@@ -215,7 +215,8 @@ class ImportScripts::XenForo < ImportScripts::Base
     puts "", "importing likes"
 
     # Count the total number of 'post' likes (only include rows where is_counted = 1)
-    total_count_query = "SELECT COUNT(*) AS count FROM #{table_name} WHERE content_type = 'post' AND is_counted = 1"
+    total_count_query =
+      "SELECT COUNT(*) AS count FROM #{table_name} WHERE content_type = 'post' AND is_counted = 1"
     total_count = mysql_query(total_count_query).first["count"]
 
     # Process in batches to avoid memory issues
@@ -235,7 +236,7 @@ class ImportScripts::XenForo < ImportScripts::Base
         {
           post_id: row["content_id"],
           user_id: row["reaction_user_id"],
-          created_at: Time.zone.at(row["reaction_date"])
+          created_at: Time.zone.at(row["reaction_date"]),
         }
       end
     end
@@ -323,9 +324,10 @@ class ImportScripts::XenForo < ImportScripts::Base
     end
   end
 
-def import_private_messages
+  def import_private_messages
     puts "", "Importing private messages..."
-    total_count = mysql_query("SELECT COUNT(*) AS count FROM xf_conversation_message").first["count"]
+    total_count =
+      mysql_query("SELECT COUNT(*) AS count FROM xf_conversation_message").first["count"]
 
     batches(BATCH_SIZE) do |offset|
       rows = mysql_query(<<-SQL).to_a
@@ -352,11 +354,12 @@ def import_private_messages
 
       create_posts(rows, total: total_count, offset: offset) do |row|
         # Determine sender: use conversation_owner for the first message; otherwise, use message_user_id.
-        mapped_user_id = if row["message_id"].to_i == row["first_message_id"].to_i
-          user_id_from_imported_user_id(row["conversation_owner"])
-        else
-          user_id_from_imported_user_id(row["message_user_id"])
-        end
+        mapped_user_id =
+          if row["message_id"].to_i == row["first_message_id"].to_i
+            user_id_from_imported_user_id(row["conversation_owner"])
+          else
+            user_id_from_imported_user_id(row["message_user_id"])
+          end
 
         # If mapping fails, fall back to the system user.
         unless User.exists?(id: mapped_user_id)
@@ -370,28 +373,40 @@ def import_private_messages
 
         if row["message_id"].to_i == row["first_message_id"].to_i
           # For the first message (PM topic), get target recipients.
-          recipients_raw = (PHP.unserialize(row["recipients"]) rescue nil)
+          recipients_raw =
+            (
+              begin
+                PHP.unserialize(row["recipients"])
+              rescue StandardError
+                nil
+              end
+            )
           if recipients_raw.blank?
             begin
               recipients_raw = JSON.parse(row["recipients"])
-            rescue
+            rescue StandardError
               recipients_raw = {}
             end
           end
 
           # Fallback: if still empty, query the recipient table.
           if recipients_raw.blank? || recipients_raw.empty?
-            recipient_rows = mysql_query("SELECT user_id FROM #{TABLE_PREFIX}conversation_recipient WHERE conversation_id = #{row["conversation_id"]} AND recipient_state = 'active'").to_a
+            recipient_rows =
+              mysql_query(
+                "SELECT user_id FROM #{TABLE_PREFIX}conversation_recipient WHERE conversation_id = #{row["conversation_id"]} AND recipient_state = 'active'",
+              ).to_a
             if recipient_rows.any?
               recipients_raw = {}
               recipient_rows.each { |r| recipients_raw[r["user_id"].to_s] = true }
             end
           end
 
-          target_usernames = if recipients_raw.present? && recipients_raw.keys.any?
-            discourse_user_ids = recipients_raw.keys.map { |id| user_id_from_imported_user_id(id.to_s) }
-            User.where(id: discourse_user_ids).pluck(:username).join(",")
-          end
+          target_usernames =
+            if recipients_raw.present? && recipients_raw.keys.any?
+              discourse_user_ids =
+                recipients_raw.keys.map { |id| user_id_from_imported_user_id(id.to_s) }
+              User.where(id: discourse_user_ids).pluck(:username).join(",")
+            end
 
           if target_usernames.blank?
             puts "Row #{row["message_id"]}: No valid target usernames found, skipping conversation."
@@ -406,7 +421,7 @@ def import_private_messages
             created_at: created_at,
             archetype: Archetype.private_message,
             import_mode: true,
-            target_usernames: target_usernames
+            target_usernames: target_usernames,
           }
         else
           # For replies, find the topic by the first message.
@@ -421,7 +436,7 @@ def import_private_messages
             raw: raw,
             created_at: created_at,
             topic_id: parent[:topic_id],
-            import_mode: true
+            import_mode: true,
           }
         end
       end
