@@ -11,6 +11,7 @@ module TurboTests
       fail_fast = opts.fetch(:fail_fast, nil)
       use_runtime_info = opts.fetch(:use_runtime_info, false)
       retry_and_log_flaky_tests = opts.fetch(:retry_and_log_flaky_tests, false)
+      run_system_tests = opts.fetch(:run_system_tests, false)
 
       STDOUT.puts "VERBOSE" if verbose
 
@@ -39,6 +40,7 @@ module TurboTests
         seed: seed,
         profile: opts[:profile],
         retry_and_log_flaky_tests: retry_and_log_flaky_tests,
+        run_system_tests: run_system_tests,
       ).run
     end
 
@@ -60,6 +62,7 @@ module TurboTests
       @profile = opts[:profile]
       @retry_and_log_flaky_tests = opts[:retry_and_log_flaky_tests]
       @failure_count = 0
+      @run_system_tests = opts[:run_system_tests]
 
       @messages = Queue.new
       @threads = []
@@ -156,14 +159,28 @@ module TurboTests
       system(*command)
     end
 
+    def default_args
+      if @run_system_tests
+        ["--tag type:system"]
+      else
+        ["--tag ~type:system"]
+      end
+    end
+
     def start_multisite_subprocess(tests, **opts)
-      start_subprocess({}, %w[--tag type:multisite], tests, "multisite", **opts)
+      start_subprocess(
+        {},
+        default_args.concat(%w[--tag type:multisite]),
+        tests,
+        "multisite",
+        **opts,
+      )
     end
 
     def start_regular_subprocess(tests, process_id, **opts)
       start_subprocess(
         { "TEST_ENV_NUMBER" => process_id.to_s },
-        %w[--tag ~type:multisite],
+        default_args.concat(%w[--tag ~type:multisite]),
         tests,
         process_id,
         **opts,

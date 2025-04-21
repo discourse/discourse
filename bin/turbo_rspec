@@ -78,27 +78,21 @@ if enable_system_tests && disable_system_tests
   exit 1
 end
 
+run_system_tests =
+  if enable_system_tests
+    true
+  elsif disable_system_tests
+    false
+  else
+    STDERR.puts "Not running system tests since it wasn't explicitly specified"
+    false
+  end
+
 # OptionParser modifies ARGV, leaving the leftover arguments in ARGV
 if ARGV.empty?
-  if !enable_system_tests && !disable_system_tests
-    STDERR.puts "Not running system tests since it wasn't explicitly specified"
-  end
-
-  run_system_tests = !!enable_system_tests
-
-  files =
-    if run_system_tests
-      ["#{Rails.root}/spec"]
-    else
-      TurboTests::Runner.default_spec_folders
-    end
-
+  files = TurboTests::Runner.default_spec_folders
   use_runtime_info = true if use_runtime_info.nil?
 else
-  if enable_system_tests || disable_system_tests
-    STDERR.puts "Ignoring system test options since files were specified"
-  end
-
   files = ARGV
   use_runtime_info = false if use_runtime_info.nil?
 end
@@ -124,6 +118,7 @@ success =
     profile:,
     profile_print_slowest_examples_count:,
     retry_and_log_flaky_tests:,
+    run_system_tests:,
   )
 
 if success
