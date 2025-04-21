@@ -1,4 +1,12 @@
-.admin-config.color-palettes-show {
+.admin-config.color-palettes {
+  .content-list {
+    margin-right: 1em;
+  }
+
+  .create-new-palette {
+    margin-top: 1em;
+  }
+
   .admin-config-color-palettes {
     &__name-control {
       display: flex;

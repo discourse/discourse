@@ -3,46 +3,16 @@
 module PageObjects
   module Pages
     class AdminColorPalettesConfigArea < PageObjects::Pages::Base
-      def visit(palette_id)
-        page.visit("/admin/config/colors/#{palette_id}")
+      def visit
+        page.visit("/admin/config/colors")
       end
 
-      def form
-        PageObjects::Components::FormKit.new(".admin-config.color-palettes-show .form-kit")
+      def palette(id)
+        find(".content-list li[data-palette-id=\"#{id}\"]")
       end
 
-      def edit_name_button
-        name_field.component.find(".btn-flat")
-      end
-
-      def name_field
-        form.field("name")
-      end
-
-      def name_heading
-        name_field.find("h2")
-      end
-
-      def user_selectable_field
-        form.field("user_selectable")
-      end
-
-      def color_palette_editor
-        PageObjects::Components::ColorPaletteEditor.new(
-          form.field("colors").component.find(".color-palette-editor"),
-        )
-      end
-
-      def duplicate_button
-        page.find(".duplicate-palette")
-      end
-
-      def has_unsaved_changes_indicator?
-        page.has_text?(I18n.t("admin_js.admin.config_areas.color_palettes.unsaved_changes"))
-      end
-
-      def has_no_unsaved_changes_indicator?
-        page.has_no_text?(I18n.t("admin_js.admin.config_areas.color_palettes.unsaved_changes"))
+      def create_button
+        find(".create-new-palette")
       end
     end
   end

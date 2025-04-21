@@ -97,7 +97,7 @@ export default class AdminConfigAreasColorPalette extends Component {
       name: this.args.colorPalette.name,
     });
     await copy.save();
-    this.router.replaceWith("adminConfig.color-palettes-show", copy);
+    this.router.replaceWith("adminConfig.colorPalettes.show", copy);
     this.toasts.success({
       data: {
         message: i18n("admin.config_areas.color_palettes.copy_created", {
@@ -164,6 +164,7 @@ export default class AdminConfigAreasColorPalette extends Component {
     <Form
       @data={{this.data}}
       @onSubmit={{this.handleSubmit}}
+      data-palette-id={{@colorPalette.id}}
       as |form transientData|
     >
       <div class="admin-config-area">
