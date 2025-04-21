@@ -4,10 +4,17 @@ import { action } from "@ember/object";
 
 export default class MultiSelect extends Component {
   @tracked selection = [{ id: 1, name: "foo" }];
+  @tracked selectedIds = [4];
+  @tracked selectedChannels = [];
 
   @action
   onChange(selection) {
     this.selection = selection;
+  }
+
+  @action
+  onChangeChannels(channels) {
+    this.selectedChannels = channels;
   }
 
   @action

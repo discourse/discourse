@@ -5,7 +5,7 @@ class Chat::Api::ChannelsController < Chat::ApiController
   CATEGORY_CHANNEL_EDITABLE_PARAMS = %i[auto_join_users allow_channel_wide_mentions]
 
   def index
-    permitted = params.permit(:filter, :limit, :offset, :status)
+    permitted = params.permit(:filter, :limit, :offset, :status, :ids)
 
     options = { filter: permitted[:filter], limit: (permitted[:limit] || 25).to_i }
     options[:offset] = permitted[:offset].to_i

@@ -103,6 +103,8 @@ module Chat
         )
       channels = channels.includes(:chat_channel_archive) if options[:include_archives]
 
+      allowed_channel_ids = allowed_channel_ids & options[:ids] if options[:ids]
+
       channels =
         channels
           .with_categories

@@ -10,5 +10,19 @@
         <:selection as |result|>{{result.name}}</:selection>
       </DMultiSelect>
     </:sample>
+
+  </Styleguide::Component>
+</StyleguideExample>
+
+<StyleguideExample @title="<DMultiSelect />">
+  <Styleguide::Component @tag="d-multi-select component">
+
+    <:sample>
+      <ChatChannelMultiSelect
+        @selectedIds={{this.selectedIds}}
+        @onChange={{this.onChangeChannels}}
+        @selection={{this.selectedChannels}}
+      />
+    </:sample>
   </Styleguide::Component>
 </StyleguideExample>
