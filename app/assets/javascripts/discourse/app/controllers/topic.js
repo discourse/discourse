@@ -159,10 +159,20 @@ export default class TopicController extends Controller {
     return loaded && isSharedDraft;
   }
 
-  @discourseComputed("currentPostId", "model.postStream.posts.firstObject.id")
-  canEditClass(currentPostId, firstPostId) {
+  @discourseComputed(
+    "model.postStream.loaded",
+    "currentPostId",
+    "model.postStream.posts.firstObject.id"
+  )
+  topicTitleClass(loaded, currentPostId, firstPostId) {
+    if (!loaded) {
+      return "edit-topic";
+    }
+
     if (currentPostId === firstPostId) {
-      return "can-edit";
+      // TODO: We need to remove edit-topic here, which is the same class as the pencil,
+      // once we have updated plugins/themes etc to no longer use this.
+      return "edit-topic can-edit-topic";
     }
   }
 
@@ -381,7 +391,9 @@ export default class TopicController extends Controller {
   @action
   editTopic(event) {
     event?.preventDefault();
-    this.set("editingTopic", true);
+    if (this.get("model.details.can_edit")) {
+      this.set("editingTopic", true);
+    }
   }
 
   @action
