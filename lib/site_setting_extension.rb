@@ -490,14 +490,19 @@ module SiteSettingExtension
   # of theme site settings and clearing relevant caches, and triggering
   # server-side events for changed settings.
   #
-  # TODO (martin)
   # Themeable site settings cannot be removed this way, they must be
   # changed via the ThemeSiteSetting model.
   #
   # @param name [Symbol] the name of the setting
   # @param val [Any] the value to set
   def remove_override!(name)
-    # TODO (martin) Do not allow attempts to remove theme site setting overrides.
+    if themeable[name]
+      # TODO (martin) Need a better error message here when we have an interface
+      # for adding/removing themeable site setting values
+      raise SiteSettingExtension::InvalidSettingAccess.new(
+              "#{name} cannot be changed like this because it is a themeable setting. Instead, modify the ThemeSiteSetting record directly.",
+            )
+    end
 
     old_val = current[name]
     provider.destroy(name)
@@ -525,14 +530,19 @@ module SiteSettingExtension
   # of theme site settings and clearing relevant caches, and triggering
   # server-side events for changed settings.
   #
-  # TODO (martin)
   # Themeable site settings cannot be changed this way, they must be
   # changed via the ThemeSiteSetting model.
   #
   # @param name [Symbol] the name of the setting
   # @param val [Any] the value to set
   def add_override!(name, val)
-    # TODO (martin) Do not allow attempts to add theme site setting overrides.
+    if themeable[name]
+      # TODO (martin) Need a better error message here when we have an interface
+      # for adding/removing themeable site setting values
+      raise SiteSettingExtension::InvalidSettingAccess.new(
+              "#{name} cannot be changed like this because it is a themeable setting. Instead, modify the ThemeSiteSetting record directly.",
+            )
+    end
 
     old_val = current[name]
     val, type = type_supervisor.to_db_value(name, val)
@@ -693,12 +703,7 @@ module SiteSettingExtension
 
   def clear_cache!
     Discourse.cache.delete(SiteSettingExtension.client_settings_cache_key)
-    Theme
-      .not_components
-      .pluck(:id)
-      .each do |theme_id|
-        Discourse.cache.delete(SiteSettingExtension.theme_site_settings_cache_key(theme_id))
-      end
+    Theme.expire_site_setting_cache!
     Site.clear_anon_cache!
   end
 
@@ -780,9 +785,13 @@ module SiteSettingExtension
                     "#{clean_name} requires a theme_id because it is themeable",
                   )
           end
-          # TODO (martin) Do we need a fallback here if the theme hasn't overridden it?
-          theme_settings = theme_site_settings[scoped_to[:theme_id]]
-          return theme_settings[clean_name] if theme_settings && theme_settings.key?(clean_name)
+
+          # If the theme hasn't overridden any theme site settings (or changed defaults)
+          # then we will just fall back further down bellow to the current site setting value.
+          settings_overriden_for_theme = theme_site_settings[scoped_to[:theme_id]]
+          if settings_overriden_for_theme && settings_overriden_for_theme.key?(clean_name)
+            return settings_overriden_for_theme[clean_name]
+          end
         end
 
         if plugins[name]

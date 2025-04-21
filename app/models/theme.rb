@@ -294,6 +294,15 @@ class Theme < ActiveRecord::Base
     SvgSprite.expire_cache
   end
 
+  def self.expire_site_setting_cache!
+    Theme
+      .not_components
+      .pluck(:id)
+      .each do |theme_id|
+        Discourse.cache.delete(SiteSettingExtension.theme_site_settings_cache_key(theme_id))
+      end
+  end
+
   def self.clear_default!
     SiteSetting.default_theme_id = -1
     expire_site_cache!
