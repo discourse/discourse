@@ -360,7 +360,7 @@ class Admin::ThemesController < Admin::AdminController
   def update_default_theme
     if theme_params.key?(:default)
       is_default = theme_params[:default].to_s == "true"
-      if @theme.id == SiteSetting.default_theme_id && !is_default
+      if @theme.default? && !is_default
         Theme.clear_default!
       elsif is_default
         @theme.set_default!

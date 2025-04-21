@@ -1,7 +1,45 @@
 # frozen_string_literal: true
 
+# Creates a new theme with the provided parameters. Themes can be created
+# with various attributes including name, user selectability, color scheme,
+# and theme fields.
+#
+# Also used to create theme components.
+#
+# The theme can optionally be set as the default theme, overriding SiteSetting.default_theme_id.
+# The theme will then be used for all users on the site who haven't specifically set their
+# theme preference.
+#
+# @example
+#  Themes::Create.call(
+#    guardian: guardian,
+#    params: {
+#      name: "My Theme",
+#      user_selectable: true,
+#      color_scheme_id: 1,
+#      component: false,
+#      theme_fields: [
+#        { name: "header", target: "common", value: "content", type_id: 1 }
+#      ],
+#      default: false
+#    }
+#  )
+#
+
 class Themes::Create
   include Service::Base
+
+  # @!method self.call(guardian:, params:)
+  #   @param [Guardian] guardian
+  #   @param [Hash] params
+  #   @option params [String] :name The name of the theme
+  #   @option params [Integer] :user_id The ID of the user creating the theme
+  #   @option params [Boolean] :user_selectable Whether the theme can be selected by users
+  #   @option params [Integer] :color_scheme_id The ID of the color palette to use
+  #   @option params [Boolean] :component Whether this is a theme component. These cannot be user_selectable or have a color_scheme_id
+  #   @option params [Array] :theme_fields Array of theme field attributes
+  #   @option params [Boolean] :default Whether to set this as the default theme
+  #   @return [Service::Base::Context]
 
   params do
     attribute :name, :string
@@ -14,7 +52,6 @@ class Themes::Create
   end
 
   policy :ensure_remote_themes_are_not_allowlisted
-  model :theme, :instantiate_theme
 
   transaction do
     try(Theme::InvalidFieldTargetError, Theme::InvalidFieldTypeError) do
@@ -30,25 +67,14 @@ class Themes::Create
     Theme.allowed_remote_theme_ids.nil?
   end
 
-  def instantiate_theme(params:)
-    context[:theme] = Theme.new(
-      params.slice(:name, :user_id, :user_selectable, :color_scheme_id, :component),
-    )
-  end
-
   def create_theme(params:)
     Theme.create(
       params.slice(:name, :user_id, :user_selectable, :color_scheme_id, :component),
     ) { |theme| params.theme_fields.to_a.each { |field| theme.set_field(**field.symbolize_keys) } }
   end
 
-  # TODO (martin) Might need to be an Action, it's used in other theme related things too.
   def update_default_theme(params:, theme:)
-    if theme.default? && !params.default
-      Theme.clear_default!
-    elsif params.default
-      theme.set_default!
-    end
+    theme.set_default! if params.default
   end
 
   # TODO (martin): Might need to be an Action, it is used in other theme related things too.
