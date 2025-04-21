@@ -22,7 +22,8 @@ class Themes::BulkDestroy
   end
 
   def log_themes_destroy(themes:, guardian:)
-    themes.each { |theme| StaffActionLogger.new(guardian.user).log_theme_destroy(theme) }
+    staff_action_logger = StaffActionLogger.new(guardian.user)
+    themes.each { |theme| staff_action_logger.log_theme_destroy(theme) }
   end
 
   def destroy_themes(themes:)
