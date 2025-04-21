@@ -15,10 +15,11 @@ class Themes::Create
 
   policy :ensure_remote_themes_are_not_allowlisted
   model :theme, :instantiate_theme
-  step :set_theme_fields
 
   transaction do
-    step :save_theme
+    try(Theme::InvalidFieldTargetError, Theme::InvalidFieldTypeError) do
+      model :theme, :create_theme
+    end
     step :update_default_theme
     step :log_theme_change
   end
@@ -35,24 +36,10 @@ class Themes::Create
     )
   end
 
-  def set_theme_fields(params:, theme:)
-    return if params.theme_fields.blank?
-
-    params.theme_fields.each do |field|
-      begin
-        theme.set_field(**field.symbolize_keys)
-      rescue Theme::InvalidFieldTargetError, Theme::InvalidFieldTypeError => err
-        fail!(err.message)
-      end
-    end
-  end
-
-  def save_theme(theme:)
-    theme.save
-
-    if theme.errors.any?
-      fail!("Could not save theme with errors #{theme.errors.full_messages.join(",")}")
-    end
+  def create_theme(params:)
+    Theme.create(
+      params.slice(:name, :user_id, :user_selectable, :color_scheme_id, :component),
+    ) { |theme| params.theme_fields.to_a.each { |field| theme.set_field(**field.symbolize_keys) } }
   end
 
   # TODO (martin) Might need to be an Action, it's used in other theme related things too.

@@ -193,7 +193,7 @@ class Admin::ThemesController < Admin::AdminController
       end
       on_failed_policy(:ensure_remote_themes_are_not_allowlisted) { raise Discourse::InvalidAccess }
       on_success { |theme:| render json: serialize_data(theme, ThemeSerializer), status: :created }
-      on_failure { |theme:| render json: theme.errors, status: :unprocessable_entity }
+      on_model_errors { |theme:| render json: theme.errors, status: :unprocessable_entity }
     end
   end
 
