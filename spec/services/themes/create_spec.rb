@@ -88,12 +88,7 @@ RSpec.describe Themes::Create do
       let(:params) do
         theme_params.merge(
           theme_fields: [
-            {
-              name: "header",
-              target: "invalid_target",
-              value: "header content",
-              type_id: ThemeField.types[:html],
-            },
+            { name: "header", target: "invalid_target", value: "header content", type: "html" },
           ],
         )
       end
@@ -109,7 +104,7 @@ RSpec.describe Themes::Create do
               name: "header",
               target: "common",
               value: "header content",
-              type_id: 999, # Invalid type
+              type: "blah", # Invalid type
             },
           ],
         )
