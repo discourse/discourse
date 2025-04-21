@@ -8,6 +8,7 @@ import { service } from "@ember/service";
 import { isEmpty, isPresent } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
 import BufferedProxy from "ember-buffered-proxy/proxy";
+import { log } from "qunit";
 import { Promise } from "rsvp";
 import {
   CLOSE_INITIATED_BY_BUTTON,
@@ -61,6 +62,7 @@ export function registerCustomPostMessageCallback(type, callback) {
 
 export default class TopicController extends Controller {
   @service composer;
+  @service capabilities;
   @service dialog;
   @service documentTitle;
   @service screenTrack;
@@ -164,9 +166,14 @@ export default class TopicController extends Controller {
     }
   }
 
-  @discourseComputed("site.mobileView", "model.details.can_edit")
-  showEditButton(mobileView, canEdit) {
-    return mobileView && canEdit;
+  @discourseComputed(
+    "site.mobileView",
+    "capabilities.touch",
+    "model.details.can_edit"
+  )
+  showEditButton(mobileView, touch, canEdit) {
+    const tabletView = touch && window.matchMedia("(hover: none)").matches;
+    return (mobileView && canEdit) || (tabletView && canEdit);
   }
 
   @discourseComputed("site.mobileView", "model.posts_count")

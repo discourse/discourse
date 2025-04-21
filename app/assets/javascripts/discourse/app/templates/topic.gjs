@@ -202,7 +202,9 @@ export default RouteTemplate(
               {{! template-lint-disable no-invalid-interactive }}
               <h1
                 data-topic-id={{@controller.model.id}}
+                role="button"
                 class={{@controller.canEditClass}}
+                aria-label={{i18n "edit_topic"}}
                 {{on "click" @controller.titleClick}}
               >
                 {{#unless @controller.model.is_warning}}
@@ -233,6 +235,8 @@ export default RouteTemplate(
                     {{on "click" @controller.editTopic}}
                     class="edit-topic"
                     title={{i18n "edit_topic"}}
+                    role="button"
+                    aria-label={{i18n "edit_topic"}}
                   >{{icon "pencil"}}</a>
                 {{/if}}
 
