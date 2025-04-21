@@ -396,6 +396,10 @@ Discourse::Application.routes.draw do
         end
       end
 
+      resources :groups, only: %i[index], constants: AdminConstraint.new do
+        collection { get "settings" => "site_settings#index" }
+      end
+
       get "search/all" => "search#index"
 
       namespace :config, constraints: StaffConstraint.new do
