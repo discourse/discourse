@@ -2,6 +2,6 @@
 
 Fabricator(:form_template) do
   name { sequence(:name) { |i| "template_#{i}" } }
-  template "- type: input
-  id: name"
+  template "---\n- type: input
+  id: name\n"
 end

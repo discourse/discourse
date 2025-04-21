@@ -7123,6 +7123,7 @@ en:
           dropdown: "Dropdown"
           upload: "Upload a file"
           multiselect: "Multiple choice"
+          tagchooser: "Tag Group selector"
         validations_modal:
           button_title: "Validations"
           modal_title: "Validation Options"
@@ -7168,6 +7169,8 @@ en:
           toggle_form_template: "form template enabled"
           select_template: "Select form templates"
           select_template_help: "Add/Edit Form Templates"
+        errors:
+          multiple_tags_not_allowed: 'You can''t select more tags from the "%{tag_name}". To avoid issues, use Form Template'
 
       impersonate:
         title: "Impersonate"

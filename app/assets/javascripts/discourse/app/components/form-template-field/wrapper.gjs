@@ -10,6 +10,7 @@ import CheckboxField from "./checkbox";
 import DropdownField from "./dropdown";
 import InputField from "./input";
 import MultiSelectField from "./multi-select";
+import TagChooserField from "./tag-chooser";
 import TextareaField from "./textarea";
 import UploadField from "./upload";
 
@@ -39,6 +40,7 @@ export default class FormTemplateFieldWrapper extends Component {
     dropdown: DropdownField,
     "multi-select": MultiSelectField,
     textarea: TextareaField,
+    "tag-chooser": TagChooserField,
     upload: UploadField,
   };
 

@@ -948,18 +948,17 @@ export default class ComposerEditor extends Component {
   }
 
   @action
-  async updatePreviewFromForm() {
+  async updateFormPreview() {
     const formTemplateData = prepareFormTemplateData(
       document.querySelector("#form-template-form"),
-      this.composer.selectedFormTemplate
+      this.composer.selectedFormTemplate,
+      false
     );
 
-    if (formTemplateData) {
-      this.preview = await this.cachedCookAsync(
-        formTemplateData,
-        this.markdownOptions
-      );
-    }
+    this.preview = await this.cachedCookAsync(
+      formTemplateData,
+      this.markdownOptions
+    );
   }
 
   async cachedCookAsync(text, options) {
@@ -1006,7 +1005,7 @@ export default class ComposerEditor extends Component {
               @id={{this.selectedFormTemplateId}}
               @initialValues={{this.composer.formTemplateInitialValues}}
               @onSelectFormTemplate={{this.composer.onSelectFormTemplate}}
-              @onChange={{this.updatePreviewFromForm}}
+              @onChange={{this.updateFormPreview}}
             />
           </form>
         </div>

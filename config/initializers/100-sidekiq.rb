@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "sidekiq/pausable"
+require "sidekiq/discourse_event"
 require "sidekiq_logster_reporter"
 require "sidekiq_long_running_job_logger"
 require "mini_scheduler_long_running_job_logger"
@@ -10,7 +11,10 @@ Sidekiq.configure_client { |config| config.redis = Discourse.sidekiq_redis_confi
 Sidekiq.configure_server do |config|
   config.redis = Discourse.sidekiq_redis_config
 
-  config.server_middleware { |chain| chain.add Sidekiq::Pausable }
+  config.server_middleware do |chain|
+    chain.add Sidekiq::Pausable
+    chain.add Sidekiq::DiscourseEvent
+  end
 
   if stuck_sidekiq_job_minutes = GlobalSetting.sidekiq_report_long_running_jobs_minutes
     config.on(:startup) { SidekiqLongRunningJobLogger.new(stuck_sidekiq_job_minutes:).start }
