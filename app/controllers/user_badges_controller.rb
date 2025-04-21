@@ -135,7 +135,7 @@ class UserBadgesController < ApplicationController
 
     return render json: failed_json, status: 403 unless can_favorite_badge?(user_badge)
 
-    is_favorite = user_badges.where(badge: user_badge.badge).pluck(:is_favorite).any?
+    is_favorite = user_badges.where(badge: user_badge.badge, is_favorite: true).exists?
 
     if !is_favorite &&
          user_badges.select(:badge_id).distinct.where(is_favorite: true).count >=
