@@ -55,6 +55,7 @@
 
   .keyboard-shortcuts-help__container {
     columns: 2 20em; // Set maximum of 2 columns
+
     section {
       display: inline-block;
       margin-bottom: 1.5em;
@@ -103,6 +104,11 @@
 
     span:last-child {
       margin-left: auto;
+    }
+
+    .delimiter-newline {
+      display: revert;
+      text-align: right;
     }
 
     kbd {

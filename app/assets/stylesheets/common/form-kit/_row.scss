@@ -5,10 +5,10 @@
   margin-left: calc(-0.5 * var(--form-kit-gutter-x));
   row-gap: calc(var(--form-kit-gutter-y) + 1.75em);
   padding-top: 1.75em;
+  width: 100%;
 
   > * {
     flex-shrink: 0;
-
     padding-right: calc(var(--form-kit-gutter-x) * 0.5);
     padding-left: calc(var(--form-kit-gutter-x) * 0.5);
   }

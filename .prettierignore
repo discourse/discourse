@@ -1,4 +1,5 @@
 app/assets/stylesheets/vendor/
+app/assets/javascripts/plugins/
 plugins/**/assets/stylesheets/vendor/
 plugins/**/assets/javascripts/vendor/
 plugins/**/config/locales/**/*.yml
@@ -19,7 +20,7 @@ plugins/**/lib/javascripts/locale
 public/
 !/app/assets/javascripts/discourse/public
 vendor/
-!app/assets/javascripts/ember-production-deprecations/vendor/
+app/assets/javascripts/discourse/tests/unit/utils/decorators-test.js
 app/assets/javascripts/discourse/tests/fixtures
 spec/
 node_modules/

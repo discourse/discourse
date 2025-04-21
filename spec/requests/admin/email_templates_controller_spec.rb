@@ -23,7 +23,7 @@ RSpec.describe Admin::EmailTemplatesController do
       before { sign_in(admin) }
 
       it "should work if you are an admin" do
-        get "/admin/customize/email_templates.json"
+        get "/admin/email/templates.json"
 
         expect(response.status).to eq(200)
 
@@ -32,7 +32,7 @@ RSpec.describe Admin::EmailTemplatesController do
       end
 
       it "returns overridden = true if subject or body has translation_overrides record" do
-        put "/admin/customize/email_templates/user_notifications.admin_login",
+        put "/admin/email/templates/user_notifications.admin_login",
             params: {
               email_template: {
                 subject: original_subject,
@@ -42,7 +42,7 @@ RSpec.describe Admin::EmailTemplatesController do
             headers: headers
         expect(response.status).to eq(200)
 
-        get "/admin/customize/email_templates.json"
+        get "/admin/email/templates.json"
         expect(response.status).to eq(200)
         templates = response.parsed_body["email_templates"]
         template = templates.find { |t| t["id"] == "user_notifications.admin_login" }
@@ -50,7 +50,7 @@ RSpec.describe Admin::EmailTemplatesController do
 
         TranslationOverride.destroy_all
 
-        get "/admin/customize/email_templates.json"
+        get "/admin/email/templates.json"
         expect(response.status).to eq(200)
         templates = response.parsed_body["email_templates"]
         template = templates.find { |t| t["id"] == "user_notifications.admin_login" }
@@ -60,7 +60,7 @@ RSpec.describe Admin::EmailTemplatesController do
 
     shared_examples "email templates inaccessible" do
       it "denies access with a 404 response" do
-        get "/admin/customize/email_templates.json"
+        get "/admin/email/templates.json"
 
         expect(response.status).to eq(404)
         expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
@@ -89,7 +89,7 @@ RSpec.describe Admin::EmailTemplatesController do
       before { sign_in(admin) }
 
       it "returns 'not found' when an unknown email template id is used" do
-        put "/admin/customize/email_templates/non_existent_template",
+        put "/admin/email/templates/non_existent_template",
             params: {
               email_template: {
                 subject: "Foo",
@@ -106,7 +106,7 @@ RSpec.describe Admin::EmailTemplatesController do
 
       shared_examples "invalid email template" do
         it "returns the right error messages" do
-          put "/admin/customize/email_templates/user_notifications.admin_login",
+          put "/admin/email/templates/user_notifications.admin_login",
               params: {
                 email_template: {
                   subject: email_subject,
@@ -124,7 +124,7 @@ RSpec.describe Admin::EmailTemplatesController do
         end
 
         it "doesn't create translation overrides" do
-          put "/admin/customize/email_templates/user_notifications.admin_login",
+          put "/admin/email/templates/user_notifications.admin_login",
               params: {
                 email_template: {
                   subject: email_subject,
@@ -138,7 +138,7 @@ RSpec.describe Admin::EmailTemplatesController do
         end
 
         it "doesn't create entries in the Staff Log" do
-          put "/admin/customize/email_templates/user_notifications.admin_login",
+          put "/admin/email/templates/user_notifications.admin_login",
               params: {
                 email_template: {
                   subject: email_subject,
@@ -224,7 +224,7 @@ RSpec.describe Admin::EmailTemplatesController do
         let(:email_body) { "The body contains [%{site_name}](%{base_url}) and %{email_token}." }
 
         it "returns the successfully updated email template" do
-          put "/admin/customize/email_templates/user_notifications.admin_login",
+          put "/admin/email/templates/user_notifications.admin_login",
               params: {
                 email_template: {
                   subject: email_subject,
@@ -249,7 +249,7 @@ RSpec.describe Admin::EmailTemplatesController do
         end
 
         it "creates translation overrides" do
-          put "/admin/customize/email_templates/user_notifications.admin_login",
+          put "/admin/email/templates/user_notifications.admin_login",
               params: {
                 email_template: {
                   subject: email_subject,
@@ -263,7 +263,7 @@ RSpec.describe Admin::EmailTemplatesController do
         end
 
         it "creates entries in the Staff Log" do
-          put "/admin/customize/email_templates/user_notifications.admin_login",
+          put "/admin/email/templates/user_notifications.admin_login",
               params: {
                 email_template: {
                   subject: email_subject,
@@ -293,7 +293,7 @@ RSpec.describe Admin::EmailTemplatesController do
           old_subject = I18n.t("system_messages.pending_users_reminder.subject_template")
           expect(old_subject).to be_a(Hash)
 
-          put "/admin/customize/email_templates/system_messages.pending_users_reminder",
+          put "/admin/email/templates/system_messages.pending_users_reminder",
               params: {
                 email_template: {
                   subject: "",
@@ -316,7 +316,7 @@ RSpec.describe Admin::EmailTemplatesController do
 
     shared_examples "email template update not allowed" do
       it "prevents updates with a 404 response" do
-        put "/admin/customize/email_templates/some_id",
+        put "/admin/email/templates/some_id",
             params: {
               email_template: {
                 subject: "Subject",
@@ -352,7 +352,7 @@ RSpec.describe Admin::EmailTemplatesController do
       before { sign_in(admin) }
 
       it "returns 'not found' when an unknown email template id is used" do
-        delete "/admin/customize/email_templates/non_existent_template", headers: headers
+        delete "/admin/email/templates/non_existent_template", headers: headers
         expect(response).not_to be_successful
 
         json = response.parsed_body
@@ -364,7 +364,7 @@ RSpec.describe Admin::EmailTemplatesController do
         let(:email_body) { "The body contains [%{site_name}](%{base_url}) and %{email_token}." }
 
         before do
-          put "/admin/customize/email_templates/user_notifications.admin_login",
+          put "/admin/email/templates/user_notifications.admin_login",
               params: {
                 email_template: {
                   subject: email_subject,
@@ -378,14 +378,14 @@ RSpec.describe Admin::EmailTemplatesController do
           expect(I18n.t("user_notifications.admin_login.subject_template")).to eq(email_subject)
           expect(I18n.t("user_notifications.admin_login.text_body_template")).to eq(email_body)
 
-          delete "/admin/customize/email_templates/user_notifications.admin_login", headers: headers
+          delete "/admin/email/templates/user_notifications.admin_login", headers: headers
 
           expect(I18n.t("user_notifications.admin_login.subject_template")).to eq(original_subject)
           expect(I18n.t("user_notifications.admin_login.text_body_template")).to eq(original_body)
         end
 
         it "returns the restored email template" do
-          delete "/admin/customize/email_templates/user_notifications.admin_login", headers: headers
+          delete "/admin/email/templates/user_notifications.admin_login", headers: headers
           expect(response.status).to eq(200)
 
           json = response.parsed_body
@@ -403,7 +403,7 @@ RSpec.describe Admin::EmailTemplatesController do
 
         it "creates entries in the Staff Log" do
           UserHistory.delete_all
-          delete "/admin/customize/email_templates/user_notifications.admin_login", headers: headers
+          delete "/admin/email/templates/user_notifications.admin_login", headers: headers
 
           log = UserHistory.find_by_subject("user_notifications.admin_login.subject_template")
 
@@ -424,7 +424,7 @@ RSpec.describe Admin::EmailTemplatesController do
 
     shared_examples "email template reversal not allowed" do
       it "prevents reversals with a 404 response" do
-        delete "/admin/customize/email_templates/some_id", headers: headers
+        delete "/admin/email/templates/some_id", headers: headers
 
         expect(response.status).to eq(404)
         expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))

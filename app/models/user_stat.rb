@@ -192,7 +192,9 @@ class UserStat < ActiveRecord::Base
     SQL
   end
 
-  def self.update_distinct_badge_count(user_id = nil)
+  def self.update_distinct_badge_count(user_ids = [])
+    user_ids = user_ids.join(", ")
+
     sql = <<~SQL
       UPDATE user_stats
       SET distinct_badge_count = x.distinct_badge_count
@@ -204,30 +206,28 @@ class UserStat < ActiveRecord::Base
         GROUP BY users.id
       ) x
       WHERE user_stats.user_id = x.user_id AND user_stats.distinct_badge_count <> x.distinct_badge_count
+      #{"AND user_stats.user_id IN (#{user_ids})" if !user_ids.empty?}
     SQL
-
-    sql = sql + " AND user_stats.user_id = #{user_id.to_i}" if user_id
 
     DB.exec sql
   end
 
   def update_distinct_badge_count
-    self.class.update_distinct_badge_count(self.user_id)
+    self.class.update_distinct_badge_count([self.user_id])
   end
 
   def self.update_draft_count(user_id = nil)
     if user_id.present?
-      draft_count, has_topic_draft =
-        DB.query_single <<~SQL, user_id: user_id, new_topic: Draft::NEW_TOPIC
+      draft_count = DB.query_single(<<~SQL, user_id: user_id).first
         UPDATE user_stats
         SET draft_count = (SELECT COUNT(*) FROM drafts WHERE user_id = :user_id)
         WHERE user_id = :user_id
-        RETURNING draft_count, (SELECT 1 FROM drafts WHERE user_id = :user_id AND draft_key = :new_topic)
+        RETURNING draft_count
       SQL
 
       MessageBus.publish(
         "/user-drafts/#{user_id}",
-        { draft_count: draft_count, has_topic_draft: !!has_topic_draft },
+        { draft_count: draft_count },
         user_ids: [user_id],
       )
     else

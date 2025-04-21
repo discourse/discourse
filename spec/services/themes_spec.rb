@@ -3,8 +3,6 @@
 RSpec.describe ThemesInstallTask do
   fab!(:admin)
 
-  before { Discourse::Application.load_tasks }
-
   describe ".new" do
     THEME_NAME = "awesome theme"
 

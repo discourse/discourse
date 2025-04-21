@@ -1,6 +1,6 @@
 import { htmlSafe } from "@ember/template";
 import { classNames } from "@ember-decorators/component";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed from "discourse/lib/decorators";
 import SelectedNameComponent from "select-kit/components/selected-name";
 
 @classNames("select-kit-selected-color")

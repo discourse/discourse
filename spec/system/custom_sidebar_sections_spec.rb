@@ -168,10 +168,12 @@ describe "Custom sidebar sections", type: :system do
     sidebar.click_add_section_button
     sidebar.click_add_link_button
 
-    is_focused =
-      page.evaluate_script("document.activeElement.classList.contains('multi-select-header')")
+    try_until_success do
+      is_focused =
+        page.evaluate_script("document.activeElement.classList.contains('multi-select-header')")
 
-    expect(is_focused).to be true
+      expect(is_focused).to be true
+    end
   end
 
   it "accessibility - when customization modal is closed, trigger is refocused" do
@@ -179,12 +181,15 @@ describe "Custom sidebar sections", type: :system do
     visit("/latest")
 
     sidebar.click_add_section_button
+    section_modal.close
 
-    find(".modal-close").click
+    expect(section_modal).to be_closed
 
-    is_focused = page.evaluate_script("document.activeElement.classList.contains('add-section')")
+    try_until_success do
+      is_focused = page.evaluate_script("document.activeElement.classList.contains('add-section')")
 
-    expect(is_focused).to be true
+      expect(is_focused).to be true
+    end
   end
 
   it "allows the user to edit custom section" do

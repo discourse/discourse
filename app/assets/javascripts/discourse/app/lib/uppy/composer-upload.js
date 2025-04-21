@@ -9,6 +9,8 @@ import XHRUpload from "@uppy/xhr-upload";
 import { cacheShortUploadUrl } from "pretty-text/upload-short-url";
 import { updateCsrfToken } from "discourse/lib/ajax";
 import ComposerVideoThumbnailUppy from "discourse/lib/composer-video-thumbnail-uppy";
+import { bind } from "discourse/lib/decorators";
+import getURL from "discourse/lib/get-url";
 import {
   bindFileInputChangeListener,
   displayErrorForBulkUpload,
@@ -21,10 +23,7 @@ import UppyS3Multipart from "discourse/lib/uppy/s3-multipart";
 import UppyWrapper from "discourse/lib/uppy/wrapper";
 import UppyChecksum from "discourse/lib/uppy-checksum-plugin";
 import { clipboardHelpers } from "discourse/lib/utilities";
-import getURL from "discourse-common/lib/get-url";
-import { bind } from "discourse-common/utils/decorators";
-import escapeRegExp from "discourse-common/utils/escape-regexp";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class UppyComposerUpload {
   @service dialog;
@@ -44,7 +43,7 @@ export default class UppyComposerUpload {
   uploadType = "composer";
   editorInputClass = ".d-editor-input";
   mobileFileUploaderId = "mobile-file-upload";
-  fileUploadElementId = "file-uploader";
+  fileUploadElementId;
   editorClass = ".d-editor";
 
   composerEventPrefix;
@@ -53,12 +52,13 @@ export default class UppyComposerUpload {
   uploadPreProcessors;
   uploadHandlers;
 
+  /** @type {PlaceholderHandler} */
+  placeholderHandler;
+
   #inProgressUploads = [];
   #bufferedUploadErrors = [];
-  #placeholders = {};
   #consecutiveImages = [];
 
-  #useUploadPlaceholders = true;
   #uploadTargetBound = false;
   #userCancelled = false;
 
@@ -73,6 +73,7 @@ export default class UppyComposerUpload {
       uploadMarkdownResolvers,
       uploadPreProcessors,
       uploadHandlers,
+      fileUploadElementId,
     }
   ) {
     setOwner(this, owner);
@@ -82,6 +83,7 @@ export default class UppyComposerUpload {
     this.uploadMarkdownResolvers = uploadMarkdownResolvers;
     this.uploadPreProcessors = uploadPreProcessors;
     this.uploadHandlers = uploadHandlers;
+    this.fileUploadElementId = fileUploadElementId;
   }
 
   @bind
@@ -145,7 +147,7 @@ export default class UppyComposerUpload {
       this.#fileInputEl,
       this._addFiles
     );
-    this.#editorEl.addEventListener("paste", this._pasteEventListener);
+    this.#editorEl.addEventListener("paste", this._pasteEventListener, true);
 
     this.uppyWrapper.uppyInstance = new Uppy({
       id: this.uppyId,
@@ -222,7 +224,7 @@ export default class UppyComposerUpload {
         const fileCount = Object.keys(unhandledFiles).length;
         if (maxFiles > 0 && fileCount > maxFiles) {
           this.dialog.alert(
-            I18n.t("post.errors.too_many_dragged_and_dropped_files", {
+            i18n("post.errors.too_many_dragged_and_dropped_files", {
               count: maxFiles,
             })
           );
@@ -286,7 +288,7 @@ export default class UppyComposerUpload {
         );
         file.meta.cancelled = true;
         this.#removeInProgressUpload(file.id);
-        this.#resetUpload(file, { removePlaceholder: true });
+        this.#resetUpload(file);
         if (this.#inProgressUploads.length === 0) {
           this.#userCancelled = true;
           this.uppyWrapper.uppyInstance.cancelAll();
@@ -333,17 +335,7 @@ export default class UppyComposerUpload {
             })
           );
 
-          const placeholder = this.#uploadPlaceholder(file);
-          this.#placeholders[file.id] = {
-            uploadPlaceholder: placeholder,
-          };
-
-          if (this.#useUploadPlaceholders) {
-            this.appEvents.trigger(
-              `${this.composerEventPrefix}:insert-text`,
-              placeholder
-            );
-          }
+          this.placeholderHandler.insert(file);
 
           this.appEvents.trigger(
             `${this.composerEventPrefix}:upload-started`,
@@ -352,7 +344,10 @@ export default class UppyComposerUpload {
         });
 
         const MIN_IMAGES_TO_AUTO_GRID = 3;
-        if (this.#consecutiveImages?.length >= MIN_IMAGES_TO_AUTO_GRID) {
+        if (
+          this.siteSettings.experimental_auto_grid_images &&
+          this.#consecutiveImages?.length >= MIN_IMAGES_TO_AUTO_GRID
+        ) {
           this.#autoGridImages();
         }
       });
@@ -363,28 +358,23 @@ export default class UppyComposerUpload {
         if (!this.uppyWrapper.uppyInstance) {
           return;
         }
-        this.#removeInProgressUpload(file.id);
         let upload = response.body;
+
         const markdown = await this.uploadMarkdownResolvers.reduce(
           (md, resolver) => resolver(upload) || md,
           getUploadMarkdown(upload)
         );
 
+        // Only remove in progress after async resolvers finish:
+        this.#removeInProgressUpload(file.id);
         cacheShortUploadUrl(upload.short_url, upload);
 
         new ComposerVideoThumbnailUppy(getOwner(this)).generateVideoThumbnail(
           file,
           upload.url,
           () => {
-            if (this.#useUploadPlaceholders) {
-              this.appEvents.trigger(
-                `${this.composerEventPrefix}:replace-text`,
-                this.#placeholders[file.id].uploadPlaceholder.trim(),
-                markdown
-              );
-            }
+            this.placeholderHandler.success(file, markdown);
 
-            this.#resetUpload(file, { removePlaceholder: false });
             this.appEvents.trigger(
               `${this.composerEventPrefix}:upload-success`,
               file.name,
@@ -409,18 +399,7 @@ export default class UppyComposerUpload {
     this.uppyWrapper.uppyInstance.on("cancel-all", () => {
       // Do the manual cancelling work only if the user clicked cancel
       if (this.#userCancelled) {
-        Object.values(this.#placeholders).forEach((data) => {
-          run(() => {
-            if (this.#useUploadPlaceholders) {
-              this.appEvents.trigger(
-                `${this.composerEventPrefix}:replace-text`,
-                data.uploadPlaceholder,
-                ""
-              );
-            }
-          });
-        });
-
+        this.placeholderHandler.cancelAll();
         this.#userCancelled = false;
         this.#reset();
 
@@ -439,7 +418,7 @@ export default class UppyComposerUpload {
   @bind
   _handleUploadError(file, error, response) {
     this.#removeInProgressUpload(file.id);
-    this.#resetUpload(file, { removePlaceholder: true });
+    this.#resetUpload(file);
 
     file.meta.error = error;
 
@@ -505,39 +484,13 @@ export default class UppyComposerUpload {
       });
 
     this.uppyWrapper.onPreProcessProgress((file) => {
-      let placeholderData = this.#placeholders[file.id];
-      placeholderData.processingPlaceholder = `[${I18n.t(
-        "processing_filename",
-        {
-          filename: file.name,
-        }
-      )}]()\n`;
-
-      this.appEvents.trigger(
-        `${this.composerEventPrefix}:replace-text`,
-        placeholderData.uploadPlaceholder,
-        placeholderData.processingPlaceholder
-      );
-
-      // Safari applies user-defined replacements to text inserted programmatically.
-      // One of the most common replacements is ... -> …, so we take care of the case
-      // where that transformation has been applied to the original placeholder
-      this.appEvents.trigger(
-        `${this.composerEventPrefix}:replace-text`,
-        placeholderData.uploadPlaceholder.replace("...", "…"),
-        placeholderData.processingPlaceholder
-      );
+      this.placeholderHandler.progress(file);
     });
 
     this.uppyWrapper.onPreProcessComplete(
       (file) => {
         run(() => {
-          let placeholderData = this.#placeholders[file.id];
-          this.appEvents.trigger(
-            `${this.composerEventPrefix}:replace-text`,
-            placeholderData.processingPlaceholder,
-            placeholderData.uploadPlaceholder
-          );
+          this.placeholderHandler.progressComplete(file);
         });
       },
       () => {
@@ -552,47 +505,6 @@ export default class UppyComposerUpload {
         });
       }
     );
-  }
-
-  #uploadFilenamePlaceholder(file) {
-    const filename = this.#filenamePlaceholder(file);
-
-    // when adding two separate files with the same filename search for matching
-    // placeholder already existing in the editor ie [Uploading: test.png…]
-    // and add order nr to the next one: [Uploading: test.png(1)…]
-    const escapedFilename = escapeRegExp(filename);
-    const regexString = `\\[${I18n.t("uploading_filename", {
-      filename: escapedFilename + "(?:\\()?([0-9])?(?:\\))?",
-    })}\\]\\(\\)`;
-    const globalRegex = new RegExp(regexString, "g");
-    const matchingPlaceholder = this.composerModel.reply.match(globalRegex);
-    if (matchingPlaceholder) {
-      // get last matching placeholder and its consecutive nr in regex
-      // capturing group and apply +1 to the placeholder
-      const lastMatch = matchingPlaceholder[matchingPlaceholder.length - 1];
-      const regex = new RegExp(regexString);
-      const orderNr = regex.exec(lastMatch)[1]
-        ? parseInt(regex.exec(lastMatch)[1], 10) + 1
-        : 1;
-      return `${filename}(${orderNr})`;
-    }
-
-    return filename;
-  }
-
-  #uploadPlaceholder(file) {
-    const clipboard = I18n.t("clipboard");
-    const uploadFilenamePlaceholder = this.#uploadFilenamePlaceholder(file);
-    const filename = uploadFilenamePlaceholder
-      ? uploadFilenamePlaceholder
-      : clipboard;
-
-    let placeholder = `[${I18n.t("uploading_filename", { filename })}]()\n`;
-    if (!this.#cursorIsOnEmptyLine()) {
-      placeholder = `\n${placeholder}`;
-    }
-
-    return placeholder;
   }
 
   #useXHRUploads() {
@@ -620,20 +532,14 @@ export default class UppyComposerUpload {
     this.#fileInputEl.value = "";
   }
 
-  #resetUpload(file, opts) {
-    if (opts.removePlaceholder && this.#placeholders[file.id]) {
-      this.appEvents.trigger(
-        `${this.composerEventPrefix}:replace-text`,
-        this.#placeholders[file.id].uploadPlaceholder,
-        ""
-      );
-    }
+  #resetUpload(file) {
+    this.placeholderHandler.cancel(file);
   }
 
   @bind
   _pasteEventListener(event) {
     if (
-      document.activeElement !== document.querySelector(this.editorInputClass)
+      !document.querySelector(this.editorInputClass)?.contains(event.target)
     ) {
       return;
     }
@@ -648,6 +554,7 @@ export default class UppyComposerUpload {
     }
 
     if (event && event.clipboardData && event.clipboardData.files) {
+      event.preventDefault();
       this._addFiles([...event.clipboardData.files], { pasted: true });
     }
   }
@@ -704,10 +611,6 @@ export default class UppyComposerUpload {
     );
   }
 
-  #filenamePlaceholder(data) {
-    return data.name.replace(/\u200B-\u200D\uFEFF]/g, "");
-  }
-
   #findMatchingUploadHandler(fileName) {
     return this.uploadHandlers.find((handler) => {
       const ext = handler.extensions.join("|");
@@ -716,19 +619,11 @@ export default class UppyComposerUpload {
     });
   }
 
-  #cursorIsOnEmptyLine() {
-    const textArea = this.#editorEl.querySelector(this.editorInputClass);
-    const selectionStart = textArea.selectionStart;
-    return (
-      selectionStart === 0 || textArea.value.charAt(selectionStart - 1) === "\n"
-    );
-  }
-
   #autoGridImages() {
     const reply = this.composerModel.get("reply");
     const imagesToWrapGrid = new Set(this.#consecutiveImages);
 
-    const uploadingText = I18n.t("uploading_filename", {
+    const uploadingText = i18n("uploading_filename", {
       filename: "%placeholder%",
     });
     const uploadingTextMatch = uploadingText.match(/^.*(?=: %placeholder%…)/);

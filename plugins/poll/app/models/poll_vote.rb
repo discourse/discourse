@@ -15,6 +15,7 @@ end
 #  user_id        :bigint
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
+#  rank           :integer          default(0), not null
 #
 # Indexes
 #

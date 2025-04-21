@@ -726,6 +726,21 @@ RSpec.describe ListController do
       get "/top?period=decadely"
       expect(response.status).to eq(400)
     end
+
+    describe "per page" do
+      it "uses value from params when present" do
+        get "/top.json?per_page=5"
+
+        expect(response.parsed_body["topic_list"]["per_page"]).to eq(5)
+      end
+
+      it "uses SiteSetting.topics_per_period_in_top_page when per_page param isn't present" do
+        SiteSetting.topics_per_period_in_top_page = 32
+        get "/top.json"
+
+        expect(response.parsed_body["topic_list"]["per_page"]).to eq(32)
+      end
+    end
   end
 
   describe "category" do
@@ -905,7 +920,10 @@ RSpec.describe ListController do
     fab!(:topic2) { Fabricate(:topic, user: user) }
     fab!(:user2) { Fabricate(:user) }
 
-    before { sign_in(user2) }
+    before do
+      user.user_stat.update!(post_count: 1)
+      sign_in(user2)
+    end
 
     it "should respond with a list" do
       get "/topics/created-by/#{user.username}.json"
@@ -1321,8 +1339,6 @@ RSpec.describe ListController do
     fab!(:private_message_topic)
     fab!(:topic_in_private_category) { Fabricate(:topic, category: private_category) }
 
-    before { SiteSetting.experimental_topics_filter = true }
-
     it "should not return topics that the user is not allowed to view" do
       sign_in(user)
 
@@ -1343,16 +1359,6 @@ RSpec.describe ListController do
       expect(
         response.parsed_body["topic_list"]["topics"].map { |topic| topic["id"] },
       ).to contain_exactly(topic.id)
-    end
-
-    it "should respond with 404 response code when `experimental_topics_filter` site setting has not been enabled" do
-      SiteSetting.experimental_topics_filter = false
-
-      sign_in(user)
-
-      get "/filter.json"
-
-      expect(response.status).to eq(404)
     end
 
     it "returns category definition topics if `show_category_definitions_in_topic_lists` site setting is enabled" do

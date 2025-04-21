@@ -28,12 +28,30 @@ class FileHelper
     filename.match?(inline_images_regexp)
   end
 
+  def self.is_svg?(filename)
+    filename.match?(/\.svg\z/i)
+  end
+
   def self.is_supported_media?(filename)
     filename.match?(supported_media_regexp)
   end
 
   def self.is_supported_playable_media?(filename)
     filename.match?(supported_playable_media_regexp)
+  end
+
+  # https://guides.rubyonrails.org/security.html#file-uploads
+  def self.sanitize_filename(filename)
+    filename.strip.tap do |name|
+      # NOTE: File.basename doesn't work right with Windows paths on Unix
+      # get only the filename, not the whole path
+      name.sub! %r{\A.*(\\|/)}, ""
+      # Replace all non alphanumeric, underscore
+      # or periods with underscore
+      name.gsub! /[^\w\.\-]/, "_"
+      # Finally, replace all double underscores with a single one
+      name.gsub! /_+/, "_"
+    end
   end
 
   class FakeIO

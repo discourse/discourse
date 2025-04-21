@@ -33,13 +33,10 @@ export default class SidebarHamburgerDropdown extends Component {
   }
 
   get collapsableSections() {
-    if (
-      this.siteSettings.navigation_menu === "header dropdown" &&
-      !this.args.collapsableSections
-    ) {
-      return this.site.mobileView || this.site.narrowDesktopView;
+    if (this.site.mobileView || this.site.narrowDesktopView) {
+      return true;
     } else {
-      this.args.collapsableSections;
+      return this.args.collapsableSections;
     }
   }
 
@@ -66,6 +63,7 @@ export default class SidebarHamburgerDropdown extends Component {
                     @collapsableSections={{this.collapsableSections}}
                     @panel={{this.sidebarState.currentPanel}}
                     @hideApiSections={{@forceMainSidebarPanel}}
+                    @toggleNavigationMenu={{@toggleNavigationMenu}}
                   />
                 {{else}}
                   <ApiPanels

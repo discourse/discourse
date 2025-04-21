@@ -42,16 +42,18 @@ RSpec.describe Stylesheet::Compiler do
         type_id: ThemeField.types[:scss],
       )
     end
-    before { stylesheet_theme_field.save! }
 
     it "theme stylesheet should be able to access theme asset variables" do
-      css, _map =
-        Stylesheet::Compiler.compile_asset(
-          "desktop_theme",
-          theme_id: theme.id,
-          theme_variables: theme.scss_variables,
-        )
-      expect(css).to include(upload.url)
+      theme.reload.with_scss_load_paths do |load_paths|
+        css, _map =
+          Stylesheet::Compiler.compile_asset(
+            "desktop_theme",
+            theme_id: theme.id,
+            theme_variables: theme.scss_variables,
+            load_paths: load_paths,
+          )
+        expect(css).to include(upload.url)
+      end
     end
 
     context "with a plugin" do
@@ -108,6 +110,7 @@ RSpec.describe Stylesheet::Compiler do
         expect(css).to include("fill:green")
         expect(css).to include("line-height:1.2em")
         expect(css).to include("border-color:#c00")
+        expect(css).to include("--simple-css-color: red")
       end
     end
   end
@@ -230,6 +233,34 @@ RSpec.describe Stylesheet::Compiler do
     it "produces RTL CSS when rtl option is given" do
       css, _ = Stylesheet::Compiler.compile("a{right:1px}", "test.scss", rtl: true)
       expect(css).to eq("a{left:1px}")
+    end
+
+    it "runs through postcss" do
+      css, map = Stylesheet::Compiler.compile(<<~SCSS, "test.scss")
+        @media (min-resolution: 2dppx) {
+          body {
+            background-color: light-dark(white, black);
+          }
+        }
+      SCSS
+
+      expect(css).to include("-webkit-min-device-pixel-ratio")
+      expect(css).to include("csstools-light-dark-toggle")
+      expect(map.size).to be > 10
+    end
+
+    it "handles errors gracefully" do
+      bad_css = <<~SCSS
+        $foo: unquote("https://notacolor.example.com");
+        .example {
+          color: $foo;
+        }
+      SCSS
+
+      expect { Stylesheet::Compiler.compile(bad_css, "test.scss") }.to raise_error(
+        DiscourseJsProcessor::TranspileError,
+        /Missed semicolon/,
+      )
     end
   end
 end

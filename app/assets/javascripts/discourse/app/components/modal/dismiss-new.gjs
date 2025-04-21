@@ -4,7 +4,7 @@ import { action } from "@ember/object";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import PreferenceCheckbox from "discourse/components/preference-checkbox";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 const REPLIES_SUBSET = "replies";
 const TOPICS_SUBSET = "topics";
@@ -85,7 +85,7 @@ export default class DismissNew extends Component {
   }
 
   get modalTitle() {
-    return I18n.t("topics.bulk.dismiss_new_modal.title");
+    return i18n("topics.bulk.dismiss_new_modal.title");
   }
 
   @action

@@ -1,13 +1,13 @@
 import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import {
   acceptance,
-  query,
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 acceptance("Tags", function (needs) {
   needs.user();
@@ -118,7 +118,7 @@ acceptance("Tags", function (needs) {
 
   test("hide tag notifications menu", async function (assert) {
     await visit("/tags/c/faq/4/test");
-    assert.dom(".tag-notifications-button").doesNotExist();
+    assert.dom(".tag-notifications-tracking").doesNotExist();
   });
 });
 
@@ -430,10 +430,9 @@ acceptance("Tag info", function (needs) {
 
     await click("#show-tag-info");
     assert.dom(".tag-info .tag-name").exists("show tag");
-    assert.ok(
-      query(".tag-info .tag-associations").innerText.includes("Gardening"),
-      "show tag group names"
-    );
+    assert
+      .dom(".tag-info .tag-associations")
+      .includesText("Gardening", "show tag group names");
     assert
       .dom(".tag-info .synonyms-list .tag-box")
       .exists({ count: 2 }, "shows the synonyms");
@@ -475,24 +474,19 @@ acceptance("Tag info", function (needs) {
     assert.dom(".tag-info .tag-name").exists("show tag");
 
     await click(".edit-tag");
-    assert.strictEqual(
-      query("#edit-name").value,
-      "happy-monkey",
-      "it displays original tag name"
-    );
-    assert.strictEqual(
-      query("#edit-description").value,
-      "happy monkey description",
-      "it displays original tag description"
-    );
+    assert
+      .dom("#edit-name")
+      .hasValue("happy-monkey", "displays original tag name");
+    assert
+      .dom("#edit-description")
+      .hasValue(
+        "happy monkey description",
+        "displays original tag description"
+      );
 
     await fillIn("#edit-description", "new description");
     await click(".submit-edit");
-    assert.strictEqual(
-      currentURL(),
-      "/tag/happy-monkey",
-      "it doesn't change URL"
-    );
+    assert.strictEqual(currentURL(), "/tag/happy-monkey", "doesn't change URL");
 
     await click(".edit-tag");
     await fillIn("#edit-name", "happy-monkey2");
@@ -500,7 +494,7 @@ acceptance("Tag info", function (needs) {
     assert.strictEqual(
       currentURL(),
       "/tag/happy-monkey2",
-      "it changes URL to new tag path"
+      "changes URL to new tag path"
     );
   });
 
@@ -542,7 +536,7 @@ acceptance("Tag info", function (needs) {
     await visit("/tag/planters");
     assert.strictEqual(
       document.title,
-      I18n.t("tagging.filters.without_category", {
+      i18n("tagging.filters.without_category", {
         filter: "Latest",
         tag: "planters",
       }) + ` - ${this.siteSettings.title}`
@@ -553,7 +547,7 @@ acceptance("Tag info", function (needs) {
     assert.strictEqual(currentURL(), "/tags/c/feature/2/planters");
     assert.strictEqual(
       document.title,
-      I18n.t("tagging.filters.with_category", {
+      i18n("tagging.filters.with_category", {
         filter: "Latest",
         tag: "planters",
         category: "feature",
@@ -565,7 +559,7 @@ acceptance("Tag info", function (needs) {
     assert.strictEqual(currentURL(), "/tags/c/feature/2/none");
     assert.strictEqual(
       document.title,
-      I18n.t("tagging.filters.untagged_with_category", {
+      i18n("tagging.filters.untagged_with_category", {
         filter: "Latest",
         category: "feature",
       }) + ` - ${this.siteSettings.title}`
@@ -715,5 +709,39 @@ acceptance("Tag show - topic list without `more_topics_url`", function (needs) {
   test("load more footer message is not present", async function (assert) {
     await visit("/tag/planters");
     assert.dom(".topic-list-bottom .footer-message").exists();
+  });
+});
+
+acceptance("Tag separator customization", function (needs) {
+  needs.pretender((server, helper) => {
+    server.get("/latest.json", () => {
+      return helper.response({
+        topic_list: {
+          topics: [
+            {
+              id: 42,
+              tags: ["feature", "bug", "dev"],
+              posters: [],
+            },
+          ],
+        },
+      });
+    });
+  });
+
+  test("applying a value transformation for custom tag separator", async function (assert) {
+    withPluginApi("1.34.0", (api) => {
+      api.registerValueTransformer("tag-separator", () => {
+        return " | ";
+      });
+    });
+
+    await visit("/latest");
+
+    assert
+      .dom(
+        ".topic-list .topic-list-item:first-child .discourse-tags__tag-separator"
+      )
+      .hasText(" | ", "custom separator is displayed between tags");
   });
 });

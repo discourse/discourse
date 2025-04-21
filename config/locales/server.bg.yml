@@ -259,6 +259,8 @@ bg:
         bio_raw: "За мен"
       user:
         password: "Парола"
+      user_password:
+        password: "Парола"
     errors:
       models:
         topic:
@@ -903,7 +905,6 @@ bg:
     disable_system_edit_notifications: "Забрани редактирането на уведомления от системните потребители когато 'download_remote_images_to_local' е активно."
     native_app_install_banner_ios: "Показва банер на приложението DiscourseHub на устройства с iOS на основни потребители (ниво на доверие 1) и нагоре."
     native_app_install_banner_android: "Показва банер на приложението DiscourseHub на устройства с Android на основни потребители (ниво на доверие 1) и нагоре."
-    full_name_required: "Полето 'Пълно име' е задължително в потребителския профил"
     enable_names: "Покажи пълното име на потребителите на техните профили, потребителски карти, и имейли. Деактивирай за скриване на пълното име навсякъде."
     display_name_on_posts: "Покажи пълните имена на потребителите в техните публикации като допълнение към потребителските им имена @username."
     show_time_gap_days: "Ако двете публикации са направени през такъв дълъг период, покажи разликата във времето в темата."
@@ -1622,19 +1623,7 @@ bg:
           homepage_style:
             choices:
               latest:
-                label: "Последни теми"
-              categories_only:
-                label: "Само категории"
-              categories_with_featured_topics:
-                label: "Категории с избрани теми"
-              categories_and_latest_topics:
-                label: "Категории и най-новите теми"
-              categories_and_latest_topics_created_date:
-                label: "Категории и най-нови теми (сортиране по дата на създаване на тема)"
-              categories_and_top_topics:
-                label: "Категории и топ теми"
-              subcategories_with_featured_topics:
-                label: "Подкатегории с избрани теми"
+                label: "Последни"
       invites:
         title: "Поканете персонал"
       finished:
@@ -1653,7 +1642,7 @@ bg:
       quoted: '%{username} ви цитира в "%{topic}" - %{site_title}'
       replied: '%{username} ви отговори в "%{topic}" - %{site_title}'
       posted: '%{username} публикува в "%{topic}" - %{site_title}'
-      private_message: '%{username} ви изпрати лично съобщение "%{topic}" - %{site_title}'
+      private_message: '%{username} ви изпрати лично съобщение в "%{topic}" - %{site_title}'
       linked: '%{username} е сложил връзка към вашата публикация в "%{topic}" - %{site_title}'
       confirm_title: "Включени известявания - %{site_title}"
       confirm_body: "Успех! Известяването е включено."
@@ -1690,15 +1679,18 @@ bg:
         description: "Съгласете се със сигнала и скрийте тази публикация + автоматично изпратете на потребителя съобщение, призовавайки го да го редактира."
       delete_single:
         title: "Изтрий"
+        complete: "Публикацията е изтрита."
       delete_and_ignore:
         title: "Игнорирайте сигнала и изтрийте публикацията"
         description: "Игнорирайте сигнала, като го премахнете от опашката и изтрийте публикацията; ако е първата публикация, изтрийте и темата. "
+        complete: "Публикацията е изтрита."
       delete_and_ignore_replies:
         title: "Игнориране на сигнала, изтриване на публикацията и отговорите"
         description: "Игнорирайте сигнала, като го премахнете от опашката, изтрийте публикацията и всички нейни отговори; ако е първата публикация, изтрийте и темата"
       delete_and_agree:
         title: "Изтрий публикацията"
         description: "Съгласете се със сигнала и изтрийте публикацията; ако това е първата публикация, изтрийте и темата."
+        complete: "Публикацията е изтрита."
       delete_and_agree_replies:
         title: "Изтриване на публикацията и отговорите"
         description: "Съгласете се със сигнала и изтрийте публикацията и всички нейни отговори; ако това е първата публикация, изтрийте и темата."
@@ -1707,18 +1699,31 @@ bg:
         description: "Възстанови тази публикация така че всички потребители да могат да я виждат."
       disagree:
         title: "Не"
+        complete: "Сигналът е игнориран."
       ignore:
         title: "Игнорирай"
+        complete: "Сигналът е игнориран."
       ignore_and_do_nothing:
         title: "Не прави нищо"
         description: "Игнорирайте сигнала, като го премахнете от опашката, без да предприемате никакви действия. Скритите публикации ще останат скрити и ще бъдат обработвани от автоматичните инструменти."
+        complete: "Сигналът е игнориран."
       approve:
         title: "Одобри"
+        complete: "Публикацията е одобрена."
+      approve_post:
+        complete: "Публикацията е одобрена."
+      reject_post:
+        complete: "Публикацията е отхвърлена."
+      approve_user:
+        complete: "Потребителят е одобрен."
       reject_user:
         delete:
           title: "Изтрий потребител "
+          complete: "Потребителят е изтрит."
       reject:
         title: "Отхвърли"
+      delete_user:
+        complete: "Потребителят е изтрит."
   fallback_username: "потребител"
   form_templates:
     errors:

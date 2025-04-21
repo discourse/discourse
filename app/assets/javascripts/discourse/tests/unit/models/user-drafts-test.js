@@ -2,7 +2,7 @@ import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import { NEW_TOPIC_KEY } from "discourse/models/composer";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 module("Unit | Model | user-draft", function (hooks) {
   setupTest(hooks);
@@ -36,7 +36,7 @@ module("Unit | Model | user-draft", function (hooks) {
     assert.strictEqual(drafts.length, 2, "drafts count is right");
     assert.strictEqual(
       drafts[1].draftType,
-      I18n.t("drafts.new_topic"),
+      i18n("drafts.new_topic"),
       "loads correct draftType label"
     );
   });

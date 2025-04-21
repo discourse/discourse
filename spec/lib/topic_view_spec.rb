@@ -1123,29 +1123,50 @@ RSpec.describe TopicView do
     end
   end
 
-  describe "with topic_view_suggested_topics_options modifier" do
-    let!(:topic1) { Fabricate(:topic) }
-    let!(:topic2) { Fabricate(:topic) }
+  describe "plugin modifiers" do
+    let(:plugin) { Plugin::Instance.new }
 
-    after { DiscoursePluginRegistry.clear_modifiers! }
+    context "with topic_view_link_counts modifier registered" do
+      let(:modifier) do
+        Proc.new do |link_counts|
+          link_counts["hijacked hehe"] = true
+          link_counts
+        end
+      end
 
-    it "allows disabling of random suggested" do
-      topic_view = TopicView.new(topic1)
+      it "allows modifications to link_counts" do
+        expect(TopicView.new(topic).link_counts).to eq({})
 
-      Plugin::Instance
-        .new
-        .register_modifier(
-          :topic_view_suggested_topics_options,
-        ) do |suggested_options, inner_topic_view|
-          expect(inner_topic_view).to eq(topic_view)
+        plugin.register_modifier(:topic_view_link_counts, &modifier)
+
+        expect(TopicView.new(topic).link_counts).to eq({ "hijacked hehe" => true })
+      ensure
+        DiscoursePluginRegistry.unregister_modifier(plugin, :topic_view_link_counts, &modifier)
+      end
+    end
+
+    context "with topic_view_suggested_topics_options modifier" do
+      let!(:topic1) { Fabricate(:topic) }
+      let!(:topic2) { Fabricate(:topic) }
+      let(:modifier) do
+        Proc.new do |suggested_options, inner_topic_view|
           suggested_options.merge(include_random: false)
         end
+      end
 
-      expect(topic_view.suggested_topics.topics.count).to eq(0)
+      it "allows modifications to suggested topics (disabling of random suggested)" do
+        expect(TopicView.new(topic1).suggested_topics.topics.count).to be > 0
 
-      DiscoursePluginRegistry.clear_modifiers!
+        plugin.register_modifier(:topic_view_suggested_topics_options, &modifier)
 
-      expect(TopicView.new(topic1).suggested_topics.topics.count).to be > 0
+        expect(TopicView.new(topic1).suggested_topics.topics.count).to eq(0)
+      ensure
+        DiscoursePluginRegistry.unregister_modifier(
+          plugin,
+          :topic_view_suggested_topics_options,
+          &modifier
+        )
+      end
     end
   end
 end

@@ -33,7 +33,7 @@ TEXT
     end
 
     it "defaults to using the plugin name with the discourse- prefix removed" do
-      expect(plugin_instance.humanized_name).to eq("sample-plugin")
+      expect(plugin_instance.humanized_name).to eq("Sample plugin")
     end
 
     it "uses the plugin setting category name if it exists" do
@@ -43,7 +43,7 @@ TEXT
 
     it "the plugin name the plugin site settings are still under the generic plugins: category" do
       plugin_instance.stubs(:setting_category).returns("plugins")
-      expect(plugin_instance.humanized_name).to eq("sample-plugin")
+      expect(plugin_instance.humanized_name).to eq("Sample plugin")
     end
 
     it "removes any Discourse prefix from the setting category name" do
@@ -625,11 +625,39 @@ TEXT
     subject(:register_reviewable_type) { plugin_instance.register_reviewable_type(new_type) }
 
     context "when the provided class inherits from `Reviewable`" do
-      let(:new_type) { Class.new(Reviewable) }
+      let(:new_type) do
+        class MyReviewable < Reviewable
+        end
+        MyReviewable
+      end
+
+      let(:new_scrubbable_type) do
+        class MyScrubbableReviewable < Reviewable
+          def scrub(reason, guardian)
+            # scrub logic
+          end
+        end
+        MyScrubbableReviewable
+      end
 
       it "adds the provided class to the existing types" do
         expect { register_reviewable_type }.to change { Reviewable.types.size }.by(1)
         expect(Reviewable.types).to include(new_type)
+      end
+
+      it "shows the correct source for the new type" do
+        register_reviewable_type
+        expect(Reviewable.source_for(new_type)).to eq("discourse-sample-plugin")
+      end
+
+      it "isn't listed as a scrubbable type if it doesn't have a scrub method" do
+        register_reviewable_type
+        expect(Reviewable.scrubbable_types).not_to include(new_type)
+      end
+
+      it "is listed as a scrubbable type if it has a scrub method" do
+        plugin_instance.register_reviewable_type(new_scrubbable_type)
+        expect(Reviewable.scrubbable_types).to include(new_scrubbable_type)
       end
 
       context "when the plugin is disabled" do
@@ -706,9 +734,13 @@ TEXT
     it "sanitizes emojis' names" do
       Plugin::Instance.new.register_emoji("?", "/baz/bar.png", "baz")
       Plugin::Instance.new.register_emoji("?test?!!", "/foo/bar.png", "baz")
+      Plugin::Instance.new.register_emoji("+1", "/foo/bar.png", "baz")
+      Plugin::Instance.new.register_emoji("test!-1", "/foo/bar.png", "baz")
 
       expect(Emoji.custom.first.name).to eq("_")
       expect(Emoji.custom.second.name).to eq("_test_")
+      expect(Emoji.custom.third.name).to eq("+1")
+      expect(Emoji.custom.fourth.name).to eq("test_-1")
     end
   end
 
@@ -987,6 +1019,192 @@ TEXT
 
       sum = DiscoursePluginRegistry.apply_modifier(:magic_sum_modifier, 1, 2)
       expect(sum).to eq(3)
+    end
+  end
+
+  describe "#add_request_rate_limiter" do
+    after { Middleware::RequestTracker.reset_rate_limiters_stack }
+
+    it "should raise an error if `after` and `before` kwarg are provided" do
+      plugin = Plugin::Instance.new
+
+      expect do
+        plugin.add_request_rate_limiter(
+          identifier: :some_identifier,
+          key: ->(request) { request.ip },
+          activate_when: ->(request) { request.ip == "1.2.3.4" },
+          after: 0,
+          before: 0,
+        )
+      end.to raise_error(ArgumentError, "only one of `after` or `before` can be provided")
+    end
+
+    it "should raise an error if value of `after` kwarg is invalid" do
+      plugin = Plugin::Instance.new
+
+      expect {
+        plugin.add_request_rate_limiter(
+          identifier: :some_identifier,
+          key: ->(request) { request.ip },
+          activate_when: ->(request) { request.ip == "1.2.3.4" },
+          after: 0,
+        )
+      }.to raise_error(
+        ArgumentError,
+        "0 is not a valid value. Must be one of RequestTracker::RateLimiters::User, RequestTracker::RateLimiters::IP",
+      )
+    end
+
+    it "should raise an error if value of `before` kwarg is invalid" do
+      plugin = Plugin::Instance.new
+
+      expect {
+        plugin.add_request_rate_limiter(
+          identifier: :some_identifier,
+          key: ->(request) { request.ip },
+          activate_when: ->(request) { request.ip == "1.2.3.4" },
+          before: 0,
+        )
+      }.to raise_error(
+        ArgumentError,
+        "0 is not a valid value. Must be one of RequestTracker::RateLimiters::User, RequestTracker::RateLimiters::IP",
+      )
+    end
+
+    it "can prepend a rate limiter to `Middleware::RequestTracker.rate_limiters_stack`" do
+      plugin = Plugin::Instance.new
+
+      plugin.add_request_rate_limiter(
+        identifier: :some_identifier,
+        key: ->(request) { "crawlers" },
+        activate_when: ->(request) { request.user_agent =~ /crawler/ },
+      )
+
+      rate_limiter = Middleware::RequestTracker.rate_limiters_stack[0]
+
+      expect(rate_limiter.superclass).to eq(RequestTracker::RateLimiters::Base)
+    end
+
+    it "can insert a rate limiter before a specific rate limiter in `Middleware::RequestTracker.rate_limiters_stack`" do
+      plugin = Plugin::Instance.new
+
+      plugin.add_request_rate_limiter(
+        identifier: :some_identifier,
+        key: ->(request) { "crawlers" },
+        activate_when: ->(request) { request.user_agent =~ /crawler/ },
+        before: RequestTracker::RateLimiters::IP,
+      )
+
+      expect(Middleware::RequestTracker.rate_limiters_stack[0]).to eq(
+        RequestTracker::RateLimiters::User,
+      )
+
+      expect(Middleware::RequestTracker.rate_limiters_stack[1].superclass).to eq(
+        RequestTracker::RateLimiters::Base,
+      )
+
+      expect(Middleware::RequestTracker.rate_limiters_stack[2]).to eq(
+        RequestTracker::RateLimiters::IP,
+      )
+    end
+
+    it "can insert a rate limiter after a specific rate limiter in `Middleware::RequestTracker.rate_limiters_stack`" do
+      plugin = Plugin::Instance.new
+
+      plugin.add_request_rate_limiter(
+        identifier: :some_identifier,
+        key: ->(request) { "crawlers" },
+        activate_when: ->(request) { request.user_agent =~ /crawler/ },
+        after: RequestTracker::RateLimiters::IP,
+      )
+
+      expect(Middleware::RequestTracker.rate_limiters_stack[0]).to eq(
+        RequestTracker::RateLimiters::User,
+      )
+
+      expect(Middleware::RequestTracker.rate_limiters_stack[1]).to eq(
+        RequestTracker::RateLimiters::IP,
+      )
+
+      expect(Middleware::RequestTracker.rate_limiters_stack[2].superclass).to eq(
+        RequestTracker::RateLimiters::Base,
+      )
+    end
+  end
+
+  describe "#full_admin_route" do
+    context "when there is no admin route defined for the plugin" do
+      context "if the plugin has more than one setting" do
+        before do
+          plugin_instance.stubs(:plugin_settings).returns(
+            { enabled_setting: plugin_instance.name, other_setting: plugin_instance.name },
+          )
+        end
+
+        it "returns the default settings route" do
+          expect(plugin_instance.full_admin_route).to eq(
+            {
+              auto_generated: true,
+              full_location: "adminPlugins.show",
+              label: "discourse_sample_plugin.title",
+              location: "discourse-sample-plugin",
+              use_new_show_route: true,
+            },
+          )
+        end
+      end
+
+      context "if the plugin has only one setting (which is the enabled setting)" do
+        before do
+          plugin_instance.stubs(:plugin_settings).returns({ enabled_setting: plugin_instance.name })
+        end
+
+        it "returns nothing" do
+          expect(plugin_instance.full_admin_route).to be_nil
+        end
+      end
+
+      context "if the plugin is not configurable" do
+        before { plugin_instance.stubs(:configurable?).returns(false) }
+
+        it "returns nothing" do
+          expect(plugin_instance.full_admin_route).to be_nil
+        end
+      end
+    end
+
+    context "when there is an admin route defined for the plugin" do
+      context "when using the new show route" do
+        before { plugin_instance.add_admin_route("test", "testIndex", use_new_show_route: true) }
+
+        it "returns the correct details" do
+          expect(plugin_instance.full_admin_route).to eq(
+            {
+              auto_generated: false,
+              full_location: "adminPlugins.show",
+              label: "test",
+              location: "testIndex",
+              use_new_show_route: true,
+            },
+          )
+        end
+      end
+
+      context "when not using the new show route" do
+        before { plugin_instance.add_admin_route("test", "testIndex") }
+
+        it "returns the correct details" do
+          expect(plugin_instance.full_admin_route).to eq(
+            {
+              auto_generated: false,
+              full_location: "adminPlugins.testIndex",
+              label: "test",
+              location: "testIndex",
+              use_new_show_route: false,
+            },
+          )
+        end
+      end
     end
   end
 end

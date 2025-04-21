@@ -1,10 +1,10 @@
 import { cached, tracked } from "@glimmer/tracking";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
+import { getOwnerWithFallback } from "discourse/lib/get-owner";
+import discourseLater from "discourse/lib/later";
 import { generateCookFunction, parseMentions } from "discourse/lib/text";
 import Bookmark from "discourse/models/bookmark";
 import User from "discourse/models/user";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
-import discourseLater from "discourse-common/lib/later";
 import transformAutolinks from "discourse/plugins/chat/discourse/lib/transform-auto-links";
 import ChatMessageReaction from "discourse/plugins/chat/discourse/models/chat-message-reaction";
 
@@ -45,7 +45,6 @@ export default class ChatMessage {
   @tracked chatWebhookEvent;
   @tracked mentionWarning;
   @tracked availableFlags;
-  @tracked newest;
   @tracked highlighted;
   @tracked firstOfResults;
   @tracked message;
@@ -62,7 +61,6 @@ export default class ChatMessage {
     this.channel = channel;
     this.streaming = args.streaming;
     this.manager = args.manager;
-    this.newest = args.newest ?? false;
     this.draftSaved = args.draftSaved ?? args.draft_saved ?? false;
     this.firstOfResults = args.firstOfResults ?? args.first_of_results ?? false;
     this.staged = args.staged ?? false;
@@ -78,7 +76,7 @@ export default class ChatMessage {
     this.deletedById = args.deletedById || args.deleted_by_id;
     this._deletedAt = args.deletedAt || args.deleted_at;
     this.expanded =
-      this.hidden || this._deletedAt ? false : args.expanded ?? true;
+      this.hidden || this._deletedAt ? false : (args.expanded ?? true);
     this.excerpt = args.excerpt;
     this.reviewableId = args.reviewableId ?? args.reviewable_id;
     this.userFlagStatus = args.userFlagStatus ?? args.user_flag_status;
@@ -87,7 +85,7 @@ export default class ChatMessage {
     this._cooked = args.cooked ?? "";
     this.inReplyTo =
       args.inReplyTo ??
-      (args.in_reply_to ?? args.replyToMsg
+      ((args.in_reply_to ?? args.replyToMsg)
         ? ChatMessage.create(channel, args.in_reply_to ?? args.replyToMsg)
         : null);
     this.reactions = this.#initChatMessageReactionModel(args.reactions);
@@ -95,6 +93,7 @@ export default class ChatMessage {
     this.user = this.#initUserModel(args.user);
     this.bookmark = args.bookmark ? Bookmark.create(args.bookmark) : null;
     this.mentionedUsers = this.#initMentionedUsers(args.mentioned_users);
+    this.blocks = args.blocks;
 
     if (args.thread) {
       this.thread = args.thread;

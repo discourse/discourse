@@ -38,6 +38,7 @@ module Chat
         target_usernames.present? || target_groups.present?
       end
     end
+
     model :target_users
     policy :can_create_direct_message
     policy :satisfies_dms_max_users_limit,

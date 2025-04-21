@@ -77,6 +77,9 @@ class InlineOneboxer
             url,
             max_redirects: max_redirects,
             initial_https_redirect_ignore_limit: SiteSetting.block_onebox_on_redirect,
+            headers: {
+              "Accept-Language" => Oneboxer.accept_language,
+            },
           )
         title = nil if title && title.length < MIN_TITLE_LENGTH
         return onebox_for(url, title, opts)
@@ -84,6 +87,18 @@ class InlineOneboxer
     end
 
     nil
+  end
+
+  def self.is_previewing?(user_id)
+    Discourse.redis.get(preview_key(user_id)) == "1"
+  end
+
+  def self.preview!(user_id)
+    Discourse.redis.setex(preview_key(user_id), 1.minute, "1")
+  end
+
+  def self.finish_preview!(user_id)
+    Discourse.redis.del(preview_key(user_id))
   end
 
   private
@@ -115,7 +130,7 @@ class InlineOneboxer
   end
 
   def self.cache_key(url)
-    "inline_onebox:#{url}"
+    "inline_onebox:#{Oneboxer.onebox_locale}:#{url}"
   end
 
   def self.post_author_for_title(topic, post_number)
@@ -125,5 +140,9 @@ class InlineOneboxer
     if author && guardian.can_see_post?(post) && post.post_type == Post.types[:regular]
       author.username
     end
+  end
+
+  def self.preview_key(user_id)
+    "inline-onebox:preview:#{user_id}"
   end
 end

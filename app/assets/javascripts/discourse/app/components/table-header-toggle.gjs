@@ -2,8 +2,8 @@ import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
-import icon from "discourse-common/helpers/d-icon";
-import I18n from "discourse-i18n";
+import icon from "discourse/helpers/d-icon";
+import { i18n } from "discourse-i18n";
 
 export default class TableHeaderToggle extends Component {
   get id() {
@@ -44,19 +44,19 @@ export default class TableHeaderToggle extends Component {
     let criteria = "";
 
     if (this.args.icon === "heart") {
-      criteria += `${I18n.t("likes_lowercase", { count: 2 })} `;
+      criteria += `${i18n("likes_lowercase", { count: 2 })} `;
     }
 
     if (this.args.translated) {
       criteria += this.args.field;
     } else {
       const labelKey = this.labelKey || `directory.${this.args.field}`;
-      criteria += I18n.t(`${labelKey}_long`, {
-        defaultValue: I18n.t(labelKey),
+      criteria += i18n(`${labelKey}_long`, {
+        defaultValue: i18n(labelKey),
       });
     }
 
-    return I18n.t("directory.sort.label", { criteria });
+    return i18n("directory.sort.label", { criteria });
   }
 
   get iconName() {
@@ -68,7 +68,7 @@ export default class TableHeaderToggle extends Component {
 
     return this.args.translated
       ? this.args.field
-      : I18n.t(labelKey + "_long", { defaultValue: I18n.t(labelKey) });
+      : i18n(labelKey + "_long", { defaultValue: i18n(labelKey) });
   }
 
   @action

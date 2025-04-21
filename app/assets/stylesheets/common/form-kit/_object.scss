@@ -1,0 +1,6 @@
+.form-kit__object {
+  display: flex;
+  flex-direction: column;
+  gap: var(--form-kit-gutter-y);
+  width: 100%;
+}

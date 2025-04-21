@@ -1,9 +1,9 @@
-import dIcon from "discourse-common/helpers/d-icon";
+import icon from "discourse/helpers/d-icon";
 
 const ChatComposerButton = <template>
   <div class="chat-composer-button__wrapper">
     <button type="button" class="chat-composer-button" ...attributes>
-      {{dIcon @icon}}
+      {{icon @icon}}
     </button>
   </div>
 </template>;

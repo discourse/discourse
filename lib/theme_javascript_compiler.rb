@@ -100,14 +100,6 @@ class ThemeJavascriptCompiler
     tree.transform_keys! do |filename|
       if filename.ends_with? ".js.es6"
         filename.sub(/\.js\.es6\z/, ".js")
-      elsif filename.include? "/templates/"
-        filename = filename.sub(/\.raw\.hbs\z/, ".hbr") if filename.ends_with? ".raw.hbs"
-
-        if filename.ends_with? ".hbr"
-          filename.sub(%r{/templates/}, "/raw-templates/")
-        else
-          filename
-        end
       else
         filename
       end
@@ -176,8 +168,6 @@ class ThemeJavascriptCompiler
         append_module(content, module_name, extension, include_variables:)
       elsif extension == "hbs"
         append_ember_template(module_name, content)
-      elsif extension == "hbr"
-        append_raw_template(module_name.sub("discourse/raw-templates/", ""), content)
       else
         append_js_error(filename, "unknown file extension '#{extension}' (#{filename})")
       end
@@ -203,29 +193,6 @@ class ThemeJavascriptCompiler
       if ('define' in window) {
       #{template_module}
       }
-    JS
-  rescue MiniRacer::RuntimeError, DiscourseJsProcessor::TranspileError => ex
-    raise CompileError.new ex.message
-  end
-
-  def raw_template_name(name)
-    name = name.sub(/\.(raw|hbr)\z/, "")
-    name.inspect
-  end
-
-  def append_raw_template(name, hbs_template)
-    compiled =
-      DiscourseJsProcessor::Transpiler.new.compile_raw_template(hbs_template, theme_id: @theme_id)
-    source_for_comment = hbs_template.gsub("*/", '*\/').indent(4, " ")
-    @output_tree << ["#{name}.js", <<~JS]
-      (function() {
-        /*
-      #{source_for_comment}
-        */
-        const addRawTemplate = requirejs('discourse-common/lib/raw-templates').addRawTemplate;
-        const template = requirejs('discourse-common/lib/raw-handlebars').template(#{compiled});
-        addRawTemplate(#{raw_template_name(name)}, template);
-      })();
     JS
   rescue MiniRacer::RuntimeError, DiscourseJsProcessor::TranspileError => ex
     raise CompileError.new ex.message

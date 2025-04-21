@@ -19,6 +19,7 @@ ignored:
     - cgi # Ruby (default gem)
     - date # Ruby (default gem)
     - digest # Ruby (default gem)
+    - io-console # Ruby (default gem)
     - io-wait # Ruby (default gem)
     - irb # Ruby (default gem)
     - json # Ruby (default gem)
@@ -28,6 +29,8 @@ ignored:
     - net-protocol # Ruby (default gem)
     - openssl # Ruby (default gem)
     - ostruct # Ruby (default gem)
+    - pp # Ruby (default gem)
+    - prettyprint # Ruby (default gem)
     - racc # Ruby (default gem)
     - rchardet # LGPL
     - rdoc # Ruby (default gem)

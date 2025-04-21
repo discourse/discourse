@@ -1,20 +1,35 @@
+import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
-import { action } from "@ember/object";
+import { action, getProperties } from "@ember/object";
 import { and } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { underscore } from "@ember/string";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import discourseComputed from "discourse/lib/decorators";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import DiscourseURL from "discourse/lib/url";
 import Category from "discourse/models/category";
 import PermissionType from "discourse/models/permission-type";
-import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
+
+const FIELD_LIST = [
+  "name",
+  "slug",
+  "parent_category_id",
+  "description",
+  "color",
+  "text_color",
+  "style_type",
+  "emoji",
+  "icon",
+];
 
 export default class EditCategoryTabsController extends Controller {
   @service dialog;
   @service site;
   @service router;
+
+  @tracked breadcrumbCategories = this.site.get("categoriesList");
 
   selectedTab = "general";
   saving = false;
@@ -25,21 +40,35 @@ export default class EditCategoryTabsController extends Controller {
   expandedMenu = false;
   parentParams = null;
   validators = [];
+  textColors = ["000000", "FFFFFF"];
 
   @and("showTooltip", "model.cannot_delete_reason") showDeleteReason;
 
-  @discourseComputed("saving", "model.name", "model.color", "deleting")
-  disabled(saving, name, color, deleting) {
-    if (saving || deleting) {
+  get formData() {
+    const data = getProperties(this.model, ...FIELD_LIST);
+
+    if (!this.model.styleType) {
+      data.style_type = "square";
+    }
+
+    return data;
+  }
+
+  @action
+  canSaveForm(transientData) {
+    if (!transientData.name) {
+      return false;
+    }
+
+    if (!transientData.color) {
+      return false;
+    }
+
+    if (this.saving || this.deleting) {
       return true;
     }
-    if (!name) {
-      return true;
-    }
-    if (!color) {
-      return true;
-    }
-    return false;
+
+    return true;
   }
 
   @discourseComputed("saving", "deleting")
@@ -50,7 +79,7 @@ export default class EditCategoryTabsController extends Controller {
   @discourseComputed("name")
   categoryName(name) {
     name = name || "";
-    return name.trim().length > 0 ? name : I18n.t("preview");
+    return name.trim().length > 0 ? name : i18n("preview");
   }
 
   @discourseComputed("saving", "model.id")
@@ -64,15 +93,15 @@ export default class EditCategoryTabsController extends Controller {
   @discourseComputed("model.id", "model.name")
   title(id, name) {
     return id
-      ? I18n.t("category.edit_dialog_title", {
+      ? i18n("category.edit_dialog_title", {
           categoryName: name,
         })
-      : I18n.t("category.create");
+      : i18n("category.create");
   }
 
   @discourseComputed("selectedTab")
   selectedTabTitle(tab) {
-    return I18n.t(`category.${underscore(tab)}`);
+    return i18n(`category.${underscore(tab)}`);
   }
 
   @action
@@ -81,10 +110,18 @@ export default class EditCategoryTabsController extends Controller {
   }
 
   @action
-  saveCategory() {
+  isLeavingForm(transition) {
+    return !transition.targetName.startsWith("editCategory.tabs");
+  }
+
+  @action
+  saveCategory(transientData) {
     if (this.validators.some((validator) => validator())) {
       return;
     }
+
+    this.model.setProperties(transientData);
+    this.setTextColor(this.model.color);
 
     this.set("saving", true);
 
@@ -105,6 +142,10 @@ export default class EditCategoryTabsController extends Controller {
             Category.slugFor(this.model)
           );
         }
+        // force a reload of the category list to track changes to style type
+        this.breadcrumbCategories = this.site.categoriesList.map((c) =>
+          c.id === this.model.id ? this.model : c
+        );
       })
       .catch((error) => {
         popupAjaxError(error);
@@ -119,7 +160,7 @@ export default class EditCategoryTabsController extends Controller {
   deleteCategory() {
     this.set("deleting", true);
     this.dialog.yesNoConfirm({
-      message: I18n.t("category.delete_confirm"),
+      message: i18n("category.delete_confirm"),
       didConfirm: () => {
         this.model
           .destroy()
@@ -127,7 +168,7 @@ export default class EditCategoryTabsController extends Controller {
             this.router.transitionTo("discovery.categories");
           })
           .catch(() => {
-            this.displayErrors([I18n.t("category.delete_error")]);
+            this.displayErrors([i18n("category.delete_error")]);
           })
           .finally(() => {
             this.set("deleting", false);
@@ -145,5 +186,16 @@ export default class EditCategoryTabsController extends Controller {
   @action
   goBack() {
     DiscourseURL.routeTo(this.model.url);
+  }
+
+  @action
+  setTextColor(backgroundColor) {
+    const r = parseInt(backgroundColor.substr(0, 2), 16);
+    const g = parseInt(backgroundColor.substr(2, 2), 16);
+    const b = parseInt(backgroundColor.substr(4, 2), 16);
+    const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+    const color = brightness >= 128 ? this.textColors[0] : this.textColors[1];
+
+    this.model.set("text_color", color);
   }
 }

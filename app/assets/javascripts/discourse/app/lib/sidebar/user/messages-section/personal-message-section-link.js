@@ -1,5 +1,5 @@
 import MessageSectionLink from "discourse/lib/sidebar/user/messages-section/message-section-link";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class PersonalMessageSectionLink extends MessageSectionLink {
   routeNames = new Set([
@@ -39,11 +39,11 @@ export default class PersonalMessageSectionLink extends MessageSectionLink {
 
   get text() {
     if (this.count > 0) {
-      return I18n.t(`sidebar.sections.messages.links.${this.type}_with_count`, {
+      return i18n(`sidebar.sections.messages.links.${this.type}_with_count`, {
         count: this.count,
       });
     } else {
-      return I18n.t(`sidebar.sections.messages.links.${this.type}`);
+      return i18n(`sidebar.sections.messages.links.${this.type}`);
     }
   }
 

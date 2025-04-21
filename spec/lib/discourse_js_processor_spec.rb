@@ -128,78 +128,12 @@ RSpec.describe DiscourseJsProcessor do
         */
         {
           "id": null,
-          "block": "[[[1,[34,0]]],[],false,[\\"somevalue\\"]]",
+          "block": "[[[1,[35,0]]],[],false,[\\"somevalue\\"]]",
           "moduleName": "/blah/mymodule",
           "isStrictMode": false
         });
       });
     JS
-  end
-
-  describe "Raw template theme transformations" do
-    # For the raw templates, we can easily render them serverside, so let's do that
-
-    let(:compiler) { DiscourseJsProcessor::Transpiler.new }
-    let(:theme_id) { 22 }
-
-    let(:helpers) { <<~JS }
-      Handlebars.registerHelper('theme-prefix', function(themeId, string) {
-        return `theme_translations.${themeId}.${string}`
-      })
-      Handlebars.registerHelper('theme-i18n', function(themeId, string) {
-        return `translated(theme_translations.${themeId}.${string})`
-      })
-      Handlebars.registerHelper('theme-setting', function(themeId, string) {
-        return `setting(${themeId}:${string})`
-      })
-      Handlebars.registerHelper('dummy-helper', function(string) {
-        return `dummy(${string})`
-      })
-    JS
-
-    let(:mini_racer) do
-      ctx = MiniRacer::Context.new
-      ctx.eval(
-        File.open(
-          "#{Rails.root}/app/assets/javascripts/discourse/node_modules/handlebars/dist/handlebars.js",
-        ).read,
-      )
-      ctx.eval(helpers)
-      ctx
-    end
-
-    def render(template)
-      compiled = compiler.compile_raw_template(template, theme_id: theme_id)
-      mini_racer.eval "Handlebars.template(#{compiled.squish})({})"
-    end
-
-    it "adds the theme id to the helpers" do
-      # Works normally
-      expect(render("{{theme-prefix 'translation_key'}}")).to eq(
-        "theme_translations.22.translation_key",
-      )
-      expect(render("{{theme-i18n 'translation_key'}}")).to eq(
-        "translated(theme_translations.22.translation_key)",
-      )
-      expect(render("{{theme-setting 'setting_key'}}")).to eq("setting(22:setting_key)")
-
-      # Works when used inside other statements
-      expect(render("{{dummy-helper (theme-prefix 'translation_key')}}")).to eq(
-        "dummy(theme_translations.22.translation_key)",
-      )
-    end
-
-    it "doesn't duplicate number parameter inside {{each}}" do
-      expect(
-        compiler.compile_raw_template(
-          "{{#each item as |test test2|}}{{theme-setting 'setting_key'}}{{/each}}",
-          theme_id: theme_id,
-        ),
-      ).to include(
-        '{"name":"theme-setting","hash":{},"hashTypes":{},"hashContexts":{},"types":["NumberLiteral","StringLiteral"]',
-      )
-      # Fail would be if theme-setting is defined with types:["NumberLiteral","NumberLiteral","StringLiteral"]
-    end
   end
 
   describe "Ember template transformations" do

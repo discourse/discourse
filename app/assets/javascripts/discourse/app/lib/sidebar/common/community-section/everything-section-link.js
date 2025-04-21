@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import BaseSectionLink from "discourse/lib/sidebar/base-community-section-link";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class EverythingSectionLink extends BaseSectionLink {
   @tracked totalUnread = 0;
@@ -40,11 +40,11 @@ export default class EverythingSectionLink extends BaseSectionLink {
   }
 
   get title() {
-    return I18n.t("sidebar.sections.community.links.topics.title");
+    return i18n("sidebar.sections.community.links.topics.title");
   }
 
   get text() {
-    return I18n.t(
+    return i18n(
       `sidebar.sections.community.links.${this.overridenName.toLowerCase()}.content`,
       { defaultValue: this.overridenName }
     );
@@ -62,11 +62,11 @@ export default class EverythingSectionLink extends BaseSectionLink {
     if (this.#newNewViewEnabled && this.#unreadAndNewCount > 0) {
       return this.#unreadAndNewCount.toString();
     } else if (this.totalUnread > 0) {
-      return I18n.t("sidebar.unread_count", {
+      return i18n("sidebar.unread_count", {
         count: this.totalUnread,
       });
     } else if (this.totalNew > 0) {
-      return I18n.t("sidebar.new_count", {
+      return i18n("sidebar.new_count", {
         count: this.totalNew,
       });
     }

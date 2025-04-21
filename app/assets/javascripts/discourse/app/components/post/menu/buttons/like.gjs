@@ -1,12 +1,12 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse-common/helpers/d-icon";
-import i18n from "discourse-common/helpers/i18n";
-import discourseLater from "discourse-common/lib/later";
+import icon from "discourse/helpers/d-icon";
+import discourseLater from "discourse/lib/later";
+import { i18n } from "discourse-i18n";
 
 export default class PostMenuLikeButton extends Component {
   static shouldRender(args) {
@@ -65,7 +65,7 @@ export default class PostMenuLikeButton extends Component {
             "toggle-like"
             "btn-icon"
             (if this.isAnimated "heart-animation")
-            (if @post.liked "has-like fade-out" "like")
+            (if @post.liked "has-like" "like")
           }}
           ...attributes
           data-post-id={{@post.id}}
@@ -130,7 +130,7 @@ class LikeCount extends Component {
           (if @post.yours "my-likes" "regular-likes")
         }}
         ...attributes
-        @ariaPressed={{@state.isWhoReadVisible}}
+        @ariaPressed={{@state.isWhoLikedVisible}}
         @translatedAriaLabel={{i18n
           "post.sr_post_like_count_button"
           count=@post.likeCount

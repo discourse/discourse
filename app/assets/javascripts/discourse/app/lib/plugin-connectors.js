@@ -5,15 +5,12 @@ import {
 } from "@glimmer/manager";
 import templateOnly from "@ember/component/template-only";
 import { isDeprecatedOutletArgument } from "discourse/helpers/deprecated-outlet-argument";
-import deprecated, {
-  withSilencedDeprecations,
-} from "discourse-common/lib/deprecated";
-import { buildRawConnectorCache } from "discourse-common/lib/raw-templates";
+import deprecated, { withSilencedDeprecations } from "discourse/lib/deprecated";
 
 let _connectorCache;
-let _rawConnectorCache;
 let _extraConnectorClasses = {};
 let _extraConnectorComponents = {};
+let debugOutletCallback;
 
 export function resetExtraClasses() {
   _extraConnectorClasses = {};
@@ -65,7 +62,6 @@ function findOutlets(keys, callback) {
 
 export function clearCache() {
   _connectorCache = null;
-  _rawConnectorCache = null;
 }
 
 /**
@@ -214,12 +210,15 @@ export function connectorsExist(outletName) {
   if (!_connectorCache) {
     buildConnectorCache();
   }
-  return Boolean(_connectorCache[outletName]);
+  return Boolean(_connectorCache[outletName] || debugOutletCallback);
 }
 
 export function connectorsFor(outletName) {
   if (!_connectorCache) {
     buildConnectorCache();
+  }
+  if (debugOutletCallback) {
+    return debugOutletCallback(outletName, _connectorCache[outletName]);
   }
   return _connectorCache[outletName] || [];
 }
@@ -231,13 +230,6 @@ export function renderedConnectorsFor(outletName, args, context, owner) {
       con.connectorClass?.shouldRender(args, context, owner)
     );
   });
-}
-
-export function rawConnectorsFor(outletName) {
-  if (!_rawConnectorCache) {
-    _rawConnectorCache = buildRawConnectorCache();
-  }
-  return _rawConnectorCache[outletName] || [];
 }
 
 export function buildArgsWithDeprecations(args, deprecatedArgs, opts = {}) {
@@ -301,4 +293,8 @@ export function deprecatedArgumentValue(deprecatedArg, options) {
     deprecated(message, deprecatedArg.options);
     return deprecatedArg.value;
   });
+}
+
+export function _setOutletDebugCallback(callback) {
+  debugOutletCallback = callback;
 }

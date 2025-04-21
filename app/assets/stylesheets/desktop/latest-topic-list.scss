@@ -23,33 +23,37 @@
   padding: 1em;
   border-bottom: 1px solid var(--primary-low);
   display: flex;
-
   align-items: center;
 
   .topic-poster {
     position: relative;
     width: 60px;
+
     .avatar-flair {
       position: absolute;
       bottom: 0;
       right: 10px;
     }
   }
+
   .main-link {
     @extend .topic-list-main-link;
     flex: 0 1 auto;
     max-width: 65%;
     font-size: var(--font-0);
+
     .top-row {
       margin-bottom: 0.1em;
       font-size: var(--font-up-1);
     }
+
     .bottom-row {
       display: flex;
       flex-wrap: wrap;
       gap: 0 0.5em;
     }
   }
+
   .topic-stats {
     flex: 1 0 0px;
     text-align: right;

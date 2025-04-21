@@ -18,8 +18,6 @@ export default class ChatGuardian extends Service {
   }
 
   canUseChat() {
-    return (
-      this.currentUser?.has_chat_enabled && this.siteSettings?.chat_enabled
-    );
+    return this.currentUser?.has_chat_enabled && this.siteSettings.chat_enabled;
   }
 }

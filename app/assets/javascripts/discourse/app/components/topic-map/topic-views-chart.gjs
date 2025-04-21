@@ -2,8 +2,7 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import loadScript from "discourse/lib/load-script";
-import i18n from "discourse-common/helpers/i18n";
-import I18n from "discourse-i18n";
+import I18n, { i18n } from "discourse-i18n";
 
 const oneDay = 86400000; // day in milliseconds
 
@@ -198,8 +197,8 @@ export default class TopicViewsChart extends Component {
               label: function (tooltipItem) {
                 const label =
                   tooltipItem?.parsed?.x === startOfDay
-                    ? I18n.t("topic_map.predicted_views")
-                    : I18n.t("topic_map.views");
+                    ? i18n("topic_map.predicted_views")
+                    : i18n("topic_map.views");
 
                 return `${label}: ${tooltipItem?.parsed?.y}`;
               },

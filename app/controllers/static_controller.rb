@@ -128,18 +128,19 @@ class StaticController < ApplicationController
     redirect_location = params[:redirect]
     if redirect_location.present? && !redirect_location.is_a?(String)
       raise Discourse::InvalidParameters.new(:redirect)
-    elsif redirect_location.present? && !redirect_location.match(login_path)
-      begin
-        forum_uri = URI(Discourse.base_url)
-        uri = URI(redirect_location)
+    elsif redirect_location.present? &&
+          begin
+            forum_uri = URI(Discourse.base_url)
+            uri = URI(redirect_location)
 
-        if uri.path.present? && (uri.host.blank? || uri.host == forum_uri.host) &&
-             uri.path =~ %r{\A\/{1}[^\.\s]*\z}
-          destination = "#{uri.path}#{uri.query ? "?#{uri.query}" : ""}"
-        end
-      rescue URI::Error
-        # Do nothing if the URI is invalid
-      end
+            if uri.path.present? && !uri.path.starts_with?(login_path) &&
+                 (uri.host.blank? || uri.host == forum_uri.host) &&
+                 uri.path =~ %r{\A\/{1}[^\.\s]*\z}
+              destination = "#{uri.path}#{uri.query ? "?#{uri.query}" : ""}"
+            end
+          rescue URI::Error
+            # Do nothing if the URI is invalid
+          end
     end
 
     redirect_to(destination, allow_other_host: false)
@@ -219,23 +220,7 @@ class StaticController < ApplicationController
         # Maximum cache that the service worker will respect is 24 hours.
         # However, ensure that these may be cached and served for longer on servers.
         immutable_for 1.year
-
-        if Rails.application.assets_manifest.assets["service-worker.js"]
-          path =
-            File.expand_path(
-              Rails.root +
-                "public/assets/#{Rails.application.assets_manifest.assets["service-worker.js"]}",
-            )
-          response.headers["Last-Modified"] = File.ctime(path).httpdate
-        end
-        content = Rails.application.assets_manifest.find_sources("service-worker.js").first
-
-        base_url = File.dirname(helpers.script_asset_path("service-worker"))
-        content =
-          content.sub(%r{^//# sourceMappingURL=(service-worker-.+\.map)$}) do
-            "//# sourceMappingURL=#{base_url}/#{Regexp.last_match(1)}"
-          end
-        render(plain: content, content_type: "application/javascript")
+        render "service-worker"
       end
     end
   end

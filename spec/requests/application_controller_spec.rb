@@ -142,6 +142,15 @@ RSpec.describe ApplicationController do
       expect(response).to redirect_to("/u/#{admin.username}/preferences/second-factor")
     end
 
+    it "should properly redirect admins when enforce_second_factor is 'all' in subfolder" do
+      set_subfolder "/forum"
+      SiteSetting.enforce_second_factor = "all"
+      sign_in(admin)
+
+      get "/"
+      expect(response).to redirect_to("/forum/u/#{admin.username}/preferences/second-factor")
+    end
+
     it "should redirect users when enforce_second_factor is 'all'" do
       SiteSetting.enforce_second_factor = "all"
       sign_in(user)
@@ -171,7 +180,7 @@ RSpec.describe ApplicationController do
 
     it "should not redirect anonymous users when enforce_second_factor is 'all'" do
       SiteSetting.enforce_second_factor = "all"
-      SiteSetting.allow_anonymous_posting = true
+      SiteSetting.allow_anonymous_mode = true
 
       sign_in(user)
 
@@ -296,13 +305,11 @@ RSpec.describe ApplicationController do
   end
 
   describe "invalid request params" do
-    before do
-      @old_logger = Rails.logger
-      @logs = StringIO.new
-      Rails.logger = Logger.new(@logs)
-    end
+    let(:fake_logger) { FakeLogger.new }
 
-    after { Rails.logger = @old_logger }
+    before { Rails.logger.broadcast_to(fake_logger) }
+
+    after { Rails.logger.stop_broadcasting_to(fake_logger) }
 
     it "should not raise a 500 (nor should it log a warning) for bad params" do
       bad_str = (+"d\xDE").force_encoding("utf-8")
@@ -312,20 +319,7 @@ RSpec.describe ApplicationController do
 
       expect(response.status).to eq(400)
 
-      log = @logs.string
-
-      if (log.include? "exception app middleware")
-        # heisentest diagnostics
-        puts
-        puts "EXTRA DIAGNOSTICS FOR INTERMITTENT TEST FAIL"
-        puts log
-        puts ">> action_dispatch.exception"
-        ex = request.env["action_dispatch.exception"]
-        puts ">> exception class: #{ex.class} : #{ex}"
-      end
-
-      expect(log).not_to include("exception app middleware")
-
+      expect(fake_logger.warnings.length).to eq(0)
       expect(response.status).to eq(400)
     end
   end
@@ -345,11 +339,7 @@ RSpec.describe ApplicationController do
     describe "topic not found" do
       it "should not redirect to permalink if topic/category does not exist" do
         topic = create_post.topic
-        Permalink.create!(
-          url: topic.relative_url,
-          permalink_type_value: topic.id + 1,
-          permalink_type: "topic",
-        )
+        Permalink.create!(url: topic.relative_url, topic_id: topic.id + 1)
         topic.trash!
 
         SiteSetting.detailed_404 = false
@@ -364,11 +354,7 @@ RSpec.describe ApplicationController do
       it "should return permalink for deleted topics" do
         topic = create_post.topic
         external_url = "https://somewhere.over.rainbow"
-        Permalink.create!(
-          url: topic.relative_url,
-          permalink_type_value: external_url,
-          permalink_type: "external_url",
-        )
+        Permalink.create!(url: topic.relative_url, external_url: external_url)
         topic.trash!
 
         get topic.relative_url
@@ -390,12 +376,7 @@ RSpec.describe ApplicationController do
         trashed_topic = create_post.topic
         trashed_topic.trash!
         new_topic = create_post.topic
-        permalink =
-          Permalink.create!(
-            url: trashed_topic.relative_url,
-            permalink_type_value: new_topic.id,
-            permalink_type: "topic",
-          )
+        permalink = Permalink.create!(url: trashed_topic.relative_url, topic_id: new_topic.id)
 
         # no subfolder because router doesn't know about subfolder in this test
         get "/t/#{trashed_topic.slug}/#{trashed_topic.id}"
@@ -404,23 +385,14 @@ RSpec.describe ApplicationController do
 
         permalink.destroy
         category = Fabricate(:category)
-        permalink =
-          Permalink.create!(
-            url: trashed_topic.relative_url,
-            permalink_type_value: category.id,
-            permalink_type: "category",
-          )
+        permalink = Permalink.create!(url: trashed_topic.relative_url, category_id: category.id)
         get "/t/#{trashed_topic.slug}/#{trashed_topic.id}"
         expect(response.status).to eq(301)
         expect(response).to redirect_to("/forum/c/#{category.slug}/#{category.id}")
 
         permalink.destroy
         permalink =
-          Permalink.create!(
-            url: trashed_topic.relative_url,
-            permalink_type_value: new_topic.posts.last.id,
-            permalink_type: "post",
-          )
+          Permalink.create!(url: trashed_topic.relative_url, post_id: new_topic.posts.last.id)
         get "/t/#{trashed_topic.slug}/#{trashed_topic.id}"
         expect(response.status).to eq(301)
         expect(response).to redirect_to(
@@ -684,6 +656,105 @@ RSpec.describe ApplicationController do
 
       expect(response.status).to eq(200)
       expect(response.body).not_to include("d-splash")
+    end
+
+    context "with color schemes" do
+      let!(:light_scheme) { ColorScheme.find_by(base_scheme_id: "Solarized Light") }
+      let!(:dark_scheme) { ColorScheme.find_by(base_scheme_id: "Dark") }
+
+      before do
+        SiteSetting.default_dark_mode_color_scheme_id = dark_scheme.id
+        SiteSetting.interface_color_selector = "sidebar_footer"
+        Theme.find_by(id: SiteSetting.default_theme_id).update!(color_scheme_id: light_scheme.id)
+      end
+
+      context "when light mode is forced" do
+        before { cookies[:forced_color_mode] = "light" }
+
+        it "uses the light scheme colors and doesn't include the prefers-color-scheme media query" do
+          get "/"
+
+          style = css_select("#d-splash style").to_s
+          expect(style).not_to include("prefers-color-scheme")
+
+          secondary = light_scheme.colors.find { |color| color.name == "secondary" }.hex
+          tertiary = light_scheme.colors.find { |color| color.name == "tertiary" }.hex
+          expect(style).to include(<<~CSS.indent(6))
+            html {
+              background-color: ##{secondary};
+            }
+          CSS
+          expect(style).to include(<<~CSS.indent(6))
+            #d-splash {
+              --dot-color: ##{tertiary};
+            }
+          CSS
+        end
+      end
+
+      context "when dark mode is forced" do
+        before { cookies[:forced_color_mode] = "dark" }
+
+        it "uses the dark scheme colors and doesn't include the prefers-color-scheme media query" do
+          get "/"
+
+          style = css_select("#d-splash style").to_s
+          expect(style).not_to include("prefers-color-scheme")
+
+          secondary = dark_scheme.colors.find { |color| color.name == "secondary" }.hex
+          tertiary = dark_scheme.colors.find { |color| color.name == "tertiary" }.hex
+          expect(style).to include(<<~CSS.indent(6))
+            html {
+              background-color: ##{secondary};
+            }
+          CSS
+          expect(style).to include(<<~CSS.indent(6))
+            #d-splash {
+              --dot-color: ##{tertiary};
+            }
+          CSS
+        end
+      end
+
+      context "when no color mode is forced" do
+        before { cookies[:forced_color_mode] = nil }
+
+        it "includes both dark and light colors inside prefers-color-scheme media queries" do
+          get "/"
+
+          style = css_select("#d-splash style").to_s
+
+          light_secondary = light_scheme.colors.find { |color| color.name == "secondary" }.hex
+          light_tertiary = light_scheme.colors.find { |color| color.name == "tertiary" }.hex
+
+          dark_secondary = dark_scheme.colors.find { |color| color.name == "secondary" }.hex
+          dark_tertiary = dark_scheme.colors.find { |color| color.name == "tertiary" }.hex
+
+          expect(style).to include(<<~CSS.indent(6))
+            @media (prefers-color-scheme: light) {
+              html {
+                background-color: ##{light_secondary};
+              }
+
+              #d-splash {
+                --dot-color: ##{light_tertiary};
+              }
+            }
+          CSS
+
+          expect(style).to include(<<~CSS.indent(6))
+            @media (prefers-color-scheme: dark) {
+              html {
+                background-color: ##{dark_secondary};
+              }
+
+              #d-splash {
+                --dot-color: ##{dark_tertiary};
+              }
+            }
+          CSS
+        end
+      end
     end
   end
 
@@ -1148,6 +1219,44 @@ RSpec.describe ApplicationController do
         end
       end
     end
+
+    context "with set_locale_from_param enabled" do
+      context "when param locale differs from default locale" do
+        before do
+          SiteSetting.allow_user_locale = true
+          SiteSetting.set_locale_from_param = true
+          SiteSetting.default_locale = "en"
+        end
+
+        context "with an anonymous user" do
+          it "uses the locale from the param" do
+            get "/latest?lang=es"
+            expect(response.status).to eq(200)
+            expect(locale_scripts(response.body)).to contain_exactly("/assets/locales/es.js")
+            expect(I18n.locale.to_s).to eq(SiteSettings::DefaultsProvider::DEFAULT_LOCALE) # doesn't leak after requests
+          end
+        end
+
+        context "when the preferred locale includes a region" do
+          it "returns the locale and region separated by an underscore" do
+            get "/latest?lang=zh-CN"
+            expect(response.status).to eq(200)
+            expect(locale_scripts(response.body)).to contain_exactly("/assets/locales/zh_CN.js")
+          end
+        end
+      end
+
+      context "when locale param is not set" do
+        it "uses the site default locale" do
+          SiteSetting.allow_user_locale = true
+          SiteSetting.default_locale = "en"
+
+          get "/latest"
+          expect(response.status).to eq(200)
+          expect(locale_scripts(response.body)).to contain_exactly("/assets/locales/en.js")
+        end
+      end
+    end
   end
 
   describe "vary header" do
@@ -1269,41 +1378,6 @@ RSpec.describe ApplicationController do
 
         get "/", headers: { "HTTP_USER_AGENT" => "iam badcrawler" }
         expect(response.status).to eq(429)
-      end
-
-      context "with XHR requests" do
-        before { global_setting :anon_cache_store_threshold, 1 }
-
-        def preloaded_data
-          response_html = Nokogiri::HTML5.fragment(response.body)
-          JSON.parse(response_html.css("#data-preloaded")[0]["data-preloaded"])
-        end
-
-        it "does not return the same preloaded data for XHR and non-XHR requests" do
-          # Request is stored in cache
-          get "/", headers: { "X-Requested-With" => "XMLHTTPrequest" }
-          expect(response.status).to eq(200)
-          expect(response.headers["X-Discourse-Cached"]).to eq("store")
-          expect(preloaded_data).not_to have_key("site")
-
-          # Request is served from cache
-          get "/", headers: { "X-Requested-With" => "xmlhttprequest" }
-          expect(response.status).to eq(200)
-          expect(response.headers["X-Discourse-Cached"]).to eq("true")
-          expect(preloaded_data).not_to have_key("site")
-
-          # Request is not served from cache because of different headers, but is stored
-          get "/"
-          expect(response.status).to eq(200)
-          expect(response.headers["X-Discourse-Cached"]).to eq("store")
-          expect(preloaded_data).to have_key("site")
-
-          # Request is served from cache
-          get "/", headers: { "X-Requested-With" => "xmlhttprequest" }
-          expect(response.status).to eq(200)
-          expect(response.headers["X-Discourse-Cached"]).to eq("true")
-          expect(preloaded_data).not_to have_key("site")
-        end
       end
     end
   end
@@ -1517,6 +1591,211 @@ RSpec.describe ApplicationController do
         expect(JSON.parse(preloaded_json["isStaffWritesOnly"])).to eq(true)
       ensure
         Discourse.disable_readonly_mode(Discourse::STAFF_WRITES_ONLY_MODE_KEY)
+      end
+    end
+  end
+
+  describe "#set_current_user_for_logs" do
+    fab!(:admin)
+
+    it "sets the X-Discourse-Route header to the controller name and action including namespace" do
+      sign_in(admin)
+
+      get "/admin/users/#{admin.id}.json"
+      expect(response.status).to eq(200)
+      expect(response.headers["X-Discourse-Route"]).to eq("admin/users/show")
+
+      get "/u/#{admin.username}.json"
+      expect(response.status).to eq(200)
+      expect(response.headers["X-Discourse-Route"]).to eq("users/show")
+    end
+  end
+
+  describe "color definition stylesheets" do
+    let!(:dark_scheme) { ColorScheme.find_by(base_scheme_id: "Dark") }
+
+    before do
+      SiteSetting.default_dark_mode_color_scheme_id = dark_scheme.id
+      SiteSetting.interface_color_selector = "sidebar_footer"
+    end
+
+    context "with early hints" do
+      before { global_setting :early_hint_header_mode, "preload" }
+
+      it "includes stylesheet links in the header" do
+        get "/"
+
+        expect(response.headers["Link"]).to include("color_definitions_base")
+        expect(response.headers["Link"]).to include("color_definitions_dark")
+      end
+    end
+
+    context "when the default theme's scheme is the same as the site's default dark scheme" do
+      before { Theme.find(SiteSetting.default_theme_id).update!(color_scheme_id: dark_scheme.id) }
+
+      it "includes a single color stylesheet that has media=all" do
+        get "/"
+
+        color_stylesheets =
+          css_select("link").select { |tag| tag[:href].include?("color_definitions") }
+
+        expect(color_stylesheets.size).to eq(1)
+
+        light_stylesheet = color_stylesheets.find { |tag| tag[:class] == "light-scheme" }
+        expect(light_stylesheet[:media]).to eq("all")
+      end
+    end
+
+    context "when light mode is forced" do
+      before { cookies[:forced_color_mode] = "light" }
+
+      it "includes a light stylesheet with media=all and a dark stylesheet with media=none" do
+        get "/"
+
+        color_stylesheets =
+          css_select("link").select { |tag| tag[:href].include?("color_definitions") }
+
+        expect(color_stylesheets.size).to eq(2)
+
+        light_stylesheet = color_stylesheets.find { |tag| tag[:class] == "light-scheme" }
+        dark_stylesheet = color_stylesheets.find { |tag| tag[:class] == "dark-scheme" }
+
+        expect(light_stylesheet[:media]).to eq("all")
+        expect(dark_stylesheet[:media]).to eq("none")
+      end
+
+      context "when the dark scheme no longer exists" do
+        it "includes only a light stylesheet with media=all" do
+          dark_scheme.destroy!
+          get "/"
+
+          color_stylesheets =
+            css_select("link").select { |tag| tag[:href].include?("color_definitions") }
+
+          expect(color_stylesheets.size).to eq(1)
+
+          light_stylesheet = color_stylesheets.find { |tag| tag[:class] == "light-scheme" }
+
+          expect(light_stylesheet[:media]).to eq("all")
+        end
+      end
+
+      context "when all schemes are deleted" do
+        it "includes only a light stylesheet with media=all" do
+          ColorScheme.destroy_all
+          get "/"
+
+          color_stylesheets =
+            css_select("link").select { |tag| tag[:href].include?("color_definitions") }
+
+          expect(color_stylesheets.size).to eq(1)
+
+          light_stylesheet = color_stylesheets.find { |tag| tag[:class] == "light-scheme" }
+
+          expect(light_stylesheet[:media]).to eq("all")
+        end
+      end
+    end
+
+    context "when dark mode is forced" do
+      before { cookies[:forced_color_mode] = "dark" }
+
+      it "includes a light stylesheet with media=none and a dark stylesheet with media=all" do
+        get "/"
+
+        color_stylesheets =
+          css_select("link").select { |tag| tag[:href].include?("color_definitions") }
+
+        expect(color_stylesheets.size).to eq(2)
+
+        light_stylesheet = color_stylesheets.find { |tag| tag[:class] == "light-scheme" }
+        dark_stylesheet = color_stylesheets.find { |tag| tag[:class] == "dark-scheme" }
+
+        expect(light_stylesheet[:media]).to eq("none")
+        expect(dark_stylesheet[:media]).to eq("all")
+      end
+
+      context "when the dark scheme no longer exists" do
+        it "includes only a light stylesheet with media=all" do
+          dark_scheme.destroy!
+          get "/"
+
+          color_stylesheets =
+            css_select("link").select { |tag| tag[:href].include?("color_definitions") }
+
+          expect(color_stylesheets.size).to eq(1)
+
+          light_stylesheet = color_stylesheets.find { |tag| tag[:class] == "light-scheme" }
+
+          expect(light_stylesheet[:media]).to eq("all")
+        end
+      end
+
+      context "when all schemes are deleted" do
+        it "includes only a light stylesheet with media=all" do
+          ColorScheme.destroy_all
+          get "/"
+
+          color_stylesheets =
+            css_select("link").select { |tag| tag[:href].include?("color_definitions") }
+
+          expect(color_stylesheets.size).to eq(1)
+
+          light_stylesheet = color_stylesheets.find { |tag| tag[:class] == "light-scheme" }
+
+          expect(light_stylesheet[:media]).to eq("all")
+        end
+      end
+    end
+
+    context "when color mode is automatic" do
+      before { cookies[:forced_color_mode] = nil }
+
+      it "includes a light stylesheet with media=(prefers-color-scheme: light) and a dark stylesheet with media=(prefers-color-scheme: dark)" do
+        get "/"
+
+        color_stylesheets =
+          css_select("link").select { |tag| tag[:href].include?("color_definitions") }
+
+        expect(color_stylesheets.size).to eq(2)
+
+        light_stylesheet = color_stylesheets.find { |tag| tag[:class] == "light-scheme" }
+        dark_stylesheet = color_stylesheets.find { |tag| tag[:class] == "dark-scheme" }
+
+        expect(light_stylesheet[:media]).to eq("(prefers-color-scheme: light)")
+        expect(dark_stylesheet[:media]).to eq("(prefers-color-scheme: dark)")
+      end
+
+      context "when the dark scheme no longer exists" do
+        it "includes only a light stylesheet with media=all" do
+          dark_scheme.destroy!
+          get "/"
+
+          color_stylesheets =
+            css_select("link").select { |tag| tag[:href].include?("color_definitions") }
+
+          expect(color_stylesheets.size).to eq(1)
+
+          light_stylesheet = color_stylesheets.find { |tag| tag[:class] == "light-scheme" }
+
+          expect(light_stylesheet[:media]).to eq("all")
+        end
+      end
+
+      context "when all schemes are deleted" do
+        it "includes only a light stylesheet with media=all" do
+          ColorScheme.destroy_all
+          get "/"
+
+          color_stylesheets =
+            css_select("link").select { |tag| tag[:href].include?("color_definitions") }
+
+          expect(color_stylesheets.size).to eq(1)
+
+          light_stylesheet = color_stylesheets.find { |tag| tag[:class] == "light-scheme" }
+
+          expect(light_stylesheet[:media]).to eq("all")
+        end
       end
     end
   end

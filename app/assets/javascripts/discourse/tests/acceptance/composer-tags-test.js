@@ -6,7 +6,7 @@ import {
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 acceptance("Composer - Tags", function (needs) {
   needs.user();
@@ -55,7 +55,7 @@ acceptance("Composer - Tags", function (needs) {
     assert
       .dom(".popup-tip.bad")
       .hasText(
-        I18n.t("composer.error.tags_missing", { count: 1 }),
+        i18n("composer.error.tags_missing", { count: 1 }),
         "it should display the right alert"
       );
 
@@ -89,7 +89,7 @@ acceptance("Composer - Tags", function (needs) {
     assert
       .dom(".popup-tip.bad")
       .hasText(
-        I18n.t("composer.error.tags_missing", { count: 1 }),
+        i18n("composer.error.tags_missing", { count: 1 }),
         "it should display the right alert"
       );
 

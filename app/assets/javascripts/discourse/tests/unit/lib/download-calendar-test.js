@@ -102,7 +102,7 @@ END:VCALENDAR`
         endsAt: "2021-10-12T16:00:00.000Z",
       },
     ]);
-    assert.ok(
+    assert.true(
       window.open.calledWith(
         "https://www.google.com/calendar/event?action=TEMPLATE&text=event&dates=20211012T150000Z%2F20211012T160000Z",
         "_blank",
@@ -123,7 +123,7 @@ END:VCALENDAR`
       ],
       { recurrenceRule: "FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR" }
     );
-    assert.ok(
+    assert.true(
       window.open.calledWith(
         "https://www.google.com/calendar/event?action=TEMPLATE&text=event&dates=20211012T150000Z%2F20211012T160000Z&recur=RRULE%3AFREQ%3DDAILY%3BBYDAY%3DMO%2CTU%2CWE%2CTH%2CFR",
         "_blank",
@@ -144,7 +144,7 @@ END:VCALENDAR`
       ],
       { location: "Paris" }
     );
-    assert.ok(
+    assert.true(
       window.open.calledWith(
         "https://www.google.com/calendar/event?action=TEMPLATE&text=event&dates=20211012T150000Z%2F20211012T160000Z&location=Paris",
         "_blank",
@@ -165,7 +165,7 @@ END:VCALENDAR`
       ],
       { details: "Cool" }
     );
-    assert.ok(
+    assert.true(
       window.open.calledWith(
         "https://www.google.com/calendar/event?action=TEMPLATE&text=event&dates=20211012T150000Z%2F20211012T160000Z&details=Cool",
         "_blank",

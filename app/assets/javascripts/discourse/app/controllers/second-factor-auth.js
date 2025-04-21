@@ -3,11 +3,11 @@ import { action } from "@ember/object";
 import { equal, readOnly } from "@ember/object/computed";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
+import discourseComputed from "discourse/lib/decorators";
 import DiscourseURL from "discourse/lib/url";
 import { getWebauthnCredential } from "discourse/lib/webauthn";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
-import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 const { TOTP, BACKUP_CODE, SECURITY_KEY } = SECOND_FACTOR_METHODS;
 export default class SecondFactorAuthController extends Controller {
@@ -20,6 +20,7 @@ export default class SecondFactorAuthController extends Controller {
   messageIsError = false;
   secondFactorToken = null;
   userSelectedMethod = null;
+  isLoading = false;
 
   @readOnly("model.totp_enabled") totpEnabled;
   @readOnly("model.backup_enabled") backupCodesEnabled;
@@ -118,11 +119,11 @@ export default class SecondFactorAuthController extends Controller {
   secondFactorTitle(shownSecondFactorMethod) {
     switch (shownSecondFactorMethod) {
       case TOTP:
-        return I18n.t("login.second_factor_title");
+        return i18n("login.second_factor_title");
       case SECURITY_KEY:
-        return I18n.t("login.second_factor_title");
+        return i18n("login.second_factor_title");
       case BACKUP_CODE:
-        return I18n.t("login.second_factor_backup_title");
+        return i18n("login.second_factor_backup_title");
     }
   }
 
@@ -130,11 +131,11 @@ export default class SecondFactorAuthController extends Controller {
   secondFactorDescription(shownSecondFactorMethod) {
     switch (shownSecondFactorMethod) {
       case TOTP:
-        return I18n.t("login.second_factor_description");
+        return i18n("login.second_factor_description");
       case SECURITY_KEY:
-        return I18n.t("login.security_key_description");
+        return i18n("login.security_key_description");
       case BACKUP_CODE:
-        return I18n.t("login.second_factor_backup_description");
+        return i18n("login.second_factor_backup_description");
     }
   }
 
@@ -174,36 +175,37 @@ export default class SecondFactorAuthController extends Controller {
     this.set("messageIsError", false);
   }
 
-  verifySecondFactor(data) {
-    return ajax("/session/2fa", {
-      type: "POST",
-      data: {
-        ...data,
-        second_factor_method: this.shownSecondFactorMethod,
-        nonce: this.nonce,
-      },
-    })
-      .then((response) => {
-        this.displaySuccess(
-          I18n.t("second_factor_auth.redirect_after_success")
-        );
-        ajax(response.callback_path, {
-          type: response.callback_method,
-          data: {
-            second_factor_nonce: this.nonce,
-            ...response.callback_params,
-          },
-        })
-          .then((callbackResponse) => {
-            const redirectUrl =
-              callbackResponse.redirect_url || response.redirect_url;
-            DiscourseURL.routeTo(redirectUrl);
-          })
-          .catch((error) => this.displayError(extractError(error)));
-      })
-      .catch((error) => {
-        this.displayError(extractError(error));
+  async verifySecondFactor(data) {
+    this.set("isLoading", true);
+
+    try {
+      const response = await ajax("/session/2fa", {
+        type: "POST",
+        data: {
+          ...data,
+          second_factor_method: this.shownSecondFactorMethod,
+          nonce: this.nonce,
+        },
       });
+
+      const callbackResponse = await ajax(response.callback_path, {
+        type: response.callback_method,
+        data: {
+          second_factor_nonce: this.nonce,
+          ...response.callback_params,
+        },
+      });
+
+      this.displaySuccess(i18n("second_factor_auth.redirect_after_success"));
+
+      DiscourseURL.routeTo(
+        callbackResponse.redirect_url || response.redirect_url
+      );
+    } catch (error) {
+      this.displayError(extractError(error));
+    } finally {
+      this.set("isLoading", false);
+    }
   }
 
   @action
@@ -224,6 +226,11 @@ export default class SecondFactorAuthController extends Controller {
         this.displayError(errorMessage);
       }
     );
+  }
+
+  @discourseComputed("secondFactorToken")
+  isSecondFactorTokenValid(secondFactorToken) {
+    return secondFactorToken?.length > 0;
   }
 
   @action

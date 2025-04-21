@@ -166,16 +166,8 @@ ko:
 
           - 항상 [올바른 커뮤니티 활동](%{base_uri}/지침) 을 해 줄것을 당부 드립니다.
       onebox:
-        instructions: |-
-          다음으로이 링크 중 하나를 나와 공유 할 수 있습니까? ** 한 줄에 링크 **로 답장하면 자동으로 확장되어 멋진 요약을 포함합니다. 링크를 복사하려면 모바일을 길게 누르거나 포인팅 장치를 마우스 오른쪽 버튼으로 클릭하십시오. <https://en.wikipedia.org/wiki/Inherently_funny_word><https://en.wikipedia.org/wiki/Death_by_coconut><https://en.wikipedia.org/wiki/Calculator_spelling>
         reply: |-
           좋았어! 이건 대부분의 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> 링크에 대해서 작동해. 딱 링크로만 된 한줄이어야만 한다는 걸 명심해. 앞이나 뒤에 다른게 있어서는 안돼.
-        not_found: |-
-          미안. 답글에서 링크를 찾지 못했어! :cry:
-
-          아래 링크 한 줄을 복사해서 다음 답글에 넣어볼래?
-
-          <https://en.wikipedia.org/wiki/Exotic_Shorthair>
       images:
         instructions: |-
           유니콘 사진이야.
@@ -241,8 +233,6 @@ ko:
       bookmark:
         instructions: |-
           자세한 내용을 알아 보려면 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> 아래와 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **이 개인 메시지를 북마크하십시오 **. 당신이하는 경우 : 선물 : 미래에있을 수 있습니다!
-        reply: |-
-          우수한! 이제 [프로필의 북마크 탭] (%{bookmark_url})에서 언제든지 개인 대화로 쉽게 돌아갈 수 있습니다. 오른쪽 상단에서 프로필 사진을 선택하십시오. ↗
         not_found: |-
           어라, 이 토픽에는 북마크가 없는데? 포스트 별로 있는 북마크 버튼을 찾았니? 더 보기 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> 를 눌러서 필요한 추가 기능이 있는지 살펴 봐.
       emoji:
@@ -276,8 +266,6 @@ ko:
 
           (그래, 내 아이디는 _disco_, 라고 써. 1970년대 토요일밤의 열기처럼 말이야. 난 [밤을 사랑하는 댄서라고!](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
-        reply: |-
-          [우리의 직원] (%{base_uri} / groups / staff)는 귀하의 깃발에 대해 개인적으로 통지를받습니다. 커뮤니티 회원이 충분하면 게시물을 신고하면 예방 조치로 자동 숨겨집니다. (나는 실제로 불쾌한 게시물을 작성하지 않았기 때문에 : angel :, 나는 지금 나아가서 깃발을 제거했습니다.)
         not_found: |-
           이런 내가 쓴 나쁜 포스트가 아직 신고가 안됐네. :worried: 부적절한 게시물로 **신고** 해주겠니 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? 더 보기 버튼을 누르면 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> 포스트에 수행할 기능을 더 볼 수 있다는 걸 잊지마.
       search:
@@ -351,10 +339,8 @@ ko:
           나는 카테고리 링크를 만들 수 있어. 이렇게 #
           ```
         reply: |-
-          우수한! 태그가 활성화 된 경우 두 카테고리 _and_ 태그 모두에서 작동합니다.
+          훌륭해! 태그가 활성화되어 있으면 카테고리와 태그 둘 다 적용된다는 걸 기억해.
       change_topic_notification_level:
-        instructions: |-
-          모든 주제에는 알림 수준이 있습니다. &#39;정상&#39;으로 시작합니다. 즉, 누군가가 나와 직접 대화 할 때만 알림을받습니다. 기본적으로 비공개 메시지의 알림 수준은 &#39;감시&#39;의 최상위 수준으로 설정되므로 모든 새 회신에 대해 알림을받습니다. 그러나 _any_ 주제의 알림 수준을 &#39;감시&#39;, &#39;추적&#39;또는 &#39;음소거 됨&#39;으로 무시할 수 있습니다. 이 주제에 대한 알림 수준을 변경해 봅시다. 주제 하단에이 주제를보고 있음을 나타내는 버튼이 있습니다. 알림 수준을 ** 추적 **으로 변경할 수 있습니까?
         not_found: |-
           아직도보고있는 것 같습니다 : 눈 :이 주제! 찾는 데 문제가 있으면 알림 수준 버튼이 주제 하단에 있습니다.
         reply: |-
@@ -375,6 +361,12 @@ ko:
           훌륭합니다. _detail_에 대한 관심은 훌륭합니다!
       end:
         message: |-
-          당신은 이것을 _advanced user_ 실제로 : bow : %{certificate}처럼 비난했습니다. 안녕! 나와 다시 대화하고 싶다면 언제든지 메시지를 보내주세요.
+          정말 _고급 사용자_처럼 잘 해냈군! :bow:
+
+          %{certificate}
+
+          내가 준비한 내용은 여기까지야.
+
+          이제 안녕! 다시 이야기하고 싶으면 언제든지 메시지 해 :sunglasses:
       certificate:
         alt: "고급 사용자 과정 수료증"

@@ -1,4 +1,4 @@
-import deprecated from "discourse-common/lib/deprecated";
+import deprecated from "discourse/lib/deprecated";
 
 export function scrollTopFor(y) {
   return y - offsetCalculator();
@@ -41,7 +41,7 @@ export default function offsetCalculator() {
   const min = headerOffset();
 
   // on mobile, just use the header
-  if (document.querySelector("html").classList.contains("mobile-view")) {
+  if (document.documentElement.classList.contains("mobile-view")) {
     return min;
   }
 

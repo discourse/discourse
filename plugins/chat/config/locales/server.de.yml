@@ -21,7 +21,6 @@ de:
     chat_minimum_message_length: "Mindestanzahl von Zeichen für eine Chat-Nachricht."
     chat_allow_uploads: "Uploads in öffentlichen Chat-Kanälen und Direktnachrichtenkanälen zulassen."
     chat_archive_destination_topic_status: "Der Status, den das Zielthema haben soll, sobald eine Kanalarchivierung abgeschlossen ist. Dies gilt nur, wenn das Zielthema ein neues Thema ist und kein vorhandenes."
-    default_emoji_reactions: "Standard-Emoji-Reaktionen für Chat-Nachrichten. Füge bis zu 5 Emojis für schnelle Reaktionen hinzu."
     direct_message_enabled_groups: "Benutzern in diesen Gruppen erlauben, persönliche Benutzer-zu-Benutzer-Chats zu erstellen. Hinweis: Teammitglieder können immer persönliche Chats erstellen und Benutzer können auf persönliche Chats antworten, die von Benutzern initiiert wurden, die die Berechtigung haben, sie zu erstellen."
     chat_message_flag_allowed_groups: "Benutzer in diesen Gruppen dürfen Chat-Nachrichten melden. Beachte, dass Administratoren und Moderatoren immer Chatnachrichten melden können."
     max_mentions_per_chat_message: "Maximale Anzahl von @name-Benachrichtigungen, die ein Benutzer in einer Chat-Nachricht verwenden kann."
@@ -31,10 +30,12 @@ de:
     chat_editing_grace_period_max_diff_low_trust: "Maximale Anzahl von Zeichenänderungen, die innerhalb der Chat-Bearbeitungsfrist erlaubt sind. Wenn mehr geändert werden, wird das Schlagwort „(bearbeitet)“ in der Chat-Nachricht angezeigt (Vertrauensstufe 0 und 1)."
     chat_editing_grace_period_max_diff_high_trust: "Maximale Anzahl von Zeichenänderungen, die innerhalb der Chat-Bearbeitungsfrist erlaubt sind. Wenn mehr geändert werden, wird das Schlagwort „(bearbeitet)“ in der Chat-Nachricht angezeigt (Vertrauensstufe 2 und höher)."
     chat_preferred_index: "Bevorzugte Registerkarte beim Laden von /chat."
+    allow_chat_in_anonymous_mode: "Aktiviere diese Einstellung, um Benutzern im anonymen Modus die Nutzung des Chats zu ermöglichen. Für diese Einstellung muss die Einstellung „allow anonymous mode“ aktiviert sein."
     errors:
       chat_default_channel: "Der Standard-Chat-Kanal muss ein öffentlicher Kanal sein."
       direct_message_enabled_groups_invalid: "Du musst mindestens eine Gruppe für diese Einstellung angeben. Wenn du nicht möchtest, dass andere Personen als Teammitglieder Direktnachrichten senden, wähle die Gruppe für Teammitglieder aus."
       chat_upload_not_allowed_secure_uploads: "Chat-Uploads sind nicht erlaubt, wenn die Website-Einstellung für sichere Uploads aktiviert ist."
+      allow_chat_in_anonymous_mode_invalid: "Für diese Einstellung muss zuerst die Einstellung „allow anonymous mode“ aktiviert werden."
   system_messages:
     private_channel_title: "Kanal %{id}"
     chat_channel_archive_complete:
@@ -60,6 +61,7 @@ de:
     deleted_chat_username: gelöscht
     errors:
       users_cant_be_added_to_channel: "Diesem Kanal können keine Benutzer hinzugefügt werden."
+      user_cant_be_removed_from_channel: "Der Benutzer kann nicht aus diesem Kanal entfernt werden."
       channel_exists_for_category: "Für diese Kategorie und diesen Namen existiert bereits ein Kanal"
       channel_new_message_disallowed:
         archived: "Der Kanal ist archiviert, es können keine neuen Nachrichten gesendet werden"
@@ -89,8 +91,9 @@ de:
       not_accepting_dms: "%{username} akzeptiert derzeit leider keine Nachrichten."
       actor_ignoring_target_user: "Du ignorierst %{username}, daher kannst du keine Nachrichten an die Person senden."
       actor_muting_target_user: "Du hast %{username} stummgeschaltet, daher kannst du keine Nachrichten an die Person senden."
-      actor_disallowed_dms: "Du hast dich dafür entschieden, dass Benutzer dir keine privaten und Direktnachrichten schicken können, daher kannst du keine neuen Direktnachrichten erstellen."
-      actor_preventing_target_user_from_dm: "Du hast dich dafür entschieden, dass %{username} dir keine privaten und Direktnachrichten schicken kann, daher kannst du keine neuen Direktnachrichten an diese Person erstellen."
+      actor_disallowed_dms: "Du hast dich dafür entschieden, dass Benutzer dir keine persönlichen und Direktnachrichten schicken können, daher kannst du keine neuen Direktnachrichten erstellen."
+      actor_preventing_target_user_from_dm: "Du hast dich dafür entschieden, dass %{username} dir keine persönlichen und Direktnachrichten schicken kann, daher kannst du keine neuen Direktnachrichten an diese Person erstellen."
+      not_reachable: "Entschuldigung, %{username} verwendet den Chat nicht."
       user_cannot_send_direct_messages: "Du kannst leider keine Direktnachrichten senden."
       over_chat_max_direct_message_users_allow_self: "Du kannst nur eine Direktnachricht an dich selbst erstellen."
       over_chat_max_direct_message_users:
@@ -186,6 +189,8 @@ de:
       inline_to_message: "Nachricht #%{message_id} von %{username} – #%{chat_channel}"
       inline_to_channel: "Chat #%{chat_channel}"
       inline_to_topic_channel: "Chat für Thema %{topic_title}"
+      inline_to_thread: "%{thread_title} – #%{chat_channel}"
+      inline_to_thread_no_title: "Thread in #%{chat_channel}"
       thread_title_connector: "in"
       x_members:
         one: "%{count} Mitglied"
@@ -233,6 +238,12 @@ de:
         private_email:
           one: "[%{site_name}] Neue Nachricht"
           other: "[%{site_name}] Neue Nachrichten"
+        watched_thread:
+          one: "[%{site_name}] Neue Thread-Nachricht in %{channel}"
+          other: "[%{site_name}] Neue Thread-Nachrichten in %{channel}"
+        watched_threads:
+          one: "[%{site_name}] Neue Thread-Nachrichten in %{channel} und %{count} anderen"
+          other: "[%{site_name}] Neue Thread-Nachrichten in %{channel} und %{count} anderen"
         chat_dm_1:
           one: "[%{site_name}] Neue Nachricht von %{name}"
           other: "[%{site_name}] Neue Nachrichten von %{name}"

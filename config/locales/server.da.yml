@@ -59,6 +59,7 @@ da:
   components:
     enabled_filter: "Aktiveret"
     disabled_filter: "Deaktiveret"
+    updates_available_filter: "Opdateringer Tilgængelige"
   themes:
     bad_color_scheme: "Kan ikke opdatere tema, ugyldigt farvepalette"
     other_error: "Der opstod en fejl under opdatering af temaet"
@@ -88,7 +89,10 @@ da:
       number_value_not_valid_min_max: "Værdien skal være mellem %{min} og %{max}."
       objects:
         required: "skal udfyldes"
+        not_valid_string_value: "skal være en streng"
         not_valid_integer_value: "skal være et heltal"
+        not_valid_float_value: "skal være en float"
+        not_valid_boolean_value: "skal være en boolean"
         string_value_not_valid_url: "skal være en gyldig URL"
     locale_errors:
       top_level_locale: "Den øverste nøgle i en locale fil skal matche det relevante locale's navn."
@@ -100,6 +104,7 @@ da:
       maximum_staged_user_per_email_reached: "Maksimalt antal af brugere oprettet pr. email."
       no_subject: "(intet emne)"
       no_body: "(intet meddelelsesindhold)"
+      attachments: "(vedhæftede filer)"
       missing_attachment: "(Vedhæftning %{filename} mangler)"
       errors:
         empty_email_error: "Dette sker når den rå email der modtages er tom."
@@ -170,6 +175,7 @@ da:
         other: har forkert længde (burde være %{count} tegn)
       other_than: "skal være andet end %{count}"
       auth_overrides_username: "Brugernavn skal opdateres på godkendelsesudbyderens side, da indstillingen `auth_overrides_username` er aktiveret."
+      required: "skal eksistere"
     template:
       body: ! "Der var problemer med følgende felter:"
       header:
@@ -234,8 +240,6 @@ da:
     failed_to_invite: "Brugeren kan ikke inviteres til dette emne uden et gruppemedlemskab i en af følgende grupper: %{group_names}."
     user_exists: "Beklager, men brugeren er allerede inviteret. Du kan kun invitere en bruger til et emne én gang."
     muted_topic: "Beklager, denne bruger ønsker tavshed i dette emne."
-    receiver_does_not_allow_pm: "Beklager, denne bruger tillader dig ikke at sende private beskeder til sig."
-    sender_does_not_allow_pm: "Beklager, du tillader ikke denne bruger sender dig private beskeder."
     user_cannot_see_topic: "%{username} kan ikke se emnet."
   backup:
     operation_already_running: "En handling kører i øjeblikket. Kan ikke starte et nyt job lige nu."
@@ -479,6 +483,8 @@ da:
         bio_raw: "Om mig"
       user:
         password: "Adgangskode"
+      user_password:
+        password: "Adgangskode"
     errors:
       models:
         topic:
@@ -556,6 +562,10 @@ da:
               too_many: "For mange ord til den handling"
             base:
               invalid_url: "Erstatnings URL er ugyldig"
+        sidebar_section_link:
+          attributes:
+            linkable_type:
+              invalid: "er ikke gyldig"
       <<: *errors
   uncategorized_category_name: "Ukategoriseret"
   general_category_name: "Overordnet"
@@ -580,6 +590,7 @@ da:
       disallowed_topic_tags: "Dette emne har mærker der ikke er tilladt af denne kategori: '%{tags}“"
       disallowed_tags_generic: "Dette emne har ikke tilladte mærker."
       slug_contains_non_ascii_chars: "indeholder ikke-ascii- tegn"
+      is_already_in_use: "er allerede i brug"
     cannot_delete:
       uncategorized: "Denne kategori er speciel. Den er beregnet som et opholdsområde for emner, der ikke har nogen kategori; den kan ikke slettes."
       has_subcategories: "Kan ikke slette denne kategori, fordi den har under kategorier."
@@ -595,6 +606,9 @@ da:
   post:
     image_placeholder:
       broken: "Dette billede er i stykker"
+      blocked_hotlinked: "Eksternt Billede"
+    media_placeholder:
+      blocked_hotlinked: "Eksterne Medier"
     has_likes:
       one: "%{count} Synes om"
       other: "%{count} Synes om"
@@ -756,6 +770,8 @@ da:
       title: "Upassende"
       short_description: 'En overtrædelse af <a href="%{base_path}/guidelines">vores retningslinjer for fællesskabet</a>'
     illegal:
+      title: "Illegal"
+      short_description: "Dette er ulovligt"
       email_title: 'Et indlæg i "%{title}" afkræver stillingtagen hos administrator'
       email_body: "%{link}\n\n%{message}"
     notify_user:
@@ -826,6 +842,8 @@ da:
       email_title: 'Emnet "%{title}" kræver moderator-opmærksomhed'
       email_body: "%{link}\n\n%{message}"
     illegal:
+      title: "Ulovlig"
+      short_description: "Dette er ulovligt"
       email_title: 'Et indlæg i "%{title}" afkræver stillingtagen hos administrator'
       email_body: "%{link}\n\n%{message}"
   flagging:
@@ -1078,12 +1096,10 @@ da:
       title: "Underret moderatorer"
       xaxis: "Dag"
       yaxis: "Antal beskeder"
-      description: "Antal gange moderatorer er blevet underrettet privat af en anmeldelse."
     notify_user_private_messages:
       title: "Giv brugeren besked"
       xaxis: "Dag"
       yaxis: "Antal beskeder"
-      description: "Antal gange, brugere har fået privat besked af en anmeldelse."
     top_referrers:
       title: "Top henvisere"
       xaxis: "Bruger"
@@ -1230,6 +1246,7 @@ da:
     top_users_by_likes_received_from_inferior_trust_level:
       labels:
         user: Bruger
+        trust_level: Tillidsniveau
         qtt_like: Likes modtaget
     top_users_by_likes_received_from_a_variety_of_people:
       labels:
@@ -1266,7 +1283,9 @@ da:
       poll_pop3_timeout: "Forbindelsen til POP3-serveren udløber. Indgående e-mail kunne ikke hentes. Kontroller dine <a href='%{base_path}/admin/site_settings/category/email'>POP3-indstillinger</a> og tjenesteudbyder."
       poll_pop3_auth_error: "Forbindelsen til POP3-serveren mislykkes med en godkendelsesfejl. Kontroller dine <a href='%{base_path}/admin/site_settings/category/email'>POP3-indstillinger</a>."
       force_https: "Dit websted bruger SSL. Men '<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>' er endnu ikke aktiveret i dine webstedsindstillinger."
+      out_of_date_themes: "Opdateringer er tilgængelige for følgende temaer:%{themes_list}"
       google_analytics_version: "Din Discourse bruger i øjeblikket Google Analytics 3, som ikke længere vil blive understøttet efter juli 2023. <a href='https://meta.discourse.org/t/260498'>Opgrader til Google Analytics 4</a> nu for fortsat at modtage værdifulde indsigter og analyser af dit websteds ydeevne."
+    back_from_logster_text: "Tilbage til webstedet"
   site_settings:
     disabled: "deaktiveret"
     display_local_time_in_user_card: "Vis den lokale tid baseret på en brugers tidszone, når deres brugerkort åbnes."
@@ -1274,8 +1293,7 @@ da:
     delete_old_hidden_posts: "Slet automatisk skjulte indlæg der forbliver skjulte i mere end 30 dage."
     default_locale: "Standardsproget for denne Discourse instans. Du kan erstatte teksten for systemgenererede kategorier og emner på <a href='%{base_path}/admin/customize/site_texts' target='_blank'>Tilpas / Tekst</a>."
     allow_user_locale: "Tillad brugere at vælge egne sprog præferencer på site"
-    set_locale_from_accept_language_header: "indstil grænsefladesprog for anonyme brugere ud fra deres webbrowsers sprog headere"
-    support_mixed_text_direction: "Understøt blandede tekstretninger fra venstre til højre og højre mod venstre."
+    support_mixed_text_direction: "Understøt blandede tekstretninger fra venstre til højre og højre mod venstre"
     max_post_length: "Maksimal længde af indlæg i tegn"
     show_topic_featured_link_in_digest: "Vis link med det fremhævede emne i e-mail-sammendraget."
     min_topic_views_for_delete_confirm: "Minimum antal visninger et emne skal have før en bekræftelse popup vises, når det bliver slettet"
@@ -1368,7 +1386,6 @@ da:
     prioritize_username_in_ux: "Vis brugernavn først på brugersiden, brugerkort og indlæg (når deaktiveret vises navnet først)"
     send_old_credential_reminder_days: "Påmind om gamle legitimationsoplysninger efter dage"
     email_token_valid_hours: "Glemte password / konto aktiverings muligheder er gyldige i (n) timer."
-    allow_index_in_robots_txt: "Angiv i robots.txt, at dette websted må indekseres af websøgemaskiner. I undtagelsestilfælde kan du permanent <a href='%{base_path}/admin/customize/robots'>tilsidesætte robots.txt</a>."
     log_out_strict: "Når brugeren logger af, log da ud af alle sessioner, på alle enheder"
     version_checks: "Ping Discourse Hub for versionopdateringer, og vis meddelelser om ny version på instrumentbrættet <a href='%{base_path}/admin' target='_blank'>/admin</a>"
     new_version_emails: "Send en email til contact_email adressen når der er en ny version af Discourse tilgængelig."
@@ -1377,8 +1394,8 @@ da:
     login_required: "Kræv godkendelse til at læse indhold på dette site, og tillad ikke anonym adgang."
     min_username_length: "Minimumslængde på brugernavne i tegn. ADVARSEL: Hvis eksisterende brugere eller grupper har kortere navne end dette, vil dit websted gå i stykker!"
     max_username_length: "Maksimallængden på brugernavne i tegn. ADVARSEL: Hvis eksisterende brugere eller grupper har længere navne end dette, vil dit websted gå i stykker!"
-    unicode_usernames: "Tillad, at brugernavne og gruppenavne indeholder Unicode bogstaver og tal."
-    allowed_unicode_username_characters: "Regulært udtryk, der kun tillader nogle Unicode-tegn i brugernavne. ASCII-bogstaver og tal vil altid være tilladt og behøver ikke at blive inkluderet i tilladelseslisten."
+    unicode_usernames: "Tillad, at brugernavne og gruppenavne indeholder Unicode bogstaver og tal"
+    allowed_unicode_username_characters: "Regulært udtryk, der kun tillader nogle Unicode-tegn i brugernavne. ASCII-bogstaver og tal vil altid være tilladt og behøver ikke at blive inkluderet i tilladelseslisten"
     reserved_usernames: "Brugernavne, hvor tilmelding ikke er tilladt. Jokertegn * kan bruges til at matche ethvert tegn nul eller flere gange."
     password_unique_characters: "Minimum antal unikke tegn, som en adgangskode skal have."
     block_common_passwords: "Tillad ikke adgangskoder som findes i de 10.000 mest benyttede adgangskoder."
@@ -1481,7 +1498,6 @@ da:
     title_fancy_entities: "Konverter almindelige ASCII-tegn til smarte HTML-entiteter i emnetitler, ala SmartyPants <a href='https://daringfireball.net/projects/smartypants/' target='_blank'>https://daringfireball.net/projects/smartypants/</a>"
     min_title_similar_length: "Minimumslængden af en titel før den vil blive kontrolleret for lignende emner."
     category_colors: "En liste med hexadecimal farveværdier som er tilladte for kategorier."
-    default_dark_mode_color_scheme_id: "Farveskemaet der bruges ved mørk tilstand."
     dark_mode_none: "Ingen"
     max_similar_results: "Hvor mange lignende emner der skal vises over editoren når du opretter et nyt emne. Sammenligning er baseret på titel og indhold."
     max_image_megapixels: "Maksimalt antal megapixel tilladt for et billede. Billeder med et højere antal megapixel vil blive afvist."
@@ -1550,7 +1566,6 @@ da:
     disable_avatar_education_message: "Deaktivér hjælpetekst for at skifte sin avatar."
     suppress_uncategorized_badge: "Vis ikke emblemet for ikke-kategoriserede emner i emnelister."
     topic_page_title_includes_category: "Emneside <a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>titelmærke</a> inkluderer kategorienavnet."
-    full_name_required: "Fuldt navn er et påkrævet felt på en brugerprofil."
     short_progress_text_threshold: "Når antallet af indlæg overstiger dette tal viser statuslinjen kun det aktuelle indlægsnummer. Hvis du ændrer bredden af statuslinjen kan det være nødvendigt at opdatere denne værdi."
     embed_support_markdown: "Support markdown formatering af indlejrede indlæg."
     allowed_embed_selectors: "En kommasepareret liste over CSS-elementer, der er tilladt i embeds."
@@ -2883,8 +2898,6 @@ da:
     regular:
       name: Regulær
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Tildelt</a> omklassificering, omdøbning, fulgte links, wiki, flere 'Synes godt om'
-      long_description: |
-        Dette emblem tildeles, når du når tillidsniveau 3. Tak, fordi du er en fast del af vores fællesskab over en periode på flere måneder. Du er nu en af de mest aktive læsere og en pålidelig bidragyder, der gør vores samfund godt. Du kan nu omklassificere og omdøbe emner, drage fordel af mere kraftfulde anmeldelser, få adgang til et privat loungeområde, og du får også mange flere 'Synes godt om' om dagen.
     leader:
       name: Leder
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Tildelt</a> global redigering, pin, luk, arkiv, split og flet, flere 'Synes godt om'
@@ -3179,15 +3192,7 @@ da:
           homepage_style:
             choices:
               latest:
-                label: "Seneste emner"
-              categories_only:
-                label: "Kun Kategorier"
-              categories_with_featured_topics:
-                label: "Kategorier med Fremhævede Emner"
-              categories_and_latest_topics:
-                label: "Kategorier og Seneste Emner"
-              categories_and_top_topics:
-                label: "Kategorier og top emner"
+                label: "Seneste"
       corporate:
         fields:
           governing_law:
@@ -3257,33 +3262,46 @@ da:
         description: "Gendan indlægget, så alle brugere kan se det."
       delete_single:
         title: "Slet"
+        complete: "Indlæg slettet."
       delete:
         title: "Slet…"
+      delete_and_ignore:
+        complete: "Indlæg slettet."
       delete_and_ignore_replies:
         confirm: "Er du sikker på, at du også vil slette svarene på indlægget?"
+      delete_and_agree:
+        complete: "Indlæg slettet."
       delete_and_agree_replies:
         confirm: "Er du sikker på, at du også vil slette svarene på indlægget?"
       disagree_and_restore:
         description: "Gendan indlægget, så alle brugere kan se det."
       disagree:
         title: "Nej"
+        complete: "Rapportering ignoreret."
       ignore:
         title: "Ignorér"
+        complete: "Rapportering ignoreret."
       ignore_and_do_nothing:
         title: "Gøre ingenting"
+        complete: "Rapportering ignoreret."
       approve:
         title: "Godkend"
+        complete: "Indlæg godkendt."
       approve_post:
         title: "Godkend Indlæg"
+        complete: "Indlæg godkendt."
       reject_post:
         title: "Afvis Indlæg"
+        complete: "Indlæg afvist."
       approve_user:
         title: "Godkend Bruger"
+        complete: "Bruger godkendt."
       reject_user:
         title: "Slet Bruger…"
         delete:
           title: "Slet Bruger"
           description: "Brugeren vil blive slettet fra forummet."
+          complete: "Bruger slettet."
         block:
           title: "Slet og Blokér Bruger"
           description: "Brugeren vil blive slettet, og vi vil blokere deres IP og e-mail-adresse."
@@ -3292,6 +3310,7 @@ da:
         bundle_title: "Afvis…"
       delete_user:
         reason: "Slettet via gennemgangskø"
+        complete: "Bruger slettet."
   email_style:
     html_missing_placeholder: "HTML-skabelonen skal indeholde %{placeholder}"
   notification_level:

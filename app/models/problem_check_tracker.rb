@@ -28,6 +28,8 @@ class ProblemCheckTracker < ActiveRecord::Base
 
     update!(blips: blips + 1, details:, last_run_at: now, last_problem_at: now, next_run_at:)
 
+    update_notice_details(details)
+
     sound_the_alarm if sound_the_alarm?
   end
 
@@ -55,6 +57,18 @@ class ProblemCheckTracker < ActiveRecord::Base
 
   private
 
+  def resolved_target
+    self.target || ProblemCheck::NO_TARGET
+  end
+
+  def details_with_target(details)
+    details.merge(target: resolved_target)
+  end
+
+  def update_notice_details(details)
+    admin_notice.where(identifier:).update_all(details: details_with_target(details))
+  end
+
   def sound_the_alarm?
     failing? && blips > check.max_blips
   end
@@ -62,7 +76,7 @@ class ProblemCheckTracker < ActiveRecord::Base
   def sound_the_alarm
     admin_notice.create_with(
       priority: check.priority,
-      details: details.merge(target: target || ProblemCheck::NO_TARGET),
+      details: details_with_target(self.details),
     ).find_or_create_by(identifier:)
   end
 
@@ -71,7 +85,7 @@ class ProblemCheckTracker < ActiveRecord::Base
   end
 
   def admin_notice
-    AdminNotice.problem.where("details->>'target' = ?", target || ProblemCheck::NO_TARGET)
+    AdminNotice.problem.where("details->>'target' = ?", resolved_target)
   end
 end
 

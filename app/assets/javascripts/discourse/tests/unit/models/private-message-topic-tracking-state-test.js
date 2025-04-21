@@ -39,7 +39,7 @@ module("Unit | Model | private-message-topic-tracking-state", function (hooks) {
     pmTopicTrackingState.set("isTracking", true);
     pmTopicTrackingState.removeTopics([]);
 
-    assert.ok(callbackCalled);
+    assert.true(callbackCalled);
   });
 });
 

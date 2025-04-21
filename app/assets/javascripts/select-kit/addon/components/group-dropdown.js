@@ -3,7 +3,7 @@ import { gte, reads } from "@ember/object/computed";
 import { classNames } from "@ember-decorators/component";
 import { setting } from "discourse/lib/computed";
 import DiscourseURL from "discourse/lib/url";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import ComboBoxComponent from "select-kit/components/combo-box";
 import {
   pluginApiIdentifiers,
@@ -30,7 +30,7 @@ export default class GroupDropdown extends ComboBoxComponent {
     const shortcuts = [];
 
     if (this.enableGroupDirectory || this.get("currentUser.staff")) {
-      shortcuts.push(I18n.t("groups.index.all"));
+      shortcuts.push(i18n("groups.index.all"));
     }
 
     return shortcuts.concat(this.groups);

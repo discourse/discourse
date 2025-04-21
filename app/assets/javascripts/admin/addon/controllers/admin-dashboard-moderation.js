@@ -1,5 +1,5 @@
 import { computed } from "@ember/object";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed from "discourse/lib/decorators";
 import AdminDashboardTabController from "./admin-dashboard-tab";
 
 export default class AdminDashboardModerationController extends AdminDashboardTabController {

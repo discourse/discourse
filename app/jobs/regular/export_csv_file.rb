@@ -218,13 +218,16 @@ module Jobs
         elsif label[:type] == :topic
           titles[label[:properties][:id]] = label[:title]
           header << label[:properties][:id]
+        elsif label[:type] == :post
+          titles[label[:properties][:truncated_raw]] = label[:title]
+          header << label[:properties][:truncated_raw]
         else
           titles[label[:property]] = label[:title]
           header << label[:property]
         end
       end
 
-      if report.modes == [:stacked_chart]
+      if report.modes == [Report::MODES[:stacked_chart]]
         header = [:x]
         data = {}
 

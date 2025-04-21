@@ -6,14 +6,20 @@
 
 tr_TR:
   js:
+    admin:
+      logs:
+        staff_actions:
+          actions:
+            delete_automation: otomasyonu sil
     discourse_automation:
       title: Otomasyon
-      create: Oluştur
-      update: Güncelle
+      back: Geri
+      edit: Düzenle
       select_script: Komut dosyası seçin
       select_trigger: Tetikleyici seçin
       confirm_automation_reset: Bu eylem komut dosyası ve tetikleyici seçeneklerini sıfırlar, yeni durum kaydedilir, devam etmek istiyor musunuz?
       confirm_automation_trigger: Bu eylem otomasyonu tetikler, devam etmek istiyor musunuz?
+      filter_placeholder: Ada veya açıklamaya göre filtreleyin...
       edit_automation:
         trigger_section:
           forced: Bu tetikleyici, komut dosyası ile zorlanır.
@@ -143,6 +149,9 @@ tr_TR:
               label: Konu kimliği
         post_created_edited:
           fields:
+            original_post_only:
+              label: Yalnızca orijinal gönderi
+              description: Yalnızca gönderi, konudaki orijinal gönderiyse tetiklenir
             action_type:
               label: Eylem türü
               description: "İsteğe bağlı, tetiklemeyi yalnızca oluşturulan veya düzenlenen etkinliklerle sınırlandırın"
@@ -152,17 +161,10 @@ tr_TR:
             restricted_tags:
               label: Etiketler
               description: 'İsteğe bağlı, yalnızca gönderide şu etiketlerden herhangi biri varsa tetiklenir:'
-            restricted_category:
-              label: Kategori
-              description: İsteğe bağlı, yalnızca gönderinin konusu bu kategorideyse tetiklenir
-            restricted_group:
-              label: Grup
-              description: İsteğe bağlı, yalnızca gönderinin konusu bu grubun gelen kutusundaki bir özel mesajsa tetiklenir
-            restricted_groups:
-              label: Grup
-            ignore_group_members:
-              label: Grup üyelerini yok say
-              description: Gönderen yukarıda belirtilen Grubun bir üyesiyse tetikleyiciyi atla
+            restricted_categories:
+              label: Kategoriler
+            restricted_inbox_groups:
+              description: İsteğe bağlı, yalnızca gönderinin konusu grup gelen kutularından birindeki kişisel bir mesajsa tetiklenir
             ignore_automated:
               label: Otomatikleştirmeyi yok say
               description: Gönderenin noreply e-postası varsa veya otomatik bir kaynaktan geliyorsa tetikleyiciyi atla. Yalnızca e-posta yoluyla oluşturulan gönderiler için geçerlidir
@@ -172,8 +174,15 @@ tr_TR:
             first_topic_only:
               label: Yalnızca ilk konu
               description: Yalnızca konu bir kullanıcının oluşturduğu ilk konuysa tetiklenir
+            skip_via_email:
+              label: "E-posta yoluyla atla"
+              description: "Gönderi e-posta yoluyla oluşturulmuşsa tetikleyiciyi atla"
           created: Oluşturulma
           edited: Düzenlendi
+          with_images: Resimler
+          with_links: Bağlantı
+          with_code: Kod
+          with_uploads: Yüklemeler
         user_updated:
           fields:
             user_profile:
@@ -214,6 +223,10 @@ tr_TR:
               label: Geçerli güven seviyeleri
               description: Yalnızca gönderi bu güven seviyelerindeki bir kullanıcı tarafından oluşturulduğunda tetiklenir, varsayılan olarak herhangi bir güven seviyesidir
         topic_tags_changed:
+          trigger_on_modes:
+            tags_added_or_removed: Eklenen veya kaldırılan etiketler
+            tags_added: Eklenen etiketler
+            tags_removed: Kaldırılan etiketler
           fields:
             watching_categories:
               label: Kategori izleme
@@ -221,6 +234,11 @@ tr_TR:
             watching_tags:
               label: Etiket izleme
               description: Yalnızca konu bu etiketlerden herhangi birine sahipse tetiklenir
+            trigger_on:
+              label: Tetikleyici açık
+            trigger_with_pms:
+              label: Kişisel mesajlarla tetikleyin
+              description: Etiketler bir kişisel mesajda değiştirilmiş olsa bile tetiklenir
         after_post_cook:
           fields:
             valid_trust_levels:
@@ -379,6 +397,7 @@ tr_TR:
           fields:
             custom_field_name:
               label: "Kullanıcı Özel Alan adı"
+      unnamed_automation: "Adsız otomasyon"
       models:
         script:
           name:
@@ -395,6 +414,8 @@ tr_TR:
             label: Komut dosyası
           version:
             label: Sürüm
+          status:
+            label: Durum
           enabled:
             label: Etkin
           disabled:

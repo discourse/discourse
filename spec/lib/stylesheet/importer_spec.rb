@@ -9,7 +9,7 @@ RSpec.describe Stylesheet::Importer do
 
   describe "#font" do
     it "includes font variable" do
-      default_font = ":root{--font-family: Arial, sans-serif}"
+      default_font = ":root{--font-family: Inter, Arial, sans-serif}"
       expect(compile_css("color_definitions")).to include(default_font)
       expect(compile_css("embed")).to include(default_font)
       expect(compile_css("publish")).to include(default_font)
@@ -48,14 +48,15 @@ RSpec.describe Stylesheet::Importer do
   end
 
   describe "#import_color_definitions" do
-    let(:scss) { ":root{--custom-color: green}" }
+    let(:input_scss) { ':root{--custom-color: green;--core-color: #{$primary}}' }
+    let(:output_scss) { ":root{--custom-color: green;--core-color: #222}" }
     let(:scss_child) do
       "$navy: #000080; :root{--custom-color: red; --custom-color-rgb: \#{hexToRGB($navy)}}"
     end
 
     let(:theme) do
       Fabricate(:theme).tap do |t|
-        t.set_field(target: :common, name: "color_definitions", value: scss)
+        t.set_field(target: :common, name: "color_definitions", value: input_scss)
         t.save!
       end
     end
@@ -69,7 +70,7 @@ RSpec.describe Stylesheet::Importer do
 
     it "should include color definitions in the theme" do
       styles = Stylesheet::Importer.new({ theme_id: theme.id }).import_color_definitions
-      expect(styles).to include(scss)
+      expect(styles).to include(output_scss)
     end
 
     it "should include color definitions from components" do
@@ -85,7 +86,7 @@ RSpec.describe Stylesheet::Importer do
     it "should include default theme color definitions" do
       SiteSetting.default_theme_id = theme.id
       styles = Stylesheet::Importer.new({}).import_color_definitions
-      expect(styles).to include(scss)
+      expect(styles).to include(output_scss)
     end
   end
 

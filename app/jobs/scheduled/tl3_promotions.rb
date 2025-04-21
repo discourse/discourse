@@ -22,12 +22,29 @@ module Jobs
             # Don't demote too soon after being promoted
             next if u.on_tl3_grace_period?
 
+            modifier_applied, demoted_user_id =
+              DiscoursePluginRegistry.apply_modifier(
+                :tl3_custom_demotions,
+                false,
+                u,
+                demoted_user_ids,
+              )
+
+            if modifier_applied
+              demoted_user_ids << demoted_user_id
+              next
+            end
+
             if Promotion.tl3_lost?(u)
               demoted_user_ids << u.id
               Promotion.new(u).change_trust_level!(TrustLevel[2])
             end
           end
       end
+
+      override =
+        DiscoursePluginRegistry.apply_modifier(:tl3_custom_promotions, false, demoted_user_ids)
+      return override if override
 
       # Promotions
       User

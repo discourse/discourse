@@ -1,6 +1,6 @@
 import { Promise } from "rsvp";
-import discourseDebounce from "discourse-common/lib/debounce";
-import I18n from "discourse-i18n";
+import discourseDebounce from "discourse/lib/debounce";
+import { i18n } from "discourse-i18n";
 
 let _cache = {};
 
@@ -80,7 +80,7 @@ function retrieveCachedUrl(
       context.strokeRect(0, 0, canvas.width, canvas.height);
 
       let fontSize = 25;
-      const text = I18n.t("image_removed");
+      const text = i18n("image_removed");
 
       // Fill text size to fit the canvas
       let textSize;
@@ -159,31 +159,15 @@ function _loadCachedShortUrls(uploadElements, siteSettings, opts) {
 
         break;
       case "DIV":
-        if (siteSettings.enable_diffhtml_preview === true) {
-          retrieveCachedUrl(upload, siteSettings, "orig-src", opts, (url) => {
-            const videoHTML = `
-              <video width="100%" height="100%" preload="metadata" controls style="">
-                <source src="${url}">
-              </video>`;
-            upload.insertAdjacentHTML("beforeend", videoHTML);
-            upload.classList.add("video-container");
-          });
-        } else {
-          retrieveCachedUrl(
-            upload,
-            siteSettings,
-            "orig-src-id",
-            opts,
-            (url) => {
-              upload.style.backgroundImage = `url('${url}')`;
+        retrieveCachedUrl(upload, siteSettings, "orig-src-id", opts, (url) => {
+          upload.style.backgroundImage = `url('${url}')`;
 
-              const placeholderIcon = upload.querySelector(
-                ".placeholder-icon.video"
-              );
-              placeholderIcon.style.backgroundColor = "rgba(0, 0, 0, 0.3)";
-            }
+          const placeholderIcon = upload.querySelector(
+            ".placeholder-icon.video"
           );
-        }
+          placeholderIcon.style.backgroundColor = "rgba(0, 0, 0, 0.3)";
+        });
+
         break;
     }
   });

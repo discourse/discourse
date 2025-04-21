@@ -105,6 +105,7 @@ nl:
         doc: Staat het sturen van meerdere PB's naar een gebruiker toe. Elk PB krijgt een vertraging.
       suspend_user_by_email:
         title: Gebruiker schorsen op e-mailadres
+        description: Schors een account automatisch op basis van e-mailadres
       user_global_notice:
         title: Algemene kennisgeving voor gebruiker
         description: Maakt het mogelijk om een algemene kennisgeving weer te geven voor een gebruiker
@@ -141,6 +142,13 @@ nl:
         button_text: Gereed
       add_user_to_group_through_custom_field:
         title: "Gebruiker toevoegen aan groep via aangepast gebruikersveld"
+        description: "Voeg gebruikers automatisch toe aan groepen wanneer ze zich aanmelden of met een terugkerende controle"
       group_category_notification_default:
         title: "Standaard categoriemelding groep"
         description: "Stel het standaard meldingsniveau van een categorie in voor leden van een groep"
+      send_chat_message:
+        title: "Chatbericht verzenden"
+        description: "Stuur een aangepast chatbericht naar een kanaal"
+      random_assign:
+        title: "Willekeurig toewijzen"
+        description: "Wijs topics willekeurig toe aan een groep"

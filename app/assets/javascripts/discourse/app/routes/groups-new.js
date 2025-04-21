@@ -1,13 +1,13 @@
 import { service } from "@ember/service";
 import Group from "discourse/models/group";
 import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class GroupsNew extends DiscourseRoute {
   @service router;
 
   titleToken() {
-    return I18n.t("admin.groups.new.title");
+    return i18n("admin.groups.new.title");
   }
 
   model() {

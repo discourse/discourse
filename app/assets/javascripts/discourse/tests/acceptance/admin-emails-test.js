@@ -1,7 +1,7 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 const EMAIL = `
 From: "somebody" <somebody@example.com>
@@ -36,7 +36,7 @@ acceptance("Admin - Emails", function (needs) {
   });
 
   test("displays received errors when testing emails", async function (assert) {
-    pretender.get("/admin/email.json", () => {
+    pretender.get("/admin/email/server-settings.json", () => {
       return response({});
     });
 
@@ -44,15 +44,14 @@ acceptance("Admin - Emails", function (needs) {
       return response(422, { errors: ["some error"] });
     });
 
-    await visit("/admin/email");
+    await visit("/admin/email/server-settings");
     await fillIn(".admin-controls input", "test@example.com");
     await click(".btn-primary");
 
-    assert.ok(query("#dialog-holder").innerText.includes("some error"));
-    assert.ok(
-      query("#dialog-holder .dialog-body b"),
-      "Error message can contain html"
-    );
+    assert.dom("#dialog-holder").includesText("some error");
+    assert
+      .dom("#dialog-holder .dialog-body b")
+      .exists("Error message can contain html");
     await click(".dialog-overlay");
   });
 });

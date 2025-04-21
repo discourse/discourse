@@ -7,16 +7,15 @@ import {
   visit,
 } from "@ember/test-helpers";
 import { test } from "qunit";
+import { cloneJSON } from "discourse/lib/object";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
 import {
   acceptance,
   publishToMessageBus,
-  query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { cloneJSON } from "discourse-common/lib/object";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 /**
  * Workaround for https://github.com/tildeio/router.js/pull/335
@@ -131,16 +130,14 @@ acceptance(
 
     test("Periods in current user's username don't act like wildcards", async function (assert) {
       await visit("/u/eviltrout");
-      assert.strictEqual(
-        query(".user-profile-names .username").textContent.trim(),
+      assert.dom(".user-profile-names .username").hasText(
         `eviltrout
                 Robin Ward is an admin`,
         "eviltrout profile is shown"
       );
 
       await visit("/u/e.il.rout");
-      assert.strictEqual(
-        query(".user-profile-names .username").textContent.trim(),
+      assert.dom(".user-profile-names .username").hasText(
         `e.il.rout
                 Robin Ward is an admin`,
         "e.il.rout profile is shown"
@@ -385,7 +382,7 @@ acceptance("User - Logout", function (needs) {
       .doesNotExist("no cancel button present");
     assert
       .dom(".dialog-footer .btn-primary")
-      .hasText(I18n.t("home"), "primary dialog button is present");
+      .hasText(i18n("home"), "primary dialog button is present");
 
     await click(".dialog-overlay");
   });

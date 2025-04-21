@@ -2,17 +2,19 @@ import { get } from "@ember/object";
 import { gt, or } from "@ember/object/computed";
 import { isBlank, isEmpty } from "@ember/utils";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import discourseComputed from "discourse/lib/decorators";
 import RestModel from "discourse/models/rest";
-import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import ThemeSettings from "admin/models/theme-settings";
 
 const THEME_UPLOAD_VAR = 2;
-const FIELDS_IDS = [0, 1, 5];
+const FIELDS_IDS = [0, 1, 5, 6];
 
 export const THEMES = "themes";
 export const COMPONENTS = "components";
 const SETTINGS_TYPE_ID = 5;
+
+const JS_FILENAME = "discourse/api-initializers/theme-initializer.gjs";
 
 class Theme extends RestModel {
   static munge(json) {
@@ -38,21 +40,6 @@ class Theme extends RestModel {
       { id: 0, name: "common" },
       { id: 1, name: "desktop", icon: "desktop" },
       { id: 2, name: "mobile", icon: "mobile-screen-button" },
-      { id: 3, name: "settings", icon: "gear", advanced: true },
-      {
-        id: 4,
-        name: "translations",
-        icon: "globe",
-        advanced: true,
-        customNames: true,
-      },
-      {
-        id: 5,
-        name: "extra_scss",
-        icon: "paintbrush",
-        advanced: true,
-        customNames: true,
-      },
     ].map((target) => {
       target["edited"] = this.hasEdited(target.name);
       target["error"] = this.hasError(target.name);
@@ -71,31 +58,16 @@ class Theme extends RestModel {
       "footer",
     ];
 
-    const scss_fields = (this.theme_fields || [])
-      .filter((f) => f.target === "extra_scss" && f.name !== "")
-      .map((f) => f.name);
-
-    if (scss_fields.length < 1) {
-      scss_fields.push("importable_scss");
-    }
-
     return {
       common: [
         ...common,
+        "js",
         "color_definitions",
         "embedded_scss",
         "embedded_header",
       ],
       desktop: common,
       mobile: common,
-      settings: ["yaml"],
-      translations: [
-        "en",
-        ...(this.theme_fields || [])
-          .filter((f) => f.target === "translations" && f.name !== "en")
-          .map((f) => f.name),
-      ],
-      extra_scss: scss_fields,
     };
   }
 
@@ -114,14 +86,8 @@ class Theme extends RestModel {
           error: this.hasError(target, fieldName),
         };
 
-        if (target === "translations" || target === "extra_scss") {
-          field.translatedName = fieldName;
-        } else {
-          field.translatedName = I18n.t(
-            `admin.customize.theme.${fieldName}.text`
-          );
-          field.title = I18n.t(`admin.customize.theme.${fieldName}.title`);
-        }
+        field.translatedName = i18n(`admin.customize.theme.${fieldName}.text`);
+        field.title = i18n(`admin.customize.theme.${fieldName}.title`);
 
         if (fieldName.indexOf("_tag") > 0) {
           field.icon = "far-file-lines";
@@ -209,6 +175,10 @@ class Theme extends RestModel {
   }
 
   getField(target, name) {
+    if (target === "common" && name === "js") {
+      target = "extra_js";
+      name = JS_FILENAME;
+    }
     let themeFields = this.themeFields;
     let key = this.getKey({ target, name });
     let field = themeFields[key];
@@ -228,6 +198,10 @@ class Theme extends RestModel {
     this.set("changed", true);
     let themeFields = this.themeFields;
     let field = { name, target, value, upload_id, type_id };
+    if (field.name === "js" && target === "common") {
+      field.target = "extra_js";
+      field.name = JS_FILENAME;
+    }
 
     // slow path for uploads and so on
     if (type_id && type_id > 1) {

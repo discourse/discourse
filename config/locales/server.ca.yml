@@ -377,6 +377,8 @@ ca:
         bio_raw: "Quant a mi"
       user:
         password: "Contrasenya"
+      user_password:
+        password: "Contrasenya"
     errors:
       models:
         topic:
@@ -948,12 +950,10 @@ ca:
       title: "Notifica els moderadors"
       xaxis: "Dia"
       yaxis: "Nombre de missatges"
-      description: "Nombre de vegades que els moderadors han estat notificats privadament per una bandera."
     notify_user_private_messages:
       title: "Notifica l'usuari"
       xaxis: "Dia"
       yaxis: "Nombre de missatges"
-      description: "Nombre de vegades que els usuaris han estat notificats de manera privada per una bandera."
     top_referrers:
       title: "Referidors principals"
       xaxis: "Usuari"
@@ -1140,7 +1140,7 @@ ca:
     delete_old_hidden_posts: "Suprimeix automàticament qualsevol publicació que resti oculta durant més de 30 dies."
     default_locale: "L'idioma per defecte d'aquesta instància de Discourse. Podeu substituir el text de les categories i els temes generats pel sistema en <a href='%{base_path}/admin/customize/site_texts' target='_blank'>Personalitza / Text</a>."
     allow_user_locale: "Permet que els usuaris triïn la seva preferència de llengua d'interfície"
-    support_mixed_text_direction: "Permet direccions de text mixtes d'esquerra a dreta i de dreta a esquerra."
+    support_mixed_text_direction: "Permet direccions de text mixtes d'esquerra a dreta i de dreta a esquerra"
     max_post_length: "Màxim longitud permesa de les publicacions en caràcters"
     show_topic_featured_link_in_digest: "Mostra l'enllaç de tema destacat en el correu de resum. "
     min_topic_title_length: "Longitud mínima permesa de títol de tema en caràcters"
@@ -1231,7 +1231,6 @@ ca:
     invalidate_inactive_admin_email_after_days: "Els comptes d'administrador que no hagin visitat el lloc web en aquest nombre de dies hauran de tornar a validar la seva adreça de correu abans d'iniciar la sessió. 0 per a desactivar-ho."
     share_links: "Determina quins elements apareixen en el diàleg de compartir i en qui ordre."
     site_contact_username: "Nom d'usuari vàlid de l'equip responsable des del qual s'envien tots els missatges automàtics. Si es deixa buit, es farà servir el compte per defecte del sistema."
-    site_contact_group_name: "Nom de grup vàlid per a ser convidat a tots els missatges automatitzats."
     send_welcome_message: "Envia a tots els usuaris nous un missatge de benvinguda amb la guia ràpida d'inici."
     send_tl1_welcome_message: "Envieu als nous usuaris de nivell de confiança 1 un missatge de benvinguda."
     suppress_reply_directly_below: "No mostris el recompte de respostes desplegable en una publicació quan només hi hagi una resposta directa sota la publicació."
@@ -1242,7 +1241,6 @@ ca:
     topics_per_period_in_top_page: "Nombre de temes principals que es mostren en els temes principals expandits amb \"mostra'n més\"."
     prioritize_username_in_ux: "Mostra el nom d'usuari primer en la pàgina d'usuari, targeta d'usuari i publicacions (si està desactivat, el nom es mostra primer)"
     email_token_valid_hours: "Els testimonis (tokens) de contrasenya oblidada i activació de compte són vàlids durant (n) hores."
-    allow_index_in_robots_txt: "Especifiqueu en robots.txt que els motors de cerca web poden indexar aquest lloc. En casos excepcionals, podeu <a href='%{base_path}/admin/customize/robots'>substituir robots.txt</a> de manera permanent."
     log_out_strict: "Quan es tanca la sessió, tanca TOTES les sessions de l'usuari en tots els dispositius"
     version_checks: "Fes ping al Discourse Hub per a actualitzacions de versions i per a mostrar missatges de versió nova en el tauler <a href='%{base_path}/admin' target='_blank'>/admin</a>."
     new_version_emails: "Envia un correu a contact_email address quan hi hagi una nova versió del Discourse disponible."
@@ -1251,7 +1249,7 @@ ca:
     login_required: "Exigeix l'autenticació per a llegir el contingut del lloc web. Impedeix l'accés anònim."
     min_username_length: "Longitud mínima de nom d'usuari en caràcters. ATENCIÓ: si cap usuari o grup existents té un nom més curt, el vostre lloc web deixarà de funcionar!"
     max_username_length: "Longitud màxima de nom d'usuari en caràcters. ATENCIÓ: si cap usuari o grup existent té un nom més llarg, el vostre lloc web deixarà de funcionar!"
-    unicode_usernames: "Permet que els noms d'usuari i els noms de grups continguin lletres i números Unicode."
+    unicode_usernames: "Permet que els noms d'usuari i els noms de grups continguin lletres i números Unicode"
     reserved_usernames: "Noms d'usuari als quals no es permet la subscripció. El símbol de comodí * es pot utilitzar per a fer coincidir qualsevol caràcter zero o més vegades."
     password_unique_characters: "Nombre mínim de caràcters únics que ha de tenir una contrasenya."
     block_common_passwords: "No permetis contrasenyes que siguin de les 10.000 més comunes."
@@ -1409,7 +1407,6 @@ ca:
     num_hours_to_close_topic: "Nombre d'hores per a aturar un tema per a intervenció."
     auto_respond_to_flag_actions: "Habilita la resposta automàtica quan s'elimini una bandera."
     min_first_post_typing_time: "Nombre mínim de temps en mil·lisegons que un usuari ha d'escriure durant la primera publicació. Si no s'assoleix el límit, la publicació passarà automàticament a la cua de les que requereixen aprovació. Poseu a 0 per desactivar (no recomanat)."
-    auto_silence_fast_typers_on_first_post: "Silencia automàticament els usuaris que no compleixin min_first_post_typing_time"
     auto_silence_fast_typers_max_trust_level: "Nivell de confiança sota el qual se silencien automàticament usuaris que escriguin massa de pressa"
     reviewable_claiming: "Cal que es reclami el contingut revisable abans que s'hi pugui actuar?"
     reviewable_default_topics: "Per defecte, mostra el contingut revisable agrupat per temes"
@@ -1509,7 +1506,6 @@ ca:
     app_association_android: "Contingut del punt final (endpoint) <a href='%{base_path}/.well-known/assetlinks.json'>.well-known/assetlinks.json</a>, utilitzat per a l’API de Digital Asset Links de Google."
     app_association_ios: "Contingut del punt final (endpoint) <a href='%{base_path}/apple-app-site-association'>apple-app-site-association</a>, utilitzat per a crear enllaços universals entre aquest lloc i les aplicacions iOS."
     auto_handle_queued_age: "Tracta automàticament els registres que esperen ser revisats després d'aquest nombre de dies. Les banderes s'ignoraran. Les publicacions en cua i els usuaris seran rebutjats. Poseu-ho a 0 per a desactivar la funció."
-    full_name_required: "El nom complet és un camp obligatori del perfil d'usuari."
     enable_names: "Mostra el nom complet de l'usuari en el seu perfil, la seva targeta d'usuari i els seus correus. Desactiveu-ho per a amagar el nom complet a tot arreu."
     display_name_on_posts: "Mostra el nom complet de l'usuari en les seves publicacions a més del seu @nomdusuari."
     show_time_gap_days: "Si es fan dues publicacions amb aquesta diferència de dies, mostra la diferència de temps en el tema."
@@ -2549,8 +2545,6 @@ ca:
     regular:
       name: Habitual
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Concedit permís</a> per a recategoritzar, reanomenar, enllaços seguits, wiki, més 'M'agrada'
-      long_description: |
-        Aquesta insígnia es concedeix quan arribeu al nivell de confiança 3. Gràcies per formar part habitualment de la comunitat des de fa mesos. Ara sou un dels lectors més actius i un col·laborador fiable que feu que la comunitat sigui fantàstica. Ara podeu recategoritzar i canviar el nom de temes, aprofitar les banderes més potents de brossa, accedir a una sala privada i, a més, obtindreu molts més 'M'agrada' al dia.
     leader:
       name: Líder
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">S'ha concedit</a> permís per a editar globalment, destacar, tancar, arxivar, dividir i combinar, més 'M'agrada'.
@@ -2829,15 +2823,7 @@ ca:
           homepage_style:
             choices:
               latest:
-                label: "Temes més recents"
-              categories_only:
-                label: "Només categories"
-              categories_with_featured_topics:
-                label: "Categories amb temes destacats"
-              categories_and_latest_topics:
-                label: "Categories i temes més recents"
-              categories_and_top_topics:
-                label: "Categories i temes principals"
+                label: "Més recents"
       corporate:
         fields:
           governing_law:
@@ -2866,7 +2852,7 @@ ca:
       quoted: '%{username} us ha citat en "%{topic}" - %{site_title}'
       replied: '%{username} us ha respost en "%{topic}" - %{site_title}'
       posted: '%{username} publicat en "%{topic}" - %{site_title}'
-      private_message: '%{username} us ha enviat un missatge privat en "%{topic}" - %{site_title}'
+      private_message: '%{username} us ha enviat un missatge personal en "%{topic}" - %{site_title}'
       linked: '%{username} ha enllaçat a la vostra publicació des de "%{topic}" - %{site_title}'
       watching_first_post: '%{username} ha creat un tema nou "%{topic}" - %{site_title}'
       confirm_title: "Notificacions activades - %{site_title}"
@@ -2909,8 +2895,13 @@ ca:
         description: "Restaura la publicació de manera que tots els usuaris puguin veure-la."
       delete_single:
         title: "Suprimeix"
+        complete: "Publicació suprimida."
+      delete_and_ignore:
+        complete: "Publicació suprimida."
       delete_and_ignore_replies:
         confirm: "Esteu segur que també voleu suprimir les respostes a la publicació?"
+      delete_and_agree:
+        complete: "Publicació suprimida."
       delete_and_agree_replies:
         confirm: "Esteu segur que també voleu suprimir les respostes a la publicació?"
       disagree_and_restore:
@@ -2934,6 +2925,7 @@ ca:
         delete:
           title: "Suprimeix l'usuari"
           description: "L'usuari serà suprimit del fòrum."
+          complete: "Usuari suprimit."
         block:
           title: "Suprimeix i bloca l'usuari"
           description: "Se suprimirà l'usuari i es blocarà la seva adreça IP i adreça de correu electrònic."
@@ -2941,6 +2933,7 @@ ca:
         title: "Rebutja"
       delete_user:
         reason: "Suprimit mitjançant cua de revisió"
+        complete: "Usuari suprimit."
   email_style:
     html_missing_placeholder: "La plantilla HTML ha d’incloure %{placeholder}"
   discord:

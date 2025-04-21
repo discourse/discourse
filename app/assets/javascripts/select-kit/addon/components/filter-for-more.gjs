@@ -1,4 +1,4 @@
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 
 const FilterForMore = <template>
   {{#if @collection.content.shouldShowMoreTip}}

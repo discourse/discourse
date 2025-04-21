@@ -11,25 +11,17 @@ describe "JS Deprecation Handling", type: :system do
       console.warn = (msg) => window.intercepted_warnings.push([msg, (new Error()).stack])
     JS
 
-    # Apply deprecate shims. These are applied automatically in production
-    # builds, but running a full production build for system specs would be
-    # too slow
-    page.execute_script <<~JS
-      require("discourse/lib/deprecate-shim").applyShim();
-    JS
-
     # Trigger a deprecation, then return the console.warn calls
     warn_calls = page.execute_script <<~JS
       const { deprecate } = require('@ember/debug');
-      deprecate("Some message", false, { id: "some.id" })
+      deprecate("Some message", false, { id: "some.id", for: "discourse", since: "3.4.0", until: "3.5.0" });
       return window.intercepted_warnings
     JS
 
     expect(warn_calls.size).to eq(1)
     call, backtrace = warn_calls[0]
 
-    expect(call).to eq("DEPRECATION: Some message [deprecation id: some.id]")
-    expect(backtrace).to include("shimLogDeprecationToConsole")
+    expect(call).to start_with("DEPRECATION: Some message [deprecation id: some.id]")
   end
 
   it "shows warnings to admins for critical deprecations" do
@@ -42,7 +34,7 @@ describe "JS Deprecation Handling", type: :system do
     visit("/latest")
 
     page.execute_script <<~JS
-      const deprecated = require("discourse-common/lib/deprecated").default;
+      const deprecated = require("discourse/lib/deprecated").default;
       deprecated("Fake deprecation message", { id: "fake-deprecation" })
     JS
 
@@ -62,7 +54,7 @@ describe "JS Deprecation Handling", type: :system do
       type: :js,
       name: "discourse/connectors/below-footer/my-connector.gjs",
       value: <<~JS,
-        import deprecated from "discourse-common/lib/deprecated";
+        import deprecated from "discourse/lib/deprecated";
         function triggerDeprecation(){
           deprecated("Fake deprecation message", { id: "fake-deprecation" })
         }

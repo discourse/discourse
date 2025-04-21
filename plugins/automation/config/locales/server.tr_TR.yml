@@ -105,6 +105,7 @@ tr_TR:
         doc: Bir kullanıcıya birden fazla özel mesaj gönderilmesine izin verir. Her özel mesaj bir gecikme kabul eder.
       suspend_user_by_email:
         title: Kullanıcıyı e-posta ile askıya al
+        description: E-posta adresine göre bir hesabı otomatik olarak askıya alın
       user_global_notice:
         title: Kullanıcı küresel bildirisi
         description: Bir kullanıcı için genel bir bildirim göstermeye izin verir
@@ -141,6 +142,13 @@ tr_TR:
         button_text: Bitti
       add_user_to_group_through_custom_field:
         title: "Kullanıcı Özel Alanı aracılığıyla gruba kullanıcı ekleyin"
+        description: "Kullanıcıları giriş yaptıklarında veya yinelenen bir kontrolle otomatik olarak gruplara ekleyin"
       group_category_notification_default:
         title: "Grup Kategorisi Bildirimi Varsayılan"
         description: "Bir grubun üyeleri için bir kategorinin varsayılan bildirim seviyesini ayarlayın"
+      send_chat_message:
+        title: "Sohbet Mesajı gönder"
+        description: "Bir kanala özel bir sohbet mesajı gönderme"
+      random_assign:
+        title: "Rastgele Ata"
+        description: "Konuları rastgele bir gruba atayın"

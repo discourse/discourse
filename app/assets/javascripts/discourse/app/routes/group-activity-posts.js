@@ -1,6 +1,6 @@
 import { action, get } from "@ember/object";
 import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export function buildGroupPage(type) {
   return class GroupActivityPosts extends DiscourseRoute {
@@ -9,7 +9,7 @@ export function buildGroupPage(type) {
     controllerName = "group-activity-posts";
 
     titleToken() {
-      return I18n.t(`groups.${type}`);
+      return i18n(`groups.${type}`);
     }
 
     model(params, transition) {

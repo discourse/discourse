@@ -4,17 +4,36 @@ import { service } from "@ember/service";
 import DiscourseRoute from "discourse/routes/discourse";
 
 export default class SignupRoute extends DiscourseRoute {
-  @service router;
   @service siteSettings;
+  @service router;
+  @service login;
+
+  authComplete = false;
 
   beforeModel() {
-    this.showCreateAccount();
+    this.authComplete = document.getElementById(
+      "data-authentication"
+    )?.dataset.authenticationData;
+
+    if (this.login.isOnlyOneExternalLoginMethod && !this.authComplete) {
+      this.login.singleExternalLogin({ signup: true });
+    } else {
+      this.showCreateAccount();
+    }
+  }
+
+  setupController(controller) {
+    super.setupController(...arguments);
+
+    if (this.login.isOnlyOneExternalLoginMethod && !this.authComplete) {
+      controller.set("isRedirectingToExternalAuth", true);
+    }
   }
 
   @action
   async showCreateAccount() {
     const { canSignUp } = this.controllerFor("application");
-    if (canSignUp && this.siteSettings.experimental_full_page_login) {
+    if (canSignUp && this.siteSettings.full_page_login) {
       return;
     }
     const route = await this.router

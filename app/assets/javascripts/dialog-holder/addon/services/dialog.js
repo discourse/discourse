@@ -1,7 +1,5 @@
-import { schedule } from "@ember/runloop";
 import Service from "@ember/service";
-import A11yDialog from "a11y-dialog";
-import { bind } from "discourse-common/utils/decorators";
+import { bind } from "discourse/lib/decorators";
 
 export default class DialogService extends Service {
   dialogInstance = null;
@@ -50,6 +48,8 @@ export default class DialogService extends Service {
     } = params;
 
     this.setProperties({
+      show: true,
+
       message,
       bodyComponent,
       bodyComponentModel,
@@ -71,28 +71,6 @@ export default class DialogService extends Service {
       didCancel,
       buttons,
       class: params.class,
-    });
-
-    await new Promise((resolve) => schedule("afterRender", resolve));
-    const element = document.getElementById("dialog-holder");
-
-    if (!element) {
-      const msg =
-        "dialog-holder wrapper element not found. Unable to render dialog";
-      // eslint-disable-next-line no-console
-      console.error(msg, params);
-      throw new Error(msg);
-    }
-
-    this.dialogInstance = new A11yDialog(element);
-    this.dialogInstance.show();
-
-    this.dialogInstance.on("hide", () => {
-      if (!this._confirming && this.didCancel) {
-        this.didCancel();
-      }
-
-      this.reset();
     });
   }
 
@@ -144,7 +122,13 @@ export default class DialogService extends Service {
   }
 
   reset() {
+    if (!this._confirming && this.didCancel) {
+      this.didCancel();
+    }
+
     this.setProperties({
+      show: false,
+
       message: null,
       bodyComponent: null,
       bodyComponentModel: null,
@@ -171,27 +155,28 @@ export default class DialogService extends Service {
     });
   }
 
-  willDestroy() {
-    this.dialogInstance?.destroy();
-    this.reset();
-  }
-
   @bind
   didConfirmWrapped() {
-    if (this.didConfirm) {
-      this.didConfirm();
-    }
+    let didConfirm = this.didConfirm;
     this._confirming = true;
-    this.dialogInstance.hide();
+    this.reset();
+    if (didConfirm) {
+      didConfirm();
+    }
   }
 
   @bind
   cancel() {
-    this.dialogInstance.hide();
+    this.reset();
   }
 
   @bind
   enableConfirmButton() {
     this.set("confirmButtonDisabled", false);
+  }
+
+  @bind
+  hide() {
+    this.reset();
   }
 }

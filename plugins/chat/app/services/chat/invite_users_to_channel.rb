@@ -25,6 +25,7 @@ module Chat
       validates :user_ids, presence: true
       validates :channel_id, presence: true
     end
+
     model :channel
     policy :can_view_channel
     model :users, optional: true

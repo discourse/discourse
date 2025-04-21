@@ -1,15 +1,15 @@
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
+import { deepMerge } from "discourse/lib/object";
 import PreloadStore from "discourse/lib/preload-store";
 import DiscourseRoute from "discourse/routes/discourse";
-import { deepMerge } from "discourse-common/lib/object";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class InvitesShow extends DiscourseRoute {
   @service siteSettings;
 
   titleToken() {
-    return I18n.t("invites.accept_title");
+    return i18n("invites.accept_title");
   }
 
   model(params) {
@@ -46,6 +46,7 @@ export default class InvitesShow extends DiscourseRoute {
 
   setupController(controller, model) {
     super.setupController(...arguments);
+    controller.accountUsername = model.username;
 
     if (model.user_fields) {
       controller.userFields.forEach((userField) => {

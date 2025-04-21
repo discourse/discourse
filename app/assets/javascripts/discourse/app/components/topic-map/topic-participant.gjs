@@ -1,9 +1,11 @@
 import Component from "@glimmer/component";
+import { hash } from "@ember/helper";
 import { htmlSafe } from "@ember/template";
 import { gt } from "truth-helpers";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import UserAvatarFlair from "discourse/components/user-avatar-flair";
+import { avatarImg } from "discourse/lib/avatar-utils";
 import { userPath } from "discourse/lib/url";
-import { avatarImg } from "discourse-common/lib/avatar-utils";
 
 const addTopicParticipantClassesCallbacks = [];
 
@@ -52,19 +54,24 @@ export default class TopicParticipant extends Component {
   }
 
   <template>
-    <div class={{this.participantClasses}}>
-      <a
-        class={{this.linkClasses}}
-        data-user-card={{@participant.username}}
-        title={{@participant.username}}
-        href={{this.userUrl}}
-      >
-        {{this.avatarImage}}
-        {{#if (gt @participant.post_count 1)}}
-          <span class="post-count">{{@participant.post_count}}</span>
-        {{/if}}
-        <UserAvatarFlair @user={{@participant}} />
-      </a>
-    </div>
+    <PluginOutlet
+      @name="topic-participant"
+      @outletArgs={{hash participant=@participant}}
+    >
+      <div class={{this.participantClasses}}>
+        <a
+          class={{this.linkClasses}}
+          data-user-card={{@participant.username}}
+          title={{@participant.username}}
+          href={{this.userUrl}}
+        >
+          {{this.avatarImage}}
+          {{#if (gt @participant.post_count 1)}}
+            <span class="post-count">{{@participant.post_count}}</span>
+          {{/if}}
+          <UserAvatarFlair @user={{@participant}} />
+        </a>
+      </div>
+    </PluginOutlet>
   </template>
 }

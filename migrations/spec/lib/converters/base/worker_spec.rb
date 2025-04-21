@@ -49,11 +49,7 @@ RSpec.describe ::Migrations::Converters::Base::Worker do
     end
 
     def create_progress_stats(progress: 1, warning_count: 0, error_count: 0)
-      stats = ::Migrations::Converters::Base::ProgressStats.new
-      stats.progress = progress
-      stats.warning_count = warning_count
-      stats.error_count = error_count
-      stats
+      ::Migrations::Converters::Base::StepStats.new(progress:, warning_count:, error_count:)
     end
 
     it "writes objects to the `output_queue`" do

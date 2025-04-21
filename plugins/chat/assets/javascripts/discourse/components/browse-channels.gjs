@@ -8,13 +8,13 @@ import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { eq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
-import { INPUT_DELAY } from "discourse-common/config/environment";
-import i18n from "discourse-common/helpers/i18n";
-import discourseDebounce from "discourse-common/lib/debounce";
+import FilterInput from "discourse/components/filter-input";
+import discourseDebounce from "discourse/lib/debounce";
+import { INPUT_DELAY } from "discourse/lib/environment";
+import { i18n } from "discourse-i18n";
 import List from "discourse/plugins/chat/discourse/components/chat/list";
 import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
 import ChatChannelCard from "discourse/plugins/chat/discourse/components/chat-channel-card";
-import DcFilterInput from "discourse/plugins/chat/discourse/components/dc-filter-input";
 
 const ARCHIVED = "archived";
 const ALL = "all";
@@ -89,11 +89,10 @@ export default class BrowseChannels extends Component {
           </ul>
         </nav>
 
-        <DcFilterInput
+        <FilterInput
           {{didInsert this.focusFilterInput}}
           @filterAction={{this.setFilter}}
           @icons={{hash right="magnifying-glass"}}
-          @containerClass="filter-input"
           placeholder={{i18n "chat.browse.filter_input_placeholder"}}
         />
       </div>
@@ -118,6 +117,7 @@ export default class BrowseChannels extends Component {
                 <DButton
                   @action={{this.showChatNewMessageModal}}
                   @label="chat.empty_state.direct_message_cta"
+                  class="btn-default"
                 />
               </div>
             </list.EmptyState>

@@ -1,8 +1,8 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import { setPrefix } from "discourse/lib/get-url";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { setPrefix } from "discourse-common/lib/get-url";
 
 acceptance("Tag Groups", function (needs) {
   needs.user();
@@ -15,16 +15,12 @@ acceptance("Tag Groups", function (needs) {
         tag_names: ["monkey"],
         parent_tag_name: [],
         one_per_topic: false,
-        permissions: { everyone: 1 },
+        permissions: { 0: 1 },
       },
     };
-    server.post("/tag_groups", () => {
-      return helper.response(tagGroups);
-    });
-    server.get("/forum/tag_groups", () => {
-      return helper.response(tagGroups);
-    });
 
+    server.post("/tag_groups", () => helper.response(tagGroups));
+    server.get("/forum/tag_groups", () => helper.response(tagGroups));
     server.get("/groups/search.json", () => {
       return helper.response([
         {
@@ -79,8 +75,8 @@ acceptance("Tag Groups", function (needs) {
     await click(".tag-groups-sidebar li:first-child a");
 
     assert
-      .dom("#visible-permission:checked")
-      .exists("selected permission does not change after saving");
+      .dom(".tag-groups-sidebar")
+      .exists("tag group is saved and displayed in the sidebar");
   });
 
   test("going back to tags supports subfolder", async function (assert) {

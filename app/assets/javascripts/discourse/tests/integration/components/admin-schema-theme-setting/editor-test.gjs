@@ -4,7 +4,7 @@ import schemaAndData from "discourse/tests/fixtures/theme-setting-schema-data";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import AdminSchemaThemeSettingEditor from "admin/components/schema-theme-setting/editor";
 import ThemeSettings from "admin/models/theme-settings";
 
@@ -89,9 +89,11 @@ module(
     test("activates the first node by default", async function (assert) {
       const setting = schemaAndData(1);
 
-      await render(<template>
-        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
-      </template>);
+      await render(
+        <template>
+          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+        </template>
+      );
 
       const tree = new TreeFromDOM();
 
@@ -103,9 +105,11 @@ module(
     test("renders the 2nd level of nested items for the active item only", async function (assert) {
       const setting = schemaAndData(1);
 
-      await render(<template>
-        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
-      </template>);
+      await render(
+        <template>
+          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+        </template>
+      );
 
       const tree = new TreeFromDOM();
 
@@ -121,7 +125,7 @@ module(
       assert.strictEqual(
         tree.nodes[1].children.length,
         0,
-        "thie children of an active node aren't shown"
+        "the children of an active node aren't shown"
       );
 
       await click(tree.nodes[1].element);
@@ -132,7 +136,7 @@ module(
       assert.strictEqual(
         tree.nodes[0].children.length,
         0,
-        "thie children of an active node aren't shown"
+        "the children of an active node aren't shown"
       );
 
       assert.true(tree.nodes[1].active);
@@ -146,9 +150,11 @@ module(
     test("allows navigating through multiple levels of nesting", async function (assert) {
       const setting = schemaAndData(1);
 
-      await render(<template>
-        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
-      </template>);
+      await render(
+        <template>
+          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+        </template>
+      );
 
       const tree = new TreeFromDOM();
 
@@ -236,9 +242,11 @@ module(
     test("the back button is only shown when the navigation is at least one level deep", async function (assert) {
       const setting = schemaAndData(1);
 
-      await render(<template>
-        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
-      </template>);
+      await render(
+        <template>
+          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+        </template>
+      );
 
       assert.dom(".--back-btn").doesNotExist();
 
@@ -271,9 +279,11 @@ module(
     test("the back button navigates to the index of the active element at the previous level", async function (assert) {
       const setting = schemaAndData(1);
 
-      await render(<template>
-        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
-      </template>);
+      await render(
+        <template>
+          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+        </template>
+      );
 
       const tree = new TreeFromDOM();
       await click(tree.nodes[1].element);
@@ -298,9 +308,11 @@ module(
     test("the back button label includes the name of the item at the previous level", async function (assert) {
       const setting = schemaAndData(1);
 
-      await render(<template>
-        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
-      </template>);
+      await render(
+        <template>
+          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+        </template>
+      );
 
       const tree = new TreeFromDOM();
       await click(tree.nodes[1].element);
@@ -309,7 +321,7 @@ module(
       await click(tree.nodes[1].children[1].element);
 
       assert.dom(".--back-btn").hasText(
-        I18n.t("admin.customize.theme.schema.back_button", {
+        i18n("admin.customize.theme.schema.back_button", {
           name: "item 2",
         })
       );
@@ -318,7 +330,7 @@ module(
       await click(tree.nodes[1].children[0].element);
 
       assert.dom(".--back-btn").hasText(
-        I18n.t("admin.customize.theme.schema.back_button", {
+        i18n("admin.customize.theme.schema.back_button", {
           name: "child 2-2",
         })
       );
@@ -326,7 +338,7 @@ module(
       await click(".--back-btn");
 
       assert.dom(".--back-btn").hasText(
-        I18n.t("admin.customize.theme.schema.back_button", {
+        i18n("admin.customize.theme.schema.back_button", {
           name: "item 2",
         })
       );
@@ -358,9 +370,11 @@ module(
         ],
       });
 
-      await render(<template>
-        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
-      </template>);
+      await render(
+        <template>
+          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+        </template>
+      );
 
       const inputFields = new InputFieldsFromDOM();
 
@@ -380,9 +394,11 @@ module(
     test("input fields for items at different levels", async function (assert) {
       const setting = schemaAndData(2);
 
-      await render(<template>
-        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
-      </template>);
+      await render(
+        <template>
+          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+        </template>
+      );
 
       const inputFields = new InputFieldsFromDOM();
 
@@ -448,9 +464,11 @@ module(
         ],
       });
 
-      await render(<template>
-        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
-      </template>);
+      await render(
+        <template>
+          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+        </template>
+      );
 
       const inputFields = new InputFieldsFromDOM();
 
@@ -464,7 +482,7 @@ module(
       inputFields.refresh();
 
       assert.dom(inputFields.fields.id.errorElement).hasText(
-        I18n.t("admin.customize.theme.schema.fields.string.too_short", {
+        i18n("admin.customize.theme.schema.fields.string.too_short", {
           count: 2,
         })
       );
@@ -475,7 +493,7 @@ module(
 
       assert
         .dom(inputFields.fields.id.errorElement)
-        .hasText(I18n.t("admin.customize.theme.schema.fields.required"));
+        .hasText(i18n("admin.customize.theme.schema.fields.required"));
     });
 
     test("input fields of type integer", async function (assert) {
@@ -502,9 +520,11 @@ module(
         ],
       });
 
-      await render(<template>
-        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
-      </template>);
+      await render(
+        <template>
+          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+        </template>
+      );
 
       const inputFields = new InputFieldsFromDOM();
 
@@ -520,7 +540,7 @@ module(
       inputFields.refresh();
 
       assert.dom(inputFields.fields.id.errorElement).hasText(
-        I18n.t("admin.customize.theme.schema.fields.number.too_large", {
+        i18n("admin.customize.theme.schema.fields.number.too_large", {
           count: 10,
         })
       );
@@ -530,7 +550,7 @@ module(
       inputFields.refresh();
 
       assert.dom(inputFields.fields.id.errorElement).hasText(
-        I18n.t("admin.customize.theme.schema.fields.number.too_small", {
+        i18n("admin.customize.theme.schema.fields.number.too_small", {
           count: 5,
         })
       );
@@ -541,7 +561,7 @@ module(
 
       assert
         .dom(inputFields.fields.id.errorElement)
-        .hasText(I18n.t("admin.customize.theme.schema.fields.required"));
+        .hasText(i18n("admin.customize.theme.schema.fields.required"));
     });
 
     test("input fields of type float", async function (assert) {
@@ -568,9 +588,11 @@ module(
         ],
       });
 
-      await render(<template>
-        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
-      </template>);
+      await render(
+        <template>
+          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+        </template>
+      );
 
       const inputFields = new InputFieldsFromDOM();
 
@@ -586,7 +608,7 @@ module(
       inputFields.refresh();
 
       assert.dom(inputFields.fields.id.errorElement).hasText(
-        I18n.t("admin.customize.theme.schema.fields.number.too_large", {
+        i18n("admin.customize.theme.schema.fields.number.too_large", {
           count: 10.5,
         })
       );
@@ -596,7 +618,7 @@ module(
       inputFields.refresh();
 
       assert.dom(inputFields.fields.id.errorElement).hasText(
-        I18n.t("admin.customize.theme.schema.fields.number.too_small", {
+        i18n("admin.customize.theme.schema.fields.number.too_small", {
           count: 5.5,
         })
       );
@@ -607,15 +629,17 @@ module(
 
       assert
         .dom(inputFields.fields.id.errorElement)
-        .hasText(I18n.t("admin.customize.theme.schema.fields.required"));
+        .hasText(i18n("admin.customize.theme.schema.fields.required"));
     });
 
     test("input fields of type boolean", async function (assert) {
       const setting = schemaAndData(3);
 
-      await render(<template>
-        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
-      </template>);
+      await render(
+        <template>
+          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+        </template>
+      );
 
       const inputFields = new InputFieldsFromDOM();
       assert
@@ -669,9 +693,11 @@ module(
         ],
       });
 
-      await render(<template>
-        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
-      </template>);
+      await render(
+        <template>
+          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+        </template>
+      );
 
       const inputFields = new InputFieldsFromDOM();
 
@@ -732,9 +758,11 @@ module(
         value: [{}],
       });
 
-      await render(<template>
-        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
-      </template>);
+      await render(
+        <template>
+          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+        </template>
+      );
 
       const inputFields = new InputFieldsFromDOM();
 
@@ -755,7 +783,7 @@ module(
       inputFields.refresh();
 
       assert.dom(inputFields.fields.not_required_category.errorElement).hasText(
-        I18n.t("admin.customize.theme.schema.fields.categories.at_least", {
+        i18n("admin.customize.theme.schema.fields.categories.at_least", {
           count: 2,
         })
       );
@@ -809,9 +837,11 @@ module(
         ],
       });
 
-      await render(<template>
-        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
-      </template>);
+      await render(
+        <template>
+          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+        </template>
+      );
 
       const inputFields = new InputFieldsFromDOM();
 
@@ -832,7 +862,7 @@ module(
       inputFields.refresh();
 
       assert.dom(inputFields.fields.required_category.errorElement).hasText(
-        I18n.t("admin.customize.theme.schema.fields.categories.at_least", {
+        i18n("admin.customize.theme.schema.fields.categories.at_least", {
           count: 1,
         })
       );
@@ -870,9 +900,11 @@ module(
         ],
       });
 
-      await render(<template>
-        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
-      </template>);
+      await render(
+        <template>
+          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+        </template>
+      );
 
       const tree = new TreeFromDOM();
 
@@ -926,9 +958,11 @@ module(
         ],
       });
 
-      await render(<template>
-        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
-      </template>);
+      await render(
+        <template>
+          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+        </template>
+      );
 
       const inputFields = new InputFieldsFromDOM();
 
@@ -957,7 +991,7 @@ module(
       assert
         .dom(inputFields.fields.required_tags_with_validations.errorElement)
         .hasText(
-          I18n.t("admin.customize.theme.schema.fields.tags.at_least", {
+          i18n("admin.customize.theme.schema.fields.tags.at_least", {
             count: 2,
           })
         );
@@ -972,7 +1006,7 @@ module(
       assert
         .dom(inputFields.fields.required_tags_with_validations.errorElement)
         .hasText(
-          I18n.t("admin.customize.theme.schema.fields.tags.at_least", {
+          i18n("admin.customize.theme.schema.fields.tags.at_least", {
             count: 2,
           })
         );
@@ -988,7 +1022,7 @@ module(
       inputFields.refresh();
 
       assert.dom(inputFields.fields.required_tags.errorElement).hasText(
-        I18n.t("admin.customize.theme.schema.fields.tags.at_least", {
+        i18n("admin.customize.theme.schema.fields.tags.at_least", {
           count: 1,
         })
       );
@@ -1020,9 +1054,11 @@ module(
         ],
       });
 
-      await render(<template>
-        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
-      </template>);
+      await render(
+        <template>
+          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+        </template>
+      );
 
       const inputFields = new InputFieldsFromDOM();
 
@@ -1040,7 +1076,7 @@ module(
       inputFields.refresh();
 
       assert.dom(inputFields.fields.required_groups.errorElement).hasText(
-        I18n.t("admin.customize.theme.schema.fields.groups.at_least", {
+        i18n("admin.customize.theme.schema.fields.groups.at_least", {
           count: 1,
         })
       );
@@ -1066,7 +1102,7 @@ module(
       assert
         .dom(inputFields.fields.groups_with_validations.errorElement)
         .hasText(
-          I18n.t("admin.customize.theme.schema.fields.groups.at_least", {
+          i18n("admin.customize.theme.schema.fields.groups.at_least", {
             count: 2,
           })
         );
@@ -1126,9 +1162,11 @@ module(
         ],
       });
 
-      await render(<template>
-        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
-      </template>);
+      await render(
+        <template>
+          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+        </template>
+      );
 
       const tree = new TreeFromDOM();
 
@@ -1147,9 +1185,11 @@ module(
     test("identifier field instantly updates in the navigation tree when the input field is changed", async function (assert) {
       const setting = schemaAndData(2);
 
-      await render(<template>
-        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
-      </template>);
+      await render(
+        <template>
+          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+        </template>
+      );
 
       const inputFields = new InputFieldsFromDOM();
       const tree = new TreeFromDOM();
@@ -1181,9 +1221,11 @@ module(
     test("edits are remembered when navigating between levels", async function (assert) {
       const setting = schemaAndData(2);
 
-      await render(<template>
-        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
-      </template>);
+      await render(
+        <template>
+          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+        </template>
+      );
 
       const inputFields = new InputFieldsFromDOM();
       const tree = new TreeFromDOM();
@@ -1209,7 +1251,7 @@ module(
       inputFields.refresh();
 
       assert.dom(".--back-btn").hasText(
-        I18n.t("admin.customize.theme.schema.back_button", {
+        i18n("admin.customize.theme.schema.back_button", {
           name: "cool section is no longer cool",
         })
       );
@@ -1255,9 +1297,11 @@ module(
         value: [],
       });
 
-      await render(<template>
-        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
-      </template>);
+      await render(
+        <template>
+          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+        </template>
+      );
 
       assert.dom(TOP_LEVEL_ADD_BTN).hasText("something");
       await click(TOP_LEVEL_ADD_BTN);
@@ -1274,9 +1318,11 @@ module(
     test("adding an object to the root list of objects", async function (assert) {
       const setting = schemaAndData(1);
 
-      await render(<template>
-        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
-      </template>);
+      await render(
+        <template>
+          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+        </template>
+      );
 
       assert.dom(TOP_LEVEL_ADD_BTN).hasText("level1");
 
@@ -1288,7 +1334,7 @@ module(
       tree.refresh();
 
       assert.strictEqual(tree.nodes.length, 4);
-      assert.ok(tree.nodes[2].active);
+      assert.true(tree.nodes[2].active);
       assert.dom(tree.nodes[2].textElement).hasText("level1 3");
       assert.dom(TOP_LEVEL_ADD_BTN).hasText("level1");
     });
@@ -1333,9 +1379,11 @@ module(
         ],
       });
 
-      await render(<template>
-        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
-      </template>);
+      await render(
+        <template>
+          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+        </template>
+      );
 
       const tree = new TreeFromDOM();
 
@@ -1353,9 +1401,11 @@ module(
     test("adding an object to a child list of objects", async function (assert) {
       const setting = schemaAndData(1);
 
-      await render(<template>
-        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
-      </template>);
+      await render(
+        <template>
+          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+        </template>
+      );
 
       const tree = new TreeFromDOM();
 
@@ -1380,9 +1430,11 @@ module(
     test("navigating 1 level deep and adding an object to the child list of objects that's displayed as the root list", async function (assert) {
       const setting = schemaAndData(1);
 
-      await render(<template>
-        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
-      </template>);
+      await render(
+        <template>
+          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+        </template>
+      );
 
       const tree = new TreeFromDOM();
 
@@ -1404,9 +1456,11 @@ module(
     test("navigating 1 level deep and adding an object to a grandchild list of objects", async function (assert) {
       const setting = schemaAndData(1);
 
-      await render(<template>
-        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
-      </template>);
+      await render(
+        <template>
+          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+        </template>
+      );
 
       const tree = new TreeFromDOM();
 
@@ -1426,9 +1480,11 @@ module(
     test("removing an object from the root list of objects", async function (assert) {
       const setting = schemaAndData(1);
 
-      await render(<template>
-        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
-      </template>);
+      await render(
+        <template>
+          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+        </template>
+      );
 
       const tree = new TreeFromDOM();
       const inputFields = new InputFieldsFromDOM();
@@ -1461,9 +1517,11 @@ module(
     test("navigating 1 level deep and removing an object from the child list of objects", async function (assert) {
       const setting = schemaAndData(1);
 
-      await render(<template>
-        <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
-      </template>);
+      await render(
+        <template>
+          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+        </template>
+      );
 
       const tree = new TreeFromDOM();
 

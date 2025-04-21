@@ -29,7 +29,7 @@ class UploadsController < ApplicationController
       current_user,
       "uploads-per-minute",
       SiteSetting.max_uploads_per_minute,
-      1.minute.to_i,
+      1.minute,
     ).performed!
 
     type =
@@ -160,7 +160,8 @@ class UploadsController < ApplicationController
     # do not serve uploads requested via XHR to prevent XSS
     return xhr_not_allowed if request.xhr?
 
-    path_with_ext = "#{params[:path]}.#{params[:extension]}"
+    path_with_ext =
+      params[:extension].nil? ? params[:path] : "#{params[:path]}.#{params[:extension]}"
     upload = upload_from_path_and_extension(path_with_ext)
 
     return render_404 if upload.blank?

@@ -218,9 +218,7 @@ RSpec.describe Email::Receiver do
   end
 
   it "strips null bytes from the subject" do
-    expect do process(:null_byte_in_subject) end.to raise_error(
-      Email::Receiver::BadDestinationAddress,
-    )
+    expect { process(:null_byte_in_subject) }.to raise_error(Email::Receiver::BadDestinationAddress)
   end
 
   describe "bounces to VERP" do
@@ -417,9 +415,43 @@ RSpec.describe Email::Receiver do
     it "automatically elides gmail quotes" do
       SiteSetting.always_show_trimmed_content = true
       expect { process(:gmail_html_reply) }.to change { topic.posts.count }
-      expect(topic.posts.last.raw).to eq(
-        "This is a **GMAIL** reply ;)\n\n<details class='elided'>\n<summary title='Show trimmed content'>&#183;&#183;&#183;</summary>\n\nThis is the *elided* part!\n\n</details>",
-      )
+      expect(topic.posts.last.raw).to eq <<~MD.strip
+        This is a **GMAIL** reply ;)
+        
+        <details class='elided'>
+        <summary title='Show trimmed content'>&#183;&#183;&#183;</summary>
+        
+        This is the *elided* part!
+        
+        </details>
+      MD
+    end
+
+    it "correctly extracts body from exchange emails" do
+      SiteSetting.always_show_trimmed_content = true
+      expect { process(:exchange_html_body) }.to change { topic.posts.count }
+      expect(topic.posts.last.raw).to eq("This is the **body** of the email.")
+    end
+
+    it "correctly extracts reply from exchange emails" do
+      SiteSetting.always_show_trimmed_content = true
+      expect { process(:exchange_html_reply) }.to change { topic.posts.count }
+      expect(topic.posts.last.raw).to eq("This is the **body !!** of the email.")
+    end
+
+    it "correctly extracts body & reply from exchange emails" do
+      SiteSetting.always_show_trimmed_content = true
+      expect { process(:exchange_html_body_and_reply) }.to change { topic.posts.count }
+      expect(topic.posts.last.raw).to eq <<~MD.strip
+        This is the **body** of the email.
+
+        <details class='elided'>
+        <summary title='Show trimmed content'>&#183;&#183;&#183;</summary>
+
+        This is the *reply*!
+
+        </details>
+      MD
     end
 
     it "doesn't process email with same message-id more than once" do
@@ -935,7 +967,7 @@ RSpec.describe Email::Receiver do
 
       user = topic.user
       expect(user.staged).to eq(true)
-      expect(user.username).to eq("random.name")
+      expect(user.username).to eq("user1")
       expect(user.name).to eq("Случайная Имя")
     end
 
@@ -1058,10 +1090,12 @@ RSpec.describe Email::Receiver do
 
       it "associates email replies using both 'In-Reply-To' and 'References' headers" do
         expect { process(:email_reply_1) }.to change(Topic, :count).by(1) &
-          change(Post, :count).by(3)
+          change(Post, :count).by(3) & change(User, :count).by(3)
 
         topic = Topic.last
+        users = User.last(3)
         ordered_posts = topic.ordered_posts
+        expect(ordered_posts.size).to eq(3)
 
         expect(ordered_posts.first.raw).to eq("This is email reply **1**.")
 
@@ -1069,7 +1103,7 @@ RSpec.describe Email::Receiver do
           expect(post.action_code).to eq("invited_user")
           expect(post.user.email).to eq("one@foo.com")
 
-          expect(%w[two three].include?(post.custom_fields["action_code_who"])).to eq(true)
+          expect(users.map(&:username)).to include(post.custom_fields["action_code_who"])
         end
 
         expect { process(:email_reply_2) }.to change { topic.posts.count }.by(1)
@@ -1366,13 +1400,29 @@ RSpec.describe Email::Receiver do
         expect(IncomingEmail.exists?(post_id: group_post.id)).to eq(false)
       end
 
-      it "processes a reply from the OP user to the group SMTP username, linking the reply_to_post_number correctly by
-      matching in_reply_to to the email log" do
+      it "processes a reply from the OP user to the group SMTP username, linking the reply_to_post_number correctly by matching in_reply_to to the email log" do
         email_log, group_post = reply_as_group_user
 
         reply_email = email(:email_to_group_email_username_2)
         reply_email.gsub!("MESSAGE_ID_REPLY_TO", email_log.message_id)
-        expect do Email::Receiver.new(reply_email).process! end.to not_change {
+        expect { Email::Receiver.new(reply_email).process! }.to not_change {
+          Topic.count
+        }.and change { Post.count }.by(1)
+
+        reply_post = Post.last
+        expect(reply_post.reply_to_user).to eq(user_in_group)
+        expect(reply_post.reply_to_post_number).to eq(group_post.post_number)
+      end
+
+      it "handles multiple message IDs in the in_reply_to header by only using the first one" do
+        email_log, group_post = reply_as_group_user
+
+        reply_email = email(:email_to_group_email_username_3)
+        reply_email.gsub!(
+          "MESSAGE_ID_REPLY_TO",
+          "<#{email_log.message_id}> <test/message/id@discourse.com>",
+        )
+        expect { Email::Receiver.new(reply_email).process! }.to not_change {
           Topic.count
         }.and change { Post.count }.by(1)
 
@@ -1386,7 +1436,7 @@ RSpec.describe Email::Receiver do
 
         reply_email = email(:email_to_group_email_username_2_as_unknown_sender)
         reply_email.gsub!("MESSAGE_ID_REPLY_TO", email_log.message_id)
-        expect do Email::Receiver.new(reply_email).process! end.to change { Topic.count }.by(
+        expect { Email::Receiver.new(reply_email).process! }.to change { Topic.count }.by(
           1,
         ).and change { Post.count }.by(1)
 
@@ -1400,7 +1450,7 @@ RSpec.describe Email::Receiver do
 
         reply_email = email(:email_to_group_email_username_2_as_unknown_sender)
         reply_email.gsub!("MESSAGE_ID_REPLY_TO", email_log.message_id)
-        expect do Email::Receiver.new(reply_email).process! end.to not_change {
+        expect { Email::Receiver.new(reply_email).process! }.to not_change {
           Topic.count
         }.and change { Post.count }.by(1)
 
@@ -1417,7 +1467,7 @@ RSpec.describe Email::Receiver do
 
         reply_email = email(:email_to_group_email_username_2)
         reply_email.gsub!("MESSAGE_ID_REPLY_TO", email_log.message_id)
-        expect do Email::Receiver.new(reply_email).process! end.to change { Topic.count }.by(
+        expect { Email::Receiver.new(reply_email).process! }.to change { Topic.count }.by(
           1,
         ).and change { Post.count }.by(1)
 
@@ -2219,6 +2269,41 @@ RSpec.describe Email::Receiver do
       receiver = Email::Receiver.new(email)
       text, _elided, _format = receiver.select_body
       expect(text).to be_blank
+    end
+
+    it "strip unsubscribe links" do
+      keep_relative = "/email/unsubscribe/#{SecureRandom.hex(32)}"
+      keep_other_instance = "http://other.discourse.org/email/unsubscribe/#{SecureRandom.hex(32)}"
+      strip_in_text = "#{Discourse.base_url}/email/unsubscribe/#{SecureRandom.hex(32)}"
+      strip_in_elided = "#{Discourse.base_url}/email/unsubscribe/#{SecureRandom.hex(32)}"
+
+      email = <<~EMAIL
+        Date: Fri, 10 Jan 2024 13:25:42 +0100
+        Subject: Will this be stripped?
+        From: Foo <foo@discourse.org>
+        To: bar@discourse.org
+        Content-Type: text/plain; charset="UTF-8"
+
+        This is a line that will not be touched.
+
+        This is a [relative](#{keep_relative}) link.
+
+        This one is from <a href="#{keep_other_instance}">another instance</a>
+
+        Here's my unsubscribe link: #{strip_in_text}
+
+        XoXo
+
+        ---
+
+        To unsubscribe from these emails, [click here](#{strip_in_elided}).
+      EMAIL
+
+      text, elided, _ = Email::Receiver.new(email).select_body
+
+      expect(text).to_not include(strip_in_text)
+      expect(text).to include(keep_relative, keep_other_instance)
+      expect(elided).to_not include(strip_in_elided)
     end
   end
 

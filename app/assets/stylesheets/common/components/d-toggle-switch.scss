@@ -1,6 +1,9 @@
 .d-toggle-switch {
   --toggle-switch-width: 45px;
   --toggle-switch-height: 24px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 
   &:focus {
     .d-toggle-switch__checkbox-slider {
@@ -19,10 +22,6 @@
       background-color: var(--tertiary-hover);
     }
   }
-
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
 
   &__label {
     position: relative;

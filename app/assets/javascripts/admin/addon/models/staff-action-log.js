@@ -1,13 +1,13 @@
 import { ajax } from "discourse/lib/ajax";
+import discourseComputed from "discourse/lib/decorators";
 import { escapeExpression } from "discourse/lib/utilities";
 import RestModel from "discourse/models/rest";
-import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import AdminUser from "admin/models/admin-user";
 
 function format(label, value, escape = true) {
   return value
-    ? `<b>${I18n.t(label)}</b>: ${escape ? escapeExpression(value) : value}`
+    ? `<b>${i18n(label)}</b>: ${escape ? escapeExpression(value) : value}`
     : "";
 }
 
@@ -39,7 +39,7 @@ export default class StaffActionLog extends RestModel {
 
   @discourseComputed("action_name")
   actionName(actionName) {
-    return I18n.t(`admin.logs.staff_actions.actions.${actionName}`);
+    return i18n(`admin.logs.staff_actions.actions.${actionName}`);
   }
 
   @discourseComputed(
@@ -99,7 +99,7 @@ export default class StaffActionLog extends RestModel {
 
   @discourseComputed("details")
   useModalForDetails(details) {
-    return details && details.length > 100;
+    return details && (details.length > 100 || details.includes("\n"));
   }
 
   @discourseComputed("action_name")

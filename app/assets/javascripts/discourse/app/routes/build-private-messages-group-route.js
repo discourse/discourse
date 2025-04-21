@@ -2,7 +2,7 @@ import { getOwner } from "@ember/owner";
 import { capitalize } from "@ember/string";
 import { findOrResetCachedTopicList } from "discourse/lib/cached-topic-list";
 import createPMRoute from "discourse/routes/build-private-messages-route";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default (inboxType, filter) => {
   return class extends createPMRoute(
@@ -19,10 +19,10 @@ export default (inboxType, filter) => {
         let title = capitalize(groupName);
 
         if (filter !== "inbox") {
-          title = `${title} ${I18n.t("user.messages." + filter)}`;
+          title = `${title} ${i18n("user.messages." + filter)}`;
         }
 
-        return [title, I18n.t(`user.private_messages`)];
+        return [title, i18n(`user.private_messages`)];
       }
     }
 
@@ -89,7 +89,7 @@ export default (inboxType, filter) => {
 
     emptyState() {
       return {
-        title: I18n.t("user.no_messages_title"),
+        title: i18n("user.no_messages_title"),
         body: "",
       };
     }

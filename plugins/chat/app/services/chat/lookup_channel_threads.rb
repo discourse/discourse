@@ -43,6 +43,7 @@ module Chat
         self.offset = [offset || 0, 0].max
       end
     end
+
     model :channel
     policy :threading_enabled_for_channel
     policy :can_view_channel

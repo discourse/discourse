@@ -7,8 +7,8 @@
 te:
   js:
     discourse_automation:
-      create: సృష్టించండి
-      update: నవీకరించండి
+      back: వెనుకకు
+      edit: సవరించండి
       fields:
         user:
           label: సభ్యుడు
@@ -59,13 +59,13 @@ te:
           fields:
             restricted_tags:
               label: ట్యాగులు
-            restricted_category:
-              label: వర్గం
-            restricted_group:
-              label: సమూహం
-            restricted_groups:
-              label: సమూహాలు
+            restricted_categories:
+              label: వర్గాలు
           created: సృష్టించిన
+          with_images: చిత్రాలు
+          with_links: లింకులు
+          with_code: కోడ్
+          with_uploads: అప్‌లోడ్‌లు
         category_created_edited:
           fields:
             restricted_category:
@@ -140,6 +140,8 @@ te:
             label: ట్రిగ్గర్
           version:
             label: సంస్కరణ
+          status:
+            label: స్థితి
           enabled:
             label: ప్రారంభించబడింది
           disabled:

@@ -1,7 +1,7 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 acceptance("Topic move posts", function (needs) {
   needs.user();
@@ -22,7 +22,7 @@ acceptance("Topic move posts", function (needs) {
     assert
       .dom(".selected-posts .move-to-topic")
       .hasText(
-        I18n.t("topic.move_to.action"),
+        i18n("topic.move_to.action"),
         "it should show the move to button"
       );
 
@@ -30,26 +30,26 @@ acceptance("Topic move posts", function (needs) {
 
     assert
       .dom(".choose-topic-modal .d-modal__title")
-      .includesHtml(I18n.t("topic.move_to.title"), "opens move to modal");
+      .includesHtml(i18n("topic.move_to.title"), "opens move to modal");
 
     assert
       .dom(".choose-topic-modal .radios")
       .includesHtml(
-        I18n.t("topic.split_topic.radio_label"),
+        i18n("topic.split_topic.radio_label"),
         "shows an option to move to new topic"
       );
 
     assert
       .dom(".choose-topic-modal .radios")
       .includesHtml(
-        I18n.t("topic.merge_topic.radio_label"),
+        i18n("topic.merge_topic.radio_label"),
         "shows an option to move to existing topic"
       );
 
     assert
       .dom(".choose-topic-modal .radios")
       .includesHtml(
-        I18n.t("topic.move_to_new_message.radio_label"),
+        i18n("topic.move_to_new_message.radio_label"),
         "shows an option to move to new message"
       );
   });
@@ -62,7 +62,7 @@ acceptance("Topic move posts", function (needs) {
     await click(".selected-posts .move-to-topic");
     await fillIn(".choose-topic-modal #split-topic-name", "Existing topic");
     await click(".choose-topic-modal .d-modal__footer .btn-primary");
-    assert.dom("#modal-alert").hasText(I18n.t("topic.move_to.error"));
+    assert.dom("#modal-alert").hasText(i18n("topic.move_to.error"));
   });
 
   test("moving all posts", async function (assert) {
@@ -74,26 +74,26 @@ acceptance("Topic move posts", function (needs) {
 
     assert
       .dom(".choose-topic-modal .d-modal__title")
-      .includesHtml(I18n.t("topic.move_to.title"), "opens move to modal");
+      .includesHtml(i18n("topic.move_to.title"), "opens move to modal");
 
     assert
       .dom(".choose-topic-modal .radios")
       .doesNotIncludeHtml(
-        I18n.t("topic.split_topic.radio_label"),
+        i18n("topic.split_topic.radio_label"),
         "does not show an option to move to new topic"
       );
 
     assert
       .dom(".choose-topic-modal .radios")
       .includesHtml(
-        I18n.t("topic.merge_topic.radio_label"),
+        i18n("topic.merge_topic.radio_label"),
         "shows an option to move to existing topic"
       );
 
     assert
       .dom(".choose-topic-modal .radios")
       .doesNotIncludeHtml(
-        I18n.t("topic.move_to_new_message.radio_label"),
+        i18n("topic.move_to_new_message.radio_label"),
         "does not show an option to move to new message"
       );
   });
@@ -109,7 +109,7 @@ acceptance("Topic move posts", function (needs) {
     assert
       .dom(".choose-topic-modal .radios")
       .includesHtml(
-        I18n.t("topic.merge_topic.radio_label"),
+        i18n("topic.merge_topic.radio_label"),
         "shows an option to move to an existing topic"
       );
 
@@ -128,7 +128,7 @@ acceptance("Topic move posts", function (needs) {
     assert
       .dom(".choose-topic-modal .checkbox-label")
       .includesHtml(
-        I18n.t("topic.merge_topic.chronological_order"),
+        i18n("topic.merge_topic.chronological_order"),
         "shows a checkbox to merge posts in chronological order"
       );
   });
@@ -142,7 +142,7 @@ acceptance("Topic move posts", function (needs) {
     assert
       .dom(".selected-posts .move-to-topic")
       .hasText(
-        I18n.t("topic.move_to.action"),
+        i18n("topic.move_to.action"),
         "it should show the move to button"
       );
 
@@ -150,19 +150,19 @@ acceptance("Topic move posts", function (needs) {
 
     assert
       .dom(".choose-topic-modal .d-modal__title")
-      .includesHtml(I18n.t("topic.move_to.title"), "opens move to modal");
+      .includesHtml(i18n("topic.move_to.title"), "opens move to modal");
 
     assert
       .dom(".choose-topic-modal .radios")
       .includesHtml(
-        I18n.t("topic.move_to_new_message.radio_label"),
+        i18n("topic.move_to_new_message.radio_label"),
         "shows an option to move to new message"
       );
 
     assert
       .dom(".choose-topic-modal .radios")
       .includesHtml(
-        I18n.t("topic.move_to_existing_message.radio_label"),
+        i18n("topic.move_to_existing_message.radio_label"),
         "shows an option to move to existing message"
       );
   });
@@ -176,7 +176,7 @@ acceptance("Topic move posts", function (needs) {
     assert
       .dom(".selected-posts .move-to-topic")
       .hasText(
-        I18n.t("topic.move_to.action"),
+        i18n("topic.move_to.action"),
         "it should show the move to button"
       );
 
@@ -184,7 +184,7 @@ acceptance("Topic move posts", function (needs) {
 
     assert
       .dom(".choose-topic-modal .d-modal__title")
-      .includesHtml(I18n.t("topic.move_to.title"), "opens move to modal");
+      .includesHtml(i18n("topic.move_to.title"), "opens move to modal");
   });
 
   test("moving posts from personal message to existing message", async function (assert) {
@@ -198,7 +198,7 @@ acceptance("Topic move posts", function (needs) {
     assert
       .dom(".choose-topic-modal .radios")
       .includesHtml(
-        I18n.t("topic.move_to_existing_message.radio_label"),
+        i18n("topic.move_to_existing_message.radio_label"),
         "shows an option to move to an existing message"
       );
 
@@ -217,7 +217,7 @@ acceptance("Topic move posts", function (needs) {
     assert
       .dom(".choose-topic-modal .checkbox-label")
       .includesHtml(
-        I18n.t("topic.merge_topic.chronological_order"),
+        i18n("topic.merge_topic.chronological_order"),
         "shows a checkbox to merge posts in chronological order"
       );
   });

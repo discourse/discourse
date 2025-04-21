@@ -1,10 +1,10 @@
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { RouteException } from "discourse/controllers/exception";
+import { bind } from "discourse/lib/decorators";
 import User from "discourse/models/user";
 import DiscourseRoute from "discourse/routes/discourse";
-import { bind } from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class UserRoute extends DiscourseRoute {
   @service router;
@@ -16,7 +16,7 @@ export default class UserRoute extends DiscourseRoute {
     if (this.siteSettings.hide_user_profiles_from_public && !this.currentUser) {
       throw new RouteException({
         status: 403,
-        desc: I18n.t("user.login_to_view_profile"),
+        desc: i18n("user.login_to_view_profile"),
       });
     }
   }

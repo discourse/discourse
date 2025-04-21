@@ -1,6 +1,6 @@
 import { htmlSafe } from "@ember/template";
+import { helperContext } from "discourse/lib/helpers";
 import { escapeExpression } from "discourse/lib/utilities";
-import { helperContext, registerRawHelper } from "discourse-common/lib/helpers";
 
 function setDir(text) {
   let content = text ? text : "";
@@ -8,8 +8,6 @@ function setDir(text) {
   const mixed = siteSettings.support_mixed_text_direction;
   return `<span ${mixed ? 'dir="auto"' : ""}>${content}</span>`;
 }
-
-registerRawHelper("dir-span", dirSpan);
 
 export default function dirSpan(str, params = {}) {
   let isHtmlSafe = false;

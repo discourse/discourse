@@ -1,8 +1,8 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import { cloneJSON } from "discourse/lib/object";
 import topicFixtures from "discourse/tests/fixtures/topic";
 import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
-import { cloneJSON } from "discourse-common/lib/object";
 
 const revisionResponse = {
   created_at: "2021-07-30T11:19:59.549Z",
@@ -55,17 +55,19 @@ acceptance(
       await click(".notification.edited a");
       const [v1, v2] = queryAll(".history-modal .revision-content");
 
-      assert.strictEqual(
-        v1.textContent.trim(),
-        "Hello world this is a test",
-        "history modal for the edited post is shown"
-      );
+      assert
+        .dom(v1)
+        .hasText(
+          "Hello world this is a test",
+          "history modal for the edited post is shown"
+        );
 
-      assert.strictEqual(
-        v2.textContent.trim(),
-        "Hello world this is a testThis is an edit!",
-        "history modal for the edited post is shown"
-      );
+      assert
+        .dom(v2)
+        .hasText(
+          "Hello world this is a testThis is an edit!",
+          "history modal for the edited post is shown"
+        );
     });
   }
 );

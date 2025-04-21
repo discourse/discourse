@@ -1,12 +1,13 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Login with email - no social logins", function (needs) {
   needs.settings({ enable_local_logins_via_email: true });
   needs.pretender((server, helper) => {
     server.post("/u/email-login", () => helper.response({ success: "OK" }));
   });
+
   test("with login with email enabled", async function (assert) {
     await visit("/");
     await click("header .login-button");
@@ -18,6 +19,6 @@ acceptance("Login with email - no social logins", function (needs) {
     await visit("/");
     await click("header .login-button");
 
-    assert.notOk(queryAll(".login-buttons").is(":visible"));
+    assert.dom(".login-buttons").doesNotExist();
   });
 });

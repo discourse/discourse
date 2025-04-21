@@ -1,8 +1,8 @@
 import { action } from "@ember/object";
 import Route from "@ember/routing/route";
 import { service } from "@ember/service";
-import { scrollTop } from "discourse/mixins/scroll-top";
-import I18n from "discourse-i18n";
+import { scrollTop } from "discourse/lib/scroll-top";
+import { i18n } from "discourse-i18n";
 import { COMPONENTS, THEMES } from "admin/models/theme";
 
 export default class AdminCustomizeThemesShowRoute extends Route {
@@ -23,14 +23,20 @@ export default class AdminCustomizeThemesShowRoute extends Route {
     }
   }
 
-  setupController(controller, model) {
+  setupController(controller, model, transition) {
     super.setupController(...arguments);
 
     const parentController = this.controllerFor("adminCustomizeThemes");
 
+    const fromNewConfigPage = [
+      "adminConfig.customize.themes",
+      "adminConfig.customize.components",
+    ].includes(transition?.from?.name);
+
     parentController.setProperties({
       editingTheme: false,
       currentTab: model.get("component") ? COMPONENTS : THEMES,
+      fromNewConfigPage,
     });
 
     controller.setProperties({
@@ -42,6 +48,7 @@ export default class AdminCustomizeThemesShowRoute extends Route {
       editingName: false,
       editingThemeSetting: false,
       userLocale: parentController.get("model.extras.locale"),
+      fromNewConfigPage,
     });
 
     this.handleHighlight(model);
@@ -72,7 +79,7 @@ export default class AdminCustomizeThemesShowRoute extends Route {
       transition.abort();
 
       this.dialog.yesNoConfirm({
-        message: I18n.t("admin.customize.theme.unsaved_parent_themes"),
+        message: i18n("admin.customize.theme.unsaved_parent_themes"),
         didConfirm: () => {
           model.set("recentlyInstalled", false);
           transition.retry();

@@ -1,12 +1,4 @@
 .powered-by-discourse {
-  .admin-area &,
-  .has-full-page-chat &,
-  .static-login &,
-  .invite-page &,
-  .account-created-page &,
-  .activate-account-page & {
-    display: none !important;
-  }
   grid-area: below-content;
   justify-self: start;
   font-size: var(--font-down-1);
@@ -18,6 +10,16 @@
   margin-bottom: 0.45em;
   color: var(--primary-medium);
 
+  .admin-area &,
+  .has-full-page-chat &,
+  .static-login &,
+  .invite-page &,
+  .account-created-page &,
+  .admin-invite-page &,
+  .activate-account-page & {
+    display: none !important;
+  }
+
   &:visited {
     color: var(--primary-medium);
   }
@@ -26,7 +28,7 @@
     display: inline-flex;
     align-items: center;
     gap: 0.5em;
-    color: currentColor;
+    color: currentcolor;
     background: var(--secondary);
     border-radius: 0.62em;
     padding: 0.25em 0.65em 0.25em 0.5em;
@@ -40,6 +42,7 @@
   .discourse-no-touch & {
     &:hover {
       color: var(--primary-high);
+
       @media (prefers-reduced-motion: no-preference) {
         // secondary repeat is an intentional buffer
         background: linear-gradient(
@@ -67,6 +70,7 @@
       0% {
         background-position: 0% 50%;
       }
+
       100% {
         background-position: 100% 50%;
       }

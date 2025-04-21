@@ -2,7 +2,7 @@ import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import routeAction from "discourse/helpers/route-action";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 
 const SignupPageCta = <template>
   <div class="signup-page-cta">

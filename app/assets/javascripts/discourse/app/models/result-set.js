@@ -1,6 +1,6 @@
 import ArrayProxy from "@ember/array/proxy";
 import { Promise } from "rsvp";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed from "discourse/lib/decorators";
 
 export default class ResultSet extends ArrayProxy {
   loading = false;

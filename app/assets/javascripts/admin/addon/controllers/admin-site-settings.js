@@ -3,9 +3,9 @@ import { action } from "@ember/object";
 import { alias } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
+import { debounce } from "discourse/lib/decorators";
+import { INPUT_DELAY } from "discourse/lib/environment";
 import SiteSettingFilter from "discourse/lib/site-setting-filter";
-import { INPUT_DELAY } from "discourse-common/config/environment";
-import { debounce } from "discourse-common/utils/decorators";
 
 export default class AdminSiteSettingsController extends Controller {
   @service router;
@@ -23,6 +23,8 @@ export default class AdminSiteSettingsController extends Controller {
       return;
     }
 
+    this.set("filter", filterData.filter);
+
     if (isEmpty(filterData.filter) && !filterData.onlyOverridden) {
       this.set("visibleSiteSettings", this.allSiteSettings);
       if (this.categoryNameKey === "all_results") {
@@ -30,8 +32,6 @@ export default class AdminSiteSettingsController extends Controller {
       }
       return;
     }
-
-    this.set("filter", filterData.filter);
 
     const matchesGroupedByCategory = this.siteSettingFilter.filterSettings(
       filterData.filter,

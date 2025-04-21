@@ -214,10 +214,10 @@ class PostCreator
       publish
 
       track_latest_on_category
+      trigger_after_events unless opts[:skip_events]
+
       enqueue_jobs unless @opts[:skip_jobs]
       BadgeGranter.queue_badge_grant(Badge::Trigger::PostRevision, post: @post)
-
-      trigger_after_events unless opts[:skip_events]
 
       auto_close
     end
@@ -342,6 +342,9 @@ class PostCreator
         drafts_saved: revisions,
         typing_duration_msecs: @opts[:typing_duration_msecs] || 0,
         composer_open_duration_msecs: @opts[:composer_open_duration_msecs] || 0,
+        writing_device: @opts[:writing_device]&.to_s,
+        writing_device_user_agent: @opts[:user_agent]&.truncate(400),
+        composer_version: @opts[:composer_version],
       )
     end
   end
@@ -405,7 +408,7 @@ class PostCreator
       TopicEmbed.new(
         topic_id: @post.topic_id,
         post_id: @post.id,
-        embed_url: @opts[:embed_url],
+        embed_url: TopicEmbed.normalize_url(@opts[:embed_url]),
         content_sha1: @opts[:embed_content_sha1],
       )
     rollback_from_errors!(embed) unless embed.save

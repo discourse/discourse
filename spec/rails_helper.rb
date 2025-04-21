@@ -82,6 +82,7 @@ Dir[Rails.root.join("spec/requests/examples/*.rb")].each { |f| require f }
 
 Dir[Rails.root.join("spec/system/helpers/**/*.rb")].each { |f| require f }
 Dir[Rails.root.join("spec/system/page_objects/**/base.rb")].each { |f| require f }
+Dir[Rails.root.join("spec/system/page_objects/**/*_base.rb")].each { |f| require f }
 Dir[Rails.root.join("spec/system/page_objects/**/*.rb")].each { |f| require f }
 
 Dir[Rails.root.join("spec/fabricators/*.rb")].each { |f| require f }
@@ -264,7 +265,10 @@ RSpec.configure do |config|
   # Sometimes the backtrace is quite big for failing specs, this will
   # remove rspec/gem paths from the backtrace so it's easier to see the
   # actual application code that caused the failure.
-  if ENV["RSPEC_EXCLUDE_NOISE_IN_BACKTRACE"]
+  #
+  # This behaviour is enabled by default, to include gems in
+  # the backtrace set DISCOURSE_INCLUDE_GEMS_IN_RSPEC_BACKTRACE=1
+  if ENV["DISCOURSE_INCLUDE_GEMS_IN_RSPEC_BACKTRACE"] != "1"
     config.backtrace_exclusion_patterns = [
       %r{/lib\d*/ruby/},
       %r{bin/},
@@ -284,13 +288,14 @@ RSpec.configure do |config|
       raise "There are pending migrations, run RAILS_ENV=test bin/rake db:migrate"
     end
 
-    Sidekiq.error_handlers.clear
+    Sidekiq.default_configuration.error_handlers.clear
 
     # Ugly, but needed until we have a user creator
     User.skip_callback(:create, :after, :ensure_in_trust_level_group)
 
     DiscoursePluginRegistry.reset! if ENV["LOAD_PLUGINS"] != "1"
     Discourse.current_user_provider = TestCurrentUserProvider
+    Discourse::Application.load_tasks
 
     SiteSetting.refresh!
 
@@ -400,6 +405,14 @@ RSpec.configure do |config|
             if RSpec.current_example
               # Store timeout for later, we'll only raise it if the test otherwise passes
               RSpec.current_example.metadata[:_capybara_timeout_exception] ||= timeout_error
+
+              if RSpec.current_example.metadata[:dump_threads_on_failure]
+                RSpec.current_example.metadata[:_capybara_server_threads_backtraces] = Thread
+                  .list
+                  .reduce([]) { |array, thread| array << thread.backtrace }
+                  .uniq
+              end
+
               raise # re-raise original error
             else
               # Outside an example... maybe a `before(:all)` hook?
@@ -476,23 +489,19 @@ RSpec.configure do |config|
       Capybara::Selenium::Driver.new(app, **mobile_driver_options)
     end
 
-    migrate_column_to_bigint(PostAction, :post_action_type_id)
-    migrate_column_to_bigint(Reviewable, :target_id)
-    migrate_column_to_bigint(ReviewableHistory, :reviewable_id)
-    migrate_column_to_bigint(ReviewableScore, :reviewable_id)
-    migrate_column_to_bigint(ReviewableScore, :reviewable_score_type)
-    migrate_column_to_bigint(SidebarSectionLink, :linkable_id)
-    migrate_column_to_bigint(SidebarSectionLink, :sidebar_section_id)
-    migrate_column_to_bigint(User, :last_seen_reviewable_id)
-    migrate_column_to_bigint(User, :required_fields_version)
-
-    $columns_to_migrate_to_bigint.each do |model, column|
-      if model.is_a?(String)
-        DB.exec("ALTER TABLE #{model} ALTER #{column} TYPE bigint")
-      else
-        DB.exec("ALTER TABLE #{model.table_name} ALTER #{column} TYPE bigint")
-        model.reset_column_information
-      end
+    [
+      [PostAction, :post_action_type_id],
+      [Reviewable, :target_id],
+      [ReviewableHistory, :reviewable_id],
+      [ReviewableScore, :reviewable_id],
+      [ReviewableScore, :reviewable_score_type],
+      [SidebarSectionLink, :linkable_id],
+      [SidebarSectionLink, :sidebar_section_id],
+      [User, :last_seen_reviewable_id],
+      [User, :required_fields_version],
+    ].each do |model, column|
+      DB.exec("ALTER TABLE #{model.table_name} ALTER #{column} TYPE bigint")
+      model.reset_column_information
     end
 
     # Sets sequence's value to be greater than the max value that an INT column can hold. This is done to prevent
@@ -692,20 +701,35 @@ RSpec.configure do |config|
     if example.exception && RspecErrorTracker.exceptions.present?
       lines = (RSpec.current_example.metadata[:extra_failure_lines] ||= +"")
 
+      lines << "\n"
       lines << "~~~~~~~ SERVER EXCEPTIONS ~~~~~~~"
+      lines << "\n"
 
       RspecErrorTracker.exceptions.each_with_index do |(path, ex), index|
         lines << "\n"
-        lines << "Error encountered while proccessing #{path}"
-        lines << "  #{ex.class}: #{ex.message}"
+        lines << "Error encountered while processing #{path}.\n"
+        lines << "  #{ex.class}: #{ex.message}\n"
+        framework_lines_excluded = 0
+
         ex.backtrace.each_with_index do |line, backtrace_index|
-          if ENV["RSPEC_EXCLUDE_GEMS_IN_BACKTRACE"]
-            next if line.match?(%r{/gems/})
+          # This behaviour is enabled by default, to include gems in
+          # the backtrace set DISCOURSE_INCLUDE_GEMS_IN_RSPEC_BACKTRACE=1
+          if ENV["DISCOURSE_INCLUDE_GEMS_IN_RSPEC_BACKTRACE"] != "1"
+            if line.match?(%r{/gems/})
+              framework_lines_excluded += 1
+              next
+            else
+              if framework_lines_excluded.positive?
+                lines << "    ...(#{framework_lines_excluded} framework line(s) excluded)\n"
+                framework_lines_excluded = 0
+              end
+            end
           end
           lines << "    #{line}\n"
         end
       end
 
+      lines << "\n"
       lines << "~~~~~~~ END SERVER EXCEPTIONS ~~~~~~~"
       lines << "\n"
     end
@@ -718,6 +742,21 @@ RSpec.configure do |config|
 
   config.after(:each, type: :system) do |example|
     lines = RSpec.current_example.metadata[:extra_failure_lines]
+
+    if example.exception &&
+         (
+           backtraces = RSpec.current_example.metadata[:_capybara_server_threads_backtraces]
+         ).present?
+      lines << "~~~~~~~ SERVER THREADS BACKTRACES ~~~~~~~"
+
+      backtraces.each_with_index do |backtrace, index|
+        lines << "\n" if index != 0
+        backtrace.each { |line| lines << line }
+      end
+
+      lines << "~~~~~~~ END SERVER THREADS BACKTRACES ~~~~~~~"
+      lines << "\n"
+    end
 
     # This is disabled by default because it is super verbose,
     # if you really need to dig into how selenium is communicating
@@ -960,11 +999,32 @@ def has_trigger?(trigger_name)
   SQL
 end
 
+def stub_deprecated_settings!(override:)
+  SiteSetting.load_settings("#{Rails.root}/spec/fixtures/site_settings/deprecated_test.yml")
+
+  stub_const(
+    SiteSettings::DeprecatedSettings,
+    "SETTINGS",
+    [["old_one", "new_one", override, "0.0.1"]],
+  ) do
+    SiteSetting.setup_deprecated_methods
+    yield
+  end
+
+  defaults = SiteSetting.defaults.instance_variable_get(:@defaults)
+  defaults.each { |_, hash| hash.delete(:old_one) }
+  defaults.each { |_, hash| hash.delete(:new_one) }
+end
+
 def silence_stdout
   STDOUT.stubs(:write)
   yield
 ensure
   STDOUT.unstub(:write)
+end
+
+def Rails.logger=(logger)
+  raise "Setting Rails.logger is not allowed as it can lead to unexpected behavior in tests. Use `fake_logger = track_log_messages { ... }` instead."
 end
 
 def track_log_messages
@@ -1048,10 +1108,6 @@ def apply_base_chrome_options(options)
   if ENV["CHROME_DISABLE_FORCE_DEVICE_SCALE_FACTOR"].blank?
     options.add_argument("--force-device-scale-factor=1")
   end
-end
-
-def migrate_column_to_bigint(model, column)
-  ($columns_to_migrate_to_bigint ||= []) << [model, column]
 end
 
 class SpecSecureRandom

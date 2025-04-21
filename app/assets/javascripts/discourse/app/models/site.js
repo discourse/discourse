@@ -1,20 +1,24 @@
 import { tracked } from "@glimmer/tracking";
 import EmberObject, { computed, get } from "@ember/object";
 import { alias, sort } from "@ember/object/computed";
+import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
+import discourseComputed from "discourse/lib/decorators";
+import deprecated from "discourse/lib/deprecated";
+import { isRailsTesting, isTesting } from "discourse/lib/environment";
+import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import PreloadStore from "discourse/lib/preload-store";
-import Singleton from "discourse/mixins/singleton";
+import singleton from "discourse/lib/singleton";
 import Archetype from "discourse/models/archetype";
 import Category from "discourse/models/category";
 import PostActionType from "discourse/models/post-action-type";
 import RestModel from "discourse/models/rest";
 import TrustLevel from "discourse/models/trust-level";
-import deprecated from "discourse-common/lib/deprecated";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
-import discourseComputed from "discourse-common/utils/decorators";
+import { havePostStreamWidgetExtensions } from "discourse/widgets/post-stream";
 
-export default class Site extends RestModel.extend().reopenClass(Singleton) {
+@singleton
+export default class Site extends RestModel {
   static createCurrent() {
     const store = getOwnerWithFallback(this).lookup("service:store");
     const siteAttributes = PreloadStore.get("site");
@@ -75,11 +79,86 @@ export default class Site extends RestModel.extend().reopenClass(Singleton) {
     return result;
   }
 
+  @service siteSettings;
+  @service currentUser;
+
   @tracked categories;
 
   @alias("is_readonly") isReadOnly;
 
   @sort("categories", "topicCountDesc") categoriesByCount;
+
+  #glimmerPostStreamEnabled;
+
+  init() {
+    super.init(...arguments);
+
+    this.topicCountDesc = ["topic_count:desc"];
+    this.categories = this.categories || [];
+  }
+
+  get useGlimmerPostStream() {
+    if (this.#glimmerPostStreamEnabled !== undefined) {
+      // Use cached value after the first call to prevent duplicate messages in the console
+      return this.#glimmerPostStreamEnabled;
+    }
+
+    let enabled;
+
+    /* eslint-disable no-console */
+    let settingValue = this.siteSettings.glimmer_post_stream_mode;
+    if (
+      settingValue === "disabled" &&
+      this.currentUser?.use_glimmer_post_stream_mode_auto_mode
+    ) {
+      settingValue = "auto";
+    }
+
+    if (settingValue === "disabled") {
+      enabled = false;
+    } else {
+      if (settingValue === "enabled") {
+        if (havePostStreamWidgetExtensions) {
+          console.log(
+            [
+              "⚠️  Using the new 'glimmer' post stream, even though some themes/plugins are not ready.\n" +
+                "The following plugins and/or themes are using deprecated APIs and may have broken customizations: \n",
+              ...Array.from(havePostStreamWidgetExtensions).sort(),
+            ].join("\n- ")
+          );
+        } else {
+          if (!isTesting() && !isRailsTesting()) {
+            console.log("✅  Using the new 'glimmer' post stream!");
+          }
+        }
+
+        enabled = true;
+      } else {
+        // auto
+        if (havePostStreamWidgetExtensions) {
+          console.warn(
+            [
+              "⚠️  Detected themes/plugins which are incompatible with the new 'glimmer' post stream. Falling back to the old implementation.\n" +
+                "The following plugins and/or themes are using deprecated APIs: \n",
+              ...Array.from(havePostStreamWidgetExtensions).sort(),
+            ].join("\n- ")
+          );
+          enabled = false;
+        } else {
+          if (!isTesting() && !isRailsTesting()) {
+            console.log("✅  Using the new 'glimmer' post stream!");
+          }
+
+          enabled = true;
+        }
+      }
+    }
+    /* eslint-enable no-console */
+
+    this.#glimmerPostStreamEnabled = enabled;
+
+    return enabled;
+  }
 
   @computed("categories.[]")
   get categoriesById() {
@@ -88,11 +167,15 @@ export default class Site extends RestModel.extend().reopenClass(Singleton) {
     return map;
   }
 
-  init() {
-    super.init(...arguments);
-
-    this.topicCountDesc = ["topic_count:desc"];
-    this.categories = this.categories || [];
+  @computed("categories.@each.parent_category_id")
+  get categoriesByParentId() {
+    const map = new Map();
+    for (const category of this.categories) {
+      const siblings = map.get(category.parent_category_id) || [];
+      siblings.push(category);
+      map.set(category.parent_category_id, siblings);
+    }
+    return map;
   }
 
   @discourseComputed("notification_types")

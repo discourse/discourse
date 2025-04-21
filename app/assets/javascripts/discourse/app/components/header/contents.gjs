@@ -3,8 +3,10 @@ import { hash } from "@ember/helper";
 import { service } from "@ember/service";
 import { and } from "truth-helpers";
 import deprecatedOutletArgument from "discourse/helpers/deprecated-outlet-argument";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import BootstrapModeNotice from "../bootstrap-mode-notice";
 import PluginOutlet from "../plugin-outlet";
+import HeaderSearch from "./header-search";
 import HomeLogo from "./home-logo";
 import SidebarToggle from "./sidebar-toggle";
 import TopicInfo from "./topic/info";
@@ -14,14 +16,43 @@ export default class Contents extends Component {
   @service currentUser;
   @service siteSettings;
   @service header;
-  @service sidebarState;
+  @service router;
+  @service navigationMenu;
+  @service search;
 
   get sidebarIcon() {
-    if (this.sidebarState.adminSidebarAllowedWithLegacyNavigationMenu) {
+    if (this.navigationMenu.isDesktopDropdownMode) {
       return "discourse-sidebar";
     }
 
     return "bars";
+  }
+
+  get minimized() {
+    return applyValueTransformer(
+      "home-logo-minimized",
+      this.args.topicInfoVisible,
+      {
+        topicInfo: this.args.topicInfo,
+        sidebarEnabled: this.args.sidebarEnabled,
+        showSidebar: this.args.showSidebar,
+      }
+    );
+  }
+
+  get showHeaderSearch() {
+    if (
+      this.site.mobileView ||
+      this.args.narrowDesktop ||
+      this.router.currentURL?.match(/\/(signup|login|invites|activate-account)/)
+    ) {
+      return false;
+    }
+
+    return (
+      this.search.searchExperience === "search_field" &&
+      !this.args.topicInfoVisible
+    );
   }
 
   <template>
@@ -55,7 +86,7 @@ export default class Contents extends Component {
 
       <div class="home-logo-wrapper-outlet">
         <PluginOutlet @name="home-logo-wrapper">
-          <HomeLogo @minimized={{@topicInfoVisible}} />
+          <HomeLogo @minimized={{this.minimized}} />
         </PluginOutlet>
       </div>
 
@@ -71,6 +102,10 @@ export default class Contents extends Component {
         <div class="d-header-mode">
           <BootstrapModeNotice />
         </div>
+      {{/if}}
+
+      {{#if this.showHeaderSearch}}
+        <HeaderSearch />
       {{/if}}
 
       <div class="before-header-panel-outlet">

@@ -16,6 +16,6 @@ module("Unit | Service | Toasts", function (hooks) {
 
     this.toasts.show({ views: ["mobile"], data: { text: "foo" } });
 
-    assert.ok(this.toasts.activeToasts.length < 2);
+    assert.true(this.toasts.activeToasts.length < 2);
   });
 });

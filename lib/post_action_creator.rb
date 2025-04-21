@@ -14,7 +14,8 @@ class PostActionCreator
       message: nil,
       created_at: nil,
       reason: nil,
-      silent: false
+      silent: false,
+      context: nil
     )
       new(
         created_by,
@@ -24,6 +25,7 @@ class PostActionCreator
         created_at: created_at,
         reason: reason,
         silent: silent,
+        context: context,
       ).perform
     end
 
@@ -50,7 +52,8 @@ class PostActionCreator
     created_at: nil,
     queue_for_review: false,
     reason: nil,
-    silent: false
+    silent: false,
+    context: nil
   )
     @created_by = created_by
     @created_at = created_at || Time.zone.now
@@ -73,6 +76,8 @@ class PostActionCreator
     @reason = "queued_by_staff" if reason.nil? && @queue_for_review
 
     @silent = silent
+
+    @context = context
   end
 
   def post_can_act?
@@ -388,6 +393,7 @@ class PostActionCreator
         topic: @post.topic,
         reviewable_by_moderator: true,
         potential_spam: @post_action_type_id == @post_action_type_view.types[:spam],
+        potentially_illegal: @post_action_type_id == @post_action_type_view.types[:illegal],
         payload: {
           targets_topic: @targets_topic,
         },
@@ -402,6 +408,7 @@ class PostActionCreator
         meta_topic_id: @meta_post&.topic_id,
         reason: @reason,
         force_review: trusted_spam_flagger?,
+        context: @context,
       )
   end
 

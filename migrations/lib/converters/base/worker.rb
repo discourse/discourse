@@ -4,14 +4,7 @@ require "oj"
 
 module Migrations::Converters::Base
   class Worker
-    OJ_SETTINGS = {
-      mode: :custom,
-      create_id: "^o",
-      create_additions: true,
-      cache_keys: true,
-      class_cache: true,
-      symbol_keys: true,
-    }
+    OJ_SETTINGS = { mode: :object, class_cache: true, symbol_keys: true }
 
     def initialize(index, input_queue, output_queue, job)
       @index = index

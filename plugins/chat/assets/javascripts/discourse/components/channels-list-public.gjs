@@ -7,8 +7,8 @@ import { service } from "@ember/service";
 import { and } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import concatClass from "discourse/helpers/concat-class";
-import dIcon from "discourse-common/helpers/d-icon";
-import i18n from "discourse-common/helpers/i18n";
+import icon from "discourse/helpers/d-icon";
+import { i18n } from "discourse-i18n";
 import EmptyChannelsList from "discourse/plugins/chat/discourse/components/empty-channels-list";
 import ChatChannelRow from "./chat-channel-row";
 
@@ -34,9 +34,7 @@ export default class ChannelsListPublic extends Component {
   }
 
   get channelList() {
-    return this.args.sortByActivity === true
-      ? this.chatChannelsManager.publicMessageChannelsByActivity
-      : this.chatChannelsManager.publicMessageChannels;
+    return this.chatChannelsManager.publicMessageChannelsByActivity;
   }
 
   @action
@@ -53,7 +51,7 @@ export default class ChannelsListPublic extends Component {
     {{#if (and this.site.desktopView this.inSidebar this.hasThreadedChannels)}}
       <LinkTo @route="chat.threads" class="chat-channel-row --threads">
         <span class="chat-channel-title">
-          {{dIcon "discourse-threads" class="chat-user-threads__icon"}}
+          {{icon "discourse-threads" class="chat-user-threads__icon"}}
           {{i18n "chat.my_threads.title"}}
         </span>
         {{#if this.hasUnreadThreads}}
@@ -77,7 +75,7 @@ export default class ChannelsListPublic extends Component {
             {{on "click" (fn this.toggleChannelSection "public-channels")}}
             data-toggleable="public-channels"
           >
-            {{dIcon "angle-up"}}
+            {{icon "angle-up"}}
           </span>
         {{/if}}
 
@@ -88,7 +86,7 @@ export default class ChannelsListPublic extends Component {
           class="btn no-text btn-flat open-browse-page-btn title-action"
           title={{i18n "chat.channels_list_popup.browse"}}
         >
-          {{dIcon "pencil"}}
+          {{icon "pencil"}}
         </LinkTo>
       </div>
     {{/if}}

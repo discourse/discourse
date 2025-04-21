@@ -1707,6 +1707,23 @@ RSpec.describe GroupsController do
           end
         end
 
+        it "sends emails with invitations when `skip_emails` param isn't present" do
+          expect_enqueued_with(job: :invite_email) do
+            put "/groups/#{group.id}/members.json", params: { emails: "something@gmail.com" }
+            expect(response.status).to eq(200)
+          end
+        end
+
+        it "sends emails with invitations when `skip_emails` is present" do
+          expect_not_enqueued_with(job: :invite_email) do
+            put "/groups/#{group.id}/members.json?skip_email=true",
+                params: {
+                  emails: "something@gmail.com",
+                }
+            expect(response.status).to eq(200)
+          end
+        end
+
         it "displays warning when all members already exists" do
           user1.update!(username: "john")
           user2.update!(username: "alice")
@@ -2624,6 +2641,19 @@ RSpec.describe GroupsController do
         expect(groups.length).to eq(2)
 
         expect(groups.map { |group| group["id"] }).to contain_exactly(group.id, hidden_group.id)
+
+        get "/groups/search.json?include_everyone=true"
+
+        expect(response.status).to eq(200)
+        groups = response.parsed_body
+
+        automatic_ids = Group::AUTO_GROUPS.map { |name, id| id }
+
+        expect(groups.map { |group| group["id"] }).to contain_exactly(
+          group.id,
+          hidden_group.id,
+          *automatic_ids,
+        )
       end
     end
 

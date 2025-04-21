@@ -1,0 +1,40 @@
+.admin-reports {
+  .admin-report {
+    width: 100%;
+
+    .report-header {
+      padding-bottom: 0.5em;
+      margin-bottom: 1em;
+      border-bottom: 1px solid var(--primary-low);
+    }
+  }
+
+  .admin-report-chart .chart-canvas-container .chart-canvas {
+    height: 400px;
+  }
+}
+
+.mobile-view .admin-reports {
+  .admin-report {
+    .body {
+      flex-direction: column;
+
+      .filters {
+        order: 0;
+        margin: 0;
+        width: 100%;
+      }
+
+      .main {
+        order: 2;
+      }
+
+      .report-alert {
+        margin: 0;
+        order: 1;
+        flex: 1 0 0px;
+        padding: 1em;
+      }
+    }
+  }
+}

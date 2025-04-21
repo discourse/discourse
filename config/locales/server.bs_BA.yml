@@ -116,7 +116,6 @@ bs_BA:
     confirm_email: "<p>Skoro ste gotovi! Na vašu e-adresu poslali smo aktivacijski mail. Slijedite upute u pošti da biste aktivirali svoj račun.</p><p>Ako ne stigne, provjerite svoju mapu neželjene pošte.</p>"
   topic_invite:
     muted_topic: "Žao nam je, navedeni korisnik je utišao ovu temu."
-    receiver_does_not_allow_pm: "Žao nam je, navedeni korisnik vam ne dozvoljava da mu šaljete privatne poruke."
   backup:
     operation_already_running: "An operation is currently running. Can't start a new job right now."
     backup_file_should_be_tar_gz: "The backup file should be a .tar.gz archive."
@@ -204,6 +203,8 @@ bs_BA:
       user_profile:
         bio_raw: "O Meni"
       user:
+        password: "Lozinka"
+      user_password:
         password: "Lozinka"
     errors:
       models:
@@ -1031,14 +1032,8 @@ bs_BA:
             label: "Pregled"
           homepage_style:
             choices:
-              categories_only:
-                label: "Samo kategorije"
-              categories_with_featured_topics:
-                label: "Kategorije s istaknutim temama"
-              categories_and_latest_topics:
-                label: "Kategorije i zadnje teme"
-              categories_and_top_topics:
-                label: "Kategorije i top teme"
+              latest:
+                label: "Zadnje"
       corporate:
         fields:
           contact_url:
@@ -1053,6 +1048,7 @@ bs_BA:
       quoted: '%{username} vas je citirao/la u "%{topic}" - %{site_title}'
       replied: '%{username} vam je odgovorio/la u "%{topic}" - %{site_title}'
       posted: '%{username} je objavio/la "%{topic}" - %{site_title}'
+      private_message: '%{username} vam je poslao/la poruku u "%{topic}" - %{site_title}'
       linked: '%{username} je linkao/la vašu objavu "%{topic}" - %{site_title}'
       watching_first_post: '%{username} je kreirao novu temu "%{topic}" - %{site_title}'
       confirm_title: "Obavijesti uključene - %{site_title}"
@@ -1079,6 +1075,11 @@ bs_BA:
         description: "Složij se sa prijavom i utišaj prijavljenog korisnika (silence)"
       delete_single:
         title: "Delete"
+        complete: "Post izbrisan."
+      delete_and_ignore:
+        complete: "Post izbrisan."
+      delete_and_agree:
+        complete: "Post izbrisan."
       disagree:
         title: "Ne"
       ignore:
@@ -1090,8 +1091,11 @@ bs_BA:
       reject_user:
         delete:
           title: "Delete User"
+          complete: "Korisnik izbrisan."
       reject:
         title: "Odbij"
+      delete_user:
+        complete: "Korisnik izbrisan."
   fallback_username: "user"
   activemodel:
     errors:

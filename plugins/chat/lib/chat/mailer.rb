@@ -30,38 +30,78 @@ module Chat
         if Chat.allowed_group_ids.include?(Group::AUTO_GROUPS[:everyone])
           ""
         else
-          "JOIN group_users ON group_users.user_id = users.id AND group_users.group_id IN (#{Chat.allowed_group_ids.join(",")})"
+          "JOIN group_users gu ON gu.user_id = u.id AND gu.group_id IN (#{Chat.allowed_group_ids.join(",")})"
         end
 
       DB.query_single <<~SQL
-        SELECT uccm.user_id
-        FROM user_chat_channel_memberships uccm
-        JOIN users ON users.id = uccm.user_id
-        JOIN user_options ON user_options.user_id = users.id
-        #{groups_join_sql}
-        JOIN chat_channels ON chat_channels.id = uccm.chat_channel_id
-        JOIN chat_messages ON chat_messages.chat_channel_id = chat_channels.id
-        JOIN users sender ON sender.id = chat_messages.user_id
-        LEFT JOIN chat_mentions ON chat_mentions.chat_message_id = chat_messages.id
-        LEFT JOIN chat_mention_notifications cmn ON cmn.chat_mention_id = chat_mentions.id
-        LEFT JOIN notifications ON notifications.id = cmn.notification_id AND notifications.user_id = uccm.user_id
-        WHERE NOT uccm.muted
-        AND (uccm.last_read_message_id IS NULL OR uccm.last_read_message_id < chat_messages.id)
-        AND (uccm.last_unread_mention_when_emailed_id IS NULL OR uccm.last_unread_mention_when_emailed_id < chat_messages.id)
-        AND users.last_seen_at < now() - interval '15 minutes'
-        AND user_options.chat_enabled
-        AND user_options.chat_email_frequency = #{UserOption.chat_email_frequencies[:when_away]}
-        AND user_options.email_level <> #{UserOption.email_level_types[:never]}
-        AND chat_channels.deleted_at IS NULL
-        AND chat_messages.deleted_at IS NULL
-        AND chat_messages.created_at > now() - interval '1 week'
-        AND chat_messages.user_id <> users.id
-        AND chat_messages.created_by_sdk = false
-        AND (
-          (chat_channels.chatable_type = 'DirectMessage' AND user_options.allow_private_messages) OR
-          (chat_channels.chatable_type = 'Category' AND uccm.following AND NOT notifications.read)
+        WITH eligible_users AS (
+          SELECT u.id, uo.allow_private_messages
+          FROM users u
+          #{groups_join_sql}
+          JOIN user_options uo ON uo.user_id = u.id 
+            AND uo.chat_enabled 
+            AND uo.chat_email_frequency = #{UserOption.chat_email_frequencies[:when_away]}
+            AND uo.email_level <> #{UserOption.email_level_types[:never]}
+          WHERE u.last_seen_at < now() - interval '15 minutes'
+        ), unread_dms AS (
+          SELECT DISTINCT uccm.user_id
+          FROM user_chat_channel_memberships uccm
+          JOIN eligible_users eu ON eu.id = uccm.user_id
+            AND eu.allow_private_messages
+          JOIN chat_messages cm ON cm.chat_channel_id = uccm.chat_channel_id
+            AND cm.deleted_at IS NULL
+            AND (cm.thread_id IS NULL OR cm.thread_id IN (SELECT id FROM chat_threads WHERE original_message_id = cm.id))
+            AND NOT cm.created_by_sdk
+            AND cm.created_at > now() - interval '1 day'
+          JOIN users sender ON sender.id = cm.user_id
+          JOIN chat_channels cc ON cc.id = cm.chat_channel_id
+            AND cc.deleted_at IS NULL
+            AND cc.chatable_type = 'DirectMessage'
+          WHERE NOT uccm.muted 
+            AND (uccm.last_read_message_id IS NULL OR uccm.last_read_message_id < cm.id)
+            AND (uccm.last_unread_mention_when_emailed_id IS NULL OR uccm.last_unread_mention_when_emailed_id < cm.id)
+        ), unread_mentions AS (
+          SELECT DISTINCT n.user_id
+          FROM notifications n
+          JOIN eligible_users eu ON eu.id = n.user_id
+          JOIN chat_mention_notifications cmn ON cmn.notification_id = n.id
+          JOIN chat_mentions mn ON mn.id = cmn.chat_mention_id
+          JOIN chat_messages cm ON cm.id = mn.chat_message_id 
+            AND cm.deleted_at IS NULL 
+            AND cm.thread_id IS NULL
+            AND NOT cm.created_by_sdk
+            AND cm.created_at > now() - interval '1 day'
+          JOIN users sender ON sender.id = cm.user_id 
+          JOIN chat_channels cc ON cc.id = cm.chat_channel_id
+            AND cc.deleted_at IS NULL
+            AND cc.chatable_type = 'Category'
+          JOIN user_chat_channel_memberships uccm ON uccm.chat_channel_id = cc.id
+            AND uccm.user_id = n.user_id 
+            AND NOT uccm.muted 
+            AND uccm.following
+            AND (uccm.last_read_message_id IS NULL OR uccm.last_read_message_id < cm.id)
+            AND (uccm.last_unread_mention_when_emailed_id IS NULL OR uccm.last_unread_mention_when_emailed_id < cm.id)
+          WHERE NOT n.read
+        ), unread_threads AS (
+          SELECT DISTINCT uctm.user_id
+          FROM user_chat_thread_memberships uctm
+          JOIN eligible_users eu ON eu.id = uctm.user_id
+          JOIN chat_threads ct ON ct.id = uctm.thread_id
+          JOIN chat_messages cm ON cm.thread_id = ct.id
+            AND cm.deleted_at IS NULL
+            AND NOT cm.created_by_sdk
+            AND cm.created_at > now() - interval '1 day'
+          JOIN users sender ON sender.id = cm.user_id 
+          JOIN chat_channels cc ON cc.id = ct.channel_id
+            AND cc.deleted_at IS NULL
+          WHERE uctm.notification_level = #{Chat::NotificationLevels.all[:watching]}
+            AND (uctm.last_read_message_id IS NULL OR uctm.last_read_message_id < cm.id)
         )
-        GROUP BY uccm.user_id
+        SELECT user_id FROM unread_dms
+        UNION
+        SELECT user_id FROM unread_mentions
+        UNION
+        SELECT user_id FROM unread_threads
       SQL
     end
   end

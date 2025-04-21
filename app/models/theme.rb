@@ -6,7 +6,7 @@ require "json_schemer"
 class Theme < ActiveRecord::Base
   include GlobalPath
 
-  BASE_COMPILER_VERSION = 84
+  BASE_COMPILER_VERSION = 87
 
   class SettingsMigrationError < StandardError
   end
@@ -52,6 +52,12 @@ class Theme < ActiveRecord::Base
           -> { where(target_id: Theme.targets[:settings], name: "yaml") },
           class_name: "ThemeField"
   has_one :javascript_cache, dependent: :destroy
+  has_one :theme_color_scheme, dependent: :destroy
+  has_one :owned_color_scheme,
+          class_name: "ColorScheme",
+          through: :theme_color_scheme,
+          source: :color_scheme
+
   has_many :locale_fields,
            -> { filter_locale_fields(I18n.fallbacks[I18n.locale]) },
            class_name: "ThemeField"
@@ -83,17 +89,23 @@ class Theme < ActiveRecord::Base
 
   scope :include_relations,
         -> do
-          includes(
+          include_basic_relations.includes(
             :child_themes,
-            :parent_themes,
-            :remote_theme,
             :theme_settings,
             :settings_field,
-            :locale_fields,
-            :user,
             :color_scheme,
-            :theme_translation_overrides,
             theme_fields: %i[upload theme_settings_migration],
+          )
+        end
+
+  scope :include_basic_relations,
+        -> do
+          includes(
+            :remote_theme,
+            :user,
+            :locale_fields,
+            :theme_translation_overrides,
+            parent_themes: %i[locale_fields theme_translation_overrides],
           )
         end
 
@@ -376,6 +388,10 @@ class Theme < ActiveRecord::Base
       ChildTheme.where("child_theme_id = ?", id).destroy_all
       self.save!
     end
+  end
+
+  def self.find_default
+    find_by(id: SiteSetting.default_theme_id)
   end
 
   def self.lookup_field(theme_id, target, field, skip_transformation: false, csp_nonce: nil)
@@ -834,11 +850,27 @@ class Theme < ActiveRecord::Base
   end
 
   def with_scss_load_paths
-    return yield([]) if self.extra_scss_fields.empty?
-
     ThemeStore::ZipExporter
       .new(self)
-      .with_export_dir(extra_scss_only: true) { |dir| yield ["#{dir}/stylesheets"] }
+      .with_export_dir(scss_only: true) do |dir|
+        FileUtils.mkdir_p("#{dir}/_entry_loadpath/theme-entrypoint")
+
+        entrypoints = {
+          "common/common.scss" => "common.scss",
+          "common/embedded.scss" => "embedded.scss",
+          "common/color_definitions.scss" => "color_definitions.scss",
+          "desktop/desktop.scss" => "desktop.scss",
+          "mobile/mobile.scss" => "mobile.scss",
+        }
+
+        entrypoints.each do |source, destination|
+          source_path = "#{dir}/#{source}"
+          destination_path = "#{dir}/_entry_loadpath/theme-entrypoint/#{destination}"
+          FileUtils.mv(source_path, destination_path) if File.exist?(source_path)
+        end
+
+        yield ["#{dir}/_entry_loadpath", "#{dir}/stylesheets"]
+      end
   end
 
   def scss_variables
@@ -871,7 +903,7 @@ class Theme < ActiveRecord::Base
   end
 
   def migrate_settings(start_transaction: true, fields: nil, allow_out_of_sequence_migration: false)
-    block = -> do
+    block = ->(*) do
       runner = ThemeSettingsMigrationsRunner.new(self)
       results =
         runner.run(fields:, raise_error_on_out_of_sequence: !allow_out_of_sequence_migration)

@@ -53,7 +53,9 @@ module PostGuardian
     result =
       if authenticated? && post
         # Allow anonymous users to like if feature is enabled and short-circuit otherwise
-        return SiteSetting.allow_anonymous_likes? && (action_key == :like) if @user.anonymous?
+        if @user.anonymous?
+          return SiteSetting.allow_likes_in_anonymous_mode? && (action_key == :like)
+        end
 
         # Silenced users can't flag
         return false if is_flag && @user.silenced?
@@ -93,7 +95,7 @@ module PostGuardian
               @user.in_any_groups?(SiteSetting.flag_post_allowed_groups_map) ||
                 post.topic.private_message?
             )
-        ) ||
+        ) || (action_key == :illegal && SiteSetting.allow_all_users_to_flag_illegal_content) ||
           # not a flagging action, and haven't done it already
           not(is_flag || already_taken_this_action) &&
             # nothing except flagging on archived topics
@@ -160,6 +162,7 @@ module PostGuardian
     if (is_staff? || is_in_edit_post_groups? || is_category_group_moderator?(post.topic&.category))
       return can_create_post?(post.topic)
     end
+    return false if !can_see_post_topic?(post)
 
     return false if post.topic&.archived? || post.user_deleted || post.deleted_at
 
@@ -283,7 +286,7 @@ module PostGuardian
     # used when !authenticated?
     if authenticated? && is_anonymous?
       return(
-        ok_to_delete && SiteSetting.allow_anonymous_likes? && post_action.is_like? &&
+        ok_to_delete && SiteSetting.allow_likes_in_anonymous_mode? && post_action.is_like? &&
           is_my_own?(post_action)
       )
     end
@@ -296,7 +299,9 @@ module PostGuardian
 
     if is_admin? && SiteSetting.suppress_secured_categories_from_admin
       topic = post.topic
-      if !topic.private_message? && topic.category.read_restricted
+      if topic.private_message?
+        return can_see_post_topic?(post)
+      elsif topic.category.read_restricted
         return secure_category_ids.include?(topic.category_id)
       end
     end

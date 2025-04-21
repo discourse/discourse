@@ -48,6 +48,8 @@ class SiteSerializer < ApplicationSerializer
     :system_user_avatar_template,
     :lazy_load_categories,
     :valid_flag_applies_to_types,
+    :full_name_required_for_signup,
+    :full_name_visible_in_signup,
   )
 
   has_many :archetypes, embed: :objects, serializer: ArchetypeSerializer
@@ -95,7 +97,15 @@ class SiteSerializer < ApplicationSerializer
       object
         .groups
         .order(:name)
-        .select(:id, :name, :flair_icon, :flair_upload_id, :flair_bg_color, :flair_color)
+        .select(
+          :id,
+          :name,
+          :flair_icon,
+          :flair_upload_id,
+          :flair_bg_color,
+          :flair_color,
+          :automatic,
+        )
         .map do |g|
           {
             id: g.id,
@@ -103,6 +113,7 @@ class SiteSerializer < ApplicationSerializer
             flair_url: g.flair_url,
             flair_bg_color: g.flair_bg_color,
             flair_color: g.flair_color,
+            automatic: g.automatic,
           }
         end
         .as_json
@@ -379,6 +390,14 @@ class SiteSerializer < ApplicationSerializer
 
   def include_valid_flag_applies_to_types?
     scope.is_admin?
+  end
+
+  def full_name_required_for_signup
+    Site.full_name_required_for_signup
+  end
+
+  def full_name_visible_in_signup
+    Site.full_name_visible_in_signup
   end
 
   private

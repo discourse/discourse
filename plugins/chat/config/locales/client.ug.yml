@@ -138,6 +138,13 @@ ug:
         never: "ھەرگىز"
       separate_sidebar_mode:
         title: "مۇنبەر ۋە سۆھبەتكە ئايرىم يان بالداق ھالىتىنى كۆرسىتىدۇ"
+      send_shortcut:
+        enter:
+          label: "Enter بېسىلسا يوللايدۇ"
+          description: "Shift + Enter بېسىلسا يېڭى قۇردىن باشلايدۇ"
+        meta_enter:
+          label: "%{meta_key} + Enter بېسىلسا يوللايدۇ"
+          description: "Enter بېسىلسا يېڭى قۇردىن باشلايدۇ"
       enable: "سۆھبەتنى قوزغات"
       flag: "پاش قىل"
       emoji: "چىراي ئىپادە قىستۇر"
@@ -281,6 +288,7 @@ ug:
         tabs:
           members: ئەزا
           settings: تەڭشەك
+        remove_member: "چىقىرىۋەت"
       new_message_modal:
         title: ئۇچۇر يوللا
         add_user_long: <kbd>shift + چېكىش</kbd> ياكى <kbd>shift + enter</kbd><span>قوش @%{username}</span>
@@ -406,6 +414,7 @@ ug:
         auto_join_users_info: "ئاخىرقى 3 ئايدىكى ئاكتىپ ئىشلەتكۈچىنى ھەر سائەتتە بىر تەكشۈرىدۇ. ئەگەر ئۇلار %{category} سەھىپىنى زىيارەت قىلالىسا، ئۇنى مەزكۇر قانالغا قوشۇڭ."
         auto_join_users_info_no_category: "ئاخىرقى 3 ئايدىكى ئاكتىپ ئىشلەتكۈچىنى ھەر سائەتتە بىر تەكشۈرىدۇ. ئەگەر ئۇلار تاللانغان سەھىپىنى زىيارەت قىلالىسا، ئۇنى مەزكۇر قانالغا قوشۇڭ."
         auto_join_users_warning: "بۇ قانالنىڭ ئەزاسى ئەمەس ھەمدە %{category} سەھىپىنى زىيارەت قىلالايدىغان ئىشلەتكۈچىنىڭ ھەممىسى قوشۇلىدۇ. جەزملەمسىز؟"
+        notification_level: "ئىتتىرىش ئۇقتۇرۇشى يوللايدۇ"
         follow: "قوشۇل"
         followed: "قوشۇلدى"
         mute: "قانالنى ئۈنسىزلە"
@@ -517,7 +526,7 @@ ug:
           other: "سۆھبەت تەڭشەكلىرى قانال ئۇچۇرلىرىنى %{count} كۈن ساقلاپ قېلىشقا تەڭشەلدى."
       flags:
         off_topic: "بۇ ئۇچۇر بىلەن قانال ماۋزۇسىدا بەلگىلەنگەن نۆۋەتتىكى سۆھبەت بىلەن مۇناسىۋەتسىز، باشقا جايغا يۆتكەش لازىم بولۇشى مۇمكىن."
-        inappropriate: "ئەقىللىق ئادەم بۇ ئۇچۇردا ھۇجۇم، ھاقارەت ياكى <a href=\"%{basePath}/guidelines\">جامائەت كۆرسەتمىمىز</a>گە خىلاپ مەزمۇن بار دەپ قارايدۇ."
+        inappropriate: "ئەقىللىق ئادەم بۇ ئۇچۇردا ھۇجۇم، ھاقارەت ياكى <a href=\"%{basePath}/guidelines\">جامائەت مىزانىمىز</a>غا خىلاپ مەزمۇن بار دەپ قارايدۇ."
         illegal: "بۇ يازمىغا باشقۇرغۇچى دىققەت قىلىشى زۆرۈر چۈنكى ئۇنىڭدا قانۇنسىز مەزمۇن بارلىقىغا ئىشىنىمەن."
         spam: "بۇ ئۇچۇر ئېلان ياكى بۇزغۇنچىلىق. ئۇ نۆۋەتتىكى قانالغا پايدىسىز ياكى مۇناسىۋەتسىز."
         notify_user: "مەن ئۇلارنىڭ ئۇچۇرى ھەققىدە بۇ كىشى بىلەن بىۋاسىتە ۋە ئۆزۈم سۆزلەشمەكچى."
@@ -601,10 +610,10 @@ ug:
         chat_message: "يېڭى سۆھبەت ئۇچۇرى"
         chat_quoted: "سۆھبەت ئۇچۇرىڭىزنى %{username} نەقىل ئالدى"
       titles:
-        chat_mention: "سۆھبەتتە ئاتاش"
-        chat_invitation: "سۆھبەت تەكلىپى"
-        chat_quoted: "سۆھبەت نەقىل ئېلىندى"
-        chat_watched_thread: "كۆزەتتىكى تېما سۆھبىتى"
+        chat_mention: "سۆھبەتتە تىلغا ئالغان"
+        chat_invitation: "سۆھبەت قانىلىغا تەكلىپ قىلىنغان"
+        chat_quoted: "سۆھبەت ئۇچۇرى نەقىل ئېلىنغان"
+        chat_watched_thread: "سۆھبەت تېمىسى كۆزىتىلگەن"
     action_codes:
       chat:
         enabled: '%{when} دە %{who} <button class="btn-link open-chat">سۆھبەت</button>نى قوزغاتتى'
@@ -635,6 +644,7 @@ ug:
         title: "سۆھبەت"
         keyboard_shortcuts:
           switch_channel_arrows: "%{shortcut} قانال ئالماشتۇر"
+          switch__unread_channel_arrows: "%{shortcut} ئوقۇلمىغان قانالغا ئالماشتۇرىدۇ"
           open_quick_channel_selector: "%{shortcut} تېز قانال تاللىغۇچنى ئاچ"
           open_insert_link_modal: "%{shortcut} ئۇلانما قىستۇر (كىرگۈزۈش كۆزنىكىلا)"
           composer_bold: "%{shortcut} توم (كىرگۈزۈش كۆزنىكىلا)"

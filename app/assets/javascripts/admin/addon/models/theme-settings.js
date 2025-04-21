@@ -1,9 +1,8 @@
-import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import Setting from "admin/mixins/setting-object";
+import SiteSetting from "admin/models/site-setting";
 
-export default class ThemeSettings extends EmberObject.extend(Setting) {
+export default class ThemeSettings extends SiteSetting {
   updateSetting(themeId, newValue) {
     if (this.objects_schema) {
       newValue = JSON.stringify(newValue);

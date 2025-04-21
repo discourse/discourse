@@ -25,8 +25,10 @@ module Chat
       validates :channel_id, presence: true
       validates :message_ids, length: { minimum: 1, maximum: 200 }
     end
+
     model :messages
     policy :can_delete_all_chat_messages
+
     transaction do
       step :trash_messages
       step :destroy_notifications
@@ -34,6 +36,7 @@ module Chat
       step :update_tracking_states
       step :update_thread_reply_cache
     end
+
     step :publish_events
 
     private

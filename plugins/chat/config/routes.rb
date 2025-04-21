@@ -11,6 +11,8 @@ Chat::Engine.routes.draw do
     put "/channels/:channel_id/read" => "channels_read#update"
     post "/channels/:channel_id/messages/:message_id/flags" => "channels_messages_flags#create"
     post "/channels/:channel_id/drafts" => "channels_drafts#create"
+    post "/channels/:channel_id/messages/:message_id/interactions" =>
+           "channels_messages_interactions#create"
     delete "/channels/:channel_id" => "channels#destroy"
     put "/channels/:channel_id" => "channels#update"
     get "/channels/:channel_id" => "channels#show"
@@ -25,6 +27,7 @@ Chat::Engine.routes.draw do
     get "/channels/:channel_id/memberships" => "channels_memberships#index"
     post "/channels/:channel_id/memberships" => "channels_memberships#create"
     delete "/channels/:channel_id/memberships/me" => "channels_current_user_membership#destroy"
+    delete "/channels/:channel_id/memberships/:user_id" => "channels_memberships#destroy"
     delete "/channels/:channel_id/memberships/me/follows" =>
              "channels_current_user_membership_follows#destroy"
     put "/channels/:channel_id/memberships/me" => "channels_current_user_membership#update"
@@ -66,10 +69,22 @@ Chat::Engine.routes.draw do
   get "/direct_messages" => "direct_messages#index"
 
   # incoming_webhooks_controller routes
-  post "/hooks/:key" => "incoming_webhooks#create_message"
+  post "/hooks/:key" => "incoming_webhooks#create_message",
+       :constraints => {
+         format: :json,
+       },
+       :defaults => {
+         format: :json,
+       }
 
   # incoming_webhooks_controller routes
-  post "/hooks/:key/slack" => "incoming_webhooks#create_message_slack_compatible"
+  post "/hooks/:key/slack" => "incoming_webhooks#create_message_slack_compatible",
+       :constraints => {
+         format: :json,
+       },
+       :defaults => {
+         format: :json,
+       }
 
   # chat_controller routes
   get "/" => "chat#respond"
@@ -88,8 +103,6 @@ Chat::Engine.routes.draw do
   post "/:chat_channel_id/quote" => "chat#quote_messages"
   put "/user_chat_enabled/:user_id" => "chat#set_user_chat_status"
   post "/:chat_channel_id" => "api/channel_messages#create"
-
-  get "/emojis" => "emojis#index"
 
   base_c_route = "/c/:channel_title/:channel_id"
   get base_c_route => "chat#respond", :as => "channel"

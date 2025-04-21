@@ -1,20 +1,30 @@
+import { cached, tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
+import { dependentKeyCompat } from "@ember/object/compat";
 import { service } from "@ember/service";
+import BufferedProxy from "ember-buffered-proxy/proxy";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { bufferedProperty } from "discourse/mixins/buffered-content";
-import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import discourseComputed from "discourse/lib/decorators";
+import { i18n } from "discourse-i18n";
 
-export default class AdminSiteTextEdit extends Controller.extend(
-  bufferedProperty("siteText")
-) {
+export default class AdminSiteTextEdit extends Controller {
   @service dialog;
+
+  @tracked siteText;
 
   saved = false;
   queryParams = ["locale"];
 
-  @discourseComputed("buffered.value")
+  @cached
+  @dependentKeyCompat
+  get buffered() {
+    return BufferedProxy.create({
+      content: this.siteText,
+    });
+  }
+
+  @discourseComputed("buffered.value", "siteText.value")
   saveDisabled(value) {
     return this.siteText.value === value;
   }
@@ -32,7 +42,7 @@ export default class AdminSiteTextEdit extends Controller.extend(
     this.siteText
       .save(attrs)
       .then(() => {
-        this.commitBuffer();
+        this.buffered.applyChanges();
         this.set("saved", true);
       })
       .catch(popupAjaxError);
@@ -43,14 +53,14 @@ export default class AdminSiteTextEdit extends Controller.extend(
     this.set("saved", false);
 
     this.dialog.yesNoConfirm({
-      message: I18n.t("admin.site_text.revert_confirm"),
+      message: i18n("admin.site_text.revert_confirm"),
       didConfirm: () => {
         this.siteText
           .revert(this.locale)
           .then((props) => {
             const buffered = this.buffered;
             buffered.setProperties(props);
-            this.commitBuffer();
+            this.buffered.applyChanges();
           })
           .catch(popupAjaxError);
       },

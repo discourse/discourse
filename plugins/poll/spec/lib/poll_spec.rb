@@ -43,6 +43,36 @@ RSpec.describe DiscoursePoll::Poll do
       end.to raise_error(DiscoursePoll::Error, I18n.t("poll.one_vote_per_user"))
     end
 
+    it "should not allow a ranked vote with all abstentions" do
+      poll = post_with_ranked_choice_poll.polls.first
+      poll_options = poll.poll_options
+
+      expect do
+        DiscoursePoll::Poll.vote(
+          user,
+          post_with_ranked_choice_poll.id,
+          "poll",
+          {
+            "0": {
+              digest: poll_options.first.digest,
+              rank: "0",
+            },
+            "1": {
+              digest: poll_options.second.digest,
+              rank: "0",
+            },
+            "2": {
+              digest: poll_options.third.digest,
+              rank: "0",
+            },
+          },
+        )
+      end.to raise_error(
+        DiscoursePoll::Error,
+        I18n.t("poll.requires_that_at_least_one_option_is_ranked"),
+      )
+    end
+
     it "should clean up bad votes for a regular poll" do
       poll = post_with_regular_poll.polls.first
 

@@ -16,6 +16,8 @@ RSpec.describe SessionController do
     end
   end
 
+  before { SiteSetting.hide_email_address_taken = false }
+
   describe "#email_login_info" do
     let(:email_token) do
       Fabricate(:email_token, user: user, scope: EmailToken.scopes[:email_login])
@@ -1574,73 +1576,29 @@ RSpec.describe SessionController do
       end
 
       it "handles non local content correctly" do
-        SiteSetting.avatar_sizes = "100|49"
         setup_s3
         SiteSetting.s3_cdn_url = "http://cdn.com"
 
-        stub_request(:any, /s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/).to_return(
-          status: 200,
-          body: "",
-          headers: {
-            referer: "fgdfds",
-          },
-        )
-
-        @user.create_user_avatar!
-        upload =
-          Fabricate(
-            :upload,
-            url: "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/something",
-          )
-
-        Fabricate(
-          :optimized_image,
-          sha1: SecureRandom.hex << "A" * 8,
-          upload: upload,
-          width: 98,
-          height: 98,
-          url: "//s3-upload-bucket.s3.amazonaws.com/something/else",
-        )
-
-        @user.update_columns(uploaded_avatar_id: upload.id)
-
-        upload1 = Fabricate(:upload_s3)
-        upload2 = Fabricate(:upload_s3)
-
+        @user.update!(uploaded_avatar: Fabricate(:upload_s3))
         @user.user_profile.update!(
-          profile_background_upload: upload1,
-          card_background_upload: upload2,
+          profile_background_upload: Fabricate(:upload_s3),
+          card_background_upload: Fabricate(:upload_s3),
         )
-
-        @user.reload
-        @user.user_avatar.reload
-        @user.user_profile.reload
 
         sign_in(@user)
-
-        stub_request(:get, "http://cdn.com/something/else").to_return(
-          body: lambda { |request| File.new(Rails.root + "spec/fixtures/images/logo.png") },
-        )
 
         get "/session/sso_provider",
             params: Rack::Utils.parse_query(@sso.payload("secretForOverRainbow"))
 
         location = response.header["Location"]
-        # javascript code will handle redirection of user to return_sso_url
         expect(location).to match(%r{^http://somewhere.over.rainbow/sso})
 
         payload = location.split("?")[1]
         sso2 = DiscourseConnectProvider.parse(payload)
 
-        expect(sso2.avatar_url.blank?).to_not eq(true)
-        expect(sso2.profile_background_url.blank?).to_not eq(true)
-        expect(sso2.card_background_url.blank?).to_not eq(true)
-
-        expect(sso2.avatar_url).to start_with("#{SiteSetting.s3_cdn_url}/original")
+        expect(sso2.avatar_url).to start_with(SiteSetting.s3_cdn_url)
         expect(sso2.profile_background_url).to start_with(SiteSetting.s3_cdn_url)
         expect(sso2.card_background_url).to start_with(SiteSetting.s3_cdn_url)
-        expect(sso2.confirmed_2fa).to eq(nil)
-        expect(sso2.no_2fa_methods).to eq(nil)
       end
 
       it "successfully logs out and redirects user to return_sso_url when the user is logged in" do
@@ -3226,6 +3184,22 @@ RSpec.describe SessionController do
           json = response.parsed_body
           expect(json["errors"][0]).to eq(I18n.t("webauthn.validation.ownership_error"))
           expect(session[:current_user_id]).to eq(nil)
+        end
+
+        it "fails when discourse connect is enabled" do
+          SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+          SiteSetting.enable_discourse_connect = true
+          simulate_localhost_passkey_challenge
+          user.activate
+          user.create_or_fetch_secure_identifier
+          post "/session/passkey/auth.json",
+               params: {
+                 publicKeyCredential:
+                   valid_passkey_auth_data.merge(
+                     { userHandle: Base64.strict_encode64(user.secure_identifier) },
+                   ),
+               }
+          expect(response.status).to eq(403)
         end
 
         it "logs the user in" do

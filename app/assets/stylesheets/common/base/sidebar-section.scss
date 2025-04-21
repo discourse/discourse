@@ -16,24 +16,36 @@
 
     .sidebar-section-header-button {
       font-size: var(--font-down-1);
+
+      > * {
+        pointer-events: none;
+      }
     }
 
     .btn.dropdown-select-box-header,
     .sidebar-section-header-button {
-      .discourse-no-touch & {
-        transition: all 0.25s;
-        opacity: 0;
-
-        &:focus {
-          opacity: 1;
-        }
-      }
-
       background: transparent;
       border: none;
       margin-right: calc(var(--d-sidebar-row-horizontal-padding) / 3 * -1);
       padding: calc(var(--d-sidebar-row-horizontal-padding) / 5)
         calc(var(--d-sidebar-row-horizontal-padding) / 3);
+
+      .discourse-no-touch & {
+        transition: all 0.25s;
+        opacity: 0;
+
+        &:hover {
+          background: var(--d-sidebar-highlight-hover-background);
+
+          .d-icon {
+            color: var(--d-sidebar-highlight-hover-icon);
+          }
+        }
+
+        &:focus {
+          opacity: 1;
+        }
+      }
 
       .d-icon {
         font-size: var(--font-down-1);
@@ -44,17 +56,9 @@
       &:focus {
         outline: none;
         background: var(--d-sidebar-highlight-hover-background);
+
         .d-icon {
           color: var(--d-sidebar-highlight-hover-icon);
-        }
-      }
-
-      .discourse-no-touch & {
-        &:hover {
-          background: var(--d-sidebar-highlight-hover-background);
-          .d-icon {
-            color: var(--d-sidebar-highlight-hover-icon);
-          }
         }
       }
     }
@@ -66,7 +70,7 @@
     min-width: 0;
     padding: 0;
     font-size: var(--font-down-2-rem);
-    color: var(--primary-medium);
+    color: var(--d-sidebar-header-color);
     font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -75,7 +79,11 @@
       justify-content: flex-start;
 
       &:hover {
-        color: var(--primary-medium);
+        color: var(--d-sidebar-header-color);
+
+        .d-icon {
+          color: var(--d-sidebar-header-icon-color);
+        }
       }
 
       &:focus {
@@ -87,12 +95,14 @@
   .sidebar-section-header-text {
     line-height: normal;
     margin-right: 0.25em;
+
     @include ellipsis;
   }
 
   .sidebar-section-header-global-indicator {
     margin: 0 0.75em 0 0.25em;
     font-size: var(--font-down-2);
+
     .d-icon {
       margin-top: -0.125em; // optical alignment
     }
@@ -117,6 +127,7 @@
       font-size: var(--font-0);
       text-transform: none;
       line-height: var(--line-height-medium);
+
       .name {
         font-size: var(--font-0);
       }
@@ -139,9 +150,6 @@
 
   .sidebar-section-content {
     margin: 0;
-    hr {
-      margin: 0em 1.5em;
-    }
   }
 }
 

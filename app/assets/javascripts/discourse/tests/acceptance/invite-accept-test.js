@@ -1,9 +1,10 @@
 import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import PreloadStore from "discourse/lib/preload-store";
+import Site from "discourse/models/site";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 function setAuthenticationData(hooks, json) {
   hooks.beforeEach(() => {
@@ -50,9 +51,7 @@ function preloadInvite({
   PreloadStore.store("invite_info", info);
 }
 
-acceptance("Invite accept", function (needs) {
-  needs.settings({ full_name_required: true });
-
+acceptance("Invite accept", function () {
   test("email invite link", async function (assert) {
     PreloadStore.store("invite_info", {
       invited_by: {
@@ -72,7 +71,7 @@ acceptance("Invite accept", function (needs) {
     assert
       .dom(".col-form")
       .includesText(
-        I18n.t("invites.social_login_available"),
+        i18n("invites.social_login_available"),
         "shows social login hint"
       );
 
@@ -164,12 +163,38 @@ acceptance("Invite accept", function (needs) {
     assert.dom(".invites-show .btn-primary").isEnabled("submit is enabled");
   });
 
-  test("invite name is required only if full name is required", async function (assert) {
+  test("invite name optional", async function (assert) {
+    const site = Site.current();
+    site.set("full_name_required_for_signup", false);
+    site.set("full_name_visible_in_signup", true);
+
     preloadInvite();
     await visit("/invites/my-valid-invite-token");
+    assert.dom("#new-account-name").exists();
     assert
-      .dom(".name-input .required")
-      .doesNotExist("Full name is implicitly required");
+      .dom(".name-input.name-required")
+      .doesNotExist("full name is not required");
+  });
+
+  test("invite name hidden", async function (assert) {
+    const site = Site.current();
+    site.set("full_name_required_for_signup", false);
+    site.set("full_name_visible_in_signup", false);
+
+    preloadInvite();
+    await visit("/invites/my-valid-invite-token");
+    assert.dom("#new-account-name").doesNotExist();
+  });
+
+  test("invite name required", async function (assert) {
+    const site = Site.current();
+    site.set("full_name_required_for_signup", true);
+    site.set("full_name_visible_in_signup", true);
+
+    preloadInvite();
+    await visit("/invites/my-valid-invite-token");
+    assert.dom("#new-account-name").exists();
+    assert.dom(".name-input.name-required").exists("full name is required");
   });
 });
 
@@ -282,7 +307,7 @@ acceptance("Invite link with authentication data", function (needs) {
 
     assert
       .dom("#account-email-validation")
-      .hasText(I18n.t("user.email.authenticated", { provider: "Facebook" }));
+      .hasText(i18n("user.email.authenticated", { provider: "Facebook" }));
 
     assert
       .dom("#new-account-username")
@@ -311,7 +336,7 @@ acceptance("Email Invite link with authentication data", function (needs) {
     assert
       .dom("#account-email-validation")
       .hasText(
-        I18n.t("user.email.invite_auth_email_invalid", { provider: "Facebook" })
+        i18n("user.email.invite_auth_email_invalid", { provider: "Facebook" })
       );
 
     assert.dom("form").doesNotExist("does not display the form");
@@ -349,7 +374,7 @@ acceptance(
 
       assert
         .dom("#account-email-validation")
-        .hasText(I18n.t("user.email.authenticated", { provider: "Facebook" }));
+        .hasText(i18n("user.email.authenticated", { provider: "Facebook" }));
 
       assert
         .dom("#new-account-username")
@@ -411,7 +436,7 @@ acceptance(
 
       assert
         .dom("#account-email-validation")
-        .hasText(I18n.t("user.email.authenticated_by_invite"));
+        .hasText(i18n("user.email.authenticated_by_invite"));
     });
   }
 );
@@ -438,7 +463,7 @@ acceptance(
         .dom("#new-account-email")
         .doesNotExist("does not show email field");
 
-      assert.dom("#account-email-validation").hasText(I18n.t("user.email.ok"));
+      assert.dom("#account-email-validation").hasText(i18n("user.email.ok"));
     });
   }
 );

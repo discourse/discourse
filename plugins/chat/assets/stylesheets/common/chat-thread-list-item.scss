@@ -73,12 +73,14 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
+
     .chat-user-avatar {
       cursor: pointer;
 
       &__container {
         padding: 0;
       }
+
       .avatar {
         border: 2px solid var(--primary-very-low);
         padding: 0;
@@ -92,6 +94,7 @@
         margin-right: -6px;
       }
     }
+
     .chat-thread-participants__avatar-group {
       overflow: hidden;
       justify-content: flex-start;
@@ -102,6 +105,7 @@
     flex-shrink: 0;
     color: var(--primary-medium);
     font-size: var(--font-down-2);
+
     @include ellipsis;
     margin-left: auto;
   }
@@ -115,6 +119,7 @@
 
   &__title {
     flex: 1 1 auto;
+
     @include ellipsis;
   }
 

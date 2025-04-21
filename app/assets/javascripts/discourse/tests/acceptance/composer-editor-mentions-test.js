@@ -1,16 +1,15 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import { cloneJSON } from "discourse/lib/object";
 import { setCaretPosition } from "discourse/lib/utilities";
 import topicFixtures from "discourse/tests/fixtures/topic";
 import {
   acceptance,
   fakeTime,
   loggedInUser,
-  query,
   queryAll,
   simulateKeys,
 } from "discourse/tests/helpers/qunit-helpers";
-import { cloneJSON } from "discourse-common/lib/object";
 
 acceptance("Composer - editor mentions", function (needs) {
   let clock = null;
@@ -67,47 +66,35 @@ acceptance("Composer - editor mentions", function (needs) {
     await visit("/");
     await click("#create-topic");
 
-    const editor = query(".d-editor-input");
+    await simulateKeys(".d-editor-input", "abc @u\r");
 
-    await simulateKeys(editor, "abc @u\r");
-
-    assert.strictEqual(
-      editor.value,
-      "abc @user ",
-      "should replace mention correctly"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue("abc @user ", "replaces mention correctly");
   });
 
   test("selecting user mentions after deleting characters", async function (assert) {
     await visit("/");
     await click("#create-topic");
 
-    const editor = query(".d-editor-input");
+    await simulateKeys(".d-editor-input", "abc @user a\b\b\r");
 
-    await simulateKeys(editor, "abc @user a\b\b\r");
-
-    assert.strictEqual(
-      editor.value,
-      "abc @user ",
-      "should replace mention correctly"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue("abc @user ", "replaces mention correctly");
   });
 
   test("selecting user mentions after deleting characters mid sentence", async function (assert) {
     await visit("/");
     await click("#create-topic");
 
-    const editor = query(".d-editor-input");
+    await simulateKeys(".d-editor-input", "abc @user 123");
+    await setCaretPosition(".d-editor-input", 9);
+    await simulateKeys(".d-editor-input", "\b\b\r");
 
-    await simulateKeys(editor, "abc @user 123");
-    await setCaretPosition(editor, 9);
-    await simulateKeys(editor, "\b\b\r");
-
-    assert.strictEqual(
-      editor.value,
-      "abc @user 123",
-      "should replace mention correctly"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue("abc @user 123", "replaces mention correctly");
   });
 
   test("shows status on search results when mentioning a user", async function (assert) {
@@ -118,9 +105,7 @@ acceptance("Composer - editor mentions", function (needs) {
     await visit("/");
     await click("#create-topic");
 
-    const editor = query(".d-editor-input");
-
-    await simulateKeys(editor, "@u");
+    await simulateKeys(".d-editor-input", "@u");
 
     assert
       .dom(`.autocomplete .emoji[alt='${status.emoji}']`)
@@ -135,16 +120,14 @@ acceptance("Composer - editor mentions", function (needs) {
     await visit("/");
     await click("#create-topic");
 
-    const editor = query(".d-editor-input");
-
-    await simulateKeys(editor, "abc @u");
+    await simulateKeys(".d-editor-input", "abc @u");
 
     assert.deepEqual(
       [...queryAll(".ac-user .username")].map((e) => e.innerText),
       ["user", "user2", "user_group", "foo"]
     );
 
-    await simulateKeys(editor, "\bf");
+    await simulateKeys(".d-editor-input", "\bf");
 
     assert.deepEqual(
       [...queryAll(".ac-user .username")].map((e) => e.innerText),

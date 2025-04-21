@@ -13,42 +13,36 @@ RSpec.describe Post do
 
   describe "#hidden_reasons" do
     context "when verifying enum sequence" do
-      before { @hidden_reasons = Post.hidden_reasons }
-
       it "'flag_threshold_reached' should be at 1st position" do
-        expect(@hidden_reasons[:flag_threshold_reached]).to eq(1)
+        expect(described_class.hidden_reasons[:flag_threshold_reached]).to eq(1)
       end
 
       it "'flagged_by_tl3_user' should be at 4th position" do
-        expect(@hidden_reasons[:flagged_by_tl3_user]).to eq(4)
+        expect(described_class.hidden_reasons[:flagged_by_tl3_user]).to eq(4)
       end
     end
   end
 
   describe "#types" do
     context "when verifying enum sequence" do
-      before { @types = Post.types }
-
       it "'regular' should be at 1st position" do
-        expect(@types[:regular]).to eq(1)
+        expect(described_class.types[:regular]).to eq(1)
       end
 
       it "'whisper' should be at 4th position" do
-        expect(@types[:whisper]).to eq(4)
+        expect(described_class.types[:whisper]).to eq(4)
       end
     end
   end
 
   describe "#cook_methods" do
     context "when verifying enum sequence" do
-      before { @cook_methods = Post.cook_methods }
-
       it "'regular' should be at 1st position" do
-        expect(@cook_methods[:regular]).to eq(1)
+        expect(described_class.cook_methods[:regular]).to eq(1)
       end
 
       it "'email' should be at 3rd position" do
-        expect(@cook_methods[:email]).to eq(3)
+        expect(described_class.cook_methods[:email]).to eq(3)
       end
     end
   end
@@ -1420,6 +1414,8 @@ RSpec.describe Post do
 
   describe "#set_owner" do
     fab!(:post)
+    fab!(:admin)
+    fab!(:new_user) { Fabricate(:user) }
 
     it "will change owner of a post correctly" do
       post.set_owner(coding_horror, Discourse.system_user)
@@ -1447,6 +1443,35 @@ RSpec.describe Post do
         I18n.with_locale(SiteSetting.default_locale) { I18n.t("change_owner.post_revision_text") }
 
       expect(post.edit_reason).to eq(expected_reason)
+    end
+
+    it "triggers a post_owner_changed event" do
+      original_user = post.user
+
+      events = DiscourseEvent.track_events { post.set_owner(new_user, admin) }
+
+      change_event = events.find { |e| e[:event_name] == :post_owner_changed }
+
+      expect(change_event).to be_present
+      expect(change_event[:params][0]).to eq(post)
+      expect(change_event[:params][1]).to eq(original_user)
+      expect(change_event[:params][2]).to eq(new_user)
+      expect(post.reload.user).to eq(new_user)
+    end
+
+    it "doesn't trigger an event when user remains the same" do
+      same_user = post.user
+
+      events = DiscourseEvent.track_events { post.set_owner(same_user, admin) }
+
+      change_event = events.find { |e| e[:event_name] == :post_owner_changed }
+
+      expect(change_event).to be_nil
+    end
+
+    it "returns true when ownership changes successfully" do
+      result = post.set_owner(new_user, admin)
+      expect(result).to eq(true)
     end
   end
 
@@ -1496,6 +1521,19 @@ RSpec.describe Post do
       expect { post.hide!(PostActionType.types[:off_topic]) }.to change { post.reload.hidden }.from(
         false,
       ).to(true)
+    end
+
+    it "should inform the user when custom flag" do
+      custom_flag = Fabricate(:flag, name: "custom flag")
+      post.hide!(PostActionType.types[:custom_custom_flag])
+
+      jobs = Jobs::SendSystemMessage.jobs
+      expect(jobs.size).to eq(1)
+
+      Jobs::SendSystemMessage.new.execute(jobs[0]["args"][0].with_indifferent_access)
+      expect(Post.last.raw).to match("custom flag")
+
+      custom_flag.destroy!
     end
 
     it "should decrease user_stat topic_count for first post" do

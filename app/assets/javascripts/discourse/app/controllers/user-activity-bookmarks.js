@@ -6,10 +6,10 @@ import { htmlSafe } from "@ember/template";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import BulkSelectHelper from "discourse/lib/bulk-select-helper";
+import discourseComputed from "discourse/lib/decorators";
+import { iconHTML } from "discourse/lib/icon-library";
 import Bookmark from "discourse/models/bookmark";
-import { iconHTML } from "discourse-common/lib/icon-library";
-import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class UserActivityBookmarksController extends Controller {
   @service router;
@@ -30,7 +30,7 @@ export default class UserActivityBookmarksController extends Controller {
 
   @computed("q")
   get searchTerm() {
-    return this._searchTerm || this.q;
+    return this._searchTerm !== undefined ? this._searchTerm : this.q;
   }
 
   set searchTerm(value) {
@@ -40,7 +40,7 @@ export default class UserActivityBookmarksController extends Controller {
   @discourseComputed()
   emptyStateBody() {
     return htmlSafe(
-      I18n.t("user.no_bookmarks_body", {
+      i18n("user.no_bookmarks_body", {
         icon: iconHTML("bookmark"),
       })
     );

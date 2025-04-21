@@ -144,6 +144,16 @@ RSpec.describe TagsController do
           expect(serialized_tag["count"]).to eq(0)
           expect(serialized_tag["pm_count"]).to eq(1)
         end
+
+        it "doesn't allow users to see other users' PMs" do
+          non_admin_user = Fabricate(:trust_level_1)
+
+          SiteSetting.pm_tags_allowed_for_groups = "1|2|3|11"
+          sign_in(non_admin_user)
+
+          get "/u/#{admin.username}/messages/tags/#{test_tag.name}.json"
+          expect(response.status).to eq(404)
+        end
       end
 
       context "when disabled" do
@@ -417,8 +427,9 @@ RSpec.describe TagsController do
 
     it "should handle synonyms" do
       synonym = Fabricate(:tag, target_tag: tag)
-      get "/tag/#{synonym.name}"
-      expect(response.status).to eq(200)
+      get "/tag/#{synonym.name}/l/top.json?period=daily"
+      expect(response.status).to eq(302)
+      expect(response.redirect_url).to match(%r{/tag/#{tag.name}/l/top.json\?period=daily})
     end
 
     it "does not show staff-only tags" do
@@ -452,6 +463,27 @@ RSpec.describe TagsController do
       expect(response.status).to eq(200)
       expect(response.parsed_body["topic_list"]["topics"].map { |t| t["id"] }).to contain_exactly(
         topic_with_two_tags.id,
+      )
+    end
+
+    it "puts the tag description in the meta description" do
+      described_tag = Fabricate(:tag, name: "test2", description: "This is a description")
+      get "/tag/#{described_tag.name}"
+
+      expect(response.status).to eq(200)
+
+      expect(response.body).to include(
+        "<meta name=\"description\" content=\"#{described_tag.description}\"",
+      )
+    end
+
+    it "has a default description for tags without a description" do
+      get "/tag/test"
+
+      expect(response.status).to eq(200)
+
+      expect(response.body).to include(
+        "<meta name=\"description\" content=\"Topics tagged #{tag.name}\"",
       )
     end
 

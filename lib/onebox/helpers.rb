@@ -17,18 +17,18 @@ module Onebox
     #
     # Note that the size of the response body is capped at `Onebox.options.max_download_kb`. When the limit has been reached,
     # this method will return the response body that has been downloaded up to the limit.
-    def self.fetch_html_doc(url, headers = nil, body_cacher = nil)
+    def self.fetch_html_doc(url, headers = nil)
       response =
         (
           begin
-            fetch_response(url, headers:, body_cacher:, raise_error_when_response_too_large: false)
+            fetch_response(url, headers:, raise_error_when_response_too_large: false)
           rescue StandardError
             nil
           end
         )
 
       doc = Nokogiri.HTML(response)
-      uri = Addressable::URI.parse(url)
+      uri = Addressable::URI.parse(url).normalize!
 
       ignore_canonical_tag = doc.at('meta[property="og:ignore_canonical"]')
       should_ignore_canonical =
@@ -38,24 +38,19 @@ module Onebox
            !should_ignore_canonical
         # prefer canonical link
         canonical_link = doc.at('//link[@rel="canonical"]/@href')
-        canonical_uri = Addressable::URI.parse(canonical_link)
+        canonical_uri = Addressable::URI.parse(canonical_link)&.normalize!
         if canonical_link && canonical_uri &&
              "#{canonical_uri.host}#{canonical_uri.path}" != "#{uri.host}#{uri.path}"
           uri =
             FinalDestination.new(
-              canonical_link,
-              Oneboxer.get_final_destination_options(canonical_link),
+              canonical_uri,
+              Oneboxer.get_final_destination_options(canonical_uri),
             ).resolve
           if uri.present?
             response =
               (
                 begin
-                  fetch_response(
-                    uri.to_s,
-                    headers:,
-                    body_cacher:,
-                    raise_error_when_response_too_large: false,
-                  )
+                  fetch_response(uri.to_s, headers:, raise_error_when_response_too_large: false)
                 rescue StandardError
                   nil
                 end
@@ -73,7 +68,6 @@ module Onebox
       redirect_limit: 5,
       domain: nil,
       headers: nil,
-      body_cacher: nil,
       raise_error_when_response_too_large: true,
       allow_cross_domain_cookies: false
     )
@@ -84,13 +78,6 @@ module Onebox
 
       uri = Addressable::URI.parse(location)
       uri = Addressable::URI.join(domain, uri) if !uri.host
-
-      use_body_cacher = body_cacher && body_cacher.respond_to?("fetch_cached_response_body")
-      if use_body_cacher
-        response_body = body_cacher.fetch_cached_response_body(uri.to_s)
-
-        return response_body if response_body.present?
-      end
 
       result = StringIO.new
       FinalDestination::HTTP.start(
@@ -105,6 +92,7 @@ module Onebox
         headers ||= {}
 
         headers["User-Agent"] ||= user_agent if user_agent
+        headers["Accept-Language"] ||= Oneboxer.accept_language
 
         request = Net::HTTP::Get.new(uri.request_uri, headers)
         start_time = Time.now
@@ -143,10 +131,6 @@ module Onebox
             end
 
             raise Timeout::Error.new if (Time.now - start_time) > Onebox.options.timeout
-          end
-
-          if use_body_cacher && body_cacher.cache_response_body?(uri)
-            body_cacher.cache_response_body(uri.to_s, result.string)
           end
 
           return result.string
@@ -231,9 +215,14 @@ module Onebox
     end
 
     def self.user_agent
-      user_agent = SiteSetting.onebox_user_agent.presence || Onebox.options.user_agent
-      user_agent = "#{user_agent} v#{Discourse::VERSION::STRING}"
-      user_agent
+      if SiteSetting.onebox_user_agent.present?
+        return "#{SiteSetting.onebox_user_agent} v#{Discourse::VERSION::STRING}"
+      end
+
+      if Onebox.options.user_agent.present?
+        return "#{Onebox.options.user_agent} v#{Discourse::VERSION::STRING}"
+      end
+      Discourse.user_agent
     end
 
     # Percent-encodes a URI string per RFC3986 - https://tools.ietf.org/html/rfc3986

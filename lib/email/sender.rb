@@ -257,7 +257,7 @@ module Email
         add_attachments(post)
       elsif @email_type.to_s == "digest"
         @stripped_secure_upload_shas = style.stripped_upload_sha_map.values
-        add_attachments(*digest_posts)
+        add_attachments(*digest_posts, is_digest: true)
       end
 
       # Suppress images from short emails
@@ -356,7 +356,7 @@ module Email
       Post.where(id: header_value("X-Discourse-Post-Ids")&.split(","))
     end
 
-    def add_attachments(*posts)
+    def add_attachments(*posts, is_digest: false)
       max_email_size = SiteSetting.email_total_attachment_size_limit_kb.kilobytes
       return if max_email_size == 0
 
@@ -367,9 +367,13 @@ module Email
         post.uploads.each do |original_upload|
           optimized_1X = original_upload.optimized_images.first
 
-          if FileHelper.is_supported_image?(original_upload.original_filename) &&
-               !should_attach_image?(original_upload, optimized_1X)
-            next
+          if FileHelper.is_supported_image?(original_upload.original_filename)
+            next if !should_attach_image?(original_upload, optimized_1X)
+            # Don't attach images that aren't rendered in the e-mail.
+            next if is_digest && !@message.html_part.body.include?(original_upload.sha1)
+          else
+            # Only attach images in digests.
+            next if is_digest
           end
 
           attached_upload = optimized_1X || original_upload

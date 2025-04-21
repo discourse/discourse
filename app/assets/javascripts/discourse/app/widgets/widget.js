@@ -3,6 +3,8 @@ import { getOwner, setOwner } from "@ember/owner";
 import { camelize } from "@ember/string";
 import { Promise } from "rsvp";
 import { h } from "virtual-dom";
+import { isProduction } from "discourse/lib/environment";
+import { deepMerge } from "discourse/lib/object";
 import { consolePrefix } from "discourse/lib/source-identifier";
 import DecoratorHelper from "discourse/widgets/decorator-helper";
 import {
@@ -20,13 +22,13 @@ import {
   WidgetMouseOutHook,
   WidgetMouseOverHook,
   WidgetMouseUpHook,
+  WidgetPointerOutHook,
+  WidgetPointerOverHook,
   WidgetTouchEndHook,
   WidgetTouchMoveHook,
   WidgetTouchStartHook,
 } from "discourse/widgets/hooks";
-import { isProduction } from "discourse-common/config/environment";
-import { deepMerge } from "discourse-common/lib/object";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 const _registry = {};
 
@@ -83,6 +85,7 @@ export function resetDecorators() {
 }
 
 const _customSettings = {};
+
 export function changeSetting(widgetName, settingName, newValue) {
   _customSettings[widgetName] = _customSettings[widgetName] || {};
   _customSettings[widgetName][settingName] = newValue;
@@ -183,6 +186,8 @@ export default class Widget {
     }
   }
 
+  init() {}
+
   transform() {
     return {};
   }
@@ -190,8 +195,6 @@ export default class Widget {
   defaultState() {
     return {};
   }
-
-  init() {}
 
   destroy() {}
 
@@ -485,6 +488,14 @@ export default class Widget {
       properties["widget-mouse-over"] = new WidgetMouseOverHook(this);
     }
 
+    if (this.pointerOver) {
+      properties["widget-pointer-over"] = new WidgetPointerOverHook(this);
+    }
+
+    if (this.pointerOut) {
+      properties["widget-pointer-out"] = new WidgetPointerOutHook(this);
+    }
+
     if (this.mouseOut) {
       properties["widget-mouse-out"] = new WidgetMouseOutHook(this);
     }
@@ -508,7 +519,7 @@ export default class Widget {
       if (typeof this.title === "function") {
         attributes.title = this.title(attrs, state);
       } else {
-        attributes.title = I18n.t(this.title);
+        attributes.title = i18n(this.title);
       }
     }
 

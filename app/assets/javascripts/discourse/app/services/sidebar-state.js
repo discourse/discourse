@@ -2,6 +2,7 @@ import { tracked } from "@glimmer/tracking";
 import { registerDestructor } from "@ember/destroyable";
 import Service, { service } from "@ember/service";
 import { TrackedSet } from "@ember-compat/tracked-built-ins";
+import escapeRegExp from "discourse/lib/escape-regexp";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import {
   currentPanelKey,
@@ -13,7 +14,6 @@ import {
   MAIN_PANEL,
   SEPARATED_MODE,
 } from "discourse/lib/sidebar/panels";
-import escapeRegExp from "discourse-common/utils/escape-regexp";
 
 @disableImplicitInjections
 export default class SidebarState extends Service {
@@ -25,7 +25,7 @@ export default class SidebarState extends Service {
   @tracked mode = COMBINED_MODE;
   @tracked displaySwitchPanelButtons = false;
   @tracked filter = "";
-  @tracked isForcingAdminSidebar = false;
+  @tracked isForcingSidebar = false;
 
   panels = panels;
   activeExpandedSections = new TrackedSet();
@@ -130,17 +130,6 @@ export default class SidebarState extends Service {
 
   get showMainPanel() {
     return this.currentPanelKey === MAIN_PANEL;
-  }
-
-  get currentUserUsingAdminSidebar() {
-    return this.currentUser?.use_admin_sidebar;
-  }
-
-  get adminSidebarAllowedWithLegacyNavigationMenu() {
-    return (
-      this.currentUserUsingAdminSidebar &&
-      this.siteSettings.navigation_menu === "header dropdown"
-    );
   }
 
   get sanitizedFilter() {

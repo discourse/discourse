@@ -277,8 +277,11 @@ RSpec.describe DiscourseUpdates do
 
       expect(result.length).to eq(3)
       expect(result[0]["experiment_setting"]).to eq("enable_mobile_theme")
+      expect(result[0]["experiment_enabled"]).to eq(true)
       expect(result[1]["experiment_setting"]).to be_nil
+      expect(result[1]["experiment_enabled"]).to eq(false)
       expect(result[2]["experiment_setting"]).to be_nil
+      expect(result[2]["experiment_enabled"]).to eq(false)
     end
 
     it "correctly shows features when related plugins are installed" do
@@ -307,6 +310,14 @@ RSpec.describe DiscourseUpdates do
       expect(result.length).to eq(2)
       expect(result[0]["title"]).to eq("Bells")
       expect(result[1]["title"]).to eq("Whistles")
+    end
+
+    it "correctly refetches features if force_refresh is used" do
+      DiscourseUpdates.expects(:update_new_features).once
+      result = DiscourseUpdates.new_features
+      expect(result.length).to eq(3)
+      result = DiscourseUpdates.new_features(force_refresh: true)
+      expect(result.length).to eq(3)
     end
   end
 

@@ -17,8 +17,8 @@ jobs:
   build:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
     name: run
-    runs-on: ${{ (github.repository != 'discourse/discourse' && 'ubuntu-latest') || 'debian-12' }}
-    container: discourse/discourse_test:slim
+    runs-on: ${{ (github.repository_owner == 'discourse' && 'debian-12') || 'ubuntu-latest' }}
+    container: discourse/discourse_test:release
     timeout-minutes: 30
 
     steps:
@@ -34,12 +34,9 @@ jobs:
           git config --global user.email "ci@ci.invalid"
           git config --global user.name "Discourse CI"
 
-      - name: Bundler cache
-        uses: actions/cache@v4
-        with:
-          path: vendor/bundle
-          key: ${{ runner.os }}-gem-${{ hashFiles('**/Gemfile.lock') }}
-          restore-keys: ${{ runner.os }}-gem-
+      - name: Symlink vendor/bundle from image
+        run: |
+          ln -s /var/www/discourse/vendor/bundle vendor/bundle
 
       - name: Setup gems
         run: |
@@ -47,15 +44,26 @@ jobs:
           bundle config --local path vendor/bundle
           bundle config --local deployment true
           bundle config --local without development
+          bundle config --local lockfile_checksums true
           bundle install --jobs 4
           bundle clean
 
       - name: pnpm install
         run: pnpm install --frozen-lockfile
 
+      - name: Bundler checksums
+        if: ${{ !cancelled() }}
+        shell: bash
+        run: |
+          bundle lock --add-checksums
+          bundle lock --normalize-platforms
+          if [[ $(git status -s Gemfile.lock) ]]; then
+            echo "Gemfile.lock is not up to date. Please run 'bundle lock --add-checksums' and 'bundle lock --normalize-platforms'." && false
+          fi
+
       - name: Rubocop
         if: ${{ !cancelled() }}
-        run: bundle exec rubocop --parallel .
+        run: bundle exec rubocop
 
       - name: syntax_tree
         if: ${{ !cancelled() }}
@@ -63,13 +71,9 @@ jobs:
           set -E
           bundle exec stree check Gemfile $(git ls-files '*.rb') $(git ls-files '*.rake') $(git ls-files '*.thor')
 
-      - name: ESLint (core)
+      - name: ESLint
         if: ${{ !cancelled() }}
         run: pnpm lint:js
-
-      - name: ESLint (core plugins)
-        if: ${{ !cancelled() }}
-        run: pnpm lint:js-plugins
 
       - name: Prettier
         if: ${{ !cancelled() }}
@@ -81,6 +85,10 @@ jobs:
         if: ${{ !cancelled() }}
         run: pnpm lint:hbs
 
+      - name: Stylelint
+        if: ${{ !cancelled() }}
+        run: pnpm lint:css
+
       - name: English locale lint (core)
         if: ${{ !cancelled() }}
         run: bundle exec ruby script/i18n_lint.rb "config/**/locales/{client,server}.en.yml"
@@ -91,4 +99,4 @@ jobs:
 
       - name: Glint
         if: ${{ !cancelled() }}
-        run: pnpm glint -p jsconfig.json
+        run: pnpm glint -p jsconfig.json --noEmit

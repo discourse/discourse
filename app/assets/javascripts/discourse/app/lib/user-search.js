@@ -2,12 +2,12 @@ import { cancel } from "@ember/runloop";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
+import { camelCaseToSnakeCase } from "discourse/lib/case-converter";
+import discourseDebounce from "discourse/lib/debounce";
+import { isTesting } from "discourse/lib/environment";
+import discourseLater from "discourse/lib/later";
 import { userPath } from "discourse/lib/url";
 import { emailValid } from "discourse/lib/utilities";
-import { isTesting } from "discourse-common/config/environment";
-import { camelCaseToSnakeCase } from "discourse-common/lib/case-converter";
-import discourseDebounce from "discourse-common/lib/debounce";
-import discourseLater from "discourse-common/lib/later";
 
 let cache = {},
   cacheKey,
@@ -35,6 +35,7 @@ function performSearch(
   groupMembersOf,
   includeStagedUsers,
   lastSeenUsers,
+  prioritizedUserId,
   limit,
   resultsFn
 ) {
@@ -64,6 +65,7 @@ function performSearch(
     topic_allowed_users: allowedUsers,
     include_staged_users: includeStagedUsers,
     last_seen_users: lastSeenUsers,
+    prioritized_user_id: prioritizedUserId,
     limit,
   };
 
@@ -119,6 +121,7 @@ let debouncedSearch = function (
   groupMembersOf,
   includeStagedUsers,
   lastSeenUsers,
+  prioritizedUserId,
   limit,
   resultsFn
 ) {
@@ -136,6 +139,7 @@ let debouncedSearch = function (
     groupMembersOf,
     includeStagedUsers,
     lastSeenUsers,
+    prioritizedUserId,
     limit,
     resultsFn,
     300
@@ -247,6 +251,7 @@ export default function userSearch(options) {
     groupMembersOf = options.groupMembersOf,
     includeStagedUsers = options.includeStagedUsers,
     lastSeenUsers = options.lastSeenUsers,
+    prioritizedUserId = options.prioritizedUserId,
     limit = options.limit || 6;
 
   if (oldSearch) {
@@ -287,6 +292,7 @@ export default function userSearch(options) {
       groupMembersOf,
       includeStagedUsers,
       lastSeenUsers,
+      prioritizedUserId,
       limit,
       function (r) {
         cancel(clearPromise);

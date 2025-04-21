@@ -58,7 +58,7 @@ SQL
     b.trigger = Badge::Trigger::TrustLevelChange
     # allow title for tl3 and above
     b.default_allow_title = id > Badge::Member
-    b.default_icon = "fa-user"
+    b.default_icon = "user"
     b.system = true
   end
 end
@@ -156,7 +156,7 @@ end
   Badge.seed do |b|
     b.id = id
     b.name = name
-    b.default_icon = "fa-user-plus"
+    b.default_icon = "user-plus"
     b.badge_type_id = type
     b.multiple_grant = false
     b.target_posts = false
@@ -173,7 +173,7 @@ end
 Badge.seed do |b|
   b.id = Badge::FirstShare
   b.name = "First Share"
-  b.default_icon = "share-alt"
+  b.default_icon = "share-nodes"
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
   b.target_posts = true
@@ -193,7 +193,7 @@ end
   Badge.seed do |b|
     b.id = id
     b.name = name
-    b.default_icon = "share-alt"
+    b.default_icon = "share-nodes"
     b.badge_type_id = level
     b.multiple_grant = true
     b.target_posts = true
@@ -339,7 +339,7 @@ end
   Badge.seed do |b|
     b.id = id
     b.name = name
-    b.default_icon = "fa-heart"
+    b.default_icon = "heart"
     b.badge_type_id = level
     b.query = BadgeQueries.liked_posts(post_count, like_count)
     b.default_badge_grouping_id = BadgeGrouping::Community
@@ -357,7 +357,7 @@ end
   Badge.seed do |b|
     b.id = id
     b.name = name
-    b.default_icon = "fa-heart"
+    b.default_icon = "heart"
     b.badge_type_id = level
     b.query = BadgeQueries.liked_back(count, ratio)
     b.default_badge_grouping_id = BadgeGrouping::Community
@@ -375,7 +375,7 @@ end
   Badge.seed do |b|
     b.id = id
     b.name = name
-    b.default_icon = "fa-heart"
+    b.default_icon = "heart"
     b.badge_type_id = level
     b.query = BadgeQueries.like_rate_limit(count)
     b.default_badge_grouping_id = BadgeGrouping::Community
@@ -402,7 +402,7 @@ end
 Badge.seed do |b|
   b.id = Badge::FirstEmoji
   b.name = "First Emoji"
-  b.default_icon = "smile"
+  b.default_icon = "face-smile"
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
   b.target_posts = true

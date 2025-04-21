@@ -7,7 +7,7 @@ import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import concatClass from "discourse/helpers/concat-class";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class ToggleChannelMembershipButton extends Component {
   @service chat;
@@ -22,10 +22,10 @@ export default class ToggleChannelMembershipButton extends Component {
 
     this.options = {
       labelType: "normal",
-      joinTitle: I18n.t("chat.channel_settings.join_channel"),
+      joinTitle: i18n("chat.channel_settings.join_channel"),
       joinIcon: "",
       joinClass: "",
-      leaveTitle: I18n.t("chat.channel_settings.leave_channel"),
+      leaveTitle: i18n("chat.channel_settings.leave_channel"),
       leaveIcon: "",
       leaveClass: "",
       ...this.args.options,
@@ -39,16 +39,16 @@ export default class ToggleChannelMembershipButton extends Component {
 
     if (this.options.labelType === "short") {
       if (this.args.channel.currentUserMembership.following) {
-        return I18n.t("chat.channel_settings.leave");
+        return i18n("chat.channel_settings.leave");
       } else {
-        return I18n.t("chat.channel_settings.join");
+        return i18n("chat.channel_settings.join");
       }
     }
 
     if (this.args.channel.currentUserMembership.following) {
-      return I18n.t("chat.channel_settings.leave_channel");
+      return i18n("chat.channel_settings.leave_channel");
     } else {
-      return I18n.t("chat.channel_settings.join_channel");
+      return i18n("chat.channel_settings.join_channel");
     }
   }
 

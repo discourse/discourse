@@ -1,9 +1,10 @@
-import { helperContext } from "discourse-common/lib/helpers";
-import { bind } from "discourse-common/utils/decorators";
+import { bind } from "discourse/lib/decorators";
+import { helperContext } from "discourse/lib/helpers";
 
 export default class PostMenuButtonConfig {
   #Component;
   #apiAdded;
+  #hidden;
   #key;
   #owner;
   #position;
@@ -14,6 +15,7 @@ export default class PostMenuButtonConfig {
     key,
     Component,
     apiAdded,
+    hidden,
     owner,
     position,
     replacementMap,
@@ -21,6 +23,7 @@ export default class PostMenuButtonConfig {
   }) {
     this.#Component = Component;
     this.#apiAdded = apiAdded;
+    this.#hidden = hidden;
     this.#key = key;
     this.#owner = owner;
     this.#position = position;
@@ -38,11 +41,14 @@ export default class PostMenuButtonConfig {
 
   @bind
   hidden(args) {
-    return this.#staticPropertyWithReplacementFallback({
-      property: "hidden",
-      args,
-      defaultValue: null,
-    });
+    return (
+      this.#hidden ??
+      this.#staticPropertyWithReplacementFallback({
+        property: "hidden",
+        args,
+        defaultValue: null,
+      })
+    );
   }
 
   @bind

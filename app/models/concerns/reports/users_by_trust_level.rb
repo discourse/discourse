@@ -7,7 +7,7 @@ module Reports::UsersByTrustLevel
     def report_users_by_trust_level(report)
       report.data = []
 
-      report.modes = [:table]
+      report.modes = [Report::MODES[:table]]
 
       report.dates_filtering = false
 

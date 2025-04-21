@@ -27,6 +27,7 @@ html.ios-device.keyboard-visible body #main-outlet .full-page-chat {
   background-color: rgba(0, 0, 0, 0.75);
   z-index: z("header");
   pointer-events: none;
+
   &-content {
     width: max-content;
     display: flex;
@@ -35,27 +36,33 @@ html.ios-device.keyboard-visible body #main-outlet .full-page-chat {
     padding: 2em;
     background-color: #1d1d1d;
     border-radius: 0.25em;
+
     &-images {
       .d-icon {
         height: 3em;
         width: 3em;
         color: var(--secondary-or-primary);
+
         &:first-of-type {
           transform: rotate(-5deg);
         }
+
         &:nth-of-type(2) {
           height: 4em;
           width: 4em;
         }
+
         &:last-of-type {
           transform: rotate(5deg);
         }
       }
     }
+
     &-text {
       margin: 1.5em 0 0 0;
       font-size: var(--font-up-1);
       color: var(--secondary-or-primary);
+
       .d-icon-upload {
         padding-right: 0.25em;
         position: relative;
@@ -68,11 +75,12 @@ html.ios-device.keyboard-visible body #main-outlet .full-page-chat {
 
 .header-dropdown-toggle.chat-header-icon .icon {
   .chat-channel-unread-indicator {
-    @include chat-unread-indicator;
     border: 2px solid var(--header_background);
     position: absolute;
     top: 0;
     right: 2px;
+
+    @include chat-unread-indicator;
 
     &.-urgent {
       display: flex;
@@ -94,7 +102,6 @@ html.ios-device.keyboard-visible body #main-outlet .full-page-chat {
       .d-icon {
         color: var(--header_primary-low-mid);
       }
-
       background: none;
     }
   }
@@ -137,16 +144,6 @@ html.ios-device.keyboard-visible body #main-outlet .full-page-chat {
     color: var(--primary-high);
     font-size: var(--font-down-2);
   }
-
-  .emoji-picker {
-    position: fixed;
-  }
-
-  &:hover {
-    .chat-.chat-message-react-btn {
-      display: inline-block;
-    }
-  }
 }
 
 .chat-emoji-avatar {
@@ -165,8 +162,9 @@ html.ios-device.keyboard-visible body #main-outlet .full-page-chat {
 
   .is-online & {
     padding: 2px;
-    box-shadow: inset 0px 0px 0px 1px var(--success),
-      inset 0px 0px 0px 2px var(--secondary);
+    box-shadow:
+      inset 0 0 0 1px var(--success),
+      inset 0 0 0 2px var(--secondary);
   }
 }
 
@@ -192,6 +190,7 @@ body.has-full-page-chat {
   .c-navbar-container {
     position: sticky;
     top: var(--main-outlet-offset);
+    z-index: 1;
   }
 
   .chat-messages-scroller {
@@ -204,8 +203,7 @@ body.has-full-page-chat {
   margin-bottom: 0;
 }
 
-.chat-message-collapser,
-.chat-message-text {
+.chat-cooked {
   > p {
     margin: 0.5em 0 0.5em;
   }
@@ -287,6 +285,7 @@ html.has-full-page-chat {
       min-height: 0;
     }
   }
+
   [data-popper-reference-hidden] {
     visibility: hidden;
   }

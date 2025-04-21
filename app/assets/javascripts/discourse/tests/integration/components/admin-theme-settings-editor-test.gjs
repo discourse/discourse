@@ -1,7 +1,6 @@
-import { click, fillIn, render } from "@ember/test-helpers";
+import { click, fillIn, find, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { query } from "discourse/tests/helpers/qunit-helpers";
 import ThemeSettingsEditor from "admin/components/theme-settings-editor";
 
 module(
@@ -19,9 +18,9 @@ module(
         },
       };
 
-      await render(<template>
-        <ThemeSettingsEditor @model={{model}} />
-      </template>);
+      await render(
+        <template><ThemeSettingsEditor @model={{model}} /></template>
+      );
 
       assert.dom(".ace_line").hasText("[");
     });
@@ -29,9 +28,9 @@ module(
     test("input is valid json", async function (assert) {
       const model = [];
 
-      await render(<template>
-        <ThemeSettingsEditor @model={{model}} />
-      </template>);
+      await render(
+        <template><ThemeSettingsEditor @model={{model}} /></template>
+      );
 
       await fillIn(".ace textarea", "foo");
       await click("button#save");
@@ -42,9 +41,9 @@ module(
     test("'setting' key is present for each setting", async function (assert) {
       const model = [];
 
-      await render(<template>
-        <ThemeSettingsEditor @model={{model}} />
-      </template>);
+      await render(
+        <template><ThemeSettingsEditor @model={{model}} /></template>
+      );
 
       await fillIn(".ace textarea", `[{ "value": "value1" }]`);
       await click("button#save");
@@ -55,9 +54,9 @@ module(
     test("'value' key is present for each setting", async function (assert) {
       const model = [];
 
-      await render(<template>
-        <ThemeSettingsEditor @model={{model}} />
-      </template>);
+      await render(
+        <template><ThemeSettingsEditor @model={{model}} /></template>
+      );
 
       await fillIn(".ace textarea", `[{ "setting": "setting1" }]`);
       await click("button#save");
@@ -68,9 +67,9 @@ module(
     test("only 'setting' and 'value' keys are present, no others", async function (assert) {
       const model = [];
 
-      await render(<template>
-        <ThemeSettingsEditor @model={{model}} />
-      </template>);
+      await render(
+        <template><ThemeSettingsEditor @model={{model}} /></template>
+      );
 
       await fillIn(".ace textarea", `[{ "other_key": "other-key-1" }]`);
       await click("button#save");
@@ -85,11 +84,11 @@ module(
         },
       };
 
-      await render(<template>
-        <ThemeSettingsEditor @model={{model}} />
-      </template>);
+      await render(
+        <template><ThemeSettingsEditor @model={{model}} /></template>
+      );
 
-      query(".ace").aceEditor.session.doc.setValue(
+      find(".ace").aceEditor.session.doc.setValue(
         JSON.stringify([{ setting: "bar", value: "bar" }])
       );
       await click("button#save");
@@ -108,11 +107,11 @@ module(
         },
       };
 
-      await render(<template>
-        <ThemeSettingsEditor @model={{model}} />
-      </template>);
+      await render(
+        <template><ThemeSettingsEditor @model={{model}} /></template>
+      );
 
-      query(".ace").aceEditor.session.doc.setValue(
+      find(".ace").aceEditor.session.doc.setValue(
         JSON.stringify([
           { setting: "foo", value: "foo" },
           { setting: "bar", value: "bar" },

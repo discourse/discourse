@@ -37,6 +37,7 @@ de:
     default_poll_with_multiple_choices_has_invalid_parameters: "Die Mehrfachauswahl-Umfrage hat ungültige Parameter."
     named_poll_with_multiple_choices_has_invalid_parameters: "Die Mehrfachauswahl-Umfrage mit dem Namen <strong>%{name}</strong> hat ungültige Parameter."
     requires_at_least_1_valid_option: "Du musst mindestens eine gültige Option auswählen."
+    requires_that_at_least_one_option_is_ranked: "Bei Ranglistenumfragen musst du mindestens eine Option bewerten."
     edit_window_expired:
       cannot_edit_default_poll_with_votes: "Du kannst eine Umfrage nur in den ersten %{minutes} Minuten ändern."
       cannot_edit_named_poll_with_votes: "Du kannst die Umfrage namens <strong>${name}</strong> nur in den ersten %{minutes} Minuten ändern."

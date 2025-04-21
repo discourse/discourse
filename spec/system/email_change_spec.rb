@@ -20,7 +20,9 @@ describe "Changing email", type: :system do
 
     find(".save-button button").click
 
-    wait_for(timeout: Capybara.default_max_wait_time) { ActionMailer::Base.deliveries.count === 1 }
+    wait_for(timeout: Capybara.default_max_wait_time * 2) do
+      ActionMailer::Base.deliveries.count === 1
+    end
 
     if user.admin?
       get_link_from_email(:old)
@@ -46,66 +48,71 @@ describe "Changing email", type: :system do
     expect(page).to have_css(".dialog-body", text: I18n.t("js.user.change_email.confirm_success"))
     find(".dialog-footer .btn-primary").click
 
-    expect(page).to have_current_path("/u/#{user.username}/preferences/account")
-    expect(user_preferences_page).to have_primary_email(new_email)
+    try_until_success(timeout: Capybara.default_max_wait_time * 2) do
+      expect(user.reload.primary_email.email).to eq(new_email)
+    end
   end
 
-  it "works when user has totp 2fa" do
+  it "works when user has totp 2fa", dump_threads_on_failure: true do
+    SiteSetting.hide_email_address_taken = false
+
     second_factor = Fabricate(:user_second_factor_totp, user: user)
     sign_in user
 
     visit generate_confirm_link
 
     find(".confirm-new-email .btn-primary").click
-
     find(".second-factor-token-input").fill_in with: second_factor.totp_object.now
-
     find("button[type=submit]").click
 
-    expect(page).to have_current_path("/u/#{user.username}/preferences/account")
-    expect(user_preferences_page).to have_primary_email(new_email)
+    try_until_success(timeout: Capybara.default_max_wait_time * 2) do
+      expect(user.reload.primary_email.email).to eq(new_email)
+    end
   end
 
   it "works when user has webauthn 2fa" do
-    # enforced 2FA flow needs a user created > 5 minutes ago
-    user.created_at = 6.minutes.ago
-    user.save!
+    begin
+      # enforced 2FA flow needs a user created > 5 minutes ago
+      user.created_at = 6.minutes.ago
+      user.save!
 
-    sign_in user
+      sign_in user
 
-    DiscourseWebauthn.stubs(:origin).returns(current_host + ":" + Capybara.server_port.to_s)
-    options =
-      ::Selenium::WebDriver::VirtualAuthenticatorOptions.new(
-        user_verification: true,
-        user_verified: true,
-        resident_key: true,
-      )
-    authenticator = page.driver.browser.add_virtual_authenticator(options)
+      DiscourseWebauthn.stubs(:origin).returns(current_host + ":" + Capybara.server_port.to_s)
+      options =
+        ::Selenium::WebDriver::VirtualAuthenticatorOptions.new(
+          user_verification: true,
+          user_verified: true,
+          resident_key: true,
+        )
+      authenticator = page.driver.browser.add_virtual_authenticator(options)
 
-    user_preferences_security_page.visit(user)
-    user_preferences_security_page.visit_second_factor(password)
+      user_preferences_security_page.visit(user)
+      user_preferences_security_page.visit_second_factor(user, password)
 
-    find(".security-key .new-security-key").click
-    expect(user_preferences_security_page).to have_css("input#security-key-name")
+      find(".security-key .new-security-key").click
+      expect(user_preferences_security_page).to have_css("input#security-key-name")
 
-    find(".d-modal__body input#security-key-name").fill_in(with: "First Key")
-    find(".add-security-key").click
+      find(".d-modal__body input#security-key-name").fill_in(with: "First Key")
+      find(".add-security-key").click
 
-    expect(user_preferences_security_page).to have_css(".security-key .second-factor-item")
+      expect(user_preferences_security_page).to have_css(".security-key .second-factor-item")
 
-    visit generate_confirm_link
+      visit generate_confirm_link
 
-    find(".confirm-new-email .btn-primary").click
+      find(".confirm-new-email .btn-primary").click
+      find("#security-key-authenticate-button").click
 
-    find("#security-key-authenticate-button").click
-
-    expect(page).to have_current_path("/u/#{user.username}/preferences/account")
-    expect(user_preferences_page).to have_primary_email(new_email)
-  ensure
-    authenticator&.remove!
+      try_until_success(timeout: Capybara.default_max_wait_time * 2) do
+        expect(user.reload.primary_email.email).to eq(new_email)
+      end
+    ensure
+      authenticator&.remove!
+    end
   end
 
-  it "does not require login to verify" do
+  it "does not require login to confirm email change" do
+    SiteSetting.full_page_login = false
     second_factor = Fabricate(:user_second_factor_totp, user: user)
     sign_in user
 
@@ -116,13 +123,12 @@ describe "Changing email", type: :system do
     visit confirm_link
 
     find(".confirm-new-email .btn-primary").click
-
     find(".second-factor-token-input").fill_in with: second_factor.totp_object.now
+    find("button[type=submit]:not([disabled])").click
 
-    find("button[type=submit]").click
-
-    expect(page).to have_current_path("/latest")
-    expect(user.reload.email).to eq(new_email)
+    try_until_success(timeout: Capybara.default_max_wait_time * 2) do
+      expect(user.reload.primary_email.email).to eq(new_email)
+    end
   end
 
   it "makes admins verify old email" do
@@ -141,7 +147,10 @@ describe "Changing email", type: :system do
     find(".dialog-footer .btn-primary").click
 
     # Confirm new email
-    wait_for(timeout: Capybara.default_max_wait_time) { ActionMailer::Base.deliveries.count === 2 }
+    wait_for(timeout: Capybara.default_max_wait_time * 2) do
+      ActionMailer::Base.deliveries.count === 2
+    end
+
     confirm_new_link = get_link_from_email(:new)
 
     visit confirm_new_link
@@ -151,7 +160,9 @@ describe "Changing email", type: :system do
     expect(page).to have_css(".dialog-body", text: I18n.t("js.user.change_email.confirm_success"))
     find(".dialog-footer .btn-primary").click
 
-    expect(user.reload.email).to eq(new_email)
+    try_until_success(timeout: Capybara.default_max_wait_time * 2) do
+      expect(user.reload.primary_email.email).to eq(new_email)
+    end
   end
 
   it "allows admin to verify old email while logged out" do
@@ -172,7 +183,10 @@ describe "Changing email", type: :system do
     find(".dialog-footer .btn-primary").click
 
     # Confirm new email
-    wait_for(timeout: Capybara.default_max_wait_time) { ActionMailer::Base.deliveries.count === 2 }
+    wait_for(timeout: Capybara.default_max_wait_time * 2) do
+      ActionMailer::Base.deliveries.count === 2
+    end
+
     confirm_new_link = get_link_from_email(:new)
 
     visit confirm_new_link
@@ -182,6 +196,8 @@ describe "Changing email", type: :system do
     expect(page).to have_css(".dialog-body", text: I18n.t("js.user.change_email.confirm_success"))
     find(".dialog-footer .btn-primary").click
 
-    expect(user.reload.email).to eq(new_email)
+    try_until_success(timeout: Capybara.default_max_wait_time * 2) do
+      expect(user.reload.primary_email.email).to eq(new_email)
+    end
   end
 end

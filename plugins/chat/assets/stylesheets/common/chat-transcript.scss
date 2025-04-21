@@ -4,6 +4,7 @@
   min-height: 50px;
   padding: 12px;
   margin: 1rem 0;
+  border-radius: var(--d-border-radius);
 
   @include post-aside;
 
@@ -78,6 +79,7 @@
 
         .chat-transcript-thread {
           min-width: 0;
+
           &-header {
             margin-bottom: 0.5rem;
           }
@@ -106,7 +108,6 @@
 
     .chat-transcript-reaction {
       @include chat-reaction;
-
       pointer-events: none;
     }
   }
@@ -114,6 +115,7 @@
   .chat-transcript-images.onebox {
     display: flex;
     flex-wrap: wrap;
+
     img {
       width: auto;
       max-height: 150px;
@@ -124,5 +126,11 @@
 
   pre code {
     box-sizing: border-box;
+  }
+}
+
+.ProseMirror {
+  .chat-transcript {
+    white-space: normal;
   }
 }

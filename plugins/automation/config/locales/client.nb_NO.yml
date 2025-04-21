@@ -7,8 +7,8 @@
 nb_NO:
   js:
     discourse_automation:
-      create: Opprett
-      update: Oppdater
+      back: Forrige
+      edit: Endre
       fields:
         user:
           label: Bruker
@@ -62,13 +62,13 @@ nb_NO:
           fields:
             restricted_tags:
               label: Stikkord
-            restricted_category:
-              label: Kategori
-            restricted_group:
-              label: Gruppe
-            restricted_groups:
-              label: Grupper
+            restricted_categories:
+              label: Kategorier
           created: Opprettet
+          with_images: Bilder
+          with_links: Lenker
+          with_code: Kode
+          with_uploads: Opplastinger
         category_created_edited:
           fields:
             restricted_category:
@@ -143,6 +143,8 @@ nb_NO:
             label: Utløser
           version:
             label: Versjon
+          status:
+            label: Status
           enabled:
             label: Aktivert
           disabled:

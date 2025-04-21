@@ -5,6 +5,7 @@ plugins:
   discourse_local_dates_enabled:
     default: true
     client: true
+    area: "localization"
   discourse_local_dates_default_formats:
     default: "LLL|LTS|LL|LLLL"
     client: true

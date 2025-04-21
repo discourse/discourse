@@ -7,6 +7,7 @@ class CategoriesController < ApplicationController
                    index
                    categories_and_latest
                    categories_and_top
+                   categories_and_hot
                    show
                    redirect
                    find_by_slug
@@ -17,7 +18,14 @@ class CategoriesController < ApplicationController
 
   before_action :fetch_category, only: %i[show update destroy visible_groups]
   before_action :initialize_staff_action_logger, only: %i[create update destroy]
-  skip_before_action :check_xhr, only: %i[index categories_and_latest categories_and_top redirect]
+  skip_before_action :check_xhr,
+                     only: %i[
+                       index
+                       categories_and_latest
+                       categories_and_top
+                       categories_and_hot
+                       redirect
+                     ]
   skip_before_action :verify_authenticity_token, only: %i[search]
 
   SYMMETRICAL_CATEGORIES_TO_TOPICS_FACTOR = 1.5
@@ -72,6 +80,10 @@ class CategoriesController < ApplicationController
 
   def categories_and_top
     categories_and_topics(:top)
+  end
+
+  def categories_and_hot
+    categories_and_topics(:hot)
   end
 
   def move
@@ -304,7 +316,12 @@ class CategoriesController < ApplicationController
     page = [1, params[:page].to_i].max
     offset = params[:offset].to_i
     parent_category_id = params[:parent_category_id].to_i if params[:parent_category_id].present?
-    only = Category.where(id: params[:only].to_a.map(&:to_i)) if params[:only].present?
+    only =
+      if params[:only].present?
+        Category.secured(guardian).where(id: params[:only].to_a.map(&:to_i))
+      else
+        Category.secured(guardian)
+      end
     except_ids = params[:except].to_a.map(&:to_i)
     include_uncategorized =
       (
@@ -529,6 +546,9 @@ class CategoriesController < ApplicationController
             :name,
             :color,
             :text_color,
+            :style_type,
+            :emoji,
+            :icon,
             :email_in,
             :email_in_allow_strangers,
             :mailinglist_mirror,
@@ -604,15 +624,19 @@ class CategoriesController < ApplicationController
       end
 
     include_topics =
-      view_context.mobile_view? || params[:include_topics] ||
+      params[:include_topics] ||
         (parent_category && parent_category.subcategory_list_includes_topics?) ||
         SiteSetting.desktop_category_page_style == "categories_with_featured_topics" ||
         SiteSetting.desktop_category_page_style == "subcategories_with_featured_topics" ||
         SiteSetting.desktop_category_page_style == "categories_boxes_with_topics" ||
-        SiteSetting.desktop_category_page_style == "categories_with_top_topics"
+        SiteSetting.desktop_category_page_style == "categories_with_top_topics" ||
+        SiteSetting.mobile_category_page_style == "categories_with_featured_topics" ||
+        SiteSetting.mobile_category_page_style == "categories_boxes_with_topics" ||
+        SiteSetting.mobile_category_page_style == "subcategories_with_featured_topics"
 
     include_subcategories =
       SiteSetting.desktop_category_page_style == "subcategories_with_featured_topics" ||
+        SiteSetting.mobile_category_page_style == "subcategories_with_featured_topics" ||
         params[:include_subcategories] == "true"
 
     category_options = {
@@ -650,6 +674,9 @@ class CategoriesController < ApplicationController
           SiteSetting.top_page_default_timeframe.to_sym,
         )
       @topic_list.more_topics_url = url_for(top_path)
+    when "categories_and_hot_topics"
+      @topic_list = TopicQuery.new(current_user, topic_options).list_hot
+      @topic_list.more_topics_url = url_for(hot_path)
     end
 
     @topic_list

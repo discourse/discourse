@@ -122,7 +122,7 @@ RSpec.describe "Admin editing objects type theme setting", type: :system do
 
       theme_settings_editor = admin_customize_themes_page.click_theme_settings_editor_button
 
-      theme_settings_editor.fill_in(<<~SETTING)
+      theme_settings_editor.set_input(<<~SETTING)
       [
         {
           "setting": "objects_setting",

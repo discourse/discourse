@@ -1,4 +1,4 @@
-import { cached } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
 import EmberObject, { computed } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { alias, and, equal, notEmpty, or } from "@ember/object/computed";
@@ -9,8 +9,12 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { fmt, propertyEqual } from "discourse/lib/computed";
 import { TOPIC_VISIBILITY_REASONS } from "discourse/lib/constants";
+import discourseComputed from "discourse/lib/decorators";
+import deprecated from "discourse/lib/deprecated";
 import { longDate } from "discourse/lib/formatter";
+import getURL from "discourse/lib/get-url";
 import { applyModelTransformations } from "discourse/lib/model-transformers";
+import { deepMerge } from "discourse/lib/object";
 import PreloadStore from "discourse/lib/preload-store";
 import { emojiUnescape } from "discourse/lib/text";
 import { fancyTitle } from "discourse/lib/topic-fancy-title";
@@ -19,12 +23,9 @@ import ActionSummary from "discourse/models/action-summary";
 import Bookmark from "discourse/models/bookmark";
 import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
+import TopicDetails from "discourse/models/topic-details";
 import { flushMap } from "discourse/services/store";
-import deprecated from "discourse-common/lib/deprecated";
-import getURL from "discourse-common/lib/get-url";
-import { deepMerge } from "discourse-common/lib/object";
-import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import Category from "./category";
 
 export function loadTopicView(topic, args) {
@@ -177,11 +178,11 @@ export default class Topic extends RestModel {
     return promise;
   }
 
-  static bulkOperation(topics, operation, options, tracked) {
+  static bulkOperation(topics, operation, options, isTracked) {
     const data = {
       topic_ids: topics.mapBy("id"),
       operation,
-      tracked,
+      tracked: isTracked,
     };
 
     if (options) {
@@ -196,8 +197,8 @@ export default class Topic extends RestModel {
     });
   }
 
-  static bulkOperationByFilter(filter, operation, options, tracked) {
-    const data = { filter, operation, tracked };
+  static bulkOperationByFilter(filter, operation, options, isTracked) {
+    const data = { filter, operation, tracked: isTracked };
 
     if (options) {
       if (options.categoryId) {
@@ -226,14 +227,18 @@ export default class Topic extends RestModel {
   }
 
   static resetNew(category, include_subcategories, opts = {}) {
-    let { tracked, tag, topicIds } = {
+    let {
+      tracked: isTracked,
+      tag,
+      topicIds,
+    } = {
       tracked: false,
       tag: null,
       topicIds: null,
       ...opts,
     };
 
-    const data = { tracked };
+    const data = { tracked: isTracked };
     if (category) {
       data.category_id = category.id;
       data.include_subcategories = include_subcategories;
@@ -296,6 +301,9 @@ export default class Topic extends RestModel {
   @service currentUser;
   @service siteSettings;
 
+  @tracked deleted_by;
+  @tracked deleted_at;
+
   message = null;
   errorLoading = false;
 
@@ -312,6 +320,11 @@ export default class Topic extends RestModel {
   @propertyEqual("last_read_post_number", "highest_post_number") readLastPost;
   @and("pinned", "readLastPost") canClearPin;
   @or("details.can_edit", "details.can_edit_tags") canEditTags;
+
+  @tracked _details = this.store.createRecord("topicDetails", {
+    id: this.id,
+    topic: this,
+  });
 
   @discourseComputed("last_read_post_number", "highest_post_number")
   visited(lastReadPostNumber, highestPostNumber) {
@@ -394,10 +407,10 @@ export default class Topic extends RestModel {
       const createdAtStr = moment(createdAt).format(BUMPED_FORMAT);
 
       return bumpedAtStr !== createdAtStr
-        ? `${I18n.t("topic.created_at", {
+        ? `${i18n("topic.created_at", {
             date: longDate(createdAt),
-          })}\n${I18n.t("topic.bumped_at", { date: longDate(bumpedAt) })}`
-        : I18n.t("topic.created_at", { date: longDate(createdAt) });
+          })}\n${i18n("topic.bumped_at", { date: longDate(bumpedAt) })}`
+        : i18n("topic.created_at", { date: longDate(createdAt) });
     }
   }
 
@@ -454,14 +467,17 @@ export default class Topic extends RestModel {
   }
 
   get details() {
-    return (this._details ??= this.store.createRecord("topicDetails", {
-      id: this.id,
-      topic: this,
-    }));
+    return this._details;
   }
 
   set details(value) {
-    this._details = value;
+    if (value instanceof TopicDetails) {
+      this._details = value;
+      return;
+    }
+
+    // we need to ensure that details is an instance of TopicDetails
+    this._details = this.store.createRecord("topicDetails", value);
   }
 
   @discourseComputed("visible")
@@ -478,7 +494,7 @@ export default class Topic extends RestModel {
       const reasonKey = Object.keys(TOPIC_VISIBILITY_REASONS).find(
         (key) => TOPIC_VISIBILITY_REASONS[key] === this.visibility_reason_id
       );
-      return I18n.t(`topic_statuses.visibility_reasons.${reasonKey}`);
+      return i18n(`topic_statuses.visibility_reasons.${reasonKey}`);
     }
 
     return "";

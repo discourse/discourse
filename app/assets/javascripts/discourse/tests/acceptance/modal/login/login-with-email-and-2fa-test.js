@@ -1,7 +1,7 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 const TOKEN = "sometoken";
 
@@ -37,8 +37,6 @@ acceptance("Login with email and 2FA", function (needs) {
     await visit(`/session/email-login/${TOKEN}`);
     await click(".toggle-second-factor-method");
 
-    assert
-      .dom("#second-factor")
-      .containsText(I18n.t("user.second_factor.title"));
+    assert.dom("#second-factor").containsText(i18n("user.second_factor.title"));
   });
 });

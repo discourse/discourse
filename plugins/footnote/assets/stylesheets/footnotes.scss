@@ -1,12 +1,11 @@
 .inline-footnotes {
   a.expand-footnote {
     user-select: none;
-    padding: 0px 0.5em;
-    margin: 0 0 0 0.25em;
+    padding: 0 0.4em;
     color: var(--primary-low-mid-or-secondary-high);
     background: var(--primary-low);
     border-radius: 3px;
-    min-height: 20px;
+    min-height: 1.25em;
     display: inline-flex;
     align-items: center;
 
@@ -25,6 +24,7 @@
   .footnotes-list,
   .footnotes-sep {
     position: absolute;
+
     // the left/right positioning prevents overflow issues
     // with long words causing overflow on small screens
     left: 0;
@@ -110,4 +110,49 @@
 
 #footnote-tooltip[data-popper-placement^="right"] > #arrow {
   left: -4px;
+}
+
+.ProseMirror {
+  counter-reset: prosemirror-footnote;
+
+  .footnote {
+    display: inline-block;
+
+    &::after {
+      padding: 0 0.125em;
+      display: inline-block;
+      content: "[" counter(prosemirror-footnote) "]";
+      vertical-align: super;
+      font-size: 0.75rem;
+      line-height: 1;
+      counter-increment: prosemirror-footnote;
+    }
+  }
+
+  .footnote-tooltip {
+    cursor: auto;
+    position: absolute;
+    max-height: 40%;
+    overflow: auto;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: 0.5rem;
+    padding-top: 0.5rem;
+    background-color: var(--primary-50);
+    border-radius: var(--d-border-radius);
+
+    &:focus-within {
+      outline: 1px solid var(--primary-low);
+    }
+
+    &::before {
+      top: 0.1rem;
+      left: 0.25rem;
+      position: absolute;
+      content: "[" var(--footnote-counter) "]:";
+      font-size: 0.75rem;
+      color: var(--primary-low-mid);
+    }
+  }
 }

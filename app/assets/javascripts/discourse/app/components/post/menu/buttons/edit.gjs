@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 
@@ -35,7 +35,7 @@ export default class PostMenuEditButton extends Component {
       }}
       ...attributes
       @action={{@buttonActions.editPost}}
-      @icon={{if @post.wiki "far-edit" "pencil-alt"}}
+      @icon={{if @post.wiki "far-pen-to-square" "pencil"}}
       @label={{if this.showLabel "post.controls.edit_action"}}
       @title="post.controls.edit"
     />

@@ -2,8 +2,8 @@ import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { url } from "discourse/lib/computed";
-import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import discourseComputed from "discourse/lib/decorators";
+import { i18n } from "discourse-i18n";
 
 export default class AdminCustomizeThemesEditController extends Controller {
   @service router;
@@ -33,7 +33,7 @@ export default class AdminCustomizeThemesEditController extends Controller {
 
   @discourseComputed("model.isSaving")
   saveButtonText(isSaving) {
-    return isSaving ? I18n.t("saving") : I18n.t("admin.customize.save");
+    return isSaving ? i18n("saving") : i18n("admin.customize.save");
   }
 
   @discourseComputed("model.changed", "model.isSaving")
@@ -57,25 +57,6 @@ export default class AdminCustomizeThemesEditController extends Controller {
       target,
       name
     );
-  }
-
-  @action
-  onlyOverriddenChanged(onlyShowOverridden) {
-    if (onlyShowOverridden) {
-      if (!this.model.hasEdited(this.currentTargetName, this.fieldName)) {
-        let firstTarget = this.get("model.targets").find((t) => t.edited);
-        let firstField = this.get(`model.fields.${firstTarget.name}`).find(
-          (f) => f.edited
-        );
-
-        this.router.replaceWith(
-          this.editRouteName,
-          this.get("model.id"),
-          firstTarget.name,
-          firstField.name
-        );
-      }
-    }
   }
 
   @action

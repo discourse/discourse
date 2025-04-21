@@ -658,6 +658,7 @@ class Post < ActiveRecord::Base
             "flag_reasons.#{post_action_type_view.types[post_action_type_id]}",
             locale: SiteSetting.default_locale,
             base_path: Discourse.base_path,
+            default: PostActionType.names[post_action_type_id],
           ),
       }
 
@@ -850,6 +851,7 @@ class Post < ActiveRecord::Base
 
     edit_reason = I18n.t("change_owner.post_revision_text", locale: SiteSetting.default_locale)
 
+    old_user = user
     revise(
       actor,
       { raw: self.raw, user_id: new_user.id, edit_reason: edit_reason },
@@ -858,7 +860,10 @@ class Post < ActiveRecord::Base
       skip_validations: true,
     )
 
-    topic.update_columns(last_post_user_id: new_user.id) if post_number == topic.highest_post_number
+    result = topic.update_columns(last_post_user_id: new_user.id) if post_number ==
+      topic.highest_post_number
+    DiscourseEvent.trigger(:post_owner_changed, self, old_user, new_user)
+    result
   end
 
   before_create { PostCreator.before_create_tasks(self) }

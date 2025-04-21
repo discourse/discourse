@@ -16,26 +16,22 @@ module("Unit | Model | theme", function (hooks) {
       ],
     });
 
-    assert.ok(
+    assert.true(
       theme.settings[0] instanceof ThemeSettings,
-      "should be an instance of ThemeSettings"
+      "is an instance of ThemeSettings"
     );
 
-    assert.ok(
+    assert.true(
       theme.settings[1] instanceof ThemeSettings,
-      "should be an instance of ThemeSettings"
+      "is an instance of ThemeSettings"
     );
   });
 
-  test("can add an upload correctly", function (assert) {
+  test("adds an upload correctly", function (assert) {
     const store = getOwner(this).lookup("service:store");
     const theme = store.createRecord("theme");
 
-    assert.strictEqual(
-      theme.uploads.length,
-      0,
-      "uploads should be an empty array"
-    );
+    assert.strictEqual(theme.uploads.length, 0, "uploads are an empty array");
 
     theme.setField("common", "bob", "", 999, 2);
     let fields = theme.theme_fields;

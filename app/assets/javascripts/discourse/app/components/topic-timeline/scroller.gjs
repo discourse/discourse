@@ -6,14 +6,14 @@ import {
   timelineDate,
 } from "discourse/components/topic-timeline/container";
 import draggable from "discourse/modifiers/draggable";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import BackButton from "./back-button";
 
 export default class TopicTimelineScroller extends Component {
   style = htmlSafe(`height: ${SCROLLER_HEIGHT}px`);
 
   get repliesShort() {
-    return I18n.t(`topic.timeline.replies_short`, {
+    return i18n(`topic.timeline.replies_short`, {
       current: this.args.current,
       total: this.args.total,
     });

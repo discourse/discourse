@@ -1,19 +1,17 @@
 import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
-import { setPrefix } from "discourse-common/lib/get-url";
+import { setPrefix } from "discourse/lib/get-url";
 
 function reportWithData(data) {
   const store = getOwner(this).lookup("service:store");
 
   return store.createRecord("report", {
     type: "topics",
-    data: data.map((val, index) => {
-      return {
-        x: moment().subtract(index, "days").format("YYYY-MM-DD"),
-        y: val,
-      };
-    }),
+    data: data.map((val, index) => ({
+      x: moment().subtract(index, "days").format("YYYY-MM-DD"),
+      y: val,
+    })),
   });
 }
 
@@ -85,8 +83,8 @@ module("Unit | Model | report", function (hooks) {
       this,
       [6, 8, 5, 2, 1]
     ).yesterdayCountTitle;
-    assert.ok(title.includes("+60%"));
-    assert.ok(title.match(/Was 5/));
+    assert.true(title.includes("+60%"));
+    assert.true(/Was 5/.test(title));
   });
 
   test("yesterdayCountTitle when two days ago was 0", function (assert) {
@@ -94,8 +92,8 @@ module("Unit | Model | report", function (hooks) {
       this,
       [6, 8, 0, 2, 1]
     ).yesterdayCountTitle;
-    assert.ok(!title.includes("%"));
-    assert.ok(title.match(/Was 0/));
+    assert.false(title.includes("%"));
+    assert.true(/Was 0/.test(title));
   });
 
   test("sevenDaysCountTitle", function (assert) {
@@ -103,22 +101,22 @@ module("Unit | Model | report", function (hooks) {
       this,
       [100, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 100, 100]
     ).sevenDaysCountTitle;
-    assert.ok(title.match(/-50%/));
-    assert.ok(title.match(/Was 14/));
+    assert.true(/-50%/.test(title));
+    assert.true(/Was 14/.test(title));
   });
 
   test("thirtyDaysCountTitle", function (assert) {
     const report = reportWithData.call(this, [5, 5, 5, 5]);
     report.set("prev30Days", 10);
 
-    assert.ok(report.thirtyDaysCountTitle.includes("+50%"));
-    assert.ok(report.thirtyDaysCountTitle.match(/Was 10/));
+    assert.true(report.thirtyDaysCountTitle.includes("+50%"));
+    assert.true(/Was 10/.test(report.thirtyDaysCountTitle));
 
     const report2 = reportWithData.call(this, [5, 5, 5, 5]);
     report2.set("prev_period", 20);
 
-    assert.ok(report2.thirtyDaysCountTitle.includes("-25%"));
-    assert.ok(report2.thirtyDaysCountTitle.match(/Was 20/));
+    assert.true(report2.thirtyDaysCountTitle.includes("-25%"));
+    assert.true(/Was 20/.test(report2.thirtyDaysCountTitle));
   });
 
   test("sevenDaysTrend", function (assert) {
@@ -370,7 +368,7 @@ module("Unit | Model | report", function (hooks) {
     const computedUsernameLabel = usernameLabel.compute(row);
     assert.strictEqual(
       computedUsernameLabel.formattedValue,
-      "<a href='/admin/users/1/joffrey'><img loading='lazy' alt='' width='24' height='24' src='/' class='avatar' title='joffrey'><span class='username'>joffrey</span></a>"
+      "<a href='/admin/users/1/joffrey'><img alt='' width='24' height='24' src='/' class='avatar' title='joffrey'><span class='username'>joffrey</span></a>"
     );
     assert.strictEqual(computedUsernameLabel.value, "joffrey");
 
@@ -380,7 +378,7 @@ module("Unit | Model | report", function (hooks) {
     assert.strictEqual(flagCountLabel.title, "Flag count");
     assert.strictEqual(flagCountLabel.type, "number");
     let computedFlagCountLabel = flagCountLabel.compute(row);
-    assert.strictEqual(computedFlagCountLabel.formattedValue, "1.9k");
+    assert.strictEqual(computedFlagCountLabel.formattedValue, "1,876");
     assert.strictEqual(computedFlagCountLabel.value, 1876);
     computedFlagCountLabel = flagCountLabel.compute(row, {
       formatNumbers: false,
@@ -459,7 +457,7 @@ module("Unit | Model | report", function (hooks) {
     const userLink = computedLabels[0].compute(row).formattedValue;
     assert.strictEqual(
       userLink,
-      "<a href='/forum/admin/users/1/joffrey'><img loading='lazy' alt='' width='24' height='24' src='/forum/' class='avatar' title='joffrey'><span class='username'>joffrey</span></a>"
+      "<a href='/forum/admin/users/1/joffrey'><img alt='' width='24' height='24' src='/forum/' class='avatar' title='joffrey'><span class='username'>joffrey</span></a>"
     );
   });
 });

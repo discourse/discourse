@@ -2,8 +2,8 @@
 <html lang="<%= html_lang %>">
   <head>
     <meta charset="utf-8">
-    <title><%= content_for?(:title) ? yield(:title) : SiteSetting.title %></title>
-    <meta name="description" content="<%= @description_meta || SiteSetting.site_description %>">
+    <title><%= title_content %></title>
+    <meta name="description" content="<%= description_content %>">
     <%= render partial: "layouts/head" %>
     <%= render partial: "common/discourse_stylesheet" %>
     <%= theme_lookup("head_tag") %>

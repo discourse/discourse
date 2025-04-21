@@ -1,8 +1,8 @@
 import { ajax } from "discourse/lib/ajax";
 import cookie, { removeCookie } from "discourse/lib/cookie";
+import discourseLater from "discourse/lib/later";
 import Session from "discourse/models/session";
-import discourseLater from "discourse-common/lib/later";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export function listColorSchemes(site, options = {}) {
   let schemes = site.get("user_color_schemes");
@@ -21,6 +21,9 @@ export function listColorSchemes(site, options = {}) {
       results.push({
         name: s.name,
         id: s.id,
+        theme_id: s.theme_id,
+        colors: s.colors,
+        is_dark: s.is_dark,
       });
     }
   });
@@ -32,16 +35,18 @@ export function listColorSchemes(site, options = {}) {
       if (!existing) {
         results.unshift({
           id: defaultDarkColorScheme.id,
-          name: `${defaultDarkColorScheme.name} ${I18n.t(
+          name: `${defaultDarkColorScheme.name} ${i18n(
             "user.color_schemes.default_dark_scheme"
           )}`,
+          theme_id: defaultDarkColorScheme.theme_id,
+          colors: defaultDarkColorScheme.colors,
         });
       }
     }
 
     results.unshift({
       id: -1,
-      name: I18n.t("user.color_schemes.disable_dark_scheme"),
+      name: i18n("user.color_schemes.disable_dark_scheme"),
     });
   }
 

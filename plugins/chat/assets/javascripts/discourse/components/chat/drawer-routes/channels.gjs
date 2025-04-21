@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 import ChannelsListPublic from "discourse/plugins/chat/discourse/components/channels-list-public";
 import Navbar from "discourse/plugins/chat/discourse/components/chat/navbar";
 import ChatFooter from "discourse/plugins/chat/discourse/components/chat-footer";
@@ -22,7 +22,7 @@ export default class ChatDrawerRoutesChannels extends Component {
 
       {{#if this.chatStateManager.isDrawerExpanded}}
         <div class="chat-drawer-content">
-          <ChannelsListPublic @sortByActivity={{true}} />
+          <ChannelsListPublic />
         </div>
 
         <ChatFooter />

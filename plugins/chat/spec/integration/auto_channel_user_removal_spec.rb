@@ -2,8 +2,9 @@
 
 describe "Automatic user removal from channels" do
   fab!(:user_1) { Fabricate(:user, trust_level: 1) }
-  let(:user_1_guardian) { Guardian.new(user_1) }
   fab!(:user_2) { Fabricate(:user, trust_level: 3) }
+
+  fab!(:user_1_guardian) { Guardian.new(user_1) }
 
   fab!(:secret_group) { Fabricate(:group) }
   fab!(:private_category) { Fabricate(:private_category, group: secret_group) }
@@ -145,6 +146,7 @@ describe "Automatic user removal from channels" do
     context "when a user is removed from a private category group" do
       context "when the user is in another group that can interact with the channel" do
         fab!(:stealth_group) { Fabricate(:group) }
+
         before do
           CategoryGroup.create!(
             category: private_category,

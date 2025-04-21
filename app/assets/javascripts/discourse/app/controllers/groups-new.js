@@ -1,43 +1,12 @@
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
-
-export function popupAutomaticMembershipAlert(group_id, email_domains) {
-  if (!email_domains) {
-    return;
-  }
-
-  const data = {};
-  data.automatic_membership_email_domains = email_domains;
-
-  if (group_id) {
-    data.id = group_id;
-  }
-
-  ajax(`/admin/groups/automatic_membership_count.json`, {
-    type: "PUT",
-    data,
-  }).then((result) => {
-    const count = result.user_count;
-
-    if (count > 0) {
-      this.dialog.alert(
-        I18n.t(
-          "admin.groups.manage.membership.automatic_membership_user_count",
-          { count }
-        )
-      );
-    }
-  });
-}
+import discourseComputed from "discourse/lib/decorators";
 
 export default class GroupsNewController extends Controller {
-  @service dialog;
   @service router;
+  @service groupAutomaticMembersDialog;
 
   saving = null;
 
@@ -52,14 +21,19 @@ export default class GroupsNewController extends Controller {
   }
 
   @action
-  save() {
+  async save() {
     this.set("saving", true);
     const group = this.model;
 
-    popupAutomaticMembershipAlert(
+    const accepted = await this.groupAutomaticMembersDialog.showConfirm(
       group.id,
       group.automatic_membership_email_domains
     );
+
+    if (!accepted) {
+      this.set("saving", false);
+      return;
+    }
 
     group
       .create()

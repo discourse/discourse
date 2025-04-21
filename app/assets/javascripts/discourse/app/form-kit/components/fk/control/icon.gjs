@@ -13,14 +13,14 @@ export default class FKControlIcon extends Component {
 
   <template>
     <IconPicker
-      @value={{readonly @value}}
+      @value={{readonly @field.value}}
       @onlyAvailable={{true}}
       @options={{hash
         maximum=1
-        disabled=@disabled
+        disabled=@field.disabled
         caretDownIcon="angle-down"
         caretUpIcon="angle-up"
-        icons=@value
+        icons=@field.value
       }}
       @onChange={{this.handleInput}}
       class="form-kit__control-icon"

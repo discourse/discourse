@@ -172,21 +172,21 @@ he:
           - אנו דוגלים ב[התנהלות קהילתית מתורבתת](%{base_uri}/guidelines) בכל עת.
       onebox:
         instructions: |-
-          נתקדם, אפשר לבקש ממך לשתף אתי את אחד הקישורים האלה? יש להגיב **עם קישור בשורה נפרדת** והוא יתרחב אוטומטית ויציג פירוט מגניב.
+          עכשיו, אוכל לבקש ממך לשתף איתי את אחד מהקישורים האלה? יש להגיב עם **הקישור בשורה נפרדת**, והוא יתרחב אוטומטית כדי לכלול תקציר מגניב עליו.
 
-          כדי להעתיק אישור כלשהו, עליך לגעת ולהחזיר אותו בנייד, או בלחיצה ימנית בכל מכשיר אחר:
+          כדי להעתיק קישור כלשהו, יש להקיש ולהחזיק במכשירים ניידים, או לחיצה ימנית בהתקן ההצבעה שלך (עכבר/משטח מגע וכו׳):
 
-          <https://en.wikipedia.org/wiki/Inherently_funny_word>
-          <https://en.wikipedia.org/wiki/Death_by_coconut>
-          <https://en.wikipedia.org/wiki/Calculator_spelling>
+          [https://en.wikipedia.org/wiki/Inherently_funny_word](https://en.wikipedia.org/wiki/Inherently_funny_word)
+          [https://en.wikipedia.org/wiki/Death_by_coconut](https://en.wikipedia.org/wiki/Death_by_coconut)
+          [https://en.wikipedia.org/wiki/Calculator_spelling](https://en.wikipedia.org/wiki/Calculator_spelling)
         reply: |-
           אחלה! השיטה הזו אמורה לעבוד עבור כל הקישורים <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16">. אך חשוב לזכור, הוא חייב להיות בשורה _עצמאית_, ללא שום דבר לפני או אחרי.
         not_found: |-
-          לא הצלחתי למצור את הקישור בתגובה שלך! :cry:
+          לא הצלחתי למצוא את הקישור בתגובה שלך, סליחה! :cry:
 
-          אפשר לבקש ממך להוסיף את הקישור הבא, בשורה נפרדת, בתגובה הבאה שלך?
+          אפשר לנסות להוסיף את הקישור הבא בשורה נפרדת בתגובה הבאה שלך?
 
-          <https://en.wikipedia.org/wiki/Exotic_Shorthair>
+          [https://en.wikipedia.org/wiki/Exotic_Shorthair](https://en.wikipedia.org/wiki/Exotic_Shorthair)
       images:
         instructions: |-
           הנה תמונה של חד־קרן:
@@ -288,13 +288,13 @@ he:
           (וכן, שם המשתמש שלי מתחיל ב_disco_ (דיסקו) כמו טירוף הריקודים של שנות השבעים. אני גם [אוהב את חיי הלילה!](https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
         instructions: |-
-          אנחנו אוהבים לשמור על הדיונים שלנו חברותיים ואנו זקוקים לעזרתך [לשמור על תרבות הדיון](%{guidelines_url}). אם נתקלת בבעיה, נא לסמן את המפגע כדי לאפשר למי שכתב או ל[סגל המועיל שלנו](%{about_url}) לדעת על כך. יש מגוון סיבות לסמן פוסט, החל הצעה בלתי מזיקה לפצל נושא עד הפרה בוטה של כללי הקהילה. אם בחרת באפשרות **משהו אחר** ייפתח דיון פרטי מול המפקחים בו ניתן לשאול שאלות נוספות.
+          אנחנו אוהבים לשמור על הדיונים שלנו חברותיים ואנו זקוקים לעזרתך [לשמור על תרבות הדיון](%{guidelines_url}). אם נתקלת בבעיה, נא לסמן את המפגע כדי לאפשר למי שכתב או ל[סגל המועיל שלנו](%{about_url}) לדעת על כך באופן פרטי. יש מגוון סיבות לסמן פוסט, החל מהצעה בלתי מזיקה לפצל נושא עד הפרה בוטה של כללי הקהילה. אם בחרת באפשרות **משהו אחר** ייפתח דיון פרטי מול המפקחים בו ניתן לשאול שאלות נוספות.
 
           > :imp: כתבתי כאן משהו מגעיל
 
           קדימה, נא **לסמן את הפוסט הזה** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> ולבחור ב**לא ראוי** כסיבה!
         reply: |-
-          [הסגל שלנו](%{base_uri}/groups/staff) יקבל התראה פרטית על הדגל שלך. אם מספיק חברים בקהילה מסמנים פוסט בדגל, הוא יוסתר ליתר ביטחון. (מאחר שלא באמת כתבתי כאן משהו נבזי :angel:, הרשיתי לעצמי להסיר את הדגל בינתיים.)
+          [הסגל שלנו](%{group_url}) יקבל התראה פרטית על הסימון שלך. אם מספיק חברים בקהילה מסמנים פוסט בדגל, הוא יוסתר ליתר ביטחון. (מאחר שלא באמת כתבתי כאן משהו נבזי :angel:, הרשיתי לעצמי להסיר את סימון הדגל בינתיים.)
         not_found: |-
           אללי, הפוסט הנבזי שלי עדיין לא סומן בגדל כבלתי הולם. :worried: אפשר לבקש ממך לסמן אותו ב**דגל** כתוכן בלתי הולם <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? לא לשכוח להשתמש בכפתור להציג עוד <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> כדי לחשוף פעולות נוספות עבור כל פוסט.
       search:

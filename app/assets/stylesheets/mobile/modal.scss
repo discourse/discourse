@@ -7,14 +7,14 @@ html:has(.d-modal) {
 
 html.keyboard-visible.mobile-view {
   .d-modal {
-    max-height: calc(var(--composer-vh, var(--1dvh)) * 100);
-    height: calc(var(--composer-vh, var(--1dvh)) * 100);
+    max-height: calc(var(--composer-vh, 1dvh) * 100);
+    height: calc(var(--composer-vh, 1dvh) * 100);
     bottom: 0;
   }
 
   .d-modal__container {
-    max-height: calc(var(--composer-vh, var(--1dvh)) * 100);
-    height: calc(var(--composer-vh, var(--1dvh)) * 100);
+    max-height: calc(var(--composer-vh, 1dvh) * 100);
+    height: calc(var(--composer-vh, 1dvh) * 100);
   }
 }
 
@@ -30,16 +30,20 @@ html:not(.keyboard-visible.mobile-view) {
   &__container {
     // this is a hack to prevent issues on safari with transforms
     position: fixed;
-
     width: 100%;
     max-width: 100%;
-    min-height: 45svh;
-    max-height: calc(var(--composer-vh, var(--1dvh)) * 85);
+    max-height: calc(var(--composer-vh, 1dvh) * 85);
   }
 
   &__footer {
     margin-top: auto;
+
+    .--stacked & {
+      flex-direction: column;
+      align-items: stretch;
+    }
   }
+
   .ios-device & {
     &__footer {
       margin-top: auto;
@@ -62,13 +66,15 @@ html:not(.keyboard-visible.mobile-view) {
   }
 }
 
-//legacy
-
+// legacy
 .modal {
   &.fade {
-    transition: opacity 0.3s linear, top 0.3s ease-out;
+    transition:
+      opacity 0.3s linear,
+      top 0.3s ease-out;
     top: -25%;
   }
+
   &.fade.in {
     top: 50%;
   }
@@ -78,7 +84,7 @@ html:not(.keyboard-visible.mobile-view) {
   font-size: var(--font-up-4);
 }
 
-@media only screen and (max-device-width: 568px) {
+@media only screen and (device-width <= 568px) {
   .flag-modal-body .flag-message {
     height: 3em;
   }

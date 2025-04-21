@@ -8,8 +8,8 @@ sv:
   js:
     discourse_automation:
       title: Automatisering
-      create: Skapa
-      update: Uppdatera
+      back: Tillbaka
+      edit: Redigera
       select_script: Välj ett skript
       select_trigger: Välj en utlösare
       confirm_automation_reset: Den här åtgärden återställer skriptet och utlösningsalternativen, det nya tillståndet sparas, vill du fortsätta?
@@ -143,13 +143,13 @@ sv:
               description: Kommer att utlösas endast om inlägg skapas av användare inom dessa förtroendenivåer, standard är samtliga förtroendenivåer
             restricted_tags:
               label: Taggar
-            restricted_category:
-              label: Kategori
-            restricted_group:
-              label: Grupp
-            restricted_groups:
-              label: Grupper
+            restricted_categories:
+              label: Kategorier
           created: Skapade
+          with_images: Bilder
+          with_links: Länkar
+          with_code: Kod
+          with_uploads: Uppladdningar
         category_created_edited:
           fields:
             restricted_category:
@@ -300,6 +300,8 @@ sv:
             label: Skript
           version:
             label: Version
+          status:
+            label: Status
           enabled:
             label: Aktiverad
           disabled:

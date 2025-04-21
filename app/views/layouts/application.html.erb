@@ -2,8 +2,8 @@
 <html lang="<%= html_lang %>" class="<%= html_classes %>">
   <head>
     <meta charset="utf-8">
-    <title><%= content_for?(:title) ? yield(:title) : SiteSetting.title %></title>
-    <meta name="description" content="<%= @description_meta || SiteSetting.site_description %>">
+    <title><%= title_content %></title>
+    <meta name="description" content="<%= description_content %>">
     <meta name="discourse_theme_id" content="<%= theme_id %>">
     <meta name="discourse_current_homepage" content="<%= current_homepage %>">
 
@@ -59,6 +59,8 @@
 
     <%= render_google_tag_manager_head_code %>
     <%= render_google_universal_analytics_code %>
+    <%= render_adobe_analytics_tags_code %>
+
     <link id="manifest-link" rel="manifest" href=<%= manifest_url %> crossorigin="use-credentials">
 
     <%- if include_ios_native_app_banner? %>

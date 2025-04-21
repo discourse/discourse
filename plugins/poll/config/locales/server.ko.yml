@@ -41,6 +41,8 @@ ko:
       other: 이 투표에는 최대 %{count}표가 허용됩니다.
     min_vote_per_user:
       other: 이 투표에는 최소 %{count}개의 표가 필요합니다.
+    ranked_choice:
+      no_group_results_support: "잘못된 투표 유형입니다. rated_choice는 그룹화된 결과를 지원하지 않습니다."
     topic_must_be_open_to_toggle_status: "토픽이 열려야 상태 변경을 할 수 있습니다."
     only_staff_or_op_can_toggle_status: "운영진이나 작성자만이 투표 상태를 변경할 수 있습니다."
     insufficient_rights_to_create: "설문 조사를 만들 수 없습니다."

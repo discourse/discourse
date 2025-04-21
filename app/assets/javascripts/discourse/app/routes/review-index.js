@@ -1,7 +1,7 @@
 import { action } from "@ember/object";
 import { isPresent } from "@ember/utils";
+import { bind } from "discourse/lib/decorators";
 import DiscourseRoute from "discourse/routes/discourse";
-import { bind } from "discourse-common/utils/decorators";
 
 export default class ReviewIndex extends DiscourseRoute {
   model(params) {
@@ -39,8 +39,11 @@ export default class ReviewIndex extends DiscourseRoute {
       filterCategoryId: meta.category_id,
       filterPriority: meta.priority,
       reviewableTypes: meta.reviewable_types,
+      unknownReviewableTypes: meta.unknown_reviewable_types_and_sources,
+      scoreTypes: meta.score_types,
       filterUsername: meta.username,
       filterReviewedBy: meta.reviewed_by,
+      filterFlaggedBy: meta.flagged_by,
       filterFromDate: isPresent(meta.from_date) ? moment(meta.from_date) : null,
       filterToDate: isPresent(meta.to_date) ? moment(meta.to_date) : null,
       filterSortOrder: meta.sort_order,
@@ -52,7 +55,6 @@ export default class ReviewIndex extends DiscourseRoute {
   }
 
   activate() {
-    this.messageBus.subscribe("/reviewable_claimed", this._updateClaimedBy);
     this.messageBus.subscribe(
       this._reviewableCountsChannel,
       this._updateReviewables
@@ -60,26 +62,10 @@ export default class ReviewIndex extends DiscourseRoute {
   }
 
   deactivate() {
-    this.messageBus.unsubscribe("/reviewable_claimed", this._updateClaimedBy);
     this.messageBus.unsubscribe(
       this._reviewableCountsChannel,
       this._updateReviewables
     );
-  }
-
-  @bind
-  _updateClaimedBy(data) {
-    const reviewables = this.controller.reviewables;
-    if (reviewables) {
-      const user = data.user
-        ? this.store.createRecord("user", data.user)
-        : null;
-      reviewables.forEach((reviewable) => {
-        if (data.topic_id === reviewable.topic.id) {
-          reviewable.set("claimed_by", user);
-        }
-      });
-    }
   }
 
   @bind

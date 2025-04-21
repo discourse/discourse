@@ -29,6 +29,7 @@ export default {
       is_group_owner: true,
       mentionable: false,
       messageable: true,
+      can_admin_group: false,
     },
   },
   "/groups/discourse.json": {
@@ -42,7 +43,7 @@ export default {
       visible: true,
       public_admission: true,
       public_exit: false,
-      flair_url: "fa-circle-half-stroke",
+      flair_url: "circle-half-stroke",
       is_group_owner: true,
       mentionable: true,
       messageable: true,
@@ -54,6 +55,11 @@ export default {
     extras: {
       visible_group_names: ["discourse"],
     },
+    meta: {
+      total: 7,
+      limit: 50,
+      offset: 0,
+    }
   },
   "/groups/support.json": {
     group: {
@@ -66,7 +72,7 @@ export default {
       visible: true,
       public_admission: true,
       public_exit: false,
-      flair_url: "fa-circle-half-stroke",
+      flair_url: "circle-half-stroke",
       is_group_owner: true,
       mentionable: true,
       messageable: true,
@@ -260,7 +266,7 @@ export default {
     },
   },
   "/groups/discourse/posts.json": {
-    "posts": [
+    posts: [
       {
         id: 94607,
         cooked:
@@ -287,6 +293,7 @@ export default {
           description:
             "Discussion about the user interface of Discourse, how features are presented to the user in the client, including language and UI elements.",
           text_color: "FFFFFF",
+          style_type: "square",
           read_restricted: false,
           auto_close_hours: null,
           post_count: 5823,
@@ -305,13 +312,10 @@ export default {
           name_lower: "ux",
           auto_close_based_on_last_post: false,
         },
-        user: {
-          id: 2770,
-          username: "awesomerobot",
-          uploaded_avatar_id: 33872,
-          avatar_template:
-            "/user_avatar/meta.discourse.org/awesomerobot/{size}/33872.png",
-        },
+        user_id: 2770,
+        username: "awesomerobot",
+        avatar_template:
+          "/user_avatar/meta.discourse.org/awesomerobot/{size}/33872.png",
       },
       {
         id: 94603,
@@ -339,6 +343,7 @@ export default {
           description:
             "Discussion about the user interface of Discourse, how features are presented to the user in the client, including language and UI elements.",
           text_color: "FFFFFF",
+          style_type: "square",
           read_restricted: false,
           auto_close_hours: null,
           post_count: 5823,
@@ -357,13 +362,10 @@ export default {
           name_lower: "ux",
           auto_close_based_on_last_post: false,
         },
-        user: {
-          id: 2770,
-          username: "awesomerobot",
-          uploaded_avatar_id: 33872,
-          avatar_template:
-            "/user_avatar/meta.discourse.org/awesomerobot/{size}/33872.png",
-        },
+        user_id: 2770,
+        username: "awesomerobot",
+        avatar_template:
+          "/user_avatar/meta.discourse.org/awesomerobot/{size}/33872.png",
       },
       {
         id: 94601,
@@ -391,6 +393,7 @@ export default {
           description:
             "Discussion about the user interface of Discourse, how features are presented to the user in the client, including language and UI elements.",
           text_color: "FFFFFF",
+          style_type: "square",
           read_restricted: false,
           auto_close_hours: null,
           post_count: 5823,
@@ -409,13 +412,11 @@ export default {
           name_lower: "ux",
           auto_close_based_on_last_post: false,
         },
-        user: {
-          id: 2770,
-          username: "awesomerobot",
-          uploaded_avatar_id: 33872,
-          avatar_template:
-            "/user_avatar/meta.discourse.org/awesomerobot/{size}/33872.png",
-        },
+        user_id: 2770,
+        username: "awesomerobot",
+        avatar_template:
+          "/user_avatar/meta.discourse.org/awesomerobot/{size}/33872.png",
+
       },
       {
         id: 94577,
@@ -443,6 +444,7 @@ export default {
           description:
             "Discussion about features or potential features of Discourse: how they work, why they work, etc.",
           text_color: "FFFFFF",
+          style_type: "square",
           read_restricted: false,
           auto_close_hours: null,
           post_count: 14360,
@@ -462,13 +464,10 @@ export default {
           name_lower: "feature",
           auto_close_based_on_last_post: false,
         },
-        user: {
-          id: 1995,
-          username: "zogstrip",
-          uploaded_avatar_id: 8630,
-          avatar_template:
-            "/user_avatar/meta.discourse.org/zogstrip/{size}/8630.png",
-        },
+        user_id: 1995,
+        username: "zogstrip",
+        avatar_template:
+          "/user_avatar/meta.discourse.org/zogstrip/{size}/8630.png",
       },
       {
         id: 94574,
@@ -496,6 +495,7 @@ export default {
           description:
             "Discussion about features or potential features of Discourse: how they work, why they work, etc.",
           text_color: "FFFFFF",
+          style_type: "square",
           read_restricted: false,
           auto_close_hours: null,
           post_count: 14360,
@@ -515,13 +515,11 @@ export default {
           name_lower: "feature",
           auto_close_based_on_last_post: false,
         },
-        user: {
-          id: 1995,
-          username: "zogstrip",
-          uploaded_avatar_id: 8630,
-          avatar_template:
-            "/user_avatar/meta.discourse.org/zogstrip/{size}/8630.png",
-        },
+        user_id: 1995,
+        username: "zogstrip",
+        avatar_template:
+          "/user_avatar/meta.discourse.org/zogstrip/{size}/8630.png",
+
       },
       {
         id: 94572,
@@ -549,6 +547,7 @@ export default {
           description:
             "This category is for discussion about localizing Discourse.",
           text_color: "FFFFFF",
+          style_type: "square",
           read_restricted: false,
           auto_close_hours: null,
           post_count: 1167,
@@ -568,13 +567,11 @@ export default {
           name_lower: "translations",
           auto_close_based_on_last_post: false,
         },
-        user: {
-          id: 1995,
-          username: "zogstrip",
-          uploaded_avatar_id: 8630,
-          avatar_template:
-            "/user_avatar/meta.discourse.org/zogstrip/{size}/8630.png",
-        },
+        user_id: 1995,
+        username: "zogstrip",
+        avatar_template:
+          "/user_avatar/meta.discourse.org/zogstrip/{size}/8630.png",
+
       },
       {
         id: 94555,
@@ -603,6 +600,7 @@ export default {
           description:
             "This category is for topics related to hacking on Discourse: submitting pull requests, configuring development environments, coding conventions, and so forth.",
           text_color: "FFFFFF",
+          style_type: "square",
           read_restricted: false,
           auto_close_hours: null,
           post_count: 4196,
@@ -622,13 +620,11 @@ export default {
           name_lower: "dev",
           auto_close_based_on_last_post: false,
         },
-        user: {
-          id: 1995,
-          username: "zogstrip",
-          uploaded_avatar_id: 8630,
-          avatar_template:
-            "/user_avatar/meta.discourse.org/zogstrip/{size}/8630.png",
-        },
+        user_id: 1995,
+        username: "zogstrip",
+        avatar_template:
+          "/user_avatar/meta.discourse.org/zogstrip/{size}/8630.png",
+
       },
       {
         id: 94544,
@@ -656,6 +652,7 @@ export default {
           description:
             "Discussion about the user interface of Discourse, how features are presented to the user in the client, including language and UI elements.",
           text_color: "FFFFFF",
+          style_type: "square",
           read_restricted: false,
           auto_close_hours: null,
           post_count: 5823,
@@ -675,13 +672,9 @@ export default {
           name_lower: "ux",
           auto_close_based_on_last_post: false,
         },
-        user: {
-          id: 32,
-          username: "codinghorror",
-          uploaded_avatar_id: 5297,
-          avatar_template:
-            "/user_avatar/meta.discourse.org/codinghorror/{size}/5297.png",
-        },
+        user_id: 32,
+        username: "codinghorror",
+        avatar_template: "/user_avatar/meta.discourse.org/codinghorror/{size}/5297.png",
       },
       {
         id: 94543,
@@ -709,6 +702,7 @@ export default {
           description:
             "Discussion about features or potential features of Discourse: how they work, why they work, etc.",
           text_color: "FFFFFF",
+          style_type: "square",
           read_restricted: false,
           auto_close_hours: null,
           post_count: 14360,
@@ -728,13 +722,10 @@ export default {
           name_lower: "feature",
           auto_close_based_on_last_post: false,
         },
-        user: {
-          id: 32,
-          username: "codinghorror",
-          uploaded_avatar_id: 5297,
-          avatar_template:
-            "/user_avatar/meta.discourse.org/codinghorror/{size}/5297.png",
-        },
+        user_id: 32,
+        username: "codinghorror",
+        avatar_template: "/user_avatar/meta.discourse.org/codinghorror/{size}/5297.png",
+
       },
       {
         id: 94542,
@@ -762,6 +753,7 @@ export default {
           description:
             "Support on configuring and using Discourse after it is up and running. For installation questions, use the install category.",
           text_color: "FFFFFF",
+          style_type: "square",
           read_restricted: false,
           auto_close_hours: null,
           post_count: 12272,
@@ -781,13 +773,9 @@ export default {
           name_lower: "support",
           auto_close_based_on_last_post: false,
         },
-        user: {
-          id: 32,
-          username: "codinghorror",
-          uploaded_avatar_id: 5297,
-          avatar_template:
-            "/user_avatar/meta.discourse.org/codinghorror/{size}/5297.png",
-        },
+        user_id: 32,
+        username: "codinghorror",
+        avatar_template: "/user_avatar/meta.discourse.org/codinghorror/{size}/5297.png",
       },
       {
         id: 94522,
@@ -815,6 +803,7 @@ export default {
           description:
             "A bug report means something is broken, preventing normal/typical use of Discourse. Do be sure to search prior to submitting bugs. Include repro steps, and only describe one bug per topic please.",
           text_color: "000000",
+          style_type: "square",
           read_restricted: false,
           auto_close_hours: null,
           post_count: 11179,
@@ -834,13 +823,9 @@ export default {
           name_lower: "bug",
           auto_close_based_on_last_post: false,
         },
-        user: {
-          id: 32,
-          username: "codinghorror",
-          uploaded_avatar_id: 5297,
-          avatar_template:
-            "/user_avatar/meta.discourse.org/codinghorror/{size}/5297.png",
-        },
+        user_id: 32,
+        username: "codinghorror",
+        avatar_template: "/user_avatar/meta.discourse.org/codinghorror/{size}/5297.png",
       },
       {
         id: 94521,
@@ -868,6 +853,7 @@ export default {
           description:
             "Discussion about the user interface of Discourse, how features are presented to the user in the client, including language and UI elements.",
           text_color: "FFFFFF",
+          style_type: "square",
           read_restricted: false,
           auto_close_hours: null,
           post_count: 5823,
@@ -887,13 +873,9 @@ export default {
           name_lower: "ux",
           auto_close_based_on_last_post: false,
         },
-        user: {
-          id: 32,
-          username: "codinghorror",
-          uploaded_avatar_id: 5297,
-          avatar_template:
-            "/user_avatar/meta.discourse.org/codinghorror/{size}/5297.png",
-        },
+        user_id: 32,
+        username: "codinghorror",
+        avatar_template: "/user_avatar/meta.discourse.org/codinghorror/{size}/5297.png",
       },
       {
         id: 94519,
@@ -921,6 +903,7 @@ export default {
           description:
             "Discussion about meta.discourse.org itself, the organization of this forum about Discourse, how it works, and how we can improve this site.",
           text_color: "FFFFFF",
+          style_type: "square",
           read_restricted: false,
           auto_close_hours: null,
           post_count: 1116,
@@ -940,13 +923,9 @@ export default {
           name_lower: "meta",
           auto_close_based_on_last_post: false,
         },
-        user: {
-          id: 32,
-          username: "codinghorror",
-          uploaded_avatar_id: 5297,
-          avatar_template:
-            "/user_avatar/meta.discourse.org/codinghorror/{size}/5297.png",
-        },
+        user_id: 32,
+        username: "codinghorror",
+        avatar_template: "/user_avatar/meta.discourse.org/codinghorror/{size}/5297.png",
       },
       {
         id: 94518,
@@ -974,6 +953,7 @@ export default {
           description:
             "Support on configuring and using Discourse after it is up and running. For installation questions, use the install category.",
           text_color: "FFFFFF",
+          style_type: "square",
           read_restricted: false,
           auto_close_hours: null,
           post_count: 12272,
@@ -993,13 +973,9 @@ export default {
           name_lower: "support",
           auto_close_based_on_last_post: false,
         },
-        user: {
-          id: 32,
-          username: "codinghorror",
-          uploaded_avatar_id: 5297,
-          avatar_template:
-            "/user_avatar/meta.discourse.org/codinghorror/{size}/5297.png",
-        },
+        user_id: 32,
+        username: "codinghorror",
+        avatar_template: "/user_avatar/meta.discourse.org/codinghorror/{size}/5297.png",
       },
       {
         id: 94517,
@@ -1027,6 +1003,7 @@ export default {
           description:
             "A bug report means something is broken, preventing normal/typical use of Discourse. Do be sure to search prior to submitting bugs. Include repro steps, and only describe one bug per topic please.",
           text_color: "000000",
+          style_type: "square",
           read_restricted: false,
           auto_close_hours: null,
           post_count: 11179,
@@ -1046,13 +1023,9 @@ export default {
           name_lower: "bug",
           auto_close_based_on_last_post: false,
         },
-        user: {
-          id: 32,
-          username: "codinghorror",
-          uploaded_avatar_id: 5297,
-          avatar_template:
-            "/user_avatar/meta.discourse.org/codinghorror/{size}/5297.png",
-        },
+        user_id: 32,
+        username: "codinghorror",
+        avatar_template: "/user_avatar/meta.discourse.org/codinghorror/{size}/5297.png",
       },
       {
         id: 94516,
@@ -1080,6 +1053,7 @@ export default {
           description:
             "Support on configuring and using Discourse after it is up and running. For installation questions, use the install category.",
           text_color: "FFFFFF",
+          style_type: "square",
           read_restricted: false,
           auto_close_hours: null,
           post_count: 12272,
@@ -1099,13 +1073,9 @@ export default {
           name_lower: "support",
           auto_close_based_on_last_post: false,
         },
-        user: {
-          id: 32,
-          username: "codinghorror",
-          uploaded_avatar_id: 5297,
-          avatar_template:
-            "/user_avatar/meta.discourse.org/codinghorror/{size}/5297.png",
-        },
+        user_id: 32,
+        username: "codinghorror",
+        avatar_template: "/user_avatar/meta.discourse.org/codinghorror/{size}/5297.png",
       },
       {
         id: 94515,
@@ -1134,6 +1104,7 @@ export default {
           description:
             "This category is for topics related to hacking on Discourse: submitting pull requests, configuring development environments, coding conventions, and so forth.",
           text_color: "FFFFFF",
+          style_type: "square",
           read_restricted: false,
           auto_close_hours: null,
           post_count: 4196,
@@ -1153,13 +1124,9 @@ export default {
           name_lower: "dev",
           auto_close_based_on_last_post: false,
         },
-        user: {
-          id: 32,
-          username: "codinghorror",
-          uploaded_avatar_id: 5297,
-          avatar_template:
-            "/user_avatar/meta.discourse.org/codinghorror/{size}/5297.png",
-        },
+        user_id: 32,
+        username: "codinghorror",
+        avatar_template: "/user_avatar/meta.discourse.org/codinghorror/{size}/5297.png",
       },
       {
         id: 94514,
@@ -1187,6 +1154,7 @@ export default {
           description:
             "Topics about extending the functionality of Discourse with plugins, themes, add-ons, or other mechanisms for extensibility.  ",
           text_color: "FFFFFF",
+          style_type: "square",
           read_restricted: false,
           auto_close_hours: null,
           post_count: 2574,
@@ -1206,13 +1174,9 @@ export default {
           name_lower: "extensibility",
           auto_close_based_on_last_post: false,
         },
-        user: {
-          id: 32,
-          username: "codinghorror",
-          uploaded_avatar_id: 5297,
-          avatar_template:
-            "/user_avatar/meta.discourse.org/codinghorror/{size}/5297.png",
-        },
+        user_id: 32,
+        username: "codinghorror",
+        avatar_template: "/user_avatar/meta.discourse.org/codinghorror/{size}/5297.png",
       },
       {
         id: 94512,
@@ -1240,6 +1204,7 @@ export default {
           description:
             "Support on configuring and using Discourse after it is up and running. For installation questions, use the install category.",
           text_color: "FFFFFF",
+          style_type: "square",
           read_restricted: false,
           auto_close_hours: null,
           post_count: 12272,
@@ -1259,13 +1224,9 @@ export default {
           name_lower: "support",
           auto_close_based_on_last_post: false,
         },
-        user: {
-          id: 32,
-          username: "codinghorror",
-          uploaded_avatar_id: 5297,
-          avatar_template:
-            "/user_avatar/meta.discourse.org/codinghorror/{size}/5297.png",
-        },
+        user_id: 32,
+        username: "codinghorror",
+        avatar_template: "/user_avatar/meta.discourse.org/codinghorror/{size}/5297.png",
       },
       {
         id: 94511,
@@ -1293,6 +1254,7 @@ export default {
           description:
             "Discussion about features or potential features of Discourse: how they work, why they work, etc.",
           text_color: "FFFFFF",
+          style_type: "square",
           read_restricted: false,
           auto_close_hours: null,
           post_count: 14360,
@@ -1312,15 +1274,11 @@ export default {
           name_lower: "feature",
           auto_close_based_on_last_post: false,
         },
-        user: {
-          id: 32,
-          username: "codinghorror",
-          uploaded_avatar_id: 5297,
-          avatar_template:
-            "/user_avatar/meta.discourse.org/codinghorror/{size}/5297.png",
-        },
-      }
-    ]
+        user_id: 32,
+        username: "codinghorror",
+        avatar_template: "/user_avatar/meta.discourse.org/codinghorror/{size}/5297.png",
+      },
+    ],
   },
   "/groups/alternative-group.json": {
     group: {
@@ -1334,7 +1292,7 @@ export default {
       has_messages: true,
       public_admission: true,
       public_exit: false,
-      flair_url: "fa-circle-half-stroke",
+      flair_url: "circle-half-stroke",
       is_group_owner: true,
       mentionable: true,
       messageable: true,

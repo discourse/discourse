@@ -21,7 +21,6 @@ sk:
     chat_minimum_message_length: "Minimálny počet znakov pre chatovú správu."
     chat_allow_uploads: "Povoľte nahrávanie vo verejných kanáloch chatu a kanáloch priamych správ."
     chat_archive_destination_topic_status: "Stav, že cieľová téma by mala byť po dokončení archívu kanála. Platí to len vtedy, keď je cieľovou témou nová téma, nie existujúca."
-    default_emoji_reactions: "Predvolené emoji reakcie pre správy chatu. Pridajte až 5 emotikonov pre rýchlu reakciu."
     direct_message_enabled_groups: "Povoliť používateľom v rámci týchto skupín vytvárať osobné rozhovory medzi používateľmi. Poznámka: Zamestnanci môžu vždy vytvárať osobné rozhovory a používatelia budú môcť odpovedať na osobné rozhovory iniciované používateľmi, ktorí majú povolenie na ich vytváranie."
     chat_message_flag_allowed_groups: "Používatelia v týchto skupinách môžu označovať chatové správy. Všimnite si, že správcovia a moderátori môžu správy četu vždy nahlásiť."
     max_mentions_per_chat_message: "Maximálny počet oznámení @name, ktoré môže používateľ použiť v správe chatu."
@@ -31,10 +30,12 @@ sk:
     chat_editing_grace_period_max_diff_low_trust: "Maximálny počet zmien znakov povolených v ochrannej lehote na úpravu chatu, ak sa ich zmení viac, pri chatovej správe sa zobrazí značka (upravená) (úroveň dôveryhodnosti 0 a 1)."
     chat_editing_grace_period_max_diff_high_trust: "Maximálny počet zmien znakov povolený v ochrannej lehote na úpravu chatu, ak sa ich zmení viac, pri chatovej správe (úroveň dôveryhodnosti 2 a vyššie) sa zobrazí značka (upravená)."
     chat_preferred_index: "Preferovaná karta pri načítaní /chat."
+    allow_chat_in_anonymous_mode: "Toto nastavenie povoľte, ak chcete používateľom, ktorí si anonymne prezerajú vašu stránku, umožniť používať chat. Toto nastavenie vyžaduje, aby bolo povolené nastavenie `povoliť anonymný režim`."
     errors:
       chat_default_channel: "Predvolený chatovací kanál musí byť verejný kanál."
       direct_message_enabled_groups_invalid: "Pre toto nastavenie musíte zadať aspoň jednu skupinu. Ak nechcete, aby niekto okrem personálu posielal priame správy, vyberte skupinu zamestnancov."
       chat_upload_not_allowed_secure_uploads: "Nahrávanie četu nie je povolené, keď je povolené nastavenie lokality zabezpečeného nahrávania."
+      allow_chat_in_anonymous_mode_invalid: "Toto nastavenie vyžaduje, aby bolo najprv povolené nastavenie \"povoliť anonymný režim\"."
   system_messages:
     private_channel_title: "Kanál %{id}"
     chat_channel_archive_complete:
@@ -60,6 +61,7 @@ sk:
     deleted_chat_username: vymazané
     errors:
       users_cant_be_added_to_channel: "Do tohto kanála nie je možné pridať používateľov."
+      user_cant_be_removed_from_channel: "Používateľ nemôže byť odstránený z tohto kanála"
       channel_exists_for_category: "Kanál už existuje pre túto kategóriu a názov"
       channel_new_message_disallowed:
         archived: "Kanál je archivovaný, nie je možné posielať nové správy"
@@ -93,8 +95,9 @@ sk:
       not_accepting_dms: "Ľutujeme, %{username} momentálne neprijíma správy."
       actor_ignoring_target_user: "Ignorujete %{username}, takže im nemôžete posielať správy."
       actor_muting_target_user: "Vypnete zvuk na stránke %{username}, takže im nemôžete posielať správy."
-      actor_disallowed_dms: "Rozhodli ste sa zabrániť používateľom odosielať vám súkromné a priame správy, takže nemôžete vytvárať nové priame správy."
-      actor_preventing_target_user_from_dm: "Rozhodli ste sa zabrániť %{username} v odosielaní súkromných a priamych správ, takže pre nich nemôžete vytvárať nové priame správy."
+      actor_disallowed_dms: "Rozhodli ste sa zabrániť používateľom odosielať vám osobné a priame správy, takže nemôžete vytvárať nové priame správy."
+      actor_preventing_target_user_from_dm: "Rozhodli ste sa zabrániť tomu, aby vám %{username} odosielal osobné a priame správy, takže k nim nemôžete vytvárať nové priame správy."
+      not_reachable: "Prepáčte, %{username} nepoužíva chat."
       user_cannot_send_direct_messages: "Ľutujeme, nemôžete posielať priame správy."
       over_chat_max_direct_message_users_allow_self: "Súkromnú správu môžete vytvoriť len sami so sebou."
       over_chat_max_direct_message_users:
@@ -208,6 +211,8 @@ sk:
       inline_to_message: "Správa #%{message_id} od %{username} – #%{chat_channel}"
       inline_to_channel: "Chat #%{chat_channel}"
       inline_to_topic_channel: "Chat pre tému %{topic_title}"
+      inline_to_thread: "%{thread_title} - #%{chat_channel}"
+      inline_to_thread_no_title: "Vlákno v #%{chat_channel}"
       thread_title_connector: "v"
       x_members:
         one: "%{count}/ člen"
@@ -263,6 +268,16 @@ sk:
           few: "[%{site_name}] Nových správ"
           many: "[%{site_name}] Nových správ"
           other: "[%{site_name}] Nové správy"
+        watched_thread:
+          one: "[%{site_name}] Nová správa na %{channel}"
+          few: "[%{site_name}] Nové správy na %{channel}"
+          many: "[%{site_name}] Nových správ na %{channel}"
+          other: "[%{site_name}] Nové správy na %{channel}"
+        watched_threads:
+          one: "[%{site_name}] Nová správa vlákna v %{channel} a %{count} iné"
+          few: "[%{site_name}] Nových správ vlákna v %{channel} a %{count} iné"
+          many: "[%{site_name}] Nových správ vlákna v %{channel} a %{count} iné"
+          other: "[%{site_name}] Nové správy vlákna v %{channel} a %{count} iné"
         chat_dm_1:
           one: "[%{site_name}] Nová správa od %{name}"
           few: "[%{site_name}] Nových správ od %{name}"

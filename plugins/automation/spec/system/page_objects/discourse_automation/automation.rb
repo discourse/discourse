@@ -4,12 +4,12 @@ module PageObjects
   module Pages
     class Automation < PageObjects::Pages::Base
       def visit(automation)
-        super("/admin/plugins/discourse-automation/#{automation.id}")
+        super("/admin/plugins/automation/automation/#{automation.id}")
         self
       end
 
       def set_name(name)
-        form.find('input[name="automation-name"]').set("aaaaa")
+        form.find('input[name="automation-name"]').set(name)
         self
       end
 
@@ -29,14 +29,12 @@ module PageObjects
       end
 
       def update
-        form.find(".update-automation").click
-        form.has_selector?(".update-automation.is-loading")
-        form.has_no_selector?(".update-automation.is-loading")
+        form.find(".update-automation:not([disabled])").click
         self
       end
 
       def form
-        @form ||= find(".discourse-automation-form.edit")
+        @form ||= find(".discourse-automation-edit")
       end
     end
   end

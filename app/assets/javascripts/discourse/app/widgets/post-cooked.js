@@ -1,19 +1,19 @@
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
 import { ajax } from "discourse/lib/ajax";
 import { isValidLink } from "discourse/lib/click-track";
+import escape from "discourse/lib/escape";
 import { number } from "discourse/lib/formatter";
+import { getOwnerWithFallback } from "discourse/lib/get-owner";
+import getURL from "discourse/lib/get-url";
 import highlightHTML, { unhighlightHTML } from "discourse/lib/highlight-html";
 import highlightSearch from "discourse/lib/highlight-search";
+import { iconHTML } from "discourse/lib/icon-library";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import {
   destroyUserStatusOnMentions,
   updateUserStatusOnMention,
 } from "discourse/lib/update-user-status-on-mention";
-import escape from "discourse-common/lib/escape";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
-import getURL from "discourse-common/lib/get-url";
-import { iconHTML } from "discourse-common/lib/icon-library";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 let _beforeAdoptDecorators = [];
 let _afterAdoptDecorators = [];
@@ -52,15 +52,6 @@ export default class PostCooked {
       : null;
   }
 
-  update(prev) {
-    if (
-      prev.attrs.cooked !== this.attrs.cooked ||
-      prev.attrs.highlightTerm !== this.attrs.highlightTerm
-    ) {
-      return this.init();
-    }
-  }
-
   init() {
     this.originalQuoteContents = null;
     // todo should be a better way of detecting if it is composer preview
@@ -75,6 +66,15 @@ export default class PostCooked {
     this._decorateAndAdopt(this.cookedDiv);
 
     return this.cookedDiv;
+  }
+
+  update(prev) {
+    if (
+      prev.attrs.cooked !== this.attrs.cooked ||
+      prev.attrs.highlightTerm !== this.attrs.highlightTerm
+    ) {
+      return this.init();
+    }
   }
 
   destroy() {
@@ -162,7 +162,7 @@ export default class PostCooked {
             bestElements.get(onebox) === link
           ) {
             link.setAttribute("data-clicks", number(lc.clicks));
-            const ariaLabel = `${link.textContent.trim()} ${I18n.t(
+            const ariaLabel = `${link.textContent.trim()} ${i18n(
               "post.link_clicked",
               {
                 count: lc.clicks,
@@ -255,7 +255,7 @@ export default class PostCooked {
   }
 
   _updateQuoteElements(aside, desc) {
-    const quoteTitle = I18n.t("post.follow_quote");
+    const quoteTitle = i18n("post.follow_quote");
     const postNumber = aside.dataset.post;
     const topicNumber = aside.dataset.topic;
 
@@ -365,10 +365,23 @@ export default class PostCooked {
       this.ignoredUsers?.includes?.(this.attrs.username)
     ) {
       cookedDiv.classList.add("post-ignored");
-      cookedDiv.innerHTML = I18n.t("post.ignored");
+      cookedDiv.innerHTML = i18n("post.ignored");
     } else {
       cookedDiv.innerHTML = this.attrs.cooked;
     }
+
+    // On WebKit-based browsers, triple clicking on the last paragraph of a post won't stop at the end of the paragraph.
+    // It looks like the browser is selecting EOL characters, and that causes the selection to leak into the following
+    // nodes until it finds a non-empty node. This is a workaround to prevent that from happening.
+    // We insert a div after the last paragraph at the end of the cooked content, containing a <br> element.
+    // The line break works as a barrier, causing the selection to stop at the correct place.
+    // To prevent layout shifts this div is styled to be invisible with height 0 and overflow hidden and set aria-hidden
+    // to true to prevent screen readers from reading it.
+    const selectionBarrier = document.createElement("div");
+    selectionBarrier.classList.add("cooked-selection-barrier");
+    selectionBarrier.ariaHidden = "true";
+    selectionBarrier.appendChild(document.createElement("br"));
+    cookedDiv.appendChild(selectionBarrier);
 
     return cookedDiv;
   }

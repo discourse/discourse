@@ -5,9 +5,18 @@ module Migrations::Converters::Base
     IntermediateDB = ::Migrations::Database::IntermediateDB
 
     attr_accessor :settings
+    attr_reader :tracker
 
-    def initialize(args = {})
-      args.each { |arg, value| instance_variable_set("@#{arg}", value) if respond_to?(arg, true) }
+    # inside of Step it might make more sense to access it as `step` instead of `tracker`
+    alias step tracker
+
+    def initialize(tracker, args = {})
+      @tracker = tracker
+
+      args.each do |arg, value|
+        setter = "#{arg}=".to_sym
+        public_send(setter, value) if respond_to?(setter, true)
+      end
     end
 
     def execute

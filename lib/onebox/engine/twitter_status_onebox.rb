@@ -8,13 +8,11 @@ module Onebox
       include HTML
       include ActionView::Helpers::NumberHelper
 
-      matches_regexp(
-        %r{^https?://(mobile\.|www\.)?(twitter\.com|x\.com)/.+?/status(es)?/\d+(/(video|photo)/\d?+)?+(/?\?.*)?/?$},
-      )
+      matches_domain("twitter.com", "www.twitter.com", "mobile.twitter.com", "x.com", "www.x.com")
       always_https
 
-      def http_params
-        { "User-Agent" => "DiscourseBot/1.0" }
+      def self.matches_path(path)
+        path.match?(%r{^/.+?/status(es)?/\d+(/(video|photo)/\d?)?(/?\?.*)?/?$})
       end
 
       def to_html

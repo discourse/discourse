@@ -146,6 +146,13 @@ uk:
         never: "Ніколи"
       separate_sidebar_mode:
         title: "Показувати окремі режими бічної панелі для форуму і чату"
+      send_shortcut:
+        enter:
+          label: "Надіслати за допомогою Enter"
+          description: "Новий рядок за допомогою Shift + Enter"
+        meta_enter:
+          label: "Надіслати %{meta_key} + Enter"
+          description: "Новий рядок за допомогою Enter"
       enable: "Увімкнути чат"
       flag: "Поскаржитися"
       emoji: "Вставити емодзі"
@@ -367,6 +374,7 @@ uk:
         tabs:
           members: Учасники
           settings: Налаштування
+        remove_member: "Вилучити"
       new_message_modal:
         title: Надіслати повідомлення
         add_user_long: <kbd>shift + click</kbd> or <kbd>shift + enter</kbd><span>Додати @%{username}</span>
@@ -740,10 +748,10 @@ uk:
         chat_message: "Нове повідомлення в чаті"
         chat_quoted: "%{username} процитував ваше повідомлення в чаті"
       titles:
-        chat_mention: "Згадка в чаті"
-        chat_invitation: "Запрошення до чату"
-        chat_quoted: "Чат процитований"
-        chat_watched_thread: "Потік перегляду чату"
+        chat_mention: "Згадано в чаті"
+        chat_invitation: "Запрошено до чату"
+        chat_quoted: "Процитовано повідомлення чату"
+        chat_watched_thread: "Переглянута гілка чату"
     action_codes:
       chat:
         enabled: '%{who} включив <button class="btn-link open-chat">чат</button> %{when}'
@@ -774,6 +782,7 @@ uk:
         title: "Чат"
         keyboard_shortcuts:
           switch_channel_arrows: "%{shortcut} Переключити канал"
+          switch__unread_channel_arrows: "%{shortcut} Переключити непрочитаний канал"
           open_quick_channel_selector: "%{shortcut} Відкрити швидкий селектор каналів"
           open_insert_link_modal: "%{shortcut} Вставити гіперпосилання (лише редактор)"
           composer_bold: "%{shortcut} Жирний (лише в редакторі)"

@@ -70,7 +70,7 @@ acceptance("Search - Full Page", function (needs) {
             grant_count: 0,
             allow_title: false,
             multiple_grant: false,
-            icon: "fa-certificate",
+            icon: "certificate",
             image: null,
             listable: true,
             enabled: true,
@@ -126,7 +126,7 @@ acceptance("Search - Full Page", function (needs) {
     assert.dom(".fps-topic").exists({ count: 1 }, "has one post");
 
     assert
-      .dom(".topic-status .personal_message")
+      .dom(".topic-status .d-icon-envelope")
       .exists({ count: 1 }, "shows the right icon");
 
     assert

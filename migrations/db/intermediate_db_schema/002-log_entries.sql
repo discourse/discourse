@@ -4,5 +4,5 @@ CREATE TABLE log_entries
     type       TEXT     NOT NULL,
     message    TEXT     NOT NULL,
     exception  TEXT,
-    details    TEXT
+    details    JSON_TEXT
 );

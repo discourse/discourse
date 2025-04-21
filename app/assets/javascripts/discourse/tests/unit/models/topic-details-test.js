@@ -12,7 +12,7 @@ module("Unit | Model | topic-details", function (hooks) {
     const details = topic.details;
 
     assert.present(details, "the details are present by default");
-    assert.ok(!details.loaded, "details are not loaded by default");
+    assert.false(details.loaded, "details are not loaded by default");
   });
 
   test("updateFromJson", function (assert) {

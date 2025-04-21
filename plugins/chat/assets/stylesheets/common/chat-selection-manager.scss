@@ -10,6 +10,7 @@
 
   &__buttons {
     display: flex;
+    flex-wrap: wrap;
     gap: 0.5rem;
 
     .chat-drawer-content & {
@@ -20,20 +21,19 @@
 
   &__copy-success {
     animation: chat-quote-message-background-fade-highlight 2s ease-out 3s;
-    @media (prefers-reduced-motion) {
-      animation-duration: 0s;
-    }
     animation-fill-mode: forwards;
     background-color: var(--success-low);
     color: var(--primary);
     flex: 1;
     line-height: normal;
     padding: 0.5rem 0.65rem;
+
+    @media (prefers-reduced-motion) {
+      animation-duration: 0s;
+    }
   }
 
   @keyframes chat-quote-message-background-fade-highlight {
-    0% {
-    }
     100% {
       background-color: transparent;
       color: transparent;

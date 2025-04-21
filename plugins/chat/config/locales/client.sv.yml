@@ -318,6 +318,7 @@ sv:
         tabs:
           members: Medlemmar
           settings: Inställningar
+        remove_member: "Ta bort"
       new_message_modal:
         title: Skicka meddelande
         add_user_long: <kbd>skift + klicka</kbd> eller <kbd>skift + enter</kbd><span>Lägg till @%{username}</span>
@@ -615,10 +616,6 @@ sv:
           other_html: "<span>%{username}</span> <span>nämnde %{identifier} i personlig chatt</span>"
         chat_message: "Nytt chattmeddelande"
         chat_quoted: "%{username} citerade ditt chattmeddelande"
-      titles:
-        chat_mention: "Chatt omnämnande"
-        chat_invitation: "Chattinbjudan"
-        chat_quoted: "Chatt citerad"
     action_codes:
       chat:
         enabled: '%{who} aktiverade <button class="btn-link open-chat">chatt</button> %{when}'

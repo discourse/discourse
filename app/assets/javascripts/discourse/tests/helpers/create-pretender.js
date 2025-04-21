@@ -1,8 +1,8 @@
 import EmberObject from "@ember/object";
 import Pretender from "pretender";
+import getURL from "discourse/lib/get-url";
+import { cloneJSON } from "discourse/lib/object";
 import User from "discourse/models/user";
-import getURL from "discourse-common/lib/get-url";
-import { cloneJSON } from "discourse-common/lib/object";
 
 export function parsePostData(query) {
   const result = {};
@@ -77,6 +77,10 @@ export function applyDefaultHandlers(pretender) {
   });
 
   pretender.get("/admin/plugins", () => response({ plugins: [] }));
+
+  pretender.get("/admin/search/all.json", () => {
+    return response(cloneJSON(fixturesByUrl["/admin/search/all.json"]));
+  });
 
   pretender.get("/composer_messages", () =>
     response({ composer_messages: [] })
@@ -260,6 +264,7 @@ export function applyDefaultHandlers(pretender) {
             name: "bug",
             color: "e9dd00",
             text_color: "000000",
+            style_type: "square",
             slug: "bug",
             read_restricted: false,
             parent_category_id: null,
@@ -1371,6 +1376,10 @@ export function applyDefaultHandlers(pretender) {
 
   pretender.get("/session/passkey/challenge.json", () =>
     response({ challenge: "123" })
+  );
+
+  pretender.get("/export_csv/latest_user_archive/:id.json", () =>
+    response(null)
   );
 }
 

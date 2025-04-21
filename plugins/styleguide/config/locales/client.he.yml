@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 he:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          styleguide: "מדריך סגנון של Discourse"
   js:
     styleguide:
       title: "מדריך סגנון"
@@ -74,6 +79,10 @@ he:
           title: "התראות על נושאים"
         post:
           title: "פוסט"
+        post_list:
+          title: "רשימת פוסטים"
+          empty_example: "<PostList /> מצב ריק"
+          populated_example: "<PostList /> מצב מאוכלס"
         topic_map:
           title: "מפת נושאים"
         site_header:

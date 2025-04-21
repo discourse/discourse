@@ -6,14 +6,20 @@
 
 nl:
   js:
+    admin:
+      logs:
+        staff_actions:
+          actions:
+            delete_automation: automatisering verwijderen
     discourse_automation:
       title: Automatisering
-      create: Maken
-      update: Bijwerken
+      back: Vorige
+      edit: Bewerken
       select_script: Selecteer een script
       select_trigger: Selecteer een trigger
       confirm_automation_reset: Deze actie reset script- en triggeropties en de nieuwe toestand wordt opgeslagen. Wil je doorgaan?
       confirm_automation_trigger: Deze actie triggert de automatisering. Wil je doorgaan?
+      filter_placeholder: Filter op naam of beschrijving...
       edit_automation:
         trigger_section:
           forced: Deze trigger wordt geforceerd door een script.
@@ -143,6 +149,9 @@ nl:
               label: Topic-ID
         post_created_edited:
           fields:
+            original_post_only:
+              label: Alleen origineel bericht
+              description: Wordt alleen getriggerd als het bericht het oorspronkelijke bericht in het topic is
             action_type:
               label: Actietype
               description: "Optioneel: beperk triggering tot alleen gemaakte of bewerkte gebeurtenissen"
@@ -152,17 +161,10 @@ nl:
             restricted_tags:
               label: Tags
               description: Optioneel, wordt alleen getriggerd als het bericht een van deze tags heeft
-            restricted_category:
-              label: Categorie
-              description: 'Optioneel: wordt alleen getriggerd als het topic van het bericht tot deze categorie behoort'
-            restricted_group:
-              label: Groep
-              description: 'Optioneel: wordt alleen getriggerd als het topic van het bericht een privébericht is in de inbox van deze groep'
-            restricted_groups:
-              label: Groepen
-            ignore_group_members:
-              label: Groepsleden negeren
-              description: Sla de trigger over als de afzender lid is van de hierboven opgegeven groep
+            restricted_categories:
+              label: Categorieën
+            restricted_inbox_groups:
+              description: Optioneel, wordt alleen getriggerd als het topic van het bericht een persoonlijk bericht is in een van de groepsinboxen
             ignore_automated:
               label: Geautomatiseerd negeren
               description: Sla de trigger over als de afzender een noreply-e-mailadres heeft of een geautomatiseerde bron is. Alleen van toepassing op berichten die via e-mail zijn gemaakt
@@ -172,8 +174,15 @@ nl:
             first_topic_only:
               label: Alleen eerste topic
               description: Wordt alleen geactiveerd als het topic het eerste is dat een gebruiker heeft gemaakt
+            skip_via_email:
+              label: "Via e-mail overslaan"
+              description: "Sla de trigger over als het bericht via e-mail is aangemaakt"
           created: Gemaakt
           edited: Bewerkt
+          with_images: Afbeeldingen
+          with_links: Links
+          with_code: Code
+          with_uploads: Uploads
         user_updated:
           fields:
             user_profile:
@@ -214,6 +223,10 @@ nl:
               label: Geldige vertrouwensniveaus
               description: Wordt alleen getriggerd als een bericht wordt gemaakt door een gebruiker met deze vertrouwensniveaus. Standaard ingesteld op elk vertrouwensniveau
         topic_tags_changed:
+          trigger_on_modes:
+            tags_added_or_removed: Tags toegevoegd of verwijderd
+            tags_added: Tags toegevoegd
+            tags_removed: Tags verwijderd
           fields:
             watching_categories:
               label: Categorieën observeren
@@ -221,6 +234,11 @@ nl:
             watching_tags:
               label: Tags observeren
               description: Wordt alleen getriggerd als het topic een van deze tags heeft
+            trigger_on:
+              label: Triggeren bij
+            trigger_with_pms:
+              label: Triggeren bij PB's
+              description: Wordt ook getriggerd als de tags in een PB zijn gewijzigd
         after_post_cook:
           fields:
             valid_trust_levels:
@@ -379,6 +397,7 @@ nl:
           fields:
             custom_field_name:
               label: "Naam aangepast gebruikersveld"
+      unnamed_automation: "Naamloze automatisering"
       models:
         script:
           name:
@@ -395,6 +414,8 @@ nl:
             label: Script
           version:
             label: Versie
+          status:
+            label: Status
           enabled:
             label: Ingeschakeld
           disabled:

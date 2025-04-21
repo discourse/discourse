@@ -3,13 +3,13 @@ import templateOnly from "@ember/component/template-only";
 import { click, fillIn, render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
+import { bind } from "discourse/lib/decorators";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import widgetHbs from "discourse/widgets/hbs-compiler";
 import RenderGlimmer, {
   registerWidgetShim,
 } from "discourse/widgets/render-glimmer";
 import Widget, { deleteFromRegistry } from "discourse/widgets/widget";
-import { bind } from "discourse-common/utils/decorators";
 
 class DemoWidget extends Widget {
   static actionTriggered = false;
@@ -47,6 +47,7 @@ class DemoWidget extends Widget {
       ),
     ];
   }
+
   dummyAction() {}
 
   @bind
@@ -67,6 +68,11 @@ class DemoComponent extends ClassicComponent {
     super.init(...arguments);
   }
 
+  willDestroy() {
+    super.willDestroy(...arguments);
+    DemoComponent.eventLog.push("willDestroy");
+  }
+
   didInsertElement() {
     super.didInsertElement(...arguments);
     DemoComponent.eventLog.push("didInsertElement");
@@ -80,11 +86,6 @@ class DemoComponent extends ClassicComponent {
   didReceiveAttrs() {
     super.didReceiveAttrs(...arguments);
     DemoComponent.eventLog.push("didReceiveAttrs");
-  }
-
-  willDestroy() {
-    super.willDestroy(...arguments);
-    DemoComponent.eventLog.push("willDestroy");
   }
 }
 

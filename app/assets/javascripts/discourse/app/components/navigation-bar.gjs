@@ -6,8 +6,9 @@ import { service } from "@ember/service";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import NavigationItem from "discourse/components/navigation-item";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import icon from "discourse/helpers/d-icon";
 import { filterTypeForMode } from "discourse/lib/filter-mode";
-import icon from "discourse-common/helpers/d-icon";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import DMenu from "float-kit/components/d-menu";
 
 export default class NavigationBarComponent extends Component {
@@ -26,6 +27,20 @@ export default class NavigationBarComponent extends Component {
     return item || navItems[0];
   }
 
+  get showDropdown() {
+    return applyValueTransformer(
+      "navigation-bar-dropdown-mode",
+      this.site.mobileView
+    );
+  }
+
+  get navigationBarIcon() {
+    return applyValueTransformer(
+      "navigation-bar-dropdown-icon",
+      "discourse-chevron-expand"
+    );
+  }
+
   @action
   onRegisterApi(api) {
     this.dMenu = api;
@@ -33,7 +48,7 @@ export default class NavigationBarComponent extends Component {
 
   <template>
     <ul id="navigation-bar" class="nav nav-pills">
-      {{#if this.site.mobileView}}
+      {{#if this.showDropdown}}
         <li>
           <DMenu
             @modalForMobile={{true}}
@@ -45,7 +60,7 @@ export default class NavigationBarComponent extends Component {
               <span
                 class="list-control-toggle-link__text"
               >{{this.selectedNavItem.displayName}}</span>
-              {{icon "discourse-chevron-expand"}}
+              {{icon this.navigationBarIcon}}
             </:trigger>
 
             <:content>

@@ -254,6 +254,8 @@ et:
         bio_raw: "Minust"
       user:
         password: "Parool"
+      user_password:
+        password: "Parool"
     errors:
       models:
         topic:
@@ -1048,13 +1050,7 @@ et:
           homepage_style:
             choices:
               latest:
-                label: "Viimased teemad"
-              categories_only:
-                label: "Ainult foorumid"
-              categories_with_featured_topics:
-                label: "Foorumid esiletõstetud teemadega"
-              categories_and_latest_topics:
-                label: "Foorumid ja viimased teemad"
+                label: "Värskeimad"
       corporate:
         fields:
           contact_url:
@@ -1090,6 +1086,11 @@ et:
         title: "Jah"
       delete_single:
         title: "Kustuta"
+        complete: "Postitus kustutatud."
+      delete_and_ignore:
+        complete: "Postitus kustutatud."
+      delete_and_agree:
+        complete: "Postitus kustutatud."
       disagree:
         title: "Ei"
       ignore:
@@ -1103,8 +1104,11 @@ et:
       reject_user:
         delete:
           title: "Kustuta kasutaja"
+          complete: "Kasutaja kustutatud."
       reject:
         title: "Lükka tagasi"
+      delete_user:
+        complete: "Kasutaja kustutatud."
   fallback_username: "kasutaja"
   activemodel:
     errors:

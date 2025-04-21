@@ -8,10 +8,10 @@ import { and } from "truth-helpers";
 import BookmarkIcon from "discourse/components/bookmark-icon";
 import UserStatusMessage from "discourse/components/user-status-message";
 import concatClass from "discourse/helpers/concat-class";
+import icon from "discourse/helpers/d-icon";
+import { bind } from "discourse/lib/decorators";
 import { prioritizeNameInUx } from "discourse/lib/settings";
-import dIcon from "discourse-common/helpers/d-icon";
-import i18n from "discourse-common/helpers/i18n";
-import { bind } from "discourse-common/utils/decorators";
+import { i18n } from "discourse-i18n";
 import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-title";
 import formatChatDate from "../../../helpers/format-chat-date";
 
@@ -156,10 +156,10 @@ export default class ChatMessageInfo extends Component {
           <span class="chat-message-info__flag">
             {{#if @message.reviewableId}}
               <LinkTo @route="review.show" @model={{@message.reviewableId}}>
-                {{dIcon "flag" title="chat.flagged"}}
+                {{icon "flag" title="chat.flagged"}}
               </LinkTo>
             {{else}}
-              {{dIcon "flag" title="chat.you_flagged"}}
+              {{icon "flag" title="chat.you_flagged"}}
             {{/if}}
           </span>
         {{/if}}

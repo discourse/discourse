@@ -2,7 +2,7 @@ import { htmlSafe } from "@ember/template";
 import { emojiUnescape } from "discourse/lib/text";
 import { userPath } from "discourse/lib/url";
 import { formatUsername, postUrl } from "discourse/lib/utilities";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class NotificationTypeBase {
   constructor({ notification, currentUser, siteSettings, site }) {
@@ -54,7 +54,7 @@ export default class NotificationTypeBase {
    */
   get linkTitle() {
     if (this.notificationName) {
-      return I18n.t(`notifications.titles.${this.notificationName}`);
+      return i18n(`notifications.titles.${this.notificationName}`);
     } else {
       // notifications with unknown types, e.g. notifications that come from a
       // plugin that's no longer installed
@@ -73,7 +73,11 @@ export default class NotificationTypeBase {
    * @returns {string} The label is the first part of the text content displayed in the notification. For example, in a like notification, the username of the user who liked the post is the label. If a falsey value is returned, the label is omitted.
    */
   get label() {
-    return this.username;
+    if (!this.siteSettings.prioritize_full_name_in_ux) {
+      return this.username;
+    }
+
+    return this.notification.acting_user_name || this.username;
   }
 
   /**

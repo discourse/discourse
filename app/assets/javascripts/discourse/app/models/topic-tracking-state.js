@@ -3,13 +3,13 @@ import EmberObject, { get } from "@ember/object";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { TrackedArray, TrackedMap } from "@ember-compat/tracked-built-ins";
+import { bind } from "discourse/lib/decorators";
 import { NotificationLevels } from "discourse/lib/notification-levels";
+import { deepEqual, deepMerge } from "discourse/lib/object";
 import PreloadStore from "discourse/lib/preload-store";
 import DiscourseURL from "discourse/lib/url";
 import Category from "discourse/models/category";
 import Site from "discourse/models/site";
-import { deepEqual, deepMerge } from "discourse-common/lib/object";
-import { bind } from "discourse-common/utils/decorators";
 
 function isNew(topic) {
   return (
@@ -545,18 +545,15 @@ export default class TopicTrackingState extends EmberObject {
   }
 
   getSubCategoryIds(categoryId) {
-    const result = [categoryId];
-    const categories = Category.list();
-
-    for (let i = 0; i < result.length; ++i) {
-      for (let j = 0; j < categories.length; ++j) {
-        if (result[i] === categories[j].parent_category_id) {
-          result[result.length] = categories[j].id;
-        }
-      }
+    if (!categoryId) {
+      return [];
     }
 
-    return new Set(result);
+    const descendants = Category.findById(categoryId).descendants.map(
+      (c) => c.id
+    );
+
+    return new Set([categoryId, ...descendants]);
   }
 
   countCategoryByState({

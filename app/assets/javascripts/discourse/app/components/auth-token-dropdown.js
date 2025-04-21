@@ -1,6 +1,6 @@
 import { action, computed } from "@ember/object";
 import { classNames } from "@ember-decorators/component";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
 import { selectKitOptions } from "select-kit/components/select-kit";
 
@@ -16,13 +16,13 @@ export default class AuthTokenDropdown extends DropdownSelectBoxComponent {
       {
         id: "notYou",
         icon: "user-xmark",
-        name: I18n.t("user.auth_tokens.not_you"),
+        name: i18n("user.auth_tokens.not_you"),
         description: "",
       },
       {
         id: "logOut",
         icon: "right-from-bracket",
-        name: I18n.t("user.log_out"),
+        name: i18n("user.log_out"),
         description: "",
       },
     ];

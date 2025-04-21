@@ -12,8 +12,7 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { GROUP_SMTP_SSL_MODES } from "discourse/lib/constants";
 import emailProviderDefaultSettings from "discourse/lib/email-provider-default-settings";
-import i18n from "discourse-common/helpers/i18n";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class GroupSmtpEmailSettings extends Component {
   @service currentUser;
@@ -26,7 +25,7 @@ export default class GroupSmtpEmailSettings extends Component {
     return Object.keys(GROUP_SMTP_SSL_MODES).map((key) => {
       return {
         value: GROUP_SMTP_SSL_MODES[key],
-        name: I18n.t(`groups.manage.email.ssl_modes.${key}`),
+        name: i18n(`groups.manage.email.ssl_modes.${key}`),
       };
     });
   }
@@ -94,7 +93,7 @@ export default class GroupSmtpEmailSettings extends Component {
 
         this.toasts.success({
           duration: 3000,
-          data: { message: I18n.t("groups.manage.email.smtp_settings_valid") },
+          data: { message: i18n("groups.manage.email.smtp_settings_valid") },
         });
       })
       .catch(popupAjaxError)

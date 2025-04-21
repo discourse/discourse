@@ -4,15 +4,15 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { SYSTEM_FLAG_IDS } from "discourse/lib/constants";
-import i18n from "discourse-common/helpers/i18n";
-import { bind } from "discourse-common/utils/decorators";
+import { bind } from "discourse/lib/decorators";
+import { i18n } from "discourse-i18n";
 import AdminFlagItem from "admin/components/admin-flag-item";
-import AdminPageSubheader from "admin/components/admin-page-subheader";
+import { SYSTEM_FLAG_IDS } from "admin/lib/constants";
 
 export default class AdminConfigAreasFlags extends Component {
   @service site;
   @service siteSettings;
+
   @tracked flags = this.site.flagTypes;
 
   get addFlagButtonDisabled() {
@@ -69,18 +69,6 @@ export default class AdminConfigAreasFlags extends Component {
   }
 
   <template>
-    <AdminPageSubheader @titleLabel="admin.config_areas.flags.flags_tab">
-      <:actions as |actions|>
-        <actions.Primary
-          @route="adminConfig.flags.new"
-          @title="admin.config_areas.flags.add"
-          @label="admin.config_areas.flags.add"
-          @icon="plus"
-          @disabled={{this.addFlagButtonDisabled}}
-          class="admin-flags__header-add-flag"
-        />
-      </:actions>
-    </AdminPageSubheader>
     <div class="container admin-flags">
       <table class="d-admin-table admin-flags__items">
         <thead>

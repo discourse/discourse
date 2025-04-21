@@ -232,6 +232,7 @@ module("Unit | class-prepend", function () {
       (Superclass) =>
         class extends Superclass {
           static someStaticField = this;
+
           static someStaticMethod() {
             return this;
           }

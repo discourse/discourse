@@ -1,11 +1,11 @@
 import Component from "@glimmer/component";
 import { gte } from "truth-helpers";
 import concatClass from "discourse/helpers/concat-class";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class MembersCount extends Component {
   get countLabel() {
-    return I18n.t("chat.direct_message_creator.members_counter", {
+    return i18n("chat.direct_message_creator.members_counter", {
       count: this.args.count,
       max: this.args.max,
     });

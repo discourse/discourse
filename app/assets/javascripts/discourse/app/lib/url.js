@@ -4,13 +4,13 @@ import { setOwner } from "@ember/owner";
 import { next, schedule } from "@ember/runloop";
 import { isEmpty } from "@ember/utils";
 import $ from "jquery";
+import { isTesting } from "discourse/lib/environment";
+import getURL, { withoutPrefix } from "discourse/lib/get-url";
 import LockOn from "discourse/lib/lock-on";
 import offsetCalculator from "discourse/lib/offset-calculator";
 import { defaultHomepage } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Session from "discourse/models/session";
-import { isTesting } from "discourse-common/config/environment";
-import getURL, { withoutPrefix } from "discourse-common/lib/get-url";
 
 const rewrites = [];
 export const TOPIC_URL_REGEXP = /\/t\/([^\/]*[^\d\/][^\/]*)\/(\d+)\/?(\d+)?/;
@@ -314,6 +314,16 @@ class DiscourseURL extends EmberObject {
     return true;
   }
 
+  isInternalTopic(url) {
+    if (!this.isInternal(url)) {
+      return false;
+    }
+
+    const internalPath = url.replace(this.origin, "");
+
+    return internalPath.startsWith("/t/");
+  }
+
   /**
     If the URL is in the topic form, /t/something/:topic_id/:post_number
     then we want to apply some special logic. If the post_number changes within the
@@ -483,9 +493,21 @@ export function setURLContainer(container) {
 }
 
 export function prefixProtocol(url) {
-  return !url.includes("://") && !url.startsWith("mailto:")
-    ? "https://" + url
-    : url;
+  if (!url || typeof url !== "string") {
+    return url;
+  }
+
+  url = url.trim();
+
+  if (url.startsWith("//")) {
+    return `https:${url}`;
+  }
+
+  if (url.startsWith("/") || url.includes("://") || url.startsWith("mailto:")) {
+    return url;
+  }
+
+  return `https://${url}`;
 }
 
 export function getCategoryAndTagUrl(category, subcategories, tag) {

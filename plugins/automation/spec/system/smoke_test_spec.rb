@@ -20,8 +20,11 @@ describe "DiscourseAutomation | smoke test", type: :system do
 
     after { DiscourseAutomation::Scriptable.remove("test") }
 
-    it "populate correctly" do
-      visit("/admin/plugins/discourse-automation")
+    it "populates correctly and can be deleted" do
+      visit("/admin/plugins/automation")
+
+      find(".admin-config-area-empty-list__cta-button").click
+
       find(".admin-section-landing__header-filter").set("test")
       find(".admin-section-landing-item__content", match: :first).click
       fill_in("automation-name", with: "aaaaa")
@@ -30,11 +33,30 @@ describe "DiscourseAutomation | smoke test", type: :system do
       select_kit.select_row_by_value("post_created_edited")
 
       expect(find(".field input[name=test]").value).to eq("test-default-value")
+
+      automation = Fabricate(:automation, name: "automation-test")
+
+      visit("/admin/plugins/automation")
+      # find the row of "automation test" then click on trash icon
+      find(".automations__name", text: "automation-test")
+        .find(:xpath, "..")
+        .find(".automations__delete")
+        .click
+
+      find(".dialog-footer .btn-danger").click
+
+      expect(page).not_to have_css(".automations__name", text: "automation-test")
+
+      try_until_success do
+        expect(DiscourseAutomation::Automation.exists?(id: automation.id)).to be(false)
+      end
     end
   end
 
   it "works" do
-    visit("/admin/plugins/discourse-automation")
+    visit("/admin/plugins/automation")
+
+    find(".admin-config-area-empty-list__cta-button").click
 
     find(".admin-section-landing__header-filter").set("user group membership through badge")
     find(".admin-section-landing-item__content", match: :first).click
@@ -51,6 +73,6 @@ describe "DiscourseAutomation | smoke test", type: :system do
     find(".automation-enabled input").click
     find(".update-automation").click
 
-    expect(page).to have_css('[role="button"]', text: "aaaaa")
+    expect(page).to have_css(".automations__name", text: "aaaaa")
   end
 end

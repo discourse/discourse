@@ -19,7 +19,6 @@ id:
     chat_minimum_message_length: "Jumlah minimum karakter untuk pesan obrolan."
     chat_allow_uploads: "Izinkan unggahan di kanal obrolan publik dan kanal pesan langsung."
     chat_archive_destination_topic_status: "Status topik tujuan setelah arsip kanal selesai. Ini hanya berlaku bila topik tujuan adalah topik baru, bukan topik yang sudah ada."
-    default_emoji_reactions: "Reaksi emoji bawaan untuk pesan obrolan. Tambahkan hingga 5 emoji untuk reaksi cepat."
     direct_message_enabled_groups: "Izinkan pengguna dalam grup ini untuk membuat Obrolan Pribadi pengguna-ke-pengguna. Catatan: staf selalu dapat membuat Obrolan Pribadi, dan pengguna akan dapat membalas Obrolan Pribadi yang dimulai oleh pengguna yang memiliki izin untuk membuatnya."
     max_mentions_per_chat_message: "Jumlah maksimum notifikasi @nama yang dapat digunakan pengguna dalam pesan obrolan."
     chat_max_direct_message_users: "Pengguna tidak dapat menambahkan lebih dari jumlah pengguna lain saat membuat pesan langsung baru. Setel ke 0 untuk hanya mengizinkan pesan untuk diri sendiri. Staf dibebaskan dari pengaturan ini."
@@ -78,8 +77,6 @@ id:
       not_accepting_dms: "Maaf, %{username} tidak menerima pesan saat ini."
       actor_ignoring_target_user: "Anda mengabaikan %{username}, jadi Anda tidak dapat mengirim pesan kepadanya."
       actor_muting_target_user: "Anda membisukan %{username}, jadi Anda tidak dapat mengirim pesan kepadanya."
-      actor_disallowed_dms: "Anda telah memilih untuk mencegah pengguna mengirimi Anda pesan langsung dan pribadi, sehingga Anda tidak dapat membuat pesan langsung baru."
-      actor_preventing_target_user_from_dm: "Anda telah memilih untuk mencegah %{username} mengirimi Anda pesan langsung dan pribadi, sehingga Anda tidak dapat membuat pesan langsung baru untuk dia."
       user_cannot_send_direct_messages: "Maaf, Anda tidak dapat mengirim pesan langsung."
       over_chat_max_direct_message_users_allow_self: "Anda hanya dapat membuat pesan langsung dengan diri Anda sendiri."
       over_chat_max_direct_message_users:

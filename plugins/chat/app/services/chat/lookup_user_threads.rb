@@ -30,6 +30,7 @@ module Chat
         self.offset = [offset || 0, 0].max
       end
     end
+
     model :threads
     step :fetch_tracking
     step :fetch_memberships

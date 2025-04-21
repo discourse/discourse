@@ -1,5 +1,5 @@
 import { createWidget } from "discourse/widgets/widget";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default createWidget("post-gap", {
   tagName: "div.gap",
@@ -11,8 +11,8 @@ export default createWidget("post-gap", {
 
   html(attrs, state) {
     return state.loading
-      ? I18n.t("loading")
-      : I18n.t("post.gap", { count: attrs.gap.length });
+      ? i18n("loading")
+      : i18n("post.gap", { count: attrs.gap.length });
   },
 
   click() {

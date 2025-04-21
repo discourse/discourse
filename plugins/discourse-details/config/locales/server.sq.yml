@@ -5,3 +5,7 @@
 # https://translate.discourse.org/
 
 sq:
+  site_settings:
+    details_enabled: 'Përfshini mundësinë për të shtuar detaje më shumë në një postim. Kjo veçori mund të gjendet në menunë që shfaqet në menun e kontrollit të administruesit. Ju duhet të ndryshoni të gjitha postimet me "rake posts:ribake" nëse ndryshoni këtë cilësim.'
+  details:
+    excerpt_details: "(kliko për më shumë detaje)"

@@ -9,7 +9,7 @@ import {
 } from "discourse/lib/search";
 import { escapeExpression } from "discourse/lib/utilities";
 import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class FullPageSearch extends DiscourseRoute {
   queryParams = {
@@ -23,7 +23,7 @@ export default class FullPageSearch extends DiscourseRoute {
   category = null;
 
   titleToken() {
-    return I18n.t("search.results_page", {
+    return i18n("search.results_page", {
       term: escapeExpression(
         this.controllerFor("full-page-search").get("searchTerm")
       ),

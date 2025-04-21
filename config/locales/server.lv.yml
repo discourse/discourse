@@ -127,6 +127,8 @@ lv:
         bio_raw: "Par Mani"
       user:
         password: "Parole"
+      user_password:
+        password: "Parole"
     errors:
       <<: *errors
   general_category_name: "Vispārīgi"
@@ -508,14 +510,8 @@ lv:
             label: "Priekšskatījums"
           homepage_style:
             choices:
-              categories_only:
-                label: "Tikai sadaļas"
-              categories_with_featured_topics:
-                label: "Sadaļas un to labākās tēmas"
-              categories_and_latest_topics:
-                label: "Sadaļas un jaunākās tēmas"
-              categories_and_top_topics:
-                label: "Kategorijas un populārākās tēmas"
+              latest:
+                label: "Pēdējais"
   onebox:
     github:
       closed: "slēgts"
@@ -545,6 +541,11 @@ lv:
         title: "Jā"
       delete_single:
         title: "Dzēst"
+        complete: "Ieraksts dzēsts."
+      delete_and_ignore:
+        complete: "Ieraksts dzēsts."
+      delete_and_agree:
+        complete: "Ieraksts dzēsts."
       disagree:
         title: "Nē"
       ignore:
@@ -554,8 +555,11 @@ lv:
       reject_user:
         delete:
           title: "Dzēst lietotāju."
+          complete: "Lietotājs dzēsts."
       reject:
         title: "Noraidīt"
+      delete_user:
+        complete: "Lietotājs dzēsts."
   fallback_username: "lietotājs"
   activemodel:
     errors:

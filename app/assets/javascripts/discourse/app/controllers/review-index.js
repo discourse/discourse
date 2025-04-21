@@ -1,12 +1,20 @@
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
+import { service } from "@ember/service";
 import { underscore } from "@ember/string";
 import { isPresent } from "@ember/utils";
-import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import { REVIEWABLE_UNKNOWN_TYPE_SOURCE } from "discourse/lib/constants";
+import discourseComputed from "discourse/lib/decorators";
+import { i18n } from "discourse-i18n";
 
 export default class ReviewIndexController extends Controller {
+  @service currentUser;
+  @service dialog;
+  @service toasts;
+
   queryParams = [
     "priority",
     "type",
@@ -19,6 +27,8 @@ export default class ReviewIndexController extends Controller {
     "to_date",
     "sort_order",
     "additional_filters",
+    "flagged_by",
+    "score_type",
   ];
 
   type = null;
@@ -30,10 +40,13 @@ export default class ReviewIndexController extends Controller {
   filtersExpanded = this.site.desktopView;
   username = "";
   reviewed_by = "";
+  flagged_by = "";
   from_date = null;
   to_date = null;
   sort_order = null;
   additional_filters = null;
+  filterScoreType = null;
+  unknownTypeSource = REVIEWABLE_UNKNOWN_TYPE_SOURCE;
 
   @discourseComputed("reviewableTypes")
   allTypes() {
@@ -42,9 +55,14 @@ export default class ReviewIndexController extends Controller {
 
       return {
         id: type,
-        name: I18n.t(`review.types.${translationKey}.title`),
+        name: i18n(`review.types.${translationKey}.title`),
       };
     });
+  }
+
+  @discourseComputed("scoreTypes")
+  allScoreTypes() {
+    return this.scoreTypes || [];
   }
 
   @discourseComputed
@@ -52,7 +70,7 @@ export default class ReviewIndexController extends Controller {
     return ["any", "low", "medium", "high"].map((priority) => {
       return {
         id: priority,
-        name: I18n.t(`review.filters.priority.${priority}`),
+        name: i18n(`review.filters.priority.${priority}`),
       };
     });
   }
@@ -63,7 +81,7 @@ export default class ReviewIndexController extends Controller {
       (order) => {
         return {
           id: order,
-          name: I18n.t(`review.filters.orders.${order}`),
+          name: i18n(`review.filters.orders.${order}`),
         };
       }
     );
@@ -80,7 +98,7 @@ export default class ReviewIndexController extends Controller {
       "reviewed",
       "all",
     ].map((id) => {
-      return { id, name: I18n.t(`review.statuses.${id}.title`) };
+      return { id, name: i18n(`review.statuses.${id}.title`) };
     });
   }
 
@@ -95,6 +113,11 @@ export default class ReviewIndexController extends Controller {
 
   refreshModel() {
     next(() => this.send("refreshRoute"));
+  }
+
+  @discourseComputed("unknownReviewableTypes")
+  displayUnknownReviewableTypesWarning(unknownReviewableTypes) {
+    return unknownReviewableTypes?.length > 0 && this.currentUser.admin;
   }
 
   @action
@@ -118,6 +141,26 @@ export default class ReviewIndexController extends Controller {
   resetTopic() {
     this.set("topic_id", null);
     this.refreshModel();
+  }
+
+  @action
+  ignoreAllUnknownTypes() {
+    return this.dialog.deleteConfirm({
+      message: i18n("review.unknown.delete_confirm"),
+      didConfirm: async () => {
+        try {
+          await ajax("/admin/unknown_reviewables/destroy", {
+            type: "delete",
+          });
+          this.set("unknownReviewableTypes", []);
+          this.toasts.success({
+            data: { message: i18n("review.unknown.ignore_success") },
+          });
+        } catch (e) {
+          popupAjaxError(e);
+        }
+      },
+    });
   }
 
   @action
@@ -161,6 +204,8 @@ export default class ReviewIndexController extends Controller {
       category_id: this.filterCategoryId,
       username: this.filterUsername,
       reviewed_by: this.filterReviewedBy,
+      flagged_by: this.filterFlaggedBy,
+      score_type: this.filterScoreType,
       from_date: isPresent(this.filterFromDate)
         ? this.filterFromDate.toISOString(true).split("T")[0]
         : null,
@@ -187,6 +232,11 @@ export default class ReviewIndexController extends Controller {
   @action
   updateFilterReviewedBy(selected) {
     this.set("filterReviewedBy", selected.firstObject);
+  }
+
+  @action
+  updateFilterFlaggedBy(selected) {
+    this.set("filterFlaggedBy", selected.firstObject);
   }
 
   @action

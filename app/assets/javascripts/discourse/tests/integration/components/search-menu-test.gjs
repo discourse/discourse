@@ -6,8 +6,7 @@ import SearchMenu, {
 import searchFixtures from "discourse/tests/fixtures/search-fixtures";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import { query } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 // Note this isn't a full-fledge test of the search menu. Those tests are in
 // acceptance/search-test.js. This is simply about the rendering of the
@@ -30,7 +29,11 @@ module("Integration | Component | search-menu", function (hooks) {
       return response(searchFixtures["search/query"]);
     });
 
-    await render(<template><SearchMenu /></template>);
+    await render(
+      <template>
+        <SearchMenu @location="test" @searchInputId="icon-search-input" />
+      </template>
+    );
 
     assert
       .dom(".show-advanced-search")
@@ -38,32 +41,33 @@ module("Integration | Component | search-menu", function (hooks) {
 
     assert.dom(".menu-panel").doesNotExist("Menu panel is not rendered yet");
 
-    await click("#search-term");
+    await click("#icon-search-input");
 
     assert
       .dom(".menu-panel .search-menu-initial-options")
       .exists("Menu panel is rendered with initial options");
 
-    await fillIn("#search-term", "test");
+    await fillIn("#icon-search-input", "test");
 
-    assert.strictEqual(
-      query(".label-suffix").textContent.trim(),
-      I18n.t("search.in_topics_posts"),
-      "search label reflects context of search"
-    );
+    assert
+      .dom(".label-suffix")
+      .hasText(
+        i18n("search.in_topics_posts"),
+        "search label reflects context of search"
+      );
 
-    await triggerKeyEvent("#search-term", "keyup", "Enter");
+    await triggerKeyEvent("#icon-search-input", "keyup", "Enter");
 
     assert
       .dom(".search-result-topic")
       .exists("search result is a list of topics");
 
-    await triggerKeyEvent("#search-term", "keydown", "Escape");
+    await triggerKeyEvent("#icon-search-input", "keydown", "Escape");
 
     assert.dom(".menu-panel").doesNotExist("Menu panel is gone");
 
-    await click("#search-term");
-    await click("#search-term");
+    await click("#icon-search-input");
+    await click("#icon-search-input");
 
     assert
       .dom(".search-result-topic")
@@ -71,24 +75,34 @@ module("Integration | Component | search-menu", function (hooks) {
   });
 
   test("clicking outside results hides and blurs input", async function (assert) {
-    await render(<template><div id="click-me"><SearchMenu /></div></template>);
-    await click("#search-term");
-
-    assert.strictEqual(
-      document.activeElement,
-      query("#search-term"),
-      "Clicking the search term input focuses it"
+    await render(
+      <template>
+        <div id="click-me">
+          <SearchMenu @location="test" @searchInputId="icon-search-input" />
+        </div>
+      </template>
     );
+    await click("#icon-search-input");
+
+    assert
+      .dom("#icon-search-input")
+      .isFocused("Clicking the search term input focuses it");
 
     await click("#click-me");
 
-    assert.strictEqual(
-      document.activeElement,
-      document.body,
-      "Clicking outside blurs focus and closes panel"
-    );
+    assert
+      .dom(document.body)
+      .isFocused("Clicking outside blurs focus and closes panel");
     assert
       .dom(".menu-panel .search-menu-initial-options")
       .doesNotExist("Menu panel is hidden");
+  });
+
+  test("rendering without a searchInputId provided", async function (assert) {
+    await render(<template><SearchMenu @location="test" /></template>);
+
+    assert
+      .dom("#search-term.search-term__input")
+      .exists("input defaults to id of search-term");
   });
 });

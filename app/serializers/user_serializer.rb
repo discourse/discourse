@@ -20,7 +20,8 @@ class UserSerializer < UserCardSerializer
              :associated_accounts,
              :profile_background_upload_url,
              :can_upload_profile_header,
-             :can_upload_user_card_background
+             :can_upload_user_card_background,
+             :no_password
 
   has_one :invited_by, embed: :object, serializer: BasicUserSerializer
   has_many :groups, embed: :object, serializer: BasicGroupSerializer
@@ -90,7 +91,11 @@ class UserSerializer < UserCardSerializer
   end
 
   def groups
-    object.groups.order(:id).visible_groups(scope.user)
+    if scope.user == object
+      object.groups.order(:id).visible_groups(scope.user)
+    else
+      object.groups.order(:id).visible_groups(scope.user).members_visible_groups(scope.user)
+    end
   end
 
   def group_users
@@ -339,6 +344,14 @@ class UserSerializer < UserCardSerializer
 
   def can_pick_theme_with_custom_homepage
     ThemeModifierHelper.new(theme_ids: Theme.enabled_theme_and_component_ids).custom_homepage
+  end
+
+  def no_password
+    true
+  end
+
+  def include_no_password?
+    !object.has_password?
   end
 
   private

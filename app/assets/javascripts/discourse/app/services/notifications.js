@@ -16,6 +16,10 @@ export default class NotificationsService extends Service {
     this._checkDoNotDisturb();
   }
 
+  willDestroy() {
+    clearTimeout(this.#dndTimer);
+  }
+
   _checkDoNotDisturb() {
     clearTimeout(this.#dndTimer);
 
@@ -37,9 +41,5 @@ export default class NotificationsService extends Service {
     } else {
       this.isInDoNotDisturb = false;
     }
-  }
-
-  willDestroy() {
-    clearTimeout(this.#dndTimer);
   }
 }

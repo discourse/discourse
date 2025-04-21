@@ -71,6 +71,20 @@ shared_examples "signup scenarios" do |signup_page_object, login_page_object|
       expect(page).to have_current_path("/t/#{topic.slug}/#{topic.id}")
     end
 
+    it "cannot signup with a common password" do
+      signup_form
+        .open
+        .fill_email("johndoe@example.com")
+        .fill_username("john")
+        .fill_password("0123456789")
+      expect(signup_form).to have_valid_fields
+
+      signup_form.click_create_account
+      expect(signup_form).to have_content(
+        I18n.t("activerecord.errors.models.user_password.attributes.password.common"),
+      )
+    end
+
     context "with invite code" do
       before { SiteSetting.invite_code = "cupcake" }
 
@@ -221,7 +235,10 @@ shared_examples "signup scenarios" do |signup_page_object, login_page_object|
   end
 
   context "when the email domain is blocked" do
-    before { SiteSetting.blocked_email_domains = "example.com" }
+    before do
+      SiteSetting.hide_email_address_taken = false
+      SiteSetting.blocked_email_domains = "example.com"
+    end
 
     it "cannot signup" do
       signup_form
@@ -252,6 +269,7 @@ shared_examples "signup scenarios" do |signup_page_object, login_page_object|
       visit "/invites/#{invite.invite_key}?t=#{invite.email_token}"
 
       find("#new-account-password").fill_in(with: "supersecurepassword")
+      find("#new-account-username").fill_in(with: "johndoe")
       find(".username-input").has_css?("#username-validation.good")
       find(".create-account__password-tip-validation").has_css?("#password-validation.good")
       find(".invitation-cta__accept").click
@@ -268,41 +286,92 @@ shared_examples "signup scenarios" do |signup_page_object, login_page_object|
     expect(page).to have_css(".invited-by .user-info[data-username='#{inviter.username}']")
     find(".invitation-cta__sign-in").click
 
-    if page.has_css?(".d-modal.login-modal", wait: 0)
-      if page.has_css?("html.mobile-view", wait: 0)
-        expect(page).to have_css(".d-modal:not(.is-animating)")
-      end
-      find(".d-modal .modal-close").click
-    else
+    if SiteSetting.full_page_login
+      expect(page).to have_css("#login-form")
       page.go_back
+    else
+      find(".d-modal .modal-close").click
     end
 
     expect(page).to have_css(".invited-by .user-info[data-username='#{inviter.username}']")
+  end
+
+  describe "full name field" do
+    context "when full_name_requirement is optional_at_signup" do
+      before { SiteSetting.full_name_requirement = "optional_at_signup" }
+
+      context "when login_required is true" do
+        before { SiteSetting.login_required = true }
+
+        it "displays the name field" do
+          signup_form.open
+          expect(signup_form).to have_name_input
+        end
+      end
+
+      context "when enable_names is false" do
+        before { SiteSetting.enable_names = false }
+
+        it "hides the name field" do
+          signup_form.open
+          expect(signup_form).to have_no_name_input
+        end
+      end
+    end
+
+    context "when full_name_requirement is hidden_at_signup" do
+      before { SiteSetting.full_name_requirement = "hidden_at_signup" }
+
+      it "hides the name field" do
+        signup_form.open
+        expect(signup_form).to have_no_name_input
+      end
+    end
+
+    context "when full_name_requirement is required_at_signup" do
+      before { SiteSetting.full_name_requirement = "required_at_signup" }
+
+      it "displays the name field" do
+        signup_form.open
+        expect(signup_form).to have_name_input
+      end
+
+      context "when enable_names is false" do
+        before { SiteSetting.enable_names = false }
+
+        it "hides the name field" do
+          signup_form.open
+          expect(signup_form).to have_no_name_input
+        end
+      end
+    end
   end
 end
 
 describe "Signup", type: :system do
   context "when desktop" do
+    before { SiteSetting.full_page_login = false }
     include_examples "signup scenarios",
                      PageObjects::Modals::Signup.new,
                      PageObjects::Modals::Login.new
   end
 
   context "when mobile", mobile: true do
+    before { SiteSetting.full_page_login = false }
     include_examples "signup scenarios",
                      PageObjects::Modals::Signup.new,
                      PageObjects::Modals::Login.new
   end
 
   context "when fullpage desktop" do
-    before { SiteSetting.experimental_full_page_login = true }
+    before { SiteSetting.full_page_login = true }
     include_examples "signup scenarios",
                      PageObjects::Pages::Signup.new,
                      PageObjects::Pages::Login.new
   end
 
   context "when fullpage mobile", mobile: true do
-    before { SiteSetting.experimental_full_page_login = true }
+    before { SiteSetting.full_page_login = true }
     include_examples "signup scenarios",
                      PageObjects::Pages::Signup.new,
                      PageObjects::Pages::Login.new

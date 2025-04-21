@@ -9,9 +9,7 @@ module(
   "Unit | Lib | time-shortcut | hideDynamicTimeShortcuts",
   function (hooks) {
     hooks.afterEach(function () {
-      if (this.clock) {
-        this.clock.restore();
-      }
+      this.clock?.restore();
     });
 
     test("hides 'Later Today' at the end of the day", function (assert) {
@@ -20,7 +18,7 @@ module(
 
       this.clock = fakeTime("2100-04-19 08:00:00", timezone, true); // morning
       let result = hideDynamicTimeShortcuts(shortcuts, timezone).mapBy("id");
-      assert.ok(
+      assert.true(
         result.includes("later_today"),
         "shows later_today in the morning"
       );
@@ -37,7 +35,7 @@ module(
 
       this.clock = fakeTime("2100-04-21 18:00:00", timezone, true); // Wednesday
       let result = hideDynamicTimeShortcuts(shortcuts, timezone).mapBy("id");
-      assert.ok(
+      assert.true(
         result.includes("later_this_week"),
         "shows later_this_week on Wednesdays"
       );
@@ -70,7 +68,7 @@ module(
         timezone,
         siteSettings
       ).mapBy("id");
-      assert.ok(
+      assert.true(
         result.includes("this_weekend"),
         "shows this_weekend on Thursdays"
       );

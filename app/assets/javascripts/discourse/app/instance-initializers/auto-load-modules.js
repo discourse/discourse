@@ -1,11 +1,5 @@
 import { setOwner } from "@ember/owner";
-import Handlebars from "handlebars";
-import {
-  createHelperContext,
-  registerHelpers,
-} from "discourse-common/lib/helpers";
-import RawHandlebars from "discourse-common/lib/raw-handlebars";
-import { registerRawHelpers } from "discourse-common/lib/raw-handlebars-helpers";
+import { createHelperContext, registerHelpers } from "discourse/lib/helpers";
 
 function isThemeOrPluginHelper(path) {
   return (
@@ -41,7 +35,6 @@ export function autoLoadModules(owner, registry) {
 
   createHelperContext(context);
   registerHelpers(registry);
-  registerRawHelpers(RawHandlebars, Handlebars, owner);
 }
 
 export default {

@@ -1,9 +1,6 @@
 import DAGMap from "dag-map";
-import { bind } from "discourse-common/utils/decorators";
-
-function ensureArray(val) {
-  return Array.isArray(val) ? val : [val];
-}
+import { bind } from "discourse/lib/decorators";
+import { makeArray } from "discourse/lib/helpers";
 
 export default class DAG {
   /**
@@ -75,10 +72,10 @@ export default class DAG {
    */
   #defaultPositionForKey(key) {
     const pos = { ...this.#defaultPosition };
-    if (ensureArray(pos.before).includes(key)) {
+    if (makeArray(pos.before).includes(key)) {
       delete pos.before;
     }
-    if (ensureArray(pos.after).includes(key)) {
+    if (makeArray(pos.after).includes(key)) {
       delete pos.after;
     }
     return pos;

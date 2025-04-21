@@ -81,7 +81,8 @@ task "admin:create" => :environment do
       admin.password = password
     end
 
-    admin.name = ask("Full name:  ") if SiteSetting.full_name_required && admin.name.blank?
+    admin.name = ask("Full name:  ") if SiteSetting.full_name_requirement == "required_at_signup" &&
+      admin.name.blank?
 
     # save/update user account
     saved = admin.save

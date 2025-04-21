@@ -31,7 +31,19 @@ class Admin::DashboardController < Admin::StaffController
   end
 
   def new_features
-    new_features = DiscourseUpdates.new_features
+    force_refresh = params[:force_refresh] == "true"
+
+    if force_refresh
+      RateLimiter.new(
+        current_user,
+        "force-refresh-new-features",
+        5,
+        1.minute,
+        apply_limit_to_staff: true,
+      ).performed!
+    end
+
+    new_features = DiscourseUpdates.new_features(force_refresh:)
 
     if current_user.admin? && most_recent = new_features&.first
       DiscourseUpdates.bump_last_viewed_feature_date(current_user.id, most_recent["created_at"])

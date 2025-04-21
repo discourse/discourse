@@ -1,19 +1,22 @@
-import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
+import {
+  click,
+  fillIn,
+  find,
+  triggerKeyEvent,
+  visit,
+} from "@ember/test-helpers";
 import { test } from "qunit";
+import { cloneJSON } from "discourse/lib/object";
 import postFixtures from "discourse/tests/fixtures/post";
 import {
   acceptance,
   metaModifier,
-  query,
   selectText,
 } from "discourse/tests/helpers/qunit-helpers";
-import { cloneJSON } from "discourse-common/lib/object";
 
 acceptance("Fast Edit", function (needs) {
   needs.user();
-  needs.settings({
-    enable_fast_edit: true,
-  });
+  needs.settings({ enable_fast_edit: true });
   needs.pretender((server, helper) => {
     server.get("/posts/419", () => {
       return helper.response(cloneJSON(postFixtures["/posts/398"]));
@@ -23,7 +26,7 @@ acceptance("Fast Edit", function (needs) {
   test("Fast edit button works", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
-    const textNode = query("#post_1 .cooked p").childNodes[0];
+    const textNode = find("#post_1 .cooked p").childNodes[0];
 
     await selectText(textNode, 9);
     await click(".quote-button .quote-edit-label");
@@ -42,7 +45,7 @@ acceptance("Fast Edit", function (needs) {
   test("Works with keyboard shortcut", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
-    const textNode = query("#post_1 .cooked p").childNodes[0];
+    const textNode = find("#post_1 .cooked p").childNodes[0];
 
     await selectText(textNode, 9);
 
@@ -77,7 +80,20 @@ acceptance("Fast Edit", function (needs) {
   test("Opens full composer for multi-line selection", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
-    const textNode = query("#post_2 .cooked");
+    const textNode = find("#post_2 .cooked");
+
+    await selectText(textNode);
+    await click(".quote-button .quote-edit-label");
+
+    assert.dom("#fast-edit-input").doesNotExist();
+    assert.dom(".d-editor-input").exists();
+  });
+
+  test("Opens full composer when selection has typographic characters", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+
+    find("#post_2 .cooked").append(`That’s what she said!`);
+    const textNode = find("#post_2 .cooked").childNodes[3];
 
     await selectText(textNode);
     await click(".quote-button .quote-edit-label");
@@ -89,8 +105,8 @@ acceptance("Fast Edit", function (needs) {
   test("Works with diacritics", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
-    query("#post_2 .cooked").append(`Je suis désolé, comment ça va?`);
-    const textNode = query("#post_2 .cooked").childNodes[2];
+    find("#post_2 .cooked").append(`Je suis désolé, comment ça va?`);
+    const textNode = find("#post_2 .cooked").childNodes[3];
 
     await selectText(textNode);
     await click(".quote-button .quote-edit-label");
@@ -101,8 +117,8 @@ acceptance("Fast Edit", function (needs) {
   test("Works with CJK ranges", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
-    query("#post_2 .cooked").append(`这是一个测试`);
-    const textNode = query("#post_2 .cooked").childNodes[2];
+    find("#post_2 .cooked").append(`这是一个测试`);
+    const textNode = find("#post_2 .cooked").childNodes[3];
 
     await selectText(textNode);
     await click(".quote-button .quote-edit-label");
@@ -113,8 +129,8 @@ acceptance("Fast Edit", function (needs) {
   test("Works with emoji", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
-    query("#post_2 .cooked").append(`This is great 👍`);
-    const textNode = query("#post_2 .cooked").childNodes[2];
+    find("#post_2 .cooked").append(`This is great 👍`);
+    const textNode = find("#post_2 .cooked").childNodes[3];
 
     await selectText(textNode);
     await click(".quote-button .quote-edit-label");

@@ -1,10 +1,10 @@
 import AllowLister from "pretty-text/allow-lister";
 import { buildEmojiUrl, performEmojiUnescape } from "pretty-text/emoji";
 import { sanitize as textSanitize } from "pretty-text/sanitizer";
-import deprecated from "discourse-common/lib/deprecated";
-import { getURLWithCDN } from "discourse-common/lib/get-url";
-import { helperContext } from "discourse-common/lib/helpers";
-import I18n from "discourse-i18n";
+import deprecated from "discourse/lib/deprecated";
+import { getURLWithCDN } from "discourse/lib/get-url";
+import { helperContext } from "discourse/lib/helpers";
+import { i18n } from "discourse-i18n";
 
 async function withEngine(name, ...args) {
   const engine = await import("discourse/static/markdown-it");
@@ -56,7 +56,7 @@ export async function parseMentions(markdown, options) {
   return await withEngine("parseMentions", markdown, options);
 }
 
-function emojiOptions() {
+export function emojiOptions() {
   let siteSettings = helperContext().siteSettings;
   let context = helperContext();
   if (!siteSettings.enable_emoji) {
@@ -146,9 +146,27 @@ export function humanizeList(listItems) {
     return last;
   } else {
     return [
-      items.join(I18n.t("word_connector.comma")),
-      I18n.t("word_connector.last_item"),
+      items.join(i18n("word_connector.comma")),
+      i18n("word_connector.last_item"),
       last,
     ].join(" ");
   }
+}
+
+export function buildBBCodeAttrs(attrs, opts = {}) {
+  opts.skipAttrs = opts.skipAttrs ?? [];
+
+  return Object.keys(attrs)
+    .map((key) => {
+      if (
+        attrs[key] === null ||
+        attrs[key] === undefined ||
+        opts.skipAttrs.includes(key)
+      ) {
+        return null;
+      }
+      return `${key}="${attrs[key]}"`;
+    })
+    .filter(Boolean)
+    .join(" ");
 }

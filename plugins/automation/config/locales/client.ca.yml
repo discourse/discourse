@@ -7,7 +7,8 @@
 ca:
   js:
     discourse_automation:
-      create: Crea
+      back: Enrere
+      edit: Edita
       fields:
         user:
           label: Usuari
@@ -55,13 +56,13 @@ ca:
           fields:
             restricted_tags:
               label: Etiquetes
-            restricted_category:
-              label: Categoria
-            restricted_group:
-              label: Grup
-            restricted_groups:
-              label: Grups
+            restricted_categories:
+              label: Categories
           created: Creat
+          with_images: Imatges
+          with_links: Enllaços
+          with_code: Codi
+          with_uploads: Càrregues
         category_created_edited:
           fields:
             restricted_category:
@@ -135,6 +136,8 @@ ca:
             label: Disparador
           version:
             label: Versió
+          status:
+            label: Estat
           enabled:
             label: Activat
           disabled:

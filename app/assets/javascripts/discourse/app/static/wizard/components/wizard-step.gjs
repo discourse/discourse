@@ -6,9 +6,12 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { schedule } from "@ember/runloop";
 import { htmlSafe } from "@ember/template";
+import concatClass from "discourse/helpers/concat-class";
 import emoji from "discourse/helpers/emoji";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 import WizardField from "./wizard-field";
+
+const READY_STEP_INDEX = 5;
 
 export default class WizardStepComponent extends Component {
   @tracked saving = false;
@@ -23,6 +26,12 @@ export default class WizardStepComponent extends Component {
 
   get id() {
     return this.step.id;
+  }
+
+  // We don't want to show the step counter for optional steps after
+  // the "Ready" step.
+  get showStepCounter() {
+    return this.args.step.displayIndex < READY_STEP_INDEX;
   }
 
   /**
@@ -60,16 +69,26 @@ export default class WizardStepComponent extends Component {
     return isReady && !this.isFinalStep;
   }
 
-  get showConfigureMore() {
-    return this.id === "ready";
-  }
-
   get showJumpInButton() {
     return this.id === "ready" || this.isFinalStep;
   }
 
   get includeSidebar() {
     return !!this.step.fields.find((f) => f.showInSidebar);
+  }
+
+  get containerFontClasses() {
+    let fontClasses = "";
+
+    if (this.wizard.font) {
+      fontClasses += ` wizard-container-body-font-${this.wizard.font.id}`;
+    }
+
+    if (this.wizard.headingFont) {
+      fontClasses += ` wizard-container-heading-font-${this.wizard.headingFont.id}`;
+    }
+
+    return fontClasses;
   }
 
   @action
@@ -172,20 +191,22 @@ export default class WizardStepComponent extends Component {
       {{didInsert this.autoFocus}}
       {{didUpdate this.stepChanged @step.id}}
     >
-      <div class="wizard-container__step-counter">
-        <span class="wizard-container__step-text">
-          {{i18n "wizard.step-text"}}
-        </span>
-        <span class="wizard-container__step-count">
-          {{i18n
-            "wizard.step"
-            current=@step.displayIndex
-            total=@wizard.totalSteps
-          }}
-        </span>
-      </div>
+      {{#if this.showStepCounter}}
+        <div class="wizard-container__step-counter">
+          <span class="wizard-container__step-text">
+            {{i18n "wizard.step-text"}}
+          </span>
+          <span class="wizard-container__step-count">
+            {{i18n
+              "wizard.step"
+              current=@step.displayIndex
+              total=@wizard.totalSteps
+            }}
+          </span>
+        </div>
+      {{/if}}
 
-      <div class="wizard-container">
+      <div class={{concatClass "wizard-container" this.containerFontClasses}}>
         <div class="wizard-container__step-contents">
           <div class="wizard-container__step-header">
             {{#if @step.emoji}}
@@ -258,15 +279,6 @@ export default class WizardStepComponent extends Component {
                 class="wizard-container__button finish"
               >
                 {{i18n "wizard.finish"}}
-              </button>
-            {{else if this.showConfigureMore}}
-              <button
-                {{on "click" this.nextStep}}
-                disabled={{this.saving}}
-                type="button"
-                class="wizard-container__button configure-more"
-              >
-                {{i18n "wizard.configure_more"}}
               </button>
             {{/if}}
 

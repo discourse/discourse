@@ -565,14 +565,24 @@ RSpec.describe ApplicationHelper do
   end
 
   describe "preloaded_json" do
-    it "returns empty JSON if preloaded is empty" do
-      @preloaded = nil
+    fab!(:user)
+
+    it "returns empty JSON if preloader is not initialized" do
+      @application_layout_preloader = nil
       expect(helper.preloaded_json).to eq("{}")
     end
 
     it "escapes and strips invalid unicode and strips in json body" do
-      @preloaded = { test: %{["< \x80"]} }
-      expect(helper.preloaded_json).to eq(%{{"test":"[\\"\\u003c \uFFFD\\"]"}})
+      @application_layout_preloader =
+        ApplicationLayoutPreloader.new(
+          guardian: Guardian.new(user),
+          theme_id: nil,
+          theme_target: nil,
+          login_method: nil,
+        )
+
+      @application_layout_preloader.store_preloaded("test", %{["< \x80"]})
+      expect(helper.preloaded_json).to include(%{"test":"[\\"\\u003c \uFFFD\\"]"})
     end
   end
 
@@ -616,7 +626,7 @@ RSpec.describe ApplicationHelper do
       it "returns the correct image" do
         SiteSetting.opengraph_image = Fabricate(:upload, url: "/images/og-image.png")
 
-        SiteSetting.twitter_summary_large_image = Fabricate(:upload, url: "/images/twitter.png")
+        SiteSetting.x_summary_large_image = Fabricate(:upload, url: "/images/twitter.png")
 
         SiteSetting.large_icon = Fabricate(:upload, url: "/images/large_icon.png")
 
@@ -631,11 +641,9 @@ RSpec.describe ApplicationHelper do
 
         SiteSetting.opengraph_image = nil
 
-        expect(helper.crawlable_meta_data).to include(
-          SiteSetting.site_twitter_summary_large_image_url,
-        )
+        expect(helper.crawlable_meta_data).to include(SiteSetting.site_x_summary_large_image_url)
 
-        SiteSetting.twitter_summary_large_image = nil
+        SiteSetting.x_summary_large_image = nil
 
         expect(helper.crawlable_meta_data).to include(SiteSetting.site_large_icon_url)
 
@@ -665,13 +673,13 @@ RSpec.describe ApplicationHelper do
         <meta name=\"twitter:image\" content=\"#{SiteSetting.site_logo_url}\" />
         HTML
 
-        SiteSetting.twitter_summary_large_image = Fabricate(:upload, url: "/images/twitter.png")
+        SiteSetting.x_summary_large_image = Fabricate(:upload, url: "/images/twitter.png")
 
         expect(helper.crawlable_meta_data).to include(<<~HTML)
-        <meta name=\"twitter:image\" content=\"#{SiteSetting.site_twitter_summary_large_image_url}\" />
+        <meta name=\"twitter:image\" content=\"#{SiteSetting.site_x_summary_large_image_url}\" />
         HTML
 
-        SiteSetting.twitter_summary_large_image = Fabricate(:upload, url: "/images/twitter.svg")
+        SiteSetting.x_summary_large_image = Fabricate(:upload, url: "/images/twitter.svg")
 
         expect(helper.crawlable_meta_data).to include(<<~HTML)
         <meta name=\"twitter:image\" content=\"#{SiteSetting.site_logo_url}\" />
@@ -734,6 +742,97 @@ RSpec.describe ApplicationHelper do
           "<meta property=\"og:site_name\" content=\"#{SiteSetting.title}\" />",
         )
       end
+    end
+  end
+
+  describe "#title_content" do
+    it "returns the correct title" do
+      SiteSetting.title = "Test Title"
+      result = helper.title_content
+
+      expect(result).to include("Test Title")
+    end
+
+    it "accepts a content argument" do
+      helper.stubs(:content_for?).with(:title).returns(true)
+      helper.stubs(:content_for).with(:title).returns("Custom Title")
+
+      result = helper.title_content
+
+      expect(result).to include("Custom Title")
+    end
+  end
+
+  describe "#description_content" do
+    it "returns the correct description" do
+      SiteSetting.site_description = "Test Description"
+      result = helper.description_content
+
+      expect(result).to include("Test Description")
+    end
+
+    it "accepts a content argument" do
+      @description_meta = "Custom Description"
+
+      result = helper.description_content
+
+      expect(result).to include("Custom Description")
+    end
+  end
+
+  describe "when a plugin registers the :meta_data_content modifier" do
+    let!(:plugin) { Plugin::Instance.new }
+    let!(:modifier) { :meta_data_content }
+    let!(:block) do
+      Proc.new do |content, property, opts|
+        next "modified by plugin" if property == :description
+        next "BIG TITLE" if property == :title
+        content
+      end
+    end
+
+    before { DiscoursePluginRegistry.register_modifier(plugin, modifier, &block) }
+    after { DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &block) }
+
+    it "allows the plugin to modify the meta tags" do
+      result =
+        helper.crawlable_meta_data(
+          description: "This is a test description",
+          title: "to be overridden",
+        )
+
+      expect(result).to include(
+        "<meta property=\"og:description\" content=\"modified by plugin\" />",
+      )
+      expect(result).to include("<meta property=\"og:title\" content=\"BIG TITLE\" />")
+    end
+
+    it "modifies the title tag" do
+      title = helper.title_content
+
+      expect(title).to include("BIG TITLE")
+    end
+
+    it "modifies the description tag" do
+      description = helper.description_content
+
+      expect(description).to include("modified by plugin")
+    end
+
+    it "does not modify the `title` SiteSetting" do
+      SiteSetting.title = "Test Title"
+      result = helper.title_content
+
+      expect(result).to include("BIG TITLE")
+      expect(SiteSetting.title).to eq("Test Title")
+    end
+
+    it "does not modify the `site_description` SiteSetting" do
+      SiteSetting.site_description = "Test Description"
+      result = helper.description_content
+
+      expect(result).to include("modified by plugin")
+      expect(SiteSetting.site_description).to eq("Test Description")
     end
   end
 
@@ -877,12 +976,20 @@ RSpec.describe ApplicationHelper do
   describe "#discourse_theme_color_meta_tags" do
     before do
       light = Fabricate(:color_scheme)
-      light.color_scheme_colors << ColorSchemeColor.new(name: "header_background", hex: "abcdef")
+      light.color_scheme_colors << ColorSchemeColor.new(
+        name: "header_background",
+        hex: "abcdef",
+        dark_hex: "fedcba",
+      )
       light.save!
       helper.request.cookies["color_scheme_id"] = light.id
 
       dark = Fabricate(:color_scheme)
-      dark.color_scheme_colors << ColorSchemeColor.new(name: "header_background", hex: "defabc")
+      dark.color_scheme_colors << ColorSchemeColor.new(
+        name: "header_background",
+        hex: "defabc",
+        dark_hex: "cbafed",
+      )
       dark.save!
       helper.request.cookies["dark_scheme_id"] = dark.id
     end
@@ -901,6 +1008,81 @@ RSpec.describe ApplicationHelper do
       expect(helper.discourse_theme_color_meta_tags).to eq(<<~HTML)
         <meta name="theme-color" media="all" content="#abcdef">
       HTML
+    end
+
+    context "when use_overhauled_theme_color_palette setting is true" do
+      before { SiteSetting.use_overhauled_theme_color_palette = true }
+
+      it "renders a light and dark theme-color meta tag using the light and dark palettes of the same color scheme record" do
+        expect(helper.discourse_theme_color_meta_tags).to eq(<<~HTML)
+          <meta name="theme-color" media="(prefers-color-scheme: light)" content="#abcdef">
+          <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#fedcba">
+        HTML
+      end
+    end
+  end
+
+  describe "#discourse_color_scheme_meta_tag" do
+    fab!(:color_scheme)
+
+    before { SiteSetting.default_dark_mode_color_scheme_id = -1 }
+
+    it "renders a 'light' color-scheme if no dark scheme is set and the current scheme is light" do
+      ColorSchemeRevisor.revise(
+        color_scheme,
+        colors: [{ name: "primary", hex: "333333" }, { name: "secondary", hex: "DDDDDD" }],
+      )
+
+      helper.request.cookies["color_scheme_id"] = color_scheme.id
+
+      expect(helper.discourse_color_scheme_meta_tag).to eq(<<~HTML)
+        <meta name="color-scheme" content="light">
+      HTML
+    end
+
+    it "renders a 'dark' color-scheme if no dark scheme is set and the default scheme is dark" do
+      ColorSchemeRevisor.revise(
+        color_scheme,
+        colors: [{ name: "primary", hex: "F8F8F8" }, { name: "secondary", hex: "232323" }],
+      )
+      @scheme_id = color_scheme.id
+
+      expect(helper.discourse_color_scheme_meta_tag).to eq(<<~HTML)
+        <meta name="color-scheme" content="dark">
+      HTML
+    end
+
+    it "renders a 'light dark' color-scheme if a dark scheme is set" do
+      dark = Fabricate(:color_scheme)
+      dark.save!
+      helper.request.cookies["dark_scheme_id"] = dark.id
+
+      expect(helper.discourse_color_scheme_meta_tag).to eq(<<~HTML)
+        <meta name="color-scheme" content="light dark">
+      HTML
+    end
+  end
+
+  describe "#dark_scheme_id" do
+    fab!(:dark_scheme) { Fabricate(:color_scheme) }
+    fab!(:light_scheme) { Fabricate(:color_scheme) }
+
+    before do
+      helper.request.cookies["color_scheme_id"] = light_scheme.id
+      helper.request.cookies["dark_scheme_id"] = dark_scheme.id
+    end
+
+    it "returns the value set in the dark_scheme_id cookie" do
+      expect(helper.dark_scheme_id).to eq(dark_scheme.id)
+    end
+
+    context "when use_overhauled_theme_color_palette is true" do
+      before { SiteSetting.use_overhauled_theme_color_palette = true }
+
+      it "returns the same value as #scheme_id" do
+        expect(helper.dark_scheme_id).to eq(helper.scheme_id)
+        expect(helper.scheme_id).to eq(light_scheme.id)
+      end
     end
   end
 end

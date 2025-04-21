@@ -4,15 +4,15 @@ import { TrackedArray, TrackedMap } from "@ember-compat/tracked-built-ins";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { bind } from "discourse/lib/decorators";
 import { NotificationLevels } from "discourse/lib/notification-levels";
+import { deepEqual, deepMerge } from "discourse/lib/object";
 import {
   ARCHIVE_FILTER,
   INBOX_FILTER,
   NEW_FILTER,
   UNREAD_FILTER,
 } from "discourse/routes/build-private-messages-route";
-import { deepEqual, deepMerge } from "discourse-common/lib/object";
-import { bind } from "discourse-common/utils/decorators";
 
 const CHANNEL_PREFIX = "/private-message-topic-tracking-state";
 

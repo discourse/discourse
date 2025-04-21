@@ -9,7 +9,7 @@ RSpec.describe AnonymousShadowCreator do
     fab!(:user) { Fabricate(:user, trust_level: TrustLevel[3]) }
 
     before do
-      SiteSetting.allow_anonymous_posting = true
+      SiteSetting.allow_anonymous_mode = true
       SiteSetting.anonymous_posting_allowed_groups = "11"
     end
 
@@ -68,7 +68,7 @@ RSpec.describe AnonymousShadowCreator do
     end
 
     it "works even when names are required" do
-      SiteSetting.full_name_required = true
+      SiteSetting.full_name_requirement = "required_at_signup"
 
       expect { AnonymousShadowCreator.get(user) }.to_not raise_error
     end

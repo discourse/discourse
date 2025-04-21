@@ -138,7 +138,15 @@ class TopicList
       { category: :parent_category },
     ]
 
-    topic_preloader_associations.concat(DiscoursePluginRegistry.topic_preloader_associations.to_a)
+    DiscoursePluginRegistry.topic_preloader_associations.each do |a|
+      fields = a[:fields]
+      condition = a[:condition]
+      if condition.present?
+        topic_preloader_associations << fields if condition.present? && condition.call
+      else
+        topic_preloader_associations << fields
+      end
+    end
 
     ActiveRecord::Associations::Preloader.new(
       records: @topics,

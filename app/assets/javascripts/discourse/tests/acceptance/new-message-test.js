@@ -1,6 +1,6 @@
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 acceptance("New Message - Anonymous", function () {
@@ -9,7 +9,7 @@ acceptance("New Message - Anonymous", function () {
       "/new-message?username=charlie&title=message%20title&body=message%20body"
     );
 
-    assert.dom(".modal.login-modal").exists("shows the login modal");
+    assert.dom(".login-fullpage").exists("shows the login page");
   });
 });
 
@@ -22,16 +22,12 @@ acceptance("New Message - Authenticated", function (needs) {
     );
 
     assert.dom(".composer-fields").exists("opens the composer");
-    assert.strictEqual(
-      query("#reply-title").value.trim(),
-      "message title",
-      "it pre-fills message title"
-    );
-    assert.strictEqual(
-      query(".d-editor-input").value.trim(),
-      "message body",
-      "it pre-fills message body"
-    );
+    assert
+      .dom("#reply-title")
+      .hasValue("message title", "pre-fills message title");
+    assert
+      .dom(".d-editor-input")
+      .hasValue("message body", "pre-fills message body");
 
     const privateMessageUsers = selectKit("#private-message-users");
     assert.strictEqual(

@@ -106,7 +106,7 @@ sl:
         other: ! "%{count} napak preprečuje tej %{model} da se shrani"
     site_settings:
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "2FA ne morete nastaviti kot zahtevano, če je omogočena možnost DiscourseConnect."
-      twitter_summary_large_image_no_svg: "Slike povzetka Twitterja, ki se uporabljajo za metapodatke twitter:image, ne morejo biti slike tipa .svg."
+      x_summary_large_image_no_svg: "Slike povzetka Twitterja, ki se uporabljajo za metapodatke twitter:image, ne morejo biti slike tipa .svg."
   invite:
     confirm_email: "<p>Ste skoraj na koncu! Poslali smo vam aktivacijsko e-sporočilo na vaš e-naslov. Sledite navodilom v e-sporočilu za aktivacijo računa.</p><p>Če e-sporočila ne prejmete, preverite predal z vsiljeno pošto.</p>"
     disabled_errors:
@@ -264,6 +264,8 @@ sl:
         featured_link: "Izpostavljena povezava"
         category_id: "Kategorija"
       user:
+        password: "Geslo"
+      user_password:
         password: "Geslo"
     errors:
       models:
@@ -653,8 +655,6 @@ sl:
         searches: Iskanj
     system_private_messages:
       title: "Sistem"
-    notify_user_private_messages:
-      description: "Kolikokrat so bili uporabniki zasebno opozorjeni s prijavo."
     top_referrers:
       xaxis: "Uporabnik"
       num_topics: "Tem"
@@ -719,7 +719,7 @@ sl:
     download_remote_images_to_local: "Pretvorite oddaljene (povezane) slike v lokalne slike tako, da jih prenesete; To ohranja vsebino, tudi če bodo slike v prihodnosti odstranjene z oddaljenega spletnega mesta."
     block_hotlinked_media: "Uporabnikom preprečite, da bi v svoje objave vključevali oddaljene (povezane) medijske vsebine. Oddaljene vsebine, ki niso prenesene z uporabo nastavitve 'download_remote_images_to_local', bodo zamenjane z nadomestno povezavo."
     block_hotlinked_media_exceptions: "Seznam naslovov URL domen, za katere ne velja nastavitev block_hotlinked_media. Naslove vpišite vključno s protokolom (npr. https://example.com)."
-    twitter_summary_large_image: "Velika slika povzetka za kartico Twitter (imeti mora vsaj 280 pik v širino in vsaj 150 pik v višino, ne sme biti .svg). Če ostane prazno se metapodatki kartice ustvarijo z uporabo opengraph_image, razen če tudi ta ni .svg"
+    x_summary_large_image: "Velika slika povzetka za kartico Twitter (imeti mora vsaj 280 pik v širino in vsaj 150 pik v višino, ne sme biti .svg). Če ostane prazno se metapodatki kartice ustvarijo z uporabo opengraph_image, razen če tudi ta ni .svg"
     send_welcome_message: "Pošlji sporočilo z dobrodošlico in kratkimi uvodnimi navodili vsem novim uporabnikom."
     auth_skip_create_confirm: Pri prijavi s pomočjo zunanjega overjanja preskočite pojavno okno za ustvarjanje računa. Priporočena uporaba skupaj z auth_overrides_email, auth_overrides_username in auth_overrides_name.
     auth_immediately: "Samodejno preusmeri na zunanji sistem za prijavo brez interakcije uporabnika. To začne veljati šele, ko je login_required vklopljen in ko obstaja samo en način zunanje overitve"
@@ -1714,8 +1714,6 @@ sl:
     regular:
       name: Redni član
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Dodeljena</a> možnost menjave kategorije, preimenovanja, sledenja povezav, wiki, več všečkov
-      long_description: |
-        Ta značka vam je podeljena, ko dosežete nivo zaupanja 3. Hvala, ker ste reden udeleženec naše skupnosti že nekaj mesecev. Ste eden bolj aktivnih bralcev in zanesljiv sodelavec, ki naredi našo skupnost enkratno. Sedaj lahko menjate kategorije temam, preimenujete teme, lahko uporabljate bolj zmogljive načine prijave, dostopate do zasebne lože in podelite več všečkov vsak dan.
     leader:
       name: Vodja
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Dodeljena</a> možnost globalnega urejanja, pripenjanja, zapiranja, arhiviranja, razdruževanja in združevanja ter več všečkov
@@ -1971,14 +1969,8 @@ sl:
             label: "Predogled"
           homepage_style:
             choices:
-              categories_only:
-                label: "Samo kategorije"
-              categories_with_featured_topics:
-                label: "Kategorije z izpostavljenimi temami"
-              categories_and_latest_topics:
-                label: "Kategorije in najnovejše teme"
-              categories_and_top_topics:
-                label: "Kategorije in najboljše teme"
+              latest:
+                label: "Najnovejše"
       invites:
         disabled: "Ker so prijave onemogočene, ni možno povabiti nikogar. Nadaljujte na naslednji korak."
   onebox:
@@ -1991,7 +1983,7 @@ sl:
       quoted: '%{username} vas je citiral v "%{topic}" - %{site_title}'
       replied: '%{username} vam je odgovoril v "%{topic}" - %{site_title}'
       posted: '%{username} je objavil v "%{topic}" - %{site_title}'
-      private_message: '%{username} vam je poslal zasebno sporočilo v "%{topic}" - %{site_title}'
+      private_message: '%{username} vam je poslal zasebno sporočilo "%{topic}" - %{site_title}'
       linked: '%{username} je objavil povezavo na vaš prispevek v "%{topic}" - %{site_title}'
       watching_first_post: '%{username} je ustvaril novo temo "%{topic}" - %{site_title}'
       confirm_title: "Obvestila omogočena - %{site_title}"
@@ -2027,8 +2019,13 @@ sl:
         description: "Povrni prispevek tako da ga lahko vidijo vsi uporabniki"
       delete_single:
         title: "Izbriši"
+        complete: "Prispevek izbrisan."
+      delete_and_ignore:
+        complete: "Prispevek izbrisan."
       delete_and_ignore_replies:
         confirm: "Ali ste prepričani, da hočete izbrisati tudi odgovore na prispevek?"
+      delete_and_agree:
+        complete: "Prispevek izbrisan."
       delete_and_agree_replies:
         confirm: "Ali ste prepričani, da hočete izbrisati tudi odgovore na prispevek?"
       disagree_and_restore:
@@ -2041,16 +2038,20 @@ sl:
         title: "Ne naredi nič"
       approve:
         title: "Odobri"
+        complete: "Objava odobrena."
       approve_post:
         title: "Odobri prispevek"
+        complete: "Objava odobrena."
       reject_post:
         title: "Zavrni prispevek"
+        complete: "Objava zavrnjena."
       approve_user:
         title: "Odobri uporabnika"
       reject_user:
         delete:
           title: "Izbriši uporabnika"
           description: "Ta uporabnik bo izbrisan iz foruma."
+          complete: "Uporabnik izbrisan."
         block:
           title: "Izbriši in blokiraj uporabnika"
           description: "Ta uporabnik bo izbrisan in njegov IP naslov in e-naslov bo blokiran."
@@ -2058,6 +2059,7 @@ sl:
         title: "Zavrni"
       delete_user:
         reason: "Izbriši preko vrste za pregled"
+        complete: "Uporabnik izbrisan."
   fallback_username: "uporabnik"
   activemodel:
     errors:

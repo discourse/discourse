@@ -32,7 +32,7 @@ class Admin::UsersController < Admin::StaffController
   def index
     users = ::AdminUserIndexQuery.new(params).find_users
 
-    opts = {}
+    opts = { include_can_be_deleted: true, include_silence_reason: true }
     if params[:show_emails] == "true"
       StaffActionLogger.new(current_user).log_show_emails(users, context: request.path)
       opts[:emails_desired] = true
@@ -50,6 +50,7 @@ class Admin::UsersController < Admin::StaffController
       AdminDetailedUserSerializer,
       root: false,
       similar_users_count: @user.similar_users.count,
+      include_silence_reason: true,
     )
   end
 
@@ -323,7 +324,12 @@ class Admin::UsersController < Admin::StaffController
             silence_reason: full_reason,
             silenced_till: user.silenced_till,
             silenced_at: user.silenced_at,
-            silenced_by: BasicUserSerializer.new(current_user, root: false).as_json,
+            silenced_by:
+              BasicUserSerializer.new(
+                current_user,
+                root: false,
+                include_silence_reason: true,
+              ).as_json,
           },
         )
       end
@@ -398,6 +404,28 @@ class Admin::UsersController < Admin::StaffController
                    ),
                },
                status: 403
+      end
+    end
+  end
+
+  def destroy_bulk
+    # capture service_params outside the hijack block to avoid thread safety
+    # issues
+    service_arg = service_params
+
+    hijack do
+      User::BulkDestroy.call(service_arg) do
+        on_success { render json: { deleted: true } }
+
+        on_failed_contract do |contract|
+          render json: failed_json.merge(errors: contract.errors.full_messages), status: 400
+        end
+
+        on_failed_policy(:can_delete_users) do
+          render json: failed_json.merge(errors: [I18n.t("user.cannot_bulk_delete")]), status: 403
+        end
+
+        on_model_not_found(:users) { render json: failed_json, status: 404 }
       end
     end
   end

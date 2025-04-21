@@ -3,7 +3,7 @@ import { service } from "@ember/service";
 import CreateInvite from "discourse/components/modal/create-invite";
 import cookie from "discourse/lib/cookie";
 import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class extends DiscourseRoute {
   @service router;
@@ -37,7 +37,7 @@ export default class extends DiscourseRoute {
       if (this.currentUser.can_invite_to_forum) {
         this.modal.show(CreateInvite, { model: { invites: [] } });
       } else {
-        this.dialog.alert(I18n.t("user.invited.cannot_invite_to_forum"));
+        this.dialog.alert(i18n("user.invited.cannot_invite_to_forum"));
       }
     });
   }

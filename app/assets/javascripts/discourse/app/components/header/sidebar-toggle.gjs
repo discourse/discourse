@@ -3,16 +3,16 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse-common/helpers/d-icon";
-import i18n from "discourse-common/helpers/i18n";
+import icon from "discourse/helpers/d-icon";
+import { i18n } from "discourse-i18n";
 
 export default class SidebarToggle extends Component {
   @service site;
-  @service sidebarState;
+  @service navigationMenu;
 
   @action
   toggleWithBlur(e) {
-    if (this.sidebarState.adminSidebarAllowedWithLegacyNavigationMenu) {
+    if (this.navigationMenu.isDesktopDropdownMode) {
       this.args.toggleNavigationMenu("sidebar");
     } else {
       this.args.toggleNavigationMenu();

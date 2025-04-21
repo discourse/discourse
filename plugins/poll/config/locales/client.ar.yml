@@ -134,6 +134,8 @@ ar:
         label: "الخيارات"
         ranked_choice:
           abstain: "الامتناع"
+          highest_priority: "(أعلى درجة أولوية)"
+          lowest_priority: "(أدنى درجة أولوية)"
           login: "سجِّل الدخول للتصويت‎!"
       error_while_toggling_status: "عذرًا، حدث خطأ أدى إلى تبديل حالة استطلاع الرأي هذا."
       error_while_casting_votes: "عذرًا، حدث خطأ في الإدلاء بأصواتك."

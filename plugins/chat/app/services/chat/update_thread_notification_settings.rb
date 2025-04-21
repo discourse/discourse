@@ -37,6 +37,7 @@ module Chat
                   in: Chat::UserChatThreadMembership.notification_levels.values,
                 }
     end
+
     model :thread, :fetch_thread
     policy :can_view_channel
     policy :threading_enabled_for_channel

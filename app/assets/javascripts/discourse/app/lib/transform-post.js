@@ -1,12 +1,12 @@
 import { isEmpty } from "@ember/utils";
+import getURL from "discourse/lib/get-url";
 import { userPath } from "discourse/lib/url";
-import getURL from "discourse-common/lib/get-url";
-import I18n from "discourse-i18n";
+import Badge from "discourse/models/badge";
 
-const _additionalAttributes = [];
+const _additionalAttributes = new Set();
 
 export function includeAttributes(...attributes) {
-  attributes.forEach((a) => _additionalAttributes.push(a));
+  attributes.forEach((a) => _additionalAttributes.add(a));
 }
 
 export function transformBasicPost(post) {
@@ -37,6 +37,9 @@ export function transformBasicPost(post) {
     user_id: post.user_id,
     usernameUrl: userPath(post.username),
     username: post.username,
+    badgesGranted: post.badges_granted?.map(
+      (badge) => Badge.createFromJson(badge)[0]
+    ),
     avatar_template: post.avatar_template,
     bookmarked: post.bookmarked,
     bookmarkReminderAt: post.bookmark_reminder_at,
@@ -165,6 +168,7 @@ export default function transformPost(
 
   if (post.notice) {
     postAtts.notice = post.notice;
+    postAtts.noticeCreatedByUser = post.notice_created_by_user;
     if (postAtts.notice.type === "returning_user") {
       postAtts.notice.lastPostedAt = new Date(post.notice.last_posted_at);
     }
@@ -175,10 +179,8 @@ export default function transformPost(
   }
 
   if (postAtts.isDeleted) {
-    postAtts.deletedByAvatarTemplate = post.get(
-      "postDeletedBy.avatar_template"
-    );
-    postAtts.deletedByUsername = post.get("postDeletedBy.username");
+    postAtts.deletedByAvatarTemplate = post.get("deletedBy.avatar_template");
+    postAtts.deletedByUsername = post.get("deletedBy.username");
   }
 
   const replyToUser = post.get("reply_to_user");
@@ -194,18 +196,12 @@ export default function transformPost(
         return a.actionType.name_key !== "like" && a.acted;
       })
       .map((a) => {
-        const action = a.actionType.name_key;
-
         return {
           id: a.id,
           postId: post.id,
-          action,
+          action: a.actionType.name_key,
           canUndo: a.can_undo,
-          description: I18n.t(`post.actions.by_you.${action}`, {
-            defaultValue: I18n.t(`post.actions.by_you.custom`, {
-              custom: a.actionType.name,
-            }),
-          }),
+          description: a.actionType.translatedDescription,
         };
       });
   }

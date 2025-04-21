@@ -1,16 +1,15 @@
-import { click, currentURL, settled, visit } from "@ember/test-helpers";
+import { getOwner } from "@ember/owner";
+import { click, currentURL, find, settled, visit } from "@ember/test-helpers";
 import { skip, test } from "qunit";
 import { configureEyeline } from "discourse/lib/eyeline";
-import { ScrollingDOMMethods } from "discourse/mixins/scrolling";
+import { cloneJSON } from "discourse/lib/object";
 import discoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
 import topFixtures from "discourse/tests/fixtures/top-fixtures";
 import {
   acceptance,
   publishToMessageBus,
-  query,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { cloneJSON } from "discourse-common/lib/object";
 
 acceptance("Topic Discovery", function (needs) {
   needs.settings({
@@ -37,14 +36,6 @@ acceptance("Topic Discovery", function (needs) {
         "title",
         "eviltrout - Most Posts",
         "it shows user's full name in avatar title"
-      );
-
-    assert
-      .dom("a[data-user-card=eviltrout] img.avatar")
-      .hasAttribute(
-        "loading",
-        "lazy",
-        "it adds loading=`lazy` to topic list avatars"
       );
 
     await visit("/c/bug");
@@ -142,20 +133,20 @@ acceptance("Topic Discovery", function (needs) {
 
   test("switching between tabs", async function (assert) {
     await visit("/latest");
-    assert.strictEqual(
-      query(".topic-list-body .topic-list-item:first-of-type").dataset.topicId,
-      "11557",
-      "shows the correct latest topics"
-    );
+    assert
+      .dom(".topic-list-body .topic-list-item:first-of-type")
+      .hasAttribute(
+        "data-topic-id",
+        "11557",
+        "shows the correct latest topics"
+      );
 
     await click(".navigation-container a[href='/hot']");
     assert.strictEqual(currentURL(), "/hot", "switches to hot");
 
-    assert.deepEqual(
-      query(".topic-list-body .topic-list-item:first-of-type").dataset.topicId,
-      "13088",
-      "shows the correct hot topics"
-    );
+    assert
+      .dom(".topic-list-body .topic-list-item:first-of-type")
+      .hasAttribute("data-topic-id", "13088", "shows the correct hot topics");
 
     await click(".navigation-container a[href='/categories']");
     assert.strictEqual(currentURL(), "/categories", "switches to categories");
@@ -164,13 +155,16 @@ acceptance("Topic Discovery", function (needs) {
   test("refreshing tabs", async function (assert) {
     const assertShowingLatest = (url) => {
       assert.strictEqual(currentURL(), url, "stays on latest");
-      const el = query(".topic-list-body .topic-list-item:first-of-type");
-      assert.strictEqual(el.closest(".hidden"), null, "topic list is visible");
       assert.strictEqual(
-        el.dataset.topicId,
-        "11557",
-        "shows the correct topic"
+        find(".topic-list-body .topic-list-item:first-of-type").closest(
+          ".hidden"
+        ),
+        null,
+        "topic list is visible"
       );
+      assert
+        .dom(".topic-list-body .topic-list-item:first-of-type")
+        .hasAttribute("data-topic-id", "11557", "shows the correct topic");
     };
 
     await visit("/latest");
@@ -186,7 +180,9 @@ acceptance("Topic Discovery", function (needs) {
 
 acceptance("Topic Discovery | Footer", function (needs) {
   needs.hooks.beforeEach(function () {
-    ScrollingDOMMethods.bindOnScroll.restore();
+    const scrollManager = getOwner(this).lookup("service:scroll-manager");
+    scrollManager.bindScrolling.restore();
+
     configureEyeline({
       skipUpdate: false,
       rootElement: "#ember-testing",

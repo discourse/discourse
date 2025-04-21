@@ -40,16 +40,28 @@ export default {
       chatService.switchChannelUpOrDown("down");
     };
 
+    const handleMoveUpUnreadShortcut = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      chatService.switchChannelUpOrDown("up", true);
+    };
+
+    const handleMoveDownUnreadShortcut = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      chatService.switchChannelUpOrDown("down", true);
+    };
+
     const isChatComposer = (el) =>
       el.classList.contains("chat-composer__input");
     const isInputSelection = (el) => {
       const inputs = ["input", "textarea", "select", "button"];
       const elementTagName = el?.tagName.toLowerCase();
 
-      if (inputs.includes(elementTagName)) {
-        return false;
-      }
-      return true;
+      return (
+        inputs.includes(elementTagName) ||
+        !!el?.closest('[contenteditable="true"]')
+      );
     };
     const modifyComposerSelection = (event, type) => {
       if (!isChatComposer(event.target)) {
@@ -75,7 +87,7 @@ export default {
     };
 
     const openChatDrawer = (event) => {
-      if (!isInputSelection(event.target)) {
+      if (isInputSelection(event.target)) {
         return;
       }
       event.preventDefault();
@@ -156,6 +168,25 @@ export default {
       api.addKeyboardShortcut("alt+down", handleMoveDownShortcut, {
         global: true,
       });
+
+      api.addKeyboardShortcut("alt+shift+up", handleMoveUpUnreadShortcut, {
+        global: true,
+        help: {
+          category: "chat",
+          name: "chat.keyboard_shortcuts.switch__unread_channel_arrows",
+          definition: {
+            keys1: ["alt", "shift", "&uarr;"],
+            keys2: ["alt", "shift", "&darr;"],
+            keysDelimiter: "plus",
+            shortcutsDelimiter: "newline",
+          },
+        },
+      });
+
+      api.addKeyboardShortcut("alt+shift+down", handleMoveDownUnreadShortcut, {
+        global: true,
+      });
+
       api.addKeyboardShortcut(
         `${PLATFORM_KEY_MODIFIER}+b`,
         (event) => modifyComposerSelection(event, "bold"),

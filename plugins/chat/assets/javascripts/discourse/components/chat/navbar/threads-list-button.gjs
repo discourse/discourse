@@ -2,14 +2,14 @@ import Component from "@glimmer/component";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse-common/helpers/d-icon";
-import I18n from "discourse-i18n";
+import icon from "discourse/helpers/d-icon";
+import { i18n } from "discourse-i18n";
 import ThreadHeaderUnreadIndicator from "discourse/plugins/chat/discourse/components/chat/thread/header-unread-indicator";
 
 export default class ChatNavbarThreadsListButton extends Component {
   @service router;
 
-  threadsListLabel = I18n.t("chat.threads.list");
+  threadsListLabel = i18n("chat.threads.list");
 
   get showThreadsListButton() {
     return (

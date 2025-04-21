@@ -1,13 +1,16 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
+import { on } from "@ember/modifier";
+import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
+import curryComponent from "ember-curry-component";
 import { modifier } from "ember-modifier";
 import { and } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import concatClass from "discourse/helpers/concat-class";
-import { isTesting } from "discourse-common/config/environment";
+import { isTesting } from "discourse/lib/environment";
 import DFloatBody from "float-kit/components/d-float-body";
 import { MENU } from "float-kit/lib/constants";
 import DMenuInstance from "float-kit/lib/d-menu-instance";
@@ -22,10 +25,44 @@ export default class DMenu extends Component {
     listeners: true,
   });
 
-  registerTrigger = modifier((element) => {
-    this.menuInstance.trigger = element;
+  registerTrigger = modifier((domElement) => {
+    this.menuInstance.trigger = domElement;
     this.options.onRegisterApi?.(this.menuInstance);
+
+    return () => {
+      this.menuInstance.destroy();
+    };
   });
+
+  registerFloatBody = modifier((domElement) => {
+    this.body = domElement;
+
+    return () => {
+      this.body = null;
+    };
+  });
+
+  @action
+  teardownFloatBody() {
+    this.body = null;
+  }
+
+  @action
+  forwardTabToContent(event) {
+    if (!this.body) {
+      return;
+    }
+
+    if (event.key === "Tab") {
+      event.preventDefault();
+
+      const firstFocusable = this.body.querySelector(
+        'button, a, input:not([type="hidden"]), select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+
+      firstFocusable?.focus() || this.body.focus();
+    }
+  }
 
   get menuId() {
     return `d-menu-${this.menuInstance.id}`;
@@ -38,8 +75,38 @@ export default class DMenu extends Component {
   get componentArgs() {
     return {
       close: this.menuInstance.close,
+      show: this.menuInstance.show,
       data: this.options.data,
     };
+  }
+
+  get triggerComponent() {
+    const instance = this;
+    const baseArguments = {
+      get icon() {
+        return instance.args.icon;
+      },
+      get translatedLabel() {
+        return instance.args.label;
+      },
+      get translatedAriaLabel() {
+        return instance.args.ariaLabel;
+      },
+      get translatedTitle() {
+        return instance.args.title;
+      },
+      get disabled() {
+        return instance.args.disabled;
+      },
+      get isLoading() {
+        return instance.args.isLoading;
+      },
+    };
+
+    return (
+      this.args.triggerComponent ||
+      curryComponent(DButton, baseArguments, getOwner(this))
+    );
   }
 
   get allowedProperties() {
@@ -51,7 +118,7 @@ export default class DMenu extends Component {
   }
 
   <template>
-    <DButton
+    <this.triggerComponent
       {{this.registerTrigger}}
       class={{concatClass
         "fk-d-menu__trigger"
@@ -63,24 +130,22 @@ export default class DMenu extends Component {
       id={{this.menuInstance.id}}
       data-identifier={{this.options.identifier}}
       data-trigger
-      @icon={{@icon}}
-      @translatedAriaLabel={{@ariaLabel}}
-      @translatedLabel={{@label}}
-      @translatedTitle={{@title}}
-      @disabled={{@disabled}}
       aria-expanded={{if this.menuInstance.expanded "true" "false"}}
+      {{on "keydown" this.forwardTabToContent}}
+      @componentArgs={{this.componentArgs}}
       ...attributes
     >
       {{#if (has-block "trigger")}}
         {{yield this.componentArgs to="trigger"}}
       {{/if}}
-    </DButton>
+    </this.triggerComponent>
 
     {{#if this.menuInstance.expanded}}
       {{#if (and this.site.mobileView this.options.modalForMobile)}}
         <DModal
           @closeModal={{this.menuInstance.close}}
           @hideHeader={{true}}
+          @autofocus={{this.options.autofocus}}
           class={{concatClass
             "fk-d-menu-modal"
             (concat this.options.identifier "-content")
@@ -88,7 +153,7 @@ export default class DMenu extends Component {
             @class
           }}
           @inline={{(isTesting)}}
-          data-identifier={{@instance.options.identifier}}
+          data-identifier={{this.options.identifier}}
           data-content
         >
           <div class="fk-d-menu-modal__grip" aria-hidden="true"></div>
@@ -118,6 +183,7 @@ export default class DMenu extends Component {
           @innerClass="fk-d-menu__inner-content"
           @role="dialog"
           @inline={{this.options.inline}}
+          {{this.registerFloatBody}}
         >
           {{#if (has-block)}}
             {{yield this.componentArgs}}

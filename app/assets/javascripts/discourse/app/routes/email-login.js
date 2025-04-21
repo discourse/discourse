@@ -1,11 +1,11 @@
 import { ajax } from "discourse/lib/ajax";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class EmailLogin extends DiscourseRoute {
   titleToken() {
-    return I18n.t("login.title");
+    return i18n("login.title");
   }
 
   model(params) {

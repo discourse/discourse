@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import iconOrImage from "discourse/helpers/icon-or-image";
-import domFromString from "discourse-common/lib/dom-from-string";
+import domFromString from "discourse/lib/dom-from-string";
 
 export default class BadgeButton extends Component {
   get title() {
@@ -8,6 +8,10 @@ export default class BadgeButton extends Component {
     if (description) {
       return domFromString(`<div>${description}</div>`)[0].innerText;
     }
+  }
+
+  get showName() {
+    return this.args.showName ?? true;
   }
 
   <template>
@@ -20,7 +24,9 @@ export default class BadgeButton extends Component {
       ...attributes
     >
       {{iconOrImage @badge}}
-      <span class="badge-display-name">{{@badge.name}}</span>
+      {{#if this.showName}}
+        <span class="badge-display-name">{{@badge.name}}</span>
+      {{/if}}
       {{yield}}
     </span>
   </template>

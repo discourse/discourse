@@ -1,6 +1,6 @@
 import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
-import getURL from "discourse-common/lib/get-url";
+import getURL from "discourse/lib/get-url";
 import AdminUser from "admin/models/admin-user";
 
 export default class EmailLog extends EmberObject {
@@ -25,7 +25,7 @@ export default class EmailLog extends EmberObject {
     const status = filter.status || "sent";
     delete filter.status;
 
-    return ajax(`/admin/email/${status}.json?offset=${offset}`, {
+    return ajax(`/admin/email-logs/${status}.json?offset=${offset}`, {
       data: filter,
     }).then((logs) => logs.map((log) => EmailLog.create(log)));
   }

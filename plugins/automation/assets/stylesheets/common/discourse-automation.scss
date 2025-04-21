@@ -1,7 +1,11 @@
-.discourse-automation {
+.admin-plugins.automation {
   .automations {
     .relative-date {
-      font-size: $font-down-1;
+      font-size: var(--font-down-1);
+    }
+
+    &__stats {
+      font-size: var(--font-down-1);
     }
 
     td[role="button"] {
@@ -13,13 +17,65 @@
     }
   }
 
+  .discourse-automations-table {
+    margin-top: 1em;
+  }
+
+  .d-admin-table.automations {
+    .d-admin-row__content {
+      @include breakpoint("tablet") {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(5, auto);
+      }
+    }
+
+    .d-admin-row__name {
+      @include breakpoint("tablet") {
+        order: 1;
+      }
+    }
+
+    .d-admin-row__detail.automations__runs {
+      @include breakpoint("tablet") {
+        order: 2; // move below the name to avoid empty spacing
+      }
+    }
+
+    .d-admin-row__detail.automations__updated-by {
+      @include breakpoint("tablet") {
+        order: 3;
+      }
+    }
+
+    .d-admin-row__detail.automations__enabled {
+      @include breakpoint("tablet") {
+        order: 5;
+      }
+    }
+
+    .d-admin-row__controls.automations__controls {
+      text-align: right;
+      display: flex;
+      flex-direction: row;
+      gap: 0.5em;
+      justify-content: flex-end;
+
+      @include breakpoint("tablet") {
+        order: 6;
+      }
+    }
+  }
+
   .admin-section-landing__header {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
+
     h2 {
       margin: 0 auto 0 0;
     }
+
     &-filter {
       margin: 0;
       flex: 0 1 15em;
@@ -41,9 +97,11 @@
     grid-template-rows: subgrid;
     grid-row: span 4;
     gap: 0;
+
     &__buttons {
       display: none; // empty container
     }
+
     &__description {
       max-width: 18.75em;
     }
@@ -88,6 +146,7 @@
 
   .alert {
     padding: 1em;
+
     p {
       margin: 0;
     }
@@ -272,9 +331,11 @@
       .control-group {
         display: flex;
         flex-direction: column;
+
         .control-label {
           width: 100%;
         }
+
         .controls {
           margin: 0;
         }
@@ -300,9 +361,11 @@
     .pm-field:not(:last-child) {
       margin-bottom: 1em;
     }
+
     .pm-title {
       width: 100%;
     }
+
     .pm-textarea {
       width: 100%;
       box-sizing: border-box;

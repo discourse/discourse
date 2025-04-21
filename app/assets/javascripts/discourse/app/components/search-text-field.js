@@ -1,16 +1,17 @@
 import { on } from "@ember-decorators/object";
 import $ from "jquery";
 import TextField from "discourse/components/text-field";
+import discourseComputed from "discourse/lib/decorators";
 import { applySearchAutocomplete } from "discourse/lib/search";
-import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class SearchTextField extends TextField {
   autocomplete = "off";
+  enterkeyhint = "search";
 
   @discourseComputed("searchService.searchContextEnabled")
   placeholder(searchContextEnabled) {
-    return searchContextEnabled ? "" : I18n.t("search.full_page_title");
+    return searchContextEnabled ? "" : i18n("search.full_page_title");
   }
 
   @on("didInsertElement")

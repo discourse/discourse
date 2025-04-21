@@ -126,13 +126,22 @@
       {{#if this.claimEnabled}}
         <div class="claimed-actions">
           <span class="help">{{html-safe this.claimHelp}}</span>
-          <ReviewableClaimedTopic
-            @topicId={{this.topicId}}
-            @claimedBy={{this.reviewable.claimed_by}}
-            @onClaim={{fn (mut this.reviewable.claimed_by)}}
-          />
+          {{#unless this.autoClaimed}}
+            <ReviewableClaimedTopic
+              @topicId={{this.topicId}}
+              @claimedBy={{this.reviewable.claimed_by}}
+              @onClaim={{fn (mut this.reviewable.claimed_by)}}
+            />
+          {{/unless}}
         </div>
       {{/if}}
+    {{/if}}
+
+    {{#if this.showIpLookup}}
+      <IpLookup
+        @ip="adminLookup"
+        @userId={{this.reviewable.target_created_by.id}}
+      />
     {{/if}}
 
     <PluginOutlet

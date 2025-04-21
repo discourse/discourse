@@ -517,7 +517,12 @@ module Email
             .join
       end
 
-      [text, elided_text, text_format]
+      [strip_unsubscribe_links(text), strip_unsubscribe_links(elided_text), text_format]
+    end
+
+    def strip_unsubscribe_links(text)
+      @unsubscribe_regex ||= %r|#{Discourse.base_url}/email/unsubscribe/\h{64}|
+      (text.presence || "").gsub(@unsubscribe_regex, "")
     end
 
     def to_markdown(html, elided_html)
@@ -564,10 +569,21 @@ module Email
     end
 
     def extract_from_exchange(doc)
-      # Exchange is using the 'messageReplySection' class for forwarded emails
-      # And 'messageBodySection' for the actual email
-      elided = doc.css("div[name='messageReplySection']").remove
-      to_markdown(doc.css("div[name='messageReplySection']").to_html, elided.to_html)
+      # Exchange is using 'messageReplySection' for forwarded emails and 'messageBodySection' for the actual email
+      reply = doc.css("div[name='messageReplySection']")
+      body = doc.css("div[name='messageBodySection']")
+
+      if reply.present? && body.present?
+        elided = doc.css("div[name='messageReplySection']").remove
+        body = doc.css("div[name='messageBodySection']")
+        to_markdown(body.to_html, elided.to_html)
+      elsif reply.present?
+        to_markdown(reply.to_html, "")
+      elsif body.present?
+        to_markdown(body.to_html, "")
+      else
+        to_markdown(doc.to_html, "")
+      end
     end
 
     def extract_from_apple_mail(doc)
@@ -927,23 +943,27 @@ module Email
     def create_group_post(group, user, body, elided)
       message_ids = Email::Receiver.extract_reply_message_ids(@mail, max_message_id_count: 5)
 
-      # incoming emails with matching message ids, and then cross references
+      # Incoming emails with matching message ids, and then cross references
       # these with any email addresses for the user vs to/from/cc of the
       # incoming emails. in effect, any incoming email record for these
-      # message ids where the user is involved in any way will be returned
+      # message ids where the user is involved in any way will be returned.
       incoming_emails = IncomingEmail.where(message_id: message_ids)
       if !group.allow_unknown_sender_topic_replies
         incoming_emails = incoming_emails.addressed_to_user(user)
       end
       post_ids = incoming_emails.pluck(:post_id) || []
 
-      # if the user is directly replying to an email send to them from discourse,
+      # If the user is directly replying to an email send to them from discourse,
       # there will be a corresponding EmailLog record, so we can use that as the
-      # reply post if it exists
-      if Email::MessageIdService.discourse_generated_message_id?(mail.in_reply_to)
+      # reply post if it exists.
+      #
+      # Since In-Reply-To can technically have multiple message ids, we only
+      # consider the first one here to simplify things.
+      first_in_reply_to = Array.wrap(mail.in_reply_to).first
+      if Email::MessageIdService.discourse_generated_message_id?(first_in_reply_to)
         post_id_from_email_log =
           EmailLog
-            .where(message_id: mail.in_reply_to)
+            .where(message_id: first_in_reply_to)
             .addressed_to_user(user)
             .order(created_at: :desc)
             .limit(1)

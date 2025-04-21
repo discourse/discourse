@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
@@ -10,15 +9,12 @@ import Form from "discourse/components/form";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import i18n from "discourse-common/helpers/i18n";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import ChatChannelChooser from "discourse/plugins/chat/discourse/components/chat-channel-chooser";
 
 export default class ChatIncomingWebhookEditForm extends Component {
   @service toasts;
   @service router;
-
-  @tracked emojiPickerIsActive = false;
 
   get formData() {
     return {
@@ -33,7 +29,6 @@ export default class ChatIncomingWebhookEditForm extends Component {
   @action
   emojiSelected(setData, emoji) {
     setData("emoji", `:${emoji}:`);
-    this.emojiPickerIsActive = false;
   }
 
   @action
@@ -53,7 +48,7 @@ export default class ChatIncomingWebhookEditForm extends Component {
         this.toasts.success({
           duration: 3000,
           data: {
-            message: I18n.t("chat.incoming_webhooks.saved"),
+            message: i18n("chat.incoming_webhooks.saved"),
           },
         });
       } else {
@@ -65,13 +60,13 @@ export default class ChatIncomingWebhookEditForm extends Component {
         this.toasts.success({
           duration: 3000,
           data: {
-            message: I18n.t("chat.incoming_webhooks.created"),
+            message: i18n("chat.incoming_webhooks.created"),
           },
         });
 
         this.router
           .transitionTo(
-            "adminPlugins.show.discourse-chat-incoming-webhooks.show",
+            "adminPlugins.show.discourse-chat-incoming-webhooks.edit",
             webhook
           )
           .then(() => {
@@ -130,6 +125,7 @@ export default class ChatIncomingWebhookEditForm extends Component {
         @name="emoji"
         @title={{i18n "chat.incoming_webhooks.emoji"}}
         @description={{i18n "chat.incoming_webhooks.emoji_instructions"}}
+        @size="large"
         as |field|
       >
         <field.Custom>
@@ -141,33 +137,19 @@ export default class ChatIncomingWebhookEditForm extends Component {
             </span>
           {{/if}}
 
-          <EmojiPicker
-            @isActive={{this.emojiPickerIsActive}}
-            @isEditorFocused={{true}}
-            @emojiSelected={{fn this.emojiSelected form.set}}
-            @onEmojiPickerClose={{fn (mut this.emojiPickerIsActive) false}}
-          />
-
-          {{#unless this.emojiPickerIsActive}}
-            <form.Row as |row|>
-              <row.Col @size={{6}}>
-                <DButton
-                  @label="chat.incoming_webhooks.select_emoji"
-                  @action={{fn (mut this.emojiPickerIsActive) true}}
-                  class="btn-primary admin-chat-webhooks-select-emoji"
-                />
-              </row.Col>
-              <row.Col @size={{6}}>
-                <DButton
-                  @label="chat.incoming_webhooks.reset_emoji"
-                  @action={{fn this.resetEmoji form.set}}
-                  @disabled={{not field.value}}
-                  class="admin-chat-webhooks-clear-emoji"
-                />
-              </row.Col>
-            </form.Row>
-          {{/unless}}
-
+          <form.Row as |row|>
+            <row.Col @size={{2}}>
+              <EmojiPicker @didSelectEmoji={{fn this.emojiSelected form.set}} />
+            </row.Col>
+            <row.Col @size={{6}}>
+              <DButton
+                @label="chat.incoming_webhooks.reset_emoji"
+                @action={{fn this.resetEmoji form.set}}
+                @disabled={{not field.value}}
+                class="admin-chat-webhooks-clear-emoji"
+              />
+            </row.Col>
+          </form.Row>
         </field.Custom>
       </form.Field>
 

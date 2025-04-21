@@ -1,7 +1,10 @@
 import { cached } from "@glimmer/tracking";
 import { warn } from "@ember/debug";
 import { htmlSafe } from "@ember/template";
+import { configNavForPlugin } from "discourse/lib/admin-plugin-config-nav";
 import { adminRouteValid } from "discourse/lib/admin-utilities";
+import { getOwnerWithFallback } from "discourse/lib/get-owner";
+import getURL from "discourse/lib/get-url";
 import PreloadStore from "discourse/lib/preload-store";
 import { ADMIN_NAV_MAP } from "discourse/lib/sidebar/admin-nav-map";
 import BaseCustomSidebarPanel from "discourse/lib/sidebar/base-custom-sidebar-panel";
@@ -9,9 +12,7 @@ import BaseCustomSidebarSection from "discourse/lib/sidebar/base-custom-sidebar-
 import BaseCustomSidebarSectionLink from "discourse/lib/sidebar/base-custom-sidebar-section-link";
 import { ADMIN_PANEL } from "discourse/lib/sidebar/panels";
 import { escapeExpression } from "discourse/lib/utilities";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
-import getURL from "discourse-common/lib/get-url";
-import I18n from "discourse-i18n";
+import I18n, { i18n } from "discourse-i18n";
 
 let additionalAdminSidebarSectionLinks = {};
 
@@ -47,7 +48,9 @@ class SidebarAdminSectionLink extends BaseCustomSidebarSectionLink {
   }
 
   get href() {
-    return this.adminSidebarNavLink.href;
+    if (this.adminSidebarNavLink.href) {
+      return getURL(this.adminSidebarNavLink.href);
+    }
   }
 
   get query() {
@@ -60,7 +63,9 @@ class SidebarAdminSectionLink extends BaseCustomSidebarSectionLink {
 
   get text() {
     return this.adminSidebarNavLink.label
-      ? I18n.t(this.adminSidebarNavLink.label)
+      ? i18n(this.adminSidebarNavLink.label, {
+          translatedFallback: this.adminSidebarNavLink.text,
+        })
       : this.adminSidebarNavLink.text;
   }
 
@@ -82,12 +87,14 @@ class SidebarAdminSectionLink extends BaseCustomSidebarSectionLink {
     // for the plugin ID has its own nested routes defined in the plugin.
     if (this.router.currentRoute.name === "adminPlugins.show.settings") {
       if (
-        this.adminSidebarNavLink.route?.includes(
-          this.router.currentRoute.parent.params.plugin_id
-        )
+        this.adminSidebarNavLink.route?.split(".").last ===
+        this.router.currentRoute.parent.params.plugin_id
       ) {
         return this.router.currentRoute.name;
       }
+    }
+    if (this.adminSidebarNavLink.currentWhen) {
+      return this.adminSidebarNavLink.currentWhen;
     }
   }
 
@@ -153,7 +160,7 @@ function defineAdminSection(
 
     get text() {
       return this.adminNavSectionData.label
-        ? I18n.t(this.adminNavSectionData.label)
+        ? i18n(this.adminNavSectionData.label)
         : this.adminNavSectionData.text;
     }
 
@@ -182,38 +189,6 @@ function defineAdminSection(
 }
 
 export function useAdminNavConfig(navMap) {
-  const adminNavSections = [
-    {
-      text: "",
-      name: "root",
-      hideSectionHeader: true,
-      links: [
-        {
-          name: "admin_home",
-          route: "admin.dashboard.general",
-          label: "admin.dashboard.title",
-          icon: "house",
-          moderator: true,
-        },
-        {
-          name: "admin_users",
-          route: "adminUsers",
-          label: "admin.community.sidebar_link.users",
-          icon: "users",
-          moderator: true,
-        },
-        {
-          name: "admin_all_site_settings",
-          route: "adminSiteSettings",
-          label: "admin.advanced.sidebar_link.all_site_settings",
-          icon: "gear",
-        },
-      ],
-    },
-  ];
-
-  navMap = adminNavSections.concat(navMap);
-
   for (const [sectionName, additionalLinks] of Object.entries(
     additionalAdminSidebarSectionLinks
   )) {
@@ -258,7 +233,7 @@ export function addAdminSidebarSectionLink(sectionName, link) {
   // label must be valid, don't want broken [XYZ translation missing]
   if (
     link.label &&
-    I18n.t(link.label) === I18n.missingTranslation(link.label, null, {})
+    i18n(link.label) === I18n.missingTranslation(link.label, null, {})
   ) {
     // eslint-disable-next-line no-console
     console.debug(
@@ -292,16 +267,45 @@ function pluginAdminRouteLinks(router) {
       }
     })
     .map((plugin) => {
+      const pluginAdminRoute = plugin.admin_route.use_new_show_route
+        ? `adminPlugins.show`
+        : `adminPlugins.${plugin.admin_route.location}`;
+      const pluginConfigNav = configNavForPlugin(plugin.name);
+
+      let pluginNavLinks = [];
+      if (pluginConfigNav) {
+        if (Array.isArray(pluginConfigNav.links)) {
+          pluginNavLinks = [...pluginConfigNav.links];
+        }
+
+        if (pluginNavLinks.length) {
+          pluginNavLinks = pluginNavLinks
+            .map((link) => {
+              if (!link.icon) {
+                link.icon = "gear";
+              }
+              if (link.route !== `${pluginAdminRoute}.${plugin.name}`) {
+                link.routeModels = [plugin.name];
+                return link;
+              } else {
+                return;
+              }
+            })
+            .compact();
+        }
+      }
+
       return {
         name: `admin_plugin_${plugin.admin_route.location}`,
-        route: plugin.admin_route.use_new_show_route
-          ? `adminPlugins.show`
-          : `adminPlugins.${plugin.admin_route.location}`,
+        route: pluginAdminRoute,
         routeModels: plugin.admin_route.use_new_show_route
           ? [plugin.admin_route.location]
           : [],
         label: plugin.admin_route.label,
+        text: plugin.humanized_name,
         icon: "gear",
+        description: plugin.description,
+        links: pluginNavLinks,
       };
     });
 }
@@ -328,9 +332,6 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
     const store = getOwnerWithFallback(this).lookup("service:store");
     const router = getOwnerWithFallback(this).lookup("service:router");
     const session = getOwnerWithFallback(this).lookup("service:session");
-    if (!currentUser.use_admin_sidebar) {
-      return [];
-    }
 
     this.adminSidebarStateManager = getOwnerWithFallback(this).lookup(
       "service:admin-sidebar-state-manager"
@@ -357,11 +358,11 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
 
     store.findAll("theme").then((themes) => {
       this.adminSidebarStateManager.setLinkKeywords(
-        "admin_themes",
+        "admin_themes_and_components",
         themes.content.rejectBy("component").mapBy("name")
       );
       this.adminSidebarStateManager.setLinkKeywords(
-        "admin_components",
+        "admin_themes_and_components",
         themes.content.filterBy("component").mapBy("name")
       );
     });
@@ -382,7 +383,7 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
         if (link.keywords) {
           this.adminSidebarStateManager.setLinkKeywords(
             link.name,
-            I18n.t(link.keywords).split("|")
+            i18n(link.keywords).split("|")
           );
         }
       })
@@ -392,7 +393,9 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
 
     if (!currentUser.admin && currentUser.moderator) {
       navConfig.forEach((section) => {
-        section.links = section.links.filterBy("moderator");
+        section.links = section.links.filter((link) => {
+          return link.moderator;
+        });
       });
       navConfig = navConfig.filterBy("links.length");
     }
@@ -412,18 +415,15 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
   }
 
   filterNoResultsDescription(filter) {
-    const params = {
-      filter: escapeExpression(filter),
-      settings_filter_url: getURL(
-        `/admin/site_settings/category/all_results?filter=${encodeURIComponent(
-          filter
-        )}`
-      ),
-      user_list_filter_url: getURL(
-        `/admin/users/list/active?username=${encodeURIComponent(filter)}`
-      ),
-    };
+    const escapedFilter = escapeExpression(filter);
 
-    return htmlSafe(I18n.t("sidebar.no_results.description", params));
+    return htmlSafe(
+      i18n("sidebar.no_results.description_admin_search", {
+        filter: escapedFilter,
+        admin_search_url: getURL(
+          `/admin/search?filter=${encodeURIComponent(filter)}`
+        ),
+      })
+    );
   }
 }

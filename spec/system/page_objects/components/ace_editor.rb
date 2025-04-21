@@ -8,16 +8,16 @@ module PageObjects
         self
       end
 
-      def fill_input(content)
-        # Clear the input before filling it in because capybara's fill_in method doesn't seem to replace existing content
-        # unless the content is a blank string.
-        editor_input.fill_in(with: "")
-        editor_input.fill_in(with: content)
+      def set_input(content)
+        # Can't rely on capybara here because ace editor is not a normal input.
+        page.evaluate_script(
+          "ace.edit(document.getElementsByClassName('ace')[0]).setValue(#{content.to_json})",
+        )
         self
       end
 
       def clear_input
-        fill_input("")
+        set_input("")
       end
 
       def editor_input
@@ -25,6 +25,11 @@ module PageObjects
           ".ace_text-input",
           visible: false,
         )
+      end
+
+      def has_content?(content)
+        editor_content = all(".ace_line").map(&:text).join("\n")
+        editor_content == content
       end
     end
   end

@@ -4,8 +4,8 @@ import { service } from "@ember/service";
 import ItsATrap from "@discourse/itsatrap";
 import { modifier } from "ember-modifier";
 import DTextarea from "discourse/components/d-textarea";
+import { bind } from "discourse/lib/decorators";
 import TextareaTextManipulation from "discourse/lib/textarea-text-manipulation";
-import { bind } from "discourse-common/utils/decorators";
 
 export default class TextareaEditor extends Component {
   @service currentUser;
@@ -110,7 +110,7 @@ export default class TextareaEditor extends Component {
       @input={{@change}}
       @focusIn={{@focusIn}}
       @focusOut={{@focusOut}}
-      class="d-editor-input"
+      class={{@class}}
       @id={{@id}}
       {{this.registerTextarea}}
     />

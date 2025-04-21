@@ -26,6 +26,6 @@ module("Unit | Model | tag", function (hooks) {
 
     tag.set("pm_only", true);
 
-    assert.ok(tag.pmOnly);
+    assert.true(tag.pmOnly);
   });
 });

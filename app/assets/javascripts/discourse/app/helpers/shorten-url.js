@@ -1,6 +1,3 @@
-import { registerRawHelper } from "discourse-common/lib/helpers";
-
-registerRawHelper("shorten-url", shortenUrl);
 export default function shortenUrl(url) {
   let matches = url.match(/\//g);
 

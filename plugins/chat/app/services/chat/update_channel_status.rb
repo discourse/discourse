@@ -23,6 +23,7 @@ module Chat
       validates :channel_id, presence: true
       validates :status, inclusion: { in: Chat::Channel.editable_statuses.keys }
     end
+
     model :channel
     policy :check_channel_permission
     step :change_status

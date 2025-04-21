@@ -52,8 +52,8 @@ export default class FKControlInput extends Component {
       event.target.value === ""
         ? undefined
         : this.type === "number"
-        ? parseFloat(event.target.value)
-        : event.target.value;
+          ? parseFloat(event.target.value)
+          : event.target.value;
 
     this.args.field.set(value);
   }
@@ -66,13 +66,13 @@ export default class FKControlInput extends Component {
 
       <input
         type={{this.type}}
-        value={{@value}}
+        value={{@field.value}}
         class={{concatClass
           "form-kit__control-input"
           (if @before "has-prefix")
           (if @after "has-suffix")
         }}
-        disabled={{@disabled}}
+        disabled={{@field.disabled}}
         ...attributes
         {{on "input" this.handleInput}}
       />

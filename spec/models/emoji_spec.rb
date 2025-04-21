@@ -29,7 +29,7 @@ RSpec.describe Emoji do
     end
 
     it "should return the emoji" do
-      expect(Emoji.lookup_unicode("blonde_man")).to eq("👱")
+      expect(Emoji.lookup_unicode("blonde_man")).to eq("👱‍♂️")
     end
 
     it "should return an aliased emoji" do
@@ -97,6 +97,13 @@ RSpec.describe Emoji do
       expect(Emoji.exists?(":blonde_woman:t7:")).to be(false)
       expect(Emoji.exists?("blonde_woman:t0")).to be(false)
       expect(Emoji.exists?("blonde_woman:t")).to be(false)
+    end
+
+    it "finds aliases" do
+      aliases_list = Emoji.aliases_db.values
+      expect(Emoji.exists?(aliases_list[0][0])).to be(true)
+      expect(Emoji.exists?(aliases_list[1][0])).to be(true)
+      expect(Emoji.exists?(aliases_list[2][0])).to be(true)
     end
   end
 

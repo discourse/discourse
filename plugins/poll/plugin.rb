@@ -11,7 +11,7 @@ register_asset "stylesheets/common/poll-ui-builder.scss"
 register_asset "stylesheets/desktop/poll-ui-builder.scss", :desktop
 register_asset "stylesheets/common/poll-breakdown.scss"
 
-register_svg_icon "far fa-square-check"
+register_svg_icon "far-square-check"
 
 enabled_site_setting :poll_enabled
 hide_plugin

@@ -6,7 +6,7 @@ import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import copyText from "discourse/lib/copy-text";
 import { slugify, toAsciiPrintable } from "discourse/lib/utilities";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 
 // https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/Base64_encoding_and_decoding
 function b64EncodeUnicode(str) {
@@ -38,7 +38,7 @@ export default class BackupCodes extends Component {
       return null;
     }
 
-    return this.args.backupCodes.join("\n").trim();
+    return this.args.backupCodes.join("\r\n").trim();
   }
 
   @action

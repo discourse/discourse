@@ -10,11 +10,15 @@ import {
   updateColorSchemeCookie,
 } from "discourse/lib/color-scheme-picker";
 import { propertyEqual } from "discourse/lib/computed";
-import { listThemes, setLocalTheme } from "discourse/lib/theme-selector";
+import discourseComputed from "discourse/lib/decorators";
+import {
+  currentThemeId,
+  listThemes,
+  setLocalTheme,
+} from "discourse/lib/theme-selector";
 import { setDefaultHomepage } from "discourse/lib/utilities";
 import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
-import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 // same as UserOption::HOMEPAGES
 const USER_HOMES = {
@@ -35,29 +39,23 @@ export default class InterfaceController extends Controller {
   @service session;
   @controller("preferences") preferencesController;
 
-  currentThemeId = -1;
+  currentThemeId = currentThemeId();
   previewingColorScheme = false;
   selectedDarkColorSchemeId = null;
   makeColorSchemeDefault = true;
 
   @propertyEqual("model.id", "currentUser.id") canPreviewColorScheme;
-  subpageTitle = I18n.t("user.preferences_nav.interface");
+  subpageTitle = i18n("user.preferences_nav.interface");
 
   @reads("userSelectableColorSchemes.length") showColorSchemeSelector;
 
   @not("currentSchemeCanBeSelected") showColorSchemeNoneItem;
 
-  selectedColorSchemeNoneLabel = I18n.t(
-    "user.color_schemes.default_description"
-  );
+  selectedColorSchemeNoneLabel = i18n("user.color_schemes.default_description");
 
   init() {
     super.init(...arguments);
     this.set("selectedDarkColorSchemeId", this.session.userDarkSchemeId);
-    this.set(
-      "enableDarkMode",
-      this.get("model.user_option.dark_scheme_id") === -1 ? false : true
-    );
     this.set("selectedColorSchemeId", this.getSelectedColorSchemeId());
   }
 
@@ -74,7 +72,6 @@ export default class InterfaceController extends Controller {
       "allow_private_messages",
       "enable_allowed_pm_users",
       "homepage_id",
-      "hide_profile",
       "hide_presence",
       "text_size",
       "title_count_mode",
@@ -105,7 +102,7 @@ export default class InterfaceController extends Controller {
   @discourseComputed
   textSizes() {
     return TEXT_SIZES.map((value) => {
-      return { name: I18n.t(`user.text_size.${value}`), value };
+      return { name: i18n(`user.text_size.${value}`), value };
     });
   }
 
@@ -120,7 +117,7 @@ export default class InterfaceController extends Controller {
   @discourseComputed
   titleCountModes() {
     return TITLE_COUNT_MODES.map((value) => {
-      return { name: I18n.t(`user.title_count_mode.${value}`), value };
+      return { name: i18n(`user.title_count_mode.${value}`), value };
     });
   }
 
@@ -129,7 +126,7 @@ export default class InterfaceController extends Controller {
     return Object.keys(AUTO_DELETE_PREFERENCES).map((key) => {
       return {
         value: AUTO_DELETE_PREFERENCES[key],
-        name: I18n.t(`bookmarks.auto_delete_preference.${key.toLowerCase()}`),
+        name: i18n(`bookmarks.auto_delete_preference.${key.toLowerCase()}`),
       };
     });
   }
@@ -211,7 +208,7 @@ export default class InterfaceController extends Controller {
 
     if (this.model.canPickThemeWithCustomHomepage) {
       result.push({
-        name: I18n.t("user.homepage.default"),
+        name: i18n("user.homepage.default"),
         value: -1,
       });
     }
@@ -226,7 +223,7 @@ export default class InterfaceController extends Controller {
     availableIds.forEach((m) => {
       let id = homeValues[m];
       if (id) {
-        result.push({ name: I18n.t(`filters.${m}.title`), value: Number(id) });
+        result.push({ name: i18n(`filters.${m}.title`), value: Number(id) });
       }
     });
 

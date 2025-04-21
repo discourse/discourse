@@ -368,6 +368,8 @@ zh_TW:
         bio_raw: "關於我"
       user:
         password: "密碼"
+      user_password:
+        password: "密碼"
     errors:
       models:
         topic:
@@ -899,12 +901,10 @@ zh_TW:
       title: "板主通知"
       xaxis: "天"
       yaxis: "訊息數量"
-      description: "版主已被私人通知投訴的次數"
     notify_user_private_messages:
       title: "使用者通知"
       xaxis: "天"
       yaxis: "訊息數量"
-      description: "通過標記私下通知使用者的次數"
     top_referrers:
       title: "最高引用"
       xaxis: "使用者"
@@ -1088,7 +1088,6 @@ zh_TW:
     censored_words: "將被自動替換為 &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "自動刪除被隱藏超過 30 天的貼文。"
     allow_user_locale: "允許使用者選擇自己的語言介面"
-    support_mixed_text_direction: "支援文字從左到右、從右到左的方向。"
     max_post_length: "貼文允許的最大文字數"
     show_topic_featured_link_in_digest: "在摘要郵件中顯示主題特色連結。"
     min_topic_title_length: "標題允許的最小文字數"
@@ -1173,7 +1172,6 @@ zh_TW:
     invalidate_inactive_admin_email_after_days: "在這幾天沒有訪問網站的管理員帳戶，在登入前需要重新驗證該管理員帳戶的電子郵件。設定為0禁用。"
     share_links: "決定在分享對話方塊裡顯示哪些項目、以什麼順序顯示。"
     site_contact_username: "以一個有效的工作成員帳號來發送所有自動化消息。如果保留空白，則會使用預設的系統帳號。"
-    site_contact_group_name: "有效的群組名稱將自動被加入到所有自動發送的訊息。"
     send_welcome_message: "給所有使用者發送快速開始指導的消息"
     send_tl1_welcome_message: "向新使用者（信任級別1）發送歡迎消息。"
     suppress_reply_directly_below: "當貼文只有一個回覆時，不顯示貼文的回覆數量。"
@@ -1192,7 +1190,6 @@ zh_TW:
     login_required: "需要登入才能進入網站，不允許匿名操作"
     min_username_length: "最短使用者名長度。警告：如果任何現有帳號或群組名稱短於此，你的網站會炸掉。"
     max_username_length: "最長使用者名長度。警告：如果任何現有帳號或群組名稱長於此，你的網站會炸掉。"
-    unicode_usernames: "允許使用者名稱、群組包含Unicode字母和數字。"
     reserved_usernames: "不允許註冊的使用者名稱。 使用星號 * 可用於匹配任何字串 0 到多次。"
     password_unique_characters: "密碼必須包含英文字"
     block_common_passwords: "不允許使用 10,000 個最常用的密碼"
@@ -1345,7 +1342,6 @@ zh_TW:
     num_hours_to_close_topic: "暫停討論話題以進行干預的小時數。"
     auto_respond_to_flag_actions: "啟用自動回覆當加入一個標籤。"
     min_first_post_typing_time: "使用者發表第一帖時打字的最小時間（以毫秒計），如果沒有達到該閾值，貼文將自動進入需要批准隊列。設置為 0 禁用（不推薦）"
-    auto_silence_fast_typers_on_first_post: "自動禁言不符合min_first_post_typing_time的使用者"
     auto_silence_fast_typers_max_trust_level: "自動封鎖輸入過於快速的使用者的最高信任等級"
     reviewable_claiming: "是否需要審核內容後，才能對其進行操作？"
     reviewable_default_topics: "預設值為顯示按討論話題分類的已審核內容"
@@ -1435,7 +1431,6 @@ zh_TW:
     automatically_unpin_topics: "當使用者到達底部時自動解除主題置頂。"
     read_time_word_count: "一分鐘閲讀的詞的數量，用於估計閲讀時間。"
     auto_handle_queued_age: "等待多天後系統將自動處理等待審核的記錄，投訴將被忽略。尚未審核的討論話題及使用者將被拒絕。設定為0，可禁用此功能。"
-    full_name_required: "全名是使用者個人信息的必填項。"
     enable_names: "在使用者的個人信息、使用者卡片和郵件中顯示全名。禁用將在所有地方隱藏全名。"
     display_name_on_posts: "在使用者的貼文中顯示他們的全名以及他們的 @username。"
     show_time_gap_days: "如果兩個貼文發表間隔多天，在主題中顯示時間間隔提示。"
@@ -2600,8 +2595,6 @@ zh_TW:
     regular:
       name: 活躍使用者
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">授與</a>重新分類、重新命名，點擊連結、維基（Wiki）功能、點擊更多的讚
-      long_description: |
-        該徽章授與給達到使用者信任等級 3 的你。感謝你在這幾個月持續地參與社群。你現在是我們之中最活躍的讀者之一了，你持續的貢獻極大地幫助了我們的社群，你真正融入到了社群中。你現在可以重新分類或者重新命名討論主題、使用更強大的垃圾投訴功能以及有權限查看隱藏的貴賓室分類了。而且每天你可以點更多次讚了。
     leader:
       name: 資深
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">授與</a>全域編輯、置頂、關閉、存檔、分割和合併、更多的讚
@@ -2878,15 +2871,9 @@ zh_TW:
           homepage_style:
             choices:
               latest:
-                label: "最新主題"
-              categories_only:
-                label: "僅分類"
-              categories_with_featured_topics:
-                label: "有精選話題的分類"
-              categories_and_latest_topics:
-                label: "分類和最新話題"
-              categories_and_top_topics:
-                label: "分類與熱門話題"
+                label: "最新版本"
+              hot:
+                label: "熱門"
       corporate:
         fields:
           governing_law:
@@ -2917,7 +2904,7 @@ zh_TW:
       quoted: '%{username}在 "%{topic}" 引用您的內容 - %{site_title}'
       replied: '%{username}在"%{topic}" 回覆了您 - %{site_title}'
       posted: '%{username} 在"%{topic}" 中發文 - %{site_title}'
-      private_message: '%{username}在"%{topic}" 中傳了私人訊息給您 - %{site_title}'
+      private_message: '%{username} 在 "%{topic}" 中私訊了你- %{site_title}'
       linked: '%{username}從"%{topic}"連到了您的貼文 - %{site_title}'
       watching_first_post: '%{username}建立了新的討論話題「%{topic}- %{site_title}」'
       confirm_title: "通知已啟用 - %{site_title}"
@@ -2963,18 +2950,25 @@ zh_TW:
         description: "將話題變更為對所有人顯示。"
       disagree:
         title: "否"
+        complete: "檢舉已忽略."
       ignore:
         title: "忽略"
+        complete: "檢舉已忽略."
       ignore_and_do_nothing:
         title: "不做任何動作"
+        complete: "檢舉已忽略."
       approve:
         title: "批准"
+        complete: "帖文已批准."
       approve_post:
         title: "批准貼文"
+        complete: "帖文已批准."
       reject_post:
         title: "否決貼文"
+        complete: "貼文被拒絕."
       approve_user:
         title: "批准使用者"
+        complete: "使用者已核准."
       reject_user:
         delete:
           title: "刪除使用者"

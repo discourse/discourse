@@ -21,7 +21,7 @@ module("Unit | Service | site-settings", function (hooks) {
   });
 
   test("contains settings", function (assert) {
-    assert.ok(this.siteSettings.title);
+    assert.strictEqual(typeof this.siteSettings.title, "string");
   });
 
   test("notifies getters", function (assert) {

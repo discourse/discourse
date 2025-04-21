@@ -368,6 +368,22 @@ RSpec.describe WordWatcher do
     end
   end
 
+  describe "#word_matches_across_all_actions" do
+    it("returns an array of words") do
+      Fabricate(:watched_word, action: WatchedWord.actions[:flag], word: "foo")
+      Fabricate(:watched_word, action: WatchedWord.actions[:block], word: "bar")
+      Fabricate(:watched_word, action: WatchedWord.actions[:silence], word: "baz")
+
+      contentful_check = described_class.new("Going to match the baz, the foo, and the bar.")
+
+      expect(contentful_check.word_matches_across_all_actions).to contain_exactly(
+        "foo",
+        "bar",
+        "baz",
+      )
+    end
+  end
+
   describe "word replacement" do
     fab!(:censored_word) do
       Fabricate(:watched_word, word: "censored", action: WatchedWord.actions[:censor])

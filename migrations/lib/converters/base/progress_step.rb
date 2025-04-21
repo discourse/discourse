@@ -10,7 +10,7 @@ module Migrations::Converters::Base
       raise NotImplementedError
     end
 
-    def process_item(item, stats)
+    def process_item(item)
       raise NotImplementedError
     end
 
@@ -21,22 +21,6 @@ module Migrations::Converters::Base
 
       def run_in_parallel?
         @run_in_parallel == true
-      end
-
-      def report_progress_in_percent(value)
-        @report_progress_in_percent = !!value
-      end
-
-      def report_progress_in_percent?
-        @report_progress_in_percent == true
-      end
-
-      def use_custom_progress_increment(value)
-        @use_custom_progress_increment = !!value
-      end
-
-      def use_custom_progress_increment?
-        @use_custom_progress_increment == true
       end
     end
   end

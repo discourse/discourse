@@ -3,6 +3,10 @@
 require "net/imap"
 
 class Group < ActiveRecord::Base
+  # Maximum 255 characters including terminator.
+  # https://datatracker.ietf.org/doc/html/rfc1035#section-2.3.4
+  MAX_EMAIL_DOMAIN_LENGTH = 253
+
   # TODO: Remove flair_url when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
   # TODO: Remove smtp_ssl when db/post_migrate/20240717053710_drop_groups_smtp_ssl has been promoted to pre-deploy
   self.ignored_columns = %w[flair_url smtp_ssl]
@@ -80,11 +84,10 @@ class Group < ActiveRecord::Base
 
   validate :name_format_validator
   validates :name, presence: true
-  validate :automatic_membership_email_domains_format_validator
+  validate :automatic_membership_email_domains_validator
   validate :incoming_email_validator
   validate :can_allow_membership_requests, if: :allow_membership_requests
   validate :validate_grant_trust_level, if: :will_save_change_to_grant_trust_level?
-  validates :automatic_membership_email_domains, length: { maximum: 1000 }
   validates :bio_raw, length: { maximum: 3000 }
   validates :membership_request_template, length: { maximum: 5000 }
   validates :full_name, length: { maximum: 100 }
@@ -273,10 +276,16 @@ class Group < ActiveRecord::Base
 
   scope :mentionable,
         lambda { |user, include_public: true|
-          where(
-            self.mentionable_sql_clause(include_public: include_public),
-            levels: alias_levels(user),
-            user_id: user&.id,
+          groups =
+            where(
+              self.mentionable_sql_clause(include_public: include_public),
+              levels: alias_levels(user),
+              user_id: user&.id,
+            )
+          DiscoursePluginRegistry.apply_modifier(
+            :mentionable_groups,
+            groups,
+            { user: user, include_public: include_public },
           )
         }
 
@@ -502,6 +511,11 @@ class Group < ActiveRecord::Base
     end
   end
 
+  def self.can_use_name?(name, group)
+    UsernameValidator.new(name, skip_length_validation: group.automatic).valid_format? &&
+      (group.name == name || !User.username_exists?(name))
+  end
+
   def self.refresh_automatic_group!(name)
     return unless id = AUTO_GROUPS[name]
 
@@ -519,9 +533,16 @@ class Group < ActiveRecord::Base
 
     # don't allow shoddy localization to break this
     localized_name = I18n.t("groups.default_names.#{name}", locale: SiteSetting.default_locale)
-    validator = UsernameValidator.new(localized_name)
+    default_name = I18n.t("groups.default_names.#{name}")
 
-    group.name = localized_name if validator.valid_format? && !User.username_exists?(localized_name)
+    group.name =
+      if can_use_name?(localized_name, group)
+        localized_name
+      elsif can_use_name?(default_name, group)
+        default_name
+      else
+        name.to_s
+      end
 
     # the everyone group is special, it can include non-users so there is no
     # way to have the membership in a table
@@ -750,6 +771,8 @@ class Group < ActiveRecord::Base
   def self.group_id_from_param(group_param)
     return group_param.id if group_param.is_a?(Group)
     return group_param if group_param.is_a?(Integer)
+    return Group[group_param].id if group_param.is_a?(Symbol)
+    return group_param.to_i if group_param.to_i.to_s == group_param
 
     # subtle, using Group[] ensures the group exists in the DB
     Group[group_param.to_sym].id
@@ -1109,7 +1132,7 @@ class Group < ActiveRecord::Base
       self.name = stripped
     end
 
-    UsernameValidator.perform_validation(self, "name") ||
+    UsernameValidator.perform_validation(self, "name", skip_length_validation: automatic) ||
       begin
         normalized_name = User.normalize_username(self.name)
 
@@ -1121,13 +1144,25 @@ class Group < ActiveRecord::Base
       end
   end
 
-  def automatic_membership_email_domains_format_validator
+  def automatic_membership_email_domains_validator
     return if self.automatic_membership_email_domains.blank?
 
     domains =
       Group.get_valid_email_domains(self.automatic_membership_email_domains) do |domain|
         self.errors.add :base, (I18n.t("groups.errors.invalid_domain", domain: domain))
       end
+
+    max_domains = SiteSetting.max_automatic_membership_email_domains
+
+    if domains.size > max_domains
+      self.errors.add :base, I18n.t("groups.errors.too_many_domains", max: max_domains)
+    end
+
+    domains.each do |domain|
+      if domain.length > MAX_EMAIL_DOMAIN_LENGTH
+        self.errors.add :base, I18n.t("groups.errors.invalid_domain", domain: domain)
+      end
+    end
 
     self.automatic_membership_email_domains = domains.join("|")
   end

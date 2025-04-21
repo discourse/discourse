@@ -102,6 +102,8 @@ nl:
         label: "Opties"
         ranked_choice:
           abstain: "Onthouden"
+          highest_priority: "(hoogste prioriteit)"
+          lowest_priority: "(laagste prioriteit)"
           login: "Meld je aan om te stemmen!"
       error_while_toggling_status: "Sorry, er is een fout opgetreden bij het omschakelen van de status van deze poll."
       error_while_casting_votes: "Sorry, er is een fout opgetreden bij het uitbrengen van je stemmen."

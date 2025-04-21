@@ -12,12 +12,12 @@ registerWidgetShim(
                    @users={{@data.users}}
                    @addSelf={{@data.addSelf}}
                    @count={{@data.count}}
-                   @description={{@data.description}}/>`
+                   @description={{@data.description}}
+                   @isVisible={{@data.isVisible}}/>`
 );
 
 registerWidgetShim(
   "actions-summary",
   "section.post-actions",
-  hbs`
-    <ActionsSummary @data={{@data}} /> `
+  hbs`<Post::ActionsSummary @post={{@data}} />`
 );

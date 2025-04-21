@@ -7,6 +7,35 @@ in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.1] - 2025-02-28
+
+- Added `removeKeyboardShortcut`, which is the opposite of `addKeyboardShortcut`. Unbinds the previously bound shortcut and callback.
+
+## [2.1.0] - 2024-01-29
+
+- Added `registerRichEditorExtension` which allows plugins/TCs to register an extension for the rich text editor.
+
+## [2.0.1] - 2025-01-29
+
+- Added `registerReportModeComponent`. This allows plugins to register different report display modes in addition to the built-in core ones like `chart`, `table`, and so on defined in `Report::MODES`.
+
+## [2.0.0] - 2025-01-07
+
+- Removed `decorateTopicTitle`. This has been deprecated for more than a year, and we are not aware of any remaining uses in the ecosystem.
+
+## [1.39.2] - 2024-12-19
+
+- Removed the deprecation of `includePostAttributes` for now.
+
+## [1.39.1] - 2024-12-18
+
+- Renamed `addTrackedPostProperty` to `addTrackedPostProperties` to allow plugins/TCs to add multiple new tracked properties to the post model.
+- Deprecated `includePostAttributes` in favor of `addTrackedPostProperties`.
+
+## [1.39.0] - 2024-11-27
+
+- Added `addTrackedPostProperty` which allows plugins/TCs to add a new tracked property to the post model.
+
 ## [1.38.0] - 2024-10-30
 
 - Added `registerMoreTopicsTab` and "more-topics-tabs" value transformer that allows to add or remove new tabs to the "more topics" (suggested/related) area.
@@ -80,7 +109,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.24.0] - 2024-01-08
 
-- Added `addAdminSidebarSectionLink` which is used to add a link to a specific admin sidebar section, as a replacement for the `admin-menu` plugin outlet. This only has an effect if the `admin_sidebar_enabled_groups` site setting is in use, which enables the new admin nav sidebar.
+- Added `addAdminSidebarSectionLink` which is used to add a link to a specific admin sidebar section, as a replacement for the `admin-menu` plugin outlet. 
 
 ## [1.23.0] - 2024-01-03
 

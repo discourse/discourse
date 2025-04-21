@@ -224,32 +224,102 @@ RSpec.describe PostSerializer do
     fab!(:user) { Fabricate(:user, trust_level: 1) }
     fab!(:user_tl1) { Fabricate(:user, trust_level: 1) }
     fab!(:user_tl2) { Fabricate(:user, trust_level: 2) }
+    fab!(:post) { Fabricate(:post, user: user) }
 
-    let(:post) do
-      post = Fabricate(:post, user: user)
-      post.custom_fields[Post::NOTICE] = {
-        type: Post.notices[:returning_user],
-        last_posted_at: 1.day.ago,
-      }
-      post.save_custom_fields
-      post
+    def json_for_user(user, serializer_opts = {})
+      serializer = PostSerializer.new(post, scope: Guardian.new(user), root: false)
+
+      if serializer_opts[:notice_created_by_users]
+        serializer.notice_created_by_users = serializer_opts[:notice_created_by_users]
+      end
+
+      serializer.as_json(serializer_opts)
     end
 
-    def json_for_user(user)
-      PostSerializer.new(post, scope: Guardian.new(user), root: false).as_json
+    describe "returning_user notice" do
+      before do
+        post.custom_fields[Post::NOTICE] = {
+          type: Post.notices[:returning_user],
+          last_posted_at: 1.day.ago,
+        }
+        post.save_custom_fields
+      end
+
+      it "is visible for TL2+ users (except poster)" do
+        expect(json_for_user(nil)[:notice]).to eq(nil)
+        expect(json_for_user(user)[:notice]).to eq(nil)
+
+        SiteSetting.returning_user_notice_tl = 2
+        expect(json_for_user(user_tl1)[:notice]).to eq(nil)
+        expect(json_for_user(user_tl2)[:notice][:type]).to eq(Post.notices[:returning_user])
+
+        SiteSetting.returning_user_notice_tl = 1
+        expect(json_for_user(user_tl1)[:notice][:type]).to eq(Post.notices[:returning_user])
+        expect(json_for_user(user_tl2)[:notice][:type]).to eq(Post.notices[:returning_user])
+      end
     end
 
-    it "is visible for TL2+ users (except poster)" do
-      expect(json_for_user(nil)[:notice]).to eq(nil)
-      expect(json_for_user(user)[:notice]).to eq(nil)
+    describe "custom notice" do
+      fab!(:moderator)
 
-      SiteSetting.returning_user_notice_tl = 2
-      expect(json_for_user(user_tl1)[:notice]).to eq(nil)
-      expect(json_for_user(user_tl2)[:notice][:type]).to eq(Post.notices[:returning_user])
+      before do
+        post.custom_fields[Post::NOTICE] = {
+          type: Post.notices[:custom],
+          raw: "This is a notice",
+          cooked: "<p>This is a notice</p>",
+          created_by_user_id: moderator.id,
+        }
+        post.save_custom_fields
+      end
 
-      SiteSetting.returning_user_notice_tl = 1
-      expect(json_for_user(user_tl1)[:notice][:type]).to eq(Post.notices[:returning_user])
-      expect(json_for_user(user_tl2)[:notice][:type]).to eq(Post.notices[:returning_user])
+      it "displays for all trust levels" do
+        expect(json_for_user(user)[:notice]).to eq(
+          {
+            cooked: "<p>This is a notice</p>",
+            created_by_user_id: moderator.id,
+            raw: "This is a notice",
+            type: Post.notices[:custom],
+          }.with_indifferent_access,
+        )
+        expect(json_for_user(user_tl1)[:notice]).to eq(
+          {
+            cooked: "<p>This is a notice</p>",
+            created_by_user_id: moderator.id,
+            raw: "This is a notice",
+            type: Post.notices[:custom],
+          }.with_indifferent_access,
+        )
+        expect(json_for_user(user_tl2)[:notice]).to eq(
+          {
+            cooked: "<p>This is a notice</p>",
+            created_by_user_id: moderator.id,
+            raw: "This is a notice",
+            type: Post.notices[:custom],
+          }.with_indifferent_access,
+        )
+      end
+
+      it "only displays the created_by_user for staff" do
+        expect(
+          json_for_user(user, notice_created_by_users: [moderator])[:notice_created_by_user],
+        ).to eq(nil)
+        expect(
+          json_for_user(user_tl1, notice_created_by_users: [moderator])[:notice_created_by_user],
+        ).to eq(nil)
+        expect(
+          json_for_user(user_tl2, notice_created_by_users: [moderator])[:notice_created_by_user],
+        ).to eq(nil)
+        expect(
+          json_for_user(moderator, notice_created_by_users: [moderator])[:notice_created_by_user],
+        ).to eq(
+          {
+            id: moderator.id,
+            username: moderator.username,
+            name: moderator.name,
+            avatar_template: moderator.avatar_template,
+          },
+        )
+      end
     end
   end
 
@@ -310,7 +380,7 @@ RSpec.describe PostSerializer do
     end
   end
 
-  context "with allow_anonymous_likes enabled" do
+  context "with allow_likes_in_anonymous_mode enabled" do
     fab!(:user)
     fab!(:topic) { Fabricate(:topic, user: user) }
     fab!(:post) { Fabricate(:post, topic: topic, user: topic.user) }
@@ -332,8 +402,8 @@ RSpec.describe PostSerializer do
     end
 
     before do
-      SiteSetting.allow_anonymous_posting = true
-      SiteSetting.allow_anonymous_likes = true
+      SiteSetting.allow_anonymous_mode = true
+      SiteSetting.allow_likes_in_anonymous_mode = true
       SiteSetting.post_undo_action_window_mins = 10
       PostSerializer.any_instance.stubs(:post_actions).returns({ 2 => post_action })
     end
@@ -435,6 +505,201 @@ RSpec.describe PostSerializer do
       json = serializer.as_json
 
       expect(json.keys).not_to include :user_status
+    end
+  end
+
+  describe "#badges_granted" do
+    fab!(:user)
+    fab!(:user2) { Fabricate(:user) }
+    fab!(:post) { Fabricate(:post, user: user) }
+    fab!(:post2) { Fabricate(:post, user: user) }
+
+    # Create twp badges that have all required flags set to true
+    fab!(:badge1) do
+      Badge.create!(
+        name: "SomeBadge",
+        badge_type_id: BadgeType::Bronze,
+        listable: true,
+        show_posts: true,
+        show_in_post_header: true,
+        multiple_grant: true,
+      )
+    end
+    fab!(:ub1) do
+      UserBadge.create!(
+        badge_id: badge1.id,
+        user: user,
+        granted_by: Discourse.system_user,
+        granted_at: Time.now,
+        post_id: post.id,
+      )
+    end
+
+    fab!(:badge2) do
+      Badge.create!(
+        name: "SomeOtherBadge",
+        badge_type_id: BadgeType::Bronze,
+        listable: true,
+        show_posts: true,
+        show_in_post_header: true,
+        multiple_grant: true,
+      )
+    end
+    fab!(:ub2) do
+      UserBadge.create!(
+        badge_id: badge2.id,
+        user: user,
+        granted_by: Discourse.system_user,
+        granted_at: Time.now,
+        post_id: post.id,
+      )
+    end
+
+    # Create a badge that has the show_posts flag set to false
+    fab!(:badge3) do
+      Badge.create!(
+        name: "YetAnotherBadge",
+        badge_type_id: BadgeType::Bronze,
+        listable: true,
+        show_posts: false,
+        show_in_post_header: true,
+      )
+    end
+    fab!(:ub3) do
+      UserBadge.create!(
+        badge_id: badge3.id,
+        user: user,
+        granted_by: Discourse.system_user,
+        granted_at: Time.now,
+        post_id: post.id,
+      )
+    end
+
+    # Re-use our first badge, but on a different post
+    fab!(:ub4) do
+      UserBadge.create!(
+        badge_id: badge1.id,
+        user: user,
+        granted_by: Discourse.system_user,
+        granted_at: Time.now,
+        post_id: post2.id,
+      )
+    end
+
+    # Now re-use our first badge, but on a different user
+    fab!(:ub5) do
+      UserBadge.create!(
+        badge_id: badge1.id,
+        user: user2,
+        granted_by: Discourse.system_user,
+        granted_at: Time.now,
+        post_id: post.id,
+      )
+    end
+
+    # Create a badge that has the listable flag set to false
+    fab!(:badge4) do
+      Badge.create!(
+        name: "WeirdBadge",
+        badge_type_id: BadgeType::Bronze,
+        listable: false,
+        show_posts: true,
+        show_in_post_header: true,
+      )
+    end
+    fab!(:ub6) do
+      UserBadge.create!(
+        badge_id: badge4.id,
+        user: user,
+        granted_by: Discourse.system_user,
+        granted_at: Time.now,
+        post_id: post.id,
+      )
+    end
+
+    # Create a badge that has the show_in_post_header flag set to false
+    fab!(:badge5) do
+      Badge.create!(
+        name: "StrangeBadge",
+        badge_type_id: BadgeType::Bronze,
+        listable: true,
+        show_posts: true,
+        show_in_post_header: false,
+      )
+    end
+    fab!(:ub7) do
+      UserBadge.create!(
+        badge_id: badge5.id,
+        user: user,
+        granted_by: Discourse.system_user,
+        granted_at: Time.now,
+        post_id: post.id,
+      )
+    end
+
+    let(:serializer) { described_class.new(post, scope: Guardian.new(user), root: false) }
+
+    it "doesn't include badges when `enable_badges` site setting is disabled" do
+      SiteSetting.enable_badges = false
+      expect(serializer.as_json[:badges_granted]).to eq([])
+    end
+
+    it "doesn't include badges when `show_badges_in_post_header` site setting is disabled" do
+      SiteSetting.enable_badges = true
+      SiteSetting.show_badges_in_post_header = false
+      expect(serializer.as_json[:badges_granted]).to eq([])
+    end
+
+    context "when `enable_badges` and `show_badges_in_post_header` site settings are enabled" do
+      before do
+        SiteSetting.enable_badges = true
+        SiteSetting.show_badges_in_post_header = true
+      end
+
+      it "includes badges that were granted for this user on this post" do
+        json = serializer.as_json
+
+        expect(json[:badges_granted].length).to eq(2)
+        expect(json[:badges_granted].map { |b| b[:badges][0][:id] }).to contain_exactly(
+          ub1.badge_id,
+          ub2.badge_id,
+        )
+
+        expect(json[:badges_granted].map { |b| b[:basic_user_badge][:id] }).to contain_exactly(
+          ub1.id,
+          ub2.id,
+        )
+      end
+
+      it "does not return a user badge that has the show_posts flag set to false" do
+        json = serializer.as_json
+
+        expect(json[:badges_granted].map { |b| b[:basic_user_badge][:id] }).not_to include(ub3.id)
+      end
+
+      it "does not return a user badge that was not granted for this post" do
+        json = serializer.as_json
+
+        expect(json[:badges_granted].map { |b| b[:basic_user_badge][:id] }).not_to include(ub4.id)
+      end
+
+      it "does not return a user badge that was granted for a different user" do
+        json = serializer.as_json
+
+        expect(json[:badges_granted].map { |b| b[:basic_user_badge][:id] }).not_to include(ub5.id)
+      end
+
+      it "does not return a user badge that has the listable flag set to false" do
+        json = serializer.as_json
+
+        expect(json[:badges_granted].map { |b| b[:basic_user_badge][:id] }).not_to include(ub6.id)
+      end
+
+      it "does not return a user badge that has the show_in_post_header flag set to false" do
+        json = serializer.as_json
+
+        expect(json[:badges_granted].map { |b| b[:basic_user_badge][:id] }).not_to include(ub7.id)
+      end
     end
   end
 

@@ -52,7 +52,7 @@ acceptance("Discourse Chat | Unit | Service | chat-guardian", function (needs) {
     set(this.currentUser, "has_chat_enabled", true);
     set(this.currentUser, "admin", true);
     this.siteSettings.chat_enabled = true;
-    assert.ok(this.chatGuardian.canEditChatChannel());
+    assert.true(this.chatGuardian.canEditChatChannel());
   });
 
   test("#canUseChat", async function (assert) {
@@ -66,7 +66,7 @@ acceptance("Discourse Chat | Unit | Service | chat-guardian", function (needs) {
 
     set(this.currentUser, "has_chat_enabled", true);
     this.siteSettings.chat_enabled = true;
-    assert.ok(this.chatGuardian.canUseChat());
+    assert.true(this.chatGuardian.canUseChat());
   });
 
   test("#canArchiveChannel", async function (assert) {
@@ -76,7 +76,7 @@ acceptance("Discourse Chat | Unit | Service | chat-guardian", function (needs) {
     set(this.currentUser, "admin", true);
     this.siteSettings.chat_enabled = true;
     this.siteSettings.chat_allow_archiving_channels = true;
-    assert.ok(this.chatGuardian.canArchiveChannel(channel));
+    assert.true(this.chatGuardian.canArchiveChannel(channel));
 
     set(this.currentUser, "admin", false);
     set(this.currentUser, "moderator", false);

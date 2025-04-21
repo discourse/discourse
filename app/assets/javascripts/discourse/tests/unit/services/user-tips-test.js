@@ -8,11 +8,7 @@ module("Unit | Service | user-tips", function (hooks) {
   setupTest(hooks);
 
   test("hideUserTipForever() makes a single request", async function (assert) {
-    const currentUser = logIn();
-    this.owner.unregister("service:current-user");
-    this.owner.register("service:current-user", currentUser, {
-      instantiate: false,
-    });
+    logIn(this.owner);
 
     const site = getOwner(this).lookup("service:site");
     site.set("user_tips", { first_notification: 1 });

@@ -1,5 +1,4 @@
 // Shared styles
-
 .login-fullpage,
 .signup-fullpage {
   height: 100%;
@@ -11,10 +10,32 @@
 
 body.login-page,
 body.signup-page,
-body.invite-page {
-  & ~ .powered-by-discourse,
-  .above-main-container-outlet {
+body.invite-page,
+body.password-reset-page,
+body.activate-account-page {
+  .powered-by-discourse,
+  .above-main-container-outlet,
+  .before-header-panel-outlet,
+  .below-site-header-outlet {
     display: none;
+  }
+
+  #main-outlet {
+    padding: 0;
+  }
+
+  .d-header {
+    box-shadow: none;
+    border: none;
+    background-color: var(--secondary);
+  }
+
+  .d-header .home-logo-wrapper-outlet {
+    width: 100%;
+  }
+
+  .d-header .title a {
+    margin: 0 auto;
   }
 }
 
@@ -25,7 +46,8 @@ body.signup-page {
 
 .login-fullpage,
 .signup-fullpage,
-.invites-show {
+.invites-show,
+.password-reset-page {
   .signup-body,
   .login-body {
     display: flex;
@@ -49,6 +71,7 @@ body.signup-page {
 
     &__existing-account,
     &__no-account-yet {
+      font-size: var(--font-down-1);
       color: var(--primary-medium);
     }
 
@@ -60,7 +83,6 @@ body.signup-page {
 
   .login-left-side {
     box-sizing: border-box;
-    width: 100%;
     padding: 3rem;
     overflow: auto;
     width: 100%;
@@ -97,7 +119,7 @@ body.signup-page {
       width: 100%;
     }
 
-    input:focus {
+    input:not(.filter-input):focus {
       outline: none;
       border: 1px solid var(--tertiary);
       box-shadow: 0 0 0 2px rgba(var(--tertiary-rgb), 0.25);
@@ -124,23 +146,29 @@ body.signup-page {
       pointer-events: none;
       left: 1em;
       top: 13px;
-      box-shadow: 0 0 0 0px rgba(var(--tertiary-rgb), 0);
+      box-shadow: 0 0 0 0 rgba(var(--tertiary-rgb), 0);
       transition: 0.2s ease all;
     }
 
     .user-field.text label.control-label,
     .user-field.dropdown label.control-label,
     .user-field.multiselect label.control-label {
-      z-index: 999;
       top: -8px;
       left: calc(1em - 0.25em);
       background-color: var(--secondary);
       padding: 0 0.25em 0 0.25em;
       font-size: $font-down-1;
     }
+
+    .user-field.multiselect label.control-label,
+    .user-field.dropdown label.control-label {
+      z-index: z("dropdown") + 1;
+    }
+
     .user-field.text label.control-label {
       top: 13px;
     }
+
     .user-field.text:focus-within,
     .user-field.dropdown:focus-within,
     .user-field.multiselect:focus-within {
@@ -159,6 +187,7 @@ body.signup-page {
     input.alt-placeholder:invalid {
       color: var(--primary);
     }
+
     .user-field.dropdown,
     .user-field.multiselect {
       .more-info,
@@ -193,14 +222,6 @@ body.signup-page {
     display: flex;
     flex-direction: column;
 
-    .input-group {
-      &.create-account-email,
-      &.create-account__username,
-      &.create-account__fullname.required {
-        order: -1;
-      }
-    }
-
     .create-account-associate-link {
       order: 1;
     }
@@ -215,6 +236,7 @@ body.signup-page {
 
     .btn-social {
       border: 1px solid var(--primary-low);
+      padding: 0.75em 0.77em; // matches input padding
     }
   }
 
@@ -230,6 +252,7 @@ body.signup-page {
     font-size: var(--font-down-1);
     min-height: 1.4em;
     display: block;
+
     &.bad {
       color: var(--danger);
     }
@@ -244,27 +267,20 @@ body.signup-page {
     font-size: var(--font-down-1);
     color: var(--primary-medium);
     overflow-wrap: anywhere;
-    transition: opacity 0.2s ease;
-    opacity: 0;
-  }
-
-  .input-group input:focus {
-    & ~ .more-info,
-    & ~ .instructions {
-      opacity: 1;
-    }
   }
 
   .caps-lock-warning {
     color: var(--danger);
     font-size: var(--font-down-1);
-    font-weight: bold;
-    margin-top: 0.5em;
   }
 
   .create-account__password-info {
     display: flex;
     justify-content: space-between;
+
+    .create-account__password-tip-validation {
+      display: flex;
+    }
   }
 
   .inline-spinner {
@@ -275,9 +291,11 @@ body.signup-page {
     display: flex;
     flex-direction: column;
     gap: 1rem;
+
     &__accept {
       width: 100%;
     }
+
     &__info {
       display: flex;
       align-items: center;
@@ -287,6 +305,7 @@ body.signup-page {
       line-height: 1rem;
       color: var(--primary-medium);
     }
+
     &__sign-in {
       padding: 0;
       height: 100%;
@@ -296,7 +315,6 @@ body.signup-page {
 }
 
 // Login page
-
 .login-fullpage {
   #second-factor {
     input {
@@ -315,7 +333,6 @@ body.signup-page {
 }
 
 // Signup page
-
 .signup-fullpage {
   .password-confirmation {
     display: none;
@@ -367,6 +384,7 @@ body.signup-page {
       .controls .checkbox-label {
         display: flex;
         align-items: center;
+
         input[type="checkbox"].ember-checkbox {
           width: 1em !important;
           min-width: unset;

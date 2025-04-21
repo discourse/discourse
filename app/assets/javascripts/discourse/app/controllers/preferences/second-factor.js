@@ -10,16 +10,13 @@ import SecondFactorBackupEdit from "discourse/components/modal/second-factor-bac
 import SecondFactorEdit from "discourse/components/modal/second-factor-edit";
 import SecondFactorEditSecurityKey from "discourse/components/modal/second-factor-edit-security-key";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import discourseComputed from "discourse/lib/decorators";
 import DiscourseURL, { userPath } from "discourse/lib/url";
-import CanCheckEmails from "discourse/mixins/can-check-emails";
 import { findAll } from "discourse/models/login-method";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
-import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
-export default class SecondFactorController extends Controller.extend(
-  CanCheckEmails
-) {
+export default class SecondFactorController extends Controller {
   @service dialog;
   @service modal;
   @service siteSettings;
@@ -34,6 +31,10 @@ export default class SecondFactorController extends Controller.extend(
   secondFactorMethod = SECOND_FACTOR_METHODS.TOTP;
   totps = [];
   security_keys = [];
+
+  get isCurrentUser() {
+    return this.currentUser?.id === this.model.id;
+  }
 
   @discourseComputed
   hasOAuth() {
@@ -167,7 +168,7 @@ export default class SecondFactorController extends Controller.extend(
 
       if (!trustedSession.success) {
         this.dialog.dialog({
-          title: I18n.t("user.confirm_access.title"),
+          title: i18n("user.confirm_access.title"),
           type: "notice",
           bodyComponent: ConfirmSession,
           didConfirm: () => this.createToTpModal(),
@@ -187,7 +188,7 @@ export default class SecondFactorController extends Controller.extend(
 
       if (!trustedSession.success) {
         this.dialog.dialog({
-          title: I18n.t("user.confirm_access.title"),
+          title: i18n("user.confirm_access.title"),
           type: "notice",
           bodyComponent: ConfirmSession,
           didConfirm: () => this.createSecurityKeyModal(),
@@ -207,7 +208,7 @@ export default class SecondFactorController extends Controller.extend(
     }
 
     this.dialog.deleteConfirm({
-      title: I18n.t("user.second_factor.disable_confirm"),
+      title: i18n("user.second_factor.disable_confirm"),
       bodyComponent: SecondFactorConfirmPhrase,
       bodyComponentModel: {
         totps: this.totps,
@@ -237,8 +238,8 @@ export default class SecondFactorController extends Controller.extend(
       return;
     }
     this.dialog.deleteConfirm({
-      title: I18n.t("user.second_factor.delete_single_confirm_title"),
-      message: I18n.t("user.second_factor.delete_single_confirm_message", {
+      title: i18n("user.second_factor.delete_single_confirm_title"),
+      message: i18n("user.second_factor.delete_single_confirm_message", {
         name: secondFactorMethod.name,
       }),
       confirmButtonLabel: "user.second_factor.delete",
@@ -304,8 +305,8 @@ export default class SecondFactorController extends Controller.extend(
   @action
   disableSecondFactorBackup() {
     this.dialog.deleteConfirm({
-      title: I18n.t("user.second_factor.delete_backup_codes_confirm_title"),
-      message: I18n.t("user.second_factor.delete_backup_codes_confirm_message"),
+      title: i18n("user.second_factor.delete_backup_codes_confirm_title"),
+      message: i18n("user.second_factor.delete_backup_codes_confirm_message"),
       confirmButtonLabel: "user.second_factor.delete",
       confirmButtonIcon: "ban",
       cancelButtonClass: "btn-flat",

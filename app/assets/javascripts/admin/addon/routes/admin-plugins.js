@@ -1,6 +1,6 @@
 import { service } from "@ember/service";
 import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import AdminPlugin from "admin/models/admin-plugin";
 
 export default class AdminPluginsRoute extends DiscourseRoute {
@@ -12,6 +12,6 @@ export default class AdminPluginsRoute extends DiscourseRoute {
   }
 
   titleToken() {
-    return I18n.t("admin.plugins.title");
+    return i18n("admin.plugins.title");
   }
 }

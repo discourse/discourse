@@ -1,6 +1,6 @@
 import { setOwner } from "@ember/owner";
 import { service } from "@ember/service";
-import { bind } from "discourse-common/utils/decorators";
+import { bind } from "discourse/lib/decorators";
 
 // Subscribe to "read-only" status change events via the Message Bus
 class ReadOnlyInit {

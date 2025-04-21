@@ -39,12 +39,14 @@ class ReviewableQueuedPost < Reviewable
           a.icon = "check"
           a.label = "reviewables.actions.approve_post.title"
           a.confirm_message = "reviewables.actions.approve_post.confirm_closed"
+          a.completed_message = "reviewables.actions.approve_post.complete"
         end
       else
         if target_created_by.present?
           actions.add(:approve_post) do |a|
             a.icon = "check"
             a.label = "reviewables.actions.approve_post.title"
+            a.completed_message = "reviewables.actions.approve_post.complete"
           end
         end
       end
@@ -240,6 +242,7 @@ end
 #
 #  id                      :bigint           not null, primary key
 #  type                    :string           not null
+#  type_source             :string           default("unknown"), not null
 #  status                  :integer          default("pending"), not null
 #  created_by_id           :integer          not null
 #  reviewable_by_moderator :boolean          default(FALSE), not null
@@ -257,6 +260,7 @@ end
 #  updated_at              :datetime         not null
 #  force_review            :boolean          default(FALSE), not null
 #  reject_reason           :text
+#  potentially_illegal     :boolean          default(FALSE)
 #
 # Indexes
 #

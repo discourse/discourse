@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 module Chat
-  # Service responsible to flag a message.
+  # Service responsible to unfollow a chat channel,
+  # which means you no longer receive notifications or
+  # see it in the channel list.
   #
   # @example
   #  ::Chat::UnfollowChannel.call(
@@ -25,6 +27,7 @@ module Chat
 
       validates :channel_id, presence: true
     end
+
     model :channel
     step :unfollow
 

@@ -1,27 +1,21 @@
-import { DEBUG } from "@glimmer/env";
-import { _backburner } from "@ember/runloop";
 import RSVP from "rsvp";
-import PreloadStore from "discourse/lib/preload-store";
-import { setURLContainer } from "discourse/lib/url";
-import Session from "discourse/models/session";
 import {
   isDevelopment,
   isProduction,
   isTesting,
   setEnvironment,
-} from "discourse-common/config/environment";
-import { setDefaultOwner } from "discourse-common/lib/get-owner";
-import { setupS3CDN, setupURL } from "discourse-common/lib/get-url";
-import { setIconList } from "discourse-common/lib/icon-library";
+} from "discourse/lib/environment";
+import { setDefaultOwner } from "discourse/lib/get-owner";
+import { setupS3CDN, setupURL } from "discourse/lib/get-url";
+import { setIconList } from "discourse/lib/icon-library";
+import PreloadStore from "discourse/lib/preload-store";
+import { setURLContainer } from "discourse/lib/url";
+import Session from "discourse/models/session";
 import I18n from "discourse-i18n";
 
 export default {
   // The very first initializer to run
   initialize(app) {
-    if (DEBUG) {
-      _backburner.ASYNC_STACKS = true;
-    }
-
     setURLContainer(app.__container__);
     setDefaultOwner(app.__container__);
 
@@ -77,8 +71,7 @@ export default {
     }
 
     session.darkModeAvailable =
-      document.querySelectorAll('link[media="(prefers-color-scheme: dark)"]')
-        .length > 0;
+      document.querySelectorAll("link.dark-scheme").length > 0;
 
     session.defaultColorSchemeIsDark = setupData.colorSchemeIsDark === "true";
 

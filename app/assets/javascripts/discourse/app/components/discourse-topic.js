@@ -2,14 +2,14 @@ import Component from "@ember/component";
 import { alias } from "@ember/object/computed";
 import { getOwner } from "@ember/owner";
 import { schedule, scheduleOnce } from "@ember/runloop";
+import { service } from "@ember/service";
 import { isBlank } from "@ember/utils";
 import { classNameBindings } from "@ember-decorators/component";
 import { observes } from "@ember-decorators/object";
 import $ from "jquery";
 import ClickTrack from "discourse/lib/click-track";
+import { bind } from "discourse/lib/decorators";
 import { highlightPost } from "discourse/lib/utilities";
-import Scrolling from "discourse/mixins/scrolling";
-import { bind } from "discourse-common/utils/decorators";
 
 @classNameBindings(
   "multiSelect",
@@ -18,13 +18,29 @@ import { bind } from "discourse-common/utils/decorators";
   "topic.category.read_restricted:read_restricted",
   "topic.deleted:deleted-topic"
 )
-export default class DiscourseTopic extends Component.extend(Scrolling) {
+export default class DiscourseTopic extends Component {
+  @service scrollManager;
+
   @alias("topic.userFilters") userFilters;
   @alias("topic.postStream") postStream;
 
   menuVisible = true;
   SHORT_POST = 1200;
   dockAt = 0;
+
+  init() {
+    super.init(...arguments);
+    this.appEvents.on("discourse:focus-changed", this, "gotFocus");
+    this.appEvents.on("post:highlight", this, "_highlightPost");
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+
+    // this happens after route exit, stuff could have trickled in
+    this.appEvents.off("discourse:focus-changed", this, "gotFocus");
+    this.appEvents.off("post:highlight", this, "_highlightPost");
+  }
 
   @observes("enteredAt")
   _enteredTopic() {
@@ -43,16 +59,10 @@ export default class DiscourseTopic extends Component.extend(Scrolling) {
     }
   }
 
-  init() {
-    super.init(...arguments);
-    this.appEvents.on("discourse:focus-changed", this, "gotFocus");
-    this.appEvents.on("post:highlight", this, "_highlightPost");
-  }
-
   didInsertElement() {
     super.didInsertElement(...arguments);
 
-    this.bindScrolling();
+    this.scrollManager.bindScrolling(this);
     window.addEventListener("resize", this.scrolled);
     $(this.element).on(
       "click.discourse-redirect",
@@ -61,18 +71,10 @@ export default class DiscourseTopic extends Component.extend(Scrolling) {
     );
   }
 
-  willDestroy() {
-    super.willDestroy(...arguments);
-
-    // this happens after route exit, stuff could have trickled in
-    this.appEvents.off("discourse:focus-changed", this, "gotFocus");
-    this.appEvents.off("post:highlight", this, "_highlightPost");
-  }
-
   willDestroyElement() {
     super.willDestroyElement(...arguments);
 
-    this.unbindScrolling();
+    this.scrollManager.unbindScrolling(this);
     window.removeEventListener("resize", this.scrolled);
 
     // Unbind link tracking

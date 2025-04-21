@@ -6,14 +6,20 @@
 
 ja:
   js:
+    admin:
+      logs:
+        staff_actions:
+          actions:
+            delete_automation: 自動化を削除
     discourse_automation:
       title: 自動化
-      create: 作成
-      update: 更新
+      back: 戻る
+      edit: 編集
       select_script: スクリプトを選択
       select_trigger: トリガーを選択
       confirm_automation_reset: この操作により、スクリプトとトリガーのオプションがリセットされ、新しい状態が保存されます。続行しますか？
       confirm_automation_trigger: この操作により、自動化がトリガーされます。続行しますか？
+      filter_placeholder: 名前または説明でフィルタ...
       edit_automation:
         trigger_section:
           forced: このトリガーはスクリプトで強制されています。
@@ -142,6 +148,9 @@ ja:
               label: トピック ID
         post_created_edited:
           fields:
+            original_post_only:
+              label: 元の投稿のみ
+              description: 投稿がトピック内のオリジナルの投稿である場合にのみトリガーされます
             action_type:
               label: 操作のタイプ
               description: "オプション。トリガーを作成または編集されたイベントのみに制限します"
@@ -151,17 +160,10 @@ ja:
             restricted_tags:
               label: タグ
               description: オプション。投稿にこれらのいずれかのタグが設定されている場合にのみトリガーされます。
-            restricted_category:
+            restricted_categories:
               label: カテゴリ
-              description: オプション。投稿のトピックがこのカテゴリにある場合にのみトリガーされます。
-            restricted_group:
-              label: グループ
-              description: オプション。投稿のトピックがこのグループの受信トレイにあるプライベートメッセージである場合にのみトリガーされます。
-            restricted_groups:
-              label: グループ
-            ignore_group_members:
-              label: グループメンバーを無視
-              description: 送信者が上記に指定されたグループのメンバーである場合はトリガーをスキップします。
+            restricted_inbox_groups:
+              description: オプション。投稿のトピックがグループのいずれかの受信トレイにある個人メッセージである場合にのみトリガーされます。
             ignore_automated:
               label: 自動送信元を無視
               description: 送信者のメールが noreply メールである場合、または自動送信元から送信されたものである場合はスキップします。メールで作成された投稿にのみ適用されます。
@@ -171,8 +173,15 @@ ja:
             first_topic_only:
               label: 最初のトピックのみ
               description: トピックがユーザーが作成した最初のトピックである場合にのみトリガーされます。
+            skip_via_email:
+              label: "メールの場合はスキップ"
+              description: "投稿がメールで作成された場合はトリガーをスキップします"
           created: 作成
           edited: 編集
+          with_images: 画像
+          with_links: リンク
+          with_code: コード
+          with_uploads: アップロード
         user_updated:
           fields:
             user_profile:
@@ -213,6 +222,10 @@ ja:
               label: 有効な信頼レベル
               description: 投稿がこれらの信頼レベルのユーザーによって作成された場合にのみトリガーされます。デフォルトはすべての信頼レベルです。
         topic_tags_changed:
+          trigger_on_modes:
+            tags_added_or_removed: タグの追加または削除
+            tags_added: タグの追加
+            tags_removed: タグの削除
           fields:
             watching_categories:
               label: ウォッチ中のカテゴリ
@@ -220,6 +233,11 @@ ja:
             watching_tags:
               label: ウォッチ中のタグ
               description: トピックにこれらのいずれかのタグが設定されている場合にのみトリガーされます
+            trigger_on:
+              label: 次の場合にトリガー
+            trigger_with_pms:
+              label: PM でトリガー
+              description: タグが PM で変更された場合でもトリガーされます
         after_post_cook:
           fields:
             valid_trust_levels:
@@ -378,6 +396,7 @@ ja:
           fields:
             custom_field_name:
               label: "ユーザーカスタムフィールド名"
+      unnamed_automation: "無題の自動化"
       models:
         script:
           name:
@@ -394,6 +413,8 @@ ja:
             label: スクリプト
           version:
             label: バージョン
+          status:
+            label: ステータス
           enabled:
             label: 有効
           disabled:

@@ -2,8 +2,8 @@ import { TextField } from "@ember/legacy-built-in-components";
 import { computed } from "@ember/object";
 import { cancel, next } from "@ember/runloop";
 import { attributeBindings } from "@ember-decorators/component";
-import discourseDebounce from "discourse-common/lib/debounce";
-import I18n from "discourse-i18n";
+import discourseDebounce from "discourse/lib/debounce";
+import { i18n } from "discourse-i18n";
 
 const DEBOUNCE_MS = 500;
 
@@ -11,6 +11,7 @@ const DEBOUNCE_MS = 500;
   "autocorrect",
   "autocapitalize",
   "autofocus",
+  "enterkeyhint",
   "maxLength",
   "dir",
   "aria-label",
@@ -64,7 +65,7 @@ export default class DiscourseTextField extends TextField {
     if (this._placeholder) {
       return this._placeholder;
     }
-    return this.placeholderKey ? I18n.t(this.placeholderKey) : "";
+    return this.placeholderKey ? i18n(this.placeholderKey) : "";
   }
 
   set placeholder(value) {

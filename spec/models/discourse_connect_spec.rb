@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseConnect do
-  before do
-    @discourse_connect_url = "http://example.com/discourse_sso"
-    @discourse_connect_secret = "shjkfdhsfkjh"
+  let(:discourse_connect_url) { "http://example.com/discourse_sso" }
+  let(:discourse_connect_secret) { "shjkfdhsfkjh" }
 
-    SiteSetting.discourse_connect_url = @discourse_connect_url
+  before do
+    SiteSetting.discourse_connect_url = discourse_connect_url
     SiteSetting.enable_discourse_connect = true
-    SiteSetting.discourse_connect_secret = @discourse_connect_secret
+    SiteSetting.discourse_connect_secret = discourse_connect_secret
     SiteSetting.reserved_usernames = ""
     Jobs.run_immediately!
   end
@@ -117,6 +117,22 @@ RSpec.describe DiscourseConnect do
     user = sso.lookup_or_create_user(ip_address)
 
     expect(user.persisted?).to eq(true)
+  end
+
+  it "always creates new users when using plus addressing" do
+    SiteSetting.stubs(:normalize_emails).returns(true)
+
+    existing_user = Fabricate(:user, email: "bob+1@user.com")
+
+    sso = new_discourse_sso
+    sso.username = "test"
+    sso.name = ""
+    sso.email = "bob+2@user.com"
+    sso.external_id = "A"
+    sso.suppress_welcome_message = true
+    user = sso.lookup_or_create_user(ip_address)
+
+    expect(user.id).not_to eq(existing_user.id)
   end
 
   it "unstaged users" do
@@ -772,7 +788,7 @@ RSpec.describe DiscourseConnect do
 
   it "generates a correct sso url" do
     url, payload = DiscourseConnect.generate_url(secure_session: secure_session).split("?")
-    expect(url).to eq @discourse_connect_url
+    expect(url).to eq discourse_connect_url
 
     sso = DiscourseConnect.parse(payload, secure_session: secure_session)
     expect(sso.nonce).to_not be_nil
@@ -904,7 +920,7 @@ RSpec.describe DiscourseConnect do
       user = sso.lookup_or_create_user(ip_address)
       expect(user.active).to eq(true)
 
-      user.primary_email.update_columns(email: "xXx@themovie.com")
+      user.primary_email.update(email: "xXx@themovie.com")
 
       user = sso.lookup_or_create_user(ip_address)
       expect(user.email).to eq(old_email)

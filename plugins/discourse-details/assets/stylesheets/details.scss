@@ -3,7 +3,8 @@ details {
 
   .topic-body .cooked &,
   .d-editor-preview,
-  &.details__boxed {
+  &.details__boxed,
+  .ProseMirror & {
     background-color: var(--primary-very-low);
     padding: 0.25rem 0.75rem;
     margin-bottom: 0.5rem;
@@ -52,7 +53,7 @@ summary:first-of-type {
   display: block;
 }
 
-summary:before {
+summary::before {
   content: "\25BA";
   margin-right: 0.25em;
 }
@@ -62,8 +63,8 @@ details[open] .lightbox-wrapper {
   display: block;
 }
 
-details[open] > summary:before,
-details.open > summary:before {
+details[open] > summary::before,
+details.open > summary::before {
   content: "\25BC";
 }
 
@@ -84,7 +85,7 @@ summary::-webkit-details-marker {
     padding: 0;
 
     &:not([open]) {
-      //specificity needed to overrule non-elided
+      // specificity needed to overrule non-elided
       &:hover,
       &:focus,
       &:focus-within {
@@ -99,12 +100,13 @@ summary::-webkit-details-marker {
     &[open] {
       background: var(--primary-very-low);
       padding: 0.5rem 0.75rem;
+
       summary {
         padding: 0;
       }
     }
 
-    summary:before {
+    summary::before {
       content: "" !important;
       display: none;
     }

@@ -37,6 +37,7 @@ fi:
     default_poll_with_multiple_choices_has_invalid_parameters: "Kysely, jossa on useita vaihtoehtoja, sisältää epäkelpoja parametreja."
     named_poll_with_multiple_choices_has_invalid_parameters: "Kysely <strong>%{name}</strong>, jossa on useampia vaihtoehtoja, sisältää epäkelpoja parametreja."
     requires_at_least_1_valid_option: "Sinun täytyy valita vähintään 1 vaihtoehto."
+    requires_that_at_least_one_option_is_ranked: "Sijoitetun valinnan kyselyissä sinun täytyy sijoittaa vähintään yksi vaihtoehto."
     edit_window_expired:
       cannot_edit_default_poll_with_votes: "Et voi muuttaa kyselyä, kun %{minutes} minuuttia on kulunut."
       cannot_edit_named_poll_with_votes: "Et voi muuttaa kyselyn nimeä <strong>${name}</strong>, kun %{minutes} minuuttia on kulunut."

@@ -4,7 +4,8 @@ export default [
   ...DiscourseRecommended,
   {
     rules: {
-      "ember/no-classic-classes": "error",
+      "qunit/no-assert-equal": "error",
+      "qunit/no-loose-assertions": "error",
     },
   },
   {

@@ -2,8 +2,8 @@
 
 # mixin for all Guardian methods dealing with user permissions
 module UserGuardian
-  def can_claim_reviewable_topic?(topic)
-    SiteSetting.reviewable_claiming != "disabled" && can_review_topic?(topic)
+  def can_claim_reviewable_topic?(topic, automatic = false)
+    (SiteSetting.reviewable_claiming != "disabled" || automatic) && can_review_topic?(topic)
   end
 
   def can_pick_avatar?(user_avatar, upload)
@@ -128,12 +128,24 @@ module UserGuardian
 
   def can_see_profile?(user)
     return false if user.blank?
-    return true if !SiteSetting.allow_users_to_hide_profile?
+    return true if is_me?(user) || is_staff?
 
-    # If a user has hidden their profile, restrict it to them and staff
-    return is_me?(user) || is_staff? if user.user_option.try(:hide_profile?)
+    profile_hidden = SiteSetting.allow_users_to_hide_profile && user.user_option&.hide_profile?
 
-    true
+    return true if user.staff? && !profile_hidden
+
+    if SiteSetting.hide_new_user_profiles && !SiteSetting.invite_only &&
+         !SiteSetting.must_approve_users
+      if user.user_stat.blank? || user.user_stat.post_count == 0
+        return false if anonymous? || !@user.has_trust_level?(TrustLevel[2])
+      end
+
+      if anonymous? || !@user.has_trust_level?(TrustLevel[1])
+        return user.has_trust_level?(TrustLevel[1]) && !profile_hidden
+      end
+    end
+
+    !profile_hidden
   end
 
   def can_see_user_actions?(user, action_types)

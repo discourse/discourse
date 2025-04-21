@@ -6,14 +6,20 @@
 
 it:
   js:
+    admin:
+      logs:
+        staff_actions:
+          actions:
+            delete_automation: elimina automazione
     discourse_automation:
       title: Automazione
-      create: Crea
-      update: Aggiorna
+      back: Indietro
+      edit: Modifica
       select_script: Seleziona uno script
       select_trigger: Seleziona evento di attivazione
       confirm_automation_reset: Questa azione ripristinerà script e le opzioni di attivazione e il nuovo stato verrà salvato. Vuoi procedere?
       confirm_automation_trigger: Questa azione attiverà l'automazione, vuoi procedere?
+      filter_placeholder: Filtra per nome o descrizione...
       edit_automation:
         trigger_section:
           forced: Questa azione di attivazione è forzata dallo script.
@@ -143,6 +149,9 @@ it:
               label: ID dell'argomento
         post_created_edited:
           fields:
+            original_post_only:
+              label: Solo messaggio originale
+              description: Verrà attivata solo se il messaggio è il messaggio originale nell'argomento
             action_type:
               label: Tipo di azione
               description: "Facoltativo, limita l'attivazione solo agli eventi creati o modificati"
@@ -152,17 +161,10 @@ it:
             restricted_tags:
               label: Etichette
               description: Facoltativo, l'attivazione avverrà solo se il messaggio ha una di queste etichette
-            restricted_category:
-              label: Categoria
-              description: Facoltativo, l'attivazione avverrà solo se l'argomento del messaggio rientra in questa categoria
-            restricted_group:
-              label: Gruppo
-              description: Facoltativo, l'attivazione avverrà solo se l'argomento del post è un messaggio privato nella posta in arrivo di questo gruppo
-            restricted_groups:
-              label: Gruppi
-            ignore_group_members:
-              label: Ignora i membri del gruppo
-              description: Salta l'attivazione se il mittente è un membro del gruppo specificato sopra
+            restricted_categories:
+              label: Categorie
+            restricted_inbox_groups:
+              description: Facoltativo, l'attivazione avverrà solo se l'argomento del post è un messaggio personale in una delle caselle di posta del gruppo
             ignore_automated:
               label: Ignora automatizzati
               description: Salta l'attivazione se il mittente ha un'e-mail che non accetta risposte o che proviene da una fonte automatizzata. Si applica solo ai messaggi creati via e-mail
@@ -172,8 +174,15 @@ it:
             first_topic_only:
               label: Solo il primo argomento
               description: L'attivazione avverrà solo se l'argomento è il primo creato da un utente
+            skip_via_email:
+              label: "Salta tramite e-mail"
+              description: "Salta l'attivazione se il messaggio è stato creato tramite e-mail"
           created: Creato
           edited: Modificato
+          with_images: Immagini
+          with_links: Collegamenti
+          with_code: Codice
+          with_uploads: Caricamenti
         user_updated:
           fields:
             user_profile:
@@ -214,6 +223,10 @@ it:
               label: Livelli di attendibilità validi
               description: L'attivazione avverrà solo se il messaggio viene creato da utenti in questi livelli di attendibilità, il valore predefinito è qualsiasi livello di attendibilità
         topic_tags_changed:
+          trigger_on_modes:
+            tags_added_or_removed: Etichette aggiunte o rimosse
+            tags_added: Etichette aggiunte
+            tags_removed: Etichette rimosse
           fields:
             watching_categories:
               label: Categorie osservate
@@ -221,6 +234,11 @@ it:
             watching_tags:
               label: Etichette osservate
               description: Verrà attivato solo se l'argomento ha una di queste etichette
+            trigger_on:
+              label: 'Attivazione:'
+            trigger_with_pms:
+              label: Attiva con messaggi privati
+              description: L'attivazione avverrà anche se le etichette sono state modificate in un messaggio privato
         after_post_cook:
           fields:
             valid_trust_levels:
@@ -379,6 +397,7 @@ it:
           fields:
             custom_field_name:
               label: "Nome campo personalizzato utente"
+      unnamed_automation: "Automazione senza nome"
       models:
         script:
           name:
@@ -395,6 +414,8 @@ it:
             label: Script
           version:
             label: Versione
+          status:
+            label: Stato
           enabled:
             label: Abilitati
           disabled:

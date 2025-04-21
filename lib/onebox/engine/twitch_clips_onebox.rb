@@ -4,7 +4,7 @@ require_relative "../mixins/twitch_onebox"
 
 class Onebox::Engine::TwitchClipsOnebox
   def self.twitch_regexp
-    %r{^https?://clips\.twitch\.tv/([a-zA-Z0-9_]+/?[^#\?/]+)}
+    %r{^https?://(?:clips\.twitch\.tv/embed\?clip=|www\.twitch\.tv/[a-zA-Z0-9_]+/clip/|clips\.twitch\.tv/)([a-zA-Z0-9_\-]+)}
   end
 
   include Onebox::Mixins::TwitchOnebox

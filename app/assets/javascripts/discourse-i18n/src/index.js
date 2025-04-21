@@ -21,10 +21,16 @@ export class I18n {
   extras = null;
   noFallbacks = false;
   testing = false;
+  verbose = false;
+  verboseIndicies = new Map();
 
   pluralizationRules = Cardinals;
 
-  translate = (scope, options) => this._translate(scope, options);
+  translate = (scope, options) => {
+    return this.verbose
+      ? this._verboseTranslate(scope, options)
+      : this._translate(scope, options);
+  };
 
   // shortcut
   t = this.translate;
@@ -45,31 +51,19 @@ export class I18n {
   }
 
   enableVerboseLocalization() {
-    let counter = 0;
-    let keys = {};
-
     this.noFallbacks = true;
-
-    this.t = this.translate = (scope, options) => {
-      let current = keys[scope];
-      if (!current) {
-        current = keys[scope] = ++counter;
-        let message = "Translation #" + current + ": " + scope;
-        if (options && Object.keys(options).length > 0) {
-          message += ", parameters: " + JSON.stringify(options);
-        }
-        // eslint-disable-next-line no-console
-        console.info(message);
-      }
-
-      return this._translate(scope, options) + " (#" + current + ")";
-    };
+    this.verbose = true;
   }
 
   enableVerboseLocalizationSession() {
     sessionStorage.setItem("verbose_localization", "true");
     this.enableVerboseLocalization();
     return "Verbose localization is enabled. Close the browser tab to turn it off. Reload the page to see the translation keys.";
+  }
+
+  disableVerboseLocalizationSession() {
+    sessionStorage.removeItem("verbose_localization");
+    return "Verbose localization disabled. Reload the page.";
   }
 
   _translate(scope, options) {
@@ -397,6 +391,22 @@ export class I18n {
       return err.message;
     }
   }
+
+  _verboseTranslate(scope, options) {
+    const result = this._translate(scope, options);
+    let i = this.verboseIndicies.get(scope);
+    if (!i) {
+      i = this.verboseIndicies.size + 1;
+      this.verboseIndicies.set(scope, i);
+    }
+    let message = `Translation #${i}: ${scope}`;
+    if (options && Object.keys(options).length > 0) {
+      message += `, parameters: ${JSON.stringify(options)}`;
+    }
+    // eslint-disable-next-line no-console
+    console.info(message);
+    return `${result} (#${i})`;
+  }
 }
 
 export class I18nMissingInterpolationArgument extends Error {
@@ -408,3 +418,5 @@ export class I18nMissingInterpolationArgument extends Error {
 
 // Export a default/global instance
 export default globalThis.I18n = new I18n();
+
+export const i18n = globalThis.I18n.t;

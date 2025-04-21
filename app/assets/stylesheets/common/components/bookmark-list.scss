@@ -10,11 +10,18 @@ $mobile-breakpoint: 700px;
   .topic-list-data.post-metadata {
     text-align: center;
   }
+
   @media (max-width: $mobile-breakpoint) {
     .main-link {
       padding-right: 0.5em;
     }
   }
+
+  .author-avatar img.avatar {
+    height: 24px;
+    width: 24px;
+  }
+
   .main-link.topic-list-data {
     .bookmark-status-with-link {
       a.title {
@@ -22,10 +29,12 @@ $mobile-breakpoint: 700px;
       }
     }
   }
+
   .d-icon.bookmark-pinned {
     font-size: var(--font-down-2);
     margin-right: 0.2em;
   }
+
   .bookmark-metadata {
     font-size: var(--font-down-2);
     margin-bottom: 0.25em;
@@ -35,6 +44,7 @@ $mobile-breakpoint: 700px;
       margin-right: 1em;
       margin-bottom: 0.25em;
       line-height: var(--line-height-medium);
+
       span {
         word-break: break-word;
       }
@@ -48,6 +58,7 @@ $mobile-breakpoint: 700px;
       margin-right: 0.25em;
     }
   }
+
   .bookmark-status-with-link {
     display: flex;
     flex-direction: row;
@@ -56,6 +67,7 @@ $mobile-breakpoint: 700px;
     .mobile-view & {
       margin-bottom: 0.15em;
     }
+
     .topic-statuses {
       float: none;
     }

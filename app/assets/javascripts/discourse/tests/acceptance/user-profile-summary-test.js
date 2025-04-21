@@ -1,11 +1,11 @@
 import { click, currentURL, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import { cloneJSON } from "discourse/lib/object";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
-import { cloneJSON } from "discourse-common/lib/object";
-import I18n from "discourse-i18n";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { i18n } from "discourse-i18n";
 
-let deleteAndBlock = null;
+let deleteAndBlock;
 
 acceptance("User Profile - Summary", function (needs) {
   needs.user();
@@ -23,6 +23,21 @@ acceptance("User Profile - Summary", function (needs) {
     assert
       .dom(".top-categories-section .category-link")
       .exists("top categories");
+  });
+
+  test("Viewing Summary - Expanding / collapsing info", async function (assert) {
+    await visit("/u/eviltrout/summary");
+
+    const collapsed = `button[aria-controls="collapsed-info-panel"][aria-expanded="false"]`;
+    const expanded = `button[aria-controls="collapsed-info-panel"][aria-expanded="true"]`;
+
+    assert.dom(collapsed).exists("info panel is collapsed");
+
+    await click(collapsed);
+    assert.dom(expanded).exists("info panel is expanded");
+
+    await click(expanded);
+    assert.dom(collapsed).exists("info panel is collapsed");
   });
 
   test("Top Categories Search", async function (assert) {
@@ -106,20 +121,20 @@ acceptance("User Profile - Summary - Stats", function (needs) {
   test("Summary Read Times", async function (assert) {
     await visit("/u/eviltrout/summary");
 
-    assert.equal(query(".stats-time-read span").textContent.trim(), "1d");
+    assert.dom(".stats-time-read span").hasText("1d");
     assert
       .dom(".stats-time-read span")
       .hasAttribute(
         "title",
-        I18n.t("user.summary.time_read_title", { duration: "1 day" })
+        i18n("user.summary.time_read_title", { duration: "1 day" })
       );
 
-    assert.equal(query(".stats-recent-read span").textContent.trim(), "17m");
+    assert.dom(".stats-recent-read span").hasText("17m");
     assert
       .dom(".stats-recent-read span")
       .hasAttribute(
         "title",
-        I18n.t("user.summary.recent_time_read_title", { duration: "17 mins" })
+        i18n("user.summary.recent_time_read_title", { duration: "17 mins" })
       );
   });
 });
@@ -142,11 +157,7 @@ acceptance("User Profile - Summary - Admin", function (needs) {
     server.delete("/admin/users/5.json", (request) => {
       const data = helper.parsePostData(request.requestBody);
 
-      if (data.block_email || data.block_ip || data.block_urls) {
-        deleteAndBlock = true;
-      } else {
-        deleteAndBlock = false;
-      }
+      deleteAndBlock = !!(data.block_email || data.block_ip || data.block_urls);
 
       return helper.response({});
     });
@@ -159,22 +170,20 @@ acceptance("User Profile - Summary - Admin", function (needs) {
   test("Delete only action", async function (assert) {
     await visit("/u/charlie/summary");
     await click(".btn-delete-user");
-    await click(".dialog-footer .btn-primary");
+    await click(".dialog-footer .delete-dont-block");
 
-    assert.notOk(deleteAndBlock, "first button does not block user");
+    assert.false(deleteAndBlock, "first button does not block user");
   });
 
   test("Delete and block", async function (assert) {
     await visit("/u/charlie/summary");
     await click(".btn-delete-user");
 
-    assert.equal(
-      query("#dialog-title").textContent,
-      I18n.t("admin.user.delete_confirm_title"),
-      "dialog has a title"
-    );
+    assert
+      .dom("#dialog-title")
+      .hasText(i18n("admin.user.delete_confirm_title"), "dialog has a title");
 
-    await click(".dialog-footer .btn-danger");
-    assert.ok(deleteAndBlock, "second button also block user");
+    await click(".dialog-footer .delete-and-block");
+    assert.true(deleteAndBlock, "second button also block user");
   });
 });

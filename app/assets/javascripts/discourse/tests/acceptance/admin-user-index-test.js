@@ -1,43 +1,30 @@
 import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 const { TOTP, BACKUP_CODE, SECURITY_KEY } = SECOND_FACTOR_METHODS;
-let deleteAndBlock = null;
+let deleteAndBlock;
 
 acceptance("Admin - User Index", function (needs) {
   needs.user();
-  needs.pretender((server, helper) => {
-    server.get("/groups/search.json", () => {
-      return helper.response([
-        {
-          id: 42,
-          automatic: false,
-          name: "Macdonald",
-          user_count: 0,
-          alias_level: 99,
-          visible: true,
-          automatic_membership_email_domains: "",
-          primary_group: false,
-          title: null,
-          grant_trust_level: null,
-          has_messages: false,
-          flair_url: null,
-          flair_bg_color: null,
-          flair_color: null,
-          bio_raw: null,
-          bio_cooked: null,
-          public_admission: false,
-          allow_membership_requests: true,
-          membership_request_template: "Please add me",
-          full_name: null,
-        },
-      ]);
-    });
 
+  needs.site({
+    groups: [
+      {
+        id: 42,
+        automatic: false,
+        name: "Macdonald",
+        flair_url: null,
+        flair_bg_color: null,
+        flair_color: null,
+      },
+    ],
+  });
+
+  needs.pretender((server, helper) => {
     server.put("/users/sam/preferences/username", () => {
       return helper.response({ id: 2, username: "new-sam" });
     });
@@ -129,11 +116,7 @@ acceptance("Admin - User Index", function (needs) {
     server.delete("/admin/users/5.json", (request) => {
       const data = helper.parsePostData(request.requestBody);
 
-      if (data.block_email || data.block_ip || data.block_urls) {
-        deleteAndBlock = true;
-      } else {
-        deleteAndBlock = false;
-      }
+      deleteAndBlock = !!(data.block_email || data.block_ip || data.block_urls);
 
       return helper.response({});
     });
@@ -249,10 +232,7 @@ acceptance("Admin - User Index", function (needs) {
     await visit("/admin/users/3/user1");
     await click(".grant-admin");
     assert.dom(".dialog-content").exists();
-    assert.strictEqual(
-      I18n.t("admin.user.grant_admin_confirm"),
-      query(".dialog-body").textContent.trim()
-    );
+    assert.dom(".dialog-body").hasText(i18n("admin.user.grant_admin_confirm"));
 
     await click(".dialog-footer .btn-primary");
   });
@@ -270,7 +250,7 @@ acceptance("Admin - User Index", function (needs) {
   test("grant admin - redirects to the 2fa page", async function (assert) {
     await visit("/admin/users/4/user2");
     await click(".grant-admin");
-    assert.equal(
+    assert.strictEqual(
       currentURL(),
       "/session/2fa?nonce=some-nonce",
       "user is redirected to the 2FA page"
@@ -281,10 +261,9 @@ acceptance("Admin - User Index", function (needs) {
     await visit("/admin/users/7/jimmy");
     await click(".disable-second-factor");
     assert.dom(".dialog-content").exists();
-    assert.strictEqual(
-      I18n.t("admin.user.disable_second_factor_confirm"),
-      query(".dialog-body").textContent.trim()
-    );
+    assert
+      .dom(".dialog-body")
+      .hasText(i18n("admin.user.disable_second_factor_confirm"));
 
     await click(".dialog-footer .btn-primary");
   });
@@ -293,13 +272,11 @@ acceptance("Admin - User Index", function (needs) {
     await visit("/admin/users/5/user5");
     await click(".btn-user-delete");
 
-    assert.equal(
-      query("#dialog-title").textContent,
-      I18n.t("admin.user.delete_confirm_title"),
-      "dialog has a title"
-    );
+    assert
+      .dom("#dialog-title")
+      .hasText(i18n("admin.user.delete_confirm_title"), "dialog has a title");
 
-    await click(".dialog-footer .btn-primary");
+    await click(".dialog-footer .delete-dont-block");
 
     assert.false(deleteAndBlock, "user does not get blocked");
   });
@@ -307,8 +284,8 @@ acceptance("Admin - User Index", function (needs) {
   test("delete user - delete and block works as expected", async function (assert) {
     await visit("/admin/users/5/user5");
     await click(".btn-user-delete");
-    await click(".dialog-footer .btn-danger");
+    await click(".dialog-footer .delete-and-block");
 
-    assert.ok(deleteAndBlock, "user does not get blocked");
+    assert.true(deleteAndBlock, "user does get blocked");
   });
 });

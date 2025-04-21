@@ -3,7 +3,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { eq, or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 
 export default class AdminWatchedWord extends Component {
   @service dialog;
@@ -34,7 +34,7 @@ export default class AdminWatchedWord extends Component {
         class="btn-transparent delete-word-record"
       />
 
-      <span>{{@word.word}}</span>
+      <span class="watched-word__content">{{@word.word}}</span>
 
       {{#if (or (eq @actionKey "replace") (eq @actionKey "link"))}}
         &rarr;

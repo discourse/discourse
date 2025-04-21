@@ -16,11 +16,11 @@
       <%- end %>
 
       <div class='author'>
-        <a href='<%= Discourse.base_url %>/u/<%= post.username %>' target="_blank"><img src='<%= post.user.small_avatar_url %>' alt=''></a>
+        <a rel='nofollow' href='<%= Discourse.base_url %>/u/<%= post.username %>' target="_blank"><img src='<%= post.user.small_avatar_url %>' alt=''></a>
       </div>
       <div class='cooked'>
         <h3 class='username'>
-          <a href='<%= Discourse.base_url %>/u/<%= post.username %>' target="_blank" class='<% if post.user.staff? %>staff<% end %><% if post.user.new_user? %>new-user<% end %>'><%= post.user.username %></a>
+          <a rel='nofollow' href='<%= Discourse.base_url %>/u/<%= post.username %>' target="_blank" class='<% if post.user.staff? %>staff<% end %><% if post.user.new_user? %>new-user<% end %>'><%= post.user.username %></a>
           <%- if post.user.title.present? %>
             <span class='title'><%= post.user.title %></span>
           <%- end %>

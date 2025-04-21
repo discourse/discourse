@@ -1,14 +1,9 @@
 import { click, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import { cloneJSON } from "discourse/lib/object";
 import topicFixtures from "discourse/tests/fixtures/topic";
-import {
-  acceptance,
-  query,
-  queryAll,
-  selectText,
-} from "discourse/tests/helpers/qunit-helpers";
-import { cloneJSON } from "discourse-common/lib/object";
-import I18n from "discourse-i18n";
+import { acceptance, selectText } from "discourse/tests/helpers/qunit-helpers";
+import { i18n } from "discourse-i18n";
 
 acceptance("Topic - Quote button - logged in", function (needs) {
   needs.user();
@@ -45,11 +40,11 @@ acceptance("Topic - Quote button - logged in", function (needs) {
 
     assert.dom(".quote-sharing").exists("shows the quote sharing options");
     assert
-      .dom(`.quote-sharing .btn[title='${I18n.t("share.twitter")}']`)
-      .exists("it includes the twitter share button");
+      .dom(`.quote-sharing .btn[title='${i18n("share.twitter")}']`)
+      .exists("includes the twitter share button");
     assert
-      .dom(`.quote-sharing .btn[title='${I18n.t("share.email")}']`)
-      .exists("it includes the email share button");
+      .dom(`.quote-sharing .btn[title='${i18n("share.email")}']`)
+      .exists("includes the email share button");
   });
 
   test("Quoting a Onebox should not copy the formatting of the rendered Onebox", async function (assert) {
@@ -57,11 +52,12 @@ acceptance("Topic - Quote button - logged in", function (needs) {
     await selectText("#post_3 aside.onebox p");
     await click(".insert-quote");
 
-    assert.strictEqual(
-      query(".d-editor-input").value.trim(),
-      '[quote="group_moderator, post:3, topic:2480"]\nhttps://example.com/57350945\n[/quote]',
-      "quote only contains a link"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue(
+        '[quote="group_moderator, post:3, topic:2480"]\nhttps://example.com/57350945\n[/quote]\n\n',
+        "quote only contains a link"
+      );
   });
 });
 
@@ -82,12 +78,12 @@ acceptance("Closed Topic - Quote button - logged in", function (needs) {
     assert.dom(".insert-quote").exists("shows the quote button");
 
     await click(".insert-quote");
-    assert.ok(
-      query(".d-editor-input")
-        .value.trim()
-        .startsWith("Continuing the discussion from"),
-      "quote action defaults to reply as new topic (since topic is closed)"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue(
+        /^\s*Continuing the discussion from/,
+        "quote action defaults to reply as new topic (since topic is closed)"
+      );
   });
 });
 
@@ -101,16 +97,14 @@ acceptance("Topic - Quote button - anonymous", function (needs) {
     await visit("/t/internationalization-localization/280");
     await selectText("#post_5 blockquote");
 
-    assert.ok(queryAll(".quote-sharing"), "it shows the quote sharing options");
+    assert.dom(".quote-sharing").exists("shows the quote sharing options");
     assert
-      .dom(`.quote-sharing .btn[title='${I18n.t("share.twitter")}']`)
-      .exists("it includes the twitter share button");
+      .dom(`.quote-sharing .btn[title='${i18n("share.twitter")}']`)
+      .exists("includes the twitter share button");
     assert
-      .dom(`.quote-sharing .btn[title='${I18n.t("share.email")}']`)
-      .exists("it includes the email share button");
-    assert
-      .dom(".insert-quote")
-      .doesNotExist("it does not show the quote button");
+      .dom(`.quote-sharing .btn[title='${i18n("share.email")}']`)
+      .exists("includes the email share button");
+    assert.dom(".insert-quote").doesNotExist("does not show the quote button");
   });
 
   test("Shows single share button when site setting only has one item", async function (assert) {
@@ -121,11 +115,11 @@ acceptance("Topic - Quote button - anonymous", function (needs) {
 
     assert.dom(".quote-sharing").exists("shows the quote sharing options");
     assert
-      .dom(`.quote-sharing .btn[title='${I18n.t("share.twitter")}']`)
-      .exists("it includes the twitter share button");
+      .dom(`.quote-sharing .btn[title='${i18n("share.twitter")}']`)
+      .exists("includes the twitter share button");
     assert
       .dom(".quote-share-label")
-      .doesNotExist("it does not show the Share label");
+      .doesNotExist("does not show the Share label");
   });
 
   test("Shows nothing when visibility is disabled", async function (assert) {
@@ -148,9 +142,8 @@ acceptance("Topic - Quote button - keyboard shortcut", function (needs) {
     await triggerKeyEvent(document, "keypress", "Q");
     assert.dom(".d-editor-input").exists("the editor is open");
 
-    assert.ok(
-      query(".d-editor-input").value.includes("Any plans to support"),
-      "editor includes selected text"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue(/Any plans to support/, "editor includes selected text");
   });
 });

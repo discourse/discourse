@@ -32,21 +32,21 @@ module("Unit | Utility | text-direction", function (hooks) {
 
   test("isRTL", function (assert) {
     // Hebrew
-    assert.strictEqual(isRTL("זה מבחן"), true);
+    assert.true(isRTL("זה מבחן"));
 
     // Arabic
-    assert.strictEqual(isRTL("هذا اختبار"), true);
+    assert.true(isRTL("هذا اختبار"));
 
     // Persian
-    assert.strictEqual(isRTL("این یک امتحان است"), true);
+    assert.true(isRTL("این یک امتحان است"));
 
-    assert.strictEqual(isRTL("This is a test"), false);
-    assert.strictEqual(isRTL(""), false);
+    assert.false(isRTL("This is a test"));
+    assert.false(isRTL(""));
   });
 
   test("isLTR", function (assert) {
-    assert.strictEqual(isLTR("This is a test"), true);
-    assert.strictEqual(isLTR("זה מבחן"), false);
+    assert.true(isLTR("This is a test"));
+    assert.false(isLTR("זה מבחן"));
   });
 
   test("setTextDirections", function (assert) {

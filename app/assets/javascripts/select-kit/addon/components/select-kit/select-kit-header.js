@@ -5,7 +5,7 @@ import {
   classNameBindings,
   classNames,
 } from "@ember-decorators/component";
-import { makeArray } from "discourse-common/lib/helpers";
+import { makeArray } from "discourse/lib/helpers";
 import UtilsMixin from "select-kit/mixins/utils";
 
 @classNames("select-kit-header")
@@ -76,7 +76,13 @@ export default class SelectKitHeader extends Component.extend(UtilsMixin) {
     ) {
       return false;
     }
-    this.selectKit.toggle(event);
+
+    // When users double click on a tag input we want to leave it open
+    const hasInput =
+      event.target.tagName === "INPUT" || event.target.querySelector("input");
+    if (!this.selectKit.isExpanded || !hasInput) {
+      this.selectKit.toggle(event);
+    }
   }
 
   keyUp(event) {

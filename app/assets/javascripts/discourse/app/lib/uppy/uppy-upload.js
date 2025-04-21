@@ -10,6 +10,9 @@ import Uppy from "@uppy/core";
 import DropTarget from "@uppy/drop-target";
 import XHRUpload from "@uppy/xhr-upload";
 import { ajax, updateCsrfToken } from "discourse/lib/ajax";
+import { bind } from "discourse/lib/decorators";
+import getUrl from "discourse/lib/get-url";
+import { deepMerge } from "discourse/lib/object";
 import {
   bindFileInputChangeListener,
   displayErrorForUpload,
@@ -19,10 +22,7 @@ import UppyS3Multipart from "discourse/lib/uppy/s3-multipart";
 import UppyWrapper from "discourse/lib/uppy/wrapper";
 import UppyChecksum from "discourse/lib/uppy-checksum-plugin";
 import UppyChunkedUploader from "discourse/lib/uppy-chunked-uploader-plugin";
-import getUrl from "discourse-common/lib/get-url";
-import { deepMerge } from "discourse-common/lib/object";
-import { bind } from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export const HUGE_FILE_THRESHOLD_BYTES = 104_857_600; // 100MB
 
@@ -186,7 +186,7 @@ export default class UppyUpload {
 
         if (tooMany) {
           this.dialog.alert(
-            I18n.t("post.errors.too_many_dragged_and_dropped_files", {
+            i18n("post.errors.too_many_dragged_and_dropped_files", {
               count: this.allowMultipleFiles ? maxFiles : 1,
             })
           );
@@ -465,7 +465,7 @@ export default class UppyUpload {
 
   #xhrUploadUrl() {
     const uploadUrl = this.config.uploadUrl || this.config.uploadRootPath;
-    return getUrl(uploadUrl) + ".json?client_id=" + this.messageBus?.clientId;
+    return getUrl(uploadUrl) + ".json?client_id=" + this.messageBus.clientId;
   }
 
   #bindFileInputChange() {

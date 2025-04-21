@@ -4,9 +4,9 @@ import { service } from "@ember/service";
 import { modifier as modifierFn } from "ember-modifier";
 import { eq } from "truth-helpers";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
+import { bind } from "discourse/lib/decorators";
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
-import { bind } from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import ChatThreadListItem from "discourse/plugins/chat/discourse/components/chat/thread-list/item";
 import ChatTrackMessage from "discourse/plugins/chat/discourse/modifiers/chat/track-message";
 
@@ -16,7 +16,7 @@ export default class ChatThreadList extends Component {
   @service messageBus;
   @service chatTrackingStateManager;
 
-  noThreadsLabel = I18n.t("chat.threads.none");
+  noThreadsLabel = i18n("chat.threads.none");
 
   subscribe = modifierFn((element, [channel]) => {
     this.messageBus.subscribe(

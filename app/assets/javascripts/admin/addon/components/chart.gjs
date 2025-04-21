@@ -6,11 +6,10 @@ import loadScript from "discourse/lib/load-script";
 // chartConfig - object
 export default class Chart extends Component {
   renderChart = modifier((element) => {
+    const { chartConfig } = this.args;
+
     loadScript("/javascripts/Chart.min.js").then(() => {
-      this.chart = new window.Chart(
-        element.getContext("2d"),
-        this.args.chartConfig
-      );
+      this.chart = new window.Chart(element.getContext("2d"), chartConfig);
     });
 
     return () => this.chart?.destroy();

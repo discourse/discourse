@@ -221,6 +221,52 @@ class SiteSettings::TypeSupervisor
     @list_type[name.to_sym]
   end
 
+  def validate_value(name, type, val)
+    if type == self.class.types[:enum]
+      if get_enum_class(name)
+        unless get_enum_class(name).valid_value?(val)
+          raise Discourse::InvalidParameters.new("Invalid value `#{val}` for `#{name}`")
+        end
+      else
+        unless (choice = @choices[name])
+          raise Discourse::InvalidParameters.new(name)
+        end
+
+        raise Discourse::InvalidParameters.new(:value) if choice.exclude?(val)
+      end
+    end
+
+    if type == self.class.types[:list] || type == self.class.types[:string]
+      if @allow_any.key?(name) && !@allow_any[name]
+        split = val.to_s.split("|")
+        resolved_choices = @choices[name]
+        if resolved_choices.first.is_a?(Hash)
+          resolved_choices = resolved_choices.map { |c| c[:value] }
+        end
+        diff = (split - resolved_choices)
+        if diff.length > 0
+          raise Discourse::InvalidParameters.new(
+                  I18n.t(
+                    "errors.site_settings.invalid_choice",
+                    name: diff.join(","),
+                    count: diff.length,
+                  ),
+                )
+        end
+      end
+    end
+
+    if (v = @validators[name])
+      validator = v[:class].new(v[:opts])
+      unless validator.valid_value?(val)
+        raise Discourse::InvalidParameters, "#{name}: #{validator.error_message}"
+      end
+    end
+
+    validate_method = "validate_#{name}"
+    public_send(validate_method, val) if self.respond_to? validate_method
+  end
+
   private
 
   def normalize_input(name, val)
@@ -249,48 +295,6 @@ class SiteSettings::TypeSupervisor
     end
 
     [val, type]
-  end
-
-  def validate_value(name, type, val)
-    if type == self.class.types[:enum]
-      if get_enum_class(name)
-        unless get_enum_class(name).valid_value?(val)
-          raise Discourse::InvalidParameters.new("Invalid value `#{val}` for `#{name}`")
-        end
-      else
-        unless (choice = @choices[name])
-          raise Discourse::InvalidParameters.new(name)
-        end
-
-        raise Discourse::InvalidParameters.new(:value) if choice.exclude?(val)
-      end
-    end
-
-    if type == self.class.types[:list] || type == self.class.types[:string]
-      if @allow_any.key?(name) && !@allow_any[name]
-        split = val.to_s.split("|")
-        diff = (split - @choices[name])
-        if diff.length > 0
-          raise Discourse::InvalidParameters.new(
-                  I18n.t(
-                    "errors.site_settings.invalid_choice",
-                    name: diff.join(","),
-                    count: diff.length,
-                  ),
-                )
-        end
-      end
-    end
-
-    if (v = @validators[name])
-      validator = v[:class].new(v[:opts])
-      unless validator.valid_value?(val)
-        raise Discourse::InvalidParameters, "#{name}: #{validator.error_message}"
-      end
-    end
-
-    validate_method = "validate_#{name}"
-    public_send(validate_method, val) if self.respond_to? validate_method
   end
 
   def get_data_type(name, val)

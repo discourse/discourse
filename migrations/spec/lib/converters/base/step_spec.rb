@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe ::Migrations::Converters::Base::Step do
+  let(:tracker) { instance_double(::Migrations::Converters::Base::StepTracker) }
+
   before do
     Object.const_set(
       "TemporaryModule",
@@ -32,13 +34,13 @@ RSpec.describe ::Migrations::Converters::Base::Step do
   describe "#initialize" do
     it "works when no arguments are supplied" do
       step = nil
-      expect { step = TemporaryModule::Users.new }.not_to raise_error
+      expect { step = TemporaryModule::Users.new(tracker) }.not_to raise_error
       expect(step.settings).to be_nil
     end
 
     it "initializes the `settings` attribute if given" do
       settings = { a: 1, b: 2 }
-      step = TemporaryModule::Users.new(settings:)
+      step = TemporaryModule::Users.new(tracker, settings:)
       expect(step.settings).to eq(settings)
     end
 
@@ -49,7 +51,7 @@ RSpec.describe ::Migrations::Converters::Base::Step do
       foo = "a string"
       bar = false
 
-      step = TemporaryModule::Users.new(settings:, foo:, bar:, non_existent: 123)
+      step = TemporaryModule::Users.new(tracker, settings:, foo:, bar:, non_existent: 123)
       expect(step.settings).to eq(settings)
       expect(step.foo).to eq(foo)
       expect(step.bar).to eq(bar)

@@ -31,7 +31,9 @@ if (
     "> pnpm was run inside a plugin directory. Re-executing with --ignore-workspace..."
   );
 
-  const indexOfPnpm = process.argv.findIndex((a) => a.endsWith("pnpm"));
+  const indexOfPnpm = process.argv.findIndex(
+    (a) => a.includes("/pnpm") || a.endsWith("pnpm")
+  );
   const newArgs = [...process.argv];
   newArgs.splice(indexOfPnpm + 1, 0, "--ignore-workspace");
 

@@ -804,11 +804,11 @@ RSpec.describe Search do
     end
 
     context "with all topics" do
-      let!(:u1) { Fabricate(:user, username: "fred", name: "bob jones", email: "foo+1@bar.baz") }
-      let!(:u2) { Fabricate(:user, username: "bob", name: "fred jones", email: "foo+2@bar.baz") }
-      let!(:u3) { Fabricate(:user, username: "jones", name: "bob fred", email: "foo+3@bar.baz") }
+      let!(:u1) { Fabricate(:user, username: "fred", name: "bob jones", email: "fred@bar.baz") }
+      let!(:u2) { Fabricate(:user, username: "bob", name: "fred jones", email: "bob@bar.baz") }
+      let!(:u3) { Fabricate(:user, username: "jones", name: "bob fred", email: "jones@bar.baz") }
       let!(:u4) do
-        Fabricate(:user, username: "alice", name: "bob fred", email: "foo+4@bar.baz", admin: true)
+        Fabricate(:user, username: "alice", name: "bob fred", email: "alice@bar.baz", admin: true)
       end
 
       let!(:public_topic) { Fabricate(:topic, user: u1) }
@@ -1098,7 +1098,15 @@ RSpec.describe Search do
       end
 
       it "works in Chinese" do
-        SiteSetting.search_tokenize_chinese_japanese_korean = true
+        SiteSetting.search_tokenize_chinese = true
+        post = new_post("I am not in English 你今天怎麼樣")
+
+        results = Search.execute("你今天", search_context: post.topic)
+        expect(results.posts.map(&:id)).to eq([post.id])
+      end
+
+      it "works in Japanese" do
+        SiteSetting.search_tokenize_japanese = true
         post = new_post("I am not in English 何点になると思いますか")
 
         results = Search.execute("何点になると思", search_context: post.topic)
@@ -2982,7 +2990,6 @@ RSpec.describe Search do
 
   context "when max_duplicate_search_index_terms limits duplication" do
     before { SearchIndexer.enable }
-
     after { SearchIndexer.disable }
 
     it "correctly ranks topics" do
@@ -3024,6 +3031,92 @@ RSpec.describe Search do
       expect(search.term).to eq("hello")
       expect(sql).to include("ORDER BY posts.created_at DESC")
       expect(sql).to match(/where.*topics.closed/i)
+    end
+  end
+
+  describe "bot search" do
+    fab!(:bot)
+    fab!(:bot_topic) { Fabricate(:topic, title: "this is a topic by a bot") }
+    fab!(:bot_post) do
+      Fabricate(:post, user: bot, topic: bot_topic, raw: "this is a regular post by a bot")
+    end
+
+    fab!(:human_post) { Fabricate(:post, topic: topic, raw: "this is a regular post not by a bot") }
+
+    before do
+      SearchIndexer.enable
+      SearchIndexer.index(bot_post, force: true)
+      SearchIndexer.index(human_post, force: true)
+    end
+
+    it "works as expected" do
+      # include bot posts by default
+      results = Search.execute("bot", guardian: Guardian.new)
+      expect(results.posts).to contain_exactly(bot_post, human_post)
+
+      # bots only
+      results = Search.execute("bot in:bot", guardian: Guardian.new)
+      expect(results.posts).to contain_exactly(bot_post)
+
+      # allows searching for human only
+      results = Search.execute("bot in:human", guardian: Guardian.new)
+      expect(results.posts).to contain_exactly(human_post)
+    end
+  end
+
+  describe "whisper search" do
+    fab!(:topic2) { Fabricate(:topic) }
+    fab!(:user)
+    fab!(:whisperer) { Fabricate(:user) }
+    fab!(:whisperers_group) { Fabricate(:group) }
+    fab!(:regular_post) do
+      Fabricate(:post, topic: topic, raw: "this is a regular post with whisper content")
+    end
+    fab!(:whisper_post) do
+      Fabricate(
+        :post,
+        topic: topic2,
+        raw: "this is a whisper post",
+        post_type: Post.types[:whisper],
+      )
+    end
+
+    before do
+      SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}|#{whisperers_group.id}"
+      whisperers_group.add(whisperer)
+      SearchIndexer.enable
+      [regular_post, whisper_post].each { |post| SearchIndexer.index(post, force: true) }
+    end
+
+    it "works as expected" do
+      # note this is simple enough, saving up on all the reindexing over and over
+      # by running in a big batch
+
+      # anon
+      results = Search.execute("whisper", guardian: Guardian.new(user))
+      expect(results.posts).to contain_exactly(regular_post)
+
+      # staff
+      results = Search.execute("whisper", guardian: Guardian.new(admin))
+      expect(results.posts).to contain_exactly(regular_post, whisper_post)
+
+      # whisperer
+      results = Search.execute("whisper", guardian: Guardian.new(whisperer))
+      expect(results.posts).to contain_exactly(regular_post, whisper_post)
+
+      # in:whispers
+      results = Search.execute("whisper in:whispers", guardian: Guardian.new(admin))
+      expect(results.posts).to contain_exactly(whisper_post)
+
+      results = Search.execute("whisper in:whispers", guardian: Guardian.new(user))
+      expect(results.posts).to be_empty
+
+      # in:regular
+      results = Search.execute("whisper in:regular", guardian: Guardian.new(admin))
+      expect(results.posts).to contain_exactly(regular_post)
+
+      results = Search.execute("content in:regular", guardian: Guardian.new(admin))
+      expect(results.posts).to contain_exactly(regular_post)
     end
   end
 end

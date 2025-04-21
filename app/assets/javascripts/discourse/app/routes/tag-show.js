@@ -13,7 +13,7 @@ import {
   findTopicList,
 } from "discourse/routes/build-topic-route";
 import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 const NONE = "none";
 const ALL = "all";
@@ -29,7 +29,6 @@ export default class TagShowRoute extends DiscourseRoute {
   @service historyStore;
 
   queryParams = queryParams;
-  controllerName = "discovery/list";
   templateName = "discovery/list";
   routeConfig = {};
 
@@ -42,9 +41,16 @@ export default class TagShowRoute extends DiscourseRoute {
   }
 
   async model(params, transition) {
+    const tagIdFromParams = escapeExpression(params.tag_id);
     const tag = this.store.createRecord("tag", {
-      id: escapeExpression(params.tag_id),
+      id: tagIdFromParams,
     });
+
+    // Handles renaming a tag, since we refer to the tag.id instead
+    // of tag.name which is the actual identifier.
+    if (tag.id !== tagIdFromParams) {
+      tag.set("id", tagIdFromParams);
+    }
 
     let additionalTags;
 
@@ -168,33 +174,31 @@ export default class TagShowRoute extends DiscourseRoute {
   }
 
   titleToken() {
-    const filterText = I18n.t(
-      `filters.${this.navMode.replace("/", ".")}.title`
-    );
+    const filterText = i18n(`filters.${this.navMode.replace("/", ".")}.title`);
     const model = this.currentModel;
 
     const tag = model?.tag?.id;
     if (tag && tag !== NONE) {
       if (model.category) {
-        return I18n.t("tagging.filters.with_category", {
+        return i18n("tagging.filters.with_category", {
           filter: filterText,
           tag: model.tag.id,
           category: model.category.displayName,
         });
       } else {
-        return I18n.t("tagging.filters.without_category", {
+        return i18n("tagging.filters.without_category", {
           filter: filterText,
           tag: model.tag.id,
         });
       }
     } else {
       if (model.category) {
-        return I18n.t("tagging.filters.untagged_with_category", {
+        return i18n("tagging.filters.untagged_with_category", {
           filter: filterText,
           category: model.category.displayName,
         });
       } else {
-        return I18n.t("tagging.filters.untagged_without_category", {
+        return i18n("tagging.filters.untagged_without_category", {
           filter: filterText,
         });
       }

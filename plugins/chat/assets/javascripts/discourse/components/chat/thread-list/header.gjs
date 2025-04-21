@@ -2,15 +2,14 @@ import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import replaceEmoji from "discourse/helpers/replace-emoji";
-import i18n from "discourse-common/helpers/i18n";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import Navbar from "discourse/plugins/chat/discourse/components/chat/navbar";
 
 export default class ChatThreadListHeader extends Component {
   @service router;
   @service site;
 
-  threadListTitle = I18n.t("chat.threads.list");
+  threadListTitle = i18n("chat.threads.list");
 
   get title() {
     let title = replaceEmoji(this.threadListTitle);

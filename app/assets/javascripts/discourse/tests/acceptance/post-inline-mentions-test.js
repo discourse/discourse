@@ -1,12 +1,11 @@
 import { triggerEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import { cloneJSON } from "discourse/lib/object";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import {
   acceptance,
   publishToMessageBus,
-  query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { cloneJSON } from "discourse-common/lib/object";
 import topicFixtures from "../fixtures/topic";
 
 function topicWithoutUserStatus(topicId, mentionedUserId) {
@@ -33,6 +32,7 @@ function topicWithUserStatus(topicId, mentionedUserId, status) {
 
 acceptance("Post inline mentions", function (needs) {
   needs.user();
+  needs.settings({ enable_user_status: true });
 
   const topicId = 130;
   const mentionedUserId = 1;
@@ -52,13 +52,9 @@ acceptance("Post inline mentions", function (needs) {
     assert
       .dom(".topic-post .cooked .mention .user-status-message")
       .exists("user status is shown");
-    const statusElement = query(
-      ".topic-post .cooked .mention .user-status-message img"
-    );
-    assert.ok(
-      statusElement.src.includes(status.emoji),
-      "status emoji is correct"
-    );
+    assert
+      .dom(".topic-post .cooked .mention .user-status-message img")
+      .hasAttribute("src", /surfing_man/, "status emoji is correct");
   });
 
   test("inserts user status on message bus message", async function (assert) {
@@ -81,13 +77,9 @@ acceptance("Post inline mentions", function (needs) {
     assert
       .dom(".topic-post .cooked .mention .user-status-message")
       .exists("user status is shown");
-    const statusElement = query(
-      ".topic-post .cooked .mention .user-status-message img"
-    );
-    assert.ok(
-      statusElement.src.includes(status.emoji),
-      "status emoji is correct"
-    );
+    assert
+      .dom(".topic-post .cooked .mention .user-status-message img")
+      .hasAttribute("src", /surfing_man/, "status emoji is correct");
   });
 
   test("updates user status on message bus message", async function (assert) {
@@ -114,13 +106,9 @@ acceptance("Post inline mentions", function (needs) {
     assert
       .dom(".topic-post .cooked .mention .user-status-message")
       .exists("updated user status is shown");
-    const statusElement = query(
-      ".topic-post .cooked .mention .user-status-message img"
-    );
-    assert.ok(
-      statusElement.src.includes(newStatus.emoji),
-      "updated status emoji is correct"
-    );
+    assert
+      .dom(".topic-post .cooked .mention .user-status-message img")
+      .hasAttribute("src", /tooth/, "updated status emoji is correct");
   });
 
   test("removes user status on message bus message", async function (assert) {
@@ -145,6 +133,7 @@ acceptance("Post inline mentions", function (needs) {
 
 acceptance("Post inline mentions – user status tooltip", function (needs) {
   needs.user();
+  needs.settings({ enable_user_status: true });
 
   const topicId = 130;
   const mentionedUserId = 1;
@@ -155,7 +144,7 @@ acceptance("Post inline mentions – user status tooltip", function (needs) {
   };
 
   async function mouseMove(selector) {
-    await triggerEvent(selector, "mousemove");
+    await triggerEvent(selector, "pointermove");
   }
 
   test("shows user status tooltip", async function (assert) {
@@ -168,22 +157,26 @@ acceptance("Post inline mentions – user status tooltip", function (needs) {
       .dom(".topic-post .cooked .mention .user-status-message")
       .exists("user status is shown");
 
-    await mouseMove(".user-status-message");
-    const statusTooltip = document.querySelector(
-      ".user-status-message-tooltip"
-    );
-    assert.ok(statusTooltip, "status tooltip is shown");
-    assert.ok(
-      statusTooltip.querySelector("img").src.includes(status.emoji),
+    await mouseMove(".topic-post .cooked .mention .user-status-message");
+
+    assert
+      .dom(".user-status-message-tooltip")
+      .exists("status tooltip is shown");
+    assert.true(
+      document
+        .querySelector(".user-status-message-tooltip img")
+        .src.includes(status.emoji),
       "emoji is correct"
     );
     assert
-      .dom(".user-status-tooltip-description", statusTooltip)
+      .dom(".user-status-tooltip-description")
       .hasText(status.description, "status description is correct");
   });
 });
 
-acceptance("Post inline mentions as an anonymous user", function () {
+acceptance("Post inline mentions as an anonymous user", function (needs) {
+  needs.settings({ enable_user_status: true });
+
   const topicId = 130;
   const mentionedUserId = 1;
   const status = {

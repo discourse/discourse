@@ -1,6 +1,6 @@
-import DEBUG from "@glimmer/env";
+import { DEBUG } from "@glimmer/env";
+import getURL from "discourse/lib/get-url";
 import PreloadStore from "discourse/lib/preload-store";
-import getURL from "discourse-common/lib/get-url";
 
 const BROWSER_EXTENSION_PROTOCOLS = [
   "moz-extension://",
@@ -58,7 +58,7 @@ export default function identifySource(error) {
 
   // Production (with fingerprints)
   plugin ??= stack.match(
-    /assets\/plugins\/_?([\w-]+)-[0-9a-f]+(?:\.br)?\.js/
+    /assets\/plugins\/_?([\w-]+)-[0-9a-f]+(?:\.(?:br|gz))?\.js/
   )?.[1];
 
   if (plugin) {

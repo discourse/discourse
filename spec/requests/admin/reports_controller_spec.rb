@@ -33,7 +33,7 @@ RSpec.describe Admin::ReportsController do
         get "/admin/reports.json"
         expect(response.parsed_body["reports"].map { |r| r[:type] }).not_to include("site_traffic")
         expect(response.parsed_body["reports"].map { |r| r[:type] }).to include(
-          *Admin::ReportsController::HIDDEN_LEGACY_PAGEVIEW_REPORTS,
+          *Report::HIDDEN_LEGACY_PAGEVIEW_REPORTS,
         )
       end
     end
@@ -45,7 +45,7 @@ RSpec.describe Admin::ReportsController do
         get "/admin/reports.json"
         expect(response.parsed_body["reports"].map { |r| r[:type] }).to include("site_traffic")
         expect(response.parsed_body["reports"].map { |r| r[:type] }).not_to include(
-          *Admin::ReportsController::HIDDEN_LEGACY_PAGEVIEW_REPORTS,
+          *Report::HIDDEN_LEGACY_PAGEVIEW_REPORTS,
         )
       end
     end
@@ -56,8 +56,9 @@ RSpec.describe Admin::ReportsController do
       before { sign_in(admin) }
 
       context "with valid params" do
+        fab!(:topic)
+
         it "renders the reports as JSON" do
-          Fabricate(:topic)
           get "/admin/reports/bulk.json",
               params: {
                 reports: {
@@ -72,6 +73,30 @@ RSpec.describe Admin::ReportsController do
 
           expect(response.status).to eq(200)
           expect(response.parsed_body["reports"].count).to eq(2)
+        end
+
+        it "uses the user's locale for report names and descriptions" do
+          SiteSetting.allow_user_locale = true
+          admin.update!(locale: "es")
+          get "/admin/reports/bulk.json",
+              params: {
+                reports: {
+                  topics: {
+                    limit: 10,
+                  },
+                  likes: {
+                    limit: 10,
+                  },
+                },
+              }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["reports"].first["title"]).to eq(
+            I18n.t("reports.topics.title", locale: "es"),
+          )
+          expect(response.parsed_body["reports"].first["description"]).to eq(
+            I18n.t("reports.topics.description", locale: "es"),
+          )
         end
       end
 
@@ -360,7 +385,7 @@ RSpec.describe Admin::ReportsController do
       end
 
       it "does not allow running site_traffic report" do
-        Admin::ReportsController::HIDDEN_PAGEVIEW_REPORTS.each do |report_type|
+        Report::HIDDEN_PAGEVIEW_REPORTS.each do |report_type|
           get "/admin/reports/#{report_type}.json"
           expect(response.status).to eq(404)
           expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
@@ -380,7 +405,7 @@ RSpec.describe Admin::ReportsController do
       end
 
       it "does not allow running legacy pageview reports" do
-        Admin::ReportsController::HIDDEN_LEGACY_PAGEVIEW_REPORTS.each do |report_type|
+        Report::HIDDEN_LEGACY_PAGEVIEW_REPORTS.each do |report_type|
           get "/admin/reports/#{report_type}.json"
           expect(response.status).to eq(404)
           expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))

@@ -1,9 +1,9 @@
 import { click, currentURL, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import { cloneJSON } from "discourse/lib/object";
 import DiscoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
 import { acceptance, chromeTest } from "discourse/tests/helpers/qunit-helpers";
-import { cloneJSON } from "discourse-common/lib/object";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 acceptance("Keyboard Shortcuts - Anonymous Users", function (needs) {
   needs.pretender((server, helper) => {
@@ -31,7 +31,7 @@ acceptance("Keyboard Shortcuts - Anonymous Users", function (needs) {
     await visit("/t/this-is-a-test-topic/9");
     await triggerKeyEvent(document, "keypress", "G");
     await triggerKeyEvent(document, "keypress", "S");
-    assert.strictEqual(currentURL(), "/t/this-is-a-test-topic/9");
+    assert.true(currentURL().startsWith("/t/this-is-a-test-topic/9"));
 
     // Suggested topics elements exist.
     await visit("/t/internationalization-localization/280");
@@ -150,7 +150,7 @@ acceptance("Keyboard Shortcuts - Authenticated Users", function (needs) {
       .exists("confirmation modal to dismiss unread is present");
     assert
       .dom(".d-modal__body")
-      .hasText(I18n.t("topics.bulk.also_dismiss_topics"));
+      .hasText(i18n("topics.bulk.also_dismiss_topics"));
     await click("#dismiss-read-confirm");
     assert.strictEqual(
       markReadCalled,
@@ -259,14 +259,14 @@ acceptance("Keyboard Shortcuts - Authenticated Users", function (needs) {
       .exists("post-specific share modal is open");
     assert
       .dom("#discourse-modal-title")
-      .hasText(I18n.t("post.share.title", { post_number: 2 }));
+      .hasText(i18n("post.share.title", { post_number: 2 }));
     await click(".modal-close");
 
     await triggerKeyEvent(document, "keydown", "S", { shiftKey: true });
     assert
       .dom(".d-modal.share-topic-modal")
       .exists("topic level share modal is open");
-    assert.dom("#discourse-modal-title").hasText(I18n.t("topic.share.title"));
+    assert.dom("#discourse-modal-title").hasText(i18n("topic.share.title"));
 
     await click(".modal-close");
   });

@@ -82,6 +82,8 @@ export default class CoreFabricators {
       name: args.name,
       avatar_template: "/letter_avatar_proxy/v3/letter/t/41988e/{size}.png",
       suspended_till: args.suspended_till,
+      can_send_private_message_to_user:
+        args.can_send_private_message_to_user ?? true,
     });
   }
 

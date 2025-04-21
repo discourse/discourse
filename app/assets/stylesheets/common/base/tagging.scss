@@ -1,3 +1,11 @@
+:root {
+  --tag-text-color: var(--primary-high);
+}
+
+.extra-info-wrapper {
+  --tag-text-color: var(--header_primary-high);
+}
+
 .container.tags-index {
   background: var(--d-content-background);
 }
@@ -59,21 +67,15 @@
 .discourse-tag {
   max-width: 14em;
   display: inline-block;
-  @include ellipsis;
   vertical-align: middle;
-}
-
-.discourse-tag {
   margin: 0;
-  color: var(--primary-medium);
+  color: var(--tag-text-color);
+
+  @include ellipsis;
 
   &:visited,
   &:hover {
-    color: var(--primary-medium);
-  }
-
-  .extra-info-wrapper & {
-    color: var(--header_primary-high) !important;
+    color: var(--tag-text-color);
   }
 
   &.large {
@@ -82,25 +84,19 @@
 
   &.box {
     background-color: var(--primary-low);
-    color: var(--primary-high);
     padding: 2px 8px;
+
     .extra-info-wrapper & {
       background-color: var(--header_primary-low);
-      color: var(--header_primary-medium);
     }
-  }
-
-  &.simple,
-  &.simple:visited,
-  &.simple:hover {
-    color: var(--primary-high);
   }
 
   &.bullet {
     margin-right: 0.5em;
     display: inline-flex;
     align-items: center;
-    &:before {
+
+    &::before {
       flex-shrink: 0;
       background: var(--primary-low-mid);
       margin-right: 5px;
@@ -110,19 +106,11 @@
       display: inline-block;
       content: "";
     }
-    &.large:before {
+
+    &.large::before {
       width: 13px;
       height: 13px;
     }
-  }
-}
-
-.discourse-tags,
-.list-tags,
-.search-category {
-  .discourse-tag.simple:not(:last-child):after {
-    content: ",\00a0";
-    margin-left: 1px;
   }
 }
 
@@ -135,6 +123,18 @@
 .discourse-tags {
   display: inline-flex;
   flex-wrap: wrap;
+
+  &__tag-separator {
+    margin-right: 0.25em;
+    color: var(--tag-text-color);
+  }
+
+  .box,
+  .bullet {
+    + .discourse-tags__tag-separator {
+      display: none;
+    }
+  }
 }
 
 .fps-result .add-full-page-tags {
@@ -146,10 +146,6 @@
     font-weight: normal;
     font-size: var(--font-down-1);
   }
-}
-
-header .discourse-tag {
-  color: var(--primary-medium);
 }
 
 .list-tags {
@@ -174,10 +170,12 @@ header .discourse-tag {
 
 .tag-sort-options {
   margin-bottom: 20px;
+
   a {
     text-decoration: underline;
     display: inline-flex;
   }
+
   span.active a {
     font-weight: bold;
   }
@@ -197,6 +195,7 @@ header .discourse-tag {
 
 .tags-admin-menu {
   margin-top: 20px;
+
   ul {
     width: 320px;
   }
@@ -215,11 +214,14 @@ header .discourse-tag {
     padding: 20px;
     margin: 1em 0;
   }
+
   .tag-groups-sidebar {
     grid-area: sidebar;
+
     // generic .content-list overrides
     width: auto;
     float: none;
+
     ul li:last-child {
       margin-bottom: 1em;
     }
@@ -246,9 +248,10 @@ header .discourse-tag {
       font-size: var(--font-0);
       display: inline-block;
       margin-right: 5px;
+
       &.radio {
-        padding-left: 0px;
-        margin-right: 0px;
+        padding-left: 0;
+        margin-right: 0;
       }
     }
 
@@ -259,28 +262,35 @@ header .discourse-tag {
       grid-template-areas:
         "input label"
         "empty dropdown";
+
       input {
         grid-area: input;
       }
+
       label {
         grid-area: label;
       }
     }
+
     .btn {
       margin-right: 10px;
     }
+
     .group-access-control {
       margin-bottom: 1em;
       grid-area: dropdown;
       grid-row: 2;
     }
+
     input[type="radio"] ~ .group-access-control {
       display: none;
     }
+
     input[type="radio"]:checked ~ .group-access-control {
       display: block;
     }
   }
+
   @include breakpoint(tablet) {
     .select-kit.multi-select {
       width: 100%;
@@ -288,6 +298,7 @@ header .discourse-tag {
 
     .tag-groups-sidebar {
       max-width: 90px;
+
       ul li a {
         word-break: break-word;
         max-width: 90px;
@@ -304,10 +315,12 @@ header .discourse-tag {
   .saving {
     margin-left: 20px;
   }
+
   .parent-tag-section {
     .tag-chooser {
       width: 210px;
     }
+
     .description {
       color: var(--primary-medium);
       margin-top: 0.5em;
@@ -337,6 +350,7 @@ section.tag-info {
     #edit-description {
       height: 120px;
     }
+
     .edit-controls {
       display: flex;
       gap: 0.5em;
@@ -347,17 +361,21 @@ section.tag-info {
     display: flex;
     font-size: var(--font-up-4);
     align-items: baseline;
+
     button {
       font-size: var(--font-down-1);
+
       .d-icon {
         color: var(--primary-high);
       }
+
       .discourse-no-touch & {
         &:hover {
           background: transparent;
         }
       }
     }
+
     .edit-tag {
       color: var(--primary-high);
       font-size: var(--font-down-2);
@@ -374,6 +392,7 @@ section.tag-info {
     display: flex;
     align-items: center;
     margin-bottom: 0.25em;
+
     a {
       margin-left: 0.5em;
     }
@@ -400,6 +419,7 @@ section.tag-info {
     margin: 0.5em 0 0;
     padding: 0;
     border: none;
+
     a {
       color: var(--primary-medium);
     }
@@ -421,6 +441,7 @@ body.tags-intersection {
 .tags-controls {
   display: flex;
   margin: 0;
+
   h2 {
     order: -1;
     margin-right: auto;

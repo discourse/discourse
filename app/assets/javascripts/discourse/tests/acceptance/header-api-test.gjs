@@ -10,9 +10,12 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 acceptance("Header API - anonymous", function () {
   test("can add buttons to the header", async function (assert) {
     withPluginApi("1.29.0", (api) => {
-      api.headerButtons.add("test", <template>
-        <button class="test-button">Test</button>
-      </template>);
+      api.headerButtons.add(
+        "test",
+        <template>
+          <button class="test-button">Test</button>
+        </template>
+      );
     });
 
     await visit("/");
@@ -21,15 +24,18 @@ acceptance("Header API - anonymous", function () {
 
   test("buttons are positioned to the left of the auth buttons by default", async function (assert) {
     withPluginApi("1.29.0", (api) => {
-      api.headerButtons.add("test", <template>
-        <button class="test-button">Test</button>
-      </template>);
+      api.headerButtons.add(
+        "test",
+        <template>
+          <button class="test-button">Test</button>
+        </template>
+      );
     });
 
     await visit("/");
     const testButton = document.querySelector(".test-button");
     const authButtons = document.querySelector(".auth-buttons");
-    assert.equal(
+    assert.strictEqual(
       testButton.compareDocumentPosition(authButtons),
       Node.DOCUMENT_POSITION_FOLLOWING,
       "Test button is positioned before auth-buttons"
@@ -38,9 +44,12 @@ acceptance("Header API - anonymous", function () {
 
   test("can add icons to the header", async function (assert) {
     withPluginApi("1.29.0", (api) => {
-      api.headerIcons.add("test", <template>
-        <span class="test-icon">Test</span>
-      </template>);
+      api.headerIcons.add(
+        "test",
+        <template>
+          <span class="test-icon">Test</span>
+        </template>
+      );
     });
 
     await visit("/");
@@ -49,15 +58,18 @@ acceptance("Header API - anonymous", function () {
 
   test("icons are positioned to the left of search icon by default", async function (assert) {
     withPluginApi("1.29.0", (api) => {
-      api.headerIcons.add("test", <template>
-        <span class="test-icon">Test</span>
-      </template>);
+      api.headerIcons.add(
+        "test",
+        <template>
+          <span class="test-icon">Test</span>
+        </template>
+      );
     });
 
     await visit("/");
     const testIcon = document.querySelector(".test-icon");
     const search = document.querySelector(".search-dropdown");
-    assert.equal(
+    assert.strictEqual(
       testIcon.compareDocumentPosition(search),
       Node.DOCUMENT_POSITION_FOLLOWING,
       "Test icon is positioned before search icon"
@@ -70,9 +82,12 @@ acceptance("Glimmer Header API - authenticated", function (needs) {
 
   test("can add buttons to the header", async function (assert) {
     withPluginApi("1.29.0", (api) => {
-      api.headerButtons.add("test", <template>
-        <button class="test-button">Test</button>
-      </template>);
+      api.headerButtons.add(
+        "test",
+        <template>
+          <button class="test-button">Test</button>
+        </template>
+      );
     });
 
     await visit("/");
@@ -81,13 +96,18 @@ acceptance("Glimmer Header API - authenticated", function (needs) {
 
   test("buttons can be repositioned", async function (assert) {
     withPluginApi("1.29.0", (api) => {
-      api.headerButtons.add("test1", <template>
-        <button class="test1-button">Test1</button>
-      </template>);
+      api.headerButtons.add(
+        "test1",
+        <template>
+          <button class="test1-button">Test1</button>
+        </template>
+      );
 
       api.headerButtons.add(
         "test2",
-        <template><button class="test2-button">Test2</button></template>,
+        <template>
+          <button class="test2-button">Test2</button>
+        </template>,
         { before: "test1" }
       );
     });
@@ -95,7 +115,7 @@ acceptance("Glimmer Header API - authenticated", function (needs) {
     await visit("/");
     const test1 = document.querySelector(".test1-button");
     const test2 = document.querySelector(".test2-button");
-    assert.equal(
+    assert.strictEqual(
       test2.compareDocumentPosition(test1),
       Node.DOCUMENT_POSITION_FOLLOWING,
       "Test2 button is positioned before Test1 button"
@@ -104,9 +124,12 @@ acceptance("Glimmer Header API - authenticated", function (needs) {
 
   test("can add icons to the header", async function (assert) {
     withPluginApi("1.29.0", (api) => {
-      api.headerIcons.add("test", <template>
-        <span class="test-icon">Test</span>
-      </template>);
+      api.headerIcons.add(
+        "test",
+        <template>
+          <span class="test-icon">Test</span>
+        </template>
+      );
     });
 
     await visit("/");
@@ -115,13 +138,18 @@ acceptance("Glimmer Header API - authenticated", function (needs) {
 
   test("icons can be repositioned", async function (assert) {
     withPluginApi("1.29.0", (api) => {
-      api.headerIcons.add("test1", <template>
-        <span class="test1-icon">Test1</span>
-      </template>);
+      api.headerIcons.add(
+        "test1",
+        <template>
+          <span class="test1-icon">Test1</span>
+        </template>
+      );
 
       api.headerIcons.add(
         "test2",
-        <template><span class="test2-icon">Test2</span></template>,
+        <template>
+          <span class="test2-icon">Test2</span>
+        </template>,
         { before: "test1" }
       );
     });
@@ -129,7 +157,7 @@ acceptance("Glimmer Header API - authenticated", function (needs) {
     await visit("/");
     const test1 = document.querySelector(".test1-icon");
     const test2 = document.querySelector(".test2-icon");
-    assert.equal(
+    assert.strictEqual(
       test2.compareDocumentPosition(test1),
       Node.DOCUMENT_POSITION_FOLLOWING,
       "Test2 icon is positioned before Test1 icon"

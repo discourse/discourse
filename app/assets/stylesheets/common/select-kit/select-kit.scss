@@ -15,7 +15,7 @@
     list-style-type: none;
     display: block;
 
-    &:before {
+    &::before {
       content: none !important;
       margin: 0;
     }
@@ -38,7 +38,6 @@
       align-items: center;
       justify-content: center;
       border-radius: 0;
-      border: none;
       border: 1px solid var(--primary-low);
       box-shadow: var(--shadow-dropdown);
       background: var(--secondary);
@@ -65,6 +64,17 @@
   }
 
   &.is-loading {
+    .select-kit-filter::after {
+      content: "";
+      position: absolute;
+      background: var(--tertiary);
+      width: 100%;
+      height: 2px;
+      left: 0;
+      bottom: 0;
+      animation: lineDrawToRight 0.5s ease-in;
+    }
+
     .select-kit-collection {
       overflow: hidden;
     }
@@ -82,6 +92,7 @@
     display: flex;
     align-items: stretch;
     height: 100%;
+
     &:not(.btn) {
       border-radius: var(--d-input-border-radius);
       padding-left: 0.5em;
@@ -101,7 +112,6 @@
     }
 
     .d-icon-spinner {
-      -webkit-animation: rotate-forever 1s infinite linear;
       animation: rotate-forever 1s infinite linear;
     }
 
@@ -126,6 +136,7 @@
         display: inline-flex;
         gap: 0.5em;
         min-width: 0;
+
         > .d-icon {
           margin-left: 0.5em;
           margin-right: 0;
@@ -232,12 +243,6 @@
       background: var(--d-hover);
     }
 
-    .discourse-tag,
-    .discourse-tag:visited,
-    .discourse-tag:hover {
-      color: var(--primary-high);
-    }
-
     &.create-color-row {
       border-left-style: solid;
       border-left-width: 5px;
@@ -247,7 +252,6 @@
   .select-kit-collection {
     overflow-x: hidden;
     overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
     margin: 0;
     max-height: 250px;
     width: 100%;
@@ -265,7 +269,7 @@
     }
 
     &::-webkit-scrollbar {
-      -webkit-appearance: none;
+      appearance: none;
       width: 10px;
     }
 
@@ -357,21 +361,9 @@
     0% {
       width: 0;
     }
+
     100% {
       width: 100%;
-    }
-  }
-
-  &.is-loading {
-    .select-kit-filter::after {
-      content: "";
-      position: absolute;
-      background: var(--tertiary);
-      width: 100%;
-      height: 2px;
-      left: 0;
-      bottom: 0;
-      animation: lineDrawToRight 0.5s ease-in;
     }
   }
 }

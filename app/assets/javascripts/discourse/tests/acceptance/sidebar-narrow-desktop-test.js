@@ -36,7 +36,7 @@ acceptance("Sidebar - Narrow Desktop", function (needs) {
       .dom(".sidebar-hamburger-dropdown")
       .exists("cloak sidebar is displayed");
 
-    await triggerEvent(document.querySelector(".header-cloak"), "pointerdown");
+    await triggerEvent(".header-cloak", "pointerdown");
 
     assert
       .dom(".sidebar-hamburger-dropdown")

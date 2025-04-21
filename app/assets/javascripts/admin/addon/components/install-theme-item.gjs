@@ -1,6 +1,6 @@
 import RadioButton from "discourse/components/radio-button";
-import dIcon from "discourse-common/helpers/d-icon";
-import i18n from "discourse-common/helpers/i18n";
+import icon from "discourse/helpers/d-icon";
+import { i18n } from "discourse-i18n";
 
 const InstallThemeItem = <template>
   <div class="install-theme-item">
@@ -12,11 +12,11 @@ const InstallThemeItem = <template>
     />
     <label class="radio" for={{@value}}>
       {{#if @showIcon}}
-        {{dIcon "plus"}}
+        {{icon "plus"}}
       {{/if}}
       {{i18n @label}}
     </label>
-    {{dIcon "caret-right"}}
+    {{icon "caret-right"}}
   </div>
 </template>;
 

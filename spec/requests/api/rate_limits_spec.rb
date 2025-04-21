@@ -46,7 +46,7 @@ RSpec.describe "rate limits" do
       .expects(:performed!)
       .with(
         nil,
-        "global_limit_60_192.0.2.1",
+        "global_limit_60_ip/192.0.2.1",
         200,
         60,
         global: true,
@@ -58,7 +58,7 @@ RSpec.describe "rate limits" do
       .expects(:performed!)
       .with(
         nil,
-        "global_limit_10_192.0.2.1",
+        "global_limit_10_ip/192.0.2.1",
         50,
         10,
         global: true,
@@ -76,7 +76,7 @@ RSpec.describe "rate limits" do
       .expects(:rollback!)
       .with(
         nil,
-        "global_limit_60_192.0.2.1",
+        "global_limit_60_ip/192.0.2.1",
         200,
         60,
         global: true,
@@ -88,7 +88,7 @@ RSpec.describe "rate limits" do
       .expects(:rollback!)
       .with(
         nil,
-        "global_limit_10_192.0.2.1",
+        "global_limit_10_ip/192.0.2.1",
         50,
         10,
         global: true,
@@ -116,7 +116,7 @@ RSpec.describe "rate limits" do
       .expects(:performed!)
       .with(
         nil,
-        "global_limit_60_192.0.2.1",
+        "global_limit_60_ip/192.0.2.1",
         200,
         60,
         global: true,
@@ -128,7 +128,7 @@ RSpec.describe "rate limits" do
       .expects(:performed!)
       .with(
         nil,
-        "global_limit_10_192.0.2.1",
+        "global_limit_10_ip/192.0.2.1",
         50,
         10,
         global: true,

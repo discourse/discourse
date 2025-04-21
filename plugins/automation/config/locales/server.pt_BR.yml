@@ -105,6 +105,7 @@ pt_BR:
         doc: Permite enviar várias MPs para um(a) usuário(a). Cada MP aceita um atraso.
       suspend_user_by_email:
         title: Suspender usuário(a) por e-mail
+        description: Suspenda automaticamente uma conta com base no endereço de e-mail
       user_global_notice:
         title: Aviso global do(a) usuário(a)
         description: Permite exibir um aviso global para um(a) usuário(a)
@@ -141,6 +142,13 @@ pt_BR:
         button_text: Concluído(a)
       add_user_to_group_through_custom_field:
         title: "Adicionar usuário(a) ao grupo por meio do campo personalizado do(a) usuário(a)"
+        description: "Adicione usuários(as) automaticamente aos grupos quando fizerem login com uma verificação recorrente"
       group_category_notification_default:
         title: "Notificação de categoria de grupo por padrão"
         description: "Definir o nível de notificação padrão de uma categoria para membros de um grupo"
+      send_chat_message:
+        title: "Enviar mensagem de chat"
+        description: "Envie uma mensagem de chat personalizada para um canal"
+      random_assign:
+        title: "Atribuição aleatória"
+        description: "Atribua tópicos a um grupo aleatoriamente"

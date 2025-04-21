@@ -11,7 +11,31 @@
 }
 
 .topic-body {
-  padding: 0;
+  width: calc(var(--topic-body-width) + (var(--topic-body-width-padding) * 2));
+  float: left;
+  min-width: 0; // prevents some elements, like <pre>, from blowing out the width
+  position: relative;
+  border-top: 1px solid var(--primary-low);
+  padding: 0.8em 0 0 0;
+
+  .topic-meta-data {
+    padding: 0 var(--topic-body-width-padding) 0.25em
+      var(--topic-body-width-padding);
+  }
+
+  .cooked {
+    padding: 1em var(--topic-body-width-padding) 0.25em
+      var(--topic-body-width-padding);
+  }
+
+  .group-request {
+    padding: 0.5em var(--topic-body-width-padding) 0
+      var(--topic-body-width-padding);
+  }
+
+  a.expand-hidden {
+    padding-left: var(--topic-body-width-padding);
+  }
 
   &:first-of-type {
     border-top: none;
@@ -25,7 +49,9 @@
   .actions .fade-out {
     .discourse-no-touch & {
       opacity: 0.7;
-      transition: background 0.25s, opacity 0.7s ease-in-out;
+      transition:
+        background 0.25s,
+        opacity 0.7s ease-in-out;
       animation: none; // replaces jsuites animation on .fade-out
     }
 
@@ -71,58 +97,6 @@ nav.post-controls {
     // Some buttons can be doubled up, like likes or flags
     .double-button {
       margin-left: var(--control-margin);
-
-      &:hover {
-        button {
-          background: var(--primary-low);
-          color: var(--primary-medium);
-        }
-      }
-
-      button {
-        margin-left: 0;
-        margin-right: 0;
-
-        &.like {
-          // Like button with 0 likes
-          &.d-hover,
-          &:hover {
-            background: var(--love-low);
-
-            .d-icon {
-              color: var(--love);
-            }
-          }
-        }
-
-        &.has-like {
-          // Like button after I've liked
-          &.d-hover,
-          &:hover {
-            background: var(--primary-low);
-
-            .d-icon {
-              color: var(--primary-medium);
-            }
-          }
-        }
-
-        &.button-count {
-          // Like count button
-          &.d-hover,
-          &:hover {
-            color: var(--primary);
-          }
-
-          + .toggle-like {
-            // Like button when like count is present
-            &.d-hover,
-            &:hover {
-              background: var(--primary-low);
-            }
-          }
-        }
-      }
     }
   }
 
@@ -131,12 +105,11 @@ nav.post-controls {
     align-items: center;
     margin-left: 0;
     border-radius: var(--d-button-border-radius);
+    white-space: nowrap;
 
     .topic-post & {
       margin-right: 0.5em;
     }
-
-    white-space: nowrap;
 
     .d-icon {
       margin-inline: var(--control-icon-space);
@@ -146,7 +119,7 @@ nav.post-controls {
     &[aria-expanded="true"] {
       background: var(--primary-low);
       color: var(--primary-high);
-      box-shadow: 0px 0px 0px 1px var(--primary-300);
+      box-shadow: 0 0 0 1px var(--primary-300);
       z-index: 1;
 
       .d-icon {
@@ -184,13 +157,13 @@ pre.codeblock-buttons:hover {
 }
 
 .embedded-posts {
+  border: 1px solid var(--primary-low);
+
   h1,
   h2,
   h3 {
     margin: 10px 0;
   }
-
-  border: 1px solid var(--primary-low);
 
   .topic-body {
     box-sizing: border-box;
@@ -219,8 +192,9 @@ pre.codeblock-buttons:hover {
     border: 1px solid var(--primary-low);
     padding: 6px 9px 8px;
     z-index: 99; // Needs to be higher than topic-avatar
+
     .d-icon {
-      color: currentColor;
+      color: currentcolor;
     }
 
     .discourse-no-touch & {
@@ -229,7 +203,7 @@ pre.codeblock-buttons:hover {
         color: var(--primary-high);
 
         .d-icon {
-          color: currentColor;
+          color: currentcolor;
         }
       }
     }
@@ -250,10 +224,10 @@ pre.codeblock-buttons:hover {
 
         .row {
           // Main reply line
-          &:before {
+          &::before {
             content: "";
             position: absolute;
-            top: -22px;
+            top: -1.5em;
             width: 1px;
             height: calc(100% + 1.25em);
             background: var(--primary-300);
@@ -264,11 +238,12 @@ pre.codeblock-buttons:hover {
 
       .row {
         padding-bottom: 0.5em;
+
         // Main reply line
-        &:before {
+        &::before {
           content: "";
           position: absolute;
-          top: -22px;
+          top: -1.5em;
           width: 1px;
           height: calc(100% + 1.5em);
           background: var(--primary-300);
@@ -367,18 +342,18 @@ pre.codeblock-buttons:hover {
 
   // top means "in reply to expansion" above a post
   &.top {
-    margin-left: 0px;
+    margin-left: 0;
     border: none;
+    width: calc(
+      var(--topic-body-width) + (var(--topic-body-width-padding) * 2) +
+        var(--topic-avatar-width) - (var(--topic-avatar-width) + 2px)
+    ); // 2px accounts for left and right borders
 
     .collapse-down {
       transform: translate(17%, 230%);
       z-index: 1;
     }
 
-    width: calc(
-      var(--topic-body-width) + (var(--topic-body-width-padding) * 2) +
-        var(--topic-avatar-width) - (var(--topic-avatar-width) + 2px)
-    ); // 2px accounts for left and right borders
     .row {
       .topic-body,
       .topic-avatar {
@@ -395,7 +370,7 @@ pre.codeblock-buttons:hover {
         &::before {
           content: "";
           position: absolute;
-          top: 16px;
+          top: 1.5em;
           width: 1px;
           height: calc(100% + 1.5em);
           background: var(--primary-300);
@@ -452,34 +427,6 @@ pre.codeblock-buttons:hover {
   }
 }
 
-#topic-footer-buttons {
-  max-width: calc(
-    var(--topic-body-width) + (var(--topic-body-width-padding) * 2) +
-      var(--topic-avatar-width)
-  );
-
-  @media screen and (max-width: 924px) {
-    .topic-footer-main-buttons {
-      margin-top: 1em; // some extra space for the docked progress bar
-    }
-  }
-
-  .bookmark {
-    .d-icon-bookmark.bookmarked {
-      color: var(--tertiary);
-    }
-  }
-
-  .bookmark.bookmarked .d-icon-bookmark,
-  .bookmark.bookmarked .d-icon-discourse-bookmark-clock {
-    color: var(--tertiary);
-  }
-
-  .feature-on-profile.featured-on-profile .d-icon-id-card {
-    color: var(--tertiary);
-  }
-}
-
 span.post-count {
   background: var(--primary);
   color: var(--secondary);
@@ -508,6 +455,7 @@ video {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -538,7 +486,6 @@ video {
 }
 
 /* solo quotes */
-
 blockquote {
   /* leave browser defaults for top and bottom here */
   margin-left: 0;
@@ -547,7 +494,6 @@ blockquote {
 }
 
 /* quotes with attribution */
-
 .quote {
   & > blockquote {
     .onebox-result {
@@ -581,35 +527,6 @@ blockquote {
   }
 }
 
-// variables are used to calculate the width of .gap
-.topic-body {
-  width: calc(var(--topic-body-width) + (var(--topic-body-width-padding) * 2));
-  float: left;
-  min-width: 0; // prevents some elements, like <pre>, from blowing out the width
-  position: relative;
-  border-top: 1px solid var(--primary-low);
-  padding: 0.8em 0 0 0;
-
-  .topic-meta-data {
-    padding: 0 var(--topic-body-width-padding) 0.25em
-      var(--topic-body-width-padding);
-  }
-
-  .cooked {
-    padding: 1em var(--topic-body-width-padding) 0.25em
-      var(--topic-body-width-padding);
-  }
-
-  .group-request {
-    padding: 0.5em var(--topic-body-width-padding) 0
-      var(--topic-body-width-padding);
-  }
-
-  a.expand-hidden {
-    padding-left: var(--topic-body-width-padding);
-  }
-}
-
 .topic-avatar {
   border-top: 1px solid var(--primary-low);
   padding-top: 15px;
@@ -617,6 +534,7 @@ blockquote {
   float: left;
   z-index: z("base") + 1;
   height: 100%;
+  overflow-anchor: none;
 }
 
 .gap {
@@ -633,7 +551,6 @@ blockquote {
 }
 
 /* hide the reply border above the time gap notices */
-
 .time-gap + .topic-post .topic-body,
 .time-gap + .topic-post .topic-avatar {
   border-top: none;
@@ -673,6 +590,7 @@ blockquote {
   padding: 0.714em;
   margin-bottom: 5px;
   right: 10px;
+
   @include breakpoint(extra-large, min-width) {
     right: auto;
     margin-left: 330px;
@@ -714,9 +632,10 @@ blockquote {
   }
 }
 
-a.attachment:before {
+a.attachment::before {
   display: inline-block;
   margin-right: 4px;
+
   // ideally, the SVG used here should be in HTML and reference the SVG sprite
   content: svg-uri(
     '<svg xmlns="http://www.w3.org/2000/svg" width="14px" height="16px" viewBox="0 0 512 512" fill="#{$tertiary}"><path d="M216 0h80c13.3 0 24 10.7 24 24v168h87.7c17.8 0 26.7 21.5 14.1 34.1L269.7 378.3c-7.5 7.5-19.8 7.5-27.3 0L90.1 226.1c-12.6-12.6-3.7-34.1 14.1-34.1H192V24c0-13.3 10.7-24 24-24zm296 376v112c0 13.3-10.7 24-24 24H24c-13.3 0-24-10.7-24-24V376c0-13.3 10.7-24 24-24h146.7l49 49c20.1 20.1 52.5 20.1 72.6 0l49-49H488c13.3 0 24 10.7 24 24zm-124 88c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20zm64 0c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20z"></path></svg>'
@@ -732,7 +651,7 @@ a.attachment:before {
     align-items: center;
   }
 
-  &:after {
+  &::after {
     visibility: hidden;
     display: block;
     font-size: 0;
@@ -742,10 +661,6 @@ a.attachment:before {
   }
 
   .post-info {
-    a {
-      color: var(--primary-med-or-secondary-med);
-    }
-
     a.wiki {
       color: var(--wiki);
     }
@@ -754,10 +669,13 @@ a.attachment:before {
 
 .who-liked,
 .who-read {
-  margin-top: 20px;
   margin-bottom: 0;
   width: 100%;
   text-align: right;
+
+  &.--expanded {
+    margin-top: 1.25em;
+  }
 }
 
 span.highlighted {
@@ -778,17 +696,20 @@ span.highlighted {
 
 /* Tablet (portrait) ----------- */
 
-@media all and (max-width: 790px) {
+@media all and (width <= 790px) {
   .topic-avatar {
     width: 45px;
   }
+
   .topic-post .reply-to-tab {
     right: 15%;
   }
+
   .topic-body {
     box-sizing: border-box;
-    width: calc(100% - 47px); //100% - [width of .topic-avatar + 2px]
+    width: calc(100% - 47px); // 100% - [width of .topic-avatar + 2px]
   }
+
   .embedded-posts {
     // top means "in reply to expansion" above a post
     &.top {

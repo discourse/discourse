@@ -1,7 +1,7 @@
 import downloadCalendarModal from "discourse/components/modal/download-calendar";
+import { getOwnerWithFallback } from "discourse/lib/get-owner";
+import getURL from "discourse/lib/get-url";
 import User from "discourse/models/user";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
-import getURL from "discourse-common/lib/get-url";
 
 export function downloadCalendar(title, dates, options = {}) {
   const currentUser = User.current();

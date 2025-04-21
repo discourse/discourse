@@ -1,7 +1,7 @@
 import Controller, { inject as controller } from "@ember/controller";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class extends Controller {
   @service pmTopicTrackingState;
@@ -30,9 +30,9 @@ export default class extends Controller {
     });
 
     if (count === 0) {
-      return I18n.t(`user.messages.${type}`);
+      return i18n(`user.messages.${type}`);
     } else {
-      return I18n.t(`user.messages.${type}_with_count`, { count });
+      return i18n(`user.messages.${type}_with_count`, { count });
     }
   }
 

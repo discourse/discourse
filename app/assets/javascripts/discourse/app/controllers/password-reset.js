@@ -1,19 +1,19 @@
+import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { alias, or, readOnly } from "@ember/object/computed";
 import { ajax } from "discourse/lib/ajax";
+import discourseComputed from "discourse/lib/decorators";
+import getURL from "discourse/lib/get-url";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
+import PasswordValidationHelper from "discourse/lib/password-validation-helper";
 import DiscourseURL, { userPath } from "discourse/lib/url";
 import { getWebauthnCredential } from "discourse/lib/webauthn";
-import PasswordValidation from "discourse/mixins/password-validation";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
-import getURL from "discourse-common/lib/get-url";
-import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
-export default class PasswordResetController extends Controller.extend(
-  PasswordValidation
-) {
+export default class PasswordResetController extends Controller {
+  @tracked accountPassword;
   @alias("model.is_developer") isDeveloper;
   @alias("model.admin") admin;
   @alias("model.second_factor_required") secondFactorRequired;
@@ -29,6 +29,8 @@ export default class PasswordResetController extends Controller.extend(
   requiresApproval = false;
   redirected = false;
   maskPassword = true;
+  passwordValidationHelper = new PasswordValidationHelper(this);
+  isLoading = false;
 
   lockImageUrl = getURL("/images/lock.svg");
 
@@ -53,9 +55,13 @@ export default class PasswordResetController extends Controller.extend(
     }
   }
 
+  get passwordValidation() {
+    return this.passwordValidationHelper.passwordValidation;
+  }
+
   @discourseComputed()
   continueButtonText() {
-    return I18n.t("password_reset.continue", {
+    return i18n("password_reset.continue", {
       site_name: this.siteSettings.title,
     });
   }
@@ -63,6 +69,10 @@ export default class PasswordResetController extends Controller.extend(
   @discourseComputed("redirectTo")
   redirectHref(redirectTo) {
     return getURL(redirectTo || "/");
+  }
+
+  get showPasswordValidation() {
+    return this.passwordValidation.ok || this.passwordValidation.reason;
   }
 
   @action
@@ -84,6 +94,8 @@ export default class PasswordResetController extends Controller.extend(
   @action
   async submit() {
     try {
+      this.set("isLoading", true);
+
       const result = await ajax({
         url: userPath(`password-reset/${this.get("model.token")}.json`),
         type: "PUT",
@@ -120,9 +132,11 @@ export default class PasswordResetController extends Controller.extend(
             securityKeyRequired: false,
             errorMessage: null,
           });
-        } else if (result.errors?.password?.length > 0) {
-          this.rejectedPasswords.pushObject(this.accountPassword);
-          this.rejectedPasswordsMessages.set(
+        } else if (result.errors?.["user_password.password"]?.length > 0) {
+          this.passwordValidationHelper.rejectedPasswords.push(
+            this.accountPassword
+          );
+          this.passwordValidationHelper.rejectedPasswordsMessages.set(
             this.accountPassword,
             (result.friendly_messages || []).join("\n")
           );
@@ -134,10 +148,12 @@ export default class PasswordResetController extends Controller.extend(
       }
     } catch (e) {
       if (e.jqXHR?.status === 429) {
-        this.set("errorMessage", I18n.t("user.second_factor.rate_limit"));
+        this.set("errorMessage", i18n("user.second_factor.rate_limit"));
       } else {
         throw new Error(e);
       }
+    } finally {
+      this.set("isLoading", false);
     }
   }
 

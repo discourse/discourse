@@ -18,7 +18,7 @@ sr:
       dm_title:
         single_user: "%{username}"
     mention_warning:
-      dismiss: "одбаци"
+      dismiss: "odbaci"
   unsubscribe:
     chat_summary:
       never: Nikad

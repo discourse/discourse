@@ -2,7 +2,7 @@ import { action } from "@ember/object";
 import Route from "@ember/routing/route";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import InstallThemeModal from "../components/modal/install-theme";
 
 export default class AdminCustomizeThemesRoute extends Route {
@@ -66,7 +66,7 @@ export default class AdminCustomizeThemesRoute extends Route {
     const currentTheme = this.modelFor("adminCustomizeThemes");
     if (this.currentModel?.warnUnassignedComponent) {
       this.dialog.yesNoConfirm({
-        message: I18n.t("admin.customize.theme.unsaved_parent_themes"),
+        message: i18n("admin.customize.theme.unsaved_parent_themes"),
         didConfirm: () => {
           currentTheme.set("recentlyInstalled", false);
           this.modal.show(InstallThemeModal, {

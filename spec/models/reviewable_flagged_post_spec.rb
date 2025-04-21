@@ -16,6 +16,13 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
     expect(reviewable.reload.potential_spam?).to eq(true)
   end
 
+  it "sets `potentially_illegal` when an illegal flag is added" do
+    reviewable = PostActionCreator.off_topic(user, post).reviewable
+    expect(reviewable.potentially_illegal?).to eq(false)
+    PostActionCreator.illegal(Fabricate(:user, refresh_auto_groups: true), post)
+    expect(reviewable.reload.potentially_illegal?).to eq(true)
+  end
+
   describe "actions" do
     let!(:result) { PostActionCreator.spam(user, post) }
     let(:reviewable) { result.reviewable }
@@ -83,8 +90,38 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
         expect(reviewable.actions_for(guardian).has?(:agree_and_suspend)).to eq(false)
       end
 
+      it "doesn't end up with an empty ignore bundle when the post is already hidden and deleted" do
+        post.update!(hidden: true)
+        post.topic.trash!
+        post.trash!
+        expect(reviewable.actions_for(guardian).has?(:ignore_and_do_nothing)).to eq(false)
+        expect(reviewable.actions_for(guardian).has?(:delete_and_ignore)).to eq(false)
+        expect(
+          reviewable.actions_for(guardian).bundles.find { |bundle| bundle.id.include?("-ignore") },
+        ).to be_blank
+      end
+
       context "when flagged as potential_spam" do
-        before { reviewable.update!(potential_spam: true) }
+        before { reviewable.update!(potential_spam: true, potentially_illegal: false) }
+
+        it "excludes delete action if the reviewer cannot delete the user" do
+          post.user.user_stat.update!(
+            first_post_created_at: 1.year.ago,
+            post_count: User::MAX_STAFF_DELETE_POST_COUNT + 1,
+          )
+
+          expect(reviewable.actions_for(guardian).has?(:delete_user)).to be false
+          expect(reviewable.actions_for(guardian).has?(:delete_user_block)).to be false
+        end
+
+        it "includes delete actions if the reviewer can delete the user" do
+          expect(reviewable.actions_for(guardian).has?(:delete_user)).to be true
+          expect(reviewable.actions_for(guardian).has?(:delete_user_block)).to be true
+        end
+      end
+
+      context "when flagged as illegal" do
+        before { reviewable.update(potential_spam: false, potentially_illegal: true) }
 
         it "excludes delete action if the reviewer cannot delete the user" do
           post.user.user_stat.update!(
@@ -183,11 +220,37 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
     end
 
     it "supports deleting a spammer" do
+      reviewable.perform(moderator, :delete_user)
+      expect(reviewable).to be_approved
+      expect(score.reload).to be_agreed
+      expect(post.reload.deleted_at).to be_present
+      expect(User.find_by(id: reviewable.target_created_by_id)).to be_blank
+    end
+
+    it "sends email when deleting a spammer" do
+      expect { reviewable.perform(moderator, :delete_user) }.to change {
+        ActionMailer::Base.deliveries.count
+      }
+      expect(ActionMailer::Base.deliveries.last.subject).to include(
+        I18n.t("user_notifications.account_deleted.subject_template", email_prefix: "Discourse"),
+      )
+    end
+
+    it "supports deleting and blocking a spammer" do
       reviewable.perform(moderator, :delete_user_block)
       expect(reviewable).to be_approved
       expect(score.reload).to be_agreed
       expect(post.reload.deleted_at).to be_present
       expect(User.find_by(id: reviewable.target_created_by_id)).to be_blank
+    end
+
+    it "sends email when deleting and blocking a spammer" do
+      expect { reviewable.perform(moderator, :delete_user_block) }.to change {
+        ActionMailer::Base.deliveries.count
+      }
+      expect(ActionMailer::Base.deliveries.last.subject).to include(
+        I18n.t("user_notifications.account_deleted.subject_template", email_prefix: "Discourse"),
+      )
     end
 
     it "ignores the flags" do

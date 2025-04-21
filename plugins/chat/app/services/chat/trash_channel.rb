@@ -23,13 +23,16 @@ module Chat
 
       validates :channel_id, presence: true
     end
+
     model :channel
     policy :invalid_access
+
     transaction do
       step :prevents_slug_collision
       step :soft_delete_channel
       step :log_channel_deletion
     end
+
     step :enqueue_delete_channel_relations_job
 
     private

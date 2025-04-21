@@ -153,6 +153,13 @@ class UserAvatar < ActiveRecord::Base
 
   def self.ensure_consistency!(max_optimized_avatars_to_remove: 20_000)
     DB.exec <<~SQL
+      DELETE FROM user_avatars
+      USING user_avatars ua
+      LEFT JOIN users u ON ua.user_id = u.id
+      WHERE user_avatars.id = ua.id AND u.id IS NULL
+    SQL
+
+    DB.exec <<~SQL
       UPDATE user_avatars
       SET gravatar_upload_id = NULL
       WHERE gravatar_upload_id IN (

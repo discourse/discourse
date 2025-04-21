@@ -7,7 +7,8 @@
 sl:
   js:
     discourse_automation:
-      create: Ustvari
+      back: Nazaj
+      edit: Uredi
       fields:
         user:
           label: Uporabnik
@@ -57,13 +58,13 @@ sl:
           fields:
             restricted_tags:
               label: Oznake
-            restricted_category:
-              label: Kategorija
-            restricted_group:
-              label: Skupina
-            restricted_groups:
-              label: Skupine
+            restricted_categories:
+              label: Kategorije
           created: Ustvarjeno
+          with_images: Slike
+          with_links: Povezave
+          with_code: Koda
+          with_uploads: Prenosi
         category_created_edited:
           fields:
             restricted_category:
@@ -134,6 +135,8 @@ sl:
             label: Sproži
           version:
             label: Verzija
+          status:
+            label: Stanje
           enabled:
             label: Vključeno
           disabled:

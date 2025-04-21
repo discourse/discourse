@@ -86,7 +86,15 @@ class Users::OmniauthCallbacksController < ApplicationController
 
     cookies["_bypass_cache"] = true
     cookies[:authentication_data] = { value: client_hash.to_json, path: Discourse.base_path("/") }
-    redirect_to @origin
+
+    # If the user account doesn't already exist, and this signup is part of a user-api-key request, direct
+    # the user to the homepage first so that signup can be completed. They'll be redirected to the user-api-key
+    # route once signup is complete. Hopefully, this can be simplified once fullscreen login/signup is everywhere.
+    if !current_user && @origin.start_with?("/user-api-key/new")
+      redirect_to path("/")
+    else
+      redirect_to @origin
+    end
   end
 
   def valid_origin?(uri)
@@ -110,6 +118,9 @@ class Users::OmniauthCallbacksController < ApplicationController
   end
 
   def self.find_authenticator(name)
+    if SiteSetting.enable_discourse_connect
+      raise Discourse::InvalidAccess.new(I18n.t("authenticator_not_found"))
+    end
     Discourse.enabled_authenticators.each do |authenticator|
       return authenticator if authenticator.name == name
     end
@@ -149,7 +160,10 @@ class Users::OmniauthCallbacksController < ApplicationController
       @auth_result.email = user.email
       return
     end
+    handle_account_activation(user)
+  end
 
+  def handle_account_activation(user)
     # automatically activate any account if a provider marked the email valid
     if @auth_result.email_valid && @auth_result.email == user.email
       if !user.active || !user.email_confirmed?

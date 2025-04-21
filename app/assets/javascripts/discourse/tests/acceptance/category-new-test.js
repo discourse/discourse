@@ -1,10 +1,12 @@
 import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
+import { cloneJSON } from "discourse/lib/object";
 import DiscourseURL from "discourse/lib/url";
+import { fixturesByUrl } from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 acceptance("New category access for moderators", function (needs) {
   needs.user({ moderator: true, admin: false, trust_level: 1 });
@@ -47,8 +49,8 @@ acceptance("Category New", function (needs) {
 
     await click(".edit-category-nav .edit-category-topic-template a");
     assert
-      .dom(".edit-category-tab-topic-template")
-      .isVisible("it can switch to topic template tab");
+      .dom(".edit-category-tab-topic-template.active")
+      .exists("it can switch to the topic template tab");
 
     await click(".edit-category-nav .edit-category-tags a");
     await click("button.add-required-tag-group");
@@ -74,7 +76,7 @@ acceptance("Category New", function (needs) {
       .exists("shows saved required tag group");
 
     assert.dom(".edit-category-title h2").hasText(
-      I18n.t("category.edit_dialog_title", {
+      i18n("category.edit_dialog_title", {
         categoryName: "testing",
       })
     );
@@ -92,9 +94,77 @@ acceptance("Category New", function (needs) {
     sinon.stub(DiscourseURL, "routeTo");
 
     await click(".category-back");
-    assert.ok(
+    assert.true(
       DiscourseURL.routeTo.calledWith("/c/testing/11"),
       "back routing works"
+    );
+  });
+
+  test("Specifying a parent category", async function (assert) {
+    await visit("/new-category");
+
+    await fillIn("input.category-name", "testing");
+
+    const categorySelector = selectKit(".category-chooser");
+    await categorySelector.expand();
+    await categorySelector.selectRowByValue(6); // 6 is support category's id
+
+    assert
+      .dom("input.category-name")
+      .hasValue("testing", "it doesn't clear out the rest of the form fields");
+    assert.strictEqual(categorySelector.header().value(), "6");
+  });
+});
+
+acceptance("Category text color", function (needs) {
+  needs.user();
+  needs.pretender((server, helper) => {
+    const category = cloneJSON(fixturesByUrl["/c/11/show.json"]).category;
+
+    server.get("/c/testing/find_by_slug.json", () => {
+      return helper.response(200, {
+        category: {
+          ...category,
+          color: "EEEEEE",
+          text_color: "000000",
+        },
+      });
+    });
+  });
+
+  test("Category text color is set based on contrast", async function (assert) {
+    await visit("/new-category");
+
+    let previewTextColor = document
+      .querySelector(".category-style .badge-category__wrapper")
+      .style.getPropertyValue("--category-badge-text-color")
+      .trim();
+
+    assert.strictEqual(
+      previewTextColor,
+      "#FFFFFF",
+      "has the default text color"
+    );
+
+    await fillIn("input.category-name", "testing");
+    await fillIn(".category-color-editor .hex-input", "EEEEEE");
+    await click("#save-category");
+
+    assert.strictEqual(
+      currentURL(),
+      "/c/testing/edit/general",
+      "it transitions to the category edit route"
+    );
+
+    previewTextColor = document
+      .querySelector(".category-style .badge-category__wrapper")
+      .style.getPropertyValue("--category-badge-text-color")
+      .trim();
+
+    assert.strictEqual(
+      previewTextColor,
+      "#000000",
+      "sets the contrast text color"
     );
   });
 });
@@ -106,19 +176,19 @@ acceptance("New category preview", function (needs) {
     await visit("/new-category");
 
     let previewBadgeColor = document
-      .querySelector(".category-color-editor .badge-category")
+      .querySelector(".category-style .badge-category")
       .style.getPropertyValue("--category-badge-color")
       .trim();
 
-    assert.equal(previewBadgeColor, "#0088CC");
+    assert.strictEqual(previewBadgeColor, "#0088CC");
 
     await fillIn(".hex-input", "FF00FF");
 
     previewBadgeColor = document
-      .querySelector(".category-color-editor .badge-category")
+      .querySelector(".category-style .badge-category")
       .style.getPropertyValue("--category-badge-color")
       .trim();
 
-    assert.equal(previewBadgeColor, "#FF00FF");
+    assert.strictEqual(previewBadgeColor, "#FF00FF");
   });
 });

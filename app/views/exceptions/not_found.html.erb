@@ -12,7 +12,7 @@
   <h1 class="title"><%= @title %></h1>
 
   <%- if !@current_user %>
-    <a href="<%= path "/login" %>" class='btn btn-primary'><%= SvgSprite.raw_svg('fa-user') %><%= I18n.t('log_in') %></a>
+    <a href="<%= path "/login" %>" class='btn btn-primary'><%= SvgSprite.raw_svg('user') %><%= I18n.t('log_in') %></a>
   <%- end %>
 
   <%- if @group&.dig(:allow_membership_requests) %>

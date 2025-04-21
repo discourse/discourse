@@ -2,17 +2,12 @@ import { cancel } from "@ember/runloop";
 import { htmlSafe } from "@ember/template";
 import { ajax } from "discourse/lib/ajax";
 import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
+import discourseDebounce from "discourse/lib/debounce";
+import { INPUT_DELAY, isTesting } from "discourse/lib/environment";
 import { getHashtagTypeClasses as getHashtagTypeClassesNew } from "discourse/lib/hashtag-type-registry";
+import discourseLater from "discourse/lib/later";
 import { emojiUnescape } from "discourse/lib/text";
-import {
-  caretPosition,
-  escapeExpression,
-  inCodeBlock,
-} from "discourse/lib/utilities";
-import { INPUT_DELAY, isTesting } from "discourse-common/config/environment";
-import discourseDebounce from "discourse-common/lib/debounce";
-import discourseLater from "discourse-common/lib/later";
-import { findRawTemplate } from "discourse-common/lib/raw-templates";
+import { escapeExpression } from "discourse/lib/utilities";
 
 /**
  * Sets up a textarea using the jQuery autocomplete plugin, specifically
@@ -50,8 +45,8 @@ export function setupHashtagAutocomplete(
   );
 }
 
-export async function hashtagTriggerRule(textarea) {
-  return !(await inCodeBlock(textarea.value, caretPosition(textarea)));
+export async function hashtagTriggerRule(textarea, { inCodeBlock }) {
+  return !(await inCodeBlock());
 }
 
 export function hashtagAutocompleteOptions(
@@ -60,10 +55,8 @@ export function hashtagAutocompleteOptions(
   autocompleteOptions
 ) {
   return {
-    template: findRawTemplate("hashtag-autocomplete"),
+    template: renderHashtagAutocomplete,
     key: "#",
-    afterComplete: autocompleteOptions.afterComplete,
-    treatAsTextarea: autocompleteOptions.treatAsTextarea,
     scrollElementSelector: ".hashtag-autocomplete__fadeout",
     autoSelectFirstSuggestion: true,
     transformComplete: (obj) => obj.ref,
@@ -75,6 +68,7 @@ export function hashtagAutocompleteOptions(
     },
     triggerRule: async (textarea, opts) =>
       await hashtagTriggerRule(textarea, opts),
+    ...autocompleteOptions,
   };
 }
 
@@ -132,13 +126,27 @@ function _searchRequest(term, contextualHashtagConfiguration, resultFunc) {
         // Convert :emoji: in the result text to HTML safely.
         result.text = htmlSafe(emojiUnescape(escapeExpression(result.text)));
 
-        const hashtagType = getHashtagTypeClassesNew()[result.type];
-        result.icon = hashtagType.generateIconHTML({
+        let opts = {
           preloaded: true,
           colors: result.colors,
           icon: result.icon,
           id: result.id,
-        });
+        };
+
+        if (result.style_type) {
+          opts.style_type = result.style_type;
+        }
+
+        if (result.icon) {
+          opts.icon = result.icon;
+        }
+
+        if (result.emoji) {
+          opts.emoji = result.emoji;
+        }
+
+        const hashtagType = getHashtagTypeClassesNew()[result.type];
+        result.icon = hashtagType.generateIconHTML(opts);
       });
       resultFunc(response.results || CANCELLED_STATUS);
     })
@@ -146,4 +154,34 @@ function _searchRequest(term, contextualHashtagConfiguration, resultFunc) {
       currentSearch = null;
     });
   return currentSearch;
+}
+
+function renderOption(option) {
+  const metaText = option.secondary_text
+    ? `<span class="hashtag-autocomplete__meta-text">(${escapeExpression(option.secondary_text)})</span>`
+    : "";
+
+  return `
+    <li class="hashtag-autocomplete__option">
+      <a class="hashtag-autocomplete__link" title="${escapeExpression(option.description)}" href>
+        ${option.icon}
+        <span class="hashtag-autocomplete__text">
+          ${option.text}
+          ${metaText}
+        </span>
+      </a>
+    </li>
+  `;
+}
+
+export default function renderHashtagAutocomplete({ options }) {
+  return `
+    <div class="autocomplete hashtag-autocomplete">
+      <div class="hashtag-autocomplete__fadeout">
+        <ul>
+          ${options.map(renderOption).join("")}
+        </ul>
+      </div>
+    </div>
+  `;
 }

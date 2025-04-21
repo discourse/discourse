@@ -1,8 +1,8 @@
-import { next, schedule } from "@ember/runloop";
+import { next } from "@ember/runloop";
 import Service, { service } from "@ember/service";
+import { bind } from "discourse/lib/decorators";
+import { isTesting } from "discourse/lib/environment";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
-import { isTesting } from "discourse-common/config/environment";
-import { bind } from "discourse-common/utils/decorators";
 
 const STORE_KEY = Symbol("scroll-location");
 
@@ -24,6 +24,17 @@ export default class RouteScrollManager extends Service {
     ? document.getElementById("ember-testing-container")
     : document.scrollingElement;
 
+  init() {
+    super.init(...arguments);
+    this.router.on("routeDidChange", this.routeDidChange);
+    this.router.on("routeWillChange", this.routeWillChange);
+  }
+
+  willDestroy() {
+    this.router.off("routeDidChange", this.routeDidChange);
+    this.router.off("routeWillChange", this.routeWillChange);
+  }
+
   @bind
   routeWillChange() {
     this.historyStore.set(STORE_KEY, [
@@ -44,11 +55,7 @@ export default class RouteScrollManager extends Service {
 
     const scrollLocation = this.historyStore.get(STORE_KEY) || [0, 0];
 
-    next(() =>
-      schedule("afterRender", () =>
-        this.scrollElement.scrollTo(...scrollLocation)
-      )
-    );
+    next(() => this.scrollElement.scrollTo(...scrollLocation));
   }
 
   #shouldScroll(routeInfo) {
@@ -62,16 +69,5 @@ export default class RouteScrollManager extends Service {
 
     // No overrides - default to true
     return true;
-  }
-
-  init() {
-    super.init(...arguments);
-    this.router.on("routeDidChange", this.routeDidChange);
-    this.router.on("routeWillChange", this.routeWillChange);
-  }
-
-  willDestroy() {
-    this.router.off("routeDidChange", this.routeDidChange);
-    this.router.off("routeWillChange", this.routeWillChange);
   }
 }

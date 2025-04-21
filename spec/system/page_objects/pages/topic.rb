@@ -78,6 +78,10 @@ module PageObjects
         ".topic-post:not(.staged) #post_#{post_number}"
       end
 
+      def has_no_post_more_actions?(post)
+        within_post(post) { has_no_css?(".show-more-actions") }
+      end
+
       def has_post_more_actions?(post)
         within_post(post) { has_css?(".show-more-actions") }
       end
@@ -119,26 +123,32 @@ module PageObjects
 
       def has_who_liked_on_post?(post, count: nil)
         if count
-          return within_post(post) { has_css?(".who-liked a.trigger-user-card", count: count) }
+          return(
+            within_post(post) do
+              has_css?(".who-liked.--expanded a.trigger-user-card", count: count)
+            end
+          )
         end
 
-        within_post(post) { has_css?(".who-liked") }
+        within_post(post) { has_css?(".who-liked.--expanded") }
       end
 
       def has_no_who_liked_on_post?(post)
-        within_post(post) { has_no_css?(".who-liked") }
+        within_post(post) { has_no_css?(".who-liked.--expanded") }
       end
 
       def has_who_read_on_post?(post, count: nil)
         if count
-          return within_post(post) { has_css?(".who-read a.trigger-user-card", count: count) }
+          return(
+            within_post(post) { has_css?(".who-read.--expanded a.trigger-user-card", count: count) }
+          )
         end
 
-        within_post(post) { has_css?(".who-read") }
+        within_post(post) { has_css?(".who-read.--expanded") }
       end
 
       def has_no_who_read_on_post?(post)
-        within_post(post) { has_no_css?(".who-read") }
+        within_post(post) { has_no_css?(".who-read.--expanded") }
       end
 
       def expand_post_admin_actions(post)
@@ -263,16 +273,16 @@ module PageObjects
       end
 
       def click_notifications_button
-        find(".topic-notifications-button .select-kit-header").click
+        find(".topic-notifications-button .notifications-tracking-trigger").click
       end
 
       def click_admin_menu_button
-        within_topic_footer_buttons { find(".topic-admin-menu-button").click }
+        within_topic_footer_buttons { find(".toggle-admin-menu").click }
       end
 
       def watch_topic
         click_notifications_button
-        find('li[data-name="watching"]').click
+        find('.notifications-tracking-btn[data-level-name="watching"]').click
       end
 
       def close_topic
@@ -300,6 +310,10 @@ module PageObjects
         find(".modal.convert-to-public-topic")
       end
 
+      def has_no_flag_button?
+        has_no_css?(".post-action-menu__flag.create-flag")
+      end
+
       def open_flag_topic_modal
         expect(page).to have_css(".flag-topic", wait: Capybara.default_max_wait_time * 3)
         find(".flag-topic").click
@@ -316,36 +330,35 @@ module PageObjects
       end
 
       def selector_for_post_action_button(button)
-        # TODO (glimmer-post-menu): Replace the selector with the BEM format ones once the glimmer-post-menu replaces the widget post menu
         case button
         when :admin
-          ".post-controls .show-post-admin-menu"
+          ".post-controls .post-action-menu__admin"
         when :bookmark
-          ".post-controls .bookmark"
+          ".post-controls .post-action-menu__bookmark"
         when :copy_link, :copyLink
           ".post-controls .post-action-menu__copy-link"
         when :delete
-          ".post-controls .delete"
+          ".post-controls .post-action-menu__delete"
         when :edit
-          ".post-controls .edit"
+          ".post-controls .post-action-menu__edit"
         when :flag
-          ".post-controls .create-flag"
+          ".post-controls .post-action-menu__flag"
         when :like
-          ".post-controls .toggle-like"
+          ".post-controls .post-action-menu__like"
         when :like_count
-          ".post-controls .like-count"
+          ".post-controls .post-action-menu__like-count"
         when :read
-          ".post-controls .read-indicator"
+          ".post-controls .post-action-menu__read"
         when :recover
-          ".post-controls .recover"
+          ".post-controls .post-action-menu__recover"
         when :replies
-          ".post-controls .show-replies"
+          ".post-controls .post-action-menu__show-replies"
         when :reply
-          ".post-controls .reply"
+          ".post-controls .post-action-menu__reply"
         when :share
-          ".post-controls .share"
+          ".post-controls .post-action-menu__share"
         when :show_more
-          ".post-controls .show-more-actions"
+          ".post-controls .post-action-menu__show-more"
         else
           raise "Unknown post menu button type: #{button}"
         end

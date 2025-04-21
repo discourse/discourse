@@ -10,21 +10,21 @@ import ConditionalLoadingSection from "discourse/components/conditional-loading-
 import CopyButton from "discourse/components/copy-button";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
+import icon from "discourse/helpers/d-icon";
 import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import dIcon from "discourse-common/helpers/d-icon";
-import i18n from "discourse-common/helpers/i18n";
-import { POPULAR_THEMES } from "discourse-common/lib/popular-themes";
-import I18n from "discourse-i18n";
+import discourseLater from "discourse/lib/later";
+import { POPULAR_THEMES } from "discourse/lib/popular-themes";
+import { i18n } from "discourse-i18n";
 import InstallThemeItem from "admin/components/install-theme-item";
 import { COMPONENTS, THEMES } from "admin/models/theme";
 import ComboBox from "select-kit/components/combo-box";
 
 const MIN_NAME_LENGTH = 4;
 const CREATE_TYPES = [
-  { name: I18n.t("admin.customize.theme.theme"), value: THEMES },
-  { name: I18n.t("admin.customize.theme.component"), value: COMPONENTS },
+  { name: i18n("admin.customize.theme.theme"), value: THEMES },
+  { name: i18n("admin.customize.theme.component"), value: COMPONENTS },
 ];
 
 export default class InstallThemeModal extends Component {
@@ -42,10 +42,16 @@ export default class InstallThemeModal extends Component {
   @tracked duplicateRemoteThemeWarning;
   @tracked themeCannotBeInstalled;
   @tracked name;
+  @tracked loadingTimePassed;
 
   recordType = this.args.model.recordType || "theme";
   keyGenUrl = this.args.model.keyGenUrl || "/admin/themes/generate_key_pair";
   importUrl = this.args.model.importUrl || "/admin/themes/import";
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.args.model.clearParams?.();
+  }
 
   get showPublicKey() {
     return this.uploadUrl?.match?.(/^ssh:\/\/.+@.+$|.+@.+:.+$/);
@@ -98,14 +104,15 @@ export default class InstallThemeModal extends Component {
 
   get placeholder() {
     if (this.component) {
-      return I18n.t("admin.customize.theme.component_name");
+      return i18n("admin.customize.theme.component_name");
     } else {
-      return I18n.t("admin.customize.theme.theme_name");
+      return i18n("admin.customize.theme.theme_name");
     }
   }
 
   get themes() {
-    return POPULAR_THEMES.map((popularTheme) => {
+    const list = [];
+    POPULAR_THEMES.forEach((popularTheme) => {
       if (
         this.args.model.installedThemes.some((installedTheme) =>
           this.themeHasSameUrl(installedTheme, popularTheme.value)
@@ -113,8 +120,28 @@ export default class InstallThemeModal extends Component {
       ) {
         popularTheme.installed = true;
       }
-      return popularTheme;
+
+      if (this.args.model.showComponentsOnly) {
+        if (popularTheme.component) {
+          list.push(popularTheme);
+        }
+      } else if (this.args.model.showThemesOnly) {
+        if (!popularTheme.component) {
+          list.push(popularTheme);
+        }
+      } else {
+        list.push(popularTheme);
+      }
     });
+    return list;
+  }
+
+  get installingMessage() {
+    if (this.loadingTimePassed > 10) {
+      return i18n("admin.customize.theme.installing_message_long_time");
+    }
+
+    return i18n("admin.customize.theme.installing_message");
   }
 
   themeHasSameUrl(theme, url) {
@@ -124,11 +151,6 @@ export default class InstallThemeModal extends Component {
       url &&
       url.replace(/\.git$/, "") === themeUrl.replace(/\.git$/, "")
     );
-  }
-
-  willDestroy() {
-    super.willDestroy(...arguments);
-    this.args.model.clearParams?.();
   }
 
   @action
@@ -168,18 +190,7 @@ export default class InstallThemeModal extends Component {
   @action
   async installTheme() {
     if (this.create) {
-      this.loading = true;
-      const theme = this.store.createRecord(this.recordType);
-      try {
-        await theme.save({ name: this.name, component: this.component });
-        this.args.model.addTheme(theme);
-        this.args.closeModal();
-      } catch (err) {
-        popupAjaxError(err);
-      } finally {
-        this.loading = false;
-      }
-      return;
+      return this.#createTheme();
     }
 
     let options = {
@@ -200,7 +211,7 @@ export default class InstallThemeModal extends Component {
           this.themeHasSameUrl(theme, this.uploadUrl)
         );
       if (duplicate && !this.duplicateRemoteThemeWarning) {
-        const warning = I18n.t("admin.customize.theme.duplicate_remote_theme", {
+        const warning = i18n("admin.customize.theme.duplicate_remote_theme", {
           name: duplicate.name,
         });
         this.duplicateRemoteThemeWarning = warning;
@@ -226,6 +237,8 @@ export default class InstallThemeModal extends Component {
 
     try {
       this.loading = true;
+      this.loadingTimePassed = 0;
+      this.#backgroundLoading();
       const result = await ajax(this.importUrl, options);
       const theme = this.store.createRecord(this.recordType, result.theme);
       this.args.model.addTheme(theme);
@@ -234,9 +247,35 @@ export default class InstallThemeModal extends Component {
       if (!this.publicKey || this.themeCannotBeInstalled) {
         return popupAjaxError(err);
       }
-      this.themeCannotBeInstalled = I18n.t(
-        "admin.customize.theme.force_install"
-      );
+      this.themeCannotBeInstalled = i18n("admin.customize.theme.force_install");
+    } finally {
+      this.loadingTimePassed = 0;
+      this.loading = false;
+    }
+  }
+
+  #backgroundLoading() {
+    if (this.loading) {
+      discourseLater(() => {
+        if (this.isDestroying || this.isDestroyed) {
+          return;
+        }
+
+        this.loadingTimePassed += 1;
+        this.#backgroundLoading();
+      }, 1000);
+    }
+  }
+
+  async #createTheme() {
+    this.loading = true;
+    const theme = this.store.createRecord(this.recordType);
+    try {
+      await theme.save({ name: this.name, component: this.component });
+      this.args.model.addTheme(theme);
+      this.args.closeModal();
+    } catch (err) {
+      popupAjaxError(err);
     } finally {
       this.loading = false;
     }
@@ -278,7 +317,7 @@ export default class InstallThemeModal extends Component {
         <div class="install-theme-content">
           <ConditionalLoadingSection
             @isLoading={{this.loading}}
-            @title={{i18n "admin.customize.theme.installing_message"}}
+            @title={{this.installingMessage}}
           >
             {{#if this.popular}}
               <div class="popular-theme-items">
@@ -291,7 +330,7 @@ export default class InstallThemeModal extends Component {
                         target="_blank"
                       >
                         {{#if theme.component}}
-                          {{dIcon
+                          {{icon
                             "puzzle-piece"
                             title="admin.customize.theme.component"
                           }}
@@ -321,7 +360,7 @@ export default class InstallThemeModal extends Component {
                             rel="noopener noreferrer"
                             target="_blank"
                           >
-                            {{dIcon "desktop"}}
+                            {{icon "desktop"}}
                             {{i18n "admin.customize.theme.preview"}}
                           </a>
                         {{/if}}

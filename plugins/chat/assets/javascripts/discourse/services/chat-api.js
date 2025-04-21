@@ -272,6 +272,21 @@ export default class ChatApi extends Service {
   }
 
   /**
+   * Creates a message interaction.
+   * @param {number} channelId - The ID of the channel.
+   * @param {number} messageId - The ID of the message.
+   * @param {object} data - Params of the intereaction.
+   * @param {string} data.action_id - The ID of the action.
+   * @returns {Promise}
+   */
+  createInteraction(channelId, messageId, data = {}) {
+    return this.#postRequest(
+      `/channels/${channelId}/messages/${messageId}/interactions`,
+      data
+    );
+  }
+
+  /**
    * Updates the status of a channel.
    * @param {number} channelId - The ID of the channel.
    * @param {string} status - The new status, can be "open" or "closed".
@@ -590,6 +605,16 @@ export default class ChatApi extends Service {
       usernames: targets.usernames,
       groups: targets.groups,
     });
+  }
+
+  /**
+   * Remove member from a channel.
+   *
+   * @param {number} channelId - The ID of the channel.
+   * @param {string} userId - The ID of the user to remove.
+   */
+  removeMemberFromChannel(channelId, userId) {
+    return this.#deleteRequest(`/channels/${channelId}/memberships/${userId}`);
   }
 
   get #basePath() {

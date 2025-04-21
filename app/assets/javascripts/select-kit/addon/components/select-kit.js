@@ -1,7 +1,7 @@
 import Component from "@ember/component";
 import EmberObject, { computed, get } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
-import { bind, cancel, next, schedule, throttle } from "@ember/runloop";
+import { bind, cancel, next, throttle } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isEmpty, isNone, isPresent } from "@ember/utils";
 import {
@@ -11,12 +11,12 @@ import {
 } from "@ember-decorators/component";
 import { createPopper } from "@popperjs/core";
 import { Promise } from "rsvp";
-import { INPUT_DELAY } from "discourse-common/config/environment";
-import discourseDebounce from "discourse-common/lib/debounce";
-import deprecated from "discourse-common/lib/deprecated";
-import { makeArray } from "discourse-common/lib/helpers";
-import { bind as bindDecorator } from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import discourseDebounce from "discourse/lib/debounce";
+import { bind as bindDecorator } from "discourse/lib/decorators";
+import deprecated from "discourse/lib/deprecated";
+import { INPUT_DELAY } from "discourse/lib/environment";
+import { makeArray } from "discourse/lib/helpers";
+import { i18n } from "discourse-i18n";
 import {
   applyContentPluginApiCallbacks,
   applyOnChangePluginApiCallbacks,
@@ -406,7 +406,7 @@ export default class SelectKit extends Component.extend(UtilsMixin) {
     if (maximum && selection.length >= maximum) {
       const key =
         this.selectKit.options.maximumLabel || "select_kit.max_content_reached";
-      this.addError(I18n.t(key, { count: maximum }));
+      this.addError(i18n(key, { count: maximum }));
       return false;
     }
 
@@ -563,7 +563,7 @@ export default class SelectKit extends Component.extend(UtilsMixin) {
     let item;
     switch (typeof none) {
       case "string":
-        item = this.defaultItem(null, I18n.t(none));
+        item = this.defaultItem(null, i18n(none));
         break;
       default:
         item = none;
@@ -737,8 +737,8 @@ export default class SelectKit extends Component.extend(UtilsMixin) {
             this.singleSelect && this.value
               ? this.itemForValue(this.value, this.mainCollection)
               : isEmpty(this.selectKit.filter)
-              ? null
-              : this.mainCollection.firstObject,
+                ? null
+                : this.mainCollection.firstObject,
           isLoading: false,
           hasNoContent,
         });
@@ -760,13 +760,11 @@ export default class SelectKit extends Component.extend(UtilsMixin) {
 
   _safeAfterRender(fn) {
     next(() => {
-      schedule("afterRender", () => {
-        if (!this.element || this.isDestroyed || this.isDestroying) {
-          return;
-        }
+      if (!this.element || this.isDestroyed || this.isDestroying) {
+        return;
+      }
 
-        fn();
-      });
+      fn();
     });
   }
 

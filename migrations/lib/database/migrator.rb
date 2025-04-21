@@ -3,7 +3,7 @@
 module Migrations::Database
   class Migrator
     def initialize(db_path)
-      @db_path = db_path
+      @db_path = File.expand_path(db_path, ::Migrations.root_path)
       @db = nil
     end
 
@@ -21,12 +21,14 @@ module Migrations::Database
       migrate_from_path(@migrations_path, performed_migrations)
 
       @db.close
+      nil
     end
 
     def reset!
       [@db_path, "#{@db_path}-wal", "#{@db_path}-shm"].each do |path|
         FileUtils.remove_file(path, force: true) if File.exist?(path)
       end
+      nil
     end
 
     private
@@ -70,7 +72,7 @@ module Migrations::Database
 
           @db.transaction do
             @db.execute(sql)
-            @db.execute(<<~SQL, path: relative_path, sql_hash: sql_hash)
+            @db.execute(<<~SQL, path: relative_path, sql_hash:)
               INSERT INTO schema_migrations (path, created_at, sql_hash)
               VALUES (:path, datetime('now'), :sql_hash)
             SQL

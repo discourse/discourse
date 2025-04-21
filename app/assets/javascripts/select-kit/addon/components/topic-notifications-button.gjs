@@ -1,15 +1,20 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
+import TopicNotificationsTracking from "discourse/components/topic-notifications-tracking";
+import getURL from "discourse/lib/get-url";
 import { NotificationLevels } from "discourse/lib/notification-levels";
-import i18n from "discourse-common/helpers/i18n";
-import getURL from "discourse-common/lib/get-url";
-import I18n from "discourse-i18n";
-import TopicNotificationsOptions from "select-kit/components/topic-notifications-options";
+import I18n, { i18n } from "discourse-i18n";
+
+const ParagraphWrapper = <template>
+  <p class="reason">{{yield}}</p>
+</template>;
+const EmptyWrapper = <template>
+  {{! template-lint-disable no-yield-only}}{{yield}}
+</template>;
 
 export default class TopicNotificationsButton extends Component {
   @service currentUser;
@@ -43,9 +48,9 @@ export default class TopicNotificationsButton extends Component {
       this.currentUser?.user_option.mailing_list_mode &&
       level > NotificationLevels.MUTED
     ) {
-      return I18n.t("topic.notifications.reasons.mailing_list_mode");
+      return i18n("topic.notifications.reasons.mailing_list_mode");
     } else {
-      return I18n.t(localeString, {
+      return i18n(localeString, {
         username: this.currentUser?.username_lower,
         basePath: getURL(""),
       });
@@ -87,11 +92,9 @@ export default class TopicNotificationsButton extends Component {
 
   get conditionalWrapper() {
     if (this.args.expanded) {
-      return <template><p class="reason">{{yield}}</p></template>;
+      return ParagraphWrapper;
     } else {
-      return <template>
-        {{! template-lint-disable no-yield-only}}{{yield}}
-      </template>;
+      return EmptyWrapper;
     }
   }
 
@@ -113,17 +116,15 @@ export default class TopicNotificationsButton extends Component {
   <template>
     <div class="topic-notifications-button" ...attributes>
       <this.conditionalWrapper>
-        <TopicNotificationsOptions
-          @value={{this.notificationLevel}}
-          @topic={{@topic}}
+        <TopicNotificationsTracking
+          @levelId={{this.notificationLevel}}
           @onChange={{this.changeTopicNotificationLevel}}
-          @options={{hash
-            icon=(if this.isLoading "spinner")
-            showFullTitle=@expanded
-            showCaret=@expanded
-            headerAriaLabel=(i18n "topic.notifications.title")
-          }}
+          @showFullTitle={{@expanded}}
+          @showCaret={{@expanded}}
+          @topic={{@topic}}
+          @contentClass={{@contentClass}}
         />
+
         {{#if @expanded}}
           <span class="text">{{htmlSafe this.reasonText}}</span>
         {{/if}}

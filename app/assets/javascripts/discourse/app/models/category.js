@@ -1,17 +1,18 @@
+import { tracked } from "@glimmer/tracking";
 import { warn } from "@ember/debug";
 import { computed, get } from "@ember/object";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
+import discourseComputed from "discourse/lib/decorators";
+import { getOwnerWithFallback } from "discourse/lib/get-owner";
+import getURL from "discourse/lib/get-url";
+import { MultiCache } from "discourse/lib/multi-cache";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import PermissionType from "discourse/models/permission-type";
 import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
 import Topic from "discourse/models/topic";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
-import getURL from "discourse-common/lib/get-url";
-import discourseComputed from "discourse-common/utils/decorators";
-import { MultiCache } from "discourse-common/utils/multi-cache";
 
 const STAFF_GROUP_NAME = "staff";
 const CATEGORY_ASYNC_SEARCH_CACHE = {};
@@ -451,6 +452,10 @@ export default class Category extends RestModel {
 
   @service currentUser;
 
+  @tracked color;
+  @tracked styleType = this.style_type;
+  @tracked emoji;
+  @tracked icon;
   permissions = null;
 
   init() {
@@ -492,6 +497,16 @@ export default class Category extends RestModel {
     });
   }
 
+  get textColor() {
+    return applyValueTransformer(
+      "category-text-color",
+      this.get("text_color"),
+      {
+        category: this,
+      }
+    );
+  }
+
   @computed("parent_category_id", "site.categories.[]")
   get parentCategory() {
     if (this.parent_category_id) {
@@ -503,12 +518,10 @@ export default class Category extends RestModel {
     this.set("parent_category_id", newParentCategory?.id);
   }
 
-  @computed("site.categories.[]")
   get subcategories() {
-    return this.site.categories.filterBy("parent_category_id", this.id);
+    return this.site.categoriesByParentId.get(this.id) || [];
   }
 
-  @computed("subcategories")
   get unloadedSubcategoryCount() {
     return this.subcategory_count - this.subcategories.length;
   }
@@ -560,8 +573,7 @@ export default class Category extends RestModel {
     }
   }
 
-  @discourseComputed("subcategories")
-  descendants() {
+  get descendants() {
     const descendants = [this];
     for (let i = 0; i < descendants.length; i++) {
       if (descendants[i].subcategories) {
@@ -713,6 +725,8 @@ export default class Category extends RestModel {
     const id = this.id;
     const url = id ? `/categories/${id}` : "/categories";
 
+    this.styleType = this.style_type;
+
     return ajax(url, {
       contentType: "application/json",
       data: JSON.stringify({
@@ -764,6 +778,9 @@ export default class Category extends RestModel {
         moderating_group_ids: this.moderating_group_ids,
         read_only_banner: this.read_only_banner,
         default_list_filter: this.default_list_filter,
+        style_type: this.style_type,
+        emoji: this.emoji,
+        icon: this.icon,
       }),
       type: id ? "PUT" : "POST",
     });

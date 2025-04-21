@@ -1,6 +1,6 @@
 import { service } from "@ember/service";
 import RestrictedUserRoute from "discourse/routes/restricted-user";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class Preferences extends RestrictedUserRoute {
   @service router;
@@ -13,7 +13,7 @@ export default class Preferences extends RestrictedUserRoute {
     let controller = this.controllerFor(this.router.currentRouteName);
     let subpageTitle = controller?.subpageTitle;
     return subpageTitle
-      ? `${subpageTitle} - ${I18n.t("user.preferences.title")}`
-      : I18n.t("user.preferences.title");
+      ? `${subpageTitle} - ${i18n("user.preferences.title")}`
+      : i18n("user.preferences.title");
   }
 }

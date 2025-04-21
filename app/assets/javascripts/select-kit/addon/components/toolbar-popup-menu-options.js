@@ -1,7 +1,7 @@
 import { classNames } from "@ember-decorators/component";
 import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
 import { translateModKey } from "discourse/lib/utilities";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
 import {
   pluginApiIdentifiers,
@@ -24,7 +24,7 @@ export default class ToolbarPopupMenuOptions extends DropdownSelectBoxComponent 
         if (content.condition) {
           let label;
           if (content.label) {
-            label = I18n.t(content.label);
+            label = i18n(content.label);
             if (content.shortcut) {
               label += ` <kbd class="shortcut">${translateModKey(
                 PLATFORM_KEY_MODIFIER + "+" + content.shortcut
@@ -34,7 +34,7 @@ export default class ToolbarPopupMenuOptions extends DropdownSelectBoxComponent 
 
           let title;
           if (content.title) {
-            title = I18n.t(content.title);
+            title = i18n(content.title);
             if (content.shortcut) {
               title += ` (${translateModKey(
                 PLATFORM_KEY_MODIFIER + "+" + content.shortcut
@@ -44,7 +44,7 @@ export default class ToolbarPopupMenuOptions extends DropdownSelectBoxComponent 
 
           let name = content.name;
           if (!name && content.label) {
-            name = I18n.t(content.label);
+            name = i18n(content.label);
           }
 
           return {

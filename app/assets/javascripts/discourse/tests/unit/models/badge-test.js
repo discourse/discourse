@@ -15,8 +15,8 @@ module("Unit | Model | badge", function (hooks) {
     const badge1 = store.createRecord("badge", { name: "New Badge" });
     const badge2 = store.createRecord("badge", { id: 1, name: "Old Badge" });
 
-    assert.ok(badge1.newBadge, "badges without ids are new");
-    assert.ok(!badge2.newBadge, "badges with ids are not new");
+    assert.true(badge1.newBadge, "badges without ids are new");
+    assert.false(badge2.newBadge, "badges with ids are not new");
   });
 
   test("createFromJson array", function (assert) {
@@ -29,7 +29,7 @@ module("Unit | Model | badge", function (hooks) {
 
     const badges = Badge.createFromJson(badgesJson);
 
-    assert.ok(Array.isArray(badges), "returns an array");
+    assert.true(Array.isArray(badges), "returns an array");
     assert.strictEqual(badges[0].name, "Badge 1", "badge details are set");
     assert.strictEqual(
       badges[0].badge_type.name,
@@ -46,7 +46,7 @@ module("Unit | Model | badge", function (hooks) {
 
     const badge = Badge.createFromJson(badgeJson);
 
-    assert.ok(!Array.isArray(badge), "does not returns an array");
+    assert.false(Array.isArray(badge), "does not returns an array");
   });
 
   test("updateFromJson", function (assert) {

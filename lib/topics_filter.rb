@@ -83,9 +83,8 @@ class TopicsFilter
       when "views-max"
         filter_by_number_of_views(max: filter_values)
       else
-        if custom_filter =
-             DiscoursePluginRegistry.custom_filter_mappings.find { |hash| hash.key?(filter) }
-          @scope = custom_filter[filter].call(@scope, filter_values)
+        if custom_filter = DiscoursePluginRegistry.custom_filter_mappings.find { _1.key?(filter) }
+          @scope = custom_filter[filter].call(@scope, filter_values, @guardian) || @scope
         end
       end
     end
@@ -562,7 +561,8 @@ class TopicsFilter
         key = "order:#{match_data[:column]}"
         if custom_match =
              DiscoursePluginRegistry.custom_filter_mappings.find { |hash| hash.key?(key) }
-          @scope = custom_match[key].call(@scope, match_data[:asc].nil? ? "DESC" : "ASC")
+          dir = match_data[:asc] ? "ASC" : "DESC"
+          @scope = custom_match[key].call(@scope, dir, @guardian) || @scope
         end
       end
     end

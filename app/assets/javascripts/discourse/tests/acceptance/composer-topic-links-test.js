@@ -1,6 +1,6 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Composer topic featured links", function (needs) {
   needs.user();
@@ -20,11 +20,9 @@ acceptance("Composer topic featured links", function (needs) {
     assert
       .dom(".d-editor-textarea-wrapper .popup-tip.good")
       .exists("the body is now good");
-    assert.strictEqual(
-      query(".title-input input").value,
-      "An interesting article",
-      "title is from the oneboxed article"
-    );
+    assert
+      .dom(".title-input input")
+      .hasValue("An interesting article", "title is from the oneboxed article");
   });
 
   test("onebox result doesn't include a title", async function (assert) {
@@ -37,22 +35,21 @@ acceptance("Composer topic featured links", function (needs) {
     assert
       .dom(".d-editor-textarea-wrapper .popup-tip.good")
       .exists("the body is now good");
-    assert.strictEqual(
-      query(".title-input input").value,
-      "http://www.example.com/no-title.html",
-      "title is unchanged"
-    );
+    assert
+      .dom(".title-input input")
+      .hasValue("http://www.example.com/no-title.html", "title is unchanged");
   });
 
   test("YouTube onebox with title", async function (assert) {
     await visit("/");
     await click("#create-topic");
     await fillIn("#reply-title", "https://www.youtube.com/watch?v=dQw4w9WgXcQ");
-    assert.strictEqual(
-      query(".title-input input").value,
-      "Rick Astley - Never Gonna Give You Up (Video)",
-      "title is from the oneboxed article"
-    );
+    assert
+      .dom(".title-input input")
+      .hasValue(
+        "Rick Astley - Never Gonna Give You Up (Video)",
+        "title is from the oneboxed article"
+      );
   });
 
   test("no onebox result", async function (assert) {
@@ -65,11 +62,12 @@ acceptance("Composer topic featured links", function (needs) {
     assert
       .dom(".d-editor-textarea-wrapper .popup-tip.good")
       .exists("link is pasted into body");
-    assert.strictEqual(
-      query(".title-input input").value,
-      "http://www.example.com/nope-onebox.html",
-      "title is unchanged"
-    );
+    assert
+      .dom(".title-input input")
+      .hasValue(
+        "http://www.example.com/nope-onebox.html",
+        "title is unchanged"
+      );
   });
 
   test("ignore internal links", async function (assert) {
@@ -80,16 +78,8 @@ acceptance("Composer topic featured links", function (needs) {
     assert
       .dom(".d-editor-preview")
       .doesNotIncludeHtml("onebox", "onebox preview doesn't show");
-    assert.strictEqual(
-      query(".d-editor-input").value.length,
-      0,
-      "link isn't put into the post"
-    );
-    assert.strictEqual(
-      query(".title-input input").value,
-      title,
-      "title is unchanged"
-    );
+    assert.dom(".d-editor-input").hasNoValue("link isn't put into the post");
+    assert.dom(".title-input input").hasValue(title, "title is unchanged");
   });
 
   test("link is longer than max title length", async function (assert) {
@@ -105,11 +95,9 @@ acceptance("Composer topic featured links", function (needs) {
     assert
       .dom(".d-editor-textarea-wrapper .popup-tip.good")
       .exists("the body is now good");
-    assert.strictEqual(
-      query(".title-input input").value,
-      "An interesting article",
-      "title is from the oneboxed article"
-    );
+    assert
+      .dom(".title-input input")
+      .hasValue("An interesting article", "title is from the oneboxed article");
   });
 
   test("onebox with title but extra words in title field", async function (assert) {
@@ -119,16 +107,13 @@ acceptance("Composer topic featured links", function (needs) {
     assert
       .dom(".d-editor-preview")
       .doesNotIncludeHtml("onebox", "onebox preview doesn't show");
-    assert.strictEqual(
-      query(".d-editor-input").value.length,
-      0,
-      "link isn't put into the post"
-    );
-    assert.strictEqual(
-      query(".title-input input").value,
-      "http://www.example.com/has-title.html test",
-      "title is unchanged"
-    );
+    assert.dom(".d-editor-input").hasNoValue("link isn't put into the post");
+    assert
+      .dom(".title-input input")
+      .hasValue(
+        "http://www.example.com/has-title.html test",
+        "title is unchanged"
+      );
   });
 
   test("blank title for Twitter link", async function (assert) {
@@ -144,7 +129,7 @@ acceptance("Composer topic featured links", function (needs) {
     assert
       .dom(".d-editor-textarea-wrapper .popup-tip.good")
       .exists("the body is now good");
-    assert.blank(query(".title-input input").value, "title is blank");
+    assert.dom(".title-input input").hasNoValue("title is blank");
   });
 });
 
@@ -175,11 +160,12 @@ acceptance(
       assert
         .dom(".d-editor-textarea-wrapper .popup-tip.good")
         .exists("the body is now good");
-      assert.strictEqual(
-        query(".title-input input").value,
-        "An interesting article",
-        "title is from the oneboxed article"
-      );
+      assert
+        .dom(".title-input input")
+        .hasValue(
+          "An interesting article",
+          "title is from the oneboxed article"
+        );
       assert
         .dom(".d-editor-textarea-wrapper.disabled")
         .doesNotExist("textarea is enabled");

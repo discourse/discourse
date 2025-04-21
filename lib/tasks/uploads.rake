@@ -528,13 +528,8 @@ task "uploads:recover" => :environment do
   end
 end
 
-task "uploads:sync_s3_acls" => :environment do
-  RailsMultisite::ConnectionManagement.each_connection do |db|
-    unless Discourse.store.external?
-      puts "This task only works for external storage."
-      exit 1
-    end
-
+def sync_s3_acls(async: true, concurrency: 10)
+  if async
     puts "CAUTION: This task may take a long time to complete! There are #{Upload.count} uploads to sync ACLs for."
     puts ""
     puts "-" * 30
@@ -542,6 +537,53 @@ task "uploads:sync_s3_acls" => :environment do
     puts "Upload ACLs will be updated in Sidekiq jobs in batches of 100 at a time, check Sidekiq queues for SyncAclsForUploads for progress."
     Upload.select(:id).find_in_batches(batch_size: 100) { |uploads| adjust_acls(uploads.map(&:id)) }
     puts "", "Upload ACL sync complete!"
+  else
+    executor = Concurrent::ThreadPoolExecutor.new(min_threads: 1, max_threads: concurrency)
+    errors = []
+    current_db = RailsMultisite::ConnectionManagement.current_db
+
+    Upload.find_in_batches(batch_size: 100) do |uploads|
+      uploads
+        .map do |upload|
+          Concurrent::Future.execute(executor:) do
+            RailsMultisite::ConnectionManagement.with_connection(current_db) do
+              begin
+                Discourse.store.update_upload_ACL(upload)
+              rescue => error
+                errors << "Error updating ACL for upload #{upload.url}: #{error.message}"
+              end
+            end
+          end
+        end
+        .each(&:wait)
+    end
+
+    executor.shutdown
+    executor.wait_for_termination
+
+    if errors.present?
+      errors.each { |error| puts error }
+      exit 1
+    end
+
+    true
+  end
+end
+
+task "uploads:sync_s3_acls", %i[synchronous parallel] => :environment do |_, args|
+  unless Discourse.store.external?
+    puts "This task only works for external storage."
+    exit 1
+  end
+
+  method = :sync_s3_acls
+  method_args = { async: !args.key?(:synchronous) || !(args[:synchronous] == "true") }
+  method_args[:concurrency] = args[:parallel].to_i if args.key?(:parallel)
+
+  if ENV["RAILS_DB"]
+    send(method, **method_args)
+  else
+    RailsMultisite::ConnectionManagement.each_connection { send(method, **method_args) }
   end
 end
 
@@ -568,29 +610,31 @@ task "uploads:disable_secure_uploads" => :environment do
     puts "Disabling secure upload and resetting uploads to not secure in #{db}...", ""
 
     SiteSetting.secure_uploads = false
+    SiteSetting.secure_uploads_pm_only = false
 
-    secure_uploads =
-      Upload
-        .joins(:upload_references)
-        .where(upload_references: { target_type: "Post" })
-        .where(secure: true)
+    secure_uploads = Upload.where(secure: true).distinct
     secure_upload_count = secure_uploads.count
-    secure_upload_ids = secure_uploads.pluck(:id)
 
     puts "", "Marking #{secure_upload_count} uploads as not secure.", ""
-    secure_uploads.update_all(
-      secure: false,
-      security_last_changed_at: Time.zone.now,
-      security_last_changed_reason: "marked as not secure by disable_secure_uploads task",
-    )
 
-    post_ids_to_rebake =
-      DB.query_single(
-        "SELECT DISTINCT target_id FROM upload_references WHERE upload_id IN (?) AND target_type = 'Post'",
-        secure_upload_ids,
+    secure_uploads.in_batches do |relation|
+      secure_upload_ids = relation.pluck(:id)
+
+      relation.update_all(
+        secure: false,
+        security_last_changed_at: Time.zone.now,
+        security_last_changed_reason: "marked as not secure by disable_secure_uploads task",
       )
-    adjust_acls(secure_upload_ids)
-    mark_upload_posts_for_rebake(post_ids_to_rebake)
+
+      post_ids_to_rebake =
+        DB.query_single(
+          "SELECT DISTINCT target_id FROM upload_references WHERE upload_id IN (?) AND target_type = 'Post'",
+          secure_upload_ids,
+        )
+
+      adjust_acls(secure_upload_ids)
+      mark_upload_posts_for_rebake(post_ids_to_rebake)
+    end
 
     puts "", "Rebaking and uploading complete!", ""
   end

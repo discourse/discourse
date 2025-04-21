@@ -52,7 +52,7 @@ class TranslationOverride < ActiveRecord::Base
   validate :check_MF_string, if: :message_format?
 
   attribute :status, :integer
-  enum status: { up_to_date: 0, outdated: 1, invalid_interpolation_keys: 2, deprecated: 3 }
+  enum :status, { up_to_date: 0, outdated: 1, invalid_interpolation_keys: 2, deprecated: 3 }
 
   scope :mf_locales,
         ->(locale) { not_deprecated.where(locale: locale).where("translation_key LIKE '%_MF'") }
@@ -63,6 +63,8 @@ class TranslationOverride < ActiveRecord::Base
             .where("translation_key LIKE 'js.%' OR translation_key LIKE 'admin_js.%'")
             .where.not("translation_key LIKE '%_MF'")
         end
+
+  before_update :refresh_status
 
   def self.upsert!(locale, key, value)
     params = { locale: locale, translation_key: key }
@@ -208,6 +210,21 @@ class TranslationOverride < ActiveRecord::Base
     MessageFormat.compile(locale, { key: value }, strict: true)
   rescue MessageFormat::Compiler::CompileError => e
     errors.add(:base, e.cause.message)
+  end
+
+  def refresh_status
+    self.original_translation = current_default
+
+    self.status =
+      if original_translation_deleted?
+        "deprecated"
+      elsif invalid_interpolation_keys.present?
+        "invalid_interpolation_keys"
+      elsif original_translation_updated?
+        "outdated"
+      else
+        "up_to_date"
+      end
   end
 end
 

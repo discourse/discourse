@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "highline/import"
+
 class DestroyTask
   def initialize(io = STDOUT)
     @io = io
@@ -44,6 +46,49 @@ class DestroyTask
   def destroy_topics_all_categories
     categories = Category.all
     categories.each { |c| @io.puts destroy_topics(c.slug, c.parent_category&.slug) }
+  end
+
+  def destroy_posts(post_ids, require_confirmation: true)
+    if !SiteSetting.can_permanently_delete
+      @io.puts "The can_permanently_delete site setting needs to be enabled to destroy posts."
+      return
+    end
+
+    posts = Post.with_deleted.where(id: post_ids)
+
+    @io.puts(<<~NOTICE)
+      There are #{posts.count} posts to delete.
+
+      Note: If a post is the first post in a topic, all posts
+            in that topic will be deleted.
+    NOTICE
+
+    if posts.count < post_ids.size
+      @io.puts "Couldn't find the following posts:"
+      @io.puts "  #{post_ids.map(&:to_i) - posts.pluck(:id)}"
+    end
+
+    if require_confirmation
+      confirm_destroy = ask("Are you sure? (Y/n)")
+      exit 1 if confirm_destroy.downcase != "y"
+    end
+
+    # Do first posts before the rest. The PostDestroyer will destroy
+    # all posts following a first post automatically, and we want to
+    # avoid duplicate audit trail entries by trying to delete them
+    # again. Note: Rails batching will order by pkey (post ID in this
+    # case) internally, and can not accept additional ordering options.
+    [posts.where(post_number: 1), posts].each do |scope|
+      scope.find_each(order: :desc) do |post|
+        @io.puts "Destroying post #{post.id}"
+        @io.puts PostDestroyer.new(
+                   Discourse.system_user,
+                   post,
+                   context: I18n.t("staff_action_logs.cli_bulk_post_delete"),
+                   force_destroy: true,
+                 ).destroy
+      end
+    end
   end
 
   def destroy_private_messages

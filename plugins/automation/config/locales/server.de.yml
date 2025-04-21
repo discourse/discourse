@@ -142,7 +142,7 @@ de:
         button_text: Erledigt
       add_user_to_group_through_custom_field:
         title: "Benutzer über benutzerdefiniertes Benutzerfeld zur Gruppe hinzufügen"
-        description: "Füge Benutzer automatisch zu Gruppen hinzu, wenn sie sich anmelden oder mit einer wiederkehrenden Prüfung"
+        description: "Füge Benutzer automatisch zu Gruppen hinzu – entweder bei ihrer Anmeldung oder durch regelmäßige Überprüfung"
       group_category_notification_default:
         title: "Gruppenkategorie-Benachrichtigungsstandard"
         description: "Die Standardbenachrichtigungsstufe einer Kategorie für Mitglieder einer Gruppe festlegen"

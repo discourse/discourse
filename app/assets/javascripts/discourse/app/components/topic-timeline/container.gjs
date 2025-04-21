@@ -13,14 +13,14 @@ import TopicAdminMenu from "discourse/components/topic-admin-menu";
 import UserTip from "discourse/components/user-tip";
 import ageWithTooltip from "discourse/helpers/age-with-tooltip";
 import categoryLink from "discourse/helpers/category-link";
+import icon from "discourse/helpers/d-icon";
 import discourseTags from "discourse/helpers/discourse-tags";
 import topicFeaturedLink from "discourse/helpers/topic-featured-link";
+import { bind, debounce } from "discourse/lib/decorators";
+import domUtils from "discourse/lib/dom-utils";
 import { headerOffset } from "discourse/lib/offset-calculator";
 import { actionDescriptionHtml } from "discourse/widgets/post-small-action";
-import icon from "discourse-common/helpers/d-icon";
-import i18n from "discourse-common/helpers/i18n";
-import { bind, debounce } from "discourse-common/utils/decorators";
-import domUtils from "discourse-common/utils/dom-utils";
+import { i18n } from "discourse-i18n";
 import TopicNotificationsButton from "select-kit/components/topic-notifications-button";
 import BackButton from "./back-button";
 import Scroller from "./scroller";
@@ -56,6 +56,7 @@ export default class TopicTimelineScrollArea extends Component {
   @service site;
   @service siteSettings;
   @service currentUser;
+  @service composer;
 
   @tracked showButton = false;
   @tracked current;
@@ -89,6 +90,7 @@ export default class TopicTimelineScrollArea extends Component {
       this.appEvents.on("composer:opened", this.calculatePosition);
       this.appEvents.on("composer:resized", this.calculatePosition);
       this.appEvents.on("composer:closed", this.calculatePosition);
+      this.appEvents.on("composer:preview-toggled", this.calculatePosition);
       this.appEvents.on("post-stream:posted", this.calculatePosition);
     }
 
@@ -127,6 +129,7 @@ export default class TopicTimelineScrollArea extends Component {
       this.appEvents.off("composer:opened", this.calculatePosition);
       this.appEvents.off("composer:resized", this.calculatePosition);
       this.appEvents.off("composer:closed", this.calculatePosition);
+      this.appEvents.off("composer:preview-toggled", this.calculatePosition);
       this.appEvents.off("topic:current-post-scrolled", this.postScrolled);
       this.appEvents.off("post-stream:posted", this.calculatePosition);
     }
@@ -209,8 +212,9 @@ export default class TopicTimelineScrollArea extends Component {
   }
 
   get scrollareaHeight() {
-    const composerHeight =
-        document.getElementById("reply-control").offsetHeight || 0,
+    const composerHeight = this.composer.isPreviewVisible
+        ? document.getElementById("reply-control").offsetHeight || 0
+        : 0,
       headerHeight = document.querySelector(".d-header")?.offsetHeight || 0;
 
     // scrollarea takes up about half of the timeline's height
@@ -219,10 +223,14 @@ export default class TopicTimelineScrollArea extends Component {
 
     const minHeight = this.site.mobileView
       ? DEFAULT_MIN_SCROLLAREA_HEIGHT
-      : desktopMinScrollAreaHeight;
+      : this.composer.isPreviewVisible
+        ? desktopMinScrollAreaHeight
+        : DEFAULT_MIN_SCROLLAREA_HEIGHT;
     const maxHeight = this.site.mobileView
       ? DEFAULT_MAX_SCROLLAREA_HEIGHT
-      : desktopMaxScrollAreaHeight;
+      : this.composer.isPreviewVisible
+        ? desktopMaxScrollAreaHeight
+        : DEFAULT_MAX_SCROLLAREA_HEIGHT;
 
     return Math.max(minHeight, Math.min(availableHeight, maxHeight));
   }
@@ -660,8 +668,12 @@ export default class TopicTimelineScrollArea extends Component {
           />
         {{/if}}
 
-        {{#if this.currentUser}}
-          <TopicNotificationsButton @topic={{@model}} @expanded={{false}} />
+        {{#if (and this.currentUser this.site.desktopView)}}
+          <TopicNotificationsButton
+            @contentClass="topic-timeline-notifications-tracking-content"
+            @topic={{@model}}
+            @expanded={{false}}
+          />
         {{/if}}
 
         <PluginOutlet

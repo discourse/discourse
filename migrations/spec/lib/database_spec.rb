@@ -140,4 +140,22 @@ RSpec.describe ::Migrations::Database do
       expect(described_class.to_blob(nil)).to be_nil
     end
   end
+
+  describe ".to_json" do
+    it "returns a JSON string for objects" do
+      expect(described_class.to_json(123)).to eq("123")
+      expect(described_class.to_json("hello world")).to eq(%q|"hello world"|)
+      expect(
+        described_class.to_json(
+          text: "foo",
+          number: 123,
+          date: DateTime.new(2023, 10, 5, 17, 30, 0),
+        ),
+      ).to eq(%q|{"text":"foo","number":123,"date":"2023-10-05T17:30:00.000+00:00"}|)
+    end
+
+    it "returns nil for nil input" do
+      expect(described_class.to_json(nil)).to be_nil
+    end
+  end
 end

@@ -1,15 +1,14 @@
 import { click, currentURL, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { NotificationLevels } from "discourse/lib/notification-levels";
+import { cloneJSON } from "discourse/lib/object";
 import discoveryFixture from "discourse/tests/fixtures/discovery-fixtures";
 import {
   acceptance,
   publishToMessageBus,
-  query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import { cloneJSON } from "discourse-common/lib/object";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 acceptance("Sidebar - Logged on user - Tags section", function (needs) {
   needs.settings({
@@ -58,7 +57,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
       });
     });
 
-    ["latest", "top", "new", "unread"].forEach((type) => {
+    ["latest", "top", "new", "unread", "hot"].forEach((type) => {
       server.get(`/tag/:tagId/l/${type}.json`, () => {
         return helper.response(
           cloneJSON(discoveryFixture["/tag/important/l/latest.json"])
@@ -76,29 +75,17 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
       )
       .exists({ count: 4 }, "4 section links under the section");
 
-    assert.strictEqual(
-      query(
-        ".sidebar-section-link-wrapper[data-tag-name=tag1]"
-      ).textContent.trim(),
-      "tag1",
-      "displays the tag1 name for the link text"
-    );
+    assert
+      .dom(".sidebar-section-link-wrapper[data-tag-name=tag1]")
+      .hasText("tag1", "displays the tag1 name for the link text");
 
-    assert.strictEqual(
-      query(
-        ".sidebar-section-link-wrapper[data-tag-name=tag2]"
-      ).textContent.trim(),
-      "tag2",
-      "displays the tag2 name for the link text"
-    );
+    assert
+      .dom(".sidebar-section-link-wrapper[data-tag-name=tag2]")
+      .hasText("tag2", "displays the tag2 name for the link text");
 
-    assert.strictEqual(
-      query(
-        ".sidebar-section-link-wrapper[data-tag-name=tag3]"
-      ).textContent.trim(),
-      "tag3",
-      "displays the tag3 name for the link text"
-    );
+    assert
+      .dom(".sidebar-section-link-wrapper[data-tag-name=tag3]")
+      .hasText("tag3", "displays the tag3 name for the link text");
 
     await click(".sidebar-section-link-wrapper[data-tag-name=tag1] a");
 
@@ -282,7 +269,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
       .exists("the tag1 section link is marked as active for the top route");
   });
 
-  test("visiting tag discovery new ", async function (assert) {
+  test("visiting tag discovery new route", async function (assert) {
     await visit(`/tag/tag1/l/new`);
 
     assert
@@ -308,6 +295,20 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
     assert
       .dom(".sidebar-section-link-wrapper[data-tag-name=tag1] a.active")
       .exists("the tag1 section link is marked as active for the unread route");
+  });
+
+  test("visiting tag discovery hot route", async function (assert) {
+    await visit(`/tag/tag1/l/hot`);
+
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='tags'] .sidebar-section-link.active"
+      )
+      .exists({ count: 1 }, "only one link is marked as active");
+
+    assert
+      .dom(".sidebar-section-link-wrapper[data-tag-name=tag1] a.active")
+      .exists("the tag1 section link is marked as active for the hot route");
   });
 
   test("show suffix indicator for new content on tag section links", async function (assert) {
@@ -462,21 +463,23 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
 
     await visit("/");
 
-    assert.strictEqual(
-      query(
+    assert
+      .dom(
         `.sidebar-section-link-wrapper[data-tag-name=tag1] .sidebar-section-link-content-badge`
-      ).textContent.trim(),
-      I18n.t("sidebar.unread_count", { count: 1 }),
-      `displays 1 unread count for tag1 section link`
-    );
+      )
+      .hasText(
+        i18n("sidebar.unread_count", { count: 1 }),
+        `displays 1 unread count for tag1 section link`
+      );
 
-    assert.strictEqual(
-      query(
+    assert
+      .dom(
         `.sidebar-section-link-wrapper[data-tag-name=tag2] .sidebar-section-link-content-badge`
-      ).textContent.trim(),
-      I18n.t("sidebar.unread_count", { count: 1 }),
-      `displays 1 unread count for tag2 section link`
-    );
+      )
+      .hasText(
+        i18n("sidebar.unread_count", { count: 1 }),
+        `displays 1 unread count for tag2 section link`
+      );
 
     assert
       .dom(
@@ -493,13 +496,14 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
       },
     });
 
-    assert.strictEqual(
-      query(
+    assert
+      .dom(
         `.sidebar-section-link-wrapper[data-tag-name=tag1] .sidebar-section-link-content-badge`
-      ).textContent.trim(),
-      I18n.t("sidebar.new_count", { count: 1 }),
-      `displays 1 new count for tag1 section link`
-    );
+      )
+      .hasText(
+        i18n("sidebar.new_count", { count: 1 }),
+        `displays 1 new count for tag1 section link`
+      );
 
     await publishToMessageBus("/unread", {
       topic_id: 1,
@@ -530,7 +534,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
 
     await click(".btn-sidebar-toggle");
 
-    assert.ok(
+    assert.true(
       Object.keys(topicTrackingState.stateChangeCallbacks).length <
         initialCallbackCount
     );
@@ -626,29 +630,26 @@ acceptance(
 
       await visit("/");
 
-      assert.strictEqual(
-        query(
+      assert
+        .dom(
           '.sidebar-section-link-wrapper[data-tag-name="tag1"] .sidebar-section-link-content-badge'
-        ).textContent.trim(),
-        "2",
-        "count for tag1 is 2 because it has 1 unread topic and 1 new topic"
-      );
+        )
+        .hasText(
+          "2",
+          "count for tag1 is 2 because it has 1 unread topic and 1 new topic"
+        );
 
-      assert.strictEqual(
-        query(
+      assert
+        .dom(
           '.sidebar-section-link-wrapper[data-tag-name="tag2"] .sidebar-section-link-content-badge'
-        ).textContent.trim(),
-        "1",
-        "count for tag2 is 1 because it has 1 unread topic"
-      );
+        )
+        .hasText("1", "count for tag2 is 1 because it has 1 unread topic");
 
-      assert.strictEqual(
-        query(
+      assert
+        .dom(
           '.sidebar-section-link-wrapper[data-tag-name="tag3"] .sidebar-section-link-content-badge'
-        ).textContent.trim(),
-        "1",
-        "count for tag3 is 1 because it has 1 new topic"
-      );
+        )
+        .hasText("1", "count for tag3 is 1 because it has 1 new topic");
     });
 
     test("dot shown next to tag link when sidebar_show_count_of_new_items is false", async function (assert) {

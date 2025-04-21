@@ -16,12 +16,14 @@ class TopicQuery
       begin
         int = lambda { |x| Integer === x || (String === x && x.match?(/\A-?[0-9]+\z/)) }
         zero_up_to_max_int = lambda { |x| int.call(x) && x.to_i.between?(0, PG_MAX_INT) }
+        one_up_to_one_hundred = lambda { |x| int.call(x) && x.to_i.between?(1, 100) }
         array_or_string = lambda { |x| Array === x || String === x }
         string = lambda { |x| String === x }
         true_or_false = lambda { |x| x == true || x == false || x == "true" || x == "false" }
 
         {
           page: zero_up_to_max_int,
+          per_page: one_up_to_one_hundred,
           before: zero_up_to_max_int,
           bumped_before: zero_up_to_max_int,
           topic_ids: array_or_string,
@@ -59,6 +61,7 @@ class TopicQuery
     # For these to work in Ember, add them to `controllers/discovery/list.js`
     @public_valid_options ||= %i[
       page
+      per_page
       before
       bumped_before
       topic_ids
@@ -89,8 +92,6 @@ class TopicQuery
         %i[
           except_topic_ids
           limit
-          page
-          per_page
           visible
           guardian
           no_definitions
@@ -358,9 +359,7 @@ class TopicQuery
 
   def list_hot
     create_list(:hot, unordered: true, prioritize_pinned: true) do |topics|
-      topics = remove_muted_topics(topics, user)
-      topics = remove_muted_categories(topics, user, exclude: options[:category])
-      TopicQuery.remove_muted_tags(topics, user, options)
+      topics = remove_muted(topics, user, options)
       topics.joins("JOIN topic_hot_scores on topics.id = topic_hot_scores.topic_id").order(
         "topic_hot_scores.score DESC",
       )
@@ -370,9 +369,9 @@ class TopicQuery
   def list_top_for(period)
     score_column = TopTopic.score_column_for_period(period)
     create_list(:top, unordered: true) do |topics|
-      topics = remove_muted_categories(topics, @user)
+      topics = remove_muted(topics, user, options)
       topics = topics.joins(:top_topic).where("top_topics.#{score_column} > 0")
-      if period == :yearly && @user.try(:trust_level) == TrustLevel[0]
+      if period == :yearly && user&.new_user?
         topics.order(<<~SQL)
           CASE WHEN (
              COALESCE(topics.pinned_at, '1900-01-01') > COALESCE(tu.cleared_pinned_at, '1900-01-01')
@@ -422,7 +421,7 @@ class TopicQuery
 
   def list_new_in_category(category)
     create_list(:new_in_category, unordered: true, category: category.id) do |list|
-      list.by_newest.first(25)
+      list.by_newest.limit(25)
     end
   end
 
@@ -503,7 +502,7 @@ class TopicQuery
     unpinned_topics = topics.where("NOT ( #{pinned_clause} )")
     pinned_topics = topics.dup.offset(nil).where(pinned_clause).reorder(pinned_at: :desc)
 
-    per_page = options[:per_page] || per_page_setting
+    per_page = options[:per_page]&.to_i || per_page_setting
     limit = per_page unless options[:limit] == false
     page = options[:page].to_i
 
@@ -561,7 +560,7 @@ class TopicQuery
     end
 
     list = TopicList.new(filter, @user, topics, options.merge(@options))
-    list.per_page = options[:per_page] || per_page_setting
+    list.per_page = options[:per_page]&.to_i || per_page_setting
     list
   end
 
@@ -836,7 +835,7 @@ class TopicQuery
       result = result.where("COALESCE(categories.topic_id, 0) <> topics.id")
     end
 
-    result = result.limit(options[:per_page]) unless options[:limit] == false
+    result = result.limit(options[:per_page]&.to_i) unless options[:limit] == false
     result = result.visible if options[:visible]
     result =
       result.where.not(topics: { id: options[:except_topic_ids] }).references(:topics) if options[
@@ -844,7 +843,7 @@ class TopicQuery
     ]
 
     if options[:page]
-      offset = options[:page].to_i * options[:per_page]
+      offset = options[:page].to_i * options[:per_page]&.to_i
       result = result.offset(offset) if offset > 0
     end
 
@@ -1214,8 +1213,7 @@ class TopicQuery
     result =
       result.where("topics.id NOT IN (?)", excluded_topic_ids) unless excluded_topic_ids.empty?
 
-    result = remove_muted_categories(result, @user)
-    result = remove_muted_topics(result, @user)
+    result = remove_muted(result, @user, @options)
 
     # If we are in a category, prefer it for the random results
     if topic.category_id

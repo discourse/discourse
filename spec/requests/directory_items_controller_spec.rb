@@ -2,9 +2,11 @@
 
 RSpec.describe DirectoryItemsController do
   fab!(:user)
-  fab!(:evil_trout)
-  fab!(:walter_white)
-  fab!(:stage_user) { Fabricate(:staged, username: "stage_user") }
+  fab!(:evil_trout) { Fabricate(:evil_trout, search_index: true) }
+  fab!(:walter_white) { Fabricate(:walter_white, search_index: true) }
+  fab!(:stage_user) do
+    Fabricate(:staged, username: "stage_user", name: "Stage User", search_index: true)
+  end
   fab!(:group) { Fabricate(:group, users: [evil_trout, stage_user]) }
 
   it "requires a `period` param" do
@@ -157,7 +159,7 @@ RSpec.describe DirectoryItemsController do
     end
 
     it "finds user by name" do
-      get "/directory_items.json", params: { period: "all", name: "eviltrout" }
+      get "/directory_items.json", params: { period: "all", name: evil_trout.name }
       expect(response.status).to eq(200)
 
       json = response.parsed_body
@@ -168,7 +170,7 @@ RSpec.describe DirectoryItemsController do
     end
 
     it "finds staged user by name" do
-      get "/directory_items.json", params: { period: "all", name: "stage_user" }
+      get "/directory_items.json", params: { period: "all", name: stage_user.name }
       expect(response.status).to eq(200)
 
       json = response.parsed_body
@@ -254,6 +256,80 @@ RSpec.describe DirectoryItemsController do
       end
     end
 
+    it "searches users by user field value" do
+      field1 = Fabricate(:user_field, searchable: true)
+      field2 = Fabricate(:user_field, searchable: true)
+
+      user_fields = [
+        { user: walter_white, field: field1, value: "Yellow", order: 1 },
+        { user: stage_user, field: field1, value: "Apple", order: 0 },
+        { user: evil_trout, field: field2, value: "Moon", order: 2 },
+      ]
+
+      user_fields.each do |data|
+        UserCustomField.create!(
+          user_id: data[:user].id,
+          name: "user_field_#{data[:field].id}",
+          value: data[:value],
+        )
+      end
+
+      # When the users are fabricated their custom user fields
+      # aren't added to the index so we can index them here.
+      SearchIndexer.with_indexing do
+        [walter_white, stage_user, evil_trout].each { |u| SearchIndexer.index(u, force: true) }
+      end
+
+      get "/directory_items.json",
+          params: {
+            period: "all",
+            order: field1.name,
+            name: "Moon",
+            user_field_ids: "#{field1.id}|#{field2.id}",
+            asc: true,
+          }
+      expect(response.status).to eq(200)
+
+      json = response.parsed_body
+      expect(json).to be_present
+      items = json["directory_items"]
+      expect(items.length).to eq(1)
+      expect(json["meta"]["total_rows_directory_items"]).to eq(1)
+      expect(items[0]["user"]["username"]).to eq("eviltrout")
+    end
+
+    it "filters users by user field value" do
+      field = Fabricate(:user_field, searchable: true)
+
+      users = Fabricate.times(30, :user)
+      users.each do |user|
+        UserCustomField.create!(user_id: user.id, name: "user_field_#{field.id}", value: "blue")
+      end
+
+      DirectoryItem.refresh!
+
+      # When the users are fabricated their custom user fields
+      # aren't added to the index so we can index them here.
+      SearchIndexer.with_indexing { users.each { |u| SearchIndexer.index(u, force: true) } }
+
+      get "/directory_items.json",
+          params: {
+            period: "all",
+            order: field.name,
+            name: "blue",
+            user_field_ids: "#{field.id}",
+            asc: true,
+          }
+      expect(response.status).to eq(200)
+
+      json = response.parsed_body
+      expect(json).to be_present
+      items = json["directory_items"]
+      # Internal reference: /t/139545
+      expect(items.length).to eq(30)
+      expect(json["meta"]["total_rows_directory_items"]).to eq(30)
+    end
+
     it "checks group permissions" do
       group.update!(visibility_level: Group.visibility_levels[:members])
 
@@ -276,6 +352,40 @@ RSpec.describe DirectoryItemsController do
 
       get "/directory_items.json", params: { period: "all", group: group.name }
       expect(response.parsed_body["directory_items"].length).to eq(2)
+    end
+  end
+
+  context "when searching by name" do
+    it "searches users by custom field 'Music' ignoring the default 20 user limit" do
+      field = Fabricate(:user_field, searchable: true)
+      users = Fabricate.times(100, :user)
+
+      users
+        .first(70)
+        .each do |u|
+          UserCustomField.create!(user_id: u.id, name: "user_field_#{field.id}", value: "Music")
+        end
+
+      DirectoryItem.refresh!
+      SearchIndexer.with_indexing { users.each { |u| SearchIndexer.index(u, force: true) } }
+
+      get "/directory_items.json",
+          params: {
+            period: "all",
+            name: "Music",
+            user_field_ids: field.id.to_s,
+          }
+
+      json = response.parsed_body
+      items = json["directory_items"]
+
+      expect(items.size).to eq(50) # The directory’s PAGE_SIZE is set to 50, so we only see 50 per page
+      expect(json["meta"]["total_rows_directory_items"]).to eq(70) # only 70 users have the Music field set
+
+      items.each do |item|
+        fields = item["user"]["user_fields"]
+        expect(fields[field.id.to_s]["value"]).to include("Music")
+      end
     end
   end
 end

@@ -36,7 +36,8 @@ class AdminDetailedUserSerializer < AdminUserSerializer
              :can_delete_sso_record,
              :api_key_count,
              :external_ids,
-             :similar_users_count
+             :similar_users_count,
+             :latest_export
 
   has_one :approved_by, serializer: BasicUserSerializer, embed: :objects
   has_one :suspended_by, serializer: BasicUserSerializer, embed: :objects
@@ -166,5 +167,16 @@ class AdminDetailedUserSerializer < AdminUserSerializer
 
   def can_delete_sso_record
     scope.can_delete_sso_record?(object)
+  end
+
+  def latest_export
+    export =
+      UserExport
+        .where(user_id: object&.id)
+        .where("created_at > ?", UserExport::DESTROY_CREATED_BEFORE.ago)
+        .order(created_at: :desc)
+        .first
+
+    UserExportSerializer.new(export, scope:).as_json if export
   end
 end

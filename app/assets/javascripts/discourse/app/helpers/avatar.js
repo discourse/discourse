@@ -1,10 +1,9 @@
 import { get } from "@ember/object";
 import { htmlSafe } from "@ember/template";
+import { avatarImg } from "discourse/lib/avatar-utils";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 import { formatUsername } from "discourse/lib/utilities";
-import { avatarImg } from "discourse-common/lib/avatar-utils";
-import { registerRawHelper } from "discourse-common/lib/helpers";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 let _customAvatarHelpers;
 
@@ -61,7 +60,7 @@ export function renderAvatar(user, options) {
         // if a description has been provided
         if (description && description.length > 0) {
           // prepend the username before the description
-          title = I18n.t("user.avatar.name_and_description", {
+          title = i18n("user.avatar.name_and_description", {
             name: displayName,
             description,
           });
@@ -72,7 +71,8 @@ export function renderAvatar(user, options) {
     return avatarImg({
       size: options.imageSize,
       extraClasses: get(user, "extras") || options.extraClasses,
-      title: title || displayName,
+      loading: options.loading,
+      title: options.hideTitle ? null : title || displayName,
       avatarTemplate,
     });
   } else {
@@ -80,7 +80,6 @@ export function renderAvatar(user, options) {
   }
 }
 
-registerRawHelper("avatar", avatar);
 export default function avatar(user, params) {
   return htmlSafe(renderAvatar.call(this, user, params));
 }

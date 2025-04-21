@@ -286,6 +286,7 @@ class Topic < ActiveRecord::Base
            dependent: :destroy
 
   has_one :top_topic
+  has_one :topic_hot_score
   has_one :shared_draft, dependent: :destroy
   has_one :published_page
 
@@ -418,7 +419,7 @@ class Topic < ActiveRecord::Base
     banner = "banner"
 
     if archetype_before_last_save == banner || archetype == banner
-      ApplicationController.banner_json_cache.clear
+      ApplicationLayoutPreloader.banner_json_cache.clear
     end
 
     if tags_changed || saved_change_to_attribute?(:category_id) ||
@@ -449,11 +450,7 @@ class Topic < ActiveRecord::Base
   end
 
   def advance_draft_sequence
-    if self.private_message?
-      DraftSequence.next!(user, Draft::NEW_PRIVATE_MESSAGE)
-    else
-      DraftSequence.next!(user, Draft::NEW_TOPIC)
-    end
+    DraftSequence.next!(user, self.draft_key)
   end
 
   def ensure_topic_has_a_category
@@ -1173,6 +1170,7 @@ class Topic < ActiveRecord::Base
         end
 
         topic_user.destroy
+        MessageBus.publish("/topic/#{id}", { type: "remove_allowed_user" }, user_ids: [user.id])
         return true
       end
     end
@@ -1298,6 +1296,9 @@ class Topic < ActiveRecord::Base
         moved_by,
         post_ids,
         move_to_pm: opts[:archetype].present? && opts[:archetype] == "private_message",
+        options: {
+          freeze_original: opts[:freeze_original],
+        },
       )
 
     if opts[:destination_topic_id]
@@ -1871,7 +1872,7 @@ class Topic < ActiveRecord::Base
 
   def update_excerpt(excerpt)
     update_column(:excerpt, excerpt)
-    ApplicationController.banner_json_cache.clear if archetype == "banner"
+    ApplicationLayoutPreloader.banner_json_cache.clear if archetype == "banner"
   end
 
   def pm_with_non_human_user?
@@ -2029,14 +2030,14 @@ class Topic < ActiveRecord::Base
       invited_by,
       "topic-invitations-per-day",
       SiteSetting.max_topic_invitations_per_day,
-      1.day.to_i,
+      1.day,
     ).performed!
 
     RateLimiter.new(
       invited_by,
       "topic-invitations-per-minute",
       SiteSetting.max_topic_invitations_per_minute,
-      1.day.to_i,
+      1.minute,
     ).performed!
   end
 

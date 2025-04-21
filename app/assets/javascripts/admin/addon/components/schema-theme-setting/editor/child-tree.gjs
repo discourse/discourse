@@ -4,7 +4,7 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import DButton from "discourse/components/d-button";
-import dIcon from "discourse-common/helpers/d-icon";
+import icon from "discourse/helpers/d-icon";
 import ChildTreeNode from "admin/components/schema-theme-setting/editor/child-tree-node";
 
 export default class SchemaThemeSettingNewEditorChildTree extends Component {
@@ -32,7 +32,7 @@ export default class SchemaThemeSettingNewEditorChildTree extends Component {
       {{on "click" this.toggleVisibility}}
     >
       {{@name}}
-      {{dIcon (if this.expanded "chevron-down" "chevron-right")}}
+      {{icon (if this.expanded "chevron-down" "chevron-right")}}
     </div>
 
     {{#if this.expanded}}

@@ -137,6 +137,30 @@ task "javascript:update_constants" => :environment do
       )
     end
 
+  MAIN_FONT_KEYS = %w[helvetica inter lato montserrat open_sans poppins roboto merriweather mukta]
+
+  write_template("admin/addon/lib/constants.js", task_name, <<~JS)
+    export const ADMIN_SEARCH_RESULT_TYPES = #{Admin::SearchController::RESULT_TYPES.to_json};
+
+    export const SITE_SETTING_REQUIRES_CONFIRMATION_TYPES = #{SiteSettings::TypeSupervisor::REQUIRES_CONFIRMATION_TYPES.to_json};
+
+    export const API_KEY_SCOPE_MODES = #{ApiKey.scope_modes.keys.to_json}
+
+    export const SYSTEM_FLAG_IDS = #{PostActionType.types.to_json};
+
+    export const REPORT_MODES = #{Report::MODES.to_json};
+
+    export const USER_FIELD_FLAGS = #{UserField::FLAG_ATTRIBUTES};
+
+    export const DEFAULT_USER_PREFERENCES = #{SiteSetting::DEFAULT_USER_PREFERENCES.to_json};
+
+    export const MAIN_FONTS = #{DiscourseFonts.fonts.filter { |font| MAIN_FONT_KEYS.include?(font[:key]) }.map { |font| { key: font[:key], name: font[:name] } }.to_json}
+
+    export const MORE_FONTS = #{DiscourseFonts.fonts.reject { |font| MAIN_FONT_KEYS.include?(font[:key]) }.map { |font| { key: font[:key], name: font[:name] } }.to_json}
+
+    export const DEFAULT_TEXT_SIZES = #{DefaultTextSizeSetting::DEFAULT_TEXT_SIZES}
+  JS
+
   write_template("discourse/app/lib/constants.js", task_name, <<~JS)
     export const SEARCH_PRIORITIES = #{Searchable::PRIORITIES.to_json};
 
@@ -152,19 +176,25 @@ task "javascript:update_constants" => :environment do
       max_title_length: #{SidebarSection::MAX_TITLE_LENGTH},
     }
 
+    export const CATEGORY_STYLE_TYPES = #{Category.style_types.to_json};
+
     export const AUTO_GROUPS = #{auto_groups.to_json};
 
     export const GROUP_SMTP_SSL_MODES = #{Group.smtp_ssl_modes.to_json};
+
+    export const MAX_AUTO_MEMBERSHIP_DOMAINS_LOOKUP = #{Admin::GroupsController::MAX_AUTO_MEMBERSHIP_DOMAINS_LOOKUP};
 
     export const MAX_NOTIFICATIONS_LIMIT_PARAMS = #{NotificationsController::INDEX_LIMIT};
 
     export const TOPIC_VISIBILITY_REASONS = #{Topic.visibility_reasons.to_json};
 
-    export const SYSTEM_FLAG_IDS = #{PostActionType.types.to_json};
-
-    export const SITE_SETTING_REQUIRES_CONFIRMATION_TYPES = #{SiteSettings::TypeSupervisor::REQUIRES_CONFIRMATION_TYPES.to_json};
-
     export const MAX_UNOPTIMIZED_CATEGORIES = #{CategoryList::MAX_UNOPTIMIZED_CATEGORIES};
+
+    export const REVIEWABLE_UNKNOWN_TYPE_SOURCE = "#{Reviewable::UNKNOWN_TYPE_SOURCE}";
+
+    export const ADMIN_SEARCH_RESULT_TYPES = #{Admin::SearchController::RESULT_TYPES.to_json};
+
+    export const API_KEY_SCOPE_MODES = #{ApiKey.scope_modes.keys.to_json}
   JS
 
   pretty_notifications = Notification.types.map { |n| "  #{n[0]}: #{n[1]}," }.join("\n")
@@ -176,10 +206,9 @@ task "javascript:update_constants" => :environment do
   JS
 
   write_template("pretty-text/addon/emoji/data.js", task_name, <<~JS)
-    export const emojis = #{Emoji.standard.map(&:name).flatten.inspect};
+    export const emojis = new Set(#{Emoji.standard.map(&:name).flatten.inspect});
     export const tonableEmojis = #{Emoji.tonable_emojis.flatten.inspect};
     export const aliases = #{Emoji.aliases.inspect.gsub("=>", ":")};
-    export const searchAliases = #{Emoji.search_aliases.inspect.gsub("=>", ":")};
     export const translations = #{Emoji.translations.inspect.gsub("=>", ":")};
     export const replacements = #{Emoji.unicode_replacements_json};
   JS
@@ -187,20 +216,6 @@ task "javascript:update_constants" => :environment do
   write_template("pretty-text/addon/emoji/version.js", task_name, <<~JS)
     export const IMAGE_VERSION = "#{Emoji::EMOJI_VERSION}";
   JS
-
-  groups_json = JSON.parse(File.read("lib/emoji/groups.json"))
-
-  emoji_buttons = groups_json.map { |group| <<~HTML }
-			<button type="button" data-section="#{group["name"]}" {{on "click" (fn this.onCategorySelection "#{group["name"]}")}} class="btn btn-default category-button emoji">
-				 {{replace-emoji ":#{group["tabicon"]}:"}}
-			</button>
-    HTML
-
-  emoji_sections = groups_json.map { |group| html_for_section(group) }
-
-  components_dir = "discourse/app/components"
-  write_hbs_template("#{components_dir}/emoji-group-buttons.hbs", task_name, emoji_buttons.join)
-  write_hbs_template("#{components_dir}/emoji-group-sections.hbs", task_name, emoji_sections.join)
 end
 
 task "javascript:update" => "clean_up" do

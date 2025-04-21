@@ -1,10 +1,13 @@
+import { cached, tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
+import { dependentKeyCompat } from "@ember/object/compat";
 import { alias, and, not, or } from "@ember/object/computed";
 import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isEmpty, isPresent } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
+import BufferedProxy from "ember-buffered-proxy/proxy";
 import { Promise } from "rsvp";
 import {
   CLOSE_INITIATED_BY_BUTTON,
@@ -21,24 +24,24 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { BookmarkFormData } from "discourse/lib/bookmark-form-data";
 import { resetCachedTopicList } from "discourse/lib/cached-topic-list";
+import discourseComputed, { bind } from "discourse/lib/decorators";
+import { isTesting } from "discourse/lib/environment";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
+import discourseLater from "discourse/lib/later";
+import { deepMerge } from "discourse/lib/object";
 import { buildQuote } from "discourse/lib/quote";
 import QuoteState from "discourse/lib/quote-state";
 import { extractLinkMeta } from "discourse/lib/render-topic-featured-link";
 import DiscourseURL, { userPath } from "discourse/lib/url";
 import { escapeExpression } from "discourse/lib/utilities";
-import { bufferedProperty } from "discourse/mixins/buffered-content";
 import Bookmark, { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
 import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
 import Post from "discourse/models/post";
 import Topic from "discourse/models/topic";
 import TopicTimer from "discourse/models/topic-timer";
-import { isTesting } from "discourse-common/config/environment";
-import discourseLater from "discourse-common/lib/later";
-import { deepMerge } from "discourse-common/lib/object";
-import discourseComputed, { bind } from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
+
 let customPostMessageCallbacks = {};
 
 const RETRIES_ON_RATE_LIMIT = 4;
@@ -56,9 +59,7 @@ export function registerCustomPostMessageCallback(type, callback) {
   customPostMessageCallbacks[type] = callback;
 }
 
-export default class TopicController extends Controller.extend(
-  bufferedProperty("model")
-) {
+export default class TopicController extends Controller {
   @service composer;
   @service dialog;
   @service documentTitle;
@@ -69,6 +70,8 @@ export default class TopicController extends Controller.extend(
   @service siteSettings;
   @service site;
   @service appEvents;
+
+  @tracked model;
 
   queryParams = ["filter", "username_filters", "replies_to_post_number"];
 
@@ -116,6 +119,14 @@ export default class TopicController extends Controller.extend(
   willDestroy() {
     super.willDestroy(...arguments);
     this.appEvents.off("post:show-revision", this, "_showRevision");
+  }
+
+  @cached
+  @dependentKeyCompat
+  get buffered() {
+    return BufferedProxy.create({
+      content: this.model,
+    });
   }
 
   updateQueryParams() {
@@ -754,7 +765,7 @@ export default class TopicController extends Controller.extend(
           .map((r) => r.id);
 
         buttons.push({
-          label: I18n.t("post.controls.delete_replies.direct_replies", {
+          label: i18n("post.controls.delete_replies.direct_replies", {
             count: directReplyIds.length,
           }),
           class: "btn-primary",
@@ -772,7 +783,7 @@ export default class TopicController extends Controller.extend(
 
         if (replies.some((r) => r.level > 1)) {
           buttons.push({
-            label: I18n.t("post.controls.delete_replies.all_replies", {
+            label: i18n("post.controls.delete_replies.all_replies", {
               count: replies.length,
             }),
             action: () => {
@@ -789,7 +800,7 @@ export default class TopicController extends Controller.extend(
         }
 
         buttons.push({
-          label: I18n.t("post.controls.delete_replies.just_the_post"),
+          label: i18n("post.controls.delete_replies.just_the_post"),
           action: () => {
             post
               .destroy(user, opts)
@@ -802,12 +813,12 @@ export default class TopicController extends Controller.extend(
         });
 
         buttons.push({
-          label: I18n.t("cancel"),
+          label: i18n("cancel"),
           class: "btn-flat",
         });
 
         this.dialog.alert({
-          title: I18n.t("post.controls.delete_replies.confirm"),
+          title: i18n("post.controls.delete_replies.confirm"),
           buttons,
         });
       });
@@ -824,8 +835,12 @@ export default class TopicController extends Controller.extend(
 
   @action
   deletePostWithConfirmation(post, opts) {
+    if (!post.can_delete) {
+      return;
+    }
+
     this.dialog.yesNoConfirm({
-      message: I18n.t("post.confirm_delete"),
+      message: i18n("post.confirm_delete"),
       didConfirm: () => this.send("deletePost", post, opts),
     });
   }
@@ -833,7 +848,7 @@ export default class TopicController extends Controller.extend(
   @action
   permanentlyDeletePost(post) {
     return this.dialog.yesNoConfirm({
-      message: I18n.t("post.controls.permanently_delete_confirmation"),
+      message: i18n("post.controls.permanently_delete_confirmation"),
       didConfirm: () => {
         this.send("deletePost", post, { force_destroy: true });
       },
@@ -843,17 +858,12 @@ export default class TopicController extends Controller.extend(
   @action
   editPost(post) {
     if (!this.currentUser) {
-      return this.dialog.alert(I18n.t("post.controls.edit_anonymous"));
+      return this.dialog.alert(i18n("post.controls.edit_anonymous"));
     } else if (!post.can_edit) {
       return false;
     }
 
-    const composer = this.composer;
-    let topic = this.model;
-    const composerModel = composer.get("model");
-    let editingFirst =
-      composerModel &&
-      (post.get("firstPost") || composerModel.get("editingFirstPost"));
+    const topic = this.model;
 
     let editingSharedDraft = false;
     let draftsCategoryId = this.get("site.shared_drafts_category_id");
@@ -872,28 +882,20 @@ export default class TopicController extends Controller.extend(
       opts.destinationCategoryId = topic.get("destination_category_id");
     }
 
-    // Reopen the composer if we're editing the same post
-    const editingExisting =
-      post.id === composerModel?.post?.id &&
-      opts?.action === Composer.EDIT &&
-      composerModel?.draftKey === opts.draftKey;
-    if (editingExisting) {
-      composer.unshrink();
-      return;
-    }
+    const { composer } = this;
+    const composerModel = composer.get("model");
+    const editingSamePost =
+      opts.post.id === composerModel?.post?.id &&
+      opts.action === composerModel?.action &&
+      opts.draftKey === composerModel?.draftKey;
 
-    // Cancel and reopen the composer for the first post
-    if (editingFirst) {
-      composer.cancelComposer(opts).then(() => composer.open(opts));
-    } else {
-      composer.open(opts);
-    }
+    return editingSamePost ? composer.unshrink() : composer.open(opts);
   }
 
   @action
   toggleBookmark(post) {
     if (!this.currentUser) {
-      return this.dialog.alert(I18n.t("bookmarks.not_bookmarked"));
+      return this.dialog.alert(i18n("bookmarks.not_bookmarked"));
     } else if (post) {
       const bookmarkForPost = this.model.bookmarks.find(
         (bookmark) =>
@@ -1015,7 +1017,7 @@ export default class TopicController extends Controller.extend(
   deleteSelected() {
     const user = this.currentUser;
     this.dialog.yesNoConfirm({
-      message: I18n.t("post.delete.confirm", {
+      message: i18n("post.delete.confirm", {
         count: this.selectedPostsCount,
       }),
       didConfirm: () => {
@@ -1036,7 +1038,7 @@ export default class TopicController extends Controller.extend(
   @action
   mergePosts() {
     this.dialog.yesNoConfirm({
-      message: I18n.t("post.merge.confirm", {
+      message: i18n("post.merge.confirm", {
         count: this.selectedPostsCount,
       }),
       didConfirm: () => {
@@ -1083,7 +1085,7 @@ export default class TopicController extends Controller.extend(
   @action
   cancelEditingTopic() {
     this.set("editingTopic", false);
-    this.rollbackBuffer();
+    this.buffered.discardChanges();
   }
 
   @action
@@ -1098,7 +1100,7 @@ export default class TopicController extends Controller.extend(
     Topic.update(this.model, props, { fastEdit: true })
       .then(() => {
         // We roll back on success here because `update` saves the properties to the topic
-        this.rollbackBuffer();
+        this.buffered.discardChanges();
         this.set("editingTopic", false);
       })
       .catch(popupAjaxError);
@@ -1214,7 +1216,9 @@ export default class TopicController extends Controller.extend(
       options = {
         action: Composer.CREATE_TOPIC,
         draftKey: post.topic.draft_key,
-        topicCategoryId: this.get("model.category.id"),
+        topicCategoryId:
+          this.get("model.category.permission") &&
+          this.get("model.category.id"),
         prioritizedCategoryId: this.get("model.category.id"),
       };
     }
@@ -1223,7 +1227,7 @@ export default class TopicController extends Controller.extend(
       const title = escapeExpression(this.model.title);
       const postUrl = `${location.protocol}//${location.host}${post.url}`;
       const postLink = `[${title}](${postUrl})`;
-      const text = `${I18n.t("post.continue_discussion", {
+      const text = `${i18n("post.continue_discussion", {
         postLink,
       })}\n\n${quotedText}`;
 
@@ -1288,6 +1292,11 @@ export default class TopicController extends Controller.extend(
     TopicTimer.update(this.get("model.id"), null, null, statusType, null)
       .then(() => this.set(`model.${topicTimer}`, EmberObject.create({})))
       .catch((error) => popupAjaxError(error));
+  }
+
+  @action
+  updateTopicPageQueryParams() {
+    this.updateQueryParams();
   }
 
   _jumpToIndex(index) {
@@ -1469,7 +1478,7 @@ export default class TopicController extends Controller.extend(
   _maybeClearAllBookmarks() {
     return new Promise((resolve) => {
       this.dialog.yesNoConfirm({
-        message: I18n.t("bookmarks.confirm_clear"),
+        message: i18n("bookmarks.confirm_clear"),
         didConfirm: () => {
           return this.model
             .deleteBookmarks()
@@ -1851,6 +1860,10 @@ export default class TopicController extends Controller.extend(
             .triggerChangedTopicStats()
             .then((firstPostId) => refresh({ id: firstPostId }));
         }
+        break;
+      }
+      case "remove_allowed_user": {
+        this.router.transitionTo("userPrivateMessages", this.currentUser);
         break;
       }
       default: {

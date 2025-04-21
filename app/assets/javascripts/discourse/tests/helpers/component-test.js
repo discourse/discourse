@@ -1,6 +1,4 @@
-import { render } from "@ember/test-helpers";
 import { setupRenderingTest as emberSetupRenderingTest } from "ember-qunit";
-import QUnit, { test } from "qunit";
 import { autoLoadModules } from "discourse/instance-initializers/auto-load-modules";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import Session from "discourse/models/session";
@@ -47,46 +45,5 @@ export function setupRenderingTest(hooks) {
 
     autoLoadModules(this.owner, this.registry);
     this.owner.lookup("service:store");
-  });
-}
-
-export default function (name, hooks, opts) {
-  if (opts === undefined) {
-    opts = hooks;
-  }
-
-  opts = opts || {};
-
-  if (opts.skip) {
-    return;
-  }
-
-  if (typeof opts.template === "string") {
-    let testName = QUnit.config.currentModule.name + " " + name;
-    // eslint-disable-next-line
-    console.warn(
-      `${testName} skipped; template must be compiled and not a string`
-    );
-    return;
-  }
-
-  test(name, async function (assert) {
-    if (opts.anonymous) {
-      this.owner.unregister("service:current-user");
-    }
-
-    if (opts.beforeEach) {
-      const store = this.owner.lookup("service:store");
-      await opts.beforeEach.call(this, store);
-    }
-
-    try {
-      await render(opts.template);
-      await opts.test.call(this, assert);
-    } finally {
-      if (opts.afterEach) {
-        await opts.afterEach.call(opts);
-      }
-    }
   });
 }

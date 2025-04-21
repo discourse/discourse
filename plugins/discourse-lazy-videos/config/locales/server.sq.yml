@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 sq:
+  site_settings:
+    lazy_videos_enabled: "Aktivizo shtojcën Lazy Videos"

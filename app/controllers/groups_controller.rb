@@ -413,7 +413,12 @@ class GroupsController < ApplicationController
 
       emails.each do |email|
         begin
-          Invite.generate(current_user, email: email, group_ids: [group.id])
+          Invite.generate(
+            current_user,
+            email: email,
+            group_ids: [group.id],
+            skip_email: params[:skip_email].to_s == "true",
+          )
         rescue RateLimiter::LimitExceeded => e
           return(
             render_json_error(
@@ -670,12 +675,12 @@ class GroupsController < ApplicationController
   end
 
   def search
+    include_everyone = params[:include_everyone] == "true"
+    order = ["name"]
     groups =
-      Group
-        .visible_groups(current_user)
-        .where("groups.id <> ?", Group::AUTO_GROUPS[:everyone])
-        .includes(:flair_upload)
-        .order(:name)
+      Group.visible_groups(current_user, order, include_everyone: include_everyone).includes(
+        :flair_upload,
+      )
 
     if (term = params[:term]).present?
       groups =

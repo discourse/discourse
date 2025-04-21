@@ -25,14 +25,17 @@ module Chat
       validates :original_message_id, :channel_id, presence: true
       validates :title, length: { maximum: Chat::Thread::MAX_TITLE_LENGTH }
     end
+
     model :channel
     policy :can_view_channel
     policy :threading_enabled_for_channel
     model :original_message
+
     transaction do
       model :thread, :find_or_create_thread
       step :associate_thread_to_message
     end
+
     step :publish_new_thread
     step :trigger_chat_thread_created_event
 

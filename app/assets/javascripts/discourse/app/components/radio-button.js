@@ -1,7 +1,7 @@
 import Component from "@ember/component";
 import { attributeBindings, tagName } from "@ember-decorators/component";
 import $ from "jquery";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed from "discourse/lib/decorators";
 
 @tagName("input")
 @attributeBindings(

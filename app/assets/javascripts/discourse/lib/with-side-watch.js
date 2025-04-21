@@ -8,6 +8,7 @@ class BroccoliNoOp extends Plugin {
   constructor(path) {
     super([new WatchedDir(path)]);
   }
+
   build() {}
 }
 

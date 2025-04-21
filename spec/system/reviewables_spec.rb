@@ -7,6 +7,8 @@ describe "Reviewables", type: :system do
   fab!(:long_post) { Fabricate(:post_with_very_long_raw_content) }
   fab!(:post)
   let(:composer) { PageObjects::Components::Composer.new }
+  let(:moderator) { Fabricate(:moderator) }
+  let(:toasts) { PageObjects::Components::Toasts.new }
 
   before { sign_in(admin) }
 
@@ -53,6 +55,7 @@ describe "Reviewables", type: :system do
 
         expect(composer).to be_opened
         expect(composer.composer_input.value).to eq(post.raw)
+        expect(toasts).to have_success(I18n.t("reviewables.actions.agree_and_edit.complete"))
       end
 
       it "should open a modal when suspending a user" do
@@ -68,6 +71,14 @@ describe "Reviewables", type: :system do
           "#discourse-modal-title",
           text: I18n.t("js.flagging.take_action_options.suspend.title"),
         )
+      end
+
+      it "should show a toast when disagreeing with a flag flag" do
+        visit("/review")
+
+        find(".post-disagree").click
+
+        expect(toasts).to have_success(I18n.t("reviewables.actions.disagree.complete"))
       end
     end
   end
@@ -99,6 +110,7 @@ describe "Reviewables", type: :system do
   describe "when there is a reviewable user" do
     fab!(:user)
     let(:rejection_reason_modal) { PageObjects::Modals::RejectReasonReviewable.new }
+    let(:scrub_user_modal) { PageObjects::Modals::ScrubRejectedUser.new }
 
     before do
       SiteSetting.must_approve_users = true
@@ -126,6 +138,36 @@ describe "Reviewables", type: :system do
       expect(mail.to).to eq([user_email])
       expect(mail.subject).to match(/You've been rejected on Discourse/)
       expect(mail.body.raw_source).to include rejection_reason
+    end
+
+    it "Allows scrubbing user data after rejection" do
+      rejection_reason = "user is spamming"
+      scrubbing_reason = "a spammer who knows how to make GDPR requests"
+      reviewable = ReviewableUser.find_by_target_id(user.id)
+
+      review_page.visit_reviewable(reviewable)
+      review_page.select_bundled_action(reviewable, "user-delete_user")
+      rejection_reason_modal.fill_in_rejection_reason(rejection_reason)
+      rejection_reason_modal.delete_user
+
+      expect(review_page).to have_reviewable_with_rejected_status(reviewable)
+      expect(review_page).to have_reviewable_with_rejection_reason(reviewable, rejection_reason)
+
+      expect(review_page).to have_scrub_button(reviewable)
+      review_page.click_scrub_button(reviewable)
+
+      expect(scrub_user_modal.scrub_button).to be_disabled
+      scrub_user_modal.fill_in_scrub_reason(scrubbing_reason)
+      expect(scrub_user_modal.scrub_button).not_to be_disabled
+      scrub_user_modal.scrub_button.click
+
+      expect(review_page).to have_reviewable_with_scrubbed_by(reviewable, admin.username)
+      expect(review_page).to have_reviewable_with_scrubbed_reason(reviewable, scrubbing_reason)
+      expect(review_page).to have_reviewable_with_scrubbed_at(
+        reviewable,
+        reviewable.payload["scrubbed_at"],
+      )
+      expect(review_page).to have_no_scrub_button(reviewable)
     end
   end
 
@@ -210,6 +252,35 @@ describe "Reviewables", type: :system do
 
         expect(review_page).to have_reviewable_with_rejected_status(queued_post_reviewable)
       end
+    end
+  end
+
+  describe "when there is an unknown plugin reviewable" do
+    fab!(:reviewable) { Fabricate(:reviewable_flagged_post, target: long_post) }
+    fab!(:reviewable2) { Fabricate(:reviewable) }
+
+    before do
+      reviewable.update_columns(type: "UnknownPlugin", type_source: "some-plugin")
+      reviewable2.update_columns(type: "UnknownSource", type_source: "unknown")
+    end
+
+    it "informs admin and allows to delete them" do
+      visit("/review")
+      expect(review_page).to have_information_about_unknown_reviewables_visible
+      expect(review_page).to have_listing_for_unknown_reviewables_plugin(
+        reviewable.type,
+        reviewable.type_source,
+      )
+      expect(review_page).to have_listing_for_unknown_reviewables_unknown_source(reviewable2.type)
+      review_page.click_ignore_all_unknown_reviewables
+      expect(review_page).to have_no_information_about_unknown_reviewables_visible
+    end
+
+    it "does not inform moderator about them" do
+      sign_in(moderator)
+
+      visit("/review")
+      expect(review_page).to have_no_information_about_unknown_reviewables_visible
     end
   end
 end

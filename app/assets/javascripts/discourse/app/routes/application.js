@@ -7,6 +7,9 @@ import NotActivatedModal from "discourse/components/modal/not-activated";
 import { RouteException } from "discourse/controllers/exception";
 import { setting } from "discourse/lib/computed";
 import cookie from "discourse/lib/cookie";
+import deprecated from "discourse/lib/deprecated";
+import { getOwnerWithFallback } from "discourse/lib/get-owner";
+import getURL from "discourse/lib/get-url";
 import logout from "discourse/lib/logout";
 import mobile from "discourse/lib/mobile";
 import identifySource, { consolePrefix } from "discourse/lib/source-identifier";
@@ -14,12 +17,8 @@ import DiscourseURL from "discourse/lib/url";
 import { postRNWebviewMessage } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
-import { findAll } from "discourse/models/login-method";
 import DiscourseRoute from "discourse/routes/discourse";
-import deprecated from "discourse-common/lib/deprecated";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
-import getURL from "discourse-common/lib/get-url";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 function isStrictlyReadonly(site) {
   return site.isReadOnly && !site.isStaffWritesOnly;
@@ -43,17 +42,6 @@ export default class ApplicationRoute extends DiscourseRoute {
 
   @setting("title") siteTitle;
   @setting("short_site_description") shortSiteDescription;
-
-  get isOnlyOneExternalLoginMethod() {
-    return (
-      !this.siteSettings.enable_local_logins &&
-      this.externalLoginMethods.length === 1
-    );
-  }
-
-  get externalLoginMethods() {
-    return findAll();
-  }
 
   @action
   loading(transition) {
@@ -101,7 +89,7 @@ export default class ApplicationRoute extends DiscourseRoute {
   @action
   logout() {
     if (isStrictlyReadonly(this.site)) {
-      this.dialog.alert(I18n.t("read_only_mode.logout_disabled"));
+      this.dialog.alert(i18n("read_only_mode.logout_disabled"));
       return;
     }
     this._handleLogout();
@@ -127,7 +115,7 @@ export default class ApplicationRoute extends DiscourseRoute {
       ? `${window.location.protocol}//${window.location.host}${post.url}`
       : null;
     const title = post
-      ? I18n.t("composer.reference_topic_title", {
+      ? i18n("composer.reference_topic_title", {
           title: post.topic.title,
         })
       : null;
@@ -137,7 +125,7 @@ export default class ApplicationRoute extends DiscourseRoute {
       action: Composer.PRIVATE_MESSAGE,
       recipients,
       archetypeId: "private_message",
-      draftKey: Composer.NEW_PRIVATE_MESSAGE_KEY,
+      draftKey: this.composer.privateMessageDraftKey,
       draftSequence: 0,
       reply,
       title,
@@ -191,7 +179,7 @@ export default class ApplicationRoute extends DiscourseRoute {
   @action
   showLogin() {
     if (isStrictlyReadonly(this.site)) {
-      this.dialog.alert(I18n.t("read_only_mode.login_disabled"));
+      this.dialog.alert(i18n("read_only_mode.login_disabled"));
       return;
     }
     this.handleShowLogin();
@@ -200,7 +188,7 @@ export default class ApplicationRoute extends DiscourseRoute {
   @action
   showCreateAccount(createAccountProps = {}) {
     if (this.site.isReadOnly) {
-      this.dialog.alert(I18n.t("read_only_mode.login_disabled"));
+      this.dialog.alert(i18n("read_only_mode.login_disabled"));
     } else {
       this.handleShowCreateAccount(createAccountProps);
     }
@@ -225,21 +213,6 @@ export default class ApplicationRoute extends DiscourseRoute {
   @action
   closeModal(initiatedBy) {
     return this.modal.close(initiatedBy);
-  }
-
-  /**
-      Hide the modal, but keep it with all its state so that it can be shown again later.
-      This is useful if you want to prompt for confirmation. hideModal, ask "Are you sure?",
-      user clicks "No", reopenModal. If user clicks "Yes", be sure to call closeModal.
-    **/
-  @action
-  hideModal() {
-    return this.modal.hide();
-  }
-
-  @action
-  reopenModal() {
-    return this.modal.reopen();
   }
 
   @action
@@ -295,9 +268,9 @@ export default class ApplicationRoute extends DiscourseRoute {
         : encodeURIComponent(window.location.pathname);
       window.location = getURL("/session/sso?return_path=" + returnPath);
     } else {
-      if (this.isOnlyOneExternalLoginMethod) {
-        this.login.externalLogin(this.externalLoginMethods[0]);
-      } else if (this.siteSettings.experimental_full_page_login) {
+      if (this.login.isOnlyOneExternalLoginMethod) {
+        this.login.singleExternalLogin();
+      } else if (this.siteSettings.full_page_login) {
         this.router.transitionTo("login").then((login) => {
           login.controller.set("canSignUp", this.controller.canSignUp);
           if (this.siteSettings.login_required) {
@@ -310,6 +283,9 @@ export default class ApplicationRoute extends DiscourseRoute {
             showNotActivated: (props) => this.send("showNotActivated", props),
             showCreateAccount: (props) => this.send("showCreateAccount", props),
             canSignUp: this.controller.canSignUp,
+            referrerTopicUrl: DiscourseURL.isInternalTopic(document.referrer)
+              ? document.referrer
+              : null,
           },
         });
       }
@@ -321,12 +297,10 @@ export default class ApplicationRoute extends DiscourseRoute {
       const returnPath = encodeURIComponent(window.location.pathname);
       window.location = getURL("/session/sso?return_path=" + returnPath);
     } else {
-      if (this.isOnlyOneExternalLoginMethod) {
+      if (this.login.isOnlyOneExternalLoginMethod) {
         // we will automatically redirect to the external auth service
-        this.login.externalLogin(this.externalLoginMethods[0], {
-          signup: true,
-        });
-      } else if (this.siteSettings.experimental_full_page_login) {
+        this.login.singleExternalLogin({ signup: true });
+      } else if (this.siteSettings.full_page_login) {
         this.router.transitionTo("signup").then((signup) => {
           Object.keys(createAccountProps || {}).forEach((key) => {
             signup.controller.set(key, createAccountProps[key]);

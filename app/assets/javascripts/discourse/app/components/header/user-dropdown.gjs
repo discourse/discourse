@@ -6,7 +6,7 @@ import { or } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import concatClass from "discourse/helpers/concat-class";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 import Notifications from "./user-dropdown/notifications";
 
 export default class UserDropdown extends Component {

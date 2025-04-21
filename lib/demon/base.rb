@@ -5,8 +5,24 @@ end
 
 # intelligent fork based demonizer
 class Demon::Base
+  HOSTNAME = Socket.gethostname
+
   def self.demons
     @demons
+  end
+
+  if Rails.env.test?
+    def self.set_demons(demons)
+      @demons = demons
+    end
+
+    def self.reset_demons
+      @demons = {}
+    end
+
+    def set_pid(pid)
+      @pid = pid
+    end
   end
 
   def self.start(count = 1, verbose: false, logger: nil)
@@ -21,10 +37,7 @@ class Demon::Base
 
   def self.restart
     return unless @demons
-    @demons.values.each do |demon|
-      demon.stop
-      demon.start
-    end
+    @demons.values.each { |demon| demon.restart }
   end
 
   def self.ensure_running
@@ -37,14 +50,12 @@ class Demon::Base
   end
 
   attr_reader :pid, :parent_pid, :started, :index
-  attr_accessor :stop_timeout
 
   def initialize(index, rails_root: nil, parent_pid: nil, verbose: false, logger: nil)
     @index = index
     @pid = nil
     @parent_pid = parent_pid || Process.pid
     @started = false
-    @stop_timeout = 10
     @rails_root = rails_root || Rails.root
     @verbose = verbose
     @logger = logger || Logger.new(STDERR)
@@ -75,6 +86,15 @@ class Demon::Base
     "HUP"
   end
 
+  def stop_timeout
+    10
+  end
+
+  def restart
+    stop
+    start
+  end
+
   def stop
     @started = false
 
@@ -83,11 +103,11 @@ class Demon::Base
 
       wait_for_stop =
         lambda do
-          timeout = @stop_timeout
+          timeout = stop_timeout
 
           while alive? && timeout > 0
-            timeout -= (@stop_timeout / 10.0)
-            sleep(@stop_timeout / 10.0)
+            timeout -= (stop_timeout / 10.0)
+            sleep(stop_timeout / 10.0)
             begin
               Process.waitpid(@pid, Process::WNOHANG)
             rescue StandardError
@@ -105,7 +125,11 @@ class Demon::Base
       wait_for_stop.call
 
       if alive?
-        log("Process would not terminate cleanly, force quitting. pid: #{@pid} #{self.class}")
+        log(
+          "Process would not terminate cleanly, force quitting. pid: #{@pid} #{self.class}\n#{caller.join("\n")}",
+          level: :warn,
+        )
+
         Process.kill("KILL", @pid)
       end
 
@@ -209,7 +233,7 @@ class Demon::Base
             Process.kill "KILL", Process.pid
           end
         rescue => e
-          log("URGENT monitoring thread had an exception #{e}")
+          log("URGENT monitoring thread had an exception #{e}", level: :error)
         end
         sleep 1
       end

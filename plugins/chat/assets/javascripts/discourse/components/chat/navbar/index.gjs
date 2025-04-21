@@ -4,7 +4,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import concatClass from "discourse/helpers/concat-class";
 import noop from "discourse/helpers/noop";
-import ChatOnResize from "../../../modifiers/chat/on-resize";
+import onResize from "discourse/modifiers/on-resize";
 import Actions from "./actions";
 import BackButton from "./back-button";
 import ChannelTitle from "./channel-title";
@@ -28,13 +28,9 @@ export default class ChatNavbar extends Component {
   <template>
     {{! template-lint-disable no-invalid-interactive }}
     <div
-      class={{concatClass
-        "c-navbar-container"
-        (if @onClick "-clickable")
-        (if @showFullTitle "-full-title")
-      }}
+      class={{concatClass "c-navbar-container" (if @onClick "-clickable")}}
       {{on "click" (if @onClick @onClick (noop))}}
-      {{ChatOnResize this.handleResize}}
+      {{onResize this.handleResize}}
     >
       <nav class="c-navbar">
         {{yield

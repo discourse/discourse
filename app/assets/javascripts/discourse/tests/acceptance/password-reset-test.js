@@ -1,11 +1,11 @@
-import { click, fillIn, visit } from "@ember/test-helpers";
+import { blur, click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
 import PreloadStore from "discourse/lib/preload-store";
 import DiscourseURL from "discourse/lib/url";
 import { parsePostData } from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 acceptance("Password Reset", function (needs) {
   needs.pretender((server, helper) => {
@@ -22,7 +22,7 @@ acceptance("Password Reset", function (needs) {
       if (body.password === "jonesyAlienSlayer") {
         return helper.response({
           success: false,
-          errors: { password: ["is the name of your cat"] },
+          errors: { "user_password.password": ["is the name of your cat"] },
           friendly_messages: ["Password is the name of your cat"],
         });
       } else {
@@ -71,9 +71,11 @@ acceptance("Password Reset", function (needs) {
     assert.dom(".password-reset .tip.good").exists("input looks good");
 
     await fillIn(".password-reset input", "123");
+    await blur(".password-reset input");
+
     assert.dom(".password-reset .tip.bad").exists("input is not valid");
     assert.dom(".password-reset .tip.bad").includesHtml(
-      I18n.t("user.password.too_short", {
+      i18n("user.password.too_short", {
         count: this.siteSettings.min_password_length,
       }),
       "password too short"
@@ -100,7 +102,7 @@ acceptance("Password Reset", function (needs) {
     await fillIn(".password-reset input", "perf3ctly5ecur3");
     sinon.stub(DiscourseURL, "redirectTo");
     await click(".password-reset form button[type='submit']");
-    assert.ok(DiscourseURL.redirectTo.calledWith("/"), "form is gone");
+    assert.true(DiscourseURL.redirectTo.calledWith("/"), "form is gone");
   });
 
   test("Password Reset Page With Second Factor", async function (assert) {
@@ -133,7 +135,7 @@ acceptance("Password Reset", function (needs) {
 
     sinon.stub(DiscourseURL, "redirectTo");
     await click(".password-reset form button[type='submit']");
-    assert.ok(
+    assert.true(
       DiscourseURL.redirectTo.calledWith("/"),
       "it redirects after submitting form"
     );

@@ -2,10 +2,23 @@ import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { htmlSafe } from "@ember/template";
+import { modifier as modifierFn } from "ember-modifier";
 import { escapeExpression } from "discourse/lib/utilities";
 
 export default class FKControlTextarea extends Component {
   static controlType = "textarea";
+
+  resizeObserver = modifierFn((element) => {
+    const observer = new ResizeObserver(() => {
+      this.args.onControlWidthChange?.(element.offsetWidth);
+    });
+
+    observer.observe(element);
+
+    return () => {
+      observer.disconnect();
+    };
+  });
 
   @action
   handleInput(event) {
@@ -24,9 +37,10 @@ export default class FKControlTextarea extends Component {
     <textarea
       class="form-kit__control-textarea"
       style={{this.style}}
-      disabled={{@disabled}}
+      disabled={{@field.disabled}}
       ...attributes
+      {{this.resizeObserver}}
       {{on "input" this.handleInput}}
-    >{{@value}}</textarea>
+    >{{@field.value}}</textarea>
   </template>
 }

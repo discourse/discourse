@@ -1,20 +1,19 @@
-import Handlebars from "handlebars";
 import $ from "jquery";
+import * as AvatarUtils from "discourse/lib/avatar-utils";
+import deprecated from "discourse/lib/deprecated";
+import escape from "discourse/lib/escape";
+import getURL from "discourse/lib/get-url";
 import { parseAsync } from "discourse/lib/text";
 import toMarkdown from "discourse/lib/to-markdown";
 import { capabilities } from "discourse/services/capabilities";
-import * as AvatarUtils from "discourse-common/lib/avatar-utils";
-import deprecated from "discourse-common/lib/deprecated";
-import escape from "discourse-common/lib/escape";
-import getURL from "discourse-common/lib/get-url";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 let _defaultHomepage;
 
 function deprecatedAvatarUtil(name) {
   return function () {
     deprecated(
-      `${name} should be imported from discourse-common/lib/avatar-utils instead of discourse/lib/utilities`,
+      `${name} should be imported from discourse/lib/avatar-utils instead of discourse/lib/utilities`,
       { id: "discourse.avatar-utils" }
     );
     return AvatarUtils[name](...arguments);
@@ -39,11 +38,6 @@ export function splitString(str, separator = ",") {
 export function escapeExpression(string) {
   if (!string) {
     return "";
-  }
-
-  // don't escape SafeStrings, since they're already safe
-  if (string instanceof Handlebars.SafeString) {
-    return string.toString();
   }
 
   return escape(string);
@@ -80,23 +74,15 @@ export function highlightPost(postNumber) {
   }
 
   const element = container.querySelector(".topic-body, .small-action-desc");
-  if (!element || element.classList.contains("highlighted")) {
+  if (!element) {
     return;
   }
 
-  element.classList.add("highlighted");
-
   if (postNumber > 1) {
+    // Transport screenreader to correct post by focusing it
     element.setAttribute("tabindex", "0");
     element.focus();
   }
-
-  const removeHighlighted = function () {
-    element.classList.remove("highlighted");
-    element.removeAttribute("tabindex");
-    element.removeEventListener("animationend", removeHighlighted);
-  };
-  element.addEventListener("animationend", removeHighlighted);
 }
 
 export function emailValid(email) {
@@ -159,17 +145,27 @@ export function selectedText() {
     } else if (oneboxTest) {
       // This is a partial quote from a onebox.
       // Treat it as though the entire onebox was quoted.
-      const oneboxUrl = oneboxTest.dataset.oneboxSrc;
-      div.append(oneboxUrl);
+      div.append(oneboxTest.dataset.oneboxSrc);
     } else {
       div.append(range.cloneContents());
     }
   }
 
   div.querySelectorAll("aside.onebox[data-onebox-src]").forEach((element) => {
-    const oneboxUrl = element.dataset.oneboxSrc;
-    element.replaceWith(oneboxUrl);
+    element.replaceWith(element.dataset.oneboxSrc);
   });
+
+  div
+    .querySelectorAll("div.video-placeholder-container[data-video-src]")
+    .forEach((element) => {
+      const videoBase62Sha1 = element.dataset.videoBase62Sha1;
+      if (videoBase62Sha1) {
+        element.replaceWith(`![|video](upload://${videoBase62Sha1})`);
+      } else {
+        // Fallback for old posts that don't contain data-video-base62-sha1
+        element.replaceWith(`![|video](${element.dataset.videoSrc})`);
+      }
+    });
 
   return toMarkdown(div.outerHTML);
 }
@@ -207,6 +203,10 @@ export function caretPosition(el) {
 
 // Set the caret's position
 export function setCaretPosition(ctrl, pos) {
+  if (typeof ctrl === "string") {
+    ctrl = document.querySelector(ctrl);
+  }
+
   let range;
   if (ctrl.setSelectionRange) {
     ctrl.focus();
@@ -435,9 +435,17 @@ export function prefersReducedMotion() {
 }
 
 export function postRNWebviewMessage(prop, value) {
-  if (window.ReactNativeWebView !== undefined) {
-    window.ReactNativeWebView.postMessage(JSON.stringify({ [prop]: value }));
+  if (window.ReactNativeWebView === undefined) {
+    return;
   }
+
+  if (prop === "headerBg" && !value.startsWith("rgb(")) {
+    // eslint-disable-next-line no-console
+    console.warn("Skipping unsupported headerBg value:", value);
+    return;
+  }
+
+  window.ReactNativeWebView.postMessage(JSON.stringify({ [prop]: value }));
 }
 
 function pickMarker(text) {
@@ -490,14 +498,15 @@ export function translateModKey(string) {
       .replace("shift", "\u21E7")
       .replace("meta", "\u2318")
       .replace("alt", "\u2325")
+      .replace("ctrl", "\u2303")
       .replace(/\+/g, "");
   } else {
     string = string
       .toLowerCase()
-      .replace("shift", I18n.t("shortcut_modifier_key.shift"))
-      .replace("ctrl", I18n.t("shortcut_modifier_key.ctrl"))
-      .replace("meta", I18n.t("shortcut_modifier_key.ctrl"))
-      .replace("alt", I18n.t("shortcut_modifier_key.alt"));
+      .replace("shift", i18n("shortcut_modifier_key.shift"))
+      .replace("ctrl", i18n("shortcut_modifier_key.ctrl"))
+      .replace("meta", i18n("shortcut_modifier_key.ctrl"))
+      .replace("alt", i18n("shortcut_modifier_key.alt"));
   }
 
   return string;
@@ -784,4 +793,8 @@ export function isPrimaryTab() {
       resolve(true);
     }
   });
+}
+
+export function optionalRequire(path, name = "default") {
+  return require.has(path) && require(path)[name];
 }

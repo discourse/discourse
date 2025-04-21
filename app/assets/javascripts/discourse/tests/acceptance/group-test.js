@@ -1,8 +1,9 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
+import GroupFixtures from "discourse/tests/fixtures/group-fixtures";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 function setupGroupPretender(server, helper) {
   server.post("/groups/Macdonald/request_membership.json", () => {
@@ -25,27 +26,27 @@ acceptance("Group - Anonymous", function (needs) {
 
     assert
       .dom(".nav-pills li a[title='Messages']")
-      .doesNotExist("it does not show group messages navigation link");
+      .doesNotExist("does not show group messages navigation link");
 
     await click(".nav-pills li a[title='Activity']");
 
-    assert.dom(".user-stream-item").exists("lists stream items");
+    assert.dom(".post-list-item").exists("lists stream items");
 
     await click(".activity-nav li a[href='/g/discourse/activity/topics']");
 
-    assert.ok(query(".topic-list"), "it shows the topic list");
+    assert.dom(".topic-list").exists("shows the topic list");
     assert.dom(".topic-list-item").exists({ count: 2 }, "lists stream items");
 
     await click(".activity-nav li a[href='/g/discourse/activity/mentions']");
 
-    assert.dom(".user-stream-item").exists("lists stream items");
+    assert.dom(".post-list-item").exists("lists stream items");
     assert
       .dom(".nav-pills li a[title='Edit Group']")
-      .doesNotExist("it should not show messages tab if user is not admin");
+      .doesNotExist("does not show messages tab if user is not admin");
     assert
       .dom(".nav-pills li a[title='Logs']")
-      .doesNotExist("it should not show Logs tab if user is not admin");
-    assert.dom(".user-stream-item").exists("lists stream items");
+      .doesNotExist("does not show Logs tab if user is not admin");
+    assert.dom(".post-list-item").exists("lists stream items");
 
     const groupDropdown = selectKit(".group-dropdown");
     await groupDropdown.expand();
@@ -54,7 +55,7 @@ acceptance("Group - Anonymous", function (needs) {
 
     assert.strictEqual(
       groupDropdown.rowByIndex(0).name(),
-      I18n.t("groups.index.all")
+      i18n("groups.index.all")
     );
 
     this.siteSettings.enable_group_directory = false;
@@ -66,7 +67,7 @@ acceptance("Group - Anonymous", function (needs) {
 
     assert
       .dom(".group-dropdown-filter")
-      .doesNotExist("it should not display the default header");
+      .doesNotExist("does not display the default header");
   });
 
   test("Anonymous Viewing Automatic Group", async function (assert) {
@@ -74,7 +75,7 @@ acceptance("Group - Anonymous", function (needs) {
 
     assert
       .dom(".nav-pills li a[title='Manage']")
-      .doesNotExist("it does not show group messages navigation link");
+      .doesNotExist("does not show group messages navigation link");
   });
 });
 
@@ -174,6 +175,41 @@ acceptance("Group - Authenticated", function (needs) {
         });
       }
     );
+
+    server.get("/groups/discourse/members.json", (request) => {
+      if (request.queryParams.filter === "somefilter") {
+        return helper.response({
+          members: [
+            {
+              id: 2770,
+              username: "awesomerobot",
+              uploaded_avatar_id: 33872,
+              avatar_template:
+                "/user_avatar/meta.discourse.org/awesomerobot/{size}/33872.png",
+              name: "",
+              last_seen_at: "2015-01-23T15:53:17.844Z",
+            },
+            {
+              id: 32,
+              username: "codinghorror",
+              uploaded_avatar_id: 5297,
+              avatar_template:
+                "/user_avatar/meta.discourse.org/codinghorror/{size}/5297.png",
+              name: "Jeff Atwood",
+              last_seen_at: "2015-01-23T06:05:25.457Z",
+            },
+          ],
+          meta: {
+            total: 7,
+            limit: 50,
+            offset: 0,
+          },
+          owners: [],
+        });
+      } else {
+        return helper.response(GroupFixtures["/groups/discourse/members.json"]);
+      }
+    });
   });
 
   test("User Viewing Group", async function (assert) {
@@ -183,13 +219,12 @@ acceptance("Group - Authenticated", function (needs) {
     assert
       .dom(".d-modal__header .d-modal__title-text")
       .hasText(
-        I18n.t("groups.membership_request.title", { group_name: "Macdonald" })
+        i18n("groups.membership_request.title", { group_name: "Macdonald" })
       );
 
-    assert.strictEqual(
-      query(".request-group-membership-form textarea").value,
-      "Please add me"
-    );
+    assert
+      .dom(".request-group-membership-form textarea")
+      .hasValue("Please add me");
 
     await click(".d-modal__footer .btn-primary");
 
@@ -204,7 +239,7 @@ acceptance("Group - Authenticated", function (needs) {
     assert.strictEqual(
       privateMessageUsers.header().value(),
       "discourse",
-      "it prefills the group name"
+      "prefills the group name"
     );
 
     assert.dom(".add-warning").doesNotExist("groups can't receive warnings");
@@ -217,8 +252,8 @@ acceptance("Group - Authenticated", function (needs) {
     assert
       .dom("span.empty-state-title")
       .hasText(
-        I18n.t("no_group_messages_title"),
-        "it should display the right text"
+        i18n("no_group_messages_title"),
+        "should display the right text"
       );
   });
 
@@ -230,16 +265,15 @@ acceptance("Group - Authenticated", function (needs) {
       .dom(".topic-list-item .link-top-line")
       .hasText(
         "This is a private message 1",
-        "it should display the list of group topics"
+        "should display the list of group topics"
       );
 
     await click("#search-button");
-    await fillIn("#search-term", "something");
+    await fillIn("#icon-search-input", "something");
 
-    assert.ok(
-      query(".search-menu .btn.search-context"),
-      "'in messages' toggle is active by default"
-    );
+    assert
+      .dom(".search-menu .btn.search-context")
+      .exists("'in messages' toggle is active by default");
   });
 
   test("Admin Viewing Group", async function (assert) {
@@ -254,25 +288,42 @@ acceptance("Group - Authenticated", function (needs) {
       .exists("displays show group message button");
     assert
       .dom(".group-info-name")
-      .hasText("Awesome Team", "it should display the group name");
+      .hasText("Awesome Team", "should display the group name");
 
     await click(".group-details-button button.btn-danger");
 
-    assert.strictEqual(
-      query(".dialog-body p:nth-of-type(2)").textContent.trim(),
-      I18n.t("admin.groups.delete_with_messages_confirm", {
+    assert.dom(".dialog-body p:nth-of-type(2)").hasText(
+      i18n("admin.groups.delete_with_messages_confirm", {
         count: 2,
       }),
-      "it should warn about orphan messages"
+      "warns about orphan messages"
     );
 
     await click(".dialog-footer .btn-default");
 
     await visit("/g/discourse/activity/posts");
 
-    assert.ok(
-      ".user-stream-item a.avatar-link[href='/u/awesomerobot']",
-      "avatar link contains href (is tabbable)"
+    assert
+      .dom(".post-list-item a.avatar-link")
+      .hasAttribute(
+        "href",
+        "/u/awesomerobot",
+        "avatar link contains href (is tabbable)"
+      );
+  });
+
+  test("Admin group delete confirmation", async function (assert) {
+    await visit("/g/discourse");
+
+    await fillIn(".group-username-filter", "somefilter");
+
+    await click(".group-details-button button.btn-danger");
+
+    assert.dom(".dialog-body p:nth-of-type(1)").hasText(
+      i18n("admin.groups.delete_details", {
+        count: 7,
+      }),
+      "it shows the total members count"
     );
   });
 
@@ -287,7 +338,7 @@ acceptance("Group - Authenticated", function (needs) {
 
     assert
       .dom(".group-add-members-modal #set-owner")
-      .exists("it allows moderators to set group owners");
+      .exists("allows moderators to set group owners");
 
     await click(".group-add-members-modal .modal-close");
 
@@ -296,11 +347,11 @@ acceptance("Group - Authenticated", function (needs) {
 
     assert.strictEqual(
       memberDropdown.rowByIndex(0).name(),
-      I18n.t("groups.members.remove_member")
+      i18n("groups.members.remove_member")
     );
     assert.strictEqual(
       memberDropdown.rowByIndex(1).name(),
-      I18n.t("groups.members.make_owner")
+      i18n("groups.members.make_owner")
     );
   });
 });

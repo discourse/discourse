@@ -1,6 +1,6 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Post - History", function (needs) {
   needs.user();
@@ -52,8 +52,8 @@ acceptance("Post - History", function (needs) {
     await click("article[data-post-id='419'] .edits button");
     assert.dom(".discourse-tag").exists({ count: 4 });
     assert.dom(".discourse-tag.diff-del").exists({ count: 1 });
-    assert.equal(query(".discourse-tag.diff-del").textContent, "tag1");
+    assert.dom(".discourse-tag.diff-del").hasText("tag1");
     assert.dom(".discourse-tag.diff-ins").exists({ count: 1 });
-    assert.equal(query(".discourse-tag.diff-ins").textContent, "tag3");
+    assert.dom(".discourse-tag.diff-ins").hasText("tag3");
   });
 });

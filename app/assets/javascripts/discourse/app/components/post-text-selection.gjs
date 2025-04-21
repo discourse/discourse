@@ -5,8 +5,13 @@ import { cancel, debounce } from "@ember/runloop";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import PostTextSelectionToolbar from "discourse/components/post-text-selection-toolbar";
+import discourseDebounce from "discourse/lib/debounce";
+import { bind } from "discourse/lib/decorators";
+import { INPUT_DELAY } from "discourse/lib/environment";
+import escapeRegExp from "discourse/lib/escape-regexp";
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
 import toMarkdown from "discourse/lib/to-markdown";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import {
   getElement,
   selectedNode,
@@ -14,10 +19,6 @@ import {
   selectedText,
 } from "discourse/lib/utilities";
 import virtualElementFromTextRange from "discourse/lib/virtual-element-from-text-range";
-import { INPUT_DELAY } from "discourse-common/config/environment";
-import discourseDebounce from "discourse-common/lib/debounce";
-import { bind } from "discourse-common/utils/decorators";
-import escapeRegExp from "discourse-common/utils/escape-regexp";
 
 function getQuoteTitle(element) {
   const titleEl = element.querySelector(".title");
@@ -49,6 +50,10 @@ export default class PostTextSelection extends Component {
   @service menu;
 
   @tracked isSelecting = false;
+  @tracked preventClose = applyValueTransformer(
+    "post-text-selection-prevent-close",
+    false
+  );
 
   prevSelectedText;
 
@@ -93,6 +98,9 @@ export default class PostTextSelection extends Component {
 
   @bind
   async hideToolbar() {
+    if (this.preventClose) {
+      return;
+    }
     this.args.quoteState.clear();
     await this.menuInstance?.close();
   }
@@ -190,6 +198,7 @@ export default class PostTextSelection extends Component {
         quoteState.buffer.length === 0 ||
         quoteState.buffer.includes("|") || // tables are too complex
         quoteState.buffer.match(/\n/g) || // linebreaks are too complex
+        quoteState.buffer.match(/[‚‘’„“”«»‹›™±…→←↔¶]/g) || // typopgraphic characters are too complex
         matches?.length !== 1 // duplicates are too complex
       ) {
         supportsFastEdit = false;
@@ -284,10 +293,7 @@ export default class PostTextSelection extends Component {
   }
 
   get canCopyQuote() {
-    return (
-      this.siteSettings.enable_quote_copy &&
-      this.currentUser?.get("user_option.enable_quoting")
-    );
+    return this.currentUser?.get("user_option.enable_quoting");
   }
 
   // on Desktop, shows the bar at the beginning of the selection

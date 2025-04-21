@@ -6,7 +6,7 @@ import {
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 acceptance("Group Members - Anonymous", function () {
   test("Viewing Members as anon user", async function (assert) {
@@ -25,7 +25,7 @@ acceptance("Group Members - Anonymous", function () {
       .dom(".group-username-filter")
       .hasAttribute(
         "placeholder",
-        I18n.t("groups.members.filter_placeholder"),
+        i18n("groups.members.filter_placeholder"),
         "it should display the right filter placeholder"
       );
   });
@@ -60,7 +60,7 @@ acceptance("Group Members", function (needs) {
       .dom(".group-username-filter")
       .hasAttribute(
         "placeholder",
-        I18n.t("groups.members.filter_placeholder_admin"),
+        i18n("groups.members.filter_placeholder_admin"),
         "it should display the right filter placeholder"
       );
   });

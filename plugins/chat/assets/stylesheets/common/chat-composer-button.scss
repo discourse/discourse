@@ -1,12 +1,13 @@
 .chat-composer-button {
-  @include breakpoint(mobile-large) {
-    width: 50px;
-  }
   box-sizing: border-box;
   border: 0;
   height: 50px;
   background: none;
   padding-inline: 0.75rem;
+
+  @include breakpoint(mobile-large) {
+    width: 50px;
+  }
 
   .is-disabled & {
     cursor: not-allowed;
@@ -44,9 +45,11 @@
       0% {
         transform: scale(0.9);
       }
+
       50% {
         transform: scale(1.2);
       }
+
       100% {
         transform: scale(0.9);
       }
@@ -83,6 +86,7 @@
     &:hover {
       transform: scale(1.1);
     }
+
     .d-icon {
       .is-focused & {
         color: var(--tertiary);

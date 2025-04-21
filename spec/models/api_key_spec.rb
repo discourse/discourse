@@ -7,6 +7,16 @@ RSpec.describe ApiKey do
   it { is_expected.to belong_to :user }
   it { is_expected.to belong_to :created_by }
   it { is_expected.to validate_length_of(:description).is_at_most(255) }
+  it { is_expected.to define_enum_for(:scope_mode).with_values(%w[global read_only granular]) }
+
+  it "validates at least one scope for granular mode" do
+    api_key = ApiKey.new
+    api_key.scope_mode = "granular"
+
+    api_key.validate
+
+    expect(api_key.errors).to contain_exactly("Api key scopes at least one must be selected")
+  end
 
   it "generates a key when saving" do
     api_key = ApiKey.new

@@ -1,4 +1,4 @@
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 const INTERACTIVE_SELECTOR = [
   "a",
@@ -45,7 +45,7 @@ function _setSpoilerHidden(element) {
     tabindex: "0",
     "data-spoiler-state": "blurred",
     "aria-expanded": false,
-    "aria-label": I18n.t("spoiler.label.show"),
+    "aria-label": i18n("spoiler.label.show"),
     "aria-live": "polite",
   };
 

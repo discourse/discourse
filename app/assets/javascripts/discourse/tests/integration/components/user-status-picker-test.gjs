@@ -3,9 +3,14 @@ import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { module, test } from "qunit";
 import UserStatusPicker from "discourse/components/user-status-picker";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
 module("Integration | Component | user-status-picker", function (hooks) {
   setupRenderingTest(hooks);
+
+  hooks.beforeEach(function () {
+    pretender.get("/emojis/search-aliases.json", () => response([]));
+  });
 
   test("it renders current status", async function (assert) {
     const status = new TrackedObject({
@@ -39,11 +44,11 @@ module("Integration | Component | user-status-picker", function (hooks) {
     await render(<template><UserStatusPicker @status={{status}} /></template>);
 
     await click(".btn-emoji");
-    await fillIn(".emoji-picker-content .filter", "mega");
-    await click(".results .emoji");
+    await fillIn(".emoji-picker-content .filter-input", "raised");
+    await click(".emoji-picker__sections .emoji");
 
-    assert.dom(".emoji").hasAttribute("alt", "mega");
-    assert.strictEqual(status.emoji, "mega");
+    assert.dom(".emoji").hasAttribute("alt", "raised_back_of_hand");
+    assert.strictEqual(status.emoji, "raised_back_of_hand");
   });
 
   test("it sets default emoji when user starts typing a description", async function (assert) {

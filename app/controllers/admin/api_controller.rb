@@ -14,6 +14,7 @@ class Admin::ApiController < Admin::AdminController
       ApiKey
         .where(hidden: false)
         .includes(:user)
+        .includes(:created_by)
         .order("revoked_at DESC NULLS FIRST, created_at DESC")
         .offset(offset)
         .limit(limit)
@@ -74,6 +75,7 @@ class Admin::ApiController < Admin::AdminController
     ApiKey.transaction do
       api_key.created_by = current_user
       api_key.api_key_scopes = build_scopes
+      api_key.scope_mode = params.dig(:key, :scope_mode)
       if username = params.require(:key).permit(:username)[:username].presence
         api_key.user = User.find_by_username(username)
         raise Discourse::NotFound unless api_key.user

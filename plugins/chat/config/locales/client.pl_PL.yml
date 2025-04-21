@@ -355,6 +355,7 @@ pl_PL:
         tabs:
           members: Członkowie
           settings: Ustawienia
+        remove_member: "Usuń"
       new_message_modal:
         title: Wyślij wiadomość
         add_user_long: <kbd>shift + click</kbd> lub <kbd>shift + enter</kbd><span>Dodaj @%{username}</span>
@@ -498,6 +499,7 @@ pl_PL:
         auto_join_users_info: "Sprawdzaj co godzinę, którzy użytkownicy byli aktywni w ciągu ostatnich 3 miesięcy. Dodaj ich do tego kanału, jeśli mają dostęp do kategorii %{category}."
         auto_join_users_info_no_category: "Sprawdzaj co godzinę, którzy użytkownicy byli aktywni w ciągu ostatnich 3 miesięcy. Dodaj ich do tego kanału, jeśli mają dostęp do wybranej kategorii."
         auto_join_users_warning: "Każdy użytkownik, który nie jest członkiem tego kanału i ma dostęp do kategorii %{category} , dołączy do niego. Czy jesteś pewien?"
+        notification_level: "Wysyłaj powiadomienia push"
         follow: "Dołącz"
         followed: "Dołączył"
         mute: "Wycisz kanał"
@@ -705,9 +707,9 @@ pl_PL:
         chat_message: "Nowa wiadomość na czacie"
         chat_quoted: "%{username} zacytował Twoją wiadomość na czacie"
       titles:
-        chat_mention: "Wzmianka na czacie"
-        chat_invitation: "Zaproszenie do czatu"
-        chat_quoted: "Cytowany czat"
+        chat_mention: "Wspomniany na czacie"
+        chat_invitation: "Zaproszony do kanału czatu"
+        chat_quoted: "Wiadomość czatu cytowana"
         chat_watched_thread: "Obserwowany wątek czatu"
     action_codes:
       chat:
@@ -739,6 +741,7 @@ pl_PL:
         title: "Czat"
         keyboard_shortcuts:
           switch_channel_arrows: "%{shortcut} Przełącz kanał"
+          switch__unread_channel_arrows: "%{shortcut} Przełącz nieprzeczytany kanał"
           open_quick_channel_selector: "%{shortcut} Otwórz szybki selektor kanałów"
           open_insert_link_modal: "%{shortcut} Wstaw hiperłącze (tylko kompozytor)"
           composer_bold: "%{shortcut} Pogrubienie (tylko kompozytor)"

@@ -91,9 +91,40 @@ RSpec.describe Wizard::StepUpdater do
         )
       updater.update
       expect(updater.success?).to eq(true)
+      expect(updater.refresh_required?).to eq(true)
       expect(wizard.completed_steps?("styling")).to eq(true)
       expect(SiteSetting.base_font).to eq("open_sans")
       expect(SiteSetting.heading_font).to eq("oswald")
+    end
+
+    it "updates both fonts if site_font is used" do
+      updater = wizard.create_updater("styling", site_font: "open_sans", homepage_style: "latest")
+      updater.update
+      expect(updater.success?).to eq(true)
+      expect(updater.refresh_required?).to eq(true)
+      expect(wizard.completed_steps?("styling")).to eq(true)
+      expect(SiteSetting.base_font).to eq("open_sans")
+      expect(SiteSetting.heading_font).to eq("open_sans")
+    end
+
+    it "does not require refresh if the font, color scheme, or theme are unchanged" do
+      SiteSetting.base_font = "open_sans"
+      SiteSetting.heading_font = "open_sans"
+      SiteSetting.top_menu = "latest|categories|unread|top"
+      dark_scheme = ColorScheme.find_by(name: "Dark")
+      Theme.find_default.update!(color_scheme: dark_scheme)
+      SiteSetting.default_dark_mode_color_scheme_id = -1
+      updater =
+        wizard.create_updater(
+          "styling",
+          color_scheme: "Dark",
+          site_font: "open_sans",
+          heading_font: "open_sans",
+          homepage_style: "latest",
+        )
+      updater.update
+      expect(updater.success?).to eq(true)
+      expect(updater.refresh_required?).to eq(false)
     end
 
     context "with colors" do
@@ -299,6 +330,43 @@ RSpec.describe Wizard::StepUpdater do
         expect(SiteSetting.desktop_category_page_style).to eq("subcategories_with_featured_topics")
       end
 
+      it "updates top_menu if it doesn't match the new homepage_style and does nothing if it matches" do
+        SiteSetting.top_menu = "categories|new|latest"
+
+        updater =
+          wizard.create_updater(
+            "styling",
+            body_font: "arial",
+            heading_font: "arial",
+            homepage_style: "hot",
+          )
+        updater.update
+        expect(updater).to be_success
+        expect(SiteSetting.top_menu).to eq("hot|categories|new|latest")
+
+        updater =
+          wizard.create_updater(
+            "styling",
+            body_font: "arial",
+            heading_font: "arial",
+            homepage_style: "hot",
+          )
+        updater.update
+        expect(updater).to be_success
+        expect(SiteSetting.top_menu).to eq("hot|categories|new|latest")
+
+        updater =
+          wizard.create_updater(
+            "styling",
+            body_font: "arial",
+            heading_font: "arial",
+            homepage_style: "latest",
+          )
+        updater.update
+        expect(updater).to be_success
+        expect(SiteSetting.top_menu).to eq("latest|hot|categories|new")
+      end
+
       it "does not overwrite top_menu site setting" do
         SiteSetting.top_menu = "latest|unread|unseen|categories"
         updater =
@@ -340,54 +408,6 @@ RSpec.describe Wizard::StepUpdater do
       expect(wizard.completed_steps?("branding")).to eq(true)
       expect(SiteSetting.logo).to eq(upload)
       expect(SiteSetting.logo_small).to eq(upload2)
-    end
-  end
-
-  describe "corporate" do
-    it "updates the fields properly" do
-      p = Fabricate(:post, raw: "company_name - governing_law - city_for_disputes template")
-      SiteSetting.tos_topic_id = p.topic_id
-
-      updater =
-        wizard.create_updater(
-          "corporate",
-          company_name: "ACME, Inc.",
-          governing_law: "New Jersey law",
-          contact_url: "http://example.com/custom-contact-url",
-          city_for_disputes: "Fairfield, New Jersey",
-          contact_email: "eviltrout@example.com",
-        )
-      updater.update
-      expect(updater).to be_success
-      expect(SiteSetting.company_name).to eq("ACME, Inc.")
-      expect(SiteSetting.governing_law).to eq("New Jersey law")
-      expect(SiteSetting.contact_url).to eq("http://example.com/custom-contact-url")
-      expect(SiteSetting.city_for_disputes).to eq("Fairfield, New Jersey")
-      expect(SiteSetting.contact_email).to eq("eviltrout@example.com")
-
-      # Should update the TOS topic
-      raw = Post.where(topic_id: SiteSetting.tos_topic_id, post_number: 1).pick(:raw)
-      expect(raw).to eq("ACME, Inc. - New Jersey law - Fairfield, New Jersey template")
-
-      # Can update the TOS topic again
-      updater =
-        wizard.create_updater(
-          "corporate",
-          company_name: "Pied Piper Inc",
-          governing_law: "California law",
-          city_for_disputes: "San Francisco, California",
-        )
-      updater.update
-      raw = Post.where(topic_id: SiteSetting.tos_topic_id, post_number: 1).pick(:raw)
-      expect(raw).to eq("Pied Piper Inc - California law - San Francisco, California template")
-
-      # Can update the TOS to nothing
-      updater = wizard.create_updater("corporate", {})
-      updater.update
-      raw = Post.where(topic_id: SiteSetting.tos_topic_id, post_number: 1).pick(:raw)
-      expect(raw).to eq("company_name - governing_law - city_for_disputes template")
-
-      expect(wizard.completed_steps?("corporate")).to eq(true)
     end
   end
 end

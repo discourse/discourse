@@ -1,6 +1,6 @@
 import { ajax } from "discourse/lib/ajax";
+import { helperContext } from "discourse/lib/helpers";
 import KeyValueStore from "discourse/lib/key-value-store";
-import { helperContext } from "discourse-common/lib/helpers";
 
 export const keyValueStore = new KeyValueStore("discourse_push_notifications_");
 

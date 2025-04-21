@@ -146,6 +146,13 @@ sk:
         never: "Nikdy"
       separate_sidebar_mode:
         title: "Zobraziť samostatné režimy bočného panela pre fórum a chat"
+      send_shortcut:
+        enter:
+          label: "Odoslať cez Enter"
+          description: "Nový riadok pomocou Shift + Enter"
+        meta_enter:
+          label: "Odoslať pomocou %{meta_key} + Enter"
+          description: "Nový riadok pomocou Enter"
       enable: "Povoliť chat"
       flag: "Označenie"
       emoji: "Vložte emotikon"
@@ -355,6 +362,7 @@ sk:
         tabs:
           members: Členovia
           settings: Nastavenia
+        remove_member: "Odstrániť"
       new_message_modal:
         title: Odoslať správu
         add_user_long: <kbd>shift + klik</kbd> alebo <kbd>shift + enter</kbd><span>Pridať @%{username}</span>
@@ -728,9 +736,9 @@ sk:
         chat_message: "Nová správa v chate"
         chat_quoted: "%{username} citoval tvoju správu na chate"
       titles:
-        chat_mention: "Zmienka o chate"
-        chat_invitation: "Pozvánka na chat"
-        chat_quoted: "Chat citovaný"
+        chat_mention: "Spomenuté v chate"
+        chat_invitation: "Pozvaný do kanála chatu"
+        chat_quoted: "Citovaná správa chatu"
         chat_watched_thread: "Sledované vlákno chatu"
     action_codes:
       chat:
@@ -762,6 +770,7 @@ sk:
         title: "Chat"
         keyboard_shortcuts:
           switch_channel_arrows: "%{shortcut} Prepnúť kanál"
+          switch__unread_channel_arrows: "%{shortcut} Prepnutie neprečítaného kanála"
           open_quick_channel_selector: "%{shortcut} Otvorte rýchly výber kanálov"
           open_insert_link_modal: "%{shortcut} Vložiť hypertextový odkaz (iba skladateľ)"
           composer_bold: "%{shortcut} Tučné (iba skladateľ)"

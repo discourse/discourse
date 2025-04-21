@@ -118,6 +118,8 @@ ru:
         label: "Параметры"
         ranked_choice:
           abstain: "Воздержаться"
+          highest_priority: "(наивысший приоритет)"
+          lowest_priority: "(самый низкий приоритет)"
           login: "Войдите, чтобы проголосовать!"
       error_while_toggling_status: "Произошла ошибка при смене статуса опроса."
       error_while_casting_votes: "Произошла ошибка в процессе обработки вашего голоса."

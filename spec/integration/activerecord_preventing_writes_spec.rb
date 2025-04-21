@@ -1,13 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe "When ActiveRecord is preventing writes" do
-  before do
-    @original_async = Scheduler::Defer.async
-    Scheduler::Defer.async = true
-  end
-
-  after { Scheduler::Defer.async = @original_async }
-
   it "should not result in an error response when there is a theme field that needs to be baked" do
     theme_field =
       Fabricate(

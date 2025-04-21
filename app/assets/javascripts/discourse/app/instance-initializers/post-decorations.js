@@ -6,15 +6,14 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import Columns from "discourse/lib/columns";
 import highlightSyntax from "discourse/lib/highlight-syntax";
+import { iconHTML, iconNode } from "discourse/lib/icon-library";
 import { nativeLazyLoading } from "discourse/lib/lazy-load-images";
 import lightbox from "discourse/lib/lightbox";
-import { SELECTORS } from "discourse/lib/lightbox/constants";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { parseAsync } from "discourse/lib/text";
 import { setTextDirections } from "discourse/lib/text-direction";
 import { tokenRange } from "discourse/lib/utilities";
-import { iconHTML, iconNode } from "discourse-common/lib/icon-library";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default {
   initialize(owner) {
@@ -25,33 +24,13 @@ export default {
       const capabilities = owner.lookup("service:capabilities");
       const modal = owner.lookup("service:modal");
       // will eventually just be called lightbox
-      const lightboxService = owner.lookup("service:lightbox");
       api.decorateCookedElement((elem) => {
         return highlightSyntax(elem, siteSettings, session);
       });
 
-      if (siteSettings.enable_experimental_lightbox) {
-        api.decorateCookedElement(
-          (element, helper) => {
-            return helper &&
-              element.querySelector(SELECTORS.DEFAULT_ITEM_SELECTOR)
-              ? lightboxService.setupLightboxes({
-                  container: element,
-                  selector: SELECTORS.DEFAULT_ITEM_SELECTOR,
-                })
-              : null;
-          },
-          {
-            onlyStream: true,
-          }
-        );
-
-        api.cleanupStream(lightboxService.cleanupLightboxes);
-      } else {
-        api.decorateCookedElement((elem) => {
-          return lightbox(elem, siteSettings);
-        });
-      }
+      api.decorateCookedElement((elem) => {
+        return lightbox(elem, siteSettings);
+      });
 
       api.decorateCookedElement((elem) => {
         const grids = elem.querySelectorAll(".d-image-grid");
@@ -119,7 +98,7 @@ export default {
           "btn-default",
           "btn",
           "btn-icon",
-          ...(props.label ? ["no-text"] : []),
+          ...(props.label ? [] : ["no-text"]),
         ];
 
         openPopupBtn.classList.add(...defaultClasses);
@@ -129,13 +108,13 @@ export default {
         }
 
         if (props.title) {
-          openPopupBtn.title = I18n.t(props.title);
+          openPopupBtn.title = i18n(props.title);
         }
 
         if (props.label && capabilities.touch) {
           openPopupBtn.innerHTML = `
           <span class="d-button-label">
-            ${I18n.t(props.label)}
+            ${i18n(props.label)}
           </div>`;
         }
 
@@ -154,6 +133,8 @@ export default {
       }
 
       function generateFullScreenTableModal(event) {
+        const { postId } = this;
+
         const table = event.currentTarget.parentElement.nextElementSibling;
         const tempTable = table.cloneNode(true);
         const cookedWrapper = document.createElement("div");
@@ -161,35 +142,35 @@ export default {
         if (siteSettings.display_footnotes_inline) {
           cookedWrapper.classList.add("inline-footnotes");
         }
-        cookedWrapper.dataset.refPostId = this.id;
+        cookedWrapper.dataset.refPostId = postId;
         cookedWrapper.appendChild(tempTable);
         modal.show(FullscreenTableModal, {
           model: { tableHtml: cookedWrapper },
         });
       }
 
-      function generateSpreadsheetModal() {
-        const tableIndex = this.tableIndex;
+      async function generateSpreadsheetModal() {
+        const { postId, tableIndex } = this;
 
-        return ajax(`/posts/${this.id}`, { type: "GET" })
-          .then((post) => {
-            parseAsync(post.raw).then((tokens) => {
-              const allTables = tokenRange(tokens, "table_open", "table_close");
-              const tableTokens = allTables[tableIndex];
+        try {
+          const post = await ajax(`/posts/${postId}`, { type: "GET" });
+          const tokens = await parseAsync(post.raw);
+          const allTables = tokenRange(tokens, "table_open", "table_close");
+          const tableTokens = allTables[tableIndex];
 
-              modal.show(SpreadsheetEditor, {
-                model: {
-                  post,
-                  tableIndex,
-                  tableTokens,
-                },
-              });
-            });
-          })
-          .catch(popupAjaxError);
+          modal.show(SpreadsheetEditor, {
+            model: {
+              post,
+              tableIndex,
+              tableTokens,
+            },
+          });
+        } catch (error) {
+          popupAjaxError(error);
+        }
       }
 
-      function generatePopups(tables, attrs) {
+      function generatePopups(tables, post) {
         tables.forEach((table, index) => {
           const buttonWrapper = document.createElement("div");
           buttonWrapper.classList.add("fullscreen-table-wrapper__buttons");
@@ -197,7 +178,6 @@ export default {
           const tableEditorBtn = _createButton({
             classes: ["btn-edit-table"],
             title: "table_builder.edit.btn_edit",
-            label: "table_builder.edit.btn_edit",
             icon: {
               name: "pencil",
               class: "edit-table-icon",
@@ -207,13 +187,15 @@ export default {
           table.parentNode.setAttribute("data-table-index", index);
           table.parentNode.classList.add("fullscreen-table-wrapper");
 
-          if (attrs.canEdit) {
+          // TODO (glimmer-post-stream) in the Glimmer post stream we can check for post.can_edit instead
+          if (post.canEdit) {
+            table.parentNode.classList.add("--editable");
             buttonWrapper.append(tableEditorBtn);
             tableEditorBtn.addEventListener(
               "click",
               generateSpreadsheetModal.bind({
+                postId: post.id,
                 tableIndex: index,
-                ...attrs,
               }),
               false
             );
@@ -229,6 +211,8 @@ export default {
             return;
           }
 
+          table.parentNode.classList.add("--has-overflow");
+
           const expandTableBtn = _createButton({
             classes: ["btn-expand-table"],
             title: "fullscreen_table.expand_btn",
@@ -237,7 +221,7 @@ export default {
           buttonWrapper.append(expandTableBtn);
           expandTableBtn.addEventListener(
             "click",
-            generateFullScreenTableModal.bind(attrs),
+            generateFullScreenTableModal.bind({ postId: post.id }),
             false
           );
           table.parentNode.insertBefore(buttonWrapper, table);
@@ -260,10 +244,10 @@ export default {
       }
 
       api.decorateCookedElement(
-        (post, helper) => {
+        (element, helper) => {
           schedule("afterRender", () => {
-            const tables = post.querySelectorAll(".md-table table");
-            generatePopups(tables, helper.widget.attrs);
+            const tables = element.querySelectorAll(".md-table table");
+            generatePopups(tables, helper.model);
           });
         },
         {

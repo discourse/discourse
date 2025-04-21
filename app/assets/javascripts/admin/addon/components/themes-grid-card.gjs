@@ -5,10 +5,9 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
+import icon from "discourse/helpers/d-icon";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import icon from "discourse-common/helpers/d-icon";
-import i18n from "discourse-common/helpers/i18n";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import AdminConfigAreaCard from "admin/components/admin-config-area-card";
 import DMenu from "float-kit/components/d-menu";
 import ThemesGridPlaceholder from "./themes-grid-placeholder";
@@ -42,7 +41,7 @@ export default class ThemeCard extends Component {
   }
 
   get footerActionIcon() {
-    return this.args.theme.isPendingUpdates ? "sync" : "ellipsis-h";
+    return this.args.theme.isPendingUpdates ? "arrows-rotate" : "ellipsis";
   }
 
   // NOTE: inspired by -> https://github.com/discourse/discourse/blob/24caa36eef826bcdaed88aebfa7df154413fb349/app/assets/javascripts/admin/addon/controllers/admin-customize-themes-show.js#L366
@@ -74,7 +73,7 @@ export default class ThemeCard extends Component {
 
     this.toasts.success({
       data: {
-        message: I18n.t("admin.customize.theme.set_default_success", {
+        message: i18n("admin.customize.theme.set_default_success", {
           theme: this.args.theme.name,
         }),
       },
@@ -94,7 +93,7 @@ export default class ThemeCard extends Component {
       .then(() => {
         this.toasts.success({
           data: {
-            message: I18n.t("admin.customize.theme.update_success", {
+            message: i18n("admin.customize.theme.update_success", {
               theme: this.args.theme.name,
             }),
           },
@@ -117,7 +116,7 @@ export default class ThemeCard extends Component {
           <span
             title={{i18n "admin.customize.theme.updates_available_tooltip"}}
             class="theme-card__update-available"
-          >{{icon "info-circle"}}</span>
+          >{{icon "circle-info"}}</span>
         {{/if}}
         <div class="theme-card__image-wrapper">
           {{#if @theme.screenshot_url}}
@@ -140,7 +139,7 @@ export default class ThemeCard extends Component {
             @translatedLabel={{i18n "admin.customize.theme.edit"}}
             @route="adminCustomizeThemes.show"
             @routeModels={{this.themeRouteModels}}
-            @class="btn-primary theme-card__button"
+            class="btn-primary theme-card__button"
             @preventFocus={{true}}
           />
 
@@ -164,7 +163,7 @@ export default class ThemeCard extends Component {
                       <DButton
                         @action={{this.updateTheme}}
                         @icon="download"
-                        @class="theme-card__button -update"
+                        class="theme-card__button -update"
                         @preventFocus={{true}}
                         @translatedLabel={{i18n
                           "admin.customize.theme.update_to_latest"
@@ -180,10 +179,10 @@ export default class ThemeCard extends Component {
                       @preventFocus={{true}}
                       @icon={{if
                         @theme.default
-                        "far-check-square"
+                        "far-square-check"
                         "far-square"
                       }}
-                      @class="theme-card__button"
+                      class="theme-card__button"
                       @translatedLabel={{i18n
                         (if
                           @theme.default

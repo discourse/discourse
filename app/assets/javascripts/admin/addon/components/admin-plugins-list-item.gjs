@@ -6,9 +6,9 @@ import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import icon from "discourse/helpers/d-icon";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import icon from "discourse-common/helpers/d-icon";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 import SiteSetting from "admin/models/site-setting";
 import PluginCommitHash from "./plugin-commit-hash";
 
@@ -142,7 +142,7 @@ export default class AdminPluginsListItem extends Component {
           {{#if this.showPluginSettingsButton}}
             {{#if @plugin.useNewShowRoute}}
               <LinkTo
-                class="btn btn-text btn-small"
+                class="btn btn-default btn-text btn-small"
                 @route="adminPlugins.show"
                 @model={{@plugin}}
                 @disabled={{this.disablePluginSettingsButton}}
@@ -153,7 +153,7 @@ export default class AdminPluginsListItem extends Component {
               </LinkTo>
             {{else}}
               <LinkTo
-                class="btn btn-text btn-small"
+                class="btn btn-default btn-text btn-small"
                 @route="adminSiteSettingsCategory"
                 @model={{@plugin.settingCategoryName}}
                 @query={{hash filter=(concat "plugin:" @plugin.name)}}

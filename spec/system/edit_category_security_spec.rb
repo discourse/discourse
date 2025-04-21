@@ -26,7 +26,7 @@ describe "Edit Category Security", type: :system do
 
   before { sign_in(current_user) }
 
-  it "lists the groups that can access the catgory" do
+  it "lists the groups that can access the category" do
     category_page.visit_security(category)
     expect(category_page).to have_public_access_message
     expect(category_permission_row).to have_group_permission(

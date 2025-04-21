@@ -111,7 +111,7 @@ de:
       remove: "Entfernen"
       collapse: "Chat-Bereich ausblenden"
       expand: "Chat-Bereich erweitern"
-      confirm_flag: "Bist du sicher, dass du die Nachricht von %{username} markieren möchtest?"
+      confirm_flag: "Bist du sicher, dass du die Nachricht von %{username} melden möchtest?"
       deleted:
         one: "Eine Nachricht wurde gelöscht. [Anzeigen]"
         other: "%{count} Nachrichten wurden gelöscht. [Alle anzeigen]"
@@ -138,6 +138,13 @@ de:
         never: "niemals"
       separate_sidebar_mode:
         title: "Separate Seitenleisten-Modi für Forum und Chat anzeigen"
+      send_shortcut:
+        enter:
+          label: "Senden mit Enter"
+          description: "Neue Zeile mit Umschalt + Enter"
+        meta_enter:
+          label: "Senden mit %{meta_key} + Enter"
+          description: "Neue Zeile mit Enter"
       enable: "Chat aktivieren"
       flag: "Melden"
       emoji: "Emoji einfügen"
@@ -274,7 +281,7 @@ de:
       select: "Auswählen"
       return_to_list: "Zurück zur Kanalliste"
       return_to_channel: "Zurück zum Kanal"
-      return_to_threads_list: "Zurück zur Themenliste"
+      return_to_threads_list: "Zurück zur Thread-Liste"
       unread_threads_count:
         one: "Du hast %{count} ungelesene Diskussion"
         other: "Du hast %{count} ungelesene Diskussionen"
@@ -335,6 +342,7 @@ de:
         tabs:
           members: Mitglieder
           settings: Einstellungen
+        remove_member: "Entfernen"
       new_message_modal:
         title: Nachricht senden
         add_user_long: <kbd>Umschalt + Klick</kbd> oder <kbd>Umschalt + Eingabe</kbd><span>@%{username} hinzufügen</span>
@@ -578,7 +586,7 @@ de:
         notify_user: "Ich möchte mit dieser Person direkt und persönlich über ihre Nachricht sprechen."
         notify_moderators: "Diese Nachricht erfordert die Aufmerksamkeit des Teams aus einem anderen, oben nicht aufgeführten Grund."
       flagging:
-        action: "Nachricht markieren"
+        action: "Nachricht melden"
       emoji_picker:
         favorites: "Häufig verwendet"
         smileys_&_emotion: "Smileys und Emotionen"
@@ -610,10 +618,10 @@ de:
             description: "Werde benachrichtigt, wenn dich jemand in diesem Thread erwähnt."
           tracking:
             title: "Verfolgen"
-            description: "Lass dich benachrichtigen, wenn dich jemand in diesem Thema erwähnt und sieh dir die Anzahl der neuen Antworten in der Threadliste an."
+            description: "Lass dich benachrichtigen, wenn dich jemand in diesem Thread erwähnt, und sieh dir die Anzahl der neuen Antworten in der Thread-Liste an."
           watching:
             title: "Beobachten"
-            description: "Lass dich über alle Antworten in diesem Thema benachrichtigen und sieh dir die Anzahl der neuen Antworten in der Threadliste an."
+            description: "Lass dich über alle Antworten in diesem Thread benachrichtigen und sieh dir die Anzahl der neuen Antworten in der Thread-Liste an."
         participants_other_count:
           one: "+%{count}"
           other: "+%{count}"
@@ -656,10 +664,10 @@ de:
         chat_message: "Neue Chat-Nachricht"
         chat_quoted: "%{username} hat deine Chat-Nachricht zitiert"
       titles:
-        chat_mention: "Chat-Erwähnung"
-        chat_invitation: "Chat-Einladung"
-        chat_quoted: "Chat zitiert"
-        chat_watched_thread: "Im Chat beobachteter Thread"
+        chat_mention: "Im Chat erwähnt"
+        chat_invitation: "Zum Chat-Kanal eingeladen"
+        chat_quoted: "Chat-Nachricht zitiert"
+        chat_watched_thread: "Beobachteter Chat-Thread"
     action_codes:
       chat:
         enabled: '%{who} hat <button class="btn-link open-chat">Chat</button> aktiviert %{when}'
@@ -690,6 +698,7 @@ de:
         title: "Chat"
         keyboard_shortcuts:
           switch_channel_arrows: "%{shortcut} Kanal wechseln"
+          switch__unread_channel_arrows: "%{shortcut} Ungelesenen Kanal wechseln"
           open_quick_channel_selector: "%{shortcut} Schnellauswahl für Kanäle öffnen"
           open_insert_link_modal: "%{shortcut} Hyperlink einfügen (nur Composer)"
           composer_bold: "%{shortcut} Fett (nur Composer)"

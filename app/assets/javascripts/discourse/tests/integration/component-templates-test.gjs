@@ -2,12 +2,10 @@ import Component from "@glimmer/component";
 import { setComponentTemplate } from "@glimmer/manager";
 import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
-import { assert, module, test } from "qunit";
-import sinon from "sinon";
-import { overrideThrowGjsError } from "discourse/instance-initializers/component-templates";
+import { module, test } from "qunit";
+import { withSilencedDeprecationsAsync } from "discourse/lib/deprecated";
 import { forceMobile } from "discourse/lib/mobile";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { withSilencedDeprecationsAsync } from "discourse-common/lib/deprecated";
 import { registerTemporaryModule } from "../helpers/temporary-module-helper";
 
 function silenceMobileAndOverrideDeprecations(hooks) {
@@ -16,6 +14,7 @@ function silenceMobileAndOverrideDeprecations(hooks) {
     const promise = new Promise((resolve) => (unsilenceCallback = resolve));
     withSilencedDeprecationsAsync(
       [
+        "component-template-resolving", // silence ember's template resolving deprecation
         "discourse.mobile-templates",
         "discourse.resolver-template-overrides",
         "discourse.component-template-overrides",
@@ -122,14 +121,14 @@ module("Integration | Initializers | plugin-component-templates", function (h) {
     hooks.beforeEach(() => registerTemplateOnlyComponents());
     setupRenderingTest(hooks);
 
-    test("treats plugin template-only definition as classic component", async function () {
+    test("treats plugin template-only definition as classic component", async function (assert) {
       await render(hbs`<PluginTemplateOnlyDefinition class='test-class'/>`);
       assert
         .dom("div.test-class")
         .hasText("classic component", "renders as classic component");
     });
 
-    test("leaves core template-only definition as glimmer template-only component", async function () {
+    test("leaves core template-only definition as glimmer template-only component", async function (assert) {
       await render(hbs`<CoreTemplateOnlyDefinition class='test-class'/>`);
       assert
         .dom("div.test-class")
@@ -142,7 +141,7 @@ module("Integration | Initializers | plugin-component-templates", function (h) {
     hooks.beforeEach(() => registerBaseComponents());
     setupRenderingTest(hooks);
 
-    test("renders core templates when there are no overrides", async function () {
+    test("renders core templates when there are no overrides", async function (assert) {
       await render(TestTemplate);
       assert
         .dom("#mock-colocated")
@@ -161,7 +160,7 @@ module("Integration | Initializers | plugin-component-templates", function (h) {
 
     setupRenderingTest(hooks);
 
-    test("core mobile overrides are used", async function () {
+    test("core mobile overrides are used", async function (assert) {
       await render(TestTemplate);
       assert
         .dom("#mock-colocated")
@@ -177,7 +176,7 @@ module("Integration | Initializers | plugin-component-templates", function (h) {
     hooks.beforeEach(registerThemeOverrides);
     setupRenderingTest(hooks);
 
-    test("theme overrides are used", async function () {
+    test("theme overrides are used", async function (assert) {
       await render(TestTemplate);
       assert
         .dom("#mock-colocated")
@@ -197,7 +196,7 @@ module("Integration | Initializers | plugin-component-templates", function (h) {
 
     setupRenderingTest(hooks);
 
-    test("mobile theme overrides are used", async function () {
+    test("mobile theme overrides are used", async function (assert) {
       await render(TestTemplate);
       assert
         .dom("#mock-colocated")
@@ -219,7 +218,7 @@ module("Integration | Initializers | plugin-component-templates", function (h) {
     hooks.beforeEach(registerPluginOverrides);
     setupRenderingTest(hooks);
 
-    test("plugin overrides are used", async function () {
+    test("plugin overrides are used", async function (assert) {
       await render(TestTemplate);
       assert
         .dom("#mock-colocated")
@@ -236,7 +235,7 @@ module("Integration | Initializers | plugin-component-templates", function (h) {
     hooks.beforeEach(registerThemeOverrides);
     setupRenderingTest(hooks);
 
-    test("plugin overrides are used", async function () {
+    test("plugin overrides are used", async function (assert) {
       await render(TestTemplate);
       assert
         .dom("#mock-colocated")
@@ -253,7 +252,7 @@ module("Integration | Initializers | plugin-component-templates", function (h) {
     hooks.beforeEach(registerOtherPluginOverrides);
     setupRenderingTest(hooks);
 
-    test("last-defined plugin overrides are used", async function () {
+    test("last-defined plugin overrides are used", async function (assert) {
       await render(TestTemplate);
       assert
         .dom("#mock-colocated")
@@ -277,7 +276,7 @@ module("Integration | Initializers | plugin-component-templates", function (h) {
     hooks.beforeEach(registerThemeOverrides);
     setupRenderingTest(hooks);
 
-    test("theme overrides plugin component", async function () {
+    test("theme overrides plugin component", async function (assert) {
       await render(TestTemplate);
       assert
         .dom("#mock-colocated")
@@ -289,8 +288,6 @@ module("Integration | Initializers | plugin-component-templates", function (h) {
   });
 
   module("overriding gjs component", function (hooks) {
-    let errorStub;
-
     hooks.beforeEach(() => {
       registerTemporaryModule(
         `discourse/components/mock-gjs-component`,
@@ -303,29 +300,17 @@ module("Integration | Initializers | plugin-component-templates", function (h) {
 
       registerTemporaryModule(
         `discourse/plugins/my-plugin/discourse/templates/components/mock-gjs-component`,
-        hbs`doomed override`
+        hbs`<span class="greeting">Overridden greeting</span>`
       );
-
-      errorStub = sinon
-        .stub(console, "error")
-        .withArgs(sinon.match(/mock-gjs-component was authored using gjs/));
-
-      overrideThrowGjsError(false);
-    });
-
-    hooks.afterEach(() => {
-      overrideThrowGjsError(true);
     });
 
     setupRenderingTest(hooks);
 
-    test("theme overrides plugin component", async function () {
+    test("theme overrides plugin component", async function (assert) {
       await render(hbs`<MockGjsComponent />`);
       assert
         .dom(".greeting")
-        .hasText("Hello world", "renders original implementation");
-
-      sinon.assert.calledOnce(errorStub);
+        .hasText("Overridden greeting", "it renders the overridden version");
     });
   });
 });

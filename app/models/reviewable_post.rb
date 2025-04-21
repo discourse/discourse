@@ -13,6 +13,10 @@ class ReviewablePost < Reviewable
          created_or_edited_by.has_trust_level?(TrustLevel[4])
       return
     end
+    queue_for_review(post)
+  end
+
+  def self.queue_for_review(post)
     system_user = Discourse.system_user
 
     needs_review!(
@@ -121,6 +125,7 @@ class ReviewablePost < Reviewable
       action.description = "#{prefix}.description"
       action.client_action = client_action
       action.confirm_message = "#{prefix}.confirm" if confirm
+      action.completed_message = "#{prefix}.complete"
     end
   end
 
@@ -138,6 +143,7 @@ end
 #
 #  id                      :bigint           not null, primary key
 #  type                    :string           not null
+#  type_source             :string           default("unknown"), not null
 #  status                  :integer          default("pending"), not null
 #  created_by_id           :integer          not null
 #  reviewable_by_moderator :boolean          default(FALSE), not null
@@ -155,6 +161,7 @@ end
 #  updated_at              :datetime         not null
 #  force_review            :boolean          default(FALSE), not null
 #  reject_reason           :text
+#  potentially_illegal     :boolean          default(FALSE)
 #
 # Indexes
 #

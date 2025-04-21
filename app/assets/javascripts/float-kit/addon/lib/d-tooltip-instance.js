@@ -65,8 +65,12 @@ export default class DTooltipInstance extends FloatKitInstance {
   }
 
   @action
-  async onMouseMove(event) {
-    if (this.expanded && this.trigger.contains(event.target)) {
+  async onPointerMove(event) {
+    if (
+      this.expanded &&
+      this.trigger.contains(event.target) &&
+      event.pointerType !== "touch"
+    ) {
       return;
     }
 
@@ -83,7 +87,7 @@ export default class DTooltipInstance extends FloatKitInstance {
   }
 
   @action
-  async onMouseLeave(event) {
+  async onPointerLeave(event) {
     if (this.untriggers.includes("hover")) {
       await this.onUntrigger(event);
     }

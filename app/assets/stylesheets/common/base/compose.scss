@@ -4,51 +4,67 @@ html.composer-open {
     transition: padding-bottom 250ms ease;
   }
 }
+
+:root {
+  --composer-max-width--hide-preview: 740px;
+}
+
 #reply-control {
   position: fixed;
   display: flex;
   flex-direction: column;
   bottom: 0;
-  height: 0;
   right: 0;
   left: 0;
-  margin-left: auto;
-  margin-right: auto;
+  margin-inline: auto;
   max-width: $reply-area-max-width;
   width: 100%;
-
-  &.hide-preview {
-    max-width: 740px;
-  }
-
-  .with-form-template {
-    .toggle-preview,
-    #mobile-file-upload,
-    .submit-panel .mobile-preview {
-      display: none;
-    }
-    .d-editor-preview-wrapper {
-      display: none;
-      flex: 0;
-    }
-  }
-
-  @media screen and (max-width: 1200px) {
-    min-width: 0;
-  }
+  height: 0;
+  min-height: 0;
   z-index: z("composer", "content");
-  transition: height 250ms ease, background 250ms ease, transform 250ms ease,
-    max-width 250ms ease, padding-bottom 250ms ease;
+  transition:
+    height 0.2s,
+    max-width 0.2s,
+    padding-bottom 0.2s,
+    top 0.2s,
+    transform 0.2s,
+    min-height 0.2s;
   background-color: var(--secondary);
   box-shadow: var(--shadow-composer);
 
+  @media screen and (width <= 1200px) {
+    min-width: 0;
+  }
+
+  &.hide-preview {
+    max-width: var(--composer-max-width--hide-preview);
+  }
+
   .reply-area {
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
+    padding: 0.5em;
 
-    &.with-form-template {
-      max-height: 100%;
-      box-sizing: border-box;
+    @include breakpoint("mobile-extra-large") {
+      padding-bottom: max(env(safe-area-inset-bottom), 6px);
+      flex-grow: 1;
+      min-height: 0;
+    }
+
+    @include breakpoint("mobile-extra-large", min-width) {
+      margin: 0 auto;
+      height: calc(100% - 11px);
+      width: 100%;
+    }
+  }
+
+  .with-form-template {
+    overflow: auto;
+    flex: 1;
+
+    #mobile-file-upload {
+      display: none;
     }
   }
 
@@ -62,17 +78,41 @@ html.composer-open {
       border-color: var(--secondary);
       border-right-color: transparent;
     }
+
     .d-icon {
       color: var(--secondary);
     }
   }
 
   &.open {
+    --min-height: 255px;
+    box-sizing: border-box;
     height: var(--composer-height);
-  }
+    min-height: var(--min-height);
+    max-height: calc(100vh - var(--header-offset, 4em));
+    padding-bottom: var(--composer-ipad-padding);
 
-  &.closed {
-    height: 0 !important;
+    @include breakpoint("mobile-extra-large") {
+      z-index: z("mobile-composer");
+    }
+
+    .grippie {
+      cursor: row-resize;
+      padding: 0.25em 0;
+      background: var(--tertiary);
+
+      @media (pointer: coarse) {
+        padding: 0.35em 0;
+      }
+
+      &::before {
+        content: "";
+        display: block;
+        width: 1.5em;
+        margin: auto;
+        border-top: 3px double var(--tertiary-medium);
+      }
+    }
   }
 
   &.draft,
@@ -102,9 +142,13 @@ html.composer-open {
   &.draft {
     cursor: pointer;
     display: flex;
+
     .draft-text {
       display: block;
+
+      @include ellipsis;
     }
+
     .grippie,
     .saving-text {
       display: none;
@@ -117,10 +161,14 @@ html.composer-open {
 
   .reply-to {
     color: var(--primary-high);
-    margin-bottom: 8px;
+    margin-bottom: 0.5em;
     display: flex;
     align-items: center;
     justify-content: flex-end;
+
+    @include breakpoint("mobile-extra-large") {
+      justify-content: space-between;
+    }
 
     .reply-details {
       flex: 1;
@@ -132,7 +180,12 @@ html.composer-open {
       .d-icon {
         color: var(--primary-medium);
       }
+
+      @include breakpoint("mobile-extra-large") {
+        max-width: calc(100% - 75px);
+      }
     }
+
     .composer-action-title {
       display: flex;
       align-items: center;
@@ -150,6 +203,7 @@ html.composer-open {
         .user-link,
         .post-link {
           margin-right: 8px;
+
           @include ellipsis;
         }
       }
@@ -157,8 +211,10 @@ html.composer-open {
       .username {
         margin-right: 5px;
         max-width: 100px;
+
         @include ellipsis;
-        @media screen and (max-width: 500px) {
+
+        @media screen and (width <= 500px) {
           display: none;
         }
       }
@@ -177,6 +233,24 @@ html.composer-open {
       gap: 8px;
       margin-left: 8px;
     }
+
+    // Protection for languages with long strings on very small screens. This
+    // has no effect on most users but we need it for some cases. If this is
+    // not added, "add edit reason" will overlap with the composer controls
+    @include breakpoint(mobile-small) {
+      .reply-details {
+        flex-wrap: wrap;
+      }
+
+      .display-edit-reason {
+        margin-top: 0.5em;
+      }
+
+      .composer-controls {
+        align-self: flex-start;
+        gap: 6px;
+      }
+    }
   }
 
   .whisper,
@@ -194,9 +268,11 @@ html.composer-open {
 
   .display-edit-reason {
     display: inline-flex;
+
     a {
       display: inline-flex;
     }
+
     .d-icon {
       padding: 0.3em 0.5em;
       color: var(--tertiary);
@@ -213,10 +289,17 @@ html.composer-open {
     width: 100%;
     align-items: center;
     position: relative;
+    gap: 0 0.5em;
   }
 
   .user-selector {
-    margin-bottom: 8px;
+    @include breakpoint("mobile-extra-large") {
+      flex-wrap: wrap;
+    }
+
+    @include breakpoint("mobile-extra-large", min-width) {
+      margin-bottom: 0.5em;
+    }
   }
 
   .title-input {
@@ -232,6 +315,13 @@ html.composer-open {
   .with-tags {
     .title-input {
       flex: 1 1 100%;
+    }
+
+    @include breakpoint("mobile-extra-large") {
+      .mini-tag-chooser,
+      .category-chooser {
+        z-index: z("base");
+      }
     }
 
     .archetype-private_message & {
@@ -275,13 +365,16 @@ html.composer-open {
       .selected-name {
         max-width: 100%;
         overflow: hidden;
+
         .name {
           display: flex;
           max-width: 100%;
           gap: 0 0.5em;
+
           .badge-category {
             overflow: hidden;
           }
+
           // This prevents the first category from being too-truncated at the expense of a long subcategory
           > span:last-of-type:not(:first-of-type) {
             flex-shrink: 10;
@@ -307,17 +400,33 @@ html.composer-open {
 
   .add-warning {
     color: var(--primary-high);
-    padding-left: 8px;
-    margin-bottom: 0;
+    padding: 0.5em;
     display: flex;
+    line-height: var(--line-height-medium);
+    margin: 0;
+
+    @include breakpoint("mobile-extra-large") {
+      margin-bottom: 0.15em;
+    }
 
     input {
       margin-right: 8px;
     }
   }
 
+  @include breakpoint("mobile-extra-large") {
+    .users-input,
+    .add-warning {
+      width: 100%;
+    }
+
+    .users-input .select-kit.multi-select {
+      width: 100%;
+    }
+  }
+
   #reply-title {
-    margin-bottom: 8px;
+    margin-bottom: 0.5em;
     flex-basis: 50%;
     width: unset;
 
@@ -327,18 +436,24 @@ html.composer-open {
   }
 
   .category-input + .tags-input {
-    margin-left: 8px;
     width: auto;
-    max-width: calc(50% - 4px);
+    max-width: calc(50% - 0.25em);
   }
 
   .tags-input {
     position: relative;
-    margin: 0 0 8px 0px;
+    margin: 0 0 0.5em 0;
     flex-grow: 1;
+
+    @include breakpoint("mobile-extra-large") {
+      width: 100%;
+      max-width: 50%;
+    }
+
     .mini-tag-chooser {
       z-index: z("composer", "dropdown");
       width: 100%;
+
       .select-kit-header {
         color: var(--primary-high);
       }
@@ -351,13 +466,45 @@ html.composer-open {
     flex-direction: column;
     flex-grow: 1;
     min-height: 0;
+
+    .mobile-view & {
+      &:not(.toolbar-visible) {
+        .d-editor-button-bar {
+          display: none;
+        }
+      }
+    }
   }
 
   .submit-panel {
     align-items: center;
     display: flex;
     flex-shrink: 0;
-    margin-top: 8px;
+    margin-top: 0.5em;
+
+    @include breakpoint("mobile-extra-large") {
+      flex-wrap: wrap;
+      gap: 0.25em 0;
+
+      .create {
+        max-width: 50vw;
+
+        span {
+          @include ellipsis;
+        }
+      }
+    }
+
+    .mobile-file-upload {
+      &.hidden + .mobile-preview {
+        // Hide preview button while file is uploading to make room for upload progress
+        display: none;
+      }
+    }
+
+    .mobile-preview {
+      margin-left: 0.25em;
+    }
   }
 
   .save-or-cancel {
@@ -366,6 +513,11 @@ html.composer-open {
     flex: 0 1 auto;
     margin-right: 1em;
 
+    @include breakpoint("mobile-extra-large") {
+      margin-right: 0.5em;
+      flex: 1 1 auto;
+    }
+
     .btn-primary {
       flex: 0 0 auto;
     }
@@ -373,15 +525,29 @@ html.composer-open {
     .cancel {
       align-items: center;
       display: flex;
-      margin-left: 1.25em;
+      margin-left: 1em;
       line-height: normal;
       color: var(--primary-high);
       transition: color 250ms;
+      padding: 0;
 
       &:hover,
       &:focus {
         outline: none;
         color: var(--danger);
+      }
+
+      &:active {
+        background-color: transparent;
+        background-image: none;
+      }
+
+      @include breakpoint("mobile-extra-large") {
+        .d-icon {
+          font-size: var(--font-up-2);
+          color: var(--primary-medium);
+          padding: 0.35em;
+        }
       }
     }
 
@@ -394,16 +560,26 @@ html.composer-open {
   #file-uploading {
     color: var(--primary-high);
     margin-right: 0.5em;
+
+    @include breakpoint("mobile-extra-large") {
+      margin-left: 0.5em;
+    }
+
+    @include breakpoint("mobile-extra-large", min-width) {
+      text-align: right;
+    }
   }
 
   #file-uploading {
     display: flex;
     align-items: center;
     margin-right: auto;
+
     a {
       margin-left: 0.33em;
       color: var(--primary-high);
     }
+
     .spinner {
       margin-right: 0.33em;
     }
@@ -411,18 +587,16 @@ html.composer-open {
 
   #draft-status {
     margin-left: auto;
+
     .d-icon-user-pen {
       color: var(--danger);
       font-size: 20px;
       vertical-align: -5.5px;
     }
+
     + .btn-mini-toggle {
       margin-left: 0;
     }
-  }
-
-  #file-uploader {
-    display: none;
   }
 
   .composer-select-form-template {
@@ -433,6 +607,67 @@ html.composer-open {
     .formatted-selection,
     .d-icon {
       color: var(--primary-high);
+    }
+  }
+
+  .select-kit.is-expanded {
+    z-index: z("composer", "dropdown") + 1;
+
+    &.user-chooser {
+      // keeps user chooser a layer above AI autocomplete
+      z-index: z("composer", "dropdown") + 2;
+    }
+  }
+
+  @include breakpoint("mobile-extra-large", min-width) {
+    &.private-message {
+      .with-tags {
+        .title-and-category {
+          flex-wrap: nowrap;
+          gap: 0.5em;
+
+          .tags-input {
+            max-width: 50%;
+            flex: 1 1 auto;
+          }
+        }
+
+        .title-input {
+          max-width: 50%;
+          min-width: 0;
+
+          input {
+            min-width: 0;
+          }
+        }
+      }
+
+      #private-message-users,
+      .users-input {
+        width: 100%;
+        flex: 0 0 auto;
+
+        &.can-warn {
+          // space for warning, inverse of mini-tag-chooser width
+          width: 60%;
+        }
+      }
+
+      .add-warning {
+        flex: 1 1 auto;
+        overflow: hidden;
+
+        span {
+          // protects the space of the user input in case there's a very long translation
+          @include ellipsis;
+        }
+      }
+    }
+  }
+
+  &.closed {
+    .grippie {
+      display: none;
     }
   }
 }
@@ -447,6 +682,10 @@ html.composer-open {
   box-shadow: var(--shadow-dropdown);
   border-radius: 8px;
 
+  @include breakpoint("mobile-extra-large", min-width) {
+    max-width: 600px;
+  }
+
   ul {
     list-style: none;
     padding: 0;
@@ -457,10 +696,12 @@ html.composer-open {
         border-top-left-radius: 8px;
         border-top-right-radius: 8px;
       }
+
       &:last-of-type a {
         border-bottom-left-radius: 8px;
         border-bottom-right-radius: 8px;
       }
+
       a {
         @include ellipsis;
         align-items: center;
@@ -523,6 +764,7 @@ html.composer-open {
     li a {
       padding: 0.5em 1em;
     }
+
     .emoji {
       height: 0.75em;
       width: 0.75em;
@@ -533,6 +775,7 @@ html.composer-open {
     li:last-of-type a {
       color: var(--primary-high);
     }
+
     .emoji {
       margin-right: 0.25em;
     }
@@ -543,6 +786,7 @@ div.ac-wrap.disabled {
   input {
     display: none;
   }
+
   .item a {
     display: none;
   }
@@ -557,6 +801,7 @@ div.ac-wrap div.item a.remove,
   border-radius: 12px;
   box-sizing: border-box;
   border: 1px solid var(--primary-low);
+
   &:hover {
     background-color: var(--danger-low);
     border: 1px solid var(--danger-medium);
@@ -572,10 +817,12 @@ div.ac-wrap {
   align-items: center;
   min-height: 30px;
   box-sizing: border-box;
+
   div.item {
     float: left;
     padding: 4px 10px;
     line-height: var(--line-height-large);
+
     span {
       display: inline-block;
       line-height: var(--line-height-medium);
@@ -592,6 +839,7 @@ div.ac-wrap {
 
   input[type="text"] {
     float: left;
+
     &.fullwidth-input {
       width: 100%;
     }
@@ -601,49 +849,11 @@ div.ac-wrap {
 .md-table {
   overflow-y: auto;
   margin: 1em 0;
+
   .mobile-view & {
     table {
       width: 100%;
     }
-  }
-}
-
-@keyframes transformer {
-  90% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
-}
-
-body.ios-safari-composer-hacks {
-  #main-outlet,
-  header,
-  .grippie,
-  html:not(.fullscreen-composer) & .toggle-fullscreen {
-    display: none;
-  }
-
-  #reply-control {
-    top: 0px;
-    &.open {
-      height: calc(var(--composer-vh, 1vh) * 100);
-    }
-  }
-}
-
-body:not(.ios-safari-composer-hacks) {
-  #reply-control.open {
-    --min-height: 255px;
-    min-height: var(--min-height);
-    max-height: calc(100vh - var(--header-offset, 4em));
-    &.composer-action-reply {
-      // we can let the reply composer get a little shorter
-      min-height: calc(var(--min-height) - 4em);
-    }
-    padding-bottom: var(--composer-ipad-padding);
-    box-sizing: border-box;
   }
 }
 
@@ -662,4 +872,459 @@ body:not(.ios-safari-composer-hacks) {
 
 .draft-error {
   color: var(--danger);
+}
+
+@keyframes blink_input_opacity_to_prevent_scrolling_when_focus {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+// Limiting to hover: none ensures we don't target touch-enabled desktops here
+@media (hover: none) {
+  // This targets mobile/iPad/tablets and it goes together with
+  // the interactive-widget=resizes-content in the viewport meta tag
+  // for maximum browser compatibility (including Firefox on Android)
+  // see https://developer.chrome.com/blog/viewport-resize-behavior for context
+  .discourse-touch,
+  .mobile-device {
+    #reply-control {
+      // this might be overkill
+      // but on iPad with a physical keyboard the composer is shifted up on scroll
+      // this adds a solid box shadow below, looks cleaner
+      box-shadow: 0 150px 0 0 var(--secondary);
+
+      &.open {
+        z-index: z("mobile-composer");
+      }
+
+      &.draft,
+      &.saving {
+        padding-bottom: env(safe-area-inset-bottom);
+      }
+
+      .toggle-fullscreen {
+        display: none;
+      }
+
+      .submit-panel,
+      .composer-fields,
+      .d-editor-button-bar {
+        // this prevents touch events (i.e. accidental scrolls) from bubbling up
+        touch-action: none;
+      }
+    }
+
+    &.keyboard-visible #reply-control.open {
+      height: calc(var(--composer-vh, 1vh) * 100);
+
+      .grippie {
+        display: none;
+      }
+
+      .reply-area {
+        padding-bottom: 0.375em;
+      }
+    }
+
+    &.composer-open .with-topic-progress {
+      bottom: calc(var(--composer-height));
+    }
+  }
+}
+
+.mobile-device {
+  #reply-control {
+    .grippie {
+      display: none;
+    }
+
+    &.open.show-preview {
+      height: 70vh;
+    }
+
+    &.show-preview {
+      .submit-panel {
+        padding-top: 0.5em;
+        z-index: z("fullscreen") + 1;
+        background-color: var(--secondary);
+
+        .cancel,
+        .mobile-file-upload,
+        .mobile-preview {
+          display: none;
+        }
+      }
+
+      .d-editor-preview-wrapper {
+        position: absolute;
+        z-index: z("fullscreen");
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: var(--secondary);
+        border-bottom: 40px solid var(--secondary);
+        max-width: 100%;
+        margin: 0;
+        padding: 0.5em;
+        overflow: auto;
+
+        .d-editor-preview {
+          margin-bottom: 40px;
+        }
+      }
+
+      .composer-controls {
+        display: none;
+      }
+    }
+  }
+}
+
+// Safari in iOS/iPad does not handle well a bottom:0 fixed-positioned element,
+// especially while the software keyboard is visible, so we top-anchor it here
+// and shift it using transform
+.ios-device {
+  #reply-control {
+    // the two properties below are equivalent to bottom: 0
+    top: calc(var(--composer-vh, 1vh) * 100);
+    transform: translateY(-100%);
+    bottom: unset;
+  }
+
+  &.footer-nav-visible {
+    #reply-control.draft,
+    #reply-control.saving {
+      margin-top: calc(
+        (var(--footer-nav-height) + env(safe-area-inset-bottom)) * -1
+      );
+      padding-bottom: 0;
+    }
+  }
+
+  // When an element (input, textearea) gets focus, iOS Safari tries to put it in the center
+  // by scrolling and zooming. We handle zooming with a meta tag. We used to handle scrolling
+  // using a complicated JS hack.
+  //
+  // However, iOS Safari doesn't scroll when the input has opacity of 0 or is clipped.
+  // We use this quirk and temporarily hide the element on focus
+  //
+  // Source https://gist.github.com/kiding/72721a0553fa93198ae2bb6eefaa3299
+  input:focus,
+  textarea:focus {
+    animation: blink_input_opacity_to_prevent_scrolling_when_focus 0.01s;
+  }
+}
+
+.composer-popup {
+  box-sizing: border-box;
+  position: absolute;
+  width: calc(50% - 16px);
+  top: 19px; // grippie (11px) + .reply-area padding (8px)
+  bottom: 8px;
+  right: 8px;
+  overflow-y: auto;
+  z-index: z("composer", "dropdown") + 1;
+  padding: 1.5em;
+  box-shadow: var(--shadow-dropdown);
+  background: var(--highlight-bg);
+
+  > p,
+  h3 {
+    &:first-of-type {
+      margin-top: 0;
+      margin-right: 3em;
+    }
+  }
+
+  &.urgent {
+    background: var(--danger-low);
+  }
+
+  &.education-message {
+    background-color: var(--tertiary-low);
+  }
+
+  &.dominating-topic-message,
+  &.get-a-room {
+    bottom: unset;
+    padding: 2.25em 6em 2.5em 2.25em;
+
+    p {
+      font-size: var(--font-up-1);
+    }
+
+    button:not(.close) {
+      margin-top: 0.5em;
+    }
+  }
+
+  h3 {
+    margin-bottom: 10px;
+  }
+
+  .btn.close {
+    flex-direction: row-reverse;
+    align-items: center;
+    position: absolute;
+    right: 0;
+    top: 0;
+    color: var(--primary-medium);
+    font-size: var(--font-0);
+
+    .d-icon {
+      color: currentcolor;
+      font-size: var(--font-up-1);
+      margin: 0 0 0 0.25em;
+    }
+
+    .discourse-no-touch & {
+      &:active,
+      &:focus {
+        background: transparent;
+
+        .d-icon {
+          color: var(--primary);
+        }
+      }
+    }
+  }
+
+  ul {
+    margin: 0;
+    padding: 0 0 0 1.5em;
+
+    &.list,
+    &.topics {
+      list-style: none;
+      padding: 0;
+    }
+
+    li {
+      font-weight: normal;
+      margin-top: 8px;
+    }
+  }
+
+  &:nth-of-type(2) {
+    width: calc(50% - 65px);
+  }
+}
+
+.custom-body {
+  background-color: var(--tertiary-low);
+
+  p {
+    max-width: 98%;
+  }
+}
+
+.similar-topics {
+  background-color: var(--tertiary-low);
+
+  .similar-topic {
+    margin-bottom: 0.5em;
+  }
+
+  a[href] {
+    color: var(--primary);
+  }
+
+  .posts-count {
+    background-color: var(--tertiary);
+  }
+
+  .topic-title {
+    flex: 0 1 auto;
+    margin-right: 0.5em;
+  }
+
+  span.badge-wrapper {
+    margin-left: 0;
+  }
+
+  .blurb {
+    color: var(--primary-high);
+  }
+
+  .topic-title,
+  .blurb {
+    margin-bottom: 0.5em;
+
+    .d-icon {
+      color: var(--primary-high);
+    }
+  }
+
+  span.topic {
+    display: flex;
+    flex-direction: column;
+
+    .first-line {
+      flex: 1;
+    }
+
+    .second-line {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 0.5em;
+
+      .discourse-tags {
+        font-size: var(--font-down-1);
+      }
+    }
+  }
+}
+
+.fullscreen-composer {
+  overflow: hidden;
+
+  .profiler-results {
+    display: none;
+  }
+
+  #reply-control {
+    &.fullscreen {
+      // important needed because of inline styles when height is changed manually with grippie
+      height: 100vh !important;
+      max-height: 100%; // prevents devices from miscalculating using vh
+      z-index: z("header") + 1;
+
+      @supports (--custom: property) {
+        height: calc(var(--composer-vh, 1vh) * 100) !important;
+      }
+
+      .d-editor-preview-wrapper {
+        margin-top: 1%;
+      }
+
+      .reply-to {
+        border-bottom: 1px solid var(--primary-low);
+        margin-bottom: 0;
+        padding-bottom: 8px;
+      }
+
+      .d-editor-textarea-wrapper {
+        border: none;
+      }
+
+      &.show-preview .d-editor-textarea-wrapper {
+        border-right: 1px solid var(--primary-low);
+      }
+
+      #draft-status,
+      #file-uploading {
+        margin-left: 0;
+        text-align: initial;
+      }
+
+      .composer-popup {
+        top: 30px;
+      }
+
+      &::before {
+        content: "";
+        background: var(--secondary);
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        z-index: -1;
+        left: 0;
+      }
+    }
+  }
+}
+
+.composer-fullscreen-prompt {
+  animation: fadeIn 1s ease-in-out;
+  animation-delay: 1.5s;
+  animation-direction: reverse;
+  animation-fill-mode: forwards;
+  position: fixed;
+  left: 50%;
+  top: 10%;
+  transform: translate(-50%, 0);
+  z-index: z("header") + 1;
+  background: var(--primary-very-high);
+  color: var(--secondary);
+  padding: 0.5em 0.75em;
+  pointer-events: none;
+  border-radius: 2px;
+
+  @media (prefers-reduced-motion) {
+    animation-duration: 0s;
+  }
+
+  .rtl & {
+    // R2 is not smart enough to support this swap
+    transform: translate(50%, 0);
+  }
+
+  kbd {
+    background: none;
+  }
+}
+
+// align the previewless composer with the topic content
+#reply-control:not(.fullscreen).hide-preview {
+  --composer-internal-padding: 1em;
+  --layout-gap: 2em;
+  --topic-width: calc(
+    var(--topic-body-width) + (var(--topic-body-width-padding) * 2)
+  );
+  width: 100%;
+  max-width: calc(var(--topic-width) + var(--topic-avatar-width));
+}
+
+body:not(.has-sidebar-page) {
+  #reply-control:not(.fullscreen).hide-preview {
+    margin-left: 0.67em;
+
+    // 1100px is equivalent to --d-max-width
+    @media screen and (width >= 1110px) {
+      margin-left: calc(((100% - var(--d-max-width)) / 2) + 0.67em);
+    }
+
+    // 790px is equivalent to --topic-width
+    @media screen and (width < 790px) {
+      max-width: calc(100% - calc(0.67em * 2));
+      margin-left: 0.67em;
+    }
+
+    @include breakpoint("mobile-extra-large") {
+      max-width: unset;
+      margin-inline: unset;
+    }
+  }
+}
+
+body.has-sidebar-page {
+  #reply-control:not(.fullscreen).hide-preview {
+    margin-left: calc(var(--d-sidebar-width) + var(--layout-gap));
+
+    // 1390px is equivalent to --d-max-width + --d-sidebar-width
+    @media screen and (width >= 1390px) {
+      left: calc(
+        (100% - var(--d-max-width) + var(--d-sidebar-width)) / 2
+      ); // 50% of the whitespace
+      margin-left: var(--layout-gap);
+    }
+
+    // This is when the topic width starts to shrink
+    @media screen and (width <= 1180px) {
+      width: calc(100% - var(--d-sidebar-width) - var(--layout-gap) - 0.67em);
+    }
+
+    // sidebar shrinks
+    @media screen and (width <= 1000px) {
+      --layout-gap: 1em;
+      margin-left: calc(var(--d-sidebar-width) + var(--layout-gap));
+    }
+  }
 }

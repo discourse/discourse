@@ -1,10 +1,9 @@
 import { click, fillIn, settled, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { toggleCheckDraftPopup } from "discourse/services/composer";
+import { cloneJSON } from "discourse/lib/object";
 import TopicFixtures from "discourse/tests/fixtures/topic";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { cloneJSON } from "discourse-common/lib/object";
 
 const FORM_TEMPLATES = [
   {
@@ -113,8 +112,6 @@ acceptance("Composer Form Template", function (needs) {
       return helper.response(topicList);
     });
   });
-
-  needs.hooks.afterEach(() => toggleCheckDraftPopup(false));
 
   test("Composer Form Template is shrank and reopened", async function (assert) {
     await visit("/");

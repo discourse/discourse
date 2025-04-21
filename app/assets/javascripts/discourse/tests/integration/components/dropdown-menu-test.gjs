@@ -15,9 +15,13 @@ module("Integration | Component | <DropdownMenu />", function (hooks) {
   });
 
   test("dropdown menu item", async function (assert) {
-    await render(<template>
-      <DropdownMenu as |dm|><dm.item class="test">test</dm.item></DropdownMenu>
-    </template>);
+    await render(
+      <template>
+        <DropdownMenu as |dm|><dm.item
+            class="test"
+          >test</dm.item></DropdownMenu>
+      </template>
+    );
 
     assert
       .dom("li.dropdown-menu__item.test")
@@ -26,9 +30,11 @@ module("Integration | Component | <DropdownMenu />", function (hooks) {
   });
 
   test("dropdown menu divider", async function (assert) {
-    await render(<template>
-      <DropdownMenu as |dm|><dm.divider class="test" /></DropdownMenu>
-    </template>);
+    await render(
+      <template>
+        <DropdownMenu as |dm|><dm.divider class="test" /></DropdownMenu>
+      </template>
+    );
 
     assert
       .dom("li.test hr.dropdown-menu__divider")

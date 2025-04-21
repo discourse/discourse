@@ -37,6 +37,7 @@ tr_TR:
     default_poll_with_multiple_choices_has_invalid_parameters: "Çoktan seçmeli ankette geçersiz parametreler bulunuyor."
     named_poll_with_multiple_choices_has_invalid_parameters: "Çoktan seçmeli <strong>%{name}</strong> adlı anket geçersiz parametrelere sahip."
     requires_at_least_1_valid_option: "En az 1 geçerli seçenek belirlemelisiniz."
+    requires_that_at_least_one_option_is_ranked: "Sıralı seçim anketlerinde en az bir seçeneği sıralamanız gerekir."
     edit_window_expired:
       cannot_edit_default_poll_with_votes: "İlk %{minutes} dakikadan sonra bir anketi değiştiremezsiniz."
       cannot_edit_named_poll_with_votes: "İlk %{minutes} dakikadan sonra <strong>${name}</strong> adlı anketi değiştiremezsiniz."

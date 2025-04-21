@@ -6,14 +6,20 @@
 
 fi:
   js:
+    admin:
+      logs:
+        staff_actions:
+          actions:
+            delete_automation: poista automaatio
     discourse_automation:
       title: Automaatio
-      create: Aloitus
-      update: Päivitä
+      back: Takaisin
+      edit: Muokkaa
       select_script: Valitse skripti
       select_trigger: Valitse triggeri
       confirm_automation_reset: Tämä toiminto nollaa skripti- ja triggeriasetukset, uusi tila tallennetaan. Haluatko jatkaa?
       confirm_automation_trigger: Tämä toiminto käynnistää automaation, haluatko jatkaa?
+      filter_placeholder: Suodata nimen tai kuvauksen mukaan...
       edit_automation:
         trigger_section:
           forced: Tämä triggeri on skriptin pakottama.
@@ -143,6 +149,9 @@ fi:
               label: Ketjun tunnus
         post_created_edited:
           fields:
+            original_post_only:
+              label: Vain alkuperäinen viesti
+              description: Käynnistyy vain, jos viesti on ketjun alkuperäinen viesti
             action_type:
               label: Toiminnon tyyppi
               description: "Valinnainen, rajaa käynnistyksen vain luomis- tai muokkaustapahtumiin"
@@ -152,17 +161,10 @@ fi:
             restricted_tags:
               label: Tunnisteet
               description: Valinnainen, käynnistyy vain, jos viestillä on jokin näistä tunnisteista
-            restricted_category:
-              label: Alue
-              description: Valinnainen, käynnistyy vain, jos viestin ketju on tällä alueella
-            restricted_group:
-              label: Ryhmä
-              description: Valinnainen, käynnistyy vain, jos viestin ketju on yksityisviesti tämän ryhmän postilaatikossa
-            restricted_groups:
-              label: Ryhmät
-            ignore_group_members:
-              label: Ohita ryhmän jäsenet
-              description: Ohita triggeri, jos lähettäjä on edellä määritellyn ryhmän jäsen
+            restricted_categories:
+              label: Luokat
+            restricted_inbox_groups:
+              description: Valinnainen, käynnistyy vain, jos viestin ketju on henkilökohtainen viesti jossakin ryhmän postilaatikoista
             ignore_automated:
               label: Ohita automaattiset
               description: Ohita triggeri, jos lähettäjällä on sähköpostiosoite, joka ei ota vastaan vastauksia, tai se on automatisoidusta lähteestä. Koskee vain sähköpostitse luotuja viestejä.
@@ -172,8 +174,15 @@ fi:
             first_topic_only:
               label: Vain ensimmäinen ketju
               description: Käynnistyy vain, jos ketju on ensimmäinen käyttäjän luoma ketju
+            skip_via_email:
+              label: "Ohita sähköpostitse"
+              description: "Ohita triggeri, jos viesti on luotu sähköpostitse"
           created: Luotu
           edited: Muokattu
+          with_images: Kuvat
+          with_links: Linkit
+          with_code: Koodi
+          with_uploads: Lataukset
         user_updated:
           fields:
             user_profile:
@@ -214,6 +223,10 @@ fi:
               label: Kelvolliset luottamustasot
               description: Käynnistyy vain, jos viestin on luonut käyttäjä, jonka luottamustaso on jokin näistä; oletusarvo on mikä tahansa luottamustaso
         topic_tags_changed:
+          trigger_on_modes:
+            tags_added_or_removed: Tunnisteita lisätty tai poistettu
+            tags_added: Tunnisteita lisätty
+            tags_removed: Tunnisteita poistettu
           fields:
             watching_categories:
               label: Tarkkailussa olevat alueet
@@ -221,6 +234,11 @@ fi:
             watching_tags:
               label: Tarkkailussa olevat tunnisteet
               description: Käynnistyy vain, jos ketjulla on jokin näistä tunnisteista
+            trigger_on:
+              label: Triggeri
+            trigger_with_pms:
+              label: Käynnistä yksityisviesteillä
+              description: Käynnistyy, vaikka tunnisteet olisi muutettu yksityisviestillä
         after_post_cook:
           fields:
             valid_trust_levels:
@@ -379,6 +397,7 @@ fi:
           fields:
             custom_field_name:
               label: "Käyttäjän mukautetun kentän nimi"
+      unnamed_automation: "Nimetön automaatio"
       models:
         script:
           name:
@@ -395,6 +414,8 @@ fi:
             label: Skripti
           version:
             label: Versio
+          status:
+            label: Tila
           enabled:
             label: Käytössä
           disabled:

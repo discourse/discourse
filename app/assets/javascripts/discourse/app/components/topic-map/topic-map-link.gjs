@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
+import { and } from "truth-helpers";
 import replaceEmoji from "discourse/helpers/replace-emoji";
-import i18n from "discourse-common/helpers/i18n";
-import and from "truth-helpers/helpers/and";
+import { i18n } from "discourse-i18n";
 
 const TRUNCATE_LENGTH_LIMIT = 85;
 
@@ -31,11 +31,13 @@ export default class TopicMapLink extends Component {
       data-clicks={{@clickCount}}
       aria-label={{i18n "topic_map.clicks" count=@clickCount}}
     >
-      {{#if @title}}
-        {{replaceEmoji this.truncatedContent}}
-      {{else}}
-        {{this.truncatedContent}}
-      {{/if}}
+      <span class="content">
+        {{#if @title}}
+          {{replaceEmoji this.truncatedContent}}
+        {{else}}
+          {{this.truncatedContent}}
+        {{/if}}
+      </span>
     </a>
     {{#if (and @title @rootDomain)}}
       <span class="domain">

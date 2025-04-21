@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { concat, hash } from "@ember/helper";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import PostsCountColumn from "discourse/components/topic-list/posts-count-column";
+import ItemRepliesCell from "discourse/components/topic-list/item/replies-cell";
 import TopicPostBadges from "discourse/components/topic-post-badges";
 import TopicStatus from "discourse/components/topic-status";
 import UserAvatarFlair from "discourse/components/user-avatar-flair";
@@ -13,10 +13,17 @@ import discourseTags from "discourse/helpers/discourse-tags";
 import formatDate from "discourse/helpers/format-date";
 import topicFeaturedLink from "discourse/helpers/topic-featured-link";
 import topicLink from "discourse/helpers/topic-link";
+import { applyValueTransformer } from "discourse/lib/transformer";
 
 export default class LatestTopicListItem extends Component {
   get tagClassNames() {
     return this.args.topic.tags?.map((tagName) => `tag-${tagName}`);
+  }
+
+  get additionalClasses() {
+    return applyValueTransformer("latest-topic-list-item-class", [], {
+      topic: this.args.topic,
+    });
   }
 
   <template>
@@ -32,6 +39,7 @@ export default class LatestTopicListItem extends Component {
         (if @topic.pinned "pinned")
         (if @topic.closed "closed")
         (if @topic.visited "visited")
+        this.additionalClasses
       }}
     >
       <PluginOutlet
@@ -40,31 +48,51 @@ export default class LatestTopicListItem extends Component {
         @outletArgs={{hash topic=@topic}}
       />
 
-      <div class="topic-poster">
-        <UserLink @user={{@topic.lastPosterUser}}>
-          {{avatar @topic.lastPosterUser imageSize="large"}}
-        </UserLink>
-        <UserAvatarFlair @user={{@topic.lastPosterUser}} />
-      </div>
+      <PluginOutlet
+        @name="latest-topic-list-item-topic-poster"
+        @outletArgs={{hash topic=@topic}}
+      >
+        <div class="topic-poster">
+          <UserLink @user={{@topic.lastPosterUser}}>
+            {{avatar @topic.lastPosterUser imageSize="large"}}
+          </UserLink>
+          <UserAvatarFlair @user={{@topic.lastPosterUser}} />
+        </div>
+      </PluginOutlet>
 
       <div class="main-link">
         <div class="top-row">
-          <TopicStatus @topic={{@topic}} />
+          <PluginOutlet
+            @name="latest-topic-list-item-main-link-top-row"
+            @outletArgs={{hash topic=@topic}}
+          >
+            <TopicStatus @topic={{@topic}} @context="topic-list" />
 
-          {{topicLink @topic}}
-          {{~#if @topic.featured_link}}
-            &nbsp;{{topicFeaturedLink @topic}}
-          {{/if~}}
-          <TopicPostBadges
-            @unreadPosts={{@topic.unread_posts}}
-            @unseen={{@topic.unseen}}
-            @url={{@topic.lastUnreadUrl}}
-          />
+            {{topicLink @topic}}
+            {{~#if @topic.featured_link}}
+              &nbsp;{{topicFeaturedLink @topic}}
+            {{/if~}}
+            <TopicPostBadges
+              @unreadPosts={{@topic.unread_posts}}
+              @unseen={{@topic.unseen}}
+              @url={{@topic.lastUnreadUrl}}
+            />
+          </PluginOutlet>
         </div>
 
         <div class="bottom-row">
-          {{categoryLink @topic.category~}}
-          {{~discourseTags @topic mode="list"}}
+          <PluginOutlet
+            @name="latest-topic-list-item-main-link-bottom-row"
+            @outletArgs={{hash topic=@topic}}
+          >
+            {{categoryLink @topic.category~}}
+            {{~discourseTags @topic mode="list"}}
+          </PluginOutlet>
+          <PluginOutlet
+            @name="below-latest-topic-list-item-bottom-row"
+            @connectorTagName="span"
+            @outletArgs={{hash topic=@topic}}
+          />
         </div>
       </div>
 
@@ -74,15 +102,18 @@ export default class LatestTopicListItem extends Component {
           @connectorTagName="div"
           @outletArgs={{hash topic=@topic}}
         />
-
-        <PostsCountColumn @topic={{@topic}} @tagName="div" />
-
-        <div class="topic-last-activity">
-          <a
-            href={{@topic.lastPostUrl}}
-            title={{@topic.bumpedAtTitle}}
-          >{{formatDate @topic.bumpedAt format="tiny" noTitle="true"}}</a>
-        </div>
+        <PluginOutlet
+          @name="latest-topic-list-item-topic-stats"
+          @outletArgs={{hash topic=@topic}}
+        >
+          <ItemRepliesCell @topic={{@topic}} @tagName="div" />
+          <div class="topic-last-activity">
+            <a
+              href={{@topic.lastPostUrl}}
+              title={{@topic.bumpedAtTitle}}
+            >{{formatDate @topic.bumpedAt format="tiny" noTitle="true"}}</a>
+          </div>
+        </PluginOutlet>
       </div>
     </div>
   </template>

@@ -1,8 +1,9 @@
+@use "lib/viewport";
+
 // Common
 // global styles that apply to the Discourse application specifically
 // BEWARE: changing these styles implies they take effect anywhere they are seen
 // throughout the Discourse application
-
 :root {
   --d-input-bg-color: var(--secondary);
   --d-input-text-color: var(--primary);
@@ -19,6 +20,7 @@
   --d-nav-border-color--active: var(--d-nav-color--active);
   --d-nav-underline-height: 0.125em;
   --safe-area-inset-bottom: env(safe-area-inset-bottom);
+  --nav-space: 0.75em;
 }
 
 // Animation Keyframes
@@ -26,6 +28,7 @@
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }
@@ -35,6 +38,7 @@
   0% {
     background-color: var(--tertiary-low);
   }
+
   100% {
     background-color: transparent;
   }
@@ -45,6 +49,7 @@
   0% {
     background-position: -1000px 0;
   }
+
   100% {
     background-position: 1100px 0;
   }
@@ -57,7 +62,6 @@
     animation-iteration-count: infinite;
     animation-name: placeHolderShimmer;
     animation-timing-function: linear;
-    background: var(--primary-very-low);
     background: linear-gradient(
       to right,
       var(--primary-very-low) 10%,
@@ -85,13 +89,15 @@ body {
 big {
   font-size: var(--font-up-5);
 }
+
 small {
   font-size: var(--font-down-2);
 }
 
 blockquote {
-  @include post-aside;
   clear: both;
+
+  @include post-aside;
 }
 
 h1,
@@ -110,6 +116,7 @@ a.cancel {
   line-height: normal;
   color: var(--primary-high);
   transition: var(--d-button-transition);
+
   &:hover {
     color: var(--danger);
   }
@@ -149,10 +156,12 @@ label {
   &:not(.checkbox-label) {
     font-weight: bold;
   }
+
   > .d-icon {
     align-self: center;
     margin-right: 4px;
   }
+
   a {
     // flex removes whitespace characters between text nodes and elements
     // so we need to add it back
@@ -170,6 +179,7 @@ input {
     cursor: pointer;
     flex-shrink: 0; // Adding for safety, Safari will shrink checkboxes
   }
+
   &[type="submit"],
   &[type="reset"],
   &[type="button"],
@@ -187,9 +197,7 @@ input {
     float: left;
     margin-left: -18px;
   }
-}
 
-input {
   &[type="text"],
   &[type="password"],
   &[type="datetime"],
@@ -204,8 +212,8 @@ input {
   &[type="search"],
   &[type="tel"],
   &[type="color"] {
-    @include appearance-none;
     @include form-item-sizing;
+    appearance: none;
     display: inline-block;
     margin-bottom: 9px;
     color: var(--d-input-text-color);
@@ -213,8 +221,26 @@ input {
     border: var(--d-input-border);
     border-radius: var(--d-input-border-radius);
     color-scheme: var(--scheme-type);
+
     &:focus {
       @include default-focus;
+    }
+  }
+
+  &[type="color"] {
+    border: var(--d-input-border);
+    border-radius: var(--d-input-border-radius);
+    cursor: pointer;
+    padding: 0;
+    margin-bottom: 0;
+
+    &::-webkit-color-swatch-wrapper {
+      padding: 0;
+    }
+
+    &::-webkit-color-swatch {
+      border: none;
+      border-radius: 0;
     }
   }
 
@@ -226,7 +252,6 @@ input {
 input[type="search"] {
   &::-webkit-search-cancel-button,
   &::-webkit-search-decoration {
-    -webkit-appearance: none;
     appearance: none;
   }
 }
@@ -280,7 +305,7 @@ input,
 select,
 textarea {
   color: var(--d-input-text-color);
-  caret-color: currentColor;
+  caret-color: currentcolor;
 
   &[disabled],
   &[readonly] {
@@ -298,20 +323,26 @@ textarea {
 }
 
 // Common Classes
-
 .sortable {
   white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+
   .discourse-no-touch & {
     &:hover,
     &:focus {
       background-color: var(--primary-low);
     }
   }
+
   .d-icon {
     margin-left: 0.25em;
   }
-  @include unselectable;
-  cursor: pointer;
+
+  button {
+    background: none;
+    border: none;
+  }
 }
 
 .radio,
@@ -346,6 +377,7 @@ textarea {
   margin-right: auto;
   margin-left: auto;
   padding: 0 var(--d-wrap-padding-h);
+
   .contents {
     position: relative;
   }
@@ -367,9 +399,11 @@ textarea {
 
 .tip {
   display: inline-block;
+
   &.good {
     color: var(--success);
   }
+
   &.bad {
     color: var(--danger);
   }
@@ -400,10 +434,11 @@ textarea {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 1.25em;
+  width: 1em;
   background-color: var(--secondary);
   border-radius: 50%;
-  height: 1.25em;
+  height: 1em;
+  box-shadow: 0 0 0 2px var(--secondary);
 
   .d-icon.d-icon-discourse-dnd {
     color: var(--header_primary-medium) !important;
@@ -436,69 +471,6 @@ textarea {
   }
 }
 
-.user-menu .quick-access-panel li.user-status .relative-date {
-  text-align: left;
-  font-size: var(--font-down-3);
-  padding-top: 0.45em;
-  margin-left: 0.75em;
-  color: var(--primary-medium);
-}
-
-.user-menu .quick-access-panel li.do-not-disturb {
-  display: flex;
-  flex: 0 0 100%;
-  flex-wrap: wrap;
-  align-items: center;
-  background: var(--secondary);
-
-  .do-not-disturb-inner-container {
-    display: flex;
-    width: 100%;
-    align-items: center;
-
-    .do-not-disturb-label {
-      display: flex;
-      align-items: center;
-    }
-
-    .relative-date {
-      text-align: left;
-      font-size: var(--font-down-3);
-      padding-top: 3px;
-      margin-left: 0.75em;
-      color: var(--primary-medium);
-    }
-
-    .d-icon-toggle-off,
-    .d-icon-toggle-on {
-      padding-top: 0;
-    }
-
-    .d-icon-toggle-on {
-      color: var(--tertiary);
-    }
-  }
-}
-
-.do-not-disturb-modal {
-  .do-not-disturb-choice {
-    display: grid;
-    grid-template-columns: 2em 1fr auto;
-    grid-template-rows: auto auto;
-    align-items: center;
-    cursor: pointer;
-    padding: 0.5em 0;
-
-    &:hover {
-      background-color: var(--tertiary-low);
-    }
-
-    label {
-      margin-bottom: 0;
-    }
-  }
-}
-
 .fade {
   opacity: 0;
   transition: opacity 0.15s linear;
@@ -516,7 +488,6 @@ textarea {
 .spinner {
   margin: 20px auto 20px auto;
   position: relative;
-  -webkit-animation: rotate-forever 1s infinite linear;
   animation: rotate-forever 1s infinite linear;
   height: 30px;
   width: 30px;
@@ -591,14 +562,20 @@ textarea {
   .control-group,
   .controls {
     margin-left: 0;
+
     label {
       font-weight: normal;
     }
   }
+
+  .radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+  }
 }
 
 // Special elements
-
 #main-outlet-wrapper {
   box-sizing: border-box;
   width: 100%;
@@ -617,9 +594,19 @@ textarea {
 
 #main-outlet {
   padding-top: 1.5em;
+
+  .mobile-view & {
+    // notch avoidance
+    @media only screen and (orientation: landscape) {
+      padding-right: env(safe-area-inset-right);
+      padding-left: env(safe-area-inset-left);
+    }
+  }
 }
 
 #main {
+  position: relative;
+
   img.avatar {
     &.header {
       width: 45px;
@@ -661,8 +648,10 @@ textarea {
 #footer {
   .container {
     height: 50px;
+
     .contents {
       padding-top: 10px;
+
       a[href] {
         color: var(--secondary);
       }
@@ -744,8 +733,10 @@ textarea {
     grid-area: dropdown;
     align-self: center;
     justify-self: end;
+
     summary {
       background: transparent;
+
       .d-icon {
         color: var(--primary-high);
       }
@@ -760,11 +751,13 @@ textarea {
 .topic-statuses {
   // avoid adding margin/padding on this parent; sometimes it appears as an empty container
   float: left;
+
   .topic-status {
     margin: 0;
     display: inline-flex;
     color: var(--primary-medium);
     margin-right: 0.2em;
+
     .d-icon {
       height: 0.74em;
       width: 0.75em;
@@ -826,8 +819,9 @@ a#skip-link {
   background: var(--tertiary);
   transition: top 0.3s ease-out;
   z-index: z("header") + 1;
+
   &:focus {
-    top: 0px;
+    top: 0;
     transition: top 0.15s ease-in;
   }
 }
@@ -835,8 +829,4 @@ a#skip-link {
 .scroll-lock {
   overflow: hidden !important;
   margin-right: var(--scroll-gap, 0);
-}
-
-.hbr-ember-outlet {
-  display: contents;
 }

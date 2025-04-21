@@ -1,10 +1,11 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import CdnImg from "discourse/components/cdn-img";
-import { getURLWithCDN } from "discourse-common/lib/get-url";
+import { getURLWithCDN } from "discourse/lib/get-url";
 
 export default class LightDarkImg extends Component {
   @service session;
+  @service interfaceColor;
 
   get isDarkImageAvailable() {
     return (
@@ -28,6 +29,16 @@ export default class LightDarkImg extends Component {
     return getURLWithCDN(this.args.darkImg.url);
   }
 
+  get darkMediaQuery() {
+    if (this.interfaceColor.darkModeForced) {
+      return "all";
+    } else if (this.interfaceColor.lightModeForced) {
+      return "none";
+    } else {
+      return "(prefers-color-scheme: dark)";
+    }
+  }
+
   <template>
     {{#if this.isDarkImageAvailable}}
       <picture>
@@ -35,7 +46,7 @@ export default class LightDarkImg extends Component {
           srcset={{this.darkImgCdnSrc}}
           width={{@darkImg.width}}
           height={{@darkImg.height}}
-          media="(prefers-color-scheme: dark)"
+          media={{this.darkMediaQuery}}
         />
         <CdnImg
           ...attributes

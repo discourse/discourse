@@ -1,5 +1,5 @@
 import BaseSectionLink from "discourse/lib/sidebar/base-community-section-link";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class GroupsSectionLink extends BaseSectionLink {
   get name() {
@@ -11,11 +11,11 @@ export default class GroupsSectionLink extends BaseSectionLink {
   }
 
   get title() {
-    return I18n.t("sidebar.sections.community.links.groups.title");
+    return i18n("sidebar.sections.community.links.groups.title");
   }
 
   get text() {
-    return I18n.t(
+    return i18n(
       `sidebar.sections.community.links.${this.overridenName.toLowerCase()}.content`,
       { defaultValue: this.overridenName }
     );

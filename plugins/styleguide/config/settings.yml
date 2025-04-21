@@ -11,3 +11,4 @@ plugins:
     allow_any: false
     refresh: true
     validator: "AtLeastOneGroupValidator"
+    area: "group_permissions"

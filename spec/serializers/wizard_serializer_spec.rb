@@ -14,7 +14,7 @@ RSpec.describe WizardSerializer do
       json = MultiJson.load(MultiJson.dump(serializer.as_json))
 
       expect(json["wizard"]["current_color_scheme"][0]["name"]).to eq("primary")
-      expect(json["wizard"]["current_color_scheme"][0]["hex"]).to eq("222222")
+      expect(json["wizard"]["current_color_scheme"][0]["hex"]).to eq("222")
     end
 
     it "should provide custom colors correctly" do
@@ -55,7 +55,7 @@ RSpec.describe WizardSerializer do
       steps = json["wizard"]["steps"]
 
       expect(steps.first["id"]).to eq("introduction")
-      expect(steps.last["id"]).to eq("corporate")
+      expect(steps.last["id"]).to eq("ready")
 
       privacy_step = steps.find { |s| s["id"] == "privacy" }
       expect(privacy_step).to_not be_nil

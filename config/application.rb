@@ -1,23 +1,11 @@
 # frozen_string_literal: true
 
-if Gem::Version.new(RUBY_VERSION) < Gem::Version.new("3.2.0")
-  STDERR.puts "Discourse requires Ruby 3.2 or above"
-  exit 1
-end
-
 require File.expand_path("../boot", __FILE__)
 require "active_record/railtie"
 require "action_controller/railtie"
 require "action_view/railtie"
 require "action_mailer/railtie"
 require "sprockets/railtie"
-
-if !Rails.env.production?
-  recommended = File.read(".ruby-version.sample").strip
-  if Gem::Version.new(RUBY_VERSION) < Gem::Version.new(recommended)
-    STDERR.puts "[Warning] Discourse recommends developing using Ruby v#{recommended} or above. You are using v#{RUBY_VERSION}."
-  end
-end
 
 # Plugin related stuff
 require_relative "../lib/plugin"
@@ -80,6 +68,7 @@ module Discourse
         super
       end
     end
+
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
@@ -90,7 +79,8 @@ module Discourse
     # tiny file needed by site settings
     require "highlight_js"
 
-    config.load_defaults 7.1
+    config.load_defaults 7.2
+    config.yjit = GlobalSetting.yjit_enabled
     config.active_record.cache_versioning = false # our custom cache class doesn’t support this
     config.action_controller.forgery_protection_origin_check = false
     config.active_record.belongs_to_required_by_default = false
@@ -168,6 +158,9 @@ module Discourse
       config.middleware.insert_after Rack::MethodOverride, Middleware::EnforceHostname
     end
 
+    require "middleware/default_headers"
+    config.middleware.insert_before ActionDispatch::ShowExceptions, Middleware::DefaultHeaders
+
     require "content_security_policy/middleware"
     config.middleware.swap ActionDispatch::ContentSecurityPolicy::Middleware,
                            ContentSecurityPolicy::Middleware
@@ -234,7 +227,10 @@ module Discourse
 
     # Use discourse-fonts gem to symlink fonts and generate .scss file
     fonts_path = File.join(config.root, "public/fonts")
-    Discourse::Utils.atomic_ln_s(DiscourseFonts.path_for_fonts, fonts_path)
+    if !File.exist?(fonts_path) || File.realpath(fonts_path) != DiscourseFonts.path_for_fonts
+      File.delete(fonts_path) if File.exist?(fonts_path)
+      Discourse::Utils.atomic_ln_s(DiscourseFonts.path_for_fonts, fonts_path)
+    end
 
     require "stylesheet/manager"
     require "svg_sprite"

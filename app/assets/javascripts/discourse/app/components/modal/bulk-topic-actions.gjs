@@ -16,7 +16,7 @@ import { topicLevels } from "discourse/lib/notification-levels";
 import Category from "discourse/models/category";
 import Topic from "discourse/models/topic";
 import autoFocus from "discourse/modifiers/auto-focus";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 import CategoryChooser from "select-kit/components/category-chooser";
 import TagChooser from "select-kit/components/tag-chooser";
 
@@ -29,6 +29,7 @@ export function addBulkDropdownAction(name, customAction) {
 export default class BulkTopicActions extends Component {
   @service router;
   @service toasts;
+
   @tracked activeComponent = null;
   @tracked tags = [];
   @tracked categoryId;
@@ -150,14 +151,22 @@ export default class BulkTopicActions extends Component {
         break;
       case "archive_messages":
       case "move_messages_to_inbox":
+        let params = { type: this.model.action };
+
         let userPrivateMessages = getOwner(this).lookup(
           "controller:user-private-messages"
         );
 
-        let params = { type: this.model.action };
-
         if (userPrivateMessages.isGroup) {
           params.group = userPrivateMessages.groupFilter;
+        }
+
+        let groupPrivateMessages = getOwner(this).lookup(
+          "controller:group-messages"
+        );
+
+        if (groupPrivateMessages.isGroup) {
+          params.group = groupPrivateMessages.model.name;
         }
 
         this.performAndRefresh(params);

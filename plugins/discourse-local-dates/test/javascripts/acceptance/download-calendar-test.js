@@ -1,10 +1,10 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
+import { cloneJSON } from "discourse/lib/object";
 import { fixturesByUrl } from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
-import { cloneJSON } from "discourse-common/lib/object";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 acceptance(
   "Local Dates - Download calendar without default calendar option set",
@@ -30,7 +30,7 @@ acceptance(
       assert
         .dom("#discourse-modal-title")
         .hasText(
-          I18n.t("download_calendar.title"),
+          i18n("download_calendar.title"),
           "it should display modal to select calendar"
         );
 
@@ -62,7 +62,7 @@ acceptance(
       assert
         .dom("#discourse-modal-title")
         .hasText(
-          I18n.t("download_calendar.title"),
+          i18n("download_calendar.title"),
           "it should display modal to select calendar"
         );
 

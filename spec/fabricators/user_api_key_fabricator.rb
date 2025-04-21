@@ -14,9 +14,19 @@ end
 
 Fabricator(:user_api_key_scope)
 
+Fabricator(:user_api_key_client_scope)
+
 Fabricator(:user_api_key_client) do
+  transient :scopes
+
   client_id { SecureRandom.hex }
   application_name "some app"
+
+  after_create do |client, transients|
+    if transients[:scopes].present?
+      [*transients[:scopes]].each { |scope| client.scopes.create!(name: scope) }
+    end
+  end
 end
 
 Fabricator(:readonly_user_api_key, from: :user_api_key) do

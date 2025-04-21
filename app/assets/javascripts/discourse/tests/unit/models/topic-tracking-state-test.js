@@ -6,7 +6,6 @@ import { module, test } from "qunit";
 import sinon from "sinon";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import DiscourseURL from "discourse/lib/url";
-import Category from "discourse/models/category";
 import User from "discourse/models/user";
 import {
   fakeTime,
@@ -317,14 +316,12 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
     };
 
     trackingState.sync(list, "unread");
-    assert.strictEqual(
+    assert.false(
       list.topics[0].unseen,
-      false,
       "expect unread topic to be marked as seen"
     );
-    assert.strictEqual(
+    assert.true(
       list.topics[0].prevent_sync,
-      true,
       "expect unread topic to be marked as prevent_sync"
     );
   });
@@ -382,7 +379,7 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
     trackingState.loadStates([{ topic_id: 111 }, { topic_id: 222 }]);
     trackingState.set("_trackedTopicLimit", 5);
     trackingState.sync(list, "unread");
-    assert.ok(
+    assert.true(
       trackingState.states.has("t111"),
       "expect state for topic 111 not to be deleted"
     );
@@ -532,9 +529,8 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
 
     await publishToMessageBus("/delete", { topic_id: 111 });
 
-    assert.strictEqual(
+    assert.true(
       trackingState.findState(111).deleted,
-      true,
       "marks the topic as deleted"
     );
     assert.strictEqual(
@@ -559,9 +555,8 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
 
     await publishToMessageBus("/recover", { topic_id: 111 });
 
-    assert.strictEqual(
+    assert.false(
       trackingState.findState(111).deleted,
-      false,
       "marks the topic as not deleted"
     );
     assert.strictEqual(
@@ -595,7 +590,7 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
       1,
       "increments message count"
     );
-    assert.ok(
+    assert.true(
       DiscourseURL.redirectTo.calledWith("/"),
       "redirect to / because topic is destroyed"
     );
@@ -689,7 +684,9 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
       slug: "baz",
       parent_category_id: bar.id,
     });
-    sinon.stub(Category, "list").returns([foo, bar, baz]);
+
+    const site = getOwner(this).lookup("service:site");
+    site.set("categories", [foo, bar, baz]);
 
     const trackingState = this.store.createRecord("topic-tracking-state");
     assert.deepEqual(Array.from(trackingState.getSubCategoryIds(1)), [1, 2, 3]);
@@ -717,7 +714,9 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
       id: 4,
       slug: "qux",
     });
-    sinon.stub(Category, "list").returns([foo, bar, baz, qux]);
+
+    const site = getOwner(this).lookup("service:site");
+    site.set("categories", [foo, bar, baz, qux]);
 
     let currentUser = this.store.createRecord("user", {
       username: "chuck",
@@ -824,13 +823,13 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
     assert.strictEqual(currentUser.unmuted_topics[0].topicId, 2);
 
     trackingState.pruneOldMutedAndUnmutedTopics();
-    assert.strictEqual(trackingState.isMutedTopic(1), true);
-    assert.strictEqual(trackingState.isUnmutedTopic(2), true);
+    assert.true(trackingState.isMutedTopic(1));
+    assert.true(trackingState.isUnmutedTopic(2));
 
     this.clock.tick(60000);
     trackingState.pruneOldMutedAndUnmutedTopics();
-    assert.strictEqual(trackingState.isMutedTopic(1), false);
-    assert.strictEqual(trackingState.isUnmutedTopic(2), false);
+    assert.false(trackingState.isMutedTopic(1));
+    assert.false(trackingState.isUnmutedTopic(2));
   });
 });
 
@@ -1045,7 +1044,7 @@ module("Unit | Model | topic-tracking-state | /unread", function (hooks) {
       payload: { topic_ids: [112] },
     });
 
-    assert.strictEqual(this.trackingState.findState(112).is_seen, true);
+    assert.true(this.trackingState.findState(112).is_seen);
   });
 
   test("marks a topic as read", async function (assert) {
@@ -1214,11 +1213,7 @@ module("Unit | Model | topic-tracking-state | /new", function (hooks) {
       },
       "new topic loaded into state"
     );
-    assert.strictEqual(
-      stateCallbackCalled,
-      true,
-      "state change callback called"
-    );
+    assert.true(stateCallbackCalled, "state change callback called");
   });
 
   test("adds incoming so it is counted in topic lists", async function (assert) {

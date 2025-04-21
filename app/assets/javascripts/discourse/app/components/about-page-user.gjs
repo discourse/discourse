@@ -1,7 +1,7 @@
 import avatar from "discourse/helpers/avatar";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 import { userPath } from "discourse/lib/url";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 
 const AboutPageUser = <template>
   <div data-username={{@user.username}} class="user-info small">

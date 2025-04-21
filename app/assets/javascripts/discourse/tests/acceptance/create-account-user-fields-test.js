@@ -1,9 +1,9 @@
 import EmberObject from "@ember/object";
-import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
+import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 const CUSTOM_VALIDATION_REASON = "bad choice";
 
@@ -55,13 +55,13 @@ acceptance("Create Account - User Fields", function (needs) {
     await visit("/");
     await click("header .sign-up-button");
 
-    assert.dom(".create-account").exists("it shows the create account modal");
+    assert.dom(".signup-fullpage").exists("it shows the signup page");
     assert.dom(".user-field").exists("it has at least one user field");
 
-    await click(".d-modal__footer .btn-primary");
+    await click(".signup-fullpage .btn-primary");
     assert
       .dom("#account-email-validation")
-      .hasText(I18n.t("user.email.required"));
+      .hasText(i18n("user.email.required"));
 
     await fillIn("#new-account-name", "Dr. Good Tuna");
     await fillIn("#new-account-password", "cool password bro");
@@ -75,20 +75,10 @@ acceptance("Create Account - User Fields", function (needs) {
       .dom("#account-email-validation.good")
       .exists("the email validation is good");
 
-    await click(".d-modal__footer .btn-primary");
+    await click(".signup-fullpage .btn-primary");
     await fillIn(".user-field input[type=text]:nth-of-type(1)", "Barky");
     await click(".user-field input[type=checkbox]");
-    await click(".d-modal__footer .btn-primary");
-  });
-
-  test("can submit with enter", async function (assert) {
-    await visit("/");
-    await click("header .sign-up-button");
-    await triggerKeyEvent("#new-account-email", "keydown", "Enter");
-
-    assert
-      .dom("#account-email-validation")
-      .hasText(I18n.t("user.email.required"), "hitting Enter triggers action");
+    await click(".signup-fullpage .btn-primary");
   });
 
   test("shows validation error for user fields", async function (assert) {
@@ -98,10 +88,14 @@ acceptance("Create Account - User Fields", function (needs) {
     await fillIn("#new-account-password", "cool password bro");
     await fillIn(".user-field-whats-your-dad-like input", "cool password bro");
 
-    await click(".d-modal__footer .btn-primary");
+    await click(".signup-fullpage .btn-primary");
 
     assert
       .dom(".user-field-what-is-your-pets-name .tip.bad")
+      .exists("shows required field error");
+
+    assert
+      .dom(".user-field-ive-read-the-terms-of-service .tip.bad")
       .exists("shows required field error");
 
     assert
@@ -121,7 +115,7 @@ acceptance("Create Account - User Fields", function (needs) {
         "it does not show error message until the form is submitted"
       );
 
-    await click(".d-modal__footer .btn-primary");
+    await click(".signup-fullpage .btn-primary");
 
     assert
       .dom(".user-field-what-is-your-favorite-color .tip.bad")
@@ -142,7 +136,7 @@ acceptance("Create Account - User Fields", function (needs) {
     await fillIn(".user-field input[type=text]:nth-of-type(1)", "Barky");
     await click(".user-field input[type=checkbox]");
 
-    await click(".d-modal__footer .btn-primary");
+    await click(".signup-fullpage .btn-primary");
     assert
       .dom(".user-field-what-is-your-favorite-color .tip.bad")
       .hasText(

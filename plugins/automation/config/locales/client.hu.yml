@@ -6,14 +6,24 @@
 
 hu:
   js:
+    admin:
+      logs:
+        staff_actions:
+          actions:
+            delete_automation: automatizálás törlése
     discourse_automation:
       title: Automatizálás
-      create: Létrehozás
-      update: Frissítés
+      table_title: Automatizálások
+      create: Automatizálás hozzáadása
+      update: Automatizálás frissítése
+      back: Vissza
+      edit: Szerkesztés
       select_script: Válasszon egy parancsfájlt
       select_trigger: Válasszon egy aktiválót
       confirm_automation_reset: Ez a művelet visszaállítja a parancsfájlt és az aktiválási beállításokat, az új állapot mentésre kerül. Folytatja?
       confirm_automation_trigger: Ez a művelet aktiválja az automatizálást, folytatja?
+      no_automation_yet: Jelenleg nincs beállított automatizálás.
+      filter_placeholder: Szűrés név vagy leírás alapján...
       edit_automation:
         trigger_section:
           forced: Ez az aktiválót a parancsfájl kényszeríti ki.
@@ -155,18 +165,11 @@ hu:
             restricted_tags:
               label: Címkék
               description: Opcionális, csak akkor aktiválódik, ha a bejegyzés rendelkezik ezen címkék bármelyikével
-            restricted_category:
-              label: Kategória
-              description: Opcionális, csak akkor aktiválódik, ha a bejegyzés témája ebbe a kategóriába tartozik
-            restricted_group:
-              label: Csoport
-              description: Opcionális, csak akkor aktiválódik, ha a bejegyzés témája egy privát üzenet a csoport postafiókjában
-            restricted_groups:
-              label: Csoportok
-              description: Opcionális, csak akkor aktiválódik, ha a bejegyzés témája egy privát üzenet a csoportok egyikében
-            ignore_group_members:
-              label: Csoporttagok figyelmen kívül hagyása
-              description: Hagyja ki az eseményindítót, ha a feladó a fent meghatározott csoport tagja
+            restricted_categories:
+              label: Kategóriák
+            restricted_inbox_groups:
+              label: Korlátozott postafiók csoportok
+              description: Nem kötelező, csak akkor aktiválódik, ha a bejegyzés témája egy személyes üzenet a csoportok egyikében
             ignore_automated:
               label: Automatizált figyelmen kívül hagyása
               description: Hagyja ki az eseményindítót, ha a feladónak van válasz e-mailje, vagy automatizált forrásból származik. Csak az e-mailben létrehozott bejegyzésekre vonatkozik
@@ -181,6 +184,10 @@ hu:
               description: "Hagyja ki az eseményindítót, ha a bejegyzés e-mailben jött létre"
           created: Létrehozott
           edited: Szerkesztve
+          with_images: Képek
+          with_links: Hivatkozások
+          with_code: Kód
+          with_uploads: Feltöltések
         user_updated:
           fields:
             user_profile:
@@ -221,6 +228,10 @@ hu:
               label: Érvényes bizalmi szintek
               description: Csak akkor aktiválódik, ha a bejegyzést a felhasználó hozza létre ezeken a bizalmi szinteken, alapértelmezés szerint bármely bizalmi szint
         topic_tags_changed:
+          trigger_on_modes:
+            tags_added_or_removed: Címkék hozzáadva vagy eltávolítva
+            tags_added: Címkék hozzáadva
+            tags_removed: Címkék eltávolítva
           fields:
             watching_categories:
               label: Figyelt kategóriák
@@ -228,6 +239,8 @@ hu:
             watching_tags:
               label: Figyelt címkék
               description: Csak akkor aktiválódik, ha a témakör rendelkezik ezen címkék bármelyikével
+            trigger_on:
+              label: Trigger bekapcsolva
             trigger_with_pms:
               label: Aktiválás PÜ-el
               description: Akkor is aktiválódik, ha a címkéket PÜ-ben módosították
@@ -375,6 +388,7 @@ hu:
               label: PÜ-ek
             sender:
               label: PÜ feladó
+              description: "Győződjön meg arról, hogy a feladó megfelelő jogosultságokkal rendelkezik ahhoz, hogy PM-eket küldjön a címzettnek"
         close_topic:
           fields:
             topic:
@@ -389,6 +403,7 @@ hu:
           fields:
             custom_field_name:
               label: "Felhasználó egyéni mező neve"
+      unnamed_automation: "Névtelen automatizálás"
       models:
         script:
           name:
@@ -405,6 +420,8 @@ hu:
             label: Szkript
           version:
             label: Verzió
+          status:
+            label: Állapot
           enabled:
             label: Engedélyezed
           disabled:

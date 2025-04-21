@@ -23,6 +23,7 @@
 /public/plugins
 /public/tombstone
 /public/uploads
+/public/images/emoji
 
 # Ignore the default SQLite database and db dumps
 *.sql
@@ -52,7 +53,7 @@
 
 /spec/fixtures/plugins/my_plugin/auto_generated
 
-/vendor/bundle/*
+/vendor/bundle
 /vendor/data/GeoLite2-City.mmdb
 /vendor/data/GeoLite2-ASN.mmdb
 
@@ -84,3 +85,9 @@ openapi/*
 
 # Cached License Data Files
 /.licenses
+
+# devenv.sh
+.devenv*
+
+# direnv.net
+.direnv

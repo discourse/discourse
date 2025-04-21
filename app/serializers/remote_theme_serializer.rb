@@ -19,10 +19,14 @@ class RemoteThemeSerializer < ApplicationSerializer
              :minimum_discourse_version,
              :maximum_discourse_version
 
-  # wow, AMS has some pretty nutty logic where it tries to find the path here
-  # from action dispatch, tell it not to
+  # ActiveModelSerializer has some pretty nutty logic where it tries to find
+  # the path here from action dispatch, tell it not to
   def about_url
-    object.about_url
+    object.about_url if UrlHelper.is_valid_url?(object.about_url)
+  end
+
+  def license_url
+    object.license_url if UrlHelper.is_valid_url?(object.license_url)
   end
 
   def include_github_diff_link?

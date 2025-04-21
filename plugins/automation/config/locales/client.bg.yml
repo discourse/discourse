@@ -7,8 +7,8 @@
 bg:
   js:
     discourse_automation:
-      create: Създай
-      update: Актуализация
+      back: Назад
+      edit: Редактирай
       fields:
         user:
           label: Потребител
@@ -59,13 +59,12 @@ bg:
           fields:
             restricted_tags:
               label: Тагове
-            restricted_category:
-              label: Категория
-            restricted_group:
-              label: Група
-            restricted_groups:
-              label: Групи
+            restricted_categories:
+              label: Категории
           created: Създадени
+          with_images: Изображения
+          with_links: Връзки
+          with_code: Код
         category_created_edited:
           fields:
             restricted_category:
@@ -135,6 +134,8 @@ bg:
             label: Тригер
           version:
             label: Версия
+          status:
+            label: Статус
           enabled:
             label: Да е включен
           disabled:

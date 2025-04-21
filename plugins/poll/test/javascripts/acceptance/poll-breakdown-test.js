@@ -1,6 +1,6 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Poll breakdown", function (needs) {
   needs.user();
@@ -80,9 +80,10 @@ acceptance("Poll breakdown", function (needs) {
         "renders a chart for each of the groups in group_results response"
       );
 
-    assert.ok(
-      query(".poll-breakdown-chart-container > canvas").$chartjs,
-      "$chartjs is defined on the pie charts"
+    assert.notStrictEqual(
+      document.querySelector(".poll-breakdown-chart-container > canvas")
+        .$chartjs,
+      undefined
     );
   });
 
@@ -92,26 +93,20 @@ acceptance("Poll breakdown", function (needs) {
 
     await click("button.show-breakdown");
 
-    assert.strictEqual(
-      query(".poll-breakdown-option-count").textContent.trim(),
-      "40.0%",
-      "displays the correct vote percentage"
-    );
+    assert
+      .dom(".poll-breakdown-option-count")
+      .hasText("40.0%", "displays the correct vote percentage");
 
     await click(".modal-tabs .count");
 
-    assert.strictEqual(
-      query(".poll-breakdown-option-count").textContent.trim(),
-      "2",
-      "displays the correct vote count"
-    );
+    assert
+      .dom(".poll-breakdown-option-count")
+      .hasText("2", "displays the correct vote count");
 
     await click(".modal-tabs .percentage");
 
-    assert.strictEqual(
-      query(".poll-breakdown-option-count").textContent.trim(),
-      "40.0%",
-      "displays the percentage again"
-    );
+    assert
+      .dom(".poll-breakdown-option-count")
+      .hasText("40.0%", "displays the percentage again");
   });
 });

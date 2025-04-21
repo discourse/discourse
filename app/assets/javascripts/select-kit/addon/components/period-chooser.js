@@ -1,7 +1,7 @@
 import { action } from "@ember/object";
 import { oneWay, readOnly } from "@ember/object/computed";
 import { classNameBindings, classNames } from "@ember-decorators/component";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
 import { selectKitOptions } from "select-kit/components/select-kit";
 
@@ -13,7 +13,7 @@ import { selectKitOptions } from "select-kit/components/select-kit";
   fullDay: "fullDay",
   customStyle: true,
   headerComponent: "period-chooser/period-chooser-header",
-  headerAriaLabel: I18n.t("period_chooser.aria_label"),
+  headerAriaLabel: i18n("period_chooser.aria_label"),
 })
 export default class PeriodChooser extends DropdownSelectBoxComponent {
   @oneWay("site.periods") content;

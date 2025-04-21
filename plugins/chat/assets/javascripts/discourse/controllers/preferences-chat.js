@@ -2,9 +2,11 @@ import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { isTesting } from "discourse-common/config/environment";
-import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import discourseComputed from "discourse/lib/decorators";
+import { isTesting } from "discourse/lib/environment";
+import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
+import { translateModKey } from "discourse/lib/utilities";
+import { i18n } from "discourse-i18n";
 import { CHAT_SOUNDS } from "discourse/plugins/chat/discourse/services/chat-audio-manager";
 
 const CHAT_ATTRS = [
@@ -16,7 +18,12 @@ const CHAT_ATTRS = [
   "chat_email_frequency",
   "chat_header_indicator_preference",
   "chat_separate_sidebar_mode",
+  "chat_send_shortcut",
+  "chat_quick_reaction_type",
+  "chat_quick_reactions_custom",
 ];
+
+export const CHAT_QUICK_REACTIONS_CUSTOM_DEFAULT = "heart|+1|smile";
 
 export const HEADER_INDICATOR_PREFERENCE_NEVER = "never";
 export const HEADER_INDICATOR_PREFERENCE_DM_AND_MENTIONS = "dm_and_mentions";
@@ -27,43 +34,69 @@ export default class PreferencesChatController extends Controller {
   @service chatAudioManager;
   @service siteSettings;
 
-  subpageTitle = I18n.t("chat.admin.title");
+  subpageTitle = i18n("chat.admin.title");
+
+  chatQuickReactionTypes = [
+    {
+      label: i18n("chat.quick_reaction_type.options.frequent"),
+      value: "frequent",
+    },
+    {
+      label: i18n("chat.quick_reaction_type.options.custom"),
+      value: "custom",
+    },
+  ];
+
+  chatSendShortcutOptions = [
+    {
+      label: i18n("chat.send_shortcut.enter.label"),
+      value: "enter",
+      description: i18n("chat.send_shortcut.enter.description"),
+    },
+    {
+      label: i18n("chat.send_shortcut.meta_enter.label", {
+        meta_key: translateModKey(PLATFORM_KEY_MODIFIER),
+      }),
+      value: "meta_enter",
+      description: i18n("chat.send_shortcut.meta_enter.description"),
+    },
+  ];
 
   emailFrequencyOptions = [
-    { name: I18n.t("chat.email_frequency.never"), value: "never" },
-    { name: I18n.t("chat.email_frequency.when_away"), value: "when_away" },
+    { name: i18n("chat.email_frequency.never"), value: "never" },
+    { name: i18n("chat.email_frequency.when_away"), value: "when_away" },
   ];
 
   headerIndicatorOptions = [
     {
-      name: I18n.t("chat.header_indicator_preference.all_new"),
+      name: i18n("chat.header_indicator_preference.all_new"),
       value: HEADER_INDICATOR_PREFERENCE_ALL_NEW,
     },
     {
-      name: I18n.t("chat.header_indicator_preference.dm_and_mentions"),
+      name: i18n("chat.header_indicator_preference.dm_and_mentions"),
       value: HEADER_INDICATOR_PREFERENCE_DM_AND_MENTIONS,
     },
     {
-      name: I18n.t("chat.header_indicator_preference.only_mentions"),
+      name: i18n("chat.header_indicator_preference.only_mentions"),
       value: HEADER_INDICATOR_PREFERENCE_ONLY_MENTIONS,
     },
     {
-      name: I18n.t("chat.header_indicator_preference.never"),
+      name: i18n("chat.header_indicator_preference.never"),
       value: HEADER_INDICATOR_PREFERENCE_NEVER,
     },
   ];
 
   chatSeparateSidebarModeOptions = [
     {
-      name: I18n.t("admin.site_settings.chat_separate_sidebar_mode.always"),
+      name: i18n("admin.site_settings.chat_separate_sidebar_mode.always"),
       value: "always",
     },
     {
-      name: I18n.t("admin.site_settings.chat_separate_sidebar_mode.fullscreen"),
+      name: i18n("admin.site_settings.chat_separate_sidebar_mode.fullscreen"),
       value: "fullscreen",
     },
     {
-      name: I18n.t("admin.site_settings.chat_separate_sidebar_mode.never"),
+      name: i18n("admin.site_settings.chat_separate_sidebar_mode.never"),
       value: "never",
     },
   ];
@@ -77,10 +110,21 @@ export default class PreferencesChatController extends Controller {
     }
   }
 
+  get chatSendShortcut() {
+    return this.model.get("user_option.chat_send_shortcut");
+  }
+
+  get chatQuickReactionsCustom() {
+    const emojis =
+      this.model.get("user_option.chat_quick_reactions_custom") ||
+      CHAT_QUICK_REACTIONS_CUSTOM_DEFAULT;
+    return emojis.split("|");
+  }
+
   @discourseComputed
   chatSounds() {
     return Object.keys(CHAT_SOUNDS).map((value) => {
-      return { name: I18n.t(`chat.sounds.${value}`), value };
+      return { name: i18n(`chat.sounds.${value}`), value };
     });
   }
 
@@ -90,6 +134,24 @@ export default class PreferencesChatController extends Controller {
       this.chatAudioManager.play(sound);
     }
     this.model.set("user_option.chat_sound", sound);
+  }
+
+  @action
+  onChangeQuickReactionType(value) {
+    this.model.set("user_option.chat_quick_reaction_type", value);
+    if (value === "custom") {
+      this.model.set(
+        "user_option.chat_quick_reactions_custom",
+        this.chatQuickReactionsCustom.join("|")
+      );
+    }
+  }
+
+  @action
+  didSelectEmoji(index, selected) {
+    let emoji = this.chatQuickReactionsCustom;
+    emoji[index] = selected;
+    this.model.set("user_option.chat_quick_reactions_custom", emoji.join("|"));
   }
 
   @action

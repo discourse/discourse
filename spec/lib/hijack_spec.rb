@@ -5,6 +5,7 @@ RSpec.describe Hijack do
     attr_reader :io
 
     include Hijack
+    include CurrentUser
 
     def initialize(env = {})
       @io = StringIO.new
@@ -231,5 +232,35 @@ RSpec.describe Hijack do
     tester.hijack_test {}
 
     expect(tester.response.status).to eq(503)
+  end
+
+  context "when there is a current user" do
+    fab!(:test_current_user) { Fabricate(:user) }
+
+    it "captures the current user" do
+      test_user_id = nil
+
+      tester =
+        Hijack::Tester.new(Auth::DefaultCurrentUserProvider::CURRENT_USER_KEY => test_current_user)
+
+      tester.hijack_test { test_user_id = current_user.id }
+
+      expect(test_user_id).to eq(test_current_user.id)
+    end
+
+    it "uses the current user's locale for translations" do
+      SiteSetting.allow_user_locale = true
+      test_current_user.update!(locale: "es")
+      test_translation = nil
+
+      tester =
+        Hijack::Tester.new(Auth::DefaultCurrentUserProvider::CURRENT_USER_KEY => test_current_user)
+
+      # Simulates the around_action that sets the locale in ApplicationController, since this is
+      # not a request spec.
+      tester.with_resolved_locale { tester.hijack_test { test_translation = I18n.t("topics") } }
+
+      expect(test_translation).to eq(I18n.t("topics", locale: "es"))
+    end
   end
 end

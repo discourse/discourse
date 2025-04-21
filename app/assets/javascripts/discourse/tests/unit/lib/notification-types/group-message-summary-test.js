@@ -1,10 +1,10 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import { deepMerge } from "discourse/lib/object";
 import Notification from "discourse/models/notification";
 import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notification-types";
 import { createRenderDirector } from "discourse/tests/helpers/notification-types-helper";
-import { deepMerge } from "discourse-common/lib/object";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 function getNotification(overrides = {}) {
   return Notification.create(
@@ -40,7 +40,7 @@ module("Unit | Notification Types | group-message-summary", function (hooks) {
     );
     assert.strictEqual(
       director.description,
-      I18n.t("notifications.group_message_summary", {
+      i18n("notifications.group_message_summary", {
         group_name: "drummers",
         count: 13,
       }),

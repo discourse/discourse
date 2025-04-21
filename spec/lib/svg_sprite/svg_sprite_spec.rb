@@ -6,6 +6,7 @@ RSpec.describe SvgSprite do
   before do
     SvgSprite.clear_plugin_svg_sprite_cache!
     SvgSprite.expire_cache
+    allow(Rails.env).to receive(:test?).and_return(false)
   end
 
   it "can generate a bundle" do
@@ -26,13 +27,12 @@ RSpec.describe SvgSprite do
   end
 
   it "can search for a specific FA icon" do
-    expect(SvgSprite.search("fa-heart")).to match(/heart/)
     expect(SvgSprite.search("poo-storm")).to match(/poo-storm/)
     expect(SvgSprite.search("this-is-not-an-icon")).to eq(false)
   end
 
   it "can get a raw SVG for an icon" do
-    expect(SvgSprite.raw_svg("fa-heart")).to match(/svg.*svg/) # SVG inside SVG
+    expect(SvgSprite.raw_svg("heart")).to match(/svg.*svg/) # SVG inside SVG
     expect(SvgSprite.raw_svg("this-is-not-an-icon")).to eq("")
   end
 
@@ -45,7 +45,7 @@ RSpec.describe SvgSprite do
 
   it "version string changes" do
     version1 = SvgSprite.version
-    Fabricate(:badge, name: "Custom Icon Badge", icon: "fa-gamepad")
+    Fabricate(:badge, name: "Custom Icon Badge", icon: "gamepad")
     version2 = SvgSprite.version
 
     expect(version1).not_to eq(version2)
@@ -88,13 +88,18 @@ RSpec.describe SvgSprite do
 
   it "strips whitespace when processing icons" do
     Fabricate(:badge, name: "Custom Icon Badge", icon: "  fab fa-facebook-messenger  ")
-    expect(SvgSprite.all_icons).to include("fab-facebook-messenger")
-    expect(SvgSprite.all_icons).not_to include("  fab-facebook-messenger  ")
+    expect(SvgSprite.all_icons).to include("fab fa-facebook-messenger")
+    expect(SvgSprite.all_icons).not_to include("  fab fa-facebook-messenger  ")
   end
 
-  it "includes Font Awesome 5 icons from badges" do
+  it "includes icons from badges" do
     Fabricate(:badge, name: "Custom Icon Badge", icon: "far fa-building")
-    expect(SvgSprite.all_icons).to include("far-building")
+    expect(SvgSprite.all_icons).to include("far fa-building")
+  end
+
+  it "raises an error in test for deprecated icons" do
+    allow(Rails.env).to receive(:test?).and_return(true)
+    expect { SvgSprite.search("fa-gamepad") }.to raise_error(Discourse::MissingIconError)
   end
 
   it "includes icons defined in theme settings" do
@@ -122,7 +127,7 @@ RSpec.describe SvgSprite do
     # FA5 syntax
     theme.update_setting(:custom_icon, "fab fa-bandcamp")
     theme.save!
-    expect(SvgSprite.all_icons(theme.id)).to include("fab-bandcamp")
+    expect(SvgSprite.all_icons(theme.id)).to include("fab fa-bandcamp")
 
     # Internal Discourse syntax + multiple icons
     theme.update_setting(:custom_icon, "fab-android|dragon")
@@ -222,7 +227,7 @@ RSpec.describe SvgSprite do
     DiscoursePluginRegistry.register_svg_icon "fab fa-bandcamp"
 
     expect(SvgSprite.all_icons).to include("blender")
-    expect(SvgSprite.all_icons).to include("fab-bandcamp")
+    expect(SvgSprite.all_icons).to include("fab fa-bandcamp")
   end
 
   it "includes Font Awesome icon from groups" do

@@ -1,6 +1,6 @@
 import { action, computed } from "@ember/object";
 import { attributeBindings, classNames } from "@ember-decorators/component";
-import { makeArray } from "discourse-common/lib/helpers";
+import { makeArray } from "discourse/lib/helpers";
 import MultiSelectComponent from "select-kit/components/multi-select";
 import {
   pluginApiIdentifiers,
@@ -22,6 +22,16 @@ export default class TagChooser extends MultiSelectComponent.extend(TagsMixin) {
   blockedTags = null;
   excludeSynonyms = false;
   excludeHasSynonyms = false;
+
+  init() {
+    super.init(...arguments);
+
+    this.setProperties({
+      blockedTags: this.blockedTags || [],
+      termMatchesForbidden: false,
+      termMatchErrorMessage: null,
+    });
+  }
 
   modifyComponentForRow(collection, item) {
     if (this.getValue(item) === this.selectKit.filter && !item.count) {
@@ -48,16 +58,6 @@ export default class TagChooser extends MultiSelectComponent.extend(TagsMixin) {
     }
 
     return null;
-  }
-
-  init() {
-    super.init(...arguments);
-
-    this.setProperties({
-      blockedTags: this.blockedTags || [],
-      termMatchesForbidden: false,
-      termMatchErrorMessage: null,
-    });
   }
 
   @computed("tags.[]")

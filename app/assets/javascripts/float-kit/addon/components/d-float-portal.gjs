@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { isTesting } from "discourse-common/config/environment";
+import { isTesting } from "discourse/lib/environment";
 
 export default class DFloatPortal extends Component {
   get inline() {

@@ -1,13 +1,14 @@
 import { get } from "@ember/object";
 import { htmlSafe } from "@ember/template";
 import categoryVariables from "discourse/helpers/category-variables";
+import replaceEmoji from "discourse/helpers/replace-emoji";
+import getURL from "discourse/lib/get-url";
+import { helperContext } from "discourse/lib/helpers";
+import { iconHTML } from "discourse/lib/icon-library";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
-import getURL from "discourse-common/lib/get-url";
-import { helperContext, registerRawHelper } from "discourse-common/lib/helpers";
-import { iconHTML } from "discourse-common/lib/icon-library";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 let _renderer = defaultCategoryLinkRenderer;
 
@@ -48,12 +49,24 @@ export function categoryBadgeHTML(category, opts) {
     return "";
   }
 
+  if (!opts.styleType) {
+    opts.styleType = category.styleType;
+
+    if (opts.styleType === "icon") {
+      opts.icon = category.icon;
+    } else if (opts.styleType === "emoji") {
+      opts.emoji = category.emoji;
+    }
+  }
+
   const depth = (opts.depth || 1) + 1;
   if (opts.ancestors) {
     const { ancestors, ...otherOpts } = opts;
     return [category, ...ancestors]
       .reverse()
-      .map((c) => categoryBadgeHTML(c, otherOpts))
+      .map((c) => {
+        return categoryBadgeHTML(c, { ...otherOpts, styleType: null });
+      })
       .join("");
   } else if (opts.recursive && depth <= siteSettings.max_category_nesting) {
     const parentCategory = Category.findById(category.parent_category_id);
@@ -103,10 +116,9 @@ export function categoryLinkHTML(category, options) {
 }
 
 export default categoryLinkHTML;
-registerRawHelper("category-link", categoryLinkHTML);
 
 function buildTopicCount(count) {
-  return `<span class="topic-count" aria-label="${I18n.t(
+  return `<span class="topic-count" aria-label="${i18n(
     "category_row.topic_count",
     { count }
   )}">&times; ${count}</span>`;
@@ -151,6 +163,10 @@ export function defaultCategoryLinkRenderer(category, opts) {
     dataAttributes += ` data-parent-category-id="${parentCat.id}"`;
   }
 
+  if (opts.styleType) {
+    classNames += ` --style-${opts.styleType}`;
+  }
+
   html += `<span
     ${dataAttributes}
     data-drop-close="true"
@@ -162,6 +178,14 @@ export function defaultCategoryLinkRenderer(category, opts) {
     }
     ${descriptionText ? 'title="' + descriptionText + '" ' : ""}
   >`;
+
+  if (opts.styleType === "icon" && opts.icon) {
+    html += iconHTML(opts.icon);
+  }
+
+  if (opts.styleType === "emoji" && opts.emoji) {
+    html += replaceEmoji(`:${opts.emoji}:`);
+  }
 
   // not ideal as we have to call it manually and we pass a fake category object
   // but there's not way around it for now
@@ -192,7 +216,7 @@ export function defaultCategoryLinkRenderer(category, opts) {
   }
 
   if (opts.subcategoryCount) {
-    html += `<span class="plus-subcategories">${I18n.t(
+    html += `<span class="plus-subcategories">${i18n(
       "category_row.subcategory_count",
       { count: opts.subcategoryCount }
     )}</span>`;

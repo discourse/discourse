@@ -1,5 +1,4 @@
 // styles that apply to the popup that appears when you show the edit history of a post
-
 .modal.history-modal {
   .d-modal__footer {
     justify-content: space-between;
@@ -20,9 +19,11 @@
     padding-bottom: 0.5em;
     overflow: auto;
     border-bottom: 3px solid var(--primary-low);
+
     @include breakpoint(tablet) {
       padding-bottom: 0;
     }
+
     @include breakpoint(mobile-large) {
       padding-bottom: 0.5em;
     }
@@ -41,15 +42,19 @@
       padding: 0;
       border: none;
     }
+
     @include breakpoint(tablet) {
       width: 100%;
       margin-top: 0.5em;
+
       .nav-pills {
         width: 100%;
+
         li {
           margin: 0;
           flex: 1 1 auto;
         }
+
         a {
           width: 100%;
           justify-content: center;
@@ -77,6 +82,7 @@
     .-tag-revisions {
       display: block;
     }
+
     .discourse-tags {
       display: inline;
       font-size: var(--font-down-1);
@@ -105,7 +111,7 @@
   }
 
   &:not(.--mode-inline) {
-    .-tag-revisions span {
+    .-tag-revisions .tag-revision__wrapper {
       flex: 0 1 50%;
       min-width: 0;
       align-self: start;
@@ -122,11 +128,13 @@
     width: 100%;
     border-collapse: collapse;
     border-spacing: 0;
+
     td {
       word-wrap: anywhere;
       white-space: pre-wrap;
       flex: 0 1 50%;
     }
+
     tbody {
       border: none;
     }
@@ -153,8 +161,10 @@
 
   #revisions {
     word-wrap: break-word;
+
     table {
       margin-top: 10px;
+
       tr {
         border: none;
       }
@@ -163,6 +173,7 @@
     .row:first-of-type {
       margin-top: 10px;
     }
+
     .revision-content table {
       thead {
         th {
@@ -174,6 +185,7 @@
 
       td {
         padding: 3px 3px 3px 0.5em;
+
         img {
           max-width: none;
         }
@@ -184,17 +196,21 @@
   #revision-footer-buttons {
     display: flex;
     gap: 0.5em;
+
     button {
       margin: 0;
       flex: 1 1 auto;
       min-width: 0;
+
       .d-button-label {
         @include ellipsis;
       }
     }
+
     @include breakpoint(tablet) {
       width: 100%;
       flex: 1 1 100%;
+
       button {
         font-size: var(--font-down-1);
       }
@@ -212,11 +228,16 @@
   del,
   .diff-del {
     color: var(--primary);
-    text-decoration: none;
+
+    &:not(s, .bbcode-u, .bbcode-s) {
+      text-decoration: none;
+    }
+
     code,
     img {
       border: 2px solid;
     }
+
     a {
       text-decoration: none;
     }
@@ -225,14 +246,17 @@
   ins,
   .diff-ins {
     background: var(--success-low);
+
     code,
     img {
       border-color: var(--success);
     }
+
     img {
       opacity: 0.75;
       filter: alpha(opacity=75);
     }
+
     a {
       color: var(--success);
     }
@@ -241,15 +265,17 @@
   del,
   .diff-del {
     background: var(--danger-low);
-    text-decoration: none;
+
     code,
     img {
       border-color: var(--danger);
     }
+
     img {
       opacity: 0.5;
       filter: alpha(opacity=50);
     }
+
     a {
       color: var(--danger);
     }
@@ -258,21 +284,26 @@
   span.date {
     font-weight: bold;
   }
+
   span.edit-reason {
     background-color: var(--highlight-bg);
   }
+
   .d-icon-ban {
     color: var(--danger);
   }
+
   .hidden-revision-either {
     opacity: 0.5;
   }
+
   .hidden-revision-previous .row {
     div:nth-of-type(1),
     td:nth-of-type(1) {
       opacity: 0.5;
     }
   }
+
   .hidden-revision-current .row {
     div:nth-of-type(2),
     td:nth-of-type(2) {

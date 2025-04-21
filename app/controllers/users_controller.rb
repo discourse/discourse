@@ -269,7 +269,7 @@ class UsersController < ApplicationController
     params.require(:new_username)
 
     if clashing_with_existing_route?(params[:new_username]) ||
-         User.reserved_username?(params[:new_username])
+         (User.reserved_username?(params[:new_username]) && !current_user.admin?)
       return render_json_error(I18n.t("login.reserved_username"))
     end
 
@@ -614,7 +614,7 @@ class UsersController < ApplicationController
     # The special case where someone is changing the case of their own username
     return render_available_true if changing_case_of_own_username(target_user, username)
 
-    checker = UsernameCheckerService.new
+    checker = UsernameCheckerService.new(allow_reserved_username: current_user&.admin?)
     email = params[:email] || target_user.try(:email)
     render json: checker.check_username(username, email)
   end
@@ -664,6 +664,9 @@ class UsersController < ApplicationController
     params.permit(:user_fields)
     params.permit(:external_ids)
 
+    if SiteSetting.enable_discourse_connect && !is_api?
+      return fail_with("login.new_registrations_disabled_discourse_connect")
+    end
     return fail_with("login.new_registrations_disabled") unless SiteSetting.allow_new_registrations
 
     if params[:password] && params[:password].length > User.max_password_length
@@ -752,11 +755,6 @@ class UsersController < ApplicationController
 
     activation = UserActivator.new(user, request, session, cookies)
     activation.start
-
-    # just assign a password if we have an authenticator and no password
-    # this is the case for Twitter
-    user.password = SecureRandom.hex if user.password.blank? &&
-      (authentication.has_authenticator? || associations.present?)
 
     if user.save
       authentication.finish
@@ -853,6 +851,23 @@ class UsersController < ApplicationController
                  security_params.merge(DiscourseWebauthn.allowed_credentials(@user, secure_session))
       end
     end
+  end
+
+  def remove_password
+    RateLimiter.new(nil, "remove-password-hr-#{request.remote_ip}", 6, 1.hour).performed!
+    RateLimiter.new(nil, "remove-password-min-#{request.remote_ip}", 3, 1.hour).performed!
+
+    user = fetch_user_from_params
+    guardian.ensure_can_edit!(user)
+    RateLimiter.new(nil, "remove-password-hr-#{user.username}", 6, 1.hour).performed!
+
+    raise Discourse::NotFound if !user || !user.user_password
+    raise Discourse::ReadOnly if staff_writes_only_mode? && !user.staff?
+    raise Discourse::InvalidAccess if !secure_session_confirmed?
+
+    user.remove_password
+
+    render json: success_json
   end
 
   def password_reset_update
@@ -1102,6 +1117,8 @@ class UsersController < ApplicationController
   def activate_account
     expires_now
 
+    raise Discourse::NotFound if current_user.present?
+
     respond_to do |format|
       format.html { render "default/empty" }
       format.json { render json: success_json }
@@ -1110,6 +1127,7 @@ class UsersController < ApplicationController
 
   def perform_account_activation
     raise Discourse::InvalidAccess.new if honeypot_or_challenge_fails?(params)
+    raise Discourse::NotFound if current_user.present?
 
     if @user = EmailToken.confirm(params[:token], scope: EmailToken.scopes[:signup])
       # Log in the user unless they need to be approved
@@ -1229,6 +1247,7 @@ class UsersController < ApplicationController
 
     topic_id = params[:topic_id].to_i if params[:topic_id].present?
     category_id = params[:category_id].to_i if params[:category_id].present?
+    prioritized_user_id = params[:prioritized_user_id].to_i if params[:prioritized_user_id].present?
 
     topic_allowed_users = params[:topic_allowed_users] || false
 
@@ -1253,6 +1272,7 @@ class UsersController < ApplicationController
 
     options[:topic_id] = topic_id if topic_id
     options[:category_id] = category_id if category_id
+    options[:prioritized_user_id] = prioritized_user_id if prioritized_user_id
 
     results =
       if usernames.blank?
@@ -1667,7 +1687,15 @@ class UsersController < ApplicationController
   def delete_passkey
     raise Discourse::NotFound unless SiteSetting.enable_passkeys
 
-    current_user.security_keys.find_by(id: params[:id].to_i)&.destroy!
+    security_key = current_user.security_keys.find_by(id: params[:id].to_i)
+
+    if security_key&.first_factor? && current_user.passkey_credential_ids.length == 1
+      if !current_user.has_password? && current_user.associated_accounts.blank?
+        return render json: { success: false, message: I18n.t("user.cannot_remove_all_auth") }
+      end
+    end
+
+    security_key&.destroy!
 
     render json: success_json
   end
@@ -1789,6 +1817,12 @@ class UsersController < ApplicationController
     # revoke permissions even if the admin has temporarily disabled that type of login
     authenticator = Discourse.authenticators.find { |a| a.name == provider_name }
     raise Discourse::NotFound if authenticator.nil? || !authenticator.can_revoke?
+
+    if user.associated_accounts&.length == 1
+      if !user.has_password? && user.passkey_credential_ids.blank?
+        return render json: { success: false, message: I18n.t("user.cannot_remove_all_auth") }
+      end
+    end
 
     skip_remote = params.permit(:skip_remote)
 
@@ -1924,9 +1958,7 @@ class UsersController < ApplicationController
     end
 
     if reminder_notifications.present?
-      if SiteSetting.show_user_menu_avatars
-        Notification.populate_acting_user(reminder_notifications)
-      end
+      Notification.populate_acting_user(reminder_notifications)
       serialized_notifications =
         ActiveModel::ArraySerializer.new(
           reminder_notifications,
@@ -1997,7 +2029,7 @@ class UsersController < ApplicationController
     end
 
     if unread_notifications.present?
-      Notification.populate_acting_user(unread_notifications) if SiteSetting.show_user_menu_avatars
+      Notification.populate_acting_user(unread_notifications)
       serialized_unread_notifications =
         ActiveModel::ArraySerializer.new(
           unread_notifications,
@@ -2010,7 +2042,7 @@ class UsersController < ApplicationController
       serialized_messages =
         serialize_data(messages_list, TopicListSerializer, scope: guardian, root: false)[:topics]
       serialized_users =
-        if SiteSetting.show_user_menu_avatars
+        if SiteSetting.show_user_menu_avatars || !SiteSetting.prioritize_username_in_ux
           users = messages_list.topics.map { |t| t.posters.last.user }.flatten.compact.uniq(&:id)
           serialize_data(users, BasicUserSerializer, scope: guardian, root: false)
         else
@@ -2019,7 +2051,7 @@ class UsersController < ApplicationController
     end
 
     if read_notifications.present?
-      Notification.populate_acting_user(read_notifications) if SiteSetting.show_user_menu_avatars
+      Notification.populate_acting_user(read_notifications)
       serialized_read_notifications =
         ActiveModel::ArraySerializer.new(
           read_notifications,

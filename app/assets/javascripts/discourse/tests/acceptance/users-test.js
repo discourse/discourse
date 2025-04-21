@@ -1,14 +1,10 @@
 import { click, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import { cloneJSON } from "discourse/lib/object";
 import directoryFixtures from "discourse/tests/fixtures/directory-fixtures";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import {
-  acceptance,
-  query,
-  queryAll,
-} from "discourse/tests/helpers/qunit-helpers";
-import { cloneJSON } from "discourse-common/lib/object";
-import I18n from "discourse-i18n";
+import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { i18n } from "discourse-i18n";
 
 acceptance("User Directory", function () {
   test("Visit Page", async function (assert) {
@@ -57,25 +53,27 @@ acceptance("User Directory", function () {
 
     await visit("/u");
 
-    const firstRowUserField = query(
-      ".directory .directory-table__body .directory-table__row:first-child .directory-table__value--user-field"
-    );
+    assert
+      .dom(
+        ".directory .directory-table__body .directory-table__row:first-child .directory-table__value--user-field a"
+      )
+      .exists("User field is displayed as a link");
 
-    const userFieldLink = firstRowUserField.querySelector("a");
+    assert
+      .dom(
+        ".directory .directory-table__body .directory-table__row:first-child .directory-table__value--user-field a"
+      )
+      .hasAttribute(
+        "href",
+        "/u?name=Blue&order=likes_received",
+        "The link points to the correct URL"
+      );
 
-    assert.ok(userFieldLink, "User field is displayed as a link");
-
-    assert.strictEqual(
-      userFieldLink.getAttribute("href"),
-      "/u?name=Blue&order=likes_received",
-      "The link points to the correct URL"
-    );
-
-    assert.strictEqual(
-      userFieldLink.textContent.trim(),
-      "Blue",
-      "Link text is correct"
-    );
+    assert
+      .dom(
+        ".directory .directory-table__body .directory-table__row:first-child .directory-table__value--user-field a"
+      )
+      .hasText("Blue", "Link text is correct");
   });
 
   test("Visit With Group Filter", async function (assert) {
@@ -89,11 +87,11 @@ acceptance("User Directory", function () {
   test("Custom user fields are present", async function (assert) {
     await visit("/u");
 
-    const firstRowUserField = query(
-      ".directory .directory-table__body .directory-table__row:first-child .directory-table__value--user-field"
-    );
-
-    assert.strictEqual(firstRowUserField.textContent.trim(), "Blue");
+    assert
+      .dom(
+        ".directory .directory-table__body .directory-table__row:first-child .directory-table__value--user-field"
+      )
+      .hasText("Blue");
   });
 
   test("Can sort table via keyboard", async function (assert) {
@@ -104,10 +102,9 @@ acceptance("User Directory", function () {
 
     await triggerKeyEvent(secondHeading, "keypress", "Enter");
 
-    assert.ok(
-      query(`${secondHeading} .d-icon-chevron-up`),
-      "list has been sorted"
-    );
+    assert
+      .dom(`${secondHeading} .d-icon-chevron-up`)
+      .exists("list has been sorted");
   });
 
   test("Visit with no users", async function (assert) {
@@ -125,7 +122,7 @@ acceptance("User Directory", function () {
     assert
       .dom(".empty-state-body")
       .hasText(
-        I18n.t("directory.no_results.body"),
+        i18n("directory.no_results.body"),
         "a JIT message is shown when there are no users"
       );
   });
@@ -145,7 +142,7 @@ acceptance("User Directory", function () {
     assert
       .dom(".empty-state-body")
       .hasText(
-        I18n.t("directory.no_results_with_search"),
+        i18n("directory.no_results_with_search"),
         "a different JIT message is used when there are no results for the search term"
       );
   });
@@ -184,27 +181,15 @@ acceptance("User directory - Editing columns", function (needs) {
 
     let columns;
     columns = fetchColumns();
-    assert.strictEqual(
-      columns[3].querySelector(".column-name").textContent.trim(),
-      "Replies Posted"
-    );
-    assert.strictEqual(
-      columns[4].querySelector(".column-name").textContent.trim(),
-      "Topics Viewed"
-    );
+    assert.dom(".column-name", columns[3]).hasText("Replies Posted");
+    assert.dom(".column-name", columns[4]).hasText("Topics Viewed");
 
     // Click on row 4 and see if they are swapped
     await click(columns[4].querySelector(".move-column-up"));
 
     columns = fetchColumns();
-    assert.strictEqual(
-      columns[3].querySelector(".column-name").textContent.trim(),
-      "Topics Viewed"
-    );
-    assert.strictEqual(
-      columns[4].querySelector(".column-name").textContent.trim(),
-      "Replies Posted"
-    );
+    assert.dom(".column-name", columns[3]).hasText("Topics Viewed");
+    assert.dom(".column-name", columns[4]).hasText("Replies Posted");
 
     const moveUserFieldColumnUpBtn =
       columns[columns.length - 1].querySelector(".move-column-up");
@@ -214,14 +199,8 @@ acceptance("User directory - Editing columns", function (needs) {
     await click(moveUserFieldColumnUpBtn);
 
     columns = fetchColumns();
-    assert.strictEqual(
-      columns[4].querySelector(".column-name").textContent.trim(),
-      "Favorite Color"
-    );
-    assert.strictEqual(
-      columns[5].querySelector(".column-name").textContent.trim(),
-      "Replies Posted"
-    );
+    assert.dom(".column-name", columns[4]).hasText("Favorite Color");
+    assert.dom(".column-name", columns[5]).hasText("Replies Posted");
 
     // Now click restore default and check order of column names
     await click(".reset-to-default");

@@ -16,24 +16,16 @@ export default class ChatChannelThreads extends DiscourseRoute {
       this.router.transitionTo("chat.channel", ...channel.routeModels);
       return;
     }
-
-    this.chatStateManager.openSidePanel();
   }
 
   @action
   activate() {
     this.chat.activeMessage = null;
+    this.chatStateManager.openSidePanel();
   }
 
   @action
-  willTransition(transition) {
-    if (
-      transition.targetName === "chat.channel.index" ||
-      transition.targetName === "chat.channel.near-message" ||
-      transition.targetName === "chat.index" ||
-      !transition.targetName.startsWith("chat")
-    ) {
-      this.chatStateManager.closeSidePanel();
-    }
+  deactivate() {
+    this.chatStateManager.closeSidePanel();
   }
 }

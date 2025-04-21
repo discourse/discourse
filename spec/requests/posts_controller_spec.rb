@@ -211,25 +211,32 @@ RSpec.describe PostsController do
 
     it "supports pagination" do
       parent = Fabricate(:post)
+
+      child_posts = []
+
       30.times do
         reply = Fabricate(:post, topic: parent.topic, reply_to_post_number: parent.post_number)
         PostReply.create!(post: parent, reply:)
+        child_posts << reply
       end
 
       get "/posts/#{parent.id}/replies.json", params: { after: parent.post_number }
       expect(response.status).to eq(200)
       replies = response.parsed_body
-      expect(replies.size).to eq(20)
+
+      expect(replies.map { |reply| reply["id"] }).to eq(child_posts[0..19].map(&:id))
 
       after = replies.last["post_number"]
 
       get "/posts/#{parent.id}/replies.json", params: { after: }
       expect(response.status).to eq(200)
       replies = response.parsed_body
-      expect(replies.size).to eq(10)
+
+      expect(replies.map { |reply| reply["id"] }).to eq(child_posts[20..-1].map(&:id))
       expect(replies[0][:post_number]).to eq(after + 1)
 
       get "/posts/#{parent.id}/replies.json", params: { after: 999_999 }
+
       expect(response.status).to eq(200)
       expect(response.parsed_body.size).to eq(0)
     end
@@ -547,7 +554,7 @@ RSpec.describe PostsController do
       end
 
       it "checks for an edit conflict" do
-        update_params[:post][:raw_old] = "old body"
+        update_params[:post][:original_text] = "old body"
         put "/posts/#{post.id}.json", params: update_params
 
         expect(response.status).to eq(409)
@@ -562,6 +569,13 @@ RSpec.describe PostsController do
 
       it "raises an error when the user doesn't have permission to see the post" do
         post = Fabricate(:private_message_post, post_number: 3)
+        put "/posts/#{post.id}.json", params: update_params
+        expect(response).to be_forbidden
+      end
+
+      it "raises an error when user is OP but can no longer see the post" do
+        post = Fabricate(:private_message_post, user: user)
+        post.topic.remove_allowed_user(admin, user)
         put "/posts/#{post.id}.json", params: update_params
         expect(response).to be_forbidden
       end
@@ -726,7 +740,6 @@ RSpec.describe PostsController do
             params: {
               post: {
                 raw: "this is a random post",
-                raw_old: post.raw,
                 random_number: 244,
               },
             }
@@ -891,7 +904,7 @@ RSpec.describe PostsController do
     include_examples "action requires login", :post, "/posts.json"
 
     before do
-      SiteSetting.min_first_post_typing_time = 0
+      SiteSetting.fast_typing_threshold = "disabled"
       SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
     end
 
@@ -1149,11 +1162,11 @@ RSpec.describe PostsController do
 
       context "when fast typing" do
         before do
-          SiteSetting.min_first_post_typing_time = 3000
+          SiteSetting.fast_typing_threshold = "standard"
           SiteSetting.auto_silence_fast_typers_max_trust_level = 1
         end
 
-        it "queues the post if min_first_post_typing_time is not met" do
+        it "queues the post if fast_typing_threshold is not met" do
           post "/posts.json",
                params: {
                  raw: "this is the test content",
@@ -1486,6 +1499,29 @@ RSpec.describe PostsController do
         expect(topic.title).to eq("This is the test title for the topic")
         expect(topic.category).to eq(category)
         expect(topic.visible).to eq(true)
+      end
+
+      describe "posts_controller_create_user modifier" do
+        fab!(:different_user) { Fabricate(:admin) }
+
+        let!(:plugin) { Plugin::Instance.new }
+        let!(:modifier) { :posts_controller_create_user }
+        let!(:block) { Proc.new { different_user } }
+
+        before { DiscoursePluginRegistry.register_modifier(plugin, modifier, &block) }
+        after { DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &block) }
+
+        it "can alter the user used to create the post" do
+          post "/posts.json",
+               params: {
+                 raw: "this is the test content",
+                 title: "this is the test title for the topic",
+                 category: category.id,
+               }
+
+          expect(response.status).to eq(200)
+          expect(Post.last.user).to eq(different_user)
+        end
       end
 
       context "when adding custom fields to topic via the `topic_custom_fields` param" do
@@ -1845,6 +1881,19 @@ RSpec.describe PostsController do
           expect(response.parsed_body["errors"]).to include(
             I18n.t("activerecord.errors.models.topic.attributes.base.unable_to_unlist"),
           )
+        end
+
+        context "with apply_modifier" do
+          it "can modify groups" do
+            plugin = Plugin::Instance.new
+            modifier = :mentionable_groups
+            proc = Proc.new { Group.all }
+            DiscoursePluginRegistry.register_modifier(plugin, modifier, &proc)
+
+            expect(Group.mentionable(user)).to eq(Group.all)
+          ensure
+            DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &proc)
+          end
         end
       end
     end
@@ -2493,6 +2542,21 @@ RSpec.describe PostsController do
         expect(data.length).to eq(0)
       end
 
+      it "returns PMs for admins who are also moderators" do
+        admin.update!(moderator: true)
+
+        pm_post = Fabricate(:private_message_post)
+        PostDestroyer.new(admin, pm_post).destroy
+
+        sign_in(admin)
+
+        get "/posts/#{pm_post.user.username}/deleted.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.size).to eq(1)
+        expect(response.parsed_body.first["id"]).to eq(pm_post.id)
+      end
+
       it "only shows posts deleted by other users" do
         create_post(user: user)
         post_deleted_by_user = create_post(user: user)
@@ -2579,6 +2643,8 @@ RSpec.describe PostsController do
   end
 
   describe "#user_posts_feed" do
+    before { user.user_stat.update!(post_count: 1) }
+
     it "returns public posts rss feed" do
       public_post
       private_post
@@ -2888,6 +2954,7 @@ RSpec.describe PostsController do
         "type" => Post.notices[:custom],
         "raw" => raw_notice,
         "cooked" => PrettyText.cook(raw_notice, features: { onebox: false }),
+        "created_by_user_id" => moderator.id,
       )
       expect(UserHistory.where(action: UserHistory.actions[:post_staff_note_create]).count).to eq(1)
 
@@ -2921,6 +2988,7 @@ RSpec.describe PostsController do
           "type" => Post.notices[:custom],
           "raw" => raw_notice,
           "cooked" => PrettyText.cook(raw_notice, features: { onebox: false }),
+          "created_by_user_id" => user.id,
         )
 
         put "/posts/#{public_post.id}/notice.json", params: { notice: nil }
@@ -3069,7 +3137,7 @@ RSpec.describe PostsController do
 
       before do
         sign_in(user)
-        SiteSetting.min_first_post_typing_time = 0
+        SiteSetting.fast_typing_threshold = "disabled"
       end
 
       it "allows strings to be added" do

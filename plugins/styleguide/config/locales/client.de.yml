@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 de:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          styleguide: "Discourse Styleguide"
   js:
     styleguide:
       title: "Styleguide"
@@ -74,8 +79,12 @@ de:
           title: "Themen-Benachrichtigungen"
         post:
           title: "Beitrag"
+        post_list:
+          title: "Beitragsliste"
+          empty_example: "<PostList /> leerer Zustand"
+          populated_example: "<PostList /> gefüllter Zustand"
         topic_map:
-          title: "Thema-Zusammenfassung"
+          title: "Themenübersicht"
         site_header:
           title: "Seitenkopf"
         suggested_topics:

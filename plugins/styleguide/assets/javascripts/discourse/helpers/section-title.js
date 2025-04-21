@@ -1,6 +1,6 @@
 import Helper from "@ember/component/helper";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default Helper.helper(function (params) {
-  return I18n.t(`styleguide.sections.${params[0].replace(/\-/g, "_")}.title`);
+  return i18n(`styleguide.sections.${params[0].replace(/\-/g, "_")}.title`);
 });

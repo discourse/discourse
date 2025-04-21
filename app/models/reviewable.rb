@@ -7,6 +7,8 @@ class Reviewable < ActiveRecord::Base
     ReviewableUser: BasicReviewableUserSerializer,
   }
 
+  UNKNOWN_TYPE_SOURCE = "unknown"
+
   self.ignored_columns = [:reviewable_by_group_id]
 
   class UpdateConflict < StandardError
@@ -42,6 +44,8 @@ class Reviewable < ActiveRecord::Base
 
   validates :reject_reason, length: { maximum: 2000 }
 
+  before_save :set_type_source
+
   after_create { log_history(:created, created_by) }
 
   after_commit(on: :create) { DiscourseEvent.trigger(:reviewable_created, self) }
@@ -73,6 +77,24 @@ class Reviewable < ActiveRecord::Base
     [ReviewableFlaggedPost, ReviewableQueuedPost, ReviewableUser, ReviewablePost]
   end
 
+  def self.scrubbable_types
+    [ReviewableUser]
+  end
+
+  def self.sti_names
+    self.types.map(&:sti_name)
+  end
+
+  def self.source_for(type)
+    type = type.sti_name if type.is_a?(Class)
+    return UNKNOWN_TYPE_SOURCE if Reviewable.sti_names.exclude?(type)
+
+    DiscoursePluginRegistry
+      .reviewable_types_lookup
+      .find { |r| r[:klass].sti_name == type }
+      &.dig(:plugin) || "core"
+  end
+
   def self.custom_filters
     @reviewable_filters ||= []
   end
@@ -83,6 +105,10 @@ class Reviewable < ActiveRecord::Base
 
   def self.clear_custom_filters!
     @reviewable_filters = []
+  end
+
+  def set_type_source
+    self.type_source = Reviewable.source_for(type)
   end
 
   def created_new!
@@ -103,6 +129,7 @@ class Reviewable < ActiveRecord::Base
     payload: nil,
     reviewable_by_moderator: false,
     potential_spam: true,
+    potentially_illegal: false,
     target_created_by: nil
   )
     reviewable =
@@ -113,6 +140,7 @@ class Reviewable < ActiveRecord::Base
         reviewable_by_moderator: reviewable_by_moderator,
         payload: payload,
         potential_spam: potential_spam,
+        potentially_illegal: potentially_illegal,
         target_created_by: target_created_by,
       )
     reviewable.created_new!
@@ -136,12 +164,14 @@ class Reviewable < ActiveRecord::Base
         id: target.id,
         type: target.class.polymorphic_name,
         potential_spam: potential_spam == true ? true : nil,
+        potentially_illegal: potentially_illegal == true ? true : nil,
       }
 
       row = DB.query_single(<<~SQL, update_args)
         UPDATE reviewables
         SET status = :status,
-          potential_spam = COALESCE(:potential_spam, reviewables.potential_spam)
+          potential_spam = COALESCE(:potential_spam, reviewables.potential_spam),
+          potentially_illegal = COALESCE(:potentially_illegal, reviewables.potentially_illegal)
         FROM reviewables AS old_reviewables
         WHERE reviewables.target_id = :id
           AND reviewables.target_type = :type
@@ -173,7 +203,8 @@ class Reviewable < ActiveRecord::Base
     created_at: nil,
     take_action: false,
     meta_topic_id: nil,
-    force_review: false
+    force_review: false,
+    context: nil
   )
     type_bonus = PostActionType.where(id: reviewable_score_type).pluck(:score_bonus)[0] || 0
     take_action_bonus = take_action ? 5.0 : 0.0
@@ -190,6 +221,7 @@ class Reviewable < ActiveRecord::Base
         meta_topic_id: meta_topic_id,
         take_action_bonus: take_action_bonus,
         created_at: created_at || Time.zone.now,
+        context: context,
       )
     rs.reason = reason.to_s if reason
     rs.save!
@@ -266,8 +298,15 @@ class Reviewable < ActiveRecord::Base
 
   def actions_for(guardian, args = nil)
     args ||= {}
+    built_actions =
+      Actions.new(self, guardian).tap { |actions| build_actions(actions, guardian, args) }
 
-    Actions.new(self, guardian).tap { |actions| build_actions(actions, guardian, args) }
+    # Empty bundles can cause big issues on the client side, so we remove them
+    # here. It's not valid anyway to have a bundle with no actions, but you can
+    # add a bundle via actions.add_bundle and then not add any actions to it.
+    built_actions.bundles.reject!(&:empty?)
+
+    built_actions
   end
 
   def editable_for(guardian, args = nil)
@@ -315,7 +354,8 @@ class Reviewable < ActiveRecord::Base
     valid = [action_id, aliases.to_a.select { |k, v| v == action_id }.map(&:first)].flatten
 
     # Ensure the user has access to the action
-    actions = actions_for(args[:guardian] || Guardian.new(performed_by), args)
+    guardian = args[:guardian] || Guardian.new(performed_by)
+    actions = actions_for(guardian, args)
     raise InvalidAction.new(action_id, self.class) unless valid.any? { |a| actions.has?(a) }
 
     perform_method = "perform_#{aliases[action_id] || action_id}".to_sym
@@ -344,6 +384,8 @@ class Reviewable < ActiveRecord::Base
         updated_reviewable_ids: result.remove_reviewable_ids,
       )
     end
+
+    notify_users(result, guardian)
 
     result
   end
@@ -437,7 +479,9 @@ class Reviewable < ActiveRecord::Base
     to_date: nil,
     additional_filters: {},
     preload: true,
-    include_claimed_by_others: true
+    include_claimed_by_others: true,
+    flagged_by: nil,
+    score_type: nil
   )
     order =
       case sort_order
@@ -455,18 +499,37 @@ class Reviewable < ActiveRecord::Base
       user_id = User.find_by_username(username)&.id
       return none if user_id.blank?
     end
-
     return none if user.blank?
-    result = viewable_by(user, order: order, preload: preload)
 
+    result = viewable_by(user, order: order, preload: preload)
     result = by_status(result, status)
     result = result.where(id: ids) if ids
-
     result = result.where("reviewables.type = ?", Reviewable.sti_class_for(type).sti_name) if type
     result = result.where("reviewables.category_id = ?", category_id) if category_id
     result = result.where("reviewables.topic_id = ?", topic_id) if topic_id
     result = result.where("reviewables.created_at >= ?", from_date) if from_date
     result = result.where("reviewables.created_at <= ?", to_date) if to_date
+
+    if flagged_by
+      flagged_by_id = User.find_by_username(flagged_by)&.id
+      return none if flagged_by_id.nil?
+      result = result.where(<<~SQL, flagged_by_id: flagged_by_id)
+        EXISTS(
+          SELECT 1 FROM reviewable_scores
+          WHERE reviewable_scores.reviewable_id = reviewables.id AND reviewable_scores.user_id = :flagged_by_id
+        )
+      SQL
+    end
+
+    if score_type
+      score_type = score_type.to_i
+      result = result.where(<<~SQL, score_type: score_type)
+      EXISTS(
+        SELECT 1 FROM reviewable_scores
+        WHERE reviewable_scores.reviewable_id = reviewables.id AND reviewable_scores.reviewable_score_type = :score_type
+      )
+      SQL
+    end
 
     if reviewed_by
       reviewed_by_id = User.find_by_username(reviewed_by)&.id
@@ -518,6 +581,7 @@ class Reviewable < ActiveRecord::Base
           "LEFT JOIN reviewable_claimed_topics rct ON reviewables.topic_id = rct.topic_id",
         ).where("rct.user_id IS NULL OR rct.user_id = ?", user.id)
     end
+    result = result.where(type: Reviewable.sti_names)
     result = result.limit(limit) if limit
     result = result.offset(offset) if offset
     result
@@ -568,6 +632,18 @@ class Reviewable < ActiveRecord::Base
     result.transition_to = transition_to
     yield result if block_given?
     result
+  end
+
+  def notify_users(result, guardian)
+    group_ids = Set.new([Group::AUTO_GROUPS[:staff]])
+
+    if SiteSetting.enable_category_group_moderation? && category
+      group_ids.merge(category.moderating_group_ids)
+    end
+
+    data = ReviewablePerformResultSerializer.new(result, root: false, scope: guardian).as_json
+
+    MessageBus.publish("/reviewable_action", data, group_ids: group_ids.to_a)
   end
 
   def self.scores_with_topics
@@ -729,6 +805,20 @@ class Reviewable < ActiveRecord::Base
     )
   end
 
+  def self.unknown_types_and_sources
+    @known_sources ||= Reviewable.sti_names.map { |n| [n, Reviewable.source_for(n)] }
+
+    known_unknowns = Reviewable.pending.distinct.pluck(:type, :type_source) - @known_sources
+
+    known_unknowns
+      .map { |type, source| { type: type, source: source } }
+      .sort_by { |e| [e[:source] == UNKNOWN_TYPE_SOURCE ? 1 : 0, e[:source], e[:type]] }
+  end
+
+  def self.destroy_unknown_types!
+    Reviewable.pending.where.not(type: Reviewable.sti_names).delete_all
+  end
+
   private
 
   def update_flag_stats(status:, user_ids:)
@@ -759,6 +849,7 @@ end
 #
 #  id                      :bigint           not null, primary key
 #  type                    :string           not null
+#  type_source             :string           default("unknown"), not null
 #  status                  :integer          default("pending"), not null
 #  created_by_id           :integer          not null
 #  reviewable_by_moderator :boolean          default(FALSE), not null
@@ -776,6 +867,7 @@ end
 #  updated_at              :datetime         not null
 #  force_review            :boolean          default(FALSE), not null
 #  reject_reason           :text
+#  potentially_illegal     :boolean          default(FALSE)
 #
 # Indexes
 #

@@ -8,6 +8,14 @@ module PageObjects
         self
       end
 
+      def hide_profile
+        find(".user-hide-profile .pref-hide-profile").click
+      end
+
+      def has_hidden_profile?
+        has_css?(".user-hide-profile .pref-hide-profile input[type=checkbox]:checked")
+      end
+
       def expand_profile_details
         find(".user-main .details .controls .btn-default").click
       end

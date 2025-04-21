@@ -1,5 +1,7 @@
+import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { action, set } from "@ember/object";
+import { alias } from "@ember/object/computed";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { classify, dasherize } from "@ember/string";
@@ -9,12 +11,12 @@ import RejectReasonReviewableModal from "discourse/components/modal/reject-reaso
 import ReviseAndRejectPostReviewable from "discourse/components/modal/revise-and-reject-post-reviewable";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import discourseComputed, { bind } from "discourse/lib/decorators";
 import optionalService from "discourse/lib/optional-service";
 import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
 import Topic from "discourse/models/topic";
-import discourseComputed, { bind } from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 let _components = {};
 
@@ -49,19 +51,44 @@ export default class ReviewableItem extends Component {
   @service siteSettings;
   @service currentUser;
   @service composer;
+  @service store;
+  @service toasts;
   @optionalService adminTools;
+
+  @tracked disabled = false;
+
+  @alias("reviewable.claimed_by.automatic") autoClaimed;
 
   updating = null;
   editing = false;
   _updates = null;
 
+  constructor() {
+    super(...arguments);
+    this.messageBus.subscribe("/reviewable_claimed", this._updateClaimedBy);
+    this.messageBus.subscribe("/reviewable_action", this._updateStatus);
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.messageBus.unsubscribe("/reviewable_claimed", this._updateClaimedBy);
+    this.messageBus.unsubscribe("/reviewable_action", this._updateStatus);
+  }
+
   @discourseComputed(
     "reviewable.type",
     "reviewable.last_performing_username",
     "siteSettings.blur_tl0_flagged_posts_media",
-    "reviewable.target_created_by_trust_level"
+    "reviewable.target_created_by_trust_level",
+    "reviewable.deleted_at"
   )
-  customClasses(type, lastPerformingUsername, blurEnabled, trustLevel) {
+  customClasses(
+    type,
+    lastPerformingUsername,
+    blurEnabled,
+    trustLevel,
+    deletedAt
+  ) {
     let classes = dasherize(type);
 
     if (lastPerformingUsername) {
@@ -70,6 +97,10 @@ export default class ReviewableItem extends Component {
 
     if (blurEnabled && trustLevel === 0) {
       classes = `${classes} blur-images`;
+    }
+
+    if (deletedAt) {
+      classes = `${classes} reviewable-deleted`;
     }
 
     return classes;
@@ -105,9 +136,13 @@ export default class ReviewableItem extends Component {
     return (topic && topic.id) || topicId || removedTopicId;
   }
 
-  @discourseComputed("siteSettings.reviewable_claiming", "topicId")
-  claimEnabled(claimMode, topicId) {
-    return claimMode !== "disabled" && !!topicId;
+  @discourseComputed(
+    "siteSettings.reviewable_claiming",
+    "topicId",
+    "reviewable.claimed_by.automatic"
+  )
+  claimEnabled(claimMode, topicId, autoClaimed) {
+    return (claimMode !== "disabled" || autoClaimed) && !!topicId;
   }
 
   @discourseComputed("siteSettings.reviewable_claiming", "claimEnabled")
@@ -131,7 +166,7 @@ export default class ReviewableItem extends Component {
     }
 
     if (claimedBy) {
-      return claimedBy.id === this.currentUser.id;
+      return claimedBy.user.id === this.currentUser.id;
     }
 
     return claimMode !== "required";
@@ -143,16 +178,22 @@ export default class ReviewableItem extends Component {
   )
   claimHelp(claimMode, claimedBy) {
     if (claimedBy) {
-      return claimedBy.id === this.currentUser.id
-        ? I18n.t("review.claim_help.claimed_by_you")
-        : I18n.t("review.claim_help.claimed_by_other", {
-            username: claimedBy.username,
-          });
+      if (claimedBy.user.id === this.currentUser.id) {
+        return i18n("review.claim_help.claimed_by_you");
+      } else if (claimedBy.automatic) {
+        return i18n("review.claim_help.automatically_claimed_by", {
+          username: claimedBy.user.username,
+        });
+      } else {
+        return i18n("review.claim_help.claimed_by_other", {
+          username: claimedBy.user.username,
+        });
+      }
     }
 
     return claimMode === "optional"
-      ? I18n.t("review.claim_help.optional")
-      : I18n.t("review.claim_help.required");
+      ? i18n("review.claim_help.optional")
+      : i18n("review.claim_help.required");
   }
 
   // Find a component to render, if one exists. For example:
@@ -177,11 +218,43 @@ export default class ReviewableItem extends Component {
     return updatedCategoryId || categoryId;
   }
 
+  @discourseComputed("reviewable.type", "reviewable.target_created_by")
+  showIpLookup(reviewableType) {
+    return (
+      reviewableType !== "ReviewableUser" &&
+      this.currentUser.staff &&
+      this.reviewable.target_created_by
+    );
+  }
+
   @bind
-  _performConfirmed(performableAction, additionalData = {}) {
+  _updateClaimedBy(data) {
+    const user = data.user ? this.store.createRecord("user", data.user) : null;
+
+    if (data.topic_id === this.reviewable.topic.id) {
+      if (user) {
+        this.reviewable.set("claimed_by", { user, automatic: data.automatic });
+      } else {
+        this.reviewable.set("claimed_by", null);
+      }
+    }
+  }
+
+  @bind
+  _updateStatus(data) {
+    if (data.remove_reviewable_ids.includes(this.reviewable.id)) {
+      delete data.remove_reviewable_ids;
+      this._performResult(data, {}, this.reviewable);
+    }
+  }
+
+  @bind
+  async _performConfirmed(performableAction, additionalData = {}) {
     let reviewable = this.reviewable;
 
-    let performAction = () => {
+    let performAction = async () => {
+      this.disabled = true;
+
       let version = reviewable.get("version");
       this.set("updating", true);
 
@@ -205,61 +278,77 @@ export default class ReviewableItem extends Component {
           data,
         }
       )
-        .then((result) => {
-          let performResult = result.reviewable_perform_result;
-
-          // "fast track" to update the current user's reviewable count before the message bus finds out.
-          if (performResult.reviewable_count !== undefined) {
-            this.currentUser.updateReviewableCount(
-              performResult.reviewable_count
-            );
-          }
-
-          if (performResult.unseen_reviewable_count !== undefined) {
-            this.currentUser.set(
-              "unseen_reviewable_count",
-              performResult.unseen_reviewable_count
-            );
-          }
-
-          if (this.remove) {
-            this.remove(performResult.remove_reviewable_ids);
-          } else {
-            return this.store.find("reviewable", reviewable.id);
-          }
-        })
+        .then((result) =>
+          this._performResult(
+            result.reviewable_perform_result,
+            performableAction,
+            reviewable
+          )
+        )
         .catch(popupAjaxError)
-        .finally(() => this.set("updating", false));
+        .finally(() => {
+          this.set("updating", false);
+          this.disabled = false;
+        });
     };
 
     if (performableAction.client_action) {
       let actionMethod =
         this[`client${classify(performableAction.client_action)}`];
       if (actionMethod) {
-        return actionMethod.call(this, reviewable, performAction);
+        if (await this.#claimReviewable()) {
+          await actionMethod.call(this, reviewable, performAction);
+        }
       } else {
         // eslint-disable-next-line no-console
         console.error(
           `No handler for ${performableAction.client_action} found`
         );
-        return;
       }
     } else {
-      return performAction();
+      await performAction();
+    }
+
+    return this.#unclaimAutomaticReviewable();
+  }
+
+  _performResult(result, performableAction, reviewable) {
+    // "fast track" to update the current user's reviewable count before the message bus finds out.
+    if (result.reviewable_count !== undefined) {
+      this.currentUser.updateReviewableCount(result.reviewable_count);
+    }
+
+    if (result.unseen_reviewable_count !== undefined) {
+      this.currentUser.set(
+        "unseen_reviewable_count",
+        result.unseen_reviewable_count
+      );
+    }
+
+    if (performableAction.completed_message) {
+      this.toasts.success({
+        data: { message: performableAction.completed_message },
+      });
+    }
+
+    if (this.remove && result.remove_reviewable_ids) {
+      this.remove(result.remove_reviewable_ids);
+    } else {
+      return this.store.find("reviewable", reviewable.id);
     }
   }
 
   clientSuspend(reviewable, performAction) {
-    this._penalize("showSuspendModal", reviewable, performAction);
+    return this._penalize("showSuspendModal", reviewable, performAction);
   }
 
   clientSilence(reviewable, performAction) {
-    this._penalize("showSilenceModal", reviewable, performAction);
+    return this._penalize("showSilenceModal", reviewable, performAction);
   }
 
   async clientEdit(reviewable, performAction) {
     if (!this.currentUser) {
-      return this.dialog.alert(I18n.t("post.controls.edit_anonymous"));
+      return this.dialog.alert(i18n("post.controls.edit_anonymous"));
     }
     const post = await this.store.find("post", reviewable.post_id);
     const topic_json = await Topic.find(post.topic_id, {});
@@ -276,7 +365,6 @@ export default class ReviewableItem extends Component {
       action: Composer.EDIT,
       draftKey: post.get("topic.draft_key"),
       draftSequence: post.get("topic.draft_sequence"),
-      skipDraftCheck: true,
       skipJumpOnSave: true,
     };
 
@@ -291,11 +379,55 @@ export default class ReviewableItem extends Component {
       let createdBy = reviewable.get("target_created_by");
       let postId = reviewable.get("post_id");
       let postEdit = reviewable.get("raw");
+
       return adminTools[adminToolMethod](createdBy, {
         postId,
         postEdit,
         before: performAction,
       });
+    }
+  }
+
+  async #claimReviewable() {
+    if (!this.reviewable.topic) {
+      // We can't claim a reviewable without a topic, so treat it as claimed
+      return true;
+    }
+
+    if (!this.reviewable.claimed_by) {
+      const claim = this.store.createRecord("reviewable-claimed-topic");
+
+      try {
+        await claim.save({
+          topic_id: this.reviewable.topic.id,
+          automatic: true,
+        });
+        this.reviewable.set("claimed_by", {
+          user: this.currentUser,
+          automatic: true,
+        });
+      } catch (e) {
+        popupAjaxError(e);
+        return false;
+      }
+    }
+
+    return this.reviewable.claimed_by?.user?.id === this.currentUser.id;
+  }
+
+  async #unclaimAutomaticReviewable() {
+    if (!this.reviewable.topic || !this.reviewable.claimed_by?.automatic) {
+      return;
+    }
+
+    try {
+      await ajax(`/reviewable_claimed_topics/${this.reviewable.topic.id}`, {
+        type: "DELETE",
+        data: { automatic: true },
+      });
+      this.reviewable.set("claimed_by", null);
+    } catch (e) {
+      popupAjaxError(e);
     }
   }
 
@@ -355,7 +487,7 @@ export default class ReviewableItem extends Component {
   }
 
   @action
-  perform(performableAction) {
+  async perform(performableAction) {
     if (this.updating) {
       return;
     }
@@ -367,18 +499,22 @@ export default class ReviewableItem extends Component {
       : actionModalClassMap[performableAction.server_action];
 
     if (message) {
-      this.dialog.confirm({
-        message,
-        didConfirm: () => this._performConfirmed(performableAction),
-      });
+      if (await this.#claimReviewable()) {
+        this.dialog.confirm({
+          message,
+          didConfirm: () => this._performConfirmed(performableAction),
+        });
+      }
     } else if (actionModalClass) {
-      this.modal.show(actionModalClass, {
-        model: {
-          reviewable: this.reviewable,
-          performConfirmed: this._performConfirmed,
-          action: performableAction,
-        },
-      });
+      if (await this.#claimReviewable()) {
+        this.modal.show(actionModalClass, {
+          model: {
+            reviewable: this.reviewable,
+            performConfirmed: this._performConfirmed,
+            action: performableAction,
+          },
+        });
+      }
     } else {
       return this._performConfirmed(performableAction);
     }

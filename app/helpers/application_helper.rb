@@ -13,6 +13,9 @@ module ApplicationHelper
     @extra_body_classes ||= Set.new
   end
 
+  # This generated equivalent of Ember's config/environment.js is used
+  # in development, production, and theme tests. (i.e. everywhere except
+  # regular tests)
   def discourse_config_environment(testing: false)
     # TODO: Can this come from Ember CLI somehow?
     config = {
@@ -20,7 +23,6 @@ module ApplicationHelper
       environment: Rails.env,
       rootURL: Discourse.base_path,
       locationType: "history",
-      historySupportMiddleware: false,
       EmberENV: {
         FEATURES: {
         },
@@ -28,22 +30,25 @@ module ApplicationHelper
           Date: false,
           String: false,
         },
-        _APPLICATION_TEMPLATE_WRAPPER: false,
-        _DEFAULT_ASYNC_OBSERVERS: true,
-        _JQUERY_INTEGRATION: true,
       },
       APP: {
         name: "discourse",
         version: "#{Discourse::VERSION::STRING} #{Discourse.git_version}",
-        exportApplicationGlobal: true,
+        # LOG_RESOLVER: true,
+        # LOG_ACTIVE_GENERATION: true,
+        # LOG_TRANSITIONS: true,
+        # LOG_TRANSITIONS_INTERNAL: true,
+        # LOG_VIEW_LOOKUPS: true,
       },
     }
 
     if testing
       config[:environment] = "test"
       config[:locationType] = "none"
-      config[:APP][:autoboot] = false
+      config[:APP][:LOG_ACTIVE_GENERATION] = false
+      config[:APP][:LOG_VIEW_LOOKUPS] = false
       config[:APP][:rootElement] = "#ember-testing"
+      config[:APP][:autoboot] = false
     end
 
     config.to_json
@@ -175,7 +180,6 @@ module ApplicationHelper
     list = []
     list << (mobile_view? ? "mobile-view" : "desktop-view")
     list << (mobile_device? ? "mobile-device" : "not-mobile-device")
-    list << "ios-device" if ios_device?
     list << "rtl" if rtl?
     list << text_size_class
     list << "anon" unless current_user
@@ -266,6 +270,24 @@ module ApplicationHelper
     (request ? I18n.locale.to_s : SiteSetting.default_locale).sub("_", "-")
   end
 
+  def title_content
+    DiscoursePluginRegistry.apply_modifier(
+      :meta_data_content,
+      content_for(:title) || SiteSetting.title,
+      :title,
+      { url: request.fullpath },
+    )
+  end
+
+  def description_content
+    DiscoursePluginRegistry.apply_modifier(
+      :meta_data_content,
+      @description_meta || SiteSetting.site_description,
+      :description,
+      { url: request.fullpath },
+    )
+  end
+
   # Creates open graph and twitter card meta data
   def crawlable_meta_data(opts = nil)
     opts ||= {}
@@ -279,20 +301,18 @@ module ApplicationHelper
     end
 
     if opts[:image].blank?
-      twitter_summary_large_image_url = SiteSetting.site_twitter_summary_large_image_url
+      x_summary_large_image_url = SiteSetting.site_x_summary_large_image_url
 
-      if twitter_summary_large_image_url.present?
-        opts[:twitter_summary_large_image] = twitter_summary_large_image_url
-      end
+      opts[:x_summary_large_image] = x_summary_large_image_url if x_summary_large_image_url.present?
 
       opts[:image] = SiteSetting.site_opengraph_image_url
     end
 
     # Use the correct scheme for opengraph/twitter image
     opts[:image] = get_absolute_image_url(opts[:image]) if opts[:image].present?
-    opts[:twitter_summary_large_image] = get_absolute_image_url(
-      opts[:twitter_summary_large_image],
-    ) if opts[:twitter_summary_large_image].present?
+    opts[:x_summary_large_image] = get_absolute_image_url(opts[:x_summary_large_image]) if opts[
+      :x_summary_large_image
+    ].present?
 
     result = []
     result << tag(:meta, property: "og:site_name", content: opts[:site_name] || SiteSetting.title)
@@ -305,6 +325,8 @@ module ApplicationHelper
     %i[url title description].each do |property|
       if opts[property].present?
         content = (property == :url ? opts[property] : gsub_emoji_to_unicode(opts[property]))
+        content =
+          DiscoursePluginRegistry.apply_modifier(:meta_data_content, content, property, opts)
         result << tag(:meta, { property: "og:#{property}", content: content }, nil, true)
         result << tag(:meta, { name: "twitter:#{property}", content: content }, nil, true)
       end
@@ -338,8 +360,8 @@ module ApplicationHelper
   private def generate_twitter_card_metadata(result, opts)
     img_url =
       (
-        if opts[:twitter_summary_large_image].present?
-          opts[:twitter_summary_large_image]
+        if opts[:x_summary_large_image].present?
+          opts[:x_summary_large_image]
         else
           opts[:image]
         end
@@ -350,7 +372,7 @@ module ApplicationHelper
       img_url = SiteSetting.site_logo_url.ends_with?(".svg") ? nil : SiteSetting.site_logo_url
     end
 
-    if opts[:twitter_summary_large_image].present? && img_url.present?
+    if opts[:x_summary_large_image].present? && img_url.present?
       result << tag(:meta, name: "twitter:card", content: "summary_large_image")
       result << tag(:meta, name: "twitter:image", content: img_url)
     elsif opts[:image].present? && img_url.present?
@@ -444,10 +466,6 @@ module ApplicationHelper
 
   def mobile_device?
     MobileDetection.mobile_device?(request.user_agent)
-  end
-
-  def ios_device?
-    MobileDetection.ios_device?(request.user_agent)
   end
 
   def customization_disabled?
@@ -555,8 +573,12 @@ module ApplicationHelper
   end
 
   def dark_scheme_id
-    cookies[:dark_scheme_id] || current_user&.user_option&.dark_scheme_id ||
-      SiteSetting.default_dark_mode_color_scheme_id
+    if SiteSetting.use_overhauled_theme_color_palette
+      scheme_id
+    else
+      cookies[:dark_scheme_id] || current_user&.user_option&.dark_scheme_id ||
+        SiteSetting.default_dark_mode_color_scheme_id
+    end
   end
 
   def current_homepage
@@ -632,12 +654,17 @@ module ApplicationHelper
 
   def discourse_preload_color_scheme_stylesheets
     result = +""
-    result << stylesheet_manager.color_scheme_stylesheet_preload_tag(scheme_id, "all")
+
+    result << stylesheet_manager.color_scheme_stylesheet_preload_tag(
+      scheme_id,
+      fallback_to_base: true,
+    )
 
     if dark_scheme_id != -1
       result << stylesheet_manager.color_scheme_stylesheet_preload_tag(
         dark_scheme_id,
-        "(prefers-color-scheme: dark)",
+        dark: SiteSetting.use_overhauled_theme_color_palette,
+        fallback_to_base: false,
       )
     end
 
@@ -645,21 +672,39 @@ module ApplicationHelper
   end
 
   def discourse_color_scheme_stylesheets
-    result = +""
-    result << stylesheet_manager.color_scheme_stylesheet_link_tag(
-      scheme_id,
-      "all",
-      self.method(:add_resource_preload_list),
-    )
+    light_href =
+      stylesheet_manager.color_scheme_stylesheet_link_tag_href(scheme_id, fallback_to_base: true)
+    add_resource_preload_list(light_href, "style")
 
+    dark_href = nil
     if dark_scheme_id != -1
-      result << stylesheet_manager.color_scheme_stylesheet_link_tag(
-        dark_scheme_id,
-        "(prefers-color-scheme: dark)",
-        self.method(:add_resource_preload_list),
-      )
+      dark_href =
+        stylesheet_manager.color_scheme_stylesheet_link_tag_href(
+          dark_scheme_id,
+          dark: SiteSetting.use_overhauled_theme_color_palette,
+          fallback_to_base: false,
+        )
     end
 
+    result = +""
+    if dark_href && dark_href != light_href
+      add_resource_preload_list(dark_href, "style")
+
+      result << color_scheme_stylesheet_link_tag(
+        light_href,
+        light_elements_media_query,
+        "light-scheme",
+        scheme_id,
+      )
+      result << color_scheme_stylesheet_link_tag(
+        dark_href,
+        dark_elements_media_query,
+        "dark-scheme",
+        dark_scheme_id,
+      )
+    else
+      result << color_scheme_stylesheet_link_tag(light_href, "all", "light-scheme", scheme_id)
+    end
     result.html_safe
   end
 
@@ -667,15 +712,29 @@ module ApplicationHelper
     result = +""
     if dark_scheme_id != -1
       result << <<~HTML
-        <meta name="theme-color" media="(prefers-color-scheme: light)" content="##{ColorScheme.hex_for_name("header_background", scheme_id)}">
-        <meta name="theme-color" media="(prefers-color-scheme: dark)" content="##{ColorScheme.hex_for_name("header_background", dark_scheme_id)}">
+        <meta name="theme-color" media="#{light_elements_media_query}" content="##{light_color_hex_for_name("header_background")}">
+        <meta name="theme-color" media="#{dark_elements_media_query}" content="##{dark_color_hex_for_name("header_background")}">
       HTML
     else
       result << <<~HTML
-        <meta name="theme-color" media="all" content="##{ColorScheme.hex_for_name("header_background", scheme_id)}">
+        <meta name="theme-color" media="all" content="##{light_color_hex_for_name("header_background")}">
       HTML
     end
     result.html_safe
+  end
+
+  def discourse_color_scheme_meta_tag
+    scheme =
+      if dark_scheme_id == -1
+        # no automatic client-side switching
+        dark_color_scheme? ? "dark" : "light"
+      else
+        # auto-switched based on browser setting
+        "light dark"
+      end
+    <<~HTML.html_safe
+        <meta name="color-scheme" content="#{scheme}">
+      HTML
   end
 
   def dark_color_scheme?
@@ -683,9 +742,55 @@ module ApplicationHelper
     ColorScheme.find_by_id(scheme_id)&.is_dark?
   end
 
+  def forced_light_mode?
+    InterfaceColorSelectorSetting.enabled? && cookies[:forced_color_mode] == "light" &&
+      !dark_color_scheme?
+  end
+
+  def forced_dark_mode?
+    InterfaceColorSelectorSetting.enabled? && cookies[:forced_color_mode] == "dark" &&
+      dark_scheme_id != -1
+  end
+
+  def light_color_hex_for_name(name)
+    ColorScheme.hex_for_name(name, scheme_id)
+  end
+
+  def dark_color_hex_for_name(name)
+    ColorScheme.hex_for_name(
+      name,
+      dark_scheme_id,
+      dark: SiteSetting.use_overhauled_theme_color_palette,
+    )
+  end
+
+  def dark_elements_media_query
+    if forced_light_mode?
+      "none"
+    elsif forced_dark_mode?
+      "all"
+    else
+      "(prefers-color-scheme: dark)"
+    end
+  end
+
+  def light_elements_media_query
+    if forced_light_mode?
+      "all"
+    elsif forced_dark_mode?
+      "none"
+    else
+      "(prefers-color-scheme: light)"
+    end
+  end
+
   def preloaded_json
-    return "{}" if @preloaded.blank?
-    @preloaded.transform_values { |value| escape_unicode(value) }.to_json
+    return "{}" if !@application_layout_preloader
+
+    @application_layout_preloader
+      .preloaded_data
+      .transform_values { |value| escape_unicode(value) }
+      .to_json
   end
 
   def client_side_setup_data
@@ -772,5 +877,9 @@ module ApplicationHelper
         cookies.delete(:authentication_data, path: Discourse.base_path("/")) if value
         current_user ? nil : value
       end
+  end
+
+  def color_scheme_stylesheet_link_tag(href, media, css_class, scheme_id)
+    %[<link href="#{href}" media="#{media}" rel="stylesheet" class="#{css_class}"#{scheme_id && scheme_id != -1 ? %[ data-scheme-id="#{scheme_id}"] : ""}/>]
   end
 end

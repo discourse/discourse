@@ -5,17 +5,17 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { and, gt, not, or } from "truth-helpers";
+import TopicStatus from "discourse/components/topic-status";
 import categoryLink from "discourse/helpers/category-link";
 import concatClass from "discourse/helpers/concat-class";
+import icon from "discourse/helpers/d-icon";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import renderTags from "discourse/lib/render-tags";
 import DiscourseURL from "discourse/lib/url";
-import icon from "discourse-common/helpers/d-icon";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 import PluginOutlet from "../../plugin-outlet";
 import FeaturedLink from "./featured-link";
 import Participant from "./participant";
-import Status from "./status";
 
 export default class Info extends Component {
   @service currentUser;
@@ -48,7 +48,7 @@ export default class Info extends Component {
   }
 
   get tags() {
-    if (this.args.topicInfo.tags) {
+    if (this.args.topicInfo.get("tags")) {
       return renderTags(this.args.topicInfo);
     }
   }
@@ -105,9 +105,10 @@ export default class Info extends Component {
             {{/if}}
 
             {{#if (and @topicInfo.fancyTitle @topicInfo.url)}}
-              <Status
-                @topicInfo={{@topicInfo}}
+              <TopicStatus
+                @topic={{@topicInfo}}
                 @disableActions={{@disableActions}}
+                @context="header"
               />
 
               <a
@@ -139,25 +140,30 @@ export default class Info extends Component {
               )
             }}
               <div class="categories-wrapper">
-                {{#if @topicInfo.category.parentCategory}}
-                  {{#if
-                    (and
-                      @topicInfo.category.parentCategory.parentCategory
-                      this.site.desktopView
-                    )
-                  }}
+                <PluginOutlet
+                  @name="header-categories-wrapper"
+                  @outletArgs={{hash category=@topicInfo.category}}
+                >
+                  {{#if @topicInfo.category.parentCategory}}
+                    {{#if
+                      (and
+                        @topicInfo.category.parentCategory.parentCategory
+                        this.site.desktopView
+                      )
+                    }}
+                      {{categoryLink
+                        @topicInfo.category.parentCategory.parentCategory
+                        (hash hideParent="true")
+                      }}
+                    {{/if}}
+
                     {{categoryLink
-                      @topicInfo.category.parentCategory.parentCategory
+                      @topicInfo.category.parentCategory
                       (hash hideParent="true")
                     }}
                   {{/if}}
-
-                  {{categoryLink
-                    @topicInfo.category.parentCategory
-                    (hash hideParent="true")
-                  }}
-                {{/if}}
-                {{categoryLink @topicInfo.category (hash hideParent="true")}}
+                  {{categoryLink @topicInfo.category (hash hideParent="true")}}
+                </PluginOutlet>
               </div>
             {{/if}}
 

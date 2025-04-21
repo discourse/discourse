@@ -25,13 +25,16 @@ module Chat
       validates :message_id, presence: true
       validates :channel_id, presence: true
     end
+
     model :message
     policy :invalid_access
+
     transaction do
       step :restore_message
       step :update_last_message_ids
       step :update_thread_reply_cache
     end
+
     step :publish_events
 
     private

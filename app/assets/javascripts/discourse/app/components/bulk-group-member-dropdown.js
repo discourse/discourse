@@ -1,6 +1,6 @@
 import { computed } from "@ember/object";
 import { classNames } from "@ember-decorators/component";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
 import {
   pluginApiIdentifiers,
@@ -20,16 +20,16 @@ export default class BulkGroupMemberDropdown extends DropdownSelectBoxComponent 
 
     items.push({
       id: "removeMembers",
-      name: I18n.t("groups.members.remove_members"),
-      description: I18n.t("groups.members.remove_members_description"),
+      name: i18n("groups.members.remove_members"),
+      description: i18n("groups.members.remove_members_description"),
       icon: "user-xmark",
     });
 
     if (this.bulkSelection.some((m) => !m.owner)) {
       items.push({
         id: "makeOwners",
-        name: I18n.t("groups.members.make_owners"),
-        description: I18n.t("groups.members.make_owners_description"),
+        name: i18n("groups.members.make_owners"),
+        description: i18n("groups.members.make_owners_description"),
         icon: "shield-halved",
       });
     }
@@ -37,8 +37,8 @@ export default class BulkGroupMemberDropdown extends DropdownSelectBoxComponent 
     if (this.bulkSelection.some((m) => m.owner)) {
       items.push({
         id: "removeOwners",
-        name: I18n.t("groups.members.remove_owners"),
-        description: I18n.t("groups.members.remove_owners_description"),
+        name: i18n("groups.members.remove_owners"),
+        description: i18n("groups.members.remove_owners_description"),
         icon: "shield-halved",
       });
     }
@@ -47,8 +47,8 @@ export default class BulkGroupMemberDropdown extends DropdownSelectBoxComponent 
       if (this.bulkSelection.some((m) => !m.primary)) {
         items.push({
           id: "setPrimary",
-          name: I18n.t("groups.members.make_all_primary"),
-          description: I18n.t("groups.members.make_all_primary_description"),
+          name: i18n("groups.members.make_all_primary"),
+          description: i18n("groups.members.make_all_primary_description"),
           icon: "id-card",
         });
       }
@@ -56,8 +56,8 @@ export default class BulkGroupMemberDropdown extends DropdownSelectBoxComponent 
       if (this.bulkSelection.some((m) => m.primary)) {
         items.push({
           id: "unsetPrimary",
-          name: I18n.t("groups.members.remove_all_primary"),
-          description: I18n.t("groups.members.remove_all_primary_description"),
+          name: i18n("groups.members.remove_all_primary"),
+          description: i18n("groups.members.remove_all_primary_description"),
           icon: "id-card",
         });
       }

@@ -1,14 +1,16 @@
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { iconHTML } from "discourse/lib/icon-library";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import { iconHTML } from "discourse-common/lib/icon-library";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
+import richEditorExtension from "../../lib/rich-editor-extension";
 
 function initializePlugin(api) {
   const siteSettings = api.container.lookup("service:site-settings");
 
   if (siteSettings.checklist_enabled) {
     api.decorateCookedElement(checklistSyntax);
+    api.registerRichEditorExtension(richEditorExtension);
   }
 }
 
@@ -55,14 +57,10 @@ export function checklistSyntax(elem, postDecorator) {
   const boxes = [...elem.getElementsByClassName("chcklst-box")];
   addUlClasses(boxes);
 
-  if (!postDecorator) {
-    return;
-  }
+  const postWidget = postDecorator?.widget;
+  const postModel = postDecorator?.getModel();
 
-  const postWidget = postDecorator.widget;
-  const postModel = postDecorator.getModel();
-
-  if (!postModel.can_edit) {
+  if (!postModel?.can_edit) {
     return;
   }
 
@@ -150,7 +148,7 @@ export function checklistSyntax(elem, postDecorator) {
 
         await postModel.save({
           raw: newRaw,
-          edit_reason: I18n.t("checklist.edit_reason"),
+          edit_reason: i18n("checklist.edit_reason"),
         });
 
         postWidget.attrs.isSaving = false;

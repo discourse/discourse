@@ -1,8 +1,6 @@
 // Modal wrappers
-
 .d-modal {
   pointer-events: none; // Allow clicks through wrappers so they hit the adjacent backdrop element
-
   display: flex;
   align-items: center;
   width: 100%;
@@ -14,10 +12,6 @@
 
   &.-inline {
     position: relative;
-  }
-
-  html.keyboard-visible body.ios-safari-composer-hacks & {
-    height: calc(var(--composer-vh, 1vh) * 100);
   }
 
   &__container {
@@ -35,15 +29,22 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.5rem 0.5rem 0.5rem 1.5rem; //offset for close button padding
+    padding: 0.5rem 0.5rem 0.5rem 1.5rem; // offset for close button padding
     border-bottom: 1px solid var(--primary-low);
 
     .modal-close {
       margin-left: auto;
       align-self: start;
+
       .d-icon {
         font-size: var(--font-up-2);
         color: var(--primary-high);
+      }
+
+      &:focus-visible {
+        .d-icon {
+          color: var(--primary);
+        }
       }
     }
   }
@@ -81,6 +82,7 @@
         width: 100%;
       }
     }
+
     textarea {
       width: 100%;
       height: 80px;
@@ -93,10 +95,12 @@
     section.field {
       padding: 0.25em 0;
       margin-bottom: 5px;
+
       &.with-items {
         display: flex;
         align-items: flex-start;
       }
+
       .field-item {
         display: inline-block;
         margin-right: 10px;
@@ -108,6 +112,7 @@
       max-width: 100%;
     }
   }
+
   &__footer {
     display: flex;
     flex-wrap: wrap;
@@ -116,6 +121,7 @@
     border-top: 1px solid var(--primary-low);
     gap: 0.5rem;
   }
+
   &__backdrop {
     user-select: none;
     position: fixed;
@@ -137,8 +143,7 @@
   }
 }
 
-//legacy
-
+// legacy
 .input-hint-text {
   margin-left: 0.5em;
   color: var(--secondary-high);
@@ -153,6 +158,7 @@
   left: 0;
   z-index: z("modal", "overlay");
   background-color: #111;
+
   &.fade {
     opacity: 0;
   }
@@ -161,11 +167,12 @@
 .modal-backdrop,
 .modal-backdrop.fade.in {
   animation: fade 0.3s;
+  opacity: 0.9;
+  filter: alpha(opacity=90);
+
   @media (prefers-reduced-motion) {
     animation-duration: 0s;
   }
-  opacity: 0.9;
-  filter: alpha(opacity=90);
 }
 
 // fade in
@@ -173,6 +180,7 @@
   from {
     opacity: 0;
   }
+
   to {
     opacity: 0.6;
   }
@@ -180,250 +188,6 @@
 
 .modal-form {
   margin-bottom: 0;
-}
-
-.modal {
-  .nav {
-    padding: 10px 30px 10px 15px;
-    background-color: var(--secondary);
-    li > a {
-      font-size: var(--font-0);
-    }
-    border-bottom: 1px solid var(--primary-low);
-  }
-
-  &.hidden {
-    display: none;
-  }
-
-  pre code {
-    white-space: pre-wrap;
-    max-width: var(--modal-max-width);
-  }
-}
-
-.reply-where-modal {
-  .dialog-content {
-    width: 100%;
-    min-width: unset;
-    max-width: 30em;
-  }
-
-  .dialog-footer {
-    display: block;
-  }
-
-  .btn {
-    display: block;
-    text-align: left;
-    margin-bottom: 0.75em;
-    margin-right: 0;
-    overflow: hidden;
-    width: 100%;
-
-    &.dialog-close {
-      display: none;
-    }
-
-    &.btn-reply-on-original {
-      --text-color: var(--secondary);
-    }
-
-    &.btn-reply-where__cancel {
-      padding-left: 0;
-      margin: 0;
-    }
-
-    &.btn-reply-here {
-      --text-color: var(--primary);
-      .discourse-no-touch & {
-        &:hover {
-          --text-color: var(--secondary);
-        }
-      }
-    }
-
-    &.btn-reply-where {
-      min-height: 3em; // for situations when there are no categories/tags
-    }
-
-    .fancy-title {
-      display: inline-block;
-      width: 100%;
-
-      @include ellipsis;
-    }
-
-    .topic-title__top-line {
-      display: flex;
-      align-items: baseline;
-      color: var(--text-color);
-      font-size: var(--font-up-1);
-      .d-icon {
-        color: var(--text-color);
-        margin: 0;
-      }
-    }
-
-    .topic-statuses {
-      display: flex;
-      font-size: 0.95em;
-    }
-
-    .topic-title__bottom-line {
-      margin-top: 0.15em;
-      display: flex;
-      align-items: baseline;
-      gap: 0.5em;
-      .discourse-tags {
-        font-size: var(--font-down-1);
-      }
-      .badge-category__name,
-      .discourse-tag {
-        color: var(--text-color);
-      }
-    }
-  }
-}
-
-.admin-delete-user-posts-progress-modal {
-  .progress-bar {
-    height: 15px;
-    position: relative;
-    background: var(--primary-low-mid);
-    border-radius: 25px;
-    overflow: hidden;
-    margin: 30px 0 20px;
-    span {
-      display: block;
-      width: 0%;
-      height: 100%;
-      background-color: var(--tertiary);
-      position: relative;
-      transition: width 0.6s linear;
-    }
-  }
-}
-
-.incoming-email-modal {
-  max-height: 80vh;
-
-  .btn {
-    background-color: transparent;
-    margin-right: 5px;
-    &:hover,
-    &.active {
-      color: var(--primary);
-    }
-    &.active {
-      font-weight: bold;
-    }
-    &:focus {
-      outline: 2px solid var(--primary-low);
-    }
-  }
-  .incoming-email-tabs {
-    margin-bottom: 15px;
-  }
-  .incoming-email-content {
-    height: 300px;
-    max-width: 100%;
-    width: 90vw; // forcing textarea wider
-    textarea,
-    .incoming-email-html-part {
-      height: 95%;
-      border: none;
-      border-top: 1px solid var(--primary-low);
-      padding-top: 10px;
-      width: 100%;
-    }
-    textarea {
-      font-family: var(--d-font-family--monospace);
-      resize: none;
-      border-radius: 0;
-      box-shadow: none;
-    }
-    .incoming-email-html-part {
-      width: calc(100% - 36px);
-      padding: 10px 4px 4px 4px;
-    }
-    @media screen and (max-width: 760px) {
-      .incoming-email-html-part {
-        width: calc(100% - 10px);
-      }
-    }
-  }
-}
-
-.change-timestamp {
-  width: 28em; // scales with user font-size
-  max-width: 90vw; // prevents overflow due to extra large user font-size
-}
-
-.change-timestamp {
-  #date-container {
-    .pika-single {
-      position: relative !important; // overriding another important
-      display: inline-block;
-      margin-top: 0.5em;
-    }
-  }
-
-  .date-picker-wrapper {
-    min-width: 130px;
-    margin-right: 0.5em;
-  }
-
-  input[type="time"] {
-    width: 130px;
-  }
-
-  form {
-    margin: 0;
-  }
-}
-
-.flag-modal-body {
-  form {
-    margin: 0;
-  }
-  .flag-action-type .controls .checkbox-label {
-    margin-bottom: 0.25em;
-  }
-  .flag-action-type-details {
-    width: 100%;
-    // max-width: 500px;
-    line-height: var(--line-height-large);
-    a {
-      margin: 0;
-    }
-  }
-  .flag-confirmation {
-    margin-top: 0.5em;
-    padding-left: 1.125em;
-  }
-}
-
-.flag-message {
-  margin: 0;
-}
-
-.custom-message-length {
-  color: var(--primary-medium);
-  font-size: var(--font-down-1);
-}
-
-.ignore-duration-with-username-modal {
-  .future-date-input {
-    margin-top: 1em;
-  }
-}
-
-.modal:not(.has-tabs) {
-  .modal-tab {
-    position: absolute;
-    width: 95%;
-  }
 }
 
 .modal {
@@ -455,6 +219,267 @@
       }
     }
   }
+
+  &:not(.has-tabs) {
+    .modal-tab {
+      position: absolute;
+      width: 95%;
+    }
+  }
+
+  .nav {
+    padding: 10px 30px 10px 15px;
+    background-color: var(--secondary);
+    border-bottom: 1px solid var(--primary-low);
+
+    li > a {
+      font-size: var(--font-0);
+    }
+  }
+
+  &.hidden {
+    display: none;
+  }
+
+  pre code {
+    white-space: pre-wrap;
+    max-width: var(--modal-max-width);
+  }
+}
+
+.reply-where-modal {
+  .dialog-content {
+    width: 100%;
+    min-width: unset;
+    max-width: 30em;
+  }
+
+  .dialog-footer {
+    display: block;
+  }
+
+  .btn {
+    display: block;
+    text-align: left;
+    margin-bottom: 0.75em;
+    margin-right: 0;
+    overflow: hidden;
+    width: 100%;
+    border-radius: var(--d-border-radius);
+
+    &.dialog-close {
+      display: none;
+    }
+
+    &.btn-reply-on-original {
+      --text-color: var(--secondary);
+    }
+
+    &.btn-reply-where__cancel {
+      padding-left: 0;
+      margin: 0;
+    }
+
+    &.btn-reply-here {
+      --text-color: var(--primary);
+
+      .discourse-no-touch & {
+        &:hover {
+          --text-color: var(--secondary);
+        }
+      }
+    }
+
+    &.btn-reply-where {
+      min-height: 3em; // for situations when there are no categories/tags
+    }
+
+    .fancy-title {
+      display: inline-block;
+      width: 100%;
+
+      @include ellipsis;
+    }
+
+    .topic-title__top-line {
+      display: flex;
+      align-items: baseline;
+      color: var(--text-color);
+      font-size: var(--font-up-1);
+
+      .d-icon {
+        color: var(--text-color);
+        margin: 0;
+      }
+    }
+
+    .topic-statuses {
+      display: flex;
+      font-size: 0.95em;
+    }
+
+    .topic-title__bottom-line {
+      margin-top: 0.15em;
+      display: flex;
+      align-items: baseline;
+      gap: 0.5em;
+
+      .discourse-tags {
+        font-size: var(--font-down-1);
+      }
+
+      .badge-category__name,
+      .discourse-tag {
+        color: var(--text-color);
+      }
+    }
+  }
+}
+
+.admin-delete-user-posts-progress-modal {
+  .progress-bar {
+    height: 15px;
+    position: relative;
+    background: var(--primary-low-mid);
+    border-radius: 25px;
+    overflow: hidden;
+    margin: 30px 0 20px;
+
+    span {
+      display: block;
+      width: 0%;
+      height: 100%;
+      background-color: var(--tertiary);
+      position: relative;
+      transition: width 0.6s linear;
+    }
+  }
+}
+
+.incoming-email-modal {
+  max-height: 80vh;
+
+  .btn {
+    background-color: transparent;
+    margin-right: 5px;
+
+    &:hover,
+    &.active {
+      color: var(--primary);
+    }
+
+    &.active {
+      font-weight: bold;
+    }
+
+    &:focus {
+      outline: 2px solid var(--primary-low);
+    }
+  }
+
+  .incoming-email-tabs {
+    margin-bottom: 15px;
+  }
+
+  .incoming-email-content {
+    height: 300px;
+    max-width: 100%;
+    width: 90vw; // forcing textarea wider
+
+    textarea,
+    .incoming-email-html-part {
+      height: 95%;
+      border: none;
+      border-top: 1px solid var(--primary-low);
+      padding-top: 10px;
+      width: 100%;
+    }
+
+    textarea {
+      font-family: var(--d-font-family--monospace);
+      resize: none;
+      border-radius: 0;
+      box-shadow: none;
+    }
+
+    .incoming-email-html-part {
+      width: calc(100% - 36px);
+      padding: 10px 4px 4px 4px;
+    }
+
+    @media screen and (width <= 760px) {
+      .incoming-email-html-part {
+        width: calc(100% - 10px);
+      }
+    }
+  }
+}
+
+.change-timestamp {
+  width: 28em; // scales with user font-size
+  max-width: 90vw; // prevents overflow due to extra large user font-size
+
+  #date-container {
+    .pika-single {
+      position: relative !important; // overriding another important
+      display: inline-block;
+      margin-top: 0.5em;
+    }
+  }
+
+  .date-picker-wrapper {
+    min-width: 130px;
+    margin-right: 0.5em;
+  }
+
+  input[type="time"] {
+    width: 130px;
+  }
+
+  form {
+    margin: 0;
+  }
+}
+
+.flag-modal-body {
+  form {
+    margin: 0;
+  }
+
+  .flag-action-type .controls .checkbox-label {
+    margin-bottom: 0.25em;
+  }
+
+  .flag-action-type-details {
+    width: 100%;
+
+    // max-width: 500px;
+    line-height: var(--line-height-large);
+
+    a {
+      margin: 0;
+    }
+  }
+
+  .flag-confirmation {
+    margin-top: 0.5em;
+    padding-left: 1.125em;
+  }
+}
+
+.flag-message {
+  margin: 0;
+}
+
+.custom-message-length {
+  color: var(--primary-medium);
+  font-size: var(--font-down-1);
+}
+
+.ignore-duration-with-username-modal {
+  .future-date-input {
+    margin-top: 1em;
+  }
 }
 
 .bulk-notification-list {
@@ -465,6 +490,7 @@
   flex-wrap: wrap;
   align-items: baseline;
   margin-bottom: 0.5em;
+
   .description {
     width: 100%;
     margin-top: 0.25em;

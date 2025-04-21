@@ -53,7 +53,7 @@ RSpec.describe "tasks/version_bump" do
   end
 
   it "can bump the beta version with version_bump:beta" do
-    Dir.chdir(local_path) { capture_stdout { Rake::Task["version_bump:beta"].invoke } }
+    Dir.chdir(local_path) { capture_stdout { invoke_rake_task("version_bump:beta") } }
 
     Dir.chdir(origin_path) do
       # Commits are present with correct messages
@@ -83,7 +83,7 @@ RSpec.describe "tasks/version_bump" do
   end
 
   it "can perform a minor stable bump with version_bump:minor_stable" do
-    Dir.chdir(local_path) { capture_stdout { Rake::Task["version_bump:minor_stable"].invoke } }
+    Dir.chdir(local_path) { capture_stdout { invoke_rake_task("version_bump:minor_stable") } }
 
     Dir.chdir(origin_path) do
       # No commits on main branch
@@ -110,7 +110,7 @@ RSpec.describe "tasks/version_bump" do
 
   it "can prepare a major stable bump with version_bump:major_stable_prepare" do
     Dir.chdir(local_path) do
-      capture_stdout { Rake::Task["version_bump:major_stable_prepare"].invoke("3.3.0") }
+      capture_stdout { invoke_rake_task("version_bump:major_stable_prepare", "3.3.0") }
     end
 
     Dir.chdir(origin_path) do
@@ -148,9 +148,9 @@ RSpec.describe "tasks/version_bump" do
   it "can merge a stable release commit into the stable branch with version_bump:major_stable_merge" do
     Dir.chdir(local_path) do
       # Prepare first, and find sha1 in output
-      output = capture_stdout { Rake::Task["version_bump:major_stable_prepare"].invoke("3.3.0") }
+      output = capture_stdout { invoke_rake_task("version_bump:major_stable_prepare", "3.3.0") }
       stable_bump_commit = output[/major_stable_merge\[(.*)\]/, 1]
-      capture_stdout { Rake::Task["version_bump:major_stable_merge"].invoke(stable_bump_commit) }
+      capture_stdout { invoke_rake_task("version_bump:major_stable_merge", stable_bump_commit) }
     end
 
     Dir.chdir(origin_path) do
@@ -204,7 +204,7 @@ RSpec.describe "tasks/version_bump" do
       output =
         capture_stdout do
           ENV["SECURITY_FIX_REFS"] = "origin/security-fix-one,origin/security-fix-two"
-          Rake::Task["version_bump:stage_security_fixes"].invoke("main")
+          invoke_rake_task("version_bump:stage_security_fixes", "main")
         ensure
           ENV.delete("SECURITY_FIX_REFS")
         end

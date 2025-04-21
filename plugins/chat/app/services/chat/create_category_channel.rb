@@ -31,6 +31,7 @@ module Chat
 
     policy :public_channels_enabled
     policy :can_create_channel
+
     params do
       attribute :name, :string
       attribute :description, :string
@@ -48,12 +49,15 @@ module Chat
       validates :category_id, presence: true
       validates :name, length: { maximum: SiteSetting.max_topic_title_length }
     end
+
     model :category
     policy :category_channel_does_not_exist
+
     transaction do
       model :channel, :create_channel
       model :membership, :create_membership
     end
+
     step :auto_join_users_if_needed
 
     private

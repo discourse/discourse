@@ -1,7 +1,7 @@
 import { computed, setProperties } from "@ember/object";
 import { classNames } from "@ember-decorators/component";
 import { allLevels, buttonDetails } from "discourse/lib/notification-levels";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
 import {
   pluginApiIdentifiers,
@@ -22,7 +22,7 @@ export default class NotificationsButton extends DropdownSelectBoxComponent {
 
   getTitle(key) {
     const { i18nPrefix, i18nPostfix } = this.selectKit.options;
-    return I18n.t(`${i18nPrefix}.${key}${i18nPostfix}.title`);
+    return i18n(`${i18nPrefix}.${key}${i18nPostfix}.title`);
   }
 
   modifyComponentForRow(_, content) {

@@ -5,6 +5,21 @@ module PageObjects
     class Composer < PageObjects::Components::Base
       COMPOSER_ID = "#reply-control"
       AUTOCOMPLETE_MENU = ".autocomplete.ac-emoji"
+      HASHTAG_MENU = ".autocomplete.hashtag-autocomplete"
+      MENTION_MENU = ".autocomplete.ac-user"
+      RICH_EDITOR = ".d-editor-input.ProseMirror"
+
+      def rich_editor
+        find(RICH_EDITOR)
+      end
+
+      def has_rich_editor?
+        page.has_css?(RICH_EDITOR)
+      end
+
+      def has_no_rich_editor?
+        page.has_no_css?(RICH_EDITOR)
+      end
 
       def opened?
         page.has_css?("#{COMPOSER_ID}.open")
@@ -14,6 +29,10 @@ module PageObjects
         page.has_css?("#{COMPOSER_ID}.closed", visible: :all)
       end
 
+      def minimized?
+        page.has_css?("#{COMPOSER_ID}.draft")
+      end
+
       def open_composer_actions
         find(".composer-action-title .btn").click
         self
@@ -21,6 +40,11 @@ module PageObjects
 
       def click_toolbar_button(button_class)
         find(".d-editor-button-bar button.#{button_class}").click
+        self
+      end
+
+      def focus
+        find(COMPOSER_INPUT_SELECTOR).click
         self
       end
 
@@ -61,6 +85,10 @@ module PageObjects
 
       def has_content?(content)
         composer_input.value == content
+      end
+
+      def has_value?(value)
+        expect(composer_input.value).to eq(value)
       end
 
       def has_popup_content?(content)
@@ -107,6 +135,18 @@ module PageObjects
 
       def has_discard_draft_modal?
         page.has_css?(".discard-draft-modal")
+      end
+
+      def has_hashtag_autocomplete?
+        has_css?(HASHTAG_MENU)
+      end
+
+      def has_mention_autocomplete?
+        has_css?(MENTION_MENU)
+      end
+
+      def mention_menu_autocomplete_username_list
+        find(MENTION_MENU).all("a").map { |a| a.text }
       end
 
       def has_emoji_autocomplete?
@@ -189,6 +229,10 @@ module PageObjects
         page.has_css?(".form-template-field__error", text: error, visible: :all)
       end
 
+      def has_no_form_template_field_error?(error)
+        page.has_no_css?(".form-template-field__error", text: error, visible: :all)
+      end
+
       def has_form_template_field_label?(label)
         page.has_css?(".form-template-field__label", text: label)
       end
@@ -267,6 +311,15 @@ module PageObjects
         select_kit.search(username)
         select_kit.select_row_by_value(username)
         select_kit.collapse
+      end
+
+      def toggle_rich_editor
+        editor_toggle_switch.click
+        self
+      end
+
+      def editor_toggle_switch
+        find("#{COMPOSER_ID} .composer-toggle-switch")
       end
 
       private

@@ -26,7 +26,7 @@ module(
 
       this.subject.prefersFullPage();
 
-      assert.ok(this.subject.isFullPagePreferred);
+      assert.true(this.subject.isFullPagePreferred);
 
       this.subject.prefersDrawer();
 
@@ -35,11 +35,11 @@ module(
       this.subject.prefersDrawer();
       Site.currentProp("mobileView", true);
 
-      assert.ok(this.subject.isFullPagePreferred);
+      assert.true(this.subject.isFullPagePreferred);
     });
 
     test("isDrawerPreferred", function (assert) {
-      assert.ok(this.subject.isDrawerPreferred);
+      assert.true(this.subject.isDrawerPreferred);
 
       this.subject.prefersFullPage();
 
@@ -47,7 +47,7 @@ module(
 
       this.subject.prefersDrawer();
 
-      assert.ok(this.subject.isDrawerPreferred);
+      assert.true(this.subject.isDrawerPreferred);
     });
 
     test("lastKnownChatURL", function (assert) {
@@ -76,14 +76,14 @@ module(
       assert.false(this.subject.isFullPageActive);
 
       sinon.stub(this.subject.router, "currentRouteName").value("chat");
-      assert.ok(this.subject.isFullPageActive);
+      assert.true(this.subject.isFullPageActive);
     });
 
     test("didCollapseDrawer", function (assert) {
       this.subject.didCollapseDrawer();
 
-      assert.strictEqual(this.subject.isDrawerExpanded, false);
-      assert.strictEqual(this.subject.isDrawerActive, true);
+      assert.false(this.subject.isDrawerExpanded);
+      assert.true(this.subject.isDrawerActive);
     });
 
     test("didExpandDrawer", function (assert) {
@@ -94,8 +94,8 @@ module(
 
       this.subject.didExpandDrawer();
 
-      assert.strictEqual(this.subject.isDrawerExpanded, true);
-      assert.strictEqual(this.subject.isDrawerActive, true);
+      assert.true(this.subject.isDrawerExpanded);
+      assert.true(this.subject.isDrawerActive);
       sinon.assert.calledOnce(stub);
     });
 
@@ -107,8 +107,8 @@ module(
 
       this.subject.didCloseDrawer();
 
-      assert.strictEqual(this.subject.isDrawerExpanded, false);
-      assert.strictEqual(this.subject.isDrawerActive, false);
+      assert.false(this.subject.isDrawerExpanded);
+      assert.false(this.subject.isDrawerActive);
       sinon.assert.calledOnce(stub);
     });
 
@@ -120,8 +120,8 @@ module(
 
       this.subject.didOpenDrawer();
 
-      assert.strictEqual(this.subject.isDrawerExpanded, true);
-      assert.strictEqual(this.subject.isDrawerActive, true);
+      assert.true(this.subject.isDrawerExpanded);
+      assert.true(this.subject.isDrawerActive);
       assert.strictEqual(this.subject.lastKnownChatURL, "/chat");
 
       this.subject.didOpenDrawer("/foo");
@@ -138,13 +138,13 @@ module(
 
       this.subject.didOpenDrawer();
 
-      assert.strictEqual(this.state.isDrawerActive, true);
-      assert.strictEqual(this.state.isDrawerExpanded, true);
+      assert.true(this.state.isDrawerActive);
+      assert.true(this.state.isDrawerExpanded);
 
       this.subject.didCloseDrawer();
 
-      assert.strictEqual(this.state.isDrawerActive, false);
-      assert.strictEqual(this.state.isDrawerExpanded, false);
+      assert.false(this.state.isDrawerActive);
+      assert.false(this.state.isDrawerExpanded);
 
       resetChatDrawerStateCallbacks();
     });

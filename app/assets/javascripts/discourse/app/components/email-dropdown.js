@@ -1,7 +1,7 @@
 import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import { classNames } from "@ember-decorators/component";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
 import { selectKitOptions } from "select-kit/components/select-kit";
 
@@ -21,7 +21,7 @@ export default class EmailDropdown extends DropdownSelectBoxComponent {
       content.push({
         id: "updateEmail",
         icon: "pencil",
-        name: I18n.t("user.email.update_email"),
+        name: i18n("user.email.update_email"),
         description: "",
       });
     }
@@ -30,7 +30,7 @@ export default class EmailDropdown extends DropdownSelectBoxComponent {
       content.push({
         id: "setPrimaryEmail",
         icon: "star",
-        name: I18n.t("user.email.set_primary"),
+        name: i18n("user.email.set_primary"),
         description: "",
       });
     }
@@ -39,7 +39,7 @@ export default class EmailDropdown extends DropdownSelectBoxComponent {
       content.push({
         id: "destroyEmail",
         icon: "xmark",
-        name: I18n.t("user.email.destroy"),
+        name: i18n("user.email.destroy"),
         description: "",
       });
     }

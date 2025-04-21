@@ -1,6 +1,6 @@
 .spoiled {
   cursor: auto;
-  -webkit-transform: translateZ(0); // Safari jitter fix
+  transform: translateZ(0); // Safari jitter fix
 
   .lightbox .meta {
     display: none;
@@ -50,5 +50,14 @@
         filter: blur(0.5em);
       }
     }
+  }
+}
+
+.ProseMirror {
+  .spoiled:not(.spoiler-blurred) {
+    box-shadow: 0 0 4px 4px rgba(var(--primary-rgb), 0.2);
+    inline-size: max-content;
+    padding-left: 2px;
+    padding-right: 2px;
   }
 }

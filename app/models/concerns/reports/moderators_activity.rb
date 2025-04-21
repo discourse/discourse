@@ -47,7 +47,7 @@ module Reports::ModeratorsActivity
         },
       ]
 
-      report.modes = [:table]
+      report.modes = [Report::MODES[:table]]
       report.data = []
 
       query = <<~SQL

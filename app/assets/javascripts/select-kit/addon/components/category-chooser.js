@@ -6,7 +6,7 @@ import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import { setting } from "discourse/lib/computed";
 import Category from "discourse/models/category";
 import PermissionType from "discourse/models/permission-type";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import CategoryRow from "select-kit/components/category-row";
 import ComboBoxComponent from "select-kit/components/combo-box";
 import { pluginApiIdentifiers, selectKitOptions } from "./select-kit";
@@ -53,9 +53,7 @@ export default class CategoryChooser extends ComboBoxComponent {
       const isString = typeof none === "string";
       return this.defaultItem(
         null,
-        htmlSafe(
-          I18n.t(isString ? this.selectKit.options.none : "category.none")
-        )
+        htmlSafe(i18n(isString ? this.selectKit.options.none : "category.none"))
       );
     } else if (this.selectKit.options.allowUncategorized) {
       return Category.findUncategorized();
@@ -65,7 +63,7 @@ export default class CategoryChooser extends ComboBoxComponent {
         10
       );
       if (!defaultCategoryId || defaultCategoryId < 0) {
-        return this.defaultItem(null, htmlSafe(I18n.t("category.choose")));
+        return this.defaultItem(null, htmlSafe(i18n("category.choose")));
       }
     }
   }

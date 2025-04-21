@@ -6,7 +6,7 @@ import { service } from "@ember/service";
 import { gte } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import MembersCount from "./members-count";
 import MembersSelector from "./members-selector";
 
@@ -17,7 +17,7 @@ export default class NewGroup extends Component {
 
   @tracked newGroupTitle = "";
 
-  placeholder = I18n.t("chat.direct_message_creator.group_name");
+  placeholder = i18n("chat.direct_message_creator.group_name");
 
   get membersCount() {
     return this.args.members?.reduce((acc, member) => {
@@ -92,11 +92,7 @@ export default class NewGroup extends Component {
         {{#if @members.length}}
           <div class="chat-message-creator__new-group-footer-container">
             <div class="chat-message-creator__new-group-footer">
-              <DButton
-                class="btn-primary btn-flat"
-                @label="cancel"
-                @action={{@cancel}}
-              />
+              <DButton class="btn-flat" @label="cancel" @action={{@cancel}} />
               <DButton
                 class="btn-primary create-chat-group"
                 @label="chat.new_message_modal.create_new_group_chat"

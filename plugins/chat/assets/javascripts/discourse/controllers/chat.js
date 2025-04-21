@@ -27,6 +27,7 @@ export default class ChatController extends Controller {
       this.chatStateManager.hasPreloadedChannels
     );
   }
+
   get shouldUseCoreSidebar() {
     return this.siteSettings.navigation_menu === "sidebar";
   }

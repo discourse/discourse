@@ -1,29 +1,27 @@
 import Controller, { inject as controller } from "@ember/controller";
-import EmberObject, { action } from "@ember/object";
+import EmberObject, { action, computed } from "@ember/object";
 import { alias, gt, not, or } from "@ember/object/computed";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import UserStatusModal from "discourse/components/modal/user-status";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
 import { propertyNotEqual, setting } from "discourse/lib/computed";
+import discourseComputed from "discourse/lib/decorators";
 import { exportUserArchive } from "discourse/lib/export-csv";
+import getURL from "discourse/lib/get-url";
 import DiscourseURL from "discourse/lib/url";
-import CanCheckEmails from "discourse/mixins/can-check-emails";
 import { findAll } from "discourse/models/login-method";
-import getURL from "discourse-common/lib/get-url";
-import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
-export default class AccountController extends Controller.extend(
-  CanCheckEmails
-) {
+export default class AccountController extends Controller {
   @service dialog;
   @service modal;
-
   @controller user;
 
   @setting("enable_names") canEditName;
   @setting("enable_user_status") canSelectUserStatus;
+  @setting("moderators_view_emails") canModeratorsViewEmails;
 
   @alias("user.viewingSelf") canDownloadPosts;
   @not("currentUser.can_delete_account") cannotDeleteAccount;
@@ -56,10 +54,19 @@ export default class AccountController extends Controller.extend(
     this.set("passwordProgress", null);
   }
 
+  @computed("model.id", "currentUser.id")
+  get canCheckEmails() {
+    return new CanCheckEmailsHelper(
+      this.model.id,
+      this.canModeratorsViewEmails,
+      this.currentUser
+    ).canCheckEmails;
+  }
+
   @discourseComputed()
   nameInstructions() {
-    return I18n.t(
-      this.siteSettings.full_name_required
+    return i18n(
+      this.site.full_name_required_for_signup
         ? "user.name.instructions_required"
         : "user.name.instructions"
     );
@@ -206,18 +213,18 @@ export default class AccountController extends Controller.extend(
   @action
   delete() {
     this.dialog.alert({
-      message: I18n.t("user.delete_account_confirm"),
+      message: i18n("user.delete_account_confirm"),
       buttons: [
         {
           icon: "triangle-exclamation",
-          label: I18n.t("user.delete_account"),
+          label: i18n("user.delete_account"),
           class: "btn-danger",
           action: () => {
             return this.model.delete().then(
               () => {
                 next(() => {
                   this.dialog.alert({
-                    message: I18n.t("user.deleted_yourself"),
+                    message: i18n("user.deleted_yourself"),
                     didConfirm: () =>
                       DiscourseURL.redirectAbsolute(getURL("/")),
                     didCancel: () => DiscourseURL.redirectAbsolute(getURL("/")),
@@ -226,7 +233,7 @@ export default class AccountController extends Controller.extend(
               },
               () => {
                 next(() =>
-                  this.dialog.alert(I18n.t("user.delete_yourself_not_allowed"))
+                  this.dialog.alert(i18n("user.delete_yourself_not_allowed"))
                 );
                 this.set("deleting", false);
               }
@@ -234,7 +241,7 @@ export default class AccountController extends Controller.extend(
           },
         },
         {
-          label: I18n.t("composer.cancel"),
+          label: i18n("composer.cancel"),
         },
       ],
     });
@@ -265,7 +272,7 @@ export default class AccountController extends Controller.extend(
   @action
   exportUserArchive() {
     this.dialog.yesNoConfirm({
-      message: I18n.t("user.download_archive.confirm"),
+      message: i18n("user.download_archive.confirm"),
       didConfirm: () => exportUserArchive(),
     });
   }

@@ -7,8 +7,7 @@ import { isBlank } from "@ember/utils";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import i18n from "discourse-common/helpers/i18n";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import ChatChannelChooser from "../../chat-channel-chooser";
 
 export default class ChatModalMoveMessageToChannel extends Component {
@@ -44,7 +43,7 @@ export default class ChatModalMoveMessageToChannel extends Component {
 
   get instructionsText() {
     return htmlSafe(
-      I18n.t("chat.move_to_channel.instructions", {
+      i18n("chat.move_to_channel.instructions", {
         channelTitle: this.sourceChannel.escapedTitle,
         count: this.selectedMessageCount,
       })

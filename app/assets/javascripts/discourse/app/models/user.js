@@ -14,13 +14,19 @@ import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { url } from "discourse/lib/computed";
 import cookie, { removeCookie } from "discourse/lib/cookie";
+import discourseComputed from "discourse/lib/decorators";
+import deprecated from "discourse/lib/deprecated";
+import { isTesting } from "discourse/lib/environment";
 import { longDate } from "discourse/lib/formatter";
+import { getOwnerWithFallback } from "discourse/lib/get-owner";
+import getURL, { getURLWithCDN } from "discourse/lib/get-url";
+import discourseLater from "discourse/lib/later";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import PreloadStore from "discourse/lib/preload-store";
+import singleton from "discourse/lib/singleton";
 import { emojiUnescape } from "discourse/lib/text";
 import { userPath } from "discourse/lib/url";
 import { defaultHomepage, escapeExpression } from "discourse/lib/utilities";
-import Singleton from "discourse/mixins/singleton";
 import Badge from "discourse/models/badge";
 import Bookmark from "discourse/models/bookmark";
 import Category from "discourse/models/category";
@@ -33,13 +39,7 @@ import UserBadge from "discourse/models/user-badge";
 import UserDraftsStream from "discourse/models/user-drafts-stream";
 import UserPostsStream from "discourse/models/user-posts-stream";
 import UserStream from "discourse/models/user-stream";
-import { isTesting } from "discourse-common/config/environment";
-import deprecated from "discourse-common/lib/deprecated";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
-import getURL, { getURLWithCDN } from "discourse-common/lib/get-url";
-import discourseLater from "discourse-common/lib/later";
-import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export const SECOND_FACTOR_METHODS = {
   TOTP: 1,
@@ -174,7 +174,36 @@ function userOption(userOptionKey) {
   });
 }
 
+@singleton
 export default class User extends RestModel.extend(Evented) {
+  static createCurrent() {
+    const userJson = PreloadStore.get("currentUser");
+    if (userJson) {
+      userJson.isCurrent = true;
+
+      if (userJson.primary_group_id) {
+        const primaryGroup = userJson.groups.find(
+          (group) => group.id === userJson.primary_group_id
+        );
+        if (primaryGroup) {
+          userJson.primary_group_name = primaryGroup.name;
+        }
+      }
+
+      if (!userJson.user_option.timezone) {
+        userJson.user_option.timezone = moment.tz.guess();
+        this._saveTimezone(userJson);
+      }
+
+      const store = getOwnerWithFallback(this).lookup("service:store");
+      const currentUser = store.createRecord("user", userJson);
+      currentUser.statusManager.trackStatus();
+      return currentUser;
+    }
+
+    return null;
+  }
+
   @service appEvents;
   @service userTips;
 
@@ -559,6 +588,12 @@ export default class User extends RestModel.extend(Evented) {
       dataType: "json",
       data: { login: this.email || this.username },
       type: "POST",
+    });
+  }
+
+  async removePassword() {
+    return ajax(userPath(`${this.username}/remove-password`), {
+      type: "PUT",
     });
   }
 
@@ -990,7 +1025,7 @@ export default class User extends RestModel.extend(Evented) {
         data: { context: window.location.pathname },
       });
     } else {
-      return Promise.reject(I18n.t("user.delete_yourself_not_allowed"));
+      return Promise.reject(i18n("user.delete_yourself_not_allowed"));
     }
   }
 
@@ -1088,9 +1123,7 @@ export default class User extends RestModel.extend(Evented) {
   }
 
   canManageGroup(group) {
-    return group.get("automatic")
-      ? false
-      : group.get("can_admin_group") || group.get("is_group_owner");
+    return group.get("can_admin_group") || group.get("is_group_owner");
   }
 
   @discourseComputed("groups.@each.title", "badges.[]")
@@ -1255,40 +1288,11 @@ export default class User extends RestModel.extend(Evented) {
   }
 }
 
-User.reopenClass(Singleton, {
+User.reopenClass({
   // Find a `User` for a given username.
   findByUsername(username, options) {
     const user = User.create({ username });
     return user.findDetails(options);
-  },
-
-  // TODO: Use app.register and junk Singleton
-  createCurrent() {
-    const userJson = PreloadStore.get("currentUser");
-    if (userJson) {
-      userJson.isCurrent = true;
-
-      if (userJson.primary_group_id) {
-        const primaryGroup = userJson.groups.find(
-          (group) => group.id === userJson.primary_group_id
-        );
-        if (primaryGroup) {
-          userJson.primary_group_name = primaryGroup.name;
-        }
-      }
-
-      if (!userJson.user_option.timezone) {
-        userJson.user_option.timezone = moment.tz.guess();
-        this._saveTimezone(userJson);
-      }
-
-      const store = getOwnerWithFallback(this).lookup("service:store");
-      const currentUser = store.createRecord("user", userJson);
-      currentUser.statusManager.trackStatus();
-      return currentUser;
-    }
-
-    return null;
   },
 
   checkUsername(username, email, for_user_id) {
@@ -1448,7 +1452,7 @@ class UserStatusManager {
   }
 
   _statusChanged() {
-    this.user.trigger("status-changed");
+    this.user.trigger("status-changed", this.user);
 
     const status = this.user.status;
     if (status && status.ends_at) {
@@ -1482,12 +1486,12 @@ class UserStatusManager {
   }
 
   _autoClearStatus() {
-    this.user.set("status", null);
+    this.user.status = null;
   }
 
   _updateStatus(statuses) {
     if (statuses.hasOwnProperty(this.user.id)) {
-      this.user.set("status", statuses[this.user.id]);
+      this.user.status = statuses[this.user.id];
     }
   }
 }

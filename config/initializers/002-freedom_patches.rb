@@ -4,7 +4,7 @@
 # Therefore it can not be postponed with .to_prepare
 RUN_WITHOUT_PREPARE = [
   "#{Rails.root}/lib/freedom_patches/rails_multisite.rb",
-  "#{Rails.root}/lib/freedom_patches/rails_rack_logger_from_rails_7_2.rb",
+  "#{Rails.root}/lib/freedom_patches/sidekiq.rb",
 ]
 RUN_WITHOUT_PREPARE.each { |path| require(path) }
 

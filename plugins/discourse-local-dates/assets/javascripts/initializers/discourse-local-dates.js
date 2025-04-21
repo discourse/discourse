@@ -1,18 +1,19 @@
 import { setOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import { bind } from "discourse/lib/decorators";
 import { downloadCalendar } from "discourse/lib/download-calendar";
+import { iconHTML, renderIcon } from "discourse/lib/icon-library";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import {
   addTagDecorateCallback,
   addTextDecorateCallback,
 } from "discourse/lib/to-markdown";
-import { iconHTML, renderIcon } from "discourse-common/lib/icon-library";
-import { bind } from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import generateDateMarkup from "discourse/plugins/discourse-local-dates/lib/local-date-markup-generator";
 import LocalDatesCreateModal from "../discourse/components/modal/local-dates-create";
 import LocalDateBuilder from "../lib/local-date-builder";
+import richEditorExtension from "../lib/rich-editor-extension";
 
 // Import applyLocalDates from discourse/lib/local-dates instead
 export function applyLocalDates(dates, siteSettings) {
@@ -142,8 +143,11 @@ function _partitionedRanges(element) {
 }
 
 function initializeDiscourseLocalDates(api) {
+  api.registerRichEditorExtension(richEditorExtension);
+
+  const modal = api.container.lookup("service:modal");
   const siteSettings = api.container.lookup("service:site-settings");
-  const defaultTitle = I18n.t("discourse_local_dates.default_title", {
+  const defaultTitle = i18n("discourse_local_dates.default_title", {
     site_name: siteSettings.title,
   });
 
@@ -164,41 +168,32 @@ function initializeDiscourseLocalDates(api) {
       id: "local-dates",
       group: "extras",
       icon: "calendar-days",
-      sendAction: (event) =>
-        toolbar.context.send("insertDiscourseLocalDate", event),
+      perform: (event) =>
+        modal.show(LocalDatesCreateModal, {
+          model: { insertDate: (markup) => event.addText(markup) },
+        }),
+      shortcut: "Shift+.",
+      shortcutAction: (event) => {
+        const timezone = api.getCurrentUser().user_option.timezone;
+        const time = moment().format("HH:mm:ss");
+        const date = moment().format("YYYY-MM-DD");
+
+        event.addText(`[date=${date} time=${time} timezone="${timezone}"]`);
+      },
     });
   });
 
-  api.modifyClass("component:d-editor", {
-    modal: service(),
-    pluginId: "discourse-local-dates",
-    actions: {
-      insertDiscourseLocalDate(toolbarEvent) {
-        this.modal.show(LocalDatesCreateModal, {
-          model: {
-            insertDate: (markup) => {
-              toolbarEvent.addText(markup);
-            },
-          },
-        });
-      },
-    },
-  });
-
-  addTextDecorateCallback(function (
-    text,
-    nextElement,
-    _previousElement,
-    metadata
-  ) {
-    if (
-      metadata.discourseLocalDateStartRangeOpts &&
-      nextElement?.attributes.class?.includes("discourse-local-date") &&
-      text === "→"
-    ) {
-      return "";
+  addTextDecorateCallback(
+    function (text, nextElement, _previousElement, metadata) {
+      if (
+        metadata.discourseLocalDateStartRangeOpts &&
+        nextElement?.attributes.class?.includes("discourse-local-date") &&
+        text === "→"
+      ) {
+        return "";
+      }
     }
-  });
+  );
   addTagDecorateCallback(function () {
     if (this.element.attributes.class?.includes("discourse-local-date")) {
       if (this.metadata.discourseLocalDateStartRangeOpts) {
@@ -312,7 +307,7 @@ function _downloadCalendarNode(element) {
 
   const node = document.createElement("div");
   node.classList.add("download-calendar");
-  node.innerHTML = `${renderIcon("string", "file")} ${I18n.t(
+  node.innerHTML = `${renderIcon("string", "file")} ${i18n(
     "download_calendar.add_to_calendar"
   )}`;
   node.setAttribute("data-starts-at", startDate.toISOString());

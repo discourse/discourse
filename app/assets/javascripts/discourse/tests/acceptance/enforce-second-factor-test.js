@@ -55,7 +55,7 @@ acceptance("Enforce Second Factor for unconfirmed session", function (needs) {
 
     await visit("/u/eviltrout/preferences/second-factor");
     this.siteSettings.enforce_second_factor = "all";
-    this.siteSettings.allow_anonymous_posting = true;
+    this.siteSettings.allow_anonymous_mode = true;
 
     await catchAbortedTransition();
 
@@ -66,7 +66,7 @@ acceptance("Enforce Second Factor for unconfirmed session", function (needs) {
     );
 
     await click(
-      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
+      ".sidebar-section[data-section-name='community'] .sidebar-more-section-trigger"
     );
 
     await click(

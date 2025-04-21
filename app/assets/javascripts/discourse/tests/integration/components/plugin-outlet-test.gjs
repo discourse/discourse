@@ -2,23 +2,22 @@ import Component from "@glimmer/component";
 import templateOnly from "@ember/component/template-only";
 import { hash } from "@ember/helper";
 import { getOwner } from "@ember/owner";
-import { click, render, settled } from "@ember/test-helpers";
+import { click, find, render, settled } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import deprecatedOutletArgument from "discourse/helpers/deprecated-outlet-argument";
+import deprecated, {
+  withSilencedDeprecations,
+  withSilencedDeprecationsAsync,
+} from "discourse/lib/deprecated";
 import {
   extraConnectorClass,
   extraConnectorComponent,
 } from "discourse/lib/plugin-connectors";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { query } from "discourse/tests/helpers/qunit-helpers";
 import { registerTemporaryModule } from "discourse/tests/helpers/temporary-module-helper";
-import deprecated, {
-  withSilencedDeprecations,
-  withSilencedDeprecationsAsync,
-} from "discourse-common/lib/deprecated";
 import {
   disableRaiseOnDeprecation,
   enableRaiseOnDeprecation,
@@ -374,11 +373,13 @@ module("Integration | Component | plugin-outlet", function (hooks) {
   );
 
   test("Renders wrapped implementation if no connectors are registered", async function (assert) {
-    await render(<template>
-      <PluginOutlet @name="outlet-with-no-registrations">
-        <span class="result">Core implementation</span>
-      </PluginOutlet>
-    </template>);
+    await render(
+      <template>
+        <PluginOutlet @name="outlet-with-no-registrations">
+          <span class="result">Core implementation</span>
+        </PluginOutlet>
+      </template>
+    );
 
     assert.dom(".result").hasText("Core implementation");
   });
@@ -431,17 +432,19 @@ module("Integration | Component | plugin-outlet", function (hooks) {
       />
     `);
 
-    const otherOutletElement = query(".hello-username");
-    otherOutletElement.someUniqueProperty = true;
+    find(".hello-username").someUniqueProperty = true;
 
     this.set("shouldDisplay", true);
     await settled();
     assert.dom(".conditional-render").exists("renders conditional outlet");
 
-    assert.true(
-      query(".hello-username").someUniqueProperty,
-      "other outlet is left untouched"
-    );
+    assert
+      .dom(".hello-username")
+      .hasProperty(
+        "someUniqueProperty",
+        true,
+        "other outlet is left untouched"
+      );
   });
 
   module("deprecated arguments", function (innerHooks) {
@@ -456,14 +459,16 @@ module("Integration | Component | plugin-outlet", function (hooks) {
     });
 
     test("deprecated parameters with default message", async function (assert) {
-      await render(<template>
-        <PluginOutlet
-          @name="test-name"
-          @deprecatedArgs={{hash
-            shouldDisplay=(deprecatedOutletArgument value=true)
-          }}
-        />
-      </template>);
+      await render(
+        <template>
+          <PluginOutlet
+            @name="test-name"
+            @deprecatedArgs={{hash
+              shouldDisplay=(deprecatedOutletArgument value=true)
+            }}
+          />
+        </template>
+      );
 
       // deprecated argument still works
       assert.dom(".conditional-render").exists("renders conditional outlet");
@@ -473,30 +478,31 @@ module("Integration | Component | plugin-outlet", function (hooks) {
         1,
         "console warn was called once"
       );
-      assert.strictEqual(
+      assert.true(
         this.consoleWarnStub.calledWith(
           "Deprecation notice: outlet arg `shouldDisplay` is deprecated on the outlet `test-name` [deprecation id: discourse.plugin-connector.deprecated-arg]"
         ),
-        true,
         "logs the default message to the console"
       );
     });
 
     test("deprecated parameters with custom deprecation data", async function (assert) {
-      await render(<template>
-        <PluginOutlet
-          @name="test-name"
-          @deprecatedArgs={{hash
-            shouldDisplay=(deprecatedOutletArgument
-              value=true
-              message="The 'shouldDisplay' is deprecated on this test"
-              id="discourse.plugin-connector.deprecated-arg.test"
-              since="3.3.0.beta4-dev"
-              dropFrom="3.4.0"
-            )
-          }}
-        />
-      </template>);
+      await render(
+        <template>
+          <PluginOutlet
+            @name="test-name"
+            @deprecatedArgs={{hash
+              shouldDisplay=(deprecatedOutletArgument
+                value=true
+                message="The 'shouldDisplay' is deprecated on this test"
+                id="discourse.plugin-connector.deprecated-arg.test"
+                since="3.3.0.beta4-dev"
+                dropFrom="3.4.0"
+              )
+            }}
+          />
+        </template>
+      );
 
       // deprecated argument still works
       assert.dom(".conditional-render").exists("renders conditional outlet");
@@ -506,34 +512,30 @@ module("Integration | Component | plugin-outlet", function (hooks) {
         1,
         "console warn was called once"
       );
-      assert.strictEqual(
+      assert.true(
         this.consoleWarnStub.calledWith(
           sinon.match(/The 'shouldDisplay' is deprecated on this test/)
         ),
-        true,
         "logs the custom deprecation message to the console"
       );
-      assert.strictEqual(
+      assert.true(
         this.consoleWarnStub.calledWith(
           sinon.match(
             /deprecation id: discourse.plugin-connector.deprecated-arg.test/
           )
         ),
-        true,
         "logs custom deprecation id"
       );
-      assert.strictEqual(
+      assert.true(
         this.consoleWarnStub.calledWith(
           sinon.match(/deprecated since Discourse 3.3.0.beta4-dev/)
         ),
-        true,
         "logs deprecation since information"
       );
-      assert.strictEqual(
+      assert.true(
         this.consoleWarnStub.calledWith(
           sinon.match(/removal in Discourse 3.4.0/)
         ),
-        true,
         "logs dropFrom information"
       );
     });
@@ -548,17 +550,19 @@ module("Integration | Component | plugin-outlet", function (hooks) {
         },
       };
 
-      await render(<template>
-        <PluginOutlet
-          @name="test-name"
-          @deprecatedArgs={{hash
-            shouldDisplay=(deprecatedOutletArgument
-              value=deprecatedData.display
-              silence="discourse.deprecation-that-should-not-be-logged"
-            )
-          }}
-        />
-      </template>);
+      await render(
+        <template>
+          <PluginOutlet
+            @name="test-name"
+            @deprecatedArgs={{hash
+              shouldDisplay=(deprecatedOutletArgument
+                value=deprecatedData.display
+                silence="discourse.deprecation-that-should-not-be-logged"
+              )
+            }}
+          />
+        </template>
+      );
 
       // deprecated argument still works
       assert.dom(".conditional-render").exists("renders conditional outlet");
@@ -568,36 +572,36 @@ module("Integration | Component | plugin-outlet", function (hooks) {
         1,
         "console warn was called once"
       );
-      assert.strictEqual(
+      assert.false(
         this.consoleWarnStub.calledWith(
           sinon.match(
             /deprecation id: discourse.deprecation-that-should-not-be-logged/
           )
         ),
-        false,
         "does not log silence deprecation"
       );
-      assert.strictEqual(
+      assert.true(
         this.consoleWarnStub.calledWith(
           sinon.match(
             /deprecation id: discourse.plugin-connector.deprecated-arg/
           )
         ),
-        true,
         "logs expected deprecation"
       );
     });
 
     test("unused arguments", async function (assert) {
-      await render(<template>
-        <PluginOutlet
-          @name="test-name"
-          @outletArgs={{hash shouldDisplay=true}}
-          @deprecatedArgs={{hash
-            argNotUsed=(deprecatedOutletArgument value=true)
-          }}
-        />
-      </template>);
+      await render(
+        <template>
+          <PluginOutlet
+            @name="test-name"
+            @outletArgs={{hash shouldDisplay=true}}
+            @deprecatedArgs={{hash
+              argNotUsed=(deprecatedOutletArgument value=true)
+            }}
+          />
+        </template>
+      );
 
       // deprecated argument still works
       assert.dom(".conditional-render").exists("renders conditional outlet");
@@ -694,13 +698,15 @@ module(
       await withSilencedDeprecationsAsync(
         "discourse.plugin-outlet-classic-hooks",
         async () => {
-          await render(<template>
-            <PluginOutlet
-              @name="test-name"
-              @outletArgs={{hash hello="world"}}
-              @defaultGlimmer={{true}}
-            />
-          </template>);
+          await render(
+            <template>
+              <PluginOutlet
+                @name="test-name"
+                @outletArgs={{hash hello="world"}}
+                @defaultGlimmer={{true}}
+              />
+            </template>
+          );
         }
       );
 
@@ -793,18 +799,16 @@ module(
           2,
           "console warn was called twice"
         );
-        assert.strictEqual(
+        assert.true(
           this.consoleWarnStub.calledWith(
             "Deprecation notice: outlet arg `hello` is deprecated on the outlet `test-name` [deprecation id: discourse.plugin-connector.deprecated-arg]"
           ),
-          true,
           "logs the expected message for @outletArgs.hello"
         );
-        assert.strictEqual(
+        assert.true(
           this.consoleWarnStub.calledWith(
             "Deprecation notice: outlet arg `hello` is deprecated on the outlet `test-name` [used on connector discourse/plugins/some-plugin/templates/connectors/test-name/my-connector] [deprecation id: discourse.plugin-connector.deprecated-arg]"
           ),
-          true,
           "logs the expected message for this.hello"
         );
       });
@@ -827,18 +831,16 @@ module(
           1,
           "console warn was called once"
         );
-        assert.strictEqual(
+        assert.true(
           this.consoleWarnStub.calledWith(
             "Deprecation notice: outlet arg `hello` is deprecated on the outlet `test-name` [deprecation id: discourse.plugin-connector.deprecated-arg]"
           ),
-          true,
           "logs the expected message for @outletArgs.hello"
         );
-        assert.strictEqual(
+        assert.false(
           this.consoleWarnStub.calledWith(
             "Deprecation notice: outlet arg `hello` is deprecated on the outlet `test-name` [used on connector discourse/plugins/some-plugin/templates/connectors/test-name/my-connector] [deprecation id: discourse.plugin-connector.deprecated-arg]"
           ),
-          false,
           "does not log the message for this.hello"
         );
       });
@@ -867,18 +869,16 @@ module(
           2,
           "console warn was called twice"
         );
-        assert.strictEqual(
+        assert.true(
           this.consoleWarnStub.calledWith(
             "Deprecation notice: outlet arg `hello` is deprecated on the outlet `test-name` [deprecation id: discourse.plugin-connector.deprecated-arg]"
           ),
-          true,
           "logs the expected message for @outletArgs.hello"
         );
-        assert.strictEqual(
+        assert.true(
           this.consoleWarnStub.calledWith(
             "Deprecation notice: outlet arg `hello` is deprecated on the outlet `test-name` [used on connector discourse/plugins/some-plugin/connectors/test-name/my-connector] [deprecation id: discourse.plugin-connector.deprecated-arg]"
           ),
-          true,
           "logs the expected message for this.hello"
         );
       });
@@ -906,18 +906,16 @@ module(
           2,
           "console warn was called twice"
         );
-        assert.strictEqual(
+        assert.true(
           this.consoleWarnStub.calledWith(
             "Deprecation notice: outlet arg `hello` is deprecated on the outlet `test-name` [deprecation id: discourse.plugin-connector.deprecated-arg]"
           ),
-          true,
           "logs the expected message for @outletArgs.hello"
         );
-        assert.strictEqual(
+        assert.true(
           this.consoleWarnStub.calledWith(
             "Deprecation notice: outlet arg `hello` is deprecated on the outlet `test-name` [deprecation id: discourse.plugin-connector.deprecated-arg]"
           ),
-          true,
           "logs the expected message for this.hello"
         );
       });
@@ -941,11 +939,10 @@ module(
           1,
           "console warn was called twice"
         );
-        assert.strictEqual(
+        assert.true(
           this.consoleWarnStub.calledWith(
             "Deprecation notice: outlet arg `hello` is deprecated on the outlet `test-name` [deprecation id: discourse.plugin-connector.deprecated-arg]"
           ),
-          true,
           "logs the expected message for @outletArgs.hello"
         );
       });
@@ -977,7 +974,9 @@ module(
     hooks.beforeEach(function () {
       registerTemporaryModule(
         `${CLASS_PREFIX}/test-name/my-connector`,
-        <template><span class="gjs-test">Hello world</span></template>
+        <template>
+          <span class="gjs-test">Hello world</span>
+        </template>
       );
     });
 
@@ -995,9 +994,12 @@ module(
     setupRenderingTest(hooks);
 
     hooks.beforeEach(function () {
-      extraConnectorComponent("test-name", <template>
-        <span class="gjs-test">Hello world from gjs</span>
-      </template>);
+      extraConnectorComponent(
+        "test-name",
+        <template>
+          <span class="gjs-test">Hello world from gjs</span>
+        </template>
+      );
     });
 
     test("renders the component in the outlet", async function (assert) {
@@ -1007,9 +1009,10 @@ module(
 
     test("throws errors for invalid components", function (assert) {
       assert.throws(() => {
-        extraConnectorComponent("test-name/blah", <template>
-          hello world
-        </template>);
+        extraConnectorComponent(
+          "test-name/blah",
+          <template>hello world</template>
+        );
       }, /invalid outlet name/);
 
       assert.throws(() => {
@@ -1030,9 +1033,9 @@ module("Integration | Component | plugin-outlet | tagName", function (hooks) {
     await withSilencedDeprecationsAsync(
       "discourse.plugin-outlet-tag-name",
       async () =>
-        await render(<template>
-          <PluginOutlet @name="test-name" @tagName="div" />
-        </template>)
+        await render(
+          <template><PluginOutlet @name="test-name" @tagName="div" /></template>
+        )
     );
     assert.dom("div").exists();
   });

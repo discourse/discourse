@@ -148,6 +148,10 @@ th:
     software_update_prompt:
       dismiss: "ซ่อน"
     back_button: "กลับ"
+    welcome_banner:
+      header:
+        anonymous_members: "ยินดีต้อนรับสู่ %{site_name}!"
+      search: "ค้นหา"
     themes:
       default_description: "ค่าเริ่มต้น"
       only_admins: "(ข้อความนี้จะแสดงเฉพาะผู้ดูแลไซต์เท่านั้น)"
@@ -311,6 +315,7 @@ th:
     continue: "ดำเนินการต่อ"
     switch_to_anon: "เข้าสู่โหมดไม่ระบุชื่อ"
     switch_from_anon: "ออกจากโหมดไม่ระบุชื่อ"
+    none_placeholder: "ไม่มี"
     banner:
       edit: "แก้ไข"
     pwa:
@@ -358,6 +363,9 @@ th:
         email: "อีเมล"
         name: "ชื่อ"
         reject_reason: "เหตุผล"
+        scrubbed_reason: "เหตุผล"
+        scrub_record:
+          cancel_button: "ยกเลิก"
       user_percentage:
         agreed:
           other: "%{count}% เห็นด้วย"
@@ -386,6 +394,8 @@ th:
         refresh: "รีเฟรช"
         status: "สถานะ"
         category: "หมวดหมู่"
+        score_type:
+          title: "เหตุผล"
         orders:
           score: "คะแนน"
           created_at: "ถูกสร้างเมื่อ"
@@ -548,13 +558,6 @@ th:
           from: "จาก"
           to: "ถึง"
       public_exit: "อนุญาตให้ผู้ใช้ออกจากกลุ่มอย่างอิสระ"
-      empty:
-        posts: "ไม่มีโพสต์โดยสมาชิกของกลุ่มนี้"
-        members: "ไม่มีสมาชิกในกลุ่มนี้"
-        requests: "ไม่มีคำร้องขอเป็นสมาชิกของกลุ่มนี้"
-        mentions: "ไม่มีการกล่าวถึงของกลุ่มนี้"
-        messages: "ไม่มีข้อความสำหรับกลุ่มนี้"
-        topics: "ไม่มีกระทู้โดยสมาชิกของกลุ่มนี้"
       add: "เพิ่ม"
       join: "เข้าร่วม"
       leave: "ออก"
@@ -696,10 +699,10 @@ th:
       delete_other_accounts:
         other: "ลบ %{count}"
       username: "ชื่อผู้ใช้"
-      trust_level: "TL"
+      trust_level: "ระดับความไว้ใจ"
       read_time: "เวลาที่อ่าน"
       topics_entered: "กระทู้ที่เข้า"
-      post_count: "# โพสต์"
+      post_count: "โพสต์"
       confirm_delete_other_accounts: "คุณแน่ใจแล้วหรือว่าจะลบบัญชีเหล่านี้"
       copied: "คัดลอกแล้ว"
     user_fields:
@@ -1296,18 +1299,14 @@ th:
       password_label: "รหัสผ่าน"
     password_reset:
       continue: "ดำเนินการต่อไปยัง %{site_name}"
-    emoji_set:
-      apple_international: "แอปเปิล/นานาชาติ"
-      google: "กูเกิล"
-      twitter: "ทวิตเตอร์"
-      win10: "Win10"
-      google_classic: "Google Classic"
-      facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "หมวดหมู่เท่านั้น"
       categories_with_featured_topics: "หมวดหมู่พร้อมด้วยกระทู้เด่น"
       categories_and_latest_topics: "หมวดหมู่และกระทู้ล่าสุด"
       categories_and_top_topics: "หมวดหมู่และกระทู้ยอดนิยม"
+    full_name_requirement:
+      required_at_signup: "ต้องการ"
+      optional_at_signup: "ทางเลือก"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -1506,8 +1505,6 @@ th:
         quoted: "ถูกอ้างอิงถึง"
         edited: "ถูกแก้ไข"
         liked: "การถูกใจใหม่"
-        private_message: "ข้อความส่วนตัวใหม่"
-        invited_to_private_message: "ถูกเชิญไปยังข้อความส่วนตัว"
         invitee_accepted: "คำเชิญถูกยอมรับ"
         posted: "โพสต์ใหม่"
         watching_category_or_tag: "โพสต์ใหม่"
@@ -1517,8 +1514,8 @@ th:
         liked_consolidated: "ไลค์ใหม่"
         post_approved: "โพสต์ได้รับอนุมัติ"
     upload_selector:
+      delete: "ลบ"
       uploading: "กำลังอัปโหลด"
-      select_file: "เลือกไฟล์"
       default_image_alt_text: รูปภาพ
     search:
       sort_by: "เรียงโดย"
@@ -1811,7 +1808,6 @@ th:
         title: "พิมพ์เอกสาร"
       flag_topic:
         title: "ธง"
-        help: "ปังธงกระทู้นี้เพื่อติดตามหรือรับการแจ้งเตือนเกี่ยวกับกระทู้"
         success_message: "คุณปักธงกระทู้นี้แล้ว"
       make_public:
         choose_category: "กรุณาเลือกหมวดหมู่สำหรับกระทู้สาธารณะ:"
@@ -2074,7 +2070,13 @@ th:
       description: "รายละเอียด"
       logo: "รูปโลโก้หมวดหมู่"
       background_image: "รูปพื้นหลังหมวดหมู่"
-      background_color: "สีพื้นหลัง"
+      background_color: "สี"
+      styles:
+        icon: "ไอคอน"
+        emoji: "Emoji"
+        options:
+          icon: "ไอคอน"
+          emoji: "Emoji"
       name_placeholder: "สูงสุดหนึ่งหรือสองคำ"
       delete_confirm: "คุณแน่ใจหรือว่าจะลบหมวดหมู่นี้ออก"
       delete_error: "มีข้อผิดพลาดในการลบหมวดหมู่"
@@ -2278,9 +2280,6 @@ th:
     lightbox:
       download: "ดาวน์โหลด"
       close: "ปิด (Esc)"
-    experimental_lightbox:
-      buttons:
-        close: "ปิด (Esc)"
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ","
       shortcut_key_delimiter_plus: "+"
@@ -2349,6 +2348,8 @@ th:
         print: "%{shortcut}พิมพ์กระทู้"
       search_menu:
         title: "เมนูค้นหา"
+      admin:
+        title: "ผู้ดูแลระบบ"
     badges:
       granted_on: "ได้รับเมื่อ %{date}"
       title: เหรียญ
@@ -2535,9 +2536,80 @@ th:
         remove_muted_tags_from_latest:
           always: "เสมอ"
           never: "ไม่เลย"
-      reports:
-        sidebar_link:
-          all: "ทั้งหมด"
+      config_sections:
+        account:
+          title: "บัญชี"
+        community:
+          title: "ชุมชน"
+        email:
+          title: "อีเมล"
+        security:
+          title: "ความปลอดภัย"
+        plugins:
+          title: "ตัวเสริม"
+      config:
+        developer:
+          title: "นักพัฒนา"
+        emojis:
+          title: "Emoji"
+        files:
+          title: "ไฟล์"
+        legal:
+          title: "กฎ"
+        branding:
+          logo:
+            form:
+              mobile: "โทรศัพท์"
+              email: "อีเมล"
+        navigation:
+          title: "การนำทาง"
+        notifications:
+          title: "การแจ้งเตือน"
+        other:
+          title: "อื่นๆ"
+        search_everything:
+          title: "ค้นหา"
+        security:
+          title: "ความปลอดภัย"
+        spam:
+          title: "ขยะ"
+        dashboard:
+          title: "แดชบอร์ด"
+        users:
+          title: "ผู้ใช้"
+        groups:
+          title: "กลุ่ม"
+        backups:
+          title: "สำรอง"
+        badges:
+          title: "เหรียญ"
+        permalinks:
+          title: "ลิงค์ถาวร"
+        emoji:
+          title: "Emoji"
+        themes:
+          title: "ธีม"
+        email:
+          sub_pages:
+            templates:
+              title: "รูปแบบ"
+            sent:
+              title: "ส่ง"
+            skipped:
+              title: "ข้าม"
+            received:
+              title: "รับ"
+            rejected:
+              title: "ถูกปฏิเสธ"
+        embedding:
+          title: "ฝั่ง"
+      search:
+        title: "ค้นหา"
+        result_types:
+          setting:
+            other: "การตั้งค่า"
+          theme:
+            other: "ธีม"
       dashboard:
         title: "แดชบอร์ด"
         version: "เวอร์ชัน"
@@ -2638,15 +2710,19 @@ th:
         group_owners: เจ้าของ
         add_owners: เพิ่มเจ้าของ
         none_selected: "เลือกกลุ่มเพื่อเริ่มต้น"
+      api_keys:
+        edit: "แก้ไข"
+        save: "บันทึก"
+        cancel: "ยกเลิก"
+        continue: "ดำเนินการต่อ"
+        revoke: "เอาออก"
       api:
         user: "ผู้ใช้"
         title: "API"
-        created: สร้างแล้ว
+        created: สร้างโดย
         updated: อัปเดตแล้ว
-        last_used: ใช้ครั้งล่าสุด
-        never_used: (ไม่เคย)
+        never_used: ไม่เคย
         revoke: "เอาออก"
-        all_users: "ผู้ใช้ทั้งหมด"
         show_details: รายละเอียด
         description: รายละเอียด
         user_placeholder: กรอกชื่อผู้ใช้
@@ -2656,7 +2732,8 @@ th:
         create: "สร้าง"
         edit: "แก้ไข"
         save: "บันทึก"
-        wildcard_event: "ส่งทุกอย่างหาฉัน"
+        delete: "ลบ"
+        cancel: "ยกเลิก"
         active: "ใช้งานอยู่"
         delivery_status:
           title: "สถานะการส่ง"
@@ -2685,21 +2762,13 @@ th:
           badges: "เหรียญ"
           notifications: "การแจ้งเตือน"
           permalinks: "ลิงค์ถาวร"
-          trust_levels: "ระดับความไว้ใจ"
           users: "ผู้ใช้"
-          user_fields: "ช่องข้อมูลผู้ใช้"
+          groups: "กลุ่ม"
           legal: "กฎ"
       appearance:
         sidebar_link:
           emoji: "Emoji"
           navigation: "การนำทาง"
-          themes: "ธีม"
-      email_logs:
-        sidebar_link:
-          sent: "ส่ง"
-          skipped: "ข้าม"
-          received: "รับ"
-          rejected: "ถูกปฏิเสธ"
       security:
         title: "ความปลอดภัย"
       section_landing_pages:
@@ -2727,9 +2796,24 @@ th:
             invalid_applies_to: "ต้องการ"
             topic: "หัวข้อ"
             post: "โพสต์"
-        look_and_feel:
+        permalinks:
+          edit: "แก้ไข"
+          delete: "ลบ"
+        embeddable_host:
+          edit: "แก้ไข"
+          delete: "ลบ"
+        themes_and_components:
+          breadcrumb_title: "การปรับแต่ง"
+          install: "ติดตั้ง"
           themes:
             title: "ธีม"
+        user_fields:
+          type: "ชนิด"
+          delete: "ลบ"
+        color_palettes:
+          palette_name: "ชื่อ"
+          colors:
+            title: "สี"
       plugins:
         title: "ปลั้กอิน"
         name: "ชื่อ"
@@ -2741,16 +2825,6 @@ th:
         change_settings_short: "การตั้งค่า"
         author: "โดย %{author}"
         learn_more: "เรียนรู้เพิ่มเติม"
-        sidebar_link:
-          installed: "ติดตั้งแล้ว"
-      advanced:
-        sidebar_link:
-          developer: "นักพัฒนา"
-          embedding: "ฝั่ง"
-          rate_limits: "ข้อจำกัด"
-          files: "ไฟล์"
-          other_options: "อื่นๆ"
-          search: "ค้นหา"
       backups:
         title: "สำรอง"
         menu:
@@ -2767,15 +2841,14 @@ th:
           download:
             label: "ดาวน์โหลด"
             title: "ส่งอีเมลพร้อมลิงก์ดาวน์โหลด"
+          destroy:
+            title: "ลบ"
         location:
           s3: "S3"
       export_csv:
         button_text: "ส่งออก"
       export_json:
         button_text: "ส่งออก"
-      invite:
-        button_text: "ส่งคำเชิญ"
-        button_title: "ส่งคำเชิญ"
       customize:
         title: "การปรับแต่ง"
         preview: "แสดงตัวอย่าง"
@@ -2806,7 +2879,6 @@ th:
           save: "บันทึก"
           edit: "แก้ไข"
           mobile: "โทรศัพท์"
-          settings: "การตั้งค่า"
           preview: "แสดงตัวอย่าง"
           add_all_themes: "เพิ่มธีมทั้งหมด"
           inactive_themes: "ธีมที่ไม่ได้ใช้งาน:"
@@ -2833,8 +2905,6 @@ th:
           no_settings: "ธีมนี้ไม่มีการตั้งค่า"
           scss:
             text: "CSS"
-          header:
-            text: "Header"
           footer:
             text: "Footer"
           embedded_scss:
@@ -2856,10 +2926,12 @@ th:
           selected:
             name: "เลือกแล้ว"
         email_style:
+          html: "HTML"
           css: "CSS"
           save_error_with_reason: "การเปลี่ยนแปลงไม่ได้ถูกบันทึก %{error}"
       email:
         title: "อีเมล"
+        settings: "การตั้งค่า"
         templates: "รูปแบบ"
         advanced_test:
           email: "ข้อความต้นฉบับ"
@@ -2868,18 +2940,14 @@ th:
         skipped: "ข้าม"
         received: "รับ"
         rejected: "ถูกปฏิเสธ"
-        sent_at: "ถูกส่งเมื่อ"
         time: "เวลา"
         user: "ผู้ใช้"
-        email_type: "ประเภทอีเมล"
-        to_address: "ไปยังที่อยู่"
         sent_test: "ส่งแล้ว!"
         refresh: "รีเฟรช"
         send_digest_label: "ส่งผลลัพธ์นี้ไปยัง:"
         send_digest: "ส่ง"
         html: "html"
         text: "ข้อความ"
-        last_seen_user: "ผู้ใช้ที่ดูล่าสุด:"
         incoming_emails:
           from_address: "จาก"
           to_addresses: "ถึง"
@@ -2914,7 +2982,6 @@ th:
           block: "บล็อก"
         staff_actions:
           all: "ทั้งหมด"
-          clear_filters: "แสดงทั้งหมด"
           staff_user: "ผู้ใช้"
           target_user: "ผู้ใช้เป้าหมาย"
           subject: "หัวข้อ"
@@ -2963,7 +3030,6 @@ th:
             update_email: "อัปเดตอีเมล"
             destroy_email: "ทำลายอีเมล"
         screened_emails:
-          email: "ที่อยู่อีเมล"
           actions:
             allow: "อนุญาต"
         screened_urls:
@@ -2973,7 +3039,6 @@ th:
           actions:
             block: "บล็อก"
             do_nothing: "อนุญาต"
-            allow_admin: "อนุญาตแอดมิน"
           form:
             label: "ใหม่:"
             ip_address: "ที่อยู่ไอพี"
@@ -2984,12 +3049,10 @@ th:
           types:
             all_search_types: "การค้นหาทั้งหมด"
             header: "Header"
-            full_page: "ทั้งหน้า"
       watched_words:
         search: "ค้นหา"
         clear_filter: "ล้าง"
         download: ดาวน์โหลด
-        clear_all: ล้างทั้งหมด
         actions:
           block: "บล็อก"
           censor: "เซนเซอร์"
@@ -3039,8 +3102,11 @@ th:
         last_emailed: "อีเมลล่าสุด"
         active: "เปิดใช้งานแล้ว"
         status: "สถานะ"
-        show_emails: "แสดงอีเมล"
-        hide_emails: "ซ่อนอีเมล"
+        bulk_actions:
+          delete:
+            confirmation_modal:
+              close: "ปิด"
+              confirm: "ลบ"
         nav:
           new: "ใหม่"
           active: "ใช้งานอยู่"
@@ -3048,8 +3114,6 @@ th:
           suspended: "ระงับการใช้งาน"
         approved: "ยืนยันหรือไม่"
         titles:
-          active: "ผู้ใช้ที่ใช้งานอยู่"
-          new: "ผู้ใช้งานใหม่"
           pending: "ผู้ใช้งานที่รอการยืนยัน"
           newuser: "ผู้ใช้ที่ระดับความไว้ใจ 0 (ผู้ใช้ใหม่)"
           basic: "ผู้ใช้ที่ระดับความไว้ใจ 1 (ผู้ใช้ทั่วไป)"
@@ -3058,7 +3122,6 @@ th:
           leader: "ผู้ใช้ที่ระดับความไว้ใจ 4 (ผู้นำ)"
           staff: "ทีมงาน"
           moderators: "ผู้ดูแลระบบ"
-          suspended: "ผู้ใช้งานที่ถูกระงับ"
         not_verified: "ยังไม่ได้รับการตรวจสอบ"
         check_email:
           title: "แสดงอีเมลของผู้ใช้งานนี้"
@@ -3116,8 +3179,6 @@ th:
             cancel: "ยกเลิก"
         delete_forbidden_because_staff: "ไม่สามารถลบแอดมินและผู้ดูแลระบบได้"
         delete_posts_forbidden_because_staff: "ไม่สามารถลบโพสต์ทั้งหมดของแอดมินและผู้ดูแลระบบได้"
-        delete_and_block: "ลบและ <b>บล็อก</b> อีเมลและไอพีนี้"
-        delete_dont_block: "ลบเท่านั้น"
         deleted: "ผู้ใช้ถูกลบแล้ว"
         delete_failed: "มีข้อผิดพลาดขณะกำลังลบผู้ใช้นั้น กรุณาตรวจสอบอีกครั้งว่าโพสต์ทั้งหมดถูกลบก่อนลบผู้ใช้นั้น"
         send_activation_email: "ส่งอีเมลยืนยันตัวตน"
@@ -3160,9 +3221,6 @@ th:
           external_email: "อีเมล"
           external_avatar_url: "URL ของรูปโปรไฟล์"
       user_fields:
-        title: "ช่องข้อมูลผู้ใช้"
-        help: "เพิ่มช่องที่คุณสามารถใส่ข้อมูลเพิ่มได้"
-        create: "สร้างช่องข้อมูลผู้ใช้"
         untitled: "ไม่ได้ตั้งชื่อ"
         name: "ชื่อช่อง"
         type: "ประเภทช่อง"
@@ -3181,24 +3239,14 @@ th:
         requirement:
           optional:
             title: "ทางเลือก"
-        editable:
-          enabled: "แก้ไขได้"
-          disabled: "แก้ไขไม่ได้"
         show_on_profile:
           title: "แสดงในข้อมูลสาธารณะ"
-          enabled: "แสดงแสดงในข้อมูลส่วนตัว"
-          disabled: "ไม่แสดงในข้อมูลส่วนตัว"
-        show_on_user_card:
-          enabled: "แสดงบนการ์ดผู้ใช้"
-          disabled: "ไม่แสดงบนการ์ดผู้ใช้"
         field_types:
-          text: "ช่องข้อความ"
+          text: "ข้อความ"
           confirm: "การยืนยัน"
           dropdown: "ดร็อปดาวน์"
       site_text:
-        description: "คุณสามารถปรับแต่งข้อความบนฟอรั่มของคุณได้คุณอย่าง เริ่มได้โดยการค้นหาข้างล่างนี่"
         search: "ค้นหาข้อความที่คุณต้องการแก้ไข"
-        title: "ข้อความ"
         edit: "แก้ไข"
         revert: "ย้อนกลับการแก้ไข"
         revert_confirm: "คุณแน่ใจหรือว่าจะย้อนกลับการแก้ไข"
@@ -3212,7 +3260,7 @@ th:
         save: "บันทึก"
         cancel: "ยกเลิก"
       site_settings:
-        title: "การตั้งค่า"
+        nav_title: "การตั้งค่า"
         no_results: "ไม่มีผลการค้นหา"
         clear_filter: "ล้าง"
         add_url: "เพิ่ม URL"
@@ -3221,6 +3269,8 @@ th:
         uploaded_image_list:
           upload:
             label: "อัปโหลด"
+        table_column_heading:
+          status: "สถานะ"
         categories:
           all_results: "ทั้งหมด"
           required: "ต้องการ"
@@ -3296,22 +3346,22 @@ th:
           replace_owners: ลบเหรียญจากผู้ใช้ก่อนหน้านี้
       emoji:
         title: "อีโมจิ"
-        new: "เพิ่ม"
-        add: "เพิ่มอีโมจิใหม่"
+        delete: "ลบ"
         name: "ชื่อ"
         group: "กลุ่ม"
         image: "ภาพ"
         delete_confirm: "คุณแน่ใจหรือว่าจะลบอีโมจิ :%{name}: ออก"
         settings: "การตั้งค่า"
       embedding:
+        delete: "ลบ"
         confirm_delete: "คุณแน่ใจหรือว่าจะลบโพสนั้น?"
         title: "ฝั่ง"
-        host: "อนุญาตโฮส"
         edit: "แก้ไข"
-        category: "โพสต์ไปยังหมวดหมู่"
-        add_host: "เพิ่มโฮส"
-        settings: "การตั้งการการฝั่ง"
-        save: "บันทึกการตั้งค่าการฝั่ง"
+        save: "บันทึก"
+        host_form:
+          save: "บันทึก"
+        nav:
+          settings: "การตั้งค่า"
       permalink:
         title: "ลิงค์ถาวร"
         url: "URL"
@@ -3322,12 +3372,16 @@ th:
         category_id: "หมายเลขหมวดหมู่"
         category_title: "หมวดหมู่"
         tag_name: "ชื่อแท็ก"
+        user_title: "ผู้ใช้"
         username: "ชื่อผู้ใช้"
         delete_confirm: คุณแน่ใจหรือว่าจะลบลิงค์ถาวรนี้?
+        nav:
+          settings: "การตั้งค่า"
+          permalinks: "ลิงค์ถาวร"
         form:
           label: "ใหม่:"
-          add: "เพิ่ม"
-          filter: "ค้นหา (URL หรือ ลิงก์ภายนอก)"
+          url: "URL"
+          save: "บันทึก"
       reseed:
         modal:
           categories: "หมวดหมู่"
@@ -3346,6 +3400,26 @@ th:
           admin: "แอดมิน"
           moderator: "ผู้ดูแล"
           regular: "ผู้ใช้ทั่วไป"
+      homepage_choices:
+        style_type:
+          categories: "หมวดหมู่"
+          topics: "หัวข้อ"
+      top_menu_items:
+        new: "ใหม่"
+        unread: "ยังไม่อ่าน"
+        top: "บน"
+        latest: "ล่าสุด"
+        categories: "หมวดหมู่"
+        read: "อ่าน"
+        bookmarks: "บุ๊คมาร์ค"
       previews:
         share_button: "แบ่งปัน"
         reply_button: "ตอบ"
+      homepage_preview:
+        nav_buttons:
+          all_categories: "ทุกหมวดหมู่"
+        table_headers:
+          topic: "หัวข้อ"
+          replies: "ตอบ"
+          views: "ดู"
+          activity: "กิจกรรม"

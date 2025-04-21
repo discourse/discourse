@@ -1,9 +1,9 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
 import { test } from "qunit";
+import emojiPicker from "discourse/tests/helpers/emoji-picker-helper";
 import {
   acceptance,
-  query,
   simulateKey,
   simulateKeys,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -11,11 +11,17 @@ import {
 acceptance("Emoji", function (needs) {
   needs.user();
 
+  needs.pretender((server, helper) => {
+    server.get("/emojis/search-aliases.json", () => {
+      return helper.response([]);
+    });
+  });
+
   test("emoji is cooked properly", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-buttons .btn.create");
 
-    await simulateKeys(".d-editor-input", "a :blonde_wo\t");
+    await simulateKeys(".d-editor-input", "a :blonde_woman\t");
 
     assert
       .dom(".d-editor-preview")
@@ -28,17 +34,16 @@ acceptance("Emoji", function (needs) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-buttons .btn.create");
 
-    await simulateKeys(".d-editor-input", "an :arrow");
-    // the 6th item in the list is the "more..."
-    await click(".autocomplete.ac-emoji ul li:nth-of-type(6)");
+    await simulateKeys(".d-editor-input", "a :man_b");
 
-    assert.dom(".emoji-picker.opened.has-filter").exists();
-    await click(".emoji-picker .results img:first-of-type");
+    // the 5th item in the list is the "more..."
+    await click(".autocomplete.ac-emoji ul li:nth-of-type(6)");
+    await emojiPicker().select("man_biking");
 
     assert
       .dom(".d-editor-preview")
       .hasHtml(
-        `<p>an <img src="/images/emoji/twitter/arrow_backward.png?v=${v}" title=":arrow_backward:" class="emoji" alt=":arrow_backward:" loading="lazy" width="20" height="20" style="aspect-ratio: 20 / 20;"></p>`
+        `<p>a <img src="/images/emoji/twitter/man_biking.png?v=${v}" title=":man_biking:" class="emoji" alt=":man_biking:" loading="lazy" width="20" height="20" style="aspect-ratio: 20 / 20;"></p>`
       );
   });
 
@@ -61,14 +66,10 @@ acceptance("Emoji", function (needs) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-buttons .btn.create");
 
-    const editor = query(".d-editor-input");
-
-    await simulateKeys(editor, ":s");
-
+    await simulateKeys(".d-editor-input", ":s");
     assert.dom(".autocomplete.ac-emoji").doesNotExist();
 
-    await simulateKey(editor, "w");
-
+    await simulateKey(".d-editor-input", "w");
     assert.dom(".autocomplete.ac-emoji").exists();
   });
 });

@@ -24,7 +24,7 @@ import {
   twoMonths,
   twoWeeks,
 } from "discourse/lib/time-utils";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export const TIME_SHORTCUT_TYPES = {
   ONE_HOUR: "one_hour",
@@ -308,5 +308,5 @@ export function formatTime(shortcut) {
     return null;
   }
 
-  return shortcut.time.format(I18n.t(shortcut.timeFormatKey));
+  return shortcut.time.format(i18n(shortcut.timeFormatKey));
 }

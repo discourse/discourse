@@ -8,8 +8,8 @@ da:
   js:
     discourse_automation:
       title: Automatisering
-      create: Opret
-      update: Opdater
+      back: Tilbage
+      edit: Rediger
       select_script: Vælg et script
       select_trigger: Vælg en udløser
       edit_automation:
@@ -131,14 +131,14 @@ da:
               label: Gyldige tillidsniveauer
             restricted_tags:
               label: Mærker
-            restricted_category:
-              label: Kategori
-            restricted_group:
-              label: Gruppe
-            restricted_groups:
-              label: Grupper
+            restricted_categories:
+              label: Kategorier
           created: Oprettet
           edited: Redigeret
+          with_images: Billeder
+          with_links: Links
+          with_code: Kode
+          with_uploads: Overførsler
         category_created_edited:
           fields:
             restricted_category:
@@ -258,6 +258,8 @@ da:
             label: Script
           version:
             label: Version
+          status:
+            label: Status
           enabled:
             label: Aktiveret
           disabled:

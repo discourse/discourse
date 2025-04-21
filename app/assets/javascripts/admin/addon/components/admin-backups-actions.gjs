@@ -4,7 +4,7 @@ import { service } from "@ember/service";
 import routeAction from "discourse/helpers/route-action";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class AdminBackupsActions extends Component {
   @service currentUser;
@@ -15,7 +15,7 @@ export default class AdminBackupsActions extends Component {
   toggleReadOnlyMode() {
     if (!this.site.isReadOnly) {
       this.dialog.yesNoConfirm({
-        message: I18n.t("admin.backups.read_only.enable.confirm"),
+        message: i18n("admin.backups.read_only.enable.confirm"),
         didConfirm: () => {
           this.currentUser.set("hideReadOnlyAlert", true);
           this.#toggleReadOnlyMode(true);

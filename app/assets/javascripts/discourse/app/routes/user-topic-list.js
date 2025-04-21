@@ -1,5 +1,4 @@
 import { setTopicList } from "discourse/lib/topic-list-tracker";
-import ViewingActionType from "discourse/mixins/viewing-action-type";
 import DiscourseRoute from "discourse/routes/discourse";
 
 export const QUERY_PARAMS = {
@@ -7,9 +6,7 @@ export const QUERY_PARAMS = {
   order: { replace: true, refreshModel: true },
 };
 
-export default class UserTopicsListRoute extends DiscourseRoute.extend(
-  ViewingActionType
-) {
+export default class UserTopicsListRoute extends DiscourseRoute {
   templateName = "user-topics-list";
   controllerName = "user-topics-list";
   queryParams = QUERY_PARAMS;

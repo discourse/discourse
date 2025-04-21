@@ -2,7 +2,7 @@ import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 acceptance("Bookmark - Bulk Actions", function (needs) {
   needs.user();
@@ -23,7 +23,7 @@ acceptance("Bookmark - Bulk Actions", function (needs) {
 
     assert.dom(".dialog-container").exists("shows the modal");
     assert.dom(".dialog-container .dialog-body").includesText(
-      I18n.t("js.bookmark_bulk_actions.clear_reminders.description", {
+      i18n("js.bookmark_bulk_actions.clear_reminders.description", {
         count: 2,
       }).replaceAll(/\<.*?>/g, "")
     );
@@ -46,7 +46,7 @@ acceptance("Bookmark - Bulk Actions", function (needs) {
     assert.dom(".dialog-container").exists("shows the modal");
 
     assert.dom(".dialog-container .dialog-body").includesText(
-      I18n.t("js.bookmark_bulk_actions.delete_bookmarks.description", {
+      i18n("js.bookmark_bulk_actions.delete_bookmarks.description", {
         count: 2,
       }).replaceAll(/\<.*?>/g, "")
     );

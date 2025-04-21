@@ -1,7 +1,7 @@
 import Service, { service } from "@ember/service";
+import { bind } from "discourse/lib/decorators";
 import { NotificationLevels } from "discourse/lib/notification-levels";
-import { bind } from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import { CHANNEL_STATUSES } from "discourse/plugins/chat/discourse/models/chat-channel";
 import ChatChannelArchive from "../models/chat-channel-archive";
 
@@ -140,9 +140,9 @@ export default class ChatSubscriptionsManager extends Service {
   @bind
   _onKickFromChannel(busData) {
     this.chatChannelsManager.find(busData.channel_id).then((channel) => {
-      if (this.chat.activeChannel.id === channel.id) {
+      if (this.chat.activeChannel?.id === channel.id) {
         this.dialog.alert({
-          message: I18n.t("chat.kicked_from_channel"),
+          message: i18n("chat.kicked_from_channel"),
           didConfirm: () => {
             this.chatChannelsManager.remove(channel);
 

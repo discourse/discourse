@@ -1,12 +1,11 @@
 import Component from "@glimmer/component";
 import { htmlSafe } from "@ember/template";
-import i18n from "discourse-common/helpers/i18n";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class PollResultsRankedChoiceComponent extends Component {
   get rankedChoiceWinnerText() {
     return htmlSafe(
-      I18n.t("poll.ranked_choice.winner", {
+      i18n("poll.ranked_choice.winner", {
         count: this.args.rankedChoiceOutcome?.round_activity?.length,
         winner: this.args.rankedChoiceOutcome?.winning_candidate?.html,
       })
@@ -14,7 +13,7 @@ export default class PollResultsRankedChoiceComponent extends Component {
   }
 
   get rankedChoiceTiedText() {
-    return I18n.t("poll.ranked_choice.tied", {
+    return i18n("poll.ranked_choice.tied", {
       count: this.args.rankedChoiceOutcome?.round_activity?.length,
     });
   }

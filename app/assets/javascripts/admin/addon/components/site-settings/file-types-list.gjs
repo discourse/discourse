@@ -5,9 +5,8 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import DButton from "discourse/components/d-button";
-import i18n from "discourse-common/helpers/i18n";
-import { makeArray } from "discourse-common/lib/helpers";
-import I18n from "discourse-i18n";
+import { makeArray } from "discourse/lib/helpers";
+import { i18n } from "discourse-i18n";
 import ListSetting from "select-kit/components/list-setting";
 
 const IMAGE_TYPES = [
@@ -89,7 +88,7 @@ export default class FileTypesList extends Component {
 
     this.toasts.success({
       data: {
-        message: I18n.t("admin.site_settings.file_types_list.add_types_toast", {
+        message: i18n("admin.site_settings.file_types_list.add_types_toast", {
           types: diffTypes.join(", "),
         }),
       },
@@ -97,6 +96,7 @@ export default class FileTypesList extends Component {
 
     this.args.changeValueCallback(newTypes.join(TOKEN_SEPARATOR));
   }
+
   <template>
     <ListSetting
       @value={{this.settingValue}}
@@ -114,7 +114,7 @@ export default class FileTypesList extends Component {
         "admin.site_settings.file_types_list.add_types_title"
         types=IMAGE_TYPES_STRING
       }}
-      class="btn file-types-list__button image"
+      class="btn btn-small btn-default file-types-list__button image"
     />
     <DButton
       @action={{fn this.insertDefaultTypes "video"}}
@@ -123,7 +123,7 @@ export default class FileTypesList extends Component {
         "admin.site_settings.file_types_list.add_types_title"
         types=VIDEO_TYPES_STRING
       }}
-      class="btn file-types-list__button video"
+      class="btn btn-small btn-default file-types-list__button video"
     />
     <DButton
       @action={{fn this.insertDefaultTypes "audio"}}
@@ -132,7 +132,7 @@ export default class FileTypesList extends Component {
         "admin.site_settings.file_types_list.add_types_title audio"
         types=AUDIO_TYPES_STRING
       }}
-      class="btn file-types-list__button"
+      class="btn btn-small btn-default file-types-list__button"
     />
     <DButton
       @action={{fn this.insertDefaultTypes "document"}}
@@ -141,7 +141,7 @@ export default class FileTypesList extends Component {
         "admin.site_settings.file_types_list.add_types_title"
         types=DOCUMENT_TYPES_STRING
       }}
-      class="btn file-types-list__button document"
+      class="btn btn-small btn-default file-types-list__button document"
     />
   </template>
 }
