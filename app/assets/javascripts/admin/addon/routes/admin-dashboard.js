@@ -1,4 +1,4 @@
-import { scrollTop } from "discourse/mixins/scroll-top";
+import { scrollTop } from "discourse/lib/scroll-top";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
 
