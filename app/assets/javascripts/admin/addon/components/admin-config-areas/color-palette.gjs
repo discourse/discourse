@@ -167,116 +167,114 @@ export default class AdminConfigAreasColorPalette extends Component {
       data-palette-id={{@colorPalette.id}}
       as |form transientData|
     >
-      <div class="admin-config-area">
-        <div class="admin-config-area__primary-content">
-          <div class="admin-config-color-palettes__top-controls">
-            <form.Field
-              @name="name"
-              @showTitle={{false}}
-              @title={{i18n "admin.config_areas.color_palettes.palette_name"}}
-              @validation="required"
-              @format="full"
-              @onSet={{this.handleNameChange}}
-              as |field|
-            >
-              {{#if transientData.editingName}}
+      <div>
+        <div class="admin-config-color-palettes__top-controls">
+          <form.Field
+            @name="name"
+            @showTitle={{false}}
+            @title={{i18n "admin.config_areas.color_palettes.palette_name"}}
+            @validation="required"
+            @format="full"
+            @onSet={{this.handleNameChange}}
+            as |field|
+          >
+            {{#if transientData.editingName}}
+              <div class="admin-config-color-palettes__name-control">
+                <field.Input />
+                <DButton
+                  class="btn-flat"
+                  @icon="xmark"
+                  @action={{this.toggleEditingName}}
+                />
+              </div>
+            {{else}}
+              <field.Custom>
                 <div class="admin-config-color-palettes__name-control">
-                  <field.Input />
+                  <h2>{{@colorPalette.name}}</h2>
                   <DButton
                     class="btn-flat"
-                    @icon="xmark"
+                    @icon="pencil"
                     @action={{this.toggleEditingName}}
                   />
                 </div>
-              {{else}}
-                <field.Custom>
-                  <div class="admin-config-color-palettes__name-control">
-                    <h2>{{@colorPalette.name}}</h2>
-                    <DButton
-                      class="btn-flat"
-                      @icon="pencil"
-                      @action={{this.toggleEditingName}}
-                    />
-                  </div>
-                </field.Custom>
-              {{/if}}
-            </form.Field>
-            <DButton
-              class="duplicate-palette"
-              @label="admin.customize.copy"
-              @action={{this.duplicate}}
-            />
-          </div>
-          <form.Alert class="fonts-and-logos-hint">
-            <div class="admin-config-color-palettes__logo-and-fonts-hint">
-              <span>{{i18n
-                  "admin.config_areas.color_palettes.logo_and_fonts_hint"
-                }}</span>
-              <LinkTo @route="adminConfig.logo-and-fonts">{{i18n
-                  "admin.config_areas.color_palettes.go_to_logo_and_fonts"
-                }}</LinkTo>
-            </div>
-          </form.Alert>
-          <AdminConfigAreaCard
-            @heading="admin.config_areas.color_palettes.color_options.title"
-          >
-            <:content>
-              <form.Field
-                @name="user_selectable"
-                @title={{i18n
-                  "admin.config_areas.color_palettes.color_options.toggle"
-                }}
-                @showTitle={{false}}
-                @description={{i18n
-                  "admin.config_areas.color_palettes.color_options.toggle_description"
-                }}
-                @format="full"
-                @onSet={{this.handleUserSelectableChange}}
-                as |field|
-              >
-                <field.Toggle />
-              </form.Field>
-            </:content>
-          </AdminConfigAreaCard>
-          <AdminConfigAreaCard
-            @heading="admin.config_areas.color_palettes.colors.title"
-          >
-            <:content>
-              <form.Field
-                @name="colors"
-                @title={{i18n "admin.config_areas.color_palettes.colors.title"}}
-                @showTitle={{false}}
-                @format="full"
-                as |field|
-              >
-                <field.Custom>
-                  <ColorPaletteEditor
-                    @initialMode={{this.editorMode}}
-                    @colors={{transientData.colors}}
-                    @onLightColorChange={{this.onLightColorChange}}
-                    @onDarkColorChange={{this.onDarkColorChange}}
-                    @onTabSwitch={{this.onEditorTabSwitch}}
-                  />
-                </field.Custom>
-              </form.Field>
-            </:content>
-          </AdminConfigAreaCard>
-          <AdminConfigAreaCard>
-            <:content>
-              <div class="admin-config-color-palettes__save-card">
-                {{#if this.hasUnsavedChanges}}
-                  <span class="admin-config-color-palettes__unsaved-changes">
-                    {{i18n "admin.config_areas.color_palettes.unsaved_changes"}}
-                  </span>
-                {{/if}}
-                <form.Submit
-                  @isLoading={{this.saving}}
-                  @label="admin.config_areas.color_palettes.save_changes"
-                />
-              </div>
-            </:content>
-          </AdminConfigAreaCard>
+              </field.Custom>
+            {{/if}}
+          </form.Field>
+          <DButton
+            class="duplicate-palette"
+            @label="admin.customize.copy"
+            @action={{this.duplicate}}
+          />
         </div>
+        <form.Alert class="fonts-and-logos-hint">
+          <div class="admin-config-color-palettes__logo-and-fonts-hint">
+            <span>{{i18n
+                "admin.config_areas.color_palettes.logo_and_fonts_hint"
+              }}</span>
+            <LinkTo @route="adminConfig.logo-and-fonts">{{i18n
+                "admin.config_areas.color_palettes.go_to_logo_and_fonts"
+              }}</LinkTo>
+          </div>
+        </form.Alert>
+        <AdminConfigAreaCard
+          @heading="admin.config_areas.color_palettes.color_options.title"
+        >
+          <:content>
+            <form.Field
+              @name="user_selectable"
+              @title={{i18n
+                "admin.config_areas.color_palettes.color_options.toggle"
+              }}
+              @showTitle={{false}}
+              @description={{i18n
+                "admin.config_areas.color_palettes.color_options.toggle_description"
+              }}
+              @format="full"
+              @onSet={{this.handleUserSelectableChange}}
+              as |field|
+            >
+              <field.Toggle />
+            </form.Field>
+          </:content>
+        </AdminConfigAreaCard>
+        <AdminConfigAreaCard
+          @heading="admin.config_areas.color_palettes.colors.title"
+        >
+          <:content>
+            <form.Field
+              @name="colors"
+              @title={{i18n "admin.config_areas.color_palettes.colors.title"}}
+              @showTitle={{false}}
+              @format="full"
+              as |field|
+            >
+              <field.Custom>
+                <ColorPaletteEditor
+                  @initialMode={{this.editorMode}}
+                  @colors={{transientData.colors}}
+                  @onLightColorChange={{this.onLightColorChange}}
+                  @onDarkColorChange={{this.onDarkColorChange}}
+                  @onTabSwitch={{this.onEditorTabSwitch}}
+                />
+              </field.Custom>
+            </form.Field>
+          </:content>
+        </AdminConfigAreaCard>
+        <AdminConfigAreaCard>
+          <:content>
+            <div class="admin-config-color-palettes__save-card">
+              {{#if this.hasUnsavedChanges}}
+                <span class="admin-config-color-palettes__unsaved-changes">
+                  {{i18n "admin.config_areas.color_palettes.unsaved_changes"}}
+                </span>
+              {{/if}}
+              <form.Submit
+                @isLoading={{this.saving}}
+                @label="admin.config_areas.color_palettes.save_changes"
+              />
+            </div>
+          </:content>
+        </AdminConfigAreaCard>
       </div>
     </Form>
   </template>

@@ -61,34 +61,37 @@ export default class AdminConfigAreasColorPalettes extends Component {
       </:breadcrumbs>
     </DPageHeader>
 
-    <div class="content-list">
-      <ul>
-        {{#each @palettes as |palette|}}
-          {{#unless palette.is_base}}
-            <li data-palette-id={{palette.id}}>
-              <LinkTo
-                @route="adminConfig.colorPalettes.show"
-                @model={{palette}}
-                @replace={{true}}
-              >
-                {{icon "paintbrush"}}
-                {{palette.description}}
-              </LinkTo>
-            </li>
-          {{/unless}}
-        {{/each}}
-      </ul>
+    <div class="admin-config-area">
+      <div class="admin-config-area__aside color-palettes-list">
+        <ul>
+          {{#each @palettes as |palette|}}
+            {{#unless palette.is_base}}
+              <li data-palette-id={{palette.id}}>
+                <LinkTo
+                  @route="adminConfig.colorPalettes.show"
+                  @model={{palette}}
+                  @replace={{true}}
+                >
+                  {{icon "paintbrush"}}
+                  {{palette.description}}
+                </LinkTo>
+              </li>
+            {{/unless}}
+          {{/each}}
+        </ul>
+        <PluginOutlet @name="admin-customize-colors-new-button">
+          <DButton
+            @action={{this.newColorPalette}}
+            @icon="plus"
+            @label="admin.customize.new"
+            class="btn-default create-new-palette"
+          />
+        </PluginOutlet>
+      </div>
 
-      <PluginOutlet @name="admin-customize-colors-new-button">
-        <DButton
-          @action={{this.newColorPalette}}
-          @icon="plus"
-          @label="admin.customize.new"
-          class="btn-default create-new-palette"
-        />
-      </PluginOutlet>
+      <div class="admin-config-area__primary-content">
+        {{outlet}}
+      </div>
     </div>
-
-    {{outlet}}
   </template>
 }
