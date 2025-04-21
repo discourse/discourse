@@ -114,7 +114,7 @@ describe "Drafts dropdown", type: :system do
       category_page.visit(category)
 
       expect(category_page).to have_button("New Topic", disabled: true)
-      expect(drafts_dropdown).to be_disabled
+      expect(drafts_dropdown).to be_enabled
     end
   end
 end

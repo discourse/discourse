@@ -1,13 +1,10 @@
 # frozen_string_literal: true
 
-describe "Admin User Page", type: :system do
+describe "Admin Search", type: :system do
   fab!(:current_user) { Fabricate(:admin) }
   let(:search_modal) { PageObjects::Modals::AdminSearch.new }
 
-  before do
-    SiteSetting.experimental_admin_search_enabled_groups = Group::AUTO_GROUPS[:admins]
-    sign_in(current_user)
-  end
+  before { sign_in(current_user) }
 
   def open_search_modal
     send_keys([SystemHelpers::PLATFORM_KEY_MODIFIER, "/"])

@@ -1617,7 +1617,7 @@ en:
         verify_identity: "To continue, please verify your identity."
         title: "Password Reset"
         remove: "Remove Password"
-        remove_detail: "This completely erases your password. Your account will no longer be accessible by using your password to log in unless you reset it."
+        remove_detail: "Your account will no longer be accessible with a password unless you reset it."
 
       second_factor_backup:
         title: "Two-Factor Backup Codes"
@@ -3045,8 +3045,6 @@ en:
       enter_hint: "or press Enter"
       mobile_enter_hint: "or tap Search icon"
       in_posts_by: "in posts by %{username}"
-      browser_tip: "%{modifier} + f"
-      browser_tip_description: "again to use native browser search"
       recent: "Recent Searches"
       clear_recent: "Clear Recent Searches"
 
@@ -5077,7 +5075,6 @@ en:
       clear_filter: "Clear filter"
       no_results:
         title: "No results"
-        description: 'We couldn’t find anything matching ‘%{filter}’.<br><br>Did you want to <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">search site settings</a> or the <a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">admin user list?</a>'
         description_admin_search: 'We couldn’t find anything matching ‘%{filter}’.<br><br>Try <a class="sidebar-additional-filter-admin-search" href="%{admin_search_url}">searching the entire admin interface</a>.'
       footer:
         interface_color_selector:
@@ -6194,7 +6191,8 @@ en:
             post: "posts"
             chat_message: "chat messages"
             enabled: "Enable this custom flag after saving"
-            alert: "Once a custom flag has been used, it can only be disabled but not edited or deleted."
+            create_warning: "Once a custom flag has been used, it can only be disabled or edited but not deleted."
+            edit_warning: "Editing the name and description of a flag can cause potential data inconsistencies. Once a custom flag has been used, it can only be disabled or edited but not deleted."
             edit_flag: "Edit flag"
             non_editable: "You cannot edit this flag because it is a system flag or has already been used in the review system, however you can still disable it."
             delete_flag: "Delete flag"
@@ -7114,6 +7112,7 @@ en:
           dropdown: "Dropdown"
           upload: "Upload a file"
           multiselect: "Multiple choice"
+          tagchooser: "Tag Group selector"
         validations_modal:
           button_title: "Validations"
           modal_title: "Validation Options"
@@ -7159,6 +7158,8 @@ en:
           toggle_form_template: "form template enabled"
           select_template: "Select form templates"
           select_template_help: "Add/Edit Form Templates"
+        errors:
+          multiple_tags_not_allowed: 'You can''t select more tags from the "%{tag_name}". To avoid issues, use Form Template'
 
       impersonate:
         title: "Impersonate"

@@ -10,6 +10,11 @@ RSpec.describe QunitController do
     Rails.env.stubs(:production?).returns(true)
   end
 
+  # rubocop:disable RSpec/BeforeAfterAll
+  before(:all) { DiscourseJsProcessor::Transpiler.build_production_theme_transpiler }
+
+  after(:all) { File.delete(DiscourseJsProcessor::Transpiler::TRANSPILER_PATH) }
+
   it "hides page for regular users in production" do
     production_sign_in(Fabricate(:user))
     get "/theme-qunit"

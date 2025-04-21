@@ -49,6 +49,10 @@ export default class FormTemplateForm extends Component {
       type: "multiselect",
       icon: "bullseye",
     },
+    {
+      type: "tagchooser",
+      icon: "bullseye",
+    },
   ];
 
   get disablePreviewButton() {
