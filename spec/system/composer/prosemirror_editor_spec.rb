@@ -3,6 +3,7 @@
 describe "Composer - ProseMirror editor", type: :system do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:tag)
+
   let(:cdp) { PageObjects::CDP.new }
   let(:composer) { PageObjects::Components::Composer.new }
   let(:rich) { composer.rich_editor }
@@ -16,7 +17,6 @@ describe "Composer - ProseMirror editor", type: :system do
     page.visit "/new-topic"
     expect(composer).to be_opened
     composer.toggle_rich_editor
-    expect(composer).to have_rich_editor_active
     composer.focus
   end
 
@@ -55,15 +55,14 @@ describe "Composer - ProseMirror editor", type: :system do
 
     it "strips partially written emoji when using 'more' emoji modal" do
       open_composer_and_toggle_rich_editor
+
       composer.type_content("Why :repeat_single")
 
       expect(composer).to have_emoji_autocomplete
 
       # "more" emoji picker
       composer.send_keys(:down, :enter)
-
       find("img[data-emoji='repeat_single_button']").click
-
       composer.toggle_rich_editor
 
       expect(composer).to have_value("Why :repeat_single_button: ")

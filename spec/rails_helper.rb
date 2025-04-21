@@ -471,14 +471,7 @@ RSpec.configure do |config|
     }
 
     Capybara.register_driver(:playwright_chrome) do |app|
-      Capybara::Playwright::Driver.new(
-        app,
-        **driver_options,
-        viewport: {
-          width: 1400,
-          height: 1400,
-        },
-      )
+      Capybara::Playwright::Driver.new(app, **driver_options, screen: { width: 1400, height: 1400 })
     end
 
     Capybara.register_driver(:playwright_mobile_chrome) do |app|

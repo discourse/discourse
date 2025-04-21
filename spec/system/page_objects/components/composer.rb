@@ -320,9 +320,21 @@ module PageObjects
         find("#{COMPOSER_ID}").has_css?(".composer-toggle-switch__right-icon.--active")
       end
 
+      def has_no_rich_editor_active?
+        find("#{COMPOSER_ID}").has_css?(".composer-toggle-switch__left-icon.--active")
+      end
+
       def toggle_rich_editor
+        rich = page.find(".composer-toggle-switch")["data-rich-editor"]
+
         editor_toggle_switch.click
-        has_css?("html.composer-open:not(.composer-has-preview)")
+
+        if rich
+          has_no_rich_editor_active?
+        else
+          has_rich_editor_active?
+        end
+
         self
       end
 
