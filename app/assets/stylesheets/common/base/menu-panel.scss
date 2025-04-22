@@ -242,7 +242,7 @@
     &.search-menu-panel {
       width: 100vw;
       max-width: 100vw;
-      padding: 0.5rem 0.5rem 0;
+      padding: 0;
       transform-origin: 66%;
       transition: height 0.2s ease-in;
 
@@ -255,7 +255,8 @@
       }
 
       &.is-destroying {
-        animation: search-slide-out 0.2s ease-in forwards;
+        // animation: search-slide-out 0.2s ease-in forwards;
+        animation: none;
       }
 
       @keyframes search-slide-in {
@@ -278,7 +279,7 @@
       }
 
       .btn-cancel-mobile-search {
-        padding: 1rem 0.625rem;
+        align-self: stretch;
       }
     }
   }

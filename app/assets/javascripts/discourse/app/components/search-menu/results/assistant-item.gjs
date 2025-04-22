@@ -141,7 +141,7 @@ export default class AssistantItem extends Component {
       {{on "click" this.onClick}}
       data-usage={{@usage}}
     >
-      <a class="search-link" href={{this.href}}>
+      <a class={{concatClass @typeClass "search-link"}} href={{this.href}}>
         <span aria-label={{i18n "search.title"}}>
           {{icon (or @icon "magnifying-glass")}}
         </span>
@@ -177,12 +177,14 @@ export default class AssistantItem extends Component {
           </span>
         {{/if}}
 
-        <span class="search-item-slug">
-          {{#if @suffix}}
-            <span class="label-suffix">{{@suffix}}</span>
-          {{/if}}
-          {{@label}}
-        </span>
+        {{#if (or @label @suffix)}}
+          <span class="search-item-slug">
+            {{#if @suffix}}
+              <span class="label-suffix">{{@suffix}}</span>
+            {{/if}}
+            {{@label}}
+          </span>
+        {{/if}}
         {{#if @extraHint}}
           <span class="extra-hint">
             {{i18n
