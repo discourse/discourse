@@ -4,7 +4,7 @@ import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import element from "discourse/helpers/element";
 import number from "discourse/helpers/number";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class RepliesCell extends Component {
   @service siteSettings;
@@ -21,10 +21,12 @@ export default class RepliesCell extends Component {
   }
 
   get title() {
-    return I18n.messageFormat("posts_likes_MF", {
-      count: this.args.topic.replyCount,
-      ratio: this.ratioText,
-    }).trim();
+    return i18n
+      .messageFormat("posts_likes_MF", {
+        count: this.args.topic.replyCount,
+        ratio: this.ratioText,
+      })
+      .trim();
   }
 
   get ratioText() {
@@ -54,7 +56,11 @@ export default class RepliesCell extends Component {
     <this.wrapperElement
       class="num posts-map posts {{this.likesHeat}} topic-list-data"
     >
-      <a href={{@topic.firstPostUrl}} class="badge-posts">
+      <a
+        href={{@topic.firstPostUrl}}
+        class="badge-posts"
+        aria-label={{i18n "topic.reply_count_link" count=@topic.replyCount}}
+      >
         <PluginOutlet
           @name="topic-list-before-reply-count"
           @outletArgs={{hash topic=@topic}}
