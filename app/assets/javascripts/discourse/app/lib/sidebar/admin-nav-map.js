@@ -30,7 +30,7 @@ export const ADMIN_NAV_MAP = [
       },
       {
         name: "admin_groups",
-        route: "groups",
+        route: "adminGroups",
         label: "admin.config.groups.title",
         description: "admin.config.groups.header_description",
         icon: "user-group",
