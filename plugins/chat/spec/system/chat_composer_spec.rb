@@ -41,7 +41,7 @@ RSpec.describe "Chat composer", type: :system do
   context "when adding an emoji through the autocomplete" do
     it "adds the emoji to the composer" do
       chat_page.visit_channel(channel_1)
-      find(".chat-composer__input").fill_in(with: ":gri")
+      find(".chat-composer__input").send_keys(":gri")
       find(".emoji-shortname", text: "grimacing").click
 
       expect(channel_page.composer).to have_value(":grimacing: ")
@@ -102,9 +102,9 @@ RSpec.describe "Chat composer", type: :system do
 
       expect(channel_page.composer).to have_value("bb")
 
-      find("body").send_keys(:enter) # special case
+      find("body").send_keys(:enter)
 
-      expect(channel_page.composer).to have_value("bb")
+      expect(channel_page.messages).to have_message(text: "bb")
     end
 
     context "when user preference is set to send on enter" do

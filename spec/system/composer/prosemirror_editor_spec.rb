@@ -615,7 +615,7 @@ describe "Composer - ProseMirror editor", type: :system do
       cdp.copy_test_image
       cdp.paste
 
-      expect(rich).to have_css("img", count: 1)
+      expect(rich).to have_css("img[data-orig-src]", count: 1)
 
       composer.focus # making sure the toggle click won't be captured as a double click
       composer.toggle_rich_editor
