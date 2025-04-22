@@ -158,9 +158,13 @@ export default class TopicController extends Controller {
     return loaded && isSharedDraft;
   }
 
-  @discourseComputed("currentPostId", "model.postStream.posts.firstObject.id")
-  topicTitleClass(currentPostId, firstPostId) {
-    if (currentPostId === firstPostId) {
+  @discourseComputed(
+    "currentPostId",
+    "model.postStream.posts.firstObject.id",
+    "model.details.can_edit"
+  )
+  topicTitleClass(currentPostId, firstPostId, canEdit) {
+    if (currentPostId === firstPostId && canEdit) {
       return "edit-topic can-edit-topic";
     }
   }

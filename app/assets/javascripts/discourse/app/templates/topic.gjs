@@ -224,9 +224,9 @@ export default RouteTemplate(
 
                 {{#if @controller.model.details.loaded}}
                   <TopicStatus @topic={{@controller.model}} />
-                  <a href={{@controller.model.url}} class="fancy-title">
+                  <span class="fancy-title">
                     {{htmlSafe @controller.model.fancyTitle}}
-                  </a>
+                  </span>
                 {{/if}}
 
                 {{#if @controller.showEditButton}}
