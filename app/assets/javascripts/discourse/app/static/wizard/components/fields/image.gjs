@@ -1,11 +1,13 @@
 import Component from "@ember/component";
 import { warn } from "@ember/debug";
+import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
 import { classNames } from "@ember-decorators/component";
 import Uppy from "@uppy/core";
 import DropTarget from "@uppy/drop-target";
 import XHRUpload from "@uppy/xhr-upload";
+import concatClass from "discourse/helpers/concat-class";
 import discourseComputed from "discourse/lib/decorators";
 import getUrl from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
@@ -19,7 +21,8 @@ export default class Image extends Component {
 
   @discourseComputed("field.id")
   previewComponent(id) {
-    return imagePreviews[dasherize(id)] ?? imagePreviews.generic;
+    const name = imagePreviews[dasherize(id)] ?? imagePreviews.generic;
+    return getOwner(this).resolveRegistration(`component:${name}`);
   }
 
   didInsertElement() {
@@ -92,4 +95,35 @@ export default class Image extends Component {
         });
       });
   }
+
+  <template>
+    <label
+      class={{concatClass
+        "wizard-container__button wizard-container__button-upload"
+        (if this.uploading "disabled")
+        (if this.hasUpload "has-upload")
+      }}
+    >
+      {{#if this.uploading}}
+        {{i18n "wizard.uploading"}}
+      {{else}}
+        {{i18n "wizard.upload"}}
+      {{/if}}
+
+      <input
+        class="wizard-hidden-upload-field"
+        disabled={{this.uploading}}
+        type="file"
+        accept="image/*"
+      />
+    </label>
+
+    {{#if this.field.value}}
+      <this.previewComponent
+        @field={{this.field}}
+        @fieldClass={{this.fieldClass}}
+        @wizard={{this.wizard}}
+      />
+    {{/if}}
+  </template>
 }

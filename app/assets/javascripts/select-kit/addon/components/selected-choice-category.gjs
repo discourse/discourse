@@ -17,4 +17,14 @@ export default class SelectedChoiceCategory extends SelectedChoiceComponent {
       })
     );
   }
+
+  <template>
+    <SelectedChoiceComponent
+      @item={{this.item}}
+      @selectKit={{this.selectKit}}
+      @extraClass={{this.extraClass}}
+    >
+      {{this.badge}}
+    </SelectedChoiceComponent>
+  </template>
 }
