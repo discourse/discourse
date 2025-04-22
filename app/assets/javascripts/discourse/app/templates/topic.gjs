@@ -230,12 +230,7 @@ export default RouteTemplate(
                 {{/if}}
 
                 {{#if @controller.showEditButton}}
-                  <a
-                    href
-                    {{on "click" @controller.editTopic}}
-                    class="edit-topic"
-                    title={{i18n "edit_topic"}}
-                  >{{icon "pencil"}}</a>
+                  {{icon "pencil"}}
                 {{/if}}
 
                 <PluginOutlet
