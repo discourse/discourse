@@ -384,7 +384,9 @@ export default class TopicController extends Controller {
   @action
   editTopic(event) {
     event?.preventDefault();
-    this.set("editingTopic", true);
+    if (this.get("model.details.can_edit")) {
+      this.set("editingTopic", true);
+    }
   }
 
   @action
@@ -394,9 +396,7 @@ export default class TopicController extends Controller {
 
     event?.preventDefault();
     if (isAtTop) {
-      if (this.get("model.details.can_edit")) {
-        this.set("editingTopic", true);
-      }
+      this.editTopic(event);
     } else if (event && wantsNewWindow(event)) {
       return;
     } else {
