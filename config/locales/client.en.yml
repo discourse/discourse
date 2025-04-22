@@ -6982,6 +6982,7 @@ en:
             tag_group_destroy: "delete tag group"
             tag_group_change: "change tag group"
             delete_associated_accounts: "delete associated accounts"
+            change_theme_site_setting: "change theme site setting"
         screened_emails:
           title: "Screened emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."

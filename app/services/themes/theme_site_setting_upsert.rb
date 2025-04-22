@@ -28,7 +28,10 @@ class Themes::ThemeSiteSettingUpsert
   transaction do
     step :convert_new_value_to_site_setting_values
     step :save_update_or_destroy
+    step :log_change
   end
+
+  step :update_site_setting_cache
 
   private
 
@@ -41,7 +44,12 @@ class Themes::ThemeSiteSettingUpsert
   end
 
   def convert_new_value_to_site_setting_values(params:)
-    return if params.value.nil?
+    if params.value.nil?
+      context[:setting_db_value] = nil
+      context[:setting_data_type] = nil
+      context[:setting_ruby_value] = nil
+      return
+    end
 
     setting_db_value, setting_data_type =
       SiteSetting.type_supervisor.to_db_value(params.name, params.value)
@@ -62,6 +70,7 @@ class Themes::ThemeSiteSettingUpsert
     setting_ruby_value:
   )
     setting_record = nil
+    context[:previous_value] = nil
 
     if existing_theme_site_setting
       # Since the site setting itself doesn't matter, if we are
@@ -71,6 +80,7 @@ class Themes::ThemeSiteSettingUpsert
       if params.value.nil? || setting_ruby_value == SiteSetting.defaults[params.name]
         existing_theme_site_setting.destroy!
       else
+        context[:previous_value] = existing_theme_site_setting.value
         existing_theme_site_setting.update!(value: setting_db_value)
         setting_record = existing_theme_site_setting
       end
@@ -88,9 +98,21 @@ class Themes::ThemeSiteSettingUpsert
     context[:theme_site_setting] = setting_record
   end
 
+  def log_change(theme_site_setting:, previous_value:, theme:, guardian:)
+    StaffActionLogger.new(guardian.user).log_theme_site_setting_change(
+      theme_site_setting.name,
+      previous_value,
+      theme_site_setting.value,
+      theme,
+    )
+  end
+
+  def update_site_setting_cache(theme:, theme_site_setting:, setting_ruby_value:)
+    SiteSetting.change_themeable_site_setting(theme.id, theme_site_setting.name, setting_ruby_value)
+  end
+
   # TODO (martin)
   #
-  # Logging the change
   # Updating site setting cache?
   # Messagebus to client to update client site settings
 end

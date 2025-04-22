@@ -574,6 +574,15 @@ module SiteSettingExtension
     DiscourseEvent.trigger(:site_setting_changed, name, old_val, current[name])
   end
 
+  def change_themeable_site_setting(theme_id, name, val)
+    theme_site_settings[theme_id] ||= {}
+    theme_site_settings[theme_id][name.to_sym] = val
+
+    # TODO (martin) Maybe notify clients can happen here?
+
+    clear_cache!
+  end
+
   # TODO (martin) I need to take into account theme site settings in these notifiers
   def notify_changed!
     MessageBus.publish("/site_settings", process: process_id)

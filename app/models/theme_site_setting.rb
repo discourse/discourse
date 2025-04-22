@@ -5,6 +5,8 @@
 # to overrride specific site settings that we make available in
 # core based on the `themeable` designation on a site setting.
 class ThemeSiteSetting < ActiveRecord::Base
+  belongs_to :theme
+
   validate :ensure_setting_themeable
 
   def ensure_setting_themeable
