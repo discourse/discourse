@@ -61,7 +61,8 @@
       }
     }
 
-    &:not(.composer-actions, .toolbar-popup-menu-options) .select-kit-filter {
+    &:not(.composer-actions, .toolbar-popup-menu-options, .more-actions-chat)
+      .select-kit-filter {
       border: 1px solid var(--primary-low);
       border-bottom: none;
     }
