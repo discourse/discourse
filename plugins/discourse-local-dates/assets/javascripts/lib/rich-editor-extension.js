@@ -5,7 +5,6 @@ const extension = {
     local_date: {
       attrs: { date: {}, time: {}, timezone: { default: null } },
       group: "inline",
-      atom: true,
       inline: true,
       parseDOM: [
         {
@@ -42,7 +41,6 @@ const extension = {
         timezone: { default: null },
       },
       group: "inline",
-      atom: true,
       inline: true,
       parseDOM: [
         {

@@ -28,6 +28,12 @@
       margin-top: 0.5em;
     }
 
+    @include breakpoint("mobile-extra-large") {
+      display: block;
+      padding: 0.5em;
+      margin-top: 0;
+    }
+
     > div {
       margin: 0 auto;
       max-width: 600px;
@@ -36,6 +42,10 @@
     .search-menu {
       display: flex;
       position: relative;
+
+      @include breakpoint("mobile-extra-large") {
+        display: none;
+      }
 
       .search-menu-container {
         width: 100%;
@@ -64,6 +74,10 @@
 
       @include breakpoint(tablet) {
         font-size: var(--font-up-4);
+      }
+
+      @include breakpoint("mobile-extra-large") {
+        font-size: var(--font-up-2);
       }
     }
 
@@ -120,6 +134,8 @@
       margin-left: auto;
       margin-right: auto;
       left: 0;
+      top: 100%;
+
       right: 0;
 
       @include float-down;

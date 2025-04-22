@@ -43,7 +43,7 @@ export default class CreateTopicButton extends Component {
       </DButtonTooltip>
 
       {{#if @showDrafts}}
-        <TopicDraftsDropdown @disabled={{this.disabled}} />
+        <TopicDraftsDropdown @disabled={{false}} />
       {{/if}}
     {{/if}}
   </template>
