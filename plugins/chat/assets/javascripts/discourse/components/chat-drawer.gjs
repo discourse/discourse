@@ -9,6 +9,8 @@ import { observes } from "@ember-decorators/object";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import bodyClass from "discourse/helpers/body-class";
 import concatClass from "discourse/helpers/concat-class";
+import hideApplicationFooter from "discourse/helpers/hide-application-footer";
+import htmlClass from "discourse/helpers/html-class";
 import { bind } from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import DiscourseURL from "discourse/lib/url";
@@ -231,6 +233,8 @@ export default class ChatDrawer extends Component {
   <template>
     {{#if this.chatStateManager.isDrawerActive}}
       {{bodyClass "chat-drawer-active"}}
+      {{htmlClass "has-drawer-chat" "has-chat"}}
+      {{bodyClass "has-drawer-chat" "has-chat"}}
     {{/if}}
 
     {{#if this.chatStateManager.isDrawerExpanded}}

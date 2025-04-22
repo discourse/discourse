@@ -25,6 +25,7 @@ module PageObjects
 
       def open_from_header
         find(".chat-header-icon").click
+        has_css?("html.has-chat")
       end
 
       def close_from_header
