@@ -1,7 +1,24 @@
 # frozen_string_literal: true
 
+# Destroys a theme and logs the staff action. Related records are destroyed
+# by ActiveRecord dependent: :destroy.
+#
+# @example
+#  Themes::Destroy.call(
+#    guardian: guardian,
+#    params: {
+#      id: theme.id,
+#    }
+#  )
+#
 class Themes::Destroy
   include Service::Base
+
+  # @!method self.call(guardian:, params:)
+  #   @param [Guardian] guardian
+  #   @param [Hash] params
+  #   @option params [Integer] :id The ID of the theme to destroy
+  #   @return [Service::Base::Context]
 
   params do
     attribute :id, :integer

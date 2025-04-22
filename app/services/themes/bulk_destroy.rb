@@ -1,7 +1,24 @@
 # frozen_string_literal: true
 
+# Destroys multiple themes and logs the staff action. Related records are destroyed
+# by ActiveRecord dependent: :destroy.
+#
+# @example
+#  Themes::Destroy.call(
+#    guardian: guardian,
+#    params: {
+#      theme_ids: [theme_1.id, theme_2.id],
+#    }
+#  )
+#
 class Themes::BulkDestroy
   include Service::Base
+
+  # @!method self.call(guardian:, params:)
+  #   @param [guardian] guardian
+  #   @param [hash] params
+  #   @option params [array] :theme_ids The ids of the themes to destroy
+  #   @return [service::base::context]
 
   params do
     attribute :theme_ids, :array
