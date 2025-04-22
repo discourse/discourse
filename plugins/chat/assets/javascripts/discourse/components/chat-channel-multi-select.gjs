@@ -24,6 +24,10 @@ export default class ChatChannelMultiSelect extends Component {
 
   @action
   async loadInitialChannels() {
+    if (!this.args.selectedIds?.length) {
+      return [];
+    }
+
     try {
       const response = await ajax("/chat/api/channels", {
         type: "GET",
@@ -67,7 +71,6 @@ export default class ChatChannelMultiSelect extends Component {
           class="chat-channels-multi-select__loading"
         />
       </:loading>
-
     </AsyncContent>
   </template>
 }
