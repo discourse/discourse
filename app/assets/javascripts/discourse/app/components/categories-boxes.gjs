@@ -9,8 +9,9 @@ import CategoryTitleLink from "discourse/components/category-title-link";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import borderColor from "discourse/helpers/border-color";
 import categoryColorVariable from "discourse/helpers/category-color-variable";
-import categoryLink from "discourse/helpers/category-link";
-import icon from "discourse/helpers/d-icon";
+import categoryLink, {
+  categoryBadgeHTML,
+} from "discourse/helpers/category-link";
 import discourseComputed from "discourse/lib/decorators";
 
 @tagName("section")
@@ -20,8 +21,6 @@ import discourseComputed from "discourse/lib/decorators";
   "hasSubcategories:with-subcategories"
 )
 export default class CategoriesBoxes extends Component {
-  lockIcon = "lock";
-
   @discourseComputed("categories.[].uploaded_logo.url")
   anyLogos() {
     return this.categories.any((c) => !isEmpty(c.get("uploaded_logo.url")));
@@ -30,6 +29,15 @@ export default class CategoriesBoxes extends Component {
   @discourseComputed("categories.[].subcategories")
   hasSubcategories() {
     return this.categories.any((c) => !isEmpty(c.get("subcategories")));
+  }
+
+  categoryName(category) {
+    return htmlSafe(
+      categoryBadgeHTML(category, {
+        allowUncategorized: true,
+        link: false,
+      })
+    );
   }
 
   <template>
@@ -65,10 +73,7 @@ export default class CategoriesBoxes extends Component {
                 <a class="parent-box-link" href={{c.url}}>
                   <h3>
                     <CategoryTitleBefore @category={{c}} />
-                    {{#if c.read_restricted}}
-                      {{icon this.lockIcon}}
-                    {{/if}}
-                    {{c.displayName}}
+                    {{this.categoryName c}}
                   </h3>
                 </a>
               </div>
