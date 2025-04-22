@@ -20,7 +20,6 @@ $search-result-element-padding: 0.35em 1rem; //hate myself but .25em is too tigh
       left: 1rem;
       right: 0.35rem; //to compensate for cancel button padding
       top: 0.5em;
-      // width: calc(100dvw - calc(var(--search-input-wrapper-padding) * 2));
       padding-bottom: 0.5em;
       background-color: var(--secondary);
       z-index: z("base");
@@ -98,20 +97,22 @@ $search-result-element-padding: 0.35em 1rem; //hate myself but .25em is too tigh
   }
 
   .search-context {
-    margin-inline: 0.25em;
-    margin-right: 0;
     white-space: nowrap;
     background-color: var(--primary-200);
 
-    &:hover {
-      background-color: var(--primary-medium);
+    @include breakpoint("mobile-extra-large", $rule: min-width) {
+      margin-left: 0.25em;
+      margin-right: 0;
     }
     @include breakpoint("mobile-extra-large") {
       position: fixed;
-      top: var(--header-offset);
+      top: calc(var(--header-offset) + 0.75em);
       left: 1rem;
-      margin: 0.25em 0 0;
       padding: 0.25em 0.5em;
+    }
+
+    &:hover {
+      background-color: var(--primary-medium);
     }
   }
 
@@ -125,12 +126,11 @@ $search-result-element-padding: 0.35em 1rem; //hate myself but .25em is too tigh
     //   padding-top: $search-pad-vertical;
     // }
 
+    //padding needs to be conditional on "in this topic" element presence
     @include breakpoint("mobile-extra-large") {
       &,
       &.with-search-term {
-        padding-top: calc(
-          var(--header-offset) + 1.5em
-        ); //clear the header + the seach term ("in this topic")
+        padding-top: calc(var(--header-offset) + 2.25em);
       }
     }
 
