@@ -298,7 +298,7 @@ import { i18n } from "discourse-i18n";
           .exists("link is shown with topic title");
 
         assert.dom(".title-wrapper").exists("title wrapper is shown");
-        await click(".title-wrapper .can-edit-topic");
+        await click("#topic-title .can-edit-topic");
         assert
           .dom(".title-wrapper .remove-featured-link")
           .exists("link to remove featured link");
