@@ -10,7 +10,7 @@ class CategoryLocalization < ActiveRecord::Base
   after_commit :invalidate_site_cache
 
   def invalidate_site_cache
-    Site.clear_cache
+    I18n.with_locale(locale) { Site.clear_cache }
   end
 end
 
