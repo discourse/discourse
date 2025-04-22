@@ -1,13 +1,3 @@
-@keyframes d-menu-opening {
-  0% {
-    opacity: 0;
-  }
-
-  100% {
-    opacity: 1;
-  }
-}
-
 .fk-d-menu {
   width: max-content;
   position: absolute;
@@ -24,13 +14,14 @@
   }
 
   &.-animated {
-    animation: d-menu-opening 0.15s ease-in;
+    @include float-down;
 
     &[data-placement^="bottom"] {
       transform-origin: top center;
     }
 
     &[data-placement^="top"] {
+      @include float-up;
       transform-origin: bottom center;
     }
 

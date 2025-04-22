@@ -141,6 +141,14 @@ $hpad: 0.65em;
   border-radius: var(--d-border-radius);
 }
 
+@mixin float-down {
+  animation: float-down ease 0.25s 1 forwards;
+}
+
+@mixin float-up {
+  animation: float-up ease 0.25s 1 forwards;
+}
+
 @mixin default-focus() {
   border-color: var(--tertiary);
   outline: 2px solid var(--tertiary);
