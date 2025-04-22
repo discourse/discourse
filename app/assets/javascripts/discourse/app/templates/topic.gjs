@@ -203,7 +203,7 @@ export default RouteTemplate(
               <h1
                 data-topic-id={{@controller.model.id}}
                 role="button"
-                class={{@controller.canEditClass}}
+                class={{@controller.topicTitleClass}}
                 aria-label={{i18n "edit_topic"}}
                 {{on "click" @controller.titleClick}}
               >
@@ -235,8 +235,6 @@ export default RouteTemplate(
                     {{on "click" @controller.editTopic}}
                     class="edit-topic"
                     title={{i18n "edit_topic"}}
-                    role="button"
-                    aria-label={{i18n "edit_topic"}}
                   >{{icon "pencil"}}</a>
                 {{/if}}
 

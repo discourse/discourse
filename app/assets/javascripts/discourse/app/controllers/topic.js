@@ -159,9 +159,9 @@ export default class TopicController extends Controller {
   }
 
   @discourseComputed("currentPostId", "model.postStream.posts.firstObject.id")
-  canEditClass(currentPostId, firstPostId) {
+  topicTitleClass(currentPostId, firstPostId) {
     if (currentPostId === firstPostId) {
-      return "can-edit";
+      return "edit-topic can-edit-topic";
     }
   }
 

@@ -208,7 +208,7 @@
       cursor: text;
     }
 
-    &.can-edit-topic :hover {
+    &.can-edit-topic:hover {
       outline: 2px solid var(--tertiary);
       border-radius: var(--d-border-radius);
     }
