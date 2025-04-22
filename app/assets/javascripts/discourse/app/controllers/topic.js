@@ -175,8 +175,16 @@ export default class TopicController extends Controller {
     "model.details.can_edit"
   )
   showEditButton(mobileView, touch, canEdit) {
-    const tabletView = touch && window.matchMedia("(hover: none)").matches;
-    return (mobileView && canEdit) || (tabletView && canEdit);
+    // const tabletView = touch && window.matchMedia("(hover: none)").matches;
+    // return (mobileView && canEdit) || (tabletView && canEdit);
+    /* eslint-disable no-console */
+    console.log(
+      mobileView,
+      touch,
+      canEdit,
+      window.matchMedia("(hover: none)").matches
+    );
+    return true;
   }
 
   @discourseComputed("site.mobileView", "model.posts_count")
