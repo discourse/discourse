@@ -344,5 +344,33 @@ RSpec.describe Site do
         &modifier_block
       )
     end
+
+    describe "experimental_content_localization" do
+      it "returns localized category names when enabled" do
+        SiteSetting.experimental_content_localization = true
+
+        localization = Fabricate(:category_localization)
+        category = localization.category
+        locale = localization.locale.to_sym
+
+        I18n.locale = locale
+
+        all_categories_cache = Site.all_categories_cache
+        cached_category = all_categories_cache.find { |c| c[:id] == category.id }
+        expect(cached_category[:name]).to eq(localization.name)
+        expect(cached_category[:description]).to eq(localization.description)
+      end
+
+      it "returns original names when enabled" do
+        SiteSetting.experimental_content_localization = true
+
+        category = Fabricate(:category, name: "derp", description: "derp derp")
+
+        all_categories_cache = Site.all_categories_cache
+        cached_category = all_categories_cache.find { |c| c[:id] == category.id }
+        expect(cached_category[:name]).to eq(category.name)
+        expect(cached_category[:description]).to eq(category.description)
+      end
+    end
   end
 end
