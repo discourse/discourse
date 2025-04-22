@@ -16,17 +16,19 @@ export default RouteTemplate(
     <DPageSubheader @titleLabel={{i18n "admin.backups.files_title"}}>
       <:actions as |actions|>
         <actions.Wrapped as |wrapped|>
-          {{#if @controller.localBackupStorage}}
-            <UppyBackupUploader
-              class={{wrapped.buttonClass}}
-              @done={{routeAction "uploadSuccess"}}
-              @localBackupStorage={{@controller.localBackupStorage}}
-            />
-          {{else}}
-            <UppyBackupUploader
-              class={{wrapped.buttonClass}}
-              @done={{routeAction "remoteUploadSuccess"}}
-            />
+          {{#if @controller.siteSettings.enable_backups}}
+            {{#if @controller.localBackupStorage}}
+              <UppyBackupUploader
+                class={{wrapped.buttonClass}}
+                @done={{routeAction "uploadSuccess"}}
+                @localBackupStorage={{@controller.localBackupStorage}}
+              />
+            {{else}}
+              <UppyBackupUploader
+                class={{wrapped.buttonClass}}
+                @done={{routeAction "remoteUploadSuccess"}}
+              />
+            {{/if}}
           {{/if}}
         </actions.Wrapped>
       </:actions>
@@ -76,37 +78,39 @@ export default RouteTemplate(
                   class="btn-default btn-small backup-item-row__download"
                 />
 
-                <DMenu
-                  @identifier="backup-item-menu"
-                  @title={{i18n "more_options"}}
-                  @icon="ellipsis-vertical"
-                  class="btn-default btn-small"
-                >
-                  <:content>
-                    <DropdownMenu as |dropdown|>
-                      <dropdown.item>
-                        <DButton
-                          @icon="play"
-                          @action={{fn (routeAction "startRestore") backup}}
-                          @disabled={{@controller.status.restoreDisabled}}
-                          @title={{@controller.restoreTitle}}
-                          @label="admin.backups.operations.restore.label"
-                          class="btn-transparent backup-item-row__restore"
-                        />
-                      </dropdown.item>
-                      <dropdown.item>
-                        <DButton
-                          @icon="trash-can"
-                          @action={{fn (routeAction "destroyBackup") backup}}
-                          @disabled={{@controller.status.isOperationRunning}}
-                          @title={{@controller.deleteTitle}}
-                          @label="admin.backups.operations.destroy.title"
-                          class="btn-transparent btn-danger backup-item-row__delete"
-                        />
-                      </dropdown.item>
-                    </DropdownMenu>
-                  </:content>
-                </DMenu>
+                {{#if @controller.siteSettings.enable_backups}}
+                  <DMenu
+                    @identifier="backup-item-menu"
+                    @title={{i18n "more_options"}}
+                    @icon="ellipsis-vertical"
+                    class="btn-default btn-small"
+                  >
+                    <:content>
+                      <DropdownMenu as |dropdown|>
+                        <dropdown.item>
+                          <DButton
+                            @icon="play"
+                            @action={{fn (routeAction "startRestore") backup}}
+                            @disabled={{@controller.status.restoreDisabled}}
+                            @title={{@controller.restoreTitle}}
+                            @label="admin.backups.operations.restore.label"
+                            class="btn-transparent backup-item-row__restore"
+                          />
+                        </dropdown.item>
+                        <dropdown.item>
+                          <DButton
+                            @icon="trash-can"
+                            @action={{fn (routeAction "destroyBackup") backup}}
+                            @disabled={{@controller.status.isOperationRunning}}
+                            @title={{@controller.deleteTitle}}
+                            @label="admin.backups.operations.destroy.title"
+                            class="btn-transparent btn-danger backup-item-row__delete"
+                          />
+                        </dropdown.item>
+                      </DropdownMenu>
+                    </:content>
+                  </DMenu>
+                {{/if}}
               </div>
             </td>
           </tr>
