@@ -36,6 +36,7 @@ class Category < ActiveRecord::Base
   has_many :category_users
   has_many :category_featured_topics
   has_many :featured_topics, through: :category_featured_topics, source: :topic
+  has_many :category_localizations, dependent: :destroy
 
   has_many :category_groups, dependent: :destroy
   has_many :category_moderation_groups, dependent: :destroy

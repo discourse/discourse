@@ -42,14 +42,6 @@ module TurboTests
       ).run
     end
 
-    def self.default_spec_folders
-      # We do not want to include system specs by default, they are quite slow.
-      Dir
-        .entries("#{Rails.root}/spec")
-        .reject { |entry| !File.directory?("spec/#{entry}") || %w[.. . system].include?(entry) }
-        .map { |entry| "spec/#{entry}" }
-    end
-
     def initialize(opts)
       @reporter = opts[:reporter]
       @files = opts[:files]

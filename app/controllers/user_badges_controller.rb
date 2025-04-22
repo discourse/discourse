@@ -135,14 +135,16 @@ class UserBadgesController < ApplicationController
 
     return render json: failed_json, status: 403 unless can_favorite_badge?(user_badge)
 
-    if !user_badge.is_favorite &&
+    is_favorite = user_badges.where(badge: user_badge.badge, is_favorite: true).exists?
+
+    if !is_favorite &&
          user_badges.select(:badge_id).distinct.where(is_favorite: true).count >=
            SiteSetting.max_favorite_badges
       return render json: failed_json, status: 400
     end
 
     UserBadge.where(user_id: user_badge.user_id, badge_id: user_badge.badge_id).update_all(
-      is_favorite: !user_badge.is_favorite,
+      is_favorite: !is_favorite,
     )
     UserBadge.update_featured_ranks!([user_badge.user_id])
   end

@@ -15,8 +15,8 @@ profile = false
 profile_print_slowest_examples_count = 10
 use_runtime_info = nil
 enable_system_tests = nil
-disable_system_tests = nil
 retry_and_log_flaky_tests = ENV["DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS"].to_s == "1"
+exclude_pattern = nil
 
 OptionParser
   .new do |opts|
@@ -67,41 +67,41 @@ OptionParser
       enable_system_tests = true
     end
 
-    opts.on("--disable-system-tests", "Don't run the system tests (defaults true)") do
-      disable_system_tests = true
-    end
+    opts.on(
+      "--exclude-pattern=pattern",
+      "Exclude files that matches against the pattern using unix-style pattern matching",
+    ) { |pattern| exclude_pattern = pattern }
   end
   .parse!(ARGV)
 
-if enable_system_tests && disable_system_tests
-  STDERR.puts "Error: I'm not sure how to enable and disable system tests simultaneously"
-  exit 1
-end
-
 # OptionParser modifies ARGV, leaving the leftover arguments in ARGV
 if ARGV.empty?
-  if !enable_system_tests && !disable_system_tests
+  if !enable_system_tests
     STDERR.puts "Not running system tests since it wasn't explicitly specified"
   end
 
   run_system_tests = !!enable_system_tests
 
-  files =
-    if run_system_tests
-      ["#{Rails.root}/spec"]
-    else
-      TurboTests::Runner.default_spec_folders
-    end
+  files = Dir.glob("#{Rails.root}/spec/**/*_spec.rb")
+  files.reject! { |file| File.fnmatch("*spec/system*", file) } if !run_system_tests
 
   use_runtime_info = true if use_runtime_info.nil?
 else
-  if enable_system_tests || disable_system_tests
-    STDERR.puts "Ignoring system test options since files were specified"
-  end
+  STDERR.puts "Ignoring system test options since files were specified" if enable_system_tests
 
-  files = ARGV
+  files =
+    ARGV.flat_map do |arg|
+      if File.directory?(arg)
+        Dir.glob("#{arg}/**/*_spec.rb")
+      else
+        arg
+      end
+    end
+
   use_runtime_info = false if use_runtime_info.nil?
 end
+
+files.reject! { |file| File.fnmatch(exclude_pattern, file) } if exclude_pattern
 
 requires.each { |f| require(f) }
 
