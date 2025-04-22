@@ -8,12 +8,30 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 
 export default class ChatChannelMultiSelect extends Component {
+  initialIds = this.args.initialIds || [];
+
   @action
-  async loadChannels(filter) {
+  async filterChannels(filter) {
+    return await this.loadChannels({ filter });
+  }
+
+  @action
+  async loadInitialSelection() {
+    if (!this.initialIds?.length) {
+      return [];
+    }
+
+    const channels = await this.loadChannels({ ids: this.initialIds });
+
+    this.args.onChange?.(channels);
+    return channels;
+  }
+
+  async loadChannels(data = { filter: null, ids: null }) {
     try {
       const response = await ajax("/chat/api/channels", {
         type: "GET",
-        data: { filter },
+        data,
       });
 
       return response.channels.map((channel) => ChatChannel.create(channel));
@@ -22,41 +40,12 @@ export default class ChatChannelMultiSelect extends Component {
     }
   }
 
-  @action
-  async loadInitialChannels() {
-    if (!this.args.selectedIds?.length) {
-      return [];
-    }
-
-    try {
-      const response = await ajax("/chat/api/channels", {
-        type: "GET",
-        data: { ids: this.args.selectedIds },
-      });
-
-      const channels = response.channels.map((channel) =>
-        ChatChannel.create(channel)
-      );
-
-      await new Promise((resolve) => {
-        setTimeout(() => {
-          resolve();
-        }, 1000);
-      });
-
-      this.args.onChange?.(channels);
-      return channels;
-    } catch (error) {
-      popupAjaxError(error);
-    }
-  }
-
   <template>
-    <AsyncContent @asyncData={{this.loadInitialChannels}}>
+    <AsyncContent @asyncData={{this.loadInitialSelection}}>
       <:content>
         <DMultiSelect
           @selection={{@selection}}
-          @loadFn={{this.loadChannels}}
+          @loadFn={{this.filterChannels}}
           @onChange={{@onChange}}
         >
           <:selection as |result|>{{result.title}}</:selection>
