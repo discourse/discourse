@@ -167,14 +167,10 @@ export default class TopicController extends Controller {
     }
   }
 
-  @discourseComputed(
-    "site.mobileView",
-    "capabilities.touch",
-    "model.details.can_edit"
-  )
-  showEditButton(mobileView, touch, canEdit) {
-    const tabletView = touch && window.matchMedia("(hover: none)").matches;
-    return (mobileView && canEdit) || (tabletView && canEdit);
+  @discourseComputed("model.details.can_edit")
+  showEditButton(canEdit) {
+    const canHover = isTesting() || window.matchMedia("(hover: hover)").matches;
+    return !canHover && canEdit;
   }
 
   @discourseComputed("site.mobileView", "model.posts_count")
