@@ -3430,6 +3430,9 @@ en:
           other {}
         }
 
+      reply_count_link:
+        one: "%{count} reply, jump to first post"
+        other: "%{count} replies, jump to first post"
       created_at: "Created: %{date}"
       bumped_at: "Latest: %{date}"
 
