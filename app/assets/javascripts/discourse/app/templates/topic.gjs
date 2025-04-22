@@ -344,7 +344,7 @@ export default RouteTemplate(
                 @jumpToPostPrompt={{@controller.jumpToPostPrompt}}
                 @enteredIndex={{@controller.enteredIndex}}
                 @prevEvent={{info.prevEvent}}
-                @jumpTop={{@controller.jumpTop}}
+                @jumpTop={{@controller.titleClick}}
                 @jumpBottom={{@controller.jumpBottom}}
                 @jumpEnd={{@controller.jumpEnd}}
                 @jumpToIndex={{@controller.jumpToIndex}}
