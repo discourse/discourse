@@ -419,7 +419,6 @@ Discourse::Application.routes.draw do
         get "notifications" => "site_settings#index"
         get "rate-limits" => "site_settings#index"
         get "onebox" => "site_settings#index"
-        get "other" => "site_settings#index"
         get "search" => "site_settings#index"
         get "security" => "site_settings#index"
         get "site-admin" => "site_settings#index"

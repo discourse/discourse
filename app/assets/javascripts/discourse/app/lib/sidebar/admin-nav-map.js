@@ -536,15 +536,6 @@ export const ADMIN_NAV_MAP = [
         settings_category: "files",
       },
       {
-        name: "admin_other_options",
-        route: "adminConfig.other.settings",
-        label: "admin.config.other.title",
-        description: "admin.config.other.header_description",
-        icon: "discourse-other-tab",
-
-        settings_category: "uncategorized",
-      },
-      {
         name: "admin_search",
         route: "adminConfig.search.settings",
         label: "admin.config.search.title",
