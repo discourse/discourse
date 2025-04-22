@@ -3043,7 +3043,7 @@ en:
       in_messages_tooltip: "switch to searching regular topics"
       in_topics_posts: "in all topics and posts"
       enter_hint: "or press Enter"
-      mobile_enter_hint: "or tap Search icon"
+      mobile_enter_hint: "or tap Search"
       in_posts_by: "in posts by %{username}"
       recent: "Recent Searches"
       clear_recent: "Clear Recent Searches"
