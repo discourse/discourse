@@ -1609,6 +1609,8 @@ vi:
     modal:
       close: "đóng"
       dismiss_error: "Loại bỏ lỗi"
+    multi_select:
+      search: "Tìm kiếm…"
     form_kit:
       reset: Cài lại
       optional: tùy chọn
@@ -1761,10 +1763,6 @@ vi:
         name: "Goole"
         title: "Đăng nhập bằng Google"
         sr_title: "Đăng nhập bằng Google"
-      twitter:
-        name: "Twitter"
-        title: "Đăng nhập bằng Twitter"
-        sr_title: "Đăng nhập bằng Twitter"
       instagram:
         name: "Instagram"
         title: "Đăng nhập bằng Instagram"
@@ -2149,8 +2147,6 @@ vi:
       in_topics_posts: "trong tất cả các chủ đề và bài đăng"
       enter_hint: "hoặc nhấn Enter"
       in_posts_by: "trong bài viết của %{username}"
-      browser_tip: "%{modifier} + f"
-      browser_tip_description: "một lần nữa để sử dụng tìm kiếm trình duyệt gốc"
       recent: "Tìm kiếm gần đây"
       clear_recent: "Xóa các Tìm kiếm Gần đây"
       type:
@@ -3702,20 +3698,20 @@ vi:
           title: "Tập tin"
         legal:
           title: "Legal"
-        branding:
-          title: "Xây dựng thương hiệu"
+        logo_and_fonts:
           logo:
             form:
               mobile: "Điện thoại"
               email: "Email"
+          fonts:
+            backfill_modal:
+              modal_yes: "Đồng ý"
         navigation:
           title: "Điều hướng"
         notifications:
           title: "Thông báo"
         onebox:
           title: "Onebox"
-        other:
-          title: "Khác"
         search_everything:
           title: "Tìm kiếm"
         security:
@@ -3754,6 +3750,8 @@ vi:
               header_description: "Xem trước nội dung của tập san email đã gửi cho các thành viên không hoạt động"
             templates:
               title: "Templates"
+        email_logs:
+          sub_pages:
             sent:
               title: "Đã gửi"
             skipped:
@@ -4190,6 +4188,18 @@ vi:
             title: "Themes"
           components:
             title: "Các thành phần"
+            install: "Cài đặt"
+            name: "Tên"
+            enabled: "Kích hoạt"
+            by_author: "Bởi %{name}"
+            learn_more: "Tìm hiểu thêm"
+            edit: "Sửa"
+            preview: "Xem trước"
+            export: "Xuất"
+            convert: "Đổi"
+            delete: "Xóa"
+            filter_by_all: "All"
+            delete_confirm: 'Bạn có chắc chắn muốn xóa "%{name}" không?'
         user_fields:
           type: "Loại"
           delete: "Xóa"

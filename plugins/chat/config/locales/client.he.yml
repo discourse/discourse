@@ -693,6 +693,11 @@ he:
       draft_channel_screen:
         header: "הודעה חדשה"
         cancel: "ביטול"
+      quick_reaction_type:
+        title: "תגובות רגש בלחיצה אחת לשיחה"
+        options:
+          frequent: "תגובות הרגש הנפוצות ביותר בשיחה"
+          custom: "תגובות רגש מותאמות אישית"
     notifications:
       chat_invitation: "נשלחה אליך הזמנה להצטרף לערוץ צ׳אט"
       chat_invitation_html: "<span>הוזמנת להצטרף לערוץ צ׳אט על ידי</span> <span>%{username}</span>"

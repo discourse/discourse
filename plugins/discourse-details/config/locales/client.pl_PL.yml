@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 pl_PL:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_details: "Szczegóły Discourse"
   js:
     details:
       title: Ukryj szczegóły

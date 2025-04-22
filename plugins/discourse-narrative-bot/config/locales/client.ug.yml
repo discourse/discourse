@@ -10,3 +10,8 @@ ug:
       welcome_post_type:
         new_user_track: "بارلىق يېڭى ئىشلەتكۈچىلەر ئۈچۈن يېڭى ئىشلەتكۈچى دەرسلىكىنى باشلايدۇ"
         welcome_message: "بارلىق يېڭى ئىشلەتكۈچىلەرگە تېز باشلاش يېتەكچىسى ئارقىلىق قارشى ئېلىش ئۇچۇرى يوللايدۇ"
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_narrative_bot: "Discourse Narrative Bot"

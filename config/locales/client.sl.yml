@@ -1863,10 +1863,6 @@ sl:
         name: "Google"
         title: "Prijavite se z Googlom"
         sr_title: "Prijavite se z Googlom"
-      twitter:
-        name: "Twitter"
-        title: "Prijavite se s Twitterjem"
-        sr_title: "Prijavite se s Twitterjem"
       instagram:
         name: "Instagram"
         title: "Prijavite se z Instagramom"
@@ -3743,19 +3739,20 @@ sl:
           title: "Datoteke"
         legal:
           title: "Pravno"
-        branding:
+        logo_and_fonts:
           logo:
             form:
               mobile: "Mobilno"
               email: "E-naslov"
+          fonts:
+            backfill_modal:
+              modal_yes: "Ja"
         navigation:
           title: "Navigacija"
         notifications:
           title: "Obvestila"
         onebox:
           title: "Onebox"
-        other:
-          title: "Drugo"
         search_everything:
           title: "Išči"
         security:
@@ -3789,6 +3786,8 @@ sl:
           sub_pages:
             templates:
               title: "Predloge"
+        email_logs:
+          sub_pages:
             sent:
               title: "Poslano"
             received:
@@ -4085,6 +4084,16 @@ sl:
           breadcrumb_title: "Prilagodi"
           themes:
             title: "Videzi"
+          components:
+            name: "Ime"
+            enabled: "Vključeno?"
+            by_author: "Od %{name}"
+            learn_more: "Več o tem"
+            edit: "Uredi"
+            preview: "Predogled"
+            export: "Izvozi"
+            delete: "Izbriši"
+            filter_by_all: "Vse"
         user_fields:
           type: "Tip"
           delete: "Izbriši"

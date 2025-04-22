@@ -16,6 +16,7 @@ da:
       date_only: "%-d. %B, %Y"
       long: "%-d. %B %Y, %H:%M"
       no_day: "%B %Y"
+      calendar_ics: "%Y%m%dT%H%M%SZ"
   date:
     month_names:
     -
@@ -51,6 +52,7 @@ da:
   remove_posts_deleted_by_author: "Slettet af forfatteren"
   redirect_warning: "Vi kunne ikke bekræfte, at det link, du valgte, faktisk blev sendt til forummet. Hvis du alligevel ønsker at fortsætte, så benyt nedenstående link."
   on_another_topic: "På et andet emne"
+  topic_category_changed: "Fra %{from} til %{to}"
   topic_tag_changed:
     added: "Tilføjet %{added}"
   inline_oneboxer:
@@ -3193,6 +3195,11 @@ da:
             choices:
               latest:
                 label: "Seneste"
+      branding:
+        title: "Webstedets logo"
+        fields:
+          logo:
+            label: "Primært logo"
       corporate:
         fields:
           governing_law:

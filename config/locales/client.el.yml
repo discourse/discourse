@@ -1781,6 +1781,9 @@ el:
     modal:
       close: "κλείσιμο"
       dismiss_error: "Παράβλεψη σφάλματος"
+    multi_select:
+      no_results: "Δεν υπάρχουν αποτελέσματα"
+      search: "Αναζήτηση…"
     form_kit:
       reset: Επαναφορά
       optional: προεραιτικό
@@ -1975,10 +1978,6 @@ el:
         name: "Google"
         title: "Συνδεθείτε με Google"
         sr_title: "Συνδεθείτε με Google"
-      twitter:
-        name: "Twitter"
-        title: "Συνδεθείτε με Twitter"
-        sr_title: "Συνδεθείτε με Twitter"
       instagram:
         name: "Instagram"
         title: "Συνδεθείτε με Instagram"
@@ -2371,7 +2370,6 @@ el:
       in_topics_posts: "σε όλα τα θέματα και τις αναρτήσεις"
       enter_hint: "ή πατήστε Enter"
       in_posts_by: "σε δημοσιεύσεις από %{username}"
-      browser_tip: "%{modifier} + f"
       recent: "Πρόσφατες Αναζητήσεις"
       clear_recent: "Εκκαθάριση Πρόσφατων Αναζητήσεων"
       type:
@@ -3986,20 +3984,20 @@ el:
           title: "Αρχεία"
         legal:
           title: "Νομικά"
-        branding:
-          title: "Επωνυμία"
+        logo_and_fonts:
           logo:
             form:
               mobile: "Mobile"
               email: "Email"
+          fonts:
+            backfill_modal:
+              modal_yes: "Ναι"
         navigation:
           title: "Πλοήγηση"
         notifications:
           title: "Ειδοποιήσεις"
         onebox:
           title: "Onebox"
-        other:
-          title: "Άλλα"
         search_everything:
           title: "Αναζήτηση"
         security:
@@ -4038,6 +4036,8 @@ el:
               header_description: "Προεπισκόπηση του περιεχομένου των συνοπτικών email που στάλθηκαν στους χρήστες που δεν ήταν ενεργοί"
             templates:
               title: "Πρότυπα"
+        email_logs:
+          sub_pages:
             sent:
               title: "Απεσταλμένα"
             skipped:
@@ -4406,6 +4406,23 @@ el:
             title: "Θέματα"
           components:
             title: "Συστατικά"
+            install: "Εγκατάσταση"
+            name: "Όνομα"
+            enabled: "Ενεργοποιημένο;"
+            by_author: "Του/της %{name}"
+            learn_more: "Μάθετε περισσότερα"
+            edit: "Επεξεργασία"
+            parent_themes_two: "%{name1} και %{name2}"
+            preview: "Προεπισκόπηση"
+            export: "Εξαγωγή"
+            convert: "Μετατρέψτε"
+            delete: "Σβήσιμο"
+            filter_by: "Φιλτράρισμα κατά"
+            filter_by_all: "Όλα"
+            filter_by_used: "Χρησιμοποιημένο"
+            filter_by_unused: "Αχρησιμοποίητο"
+            delete_confirm: 'Είστε βέβαιοι πως θέλετε να διαγράψετε το «%{name}»;'
+            badge_unused: "Αχρησιμοποίητο"
         user_fields:
           type: "Τύπος"
           delete: "Σβήσιμο"

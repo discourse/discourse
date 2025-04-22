@@ -1280,8 +1280,6 @@ th:
       not_approved: "บัญชีของคุณยังไม่ได้รับการยืนยัน คุณจะได้รับการแจ้งเตือนทางอีเมลเมื่อคุณสามารถเข้าสู่ระบบได้"
       google_oauth2:
         name: "กูเกิล"
-      twitter:
-        name: "ทวิตเตอร์"
       instagram:
         name: "อินสตาแกรม"
       facebook:
@@ -2556,17 +2554,18 @@ th:
           title: "ไฟล์"
         legal:
           title: "กฎ"
-        branding:
+        logo_and_fonts:
           logo:
             form:
               mobile: "โทรศัพท์"
               email: "อีเมล"
+          fonts:
+            backfill_modal:
+              modal_yes: "ใช่"
         navigation:
           title: "การนำทาง"
         notifications:
           title: "การแจ้งเตือน"
-        other:
-          title: "อื่นๆ"
         search_everything:
           title: "ค้นหา"
         security:
@@ -2593,6 +2592,8 @@ th:
           sub_pages:
             templates:
               title: "รูปแบบ"
+        email_logs:
+          sub_pages:
             sent:
               title: "ส่ง"
             skipped:
@@ -2807,6 +2808,18 @@ th:
           install: "ติดตั้ง"
           themes:
             title: "ธีม"
+          components:
+            install: "ติดตั้ง"
+            name: "ชื่อ"
+            enabled: "เปิดใช้"
+            by_author: "โดย %{name}"
+            learn_more: "เรียนรู้เพิ่มเติม"
+            edit: "แก้ไข"
+            preview: "แสดงตัวอย่าง"
+            export: "ส่งออก"
+            delete: "ลบ"
+            filter_by_all: "ทั้งหมด"
+            delete_confirm: 'คุณแน่ใจหรือว่าต้องการลบ "%{name}"'
         user_fields:
           type: "ชนิด"
           delete: "ลบ"

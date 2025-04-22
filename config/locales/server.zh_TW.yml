@@ -2874,6 +2874,11 @@ zh_TW:
                 label: "最新版本"
               hot:
                 label: "熱門"
+      branding:
+        title: "網站標誌"
+        fields:
+          logo:
+            label: "主要標誌"
       corporate:
         fields:
           governing_law:

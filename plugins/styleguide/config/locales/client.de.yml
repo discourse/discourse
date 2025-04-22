@@ -30,6 +30,8 @@ de:
           title: "Datum/Uhrzeit"
         menus:
           title: "Menüs"
+        multi_select:
+          title: "Mehrfachauswahl"
         toasts:
           title: "Toasts"
         font_scale:

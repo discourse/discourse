@@ -1677,8 +1677,6 @@ gl:
       not_approved: "A súa conta non foi aínda aprobada. Notificaráselle por correo electrónico cando poida iniciar a sesión."
       google_oauth2:
         name: "Google"
-      twitter:
-        name: "Twitter"
       instagram:
         name: "Instagram"
       facebook:
@@ -3440,8 +3438,7 @@ gl:
           title: "Ficheiros"
         legal:
           title: "Legal"
-        branding:
-          title: "Logo"
+        logo_and_fonts:
           logo:
             form:
               mobile: "Móbil"
@@ -3450,14 +3447,19 @@ gl:
                 description: "Capturas de pantalla que presentan as funcionalidades da súa instalación e funcionalidade na páxina de arranque da instalación. Todas as imaxes deberían ser cargas en local e das mesmas dimensións."
               opengraph_image:
                 description: "Imaxe de gráfico aberto predeterminada que se utiliza cando a páxina non ten ningunha outra imaxe adecuada."
+          fonts:
+            title: "Tipos de letra"
+            form:
+              heading_font:
+                title: "Tipo de letra de título"
+            backfill_modal:
+              modal_yes: "Si"
         navigation:
           title: "Navegación"
         notifications:
           title: "Notificacións"
         onebox:
           title: "Onebox"
-        other:
-          title: "Outro"
         search_everything:
           title: "Buscar"
         security:
@@ -3496,6 +3498,8 @@ gl:
               header_description: "Visualiza o contido das mensaxes de correo e o compendio enviado a usuarios inactivos"
             templates:
               title: "Modelos"
+        email_logs:
+          sub_pages:
             sent:
               title: "Enviada"
             skipped:
@@ -3865,6 +3869,18 @@ gl:
             title: "Temas"
           components:
             title: "Compoñentes"
+            install: "Instalar"
+            name: "Nome"
+            enabled: "Activado?"
+            by_author: "De %{name}"
+            learn_more: "Saber máis"
+            edit: "Editar"
+            preview: "Visualizar"
+            export: "Exportar"
+            convert: "Converter"
+            delete: "Eliminar"
+            filter_by_all: "Todas"
+            delete_confirm: 'Confirma a eliminación de «%{name}»?'
         user_fields:
           type: "Tipo"
           delete: "Eliminar"

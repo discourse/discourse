@@ -643,6 +643,11 @@ fr:
       draft_channel_screen:
         header: "Nouveau message"
         cancel: "Annuler"
+      quick_reaction_type:
+        title: "Réactions de discussion en un clic"
+        options:
+          frequent: "Réactions de discussion les plus fréquemment utilisées"
+          custom: "Réactions personnalisées"
     notifications:
       chat_invitation: "vous a invité(e) à rejoindre un canal de discussion"
       chat_invitation_html: "<span>%{username}</span> <span>vous a invité(e) à rejoindre un canal de discussion</span>"

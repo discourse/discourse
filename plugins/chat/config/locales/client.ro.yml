@@ -218,6 +218,11 @@ ro:
       draft_channel_screen:
         header: "Mesaj nou"
         cancel: "Anulează"
+      quick_reaction_type:
+        title: "Reacții la discuții cu un singur clic"
+        options:
+          frequent: "Cele mai utilizate reacții de discuții"
+          custom: "Reacții personalizate"
     notifications:
       chat_quoted: "<span>%{username}</span> %{description}"
       titles:

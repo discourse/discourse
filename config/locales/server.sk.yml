@@ -2632,12 +2632,10 @@ sk:
     default_navigation_menu_categories: "Vybrané kategórie sa predvolene zobrazia v časti Kategórie navigačného menu."
     default_navigation_menu_tags: "Vybrané značky sa predvolene zobrazia v časti Značky v navigačnom menu."
     experimental_new_new_view_groups: 'Povoľte nový zoznam tém, ktorý kombinuje neprečítané a nové témy, a vytvorte naň odkaz "Všetko" v bočnom paneli.'
-    glimmer_topic_list_mode: "Kontrola, či sa používa nová implementácia zoznamu tém \"glimmer\". 'auto' sa zapne automaticky, akonáhle sú všetky vaše témy a doplnky pripravené. Viac informácií nájdete v <a href='https://meta.discourse.org/t/343404'>téme Meta</a>."
-    glimmer_post_menu_mode: "Kontrola, či sa používa nová implementácia ponuky \"glimmer\". 'auto' sa zapne automaticky, akonáhle sú všetky vaše témy a doplnky pripravené. Táto implementácia je v štádiu aktívneho vývoja a nie je určená na produkčné použitie. Nevyvíjajte proti nej témy/pluginy, kým nebude implementácia dokončená a oznámená."
-    glimmer_post_menu_groups: "Povolenie novej implementácie ponuky \"glimmer\" v režime \"auto\" pre zadané skupiny používateľov. Táto implementácia je v štádiu aktívneho vývoja a nie je určená na produkčné použitie. Nevyvíjajte proti nej témy/pluginy, kým nebude implementácia dokončená a oznámená."
     glimmer_post_stream_mode: "Ovládanie, či sa použije nová implementácia postreamu \"glimmer\". 'auto' sa zapne automaticky, akonáhle sú všetky vaše témy a doplnky pripravené. Táto implementácia je v štádiu aktívneho vývoja a nie je určená na produkčné použitie. Nevyvíjajte proti nej témy/pluginy, kým nebude implementácia dokončená a oznámená."
     glimmer_post_stream_mode_auto_groups: "Povolenie novej implementácie ponuky \"glimmer\" v režime \"auto\" pre zadané skupiny používateľov. Táto implementácia je v štádiu aktívneho vývoja a nie je určená na produkčné použitie. Nevyvíjajte proti nej témy/pluginy, kým nebude implementácia dokončená a oznámená."
     experimental_form_templates: "Povoľte funkciu šablón formulárov. Šablóny spravujte v časti <a href='%{base_path}/admin/customize/form-templates'>Prispôsobiť / Šablóny</a>."
+    show_preview_for_form_templates: "Povolenie funkcie náhľadu pre šablóny formulárov"
     lazy_load_categories_groups: "Lenivé načítanie informácií o kategórii len pre používateľov týchto skupín. To zlepšuje výkon na stránkach s mnohými kategóriami."
     experimental_auto_grid_images: "Automatické zabalenie obrázkov do značiek [grid], keď sú v kompozitore nahrané 3 alebo viac obrázkov."
     page_loading_indicator: "Nakonfigurujte indikátor načítania, ktorý sa zobrazí počas navigácie po stránkach v rámci Discourse. „Spinner“ je indikátor celej strany. „Posuvník“ zobrazuje úzky pruh v hornej časti obrazovky."
@@ -3012,6 +3010,7 @@ sk:
       many: "Používateľ %{username} má %{count} príspevkov vo verejnej téme alebo osobnej správe, takže ich nemožno odstrániť."
       other: "Používateľ %{username} má %{count} príspevky vo verejných témach alebo osobných správach, takže ich nemožno vymazať."
     cannot_bulk_delete: "Jedného alebo viacerých používateľov nemožno odstrániť, pretože sú správcom, majú príliš veľa príspevkov alebo majú veľmi starý príspevok."
+    cannot_remove_all_auth: "Musíte mať nastavený aspoň jeden pridružený účet, prístupový kľúč alebo heslo."
   unsubscribe_mailer:
     title: "Odhlásenie mailerov"
     subject_template: "Potvrďte, že už ďalej nechcete dostávať aktualizácie z %{site_title}"

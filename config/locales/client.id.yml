@@ -1555,8 +1555,6 @@ id:
       submit_new_email: "Perbarui Alamat Email"
       google_oauth2:
         name: "Google"
-      twitter:
-        name: "Twitter"
       instagram:
         name: "Instagram"
       facebook:
@@ -2303,16 +2301,17 @@ id:
         email:
           title: "Surel"
       config:
-        branding:
+        logo_and_fonts:
           logo:
             form:
               email: "Surel"
+          fonts:
+            backfill_modal:
+              modal_yes: "Ya"
         navigation:
           title: "Navigasi"
         notifications:
           title: "Pemberitahuan"
-        other:
-          title: "Lainnya"
         search_everything:
           title: "Cari"
         spam:
@@ -2327,7 +2326,7 @@ id:
           sub_pages:
             logs:
               title: "Log"
-        email:
+        email_logs:
           sub_pages:
             sent:
               title: "Mengirim"
@@ -2487,6 +2486,13 @@ id:
           delete: "Hapus"
         themes_and_components:
           breadcrumb_title: "Sesuaikan"
+          components:
+            name: "Nama"
+            enabled: "Diaktifkan?"
+            edit: "Ubah"
+            export: "Ekspor"
+            delete: "Hapus"
+            filter_by_all: "Semua"
         user_fields:
           type: "Tipe"
           delete: "Hapus"

@@ -30,6 +30,8 @@ sk:
           title: "Pole pre dátum a čas"
         menus:
           title: "Menu"
+        multi_select:
+          title: "Viacnásobný výber"
         toasts:
           title: "Toasty"
         font_scale:

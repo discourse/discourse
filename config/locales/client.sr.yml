@@ -1607,6 +1607,8 @@ sr:
         fixed: "Učitaj stranicu"
     modal:
       close: "zatvori"
+    multi_select:
+      search: "Pretraži"
     form_kit:
       optional: opciono
       errors:
@@ -1705,8 +1707,6 @@ sr:
         name: "Google"
         title: "Prijavite se s Googleom"
         sr_title: "Prijavite se s Googleom"
-      twitter:
-        name: "Twitter"
       instagram:
         title: "Prijavite se s Instagramom"
         sr_title: "Prijavite se s Instagramom"
@@ -2631,18 +2631,19 @@ sr:
           title: "Datoteke"
         legal:
           title: "Legalno"
-        branding:
+        logo_and_fonts:
           logo:
             form:
               email: "Email"
+          fonts:
+            backfill_modal:
+              modal_yes: "Da"
         navigation:
           title: "Navigacija"
         notifications:
           title: "Obaveštenja"
         onebox:
           title: "Onebox"
-        other:
-          title: "Ostalo"
         search_everything:
           title: "Pretraži"
         security:
@@ -2664,7 +2665,7 @@ sr:
           title: "Značke"
         emoji:
           title: "Emoji"
-        email:
+        email_logs:
           sub_pages:
             sent:
               title: "Poslato"
@@ -2844,6 +2845,15 @@ sr:
           delete: "Obriši"
         themes_and_components:
           breadcrumb_title: "Prilagođavanje"
+          components:
+            name: "Ime foruma"
+            enabled: "Omgućeno"
+            by_author: "Od %{name}"
+            learn_more: "Saznaj više"
+            edit: "Izmeni"
+            export: "Izvoz"
+            delete: "Obriši"
+            filter_by_all: "sve"
         user_fields:
           type: "Tip"
           delete: "Obriši"
