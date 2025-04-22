@@ -170,12 +170,6 @@ function filterHelper(filter) {
 export default function selectKit(selector) {
   selector = selector || ".select-kit";
 
-  if (!exists(selector)) {
-    throw new Error(
-      `You are trying to use selectKit on a selector that does not exist: ${selector}`
-    );
-  }
-
   return {
     async expand() {
       await expandSelectKit(selector);
