@@ -97,6 +97,7 @@
   #site-text-logo {
     margin: 0;
     font-size: var(--font-up-1);
+    font-weight: bold;
 
     @include ellipsis;
 

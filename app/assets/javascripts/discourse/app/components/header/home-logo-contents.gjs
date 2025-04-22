@@ -28,9 +28,9 @@ const HomeLogoContents = <template>
       @darkUrl={{@logoUrlDark}}
     />
   {{else}}
-    <h1 id="site-text-logo" class="text-logo">
+    <div id="site-text-logo" class="text-logo">
       {{@title}}
-    </h1>
+    </div>
   {{/if}}
 </template>;
 

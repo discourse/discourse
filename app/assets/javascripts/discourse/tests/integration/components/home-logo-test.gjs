@@ -51,7 +51,7 @@ module("Integration | Component | home-logo", function (hooks) {
     this.siteSettings.title = title;
 
     await render(<template><HomeLogo @minimized={{false}} /></template>);
-    assert.dom("h1#site-text-logo.text-logo").exists({ count: 1 });
+    assert.dom("div#site-text-logo.text-logo").exists({ count: 1 });
     assert.dom("#site-text-logo").hasText(title, "has title as text logo");
   });
 
