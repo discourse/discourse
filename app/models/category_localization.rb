@@ -31,7 +31,3 @@ end
 #  index_category_localizations_on_category_id             (category_id)
 #  index_category_localizations_on_category_id_and_locale  (category_id,locale) UNIQUE
 #
-# Foreign Keys
-#
-#  fk_rails_...  (category_id => categories.id)
-#
