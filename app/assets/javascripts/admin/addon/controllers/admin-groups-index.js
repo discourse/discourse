@@ -3,7 +3,7 @@ import { action } from "@ember/object";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
 
-export default class GroupsIndexController extends Controller {
+export default class AdminGroupsIndexController extends Controller {
   queryParams = ["order", "asc", "filter", "type"];
   order = null;
   asc = null;

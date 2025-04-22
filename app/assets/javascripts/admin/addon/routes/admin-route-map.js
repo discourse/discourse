@@ -220,6 +220,14 @@ export default function () {
     );
 
     this.route(
+      "adminGroups",
+      { path: "/groups", resetNamespace: true },
+      function () {
+        this.route("settings");
+      }
+    );
+
+    this.route(
       "adminConfig",
       { path: "/config", resetNamespace: true },
       function () {

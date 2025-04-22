@@ -51,7 +51,6 @@ $search-pad-horizontal: 0.5em;
     background: var(--d-input-bg-color);
     border: var(--d-input-border);
     border-radius: var(--d-input-border-radius);
-    margin: 1px;
     padding: 0.25rem;
 
     input.search-term__input {
@@ -101,12 +100,6 @@ $search-pad-horizontal: 0.5em;
     .filter {
       padding: 0 5px;
     }
-  }
-
-  .menu-panel {
-    border: 0;
-    box-shadow: var(--shadow-dropdown);
-    padding: 1rem;
   }
 
   &.menu-panel-results {

@@ -34,6 +34,30 @@
   }
 }
 
+@keyframes float-down {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float-up {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @keyframes background-fade-highlight {
   0% {
     background-color: var(--tertiary-low);
@@ -452,7 +476,6 @@ textarea {
   position: absolute;
   right: -3px;
   bottom: -1px;
-  z-index: 1002;
 }
 
 .user-status-background {
