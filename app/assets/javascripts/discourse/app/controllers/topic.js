@@ -164,6 +164,8 @@ export default class TopicController extends Controller {
     "model.details.can_edit"
   )
   topicTitleClass(currentPostId, firstPostId, canEdit) {
+    /* eslint-disable no-console */
+    console.log(currentPostId, firstPostId, canEdit);
     if (currentPostId === firstPostId && canEdit) {
       return "edit-topic can-edit-topic";
     }
