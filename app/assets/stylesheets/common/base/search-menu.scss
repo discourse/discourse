@@ -7,8 +7,6 @@
 
 @mixin separator {
   border-top: 1px solid var(--primary-low);
-  // margin-top: 0.5em;
-  // padding-top: 0.5em;
 }
 
 $search-pad-vertical: 0.25em;
@@ -74,8 +72,8 @@ $search-result-element-padding: 0.35em 1rem; //hate myself but .25em is too tigh
       }
     }
 
-    .btn.search-context {
-      margin: 2px;
+    .search-context {
+      margin-inline: 0.25em;
       margin-right: 0;
       white-space: nowrap;
       background-color: var(--primary-200);
@@ -117,9 +115,10 @@ $search-result-element-padding: 0.35em 1rem; //hate myself but .25em is too tigh
     flex-direction: column;
     border-radius: var(--d-border-radius);
 
-    &.with-search-term {
-      padding-top: $search-pad-vertical;
-    }
+    //something mobile only?
+    // &.with-search-term {
+    //   padding-top: $search-pad-vertical;
+    // }
 
     @include breakpoint("mobile-extra-large") {
       &,
@@ -163,6 +162,7 @@ $search-result-element-padding: 0.35em 1rem; //hate myself but .25em is too tigh
     &.tag {
       display: flex;
       align-items: center;
+      flex-wrap: nowrap;
       gap: 0.5em;
     }
 
@@ -217,6 +217,18 @@ $search-result-element-padding: 0.35em 1rem; //hate myself but .25em is too tigh
       @include breakpoint("mobile-extra-large") {
         padding-block: 0.75em;
       }
+    }
+  }
+
+  .search-menu-initial-options {
+    + .search-result-tag,
+    + .search-result-category,
+    + .search-result-user,
+    + .search-result-group {
+      @include separator;
+    }
+    .search-menu-recent {
+      @include separator;
     }
   }
 
@@ -368,9 +380,9 @@ $search-result-element-padding: 0.35em 1rem; //hate myself but .25em is too tigh
 
   .label-suffix {
     color: var(--primary-medium);
-    // margin-right: 0.33em;
   }
 
+  //what is search-item-tag?
   .badge-category__wrapper + .search-item-tag {
     display: flex;
     align-items: baseline;
@@ -392,7 +404,7 @@ $search-result-element-padding: 0.35em 1rem; //hate myself but .25em is too tigh
     min-width: 0;
 
     .keyword {
-      margin-right: 0.33em;
+      margin-right: 0.25em;
     }
 
     .badge-wrapper {
@@ -400,52 +412,9 @@ $search-result-element-padding: 0.35em 1rem; //hate myself but .25em is too tigh
       margin-left: 2px;
     }
   }
-
-  .search-menu-initial-options {
-    + .search-result-tag,
-    + .search-result-category,
-    + .search-result-user,
-    + .search-result-group {
-      @include separator;
-    }
-  }
-
-  // //replacing by flex gap
-  // .search-menu-initial-options,
-  // .search-result-tag,
-  // .search-menu-assistant {
-  //   .search-item-prefix {
-  //     // margin-right: 0.33em;
-  //   }
-
-  //   .badge-category__wrapper {
-  //     font-size: var(--font-0);
-  //   }
-
-  //   .search-link {
-  //     @include ellipsis;
-  //     display: flex;
-  //     flex-wrap: wrap;
-  //     align-items: center;
-  //     // padding: $search-result-element-padding;
-
-  //     .d-icon {
-  //       // margin-right: 0.25em;
-  //       vertical-align: middle;
-  //     }
-
-  //     .d-icon-tag {
-  //       font-size: var(--font-down-1);
-  //     }
-
-  //     .d-icon-magnifying-glass {
-  //       font-size: var(--font-down-1);
-  //     }
-  //   }
-  // }
 }
 
-.browser-search-tip,
+//how to trigger?
 .search-random-quick-tip {
   padding: max(0.5rem, 0.5em) 1rem;
   font-size: var(--font-down-2);
@@ -462,18 +431,6 @@ $search-result-element-padding: 0.35em 1rem; //hate myself but .25em is too tigh
       cursor: pointer;
     }
   }
-}
-
-.search-menu-recent {
-  @include separator;
-
-  // .search-menu-assistant-item .search-link {
-  //   flex-wrap: nowrap;
-  // }
-}
-
-.browser-search-tip {
-  padding-top: 0.5em;
 }
 
 .searching {
