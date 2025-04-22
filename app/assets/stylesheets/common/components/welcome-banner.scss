@@ -18,13 +18,6 @@
   margin-bottom: 1em;
   border-radius: var(--d-border-radius-large);
 
-  &__search-menu {
-    .menu-panel-results .menu-panel.search-menu-panel {
-      position: unset;
-      padding: 0;
-    }
-  }
-
   &__wrap {
     box-sizing: border-box;
     position: relative;
@@ -133,19 +126,19 @@
     }
 
     .results {
+      @include float-down;
       box-sizing: border-box;
-      border: 1px solid var(--primary-low);
       border-radius: var(--d-border-radius);
       background: var(--secondary);
-      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
-      position: absolute;
       z-index: 9;
       margin-left: auto;
       margin-right: auto;
       left: 0;
       top: 100%;
+
       right: 0;
-      padding: 0.5em;
+
+      @include float-down;
 
       @include breakpoint(mobile-extra-large) {
         width: 100%;
