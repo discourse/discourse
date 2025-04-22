@@ -169,7 +169,7 @@ export default class TopicController extends Controller {
 
   @discourseComputed("model.details.can_edit")
   showEditButton(canEdit) {
-    const canHover = isTesting() || window.matchMedia("(hover: hover)").matches;
+    const canHover = window.matchMedia("(hover: hover)").matches;
     return !canHover && canEdit;
   }
 
@@ -384,14 +384,8 @@ export default class TopicController extends Controller {
   }
 
   @action
-  titleClick(event) {
-    let isAtTop =
-      this.currentPostId === this.model.postStream.posts.firstObject.id;
-
-    event?.preventDefault();
-    if (isAtTop) {
-      this.editTopic(event);
-    } else if (event && wantsNewWindow(event)) {
+  jumpTop(event) {
+    if (event && wantsNewWindow(event)) {
       return;
     } else {
       DiscourseURL.routeTo(this.get("model.firstPostUrl"), {
@@ -399,6 +393,15 @@ export default class TopicController extends Controller {
         keepFilter: true,
       });
     }
+  }
+
+  @action
+  titleClick(event) {
+    if (event && wantsNewWindow(event)) {
+      return;
+    }
+    event?.preventDefault();
+    this.editTopic(event);
   }
 
   @action
