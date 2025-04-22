@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-describe "CategoryLocalization" do
+describe CategoryLocalization do
   context "when commit" do
-    it "clears the cache for the locale" do
+    it "clears the site cache for the locale" do
       category = Fabricate(:category, name: "yy")
 
       I18n.locale = "es"
