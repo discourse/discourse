@@ -15,7 +15,6 @@ profile = false
 profile_print_slowest_examples_count = 10
 use_runtime_info = nil
 enable_system_tests = nil
-disable_system_tests = nil
 retry_and_log_flaky_tests = ENV["DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS"].to_s == "1"
 
 OptionParser
@@ -66,21 +65,12 @@ OptionParser
     opts.on("--enable-system-tests", "Run the system tests (defaults false)") do
       enable_system_tests = true
     end
-
-    opts.on("--disable-system-tests", "Don't run the system tests (defaults true)") do
-      disable_system_tests = true
-    end
   end
   .parse!(ARGV)
 
-if enable_system_tests && disable_system_tests
-  STDERR.puts "Error: I'm not sure how to enable and disable system tests simultaneously"
-  exit 1
-end
-
 # OptionParser modifies ARGV, leaving the leftover arguments in ARGV
 if ARGV.empty?
-  if !enable_system_tests && !disable_system_tests
+  if !enable_system_tests
     STDERR.puts "Not running system tests since it wasn't explicitly specified"
   end
 
@@ -95,9 +85,7 @@ if ARGV.empty?
 
   use_runtime_info = true if use_runtime_info.nil?
 else
-  if enable_system_tests || disable_system_tests
-    STDERR.puts "Ignoring system test options since files were specified"
-  end
+  STDERR.puts "Ignoring system test options since files were specified" if enable_system_tests
 
   files = ARGV
   use_runtime_info = false if use_runtime_info.nil?
