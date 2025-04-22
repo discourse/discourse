@@ -164,6 +164,8 @@ export default class TopicController extends Controller {
     "model.details.can_edit"
   )
   topicTitleClass(currentPostId, firstPostId, canEdit) {
+    /* eslint-disable no-console */
+    console.log(currentPostId, firstPostId, canEdit);
     if (currentPostId === firstPostId && canEdit) {
       return "edit-topic can-edit-topic";
     }
@@ -175,16 +177,8 @@ export default class TopicController extends Controller {
     "model.details.can_edit"
   )
   showEditButton(mobileView, touch, canEdit) {
-    // const tabletView = touch && window.matchMedia("(hover: none)").matches;
-    // return (mobileView && canEdit) || (tabletView && canEdit);
-    /* eslint-disable no-console */
-    console.log(
-      mobileView,
-      touch,
-      canEdit,
-      window.matchMedia("(hover: none)").matches
-    );
-    return true;
+    const tabletView = touch && window.matchMedia("(hover: none)").matches;
+    return (mobileView && canEdit) || (tabletView && canEdit);
   }
 
   @discourseComputed("site.mobileView", "model.posts_count")
