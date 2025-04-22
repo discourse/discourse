@@ -11,6 +11,7 @@ module TurboTests
       fail_fast = opts.fetch(:fail_fast, nil)
       use_runtime_info = opts.fetch(:use_runtime_info, false)
       retry_and_log_flaky_tests = opts.fetch(:retry_and_log_flaky_tests, false)
+      rspec_cli_opts = opts.fetch(:rspec_cli_opts, "")
 
       STDOUT.puts "VERBOSE" if verbose
 
@@ -39,6 +40,7 @@ module TurboTests
         seed: seed,
         profile: opts[:profile],
         retry_and_log_flaky_tests: retry_and_log_flaky_tests,
+        rspec_cli_opts: rspec_cli_opts,
       ).run
     end
 
@@ -60,6 +62,7 @@ module TurboTests
       @profile = opts[:profile]
       @retry_and_log_flaky_tests = opts[:retry_and_log_flaky_tests]
       @failure_count = 0
+      @rspec_cli_opts = opts[:rspec_cli_opts] || ""
 
       @messages = Queue.new
       @threads = []
@@ -143,9 +146,7 @@ module TurboTests
 
     def rerun_failed_examples(failed_examples)
       command = [
-        "bundle",
-        "exec",
-        "rspec",
+        "bin/rspec",
         "--format",
         "documentation",
         "--format",
@@ -156,21 +157,25 @@ module TurboTests
       system(*command)
     end
 
+    def rspec_cli_opts(extra_opts)
+      @rspec_cli_opts.split(/\s+/) + extra_opts
+    end
+
     def start_multisite_subprocess(tests, **opts)
-      start_subprocess({}, %w[--tag type:multisite], tests, "multisite", **opts)
+      start_subprocess({}, rspec_cli_opts(%w[--tag type:multisite]), tests, "multisite", **opts)
     end
 
     def start_regular_subprocess(tests, process_id, **opts)
       start_subprocess(
         { "TEST_ENV_NUMBER" => process_id.to_s },
-        %w[--tag ~type:multisite],
+        rspec_cli_opts(%w[--tag ~type:multisite]),
         tests,
         process_id,
         **opts,
       )
     end
 
-    def start_subprocess(env, extra_args, tests, process_id, record_runtime:)
+    def start_subprocess(env, extra_opts, tests, process_id, record_runtime:)
       if tests.empty?
         @messages << { type: "exit", process_id: process_id }
       else
@@ -191,10 +196,8 @@ module TurboTests
           end
 
         command = [
-          "bundle",
-          "exec",
-          "rspec",
-          *extra_args,
+          "bin/rspec",
+          *extra_opts,
           "--order",
           "random:#{@seed}",
           "--format",

@@ -16,6 +16,7 @@ profile_print_slowest_examples_count = 10
 use_runtime_info = nil
 enable_system_tests = nil
 retry_and_log_flaky_tests = ENV["DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS"].to_s == "1"
+rspec_cli_opts = nil
 
 OptionParser
   .new do |opts|
@@ -65,6 +66,8 @@ OptionParser
     opts.on("--enable-system-tests", "Run the system tests (defaults false)") do
       enable_system_tests = true
     end
+
+    opts.on("--rspec-cli-opts=options", "Extra RSpec CLI options") { |opts| rspec_cli_opts = opts }
   end
   .parse!(ARGV)
 
@@ -112,6 +115,7 @@ success =
     profile:,
     profile_print_slowest_examples_count:,
     retry_and_log_flaky_tests:,
+    rspec_cli_opts:,
   )
 
 if success
