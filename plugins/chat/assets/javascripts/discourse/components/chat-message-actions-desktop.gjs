@@ -183,7 +183,7 @@ export default class ChatMessageActionsDesktop extends Component {
               }}
               @content={{this.messageInteractor.secondaryActions}}
               @onChange={{this.messageInteractor.handleSecondaryActions}}
-              class="more-buttons secondary-actions"
+              class="more-buttons secondary-actions more-actions-chat"
             />
           {{/if}}
         </div>
