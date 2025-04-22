@@ -146,6 +146,13 @@ pl_PL:
         never: "Nigdy"
       separate_sidebar_mode:
         title: "Pokaż oddzielne tryby paska bocznego dla forum i czatu"
+      send_shortcut:
+        enter:
+          label: "Wyślij przez Enter"
+          description: "Nowa linia przez Shift + Enter"
+        meta_enter:
+          label: "Wyślij przez %{meta_key} + Enter"
+          description: "Nowa linia przez Enter"
       enable: "Włącz czat"
       flag: "Oflaguj"
       emoji: "Wstaw emoji"
@@ -681,6 +688,7 @@ pl_PL:
         input_placeholder: "Powiedz innym, o czym jest ta rozmowa..."
         discourse_ai:
           title: "Automatycznie generuj tytuły wątków"
+          description: "Sprawdź %{url}, aby dowiedzieć się więcej o tym i innych ulepszeniach Discourse."
       threads:
         open: "Otwórz wątek"
         list: "Wątki"
@@ -692,6 +700,11 @@ pl_PL:
       chat_invitation: "zaprosił Cię do dołączenia do kanału czatu"
       chat_invitation_html: "<span>%{username}</span> <span>zaprosił Cię do dołączenia do kanału czatu</span>"
       chat_quoted: "<span>%{username}</span> %{description}"
+      chat_watched_thread_label:
+        one: "%{username} i %{username2}"
+        few: "%{username} i %{count} inni"
+        many: "%{username} i %{count} inni"
+        other: "%{username} i %{count} inni"
       popup:
         chat_mention:
           direct: 'wspomniał o Tobie w "%{channel}"'

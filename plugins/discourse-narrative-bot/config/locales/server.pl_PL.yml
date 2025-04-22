@@ -289,6 +289,14 @@ pl_PL:
           (Tak, moja nazwa użytkownika pisana jest _disco_, tak jak w popularna w latach 90 muzyka. Naprawdę [kocham życie nocne!]
           (https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
+        instructions: |-
+          Lubimy przyjazne dyskusje i potrzebujemy Twojej pomocy, aby [utrzymać kulturę](%{guidelines_url}). Jeśli zauważysz problem, zgłoś go, aby autor lub [nasz pomocny personel](%{about_url}) dowiedzieli się o tym. Istnieje wiele powodów, dla których możesz chcieć zgłosić post, od niewinnej sugestii podziału tematu po wyraźne naruszenie standardów społeczności. Jeśli wybierzesz **coś innego**, rozpoczniesz prywatną rozmowę z moderatorami, w której możesz zadać dalsze pytania.
+
+          > :imp: Napisałem tutaj coś paskudnego
+
+          Śmiało, **zgłoś ten post** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> i wybierz jako powód **Jest niewłaściwy**!
+        reply: |-
+          [Nasz personel](%{group_url}) zostanie prywatnie powiadomiony o Twoim zgłoszeniu. Jeśli wystarczająca liczba członków społeczności zgłosi post, zostanie on również automatycznie ukryty jako środek ostrożności. (Ponieważ faktycznie nie napisałem złośliwego posta :angel:, na razie usunąłem zgłoszenie.)
         not_found: |-
           O nie, mój nieodpowiedni wpis nie został jeszcze oflagowany. :worried: Czy możesz oznaczyć post jako nieodpowiedni, używając flagi <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Nie zapomnij użyć przycisku „pokaż więcej” <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">, by wyświetlić więcej opcji przy dla danego wpisu.
       search:
@@ -382,6 +390,12 @@ pl_PL:
         reply: |-
           Wspaniale! Pamiętaj, że działa to zarówno dla kategorii _i_ tagów, jeśli taka możliwość jest dostępna.
       change_topic_notification_level:
+        instructions: |-
+          Każdy temat ma poziom powiadomień. Zaczyna się od "normalnego", co oznacza, że zazwyczaj otrzymasz powiadomienie tylko wtedy, gdy ktoś mówi bezpośrednio do Ciebie.
+
+          Domyślnie poziom powiadomień dla wiadomości osobistej jest ustawiony na najwyższy poziom "obserwowania", co oznacza, że będziesz otrzymywać powiadomienia o każdej nowej odpowiedzi. Możesz jednak zmienić poziom powiadomień dla _dowolnego_ tematu na "obserwowanie", "śledzenie" lub "wyciszenie".
+
+          Spróbujmy zmienić poziom powiadomień dla tego tematu. Na dole tematu znajdziesz przycisk, który pokazuje, że **obserwujesz** ten temat. Czy możesz zmienić poziom powiadomień na **śledzenie**?
         not_found: |-
           Wygląda na to, że ciągle obserwujesz :eyes: ten temat! Jeśli masz problem w znalezieniu, przycisk poziomu notyfikacji znajduję się na dole tego tematu.
         reply: |-
@@ -427,7 +441,7 @@ pl_PL:
         not_found: |-
           Czy masz problem przy tworzeniu widgetu szczegółów? Spróbuj dołączyć następujący tekst w twojej odpowiedzi.
 
-          ```tekst
+          ``` text
           [details=Pokaż szczegóły]
           Tutaj są szczegóły
           [/details]
