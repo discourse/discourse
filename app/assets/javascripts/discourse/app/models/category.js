@@ -456,6 +456,7 @@ export default class Category extends RestModel {
   @tracked styleType = this.style_type;
   @tracked emoji;
   @tracked icon;
+  @tracked localizations = this.category_localizations;
   permissions = null;
 
   init() {
@@ -781,6 +782,7 @@ export default class Category extends RestModel {
         style_type: this.style_type,
         emoji: this.emoji,
         icon: this.icon,
+        category_localizations: this.localizations,
       }),
       type: id ? "PUT" : "POST",
     });
