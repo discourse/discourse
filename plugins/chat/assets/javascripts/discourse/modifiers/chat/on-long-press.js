@@ -43,17 +43,6 @@ export default class ChatOnLongPress extends Modifier {
       this.element.removeEventListener("pointermove", this.onCancel);
       this.element.removeEventListener("pointerup", this.onCancel);
       this.element.removeEventListener("pointercancel", this.onCancel);
-
-      // Release pointer capture if we have it
-      if (this.pointerId !== undefined) {
-        try {
-          this.element.releasePointerCapture(this.pointerId);
-          // eslint-disable-next-line no-unused-vars
-        } catch (error) {
-          // Handle case where pointer capture might be released already
-        }
-        this.pointerId = undefined;
-      }
     }
 
     this.onLongPressCancel(this.element);
@@ -66,12 +55,6 @@ export default class ChatOnLongPress extends Modifier {
       this.onCancel();
       return;
     }
-
-    // Store pointerId for releasing capture later
-    this.pointerId = event.pointerId;
-
-    // Capture the pointer to ensure all events go to this element
-    this.element.setPointerCapture(event.pointerId);
 
     this.onLongPressStart(this.element, event);
 
