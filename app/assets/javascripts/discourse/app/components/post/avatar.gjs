@@ -24,16 +24,16 @@ export default class PostAvatar extends Component {
   }
 
   <template>
-    <PluginOutlet
-      @name="post-avatar"
-      @outletArgs={{hash
-        post=@post
-        size=this.size
-        user=this.user
-        userWasDeleted=this.userWasDeleted
-      }}
-    >
-      <div class="topic-avatar">
+    <div class="topic-avatar">
+      <PluginOutlet
+        @name="post-avatar"
+        @outletArgs={{hash
+          post=@post
+          size=this.size
+          user=this.user
+          userWasDeleted=this.userWasDeleted
+        }}
+      >
         <div class="post-avatar">
           {{#if this.userWasDeleted}}
             {{icon "trash-can" class="deleted-user-avatar"}}
@@ -52,7 +52,7 @@ export default class PostAvatar extends Component {
             <div class="post-avatar-user-info"></div>
           {{/if}}
         </div>
-      </div>
-    </PluginOutlet>
+      </PluginOutlet>
+    </div>
   </template>
 }
