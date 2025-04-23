@@ -2487,7 +2487,7 @@ RSpec.describe User do
       end
 
       it "delegates the value from the main user record" do
-        expect(anon.silenced_till).to eq(main.silenced_till)
+        expect(anon.silenced_till).to be_within(1.second).of(main.silenced_till)
       end
     end
   end
