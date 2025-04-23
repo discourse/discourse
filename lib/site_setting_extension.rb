@@ -523,7 +523,7 @@ module SiteSettingExtension
   # Adds an override, which is to say a database entry for the setting
   # instead of using the default.
   #
-  # The set, set_and_log, and setting_name= methods all call
+  # The `set`, `set_and_log`, and `setting_name=` methods all call
   # this method. Its opposite is remove_override!.
   #
   # Here we also handle notifying the UI of the change in the case
@@ -535,6 +535,17 @@ module SiteSettingExtension
   #
   # @param name [Symbol] the name of the setting
   # @param val [Any] the value to set
+  #
+  # @example
+  #   SiteSetting.add_override!(:site_description, "My awesome forum")
+  #
+  # @raise [SiteSettingExtension::InvalidSettingAccess] if the setting is themeable
+  #   (themeable settings must be changed via ThemeSiteSetting model)
+  #
+  # @note When called from the Rails console, this method automatically logs the change
+  #   with the system user.
+  #
+  # @see remove_override! for removing an override and reverting to default value
   def add_override!(name, val)
     if themeable[name]
       # TODO (martin) Need a better error message here when we have an interface
@@ -562,7 +573,7 @@ module SiteSettingExtension
     return if current[name] == old_val
 
     clear_uploads_cache(name)
-    notify_clients!(name) if client_settings.include? name
+    notify_clients!(name) if client_settings.include?(name)
     clear_cache!
 
     if defined?(Rails::Console)
@@ -574,22 +585,44 @@ module SiteSettingExtension
     DiscourseEvent.trigger(:site_setting_changed, name, old_val, current[name])
   end
 
+  # Updates a theme-specific site setting value in memory and notifies observers.
+  #
+  # This method is used to change site settings that are marked as "themeable",
+  # which means they can have different values per theme. Unlike `add_override!`,
+  # the database isn't touched here.
+  #
+  # @param theme_id [Integer] The ID of the theme to update the setting for
+  # @param name [String, Symbol] The name of the site setting to change
+  # @param val [Object] The new "ruby" value for the site setting
+  #
+  # @example
+  #   SiteSetting.change_themeable_site_setting(5, "enable_welcome_banner", false)
+  #
+  # @note Unlike regular site settings which use add_override!, themeable settings
+  #   should be changed via the ThemeSiteSettingUpsert service.
+  #
+  # @see ThemeSiteSettingUpsert service for the higher-level implementation that handles
+  #   database persistence and logging.
   def change_themeable_site_setting(theme_id, name, val)
-    theme_site_settings[theme_id] ||= {}
-    theme_site_settings[theme_id][name.to_sym] = val
+    name = name.to_sym
 
-    # TODO (martin) Maybe notify clients can happen here?
+    theme_site_settings[theme_id] ||= {}
+    old_val = theme_site_settings[theme_id][name]
+    theme_site_settings[theme_id][name] = val
+
+    notify_clients!(name, theme_id: theme_id) if client_settings.include?(name)
 
     clear_cache!
+
+    DiscourseEvent.trigger(:theme_site_setting_changed, name, old_val, val)
   end
 
-  # TODO (martin) I need to take into account theme site settings in these notifiers
   def notify_changed!
     MessageBus.publish("/site_settings", process: process_id)
   end
 
-  def notify_clients!(name)
-    MessageBus.publish("/client_settings", name: name, value: self.public_send(name))
+  def notify_clients!(name, scoped_to = nil)
+    MessageBus.publish("/client_settings", name: name, value: self.public_send(name, scoped_to))
   end
 
   def requires_refresh?(name)

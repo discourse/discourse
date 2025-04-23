@@ -12,16 +12,13 @@ class Themes::ThemeSiteSettingUpsert
     validates :name, presence: true
 
     after_validation do
-      self.name = self.name.to_sym
+      self.name = self.name.to_sym if self.name.present?
       self.value = self.value || nil
     end
   end
 
-  # TODO (martin) Need any sort of policies here?
-  # * Validate setting is themeable (take this from model)
-  # * Validate type of setting is okay?
-  # * Validate user is admin
-
+  policy :current_user_is_admin
+  policy :ensure_setting_is_themeable
   model :theme
   model :existing_theme_site_setting, optional: true
 
@@ -34,6 +31,14 @@ class Themes::ThemeSiteSettingUpsert
   step :update_site_setting_cache
 
   private
+
+  def current_user_is_admin(guardian:)
+    guardian.is_admin?
+  end
+
+  def ensure_setting_is_themeable(params:)
+    SiteSetting.themeable[params.name]
+  end
 
   def fetch_theme(params:)
     Theme.find_by(id: params.theme_id)
@@ -51,6 +56,8 @@ class Themes::ThemeSiteSettingUpsert
       return
     end
 
+    # This must be done because we want the schema and data of ThemeSiteSetting to reflect
+    # that of SiteSetting, since they are the same data types and values.
     setting_db_value, setting_data_type =
       SiteSetting.type_supervisor.to_db_value(params.name, params.value)
     setting_ruby_value =
@@ -71,16 +78,24 @@ class Themes::ThemeSiteSettingUpsert
   )
     setting_record = nil
     context[:previous_value] = nil
+    context[:new_value] = nil
 
     if existing_theme_site_setting
+      context[:previous_value] = SiteSetting.type_supervisor.to_rb_value(
+        existing_theme_site_setting.name,
+        existing_theme_site_setting.value,
+        setting_data_type,
+      )
+
       # Since the site setting itself doesn't matter, if we are
       # setting this back to the same value as the default setting
       # value then it makes sense to get rid of the theme site setting
       # override.
       if params.value.nil? || setting_ruby_value == SiteSetting.defaults[params.name]
+        context[:new_value] = SiteSetting.defaults[params.name]
         existing_theme_site_setting.destroy!
       else
-        context[:previous_value] = existing_theme_site_setting.value
+        context[:new_value] = setting_ruby_value
         existing_theme_site_setting.update!(value: setting_db_value)
         setting_record = existing_theme_site_setting
       end
@@ -92,27 +107,25 @@ class Themes::ThemeSiteSettingUpsert
             value: setting_db_value,
             data_type: setting_data_type,
           )
+        context[:new_value] = setting_ruby_value
       end
     end
 
     context[:theme_site_setting] = setting_record
   end
 
-  def log_change(theme_site_setting:, previous_value:, theme:, guardian:)
+  def log_change(params:, new_value:, previous_value:, theme:, guardian:)
     StaffActionLogger.new(guardian.user).log_theme_site_setting_change(
-      theme_site_setting.name,
+      params.name,
       previous_value,
-      theme_site_setting.value,
+      new_value,
       theme,
     )
   end
 
-  def update_site_setting_cache(theme:, theme_site_setting:, setting_ruby_value:)
-    SiteSetting.change_themeable_site_setting(theme.id, theme_site_setting.name, setting_ruby_value)
+  def update_site_setting_cache(theme:, params:, new_value:)
+    # This also sends a MessageBus message to the client for client site settings,
+    # and a DiscourseEvent for the change.
+    SiteSetting.change_themeable_site_setting(theme.id, params.name, new_value)
   end
-
-  # TODO (martin)
-  #
-  # Updating site setting cache?
-  # Messagebus to client to update client site settings
 end

@@ -4,21 +4,11 @@
 # data types are identical. This table is used as a way for themes
 # to overrride specific site settings that we make available in
 # core based on the `themeable` designation on a site setting.
+#
+# Creation, updating, and deletion of theme site settings is done
+# via the `Themes::ThemeSiteSettingUpsert` service.
 class ThemeSiteSetting < ActiveRecord::Base
   belongs_to :theme
-
-  validate :ensure_setting_themeable
-
-  def ensure_setting_themeable
-    return if SiteSetting.themeable[self.name.to_sym]
-    errors.add(:base, "#{self.name} is not a themeable site setting")
-  end
-
-  # TODO (martin)
-  # When creating these, we need to do a similar thing to
-  # when site settings are created/updated, like sending a
-  # MessageBus update to the UI for client settings, logging,
-  # and so on. Probably will need a service...
 end
 
 # == Schema Information

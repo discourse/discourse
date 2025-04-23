@@ -7,12 +7,28 @@ RSpec.describe Themes::ThemeSiteSettingUpsert do
   end
 
   describe ".call" do
-    subject(:result) { described_class.call(guardian: admin.guardian, params:) }
+    subject(:result) { described_class.call(guardian:, params:) }
+
+    let(:guardian) { admin.guardian }
 
     fab!(:admin)
     fab!(:theme)
 
     let(:params) { { theme_id: theme.id, name: "enable_welcome_banner", value: false } }
+
+    before { SiteSetting.refresh! }
+
+    context "when a non-admin user tries to change a setting" do
+      let(:guardian) { Guardian.new }
+
+      it { is_expected.to fail_a_policy(:current_user_is_admin) }
+    end
+
+    context "when the site setting is not a themeable one" do
+      let(:params) { { theme_id: theme.id, name: "title", value: "New Title" } }
+
+      it { is_expected.to fail_a_policy(:ensure_setting_is_themeable) }
+    end
 
     context "when creating a new theme site setting" do
       it "runs successfully" do
@@ -33,7 +49,7 @@ RSpec.describe Themes::ThemeSiteSettingUpsert do
         StaffActionLogger
           .any_instance
           .expects(:log_theme_site_setting_change)
-          .with("enable_welcome_banner", nil, "f", theme)
+          .with(:enable_welcome_banner, nil, false, theme)
         expect(result).to be_a_success
       end
 
@@ -41,6 +57,21 @@ RSpec.describe Themes::ThemeSiteSettingUpsert do
         expect(SiteSetting.enable_welcome_banner(theme_id: theme.id)).to eq(true)
         expect(result).to be_a_success
         expect(SiteSetting.enable_welcome_banner(theme_id: theme.id)).to eq(false)
+      end
+
+      it "should publish changes to clients for client site settings" do
+        message = MessageBus.track_publish("/client_settings") { result }.first
+        expect(message.data).to eq({ name: :enable_welcome_banner, value: false })
+      end
+
+      it "sends a DiscourseEvent for the change" do
+        event =
+          DiscourseEvent
+            .track_events { messages = MessageBus.track_publish { result } }
+            .find { |e| e[:event_name] == :theme_site_setting_changed }
+
+        expect(event).to be_present
+        expect(event[:params]).to eq([:enable_welcome_banner, nil, false])
       end
     end
 
@@ -64,7 +95,7 @@ RSpec.describe Themes::ThemeSiteSettingUpsert do
         StaffActionLogger
           .any_instance
           .expects(:log_theme_site_setting_change)
-          .with("enable_welcome_banner", "t", "f", theme)
+          .with(:enable_welcome_banner, true, false, theme)
         expect(result).to be_a_success
       end
 
@@ -73,17 +104,29 @@ RSpec.describe Themes::ThemeSiteSettingUpsert do
         expect(result).to be_a_success
         expect(SiteSetting.enable_welcome_banner(theme_id: theme.id)).to eq(false)
       end
+
+      it "should publish changes to clients for client site settings" do
+        message = MessageBus.track_publish("/client_settings") { result }.first
+        expect(message.data).to eq({ name: :enable_welcome_banner, value: false })
+      end
+
+      it "sends a DiscourseEvent for the change" do
+        event =
+          DiscourseEvent
+            .track_events { messages = MessageBus.track_publish { result } }
+            .find { |e| e[:event_name] == :theme_site_setting_changed }
+
+        expect(event).to be_present
+        expect(event[:params]).to eq([:enable_welcome_banner, true, false])
+      end
     end
 
     context "when removing a theme site setting by ommitting the value" do
       let!(:theme_site_setting) do
-        Fabricate(
-          :theme_site_setting,
-          theme: theme,
-          name: "enable_welcome_banner",
-          value: "Old Theme Title",
-        )
+        Fabricate(:theme_site_setting, theme: theme, name: "enable_welcome_banner", value: false)
       end
+
+      before { SiteSetting.refresh! }
 
       let(:params) { { theme_id: theme.id, name: "enable_welcome_banner", value: nil } }
 
@@ -94,6 +137,35 @@ RSpec.describe Themes::ThemeSiteSettingUpsert do
       it "removes the theme site setting" do
         expect { result }.to change { ThemeSiteSetting.count }.by(-1)
         expect(ThemeSiteSetting.find_by(id: theme_site_setting.id)).to be_nil
+      end
+
+      it "logs the removal in staff action log" do
+        StaffActionLogger
+          .any_instance
+          .expects(:log_theme_site_setting_change)
+          .with(:enable_welcome_banner, false, true, theme)
+        expect(result).to be_a_success
+      end
+
+      it "refreshes the value in the SiteSetting cache" do
+        expect(SiteSetting.enable_welcome_banner(theme_id: theme.id)).to eq(false)
+        expect(result).to be_a_success
+        expect(SiteSetting.enable_welcome_banner(theme_id: theme.id)).to eq(true)
+      end
+
+      it "should publish changes to clients for client site settings" do
+        message = MessageBus.track_publish("/client_settings") { result }.first
+        expect(message.data).to eq({ name: :enable_welcome_banner, value: true })
+      end
+
+      it "sends a DiscourseEvent for the change" do
+        event =
+          DiscourseEvent
+            .track_events { messages = MessageBus.track_publish { result } }
+            .find { |e| e[:event_name] == :theme_site_setting_changed }
+
+        expect(event).to be_present
+        expect(event[:params]).to eq([:enable_welcome_banner, false, true])
       end
     end
 
@@ -113,50 +185,6 @@ RSpec.describe Themes::ThemeSiteSettingUpsert do
         expect(ThemeSiteSetting.find_by(id: theme_site_setting.id)).to be_nil
       end
     end
-
-    # context "with different data types" do
-    #   context "with integer setting" do
-    #     let(:params) { { theme_id: theme.id, name: "min_post_length", value: "20" } }
-
-    #     before do
-    #       SiteSetting.stubs(:types).returns({ integer: 1 })
-    #       SiteSetting.stubs(:type_supervisor).returns(stub(to_db_value: ["20", 1], to_rb_value: 20))
-    #     end
-
-    #     it "runs successfully" do
-    #       expect(result).to be_a_success
-    #     end
-
-    #     it "converts the value to the correct type" do
-    #       result
-    #       theme_site_setting = ThemeSiteSetting.last
-    #       expect(theme_site_setting.data_type).to eq(1) # integer type
-    #       expect(theme_site_setting.value).to eq("20")
-    #     end
-    #   end
-
-    #   context "with boolean setting" do
-    #     let(:params) { { theme_id: theme.id, name: "allow_uncategorized_topics", value: "false" } }
-
-    #     before do
-    #       SiteSetting.stubs(:types).returns({ boolean: 2 })
-    #       SiteSetting.stubs(:type_supervisor).returns(
-    #         stub(to_db_value: ["false", 2], to_rb_value: false),
-    #       )
-    #     end
-
-    #     it "runs successfully" do
-    #       expect(result).to be_a_success
-    #     end
-
-    #     it "converts the value to the correct type" do
-    #       result
-    #       theme_site_setting = ThemeSiteSetting.last
-    #       expect(theme_site_setting.data_type).to eq(2) # boolean type
-    #       expect(theme_site_setting.value).to eq("false")
-    #     end
-    #   end
-    # end
 
     context "when theme doesn't exist" do
       before { theme.destroy! }
