@@ -73,7 +73,7 @@ describe "Edit Category Localizations", type: :system do
     describe "when editing a category with localizations" do
       fab!(:category_localization) { Fabricate(:category_localization, category: category) }
 
-      it "should allow you do delete localizations" do
+      it "should allow you to delete localizations" do
         expect(CategoryLocalization.where(category_id: category.id).count).to eq(1)
         category_page.visit_edit_localizations(category)
         page.find(".edit-category-tab-localizations .remove-localization").click
