@@ -41,18 +41,14 @@ describe "Discovery heading accessibility", type: :system do
   end
 
   it "shows heading for bookmarked topics" do
-    user = sign_in(Fabricate(:user))
-    topic = Fabricate(:topic)
-    Fabricate(:bookmark, user: user, topic: topic)
+    sign_in(Fabricate(:user))
 
     visit "/bookmarks"
     expect(page).to have_selector("h1", text: "all topics you’ve bookmarked")
   end
 
   it "shows heading for posted topics" do
-    user = sign_in(Fabricate(:user))
-    topic = Fabricate(:topic)
-    Fabricate(:post, topic: topic, user: user)
+    sign_in(Fabricate(:user))
 
     visit "/posted"
     expect(page).to have_selector("h1", text: "all topics you’ve posted in")
