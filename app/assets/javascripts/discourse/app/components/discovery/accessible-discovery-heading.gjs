@@ -1,7 +1,9 @@
 import Component from "@glimmer/component";
+import { cached } from "@glimmer/tracking";
 import { i18n } from "discourse-i18n";
 
 export default class AccessibleDiscoveryHeading extends Component {
+  @cached
   get filterKey() {
     const filter = this.args.filter;
 
@@ -16,6 +18,7 @@ export default class AccessibleDiscoveryHeading extends Component {
     return filter;
   }
 
+  @cached
   get filterLabel() {
     const key = this.filterKey;
 
@@ -29,6 +32,7 @@ export default class AccessibleDiscoveryHeading extends Component {
       : label;
   }
 
+  @cached
   get type() {
     const { category, tag, additionalTags } = this.args;
 
