@@ -87,7 +87,7 @@ RSpec.describe FormTemplatesController do
                   tag_group: "tag_group1"  # Replace with actual value if needed
                   validations:
                     required: false
-    
+
                 - type: tag-chooser
                   id: 2
                   attributes:
@@ -116,13 +116,13 @@ RSpec.describe FormTemplatesController do
           expect(parsed_template[1]["attributes"]["tag_group"]).to eq(tag_group2.name)
 
           expect(parsed_template[0]["attributes"]["tag_choices"]).to eq(
-            { "tag1" => "Tag 1 custom Translation" },
+            { tag1.name => tag1.description },
           )
           expect(parsed_template[1]["attributes"]["tag_choices"]).to eq(
-            { "tag2" => "Tag 2 custom Translation" },
+            { tag2.name => tag2.description },
           )
-          expect(parsed_template[0]["choices"]).to eq(%w[tag1 tag3])
-          expect(parsed_template[1]["choices"]).to eq(%w[tag2 tag4])
+          expect(parsed_template[0]["choices"]).to eq([tag1.name, tag3.name])
+          expect(parsed_template[1]["choices"]).to eq([tag2.name, tag4.name])
         end
       end
     end

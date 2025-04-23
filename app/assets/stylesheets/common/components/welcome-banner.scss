@@ -18,13 +18,6 @@
   margin-bottom: 1em;
   border-radius: var(--d-border-radius-large);
 
-  &__search-menu {
-    .menu-panel-results .menu-panel.search-menu-panel {
-      position: unset;
-      padding: 0;
-    }
-  }
-
   &__wrap {
     box-sizing: border-box;
     position: relative;
@@ -35,6 +28,12 @@
       margin-top: 0.5em;
     }
 
+    @include breakpoint("mobile-extra-large") {
+      display: block;
+      padding: 0.5em;
+      margin-top: 0;
+    }
+
     > div {
       margin: 0 auto;
       max-width: 600px;
@@ -43,6 +42,10 @@
     .search-menu {
       display: flex;
       position: relative;
+
+      @include breakpoint("mobile-extra-large") {
+        display: none;
+      }
 
       .search-menu-container {
         width: 100%;
@@ -71,6 +74,10 @@
 
       @include breakpoint(tablet) {
         font-size: var(--font-up-4);
+      }
+
+      @include breakpoint("mobile-extra-large") {
+        font-size: var(--font-up-2);
       }
     }
 
@@ -119,17 +126,18 @@
     }
 
     .results {
+      @include float-down;
       box-sizing: border-box;
+      border-radius: var(--d-border-radius);
       background: var(--secondary);
-      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
-      position: absolute;
       z-index: 9;
       margin-left: auto;
       margin-right: auto;
       left: 0;
-      top: 2.75em;
+      top: 100%;
       right: 0;
-      padding: 0.5em;
+
+      @include float-down;
 
       @include breakpoint(mobile-extra-large) {
         width: 100%;

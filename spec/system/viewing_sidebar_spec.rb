@@ -12,11 +12,11 @@ describe "Viewing sidebar as logged in user", type: :system do
   describe "when using the header dropdown navigation menu" do
     before { SiteSetting.navigation_menu = "header dropdown" }
 
-    it "should display the sidebar when `navigation_menu` query param is 'sidebar'" do
+    it "should display the sidebar when `navigation_menu` query param is 'sidebar' and maintain header dropdown" do
       visit("/latest?navigation_menu=sidebar")
 
       expect(sidebar).to be_visible
-      expect(page).not_to have_css(".hamburger-dropdown")
+      expect(page).to have_css(".hamburger-dropdown")
     end
   end
 

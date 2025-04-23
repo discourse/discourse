@@ -175,4 +175,34 @@ module("Integration | Component | FormKit | Collection", function (hooks) {
 
     assert.form().field("one.0.two.0.three.0.foo").hasValue("2");
   });
+
+  test("emptying a collection field", async function (assert) {
+    const onSubmit = (data) => {
+      assert.deepEqual(
+        data.animals,
+        ["souna", undefined],
+        "correctly makes the field undefined"
+      );
+    };
+
+    await render(
+      <template>
+        <Form
+          @data={{hash animals=(array "souna" "sissi")}}
+          @onSubmit={{onSubmit}}
+          as |form|
+        >
+          <form.Collection @name="animals" as |collection|>
+            <collection.Field @title="cat" as |field|>
+              <field.Input />
+            </collection.Field>
+          </form.Collection>
+          <form.Submit />
+        </Form>
+      </template>
+    );
+
+    await formKit().field("animals.1").fillIn("");
+    await formKit().submit();
+  });
 });

@@ -194,8 +194,9 @@ const extension = {
               !node.isText ||
               node.marks.some(
                 (mark) =>
-                  mark.type.name === "link" &&
-                  !AUTO_LINKS.includes(mark.attrs.markup)
+                  (mark.type.name === "link" &&
+                    !AUTO_LINKS.includes(mark.attrs.markup)) ||
+                  mark.type.name === "code"
               )
             ) {
               return true;
@@ -270,6 +271,11 @@ const extension = {
               .getLinkify()
               .match(fullText)
               ?.forEach((match) => {
+                // small exception when we're typing `www.link.com
+                if (fullText[match.index - 1] === "`") {
+                  return;
+                }
+
                 tr.addMark(
                   startPos + match.index,
                   startPos + match.index + match.raw.length,

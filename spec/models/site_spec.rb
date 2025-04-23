@@ -282,4 +282,95 @@ RSpec.describe Site do
     data = JSON.parse(Site.json_for(Guardian.new))
     expect(data["auth_providers"].map { |a| a["name"] }).to contain_exactly("facebook", "twitter")
   end
+
+  describe ".all_categories_cache" do
+    fab!(:category)
+    fab!(:category2) { Fabricate(:category) }
+
+    it "returns cached categories" do
+      categories_data = Site.all_categories_cache
+      expect(categories_data.map { |c| c[:id] }).to contain_exactly(
+        SiteSetting.uncategorized_category_id,
+        category.id,
+        category2.id,
+      )
+    end
+
+    it "caches the result" do
+      Site.all_categories_cache
+
+      category2.update_columns(name: "derp")
+
+      # The cached result should not contain
+      # the updated name that skipped validations
+      cached_names = Site.all_categories_cache.map { |c| c[:name] }
+      expect(cached_names).not_to include("derp")
+
+      Site.clear_cache
+      refreshed_names = Site.all_categories_cache.map { |c| c[:name] }
+      expect(refreshed_names).to include("derp")
+    end
+
+    it "includes preloaded custom fields" do
+      Site.reset_preloaded_category_custom_fields
+      Site.preloaded_category_custom_fields << "test_field"
+
+      category.custom_fields["test_field"] = "test_value"
+      category.save_custom_fields
+
+      categories_data = Site.all_categories_cache
+      category_data = categories_data.find { |c| c[:id] == category.id }
+
+      expect(category_data[:custom_fields]["test_field"]).to eq("test_value")
+    ensure
+      Site.reset_preloaded_category_custom_fields
+    end
+
+    it "applies plugin modifiers to the query" do
+      plugin_instance = Plugin::Instance.new
+      modifier_block =
+        Proc.new { |query| query.where("categories.name LIKE ?", "#{category.name}%") }
+
+      plugin_instance.register_modifier(:site_all_categories_cache_query, &modifier_block)
+
+      Site.clear_cache
+      categories_data = Site.all_categories_cache
+
+      expect(categories_data.map { |c| c[:id] }).to contain_exactly(category.id)
+    ensure
+      DiscoursePluginRegistry.unregister_modifier(
+        plugin_instance,
+        :site_all_categories_cache_query,
+        &modifier_block
+      )
+    end
+
+    describe "experimental_content_localization" do
+      it "returns localized category names when enabled" do
+        SiteSetting.experimental_content_localization = true
+
+        localization = Fabricate(:category_localization)
+        category = localization.category
+        locale = localization.locale.to_sym
+
+        I18n.locale = locale
+
+        all_categories_cache = Site.all_categories_cache
+        cached_category = all_categories_cache.find { |c| c[:id] == category.id }
+        expect(cached_category[:name]).to eq(localization.name)
+        expect(cached_category[:description]).to eq(localization.description)
+      end
+
+      it "returns original names when enabled" do
+        SiteSetting.experimental_content_localization = true
+
+        category = Fabricate(:category, name: "derp", description: "derp derp")
+
+        all_categories_cache = Site.all_categories_cache
+        cached_category = all_categories_cache.find { |c| c[:id] == category.id }
+        expect(cached_category[:name]).to eq(category.name)
+        expect(cached_category[:description]).to eq(category.description)
+      end
+    end
+  end
 end
