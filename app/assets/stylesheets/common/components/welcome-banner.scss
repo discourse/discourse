@@ -68,9 +68,11 @@
       }
     }
 
-    h1 {
+    .welcome-banner__title {
       font-size: var(--font-up-6);
       line-height: $line-height-medium;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
 
       @include breakpoint(tablet) {
         font-size: var(--font-up-4);
@@ -81,7 +83,7 @@
       }
     }
 
-    h1,
+    .welcome-banner__title,
     p {
       text-align: center;
     }

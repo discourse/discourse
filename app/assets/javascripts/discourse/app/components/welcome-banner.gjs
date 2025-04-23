@@ -96,7 +96,9 @@ export default class WelcomeBanner extends Component {
       >
         <div class="custom-search-banner welcome-banner__inner-wrapper">
           <div class="custom-search-banner-wrap welcome-banner__wrap">
-            <h1 class="welcome-banner__title">{{htmlSafe this.headerText}}</h1>
+            <div class="welcome-banner__title">
+              {{htmlSafe this.headerText}}
+            </div>
             <PluginOutlet @name="welcome-banner-below-headline" />
             <div class="search-menu welcome-banner__search-menu">
               <DButton
