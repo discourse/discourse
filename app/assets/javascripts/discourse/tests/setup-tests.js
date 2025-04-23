@@ -16,7 +16,6 @@ import QUnit from "qunit";
 import sinon from "sinon";
 import PreloadStore from "discourse/lib/preload-store";
 import { resetSettings as resetThemeSettings } from "discourse/lib/theme-settings-store";
-import { ScrollingDOMMethods } from "discourse/mixins/scrolling";
 import Session from "discourse/models/session";
 import User from "discourse/models/user";
 import { resetCategoryCache } from "discourse/models/category";
@@ -303,9 +302,6 @@ export default function setupTests(config) {
     resetSite();
 
     resetCategoryCache();
-
-    sinon.stub(ScrollingDOMMethods, "bindOnScroll");
-    sinon.stub(ScrollingDOMMethods, "unbindOnScroll");
 
     // Access the container that's set up in createApplication
     const scrollManager = app.__container__.lookup("service:scroll-manager");
