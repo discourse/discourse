@@ -1,6 +1,7 @@
+import { fn, hash } from "@ember/helper";
 import { service } from "@ember/service";
+import { eq } from "truth-helpers";
 import { buildCategoryPanel } from "discourse/components/edit-category-panel";
-import { concat, fn, hash } from "@ember/helper";
 import { i18n } from "discourse-i18n";
 
 export default class EditCategoryLocalizations extends buildCategoryPanel(
@@ -13,7 +14,23 @@ export default class EditCategoryLocalizations extends buildCategoryPanel(
   }
 
   <template>
+    {{#if (eq @transientData.localizations.length 0)}}
+      <@form.Alert @icon="circle-info">
+        {{i18n "category.localization.hint"}}
+      </@form.Alert>
+    {{/if}}
+
     <@form.Collection @name="localizations" as |collection index|>
+      <collection.Field
+        @name="category_id"
+        @title="category_id"
+        @showTitle={{false}}
+        @disabled={{true}}
+        as |field|
+      >
+        <field.Input @value={{this.category.id}} @type="hidden" />
+      </collection.Field>
+
       <@form.Row as |row|>
         <row.Col @size={{2}}>
           <collection.Field
@@ -73,7 +90,7 @@ export default class EditCategoryLocalizations extends buildCategoryPanel(
       @action={{fn
         @form.addItemToCollection
         "localizations"
-        (hash locale="" name="" description="")
+        (hash category_id=this.category.id locale="" name="" description="")
       }}
     />
   </template>

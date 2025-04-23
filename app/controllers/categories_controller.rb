@@ -592,6 +592,7 @@ class CategoriesController < ApplicationController
             allowed_tag_groups: [],
             required_tag_groups: %i[name min_count],
             form_template_ids: [],
+            category_localizations_attributes: %i[id category_id locale name description _destroy],
           )
 
         if result[:required_tag_groups] && !result[:required_tag_groups].is_a?(Array)

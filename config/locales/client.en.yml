@@ -4129,6 +4129,7 @@ en:
         description: "Description"
         add: "Add new locale"
         remove: "Remove"
+        hint: "There are currently no localizations for this category. Click 'Add new locale' below to begin adding localizations."
       tags_allowed_tags: "Restrict these tags to this category:"
       tags_allowed_tag_groups: "Restrict these tag groups to this category:"
       tags_placeholder: "(Optional) list of allowed tags"
