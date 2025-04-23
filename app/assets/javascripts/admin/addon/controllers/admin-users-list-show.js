@@ -116,7 +116,7 @@ export default class AdminUsersListShowController extends Controller {
     })
       .then((result) => {
         this.lastBulkDeleteMessageBusId =
-          result.meta.message_bus_last_ids.bulk_delete;
+          result.meta?.message_bus_last_ids?.bulk_delete;
 
         this._results[page] = result.users;
 
