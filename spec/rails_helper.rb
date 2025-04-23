@@ -377,6 +377,7 @@ RSpec.configure do |config|
 
     Capybara.threadsafe = true
     Capybara.disable_animation = true
+    Capybara.save_path = Downloads::FOLDER
 
     # Click offsets is calculated from top left of element
     Capybara.w3c_click_offset = false
