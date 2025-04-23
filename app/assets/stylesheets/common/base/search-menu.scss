@@ -82,6 +82,14 @@ $search-result-element-padding: 0.35em 1rem; //hate myself but .25em is too tigh
     border: 0;
     box-shadow: var(--shadow-dropdown);
     padding: 0; // overrule generic menu panels to achieve full width hover effect
+
+    // alignment adjustment for search menu panel (within topic) to align with results
+    .search-input {
+      padding-right: calc(1rem - 0.65em);
+    }
+    .search-term__input {
+      padding-left: 1rem;
+    }
   }
 
   &.menu-panel-results {
