@@ -626,8 +626,6 @@ aside.quote {
 
     @include post-aside;
     @include unselectable;
-    border-bottom-right-radius: 0;
-    border-bottom-left-radius: 0;
 
     // blockquote is underneath this and has top margin
     .avatar {
@@ -637,11 +635,6 @@ aside.quote {
     img {
       margin-top: -0.26em;
     }
-  }
-
-  .title + blockquote {
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
   }
 
   // blockquote is docked within aside for content
