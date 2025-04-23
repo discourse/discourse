@@ -333,4 +333,18 @@ module SystemHelpers
     script = "window.getComputedStyle(arguments[0]).getPropertyValue(arguments[1])"
     page.evaluate_script(script, element, key)
   end
+
+  def get_rgb_color(element, property = "backgroundColor")
+    element.native.evaluate(<<~JS)
+      (el) => {
+        const color = window.getComputedStyle(el).#{property};
+        const tempDiv = document.createElement('div');
+        tempDiv.style.#{property} = color;
+        document.body.appendChild(tempDiv);
+        const rgbColor = window.getComputedStyle(tempDiv).#{property};
+        document.body.removeChild(tempDiv);
+        return rgbColor;
+      }
+    JS
+  end
 end
