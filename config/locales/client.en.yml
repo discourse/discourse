@@ -5189,6 +5189,53 @@ en:
     powered_by_discourse: "Powered by Discourse"
     safari_15_warning: "Your browser will soon be incompatible with this community. To keep participating here, please upgrade your browser or <a href='%{url}'>learn more</a>."
 
+    discovery:
+      headings:
+        all:
+          default: "all %{filter} topics"
+          posted: "all topics you’ve posted in"
+          bookmarks: "all topics you’ve bookmarked"
+
+        category:
+          default: "%{filter} topics in %{category}"
+          posted: "topics in %{category} you’ve posted in"
+          bookmarks: "topics in %{category} you’ve bookmarked"
+
+        no_tags:
+          all_default: "all topics without tags"
+          category_default: "%{filter} topics in %{category} without tags"
+          all:
+            posted: "all topics without tags you've posted in"
+            bookmarks: "all topics without tags you've bookmarked"
+          category:
+            posted: "topics in %{category} without tags you've posted in"
+            bookmarks: "topics in %{category} without tags you've bookmarked"
+
+        single_tag:
+          default: "%{filter} topics tagged %{tag}"
+          posted: "topics tagged %{tag} you've posted in"
+          bookmarks: "topics tagged %{tag} you’ve bookmarked"
+
+        multi_tag:
+          default: "%{filter} topics tagged %{tags}"
+          posted: "topics tagged %{tags} you've posted in"
+          bookmarks: "topics tagged %{tags} you’ve bookmarked"
+
+        category_tag:
+          default: "%{filter} topics in %{category} tagged %{tags}"
+          posted: "topics in %{category} tagged %{tags} you’ve posted in"
+          bookmarks: "topics in %{category} tagged %{tags} you’ve bookmarked"
+
+        categories: "all categories"
+
+        filter_labels:
+          latest: "latest"
+          top: "top"
+          new: "new"
+          unread: "unread"
+          hot: "hot"
+          unseen: "unseen"
+
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
     # This is a text input placeholder, keep the translation short
