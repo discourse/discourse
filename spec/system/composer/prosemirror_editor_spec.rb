@@ -146,9 +146,9 @@ describe "Composer - ProseMirror editor", type: :system do
 
     it "supports __ or ** to create a bold text" do
       open_composer_and_toggle_rich_editor
-      composer.type_content("__This is bold__\n")
-      composer.type_content("**This is bold**\n")
-      composer.type_content("Hey __This is bold__\n")
+      composer.type_content("__This is bold__\n\n")
+      composer.type_content("**This is bold**\n\n")
+      composer.type_content("Hey __This is bold__\n\n")
       composer.type_content("Hey**This is bold**")
 
       expect(rich).to have_css("strong", text: "This is bold", count: 4)
@@ -445,7 +445,7 @@ describe "Composer - ProseMirror editor", type: :system do
 
     it "supports Ctrl + Z and Ctrl + Shift + Z to undo and redo" do
       open_composer_and_toggle_rich_editor
-      composer.type_content("This is a test")
+      cdp.copy_paste("This is a test")
       composer.send_keys([PLATFORM_KEY_MODIFIER, "z"])
 
       expect(rich).not_to have_css("p", text: "This is a test")
@@ -594,7 +594,11 @@ describe "Composer - ProseMirror editor", type: :system do
         lines">
       HTML
 
-      expect(rich).to have_css("img[alt='alt with new lines'][title='title with new lines']")
+      img = rich.find("img")
+
+      expect(img["src"]).to eq("https://example.com/image.png")
+      expect(img["alt"]).to eq("alt with new lines")
+      expect(img["title"]).to eq("title with new lines")
 
       composer.toggle_rich_editor
 
