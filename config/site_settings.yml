@@ -3980,3 +3980,6 @@ experimental:
     client: true
     default: false
     hidden: true
+  experimental_content_localization:
+    client: true
+    default: false
