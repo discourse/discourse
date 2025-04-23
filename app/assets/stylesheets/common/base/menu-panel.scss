@@ -255,8 +255,7 @@
       }
 
       &.is-destroying {
-        // animation: search-slide-out 0.2s ease-in forwards;
-        animation: none;
+        animation: search-slide-out 0.2s ease-in forwards;
       }
 
       @keyframes search-slide-in {
