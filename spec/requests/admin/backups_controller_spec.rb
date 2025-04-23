@@ -835,6 +835,16 @@ RSpec.describe Admin::BackupsController do
         expect(response.status).to eq(200)
       end
 
+      it "works even when backups are disabled" do
+        SiteSetting.enable_backups = false
+        create_backup_files(backup_filename)
+
+        expect { put "/admin/backups/#{backup_filename}.json" }.to change {
+          Jobs::DownloadBackupEmail.jobs.size
+        }.by(1)
+        expect(response.status).to eq(200)
+      end
+
       it "returns 404 when the backup does not exist" do
         put "/admin/backups/#{backup_filename}.json"
 
