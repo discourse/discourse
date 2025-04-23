@@ -41,10 +41,10 @@ RSpec.describe Admin::BackupsController do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
-      it "raises an error when backups are disabled" do
+      it "works even when backups are disabled" do
         SiteSetting.enable_backups = false
         get "/admin/backups.json"
-        expect(response.status).to eq(403)
+        expect(response.status).to eq(200)
       end
 
       context "with html format" do
