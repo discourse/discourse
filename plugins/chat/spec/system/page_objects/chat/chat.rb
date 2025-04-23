@@ -30,6 +30,7 @@ module PageObjects
 
       def close_from_header
         find(".chat-header-icon").click
+        has_no_css?("html.has-chat")
       end
 
       def has_header_href?(href)
