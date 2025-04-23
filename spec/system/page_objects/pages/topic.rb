@@ -11,9 +11,7 @@ module PageObjects
       end
 
       def visit_topic(topic, post_number: nil)
-        url = "/t/#{topic.id}"
-        url += "/#{post_number}" if post_number
-        page.visit(url)
+        page.visit(topic.url(post_number))
         self
       end
 
