@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { i18n } from "discourse-i18n";
 
-export default class DiscoveryHeading extends Component {
+export default class AccessibleDiscoveryHeading extends Component {
   get filterKey() {
     const filter = this.args.filter;
 

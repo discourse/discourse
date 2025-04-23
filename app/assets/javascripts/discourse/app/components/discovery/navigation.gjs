@@ -5,7 +5,7 @@ import { service } from "@ember/service";
 import AddCategoryTagClasses from "discourse/components/add-category-tag-classes";
 import CategoryLogo from "discourse/components/category-logo";
 import DNavigation from "discourse/components/d-navigation";
-import DiscoveryHeading from "discourse/components/discovery/discovery-heading";
+import AccessibleDiscoveryHeading from "discourse/components/discovery/accessible-discovery-heading";
 import ReorderCategories from "discourse/components/modal/reorder-categories";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import bodyClass from "discourse/helpers/body-class";
@@ -75,7 +75,7 @@ export default class DiscoveryNavigation extends Component {
       @tags={{if @tag (array @tag.id)}}
     />
 
-    <DiscoveryHeading
+    <AccessibleDiscoveryHeading
       @category={{@category}}
       @tag={{@tag}}
       @additionalTags={{@additionalTags}}
