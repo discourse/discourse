@@ -340,10 +340,11 @@ class UploadCreator
     opts = { flatten: false } # Preserve transparency
 
     begin
-      execute_convert(from, to, opts)
-    rescue StandardError
-      # retry with debugging enabled
-      execute_convert(from, to, opts.merge(debug: true))
+      maybe_convert(from, to, opts)
+    rescue StandardError => e
+      png_tempfile.unlink
+      png_tempfile.close
+      raise e
     end
 
     @file.respond_to?(:close!) ? @file.close! : @file.close
@@ -374,10 +375,11 @@ class UploadCreator
     opts = { quality: target_quality } if target_quality
 
     begin
-      execute_convert(from, to, opts)
-    rescue StandardError
-      # retry with debugging enabled
-      execute_convert(from, to, opts.merge(debug: true))
+      maybe_convert(from, to, opts)
+    rescue StandardError => e
+      jpeg_tempfile.unlink
+      jpeg_tempfile.close
+      raise e
     end
 
     new_size = File.size(jpeg_tempfile.path)
@@ -405,10 +407,11 @@ class UploadCreator
     OptimizedImage.ensure_safe_paths!(from, to)
 
     begin
-      execute_convert(from, to)
-    rescue StandardError
-      # retry with debugging enabled
-      execute_convert(from, to, { debug: true })
+      maybe_convert(from, to)
+    rescue StandardError => e
+      jpeg_tempfile.unlink
+      jpeg_tempfile.close
+      raise e
     end
 
     @file.respond_to?(:close!) ? @file.close! : @file.close
@@ -429,6 +432,15 @@ class UploadCreator
       failure_message: I18n.t("upload.png_to_jpg_conversion_failure_message"),
       timeout: MAX_CONVERT_FORMAT_SECONDS,
     )
+  end
+
+  def maybe_convert(from, to, opts = {})
+    begin
+      execute_convert(from, to, opts)
+    rescue StandardError
+      # retry with debugging enabled
+      execute_convert(from, to, opts.merge(debug: true))
+    end
   end
 
   def should_alter_quality?
