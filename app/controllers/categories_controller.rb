@@ -539,6 +539,12 @@ class CategoriesController < ApplicationController
           conditional_param_keys << { moderating_group_ids: [] }
         end
 
+        if SiteSetting.experimental_content_localization?
+          conditional_param_keys << {
+            category_localizations_attributes: %i[id category_id locale name description _destroy],
+          }
+        end
+
         result =
           params.permit(
             *required_param_keys,
@@ -592,7 +598,6 @@ class CategoriesController < ApplicationController
             allowed_tag_groups: [],
             required_tag_groups: %i[name min_count],
             form_template_ids: [],
-            category_localizations_attributes: %i[id category_id locale name description _destroy],
           )
 
         if result[:required_tag_groups] && !result[:required_tag_groups].is_a?(Array)

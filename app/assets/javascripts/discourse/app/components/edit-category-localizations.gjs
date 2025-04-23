@@ -53,6 +53,7 @@ export default class EditCategoryLocalizations extends buildCategoryPanel(
           <collection.Field
             @name="name"
             @title={{i18n "category.localization.name"}}
+            @validation="length:1,50"
             as |field|
           >
             <field.Input
@@ -75,7 +76,7 @@ export default class EditCategoryLocalizations extends buildCategoryPanel(
 
         <row.Col @size={{1}}>
           <@form.Button
-            class="btn-danger"
+            class="btn-danger remove-localization"
             @icon="trash-can"
             @title="category.localization.remove"
             @action={{fn collection.remove index}}
@@ -85,6 +86,7 @@ export default class EditCategoryLocalizations extends buildCategoryPanel(
     </@form.Collection>
 
     <@form.Button
+      class="add-localization"
       @icon="plus"
       @label="category.localization.add"
       @action={{fn
