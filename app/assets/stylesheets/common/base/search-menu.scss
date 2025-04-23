@@ -68,7 +68,7 @@ $search-result-element-padding: 0.35em 1rem; //hate myself but .25em is too tigh
     }
 
     @include breakpoint("mobile-extra-large") {
-      .mobile-search-button + input.search-term__input {
+      .mobile-search-button ~ input.search-term__input {
         padding-inline: 0;
       }
     }
@@ -83,12 +83,14 @@ $search-result-element-padding: 0.35em 1rem; //hate myself but .25em is too tigh
     box-shadow: var(--shadow-dropdown);
     padding: 0; // overrule generic menu panels to achieve full width hover effect
 
-    // alignment adjustment for search menu panel (within topic) to align with results
-    .search-input {
-      padding-right: calc(1rem - 0.65em);
-    }
-    .search-term__input {
-      padding-left: 1rem;
+    @include breakpoint("mobile-extra-large", $rule: min-width) {
+      // alignment adjustment for search menu panel (within topic) on desktop to align with results
+      .search-input {
+        padding-right: calc(1rem - 0.65em);
+      }
+      .search-term__input {
+        padding-left: 1rem;
+      }
     }
   }
 
@@ -109,7 +111,7 @@ $search-result-element-padding: 0.35em 1rem; //hate myself but .25em is too tigh
     background-color: var(--primary-200);
 
     @include breakpoint("mobile-extra-large", $rule: min-width) {
-      margin-left: 0.25em;
+      margin-left: 1rem;
       margin-right: 0;
     }
     @include breakpoint("mobile-extra-large") {
@@ -230,9 +232,6 @@ $search-result-element-padding: 0.35em 1rem; //hate myself but .25em is too tigh
       align-items: center;
 
       gap: 0.5em;
-      // @include breakpoint("mobile-extra-large") {
-      //   padding-block: 0.5em;
-      // }
     }
   }
 
@@ -369,7 +368,6 @@ $search-result-element-padding: 0.35em 1rem; //hate myself but .25em is too tigh
     }
   }
 
-  //needs checking - how to trigger, what is this?
   .user-titles {
     @include user-item-flex;
 
@@ -443,7 +441,6 @@ $search-result-element-padding: 0.35em 1rem; //hate myself but .25em is too tigh
   }
 }
 
-//how to trigger?
 .search-random-quick-tip {
   padding: max(0.5rem, 0.5em) 1rem;
   font-size: var(--font-down-2);
@@ -451,7 +448,7 @@ $search-result-element-padding: 0.35em 1rem; //hate myself but .25em is too tigh
 
   .tip-label {
     background-color: rgba(var(--tertiary-rgb), 0.1);
-    margin-right: 4px;
+    margin-right: 0.25em;
     padding: 2px 4px;
     display: inline-block;
     border: none;
