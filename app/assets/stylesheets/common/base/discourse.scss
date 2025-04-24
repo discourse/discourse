@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 // Common
 // global styles that apply to the Discourse application specifically
 // BEWARE: changing these styles implies they take effect anywhere they are seen
@@ -29,6 +31,30 @@
 
   100% {
     transform: rotate(360deg);
+  }
+}
+
+@keyframes float-down {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float-up {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
@@ -450,7 +476,6 @@ textarea {
   position: absolute;
   right: -3px;
   bottom: -1px;
-  z-index: 1002;
 }
 
 .user-status-background {
@@ -592,9 +617,19 @@ textarea {
 
 #main-outlet {
   padding-top: 1.5em;
+
+  .mobile-view & {
+    // notch avoidance
+    @media only screen and (orientation: landscape) {
+      padding-right: env(safe-area-inset-right);
+      padding-left: env(safe-area-inset-left);
+    }
+  }
 }
 
 #main {
+  position: relative;
+
   img.avatar {
     &.header {
       width: 45px;
@@ -817,8 +852,4 @@ a#skip-link {
 .scroll-lock {
   overflow: hidden !important;
   margin-right: var(--scroll-gap, 0);
-}
-
-.hbr-ember-outlet {
-  display: contents;
 }

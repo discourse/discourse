@@ -269,24 +269,22 @@ export default class KeyboardShortcutsHelp extends Component {
       },
     };
 
-    if (this.currentUser?.use_experimental_admin_search) {
-      shortcuts.admin = {
-        shortcuts: {
-          admin_search_open: buildShortcut("admin.search_open", {
-            keys1: [META, "/"],
-            keysDelimiter: PLUS,
-          }),
-          admin_search_prev_next: buildShortcut("admin.search_prev_next", {
-            keys1: ["&uarr;"],
-            keys2: ["&darr;"],
-            shortcutsDelimiter: "slash",
-          }),
-          admin_search_full_page: buildShortcut("admin.search_full_page", {
-            keys1: ["Enter"],
-          }),
-        },
-      };
-    }
+    shortcuts.admin = {
+      shortcuts: {
+        admin_search_open: buildShortcut("admin.search_open", {
+          keys1: [META, "/"],
+          keysDelimiter: PLUS,
+        }),
+        admin_search_prev_next: buildShortcut("admin.search_prev_next", {
+          keys1: ["&uarr;"],
+          keys2: ["&darr;"],
+          shortcutsDelimiter: "slash",
+        }),
+        admin_search_full_page: buildShortcut("admin.search_full_page", {
+          keys1: ["Enter"],
+        }),
+      },
+    };
 
     this._buildExtraShortcuts(shortcuts);
     this._addCountsToShortcutCategories(shortcuts);

@@ -31,7 +31,7 @@ export default class Icons extends Component {
   @service site;
   @service currentUser;
   @service siteSettings;
-  @service sidebarState;
+  @service navigationMenu;
   @service header;
   @service search;
   @service interfaceColor;
@@ -44,10 +44,7 @@ export default class Icons extends Component {
       return false;
     }
 
-    if (
-      this.args.sidebarEnabled &&
-      this.sidebarState.adminSidebarAllowedWithLegacyNavigationMenu
-    ) {
+    if (this.args.sidebarEnabled && this.navigationMenu.isDesktopDropdownMode) {
       return true;
     }
 
@@ -62,13 +59,14 @@ export default class Icons extends Component {
     return (
       this.site.mobileView ||
       this.search.searchExperience === "search_icon" ||
-      this.args.topicInfoVisible
+      this.args.topicInfoVisible ||
+      this.args.narrowDesktop
     );
   }
 
   @action
   toggleHamburger() {
-    if (this.sidebarState.adminSidebarAllowedWithLegacyNavigationMenu) {
+    if (this.navigationMenu.isDesktopDropdownMode) {
       this.args.toggleNavigationMenu("hamburger");
     } else {
       this.args.toggleNavigationMenu();

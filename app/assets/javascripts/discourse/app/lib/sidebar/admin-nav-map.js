@@ -30,7 +30,7 @@ export const ADMIN_NAV_MAP = [
       },
       {
         name: "admin_groups",
-        route: "groups",
+        route: "adminGroups",
         label: "admin.config.groups.title",
         description: "admin.config.groups.header_description",
         icon: "user-group",
@@ -250,12 +250,11 @@ export const ADMIN_NAV_MAP = [
     label: "admin.config_sections.appearance.title",
     links: [
       {
-        name: "admin_branding",
-        route: "adminConfig.branding",
-        label: "admin.config.branding.title",
-        description: "admin.config.branding.header_description",
+        name: "admin_logo_and_fonts",
+        route: "adminConfig.logo-and-fonts",
+        label: "admin.config.logo_and_fonts.title",
+        description: "admin.config.logo_and_fonts.header_description",
         icon: "fab-discourse",
-        settings_category: "branding",
       },
       {
         name: "admin_color_palettes",
@@ -320,7 +319,7 @@ export const ADMIN_NAV_MAP = [
         label: "admin.config.email.title",
         description: "admin.config.email.header_description",
         keywords: "admin.config.email.keywords",
-        icon: "far-envelope",
+        icon: "gear",
         links: [
           {
             name: "admin_email_preview_summary",
@@ -350,7 +349,7 @@ export const ADMIN_NAV_MAP = [
         route: "adminCustomizeEmailStyle",
         label: "admin.config.email_appearance.title",
         description: "admin.config.email_appearance.header_description",
-        icon: "envelope",
+        icon: "palette",
       },
       {
         name: "admin_email_logs",
@@ -535,15 +534,6 @@ export const ADMIN_NAV_MAP = [
         description: "admin.config.files.header_description",
         icon: "file",
         settings_category: "files",
-      },
-      {
-        name: "admin_other_options",
-        route: "adminConfig.other.settings",
-        label: "admin.config.other.title",
-        description: "admin.config.other.header_description",
-        icon: "discourse-other-tab",
-
-        settings_category: "uncategorized",
       },
       {
         name: "admin_search",

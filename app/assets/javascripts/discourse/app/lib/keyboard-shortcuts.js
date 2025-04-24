@@ -60,8 +60,6 @@ const DEFAULT_BINDINGS = {
   b: { handler: "toggleBookmark" },
   c: { handler: "createTopic" },
   "shift+c": { handler: "focusComposer" },
-  "ctrl+f": { handler: "showPageSearch", anonymous: true },
-  "command+f": { handler: "showPageSearch", anonymous: true },
   "command+left": { handler: "webviewKeyboardBack", anonymous: true },
   "command+[": { handler: "webviewKeyboardBack", anonymous: true },
   "command+right": { handler: "webviewKeyboardForward", anonymous: true },
@@ -502,10 +500,6 @@ export default {
 
     if (filterInput) {
       this._scrollTo(0);
-
-      if (!this.currentUser.use_experimental_admin_search) {
-        filterInput.focus();
-      }
     }
   },
 

@@ -142,7 +142,11 @@ export default class ProsemirrorEditor extends Component {
       ...extractPlugins(this.extensions, params, this.handleAsyncPlugin),
     ];
 
-    this.parser = new Parser(this.extensions, this.args.includeDefault);
+    this.parser = new Parser(
+      this.extensions,
+      this.pluginParams,
+      this.args.includeDefault
+    );
     this.serializer = new Serializer(
       this.extensions,
       this.pluginParams,
@@ -153,7 +157,7 @@ export default class ProsemirrorEditor extends Component {
 
     this.view = new EditorView(container, {
       state,
-      nodeViews: extractNodeViews(this.extensions),
+      nodeViews: extractNodeViews(this.extensions, this.pluginParams),
       attributes: { class: this.args.class ?? "" },
       editable: () => this.args.disabled !== true,
       dispatchTransaction: (tr) => {

@@ -2,8 +2,8 @@
 <html lang="<%= html_lang %>" class="<%= html_classes %>">
   <head>
     <meta charset="utf-8">
-    <title><%= content_for?(:title) ? yield(:title) : SiteSetting.title %></title>
-    <meta name="description" content="<%= @description_meta || SiteSetting.site_description %>">
+    <title><%= title_content %></title>
+    <meta name="description" content="<%= description_content %>">
     <meta name="discourse_theme_id" content="<%= theme_id %>">
     <meta name="discourse_current_homepage" content="<%= current_homepage %>">
 

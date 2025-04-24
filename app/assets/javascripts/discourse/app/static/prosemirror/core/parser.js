@@ -8,7 +8,8 @@ import { parse } from "../lib/markdown-it";
 export default class Parser {
   #multipleParseSpecs = {};
 
-  constructor(extensions, includeDefault = true) {
+  constructor(extensions, params, includeDefault = true) {
+    this.params = params;
     this.parseTokens = includeDefault
       ? {
           ...defaultMarkdownParser.tokens,
@@ -44,10 +45,15 @@ export default class Parser {
 
   #extractParsers(extensions) {
     const parsers = {};
-    for (const { parse: parseObj } of extensions) {
+    for (let { parse: parseObj } of extensions) {
       if (!parseObj) {
         continue;
       }
+
+      if (parseObj instanceof Function) {
+        parseObj = parseObj(this.params);
+      }
+
       for (const [token, parseSpec] of Object.entries(parseObj)) {
         if (parsers[token] !== undefined) {
           if (this.#multipleParseSpecs[token] === undefined) {

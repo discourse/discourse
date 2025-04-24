@@ -18,7 +18,11 @@ const Layout = <template>
     <PluginOutlet
       @name="discovery-list-controls-above"
       @connectorTagName="div"
-      @outletArgs={{hash category=@model.category tag=@model.tag}}
+      @outletArgs={{hash
+        category=@model.category
+        tag=@model.tag
+        toggleTagInfo=@toggleTagInfo
+      }}
     />
   </span>
 

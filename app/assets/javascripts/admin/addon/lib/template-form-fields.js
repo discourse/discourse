@@ -73,4 +73,16 @@ export const templateFormFields = [
   validations:
     # ${i18n("admin.form_templates.field_placeholders.validations")}`,
   },
+  {
+    type: "tagchooser",
+    structure: `- type: tag-chooser
+  id: ${i18n("admin.form_templates.field_placeholders.id")}
+  tag_group: ""
+  attributes:
+    none_label: "${i18n("admin.form_templates.field_placeholders.none_label")}"
+    label: "${i18n("admin.form_templates.field_placeholders.label")}"
+    multiple: true
+  validations:
+    # ${i18n("admin.form_templates.field_placeholders.validations")}`,
+  },
 ];

@@ -427,21 +427,6 @@ body.wizard {
     background-color: var(--tertiary-low);
   }
 
-  &__button.configure-more {
-    margin-right: 1em;
-    background-color: transparent;
-    color: var(--tertiary);
-
-    @include breakpoint("mobile-extra-large") {
-      order: 2;
-    }
-  }
-
-  &__button.configure-more:hover {
-    background-color: transparent;
-    color: var(--primary);
-  }
-
   &__button.jump-in {
     &:hover {
       background-color: var(--primary-300);

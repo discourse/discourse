@@ -15,12 +15,11 @@ import TextareaEditor from "discourse/components/composer/textarea-editor";
 import ToggleSwitch from "discourse/components/composer/toggle-switch";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
-import DecoratedHtml from "discourse/components/decorated-html";
+import DEditorPreview from "discourse/components/d-editor-preview";
 import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
 import InsertHyperlink from "discourse/components/modal/insert-hyperlink";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PopupInputTip from "discourse/components/popup-input-tip";
-import htmlSafe from "discourse/helpers/html-safe";
 import { SKIP } from "discourse/lib/autocomplete";
 import renderEmojiAutocomplete from "discourse/lib/autocomplete/emoji";
 import userAutocomplete from "discourse/lib/autocomplete/user";
@@ -31,7 +30,6 @@ import deprecated from "discourse/lib/deprecated";
 import { isTesting } from "discourse/lib/environment";
 import { getRegister } from "discourse/lib/get-owner";
 import { hashtagAutocompleteOptions } from "discourse/lib/hashtag-autocomplete";
-import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
 import loadEmojiSearchAliases from "discourse/lib/load-emoji-search-aliases";
 import loadRichEditor from "discourse/lib/load-rich-editor";
@@ -156,40 +154,11 @@ export default class DEditor extends Component {
 
     keymap["tab"] = () => this.textManipulation.indentSelection("right");
     keymap["shift+tab"] = () => this.textManipulation.indentSelection("left");
+    if (this.siteSettings.rich_editor) {
+      keymap["ctrl+m"] = () => this.toggleRichEditor();
+    }
 
     return keymap;
-  }
-
-  @action
-  handlePreviewClick(event) {
-    if (!event.target.closest(".d-editor-preview")) {
-      return;
-    }
-
-    if (wantsNewWindow(event)) {
-      return;
-    }
-
-    if (event.target.tagName === "A") {
-      if (event.target.classList.contains("mention")) {
-        this.appEvents.trigger(
-          "d-editor:preview-click-user-card",
-          event.target,
-          event
-        );
-      }
-
-      if (event.target.classList.contains("mention-group")) {
-        this.appEvents.trigger(
-          "d-editor:preview-click-group-card",
-          event.target,
-          event
-        );
-      }
-
-      event.preventDefault();
-      return false;
-    }
   }
 
   @onEvent("willDestroyElement")
@@ -810,26 +779,12 @@ export default class DEditor extends Component {
           />
         </div>
       </div>
-
-      {{! template-lint-disable no-invalid-interactive }}
-      <div
-        class="d-editor-preview-wrapper
-          {{if this.forcePreview 'force-preview'}}"
-        {{on "click" this.handlePreviewClick}}
-      >
-        <DecoratedHtml
-          @className="d-editor-preview"
-          @html={{htmlSafe this.preview}}
-          @decorate={{this.previewUpdated}}
-        />
-        <span class="d-editor-plugin">
-          <PluginOutlet
-            @name="editor-preview"
-            @connectorTagName="div"
-            @outletArgs={{this.outletArgs}}
-          />
-        </span>
-      </div>
+      <DEditorPreview
+        @preview={{this.preview}}
+        @forcePreview={{this.forcePreview}}
+        @onPreviewUpdated={{this.previewUpdated}}
+        @outletArgs={{this.outletArgs}}
+      />
     </div>
   </template>
 }

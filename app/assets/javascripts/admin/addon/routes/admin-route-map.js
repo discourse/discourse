@@ -189,6 +189,7 @@ export default function () {
       "adminUsers",
       { path: "/users", resetNamespace: true },
       function () {
+        this.route("settings");
         this.route(
           "adminUser",
           { path: "/:user_id/:username", resetNamespace: true },
@@ -212,8 +213,17 @@ export default function () {
       "adminBadges",
       { path: "/badges", resetNamespace: true },
       function () {
+        this.route("settings");
         this.route("award", { path: "/award/:badge_id" });
         this.route("show", { path: "/:badge_id" });
+      }
+    );
+
+    this.route(
+      "adminGroups",
+      { path: "/groups", resetNamespace: true },
+      function () {
+        this.route("settings");
       }
     );
 
@@ -352,7 +362,7 @@ export default function () {
         this.route("developer", function () {
           this.route("settings", { path: "/" });
         });
-        this.route("branding");
+        this.route("logo-and-fonts");
         this.route("navigation", function () {
           this.route("settings", { path: "/" });
         });

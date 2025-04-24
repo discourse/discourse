@@ -61,7 +61,6 @@ import {
   resetExtraClasses,
 } from "discourse/lib/plugin-connectors";
 import PreloadStore from "discourse/lib/preload-store";
-import { resetNeedsHbrTopicList } from "discourse/lib/raw-templates";
 import { clearTopicFooterButtons } from "discourse/lib/register-topic-footer-button";
 import { clearTopicFooterDropdowns } from "discourse/lib/register-topic-footer-dropdown";
 import { clearTagsHtmlCallbacks } from "discourse/lib/render-tags";
@@ -268,7 +267,6 @@ export function testCleanup(container, app) {
   resetWidgetCleanCallbacks();
   clearPluginHeaderActionComponents();
   clearRegisteredTabs();
-  resetNeedsHbrTopicList();
   clearAddedTrackedPostProperties();
   resetGroupPostSmallActionCodes();
   resetPostSmallActionClassesCallbacks();

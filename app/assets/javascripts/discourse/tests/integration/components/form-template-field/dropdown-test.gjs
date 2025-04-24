@@ -1,6 +1,7 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import Dropdown from "discourse/components/form-template-field/dropdown";
+import noop from "discourse/helpers/noop";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -20,7 +21,11 @@ module(
       const choices = ["Choice 1", "Choice 2", "Choice 3"];
       this.set("choices", choices);
 
-      await render(<template><Dropdown @choices={{self.choices}} /></template>);
+      await render(
+        <template>
+          <Dropdown @choices={{self.choices}} @onChange={{noop}} />
+        </template>
+      );
       assert
         .dom(".form-template-field__dropdown")
         .exists("a dropdown component exists");
@@ -54,7 +59,11 @@ module(
 
       await render(
         <template>
-          <Dropdown @choices={{self.choices}} @attributes={{self.attributes}} />
+          <Dropdown
+            @choices={{self.choices}}
+            @attributes={{self.attributes}}
+            @onChange={{noop}}
+          />
         </template>
       );
       assert
@@ -72,7 +81,11 @@ module(
       const choices = ["Choice 1", "Choice 2", "Choice 3"];
       this.set("choices", choices);
 
-      await render(<template><Dropdown @choices={{self.choices}} /></template>);
+      await render(
+        <template>
+          <Dropdown @choices={{self.choices}} @onChange={{noop}} />
+        </template>
+      );
 
       assert.dom(".form-template-field__label").doesNotExist();
     });

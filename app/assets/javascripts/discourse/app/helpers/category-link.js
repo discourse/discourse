@@ -3,7 +3,7 @@ import { htmlSafe } from "@ember/template";
 import categoryVariables from "discourse/helpers/category-variables";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import getURL from "discourse/lib/get-url";
-import { helperContext, registerRawHelper } from "discourse/lib/helpers";
+import { helperContext } from "discourse/lib/helpers";
 import { iconHTML } from "discourse/lib/icon-library";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { escapeExpression } from "discourse/lib/utilities";
@@ -116,7 +116,6 @@ export function categoryLinkHTML(category, options) {
 }
 
 export default categoryLinkHTML;
-registerRawHelper("category-link", categoryLinkHTML);
 
 function buildTopicCount(count) {
   return `<span class="topic-count" aria-label="${i18n(

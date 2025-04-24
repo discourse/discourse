@@ -28,6 +28,11 @@ module(
         '<pre class="html-block"><code>&lt;div&gt;1&lt;/div&gt;</code></pre><p>A</p><pre class="html-block"><code>&lt;div&gt;2&lt;/div&gt;</code></pre>',
         "<div>1</div>\n\nA\n\n<div>2</div>\n\n",
       ],
+      "html block with formatting that would be escaped outside it": [
+        "<div>A **bold** or *italic* text</div>",
+        '<pre class="html-block"><code>&lt;div&gt;A **bold** or *italic* text&lt;/div&gt;</code></pre>',
+        "<div>A **bold** or *italic* text</div>\n\n",
+      ],
     }).forEach(([name, [markdown, html, expectedMarkdown]]) => {
       test(name, async function (assert) {
         this.siteSettings.rich_editor = true;

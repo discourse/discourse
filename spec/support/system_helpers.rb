@@ -198,7 +198,8 @@ module SystemHelpers
     SiteSetting.enable_direct_s3_uploads = enable_direct_s3_uploads
     SiteSetting.secure_uploads = enable_secure_uploads
 
-    MinioRunner.start
+    # On CI, the minio binary is preinstalled in the docker image so there is no need for us to check for a new binary
+    MinioRunner.start(install: ENV["CI"] ? false : true)
   end
 
   def skip_unless_s3_system_specs_enabled!

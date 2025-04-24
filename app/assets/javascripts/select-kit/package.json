@@ -20,7 +20,8 @@
     "ember-auto-import": "^2.10.0",
     "ember-cli-babel": "^8.2.0",
     "ember-cli-htmlbars": "^6.3.0",
-    "ember-template-imports": "^4.3.0"
+    "ember-template-imports": "^4.3.0",
+    "truth-helpers": "workspace:*"
   },
   "devDependencies": {
     "@ember/optional-features": "^2.2.0",

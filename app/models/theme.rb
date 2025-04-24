@@ -87,14 +87,21 @@ class Theme < ActiveRecord::Base
             :child_themes,
             :theme_settings,
             :settings_field,
-            :locale_fields,
             :color_scheme,
-            :theme_translation_overrides,
             theme_fields: %i[upload theme_settings_migration],
           )
         end
 
-  scope :include_basic_relations, -> { includes(:parent_themes, :remote_theme, :user) }
+  scope :include_basic_relations,
+        -> do
+          includes(
+            :remote_theme,
+            :user,
+            :locale_fields,
+            :theme_translation_overrides,
+            parent_themes: %i[locale_fields theme_translation_overrides],
+          )
+        end
 
   delegate :remote_url, to: :remote_theme, private: true, allow_nil: true
 

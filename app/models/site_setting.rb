@@ -4,6 +4,7 @@ class SiteSetting < ActiveRecord::Base
   VALID_AREAS = %w[
     about
     analytics
+    badges
     categories_and_tags
     email
     embedding
@@ -24,6 +25,7 @@ class SiteSetting < ActiveRecord::Base
     site_admin
     stats_and_thresholds
     trust_levels
+    users
   ]
 
   DEFAULT_USER_PREFERENCES = %w[

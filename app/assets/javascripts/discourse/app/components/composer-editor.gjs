@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { hash } from "@ember/helper";
 import EmberObject, { action, computed } from "@ember/object";
@@ -11,12 +12,14 @@ import $ from "jquery";
 import { resolveAllShortUrls } from "pretty-text/upload-short-url";
 import { gt } from "truth-helpers";
 import DEditor from "discourse/components/d-editor";
+import DEditorPreview from "discourse/components/d-editor-preview";
 import Wrapper from "discourse/components/form-template-field/wrapper";
 import PickFilesButton from "discourse/components/pick-files-button";
 import { ajax } from "discourse/lib/ajax";
 import { tinyAvatar } from "discourse/lib/avatar-utils";
 import { setupComposerPosition } from "discourse/lib/composer/composer-position";
 import discourseComputed, { bind, debounce } from "discourse/lib/decorators";
+import prepareFormTemplateData from "discourse/lib/form-template-validation";
 import {
   fetchUnseenHashtagsInContext,
   linkSeenHashtagsInContext,
@@ -28,6 +31,7 @@ import {
   linkSeenMentions,
 } from "discourse/lib/link-mentions";
 import { loadOneboxes } from "discourse/lib/load-oneboxes";
+import { generateCookFunction } from "discourse/lib/text";
 import {
   authorizesOneOrMoreImageExtensions,
   IMAGE_MARKDOWN_REGEX,
@@ -92,6 +96,8 @@ const DEBOUNCE_JIT_MS = 2000;
 @classNameBindings("composer.showToolbar:toolbar-visible", ":wmd-controls")
 export default class ComposerEditor extends Component {
   @service composer;
+
+  @tracked preview;
 
   composerEventPrefix = "composer";
   shouldBuildScrollMap = true;
@@ -942,6 +948,25 @@ export default class ComposerEditor extends Component {
   }
 
   @action
+  async updateFormPreview() {
+    const formTemplateData = prepareFormTemplateData(
+      document.querySelector("#form-template-form"),
+      this.composer.selectedFormTemplate,
+      false
+    );
+
+    this.preview = await this.cachedCookAsync(
+      formTemplateData,
+      this.markdownOptions
+    );
+  }
+
+  async cachedCookAsync(text, options) {
+    this._cachedCookFunction ||= await generateCookFunction(options || {});
+    return await this._cachedCookFunction(text);
+  }
+
+  @action
   updateSelectedFormTemplateId(formTemplateId) {
     this.selectedFormTemplateId = formTemplateId;
   }
@@ -963,28 +988,35 @@ export default class ComposerEditor extends Component {
   <template>
     {{#if this.showFormTemplateForm}}
       <div class="d-editor">
-        <div class="d-editor-container">
-          <div class="d-editor-textarea-column">
-            {{yield}}
+        <div class="d-editor-textarea-column">
+          {{yield}}
 
-            {{#if (gt this.composer.formTemplateIds.length 1)}}
-              <FormTemplateChooser
-                @filteredIds={{this.composer.formTemplateIds}}
-                @value={{this.selectedFormTemplateId}}
-                @onChange={{this.updateSelectedFormTemplateId}}
-                @options={{hash maximum=1}}
-                class="composer-select-form-template"
-              />
-            {{/if}}
-            <form id="form-template-form">
-              <Wrapper
-                @id={{this.selectedFormTemplateId}}
-                @initialValues={{this.composer.formTemplateInitialValues}}
-                @onSelectFormTemplate={{this.composer.onSelectFormTemplate}}
-              />
-            </form>
-          </div>
+          {{#if (gt this.composer.formTemplateIds.length 1)}}
+            <FormTemplateChooser
+              @filteredIds={{this.composer.formTemplateIds}}
+              @value={{this.selectedFormTemplateId}}
+              @onChange={{this.updateSelectedFormTemplateId}}
+              @options={{hash maximum=1}}
+              class="composer-select-form-template"
+            />
+          {{/if}}
+          <form id="form-template-form">
+            <Wrapper
+              @id={{this.selectedFormTemplateId}}
+              @initialValues={{this.composer.formTemplateInitialValues}}
+              @onSelectFormTemplate={{this.composer.onSelectFormTemplate}}
+              @onChange={{this.updateFormPreview}}
+            />
+          </form>
         </div>
+        {{#if this.siteSettings.show_preview_for_form_templates}}
+          <DEditorPreview
+            @preview={{this.preview}}
+            @forcePreview={{this.forcePreview}}
+            @onPreviewUpdated={{this.previewUpdated}}
+            @outletArgs={{this.outletArgs}}
+          />
+        {{/if}}
       </div>
     {{else}}
       <DEditor

@@ -150,37 +150,7 @@ describe "Admin | Sidebar Navigation", type: :system do
 
     no_results_description = page.find(".sidebar-no-results__description")
     expect(no_results_description.text).to eq(
-      "We couldn’t find anything matching ‘ieeee’.\n\nDid you want to search site settings or the admin user list?",
-    )
-    expect(no_results_description).to have_link(
-      "search site settings",
-      href: "/admin/site_settings/category/all_results?filter=ieeee",
-    )
-    expect(no_results_description).to have_link(
-      "admin user list?",
-      href: "/admin/users/list/active?username=ieeee",
-    )
-  end
-
-  it "encodes the url param in the links when the filter has no results" do
-    visit("/admin")
-
-    unknown_filter = "blahblah"
-    filter.filter(unknown_filter)
-    expect(page).to have_no_css(".sidebar-section-link-content-text")
-    expect(page).to have_css(".sidebar-no-results")
-
-    no_results_description = page.find(".sidebar-no-results__description")
-    expect(no_results_description.text).to eq(
-      "We couldn’t find anything matching ‘#{unknown_filter}’.\n\nDid you want to search site settings or the admin user list?",
-    )
-    expect(no_results_description).to have_link(
-      "search site settings",
-      href: "/admin/site_settings/category/all_results?filter=#{unknown_filter}",
-    )
-    expect(no_results_description).to have_link(
-      "admin user list?",
-      href: "/admin/users/list/active?username=#{unknown_filter}",
+      "We couldn’t find anything matching ‘ieeee’.\n\nTry searching the entire admin interface.",
     )
   end
 
@@ -221,36 +191,6 @@ describe "Admin | Sidebar Navigation", type: :system do
         I18n.t("admin_js.admin.config.whats_new.title"),
       ],
     )
-  end
-
-  it "allows further filtering of site settings or users if links do not show results" do
-    user_1 = Fabricate(:user, username: "moltisanti", name: "Christopher Moltisanti")
-    user_2 = Fabricate(:user, username: "bevelaqua", name: "Matthew Bevelaqua")
-
-    visit("/admin")
-    filter.filter("user locale")
-    find(".sidebar-additional-filter-settings").click
-    expect(page).to have_current_path(
-      "/admin/site_settings/category/all_results?filter=user%20locale",
-    )
-    expect(page).to have_content(I18n.t("site_settings.allow_user_locale"))
-
-    filter.filter("log_search_queries")
-    find(".sidebar-additional-filter-settings").click
-    expect(page).to have_current_path(
-      "/admin/site_settings/category/all_results?filter=log_search_queries",
-    )
-    expect(page).to have_content(I18n.t("site_settings.log_search_queries"))
-
-    filter.filter("bevelaqua")
-    find(".sidebar-additional-filter-users").click
-    expect(page).to have_current_path("/admin/users/list/active?username=bevelaqua")
-    expect(find(".users-list-container")).to have_content("bevelaqua")
-
-    filter.filter("moltisanti")
-    find(".sidebar-additional-filter-users").click
-    expect(page).to have_current_path("/admin/users/list/active?username=moltisanti")
-    expect(find(".users-list-container")).to have_content("moltisanti")
   end
 
   it "allows sections to be expanded" do

@@ -190,6 +190,7 @@
           "require_reply_approval": null,
           "require_topic_approval": null
         },
+        "category_localizations": [],
         "read_only_banner": {
           "type": [
             "string",

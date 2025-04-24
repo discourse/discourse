@@ -5,13 +5,14 @@
  */
 const extension = {
   plugins({
-    pmState: { Plugin },
+    pmState: { Plugin, PluginKey },
     pmView: { Decoration, DecorationSet },
     getContext,
   }) {
     let placeholder;
 
     return new Plugin({
+      key: new PluginKey("placeholder"),
       view() {
         placeholder = getContext().placeholder;
         return {};

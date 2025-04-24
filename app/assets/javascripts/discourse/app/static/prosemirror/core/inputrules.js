@@ -14,6 +14,12 @@ export function buildInputRules(extensions, params, includeDefault = true) {
   if (includeDefault) {
     const schema = params.schema;
 
+    // adapt the 2 groups to the single group that markInputRule expects
+    const getAttrs = (match) => ({
+      match: [match[0].replace(match[1], ""), match[2]],
+      start: match[1].length,
+    });
+
     rules.push(
       // TODO(renato) smartQuotes should respect `markdown_typographer_quotation_marks`
       ...smartQuotes,
@@ -29,9 +35,9 @@ export function buildInputRules(extensions, params, includeDefault = true) {
         return rule;
       }),
       markInputRule(/\*\*([^*]+)\*\*$/, schema.marks.strong),
-      markInputRule(/(?<=^|\s)__([^_]+)__$/, schema.marks.strong),
-      markInputRule(/(?:^|(?<!\*))\*([^*]+)\*$/, schema.marks.em),
-      markInputRule(/(?<=^|\s)_([^_]+)_$/, schema.marks.em),
+      markInputRule(/(^|\s)__([^_]+)__$/, schema.marks.strong, getAttrs),
+      markInputRule(/(^|[^*])\*([^*]+)\*$/, schema.marks.em, getAttrs),
+      markInputRule(/(^|\s)_([^_]+)_$/, schema.marks.em, getAttrs),
       markInputRule(/`([^`]+)`$/, schema.marks.code),
       new InputRule(
         /^(\u2013-|\u2014-|___\s|\*\*\*\s)$/,
@@ -58,7 +64,7 @@ function processInputRule(inputRule, params) {
   }
 
   if (inputRule instanceof Function) {
-    inputRule = inputRule(params);
+    return processInputRule(inputRule(params));
   }
 
   if (inputRule instanceof InputRule) {

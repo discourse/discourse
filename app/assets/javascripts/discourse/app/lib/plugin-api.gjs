@@ -199,11 +199,7 @@ const POST_STREAM_DEPRECATION_OPTIONS = {
   // url: "", // TODO (glimmer-post-stream) uncomment when the topic is created on meta
 };
 
-export const RAW_TOPIC_LIST_DEPRECATION_OPTIONS = {
-  since: "v3.4.0.beta4-dev",
-  id: "discourse.hbr-topic-list-overrides",
-  url: "https://meta.discourse.org/t/343404",
-};
+const blockedModifications = ["component:topic-list"];
 
 const appliedModificationIds = new WeakMap();
 
@@ -295,7 +291,11 @@ class PluginApi {
       return;
     }
 
-    const klass = this.container.factoryFor(normalized);
+    let klass;
+    if (!blockedModifications.includes(normalized)) {
+      klass = this.container.factoryFor(normalized);
+    }
+
     if (!klass) {
       if (!opts.ignoreMissing) {
         // eslint-disable-next-line no-console
@@ -328,17 +328,6 @@ class PluginApi {
    * ```
    **/
   modifyClass(resolverName, changes, opts) {
-    if (
-      resolverName === "component:topic-list" ||
-      resolverName === "component:topic-list-item" ||
-      resolverName === "raw-view:topic-status"
-    ) {
-      deprecated(
-        `Modifying '${resolverName}' with 'modifyClass' is deprecated. Use the value transformer 'topic-list-columns' and other new topic-list plugin APIs instead.`,
-        RAW_TOPIC_LIST_DEPRECATION_OPTIONS
-      );
-    }
-
     const klass = this._resolveClass(resolverName, opts);
     if (!klass) {
       return;
@@ -376,17 +365,6 @@ class PluginApi {
    * ```
    **/
   modifyClassStatic(resolverName, changes, opts) {
-    if (
-      resolverName === "component:topic-list" ||
-      resolverName === "component:topic-list-item" ||
-      resolverName === "raw-view:topic-status"
-    ) {
-      deprecated(
-        `Modifying '${resolverName}' with 'modifyClass' is deprecated. Use the value transformer 'topic-list-columns' and other new topic-list plugin APIs instead.`,
-        RAW_TOPIC_LIST_DEPRECATION_OPTIONS
-      );
-    }
-
     const klass = this._resolveClass(resolverName, opts);
     if (!klass) {
       return;

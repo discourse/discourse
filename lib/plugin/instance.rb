@@ -103,6 +103,11 @@ class Plugin::Instance
     @idx = 0
   end
 
+  # Keys can only be lowercase letters
+  # Example usage:
+  #   plugin.register_anonymous_cache_key :onlylowercase do
+  #     @request.cookies["cookie_name"].present? ? "1" : "0"
+  #   end
   def register_anonymous_cache_key(key, &block)
     key_method = "key_#{key}"
     add_to_class(Middleware::AnonymousCache::Helper, key_method, &block)

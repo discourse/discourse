@@ -851,6 +851,7 @@ class Post < ActiveRecord::Base
 
     edit_reason = I18n.t("change_owner.post_revision_text", locale: SiteSetting.default_locale)
 
+    old_user = user
     revise(
       actor,
       { raw: self.raw, user_id: new_user.id, edit_reason: edit_reason },
@@ -859,7 +860,10 @@ class Post < ActiveRecord::Base
       skip_validations: true,
     )
 
-    topic.update_columns(last_post_user_id: new_user.id) if post_number == topic.highest_post_number
+    result = topic.update_columns(last_post_user_id: new_user.id) if post_number ==
+      topic.highest_post_number
+    DiscourseEvent.trigger(:post_owner_changed, self, old_user, new_user)
+    result
   end
 
   before_create { PostCreator.before_create_tasks(self) }

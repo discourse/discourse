@@ -45,6 +45,7 @@ jobs:
       MINIO_RUNNER_INSTALL_DIR: /home/discourse/.minio_runner
       TESTEM_BROWSER: ${{ (startsWith(matrix.browser, 'Firefox') && 'Firefox') || matrix.browser }}
       TESTEM_FIREFOX_PATH: ${{ (matrix.browser == 'Firefox Evergreen') && '/opt/firefox-evergreen/firefox' }}
+      EMBER_ENV: development
 
     strategy:
       fail-fast: false
@@ -262,7 +263,7 @@ jobs:
 
       - name: Ember Build for System Tests
         if: matrix.build_type == 'system'
-        run: bin/ember-cli --build
+        run: script/assemble_ember_build.rb
 
       - name: Core System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core'
@@ -275,8 +276,7 @@ jobs:
         env:
           CHECKOUT_TIMEOUT: 10
         run: |
-          GLOBIGNORE="plugins/chat/*";
-          LOAD_PLUGINS=1 RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation plugins/*/spec/system
+          LOAD_PLUGINS=1 RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --exclude-pattern="plugins/chat/*" --use-runtime-info --profile=50 --verbose --format documentation plugins/*/spec/system
         shell: bash
         timeout-minutes: 30
 

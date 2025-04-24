@@ -17,11 +17,11 @@ export default class Contents extends Component {
   @service siteSettings;
   @service header;
   @service router;
-  @service sidebarState;
+  @service navigationMenu;
   @service search;
 
   get sidebarIcon() {
-    if (this.sidebarState.adminSidebarAllowedWithLegacyNavigationMenu) {
+    if (this.navigationMenu.isDesktopDropdownMode) {
       return "discourse-sidebar";
     }
 
@@ -43,6 +43,7 @@ export default class Contents extends Component {
   get showHeaderSearch() {
     if (
       this.site.mobileView ||
+      this.args.narrowDesktop ||
       this.router.currentURL?.match(/\/(signup|login|invites|activate-account)/)
     ) {
       return false;

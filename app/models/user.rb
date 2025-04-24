@@ -1316,6 +1316,10 @@ class User < ActiveRecord::Base
     !!(suspended_till && suspended_till > Time.zone.now)
   end
 
+  def silenced_till
+    main_user_record[:silenced_till]
+  end
+
   def silenced?
     !!(silenced_till && silenced_till > Time.zone.now)
   end
@@ -2144,6 +2148,10 @@ class User < ActiveRecord::Base
   end
 
   private
+
+  def main_user_record
+    anonymous? ? master_user : self
+  end
 
   def set_default_sidebar_section_links(update: false)
     return if staged? || bot?

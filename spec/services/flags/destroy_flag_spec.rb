@@ -60,8 +60,7 @@ RSpec.describe(Flags::DestroyFlag) do
         expect { result }.to change { UserHistory.count }.by(1)
         expect(UserHistory.last).to have_attributes(
           custom_type: "delete_flag",
-          details:
-            "name: offtopic\ndescription: \napplies_to: [\"Post\", \"Chat::Message\"]\nenabled: true",
+          details: "name: offtopic\ndescription: \napplies_to: [\"Post\"]\nenabled: true",
         )
       end
     end

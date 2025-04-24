@@ -2,14 +2,11 @@ import * as GlimmerManager from "@glimmer/manager";
 import ClassicComponent from "@ember/component";
 import deprecated from "discourse/lib/deprecated";
 import DiscourseTemplateMap from "discourse/lib/discourse-template-map";
-import { RAW_TOPIC_LIST_DEPRECATION_OPTIONS } from "discourse/lib/plugin-api";
 import { getThemeInfo } from "discourse/lib/source-identifier";
 
 // We're using a patched version of Ember with a modified GlimmerManager to make the code below work.
 // This patch is not ideal, but Ember does not allow us to change a component template after initial association
 // https://github.com/glimmerjs/glimmer-vm/blob/03a4b55c03/packages/%40glimmer/manager/lib/public/template.ts#L14-L20
-
-const LEGACY_TOPIC_LIST_OVERRIDES = ["topic-list", "topic-list-item"];
 
 function sourceForModuleName(name) {
   const pluginMatch = name.match(/^discourse\/plugins\/([^\/]+)\//)?.[1];
@@ -74,25 +71,14 @@ export default {
       const originalTemplate = GlimmerManager.getComponentTemplate(component);
 
       if (originalTemplate) {
-        if (LEGACY_TOPIC_LIST_OVERRIDES.includes(componentName)) {
-          // Special handling for these, with a different deprecation id, so the auto-feature-flag works correctly
-          deprecated(
-            `Overriding '${componentName}' template is deprecated. Use the value transformer 'topic-list-columns' and other new topic-list plugin APIs instead.`,
-            {
-              ...RAW_TOPIC_LIST_DEPRECATION_OPTIONS,
-              source: sourceForModuleName(finalOverrideModuleName),
-            }
-          );
-        } else {
-          deprecated(
-            `Overriding component templates is deprecated, and will soon be disabled. Use plugin outlets, CSS, or other customization APIs instead. [${finalOverrideModuleName}]`,
-            {
-              id: "discourse.component-template-overrides",
-              url: "https://meta.discourse.org/t/355668",
-              source: sourceForModuleName(finalOverrideModuleName),
-            }
-          );
-        }
+        deprecated(
+          `Overriding component templates is deprecated, and will soon be disabled. Use plugin outlets, CSS, or other customization APIs instead. [${finalOverrideModuleName}]`,
+          {
+            id: "discourse.component-template-overrides",
+            url: "https://meta.discourse.org/t/355668",
+            source: sourceForModuleName(finalOverrideModuleName),
+          }
+        );
 
         const overrideTemplate = require(finalOverrideModuleName).default;
 

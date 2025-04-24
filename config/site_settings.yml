@@ -397,9 +397,11 @@ basic:
   enable_badges:
     client: true
     default: true
+    area: "badges"
   show_badges_in_post_header:
     client: true
     default: true
+    area: "badges"
   enable_badge_sql:
     client: true
     default: false
@@ -409,6 +411,7 @@ basic:
     default: 2
     min: 0
     max: 6
+    area: "badges"
   whispers_allowed_groups:
     type: group_list
     list_type: compact
@@ -483,6 +486,7 @@ basic:
     client: true
     default: true
     refresh: true
+    area: "users"
   page_loading_indicator:
     client: true
     type: enum
@@ -740,10 +744,12 @@ users:
     client: true
     default: 3
     validator: "MinUsernameLengthValidator"
+    area: "users"
   max_username_length:
     client: true
     default: 20
     validator: "MaxUsernameLengthValidator"
+    area: "users"
   unicode_usernames:
     default: false
     client: true
@@ -766,6 +772,7 @@ users:
     list_type: compact
     default: "admin|moderator|administrator|mod|sys|system|community|info|you|name|username|user|nickname|discourse|discourseorg|discourseforum|support|all|here"
     mandatory_values: "admin|moderator|administrator|mod|sys|system|you|name|username|user|nickname|discourse|discourseorg|discourseforum|all|here"
+    area: "users"
   min_password_length:
     client: true
     default: 10
@@ -783,27 +790,36 @@ users:
     min: 1
     max: 10
     requires_confirmation: "simple"
+    area: "users"
   block_common_passwords:
     default: true
     requires_confirmation: "simple"
-  username_change_period: 3
+    area: "users"
+  username_change_period:
+    default: 3
+    area: "users"
   email_editable:
     client: true
     default: true
+    area: "users"
   logout_redirect:
     client: true
     default: ""
+    area: "users"
   full_name_requirement:
     type: enum
     default: hidden_at_signup
     enum: "FullNameRequirement"
+    area: "users"
   enable_names:
     client: true
     default: true
+    area: "users"
   invite_expiry_days:
     default: 90
     client: true
     max: 36500
+    area: "users"
   invites_per_page:
     client: true
     default: 40
@@ -811,41 +827,54 @@ users:
   delete_user_max_post_age:
     client: true
     default: 60
+    area: "users"
   delete_all_posts_max:
     client: true
     default: 15
     min: 1
+    area: "users"
   delete_user_self_max_post_count:
     default: 1
     min: -1
-  redirect_users_to_top_page: true
+    area: "users"
+  redirect_users_to_top_page:
+    default: true
+    area: "users"
   prioritize_username_in_ux:
     client: true
     default: true
+    area: "users"
   prioritize_full_name_in_ux:
     client: true
     default: false
     hidden: true
+    area: "users"
   email_token_valid_hours:
     default: 48
     min: 1
+    area: "users"
   purge_unactivated_users_grace_period_days:
     default: 14
     max: 36500
+    area: "users"
   public_user_custom_fields:
     type: list
     list_type: simple
     default: ""
+    area: "users"
   staff_user_custom_fields:
     type: list
     list_type: simple
     default: ""
+    area: "users"
   enable_user_directory:
     client: true
     default: true
+    area: "users"
   allow_anonymous_mode:
     default: false
     client: true
+    area: "users"
   allow_likes_in_anonymous_mode:
     default: false
     client: true
@@ -864,47 +893,62 @@ users:
   anonymous_account_duration_minutes:
     default: 10080
     max: 99000
+    area: "users"
   allow_users_to_hide_profile:
     default: true
     client: true
+    area: "users"
   hide_user_profiles_from_public:
     default: false
     client: true
+    area: "users"
   hide_new_user_profiles:
     default: true
+    area: "users"
   allow_featured_topic_on_user_profiles:
     default: true
     client: true
+    area: "users"
   show_inactive_accounts:
     default: false
+    area: "users"
   allowed_user_website_domains:
     default: ""
     type: list
     list_type: simple
+    area: "users"
   hide_suspension_reasons:
     default: false
     client: true
-  log_personal_messages_views: false
+    area: "users"
+  log_personal_messages_views:
+    default: false
+    area: "users"
   ignored_users_count_message_threshold:
     default: 5
     client: true
     min: 1
+    area: "users"
   ignored_users_message_gap_days:
     default: 365
     client: true
     min: 1
     max: 36500
+    area: "users"
   clean_up_inactive_users_after_days:
     default: 730
     min: 0
     max: 36500
+    area: "users"
   clean_up_unused_staged_users_after_days:
     default: 365
     min: 0
     max: 36500
+    area: "users"
   user_selected_primary_groups:
     default: false
     client: true
+    area: "users"
   max_notifications_per_user:
     default: 10000
     hidden: true
@@ -912,27 +956,35 @@ users:
   gravatar_name:
     default: Gravatar
     client: true
+    area: "users"
   gravatar_base_url:
     default: www.gravatar.com
     client: true
+    area: "users"
   gravatar_login_url:
     default: /emails
     client: true
+    area: "users"
   max_bookmarks_per_user:
     default: 2000
     hidden: true
   use_email_for_username_and_name_suggestions:
     default: false
+    area: "users"
   use_name_for_username_suggestions:
     default: true
+    area: "users"
   hide_user_activity_tab:
     default: false
     client: true
+    area: "users"
   delete_associated_accounts_on_password_reset:
     default: false
+    area: "users"
   enable_user_status:
     client: true
     default: false
+    area: "users"
 
 groups:
   enable_group_directory:
@@ -3108,7 +3160,9 @@ uncategorized:
     default: 50
     area: "posts_and_topics"
 
-  previous_visit_timeout_hours: 1
+  previous_visit_timeout_hours:
+    default: 1
+    area: "users"
   staff_like_weight: 3
   topic_view_duration_hours:
     default: 8
@@ -3202,7 +3256,9 @@ uncategorized:
     area: "stats_and_thresholds"
 
   # Warnings
-  educate_until_posts: 2
+  educate_until_posts:
+    default: 2
+    area: "users"
   sequential_replies_threshold:
     default: 2
     area: "stats_and_thresholds"
@@ -3215,8 +3271,12 @@ uncategorized:
   dominating_topic_minimum_percent:
     default: 40
     area: "stats_and_thresholds"
-  disable_avatar_education_message: false
-  pm_warn_user_last_seen_months_ago: 24
+  disable_avatar_education_message:
+    default: false
+    area: "users"
+  pm_warn_user_last_seen_months_ago:
+    default: 24
+    area: "users"
 
   global_notice:
     default: ""
@@ -3424,6 +3484,7 @@ uncategorized:
   allow_bulk_invite:
     default: true
     client: true
+    area: "users"
 
   max_bulk_invites:
     default: 50000
@@ -3449,7 +3510,9 @@ uncategorized:
     default: true
     area: "posts_and_topics"
 
-  allow_changing_staged_user_tracking: false
+  allow_changing_staged_user_tracking:
+    default: false
+    area: "users"
 
   use_polymorphic_bookmarks:
     client: true
@@ -3865,6 +3928,9 @@ experimental:
   experimental_form_templates:
     client: true
     default: false
+  show_preview_for_form_templates:
+    client: true
+    default: true
   experimental_new_new_view_groups:
     client: true
     type: group_list
@@ -3873,22 +3939,6 @@ experimental:
     allow_any: false
     refresh: true
     area: "group_permissions|navigation"
-  experimental_admin_search_enabled_groups:
-    client: true
-    type: group_list
-    list_type: compact
-    default: ""
-    allow_any: false
-    refresh: true
-    area: "group_permissions"
-  glimmer_topic_list_mode:
-    client: true
-    type: enum
-    choices:
-      - disabled
-      - auto
-      - enabled
-    default: enabled
   glimmer_post_stream_mode_auto_groups:
     client: true
     type: group_list
@@ -3923,3 +3973,6 @@ experimental:
     client: true
     default: false
     hidden: true
+  experimental_content_localization:
+    client: true
+    default: false

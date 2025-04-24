@@ -55,6 +55,7 @@ export default class MoreLink extends Component {
             href={{this.moreUrl}}
             {{on "click" this.transitionToMoreUrl}}
             class="filter search-link"
+            data-test-anchor="show-more"
           >
             {{i18n "more"}}...
           </a>

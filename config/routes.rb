@@ -175,6 +175,7 @@ Discourse::Application.routes.draw do
           :as => :user_show
       get "users/:id/:username/badges" => "users#show"
       get "users/:id/:username/tl3_requirements" => "users#show"
+      get "users/settings" => "site_settings#index"
 
       post "users/sync_sso" => "users#sync_sso", :constraints => AdminConstraint.new
 
@@ -395,6 +396,10 @@ Discourse::Application.routes.draw do
         end
       end
 
+      resources :groups, only: %i[index], constants: AdminConstraint.new do
+        collection { get "settings" => "site_settings#index" }
+      end
+
       get "search/all" => "search#index"
 
       namespace :config, constraints: StaffConstraint.new do
@@ -414,7 +419,6 @@ Discourse::Application.routes.draw do
         get "notifications" => "site_settings#index"
         get "rate-limits" => "site_settings#index"
         get "onebox" => "site_settings#index"
-        get "other" => "site_settings#index"
         get "search" => "site_settings#index"
         get "security" => "site_settings#index"
         get "site-admin" => "site_settings#index"
@@ -424,9 +428,9 @@ Discourse::Application.routes.draw do
         get "experimental" => "site_settings#index"
         get "trust-levels" => "site_settings#index"
         get "group-permissions" => "site_settings#index"
-        get "branding" => "branding#index"
-        put "branding/logo" => "branding#logo"
-        put "branding/fonts" => "branding#fonts"
+        get "/logo-and-fonts" => "logo#index"
+        put "/logo" => "logo#update"
+        put "/fonts" => "fonts#update"
         get "colors/:id" => "color_palettes#show"
 
         resources :flags, only: %i[index new create update destroy] do

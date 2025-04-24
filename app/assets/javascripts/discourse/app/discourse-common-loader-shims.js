@@ -84,15 +84,6 @@ loaderShim("discourse-common/lib/object", () =>
 loaderShim("discourse-common/lib/popular-themes", () =>
   importSync("discourse/lib/popular-themes")
 );
-loaderShim("discourse-common/lib/raw-handlebars-helpers", () =>
-  importSync("discourse/lib/raw-handlebars-helpers")
-);
-loaderShim("discourse-common/lib/raw-handlebars", () =>
-  importSync("discourse/lib/raw-handlebars")
-);
-loaderShim("discourse-common/lib/raw-templates", () =>
-  importSync("discourse/lib/raw-templates")
-);
 loaderShim("discourse-common/lib/suffix-trie", () =>
   importSync("discourse/lib/suffix-trie")
 );

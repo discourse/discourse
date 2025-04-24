@@ -1,6 +1,5 @@
 html.composer-open {
   #main-outlet {
-    padding-bottom: var(--composer-height);
     transition: padding-bottom 250ms ease;
   }
 }
@@ -63,15 +62,8 @@ html.composer-open {
     overflow: auto;
     flex: 1;
 
-    .toggle-preview,
-    #mobile-file-upload,
-    .submit-panel .mobile-preview {
+    #mobile-file-upload {
       display: none;
-    }
-
-    .d-editor-preview-wrapper {
-      display: none;
-      flex: 0;
     }
   }
 

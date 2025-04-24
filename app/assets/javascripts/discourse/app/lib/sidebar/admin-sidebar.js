@@ -415,35 +415,15 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
   }
 
   filterNoResultsDescription(filter) {
-    const currentUser = getOwnerWithFallback(this).lookup(
-      "service:current-user"
-    );
-
     const escapedFilter = escapeExpression(filter);
 
-    const params = {
-      filter: escapedFilter,
-      settings_filter_url: getURL(
-        `/admin/site_settings/category/all_results?filter=${encodeURIComponent(
-          filter
-        )}`
-      ),
-      user_list_filter_url: getURL(
-        `/admin/users/list/active?username=${encodeURIComponent(filter)}`
-      ),
-    };
-
-    if (currentUser?.use_experimental_admin_search) {
-      return htmlSafe(
-        i18n("sidebar.no_results.description_admin_search", {
-          filter: escapedFilter,
-          admin_search_url: getURL(
-            `/admin/search?filter=${encodeURIComponent(filter)}`
-          ),
-        })
-      );
-    }
-
-    return htmlSafe(i18n("sidebar.no_results.description", params));
+    return htmlSafe(
+      i18n("sidebar.no_results.description_admin_search", {
+        filter: escapedFilter,
+        admin_search_url: getURL(
+          `/admin/search?filter=${encodeURIComponent(filter)}`
+        ),
+      })
+    );
   }
 }

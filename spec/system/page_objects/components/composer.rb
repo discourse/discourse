@@ -7,9 +7,18 @@ module PageObjects
       AUTOCOMPLETE_MENU = ".autocomplete.ac-emoji"
       HASHTAG_MENU = ".autocomplete.hashtag-autocomplete"
       MENTION_MENU = ".autocomplete.ac-user"
+      RICH_EDITOR = ".d-editor-input.ProseMirror"
 
       def rich_editor
-        find(".d-editor-input.ProseMirror")
+        find(RICH_EDITOR)
+      end
+
+      def has_rich_editor?
+        page.has_css?(RICH_EDITOR)
+      end
+
+      def has_no_rich_editor?
+        page.has_no_css?(RICH_EDITOR)
       end
 
       def opened?
@@ -218,6 +227,10 @@ module PageObjects
 
       def has_form_template_field_error?(error)
         page.has_css?(".form-template-field__error", text: error, visible: :all)
+      end
+
+      def has_no_form_template_field_error?(error)
+        page.has_no_css?(".form-template-field__error", text: error, visible: :all)
       end
 
       def has_form_template_field_label?(label)
