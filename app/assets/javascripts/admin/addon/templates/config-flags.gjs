@@ -21,6 +21,7 @@ class FlagsTemplate extends Component {
       ).length >= this.siteSettings.custom_flags_limit
     );
   }
+
   <template>
     <DPageHeader
       @titleLabel={{i18n "admin.config.flags.title"}}
