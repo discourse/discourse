@@ -45,7 +45,7 @@ describe "Admin | Sidebar Navigation", type: :system do
       visit("/discuss/admin")
 
       filter.click_back_to_forum
-      expect(page).to have_current_path("/discuss/latest")
+      expect(page).to have_current_path("/discuss/")
     end
   end
 
