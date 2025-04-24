@@ -23,9 +23,7 @@ export default RouteTemplate(
     </DPageHeader>
 
     <div class="admin-config-page__main-area">
-      <ThemeSiteSettings
-        @initialSelectedSettingName={{@controller.selectedSettingName}}
-      />
+      <ThemeSiteSettings />
     </div>
   </template>
 );

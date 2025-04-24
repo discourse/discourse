@@ -1,53 +1,43 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { array, hash } from "@ember/helper";
+import { array } from "@ember/helper";
 import { action } from "@ember/object";
+import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { eq } from "truth-helpers";
 import AsyncContent from "discourse/components/async-content";
-import DButton from "discourse/components/d-button";
 import DPageSubheader from "discourse/components/d-page-subheader";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
+import basePath from "discourse/helpers/base-path";
 import { ajax } from "discourse/lib/ajax";
 import { humanizedSettingName } from "discourse/lib/site-settings-utils";
 import { currentThemeId, listThemes } from "discourse/lib/theme-selector";
 import { i18n } from "discourse-i18n";
-import ComboBox from "select-kit/components/combo-box";
+import DTooltip from "float-kit/components/d-tooltip";
 
 export default class ThemeSiteSettings extends Component {
   @service site;
   @service router;
 
-  @tracked themeSiteSettings = null;
-  @tracked selectedSettingName = this.args.initialSelectedSettingName || null;
+  @tracked themesWithSiteSettingOverrides = null;
   @tracked themeableSiteSettings = null;
-
-  get context() {
-    if (!this.selectedSettingName) {
-      return {};
-    }
-    return { settingName: this.selectedSettingName };
-  }
 
   get themes() {
     return listThemes(this.site);
-  }
-
-  get ctaRouteModels() {
-    return ["themes", this.selectedThemeId];
   }
 
   get currentThemeIdValue() {
     return currentThemeId();
   }
 
+  get currentTheme() {
+    return this.themes.find((theme) => {
+      return eq(theme.id, this.currentThemeIdValue);
+    });
+  }
+
   @action
-  async loadThemeSiteSettings(context) {
+  async loadThemeSiteSettings() {
     let url = "/admin/config/theme-site-settings.json";
-    if (context.settingName) {
-      url += `?setting_name=${context.settingName}`;
-    }
     const response = await ajax(url, {
       method: "GET",
     });
@@ -59,81 +49,81 @@ export default class ThemeSiteSettings extends Component {
         };
       }
     );
-    this.themeSiteSettings = response.theme_site_settings;
-    return this.themeSiteSettings;
+    this.themesWithSiteSettingOverrides =
+      response.themes_with_site_setting_overrides;
+    return this.themesWithSiteSettingOverrides;
   }
 
   @action
-  updateSelectedSettingName(value) {
-    this.selectedSettingName = value;
-    this.router.transitionTo({ queryParams: { selectedSettingName: value } });
+  joinedThemesOverriding(themesOverriding) {
+    return themesOverriding
+      .map((theme) => {
+        return `<a href="${basePath()}/admin/customize/themes/${
+          theme.theme_id
+        }" class="theme-link">${theme.theme_name}</a>`;
+      })
+      .join(", ");
   }
 
   <template>
     <div class="theme-site-settings">
-      <ComboBox
-        @labelProperty="name"
-        @valueProperty="value"
-        @content={{this.themeableSiteSettings}}
-        @value={{this.selectedSettingName}}
-        @id="themeable_site_settings"
-        @onChange={{this.updateSelectedSettingName}}
-        @options={{hash none="admin.theme_site_settings.select_setting"}}
-      />
-      <AsyncContent
-        @asyncData={{this.loadThemeSiteSettings}}
-        @context={{this.context}}
-      >
+      <AsyncContent @asyncData={{this.loadThemeSiteSettings}}>
         <:content as |content|>
           <DPageSubheader
-            @descriptionLabel={{i18n "admin.theme_site_settings.help"}}
+            @descriptionLabel={{i18n
+              "admin.theme_site_settings.help"
+              currentTheme=this.currentTheme.name
+              basePath=basePath
+              currentThemeId=this.currentThemeIdValue
+            }}
           />
-          <table class="d-admin-table">
+          <table class="d-admin-table admin-theme-site-settings">
             <thead>
               <tr>
-                <th>{{i18n "admin.theme_site_settings.theme"}}</th>
-                <th>{{i18n "admin.theme_site_settings.value"}}</th>
-                <th>{{i18n "admin.theme_site_settings.is_overridden"}}</th>
-                <th></th>
+                <th>{{i18n "admin.theme_site_settings.setting"}}</th>
+                <th>{{i18n "admin.theme_site_settings.overridden_by"}}</th>
               </tr>
             </thead>
             <tbody>
-              {{#each content as |setting|}}
-                <tr
-                  class={{concatClass
-                    "d-admin-row__content admin-theme-site-settings__table-row"
-                    (unless setting.is_default "--overridden")
-                  }}
-                >
-                  <td>
-                    {{setting.theme_name}}
-                    {{#if (eq setting.theme_id this.currentThemeIdValue)}}
-                      *
-                    {{/if}}
+              {{#each-in content as |settingName overrides|}}
+                <tr class="admin-theme-site-settings-row">
+                  <td class="admin-theme-site-settings-row__setting">
+                    <p class="setting-label">{{humanizedSettingName
+                        settingName
+                      }}</p>
+                    <div
+                      class="setting-description"
+                    >{{overrides.setting_description}}</div>
                   </td>
                   <td>
-                    {{setting.value}}
-                  </td>
-                  <td>
-                    {{#if setting.is_default}}
-                      {{i18n "no_value"}}
-                    {{else}}
-                      {{i18n "yes_value"}}
-                    {{/if}}
-                  </td>
-
-                  <td class="d-admin-row__controls">
-                    <div class="d-admin-row__controls-options">
-                      <DButton
-                        class="btn-default btn-small admin-theme-site-settings__edit"
-                        @route="adminCustomizeThemes.show"
-                        @routeModels={{array "themes" setting.theme_id}}
-                        @label="admin.config_areas.flags.edit"
-                      />
-                    </div>
+                    {{#each overrides.themes as |theme|}}
+                      <DTooltip>
+                        <:trigger>
+                          <LinkTo
+                            @route="adminCustomizeThemes.show"
+                            @models={{array "theme" theme.theme_id}}
+                            class="theme-link"
+                          >
+                            {{theme.theme_name}}
+                          </LinkTo>
+                        </:trigger>
+                        <:content>
+                          {{i18n
+                            "admin.theme_site_settings.overridden_value"
+                            value=theme.value
+                          }}
+                        </:content>
+                      </DTooltip>
+                      {{#unless
+                        (eq theme overrides.themes.lastObject)
+                      }},{{/unless}}
+                    {{/each}}
+                    {{#unless overrides.themes}}
+                      -
+                    {{/unless}}
                   </td>
                 </tr>
-              {{/each}}
+              {{/each-in}}
             </tbody>
           </table>
         </:content>
