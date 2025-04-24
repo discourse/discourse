@@ -133,15 +133,13 @@ $search-result-element-padding: 0.35em 1rem; // hate myself but .25em is too tig
     flex-direction: column;
     border-radius: var(--d-border-radius);
 
-    // something mobile only?
-    // &.with-search-term {
-    //   padding-top: $search-pad-vertical;
-    // }
-
-    // padding needs to be conditional on "in this topic" element presence
     @include breakpoint("mobile-extra-large") {
-      &,
       &.with-search-term {
+        padding-top: calc(var(--header-offset));
+      }
+
+      //temporary solution while waiting for dev to add conditional class
+      :has(.search-context) & {
         padding-top: calc(var(--header-offset) + 2.25em);
       }
     }
@@ -201,6 +199,7 @@ $search-result-element-padding: 0.35em 1rem; // hate myself but .25em is too tig
       display: flex;
       align-items: center;
       gap: 0.25em;
+      color: var(--primary-high);
     }
 
     // overrules for legacy css
@@ -247,17 +246,6 @@ $search-result-element-padding: 0.35em 1rem; // hate myself but .25em is too tig
 
     .search-menu-recent {
       @include separator;
-    }
-
-    // specific spacing tweaks for the search instruction "sentence"
-    .search-menu-assistant-item {
-      .search-link {
-        gap: 0.25em;
-
-        .d-icon {
-          margin-right: 0.25em;
-        }
-      }
     }
   }
 
@@ -411,17 +399,6 @@ $search-result-element-padding: 0.35em 1rem; // hate myself but .25em is too tig
 
   .label-suffix {
     color: var(--primary-medium);
-  }
-
-  // what is search-item-tag?
-  .badge-category__wrapper + .search-item-tag {
-    display: flex;
-    align-items: baseline;
-    margin-left: 0.33em;
-  }
-
-  .search-item-tag {
-    color: var(--primary-high);
   }
 
   .extra-hint {
