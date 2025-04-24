@@ -17,7 +17,7 @@ module("Unit | Utility | session-store", function (hooks) {
     store.set({ key: "bob", value: "uncle" });
     store.remove("bob");
 
-    assert.strictEqual(store.get("bob"), undefined);
+    assert.strictEqual(store.get("bob"), null);
   });
 
   test("is able to remove multiple items at once from the store", function (assert) {
@@ -30,9 +30,9 @@ module("Unit | Utility | session-store", function (hooks) {
       return key.includes("bob") || value === "brother";
     });
 
-    assert.strictEqual(store.get("bob"), undefined);
+    assert.strictEqual(store.get("bob"), null);
     assert.strictEqual(store.get("jane"), "sister");
-    assert.strictEqual(store.get("clark"), undefined);
+    assert.strictEqual(store.get("clark"), null);
   });
 
   test("is able to nuke the store", function (assert) {
@@ -41,8 +41,8 @@ module("Unit | Utility | session-store", function (hooks) {
     store.abandonLocal();
     sessionStorage.setItem("a", 1);
 
-    assert.strictEqual(store.get("bob1"), undefined);
-    assert.strictEqual(sessionStorage.get("a"), "1");
+    assert.strictEqual(store.get("bob1"), null);
+    assert.strictEqual(sessionStorage.getItem("a"), "1");
   });
 
   test("is API-compatible with `sessionStorage`", function (assert) {
@@ -51,6 +51,6 @@ module("Unit | Utility | session-store", function (hooks) {
     assert.strictEqual(store.getItem("bob"), "uncle");
 
     store.removeItem("bob");
-    assert.strictEqual(store.getItem("bob"), undefined);
+    assert.strictEqual(store.getItem("bob"), null);
   });
 });
