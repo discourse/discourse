@@ -31,6 +31,8 @@ class Topic < ActiveRecord::Base
 
   attr_accessor :allowed_user_ids, :allowed_group_ids, :tags_changed, :includes_destination_category
 
+  has_many :topic_localizations, dependent: :destroy
+
   def self.max_fancy_title_length
     400
   end
