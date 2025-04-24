@@ -7,21 +7,12 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 import AdminFlagItem from "admin/components/admin-flag-item";
-import { SYSTEM_FLAG_IDS } from "admin/lib/constants";
 
 export default class AdminConfigAreasFlags extends Component {
   @service site;
   @service siteSettings;
 
   @tracked flags = this.site.flagTypes;
-
-  get addFlagButtonDisabled() {
-    return (
-      this.flags.filter(
-        (flag) => !Object.values(SYSTEM_FLAG_IDS).includes(flag.id)
-      ).length >= this.siteSettings.custom_flags_limit
-    );
-  }
 
   @bind
   isFirstFlag(flag) {

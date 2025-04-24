@@ -72,8 +72,7 @@ describe "Admin Flags Page", type: :system do
       .select_applies_to("Post")
       .click_save
 
-    # TODO: (Kris.K)
-    # expect(admin_flags_page).to have_add_flag_button_disabled
+    expect(admin_flags_page).to have_add_flag_button_disabled
 
     expect(admin_flags_page).to have_flags(
       "Send @%{username} a message",
