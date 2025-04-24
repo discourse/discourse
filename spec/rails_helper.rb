@@ -370,6 +370,8 @@ RSpec.configure do |config|
         (ENV["CAPYBARA_SERVER_PORT"].presence || "31_337").to_i + ENV["TEST_ENV_NUMBER"].to_i
     end
 
+    Capybara.server = [:puma, { Threads: "0:10", Silent: true }]
+
     module IgnoreUnicornCapturedErrors
       def raise_server_error!
         super
