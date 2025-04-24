@@ -198,6 +198,8 @@ module SystemHelpers
     SiteSetting.enable_direct_s3_uploads = enable_direct_s3_uploads
     SiteSetting.secure_uploads = enable_secure_uploads
 
+    # On CI, the minio binary is preinstalled in the docker image so there is no need for us to check for a new binary
+    MinioRunner.config.cache_time = 2.day.to_i if ENV["CI"]
     MinioRunner.start
   end
 
