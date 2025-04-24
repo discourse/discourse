@@ -6494,6 +6494,7 @@ en:
           set_default_theme: "Set as active"
           default_theme: "Active theme"
           set_default_success: "Default theme set to %{theme}"
+          setting_was_saved: "Theme setting was saved"
           install_success: "%{theme} installed successfully!"
           inactive_components: "Unused components:"
           selected:
