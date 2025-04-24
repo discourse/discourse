@@ -101,7 +101,7 @@ export default class ThemeSiteSettings extends Component {
                         <:trigger>
                           <LinkTo
                             @route="adminCustomizeThemes.show"
-                            @models={{array "theme" theme.theme_id}}
+                            @models={{array "themes" theme.theme_id}}
                             class="theme-link"
                           >
                             {{theme.theme_name}}
