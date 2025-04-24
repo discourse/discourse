@@ -34,7 +34,7 @@
     "moment-timezone": "0.5.45",
     "pikaday": "1.8.2",
     "prettier": "3.5.3",
-    "puppeteer-core": "^24.7.0",
+    "puppeteer-core": "^24.7.1",
     "squoosh": "https://codeload.github.com/discourse/squoosh/tar.gz/dc9649d",
     "stylelint": "16.16.0",
     "terser": "^5.39.0",
