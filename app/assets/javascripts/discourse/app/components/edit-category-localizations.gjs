@@ -37,6 +37,7 @@ export default class EditCategoryLocalizations extends buildCategoryPanel(
             @name="locale"
             @title={{i18n "category.localization.locale"}}
             @format="full"
+            @validation="required"
             as |field|
           >
             <field.Select as |select|>
@@ -53,7 +54,7 @@ export default class EditCategoryLocalizations extends buildCategoryPanel(
           <collection.Field
             @name="name"
             @title={{i18n "category.localization.name"}}
-            @validation="length:1,50"
+            @validation="required|length:1,50"
             as |field|
           >
             <field.Input
