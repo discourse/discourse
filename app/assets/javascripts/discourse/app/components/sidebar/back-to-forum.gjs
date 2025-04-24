@@ -7,16 +7,14 @@ import { i18n } from "discourse-i18n";
 export default class BackToForum extends Component {
   @service routeHistory;
 
-  lastForumUrl = this.routeHistory.lastKnownURL;
-
   get href() {
-    const lastUrl = this.lastForumUrl;
-    if (lastUrl.startsWith("/admin")) {
-      //  the last page was an admin page, and we do not know were to go
-      // so we just go to the homepage
-      return getURL("/");
+    const lastNonAdminUrl = this.routeHistory.history.find(
+      (url) => !url.startsWith("/admin")
+    );
+    if (lastNonAdminUrl) {
+      return getURL(lastNonAdminUrl);
     }
-    return getURL(lastUrl);
+    return getURL("/");
   }
 
   <template>

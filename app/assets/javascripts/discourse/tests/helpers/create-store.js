@@ -2,6 +2,7 @@ import RestAdapter from "discourse/adapters/rest";
 import TopicListAdapter from "discourse/adapters/topic-list";
 import deprecated from "discourse/lib/deprecated";
 import KeyValueStore from "discourse/lib/key-value-store";
+import SessionStore from "discourse/lib/session-store";
 import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
 import TopicTrackingState from "discourse/models/topic-tracking-state";
@@ -81,6 +82,10 @@ export default function (customLookup = () => {}) {
         if (type === "service:key-value-store") {
           this._kvs = this._kvs || new KeyValueStore();
           return this._kvs;
+        }
+        if (type === "service:session-store") {
+          this._sessionStore = this._sessionStore || new SessionStore();
+          return this._sessionStore;
         }
         if (type === "service:topic-tracking-state") {
           this._tracker = this._tracker || TopicTrackingState.create();
