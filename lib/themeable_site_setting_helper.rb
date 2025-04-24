@@ -79,7 +79,11 @@ class ThemeableSiteSettingHelper
           else
             # We use `current` here because we want the raw site setting value without
             # validations.
-            setting_hash[:value] = SiteSetting.current[setting].to_s
+            # setting_hash[:value] = SiteSetting.current[setting].to_s
+            #
+            # Actually I think we want the default here too? Themes always override the
+            # site setting so we don't care about the actual DB value of the setting
+            setting_hash[:value] = SiteSetting.defaults[setting].to_s
           end
         end
 

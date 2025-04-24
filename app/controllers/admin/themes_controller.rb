@@ -361,6 +361,7 @@ class Admin::ThemesController < Admin::AdminController
         name: params[:name],
         value: params[:value],
       },
+      guardian:,
     ) do
       on_success do |theme_site_setting:|
         if theme_site_setting.present?

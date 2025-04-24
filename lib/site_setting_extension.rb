@@ -610,6 +610,8 @@ module SiteSettingExtension
     old_val = theme_site_settings[theme_id][name]
     theme_site_settings[theme_id][name] = val
 
+    # TODO (martin) IMPORTANT -- we only want to send this to clients currently using this theme,
+    # otherwise the UI can move/change on other themes where this change is irrelevant
     notify_clients!(name, theme_id: theme_id) if client_settings.include?(name)
 
     clear_cache!

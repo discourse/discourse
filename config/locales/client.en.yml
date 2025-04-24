@@ -5258,7 +5258,7 @@ en:
           header_description: "Configure legal settings, such as terms of service, privacy policy, contact details, and EU-specific considerations"
         theme_site_settings:
           title: "Theme site settings"
-          header_description: "A list of all theme site settings, their values, and whether they are overridden by a theme"
+          header_description: "Shows the values for theme site settings across all themes"
         localization:
           title: "Localization"
           header_description: "Configure your community’s interface language and other localization options for your members"
@@ -5550,10 +5550,12 @@ en:
           header_description: "Discourse has the ability to embed the comments from a topic in a remote site using a Javascript API that creates an IFRAME"
 
       theme_site_settings:
-        name: "Name"
+        theme: "Theme"
         value: "Value"
-        no_overrides: "This theme has not overridden any theme site settings"
+        is_overridden: "Is overridden?"
+        select_setting: "Select a site setting to see current theme values"
         add: "Go to theme site settings"
+        help: "The * indicates the theme that you are currently using"
 
       search:
         modal_title: "Search anything in admin"

@@ -52,3 +52,9 @@
     font-weight: 700;
   }
 }
+
+.admin-theme-site-settings__table-row {
+  &.--overridden {
+    background-color: var(--tertiary-200);
+  }
+}
