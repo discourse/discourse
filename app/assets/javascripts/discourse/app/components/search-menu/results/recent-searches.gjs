@@ -57,7 +57,7 @@ export default class RecentSearches extends Component {
             @title="search.clear_recent"
             @icon="xmark"
             @action={{this.clearRecent}}
-            class="btn-flat no-text clear-recent-searches"
+            class="btn-flat clear-recent-searches"
           />
         </div>
 
