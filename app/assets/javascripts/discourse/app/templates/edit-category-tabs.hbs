@@ -62,6 +62,15 @@
           @tab="tags"
         />
       {{/if}}
+
+      {{#if this.siteSettings.experimental_content_localization}}
+        <EditCategoryTab
+          @panels={{this.panels}}
+          @selectedTab={{this.selectedTab}}
+          @params={{this.parentParams}}
+          @tab="localizations"
+        />
+      {{/if}}
     </ul>
   </div>
 
