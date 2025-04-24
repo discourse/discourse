@@ -1,11 +1,11 @@
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
+import { service } from "@ember/service";
 import RouteTemplate from "ember-route-template";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import DPageHeader from "discourse/components/d-page-header";
 import NavItem from "discourse/components/nav-item";
 import { i18n } from "discourse-i18n";
-import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
-import { service } from "@ember/service";
 import { SYSTEM_FLAG_IDS } from "admin/lib/constants";
 
 class FlagsTemplate extends Component {
