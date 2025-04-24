@@ -97,6 +97,18 @@ RSpec.describe "groups" do
           let(:expected_request_schema) { expected_request_schema }
         end
       end
+
+      response "200", "success response (by id)" do
+        expected_response_schema = load_spec_schema("group_response")
+        schema expected_response_schema
+
+        let(:id) { Fabricate(:group).id }
+
+        it_behaves_like "a JSON endpoint", 200 do
+          let(:expected_response_schema) { expected_response_schema }
+          let(:expected_request_schema) { expected_request_schema }
+        end
+      end
     end
   end
 

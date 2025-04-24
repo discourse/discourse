@@ -870,7 +870,13 @@ class GroupsController < ApplicationController
 
   def find_group(param_name, ensure_can_see: true)
     name = params.require(param_name)
-    group = Group.find_by("LOWER(name) = ?", name.downcase)
+
+    group =
+      if name.to_i.to_s == name # Check if the input is a numeric ID
+        Group.find_by(id: name)
+      else
+        Group.find_by("LOWER(name) = ?", name.downcase)
+      end
     raise Discourse::NotFound if ensure_can_see && !guardian.can_see_group?(group)
     group
   end
