@@ -350,20 +350,6 @@ shared_examples "signup scenarios" do |signup_page_object, login_page_object|
 end
 
 describe "Signup", type: :system do
-  context "when desktop" do
-    before { SiteSetting.full_page_login = false }
-    include_examples "signup scenarios",
-                     PageObjects::Modals::Signup.new,
-                     PageObjects::Modals::Login.new
-  end
-
-  context "when mobile", mobile: true do
-    before { SiteSetting.full_page_login = false }
-    include_examples "signup scenarios",
-                     PageObjects::Modals::Signup.new,
-                     PageObjects::Modals::Login.new
-  end
-
   context "when fullpage desktop" do
     before { SiteSetting.full_page_login = true }
     include_examples "signup scenarios",
