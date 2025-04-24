@@ -1,0 +1,127 @@
+.review-item {
+  padding: 1.5em;
+  background: var(--primary-low);
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__back {
+    background: none;
+    border: none;
+    font-size: 0.9em;
+    color: var(--primary-medium);
+    cursor: pointer;
+  }
+
+  &__status {
+    font-weight: bold;
+    padding: 0.25em 0.75em;
+    border-radius: 4px;
+
+    &--pending {
+      background-color: var(--highlight-low);
+      color: var(--danger);
+    }
+  }
+
+  &__flag-summary {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+  }
+
+  &__flag {
+    background: var(--primary-very-low);
+    border: 1px solid var(--primary-low-mid);
+    border-radius: 4px;
+    padding: 0.3em 0.6em;
+    font-size: 0.85em;
+
+    &--spam {
+      color: var(--danger);
+    }
+
+    &--other {
+      color: var(--warning);
+    }
+  }
+
+  &__meta {
+    font-size: 0.9em;
+    color: var(--primary-medium);
+  }
+
+  &__post {
+    background: var(--primary-very-low);
+    border-radius: 4px;
+    padding: 1em;
+    font-size: 0.95em;
+
+    &-content {
+      max-height: 100px;
+      overflow: hidden;
+      position: relative;
+    }
+  }
+
+  &__toggle-post {
+    margin-top: 0.5em;
+    background: none;
+    border: none;
+    color: var(--primary);
+    cursor: pointer;
+  }
+
+  &__insights {
+    background: var(--tertiary-low);
+    border-radius: 4px;
+    padding: 1em;
+  }
+
+  &__section-title {
+    font-size: 1em;
+    font-weight: bold;
+    margin-bottom: 0.5em;
+  }
+
+  &__insights-list {
+    list-style: none;
+    padding-left: 0;
+    li {
+      margin-bottom: 0.5em;
+      font-size: 0.9em;
+    }
+  }
+
+  &__moderator-actions {
+    margin-top: 1em;
+    padding: 1em;
+    border: 1px solid var(--primary-low-mid);
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75em;
+
+    label {
+      font-size: 0.85em;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25em;
+    }
+
+    .btn--primary {
+      background: var(--danger);
+      color: white;
+      border: none;
+      padding: 0.5em 1em;
+      border-radius: 4px;
+    }
+  }
+}
