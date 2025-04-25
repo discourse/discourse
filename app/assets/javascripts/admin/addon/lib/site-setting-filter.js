@@ -66,6 +66,8 @@ export default class SiteSettingFilter {
       let fuzzyMatches = [];
 
       const siteSettings = settingsCategory.siteSettings.filter((item) => {
+        item.weight = 0;
+
         if (opts.onlyOverridden && !item.get("overridden")) {
           return false;
         }
@@ -74,18 +76,43 @@ export default class SiteSettingFilter {
         }
         if (filter) {
           const setting = item.get("setting").toLowerCase();
-          let filterResult =
+
+          // Site setting name match.
+          if (
             setting.includes(filter) ||
-            setting.replace(/_/g, " ").includes(filter) ||
-            item.get("description").toLowerCase().includes(filter) ||
+            setting.replace(/_/g, " ").includes(filter)
+          ) {
+            item.weight = -10;
+            return true;
+          }
+
+          // Site setting keyword match.
+          if (
             (item.get("keywords") || []).any((keyword) =>
               keyword
                 .replace(/_/g, " ")
                 .toLowerCase()
                 .includes(filter.replace(/_/g, " "))
-            ) ||
-            (item.get("value") || "").toString().toLowerCase().includes(filter);
-          if (!filterResult && fuzzyRegex && fuzzyRegex.test(setting)) {
+            )
+          ) {
+            item.weight = -5;
+            return true;
+          }
+
+          // Site setting description match.
+          if (item.get("description").toLowerCase().includes(filter)) {
+            return true;
+          }
+
+          // Site setitng value match.
+          if (
+            (item.get("value") || "").toString().toLowerCase().includes(filter)
+          ) {
+            return true;
+          }
+
+          // Fuzzy site setting name match.
+          if (fuzzyRegex && fuzzyRegex.test(setting)) {
             // Tightens up fuzzy search results a bit.
             const fuzzySearchLimiter = 25;
             const strippedSetting = setting.replace(/[^a-z0-9]/gi, "");
@@ -99,8 +126,11 @@ export default class SiteSettingFilter {
               }
               fuzzyMatches.push(item);
             }
+
+            return true;
           }
-          return filterResult;
+
+          return false;
         } else {
           return true;
         }
