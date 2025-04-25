@@ -240,7 +240,7 @@ module SystemHelpers
   #    <your system test code here>
   #  end
   #
-  def with_security_key(user, options = {})
+  def with_security_key(user)
     # The public and private keys are complicated to generate programmatically, so we generate it by running the
     # `spec/user_preferences/security_keys_spec.rb` test and uncommenting the lines that print the keys.
     public_key_base64 =
@@ -251,7 +251,7 @@ module SystemHelpers
     credential_id_bytes = Base64.urlsafe_decode64(credential_id_base64)
     private_key_bytes = Base64.urlsafe_decode64(private_key_base64)
 
-    with_virtual_authenticator(options) do |cdp_client, authenticator_id|
+    with_virtual_authenticator do |cdp_client, authenticator_id|
       cdp_client.send_message(
         "WebAuthn.addCredential",
         params: {
@@ -278,7 +278,7 @@ module SystemHelpers
     end
   end
 
-  def with_virtual_authenticator(options = {})
+  def with_virtual_authenticator
     page.driver.with_playwright_page do |pw_page|
       cdp_client = pw_page.context.new_cdp_session(pw_page)
       cdp_client.send_message("WebAuthn.enable")
