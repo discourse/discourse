@@ -1,9 +1,0 @@
-{{#if this.site.desktopView}}
-  <EmojiPicker
-    @didSelectEmoji={{@outletArgs.composer.onSelectEmoji}}
-    @btnClass="chat-composer-button btn-transparent -emoji"
-    @context="chat"
-  />
-
-  <Chat::Composer::Separator />
-{{/if}}
