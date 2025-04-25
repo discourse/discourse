@@ -275,7 +275,9 @@ class Site
     # invalidate both the legacy and localized caches if necessary
     MessageBus.publish(SITE_JSON_CHANNEL, "")
 
-    # also handle localized cache if enabled
+    # always clear legacy cache keys
+    Discourse.redis.del("site_json", "site_json_seq", "site_json_version")
+
     if SiteSetting.experimental_content_localization
       locales =
         begin
@@ -289,8 +291,6 @@ class Site
       locales.each do |loc|
         Discourse.redis.del("site_json_#{loc}", "site_json_seq_#{loc}", "site_json_version_#{loc}")
       end
-    else
-      Discourse.redis.del("site_json", "site_json_seq", "site_json_version")
     end
   end
 
