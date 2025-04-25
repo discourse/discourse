@@ -278,7 +278,7 @@ module SystemHelpers
     end
   end
 
-  def with_virtual_authenticator
+  def with_virtual_authenticator(options = {})
     page.driver.with_playwright_page do |pw_page|
       cdp_client = pw_page.context.new_cdp_session(pw_page)
       cdp_client.send_message("WebAuthn.enable")
@@ -289,7 +289,7 @@ module SystemHelpers
         hasResidentKey: false,
         hasUserVerification: false,
         automaticPresenceSimulation: true,
-      }
+      }.merge(options)
 
       response =
         cdp_client.send_message(

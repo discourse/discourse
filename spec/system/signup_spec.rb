@@ -179,7 +179,7 @@ shared_examples "signup scenarios" do |signup_page_object, login_page_object|
 
         login_form.click_login
 
-        expect(page).to have_current_path(example.metadata[:mobile] ? "/" : "/latest")
+        expect(page).to have_current_path("/")
         expect(page).to have_css(".header-dropdown-toggle.current-user")
       end
 
@@ -201,7 +201,7 @@ shared_examples "signup scenarios" do |signup_page_object, login_page_object|
         visit "/"
         login_form.open.fill_username("john").fill_password("supersecurepassword").click_login
 
-        expect(page).to have_current_path(example.metadata[:mobile] ? "/" : "/latest")
+        expect(page).to have_current_path("/")
         expect(page).to have_css(".header-dropdown-toggle.current-user")
       end
     end
