@@ -202,13 +202,11 @@ export default RouteTemplate(
           {{/if}}
         {{/if}}
 
-        <span>
-          <PluginOutlet
-            @name="full-page-search-below-search-info"
-            @connectorTagName="div"
-            @outletArgs={{hash search=@controller.searchTerm}}
-          />
-        </span>
+        <PluginOutlet
+          @name="full-page-search-below-search-info"
+          @connectorTagName="div"
+          @outletArgs={{hash search=@controller.searchTerm}}
+        />
 
         {{#if @controller.searching}}
           {{loadingSpinner size="medium"}}
