@@ -32,7 +32,7 @@ describe "Discovery heading accessibility", type: :system do
 
   it "shows default heading for latest topics" do
     visit "/latest"
-    expect(page).to have_selector("h1", text: "All latest topics")
+    expect(page).to have_selector("h1", text: "All Latest topics")
   end
 
   it "shows heading for all categories view" do
