@@ -75,8 +75,6 @@ module TurboTests
 
       subprocess_opts = { record_runtime: @use_runtime_info }
 
-      start_multisite_subprocess(@files, **subprocess_opts)
-
       tests_in_groups.each_with_index do |tests, process_id|
         start_regular_subprocess(tests, process_id + 1, **subprocess_opts)
       end
@@ -148,21 +146,11 @@ module TurboTests
       system(*command)
     end
 
-    def start_multisite_subprocess(tests, **opts)
-      start_subprocess({}, %w[--tag type:multisite], tests, "multisite", **opts)
-    end
-
     def start_regular_subprocess(tests, process_id, **opts)
-      start_subprocess(
-        { "TEST_ENV_NUMBER" => process_id.to_s },
-        %w[--tag ~type:multisite],
-        tests,
-        process_id,
-        **opts,
-      )
+      start_subprocess({ "TEST_ENV_NUMBER" => process_id.to_s }, tests, process_id, **opts)
     end
 
-    def start_subprocess(env, extra_args, tests, process_id, record_runtime:)
+    def start_subprocess(env, tests, process_id, record_runtime:)
       if tests.empty?
         @messages << { type: "exit", process_id: process_id }
       else
@@ -186,7 +174,6 @@ module TurboTests
           "bundle",
           "exec",
           "rspec",
-          *extra_args,
           "--order",
           "random:#{@seed}",
           "--format",
