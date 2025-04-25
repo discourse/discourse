@@ -144,8 +144,9 @@ class CategoryList
       locale = I18n.locale.to_s
       query =
         query.joins(
-          "LEFT JOIN category_localizations cl ON cl.category_id = categories.id AND cl.locale = '#{locale}'",
-        )
+          ActiveRecord::Base.sanitize_sql_array(
+            ["LEFT JOIN category_localizations cl ON cl.category_id = categories.id AND cl.locale = ?", locale]
+          )
     end
 
     query = self.class.order_categories(query)
