@@ -596,7 +596,7 @@ describe "Composer - ProseMirror editor", type: :system do
         lines">
       HTML
 
-      img = rich.find("img")
+      img = rich.find("img:nth-of-type(1)")
 
       expect(img["src"]).to eq("https://example.com/image.png")
       expect(img["alt"]).to eq("alt with new lines")
