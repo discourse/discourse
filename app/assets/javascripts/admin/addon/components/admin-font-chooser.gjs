@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { concat, fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { dasherize } from "@ember/string";
-import { eq } from 'truth-helpers';
+import { eq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import { i18n } from "discourse-i18n";

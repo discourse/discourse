@@ -3,7 +3,7 @@ import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { decamelize, underscore } from "@ember/string";
-import { eq } from 'truth-helpers';
+import { eq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import Form from "discourse/components/form";
 import UpdateDefaultTextSize from "discourse/components/modal/update-default-text-size";
