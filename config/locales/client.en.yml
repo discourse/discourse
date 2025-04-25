@@ -3430,6 +3430,9 @@ en:
           other {}
         }
 
+      reply_count_link:
+        one: "%{count} reply, jump to first post"
+        other: "%{count} replies, jump to first post"
       created_at: "Created: %{date}"
       bumped_at: "Latest: %{date}"
 
@@ -4122,6 +4125,14 @@ en:
       settings: "Settings"
       topic_template: "Template"
       tags: "Tags"
+      localizations: "Localizations"
+      localization:
+        locale: "Locale"
+        name: "Name"
+        description: "Description"
+        add: "Add new locale"
+        remove: "Remove"
+        hint: "There are currently no localizations for this category. Click 'Add new locale' below to begin adding localizations."
       tags_allowed_tags: "Restrict these tags to this category:"
       tags_allowed_tag_groups: "Restrict these tag groups to this category:"
       tags_placeholder: "(Optional) list of allowed tags"
@@ -5357,9 +5368,6 @@ en:
         onebox:
           title: "Onebox"
           header_description: "Configure how onebox previews are generated and displayed for your site"
-        other:
-          title: "Other"
-          header_description: "Settings which do not fit into any other category"
         rate_limits:
           title: "Rate limits"
           header_description: "Configure how often users can perform certain actions, such as creating topics, sending messages, and posting replies"
@@ -7112,6 +7120,7 @@ en:
           dropdown: "Dropdown"
           upload: "Upload a file"
           multiselect: "Multiple choice"
+          tagchooser: "Tag Group selector"
         validations_modal:
           button_title: "Validations"
           modal_title: "Validation Options"
@@ -7157,6 +7166,8 @@ en:
           toggle_form_template: "form template enabled"
           select_template: "Select form templates"
           select_template_help: "Add/Edit Form Templates"
+        errors:
+          multiple_tags_not_allowed: 'You can''t select more tags from the "%{tag_name}". To avoid issues, use Form Template'
 
       impersonate:
         title: "Impersonate"

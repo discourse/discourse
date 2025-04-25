@@ -12,6 +12,7 @@ export const DPageActionButton = <template>
     @title={{@title}}
     @icon={{@icon}}
     @isLoading={{@isLoading}}
+    @disabled={{@disabled}}
   />
 </template>;
 
@@ -36,6 +37,7 @@ export const PrimaryButton = <template>
     @label={{@label}}
     @title={{@title}}
     @isLoading={{@isLoading}}
+    @disabled={{@disabled}}
   />
 </template>;
 

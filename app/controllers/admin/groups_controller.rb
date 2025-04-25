@@ -3,6 +3,9 @@
 class Admin::GroupsController < Admin::StaffController
   MAX_AUTO_MEMBERSHIP_DOMAINS_LOOKUP = 10
 
+  def index
+  end
+
   def create
     guardian.ensure_can_create_group!
 

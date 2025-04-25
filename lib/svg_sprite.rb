@@ -93,6 +93,7 @@ module SvgSprite
         discourse-other-tab
         discourse-sidebar
         discourse-sparkles
+        discourse-table
         discourse-threads
         download
         earth-americas

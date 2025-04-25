@@ -397,9 +397,11 @@ basic:
   enable_badges:
     client: true
     default: true
+    area: "badges"
   show_badges_in_post_header:
     client: true
     default: true
+    area: "badges"
   enable_badge_sql:
     client: true
     default: false
@@ -409,6 +411,7 @@ basic:
     default: 2
     min: 0
     max: 6
+    area: "badges"
   whispers_allowed_groups:
     type: group_list
     list_type: compact
@@ -3970,3 +3973,6 @@ experimental:
     client: true
     default: false
     hidden: true
+  experimental_content_localization:
+    client: true
+    default: false

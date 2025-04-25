@@ -460,7 +460,7 @@ export default class EmojiPicker extends Component {
           }}
         >
           <FilterInput
-            {{didInsert (if this.site.desktopView this.focusFilter (noop))}}
+            {{didInsert this.focusFilter}}
             {{didInsert this.registerFilterInput}}
             @value={{this.term}}
             @filterAction={{withEventValue this.didInputFilter}}

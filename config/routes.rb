@@ -396,6 +396,10 @@ Discourse::Application.routes.draw do
         end
       end
 
+      resources :groups, only: %i[index], constants: AdminConstraint.new do
+        collection { get "settings" => "site_settings#index" }
+      end
+
       get "search/all" => "search#index"
 
       namespace :config, constraints: StaffConstraint.new do
@@ -415,7 +419,6 @@ Discourse::Application.routes.draw do
         get "notifications" => "site_settings#index"
         get "rate-limits" => "site_settings#index"
         get "onebox" => "site_settings#index"
-        get "other" => "site_settings#index"
         get "search" => "site_settings#index"
         get "security" => "site_settings#index"
         get "site-admin" => "site_settings#index"

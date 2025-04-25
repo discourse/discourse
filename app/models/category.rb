@@ -36,6 +36,7 @@ class Category < ActiveRecord::Base
   has_many :category_users
   has_many :category_featured_topics
   has_many :featured_topics, through: :category_featured_topics, source: :topic
+  has_many :category_localizations, dependent: :destroy
 
   has_many :category_groups, dependent: :destroy
   has_many :category_moderation_groups, dependent: :destroy
@@ -61,6 +62,7 @@ class Category < ActiveRecord::Base
   has_and_belongs_to_many :web_hooks
 
   accepts_nested_attributes_for :category_setting, update_only: true
+  accepts_nested_attributes_for :category_localizations, allow_destroy: true
 
   validates :user_id, presence: true
 

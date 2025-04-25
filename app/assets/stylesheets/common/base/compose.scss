@@ -1,4 +1,4 @@
-html.composer-open {
+html.composer-open:not(.has-full-page-chat) {
   #main-outlet {
     padding-bottom: var(--composer-height);
     transition: padding-bottom 250ms ease;

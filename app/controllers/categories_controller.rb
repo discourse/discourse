@@ -539,6 +539,12 @@ class CategoriesController < ApplicationController
           conditional_param_keys << { moderating_group_ids: [] }
         end
 
+        if SiteSetting.experimental_content_localization?
+          conditional_param_keys << {
+            category_localizations_attributes: %i[id category_id locale name description _destroy],
+          }
+        end
+
         result =
           params.permit(
             *required_param_keys,
