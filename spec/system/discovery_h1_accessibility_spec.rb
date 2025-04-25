@@ -12,45 +12,45 @@ describe "Discovery heading accessibility", type: :system do
 
   it "shows correct heading for category view" do
     visit "/c/#{category.slug}/#{category.id}"
-    expect(page).to have_selector("h1", text: "latest topics in General")
+    expect(page).to have_selector("h1", text: "Latest topics in General")
   end
 
   it "shows correct heading for tagged view" do
     visit "/tags/#{tag.name}"
-    expect(page).to have_selector("h1", text: "latest topics tagged help")
+    expect(page).to have_selector("h1", text: "Latest topics tagged help")
   end
 
   it "shows correct heading for category + tag view" do
     visit "/tags/c/#{category.slug}/#{category.id}/#{tag.name}"
-    expect(page).to have_selector("h1", text: "latest topics in General tagged help")
+    expect(page).to have_selector("h1", text: "Latest topics in General tagged help")
   end
 
   it "shows correct heading for no tags view" do
     visit "/tags/none"
-    expect(page).to have_selector("h1", text: "all topics without tags")
+    expect(page).to have_selector("h1", text: "All topics without tags")
   end
 
   it "shows default heading for latest topics" do
     visit "/latest"
-    expect(page).to have_selector("h1", text: "all latest topics")
+    expect(page).to have_selector("h1", text: "All latest topics")
   end
 
   it "shows heading for all categories view" do
     visit "/categories"
-    expect(page).to have_selector("h1", text: "all categories")
+    expect(page).to have_selector("h1", text: "All categories")
   end
 
   it "shows heading for bookmarked topics" do
     sign_in(Fabricate(:user))
 
     visit "/bookmarks"
-    expect(page).to have_selector("h1", text: "all topics you’ve bookmarked")
+    expect(page).to have_selector("h1", text: "All topics you’ve bookmarked")
   end
 
   it "shows heading for posted topics" do
     sign_in(Fabricate(:user))
 
     visit "/posted"
-    expect(page).to have_selector("h1", text: "all topics you’ve posted in")
+    expect(page).to have_selector("h1", text: "All topics you’ve posted in")
   end
 end
