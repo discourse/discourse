@@ -289,7 +289,7 @@ module SystemHelpers
         hasResidentKey: false,
         hasUserVerification: false,
         automaticPresenceSimulation: true,
-      }.merge(options)
+      }
 
       response =
         cdp_client.send_message(
