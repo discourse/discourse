@@ -276,11 +276,12 @@ describe "Composer - ProseMirror editor", type: :system do
       open_composer_and_toggle_rich_editor
       composer.type_content("Some text ")
       cdp.copy_paste("https://example.com/x")
-      composer.type_content(" ").type_content("more text")
+      composer.type_content(:space)
 
       expect(rich).to have_no_css("div.onebox-wrapper")
       expect(rich).to have_css("a.inline-onebox", text: "Example Site 1")
 
+      composer.type_content("more text")
       composer.toggle_rich_editor
 
       expect(composer).to have_value("Some text https://example.com/x more text")
