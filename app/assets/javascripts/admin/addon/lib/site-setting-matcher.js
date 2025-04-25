@@ -58,16 +58,18 @@ export default class SiteSettingMatcher {
     const strippedSetting = name.replace(/[^a-z0-9]/gi, "");
 
     if (
-      strippedSetting.length <=
+      strippedSetting.length >
       this.strippedQuery.length + fuzzySearchLimiter
     ) {
-      const gapResult = strippedSetting.match(this.fuzzyRegexGaps);
-      if (gapResult) {
-        this.matchStrength -= gapResult.filter((gap) => gap !== "").length;
-      }
-      return true;
+      return false;
     }
 
-    return false;
+    const gapResult = strippedSetting.match(this.fuzzyRegexGaps);
+
+    if (gapResult) {
+      this.matchStrength -= gapResult.filter((gap) => gap !== "").length;
+    }
+
+    return true;
   }
 }

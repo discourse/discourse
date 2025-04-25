@@ -64,41 +64,43 @@ export default class SiteSettingFilter {
           if (opts.onlyOverridden && !siteSetting.get("overridden")) {
             return false;
           }
+
           if (pluginFilter && siteSetting.plugin !== pluginFilter) {
             return false;
           }
-          if (filter) {
-            const matcher = new SiteSettingMatcher(filter, siteSetting);
 
-            if (matcher.isNameMatch) {
-              siteSetting.weight = 10;
-              return true;
-            }
-
-            if (matcher.isKeywordMatch) {
-              siteSetting.weight = 5;
-              return true;
-            }
-
-            if (matcher.isDescriptionMatch) {
-              return true;
-            }
-
-            if (matcher.isValueMatch) {
-              return true;
-            }
-
-            if (matcher.isFuzzyNameMatch) {
-              siteSetting.weight += matcher.matchStrength;
-              fuzzyMatches.push(siteSetting);
-
-              return true;
-            }
-
-            return false;
-          } else {
+          if (!filter) {
             return true;
           }
+
+          const matcher = new SiteSettingMatcher(filter, siteSetting);
+
+          if (matcher.isNameMatch) {
+            siteSetting.weight = 10;
+            return true;
+          }
+
+          if (matcher.isKeywordMatch) {
+            siteSetting.weight = 5;
+            return true;
+          }
+
+          if (matcher.isDescriptionMatch) {
+            return true;
+          }
+
+          if (matcher.isValueMatch) {
+            return true;
+          }
+
+          if (matcher.isFuzzyNameMatch) {
+            siteSetting.weight += matcher.matchStrength;
+            fuzzyMatches.push(siteSetting);
+
+            return true;
+          }
+
+          return false;
         }
       );
 
