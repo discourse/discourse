@@ -36,11 +36,6 @@ describe "User preferences | Security", type: :system do
 
       user_menu.sign_out
 
-      # puts <<~STRING
-      # public_key_base64 = \"#{user.second_factor_security_keys.first.public_key}\"
-      # private_key_string = \"#{authenticator.credentials.first.private_key}\"
-      # STRING
-
       # login flow
       find(".d-header .login-button").click
       find("input#login-account-name").fill_in(with: user.username)
