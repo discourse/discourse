@@ -12,7 +12,7 @@ import { i18n } from "discourse-i18n";
 
 export default RouteTemplate(
   <template>
-    <LoadMore @selector=".email-list tr" @action={{@controller.loadMore}}>
+    <LoadMore @action={{@controller.loadMore}}>
       <table class="table email-list">
         <thead>
           <tr>
@@ -25,15 +25,18 @@ export default RouteTemplate(
         <tbody>
           <tr class="filters">
             <td>{{i18n "admin.email.logs.filters.title"}}</td>
-            <td><TextField
+            <td>
+              <TextField
                 @value={{@controller.filter.user}}
                 @placeholderKey="admin.email.logs.filters.user_placeholder"
               /></td>
-            <td><TextField
+            <td>
+              <TextField
                 @value={{@controller.filter.address}}
                 @placeholderKey="admin.email.logs.filters.address_placeholder"
               /></td>
-            <td colspan="2"><TextField
+            <td colspan="2">
+              <TextField
                 @value={{@controller.filter.type}}
                 @placeholderKey="admin.email.logs.filters.type_placeholder"
               /></td>
@@ -85,7 +88,8 @@ export default RouteTemplate(
             </tr>
           {{else}}
             {{#unless @controller.loading}}
-              <tr><td colspan="5">{{i18n "admin.email.logs.none"}}</td></tr>
+              <tr>
+                <td colspan="5">{{i18n "admin.email.logs.none"}}</td></tr>
             {{/unless}}
           {{/each}}
         </tbody>

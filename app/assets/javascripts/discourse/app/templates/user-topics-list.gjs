@@ -23,11 +23,7 @@ export default RouteTemplate(
         @body={{@controller.model.emptyState.body}}
       />
     {{else}}
-      <LoadMore
-        @selector=".paginated-topics-list .topic-list .topic-list-item"
-        @action={{@controller.loadMore}}
-        class="paginated-topics-list"
-      >
+      <LoadMore @action={{@controller.loadMore}} class="paginated-topics-list">
         <TopicDismissButtons
           @position="top"
           @selectedTopics={{@controller.bulkSelectHelper.selected}}

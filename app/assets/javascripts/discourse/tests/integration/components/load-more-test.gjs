@@ -52,11 +52,7 @@ module("Integration | Component | load-more", function (hooks) {
 
     await render(
       <template>
-        <LoadMore
-          @selector=".numbers tr"
-          @action={{performLoadMore}}
-          @root="#ember-testing"
-        >
+        <LoadMore @action={{performLoadMore}} @root="#ember-testing">
           <table class="numbers">
             <tbody>
               <tr />

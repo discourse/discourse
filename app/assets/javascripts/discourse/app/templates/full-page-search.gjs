@@ -214,7 +214,7 @@ export default RouteTemplate(
           {{loadingSpinner size="medium"}}
         {{else}}
           <div class="search-results" role="region">
-            <LoadMore @selector=".fps-result" @action={{@controller.loadMore}}>
+            <LoadMore @action={{@controller.loadMore}}>
               {{#if
                 (or
                   @controller.usingDefaultSearchType
