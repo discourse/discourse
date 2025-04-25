@@ -1,29 +1,39 @@
+import { cached, tracked } from "@glimmer/tracking";
 import Component, { Input } from "@ember/component";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
+import { dependentKeyCompat } from "@ember/object/compat";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
+import BufferedProxy from "ember-buffered-proxy/proxy";
 import DButton from "discourse/components/d-button";
 import RadioButton from "discourse/components/radio-button";
 import TextField from "discourse/components/text-field";
 import discourseComputed from "discourse/lib/decorators";
-import { bufferedProperty } from "discourse/mixins/buffered-content";
 import PermissionType from "discourse/models/permission-type";
 import { i18n } from "discourse-i18n";
 import GroupChooser from "select-kit/components/group-chooser";
 import TagChooser from "select-kit/components/tag-chooser";
 
 @tagName("")
-export default class TagGroupsForm extends Component.extend(
-  bufferedProperty("model")
-) {
+export default class TagGroupsForm extends Component {
   @service router;
   @service dialog;
   @service site;
 
+  @tracked model;
+
   // All but the "everyone" group
   allGroups = this.site.groups.filter(({ id }) => id !== 0);
+
+  @cached
+  @dependentKeyCompat
+  get buffered() {
+    return BufferedProxy.create({
+      content: this.model,
+    });
+  }
 
   @discourseComputed("buffered.permissions")
   selectedGroupIds(permissions) {
@@ -102,7 +112,8 @@ export default class TagGroupsForm extends Component.extend(
   <template>
     <section class="group-name">
       <label>{{i18n "tagging.groups.name_placeholder"}}</label>
-      <div><TextField @value={{this.buffered.name}} /></div>
+      <div>
+        <TextField @value={{this.buffered.name}} /></div>
     </section>
 
     <section class="group-tags-list">
