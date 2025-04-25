@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <div class="select-kit-header-wrapper">
   {{#each this.icons as |icon|}}
     {{d-icon icon}}
@@ -31,3 +32,27 @@
     {{d-icon this.caretIcon class="caret-icon"}}
   {{/if}}
 </div>
+=======
+import { computed } from "@ember/object";
+import { reads } from "@ember/object/computed";
+import {
+  attributeBindings,
+  classNames,
+  tagName,
+} from "@ember-decorators/component";
+import SelectKitHeaderComponent from "select-kit/components/select-kit/select-kit-header";
+
+@tagName("summary")
+@classNames("multi-select-header")
+@attributeBindings("ariaLabel:aria-label")
+export default class MultiSelectHeader extends SelectKitHeaderComponent {
+  @reads("selectKit.options.caretUpIcon") caretUpIcon;
+  @reads("selectKit.options.caretDownIcon") caretDownIcon;
+  @reads("selectKit.options.headerAriaLabel") ariaLabel;
+
+  @computed("selectKit.isExpanded", "caretUpIcon", "caretDownIcon")
+  get caretIcon() {
+    return this.selectKit.isExpanded ? this.caretUpIcon : this.caretDownIcon;
+  }
+}
+>>>>>>> a9ddbde3f6 (DEV: [gjs-codemod] renamed js to gjs)
