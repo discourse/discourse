@@ -111,11 +111,7 @@ module PrettyText
       # categories, however if the suppress_secured_categories_from_admin
       # site setting is activated then this user will not be able to access
       # secure categories, so hashtags that are secure will not render.
-      if cooking_user_id.blank?
-        cooking_user = Discourse.system_user
-      else
-        cooking_user = User.find(cooking_user_id)
-      end
+      cooking_user = User.find_by(id: cooking_user_id) || Discourse.system_user
 
       types_in_priority_order =
         types_in_priority_order.select do |type|
