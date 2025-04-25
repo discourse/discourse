@@ -19,11 +19,13 @@ export function enableLoadMoreObserver() {
  * A component that implements infinite loading using IntersectionObserver.
  *
  * LoadMore triggers an action when a sentinel element becomes visible in the viewport,
- * which is typically used to load additional content.
+ * which is typically used to load additional content. Besides the `action` argument, it also takes
+ * in additional options to customize the observer's behavior;
+ * Refer to https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver/IntersectionObserver#options for a full list.
  *
  * @example Basic usage with a block:
  * ```gjs
- * <LoadMore @selector=".topic-list tr" @action={{this.loadMoreTopics}}>
+ * <LoadMore @action={{this.loadMoreTopics}}>
  *   <TopicList @topics={{this.topics}} />
  * </LoadMore>
  * ```
@@ -36,16 +38,16 @@ export function enableLoadMoreObserver() {
  *   {{/each}}
  * </div>
  *
- * <LoadMore @selector=".item-component" @action={{this.loadMore}} />
+ * <LoadMore @action={{this.loadMore}} />
  * ```
  *
- * @example With custom threshold and margin:
+ * @example With custom options:
  * ```gjs
  * <LoadMore
- *   @selector=".user-items li"
  *   @action={{this.fetchMoreUsers}}
- *   @rootMargin="200px"
+ *   @rootMargin="100px"
  *   @threshold={{0.2}}
+ *   @root={{this.root}}
  *   class="users-container"
  * />
  * ```
@@ -53,9 +55,8 @@ export function enableLoadMoreObserver() {
 export default class LoadMore extends Component {
   observer;
   loadMoreAction = this.args.action;
-  selector = this.args.selector;
   root = this.args.root || null;
-  rootMargin = this.args.rootMargin || "100px";
+  rootMargin = this.args.rootMargin || "0px 0px 0px 0px";
   threshold = this.args.threshold || 0.1;
 
   willDestroy() {
@@ -76,8 +77,7 @@ export default class LoadMore extends Component {
 
     this.observer = new IntersectionObserver(
       (entries) => {
-        // only trigger further action if the expected items matching the selector are present
-        if (!this.observer || !document.querySelector(this.selector)) {
+        if (!this.observer) {
           return;
         }
 
