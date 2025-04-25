@@ -141,6 +141,8 @@ $search-pad-horizontal: 0.5em;
           word-break: break-word;
           hyphens: auto;
           margin-top: 0.25em;
+          color: var(--primary-high);
+          font-size: var(--font-down-1);
         }
       }
     }
