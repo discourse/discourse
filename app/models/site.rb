@@ -232,12 +232,23 @@ class Site
     end
 
     seq = nil
+    use_localized_anon_cache = SiteSetting.experimental_content_localization && guardian.anonymous?
+
+    locale = I18n.locale
+    cache_key = "site_json"
+    seq_key = "site_json_seq"
+    version_key = "site_json_version"
+
+    if use_localized_anon_cache
+      cache_key += "_#{locale}"
+      seq_key += "_#{locale}"
+      version_key += "_#{locale}"
+    end
 
     if guardian.anonymous?
       seq = MessageBus.last_id("/site_json")
-
       cached_json, cached_seq, cached_version =
-        Discourse.redis.mget("site_json", "site_json_seq", "site_json_version")
+        Discourse.redis.mget(cache_key, seq_key, version_key)
 
       if cached_json && seq == cached_seq.to_i && Discourse.git_version == cached_version
         return cached_json
@@ -249,9 +260,9 @@ class Site
 
     if guardian.anonymous?
       Discourse.redis.multi do |transaction|
-        transaction.setex "site_json", 1800, json
-        transaction.set "site_json_seq", seq
-        transaction.set "site_json_version", Discourse.git_version
+        transaction.setex cache_key, 1800, json
+        transaction.set seq_key, seq
+        transaction.set version_key, Discourse.git_version
       end
     end
 
@@ -261,9 +272,26 @@ class Site
   SITE_JSON_CHANNEL = "/site_json"
 
   def self.clear_anon_cache!
-    # publishing forces the sequence up
-    # the cache is validated based on the sequence
+    # invalidate both the legacy and localized caches if necessary
     MessageBus.publish(SITE_JSON_CHANNEL, "")
+
+    # also handle localized cache if enabled
+    if SiteSetting.experimental_content_localization
+      locales =
+        begin
+          # try to guess which locales might be used
+          I18n.available_locales
+        rescue StandardError
+          # fallback to default locale
+          [I18n.default_locale]
+        end
+
+      locales.each do |loc|
+        Discourse.redis.del("site_json_#{loc}", "site_json_seq_#{loc}", "site_json_version_#{loc}")
+      end
+    else
+      Discourse.redis.del("site_json", "site_json_seq", "site_json_version")
+    end
   end
 
   def self.full_name_required_for_signup

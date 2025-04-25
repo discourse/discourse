@@ -373,4 +373,67 @@ RSpec.describe Site do
       end
     end
   end
+
+  context "when there are anonymous users with different locales" do
+    let(:anon_guardian) { Guardian.new }
+
+    before do
+      SiteSetting.login_required = false
+      Discourse.redis.flushdb
+      I18n.available_locales = %i[en ja]
+      I18n.locale = :en
+    end
+
+    context "when experimental_content_localization is disabled" do
+      before { SiteSetting.experimental_content_localization = false }
+
+      it "caches anon site json with a global key (not locale scoped)" do
+        expect(Discourse.redis.get("site_json")).to be_nil
+
+        json = Site.json_for(anon_guardian)
+
+        expect(Discourse.redis.get("site_json")).to eq(json)
+
+        I18n.locale = :ja
+        json_ja = Site.json_for(anon_guardian)
+        expect(Discourse.redis.get("site_json")).to eq(json_ja)
+
+        # always overwritten, not per locale
+        I18n.locale = :en
+        expect(Discourse.redis.get("site_json")).to eq(json)
+      end
+    end
+
+    context "when experimental_content_localization is enabled" do
+      before { SiteSetting.experimental_content_localization = true }
+
+      it "caches anon site json separately for each locale" do
+        expect(Discourse.redis.get("site_json_en")).to be_nil
+        expect(Discourse.redis.get("site_json_ja")).to be_nil
+
+        json_en = Site.json_for(anon_guardian)
+        expect(Discourse.redis.get("site_json_en")).to eq(json_en)
+
+        I18n.locale = :ja
+        json_ja = Site.json_for(anon_guardian)
+        expect(Discourse.redis.get("site_json_ja")).to eq(json_ja)
+
+        expect(json_en).not_to eq(json_ja)
+      end
+
+      it "clears all locale caches on clear_anon_cache!" do
+        I18n.locale = :en
+        Site.json_for(anon_guardian)
+        I18n.locale = :ja
+        Site.json_for(anon_guardian)
+
+        expect(Discourse.redis.get("site_json_en")).to be_present
+        expect(Discourse.redis.get("site_json_ja")).to be_present
+
+        described_class.clear_anon_cache!
+        expect(Discourse.redis.get("site_json_en")).to be_nil
+        expect(Discourse.redis.get("site_json_ja")).to be_nil
+      end
+    end
+  end
 end
