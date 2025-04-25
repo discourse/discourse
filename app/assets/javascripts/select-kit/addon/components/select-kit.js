@@ -635,9 +635,9 @@ export default class SelectKit extends Component.extend(UtilsMixin) {
       }
     }
 
-    const action = get(this, actionName);
-    if (boundaryAction && action) {
-      boundaryAction = action.call(this, ...params);
+    const theAction = get(this, actionName);
+    if (boundaryAction && theAction) {
+      boundaryAction = theAction.call(this, ...params);
     }
 
     return boundaryAction;

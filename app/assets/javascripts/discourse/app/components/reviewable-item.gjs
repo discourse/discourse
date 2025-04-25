@@ -760,8 +760,8 @@ export default class ReviewableItem extends Component {
                     @tagName=""
                     @value={{editableValue this.reviewable f.id}}
                     @tagCategoryId={{this.tagCategoryId}}
-                    @valueChanged={{action "valueChanged" f.id}}
-                    @categoryChanged={{action "categoryChanged"}}
+                    @valueChanged={{fn this.valueChanged f.id}}
+                    @categoryChanged={{this.categoryChanged}}
                   />
                 {{/let}}
               </div>
@@ -792,14 +792,14 @@ export default class ReviewableItem extends Component {
               <DButton
                 @disabled={{this.disabled}}
                 @icon="check"
-                @action={{action "saveEdit"}}
+                @action={{this.saveEdit}}
                 @label="review.save"
                 class="btn-primary reviewable-action save-edit"
               />
               <DButton
                 @disabled={{this.disabled}}
                 @icon="xmark"
-                @action={{action "cancelEdit"}}
+                @action={{this.cancelEdit}}
                 @label="review.cancel"
                 class="btn-danger reviewable-action cancel-edit"
               />
@@ -807,7 +807,7 @@ export default class ReviewableItem extends Component {
               {{#each this.reviewable.bundled_actions as |bundle|}}
                 <ReviewableBundledAction
                   @bundle={{bundle}}
-                  @performAction={{action "perform"}}
+                  @performAction={{this.perform}}
                   @reviewableUpdating={{this.disabled}}
                 />
               {{/each}}
@@ -816,7 +816,7 @@ export default class ReviewableItem extends Component {
                 <DButton
                   @disabled={{this.disabled}}
                   @icon="pencil"
-                  @action={{action "edit"}}
+                  @action={{this.edit}}
                   @label="review.edit"
                   class="reviewable-action btn-default edit"
                 />
