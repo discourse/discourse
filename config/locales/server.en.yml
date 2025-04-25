@@ -2769,6 +2769,7 @@ en:
     adobe_analytics_tags_url: "Adobe Analytics tags URL (`https://assets.adobedtm.com/...`)"
     view_raw_email_allowed_groups: "Groups which can view the raw email content of a post if it was created by an incoming email. This includes email headers and other technical information."
     experimental_content_localization: "Displays localized content for users based on their language preferences. Such content may include categories, tags, posts, and topics. This feature is under heavy development."
+    rich_editor: "Enable the rich editor for all users, allowing each user to toggle between the markdown editor and rich editor. The rich editor is designed to provide a more intuitive and user-friendly interface for composing and editing content. See <a href='https://meta.discourse.org/t/test-our-new-composer-on-meta/352347'>Meta topic</a> for more details."
     errors:
       invalid_css_color: "Invalid color. Enter a color name or hex value."
       invalid_email: "Invalid email address."
