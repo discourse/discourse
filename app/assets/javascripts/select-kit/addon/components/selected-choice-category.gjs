@@ -17,12 +17,14 @@ export default class SelectedChoiceCategory extends SelectedChoiceComponent {
       })
     );
   }
-}
 
-<SelectedChoice
-  @item={{this.item}}
-  @selectKit={{this.selectKit}}
-  @extraClass={{this.extraClass}}
->
-  {{this.badge}}
-</SelectedChoice>
+  <template>
+    <SelectedChoiceComponent
+      @item={{this.item}}
+      @selectKit={{this.selectKit}}
+      @extraClass={{this.extraClass}}
+    >
+      {{this.badge}}
+    </SelectedChoiceComponent>
+  </template>
+}

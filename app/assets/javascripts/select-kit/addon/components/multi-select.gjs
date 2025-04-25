@@ -1,12 +1,18 @@
+import { concat } from "@ember/helper";
 import { computed } from "@ember/object";
 import { next } from "@ember/runloop";
 import { isPresent } from "@ember/utils";
 import { classNames } from "@ember-decorators/component";
+import { and, not } from "truth-helpers";
+import componentForCollection from "discourse/helpers/component-for-collection";
 import { makeArray } from "discourse/lib/helpers";
+import { i18n } from "discourse-i18n";
 import SelectKitComponent, {
   pluginApiIdentifiers,
+  resolveComponent,
   selectKitOptions,
 } from "select-kit/components/select-kit";
+import SelectKitBody from "select-kit/components/select-kit/select-kit-body";
 
 @classNames("multi-select")
 @selectKitOptions({
@@ -193,62 +199,89 @@ export default class MultiSelect extends SelectKitComponent {
 
     return true;
   }
-}
 
-{{#unless this.selectKit.isHidden}}
-  {{component
-    this.selectKit.options.headerComponent
-    tabindex=this.tabindex
-    value=this.value
-    selectedContent=this.selectedContent
-    selectKit=this.selectKit
-    id=(concat this.selectKit.uniqueID "-header")
-  }}
-
-  <SelectKit::SelectKitBody
-    @selectKit={{this.selectKit}}
-    @id={{concat this.selectKit.uniqueID "-body"}}
-  >
-    {{#unless this.selectKit.options.useHeaderFilter}}
-      {{component
-        this.selectKit.options.filterComponent
-        selectKit=this.selectKit
-        id=(concat this.selectKit.uniqueID "-filter")
+  <template>
+    {{#unless this.selectKit.isHidden}}
+      {{#let
+        (resolveComponent this this.selectKit.options.headerComponent)
+        as |HeaderComponent|
       }}
+        <HeaderComponent
+          @tabindex={{this.tabindex}}
+          @value={{this.value}}
+          @selectedContent={{this.selectedContent}}
+          @selectKit={{this.selectKit}}
+          @id={{concat this.selectKit.uniqueID "-header"}}
+        />
+      {{/let}}
 
-      {{#if this.selectedContent.length}}
-        <div class="selected-content">
-          {{#each this.selectedContent as |item|}}
-            {{component
-              this.selectKit.options.selectedChoiceComponent
-              item=item
-              selectKit=this.selectKit
-              mandatoryValues=@mandatoryValues
-            }}
-          {{/each}}
-        </div>
-      {{/if}}
+      <SelectKitBody
+        @selectKit={{this.selectKit}}
+        @id={{concat this.selectKit.uniqueID "-body"}}
+      >
+        {{#unless this.selectKit.options.useHeaderFilter}}
+          {{#let
+            (resolveComponent this this.selectKit.options.filterComponent)
+            as |FilterComponent|
+          }}
+            <FilterComponent
+              @selectKit={{this.selectKit}}
+              @id={{concat this.selectKit.uniqueID "-filter"}}
+            />
+          {{/let}}
+
+          {{#if this.selectedContent.length}}
+            <div class="selected-content">
+              {{#let
+                (resolveComponent
+                  this this.selectKit.options.selectedChoiceComponent
+                )
+                as |SelectedChoiceComponent|
+              }}
+                {{#each this.selectedContent as |item|}}
+                  <SelectedChoiceComponent
+                    @item={{item}}
+                    @selectKit={{this.selectKit}}
+                    @mandatoryValues={{@mandatoryValues}}
+                  />
+                {{/each}}
+              {{/let}}
+            </div>
+          {{/if}}
+        {{/unless}}
+
+        {{#each this.collections as |collection|}}
+          {{#let
+            (resolveComponent
+              this (componentForCollection collection.identifier this.selectKit)
+            )
+            as |CollectionComponent|
+          }}
+            <CollectionComponent
+              @collection={{collection}}
+              @selectKit={{this.selectKit}}
+              @value={{this.value}}
+            />
+          {{/let}}
+        {{/each}}
+
+        {{#if this.selectKit.filter}}
+          {{#if
+            (and this.selectKit.hasNoContent (not this.selectKit.isLoading))
+          }}
+            <span class="no-content" role="alert">
+              {{i18n "select_kit.no_content"}}
+            </span>
+          {{else}}
+            <span class="results-count" role="alert">
+              {{i18n
+                "select_kit.results_count"
+                count=this.mainCollection.length
+              }}
+            </span>
+          {{/if}}
+        {{/if}}
+      </SelectKitBody>
     {{/unless}}
-
-    {{#each this.collections as |collection|}}
-      {{component
-        (component-for-collection collection.identifier this.selectKit)
-        collection=collection
-        selectKit=this.selectKit
-        value=this.value
-      }}
-    {{/each}}
-
-    {{#if this.selectKit.filter}}
-      {{#if (and this.selectKit.hasNoContent (not this.selectKit.isLoading))}}
-        <span class="no-content" role="alert">
-          {{i18n "select_kit.no_content"}}
-        </span>
-      {{else}}
-        <span class="results-count" role="alert">
-          {{i18n "select_kit.results_count" count=this.mainCollection.length}}
-        </span>
-      {{/if}}
-    {{/if}}
-  </SelectKit::SelectKitBody>
-{{/unless}}
+  </template>
+}

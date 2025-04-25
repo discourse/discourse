@@ -1,22 +1,42 @@
 import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
+import { concat, fn, hash } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action, set } from "@ember/object";
 import { alias } from "@ember/object/computed";
 import { getOwner } from "@ember/owner";
+import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { classify, dasherize } from "@ember/string";
 import { tagName } from "@ember-decorators/component";
+import DButton from "discourse/components/d-button";
 import ExplainReviewableModal from "discourse/components/modal/explain-reviewable";
 import RejectReasonReviewableModal from "discourse/components/modal/reject-reason-reviewable";
 import ReviseAndRejectPostReviewable from "discourse/components/modal/revise-and-reject-post-reviewable";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import ReviewableBundledAction from "discourse/components/reviewable-bundled-action";
+import ReviewableClaimedTopic from "discourse/components/reviewable-claimed-topic";
+import ReviewableCreatedByName from "discourse/components/reviewable-created-by-name";
+import ageWithTooltip from "discourse/helpers/age-with-tooltip";
+import avatar from "discourse/helpers/avatar";
+import concatClass from "discourse/helpers/concat-class";
+import icon from "discourse/helpers/d-icon";
+import dasherizeHelper from "discourse/helpers/dasherize";
+import editableValue from "discourse/helpers/editable-value";
+import htmlSafe from "discourse/helpers/html-safe";
+import reviewableStatus from "discourse/helpers/reviewable-status";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed, { bind } from "discourse/lib/decorators";
 import optionalService from "discourse/lib/optional-service";
+import { optionalRequire } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
 import Topic from "discourse/models/topic";
 import { i18n } from "discourse-i18n";
+import ReviewableScores from "./reviewable-scores";
+
+const IpLookup = optionalRequire("admin/components/ip-lookup");
 
 let _components = {};
 
@@ -42,6 +62,10 @@ export function registerReviewableActionModal(actionName, modalClass) {
     );
   }
   actionModalClassMap[actionName] = modalClass;
+}
+
+function lookupComponent(context, name) {
+  return getOwner(context).resolveRegistration(`component:${name}`);
 }
 
 @tagName("")
@@ -519,158 +543,164 @@ export default class ReviewableItem extends Component {
       return this._performConfirmed(performableAction);
     }
   }
-}
 
-<div
-  data-reviewable-id={{this.reviewable.id}}
-  class="reviewable-item {{this.customClasses}}"
->
-  <div class="reviewable-meta-data">
-    <span
-      class={{concat-class "reviewable-type" this.reviewable.humanTypeCssClass}}
-    >{{this.reviewable.humanType}}</span>
-    {{#if this.reviewable.reply_count}}
-      <span class="reply-count">{{i18n
-          "review.replies"
-          count=this.reviewable.reply_count
-        }}</span>
-    {{/if}}
-    <span class="created-at">
-      <LinkTo
-        @route="review.show"
-        @model={{this.reviewable.id}}
-      >{{age-with-tooltip this.reviewable.created_at}}</LinkTo>
-    </span>
-    <span class="status">
-      {{reviewable-status this.reviewable.status this.reviewable.type}}
-    </span>
-    <a
-      href
-      {{on "click" (fn this.explainReviewable this.reviewable)}}
-      title={{i18n "review.explain.why"}}
-      class="explain"
+  <template>
+    <div
+      data-reviewable-id={{this.reviewable.id}}
+      class="reviewable-item {{this.customClasses}}"
     >
-      {{d-icon "circle-question"}}
-    </a>
-  </div>
-
-  <div class="reviewable-contents">
-    {{#if this.editing}}
-      <div class="editable-fields">
-        {{#if this.reviewable.created_by}}
-          <div class="editable-created-by">
-            {{avatar this.reviewable.created_by imageSize="tiny"}}
-            <ReviewableCreatedByName @user={{this.reviewable.created_by}} />
-          </div>
+      <div class="reviewable-meta-data">
+        <span
+          class={{concatClass
+            "reviewable-type"
+            this.reviewable.humanTypeCssClass
+          }}
+        >{{this.reviewable.humanType}}</span>
+        {{#if this.reviewable.reply_count}}
+          <span class="reply-count">{{i18n
+              "review.replies"
+              count=this.reviewable.reply_count
+            }}</span>
         {{/if}}
-
-        {{#each this.reviewable.editable_fields as |f|}}
-          <div class="editable-field {{dasherize f.id}}">
-            {{component
-              (concat "reviewable-field-" f.type)
-              tagName=""
-              value=(editable-value this.reviewable f.id)
-              tagCategoryId=this.tagCategoryId
-              valueChanged=(action "valueChanged" f.id)
-              categoryChanged=(action "categoryChanged")
-            }}
-          </div>
-        {{/each}}
+        <span class="created-at">
+          <LinkTo
+            @route="review.show"
+            @model={{this.reviewable.id}}
+          >{{ageWithTooltip this.reviewable.created_at}}</LinkTo>
+        </span>
+        <span class="status">
+          {{reviewableStatus this.reviewable.status this.reviewable.type}}
+        </span>
+        <a
+          href
+          {{on "click" (fn this.explainReviewable this.reviewable)}}
+          title={{i18n "review.explain.why"}}
+          class="explain"
+        >
+          {{icon "circle-question"}}
+        </a>
       </div>
-    {{else}}
-      {{#let
-        (component
-          this.reviewableComponent reviewable=this.reviewable tagName=""
-        )
-        as |ReviewableComponent|
-      }}
-        {{! template-lint-disable no-shadowed-elements }}{{! (seems to be a false positive) }}
-        <ReviewableComponent>
-          <ReviewableScores @reviewable={{this.reviewable}} @tagName="" />
-        </ReviewableComponent>
-      {{/let}}
-    {{/if}}
-  </div>
 
-  {{#if this.displayContextQuestion}}
-    <h3 class="reviewable-item__context-question">
-      {{this.reviewable.flaggedReviewableContextQuestion}}
-    </h3>
-  {{/if}}
-
-  <div class="reviewable-actions">
-    {{#unless this.reviewable.last_performing_username}}
-      {{#if this.canPerform}}
+      <div class="reviewable-contents">
         {{#if this.editing}}
-          <DButton
-            @disabled={{this.disabled}}
-            @icon="check"
-            @action={{action "saveEdit"}}
-            @label="review.save"
-            class="btn-primary reviewable-action save-edit"
-          />
-          <DButton
-            @disabled={{this.disabled}}
-            @icon="xmark"
-            @action={{action "cancelEdit"}}
-            @label="review.cancel"
-            class="btn-danger reviewable-action cancel-edit"
-          />
-        {{else}}
-          {{#each this.reviewable.bundled_actions as |bundle|}}
-            <ReviewableBundledAction
-              @bundle={{bundle}}
-              @performAction={{action "perform"}}
-              @reviewableUpdating={{this.disabled}}
-            />
-          {{/each}}
+          <div class="editable-fields">
+            {{#if this.reviewable.created_by}}
+              <div class="editable-created-by">
+                {{avatar this.reviewable.created_by imageSize="tiny"}}
+                <ReviewableCreatedByName @user={{this.reviewable.created_by}} />
+              </div>
+            {{/if}}
 
-          {{#if this.reviewable.can_edit}}
-            <DButton
-              @disabled={{this.disabled}}
-              @icon="pencil"
-              @action={{action "edit"}}
-              @label="review.edit"
-              class="reviewable-action btn-default edit"
-            />
+            {{#each this.reviewable.editable_fields as |f|}}
+              <div class="editable-field {{dasherizeHelper f.id}}">
+                {{#let
+                  (lookupComponent this (concat "reviewable-field-" f.type))
+                  as |FieldComponent|
+                }}
+                  <FieldComponent
+                    @tagName=""
+                    @value={{editableValue this.reviewable f.id}}
+                    @tagCategoryId={{this.tagCategoryId}}
+                    @valueChanged={{action "valueChanged" f.id}}
+                    @categoryChanged={{action "categoryChanged"}}
+                  />
+                {{/let}}
+              </div>
+            {{/each}}
+          </div>
+        {{else}}
+          {{#let
+            (lookupComponent this this.reviewableComponent)
+            as |ReviewableComponent|
+          }}
+            <ReviewableComponent @reviewable={{this.reviewable}} @tagName="">
+              <ReviewableScores @reviewable={{this.reviewable}} @tagName="" />
+            </ReviewableComponent>
+          {{/let}}
+        {{/if}}
+      </div>
+
+      {{#if this.displayContextQuestion}}
+        <h3 class="reviewable-item__context-question">
+          {{this.reviewable.flaggedReviewableContextQuestion}}
+        </h3>
+      {{/if}}
+
+      <div class="reviewable-actions">
+        {{#unless this.reviewable.last_performing_username}}
+          {{#if this.canPerform}}
+            {{#if this.editing}}
+              <DButton
+                @disabled={{this.disabled}}
+                @icon="check"
+                @action={{action "saveEdit"}}
+                @label="review.save"
+                class="btn-primary reviewable-action save-edit"
+              />
+              <DButton
+                @disabled={{this.disabled}}
+                @icon="xmark"
+                @action={{action "cancelEdit"}}
+                @label="review.cancel"
+                class="btn-danger reviewable-action cancel-edit"
+              />
+            {{else}}
+              {{#each this.reviewable.bundled_actions as |bundle|}}
+                <ReviewableBundledAction
+                  @bundle={{bundle}}
+                  @performAction={{action "perform"}}
+                  @reviewableUpdating={{this.disabled}}
+                />
+              {{/each}}
+
+              {{#if this.reviewable.can_edit}}
+                <DButton
+                  @disabled={{this.disabled}}
+                  @icon="pencil"
+                  @action={{action "edit"}}
+                  @label="review.edit"
+                  class="reviewable-action btn-default edit"
+                />
+              {{/if}}
+            {{/if}}
+          {{/if}}
+        {{/unless}}
+
+        {{#if this.reviewable.last_performing_username}}
+          <div class="stale-help">{{htmlSafe
+              (i18n
+                "review.stale_help"
+                username=this.reviewable.last_performing_username
+              )
+            }}</div>
+        {{else}}
+          {{#if this.claimEnabled}}
+            <div class="claimed-actions">
+              <span class="help">{{htmlSafe this.claimHelp}}</span>
+              {{#unless this.autoClaimed}}
+                <ReviewableClaimedTopic
+                  @topicId={{this.topicId}}
+                  @claimedBy={{this.reviewable.claimed_by}}
+                  @onClaim={{fn (mut this.reviewable.claimed_by)}}
+                />
+              {{/unless}}
+            </div>
           {{/if}}
         {{/if}}
-      {{/if}}
-    {{/unless}}
 
-    {{#if this.reviewable.last_performing_username}}
-      <div class="stale-help">{{html-safe
-          (i18n
-            "review.stale_help"
-            username=this.reviewable.last_performing_username
-          )
-        }}</div>
-    {{else}}
-      {{#if this.claimEnabled}}
-        <div class="claimed-actions">
-          <span class="help">{{html-safe this.claimHelp}}</span>
-          {{#unless this.autoClaimed}}
-            <ReviewableClaimedTopic
-              @topicId={{this.topicId}}
-              @claimedBy={{this.reviewable.claimed_by}}
-              @onClaim={{fn (mut this.reviewable.claimed_by)}}
-            />
-          {{/unless}}
-        </div>
-      {{/if}}
-    {{/if}}
+        {{#if this.showIpLookup}}
+          <IpLookup
+            @ip="adminLookup"
+            @userId={{this.reviewable.target_created_by.id}}
+          />
+        {{/if}}
 
-    {{#if this.showIpLookup}}
-      <IpLookup
-        @ip="adminLookup"
-        @userId={{this.reviewable.target_created_by.id}}
-      />
-    {{/if}}
-
-    <PluginOutlet
-      @name="reviewable-item-actions"
-      @connectorTagName="div"
-      @outletArgs={{hash reviewable=this.reviewable}}
-    />
-  </div>
-</div>
+        <PluginOutlet
+          @name="reviewable-item-actions"
+          @connectorTagName="div"
+          @outletArgs={{hash reviewable=this.reviewable}}
+        />
+      </div>
+    </div>
+  </template>
+}
