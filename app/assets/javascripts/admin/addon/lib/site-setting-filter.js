@@ -82,7 +82,7 @@ export default class SiteSettingFilter {
             setting.includes(filter) ||
             setting.replace(/_/g, " ").includes(filter)
           ) {
-            item.weight = -10;
+            item.weight = 10;
             return true;
           }
 
@@ -95,7 +95,7 @@ export default class SiteSettingFilter {
                 .includes(filter.replace(/_/g, " "))
             )
           ) {
-            item.weight = -5;
+            item.weight = 5;
             return true;
           }
 
@@ -104,7 +104,7 @@ export default class SiteSettingFilter {
             return true;
           }
 
-          // Site setitng value match.
+          // Site setting value match.
           if (
             (item.get("value") || "").toString().toLowerCase().includes(filter)
           ) {
@@ -122,7 +122,7 @@ export default class SiteSettingFilter {
             ) {
               const gapResult = strippedSetting.match(fuzzyRegexGaps);
               if (gapResult) {
-                item.weight = gapResult.filter((gap) => gap !== "").length;
+                item.weight -= gapResult.filter((gap) => gap !== "").length;
               }
               fuzzyMatches.push(item);
             }
@@ -170,7 +170,7 @@ export default class SiteSettingFilter {
     // Sort the site settings so that fuzzy results are at the bottom
     // and ordered by their gap count asc.
     return settings.sort((a, b) => {
-      return (a.weight || 0) - (b.weight || 0);
+      return (b.weight || 0) - (a.weight || 0);
     });
   }
 }
