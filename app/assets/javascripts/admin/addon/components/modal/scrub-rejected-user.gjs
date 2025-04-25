@@ -1,11 +1,13 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import TextField from "discourse/components/text-field";
+import withEventValue from "discourse/helpers/with-event-value";
 import { i18n } from "discourse-i18n";
 
 export default class ScrubRejectedUserModal extends Component {
@@ -40,7 +42,7 @@ export default class ScrubRejectedUserModal extends Component {
           class="scrub-reason"
           id="scrub-reason"
           @placeholderKey="review.user.scrub_record.reason_placeholder"
-          {{on "input" (action (mut this.scrubReason) value="target.value")}}
+          {{on "input" (withEventValue (fn (mut this.scrubReason)))}}
         />
       </:body>
       <:footer>
