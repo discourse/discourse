@@ -67,6 +67,7 @@ RSpec.describe "User chat preferences", type: :system do
       user_preferences_chat_page.visit
       find("#user_chat_quick_reaction_type_frequent").click
       user_preferences_chat_page.save_changes_and_refresh
+      page.refresh # shouldn't be needed
       chat.visit_channel(category_channel_1)
       channel.hover_message(message_1)
 
