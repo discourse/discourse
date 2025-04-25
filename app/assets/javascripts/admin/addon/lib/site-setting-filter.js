@@ -1,5 +1,6 @@
 import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
+import SiteSettingMatcher from "admin/lib/site-setting-matcher";
 
 export default class SiteSettingFilter {
   constructor(siteSettings) {
@@ -53,15 +54,6 @@ export default class SiteSettingFilter {
       matchesGroupedByCategory.push(all);
     }
 
-    const strippedQuery = filter.replace(/[^a-z0-9]/gi, "");
-    let fuzzyRegex;
-    let fuzzyRegexGaps;
-
-    if (strippedQuery.length > 2) {
-      fuzzyRegex = new RegExp(strippedQuery.split("").join(".*"), "i");
-      fuzzyRegexGaps = new RegExp(strippedQuery.split("").join("(.*)"), "i");
-    }
-
     this.siteSettings.forEach((settingsCategory) => {
       let fuzzyMatches = [];
 
@@ -76,62 +68,29 @@ export default class SiteSettingFilter {
             return false;
           }
           if (filter) {
-            const setting = siteSetting.get("setting").toLowerCase();
+            const matcher = new SiteSettingMatcher(filter, siteSetting);
 
-            // Site setting name match.
-            if (
-              setting.includes(filter) ||
-              setting.replace(/_/g, " ").includes(filter)
-            ) {
+            if (matcher.isNameMatch) {
               siteSetting.weight = 10;
               return true;
             }
 
-            // Site setting keyword match.
-            if (
-              (siteSetting.get("keywords") || []).any((keyword) =>
-                keyword
-                  .replace(/_/g, " ")
-                  .toLowerCase()
-                  .includes(filter.replace(/_/g, " "))
-              )
-            ) {
+            if (matcher.isKeywordMatch) {
               siteSetting.weight = 5;
               return true;
             }
 
-            // Site setting description match.
-            if (siteSetting.get("description").toLowerCase().includes(filter)) {
+            if (matcher.isDescriptionMatch) {
               return true;
             }
 
-            // Site setting value match.
-            if (
-              (siteSetting.get("value") || "")
-                .toString()
-                .toLowerCase()
-                .includes(filter)
-            ) {
+            if (matcher.isValueMatch) {
               return true;
             }
 
-            // Fuzzy site setting name match.
-            if (fuzzyRegex && fuzzyRegex.test(setting)) {
-              // Tightens up fuzzy search results a bit.
-              const fuzzySearchLimiter = 25;
-              const strippedSetting = setting.replace(/[^a-z0-9]/gi, "");
-              if (
-                strippedSetting.length <=
-                strippedQuery.length + fuzzySearchLimiter
-              ) {
-                const gapResult = strippedSetting.match(fuzzyRegexGaps);
-                if (gapResult) {
-                  siteSetting.weight -= gapResult.filter(
-                    (gap) => gap !== ""
-                  ).length;
-                }
-                fuzzyMatches.push(siteSetting);
-              }
+            if (matcher.isFuzzyNameMatch) {
+              siteSetting.weight += matcher.matchStrength;
+              fuzzyMatches.push(siteSetting);
 
               return true;
             }
