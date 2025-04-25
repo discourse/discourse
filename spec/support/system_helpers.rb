@@ -148,8 +148,11 @@ module SystemHelpers
 
   def using_browser_timezone(timezone, &example)
     using_session(timezone) do
-      page.driver.browser.devtools.emulation.set_timezone_override(timezone_id: timezone)
-      freeze_time(&example)
+      page.driver.with_playwright_page do |pw_page|
+        cdp_session = pw_page.context.new_cdp_session(pw_page)
+        cdp_session.send_message("Emulation.setTimezoneOverride", params: { timezoneId: timezone })
+        freeze_time(&example)
+      end
     end
   end
 
