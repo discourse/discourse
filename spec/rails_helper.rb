@@ -673,7 +673,7 @@ RSpec.configure do |config|
       Capybara.current_session.driver.on_save_screenrecord do |video_path|
         saved_path =
           File.join(
-            "tmp/capybara",
+            "tmp/downloads/capybara",
             "#{example.metadata[:full_description].parameterize}-screenrecord.webm",
           )
 
@@ -686,7 +686,10 @@ RSpec.configure do |config|
     if example.metadata[:tracing]
       Capybara.current_session.driver.on_save_trace do |trace|
         saved_path =
-          File.join("tmp/capybara", "#{example.metadata[:full_description].parameterize}-trace.zip")
+          File.join(
+            "tmp/downloads/capybara",
+            "#{example.metadata[:full_description].parameterize}-trace.zip",
+          )
 
         File.write(saved_path, File.read(trace))
 

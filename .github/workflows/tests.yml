@@ -310,7 +310,7 @@ jobs:
         id: check-failed-system-test-artifacts
         if: always() && matrix.build_type == 'system'
         run: |
-          if [ -d tmp/capybara ] && [ "$(ls -A tmp/capybara/)" ]; then
+          if [ -d tmp/downloads/capybara ] && [ "$(ls -A tmp/downloads/capybara/)" ]; then
             echo "exists=true" >> $GITHUB_OUTPUT
           else
             echo "exists=false" >> $GITHUB_OUTPUT
@@ -323,9 +323,9 @@ jobs:
         with:
           name: failed-system-test-artifacts-${{ matrix.build_type }}-${{ matrix.target }}
           path: |
-            tmp/capybara/*.png
-            tmp/capybara/*.zip
-            tmp/capybara/*.webm
+            tmp/downloads/capybara/*.png
+            tmp/downloads/capybara/*.zip
+            tmp/downloads/capybara/*.webm
 
       - name: Check for flaky tests report
         id: check-flaky-spec-report
