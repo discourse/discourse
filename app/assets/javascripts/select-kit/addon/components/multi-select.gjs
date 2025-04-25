@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 {{#unless this.selectKit.isHidden}}
   {{component
     this.selectKit.options.headerComponent
@@ -57,15 +58,23 @@
   </SelectKit::SelectKitBody>
 {{/unless}}
 =======
+=======
+import { concat } from "@ember/helper";
+>>>>>>> e41897a306 (DEV: [gjs-codemod] Convert final core components/routes to gjs)
 import { computed } from "@ember/object";
 import { next } from "@ember/runloop";
 import { isPresent } from "@ember/utils";
 import { classNames } from "@ember-decorators/component";
+import { and, not } from "truth-helpers";
+import componentForCollection from "discourse/helpers/component-for-collection";
 import { makeArray } from "discourse/lib/helpers";
+import { i18n } from "discourse-i18n";
 import SelectKitComponent, {
   pluginApiIdentifiers,
+  resolveComponent,
   selectKitOptions,
 } from "select-kit/components/select-kit";
+import SelectKitBody from "select-kit/components/select-kit/select-kit-body";
 
 @classNames("multi-select")
 @selectKitOptions({
@@ -252,5 +261,94 @@ export default class MultiSelect extends SelectKitComponent {
 
     return true;
   }
+<<<<<<< HEAD
 }
 >>>>>>> a9ddbde3f6 (DEV: [gjs-codemod] renamed js to gjs)
+=======
+
+  <template>
+    {{#unless this.selectKit.isHidden}}
+      {{#let
+        (resolveComponent this this.selectKit.options.headerComponent)
+        as |HeaderComponent|
+      }}
+        <HeaderComponent
+          @tabindex={{this.tabindex}}
+          @value={{this.value}}
+          @selectedContent={{this.selectedContent}}
+          @selectKit={{this.selectKit}}
+          @id={{concat this.selectKit.uniqueID "-header"}}
+        />
+      {{/let}}
+
+      <SelectKitBody
+        @selectKit={{this.selectKit}}
+        @id={{concat this.selectKit.uniqueID "-body"}}
+      >
+        {{#unless this.selectKit.options.useHeaderFilter}}
+          {{#let
+            (resolveComponent this this.selectKit.options.filterComponent)
+            as |FilterComponent|
+          }}
+            <FilterComponent
+              @selectKit={{this.selectKit}}
+              @id={{concat this.selectKit.uniqueID "-filter"}}
+            />
+          {{/let}}
+
+          {{#if this.selectedContent.length}}
+            <div class="selected-content">
+              {{#let
+                (resolveComponent
+                  this this.selectKit.options.selectedChoiceComponent
+                )
+                as |SelectedChoiceComponent|
+              }}
+                {{#each this.selectedContent as |item|}}
+                  <SelectedChoiceComponent
+                    @item={{item}}
+                    @selectKit={{this.selectKit}}
+                    @mandatoryValues={{@mandatoryValues}}
+                  />
+                {{/each}}
+              {{/let}}
+            </div>
+          {{/if}}
+        {{/unless}}
+
+        {{#each this.collections as |collection|}}
+          {{#let
+            (resolveComponent
+              this (componentForCollection collection.identifier this.selectKit)
+            )
+            as |CollectionComponent|
+          }}
+            <CollectionComponent
+              @collection={{collection}}
+              @selectKit={{this.selectKit}}
+              @value={{this.value}}
+            />
+          {{/let}}
+        {{/each}}
+
+        {{#if this.selectKit.filter}}
+          {{#if
+            (and this.selectKit.hasNoContent (not this.selectKit.isLoading))
+          }}
+            <span class="no-content" role="alert">
+              {{i18n "select_kit.no_content"}}
+            </span>
+          {{else}}
+            <span class="results-count" role="alert">
+              {{i18n
+                "select_kit.results_count"
+                count=this.mainCollection.length
+              }}
+            </span>
+          {{/if}}
+        {{/if}}
+      </SelectKitBody>
+    {{/unless}}
+  </template>
+}
+>>>>>>> e41897a306 (DEV: [gjs-codemod] Convert final core components/routes to gjs)

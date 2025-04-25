@@ -9,9 +9,11 @@
 {{/if}}
 =======
 import Component from "@ember/component";
+import { htmlSafe } from "@ember/template";
 import { classNameBindings, classNames } from "@ember-decorators/component";
 import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
+import PinnedOptions from "select-kit/components/pinned-options";
 import { pluginApiIdentifiers } from "select-kit/components/select-kit";
 
 @classNames("pinned-button")
@@ -33,5 +35,20 @@ export default class PinnedButton extends Component {
   isHidden(pinned, deleted, unpinned) {
     return deleted || (!pinned && !unpinned);
   }
+<<<<<<< HEAD
 }
 >>>>>>> a9ddbde3f6 (DEV: [gjs-codemod] renamed js to gjs)
+=======
+
+  <template>
+    {{#if this.appendReason}}
+      <p class="reason">
+        <PinnedOptions @value={{this.pinned}} @topic={{this.topic}} />
+        <span class="text">{{htmlSafe this.reasonText}}</span>
+      </p>
+    {{else}}
+      <PinnedOptions @value={{this.pinned}} @topic={{this.topic}} />
+    {{/if}}
+  </template>
+}
+>>>>>>> e41897a306 (DEV: [gjs-codemod] Convert final core components/routes to gjs)

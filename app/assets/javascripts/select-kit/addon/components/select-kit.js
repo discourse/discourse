@@ -1,6 +1,7 @@
 import Component from "@ember/component";
 import EmberObject, { computed, get } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
+import { getOwner } from "@ember/owner";
 import { bind, cancel, next, throttle } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isEmpty, isNone, isPresent } from "@ember/utils";
@@ -63,6 +64,16 @@ export function pluginApiIdentifiers(identifiers) {
   return function (target) {
     concatProtoProperty(target, "pluginApiIdentifiers", identifiers);
   };
+}
+
+export function resolveComponent(context, component) {
+  const owner = getOwner(context);
+
+  if (typeof component === "string") {
+    return owner.resolveRegistration(`component:${component}`);
+  }
+
+  return component;
 }
 
 // Decorator which converts a field into a prototype property.

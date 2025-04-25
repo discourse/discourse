@@ -16,7 +16,9 @@ import {
   classNames,
   tagName,
 } from "@ember-decorators/component";
+import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import { resolveComponent } from "select-kit/components/select-kit";
 import SelectKitHeaderComponent from "select-kit/components/select-kit/select-kit-header";
 
 @tagName("summary")
@@ -45,5 +47,24 @@ export default class SingleSelectHeader extends SelectKitHeaderComponent {
       return i18n("select_kit.select_to_filter");
     }
   }
+
+  <template>
+    <div class="select-kit-header-wrapper">
+      {{#each this.icons as |iconName|}} {{icon iconName}} {{/each}}
+
+      {{#let
+        (resolveComponent this this.selectKit.options.selectedNameComponent)
+        as |SelectedNameComponent|
+      }}
+        <SelectedNameComponent
+          @item={{this.selectedContent}}
+          @selectKit={{this.selectKit}}
+        />
+      {{/let}}
+    </div>
+  </template>
 }
+<<<<<<< HEAD
 >>>>>>> a9ddbde3f6 (DEV: [gjs-codemod] renamed js to gjs)
+=======
+>>>>>>> e41897a306 (DEV: [gjs-codemod] Convert final core components/routes to gjs)

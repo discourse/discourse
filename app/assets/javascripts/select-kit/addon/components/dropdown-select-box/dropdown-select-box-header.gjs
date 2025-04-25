@@ -20,6 +20,8 @@
 import { computed } from "@ember/object";
 import { readOnly } from "@ember/object/computed";
 import { classNameBindings, classNames } from "@ember-decorators/component";
+import icon from "discourse/helpers/d-icon";
+import { resolveComponent } from "select-kit/components/select-kit";
 import SingleSelectHeaderComponent from "select-kit/components/select-kit/single-select-header";
 
 @classNames("dropdown-select-box-header")
@@ -45,5 +47,32 @@ export default class DropdownSelectBoxHeader extends SingleSelectHeaderComponent
   get caretIcon() {
     return this.selectKit.isExpanded ? this.caretUpIcon : this.caretDownIcon;
   }
+
+  <template>
+    <div class="select-kit-header-wrapper">
+      {{#each this.icons as |iconName|}} {{icon iconName}} {{/each}}
+
+      {{#let
+        (resolveComponent this this.selectKit.options.selectedNameComponent)
+        as |SelectedNameComponent|
+      }}
+        <SelectedNameComponent
+          @tabindex={{this.tabindex}}
+          @item={{this.selectedContent}}
+          @selectKit={{this.selectKit}}
+          @shouldDisplayClearableButton={{this.shouldDisplayClearableButton}}
+        />
+      {{/let}}
+
+      {{#if this.selectKit.options.showCaret}}
+        {{icon this.caretIcon class="caret-icon"}}
+      {{/if}}
+      &#8203;
+      {{! Zero-width space character, so icon-only button height = regular button height }}
+    </div>
+  </template>
 }
+<<<<<<< HEAD
 >>>>>>> a9ddbde3f6 (DEV: [gjs-codemod] renamed js to gjs)
+=======
+>>>>>>> e41897a306 (DEV: [gjs-codemod] Convert final core components/routes to gjs)
