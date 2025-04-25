@@ -9,13 +9,24 @@ class PostLocalization < ActiveRecord::Base
   validates :cooked, presence: true
   validates :localizer_user_id, presence: true
   validates :post_id, uniqueness: { scope: :locale }
-
-  def self.create_or_update!(post_id:, post_version:, locale:, raw:, cooked:)
-    localization = find_or_initialize_by(post_id: post_id, locale: locale)
-    localization.post_version = post_version
-    localization.raw = raw
-    localization.cooked = cooked
-    localization.save!
-    localization
-  end
 end
+
+# == Schema Information
+#
+# Table name: post_localizations
+#
+#  id                :bigint           not null, primary key
+#  post_id           :integer          not null
+#  post_version      :integer          not null
+#  locale            :string(20)       not null
+#  raw               :text             not null
+#  cooked            :text             not null
+#  localizer_user_id :integer          not null
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#
+# Indexes
+#
+#  index_post_localizations_on_post_id             (post_id)
+#  index_post_localizations_on_post_id_and_locale  (post_id,locale) UNIQUE
+#
