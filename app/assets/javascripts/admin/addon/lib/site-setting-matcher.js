@@ -5,14 +5,14 @@ export default class SiteSettingMatcher {
     this.strippedQuery = filter.replace(/[^a-z0-9]/gi, "");
     this.fuzzyRegex = new RegExp(this.strippedQuery.split("").join(".*"), "i");
     this.fuzzyRegexGaps = new RegExp(
-      this.strippedQuery.split("").join("(.*)"),
+      ".*" + this.strippedQuery.split("").join("(.*)"),
       "i"
     );
     this.matchStrength = 0;
   }
 
   get isNameMatch() {
-    const name = this.siteSetting.get("setting").toLowerCase();
+    const name = this.siteSetting.setting.toLowerCase();
 
     return (
       name.includes(this.filter) ||
@@ -21,7 +21,7 @@ export default class SiteSettingMatcher {
   }
 
   get isKeywordMatch() {
-    (this.siteSetting.get("keywords") || []).any((keyword) =>
+    return (this.siteSetting.keywords || []).any((keyword) =>
       keyword
         .replace(/_/g, " ")
         .toLowerCase()
@@ -30,21 +30,18 @@ export default class SiteSettingMatcher {
   }
 
   get isDescriptionMatch() {
-    return this.siteSetting
-      .get("description")
-      .toLowerCase()
-      .includes(this.filter);
+    return this.siteSetting.description.toLowerCase().includes(this.filter);
   }
 
   get isValueMatch() {
-    (this.siteSetting.get("value") || "")
+    return (this.siteSetting.value || "")
       .toString()
       .toLowerCase()
       .includes(this.filter);
   }
 
   get isFuzzyNameMatch() {
-    const name = this.siteSetting.get("setting").toLowerCase();
+    const name = this.siteSetting.setting.toLowerCase();
 
     if (this.strippedQuery.length < 3) {
       return false;
@@ -67,7 +64,10 @@ export default class SiteSettingMatcher {
     const gapResult = strippedSetting.match(this.fuzzyRegexGaps);
 
     if (gapResult) {
-      this.matchStrength -= gapResult.filter((gap) => gap !== "").length;
+      // Discard empty gaps and disregard the full string match.
+      const numberOfGaps = gapResult.filter((gap) => gap !== "").length - 1;
+
+      this.matchStrength -= numberOfGaps;
     }
 
     return true;

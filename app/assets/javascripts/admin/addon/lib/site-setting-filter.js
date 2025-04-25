@@ -104,10 +104,6 @@ export default class SiteSettingFilter {
         }
       );
 
-      if (fuzzyMatches.length > 0) {
-        siteSettings.pushObjects(fuzzyMatches);
-      }
-
       if (siteSettings.length > 0) {
         matches.pushObjects(siteSettings);
         matchesGroupedByCategory.pushObject({
@@ -136,7 +132,7 @@ export default class SiteSettingFilter {
   @bind
   sortSettings(settings) {
     // Sort the site settings so that fuzzy results are at the bottom
-    // and ordered by their gap count asc.
+    // and ordered by their match strength.
     return settings.sort((a, b) => {
       return (b.weight || 0) - (a.weight || 0);
     });
