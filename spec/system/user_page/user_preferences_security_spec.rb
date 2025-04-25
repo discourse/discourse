@@ -34,11 +34,6 @@ describe "User preferences | Security", type: :system do
 
         user_menu.sign_out
 
-        # login flow
-        find(".d-header .login-button").click
-        find("input#login-account-name").fill_in(with: user.username)
-        find("input#login-account-password").fill_in(with: password)
-
         # puts <<~STRING
         # public_key_base64 = \"#{user.second_factor_security_keys.first.public_key}\"
         # private_key_string = \"#{authenticator.credentials.first.private_key}\"
@@ -48,6 +43,9 @@ describe "User preferences | Security", type: :system do
         find(".d-header .login-button").click
         find("input#login-account-name").fill_in(with: user.username)
         find("input#login-account-password").fill_in(with: password)
+
+        find("#login-button.btn-primary").click
+        find("#security-key .btn-primary").click
 
         expect(page).to have_css(".header-dropdown-toggle.current-user")
       end

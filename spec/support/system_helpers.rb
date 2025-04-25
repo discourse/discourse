@@ -225,54 +225,6 @@ module SystemHelpers
     !!RSpec.current_example.metadata[:mobile]
   end
 
-  # This method can be used to run a system test with a user that has a physical security key by adding a virtual
-  # authenticator to the browser. It will automatically remove the virtual authenticator after the block is executed.
-  #
-  # Example:
-  #  with_security_key(user) do
-  #    <your system test code here>
-  #  end
-  #
-  def with_security_key(user)
-    # The public and private keys are complicated to generate programmatically, so we generate it by running the
-    # `spec/user_preferences/security_keys_spec.rb` test and uncommenting the lines that print the keys.
-    public_key_base64 =
-      "pQECAyYgASFYIJhY+jDNJM8g0lyKP3ivDxs+mrKXqfKUY3f7Uo4pWTPDIlggj03xktSm0JTSqbDefhu5WAKH7VRQmWXotjtI/8ka/P0="
-    private_key_base64 =
-      "MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQg2AWg10o6aoM0s55halZvcQLnpM2tVO2D8Ugw7wFCjzyhRANCAASYWPowzSTPINJcij94rw8bPpqyl6nylGN3-1KOKVkzw49N8ZLUptCU0qmw3n4buVgCh-1UUJll6LY7SP_JGvz9"
-    credential_id_base64 = Base64.strict_encode64(SecureRandom.random_bytes(32))
-    credential_id_bytes = Selenium::WebDriver::Credential.decode(credential_id_base64)
-    private_key_bytes = Selenium::WebDriver::Credential.decode(private_key_base64)
-
-    credential =
-      Selenium::WebDriver::Credential.new(
-        id: credential_id_bytes,
-        resident_credential: false,
-        rp_id: DiscourseWebauthn.rp_id,
-        private_key: private_key_bytes,
-        sign_count: 1,
-      )
-
-    authenticator =
-      page.driver.browser.add_virtual_authenticator(
-        Selenium::WebDriver::VirtualAuthenticatorOptions.new,
-      )
-
-    authenticator.add_credential(credential)
-
-    Fabricate(
-      :user_security_key,
-      user:,
-      public_key: public_key_base64,
-      credential_id: credential_id_base64,
-      name: "First Key",
-    )
-
-    yield
-  ensure
-    authenticator.remove! if authenticator
-  end
-
   def with_logs
     playwright_logger = nil
     page.driver.with_playwright_page { |pw_page| playwright_logger = PlaywrightLogger.new(pw_page) }
@@ -280,44 +232,87 @@ module SystemHelpers
     yield(playwright_logger)
   end
 
-  def with_virtual_authenticator(options = {})
-    cdp_client = nil
+  # This method can be used to run a system test with a user that has a physical security key by adding a virtual
+  # authenticator to the browser. It will automatically remove the virtual authenticator after the block is executed.
+  #
+  # Example:
+  #  with_security_key(user, options) do
+  #    <your system test code here>
+  #  end
+  #
+  def with_security_key(user, options = {})
+    # The public and private keys are complicated to generate programmatically, so we generate it by running the
+    # `spec/user_preferences/security_keys_spec.rb` test and uncommenting the lines that print the keys.
+    public_key_base64 =
+      "pQECAyYgASFYIJhY+jDNJM8g0lyKP3ivDxs+mrKXqfKUY3f7Uo4pWTPDIlggj03xktSm0JTSqbDefhu5WAKH7VRQmWXotjtI/8ka/P0="
+    private_key_base64 =
+      "MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQg2AWg10o6aoM0s55halZvcQLnpM2tVO2D8Ugw7wFCjzyhRANCAASYWPowzSTPINJcij94rw8bPpqyl6nylGN3-1KOKVkzw49N8ZLUptCU0qmw3n4buVgCh-1UUJll6LY7SP_JGvz9"
+    credential_id_base64 = Base64.strict_encode64(SecureRandom.random_bytes(32))
+    credential_id_bytes = Base64.urlsafe_decode64(credential_id_base64)
+    private_key_bytes = Base64.urlsafe_decode64(private_key_base64)
 
-    page.driver.with_playwright_page do |pw_page|
-      cdp_client = pw_page.context.new_cdp_session(pw_page)
-    end
-
-    cdp_client.send_message("WebAuthn.enable")
-
-    authenticator_options = {
-      protocol: "ctap2",
-      transport: "usb",
-      hasResidentKey: false,
-      hasUserVerification: false,
-      automaticPresenceSimulation: true,
-    }.merge(options)
-
-    response =
+    with_virtual_authenticator(options) do |cdp_client, authenticator_id|
       cdp_client.send_message(
-        "WebAuthn.addVirtualAuthenticator",
-        params: {
-          options: authenticator_options,
-        },
-      )
-
-    authenticator_id = response["authenticatorId"]
-
-    begin
-      yield if block_given?
-    ensure
-      cdp_client.send_message(
-        "WebAuthn.removeVirtualAuthenticator",
+        "WebAuthn.addCredential",
         params: {
           authenticatorId: authenticator_id,
+          credential: {
+            credentialId: Base64.strict_encode64(credential_id_bytes),
+            isResidentCredential: false,
+            rpId: DiscourseWebauthn.rp_id,
+            privateKey: Base64.strict_encode64(private_key_bytes),
+            signCount: 1,
+          },
         },
       )
 
-      cdp_client.send_message("WebAuthn.disable")
+      Fabricate(
+        :user_security_key,
+        user:,
+        public_key: public_key_base64,
+        credential_id: credential_id_base64,
+        name: "First Key",
+      )
+
+      yield
+    end
+  end
+
+  def with_virtual_authenticator(options = {})
+    page.driver.with_playwright_page do |pw_page|
+      cdp_client = pw_page.context.new_cdp_session(pw_page)
+      cdp_client.send_message("WebAuthn.enable")
+
+      authenticator_options = {
+        protocol: "ctap2",
+        transport: "usb",
+        hasResidentKey: false,
+        hasUserVerification: false,
+        automaticPresenceSimulation: true,
+      }.merge(options)
+
+      response =
+        cdp_client.send_message(
+          "WebAuthn.addVirtualAuthenticator",
+          params: {
+            options: authenticator_options,
+          },
+        )
+
+      authenticator_id = response["authenticatorId"]
+
+      begin
+        yield(cdp_client, authenticator_id)
+      ensure
+        cdp_client.send_message(
+          "WebAuthn.removeVirtualAuthenticator",
+          params: {
+            authenticatorId: authenticator_id,
+          },
+        )
+
+        cdp_client.send_message("WebAuthn.disable")
+      end
     end
   end
 
