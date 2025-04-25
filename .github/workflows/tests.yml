@@ -51,14 +51,10 @@ jobs:
       fail-fast: false
 
       matrix:
-        build_type: [backend, frontend, system, annotations]
+        build_type: [backend, frontend, system]
         target: [core, plugins, themes]
         browser: [Chrome]
         exclude:
-          - build_type: annotations
-            target: plugins
-          - build_type: annotations
-            target: themes
           - build_type: backend
             target: themes
         include:
@@ -217,6 +213,22 @@ jobs:
           key: rspec-runtime-${{ matrix.build_type }}-${{ matrix.target }}-${{ github.run_id }}
           restore-keys: rspec-runtime-${{ matrix.build_type }}-${{ matrix.target }}-
 
+      - name: Check Annotations
+        if: matrix.build_type == 'backend' && matrix.target == 'core'
+        run: |
+          bin/rake annotate:ensure_all_indexes
+          bin/annotate --models --model-dir app/models
+
+          if [ ! -z "$(git status --porcelain app/models/)" ]; then
+            echo "Core annotations are not up to date. To resolve, run:"
+            echo "  bin/rake annotate:clean"
+            echo
+            echo "Or manually apply the diff printed below:"
+            echo "---------------------------------------------"
+            git -c color.ui=always diff app/models/
+            exit 1
+          fi
+
       - name: Check Zeitwerk reloading
         if: matrix.build_type == 'backend'
         env:
@@ -336,22 +348,6 @@ jobs:
         with:
           name: flaky-test-reports-${{ matrix.build_type }}-${{ matrix.target }}
           path: tmp/turbo_rspec_flaky_tests-${{ matrix.build_type }}-${{ matrix.target }}-${{ steps.fetch-job-id.outputs.job_id }}.json
-
-      - name: Check Annotations
-        if: matrix.build_type == 'annotations'
-        run: |
-          bin/rake annotate:ensure_all_indexes
-          bin/annotate --models --model-dir app/models
-
-          if [ ! -z "$(git status --porcelain app/models/)" ]; then
-            echo "Core annotations are not up to date. To resolve, run:"
-            echo "  bin/rake annotate:clean"
-            echo
-            echo "Or manually apply the diff printed below:"
-            echo "---------------------------------------------"
-            git -c color.ui=always diff app/models/
-            exit 1
-          fi
 
   merge:
     if: github.repository == 'discourse/discourse' && github.ref == 'refs/heads/main'
