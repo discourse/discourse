@@ -71,33 +71,8 @@ describe "Changing email", type: :system do
   end
 
   it "works when user has webauthn 2fa" do
-    begin
-      # enforced 2FA flow needs a user created > 5 minutes ago
-      user.created_at = 6.minutes.ago
-      user.save!
-
+    with_security_key(user) do
       sign_in user
-
-      DiscourseWebauthn.stubs(:origin).returns(current_host + ":" + Capybara.server_port.to_s)
-      options =
-        ::Selenium::WebDriver::VirtualAuthenticatorOptions.new(
-          user_verification: true,
-          user_verified: true,
-          resident_key: true,
-        )
-      authenticator = page.driver.browser.add_virtual_authenticator(options)
-
-      user_preferences_security_page.visit(user)
-      user_preferences_security_page.visit_second_factor(user, password)
-
-      find(".security-key .new-security-key").click
-      expect(user_preferences_security_page).to have_css("input#security-key-name")
-
-      find(".d-modal__body input#security-key-name").fill_in(with: "First Key")
-      find(".add-security-key").click
-
-      expect(user_preferences_security_page).to have_css(".security-key .second-factor-item")
-
       visit generate_confirm_link
 
       find(".confirm-new-email .btn-primary").click
@@ -106,8 +81,6 @@ describe "Changing email", type: :system do
       try_until_success(timeout: Capybara.default_max_wait_time * 2) do
         expect(user.reload.primary_email.email).to eq(new_email)
       end
-    ensure
-      authenticator&.remove!
     end
   end
 
