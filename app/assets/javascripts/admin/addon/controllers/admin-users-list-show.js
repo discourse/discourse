@@ -131,6 +131,7 @@ export default class AdminUsersListShowController extends Controller {
     discourseDebounce(this, this.resetFilters, INPUT_DELAY);
   }
 
+  @action
   loadMore() {
     if (this.refreshing) {
       return;

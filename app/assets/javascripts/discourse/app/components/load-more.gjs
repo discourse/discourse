@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import element from "discourse/helpers/element";
 import discourseDebounce from "discourse/lib/debounce";
+import observeIntersection from "discourse/modifiers/observe-intersection";
 
 let ENABLE_LOAD_MORE_OBSERVER = true;
 
@@ -54,46 +54,15 @@ export function enableLoadMoreObserver() {
  */
 export default class LoadMore extends Component {
   observer;
-  loadMoreAction = this.args.action;
   root = this.args.root || null;
   rootMargin = this.args.rootMargin || "0px 0px 0px 0px";
   threshold = this.args.threshold || 0.1;
 
-  willDestroy() {
-    super.willDestroy();
-    if (this.observer) {
-      this.observer.disconnect();
-      this.observer = null;
-    }
-  }
-
   @action
-  setupObserver(sentinelElement) {
-    if (!ENABLE_LOAD_MORE_OBSERVER) {
-      return;
+  onIntersection(entry) {
+    if (ENABLE_LOAD_MORE_OBSERVER && entry.isIntersecting) {
+      discourseDebounce(this, this.args.action, 100);
     }
-
-    const rootElement = this.root ? document.querySelector(this.root) : null;
-
-    this.observer = new IntersectionObserver(
-      (entries) => {
-        if (!this.observer) {
-          return;
-        }
-
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            discourseDebounce(this, this.loadMoreAction, 100);
-          }
-        });
-      },
-      {
-        root: rootElement,
-        rootMargin: this.rootMargin,
-        threshold: this.threshold,
-      }
-    );
-    this.observer.observe(sentinelElement);
   }
 
   <template>
@@ -101,7 +70,12 @@ export default class LoadMore extends Component {
       <Wrapper ...attributes>
         {{yield}}
         <div
-          {{didInsert this.setupObserver}}
+          {{observeIntersection
+            this.onIntersection
+            threshold=this.threshold
+            rootMargin=this.rootMargin
+            root=this.root
+          }}
           class="load-more-sentinel"
           aria-hidden="true"
           style="height: 1px; width: 100%; margin: 0; padding: 0; pointer-events: none; user-select: none; visibility: hidden; position: relative;"
