@@ -5,7 +5,7 @@ import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { debounce } from "discourse/lib/decorators";
 import { INPUT_DELAY } from "discourse/lib/environment";
-import SiteSettingFilter from "discourse/lib/site-setting-filter";
+import SiteSettingFilter from "admin/lib/site-setting-filter";
 
 export default class AdminSiteSettingsController extends Controller {
   @service router;
