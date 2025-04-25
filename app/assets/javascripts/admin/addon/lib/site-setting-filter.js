@@ -65,76 +65,83 @@ export default class SiteSettingFilter {
     this.siteSettings.forEach((settingsCategory) => {
       let fuzzyMatches = [];
 
-      const siteSettings = settingsCategory.siteSettings.filter((item) => {
-        item.weight = 0;
+      const siteSettings = settingsCategory.siteSettings.filter(
+        (siteSetting) => {
+          siteSetting.weight = 0;
 
-        if (opts.onlyOverridden && !item.get("overridden")) {
-          return false;
-        }
-        if (pluginFilter && item.plugin !== pluginFilter) {
-          return false;
-        }
-        if (filter) {
-          const setting = item.get("setting").toLowerCase();
-
-          // Site setting name match.
-          if (
-            setting.includes(filter) ||
-            setting.replace(/_/g, " ").includes(filter)
-          ) {
-            item.weight = 10;
-            return true;
+          if (opts.onlyOverridden && !siteSetting.get("overridden")) {
+            return false;
           }
-
-          // Site setting keyword match.
-          if (
-            (item.get("keywords") || []).any((keyword) =>
-              keyword
-                .replace(/_/g, " ")
-                .toLowerCase()
-                .includes(filter.replace(/_/g, " "))
-            )
-          ) {
-            item.weight = 5;
-            return true;
+          if (pluginFilter && siteSetting.plugin !== pluginFilter) {
+            return false;
           }
+          if (filter) {
+            const setting = siteSetting.get("setting").toLowerCase();
 
-          // Site setting description match.
-          if (item.get("description").toLowerCase().includes(filter)) {
-            return true;
-          }
-
-          // Site setting value match.
-          if (
-            (item.get("value") || "").toString().toLowerCase().includes(filter)
-          ) {
-            return true;
-          }
-
-          // Fuzzy site setting name match.
-          if (fuzzyRegex && fuzzyRegex.test(setting)) {
-            // Tightens up fuzzy search results a bit.
-            const fuzzySearchLimiter = 25;
-            const strippedSetting = setting.replace(/[^a-z0-9]/gi, "");
+            // Site setting name match.
             if (
-              strippedSetting.length <=
-              strippedQuery.length + fuzzySearchLimiter
+              setting.includes(filter) ||
+              setting.replace(/_/g, " ").includes(filter)
             ) {
-              const gapResult = strippedSetting.match(fuzzyRegexGaps);
-              if (gapResult) {
-                item.weight -= gapResult.filter((gap) => gap !== "").length;
-              }
-              fuzzyMatches.push(item);
+              siteSetting.weight = 10;
+              return true;
             }
 
+            // Site setting keyword match.
+            if (
+              (siteSetting.get("keywords") || []).any((keyword) =>
+                keyword
+                  .replace(/_/g, " ")
+                  .toLowerCase()
+                  .includes(filter.replace(/_/g, " "))
+              )
+            ) {
+              siteSetting.weight = 5;
+              return true;
+            }
+
+            // Site setting description match.
+            if (siteSetting.get("description").toLowerCase().includes(filter)) {
+              return true;
+            }
+
+            // Site setting value match.
+            if (
+              (siteSetting.get("value") || "")
+                .toString()
+                .toLowerCase()
+                .includes(filter)
+            ) {
+              return true;
+            }
+
+            // Fuzzy site setting name match.
+            if (fuzzyRegex && fuzzyRegex.test(setting)) {
+              // Tightens up fuzzy search results a bit.
+              const fuzzySearchLimiter = 25;
+              const strippedSetting = setting.replace(/[^a-z0-9]/gi, "");
+              if (
+                strippedSetting.length <=
+                strippedQuery.length + fuzzySearchLimiter
+              ) {
+                const gapResult = strippedSetting.match(fuzzyRegexGaps);
+                if (gapResult) {
+                  siteSetting.weight -= gapResult.filter(
+                    (gap) => gap !== ""
+                  ).length;
+                }
+                fuzzyMatches.push(siteSetting);
+              }
+
+              return true;
+            }
+
+            return false;
+          } else {
             return true;
           }
-
-          return false;
-        } else {
-          return true;
         }
-      });
+      );
 
       if (fuzzyMatches.length > 0) {
         siteSettings.pushObjects(fuzzyMatches);
