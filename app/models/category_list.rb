@@ -139,6 +139,15 @@ class CategoryList
 
   def find_categories
     query = Category.includes(CategoryList.included_associations).secured(@guardian)
+
+    if SiteSetting.experimental_content_localization
+      locale = I18n.locale.to_s
+      query =
+        query.joins(
+          "LEFT JOIN category_localizations cl ON cl.category_id = categories.id AND cl.locale = '#{locale}'",
+        )
+    end
+
     query = self.class.order_categories(query)
 
     paginate = paginate_results?
@@ -158,6 +167,15 @@ class CategoryList
 
     query =
       DiscoursePluginRegistry.apply_modifier(:category_list_find_categories_query, query, self)
+
+    if SiteSetting.experimental_content_localization
+      query =
+        query.select(
+          "categories.*,
+     MAX(COALESCE(cl.name, categories.name)) AS name,
+     MAX(COALESCE(cl.description, categories.description)) AS description",
+        )
+    end
 
     @categories = query.to_a
 
