@@ -30,8 +30,6 @@
     "lint-to-the-future-ember-template": "^3.1.0",
     "lint-to-the-future-eslint": "^3.1.0",
     "magnific-popup": "1.1.0",
-    "moment": "2.30.1",
-    "moment-timezone": "0.5.45",
     "pikaday": "1.8.2",
     "prettier": "3.5.3",
     "puppeteer-core": "^24.7.2",
