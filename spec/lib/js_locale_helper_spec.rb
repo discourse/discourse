@@ -22,7 +22,8 @@ RSpec.describe JsLocaleHelper do
     ctx.eval <<~JS
       define("discourse/loader-shims", () => {})
       define("discourse/lib/load-moment", () => {})
-      moment = { defineLocale: () => {}, fn: {}, tz: {} }
+      require("discourse-i18n");
+      globalThis.moment = { defineLocale: () => {}, fn: {}, tz: {} }
     JS
     ctx
   end
@@ -175,6 +176,7 @@ RSpec.describe JsLocaleHelper do
         value: "{ count, plural, one {返信 # 件、} other {返信 # 件、} }",
       )
       overriden_translation_zh_tw.update_columns(value: "{ count, plural, ")
+      puts output
       v8_ctx.eval(output)
     end
 
