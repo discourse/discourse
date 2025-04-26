@@ -1,4 +1,4 @@
-import { render, settled } from "@ember/test-helpers";
+import { render, waitUntil } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import LoadMore, {
   disableLoadMoreObserver,
@@ -62,8 +62,7 @@ module("Integration | Component | load-more", function (hooks) {
       </template>
     );
 
-    // eslint-disable-next-line ember/no-settled-after-test-helper
-    await settled();
+    await waitUntil(() => actionCalled === 1);
 
     assert.strictEqual(
       actionCalled,
