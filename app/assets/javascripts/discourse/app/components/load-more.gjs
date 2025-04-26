@@ -56,7 +56,7 @@ export default class LoadMore extends Component {
   observer;
   root = this.args.root || null;
   rootMargin = this.args.rootMargin || "0px 0px 0px 0px";
-  threshold = this.args.threshold || 0.1;
+  threshold = this.args.threshold || 0.0;
 
   @action
   onIntersection(entry) {
@@ -78,7 +78,7 @@ export default class LoadMore extends Component {
           }}
           class="load-more-sentinel"
           aria-hidden="true"
-          style="height: 1px; width: 100%; margin: 0; padding: 0; pointer-events: none; user-select: none; visibility: hidden; position: relative;"
+          style="height: 0px; width: 100%; margin: 0; padding: 0; pointer-events: none; user-select: none; visibility: hidden; position: relative;"
         />
       </Wrapper>
     {{/let}}
