@@ -260,7 +260,7 @@ module JsLocaleHelper
 
   def self.find_moment_locale(locale_chain, timezone_names: false)
     if timezone_names
-      path = "#{Rails.root}/node_modules/@discourse/moment-timezone-names-locale"
+      path = "#{Rails.root}/node_modules/@discourse/moment-timezone-names-translations/locales"
       type = :moment_js_timezones
     else
       path = "#{Rails.root}/app/assets/javascripts/discourse/node_modules/moment/locale"

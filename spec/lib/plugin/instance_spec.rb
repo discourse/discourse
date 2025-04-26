@@ -573,7 +573,10 @@ TEXT
         ],
       )
       expect(locale[:moment_js_timezones]).to eq(
-        ["pt", "#{Rails.root}/node_modules/@discourse/moment-timezone-names-locale/pt.js"],
+        [
+          "pt",
+          "#{Rails.root}/node_modules/@discourse/moment-timezone-names-translations/locales/pt.js",
+        ],
       )
       expect(locale[:plural]).to be_nil
 
@@ -583,13 +586,12 @@ TEXT
     it "correctly registers a new locale when some files exist in core" do
       locale = register_locale("tlh", name: "Klingon", nativeName: "tlhIngan Hol", plural: plural)
 
-      puts DiscoursePluginRegistry.locales.inspect
       expect(DiscoursePluginRegistry.locales.count).to eq(1)
       expect(DiscoursePluginRegistry.locales).to have_key(:tlh)
 
       expect(locale[:fallbackLocale]).to be_nil
       expect(locale[:moment_js]).to eq(
-        ["tlh", "#{Rails.root}/moment-timezone-names-locale/moment/locale/tlh.js"],
+        ["tlh", "#{Rails.root}/app/assets/javascripts/discourse/node_modules/moment/locale/tlh.js"],
       )
       expect(locale[:plural]).to eq(plural.with_indifferent_access)
 
