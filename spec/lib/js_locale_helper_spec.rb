@@ -22,7 +22,7 @@ RSpec.describe JsLocaleHelper do
     ctx.eval <<~JS
       define("discourse/loader-shims", () => {})
       define("discourse/lib/load-moment", () => {})
-      moment = { defineLocale: () => {}, fn: {} }
+      moment = { defineLocale: () => {}, fn: {}, tz: {} }
     JS
     # As there are circular references in the return value, this raises an
     # error if we let MiniRacer try to convert the value to JSON. Forcing
