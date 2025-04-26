@@ -191,6 +191,29 @@
   }
 }
 
+.composer-link-toolbar {
+  display: flex;
+  align-items: center;
+
+  &__divider {
+    width: 1px;
+    height: 1rem;
+    background-color: var(--primary-low);
+    margin: 0 0.5rem;
+  }
+
+  &__visit {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    margin-right: 0.5rem;
+  }
+}
+
+.fk-d-menu[data-identifier="composer-link-toolbar"] {
+  z-index: z("composer", "dropdown") + 1;
+  animation: fade-in ease 0.25s 1 forwards;
+}
+
 /*********************************************************
  Section below from prosemirror-view/style/prosemirror.css
  ********************************************************/

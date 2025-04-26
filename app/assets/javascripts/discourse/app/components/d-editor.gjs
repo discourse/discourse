@@ -8,6 +8,7 @@ import { schedule, scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
 import { classNames } from "@ember-decorators/component";
 import { observes, on as onEvent } from "@ember-decorators/object";
+import curryComponent from "ember-curry-component";
 import { emojiSearch, isSkinTonableEmoji } from "pretty-text/emoji";
 import { translations } from "pretty-text/emoji/data";
 import { Promise } from "rsvp";
@@ -68,6 +69,8 @@ export default class DEditor extends Component {
   @tracked editorComponent;
   /** @type {TextManipulation} */
   @tracked textManipulation;
+  @tracked replacedToolbarComponent;
+  @tracked replacedToolbar;
 
   @tracked preview;
 
@@ -617,6 +620,12 @@ export default class DEditor extends Component {
   }
 
   @action
+  resetToolbar() {
+    this.replacedToolbar = false;
+    this.replacedToolbarComponent = null;
+  }
+
+  @action
   onChange(event) {
     this.set("value", event?.target?.value);
     this.change?.(event);
@@ -652,7 +661,22 @@ export default class DEditor extends Component {
         "indentSelection"
       );
 
+      const replaceToolbar = ({ component, data }) => {
+        this.replacedToolbar = true;
+        this.replacedToolbarComponent = curryComponent(
+          component,
+          { data },
+          getOwner(this)
+        );
+      };
+
+      this.appEvents.on("composer:replace-toolbar", replaceToolbar);
+      this.appEvents.on("composer:reset-toolbar", this, "resetToolbar");
+
       return () => {
+        this.appEvents.off("composer:replace-toolbar", replaceToolbar);
+        this.appEvents.off("composer:reset-toolbar", this, "resetToolbar");
+
         this.appEvents.off(
           "composer:insert-block",
           textManipulation,
@@ -715,45 +739,62 @@ export default class DEditor extends Component {
             {{if this.disabled 'disabled'}}
             {{if this.isEditorFocused 'in-focus'}}"
         >
-          <div class="d-editor-button-bar" role="toolbar">
-            {{#if this.siteSettings.rich_editor}}
-              <ToggleSwitch
-                @preventFocus={{true}}
-                @disabled={{@disableSubmit}}
-                @state={{this.isRichEditorEnabled}}
-                {{on "click" this.toggleRichEditor}}
-              />
-            {{/if}}
 
-            {{#each this.toolbar.groups as |group|}}
-              {{#each group.buttons as |b|}}
-                {{#if (b.condition this)}}
-                  {{#if b.popupMenu}}
-                    <ToolbarPopupMenuOptions
-                      @content={{this.popupMenuOptions}}
-                      @onChange={{this.onPopupMenuAction}}
-                      @onOpen={{fn b.action b}}
-                      @tabindex={{-1}}
-                      @onKeydown={{this.rovingButtonBar}}
-                      @options={{hash icon=b.icon focusAfterOnChange=false}}
-                      class={{b.className}}
-                    />
-                  {{else}}
-                    <DButton
-                      @action={{fn b.action b}}
-                      @translatedTitle={{b.title}}
-                      @label={{b.label}}
-                      @icon={{b.icon}}
-                      @preventFocus={{b.preventFocus}}
-                      @onKeyDown={{this.rovingButtonBar}}
-                      tabindex={{b.tabindex}}
-                      class={{b.className}}
-                    />
+          {{#if this.replacedToolbar}}
+            <div class="d-editor-button-bar --replaced-toolbar" role="toolbar">
+              <div class="d-editor-replaced-toolbar">
+                <DButton
+                  @action={{this.resetToolbar}}
+                  @icon="angle-left"
+                  @preventFocus={{true}}
+                  @onKeyDown={{this.rovingButtonBar}}
+                  @tabindex="-1"
+                  class="btn-flat"
+                />
+                {{this.replacedToolbarComponent}}
+              </div>
+            </div>
+          {{else}}
+            <div class="d-editor-button-bar" role="toolbar">
+              {{#if this.siteSettings.rich_editor}}
+                <ToggleSwitch
+                  @preventFocus={{true}}
+                  @disabled={{@disableSubmit}}
+                  @state={{this.isRichEditorEnabled}}
+                  {{on "click" this.toggleRichEditor}}
+                />
+              {{/if}}
+
+              {{#each this.toolbar.groups as |group|}}
+                {{#each group.buttons as |b|}}
+                  {{#if (b.condition this)}}
+                    {{#if b.popupMenu}}
+                      <ToolbarPopupMenuOptions
+                        @content={{this.popupMenuOptions}}
+                        @onChange={{this.onPopupMenuAction}}
+                        @onOpen={{fn b.action b}}
+                        @tabindex={{-1}}
+                        @onKeydown={{this.rovingButtonBar}}
+                        @options={{hash icon=b.icon focusAfterOnChange=false}}
+                        class={{b.className}}
+                      />
+                    {{else}}
+                      <DButton
+                        @action={{fn b.action b}}
+                        @translatedTitle={{b.title}}
+                        @label={{b.label}}
+                        @icon={{b.icon}}
+                        @preventFocus={{b.preventFocus}}
+                        @onKeyDown={{this.rovingButtonBar}}
+                        tabindex={{b.tabindex}}
+                        class={{b.className}}
+                      />
+                    {{/if}}
                   {{/if}}
-                {{/if}}
+                {{/each}}
               {{/each}}
-            {{/each}}
-          </div>
+            </div>
+          {{/if}}
 
           <ConditionalLoadingSpinner @condition={{this.loading}} />
           <this.editorComponent

@@ -63,6 +63,10 @@ const AUTOCOMPLETE_KEY_DOWN_SUPPRESS = ["Enter", "Tab"];
 export default class ProsemirrorEditor extends Component {
   @service session;
   @service dialog;
+  @service menu;
+  @service site;
+  @service appEvents;
+  @service capabilities;
 
   schema = createSchema(this.extensions, this.args.includeDefault);
   view;
@@ -86,6 +90,10 @@ export default class ProsemirrorEditor extends Component {
         topicId: this.args.topicId,
         categoryId: this.args.categoryId,
         session: this.session,
+        menu: this.menu,
+        site: this.site,
+        appEvents: this.appEvents,
+        capabilities: this.capabilities,
       }),
     };
   }
