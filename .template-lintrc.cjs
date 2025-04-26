@@ -4,8 +4,9 @@ module.exports = {
   ...templateLint,
   rules: {
     ...templateLint.rules,
-    "no-capital-arguments": false, // TODO: we extensively use `args` argument name
+    "no-capital-arguments": false, // @args is used for MountWidget
     "require-button-type": false,
     "no-action": true,
+    "require-strict-mode": true,
   },
 };
