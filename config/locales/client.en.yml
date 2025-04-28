@@ -5227,9 +5227,9 @@ en:
           bookmarks: "Topics tagged %{tags} you’ve bookmarked"
 
         category_tag:
-          default: "%{filter} topics in %{category} tagged %{tags}"
-          posted: "Topics in %{category} tagged %{tags} you’ve posted in"
-          bookmarks: "Topics in %{category} tagged %{tags} you’ve bookmarked"
+          default: "%{filter} topics in %{category} tagged %{tag}"
+          posted: "Topics in %{category} tagged %{tag} you’ve posted in"
+          bookmarks: "Topics in %{category} tagged %{tag} you’ve bookmarked"
 
         categories: "All categories"
 
