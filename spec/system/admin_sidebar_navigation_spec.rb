@@ -83,7 +83,7 @@ describe "Admin | Sidebar Navigation", type: :system do
 
       filter.click_back_to_forum
       expect(page).to have_current_path("/latest")
-         
+
       sidebar_dropdown.click
       expect(sidebar).to have_no_section("admin-root")
     end
