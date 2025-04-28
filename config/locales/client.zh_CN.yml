@@ -3899,7 +3899,7 @@ zh_CN:
           other: "%{categoryName} (%{count})"
         help: "%{categoryName}类别中的最新话题"
       top:
-        title: "热门"
+        title: "排行榜"
         help: "过去一年、一个月、一周或一天中最活跃的话题"
         all:
           title: "所有时间"
@@ -3954,7 +3954,7 @@ zh_CN:
         new: "%{shortcut} 新"
         unread: "%{shortcut} 未读"
         categories: "%{shortcut} 类别"
-        top: "%{shortcut} 热门"
+        top: "%{shortcut} 排行榜"
         bookmarks: "%{shortcut} 书签"
         profile: "%{shortcut} 个人资料"
         messages: "%{shortcut} 消息"

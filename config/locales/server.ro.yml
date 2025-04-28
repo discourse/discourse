@@ -2111,6 +2111,8 @@ ro:
             choices:
               latest:
                 label: "Ultima"
+      branding:
+        title: "Logo site"
       corporate:
         fields:
           contact_url:

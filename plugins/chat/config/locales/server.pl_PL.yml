@@ -94,6 +94,7 @@ pl_PL:
       actor_muting_target_user: "Wyciszasz %{username}, więc nie możesz wysyłać do niego wiadomości."
       actor_disallowed_dms: "Zdecydowałeś się uniemożliwić użytkownikom wysyłanie Ci prywatnych i bezpośrednich wiadomości, więc nie możesz tworzyć nowych bezpośrednich wiadomości."
       actor_preventing_target_user_from_dm: "Zdecydowałeś się uniemożliwić %{username} wysyłanie do Ciebie osobistych i bezpośrednich wiadomości, więc nie możesz tworzyć nowych bezpośrednich wiadomości do nich."
+      not_reachable: "Przepraszamy, %{username} nie używa czatu."
       user_cannot_send_direct_messages: "Przepraszamy, nie możesz wysyłać bezpośrednich wiadomości."
       over_chat_max_direct_message_users_allow_self: "Możesz utworzyć bezpośrednią wiadomość tylko z samym sobą."
       over_chat_max_direct_message_users:
@@ -207,6 +208,8 @@ pl_PL:
       inline_to_message: "Wiadomość #%{message_id} od %{username} - #%{chat_channel}"
       inline_to_channel: "Czat #%{chat_channel}"
       inline_to_topic_channel: "Czat dla tematu %{topic_title}"
+      inline_to_thread: "%{thread_title} - #%{chat_channel}"
+      inline_to_thread_no_title: "Wątek w #%{chat_channel}"
       thread_title_connector: "w"
       x_members:
         one: "%{count} członek"
@@ -275,6 +278,8 @@ pl_PL:
           many: "[%{site_name}] Nowe wiadomości w %{channel}"
           other: "[%{site_name}] Nowe wiadomości w %{channel}"
         chat_channel_2: "[%{site_name}] Nowe wiadomości w %{channel_1} i %{channel_2}"
+        chat_channel_3_or_more: "[%{site_name}] Nowe wiadomości w %{channel} i %{count} inne"
+        chat_channel_and_dm: "[%{site_name}] Nowe wiadomości w %{channel} i od %{name}"
       unsubscribe: "To podsumowanie czatu jest wysyłane z %{site_link} kiedy cię nie ma. Zmień swoje %{email_preferences_link}, lub %{unsubscribe_link}, aby zrezygnować z subskrypcji."
       unsubscribe_no_link: "To podsumowanie czatu jest wysyłane z %{site_link} kiedy cię nie ma. Zmień swoje %{email_preferences_link}."
       view_messages:

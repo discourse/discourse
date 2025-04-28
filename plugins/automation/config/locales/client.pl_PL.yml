@@ -6,6 +6,11 @@
 
 pl_PL:
   js:
+    admin:
+      logs:
+        staff_actions:
+          actions:
+            delete_automation: usuń automatyzację
     discourse_automation:
       title: Automatyzacja
       create: Utwórz
@@ -81,6 +86,8 @@ pl_PL:
               label: Ograniczony do kategorii
             tags:
               label: Ograniczony do tagów
+            stalled_after:
+              label: Zatrzymany po
         recurring:
           every: Co
           frequencies:
@@ -162,51 +169,66 @@ pl_PL:
               description: Opcjonalne, uruchomi się tylko wtedy, gdy temat posta należy do tej kategorii.
             restricted_group:
               label: Grupa
+              description: Opcjonalnie, uruchomi się tylko wtedy, gdy temat postu jest osobistą wiadomością w skrzynce odbiorczej tej grupy
             restricted_groups:
               label: Grupy
+              description: Opcjonalnie, uruchomi się tylko wtedy, gdy temat postu jest osobistą wiadomością w jednej ze skrzynek odbiorczych grupy
             ignore_group_members:
               label: Ignoruj członków grupy
               description: Pomiń wyzwalacz, jeśli nadawca jest członkiem grupy określonej powyżej.
             ignore_automated:
               label: Ignoruj automatyczne
+              description: Pomiń wyzwalacz, jeśli nadawca ma adres e-mail typu noreply lub pochodzi z automatycznego źródła. Dotyczy tylko postów utworzonych przez e-mail.
             first_post_only:
               label: Tylko pierwszy post
+              description: Uruchomi się tylko wtedy, gdy post jest pierwszym postem utworzonym przez użytkownika.
             first_topic_only:
               label: Tylko pierwszy temat
+              description: Uruchomi się tylko wtedy, gdy temat jest pierwszym tematem utworzonym przez użytkownika.
             skip_via_email:
               label: "Pomiń przez e-mail"
+              description: "Pomiń wyzwalacz, jeśli post został utworzony za pośrednictwem wiadomości e-mail."
           created: Utworzono
           edited: Edytowany
         user_updated:
           fields:
             user_profile:
               label: Pola profilu użytkownika
+              description: Uruchomi się tylko wtedy, gdy użytkownik wypełni wszystkie te pola.
             custom_fields:
               label: Pola niestandardowe użytkownika
+              description: Uruchomi się tylko wtedy, gdy użytkownik wypełni wszystkie te pola.
             once_per_user:
               label: Raz na użytkownika
               description: Wyzwoli się tylko raz na użytkownika
             new_users_only:
               label: Tylko nowi użytkownicy
+              description: Uruchomi się tylko dla nowych użytkowników, którzy dołączą po włączeniu tej automatyzacji.
         category_created_edited:
           fields:
             restricted_category:
               label: Kategoria rodzica
+              description: Opcjonalnie, pozwala ograniczyć wykonanie wyzwalacza do tej kategorii
         pm_created:
           fields:
             restricted_user:
               label: Użytkownicy
+              description: Uruchomi się tylko dla wiadomości prywatnych wysłanych do tego użytkownika
             restricted_group:
               label: Grupa
+              description: Uruchomi się tylko dla wiadomości prywatnych wysłanych do tej grupy
             ignore_staff:
               label: Ignoruj personel
+              description: Pomiń wyzwalacz, jeśli nadawca jest użytkownikiem personelu
             ignore_group_members:
               label: Ignoruj członków grupy
+              description: Pomiń wyzwalacz, jeśli nadawca jest członkiem grupy określonej powyżej.
             ignore_automated:
               label: Ignoruj automatyczne
               description: Pomiń wyzwalacz, jeśli nadawca ma adres e-mail bez odpowiedzi lub pochodzi z automatycznego źródła. Dotyczy tylko prywatnych wiadomości utworzonych za pośrednictwem poczty e-mail
             valid_trust_levels:
               label: Prawidłowe poziomy zaufania
+              description: Uruchomi się tylko wtedy, gdy post zostanie utworzony przez użytkownika na tych poziomach zaufania, domyślnie na dowolnym poziomie zaufania.
         topic_tags_changed:
           trigger_on_modes:
             tags_added_or_removed: Tagi dodane lub usunięte
@@ -215,26 +237,41 @@ pl_PL:
           fields:
             watching_categories:
               label: Obserwuje kategorie
+              description: Uruchomi się tylko wtedy, gdy temat należy do jednej z tych kategorii
             watching_tags:
               label: Obserwuje tagi
+              description: Zostanie uruchomiony tylko wtedy, gdy temat ma którykolwiek z tych tagów
+            trigger_on:
+              label: Uruchom po
+            trigger_with_pms:
+              label: Uruchom przez prywatną wiadomość
+              description: Uruchomi się, nawet jeśli tagi zostały zmienione w prywatnej wiadomości
         after_post_cook:
           fields:
             valid_trust_levels:
               label: Prawidłowe poziomy zaufania
+              description: Uruchomi się tylko wtedy, gdy post zostanie utworzony przez użytkownika na tych poziomach zaufania, domyślnie na dowolnym poziomie zaufania.
             restricted_category:
               label: Kategoria
+              description: Opcjonalne, uruchomi się tylko wtedy, gdy temat posta należy do tej kategorii.
             restricted_tags:
               label: Tagi
+              description: Opcjonalne, uruchomi się tylko wtedy, gdy post ma którykolwiek z tych tagów
       scriptables:
+        not_found: Nie można znaleźć skryptu `%{script}` dla automatyzacji `%{automation}`, upewnij się, że powiązana wtyczka jest zainstalowana.
         zapier_webhook:
           fields:
             webhook_url:
               label: URL webhooka
+              description: "Oczekuje poprawnego adresu URL webhooka Zapier, np. https://hooks.zapier.com/hooks/catch/xxx/yyy/."
         auto_responder:
           fields:
             once:
               label: Raz
               description: Odpowiedzi tylko raz na temat
+            word_answer_list:
+              label: Lista par słowo/odpowiedź
+              description: "Definiuje listę grup klucz/wartość, gdzie `klucz` jest szukanym terminem, a `wartość` tekstem odpowiedzi. `Klucz` może być pozostawiony pusty, aby odpowiadać na wszystkie wyzwalacze, niezależnie od treści. Zauważ, że `wartość` akceptuje `{{key}}` jako symbol zastępczy, który zostanie zastąpiony wartością `klucza` w odpowiedzi. Zauważ, że `klucz` będzie oceniany jako wyrażenie regularne, a znaki specjalne, takie jak `.`, powinny być eskejpowane, jeśli faktycznie masz na myśli kropkę, np.: `\\.`."
             answering_user:
               label: Odpowiada użytkownikowi
               description: Domyślnie użytkownik systemowy
@@ -281,6 +318,7 @@ pl_PL:
               label: Poziom
             notice:
               label: Ogłoszenie
+              description: Akceptuje HTML, nie wypełniaj go niezaufanymi danymi wejściowymi!
           levels:
             warning: Ostrzeżenie
             info: Informacje
@@ -292,11 +330,13 @@ pl_PL:
               label: Nazwa odznaki
             group:
               label: Grupa
+              description: Grupa docelowa. Użytkownicy z określonym identyfikatorem zostaną dodani do tej grupy
             update_user_title_and_flair:
               label: Zaktualizuj tytuł i znacznik użytkownika
               description: Opcjonalnie, zaktualizuj tytuł i znacznik użytkownika
             remove_members_without_badge:
               label: Usuń istniejących członków bez odznaki
+              description: Opcjonalnie, usuń istniejących członków grupy bez określonej odznaki.
             badge:
               label: Odznaka
               description: Wybierz odznakę
@@ -321,6 +361,8 @@ pl_PL:
           fields:
             topic_id:
               label: ID tematu
+            banner_until:
+              label: Utwórz baner do
             user:
               label: Użytkownik
               description: "Użytkownik tworzący baner (domyślnie: system)"
@@ -344,6 +386,10 @@ pl_PL:
           fields:
             receiver:
               label: Odbiornik PW
+            sendable_pms:
+              label: Prywatne wiadomości
+            sender:
+              label: Nadawca wiadomości prywatnych
         close_topic:
           fields:
             topic:
