@@ -933,6 +933,23 @@ RSpec.describe CategoriesController do
           expect(response.status).to eq(200)
           expect(category.reload.moderating_groups).to be_blank
         end
+
+        it "can correctly convert blank strings to appropriate null values" do
+          put "/categories/#{category.id}.json", params: { email_in: "", minimum_required_tags: "" }
+          expect(response.status).to eq(200)
+          expect(category.reload.email_in).to be_nil
+          expect(category.reload.minimum_required_tags).to eq(0)
+        end
+
+        it "does not convert params when their key isn't present" do
+          category.update!(email_in: "ted@discourse.org", minimum_required_tags: 5)
+
+          put "/categories/#{category.id}.json", params: {}
+
+          expect(response.status).to eq(200)
+          expect(category.reload.email_in).to eq("ted@discourse.org")
+          expect(category.reload.minimum_required_tags).to eq(5)
+        end
       end
     end
   end
