@@ -169,52 +169,50 @@ def log_task_duration(task_description, &task)
 end
 
 task "assets:precompile:compress_js": "environment" do
-  if $bypass_sprockets_uglify
-    puts "Compressing Javascript and Generating Source Maps"
-    manifest = Sprockets::Manifest.new(assets_path)
+  puts "Compressing Javascript and Generating Source Maps"
+  manifest = Sprockets::Manifest.new(assets_path)
 
-    locales = Set.new(["en"])
+  locales = Set.new(["en"])
 
-    RailsMultisite::ConnectionManagement.each_connection do |db|
-      locales.add(SiteSetting.default_locale)
-    end
+  RailsMultisite::ConnectionManagement.each_connection do |db|
+    locales.add(SiteSetting.default_locale)
+  end
 
-    log_task_duration("Done compressing all JS files") do
-      concurrent? do |proc|
-        manifest
-          .files
-          .select { |k, v| k =~ /\.js\z/ }
-          .each do |file, info|
-            path = "#{assets_path}/#{file}"
-            if file.include? "discourse/tests"
-              STDERR.puts "Skipping: #{file}"
-            else
-              proc.call do
-                log_task_duration(file) do
-                  STDERR.puts "Compressing: #{file}"
+  log_task_duration("Done compressing all JS files") do
+    concurrent? do |proc|
+      manifest
+        .files
+        .select { |k, v| k =~ /\.js\z/ }
+        .each do |file, info|
+          path = "#{assets_path}/#{file}"
+          if file.include? "discourse/tests"
+            STDERR.puts "Skipping: #{file}"
+          else
+            proc.call do
+              log_task_duration(file) do
+                STDERR.puts "Compressing: #{file}"
 
-                  info["size"] = File.size(path)
-                  info["mtime"] = File.mtime(path).iso8601
-                  gzip(path)
-                  brotli(path)
-                end
+                info["size"] = File.size(path)
+                info["mtime"] = File.mtime(path).iso8601
+                gzip(path)
+                brotli(path)
               end
             end
           end
-      end
+        end
     end
+  end
 
-    # protected
-    manifest.send :save
+  # protected
+  manifest.send :save
 
-    if GlobalSetting.fallback_assets_path.present?
-      begin
-        FileUtils.cp_r("#{Rails.root}/public/assets/.", GlobalSetting.fallback_assets_path)
-      rescue => e
-        STDERR.puts "Failed to backup assets to #{GlobalSetting.fallback_assets_path}"
-        STDERR.puts e
-        STDERR.puts e.backtrace
-      end
+  if GlobalSetting.fallback_assets_path.present?
+    begin
+      FileUtils.cp_r("#{Rails.root}/public/assets/.", GlobalSetting.fallback_assets_path)
+    rescue => e
+      STDERR.puts "Failed to backup assets to #{GlobalSetting.fallback_assets_path}"
+      STDERR.puts e
+      STDERR.puts e.backtrace
     end
   end
 end
