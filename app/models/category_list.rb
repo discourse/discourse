@@ -175,10 +175,10 @@ class CategoryList
 
     if SiteSetting.experimental_content_localization
       query =
-        query.select(
+        query.group("categories.id").select(
           "categories.*,
-     MAX(COALESCE(cl.name, categories.name)) AS name,
-     MAX(COALESCE(cl.description, categories.description)) AS description",
+           MAX(COALESCE(cl.name, categories.name)) AS name,
+           MAX(COALESCE(cl.description, categories.description)) AS description",
         )
     end
 
