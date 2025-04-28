@@ -335,7 +335,7 @@ export default class DiscoveryTopics extends Component {
           @newRepliesCount={{this.newRepliesCount}}
           @newTopicsCount={{this.newTopicsCount}}
         />
-        <LoadMore @selector=".topic-list-item" @action={{this.loadMore}} />
+        <LoadMore @action={{this.loadMore}} />
       {{/if}}
 
       <span class="after-topic-list-plugin-outlet-wrapper">
