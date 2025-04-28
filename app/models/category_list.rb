@@ -145,8 +145,12 @@ class CategoryList
       query =
         query.joins(
           ActiveRecord::Base.sanitize_sql_array(
-            ["LEFT JOIN category_localizations cl ON cl.category_id = categories.id AND cl.locale = ?", locale]
-          )
+            [
+              "LEFT JOIN category_localizations cl ON cl.category_id = categories.id AND cl.locale = ?",
+              locale,
+            ],
+          ),
+        )
     end
 
     query = self.class.order_categories(query)
