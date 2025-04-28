@@ -5,45 +5,49 @@ module SystemHelpers
   PLATFORM_KEY_MODIFIER = RUBY_PLATFORM =~ /darwin/i ? :meta : :control
 
   def pause_test
-    page.driver.with_playwright_page do |pw_page|
-      browser = pw_page.context.browser
-      cdp_session = pw_page.context.new_cdp_session(pw_page)
-      targets = cdp_session.send_message("Target.getTargets")
-      devtools = targets["targetInfos"].find { |t| t["url"]&.include?("devtools") }
+    msg = "Test paused. Press enter to resume, or `d` + enter to start debugger.\n\n"
+    msg += "Browser inspection URLs:\n"
 
-      msg = "Test paused. Press enter to resume, or `d` + enter to start debugger.\n\n"
-      msg += "Browser inspection URLs:\n"
+    response =
+      Net::HTTP.get(CHROME_REMOTE_DEBUGGING_ADDRESS, "/json/list", CHROME_REMOTE_DEBUGGING_PORT)
 
-      socat_pid = nil
-      if exposed_port = ENV["SELENIUM_FORWARD_DEVTOOLS_TO_PORT"]
-        socat_pid =
-          fork do
-            chrome_port = uri.port
-            exec "socat tcp-listen:#{exposed_port},reuseaddr,fork tcp:localhost:#{chrome_port}"
-          end
-      end
+    socat_pid = nil
 
-      devtools_url = devtools["url"]
-      devtools_url = devtools_url.gsub(":#{uri.port}", ":#{exposed_port}") if exposed_port
-
-      if ENV["CODESPACE_NAME"]
-        devtools_url =
-          devtools_url
-            .gsub(
-              "localhost:#{exposed_port}",
-              "#{ENV["CODESPACE_NAME"]}-#{exposed_port}.#{ENV["GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN"]}",
-            )
-            .gsub("http://", "https://")
-            .gsub("ws=", "wss=")
-      end
-
-      msg += " - (#{devtools["type"]}) #{devtools_url} (#{URI(devtools["url"]).path})\n"
-
-      result = ask("\n\e[33m#{msg}\e[0m")
-      binding.pry if result == "d" # rubocop:disable Lint/Debugger
-      puts "\e[33mResuming...\e[0m"
-      Process.kill("TERM", socat_pid) if socat_pid
+    if exposed_port =
+         ENV["PLAYWRIGHT_FORWARD_DEVTOOLS_TO_PORT"].presence ||
+           ENV["SELENIUM_FORWARD_DEVTOOLS_TO_PORT"].presence
+      socat_pid =
+        fork do
+          chrome_port = uri.port
+          exec "socat tcp-listen:#{exposed_port},reuseaddr,fork tcp:localhost:#{chrome_port}"
+        end
     end
+
+    JSON
+      .parse(response)
+      .each do |result|
+        devtools_url = result["devtoolsFrontendUrl"]
+
+        devtools_url = devtools_url.gsub(":#{uri.port}", ":#{exposed_port}") if exposed_port
+
+        if ENV["CODESPACE_NAME"]
+          devtools_url =
+            devtools_url
+              .gsub(
+                "localhost:#{exposed_port}",
+                "#{ENV["CODESPACE_NAME"]}-#{exposed_port}.#{ENV["GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN"]}",
+              )
+              .gsub("http://", "https://")
+              .gsub("ws=", "wss=")
+        end
+
+        msg += " - (#{result["type"]}) #{devtools_url} (#{URI(result["url"]).path})\n"
+      end
+
+    result = ask("\n\e[33m#{msg}\e[0m")
+    binding.pry if result == "d" # rubocop:disable Lint/Debugger
+    puts "\e[33mResuming...\e[0m"
+    Process.kill("TERM", socat_pid) if socat_pid
     self
   end
 

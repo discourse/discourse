@@ -26,6 +26,9 @@ require "certified"
 require "webmock/rspec"
 require "minio_runner"
 
+CHROME_REMOTE_DEBUGGING_PORT = (ENV["CHROME_REMOTE_DEBUGGING_PORT"] || 50_062).to_s
+CHROME_REMOTE_DEBUGGING_ADDRESS = ENV["CHROME_REMOTE_DEBUGGING_ADDRESS"] || "localhost"
+
 class RspecErrorTracker
   def self.exceptions
     @exceptions ||= {}
@@ -787,7 +790,7 @@ RSpec.configure do |config|
 
     # Recommended that this is not disabled, since it makes debugging
     # failed system tests a lot trickier.
-    if ENV["PLAYWRIGHT_DISABLE_VERBOSE_JS_LOGS"].blank?
+    if ENV["PLAYWRIGHT_DISABLE_VERBOSE_JS_LOGS"].blank? && $playwright_logger
       if example.exception
         lines << "~~~~~~~ JS LOGS ~~~~~~~"
 
@@ -1097,6 +1100,9 @@ def apply_base_chrome_args(args = [])
     --mute-audio
     --remote-allow-origins=*
   ]
+
+  base_args << "--remote-debugging-port=" + CHROME_REMOTE_DEBUGGING_PORT
+  base_args << "----remote-debugging-address=" + CHROME_REMOTE_DEBUGGING_ADDRESS
 
   # A file that contains just a list of paths like so:
   #
