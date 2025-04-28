@@ -91,14 +91,18 @@
     }
   }
 
-  p[data-placeholder]::before {
-    pointer-events: none;
-    position: absolute;
-    padding-top: 2px;
-    padding-right: 0.5rem;
-    content: attr(data-placeholder);
-    color: var(--primary-400);
-    line-height: 1.1;
+  p[data-placeholder] {
+    overflow: hidden;
+
+    &::before {
+      pointer-events: none;
+      position: absolute;
+      padding-top: 2px;
+      padding-right: 0.5rem;
+      content: attr(data-placeholder);
+      color: var(--primary-400);
+      line-height: 1.1;
+    }
   }
 
   del {
@@ -193,6 +197,7 @@
 
 // stylelint-disable-next-line no-duplicate-selectors
 .ProseMirror {
+  position: relative;
   word-wrap: break-word;
   white-space: break-spaces;
 }

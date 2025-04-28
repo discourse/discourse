@@ -25,6 +25,8 @@ zh_CN:
           title: "日期/时间输入"
         menus:
           title: "菜单"
+        multi_select:
+          title: "多选"
         toasts:
           title: "消息框"
         font_scale:

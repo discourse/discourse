@@ -177,8 +177,8 @@ class CategoriesController < ApplicationController
       category_params.delete(:custom_fields)
 
       # properly null the value so the database constraint doesn't catch us
-      category_params[:email_in] = nil if category_params[:email_in].blank?
-      category_params[:minimum_required_tags] = 0 if category_params[:minimum_required_tags].blank?
+      category_params[:email_in] = nil if category_params[:email_in]&.blank?
+      category_params[:minimum_required_tags] = 0 if category_params[:minimum_required_tags]&.blank?
 
       old_permissions = cat.permissions_params
       old_permissions = { "everyone" => 1 } if old_permissions.empty?

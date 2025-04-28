@@ -24,10 +24,7 @@ export default RouteTemplate(
 
     {{bodyClass "users-page"}}
     <section>
-      <LoadMore
-        @selector=".directory-table .directory-table__cell"
-        @action={{@controller.loadMore}}
-      >
+      <LoadMore @action={{@controller.loadMore}}>
         <div class="container">
           <div class="users-directory directory">
             <span>

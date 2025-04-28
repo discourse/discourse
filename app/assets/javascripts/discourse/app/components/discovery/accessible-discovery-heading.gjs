@@ -1,0 +1,94 @@
+import Component from "@glimmer/component";
+import { i18n } from "discourse-i18n";
+
+export default class AccessibleDiscoveryHeading extends Component {
+  get filterKey() {
+    const filter = this.args.filter;
+
+    if (filter === "categories") {
+      return null;
+    }
+
+    if (filter.includes("/")) {
+      return filter.split("/").pop();
+    }
+
+    return filter;
+  }
+
+  get filterLabel() {
+    const key = this.filterKey;
+
+    // fallback to nothing, e.g, "topics in uncategorized"
+    // rather than "[en.discovery.headings.filter_labels.foo] topics in uncategorized"
+    const fallback = "";
+    const label = i18n(`discovery.headings.filter_labels.${key}`);
+
+    return label.includes("discovery.headings.filter_labels.")
+      ? fallback
+      : label;
+  }
+
+  get type() {
+    const { category, tag, additionalTags } = this.args;
+
+    if (category && tag) {
+      return "category_tag";
+    }
+
+    if (tag && additionalTags?.length) {
+      return "multi_tag";
+    }
+
+    if (tag) {
+      return "single_tag";
+    }
+
+    if (category) {
+      return "category";
+    }
+
+    return "all";
+  }
+
+  get label() {
+    const { category, tag, additionalTags, filter } = this.args;
+    const type = this.type;
+
+    if (filter === "categories") {
+      return i18n("discovery.headings.categories");
+    }
+
+    const key = this.filterKey;
+    const isSpecial = ["posted", "bookmarks"].includes(key);
+    const scope = `discovery.headings`;
+
+    if (tag?.id === "none" && !additionalTags?.length) {
+      const noTagsType = category ? "category" : "all";
+
+      const noTagsKey = isSpecial
+        ? `${scope}.no_tags.${noTagsType}.${key}`
+        : `${scope}.no_tags.${noTagsType}_default`;
+
+      return i18n(noTagsKey, {
+        filter: this.filterLabel,
+        category: category?.name,
+      });
+    }
+
+    const translationKey = isSpecial
+      ? `${scope}.${type}.${key}`
+      : `${scope}.${type}.default`;
+
+    return i18n(translationKey, {
+      filter: this.filterLabel,
+      category: category?.name,
+      tag: tag?.id,
+      tags: [tag?.id, ...(additionalTags || [])].join(" + "),
+    });
+  }
+
+  <template>
+    <h1 id="topic-list-heading" class="sr-only">{{this.label}}</h1>
+  </template>
+}

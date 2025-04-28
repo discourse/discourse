@@ -28,10 +28,7 @@ export default RouteTemplate(
       </div>
 
       {{#if @controller.hasRequesters}}
-        <LoadMore
-          @selector=".directory-table .directory-table__cell"
-          @action={{@controller.loadMore}}
-        >
+        <LoadMore @action={{@controller.loadMore}}>
           <ResponsiveTable @className="group-members group-members__requests">
             <:header>
               <TableHeaderToggle

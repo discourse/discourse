@@ -232,12 +232,23 @@ class Site
     end
 
     seq = nil
+    use_localized_anon_cache = SiteSetting.experimental_content_localization && guardian.anonymous?
+
+    locale = I18n.locale
+    cache_key = "site_json"
+    seq_key = "site_json_seq"
+    version_key = "site_json_version"
+
+    if use_localized_anon_cache
+      cache_key += "_#{locale}"
+      seq_key += "_#{locale}"
+      version_key += "_#{locale}"
+    end
 
     if guardian.anonymous?
       seq = MessageBus.last_id("/site_json")
-
       cached_json, cached_seq, cached_version =
-        Discourse.redis.mget("site_json", "site_json_seq", "site_json_version")
+        Discourse.redis.mget(cache_key, seq_key, version_key)
 
       if cached_json && seq == cached_seq.to_i && Discourse.git_version == cached_version
         return cached_json
@@ -249,9 +260,9 @@ class Site
 
     if guardian.anonymous?
       Discourse.redis.multi do |transaction|
-        transaction.setex "site_json", 1800, json
-        transaction.set "site_json_seq", seq
-        transaction.set "site_json_version", Discourse.git_version
+        transaction.setex cache_key, 1800, json
+        transaction.set seq_key, seq
+        transaction.set version_key, Discourse.git_version
       end
     end
 

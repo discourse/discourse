@@ -5081,12 +5081,6 @@ en:
       back_to_forum: "Back to Forum"
       collapse_all_sections: "Collapse all sections"
       expand_all_sections: "Expand all sections"
-      filter: "Filter..."
-      filter_links: "Filter links..."
-      clear_filter: "Clear filter"
-      no_results:
-        title: "No results"
-        description_admin_search: 'We couldn’t find anything matching ‘%{filter}’.<br><br>Try <a class="sidebar-additional-filter-admin-search" href="%{admin_search_url}">searching the entire admin interface</a>.'
       footer:
         interface_color_selector:
           light: "Light"
@@ -5199,6 +5193,53 @@ en:
           save: "Save as..."
     powered_by_discourse: "Powered by Discourse"
     safari_15_warning: "Your browser will soon be incompatible with this community. To keep participating here, please upgrade your browser or <a href='%{url}'>learn more</a>."
+
+    discovery:
+      headings:
+        all:
+          default: "All %{filter} topics"
+          posted: "All topics you’ve posted in"
+          bookmarks: "All topics you’ve bookmarked"
+
+        category:
+          default: "%{filter} topics in %{category}"
+          posted: "Topics in %{category} you’ve posted in"
+          bookmarks: "Topics in %{category} you’ve bookmarked"
+
+        no_tags:
+          all_default: "All topics without tags"
+          category_default: "%{filter} topics in %{category} without tags"
+          all:
+            posted: "All topics without tags you've posted in"
+            bookmarks: "All topics without tags you've bookmarked"
+          category:
+            posted: "Topics in %{category} without tags you've posted in"
+            bookmarks: "Topics in %{category} without tags you've bookmarked"
+
+        single_tag:
+          default: "%{filter} topics tagged %{tag}"
+          posted: "Topics tagged %{tag} you've posted in"
+          bookmarks: "Topics tagged %{tag} you’ve bookmarked"
+
+        multi_tag:
+          default: "%{filter} topics tagged %{tags}"
+          posted: "Topics tagged %{tags} you've posted in"
+          bookmarks: "Topics tagged %{tags} you’ve bookmarked"
+
+        category_tag:
+          default: "%{filter} topics in %{category} tagged %{tag}"
+          posted: "Topics in %{category} tagged %{tag} you’ve posted in"
+          bookmarks: "Topics in %{category} tagged %{tag} you’ve bookmarked"
+
+        categories: "All categories"
+
+        filter_labels:
+          latest: "Latest"
+          top: "Top"
+          new: "New"
+          unread: "Unread"
+          hot: "Hot"
+          unseen: "Unseen"
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
@@ -5558,6 +5599,7 @@ en:
         modal_title: "Search anything in admin"
         title: "Search"
         instructions: "Type to search for pages, settings, reports, themes, components, and more..."
+        no_results: 'We couldn’t find anything matching ‘%{filter}’.'
         result_types:
           page:
             one: "Page"

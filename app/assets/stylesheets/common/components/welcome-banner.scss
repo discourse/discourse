@@ -13,8 +13,6 @@
 }
 
 .welcome-banner {
-  position: relative;
-  z-index: 1;
   margin-bottom: 1em;
   border-radius: var(--d-border-radius-large);
 
@@ -53,7 +51,7 @@
       }
     }
 
-    .d-icon-search {
+    .d-icon-magnifying-glass {
       margin: 0;
     }
 
@@ -151,7 +149,7 @@
         margin: 0;
       }
 
-      .d-icon-search {
+      .d-icon-magnifying-glass {
         display: none;
       }
     }

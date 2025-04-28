@@ -46,7 +46,7 @@ class Stylesheet::Manager
     color_scheme_name = Slug.for(color_scheme.name) + color_scheme&.id.to_s
     theme_string = theme_id ? "_theme#{theme_id}" : ""
     dark_string = dark ? "_dark" : ""
-    "#{COLOR_SCHEME_STYLESHEET}_#{color_scheme_name}_#{theme_string}_#{Discourse.current_hostname}#{dark_string}"
+    "#{COLOR_SCHEME_STYLESHEET}_#{color_scheme_name}_#{theme_string}_#{Discourse.current_hostname}_#{GlobalSetting.relative_url_root}_#{dark_string}"
   end
 
   def self.precompile_css
@@ -285,14 +285,15 @@ class Stylesheet::Manager
   def stylesheet_details(target = :desktop, media = "all")
     target = target.to_sym
     current_hostname = Discourse.current_hostname
+    relative_url_root = GlobalSetting.relative_url_root
     is_theme_target = !!(target.to_s =~ THEME_REGEX)
 
     array_cache_key =
       (
         if is_theme_target
-          "array_themes_#{@theme_ids.join(",")}_#{target}_#{current_hostname}"
+          "array_themes_#{@theme_ids.join(",")}_#{target}_#{current_hostname}_#{relative_url_root}"
         else
-          "array_#{target}_#{current_hostname}"
+          "array_#{target}_#{current_hostname}_#{relative_url_root}"
         end
       )
 

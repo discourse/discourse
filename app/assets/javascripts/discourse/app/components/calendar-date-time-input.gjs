@@ -134,7 +134,7 @@ export default class CalendarDateTimeInput extends Component {
           @type="time"
           @value={{this._time}}
           class="time-picker"
-          {{on "input" (action this.onChangeTime)}}
+          {{on "input" this.onChangeTime}}
         />
       </div>
     </div>

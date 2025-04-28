@@ -74,7 +74,7 @@ export default class PostList extends Component {
       {{hideApplicationFooter}}
     {{/if}}
 
-    <LoadMore @selector=".post-list-item" @action={{this.loadMore}}>
+    <LoadMore @action={{this.loadMore}}>
       <div class="post-list" ...attributes>
         {{#each @posts as |post|}}
           <PostListItem
