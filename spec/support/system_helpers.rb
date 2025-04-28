@@ -5,52 +5,45 @@ module SystemHelpers
   PLATFORM_KEY_MODIFIER = RUBY_PLATFORM =~ /darwin/i ? :meta : :control
 
   def pause_test
-    msg = "Test paused. Press enter to resume, or `d` + enter to start debugger.\n\n"
-    msg += "Browser inspection URLs:\n"
+    page.driver.with_playwright_page do |pw_page|
+      browser = pw_page.context.browser
+      cdp_session = pw_page.context.new_cdp_session(pw_page)
+      targets = cdp_session.send_message("Target.getTargets")
+      devtools = targets["targetInfos"].find { |t| t["url"]&.include?("devtools") }
 
-    # base_url = page.driver.browser.send(:devtools_address)
-    # uri = URI(base_url)
-    # response = Net::HTTP.get(uri.hostname, "/json/list", uri.port)
+      msg = "Test paused. Press enter to resume, or `d` + enter to start debugger.\n\n"
+      msg += "Browser inspection URLs:\n"
 
-    # socat_pid = nil
+      socat_pid = nil
+      if exposed_port = ENV["SELENIUM_FORWARD_DEVTOOLS_TO_PORT"]
+        socat_pid =
+          fork do
+            chrome_port = uri.port
+            exec "socat tcp-listen:#{exposed_port},reuseaddr,fork tcp:localhost:#{chrome_port}"
+          end
+      end
 
-    # if exposed_port = ENV["SELENIUM_FORWARD_DEVTOOLS_TO_PORT"]
-    #   socat_pid =
-    #     fork do
-    #       chrome_port = uri.port
-    #       exec "socat tcp-listen:#{exposed_port},reuseaddr,fork tcp:localhost:#{chrome_port}"
-    #     end
-    # end
+      devtools_url = devtools["url"]
+      devtools_url = devtools_url.gsub(":#{uri.port}", ":#{exposed_port}") if exposed_port
 
-    # # Fetch devtools urls
-    # base_url = page.driver.browser.send(:devtools_address)
-    # uri = URI(base_url)
-    # response = Net::HTTP.get(uri.hostname, "/json/list", uri.port)
-    # JSON
-    #   .parse(response)
-    #   .each do |result|
-    #     devtools_url = "#{base_url}#{result["devtoolsFrontendUrl"]}"
+      if ENV["CODESPACE_NAME"]
+        devtools_url =
+          devtools_url
+            .gsub(
+              "localhost:#{exposed_port}",
+              "#{ENV["CODESPACE_NAME"]}-#{exposed_port}.#{ENV["GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN"]}",
+            )
+            .gsub("http://", "https://")
+            .gsub("ws=", "wss=")
+      end
 
-    #     devtools_url = devtools_url.gsub(":#{uri.port}", ":#{exposed_port}") if exposed_port
+      msg += " - (#{devtools["type"]}) #{devtools_url} (#{URI(devtools["url"]).path})\n"
 
-    #     if ENV["CODESPACE_NAME"]
-    #       devtools_url =
-    #         devtools_url
-    #           .gsub(
-    #             "localhost:#{exposed_port}",
-    #             "#{ENV["CODESPACE_NAME"]}-#{exposed_port}.#{ENV["GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN"]}",
-    #           )
-    #           .gsub("http://", "https://")
-    #           .gsub("ws=", "wss=")
-    #     end
-
-    #     msg += " - (#{result["type"]}) #{devtools_url} (#{URI(result["url"]).path})\n"
-    #   end
-
-    result = ask("\n\e[33m#{msg}\e[0m")
-    binding.pry if result == "d" # rubocop:disable Lint/Debugger
-    # puts "\e[33mResuming...\e[0m"
-    # Process.kill("TERM", socat_pid) if socat_pid
+      result = ask("\n\e[33m#{msg}\e[0m")
+      binding.pry if result == "d" # rubocop:disable Lint/Debugger
+      puts "\e[33mResuming...\e[0m"
+      Process.kill("TERM", socat_pid) if socat_pid
+    end
     self
   end
 
