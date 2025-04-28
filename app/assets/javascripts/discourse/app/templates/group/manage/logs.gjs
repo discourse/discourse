@@ -36,10 +36,7 @@ export default RouteTemplate(
         />
       </div>
 
-      <LoadMore
-        @selector=".group-manage-logs .group-manage-logs-row"
-        @action={{@controller.loadMore}}
-      >
+      <LoadMore @action={{@controller.loadMore}}>
         <table class="group-manage-logs">
           <thead>
             <th>{{i18n "groups.manage.logs.action"}}</th>
