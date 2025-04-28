@@ -1144,20 +1144,9 @@ Discourse::Application.routes.draw do
 
     %w[groups g].each do |root_path|
       resources :groups,
-                only: %i[index show new edit update],
+                only: %i[index new edit update],
                 id: RouteFormat.username,
                 path: root_path do
-        get "posts.rss" => "groups#posts_feed", :format => :rss
-        get "mentions.rss" => "groups#mentions_feed", :format => :rss
-
-        get "members"
-        get "posts"
-        get "mentions"
-        get "mentionable"
-        get "messageable"
-        get "logs" => "groups#histories"
-        post "test_email_settings"
-
         collection do
           get "check-name" => "groups#check_name"
           get "custom/new" => "groups#new", :constraints => StaffConstraint.new
@@ -1165,34 +1154,49 @@ Discourse::Application.routes.draw do
         end
 
         member do
-          %w[
-            activity
-            activity/:filter
-            requests
-            messages
-            messages/inbox
-            messages/archive
-            manage
-            manage/profile
-            manage/members
-            manage/membership
-            manage/interaction
-            manage/email
-            manage/categories
-            manage/tags
-            manage/logs
-          ].each { |path| get path => "groups#show" }
-
-          get "permissions" => "groups#permissions"
-          put "members" => "groups#add_members"
           put "owners" => "groups#add_owners"
           put "join" => "groups#join"
           delete "members" => "groups#remove_member"
           delete "leave" => "groups#leave"
-          post "request_membership" => "groups#request_membership"
           put "handle_membership_request" => "groups#handle_membership_request"
-          post "notifications" => "groups#set_notifications"
         end
+      end
+
+      get "#{root_path}/by-id/:id" => "groups#show"
+
+      scope path: "#{root_path}/:name" do
+        get "/" => "groups#show"
+        get "activity" => "groups#show"
+        get "activity/:filter" => "groups#show"
+        get "requests" => "groups#show"
+        get "messages" => "groups#show"
+        get "messages/inbox" => "groups#show"
+        get "messages/archive" => "groups#show"
+        get "manage" => "groups#show"
+        get "manage/profile" => "groups#show"
+        get "manage/members" => "groups#show"
+        get "manage/membership" => "groups#show"
+        get "manage/interaction" => "groups#show"
+        get "manage/email" => "groups#show"
+        get "manage/categories" => "groups#show"
+        get "manage/tags" => "groups#show"
+        get "manage/logs" => "groups#show"
+        get "permissions" => "groups#permissions"
+        put "members" => "groups#add_members"
+
+        post "request_membership" => "groups#request_membership"
+        post "notifications" => "groups#set_notifications"
+
+        get "posts.rss" => "groups#posts_feed", :format => :rss
+        get "mentions.rss" => "groups#mentions_feed", :format => :rss
+
+        get "members" => "groups#members"
+        get "posts" => "groups#posts"
+        get "mentions" => "groups#mentions"
+        get "mentionable" => "groups#mentionable"
+        get "messageable" => "groups#messageable"
+        get "logs" => "groups#histories"
+        post "test_email_settings" => "groups#test_email_settings"
       end
     end
 

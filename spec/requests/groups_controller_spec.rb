@@ -451,78 +451,96 @@ RSpec.describe GroupsController do
   end
 
   describe "#show" do
-    it "ensures the group can be seen" do
-      sign_in(user)
-      group.update!(visibility_level: Group.visibility_levels[:owners])
+    shared_examples "group show behavior" do |path|
+      it "ensures the group can be seen" do
+        sign_in(user)
+        group.update!(visibility_level: Group.visibility_levels[:owners])
 
-      get "/groups/#{group.name}.json"
+        get path.call(group, format: :json)
 
-      expect(response.status).to eq(404)
-    end
+        expect(response.status).to eq(404)
+      end
 
-    it "returns the right response" do
-      sign_in(user)
-      mod_group = Group.find(moderator_group_id)
-      get "/groups/#{group.name}.json"
-
-      expect(response.status).to eq(200)
-
-      body = response.parsed_body
-
-      expect(body["group"]["id"]).to eq(group.id)
-      expect(body["extras"]["visible_group_names"]).to eq([mod_group.name, group.name])
-      expect(response.headers["X-Robots-Tag"]).to eq("noindex")
-    end
-
-    context "as an admin" do
       it "returns the right response" do
-        sign_in(admin)
-        get "/groups/#{group.name}.json"
+        sign_in(user)
+        mod_group = Group.find(moderator_group_id)
+        get path.call(group, format: :json)
 
         expect(response.status).to eq(200)
 
         body = response.parsed_body
 
         expect(body["group"]["id"]).to eq(group.id)
-
-        groups = Group::AUTO_GROUPS.keys
-        groups.delete(:everyone)
-        groups.push(group.name)
-
-        expect(body["extras"]["visible_group_names"]).to contain_exactly(*groups.map(&:to_s))
+        expect(body["extras"]["visible_group_names"]).to eq([mod_group.name, group.name])
+        expect(response.headers["X-Robots-Tag"]).to eq("noindex")
       end
-    end
 
-    it "should respond to HTML" do
-      group.update!(bio_raw: "testing **group** bio")
+      context "as an admin" do
+        it "returns the right response" do
+          sign_in(admin)
+          get path.call(group, format: :json)
 
-      get "/groups/#{group.name}.html"
+          expect(response.status).to eq(200)
 
-      expect(response.status).to eq(200)
+          body = response.parsed_body
 
-      expect(response.body).to have_tag "title", text: "#{group.name} - #{SiteSetting.title}"
-      expect(response.body).to have_tag(:meta, with: { property: "og:title", content: group.name })
+          expect(body["group"]["id"]).to eq(group.id)
 
-      # note this uses an excerpt so it strips html
-      expect(response.body).to have_tag(
-        :meta,
-        with: {
-          property: "og:description",
-          content: "testing group bio",
-        },
-      )
-    end
+          groups = Group::AUTO_GROUPS.keys
+          groups.delete(:everyone)
+          groups.push(group.name)
 
-    describe "when viewing activity filters" do
-      it "should return the right response" do
-        get "/groups/#{group.name}/activity/posts.json"
+          expect(body["extras"]["visible_group_names"]).to contain_exactly(*groups.map(&:to_s))
+        end
+      end
+
+      it "should respond to HTML" do
+        group.update!(bio_raw: "testing **group** bio")
+
+        get path.call(group, format: :html)
 
         expect(response.status).to eq(200)
 
-        body = response.parsed_body["group"]
+        expect(response.body).to have_tag "title", text: "#{group.name} - #{SiteSetting.title}"
+        expect(response.body).to have_tag(
+          :meta,
+          with: {
+            property: "og:title",
+            content: group.name,
+          },
+        )
 
-        expect(body["id"]).to eq(group.id)
+        # note this uses an excerpt so it strips html
+        expect(response.body).to have_tag(
+          :meta,
+          with: {
+            property: "og:description",
+            content: "testing group bio",
+          },
+        )
       end
+    end
+
+    describe "when accessing by name" do
+      include_examples "group show behavior",
+                       lambda { |group, format:| "/groups/#{group.name}.#{format}" }
+
+      describe "when viewing activity filters" do
+        it "should return the right response" do
+          get "/groups/#{group.name}/activity/posts.json"
+
+          expect(response.status).to eq(200)
+
+          body = response.parsed_body["group"]
+
+          expect(body["id"]).to eq(group.id)
+        end
+      end
+    end
+
+    describe "when accessing by id" do
+      include_examples "group show behavior",
+                       lambda { |group, format:| "/groups/by-id/#{group.id}.#{format}" }
     end
   end
 

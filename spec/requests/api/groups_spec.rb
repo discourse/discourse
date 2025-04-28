@@ -53,6 +53,33 @@ RSpec.describe "groups" do
     end
   end
 
+  path "/groups/{name}.json" do
+    get "Get a group" do
+      tags "Groups"
+      operationId "getGroup"
+      consumes "application/json"
+      parameter name: :name,
+                in: :path,
+                type: :string,
+                example: "name",
+                description: "Use group name instead of id"
+      expected_request_schema = nil
+
+      produces "application/json"
+      response "200", "success response" do
+        expected_response_schema = load_spec_schema("group_response")
+        schema expected_response_schema
+
+        let(:name) { Fabricate(:group).name }
+
+        it_behaves_like "a JSON endpoint", 200 do
+          let(:expected_response_schema) { expected_response_schema }
+          let(:expected_request_schema) { expected_request_schema }
+        end
+      end
+    end
+  end
+
   path "/groups/{id}.json" do
     put "Update a group" do
       tags "Groups"
@@ -73,8 +100,10 @@ RSpec.describe "groups" do
         run_test!
       end
     end
+  end
 
-    get "Get a group" do
+  path "/groups/by-id/{id}.json" do
+    get "Get a group by id" do
       tags "Groups"
       operationId "getGroup"
       consumes "application/json"
@@ -86,18 +115,6 @@ RSpec.describe "groups" do
       expected_request_schema = nil
 
       produces "application/json"
-      response "200", "success response" do
-        expected_response_schema = load_spec_schema("group_response")
-        schema expected_response_schema
-
-        let(:id) { Fabricate(:group).name }
-
-        it_behaves_like "a JSON endpoint", 200 do
-          let(:expected_response_schema) { expected_response_schema }
-          let(:expected_request_schema) { expected_request_schema }
-        end
-      end
-
       response "200", "success response (by id)" do
         expected_response_schema = load_spec_schema("group_response")
         schema expected_response_schema
@@ -112,12 +129,12 @@ RSpec.describe "groups" do
     end
   end
 
-  path "/groups/{id}/members.json" do
+  path "/groups/{name}/members.json" do
     get "List group members" do
       tags "Groups"
       operationId "listGroupMembers"
       consumes "application/json"
-      parameter name: :id,
+      parameter name: :name,
                 in: :path,
                 type: :string,
                 example: "name",
@@ -129,7 +146,7 @@ RSpec.describe "groups" do
         expected_response_schema = load_spec_schema("group_members_response")
         schema expected_response_schema
 
-        let(:id) { Fabricate(:group).name }
+        let(:name) { Fabricate(:group).name }
 
         it_behaves_like "a JSON endpoint", 200 do
           let(:expected_response_schema) { expected_response_schema }
@@ -137,7 +154,9 @@ RSpec.describe "groups" do
         end
       end
     end
+  end
 
+  path "/groups/{id}/members.json" do
     put "Add group members" do
       tags "Groups"
       operationId "addGroupMembers"
