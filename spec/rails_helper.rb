@@ -670,27 +670,30 @@ RSpec.configure do |config|
       Capybara.current_session.driver.on_save_screenrecord do |video_path|
         saved_path =
           File.join(
-            "tmp/downloads/capybara",
+            "tmp/capybara",
             "#{example.metadata[:full_description].parameterize}-screenrecord.webm",
           )
 
         File.write(saved_path, File.read(video_path))
 
-        puts "Video saved at #{saved_path}" if !ENV["CI"]
+        if !ENV["CI"]
+          puts "\n🎥 Recorded video for: #{example.metadata[:full_description]}\n"
+          puts "#{File.join(Rails.root, saved_path)}\n"
+        end
       end
     end
 
-    if example.metadata[:tracing]
+    if example.metadata[:trace]
       Capybara.current_session.driver.on_save_trace do |trace|
         saved_path =
-          File.join(
-            "tmp/downloads/capybara",
-            "#{example.metadata[:full_description].parameterize}-trace.zip",
-          )
+          File.join("tmp/capybara", "#{example.metadata[:full_description].parameterize}-trace.zip")
 
         File.write(saved_path, File.read(trace))
 
-        puts "Traced saved at #{saved_path}" if !ENV["CI"]
+        if !ENV["CI"]
+          puts "\n🧭 Saved trace for: #{example.metadata[:full_description]}\n"
+          puts "Open with `npx playwright show-trace #{File.join(Rails.root, saved_path)}`\n"
+        end
       end
     end
 
