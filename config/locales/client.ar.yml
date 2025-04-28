@@ -2502,6 +2502,9 @@ ar:
     modal:
       close: "إغلاق"
       dismiss_error: "تجاهل الخطأ"
+    multi_select:
+      no_results: "لا توجد نتائج"
+      search: "البحث…"
     form_kit:
       reset: إعادة التعيين
       optional: اختياري
@@ -2781,10 +2784,6 @@ ar:
         name: "Google"
         title: "تسجيل الدخول باستخدام Google"
         sr_title: "تسجيل الدخول باستخدام Google"
-      twitter:
-        name: "Twitter"
-        title: "تسجيل الدخول باستخدام Twitter"
-        sr_title: "تسجيل الدخول باستخدام Twitter"
       instagram:
         name: "Instagram"
         title: "تسجيل الدخول باستخدام Instagram"
@@ -3369,8 +3368,6 @@ ar:
       in_topics_posts: "في كل الموضوعات والمنشورات"
       enter_hint: "أو اضغط على Enter"
       in_posts_by: "في منشورات %{username}"
-      browser_tip: "%{modifier} + f"
-      browser_tip_description: "مرة أخرى لاستخدام بحث المتصفح الأصلي"
       recent: "عمليات البحث الأخيرة"
       clear_recent: "مسح عمليات البحث الأخيرة"
       type:
@@ -5654,7 +5651,6 @@ ar:
       clear_filter: "مسح الفلتر"
       no_results:
         title: "لا توجد نتائج"
-        description: 'لم نتمكن من العثور على أي شيء يطابق "%{filter}".<br><br>هل تريد <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">البحث في إعدادات الموقع</a> أو <a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">قائمة المستخدمين ذوي دور المسؤول؟</a>'
       footer:
         interface_color_selector:
           light: "فاتح"
@@ -5826,9 +5822,6 @@ ar:
         flags:
           title: "الإشراف"
           header_description: "يساعدك نظام البلاغات في Discourse وفريق المشرفين لديك على إدارة المحتوى وسلوك المستخدم، والحفاظ على مجتمعك محترمًا وصحيًا. الإعدادات الافتراضية مناسبة لمعظم المجتمعات ولا يتعين عليك تغييرها. ومع ذلك، إذا كان موقعك يحتوي على متطلبات معيَّنة، يمكنك إيقاف البلاغات التي لا تحتاج إليها وإضافة بلاغاتك المخصَّصة."
-        font_style:
-          title: "نمط الخط"
-          header_description: "تخصيص أنماط الخطوط المُستخدَمة في سماتك"
         files:
           title: "الملفات"
           header_description: "الإعدادات التي تتحكم في حدود أحجام الملفات ونوعها، وأحجام الصور الرمزية ومصادرها، وتخزين الملفات، وجودة الصور وضغطها، وغير ذلك"
@@ -5838,11 +5831,7 @@ ar:
         login_and_authentication:
           title: "تسجيل الدخول والمصادقة"
           header_description: "تكوين كيفية تسجيل دخول المستخدمين ومصادقتهم، والعبارات السرية، والمفاتيح، ومقِّدمي OAuth2، وغير ذلك"
-        logo:
-          title: "شعار الموقع"
-          header_description: "تخصيص الأشكال المختلفة لشعار موقعك"
-        branding:
-          title: "العلامة التجارية"
+        logo_and_fonts:
           logo:
             form:
               logo:
@@ -5851,6 +5840,13 @@ ar:
               email: "البريد الإلكتروني"
               manifest_screenshots:
                 description: "لقطات شاشة تعرض ميزات المثيل ووظيفته على صفحة رسالة التثبيت الخاصة به. يجب أن تكون جميع الصور من تحميلات محلية وبالأبعاد نفسها."
+          fonts:
+            title: "الخطوط"
+            form:
+              heading_font:
+                title: "خط العنوان"
+            backfill_modal:
+              modal_yes: "نعم"
         navigation:
           title: "التنقل"
           header_description: "تكوين روابط التنقل وعناصر القائمة لموقعك. يتضمَّن ذلك الموقع وسلوك قائمة التنقل الرئيسية، والروابط السريعة في أعلى الصفحة الرئيسية، والشريط الجانبي للمسؤول"
@@ -5860,9 +5856,6 @@ ar:
         onebox:
           title: "لوحة المعاينة"
           header_description: "تكوين كيفية إنشاء لوحات المعاينة وعرضها لموقعك"
-        other:
-          title: "أخرى"
-          header_description: "الإعدادات التي لا تناسب أي فئة أخرى"
         rate_limits:
           title: "حدود المعدل"
           header_description: "تكوين عدد المرات التي يمكن فيها للمستخدمين تنفيذ إجراءات معيَّنة، مثل إنشاء الموضوعات، وإرسال الرسائل، ونشر الردود"
@@ -5908,6 +5901,10 @@ ar:
         badges:
           title: "الشارات"
           header_description: "تكافئ الشارات المستخدمين على أنشطتهم ومساهماتهم وإنجازاتهم للإشادة بالسلوك الإيجابي والتفاعل داخل المجتمع والإقرار بهما وتشجيعهما"
+        content:
+          sub_pages:
+            posts_and_topics:
+              title: "المنشورات والموضوعات"
         permalinks:
           title: "الروابط الثابتة"
           header_description: "عمليات إعادة التوجيه التي سيتم تطبيقها على عناوين URL التي لا يعرفها المنتدى"
@@ -5931,9 +5928,6 @@ ar:
         site_texts:
           title: "نصوص الموقع"
         email:
-          title: "إعداد الخادم والسجلات"
-          header_description: "خصِّص القوالب المُستخدَمة لإنشاء الرسائل الإلكترونية، ومعاينة الرسائل الإلكترونية التلخيصية التي سيتم إرسالها، وعرض سجلات البريد الإلكتروني"
-          keywords: "البريد الإلكتروني | smtp | mailgun | sendgrid | مُرسَل | تم تخطيه | مرتد | مُستلَم | مرفوض | سجلات البريد الإلكتروني | ملخص المعاينة"
           sub_pages:
             preview_summary:
               title: "معاينة الملخص"
@@ -5942,6 +5936,8 @@ ar:
               title: "الاختبار المتقدم"
             templates:
               title: "القوالب"
+        email_logs:
+          sub_pages:
             sent:
               title: "المُرسَلة"
             skipped:
@@ -6644,7 +6640,6 @@ ar:
             post: "المنشورات"
             chat_message: "رسائل الدردشة"
             enabled: "تفعيل هذا البلاغ المخصَّص بعد الحفظ"
-            alert: "بمجرد استخدام بلاغ مخصَّص، فإنه يمكن إيقافه فقط ولكن لا يمكن تعديلها أو حذفها."
             edit_flag: "تعديل البلاغ"
             non_editable: "لا يمكنك تعديل هذا البلاغ لأنه بلاغ نظام أو تم استخدامه بالفعل في نظام المراجعة، ومع ذلك لا يزال بإمكانك إيقافه."
             delete_flag: "حذف البلاغ"
@@ -6673,6 +6668,24 @@ ar:
             new_theme: "سمة جديدة"
           components:
             title: "المكوِّنات"
+            install: "تثبيت"
+            name: "الاسم"
+            enabled: "مفعَّلة؟"
+            by_author: "بواسطة %{name}"
+            learn_more: "معرفة المزيد"
+            edit: "تعديل"
+            parent_themes_two: "%{name1} و%{name2}"
+            preview: "معاينة"
+            check_update: "تحقَّق من وجود تحديثات"
+            export: "تصدير"
+            convert: "تحويل"
+            delete: "حذف"
+            filter_by: "التصفية حسب"
+            filter_by_all: "الكل"
+            filter_by_used: "مُستخدَم"
+            filter_by_unused: "غير مُستخدَم"
+            delete_confirm: 'هل تريد بالتأكيد حذف "%{name}"؟'
+            badge_unused: "غير مُستخدَم"
         user_fields:
           field: "الحقل"
           type: "النوع"

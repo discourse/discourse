@@ -76,6 +76,8 @@ pl_PL:
           title: "Wpis"
         post_list:
           title: "Lista postów"
+          empty_example: "<PostList /> pusty stan"
+          populated_example: "<PostList /> stan wypełniony"
         topic_map:
           title: "Mapa tematu"
         site_header:

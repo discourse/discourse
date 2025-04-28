@@ -196,6 +196,7 @@ hu:
     back_button: "Vissza"
     welcome_banner:
       header:
+        logged_in_members: "Üdv újra itt, %{preferred_display_name}!"
         anonymous_members: "Üdvözöljük a(z) %{site_name} oldalon."
       search: "Keresés"
     themes:
@@ -574,6 +575,7 @@ hu:
         required: "Zárolnia kell az elemeket, hogy jóvá tudja őket hagyni."
         claimed_by_you: "Zárolta ezt az elemet, és most már jóváhagyhatja."
         claimed_by_other: "Ezt az elemet csak <b>%{username}</b> hagyhatja jóvá."
+        automatically_claimed_by: "Ezt az elemet <b>%{username}</b> vizsgálja felül."
       claim:
         title: "téma zárolása"
       unclaim:
@@ -611,8 +613,11 @@ hu:
         fields: "Mezők"
         reject_reason: "Ok"
         scrubbed_reason: "Ok"
+        scrubbed_reject_reason: "A felhasználó elutasításának oka"
         scrub_record:
+          confirm_title: Személyes adatok eltávolítása
           reason_placeholder: "Ok..."
+          confirm_button: "Az eltávolítás megerősítése"
           cancel_button: "Mégse"
       user_percentage:
         summary:
@@ -1507,6 +1512,7 @@ hu:
         choose: "Válasszon jelszót"
         verify_identity: "A folytatáshoz igazolja személyazonosságát."
         title: "Jelszó-visszaállítás"
+        remove: "Jelszó eltávolítása"
       second_factor_backup:
         title: "Kétfaktoros biztonsági kódok"
         regenerate: "Újragenerálás"
@@ -2082,6 +2088,9 @@ hu:
     modal:
       close: "bezárás"
       dismiss_error: "Hiba elvetése"
+    multi_select:
+      no_results: "Nincs eredmény"
+      search: "Keresés…"
     form_kit:
       reset: Alaphelyzetbe állítás
       optional: nem kötelező
@@ -2320,9 +2329,9 @@ hu:
         title: "Bejelentkezés a Google-lel"
         sr_title: "Bejelentkezés a Google-lel"
       twitter:
-        name: "Twitter"
-        title: "Bejelentkezés a Twitterrel"
-        sr_title: "Bejelentkezés a Twitterrel"
+        name: "X"
+        title: "Jelentkezzen be X-el"
+        sr_title: "Jelentkezzen be X-el"
       instagram:
         name: "Instagram"
         title: "Bejelentkezés az Instagrammal"
@@ -2364,6 +2373,18 @@ hu:
       password_label: "Jelszó"
     password_reset:
       continue: "Tovább a(z) %{site_name} oldalra"
+    emoji_set:
+      apple_international: "Apple/International (elavult Twemoji)"
+      google: "Google (elavult Noto Emoji)"
+      twitter: "Twitter (elavult Twemoji)"
+      win10: "Win10 (elavult Fluent Emojia)"
+      google_classic: "Google klasszikus (elavult Noto Emoji)"
+      facebook_messenger: "Facebook Messenger (elavult Szabványos)"
+      openmoji: OpenMoji
+      standard: Szabványos
+      fluentui: Fluent Emoji
+      noto: Noto Emoji
+      twemoji: Twemoji
     category_page_style:
       categories_only: "Csak kategóriák szerint"
       categories_with_featured_topics: "Kategóriák funkciók szerint"
@@ -2751,8 +2772,11 @@ hu:
         new_features: "Új Discourse funkciók jelentek meg!"
         admin_problems: "új tanácsok a webhely irányítópultján"
     upload_selector:
+      change: "Módosítás"
       delete: "Törlés"
       uploading: "Feltöltés"
+      processing: "Feltöltés feldolgozása"
+      select_file: "Kattintson a feltöltéshez vagy húzza és dobja be a fájlt"
       default_image_alt_text: kép
     search:
       sort_by: "Rendezés"
@@ -2795,8 +2819,6 @@ hu:
       in_topics_posts: "az összes témában és bejegyzésben"
       enter_hint: "vagy nyomjon Entert"
       in_posts_by: "%{username} bejegyzéseiben"
-      browser_tip: "%{modifier} + f"
-      browser_tip_description: "újra a böngésző natív keresőjének használata"
       recent: "Legutóbbi keresések"
       clear_recent: "Legutóbbi keresések törlése"
       experience:
@@ -3823,16 +3845,21 @@ hu:
       creation_error: Hiba lépett fel a kategória létrehozása során!
       save_error: Hiba lépett fel a kategória mentése során!
       name: "Kategória neve"
+      untitled: "Névtelen kategória"
       description: "Leírás"
       logo: "Kategória képe"
       logo_dark: "Sötét üzemmód kategória logó képe"
+      logo_description: "Ajánlott 1:1 képarány, minimum 200px-es méret. Ha üresen hagyja, nem jelenik meg kép."
       background_image: "Kategória háttérképe"
       background_image_dark: "Sötét kategória háttérképe"
+      style: "Stílusok"
       background_color: "Szín"
       styles:
+        type: "Stílus"
         icon: "Ikon"
         emoji: "Hangulatjel"
         options:
+          square: "Négyzet"
           icon: "Ikon"
           emoji: "Hangulatjel"
       color_used: "Használt szín"
@@ -4305,6 +4332,8 @@ hu:
       admin:
         title: "Adminisztrátor"
         search_prev_next: "%{shortcut} A kijelölés mozgatása felfelé és lefelé"
+        search_open: "%{shortcut} Nyissa meg a keresést az admin felületre"
+        search_full_page: "%{shortcut} Teljes oldali admin keresés megnyitása"
     badges:
       earned_n_times:
         one: "Nyerte ezt a jelvényt %{count} idővel"
@@ -4700,10 +4729,11 @@ hu:
       collapse_all_sections: "Minden szakasz összezárása"
       expand_all_sections: "Minden szakasz kibontása"
       filter: "Szűrő..."
+      filter_links: "Linkek szűrése..."
       clear_filter: "Szűrő kiürítése"
       no_results:
         title: "Nincs eredmény"
-        description: 'Nem találtunk semmit ami ennek megfelelne: ''%{filter}''.<br><br>Szeretné <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}"> felkeresni a webhely beállításaiban</a> vagy <a class="sidebar-additional-filter-users" href="%{user_list_filter_url}"> az adminisztátori listában?</a>'
+        description_admin_search: 'Nem találtunk semmit a következőnek: ''%{filter}''.<br><br>Próbálkozzon a <a class="sidebar-additional-filter-admin-search" href="%{admin_search_url}">kereséssel a teljes adminisztrációs felületen</a>.'
       footer:
         interface_color_selector:
           light: "Világos"
@@ -4810,6 +4840,7 @@ hu:
           paste: "Beillesztés..."
           save: "Mentés másként..."
     powered_by_discourse: "Meghajtja a Discourse"
+    safari_15_warning: "Az Ön böngészője hamarosan nem lesz kompatibilis ezzel a közösséggel. Ha továbbra is részt szeretne venni itt, frissítse böngészőjét, vagy <a href='%{url}'>tudjon meg többet</a>."
   admin_js:
     type_to_filter: "Írj ide a szűréshez.."
     settings: "Beállítások"
@@ -4861,9 +4892,6 @@ hu:
           title: "Moderálás"
           header_description: "A Discourse jelölési rendszere segít Önnek és moderátori csapatának a tartalom és a felhasználói viselkedés kezelésében, hogy a közösség tisztelettudó és egészséges maradjon. Az alapértelmezett beállítások a legtöbb közösség számára megfelelőek, és nem kell megváltoztatnia őket. Ha azonban webhelyének különleges követelményei vannak, letilthatja a nem szükséges megjelöléseket, és saját megjelöléseket adhat hozzá."
           keywords: "megjelölés|vélemény|spam|illegális"
-        font_style:
-          title: "Betűstílus"
-          header_description: "Szabja testre a témák által használt betűstílusokat"
         files:
           title: "Fájlok"
           header_description: "Beállítások, amelyek a fájlméret- és típushatárokat, az avatarok méretét és forrásait, a fájltárolást, a képminőséget és tömörítést stb. szabályozzák."
@@ -4877,19 +4905,41 @@ hu:
         login_and_authentication:
           title: "Bejelentkezés és hitelesítés"
           header_description: "Konfigurálja a felhasználók bejelentkezési és hitelesítési módját, a titkokat és kulcsokat, az OAuth2-szolgáltatókat stb"
-        logo:
-          title: "Webhely logó"
-          header_description: "Szabja testre webhelye logójának változatait"
-        branding:
-          title: "Logó"
+        logo_and_fonts:
+          header_description: "Testreszabhatja webhelye logójának és betűtípusainak változatait"
           logo:
+            title: "Logó"
             form:
+              saved: "A logó beállításai mentésre kerülnek."
               logo:
                 title: "Elsődleges logó"
+                description: "Megjelenik a webhely felső navigációs sávjában, valamint a webhely e-mail értesítéseinek felső részén."
+                help_text: "Az ajánlott méret 600 x 80 pixel."
+              logo_dark:
+                required: "Használjon másik logót sötét módban?"
+                title: "Elsődleges sötét logó"
+                help_text: "Az ajánlott méret 600 x 80 pixel."
+              large_icon:
+                title: "Négyzet alakú ikon"
+                help_text: "Az ajánlott méret 512 x 512 pixel."
+              square_icon_dark:
+                help_text: "Az ajánlott méret 512 x 512 pixel."
+              logo_small:
+                help_text: "Az ajánlott méret 120 x 120 pixel."
+              logo_small_dark:
+                help_text: "Az ajánlott méret 120 x 120 pixel."
               mobile: "Mobil"
               email: "E-mail:"
+              manifest_icon:
+                help_text: "Az ajánlott méret 512 x 512 pixel."
               manifest_screenshots:
                 description: "Képernyőképek, amelyek bemutatják az Ön példányának jellemzőit és funkcionalitását a telepítés oldalon. Minden képnek helyi feltöltésűnek kell lennie és azonos méretűnek."
+          fonts:
+            form:
+              heading_font:
+                title: "Fejléc betűtípus"
+            backfill_modal:
+              modal_yes: "Igen"
         navigation:
           title: "Navigáció"
           header_description: "Konfigurálja a navigációs hivatkozásokat és a menüelemeket a webhelyéhez. Ide tartozik az elsődleges navigációs menü helye és viselkedése, a kezdőlap tetején található gyorshivatkozások, valamint az adminisztrátori oldalsáv"
@@ -4899,16 +4949,15 @@ hu:
         onebox:
           title: "Onebox"
           header_description: "Állítsa be, hogy a Onebox előnézetek hogyan jönnek létre és jelenjenek meg a webhelyen"
-        other:
-          title: "Egyéb"
-          header_description: "Más kategóriába nem illő beállítások"
         rate_limits:
           title: "Korlátozások"
           header_description: "Állítsa be, hogy a felhasználók milyen gyakran hajthatnak végre bizonyos műveleteket, például témákat hozhatnak létre, üzeneteket küldhetnek és válaszokat küldhetnek"
         search:
+          title: "Keresési beállítások"
           header_description: "Konfigurálja a keresési beállításokat, beleértve a naplózást és a tokenizálást kínai és japán nyelvekhez"
         search_everything:
           title: "Keresés"
+          header_description: "Itt megtalálhat mindent az adminisztrációs felületen. Az alábbiakban szűrheti az eredményeket, és a rendszer emlékezni fog a preferenciáira. A keresés bárhol megnyitásához az adminisztrációs felületen nyomja meg a %{shortcutHTML}gombot."
         security:
           title: "Biztonság"
           header_description: "Konfigurálja a biztonsági beállításokat, beleértve a kétfaktoros hitelesítést, a moderátorjogokat és a tartalombiztonsági házirendeket"
@@ -4950,12 +4999,39 @@ hu:
         reports:
           title: "Jelentések"
           header_description: "A jelentések egy hatékony eszköz, amely segít megérteni, mi történik a webhelyén. Segítségükkel azonosíthatja a trendeket, felismerheti a problémákat, és adatok alapján hozhat döntéseket."
+          sub_pages:
+            settings:
+              title: "Irányítópult beállításai"
         badges:
           title: "Jelvények"
           header_description: "A jelvények jutalmazzák a felhasználókat tevékenységeikért, hozzájárulásaikért és eredményeikért, amelyek célja a közösségen belüli pozitív magatartás és elkötelezettség elismerése, érvényesítése és ösztönzése"
+        analytics:
+          title: "Analitika és SEO"
+          header_description: "Javítsa webhelye láthatóságát a keresőmotorok számára, és konfigurálja a webhely látogatóinak nyomon követését"
+          keywords: "keresés|google|oldaltérkép"
+        interface:
+          title: "Felület és elrendezés"
+          header_description: "Személyre szabhatja webhelye általános elrendezésének és felhasználói felületének részleteit"
+        content:
+          title: "Tartalom"
+          header_description: "Konfigurálja a témakörök és bejegyzések kezelését, és személyre szabja a tartalomkészítési élményt tagjai számára"
+          keywords: "témák|bejegyzések|kategóriák|címkék"
+          sub_pages:
+            categories_and_tags:
+              title: "Kategóriák és címkék"
+            sharing:
+              title: "Megosztás"
+            posts_and_topics:
+              title: "Bejegyzések és témák"
+            stats_and_thresholds:
+              title: "Statisztikák és küszöbértékek"
         permalinks:
           title: "Közvetlen hivatkozás"
           header_description: "A fórum által nem ismert URL címekre történő átirányítás"
+        user_defaults:
+          title: "Felhasználói alapértelmezett beállítások"
+          header_description: "Állítson be alapértelmezett értékeket azokhoz a beállításokhoz, amelyek hatással vannak a felhasználókra, és konfigurálhatja a belépési élményüket"
+          keywords: "felhasználók|belépés|új"
         user_fields:
           title: "Felhasználói mezők"
           header_description: "Hozzon létre egyéni felhasználói mezőket, hogy további részleteket gyűjthessen a közösség tagjairól. Kiválaszthatja, hogy milyen adatokra van szükség a regisztráció során, mi jelenjen meg a profilokon, és mit frissíthetnek a felhasználók."
@@ -4975,14 +5051,25 @@ hu:
           title: "Összetevők"
           header_description: "Az összetevők kisebb testreszabások, amelyek hozzáadhatók a témákhoz, hogy megváltoztassák a fórum kialakításának stílusát"
           keywords: "téma|összetevő|bővítmény"
+        themes_and_components:
+          title: "Témák és összetevők"
+          header_description: "Személyre szabhatja Discourse oldalát az igényeinek megfelelő témákkal és komponensekkel"
+          keywords: "téma|összetevő|kiterjesztés|testreszabás"
+        site_admin:
+          title: "Oldal adminisztrátor"
+          header_description: "Konfiguráljon különféle beállításokat a webhely kezelésével kapcsolatban"
+          keywords: "felfedezés|bootstrap|alkalmazások"
         site_texts:
           title: "Oldal szövegei"
           header_description: "A Discourse-ban használt szövegek testreszabása a közösség hangjának és hangnemének megfelelően"
         email:
-          title: "Szerverbeállítások és naplók"
-          header_description: "Testreszabhatja az e-mailek létrehozásához használt sablonokat, megtekintheti a kiküldött összefoglaló e-maileket, és megtekintheti az e-mail naplókat"
-          keywords: "email|smtp|mailgun|sendgrid|elküldve|kihagyva|visszapattant|kapott|elutasítva|e-mail naplók|előzetes összefoglaló"
+          title: "E-mail beállítások"
+          header_description: "Konfigurálja a tagjainak küldött e-mailek beállításait"
+          keywords: "kivonat|leiratkozás|e-mail|smtp|mailgun|sendgrid|előzetes összefoglaló"
           sub_pages:
+            server_settings:
+              title: "Szerverbeállítások"
+              header_description: "Konfigurálja a tagjainak küldött e-mailek beállításait"
             preview_summary:
               title: "Előnézet összefoglalója"
               header_description: "Inaktív felhasználóknak küldött összefoglaló e-mailek tartalmának áttekintése"
@@ -4992,6 +5079,11 @@ hu:
             templates:
               title: "Sablonok"
               header_description: "Testreszabhatja az e-mailek létrehozásához használt sablonokat"
+        email_logs:
+          title: "E-mail naplók"
+          header_description: "Megtekintheti a webhelyéről küldött e-mailek naplóit"
+          keywords: "elküldött|kihagyott|visszapattan|kapott|elutasított|e-mail naplók"
+          sub_pages:
             sent:
               title: "Elküldött"
               header_description: "Az elküldött e-mailek naplójának megtekintése"
@@ -5044,6 +5136,7 @@ hu:
       search:
         modal_title: "Keresés adminban"
         title: "Keresés"
+        instructions: "Írja be, hogy keressen oldalakat, beállításokat, jelentéseket, témákat, komponenseket és még sok mást..."
         result_types:
           page:
             one: "Oldal"
@@ -5230,6 +5323,7 @@ hu:
             automatic_membership_user_count:
               one: "%{count} a felhasználó rendelkezik az új e-mail tartományokkal, és hozzá lesz adva a csoporthoz."
               other: "%{count} a felhasználók rendelkeznek az új e-mail tartományokkal, és hozzá lesznek adva a csoporthoz."
+            automatic_membership_user_unknown_count: "Az új e-mail domainek egyikével rendelkező felhasználók hozzáadódnak a csoporthoz."
             automatic_membership_associated_groups: "Azok a felhasználók, akik egy itt felsorolt szolgáltatás csoportjának tagjai, automatikusan hozzáadódnak ehhez a csoporthoz, amikor bejelentkeznek a szolgáltatásba."
             primary_group: "Automatikusan beállítva elsődleges csoportnak"
           alert:
@@ -5569,6 +5663,7 @@ hu:
           emoji: "Hangulatjel"
           navigation: "Navigáció"
           themes_and_components:
+            title: "Témák és összetevők"
             keywords: "kiterjesztés"
           site_texts: "Oldal szövegei"
       email_settings:
@@ -5670,7 +5765,6 @@ hu:
             post: "bejegyzések"
             chat_message: "chat üzenetek"
             enabled: "Mentés után engedélyezze ezt az egyéni megjelölést"
-            alert: "Ha egyszer már használtak egy egyéni megjelölést, azt csak letiltani lehet, de szerkeszteni vagy törölni nem."
             edit_flag: "Megjelölés szerkesztése"
             non_editable: "Ezt a megjelölést nem szerkesztheti, mivel ez egy rendszermegjelölés, vagy már használták a felülvizsgálati rendszerben. Ellenben letiltható."
             delete_flag: "Megjelölés törlése"
@@ -5691,14 +5785,49 @@ hu:
           more_options:
             title: "További lehetőségek"
         themes_and_components:
+          title: "Témák és összetevők"
+          description: "Személyre szabhatja Discourse oldalát az igényeinek megfelelő témákkal és komponensekkel."
           breadcrumb_title: "Személyre szabás"
           install: "Telepítés"
           themes:
             title: "Témák"
             themes_intro: "A kezdéshez telepítsen új témát, vagy hozzon létre saját témát a semmiből ezen erőforrások segítségével."
             new_theme: "Új téma"
+            back: "Vissza a témákhoz"
           components:
             title: "Összetevők"
+            description: "Testreszabások, amelyek megváltoztatják a fórum kialakításának felületi elemeit, vagy további front-end szolgáltatásokat adnak hozzá"
+            components_intro: "A kezdéshez telepítsen egy új összetevőt, vagy készítsen sajátot a semmiből ezen erőforrások segítségével."
+            new_component: "Új öszetevő"
+            back: "Vissza az összetevőkhöz"
+            install: "Telepítés"
+            name: "Név"
+            used_on: "Használt"
+            enabled: "Engedélyezed?"
+            by_author: "Szerző %{name}"
+            learn_more: "Tudjon meg többet"
+            edit: "Szerkesztés"
+            parent_themes_two: "%{name1} és %{name2}"
+            parent_themes_three: "%{name1}, %{name2} és %{name3}"
+            parent_themes_more_than_three:
+              one: "%{name1}, %{name2}, %{name3} és %{count} további"
+              other: "%{name1}, %{name2}, %{name3} és %{count} további"
+            add_to_theme: "Hozzáadás a témához"
+            preview: "Előnézet"
+            update: "Frissítés a legújabbra"
+            check_update: "Frissítések keresése"
+            update_available: "Frissítés elérhető!"
+            export: "Exportálás"
+            convert: "Konvertálás"
+            delete: "Törlés"
+            filter_by: "Szűrés:"
+            filter_by_all: "Összes"
+            filter_by_used: "Használt"
+            filter_by_unused: "Nem használt"
+            filter_by_updates_available: "Frissítések elérhetők"
+            search_components: "Írja be az összetevő nevét"
+            delete_confirm: 'Biztosan törli a "%{name}" elemet?'
+            badge_unused: "Nem használt"
         user_fields:
           field: "Mező"
           type: "Típus"

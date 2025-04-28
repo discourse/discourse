@@ -1157,8 +1157,6 @@ sw:
       not_approved: "Akaunti yako bado haijathibitishwa. Utapata ujumbe kwa barua pepe ukiwa tayari kuingia."
       google_oauth2:
         name: "Google"
-      twitter:
-        name: "Twitter"
       instagram:
         name: "Instagram"
       facebook:
@@ -2398,19 +2396,20 @@ sw:
           title: "Mafaili"
         legal:
           title: "Halali"
-        branding:
+        logo_and_fonts:
           logo:
             form:
               mobile: "Kifaa cha kiganjani"
               email: "Barua pepe"
+          fonts:
+            backfill_modal:
+              modal_yes: "Ndio"
         navigation:
           title: "Abiri"
         notifications:
           title: "Taarifa"
         onebox:
           title: "Onebox"
-        other:
-          title: "Nyingine"
         search_everything:
           title: "Tafuta"
         security:
@@ -2444,6 +2443,8 @@ sw:
               header_description: "Kihakiki maandishi ya barua pepe za jarida zinatomwa kwa watumiaji wasiotembelea jumuiya"
             templates:
               title: "Violezo"
+        email_logs:
+          sub_pages:
             sent:
               title: "Imetumwa"
             skipped:
@@ -2690,6 +2691,15 @@ sw:
           breadcrumb_title: "Geuza Kukufaa"
           themes:
             title: "Mandhari"
+          components:
+            name: "Jina"
+            enabled: "Imeruhusiwa?"
+            learn_more: "Jifunze zaidi"
+            edit: "Hariri"
+            preview: "Kihakiki"
+            export: "Hamisha"
+            delete: "Futa"
+            filter_by_all: "Vyote"
         user_fields:
           type: "Aina"
           delete: "Futa"
