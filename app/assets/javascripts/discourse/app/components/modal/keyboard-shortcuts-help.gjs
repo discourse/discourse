@@ -106,9 +106,11 @@ export default class KeyboardShortcutsHelp extends Component {
           help: buildShortcut("application.help", { keys1: ["?"] }),
           bulk_select: buildShortcut("application.toggle_bulk_select", {
             keys1: [SHIFT, "b"],
+            keysDelimiter: PLUS,
           }),
           dismiss: buildShortcut("application.dismiss", {
             keys1: [SHIFT, "d"],
+            keysDelimiter: PLUS,
           }),
           x: buildShortcut("application.x", {
             keys1: ["x"],
