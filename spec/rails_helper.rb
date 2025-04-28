@@ -1104,7 +1104,7 @@ def apply_base_chrome_args(args = [])
   ]
 
   base_args << "--remote-debugging-port=" + CHROME_REMOTE_DEBUGGING_PORT
-  base_args << "----remote-debugging-address=" + CHROME_REMOTE_DEBUGGING_ADDRESS
+  base_args << "--remote-debugging-address=" + CHROME_REMOTE_DEBUGGING_ADDRESS
 
   # A file that contains just a list of paths like so:
   #
