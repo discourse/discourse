@@ -27,7 +27,7 @@ require "webmock/rspec"
 require "minio_runner"
 
 CHROME_REMOTE_DEBUGGING_PORT = (ENV["CHROME_REMOTE_DEBUGGING_PORT"] || 50_062).to_s
-CHROME_REMOTE_DEBUGGING_ADDRESS = ENV["CHROME_REMOTE_DEBUGGING_ADDRESS"] || "localhost"
+CHROME_REMOTE_DEBUGGING_ADDRESS = ENV["CHROME_REMOTE_DEBUGGING_ADDRESS"] || "0.0.0.0"
 
 class RspecErrorTracker
   def self.exceptions
