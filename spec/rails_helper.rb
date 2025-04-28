@@ -407,7 +407,7 @@ RSpec.configure do |config|
           @cause = cause
           super "This spec passed, but capybara waited for the full wait duration (#{wait_time}s) at least once. " +
                   "This will slow down the test suite. " +
-                  "Beware of negating the result of selenium's RSpec matchers."
+                  "Beware of negating the result of RSpec matchers."
         end
       end
 
@@ -453,15 +453,11 @@ RSpec.configure do |config|
       end
     end
 
-    # possible values: OFF, SEVERE, WARNING, INFO, DEBUG, ALL
-    browser_log_level = ENV["SELENIUM_BROWSER_LOG_LEVEL"] || "WARNING"
-
     driver_options = {
       browser_type: :chromium,
       channel: :chrome,
-      headless: ENV["SELENIUM_HEADLESS"] != "0",
+      headless: (ENV["PLAYWRIGHT_HEADLESS"].presence || ENV["SELENIUM_HEADLESS"].presence) != "0",
       args: apply_base_chrome_args,
-      env: [{ name: browser_log_level, value: "pw:browser" }],
       acceptDownloads: true,
       downloadsPath: Downloads::FOLDER,
       devtools: ENV["CHROME_DEV_TOOLS"].present?, # playwright recommends https://playwright.dev/docs/debug instead
@@ -791,7 +787,7 @@ RSpec.configure do |config|
 
     # Recommended that this is not disabled, since it makes debugging
     # failed system tests a lot trickier.
-    if ENV["SELENIUM_DISABLE_VERBOSE_JS_LOGS"].blank?
+    if ENV["PLAYWRIGHT_DISABLE_VERBOSE_JS_LOGS"].blank?
       if example.exception
         lines << "~~~~~~~ JS LOGS ~~~~~~~"
 
