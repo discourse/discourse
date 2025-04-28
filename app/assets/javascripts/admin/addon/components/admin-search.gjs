@@ -65,11 +65,9 @@ export default class AdminSearch extends Component {
   }
 
   get noResultsDescription() {
-    return htmlSafe(
-      i18n("admin.search.no_results", {
-        filter: escapeExpression(this.filter),
-      })
-    );
+    return i18n("admin.search.no_results", {
+      filter: escapeExpression(this.filter),
+    });
   }
 
   @action
