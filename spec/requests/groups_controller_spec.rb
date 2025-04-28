@@ -451,12 +451,12 @@ RSpec.describe GroupsController do
   end
 
   describe "#show" do
-    shared_examples "group show behavior" do |path|
+    shared_examples "group show behavior" do |path_prefix, param|
       it "ensures the group can be seen" do
         sign_in(user)
         group.update!(visibility_level: Group.visibility_levels[:owners])
 
-        get path.call(group, format: :json)
+        get "#{path_prefix}/#{group.public_send(param)}.json"
 
         expect(response.status).to eq(404)
       end
@@ -464,7 +464,8 @@ RSpec.describe GroupsController do
       it "returns the right response" do
         sign_in(user)
         mod_group = Group.find(moderator_group_id)
-        get path.call(group, format: :json)
+
+        get "#{path_prefix}/#{group.public_send(param)}.json"
 
         expect(response.status).to eq(200)
 
@@ -478,7 +479,8 @@ RSpec.describe GroupsController do
       context "as an admin" do
         it "returns the right response" do
           sign_in(admin)
-          get path.call(group, format: :json)
+
+          get "#{path_prefix}/#{group.public_send(param)}.json"
 
           expect(response.status).to eq(200)
 
@@ -493,37 +495,29 @@ RSpec.describe GroupsController do
           expect(body["extras"]["visible_group_names"]).to contain_exactly(*groups.map(&:to_s))
         end
       end
+    end
 
-      it "should respond to HTML" do
-        group.update!(bio_raw: "testing **group** bio")
+    it "should respond to HTML" do
+      group.update!(bio_raw: "testing **group** bio")
 
-        get path.call(group, format: :html)
+      get "/groups/#{group.name}.html"
 
-        expect(response.status).to eq(200)
+      expect(response.status).to eq(200)
 
-        expect(response.body).to have_tag "title", text: "#{group.name} - #{SiteSetting.title}"
-        expect(response.body).to have_tag(
-          :meta,
-          with: {
-            property: "og:title",
-            content: group.name,
-          },
-        )
+      expect(response.body).to have_tag "title", text: "#{group.name} - #{SiteSetting.title}"
+      expect(response.body).to have_tag(:meta, with: { property: "og:title", content: group.name })
 
-        # note this uses an excerpt so it strips html
-        expect(response.body).to have_tag(
-          :meta,
-          with: {
-            property: "og:description",
-            content: "testing group bio",
-          },
-        )
-      end
+      expect(response.body).to have_tag(
+        :meta,
+        with: {
+          property: "og:description",
+          content: "testing group bio",
+        },
+      )
     end
 
     describe "when accessing by name" do
-      include_examples "group show behavior",
-                       lambda { |group, format:| "/groups/#{group.name}.#{format}" }
+      include_examples "group show behavior", "/groups", :name
 
       describe "when viewing activity filters" do
         it "should return the right response" do
@@ -539,8 +533,7 @@ RSpec.describe GroupsController do
     end
 
     describe "when accessing by id" do
-      include_examples "group show behavior",
-                       lambda { |group, format:| "/groups/by-id/#{group.id}.#{format}" }
+      include_examples "group show behavior", "/groups/by-id", :id
     end
   end
 
