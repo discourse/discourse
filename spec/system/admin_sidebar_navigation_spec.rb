@@ -24,7 +24,7 @@ describe "Admin | Sidebar Navigation", type: :system do
     expect(sidebar).to have_no_section("categories")
     expect(page).to have_no_css(".admin-main-nav")
 
-    filter.click_back_to_forum
+    sidebar.click_back_to_forum
     expect(page).to have_current_path("/latest")
     expect(sidebar).to have_no_section("admin-root")
   end
@@ -34,7 +34,7 @@ describe "Admin | Sidebar Navigation", type: :system do
 
     sidebar.click_link_in_section("community", "admin")
 
-    filter.click_back_to_forum
+    sidebar.click_back_to_forum
     expect(page).to have_current_path("/hot")
   end
 
@@ -81,7 +81,7 @@ describe "Admin | Sidebar Navigation", type: :system do
       expect(sidebar).to have_no_section("community")
       expect(page).to have_no_css(".admin-main-nav")
 
-      filter.click_back_to_forum
+      sidebar.click_back_to_forum
       expect(page).to have_current_path("/latest")
 
       sidebar_dropdown.click
