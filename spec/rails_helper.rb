@@ -1103,8 +1103,10 @@ def apply_base_chrome_args(args = [])
     --remote-allow-origins=*
   ]
 
-  base_args << "--remote-debugging-port=" + CHROME_REMOTE_DEBUGGING_PORT
-  base_args << "--remote-debugging-address=" + CHROME_REMOTE_DEBUGGING_ADDRESS
+  if !ENV["CI"]
+    base_args << "--remote-debugging-port=" + CHROME_REMOTE_DEBUGGING_PORT
+    base_args << "--remote-debugging-address=" + CHROME_REMOTE_DEBUGGING_ADDRESS
+  end
 
   # A file that contains just a list of paths like so:
   #
