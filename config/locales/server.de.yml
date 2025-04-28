@@ -2479,12 +2479,10 @@ de:
     default_navigation_menu_categories: "Ausgewählte Kategorien werden standardmäßig im Abschnitt „Kategorien“ des Navigationsmenüs angezeigt."
     default_navigation_menu_tags: "Ausgewählte Schlagwörter werden standardmäßig im Abschnitt „Schlagwörter“ des Navigationsmenüs angezeigt."
     experimental_new_new_view_groups: 'Eine neue Themenliste aktivieren, die ungelesene und neue Themen kombiniert, und den Link „Alles“ in der Seitenleiste entsprechend verknüpfen.'
-    glimmer_topic_list_mode: "Lege fest, ob die neue Themenlisten-Implementierung „glimmer“ verwendet werden soll. „auto“ wird automatisch aktiviert, sobald alle deine Themes und Plug-ins bereit sind. Weitere Informationen findest du <a href='https://meta.discourse.org/t/343404'>im Meta-Thema</a>."
-    glimmer_post_menu_mode: "Lege fest, ob die neue Implementierung des „glimmer“-Beitragmenüs verwendet werden soll. „auto“ wird automatisch aktiviert, sobald alle deine Themes und Plug-ins bereit sind. Diese Implementierung befindet sich in der Entwicklung und ist nicht für den produktiven Einsatz gedacht. Entwickle keine Themes/Plug-ins dafür, bis die Implementierung fertiggestellt und angekündigt ist."
-    glimmer_post_menu_groups: "Aktiviere die neue „glimmer“-Beitragmenü-Implementierung im „auto“-Modus für die angegebenen Benutzergruppen. Diese Implementierung befindet sich in der Entwicklung und ist nicht für den produktiven Einsatz gedacht. Entwickle keine Themes/Plug-ins dafür, bis die Implementierung fertiggestellt und angekündigt ist."
     glimmer_post_stream_mode: "Lege fest, ob die neue Implementierung des „glimmer“-Beitragsstroms verwendet werden soll. „auto“ wird automatisch aktiviert, sobald alle deine Themes und Plug-ins bereit sind. Diese Implementierung befindet sich in der Entwicklung und ist nicht für den produktiven Einsatz gedacht. Entwickle keine Themes/Plug-ins dafür, bis die Implementierung fertiggestellt und angekündigt ist."
     glimmer_post_stream_mode_auto_groups: "Aktiviere die neue „glimmer“-Beitragmenü-Implementierung im „auto“-Modus für die angegebenen Benutzergruppen. Diese Implementierung befindet sich in der Entwicklung und ist nicht für den produktiven Einsatz gedacht. Entwickle keine Themes/Plug-ins dafür, bis die Implementierung fertiggestellt und angekündigt ist."
     experimental_form_templates: "Aktiviere die Funktion für Formularvorlagen. Verwalte die Vorlagen unter <a href='%{base_path}/admin/customize/form-templates'>Anpassen / Vorlagen</a>."
+    show_preview_for_form_templates: "Aktiviere die Vorschau für Formularvorlagen"
     lazy_load_categories_groups: "Lazy Loading von Kategorieinformationen nur für Benutzer dieser Gruppen. Dies verbessert die Leistung auf Websites mit vielen Kategorien."
     experimental_auto_grid_images: "Wickelt Bilder automatisch in [grid]-Tags ein, wenn 3 oder mehr Bilder im Composer hochgeladen werden."
     page_loading_indicator: "Die Ladeanzeige konfigurieren, die bei der Seitennavigation in Discourse erscheint. „Spinner“ ist ein ganzseitiger Indikator. „Slider“ zeigt einen schmalen Balken am oberen Rand des Bildschirms an."
@@ -2807,6 +2805,7 @@ de:
       one: "Benutzer %{username} hat %{count} Beitrag in einem öffentlichen Thema oder einer persönlichen Nachricht verfasst. Löschen nicht möglich."
       other: "Benutzer %{username} hat %{count} Beiträge in öffentlichen Themen oder persönlichen Nachrichten verfasst. Löschen nicht möglich."
     cannot_bulk_delete: "Ein oder mehrere Benutzer können nicht gelöscht werden, weil sie entweder ein Administrator sind, zu viele Beiträge haben oder einen sehr alten Beitrag haben."
+    cannot_remove_all_auth: "Du musst mindestens ein verknüpftes Konto, einen Passkey oder ein Passwort festgelegt haben."
   unsubscribe_mailer:
     title: "Abbestellung von E-Mail-Updates"
     subject_template: "Bitte bestätige, dass du keine E-Mail-Updates mehr von %{site_title} erhalten möchtest."

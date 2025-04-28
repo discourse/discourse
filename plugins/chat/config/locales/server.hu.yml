@@ -30,10 +30,12 @@ hu:
     chat_editing_grace_period_max_diff_low_trust: "A szerkesztési türelmi időszakban megengedett karakterváltoztatások maximális száma. Ha ennél több változik, megjelenik a (szerkesztve) címke a chat üzenet mellett (0-s és 1-es bizalmi szint esetén)."
     chat_editing_grace_period_max_diff_high_trust: "A szerkesztési türelmi időszakban megengedett karakterváltoztatások maximális száma. Ha ennél több változik, megjelenik a (szerkesztve) címke a chat üzenet mellett (2-es és nagyobb bizalmi szint)."
     chat_preferred_index: "Előnyben részesített lap a /chat betöltésekor."
+    allow_chat_in_anonymous_mode: "Engedélyezze ezt a beállítást, hogy a webhelyét névtelenül böngésző felhasználók használhassák a csevegést. Ehhez a beállításhoz engedélyezni kell a `engedélyezd az anonim módot` beállítást."
     errors:
       chat_default_channel: "Az alapértelmezett csevegőcsatornának nyilvános csatornának kell lennie."
       direct_message_enabled_groups_invalid: "Ehhez a beállításhoz legalább egy csoportot meg kell adni. Ha nem szeretné, hogy a stábtagokon kívül bárki közvetlen üzeneteket küldjön, válassza ki a stábtag csoportot."
       chat_upload_not_allowed_secure_uploads: "A csevegési feltöltések nem engedélyezettek, ha a biztonságos feltöltési webhely beállítása engedélyezett."
+      allow_chat_in_anonymous_mode_invalid: "Ehhez a beállításhoz először engedélyezni kell az 'anonim mód engedélyezése' beállítást."
   system_messages:
     private_channel_title: "Csatorna %{id}"
     chat_channel_archive_complete:

@@ -2068,6 +2068,9 @@ es:
     modal:
       close: "cerrar"
       dismiss_error: "Descartar error"
+    multi_select:
+      no_results: "No hay resultados"
+      search: "Buscar…"
     form_kit:
       reset: Restablecer
       optional: opcional
@@ -2303,10 +2306,6 @@ es:
         name: "Google"
         title: "Iniciar sesión con Google"
         sr_title: "Iniciar sesión con Google"
-      twitter:
-        name: "Twitter"
-        title: "Iniciar sesión con Twitter"
-        sr_title: "Iniciar sesión con Twitter"
       instagram:
         name: "Instagram"
         title: "Iniciar sesión con Instagram"
@@ -2775,8 +2774,6 @@ es:
       in_topics_posts: "en todos los temas y publicaciones"
       enter_hint: "o pulsa Intro"
       in_posts_by: "en publicaciones por %{username}"
-      browser_tip: "%{modifier} + f"
-      browser_tip_description: "otra vez para usar la búsqueda nativa de tu navegador"
       recent: "Búsquedas recientes"
       clear_recent: "Borrar búsquedas recientes"
       type:
@@ -4669,7 +4666,6 @@ es:
       clear_filter: "Limpiar filtro"
       no_results:
         title: "No hay resultados"
-        description: 'No hemos encontrado nada que coincida con «%{filter}».<br><br>¿Quieres <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">buscar en los ajustes del sitio</a> o en la <a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">lista de usuarios de administración?</a>'
       footer:
         interface_color_selector:
           light: "Claro"
@@ -4825,9 +4821,6 @@ es:
         flags:
           title: "Moderación"
           header_description: "El sistema de marcado de Discourse te ayuda a ti y a tu equipo de moderadores a gestionar el contenido y el comportamiento de los usuarios, manteniendo tu comunidad respetuosa y saludable. Los valores predeterminados son adecuados para la mayoría de las comunidades y no es necesario que los cambies. Sin embargo, si tu sitio tiene requisitos particulares, puedes desactivar los indicadores que no necesites y añadir tus propios indicadores personalizados."
-        font_style:
-          title: "Estilo de letra"
-          header_description: "Personaliza los estilos de fuente utilizados por tus temas"
         files:
           title: "Archivos"
           header_description: "Ajustes que controlan los límites de tamaño y tipo de archivo, los tamaños y fuentes de los avatares, el almacenamiento de archivos, la calidad y compresión de las imágenes, etc."
@@ -4837,11 +4830,7 @@ es:
         login_and_authentication:
           title: "Inicio de sesión y autenticación"
           header_description: "Configura cómo se conectan y autentican los usuarios, secretos y claves, proveedores de OAuth2, etc."
-        logo:
-          title: "Logotipo del sitio"
-          header_description: "Personaliza las variaciones del logotipo de tu sitio"
-        branding:
-          title: "Marca"
+        logo_and_fonts:
           logo:
             form:
               logo:
@@ -4852,6 +4841,13 @@ es:
                 description: "Capturas de pantalla para mostrar las funcionalidades del sitio web en la pantalla de instalación. Todas las imágenes deben ser alojadas localmente y tener las mismas dimensiones."
               opengraph_image:
                 description: "Imagen de gráfico abierto predeterminada, utilizada cuando la página no tiene otra imagen adecuada. Si se deja en blanco, se utilizará large_icon."
+          fonts:
+            title: "Tipos de letra"
+            form:
+              heading_font:
+                title: "Tipo de letra para encabezados"
+            backfill_modal:
+              modal_yes: "Sí"
         navigation:
           title: "Navegación"
           header_description: "Configura los enlaces de navegación y los elementos de menú de tu sitio. Esto incluye la ubicación y el comportamiento del menú de navegación principal, los enlaces rápidos de la parte superior de la página de inicio, así como la barra lateral de administración."
@@ -4861,9 +4857,6 @@ es:
         onebox:
           title: "Onebox"
           header_description: "Configura cómo se generan y se muestran las previsualizaciones de onebox para tu sitio"
-        other:
-          title: "Otros"
-          header_description: "Ajustes que no encajan en ninguna otra categoría"
         rate_limits:
           title: "Límites de velocidad"
           header_description: "Configura la frecuencia con la que los usuarios pueden realizar determinadas acciones, como crear temas, enviar mensajes y publicar respuestas"
@@ -4909,6 +4902,10 @@ es:
         badges:
           title: "Medallas"
           header_description: "Las insignias recompensan a los usuarios por sus actividades, contribuciones y logros para reconocer, validar y fomentar el comportamiento positivo y el compromiso dentro de la comunidad"
+        content:
+          sub_pages:
+            posts_and_topics:
+              title: "Publicaciones y temas"
         permalinks:
           title: "Enlaces permanentes"
           header_description: "Redirecciones para URL que no existan ya en el foro"
@@ -4932,9 +4929,6 @@ es:
         site_texts:
           title: "Textos del sitio"
         email:
-          title: "Configuración y registros del servidor"
-          header_description: "Personaliza las plantillas utilizadas para crear correos electrónicos, previsualiza los correos electrónicos de resumen que se enviarán y consulta los registros de correo electrónico"
-          keywords: "correo electrónico|smtp|mailgun|sendgrid|enviado|omitido|recibido|rechazado|registros de correo electrónico|previsualizar resumen"
           sub_pages:
             preview_summary:
               title: "Previsualizar resumen"
@@ -4943,6 +4937,8 @@ es:
               title: "Prueba avanzada"
             templates:
               title: "Plantillas"
+        email_logs:
+          sub_pages:
             sent:
               title: "Enviado"
             skipped:
@@ -4952,7 +4948,7 @@ es:
             received:
               title: "Recibido"
             rejected:
-              title: "Rechazados"
+              title: "Rechazado"
         email_appearance:
           title: "Aspecto"
           header_description: "Personaliza la plantilla sobre la que se crean todos los correos HTML, y aplica estilos usando CSS"
@@ -5596,7 +5592,6 @@ es:
             post: "publicaciones"
             chat_message: "mensajes de chat"
             enabled: "Activa esta bandera personalizada después de guardar"
-            alert: "Una vez que se ha utilizado una bandera personalizada, solo se puede desactivar, pero no editar ni borrar."
             edit_flag: "Editar bandera"
             non_editable: "No puedes editar esta bandera porque es una bandera del sistema o ya se ha utilizado en el sistema de revisión, sin embargo, puedes desactivarla."
             delete_flag: "Eliminar bandera"
@@ -5625,6 +5620,24 @@ es:
             new_theme: "Nuevo tema"
           components:
             title: "Componentes"
+            install: "Instalar"
+            name: "Nombre"
+            enabled: "¿Activado?"
+            by_author: "Por %{name}"
+            learn_more: "Más información"
+            edit: "Editar"
+            parent_themes_two: "%{name1} y %{name2}"
+            preview: "Vista previa"
+            check_update: "Buscar actualizaciones"
+            export: "Exportar"
+            convert: "Convertir"
+            delete: "Eliminar"
+            filter_by: "Filtrar por"
+            filter_by_all: "Todo"
+            filter_by_used: "Usado"
+            filter_by_unused: "No usado"
+            delete_confirm: '¿Seguro que quieres eliminar «%{name}»?'
+            badge_unused: "No usado"
         user_fields:
           field: "Campo"
           type: "Tipo"
