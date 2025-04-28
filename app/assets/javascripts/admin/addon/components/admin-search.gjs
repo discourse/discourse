@@ -6,11 +6,13 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
+import { and, not } from "truth-helpers";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import icon from "discourse/helpers/d-icon";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
+import { escapeExpression } from "discourse/lib/utilities";
 import autoFocus from "discourse/modifiers/auto-focus";
 import { i18n } from "discourse-i18n";
 import AdminSearchFilters from "admin/components/admin-search-filters";
@@ -62,6 +64,14 @@ export default class AdminSearch extends Component {
     return !this.adminSearchDataSource.isLoaded || this.loading;
   }
 
+  get noResultsDescription() {
+    return htmlSafe(
+      i18n("admin.search.no_results", {
+        filter: escapeExpression(this.filter),
+      })
+    );
+  }
+
   @action
   toggleFilters() {
     this.showFilters = !this.showFilters;
@@ -91,7 +101,9 @@ export default class AdminSearch extends Component {
   changeSearchTerm(event) {
     this.searchResults = [];
     this.filter = event.target.value;
-    this.runSearch();
+    if (this.filter.length > 0) {
+      this.runSearch();
+    }
   }
 
   @action
@@ -219,6 +231,11 @@ export default class AdminSearch extends Component {
             </a>
           </div>
         {{/each}}
+        {{#if (and (not this.searchResults) this.filter)}}
+          <p class="admin-search__no-results">
+            {{this.noResultsDescription}}
+          </p>
+        {{/if}}
       </ConditionalLoadingSpinner>
     </div>
   </template>
