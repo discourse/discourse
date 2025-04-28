@@ -44,10 +44,10 @@ const tonableEmojiTitle = (emoji, diversity) => {
 
 const tonableEmojiUrl = (emoji, scale) => {
   if (!emoji.tonable || scale === 1) {
-    return emoji.url;
+    return emojiUrlFor(emoji.name);
   }
 
-  return emoji.url.split(".png")[0] + `/${scale}.png`;
+  return emojiUrlFor(`${emoji.name}:t${scale}`);
 };
 
 export default class EmojiPicker extends Component {
