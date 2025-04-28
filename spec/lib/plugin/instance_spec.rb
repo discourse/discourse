@@ -607,7 +607,6 @@ TEXT
       config/locales/client.foo_BAR.yml
       config/locales/server.foo_BAR.yml
       lib/javascripts/locale/moment_js/foo_BAR.js
-      assets/locales/foo_BAR.js.erb
     ].each do |path|
       it "does not register a new locale when #{path} is missing" do
         path = "#{plugin_path}/#{path}"

@@ -187,7 +187,10 @@ module JsLocaleHelper
     translations = translations_for(locale_str)
 
     remove_message_formats!(translations, locale)
-    result = +""
+    result = +<<~JS
+      require("discourse/loader-shims");
+      require("discourse-i18n");
+    JS
 
     translations.keys.each do |l|
       translations[l].keys.each { |k| translations[l].delete(k) unless k == "js" }
