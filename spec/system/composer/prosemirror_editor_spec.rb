@@ -242,7 +242,7 @@ describe "Composer - ProseMirror editor", type: :system do
       open_composer_and_toggle_rich_editor
       composer.type_content("Check out this link ")
       cdp.copy_paste("https://example.com/x")
-      composer.type_content(" ")
+      composer.type_content(:space)
 
       expect(rich).to have_css(
         "a.inline-onebox[href='https://example.com/x']",
@@ -277,7 +277,7 @@ describe "Composer - ProseMirror editor", type: :system do
       open_composer_and_toggle_rich_editor
       composer.type_content("Some text ")
       cdp.copy_paste("https://example.com/x")
-      composer.type_content(" ")
+      composer.type_content(:space)
 
       expect(rich).to have_no_css("div.onebox-wrapper")
       expect(rich).to have_css("a.inline-onebox", text: "Example Site 1")
@@ -364,7 +364,7 @@ describe "Composer - ProseMirror editor", type: :system do
       open_composer_and_toggle_rich_editor
       composer.type_content("Hey ")
       cdp.copy_paste("https://example.com/x")
-      composer.type_content(" ").type_content("and").type_content(" ")
+      composer.type_content(:space).type_content("and").type_content(:space)
       cdp.paste
       composer.type_content("\n")
 
@@ -632,7 +632,9 @@ describe "Composer - ProseMirror editor", type: :system do
       cdp.copy_paste("This is a [link](https://example.com)")
       expect(rich).to have_css("a", text: "link")
 
-      composer.send_keys(%i[space left backspace])
+      composer.type_content(:space)
+      composer.type_content(:left)
+      composer.type_content(:backspace)
 
       expect(rich).to have_css("a", text: "lin")
     end
