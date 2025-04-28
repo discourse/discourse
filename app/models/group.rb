@@ -1147,6 +1147,11 @@ class Group < ActiveRecord::Base
   def automatic_membership_email_domains_validator
     return if self.automatic_membership_email_domains.blank?
 
+    # Special case: "*" means all domains
+    if self.automatic_membership_email_domains == "*"
+      return
+    end
+
     domains =
       Group.get_valid_email_domains(self.automatic_membership_email_domains) do |domain|
         self.errors.add :base, (I18n.t("groups.errors.invalid_domain", domain: domain))
@@ -1238,14 +1243,23 @@ class Group < ActiveRecord::Base
   end
 
   def self.automatic_membership_users(domains, group_id = nil)
-    pattern = "@(#{domains.gsub(".", '\.')})$"
-
-    users =
-      User
+    if domains == "*"
+      # Match all email addresses
+      users = User
         .joins(:user_emails)
-        .where("user_emails.email ~* ?", pattern)
         .activated
         .where(staged: false)
+    else
+      pattern = "@(#{domains.gsub(".", '\.')})$"
+
+      users =
+        User
+          .joins(:user_emails)
+          .where("user_emails.email ~* ?", pattern)
+          .activated
+          .where(staged: false)
+    end
+    
     users =
       users.where(
         "users.id NOT IN (SELECT user_id FROM group_users WHERE group_users.group_id = ?)",
@@ -1256,6 +1270,9 @@ class Group < ActiveRecord::Base
   end
 
   def self.get_valid_email_domains(value)
+    # Special case for wildcard
+    return ["*"] if value == "*"
+    
     valid_domains = []
 
     value

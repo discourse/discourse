@@ -1671,11 +1671,21 @@ class User < ActiveRecord::Base
       .where(automatic: false)
       .where("LENGTH(COALESCE(automatic_membership_email_domains, '')) > 0")
       .each do |group|
-        domains = group.automatic_membership_email_domains.gsub(".", '\.')
-
-        if email =~ Regexp.new("@(#{domains})$", true) && !group.users.include?(self)
-          group.add(self)
-          GroupActionLogger.new(Discourse.system_user, group).log_add_user_to_group(self)
+        domains = group.automatic_membership_email_domains
+        
+        if domains == "*"
+          # Special case: add user to group if wildcard is specified
+          if !group.users.include?(self)
+            group.add(self)
+            GroupActionLogger.new(Discourse.system_user, group).log_add_user_to_group(self)
+          end
+        else
+          # Normal case: check if email matches the domain pattern
+          domains_regex = domains.gsub(".", '\.')
+          if email =~ Regexp.new("@(#{domains_regex})$", true) && !group.users.include?(self)
+            group.add(self)
+            GroupActionLogger.new(Discourse.system_user, group).log_add_user_to_group(self)
+          end
         end
       end
 

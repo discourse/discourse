@@ -84,7 +84,15 @@ class Admin::GroupsController < Admin::StaffController
   end
 
   def automatic_membership_count
-    domains = Group.get_valid_email_domains(params.require(:automatic_membership_email_domains))
+    domains_string = params.require(:automatic_membership_email_domains)
+    
+    # Special case for wildcard
+    if domains_string == "*"
+      domains = ["*"]
+    else
+      domains = Group.get_valid_email_domains(domains_string)
+    end
+    
     group_id = params[:id]
     user_count = 0
 
@@ -96,19 +104,24 @@ class Admin::GroupsController < Admin::StaffController
         return can_not_modify_automatic if group.automatic
 
         existing_domains = group.automatic_membership_email_domains&.split("|") || []
-        domains -= existing_domains
+        domains -= existing_domains unless domains.include?("*")
       end
 
-      if domains.size > MAX_AUTO_MEMBERSHIP_DOMAINS_LOOKUP
-        raise Discourse::InvalidParameters.new(
-                I18n.t(
-                  "groups.errors.counting_too_many_email_domains",
-                  count: MAX_AUTO_MEMBERSHIP_DOMAINS_LOOKUP,
-                ),
-              )
-      end
+      if domains.include?("*")
+        # Считаем всех подходящих пользователей при использовании wildcard
+        user_count = Group.automatic_membership_users("*").count
+      else
+        if domains.size > MAX_AUTO_MEMBERSHIP_DOMAINS_LOOKUP
+          raise Discourse::InvalidParameters.new(
+                  I18n.t(
+                    "groups.errors.counting_too_many_email_domains",
+                    count: MAX_AUTO_MEMBERSHIP_DOMAINS_LOOKUP,
+                  ),
+                )
+        end
 
-      user_count = Group.automatic_membership_users(domains.join("|")).count
+        user_count = Group.automatic_membership_users(domains.join("|")).count
+      end
     end
 
     render json: { user_count: user_count }
