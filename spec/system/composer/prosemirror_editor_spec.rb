@@ -242,7 +242,7 @@ describe "Composer - ProseMirror editor", type: :system do
       open_composer_and_toggle_rich_editor
       composer.type_content("Check out this link ")
       cdp.copy_paste("https://example.com/x")
-      composer.type_content(:space)
+      composer.type_content(" ")
 
       expect(rich).to have_css(
         "a.inline-onebox[href='https://example.com/x']",
@@ -277,7 +277,7 @@ describe "Composer - ProseMirror editor", type: :system do
       open_composer_and_toggle_rich_editor
       composer.type_content("Some text ")
       cdp.copy_paste("https://example.com/x")
-      composer.type_content(:space)
+      composer.type_content(" ")
 
       expect(rich).to have_no_css("div.onebox-wrapper")
       expect(rich).to have_css("a.inline-onebox", text: "Example Site 1")
