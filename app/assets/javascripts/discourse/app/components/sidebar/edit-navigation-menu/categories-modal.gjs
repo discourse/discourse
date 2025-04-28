@@ -320,6 +320,7 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
     }
   }
 
+  @action
   async loadMore() {
     this.loadAnotherPage = true;
     this.debouncedSendRequest();

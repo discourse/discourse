@@ -100,7 +100,7 @@ export default RouteTemplate(
     <div class="clearfix"></div>
 
     <StaffActions>
-      <LoadMore @selector=".staff-logs tr" @action={{@controller.loadMore}}>
+      <LoadMore @action={{@controller.loadMore}}>
         {{#if @controller.model.content}}
           <table class="table staff-logs grid">
             <thead>

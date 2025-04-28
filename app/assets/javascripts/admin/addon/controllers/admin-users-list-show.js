@@ -133,6 +133,9 @@ export default class AdminUsersListShowController extends Controller {
 
   @action
   loadMore() {
+    if (this.refreshing) {
+      return;
+    }
     this._page += 1;
     this._refreshUsers();
   }

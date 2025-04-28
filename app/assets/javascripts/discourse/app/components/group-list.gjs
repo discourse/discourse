@@ -87,10 +87,7 @@ export default class GroupList extends Component {
       </div>
 
       {{#if @groups}}
-        <LoadMore
-          @selector=".groups-boxes .group-box"
-          @action={{this.loadMore}}
-        >
+        <LoadMore @action={{this.loadMore}}>
           <div class="container">
             <div class="groups-boxes">
               {{#each @groups as |group|}}
