@@ -22,7 +22,7 @@ Rails.application.config.assets.precompile += [
   end,
 ]
 
-Rails.application.config.assets.precompile += %w[break_string.js scripts/discourse-test-listen-boot]
+Rails.application.config.assets.precompile += %w[scripts/discourse-test-listen-boot]
 
 Rails.application.config.assets.precompile << lambda do |logical_path, filename|
   filename.start_with?(EmberCli.dist_dir) && EmberCli.assets.include?(logical_path)
