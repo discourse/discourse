@@ -8,7 +8,7 @@ class PostLocalization < ActiveRecord::Base
   validates :raw, presence: true
   validates :cooked, presence: true
   validates :localizer_user_id, presence: true
-  validates :post_id, uniqueness: { scope: :locale }
+  validates :locale, uniqueness: { scope: :post_id }
 end
 
 # == Schema Information
