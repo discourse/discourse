@@ -176,7 +176,6 @@ RSpec.describe JsLocaleHelper do
         value: "{ count, plural, one {返信 # 件、} other {返信 # 件、} }",
       )
       overriden_translation_zh_tw.update_columns(value: "{ count, plural, ")
-      puts output
       v8_ctx.eval(output)
     end
 
