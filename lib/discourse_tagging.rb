@@ -670,7 +670,7 @@ module DiscourseTagging
 
   # read-only tags for this user
   def self.readonly_tag_names(guardian = nil)
-    return [] if guardian&.is_staff?
+    return [] if guardian&.is_admin?
 
     query =
       Tag.joins(tag_groups: :tag_group_permissions).where(
