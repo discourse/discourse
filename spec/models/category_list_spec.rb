@@ -525,7 +525,7 @@ RSpec.describe CategoryList do
       expect(cat.description).to eq("Other Desc")
     end
 
-    it "safely returns categories when SiteSetting.fixed_category_positions is set" do
+    it "safely returns categories when SiteSetting.fixed_category_positions is enabled" do
       SiteSetting.fixed_category_positions = true
       category_list = CategoryList.new(Guardian.new)
       expect(category_list.categories).to include(category)
