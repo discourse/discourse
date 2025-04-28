@@ -16,8 +16,8 @@ module CommonHelper
   end
 
   def render_adobe_analytics_tags_code
-    if SiteSetting.adobe_analytics_url.present?
-      content_tag(:script, "", src: SiteSetting.adobe_analytics_url, async: true)
+    if SiteSetting.adobe_analytics_tags_url.present?
+      content_tag(:script, "", src: SiteSetting.adobe_analytics_tags_url, async: true)
     end
   end
 end
