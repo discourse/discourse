@@ -620,6 +620,18 @@ describe "Composer - ProseMirror editor", type: :system do
 
       expect(composer).to have_value("![image|244x66](upload://4uyKKMzLG4oNnAYDWCgpRMjBr9X.png)")
     end
+
+    it "should correctly merge text with link marks created from parsing" do
+      cdp.allow_clipboard
+      open_composer_and_toggle_rich_editor
+
+      cdp.copy_paste("This is a [link](https://example.com)")
+      expect(rich).to have_css("a", text: "link")
+
+      composer.send_keys(%i[space left backspace])
+
+      expect(rich).to have_css("a", text: "lin")
+    end
   end
 
   describe "trailing paragraph" do

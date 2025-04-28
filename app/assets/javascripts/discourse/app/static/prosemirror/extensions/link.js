@@ -16,7 +16,7 @@ const extension = {
         // same value from the markdown-it token
         // null for [link](...), "autolink" for <...>, and "linkify" for plain URLs
         markup: { default: null },
-        attachment: { default: null },
+        attachment: { default: false },
         "data-orig-href": { default: null },
       },
       inclusive: false,
@@ -41,7 +41,7 @@ const extension = {
             href: node.attrs.href,
             title: node.attrs.title,
             class: node.attrs.attachment ? "attachment" : undefined,
-            "data-orig-href": node.attrs["data-orig-href"],
+            "data-orig-href": node.attrs["data-orig-href"] || undefined,
             "data-markup": node.attrs.markup || undefined,
           },
           0,
@@ -53,18 +53,16 @@ const extension = {
     link: {
       mark: "link",
       getAttrs(tok, tokens, i) {
-        const attachment = tokens[i + 1].content.endsWith("|attachment");
+        const nextContent = tokens[i + 1].content;
+        const attachment = nextContent.endsWith("|attachment");
         if (attachment) {
-          tokens[i + 1].content = tokens[i + 1].content.replace(
-            /\|attachment$/,
-            ""
-          );
+          tokens[i + 1].content = nextContent.slice(0, -11);
         }
 
         return {
           href: tok.attrGet("href"),
           title: tok.attrGet("title") || null,
-          markup: tok.markup,
+          markup: tok.markup || null,
           attachment,
           "data-orig-href": tok.attrGet("data-orig-href"),
         };
@@ -74,10 +72,8 @@ const extension = {
   serializeMark: {
     // override mark serializer to support "|attachment"
     link: {
-      open(state, mark, parent, index) {
-        state.linkMarkup =
-          mark.attrs.markup ??
-          (isPlainURL(mark, parent, index) ? "autolink" : null);
+      open(state, mark) {
+        state.linkMarkup = mark.attrs.markup;
 
         if (state.linkMarkup === "autolink") {
           return "<";
@@ -90,7 +86,7 @@ const extension = {
         return "[";
       },
       close(state, mark) {
-        let { linkMarkup } = state;
+        const { linkMarkup } = state;
         state.linkMarkup = undefined;
 
         if (linkMarkup === "autolink") {
@@ -325,24 +321,6 @@ function addLinkMark(view, text, utils) {
   tr.addMark(from, to, view.state.schema.marks.link.create({ href: text }));
 
   return tr.doc.slice(from, to);
-}
-
-function isPlainURL(link, parent, index) {
-  if (link.attrs.title || !/^\w+:/.test(link.attrs.href)) {
-    return false;
-  }
-  let content = parent.child(index);
-  if (
-    !content.isText ||
-    content.text !== link.attrs.href ||
-    content.marks[content.marks.length - 1] !== link
-  ) {
-    return false;
-  }
-  return (
-    index === parent.childCount - 1 ||
-    !link.isInSet(parent.child(index + 1).marks)
-  );
 }
 
 export default extension;
