@@ -96,6 +96,10 @@ module Helpers
     create_limited_tags("Staff Tags", Group::AUTO_GROUPS[:staff], tag_names)
   end
 
+  def create_admin_only_tags(tag_names)
+    create_limited_tags("Admin Tags", Group::AUTO_GROUPS[:admins], tag_names)
+  end
+
   def create_limited_tags(tag_group_name, group_id, tag_names)
     tag_group = Fabricate(:tag_group, name: tag_group_name)
     TagGroupPermission.where(
