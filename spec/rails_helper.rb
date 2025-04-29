@@ -468,6 +468,11 @@ RSpec.configure do |config|
       playwright_cli_executable_path: "./node_modules/.bin/playwright",
     }
 
+    if ENV["CAPYBARA_REMOTE_DRIVER_URL"].present?
+      driver_options[:browser] = :remote
+      driver_options[:url] = ENV["CAPYBARA_REMOTE_DRIVER_URL"]
+    end
+
     Capybara.register_driver(:playwright_chrome) do |app|
       Capybara::Playwright::Driver.new(app, **driver_options, screen: { width: 1400, height: 1400 })
     end
