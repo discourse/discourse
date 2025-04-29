@@ -1772,7 +1772,6 @@ it:
     pending_users_reminder_delay_minutes: "Notifica i moderatori se nuovi utenti sono in attesa di approvazione per più di questo numero di minuti. Imposta il valore a -1 per disabilitare le notifiche."
     persistent_sessions: "Gli utenti rimarranno connessi alla chiusura del browser"
     maximum_session_age: "L'utente resterà connesso per n ore dall'ultima visita"
-    full_page_login: "Mostra i moduli di accesso e registrazione in una pagina intera (se questa opzione non è selezionata, gli utenti vedranno i moduli in una finestra modale). "
     show_signup_form_email_instructions: Mostra le istruzioni e-mail nel modulo di registrazione.
     show_signup_form_username_instructions: Mostra le istruzioni per il nome utente nel modulo di registrazione.
     show_signup_form_full_name_instructions: Mostra le istruzioni per il nome completo nel modulo di registrazione.

@@ -3197,6 +3197,9 @@ de:
           false { Oder <a href="{basePath}/latest">sieh dir die aktuellen Themen an</a>}
           other {}
         }
+      reply_count_link:
+        one: "%{count} Antwort, zum ersten Beitrag springen"
+        other: "%{count} Antworten, zum ersten Beitrag springen"
       created_at: "Erstellt: %{date}"
       bumped_at: "Letztes: %{date}"
       browse_all_categories_latest: "<a href='%{basePath}/categories'>Durchstöbere alle Kategorien</a> oder <a href='%{basePath}/latest'>sieh dir die aktuellen Themen an</a>."
@@ -3833,6 +3836,14 @@ de:
       settings: "Einstellungen"
       topic_template: "Vorlage"
       tags: "Schlagwörter"
+      localizations: "Lokalisierungen"
+      localization:
+        locale: "Gebietsschema"
+        name: "Name"
+        description: "Beschreibung"
+        add: "Neues Gebietsschema hinzufügen"
+        remove: "Entfernen"
+        hint: "Derzeit gibt es keine Lokalisierungen für diese Kategorie. Klicke unten auf \"Neues Gebietsschema hinzufügen\", um mit dem Hinzufügen von Lokalisierungen zu beginnen."
       tags_allowed_tags: "Schlagwörter auf diese Kategorie einschränken:"
       tags_allowed_tag_groups: "Schlagwortgruppen auf diese Kategorie einschränken:"
       tags_placeholder: "(Optional) Liste erlaubter Schlagwörter"
@@ -4733,12 +4744,6 @@ de:
       back_to_forum: "Zurück zum Forum"
       collapse_all_sections: "Alle Abschnitte einklappen"
       expand_all_sections: "Alle Abschnitte erweitern"
-      filter: "Filter …"
-      filter_links: "Links filtern..."
-      clear_filter: "Filter löschen"
-      no_results:
-        title: "Keine Ergebnisse"
-        description_admin_search: 'Wir konnten nichts finden, was mit ''%{filter}'' übereinstimmt.<br><br>Versuche, <a class="sidebar-additional-filter-admin-search" href="%{admin_search_url}">die gesamte Administratoroberfläche zu durchsuchen</a>.'
       footer:
         interface_color_selector:
           light: "Hell"
@@ -4846,6 +4851,45 @@ de:
           save: "Speichern als …"
     powered_by_discourse: "Bereitgestellt von Discourse"
     safari_15_warning: "Dein Browser wird bald nicht mehr mit dieser Community kompatibel sein. Um weiterhin hier teilzunehmen, aktualisiere bitte deinen Browser oder <a href='%{url}'>erfahre mehr</a>."
+    discovery:
+      headings:
+        all:
+          default: "Alle %{filter} Themen"
+          posted: "Alle Themen, zu denen du beigetragen hast"
+          bookmarks: "Alle Themen, die du mit einem Lesezeichen versehen hast."
+        category:
+          default: "%{filter} Themen in %{category}"
+          posted: "Themen in %{category}, zu denen du beigetragen hast"
+          bookmarks: "Themen in %{category}, die du mit einem Lesezeichen versehen hast"
+        no_tags:
+          all_default: "Alle Themen ohne Schlagwörter"
+          category_default: "%{filter} Themen in %{category} ohne Schlagwörter"
+          all:
+            posted: "Alle Themen ohne Schlagwörter, zu denen du beigetragen hast"
+            bookmarks: "Alle Themen ohne Schlagwörter, die du mit einem Lesezeichen versehen hast"
+          category:
+            posted: "Themen in %{category} ohne Schlagwörter, zu denen du beigetragen hast"
+            bookmarks: "Themen in %{category} ohne Schlagwörter, die du mit einem Lesezeichen versehen hast"
+        single_tag:
+          default: "%{filter} Themen mit dem Schlagwort %{tag}"
+          posted: "Themen mit dem Schlagwort %{tag}, zu denen du beigetragen hast"
+          bookmarks: "Themen mit dem Schlagwort %{tag}, die du mit einem Lesezeichen versehen hast"
+        multi_tag:
+          default: "%{filter} Themen mit den Schlagwörtern %{tags}"
+          posted: "Themen mit den Schlagwörtern %{tags}, zu denen du beigetragen hast"
+          bookmarks: "Themen mit den Schlagwörtern %{tags}, die du mit einem Lesezeichen versehen hast"
+        category_tag:
+          default: "%{filter} Themen in %{category} mit den Schlagwörtern %{tag}"
+          posted: "Themen in %{category} mit den Schlagwörtern %{tag}, zu denen du beigetragen hast"
+          bookmarks: "Themen in %{category} mit den Schlagwörtern %{tag}, die du mit einem Lesezeichen versehen hast"
+        categories: "Alle Kategorien"
+        filter_labels:
+          latest: "Aktuelle"
+          top: "Angesagte"
+          new: "Neue"
+          unread: "Ungelesene"
+          hot: "Heiße"
+          unseen: "Ungesehene"
   admin_js:
     type_to_filter: "Zum Filtern hier eingeben …"
     settings: "Einstellungen"

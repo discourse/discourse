@@ -1935,7 +1935,6 @@ he:
     pending_users_reminder_delay_minutes: "יש להודיע למפקחים אם משתמשים חדשים ממתינים לעדכון מעבר לכמות כזו של דקות. יש להגדיר ל־‎-1 כדי להשבית את ההתראות."
     persistent_sessions: "המשתמשים יישארו במערכת כאשר הדפדפן סגור"
     maximum_session_age: "משתמשים יישארו מחוברים למשך n שעות מאז ביקורם האחרון"
-    full_page_login: "הצגת טופסי הכניסה והרישום בעמוד מלא (כשהאפשרות לא מסומנת, משתמשים יראו את הטפסים בחלוניות משתלטות). "
     show_signup_form_email_instructions: הצגת הנחיות דוא״ל בטופס ההרשמה.
     show_signup_form_username_instructions: הצגת הנחיות שם משתמש בטופס ההרשמה.
     show_signup_form_full_name_instructions: הצגת הנחיות שם מלא בטופס ההרשמה.

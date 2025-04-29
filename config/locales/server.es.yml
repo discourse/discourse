@@ -1772,7 +1772,6 @@ es:
     pending_users_reminder_delay_minutes: "Notificar a los moderadores si hay usuarios nuevos que hayan estado esperando aprobación durante más de esta cantidad de minutos. Usa -1 para desactivar estas notificaciones."
     persistent_sessions: "Los usuarios permanecerán con la sesión abierta aunque cierren su navegador"
     maximum_session_age: "El usuario permanecerá con su sesión iniciada n horas desde su última visita"
-    full_page_login: "Mostrar los formularios de inicio de sesión y registro en una página completa (si no está marcada, los usuarios verán los formularios en una ventana modal). "
     show_signup_form_email_instructions: Mostrar las instrucciones de correo electrónico en el formulario de registro.
     show_signup_form_username_instructions: Mostrar las instrucciones del nombre de usuario en el formulario de registro.
     show_signup_form_full_name_instructions: Mostrar las instrucciones con el nombre completo en el formulario de registro.

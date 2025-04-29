@@ -3619,6 +3619,10 @@ hr:
       general: "Općenito"
       settings: "Postavke"
       tags: "Oznake"
+      localization:
+        name: "Ime"
+        description: "Opis"
+        remove: "Ukloni"
       tags_allowed_tags: "Ograniči ove oznake na ovu kategoriju:"
       tags_allowed_tag_groups: "Ograniči ove grupe oznaka na ovu kategoriju:"
       tags_placeholder: "(Izborno) popis dopuštenih oznaka"
@@ -4439,6 +4443,15 @@ hr:
       spreadsheet:
         show: "Pokaži"
         about: "O nama"
+    discovery:
+      headings:
+        categories: "Sve kategorije"
+        filter_labels:
+          latest: "Posljednje"
+          top: "Najaktivnije"
+          new: "Novo"
+          unread: "Nepročitano"
+          unseen: "Neviđeno"
   admin_js:
     type_to_filter: "Upišite za filtriranje…"
     settings: "Postavke"

@@ -3552,6 +3552,11 @@ he:
           false { או <a href="{basePath}/latest">לצפות בנושאים העדכניים ביותר</a>}
           other {}
         }
+      reply_count_link:
+        one: "תגובה אחת, קפיצה לפוסט הראשון"
+        two: "שתי תגובות, קפיצה לפוסט הראשון"
+        many: "%{count} תגובות, קפיצה לפוסט הראשון"
+        other: "%{count} תגובות, קפיצה לפוסט הראשון"
       created_at: "מועד יצירה: %{date}"
       bumped_at: "האחרון: %{date}"
       browse_all_categories_latest: "<a href='%{basePath}/categories'>עיון בכל הקטגוריות</a> או <a href='%{basePath}/latest'>הצגת הנושאים העדכניים ביותר</a>."
@@ -4258,6 +4263,14 @@ he:
       settings: "הגדרות"
       topic_template: "תבנית"
       tags: "תגיות"
+      localizations: "תרגומים"
+      localization:
+        locale: "הגדרות מקומיות"
+        name: "שם"
+        description: "תיאור"
+        add: "הוספת הגדרות מקומיות חדשות"
+        remove: "הסרה"
+        hint: "אין תרגומים לקטגוריה הזאת. לחיצה על ‚הוספת הגדרות מקומיות חדשות’ תתחיל את הוספת התרגומים."
       tags_allowed_tags: "הגבלת התגיות האלו לקטגוריה הזו:"
       tags_allowed_tag_groups: "הגבלת קבוצות תגיות אלו לקטגוריה זו:"
       tags_placeholder: "(רשות) רשימת תגיות מותרות"
@@ -5234,12 +5247,6 @@ he:
       back_to_forum: "חזרה לפורום"
       collapse_all_sections: "צמצום כל הסעיפים"
       expand_all_sections: "הרחבת כל הסעיפים"
-      filter: "סינון..."
-      filter_links: "סינון קישורים…"
-      clear_filter: "פינוי המסנן"
-      no_results:
-        title: "אין תוצאות"
-        description_admin_search: 'לא הצלחנו למצוא שום דבר שעונה לחיפוש ‘%{filter}’.<br><br>כדאי <a class="sidebar-additional-filter-admin-search" href="%{admin_search_url}">לחפש בכל מנשק הניהול</a>.'
       footer:
         interface_color_selector:
           light: "בהיר"
@@ -5355,6 +5362,45 @@ he:
           save: "שמירה בשם…"
     powered_by_discourse: "מופעל על גבי Discourse"
     safari_15_warning: "בקרוב הדפדפן שלך לא יהיה תואם לקהילה הזו. כדי להמשיך להשתתף כאן, נא לשדרג את הדפדפן שלך או <a href='%{url}'>לקרוא על כך עוד</a>."
+    discovery:
+      headings:
+        all:
+          default: "כל %{filter} הנושאים"
+          posted: "כל הנושאים שפרסמת בהם"
+          bookmarks: "כל הנושאים שהוספת לסימניות"
+        category:
+          default: "%{filter} נושאים ב%{category}"
+          posted: "נושאים ב%{category} שפרסמת בהם"
+          bookmarks: "נושאים ב%{category} שהוספת לסימניות"
+        no_tags:
+          all_default: "כל הנושאים ללא תגיות"
+          category_default: "%{filter} נושאים ב%{category} בלי תגיות"
+          all:
+            posted: "כל הנושאים ללא התגיות שפרסמת בהם"
+            bookmarks: "כל הנושאים ללא התגיות שהוספת לסימניות"
+          category:
+            posted: "נושאים ב%{category} ללא תיוג שפרסמת בהם"
+            bookmarks: "נושאים ב%{category} ללא תיוג שהוספת לסימניות"
+        single_tag:
+          default: "%{filter} נושאים עם התיוג %{tag}"
+          posted: "נושאים עם התיוג %{tag} שפרסמת בהם"
+          bookmarks: "נושאים עם התיוג %{tag} שהוספת לסימניות"
+        multi_tag:
+          default: "%{filter} נושאים עם התיוג %{tags}"
+          posted: "נושאים עם התיוג %{tags} שפרסמת בהם"
+          bookmarks: "נושאים עם התיוג %{tags} שהוספת לסימניות"
+        category_tag:
+          default: "%{filter} נושאים ב%{category} עם התיוג %{tag}"
+          posted: "נושאים ב%{category} עם התיוג %{tag} שפרסמת בהם"
+          bookmarks: "נושאים ב%{category} עם התיוג %{tag} שהוספת לסימניות"
+        categories: "כל הקטגוריות"
+        filter_labels:
+          latest: "אחרונות"
+          top: "מובילים"
+          new: "חדשות"
+          unread: "טרם נקראו"
+          hot: "חמים"
+          unseen: "לא נראו"
   admin_js:
     type_to_filter: "יש להקליד לסינון…"
     settings: "הגדרות"
@@ -5704,6 +5750,7 @@ he:
         modal_title: "חיפוש כל דבר שהוא בניהול"
         title: "חיפוש"
         instructions: "אפשר להקליד כדי לחפש אחר עמודים, הגדרות, דוחות, ערכות עיצוב, רכיבים ועוד…"
+        no_results: 'לא מצאנו שום דבר שעונה על ‚%{filter}’.'
         result_types:
           page:
             one: "עמוד"
@@ -7163,6 +7210,7 @@ he:
           actions:
             block: "חסימה"
             do_nothing: "לאפשר"
+            allow_admin: "לאפשר להנהלה"
           form:
             label: "חדשה:"
             ip_address: "כתובת IP"
@@ -7282,6 +7330,7 @@ he:
           dropdown: "נפתח"
           upload: "העלאת קובץ"
           multiselect: "מגוון אפשרויות"
+          tagchooser: "בורר קבוצות תגיות"
         validations_modal:
           button_title: "אמצעי וידוא"
           modal_title: "אפשרויות וידוא"
@@ -7327,6 +7376,8 @@ he:
           toggle_form_template: "תבנית טופס פעילה"
           select_template: "בחירת תבניות טופס"
           select_template_help: "הוספה/עריכה של תבניות טופס"
+        errors:
+          multiple_tags_not_allowed: 'אי אפשר לבחור תגיות נוספות מתוך „%{tag_name}”. כדי להימנע מבעיות, כדאי להשתמש בתבנית טופס'
       impersonate:
         title: "התחזות"
         help: "ניתן להשתמש בכלי הזה כדי להתחזות לחשבון משתמש למטרות טיפול בשגיאות. יהיה עליך לצאת לאחר הסיום."

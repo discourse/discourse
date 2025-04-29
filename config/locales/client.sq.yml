@@ -3509,6 +3509,10 @@ sq:
       general: "Karakteristika të përgjithshme"
       settings: "Rregullimet"
       tags: "Etiketat"
+      localization:
+        name: "Emri"
+        description: "Përshkrimi"
+        remove: "Hiq"
       tags_placeholder: "(Opsionale) lista e etiketave të lejuara"
       tag_groups_placeholder: "(Opsionale) lista e grupeve të etiketave"
       required_tag_group:
@@ -3972,6 +3976,15 @@ sq:
       spreadsheet:
         show: "Shfaq"
         about: "Rreth"
+    discovery:
+      headings:
+        categories: "Të gjitha kategoritë"
+        filter_labels:
+          latest: "Më të fundit"
+          top: "Popullore"
+          new: "I Ri"
+          unread: "Të palexuara"
+          unseen: "E padukshme"
   admin_js:
     settings: "Rregullimet"
     admin:

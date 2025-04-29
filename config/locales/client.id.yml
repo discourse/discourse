@@ -1951,6 +1951,10 @@ id:
       general: "Umum"
       settings: "Pengaturan"
       tags: "Label"
+      localization:
+        name: "Nama"
+        description: "Deskripsi"
+        remove: "Hapus"
       required_tag_group:
         delete: "Hapus"
       name: "Nama Kategori"
@@ -2239,7 +2243,6 @@ id:
       back_to_forum: "Kembali ke Forum"
       collapse_all_sections: "Tutup semua bagian"
       expand_all_sections: "Buka semua bagian"
-      filter: "Filter..."
     until: "Sampai:"
     form_template_chooser:
       select_template: "Pilih templat formulir"
@@ -2285,6 +2288,14 @@ id:
       spreadsheet:
         show: "Tunjukkan"
         about: "Tentang"
+    discovery:
+      headings:
+        categories: "Semua kategori"
+        filter_labels:
+          latest: "Terbaru"
+          new: "New"
+          unread: "Belum dibaca"
+          unseen: "Tak terlihat"
   admin_js:
     settings: "Pengaturan"
     admin:

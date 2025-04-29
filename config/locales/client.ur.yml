@@ -2927,6 +2927,10 @@ ur:
       general: "عام"
       settings: "سیٹِنگ"
       tags: "ٹیگز"
+      localization:
+        name: "نام"
+        description: "تفصیل"
+        remove: "خارج کریں"
       tags_allowed_tags: "اس زُمرہ میں اِن ٹیگز کو محدود کریں:"
       tags_allowed_tag_groups: "اس زُمرہ میں اِن ٹیگ گروپس کو محدود کریں:"
       tags_placeholder: "(اختیاری) اجازت والے ٹیگز کی فہرست"
@@ -3616,7 +3620,6 @@ ur:
               content: "جائزہ لیں"
             invite:
               content: "دعوت دیں"
-      filter: "فِلٹر..."
       footer:
         interface_color_selector:
           light: "لائٹ"
@@ -3642,6 +3645,15 @@ ur:
       spreadsheet:
         show: "دکھائیں"
         about: "بارے میں"
+    discovery:
+      headings:
+        categories: "تمام زُمرَہ جات"
+        filter_labels:
+          latest: "تازہ ترین"
+          top: "سب سے اوپر"
+          new: "نئی"
+          unread: "بغیر پڑھے"
+          unseen: "ان دیکھا"
   admin_js:
     type_to_filter: "کو فلٹر کرنے کے لیے ٹائپ کریں…"
     settings: "ترتیبات"

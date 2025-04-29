@@ -3824,6 +3824,10 @@ tr_TR:
       settings: "Ayarlar"
       topic_template: "Şablon"
       tags: "Etiketler"
+      localization:
+        name: "Ad"
+        description: "Açıklama"
+        remove: "Kaldır"
       tags_allowed_tags: "Bu etiketleri bu kategoriyle sınırla:"
       tags_allowed_tag_groups: "Bu etiket gruplarını bu kategoriyle sınırla:"
       tags_placeholder: "(İsteğe bağlı) izin verilen etiketlerin listesi"
@@ -4714,10 +4718,6 @@ tr_TR:
       back_to_forum: "Foruma geri dön"
       collapse_all_sections: "Tüm bölümleri daralt"
       expand_all_sections: "Tüm bölümleri genişlet"
-      filter: "Filtrele..."
-      clear_filter: "Filtreyi temizle"
-      no_results:
-        title: "Sonuç yok"
       footer:
         interface_color_selector:
           light: "Açık"
@@ -4823,6 +4823,16 @@ tr_TR:
           paste: "Yapıştır..."
           save: "Farklı kaydet..."
     powered_by_discourse: "Discourse tarafından desteklenmektedir"
+    discovery:
+      headings:
+        categories: "Tüm kategoriler"
+        filter_labels:
+          latest: "En son"
+          top: "En iyi"
+          new: "Yeni"
+          unread: "Okunmamış"
+          hot: "Popüler"
+          unseen: "Görülmemiş"
   admin_js:
     type_to_filter: "Filtrelemek için yazın…"
     settings: "Ayarlar"

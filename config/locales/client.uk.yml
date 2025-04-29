@@ -3561,6 +3561,11 @@ uk:
           false { або <a href="{basePath}/latest">переглянути останні теми</a>}
           other {}
         }
+      reply_count_link:
+        one: "%{count} відповідь, перейти до першого допису"
+        few: "%{count} відповіді, перейти до першого допису"
+        many: "%{count} відповідей, перейти до першого допису"
+        other: "%{count} відповідей, перейти до першого допису"
       created_at: "Створено: %{date}"
       bumped_at: "Останні:%{date}"
       browse_all_categories_latest: "<a href='%{basePath}/categories'>Перегляньте всі категорії</a> або <a href='%{basePath}/latest'>перегляньте останні теми</a>."
@@ -4267,6 +4272,14 @@ uk:
       settings: "Налаштування"
       topic_template: "Шаблон"
       tags: "Теґи"
+      localizations: "Локалізації"
+      localization:
+        locale: "Локаль"
+        name: "Імʼя"
+        description: "Опис"
+        add: "Додати нову мову"
+        remove: "Вилучити"
+        hint: "Наразі немає локалізацій для цієї категорії. Натисніть «Додати нову мову» нижче, щоб почати додавати локалізації."
       tags_allowed_tags: "Обмежити ці теґи цим розділом:"
       tags_allowed_tag_groups: "Обмежити ці групи теґів цим розділом:"
       tags_placeholder: "(Необов'язково) список дозволених теґів"
@@ -5243,12 +5256,6 @@ uk:
       back_to_forum: "Повернутися до форуму"
       collapse_all_sections: "Згорнути всі розділи"
       expand_all_sections: "Розгорнути всі розділи"
-      filter: "Фільтр..."
-      filter_links: "Фільтр посилання..."
-      clear_filter: "Очистити фільтр"
-      no_results:
-        title: "Немає результатів"
-        description_admin_search: 'Ми не змогли знайти нічого, що відповідає ''%{filter}''.<br><br>Спробуйте виконати <a class="sidebar-additional-filter-admin-search" href="%{admin_search_url}">пошук по всьому інтерфейсу адміністратора</a>.'
       footer:
         interface_color_selector:
           light: "Світла"
@@ -5364,6 +5371,45 @@ uk:
           save: "Зберегти як..."
     powered_by_discourse: "Працює на Discourse"
     safari_15_warning: "Ваш браузер незабаром буде несумісний з цією спільнотою. Щоб продовжити участь, будь ласка, оновіть свій браузер або <a href='%{url}'>дізнайтеся більше</a>."
+    discovery:
+      headings:
+        all:
+          default: "Всі %{filter} теми"
+          posted: "Усі теми, у яких ви писали"
+          bookmarks: "Всі теми, які ви додали до закладок"
+        category:
+          default: "%{filter} тем у %{category}"
+          posted: "Теми в %{category} , у яких ви писали"
+          bookmarks: "Теми в %{category}, які ви додали до закладок"
+        no_tags:
+          all_default: "Всі теми без тегів"
+          category_default: "%{filter} теми в %{category} без тегів"
+          all:
+            posted: "Всі теми без тегів, в яких ви писали"
+            bookmarks: "Усі теми без тегів, які ви додали в закладки"
+          category:
+            posted: "Теми в %{category} без тегів, у яких ви писали"
+            bookmarks: "Теми в %{category} без тегів, які ви додали в закладки"
+        single_tag:
+          default: "%{filter} теми з тегом %{tag}"
+          posted: "Теми з тегом %{tag} , в яких ви писали"
+          bookmarks: "Теми з тегом %{tag} , які ви додали до закладок"
+        multi_tag:
+          default: "%{filter} теми з тегами %{tags}"
+          posted: "Теми з тегами %{tags} , у яких ви писали"
+          bookmarks: "Теми з тегами %{tags}, які ви додали в закладки"
+        category_tag:
+          default: "%{filter} теми в %{category} з тегами %{tag}"
+          posted: "Теми в %{category} з тегами %{tag} , які ви публікували"
+          bookmarks: "Теми в %{category} позначені тегами %{tag} , які ви додали в закладки"
+        categories: "Всі розділи"
+        filter_labels:
+          latest: "Остання"
+          top: "Топ"
+          new: "Нові"
+          unread: "Непрочитані"
+          hot: "Гаряче"
+          unseen: "Непереглянуті"
   admin_js:
     type_to_filter: "Текст для пошуку…"
     settings: "Налаштування"
@@ -5715,6 +5761,7 @@ uk:
         modal_title: "Шукайте будь-що в адмінці"
         title: "Пошук"
         instructions: "Введіть текст для пошуку сторінок, налаштувань, звітів, тем, компонентів тощо..."
+        no_results: 'Ми не змогли знайти нічого, що відповідає "%{filter}".'
         result_types:
           page:
             one: "Сторінка"
