@@ -385,6 +385,10 @@
     padding: 0;
     width: 100%;
     height: var(--d-sidebar-row-height);
+
+    &:focus {
+      outline: none;
+    }
   }
 }
 
