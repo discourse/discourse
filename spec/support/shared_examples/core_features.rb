@@ -81,7 +81,7 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
             click_on(topics.first.title)
             expect(page).to have_content(topics.first.first_post.raw)
             within(".actions") { click_button("Reply") }
-            composer.focus
+            find(PageObjects::Components::Composer::COMPOSER_INPUT_SELECTOR).click
             send_keys("This is a long enough reply.")
             expect(page).to have_css(".d-editor-preview p", visible: true)
             within(".save-or-cancel") { click_button("Reply") }
@@ -160,7 +160,6 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
       before do
         SearchIndexer.enable
         topics.each { SearchIndexer.index(_1, force: true) }
-        SiteSetting.enable_welcome_banner = false
       end
 
       after { SearchIndexer.disable }
