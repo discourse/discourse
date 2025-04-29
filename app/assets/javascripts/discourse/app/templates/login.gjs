@@ -29,12 +29,7 @@ export default RouteTemplate(
       {{loadingSpinner}}
     {{else}}
       {{#if
-        (and
-          @controller.siteSettings.full_page_login
-          (or
-            @controller.showLogin (not @controller.siteSettings.login_required)
-          )
-        )
+        (or @controller.showLogin (not @controller.siteSettings.login_required))
       }}
         {{! Show the full page login form }}
         <div class="login-fullpage">
