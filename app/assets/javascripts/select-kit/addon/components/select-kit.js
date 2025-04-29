@@ -21,7 +21,7 @@ import { i18n } from "discourse-i18n";
 import {
   applyContentPluginApiCallbacks,
   applyOnChangePluginApiCallbacks,
-} from "select-kit/mixins/plugin-api";
+} from "select-kit/lib/plugin-api";
 import UtilsMixin from "select-kit/mixins/utils";
 
 export const MAIN_COLLECTION = "MAIN_COLLECTION";
