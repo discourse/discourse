@@ -67,7 +67,7 @@ module PageObjects
 
       def visit_thread(thread)
         visit(thread.url)
-        has_css?(".chat-thread:not(.loading)[data-id=\"#{thread.id}\"]")
+        has_css?(".chat-thread.--loaded[data-id=\"#{thread.id}\"]")
       end
 
       def visit_threads_list(channel)

@@ -4,7 +4,7 @@ module PageObjects
   module Pages
     class ChatThread < PageObjects::Pages::Base
       def open?
-        has_css?(".chat-thread:not(.loading)")
+        has_css?(".chat-thread.--loaded")
       end
 
       def composer
