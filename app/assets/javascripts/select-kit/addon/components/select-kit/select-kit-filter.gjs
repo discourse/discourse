@@ -156,10 +156,10 @@ export default class SelectKitFilter extends Component.extend(UtilsMixin) {
         spellcheck={{false}}
         @value={{readonly this.selectKit.filter}}
         @type="search"
-        {{on "paste" (action "onPaste")}}
-        {{on "keydown" (action "onKeydown")}}
-        {{on "keyup" (action "onKeyup")}}
-        {{on "input" (action "onInput")}}
+        {{on "paste" this.onPaste}}
+        {{on "keydown" this.onKeydown}}
+        {{on "keyup" this.onKeyup}}
+        {{on "input" this.onInput}}
       />
 
       {{#if this.selectKit.options.filterIcon}}

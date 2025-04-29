@@ -98,10 +98,7 @@ export default class CategoriesDisplay extends Component {
       @outletArgs={{hash categories=@categories topics=@topics}}
     />
     {{#if this.canLoadMore}}
-      <LoadMore
-        @selector=".category:not(.muted-categories *)"
-        @action={{@loadMore}}
-      >
+      <LoadMore @action={{@loadMore}}>
         <this.categoriesComponent
           @categories={{@categories}}
           @topics={{@topics}}

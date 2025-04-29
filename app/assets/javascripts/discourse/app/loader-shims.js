@@ -73,3 +73,4 @@ loaderShim("@messageformat/runtime/lib/cardinals", () =>
   importSync("@messageformat/runtime/lib/cardinals")
 );
 loaderShim("@ember/string", () => importSync("@ember/string"));
+loaderShim("moment", () => importSync("moment"));

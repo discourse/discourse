@@ -1,5 +1,6 @@
 import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
+import SiteSettingMatcher from "admin/lib/site-setting-matcher";
 
 export default class SiteSettingFilter {
   constructor(siteSettings) {
@@ -53,62 +54,55 @@ export default class SiteSettingFilter {
       matchesGroupedByCategory.push(all);
     }
 
-    const strippedQuery = filter.replace(/[^a-z0-9]/gi, "");
-    let fuzzyRegex;
-    let fuzzyRegexGaps;
-
-    if (strippedQuery.length > 2) {
-      fuzzyRegex = new RegExp(strippedQuery.split("").join(".*"), "i");
-      fuzzyRegexGaps = new RegExp(strippedQuery.split("").join("(.*)"), "i");
-    }
-
     this.siteSettings.forEach((settingsCategory) => {
       let fuzzyMatches = [];
 
-      const siteSettings = settingsCategory.siteSettings.filter((item) => {
-        if (opts.onlyOverridden && !item.get("overridden")) {
-          return false;
-        }
-        if (pluginFilter && item.plugin !== pluginFilter) {
-          return false;
-        }
-        if (filter) {
-          const setting = item.get("setting").toLowerCase();
-          let filterResult =
-            setting.includes(filter) ||
-            setting.replace(/_/g, " ").includes(filter) ||
-            item.get("description").toLowerCase().includes(filter) ||
-            (item.get("keywords") || []).any((keyword) =>
-              keyword
-                .replace(/_/g, " ")
-                .toLowerCase()
-                .includes(filter.replace(/_/g, " "))
-            ) ||
-            (item.get("value") || "").toString().toLowerCase().includes(filter);
-          if (!filterResult && fuzzyRegex && fuzzyRegex.test(setting)) {
-            // Tightens up fuzzy search results a bit.
-            const fuzzySearchLimiter = 25;
-            const strippedSetting = setting.replace(/[^a-z0-9]/gi, "");
-            if (
-              strippedSetting.length <=
-              strippedQuery.length + fuzzySearchLimiter
-            ) {
-              const gapResult = strippedSetting.match(fuzzyRegexGaps);
-              if (gapResult) {
-                item.weight = gapResult.filter((gap) => gap !== "").length;
-              }
-              fuzzyMatches.push(item);
-            }
-          }
-          return filterResult;
-        } else {
-          return true;
-        }
-      });
+      const siteSettings = settingsCategory.siteSettings.filter(
+        (siteSetting) => {
+          siteSetting.weight = 0;
 
-      if (fuzzyMatches.length > 0) {
-        siteSettings.pushObjects(fuzzyMatches);
-      }
+          if (opts.onlyOverridden && !siteSetting.get("overridden")) {
+            return false;
+          }
+
+          if (pluginFilter && siteSetting.plugin !== pluginFilter) {
+            return false;
+          }
+
+          if (!filter) {
+            return true;
+          }
+
+          const matcher = new SiteSettingMatcher(filter, siteSetting);
+
+          if (matcher.isNameMatch) {
+            siteSetting.weight = 10;
+            return true;
+          }
+
+          if (matcher.isKeywordMatch) {
+            siteSetting.weight = 5;
+            return true;
+          }
+
+          if (matcher.isDescriptionMatch) {
+            return true;
+          }
+
+          if (matcher.isValueMatch) {
+            return true;
+          }
+
+          if (matcher.isFuzzyNameMatch) {
+            siteSetting.weight += matcher.matchStrength;
+            fuzzyMatches.push(siteSetting);
+
+            return true;
+          }
+
+          return false;
+        }
+      );
 
       if (siteSettings.length > 0) {
         matches.pushObjects(siteSettings);
@@ -138,9 +132,9 @@ export default class SiteSettingFilter {
   @bind
   sortSettings(settings) {
     // Sort the site settings so that fuzzy results are at the bottom
-    // and ordered by their gap count asc.
+    // and ordered by their match strength.
     return settings.sort((a, b) => {
-      return (a.weight || 0) - (b.weight || 0);
+      return (b.weight || 0) - (a.weight || 0);
     });
   }
 }

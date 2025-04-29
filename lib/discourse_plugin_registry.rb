@@ -244,8 +244,9 @@ class DiscoursePluginRegistry
   end
 
   VENDORED_CORE_PRETTY_TEXT_MAP = {
-    "moment.js" => "vendor/assets/javascripts/moment.js",
-    "moment-timezone.js" => "vendor/assets/javascripts/moment-timezone-with-data.js",
+    "moment.js" => "app/assets/javascripts/discourse/node_modules/moment/moment.js",
+    "moment-timezone.js" =>
+      "app/assets/javascripts/discourse/node_modules/moment-timezone/builds/moment-timezone-with-data.js",
   }
 
   def self.core_asset_for_name(name)

@@ -93,7 +93,6 @@
 
   p[data-placeholder] {
     overflow: hidden;
-    position: relative;
 
     &::before {
       pointer-events: none;
@@ -198,6 +197,7 @@
 
 // stylelint-disable-next-line no-duplicate-selectors
 .ProseMirror {
+  position: relative;
   word-wrap: break-word;
   white-space: break-spaces;
 }

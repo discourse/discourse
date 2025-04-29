@@ -5,11 +5,7 @@ import LoadMore from "discourse/components/load-more";
 
 export default RouteTemplate(
   <template>
-    <LoadMore
-      @selector=".paginated-topics-list .topic-list tr"
-      @action={{@controller.loadMore}}
-      class="paginated-topics-list"
-    >
+    <LoadMore @action={{@controller.loadMore}} class="paginated-topics-list">
       <BasicTopicList @topicList={{@controller.model}} @showPosters={{true}} />
       <ConditionalLoadingSpinner @condition={{@controller.model.loadingMore}} />
     </LoadMore>

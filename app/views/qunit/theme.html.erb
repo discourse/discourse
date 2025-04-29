@@ -10,7 +10,7 @@
       <%= preload_script "test-support" %>
       <%= preload_script "discourse" %>
       <%= preload_script "test" %>
-      <%= preload_script "locales/#{I18n.locale}" %>
+      <%= preload_script_url ExtraLocalesController.url("main") %>
       <%= preload_script_url ExtraLocalesController.url("mf") %>
       <%= preload_script "admin" %>
       <%- Discourse.find_plugin_js_assets(include_disabled: true).each do |file| %>

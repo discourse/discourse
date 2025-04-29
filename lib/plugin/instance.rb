@@ -1429,7 +1429,6 @@ class Plugin::Instance
         ""
       opts[:server_locale_file] = Dir["#{root_path}/config/locales/server*.#{locale}.yml"].first ||
         ""
-      opts[:js_locale_file] = File.join(root_path, "assets/locales/#{locale}.js.erb")
 
       locale_chain = opts[:fallbackLocale] ? [locale, opts[:fallbackLocale]] : [locale]
       lib_locale_path = File.join(root_path, "lib/javascripts/locale")
@@ -1522,8 +1521,7 @@ class Plugin::Instance
 
   def valid_locale?(custom_locale)
     File.exist?(custom_locale[:client_locale_file]) &&
-      File.exist?(custom_locale[:server_locale_file]) &&
-      File.exist?(custom_locale[:js_locale_file]) && custom_locale[:moment_js]
+      File.exist?(custom_locale[:server_locale_file]) && custom_locale[:moment_js]
   end
 
   def find_locale_file(locale_chain, path)

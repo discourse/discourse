@@ -64,4 +64,15 @@ describe "Admin Search", type: :system do
       I18n.t("site_settings.min_topic_title_length"),
     )
   end
+
+  it "informs user about no results" do
+    visit "/admin"
+    open_search_modal
+
+    search_modal.search("very long search phrase")
+
+    expect(search_modal).to have_content(
+      "We couldn’t find anything matching ‘very long search phrase’.",
+    )
+  end
 end

@@ -214,7 +214,7 @@ export default class AdminConfigAreasComponents extends Component {
       {{/if}}
       <ConditionalLoadingSpinner @condition={{this.loading}}>
         {{#if this.components.length}}
-          <LoadMore @selector=".component-list tr" @action={{this.loadMore}}>
+          <LoadMore @action={{this.loadMore}}>
             <table class="d-admin-table component-list">
               <thead>
                 <th>{{i18n
