@@ -2744,6 +2744,10 @@ gl:
       general: "Xeral"
       settings: "Configuración"
       tags: "Etiquetas"
+      localization:
+        name: "Nome"
+        description: "Descrición"
+        remove: "Retirar"
       tags_allowed_tags: "Restrinxir estas etiquetas a esta categoría:"
       tags_allowed_tag_groups: "Restrinxir estes grupos de etiquetas a esta categoría:"
       tags_placeholder: "lista de etiquetas permitidas (opcional)"
@@ -3372,7 +3376,6 @@ gl:
               content: "Revisar"
             invite:
               content: "Convidar"
-      filter: "Filtrar..."
       footer:
         interface_color_selector:
           light: "Claro"
@@ -3398,6 +3401,14 @@ gl:
       spreadsheet:
         show: "Amosar"
         about: "Verbo de"
+    discovery:
+      headings:
+        categories: "Todas as categorías"
+        filter_labels:
+          latest: "Últimos"
+          top: "Destacados"
+          new: "Novo"
+          unread: "Pendentes de lectura"
   admin_js:
     settings: "Configuración"
     admin:

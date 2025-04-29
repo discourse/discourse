@@ -3000,6 +3000,8 @@ zh_CN:
           false {或<a href="{basePath}/latest">查看最新话题</a>}
           other {}
         }
+      reply_count_link:
+        other: "%{count} 条回复，跳转到第一个帖子"
       created_at: "创建日期：%{date}"
       bumped_at: "最新：%{date}"
       browse_all_categories_latest: "<a href='%{basePath}/categories'>浏览所有类别</a>或<a href='%{basePath}/latest'>查看最新话题</a>。"
@@ -3601,6 +3603,14 @@ zh_CN:
       settings: "设置"
       topic_template: "模板"
       tags: "标签"
+      localizations: "本地化"
+      localization:
+        locale: "区域设置"
+        name: "名称"
+        description: "描述"
+        add: "添加新的区域设置"
+        remove: "移除"
+        hint: "此类别目前没有本地化。点击下面的“添加新的本地化”开始添加本地化。"
       tags_allowed_tags: "将这些标签限制在此类别："
       tags_allowed_tag_groups: "将这些标签组限制在此类别："
       tags_placeholder: "（可选）允许的标签列表"
@@ -3637,6 +3647,7 @@ zh_CN:
         icon: "图标"
         emoji: "表情符号"
         options:
+          square: "方形"
           icon: "图标"
           emoji: "表情符号"
       color_used: "使用的颜色"
@@ -4462,12 +4473,6 @@ zh_CN:
       back_to_forum: "返回论坛"
       collapse_all_sections: "收起所有版块"
       expand_all_sections: "展开所有版块"
-      filter: "筛选…"
-      filter_links: "筛选链接..."
-      clear_filter: "清除筛选器"
-      no_results:
-        title: "没有结果"
-        description_admin_search: '我们找不到与“%{filter}”匹配的任何内容。<br><br>尝试 <a class="sidebar-additional-filter-admin-search" href="%{admin_search_url}">搜索整个管理界面</a>。'
       footer:
         interface_color_selector:
           light: "亮"
@@ -4571,6 +4576,37 @@ zh_CN:
           save: "另存为…"
     powered_by_discourse: "由 Discourse 提供技术支持"
     safari_15_warning: "您的浏览器很快将与此社区不兼容。若要继续参与此社区，请升级您的浏览器或 <a href='%{url}'>了解更多信息</a>。"
+    discovery:
+      headings:
+        all:
+          default: "所有 %{filter} 话题"
+          posted: "您发过帖子的所有话题"
+          bookmarks: "您已添加书签的所有话题"
+        category:
+          default: "%{category}中的%{filter}话题"
+          posted: "%{category} 中您发布过帖子的话题"
+          bookmarks: "%{category} 中您已添加书签的话题"
+        no_tags:
+          all_default: "所有无标签话题"
+          category_default: "%{category}中的%{filter}无标签话题"
+          all:
+            posted: "您发过帖子的所有无标签话题"
+            bookmarks: "您已添加书签的所有无标签话题"
+          category:
+            posted: "%{category} 中您发布过帖子的无标签话题"
+            bookmarks: "%{category} 中您已添加书签的无标签话题"
+        category_tag:
+          default: "%{filter} 个话题位于 %{category} 中，标签为 %{tag}"
+          posted: "您已在 %{category} 中发布过带有 %{tag} 标签的主题"
+          bookmarks: "您已收藏了 %{category} 中标记为 %{tag} 的主题"
+        categories: "所有类别"
+        filter_labels:
+          latest: "最新"
+          top: "排行榜"
+          new: "新"
+          unread: "未读"
+          hot: "热议"
+          unseen: "未读"
   admin_js:
     type_to_filter: "输入以筛选…"
     settings: "设置"
@@ -4913,6 +4949,7 @@ zh_CN:
         modal_title: "搜索管理员页面中的任何内容"
         title: "搜索"
         instructions: "键入以搜索页面、设置、报告、主题、组件等等..."
+        no_results: '我们找不到任何与“%{filter}”匹配的内容。'
         result_types:
           page:
             other: "页面"

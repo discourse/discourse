@@ -1899,6 +1899,10 @@ sw:
       general: "Jumla"
       settings: "Mipangilio"
       tags: "Lebo"
+      localization:
+        name: "Jina"
+        description: "Elezo"
+        remove: "Ondoa"
       tags_placeholder: "(Sio muhimu) orodha ya lebo zilizoruhusiwa."
       tag_groups_placeholder: "(Sio muhimu) orodha ya vikundi vyenye lebo zilizoruhusiwa."
       required_tag_group:
@@ -2343,7 +2347,6 @@ sw:
               content: "Machapisho Yangu"
             invite:
               content: "Mualiko"
-      filter: "Chuja..."
       footer:
         interface_color_selector:
           light: "Hafifu"
@@ -2365,6 +2368,14 @@ sw:
       spreadsheet:
         show: "Onyesha"
         about: "Kuhusu"
+    discovery:
+      headings:
+        categories: "Kategoria Zote"
+        filter_labels:
+          latest: "Hivi Karibuni"
+          top: "Juu"
+          new: "Mpya"
+          unread: "Haijasomwa"
   admin_js:
     settings: "Mipangilio"
     admin:

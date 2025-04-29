@@ -4253,6 +4253,10 @@ cs:
       settings: "Nastavení"
       topic_template: "Šablona"
       tags: "Štítky"
+      localization:
+        name: "Jméno"
+        description: "Popis"
+        remove: "Smazat"
       tags_allowed_tags: "Omezit tyto štítky na tuto kategorii:"
       tags_allowed_tag_groups: "Omezit tuto kategorii pouze na tyto skupiny štítků:"
       tags_placeholder: "(Volitelné) seznam dovolených štítků"
@@ -5234,12 +5238,6 @@ cs:
       back_to_forum: "Zpět na fórum"
       collapse_all_sections: "Sbalit všechny sekce"
       expand_all_sections: "Rozbalit všechny sekce"
-      filter: "Filtr..."
-      filter_links: "Filtrovat odkazy..."
-      clear_filter: "Vymazat filtr"
-      no_results:
-        title: "Žádné výsledky"
-        description_admin_search: 'Nenašli jsme nic odpovídající ''%{filter}''.<br><br>Zkuste <a class="sidebar-additional-filter-admin-search" href="%{admin_search_url}">prohledat celé administrátorské rozhraní</a>.'
       footer:
         interface_color_selector:
           light: "Světlý režim"
@@ -5354,6 +5352,16 @@ cs:
           paste: "Vložit..."
           save: "Uložit jako..."
     powered_by_discourse: "Powered by Discourse"
+    discovery:
+      headings:
+        categories: "Všechny kategorie"
+        filter_labels:
+          latest: "Nejnovější"
+          top: "Nejlepší"
+          new: "Nový"
+          unread: "Nepřečtené"
+          hot: "Žhavé"
+          unseen: "Neshlédnutá"
   admin_js:
     type_to_filter: "Text pro filtrování..."
     settings: "Nastavení"

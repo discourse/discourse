@@ -1695,7 +1695,6 @@ ja:
     pending_users_reminder_delay_minutes: "モデレーターに新しいユーザーがこの時間以上承認待ちであることを通知します。-1 に設定すると、通知は無効になります。"
     persistent_sessions: "ユーザーはブラウザが閉じられてもログインのままになる"
     maximum_session_age: "ユーザーは最後の訪問から n 時間以内はログインしたままになる"
-    full_page_login: "ログインフォームと登録フォームをフルページで表示します (オフの場合、フォームはモーダルで表示されます)。"
     show_signup_form_email_instructions: 登録フォームにメールアドレスの指示を表示します。
     show_signup_form_username_instructions: 登録フォームにユーザー名の指示を表示します。
     show_signup_form_full_name_instructions: 登録フォームにフルネームの指示を表示します。

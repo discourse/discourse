@@ -3561,6 +3561,11 @@ sk:
           false { alebo <a href="{basePath}/latest">zobraziť najnovšie témy</a>}
           other {}
         }
+      reply_count_link:
+        one: "%{count} odpoveď, skok na prvý príspevok"
+        few: "%{count} odpovedí, skok na prvý príspevok"
+        many: "%{count} odpovedí, skok na prvý príspevok"
+        other: "%{count} odpovede, skok na prvý príspevok"
       created_at: "Vytvorené: %{date}"
       bumped_at: "Najnovšie: %{date}"
       browse_all_categories_latest: "<a href='%{basePath}/categories'>Prezrite si všetky kategórie</a> alebo <a href='%{basePath}/latest'>najnovšie témy</a>."
@@ -4267,6 +4272,14 @@ sk:
       settings: "Nastavenia"
       topic_template: "Šablóna"
       tags: "Značky"
+      localizations: "Lokalizácie"
+      localization:
+        locale: "Miestne nastavenie"
+        name: "Meno"
+        description: "Popis"
+        add: "Pridať nové miestne nastavenie"
+        remove: "Odstrániť"
+        hint: "V súčasnosti nie sú k dispozícii žiadne lokalizácie pre túto kategóriu. Kliknutím na \"Pridať novú lokalizáciu\" nižšie začnete pridávať lokalizácie."
       tags_allowed_tags: "Obmedziť tieto značky na túto kategóriu:"
       tags_allowed_tag_groups: "Obmedziť tieto skupiny značiek na túto kategóriu:"
       tags_placeholder: "(Voliteľné) zoznam povolených štítkov"
@@ -5249,12 +5262,6 @@ sk:
       back_to_forum: "Späť na fórum"
       collapse_all_sections: "Zbaliť všetky sekcie"
       expand_all_sections: "Rozbaľte všetky sekcie"
-      filter: "Filter..."
-      filter_links: "Filtrovanie odkazov..."
-      clear_filter: "Vymazať filter"
-      no_results:
-        title: "Žiadne výsledky"
-        description_admin_search: 'Nenašli sme nič, čo by zodpovedalo ''%{filter}''.<br><br>Skúste <a class="sidebar-additional-filter-admin-search" href="%{admin_search_url}">prehľadávať celé rozhranie administrátora</a>.'
       footer:
         interface_color_selector:
           light: "Svetlá"
@@ -5370,6 +5377,45 @@ sk:
           save: "Uložiť ako..."
     powered_by_discourse: "Powered by Discourse"
     safari_15_warning: "Váš prehliadač bude čoskoro nekompatibilný s touto komunitou. Ak sa chcete naďalej zúčastňovať, aktualizujte svoj prehliadač alebo <a href='%{url}'>sa dozviete viac.</a>"
+    discovery:
+      headings:
+        all:
+          default: "Všetky témy %{filter}"
+          posted: "Všetky témy, ktoré ste zverejnili v"
+          bookmarks: "Všetky témy, ktoré ste si pridali do záložiek"
+        category:
+          default: "%{filter} tém v %{category}"
+          posted: "Témy v %{category} , v ktorých ste uverejnili príspevok"
+          bookmarks: "Témy na %{category} , ktoré ste si pridali do záložiek"
+        no_tags:
+          all_default: "Všetky témy bez značiek"
+          category_default: "%{filter} tém v %{category} bez značiek"
+          all:
+            posted: "Všetky témy bez značiek, ktoré ste zverejnili"
+            bookmarks: "Všetky témy bez značiek, ktoré ste si pridali do záložiek"
+          category:
+            posted: "Témy v %{category} bez štítkov, ktoré ste uverejnili"
+            bookmarks: "Témy v %{category} bez značiek, ktoré ste si pridali medzi záložky"
+        single_tag:
+          default: "%{filter} tém označených %{tag}"
+          posted: "Témy označené %{tag} , v ktorých ste uverejnili príspevok"
+          bookmarks: "Témy označené %{tag} , ktoré ste si pridali do záložiek"
+        multi_tag:
+          default: "%{filter} témy označené %{tags}"
+          posted: "Témy označené %{tags} , v ktorých ste uverejnili príspevok"
+          bookmarks: "Témy označené %{tags} , ktoré ste si pridali do záložiek"
+        category_tag:
+          default: "%{filter} tém v %{category} označených %{tag}"
+          posted: "Témy v %{category} označené %{tag} , v ktorých ste uverejnili"
+          bookmarks: "Témy v %{category} označené %{tag} , ktoré ste si pridali medzi záložky"
+        categories: "Všetky kategórie"
+        filter_labels:
+          latest: "Najnovšie"
+          top: "Najlepšie"
+          new: "Nový"
+          unread: "Neprečítané"
+          hot: "Horúce"
+          unseen: "Nevidené"
   admin_js:
     type_to_filter: "Filtrovať..."
     settings: "Nastavenia"

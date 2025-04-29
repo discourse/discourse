@@ -2966,6 +2966,10 @@ ko:
       general: "일반"
       settings: "설정"
       tags: "태그"
+      localization:
+        name: "그룹명"
+        description: "내용"
+        remove: "제거"
       tags_allowed_tags: "이 태그를 이 카테고리로 제한:"
       tags_allowed_tag_groups: "이 태그 그룹을 이 카테고리로 제한:"
       tags_placeholder: "(선택사항) 허용된 태그 목록"
@@ -3646,9 +3650,6 @@ ko:
             invite:
               content: "초대"
               title: "새로운 멤버 초대"
-      filter: "필터..."
-      no_results:
-        title: "결과 없음"
       footer:
         interface_color_selector:
           light: "라이트"
@@ -3676,6 +3677,15 @@ ko:
       spreadsheet:
         show: "보기"
         about: "소개"
+    discovery:
+      headings:
+        categories: "모든 카테고리"
+        filter_labels:
+          latest: "최신"
+          top: "인기글"
+          new: "신규"
+          unread: "읽지 않음"
+          unseen: "읽지 않음"
   admin_js:
     type_to_filter: "필터 입력..."
     settings: "설정"

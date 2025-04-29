@@ -2942,6 +2942,10 @@ vi:
       general: "Chung"
       settings: "Cấu hình"
       tags: "Thẻ"
+      localization:
+        name: "Tên"
+        description: "Mô tả"
+        remove: "Xoá"
       tags_allowed_tags: "Hạn chế các thẻ này trong danh mục này:"
       tags_allowed_tag_groups: "Hạn chế các nhóm thẻ này trong danh mục này:"
       tags_placeholder: "(Tuỳ chọn) danh sách thẻ cho phép"
@@ -3633,7 +3637,6 @@ vi:
               content: "Review"
             invite:
               content: "Mời"
-      filter: "Lọc..."
     until: "Cho đến khi:"
     form_templates:
       upload_field:
@@ -3655,6 +3658,15 @@ vi:
       spreadsheet:
         show: "Hiển thị"
         about: "Giới thiệu"
+    discovery:
+      headings:
+        categories: "Tất cả danh mục"
+        filter_labels:
+          latest: "Mới nhất"
+          top: "Top"
+          new: "Mới"
+          unread: "Chưa đọc"
+          unseen: "Không nhìn thấy"
   admin_js:
     type_to_filter: "Gõ vào bộ lọc…"
     settings: "Cài đặt"

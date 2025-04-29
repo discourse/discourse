@@ -2055,6 +2055,10 @@ th:
       general: "ทั่วไป"
       settings: "การตั้งค่า"
       tags: "แท็ก"
+      localization:
+        name: "ชื่อ"
+        description: "รายละเอียด"
+        remove: "ลบ"
       allow_global_tags_label: "อนุญาตแท็กอื่นด้วย"
       required_tag_group:
         delete: "ลบ"
@@ -2525,6 +2529,14 @@ th:
       spreadsheet:
         show: "แสดง"
         about: "เกี่ยวกับ"
+    discovery:
+      headings:
+        categories: "หมวดหมู่ทั้งหมด"
+        filter_labels:
+          latest: "ล่าสุด"
+          top: "บน"
+          new: "ใหม่"
+          unread: "ยังไม่อ่าน"
   admin_js:
     settings: "การตั้งค่า"
     admin:

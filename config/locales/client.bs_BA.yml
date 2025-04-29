@@ -2499,6 +2499,10 @@ bs_BA:
       general: "General"
       settings: "Postavke"
       tags: "Oznake"
+      localization:
+        name: "Ime"
+        description: "Opis"
+        remove: "Ukloni"
       tags_allowed_tags: "Ograničite ove oznake na ovu kategoriju:"
       tags_allowed_tag_groups: "Ograničite ove grupe oznaka na ovu kategoriju:"
       tags_placeholder: "(Opcionalno) lista dozvoljenih oznaka"
@@ -3110,7 +3114,6 @@ bs_BA:
               content: "Pregled"
             invite:
               content: "Invite"
-      filter: "Filter..."
     until: "Sve do:"
     form_templates:
       upload_field:
@@ -3131,6 +3134,14 @@ bs_BA:
       spreadsheet:
         show: "Show"
         about: "O nama"
+    discovery:
+      headings:
+        categories: "Sve kategorije"
+        filter_labels:
+          latest: "Zadnje"
+          top: "Top teme"
+          new: "Novi"
+          unread: "Nepročitano"
   admin_js:
     settings: "Postavke"
     admin:

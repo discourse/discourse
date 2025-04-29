@@ -3772,6 +3772,10 @@ es:
       settings: "Ajustes"
       topic_template: "Plantilla"
       tags: "Etiquetas"
+      localization:
+        name: "Nombre"
+        description: "Descripción"
+        remove: "Eliminar"
       tags_allowed_tags: "Restringir estas etiquetas a esta categoría:"
       tags_allowed_tag_groups: "Restringir estos grupos de etiquetas a esta categoría:"
       tags_placeholder: "(Opcional) lista de etiquetas permitidas"
@@ -4662,10 +4666,6 @@ es:
       back_to_forum: "Volver al Foro"
       collapse_all_sections: "Contraer todas las secciones"
       expand_all_sections: "Expandir todas las secciones"
-      filter: "Filtrar..."
-      clear_filter: "Limpiar filtro"
-      no_results:
-        title: "No hay resultados"
       footer:
         interface_color_selector:
           light: "Claro"
@@ -4771,6 +4771,16 @@ es:
           paste: "Pegar..."
           save: "Guardar como..."
     powered_by_discourse: "Desarrollado por Discourse"
+    discovery:
+      headings:
+        categories: "Todas las categorías"
+        filter_labels:
+          latest: "Recientes"
+          top: "Destacados"
+          new: "Nuevo"
+          unread: "Sin leer"
+          hot: "Caliente"
+          unseen: "No vistos"
   admin_js:
     type_to_filter: "Escribe para filtrar…"
     settings: "Ajustes"

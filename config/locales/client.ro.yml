@@ -2380,6 +2380,10 @@ ro:
       back_to_list: "Înapoi la lista de subiecte"
       options: "Opțiuni pentru subiect"
       show_links: "arată legăturile din acest subiect"
+      reply_count_link:
+        one: "%{count} răspuns, sari la prima postare"
+        few: "%{count} răspunsuri, sari la prima postare"
+        other: "%{count} de răspunsuri, sari la prima postare"
       suggest_create_topic: Ești gata să <a href>începi o nouă conversație?</a>
       jump_reply_button: "Sari la articol"
       deleted: "Subiectul a fost șters"
@@ -2833,6 +2837,14 @@ ro:
       general: "General"
       settings: "Setări"
       tags: "Etichete"
+      localizations: "Localizări"
+      localization:
+        locale: "Locală"
+        name: "Nume"
+        description: "Descriere"
+        add: "Adaugă locală nouă"
+        remove: "Elimină"
+        hint: "Momentan nu există localizări pentru această categorie. Dă clic pe „Adaugă locală nouă” pentru a începe să adaugi localizări."
       tags_placeholder: "(Opțional) lista etichetelor permise"
       tag_groups_placeholder: "(Opțional) lista grupurilor de etichete permise"
       required_tag_group:
@@ -3433,11 +3445,6 @@ ro:
       back_to_forum: "Înapoi la forum"
       collapse_all_sections: "Restrânge toate secțiunile"
       expand_all_sections: "Extinde toate secțiunile"
-      filter: "Filtru..."
-      filter_links: "Filtrează legături..."
-      clear_filter: "Elimină filtrul"
-      no_results:
-        title: "Fără rezultate"
       footer:
         interface_color_selector:
           light: "Luminos"
@@ -3510,6 +3517,15 @@ ro:
           save: "Salvează ca..."
     powered_by_discourse: "Propulsat de Discourse"
     safari_15_warning: "Navigatorul tău va fi în curând incompatibil cu această comunitate. Pentru a continua să participi aici, te rugăm să-ți actualizezi navigatorul sau <a href='%{url}'>să afli mai multe</a>."
+    discovery:
+      headings:
+        categories: "Toate categoriile"
+        filter_labels:
+          latest: "Ultimele"
+          top: "Top"
+          new: "Noi"
+          unread: "Necitite"
+          unseen: "Nevăzute"
   admin_js:
     type_to_filter: "Tastează pentru a filtra…"
     settings: "Opțiuni"
@@ -3765,6 +3781,7 @@ ro:
       search:
         modal_title: "Caută orice în admin"
         title: "Caută"
+        no_results: 'Nu am găsit nimic care să se potrivească cu „%{filter}”.'
         result_types:
           page:
             one: "Pagină"

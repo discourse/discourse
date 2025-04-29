@@ -1292,6 +1292,7 @@ ro:
     experimental_form_templates: "Activează caracteristica șabloane de formulare. Gestionează șabloanele la <a href='%{base_path}/admin/customize/form-templates'>Personalizare/șabloane</a>."
     show_preview_for_form_templates: "Activează funcționalitatea de previzualizare pentru șabloanele de formulare"
     show_user_menu_avatars: "Arată avatare utilizator în meniul utilizatorului"
+    experimental_content_localization_allowed_groups: 'Grupuri cărora li se permite să actualizeze conținutul localizat. Necesită ca „localizarea experimentală a conținutului” să fie activată.'
     errors:
       invalid_email: "Adresă de email invalidă."
       invalid_username: "Nu există nici un utilizator cu acest nume de utilizator."
@@ -2255,6 +2256,8 @@ ro:
       delete_user:
         complete: "Utilizatorul a fost șters."
   fallback_username: "utilizator"
+  content_localization:
+    not_allowed: "Nu ai voie să localizezi acest conținut."
   activemodel:
     errors:
       <<: *errors
