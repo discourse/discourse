@@ -60,7 +60,8 @@ if !system "pnpm", "--dir=#{RAILS_ROOT}", "install"
   exit 1
 end
 
-system "npx" \
+system "pnpm" \
+         "dlx" \
          "playwright" \
          "install" \
          "--with-deps" \
