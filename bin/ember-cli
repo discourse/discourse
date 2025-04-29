@@ -61,7 +61,6 @@ if !system "pnpm", "--dir=#{RAILS_ROOT}", "install"
 end
 
 system "pnpm" \
-         "dlx" \
          "playwright" \
          "install" \
          "--with-deps" \
