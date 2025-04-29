@@ -5,6 +5,7 @@
 // BEWARE: changing these styles implies they take effect anywhere they are seen
 // throughout the Discourse application
 :root {
+  --d-max-width: 1110px;
   --d-input-bg-color: var(--secondary);
   --d-input-text-color: var(--primary);
   --d-input-border: 1px solid var(--primary-400);
@@ -101,12 +102,23 @@ html {
 }
 
 body {
+  background-color: var(--secondary);
   background-attachment: fixed;
   background-size: cover;
   min-height: 100%;
   box-sizing: border-box;
 
+  &.dragging {
+    cursor: ns-resize;
+  }
+
   @include clearfix;
+
+  @include viewport.until(sm) {
+    body {
+      min-width: 0;
+    }
+  }
 }
 
 // setting a static limit on big and small prevents nesting abuse
@@ -119,9 +131,12 @@ small {
 }
 
 blockquote {
-  clear: both;
-
   @include post-aside;
+}
+
+code,
+pre {
+  font-family: var(--d-font-family--monospace);
 }
 
 h1,
@@ -194,6 +209,11 @@ label {
 }
 
 input {
+  @include viewport.from(sm) {
+    width: 210px;
+    margin-left: 0;
+  }
+
   &[type="radio"],
   &[type="checkbox"] {
     margin-top: 0.17em;
@@ -310,10 +330,30 @@ textarea {
   &:focus {
     @include default-focus;
   }
+
+  @include viewport.from(sm) {
+    width: 210px;
+    margin-left: 0;
+  }
 }
 
 select {
   border: 1px solid var(--primary-low);
+  background: var(--secondary);
+
+  &[multiple],
+  &[size] {
+    height: auto;
+  }
+
+  @include viewport.from(sm) {
+    width: 220px;
+  }
+}
+
+select,
+input[type="file"] {
+  line-height: var(--line-height-large);
 }
 
 table {
@@ -343,6 +383,34 @@ textarea {
     color: var(--danger);
     border-color: var(--danger);
     outline: 1px solid var(--danger);
+  }
+}
+
+@include viewport.from(sm) {
+  label,
+  input,
+  button,
+  select,
+  textarea {
+    font-size: var(--font-0);
+    font-weight: normal;
+    line-height: var(--line-height-medium);
+  }
+
+  select,
+  textarea {
+    display: inline-block;
+    margin-bottom: 9px;
+    font-size: var(--font-0);
+    line-height: var(--line-height-large);
+    color: var(--primary);
+  }
+
+  .input {
+    &-xxlarge,
+    &-xxlarge + .control-instructions {
+      width: 530px;
+    }
   }
 }
 
@@ -402,12 +470,18 @@ textarea {
   margin-left: auto;
   padding: 0 var(--d-wrap-padding-h);
 
+  @include viewport.until(sm) {
+    min-width: 0;
+  }
+
   .contents {
     position: relative;
   }
 }
 
 .boxed {
+  height: 100%;
+
   &.white {
     background-color: var(--secondary);
   }
@@ -415,6 +489,10 @@ textarea {
 
 .full-width {
   margin-left: 12px;
+
+  @include viewport.until(sm) {
+    min-width: 0;
+  }
 }
 
 .clear-transitions {
@@ -565,6 +643,23 @@ textarea {
   }
 }
 
+form {
+  margin: 0;
+}
+
+.control-group {
+  margin-bottom: 9px;
+}
+
+.controls-dropdown {
+  margin-bottom: 10px;
+}
+
+.control-instructions {
+  color: var(--primary-medium);
+  font-size: 0.875rem;
+}
+
 .form-vertical {
   input,
   textarea,
@@ -591,10 +686,49 @@ textarea {
     }
   }
 
+  .control-group {
+    margin-bottom: 1.25em;
+  }
+
   .radio-group {
     display: flex;
     flex-direction: column;
     gap: 0.5em;
+  }
+
+  .controls:not(.controls-dropdown) + .controls {
+    margin-top: 0.5em;
+  }
+}
+
+.form-horizontal {
+  input[type="text"],
+  input[type="password"],
+  textarea {
+    margin-bottom: 0;
+  }
+
+  .control-group {
+    margin-bottom: 18px;
+
+    @include clearfix;
+  }
+
+  .control-indent {
+    margin-left: 20px;
+    margin-bottom: 10px;
+  }
+
+  .control-label {
+    margin: 6.5px;
+    float: left;
+    width: 140px;
+    text-align: right;
+    font-weight: bold;
+  }
+
+  .controls {
+    margin-left: 160px;
   }
 }
 
@@ -619,6 +753,8 @@ textarea {
   padding-top: 1.5em;
 
   .mobile-view & {
+    padding-top: 1.25em;
+
     // notch avoidance
     @media only screen and (orientation: landscape) {
       padding-right: env(safe-area-inset-right);
@@ -852,4 +988,126 @@ a#skip-link {
 .scroll-lock {
   overflow: hidden !important;
   margin-right: var(--scroll-gap, 0);
+}
+
+body.has-sidebar-page {
+  .wrap {
+    // increase page max-width to accommodate sidebar width
+    max-width: calc(var(--d-sidebar-width) + var(--d-max-width));
+  }
+
+  #main-outlet-wrapper {
+    grid-template-columns: var(--d-sidebar-width) minmax(0, 1fr);
+    gap: 0 2em;
+    padding-left: 0;
+
+    @include viewport.until(lg) {
+      gap: 0 1em;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  body.sidebar-animate {
+    #main-outlet-wrapper {
+      transition-property: grid-template-columns, max-width;
+      transition-timing-function: var(--d-sidebar-animation-ease);
+      transition-duration: var(--d-sidebar-animation-time);
+    }
+
+    .d-header-wrap .wrap {
+      transition: max-width var(--d-sidebar-animation-time)
+        var(--d-sidebar-animation-ease);
+    }
+  }
+}
+
+.mobile-view {
+  .boxed {
+    .contents {
+      // adds space below avatar
+      padding: 10px 0 0 0;
+    }
+  }
+}
+
+.ios-device {
+  textarea {
+    background-color: var(--secondary);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  input#reply-title {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+// todo: replace — legacy, currently only seems to be used for assigns
+.mobile-nav {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  position: relative;
+
+  a {
+    color: var(--primary);
+
+    .d-icon {
+      margin-right: 0.25em;
+      color: var(--primary-medium);
+    }
+  }
+
+  > li > a.expander {
+    display: flex;
+    align-items: center;
+    border-color: var(--primary-medium);
+    max-width: 100%;
+
+    @include form-item-sizing;
+
+    .selection {
+      max-width: 120px;
+
+      @include ellipsis;
+    }
+
+    > .d-icon {
+      &:last-of-type {
+        margin-left: auto;
+        margin-right: 0;
+      }
+    }
+  }
+
+  .drop {
+    display: none;
+
+    &.expanded {
+      left: 0;
+      display: block;
+      position: absolute;
+      z-index: z("dropdown");
+      background-color: var(--secondary);
+      width: 100%;
+      list-style: none;
+      margin: 0;
+      padding: 5px;
+      border: 1px solid var(--primary-low);
+      box-sizing: border-box;
+
+      li {
+        margin: 5px 0;
+        padding: 0;
+
+        a {
+          height: 100%;
+          display: block;
+          padding: 5px 8px;
+
+          @include ellipsis;
+        }
+      }
+    }
+  }
 }
