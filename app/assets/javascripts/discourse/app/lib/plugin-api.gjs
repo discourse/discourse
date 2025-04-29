@@ -157,7 +157,7 @@ import {
 } from "discourse/widgets/widget";
 import { addImageWrapperButton } from "discourse-markdown-it/features/image-controls";
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
-import { modifySelectKit } from "select-kit/mixins/plugin-api";
+import { modifySelectKit } from "select-kit/lib/plugin-api";
 
 const DEPRECATED_POST_STREAM_WIDGETS = [
   "actions-summary",
