@@ -85,7 +85,6 @@ describe "Changing email", type: :system do
   end
 
   it "does not require login to confirm email change" do
-    SiteSetting.full_page_login = false
     second_factor = Fabricate(:user_second_factor_totp, user: user)
     sign_in user
 
