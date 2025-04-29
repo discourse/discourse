@@ -40,6 +40,11 @@ export default class ThemeCard extends Component {
     return `/admin/themes/${this.args.theme.id}/preview`;
   }
 
+  @action
+  onRegisterApi(api) {
+    this.dMenu = api;
+  }
+
   // NOTE: inspired by -> https://github.com/discourse/discourse/blob/24caa36eef826bcdaed88aebfa7df154413fb349/app/assets/javascripts/admin/addon/controllers/admin-customize-themes-show.js#L366
   //
   // Will also need some cleanup when refactoring other theme code.
@@ -48,6 +53,7 @@ export default class ThemeCard extends Component {
     let oldDefaultThemeId;
 
     this.args.theme.set("default", true);
+    this.dMenu.close();
     this.args.allThemes.forEach((theme) => {
       if (theme.id !== this.args.theme.id) {
         if (theme.get("default")) {
@@ -72,6 +78,27 @@ export default class ThemeCard extends Component {
         message: i18n("admin.customize.theme.set_default_success", {
           theme: this.args.theme.name,
         }),
+      },
+      duration: 2000,
+    });
+  }
+
+  @action
+  async toggleUserSelectable() {
+    let oldUserSelectable = this.args.theme.user_selectable;
+
+    this.args.theme.set("user_selectable", !oldUserSelectable);
+    this.dMenu.close();
+
+    const changesSaved = await this.args.theme.saveChanges("user_selectable");
+    if (!changesSaved) {
+      this.args.theme.set("user_selectable", oldUserSelectable);
+      return;
+    }
+
+    this.toasts.success({
+      data: {
+        message: i18n("admin.customize.theme.setting_was_saved"),
       },
       duration: 2000,
     });
@@ -103,9 +130,7 @@ export default class ThemeCard extends Component {
   }
 
   <template>
-    <AdminConfigAreaCard
-      class={{this.themeCardClasses}}
-    >
+    <AdminConfigAreaCard class={{this.themeCardClasses}}>
       <:content>
         {{#if @theme.default}}
           <span
@@ -128,7 +153,7 @@ export default class ThemeCard extends Component {
           {{/if}}
         </div>
         <div class="theme-card__content">
-          <div class="theme-card__title">{{ @theme.name }}</div>
+          <div class="theme-card__title">{{@theme.name}}</div>
           {{#if @theme.description}}
             <p class="theme-card__description">{{@theme.description}}</p>
           {{/if}}
@@ -139,18 +164,25 @@ export default class ThemeCard extends Component {
               <span
                 title={{i18n "admin.customize.theme.updates_available_tooltip"}}
                 class="theme-card__badge"
-              >{{icon "arrows-rotate"}} {{i18n "admin.customize.theme.update_available"}}</span>
+              >{{icon "arrows-rotate"}}
+                {{i18n "admin.customize.theme.update_available"}}</span>
+            {{/if}}
+
+            {{#if @theme.user_selectable}}
+              <span
+                title={{i18n "admin.customize.theme.user_selectable"}}
+                class="theme-card__badge"
+              >{{icon "user-check"}}
+                {{i18n
+                  "admin.customize.theme.user_selectable_badge_label"
+                }}</span>
             {{/if}}
 
             <span
-                title={{i18n "admin.customize.theme.user_selectable"}}
-                class="theme-card__badge"
-              >{{icon "user-check"}} {{i18n "admin.customize.theme.user_selectable_badge_label"}}</span>
-
-            <span
-                title={{i18n "admin.customize.theme.broken_theme_tooltip"}}
-                class="theme-card__badge"
-              >{{icon "triangle-exclamation"}} {{i18n "admin.customize.theme.broken_badge_label"}}</span>
+              title={{i18n "admin.customize.theme.broken_theme_tooltip"}}
+              class="theme-card__badge"
+            >{{icon "triangle-exclamation"}}
+              {{i18n "admin.customize.theme.broken_badge_label"}}</span>
           </div>
 
           <div class="theme-card__controls">
@@ -166,6 +198,7 @@ export default class ThemeCard extends Component {
               <DMenu
                 @identifier="theme-card__footer-menu"
                 @triggerClass="theme-card__footer-menu btn-flat"
+                @onRegisterApi={{this.onRegisterApi}}
                 @modalForMobile={{true}}
                 @icon="ellipsis"
                 {{!-- @label={{if
@@ -183,11 +216,7 @@ export default class ThemeCard extends Component {
                       <DButton
                         @action={{this.setDefault}}
                         @preventFocus={{true}}
-                        @icon={{if
-                          @theme.default
-                          "star"
-                          "far-star"
-                        }}
+                        @icon={{if @theme.default "star" "far-star"}}
                         class="theme-card__button"
                         @translatedLabel={{i18n
                           (if
@@ -214,17 +243,17 @@ export default class ThemeCard extends Component {
                     {{/if}}
                     <dropdown.item>
                       <DButton
-                        @action={{this.setDefault}}
+                        @action={{this.toggleUserSelectable}}
                         @preventFocus={{true}}
                         @icon={{if
-                          @theme.default
+                          @theme.user_selectable
                           "user-xmark"
                           "user-check"
                         }}
                         class="theme-card__button"
                         @translatedLabel={{i18n
                           (if
-                            @theme.default
+                            @theme.user_selectable
                             "admin.customize.theme.user_selectable_unavailable_button_label"
                             "admin.customize.theme.user_selectable_button_label"
                           )
@@ -238,7 +267,8 @@ export default class ThemeCard extends Component {
                         rel="noopener noreferrer"
                         target="_blank"
                         class="btn btn-transparent theme-card__button"
-                      >{{icon "eye"}} {{i18n "admin.customize.theme.preview"}}</a>
+                      >{{icon "eye"}}
+                        {{i18n "admin.customize.theme.preview"}}</a>
                     </dropdown.item>
                   </DropdownMenu>
                 </:content>
