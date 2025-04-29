@@ -89,6 +89,8 @@ export default class AccessibleDiscoveryHeading extends Component {
   }
 
   <template>
-    <h1 id="topic-list-heading" class="sr-only">{{this.label}}</h1>
+    {{#if this.args.filter}}
+      <h1 id="topic-list-heading" class="sr-only">{{this.label}}</h1>
+    {{/if}}
   </template>
 }
