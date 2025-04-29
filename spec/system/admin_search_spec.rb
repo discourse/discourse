@@ -3,6 +3,7 @@
 describe "Admin Search", type: :system do
   fab!(:current_user) { Fabricate(:admin) }
   let(:search_modal) { PageObjects::Modals::AdminSearch.new }
+  let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
 
   before { sign_in(current_user) }
 
@@ -74,5 +75,13 @@ describe "Admin Search", type: :system do
     expect(search_modal).to have_content(
       "We couldn’t find anything matching ‘very long search phrase’.",
     )
+  end
+
+  it "opens search modal when search input is clicked" do
+    visit "/admin"
+    sidebar.click_search_input
+
+    search_modal.search("min_topic_title")
+    expect(search_modal.find_result("setting", 0)).to have_content("Min topic title length")
   end
 end

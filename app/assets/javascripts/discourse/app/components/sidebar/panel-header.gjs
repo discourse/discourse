@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import BackToForum from "./back-to-forum";
+import Search from "./search";
 import ToggleAllSections from "./toggle-all-sections";
 
 export default class PanelHeader extends Component {
@@ -16,6 +17,9 @@ export default class PanelHeader extends Component {
         <div class="sidebar-panel-header__row">
           <BackToForum />
           <ToggleAllSections @sections={{@sections}} />
+        </div>
+        <div class="sidebar-panel-header__row">
+          <Search />
         </div>
       </div>
     {{/if}}

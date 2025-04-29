@@ -5081,6 +5081,7 @@ en:
       back_to_forum: "Back to Forum"
       collapse_all_sections: "Collapse all sections"
       expand_all_sections: "Expand all sections"
+      search: "Search everything"
       footer:
         interface_color_selector:
           light: "Light"
