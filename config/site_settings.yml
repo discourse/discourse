@@ -503,7 +503,7 @@ basic:
     default: ""
     type: group_list
     area: "group_permissions"
-  adobe_analytics_tags_url:
+  adobe_analytics_url:
     default: ""
     regex: "assets.adobedtm.com"
     area: "analytics"
