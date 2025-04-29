@@ -181,6 +181,8 @@ module SystemHelpers
       "document.querySelector('#{selector_to_make_tall}').style.height = '10000px'",
     )
 
+    sleep 0.1 # give time to browser
+
     page.scroll_to(0, 1000)
   end
 
