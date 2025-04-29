@@ -1,4 +1,5 @@
-import { computed } from "@ember/object";
+import { action, computed } from "@ember/object";
+import { service } from "@ember/service";
 import { classNames } from "@ember-decorators/component";
 import { makeArray } from "discourse/lib/helpers";
 import MultiSelectComponent from "select-kit/components/multi-select";
@@ -19,6 +20,8 @@ import TagsMixin from "select-kit/mixins/tags";
 export default class TagGroupChooser extends MultiSelectComponent.extend(
   TagsMixin
 ) {
+  @service tagUtils;
+
   modifyComponentForRow() {
     return "tag-chooser-row";
   }
@@ -41,20 +44,19 @@ export default class TagGroupChooser extends MultiSelectComponent.extend(
       limit: this.siteSettings.max_tag_search_results,
     };
 
-    return this.searchTags(
-      "/tag_groups/filter/search",
-      data,
-      this._transformJson
-    ).then((results) => {
-      if (results && results.length) {
-        return results.filter((r) => {
-          return !makeArray(this.tagGroups).includes(this.getValue(r));
-        });
-      }
-    });
+    return this.tagUtils
+      .searchTags("/tag_groups/filter/search", data, this._transformJson)
+      .then((results) => {
+        if (results && results.length) {
+          return results.filter((r) => {
+            return !makeArray(this.tagGroups).includes(this.getValue(r));
+          });
+        }
+      });
   }
 
-  _transformJson(context, json) {
+  @action
+  _transformJson(json) {
     return json.results
       .sort((a, b) => a.name > b.name)
       .map((result) => {

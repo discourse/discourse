@@ -1,5 +1,6 @@
-import { computed } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { empty, or } from "@ember/object/computed";
+import { service } from "@ember/service";
 import {
   attributeBindings,
   classNameBindings,
@@ -35,6 +36,8 @@ import TagsMixin from "select-kit/mixins/tags";
 export default class MiniTagChooser extends MultiSelectComponent.extend(
   TagsMixin
 ) {
+  @service tagUtils;
+
   @empty("value") noTags;
   @or("allowCreate", "site.can_create_tag") allowAnyTag;
 
@@ -103,27 +106,32 @@ export default class MiniTagChooser extends MultiSelectComponent.extend(
       data.filterForInput = true;
     }
 
-    return this.searchTags("/tags/filter/search", data, this._transformJson);
+    return this.tagUtils.searchTags(
+      "/tags/filter/search",
+      data,
+      this._transformJson
+    );
   }
 
-  _transformJson(context, json) {
-    if (context.isDestroyed || context.isDestroying) {
+  @action
+  _transformJson(json) {
+    if (this.isDestroyed || this.isDestroying) {
       return [];
     }
 
     let results = json.results;
 
-    context.setProperties({
+    this.setProperties({
       termMatchesForbidden: json.forbidden ? true : false,
       termMatchErrorMessage: json.forbidden_message,
     });
 
-    if (context.siteSettings.tags_sort_alphabetically) {
+    if (this.siteSettings.tags_sort_alphabetically) {
       results = results.sort((a, b) => a.text.localeCompare(b.text));
     }
 
     if (json.required_tag_group) {
-      context.set(
+      this.set(
         "selectKit.options.translatedFilterPlaceholder",
         i18n("tagging.choose_for_topic_required_group", {
           count: json.required_tag_group.min_count,
@@ -131,9 +139,9 @@ export default class MiniTagChooser extends MultiSelectComponent.extend(
         })
       );
     } else {
-      context.set("selectKit.options.translatedFilterPlaceholder", null);
+      this.set("selectKit.options.translatedFilterPlaceholder", null);
     }
 
-    return results.filter((r) => !makeArray(context.tags).includes(r.id));
+    return results.filter((r) => !makeArray(this.tags).includes(r.id));
   }
 }

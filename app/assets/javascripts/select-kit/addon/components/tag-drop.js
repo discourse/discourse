@@ -1,5 +1,6 @@
 import { action, computed } from "@ember/object";
 import { readOnly } from "@ember/object/computed";
+import { service } from "@ember/service";
 import { classNameBindings, classNames } from "@ember-decorators/component";
 import { setting } from "discourse/lib/computed";
 import { makeArray } from "discourse/lib/helpers";
@@ -34,6 +35,8 @@ const MORE_TAGS_COLLECTION = "MORE_TAGS_COLLECTION";
 })
 @pluginApiIdentifiers("tag-drop")
 export default class TagDrop extends ComboBoxComponent.extend(TagsMixin) {
+  @service tagUtils;
+
   @setting("max_tag_search_results") maxTagSearchResults;
   @setting("tags_sort_alphabetically") sortTagsAlphabetically;
   @setting("max_tags_in_filter_list") maxTagsInFilterList;
@@ -149,7 +152,11 @@ export default class TagDrop extends ComboBoxComponent.extend(TagsMixin) {
         limit: this.maxTagSearchResults,
       };
 
-      return this.searchTags("/tags/filter/search", data, this._transformJson);
+      return this.tagUtils.searchTags(
+        "/tags/filter/search",
+        data,
+        this._transformJson
+      );
     } else {
       return (this.content || []).map((tag) => {
         if (tag.id && tag.name) {
@@ -160,13 +167,14 @@ export default class TagDrop extends ComboBoxComponent.extend(TagsMixin) {
     }
   }
 
-  _transformJson(context, json) {
+  @action
+  _transformJson(json) {
     return json.results
       .sort((a, b) => a.id > b.id)
       .map((r) => {
-        const content = context.defaultItem(r.id, r.text);
+        const content = this.defaultItem(r.id, r.text);
         content.targetTagId = r.target_tag || r.id;
-        if (!context.currentCategory) {
+        if (!this.currentCategory) {
           content.count = r.count;
         }
         content.pmCount = r.pm_count;

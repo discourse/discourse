@@ -1,4 +1,5 @@
 import { action, computed } from "@ember/object";
+import { service } from "@ember/service";
 import { attributeBindings, classNames } from "@ember-decorators/component";
 import { makeArray } from "discourse/lib/helpers";
 import MultiSelectComponent from "select-kit/components/multi-select";
@@ -19,6 +20,8 @@ import TagsMixin from "select-kit/mixins/tags";
 })
 @pluginApiIdentifiers("tag-chooser")
 export default class TagChooser extends MultiSelectComponent.extend(TagsMixin) {
+  @service tagUtils;
+
   blockedTags = null;
   excludeSynonyms = false;
   excludeHasSynonyms = false;
@@ -107,28 +110,33 @@ export default class TagChooser extends MultiSelectComponent.extend(TagsMixin) {
       data.excludeHasSynonyms = true;
     }
 
-    return this.searchTags("/tags/filter/search", data, this._transformJson);
+    return this.tagUtils.searchTags(
+      "/tags/filter/search",
+      data,
+      this._transformJson
+    );
   }
 
-  _transformJson(context, json) {
-    if (context.isDestroyed || context.isDestroying) {
+  @action
+  _transformJson(json) {
+    if (this.isDestroyed || this.isDestroying) {
       return [];
     }
 
     let results = json.results;
 
-    context.setProperties({
+    this.setProperties({
       termMatchesForbidden: json.forbidden ? true : false,
       termMatchErrorMessage: json.forbidden_message,
     });
 
-    if (context.blockedTags) {
+    if (this.blockedTags) {
       results = results.filter((result) => {
-        return !context.blockedTags.includes(result.id);
+        return !this.blockedTags.includes(result.id);
       });
     }
 
-    if (context.siteSettings.tags_sort_alphabetically) {
+    if (this.siteSettings.tags_sort_alphabetically) {
       results = results.sort((a, b) => a.id > b.id);
     }
 
