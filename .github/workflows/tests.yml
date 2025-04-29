@@ -276,7 +276,7 @@ jobs:
 
       - name: Install playwright
         if: matrix.build_type == 'system'
-        run: ./node_modules/.bin/playwright install
+        run: ./node_modules/.bin/playwright install --with-deps --only-shell chromium
 
       - name: Core System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core'
