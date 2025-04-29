@@ -15,11 +15,15 @@
   },
   "dependencies": {
     "@babel/core": "^7.26.10",
+    "@ember-decorators/component": "*",
     "@ember/string": "^4.0.1",
+    "@popperjs/core": "^2.11.8",
     "discourse-i18n": "workspace:1.0.0",
     "ember-auto-import": "^2.10.0",
+    "ember-cached-decorator-polyfill": "^1.0.2",
     "ember-cli-babel": "^8.2.0",
     "ember-cli-htmlbars": "^6.3.0",
+    "ember-decorators": "^6.1.1",
     "ember-template-imports": "^4.3.0",
     "truth-helpers": "workspace:*"
   },
