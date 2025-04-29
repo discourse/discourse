@@ -34,7 +34,7 @@ module DiscourseAutomation
 
           original_post_only = automation.trigger_field("original_post_only")
           if original_post_only["value"]
-            next if topic.posts_count > 1
+            next if post.post_number != 1
           end
 
           first_post_only = automation.trigger_field("first_post_only")
