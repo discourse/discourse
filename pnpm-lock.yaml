@@ -763,6 +763,12 @@ importers:
       '@babel/core':
         specifier: ^7.26.10
         version: 7.26.10(supports-color@8.1.1)
+      '@ember/render-modifiers':
+        specifier: ^3.0.0
+        version: 3.0.0(@glint/template@1.4.1-unstable.34c4510)(ember-source@5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.26.10))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5)(webpack@5.99.7(@swc/core@1.11.22)(esbuild@0.25.3)))
+      '@floating-ui/dom':
+        specifier: ^1.6.13
+        version: 1.6.13
       ember-auto-import:
         specifier: ^2.10.0
         version: 2.10.0(@glint/template@1.4.1-unstable.34c4510)(webpack@5.99.7(@swc/core@1.11.22)(esbuild@0.25.3))
@@ -772,6 +778,9 @@ importers:
       ember-cli-htmlbars:
         specifier: ^6.3.0
         version: 6.3.0
+      ember-curry-component:
+        specifier: ^0.3.0
+        version: 0.3.0(@babel/core@7.26.10)
       ember-template-imports:
         specifier: ^4.3.0
         version: 4.3.0
@@ -915,21 +924,33 @@ importers:
       '@babel/core':
         specifier: ^7.26.10
         version: 7.26.10(supports-color@8.1.1)
+      '@ember-decorators/component':
+        specifier: '*'
+        version: 6.1.1
       '@ember/string':
         specifier: ^4.0.1
         version: 4.0.1
+      '@popperjs/core':
+        specifier: ^2.11.8
+        version: 2.11.8
       discourse-i18n:
         specifier: workspace:1.0.0
         version: link:../discourse-i18n
       ember-auto-import:
         specifier: ^2.10.0
         version: 2.10.0(@glint/template@1.4.1-unstable.34c4510)(webpack@5.99.7(@swc/core@1.11.22)(esbuild@0.25.3))
+      ember-cached-decorator-polyfill:
+        specifier: ^1.0.2
+        version: 1.0.2(@babel/core@7.26.10)(@glint/template@1.4.1-unstable.34c4510)(ember-source@5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.26.10))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5)(webpack@5.99.7(@swc/core@1.11.22)(esbuild@0.25.3)))
       ember-cli-babel:
         specifier: ^8.2.0
         version: 8.2.0(@babel/core@7.26.10)
       ember-cli-htmlbars:
         specifier: ^6.3.0
         version: 6.3.0
+      ember-decorators:
+        specifier: ^6.1.1
+        version: 6.1.1
       ember-template-imports:
         specifier: ^4.3.0
         version: 4.3.0
