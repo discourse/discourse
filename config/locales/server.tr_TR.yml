@@ -1765,7 +1765,6 @@ tr_TR:
     pending_users_reminder_delay_minutes: "Yeni kullanıcılar şu kadar dakikadan uzun süredir onay bekliyorsa moderatörleri bilgilendirin. Bildirimleri devre dışı bırakmak için -1 olarak ayarlayın."
     persistent_sessions: "Web tarayıcısı kapatıldığında kullanıcıların oturumları açık kalır"
     maximum_session_age: "Kullanıcı, son ziyaretinden bu yana n saat süreyle oturum açmış durumda kalır"
-    full_page_login: "Giriş ve kayıt formlarını tam sayfada göster (işareti kaldırıldığında, kullanıcılar formları bir modalda görecektir). "
     show_signup_form_email_instructions: Kayıt formunda e-posta talimatlarını gösterin.
     show_signup_form_username_instructions: Kayıt formunda kullanıcı adı talimatlarını gösterin.
     show_signup_form_full_name_instructions: Kayıt formunda tam ad talimatlarını gösterin.

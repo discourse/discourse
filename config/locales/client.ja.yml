@@ -3557,6 +3557,10 @@ ja:
       settings: "設定"
       topic_template: "テンプレート"
       tags: "タグ"
+      localization:
+        name: "名前"
+        description: "説明"
+        remove: "削除"
       tags_allowed_tags: "これらのタグをこのカテゴリに制限する:"
       tags_allowed_tag_groups: "これらのタググループをこのカテゴリに制限する:"
       tags_placeholder: "(オプション) 許可されたタグのリスト"
@@ -4409,10 +4413,6 @@ ja:
       back_to_forum: "フォーラムに戻る"
       collapse_all_sections: "すべてのセクションを折りたたむ"
       expand_all_sections: "すべてのセクションを展開"
-      filter: "フィルタ..."
-      clear_filter: "フィルタをクリア"
-      no_results:
-        title: "結果がありません"
       footer:
         interface_color_selector:
           light: "ライト"
@@ -4514,6 +4514,16 @@ ja:
           paste: "貼り付け..."
           save: "名前を付けて保存..."
     powered_by_discourse: "Discourse 提供"
+    discovery:
+      headings:
+        categories: "すべてのカテゴリ"
+        filter_labels:
+          latest: "最新"
+          top: "人気"
+          new: "新規"
+          unread: "未読"
+          hot: "ホット"
+          unseen: "未読"
   admin_js:
     type_to_filter: "入力してフィルタ..."
     settings: "設定"

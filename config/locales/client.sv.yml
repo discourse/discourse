@@ -3444,6 +3444,10 @@ sv:
       settings: "Inställningar"
       topic_template: "Mall"
       tags: "Taggar"
+      localization:
+        name: "Namn"
+        description: "Beskrivning"
+        remove: "Ta bort"
       tags_allowed_tags: "Begränsa dessa taggar till följande kategori:"
       tags_allowed_tag_groups: "Begränsa dessa tagg-grupper till denna kategori:"
       tags_placeholder: "(Valfri) lista över tillåtna taggar"
@@ -4262,7 +4266,6 @@ sv:
         forum:
           label: Forum
       back_to_forum: "Tillbaka till forumet"
-      filter: "Filter..."
       footer:
         interface_color_selector:
           light: "Ljust"
@@ -4367,6 +4370,16 @@ sv:
           copy: "Kopiera..."
           paste: "Klistra in..."
           save: "Spara som..."
+    discovery:
+      headings:
+        categories: "Alla kategorier"
+        filter_labels:
+          latest: "Senaste"
+          top: "Topp"
+          new: "Nya"
+          unread: "Olästa"
+          hot: "Hett"
+          unseen: "Osedda"
   admin_js:
     type_to_filter: "Skriv för att filtrera…"
     settings: "Inställningar"

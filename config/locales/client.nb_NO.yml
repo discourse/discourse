@@ -3653,6 +3653,10 @@ nb_NO:
       settings: "Innstillinger"
       topic_template: "Mal"
       tags: "Stikkord"
+      localization:
+        name: "Navn"
+        description: "Beskrivelse"
+        remove: "Fjern"
       tags_allowed_tags: "Begrens disse stikkordene til denne kategorien:"
       tags_allowed_tag_groups: "Begrens disse stikkordgruppene til denne kategorien:"
       tags_placeholder: "(Valgfritt) liste over tillatte stikkord"
@@ -4335,7 +4339,6 @@ nb_NO:
               content: "Gjennomgang"
             invite:
               content: "Inviter"
-      filter: "Filtrer..."
       footer:
         interface_color_selector:
           light: "Lys"
@@ -4361,6 +4364,15 @@ nb_NO:
       spreadsheet:
         show: "Vis"
         about: "Om"
+    discovery:
+      headings:
+        categories: "Alle kategorier"
+        filter_labels:
+          latest: "Siste"
+          top: "Aktive"
+          new: "Ny"
+          unread: "Uleste"
+          unseen: "Usette"
   admin_js:
     type_to_filter: "Skriv for å filtrere…"
     settings: "Instillinger"

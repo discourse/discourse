@@ -3774,6 +3774,10 @@ fr:
       settings: "Paramètres"
       topic_template: "Modèle"
       tags: "Étiquettes"
+      localization:
+        name: "Nom"
+        description: "Description"
+        remove: "Supprimer"
       tags_allowed_tags: "Réserver l'utilisation de ces étiquettes à cette catégorie :"
       tags_allowed_tag_groups: "Réserver l'utilisation de ces groupes d'étiquettes à cette catégorie :"
       tags_placeholder: "(Facultatif) liste des étiquettes autorisées"
@@ -4664,10 +4668,6 @@ fr:
       back_to_forum: "Retour au forum"
       collapse_all_sections: "Réduire toutes les sections"
       expand_all_sections: "Développer toutes les sections"
-      filter: "Filtrer..."
-      clear_filter: "Effacer le filtre"
-      no_results:
-        title: "Aucun résultat"
       footer:
         interface_color_selector:
           light: "Clair"
@@ -4773,6 +4773,16 @@ fr:
           paste: "Coller..."
           save: "Enregistrer sous..."
     powered_by_discourse: "Alimenté par Discourse"
+    discovery:
+      headings:
+        categories: "Toutes les catégories"
+        filter_labels:
+          latest: "Récents"
+          top: "Top"
+          new: "Nouveaux"
+          unread: "Non lus"
+          hot: "Populaires"
+          unseen: "Non lus"
   admin_js:
     type_to_filter: "Commencez votre saisie pour filtrer…"
     settings: "Paramètres"

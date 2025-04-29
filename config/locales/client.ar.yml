@@ -4606,6 +4606,10 @@ ar:
       settings: "الإعدادات"
       topic_template: "قالب"
       tags: "الوسوم"
+      localization:
+        name: "الاسم"
+        description: "الوصف"
+        remove: "إزالة"
       tags_allowed_tags: "حصر هذه الوسوم على هذه الفئة:"
       tags_allowed_tag_groups: "حصر مجموعات الوسوم هذه على هذه الفئة:"
       tags_placeholder: "(اختياري) قائمة الوسوم المسموح بها"
@@ -5647,10 +5651,6 @@ ar:
       back_to_forum: "العودة إلى المنتدى"
       collapse_all_sections: "طي جميع الأقسام"
       expand_all_sections: "توسيع جميع الأقسام"
-      filter: "عامل التصفية..."
-      clear_filter: "مسح الفلتر"
-      no_results:
-        title: "لا توجد نتائج"
       footer:
         interface_color_selector:
           light: "فاتح"
@@ -5772,6 +5772,16 @@ ar:
           paste: "لصق..."
           save: "الحفظ باسم..."
     powered_by_discourse: "بدعم من Discourse"
+    discovery:
+      headings:
+        categories: "كل الفئات"
+        filter_labels:
+          latest: "الحديثة"
+          top: "الأكثر نشاطًا"
+          new: "الجديدة"
+          unread: "غير المقروءة"
+          hot: "ساخن"
+          unseen: "غير مقروءة"
   admin_js:
     type_to_filter: "اكتب للتصفية…"
     settings: "الإعدادات"

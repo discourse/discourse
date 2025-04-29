@@ -4255,6 +4255,10 @@ pl_PL:
       settings: "Ustawienia"
       topic_template: "Szablon"
       tags: "Tagi"
+      localization:
+        name: "Nazwa"
+        description: "Opis"
+        remove: "Usuń"
       tags_allowed_tags: "Zabroń następujących tagów w tej kategorii: "
       tags_allowed_tag_groups: "Zabroń następujących grup tagów w tej kategorii:"
       tags_placeholder: "(Opcjonalnie) lista dozwolonych tagów"
@@ -5228,12 +5232,6 @@ pl_PL:
       back_to_forum: "Powrót do forum"
       collapse_all_sections: "Zwiń wszystkie sekcje"
       expand_all_sections: "Rozwiń wszystkie sekcje"
-      filter: "Filtr..."
-      filter_links: "Filtruj linki..."
-      clear_filter: "Wyczyść filtr"
-      no_results:
-        title: "Brak wyników"
-        description_admin_search: 'Nie znaleziono niczego pasującego do ''%{filter}''.<br><br>Spróbuj <a class="sidebar-additional-filter-admin-search" href="%{admin_search_url}">przeszukać cały interfejs administratora</a>.'
       footer:
         interface_color_selector:
           light: "Jasny"
@@ -5349,6 +5347,16 @@ pl_PL:
           save: "Zapisz jako..."
     powered_by_discourse: "Obsługiwane przez Discourse"
     safari_15_warning: "Twoja przeglądarka wkrótce będzie niekompatybilna z tą społecznością. Aby nadal w niej uczestniczyć, zaktualizuj przeglądarkę lub <a href='%{url}'>dowiedz się więcej</a>."
+    discovery:
+      headings:
+        categories: "Wszystkie kategorie"
+        filter_labels:
+          latest: "Najnowsza"
+          top: "Popularne"
+          new: "Nowa"
+          unread: "Nieprzeczytane"
+          hot: "Gorące"
+          unseen: "Niewidziany"
   admin_js:
     type_to_filter: "Pisz, aby filtrować…"
     settings: "Ustawienia"
@@ -5661,6 +5669,7 @@ pl_PL:
         modal_title: "Wyszukaj cokolwiek w panelu administracyjnym"
         title: "Szukaj"
         instructions: "Wpisz, aby wyszukać strony, ustawienia, raporty, motywy, komponenty i nie tylko..."
+        no_results: 'Nie znaleźliśmy niczego pasującego do ‘%{filter}’.'
         result_types:
           page:
             one: "Strona"

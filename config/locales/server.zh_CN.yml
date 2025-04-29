@@ -1557,7 +1557,6 @@ zh_CN:
       category_style_deprecated: "您的 Discourse 目前使用的是过时的类别样式，该样式将在 Discourse 3.2 最终测试版发布前移除。请参阅<a href='https://meta.discourse.org/t/282441'>迁移至单一类别样式网站设置</a>，了解如何保留所选类别样式。"
       maxmind_db_configuration: '服务器已被配置为使用 MaxMind 数据库进行反向 IP 查找，但尚未配置有效的 MaxMind 帐户 ID，这可能导致 MaxMind 数据库将来无法下载。<a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">请参阅本指南了解更多详情</a>。'
       admin_sidebar_deprecation: "旧的管理布局已被替换为新的<a href='https://meta.discourse.org/t/-/289281'>边栏布局</a>，旧布局将在下一个版本中移除。您现在可以选择<a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>配置</a>新的边栏布局。"
-      full_page_login_check: "你的网站已禁用全页面登录设置。该设置已过时，将于<strong>2025年4月29日</strong>移除。届时，你的网站将更新为使用全页注册和登录屏幕。<a href='https://meta.discourse.org/t/introducing-our-new-fullscreen-signup-and-login-pages/340401'>了解更多信息</a>。"
     back_from_logster_text: "返回网站"
   site_settings:
     allow_bulk_invite: "允许通过上传 CSV 文件批量邀请"
@@ -1714,7 +1713,6 @@ zh_CN:
     pending_users_reminder_delay_minutes: "如果新用户等待批准的时间超过此分钟数则通知版主。设置为 -1 可禁用通知。"
     persistent_sessions: "当网络浏览器关闭后，用户将保持登录状态"
     maximum_session_age: "自上次访问以来，用户将保持登录状态 n 小时"
-    full_page_login: "在一个完整页面中显示登录和注册表单（未选中时，用户将在模态框中看到这些表单）。"
     show_signup_form_email_instructions: 在注册表单上显示电子邮件说明。
     show_signup_form_username_instructions: 在注册表单上显示用户名说明。
     show_signup_form_full_name_instructions: 在注册表单上显示全名说明。
@@ -2415,6 +2413,7 @@ zh_CN:
     adobe_analytics_tags_url: "Adobe Analytics 标签 URL (`https://assets.adobedtm.com/...`)"
     view_raw_email_allowed_groups: "如果帖子是通过接收的电子邮件创建的，可以查看帖子原始电子邮件内容的群组。这包括电子邮件标题和其他技术信息。"
     experimental_content_localization: "根据用户的语言偏好为其显示本地化内容。这些内容可能包括类别、标签、帖子和主题。该功能正在紧张开发中。"
+    experimental_content_localization_allowed_groups: '允许更新本地化内容的组。需要启用"实验性内容本地化"。'
     errors:
       invalid_css_color: "颜色无效。输入颜色名称或十六进制值。"
       invalid_email: "无效的电子邮件地址。"

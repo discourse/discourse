@@ -3772,6 +3772,10 @@ fi:
       settings: "Asetukset"
       topic_template: "Malli"
       tags: "Tunnisteet"
+      localization:
+        name: "Nimi"
+        description: "Kuvaus"
+        remove: "Poista"
       tags_allowed_tags: "Rajaa nämä tunnisteet tälle alueelle:"
       tags_allowed_tag_groups: "Rajaa nämä tunnisteryhmät tälle alueelle:"
       tags_placeholder: "(Valinnainen) lista sallituista tunnisteista"
@@ -4662,10 +4666,6 @@ fi:
       back_to_forum: "Takaisin foorumille"
       collapse_all_sections: "Pienennä kaikki osiot"
       expand_all_sections: "Laajenna kaikki osiot"
-      filter: "Suodata..."
-      clear_filter: "Tyhjennä suodatin"
-      no_results:
-        title: "Ei tuloksia"
       footer:
         interface_color_selector:
           light: "Vaalea"
@@ -4771,6 +4771,16 @@ fi:
           paste: "Liitä..."
           save: "Tallenna nimellä..."
     powered_by_discourse: "Voimanlähteenä Discourse"
+    discovery:
+      headings:
+        categories: "Kaikki alueet"
+        filter_labels:
+          latest: "Tuoreimmat"
+          top: "Suositut"
+          new: "Uudet"
+          unread: "Lukemattomat"
+          hot: "Liekeissä"
+          unseen: "Näkemätön"
   admin_js:
     type_to_filter: "Kirjoita suodattaaksesi…"
     settings: "Asetukset"

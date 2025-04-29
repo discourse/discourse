@@ -1624,7 +1624,6 @@ hu:
       category_style_deprecated: "Az Ön Discourse-a jelenleg egy elavult kategória stílust használ, amely el lesz távolítva a Discourse 3.2 végleges béta kiadása előtt. Kérjük, tekintse meg a <a href='https://meta.discourse.org/t/282441'>Áttérés egyetlen kategória stílus oldal beállításra</a> című útmutatót, hogy megtudja, hogyan tarthatja meg a kiválasztott kategória stílust."
       maxmind_db_configuration: 'A szerver úgy lett beállítva, hogy MaxMind adatbázisokat használjon a fordított IP-keresésekhez, de nem lett beállítva érvényes MaxMind fiók azonosító, ami ahhoz vezethet, hogy a MaxMind adatbázisok letöltése a jövőben sikertelen lesz. <a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">Tekintse meg ezt az útmutatót, hogy többet megtudjon</a>.'
       admin_sidebar_deprecation: "A régi adminisztrátori elrendezés elavult, az új <a href='https://meta.discourse.org/t/-/289281'>oldalsávelrendezés helyett</a> , és a következő kiadásban eltávolítjuk. Most már <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>konfigurálhatja</a> az új oldalsáv-elrendezést, hogy azelőtt bekapcsolódjon."
-      full_page_login_check: "Webhelye letiltotta a teljes oldalas bejelentkezési beállítást. Ez a beállítás elavult, és <strong>2025. április 29-én</strong>törlődik. Webhelye frissítve lesz, hogy az adott napon teljes oldalas regisztrációs és bejelentkezési képernyőket használjon. <a href='https://meta.discourse.org/t/introducing-our-new-fullscreen-signup-and-login-pages/340401'>További információ</a>."
     back_from_logster_text: "Vissza az oldalra"
   site_settings:
     allow_bulk_invite: "Tömeges meghívók engedélyezése CSV-fájl feltöltésével"
@@ -1781,7 +1780,6 @@ hu:
     pending_users_reminder_delay_minutes: "Értesítse a moderátorokat, ha az új felhasználók ennél több perce várnak jóváhagyásra. Állítsa -1-re az értesítések kikapcsolásához."
     persistent_sessions: "A felhasználók bejelentkezve maradnak a böngésző bezárásakor"
     maximum_session_age: "A felhasználó bejelentkezve marad n órán keresztül az utolsó látogatása óta"
-    full_page_login: "Jelenítse meg a bejelentkezési és regisztrációs űrlapokat egy teljes oldalon (ha nincs bejelölve, a felhasználók modálisan látják az űrlapokat). "
     show_signup_form_email_instructions: Jelenítse meg az e-mailes utasításokat a regisztrációs űrlapon.
     show_signup_form_username_instructions: A felhasználónévre vonatkozó utasítások megjelenítése a regisztrációs űrlapon.
     show_signup_form_full_name_instructions: Mutassa meg a teljes névre vonatkozó utasításokat a regisztrációs űrlapon.
@@ -2470,6 +2468,7 @@ hu:
     glimmer_post_stream_mode: "Szabályozhatja, hogy a rendszer használja-e az új „csillogó” post-stream megvalósítást. Az „auto” automatikusan bekapcsol, amint minden témája és bővítménye készen áll. Ez a megvalósítás aktív fejlesztés alatt áll, és nem termelési használatra készült. Ne dolgozzon ellene témákat/bővítményeket, amíg a megvalósítást nem véglegesítik és be nem jelentik."
     glimmer_post_stream_mode_auto_groups: "Engedélyezze az új „ragyogó” bejegyzés menü megvalósítását „auto” módban a megadott felhasználói csoportok számára. Ez a megvalósítás aktív fejlesztés alatt áll, és nem alkalmas éles használatra. Ne fejlesszen hozzá témákat/bővítményeket, amíg a megvalósítást nem véglegesítik és be nem jelentik."
     experimental_form_templates: "Engedélyezze az űrlapsablonok funkciót. A sablonokat a következő helyen kezelheti: <a href='%{base_path}/admin/customize/form-templates'>Testreszabás / Sablonok</a>."
+    show_preview_for_form_templates: "Az űrlapsablonok előnézetének engedélyezése"
     lazy_load_categories_groups: "Lusta betöltés alkalmazása a kategória információkra a kiválasztott csoportok felhasználói számára. Ez javítja a teljesítményt olyan webhelyeken, ahol sok kategória van."
     experimental_auto_grid_images: "Automatikusan [grid] címkékbe csomagolja a képeket, ha 3 vagy több képet töltöttek fel a komponálóba."
     page_loading_indicator: "A Discourse-on belüli oldalnavigációk során megjelenő betöltési jelző konfigurálása. A 'Spinner' egy teljes oldalas jelző. A 'Slider' egy keskeny sávot jelenít meg a képernyő tetején."
@@ -2477,6 +2476,7 @@ hu:
     about_page_hidden_groups: "Ne jelenítse meg bizonyos csoportok tagjait a /about oldalon."
     adobe_analytics_tags_url: "Adobe Analytics címkék URL-je (`https://assets.adobedtm.com/...`)"
     view_raw_email_allowed_groups: "Csoportok, amelyek megtekinthetik egy bejegyzés nyers e-mail tartalmát, ha azt bejövő e-mailből hozták létre. Ez magában foglalja az e-mail fejléceket és egyéb technikai információkat."
+    experimental_content_localization: "Lokalizált tartalmakat jelenít meg a felhasználók számára a nyelvi beállításaik alapján. Ilyen tartalom lehetnek a kategóriák, címkék, bejegyzések és témák. Ezt a funkciót jelenleg nagy erőkkel fejlesztjük."
     errors:
       invalid_css_color: "Érvénytelen szín. Adjon meg egy színnevet vagy hexaértéket."
       invalid_email: "Érvénytelen e-mail cím."

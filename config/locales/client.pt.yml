@@ -2959,6 +2959,10 @@ pt:
       general: "Geral"
       settings: "Configurações"
       tags: "Etiquetas"
+      localization:
+        name: "Nome"
+        description: "Descrição"
+        remove: "Remover"
       tags_allowed_tags: "Restringir essas tags a esta categoria:"
       tags_allowed_tag_groups: "Restringir esses grupos de tags a esta categoria:"
       tags_placeholder: "(Opcional) lista de etiquetas permitidas"
@@ -3598,6 +3602,15 @@ pt:
         show: "Mostrar"
         about: "Sobre"
     powered_by_discourse: "Alimentado pelo Discourse"
+    discovery:
+      headings:
+        categories: "Todas as categorias"
+        filter_labels:
+          latest: "Recente"
+          top: "Os Melhores"
+          new: "Novo"
+          unread: "Não Lido"
+          unseen: "Por ler"
   admin_js:
     settings: "Configurações"
     admin:

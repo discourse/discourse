@@ -2934,6 +2934,10 @@ lt:
       general: "Bendriniai"
       settings: "Nustatymai"
       tags: "Žymos"
+      localization:
+        name: "Vardas"
+        description: "Aprašymas"
+        remove: "Pašalinti"
       tags_allowed_tags: "Apribokite šias žymas šioje kategorijoje:"
       tags_allowed_tag_groups: "Apribokite šias žymų grupes šioje kategorijoje:"
       tags_placeholder: "(Neprivaloma) leidžiamų žymų sąrašas"
@@ -3617,7 +3621,6 @@ lt:
               content: "Peržiūra"
             invite:
               content: "Kviesti"
-      filter: "Filtruoti..."
       footer:
         interface_color_selector:
           light: "Šviesi"
@@ -3643,6 +3646,15 @@ lt:
       spreadsheet:
         show: "Rodyti"
         about: "Apie"
+    discovery:
+      headings:
+        categories: "Visos kategorijos"
+        filter_labels:
+          latest: "Naujausia"
+          top: "Populiarios"
+          new: "Nauji"
+          unread: "Neperskaitytos"
+          unseen: "Nematytas"
   admin_js:
     type_to_filter: "Įveskite filtrą…"
     settings: "Nustatymai"

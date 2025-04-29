@@ -3786,6 +3786,10 @@ fa_IR:
       settings: "تنظیمات"
       topic_template: "قالب"
       tags: "برچسب‌ها"
+      localization:
+        name: "نام"
+        description: "توضیح"
+        remove: "پاک کردن"
       tags_allowed_tags: "محدودکردن این برچسب‌ها به این دسته‌بندی:"
       tags_allowed_tag_groups: "این گروه برچسب را به این دسته محدود کنید:"
       tags_placeholder: "(اختیاری) فهرست برچسب‌های قابل استفاده"
@@ -4677,10 +4681,6 @@ fa_IR:
       back_to_forum: "بازگشت به انجمن"
       collapse_all_sections: "جمع‌کردن همه بخش‌ها"
       expand_all_sections: "گستردن همه بخش‌ها"
-      filter: "فیلتر..."
-      clear_filter: "حذف کردن فیلتر"
-      no_results:
-        title: "هیچ نتیجه‌ای وجود ندارد"
       footer:
         interface_color_selector:
           light: "روشن"
@@ -4787,6 +4787,16 @@ fa_IR:
           paste: "چسباندن..."
           save: "ذخیره به عنوان..."
     safari_15_warning: "مرورگر شما به زودی دیگر با این انجمن سازگار نخواهد بود. برای ادامه مشارکت در اینجا، لطفا مرورگر خود را ارتقا دهید یا <a href='%{url}'>اطلاعات بیشتری کسب کنید</a>."
+    discovery:
+      headings:
+        categories: "همه‌ی دسته‌بندی‌ها"
+        filter_labels:
+          latest: "آخرین"
+          top: "برترین‌ها"
+          new: "تازه"
+          unread: "خوانده‌ نشده‌"
+          hot: "داغ"
+          unseen: "دیده نشده"
   admin_js:
     type_to_filter: "برای فیلتر کردن تایپ کنید..."
     settings: "تنظیمات"

@@ -3577,6 +3577,10 @@ zh_TW:
       settings: "設定"
       topic_template: "範本"
       tags: "標記"
+      localization:
+        name: "名字"
+        description: "簡述"
+        remove: "移除"
       tags_allowed_tags: "將這些標籤（Tags）限制為此分類做使用："
       tags_allowed_tag_groups: "將這些標籤群組限制在此類別使用："
       tags_placeholder: "（可選）允許使用的標籤列表"
@@ -4435,12 +4439,6 @@ zh_TW:
       back_to_forum: "返回論壇"
       collapse_all_sections: "折疊所有區段"
       expand_all_sections: "展開所有區段"
-      filter: "篩選..."
-      filter_links: "篩選連結..."
-      clear_filter: "清除篩選"
-      no_results:
-        title: "沒有結果"
-        description_admin_search: '我們找不到任何與「%{filter}」相符的內容。<br><br>試試 <a class="sidebar-additional-filter-admin-search" href="%{admin_search_url}">搜尋整個管理介面</a>。'
       footer:
         interface_color_selector:
           light: "輕亮"
@@ -4544,6 +4542,16 @@ zh_TW:
           save: "另存為..."
     powered_by_discourse: "由 Discourse 提供支持"
     safari_15_warning: "您的瀏覽器與這個社群站不相容，要持續互動的話，請升級您的瀏覽器或是 <a href='%{url}'>瞭解更多</a>。"
+    discovery:
+      headings:
+        categories: "所有分類"
+        filter_labels:
+          latest: "最新版本"
+          top: "精選"
+          new: "新使用者"
+          unread: "未讀"
+          hot: "熱門"
+          unseen: "未讀"
   admin_js:
     type_to_filter: "篩選類型…"
     settings: "設定"

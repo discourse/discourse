@@ -3772,6 +3772,10 @@ it:
       settings: "Impostazioni"
       topic_template: "Modello"
       tags: "Etichette"
+      localization:
+        name: "Nome"
+        description: "Descrizione"
+        remove: "Rimuovi"
       tags_allowed_tags: "Limita queste Etichette a questa Categoria:"
       tags_allowed_tag_groups: "Limita questi gruppi di Etichette a questa Categoria:"
       tags_placeholder: "Elenco (opzionale) delle etichette permesse"
@@ -4662,10 +4666,6 @@ it:
       back_to_forum: "Torna al forum"
       collapse_all_sections: "Comprimi tutte le sezioni"
       expand_all_sections: "Espandi tutte le sezioni"
-      filter: "Filtro..."
-      clear_filter: "Cancella il filtro"
-      no_results:
-        title: "Nessun risultato"
       footer:
         interface_color_selector:
           light: "Chiaro"
@@ -4771,6 +4771,16 @@ it:
           paste: "Incolla..."
           save: "Salva come..."
     powered_by_discourse: "Con tecnologia Discourse"
+    discovery:
+      headings:
+        categories: "Tutte le categorie"
+        filter_labels:
+          latest: "Più recenti"
+          top: "Popolari"
+          new: "Nuovo"
+          unread: "Non letti"
+          hot: "Novità"
+          unseen: "Non visualizzati"
   admin_js:
     type_to_filter: "Digita per filtrare…"
     settings: "Impostazioni"

@@ -3446,6 +3446,10 @@ te:
       settings: "అమరికలు"
       topic_template: "టెంప్లేట్"
       tags: "ట్యాగులు"
+      localization:
+        name: "పేరు"
+        description: "వివరణ"
+        remove: "తీసివేయండి"
       tags_allowed_tags: "ఈ ట్యాగ్‌లను ఈ వర్గానికి పరిమితం చేయండి:"
       tags_allowed_tag_groups: "ఈ ట్యాగ్ సమూహాలను ఈ వర్గానికి పరిమితం చేయండి:"
       tags_placeholder: "(ఐచ్ఛికం) అనుమతించబడిన ట్యాగ్‌ల జాబితా"
@@ -4271,9 +4275,6 @@ te:
         forum:
           label: ఫోరం
       back_to_forum: "తిరిగి ఫోరమ్కి"
-      clear_filter: "ఫిల్టర్‌ని క్లియర్ చేయండి"
-      no_results:
-        title: "ఫలితాలు లేవు"
       footer:
         interface_color_selector:
           light: "లేత"
@@ -4378,6 +4379,16 @@ te:
           copy: "కాపీ..."
           paste: "అతికించండి..."
           save: "ఇలా సేవ్ చేయండి..."
+    discovery:
+      headings:
+        categories: "అన్ని వర్గాలు"
+        filter_labels:
+          latest: "తాజా"
+          top: "అగ్ర"
+          new: "కొత్త "
+          unread: "చదవని"
+          hot: "హాట్"
+          unseen: "చూడనవి"
   admin_js:
     type_to_filter: "ఫిల్టర్ చేయడానికి టైప్ చేయండి…"
     settings: "అమరికలు"
