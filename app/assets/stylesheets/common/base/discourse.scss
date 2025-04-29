@@ -114,7 +114,7 @@ body {
 
   @include clearfix;
 
-  @include breakpoint(mobile-extra-large) {
+  @include viewport.until(sm) {
     body {
       min-width: 0;
     }
@@ -470,7 +470,7 @@ textarea {
   margin-left: auto;
   padding: 0 var(--d-wrap-padding-h);
 
-  @include breakpoint(mobile-extra-large) {
+  @include viewport.until(sm) {
     min-width: 0;
   }
 
@@ -490,7 +490,7 @@ textarea {
 .full-width {
   margin-left: 12px;
 
-  @include breakpoint(mobile-extra-large) {
+  @include viewport.until(sm) {
     min-width: 0;
   }
 }
@@ -1001,7 +1001,7 @@ body.has-sidebar-page {
     gap: 0 2em;
     padding-left: 0;
 
-    @include breakpoint(large) {
+    @include viewport.until(lg) {
       gap: 0 1em;
     }
   }
