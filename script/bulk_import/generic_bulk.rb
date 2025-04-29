@@ -2110,7 +2110,7 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def import_answers
-    puts "", "Importing solutions into post custom fields..."
+    puts "", "Importing solutions into discourse_solved_solved_topics..."
 
     solutions = query(<<~SQL)
       SELECT *
@@ -2118,40 +2118,20 @@ class BulkImport::Generic < BulkImport::Base
        ORDER BY topic_id
     SQL
 
-    field_name = "is_accepted_answer"
-    value = "true"
-    existing_fields = PostCustomField.where(name: field_name).pluck(:post_id).to_set
+    existing_solved_topics = DiscourseSolved::SolvedTopic.pluck(:topic_id).to_set
 
-    create_post_custom_fields(solutions) do |row|
-      next unless (post_id = post_id_from_imported_id(row["post_id"]))
-      next unless existing_fields.add?(post_id)
-
-      {
-        post_id: post_id,
-        name: field_name,
-        value: value,
-        created_at: to_datetime(row["created_at"]),
-      }
-    end
-
-    puts "", "Importing solutions into topic custom fields..."
-
-    solutions.reset
-
-    field_name = "accepted_answer_post_id"
-    existing_fields = TopicCustomField.where(name: field_name).pluck(:topic_id).to_set
-
-    create_topic_custom_fields(solutions) do |row|
+    create_solved_topic(solutions) do |row|
       post_id = post_id_from_imported_id(row["post_id"])
       topic_id = topic_id_from_imported_id(row["topic_id"])
+      accepter_user_id = user_id_from_imported_id(row["acting_user_id"])
 
       next unless post_id && topic_id
-      next unless existing_fields.add?(topic_id)
+      next unless existing_solved_topics.add?(topic_id)
 
       {
         topic_id: topic_id,
-        name: field_name,
-        value: post_id.to_s,
+        answer_post_id: post_id,
+        accepter_user_id: accepter_user_id,
         created_at: to_datetime(row["created_at"]),
       }
     end
