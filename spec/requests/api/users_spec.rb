@@ -600,6 +600,14 @@ RSpec.describe "users" do
 
       produces "application/json"
       response "200", "users response" do
+        let(:order) { "created" }
+        let(:asc) { "true" }
+        let(:page) { 0 }
+        let(:show_emails) { false }
+        let(:stats) { nil }
+        let(:email) { nil }
+        let(:ip) { nil }
+
         expected_response_schema = load_spec_schema("admin_user_list_response")
         schema expected_response_schema
 
