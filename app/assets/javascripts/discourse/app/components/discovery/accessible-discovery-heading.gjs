@@ -5,7 +5,7 @@ export default class AccessibleDiscoveryHeading extends Component {
   get filterKey() {
     const filter = this.args.filter;
 
-    if (filter === "categories") {
+    if (!filter || filter === "categories") {
       return null;
     }
 
