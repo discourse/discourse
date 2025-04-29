@@ -1109,6 +1109,7 @@ def apply_base_chrome_args(args = [])
     --disable-dev-shm-usage
     --mute-audio
     --remote-allow-origins=*
+    --disable-smooth-scrolling
   ]
 
   if !ENV["CI"]
