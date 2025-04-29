@@ -443,7 +443,7 @@ GEM
     rinku (2.0.6)
     rotp (6.3.0)
     rouge (4.5.2)
-    rqrcode (3.0.0)
+    rqrcode (3.1.0)
       chunky_png (~> 1.0)
       rqrcode_core (~> 2.0)
     rqrcode_core (2.0.0)
@@ -1015,7 +1015,7 @@ CHECKSUMS
   rinku (2.0.6) sha256=8b60670e3143f3db2b37efa262971ce3619ec23092045498ef9f077d82828d7d
   rotp (6.3.0) sha256=75d40087e65ed0d8022c33055a6306c1c400d1c12261932533b5d6cbcd868854
   rouge (4.5.2) sha256=034233fb8a69d0ad0e0476943184e04cb971b68e3c2239724e02f428878b68a3
-  rqrcode (3.0.0) sha256=44890d5209a435f089875ac03050db1f391606c7fdabc5695c97dec0980840aa
+  rqrcode (3.1.0) sha256=e2d5996375f6e9a013823c289ed575dbea678b8e0388574302c1fac563f098af
   rqrcode_core (2.0.0) sha256=1e40b823ab57a96482a417fff5dd5c33645a00cea6ef5d9e342fecc5ef91d9ab
   rrule (0.6.0) sha256=bd123b4df7eb086a6388d9c47e8ecaad3708433d11c57a195a50d4d0dd4e9616
   rspec (3.13.0) sha256=d490914ac1d5a5a64a0e1400c1d54ddd2a501324d703b8cfe83f458337bab993
