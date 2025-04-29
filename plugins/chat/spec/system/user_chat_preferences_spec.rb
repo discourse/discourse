@@ -58,6 +58,7 @@ RSpec.describe "User chat preferences", type: :system do
       user_preferences_chat_page.visit
       find("#user_chat_quick_reaction_type_custom").click
       user_preferences_chat_page.save_changes_and_refresh
+      page.refresh # TODO: flakey without this
       chat.visit_channel(category_channel_1)
       channel.hover_message(message_1)
 
@@ -67,6 +68,7 @@ RSpec.describe "User chat preferences", type: :system do
       user_preferences_chat_page.visit
       find("#user_chat_quick_reaction_type_frequent").click
       user_preferences_chat_page.save_changes_and_refresh
+      page.refresh # TODO: flakey without this
       chat.visit_channel(category_channel_1)
       channel.hover_message(message_1)
 
