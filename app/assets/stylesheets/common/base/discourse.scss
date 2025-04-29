@@ -1061,14 +1061,15 @@ body.has-sidebar-page {
   > li > a.expander {
     display: flex;
     align-items: center;
-
-    @include form-item-sizing;
     border-color: var(--primary-medium);
     max-width: 100%;
 
+    @include form-item-sizing;
+
     .selection {
-      @include ellipsis;
       max-width: 120px;
+
+      @include ellipsis;
     }
 
     > .d-icon {
