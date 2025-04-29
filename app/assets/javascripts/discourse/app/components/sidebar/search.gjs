@@ -32,6 +32,7 @@ export default class Search extends Component {
             class="btn-transparent sidebar-search__icon"
           />
           <input
+            {{on "mousedown" this.onClick}}
             {{on "mouseup" this.onClick}}
             placeholder={{i18n "sidebar.search"}}
             type="text"
