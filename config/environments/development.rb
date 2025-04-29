@@ -64,8 +64,6 @@ Discourse::Application.configure do
     config.hosts.concat(hosts.split(","))
   end
 
-  # require "middleware/turbo_dev"
-  # config.middleware.insert 0, Middleware::TurboDev
   require "middleware/missing_avatars"
   config.middleware.insert 1, Middleware::MissingAvatars
 
