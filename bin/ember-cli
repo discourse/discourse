@@ -60,8 +60,6 @@ if !system "pnpm", "--dir=#{RAILS_ROOT}", "install"
   exit 1
 end
 
-system "pnpm", "playwright", "install", "--with-deps", "--no-shell", "chromium"
-
 pnpm_env = {
   "TERM" => "dumb", # simple output from ember-cli, so we can parse/forward it more easily
 }
@@ -75,8 +73,9 @@ if ARGV.include?("-u") || ARGV.include?("--unicorn")
       {
         "DISCOURSE_PORT" => "443",
         "DISCOURSE_FORCE_HTTPS" => "1",
-        "DISCOURSE_FORCE_HOSTNAME" => "#{ENV["CODESPACE_NAME"]}-4200.#{ENV["GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN"]}"
-      }
+        "DISCOURSE_FORCE_HOSTNAME" =>
+          "#{ENV["CODESPACE_NAME"]}-4200.#{ENV["GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN"]}",
+      },
     )
   end
 
