@@ -15,6 +15,6 @@ export default class TrackedMediaQuery {
   }
 
   teardown() {
-    this.mediaQueryList.removeEventListener("change", this.#handleChange);
+    this.#matcher.removeEventListener("change", this.#handleChange);
   }
 }
