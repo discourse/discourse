@@ -11,7 +11,6 @@ import BaseCustomSidebarSection from "discourse/lib/sidebar/base-custom-sidebar-
 import BaseCustomSidebarSectionLink from "discourse/lib/sidebar/base-custom-sidebar-section-link";
 import { ADMIN_PANEL } from "discourse/lib/sidebar/panels";
 import I18n, { i18n } from "discourse-i18n";
-import AdminSearchModal from "admin/components/modal/admin-search";
 
 let additionalAdminSidebarSectionLinks = {};
 
@@ -414,6 +413,8 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
   }
 
   get onSearchClick() {
-    getOwnerWithFallback(this).lookup("service:modal").show(AdminSearchModal);
+    getOwnerWithFallback(this)
+      .lookup("service:modal")
+      .show(this.adminSidebarStateManager.modals.adminSearch);
   }
 }

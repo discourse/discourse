@@ -1,6 +1,7 @@
 import Service, { service } from "@ember/service";
 import KeyValueStore from "discourse/lib/key-value-store";
 import { ADMIN_PANEL, MAIN_PANEL } from "discourse/lib/sidebar/panels";
+import AdminSearchModal from "admin/components/modal/admin-search";
 
 export default class AdminSidebarStateManager extends Service {
   @service sidebarState;
@@ -55,6 +56,10 @@ export default class AdminSidebarStateManager extends Service {
   stopForcingAdminSidebar() {
     this.sidebarState.setPanel(MAIN_PANEL);
     this.sidebarState.isForcingSidebar = false;
+  }
+
+  get modals() {
+    return { adminSearch: AdminSearchModal };
   }
 
   #forceAdminSidebar() {
