@@ -2,7 +2,9 @@
 
 RSpec.describe PushNotificationPusher do
   it "returns badges url by default" do
-    expect(PushNotificationPusher.get_badge).to eq("/assets/push-notifications/discourse.png")
+    expect(PushNotificationPusher.get_badge).to match(
+      %r{\A/assets/push-notifications/discourse-\w{8}.png\z},
+    )
   end
 
   it "returns custom badges url" do
@@ -52,12 +54,12 @@ RSpec.describe PushNotificationPusher do
 
     it "correctly guesses an image if missing" do
       message = execute_push(notification_type: -1)
-      expect(message[:icon]).to eq("/assets/push-notifications/discourse.png")
+      expect(message[:icon]).to match(%r{\A/assets/push-notifications/discourse-\w{8}.png\z})
     end
 
     it "correctly finds image if exists" do
       message = execute_push(notification_type: 1)
-      expect(message[:icon]).to eq("/assets/push-notifications/mentioned.png")
+      expect(message[:icon]).to match(%r{\A/assets/push-notifications/mentioned-\w{8}.png\z})
     end
 
     it "sends notification in user's locale" do

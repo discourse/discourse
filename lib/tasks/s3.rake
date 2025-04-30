@@ -51,38 +51,27 @@ def helper
 end
 
 def assets
-  cached = Rails.application.assets&.cached
-  manifest =
-    Sprockets::Manifest.new(
-      cached,
-      Rails.root + "public/assets",
-      Rails.application.config.assets.manifest,
-    )
+  load_path = Rails.application.assets.load_path
 
   results = Set.new
 
-  manifest.assets.each do |_, path|
-    fullpath = (Rails.root + "public/assets/#{path}").to_s
+  load_path.assets.each do |asset|
+    fullpath = "#{Rails.root}/public/assets/#{asset.digested_path}"
 
-    # Ignore files we can't find the mime type of, like yarn.lock
     content_type = MiniMime.lookup_by_filename(fullpath)&.content_type
     content_type ||= "application/json" if fullpath.end_with?(".map")
 
-    if content_type
-      asset_path = "assets/#{path}"
-      results << [fullpath, asset_path, content_type]
+    next unless content_type
 
-      if File.exist?(fullpath + ".br")
-        results << [fullpath + ".br", brotli_s3_path(asset_path), content_type, "br"]
-      end
+    asset_path = "assets/#{asset.digested_path}"
+    results << [fullpath, asset_path, content_type]
 
-      if File.exist?(fullpath + ".gz")
-        results << [fullpath + ".gz", gzip_s3_path(asset_path), content_type, "gzip"]
-      end
+    if File.exist?(fullpath + ".br")
+      results << [fullpath + ".br", brotli_s3_path(asset_path), content_type, "br"]
+    end
 
-      if File.exist?(fullpath + ".map")
-        results << [fullpath + ".map", asset_path + ".map", "application/json"]
-      end
+    if File.exist?(fullpath + ".gz")
+      results << [fullpath + ".gz", gzip_s3_path(asset_path), content_type, "gzip"]
     end
   end
 
