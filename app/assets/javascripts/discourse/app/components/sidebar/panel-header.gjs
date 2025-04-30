@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import BackToForum from "./back-to-forum";
-import Search from "./search";
+import BackToForum from "discourse/components/back-to-forum";
+import Search from "discourse/components/search";
 import ToggleAllSections from "./toggle-all-sections";
 
 export default class PanelHeader extends Component {
