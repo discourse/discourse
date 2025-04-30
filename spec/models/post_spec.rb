@@ -2356,4 +2356,29 @@ RSpec.describe Post do
       ).to eq(6.days.ago.to_date => 1, 7.days.ago.to_date => 1)
     end
   end
+
+  describe "#has_localization?" do
+    it "returns if the post has localization" do
+      post = Fabricate(:post)
+      Fabricate(:post_localization, post: post, locale: "zh_CN")
+
+      expect(post.has_localization?(:zh_CN)).to eq(true)
+      expect(post.has_localization?(:"zh_CN")).to eq(true)
+      expect(post.has_localization?("zh-CN")).to eq(true)
+
+      expect(post.has_localization?("z")).to eq(false)
+    end
+  end
+
+  describe "#get_localization" do
+    it "returns the localization with the specified locale" do
+      post = Fabricate(:post)
+      localization = Fabricate(:post_localization, post: post, locale: "zh_CN")
+
+      expect(post.get_localization(:zh_CN)).to eq(localization)
+      expect(post.get_localization("zh-CN")).to eq(localization)
+
+      expect(post.get_localization("xx")).to eq(nil)
+    end
+  end
 end
