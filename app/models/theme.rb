@@ -547,12 +547,10 @@ class Theme < ActiveRecord::Base
     if target == :translations
       fields = ThemeField.find_first_locale_fields(theme_ids, I18n.fallbacks[name])
     else
+      target = :common if target == :common_theme
       target = :mobile if target == :mobile_theme
       target = :desktop if target == :desktop_theme
-      fields =
-        ThemeField.find_by_theme_ids(theme_ids).where(
-          target_id: [Theme.targets[target], Theme.targets[:common]],
-        )
+      fields = ThemeField.find_by_theme_ids(theme_ids).where(target_id: Theme.targets[target])
       fields = fields.where(name: name.to_s) unless name.nil?
       fields = fields.order(:target_id)
     end

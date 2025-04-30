@@ -86,7 +86,7 @@ class Stylesheet::Manager
     color_schemes << ColorScheme.base
     color_schemes = color_schemes.compact.uniq
 
-    targets = %i[desktop_theme mobile_theme]
+    targets = %i[common_theme desktop_theme mobile_theme]
     compiled = Set.new
 
     themes.each do |theme_id, color_scheme_id|
@@ -315,7 +315,7 @@ class Stylesheet::Manager
             }
             builder = Builder.new(target: target, theme: theme, manager: self)
 
-            next if builder.theme&.component && !scss_checker.has_scss(theme_id)
+            next if !scss_checker.has_scss(theme_id)
             builder.compile unless File.exist?(builder.stylesheet_fullpath)
             href = builder.stylesheet_absolute_url
 
