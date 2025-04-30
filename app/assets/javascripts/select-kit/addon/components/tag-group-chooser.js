@@ -1,6 +1,7 @@
-import { action, computed } from "@ember/object";
+import { computed } from "@ember/object";
 import { service } from "@ember/service";
 import { classNames } from "@ember-decorators/component";
+import { bind } from "discourse/lib/decorators";
 import { makeArray } from "discourse/lib/helpers";
 import MultiSelectComponent from "select-kit/components/multi-select";
 import {
@@ -55,8 +56,11 @@ export default class TagGroupChooser extends MultiSelectComponent.extend(
       });
   }
 
-  @action
+  @bind
   _transformJson(json) {
+    if (this.isDestroyed || this.isDestroying) {
+      return [];
+    }
     return json.results
       .sort((a, b) => a.name > b.name)
       .map((result) => {

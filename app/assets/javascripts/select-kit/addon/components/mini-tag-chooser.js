@@ -1,4 +1,4 @@
-import { action, computed } from "@ember/object";
+import { computed } from "@ember/object";
 import { empty, or } from "@ember/object/computed";
 import { service } from "@ember/service";
 import {
@@ -7,6 +7,7 @@ import {
   classNames,
 } from "@ember-decorators/component";
 import { setting } from "discourse/lib/computed";
+import { bind } from "discourse/lib/decorators";
 import { makeArray } from "discourse/lib/helpers";
 import { i18n } from "discourse-i18n";
 import MultiSelectComponent from "select-kit/components/multi-select";
@@ -113,7 +114,7 @@ export default class MiniTagChooser extends MultiSelectComponent.extend(
     );
   }
 
-  @action
+  @bind
   _transformJson(json) {
     if (this.isDestroyed || this.isDestroying) {
       return [];

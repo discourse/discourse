@@ -3,6 +3,7 @@ import { readOnly } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { classNameBindings, classNames } from "@ember-decorators/component";
 import { setting } from "discourse/lib/computed";
+import { bind } from "discourse/lib/decorators";
 import { makeArray } from "discourse/lib/helpers";
 import DiscourseURL, { getCategoryAndTagUrl } from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
@@ -167,8 +168,12 @@ export default class TagDrop extends ComboBoxComponent.extend(TagsMixin) {
     }
   }
 
-  @action
+  @bind
   _transformJson(json) {
+    if (this.isDestroyed || this.isDestroying) {
+      return [];
+    }
+
     return json.results
       .sort((a, b) => a.id > b.id)
       .map((r) => {
