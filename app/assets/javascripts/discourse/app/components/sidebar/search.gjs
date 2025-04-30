@@ -9,10 +9,6 @@ import { translateModKey } from "discourse/lib/utilities";
 export default class Search extends Component {
   @service sidebarState;
 
-  willDestroy() {
-    super.willDestroy(...arguments);
-  }
-
   get shouldDisplay() {
     return this.sidebarState.currentPanel.searchable;
   }

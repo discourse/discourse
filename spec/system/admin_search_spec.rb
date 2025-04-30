@@ -7,11 +7,6 @@ describe "Admin Search", type: :system do
 
   before { sign_in(current_user) }
 
-  def open_search_modal
-    send_keys([SystemHelpers::PLATFORM_KEY_MODIFIER, "/"])
-    expect(search_modal).to be_open
-  end
-
   it "can search for settings, pages, themes, components, and reports" do
     theme = Fabricate(:theme, name: "Discourse Invincible Theme")
     component = Fabricate(:theme, name: "Discourse Redacted", component: true)
@@ -21,7 +16,7 @@ describe "Admin Search", type: :system do
       .returns([stub(key: "theme_metadata.description", value: "Some description")])
 
     visit "/admin"
-    open_search_modal
+    sidebar.click_search_input
 
     search_modal.search("min_topic_title")
     expect(search_modal.find_result("setting", 0)).to have_content("Min topic title length")
@@ -56,7 +51,7 @@ describe "Admin Search", type: :system do
 
   it "can search full page" do
     visit "/admin"
-    open_search_modal
+    sidebar.click_search_input
     search_modal.search("min_topic_title")
     search_modal.input_enter
     expect(page).to have_current_path("/admin/search?filter=min_topic_title")
@@ -68,7 +63,7 @@ describe "Admin Search", type: :system do
 
   it "informs user about no results" do
     visit "/admin"
-    open_search_modal
+    sidebar.click_search_input
 
     search_modal.search("very long search phrase")
 
@@ -77,11 +72,10 @@ describe "Admin Search", type: :system do
     )
   end
 
-  it "opens search modal when search input is clicked" do
+  it "opens search modal with keyboard shortcut" do
     visit "/admin"
-    sidebar.click_search_input
 
-    search_modal.search("min_topic_title")
-    expect(search_modal.find_result("setting", 0)).to have_content("Min topic title length")
+    send_keys([SystemHelpers::PLATFORM_KEY_MODIFIER, "/"])
+    expect(search_modal).to be_open
   end
 end
