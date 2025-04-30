@@ -10,6 +10,7 @@ import CountI18n from "discourse/components/count-i18n";
 import DiscourseLinkedText from "discourse/components/discourse-linked-text";
 import DiscoveryTopicsList from "discourse/components/discovery-topics-list";
 import FooterMessage from "discourse/components/footer-message";
+import LoadMore from "discourse/components/load-more";
 import NewListHeaderControlsWrapper from "discourse/components/new-list-header-controls-wrapper";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TopPeriodButtons from "discourse/components/top-period-buttons";
@@ -21,6 +22,7 @@ import htmlSafe from "discourse/helpers/html-safe";
 import loadingSpinner from "discourse/helpers/loading-spinner";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { filterTypeForMode } from "discourse/lib/filter-mode";
+import { applyBehaviorTransformer } from "discourse/lib/transformer";
 import { userPath } from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
 import PeriodChooser from "select-kit/components/period-chooser";
@@ -28,6 +30,7 @@ import PeriodChooser from "select-kit/components/period-chooser";
 export default class DiscoveryTopics extends Component {
   @service router;
   @service composer;
+  @service documentTitle;
   @service modal;
   @service currentUser;
   @service topicTrackingState;
@@ -198,6 +201,37 @@ export default class DiscoveryTopics extends Component {
     return this.args.tag || this.args.category;
   }
 
+  @action
+  loadMore() {
+    applyBehaviorTransformer(
+      "discovery-topic-list-load-more",
+      () => {
+        this.documentTitle.updateContextCount(0);
+        return this.args.model
+          .loadMore()
+          .then(({ moreTopicsUrl, newTopics } = {}) => {
+            if (
+              newTopics &&
+              newTopics.length &&
+              this.bulkSelectHelper?.bulkSelectEnabled
+            ) {
+              this.bulkSelectHelper.addTopics(newTopics);
+            }
+
+            // If after loading more topics and there's another page of topics,
+            // we continue loading when there's still space in the viewport for more topics
+            if (
+              moreTopicsUrl &&
+              window.innerHeight >= document.documentElement.scrollHeight
+            ) {
+              this.loadMore();
+            }
+          });
+      },
+      { model: this.args.model }
+    );
+  }
+
   <template>
     {{#if @model.canLoadMore}}
       {{hideApplicationFooter}}
@@ -301,6 +335,7 @@ export default class DiscoveryTopics extends Component {
           @newRepliesCount={{this.newRepliesCount}}
           @newTopicsCount={{this.newTopicsCount}}
         />
+        <LoadMore @action={{this.loadMore}} />
       {{/if}}
 
       <span class="after-topic-list-plugin-outlet-wrapper">
