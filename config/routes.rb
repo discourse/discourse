@@ -1185,7 +1185,9 @@ Discourse::Application.routes.draw do
         put "members" => "groups#add_members"
 
         post "request_membership" => "groups#request_membership"
-        post "notifications" => "groups#set_notifications"
+
+        post "notifications" => "groups#set_notifications",
+             :as => :"#{root_path}_group_set_notifications"
 
         get "posts.rss" => "groups#posts_feed", :format => :rss
         get "mentions.rss" => "groups#mentions_feed", :format => :rss
