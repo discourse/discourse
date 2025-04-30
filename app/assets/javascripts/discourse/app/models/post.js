@@ -396,6 +396,13 @@ export default class Post extends RestModel {
     return this.post_type === this.site.post_types.moderator_action;
   }
 
+  get isSmallAction() {
+    return (
+      this.post_type === this.site.post_types.small_action ||
+      this.action_code === "split_topic"
+    );
+  }
+
   get liked() {
     return !!this.likeAction?.get("acted");
   }

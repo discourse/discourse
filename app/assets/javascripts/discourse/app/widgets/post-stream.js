@@ -392,6 +392,7 @@ export default createWidget("post-stream", {
               toggleReplyAbove: () =>
                 this.sendWidgetAction("toggleReplyAbove", post),
               toggleWiki: () => this.sendWidgetAction("toggleWiki", post),
+              topicPageQueryParams: attrs.topicPageQueryParams,
               unhidePost: () => this.sendWidgetAction("unhidePost", post),
               unlockPost: () => this.sendWidgetAction("unlockPost", post),
               updateTopicPageQueryParams: () =>
