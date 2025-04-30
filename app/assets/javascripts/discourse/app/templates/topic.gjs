@@ -1,5 +1,6 @@
 import { array, concat, fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
+import { getProperties } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import RouteTemplate from "ember-route-template";
 import { and, eq } from "truth-helpers";
@@ -482,6 +483,10 @@ export default RouteTemplate(
                     @showPagePublish={{routeAction "showPagePublish"}}
                     @filteringRepliesToPostNumber={{@controller.replies_to_post_number}}
                     @updateTopicPageQueryParams={{@controller.updateTopicPageQueryParams}}
+                    @topicPageQueryParams={{getProperties
+                      @controller
+                      @controller.queryParams
+                    }}
                   />
                 {{/unless}}
 
