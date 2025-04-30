@@ -9,7 +9,7 @@ class BootstrapController < ApplicationController
   end
 
   def core_css_for_tests
-    targets = %w[color_definitions desktop admin]
+    targets = %w[color_definitions common desktop admin]
     render_css_for_tests(targets)
   end
 
