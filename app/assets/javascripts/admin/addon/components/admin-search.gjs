@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
-import { hash } from "@ember/helper";
-import { LinkTo } from "@ember/routing";
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
+import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
