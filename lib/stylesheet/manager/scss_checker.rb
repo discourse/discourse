@@ -16,7 +16,7 @@ class Stylesheet::Manager::ScssChecker
     @themes_with_scss ||=
       begin
         theme_target = @target.to_sym
-        theme_target = :common if theme_target == :common_theme
+        theme_target = :common if theme_target == :common_theme || theme_target == :embedded_theme
         theme_target = :mobile if theme_target == :mobile_theme
         theme_target = :desktop if theme_target == :desktop_theme
         name = @target == :embedded_theme ? :embedded_scss : :scss

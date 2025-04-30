@@ -105,7 +105,7 @@ class Stylesheet::Manager
             builder =
               Stylesheet::Manager::Builder.new(target: target, theme: theme, manager: manager)
 
-            next if theme.component && !scss_checker.has_scss(theme.id)
+            next if !scss_checker.has_scss(theme.id)
             $stderr.puts "precompile target: #{target} #{theme.name}"
             builder.compile(force: true)
             compiled << "#{target}_#{theme.id}"

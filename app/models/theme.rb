@@ -439,7 +439,7 @@ class Theme < ActiveRecord::Base
     all_themes: false
   )
     Stylesheet::Manager.clear_theme_cache!
-    targets = %i[mobile_theme desktop_theme]
+    targets = %i[common_theme mobile_theme desktop_theme]
 
     if with_scheme
       targets.prepend(:desktop, :mobile, :admin)
