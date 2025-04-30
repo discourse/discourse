@@ -5588,6 +5588,14 @@ en:
       restored: Restored
     bulk_user_delete: "deleted in a bulk delete operation"
     cli_bulk_post_delete: "Bulk deleted from rake task"
+    api_post_delete: "Deleted via API"
+    reminder_deleted: "Replaced by new reminder"
+    user_associated_posts_deleted: "User was destroyed"
+    imap_email_deleted: "Email has been deleted on the IMAP server"
+    imap_email_marked_as_spam: "Email has been moved to spam on the IMAP server"
+    auto_deleted_hidden_posts: "Automatically destroyed hidden posts"
+    seed_data_topic_updated: "Seed data topic updated"
+    seed_data_topic_deleted: "Seed data topic deleted"
 
   reviewables:
     already_handled: "Thanks, but we've already reviewed that post and determined it does not need to be flagged again."
