@@ -6,47 +6,9 @@ class DiscourseJsProcessor
   class TranspileError < StandardError
   end
 
-  def self.ember_cli?(filename)
-    filename.include?("/app/assets/javascripts/discourse/dist/")
-  end
-
-  def self.call(input)
-    root_path = input[:load_path] || ""
-    logical_path =
-      (input[:filename] || "").sub(root_path, "").gsub(/\.(js|es6).*$/, "").sub(%r{^/}, "")
-    data = input[:data]
-
-    data = transpile(data, root_path, logical_path) if should_transpile?(input[:filename])
-
-    { data: data }
-  end
-
   def self.transpile(data, root_path, logical_path, theme_id: nil, extension: nil)
     transpiler = Transpiler.new(skip_module: skip_module?(data))
     transpiler.perform(data, root_path, logical_path, theme_id: theme_id, extension: extension)
-  end
-
-  def self.should_transpile?(filename)
-    filename ||= ""
-
-    # skip ember cli
-    return false if ember_cli?(filename)
-
-    # es6 is always transpiled
-    return true if filename.end_with?(".es6") || filename.end_with?(".es6.erb")
-
-    # For .js check the path...
-    return false unless filename.end_with?(".js") || filename.end_with?(".js.erb")
-
-    relative_path = filename.sub(Rails.root.to_s, "").sub(%r{^/*}, "")
-
-    js_root = "app/assets/javascripts"
-    test_root = "test/javascripts"
-
-    return false if relative_path.start_with?("#{js_root}/locales/")
-    return false if relative_path.start_with?("#{js_root}/plugins/")
-
-    !!(relative_path =~ %r{^#{js_root}/[^/]+/} || relative_path =~ %r{^#{test_root}/[^/]+/})
   end
 
   def self.skip_module?(data)

@@ -466,7 +466,18 @@ module Discourse
   def self.assets_digest
     @assets_digest ||=
       begin
-        digest = Digest::MD5.hexdigest(ActionView::Base.assets_manifest.assets.values.sort.join)
+        digest =
+          Digest::MD5.hexdigest(
+            Rails
+              .application
+              .assets
+              .load_path
+              .assets
+              .map(&:digested_path)
+              .map(&:to_s)
+              .sort
+              .join("|"),
+          )
 
         channel = "/global/asset-version"
         message = MessageBus.last_message(channel)

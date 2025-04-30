@@ -15,13 +15,10 @@ gem "activemodel", "~> 7.2.0"
 gem "activerecord", "~> 7.2.0"
 gem "activesupport", "~> 7.2.0"
 gem "railties", "~> 7.2.0"
-gem "sprockets-rails"
+
+gem "propshaft"
 
 gem "json"
-
-# TODO: At the moment Discourse does not work with Sprockets 4, we would need to correct internals
-# We intend to drop sprockets rather than upgrade to 4.x
-gem "sprockets", "~> 3.7.3"
 
 # this will eventually be added to rails,
 # allows us to precompile all our templates in the unicorn master

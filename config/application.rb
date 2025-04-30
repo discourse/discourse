@@ -5,7 +5,6 @@ require "active_record/railtie"
 require "action_controller/railtie"
 require "action_view/railtie"
 require "action_mailer/railtie"
-require "sprockets/railtie"
 
 # Plugin related stuff
 require_relative "../lib/plugin"
@@ -167,34 +166,6 @@ module Discourse
 
     require "middleware/discourse_public_exceptions"
     config.exceptions_app = Middleware::DiscoursePublicExceptions.new(Rails.public_path)
-
-    require "discourse_js_processor"
-    require "discourse_sourcemapping_url_processor"
-
-    Sprockets.register_mime_type "application/javascript",
-                                 extensions: %w[.js .es6 .js.es6],
-                                 charset: :unicode
-    Sprockets.register_postprocessor "application/javascript", DiscourseJsProcessor
-
-    class SprocketsSassUnsupported
-      def self.call(*args)
-        raise "Discourse does not support compiling scss/sass files via Sprockets"
-      end
-    end
-
-    Sprockets.register_engine(".sass", SprocketsSassUnsupported, silence_deprecation: true)
-    Sprockets.register_engine(".scss", SprocketsSassUnsupported, silence_deprecation: true)
-
-    Discourse::Application.initializer :prepend_ember_assets do |app|
-      # Needs to be in its own initializer so it runs after the append_assets_path initializer defined by Sprockets
-      app
-        .config
-        .assets
-        .paths.unshift "#{app.config.root}/app/assets/javascripts/discourse/dist/assets"
-      Sprockets.unregister_postprocessor "application/javascript",
-                                         Sprockets::Rails::SourcemappingUrlProcessor
-      Sprockets.register_postprocessor "application/javascript", DiscourseSourcemappingUrlProcessor
-    end
 
     require "discourse_redis"
     require "logster/redis_store"
