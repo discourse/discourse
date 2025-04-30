@@ -272,8 +272,7 @@ shared_examples "social authentication scenarios" do |signup_page_object, login_
           mock_google_auth
 
           visit("/login")
-          expect(page).to have_css(".login-welcome")
-          expect(page).to have_css(".site-logo")
+          expect(page).to have_css(".btn-social")
 
           visit("/")
           expect(page).to have_css(".login-welcome")
