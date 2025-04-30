@@ -1,3 +1,4 @@
+import Component from "@glimmer/component";
 import { click, settled, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { PLUGIN_API_VERSION, withPluginApi } from "discourse/lib/plugin-api";
@@ -307,6 +308,34 @@ acceptance("Sidebar - Plugin API", function (needs) {
         ".sidebar-section[data-section-name='test-chat-channels'] .sidebar-section-content a"
       )
       .doesNotExist("displays no links");
+  });
+
+  test("Empty state when no links are present", async function (assert) {
+    const emptyStateComponent = class EmptyStateTestComponent extends Component {
+      <template>
+        <div class="test-empty-state">Empty</div>
+      </template>
+    };
+
+    withPluginApi(PLUGIN_API_VERSION, (api) => {
+      api.addSidebarSection((BaseCustomSidebarSection) => {
+        return class extends BaseCustomSidebarSection {
+          name = "test-empty-state";
+          text = "random text";
+          links = [];
+
+          get emptyStateComponent() {
+            return emptyStateComponent;
+          }
+        };
+      });
+    });
+    await visit("/");
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='test-empty-state'] #sidebar-section-content-test-empty-state .test-empty-state"
+      )
+      .hasText("Empty");
   });
 
   test("Section that is not displayed via displaySection", async function (assert) {

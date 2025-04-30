@@ -3150,6 +3150,10 @@ hy:
       general: "Ընդհանուր"
       settings: "Կարգավորումներ"
       tags: "Պիտակներ"
+      localization:
+        name: "Անուն"
+        description: "Նկարագրությունը"
+        remove: "Հեռացնել"
       tags_allowed_tags: "Սահմանափակել այս պիտակները՝ այս կատեգորիայում."
       tags_allowed_tag_groups: "Սահմանափակել այս պիտակների խմբերը այս կատեգորիայում."
       tags_placeholder: "(Ընտրովի) թույլատրված պիտակների ցանկը"
@@ -3807,6 +3811,16 @@ hy:
       spreadsheet:
         show: "Ցուցադրել"
         about: "Մասին"
+    discovery:
+      headings:
+        categories: "Բոլոր կատեգորիաները"
+        filter_labels:
+          latest: "Վերջինը"
+          top: "Ամենահայտնի"
+          new: "Նոր"
+          unread: "Չկարդացած"
+          hot: "Թոփ"
+          unseen: "Չդիտված"
   admin_js:
     settings: "Կարգավորումներ"
     admin:

@@ -4202,6 +4202,10 @@ ru:
       settings: "Настройки"
       topic_template: "Шаблон"
       tags: "Теги"
+      localization:
+        name: "Название"
+        description: "Описание"
+        remove: "Отозвать"
       tags_allowed_tags: "Ограничить теги этой категорией:"
       tags_allowed_tag_groups: "Ограничить группы тегов этой категорией:"
       tags_placeholder: "(Необязат.) Доступные теги"
@@ -5168,10 +5172,6 @@ ru:
       back_to_forum: "Вернуться на форум"
       collapse_all_sections: "Свернуть все разделы"
       expand_all_sections: "Развернуть все разделы"
-      filter: "Фильтр..."
-      clear_filter: "Очистить фильтр"
-      no_results:
-        title: "Нет результатов"
       footer:
         interface_color_selector:
           light: "Светлая"
@@ -5285,6 +5285,16 @@ ru:
           paste: "Вставить..."
           save: "Сохранить как..."
     powered_by_discourse: "На платформе Discourse"
+    discovery:
+      headings:
+        categories: "Все категории"
+        filter_labels:
+          latest: "Последняя версия"
+          top: "Обсуждаемые"
+          new: "Новое"
+          unread: "Непрочитанные"
+          hot: "Горячие"
+          unseen: "Непросмотренные"
   admin_js:
     type_to_filter: "Фильтрация настроек…"
     settings: "Настройки"

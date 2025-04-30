@@ -2964,6 +2964,10 @@ sl:
       general: "Splošno"
       settings: "Nastavitve"
       tags: "Oznake"
+      localization:
+        name: "Ime"
+        description: "Opis"
+        remove: "Odstrani"
       tags_allowed_tags: "Omeji te oznake na to kategorijo:"
       tags_allowed_tag_groups: "Omeji te skupine oznak na to kategorijo:"
       tags_placeholder: "(neobvezno) seznam dovoljenih oznak"
@@ -3645,7 +3649,6 @@ sl:
               content: "Pregled"
             invite:
               content: "Povabi"
-      filter: "Filter..."
     until: "Do:"
     form_templates:
       upload_field:
@@ -3699,6 +3702,14 @@ sl:
       spreadsheet:
         show: "Prikaži"
         about: "O nas"
+    discovery:
+      headings:
+        categories: "Vse kategorije"
+        filter_labels:
+          latest: "Najnovejše"
+          top: "Najboljše"
+          new: "Nova"
+          unread: "Neprebrane"
   admin_js:
     settings: "Nastavitve"
     admin:

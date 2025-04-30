@@ -5,7 +5,7 @@ export default class AccessibleDiscoveryHeading extends Component {
   get filterKey() {
     const filter = this.args.filter;
 
-    if (filter === "categories") {
+    if (!filter || filter === "categories") {
       return null;
     }
 
@@ -89,6 +89,8 @@ export default class AccessibleDiscoveryHeading extends Component {
   }
 
   <template>
-    <h1 id="topic-list-heading" class="sr-only">{{this.label}}</h1>
+    {{#if @filter}}
+      <h1 id="topic-list-heading" class="sr-only">{{this.label}}</h1>
+    {{/if}}
   </template>
 }

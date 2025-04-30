@@ -1772,7 +1772,6 @@ nl:
     pending_users_reminder_delay_minutes: "Moderators informeren wanneer nieuwe gebruikers langer dan dit aantal uren op goedkeuring wachten. Stel dit in op -1 om meldingen uit te schakelen."
     persistent_sessions: "Gebruikers blijven aangemeld wanneer de webbrowser wordt gesloten"
     maximum_session_age: "Gebruikers blijven (n) uur na hun laatste bezoek aangemeld"
-    full_page_login: "Geef het aanmeldings- en registratieformulier weer op een volledige pagina (als dit niet is geselecteerd, zien gebruikers de formulieren in een modal). "
     show_signup_form_email_instructions: Geef instructies voor het e-mailadres weer in het registratieformulier.
     show_signup_form_username_instructions: Geef instructies voor de gebruikersnaam weer in het registratieformulier.
     show_signup_form_full_name_instructions: Geef instructies voor de volledige naam weer in het registratieformulier.

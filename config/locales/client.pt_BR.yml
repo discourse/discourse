@@ -3795,6 +3795,10 @@ pt_BR:
       settings: "Configurações"
       topic_template: "Modelo"
       tags: "Etiquetas"
+      localization:
+        name: "Nome"
+        description: "Descrição"
+        remove: "Remover"
       tags_allowed_tags: "Restringir estas etiquetas a esta categoria:"
       tags_allowed_tag_groups: "Restringir estes grupos de etiquetas a esta categoria:"
       tags_placeholder: "(Opcional) lista de etiquetas permitidas"
@@ -4689,11 +4693,6 @@ pt_BR:
       back_to_forum: "Voltar para o Fórum"
       collapse_all_sections: "Recolher todas as seções"
       expand_all_sections: "Expandir todas as seções"
-      filter: "Filtro..."
-      clear_filter: "Limpar filtro"
-      no_results:
-        title: "Nenhum resultado"
-        description_admin_search: 'Não conseguimos encontrar nada correspondente a ''%{filter}''.<br><br>Tente <a class="sidebar-additional-filter-admin-search" href="%{admin_search_url}">pesquisar em toda a interface de administração</a>.'
       footer:
         interface_color_selector:
           light: "Claro"
@@ -4800,6 +4799,16 @@ pt_BR:
           paste: "Colar..."
           save: "Salvar como..."
     powered_by_discourse: "Com tecnologia Discourse"
+    discovery:
+      headings:
+        categories: "Todas as categorias"
+        filter_labels:
+          latest: "Últimos"
+          top: "Melhores"
+          new: "Novo"
+          unread: "Não lidas"
+          hot: "Em alta"
+          unseen: "Não vistos"
   admin_js:
     type_to_filter: "Digite para filtrar..."
     settings: "Configurações"

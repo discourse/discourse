@@ -1772,7 +1772,6 @@ fr:
     pending_users_reminder_delay_minutes: "Avertir les modérateurs si des nouveaux utilisateurs sont en attente d'approbation depuis ce nombre de minutes. Mettre -1 pour désactiver les notifications."
     persistent_sessions: "Les utilisateurs resteront connectés lorsque le navigateur Web sera fermé"
     maximum_session_age: "L'utilisateur restera connecté pour n heures après la dernière visite"
-    full_page_login: "Affichez les formulaires de connexion et d'inscription sur une page complète (lorsque cette case n'est pas cochée, les utilisateurs verront les formulaires dans un mode modal). "
     show_signup_form_email_instructions: Affichez les instructions relatives à l'adresse e-mail sur le formulaire d'inscription.
     show_signup_form_username_instructions: Affichez les instructions relatives au nom d'utilisateur sur le formulaire d'inscription.
     show_signup_form_full_name_instructions: Affichez les instructions relatives au nom complet sur le formulaire d'inscription.

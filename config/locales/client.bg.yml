@@ -2923,6 +2923,10 @@ bg:
       settings: "Настройки"
       topic_template: "Шаблон"
       tags: "Етикети"
+      localization:
+        name: "Име"
+        description: "Описание"
+        remove: "Премахване"
       tags_placeholder: "(По желание) списък на позволените етикети"
       required_tag_group:
         delete: "Изтрий"
@@ -3428,6 +3432,15 @@ bg:
       spreadsheet:
         show: "Покажи"
         about: "Относно"
+    discovery:
+      headings:
+        categories: "Всички категории"
+        filter_labels:
+          latest: "Последни"
+          top: "Топ"
+          new: "Нова"
+          unread: "Непрочетени"
+          unseen: "Непрегледани"
   admin_js:
     settings: "Настройки"
     admin:

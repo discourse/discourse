@@ -1786,7 +1786,6 @@ sk:
       category_style_deprecated: "Váš Discourse v súčasnosti používa zastaraný štýl kategórie, ktorý bude odstránený pred konečným vydaním beta verzie Discusu 3.2. Pokyny, ako zachovať zvolený štýl kategórie, nájdete v časti <a href='https://meta.discourse.org/t/282441'>Presun na nastavenie lokality v štýle jednej kategórie</a> ."
       maxmind_db_configuration: 'Server bol nakonfigurovaný na používanie databáz MaxMind pre reverzné vyhľadávanie IP adries, ale nebolo nakonfigurované platné ID účtu MaxMind, čo môže mať za následok, že databázy MaxMind sa v budúcnosti nebudú sťahovať. <a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">Viac informácií nájdete v tejto príručke</a>.'
       admin_sidebar_deprecation: "Staré rozvrhnutie administrátora je zastarané v prospech nového <a href='https://meta.discourse.org/t/-/289281'>rozvrhnutia bočného panela</a> a bude odstránené v nasledujúcej verzii. Nové rozvrhnutie bočného panela môžete <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>nakonfigurovať</a> už teraz, aby ste sa rozhodli preň skôr."
-      full_page_login_check: "Vaša stránka má vypnuté nastavenie prihlásenia na celú stránku. Toto nastavenie je zastarané a bude odstránené <strong>29. apríla 2025.</strong> Vaša lokalita bude k tomuto dátumu aktualizovaná tak, aby používala prihlasovacie obrazovky a obrazovky na prihlásenie na celú stránku. <a href='https://meta.discourse.org/t/introducing-our-new-fullscreen-signup-and-login-pages/340401'>Ďalšie informácie.</a>"
     back_from_logster_text: "Späť na stránku"
   site_settings:
     allow_bulk_invite: "Umožniť hromadné pozvania nahraním súboru CSV"
@@ -1943,7 +1942,6 @@ sk:
     pending_users_reminder_delay_minutes: "Upozorniť moderátorov, ak noví používatelia čakajú na schválenie dlhšie ako tento počet minút. Nastavte na -1, ak chcete vypnúť upozornenia."
     persistent_sessions: "Používatelia zostanú prihlásení aj po zatvorení webového prehliadača"
     maximum_session_age: "Používateľ zostane prihlásený n hodín od poslednej návštevy"
-    full_page_login: "Zobraziť prihlasovacie a registračné formuláre na celej stránke (ak nie je začiarknuté, používatelia uvidia formuláre v modálnom okne). "
     show_signup_form_email_instructions: Zobrazte e-mailové pokyny vo formulári na registráciu.
     show_signup_form_username_instructions: Zobrazenie pokynov k používateľskému menu vo formulári na registráciu.
     show_signup_form_full_name_instructions: Zobrazenie pokynov na celé meno vo formulári na registráciu.
@@ -2643,6 +2641,8 @@ sk:
     about_page_hidden_groups: "Nezobrazujte členov konkrétnych skupín na stránke /o nás."
     adobe_analytics_tags_url: "Adresa URL značiek Adobe Analytics (`https://assets.adobedtm.com/...`)"
     view_raw_email_allowed_groups: "Skupiny, ktoré môžu zobraziť nespracovaný obsah e-mailu, ak bol príspevok vytvorený pomocou prichádzajúceho e-mailu. To zahŕňa hlavičky e-mailov a ďalšie technické informácie."
+    experimental_content_localization: "Zobrazuje lokalizovaný obsah pre používateľov na základe ich jazykových preferencií. Takýto obsah môže zahŕňať kategórie, značky, príspevky a témy. Na tejto funkcii sa intenzívne pracuje."
+    rich_editor: "Povoľte bohatý editor, aby všetci používatelia mohli prepínať medzi súčasným režimom Markdown a novým bohatým textovým editorom pre intuitívnejšie a používateľsky prívetivejšie písanie. Bohatý textový editor je v štádiu aktívneho vývoja, takže ešte nie sú podporované všetky funkcie - <a href='https://meta.discourse.org/t/test-our-new-composer/352347' target='_blank'>viac informácií nájdete v časti Meta</a>."
     errors:
       invalid_css_color: "Neplatná farba. Zadajte názov farby alebo hexadecimálnu hodnotu."
       invalid_email: "Nesprávna emailová adresa."

@@ -1786,7 +1786,6 @@ pl_PL:
       category_style_deprecated: "Twój Discourse obecnie używa przestarzałego stylu kategorii, który zostanie usunięty przed finalnym wydaniem beta Discourse 3.2. Zapoznaj się z instrukcjami dotyczącymi zachowania wybranego stylu kategorii na stronie <a href='https://meta.discourse.org/t/282441'>Przejście na pojedynczy styl kategorii ustawień witryny</a>."
       maxmind_db_configuration: 'Serwer został skonfigurowany do używania baz danych MaxMind do odwrotnej translacji adresów IP, ale nie skonfigurowano prawidłowego identyfikatora konta MaxMind, co może spowodować niepowodzenie pobierania baz danych MaxMind w przyszłości. <a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">Zapoznaj się z tym przewodnikiem, aby dowiedzieć się więcej</a>.'
       admin_sidebar_deprecation: "Stary układ administracyjny jest przestarzały na rzecz nowego <a href='https://meta.discourse.org/t/-/289281'>układu paska bocznego</a> i zostanie usunięty w następnej wersji. Możesz <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>skonfigurować</a> nowy układ paska bocznego już teraz, aby wcześniej się na niego przełączyć."
-      full_page_login_check: "Twoja strona wyłączyła ustawienie logowania na pełnej stronie. To ustawienie jest przestarzałe i zostanie usunięte <strong>29 kwietnia 2025</strong>. Twoja strona zostanie zaktualizowana, aby używać pełnoekranowych stron rejestracji i logowania w tym dniu. <a href='https://meta.discourse.org/t/introducing-our-new-fullscreen-signup-and-login-pages/340401'>Dowiedz się więcej</a>."
     back_from_logster_text: "Powrót do strony"
   site_settings:
     allow_bulk_invite: "Zezwalaj na zaproszenia zbiorcze, przesyłając plik CSV"
@@ -1943,7 +1942,6 @@ pl_PL:
     pending_users_reminder_delay_minutes: "Powiadom moderatorów, jeśli nowi użytkownicy czekają na zatwierdzenie dłużej niż tyle minut. Ustaw na -1, aby wyłączyć powiadomienia."
     persistent_sessions: "Użytkownicy pozostaną zalogowani po zamknięciu przeglądarki internetowej"
     maximum_session_age: "Użytkownik zostanie zalogowany przez n godzin od czasu ostatniej wizyty."
-    full_page_login: "Pokaż formularze logowania i rejestracji na pełnej stronie (po odznaczeniu tej opcji użytkownicy zobaczą formularze w oknie modalnym). "
     show_signup_form_email_instructions: Pokaż instrukcje e-mail w formularzu rejestracji.
     show_signup_form_username_instructions: Pokaż instrukcje dotyczące nazwy użytkownika w formularzu rejestracji.
     show_signup_form_full_name_instructions: Pokaż pełne instrukcje dotyczące nazwy w formularzu rejestracyjnym.

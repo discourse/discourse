@@ -5217,7 +5217,7 @@ en:
             bookmarks: "Topics in %{category} without tags you've bookmarked"
 
         single_tag:
-          default: "%{filter} topics tagged %{tag}"
+          default: "%{filter} topics tagged with %{tag}"
           posted: "Topics tagged %{tag} you've posted in"
           bookmarks: "Topics tagged %{tag} you’ve bookmarked"
 
@@ -5227,7 +5227,7 @@ en:
           bookmarks: "Topics tagged %{tags} you’ve bookmarked"
 
         category_tag:
-          default: "%{filter} topics in %{category} tagged %{tag}"
+          default: "%{filter} topics in %{category} tagged with %{tag}"
           posted: "Topics in %{category} tagged %{tag} you’ve posted in"
           bookmarks: "Topics in %{category} tagged %{tag} you’ve bookmarked"
 
@@ -5599,7 +5599,7 @@ en:
         modal_title: "Search anything in admin"
         title: "Search"
         instructions: "Type to search for pages, settings, reports, themes, components, and more..."
-        no_results: 'We couldn’t find anything matching ‘%{filter}’.'
+        no_results: "We couldn’t find anything matching ‘%{filter}’."
         result_types:
           page:
             one: "Page"

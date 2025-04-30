@@ -9,34 +9,23 @@ Rails.application.config.assets.enabled = true
 Rails.application.config.assets.version = "2-#{GlobalSetting.asset_url_salt}"
 
 # Add additional assets to the asset load path.
-Rails.application.config.assets.paths << "#{Rails.root}/public/javascripts"
+Rails.application.config.assets.paths.push(
+  "#{Rails.root}/public/javascripts",
+  "#{Rails.root}/app/assets/javascripts/discourse/dist/assets",
+)
 
-# Precompile additional assets.
-# application.js, application.css, and all non-JS/CSS in the app/assets
-# folder are already added.
+Rails.application.config.assets.paths.push(
+  *Discourse.plugins.map { |p| "#{Rails.root}/app/assets/generated/#{p.directory_name}" },
+)
 
-# explicitly precompile any images in plugins ( /assets/images ) path
-Rails.application.config.assets.precompile += [
-  lambda do |filename, path|
-    path =~ %r{assets/images} && !%w[.js .css].include?(File.extname(filename))
-  end,
-]
+# These paths are added automatically by propshaft, but we don't want them
+Rails.application.config.assets.excluded_paths.push(
+  "#{Rails.root}/app/assets/generated",
+  "#{Rails.root}/app/assets/javascripts",
+  "#{Rails.root}/app/assets/stylesheets",
+)
 
-Rails.application.config.assets.precompile += %w[scripts/discourse-test-listen-boot]
-
-Rails.application.config.assets.precompile << lambda do |logical_path, filename|
-  filename.start_with?(EmberCli.dist_dir) && EmberCli.assets.include?(logical_path)
+# We don't need/want most of Propshaft's preprocessing. Only keep the JS sourcemap handler
+Rails.application.config.assets.compilers.filter! do |type, compiler|
+  type == "text/javascript" && compiler == Propshaft::Compiler::SourceMappingUrls
 end
-
-# out of the box sprockets 3 grabs loose files that are hanging in assets,
-# the exclusion list does not include hbs so you double compile all this stuff
-Rails.application.config.assets.precompile.delete(Sprockets::Railtie::LOOSE_APP_ASSETS)
-
-# We don't want application from node_modules, only from the root
-Rails.application.config.assets.precompile.delete(%r{(?:/|\\|\A)application\.(css|js)$})
-
-Discourse
-  .find_plugin_js_assets(include_disabled: true)
-  .each do |file|
-    Rails.application.config.assets.precompile << "#{file}.js" if file.end_with?("_extra")
-  end

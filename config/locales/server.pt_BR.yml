@@ -1783,7 +1783,6 @@ pt_BR:
     pending_users_reminder_delay_minutes: "Notifique os moderadores se novos(as) usuários(as) estiverem aguardando aprovação por mais de alguns minutos. Defina como -1 para desativar as notificações."
     persistent_sessions: "Os(as) usuários(as) permanecerão com a conta conectada ao fechar o navegador"
     maximum_session_age: "O(a) usuário(a) permanecerá com a conta conectada durante n horas desde o último acesso"
-    full_page_login: "Mostrar formulários de login e criação de conta numa página completa (quando desmarcada, os(as) usuários(as) verão os formulários em um modal). "
     show_signup_form_email_instructions: Mostrar instruções de e-mail no formulário de criação de conta.
     show_signup_form_username_instructions: Mostrar nome de usuário(a) no formulário de criação de conta.
     show_signup_form_full_name_instructions: Mostrar nome completo no formulário de criação de conta.

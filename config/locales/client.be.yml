@@ -1185,6 +1185,10 @@ be:
       settings: "Налады"
       topic_template: "Шаблон"
       tags: "Тэгі"
+      localization:
+        name: "імя"
+        description: "Апісанне"
+        remove: "выдаліць"
       required_tag_group:
         delete: "Выдаліць"
       delete: "выдаліць катэгорыю"
@@ -1490,7 +1494,6 @@ be:
               content_drafts: "Мае чарнавікі"
             review:
               content: "Патрабуе перагляду"
-      filter: "Filter..."
       footer:
         interface_color_selector:
           light: "святло"
@@ -1511,6 +1514,14 @@ be:
           reason: "чаму Вы рэдагуеце паведамленне?"
       spreadsheet:
         about: "Аб тэме"
+    discovery:
+      headings:
+        categories: "Усе катэгорыі"
+        filter_labels:
+          latest: "апошняя"
+          top: "Топ тэмаў"
+          new: "Новыя"
+          unread: "Непрачытаныя"
   admin_js:
     settings: "Налады"
     admin:

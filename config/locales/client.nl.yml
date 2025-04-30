@@ -3772,6 +3772,10 @@ nl:
       settings: "Instellingen"
       topic_template: "Sjabloon"
       tags: "Tags"
+      localization:
+        name: "Naam"
+        description: "Beschrijving"
+        remove: "Verwijderen"
       tags_allowed_tags: "Deze tags beperken tot deze categorie:"
       tags_allowed_tag_groups: "Deze taggroepen beperken tot deze categorie:"
       tags_placeholder: "(Optioneel) lijst van toegestane tags"
@@ -4662,10 +4666,6 @@ nl:
       back_to_forum: "Terug naar forum"
       collapse_all_sections: "Alle secties samenvouwen"
       expand_all_sections: "Alle secties uitvouwen"
-      filter: "Filter..."
-      clear_filter: "Filter wissen"
-      no_results:
-        title: "Geen resultaten"
       footer:
         interface_color_selector:
           light: "Licht"
@@ -4771,6 +4771,16 @@ nl:
           paste: "Plakken..."
           save: "Opslaan als..."
     powered_by_discourse: "Mogelijk gemaakt door Discourse"
+    discovery:
+      headings:
+        categories: "Alle categorieën"
+        filter_labels:
+          latest: "Nieuwste"
+          top: "Top"
+          new: "Nieuw"
+          unread: "Ongelezen"
+          hot: "Veelgelezen"
+          unseen: "Ongezien"
   admin_js:
     type_to_filter: "Typ om te filteren…"
     settings: "Instellingen"
