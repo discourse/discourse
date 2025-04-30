@@ -385,10 +385,19 @@
     padding: 0;
     width: 100%;
     height: var(--d-sidebar-row-height);
+    cursor: pointer;
 
     &:focus {
       outline: none;
     }
+  }
+
+  &__shortcut-hint {
+    background-color: rgba(var(--tertiary-rgb), 0.1);
+    padding: 0.25em 0.5em;
+    margin-right: 0.5em;
+    font-size: var(--font-down-3);
+    color: var(--primary-medium);
   }
 }
 

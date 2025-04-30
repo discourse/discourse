@@ -4,6 +4,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import { i18n } from "discourse-i18n";
+import { translateModKey } from "discourse/lib/utilities";
 
 export default class Search extends Component {
   @service sidebarState;
@@ -14,6 +15,10 @@ export default class Search extends Component {
 
   get shouldDisplay() {
     return this.sidebarState.currentPanel.searchable;
+  }
+
+  get sidebarShortcutCombo() {
+    return `${translateModKey("Meta")}+/`;
   }
 
   @action
@@ -39,6 +44,9 @@ export default class Search extends Component {
             enterkeyhint="done"
             class="sidebar-search__input"
           />
+          <span
+            class="sidebar-search__shortcut-hint"
+          >{{this.sidebarShortcutCombo}}</span>
         </div>
       </div>
     {{/if}}
