@@ -20,9 +20,10 @@ class SiteSettings::TypeSupervisor
     list_type
     textarea
     json_schema
+    schema
     requires_confirmation
   ].freeze
-  VALIDATOR_OPTS = %i[min max regex hidden regex_error json_schema].freeze
+  VALIDATOR_OPTS = %i[min max regex hidden regex_error json_schema schema].freeze
 
   # For plugins, so they can tell if a feature is supported
   SUPPORTED_TYPES = %i[email username list enum].freeze
@@ -59,6 +60,7 @@ class SiteSettings::TypeSupervisor
         html_deprecated: 25,
         tag_group_list: 26,
         file_size_restriction: 27,
+        objects: 28,
       )
   end
 
@@ -94,6 +96,7 @@ class SiteSettings::TypeSupervisor
     @list_type = {}
     @textareas = {}
     @json_schemas = {}
+    @schemas = {}
   end
 
   def load_setting(name_arg, opts = {})
@@ -102,6 +105,7 @@ class SiteSettings::TypeSupervisor
     @textareas[name] = opts[:textarea] if opts[:textarea]
 
     @json_schemas[name] = opts[:json_schema].constantize if opts[:json_schema]
+    @schemas[name] = opts[:schema] if opts[:schema]
 
     if (enum = opts[:enum])
       @enums[name] = enum.is_a?(String) ? enum.constantize : enum
@@ -140,7 +144,6 @@ class SiteSettings::TypeSupervisor
     name = name.to_sym
     @types[name] = (@types[name] || get_data_type(name, value))
     type = (override_type || @types[name])
-
     case type
     when self.class.types[:float]
       value.to_f
@@ -172,7 +175,6 @@ class SiteSettings::TypeSupervisor
   def type_hash(name)
     name = name.to_sym
     type = get_type(name)
-
     result = { type: type.to_s }
 
     if type == :enum
@@ -202,6 +204,8 @@ class SiteSettings::TypeSupervisor
     result[:choices] = @choices[name] if @choices.has_key? name
     result[:list_type] = @list_type[name] if @list_type.has_key? name
     result[:textarea] = @textareas[name] if @textareas.has_key? name
+    result[:schema] = @schemas[name] if @schemas.has_key? name
+
     if @json_schemas.has_key?(name) && json_klass = json_schema_class(name)
       result[:json_schema] = json_klass.schema
     end

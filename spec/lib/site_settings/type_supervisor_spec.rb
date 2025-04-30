@@ -186,6 +186,19 @@ RSpec.describe SiteSettings::TypeSupervisor do
         "[{\"name\":\"Brett\"}]",
         json_schema: "TestJsonSchemaClass",
       )
+      settings.setting(
+        :type_objects,
+        "[]",
+        type: "objects",
+        schema: {
+          name: "link",
+          properties: {
+            name: {
+              type: "string",
+            },
+          },
+        },
+      )
       settings.refresh!
     end
 
@@ -327,6 +340,19 @@ RSpec.describe SiteSettings::TypeSupervisor do
              SiteSetting.types[:string],
            ]
       end
+
+      it "raises when an object is not valid for the given schema" do
+        expect {
+          settings.type_supervisor.to_db_value(:type_objects, "not-json")
+        }.to raise_error Discourse::InvalidParameters
+      end
+
+      it "returns value for the given objects schema string setting" do
+        expect(settings.type_supervisor.to_db_value(:type_objects, "[]")).to eq [
+             "[]",
+             SiteSetting.types[:string],
+           ]
+      end
     end
 
     describe "#to_rb_value" do
@@ -446,6 +472,19 @@ RSpec.describe SiteSettings::TypeSupervisor do
       settings.setting(:type_enum_choices, "2", type: "enum", choices: %w[1 2])
       settings.setting(:type_enum_class, "a", enum: "TestEnumClass2")
       settings.setting(:type_list, "a", type: "list", choices: %w[a b], list_type: "compact")
+      settings.setting(
+        :type_objects,
+        "[]",
+        type: "objects",
+        schema: {
+          name: "link",
+          properties: {
+            name: {
+              type: "string",
+            },
+          },
+        },
+      )
       settings.refresh!
     end
 
@@ -499,6 +538,12 @@ RSpec.describe SiteSettings::TypeSupervisor do
       hash = settings.type_supervisor.type_hash(:type_enum_class)
       expect(hash[:valid_values]).to eq %w[a b]
       expect(hash[:translate_names]).to eq false
+    end
+
+    it "returns objects type" do
+      hash = settings.type_supervisor.type_hash(:type_objects)
+      expect(hash[:type]).to eq "objects"
+      expect(hash[:schema]).to eq({ name: "link", properties: { name: { type: "string" } } })
     end
 
     it "returns int min/max values" do
