@@ -1,6 +1,7 @@
 /* eslint-disable simple-import-sort/imports */
 import Application from "../app";
 import "./loader-shims";
+import "discourse/static/markdown-it";
 /* eslint-enable simple-import-sort/imports */
 
 import { getOwner } from "@ember/owner";
