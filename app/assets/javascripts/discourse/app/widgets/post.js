@@ -2,7 +2,6 @@ import { getOwner } from "@ember/owner";
 import { hbs } from "ember-cli-htmlbars";
 import { Promise } from "rsvp";
 import { h } from "virtual-dom";
-import ShareTopicModal from "discourse/components/modal/share-topic";
 import { dateNode } from "discourse/helpers/node";
 import autoGroupFlairForUser from "discourse/lib/avatar-flair";
 import { avatarUrl, translateSize } from "discourse/lib/avatar-utils";
@@ -436,9 +435,12 @@ createWidget("post-date", {
     });
   },
 
-  showShareModal() {
+  async showShareModal() {
     const post = this.findAncestorModel();
     const topic = post.topic;
+    const ShareTopicModal = await import(
+      "discourse/components/modal/share-topic"
+    );
     getOwner(this)
       .lookup("service:modal")
       .show(ShareTopicModal, {

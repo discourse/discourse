@@ -22,33 +22,14 @@
     <%- end %>
 
     <%= build_plugin_html 'server:before-script-load' %>
-
-    <% add_resource_preload_list(script_asset_path("start-discourse"), "script") %>
-    <% add_resource_preload_list(script_asset_path("browser-update"), "script") %>
-    <link rel="preload" href="<%= script_asset_path "start-discourse" %>" as="script" nonce="<%= csp_nonce_placeholder %>">
-    <link rel="preload" href="<%= script_asset_path "browser-update" %>" as="script" nonce="<%= csp_nonce_placeholder %>">
-
-    <%= preload_script 'browser-detect' %>
-
-    <%= preload_script "vendor" %>
-    <%= preload_script "discourse" %>
-    <%- Discourse.find_plugin_js_assets(include_official: allow_plugins?, include_unofficial: allow_third_party_plugins?, request: request).each do |file| %>
-      <%= preload_script file %>
-    <%- end %>
+    
+    <%= preload_script "vendor", typeModule: true %>
+    <%= preload_script "discourse", typeModule: true %>
 
     <%= preload_script_url ExtraLocalesController.url("main") %>
     <%= preload_script_url ExtraLocalesController.url("mf") %>
     <%- if ExtraLocalesController.client_overrides_exist? %>
       <%= preload_script_url ExtraLocalesController.url("overrides") %>
-    <%- end %>
-
-    <%- if staff? %>
-      <%= preload_script_url ExtraLocalesController.url("admin") %>
-      <%= preload_script "admin" %>
-    <%- end %>
-
-    <%- if admin? %>
-      <%= preload_script_url ExtraLocalesController.url("wizard") %>
     <%- end %>
 
     <%- unless customization_disabled? %>
@@ -77,6 +58,9 @@
     <%- if authentication_data %>
       <meta id="data-authentication" data-authentication-data="<%= authentication_data %>">
     <%- end %>
+
+    <%= preload_modules %>
+
   </head>
 
   <body class="<%= body_classes %>">
@@ -133,11 +117,9 @@
       </form>
     <% end %>
 
-    <script defer src="<%= script_asset_path "start-discourse" %>" nonce="<%= csp_nonce_placeholder %>"></script>
+    <script type="module" src="<%= script_asset_path EmberCli.script_chunks["start-discourse"]&.first || "start-discourse" %>" nonce="<%= csp_nonce_placeholder %>" data-discourse-entrypoint="start-discourse"></script>
 
     <%= yield :data %>
-
-    <script defer src="<%= script_asset_path "browser-update" %>" nonce="<%= csp_nonce_placeholder %>"></script>
 
     <%- unless customization_disabled? %>
       <%= theme_lookup("body_tag") %>

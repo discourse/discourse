@@ -133,7 +133,7 @@ module ApplicationHelper
     path
   end
 
-  def preload_script(script)
+  def preload_script(script, typeModule: false)
     scripts = []
 
     if chunks = EmberCli.script_chunks[script]
@@ -145,20 +145,21 @@ module ApplicationHelper
     scripts
       .map do |name|
         path = script_asset_path(name)
-        preload_script_url(path, entrypoint: script)
+        preload_script_url(path, entrypoint: script, typeModule:)
       end
       .join("\n")
       .html_safe
   end
 
-  def preload_script_url(url, entrypoint: nil)
+  def preload_script_url(url, entrypoint: nil, typeModule: false)
     entrypoint_attribute = entrypoint ? "data-discourse-entrypoint=\"#{entrypoint}\"" : ""
     nonce_attribute = "nonce=\"#{csp_nonce_placeholder}\""
+    module_or_defer = typeModule ? 'type="module"' : "defer"
 
     add_resource_preload_list(url, "script")
 
     <<~HTML.html_safe
-      <script defer src="#{url}" #{entrypoint_attribute} #{nonce_attribute}></script>
+      <script #{module_or_defer} src="#{url}" #{entrypoint_attribute} #{nonce_attribute}></script>
     HTML
   end
 
@@ -791,6 +792,22 @@ module ApplicationHelper
       .preloaded_data
       .transform_values { |value| escape_unicode(value) }
       .to_json
+  end
+
+  def preload_modules
+    puts params[:controller]
+    ember_route_name =
+      if params[:controller] == "list"
+        "discovery"
+      elsif params[:controller] == "topics"
+        "topic"
+      end
+
+    modules_to_preload = EmberCli.route_bundles[ember_route_name]
+
+    modules_to_preload&.map { |module_name| <<~HTML }&.join("\n")&.html_safe
+        <link rel="modulepreload" href="#{script_asset_path(module_name)}" />
+      HTML
   end
 
   def client_side_setup_data

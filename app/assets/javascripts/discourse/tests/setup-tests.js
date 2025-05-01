@@ -1,5 +1,5 @@
 /* eslint-disable simple-import-sort/imports */
-import Application from "../app";
+import Application from "discourse/app";
 import "./loader-shims";
 import "discourse/static/markdown-it";
 /* eslint-enable simple-import-sort/imports */
@@ -12,18 +12,23 @@ import {
   setResolver,
 } from "@ember/test-helpers";
 import $ from "jquery";
-import MessageBus from "message-bus-client";
+import "message-bus-client";
+const MessageBus = window.MessageBus; // TODO
+import * as FakerModule from "@faker-js/faker";
 import QUnit from "qunit";
 import sinon from "sinon";
+import { setLoadedFaker } from "discourse/lib/load-faker";
 import PreloadStore from "discourse/lib/preload-store";
+import { loadSprites } from "discourse/lib/svg-sprite-loader";
 import { resetSettings as resetThemeSettings } from "discourse/lib/theme-settings-store";
+import { ScrollingDOMMethods } from "discourse/mixins/scrolling";
+import { resetCategoryCache } from "discourse/models/category";
 import {
   disableLoadMoreObserver,
   enableLoadMoreObserver,
 } from "discourse/components/load-more";
 import Session from "discourse/models/session";
 import User from "discourse/models/user";
-import { resetCategoryCache } from "discourse/models/category";
 import SiteSettingService from "discourse/services/site-settings";
 import { flushMap } from "discourse/services/store";
 import pretender, {
@@ -51,6 +56,10 @@ import { buildResolver } from "discourse/resolver";
 import { loadSprites } from "../lib/svg-sprite-loader";
 import * as FakerModule from "@faker-js/faker";
 import { setLoadedFaker } from "discourse/lib/load-faker";
+import deprecated from "discourse-common/lib/deprecated";
+import { setDefaultOwner } from "discourse-common/lib/get-owner";
+import { setupS3CDN, setupURL } from "discourse-common/lib/get-url";
+import { buildResolver } from "discourse-common/resolver";
 
 let cancelled = false;
 let started = false;

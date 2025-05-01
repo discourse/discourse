@@ -4,9 +4,6 @@
   "description": "Discourse's admin section",
   "author": "Discourse",
   "license": "GPL-2.0-only",
-  "keywords": [
-    "ember-addon"
-  ],
   "scripts": {
     "build": "ember build",
     "lint:hbs": "ember-template-lint .",
@@ -14,11 +11,21 @@
     "start": "ember serve"
   },
   "dependencies": {
-    "@babel/core": "^7.26.10",
-    "@ember/string": "^4.0.1",
+    "@babel/core": "^7.26.0",
+    "@ember/string": "^4.0.0",
+    "discourse-i18n": "workspace:*",
     "ember-cli-babel": "^8.2.0",
     "ember-cli-htmlbars": "^6.3.0",
-    "ember-template-imports": "^4.3.0"
+    "ember-template-imports": "^4.2.0",
+    "truth-helpers": "workspace:*",
+    "@ember-decorators/component": "^6.1.1",
+    "@ember-decorators/object": "^6.1.1",
+    "ember-cached-decorator-polyfill": "^1.0.2",
+    "@ember/render-modifiers": "^2.1.0",
+    "@ember-compat/tracked-built-ins": "^0.9.1",
+    "ember-modifier": "^4.2.0",
+    "jquery": "^3.7.1"
+
   },
   "devDependencies": {
     "@ember/optional-features": "^2.2.0",
@@ -45,8 +52,5 @@
     "npm": "please-use-pnpm",
     "yarn": "please-use-pnpm",
     "pnpm": "^9"
-  },
-  "ember": {
-    "edition": "default"
   }
 }

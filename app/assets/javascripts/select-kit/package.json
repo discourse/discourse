@@ -4,9 +4,6 @@
   "description": "Discourse's select widget",
   "author": "Discourse",
   "license": "GPL-2.0-only",
-  "keywords": [
-    "ember-addon"
-  ],
   "scripts": {
     "build": "ember build",
     "lint:hbs": "ember-template-lint .",
@@ -45,15 +42,17 @@
     "ember-source": "~5.12.0",
     "ember-source-channel-url": "^3.0.0",
     "loader.js": "^4.7.0",
-    "webpack": "^5.99.7"
+    "webpack": "^5.97.1",
+    "@popperjs/core": "^2.11.8",
+    "@ember-decorators/component": "^6.1.1",
+    "@ember-decorators/object": "^6.1.1",
+    "ember-cached-decorator-polyfill": "^1.0.2",
+    "jquery": "^3.7.1"
   },
   "engines": {
     "node": ">= 18",
     "npm": "please-use-pnpm",
     "yarn": "please-use-pnpm",
     "pnpm": "^9"
-  },
-  "ember": {
-    "edition": "default"
   }
 }

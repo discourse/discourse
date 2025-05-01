@@ -4,9 +4,6 @@
   "description": "Discourse's floating panels component.",
   "author": "Discourse",
   "license": "GPL-2.0-only",
-  "keywords": [
-    "ember-addon"
-  ],
   "scripts": {
     "build": "ember build",
     "lint:hbs": "ember-template-lint .",
@@ -25,7 +22,9 @@
     "truth-helpers": "workspace:1.0.0"
   },
   "devDependencies": {
+    "ember-modifier": "^4.2.0",
     "@ember/optional-features": "^2.2.0",
+    "@ember/render-modifiers": "^2.1.0",
     "@embroider/test-setup": "^4.0.0",
     "@glimmer/component": "^1.1.2",
     "@types/jquery": "^3.5.32",
@@ -42,15 +41,14 @@
     "ember-source": "~5.12.0",
     "ember-source-channel-url": "^3.0.0",
     "loader.js": "^4.7.0",
-    "webpack": "^5.99.7"
+    "webpack": "^5.97.1",
+    "@floating-ui/dom": "^1.6.12",
+    "@ember-compat/tracked-built-ins": "^0.9.1"
   },
   "engines": {
     "node": ">= 18",
     "npm": "please-use-pnpm",
     "yarn": "please-use-pnpm",
     "pnpm": "^9"
-  },
-  "ember": {
-    "edition": "default"
   }
 }

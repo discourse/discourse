@@ -1,16 +1,23 @@
+performance.mark("discourse-init");
+const event = new CustomEvent("discourse-init");
+document.dispatchEvent(event);
+
 import "./setup-deprecation-workflow";
 import "decorator-transforms/globals";
+import "./loader"; // todo, loader.js from npm?
 import "./loader-shims";
 import "./discourse-common-loader-shims";
 import "./global-compat";
+import "./compat-modules";
+import { importSync } from "@embroider/macros";
+import compatModules from "@embroider/virtual/compat-modules";
 import { registerDiscourseImplicitInjections } from "discourse/lib/implicit-injections";
-
 // Register Discourse's standard implicit injections on common framework classes.
 registerDiscourseImplicitInjections();
 
 import Application from "@ember/application";
 import { VERSION } from "@ember/version";
-import require from "require";
+// import require from "require";
 import { normalizeEmberEventHandling } from "discourse/lib/ember-events";
 import { isTesting } from "discourse/lib/environment";
 import { withPluginApi } from "discourse/lib/plugin-api";
@@ -27,7 +34,16 @@ class Discourse extends Application {
     paste: "paste",
   };
 
-  Resolver = buildResolver("discourse");
+  Resolver = buildResolver("discourse").withModules({
+    ...compatModules,
+
+    "discourse/templates/discovery/list": importSync(
+      "discourse/templates/discovery/list"
+    ),
+    "discourse/controllers/discovery/list": importSync(
+      "discourse/controllers/discovery/list"
+    ),
+  });
 
   // Start up the Discourse application by running all the initializers we've defined.
   start() {
