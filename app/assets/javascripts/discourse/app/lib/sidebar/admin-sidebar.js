@@ -407,4 +407,14 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
       );
     });
   }
+
+  get searchable() {
+    return true;
+  }
+
+  get onSearchClick() {
+    getOwnerWithFallback(this)
+      .lookup("service:modal")
+      .show(this.adminSidebarStateManager.modals.adminSearch);
+  }
 }
