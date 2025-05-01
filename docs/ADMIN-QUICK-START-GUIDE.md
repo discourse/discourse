@@ -67,9 +67,9 @@ To get you started, think about what you want new members to **know about your c
 
 To customize the look and feel of your community beyond what you configured in the [setup wizard](%{base_url}/wizard), you can change the following settings in the [admin interface](%{base_url}/admin):
 
-- [Logo images](%{base_url}/admin/config/logo)
+- [Logo images](%{base_url}/admin/config/logo-and-fonts)
 - [Color palettes](%{base_url}/admin/customize/colors)
-- [Font styles](%{base_url}/admin/config/fonts)
+- [Font styles](%{base_url}/admin/config/logo-and-fonts)
 - [Site theme](%{base_url}/admin/customize/themes)
 - [Navigation menu](%{base_url}/admin/config/navigation)
 - [Custom user fields](%{base_url}/admin/config/user-fields)
