@@ -50,7 +50,8 @@ class Stylesheet::Manager
   end
 
   def self.precompile_css
-    targets = %i[desktop mobile admin wizard desktop_rtl mobile_rtl admin_rtl wizard_rtl]
+    targets = %i[common desktop mobile admin wizard]
+    targets += targets.map { |t| :"#{t}_rtl" }
 
     targets +=
       Discourse.find_plugin_css_assets(
@@ -85,7 +86,7 @@ class Stylesheet::Manager
     color_schemes << ColorScheme.base
     color_schemes = color_schemes.compact.uniq
 
-    targets = %i[desktop_theme mobile_theme]
+    targets = %i[common_theme desktop_theme mobile_theme]
     compiled = Set.new
 
     themes.each do |theme_id, color_scheme_id|
@@ -104,7 +105,7 @@ class Stylesheet::Manager
             builder =
               Stylesheet::Manager::Builder.new(target: target, theme: theme, manager: manager)
 
-            next if theme.component && !scss_checker.has_scss(theme.id)
+            next if !scss_checker.has_scss(theme.id)
             $stderr.puts "precompile target: #{target} #{theme.name}"
             builder.compile(force: true)
             compiled << "#{target}_#{theme.id}"
@@ -314,7 +315,7 @@ class Stylesheet::Manager
             }
             builder = Builder.new(target: target, theme: theme, manager: self)
 
-            next if builder.theme&.component && !scss_checker.has_scss(theme_id)
+            next if !scss_checker.has_scss(theme_id)
             builder.compile unless File.exist?(builder.stylesheet_fullpath)
             href = builder.stylesheet_absolute_url
 

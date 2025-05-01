@@ -646,7 +646,7 @@ RSpec.describe Discourse do
       css_link_tag =
         Nokogiri::HTML5
           .fragment(
-            Stylesheet::Manager.new(theme_id: theme.id).stylesheet_link_tag(:desktop_theme, "all"),
+            Stylesheet::Manager.new(theme_id: theme.id).stylesheet_link_tag(:common_theme, "all"),
           )
           .css("link")
           .first
@@ -672,7 +672,7 @@ RSpec.describe Discourse do
       css_link_tag =
         Nokogiri::HTML5
           .fragment(
-            Stylesheet::Manager.new(theme_id: theme.id).stylesheet_link_tag(:desktop_theme, "all"),
+            Stylesheet::Manager.new(theme_id: theme.id).stylesheet_link_tag(:common_theme, "all"),
           )
           .css("link")
           .first
@@ -697,7 +697,7 @@ RSpec.describe Discourse do
       css_link_tag =
         Nokogiri::HTML5
           .fragment(
-            Stylesheet::Manager.new(theme_id: theme.id).stylesheet_link_tag(:desktop_theme, "all"),
+            Stylesheet::Manager.new(theme_id: theme.id).stylesheet_link_tag(:common_theme, "all"),
           )
           .css("link")
           .first

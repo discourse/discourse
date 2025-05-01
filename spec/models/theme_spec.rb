@@ -292,7 +292,7 @@ HTML
 
       scss, _map =
         Stylesheet::Manager::Builder.new(
-          target: :desktop_theme,
+          target: :common_theme,
           theme: theme,
           manager: manager,
         ).compile(force: true)
@@ -319,7 +319,7 @@ HTML
 
       scss, _map =
         Stylesheet::Manager::Builder.new(
-          target: :desktop_theme,
+          target: :common_theme,
           theme: theme,
           manager: manager,
         ).compile(force: true)
@@ -333,7 +333,7 @@ HTML
 
       scss, _map =
         Stylesheet::Manager::Builder.new(
-          target: :desktop_theme,
+          target: :common_theme,
           theme: theme,
           manager: manager,
         ).compile(force: true)
@@ -351,7 +351,7 @@ HTML
 
       scss, _map =
         Stylesheet::Manager::Builder.new(
-          target: :desktop_theme,
+          target: :common_theme,
           theme: theme,
           manager: manager,
         ).compile(force: true)
@@ -575,12 +575,16 @@ HTML
 
     theme = Fabricate(:theme, user_selectable: true, user: user, color_scheme_id: cs1.id)
 
-    messages = MessageBus.track_publish { theme.save! }.filter { |m| m.channel == "/file-change" }
+    messages =
+      MessageBus
+        .track_publish do
+          theme.set_field(target: :common, name: :scss, value: "body { color: red; }")
+          theme.save!
+        end
+        .filter { |m| m.channel == "/file-change" }
     expect(messages.count).to eq(1)
-    expect(messages.first.data.map { |d| d[:target] }).to contain_exactly(
-      :desktop_theme,
-      :mobile_theme,
-    )
+
+    expect(messages.first.data.map { |d| d[:target] }).to contain_exactly(:common_theme)
 
     # With color scheme change:
     messages =
@@ -594,9 +598,8 @@ HTML
     expect(messages.first.data.map { |d| d[:target] }).to contain_exactly(
       :admin,
       :desktop,
-      :desktop_theme,
       :mobile,
-      :mobile_theme,
+      :common_theme,
     )
   end
 
@@ -883,7 +886,7 @@ HTML
       manager = Stylesheet::Manager.new(theme_id: theme.id)
 
       builder =
-        Stylesheet::Manager::Builder.new(target: :desktop_theme, theme: theme, manager: manager)
+        Stylesheet::Manager::Builder.new(target: :common_theme, theme: theme, manager: manager)
 
       builder.compile(force: true)
     end
@@ -917,7 +920,7 @@ HTML
 
       builder =
         Stylesheet::Manager::Builder.new(
-          target: :desktop_theme,
+          target: :common_theme,
           theme: child_theme,
           manager: manager,
         )
