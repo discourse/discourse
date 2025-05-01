@@ -42,6 +42,11 @@
     background: none !important;
     width: 100% !important;
   }
+
+  &__full-page-link {
+    align-self: self-end;
+    padding-right: 2.3em;
+  }
 }
 
 // Fitler
@@ -150,4 +155,5 @@
 
 .admin-search-modal {
   --modal-max-width: 700px;
+  --modal-min-height: 200px;
 }

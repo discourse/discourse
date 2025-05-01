@@ -54,6 +54,20 @@ export default class BaseCustomSidebarPanel {
     return false;
   }
 
+  /**
+   * @returns {boolean} Controls whether the search is shown
+   */
+  get searchable() {
+    return false;
+  }
+
+  /**
+   * @returns {Function} Action when search input is clicked.
+   */
+  onSearchClick() {
+    return null;
+  }
+
   get scrollActiveLinkIntoView() {
     return false;
   }
