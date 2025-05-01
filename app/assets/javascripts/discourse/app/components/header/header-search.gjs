@@ -28,11 +28,8 @@ export default class HeaderSearch extends Component {
 
   get shouldDisplay() {
     return (
-      (this.siteSettings.login_required &&
-        this.currentUser &&
-        !this.search.welcomeBannerSearchInViewport) ||
-      (!this.siteSettings.login_required &&
-        !this.search.welcomeBannerSearchInViewport)
+      (this.siteSettings.login_required && this.currentUser) ||
+      !this.siteSettings.login_required
     );
   }
 
