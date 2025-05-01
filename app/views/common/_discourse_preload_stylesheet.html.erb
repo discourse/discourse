@@ -1,8 +1,10 @@
 <%= discourse_preload_color_scheme_stylesheets %>
 
 <%- if rtl? %>
+  <%= discourse_stylesheet_preload_tag(:common_rtl) %>
   <%= discourse_stylesheet_preload_tag(mobile_view? ? :mobile_rtl : :desktop_rtl) %>
 <%- else %>
+  <%= discourse_stylesheet_preload_tag(:common) %>
   <%= discourse_stylesheet_preload_tag(mobile_view? ? :mobile : :desktop) %>
 <%- end %>
 

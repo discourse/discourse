@@ -47,7 +47,7 @@ RSpec.describe Stylesheet::Compiler do
       theme.reload.with_scss_load_paths do |load_paths|
         css, _map =
           Stylesheet::Compiler.compile_asset(
-            "desktop_theme",
+            "common_theme",
             theme_id: theme.id,
             theme_variables: theme.scss_variables,
             load_paths: load_paths,
