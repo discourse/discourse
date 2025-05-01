@@ -69,6 +69,10 @@ module PageObjects
           page.find(".sidebar-sections__back-to-forum").click
           self
         end
+
+        def click_search_input
+          page.find(".sidebar-search__input").click
+        end
       end
     end
   end

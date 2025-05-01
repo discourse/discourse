@@ -67,8 +67,10 @@ describe "Wizard", type: :system do
       expect(wizard_page).to be_on_step("branding")
       attach_file(file_path_1) { wizard_page.branding_step.click_upload_button("logo") }
       expect(wizard_page.branding_step).to have_upload("logo")
+      expect(wizard_page.branding_step).to have_preview("logo")
       attach_file(file_path_2) { wizard_page.branding_step.click_upload_button("logo-small") }
       expect(wizard_page.branding_step).to have_upload("logo-small")
+      expect(wizard_page.branding_step).to have_preview("logo-small")
       wizard_page.go_to_next_step
       expect(wizard_page).to be_on_step("ready")
 
