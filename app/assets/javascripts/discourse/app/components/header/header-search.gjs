@@ -35,7 +35,7 @@ export default class HeaderSearch extends Component {
 
   <template>
     {{#if this.shouldDisplay}}
-      {{bodyClass "header-search--visible header-search--enabled"}}
+      {{bodyClass "header-search--enabled"}}
       <div
         class="floating-search-input-wrapper"
         {{this.handleKeyboardShortcut}}
