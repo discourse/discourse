@@ -85,6 +85,10 @@ export default class TagChooser extends MultiSelectComponent.extend(TagsMixin) {
     }
   }
 
+  createContentFromInput(input) {
+    return this.tagUtils.createContentFromInput(input);
+  }
+
   search(query) {
     const selectedTags = makeArray(this.tags).filter(Boolean);
 

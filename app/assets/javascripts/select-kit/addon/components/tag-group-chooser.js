@@ -39,6 +39,10 @@ export default class TagGroupChooser extends MultiSelectComponent.extend(
       .map((t) => this.defaultItem(t, t));
   }
 
+  createContentFromInput(input) {
+    return this.tagUtils.createContentFromInput(input);
+  }
+
   search(query) {
     const data = {
       q: query,

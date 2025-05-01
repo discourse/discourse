@@ -21,6 +21,7 @@ import TagsMixin from "select-kit/mixins/tags";
 @classNames("mini-tag-chooser")
 @classNameBindings("noTags")
 @selectKitOptions({
+  allowAny: "allowAnyTag",
   fullWidthOnMobile: true,
   filterable: true,
   caretDownIcon: "caretIcon",
@@ -83,6 +84,10 @@ export default class MiniTagChooser extends MultiSelectComponent.extend(
       );
     }
     return values.map((x) => this.defaultItem(x, x));
+  }
+
+  createContentFromInput(input) {
+    return this.tagUtils.createContentFromInput(input);
   }
 
   search(filter) {

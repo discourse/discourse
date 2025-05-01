@@ -146,6 +146,10 @@ export default class TagDrop extends ComboBoxComponent.extend(TagsMixin) {
     }
   }
 
+  createContentFromInput(input) {
+    return this.tagUtils.createContentFromInput(input);
+  }
+
   search(filter) {
     if (filter) {
       const data = {

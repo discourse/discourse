@@ -1,24 +1,9 @@
-import { reads } from "@ember/object/computed";
 import Mixin from "@ember/object/mixin";
 import { isEmpty } from "@ember/utils";
-import { ajax } from "discourse/lib/ajax";
-import { popupAjaxError } from "discourse/lib/ajax-error";
 import { makeArray } from "discourse/lib/helpers";
 import { i18n } from "discourse-i18n";
 
 export default Mixin.create({
-  searchTags(url, data, callback) {
-    return ajax(url, { data })
-      .then((json) => callback(this, json))
-      .catch(popupAjaxError);
-  },
-
-  selectKitOptions: {
-    allowAny: "allowAnyTag",
-  },
-
-  allowAnyTag: reads("site.can_create_tag"),
-
   validateCreate(filter, content) {
     if (!filter.length) {
       return;
@@ -60,20 +45,5 @@ export default Mixin.create({
     }
 
     return true;
-  },
-
-  createContentFromInput(input) {
-    // See lib/discourse_tagging#clean_tag.
-    input = input
-      .trim()
-      .replace(/\s+/g, "-")
-      .replace(/[\/\?#\[\]@!\$&'\(\)\*\+,;=\.%\\`^\s|\{\}"<>]+/g, "")
-      .substring(0, this.siteSettings.max_tag_length);
-
-    if (this.siteSettings.force_lowercase_tags) {
-      input = input.toLowerCase();
-    }
-
-    return input;
   },
 });
