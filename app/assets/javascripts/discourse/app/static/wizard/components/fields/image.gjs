@@ -31,7 +31,6 @@
 =======
 import Component from "@ember/component";
 import { warn } from "@ember/debug";
-import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
 import { classNames } from "@ember-decorators/component";
@@ -52,8 +51,7 @@ export default class Image extends Component {
 
   @discourseComputed("field.id")
   previewComponent(id) {
-    const name = imagePreviews[dasherize(id)] ?? imagePreviews.generic;
-    return getOwner(this).resolveRegistration(`component:${name}`);
+    return imagePreviews[dasherize(id)] ?? imagePreviews.generic;
   }
 
   didInsertElement() {
