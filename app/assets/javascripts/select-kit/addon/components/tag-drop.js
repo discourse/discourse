@@ -14,7 +14,6 @@ import {
   pluginApiIdentifiers,
   selectKitOptions,
 } from "select-kit/components/select-kit";
-import TagsMixin from "select-kit/mixins/tags";
 
 export const NO_TAG_ID = "no-tags";
 export const ALL_TAGS_ID = "all-tags";
@@ -35,7 +34,7 @@ const MORE_TAGS_COLLECTION = "MORE_TAGS_COLLECTION";
   autoInsertNoneItem: false,
 })
 @pluginApiIdentifiers("tag-drop")
-export default class TagDrop extends ComboBoxComponent.extend(TagsMixin) {
+export default class TagDrop extends ComboBoxComponent {
   @service tagUtils;
 
   @setting("max_tag_search_results") maxTagSearchResults;
@@ -144,6 +143,18 @@ export default class TagDrop extends ComboBoxComponent.extend(TagsMixin) {
     } else {
       return this.shortcuts.concat(makeArray(topTags));
     }
+  }
+
+  validateCreate(filter, content) {
+    return this.tagUtils.validateCreate(
+      filter,
+      content,
+      this.selectKit.options.maximum,
+      (e) => this.addError(e),
+      this.termMatchesForbidden,
+      (value) => this.getValue(value),
+      this.value
+    );
   }
 
   createContentFromInput(input) {

@@ -8,7 +8,6 @@ import {
   pluginApiIdentifiers,
   selectKitOptions,
 } from "select-kit/components/select-kit";
-import TagsMixin from "select-kit/mixins/tags";
 
 @classNames("tag-group-chooser", "tag-chooser")
 @selectKitOptions({
@@ -18,9 +17,7 @@ import TagsMixin from "select-kit/mixins/tags";
   limit: null,
 })
 @pluginApiIdentifiers("tag-group-chooser")
-export default class TagGroupChooser extends MultiSelectComponent.extend(
-  TagsMixin
-) {
+export default class TagGroupChooser extends MultiSelectComponent {
   @service tagUtils;
 
   modifyComponentForRow() {
@@ -37,6 +34,18 @@ export default class TagGroupChooser extends MultiSelectComponent.extend(
     return makeArray(this.tagGroups)
       .uniq()
       .map((t) => this.defaultItem(t, t));
+  }
+
+  validateCreate(filter, content) {
+    return this.tagUtils.validateCreate(
+      filter,
+      content,
+      this.selectKit.options.maximum,
+      (e) => this.addError(e),
+      this.termMatchesForbidden,
+      (value) => this.getValue(value),
+      this.value
+    );
   }
 
   createContentFromInput(input) {

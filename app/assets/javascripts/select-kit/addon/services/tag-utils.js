@@ -7,6 +7,7 @@ import { i18n } from "discourse-i18n";
 
 export default class TagUtils extends Service {
   @service siteSettings;
+  @service site;
 
   searchTags(url, data, callback) {
     return ajax(url, { data })
@@ -14,16 +15,15 @@ export default class TagUtils extends Service {
       .catch(popupAjaxError);
   }
 
-  validateCreate(filter, content, options) {
-    const {
-      value,
-      maximum,
-      termMatchesForbidden,
-      getValue,
-      addError,
-      tagsFilterRegexp,
-    } = options;
-
+  validateCreate(
+    filter,
+    content,
+    maximum,
+    addError,
+    termMatchesForbidden,
+    getValue,
+    value
+  ) {
     if (!filter.length) {
       return;
     }
@@ -37,7 +37,7 @@ export default class TagUtils extends Service {
       return false;
     }
 
-    const filterRegexp = new RegExp(tagsFilterRegexp, "g");
+    const filterRegexp = new RegExp(this.site.tags_filter_regexp, "g");
     filter = filter.replace(filterRegexp, "").trim().toLowerCase();
 
     if (termMatchesForbidden) {

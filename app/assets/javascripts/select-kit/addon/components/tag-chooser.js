@@ -8,7 +8,6 @@ import {
   pluginApiIdentifiers,
   selectKitOptions,
 } from "select-kit/components/select-kit";
-import TagsMixin from "select-kit/mixins/tags";
 
 @classNames("tag-chooser")
 @attributeBindings("categoryId")
@@ -20,7 +19,7 @@ import TagsMixin from "select-kit/mixins/tags";
   maximum: "maximumTagCount",
 })
 @pluginApiIdentifiers("tag-chooser")
-export default class TagChooser extends MultiSelectComponent.extend(TagsMixin) {
+export default class TagChooser extends MultiSelectComponent {
   @service tagUtils;
 
   blockedTags = null;
@@ -83,6 +82,18 @@ export default class TagChooser extends MultiSelectComponent.extend(TagsMixin) {
     } else {
       this.set("tags", value);
     }
+  }
+
+  validateCreate(filter, content) {
+    return this.tagUtils.validateCreate(
+      filter,
+      content,
+      this.selectKit.options.maximum,
+      (e) => this.addError(e),
+      this.termMatchesForbidden,
+      (value) => this.getValue(value),
+      this.value
+    );
   }
 
   createContentFromInput(input) {

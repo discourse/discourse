@@ -15,7 +15,6 @@ import {
   pluginApiIdentifiers,
   selectKitOptions,
 } from "select-kit/components/select-kit";
-import TagsMixin from "select-kit/mixins/tags";
 
 @attributeBindings("selectKit.options.categoryId:category-id")
 @classNames("mini-tag-chooser")
@@ -35,9 +34,7 @@ import TagsMixin from "select-kit/mixins/tags";
   useHeaderFilter: false,
 })
 @pluginApiIdentifiers(["mini-tag-chooser"])
-export default class MiniTagChooser extends MultiSelectComponent.extend(
-  TagsMixin
-) {
+export default class MiniTagChooser extends MultiSelectComponent {
   @service tagUtils;
 
   @empty("value") noTags;
@@ -84,6 +81,18 @@ export default class MiniTagChooser extends MultiSelectComponent.extend(
       );
     }
     return values.map((x) => this.defaultItem(x, x));
+  }
+
+  validateCreate(filter, content) {
+    return this.tagUtils.validateCreate(
+      filter,
+      content,
+      this.selectKit.options.maximum,
+      (e) => this.addError(e),
+      this.termMatchesForbidden,
+      (value) => this.getValue(value),
+      this.value
+    );
   }
 
   createContentFromInput(input) {
