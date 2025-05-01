@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { service } from "@ember/service";
 import { and } from "truth-helpers";
-import bodyClass from "discourse/helpers/body-class";
 import deprecatedOutletArgument from "discourse/helpers/deprecated-outlet-argument";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import BootstrapModeNotice from "../bootstrap-mode-notice";
