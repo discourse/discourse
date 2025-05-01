@@ -129,6 +129,11 @@ class SiteSettings::TypeSupervisor
         @allow_any[name] = opts[:allow_any] == false ? false : true
         @list_type[name] = opts[:list_type] if opts[:list_type]
       end
+
+      # add validator for objects
+      if type.to_sym == :objects
+        @validators[name] = { class: ObjectsSettingValidator, opts: { schema: opts[:schema] } }
+      end
     end
     @types[name] = get_data_type(name, @defaults_provider[name])
 

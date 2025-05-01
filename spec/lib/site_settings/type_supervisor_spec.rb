@@ -195,6 +195,7 @@ RSpec.describe SiteSettings::TypeSupervisor do
           properties: {
             name: {
               type: "string",
+              required: true,
             },
           },
         },
@@ -347,10 +348,22 @@ RSpec.describe SiteSettings::TypeSupervisor do
         }.to raise_error Discourse::InvalidParameters
       end
 
+      it "raises when an object property is not valid for the given schema" do
+        expect {
+          settings.type_supervisor.to_db_value(:type_objects, "[{\"nam\":\"Brett\"}]")
+        }.to raise_error Discourse::InvalidParameters
+      end
+
+      it "raises when an object value is not valid for the given schema" do
+        expect {
+          settings.type_supervisor.to_db_value(:type_objects, "[{\"name\":1}]")
+        }.to raise_error Discourse::InvalidParameters
+      end
+
       it "returns value for the given objects schema string setting" do
         expect(settings.type_supervisor.to_db_value(:type_objects, "[]")).to eq [
              "[]",
-             SiteSetting.types[:string],
+             SiteSetting.types[:objects],
            ]
       end
     end
