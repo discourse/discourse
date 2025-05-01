@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
-import { dasherize } from "@ember/string";
 import { tracked } from "@glimmer/tracking";
 import { array } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { dasherize } from "@ember/string";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import icon from "discourse/helpers/d-icon";
