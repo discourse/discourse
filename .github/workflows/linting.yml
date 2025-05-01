@@ -7,7 +7,7 @@ on:
       - main
 
 concurrency:
-  group: linting-${{ format('{0}-{1}', github.head_ref || github.run_number, github.job) }}
+  group: linting-${{ format('{0}-{1}', github.ref_name, github.job) }}
   cancel-in-progress: true
 
 permissions:
