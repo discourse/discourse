@@ -391,6 +391,7 @@ export default function () {
       function () {
         this.route("index", { path: "/" });
         this.route("show", { path: "/:plugin_id" }, function () {
+          this.route("schema", { path: "schema/:setting_name" });
           this.route("settings");
         });
       }
