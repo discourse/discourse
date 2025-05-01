@@ -36,17 +36,9 @@ export default class HeaderSearch extends Component {
     );
   }
 
-  get bodyClasses() {
-    return this.shouldDisplay && !this.search.welcomeBannerSearchInViewport
-      ? "header-search--enabled header-search--visible"
-      : this.shouldDisplay
-        ? "header-search--enabled"
-        : "";
-  }
-
   <template>
     {{#if this.shouldDisplay}}
-      {{bodyClass this.bodyClasses}}
+      {{bodyClass "header-search--visible header-search--enabled"}}
       <div
         class="floating-search-input-wrapper"
         {{this.handleKeyboardShortcut}}

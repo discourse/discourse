@@ -29,11 +29,15 @@
     flex-grow: 1;
   }
 
+  &.welcome-banner--enabled {
+    .floating-search-input {
+      @include float-up;
+    }
+  }
+
   .floating-search-input {
     width: 100%;
     max-width: 550px; // half of defualt d-max-width
-
-    @include float-up;
 
     .search-banner {
       height: 100%;

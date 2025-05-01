@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { service } from "@ember/service";
 import { and } from "truth-helpers";
+import bodyClass from "discourse/helpers/body-class";
 import deprecatedOutletArgument from "discourse/helpers/deprecated-outlet-argument";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import BootstrapModeNotice from "../bootstrap-mode-notice";
@@ -41,8 +42,6 @@ export default class Contents extends Component {
   }
 
   get showHeaderSearch() {
-    console.log("in show header search", Date.now());
-
     if (
       this.site.mobileView ||
       this.args.narrowDesktop ||
@@ -51,18 +50,6 @@ export default class Contents extends Component {
       ) ||
       this.search.welcomeBannerSearchInViewport
     ) {
-      console.log(
-        "false",
-        {
-          mobileview: this.site.mobileView,
-          narrowDesktop: this.args.narrowDesktop,
-          currentURL: this.router.currentURL?.match(
-            /\/(signup|login|invites|activate-account)/
-          ),
-          searchinbiewport: this.search.welcomeBannerSearchInViewport,
-        },
-        Date.now()
-      );
       return false;
     }
 
@@ -71,15 +58,6 @@ export default class Contents extends Component {
       !this.args.topicInfoVisible &&
       !this.search.welcomeBannerSearchInViewport
     ) {
-      console.log(
-        "true",
-        {
-          searchExperience: this.search.searchExperience,
-          topicInfoVisible: this.args.topicInfoVisible,
-          searchinbiewport: this.search.welcomeBannerSearchInViewport,
-        },
-        Date.now()
-      );
       return true;
     }
   }
