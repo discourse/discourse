@@ -165,6 +165,14 @@ export default Mixin.create({
         label: "admin.site_settings.json_schema.edit",
         icon: "pencil",
       };
+    } else if (setting.schema) {
+      return {
+        action: () => {
+          this.router.transitionTo("adminPlugins.show.schema", setting.setting);
+        },
+        label: "admin.site_settings.json_schema.edit",
+        icon: "pencil",
+      };
     } else if (setting.objects_schema) {
       return {
         action: () => {
