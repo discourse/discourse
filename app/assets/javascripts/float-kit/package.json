@@ -24,7 +24,6 @@
   "devDependencies": {
     "ember-modifier": "^4.2.0",
     "@ember/optional-features": "^2.2.0",
-    "@ember/render-modifiers": "^2.1.0",
     "@embroider/test-setup": "^4.0.0",
     "@glimmer/component": "^1.1.2",
     "@types/jquery": "^3.5.32",

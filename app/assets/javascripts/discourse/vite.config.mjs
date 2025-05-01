@@ -13,11 +13,9 @@ import basicSsl from "@vitejs/plugin-basic-ssl";
 import { visualizer } from "rollup-plugin-visualizer";
 import { defineConfig } from "vite";
 import mkcert from "vite-plugin-mkcert";
-import transformHbr from "discourse-hbr/vite-plugin";
 import customProxy from "../custom-proxy";
 import customInvokableResolver from "./lib/custom-invokable-resolver";
 import discourseTestSiteSettings from "./lib/site-settings-plugin";
-import discourseTestTranslations from "./lib/translation-plugin";
 
 const extensions = [
   ".mjs",
@@ -35,7 +33,6 @@ export default defineConfig(({ mode, command }) => {
     resolve: {
       extensions,
       alias: [
-        { find: "discourse-common", replacement: "/../discourse-common/addon" },
         { find: "pretty-text", replacement: "/../pretty-text/addon" },
         {
           find: "discourse-widget-hbs",
@@ -46,7 +43,7 @@ export default defineConfig(({ mode, command }) => {
         { find: "discourse/tests", replacement: "/tests" },
         { find: "discourse", replacement: "/app" },
         { find: "admin", replacement: "/../admin/addon" },
-        // { find: "@ember-decorators", replacement: "ember-decorators" },
+        { find: "dialog-holder", replacement: "/../dialog-holder/addon" },
       ],
     },
     plugins: [
@@ -59,9 +56,7 @@ export default defineConfig(({ mode, command }) => {
       assets(),
       contentFor(),
 
-      transformHbr(),
       discourseTestSiteSettings(),
-      discourseTestTranslations(),
       customInvokableResolver(),
 
       babel({
@@ -85,7 +80,6 @@ export default defineConfig(({ mode, command }) => {
       proxy: {
         "^/(?!@vite/)": customProxy,
       },
-
       // https: {
       //   maxSessionMemory: 1000,
       // },

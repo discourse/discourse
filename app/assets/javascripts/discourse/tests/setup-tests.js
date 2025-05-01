@@ -17,18 +17,21 @@ const MessageBus = window.MessageBus; // TODO
 import * as FakerModule from "@faker-js/faker";
 import QUnit from "qunit";
 import sinon from "sinon";
-import { setLoadedFaker } from "discourse/lib/load-faker";
-import PreloadStore from "discourse/lib/preload-store";
-import { loadSprites } from "discourse/lib/svg-sprite-loader";
-import { resetSettings as resetThemeSettings } from "discourse/lib/theme-settings-store";
-import { ScrollingDOMMethods } from "discourse/mixins/scrolling";
-import { resetCategoryCache } from "discourse/models/category";
 import {
   disableLoadMoreObserver,
   enableLoadMoreObserver,
 } from "discourse/components/load-more";
+import deprecated from "discourse/lib/deprecated";
+import { setDefaultOwner } from "discourse/lib/get-owner";
+import { setupS3CDN, setupURL } from "discourse/lib/get-url";
+import { setLoadedFaker } from "discourse/lib/load-faker";
+import PreloadStore from "discourse/lib/preload-store";
+import { loadSprites } from "discourse/lib/svg-sprite-loader";
+import { resetSettings as resetThemeSettings } from "discourse/lib/theme-settings-store";
+import { resetCategoryCache } from "discourse/models/category";
 import Session from "discourse/models/session";
 import User from "discourse/models/user";
+import { buildResolver } from "discourse/resolver";
 import SiteSettingService from "discourse/services/site-settings";
 import { flushMap } from "discourse/services/store";
 import pretender, {
@@ -49,17 +52,6 @@ import {
 import { configureRaiseOnDeprecation } from "discourse/tests/helpers/raise-on-deprecation";
 import { resetSettings } from "discourse/tests/helpers/site-settings";
 import { disableCloaking } from "discourse/widgets/post-stream";
-import deprecated from "discourse/lib/deprecated";
-import { setDefaultOwner } from "discourse/lib/get-owner";
-import { setupS3CDN, setupURL } from "discourse/lib/get-url";
-import { buildResolver } from "discourse/resolver";
-import { loadSprites } from "../lib/svg-sprite-loader";
-import * as FakerModule from "@faker-js/faker";
-import { setLoadedFaker } from "discourse/lib/load-faker";
-import deprecated from "discourse-common/lib/deprecated";
-import { setDefaultOwner } from "discourse-common/lib/get-owner";
-import { setupS3CDN, setupURL } from "discourse-common/lib/get-url";
-import { buildResolver } from "discourse-common/resolver";
 
 let cancelled = false;
 let started = false;

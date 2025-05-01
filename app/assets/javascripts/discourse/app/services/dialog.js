@@ -1,1 +1,1 @@
-export { default } from "dialog-holder/addon/services/dialog";
+export { default } from "dialog-holder/services/dialog";
