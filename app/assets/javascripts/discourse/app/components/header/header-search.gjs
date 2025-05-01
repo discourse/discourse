@@ -28,14 +28,25 @@ export default class HeaderSearch extends Component {
 
   get shouldDisplay() {
     return (
-      (this.siteSettings.login_required && this.currentUser) ||
-      !this.siteSettings.login_required
+      (this.siteSettings.login_required &&
+        this.currentUser &&
+        !this.search.welcomeBannerSearchInViewport) ||
+      (!this.siteSettings.login_required &&
+        !this.search.welcomeBannerSearchInViewport)
     );
+  }
+
+  get bodyClasses() {
+    return this.shouldDisplay && !this.search.welcomeBannerSearchInViewport
+      ? "header-search--enabled header-search--visible"
+      : this.shouldDisplay
+        ? "header-search--enabled"
+        : "";
   }
 
   <template>
     {{#if this.shouldDisplay}}
-      {{bodyClass "header-search--enabled"}}
+      {{bodyClass this.bodyClasses}}
       <div
         class="floating-search-input-wrapper"
         {{this.handleKeyboardShortcut}}

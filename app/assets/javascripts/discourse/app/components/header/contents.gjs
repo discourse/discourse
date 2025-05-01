@@ -41,18 +41,47 @@ export default class Contents extends Component {
   }
 
   get showHeaderSearch() {
+    console.log("in show header search", Date.now());
+
     if (
       this.site.mobileView ||
       this.args.narrowDesktop ||
-      this.router.currentURL?.match(/\/(signup|login|invites|activate-account)/)
+      this.router.currentURL?.match(
+        /\/(signup|login|invites|activate-account)/
+      ) ||
+      this.search.welcomeBannerSearchInViewport
     ) {
+      console.log(
+        "false",
+        {
+          mobileview: this.site.mobileView,
+          narrowDesktop: this.args.narrowDesktop,
+          currentURL: this.router.currentURL?.match(
+            /\/(signup|login|invites|activate-account)/
+          ),
+          searchinbiewport: this.search.welcomeBannerSearchInViewport,
+        },
+        Date.now()
+      );
       return false;
     }
 
-    return (
+    if (
       this.search.searchExperience === "search_field" &&
-      !this.args.topicInfoVisible
-    );
+      !this.args.topicInfoVisible &&
+      !this.search.welcomeBannerSearchInViewport
+    ) {
+      console.log(
+        "true",
+        {
+          searchExperience: this.search.searchExperience,
+          topicInfoVisible: this.args.topicInfoVisible,
+          searchinbiewport: this.search.welcomeBannerSearchInViewport,
+        },
+        Date.now()
+      );
+      return true;
+    }
   }
 
   <template>

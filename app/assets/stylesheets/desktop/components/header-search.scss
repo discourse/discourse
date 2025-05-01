@@ -33,6 +33,8 @@
     width: 100%;
     max-width: 550px; // half of defualt d-max-width
 
+    @include float-up;
+
     .search-banner {
       height: 100%;
 
