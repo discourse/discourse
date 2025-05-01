@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { dasherize } from "@ember/string";
 import { tracked } from "@glimmer/tracking";
 import { array } from "@ember/helper";
 import { action } from "@ember/object";
@@ -29,6 +30,7 @@ export default class ThemeCard extends Component {
       "theme-card",
       this.args.theme.get("default") ? "-active" : "",
       this.isUpdating ? "--updating" : "",
+      dasherize(this.args.theme.name),
     ].join(" ");
   }
 
@@ -171,18 +173,12 @@ export default class ThemeCard extends Component {
             {{#if @theme.user_selectable}}
               <span
                 title={{i18n "admin.customize.theme.user_selectable"}}
-                class="theme-card__badge"
+                class="theme-card__badge --selectable"
               >{{icon "user-check"}}
                 {{i18n
                   "admin.customize.theme.user_selectable_badge_label"
                 }}</span>
             {{/if}}
-
-            <span
-              title={{i18n "admin.customize.theme.broken_theme_tooltip"}}
-              class="theme-card__badge"
-            >{{icon "triangle-exclamation"}}
-              {{i18n "admin.customize.theme.broken_badge_label"}}</span>
           </div>
 
           <div class="theme-card__controls">
@@ -190,7 +186,7 @@ export default class ThemeCard extends Component {
               @translatedLabel={{i18n "admin.customize.theme.edit"}}
               @route="adminCustomizeThemes.show"
               @routeModels={{this.themeRouteModels}}
-              class="btn-secondary theme-card__button"
+              class="btn-secondary theme-card__button edit"
               @preventFocus={{true}}
             />
 
@@ -201,11 +197,6 @@ export default class ThemeCard extends Component {
                 @onRegisterApi={{this.onRegisterApi}}
                 @modalForMobile={{true}}
                 @icon="ellipsis"
-                {{!-- @label={{if
-                  this.isUpdating
-                  (i18n "admin.customize.theme.updating")
-                  ""
-                }} --}}
                 @triggers={{array "click"}}
               >
                 <:content>
@@ -217,7 +208,7 @@ export default class ThemeCard extends Component {
                         @action={{this.setDefault}}
                         @preventFocus={{true}}
                         @icon={{if @theme.default "star" "far-star"}}
-                        class="theme-card__button"
+                        class="theme-card__button set-active"
                         @translatedLabel={{i18n
                           (if
                             @theme.default
@@ -233,7 +224,7 @@ export default class ThemeCard extends Component {
                         <DButton
                           @action={{this.updateTheme}}
                           @icon="download"
-                          class="theme-card__button -update"
+                          class="theme-card__button update"
                           @preventFocus={{true}}
                           @translatedLabel={{i18n
                             "admin.customize.theme.update_to_latest"
@@ -250,7 +241,7 @@ export default class ThemeCard extends Component {
                           "user-xmark"
                           "user-check"
                         }}
-                        class="theme-card__button"
+                        class="theme-card__button set-selectable"
                         @translatedLabel={{i18n
                           (if
                             @theme.user_selectable
@@ -266,7 +257,7 @@ export default class ThemeCard extends Component {
                         title={{i18n "admin.customize.explain_preview"}}
                         rel="noopener noreferrer"
                         target="_blank"
-                        class="btn btn-transparent theme-card__button"
+                        class="btn btn-transparent theme-card__button preview"
                       >{{icon "eye"}}
                         {{i18n "admin.customize.theme.preview"}}</a>
                     </dropdown.item>

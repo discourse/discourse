@@ -70,7 +70,7 @@ To customize the look and feel of your community beyond what you configured in t
 - [Logo images](%{base_url}/admin/config/logo)
 - [Color palettes](%{base_url}/admin/customize/colors)
 - [Font styles](%{base_url}/admin/config/fonts)
-- [Site theme](%{base_url}/admin/customize/themes)
+- [Site theme](%{base_url}/admin/config/customize/themes)
 - [Navigation menu](%{base_url}/admin/config/navigation)
 - [Custom user fields](%{base_url}/admin/config/user-fields)
 - [Terms of service and privacy policies](%{base_url}/admin/config/legal)
