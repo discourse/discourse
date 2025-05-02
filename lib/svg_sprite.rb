@@ -387,7 +387,7 @@ module SvgSprite
         .merge(theme_icons(theme_id))
         .merge(custom_icons(theme_id))
         .delete_if { |i| i.blank? || i.include?("/") }
-        .map! { |i| i.strip }
+        .map!(&:strip)
         .merge(SVG_ICONS)
         .sort
     end
