@@ -77,6 +77,7 @@ class BulkImport::Generic < BulkImport::Base
     import_category_tag_groups
     import_category_permissions
     import_category_users
+    import_category_moderation_groups
 
     import_topics
     import_posts
@@ -360,6 +361,32 @@ class BulkImport::Generic < BulkImport::Base
     permissions.close
   end
 
+  def import_category_moderation_groups
+    puts "", "Importing category moderation groups..."
+
+    moderation_groups = query(<<~SQL)
+      SELECT c.id AS category_id, 
+            m.value AS group_id
+      FROM categories c,
+           JSON_EACH(c.moderation_group_ids) m
+      ORDER BY c.id, m.value
+    SQL
+
+    existing_moderation_groups = CategoryModerationGroup.pluck(:category_id, :group_id).to_set
+
+    create_category_moderation_groups(moderation_groups) do |row|
+      category_id = category_id_from_imported_id(row["category_id"])
+      group_id = group_id_from_imported_id(row["group_id"])
+
+      next unless category_id && group_id
+      next if existing_moderation_groups.include?([category_id, group_id])
+
+      { category_id: category_id, group_id: group_id }
+    end
+
+    moderation_groups.close
+  end
+
   def import_category_users
     puts "", "Importing category users..."
 
@@ -403,10 +430,14 @@ class BulkImport::Generic < BulkImport::Base
         imported_id: row["id"],
         name: row["name"],
         full_name: row["full_name"],
+        public_admission: row["public_admission"],
+        public_exit: row["public_exit"],
+        allow_membership_requests: row["allow_membership_requests"],
         visibility_level: row["visibility_level"],
         members_visibility_level: row["members_visibility_level"],
         mentionable_level: row["mentionable_level"],
         messageable_level: row["messageable_level"],
+        assignable_level: row["assignable_level"],
       }
     end
 
@@ -427,9 +458,11 @@ class BulkImport::Generic < BulkImport::Base
     create_group_users(group_members) do |row|
       group_id = group_id_from_imported_id(row["group_id"])
       user_id = user_id_from_imported_id(row["user_id"])
+
+      next if user_id.nil?
       next if existing_group_user_ids.include?([group_id, user_id])
 
-      { group_id: group_id, user_id: user_id }
+      { group_id: group_id, user_id: user_id, owner: row["owner"] }
     end
 
     group_members.close
@@ -476,8 +509,10 @@ class BulkImport::Generic < BulkImport::Base
         moderator: row["moderator"],
         suspended_at: suspended_at,
         suspended_till: suspended_till,
+        trust_level: row["trust_level"],
         registration_ip_address: row["registration_ip_address"],
         date_of_birth: to_date(row["date_of_birth"]),
+        primary_group_id: group_id_from_imported_id(row["primary_group_id"]),
       }
     end
 
@@ -541,12 +576,13 @@ class BulkImport::Generic < BulkImport::Base
     puts "", "Importing user options..."
 
     users = query(<<~SQL)
-      SELECT id, timezone, email_level, email_messages_level, email_digests
+      SELECT id, timezone, email_level, email_messages_level, email_digests, hide_profile_and_presence
         FROM users
        WHERE timezone IS NOT NULL
           OR email_level IS NOT NULL
           OR email_messages_level IS NOT NULL
           OR email_digests IS NOT NULL
+          OR hide_profile_and_presence IS NOT NULL
        ORDER BY id
     SQL
 
@@ -562,6 +598,7 @@ class BulkImport::Generic < BulkImport::Base
         email_level: row["email_level"],
         email_messages_level: row["email_messages_level"],
         email_digests: row["email_digests"],
+        hide_profile_and_presence: row["hide_profile_and_presence"] || false,
       }
     end
 
@@ -1953,11 +1990,21 @@ class BulkImport::Generic < BulkImport::Base
         )
       @tag_mapping[row["id"]] = tag.id
 
-      if row["tag_group_id"]
-        TagGroupMembership.find_or_create_by!(
-          tag_id: tag.id,
-          tag_group_id: @tag_group_mapping[row["tag_group_id"]],
-        )
+      if row["tag_group_id"] && !row["tag_group_id"].empty?
+        intermediate_group_ids = JSON.parse(row["tag_group_id"])
+
+        intermediate_group_ids.each do |intermediate_group_id|
+          discourse_tag_group_id = @tag_group_mapping[intermediate_group_id]
+
+          if discourse_tag_group_id
+            TagGroupMembership.find_or_create_by!(
+              tag_id: tag.id,
+              tag_group_id: discourse_tag_group_id,
+            )
+          else
+            puts "Warning: Intermediate tag group ID #{intermediate_group_id} from row not found in @tag_group_mapping for tag '#{tag.name}'"
+          end
+        end
       end
     end
 
