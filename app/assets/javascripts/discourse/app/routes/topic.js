@@ -48,6 +48,10 @@ export default class TopicRoute extends DiscourseRoute {
     };
   }
 
+  redirect() {
+    return this.redirectIfLoginRequired();
+  }
+
   titleToken() {
     const model = this.modelFor("topic");
     if (model) {

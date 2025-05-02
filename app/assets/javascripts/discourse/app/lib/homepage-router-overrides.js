@@ -35,7 +35,6 @@ function rewriteIfNeeded(url, transition) {
   const intentUrl = transition?.intent?.url;
   if (
     intentUrl?.startsWith(homepageDestination()) ||
-    intentUrl?.startsWith("/login-required") ||
     (transition?.intent.name === `discovery.${defaultHomepage()}` &&
       transition?.intent.queryParams[homepageRewriteParam])
   ) {
