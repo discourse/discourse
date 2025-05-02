@@ -76,7 +76,8 @@
   }
 }
 
-.admin-customize {
+.admin-customize,
+.admin-config.theme-edit {
   /* TODO: Remove when admin header has been added to all /customize pages */
   h1 {
     margin-bottom: 10px;

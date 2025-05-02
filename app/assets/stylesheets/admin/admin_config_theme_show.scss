@@ -1,0 +1,125 @@
+.admin-config.theme-show {
+  .admin-config-theme {
+    &__back-link {
+      display: block;
+      margin-bottom: var(--space-4);
+    }
+
+    &__theme-info {
+      margin-bottom: var(--space-4);
+    }
+
+    &__name-control {
+      display: flex;
+      gap: var(--space-2);
+      margin-bottom: var(--space-2);
+
+      h2 {
+        margin-bottom: 0;
+      }
+    }
+
+    &__created-by {
+      font-size: var(--font-down-1);
+      margin-bottom: var(--space-1);
+    }
+
+    &__description {
+      margin-top: 0;
+    }
+
+    &__child-components-sections {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-5);
+    }
+
+    &__child-components-heading {
+      text-transform: uppercase;
+      font-weight: bold;
+      font-size: var(--font-down-1);
+      color: var(--primary-high);
+    }
+
+    &__child-components,
+    &__uploads {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-1);
+    }
+
+    &__child-component,
+    &__upload {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    &__upload {
+      font-family: var(--d-font-family--monospace);
+    }
+
+    &__settings,
+    &__translations {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-5);
+    }
+
+    &__metadata {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+    }
+
+    &__metadata-title {
+      font-size: var(--font-down-1);
+      color: var(--primary-very-high);
+    }
+
+    &__metadata-section {
+      .d-icon {
+        color: var(--primary-very-high);
+      }
+    }
+
+    &__custom-css-html {
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+
+    &__metadata-links {
+      display: flex;
+      gap: var(--space-2);
+    }
+
+    &__check-for-update {
+      font-size: var(--font-down-1);
+    }
+
+    &__sha {
+      font-family: var(--d-font-family--monospace);
+    }
+
+    &__last-updated {
+      .admin-config-theme__metadata-section {
+        display: flex;
+        align-items: center;
+      }
+    }
+
+    &__top-actions {
+      margin-bottom: var(--space-4);
+      text-align: right;
+    }
+  }
+
+  .setting-label {
+    width: 30%;
+  }
+
+  .theme-setting,
+  .theme-translation {
+    padding-bottom: 0;
+  }
+}

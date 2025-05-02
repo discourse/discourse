@@ -451,6 +451,11 @@ Discourse::Application.routes.draw do
           collection do
             get "/themes" => "customize#themes"
             get "/components" => "customize#components"
+
+            get "/themes/:id" => "customize#theme"
+            get "/components/:id" => "customize#component"
+
+            get "/themes/:id/:target/:field_name/edit" => "customize#themes"
           end
         end
       end

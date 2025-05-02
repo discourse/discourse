@@ -164,9 +164,9 @@ acceptance("Theme", function (needs) {
   });
 
   test("can force install themes", async function (assert) {
-    await visit("/admin/config/customize/themes");
+    await visit("/admin/customize/themes");
 
-    await click(".theme-install-card .btn-primary");
+    await click(".themes-list .create-actions button");
     await click(".install-theme-items #remote");
     await fillIn(
       ".install-theme-content .repo input",
@@ -189,9 +189,9 @@ acceptance("Theme", function (needs) {
   });
 
   test("can continue installation", async function (assert) {
-    await visit("/admin/config/customize/themes");
+    await visit("/admin/customize/themes");
 
-    await click(".theme-card .btn-secondary");
+    await click(".themes-list-container__item .info");
     assert
       .dom(".control-unit .status-message")
       .includesText(

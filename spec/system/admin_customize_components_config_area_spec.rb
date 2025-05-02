@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Admin Customize Themes Config Area Page", type: :system do
+describe "Admin Customize Components Config Area Page", type: :system do
   fab!(:admin)
   fab!(:parent_theme) { Fabricate(:theme, name: "A theme") }
   fab!(:parent_theme_2) { Fabricate(:theme, name: "B theme") }

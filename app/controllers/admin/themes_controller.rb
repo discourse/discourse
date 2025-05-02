@@ -293,7 +293,14 @@ class Admin::ThemesController < Admin::AdminController
     @theme = Theme.include_relations.find_by(id: params[:id])
     raise Discourse::InvalidParameters.new(:id) unless @theme
 
-    render_serialized(@theme, ThemeSerializer)
+    available_components =
+      Theme
+        .where(component: true)
+        .where("id != ?", params[:id])
+        .pluck(:id, :name)
+        .map { |(id, name)| { id:, name: } }
+
+    render_serialized(@theme, ThemeSerializer, available_components:)
   end
 
   def export

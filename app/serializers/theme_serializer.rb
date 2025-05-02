@@ -13,7 +13,8 @@ class ThemeSerializer < BasicThemeSerializer
              :enabled?,
              :disabled_at,
              :theme_fields,
-             :screenshot_url
+             :screenshot_url,
+             :available_components
 
   has_one :color_scheme, serializer: ColorSchemeSerializer, embed: :object
   has_one :user, serializer: UserNameSerializer, embed: :object
@@ -82,5 +83,13 @@ class ThemeSerializer < BasicThemeSerializer
 
   def include_disabled_by?
     include_disabled_at?
+  end
+
+  def available_components
+    @options[:available_components]
+  end
+
+  def include_available_components?
+    @options[:available_components].present?
   end
 end

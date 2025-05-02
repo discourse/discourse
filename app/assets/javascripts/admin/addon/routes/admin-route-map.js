@@ -322,6 +322,12 @@ export default function () {
           this.route("themes");
           this.route("components");
         });
+        this.route("themeShow", { path: "/customize/themes/:id" });
+        this.route("componentShow", { path: "/customize/components/:id" });
+        this.route("themeEdit", {
+          path: "/customize/themes/:theme_id/:target/:field_name/edit",
+        });
+
         this.route(
           "adminAnalytics",
           { path: "/analytics-and-seo", resetNamespace: true },
