@@ -9,8 +9,8 @@ acceptance("Login Required - Full page login", function (needs) {
     await visit("/");
     assert.strictEqual(
       currentRouteName(),
-      "discovery.login-required",
-      "it shows the login required splash"
+      "login",
+      "it redirects them to login"
     );
 
     await click(".login-button");
