@@ -134,6 +134,20 @@ module("Unit | Service | AdminSearchDataSource", function (hooks) {
       "/admin/reports/page_view_anon_browser_reqs"
     );
   });
+
+  test("search - prioritize whole word matches", async function (assert) {
+    await this.subject.buildMap();
+    let results = this.subject.search("anonym");
+    assert.deepEqual(results.length, 1);
+    assert.deepEqual(results[0].label, "Anonymous Browser Pageviews");
+  });
+
+  test("search - prioritize beginning of label", async function (assert) {
+    await this.subject.buildMap();
+    let results = this.subject.search("about");
+    assert.deepEqual(results.length, 4);
+    assert.deepEqual(results[0].label, "About your site > Title");
+  });
 });
 
 module(

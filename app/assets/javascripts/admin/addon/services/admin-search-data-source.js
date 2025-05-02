@@ -271,22 +271,70 @@ export default class AdminSearchDataSource extends Service {
         ? MAX_TYPE_RESULT_COUNT_LOW
         : MAX_TYPE_RESULT_COUNT_HIGH;
 
+    const exactKeywordRegexes = escapedFilterRegExp
+      .split(" ")
+      .map((keyword) => new RegExp(`(${keyword})\\b`, "i"));
+    const labelStartRegex = new RegExp(`^${escapedFilterRegExp}`, "i");
+    const fallbackRegex = new RegExp(`${escapedFilterRegExp}`, "i");
+    let typeItemCounts = {};
     opts.types.forEach((type) => {
-      let typeItemCount = 0;
+      typeItemCounts[type] = 0;
+    });
+    this.#partialSearch(
+      opts.types,
+      typeItemCounts,
+      perTypeLimit,
+      filteredResults,
+      (dataSourceItem) => {
+        return dataSourceItem.label.match(labelStartRegex);
+      }
+    );
+    this.#partialSearch(
+      opts.types,
+      typeItemCounts,
+      perTypeLimit,
+      filteredResults,
+      (dataSourceItem) => {
+        return exactKeywordRegexes.every((regex) =>
+          dataSourceItem.keywords.match(regex)
+        );
+      }
+    );
+    // return if we have exact matches as this is most important result
+    if (filteredResults.length > 0) {
+      return filteredResults;
+    }
+    this.#partialSearch(
+      opts.types,
+      typeItemCounts,
+      perTypeLimit,
+      filteredResults,
+      (dataSourceItem) => {
+        return dataSourceItem.keywords.match(fallbackRegex);
+      }
+    );
+    return filteredResults;
+  }
+
+  #partialSearch(
+    types,
+    typeItemCounts,
+    perTypeLimit,
+    filteredResults,
+    searchCallback
+  ) {
+    types.forEach((type) => {
       this[`${type}DataSourceItems`].forEach((dataSourceItem) => {
-        // TODO (martin) There is likely a much better way of doing this matching
-        // that will support fuzzy searches, for now let's go with the most basic thing.
         if (
-          dataSourceItem.keywords.match(escapedFilterRegExp) &&
-          typeItemCount <= perTypeLimit
+          searchCallback(dataSourceItem) &&
+          typeItemCounts[type] <= perTypeLimit &&
+          !filteredResults.includes(dataSourceItem)
         ) {
           filteredResults.push(dataSourceItem);
-          typeItemCount++;
+          typeItemCounts[type]++;
         }
       });
     });
-
-    return filteredResults;
   }
 
   #addPageLink(navMapSection, link, parentLabel = "") {
