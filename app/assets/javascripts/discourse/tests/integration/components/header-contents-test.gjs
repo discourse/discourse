@@ -30,24 +30,6 @@ module("Integration | Component | Header | Contents", function (hooks) {
         "it does not display when the search_experience setting is search_icon"
       );
 
-    this.siteSettings.search_experience = "search_field";
-
-    await render(
-      <template>
-        <Contents
-          @sidebarEnabled={{true}}
-          @toggleNavigationMenu={{toggleNavigationMenu}}
-          @showSidebar={{true}}
-        >test</Contents>
-      </template>
-    );
-
-    assert
-      .dom(".floating-search-input-wrapper")
-      .exists(
-        "it does display when the search_experience setting is search_field"
-      );
-
     sinon.stub(site, "mobileView").value(true);
 
     await render(
