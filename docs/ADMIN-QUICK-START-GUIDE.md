@@ -20,7 +20,9 @@ Give your early members a place to start interacting.
 
 → Add some topics with conversation starters, frequently asked questions, and other content.
 
-## :wave: Set up your site
+→ Discuss ideas and plans for your community with your team.
+
+## :artist_palette: Make it your own
 
 Help your new members feel right at home when they first arrive.
 
