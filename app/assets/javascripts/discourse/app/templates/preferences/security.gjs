@@ -42,17 +42,15 @@ export default RouteTemplate(
           {{#if @controller.associatedAccountsLoaded}}
             {{#if @controller.canRemovePassword}}
               <div class="controls">
-                <DButton
-                  @action={{@controller.removePassword}}
-                  @icon="trash-can"
-                  @label="user.change_password.remove"
-                  class="btn-default"
-                  @isLoading={{@controller.removePasswordInProgress}}
-                  id="remove-password-button"
-                />
-              </div>
-              <div class="instructions">
-                {{i18n "user.change_password.remove_detail"}}
+                <a
+                  href
+                  {{on "click" @controller.removePassword}}
+                  hidden={{@controller.removePasswordInProgress}}
+                  id="remove-password-link"
+                >
+                  {{icon "trash-can"}}
+                  {{i18n "user.change_password.remove"}}
+                </a>
               </div>
             {{/if}}
           {{else}}

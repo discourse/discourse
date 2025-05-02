@@ -196,6 +196,7 @@ fr:
     back_button: "Retour"
     welcome_banner:
       header:
+        logged_in_members: "Bienvenue, %{preferred_display_name}!"
         anonymous_members: "Bienvenue sur %{site_name} !"
       search: "Recherche"
     themes:
@@ -463,6 +464,7 @@ fr:
       dropdown:
         title: "Ouvrir le menu des derniers brouillons"
         untitled: "Brouillon sans titre"
+        view_all: "afficher tous les brouillons"
         other_drafts:
           one: "+%{count} autre brouillon"
           other: "+%{count} autres brouillons"
@@ -2068,6 +2070,9 @@ fr:
     modal:
       close: "fermer"
       dismiss_error: "Ignorer l'erreur"
+    multi_select:
+      no_results: "Aucun résultat"
+      search: "Recherche…"
     form_kit:
       reset: Réinitialiser
       optional: facultatif
@@ -2303,10 +2308,6 @@ fr:
         name: "Google"
         title: "Se connecter avec Google"
         sr_title: "Se connecter avec Google"
-      twitter:
-        name: "Twitter"
-        title: "Se connecter avec Twitter"
-        sr_title: "Se connecter avec Twitter"
       instagram:
         name: "Instagram"
         title: "Se connecter avec Instagram"
@@ -2775,8 +2776,6 @@ fr:
       in_topics_posts: "dans tous les sujets et messages"
       enter_hint: "ou appuyez sur Entrée"
       in_posts_by: "dans les messages de %{username}"
-      browser_tip: "%{modifier} + f"
-      browser_tip_description: "à nouveau pour utiliser la fonction de recherche de votre navigateur"
       recent: "Recherches récentes"
       clear_recent: "Effacer les recherches récentes"
       type:
@@ -3775,6 +3774,10 @@ fr:
       settings: "Paramètres"
       topic_template: "Modèle"
       tags: "Étiquettes"
+      localization:
+        name: "Nom"
+        description: "Description"
+        remove: "Supprimer"
       tags_allowed_tags: "Réserver l'utilisation de ces étiquettes à cette catégorie :"
       tags_allowed_tag_groups: "Réserver l'utilisation de ces groupes d'étiquettes à cette catégorie :"
       tags_placeholder: "(Facultatif) liste des étiquettes autorisées"
@@ -4665,11 +4668,6 @@ fr:
       back_to_forum: "Retour au forum"
       collapse_all_sections: "Réduire toutes les sections"
       expand_all_sections: "Développer toutes les sections"
-      filter: "Filtrer..."
-      clear_filter: "Effacer le filtre"
-      no_results:
-        title: "Aucun résultat"
-        description: 'Nous n''avons rien trouvé correspondant à « %{filter} ».<br><br>Vouliez-vous <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">rechercher dans les paramètres du site</a> ou dans la <a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">liste des utilisateurs administrateurs ?</a>'
       footer:
         interface_color_selector:
           light: "Clair"
@@ -4775,6 +4773,16 @@ fr:
           paste: "Coller..."
           save: "Enregistrer sous..."
     powered_by_discourse: "Alimenté par Discourse"
+    discovery:
+      headings:
+        categories: "Toutes les catégories"
+        filter_labels:
+          latest: "Récents"
+          top: "Top"
+          new: "Nouveaux"
+          unread: "Non lus"
+          hot: "Populaires"
+          unseen: "Non lus"
   admin_js:
     type_to_filter: "Commencez votre saisie pour filtrer…"
     settings: "Paramètres"
@@ -4825,9 +4833,6 @@ fr:
         flags:
           title: "Modération"
           header_description: "Le système de signalement de Discourse vous aide, vous et votre équipe de modérateurs, à gérer le contenu et le comportement des utilisateurs, en gardant ainsi votre communauté respectueuse et saine. Les valeurs par défaut conviennent à la plupart des communautés et vous n'avez pas besoin de les modifier. Cependant, si votre site a des exigences particulières, vous pouvez désactiver les indicateurs dont vous n'avez pas besoin et ajouter vos propres indicateurs personnalisés."
-        font_style:
-          title: "Style de police"
-          header_description: "Personnalisez les styles de police utilisés par vos thèmes"
         files:
           title: "Fichiers"
           header_description: "Paramètres qui contrôlent les limites de taille et de type de fichier, les tailles et les sources des avatars, le stockage des fichiers, la qualité et la compression des images, etc."
@@ -4837,11 +4842,7 @@ fr:
         login_and_authentication:
           title: "Connexion et authentification"
           header_description: "Configurez la manière dont les utilisateurs se connectent et s'authentifient, les secrets et les clés, les fournisseurs OAuth2, etc."
-        logo:
-          title: "Logo du site"
-          header_description: "Personnalisez les variantes du logo de votre site"
-        branding:
-          title: "Branding"
+        logo_and_fonts:
           logo:
             form:
               logo:
@@ -4852,6 +4853,13 @@ fr:
                 description: "Captures d'écran qui mettent en valeur les atouts et les fonctionnalités de votre instance du logiciel. Ces images doivent toutes être enregistrées localement sur le serveur et posséder des dimensions identiques."
               opengraph_image:
                 description: "Image opengraph par défaut, utilisée lorsque la page n'a pas d'autre image appropriée. Si vous laissez ce champ vide, « large_icon » sera utilisée."
+          fonts:
+            title: "Polices"
+            form:
+              heading_font:
+                title: "Police de titre"
+            backfill_modal:
+              modal_yes: "Oui"
         navigation:
           title: "Navigation"
           header_description: "Configurez les liens de navigation et les éléments de menu de votre site. Cela inclut l'emplacement et le comportement du menu de navigation principal, les liens rapides en haut de la page d'accueil, ainsi que la barre latérale d'administration"
@@ -4861,9 +4869,6 @@ fr:
         onebox:
           title: "Onebox"
           header_description: "Configurez la manière dont les aperçus Onebox sont générés et affichés pour votre site"
-        other:
-          title: "Autre"
-          header_description: "Paramètres qui ne rentrent dans aucune autre catégorie"
         rate_limits:
           title: "Limites d'utilisation"
           header_description: "Configurez la fréquence à laquelle les utilisateurs peuvent effectuer certaines actions, telles que créer des sujets, envoyer des messages et publier des réponses"
@@ -4909,6 +4914,10 @@ fr:
         badges:
           title: "Badges"
           header_description: "Les badges récompensent les utilisateurs pour leurs activités, leurs contributions et leurs réalisations afin de reconnaître, de valider et d'encourager les comportements et interactions positives au sein de la communauté"
+        content:
+          sub_pages:
+            posts_and_topics:
+              title: "Publications et sujets"
         permalinks:
           title: "Permaliens"
           header_description: "Redirections à appliquer pour les URL non connues par le forum"
@@ -4932,9 +4941,6 @@ fr:
         site_texts:
           title: "Textes du site"
         email:
-          title: "Configuration du serveur et journaux"
-          header_description: "Personnalisez les modèles utilisés pour créer des e-mails, prévisualiser les e-mails récapitulatifs qui seront envoyés et afficher les journaux"
-          keywords: "e-mail|smtp|mailgun|sendgrid|envoyé|ignoré|non délivré|reçu|rejeté|journaux d'e-mail|prévisualier le résumé"
           sub_pages:
             preview_summary:
               title: "Prévisualiser le résumé"
@@ -4943,6 +4949,8 @@ fr:
               title: "Test avancé"
             templates:
               title: "Modèles"
+        email_logs:
+          sub_pages:
             sent:
               title: "Envoyés"
             skipped:
@@ -5597,7 +5605,6 @@ fr:
             post: "publications"
             chat_message: "messages de discussion"
             enabled: "Activer ce signalement personnalisé après l'enregistrement"
-            alert: "Une fois qu'un signalement personnalisé a été utilisé, il peut être désactivé, mais pas modifié ni supprimé."
             edit_flag: "Modifier le signalement"
             non_editable: "Vous ne pouvez pas modifier ce signalement, car il s'agit d'un indicateur système ou il a déjà été utilisé dans le système de révision, mais vous pouvez toujours le désactiver."
             delete_flag: "Supprimer le signalement"
@@ -5626,6 +5633,24 @@ fr:
             new_theme: "Nouveau thème"
           components:
             title: "Composants"
+            install: "Installer"
+            name: "Nom"
+            enabled: "Activé ?"
+            by_author: "Par %{name}"
+            learn_more: "En savoir plus…"
+            edit: "Modifier"
+            parent_themes_two: "%{name1} et %{name2}"
+            preview: "Aperçu"
+            check_update: "Vérifier les mises à jour"
+            export: "Exporter"
+            convert: "Convertir"
+            delete: "Supprimer"
+            filter_by: "Filtrer par"
+            filter_by_all: "Tout"
+            filter_by_used: "Utilisé"
+            filter_by_unused: "Non utilisé"
+            delete_confirm: 'Voulez-vous vraiment supprimer « %{name} » ?'
+            badge_unused: "Non utilisé"
         user_fields:
           field: "Champ"
           type: "Type"

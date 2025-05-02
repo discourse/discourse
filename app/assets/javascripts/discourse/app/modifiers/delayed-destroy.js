@@ -15,7 +15,7 @@ export default modifier(
   (
     element,
     posArgs,
-    { animate = false, onComplete = () => {}, elementSelector, delay = 300 }
+    { animate = false, onComplete = () => {}, elementSelector, delay = 200 }
   ) => {
     if (animate) {
       const targetEl = elementSelector

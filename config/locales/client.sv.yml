@@ -1858,6 +1858,8 @@ sv:
     modal:
       close: "stäng"
       dismiss_error: "Avfärda fel"
+    multi_select:
+      search: "Sök…"
     form_kit:
       reset: Återställ
       optional: valfritt
@@ -2042,10 +2044,6 @@ sv:
         name: "Google"
         title: "Logga in med Google"
         sr_title: "Logga in med Google"
-      twitter:
-        name: "Twitter"
-        title: "Logga in med Twitter"
-        sr_title: "Logga in med Twitter"
       instagram:
         name: "Instagram"
         title: "Logga in med Instagram"
@@ -2494,8 +2492,6 @@ sv:
       in_topics_posts: "i alla ämnen och inlägg"
       enter_hint: "eller tryck Enter"
       in_posts_by: "i inlägg av %{username}"
-      browser_tip: "%{modifier} + f"
-      browser_tip_description: "igen för att använda inbyggd webbläsarsökning"
       recent: "Senaste sökningar"
       clear_recent: "Rensa senaste sökningar"
       type:
@@ -3448,6 +3444,10 @@ sv:
       settings: "Inställningar"
       topic_template: "Mall"
       tags: "Taggar"
+      localization:
+        name: "Namn"
+        description: "Beskrivning"
+        remove: "Ta bort"
       tags_allowed_tags: "Begränsa dessa taggar till följande kategori:"
       tags_allowed_tag_groups: "Begränsa dessa tagg-grupper till denna kategori:"
       tags_placeholder: "(Valfri) lista över tillåtna taggar"
@@ -4266,7 +4266,6 @@ sv:
         forum:
           label: Forum
       back_to_forum: "Tillbaka till forumet"
-      filter: "Filter..."
       footer:
         interface_color_selector:
           light: "Ljust"
@@ -4371,6 +4370,16 @@ sv:
           copy: "Kopiera..."
           paste: "Klistra in..."
           save: "Spara som..."
+    discovery:
+      headings:
+        categories: "Alla kategorier"
+        filter_labels:
+          latest: "Senaste"
+          top: "Topp"
+          new: "Nya"
+          unread: "Olästa"
+          hot: "Hett"
+          unseen: "Osedda"
   admin_js:
     type_to_filter: "Skriv för att filtrera…"
     settings: "Inställningar"
@@ -4416,10 +4425,7 @@ sv:
           title: "Filer"
         legal:
           title: "Juridik"
-        logo:
-          title: "Webbplatsens logotyp"
-        branding:
-          title: "Varumärke"
+        logo_and_fonts:
           logo:
             form:
               logo:
@@ -4428,14 +4434,19 @@ sv:
               email: "E-postadress"
               manifest_screenshots:
                 description: "Skärmdumpar som visar dina instansfunktioner och funktionaliteten på dess installationsfrågesida. Alla bilder ska vara lokala uppladdningar, med samma dimensioner."
+          fonts:
+            title: "Typsnitt"
+            form:
+              heading_font:
+                title: "Typsnitt för rubrik"
+            backfill_modal:
+              modal_yes: "Ja"
         navigation:
           title: "Navigering"
         notifications:
           title: "Aviseringar"
         onebox:
           title: "Onebox"
-        other:
-          title: "Övrigt"
         search_everything:
           title: "Sök"
         security:
@@ -4474,6 +4485,8 @@ sv:
               header_description: "Förhandsgranska innehållet i sammanfattningen som skickas via e-post till inaktiva användare"
             templates:
               title: "Mallar"
+        email_logs:
+          sub_pages:
             sent:
               title: "Skickade"
             skipped:
@@ -4989,6 +5002,22 @@ sv:
             title: "Teman"
           components:
             title: "Komponenter"
+            install: "Installera"
+            name: "Namn"
+            enabled: "Aktiverad?"
+            by_author: "Av %{name}"
+            learn_more: "Läs mer"
+            edit: "Redigera"
+            preview: "Förhandsgranska"
+            export: "Exportera"
+            convert: "Konvertera"
+            delete: "Radera"
+            filter_by: "Filtrera efter"
+            filter_by_all: "Alla"
+            filter_by_used: "Använt"
+            filter_by_unused: "Oanvänt"
+            delete_confirm: 'Är du säker på att du vill radera "%{name}"?'
+            badge_unused: "Oanvänt"
         user_fields:
           type: "Typ"
           delete: "Radera"

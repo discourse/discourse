@@ -1617,7 +1617,7 @@ en:
         verify_identity: "To continue, please verify your identity."
         title: "Password Reset"
         remove: "Remove Password"
-        remove_detail: "This completely erases your password. Your account will no longer be accessible by using your password to log in unless you reset it."
+        remove_detail: "Your account will no longer be accessible with a password unless you reset it."
 
       second_factor_backup:
         title: "Two-Factor Backup Codes"
@@ -3045,8 +3045,6 @@ en:
       enter_hint: "or press Enter"
       mobile_enter_hint: "or tap Search icon"
       in_posts_by: "in posts by %{username}"
-      browser_tip: "%{modifier} + f"
-      browser_tip_description: "again to use native browser search"
       recent: "Recent Searches"
       clear_recent: "Clear Recent Searches"
 
@@ -3432,6 +3430,9 @@ en:
           other {}
         }
 
+      reply_count_link:
+        one: "%{count} reply, jump to first post"
+        other: "%{count} replies, jump to first post"
       created_at: "Created: %{date}"
       bumped_at: "Latest: %{date}"
 
@@ -4124,6 +4125,14 @@ en:
       settings: "Settings"
       topic_template: "Template"
       tags: "Tags"
+      localizations: "Localizations"
+      localization:
+        locale: "Locale"
+        name: "Name"
+        description: "Description"
+        add: "Add new locale"
+        remove: "Remove"
+        hint: "There are currently no localizations for this category. Click 'Add new locale' below to begin adding localizations."
       tags_allowed_tags: "Restrict these tags to this category:"
       tags_allowed_tag_groups: "Restrict these tag groups to this category:"
       tags_placeholder: "(Optional) list of allowed tags"
@@ -5072,12 +5081,7 @@ en:
       back_to_forum: "Back to Forum"
       collapse_all_sections: "Collapse all sections"
       expand_all_sections: "Expand all sections"
-      filter: "Filter..."
-      filter_links: "Filter links..."
-      clear_filter: "Clear filter"
-      no_results:
-        title: "No results"
-        description_admin_search: 'We couldn’t find anything matching ‘%{filter}’.<br><br>Try <a class="sidebar-additional-filter-admin-search" href="%{admin_search_url}">searching the entire admin interface</a>.'
+      search: "Search"
       footer:
         interface_color_selector:
           light: "Light"
@@ -5190,6 +5194,53 @@ en:
           save: "Save as..."
     powered_by_discourse: "Powered by Discourse"
     safari_15_warning: "Your browser will soon be incompatible with this community. To keep participating here, please upgrade your browser or <a href='%{url}'>learn more</a>."
+
+    discovery:
+      headings:
+        all:
+          default: "All %{filter} topics"
+          posted: "All topics you’ve posted in"
+          bookmarks: "All topics you’ve bookmarked"
+
+        category:
+          default: "%{filter} topics in %{category}"
+          posted: "Topics in %{category} you’ve posted in"
+          bookmarks: "Topics in %{category} you’ve bookmarked"
+
+        no_tags:
+          all_default: "All topics without tags"
+          category_default: "%{filter} topics in %{category} without tags"
+          all:
+            posted: "All topics without tags you've posted in"
+            bookmarks: "All topics without tags you've bookmarked"
+          category:
+            posted: "Topics in %{category} without tags you've posted in"
+            bookmarks: "Topics in %{category} without tags you've bookmarked"
+
+        single_tag:
+          default: "%{filter} topics tagged with %{tag}"
+          posted: "Topics tagged %{tag} you've posted in"
+          bookmarks: "Topics tagged %{tag} you’ve bookmarked"
+
+        multi_tag:
+          default: "%{filter} topics tagged %{tags}"
+          posted: "Topics tagged %{tags} you've posted in"
+          bookmarks: "Topics tagged %{tags} you’ve bookmarked"
+
+        category_tag:
+          default: "%{filter} topics in %{category} tagged with %{tag}"
+          posted: "Topics in %{category} tagged %{tag} you’ve posted in"
+          bookmarks: "Topics in %{category} tagged %{tag} you’ve bookmarked"
+
+        categories: "All categories"
+
+        filter_labels:
+          latest: "Latest"
+          top: "Top"
+          new: "New"
+          unread: "Unread"
+          hot: "Hot"
+          unseen: "Unseen"
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
@@ -5359,9 +5410,6 @@ en:
         onebox:
           title: "Onebox"
           header_description: "Configure how onebox previews are generated and displayed for your site"
-        other:
-          title: "Other"
-          header_description: "Settings which do not fit into any other category"
         rate_limits:
           title: "Rate limits"
           header_description: "Configure how often users can perform certain actions, such as creating topics, sending messages, and posting replies"
@@ -5552,6 +5600,8 @@ en:
         modal_title: "Search anything in admin"
         title: "Search"
         instructions: "Type to search for pages, settings, reports, themes, components, and more..."
+        full_page_link: "Switch to full page search"
+        no_results: "We couldn’t find anything matching ‘%{filter}’."
         result_types:
           page:
             one: "Page"
@@ -6193,7 +6243,8 @@ en:
             post: "posts"
             chat_message: "chat messages"
             enabled: "Enable this custom flag after saving"
-            alert: "Once a custom flag has been used, it can only be disabled but not edited or deleted."
+            create_warning: "Once a custom flag has been used, it can only be disabled or edited but not deleted."
+            edit_warning: "Editing the name and description of a flag can cause potential data inconsistencies. Once a custom flag has been used, it can only be disabled or edited but not deleted."
             edit_flag: "Edit flag"
             non_editable: "You cannot edit this flag because it is a system flag or has already been used in the review system, however you can still disable it."
             delete_flag: "Delete flag"
@@ -7120,6 +7171,7 @@ en:
           dropdown: "Dropdown"
           upload: "Upload a file"
           multiselect: "Multiple choice"
+          tagchooser: "Tag Group selector"
         validations_modal:
           button_title: "Validations"
           modal_title: "Validation Options"
@@ -7165,6 +7217,8 @@ en:
           toggle_form_template: "form template enabled"
           select_template: "Select form templates"
           select_template_help: "Add/Edit Form Templates"
+        errors:
+          multiple_tags_not_allowed: 'You can''t select more tags from the "%{tag_name}". To avoid issues, use Form Template'
 
       impersonate:
         title: "Impersonate"

@@ -1934,10 +1934,6 @@ bg:
         name: "Google"
         title: "Влезте с Google"
         sr_title: "Влезте с Google"
-      twitter:
-        name: "Twitter"
-        title: "Влезте с Twitter"
-        sr_title: "Влезте с Twitter"
       instagram:
         name: "Instagram"
         title: "Влезте с Instagram"
@@ -2927,6 +2923,10 @@ bg:
       settings: "Настройки"
       topic_template: "Шаблон"
       tags: "Етикети"
+      localization:
+        name: "Име"
+        description: "Описание"
+        remove: "Премахване"
       tags_placeholder: "(По желание) списък на позволените етикети"
       required_tag_group:
         delete: "Изтрий"
@@ -3432,6 +3432,15 @@ bg:
       spreadsheet:
         show: "Покажи"
         about: "Относно"
+    discovery:
+      headings:
+        categories: "Всички категории"
+        filter_labels:
+          latest: "Последни"
+          top: "Топ"
+          new: "Нова"
+          unread: "Непрочетени"
+          unseen: "Непрегледани"
   admin_js:
     settings: "Настройки"
     admin:
@@ -3461,19 +3470,20 @@ bg:
           title: "Файлове"
         legal:
           title: "Правни"
-        branding:
+        logo_and_fonts:
           logo:
             form:
               mobile: "Мобилен"
               email: "Имейл "
+          fonts:
+            backfill_modal:
+              modal_yes: "Да"
         navigation:
           title: "Навигация"
         notifications:
           title: "Известия"
         onebox:
           title: "Onebox"
-        other:
-          title: "Други"
         search_everything:
           title: "Търсене"
         security:
@@ -3503,6 +3513,8 @@ bg:
               header_description: "Преглед на съдържанието на имейлите, изпратени до неактивните потребители"
             templates:
               title: "Шаблони"
+        email_logs:
+          sub_pages:
             sent:
               title: "Изпрати"
             skipped:
@@ -3702,6 +3714,16 @@ bg:
           delete: "Изтрий"
         themes_and_components:
           breadcrumb_title: "Персонализация"
+          components:
+            name: "Име"
+            enabled: "Да е включен?"
+            by_author: "От %{name}"
+            learn_more: "Научете повече"
+            edit: "Редактирай"
+            preview: "Преглед"
+            export: "Експорт "
+            delete: "Изтрий"
+            filter_by_all: "Всички"
         user_fields:
           type: "Тип"
           delete: "Изтрий"

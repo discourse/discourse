@@ -18,33 +18,32 @@ module Chat
     #   @return [Service::Base::Context]
     params do
       attribute :channel_id, :integer
+      attribute :thread_id, :integer
+
       validates :channel_id, presence: true
 
-      attribute :thread_id, :integer
+      def channel_name
+        return "/chat-reply/#{channel_id}/thread/#{thread_id}" if thread_id
+        "/chat-reply/#{channel_id}"
+      end
     end
 
     model :presence_channel
     step :generate_client_id
-    step :join_chat_reply_presence_channel
+    try(PresenceChannel::InvalidAccess) { step :join_chat_reply_presence_channel }
 
     private
 
     def fetch_presence_channel(params:)
-      name = "/chat-reply/#{params.channel_id}"
-      name += "/thread/#{params.thread_id}" if params.thread_id
-      PresenceChannel.new(name)
-    rescue PresenceChannel::NotFound
-      nil
+      PresenceChannel.new(params.channel_name)
     end
 
     def generate_client_id
       context[:client_id] = SecureRandom.hex
     end
 
-    def join_chat_reply_presence_channel(presence_channel:, guardian:)
-      presence_channel.present(user_id: guardian.user.id, client_id: context.client_id)
-    rescue PresenceChannel::InvalidAccess
-      fail!("Presence channel not accessible by the user: #{guardian.user.id}")
+    def join_chat_reply_presence_channel(presence_channel:, guardian:, client_id:)
+      presence_channel.present(user_id: guardian.user.id, client_id:)
     end
   end
 end

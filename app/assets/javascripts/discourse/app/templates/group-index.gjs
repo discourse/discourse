@@ -97,14 +97,11 @@ export default RouteTemplate(
       </div>
 
       {{#if @controller.hasMembers}}
-        <LoadMore
-          @selector=".directory-table .directory-table__cell"
-          @action={{@controller.loadMore}}
-        >
+        <LoadMore @action={{@controller.loadMore}}>
           <ResponsiveTable
             @className="group-members
           {{if @controller.isBulk 'sticky-header' ''}}
-          {{if @controller.canManageGroup 'group-members--can-manage' ''}}"
+            {{if @controller.canManageGroup 'group-members--can-manage' ''}}"
           >
             <:header>
               <TableHeaderToggle

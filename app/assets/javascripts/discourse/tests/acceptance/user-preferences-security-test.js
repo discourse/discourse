@@ -234,7 +234,7 @@ acceptance("User Preferences - Security", function (needs) {
     await visit("/u/eviltrout/preferences/security");
     // eviltrout starts with an entry in associated_accounts, can remove password
     assert
-      .dom("#remove-password-button")
+      .dom("#remove-password-link")
       .exists("shows for user with associated account");
 
     updateCurrentUser({
@@ -242,7 +242,7 @@ acceptance("User Preferences - Security", function (needs) {
     });
 
     assert
-      .dom("#remove-password-button")
+      .dom("#remove-password-link")
       .doesNotExist(
         "does not show for user with no associated account and no passkeys"
       );
@@ -257,14 +257,14 @@ acceptance("User Preferences - Security", function (needs) {
         },
       ],
     });
-    assert.dom("#remove-password-button").exists("shows for user with passkey");
+    assert.dom("#remove-password-link").exists("shows for user with passkey");
   });
 
   test("Removing User Password", async function (assert) {
     await visit("/u/eviltrout/preferences/security");
     // eviltrout starts with an entry in associated_accounts, can remove password
 
-    await click("#remove-password-button");
+    await click("#remove-password-link");
     assert
       .dom(".dialog-body .confirm-session")
       .exists(
@@ -277,7 +277,7 @@ acceptance("User Preferences - Security", function (needs) {
       .hasText(i18n("user.change_password.remove_detail"));
     await click(".dialog-footer .btn-danger");
     assert
-      .dom("#remove-password-button")
+      .dom("#remove-password-link")
       .doesNotExist("hides remove password button once password is removed");
     assert
       .dom("#change-password-button")

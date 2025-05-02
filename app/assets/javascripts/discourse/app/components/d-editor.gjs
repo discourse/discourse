@@ -30,7 +30,6 @@ import deprecated from "discourse/lib/deprecated";
 import { isTesting } from "discourse/lib/environment";
 import { getRegister } from "discourse/lib/get-owner";
 import { hashtagAutocompleteOptions } from "discourse/lib/hashtag-autocomplete";
-import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
 import loadEmojiSearchAliases from "discourse/lib/load-emoji-search-aliases";
 import loadRichEditor from "discourse/lib/load-rich-editor";
@@ -160,38 +159,6 @@ export default class DEditor extends Component {
     }
 
     return keymap;
-  }
-
-  @action
-  handlePreviewClick(event) {
-    if (!event.target.closest(".d-editor-preview")) {
-      return;
-    }
-
-    if (wantsNewWindow(event)) {
-      return;
-    }
-
-    if (event.target.tagName === "A") {
-      if (event.target.classList.contains("mention")) {
-        this.appEvents.trigger(
-          "d-editor:preview-click-user-card",
-          event.target,
-          event
-        );
-      }
-
-      if (event.target.classList.contains("mention-group")) {
-        this.appEvents.trigger(
-          "d-editor:preview-click-group-card",
-          event.target,
-          event
-        );
-      }
-
-      event.preventDefault();
-      return false;
-    }
   }
 
   @onEvent("willDestroyElement")
@@ -765,7 +732,7 @@ export default class DEditor extends Component {
                     <ToolbarPopupMenuOptions
                       @content={{this.popupMenuOptions}}
                       @onChange={{this.onPopupMenuAction}}
-                      @onOpen={{action b.action b}}
+                      @onOpen={{fn b.action b}}
                       @tabindex={{-1}}
                       @onKeydown={{this.rovingButtonBar}}
                       @options={{hash icon=b.icon focusAfterOnChange=false}}
@@ -773,7 +740,7 @@ export default class DEditor extends Component {
                     />
                   {{else}}
                     <DButton
-                      @action={{fn (action b.action) b}}
+                      @action={{fn b.action b}}
                       @translatedTitle={{b.title}}
                       @label={{b.label}}
                       @icon={{b.icon}}
@@ -812,7 +779,6 @@ export default class DEditor extends Component {
           />
         </div>
       </div>
-
       <DEditorPreview
         @preview={{this.preview}}
         @forcePreview={{this.forcePreview}}

@@ -456,6 +456,7 @@ export default class Category extends RestModel {
   @tracked styleType = this.style_type;
   @tracked emoji;
   @tracked icon;
+  @tracked localizations = this.category_localizations;
   permissions = null;
 
   init() {
@@ -781,9 +782,26 @@ export default class Category extends RestModel {
         style_type: this.style_type,
         emoji: this.emoji,
         icon: this.icon,
+        ...(this.siteSettings.experimental_content_localization && {
+          category_localizations_attributes: this._buildUpdatedLocalizations(),
+        }),
       }),
       type: id ? "PUT" : "POST",
     });
+  }
+
+  _buildUpdatedLocalizations() {
+    const localizationsToDestroy = this.category_localizations
+      .filter(
+        (original) =>
+          !this.localizations.some((newLoc) => newLoc.id === original.id)
+      )
+      .map((loc) => ({
+        id: loc.id,
+        _destroy: true,
+      }));
+
+    return [...this.localizations, ...localizationsToDestroy];
   }
 
   _permissionsForUpdate() {

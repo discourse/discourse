@@ -5,6 +5,7 @@ RSpec.describe SafeModeController do
     it "never includes customizations" do
       theme = Fabricate(:theme)
       theme.set_field(target: :common, name: "header", value: "My Custom Header")
+      theme.set_field(target: :common, name: :scss, value: "body { background: red; }")
       theme.save!
       theme.set_default!
 

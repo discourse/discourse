@@ -22,14 +22,14 @@ export default RouteTemplate(
     {{#if @controller.canInviteToForum}}
       <LoadMore
         @id="user-content"
-        @selector=".user-invite-list tr"
         @action={{@controller.loadMore}}
         class="user-content"
       >
         <section class="user-additional-controls">
           {{#if @controller.showSearch}}
             <div class="user-invite-search">
-              <form><TextField
+              <form>
+                <TextField
                   @value={{@controller.searchTerm}}
                   @placeholderKey="user.invited.search"
                 /></form>

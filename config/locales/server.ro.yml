@@ -1290,7 +1290,9 @@ ro:
     enable_welcome_banner: "Afișează un banner pe paginile principale ale subiectelor pentru a ura bun venit membri și a le permite să caute conținut în site"
     experimental_new_new_view_groups: 'Activează o nouă listă de subiecte care combină subiectele necitite și cele noi și fă ca legătura „Toate” din bara laterală să ducă spre aceasta.'
     experimental_form_templates: "Activează caracteristica șabloane de formulare. Gestionează șabloanele la <a href='%{base_path}/admin/customize/form-templates'>Personalizare/șabloane</a>."
+    show_preview_for_form_templates: "Activează funcționalitatea de previzualizare pentru șabloanele de formulare"
     show_user_menu_avatars: "Arată avatare utilizator în meniul utilizatorului"
+    experimental_content_localization_allowed_groups: 'Grupuri cărora li se permite să actualizeze conținutul localizat. Necesită ca „localizarea experimentală a conținutului” să fie activată.'
     errors:
       invalid_email: "Adresă de email invalidă."
       invalid_username: "Nu există nici un utilizator cu acest nume de utilizator."
@@ -1434,6 +1436,7 @@ ro:
       not_allowed: "nu este permis din partea acelui furnizor de servicii email. Te rugăm folosește altă adresă email."
       blocked: "nu este permis."
       revoked: "No se vor trimite emailuri către '%{email}' până la data de %{date}."
+    cannot_remove_all_auth: "Trebuie să ai cel puțin un cont asociat, o cheie de acces sau o parolă setată."
   unsubscribe_mailer:
     subject_template: "Confirmă că nu mai vrei să primești actualizări pe email de la %{site_title}"
   invite_password_instructions:
@@ -2139,6 +2142,8 @@ ro:
             choices:
               latest:
                 label: "Ultima"
+      branding:
+        title: "Logo site"
       corporate:
         fields:
           contact_url:
@@ -2251,6 +2256,8 @@ ro:
       delete_user:
         complete: "Utilizatorul a fost șters."
   fallback_username: "utilizator"
+  content_localization:
+    not_allowed: "Nu ai voie să localizezi acest conținut."
   activemodel:
     errors:
       <<: *errors

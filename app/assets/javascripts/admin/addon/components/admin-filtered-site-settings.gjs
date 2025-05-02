@@ -6,10 +6,10 @@ import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import discourseDebounce from "discourse/lib/debounce";
-import SiteSettingFilter from "discourse/lib/site-setting-filter";
 import { i18n } from "discourse-i18n";
 import AdminSiteSettingsFilterControls from "admin/components/admin-site-settings-filter-controls";
 import SiteSetting from "admin/components/site-setting";
+import SiteSettingFilter from "admin/lib/site-setting-filter";
 
 export default class AdminFilteredSiteSettings extends Component {
   @service currentUser;

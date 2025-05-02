@@ -65,11 +65,9 @@ RSpec.describe Stylesheet::Manager do
       css = File.read(builder.stylesheet_fullpath)
       _source_map = File.read(builder.source_map_fullpath)
 
-      expect(css).to match(/\.common/)
       expect(css).to match(/\.desktop/)
 
       # child theme CSS is no longer bundled with main theme
-      expect(css).not_to match(/child_common/)
       expect(css).not_to match(/child_desktop/)
 
       child_theme_builder =
@@ -84,7 +82,6 @@ RSpec.describe Stylesheet::Manager do
       child_css = File.read(child_theme_builder.stylesheet_fullpath)
       _child_source_map = File.read(child_theme_builder.source_map_fullpath)
 
-      expect(child_css).to match(/child_common/)
       expect(child_css).to match(/child_desktop/)
 
       child_theme.set_field(target: :desktop, name: :scss, value: ".nothing{color: green;}")
@@ -887,7 +884,7 @@ RSpec.describe Stylesheet::Manager do
         manager = manager(theme.id)
 
         child_theme_manager =
-          Stylesheet::Manager::Builder.new(target: :desktop_theme, theme: child, manager: manager)
+          Stylesheet::Manager::Builder.new(target: :common_theme, theme: child, manager: manager)
 
         child_theme_manager.compile(force: true)
 
@@ -914,10 +911,10 @@ RSpec.describe Stylesheet::Manager do
 
   describe ".precompile_css" do
     let(:core_targets) do
-      %w[desktop mobile admin wizard desktop_rtl mobile_rtl admin_rtl wizard_rtl]
+      %w[common desktop mobile admin wizard common_rtl desktop_rtl mobile_rtl admin_rtl wizard_rtl]
     end
 
-    let(:theme_targets) { %i[desktop_theme mobile_theme] }
+    let(:theme_targets) { %i[common_theme desktop_theme mobile_theme] }
 
     before do
       STDERR.stubs(:write)
@@ -962,8 +959,8 @@ RSpec.describe Stylesheet::Manager do
       output = capture_output(:stderr) { Stylesheet::Manager.precompile_theme_css }
 
       # Ensure we force compile each theme only once
-      expect(output.scan(/#{child_theme_with_css.name}/).length).to eq(2)
-      expect(StylesheetCache.count).to eq(38) # (3 themes * 2 targets) + 32 color schemes (2 themes * 8 color schemes (7 defaults + 1 theme scheme) * 2 (light and dark mode per scheme))
+      expect(output.scan(/#{child_theme_with_css.name}/).length).to eq(1)
+      expect(StylesheetCache.count).to eq(33) # (1 theme with css) + 32 color schemes (2 themes * 8 color schemes (7 defaults + 1 theme scheme) * 2 (light and dark mode per scheme))
     end
 
     it "generates precompiled CSS - core and themes" do
@@ -971,13 +968,9 @@ RSpec.describe Stylesheet::Manager do
       Stylesheet::Manager.precompile_theme_css
 
       results = StylesheetCache.pluck(:target)
-      expect(results.size).to eq(46) # 8 core targets + 6 theme + 32 color schemes (light and dark mode per scheme)
+      expect(results.size).to eq(43) # 10 core targets + 1 theme + 32 color schemes (light and dark mode per scheme)
 
-      theme_targets.each do |tar|
-        expect(
-          results.count { |target| target =~ /^#{tar}_(#{user_theme.id}|#{default_theme.id})$/ },
-        ).to eq(2)
-      end
+      expect(results.count { |target| target =~ /^common_theme_/ }).to eq(1)
     end
 
     it "correctly generates precompiled CSS - core and themes and no default theme" do
@@ -987,7 +980,7 @@ RSpec.describe Stylesheet::Manager do
       Stylesheet::Manager.precompile_theme_css
 
       results = StylesheetCache.pluck(:target)
-      expect(results.size).to eq(46) # 8 core targets + 6 theme + 32 color schemes (light and dark mode per scheme)
+      expect(results.size).to eq(43) # 10 core targets + 1 theme + 32 color schemes (light and dark mode per scheme)
 
       expect(results).to include("color_definitions_#{scheme1.name}_#{scheme1.id}_#{user_theme.id}")
       expect(results).to include(
@@ -1027,7 +1020,7 @@ RSpec.describe Stylesheet::Manager do
       manager = manager(default_theme.id)
       theme_builder =
         Stylesheet::Manager::Builder.new(
-          target: :desktop_theme,
+          target: :common_theme,
           theme: default_theme,
           manager: manager,
         )

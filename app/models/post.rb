@@ -67,6 +67,8 @@ class Post < ActiveRecord::Base
 
   has_many :user_actions, foreign_key: :target_post_id
 
+  has_many :post_localizations, dependent: :destroy
+
   belongs_to :image_upload, class_name: "Upload"
 
   has_many :post_hotlinked_media, dependent: :destroy, class_name: "PostHotlinkedMedia"
@@ -1402,6 +1404,7 @@ end
 #  locked_by_id            :integer
 #  image_upload_id         :bigint
 #  outbound_message_id     :string
+#  locale                  :string(20)
 #
 # Indexes
 #

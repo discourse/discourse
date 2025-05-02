@@ -202,19 +202,17 @@ export default RouteTemplate(
           {{/if}}
         {{/if}}
 
-        <span>
-          <PluginOutlet
-            @name="full-page-search-below-search-info"
-            @connectorTagName="div"
-            @outletArgs={{hash search=@controller.searchTerm}}
-          />
-        </span>
+        <PluginOutlet
+          @name="full-page-search-below-search-info"
+          @connectorTagName="div"
+          @outletArgs={{hash search=@controller.searchTerm}}
+        />
 
         {{#if @controller.searching}}
           {{loadingSpinner size="medium"}}
         {{else}}
           <div class="search-results" role="region">
-            <LoadMore @selector=".fps-result" @action={{@controller.loadMore}}>
+            <LoadMore @action={{@controller.loadMore}}>
               {{#if
                 (or
                   @controller.usingDefaultSearchType

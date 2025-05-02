@@ -188,9 +188,7 @@ export default class SearchMenu extends Component {
   }
 
   @bind
-  clearSearch(e) {
-    e.stopPropagation();
-    e.preventDefault();
+  clearSearch() {
     this.search.activeGlobalSearchTerm = "";
     this.search.focusSearchInput();
     this.triggerSearch();
@@ -471,8 +469,8 @@ export default class SearchMenu extends Component {
           <DButton
             @action={{this.cancelMobileSearch}}
             @translatedLabel={{i18n "cancel_value"}}
-            class="btn-flat"
-            data-test-button="cancel-search-mobile"
+            class="btn-flat btn-cancel-mobile-search"
+            data-test-button="cancel-mobile-search"
           />
         {{/if}}
       </div>

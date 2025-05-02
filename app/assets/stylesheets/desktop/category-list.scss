@@ -4,7 +4,8 @@
 
   td,
   th {
-    @extend .list-cell;
+    padding: 12px 5px;
+    color: var(--primary-med-or-secondary-high);
   }
 
   td {
@@ -128,6 +129,10 @@
       background: transparent;
       border: none;
       padding: 0;
+    }
+
+    .topic-statuses {
+      display: flex;
     }
   }
 

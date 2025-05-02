@@ -1681,6 +1681,8 @@ ko:
     modal:
       close: "닫기"
       dismiss_error: "오류 무시"
+    multi_select:
+      no_results: "결과 없음"
     form_kit:
       reset: 리셋
       optional: 선택 사항
@@ -1826,10 +1828,6 @@ ko:
         name: "구글"
         title: "구글로 로그인"
         sr_title: "구글로 로그인"
-      twitter:
-        name: "트위터"
-        title: "트위터로 로그인"
-        sr_title: "트위터로 로그인"
       instagram:
         name: "인스타그램"
         title: "인스타그램으로 로그인"
@@ -2193,8 +2191,6 @@ ko:
       in_topics_posts: "모든 주제와 게시물에서"
       enter_hint: "또는 Enter를 누르세요"
       in_posts_by: "%{username} 님의 게시물에서"
-      browser_tip: "%{modifier} + f"
-      browser_tip_description: "다시 기본 브라우저 검색 사용"
       recent: "최근 검색"
       clear_recent: "최근 검색 지우기"
       type:
@@ -2970,6 +2966,10 @@ ko:
       general: "일반"
       settings: "설정"
       tags: "태그"
+      localization:
+        name: "그룹명"
+        description: "내용"
+        remove: "제거"
       tags_allowed_tags: "이 태그를 이 카테고리로 제한:"
       tags_allowed_tag_groups: "이 태그 그룹을 이 카테고리로 제한:"
       tags_placeholder: "(선택사항) 허용된 태그 목록"
@@ -3650,9 +3650,6 @@ ko:
             invite:
               content: "초대"
               title: "새로운 멤버 초대"
-      filter: "필터..."
-      no_results:
-        title: "결과 없음"
       footer:
         interface_color_selector:
           light: "라이트"
@@ -3680,6 +3677,15 @@ ko:
       spreadsheet:
         show: "보기"
         about: "소개"
+    discovery:
+      headings:
+        categories: "모든 카테고리"
+        filter_labels:
+          latest: "최신"
+          top: "인기글"
+          new: "신규"
+          unread: "읽지 않음"
+          unseen: "읽지 않음"
   admin_js:
     type_to_filter: "필터 입력..."
     settings: "설정"
@@ -3721,8 +3727,7 @@ ko:
           title: "파일"
         legal:
           title: "법률조항"
-        branding:
-          title: "브랜딩"
+        logo_and_fonts:
           logo:
             form:
               mobile: "모바일"
@@ -3731,14 +3736,19 @@ ko:
                 description: "설치 프롬프트 페이지에서 인스턴스 기능을 보여주는 스크린 샷입니다. 모든 이미지는 로컬 업로드여야 하며 크기가 동일해야 합니다."
               opengraph_image:
                 description: "페이지에 다른 적합한 이미지가 없을 때 사용되는 기본 오픈 그래프 이미지. 비워두면 large_icon이 사용됩니다."
+          fonts:
+            title: "글꼴"
+            form:
+              heading_font:
+                title: "제목 글꼴"
+            backfill_modal:
+              modal_yes: "예"
         navigation:
           title: "내비게이션"
         notifications:
           title: "알림"
         onebox:
           title: "Onebox"
-        other:
-          title: "기타"
         search_everything:
           title: "검색"
         security:
@@ -3776,6 +3786,8 @@ ko:
           sub_pages:
             templates:
               title: "템플릿"
+        email_logs:
+          sub_pages:
             sent:
               title: "보낸 편지함"
             skipped:
@@ -4178,6 +4190,18 @@ ko:
             title: "테마"
           components:
             title: "구성 요소"
+            install: "설치"
+            name: "그룹명"
+            enabled: "활성화?"
+            by_author: "%{name}에 의해"
+            learn_more: "더 보기"
+            edit: "편집"
+            preview: "미리 보기"
+            export: "내보내기"
+            convert: "변환"
+            delete: "삭제하기"
+            filter_by_all: "전체"
+            delete_confirm: '&quot;%{name}&quot;를 삭제 하시겠습니까?'
         user_fields:
           type: "유형"
           delete: "삭제하기"

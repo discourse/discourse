@@ -1736,7 +1736,6 @@ en:
       category_style_deprecated: "Your Discourse is currently using a deprecated category style which will be removed before the final beta release of Discourse 3.2. Please refer to <a href='https://meta.discourse.org/t/282441'>Moving to a Single Category Style Site Setting</a> for instructions on how to keep your selected category style."
       maxmind_db_configuration: 'The server has been configured to use MaxMind databases for reverse IP lookups but a valid MaxMind account ID has not been configured which may result in MaxMind databases failing to download in the future. <a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">See this guide to learn more</a>.'
       admin_sidebar_deprecation: "The old admin layout is deprecated in favour of the new <a href='https://meta.discourse.org/t/-/289281'>sidebar layout</a> and will be removed in the next release. You can <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>configure</a> the new sidebar layout now to opt in before that."
-      full_page_login_check: "Your site has disabled the full page login setting. This setting is deprecated and will be removed on <strong>29 April 2025</strong>. Your site will be updated to use full page signup and login screens on that date. <a href='https://meta.discourse.org/t/introducing-our-new-fullscreen-signup-and-login-pages/340401'>Learn more</a>."
     back_from_logster_text: "Back to site"
 
   site_settings:
@@ -1905,7 +1904,6 @@ en:
     pending_users_reminder_delay_minutes: "Notify moderators if new users have been waiting for approval for longer than this many minutes. Set to -1 to disable notifications."
     persistent_sessions: "Users will remain logged in when the web browser is closed"
     maximum_session_age: "User will remain logged in for n hours since last visit"
-    full_page_login: "Show the login and signup forms in a full page (when unchecked, users will see the forms in a modal). "
     show_signup_form_email_instructions: Show email instructions on the signup form.
     show_signup_form_username_instructions: Show username instructions on the signup form.
     show_signup_form_full_name_instructions: Show full name instructions on the signup form.
@@ -2758,7 +2756,7 @@ en:
     default_navigation_menu_tags: "Selected tags will be displayed under Navigation Menu's Tags section by default."
     experimental_new_new_view_groups: 'Enable a new topics list that combines unread and new topics and make the "Everything" link in the sidebar link to it.'
     glimmer_post_stream_mode: "Control whether the new 'glimmer' post stream implementation is used. 'auto' will enable automatically once all your themes and plugins are ready. This implementation is under active development, and is not intended for production use. Do not develop themes/plugins against it until the implementation is finalized and announced."
-    glimmer_post_stream_mode_auto_groups: "Enable the new 'glimmer' post menu implementation in 'auto' mode for the specified user groups. This implementation is under active development, and is not intended for production use. Do not develop themes/plugins against it until the implementation is finalized and announced."
+    glimmer_post_stream_mode_auto_groups: "Enable the new 'glimmer' post stream implementation in 'auto' mode for the specified user groups. This implementation is under active development, and is not intended for production use. Do not develop themes/plugins against it until the implementation is finalized and announced."
     experimental_form_templates: "Enable the form templates feature. Manage the templates at <a href='%{base_path}/admin/customize/form-templates'>Customize / Templates</a>."
     show_preview_for_form_templates: "Enable the preview for form templates feature"
     lazy_load_categories_groups: "Lazy load category information only for users of these groups. This improves performance on sites with many categories."
@@ -2768,6 +2766,9 @@ en:
     about_page_hidden_groups: "Do not show members of specific groups on the /about page."
     adobe_analytics_tags_url: "Adobe Analytics tags URL (`https://assets.adobedtm.com/...`)"
     view_raw_email_allowed_groups: "Groups which can view the raw email content of a post if it was created by an incoming email. This includes email headers and other technical information."
+    experimental_content_localization: "Displays localized content for users based on their language preferences. Such content may include categories, tags, posts, and topics. This feature is under heavy development."
+    rich_editor: "Enable the rich editor so all users can switch between the current Markdown mode and the new rich text editor for more intuitive and user-friendly composition. The rich text editor is under active development, so not all features are supported yet — <a href='https://meta.discourse.org/t/test-our-new-composer/352347' target='_blank'>see Meta for more details</a>."
+    experimental_content_localization_allowed_groups: 'Groups allowed to update localized content. Requires "experimental content localization" to be enabled.'
     errors:
       invalid_css_color: "Invalid color. Enter a color name or hex value."
       invalid_email: "Invalid email address."
@@ -5797,3 +5798,6 @@ en:
       duplicate_ids: "has duplicate ids"
       reserved_id: "has a reserved keyword as id: %{id}"
       unsafe_description: "has an unsafe HTML description"
+
+  content_localization:
+    not_allowed: "You are not allowed to localize this content."

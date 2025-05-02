@@ -1,7 +1,7 @@
 import { action } from "@ember/object";
 import Route from "@ember/routing/route";
 import { service } from "@ember/service";
-import { scrollTop } from "discourse/mixins/scroll-top";
+import { scrollTop } from "discourse/lib/scroll-top";
 import { i18n } from "discourse-i18n";
 import { COMPONENTS, THEMES } from "admin/models/theme";
 

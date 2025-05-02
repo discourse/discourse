@@ -1692,6 +1692,8 @@ pt:
     modal:
       close: "fechar"
       dismiss_error: "Dispensar erro"
+    multi_select:
+      search: "Pesquisar…"
     form_kit:
       reset: Repor
       optional: opcional
@@ -1830,10 +1832,6 @@ pt:
       not_approved: "A sua conta ainda não foi aprovada. Será notificado por mensagem quando estiver pronto para iniciar a sessão."
       google_oauth2:
         name: "Google"
-      twitter:
-        name: "Twitter"
-        title: "Cadastrar-se com o Twitter"
-        sr_title: "Cadastrar-se com o Twitter"
       instagram:
         name: "Instagram"
         title: "Iniciar sessão com o Instagram"
@@ -2206,8 +2204,6 @@ pt:
       in_topics_posts: "em todos os tópicos e posts"
       enter_hint: "ou pressione Enter"
       in_posts_by: "em discussões por %{username}"
-      browser_tip: "%{modifier} + f"
-      browser_tip_description: "novamente para usar a pesquisa nativa do browser"
       recent: "pesquisas recentes"
       clear_recent: "Limpar pesquisas recentes"
       type:
@@ -2963,6 +2959,10 @@ pt:
       general: "Geral"
       settings: "Configurações"
       tags: "Etiquetas"
+      localization:
+        name: "Nome"
+        description: "Descrição"
+        remove: "Remover"
       tags_allowed_tags: "Restringir essas tags a esta categoria:"
       tags_allowed_tag_groups: "Restringir esses grupos de tags a esta categoria:"
       tags_placeholder: "(Opcional) lista de etiquetas permitidas"
@@ -3602,6 +3602,15 @@ pt:
         show: "Mostrar"
         about: "Sobre"
     powered_by_discourse: "Alimentado pelo Discourse"
+    discovery:
+      headings:
+        categories: "Todas as categorias"
+        filter_labels:
+          latest: "Recente"
+          top: "Os Melhores"
+          new: "Novo"
+          unread: "Não Lido"
+          unseen: "Por ler"
   admin_js:
     settings: "Configurações"
     admin:
@@ -3642,21 +3651,22 @@ pt:
           title: "Ficheiros"
         legal:
           title: "Legal"
-        branding:
+        logo_and_fonts:
           logo:
             form:
               mobile: "Móvel"
               email: "Email"
               manifest_screenshots:
                 description: "Capturas de tela que mostrem os recursos e a funcionalidade da instância na página de incentivo à instalação. Todas as imagens devem ser envios locais e das mesmas dimensões."
+          fonts:
+            backfill_modal:
+              modal_yes: "Sim"
         navigation:
           title: "Navegação"
         notifications:
           title: "Notificações"
         onebox:
           title: "Caixa Única"
-        other:
-          title: "Outro"
         search_everything:
           title: "Pesquisar"
         security:
@@ -3694,6 +3704,8 @@ pt:
               header_description: "Pré-visualizar o conteúdo dos emails de resumo enviados aos utilizadores inativos"
             templates:
               title: "Templates"
+        email_logs:
+          sub_pages:
             sent:
               title: "Enviado"
             skipped:
@@ -4051,6 +4063,18 @@ pt:
             title: "Temas"
           components:
             title: "Componentes"
+            install: "Instalar"
+            name: "Nome"
+            enabled: "Ativado?"
+            by_author: "Por %{name}"
+            learn_more: "Saiba mais"
+            edit: "Editar"
+            preview: "Pré-visualização"
+            export: "Exportar"
+            convert: "Converter"
+            delete: "Eliminar"
+            filter_by_all: "Tudo"
+            delete_confirm: 'Tem certeza de que deseja excluir "%{name}"?'
         user_fields:
           type: "Tipo"
           delete: "Eliminar"

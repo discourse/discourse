@@ -213,8 +213,17 @@ export default function () {
       "adminBadges",
       { path: "/badges", resetNamespace: true },
       function () {
+        this.route("settings");
         this.route("award", { path: "/award/:badge_id" });
         this.route("show", { path: "/:badge_id" });
+      }
+    );
+
+    this.route(
+      "adminGroups",
+      { path: "/groups", resetNamespace: true },
+      function () {
+        this.route("settings");
       }
     );
 

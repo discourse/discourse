@@ -396,6 +396,10 @@ Discourse::Application.routes.draw do
         end
       end
 
+      resources :groups, only: %i[index], constants: AdminConstraint.new do
+        collection { get "settings" => "site_settings#index" }
+      end
+
       get "search/all" => "search#index"
 
       namespace :config, constraints: StaffConstraint.new do
@@ -415,7 +419,6 @@ Discourse::Application.routes.draw do
         get "notifications" => "site_settings#index"
         get "rate-limits" => "site_settings#index"
         get "onebox" => "site_settings#index"
-        get "other" => "site_settings#index"
         get "search" => "site_settings#index"
         get "security" => "site_settings#index"
         get "site-admin" => "site_settings#index"
@@ -545,6 +548,7 @@ Discourse::Application.routes.draw do
     post "login" => "static#enter"
 
     get "login" => "static#show", :id => "login"
+    get "login-required" => "static#show", :id => "login"
     get "login-preferences" => "static#show", :id => "login"
     get "signup" => "static#show", :id => "signup"
     get "password-reset" => "static#show", :id => "password_reset"
@@ -1224,6 +1228,8 @@ Discourse::Application.routes.draw do
         put "merge_posts"
       end
     end
+    resources :post_localizations, only: %i[create update destroy]
+    resources :topic_localizations, only: %i[create update destroy]
 
     resources :bookmarks, only: %i[create destroy update] do
       put "toggle_pin"
@@ -1574,14 +1580,6 @@ Discourse::Application.routes.draw do
     resources :drafts, only: %i[index create show destroy]
 
     get "/service-worker.js" => "static#service_worker_asset", :format => :js
-    if service_worker_asset = Rails.application.assets_manifest.assets["service-worker.js"]
-      # https://developers.google.com/web/fundamentals/codelabs/debugging-service-workers/
-      # Normally the browser will wait until a user closes all tabs that contain the
-      # current site before updating to a new Service Worker.
-      # Support the old Service Worker path to avoid routing error filling up the
-      # logs.
-      get service_worker_asset => "static#service_worker_asset", :format => :js
-    end
 
     get "cdn_asset/:site/*path" => "static#cdn_asset",
         :format => false,

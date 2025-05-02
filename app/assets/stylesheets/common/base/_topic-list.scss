@@ -89,11 +89,11 @@
 
 .category-heading {
   max-width: 100%;
+  font-size: var(--font-up-3);
 
   p {
     margin-top: 0;
     line-height: var(--line-height-large);
-    font-size: var(--font-up-3);
   }
 }
 
@@ -474,4 +474,9 @@ div.education {
   white-space: nowrap;
   align-self: center;
   line-height: var(--line-height-medium);
+}
+
+#topic-list-heading {
+  line-height: var(--line-height-medium);
+  margin-bottom: 0.5em;
 }

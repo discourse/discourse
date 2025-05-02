@@ -44,10 +44,10 @@ const tonableEmojiTitle = (emoji, diversity) => {
 
 const tonableEmojiUrl = (emoji, scale) => {
   if (!emoji.tonable || scale === 1) {
-    return emoji.url;
+    return emojiUrlFor(emoji.name);
   }
 
-  return emoji.url.split(".png")[0] + `/${scale}.png`;
+  return emojiUrlFor(`${emoji.name}:t${scale}`);
 };
 
 export default class EmojiPicker extends Component {
@@ -460,7 +460,7 @@ export default class EmojiPicker extends Component {
           }}
         >
           <FilterInput
-            {{didInsert (if this.site.desktopView this.focusFilter (noop))}}
+            {{didInsert this.focusFilter}}
             {{didInsert this.registerFilterInput}}
             @value={{this.term}}
             @filterAction={{withEventValue this.didInputFilter}}

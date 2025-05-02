@@ -2068,6 +2068,9 @@ it:
     modal:
       close: "chiudi"
       dismiss_error: "Ignora errore"
+    multi_select:
+      no_results: "Nessun risultato"
+      search: "Cerca…"
     form_kit:
       reset: Annulla
       optional: facoltativo
@@ -2303,10 +2306,6 @@ it:
         name: "Google"
         title: "Accedi con Google"
         sr_title: "Accedi con Google"
-      twitter:
-        name: "Twitter"
-        title: "Accedi con Twitter"
-        sr_title: "Accedi con Twitter"
       instagram:
         name: "Instagram"
         title: "Accedi con Instagram"
@@ -2775,8 +2774,6 @@ it:
       in_topics_posts: "in tutti gli argomenti e i messaggi"
       enter_hint: "o premi Invio"
       in_posts_by: "nei messaggi di @%{username}"
-      browser_tip: "%{modifier} + f"
-      browser_tip_description: "di nuovo per utilizzare la ricerca nativa del browser"
       recent: "Ricerche recenti"
       clear_recent: "Cancella le ricerche recenti"
       type:
@@ -3775,6 +3772,10 @@ it:
       settings: "Impostazioni"
       topic_template: "Modello"
       tags: "Etichette"
+      localization:
+        name: "Nome"
+        description: "Descrizione"
+        remove: "Rimuovi"
       tags_allowed_tags: "Limita queste Etichette a questa Categoria:"
       tags_allowed_tag_groups: "Limita questi gruppi di Etichette a questa Categoria:"
       tags_placeholder: "Elenco (opzionale) delle etichette permesse"
@@ -4665,11 +4666,6 @@ it:
       back_to_forum: "Torna al forum"
       collapse_all_sections: "Comprimi tutte le sezioni"
       expand_all_sections: "Espandi tutte le sezioni"
-      filter: "Filtro..."
-      clear_filter: "Cancella il filtro"
-      no_results:
-        title: "Nessun risultato"
-        description: 'Nessuna corrispondenza trovata per "%{filter}":<br><br> Vuoi <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">cercare tra le impostazioni del sito</a> o nell''<a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">elenco degli utenti amministratori</a>?'
       footer:
         interface_color_selector:
           light: "Chiaro"
@@ -4775,6 +4771,16 @@ it:
           paste: "Incolla..."
           save: "Salva come..."
     powered_by_discourse: "Con tecnologia Discourse"
+    discovery:
+      headings:
+        categories: "Tutte le categorie"
+        filter_labels:
+          latest: "Più recenti"
+          top: "Popolari"
+          new: "Nuovo"
+          unread: "Non letti"
+          hot: "Novità"
+          unseen: "Non visualizzati"
   admin_js:
     type_to_filter: "Digita per filtrare…"
     settings: "Impostazioni"
@@ -4825,9 +4831,6 @@ it:
         flags:
           title: "Moderazione"
           header_description: "Il sistema di segnalazioni di Discourse aiuta il team di moderazione a gestire i contenuti e i comportamenti degli utenti per mantenere la comunità un ambiente salubre e improntato al rispetto. Le impostazioni predefinite si adattano alle esigenze della maggior parte delle comunità, per cui non richiedono modifiche. Tuttavia, se il tuo sito web ha requisiti particolari, puoi disabilitare le segnalazioni che non ti servono e aggiungerne di personalizzate."
-        font_style:
-          title: "Stile del carattere"
-          header_description: "Personalizza gli stili dei caratteri utilizzati dai tuoi temi"
         files:
           title: "File"
           header_description: "Impostazioni che controllano i limiti di dimensione e tipo dei file, le dimensioni e le origini degli avatar, l'archiviazione dei file, la qualità e la compressione delle immagini e altro ancora"
@@ -4839,11 +4842,7 @@ it:
         login_and_authentication:
           title: "Accesso e autenticazione"
           header_description: "Configura le modalità di accesso e autenticazione degli utenti, segreti e chiavi, fornitori OAuth2 e altro ancora"
-        logo:
-          title: "Logo del sito"
-          header_description: "Personalizza le varianti del logo del tuo sito"
-        branding:
-          title: "Branding"
+        logo_and_fonts:
           logo:
             form:
               logo:
@@ -4854,6 +4853,13 @@ it:
                 description: "Schermate che mostrano le caratteristiche e le funzionalità nella pagina di installazione. Tutte le immagini devono essere caricate in locale e delle stesse dimensioni."
               opengraph_image:
                 description: "Immagine opengraph predefinita, utilizzata quando la pagina non ha altre immagini adatte. Se lasciato vuoto, verrà usato large_icon."
+          fonts:
+            title: "Caratteri"
+            form:
+              heading_font:
+                title: "Carattere dell'intestazione"
+            backfill_modal:
+              modal_yes: "Sì"
         navigation:
           title: "Navigazione"
           header_description: "Configura i link di navigazione e le voci di menu per il tuo sito. Ciò include la posizione e il comportamento del menu di navigazione principale, i link rapidi in cima alla home page, nonché la barra laterale di amministrazione"
@@ -4863,9 +4869,6 @@ it:
         onebox:
           title: "Onebox"
           header_description: "Configura come vengono generate e visualizzate le anteprime Onebox per il tuo sito"
-        other:
-          title: "Altri"
-          header_description: "Impostazioni che non rientrano in nessun'altra categoria"
         rate_limits:
           title: "Limiti di frequenza"
           header_description: "Configura la frequenza con cui gli utenti possono eseguire determinate azioni, come la creazione di argomenti, l'invio di messaggi e la pubblicazione di risposte"
@@ -4911,6 +4914,10 @@ it:
         badges:
           title: "Distintivi"
           header_description: "I distintivi premiano gli utenti per le loro attività, i loro contributi e i loro risultati, per riconoscere, convalidare e incoraggiare comportamenti positivi e l'impegno all'interno della community"
+        content:
+          sub_pages:
+            posts_and_topics:
+              title: "Messaggi e argomenti"
         permalinks:
           title: "Permalink"
           header_description: "Reindirizzamenti da applicare per URL non conosciuti dal forum"
@@ -4934,9 +4941,6 @@ it:
         site_texts:
           title: "Testi del sito"
         email:
-          title: "Configurazione del server e log"
-          header_description: "Personalizza i modelli utilizzati per creare e-mail, visualizza in anteprima le e-mail di riepilogo che verranno inviate e visualizza i log delle e-mail"
-          keywords: "email|smtp|mailgun|sendgrid|inviato|saltato|rimbalzato|ricevuto|rifiutato|log email|anteprima riepilogo"
           sub_pages:
             preview_summary:
               title: "Anteprima del riepilogo"
@@ -4945,6 +4949,8 @@ it:
               title: "Test avanzato"
             templates:
               title: "Modelli"
+        email_logs:
+          sub_pages:
             sent:
               title: "Inviato"
             skipped:
@@ -5599,7 +5605,6 @@ it:
             post: "messaggi"
             chat_message: "messaggi di chat"
             enabled: "Abilita questa segnalazione personalizzata dopo il salvataggio"
-            alert: "Una volta che una segnalazione personalizzata è stata usata, non può più essere modificata o eliminata, ma solo disabilitata."
             edit_flag: "Modifica segnalazione"
             non_editable: "Impossibile modificare la segnalazione: è una segnalazione di sistema oppure è già stata usata nel sistema di revisione. È però possibile disabilitarla."
             delete_flag: "Elimina segnalazione"
@@ -5628,6 +5633,24 @@ it:
             new_theme: "Nuovo tema"
           components:
             title: "Componenti"
+            install: "Installa"
+            name: "Nome"
+            enabled: "Abilitato?"
+            by_author: "Da %{name}"
+            learn_more: "Scopri di più"
+            edit: "Modifica"
+            parent_themes_two: "%{name1} e %{name2}"
+            preview: "Anteprima"
+            check_update: "Controlla gli aggiornamenti"
+            export: "Esporta"
+            convert: "Converti"
+            delete: "Elimina"
+            filter_by: "Filtra per"
+            filter_by_all: "Tutte"
+            filter_by_used: "Usato"
+            filter_by_unused: "Non usato"
+            delete_confirm: 'Vuoi davvero eliminare "%{name}"?'
+            badge_unused: "Non usato"
         user_fields:
           field: "Campo"
           type: "Tipo"

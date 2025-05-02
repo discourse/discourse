@@ -157,7 +157,7 @@ import {
 } from "discourse/widgets/widget";
 import { addImageWrapperButton } from "discourse-markdown-it/features/image-controls";
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
-import { modifySelectKit } from "select-kit/mixins/plugin-api";
+import { modifySelectKit } from "select-kit/lib/plugin-api";
 
 const DEPRECATED_POST_STREAM_WIDGETS = [
   "actions-summary",
@@ -867,6 +867,11 @@ class PluginApi {
   }
 
   /**
+   * @deprecated
+   *
+   * This function is now an alias to `api.addTrackedPostProperties`.
+   * Use that function instead.
+   *
    * Add more attributes to the Post's `attrs` object passed through to widgets.
    * You'll need to do this if you've added attributes to the serializer for a
    * Post and want to use them when you're rendering.
@@ -880,7 +885,15 @@ class PluginApi {
    *
    **/
   includePostAttributes(...attributes) {
-    includeAttributes(...attributes);
+    // TODO (glimmer-post-stream): we can keep this function as an alias to addTrackedPostProperties but it is useful to
+    //   deprecate it for now to get warnings for code that is incompatible with the Glimmer Post Stream because if an
+    //   extension is using it, then it is very likely that there is other code that is incompatible
+    deprecated(
+      "`api.includePostAttributes` has been deprecated. Use `api.addTrackedPostProperties` instead.",
+      POST_STREAM_DEPRECATION_OPTIONS
+    );
+
+    this.addTrackedPostProperties(...attributes);
   }
 
   /**

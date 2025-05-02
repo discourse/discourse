@@ -31,7 +31,10 @@ describe "chat transcripts in rich editor", type: :system do
         messages_or_ids: [message_1],
       ).generate_markdown
 
-    cdp.copy_paste(markdown)
+    cdp.copy_paste(
+      markdown,
+      css_selector: PageObjects::Components::Composer::COMPOSER_INPUT_SELECTOR,
+    )
 
     expect(rich).to have_css(".chat-transcript", text: channel.name)
     expect(rich).to have_css(
@@ -54,7 +57,10 @@ describe "chat transcripts in rich editor", type: :system do
         messages_or_ids: [message_1, message_2],
       ).generate_markdown
 
-    cdp.copy_paste(markdown)
+    cdp.copy_paste(
+      markdown,
+      css_selector: PageObjects::Components::Composer::COMPOSER_INPUT_SELECTOR,
+    )
 
     expect(rich).to have_css(".chat-transcript.chat-transcript-chained", count: 2)
     expect(rich).to have_css(

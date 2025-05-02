@@ -536,4 +536,105 @@ describe "Composer Form Templates", type: :system do
     attach_file "5-uploader", "#{Rails.root}/spec/fixtures/images/logo.png", make_visible: true
     expect(preview).to have_css("img")
   end
+
+  context "when using tagchooser" do
+    fab!(:tag1) { Fabricate(:tag, description: "Tag 1 custom Translation") }
+    fab!(:tag2) { Fabricate(:tag, description: "Tag 2 custom Translation") }
+    fab!(:tag3) { Fabricate(:tag) }
+    fab!(:tag4) { Fabricate(:tag) }
+
+    fab!(:tag_group1) { Fabricate(:tag_group, name: "tag_group1", tags: [tag1, tag3]) }
+    fab!(:tag_group2) { Fabricate(:tag_group, name: "tag_group2", tags: [tag2, tag4]) }
+
+    fab!(:tag_groups_form_template) do
+      Fabricate(
+        :form_template,
+        name: "TagGroups",
+        template:
+          %Q(
+            - type: tag-chooser
+              id: 1
+              attributes:
+                label: "Full name"
+                description: "What is your full name?"
+                multiple: true
+              tag_group: "tag_group1"  # Replace with actual value if needed
+              validations:
+                required: false
+
+            - type: tag-chooser
+              id: 2
+              attributes:
+                label: "Prescription"
+                description: "Upload your prescription"
+                multiple: false
+              tag_group: "tag_group2"
+              validations:
+                required: true),
+      )
+    end
+
+    fab!(:category_with_tagchooser_template) do
+      Fabricate(
+        :category,
+        name: "tagtest",
+        slug: "tagtest",
+        topic_count: 2,
+        form_template_ids: [tag_groups_form_template.id],
+      )
+    end
+
+    it "shows the correct tag group descriptions" do
+      category_page.visit(category_with_tagchooser_template)
+      category_page.new_topic_button.click
+
+      tag_chooser1 = find("[name='1']")
+      tag_chooser2 = find("[name='2']")
+
+      expect(tag_chooser1).to have_content("#{tag3.name.upcase}")
+      expect(tag_chooser2).to have_content("#{tag4.name.upcase}")
+
+      tag_chooser1.find("option", text: tag1.description).click(:control)
+
+      expect(tag_chooser1.value).to eq(["#{tag1.description}"])
+
+      # event won't be triggered if not done this way
+      tag_chooser2.click
+      tag_chooser2.send_keys(:arrow_down)
+      tag_chooser2.send_keys(:enter)
+
+      tag_chooser2.click
+      tag_chooser2.send_keys(:arrow_up)
+      tag_chooser2.send_keys(:enter)
+
+      # working description translations
+      expect(tag_chooser1).to have_content("#{tag1.description}")
+      expect(tag_chooser2).to have_content("#{tag2.description}")
+
+      mini_tag_chooser = PageObjects::Components::SelectKit.new(".mini-tag-chooser")
+      expect(mini_tag_chooser).to have_selected_name("#{tag1.name},#{tag2.name}")
+    end
+
+    it "updates form when selecting tags in the composer" do
+      category_page.visit(category_with_tagchooser_template)
+      category_page.new_topic_button.click
+
+      mini_tag_chooser = find(".mini-tag-chooser")
+      mini_tag_chooser.click
+
+      input = mini_tag_chooser.find("[name='filter-input-search']")
+      input.set(tag1.name)
+
+      input.send_keys(:arrow_down)
+      input.send_keys(:enter)
+
+      expect(mini_tag_chooser).to have_content(tag1.name)
+
+      tag_chooser1 = find("[name='1']")
+      expect(tag_chooser1.value).to eq([tag1.description])
+
+      mini_tag_chooser.find("button").click
+      expect(tag_chooser1.value).to eq([])
+    end
+  end
 end

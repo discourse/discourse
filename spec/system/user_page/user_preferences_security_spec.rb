@@ -36,6 +36,11 @@ describe "User preferences | Security", type: :system do
 
       user_menu.sign_out
 
+      # puts <<~STRING
+      # public_key_base64 = \"#{user.second_factor_security_keys.first.public_key}\"
+      # private_key_string = \"#{authenticator.credentials.first.private_key}\"
+      # STRING
+
       # login flow
       find(".d-header .login-button").click
       find("input#login-account-name").fill_in(with: user.username)
@@ -95,10 +100,10 @@ describe "User preferences | Security", type: :system do
       # close the dialog (don't delete the key, we need it to login in the next step)
       find(".dialog-close").click
 
-      find("#remove-password-button").click
+      find("#remove-password-link").click
       # already confirmed session for the passkey, so this will go straight for the confirmation dialog
       find(".dialog-footer .btn-danger").click
-      expect(user_preferences_security_page).to have_no_css("#remove-password-button")
+      expect(user_preferences_security_page).to have_no_css("#remove-password-link")
 
       user_menu.sign_out
 

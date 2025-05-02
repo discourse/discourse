@@ -1956,6 +1956,9 @@ ja:
     modal:
       close: "閉じる"
       dismiss_error: "エラーを閉じる"
+    multi_select:
+      no_results: "結果がありません"
+      search: "検索…"
     form_kit:
       reset: リセット
       optional: オプション
@@ -2178,10 +2181,6 @@ ja:
         name: "Google"
         title: "Google でサインイン"
         sr_title: "Google でサインイン"
-      twitter:
-        name: "Twitter"
-        title: "Twitter でサインイン"
-        sr_title: "Twitter でサインイン"
       instagram:
         name: "Instagram"
         title: "Instagram でログイン"
@@ -2621,8 +2620,6 @@ ja:
       in_topics_posts: "すべてのトピックと投稿"
       enter_hint: "または Enter キーを押します"
       in_posts_by: "%{username} の投稿内"
-      browser_tip: "%{modifier} + f"
-      browser_tip_description: "もう一度ネイティブブラウザ検索を使用します"
       recent: "最近の検索"
       clear_recent: "最近の検索をクリア"
       type:
@@ -3560,6 +3557,10 @@ ja:
       settings: "設定"
       topic_template: "テンプレート"
       tags: "タグ"
+      localization:
+        name: "名前"
+        description: "説明"
+        remove: "削除"
       tags_allowed_tags: "これらのタグをこのカテゴリに制限する:"
       tags_allowed_tag_groups: "これらのタググループをこのカテゴリに制限する:"
       tags_placeholder: "(オプション) 許可されたタグのリスト"
@@ -4412,11 +4413,6 @@ ja:
       back_to_forum: "フォーラムに戻る"
       collapse_all_sections: "すべてのセクションを折りたたむ"
       expand_all_sections: "すべてのセクションを展開"
-      filter: "フィルタ..."
-      clear_filter: "フィルタをクリア"
-      no_results:
-        title: "結果がありません"
-        description: '‘%{filter}’ に一致するものは見つかりませんでした。<br><br><a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">サイト設定</a>または<a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">管理者ユーザーリストを検索</a>しますか？'
       footer:
         interface_color_selector:
           light: "ライト"
@@ -4518,6 +4514,16 @@ ja:
           paste: "貼り付け..."
           save: "名前を付けて保存..."
     powered_by_discourse: "Discourse 提供"
+    discovery:
+      headings:
+        categories: "すべてのカテゴリ"
+        filter_labels:
+          latest: "最新"
+          top: "人気"
+          new: "新規"
+          unread: "未読"
+          hot: "ホット"
+          unseen: "未読"
   admin_js:
     type_to_filter: "入力してフィルタ..."
     settings: "設定"
@@ -4567,9 +4573,6 @@ ja:
         flags:
           title: "モデレーション"
           header_description: "Discourse の通報システムは、あなたとあなたのモデレーターチームがコミュニティーの尊厳と健全性を保つためにコンテンツとユーザーの行動を管理する上で役立ちます。デフォルト設定はほとんどのコミュニティーに最適であるため、変更の必要はありません。ただし、サイトに特別な要件がある場合は、不要な通報を無効にし、独自のカスタム通報を追加できます。"
-        font_style:
-          title: "フォントスタイル"
-          header_description: "テーマで使用するフォントスタイルをカスタマイズする"
         files:
           title: "ファイル"
           header_description: "ファイルのサイズと形式の制限、アバターのサイズとソース、ファイルストレージ、画像の品質と圧縮などを制御する設定"
@@ -4579,11 +4582,7 @@ ja:
         login_and_authentication:
           title: "ログインと認証"
           header_description: "ユーザーのログインと認証方法、シークレットと鍵、OAuth2 プロバイダーなどを構成します"
-        logo:
-          title: "サイトのロゴ"
-          header_description: "サイトのロゴのバリエーションをカスタマイズします"
-        branding:
-          title: "ブランディング"
+        logo_and_fonts:
           logo:
             form:
               logo:
@@ -4594,6 +4593,13 @@ ja:
                 description: "インストールプロンプトページでインスタンスの特徴と機能を紹介するスクリーンショット。すべての画像はローカルアップロードであり、同じサイズである必要があります。"
               opengraph_image:
                 description: "デフォルトの opengraph 画像。ページにほかの適切な画像がない場合に使用されます。空のままにすると、large_icon が使用されます."
+          fonts:
+            title: "フォント"
+            form:
+              heading_font:
+                title: "見出しのフォント"
+            backfill_modal:
+              modal_yes: "はい"
         navigation:
           title: "ナビゲーション"
           header_description: "サイトのナビゲーションリンクとメニュー項目を構成します。これには、メインのナビゲーションメニュー、ホームページ上部のクイックリンク、および管理者サイドバーの場所と動作が含まれます。"
@@ -4603,9 +4609,6 @@ ja:
         onebox:
           title: "ワンボックス"
           header_description: "サイトのワンボックスプレビューの生成と表示方法を構成します"
-        other:
-          title: "その他"
-          header_description: "他のどのカテゴリにも当てはまらない設定"
         rate_limits:
           title: "レート制限"
           header_description: "トピックの作成、メッセージの送信、返信の投稿など、ユーザーが特定の操作を実行できる頻度を構成します"
@@ -4650,6 +4653,10 @@ ja:
           header_description: "レポートは、サイトで起きていることを理解するのに役立つ強力なツールです。トレンドの特定、問題の発見、データに基づく決定に役立ちます。"
         badges:
           title: "バッジ"
+        content:
+          sub_pages:
+            posts_and_topics:
+              title: "投稿とトピック"
         permalinks:
           title: "パーマリンク"
         user_fields:
@@ -4670,8 +4677,6 @@ ja:
         site_texts:
           title: "サイトのテキスト"
         email:
-          title: "サーバーのセットアップとログ"
-          keywords: "メール|smtp|mailgun|sendgrid|送信|スキップ|バウンス|受信|拒否|メールログ|要約をプレビュー"
           sub_pages:
             preview_summary:
               title: "要約をプレビュー"
@@ -4679,14 +4684,16 @@ ja:
               title: "高度なテスト"
             templates:
               title: "テンプレート"
+        email_logs:
+          sub_pages:
             sent:
-              title: "送信"
+              title: "送信済み"
             skipped:
               title: "スキップ"
             bounced:
               title: "バウンス"
             received:
-              title: "受け取った"
+              title: "受信"
             rejected:
               title: "拒否"
         email_appearance:
@@ -5320,7 +5327,6 @@ ja:
             post: "投稿"
             chat_message: "チャットメッセージ"
             enabled: "保存後にこのカスタム通報を有効にする"
-            alert: "カスタム通報が使用されると、無効にすることはできますが、編集や削除は行えません。"
             edit_flag: "通報を編集"
             non_editable: "これはシステム通報であるかレビューシステムですでに使用されているため編集できません。無効にすることはできます。"
             delete_flag: "通報を削除"
@@ -5349,6 +5355,23 @@ ja:
             new_theme: "新しいテーマ"
           components:
             title: "コンポーネント"
+            install: "インストール"
+            name: "名前"
+            enabled: "有効化？"
+            by_author: "作成者: %{name}"
+            learn_more: "もっと読む"
+            edit: "編集"
+            preview: "プレビュー"
+            check_update: "アップデートを確認"
+            export: "エクスポート"
+            convert: "変換"
+            delete: "削除"
+            filter_by: "フィルタ基準:"
+            filter_by_all: "すべて"
+            filter_by_used: "使用中"
+            filter_by_unused: "未使用"
+            delete_confirm: '"%{name}" を削除してもよろしいですか？'
+            badge_unused: "未使用"
         user_fields:
           field: "フィールド"
           type: "タイプ"

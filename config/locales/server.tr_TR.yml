@@ -1765,7 +1765,6 @@ tr_TR:
     pending_users_reminder_delay_minutes: "Yeni kullanıcılar şu kadar dakikadan uzun süredir onay bekliyorsa moderatörleri bilgilendirin. Bildirimleri devre dışı bırakmak için -1 olarak ayarlayın."
     persistent_sessions: "Web tarayıcısı kapatıldığında kullanıcıların oturumları açık kalır"
     maximum_session_age: "Kullanıcı, son ziyaretinden bu yana n saat süreyle oturum açmış durumda kalır"
-    full_page_login: "Giriş ve kayıt formlarını tam sayfada göster (işareti kaldırıldığında, kullanıcılar formları bir modalda görecektir). "
     show_signup_form_email_instructions: Kayıt formunda e-posta talimatlarını gösterin.
     show_signup_form_username_instructions: Kayıt formunda kullanıcı adı talimatlarını gösterin.
     show_signup_form_full_name_instructions: Kayıt formunda tam ad talimatlarını gösterin.
@@ -2448,9 +2447,6 @@ tr_TR:
     default_navigation_menu_categories: "Seçilen kategoriler, varsayılan olarak Navigasyon Menüsü'nün Kategoriler bölümünde gösterilir."
     default_navigation_menu_tags: "Seçilen etiketler, varsayılan olarak Navigasyon Menüsü'nün Etiketler bölümünde gösterilir."
     experimental_new_new_view_groups: 'Okunmamış ve yeni konuları birleştiren bir yeni konular listesi etkinleştirin ve kenar çubuğundaki "Her şey" bağlantısını buna bağlayın.'
-    glimmer_topic_list_mode: "Yeni \"glimmer\" konu listesi uygulamasının kullanılıp kullanılmayacağını kontrol edin. \"auto\" tüm temalarınız ve eklentileriniz hazır olduğunda otomatik olarak etkinleştirilir. Daha fazla bilgi için <a href='https://meta.discourse.org/t/343404'>Meta konusuna</a> bakın."
-    glimmer_post_menu_mode: "Yeni \"parıltı\" gönderi menüsü uygulamasının kullanılıp kullanılmayacağını kontrol edin. \"otomatik\" tüm temalarınız ve eklentileriniz hazır olduğunda otomatik olarak etkinleştirilir. Bu uygulama aktif geliştirme aşamasındadır ve üretim kullanımı için tasarlanmamıştır. Uygulama tamamlanıp duyurulana kadar tema/eklenti geliştirmeyin."
-    glimmer_post_menu_groups: "Belirtilen kullanıcı grupları için \"otomatik\" modda yeni \"parıltı\" gönderi menüsü uygulamasını etkinleştirin. Bu uygulama aktif geliştirme aşamasındadır ve üretim kullanımı için tasarlanmamıştır. Uygulama tamamlanıp duyurulana kadar tema/eklenti geliştirmeyin."
     glimmer_post_stream_mode_auto_groups: "Belirtilen kullanıcı grupları için \"otomatik\" modda yeni \"parıltı\" gönderi menüsü uygulamasını etkinleştirin. Bu uygulama aktif geliştirme aşamasındadır ve üretim kullanımı için tasarlanmamıştır. Uygulama tamamlanıp duyurulana kadar tema/eklenti geliştirmeyin."
     experimental_form_templates: "Form şablonları özelliğini etkinleştirin. Şablonları <a href='%{base_path}/admin/customize/form-templates'>Özelleştir / Şablonlar</a> bölümünden yönetin."
     lazy_load_categories_groups: "Kategori bilgilerini yalnızca bu gruplardaki kullanıcılar için tembel olarak yükleyin. Bu, çok sayıda kategoriye sahip sitelerde performansı artırır."

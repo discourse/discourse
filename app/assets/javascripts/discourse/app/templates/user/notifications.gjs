@@ -101,7 +101,6 @@ export default RouteTemplate(
 
     <section class="user-content" id="user-content">
       <LoadMore
-        @selector=".user-stream .notification"
         @action={{@controller.loadMore}}
         class="notification-history user-stream"
       >

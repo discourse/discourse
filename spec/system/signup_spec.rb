@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 shared_examples "signup scenarios" do |signup_page_object, login_page_object|
-  let(:login_form) { login_page_object }
   let(:signup_form) { signup_page_object }
+  let(:login_form) { login_page_object }
   let(:invite_form) { PageObjects::Pages::InviteForm.new }
   let(:activate_account) { PageObjects::Pages::ActivateAccount.new }
   let(:invite) { Fabricate(:invite, email: "johndoe@example.com") }
@@ -285,14 +285,8 @@ shared_examples "signup scenarios" do |signup_page_object, login_page_object|
 
     expect(page).to have_css(".invited-by .user-info[data-username='#{inviter.username}']")
     find(".invitation-cta__sign-in").click
-
-    if SiteSetting.full_page_login
-      expect(page).to have_css("#login-form")
-      page.go_back
-    else
-      find(".d-modal .modal-close").click
-    end
-
+    expect(page).to have_css("#login-form")
+    page.go_back
     expect(page).to have_css(".invited-by .user-info[data-username='#{inviter.username}']")
   end
 
@@ -349,29 +343,13 @@ shared_examples "signup scenarios" do |signup_page_object, login_page_object|
 end
 
 describe "Signup", type: :system do
-  context "when desktop" do
-    before { SiteSetting.full_page_login = false }
-    include_examples "signup scenarios",
-                     PageObjects::Modals::Signup.new,
-                     PageObjects::Modals::Login.new
-  end
-
-  context "when mobile", mobile: true do
-    before { SiteSetting.full_page_login = false }
-    include_examples "signup scenarios",
-                     PageObjects::Modals::Signup.new,
-                     PageObjects::Modals::Login.new
-  end
-
   context "when fullpage desktop" do
-    before { SiteSetting.full_page_login = true }
     include_examples "signup scenarios",
                      PageObjects::Pages::Signup.new,
                      PageObjects::Pages::Login.new
   end
 
   context "when fullpage mobile", mobile: true do
-    before { SiteSetting.full_page_login = true }
     include_examples "signup scenarios",
                      PageObjects::Pages::Signup.new,
                      PageObjects::Pages::Login.new

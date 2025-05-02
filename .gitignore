@@ -79,6 +79,7 @@ yarn-error.log
 
 # Auto-generated plugin JS assets
 /app/assets/javascripts/plugins/*
+/app/assets/generated
 
 # Generated API documentation files
 openapi/*

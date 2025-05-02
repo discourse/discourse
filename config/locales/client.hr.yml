@@ -1972,6 +1972,8 @@ hr:
     modal:
       close: "zatvori"
       dismiss_error: "Odbaci pogrešku"
+    multi_select:
+      search: "Traži…"
     form_kit:
       reset: Resetirati
       optional: neobvezno
@@ -2155,10 +2157,6 @@ hr:
         name: "Google"
         title: "Prijavite se s Googleom"
         sr_title: "Prijavite se s Googleom"
-      twitter:
-        name: "Twitter"
-        title: "Prijavite se s Twitterom"
-        sr_title: "Prijavite se s Twitterom"
       instagram:
         name: "Instagram"
         title: "Prijavite se s Instagramom"
@@ -2637,8 +2635,6 @@ hr:
       in_topics_posts: "u svim temama i postovima"
       enter_hint: "ili pritisnite Enter"
       in_posts_by: "u objavama od %{username}"
-      browser_tip: "%{modifier} + f"
-      browser_tip_description: "ponovno za korištenje izvornog pretraživanja preglednika"
       recent: "Nedavna pretraživanja"
       clear_recent: "Obriši nedavna pretraživanja"
       type:
@@ -3623,6 +3619,10 @@ hr:
       general: "Općenito"
       settings: "Postavke"
       tags: "Oznake"
+      localization:
+        name: "Ime"
+        description: "Opis"
+        remove: "Ukloni"
       tags_allowed_tags: "Ograniči ove oznake na ovu kategoriju:"
       tags_allowed_tag_groups: "Ograniči ove grupe oznaka na ovu kategoriju:"
       tags_placeholder: "(Izborno) popis dopuštenih oznaka"
@@ -4443,6 +4443,15 @@ hr:
       spreadsheet:
         show: "Pokaži"
         about: "O nama"
+    discovery:
+      headings:
+        categories: "Sve kategorije"
+        filter_labels:
+          latest: "Posljednje"
+          top: "Najaktivnije"
+          new: "Novo"
+          unread: "Nepročitano"
+          unseen: "Neviđeno"
   admin_js:
     type_to_filter: "Upišite za filtriranje…"
     settings: "Postavke"
@@ -4484,20 +4493,20 @@ hr:
           title: "Datoteke"
         legal:
           title: "Legalno"
-        branding:
-          title: "Brendiranje"
+        logo_and_fonts:
           logo:
             form:
               mobile: "Mobilni"
               email: "E-mail"
+          fonts:
+            backfill_modal:
+              modal_yes: "Da"
         navigation:
           title: "Navigacija"
         notifications:
           title: "Obavijest"
         onebox:
           title: "Onebox"
-        other:
-          title: "Ostalo"
         search_everything:
           title: "Pretraživanje"
         security:
@@ -4538,6 +4547,8 @@ hr:
               header_description: "Pregledajte sadržaj e-mail poruka sa sažetkom poslanih neaktivnim korisnicima"
             templates:
               title: "Predlošci"
+        email_logs:
+          sub_pages:
             sent:
               title: "Poslano"
             skipped:
@@ -4962,6 +4973,18 @@ hr:
             title: "Teme"
           components:
             title: "Komponente"
+            install: "Instalirajte"
+            name: "Ime"
+            enabled: "Omogućeno?"
+            by_author: "Od %{name}"
+            learn_more: "Saznajte više"
+            edit: "Uredi"
+            preview: "Pregled"
+            export: "Izvoz"
+            convert: "Pretvoriti"
+            delete: "Pobriši"
+            filter_by_all: "Sve"
+            delete_confirm: 'Jeste li sigurni da želite izbrisati "%{name}"?'
         user_fields:
           type: "Tip"
           delete: "Pobriši"

@@ -1,5 +1,6 @@
 import Component from "@ember/component";
 import { hash } from "@ember/helper";
+import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { classNameBindings, tagName } from "@ember-decorators/component";
 import CategoriesBoxesTopic from "discourse/components/categories-boxes-topic";
@@ -7,7 +8,7 @@ import CategoryLogo from "discourse/components/category-logo";
 import CategoryTitleBefore from "discourse/components/category-title-before";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import categoryColorVariable from "discourse/helpers/category-color-variable";
-import icon from "discourse/helpers/d-icon";
+import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import discourseComputed from "discourse/lib/decorators";
 
 @tagName("section")
@@ -16,13 +17,20 @@ import discourseComputed from "discourse/lib/decorators";
   "anyLogos:with-logos:no-logos"
 )
 export default class CategoriesBoxesWithTopics extends Component {
-  lockIcon = "lock";
-
   @discourseComputed("categories.[].uploaded_logo.url")
   anyLogos() {
     return this.categories.any((c) => {
       return !isEmpty(c.get("uploaded_logo.url"));
     });
+  }
+
+  categoryName(category) {
+    return htmlSafe(
+      categoryBadgeHTML(category, {
+        allowUncategorized: true,
+        link: false,
+      })
+    );
   }
 
   <template>
@@ -44,10 +52,7 @@ export default class CategoriesBoxesWithTopics extends Component {
 
               <h3>
                 <CategoryTitleBefore @category={{c}} />
-                {{#if c.read_restricted}}
-                  {{icon this.lockIcon}}
-                {{/if}}
-                {{c.displayName}}
+                {{this.categoryName c}}
               </h3>
             </a>
           </div>

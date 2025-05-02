@@ -1772,7 +1772,6 @@ es:
     pending_users_reminder_delay_minutes: "Notificar a los moderadores si hay usuarios nuevos que hayan estado esperando aprobación durante más de esta cantidad de minutos. Usa -1 para desactivar estas notificaciones."
     persistent_sessions: "Los usuarios permanecerán con la sesión abierta aunque cierren su navegador"
     maximum_session_age: "El usuario permanecerá con su sesión iniciada n horas desde su última visita"
-    full_page_login: "Mostrar los formularios de inicio de sesión y registro en una página completa (si no está marcada, los usuarios verán los formularios en una ventana modal). "
     show_signup_form_email_instructions: Mostrar las instrucciones de correo electrónico en el formulario de registro.
     show_signup_form_username_instructions: Mostrar las instrucciones del nombre de usuario en el formulario de registro.
     show_signup_form_full_name_instructions: Mostrar las instrucciones con el nombre completo en el formulario de registro.
@@ -2454,9 +2453,6 @@ es:
     default_navigation_menu_categories: "Las categorías seleccionadas se mostrarán por defecto en la sección Categorías del Menú de navegación."
     default_navigation_menu_tags: "Las etiquetas seleccionadas se mostrarán por defecto en la sección Etiquetas del Menú de navegación."
     experimental_new_new_view_groups: 'Activa una nueva lista de temas que combine los no leídos y los nuevos y haz que el enlace «Todo» de la barra lateral enlace a ella.'
-    glimmer_topic_list_mode: "Controla si se utiliza la nueva implementación de la lista de temas 'glimmer'. 'auto' se activará automáticamente cuando todos tus temas y plugins estén listos. Consulta <a href='https://meta.discourse.org/t/343404'>el tema de Meta</a> para más información."
-    glimmer_post_menu_mode: "Controla si se utiliza la nueva implementación del menú de la publicación 'glimmer'. 'auto' se activará automáticamente cuando todos tus temas y plugins estén listos. Esta implementación está en desarrollo activo y no está pensada para su uso en producción. No desarrolles temas/plugins con ella hasta que la implementación esté finalizada y anunciada."
-    glimmer_post_menu_groups: "Activa la nueva implementación del menú de la publicación «glimmer» en modo «auto» para los grupos de usuarios especificados. Esta implementación está en desarrollo activo y no está pensada para su uso en producción. No desarrolles temas/plugins para ella hasta que la implementación esté finalizada y anunciada."
     glimmer_post_stream_mode_auto_groups: "Activa la nueva implementación del menú de la publicación «glimmer» en modo «auto» para los grupos de usuarios especificados. Esta implementación está en desarrollo activo y no está pensada para su uso en producción. No desarrolles temas/plugins para ella hasta que la implementación esté finalizada y anunciada."
     experimental_form_templates: "Activa la característica de plantillas de formulario. Gestiona las plantillas en <a href='%{base_path}/admin/customize/form-templates'>Personalizar / Plantillas</a>."
     lazy_load_categories_groups: "Carga lenta de la información de categoría solo para los usuarios de estos grupos. Esto mejora el rendimiento en sitios con muchas categorías."

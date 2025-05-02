@@ -24,6 +24,10 @@ import PinnedButton from "select-kit/components/pinned-button";
 import TopicNotificationsButton from "select-kit/components/topic-notifications-button";
 import DMenu from "float-kit/components/d-menu";
 
+function bind(fn, context) {
+  return fn.bind(context);
+}
+
 @attributeBindings("role")
 export default class TopicFooterButtons extends Component {
   elementId = "topic-footer-buttons";
@@ -151,7 +155,7 @@ export default class TopicFooterButtons extends Component {
               @id={{concat "topic-footer-dropdown-" actionable.id}}
               @value={{actionable.value}}
               @content={{actionable.content}}
-              @onChange={{action actionable.action}}
+              @onChange={{bind actionable.action this}}
               @options={{hash
                 icon=actionable.icon
                 none=actionable.noneItem

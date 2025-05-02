@@ -5,7 +5,6 @@ import { and, not, or } from "truth-helpers";
 import ConditionalLoadingSection from "discourse/components/conditional-loading-section";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import ActiveFilters from "discourse/components/search-menu/active-filters";
-import BrowserSearchTip from "discourse/components/search-menu/browser-search-tip";
 import Assistant from "discourse/components/search-menu/results/assistant";
 import InitialOptions from "discourse/components/search-menu/results/initial-options";
 import MoreLink from "discourse/components/search-menu/results/more-link";
@@ -58,6 +57,10 @@ export default class Results extends Component {
     return this.search.results.grouped_search_result?.search_log_id;
   }
 
+  get inTopicContext() {
+    return this.search.inTopicContext && !this.args.searchTopics;
+  }
+
   <template>
     {{#if
       (and
@@ -70,11 +73,7 @@ export default class Results extends Component {
       />
     {{/if}}
 
-    {{#if (and this.search.inTopicContext (not @searchTopics))}}
-      {{#unless @inHeaderMobileView}}
-        <BrowserSearchTip />
-      {{/unless}}
-    {{else}}
+    {{#unless this.inTopicContext}}
       <ConditionalLoadingSection @isLoading={{this.loading}}>
         <div
           class={{concatClass
@@ -170,6 +169,6 @@ export default class Results extends Component {
           />
         </div>
       </ConditionalLoadingSection>
-    {{/if}}
+    {{/unless}}
   </template>
 }

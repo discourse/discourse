@@ -1633,7 +1633,6 @@ de:
       category_style_deprecated: "Dein Discourse verwendet zurzeit einen veralteten Kategoriestil, der vor der endgültigen Beta-Version von Discourse 3.2 entfernt wird. Wie du deinen gewählten Kategoriestil beibehalten kannst, erfährst du unter <a href='https://meta.discourse.org/t/282441'>Umstellung auf einen einzigen Kategoriestil (Website-Einstellung)</a>."
       maxmind_db_configuration: 'Der Server wurde so konfiguriert, dass er MaxMind-Datenbanken für Reverse-IP-Lookups verwendet, aber es wurde keine gültige MaxMind-Konto-ID konfiguriert, was dazu führen kann, dass MaxMind-Datenbanken in Zukunft nicht mehr heruntergeladen werden können. <a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">In diesem Leitfaden erfährst du mehr</a>.'
       admin_sidebar_deprecation: "Das alte Admin-Layout wird vom neuen <a href='https://meta.discourse.org/t/-/289281'>Seitenleisten-Layout</a> abgelöst und in der nächsten Version entfernt. Du kannst das neue Seitenleisten-Layout jetzt <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>konfigurieren</a>, um es vorher zu aktivieren."
-      full_page_login_check: "Deine Website hat die Einstellung „full page login“ deaktiviert. Diese Einstellung ist veraltet und wird am <strong>29. April 2025</strong> entfernt. Ab diesem Datum wird deine Website auf die ganzseitigen Registrierungs- und Anmeldeseiten umgestellt. <a href='https://meta.discourse.org/t/introducing-our-new-fullscreen-signup-and-login-pages/340401'>Mehr erfahren</a>."
     back_from_logster_text: "Zurück zur Website"
   site_settings:
     allow_bulk_invite: "Erlaube Masseneinladungen durch Hochladen einer CSV-Datei"
@@ -1790,7 +1789,6 @@ de:
     pending_users_reminder_delay_minutes: "Benachrichtige die Moderatoren, falls neue Benutzer mehr als so viele Minuten auf ihre Genehmigung gewartet haben. Stelle -1 ein, um diese Benachrichtigungen zu deaktivieren."
     persistent_sessions: "Benutzer bleiben angemeldet, wenn der Webbrowser geschlossen wird"
     maximum_session_age: "Benutzer bleiben n Stunden nach ihrem letzten Besuch angemeldet"
-    full_page_login: "Zeige die Anmelde- und Registrierungsformulare auf einer ganzen Seite an (wenn diese Option nicht aktiviert ist, werden die Formulare in einem Modal angezeigt). "
     show_signup_form_email_instructions: Zeige die E-Mail-Anweisungen im Registrierungsformular an.
     show_signup_form_username_instructions: Zeige die Anweisungen für den Benutzernamen im Registrierungsformular an.
     show_signup_form_full_name_instructions: Zeige die vollständigen Anweisungen zum Namen im Registrierungsformular an.
@@ -2479,12 +2477,10 @@ de:
     default_navigation_menu_categories: "Ausgewählte Kategorien werden standardmäßig im Abschnitt „Kategorien“ des Navigationsmenüs angezeigt."
     default_navigation_menu_tags: "Ausgewählte Schlagwörter werden standardmäßig im Abschnitt „Schlagwörter“ des Navigationsmenüs angezeigt."
     experimental_new_new_view_groups: 'Eine neue Themenliste aktivieren, die ungelesene und neue Themen kombiniert, und den Link „Alles“ in der Seitenleiste entsprechend verknüpfen.'
-    glimmer_topic_list_mode: "Lege fest, ob die neue Themenlisten-Implementierung „glimmer“ verwendet werden soll. „auto“ wird automatisch aktiviert, sobald alle deine Themes und Plug-ins bereit sind. Weitere Informationen findest du <a href='https://meta.discourse.org/t/343404'>im Meta-Thema</a>."
-    glimmer_post_menu_mode: "Lege fest, ob die neue Implementierung des „glimmer“-Beitragmenüs verwendet werden soll. „auto“ wird automatisch aktiviert, sobald alle deine Themes und Plug-ins bereit sind. Diese Implementierung befindet sich in der Entwicklung und ist nicht für den produktiven Einsatz gedacht. Entwickle keine Themes/Plug-ins dafür, bis die Implementierung fertiggestellt und angekündigt ist."
-    glimmer_post_menu_groups: "Aktiviere die neue „glimmer“-Beitragmenü-Implementierung im „auto“-Modus für die angegebenen Benutzergruppen. Diese Implementierung befindet sich in der Entwicklung und ist nicht für den produktiven Einsatz gedacht. Entwickle keine Themes/Plug-ins dafür, bis die Implementierung fertiggestellt und angekündigt ist."
     glimmer_post_stream_mode: "Lege fest, ob die neue Implementierung des „glimmer“-Beitragsstroms verwendet werden soll. „auto“ wird automatisch aktiviert, sobald alle deine Themes und Plug-ins bereit sind. Diese Implementierung befindet sich in der Entwicklung und ist nicht für den produktiven Einsatz gedacht. Entwickle keine Themes/Plug-ins dafür, bis die Implementierung fertiggestellt und angekündigt ist."
     glimmer_post_stream_mode_auto_groups: "Aktiviere die neue „glimmer“-Beitragmenü-Implementierung im „auto“-Modus für die angegebenen Benutzergruppen. Diese Implementierung befindet sich in der Entwicklung und ist nicht für den produktiven Einsatz gedacht. Entwickle keine Themes/Plug-ins dafür, bis die Implementierung fertiggestellt und angekündigt ist."
     experimental_form_templates: "Aktiviere die Funktion für Formularvorlagen. Verwalte die Vorlagen unter <a href='%{base_path}/admin/customize/form-templates'>Anpassen / Vorlagen</a>."
+    show_preview_for_form_templates: "Aktiviere die Vorschau für Formularvorlagen"
     lazy_load_categories_groups: "Lazy Loading von Kategorieinformationen nur für Benutzer dieser Gruppen. Dies verbessert die Leistung auf Websites mit vielen Kategorien."
     experimental_auto_grid_images: "Wickelt Bilder automatisch in [grid]-Tags ein, wenn 3 oder mehr Bilder im Composer hochgeladen werden."
     page_loading_indicator: "Die Ladeanzeige konfigurieren, die bei der Seitennavigation in Discourse erscheint. „Spinner“ ist ein ganzseitiger Indikator. „Slider“ zeigt einen schmalen Balken am oberen Rand des Bildschirms an."
@@ -2492,6 +2488,8 @@ de:
     about_page_hidden_groups: "Mitglieder bestimmter Gruppen nicht auf der /about-Seite anzeigen."
     adobe_analytics_tags_url: "„Adobe Analytics“-Schlagwort-URL (`https://assets.adobedtm.com/...`)"
     view_raw_email_allowed_groups: "Gruppen, die den unformatierten E-Mail-Inhalt eines Beitrags einsehen können, wenn dieser durch eine eingehende E-Mail erstellt wurde. Dazu gehören E-Mail-Kopfzeilen und andere technische Informationen."
+    experimental_content_localization: "Zeigt lokalisierte Inhalte basierend auf den Spracheinstellungen der Benutzer an. Diese Inhalte können Kategorien, Schlagwörter, Beiträge und Themen umfassen. Diese Funktion wird derzeit intensiv entwickelt."
+    rich_editor: "Aktiviere den Rich-Text-Editor, damit alle Benutzer zwischen dem aktuellen Markdown-Modus und dem neuen Rich-Text-Editor für intuitiveres und benutzerfreundlicheres Verfassen wechseln können. Der Rich-Text-Editor befindet sich in der Entwicklung, daher werden noch nicht alle Funktionen unterstützt — <a href='https://meta.discourse.org/t/test-our-new-composer/352347' target='_blank'>siehe Meta für weitere Details</a>."
     errors:
       invalid_css_color: "Ungültige Farbe. Gib einen Farbnamen oder einen Hexadezimalwert ein."
       invalid_email: "Ungültige E-Mail-Adresse."
@@ -2807,6 +2805,7 @@ de:
       one: "Benutzer %{username} hat %{count} Beitrag in einem öffentlichen Thema oder einer persönlichen Nachricht verfasst. Löschen nicht möglich."
       other: "Benutzer %{username} hat %{count} Beiträge in öffentlichen Themen oder persönlichen Nachrichten verfasst. Löschen nicht möglich."
     cannot_bulk_delete: "Ein oder mehrere Benutzer können nicht gelöscht werden, weil sie entweder ein Administrator sind, zu viele Beiträge haben oder einen sehr alten Beitrag haben."
+    cannot_remove_all_auth: "Du musst mindestens ein verknüpftes Konto, einen Passkey oder ein Passwort festgelegt haben."
   unsubscribe_mailer:
     title: "Abbestellung von E-Mail-Updates"
     subject_template: "Bitte bestätige, dass du keine E-Mail-Updates mehr von %{site_title} erhalten möchtest."

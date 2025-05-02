@@ -1980,6 +1980,8 @@ nb_NO:
     modal:
       close: "lukk"
       dismiss_error: "Avvis feil"
+    multi_select:
+      search: "Søk…"
     form_kit:
       reset: Tilbakestill
       optional: valgfritt
@@ -2212,10 +2214,6 @@ nb_NO:
         name: "Google"
         title: "Logg inn med Google"
         sr_title: "Logg inn med Google"
-      twitter:
-        name: "Twitter"
-        title: "Logg inn med Twitter"
-        sr_title: "Logg inn med Twitter"
       instagram:
         name: "Instagram"
         title: "Logg inn med Instagram"
@@ -2680,8 +2678,6 @@ nb_NO:
       in_topics_posts: "i alle emner og innlegg"
       enter_hint: "eller trykk Enter"
       in_posts_by: "i innlegg av %{username}"
-      browser_tip: "%{modifier} + f"
-      browser_tip_description: "igjen for å bruke innebygd nettlesersøk"
       recent: "Nylige søk"
       clear_recent: "Fjern nylige søk"
       type:
@@ -3657,6 +3653,10 @@ nb_NO:
       settings: "Innstillinger"
       topic_template: "Mal"
       tags: "Stikkord"
+      localization:
+        name: "Navn"
+        description: "Beskrivelse"
+        remove: "Fjern"
       tags_allowed_tags: "Begrens disse stikkordene til denne kategorien:"
       tags_allowed_tag_groups: "Begrens disse stikkordgruppene til denne kategorien:"
       tags_placeholder: "(Valgfritt) liste over tillatte stikkord"
@@ -4339,7 +4339,6 @@ nb_NO:
               content: "Gjennomgang"
             invite:
               content: "Inviter"
-      filter: "Filtrer..."
       footer:
         interface_color_selector:
           light: "Lys"
@@ -4365,6 +4364,15 @@ nb_NO:
       spreadsheet:
         show: "Vis"
         about: "Om"
+    discovery:
+      headings:
+        categories: "Alle kategorier"
+        filter_labels:
+          latest: "Siste"
+          top: "Aktive"
+          new: "Ny"
+          unread: "Uleste"
+          unseen: "Usette"
   admin_js:
     type_to_filter: "Skriv for å filtrere…"
     settings: "Instillinger"
@@ -4406,19 +4414,20 @@ nb_NO:
           title: "Filer"
         legal:
           title: "Juridisk"
-        branding:
+        logo_and_fonts:
           logo:
             form:
               mobile: "Mobil"
               email: "E-post"
+          fonts:
+            backfill_modal:
+              modal_yes: "Ja"
         navigation:
           title: "Navigasjon"
         notifications:
           title: "Varsler"
         onebox:
           title: "Onebox"
-        other:
-          title: "Annet"
         search_everything:
           title: "Søk"
         security:
@@ -4456,6 +4465,8 @@ nb_NO:
               header_description: "Forhåndsvis innholde i oppsummerings-e-postene som sendes til inaktive brukere"
             templates:
               title: "Maler"
+        email_logs:
+          sub_pages:
             sent:
               title: "Sendt"
             skipped:
@@ -4787,6 +4798,18 @@ nb_NO:
             title: "Drakter"
           components:
             title: "Komponenter"
+            install: "Installer"
+            name: "Navn"
+            enabled: "Aktivert?"
+            by_author: "Av %{name}"
+            learn_more: "Finn ut mer"
+            edit: "Endre"
+            preview: "Forhåndsvis"
+            export: "Eksporter"
+            convert: "Konverter"
+            delete: "Slett"
+            filter_by_all: "Alle"
+            delete_confirm: 'Er du sikker på at du vil slette "%{name}?'
         user_fields:
           type: "Type"
           more_options:

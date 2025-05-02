@@ -2292,6 +2292,9 @@ ru:
     modal:
       close: "закрыть"
       dismiss_error: "Отклонить ошибку"
+    multi_select:
+      no_results: "Нет результатов"
+      search: "Поиск…"
     form_kit:
       reset: Сбросить
       optional: необязательно
@@ -2553,10 +2556,6 @@ ru:
         name: "Google"
         title: "Войти через Google"
         sr_title: "Войти через Google"
-      twitter:
-        name: "Twitter"
-        title: "Войти через Twitter"
-        sr_title: "Войти через Twitter"
       instagram:
         name: "Instagram"
         title: "Войти через Instagram"
@@ -3083,8 +3082,6 @@ ru:
       in_topics_posts: "Во всех темах и сообщениях"
       enter_hint: "Или нажмите Enter"
       in_posts_by: "В сообщениях от %{username}"
-      browser_tip: "%{modifier} + f"
-      browser_tip_description: "Использовать поисковый движок браузера"
       recent: "Недавние запросы"
       clear_recent: "Очистить недавние запросы"
       type:
@@ -4205,6 +4202,10 @@ ru:
       settings: "Настройки"
       topic_template: "Шаблон"
       tags: "Теги"
+      localization:
+        name: "Название"
+        description: "Описание"
+        remove: "Отозвать"
       tags_allowed_tags: "Ограничить теги этой категорией:"
       tags_allowed_tag_groups: "Ограничить группы тегов этой категорией:"
       tags_placeholder: "(Необязат.) Доступные теги"
@@ -5171,11 +5172,6 @@ ru:
       back_to_forum: "Вернуться на форум"
       collapse_all_sections: "Свернуть все разделы"
       expand_all_sections: "Развернуть все разделы"
-      filter: "Фильтр..."
-      clear_filter: "Очистить фильтр"
-      no_results:
-        title: "Нет результатов"
-        description: 'Мы не нашли ничего, соответствующего ''%{filter}''.<br><br>Выполнить <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">поиск в настройках сайта</a> или в <a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">списке пользователей администратора?</a>'
       footer:
         interface_color_selector:
           light: "Светлая"
@@ -5289,6 +5285,16 @@ ru:
           paste: "Вставить..."
           save: "Сохранить как..."
     powered_by_discourse: "На платформе Discourse"
+    discovery:
+      headings:
+        categories: "Все категории"
+        filter_labels:
+          latest: "Последняя версия"
+          top: "Обсуждаемые"
+          new: "Новое"
+          unread: "Непрочитанные"
+          hot: "Горячие"
+          unseen: "Непросмотренные"
   admin_js:
     type_to_filter: "Фильтрация настроек…"
     settings: "Настройки"
@@ -5339,9 +5345,6 @@ ru:
         flags:
           title: "Модерация"
           header_description: "Система меток в Discourse поможет вам и вашей команде модераторов работать с контентом и реагировать на поведение пользователей, что позволит обеспечить уважительное и здоровое взаимодействие в сообществе. Настройки по умолчанию подходят для большинства сообществ — их можно не менять. Однако если у вас особые требования к сайту, вы можете отключить ненужные метки и добавить собственные."
-        font_style:
-          title: "Стиль шрифта"
-          header_description: "Настройте стили шрифтов, используемые в ваших темах"
         files:
           title: "Файлы"
           header_description: "Настройки, контролирующие ограничения на размер и тип файлов, размеры и источники аватаров, хранение файлов, качество и сжатие изображений и многое другое"
@@ -5351,11 +5354,7 @@ ru:
         login_and_authentication:
           title: "Вход и аутентификация"
           header_description: "Настройте способ входа и аутентификации пользователей, идентификаторы ключей доступа и секретные ключи доступа, поставщиков OAuth2 и многое другое"
-        logo:
-          title: "Логотип сайта"
-          header_description: "Настройте варианты логотипа вашего сайта"
-        branding:
-          title: "Брендинг"
+        logo_and_fonts:
           logo:
             form:
               logo:
@@ -5364,6 +5363,13 @@ ru:
               email: "Эл. почта"
               manifest_screenshots:
                 description: "Скриншоты, демонстрирующие особенности и функциональные возможности приложения, отображаемые на странице с запросом на установку. Все изображения должны быть загружены локально и иметь одинаковые размеры."
+          fonts:
+            title: "Шрифты"
+            form:
+              heading_font:
+                title: "Шрифт заголовка"
+            backfill_modal:
+              modal_yes: "Да"
         navigation:
           title: "Навигация"
           header_description: "Настрой навигационные ссылки и пункты меню для своего сайта. Сюда входит расположение и поведение основного навигационного меню, быстрых ссылок в верхней части главной страницы, а также боковой панели администратора"
@@ -5373,9 +5379,6 @@ ru:
         onebox:
           title: "OneBox"
           header_description: "Настройте, как будут создаваться и отображаться предпросмотры Onebox на вашем сайте"
-        other:
-          title: "Разное"
-          header_description: "Настройки, которые не относятся ни к одной другой категории"
         rate_limits:
           title: "Ограничения"
           header_description: "Настройте, как часто пользователи могут выполнять определенные действия, например, создавать темы, отправлять сообщения и публиковать ответы"
@@ -5421,6 +5424,10 @@ ru:
         badges:
           title: "Значки"
           header_description: "Награды выдаются пользователям за их действия, вклад и достижения, чтобы признавать, подтверждать и поощрять хорошее поведение и участие в жизни сообщества"
+        content:
+          sub_pages:
+            posts_and_topics:
+              title: "Публикации и темы"
         permalinks:
           title: "Постоянные ссылки"
           header_description: "Перенаправления, применяемые для URL, не известных форуму"
@@ -5444,9 +5451,6 @@ ru:
         site_texts:
           title: "Тексты сайта"
         email:
-          title: "Настройка сервера и журналы"
-          header_description: "Настройте шаблоны, используемые для создания электронных писем, предпросмотр писем со сводками, которые будут отправлены, и просмотрите журналы электронной почты"
-          keywords: "email|smtp|mailgun|sendgrid|отправлено|пропущено|возвращено|получено|отклонено|журналы эл. почты|предпросмотр сводки"
           sub_pages:
             preview_summary:
               title: "Предпросмотр сводки"
@@ -5455,8 +5459,10 @@ ru:
               title: "Расширенный тест"
             templates:
               title: "Шаблоны"
+        email_logs:
+          sub_pages:
             sent:
-              title: "Отправленные"
+              title: "Отправлено"
             skipped:
               title: "Пропущено"
             bounced:
@@ -6133,7 +6139,6 @@ ru:
             post: "публикации"
             chat_message: "сообщения чата"
             enabled: "Включить пользовательскую метку после сохранения"
-            alert: "После использования пользовательской метки ее можно только отключить (изменить и удалить нельзя)."
             edit_flag: "Изменение метки"
             non_editable: "Изменить метку нельзя: она системная или уже использовалась в системе проверки. Однако метку можно отключить."
             delete_flag: "Удаление метки"
@@ -6162,6 +6167,24 @@ ru:
             new_theme: "Новая тема"
           components:
             title: "Компоненты"
+            install: "Установить"
+            name: "Название"
+            enabled: "Включено?"
+            by_author: "Автор: %{name}"
+            learn_more: "Подробнее"
+            edit: "Отредактировать"
+            parent_themes_two: "%{name1} и %{name2}"
+            preview: "Предпросмотр"
+            check_update: "Проверить обновления"
+            export: "Экспорт"
+            convert: "Преобразовать"
+            delete: "Удалить"
+            filter_by: "Фильтры"
+            filter_by_all: "Все настройки"
+            filter_by_used: "Используется"
+            filter_by_unused: "Не используется"
+            delete_confirm: 'Действительно удалить тему «%{name}»?'
+            badge_unused: "Не используется"
         user_fields:
           field: "Поле"
           type: "Тип"

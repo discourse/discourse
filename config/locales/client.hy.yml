@@ -1971,6 +1971,8 @@ hy:
     modal:
       close: "փակել"
       dismiss_error: "Չեղարկել սխալը"
+    multi_select:
+      search: "Որոնել…"
     form_kit:
       reset: Զրոյացնել
       optional: ընտրովի
@@ -2123,10 +2125,6 @@ hy:
         name: "Google"
         title: "Մուտք Google-ով"
         sr_title: "Մուտք Google-ով"
-      twitter:
-        name: "Twitter"
-        title: "Մուտք Twitter-ով"
-        sr_title: "Մուտք Twitter-ով"
       instagram:
         name: "Instagram"
       facebook:
@@ -3152,6 +3150,10 @@ hy:
       general: "Ընդհանուր"
       settings: "Կարգավորումներ"
       tags: "Պիտակներ"
+      localization:
+        name: "Անուն"
+        description: "Նկարագրությունը"
+        remove: "Հեռացնել"
       tags_allowed_tags: "Սահմանափակել այս պիտակները՝ այս կատեգորիայում."
       tags_allowed_tag_groups: "Սահմանափակել այս պիտակների խմբերը այս կատեգորիայում."
       tags_placeholder: "(Ընտրովի) թույլատրված պիտակների ցանկը"
@@ -3809,6 +3811,16 @@ hy:
       spreadsheet:
         show: "Ցուցադրել"
         about: "Մասին"
+    discovery:
+      headings:
+        categories: "Բոլոր կատեգորիաները"
+        filter_labels:
+          latest: "Վերջինը"
+          top: "Ամենահայտնի"
+          new: "Նոր"
+          unread: "Չկարդացած"
+          hot: "Թոփ"
+          unseen: "Չդիտված"
   admin_js:
     settings: "Կարգավորումներ"
     admin:
@@ -3849,20 +3861,20 @@ hy:
           title: "Ֆայլեր"
         legal:
           title: "Օրինական"
-        branding:
-          title: "Բրենդինգ"
+        logo_and_fonts:
           logo:
             form:
               mobile: "Հեռախոսային"
               email: "Էլ. փոստ"
+          fonts:
+            backfill_modal:
+              modal_yes: "Այո"
         navigation:
           title: "Նավիգացիա"
         notifications:
           title: "Ծանուցումներ"
         onebox:
           title: "Onebox"
-        other:
-          title: "Այլ"
         search_everything:
           title: "Որոնում"
         security:
@@ -3898,6 +3910,8 @@ hy:
           sub_pages:
             templates:
               title: "Ձևանմուշներ"
+        email_logs:
+          sub_pages:
             sent:
               title: "Ուղարկված"
             skipped:
@@ -4251,6 +4265,18 @@ hy:
             title: "Թեմաներ"
           components:
             title: "Բաղադրիչներ"
+            install: "Տեղադրել"
+            name: "Անուն"
+            enabled: "Միացվա՞ծ է:"
+            by_author: "%{name}-Ի կողմԻց"
+            learn_more: "Իմանալ ավելին"
+            edit: "Խմբագրել"
+            preview: "Նախադիտում"
+            export: "Արտահանել"
+            convert: "Փոխակերպել"
+            delete: "Ջնջել"
+            filter_by_all: "Բոլորը"
+            delete_confirm: 'Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել <<%{name}>> :'
         user_fields:
           type: "Տիպը"
           more_options:

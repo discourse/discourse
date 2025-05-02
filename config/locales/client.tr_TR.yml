@@ -196,6 +196,7 @@ tr_TR:
     back_button: "Geri"
     welcome_banner:
       header:
+        logged_in_members: "Tekrar hoş geldin, %{preferred_display_name}!"
         anonymous_members: "%{site_name}'a hoş geldiniz!"
       search: "Ara"
     themes:
@@ -460,9 +461,11 @@ tr_TR:
       remove_confirmation: "Bu taslağı silmek istediğinize emin misiniz?"
       new_topic: "Yeni konu taslağı"
       new_private_message: "Yeni kişisel ileti taslağı"
+      edit_topic: "Konu taslağını düzenle"
       dropdown:
         title: "En son taslaklar menüsünü açın"
         untitled: "Başlıksız taslak"
+        view_all: "tüm taslakları görüntüle"
         other_drafts:
           one: "+%{count} taslak daha"
           other: "+%{count} taslak daha"
@@ -527,6 +530,17 @@ tr_TR:
       date_filter: "Şu tarihler arasında gönderildi"
       in_reply_to: "şuna yanıt olarak"
       filtered_flagged_by: "Bayrak ekleyen kişi:"
+      unknown:
+        title:
+          one: "Devre dışı bırakılmış eklentiden bekleyen incelenebilir dosyalarınız var:"
+          other: "Devre dışı bırakılmış eklentilerden bekleyen incelenebilir dosyalarınız var:"
+        instruction: "İlgili eklentiyi etkinleştirmediğiniz sürece düzgün görüntülenemezler. Lütfen eklentiyi etkinleştirin ve sayfayı yenileyin. Alternatif olarak, bunları görmezden gelebilirsiniz. <a href='%{url}' target='_blank'>Daha fazlasını öğrenin...</a>"
+        reviewable_unknown_source: "%{reviewableType} (bilinmeyen eklenti)"
+        reviewable_known_source: "%{reviewableType} ('%{pluginName}' eklentisinden)"
+        ignore_all: "Tümünü görmezden gel"
+        enable_plugins: "Eklentileri etkinleştir"
+        delete_confirm: "Devre dışı bırakılan eklentiler tarafından oluşturulan tüm incelemeleri silmek istediğinizden emin misiniz?"
+        ignore_success: "Devre dışı bırakılan eklentiler tarafından oluşturulan tüm incelemeler silindi."
       explain:
         why: "bu ögenin neden kuyruğa girdiğini açıklayın"
         title: "İncelenebilir Puanlama"
@@ -561,6 +575,7 @@ tr_TR:
         required: "Ögeleri inceleyebilmek için önce talepte bulunmalısınız."
         claimed_by_you: "Bu ögeyi talep ettiniz ve inceleyebilirsiniz."
         claimed_by_other: "Bu öge yalnızca <b>%{username}</b> adlı kullanıcı tarafından incelenebilir."
+        automatically_claimed_by: "Bu ürün şu anda <b>%{username}</b>tarafından inceleniyor."
       claim:
         title: "bu konuyu talep et"
       unclaim:
@@ -598,8 +613,11 @@ tr_TR:
         fields: "Alanlar"
         reject_reason: "Sebep"
         scrubbed_reason: "Sebep"
+        scrubbed_reject_reason: "Kullanıcı reddetme nedeni"
         scrub_record:
+          confirm_title: Kişisel verileri kaldırın
           reason_placeholder: "Sebep..."
+          confirm_button: "Kaldırmayı onayla"
           cancel_button: "İptal et"
       user_percentage:
         summary:
@@ -1493,6 +1511,8 @@ tr_TR:
         choose: "Şifre seç"
         verify_identity: "Devam etmek için lütfen kimliğinizi doğrulayın."
         title: "Şifre Sıfırlama"
+        remove: "Parolayı Kaldır"
+        remove_detail: "Hesap şifrenizi sıfırlamadığınız sürece artık hesabınıza erişilemeyecektir."
       second_factor_backup:
         title: "İki Adımlı Yedek Kodları"
         regenerate: "Yeniden oluştur"
@@ -2030,6 +2050,7 @@ tr_TR:
     user_tips:
       button: "Anladım!"
       skip: "İpuçlarını atla"
+      dont_show_again: "Bunu bir daha gösterme"
       first_notification:
         title: "İlk bildiriminiz!"
         content: "Bildirimler, sizi toplulukta olup bitenlerden haberdar etmek için kullanılır."
@@ -2068,6 +2089,10 @@ tr_TR:
     modal:
       close: "kapat"
       dismiss_error: "Hatayı kapat"
+    multi_select:
+      no_results: "Sonuç yok"
+      search: "Ara…"
+      label: "Seçenekleri seçin"
     form_kit:
       reset: Sıfırla
       optional: i̇steğe bağlı
@@ -2075,6 +2100,8 @@ tr_TR:
       dirty_form: "Değişikliklerinizi göndermediniz! Ayrılmak istediğinizden emin misiniz?"
       errors:
         required: "Gerekli"
+        date_before_or_equal: "%{date}'dan önce veya ona eşit olmalıdır"
+        date_after_or_equal: "%{date}'dan sonra veya buna eşit olmalıdır"
         invalid_url: "Geçerli bir URL olmalıdır"
         not_an_integer: "Tam sayı olmalı"
         not_accepted: "Kabul edilmeli"
@@ -2304,9 +2331,9 @@ tr_TR:
         title: "Google ile oturum açın"
         sr_title: "Google ile oturum açın"
       twitter:
-        name: "Twitter"
-        title: "Twitter ile oturum açın"
-        sr_title: "Twitter ile oturum açın"
+        name: "X"
+        title: "X ile oturum açın"
+        sr_title: "X ile oturum açın"
       instagram:
         name: "Instagram"
         title: "Instagram ile Giriş Yapın"
@@ -2348,6 +2375,18 @@ tr_TR:
       password_label: "Şifre"
     password_reset:
       continue: "%{site_name} adresine devam edin"
+    emoji_set:
+      apple_international: "Apple/International (Twemoji'de kullanımdan kaldırıldı)"
+      google: "Google (Noto Emoji'ye göre kullanımdan kaldırıldı)"
+      twitter: "Twitter (Twemoji olarak kullanımdan kaldırılmıştır)"
+      win10: "Win10 (Fluent Emoji'ye göre kullanımdan kaldırıldı)"
+      google_classic: "Google Klasik (Noto Emoji'ye göre kullanımdan kaldırıldı)"
+      facebook_messenger: "Facebook Messenger (Standart olarak kullanımdan kaldırılmıştır)"
+      openmoji: OpenMoji
+      standard: Standart
+      fluentui: Fluent Emoji
+      noto: Noto Emoji
+      twemoji: Twemoji
     category_page_style:
       categories_only: "Yalnızca Kategoriler"
       categories_with_featured_topics: "Öne Çıkan Konuları içeren Kategoriler"
@@ -2361,6 +2400,10 @@ tr_TR:
       required_at_signup: "Gerekli"
       optional_at_signup: "İsteğe bağlı"
       hidden_at_signup: "İsteğe bağlı, kayıt sırasında gizli"
+    interface_color_selector:
+      disabled: "Görüntüleme"
+      sidebar_footer: "Kenar çubuğu altbilgisinde görüntüle"
+      header: "Başlıkta görüntüle"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -2522,6 +2565,8 @@ tr_TR:
       uploading: "Yükleniyor…"
       show_preview: "ön izlemeyi göster"
       hide_preview: "ön izlemeyi gizle"
+      switch_to_markdown: "Standart Markdown düzenleyicisine geçin (%{keyboardShortcut})"
+      switch_to_rich_text: "Yeni zengin metin düzenleyicisine geçin (%{keyboardShortcut})"
       quote_post_title: "Tüm gönderiyi alıntıla"
       bold_label: "B"
       bold_title: "Güçlü"
@@ -2731,8 +2776,11 @@ tr_TR:
         new_features: "Yeni Discourse özellikleri çıktı!"
         admin_problems: "sitenizin panonuzda yeni öneriler mevcut"
     upload_selector:
+      change: "Değiştir"
       delete: "Sil"
       uploading: "Yükleniyor"
+      processing: "Yükleme işleniyor"
+      select_file: "Yüklemek için tıklayın veya dosyayı sürükleyip bırakın"
       default_image_alt_text: görüntü
     search:
       sort_by: "Sıralama ölçütü"
@@ -2774,11 +2822,12 @@ tr_TR:
       in_messages_tooltip: "normal konuları aramaya geç"
       in_topics_posts: "tüm konularda ve gönderilerde"
       enter_hint: "veya Enter tuşuna basın"
+      mobile_enter_hint: "veya Arama simgesine dokunun"
       in_posts_by: "@%{username} adlı kullanıcının gönderilerinde"
-      browser_tip: "%{modifier} + f"
-      browser_tip_description: "yeniden yerel tarayıcı aramasını kullanmak için"
       recent: "Son Aramalar"
       clear_recent: "Son Aramaları Temizle"
+      experience:
+        search_field: "Site başlığındaki arama alanı"
       type:
         default: "Konular/gönderiler"
         users: "Kullanıcılar"
@@ -3775,6 +3824,10 @@ tr_TR:
       settings: "Ayarlar"
       topic_template: "Şablon"
       tags: "Etiketler"
+      localization:
+        name: "Ad"
+        description: "Açıklama"
+        remove: "Kaldır"
       tags_allowed_tags: "Bu etiketleri bu kategoriyle sınırla:"
       tags_allowed_tag_groups: "Bu etiket gruplarını bu kategoriyle sınırla:"
       tags_placeholder: "(İsteğe bağlı) izin verilen etiketlerin listesi"
@@ -4665,11 +4718,6 @@ tr_TR:
       back_to_forum: "Foruma geri dön"
       collapse_all_sections: "Tüm bölümleri daralt"
       expand_all_sections: "Tüm bölümleri genişlet"
-      filter: "Filtrele..."
-      clear_filter: "Filtreyi temizle"
-      no_results:
-        title: "Sonuç yok"
-        description: '"%{filter}" ile eşleşen bir şey bulamadık.<br><br><a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">Site ayarlarında</a> veya <a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">yönetici kullanıcı listesinde</a> arama yapmak ister misiniz?'
       footer:
         interface_color_selector:
           light: "Açık"
@@ -4775,6 +4823,16 @@ tr_TR:
           paste: "Yapıştır..."
           save: "Farklı kaydet..."
     powered_by_discourse: "Discourse tarafından desteklenmektedir"
+    discovery:
+      headings:
+        categories: "Tüm kategoriler"
+        filter_labels:
+          latest: "En son"
+          top: "En iyi"
+          new: "Yeni"
+          unread: "Okunmamış"
+          hot: "Popüler"
+          unseen: "Görülmemiş"
   admin_js:
     type_to_filter: "Filtrelemek için yazın…"
     settings: "Ayarlar"
@@ -4825,9 +4883,6 @@ tr_TR:
         flags:
           title: "Moderasyon"
           header_description: "Discourse'taki bayrak ekleme sistemi sizin ve moderatör ekibinizin içeriği ve kullanıcı davranışını yönetmenize yardımcı olarak topluluğunuzun saygılı ve sağlıklı kalmasını sağlar. Varsayılanlar çoğu topluluk için uygundur ve bunları değiştirmeniz gerekmez. Ancak sitenizin belirli gereklilikleri varsa ihtiyacınız olmayan bayrakları devre dışı bırakabilir ve kendi özel bayraklarınızı ekleyebilirsiniz."
-        font_style:
-          title: "Yazı tipi stili"
-          header_description: "Temalarınız tarafından kullanılan yazı tipi stillerini özelleştirin"
         files:
           title: "Dosyalar"
           header_description: "Dosya boyutu ve türü limitlerini, avatar boyutlarını ve kaynaklarını, dosya depolamayı, görüntü kalitesini ve sıkıştırmayı ve daha fazlasını kontrol eden ayarlar"
@@ -4837,21 +4892,62 @@ tr_TR:
         login_and_authentication:
           title: "Giriş ve kimlik doğrulama"
           header_description: "Kullanıcıların oturum açma ve kimlik doğrulama yöntemlerini, gizli dizileri ve anahtarları, OAuth2 sağlayıcılarını ve daha fazlasını yapılandırın"
-        logo:
-          title: "Site logosu"
-          header_description: "Site logonuzun varyasyonlarını özelleştirin"
-        branding:
-          title: "Markalaşma"
+        logo_and_fonts:
           logo:
             form:
               logo:
                 title: "Birincil logo"
               mobile: "Mobil"
               email: "E-posta"
+              mobile_logo:
+                description: "Sitenizin mobil versiyonunda kullanılan logo. Boş bırakılırsa, `logo` ayarındaki resim kullanılacaktır."
+                help_text: "Yüksekliği 120 ve en boy oranı 3:1'den büyük olan geniş dikdörtgen bir resim kullanın."
+              mobile_logo_dark:
+                required: "Karanlık mod için farklı bir mobil logo mu kullanacaksınız?"
+                title: "Mobil logo koyu"
+                help_text: "Yüksekliği 120 ve en boy oranı 3:1'den büyük olan geniş dikdörtgen bir resim kullanın."
+              manifest_icon:
+                title: "Manifest simgesi"
+                description: "Android'de logo/açılış resmi olarak kullanılan resim. Boş bırakılırsa, large_icon kullanılacaktır."
+                help_text: "Önerilen boyut 512 x 512 pikseldir."
               manifest_screenshots:
+                title: "Manifest ekran görüntüleri"
                 description: "Kurulum istemi sayfasında örneğinizin özelliklerini ve işlevselliğini gösteren ekran görüntüleri. Tüm görüntüler yerel yüklemeler olmalı ve aynı boyutlarda olmalıdır."
+              apple_touch_icon:
+                title: "Apple dokunmatik simgesi"
+                description: "Apple dokunmatik cihazlar için kullanılan simge. Boş bırakılırsa, large_icon kullanılacaktır."
+                help_text: "Önerilen boyut 180 x 180 pikseldir. Şeffaf arka plan önerilmez."
+              digest_logo:
+                title: "Digest logosu"
+                description: "Sitenizin e-posta özetinin üst kısmında kullanılan alternatif logo görüntüsü. Boş bırakılırsa, `logo` ayarındaki görüntü kullanılacaktır."
+                help_text: "Geniş bir dikdörtgen görüntü kullanın. SVG görüntüsü kullanmayın."
               opengraph_image:
+                title: "OpenGraph görüntüsü"
                 description: "Varsayılan opengraph görüntüsü, sayfada başka uygun görüntü olmadığında kullanılır. Boş bırakılırsa large_icon kullanılır."
+              x_summary_large_image:
+                title: "X özeti büyük resim"
+                description: "X kartı 'özet büyük resim'. Boş bırakılırsa, aynı zamanda bir .svg olmadığı sürece OpenGraph_image kullanılarak normal kart meta verileri oluşturulur."
+                help_text: "Önerilen boyut en az 280 x 150 pikseldir. SVG resmi kullanmayın."
+          fonts:
+            title: "Yazı Tipleri"
+            form:
+              more_fonts: "Daha fazla yazı tipi"
+              less_fonts: "Daha az yazı tipi"
+              saved: "Yazı tipi ayarları kaydedildi."
+              base_font:
+                title: "Temel yazı tipi"
+              heading_font:
+                title: "Başlık yazı tipi"
+              default_text_size:
+                title: "Varsayılan metin boyutu"
+                description: "Bu boyut daha sonra her kullanıcı tarafından kendi tercihine göre ayarlanabilir."
+            backfill_modal:
+              title: "Yeni varsayılan metin ayarları uygulansın mı?"
+              description:
+                one: "Varsayılan metin boyutunu güncellediniz. Bu değişikliği %{count} mevcut kullanıcıya uygulamak ister misiniz?"
+                other: "Varsayılan metin boyutunu güncellediniz. Bu değişikliği %{count} mevcut kullanıcıya uygulamak ister misiniz?"
+              modal_yes: "Evet"
+              modal_no: "Hayır, sadece ileriye dönük olarak uygula"
         navigation:
           title: "Gezinme"
           header_description: "Siteniz için gezinme bağlantılarını ve menü ögelerini yapılandırın. Bu, birincil gezinme menüsünün konumunu ve davranışını, ana sayfanın üst kısmındaki hızlı bağlantıları ve yönetici kenar çubuğunu içerir"
@@ -4861,16 +4957,15 @@ tr_TR:
         onebox:
           title: "Onebox"
           header_description: "Siteniz için onebox ön izlemelerinin nasıl oluşturulacağını ve gösterileceğini yapılandırma"
-        other:
-          title: "Diğer"
-          header_description: "Başka hiçbir kategoriye uymayan ayarlar"
         rate_limits:
           title: "Oran limitleri"
           header_description: "Kullanıcıların konu oluşturma, mesaj gönderme ve yanıt paylaşma gibi belirli eylemleri ne sıklıkta gerçekleştirebileceğini yapılandırma"
         search:
+          title: "Arama ayarları"
           header_description: "Çince ve Japonca dilleri için günlük kaydı ve tokenizasyon dâhil arama ayarlarını yapılandırma"
         search_everything:
           title: "Ara"
+          header_description: "Yönetici arayüzünde her şeyi burada bulabilirsiniz. Aşağıdaki sonuçları filtreleyebilirsiniz ve tercihleriniz hatırlanacaktır. Bu aramayı yönetici arayüzünde herhangi bir yerde açmak için %{shortcutHTML}tuşuna basın."
         security:
           title: "Güvenlik"
           header_description: "İki adımlı kimlik doğrulama, moderatör ayrıcalıkları ve içerik güvenliği ilkeleri dâhil olmak üzere güvenlik ayarlarını yapılandırma"
@@ -4909,6 +5004,10 @@ tr_TR:
         badges:
           title: "Rozetler"
           header_description: "Rozetler, topluluk içindeki olumlu davranışları ve katılımı tanımak, doğrulamak ve teşvik etmek için kullanıcıları aktiviteleri, katkıları ve başarıları için ödüllendirir"
+        content:
+          sub_pages:
+            posts_and_topics:
+              title: "Gönderiler ve konular"
         permalinks:
           title: "Kalıcı Bağlantılar"
         user_fields:
@@ -4931,9 +5030,6 @@ tr_TR:
         site_texts:
           title: "Site metinleri"
         email:
-          title: "Sunucu kurulumu ve günlükleri"
-          header_description: "E-posta oluşturmak için kullanılan şablonları özelleştirin, gönderilecek özet e-postaları ön izleyin ve e-posta günlüklerini görüntüleyin"
-          keywords: "e-posta|smtp|mailgun|sendgrid|gönderildi|atlandı|geri döndü|alındı|reddedildi|e-posta günlükleri|ön izleme özeti"
           sub_pages:
             preview_summary:
               title: "Özeti ön izle"
@@ -4942,6 +5038,8 @@ tr_TR:
               title: "Gelişmiş test"
             templates:
               title: "Şablonlar"
+        email_logs:
+          sub_pages:
             sent:
               title: "Gönderilen"
             skipped:
@@ -5596,7 +5694,6 @@ tr_TR:
             post: "gönderiler"
             chat_message: "sohbet mesajları"
             enabled: "Kaydettikten sonra bu özel bayrağı etkinleştirin"
-            alert: "Özel bir bayrak kullanıldıktan sonra yalnızca devre dışı bırakılabilir ancak düzenlenemez veya silinemez."
             edit_flag: "Bayrağı düzenle"
             non_editable: "Bu bayrak bir sistem bayrağı olduğu veya inceleme sisteminde zaten kullanıldığı için düzenleyemezsiniz ancak yine de devre dışı bırakabilirsiniz."
             delete_flag: "Bayrağı sil"
@@ -5625,6 +5722,24 @@ tr_TR:
             new_theme: "Yeni tema"
           components:
             title: "Bileşenler"
+            install: "Yükle"
+            name: "Ad"
+            enabled: "Etkin mi?"
+            by_author: "Yazan: %{name}"
+            learn_more: "Daha fazla bilgi edin"
+            edit: "Düzenle"
+            parent_themes_two: "%{name1} ve %{name2}"
+            preview: "Ön izle"
+            check_update: "Güncellemeleri kontrol et"
+            export: "Dışa Aktar"
+            convert: "Dönüştür"
+            delete: "Sil"
+            filter_by: "Filtrele"
+            filter_by_all: "Hepsi"
+            filter_by_used: "Kullanılmış"
+            filter_by_unused: "Kullanılmamış"
+            delete_confirm: '"%{name}" adlı temayı silmek istediğinizden emin misiniz?'
+            badge_unused: "Kullanılmamış"
         user_fields:
           field: "Alan"
           type: "Tür"

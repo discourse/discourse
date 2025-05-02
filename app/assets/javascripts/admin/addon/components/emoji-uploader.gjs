@@ -129,7 +129,7 @@ export default class EmojiUploader extends Component {
               @id="emoji-group-selector"
               @value={{this.group}}
               @content={{this.newEmojiGroups}}
-              @onChange={{action "createEmojiGroup"}}
+              @onChange={{this.createEmojiGroup}}
               @valueProperty={{null}}
               @nameProperty={{null}}
               @options={{hash allowAny=true}}
