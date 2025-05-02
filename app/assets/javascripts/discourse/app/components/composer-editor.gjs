@@ -947,6 +947,14 @@ export default class ComposerEditor extends Component {
     this._selectedFormTemplateId = value;
   }
 
+  get showTranslationEditor() {
+    if (this.composer.model.action === Composer.ADD_TRANSLATION) {
+      return true;
+    }
+
+    return false;
+  }
+
   @action
   async updateFormPreview() {
     const formTemplateData = prepareFormTemplateData(
@@ -1017,6 +1025,15 @@ export default class ComposerEditor extends Component {
             @outletArgs={{this.outletArgs}}
           />
         {{/if}}
+      </div>
+    {{else if this.showTranslationEditor}}
+      <div class="d-editor translation-editor">
+        <DEditor
+          @placeholder="composer.translations.placeholder"
+          @forcePreview={{true}}
+          @processPreview={{false}}
+          @hijackPreview={{this.composer.hijackPreview}}
+        />
       </div>
     {{else}}
       <DEditor

@@ -362,6 +362,8 @@ export default class ComposerService extends Service {
       return "composer.create_whisper";
     } else if (privateMessage && modelAction === Composer.REPLY) {
       return "composer.create_pm";
+    } else if (modelAction === Composer.ADD_TRANSLATION) {
+      return "composer.translations.save";
     }
 
     return SAVE_LABELS[modelAction];
@@ -1036,6 +1038,10 @@ export default class ComposerService extends Service {
       return;
     }
 
+    if (this.model.action === Composer.ADD_TRANSLATION) {
+      return this.saveTranslation();
+    }
+
     // Clear the warning state if we're not showing the checkbox anymore
     if (!this.showWarning) {
       this.set("model.isWarning", false);
@@ -1275,6 +1281,10 @@ export default class ComposerService extends Service {
     return promise;
   }
 
+  saveTranslation() {
+    // save translation code here..
+  }
+
   @action
   postWasEnqueued(details) {
     this.modal.show(PostEnqueuedModal, { model: details });
@@ -1333,6 +1343,10 @@ export default class ComposerService extends Service {
     this.set("skipJumpOnSave", !!opts.skipJumpOnSave);
 
     this.set("skipFormTemplate", !!opts.skipFormTemplate);
+
+    if (opts.hijackPreview) {
+      this.set("hijackPreview", opts.hijackPreview);
+    }
 
     // Scope the categories drop down to the category we opened the composer with.
     if (opts.categoryId && !opts.disableScopedCategory) {

@@ -93,6 +93,7 @@ module SvgSprite
         discourse-sparkles
         discourse-table
         discourse-threads
+        discourse-add-translation
         download
         earth-americas
         ellipsis

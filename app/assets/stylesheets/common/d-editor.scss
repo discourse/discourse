@@ -370,3 +370,12 @@
   margin-bottom: 0;
   height: 100%;
 }
+
+// TODO: not sure why these styles aren't applying?
+.d-editor-translation-preview-wrapper {
+  // border: 1px solid var(--primary);
+  // margin: 1rem;
+  &__header {
+    // font-size: var(--font-up-1);
+  }
+}

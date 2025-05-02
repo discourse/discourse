@@ -269,6 +269,7 @@ basic:
       - bookmark
       - admin
       - reply
+      - addTranslation
     area: "posts_and_topics"
   post_menu_hidden_items:
     client: true
@@ -285,6 +286,7 @@ basic:
       - bookmark
       - admin
       - reply
+      - addTranslation
     area: "posts_and_topics"
   share_links:
     client: true
