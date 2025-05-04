@@ -20,6 +20,10 @@ module PageObjects
         self
       end
 
+      def visit_edit_localizations(category)
+        page.visit("/c/#{category.slug}/edit/localizations")
+      end
+
       def visit_categories
         page.visit("/categories")
         self
@@ -104,6 +108,16 @@ module PageObjects
 
       def has_no_public_access_message?
         page.has_no_content?(I18n.t("js.category.permissions.everyone_has_access"))
+      end
+
+      def has_setting_tab?(tab_name)
+        tab_css = ".edit-category-#{tab_name}"
+        page.has_css?(tab_css)
+      end
+
+      def has_no_setting_tab?(tab_name)
+        tab_css = ".edit-category-#{tab_name}"
+        page.has_no_css?(tab_css)
       end
     end
   end

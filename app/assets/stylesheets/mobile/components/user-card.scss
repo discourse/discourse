@@ -108,7 +108,7 @@
     max-height: 40vh;
     overflow-y: auto;
 
-    @media screen and (max-height: 550px) {
+    @media screen and (height <= 550px) {
       max-height: 12vh;
     }
 

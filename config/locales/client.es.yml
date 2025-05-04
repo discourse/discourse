@@ -194,6 +194,10 @@ es:
       dismiss: "Descartar"
     bootstrap_mode: "Cómo empezar"
     back_button: "Volver"
+    welcome_banner:
+      header:
+        anonymous_members: "¡Te damos la bienvenida a %{site_name}!"
+      search: "Buscar"
     themes:
       default_description: "Por defecto"
       broken_theme_alert: "Puede que tu sitio no funcione, un tema o componente está causando errores."
@@ -456,10 +460,6 @@ es:
       remove_confirmation: "¿Seguro que quieres eliminar este borrador?"
       new_topic: "Nuevo borrador de tema"
       new_private_message: "Nuevo borrador de mensaje personal"
-      abandon:
-        confirm: "Ya tienes un borrador en curso. ¿Qué te gustaría hacer con él?"
-        yes_value: "Descartar"
-        no_value: "Reanudar edición"
       dropdown:
         title: "Abre el menú de últimos borradores"
         untitled: "Borrador sin título"
@@ -597,6 +597,10 @@ es:
         name: "Nombre"
         fields: "Campos"
         reject_reason: "Motivo"
+        scrubbed_reason: "Motivo"
+        scrub_record:
+          reason_placeholder: "Motivo..."
+          cancel_button: "Cancelar"
       user_percentage:
         summary:
           one: "%{agreed}, %{disagreed}, %{ignored}, (de la última denuncia)"
@@ -2064,6 +2068,9 @@ es:
     modal:
       close: "cerrar"
       dismiss_error: "Descartar error"
+    multi_select:
+      no_results: "No hay resultados"
+      search: "Buscar…"
     form_kit:
       reset: Restablecer
       optional: opcional
@@ -2299,10 +2306,6 @@ es:
         name: "Google"
         title: "Iniciar sesión con Google"
         sr_title: "Iniciar sesión con Google"
-      twitter:
-        name: "Twitter"
-        title: "Iniciar sesión con Twitter"
-        sr_title: "Iniciar sesión con Twitter"
       instagram:
         name: "Instagram"
         title: "Iniciar sesión con Instagram"
@@ -2771,8 +2774,6 @@ es:
       in_topics_posts: "en todos los temas y publicaciones"
       enter_hint: "o pulsa Intro"
       in_posts_by: "en publicaciones por %{username}"
-      browser_tip: "%{modifier} + f"
-      browser_tip_description: "otra vez para usar la búsqueda nativa de tu navegador"
       recent: "Búsquedas recientes"
       clear_recent: "Borrar búsquedas recientes"
       type:
@@ -3771,6 +3772,10 @@ es:
       settings: "Ajustes"
       topic_template: "Plantilla"
       tags: "Etiquetas"
+      localization:
+        name: "Nombre"
+        description: "Descripción"
+        remove: "Eliminar"
       tags_allowed_tags: "Restringir estas etiquetas a esta categoría:"
       tags_allowed_tag_groups: "Restringir estos grupos de etiquetas a esta categoría:"
       tags_placeholder: "(Opcional) lista de etiquetas permitidas"
@@ -3798,9 +3803,13 @@ es:
       logo_dark: "Imagen del logotipo de la categoría en modo oscuro"
       background_image: "Imagen de fondo de la categoría"
       background_image_dark: "Imagen de fondo de categoría oscura"
-      badge_colors: "Colores de las medallas"
-      background_color: "Color de fondo"
-      foreground_color: "Colores de primer plano"
+      background_color: "Color"
+      styles:
+        icon: "Icono"
+        emoji: "Emoji"
+        options:
+          icon: "Icono"
+          emoji: "Emoji"
       color_used: "Color en uso"
       predefined_colors: "Opciones de color predefinidas"
       name_placeholder: "Una o dos palabras máximo"
@@ -4657,11 +4666,6 @@ es:
       back_to_forum: "Volver al Foro"
       collapse_all_sections: "Contraer todas las secciones"
       expand_all_sections: "Expandir todas las secciones"
-      filter: "Filtrar..."
-      clear_filter: "Limpiar filtro"
-      no_results:
-        title: "No hay resultados"
-        description: 'No hemos encontrado nada que coincida con «%{filter}».<br><br>¿Quieres <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">buscar en los ajustes del sitio</a> o en la <a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">lista de usuarios de administración?</a>'
       footer:
         interface_color_selector:
           light: "Claro"
@@ -4767,6 +4771,16 @@ es:
           paste: "Pegar..."
           save: "Guardar como..."
     powered_by_discourse: "Desarrollado por Discourse"
+    discovery:
+      headings:
+        categories: "Todas las categorías"
+        filter_labels:
+          latest: "Recientes"
+          top: "Destacados"
+          new: "Nuevo"
+          unread: "Sin leer"
+          hot: "Caliente"
+          unseen: "No vistos"
   admin_js:
     type_to_filter: "Escribe para filtrar…"
     settings: "Ajustes"
@@ -4817,9 +4831,6 @@ es:
         flags:
           title: "Moderación"
           header_description: "El sistema de marcado de Discourse te ayuda a ti y a tu equipo de moderadores a gestionar el contenido y el comportamiento de los usuarios, manteniendo tu comunidad respetuosa y saludable. Los valores predeterminados son adecuados para la mayoría de las comunidades y no es necesario que los cambies. Sin embargo, si tu sitio tiene requisitos particulares, puedes desactivar los indicadores que no necesites y añadir tus propios indicadores personalizados."
-        font_style:
-          title: "Estilo de letra"
-          header_description: "Personaliza los estilos de fuente utilizados por tus temas"
         files:
           title: "Archivos"
           header_description: "Ajustes que controlan los límites de tamaño y tipo de archivo, los tamaños y fuentes de los avatares, el almacenamiento de archivos, la calidad y compresión de las imágenes, etc."
@@ -4829,11 +4840,7 @@ es:
         login_and_authentication:
           title: "Inicio de sesión y autenticación"
           header_description: "Configura cómo se conectan y autentican los usuarios, secretos y claves, proveedores de OAuth2, etc."
-        logo:
-          title: "Logotipo del sitio"
-          header_description: "Personaliza las variaciones del logotipo de tu sitio"
-        branding:
-          title: "Marca"
+        logo_and_fonts:
           logo:
             form:
               logo:
@@ -4844,6 +4851,13 @@ es:
                 description: "Capturas de pantalla para mostrar las funcionalidades del sitio web en la pantalla de instalación. Todas las imágenes deben ser alojadas localmente y tener las mismas dimensiones."
               opengraph_image:
                 description: "Imagen de gráfico abierto predeterminada, utilizada cuando la página no tiene otra imagen adecuada. Si se deja en blanco, se utilizará large_icon."
+          fonts:
+            title: "Tipos de letra"
+            form:
+              heading_font:
+                title: "Tipo de letra para encabezados"
+            backfill_modal:
+              modal_yes: "Sí"
         navigation:
           title: "Navegación"
           header_description: "Configura los enlaces de navegación y los elementos de menú de tu sitio. Esto incluye la ubicación y el comportamiento del menú de navegación principal, los enlaces rápidos de la parte superior de la página de inicio, así como la barra lateral de administración."
@@ -4853,9 +4867,6 @@ es:
         onebox:
           title: "Onebox"
           header_description: "Configura cómo se generan y se muestran las previsualizaciones de onebox para tu sitio"
-        other:
-          title: "Otros"
-          header_description: "Ajustes que no encajan en ninguna otra categoría"
         rate_limits:
           title: "Límites de velocidad"
           header_description: "Configura la frecuencia con la que los usuarios pueden realizar determinadas acciones, como crear temas, enviar mensajes y publicar respuestas"
@@ -4901,6 +4912,10 @@ es:
         badges:
           title: "Medallas"
           header_description: "Las insignias recompensan a los usuarios por sus actividades, contribuciones y logros para reconocer, validar y fomentar el comportamiento positivo y el compromiso dentro de la comunidad"
+        content:
+          sub_pages:
+            posts_and_topics:
+              title: "Publicaciones y temas"
         permalinks:
           title: "Enlaces permanentes"
           header_description: "Redirecciones para URL que no existan ya en el foro"
@@ -4924,9 +4939,6 @@ es:
         site_texts:
           title: "Textos del sitio"
         email:
-          title: "Configuración y registros del servidor"
-          header_description: "Personaliza las plantillas utilizadas para crear correos electrónicos, previsualiza los correos electrónicos de resumen que se enviarán y consulta los registros de correo electrónico"
-          keywords: "correo electrónico|smtp|mailgun|sendgrid|enviado|omitido|recibido|rechazado|registros de correo electrónico|previsualizar resumen"
           sub_pages:
             preview_summary:
               title: "Previsualizar resumen"
@@ -4935,6 +4947,8 @@ es:
               title: "Prueba avanzada"
             templates:
               title: "Plantillas"
+        email_logs:
+          sub_pages:
             sent:
               title: "Enviado"
             skipped:
@@ -4944,7 +4958,7 @@ es:
             received:
               title: "Recibido"
             rejected:
-              title: "Rechazados"
+              title: "Rechazado"
         email_appearance:
           title: "Aspecto"
           header_description: "Personaliza la plantilla sobre la que se crean todos los correos HTML, y aplica estilos usando CSS"
@@ -5455,6 +5469,66 @@ es:
             failed: "Falló"
       home:
         title: "Inicio"
+      account:
+        title: "Cuenta"
+        sidebar_link:
+          backups: "Copias de seguridad"
+          whats_new:
+            title: "Novedades"
+            keywords: "registro de cambios|característica|lanzamiento"
+      community:
+        title: "Comunidad"
+        sidebar_link:
+          about_your_site: "Acerca de tu sitio"
+          badges: "Medallas"
+          login_and_authentication: "Inicio de sesión y autenticación"
+          notifications: "Notificaciones"
+          permalinks: "Enlaces permanentes"
+          trust_levels: "Niveles de confianza"
+          group_permissions: "Permisos de grupo"
+          users: "Usuarios"
+          groups: "Grupos"
+          user_fields: "Campos de usuario"
+          watched_words: "Palabras vigiladas"
+          legal: "Legal"
+          moderation_flags:
+            title: "Moderación"
+            keywords: "denunciar|revisar"
+      appearance:
+        title: "Aspecto"
+        sidebar_link:
+          font_style: "Estilo de letra"
+          site_logo: "Logotipo del sitio"
+          color_schemes: "Paletas de colores"
+          emoji: "Emoji"
+          navigation: "Navegación"
+          themes_and_components:
+            keywords: "extensión"
+          site_texts: "Textos del sitio"
+      email_settings:
+        title: "Ajustes del correo electrónico"
+        sidebar_link:
+          appearance: "Aspecto"
+          server_setup:
+            title: "Configuración y registros del servidor"
+            keywords: "correo electrónico|smtp|mailgun|sendgrid|enviado|omitido|recibido|rechazado|registros de correo electrónico|previsualizar resumen"
+      security:
+        title: "Seguridad"
+        sidebar_link:
+          security: "Ajustes de seguridad"
+          spam: "Ajustes de correo no deseado"
+          staff_action_logs:
+            title: "Registros y cribado"
+            keywords: "registros de errores|acciones del personal|correos electrónicos cribados|ips cribadas|urls cribadas|registros de búsqueda"
+      section_landing_pages:
+        account:
+          title: "Cuenta"
+          backups:
+            title: "Copias de seguridad"
+            description: "Haz una copia de seguridad de los datos de tu sitio web"
+          whats_new:
+            title: "Novedades"
+            description: "Descubre nuevas versiones y mejoras de Discourse"
       config_areas:
         about:
           general_settings: "Ajustes generales"
@@ -5528,7 +5602,6 @@ es:
             post: "publicaciones"
             chat_message: "mensajes de chat"
             enabled: "Activa esta bandera personalizada después de guardar"
-            alert: "Una vez que se ha utilizado una bandera personalizada, solo se puede desactivar, pero no editar ni borrar."
             edit_flag: "Editar bandera"
             non_editable: "No puedes editar esta bandera porque es una bandera del sistema o ya se ha utilizado en el sistema de revisión, sin embargo, puedes desactivarla."
             delete_flag: "Eliminar bandera"
@@ -5548,16 +5621,33 @@ es:
           delete: "Eliminar"
           more_options:
             title: "Más opciones"
-        look_and_feel:
+        themes_and_components:
+          breadcrumb_title: "Personalizar"
+          install: "Instalar"
           themes:
-            title: "Temas"
+            title: "Tema"
             themes_intro: "Instala un tema nuevo para empezar, o crea el tuyo desde cero utilizando estos recursos."
-            themes_intro_img_alt: "Nuevo marcador de posición del tema"
-            set_default_theme: "Establecer como predeterminado"
-            default_theme: "Tema predeterminado"
-            themes_description: "Los temas son personalizaciones expansivas que cambian múltiples elementos del estilo del diseño de tu foro, y a menudo también incluyen características adicionales del front-end."
             new_theme: "Nuevo tema"
-            user_selectable: "Seleccionable por el usuario"
+          components:
+            title: "Componentes"
+            install: "Instalar"
+            name: "Nombre"
+            enabled: "¿Activado?"
+            by_author: "Por %{name}"
+            learn_more: "Más información"
+            edit: "Editar"
+            parent_themes_two: "%{name1} y %{name2}"
+            preview: "Vista previa"
+            check_update: "Buscar actualizaciones"
+            export: "Exportar"
+            convert: "Convertir"
+            delete: "Eliminar"
+            filter_by: "Filtrar por"
+            filter_by_all: "Todo"
+            filter_by_used: "Usado"
+            filter_by_unused: "No usado"
+            delete_confirm: '¿Seguro que quieres eliminar «%{name}»?'
+            badge_unused: "No usado"
         user_fields:
           field: "Campo"
           type: "Tipo"
@@ -5568,6 +5658,13 @@ es:
           delete: "Eliminar"
           delete_successful: "Campo de usuario eliminado."
           save_successful: "Campo de usuario guardado."
+        color_palettes:
+          palette_name: "Nombre"
+          color_options:
+            toggle: "Seleccionable por el usuario"
+            toggle_description: "Los usuarios pueden seleccionar la paleta de colores"
+          colors:
+            title: "Colores"
       plugins:
         title: "Plugins"
         name: "Nombre"
@@ -5909,7 +6006,6 @@ es:
           title: "Colores"
           edit: "Editar paletas de colores"
           long_title: "Paletas de colores"
-          description: "Las paletas de colores definen los colores básicos utilizados en la interfaz de tu sitio, mientras que los temas pueden proporcionar estilos, diseños y componentes adicionales: ambos pueden trabajar juntos para crear el aspecto único de tu sitio, y ambos pueden estar disponibles para que los usuarios seleccionen sus preferencias."
           about: "Modifica los colores utilizados en tus temas. Crea una nueva paleta de color para empezar."
           new_name: "Nueva paleta de colores"
           copy_name_prefix: "Copia de"

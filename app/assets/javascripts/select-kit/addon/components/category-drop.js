@@ -42,12 +42,14 @@ const MORE_COLLECTION = "MORE_COLLECTION";
   headerComponent: "category-drop/category-drop-header",
   parentCategory: false,
   allowUncategorized: "allowUncategorized",
+  shouldDisplayIcon: "shouldDisplayIcon",
 })
 @pluginApiIdentifiers(["category-drop"])
 export default class CategoryDrop extends ComboBoxComponent {
   @readOnly("category.id") value;
   @readOnly("categoriesWithShortcuts.[]") content;
   @readOnly("selectKit.options.parentCategory.displayName") parentCategoryName;
+  @readOnly("selectKit.options.shouldDisplayIcon") shouldDisplayIcon;
   @setting("allow_uncategorized_topics") allowUncategorized;
 
   noCategoriesLabel = i18n("categories.no_subcategories");

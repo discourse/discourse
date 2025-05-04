@@ -16,10 +16,12 @@ export default class Contents extends Component {
   @service currentUser;
   @service siteSettings;
   @service header;
-  @service sidebarState;
+  @service router;
+  @service navigationMenu;
+  @service search;
 
   get sidebarIcon() {
-    if (this.sidebarState.adminSidebarAllowedWithLegacyNavigationMenu) {
+    if (this.navigationMenu.isDesktopDropdownMode) {
       return "discourse-sidebar";
     }
 
@@ -39,12 +41,16 @@ export default class Contents extends Component {
   }
 
   get showHeaderSearch() {
-    if (this.site.mobileView) {
+    if (
+      this.site.mobileView ||
+      this.args.narrowDesktop ||
+      this.router.currentURL?.match(/\/(signup|login|invites|activate-account)/)
+    ) {
       return false;
     }
 
     return (
-      this.siteSettings.search_experience === "search_field" &&
+      this.search.searchExperience === "search_field" &&
       !this.args.topicInfoVisible
     );
   }

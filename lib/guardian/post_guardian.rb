@@ -53,7 +53,9 @@ module PostGuardian
     result =
       if authenticated? && post
         # Allow anonymous users to like if feature is enabled and short-circuit otherwise
-        return SiteSetting.allow_anonymous_likes? && (action_key == :like) if @user.anonymous?
+        if @user.anonymous?
+          return SiteSetting.allow_likes_in_anonymous_mode? && (action_key == :like)
+        end
 
         # Silenced users can't flag
         return false if is_flag && @user.silenced?
@@ -284,7 +286,7 @@ module PostGuardian
     # used when !authenticated?
     if authenticated? && is_anonymous?
       return(
-        ok_to_delete && SiteSetting.allow_anonymous_likes? && post_action.is_like? &&
+        ok_to_delete && SiteSetting.allow_likes_in_anonymous_mode? && post_action.is_like? &&
           is_my_own?(post_action)
       )
     end

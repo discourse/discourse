@@ -39,7 +39,11 @@ module Migrations::Converters::Base
       with_progressbar do |progressbar|
         @step.items.each do |item|
           stats = job.run(item)
-          progressbar.update(stats.progress, stats.warning_count, stats.error_count)
+          progressbar.update(
+            increment_by: stats.progress,
+            warning_count: stats.warning_count,
+            error_count: stats.error_count,
+          )
         end
       end
     end
@@ -90,7 +94,11 @@ module Migrations::Converters::Base
               ::Migrations::Database::IntermediateDB.insert(sql, *parameters)
             end
 
-            progressbar.update(stats.progress, stats.warning_count, stats.error_count)
+            progressbar.update(
+              increment_by: stats.progress,
+              warning_count: stats.warning_count,
+              error_count: stats.error_count,
+            )
           end
         end
       end

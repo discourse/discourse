@@ -1695,7 +1695,6 @@ ja:
     pending_users_reminder_delay_minutes: "モデレーターに新しいユーザーがこの時間以上承認待ちであることを通知します。-1 に設定すると、通知は無効になります。"
     persistent_sessions: "ユーザーはブラウザが閉じられてもログインのままになる"
     maximum_session_age: "ユーザーは最後の訪問から n 時間以内はログインしたままになる"
-    full_page_login: "ログインフォームと登録フォームをフルページで表示します (オフの場合、フォームはモーダルで表示されます)。"
     show_signup_form_email_instructions: 登録フォームにメールアドレスの指示を表示します。
     show_signup_form_username_instructions: 登録フォームにユーザー名の指示を表示します。
     show_signup_form_full_name_instructions: 登録フォームにフルネームの指示を表示します。
@@ -2149,8 +2148,7 @@ ja:
     enable_group_directory: "閲覧用のグループディレクトリを提供"
     enable_category_group_moderation: "グループが特定のカテゴリのコンテンツに介入することを許可する"
     group_in_subject: "メールの件名の %%{optional_pm} を PM の最初のグループの名前に設定する。「<a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>標準メールの件名のフォーマットをカスタマイズする</a>」をご覧ください。"
-    allow_anonymous_posting: "ユーザーが匿名モードに切り替えて投稿するオプションを有効にします。有効にすると、ユーザーはサイト全体で投稿またはトピックを作成する際に自分の ID を非表示することを選択できます。`allow anonymous likes` も参照してください。"
-    allow_anonymous_likes: "サイトを匿名で閲覧しているユーザーが投稿に「いいね！」できるようにするには、この設定を有効にします。有効にすると、ユーザーはサイト全体で投稿またはトピックに「いいね！」する際に、自分の ID を非表示することを選択できます。`allow_anonymous_posting` も参照してください。"
+    allow_anonymous_mode: "ユーザーが匿名モードに切り替えて投稿するオプションを有効にします。有効にすると、ユーザーはサイト全体で投稿またはトピックを作成する際に自分の ID を非表示することを選択できます。`allow anonymous likes` も参照してください。"
     anonymous_posting_min_trust_level: "匿名で投稿するために必要な最低信頼レベル"
     anonymous_posting_allowed_groups: "匿名投稿を有効にできるグループ"
     anonymous_account_duration_minutes: "匿名性を守るため、N 分毎に各ユーザーの匿名アカウントを作成しなおします。例 : 600 に設定すると、最終投稿から 600 分が経過し、さらにユーザーが匿名に切り替えると、新しい匿名アカウントが作成されます。"
@@ -2376,9 +2374,7 @@ ja:
     default_navigation_menu_categories: "選択されたカテゴリは、デフォルトでナビゲーションメニューのカテゴリセクションに表示されます。"
     default_navigation_menu_tags: "選択されたタグは、デフォルトでナビゲーションメニューのタグセクションに表示されます。"
     experimental_new_new_view_groups: '未読のトピックと新規トピックを合わせた新しいトピックリストを有効にし、サイドバーの「すべて」リンクをそのリストにリンクする。'
-    glimmer_topic_list_mode: "新しい 'glimmer' トピックリストの実装が使用されるかどうかを制御します。'auto' の場合、すべてのテーマとプラグインの準備が整うと自動的に有効になります。詳細は、<a href='https://meta.discourse.org/t/343404'>メタトピック</a>をご覧ください。"
-    glimmer_post_menu_mode: "新しい 'glimmer' 投稿メニューの実装が使用されるかどうかを制御する。'auto' はすべてのテーマとプラグインの準備ができると自動的に有効化します。この実装は活動的に開発中であり、本番環境での使用を意図したものではありません。実装が完成してリリースされるまで、これに対するテーマ/プラグインを開発しないでください。"
-    glimmer_post_menu_groups: "特定のユーザーグループに対し、新しい 'glimmer' 投稿リストの実装を 'auto' モードで有効にする。この実装は開発中であり、本番環境での使用を意図したものではありません。実装が完成してリリースされるまで、これに対するテーマ/プラグインを開発しないでください。"
+    glimmer_post_stream_mode_auto_groups: "特定のユーザーグループに対し、新しい 'glimmer' 投稿リストの実装を 'auto' モードで有効にする。この実装は開発中であり、本番環境での使用を意図したものではありません。実装が完成してリリースされるまで、これに対するテーマ/プラグインを開発しないでください。"
     experimental_form_templates: "フォームのテンプレート機能を有効にします。テンプレートは <a href='%{base_path}/admin/customize/form-templates'>Customize / Templates</a> で管理できます。"
     lazy_load_categories_groups: "これらのグループのユーザーに対してのみ、カテゴリ情報を遅延読み込みする。これにより、カテゴリ数の多いサイトのパフォーマンスが改善されます。"
     page_loading_indicator: "Discourse 内のページナビゲーション中に表示される読み込みインジケーターを構成します。「スピナー」はページ全体のインジケーターです。「スライダー」は画面上部に細いバーを表示します。"
@@ -4975,11 +4971,13 @@ ja:
         description: "通報に同意し、コンポーザーウィンドウを開いて投稿を編集します。"
       delete_single:
         title: "削除"
+        complete: "削除された投稿."
       delete:
         title: "削除…"
       delete_and_ignore:
         title: "通報を無視して投稿を削除する"
         description: "通報をキューから削除して通報を無視し、投稿を削除します。最初の投稿である場合は、トピックも削除します。 "
+        complete: "削除された投稿."
       delete_and_ignore_replies:
         title: "通報を無視し、投稿と返信を削除する"
         description: "通報をキューから削除して通報を無視し、投稿とそのすべての返信を削除します。最初の投稿である場合は、トピックも削除します。"
@@ -4987,6 +4985,7 @@ ja:
       delete_and_agree:
         title: "投稿を削除する"
         description: "通報に同意し、この投稿を削除します。最初の投稿である場合は、トピックも削除します。"
+        complete: "削除された投稿."
       delete_and_agree_replies:
         title: "投稿と返信を削除する"
         description: "通報に同意し、この投稿とそのすべての返信を削除します。最初の投稿である場合は、トピックも削除します。"
@@ -4996,29 +4995,37 @@ ja:
         description: "すべてのユーザーが閲覧できるように投稿を復元します。"
       disagree:
         title: "いいえ"
+        complete: "通報が無視されました."
       discard_post:
         title: "投稿を破棄"
       revise_and_reject_post:
         title: "投稿を修正..."
       ignore:
         title: "無視"
+        complete: "通報が無視されました."
       ignore_and_do_nothing:
         title: "何もしない"
         description: "何もアクションを起こさずにキューから通報を削除して、通報を無視します。非表示の投稿は非表示のままになり、自動ツールによって処理されます。"
+        complete: "通報が無視されました."
       approve:
         title: "承認"
+        complete: "投稿が承認されました."
       approve_post:
         title: "投稿の承認"
         confirm_closed: "このトピックはクローズされました。それでも投稿を作成しますか？"
+        complete: "投稿が承認されました."
       reject_post:
         title: "投稿の拒否"
+        complete: "投稿が拒否されました."
       approve_user:
         title: "ユーザーの承認"
+        complete: "ユーザーが承認されました."
       reject_user:
         title: "ユーザーを削除…"
         delete:
           title: "ユーザーの削除"
           description: "ユーザーはフォーラムから削除されます。"
+          complete: "削除されたユーザー."
         block:
           title: "ユーザーの削除とブロック"
           description: "ユーザーは削除され、その IP とメールアドレスはブロックされます。"
@@ -5037,6 +5044,7 @@ ja:
         title: "投稿の承認と復元"
       delete_user:
         reason: "レビューキューを介して削除されました"
+        complete: "削除されたユーザー."
   email_style:
     html_missing_placeholder: "html テンプレートには %{placeholder} が含まれている必要があります。"
   notification_level:

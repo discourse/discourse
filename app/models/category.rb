@@ -36,6 +36,7 @@ class Category < ActiveRecord::Base
   has_many :category_users
   has_many :category_featured_topics
   has_many :featured_topics, through: :category_featured_topics, source: :topic
+  has_many :category_localizations, dependent: :destroy
 
   has_many :category_groups, dependent: :destroy
   has_many :category_moderation_groups, dependent: :destroy
@@ -61,6 +62,7 @@ class Category < ActiveRecord::Base
   has_and_belongs_to_many :web_hooks
 
   accepts_nested_attributes_for :category_setting, update_only: true
+  accepts_nested_attributes_for :category_localizations, allow_destroy: true
 
   validates :user_id, presence: true
 
@@ -231,6 +233,8 @@ class Category < ActiveRecord::Base
 
   # Allows us to skip creating the category definition topic in tests.
   attr_accessor :skip_category_definition
+
+  enum :style_type, { square: 0, icon: 1, emoji: 2 }
 
   def self.preload_user_fields!(guardian, categories)
     category_ids = categories.map(&:id)
@@ -1381,6 +1385,9 @@ end
 #  default_slow_mode_seconds                 :integer
 #  uploaded_logo_dark_id                     :integer
 #  uploaded_background_dark_id               :integer
+#  style_type                                :integer          default("square"), not null
+#  emoji                                     :string
+#  icon                                      :string
 #
 # Indexes
 #

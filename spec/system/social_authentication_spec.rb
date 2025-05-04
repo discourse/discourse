@@ -173,7 +173,6 @@ shared_examples "social authentication scenarios" do |signup_page_object, login_
     end
 
     # These tests use Google, but they should be the same for all providers
-
     context "when opening the external auth from /login" do
       before { SiteSetting.enable_google_oauth2_logins = true }
       after { reset_omniauth_config(:google_oauth2) }
@@ -454,27 +453,13 @@ end
 describe "Social authentication", type: :system do
   before { SiteSetting.full_name_requirement = "optional_at_signup" }
 
-  context "when desktop" do
-    include_examples "social authentication scenarios",
-                     PageObjects::Modals::Signup.new,
-                     PageObjects::Modals::Login.new
-  end
-
-  context "when mobile", mobile: true do
-    include_examples "social authentication scenarios",
-                     PageObjects::Modals::Signup.new,
-                     PageObjects::Modals::Login.new
-  end
-
   context "when fullpage desktop" do
-    before { SiteSetting.full_page_login = true }
     include_examples "social authentication scenarios",
                      PageObjects::Pages::Signup.new,
                      PageObjects::Pages::Login.new
   end
 
   context "when fullpage mobile", mobile: true do
-    before { SiteSetting.full_page_login = true }
     include_examples "social authentication scenarios",
                      PageObjects::Pages::Signup.new,
                      PageObjects::Pages::Login.new

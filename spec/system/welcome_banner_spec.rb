@@ -46,9 +46,7 @@ describe "Welcome banner", type: :system do
       expect(banner).to be_visible
       expect(search_page).to have_no_search_field
 
-      # Trick to give a huge vertical space to scroll
-      page.execute_script("document.querySelector('.topic-list').style.height = '10000px'")
-      page.scroll_to(0, 1000)
+      fake_scroll_down_long
 
       expect(banner).to be_invisible
       expect(search_page).to have_search_field

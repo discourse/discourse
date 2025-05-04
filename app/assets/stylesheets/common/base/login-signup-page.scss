@@ -119,7 +119,7 @@ body.signup-page {
       width: 100%;
     }
 
-    input:focus {
+    input:not(.filter-input):focus {
       outline: none;
       border: 1px solid var(--tertiary);
       box-shadow: 0 0 0 2px rgba(var(--tertiary-rgb), 0.25);
@@ -153,12 +153,16 @@ body.signup-page {
     .user-field.text label.control-label,
     .user-field.dropdown label.control-label,
     .user-field.multiselect label.control-label {
-      z-index: 999;
       top: -8px;
       left: calc(1em - 0.25em);
       background-color: var(--secondary);
       padding: 0 0.25em 0 0.25em;
       font-size: $font-down-1;
+    }
+
+    .user-field.multiselect label.control-label,
+    .user-field.dropdown label.control-label {
+      z-index: z("dropdown") + 1;
     }
 
     .user-field.text label.control-label {
@@ -328,7 +332,8 @@ body.signup-page {
   }
 }
 
-// Signup page
+// Signup and invite page
+.invite-page,
 .signup-fullpage {
   .password-confirmation {
     display: none;

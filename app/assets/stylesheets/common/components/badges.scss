@@ -31,12 +31,32 @@
     color: var(--primary-high);
     min-width: 0;
 
-    &::before {
+    &.--style-square::before {
       content: "";
       background: var(--category-badge-color);
       flex: 0 0 auto;
       width: 0.625rem; // fixed dimensions (10px square)
       height: 0.625rem;
+    }
+
+    &.--style-emoji,
+    &.--style-icon {
+      display: flex;
+      align-items: center;
+
+      .d-icon,
+      .emoji {
+        width: 0.74em;
+        height: 0.74em;
+      }
+    }
+
+    &.--style-icon .d-icon {
+      color: var(--category-badge-color);
+    }
+
+    &.--style-icon .d-icon + .d-icon {
+      color: var(--primary-medium);
     }
 
     &__name {

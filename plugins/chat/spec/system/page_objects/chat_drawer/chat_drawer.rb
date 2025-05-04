@@ -174,7 +174,7 @@ module PageObjects
         # and that the message actions menu is closed.
         # This check is essential because the message actions menu might partially
         # overlap with the header, making certain buttons inaccessible.
-        PageObjects::Components::Logo.hover
+        PageObjects::Components::Logo.new.hover
       end
     end
   end

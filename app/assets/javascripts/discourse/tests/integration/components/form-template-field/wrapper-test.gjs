@@ -1,6 +1,7 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import Wrapper from "discourse/components/form-template-field/wrapper";
+import noop from "discourse/helpers/noop";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
@@ -13,7 +14,11 @@ module(
       const self = this;
 
       this.set("content", `- type: checkbox\n  attributes;invalid`);
-      await render(<template><Wrapper @content={{self.content}} /></template>);
+      await render(
+        <template>
+          <Wrapper @content={{self.content}} @onChange={{noop}} />
+        </template>
+      );
 
       assert
         .dom(".form-template-field")
@@ -40,7 +45,11 @@ module(
       ];
       this.set("content", content);
 
-      await render(<template><Wrapper @content={{self.content}} /></template>);
+      await render(
+        <template>
+          <Wrapper @content={{self.content}} @onChange={{noop}} />
+        </template>
+      );
 
       componentTypes.forEach((componentType) => {
         assert
@@ -72,6 +81,7 @@ module(
           <Wrapper
             @content={{self.content}}
             @initialValues={{self.initialValues}}
+            @onChange={{noop}}
           />
         </template>
       );
@@ -99,7 +109,9 @@ module(
 
       this.set("formTemplateId", [1]);
       await render(
-        <template><Wrapper @id={{self.formTemplateId}} /></template>
+        <template>
+          <Wrapper @id={{self.formTemplateId}} @onChange={{noop}} />
+        </template>
       );
 
       assert

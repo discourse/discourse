@@ -37,3 +37,7 @@
     text-align: left;
   }
 }
+
+.topic-timeline-notifications-tracking-content {
+  z-index: z("fullscreen") + 1;
+}

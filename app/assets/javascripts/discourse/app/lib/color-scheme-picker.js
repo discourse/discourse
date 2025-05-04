@@ -21,6 +21,9 @@ export function listColorSchemes(site, options = {}) {
       results.push({
         name: s.name,
         id: s.id,
+        theme_id: s.theme_id,
+        colors: s.colors,
+        is_dark: s.is_dark,
       });
     }
   });
@@ -35,6 +38,8 @@ export function listColorSchemes(site, options = {}) {
           name: `${defaultDarkColorScheme.name} ${i18n(
             "user.color_schemes.default_dark_scheme"
           )}`,
+          theme_id: defaultDarkColorScheme.theme_id,
+          colors: defaultDarkColorScheme.colors,
         });
       }
     }

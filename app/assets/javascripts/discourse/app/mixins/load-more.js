@@ -1,10 +1,12 @@
 import { on } from "@ember/object/evented";
 import Mixin from "@ember/object/mixin";
+import { service } from "@ember/service";
 import Eyeline from "discourse/lib/eyeline";
-import Scrolling from "discourse/mixins/scrolling";
 
 // Provides the ability to load more items for a view which is scrolled to the bottom.
-export default Mixin.create(Scrolling, {
+export default Mixin.create({
+  scrollManager: service(),
+
   scrolled() {
     return this.eyeline?.update();
   },
@@ -18,10 +20,10 @@ export default Mixin.create(Scrolling, {
     eyeline.on("sawBottom", () => this.send("loadMore"));
     eyeline.update(); // update once to consider current position
 
-    this.bindScrolling();
+    this.scrollManager.bindScrolling(this);
   }),
 
   _removeEyeline: on("willDestroyElement", function () {
-    this.unbindScrolling();
+    this.scrollManager.unbindScrolling(this);
   }),
 });

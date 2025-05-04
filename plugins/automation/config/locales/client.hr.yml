@@ -65,7 +65,10 @@ hr:
             restricted_categories:
               label: Kategorije
           created: Stvoreno
-          topics: Tema
+          with_images: Slike
+          with_links: Linkovi
+          with_code: Šifra
+          with_uploads: Prijenosi
         category_created_edited:
           fields:
             restricted_category:

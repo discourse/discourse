@@ -80,6 +80,7 @@ class Admin::EmailTemplatesController < Admin::AdminController
       test_mailer
       unsubscribe_mailer
       user_notifications.account_created
+      user_notifications.account_deleted
       user_notifications.account_exists
       user_notifications.account_second_factor_disabled
       user_notifications.account_silenced

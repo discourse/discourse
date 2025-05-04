@@ -106,9 +106,11 @@ export default class KeyboardShortcutsHelp extends Component {
           help: buildShortcut("application.help", { keys1: ["?"] }),
           bulk_select: buildShortcut("application.toggle_bulk_select", {
             keys1: [SHIFT, "b"],
+            keysDelimiter: PLUS,
           }),
           dismiss: buildShortcut("application.dismiss", {
             keys1: [SHIFT, "d"],
+            keysDelimiter: PLUS,
           }),
           x: buildShortcut("application.x", {
             keys1: ["x"],
@@ -269,24 +271,22 @@ export default class KeyboardShortcutsHelp extends Component {
       },
     };
 
-    if (this.currentUser?.use_experimental_admin_search) {
-      shortcuts.admin = {
-        shortcuts: {
-          admin_search_open: buildShortcut("admin.search_open", {
-            keys1: [META, "/"],
-            keysDelimiter: PLUS,
-          }),
-          admin_search_prev_next: buildShortcut("admin.search_prev_next", {
-            keys1: ["&uarr;"],
-            keys2: ["&darr;"],
-            shortcutsDelimiter: "slash",
-          }),
-          admin_search_full_page: buildShortcut("admin.search_full_page", {
-            keys1: ["Enter"],
-          }),
-        },
-      };
-    }
+    shortcuts.admin = {
+      shortcuts: {
+        admin_search_open: buildShortcut("admin.search_open", {
+          keys1: [META, "/"],
+          keysDelimiter: PLUS,
+        }),
+        admin_search_prev_next: buildShortcut("admin.search_prev_next", {
+          keys1: ["&uarr;"],
+          keys2: ["&darr;"],
+          shortcutsDelimiter: "slash",
+        }),
+        admin_search_full_page: buildShortcut("admin.search_full_page", {
+          keys1: ["Enter"],
+        }),
+      },
+    };
 
     this._buildExtraShortcuts(shortcuts);
     this._addCountsToShortcutCategories(shortcuts);

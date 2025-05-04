@@ -87,7 +87,7 @@ describe "Admin Customize Themes", type: :system do
       expect(theme_translations_settings_editor.get_input_value).to have_content("Hello World")
     end
 
-    xit "should allow admin to edit and save the theme translations from other languages" do
+    it "should allow admin to edit and save the theme translations from other languages" do
       theme.set_field(
         target: :translations,
         name: "en",
@@ -108,6 +108,8 @@ describe "Admin Customize Themes", type: :system do
 
       theme_translations_picker = PageObjects::Components::SelectKit.new(".translation-selector")
       theme_translations_picker.select_row_by_value("fr")
+
+      expect(page).to have_css(".translations")
 
       expect(theme_translations_settings_editor.get_input_value).to have_content("Bonjour!")
 
@@ -144,8 +146,10 @@ describe "Admin Customize Themes", type: :system do
     end
   end
 
+  # TODO(osama) unskip this test when the "Themes and components" link is
+  # changed to the new config customize page
   context "when visting a theme's page" do
-    it "has a link to the themes page" do
+    xit "has a link to the themes page" do
       visit("/admin/customize/themes/#{theme.id}")
       expect(admin_customize_themes_page).to have_back_button_to_themes_page
     end
@@ -154,7 +158,7 @@ describe "Admin Customize Themes", type: :system do
   context "when visting a component's page" do
     fab!(:component) { Fabricate(:theme, component: true, name: "Cool component 493") }
 
-    it "has a link to the components page" do
+    xit "has a link to the components page" do
       visit("/admin/customize/themes/#{component.id}")
       expect(admin_customize_themes_page).to have_back_button_to_components_page
     end

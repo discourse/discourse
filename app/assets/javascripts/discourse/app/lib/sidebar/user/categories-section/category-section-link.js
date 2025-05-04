@@ -186,7 +186,14 @@ export default class CategorySectionLink {
   }
 
   get prefixType() {
-    return customCategoryPrefixes[this.category.id]?.prefixType || "span";
+    const customPrefixType =
+      customCategoryPrefixes[this.category.id]?.prefixType;
+
+    if (customPrefixType) {
+      return customPrefixType;
+    }
+
+    return this.category.styleType;
   }
 
   get prefixValue() {
@@ -195,6 +202,16 @@ export default class CategorySectionLink {
 
     if (customPrefixValue) {
       return customPrefixValue;
+    }
+
+    const styleType = this.category.styleType;
+
+    if (styleType === "icon") {
+      return this.category.icon;
+    }
+
+    if (styleType === "emoji") {
+      return this.category.emoji;
     }
 
     if (this.category.parentCategory?.color) {

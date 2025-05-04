@@ -204,6 +204,10 @@ sl:
       dismiss: "Opusti"
     bootstrap_mode: "Začetki"
     back_button: "Nazaj"
+    welcome_banner:
+      header:
+        anonymous_members: "Dobrodošli na %{site_name}!"
+      search: "Išči"
     themes:
       default_description: "Privzeto"
       broken_theme_alert: "Vaše spletno mesto morda ne bo delovalo, ker ima tema/komponenta napake."
@@ -389,9 +393,6 @@ sl:
       remove_confirmation: "Ali ste prepričani da hočete izbrisati ta osnutek?"
       new_topic: "Nov osnutek teme"
       new_private_message: "Nov osnutek osebnega sporočila"
-      abandon:
-        yes_value: "Zavrzi"
-        no_value: "Nadaljujt urejanje"
     topic_count_all:
       one: "Poglej %{count} novo temo"
       two: "Poglej %{count} novi temi"
@@ -511,6 +512,10 @@ sl:
         name: "Polno ime"
         fields: "Polja"
         reject_reason: "Razlog"
+        scrubbed_reason: "Razlog"
+        scrub_record:
+          reason_placeholder: "Razlog..."
+          cancel_button: "Prekliči"
       topics:
         topic: "Tema"
         reviewable_count: "Število"
@@ -1858,10 +1863,6 @@ sl:
         name: "Google"
         title: "Prijavite se z Googlom"
         sr_title: "Prijavite se z Googlom"
-      twitter:
-        name: "Twitter"
-        title: "Prijavite se s Twitterjem"
-        sr_title: "Prijavite se s Twitterjem"
       instagram:
         name: "Instagram"
         title: "Prijavite se z Instagramom"
@@ -2963,6 +2964,10 @@ sl:
       general: "Splošno"
       settings: "Nastavitve"
       tags: "Oznake"
+      localization:
+        name: "Ime"
+        description: "Opis"
+        remove: "Odstrani"
       tags_allowed_tags: "Omeji te oznake na to kategorijo:"
       tags_allowed_tag_groups: "Omeji te skupine oznak na to kategorijo:"
       tags_placeholder: "(neobvezno) seznam dovoljenih oznak"
@@ -2984,9 +2989,13 @@ sl:
       description: "Opis"
       logo: "Logotip slika kategorije"
       background_image: "Slika ozadja kategorije"
-      badge_colors: "Barve značk"
-      background_color: "Barva ozadja"
-      foreground_color: "Barva ospredja"
+      background_color: "Barva"
+      styles:
+        icon: "Ikona"
+        emoji: "Emoji"
+        options:
+          icon: "Ikona"
+          emoji: "Emoji"
       name_placeholder: "Največ ena ali dve besede"
       color_placeholder: "Katerakoli spletna barva"
       delete_confirm: "Ste prepričani da želite izbrisati kategorijo?"
@@ -3640,7 +3649,6 @@ sl:
               content: "Pregled"
             invite:
               content: "Povabi"
-      filter: "Filter..."
     until: "Do:"
     form_templates:
       upload_field:
@@ -3694,6 +3702,14 @@ sl:
       spreadsheet:
         show: "Prikaži"
         about: "O nas"
+    discovery:
+      headings:
+        categories: "Vse kategorije"
+        filter_labels:
+          latest: "Najnovejše"
+          top: "Najboljše"
+          new: "Nova"
+          unread: "Neprebrane"
   admin_js:
     settings: "Nastavitve"
     admin:
@@ -3734,19 +3750,20 @@ sl:
           title: "Datoteke"
         legal:
           title: "Pravno"
-        branding:
+        logo_and_fonts:
           logo:
             form:
               mobile: "Mobilno"
               email: "E-naslov"
+          fonts:
+            backfill_modal:
+              modal_yes: "Ja"
         navigation:
           title: "Navigacija"
         notifications:
           title: "Obvestila"
         onebox:
           title: "Onebox"
-        other:
-          title: "Drugo"
         search_everything:
           title: "Išči"
         security:
@@ -3780,6 +3797,8 @@ sl:
           sub_pages:
             templates:
               title: "Predloge"
+        email_logs:
+          sub_pages:
             sent:
               title: "Poslano"
             received:
@@ -4017,6 +4036,36 @@ sl:
             failed: "Spodletelo"
       home:
         title: "Domov"
+      account:
+        title: "Račun"
+        sidebar_link:
+          backups: "Varnostne kopije"
+      community:
+        title: "Skupnost"
+        sidebar_link:
+          badges: "Značke"
+          notifications: "Obvestila"
+          permalinks: "Trajne povezave"
+          users: "Uporabniki"
+          groups: "Skupine"
+          legal: "Pravno"
+          moderation_flags:
+            title: "Moderiranje"
+      appearance:
+        title: "Videz"
+        sidebar_link:
+          emoji: "Emoji"
+          navigation: "Navigacija"
+      email_settings:
+        sidebar_link:
+          appearance: "Videz"
+      security:
+        title: "Varnost"
+      section_landing_pages:
+        account:
+          title: "Račun"
+          backups:
+            title: "Varnostne kopije"
       config_areas:
         about:
           company_name: "Ime"
@@ -4042,12 +4091,27 @@ sl:
         embeddable_host:
           edit: "Uredi"
           delete: "Izbriši"
-        look_and_feel:
+        themes_and_components:
+          breadcrumb_title: "Prilagodi"
           themes:
             title: "Videzi"
+          components:
+            name: "Ime"
+            enabled: "Vključeno?"
+            by_author: "Od %{name}"
+            learn_more: "Več o tem"
+            edit: "Uredi"
+            preview: "Predogled"
+            export: "Izvozi"
+            delete: "Izbriši"
+            filter_by_all: "Vse"
         user_fields:
           type: "Tip"
           delete: "Izbriši"
+        color_palettes:
+          palette_name: "Ime"
+          colors:
+            title: "Barve"
       plugins:
         title: "Vtičniki"
         name: "Ime"

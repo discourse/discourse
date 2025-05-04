@@ -168,15 +168,15 @@ en:
             restricted_archetype:
               label: Topic Type
               description: Optional, allow to trigger only on topics or personal messages
-            restricted_user_group:
-              label: Restricted user group
-              description: Optional, will trigger only if the post user is in this group
             restricted_groups:
+              label: Restricted groups
+              description: Optional, will trigger only if the post user is in any of these groups
+            restricted_inbox_groups:
               label: Restricted inboxes groups
               description: Optional, will trigger only if the post's topic is a personal message in one of the group inboxes
-            ignore_group_members:
-              label: Ignore group members
-              description: Skip the trigger if sender is a member of the Group specified above
+            excluded_groups:
+              label: Excluded groups
+              description: Optional, Skip the trigger if the post user belongs to any of these groups
             ignore_automated:
               label: Ignore automated
               description: Skip the trigger if the sender has a noreply email or is from an automated source. Only applies to posts created via email
@@ -189,10 +189,18 @@ en:
             skip_via_email:
               label: "Skip via email"
               description: "Skip the trigger if the post was created via email"
+            post_features:
+              label: Post features
+              description: "Optional, limit triggering to only posts with these features"
           created: Created
           edited: Edited
-          topics: Topics
+          topics: All Topics
           personal_messages: Personal Messages
+          public_topics: Public Topics (exclude all secure categories)
+          with_images: Images
+          with_links: Links
+          with_code: Code
+          with_uploads: Uploads
         user_updated:
           fields:
             user_profile:
@@ -418,6 +426,11 @@ en:
           name:
             label: Trigger
         automation:
+          runs_today: "%{count} today"
+          runs_this_week: "%{count} this week"
+          runs_this_month: "%{count} this month"
+          runs:
+            label: Runs
           name:
             label: Name
           trigger:
@@ -436,5 +449,7 @@ en:
             label: Placeholders
           last_updated_at:
             label: Last update
+          last_run:
+            label: Last run
           last_updated_by:
             label: Updated by

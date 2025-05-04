@@ -30,6 +30,8 @@ he:
           title: "קלטי תאריך/שעה"
         menus:
           title: "תפריטים"
+        multi_select:
+          title: "בחירה במרוכז"
         toasts:
           title: "חלוניות מידע"
         font_scale:

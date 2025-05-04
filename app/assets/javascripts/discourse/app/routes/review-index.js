@@ -55,7 +55,6 @@ export default class ReviewIndex extends DiscourseRoute {
   }
 
   activate() {
-    this.messageBus.subscribe("/reviewable_claimed", this._updateClaimedBy);
     this.messageBus.subscribe(
       this._reviewableCountsChannel,
       this._updateReviewables
@@ -63,26 +62,10 @@ export default class ReviewIndex extends DiscourseRoute {
   }
 
   deactivate() {
-    this.messageBus.unsubscribe("/reviewable_claimed", this._updateClaimedBy);
     this.messageBus.unsubscribe(
       this._reviewableCountsChannel,
       this._updateReviewables
     );
-  }
-
-  @bind
-  _updateClaimedBy(data) {
-    const reviewables = this.controller.reviewables;
-    if (reviewables) {
-      const user = data.user
-        ? this.store.createRecord("user", data.user)
-        : null;
-      reviewables.forEach((reviewable) => {
-        if (data.topic_id === reviewable.topic.id) {
-          reviewable.set("claimed_by", user);
-        }
-      });
-    }
   }
 
   @bind

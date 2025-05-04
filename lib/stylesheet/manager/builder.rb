@@ -48,11 +48,12 @@ class Stylesheet::Manager::Builder
           color_scheme_id: @color_scheme&.id,
           load_paths: load_paths,
           dark: @dark,
+          strict_deprecations: %i[desktop mobile admin wizard].include?(@target),
         )
       rescue SassC::SyntaxError, SassC::NotRenderedError, DiscourseJsProcessor::TranspileError => e
         if Stylesheet::Importer::THEME_TARGETS.include?(@target.to_s)
           # no special errors for theme, handled in theme editor
-          ["", nil]
+          ["/* SCSS compilation error: #{e.message} */", nil]
         elsif @target.to_s == Stylesheet::Manager::COLOR_SCHEME_STYLESHEET && Rails.env.production?
           # log error but do not crash for errors in color definitions SCSS
           Rails.logger.error "SCSS compilation error: #{e.message}"
@@ -176,7 +177,7 @@ class Stylesheet::Manager::Builder
   end
 
   def scss_digest
-    if %i[mobile_theme desktop_theme].include?(@target)
+    if %i[common_theme mobile_theme desktop_theme].include?(@target)
       resolve_baked_field(@target.to_s.sub("_theme", ""), :scss)
     elsif @target == :embedded_theme
       resolve_baked_field(:common, :embedded_scss)
@@ -274,13 +275,13 @@ class Stylesheet::Manager::Builder
     theme_ids = [theme_ids.first] if name != :color_definitions
 
     baked_fields = []
-    targets = [Theme.targets[target.to_sym], Theme.targets[:common]]
+    target_id = Theme.targets[target.to_sym]
 
     @manager
       .load_themes(theme_ids)
       .each do |theme|
         theme.builder_theme_fields.each do |theme_field|
-          if theme_field.name == name.to_s && targets.include?(theme_field.target_id)
+          if theme_field.name == name.to_s && theme_field.target_id == target_id
             baked_fields << theme_field
           end
         end

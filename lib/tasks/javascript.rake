@@ -69,16 +69,6 @@ def dependencies
     { source: "chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js", public: true },
     { source: "magnific-popup/dist/jquery.magnific-popup.min.js", public: true },
     { source: "pikaday/pikaday.js", public: true },
-    { source: "moment/moment.js" },
-    { source: "moment/locale/.", destination: "moment-locale" },
-    {
-      source: "moment-timezone/builds/moment-timezone-with-data-10-year-range.js",
-      destination: "moment-timezone-with-data.js",
-    },
-    {
-      source: "@discourse/moment-timezone-names-translations/locales/.",
-      destination: "moment-timezone-names-locale",
-    },
     {
       source: "squoosh/codecs/mozjpeg/enc/mozjpeg_enc.js",
       destination: "squoosh",
@@ -137,6 +127,30 @@ task "javascript:update_constants" => :environment do
       )
     end
 
+  MAIN_FONT_KEYS = %w[helvetica inter lato montserrat open_sans poppins roboto merriweather mukta]
+
+  write_template("admin/addon/lib/constants.js", task_name, <<~JS)
+    export const ADMIN_SEARCH_RESULT_TYPES = #{Admin::SearchController::RESULT_TYPES.to_json};
+
+    export const SITE_SETTING_REQUIRES_CONFIRMATION_TYPES = #{SiteSettings::TypeSupervisor::REQUIRES_CONFIRMATION_TYPES.to_json};
+
+    export const API_KEY_SCOPE_MODES = #{ApiKey.scope_modes.keys.to_json}
+
+    export const SYSTEM_FLAG_IDS = #{PostActionType.types.to_json};
+
+    export const REPORT_MODES = #{Report::MODES.to_json};
+
+    export const USER_FIELD_FLAGS = #{UserField::FLAG_ATTRIBUTES};
+
+    export const DEFAULT_USER_PREFERENCES = #{SiteSetting::DEFAULT_USER_PREFERENCES.to_json};
+
+    export const MAIN_FONTS = #{DiscourseFonts.fonts.filter { |font| MAIN_FONT_KEYS.include?(font[:key]) }.map { |font| { key: font[:key], name: font[:name] } }.to_json}
+
+    export const MORE_FONTS = #{DiscourseFonts.fonts.reject { |font| MAIN_FONT_KEYS.include?(font[:key]) }.map { |font| { key: font[:key], name: font[:name] } }.to_json}
+
+    export const DEFAULT_TEXT_SIZES = #{DefaultTextSizeSetting::DEFAULT_TEXT_SIZES}
+  JS
+
   write_template("discourse/app/lib/constants.js", task_name, <<~JS)
     export const SEARCH_PRIORITIES = #{Searchable::PRIORITIES.to_json};
 
@@ -152,23 +166,19 @@ task "javascript:update_constants" => :environment do
       max_title_length: #{SidebarSection::MAX_TITLE_LENGTH},
     }
 
+    export const CATEGORY_STYLE_TYPES = #{Category.style_types.to_json};
+
     export const AUTO_GROUPS = #{auto_groups.to_json};
 
     export const GROUP_SMTP_SSL_MODES = #{Group.smtp_ssl_modes.to_json};
+
+    export const MAX_AUTO_MEMBERSHIP_DOMAINS_LOOKUP = #{Admin::GroupsController::MAX_AUTO_MEMBERSHIP_DOMAINS_LOOKUP};
 
     export const MAX_NOTIFICATIONS_LIMIT_PARAMS = #{NotificationsController::INDEX_LIMIT};
 
     export const TOPIC_VISIBILITY_REASONS = #{Topic.visibility_reasons.to_json};
 
-    export const SYSTEM_FLAG_IDS = #{PostActionType.types.to_json};
-
-    export const SITE_SETTING_REQUIRES_CONFIRMATION_TYPES = #{SiteSettings::TypeSupervisor::REQUIRES_CONFIRMATION_TYPES.to_json};
-
     export const MAX_UNOPTIMIZED_CATEGORIES = #{CategoryList::MAX_UNOPTIMIZED_CATEGORIES};
-
-    export const USER_FIELD_FLAGS = #{UserField::FLAG_ATTRIBUTES};
-
-    export const REPORT_MODES = #{Report::MODES.to_json};
 
     export const REVIEWABLE_UNKNOWN_TYPE_SOURCE = "#{Reviewable::UNKNOWN_TYPE_SOURCE}";
 

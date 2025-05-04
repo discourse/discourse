@@ -188,7 +188,9 @@ describe "Thread list in side panel | full page", type: :system do
 
         restore_message!(thread_1.original_message, user: other_user)
 
-        expect(thread_list_page).to have_thread(thread_1)
+        try_until_success(timeout: Capybara.default_max_wait_time * 2) do
+          expect(thread_list_page).to have_thread(thread_1)
+        end
       end
     end
 

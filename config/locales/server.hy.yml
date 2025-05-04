@@ -2879,21 +2879,39 @@ hy:
         description: "Վերականգնել գրառումը, որպեսզի բոլոր օգտատերերը կարողանան տեսնել այն:"
       delete_single:
         title: "Ջնջել"
+        complete: "Գրառումը ջնջված է."
+      delete_and_ignore:
+        complete: "Գրառումը ջնջված է."
+      delete_and_agree:
+        complete: "Գրառումը ջնջված է."
       disagree_and_restore:
         description: "Վերականգնել գրառումը, որպեսզի բոլոր օգտատերերը կարողանան տեսնել այն:"
       disagree:
         title: "Ոչ"
+        complete: "Բողոքը անտեսվել է."
       ignore:
         title: "Անտեսել"
+        complete: "Բողոքը անտեսվել է."
       ignore_and_do_nothing:
         title: "Ոչինչ չանել"
+        complete: "Բողոքը անտեսվել է."
       approve:
         title: "Հաստատել"
+        complete: "Գրառումը հաստատվել է."
+      approve_post:
+        complete: "Գրառումը հաստատվել է."
+      reject_post:
+        complete: "Գրառումը մերժվել է."
+      approve_user:
+        complete: "Օգտատերը հաստատվել է."
       reject_user:
         delete:
           title: "Ջնջել Օգտատիրոջը"
+          complete: "Օգտատերը ջնջված է."
       reject:
         title: "Մերժել"
+      delete_user:
+        complete: "Օգտատերը ջնջված է."
   fallback_username: "օգտատեր"
   activemodel:
     errors:

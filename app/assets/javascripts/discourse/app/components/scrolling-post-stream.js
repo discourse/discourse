@@ -1,4 +1,4 @@
-import { schedule, scheduleOnce } from "@ember/runloop";
+import { next, schedule, scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
 import MountWidget from "discourse/components/mount-widget";
 import discourseDebounce from "discourse/lib/debounce";
@@ -33,6 +33,7 @@ function findTopView(posts, viewportTop, postsWrapperTop, min, max) {
 
 export default class ScrollingPostStream extends MountWidget {
   @service screenTrack;
+  @service site;
 
   widget = "post-stream";
   _topVisible = null;
@@ -46,6 +47,7 @@ export default class ScrollingPostStream extends MountWidget {
       "posts",
       "canCreatePost",
       "filteredPostsCount",
+      "filteringRepliesToPostNumber",
       "multiSelect",
       "gaps",
       "selectedQuery",
@@ -54,7 +56,8 @@ export default class ScrollingPostStream extends MountWidget {
       "showReadIndicator",
       "streamFilters",
       "lastReadPostNumber",
-      "highestPostNumber"
+      "highestPostNumber",
+      "topicPageQueryParams"
     );
   }
 
@@ -319,7 +322,12 @@ export default class ScrollingPostStream extends MountWidget {
     };
     document.addEventListener("touchmove", this._debouncedScroll, opts);
     window.addEventListener("scroll", this._debouncedScroll, opts);
-    this._scrollTriggered();
+
+    if (this.site.useGlimmerPostStream) {
+      next(() => this._scrollTriggered());
+    } else {
+      this._scrollTriggered();
+    }
 
     this.appEvents.on("post-stream:posted", this, "_posted");
 

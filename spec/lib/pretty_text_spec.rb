@@ -1814,7 +1814,7 @@ RSpec.describe PrettyText do
   it "produces hashtag links" do
     user = Fabricate(:user)
     category = Fabricate(:category, name: "testing", slug: "testing")
-    category2 = Fabricate(:category, name: "known", slug: "known")
+    category2 = Fabricate(:category, name: "known", slug: "known", style_type: "icon", icon: "book")
     group = Fabricate(:group)
     private_category = Fabricate(:private_category, name: "secret", group: group, slug: "secret")
     tag = Fabricate(:tag, name: "known")
@@ -1831,6 +1831,8 @@ RSpec.describe PrettyText do
         "data-type": "category",
         "data-slug": category2.slug,
         "data-id": category2.id,
+        "data-style-type": category2.style_type,
+        "data-icon": category2.icon,
       },
     ) do
       with_tag("span", with: { class: "hashtag-icon-placeholder" })

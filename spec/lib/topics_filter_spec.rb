@@ -1516,7 +1516,7 @@ RSpec.describe TopicsFilter do
           before_all do
             Plugin::Instance.new.add_filter_custom_filter(
               "order:bumped",
-              &->(scope, value) { scope.order("bumped_at #{value}") }
+              &->(scope, value, _guardian) { scope.order("bumped_at #{value}") }
             )
           end
 
@@ -1538,6 +1538,30 @@ RSpec.describe TopicsFilter do
             ).to eq([now_topic.id, earlier_topic.id])
           end
         end
+      end
+    end
+
+    describe "with a custom filter" do
+      fab!(:topic)
+
+      before do
+        Plugin::Instance.new.add_filter_custom_filter(
+          "foo",
+          &->(scope, value, guardian) { guardian.is_admin? ? scope : scope.where("1=0") }
+        )
+      end
+
+      it "can guard against the current user" do
+        expect(
+          TopicsFilter.new(guardian: Guardian.new).filter_from_query_string("foo:bar").pluck(:id),
+        ).to be_empty
+
+        expect(
+          TopicsFilter
+            .new(guardian: Guardian.new(admin))
+            .filter_from_query_string("foo:bar")
+            .pluck(:id),
+        ).to contain_exactly(topic.id)
       end
     end
   end

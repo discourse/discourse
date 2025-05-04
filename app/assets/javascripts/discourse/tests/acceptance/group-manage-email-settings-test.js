@@ -62,6 +62,11 @@ acceptance(
           success: "OK",
         });
       });
+      server.put("/admin/groups/automatic_membership_count.json", () => {
+        return helper.response({
+          user_count: 0,
+        });
+      });
     });
 
     test("enabling SMTP, testing, and saving", async function (assert) {

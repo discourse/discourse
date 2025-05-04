@@ -5,6 +5,7 @@ import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import Form from "discourse/components/form";
+import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
 import AdminConfigAreaCard from "admin/components/admin-config-area-card";
@@ -19,6 +20,8 @@ export default class AdminConfigAreasColorPalette extends Component {
   @tracked editingName = false;
   @tracked editorMode = LIGHT;
   @tracked hasUnsavedChanges = false;
+  @tracked saving = false;
+  hasChangedColors = false;
 
   @cached
   get data() {
@@ -40,6 +43,7 @@ export default class AdminConfigAreasColorPalette extends Component {
     const color = this.data.colors.find((c) => c.name === name);
     color.hex = value;
     this.hasUnsavedChanges = true;
+    this.hasChangedColors = true;
   }
 
   @action
@@ -47,10 +51,12 @@ export default class AdminConfigAreasColorPalette extends Component {
     const color = this.data.colors.find((c) => c.name === name);
     color.dark_hex = value;
     this.hasUnsavedChanges = true;
+    this.hasChangedColors = true;
   }
 
   @action
   async handleSubmit(data) {
+    this.saving = true;
     this.args.colorPalette.name = data.name;
     this.args.colorPalette.user_selectable = data.user_selectable;
 
@@ -63,6 +69,10 @@ export default class AdminConfigAreasColorPalette extends Component {
           message: i18n("saved"),
         },
       });
+      if (this.hasChangedColors) {
+        await this.applyColorChangesIfPossible();
+        this.hasChangedColors = false;
+      }
     } catch (error) {
       this.toasts.error({
         duration: 3000,
@@ -70,6 +80,8 @@ export default class AdminConfigAreasColorPalette extends Component {
           message: extractError(error),
         },
       });
+    } finally {
+      this.saving = false;
     }
   }
 
@@ -105,6 +117,47 @@ export default class AdminConfigAreasColorPalette extends Component {
   handleUserSelectableChange(value, { set }) {
     set("user_selectable", value);
     this.hasUnsavedChanges = true;
+  }
+
+  async applyColorChangesIfPossible() {
+    const id = this.args.colorPalette.id;
+
+    if (!id) {
+      return;
+    }
+
+    const tags = document.querySelectorAll(`link[data-scheme-id="${id}"]`);
+
+    if (tags.length === 0) {
+      return;
+    }
+
+    let darkTag;
+    let lightTag;
+    for (const tag of tags) {
+      if (tag.classList.contains("dark-scheme")) {
+        darkTag = tag;
+      } else if (tag.classList.contains("light-scheme")) {
+        lightTag = tag;
+      }
+    }
+
+    try {
+      const data = await ajax(`/color-scheme-stylesheet/${id}.json`, {
+        data: {
+          include_dark_scheme: !!darkTag,
+        },
+      });
+      if (data?.new_href && lightTag) {
+        lightTag.href = data.new_href;
+      }
+      if (data?.new_dark_href && darkTag) {
+        darkTag.href = data.new_dark_href;
+      }
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(`Failed to apply changes to color palette ${id}`, error);
+    }
   }
 
   <template>
@@ -154,12 +207,12 @@ export default class AdminConfigAreasColorPalette extends Component {
             />
           </div>
           <form.Alert class="fonts-and-logos-hint">
-            <div class="admin-config-color-palettes__fonts-and-logos-hint">
+            <div class="admin-config-color-palettes__logo-and-fonts-hint">
               <span>{{i18n
-                  "admin.config_areas.color_palettes.fonts_and_logos_hint"
+                  "admin.config_areas.color_palettes.logo_and_fonts_hint"
                 }}</span>
-              <LinkTo @route="adminConfig.branding">{{i18n
-                  "admin.config_areas.color_palettes.go_to_branding"
+              <LinkTo @route="adminConfig.logo-and-fonts">{{i18n
+                  "admin.config_areas.color_palettes.go_to_logo_and_fonts"
                 }}</LinkTo>
             </div>
           </form.Alert>
@@ -216,6 +269,7 @@ export default class AdminConfigAreasColorPalette extends Component {
                   </span>
                 {{/if}}
                 <form.Submit
+                  @isLoading={{this.saving}}
                   @label="admin.config_areas.color_palettes.save_changes"
                 />
               </div>

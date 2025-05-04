@@ -674,6 +674,11 @@ en:
       draft_channel_screen:
         header: "New Message"
         cancel: "Cancel"
+      quick_reaction_type:
+        title: "One-click chat reactions"
+        options:
+          frequent: "Most frequently used chat reactions"
+          custom: "Custom reactions"
     notifications:
       chat_invitation: "invited you to join a chat channel"
       chat_invitation_html: "<span>%{username}</span> <span>invited you to join a chat channel</span>"

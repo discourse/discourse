@@ -2019,8 +2019,13 @@ sl:
         description: "Povrni prispevek tako da ga lahko vidijo vsi uporabniki"
       delete_single:
         title: "Izbriši"
+        complete: "Prispevek izbrisan."
+      delete_and_ignore:
+        complete: "Prispevek izbrisan."
       delete_and_ignore_replies:
         confirm: "Ali ste prepričani, da hočete izbrisati tudi odgovore na prispevek?"
+      delete_and_agree:
+        complete: "Prispevek izbrisan."
       delete_and_agree_replies:
         confirm: "Ali ste prepričani, da hočete izbrisati tudi odgovore na prispevek?"
       disagree_and_restore:
@@ -2033,16 +2038,20 @@ sl:
         title: "Ne naredi nič"
       approve:
         title: "Odobri"
+        complete: "Objava odobrena."
       approve_post:
         title: "Odobri prispevek"
+        complete: "Objava odobrena."
       reject_post:
         title: "Zavrni prispevek"
+        complete: "Objava zavrnjena."
       approve_user:
         title: "Odobri uporabnika"
       reject_user:
         delete:
           title: "Izbriši uporabnika"
           description: "Ta uporabnik bo izbrisan iz foruma."
+          complete: "Uporabnik izbrisan."
         block:
           title: "Izbriši in blokiraj uporabnika"
           description: "Ta uporabnik bo izbrisan in njegov IP naslov in e-naslov bo blokiran."
@@ -2050,6 +2059,7 @@ sl:
         title: "Zavrni"
       delete_user:
         reason: "Izbriši preko vrste za pregled"
+        complete: "Uporabnik izbrisan."
   fallback_username: "uporabnik"
   activemodel:
     errors:

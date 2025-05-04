@@ -5,16 +5,12 @@ import Mixin from "@ember/object/mixin";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isNone } from "@ember/utils";
-import { Promise } from "rsvp";
 import JsonSchemaEditorModal from "discourse/components/modal/json-schema-editor";
-import { ajax } from "discourse/lib/ajax";
 import { fmt, propertyNotEqual } from "discourse/lib/computed";
-import { SITE_SETTING_REQUIRES_CONFIRMATION_TYPES } from "discourse/lib/constants";
 import { deepEqual } from "discourse/lib/object";
 import { humanizedSettingName } from "discourse/lib/site-settings-utils";
 import { splitString } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
-import SiteSettingDefaultCategoriesModal from "../components/modal/site-setting-default-categories";
 
 const CUSTOM_TYPES = [
   "bool",
@@ -42,56 +38,14 @@ const CUSTOM_TYPES = [
   "font_list",
 ];
 
-const AUTO_REFRESH_ON_SAVE = ["logo", "logo_small", "large_icon"];
-
-const DEFAULT_USER_PREFERENCES = [
-  "default_email_digest_frequency",
-  "default_include_tl0_in_digests",
-  "default_email_level",
-  "default_email_messages_level",
-  "default_email_mailing_list_mode",
-  "default_email_mailing_list_mode_frequency",
-  "default_email_previous_replies",
-  "default_email_in_reply_to",
-  "default_hide_profile",
-  "default_hide_presence",
-  "default_other_new_topic_duration_minutes",
-  "default_other_auto_track_topics_after_msecs",
-  "default_other_notification_level_when_replying",
-  "default_other_external_links_in_new_tab",
-  "default_other_enable_quoting",
-  "default_other_enable_smart_lists",
-  "default_other_enable_defer",
-  "default_other_dynamic_favicon",
-  "default_other_like_notification_frequency",
-  "default_other_skip_new_user_tips",
-  "default_topics_automatic_unpin",
-  "default_categories_watching",
-  "default_categories_tracking",
-  "default_categories_muted",
-  "default_categories_watching_first_post",
-  "default_categories_normal",
-  "default_tags_watching",
-  "default_tags_tracking",
-  "default_tags_muted",
-  "default_tags_watching_first_post",
-  "default_text_size",
-  "default_title_count_mode",
-  "default_navigation_menu_categories",
-  "default_navigation_menu_tags",
-  "default_sidebar_link_to_filtered_list",
-  "default_sidebar_show_count_of_new_items",
-];
-
 export default Mixin.create({
   modal: service(),
   router: service(),
   site: service(),
   dialog: service(),
+  siteSettingChangeTracker: service(),
   attributeBindings: ["setting.setting:data-setting"],
   classNameBindings: [":row", ":setting", "overridden", "typeClass"],
-  validationMessage: null,
-  setting: null,
 
   content: alias("setting"),
   isSecret: oneWay("setting.secret"),
@@ -113,7 +67,7 @@ export default Mixin.create({
   }),
 
   dirty: computed("buffered.value", "setting.value", function () {
-    let bufferVal = this.get("buffered.value");
+    let bufferVal = this.buffered.get("value");
     let settingVal = this.setting?.value;
 
     if (isNone(bufferVal)) {
@@ -124,12 +78,20 @@ export default Mixin.create({
       settingVal = "";
     }
 
-    return !deepEqual(bufferVal, settingVal);
+    const dirty = !deepEqual(bufferVal, settingVal);
+
+    if (dirty) {
+      this.siteSettingChangeTracker.add(this.setting);
+    } else {
+      this.siteSettingChangeTracker.remove(this.setting);
+    }
+
+    return dirty;
   }),
 
   preview: computed("setting", "buffered.value", function () {
     const setting = this.setting;
-    const value = this.get("buffered.value");
+    const value = this.buffered.get("value");
     const preview = setting.preview;
     if (preview) {
       const escapedValue = preview.replace(/\{\{value\}\}/g, value);
@@ -166,7 +128,7 @@ export default Mixin.create({
   }),
 
   bufferedValues: computed("buffered.value", function () {
-    const value = this.get("buffered.value");
+    const value = this.buffered.get("value");
     return splitString(value, "|");
   }),
 
@@ -217,102 +179,41 @@ export default Mixin.create({
     }
   }),
 
-  disableSaveButton: computed("validationMessage", function () {
-    return !!this.validationMessage;
+  disableControls: computed("setting.isSaving", function () {
+    return !!this.setting.isSaving;
   }),
-
-  confirmChanges(settingKey) {
-    return new Promise((resolve) => {
-      // Fallback is needed in case the setting does not have a custom confirmation
-      // prompt/confirm defined.
-      this.dialog.alert({
-        message: i18n(
-          `admin.site_settings.requires_confirmation_messages.${settingKey}.prompt`,
-          {
-            translatedFallback: i18n(
-              "admin.site_settings.requires_confirmation_messages.default.prompt"
-            ),
-          }
-        ),
-        buttons: [
-          {
-            label: i18n(
-              `admin.site_settings.requires_confirmation_messages.${settingKey}.confirm`,
-              {
-                translatedFallback: i18n(
-                  "admin.site_settings.requires_confirmation_messages.default.confirm"
-                ),
-              }
-            ),
-            class: "btn-primary",
-            action: () => resolve(true),
-          },
-          {
-            label: i18n("no_value"),
-            class: "btn-default",
-            action: () => resolve(false),
-          },
-        ],
-      });
-    });
-  },
 
   update: action(async function () {
-    const key = this.buffered.get("setting");
+    if (this.setting.requiresConfirmation) {
+      const confirm = await this.siteSettingChangeTracker.confirmChanges(
+        this.setting
+      );
 
-    let confirm = true;
-    if (
-      this.buffered.get("requires_confirmation") ===
-      SITE_SETTING_REQUIRES_CONFIRMATION_TYPES.simple
-    ) {
-      confirm = await this.confirmChanges(key);
+      if (!confirm) {
+        return;
+      }
     }
 
-    if (!confirm) {
-      this.cancel();
-      return;
+    if (this.setting.affectsExistingUsers) {
+      await this.siteSettingChangeTracker.configureBackfill(this.setting);
     }
 
-    if (!DEFAULT_USER_PREFERENCES.includes(key)) {
-      await this.save();
-      return;
-    }
-
-    const data = {
-      [key]: this.buffered.get("value"),
-    };
-
-    const result = await ajax(`/admin/site_settings/${key}/user_count.json`, {
-      type: "PUT",
-      data,
-    });
-
-    const count = result.user_count;
-    if (count > 0) {
-      await this.modal.show(SiteSettingDefaultCategoriesModal, {
-        model: {
-          siteSetting: { count, key: key.replaceAll("_", " ") },
-          setUpdateExistingUsers: this.setUpdateExistingUsers,
-        },
-      });
-      this.save();
-    } else {
-      await this.save();
-    }
-  }),
-
-  setUpdateExistingUsers: action(function (value) {
-    this.updateExistingUsers = value;
+    await this.save();
   }),
 
   save: action(async function () {
     try {
+      this.setting.isSaving = true;
+
       await this._save();
 
-      this.set("validationMessage", null);
-      this.commitBuffer();
-      if (AUTO_REFRESH_ON_SAVE.includes(this.setting.setting)) {
-        this.afterSave();
+      this.setting.validationMessage = null;
+      this.buffered.applyChanges();
+
+      if (this.setting.requiresReload) {
+        this.siteSettingChangeTracker.refreshPage({
+          [this.setting.setting]: this.setting.value,
+        });
       }
     } catch (e) {
       const json = e.jqXHR?.responseJSON;
@@ -323,29 +224,31 @@ export default Mixin.create({
           errorString = htmlSafe(errorString);
         }
 
-        this.set("validationMessage", errorString);
+        this.setting.validationMessage = errorString;
       } else {
-        this.set("validationMessage", i18n("generic_error"));
+        this.setting.validationMessage = i18n("generic_error");
       }
+    } finally {
+      this.setting.isSaving = false;
     }
   }),
 
   changeValueCallback: action(function (value) {
-    this.set("buffered.value", value);
+    this.buffered.set("value", value);
   }),
 
   setValidationMessage: action(function (message) {
-    this.set("validationMessage", message);
+    this.setting.validationMessage = message;
   }),
 
   cancel: action(function () {
-    this.rollbackBuffer();
-    this.set("validationMessage", null);
+    this.buffered.discardChanges();
+    this.setting.validationMessage = null;
   }),
 
   resetDefault: action(function () {
-    this.set("buffered.value", this.setting.default);
-    this.set("validationMessage", null);
+    this.buffered.set("value", this.setting.default);
+    this.setting.validationMessage = null;
   }),
 
   toggleSecret: action(function () {
@@ -353,11 +256,11 @@ export default Mixin.create({
   }),
 
   setDefaultValues: action(function () {
-    this.set(
-      "buffered.value",
+    this.buffered.set(
+      "value",
       this.bufferedValues.concat(this.defaultValues).uniq().join("|")
     );
-    this.set("validationMessage", null);
+    this.setting.validationMessage = null;
     return false;
   }),
 

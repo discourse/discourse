@@ -80,6 +80,15 @@ export function generatePlaceholderHashtagHTML(type, spanEl, data) {
   link.dataset.type = type;
   link.dataset.id = data.id;
   link.dataset.slug = data.slug;
+  link.dataset.style_type = data.style_type;
+
+  if (data.style_type === "icon") {
+    link.dataset.icon = data.icon;
+  }
+  if (data.style_type === "emoji") {
+    link.dataset.emoji = data.emoji;
+  }
+
   const hashtagTypeClass = new getHashtagTypeClasses()[type];
   link.innerHTML = `${hashtagTypeClass.generateIconHTML(
     data
@@ -96,13 +105,21 @@ export function decorateHashtags(element, site) {
     const hashtagType = hashtagEl.dataset.type;
     const hashtagTypeClass = getHashtagTypeClasses()[hashtagType];
     if (iconPlaceholderEl && hashtagTypeClass) {
-      const hashtagIconHTML = hashtagTypeClass
-        .generateIconHTML({
-          icon: site.hashtag_icons[hashtagType],
-          id: hashtagEl.dataset.id,
-          slug: hashtagEl.dataset.slug,
-        })
-        .trim();
+      let opts = {
+        icon: site.hashtag_icons[hashtagType],
+        id: hashtagEl.dataset.id,
+        slug: hashtagEl.dataset.slug,
+        style_type: hashtagEl.dataset.styleType || "square",
+      };
+
+      if (opts.style_type === "icon") {
+        opts.icon = hashtagEl.dataset.icon;
+      }
+      if (opts.style_type === "emoji") {
+        opts.emoji = hashtagEl.dataset.emoji;
+      }
+
+      const hashtagIconHTML = hashtagTypeClass.generateIconHTML(opts).trim();
       iconPlaceholderEl.replaceWith(domFromString(hashtagIconHTML)[0]);
     }
 

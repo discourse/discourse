@@ -15,7 +15,6 @@ import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import number from "discourse/helpers/number";
 import { reportModeComponent } from "discourse/lib/admin-report-additional-modes";
-import { REPORT_MODES } from "discourse/lib/constants";
 import { bind } from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
 import { exportEntity } from "discourse/lib/export-csv";
@@ -35,6 +34,7 @@ import ReportFilterBoolComponent from "admin/components/report-filters/bool";
 import ReportFilterCategoryComponent from "admin/components/report-filters/category";
 import ReportFilterGroupComponent from "admin/components/report-filters/group";
 import ReportFilterListComponent from "admin/components/report-filters/list";
+import { REPORT_MODES } from "admin/lib/constants";
 import Report, { DAILY_LIMIT_DAYS, SCHEMA_VERSION } from "admin/models/report";
 import DTooltip from "float-kit/components/d-tooltip";
 

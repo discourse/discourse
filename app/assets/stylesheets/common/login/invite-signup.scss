@@ -1,6 +1,13 @@
+@use "lib/viewport";
+
 .invites-show {
-  padding: 2rem 3rem;
+  box-sizing: border-box;
   background: var(--secondary);
+  padding: 1em;
+
+  @include viewport.from(sm) {
+    padding: 2rem 3rem;
+  }
 
   .success-info p:last-child {
     margin-bottom: 0;
@@ -46,6 +53,12 @@
     align-items: center;
     gap: 1rem;
     margin-top: 1rem;
+
+    @include viewport.until(sm) {
+      flex-direction: column;
+      align-items: flex-start;
+      margin-top: 2rem;
+    }
   }
 
   .instructions {
@@ -69,6 +82,12 @@
       }
     }
   }
+
+  @include viewport.until(sm) {
+    .signup-progress-bar {
+      margin: 0;
+    }
+  }
 }
 
 .invite-page {
@@ -82,7 +101,7 @@
   background: var(--secondary);
   margin: 0 auto;
 
-  @media screen and (max-width: 700px) {
+  @include viewport.until(md) {
     margin: 1em auto 1em auto;
     padding: 1rem;
   }

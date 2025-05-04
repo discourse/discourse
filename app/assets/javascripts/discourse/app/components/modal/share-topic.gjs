@@ -14,13 +14,10 @@ import discourseComputed, { afterRender } from "discourse/lib/decorators";
 import { longDateNoYear } from "discourse/lib/formatter";
 import { getAbsoluteURL } from "discourse/lib/get-url";
 import Sharing from "discourse/lib/sharing";
-import { bufferedProperty } from "discourse/mixins/buffered-content";
 import Category from "discourse/models/category";
 import { i18n } from "discourse-i18n";
 
-export default class ShareTopicModal extends Component.extend(
-  bufferedProperty("invite")
-) {
+export default class ShareTopicModal extends Component {
   @service modal;
 
   @readOnly("model.topic") topic;

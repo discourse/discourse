@@ -288,22 +288,27 @@ module("Integration | Component | FormKit | Field", function (hooks) {
   test("@onSet", async function (assert) {
     const onSetWasCalled = assert.async();
 
-    const onSet = async (value, { set }) => {
-      assert.form().field("foo").hasValue("bar");
+    const onSet = async (value, { name, parentName, set }) => {
+      assert.deepEqual(name, "something.foo");
+      assert.deepEqual(parentName, "something");
 
-      await set("foo", "baz");
+      assert.form().field("something.foo").hasValue("bar");
+
+      await set("something.foo", "baz");
       await settled();
 
-      assert.form().field("foo").hasValue("baz");
+      assert.form().field("something.foo").hasValue("baz");
       onSetWasCalled();
     };
 
     await render(
       <template>
-        <Form as |form|>
-          <form.Field @name="foo" @title="Foo" @onSet={{onSet}} as |field|>
-            <field.Input />
-          </form.Field>
+        <Form @data={{hash something=(hash foo=1)}} as |form|>
+          <form.Object @name="something" as |object|>
+            <object.Field @name="foo" @title="Foo" @onSet={{onSet}} as |field|>
+              <field.Input />
+            </object.Field>
+          </form.Object>
         </Form>
       </template>
     );

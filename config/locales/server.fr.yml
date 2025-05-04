@@ -1772,7 +1772,6 @@ fr:
     pending_users_reminder_delay_minutes: "Avertir les modérateurs si des nouveaux utilisateurs sont en attente d'approbation depuis ce nombre de minutes. Mettre -1 pour désactiver les notifications."
     persistent_sessions: "Les utilisateurs resteront connectés lorsque le navigateur Web sera fermé"
     maximum_session_age: "L'utilisateur restera connecté pour n heures après la dernière visite"
-    full_page_login: "Affichez les formulaires de connexion et d'inscription sur une page complète (lorsque cette case n'est pas cochée, les utilisateurs verront les formulaires dans un mode modal). "
     show_signup_form_email_instructions: Affichez les instructions relatives à l'adresse e-mail sur le formulaire d'inscription.
     show_signup_form_username_instructions: Affichez les instructions relatives au nom d'utilisateur sur le formulaire d'inscription.
     show_signup_form_full_name_instructions: Affichez les instructions relatives au nom complet sur le formulaire d'inscription.
@@ -2228,8 +2227,7 @@ fr:
     enable_group_directory: "Activer l'annuaire des groupes"
     enable_category_group_moderation: "Autoriser les groupes à modérer le contenu dans des catégories spécifiques"
     group_in_subject: "Mettre %%{optional_pm} dans le sujet de l'e-mail au nom du premier groupe du message direct. Voir : <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>personnaliser le format du sujet des e-mails ordinaires</a>"
-    allow_anonymous_posting: "Activez l'option permettant aux utilisateurs de passer en mode anonyme pour publier. Lorsque cette option est activée, les utilisateurs peuvent choisir de masquer leur identité lors de la création de publications ou de sujets sur le site. Voir aussi « allow_anonymous_likes »."
-    allow_anonymous_likes: "Activez ce paramètre pour permettre aux utilisateurs qui naviguent sur votre site de manière anonyme d'ajouter des mentions J'aime aux publications. Lorsque cette option est activée, les utilisateurs peuvent choisir de masquer leur identité lorsqu'ils ajoutent une mention J'aime aux publications ou aux sujets du site. Voir aussi allow_anonymous_posting."
+    allow_anonymous_mode: "Activez l'option permettant aux utilisateurs de passer en mode anonyme pour publier. Lorsque cette option est activée, les utilisateurs peuvent choisir de masquer leur identité lors de la création de publications ou de sujets sur le site. Voir aussi « allow_anonymous_likes »."
     anonymous_posting_min_trust_level: "Le niveau de confiance minimal pour passer en mode anonyme."
     anonymous_posting_allowed_groups: "Groupes autorisés à activer la publication anonyme"
     anonymous_account_duration_minutes: "Pour protéger l'anonymat, créer un nouveau compte anonyme toutes les N minutes pour chaque utilisateur. Exemple : si la valeur 600 est choisie, lorsque 600 minutes seront passées après le dernier message ET que l'utilisateur passera en mode anonyme, un nouveau compte anonyme lui sera créé."
@@ -2455,9 +2453,7 @@ fr:
     default_navigation_menu_categories: "Les catégories sélectionnées seront affichées par défaut dans la section Catégories du menu de navigation."
     default_navigation_menu_tags: "Les étiquettes sélectionnées seront affichées par défaut dans la section Étiquettes du menu de navigation."
     experimental_new_new_view_groups: 'Activez une nouvelle liste de sujets qui combine les sujets non lus et nouveaux, et faites en sorte que le lien « Tout » dans la barre latérale renvoie vers celle-ci.'
-    glimmer_topic_list_mode: "Contrôlez si la nouvelle implémentation « Glimmer » de la liste de sujets est utilisée. L'option « auto » s'activera automatiquement une fois que tous vos thèmes et extensions seront prêtes. Consultez la <a href='https://meta.discourse.org/t/343404'>méta-rubrique</a> pour obtenir plus d'informations."
-    glimmer_post_menu_mode: "Contrôlez si la nouvelle implémentation du menu de publication « glimmer » est utilisée. « auto » s'activera automatiquement une fois que tous vos thèmes et extensions seront prêts. Cette implémentation est en cours de développement et n'est pas destinée à une utilisation en production. Ne développez pas de thèmes/extensions pour cette implémentation avant qu'elle soit finalisée et annoncée."
-    glimmer_post_menu_groups: "Activez la nouvelle implémentation du menu de publication « glimmer » en mode « auto » pour les groupes d'utilisateurs spécifiés. Cette implémentation est en cours de développement et n'est pas destinée à une utilisation en production. Ne développez pas de thèmes/extensions pour cette implémentation avant qu'elle soit finalisée et annoncée."
+    glimmer_post_stream_mode_auto_groups: "Activez la nouvelle implémentation du menu de publication « glimmer » en mode « auto » pour les groupes d'utilisateurs spécifiés. Cette implémentation est en cours de développement et n'est pas destinée à une utilisation en production. Ne développez pas de thèmes/extensions pour cette implémentation avant qu'elle soit finalisée et annoncée."
     experimental_form_templates: "Activez la fonctionnalité de modèles de formulaire. Gérez les modèles dans <a href='%{base_path}/admin/customize/form-templates'>Personnaliser/modèles</a>."
     lazy_load_categories_groups: "Chargez en différé les informations de catégorie uniquement pour les utilisateurs de ces groupes. Cela permet d'améliorer les performances sur les sites comportant de nombreuses catégories."
     page_loading_indicator: "Configurer l'indicateur de chargement qui apparaît lors de la navigation dans Discourse. « Spinner » est un indicateur de pleine page. Le « curseur » affiche une barre étroite en haut de l'écran."
@@ -5121,11 +5117,13 @@ fr:
         description: "Acceptez le signalement et ouvrez une fenêtre de composition pour modifier le message."
       delete_single:
         title: "Supprimer"
+        complete: "Message supprimé."
       delete:
         title: "Supprimer…"
       delete_and_ignore:
         title: "Ignorer le signalement et supprimer le message"
         description: "Ignorez le signalement en le retirant de la file d'attente et supprimez le message. S'il s'agit du premier message, vous supprimerez également le sujet. "
+        complete: "Message supprimé."
       delete_and_ignore_replies:
         title: "Ignorer le signalement, supprimer le message et les réponses"
         description: "Ignorez le signalement en le supprimant de la file d'attente, et supprimez le message et toutes ses réponses. S'il s'agit du premier message, vous supprimerez également le sujet"
@@ -5133,6 +5131,7 @@ fr:
       delete_and_agree:
         title: "Supprimer le message"
         description: "Accepter le signalement et supprimer ce message. S'il s'agit du premier message, vous supprimerez également le sujet."
+        complete: "Message supprimé."
       delete_and_agree_replies:
         title: "Supprimer le message et les réponses"
         description: "Acceptez le signalement et supprimez ce message et toutes ses réponses. S'il s'agit du premier message, vous supprimerez également le sujet."
@@ -5142,29 +5141,37 @@ fr:
         description: "Rétablir le message afin que tous les utilisateurs puissent le voir."
       disagree:
         title: "Non"
+        complete: "Signalement ignoré."
       discard_post:
         title: "Supprimer le message"
       revise_and_reject_post:
         title: "Réviser le message..."
       ignore:
         title: "Ignorer"
+        complete: "Signalement ignoré."
       ignore_and_do_nothing:
         title: "Ne rien faire"
         description: "Ignorez le signalement en le retirant de la file d'attente sans effectuer aucune action. Les messages masqués resteront masqués et seront gérés par les outils automatiques."
+        complete: "Signalement ignoré."
       approve:
         title: "Approuver"
+        complete: "Message approuvé."
       approve_post:
         title: "Approuver le message"
         confirm_closed: "Ce sujet est fermé. Voulez-vous quand même créer le message ?"
+        complete: "Message approuvé."
       reject_post:
         title: "Rejeter le message"
+        complete: "Message refusé."
       approve_user:
         title: "Approuver l'utilisateur"
+        complete: "Utilisateur approuvé."
       reject_user:
         title: "Supprimer l'utilisateur…"
         delete:
           title: "Supprimer l'utilisateur"
           description: "L'utilisateur sera supprimé du forum."
+          complete: "Utilisateur supprimé."
         block:
           title: "Supprimer et bloquer l'utilisateur"
           description: "L'utilisateur sera supprimé et nous bloquerons ses adresses e-mail et IP."
@@ -5183,6 +5190,7 @@ fr:
         title: "Autoriser et restaurer ce message"
       delete_user:
         reason: "Supprimé via la file des messages en attente d'examen"
+        complete: "Utilisateur supprimé."
   email_style:
     html_missing_placeholder: "Le modèle HTML doit inclure %{placeholder}"
   notification_level:

@@ -64,6 +64,15 @@ module PageObjects
         def toggle_section(name)
           find("[data-section-name='admin-#{name.to_s.downcase}']").click
         end
+
+        def click_back_to_forum
+          page.find(".sidebar-sections__back-to-forum").click
+          self
+        end
+
+        def click_search_input
+          page.find(".sidebar-search__input").click
+        end
       end
     end
   end

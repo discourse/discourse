@@ -14,13 +14,18 @@
     "start": "ember serve"
   },
   "dependencies": {
-    "@babel/core": "^7.26.10",
+    "@babel/core": "^7.27.1",
+    "@ember-decorators/component": "*",
     "@ember/string": "^4.0.1",
+    "@popperjs/core": "^2.11.8",
     "discourse-i18n": "workspace:1.0.0",
     "ember-auto-import": "^2.10.0",
+    "ember-cached-decorator-polyfill": "^1.0.2",
     "ember-cli-babel": "^8.2.0",
     "ember-cli-htmlbars": "^6.3.0",
-    "ember-template-imports": "^4.3.0"
+    "ember-decorators": "^6.1.1",
+    "ember-template-imports": "^4.3.0",
+    "truth-helpers": "workspace:*"
   },
   "devDependencies": {
     "@ember/optional-features": "^2.2.0",
@@ -30,7 +35,7 @@
     "@types/qunit": "^2.19.12",
     "@types/rsvp": "^4.0.9",
     "broccoli-asset-rev": "^3.0.0",
-    "ember-cli": "~6.2.3",
+    "ember-cli": "~6.3.1",
     "ember-cli-inject-live-reload": "^2.1.0",
     "ember-cli-sri": "^2.1.1",
     "ember-cli-terser": "^4.0.2",
@@ -40,7 +45,7 @@
     "ember-source": "~5.12.0",
     "ember-source-channel-url": "^3.0.0",
     "loader.js": "^4.7.0",
-    "webpack": "^5.98.0"
+    "webpack": "^5.99.7"
   },
   "engines": {
     "node": ">= 18",

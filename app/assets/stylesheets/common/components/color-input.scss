@@ -5,7 +5,7 @@
   .add-on {
     @include form-item-sizing;
     background-color: var(--primary-low);
-    border-color: var(--primary-medium);
+    border-color: var(--primary-low-mid);
     border-right-color: transparent;
     padding-left: 0.5em;
     padding-right: 0.5em;

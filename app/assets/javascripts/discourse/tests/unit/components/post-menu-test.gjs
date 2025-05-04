@@ -9,7 +9,6 @@ module("Unit | Component | post-menu", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
-    this.siteSettings.glimmer_post_menu_mode = "enabled";
     this.siteSettings.post_menu =
       "read|like|copyLink|share|flag|edit|bookmark|delete|admin|reply";
     this.siteSettings.post_menu_hidden_items = "";

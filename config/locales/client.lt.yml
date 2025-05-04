@@ -208,6 +208,10 @@ lt:
       dismiss: "Praleisti"
     bootstrap_mode: "Darbo pradžia"
     back_button: "Atgal"
+    welcome_banner:
+      header:
+        anonymous_members: "Sveiki atvykę į %{site_name}!"
+      search: "Paieška"
     themes:
       default_description: "Numatytasis"
       broken_theme_alert: "Jūsų svetainė gali neveikti, nes temoje / komponente yra klaidų."
@@ -398,9 +402,6 @@ lt:
       remove_confirmation: "Ar tikrai norite ištrinti šį juodraštį?"
       new_topic: "Naujos temos juodraštis"
       new_private_message: "Naujas asmeninės žinutės juodraštis"
-      abandon:
-        yes_value: "Išmesti"
-        no_value: "Tęsti redagavimą"
     topic_count_all:
       one: "Pamatyk %{count} naują temą"
       few: "Pamatyk %{count} naujas temas"
@@ -522,6 +523,9 @@ lt:
         name: "Vardas"
         fields: "Laukai"
         reject_reason: "Priežastis"
+        scrubbed_reason: "Priežastis"
+        scrub_record:
+          cancel_button: "Atšaukti"
       topics:
         topic: "Tema"
         reviewable_count: "Skaičiuoti"
@@ -1819,10 +1823,6 @@ lt:
         name: "Google"
         title: "Prisijunkite naudodami “Google”"
         sr_title: "Prisijunkite naudodami “Google”"
-      twitter:
-        name: "Twitter"
-        title: "Prisijunkite naudodami “Twitter”"
-        sr_title: "Prisijunkite naudodami “Twitter”"
       instagram:
         name: "Instagram"
         title: "Prisijunkite naudodami “Instagram”"
@@ -2180,8 +2180,6 @@ lt:
       in_topics_posts: "visose temose ir žinutėse"
       enter_hint: "arba paspauskite Enter"
       in_posts_by: "pranešimuose %{username}"
-      browser_tip: "%{modifier} + f"
-      browser_tip_description: "dar kartą norėdami naudoti savosios naršyklės paiešką"
       recent: "Naujausios paieškos"
       clear_recent: "Išvalyti naujausias paieškas"
       type:
@@ -2936,6 +2934,10 @@ lt:
       general: "Bendriniai"
       settings: "Nustatymai"
       tags: "Žymos"
+      localization:
+        name: "Vardas"
+        description: "Aprašymas"
+        remove: "Pašalinti"
       tags_allowed_tags: "Apribokite šias žymas šioje kategorijoje:"
       tags_allowed_tag_groups: "Apribokite šias žymų grupes šioje kategorijoje:"
       tags_placeholder: "(Neprivaloma) leidžiamų žymų sąrašas"
@@ -2958,9 +2960,13 @@ lt:
       description: "Aprašymas"
       logo: "Kategorijos logotipo paveiksliukas"
       background_image: "Kategorijos fono paveiksliukas"
-      badge_colors: "Ženkliukų spalvos"
-      background_color: "Fono spalva"
-      foreground_color: "Priekinio plano spalva"
+      background_color: "Spalva"
+      styles:
+        icon: "Ikona"
+        emoji: "Emoji"
+        options:
+          icon: "Ikona"
+          emoji: "Emoji"
       name_placeholder: "Daugiausiai vienas arba du žodžiai"
       color_placeholder: "Bet kokia internetinė spalva"
       delete_confirm: "Ar tikrai norite ištrinti šią kategoriją?"
@@ -3615,7 +3621,6 @@ lt:
               content: "Peržiūra"
             invite:
               content: "Kviesti"
-      filter: "Filtruoti..."
       footer:
         interface_color_selector:
           light: "Šviesi"
@@ -3641,6 +3646,15 @@ lt:
       spreadsheet:
         show: "Rodyti"
         about: "Apie"
+    discovery:
+      headings:
+        categories: "Visos kategorijos"
+        filter_labels:
+          latest: "Naujausia"
+          top: "Populiarios"
+          new: "Nauji"
+          unread: "Neperskaitytos"
+          unseen: "Nematytas"
   admin_js:
     type_to_filter: "Įveskite filtrą…"
     settings: "Nustatymai"
@@ -3682,20 +3696,23 @@ lt:
           title: "Failai"
         legal:
           title: "Naudojimosi taisyklės"
-        branding:
-          title: "Prekinis ženklas"
+        logo_and_fonts:
           logo:
             form:
               mobile: "Mobilus"
               email: "El. paštas"
+          fonts:
+            form:
+              heading_font:
+                title: "Antraštės šriftas"
+            backfill_modal:
+              modal_yes: "Taip"
         navigation:
           title: "Navigacija"
         notifications:
           title: "Pranešimai"
         onebox:
           title: "Laukelio nustatymai"
-        other:
-          title: "Kiti"
         search_everything:
           title: "Paieška"
         security:
@@ -3732,6 +3749,8 @@ lt:
           sub_pages:
             templates:
               title: "Juodraščiai"
+        email_logs:
+          sub_pages:
             sent:
               title: "Išsiųsti"
             skipped:
@@ -4026,6 +4045,38 @@ lt:
             failed: "Nepavyko"
       home:
         title: "Pradinis"
+      account:
+        title: "Paskyra"
+        sidebar_link:
+          backups: "Atsarginės kopijos"
+      community:
+        title: "Bendruomenė"
+        sidebar_link:
+          badges: "Trofėjai"
+          notifications: "Pranešimai"
+          permalinks: "Laikinos Nuorodos"
+          users: "Vartotojai"
+          groups: "Grupės"
+          legal: "Naudojimosi taisyklės"
+          moderation_flags:
+            title: "Moderavimas"
+      appearance:
+        title: "išvaizda"
+        sidebar_link:
+          emoji: "Emoji"
+          navigation: "Navigacija"
+          themes_and_components:
+            keywords: "išplėtimas"
+      email_settings:
+        sidebar_link:
+          appearance: "išvaizda"
+      security:
+        title: "Apsauga"
+      section_landing_pages:
+        account:
+          title: "Paskyra"
+          backups:
+            title: "Atsarginės kopijos"
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
@@ -4053,12 +4104,32 @@ lt:
         embeddable_host:
           edit: "Redaguoti"
           delete: "Pašalinti"
-        look_and_feel:
+        themes_and_components:
+          breadcrumb_title: "Pakeisti"
+          install: "diegti"
           themes:
             title: "Temos"
+          components:
+            title: "Komponentai"
+            install: "diegti"
+            name: "Vardas"
+            enabled: "Galimas?"
+            by_author: "Pagal %{name}"
+            learn_more: "Sužinoti daugiau"
+            edit: "Redaguoti"
+            preview: "Peržiūrėti"
+            export: "Eksportuoti"
+            convert: "Paversti"
+            delete: "Pašalinti"
+            filter_by_all: "Visos"
+            delete_confirm: 'Ar tikrai norite ištrinti „%{name}“?'
         user_fields:
           type: "Tipas"
           delete: "Pašalinti"
+        color_palettes:
+          palette_name: "Vardas"
+          colors:
+            title: "Spalvos"
       plugins:
         title: "Plugins"
         name: "Vardas"

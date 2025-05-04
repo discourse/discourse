@@ -44,7 +44,8 @@ class Reviewable < ActiveRecord::Base
                     :confirm_message,
                     :client_action,
                     :require_reject_reason,
-                    :custom_modal
+                    :custom_modal,
+                    :completed_message
 
       def initialize(id, icon = nil, button_class = nil, label = nil)
         super(id)

@@ -15,13 +15,10 @@ gem "activemodel", "~> 7.2.0"
 gem "activerecord", "~> 7.2.0"
 gem "activesupport", "~> 7.2.0"
 gem "railties", "~> 7.2.0"
-gem "sprockets-rails"
+
+gem "propshaft"
 
 gem "json"
-
-# TODO: At the moment Discourse does not work with Sprockets 4, we would need to correct internals
-# We intend to drop sprockets rather than upgrade to 4.x
-gem "sprockets", "~> 3.7.3"
 
 # this will eventually be added to rails,
 # allows us to precompile all our templates in the unicorn master
@@ -33,9 +30,7 @@ gem "mail"
 gem "mini_mime"
 gem "mini_suffix"
 
-# config/initializers/006-mini_profiler.rb depends upon the RedisClient#call.
-# Rework this when upgrading to redis client 5.0 and above.
-gem "redis", "< 5.0"
+gem "redis"
 
 # This is explicitly used by Sidekiq and is an optional dependency.
 # We tell Sidekiq to use the namespace "sidekiq" which triggers this
@@ -118,12 +113,6 @@ gem "net-smtp", require: false
 gem "net-imap", require: false
 gem "net-pop", require: false
 gem "digest", require: false
-
-# Gems used only for assets and not required in production environments by default.
-# Allow everywhere for now cause we are allowing asset debugging in production
-group :assets do
-  gem "uglifier"
-end
 
 group :test do
   gem "capybara", require: false

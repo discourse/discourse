@@ -9,6 +9,8 @@ const CHAT_EMAIL_FREQUENCY = "chat_email_frequency";
 const CHAT_HEADER_INDICATOR_PREFERENCE = "chat_header_indicator_preference";
 const CHAT_SEPARATE_SIDEBAR_MODE = "chat_separate_sidebar_mode";
 const CHAT_SEND_SHORTCUT = "chat_send_shortcut";
+const CHAT_QUICK_REACTION_TYPE = "chat_quick_reaction_type";
+const CHAT_QUICK_REACTIONS_CUSTOM = "chat_quick_reactions_custom";
 
 export default {
   name: "chat-user-options",
@@ -26,6 +28,8 @@ export default {
         api.addSaveableUserOptionField(CHAT_HEADER_INDICATOR_PREFERENCE);
         api.addSaveableUserOptionField(CHAT_SEPARATE_SIDEBAR_MODE);
         api.addSaveableUserOptionField(CHAT_SEND_SHORTCUT);
+        api.addSaveableUserOptionField(CHAT_QUICK_REACTION_TYPE);
+        api.addSaveableUserOptionField(CHAT_QUICK_REACTIONS_CUSTOM);
       }
     });
   },

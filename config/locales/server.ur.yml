@@ -3345,8 +3345,13 @@ ur:
         description: "پوسٹ کو بحال کریں تاکہ تمام صارفین اِسے دیکھ سکیں۔"
       delete_single:
         title: "حذف کریں"
+        complete: "پوسٹ مٹادی گئی."
+      delete_and_ignore:
+        complete: "پوسٹ مٹادی گئی."
       delete_and_ignore_replies:
         confirm: "کیا آپ واقعی اِس پوسٹ پر جوابات بھی حذف کرنا چاہتے ہیں؟"
+      delete_and_agree:
+        complete: "پوسٹ مٹادی گئی."
       delete_and_agree_replies:
         confirm: "کیا آپ واقعی اِس پوسٹ پر جوابات بھی حذف کرنا چاہتے ہیں؟"
       disagree_and_restore:
@@ -3370,6 +3375,7 @@ ur:
         delete:
           title: "صارف حذف کریں"
           description: "اِس صارف کو فورم سے حذف کردیا جائے گا۔"
+          complete: "صارف مٹادیا گیا."
         block:
           title: "صارف کو حذف اور بلاک کریں"
           description: "اِس صارف کو حذف کر دیا جائے گا، اور ہم اِس کے IP اور ایمَیل ایڈریسوں کو بلاک کردیں گے۔"
@@ -3377,6 +3383,7 @@ ur:
         title: "مسترد کریں"
       delete_user:
         reason: "بذریعہ نظر ثانی قطار کے حذف کر دیا گیا"
+        complete: "صارف مٹادیا گیا."
   email_style:
     html_missing_placeholder: "HTML ٹَیمپلیٹ میں %{placeholder} کا شامل ہونا لاذمی ہے۔"
   notification_level:

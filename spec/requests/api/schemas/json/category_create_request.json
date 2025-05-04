@@ -12,6 +12,15 @@
       "type": "string",
       "example": "f0fcfd"
     },
+    "style_type": {
+      "type": "string"
+    },
+    "emoji": {
+      "type": "string"
+    },
+    "icon": {
+      "type": "string"
+    },
     "parent_category_id": {
       "type": "integer"
     },

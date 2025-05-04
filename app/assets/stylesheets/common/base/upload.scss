@@ -101,24 +101,41 @@
   pointer-events: none;
 }
 
-.progress-bar-container {
-  --d-border-radius: 10px;
-  background: var(--primary-low-mid);
-  border-radius: var(--d-border-radius);
-  width: 90%;
-  height: 5px;
+.progress-status {
   position: absolute;
-  top: 50%;
+  top: 60%;
   left: 50%;
   transform: translate(-50%, -50%);
+  width: 90%;
 
-  .progress-bar {
+  .progress-bar-container {
+    --d-border-radius: 10px;
+    background: var(--primary-low-mid);
     border-radius: var(--d-border-radius);
-    height: 100%;
-    background: var(--tertiary);
-    transition: width 0.3s ease;
-    position: absolute;
-    left: 0;
-    top: 0%;
+    height: 5px;
+    position: relative;
+
+    .progress-bar {
+      border-radius: var(--d-border-radius);
+      height: 100%;
+      background: var(--tertiary);
+      transition: width 0.3s ease;
+      position: absolute;
+      left: 0;
+      top: 0%;
+    }
   }
+
+  span {
+    font-size: var(--font-down-2);
+    margin-top: 8px;
+    display: block;
+    text-align: center;
+    color: var(--primary-high);
+  }
+}
+
+.hidden-upload-field {
+  visibility: hidden;
+  position: absolute;
 }

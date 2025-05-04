@@ -2874,6 +2874,11 @@ zh_TW:
                 label: "最新版本"
               hot:
                 label: "熱門"
+      branding:
+        title: "網站標誌"
+        fields:
+          logo:
+            label: "主要標誌"
       corporate:
         fields:
           governing_law:
@@ -2950,18 +2955,25 @@ zh_TW:
         description: "將話題變更為對所有人顯示。"
       disagree:
         title: "否"
+        complete: "檢舉已忽略."
       ignore:
         title: "忽略"
+        complete: "檢舉已忽略."
       ignore_and_do_nothing:
         title: "不做任何動作"
+        complete: "檢舉已忽略."
       approve:
         title: "批准"
+        complete: "帖文已批准."
       approve_post:
         title: "批准貼文"
+        complete: "帖文已批准."
       reject_post:
         title: "否決貼文"
+        complete: "貼文被拒絕."
       approve_user:
         title: "批准使用者"
+        complete: "使用者已核准."
       reject_user:
         delete:
           title: "刪除使用者"

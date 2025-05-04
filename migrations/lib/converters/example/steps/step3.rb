@@ -17,7 +17,7 @@ module Migrations::Converters::Example
 
       step.log_warning("Test", details: item) if item[:counter] > 10 && item[:counter] < 20
 
-      IntermediateDB::LogEntry.create!(type: "info", message: "Step3 - #{item[:counter]}")
+      IntermediateDB::LogEntry.create(type: "info", message: "Step3 - #{item[:counter]}")
     end
   end
 end

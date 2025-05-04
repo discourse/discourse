@@ -1772,7 +1772,6 @@ es:
     pending_users_reminder_delay_minutes: "Notificar a los moderadores si hay usuarios nuevos que hayan estado esperando aprobación durante más de esta cantidad de minutos. Usa -1 para desactivar estas notificaciones."
     persistent_sessions: "Los usuarios permanecerán con la sesión abierta aunque cierren su navegador"
     maximum_session_age: "El usuario permanecerá con su sesión iniciada n horas desde su última visita"
-    full_page_login: "Mostrar los formularios de inicio de sesión y registro en una página completa (si no está marcada, los usuarios verán los formularios en una ventana modal). "
     show_signup_form_email_instructions: Mostrar las instrucciones de correo electrónico en el formulario de registro.
     show_signup_form_username_instructions: Mostrar las instrucciones del nombre de usuario en el formulario de registro.
     show_signup_form_full_name_instructions: Mostrar las instrucciones con el nombre completo en el formulario de registro.
@@ -2228,8 +2227,7 @@ es:
     enable_group_directory: "Proporcionar un directorio de grupos que se pueda navegar"
     enable_category_group_moderation: "Permitir que los grupos moderen contenido en categorías específicas"
     group_in_subject: "Configura %%{optional_pm} en el título del correo electrónico para nombrar el primer grupo en MP, consulta: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Personalizar el formato del asunto para correos electrónicos estándar</a>"
-    allow_anonymous_posting: "Activa la opción de que los usuarios cambien al modo anónimo para publicar. Cuando está activada, los usuarios pueden optar por ocultar su identidad al crear mensajes o temas en todo el sitio. Véase también «allow_anonymous_likes»."
-    allow_anonymous_likes: "Activa esta opción para permitir que a los usuarios que navegan por tu sitio de forma anónima les gusten los mensajes. Cuando está activada, los usuarios pueden optar por ocultar su identidad cuando les gusten entradas o temas en todo el sitio. Consulta también «allow_anonymous_posting»."
+    allow_anonymous_mode: "Activa la opción de que los usuarios cambien al modo anónimo para publicar. Cuando está activada, los usuarios pueden optar por ocultar su identidad al crear mensajes o temas en todo el sitio. Véase también «allow_anonymous_likes»."
     anonymous_posting_min_trust_level: "Nivel de confianza mínimo requerido para permitir la publicación anónima"
     anonymous_posting_allowed_groups: "Grupos que pueden permitir la publicación anónima"
     anonymous_account_duration_minutes: "Para proteger el anonimato, crear una nueva cuenta anónima cada N minutos para cada usuario. Ejemplo: si se establece en 600, tan pronto como pasen 600 minutos desde la última publicación Y el usuario cambie a anónimo, se creará una nueva cuenta anónima."
@@ -2455,9 +2453,7 @@ es:
     default_navigation_menu_categories: "Las categorías seleccionadas se mostrarán por defecto en la sección Categorías del Menú de navegación."
     default_navigation_menu_tags: "Las etiquetas seleccionadas se mostrarán por defecto en la sección Etiquetas del Menú de navegación."
     experimental_new_new_view_groups: 'Activa una nueva lista de temas que combine los no leídos y los nuevos y haz que el enlace «Todo» de la barra lateral enlace a ella.'
-    glimmer_topic_list_mode: "Controla si se utiliza la nueva implementación de la lista de temas 'glimmer'. 'auto' se activará automáticamente cuando todos tus temas y plugins estén listos. Consulta <a href='https://meta.discourse.org/t/343404'>el tema de Meta</a> para más información."
-    glimmer_post_menu_mode: "Controla si se utiliza la nueva implementación del menú de la publicación 'glimmer'. 'auto' se activará automáticamente cuando todos tus temas y plugins estén listos. Esta implementación está en desarrollo activo y no está pensada para su uso en producción. No desarrolles temas/plugins con ella hasta que la implementación esté finalizada y anunciada."
-    glimmer_post_menu_groups: "Activa la nueva implementación del menú de la publicación «glimmer» en modo «auto» para los grupos de usuarios especificados. Esta implementación está en desarrollo activo y no está pensada para su uso en producción. No desarrolles temas/plugins para ella hasta que la implementación esté finalizada y anunciada."
+    glimmer_post_stream_mode_auto_groups: "Activa la nueva implementación del menú de la publicación «glimmer» en modo «auto» para los grupos de usuarios especificados. Esta implementación está en desarrollo activo y no está pensada para su uso en producción. No desarrolles temas/plugins para ella hasta que la implementación esté finalizada y anunciada."
     experimental_form_templates: "Activa la característica de plantillas de formulario. Gestiona las plantillas en <a href='%{base_path}/admin/customize/form-templates'>Personalizar / Plantillas</a>."
     lazy_load_categories_groups: "Carga lenta de la información de categoría solo para los usuarios de estos grupos. Esto mejora el rendimiento en sitios con muchas categorías."
     page_loading_indicator: "Configura el indicador de carga que aparece durante la navegación por las páginas dentro de Discourse. «Spinner» es un indicador de página completa. «Slider» muestra una barra estrecha en la parte superior de la pantalla."
@@ -5111,11 +5107,13 @@ es:
         description: "Acepta la bandera y abre una ventana de editor para editar la publicación."
       delete_single:
         title: "Eliminar"
+        complete: "Publicación eliminada."
       delete:
         title: "Eliminar…"
       delete_and_ignore:
         title: "Ignorar la denuncia y eliminar la publicación"
         description: "Ignorar la denuncia quitándola de la cola y eliminar la publicación; si es la primera publicación, eliminar también el tema. "
+        complete: "Publicación eliminada."
       delete_and_ignore_replies:
         title: "Ignorar la denuncia, eliminar la publicación y las respuestas"
         description: "Ignorar la denuncia quitándola de la cola, eliminar la publicación y todas sus respuestas; si es la primera publicación, eliminar también el tema"
@@ -5123,6 +5121,7 @@ es:
       delete_and_agree:
         title: "Eliminar publicación"
         description: "Aceptar la denuncia y eliminar esta publicación; si es la primera publicación, eliminar también el tema."
+        complete: "Publicación eliminada."
       delete_and_agree_replies:
         title: "Eliminar publicación y respuestas"
         description: "Aceptar la denuncia y eliminar esta publicación y todas sus respuestas; si es la primera publicación, eliminar también el tema."
@@ -5132,29 +5131,37 @@ es:
         description: "Restaurar la publicación para que los usuarios puedan verla."
       disagree:
         title: "No"
+        complete: "Denuncia ignorada."
       discard_post:
         title: "Descartar publicación"
       revise_and_reject_post:
         title: "Revisar publicación..."
       ignore:
         title: "Ignorar"
+        complete: "Denuncia ignorada."
       ignore_and_do_nothing:
         title: "No hacer nada"
         description: "Ignorar la denuncia quitándola de la cola sin realizar ninguna acción. Las publicaciones ocultas permanecerán ocultas y las gestionarán las herramientas automáticas."
+        complete: "Denuncia ignorada."
       approve:
         title: "Aprobar"
+        complete: "Publicación aprobada."
       approve_post:
         title: "Aprobar publicación"
         confirm_closed: "Este tema está cerrado. ¿Quieres crear una publicación de todas maneras?"
+        complete: "Publicación aprobada."
       reject_post:
         title: "Rechazar publicación"
+        complete: "Publicación rechazada."
       approve_user:
         title: "Aprobar usuario"
+        complete: "Usuario aprobado."
       reject_user:
         title: "Eliminar usuario…"
         delete:
           title: "Eliminar usuario"
           description: "El usuario será eliminado del foro."
+          complete: "Usuario eliminado."
         block:
           title: "Eliminar y bloquear usuario"
           description: "El usuario será eliminado y bloquearemos su IP y su dirección de correo electrónico."
@@ -5173,6 +5180,7 @@ es:
         title: "Aprobar y restaurar publicación"
       delete_user:
         reason: "Eliminado a través de la cola de revisiones"
+        complete: "Usuario eliminado."
   email_style:
     html_missing_placeholder: "La plantilla html debe incluir %{placeholder}"
   notification_level:

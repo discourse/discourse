@@ -100,6 +100,8 @@ class BulkImport::Generic < BulkImport::Base
     import_badge_groupings
     import_badges
     import_user_badges
+    import_anniversary_user_badges
+    update_badge_grant_counts
 
     import_optimized_images
 
@@ -194,6 +196,19 @@ class BulkImport::Generic < BulkImport::Base
     end
 
     rows.close
+
+    return if ENV["SKIP_MIGRATED_SITE_FLAG_UPDATE"]
+
+    # Bypassing SiteSetting.set_and_log if migrated_site is present and not enabled, enable it
+    # We don't need to have the plugin enabled
+    migrated_site_flag_enabled = DB.exec(<<~SQL) > 0
+      UPDATE site_settings
+         SET value = 't'
+       WHERE name = 'migrated_site'
+         AND value <> 't'
+    SQL
+
+    SiteSetting.refresh! if migrated_site_flag_enabled
   end
 
   def import_categories
@@ -1376,6 +1391,27 @@ class BulkImport::Generic < BulkImport::Base
                                                         liked = excluded.liked
     SQL
 
+    DB.exec(<<~SQL, notification_level: NotificationLevels.topic_levels[:watching])
+      WITH
+        latest_posts AS (
+                          SELECT p.topic_id, MAX(p.post_number) AS number
+                            FROM posts p
+                          WHERE p.deleted_at IS NULL
+                            AND NOT p.hidden
+                            AND p.user_id > 0
+                          GROUP BY p.topic_id
+                        )
+      UPDATE topic_users tu
+        SET last_read_post_number = latest_posts.number
+      FROM latest_posts
+           JOIN topics t ON t.id = latest_posts.topic_id
+      WHERE tu.topic_id = latest_posts.topic_id
+        AND tu.notification_level = :notification_level
+        AND tu.last_read_post_number IS NULL
+        AND t.deleted_at IS NULL
+        AND t.visible
+    SQL
+
     puts "  Updated topic users in #{(Time.now - start_time).to_i} seconds."
   end
 
@@ -2087,7 +2123,7 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def import_answers
-    puts "", "Importing solutions into post custom fields..."
+    puts "", "Importing solutions into discourse_solved_solved_topics..."
 
     solutions = query(<<~SQL)
       SELECT *
@@ -2095,40 +2131,20 @@ class BulkImport::Generic < BulkImport::Base
        ORDER BY topic_id
     SQL
 
-    field_name = "is_accepted_answer"
-    value = "true"
-    existing_fields = PostCustomField.where(name: field_name).pluck(:post_id).to_set
+    existing_solved_topics = DiscourseSolved::SolvedTopic.pluck(:topic_id).to_set
 
-    create_post_custom_fields(solutions) do |row|
-      next unless (post_id = post_id_from_imported_id(row["post_id"]))
-      next unless existing_fields.add?(post_id)
-
-      {
-        post_id: post_id,
-        name: field_name,
-        value: value,
-        created_at: to_datetime(row["created_at"]),
-      }
-    end
-
-    puts "", "Importing solutions into topic custom fields..."
-
-    solutions.reset
-
-    field_name = "accepted_answer_post_id"
-    existing_fields = TopicCustomField.where(name: field_name).pluck(:topic_id).to_set
-
-    create_topic_custom_fields(solutions) do |row|
+    create_solved_topic(solutions) do |row|
       post_id = post_id_from_imported_id(row["post_id"])
       topic_id = topic_id_from_imported_id(row["topic_id"])
+      accepter_user_id = user_id_from_imported_id(row["acting_user_id"])
 
       next unless post_id && topic_id
-      next unless existing_fields.add?(topic_id)
+      next unless existing_solved_topics.add?(topic_id)
 
       {
         topic_id: topic_id,
-        name: field_name,
-        value: post_id.to_s,
+        answer_post_id: post_id,
+        accepter_user_id: accepter_user_id,
         created_at: to_datetime(row["created_at"]),
       }
     end
@@ -2406,7 +2422,81 @@ class BulkImport::Generic < BulkImport::Base
     end
 
     user_badges.close
+  end
 
+  def import_anniversary_user_badges
+    unless SiteSetting.enable_badges?
+      puts "", "Skipping anniversary user badges because badges are not enabled."
+      return
+    end
+
+    puts "", "Importing anniversary user badges..."
+
+    start_time = Time.now
+
+    DB.exec(<<~SQL)
+      WITH
+        eligible_users AS (
+                            SELECT u.id, u.created_at
+                            FROM users u
+                            WHERE u.active
+                              AND NOT u.staged
+                              AND u.id > 0
+                              AND (u.silenced_till IS NULL OR u.silenced_till < CURRENT_TIMESTAMP)
+                              AND (u.suspended_till IS NULL OR u.suspended_till < CURRENT_TIMESTAMP)
+                              AND NOT EXISTS (SELECT 1 FROM anonymous_users AS au WHERE au.user_id = u.id)
+                          ),
+        anniversary_dates AS ( -- Series of anniversary dates starting from the user's created_at + 1 year up to the current year
+                               SELECT
+                                 eu.id AS user_id,
+                                 (
+                                   eu.created_at +
+                                   ((year_num - EXTRACT(YEAR FROM eu.created_at)) || ' years')::interval
+                                 )::timestamp AS anniversary_date
+                               FROM eligible_users eu,
+                                    generate_series(
+                                      EXTRACT(YEAR FROM eu.created_at)::int + 1,
+                                      EXTRACT(YEAR FROM CURRENT_TIMESTAMP)::int
+                                    ) AS year_num
+                                WHERE
+                                  (
+                                    eu.created_at +
+                                    ((year_num - EXTRACT(YEAR FROM eu.created_at)) || ' years')::interval
+                                  ) < CURRENT_TIMESTAMP
+                             )
+      INSERT INTO user_badges (granted_at, created_at, granted_by_id, user_id, badge_id, seq)
+      SELECT a.anniversary_date,
+             CURRENT_TIMESTAMP,
+             #{Discourse.system_user.id},
+             a.user_id,
+             #{Badge::Anniversary},
+             (ROW_NUMBER() OVER (PARTITION BY a.user_id ORDER BY a.anniversary_date) - 1) AS seq
+      FROM anniversary_dates a
+           JOIN eligible_users u ON a.user_id = u.id
+           JOIN posts AS p ON p.user_id = u.id
+           JOIN topics AS t ON p.topic_id = t.id
+      WHERE p.deleted_at IS NULL
+        AND NOT p.hidden
+        AND p.created_at BETWEEN a.anniversary_date - '1 year'::interval AND a.anniversary_date
+        AND t.visible
+        AND t.archetype <> 'private_message'
+        AND t.deleted_at IS NULL
+        AND NOT EXISTS (
+            SELECT 1
+            FROM user_badges AS ub
+            WHERE ub.user_id = u.id
+            AND ub.badge_id = #{Badge::Anniversary}
+            AND ub.granted_at BETWEEN a.anniversary_date - '1 year'::interval AND a.anniversary_date
+        )
+      GROUP BY a.user_id, a.anniversary_date
+    SQL
+
+    UserBadge.update_featured_ranks!
+
+    puts "  Anniversary user badges imported in #{(Time.now - start_time).to_i} seconds."
+  end
+
+  def update_badge_grant_counts
     puts "", "Updating badge grant counts..."
     start_time = Time.now
 

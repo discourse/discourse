@@ -5,41 +5,62 @@ class Admin::Config::AboutController < Admin::AdminController
   end
 
   def update
-    settings_map = {}
-    if general_settings = params[:general_settings]
-      settings_map[:title] = general_settings[:name]
-      settings_map[:site_description] = general_settings[:summary]
-      settings_map[:about_banner_image] = general_settings[:about_banner_image]
+    settings = []
 
-      settings_map[:extended_site_description] = general_settings[:extended_description]
-      settings_map[:short_site_description] = general_settings[:community_title]
-      if settings_map[:extended_site_description].present?
-        settings_map[:extended_site_description_cooked] = PrettyText.markdown(
-          settings_map[:extended_site_description],
-        )
+    if general_settings = params[:general_settings]
+      settings << { setting_name: "title", value: general_settings[:name] }
+      settings << { setting_name: "site_description", value: general_settings[:summary] }
+      settings << {
+        setting_name: "about_banner_image",
+        value: general_settings[:about_banner_image],
+      }
+
+      settings << {
+        setting_name: "extended_site_description",
+        value: general_settings[:extended_description],
+      }
+      settings << {
+        setting_name: "short_site_description",
+        value: general_settings[:community_title],
+      }
+
+      if general_settings[:extended_description].present?
+        settings << {
+          setting_name: "extended_site_description_cooked",
+          value: PrettyText.markdown(general_settings[:extended_description]),
+        }
       else
-        settings_map[:extended_site_description_cooked] = ""
+        settings << { setting_name: "extended_site_description_cooked", value: "" }
       end
     end
 
     if contact_information = params[:contact_information]
-      settings_map[:community_owner] = contact_information[:community_owner]
-      settings_map[:contact_email] = contact_information[:contact_email]
-      settings_map[:contact_url] = contact_information[:contact_url]
-      settings_map[:site_contact_username] = contact_information[:contact_username]
-      settings_map[:site_contact_group_name] = contact_information[:contact_group_name]
+      settings << { setting_name: "community_owner", value: contact_information[:community_owner] }
+      settings << { setting_name: "contact_email", value: contact_information[:contact_email] }
+      settings << { setting_name: "contact_url", value: contact_information[:contact_url] }
+      settings << {
+        setting_name: "site_contact_username",
+        value: contact_information[:contact_username],
+      }
+      settings << {
+        setting_name: "site_contact_group_name",
+        value: contact_information[:contact_group_name],
+      }
     end
 
     if your_organization = params[:your_organization]
-      settings_map[:company_name] = your_organization[:company_name]
-      settings_map[:governing_law] = your_organization[:governing_law]
-      settings_map[:city_for_disputes] = your_organization[:city_for_disputes]
+      settings << { setting_name: "company_name", value: your_organization[:company_name] }
+      settings << { setting_name: "governing_law", value: your_organization[:governing_law] }
+      settings << {
+        setting_name: "city_for_disputes",
+        value: your_organization[:city_for_disputes],
+      }
     end
 
     SiteSetting::Update.call(
       guardian:,
       params: {
-        settings: settings_map,
+        settings:,
       },
       options: {
         allow_changing_hidden: %i[
@@ -51,6 +72,9 @@ class Admin::Config::AboutController < Admin::AdminController
       },
     ) do
       on_success { render json: success_json }
+      on_failed_policy(:settings_are_not_deprecated) do |policy|
+        raise Discourse::InvalidParameters, policy.reason
+      end
       on_failed_policy(:settings_are_visible) do |policy|
         raise Discourse::InvalidParameters, policy.reason
       end

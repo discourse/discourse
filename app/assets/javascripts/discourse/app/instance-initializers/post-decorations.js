@@ -133,6 +133,8 @@ export default {
       }
 
       function generateFullScreenTableModal(event) {
+        const { postId } = this;
+
         const table = event.currentTarget.parentElement.nextElementSibling;
         const tempTable = table.cloneNode(true);
         const cookedWrapper = document.createElement("div");
@@ -140,35 +142,35 @@ export default {
         if (siteSettings.display_footnotes_inline) {
           cookedWrapper.classList.add("inline-footnotes");
         }
-        cookedWrapper.dataset.refPostId = this.id;
+        cookedWrapper.dataset.refPostId = postId;
         cookedWrapper.appendChild(tempTable);
         modal.show(FullscreenTableModal, {
           model: { tableHtml: cookedWrapper },
         });
       }
 
-      function generateSpreadsheetModal() {
-        const tableIndex = this.tableIndex;
+      async function generateSpreadsheetModal() {
+        const { postId, tableIndex } = this;
 
-        return ajax(`/posts/${this.id}`, { type: "GET" })
-          .then((post) => {
-            parseAsync(post.raw).then((tokens) => {
-              const allTables = tokenRange(tokens, "table_open", "table_close");
-              const tableTokens = allTables[tableIndex];
+        try {
+          const post = await ajax(`/posts/${postId}`, { type: "GET" });
+          const tokens = await parseAsync(post.raw);
+          const allTables = tokenRange(tokens, "table_open", "table_close");
+          const tableTokens = allTables[tableIndex];
 
-              modal.show(SpreadsheetEditor, {
-                model: {
-                  post,
-                  tableIndex,
-                  tableTokens,
-                },
-              });
-            });
-          })
-          .catch(popupAjaxError);
+          modal.show(SpreadsheetEditor, {
+            model: {
+              post,
+              tableIndex,
+              tableTokens,
+            },
+          });
+        } catch (error) {
+          popupAjaxError(error);
+        }
       }
 
-      function generatePopups(tables, attrs) {
+      function generatePopups(tables, post) {
         tables.forEach((table, index) => {
           const buttonWrapper = document.createElement("div");
           buttonWrapper.classList.add("fullscreen-table-wrapper__buttons");
@@ -185,14 +187,15 @@ export default {
           table.parentNode.setAttribute("data-table-index", index);
           table.parentNode.classList.add("fullscreen-table-wrapper");
 
-          if (attrs.canEdit) {
+          // TODO (glimmer-post-stream) in the Glimmer post stream we can check for post.can_edit instead
+          if (post.canEdit) {
             table.parentNode.classList.add("--editable");
             buttonWrapper.append(tableEditorBtn);
             tableEditorBtn.addEventListener(
               "click",
               generateSpreadsheetModal.bind({
+                postId: post.id,
                 tableIndex: index,
-                ...attrs,
               }),
               false
             );
@@ -218,7 +221,7 @@ export default {
           buttonWrapper.append(expandTableBtn);
           expandTableBtn.addEventListener(
             "click",
-            generateFullScreenTableModal.bind(attrs),
+            generateFullScreenTableModal.bind({ postId: post.id }),
             false
           );
           table.parentNode.insertBefore(buttonWrapper, table);
@@ -241,10 +244,10 @@ export default {
       }
 
       api.decorateCookedElement(
-        (post, helper) => {
+        (element, helper) => {
           schedule("afterRender", () => {
-            const tables = post.querySelectorAll(".md-table table");
-            generatePopups(tables, helper.widget.attrs);
+            const tables = element.querySelectorAll(".md-table table");
+            generatePopups(tables, helper.model);
           });
         },
         {

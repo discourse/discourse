@@ -11,6 +11,7 @@ export default RouteTemplate(
     <Layout
       @model={{@controller.model}}
       @createTopicDisabled={{@controller.createTopicDisabled}}
+      @toggleTagInfo={{@controller.toggleTagInfo}}
     >
       <:navigation>
         <Navigation
@@ -39,6 +40,7 @@ export default RouteTemplate(
           <CategoriesDisplay
             @categories={{@controller.model.subcategoryList.categories}}
             @parentCategory={{@controller.model.subcategoryList.parentCategory}}
+            @loadMore={{@controller.model.subcategoryList.loadMore}}
           />
         {{/if}}
         {{#if (and @controller.showTagInfo @controller.model.tag)}}

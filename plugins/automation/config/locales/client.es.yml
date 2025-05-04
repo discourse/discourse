@@ -163,11 +163,8 @@ es:
               description: Opcional, solo se activará si la publicación tiene alguna de estas etiquetas
             restricted_categories:
               label: Categorías
-            restricted_groups:
+            restricted_inbox_groups:
               description: Opcional, se activará solo si el tema de la publicación es un mensaje personal en una de las bandejas de entrada del grupo.
-            ignore_group_members:
-              label: Ignorar a los miembros del grupo
-              description: Omitir el activador si el remitente es un miembro del Grupo especificado anteriormente
             ignore_automated:
               label: Ignorar la automatización
               description: Omite el activador si el remitente tiene un correo electrónico de no respuesta o procede de una fuente automatizada. Solo se aplica a las publicaciones creadas por correo electrónico
@@ -182,7 +179,10 @@ es:
               description: "Omitir el activador si la publicación se creó por correo electrónico"
           created: Creado
           edited: Editado
-          topics: Temas
+          with_images: Imágenes
+          with_links: Enlaces
+          with_code: Código
+          with_uploads: Subidos
         user_updated:
           fields:
             user_profile:

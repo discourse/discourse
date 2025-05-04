@@ -3,17 +3,68 @@
 class SiteSetting < ActiveRecord::Base
   VALID_AREAS = %w[
     about
+    analytics
+    badges
+    categories_and_tags
+    email
     embedding
     emojis
     flags
     fonts
     group_permissions
+    interface
     legal
     localization
     navigation
     notifications
     permalinks
+    reports
+    posts_and_topics
+    user_defaults
+    sharing
+    site_admin
+    stats_and_thresholds
     trust_levels
+    users
+  ]
+
+  DEFAULT_USER_PREFERENCES = %w[
+    default_email_digest_frequency
+    default_include_tl0_in_digests
+    default_email_level
+    default_email_messages_level
+    default_email_mailing_list_mode
+    default_email_mailing_list_mode_frequency
+    default_email_previous_replies
+    default_email_in_reply_to
+    default_hide_profile
+    default_hide_presence
+    default_other_new_topic_duration_minutes
+    default_other_auto_track_topics_after_msecs
+    default_other_notification_level_when_replying
+    default_other_external_links_in_new_tab
+    default_other_enable_quoting
+    default_other_enable_smart_lists
+    default_other_enable_defer
+    default_other_dynamic_favicon
+    default_other_like_notification_frequency
+    default_other_skip_new_user_tips
+    default_topics_automatic_unpin
+    default_categories_watching
+    default_categories_tracking
+    default_categories_muted
+    default_categories_watching_first_post
+    default_categories_normal
+    default_tags_watching
+    default_tags_tracking
+    default_tags_muted
+    default_tags_watching_first_post
+    default_text_size
+    default_title_count_mode
+    default_navigation_menu_categories
+    default_navigation_menu_tags
+    default_sidebar_link_to_filtered_list
+    default_sidebar_show_count_of_new_items
   ]
 
   extend GlobalPath
@@ -251,7 +302,7 @@ class SiteSetting < ActiveRecord::Base
     manifest_icon
     favicon
     apple_touch_icon
-    twitter_summary_large_image
+    x_summary_large_image
     opengraph_image
     push_notifications_icon
   ].each do |setting_name|

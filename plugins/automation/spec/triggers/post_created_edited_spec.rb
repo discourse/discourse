@@ -10,6 +10,7 @@ describe "PostCreatedEdited" do
   let(:subcategory) { Fabricate(:category_with_definition, parent_category_id: parent_category.id) }
 
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+  fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
   fab!(:automation) { Fabricate(:automation, trigger: "post_created_edited") }
 
   context "when filtering on first post only" do
@@ -131,9 +132,9 @@ describe "PostCreatedEdited" do
 
       before do
         automation.upsert_field!(
-          "restricted_user_group",
-          "group",
-          { value: group.id },
+          "restricted_groups",
+          "groups",
+          { value: [group.id] },
           target: "trigger",
         )
       end
@@ -200,7 +201,7 @@ describe "PostCreatedEdited" do
 
       before do
         automation.upsert_field!(
-          "restricted_groups",
+          "restricted_inbox_groups",
           "groups",
           { value: [target_group.id, another_group.id] },
           target: "trigger",
@@ -248,33 +249,6 @@ describe "PostCreatedEdited" do
             capture_contexts do
               user.groups << target_group
               PostCreator.create(user, basic_topic_params)
-            end
-
-          expect(list).to be_blank
-        end
-      end
-
-      context "when members of the group are ignored" do
-        before do
-          automation.upsert_field!(
-            "ignore_group_members",
-            "boolean",
-            { value: true },
-            target: "trigger",
-          )
-        end
-
-        it "doesn’t fire the trigger" do
-          list =
-            capture_contexts do
-              user.groups << target_group
-              PostCreator.create(
-                user,
-                basic_topic_params.merge(
-                  target_group_names: [target_group.name],
-                  archetype: Archetype.private_message,
-                ),
-              )
             end
 
           expect(list).to be_blank
@@ -507,6 +481,34 @@ describe "PostCreatedEdited" do
       end
     end
 
+    context "when only public topics are allowed" do
+      before do
+        automation.upsert_field!(
+          "restricted_archetype",
+          "choices",
+          { value: "public" },
+          target: "trigger",
+        )
+      end
+
+      it "fires the trigger for public topics" do
+        list = capture_contexts { PostCreator.create(user, basic_topic_params) }
+
+        expect(list.length).to eq(1)
+        expect(list[0]["kind"]).to eq("post_created_edited")
+      end
+
+      it "doesn't fire the trigger for secure categories" do
+        secure_category = Fabricate(:category, read_restricted: true)
+        list =
+          capture_contexts do
+            PostCreator.create(admin, basic_topic_params.merge(category: secure_category.id))
+          end
+
+        expect(list.length).to eq(0)
+      end
+    end
+
     context "when archetype is restricted" do
       context "when only regular topics are allowed" do
         before do
@@ -592,6 +594,195 @@ describe "PostCreatedEdited" do
         expect(list.length).to eq(1)
         expect(list[0]["kind"]).to eq("post_created_edited")
         expect(list[0]["action"].to_s).to eq("edit")
+      end
+    end
+  end
+
+  context "when excluded groups are defined" do
+    fab!(:excluded_group) { Fabricate(:group) }
+
+    before do
+      automation.upsert_field!(
+        "excluded_groups",
+        "groups",
+        { value: [excluded_group.id] },
+        target: "trigger",
+      )
+    end
+
+    context "when user is in an excluded group" do
+      before { excluded_group.add(user) }
+
+      it "doesn't fire the trigger" do
+        list = capture_contexts { PostCreator.create(user, basic_topic_params) }
+
+        expect(list).to be_blank
+      end
+    end
+
+    context "when user is not in any excluded group" do
+      it "fires the trigger" do
+        list = capture_contexts { PostCreator.create(user, basic_topic_params) }
+
+        expect(list.length).to eq(1)
+        expect(list[0]["kind"]).to eq("post_created_edited")
+      end
+    end
+  end
+
+  context "when filtering on post features" do
+    fab!(:topic) { Fabricate(:topic, user: user) }
+
+    context "with images filter" do
+      before do
+        automation.upsert_field!(
+          "post_features",
+          "choices",
+          { value: ["with_images"] },
+          target: "trigger",
+        )
+      end
+
+      it "fires the trigger when post has an image" do
+        list =
+          capture_contexts do
+            PostCreator.create(
+              user,
+              raw: "Look at this image: ![image](https://example.com/image.jpg)",
+              topic_id: topic.id,
+            )
+          end
+
+        expect(list.length).to eq(1)
+        expect(list[0]["kind"]).to eq("post_created_edited")
+      end
+
+      it "doesn't fire the trigger when post has no image" do
+        list =
+          capture_contexts do
+            PostCreator.create(
+              user,
+              raw: "This is just regular text with no images",
+              topic_id: topic.id,
+            )
+          end
+
+        expect(list.length).to eq(0)
+      end
+    end
+
+    context "with links filter" do
+      before do
+        automation.upsert_field!(
+          "post_features",
+          "choices",
+          { value: ["with_links"] },
+          target: "trigger",
+        )
+      end
+
+      it "fires the trigger when post has a link" do
+        list =
+          capture_contexts do
+            PostCreator.create(
+              user,
+              raw: "Check out this [link](https://example.com)",
+              topic_id: topic.id,
+            )
+          end
+
+        expect(list.length).to eq(1)
+        expect(list[0]["kind"]).to eq("post_created_edited")
+      end
+
+      it "doesn't fire the trigger when post has no link" do
+        list =
+          capture_contexts do
+            PostCreator.create(
+              user,
+              raw: "This is just regular text with no links",
+              topic_id: topic.id,
+            )
+          end
+
+        expect(list.length).to eq(0)
+      end
+    end
+
+    context "with code filter" do
+      before do
+        automation.upsert_field!(
+          "post_features",
+          "choices",
+          { value: ["with_code"] },
+          target: "trigger",
+        )
+      end
+
+      it "fires the trigger when post has a code block" do
+        list =
+          capture_contexts do
+            PostCreator.create(
+              user,
+              raw: "```ruby\ndef hello_world\n  puts 'hello world'\nend\n```",
+              topic_id: topic.id,
+            )
+          end
+
+        expect(list.length).to eq(1)
+        expect(list[0]["kind"]).to eq("post_created_edited")
+      end
+
+      it "doesn't fire the trigger when post has no code block" do
+        list =
+          capture_contexts do
+            PostCreator.create(
+              user,
+              raw: "This is just regular text with no code blocks",
+              topic_id: topic.id,
+            )
+          end
+
+        expect(list.length).to eq(0)
+      end
+    end
+
+    context "with multiple features" do
+      before do
+        automation.upsert_field!(
+          "post_features",
+          "choices",
+          { value: %w[with_links with_images] },
+          target: "trigger",
+        )
+      end
+
+      it "fires the trigger when post has all required features" do
+        list =
+          capture_contexts do
+            PostCreator.create(
+              user,
+              raw:
+                "Check this [link](https://example.com) and ![image](https://example.com/image.jpg)",
+              topic_id: topic.id,
+            )
+          end
+
+        expect(list.length).to eq(1)
+        expect(list[0]["kind"]).to eq("post_created_edited")
+      end
+
+      it "doesn't fire the trigger when post is missing a required feature" do
+        list =
+          capture_contexts do
+            PostCreator.create(
+              user,
+              raw: "This only has a [link](https://example.com) but no image",
+              topic_id: topic.id,
+            )
+          end
+
+        expect(list.length).to eq(0)
       end
     end
   end

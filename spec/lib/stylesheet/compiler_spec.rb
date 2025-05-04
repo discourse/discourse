@@ -42,16 +42,18 @@ RSpec.describe Stylesheet::Compiler do
         type_id: ThemeField.types[:scss],
       )
     end
-    before { stylesheet_theme_field.save! }
 
     it "theme stylesheet should be able to access theme asset variables" do
-      css, _map =
-        Stylesheet::Compiler.compile_asset(
-          "desktop_theme",
-          theme_id: theme.id,
-          theme_variables: theme.scss_variables,
-        )
-      expect(css).to include(upload.url)
+      theme.reload.with_scss_load_paths do |load_paths|
+        css, _map =
+          Stylesheet::Compiler.compile_asset(
+            "common_theme",
+            theme_id: theme.id,
+            theme_variables: theme.scss_variables,
+            load_paths: load_paths,
+          )
+        expect(css).to include(upload.url)
+      end
     end
 
     context "with a plugin" do
@@ -108,6 +110,7 @@ RSpec.describe Stylesheet::Compiler do
         expect(css).to include("fill:green")
         expect(css).to include("line-height:1.2em")
         expect(css).to include("border-color:#c00")
+        expect(css).to include("--simple-css-color: red")
       end
     end
   end

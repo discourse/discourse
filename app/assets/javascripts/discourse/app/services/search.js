@@ -1,12 +1,13 @@
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import Service, { service } from "@ember/service";
-import { focusSearchInput } from "discourse/components/search-menu";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import { applyValueTransformer } from "discourse/lib/transformer";
 
 @disableImplicitInjections
 export default class Search extends Service {
   @service appEvents;
+  @service siteSettings;
 
   @tracked activeGlobalSearchTerm = "";
   @tracked searchContext;
@@ -14,10 +15,32 @@ export default class Search extends Service {
   @tracked inTopicContext = false;
   @tracked visible = false;
   @tracked results = {};
-  @tracked noResults = false;
+  @tracked noResults = false; // TODO: shouldn't `noResults` default value be `true`?
+  @tracked welcomeBannerSearchInViewport = false;
 
   // only relative for the widget search menu
   searchContextEnabled = false; // checkbox to scope search
+
+  get currentSearchInputId() {
+    if (this.welcomeBannerSearchInViewport) {
+      return "welcome-banner-search-input";
+    } else if (this.searchExperience === "search_field") {
+      return "header-search-input";
+    } else {
+      return "icon-search-input";
+    }
+  }
+
+  get searchExperience() {
+    return applyValueTransformer(
+      "site-setting-search-experience",
+      this.siteSettings.search_experience
+    );
+  }
+
+  focusSearchInput() {
+    document.getElementById(this.currentSearchInputId)?.focus();
+  }
 
   get contextType() {
     return this.searchContext?.type || null;
@@ -96,7 +119,7 @@ export default class Search extends Service {
         const firstResult = results[0] || links[0];
         firstResult.focus();
       } else if (index === 0 && e.key === "ArrowUp") {
-        focusSearchInput();
+        this.focusSearchInput();
       } else if (index > -1) {
         // change focus to the next result item if present
         index += e.key === "ArrowDown" ? 1 : -1;

@@ -1,50 +1,294 @@
-## Configuration options for the base intermediate schema generator
-##
-## After modifying this file, regenerate the base intermediate schema
-## by running the `generate_schema` script.
+# $schema: ./json_schemas/db_schema.json
 
-# Default relative path for generated base schema file.
-# An absolute path can also be provided to the script as the first CLI argument.
-# If the CLI argument is present, it takes precedence over the value specified here.
-output_file_path: "../db/schema/100-base-schema.sql"
+output:
+  schema_file: "db/intermediate_db_schema/100-base-schema.sql"
+  models_directory: "lib/database/intermediate_db"
+  models_namespace: Migrations::Database::IntermediateDB
 
-## Tables to include in the generated base intermediate schema.
-##
-## Available table options:
-## virtual:     Boolean. Enables the inclusion of a table in the schema solely based.
-##              on the provided configuration. A virtual table does not need to be available in the core schema.
-## ignore:      List of columns to ignore. Convenient if most of the table's column are needed.
-##              Usage is mutually exclusive with the `include` option. Only one should be used at a time.
-## include:     List of columns to include. Convenient if only a few columns are needed.
-##              Usage is mutually exclusive with the `include`` option. Only one should be used at a time.
-## primary_key: Literal or list of columns to use as primary key.
-## extend:      List of objects describing columns to be added/extended.
-##              The following options are available for an "extend" object:
-##                name:    Required. The name of the column being extended.
-##                is_null: Specifies if the column can be null.
-##                type:    Column type. Defaults to TEXT.
-## indexes:     List of indexes to create. The following options are available for an "index" object:
-##                name: Index name.
-##                columns: List of column(s) to index.
-tables:
-  users:
-    ignore:
-      - flag_level
-      - last_emailed_at
-      - last_posted_at
-      - last_seen_reviewable_id
-      - password_algorithm
-      - password_hash
-      - salt
-      - secure_identifier
-      - seen_notification_id
-      - username_lower
+schema:
+  tables:
+    user_emails:
+      columns:
+        include:
+          - "email"
+          - "primary"
+          - "user_id"
+          - "created_at"
+      primary_key_column_names: [ "email" ]
+    user_options:
+      primary_key_column_names: [ "user_id" ]
+    users:
+      columns:
+        add:
+          - name: "original_username"
+            datatype: text
+        exclude:
+          - "flag_level"
+          - "last_emailed_at"
+          - "last_posted_at"
+          - "last_seen_reviewable_id"
+          - "previous_visit_at"
+          - "required_fields_version"
+          - "secure_identifier"
+          - "seen_notification_id"
+          - "suspended_at"
+          - "suspended_till"
+          - "username_lower"
 
-## Schema-wide column configuration options. These options apply to all tables.
-## See table specific column configuration options above.
-##
-## Available Options:
-## ignore:  List of core/plugin table columns to ignore and exclude from intermediate schema.
-columns:
-  ignore:
-    - updated_at
+  global:
+    columns:
+      modify:
+        - name: "id"
+          datatype: numeric
+          rename_to: "original_id"
+        - name_regex: ".*upload.*_id$"
+          datatype: text
+        - name_regex: ".*_id$"
+          datatype: numeric
+      exclude:
+        - "updated_at"
+
+    tables:
+      exclude:
+        - "admin_notices"
+        - "allowed_pm_users"
+        - "anonymous_users"
+        - "api_key_scopes"
+        - "api_keys"
+        - "application_requests"
+        - "ar_internal_metadata"
+        - "associated_groups"
+        - "backup_draft_posts"
+        - "backup_draft_topics"
+        - "backup_metadata"
+        - "badge_groupings"
+        - "badge_types"
+        - "badges"
+        - "bookmarks"
+        - "categories"
+        - "categories_web_hooks"
+        - "category_custom_fields"
+        - "category_featured_topics"
+        - "category_form_templates"
+        - "category_groups"
+        - "category_localizations"
+        - "category_moderation_groups"
+        - "category_required_tag_groups"
+        - "category_search_data"
+        - "category_settings"
+        - "category_tag_groups"
+        - "category_tag_stats"
+        - "category_tags"
+        - "category_users"
+        - "chat_channel_archives"
+        - "chat_channel_custom_fields"
+        - "chat_channels"
+        - "chat_drafts"
+        - "chat_mention_notifications"
+        - "chat_mentions"
+        - "chat_message_custom_fields"
+        - "chat_message_interactions"
+        - "chat_message_reactions"
+        - "chat_message_revisions"
+        - "chat_messages"
+        - "chat_thread_custom_fields"
+        - "chat_threads"
+        - "chat_webhook_events"
+        - "child_themes"
+        - "color_scheme_colors"
+        - "color_schemes"
+        - "custom_emojis"
+        - "developers"
+        - "direct_message_channels"
+        - "direct_message_users"
+        - "directory_columns"
+        - "directory_items"
+        - "discourse_automation_automations"
+        - "discourse_automation_fields"
+        - "discourse_automation_pending_automations"
+        - "discourse_automation_pending_pms"
+        - "discourse_automation_stats"
+        - "discourse_automation_user_global_notices"
+        - "dismissed_topic_users"
+        - "do_not_disturb_timings"
+        - "draft_sequences"
+        - "drafts"
+        - "email_change_requests"
+        - "email_logs"
+        - "email_tokens"
+        - "embeddable_host_tags"
+        - "embeddable_hosts"
+        - "external_upload_stubs"
+        - "flags"
+        - "form_templates"
+        - "given_daily_likes"
+        - "group_archived_messages"
+        - "group_associated_groups"
+        - "group_category_notification_defaults"
+        - "group_custom_fields"
+        - "group_histories"
+        - "group_mentions"
+        - "group_requests"
+        - "group_tag_notification_defaults"
+        - "group_users"
+        - "groups"
+        - "groups_web_hooks"
+        - "ignored_users"
+        - "imap_sync_logs"
+        - "incoming_chat_webhooks"
+        - "incoming_domains"
+        - "incoming_emails"
+        - "incoming_links"
+        - "incoming_referers"
+        - "invited_groups"
+        - "invited_users"
+        - "invites"
+        - "javascript_caches"
+        - "linked_topics"
+        - "message_bus"
+        - "moved_posts"
+        - "muted_users"
+        - "notifications"
+        - "oauth2_user_infos"
+        - "onceoff_logs"
+        - "optimized_images"
+        - "permalinks"
+        - "plugin_store_rows"
+        - "poll_options"
+        - "poll_votes"
+        - "polls"
+        - "post_action_types"
+        - "post_actions"
+        - "post_custom_fields"
+        - "post_details"
+        - "post_hotlinked_media"
+        - "post_localizations"
+        - "post_replies"
+        - "post_reply_keys"
+        - "post_revisions"
+        - "post_search_data"
+        - "post_stats"
+        - "post_timings"
+        - "posts"
+        - "problem_check_trackers"
+        - "published_pages"
+        - "push_subscriptions"
+        - "quoted_posts"
+        - "redelivering_webhook_events"
+        - "remote_themes"
+        - "reviewable_claimed_topics"
+        - "reviewable_histories"
+        - "reviewable_scores"
+        - "reviewables"
+        - "scheduler_stats"
+        - "schema_migration_details"
+        - "schema_migrations"
+        - "screened_emails"
+        - "screened_ip_addresses"
+        - "screened_urls"
+        - "search_logs"
+        - "shared_drafts"
+        - "shelved_notifications"
+        - "sidebar_section_links"
+        - "sidebar_sections"
+        - "sidebar_urls"
+        - "single_sign_on_records"
+        - "site_settings"
+        - "sitemaps"
+        - "skipped_email_logs"
+        - "stylesheet_cache"
+        - "summary_sections"
+        - "tag_group_memberships"
+        - "tag_group_permissions"
+        - "tag_groups"
+        - "tag_search_data"
+        - "tag_users"
+        - "tags"
+        - "tags_web_hooks"
+        - "theme_color_schemes"
+        - "theme_fields"
+        - "theme_modifier_sets"
+        - "theme_settings"
+        - "theme_settings_migrations"
+        - "theme_svg_sprites"
+        - "theme_translation_overrides"
+        - "themes"
+        - "top_topics"
+        - "topic_allowed_groups"
+        - "topic_allowed_users"
+        - "topic_custom_fields"
+        - "topic_embeds"
+        - "topic_groups"
+        - "topic_hot_scores"
+        - "topic_invites"
+        - "topic_link_clicks"
+        - "topic_links"
+        - "topic_localizations"
+        - "topic_search_data"
+        - "topic_tags"
+        - "topic_thumbnails"
+        - "topic_timers"
+        - "topic_users"
+        - "topic_view_stats"
+        - "topic_views"
+        - "topics"
+        - "translation_overrides"
+        - "unsubscribe_keys"
+        - "upload_references"
+        - "uploads"
+        - "user_actions"
+        - "user_api_key_client_scopes"
+        - "user_api_key_clients"
+        - "user_api_key_scopes"
+        - "user_api_keys"
+        - "user_archived_messages"
+        - "user_associated_accounts"
+        - "user_associated_groups"
+        - "user_auth_token_logs"
+        - "user_auth_tokens"
+        - "user_avatars"
+        - "user_badges"
+        - "user_chat_channel_memberships"
+        - "user_chat_thread_memberships"
+        - "user_custom_fields"
+        - "user_exports"
+        - "user_field_options"
+        - "user_fields"
+        - "user_histories"
+        - "user_ip_address_histories"
+        - "user_notification_schedules"
+        - "user_open_ids"
+        - "user_passwords"
+        - "user_profile_views"
+        - "user_profiles"
+        - "user_required_fields_versions"
+        - "user_search_data"
+        - "user_second_factors"
+        - "user_security_keys"
+        - "user_stats"
+        - "user_statuses"
+        - "user_uploads"
+        - "user_visits"
+        - "user_warnings"
+        - "watched_word_groups"
+        - "watched_words"
+        - "web_crawler_requests"
+        - "web_hook_event_types"
+        - "web_hook_event_types_hooks"
+        - "web_hook_events"
+        - "web_hook_events_daily_aggregates"
+        - "web_hooks"
+
+plugins:
+  - "automation"
+  - "chat"
+  - "checklist"
+  - "discourse-details"
+  - "discourse-lazy-videos"
+  - "discourse-local-dates"
+  - "discourse-narrative-bot"
+  - "discourse-presence"
+  - "footnote"
+  - "poll"
+  - "spoiler-alert"
+  - "styleguide"

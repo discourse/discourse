@@ -368,7 +368,9 @@ he:
     site_settings:
       invalid_site_setting: "לא קיימת הגדרה שנקראת ‚%{name}’"
       invalid_category_id: "ציינת קטגוריה שאינה קיימת"
+      site_settings_are_deprecated: "השימוש בהגדרות הבאות הופסק: %{old_names}. נא להשתמש ב־%{new_names} במקום"
       site_settings_are_hidden: "אסור לך לשנות הגדרות נסתרות: %{setting_names}"
+      site_settings_are_shadowed_globally: "אי אפשר לשנות את ההגדרות האלה כיוון שהן מוגדרות באופן כללי: %{setting_names}"
       site_settings_are_unconfigurable: "אסור לך לשנות הגדרות שלא ניתן להגדיר: %{setting_names}"
       invalid_choice:
         one: "‚%{name}’ היא בחירה שגויה."
@@ -395,6 +397,7 @@ he:
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "אי אפשר להשבית הפשטת נתוני על מתמונה אם האפשרות ‚תמונת מיטוב מדיה בכתיבת הודעה פעילה’ פעילה. יש להשבית את האפשרות בטרם השבתת הפשטת נתוני על מתמונה."
       x_summary_large_image_no_svg: "תמונות התקציר של טוויטר שמשמשות לנתוני העל של twitter:image לא יכולות להיות תמונת ‎.svg"
       tl0_and_anonymous_flag: "יש לספק ‚דוא״ל קשר עם האתר’ או ‚כתובת דוא״ל לדיווח על תוכן לא חוקי’ למשתמשים אלמוניים."
+      allow_likes_in_anonymous_mode_without_anonymous_mode_enabled: "ההגדרה הזאת דורשת את הפעלת ההגדרה ‚לאפשר מצב אלמוני’ תחילה."
     conflicting_google_user_id: 'מזהה חשבון ה־Google לחשבון זה השתנה, התערבות של חבר סגל נדרשת מטעמי אבטחה. נא ליצור קשר עם אחד מחברי הסגל ולהפנות אותו אל <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "מחילה אך לא הצלחנו לייצר תצוגה מקדימה לאתר הזה, כיוון שהשרת ‚%{hostname}’ לא נמצא. במקום תצוגה מקדימה יופיע קישור בלבד בפוסט שלך. :cry:"
@@ -663,6 +666,7 @@ he:
         many: "המשתמשים הבאים כבר חברים בקבוצה: %{username}"
         other: "המשתמשים הבאים כבר חברים בקבוצה: %{username}"
       invalid_domain: "‚%{domain}’ אינו שם מתחם תקף."
+      too_many_domains: "יותר מדי שמות תחום. %{max} לכל היותר."
       invalid_incoming_email: "‚%{email}’ אינה כתובת דוא״ל תקפה."
       email_already_used_in_group: "‚%{email}’ כבר בשימוש על ידי הקבוצה ‚%{group_name}’."
       email_already_used_in_category: "‚%{email}’ כבר בשימוש על ידי הקטגוריה ‚%{category_name}’."
@@ -1931,7 +1935,6 @@ he:
     pending_users_reminder_delay_minutes: "יש להודיע למפקחים אם משתמשים חדשים ממתינים לעדכון מעבר לכמות כזו של דקות. יש להגדיר ל־‎-1 כדי להשבית את ההתראות."
     persistent_sessions: "המשתמשים יישארו במערכת כאשר הדפדפן סגור"
     maximum_session_age: "משתמשים יישארו מחוברים למשך n שעות מאז ביקורם האחרון"
-    full_page_login: "הצגת טופסי הכניסה והרישום בעמוד מלא (כשהאפשרות לא מסומנת, משתמשים יראו את הטפסים בחלוניות משתלטות). "
     show_signup_form_email_instructions: הצגת הנחיות דוא״ל בטופס ההרשמה.
     show_signup_form_username_instructions: הצגת הנחיות שם משתמש בטופס ההרשמה.
     show_signup_form_full_name_instructions: הצגת הנחיות שם מלא בטופס ההרשמה.
@@ -2216,6 +2219,7 @@ he:
     max_here_mentioned: "מספר האנשים המרבי שמוזכרים על ידי ‎@here."
     min_trust_level_for_here_mention: "דרגת האמון המזערית המורשית להזכיר את ‎@here."
     here_mention_allowed_groups: "קבוצות שמורשות להזכיר את ‎@here. מנהלים ומפקחים תמיד מורשים להזכיר את ‎@here."
+    create_thumbnails: "ליצור תמונות ממוזערות וחלונית גלריה לתמונות שגדולות מכדי להופיע במלואן בפוסט."
     email_time_window_mins: "להמתין (n) דקות בטרם כל שליחת התראה בדוא״ל, כדי לאפשר למשתמשים הזדמנות לערוך ולוודא באופן סופי את הפוסטים שלהם."
     personal_email_time_window_seconds: "להמתין (n) שניות בטרם שליחת הודעות בדוא״ל עם התראות על הודעות אישיות, כדי לתת למשתמשים הזדמנות לסיים את עריכת ההודעות שלהם."
     email_posts_context: "כמה תגובות קודמות יש לכלול כהקשר בהתראות בדוא״ל."
@@ -2388,8 +2392,8 @@ he:
     enable_group_directory: "ספקו ספריה של קבוצות לסיור"
     enable_category_group_moderation: "לאפשר לקבוצות לסקור תוכן בקטגוריות מסוימות"
     group_in_subject: "ניתן להגדיר %%{optional_pm} בנושא הודעת הדוא״ל לשם הקבוצה הראשונה בהודעה הפרטית (PM), למידע נוסף: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>התאמת תבנית הנושא להודעות דוא״ל תקניות</a>"
-    allow_anonymous_posting: "יש להפעיל את האפשרות הזאת כדי לאפשר למשתמשים לעבור למצב אלמוני לפרסום. כשהמצב מופעל, משתמשים יכולים לבקש להסוות את הזהות שלהם בעת יצירת פוסטים או נושאים ברחבי האתר. כמו כן, יש גם את `allow anonymous likes` (לאפשר לייקים אלמוניים)."
-    allow_anonymous_likes: "הפעלת ההגדרה הזאת תאפשר למשתמשים שגולשים באתר שלך באלמוניות לסמן לייק על פוסטים. כשהאפשרות מופעלת, משתמשים יכולים להסוות את הזהות שלהם בסימון לייק לפוסטים או נושאים ברחבי האתר. יש גם את `allow_anonymous_posting` (לאפשר פרסום אלמוני)."
+    allow_anonymous_mode: "יש להפעיל את האפשרות הזאת כדי לאפשר למשתמשים לעבור למצב אלמוני לפרסום. כשהמצב מופעל, משתמשים יכולים לבקש להסוות את הזהות שלהם בעת יצירת פוסטים או נושאים ברחבי האתר. כמו כן, יש גם את `allow anonymous likes` (לאפשר לייקים אלמוניים)."
+    allow_likes_in_anonymous_mode: "הפעלת ההגדרה הזאת תאפשר למשתמשים שגולשים באתר שלך באלמוניות לסמן לייק על פוסטים. כשהאפשרות מופעלת, משתמשים יכולים להסוות את הזהות שלהם בסימון לייק לפוסטים או נושאים ברחבי האתר. יש גם את `allow_anonymous_mode` (לאפשר מצב אלמוני)."
     anonymous_posting_min_trust_level: "דרגת האמון המזערית הנדרשת כדי לאפשר פרסום אלמוני"
     anonymous_posting_allowed_groups: "קבוצות שמורשות להפעיל פרסום אלמוני"
     anonymous_account_duration_minutes: "כדי להגן על האלמוניות יש ליצור חשבון אלמוני חדש כל N דקות עבור כל משתמש. למשל: אם ההגדרה היא 600, בחלוף 600 דקות מהפוסט האחרון וגם אם המשתמש עבר למצב אלמוני, ייווצר חשבון אלמוני חדש."
@@ -2613,15 +2617,16 @@ he:
     suggest_weekends_in_date_pickers: "לכלול סופי שבוע (שישי ושבת) בהצעות לבוחר התאריכים (כדאי להשבית זאת אם יוצא לך להשתמש ב־Discourse רק בימי חול, ראשון עד חמישי)."
     show_bottom_topic_map: "הצגת מפת הנושאים בתחתית הנושא כשיש 10 תגובות ומעלה."
     show_topic_map_in_topics_without_replies: "הצגת מפת הנושאים אם לנושא איך תגובות."
+    enable_welcome_banner: "להציג כרזה בעמודי רשימת הנושאים העיקרית שלך כדי לקבל את פניהם של החברים ולהאפשר להם לחפש בתוכן האתר"
     splash_screen: "מציג מסך טעינה בזמן שהמשאבים נטענים"
     navigation_menu: "ציין את סרגל הצד או הכותרת הנפתחת כתפריט הניווט הראשי של האתר שלך. סרגל צד מומלץ."
     default_navigation_menu_categories: "הקטגוריות הנבחרות תוצגנה תחת סעיף הקטגוריות של תפריט הניווט כברירת מחדל."
     default_navigation_menu_tags: "התגיות הנבחרות תוצגנה תחת סעיף התגיות של תפריט הניווט כברירת מחדל."
     experimental_new_new_view_groups: 'לאפשר רשימת נושאים חדשה המשלבת נושאים שלא נקראו וחדשים ולקשר אליה את „הכול” בסרגל הצד.'
-    glimmer_topic_list_mode: "שליטה האם להשתמש במימוש רשימת הנושאים החדש ‚glimmer’.‏ ‚auto’ יפעיל אותה אוטומטית לאחר שכל ערכות העיצוב והתוספים שלך מוכנים. <a href='https://meta.discourse.org/t/343404'>בנושא שב־Meta</a> יש פרטים נוספים."
-    glimmer_post_menu_mode: "בקרה האם להשתמש במימוש תפריט הפוסט החדש ‚glimmer’. הערך ‚auto’ יפעיל אותו אוטומטית לאחר שכל ערכות העיצוב והתוספים שלך מוענים. המימוש הזה נמצא בפיתוח כרגע, ולא מיועד לשימוש יומיומי. לא לפתח על גביו ערכות עיצוב/תוספים עד שהמימוש יושלם ויוכרז רשמית."
-    glimmer_post_menu_groups: "הפעלת מימוש תפריט הפוסט החדש ‚glimmer’ במצב ‚auto’ לקבוצת המשתמשים שצוינה. המימוש הזה בפיתוח כרגע ואינו מיועד לשימוש יומיומי. לא לפתח ערכות עיצוב/תוספים על גביו עד שהמימוש יושלם ויוכרז רשמית."
+    glimmer_post_stream_mode: "בקרה האם להשתמש במימוש תזרים הפוסט החדש ‚glimmer’. הערך ‚auto’ יפעיל אותו אוטומטית לאחר שכל ערכות העיצוב והתוספים שלך מוענים. המימוש הזה נמצא בפיתוח כרגע, ולא מיועד לשימוש יומיומי. לא לפתח על גביו ערכות עיצוב/תוספים עד שהמימוש יושלם ויוכרז רשמית."
+    glimmer_post_stream_mode_auto_groups: "הפעלת מימוש תפריט הפוסט החדש ‚glimmer’ במצב ‚auto’ לקבוצת המשתמשים שצוינה. המימוש הזה בפיתוח כרגע ואינו מיועד לשימוש יומיומי. לא לפתח ערכות עיצוב/תוספים על גביו עד שהמימוש יושלם ויוכרז רשמית."
     experimental_form_templates: "יש להפעיל את יכולת תבניות הטפסים. אפשר לנהל את התבניות דרך <a href='%{base_path}/admin/customize/form-templates'>התאמה / תבניות</a>."
+    show_preview_for_form_templates: "הפעלת התצוגה המקדימה של יכולת תבניות הטפסים"
     lazy_load_categories_groups: "לטעון בעצלות את פרטי הקטגוריה רק למשתמשים בקבוצות האלה. הגדרה זו משפרת את הביצועים באתרים עם הרבה קטגוריות."
     experimental_auto_grid_images: "עוטף תמונות אוטומטית בתגיות [grid] כאשר 3 תמונות או יותר מועלות במחבר ההודעות."
     page_loading_indicator: "הגדרת מחוון הטעינה שמופיע במהלך ניווט בין עמודים ב־Discourse. ‚שבשבת’ הוא מחוון עמוד מלא. ‚מד התקדמות’ מציג סרגל צר בראש המסך."
@@ -2995,6 +3000,7 @@ he:
       many: "למשתמש %{username} יש %{count} פוסטים בנושא ציבורי או הודעה פרטית, לכן לא ניתן למחוק אותו."
       other: "למשתמש %{username} יש %{count} פוסטים בנושא ציבורי או הודעה פרטית, לכן לא ניתן למחוק אותו."
     cannot_bulk_delete: "חלק מהמשתמשים לא נמחקו כי הם חברי הנהלה, יש להם יותר מדי פוסטים או שיש להם פוסט ישן מאוד."
+    cannot_remove_all_auth: "חייב להיות לך לפחות חשבון אחד משויך, מפתח גישה/passkey אחד או סיסמה מוגדרים."
   unsubscribe_mailer:
     title: "שולח-מיילים לביטול מנוי"
     subject_template: "נא לאשר שלא מעניין אותך לקבל עוד עדכוני דוא״ל מאת %{site_title}"
@@ -3844,10 +3850,15 @@ he:
     in_reply_to: "בתגובה ל"
     reply_by_email: "[בקרו בנושא](%{base_url}%{url}) או ענו למייל זה כדי להגיב."
     reply_by_email_pm: "יש [לבקר בהודעה](%{base_url}%{url}) או להשיב להודעת דוא״ל זו כדי להגיב אל %{participants}."
+    reply_by_email_button_only: "[ביקור בנושא](%{base_url}%{url})"
+    reply_by_email_pm_button_only: "[ביקור בהודעה](%{base_url}%{url})"
     only_reply_by_email: "השיבו למייל זה כדי לענות."
     only_reply_by_email_pm: "יש להשיב להודעה הזאת כדי להגיב אל %{participants}."
+    only_reply_by_email_pm_button_only: "[ביקור בהודעה](%{base_url}%{url})"
     visit_link_to_respond: "[בקרו בנושא](%{base_url}%{url}) כדי לענות."
     visit_link_to_respond_pm: "יש [לבקר בהודעה](%{base_url}%{url}) כדי להגיב אל %{participants}."
+    visit_link_to_respond_button_only: "[ביקור בנושא](%{base_url}%{url})"
+    visit_link_to_respond_pm_button_only: "[ביקור בהודעה](%{base_url}%{url})"
     reply_above_line: "## נא להקליד את התגובה שלך מעל לשורה הזאת. ##"
     posted_by: "פורסם על ידי %{username} ב %{post_date}"
     pm_participants: "משתתפים: %{participants}"
@@ -4098,6 +4109,17 @@ he:
         הושתקת בפורום.
 
         הסיבה - %{reason}
+    account_deleted:
+      title: "החשבון נמחק"
+      subject_template: "[%{email_prefix}] החשבון שלך נמחק"
+      text_body_template: |
+        שלום,
+
+        זו הודעה אוטומטית מהאתר [%{site_name}](%{base_url}) כדי ליידע אותך שחשבון המשתמש שמשויך לכתובת הדוא״ל הזאת נמחק על ידי הסגל.
+
+        %{flag_reason}
+
+        נא לעיין ב[הנחיות הקהילה](%{base_url}/guidelines) שלנו לפרטים נוספים.
     account_exists:
       title: "החשבון כבר קיים"
       subject_template: "[%{email_prefix}] החשבון כבר קיים"
@@ -5302,6 +5324,11 @@ he:
       new_topics_unless_trust_level: "נושאים של משתמשים בדרגות אמון נמוכות חייבים לעבור את אישור הסגל. למידע נוסף %{link}."
       fast_typer: "ההקלדה של הפוסט הראשון של משתמש מסוים הייתה מהירה באופן שמעלה חשד שמדובר בהתנהגות של בוט או הפצת ספאם. למידע נוסף %{link}."
       auto_silence_regex: "משתמש חדש שהפוסט הראשון שלו עונה להגדרה %{link}."
+      watched_word:
+        one: "הפוסט הזה מכיל מילה במעקב, המילה המסומנת היא: %{words}. פרטים נוספים בקישור %{link}."
+        two: "הפוסט הזה מכיל מילים במעקב, המילים המסומנות הן: %{words}. פרטים נוספים בקישור %{link}."
+        many: "הפוסט הזה מכיל מילים במעקב, המילים המסומנות הן: %{words}. פרטים נוספים בקישור %{link}."
+        other: "הפוסט הזה מכיל מילים במעקב, המילים המסומנות הן: %{words}. פרטים נוספים בקישור %{link}."
       staged: "נושאים ופוסטים חדשים של משתמשים מבוימים חייבים לקבל את אישור הסגל. מידע נוסף תחת %{link}."
       category: "פוסטים בקטגוריה זו דורשים אימות ידני של הסגל. מידע נוסף ב־%{link}."
       must_approve_users: "כל המשתמשים החדשים חייבים לעבור את אישור הסגל. למידע נוסף: %{link}."
@@ -5312,95 +5339,128 @@ he:
       contains_media: "פוסט זה כולל מדיה מוטמעת. מידע נוסף תחת %{link}."
       queued_by_staff: "אחד מחברי הסגל חושב שהפוסט הזה דורש סקירה. עד אז הוא יישאר מוסתר."
       links:
+        watched_word: הגדרות מילים במעקב
         category: הגדרות קטגוריה
+      no_context:
+        watched_word: "הפוסט הזה כלל מילים במעקב. נא לפנות אל %{link} לפרטים נוספים."
     actions:
       agree:
         title: "כן"
       agree_and_keep:
         title: "להשאיר את הפוסט"
         description: "הבעת הסכמה עם הדגל אך השארת הפוסט ללא שינוי."
+        complete: "הפוסט נשאר ללא שינוי."
       agree_and_keep_hidden:
         title: "להשאיר את הפוסט מוסתר"
         description: "הבעת הסכמה עם הדגל והשארת הפוסט מוסתר."
+        complete: "הפוסט נשאר מוסתר."
       agree_and_suspend:
         title: "השעיית משתמש"
         description: "הבעת הסכמה עם הדגל והשעיית המשתמש."
+        complete: "משתמש הושעה."
       agree_and_silence:
         title: "השתקת משתמש"
         description: "הבעת הסכמה עם הדגל והשתקת המשתמש."
+        complete: "משתמש הושתק."
       agree_and_restore:
         title: "שחזור פוסט"
         description: "יש לשחזר את הפוסט כדי שכל המשתמשים יוכלו לצפות בו."
+        complete: "הפוסט שוחזר."
       agree_and_hide:
         title: "הסתרת פוסט"
         description: "הסכמה עם הסימון והסתרת הפוסט הזה + שליחת הודעה אוטומטית למשתמש שמפצירה בו לערוך אותו."
+        complete: "הפוסט הוסתר, המשתמש קיבל הודעה."
       agree_and_edit:
         title: "להסכים ולערוך את הפוסט"
         description: "להסכים עם הסימון ולפתוח חלון עריכת הודעה כדי לערוך את הפוסט."
+        complete: "הדגל אושר, עכשיו אפשר לערוך את הפוסט"
       delete_single:
         title: "מחיקה"
+        complete: "פוסט נמחק."
       delete:
         title: "מחיקה…"
       delete_and_ignore:
         title: "התעלמות מהדגל ומחיקת הפוסט"
         description: "התעלמות מהסימון על ידי הסרתו מהתור ומחיקת הפוסט, אם זה הפוסט הראשון, למחוק גם את הנושא. "
+        complete: "פוסט נמחק."
       delete_and_ignore_replies:
         title: "התעלמות מהסימון, למחוק את הפוסט והתגובות"
         description: "התעלמות מהסימון על ידי הסרתו מהתור, מחיקת הפוסט וכל התגובות שלו, אם זה הפוסט הראשון, למחוק גם את הנושא"
         confirm: "למחוק גם את התגובות לפוסט?"
+        complete: "הפוסט והתגובות נמחקו."
       delete_and_agree:
         title: "מחיקת פוסט"
         description: "להסכים עם הסימון ולמחוק את הפוסט, אם זה הפוסט הראשון אז למחוק גם את הנושא."
+        complete: "פוסט נמחק."
       delete_and_agree_replies:
         title: "מחיקת הפוסט והתגובות"
         description: "להסכים עם הסימון ולמחוק את הפוסט ואת כל התגובות שלו, אם זה הפוסט הראשון אז למחוק גם את הנושא."
         confirm: "למחוק גם את התגובות לפוסט?"
+        complete: "הפוסט והתגובות נמחקו."
       disagree_and_restore:
         title: "לא, לשחזר את הפוסט"
         description: "לשחזר את הפוסט כדי שכל המשתמשים יוכלו לצפות בו."
+        complete: "הפוסט שוחזר."
       disagree:
         title: "לא"
+        complete: "הסימון זכה להתעלמות."
       discard_post:
         title: "השלכת פוסט"
+        complete: "הפוסט הושלך."
       revise_and_reject_post:
         title: "עריכת שינויים בפוסט…"
+        complete: "מהדורה ממתינה נדחתה בפוסט."
       ignore:
         title: "התעלמות"
+        complete: "הסימון זכה להתעלמות."
       ignore_and_do_nothing:
         title: "לא לעשות דבר"
         description: "התעלמות מהסימון על ידי הסרתו מהתור מבלי לנקוט בעמדה. פוסטים מוסתרים נשארים מוסתרים ויטופלו על ידי הכלים האוטומטיים."
+        complete: "הסימון זכה להתעלמות."
       approve:
         title: "אישור"
+        complete: "הפרסום אושר."
       approve_post:
         title: "לאשר פוסט"
         confirm_closed: "נושא זה סגור. ליצור את הפוסט בכל אופן?"
+        complete: "הפרסום אושר."
       reject_post:
         title: "לדחות פוסט"
+        complete: "הפרסום נדחה."
       approve_user:
         title: "אישור משתמש"
+        complete: "המשתמש אישר."
       reject_user:
         title: "מחיקת משתמש…"
         delete:
           title: "מחיקת משתמש"
           description: "המשתמש יימחק מהפורום."
+          complete: "משתמש נמחק."
         block:
           title: "מחיקה וחסימת המשתמש"
           description: "המשתמש יימחק ואנו נחסום את כתובת ה־IP והדוא״ל שלו."
+          complete: "המשתמש נמחק ונחסם."
       reject:
         title: "לדחות"
         bundle_title: "דחייה…"
       reject_and_suspend:
         title: "לדחות ולהשעות את המשתמש"
+        complete: "הפוסט נדחה והמשתמש הושעה."
       reject_and_silence:
         title: "לדחות ולהשתיק את המשתמש"
+        complete: "הפוסט נדחה והמשתמש הושתק."
       reject_and_delete:
         title: "לדחות ולמחוק את הפוסט"
+        complete: "הפוסט נדחה ונמחק."
       reject_and_keep_deleted:
         title: "להשאיר את הפוסט מחוק"
+        complete: "הפוסט נדחה ונשאר מחוק."
       approve_and_restore:
         title: "אישור ושחזור הפוסט"
+        complete: "הפוסט אושר ושוחזר."
       delete_user:
         reason: "למחוק דרך תור סקירה"
+        complete: "משתמש נמחק."
   email_style:
     html_missing_placeholder: "תבנית ה־html חייבת לכלול %{placeholder}"
   notification_level:

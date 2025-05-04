@@ -1075,6 +1075,11 @@ bs_BA:
         description: "Složij se sa prijavom i utišaj prijavljenog korisnika (silence)"
       delete_single:
         title: "Delete"
+        complete: "Post izbrisan."
+      delete_and_ignore:
+        complete: "Post izbrisan."
+      delete_and_agree:
+        complete: "Post izbrisan."
       disagree:
         title: "Ne"
       ignore:
@@ -1086,8 +1091,11 @@ bs_BA:
       reject_user:
         delete:
           title: "Delete User"
+          complete: "Korisnik izbrisan."
       reject:
         title: "Odbij"
+      delete_user:
+        complete: "Korisnik izbrisan."
   fallback_username: "user"
   activemodel:
     errors:

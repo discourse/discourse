@@ -6,35 +6,29 @@ import DButton from "discourse/components/d-button";
 import { withSilencedDeprecations } from "discourse/lib/deprecated";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { resetPostMenuExtraButtons } from "discourse/widgets/post-menu";
 
 function postStreamTest(name, attrs) {
   test(name, async function (assert) {
     this.set("posts", attrs.posts.call(this));
 
     await render(
-      hbs`
-        <MountWidget @widget="post-stream" @args={{hash posts=this.posts}} />`
+      hbs`<MountWidget @widget="post-stream" @args={{hash posts=this.posts}} />`
     );
 
     attrs.test.call(this, assert);
   });
 }
 
-["enabled", "disabled"].forEach((postMenuMode) => {
+["enabled", "disabled"].forEach((postStreamMode) => {
   let lastTransformedPost = null;
 
   module(
-    `Integration | Component | Widget | post-stream (glimmer_post_menu_mode = ${postMenuMode})`,
+    `Integration | Component | Widget | post-stream (glimmer_post_stream_mode = ${postStreamMode})`,
     function (hooks) {
       setupRenderingTest(hooks);
 
       hooks.beforeEach(function () {
-        this.siteSettings.glimmer_post_menu_mode = postMenuMode;
-      });
-
-      hooks.afterEach(function () {
-        resetPostMenuExtraButtons();
+        this.siteSettings.glimmer_post_stream_mode = postStreamMode;
       });
 
       const CustomPostMenuButton = <template>
@@ -126,6 +120,7 @@ function postStreamTest(name, attrs) {
               topic,
               id: 1,
               post_number: 1,
+              username: "eviltrout",
               user_id: 123,
               primary_group_name: "trout",
               avatar_template: "/images/avatar.png",
@@ -165,7 +160,7 @@ function postStreamTest(name, attrs) {
           ];
         },
 
-        test(assert) {
+        async test(assert) {
           assert.dom(".post-stream").exists({ count: 1 });
           assert.dom(".topic-post").exists({ count: 6 }, "renders all posts");
 

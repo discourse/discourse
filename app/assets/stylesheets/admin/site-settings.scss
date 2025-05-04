@@ -19,3 +19,36 @@
     }
   }
 }
+
+.admin-site-settings__changes-banner {
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  bottom: 0;
+  padding: var(--space-6) var(--space-3);
+  background-color: var(--secondary);
+  border-top: 2px solid var(--tertiary);
+
+  @include breakpoint("mobile-extra-large") {
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: var(--space-3);
+  }
+
+  .controls {
+    display: flex;
+    gap: var(--space-3);
+
+    @include breakpoint("mobile-extra-large") {
+      flex-direction: column;
+    }
+  }
+
+  em {
+    font-style: normal;
+    font-weight: 700;
+  }
+}

@@ -14,7 +14,7 @@ module Migrations::Converters::Example
       step.log_warning("Test", details: item) if item.in?([3, 7, 9])
       step.log_error("Test", details: item) if item.in?([6, 10])
 
-      IntermediateDB::LogEntry.create!(type: "info", message: "Step2 - #{item}")
+      IntermediateDB::LogEntry.create(type: "info", message: "Step2 - #{item}")
     end
   end
 end

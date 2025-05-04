@@ -103,10 +103,10 @@ RSpec.describe Guardian do
     fab!(:post)
 
     describe "an authenticated user posting anonymously" do
-      before { SiteSetting.allow_anonymous_posting = true }
+      before { SiteSetting.allow_anonymous_mode = true }
 
-      context "when allow_anonymous_likes is enabled" do
-        before { SiteSetting.allow_anonymous_likes = true }
+      context "when allow_likes_in_anonymous_mode is enabled" do
+        before { SiteSetting.allow_likes_in_anonymous_mode = true }
 
         it "returns true when liking" do
           expect(Guardian.new(anonymous_user).post_can_act?(post, :like)).to be_truthy
@@ -119,8 +119,8 @@ RSpec.describe Guardian do
         end
       end
 
-      context "when allow_anonymous_likes is disabled" do
-        before { SiteSetting.allow_anonymous_likes = false }
+      context "when allow_likes_in_anonymous_mode is disabled" do
+        before { SiteSetting.allow_likes_in_anonymous_mode = false }
 
         it "returns false when liking" do
           expect(Guardian.new(anonymous_user).post_can_act?(post, :like)).to be_falsey
@@ -2577,10 +2577,10 @@ RSpec.describe Guardian do
   end
 
   describe "#can_delete_post_action?" do
-    before { SiteSetting.allow_anonymous_posting = true }
+    before { SiteSetting.allow_anonymous_mode = true }
 
-    context "with allow_anonymous_likes enabled" do
-      before { SiteSetting.allow_anonymous_likes = true }
+    context "with allow_likes_in_anonymous_mode enabled" do
+      before { SiteSetting.allow_likes_in_anonymous_mode = true }
 
       describe "an authenticated anonymous user" do
         let(:post_action) do
@@ -2649,10 +2649,10 @@ RSpec.describe Guardian do
       end
     end
 
-    context "with allow_anonymous_likes disabled" do
+    context "with allow_likes_in_anonymous_mode disabled" do
       before do
-        SiteSetting.allow_anonymous_likes = false
-        SiteSetting.allow_anonymous_posting = true
+        SiteSetting.allow_likes_in_anonymous_mode = false
+        SiteSetting.allow_anonymous_mode = true
       end
       describe "an anonymous user" do
         let(:post_action) do
@@ -3250,7 +3250,7 @@ RSpec.describe Guardian do
     end
 
     context "for anonymous user" do
-      before { SiteSetting.allow_anonymous_posting = true }
+      before { SiteSetting.allow_anonymous_mode = true }
 
       it "is false" do
         expect(Guardian.new(anonymous_user).can_edit_username?(anonymous_user)).to be_falsey
@@ -3323,7 +3323,7 @@ RSpec.describe Guardian do
       before { SiteSetting.email_editable = true }
 
       context "for anonymous user" do
-        before { SiteSetting.allow_anonymous_posting = true }
+        before { SiteSetting.allow_anonymous_mode = true }
 
         it "is false" do
           expect(Guardian.new(anonymous_user).can_edit_email?(anonymous_user)).to be_falsey
@@ -3423,7 +3423,7 @@ RSpec.describe Guardian do
     end
 
     context "for anonymous user" do
-      before { SiteSetting.allow_anonymous_posting = true }
+      before { SiteSetting.allow_anonymous_mode = true }
 
       it "is false" do
         expect(Guardian.new(anonymous_user).can_edit_name?(anonymous_user)).to be_falsey

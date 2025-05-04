@@ -28,7 +28,7 @@ class ReviewableSerializer < ApplicationSerializer
   has_many :editable_fields, serializer: ReviewableEditableFieldSerializer, embed: :objects
   has_many :reviewable_scores, serializer: ReviewableScoreSerializer
   has_many :bundled_actions, serializer: ReviewableBundledActionSerializer
-  has_one :claimed_by, serializer: UserWithCustomFieldsSerializer, root: "users"
+  has_one :claimed_by, serializer: ReviewableClaimedTopicSerializer
 
   # Used to keep track of our payload attributes
   class_attribute :_payload_for_serialization

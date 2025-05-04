@@ -179,9 +179,11 @@ ro:
     embed:
       load_from_remote: "A apărut o eroare la încărcarea postării."
     site_settings:
+      site_settings_are_deprecated: "Următoarele setări sunt învechite: %{old_names}. Folosește %{new_names} în schimb"
       default_categories_already_selected: "Nu poți selecta o categorie folosită într-o altă listă."
       s3_upload_bucket_is_required: "Nu poți activa încărcările pe S3 dacă nu ai introdus 's3_upload_bucket'."
       page_publishing_requirements: "Publicarea paginilor nu poate fi activată dacă este activată încărcarea securizată."
+      allow_likes_in_anonymous_mode_without_anonymous_mode_enabled: "Această setare necesită mai întâi activarea setării „permite modul anonim”."
   invite:
     expired: "Codul tău de invitație a expirat. Te rugăm <a href='%{base_url}/about'>contactezi personalul</a> forumului."
     confirm_email: "<p>Ești aproape gata! Am trimis un e-mail de activare la adresa ta de e-mail. Te rugăm să urmezi instrucţiunile din mail pentru a-ţi activa contul.</p><p>Dacă nu ajunge, verifică folderul spam.</p>"
@@ -301,9 +303,14 @@ ro:
         other: "Nivelul implicit de notificare nu poate fi setat pentru grupuri mai mari de %{count} de utilizatori. Grup incorect: %{group_name}"
       can_not_modify_automatic: "Nu poți modifica un grup automat"
       invalid_domain: "'%{domain}' nu este un domeniu valid."
+      too_many_domains: "Prea multe domenii. Maxim %{max}."
       invalid_incoming_email: "'%{email}' nu este o adresa validă de email."
       email_already_used_in_group: "'%{email}' este deja folosit de grupul '%{group_name}'."
       email_already_used_in_category: "%{email}' este deja folosit de categoria '%{category_name}'."
+      counting_too_many_email_domains:
+        one: "Maxim %{count} domeniu de email poate fi contorizat o dată."
+        few: "Maxim %{count} domenii de email pot fi contorizate o dată."
+        other: "Maxim %{count} de domenii de email pot fi contorizate o dată."
     default_names:
       everyone: "toată lumea"
       admins: "administratori"
@@ -1204,6 +1211,8 @@ ro:
     detect_custom_avatars: "Dacă sau nu să verifice dacă utilizatorii și-au încărcat poze de profil personalizate."
     max_daily_gravatar_crawls: "Numărul maxim zilnic de verificări pe care Discourse le va face pe Gravatar pentru a vedea dacă există avatare personalizate."
     enable_user_directory: "Furnizează un „carte de telefon” cu utilizatorii"
+    allow_anonymous_mode: "Activează opțiunea pentru ca utilizatorii să treacă la modul anonim pentru postare. Când este activată, utilizatorii pot opta ca identitățile lor să fie ascunse atunci când creează postări sau subiecte pe tot site-ul. Vezi și „permite aprecieri anonime”."
+    allow_likes_in_anonymous_mode: "Activează această setare pentru a permite utilizatorilor care navighează anonim pe site-ul tău să aprecieze postările. Când este activată, utilizatorii pot opta ca identitățile lor să fie ascunse atunci când apreciază postărilor sau subiectele de pe site. Vezi și „permite modul anonim”."
     anonymous_posting_min_trust_level: "Nivelul minim de încredere necesar pentru a putea activa postarea anonimă."
     anonymous_account_duration_minutes: "Pentru protejarea anonimității, creează un nou cont anonim la fiecare N minute pentru fiecare utilizator. Exemplu: dacă e setat la 600, imediat ce au trecut 600 de minute de la ultima postare șI utilizatorul a comutat pe anonim, va fi creat un nou cont anonim."
     hide_user_profiles_from_public: "Dezactivează cardurile, profilurile și „cartea de telefon” pentru utilizatorii anonimi."
@@ -1278,9 +1287,12 @@ ro:
     use_email_for_username_and_name_suggestions: "Folosește prima parte a adreselor de email pentru nume de utilizator și sugestii de nume. Avertisment: acest lucru poate face mai ușor pentru actorii rău intenționat să descopere adresa de email a membrilor tăi (deoarece mulți oameni folosesc furnizori de email obișnuiți precum `gmail.com`)."
     show_bottom_topic_map: "Arată harta subiectului în partea de jos a subiectului atunci când are 10 răspunsuri sau mai multe."
     show_topic_map_in_topics_without_replies: "Arată harta subiectului chiar dacă subiectul nu are răspunsuri."
+    enable_welcome_banner: "Afișează un banner pe paginile principale ale subiectelor pentru a ura bun venit membri și a le permite să caute conținut în site"
     experimental_new_new_view_groups: 'Activează o nouă listă de subiecte care combină subiectele necitite și cele noi și fă ca legătura „Toate” din bara laterală să ducă spre aceasta.'
     experimental_form_templates: "Activează caracteristica șabloane de formulare. Gestionează șabloanele la <a href='%{base_path}/admin/customize/form-templates'>Personalizare/șabloane</a>."
+    show_preview_for_form_templates: "Activează funcționalitatea de previzualizare pentru șabloanele de formulare"
     show_user_menu_avatars: "Arată avatare utilizator în meniul utilizatorului"
+    experimental_content_localization_allowed_groups: 'Grupuri cărora li se permite să actualizeze conținutul localizat. Necesită ca „localizarea experimentală a conținutului” să fie activată.'
     errors:
       invalid_email: "Adresă de email invalidă."
       invalid_username: "Nu există nici un utilizator cu acest nume de utilizator."
@@ -1424,6 +1436,7 @@ ro:
       not_allowed: "nu este permis din partea acelui furnizor de servicii email. Te rugăm folosește altă adresă email."
       blocked: "nu este permis."
       revoked: "No se vor trimite emailuri către '%{email}' până la data de %{date}."
+    cannot_remove_all_auth: "Trebuie să ai cel puțin un cont asociat, o cheie de acces sau o parolă setată."
   unsubscribe_mailer:
     subject_template: "Confirmă că nu mai vrei să primești actualizări pe email de la %{site_title}"
   invite_password_instructions:
@@ -1587,8 +1600,13 @@ ro:
     previous_discussion: "Răspunsurile precedente"
     in_reply_to: "Ca răspuns la"
     reply_by_email: "[Vizitează subiect](%{base_url}%{url}) sau dă reply la acest email pentru a răspunde."
+    reply_by_email_button_only: "[Vizitează subiect](%{base_url}%{url})"
+    reply_by_email_pm_button_only: "[Vizitează mesaj](%{base_url}%{url})"
     only_reply_by_email: "Dă reply la acest email pentru a răspunde."
+    only_reply_by_email_pm_button_only: "[Vizitează mesaj](%{base_url}%{url})"
     visit_link_to_respond: "[Vizitează subiect](%{base_url}%{url}) pentru a răspunde."
+    visit_link_to_respond_button_only: "[Vizitează subiect](%{base_url}%{url})"
+    visit_link_to_respond_pm_button_only: "[Vizitează mesaj](%{base_url}%{url})"
     posted_by: "Postat de %{username} pe data %{post_date}"
     user_invited_to_private_message_pm_group:
       text_body_template: |
@@ -1755,6 +1773,17 @@ ro:
       text_body_template: |2
 
         %{message}
+    account_deleted:
+      title: "Cont șters"
+      subject_template: "[%{email_prefix}] Contul tău a fost șters"
+      text_body_template: |
+        Salut,
+
+        Acesta este un mesaj automat de la [%{site_name}](%{base_url}) pentru a te anunța de ștergerea contului tău de utilizator asociat cu această adresă de email de către un membru al echipei.
+
+        %{flag_reason}
+
+        Consultă [regulile comunității](%{base_url}/guidelines) pentru detalii.
     account_second_factor_disabled:
       title: "Autentificarea în doi pași (2FA) este dezactivată"
       subject_template: "[%{email_prefix}] Autentificare în doi pași (2FA) dezactivată"
@@ -2113,6 +2142,8 @@ ro:
             choices:
               latest:
                 label: "Ultima"
+      branding:
+        title: "Logo site"
       corporate:
         fields:
           contact_url:
@@ -2159,26 +2190,74 @@ ro:
     actions:
       agree:
         title: "Da"
+      agree_and_keep:
+        complete: "Postarea a rămas neschimbată."
+      agree_and_keep_hidden:
+        complete: "Postarea a rămas ascunsă."
+      agree_and_suspend:
+        complete: "Utilizatorul a fost suspendat."
+      agree_and_silence:
+        complete: "Utilizatorul a fost redus la tăcere."
       agree_and_restore:
         description: "Restabilește postarea pentru astfel încât toți utilizatorii să o poată vedea."
+        complete: "Postarea a fost restaurată."
+      agree_and_hide:
+        complete: "Postarea a fost ascunsă, utilizatorul a fost notificat."
       delete_single:
         title: "Șterge"
+        complete: "Postarea a fost ștearsă."
+      delete_and_ignore:
+        complete: "Postarea a fost ștearsă."
+      delete_and_ignore_replies:
+        complete: "Postarea și răspunsurile au fost șterse."
+      delete_and_agree:
+        complete: "Postarea a fost ștearsă."
+      delete_and_agree_replies:
+        complete: "Postarea și răspunsurile au fost șterse."
       disagree_and_restore:
         description: "Restabilește postarea pentru astfel încât toți utilizatorii să o poată vedea."
+        complete: "Postarea a fost restaurată."
       disagree:
         title: "Nu"
+        complete: "Semnalarea a fost ignorată."
       ignore:
         title: "Ignoră"
+        complete: "Semnalarea a fost ignorată."
       ignore_and_do_nothing:
         title: "Nu face nimic"
+        complete: "Semnalarea a fost ignorată."
       approve:
         title: "Aprobare"
+        complete: "Postarea a fost aprobată."
+      approve_post:
+        complete: "Postarea a fost aprobată."
+      reject_post:
+        complete: "Postarea a fost respinsă."
+      approve_user:
+        complete: "Utilizatorul a fost aprobat."
       reject_user:
         delete:
           title: "Şterge utilizatorul"
+          complete: "Utilizatorul a fost șters."
+        block:
+          complete: "Utilizatorul a fost șters și blocat."
       reject:
         title: "Respingere"
+      reject_and_suspend:
+        complete: "Postarea a fost respinsă și utilizatorul a fost suspendat."
+      reject_and_silence:
+        complete: "Postarea a fost respinsă și utilizatorul a fost redus la tăcere."
+      reject_and_delete:
+        complete: "Postarea a fost respinsă și ștearsă."
+      reject_and_keep_deleted:
+        complete: "Postarea a fost respinsă și păstrată ștearsă."
+      approve_and_restore:
+        complete: "Postare a fost aprobată și restaurată."
+      delete_user:
+        complete: "Utilizatorul a fost șters."
   fallback_username: "utilizator"
+  content_localization:
+    not_allowed: "Nu ai voie să localizezi acest conținut."
   activemodel:
     errors:
       <<: *errors

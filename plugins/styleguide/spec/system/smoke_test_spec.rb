@@ -32,6 +32,7 @@ RSpec.describe "Styleguide Smoke Test", type: :system do
       { href: "/molecules/navigation-stacked", title: "Navigation Stacked" },
       { href: "/molecules/post-menu", title: "Post Menu" },
       { href: "/molecules/signup-cta", title: "Signup CTA" },
+      { href: "/molecules/multi-select", title: "Multi select" },
       { href: "/molecules/toasts", title: "Toasts" },
       { href: "/molecules/tooltips", title: "Tooltips" },
       { href: "/molecules/topic-list-item", title: "Topic List Item" },

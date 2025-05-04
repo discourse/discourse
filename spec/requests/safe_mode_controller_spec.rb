@@ -5,6 +5,7 @@ RSpec.describe SafeModeController do
     it "never includes customizations" do
       theme = Fabricate(:theme)
       theme.set_field(target: :common, name: "header", value: "My Custom Header")
+      theme.set_field(target: :common, name: :scss, value: "body { background: red; }")
       theme.save!
       theme.set_default!
 
@@ -20,6 +21,11 @@ RSpec.describe SafeModeController do
       expect(response.status).to eq(200)
       expect(response.body).not_to include("My Custom Header")
       expect(response.body).not_to include("data-theme-id=\"#{theme.id}\"")
+    end
+
+    it "sets the robots header" do
+      get "/safe-mode"
+      expect(response.headers["X-Robots-Tag"]).to eq("noindex, nofollow")
     end
   end
 

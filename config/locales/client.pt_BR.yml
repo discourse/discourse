@@ -194,6 +194,10 @@ pt_BR:
       dismiss: "Descartar"
     bootstrap_mode: "Primeiros passos"
     back_button: "Voltar"
+    welcome_banner:
+      header:
+        anonymous_members: "Boas-vindas ao %{site_name}!"
+      search: "Pesquisar"
     themes:
       default_description: "Padrão"
       broken_theme_alert: "Seu site pode não funcionar porque o tema/componente tem erros."
@@ -457,10 +461,6 @@ pt_BR:
       new_topic: "Rascunho de novo tópico"
       new_private_message: "Novo rascunho de mensagem"
       edit_topic: "Editar rascunho do tópico"
-      abandon:
-        confirm: "Você já tem um rascunho em andamento. O que deseja fazer com ele?"
-        yes_value: "Descartar"
-        no_value: "Retomar a edição"
       dropdown:
         title: "Abrir menu de rascunhos mais recentes"
         untitled: "Rascunho sem título"
@@ -609,6 +609,10 @@ pt_BR:
         name: "Nome"
         fields: "Campos"
         reject_reason: "Motivo"
+        scrubbed_reason: "Motivo"
+        scrub_record:
+          reason_placeholder: "Motivo..."
+          cancel_button: "Cancelar"
       user_percentage:
         summary:
           one: "%{agreed}, %{disagreed}, %{ignored} (do último sinalizador)"
@@ -2076,6 +2080,9 @@ pt_BR:
     modal:
       close: "fechar"
       dismiss_error: "Descartar erro"
+    multi_select:
+      no_results: "Nenhum resultado"
+      search: "Pesquisar…"
     form_kit:
       reset: Redefinir
       optional: opcional
@@ -2311,10 +2318,6 @@ pt_BR:
         name: "Google"
         title: "Conectar com o Google"
         sr_title: "Conectar com o Google"
-      twitter:
-        name: "Twitter"
-        title: "Conectar com o Twitter"
-        sr_title: "Conectar com o Twitter"
       instagram:
         name: "Instagram"
         title: "Entrar com o Instagram"
@@ -2792,8 +2795,6 @@ pt_BR:
       in_topics_posts: "em todos os tópicos e postagens"
       enter_hint: "ou pressione Enter"
       in_posts_by: "em postagens por %{username}"
-      browser_tip: "%{modifier} + f"
-      browser_tip_description: "usar novamente pesquisa de navegador"
       recent: "Pesquisas recentes"
       clear_recent: "Remover pesquisas recentes"
       experience:
@@ -3794,6 +3795,10 @@ pt_BR:
       settings: "Configurações"
       topic_template: "Modelo"
       tags: "Etiquetas"
+      localization:
+        name: "Nome"
+        description: "Descrição"
+        remove: "Remover"
       tags_allowed_tags: "Restringir estas etiquetas a esta categoria:"
       tags_allowed_tag_groups: "Restringir estes grupos de etiquetas a esta categoria:"
       tags_placeholder: "(Opcional) lista de etiquetas permitidas"
@@ -3822,9 +3827,13 @@ pt_BR:
       logo_description: "Proporção de aspecto recomendada 1:1 com tamanho mínimo de 200px. Se deixado em branco, nenhuma imagem será exibida."
       background_image: "Imagem de fundo da categoria"
       background_image_dark: "Imagem escura de fundo da categoria"
-      badge_colors: "Cores do emblema"
-      background_color: "Cor de fundo"
-      foreground_color: "Cor de primeiro plano"
+      background_color: "Cor"
+      styles:
+        icon: "Ícone"
+        emoji: "Emoji"
+        options:
+          icon: "Ícone"
+          emoji: "Emoji"
       color_used: "Cor em uso"
       predefined_colors: "Opções predefinidas de cor"
       name_placeholder: "máximo de uma ou duas palavras"
@@ -4684,12 +4693,6 @@ pt_BR:
       back_to_forum: "Voltar para o Fórum"
       collapse_all_sections: "Recolher todas as seções"
       expand_all_sections: "Expandir todas as seções"
-      filter: "Filtro..."
-      clear_filter: "Limpar filtro"
-      no_results:
-        title: "Nenhum resultado"
-        description: 'Não foi possível encontrar nenhum "%{filter}" correspondente.<br><br>Você queria <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">procurar as configurações do site</a> ou a <a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">lista de usuários(as) administradores(as)?</a>'
-        description_admin_search: 'Não conseguimos encontrar nada correspondente a ''%{filter}''.<br><br>Tente <a class="sidebar-additional-filter-admin-search" href="%{admin_search_url}">pesquisar em toda a interface de administração</a>.'
       footer:
         interface_color_selector:
           light: "Claro"
@@ -4796,6 +4799,16 @@ pt_BR:
           paste: "Colar..."
           save: "Salvar como..."
     powered_by_discourse: "Com tecnologia Discourse"
+    discovery:
+      headings:
+        categories: "Todas as categorias"
+        filter_labels:
+          latest: "Últimos"
+          top: "Melhores"
+          new: "Novo"
+          unread: "Não lidas"
+          hot: "Em alta"
+          unseen: "Não vistos"
   admin_js:
     type_to_filter: "Digite para filtrar..."
     settings: "Configurações"
@@ -4847,9 +4860,6 @@ pt_BR:
           title: "Moderação"
           header_description: "O sistema de sinalização do Discourse ajuda o(a) usuário(a) e sua equipe de moderadores(as) a gerenciar conteúdo e comportamento do(a) usuário(a), promovendo um ambiente saudável e respeitoso na comunidade. As definições padrão são apropriadas para a maior parte das comunidades e não precisarão ser alteradas. Contudo, caso seu site tenha algum requisito específico, você pode desativar os sinalizadores desnecessários e adicionar os seus."
           keywords: "denunciar|revisar|spam|ilegal"
-        font_style:
-          title: "Estilo de fonte"
-          header_description: "Personalize os estilos de fonte usados pelos seus temas"
         files:
           title: "Arquivos"
           header_description: "Configurações para controlar limites de tipo e tamanho de arquivo, origens e tamanhos de avatar, armazenamento de arquivo, compactação e qualidade de imagem etc."
@@ -4863,11 +4873,7 @@ pt_BR:
         login_and_authentication:
           title: "Acesso e autenticação"
           header_description: "Configure o acesso e autenticação de usuários(as), chaves e segredos, provedores OAuth2 e muito mais"
-        logo:
-          title: "Logotipo do site"
-          header_description: "Personalize as variações do logotipo do seu site"
-        branding:
-          title: "Identidade visual"
+        logo_and_fonts:
           logo:
             title: "Logotipo"
             form:
@@ -4920,6 +4926,13 @@ pt_BR:
                 description: "Imagem opengraph padrão, usada quando a página não tiver outra imagem adequada. Se for deixada em branco, large_icon será usado."
               x_summary_large_image:
                 help_text: "o tamanho recomendado é de pelo menos 280 x 150 pixels. Não use uma imagem SVG."
+          fonts:
+            title: "Fontes"
+            form:
+              heading_font:
+                title: "Fonte do cabeçalho"
+            backfill_modal:
+              modal_yes: "Sim"
         navigation:
           title: "Navegação"
           header_description: "Configure itens de menu e links de navegação para seu site, inclusive a localização e comportamento do menu de navegação principal, links rápidos no topo da página inicial e a barra lateral da administração"
@@ -4929,9 +4942,6 @@ pt_BR:
         onebox:
           title: "Onebox"
           header_description: "Configure a pré-visualização, geração e exibição do Onebox para seu site"
-        other:
-          title: "Outras"
-          header_description: "Configurações que não pertencem a outras categorias"
         rate_limits:
           title: "Limites de frequência"
           header_description: "Configure a frequência com a qual os(as) usuários(as) podem realizar certas ações, como criar tópicos, enviar mensagens e postar respostas"
@@ -4940,7 +4950,6 @@ pt_BR:
           header_description: "Configure definições de pesquisa, inclusive registro e tokenização para chinês e japonês"
         search_everything:
           title: "Pesquisar"
-          header_description: "Encontre qualquer coisa na interface de administração aqui. Você pode filtrar os resultados abaixo, e suas preferências serão lembradas."
         security:
           title: "Segurança"
           header_description: "Configurar definições de segurança, inclusive autenticação de dois fatores, privilégios de moderador(a) e políticas de segurança de conteúdo"
@@ -4985,6 +4994,10 @@ pt_BR:
         badges:
           title: "Emblemas"
           header_description: "Os(as) usuários(as) recebem emblemas como recompensa por suas atividades, contribuições e realizações. Isso é uma forma de reconhecer, validar e incentivar comportamentos positivos e o envolvimento na comunidade"
+        content:
+          sub_pages:
+            posts_and_topics:
+              title: "Postagens no tópico"
         permalinks:
           title: "Links permanentes"
           header_description: "Redirecionamentos para aplicar nas URLs que não são conhecidas pelo fórum"
@@ -4996,7 +5009,6 @@ pt_BR:
           header_description: "Palavras em acompanhamento são ferramentas de moderação que realizam várias ações diferentes, inclusive bloquear, censurar, vincular ou sinalizar postagens que contenham certas palavras"
         color_palettes:
           title: "Paletas de cores"
-          header_description: "As paletas de cores definem as cores usadas na interface do seu site, já os temas fornecem mais estilos, layouts e componentes. Ambos podem funcionar juntos para criar uma aparência e impressão única para seu site, além de serem disponibilizados para os(as) usuários(as) selecionarem sua preferência."
         emoji:
           title: "Emoji"
           header_description: "Adicione novos emojis que estarão disponíveis para todas as pessoas. Selecione vários arquivos para criar emojis usando seus nomes de arquivo. O grupo selecionado será usado para todos os arquivos que forem adicionados ao mesmo tempo."
@@ -5011,9 +5023,6 @@ pt_BR:
           title: "Textos do site"
           header_description: "Personalize qualquer texto usado no Discourse para corresponder à voz e ao tom da sua comunidade"
         email:
-          title: "Registros e configurações do servidor"
-          header_description: "Personalize os modelos usados para criar e-mails, pré-visualize e-mails de resumo que serão enviados e visualize logs de e-mail"
-          keywords: "e-mail|smtp|mailgun|sendgrid|enviado|ignorado|retornado|recebido|recusado|registros de e-mail|resumo de pré-visualização"
           sub_pages:
             preview_summary:
               title: "Pré-visualizar resumo"
@@ -5024,6 +5033,8 @@ pt_BR:
             templates:
               title: "Modelos"
               header_description: "Personalizar os modelos usados para criar e-mails"
+        email_logs:
+          sub_pages:
             sent:
               title: "Enviado(a)"
               header_description: "Ver um log de e-mails que foram enviados"
@@ -5563,6 +5574,66 @@ pt_BR:
             failed: "Falha"
       home:
         title: "Início"
+      account:
+        title: "Conta"
+        sidebar_link:
+          backups: "Backups"
+          whats_new:
+            title: "Novidades?"
+            keywords: "registro de alterações|recurso|lançamento"
+      community:
+        title: "Comunidade"
+        sidebar_link:
+          about_your_site: "Sobre seu site"
+          badges: "Emblemas"
+          login_and_authentication: "Acesso e autenticação"
+          notifications: "Notificações"
+          permalinks: "Links permanentes"
+          trust_levels: "Níveis de confiança"
+          group_permissions: "Permissões de grupo"
+          users: "Usuários(as)"
+          groups: "Grupos"
+          user_fields: "Campos de usuário(a)"
+          watched_words: "Palavras em acompanhamento"
+          legal: "Jurídico"
+          moderation_flags:
+            title: "Moderação"
+            keywords: "sinalizar|revisar"
+      appearance:
+        title: "Aparência"
+        sidebar_link:
+          font_style: "Estilo de fonte"
+          site_logo: "Logotipo do site"
+          color_schemes: "Paletas de cores"
+          emoji: "Emoji"
+          navigation: "Navegação"
+          themes_and_components:
+            keywords: "extensão"
+          site_texts: "Textos do site"
+      email_settings:
+        title: "Configurações de e-mail"
+        sidebar_link:
+          appearance: "Aparência"
+          server_setup:
+            title: "Registros e configurações do servidor"
+            keywords: "e-mail|smtp|mailgun|sendgrid|enviado|ignorado|retornado|recebido|recusado|registros de e-mail|resumo de pré-visualização"
+      security:
+        title: "Segurança"
+        sidebar_link:
+          security: "Configurações de segurança"
+          spam: "Configurações de spam"
+          staff_action_logs:
+            title: "Filtros e registros"
+            keywords: "registros de erros|ação da equipe|e-mails filtrados|ips filtrados|urls filtradas|registros de pesquisa"
+      section_landing_pages:
+        account:
+          title: "Conta"
+          backups:
+            title: "Backups"
+            description: "Faça cópia de segurança dos dados do seu site"
+          whats_new:
+            title: "Novidades?"
+            description: "Descubra melhorias e lançamentos novos no Discourse"
       config_areas:
         about:
           general_settings: "Configurações gerais"
@@ -5638,7 +5709,6 @@ pt_BR:
             post: "postagens"
             chat_message: "mensagens de chat"
             enabled: "Ativar este sinalizador personalizado após salvar"
-            alert: "Após ser utilizado, o sinalizador personalizado poderá ser desativado, mas não ser editado nem excluído."
             edit_flag: "Editar sinalizador"
             non_editable: "Você não pode editar este sinalizador porque é um sinalizador de sistema ou já foi utilizado no sistema de revisão. Mas ainda pode desativar."
             delete_flag: "Excluir sinalizador"
@@ -5658,16 +5728,33 @@ pt_BR:
           delete: "Excluir"
           more_options:
             title: "Mais opções"
-        look_and_feel:
+        themes_and_components:
+          breadcrumb_title: "Personalizar"
+          install: "Instalar"
           themes:
             title: "Temas"
             themes_intro: "Instale um novo tema para começar, ou crie um do zero usando estes recursos."
-            themes_intro_img_alt: "Novo espaço reservado para tema"
-            set_default_theme: "Definir padrão"
-            default_theme: "Tema padrão"
-            themes_description: "Temas são personalizações que podem ser estendidas e alteram vários elementos do estilo do design do fórum, incluindo muitas vezes recursos adicionais de front-end."
             new_theme: "Novo tema"
-            user_selectable: "Selecionável por usuário(a)"
+          components:
+            title: "Componentes"
+            install: "Instalar"
+            name: "Nome"
+            enabled: "Ativado(a)?"
+            by_author: "De %{name}"
+            learn_more: "Saiba mais"
+            edit: "Editar"
+            parent_themes_two: "%{name1} e %{name2}"
+            preview: "Pré-visualizar"
+            check_update: "Verificar atualizações"
+            export: "Exportar"
+            convert: "Converter"
+            delete: "Excluir"
+            filter_by: "Filtrar por"
+            filter_by_all: "Tudo"
+            filter_by_used: "Usado(a)"
+            filter_by_unused: "Não usado(a)"
+            delete_confirm: 'Você tem certeza de que deseja excluir "%{name}"?'
+            badge_unused: "Não usado(a)"
         user_fields:
           field: "Campo"
           type: "Tipo"
@@ -5678,6 +5765,13 @@ pt_BR:
           delete: "Excluir"
           delete_successful: "Campo de usuário(a) excluído."
           save_successful: "Campo de usuário(a) salvo."
+        color_palettes:
+          palette_name: "Nome"
+          color_options:
+            toggle: "Selecionável por usuário(a)"
+            toggle_description: "A paleta de cores pode ser selecionado pelos(as) usuários(as)"
+          colors:
+            title: "Cores"
       plugins:
         title: "Plugins"
         name: "Nome"
@@ -6037,7 +6131,6 @@ pt_BR:
           title: "Cores"
           edit: "Editar paletas de cores"
           long_title: "Paletas de cores"
-          description: "As paletas de cores definem as cores usadas na interface do seu site, já os temas fornecem mais estilos, layouts e componentes. Ambos podem funcionar juntos para criar uma aparência e impressão única para seu site, além de serem disponibilizados para os(as) usuários(as) selecionarem sua preferência."
           about: "Altere as cores usadas nos seus temas. Crie um novo esquema de cores para começar."
           new_name: "Nova paleta de cores"
           copy_name_prefix: "Copiar de"

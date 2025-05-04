@@ -551,7 +551,7 @@
     }
   }
 
-  @media all and (max-width: 600px) {
+  @media all and (width <= 600px) {
     float: none;
     width: 100%;
   }
@@ -691,8 +691,33 @@
   }
 
   .pref-associated-accounts table {
+    width: 100%;
+
     td {
       padding: 8px;
+
+      &.associated-account__icon {
+        font-size: 1.5em;
+        padding-right: 0;
+        text-align: center;
+
+        &.discord .d-icon {
+          color: var(--discord);
+        }
+      }
+
+      &.associated-account__actions {
+        text-align: right;
+      }
+    }
+
+    .associated-account__name {
+      font-size: var(--font-up-1);
+    }
+
+    .associated-account__description {
+      word-break: break-all;
+      color: var(--primary-medium);
     }
   }
 

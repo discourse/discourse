@@ -194,6 +194,11 @@ fr:
       dismiss: "Rejeter"
     bootstrap_mode: "Pour commencer"
     back_button: "Retour"
+    welcome_banner:
+      header:
+        logged_in_members: "Bienvenue, %{preferred_display_name}!"
+        anonymous_members: "Bienvenue sur %{site_name} !"
+      search: "Recherche"
     themes:
       default_description: "Par défaut"
       broken_theme_alert: "Votre site risque de ne pas fonctionner, car un thème ou un composant comprend des erreurs."
@@ -456,13 +461,10 @@ fr:
       remove_confirmation: "Voulez-vous vraiment supprimer ce brouillon ?"
       new_topic: "Nouveau brouillon de sujet"
       new_private_message: "Nouveau brouillon de message direct"
-      abandon:
-        confirm: "Vous avez déjà un brouillon en cours de rédaction. Que voulez-vous en faire ?"
-        yes_value: "Abandonner"
-        no_value: "Reprendre l'édition"
       dropdown:
         title: "Ouvrir le menu des derniers brouillons"
         untitled: "Brouillon sans titre"
+        view_all: "afficher tous les brouillons"
         other_drafts:
           one: "+%{count} autre brouillon"
           other: "+%{count} autres brouillons"
@@ -597,6 +599,10 @@ fr:
         name: "Nom"
         fields: "Champs"
         reject_reason: "Raison"
+        scrubbed_reason: "Motif d'attribution"
+        scrub_record:
+          reason_placeholder: "Raison ..."
+          cancel_button: "Annuler"
       user_percentage:
         summary:
           one: "%{agreed}, %{disagreed}, %{ignored} (du dernier signalement)"
@@ -2064,6 +2070,9 @@ fr:
     modal:
       close: "fermer"
       dismiss_error: "Ignorer l'erreur"
+    multi_select:
+      no_results: "Aucun résultat"
+      search: "Recherche…"
     form_kit:
       reset: Réinitialiser
       optional: facultatif
@@ -2299,10 +2308,6 @@ fr:
         name: "Google"
         title: "Se connecter avec Google"
         sr_title: "Se connecter avec Google"
-      twitter:
-        name: "Twitter"
-        title: "Se connecter avec Twitter"
-        sr_title: "Se connecter avec Twitter"
       instagram:
         name: "Instagram"
         title: "Se connecter avec Instagram"
@@ -2771,8 +2776,6 @@ fr:
       in_topics_posts: "dans tous les sujets et messages"
       enter_hint: "ou appuyez sur Entrée"
       in_posts_by: "dans les messages de %{username}"
-      browser_tip: "%{modifier} + f"
-      browser_tip_description: "à nouveau pour utiliser la fonction de recherche de votre navigateur"
       recent: "Recherches récentes"
       clear_recent: "Effacer les recherches récentes"
       type:
@@ -3771,6 +3774,10 @@ fr:
       settings: "Paramètres"
       topic_template: "Modèle"
       tags: "Étiquettes"
+      localization:
+        name: "Nom"
+        description: "Description"
+        remove: "Supprimer"
       tags_allowed_tags: "Réserver l'utilisation de ces étiquettes à cette catégorie :"
       tags_allowed_tag_groups: "Réserver l'utilisation de ces groupes d'étiquettes à cette catégorie :"
       tags_placeholder: "(Facultatif) liste des étiquettes autorisées"
@@ -3798,9 +3805,13 @@ fr:
       logo_dark: "Image du logo de la catégorie en mode sombre"
       background_image: "Image de fond de la catégorie"
       background_image_dark: "Image d'arrière-plan de la catégorie sombre"
-      badge_colors: "Couleurs du badge"
-      background_color: "Couleur du fond"
-      foreground_color: "Couleur du texte"
+      background_color: "Couleur"
+      styles:
+        icon: "Icône"
+        emoji: "Émoji"
+        options:
+          icon: "Icône"
+          emoji: "Émoji"
       color_used: "Couleur en cours d'utilisation"
       predefined_colors: "Options de couleurs prédéfinies"
       name_placeholder: "Un ou deux mots maximum"
@@ -4657,11 +4668,6 @@ fr:
       back_to_forum: "Retour au forum"
       collapse_all_sections: "Réduire toutes les sections"
       expand_all_sections: "Développer toutes les sections"
-      filter: "Filtrer..."
-      clear_filter: "Effacer le filtre"
-      no_results:
-        title: "Aucun résultat"
-        description: 'Nous n''avons rien trouvé correspondant à « %{filter} ».<br><br>Vouliez-vous <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">rechercher dans les paramètres du site</a> ou dans la <a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">liste des utilisateurs administrateurs ?</a>'
       footer:
         interface_color_selector:
           light: "Clair"
@@ -4767,6 +4773,16 @@ fr:
           paste: "Coller..."
           save: "Enregistrer sous..."
     powered_by_discourse: "Alimenté par Discourse"
+    discovery:
+      headings:
+        categories: "Toutes les catégories"
+        filter_labels:
+          latest: "Récents"
+          top: "Top"
+          new: "Nouveaux"
+          unread: "Non lus"
+          hot: "Populaires"
+          unseen: "Non lus"
   admin_js:
     type_to_filter: "Commencez votre saisie pour filtrer…"
     settings: "Paramètres"
@@ -4817,9 +4833,6 @@ fr:
         flags:
           title: "Modération"
           header_description: "Le système de signalement de Discourse vous aide, vous et votre équipe de modérateurs, à gérer le contenu et le comportement des utilisateurs, en gardant ainsi votre communauté respectueuse et saine. Les valeurs par défaut conviennent à la plupart des communautés et vous n'avez pas besoin de les modifier. Cependant, si votre site a des exigences particulières, vous pouvez désactiver les indicateurs dont vous n'avez pas besoin et ajouter vos propres indicateurs personnalisés."
-        font_style:
-          title: "Style de police"
-          header_description: "Personnalisez les styles de police utilisés par vos thèmes"
         files:
           title: "Fichiers"
           header_description: "Paramètres qui contrôlent les limites de taille et de type de fichier, les tailles et les sources des avatars, le stockage des fichiers, la qualité et la compression des images, etc."
@@ -4829,11 +4842,7 @@ fr:
         login_and_authentication:
           title: "Connexion et authentification"
           header_description: "Configurez la manière dont les utilisateurs se connectent et s'authentifient, les secrets et les clés, les fournisseurs OAuth2, etc."
-        logo:
-          title: "Logo du site"
-          header_description: "Personnalisez les variantes du logo de votre site"
-        branding:
-          title: "Branding"
+        logo_and_fonts:
           logo:
             form:
               logo:
@@ -4844,6 +4853,13 @@ fr:
                 description: "Captures d'écran qui mettent en valeur les atouts et les fonctionnalités de votre instance du logiciel. Ces images doivent toutes être enregistrées localement sur le serveur et posséder des dimensions identiques."
               opengraph_image:
                 description: "Image opengraph par défaut, utilisée lorsque la page n'a pas d'autre image appropriée. Si vous laissez ce champ vide, « large_icon » sera utilisée."
+          fonts:
+            title: "Polices"
+            form:
+              heading_font:
+                title: "Police de titre"
+            backfill_modal:
+              modal_yes: "Oui"
         navigation:
           title: "Navigation"
           header_description: "Configurez les liens de navigation et les éléments de menu de votre site. Cela inclut l'emplacement et le comportement du menu de navigation principal, les liens rapides en haut de la page d'accueil, ainsi que la barre latérale d'administration"
@@ -4853,9 +4869,6 @@ fr:
         onebox:
           title: "Onebox"
           header_description: "Configurez la manière dont les aperçus Onebox sont générés et affichés pour votre site"
-        other:
-          title: "Autre"
-          header_description: "Paramètres qui ne rentrent dans aucune autre catégorie"
         rate_limits:
           title: "Limites d'utilisation"
           header_description: "Configurez la fréquence à laquelle les utilisateurs peuvent effectuer certaines actions, telles que créer des sujets, envoyer des messages et publier des réponses"
@@ -4901,6 +4914,10 @@ fr:
         badges:
           title: "Badges"
           header_description: "Les badges récompensent les utilisateurs pour leurs activités, leurs contributions et leurs réalisations afin de reconnaître, de valider et d'encourager les comportements et interactions positives au sein de la communauté"
+        content:
+          sub_pages:
+            posts_and_topics:
+              title: "Publications et sujets"
         permalinks:
           title: "Permaliens"
           header_description: "Redirections à appliquer pour les URL non connues par le forum"
@@ -4924,9 +4941,6 @@ fr:
         site_texts:
           title: "Textes du site"
         email:
-          title: "Configuration du serveur et journaux"
-          header_description: "Personnalisez les modèles utilisés pour créer des e-mails, prévisualiser les e-mails récapitulatifs qui seront envoyés et afficher les journaux"
-          keywords: "e-mail|smtp|mailgun|sendgrid|envoyé|ignoré|non délivré|reçu|rejeté|journaux d'e-mail|prévisualier le résumé"
           sub_pages:
             preview_summary:
               title: "Prévisualiser le résumé"
@@ -4935,6 +4949,8 @@ fr:
               title: "Test avancé"
             templates:
               title: "Modèles"
+        email_logs:
+          sub_pages:
             sent:
               title: "Envoyés"
             skipped:
@@ -5456,6 +5472,66 @@ fr:
             failed: "Échec"
       home:
         title: "Accueil"
+      account:
+        title: "Compte"
+        sidebar_link:
+          backups: "Sauvegardes"
+          whats_new:
+            title: "Quoi de neuf ?"
+            keywords: "journal des modifications|fonctionnalité|version"
+      community:
+        title: "Communauté"
+        sidebar_link:
+          about_your_site: "À propos de votre site"
+          badges: "Badges"
+          login_and_authentication: "Connexion et authentification"
+          notifications: "Notifications"
+          permalinks: "Permaliens"
+          trust_levels: "Niveaux de confiance"
+          group_permissions: "Autorisations de groupe"
+          users: "Utilisateurs"
+          groups: "Groupes"
+          user_fields: "Champs utilisateur"
+          watched_words: "Mots surveillés"
+          legal: "Mentions légales"
+          moderation_flags:
+            title: "Modération"
+            keywords: "signaler|examiner"
+      appearance:
+        title: "Apparence"
+        sidebar_link:
+          font_style: "Style de police"
+          site_logo: "Logo du site"
+          color_schemes: "Palettes de couleurs"
+          emoji: "Émoji"
+          navigation: "Navigation"
+          themes_and_components:
+            keywords: "extension"
+          site_texts: "Textes du site"
+      email_settings:
+        title: "Paramètres de messagerie"
+        sidebar_link:
+          appearance: "Apparence"
+          server_setup:
+            title: "Configuration du serveur et journaux"
+            keywords: "e-mail|smtp|mailgun|sendgrid|envoyé|ignoré|non délivré|reçu|rejeté|journaux d'e-mail|prévisualier le résumé"
+      security:
+        title: "Sécurité"
+        sidebar_link:
+          security: "Paramètres de sécurité"
+          spam: "Paramètres anti-spam"
+          staff_action_logs:
+            title: "Journaux et filtrage"
+            keywords: "journaux d'erreurs|action du personnel|e-mails filtrés|ip filtrés|url filtrées|journaux de recherche"
+      section_landing_pages:
+        account:
+          title: "Compte"
+          backups:
+            title: "Sauvegardes"
+            description: "Effectuez une sauvegarde des données de votre site"
+          whats_new:
+            title: "Quoi de neuf ?"
+            description: "Découvrez les nouvelles versions et améliorations de Discourse"
       config_areas:
         about:
           general_settings: "Paramètres généraux"
@@ -5529,7 +5605,6 @@ fr:
             post: "publications"
             chat_message: "messages de discussion"
             enabled: "Activer ce signalement personnalisé après l'enregistrement"
-            alert: "Une fois qu'un signalement personnalisé a été utilisé, il peut être désactivé, mais pas modifié ni supprimé."
             edit_flag: "Modifier le signalement"
             non_editable: "Vous ne pouvez pas modifier ce signalement, car il s'agit d'un indicateur système ou il a déjà été utilisé dans le système de révision, mais vous pouvez toujours le désactiver."
             delete_flag: "Supprimer le signalement"
@@ -5549,16 +5624,33 @@ fr:
           delete: "Supprimer"
           more_options:
             title: "Plus d'options"
-        look_and_feel:
+        themes_and_components:
+          breadcrumb_title: "Personnaliser"
+          install: "Installer"
           themes:
             title: "Thèmes"
             themes_intro: "Installez un nouveau thème pour commencer ou créez le vôtre à partir de zéro en utilisant ces ressources."
-            themes_intro_img_alt: "Nouvel espace réservé au thème"
-            set_default_theme: "Définir par défaut"
-            default_theme: "Thème par défaut"
-            themes_description: "Les thèmes sont des personnalisations étendues qui modifient plusieurs éléments du style de conception de votre forum et incluent souvent également des fonctionnalités front-end supplémentaires."
             new_theme: "Nouveau thème"
-            user_selectable: "Sélectionnable par l'utilisateur"
+          components:
+            title: "Composants"
+            install: "Installer"
+            name: "Nom"
+            enabled: "Activé ?"
+            by_author: "Par %{name}"
+            learn_more: "En savoir plus…"
+            edit: "Modifier"
+            parent_themes_two: "%{name1} et %{name2}"
+            preview: "Aperçu"
+            check_update: "Vérifier les mises à jour"
+            export: "Exporter"
+            convert: "Convertir"
+            delete: "Supprimer"
+            filter_by: "Filtrer par"
+            filter_by_all: "Tout"
+            filter_by_used: "Utilisé"
+            filter_by_unused: "Non utilisé"
+            delete_confirm: 'Voulez-vous vraiment supprimer « %{name} » ?'
+            badge_unused: "Non utilisé"
         user_fields:
           field: "Champ"
           type: "Type"
@@ -5569,6 +5661,13 @@ fr:
           delete: "Supprimer"
           delete_successful: "Champ utilisateur supprimé."
           save_successful: "Champ utilisateur enregistré."
+        color_palettes:
+          palette_name: "Nom"
+          color_options:
+            toggle: "Sélectionnable par l'utilisateur"
+            toggle_description: "La palette de couleurs peut être sélectionnée par les utilisateurs"
+          colors:
+            title: "Couleurs"
       plugins:
         title: "Extensions"
         name: "Nom"
@@ -5910,7 +6009,6 @@ fr:
           title: "Couleurs"
           edit: "Modifier les palettes de couleurs"
           long_title: "Palettes de couleurs"
-          description: "Les palettes de couleurs définissent les couleurs de base utilisées dans l'interface de votre site, tandis que les thèmes peuvent fournir un style, des mises en page et des composants supplémentaires. Les deux peuvent fonctionner ensemble pour créer l'apparence unique de votre site et les deux peuvent être mis à la disposition des utilisateurs selon leurs préférences."
           about: "Modifiez les couleurs utilisées par vos thèmes. Créez une nouvelle palette de couleurs pour commencer."
           new_name: "Nouvelle palette de couleurs"
           copy_name_prefix: "Copie de"

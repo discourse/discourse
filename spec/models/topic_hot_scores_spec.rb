@@ -6,6 +6,8 @@ RSpec.describe TopicHotScore do
     fab!(:user2) { Fabricate(:user) }
     fab!(:user3) { Fabricate(:user) }
 
+    after { Discourse.cache.delete(described_class::CACHE_KEY) }
+
     it "also always updates based on recent activity" do
       freeze_time
 
@@ -110,6 +112,21 @@ RSpec.describe TopicHotScore do
 
       expect(TopicHotScore.find_by(topic_id: topic1.id).score).to be_within(0.0001).of(0.0005)
       expect(TopicHotScore.find_by(topic_id: topic2.id).score).to be_within(0.001).of(0.001)
+    end
+
+    it "caches 10% of the hottest topic IDs" do
+      9.times { Fabricate(:topic, like_count: 3, last_posted_at: 10.minutes.ago) }
+      hottest_topic = Fabricate(:topic, like_count: 10, last_posted_at: 10.minutes.ago)
+
+      TopicHotScore.update_scores
+
+      expect(TopicHotScore.hottest_topic_ids).to contain_exactly(hottest_topic.id)
+
+      hottest_topic_2 = Fabricate(:topic, like_count: 100, last_posted_at: 10.minutes.ago)
+
+      TopicHotScore.update_scores
+
+      expect(TopicHotScore.hottest_topic_ids).to contain_exactly(hottest_topic_2.id)
     end
 
     it "ignores topics in the future" do

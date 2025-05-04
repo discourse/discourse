@@ -95,7 +95,7 @@ if defined?(Rack::MiniProfiler) && defined?(Rack::MiniProfiler::Config)
       end
     end
 
-  Rack::MiniProfiler.counter_method(Redis::Client, :call) { "redis" }
+  Rack::MiniProfiler.counter_method(Redis::Client, :call_v) { "redis" }
 end
 
 if ENV["PRINT_EXCEPTIONS"]

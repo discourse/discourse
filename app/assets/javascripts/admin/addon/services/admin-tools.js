@@ -44,7 +44,7 @@ export default class AdminToolsService extends Service {
     const loadedUser = user.adminUserView
       ? user
       : await AdminUser.find(user.get("id"));
-    this.modal.show(PenalizeUserModal, {
+    return this.modal.show(PenalizeUserModal, {
       model: {
         penaltyType: type,
         postId: opts.postId,
@@ -57,11 +57,11 @@ export default class AdminToolsService extends Service {
   }
 
   showSilenceModal(user, opts) {
-    this.showControlModal("silence", user, opts);
+    return this.showControlModal("silence", user, opts);
   }
 
   showSuspendModal(user, opts) {
-    this.showControlModal("suspend", user, opts);
+    return this.showControlModal("suspend", user, opts);
   }
 
   _deleteSpammer(adminUser) {

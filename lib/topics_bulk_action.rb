@@ -271,7 +271,7 @@ class TopicsBulkAction
   def remove_tags
     topics.each do |t|
       if guardian.can_edit?(t)
-        TopicTag.where(topic_id: t.id).delete_all
+        TopicTag.where(topic_id: t.id).in_batches.destroy_all
         @changed_ids << t.id
       end
     end

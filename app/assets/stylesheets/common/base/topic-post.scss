@@ -370,7 +370,6 @@ nav.post-controls {
 
         &.like {
           // Like button with 0 likes
-          &.d-hover,
           &:hover {
             background: var(--love-low);
 
@@ -387,7 +386,6 @@ nav.post-controls {
           }
 
           .discourse-no-touch & {
-            &.d-hover,
             &:hover {
               background: var(--primary-low);
 
@@ -410,7 +408,6 @@ nav.post-controls {
 
             // Like button when like count is present
             .discourse-no-touch & {
-              &.d-hover,
               &:hover {
                 background: var(--primary-low);
               }
@@ -419,7 +416,6 @@ nav.post-controls {
 
           // Like count button
           .discourse-no-touch & {
-            &.d-hover,
             &:hover {
               color: var(--primary);
             }
@@ -459,14 +455,7 @@ nav.post-controls {
       border: none;
       border-radius: var(--d-post-control-border-radius);
 
-      .d-icon {
-        // this avoids an issue where hovering off the icon
-        // removes the .d-hover class from the button prematurely
-        pointer-events: none;
-      }
-
       .discourse-no-touch & {
-        &.d-hover,
         &:hover,
         &:focus-visible,
         &:active {
@@ -475,8 +464,6 @@ nav.post-controls {
           color: var(--d-post-control-text-color--hover);
         }
 
-        // TODO (glimmer-post-menu): Go over the the d-hover style and remove the unnecessary ones when glimmer-post-menu replaces the widget version
-        &.delete.d-hover,
         &.delete:hover,
         &.delete:active,
         &.delete:focus {
@@ -567,7 +554,8 @@ nav.post-controls {
       }
     }
 
-    .widget-button {
+    .widget-button, // TODO (glimmer-post-stream): Remove this when glimmer-post-stream is enabled
+    .btn {
       &:hover {
         color: currentcolor;
         background: var(--danger-low);
@@ -611,8 +599,6 @@ nav.post-controls {
   }
 }
 
-// .d-icon.heart-animation is the widget animation while .toggle-like.heart-animation is the glimmer-post-menu's
-.has-like .d-icon.heart-animation,
 .toggle-like.heart-animation .d-icon {
   @media (prefers-reduced-motion: no-preference) {
     animation: heartBump 0.4s;
@@ -627,6 +613,12 @@ nav.post-controls {
   to {
     max-height: 9999px;
   }
+}
+
+blockquote {
+  margin-left: 0;
+  margin-right: 0;
+  padding: 0.75em;
 }
 
 // we use aside to hold expandable quotes (versus, say, static blockquotes)
@@ -754,7 +746,7 @@ aside.quote {
     display: flex;
     flex-wrap: wrap;
 
-    @media screen and (max-width: 420px) {
+    @media screen and (width <= 420px) {
       flex-direction: column;
       align-items: flex-start;
 
@@ -978,7 +970,8 @@ aside.quote {
   }
 
   &.edits {
-    .widget-button {
+    .widget-button, // TODO (glimmer-post-stream): Remove this when glimmer-post-stream is enabled
+    .btn {
       display: flex;
       align-items: center;
 
@@ -1278,9 +1271,8 @@ a.mention-group {
 }
 
 .mention .emoji {
-  margin-left: 0.3em;
-  width: 15px;
-  height: 15px;
+  width: 0.93em;
+  height: 0.93em;
 }
 
 span.mention {
@@ -1410,7 +1402,7 @@ span.mention {
   }
 }
 
-@media all and (max-width: 767px) {
+@media all and (width <= 767px) {
   .reply-to-tab {
     span {
       display: none;
@@ -1500,8 +1492,14 @@ span.mention {
     }
   }
 
-  .post-notice-message p {
-    display: inline;
+  .post-notice-message {
+    p {
+      display: inline;
+    }
+
+    .custom_created_by {
+      display: inline-block;
+    }
   }
 
   p {

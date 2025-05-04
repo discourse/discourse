@@ -11,6 +11,12 @@ if Rails.env.development? && !Rails.configuration.cache_classes && Discourse.run
     "#{Rails.root}/plugins",
   ]
 
+  # Find symlinked plugins, and add their real paths to the watch list.
+  paths +=
+    Dir["#{Rails.root}/plugins/*"]
+      .select { |path| File.symlink? path }
+      .map { |path| File.expand_path(File.readlink(path), File.dirname(path)) }
+
   if Listen::Adapter::Linux.usable?
     # The Listen gem watches recursively, which has a cost per-file on Linux (via rb-inotify)
     # Skip a bunch of unnecessary directories to reduce the cost

@@ -44,7 +44,7 @@
   }
 }
 
-@media all and (max-width: 750px) {
+@media all and (width <= 750px) {
   .show-badge .user-badge-with-posts .badge-user a.post-link {
     width: auto;
   }
@@ -232,7 +232,7 @@
         margin-bottom: 0.25em;
         font-size: var(--font-up-1);
 
-        @media screen and (min-width: 900px) {
+        @media screen and (width >= 900px) {
           font-size: var(--font-up-2);
         }
       }
@@ -243,7 +243,7 @@
     width: 100%;
     align-self: flex-start;
 
-    @media screen and (min-width: 767px) {
+    @media screen and (width >= 767px) {
       max-width: calc(var(--d-max-width) / 2);
     }
 

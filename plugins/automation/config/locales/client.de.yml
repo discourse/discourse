@@ -174,15 +174,15 @@ de:
             restricted_archetype:
               label: Thementyp
               description: Optional, nur bei Themen oder persönlichen Nachrichten auslösen lassen
-            restricted_user_group:
-              label: Eingeschränkte Benutzergruppe
-              description: Optional, wird nur ausgelöst, wenn der Beitragsbenutzer in dieser Gruppe ist
             restricted_groups:
+              label: Eingeschränkte Gruppen
+              description: Optional, wird nur ausgelöst, wenn der Beitragsbenutzer in einer dieser Gruppen ist
+            restricted_inbox_groups:
               label: Gruppen mit eingeschränktem Posteingang
               description: Optional. Wird nur ausgelöst, wenn der Beitrag eine persönliche Nachricht im Posteingang einer der Gruppen ist
-            ignore_group_members:
-              label: Gruppenmitglieder ignorieren
-              description: Den Auslöser überspringen, falls der Absender ein Mitglied der oben angegebenen Gruppe ist
+            excluded_groups:
+              label: Ausgeschlossene Gruppen
+              description: Optional, überspringe die Auslösung, wenn der Beitragsbenutzer in einer dieser Gruppen ist
             ignore_automated:
               label: Automatisierte Nachrichten ignorieren
               description: Überspringe den Auslöser, wenn der Absender eine Noreply-E-Mail-Adresse nutzt oder die Nachricht von einer automatischen Quelle stammt. Gilt nur für Beiträge, die per E-Mail erstellt wurden
@@ -195,10 +195,18 @@ de:
             skip_via_email:
               label: "„Per E-Mail“ überspringen"
               description: "Den Auslöser überspringen, wenn der Beitrag per E-Mail erstellt wurde"
+            post_features:
+              label: Merkmale des Beitrags
+              description: "Optional, beschränke die Auslösung auf Beiträge mit diesen Merkmalen"
           created: Erstellt
           edited: Bearbeitet
-          topics: Themen
+          topics: Alle Themen
           personal_messages: Persönliche Nachrichten
+          public_topics: Öffentliche Themen (alle sicheren Kategorien ausschließen)
+          with_images: Bilder
+          with_links: Links
+          with_code: Code
+          with_uploads: Uploads
         user_updated:
           fields:
             user_profile:
@@ -423,6 +431,11 @@ de:
           name:
             label: Auslöser
         automation:
+          runs_today: "%{count} heute"
+          runs_this_week: "%{count} diese Woche"
+          runs_this_month: "%{count} diesen Monat"
+          runs:
+            label: Läuft
           name:
             label: Name
           trigger:
@@ -441,5 +454,7 @@ de:
             label: Platzhalter
           last_updated_at:
             label: Letzte Aktualisierung
+          last_run:
+            label: Letzter Lauf
           last_updated_by:
             label: Aktualisiert von

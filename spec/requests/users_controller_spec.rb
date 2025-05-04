@@ -208,6 +208,85 @@ RSpec.describe UsersController do
     end
   end
 
+  describe "#remove password" do
+    it "responds forbidden when not logged in" do
+      put "/u/#{user.username}/remove-password.json"
+      expect(response.status).to eq(403)
+    end
+
+    context "when logged in with no associated account, no passkeys" do
+      before { sign_in(user) }
+
+      it "fails without a secure session" do
+        put "/u/#{user.username}/remove-password.json" #
+        expect(response.status).to eq(403)
+      end
+
+      it "fails with a secure session" do
+        stub_secure_session_confirmed
+        put "/u/#{user.username}/remove-password.json"
+        expect(response.status).to eq(403)
+      end
+    end
+
+    context "when logged in and has a passkey" do
+      before do
+        SiteSetting.enable_passkeys = true
+        Fabricate(:passkey_with_random_credential, user: user)
+        sign_in(user)
+      end
+
+      it "fails without a secure session" do
+        put "/u/#{user.username}/remove-password.json" #
+        expect(response.status).to eq(403)
+      end
+
+      it "succeeds with a secure session" do
+        stub_secure_session_confirmed
+        put "/u/#{user.username}/remove-password.json"
+        expect(response.status).to eq(200)
+      end
+    end
+
+    context "when logged in and has associated accout" do
+      let(:plugin_auth_provider) do
+        authenticator_class =
+          Class.new(Auth::ManagedAuthenticator) do
+            def name
+              "pluginauth"
+            end
+
+            def enabled?
+              true
+            end
+          end
+
+        provider = Auth::AuthProvider.new
+        provider.authenticator = authenticator_class.new
+        provider
+      end
+
+      before do
+        DiscoursePluginRegistry.register_auth_provider(plugin_auth_provider)
+        user.user_associated_accounts.create!(provider_name: "pluginauth", provider_uid: "foo")
+        sign_in(user)
+      end
+
+      it "fails without a secure session" do
+        put "/u/#{user.username}/remove-password.json" #
+        expect(response.status).to eq(403)
+      end
+
+      it "succeeds with a secure session" do
+        stub_secure_session_confirmed
+        put "/u/#{user.username}/remove-password.json"
+        expect(response.status).to eq(200)
+      end
+
+      after { DiscoursePluginRegistry.reset! }
+    end
+  end
+
   describe "#password_reset" do
     let(:token) { SecureRandom.hex }
 
@@ -695,7 +774,7 @@ RSpec.describe UsersController do
 
   describe "#toggle_anon" do
     it "allows you to toggle anon if enabled" do
-      SiteSetting.allow_anonymous_posting = true
+      SiteSetting.allow_anonymous_mode = true
 
       user = sign_in(Fabricate(:user, trust_level: TrustLevel[1]))
 
@@ -863,10 +942,16 @@ RSpec.describe UsersController do
           provider
         end
 
-        before { DiscoursePluginRegistry.register_auth_provider(plugin_auth_provider) }
+        before do
+          DiscoursePluginRegistry.register_auth_provider(plugin_auth_provider)
+          # Tell UserAuthenticator our user authenticated previously.
+          allow(UserAuthenticator).to receive(:new).and_wrap_original do |original_method, user|
+            authenticated_session = { authentication: { email: "foo" } }
+            original_method.call(user, authenticated_session)
+          end
+        end
 
         after { DiscoursePluginRegistry.reset! }
-
         it "creates User record" do
           params = {
             username: "foobar",
@@ -5226,6 +5311,37 @@ RSpec.describe UsersController do
       expect(json["users"].map { |u| u["username"] }).to include(user.username)
     end
 
+    context "in a topic" do
+      it "brings first the replied to user" do
+        get "/u/search/users.json",
+            params: {
+              term: "",
+              topic_id: topic.id,
+              prioritized_user_id: post1.user_id,
+            }
+
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["users"].map { |u| u["username"] }).to include(user.username)
+        expect(json["users"].first["username"]).to eq(user.username)
+      end
+
+      it "respects the term when replying to a post" do
+        other_user = Fabricate(:user, username: "other_user")
+        get "/u/search/users.json",
+            params: {
+              term: other_user.username,
+              topic_id: topic.id,
+              prioritized_user_id: post1.user_id,
+            }
+
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["users"].map { |u| u["username"] }).to include(other_user.username)
+        expect(json["users"].first["username"]).to eq(other_user.username)
+      end
+    end
+
     it "searches only for users who have access to private topic" do
       searching_user = Fabricate(:user)
       privileged_user =
@@ -6350,6 +6466,27 @@ RSpec.describe UsersController do
 
         expect(user1.passkey_credential_ids[0]).to eq(passkey.credential_id)
       end
+
+      context "with second passkey" do
+        fab!(:second_passkey) { Fabricate(:passkey_with_random_credential, user: user1) }
+        it "fails removing the last passkey if the user has neither password nor associated accounts" do
+          user1.user_password = nil
+          allow(user1).to receive(:associated_accounts).and_return([])
+
+          sign_in(user1)
+          expect(user1.passkey_credential_ids.length).to eq(2)
+
+          #succeeds removing the first passkey since there's still a second one
+          delete "/u/delete_passkey/#{passkey.id}.json"
+          expect(response.status).to eq(200)
+          expect(user1.passkey_credential_ids.length).to eq(1)
+
+          delete "/u/delete_passkey/#{second_passkey.id}.json"
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["message"]).to eq(I18n.t("user.cannot_remove_all_auth"))
+          expect(user1.passkey_credential_ids.length).to eq(1)
+        end
+      end
     end
   end
 
@@ -6504,6 +6641,55 @@ RSpec.describe UsersController do
                  provider_name: "testprovider",
                }
           expect(response.status).to eq(200)
+        end
+
+        context "with a second provider" do
+          let(:second_authenticator) do
+            Class
+              .new(Auth::ManagedAuthenticator) do
+                def name
+                  "testprovider2"
+                end
+
+                def enabled?
+                  true
+                end
+              end
+              .new
+          end
+
+          before do
+            DiscoursePluginRegistry.register_auth_provider(
+              Auth::AuthProvider.new(authenticator: second_authenticator),
+            )
+            authenticator.can_revoke = true
+            user1.user_password = nil
+            allow(user1).to receive(:passkey_credential_ids).and_return([])
+            user1.user_associated_accounts.create!(
+              provider_name: "testprovider2",
+              provider_uid: "foo",
+            )
+          end
+
+          it "fails removing the last associated account if the user has neither password nor passkey" do
+            expect(user1.associated_accounts.length).to eq(2)
+
+            #succeeds removing the first account since there's still a second one
+            post "/u/#{user1.username}/preferences/revoke-account.json",
+                 params: {
+                   provider_name: "testprovider2",
+                 }
+
+            expect(response.status).to eq(200)
+            expect(user1.associated_accounts.length).to eq(1)
+
+            post "/u/#{user1.username}/preferences/revoke-account.json",
+                 params: {
+                   provider_name: "testprovider",
+                 }
+            expect(response.parsed_body["message"]).to eq(I18n.t("user.cannot_remove_all_auth"))
+            expect(user1.associated_accounts.length).to eq(1)
+          end
         end
       end
     end

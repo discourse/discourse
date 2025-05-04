@@ -5,3 +5,4 @@
 # version: 1.0
 
 register_asset "stylesheets/common/common.scss"
+register_asset "stylesheets/simple.css"

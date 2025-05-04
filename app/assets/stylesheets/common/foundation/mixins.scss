@@ -8,6 +8,7 @@
 @use "sass:color";
 @use "sass:math";
 @use "sass:string";
+@use "sass:map";
 
 $breakpoints: (
   mobile-small: 320px,
@@ -139,6 +140,14 @@ $hpad: 0.65em;
   background-color: var(--blend-primary-secondary-5);
 }
 
+@mixin float-down {
+  animation: float-down ease 0.25s 1 forwards;
+}
+
+@mixin float-up {
+  animation: float-up ease 0.25s 1 forwards;
+}
+
 @mixin default-focus() {
   border-color: var(--tertiary);
   outline: 2px solid var(--tertiary);
@@ -234,15 +243,18 @@ $hpad: 0.65em;
 }
 
 @mixin mention() {
-  display: inline;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25em;
   font-size: 0.93em;
   font-weight: normal;
   color: var(--primary);
-  padding: 0.14em 0.34em 0.19em;
+  padding: 0.2em 0.34em;
   background: var(--primary-low);
   border-radius: 0.6em;
   text-decoration: none;
   text-wrap: nowrap;
+  line-height: 1;
 
   &.--bot {
     background: var(--success-low);

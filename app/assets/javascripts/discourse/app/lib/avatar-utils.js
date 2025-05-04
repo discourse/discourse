@@ -78,7 +78,13 @@ export function avatarImg(options, customGetURL) {
     title = ` title='${escaped}'`;
   }
 
-  return `<img alt='' width='${size}' height='${size}' src='${url}' class='${classes}'${title}>`;
+  let loading = "";
+  if (options.loading) {
+    const escaped = escape(options.loading || "");
+    loading = ` loading='${escaped}'`;
+  }
+
+  return `<img alt='' width='${size}' height='${size}' src='${url}' class='${classes}'${title}${loading}>`;
 }
 
 export function tinyAvatar(avatarTemplate, options) {

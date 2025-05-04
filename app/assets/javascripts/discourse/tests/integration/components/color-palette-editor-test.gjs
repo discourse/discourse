@@ -42,12 +42,6 @@ function editor() {
           );
         },
 
-        displayedValue() {
-          return this.container().querySelector(
-            ".color-palette-editor__color-code"
-          ).textContent;
-        },
-
         displayName() {
           return this.container()
             .querySelector(".color-palette-editor__color-name")
@@ -60,18 +54,30 @@ function editor() {
             .textContent.trim();
         },
 
-        input() {
+        colorInput() {
           return this.container().querySelector(".color-palette-editor__input");
         },
 
-        async sendInputEvent(value) {
-          const input = this.input();
+        textInput() {
+          return this.container().querySelector(
+            ".color-palette-editor__text-input"
+          );
+        },
+
+        async sendColorInputEvent(value) {
+          const input = this.colorInput();
           input.value = value;
           await triggerEvent(input, "input");
         },
 
-        async sendChangeEvent(value) {
-          const input = this.input();
+        async sendColorChangeEvent(value) {
+          const input = this.colorInput();
+          input.value = value;
+          await triggerEvent(input, "change");
+        },
+
+        async sendTextChangeEvent(value) {
+          const input = this.textInput();
           input.value = value;
           await triggerEvent(input, "change");
         },
@@ -115,25 +121,25 @@ module("Integration | Component | ColorPaletteEditor", function (hooks) {
     );
 
     assert.strictEqual(
-      this.subject.color("primary").input().value,
+      this.subject.color("primary").colorInput().value,
       "#aaaaaa",
       "input for the primary color is showing the light color"
     );
     assert.strictEqual(
-      this.subject.color("primary").displayedValue(),
+      this.subject.color("primary").textInput().value,
       "aaaaaa",
-      "displayed value for the primary color is showing the light color"
+      "text input value for the primary color is showing the light color"
     );
 
     assert.strictEqual(
-      this.subject.color("header_background").input().value,
+      this.subject.color("header_background").colorInput().value,
       "#473921",
       "input for the header_background color is showing the light color"
     );
     assert.strictEqual(
-      this.subject.color("header_background").displayedValue(),
+      this.subject.color("header_background").textInput().value,
       "473921",
-      "displayed value for the header_background color is showing the light color"
+      "text input value for the header_background color is showing the light color"
     );
 
     await this.subject.switchToDarkTab();
@@ -145,25 +151,25 @@ module("Integration | Component | ColorPaletteEditor", function (hooks) {
     assert.true(this.subject.isActiveModeDark(), "dark mode tab is now active");
 
     assert.strictEqual(
-      this.subject.color("primary").input().value,
+      this.subject.color("primary").colorInput().value,
       "#1e3c8a",
       "input for the primary color is showing the dark color"
     );
     assert.strictEqual(
-      this.subject.color("primary").displayedValue(),
+      this.subject.color("primary").textInput().value,
       "1e3c8a",
-      "displayed value for the primary color is showing the dark color"
+      "text input value for the primary color is showing the dark color"
     );
 
     assert.strictEqual(
-      this.subject.color("header_background").input().value,
+      this.subject.color("header_background").colorInput().value,
       "#f2cca9",
       "input for the header_background color is showing the dark color"
     );
     assert.strictEqual(
-      this.subject.color("header_background").displayedValue(),
+      this.subject.color("header_background").textInput().value,
       "f2cca9",
-      "displayed value for the header_background color is showing the dark color"
+      "text input value for the header_background color is showing the dark color"
     );
   });
 
@@ -220,17 +226,17 @@ module("Integration | Component | ColorPaletteEditor", function (hooks) {
       </template>
     );
 
-    await this.subject.color("primary").sendInputEvent("#abcdef");
+    await this.subject.color("primary").sendColorInputEvent("#abcdef");
 
     assert.strictEqual(
-      this.subject.color("primary").input().value,
+      this.subject.color("primary").colorInput().value,
       "#abcdef",
       "the input element for the primary color changes its value for `input` events"
     );
     assert.strictEqual(
-      this.subject.color("primary").displayedValue(),
+      this.subject.color("primary").textInput().value,
       "abcdef",
-      "displayed value for the primary color updates for `input` events"
+      "text input value for the primary color updates for `input` events"
     );
     assert.strictEqual(
       lightChanges.length,
@@ -243,17 +249,17 @@ module("Integration | Component | ColorPaletteEditor", function (hooks) {
       "dark color change callbacks aren't triggered for `input` events"
     );
 
-    await this.subject.color("primary").sendChangeEvent("#fedcba");
+    await this.subject.color("primary").sendColorChangeEvent("#fedcba");
 
     assert.strictEqual(
-      this.subject.color("primary").input().value,
+      this.subject.color("primary").colorInput().value,
       "#fedcba",
       "the input element for the primary color changes its value for `change` events"
     );
     assert.strictEqual(
-      this.subject.color("primary").displayedValue(),
+      this.subject.color("primary").textInput().value,
       "fedcba",
-      "displayed value for the primary color updates for `change` events"
+      "text input value for the primary color updates for `change` events"
     );
     assert.deepEqual(
       lightChanges,
@@ -270,12 +276,12 @@ module("Integration | Component | ColorPaletteEditor", function (hooks) {
     await this.subject.switchToDarkTab();
 
     assert.strictEqual(
-      this.subject.color("primary").input().value,
+      this.subject.color("primary").colorInput().value,
       "#1e3c8a",
       "the dark color isn't affected by the change to the light color"
     );
     assert.strictEqual(
-      this.subject.color("primary").displayedValue(),
+      this.subject.color("primary").textInput().value,
       "1e3c8a",
       "the dark color isn't affected by the change to the light color"
     );
@@ -283,17 +289,19 @@ module("Integration | Component | ColorPaletteEditor", function (hooks) {
     lightChanges.length = 0;
     darkChanges.length = 0;
 
-    await this.subject.color("header_background").sendInputEvent("#776655");
+    await this.subject
+      .color("header_background")
+      .sendColorInputEvent("#776655");
 
     assert.strictEqual(
-      this.subject.color("header_background").input().value,
+      this.subject.color("header_background").colorInput().value,
       "#776655",
       "the input element for the header_background color changes its value for `input` events"
     );
     assert.strictEqual(
-      this.subject.color("header_background").displayedValue(),
+      this.subject.color("header_background").textInput().value,
       "776655",
-      "displayed value for the header_background color updates for `input` events"
+      "text input value for the header_background color updates for `input` events"
     );
     assert.strictEqual(
       lightChanges.length,
@@ -306,17 +314,19 @@ module("Integration | Component | ColorPaletteEditor", function (hooks) {
       "dark color change callbacks aren't triggered for `input` events"
     );
 
-    await this.subject.color("header_background").sendChangeEvent("#99aaff");
+    await this.subject
+      .color("header_background")
+      .sendColorChangeEvent("#99aaff");
 
     assert.strictEqual(
-      this.subject.color("header_background").input().value,
+      this.subject.color("header_background").colorInput().value,
       "#99aaff",
       "the input element for the header_background color changes its value for `change` events"
     );
     assert.strictEqual(
-      this.subject.color("header_background").displayedValue(),
+      this.subject.color("header_background").textInput().value,
       "99aaff",
-      "displayed value for the header_background color updates for `change` events"
+      "text input value for the header_background color updates for `change` events"
     );
     assert.deepEqual(
       darkChanges,
@@ -333,23 +343,23 @@ module("Integration | Component | ColorPaletteEditor", function (hooks) {
     await this.subject.switchToLightTab();
 
     assert.strictEqual(
-      this.subject.color("primary").input().value,
+      this.subject.color("primary").colorInput().value,
       "#fedcba",
       "the light color for the primary color is remembered after switching tabs"
     );
     assert.strictEqual(
-      this.subject.color("primary").displayedValue(),
+      this.subject.color("primary").textInput().value,
       "fedcba",
       "the light color for the primary color is remembered after switching tabs"
     );
 
     assert.strictEqual(
-      this.subject.color("header_background").input().value,
+      this.subject.color("header_background").colorInput().value,
       "#473921",
       "the light color for the header_background color remains unchanged"
     );
     assert.strictEqual(
-      this.subject.color("header_background").displayedValue(),
+      this.subject.color("header_background").textInput().value,
       "473921",
       "the light color for the header_background color remains unchanged"
     );
@@ -357,25 +367,96 @@ module("Integration | Component | ColorPaletteEditor", function (hooks) {
     await this.subject.switchToDarkTab();
 
     assert.strictEqual(
-      this.subject.color("primary").input().value,
+      this.subject.color("primary").colorInput().value,
       "#1e3c8a",
       "the dark color for the primary color remains unchanged"
     );
     assert.strictEqual(
-      this.subject.color("primary").displayedValue(),
+      this.subject.color("primary").textInput().value,
       "1e3c8a",
       "the dark color for the primary color remains unchanged"
     );
 
     assert.strictEqual(
-      this.subject.color("header_background").input().value,
+      this.subject.color("header_background").colorInput().value,
       "#99aaff",
       "the dark color for the header_background color is remembered after switching tabs"
     );
     assert.strictEqual(
-      this.subject.color("header_background").displayedValue(),
+      this.subject.color("header_background").textInput().value,
       "99aaff",
       "the dark color for the header_background color is remembered after switching tabs"
+    );
+  });
+
+  test("changing the text input field updates the color picker", async function (assert) {
+    const colors = [
+      {
+        name: "primary",
+        hex: "aaaaaa",
+        dark_hex: "1e3c8a",
+      },
+    ].map((data) => ColorSchemeColor.create(data));
+
+    const lightChanges = [];
+    const darkChanges = [];
+
+    const onLightColorChange = (name, value) => {
+      lightChanges.push([name, value]);
+    };
+    const onDarkColorChange = (name, value) => {
+      darkChanges.push([name, value]);
+    };
+
+    await render(
+      <template>
+        <ColorPaletteEditor
+          @colors={{colors}}
+          @onLightColorChange={{onLightColorChange}}
+          @onDarkColorChange={{onDarkColorChange}}
+        />
+      </template>
+    );
+
+    await this.subject.color("primary").sendTextChangeEvent("9999cc");
+
+    assert.strictEqual(
+      this.subject.color("primary").colorInput().value,
+      "#9999cc",
+      "the color input reflects the text input"
+    );
+    assert.deepEqual(
+      lightChanges,
+      [["primary", "9999cc"]],
+      "light color change callbacks are triggered for `change` events when the light color changes"
+    );
+
+    assert.strictEqual(
+      darkChanges.length,
+      0,
+      "no changes to dark mode colors are mode"
+    );
+
+    lightChanges.length = 0;
+
+    await this.subject.switchToDarkTab();
+
+    await this.subject.color("primary").sendTextChangeEvent("1f9c3e");
+
+    assert.strictEqual(
+      this.subject.color("primary").colorInput().value,
+      "#1f9c3e",
+      "the color input reflects the text input"
+    );
+    assert.deepEqual(
+      darkChanges,
+      [["primary", "1f9c3e"]],
+      "dark color change callbacks are triggered for `change` events when the light color changes"
+    );
+    assert.strictEqual(
+      lightChanges.length,
+      0,
+      "no changes to light mode colors are mode"
     );
   });
 
@@ -393,27 +474,27 @@ module("Integration | Component | ColorPaletteEditor", function (hooks) {
     );
 
     assert.strictEqual(
-      this.subject.color("primary").input().value,
+      this.subject.color("primary").colorInput().value,
       "#aa88cc",
       "the input field has the equivalent 6 digits value"
     );
     assert.strictEqual(
-      this.subject.color("primary").displayedValue(),
+      this.subject.color("primary").textInput().value,
       "aa88cc",
-      "the displayed value shows the 6 digits format"
+      "the text input value shows the 6 digits format"
     );
 
     await this.subject.switchToDarkTab();
 
     assert.strictEqual(
-      this.subject.color("primary").input().value,
+      this.subject.color("primary").colorInput().value,
       "#997711",
       "the input field has the equivalent 6 digits value"
     );
     assert.strictEqual(
-      this.subject.color("primary").displayedValue(),
+      this.subject.color("primary").textInput().value,
       "997711",
-      "the displayed value shows the 6 digits format"
+      "the text input value shows the 6 digits format"
     );
   });
 });

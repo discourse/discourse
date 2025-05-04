@@ -58,7 +58,7 @@ body.wizard {
       height: 50px;
     }
 
-    @media screen and (max-height: 900px) {
+    @media screen and (height <= 900px) {
       .desktop-view & {
         display: none;
       }
@@ -185,7 +185,7 @@ body.wizard {
 
   &__field.text-governing-law,
   &__field.text-city-for-disputes {
-    @media only screen and (max-width: 568px) {
+    @media only screen and (width <= 568px) {
       display: none;
     }
   }
@@ -200,7 +200,7 @@ body.wizard {
     display: flex;
     flex: 1 0 50%;
 
-    @media only screen and (max-width: 568px) {
+    @media only screen and (width <= 568px) {
       width: 100%;
     }
   }
@@ -210,7 +210,7 @@ body.wizard {
     box-sizing: border-box;
     margin-right: 1em;
 
-    @media only screen and (max-width: 925px) {
+    @media only screen and (width <= 925px) {
       width: 100%;
       margin-left: auto;
       margin-right: auto;
@@ -223,7 +223,7 @@ body.wizard {
       border-radius: 0.5em;
       margin-top: -1em;
 
-      @media only screen and (max-width: 925px) {
+      @media only screen and (width <= 925px) {
         display: none;
       }
     }
@@ -348,7 +348,7 @@ body.wizard {
   &__step-text {
     display: inline;
 
-    @media only screen and (max-width: 568px) {
+    @media only screen and (width <= 568px) {
       display: none;
     }
   }
@@ -425,21 +425,6 @@ body.wizard {
 
   &__button.primary:disabled {
     background-color: var(--tertiary-low);
-  }
-
-  &__button.configure-more {
-    margin-right: 1em;
-    background-color: transparent;
-    color: var(--tertiary);
-
-    @include breakpoint("mobile-extra-large") {
-      order: 2;
-    }
-  }
-
-  &__button.configure-more:hover {
-    background-color: transparent;
-    color: var(--primary);
   }
 
   &__button.jump-in {
@@ -558,7 +543,7 @@ body.wizard {
       margin: 0;
     }
 
-    @media only screen and (max-width: 568px) {
+    @media only screen and (width <= 568px) {
       font-size: var(--font-0);
     }
   }
@@ -568,7 +553,7 @@ body.wizard {
     font-size: var(--font-up-1);
     margin: 0.25em 0 0.5em 3.5em;
 
-    @media only screen and (max-width: 568px) {
+    @media only screen and (width <= 568px) {
       margin-left: 2em;
     }
   }
@@ -630,7 +615,7 @@ body.wizard {
     vertical-align: middle;
     transition: background 0.25s;
 
-    @media only screen and (max-width: 568px) {
+    @media only screen and (width <= 568px) {
       height: 20px;
       width: 35px;
     }
@@ -649,7 +634,7 @@ body.wizard {
     top: 4px;
     left: 9px;
 
-    @media only screen and (max-width: 568px) {
+    @media only screen and (width <= 568px) {
       top: 3px;
       left: 5px;
       font-size: var(--font-down-3);
@@ -665,7 +650,7 @@ body.wizard {
     left: 4px;
     transition: left 0.25s;
 
-    @media only screen and (max-width: 568px) {
+    @media only screen and (width <= 568px) {
       height: 12px;
       width: 12px;
     }
@@ -685,7 +670,7 @@ body.wizard {
   &__checkbox:checked + .wizard-container__checkbox-slider::before {
     left: 26px;
 
-    @media only screen and (max-width: 568px) {
+    @media only screen and (width <= 568px) {
       left: 20px;
     }
   }
@@ -766,7 +751,7 @@ body.wizard {
       display: flex;
       gap: 1em;
 
-      @media screen and (max-width: 750px) {
+      @media screen and (width <= 750px) {
         flex-direction: column-reverse;
       }
     }

@@ -135,7 +135,10 @@ da:
               label: Kategorier
           created: Oprettet
           edited: Redigeret
-          topics: Emner
+          with_images: Billeder
+          with_links: Links
+          with_code: Kode
+          with_uploads: Overførsler
         category_created_edited:
           fields:
             restricted_category:

@@ -1772,7 +1772,6 @@ fi:
     pending_users_reminder_delay_minutes: "Ilmoita valvojille, jos uusi käyttäjä on odottanut hyväksyntää kauemmin kuin näin monta minuuttia. Aseta -1, jos haluat poistaa ilmoitukset käytöstä."
     persistent_sessions: "Käyttäjät pysyvät sisäänkirjautuneena, vaikka selain on suljettuna"
     maximum_session_age: "Käyttäjä pysyy sisäänkirjautuneena n tuntia vierailunsa jälkeen"
-    full_page_login: "Näytä kirjautumis- ja rekisteröitymislomakkeet koko sivulla (jos tätä ei ole valittu, käyttäjät näkevät lomakkeet modaali-ikkunassa). "
     show_signup_form_email_instructions: Näytä sähköpostiohjeet rekisteröitymislomakkeessa.
     show_signup_form_username_instructions: Näytä käyttäjätunnusohjeet rekisteröitymislomakkeessa.
     show_signup_form_full_name_instructions: Näytä koko nimen ohjeet rekisteröitymislomakkeessa.
@@ -2228,8 +2227,7 @@ fi:
     enable_group_directory: "Näytä hakemisto ryhmistä selattavaksi"
     enable_category_group_moderation: "Salli ryhmien valvoa sisältöä tietyillä alueilla"
     group_in_subject: "Aseta %%{optional_pm} sähköpostin aiheessa ensimmäisen ryhmän nimeksi yksityisviestissä, katso: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Customize subject format for standard emails</a>"
-    allow_anonymous_posting: "Ota käyttöön valinta, jolla käyttäjät voivat vaihtaa anonyymiin tilaan viestin julkaisua varten. Kun tämä aktivoidaan, käyttäjät voivat halutessaan piilottaa henkilöllisyytensä luodessaan viestejä tai ketjuja sivustolla. Katso myös \"allow anonymous likes\"."
-    allow_anonymous_likes: "Kun otat tämän asetuksen käyttöön, käyttäjät, jotka selaavat sivustoasi anonyymisti, voivat tykätä viesteistä. Kun tämä aktivoidaan, käyttäjät voivat halutessaan piilottaa henkilöllisyytensä tykätessään viesteistä tai ketjuista sivustolla. Katso myös \"allow_anonymous_posting\"."
+    allow_anonymous_mode: "Ota käyttöön valinta, jolla käyttäjät voivat vaihtaa anonyymiin tilaan viestin julkaisua varten. Kun tämä aktivoidaan, käyttäjät voivat halutessaan piilottaa henkilöllisyytensä luodessaan viestejä tai ketjuja sivustolla. Katso myös \"allow anonymous likes\"."
     anonymous_posting_min_trust_level: "Anonyymien viestien lähettämiseen vaadittava luottamustila"
     anonymous_posting_allowed_groups: "Ryhmät, jotka voivat ottaa käyttöön anonyymin viestien lähettämisen"
     anonymous_account_duration_minutes: "Suojellaksesi anonymiteettiä, luo käyttäjälle uusi anonyymi tili N minuutin välein. Esimerkki: jos arvoksi asetetaan 600, kun 600 minuuttia tulee kuluneeksi edellisestä viestistä JA käyttäjä vaihtaa anonyymiin tilaan, luodaan uusi anonyymi tili."
@@ -2454,9 +2452,7 @@ fi:
     default_navigation_menu_categories: "Valitut alueet näkyvät navigointivalikon Alueet-osiossa oletuksena."
     default_navigation_menu_tags: "Valitut tunnisteet näkyvät navigointivalikon Tunnisteet-osiossa oletuksena."
     experimental_new_new_view_groups: 'Ota käyttöön uusien ketjujen luettelo, joka yhdistää lukemattomat ja uudet ketjut, ja linkitä sivupalkin "Kaikki"-linkki siihen.'
-    glimmer_topic_list_mode: "Hallitse, käytetäänkö uutta glimmer-ketjuluettelouudistusta. Arvo \"auto\" ottaa sen käyttöön automaattisesti, kun kaikki teemasi ja lisäosasi ovat valmiita. Katso lisätietoja <a href='https://meta.discourse.org/t/343404'>Meta-ketjusta</a>."
-    glimmer_post_menu_mode: "Hallitse, käytetäänkö uutta glimmer-viestivalikkouudistusta. \"Auto\" ottaa sen käyttöön automaattisesti, kun kaikki teemasi ja lisäosasi ovat valmiita. Tämä uudistus on aktiivisesti kehitteillä, eikä sitä ole tarkoitettu tuotantokäyttöön. Älä kehitä teemoja tai lisäosia sen mukaan ennen kuin uudistus on viimeistelty ja julkistettu."
-    glimmer_post_menu_groups: "Ota käyttöön uusi glimmer-viestivalikkouudistus \"auto\"-tilassa määritetyille käyttäjäryhmille. Tämä uudistus on aktiivisesti kehitteillä, eikä sitä ole tarkoitettu tuotantokäyttöön. Älä kehitä teemoja tai lisäosia sen mukaan ennen kuin uudistus on viimeistelty ja julkistettu."
+    glimmer_post_stream_mode_auto_groups: "Ota käyttöön uusi glimmer-viestivalikkouudistus \"auto\"-tilassa määritetyille käyttäjäryhmille. Tämä uudistus on aktiivisesti kehitteillä, eikä sitä ole tarkoitettu tuotantokäyttöön. Älä kehitä teemoja tai lisäosia sen mukaan ennen kuin uudistus on viimeistelty ja julkistettu."
     experimental_form_templates: "Ota lomakemalliominaisuus käyttöön.Voit hallinnoida malleja kohdassa <a href='%{base_path}/admin/customize/form-templates'>Mukauta / Mallit</a>."
     lazy_load_categories_groups: "Käytä laiskaa latausta alueen tietoihin vain näiden ryhmien käyttäjille. Tämä parantaa suorituskykyä sivustoilla, joilla on useita alueita."
     page_loading_indicator: "Määritä latausilmaisin, joka näkyy Discoursessa sivujen navigointien aikana. \"Spinner\" on koko sivun ilmaisin. \"Slider\" näyttää kapean palkin ruudun yläosassa."
@@ -5017,11 +5013,13 @@ fi:
         description: "Hyväksy lipulla ja avaa kirjoitusikkuna viestin muokkaamiseksi."
       delete_single:
         title: "Poista"
+        complete: "Viesti poistettu."
       delete:
         title: "Poista…"
       delete_and_ignore:
         title: "Ohita liputus ja poista viesti"
         description: "Ohita liputus poistamalla se jonosta ja poista viesti; jos viesti on ensimmäinen viesti, poista myös ketju. "
+        complete: "Viesti poistettu."
       delete_and_ignore_replies:
         title: "Ohita liputus, poista viesti ja vastaukset"
         description: "Ohita liputus poistamalla se jonosta, poista viesti ja kaikki sen vastaukset; jos viesti on ensimmäinen viesti, poista myös ketju"
@@ -5029,6 +5027,7 @@ fi:
       delete_and_agree:
         title: "Poista viesti"
         description: "Hyväksy liputus ja poista tämä viesti; jos viesti on ensimmäinen viesti, poista myös ketju."
+        complete: "Viesti poistettu."
       delete_and_agree_replies:
         title: "Poista viesti ja vastaukset"
         description: "Hyväksy liputus ja poista tämä viesti ja kaikki sen vastaukset; jos viesti on ensimmäinen viesti, poista myös ketju."
@@ -5038,29 +5037,37 @@ fi:
         description: "Palauta viesti, niin kaikki käyttäjät näkevät sen."
       disagree:
         title: "Ei"
+        complete: "Liputus ohitettu."
       discard_post:
         title: "Hylkää viesti"
       revise_and_reject_post:
         title: "Korjaa julkaisua..."
       ignore:
         title: "Sivuuta"
+        complete: "Liputus ohitettu."
       ignore_and_do_nothing:
         title: "Älä tee mitään"
         description: "Ohita liputus poistamalla se jonosta tekemättä mitään. Piilotetut viestit pysyvät piilossa ja automaattiset työkalut käsittelevät ne."
+        complete: "Liputus ohitettu."
       approve:
         title: "Hyväksy"
+        complete: "Viesti hyväksytty."
       approve_post:
         title: "Hyväksy viesti"
         confirm_closed: "Tämä ketju on suljettu. Haluatko silti luoda viestin?"
+        complete: "Viesti hyväksytty."
       reject_post:
         title: "Hylkää viesti"
+        complete: "Viesti hylätty."
       approve_user:
         title: "Hyväksy käyttäjä"
+        complete: "Käyttäjä hyväksytty."
       reject_user:
         title: "Poista käyttäjä…"
         delete:
           title: "Poista käyttäjä"
           description: "Käyttäjä poistetaan foorumista."
+          complete: "Käyttäjä poistettu."
         block:
           title: "Poista ja estä käyttäjä"
           description: "Käyttäjä poistetaan ja hänen IP-osoitteensa sekä sähköpostiosoitteensa estetään."
@@ -5079,6 +5086,7 @@ fi:
         title: "Hyväksy ja palauta viesti"
       delete_user:
         reason: "Poistettiin tarkastusjonon kautta"
+        complete: "Käyttäjä poistettu."
   email_style:
     html_missing_placeholder: "HTML-pohjan täytyy sisältää %{placeholder}"
   notification_level:

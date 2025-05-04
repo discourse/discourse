@@ -83,17 +83,23 @@ class Theme < ActiveRecord::Base
 
   scope :include_relations,
         -> do
-          includes(
+          include_basic_relations.includes(
             :child_themes,
-            :parent_themes,
-            :remote_theme,
             :theme_settings,
             :settings_field,
-            :locale_fields,
-            :user,
             :color_scheme,
-            :theme_translation_overrides,
             theme_fields: %i[upload theme_settings_migration],
+          )
+        end
+
+  scope :include_basic_relations,
+        -> do
+          includes(
+            :remote_theme,
+            :user,
+            :locale_fields,
+            :theme_translation_overrides,
+            parent_themes: %i[locale_fields theme_translation_overrides],
           )
         end
 
@@ -433,7 +439,7 @@ class Theme < ActiveRecord::Base
     all_themes: false
   )
     Stylesheet::Manager.clear_theme_cache!
-    targets = %i[mobile_theme desktop_theme]
+    targets = %i[common_theme mobile_theme desktop_theme]
 
     if with_scheme
       targets.prepend(:desktop, :mobile, :admin)
@@ -541,12 +547,10 @@ class Theme < ActiveRecord::Base
     if target == :translations
       fields = ThemeField.find_first_locale_fields(theme_ids, I18n.fallbacks[name])
     else
+      target = :common if target == :common_theme
       target = :mobile if target == :mobile_theme
       target = :desktop if target == :desktop_theme
-      fields =
-        ThemeField.find_by_theme_ids(theme_ids).where(
-          target_id: [Theme.targets[target], Theme.targets[:common]],
-        )
+      fields = ThemeField.find_by_theme_ids(theme_ids).where(target_id: Theme.targets[target])
       fields = fields.where(name: name.to_s) unless name.nil?
       fields = fields.order(:target_id)
     end
@@ -836,11 +840,27 @@ class Theme < ActiveRecord::Base
   end
 
   def with_scss_load_paths
-    return yield([]) if self.extra_scss_fields.empty?
-
     ThemeStore::ZipExporter
       .new(self)
-      .with_export_dir(extra_scss_only: true) { |dir| yield ["#{dir}/stylesheets"] }
+      .with_export_dir(scss_only: true) do |dir|
+        FileUtils.mkdir_p("#{dir}/_entry_loadpath/theme-entrypoint")
+
+        entrypoints = {
+          "common/common.scss" => "common.scss",
+          "common/embedded.scss" => "embedded.scss",
+          "common/color_definitions.scss" => "color_definitions.scss",
+          "desktop/desktop.scss" => "desktop.scss",
+          "mobile/mobile.scss" => "mobile.scss",
+        }
+
+        entrypoints.each do |source, destination|
+          source_path = "#{dir}/#{source}"
+          destination_path = "#{dir}/_entry_loadpath/theme-entrypoint/#{destination}"
+          FileUtils.mv(source_path, destination_path) if File.exist?(source_path)
+        end
+
+        yield ["#{dir}/_entry_loadpath", "#{dir}/stylesheets"]
+      end
   end
 
   def scss_variables

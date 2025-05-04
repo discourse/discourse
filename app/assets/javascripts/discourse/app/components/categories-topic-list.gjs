@@ -19,11 +19,7 @@ export default class CategoriesTopicList extends Component {
 
     {{#if this.topics}}
       {{#each this.topics as |t|}}
-        {{#if this.site.useGlimmerTopicList}}
-          <LatestTopicListItem @topic={{t}} />
-        {{else}}
-          <LatestTopicListItem @topic={{t}} />
-        {{/if}}
+        <LatestTopicListItem @topic={{t}} />
       {{/each}}
 
       <div class="more-topics">

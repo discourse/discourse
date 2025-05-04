@@ -160,7 +160,10 @@ class Users::OmniauthCallbacksController < ApplicationController
       @auth_result.email = user.email
       return
     end
+    handle_account_activation(user)
+  end
 
+  def handle_account_activation(user)
     # automatically activate any account if a provider marked the email valid
     if @auth_result.email_valid && @auth_result.email == user.email
       if !user.active || !user.email_confirmed?

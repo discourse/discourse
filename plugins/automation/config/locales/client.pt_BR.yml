@@ -174,15 +174,9 @@ pt_BR:
             restricted_archetype:
               label: Tipo de tópico
               description: Opcional, permitir a ativação apenas em tópicos ou mensagens pessoais
-            restricted_user_group:
-              label: Grupo de usuários restrito
-              description: Opcional, ativa apenas se o usuário da postagem estiver neste grupo
-            restricted_groups:
+            restricted_inbox_groups:
               label: Grupos de caixas de entrada restritas
               description: Opcional. Será ativado apenas se o tópico da postagem for uma mensagem pessoal em uma das caixas de entrada do grupo
-            ignore_group_members:
-              label: Ignorar membros de grupo
-              description: Ignorar o gatilho se o(a) remetente for um membro do Grupo especificado acima
             ignore_automated:
               label: Ignorar automatizado
               description: Ignore o gatilho se o remetente tiver um e-mail sem resposta ou for de uma fonte automatizada. Aplica-se apenas a postagens criadas por e-mail.
@@ -197,8 +191,11 @@ pt_BR:
               description: "Pule o acionador se a postagem tiver sido criada por e-mail"
           created: Criado(a)
           edited: Editado(a)
-          topics: Tópicos
           personal_messages: Mensagens pessoais
+          with_images: Imagens
+          with_links: Links
+          with_code: Código
+          with_uploads: Envios
         user_updated:
           fields:
             user_profile:

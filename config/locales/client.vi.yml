@@ -159,6 +159,10 @@ vi:
       dismiss: "Hủy bỏ"
     bootstrap_mode: "Bắt đầu"
     back_button: "Quay lại"
+    welcome_banner:
+      header:
+        anonymous_members: "Chào mừng đến với %{site_name}!"
+      search: "Tìm kiếm"
     themes:
       default_description: "Mặc định"
       broken_theme_alert: "Trang web của bạn có thể không hoạt động vì một chủ đề / thành phần có lỗi."
@@ -340,9 +344,6 @@ vi:
       remove_confirmation: "Bạn có chắc chắn muốn xóa bản nháp này không?"
       new_topic: "Chủ đề nháp mới"
       new_private_message: "Bản nháp tin nhắn cá nhân mới"
-      abandon:
-        yes_value: "Hủy bỏ"
-        no_value: "Tiếp tục chỉnh sửa"
     topic_count_all:
       other: "Xem %{count} chủ đề mới"
     topic_count_categories:
@@ -461,6 +462,10 @@ vi:
         name: "Tên"
         fields: "Trường tùy biến"
         reject_reason: "Lý do"
+        scrubbed_reason: "Lý do"
+        scrub_record:
+          reason_placeholder: "Lý do..."
+          cancel_button: "Huỷ"
       user_percentage:
         summary:
           other: "%{agreed}, %{disagreed}, %{ignored} (trong số %{count} cờ)"
@@ -1604,6 +1609,8 @@ vi:
     modal:
       close: "đóng"
       dismiss_error: "Loại bỏ lỗi"
+    multi_select:
+      search: "Tìm kiếm…"
     form_kit:
       reset: Cài lại
       optional: tùy chọn
@@ -1756,10 +1763,6 @@ vi:
         name: "Goole"
         title: "Đăng nhập bằng Google"
         sr_title: "Đăng nhập bằng Google"
-      twitter:
-        name: "Twitter"
-        title: "Đăng nhập bằng Twitter"
-        sr_title: "Đăng nhập bằng Twitter"
       instagram:
         name: "Instagram"
         title: "Đăng nhập bằng Instagram"
@@ -2144,8 +2147,6 @@ vi:
       in_topics_posts: "trong tất cả các chủ đề và bài đăng"
       enter_hint: "hoặc nhấn Enter"
       in_posts_by: "trong bài viết của %{username}"
-      browser_tip: "%{modifier} + f"
-      browser_tip_description: "một lần nữa để sử dụng tìm kiếm trình duyệt gốc"
       recent: "Tìm kiếm gần đây"
       clear_recent: "Xóa các Tìm kiếm Gần đây"
       type:
@@ -2941,6 +2942,10 @@ vi:
       general: "Chung"
       settings: "Cấu hình"
       tags: "Thẻ"
+      localization:
+        name: "Tên"
+        description: "Mô tả"
+        remove: "Xoá"
       tags_allowed_tags: "Hạn chế các thẻ này trong danh mục này:"
       tags_allowed_tag_groups: "Hạn chế các nhóm thẻ này trong danh mục này:"
       tags_placeholder: "(Tuỳ chọn) danh sách thẻ cho phép"
@@ -2966,9 +2971,13 @@ vi:
       description: "Mô tả"
       logo: "Logo của chuyên mục"
       background_image: "Ảnh nền của chuyên mục"
-      badge_colors: "Màu huy hiệu"
-      background_color: "Màu nền"
-      foreground_color: "Màu mặt trước"
+      background_color: "Màu sắc"
+      styles:
+        icon: "Biểu tượng"
+        emoji: "Emoji"
+        options:
+          icon: "Biểu tượng"
+          emoji: "Emoji"
       name_placeholder: "Tối đa một hoặc hai từ"
       color_placeholder: "Bất cứ màu nào"
       delete_confirm: "Bạn có chắc sẽ xóa chuyên mục này chứ?"
@@ -3628,7 +3637,6 @@ vi:
               content: "Review"
             invite:
               content: "Mời"
-      filter: "Lọc..."
     until: "Cho đến khi:"
     form_templates:
       upload_field:
@@ -3650,6 +3658,15 @@ vi:
       spreadsheet:
         show: "Hiển thị"
         about: "Giới thiệu"
+    discovery:
+      headings:
+        categories: "Tất cả danh mục"
+        filter_labels:
+          latest: "Mới nhất"
+          top: "Top"
+          new: "Mới"
+          unread: "Chưa đọc"
+          unseen: "Không nhìn thấy"
   admin_js:
     type_to_filter: "Gõ vào bộ lọc…"
     settings: "Cài đặt"
@@ -3693,20 +3710,20 @@ vi:
           title: "Tập tin"
         legal:
           title: "Legal"
-        branding:
-          title: "Xây dựng thương hiệu"
+        logo_and_fonts:
           logo:
             form:
               mobile: "Điện thoại"
               email: "Email"
+          fonts:
+            backfill_modal:
+              modal_yes: "Đồng ý"
         navigation:
           title: "Điều hướng"
         notifications:
           title: "Thông báo"
         onebox:
           title: "Onebox"
-        other:
-          title: "Khác"
         search_everything:
           title: "Tìm kiếm"
         security:
@@ -3745,6 +3762,8 @@ vi:
               header_description: "Xem trước nội dung của tập san email đã gửi cho các thành viên không hoạt động"
             templates:
               title: "Templates"
+        email_logs:
+          sub_pages:
             sent:
               title: "Đã gửi"
             skipped:
@@ -4117,6 +4136,36 @@ vi:
             failed: "Thất bại"
       home:
         title: "Trang chủ"
+      account:
+        title: "Tài khoản"
+        sidebar_link:
+          backups: "Bản sao lưu"
+      community:
+        title: "Cộng đồng"
+        sidebar_link:
+          badges: "Huy hiệu"
+          notifications: "Thông báo"
+          permalinks: "Liên kết cố định"
+          users: "Thành viên"
+          groups: "Nhóm"
+          legal: "Legal"
+          moderation_flags:
+            title: "Người kiểm duyệt"
+      appearance:
+        title: "Ngoại hình"
+        sidebar_link:
+          emoji: "Emoji"
+          navigation: "Điều hướng"
+      email_settings:
+        sidebar_link:
+          appearance: "Ngoại hình"
+      security:
+        title: "Bảo mật"
+      section_landing_pages:
+        account:
+          title: "Tài khoản"
+          backups:
+            title: "Bản sao lưu"
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
@@ -4144,12 +4193,32 @@ vi:
         embeddable_host:
           edit: "Sửa"
           delete: "Xóa"
-        look_and_feel:
+        themes_and_components:
+          breadcrumb_title: "Tùy biến"
+          install: "Cài đặt"
           themes:
             title: "Themes"
+          components:
+            title: "Các thành phần"
+            install: "Cài đặt"
+            name: "Tên"
+            enabled: "Kích hoạt"
+            by_author: "Bởi %{name}"
+            learn_more: "Tìm hiểu thêm"
+            edit: "Sửa"
+            preview: "Xem trước"
+            export: "Xuất"
+            convert: "Đổi"
+            delete: "Xóa"
+            filter_by_all: "All"
+            delete_confirm: 'Bạn có chắc chắn muốn xóa "%{name}" không?'
         user_fields:
           type: "Loại"
           delete: "Xóa"
+        color_palettes:
+          palette_name: "Tên"
+          colors:
+            title: "Màu sắc"
       plugins:
         title: "Plugin"
         name: "Tên"

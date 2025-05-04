@@ -338,6 +338,7 @@ fa_IR:
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "شما نمی توانید هیچ یک از مقادیر زیر را به تنظیمات اضافه کنید: %{values}."
       x_summary_large_image_no_svg: "تصاویر خلاصه توییتر مورد استفاده برای ابرداده twitter:image نمی توانند یک تصویر .svg باشند."
       tl0_and_anonymous_flag: "برای کاربران ناشناس باید «ایمیل تماس با سایت» یا «آدرس ایمیل برای گزارش محتوای غیرقانونی» ارائه شود."
+      allow_likes_in_anonymous_mode_without_anonymous_mode_enabled: "این تنظیم نیاز دارد که ابتدا تنظیمات «فعال‌سازی حالت ناشناس» فعال باشد."
     conflicting_google_user_id: 'شناسه حساب Google برای این حساب تغییر کرده است. مداخله کارکنان به دلایل امنیتی لازم است. لطفاً با کارکنان تماس بگیرید و به آنها نشان دهید <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "متأسفیم، ما نتوانستیم پیش نمایشی برای این صفحه وب ایجاد کنیم، زیرا سرور \"%{hostname}\" یافت نشد. به جای پیش نمایش، فقط یک پیوند در پست شما ظاهر می شود. :cry:"
@@ -994,25 +995,56 @@ fa_IR:
       short_description: "پسندیدن این فرسته"
   user_activity:
     no_log_search_queries: "لاگ درخواست‌های جستجو در حال حاضر غیرفعال است (مدیر می‌تواند آن را در تنظیمات سایت فعال کند)."
+  email_settings:
+    imap_unhandled_error: "هنگام برقراری ارتباط با سرور IMAP یک خطای کنترل نشده وجود داشت. %{message}"
+    connection_error: "مشکلی در اتصال با سرور وجود داشت. نام سرور و پورت را بررسی کنید و دوباره امتحان کنید."
+    timeout_error: "مدت زمان اتصال به سرور، بیش از حد طول کشید. نام سرور و پورت را بررسی کنید و دوباره امتحان کنید."
+    unhandled_error: "خطای کنترل نشده هنگام تست تنظیمات ایمیل. %{message}"
+  webauthn:
+    validation:
+      invalid_type_error: "نوع webauthn ارائه شده نامعتبر بود. انواع معتبر webauthn.get و webauthn.create هستند."
+      challenge_mismatch_error: "چالش ارائه شده با چالش ایجاد شده توسط سرور احراز هویت مطابقت ندارد."
+      invalid_origin_error: "مبدا درخواست احراز هویت با مبدا سرور مطابقت ندارد."
+      malformed_attestation_error: "خطایی در رمزگشایی داده‌های گواهی وجود داشت."
+      user_presence_error: "حضور کاربر الزامی است."
+      user_verification_error: "تأیید کاربر مورد نیاز است."
+      unsupported_public_key_algorithm_error: "الگوریتم کلید عمومی ارائه شده توسط سرور پشتیبانی نمی شود."
+      unsupported_attestation_format_error: "فرمت گواهی توسط سرور پشتیبانی نمی شود."
+      credential_id_in_use_error: "شناسه اعتبار ارائه شده، از قبل در حال استفاده است."
+      public_key_error: "تأیید کلید عمومی برای اعتبارنامه انجام نشد."
+      ownership_error: "کلید امنیتی متعلق به کاربر نیست."
+      not_found_error: "کلید امنیتی با شناسه اعتبار ارائه شده یافت نشد."
+      unknown_cose_algorithm_error: "الگوریتم مورد استفاده برای کلید امنیتی شناسایی نمی شود."
+      malformed_public_key_credential_error: "کلید عمومی ارائه شده نامعتبر است."
   topic_flag_types:
     spam:
       title: "هرز‌نامه"
       description: "این موضوع تبلیغاتی است. این برای سایت مفید یا مربط نیست، ولی تبلیغات طبیعی است."
       long_form: "پرچم‌گذاری به عنوان یک هرزنامه"
+      short_description: "این یک تبلیغ است"
     inappropriate:
       title: "نامناسب"
+      description: 'این موضوع حاوی مطالبی است که یک فرد معقول آن را توهین‌آمیز، زننده، رفتار نفرت‌انگیز یا ناقض <a href="%{base_path}/guidelines">دستورالعمل‌های انجمن ما</a> تلقی می‌کند.'
       long_form: "پرچم گذاری شده به عنوان نامناسب"
+      short_description: 'ناقض <a href="%{base_path}/guidelines">دستورالعمل‌های انجمن ما</a>'
     notify_moderators:
       title: "یک چیز دیگر"
+      description: 'این موضوع بر اساس <a href="%{base_path}/guidelines"> دستورالعمل‌‌ها</a>، <a href="%{tos_url}"> قوانین و مقررات استفاده از خدمات</a>، یا به دلیل دیگری که در بالا ذکر نشده است، نیازمند توجه کارکنان است.'
       long_form: "این را برای توجه مدیر پرچم گذاری کن"
       short_description: "به دلیل دیگری، نیازمند توجه همکاران است"
       email_title: 'موضوع "%{title}" نیاز به توجه ناظم دارد. '
       email_body: "%{link}\n\n%{message}"
     illegal:
+      title: "غیر قانونی"
+      description: "این موضوع به توجه کارکنان نیاز دارد زیرا معتقدم حاوی محتوای غیرقانونی است."
+      short_description: "غیر قانونی است"
       email_title: 'یک فرسته در "%{title}" نیاز به توجه مدیران دارد'
       email_body: "%{link}\n\n%{message}"
   flagging:
+    you_must_edit: '<p>پست شما توسط انجمن پرچم گذاری شد. لطفا <a href="%{path}">پیام های خود را ببینید</a>.</p>'
     user_must_edit: "<p>این نوشته توسط انجمن پرچم‌گذاری شده و به طور موقت مخفی است.</p>"
+  ignored:
+    hidden_content: "<p>محتوای نادیده گرفته شده</p>"
   archetypes:
     regular:
       title: "موضوع عادی"
@@ -1022,14 +1054,20 @@ fa_IR:
         make: "این موضوع در حال حاضر یک بنر است و تا زمانی که توسط کاربر رد شود، بالای تمام صفحه‌ها نمایش داده می‌شود. "
         remove: "این موضوع دیگر بنر نیست و بالای تمام صفحات به نمایش در نمی‌آید. "
   unsubscribed:
+    title: "تنظیمات برگزیده ایمیل به روز شد!"
+    description: "تنظیمات برگزیده ایمیل برای <b>%{email}</b> به روز شد. برای تغییر تنظیمات ایمیل خود <a href='%{url}'>از تنظیمات برگزیده کاربر خود بازدید کنید</a>."
     topic_description: "برای اشتراک مجدد در %{link}، از مدیریت آگاه‌سازی در قسمت پایین یا راست موضوع استفاده کنید."
+    private_topic_description: "برای اشتراک مجدد، از کنترل اعلان در پایین یا سمت راست موضوع استفاده کنید."
   unsubscribe:
     title: "لغو اشتراک"
     stop_watching_topic: "این موضوع را مشاهده نکنید، %{link}"
     mute_topic: "نادیده گرفتن تمام اطلاعیه‌های این موضوع، %{link}"
     unwatch_category: "موضوعات دسته‌بندی %{category} را مشاهده نکنید"
     mailing_list_mode: "غیرفعال سازی حالت فهرست ایمیل"
+    all: "هیچ ایمیلی از %{sitename}برای من نفرست"
     different_user_description: "در حال حاضر با نام کاربری متفاوتی با آن که برایتان ایمیل شده است وارد شده‌اید. لطفا خارج شوید یا در حالت ناشناس وارد شده و دوباره تلاش کنید."
+    not_found_description: "متأسفیم، نتوانستیم آن اشتراک را پیدا کنیم. ممکن است پیوند ایمیل شما خیلی قدیمی باشد و منقضی شده باشد؟"
+    user_not_found_description: "متأسفیم، نتوانستیم کاربری برای این اشتراک پیدا کنیم. احتمالاً در حال تلاش برای لغو اشتراک حسابی هستید که دیگر وجود ندارد."
     log_out: "خروج"
     submit: "ذخیره تنظیمات"
     digest_frequency:
@@ -1049,6 +1087,8 @@ fa_IR:
     read: "خواندن"
     read_write: "خواندن/نوشتن"
     description: '"%{application_name}" درخواست دسترسی به حساب کاربری شما را دارد:'
+    instructions: 'ما به تازگی یک کلید API کاربر جدید برای استفاده شما با "%{application_name}" ایجاد کردیم. لطفاً کلید زیر را در برنامه خود جایگذاری کنید:'
+    otp_description: 'آیا می خواهید به "%{application_name}" اجازه دسترسی به این سایت را بدهید؟'
     otp_confirmation:
       confirm_title: ورود به %{site_name}
       logging_in_as: ورود با %{username}
@@ -1062,43 +1102,98 @@ fa_IR:
       session_info: "خواندن اطلاعات session کاربر"
       read: "خواندن همه"
       write: "نوشتن همه"
+      one_time_password: "یک رمز ورود یک بار مصرف ایجاد کنید"
+      bookmarks_calendar: "یادآورهای نشانک را بخوانید"
       user_status: "خواندن و به‌روزرسانی وضعیت کاربر"
+    invalid_public_key: "متأسفیم، کلید عمومی نامعتبر است."
+    invalid_auth_redirect: "با عرض پوزش، این میزبان auth_redirect مجاز نیست."
+    invalid_token: "توکن گم شده، نامعتبر یا منقضی شده است"
+  flags:
+    errors:
+      already_handled: "پرچم قبلاً کنترل شده بود"
+      wrong_move: "پرچم قابل جابجایی نیست"
+      used: "پرچم را نمی توان به روز کرد یا حذف کرد زیرا قبلاً استفاده شده است."
+      unique_name: "نام پرچم باید منحصر به فرد باشد"
   reports:
     default:
       labels:
         count: تعداد
+        percent: درصد
         day: روز
     post_edits:
+      title: "ویرایش‌های فرسته"
       labels:
         edited_at: تاریخ
         post: فرسته
         editor: ویرایشگر
+        author: نویسنده
         edit_reason: دلیل
     user_flagging_ratio:
+      title: "نسبت پرچم گذاری کاربر"
       labels:
         user: کاربر
+        agreed_flags: گزارش‌های تایید شده
+        disagreed_flags: گزارش‌های رد شده
+        ignored_flags: گزارش‌های نادیده گرفته‌شده
         score: امتیاز
     moderators_activity:
+      title: "فعالیت ناظر"
       labels:
         moderator: مدیر
+        flag_count: گزارش‌ها بررسی شدند
+        time_read: مدت زمان خواندن
+        topic_count: موضوعات ساخته شدند
+        post_count: نوشته‌ها ساخته شدند
+        revision_count: تجدید نظرها
+      description: فهرست فعالیت‌های ناظر شامل گزارش‌های بررسی‌شده، زمان مطالعه، موضوعات ایجاد شده، پست‌های ایجاد شده، پیام‌های شخصی ایجاد شده و بازبینی‌ها است
     flags_status:
+      title: "وضعیت گزارش‌ها"
+      values:
+        agreed: تأیید شده
+        disagreed: رد شده
+        deferred: به تعویق افتاده
+        no_action: هیچ اقدامی
       labels:
         flag: نوع
+        assigned: اختصاص داده شده
+        poster: ارسال کننده
+        flagger: گزارش‌دهنده
     visits:
       title: "بازدید کاربران"
       xaxis: "روز"
       yaxis: "تعداد بازدید ها"
+      description: "تعداد بازدیدهای کاربران وارد شده"
     signups:
+      title: "ثبت‌نام‌ها"
       xaxis: "روز"
+      yaxis: "تعداد ثبت‌نام‌ها"
+      description: "ثبت‌نام‌های حساب کاربری جدید در این دوره"
     new_contributors:
+      title: "مشارکت کنندگان جدید"
       xaxis: "روز"
+      yaxis: "تعداد مشارکت کنندگان جدید"
+      description: "تعداد کاربرانی که اولین پست خود را در این مدت ارسال کردند."
     trust_level_growth:
+      title: "رشد سطح اعتماد"
+      xaxis:
+        tl1_reached: "به TL1 رسید"
+        tl2_reached: "به TL2 رسید"
+        tl3_reached: "به TL3 رسید"
+        tl4_reached: "به TL4 رسید"
       yaxis: "روز"
+      description: "تعداد کاربرانی که در این مدت سطح اعتماد خود را افزایش دادند."
     consolidated_page_views:
+      title_legacy: "بازدیدهای تجمیع شده"
+      xaxis:
+        page_view_crawler: "خزنده‌ها"
+        page_view_anon: "کاربران ناشناس"
+        page_view_logged_in: "کاربران وارد شده"
       yaxis: "روز"
+      description_legacy: "بازدید از صفحه برای کاربران وارد شده، کاربران ناشناس و خزنده ها."
       labels:
         post: فرسته
         editor: ویرایشگر
+        author: نویسنده
         edit_reason: دلیل
     consolidated_api_requests:
       title: "درخواست‌های API تلفیقی"
@@ -1108,26 +1203,46 @@ fa_IR:
       yaxis: "روز"
       description: "درخواست‌های API برای کلیدهای API معمولی و کلیدهای API کاربر."
     consolidated_page_views_browser_detection:
+      xaxis:
+        page_view_anon_browser: "مرورگر ناشناس"
+        page_view_crawler: "خزنده شناخته شده"
+        page_view_other: "سایر بازدیدهای صفحه"
       yaxis: "روز"
     site_traffic:
+      title: "ترافیک سایت"
+      xaxis:
+        page_view_anon_browser: "بازدید از صفحه (ناشناس)"
+        page_view_logged_in_browser: "بازدید از صفحه (وارد شده)"
+        page_view_crawler: "خزنده های شناخته شده"
+        page_view_other: "ترافیک‌های دیگر"
       yaxis: "روز"
+      description: "بازدید از صفحه برای کاربران وارد شده، کاربران ناشناس، خزنده های شناخته شده و سایر ترافیک‌ها."
       description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
+      title: "DAU/MAU"
       xaxis: "روز"
+      yaxis: "DAU/MAU"
+      description: "تعداد اعضایی که در روز گذشته وارد سیستم شده‌اند تقسیم بر تعداد اعضایی که در ماه گذشته وارد شده‌اند - درصدی را نشان می‌دهد که نشان‌دهنده «چسبندگی» انجمن است. بیش از ۲۰٪ را هدف بگیرید."
     daily_engaged_users:
+      title: "کاربران فعال روزانه"
       xaxis: "روز"
+      yaxis: "کاربران فعال"
+      description: "تعداد کاربرانی که در روز گذشته نوشته‌ای را پسند کرده‌اند یا پستی گذاشته‌اند."
     profile_views:
       title: "بازدید‌های نمایه کاربر"
       xaxis: "روز"
       yaxis: "تعداد نمایه‌های کاربری که بازدید شده‌اند"
+      description: "کل بازدیدهای جدید از پروفایل‌های کاربران"
     topics:
       title: "موضوعات"
       xaxis: "روز"
       yaxis: "تعداد موضوعات جدید"
+      description: "موضوعات جدید ایجاد شده در این دوره."
     posts:
       title: "فرسته‌ها"
       xaxis: "روز"
       yaxis: "تعداد فرسته‌های جدید"
+      description: "پست‌های جدید ایجاد شده در این دوره"
     likes:
       title: "پسندها"
       xaxis: "روز"
@@ -1137,18 +1252,22 @@ fa_IR:
       title: "پرچم‌ها"
       xaxis: "روز"
       yaxis: "تعداد پرچم‌ها"
+      description: "تعداد گزارش‌های جدید"
     bookmarks:
       title: "نشانک‌ها"
       xaxis: "روز"
       yaxis: "تعداد نشانک‌های جدید"
+      description: "تعداد موضوعات و پست های جدید نشانک شده."
     users_by_trust_level:
       title: "کاربران بر اساس سطح‌اعتماد"
       xaxis: "سطح‌اعتماد"
       yaxis: "تعداد کاربران"
       labels:
         level: سطح
+      description: "تعداد کاربران گروه بندی شده بر اساس سطح اعتماد."
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
     users_by_type:
+      title: "کاربران بر اساس نوع"
       xaxis: "نوع"
       yaxis: "تعداد کاربران"
       labels:
@@ -1157,27 +1276,39 @@ fa_IR:
         admin: مدیر
         moderator: مدیر
         suspended: تعلیق شد
+        silenced: بی‌صدا شده
+      description: "تعداد کاربران گروه‌بندی‌شده بر اساس مدیر کل، ناظر، تعلیق شده و بی‌صدا شده."
     trending_search:
+      title: عبارات جستجوی پرطرفدار
       labels:
         searches: جستجوها
+        click_through: CTR
+      description: "محبوب ترین عبارات جستجو با نرخ کلیک آنها."
     emails:
       title: "ایمیل ها ارسال شد"
       xaxis: "روز"
       yaxis: "تعداد ایمیل‌ها"
+      description: "تعداد ایمیل های جدید ارسال شده"
     user_to_user_private_messages:
+      title: "کاربر به کاربر (به استثنای پاسخ ها)"
       xaxis: "روز"
       yaxis: "تعداد پیام‌ها"
+      description: "تعداد پیام‌های شخصی تازه شروع شده"
     user_to_user_private_messages_with_replies:
+      title: "کاربر به کاربر (با پاسخ)"
       xaxis: "روز"
       yaxis: "تعداد پیام‌ها"
+      description: "تعداد تمام پیام‌ها و پاسخ‌های شخصی جدید."
     system_private_messages:
       title: "سیستم"
       xaxis: "روز"
       yaxis: "تعداد پیام‌ها"
+      description: "تعداد پیام‌های شخصی ارسال شده به صورت خودکار توسط سیستم."
     moderator_warning_private_messages:
       title: "هشدار مدیر"
       xaxis: "روز"
       yaxis: "تعداد پیام‌ها"
+      description: "تعداد اخطارهای ارسال شده از طریق پیام‌های شخصی از طرف مدیران."
     notify_moderators_private_messages:
       title: "اطلاعیه مدیران"
       xaxis: "روز"
@@ -1186,6 +1317,7 @@ fa_IR:
       title: "اطلاعیه کاربر"
       xaxis: "روز"
       yaxis: "تعداد پیام‌ها"
+      description: "تعداد دفعاتی که کاربران با استفاده از کادر گفتگوی گزارش، پیام شخصی ارسال کرده‌اند."
     top_referrers:
       title: "برترین معرفی کنندگان"
       xaxis: "کاربر"
@@ -1195,6 +1327,7 @@ fa_IR:
         user: "کاربر"
         num_clicks: "کلیک‌ها"
         num_topics: "موضوعات"
+      description: "لیست کاربران بر اساس تعداد کلیک روی پیوندهایی که به اشتراک گذاشته‌اند."
     top_traffic_sources:
       title: "بالاترین منابع ترافیک"
       xaxis: "دومین"
@@ -1205,27 +1338,33 @@ fa_IR:
         domain: دومین
         num_clicks: کلیک‌ها
         num_topics: موضوعات
+      description: "منابع خارجی که بیشتر به این سایت لینک داده‌اند."
     top_referred_topics:
       title: "بالاترین موضوعات مورد مراجعه"
       labels:
         num_clicks: "کلیک‌ها"
         topic: "موضوعات"
+      description: "موضوعاتی که بیشترین کلیک را از منابع خارجی دریافت کرده‌اند."
     page_view_anon_reqs:
       title: "ناشناس"
       xaxis: "روز"
       yaxis: "نمایش صفحات به کاربران ناشناس"
+      description: "تعداد بازدیدهای جدید از صفحه توسط بازدیدکنندگانی که به حساب وارد نشده‌اند."
     page_view_logged_in_reqs:
       title: "وارد شده در"
       xaxis: "روز"
       yaxis: "نمایش صفحات به کاربران وارد شده"
+      description: "تعداد بازدیدهای جدید از صفحه از سوی کاربران وارد شده."
     page_view_crawler_reqs:
       title: "نمایش صفحات به خزندگان وب"
       xaxis: "روز"
       yaxis: "نمایش صفحات به خزندگان وب"
+      description: "کل بازدیدهای صفحات از سوی خزنده های وب در طول زمان"
     page_view_total_reqs:
       title: "بازدید"
       xaxis: "روز"
       yaxis: "مجموع بازدید صفحات"
+      description: "تعداد بازدیدهای جدید صفحات از سوی همه بازدیدکنندگان."
     page_view_legacy_total_reqs:
       xaxis: "روز"
       yaxis: "مجموع بازدید صفحات"
@@ -1233,14 +1372,18 @@ fa_IR:
       title: "نمایش صفحات کاربران وارد شده"
       xaxis: "روز"
       yaxis: "نمایش صفحات کاربران وارد شده موبایلی"
+      description: "تعداد بازدیدهای جدید از صفحه از سوی کاربران دستگاه‌های تلفن همراه و وارد شده با حساب کاربری."
     page_view_anon_mobile_reqs:
       title: "بازدید ناشناس"
       xaxis: "روز"
       yaxis: "بازدید ناشناس موبایلی"
+      description: "تعداد بازدیدهای جدید از صفحه از سوی بازدیدکنندگان دستگاه همراهی که وارد سیستم نشده‌اند.ورود به حساب کاربری."
     page_view_anon_browser_reqs:
       xaxis: "روز"
+      description: "تعداد بازدید از صفحه توسط بازدیدکنندگان ناشناس با استفاده از مرورگرهای واقعی."
     page_view_logged_in_browser_reqs:
       xaxis: "روز"
+      description: "تعداد بازدید از صفحه توسط بازدیدکنندگان وارد شده با استفاده از مرورگرهای واقعی."
     http_background_reqs:
       title: "پس زمینه"
       xaxis: "روز"
@@ -1269,89 +1412,161 @@ fa_IR:
       title: "زمان ارسال اولین پاسخ"
       xaxis: "روز"
       yaxis: "میانگین زمان (ساعت)"
+      description: "میانگین زمان اولین پاسخ به موضوعات جدید (به ساعت)."
     topics_with_no_response:
       title: "موضوعات بدون پاسخ"
       xaxis: "روز"
       yaxis: "مجموع"
+      description: "تعداد موضوعات جدید ایجاد شده که پاسخی دریافت نکرده‌اند."
     mobile_visits:
+      title: "بازدید کاربران (موبایل)"
       xaxis: "روز"
       yaxis: "تعداد بازدید‌ها"
+      description: "تعداد کاربران منحصربه‌فرد واردشده به سیستم که با استفاده از دستگاه تلفن همراه بازدید کرده‌اند."
     web_crawlers:
       labels:
         page_views: "بازدید"
     web_hook_events_daily_aggregate:
+      title: "رویدادهای وب هوک"
       xaxis: "روز"
+      yaxis: "تعداد رویدادها"
     suspicious_logins:
+      title: "ورودهای مشکوک"
       labels:
         user: کاربر
+        client_ip: آی پی مشتری
         location: موقعیت
+        browser: مرورگر
+        device: دستگاه
         os: سیستم‌عامل
+        login_time: زمان ورود
+      description: "جزئیات ورودهای جدید که به طور مشکوکی با ورودهای قبلی متفاوت است."
     staff_logins:
+      title: "ورود مدیریت"
       labels:
         user: کاربر
         location: موقعیت
+        login_at: ورود در
     top_uploads:
+      title: "بارگذاری‌های برتر"
       labels:
         filename: نام پرونده
+        extension: پسوند
+        author: نویسنده
+        filesize: اندازه فایل
+      description: "فهرست همه آپلودها بر اساس پسوند، اندازه فایل و نویسنده."
+    top_ignored_users:
+      title: "کاربران برتر نادیده گرفته شده / بی صدا"
+      labels:
+        ignored_user: کاربر نادیده گرفته شده
+        ignores_count: تعداد نادیده گرفته می شود
+        mutes_count: شمارش بی صداها
+      description: "کاربرانی که توسط بسیاری از کاربران دیگر بی‌صدا شده و/یا نادیده گرفته شده اند."
     top_users_by_likes_received:
+      title: "کاربران برتر بر اساس پسندهای دریافتی"
       labels:
         user: کاربر
         qtt_like: پسند‌های دریافتی
+      description: "۱۰ کاربر برتر که پسند دریافت کرده اند."
     top_users_by_likes_received_from_inferior_trust_level:
+      title: "کاربران برتر بر اساس پسندهای دریافتی از کاربری با سطح اعتماد پایین‌تر"
       labels:
         user: کاربر
+        trust_level: سطح اعتماد
         qtt_like: پسند‌های دریافتی
+      description: "۱۰ کاربر برتر در سطح اعتماد بالاتر که توسط افرادی با سطح اعتماد پایین‌تر پسندیده شده‌اند."
     top_users_by_likes_received_from_a_variety_of_people:
+      title: "کاربران برتر بر اساس لایک های دریافتی از افراد مختلف"
       labels:
         user: کاربر
         qtt_like: پسند‌های دریافتی
+      description: "۱۰ کاربر برتر که از طیف وسیعی از افراد لایک داشته اند."
     topic_view_stats:
+      title: "آمار مشاهده موضوع"
       labels:
         topic: موضوع
         logged_in_views: وارد شده در
         anon_views: ناشناس
         total_views: مجموع
+      description: "۱۰۰ موضوع پربازدید در یک محدوده زمانی؛ ترکیبی از بازدیدهای وارد شده و ناشناس. می توان بر اساس دسته بندی فیلتر کرد."
   dashboard:
     problem:
+      twitter_login: 'به نظر می رسد ورود به توییتر در حال حاضر کار نمی کند. اعتبارنامه را در <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">تنظیمات سایت</a>بررسی کنید.'
+      group_email_credentials: 'مشکلی در اعتبار نامه ایمیل برای گروه <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>وجود داشت. تا زمانی که این مشکل برطرف نشود، هیچ ایمیلی از صندوق ورودی گروه ارسال نخواهد شد. %{error}'
       rails_env: "سرور شما در حالت %{env} در حال اجراست"
       host_names: "config/database.yml فایل شما از اسم هاست پیش فرض localhost استفاده کرده. برای استفاده از نام سایتتان این قسمت را به‌روز کنید."
+      sidekiq: 'Sidekiq کار نمی کند. کار‌های زیادی مثل ارسال ایمیل ها، برای اجرا نیازمند sidekiq هستند. لطفا مطمئن شوید که حداقل یک پروسه sidekiq کار می‌کند. <a href="https://github.com/mperham/sidekiq" target="_blank"> درباره Sidekiq بیشتر بدانید.</a>'
       queue_size: "تعداد کار های زمانبندی شده %{queue_size}، که مقدار بالاییست. این مسئله می‌تواند باعث بروز مشکل در پردازش(های) Sidekiq شود، یا می‌توانید عامل‌های Sidekiq بیشتری اضافه کنید."
       ram: "سرور شما با کمتر از ۱ گیگایابت رم راه‌اندازی شده است. برای دیسکورس حداقل ۱ گیگابایت رم لازم است تا به درستی کار کند."
       subfolder_ends_in_slash: "تنظیمات زیرپوشه نادرست است، مقدار DISCOURSE_RELATIVE_URL_ROOT با نویسه‌ی slash تمام می‌شود."
       poll_pop3_timeout: "اتصال به سرور POP3 انجام نشد. ایمیل‌های ورودی ممکن است دریافت نشوند. لطفا <a href='%{base_path}/admin/site_settings/category/email'>تنظیمات POP3 </a>و فراهم کننده خدمات را بررسی کنید."
       poll_pop3_auth_error: "اتصال به سرور POP3 ناموفق بود، خطای اعتبار سنجی. لطفا <a href='%{base_path}/admin/site_settings/category/email'>تنظیمات POP3</a> را بررسی کنید."
+    back_from_logster_text: "بازگشت به سایت"
   site_settings:
+    allow_bulk_invite: "با آپلود یک فایل CSV، دعوت‌های انبوه را مجاز کنید"
     disabled: "غیرفعال شده"
+    display_local_time_in_user_card: "زمانی که کارت کاربر باز می شود، زمان محلی را بر اساس منطقه زمانی کاربر نمایش دهید."
     censored_words: "کلماتی که به صورت خودکار جایگزین می شوند با &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "تمام فرسته‌هایی که بیش از ۳۰ روز پنهان باقی می‌مانند پاک شوند."
     allow_user_locale: "اجازه انتخاب زبان به کاربران داده شود."
+    set_locale_from_accept_language_header: "تنظیم زبان رابط برای کاربران ناشناس از سربرگ زبان مرورگر وب آنها"
+    support_mixed_text_direction: "پشتیبانی از جهت های متنی ترکیبی از چپ به راست و راست به چپ"
+    min_post_length: "حداقل طول پست مجاز بر حسب نویسه (به استثنای پیام های شخصی)"
+    min_first_post_length: "حداقل طول اولین پست (بدنه موضوع) (به استثنای پیام های شخصی)"
+    prevent_uploads_only_posts: "هنگام بررسی حداقل طول پست، کد نشانه گذاری آپلود را به حساب نیاور"
+    min_personal_message_post_length: "حداقل طول پست مجاز بر حسب نویسه برای پیام‌ها (هم اولین پست و هم پاسخ‌ها)"
     max_post_length: "حداکثر طول فرسته بر حسب نویسه"
+    topic_featured_link_enabled: "به کاربران امکان می دهد پیوندی را با موضوعات خود مرتبط کنند. وقتی روشن است، موضوعات می‌توانند پیوند برجسته‌شده‌ای داشته باشند که برای عموم قابل مشاهده است و اگر کاربر مجوزهای کافی داشته باشد، قابل ویرایش است. پیوند می‌تواند با ارائه محتوای اضافی مرتبط، قابلیت درک موضوع را افزایش دهد."
     show_topic_featured_link_in_digest: "نمایش پیوند‌های برجسته موضوع در ایمیل خلاصه"
+    min_topic_views_for_delete_confirm: "حداقل تعداد بازدیدهایی که یک موضوع باید داشته باشد تا یک پنجره تأیید هنگام حذف ظاهر شود"
     min_topic_title_length: "حداقل طول عنوان نوشته به نویسه"
     max_topic_title_length: "حداکثر طول مجاز عنوان موضوع به نویسه"
     min_personal_message_title_length: "حداقل طول مجاز عنوان برای پیام به نویسه"
+    max_emojis_in_title: "حداکثر ایموجی مجاز در عنوان موضوع. اگر مقدار تنظیم شده صفر باشد، از استفاده از هر گونه ایموجی در عنوان موضوع جلوگیری می کند."
     min_search_term_length: "حداقل طول واژه جستجوی معتبر به نویسه"
+    search_tokenize_chinese: "جستجوی اجباری برای توکن سازی چینی حتی در سایت های غیر چینی"
+    search_tokenize_japanese: "جستجوی اجباری برای توکن کردن زبان ژاپنی حتی در سایت های غیر ژاپنی"
     search_prefer_recent_posts: "اگر در انجمن بزرگ شما سرعت جست‌وجو کم است، این گزینه در ابتدا نمایه‌ی آخرین فرسته‌ها را می‌گردد."
     search_recent_posts_size: "تعداد فرسته‌های اخیر برای قرار گرفتن در نمایه"
     log_search_queries: "کارنامه جستجوهای انجام شده توسط کاربران"
     search_query_log_max_size: "حداکثر مقدار جستجوهای انجام شده برای نگهداری"
+    search_query_log_max_retention_days: "حداکثر زمان برای نگهداری عبارت‌های جستجو، در روز."
+    search_ignore_accents: "اگر این تنظیم فعال باشد، علائم لهجه در جستجوهای جستجو نادیده گرفته می شوند و به کاربران امکان می دهد نتایج را پیدا کنند حتی اگر لهجه صحیح را وارد نکنند."
+    search_default_sort_order: "ترتیب مرتب‌سازی پیش فرض برای جستجوی تمام صفحه"
+    search_experience: "موقعیت پیش فرض و ظاهر جستجو در دستگاه های دسکتاپ"
     allow_uncategorized_topics: "اجازه ایجاد موضوعات فاقد دسته‌بندی را بده. هشدار: درصورتی که موضوعات فاقد دسته‌بندی وجود داشته باشد، بایستی قبل از غیر‌فعال کردن این قابلیت آن‌ها را دسته‌بندی کنید."
     allow_duplicate_topic_titles: "به موضوعات اجازه داشتن عنوان مشابه، تکراری را بده."
     unique_posts_mins: "چند دقیقه‌ی بعد کاربر بتواند دوباره فرسته‌ای با محتویات یکسان بفرستد"
     educate_until_posts: "تا (n) فرسته‌ی اول کاربر، وقتی کاربر شروع به نوشتن می‌کند کادر پرشی آموزش کاربر جدید را نشان بده."
+    title: "نام این سایت. برای همه بازدیدکنندگان از جمله کاربران ناشناس قابل مشاهده است."
+    site_description: "این سایت را در یک جمله توصیف کنید. برای همه بازدیدکنندگان از جمله کاربران ناشناس قابل مشاهده است."
+    short_site_description: "توضیح کوتاه در چند کلمه. برای همه بازدیدکنندگان از جمله کاربران ناشناس قابل مشاهده است."
     crawl_images: "بازیابی تصاویر از URL‌های خارجی برای وارد کردن طول و عرض صحیح."
     download_remote_images_threshold: "حداقل فضای دیسک مورد نیاز برای دانلود عکس‌های خارجی به هاست (به درصد)"
     disabled_image_download_domains: "عکس‌های خارجی هرگز از این دامنه‌ها دانلود نخواهند شد. لیست Pipe-delimited"
     editing_grace_period: "ویرایش کردن تا (n) ثانیه بعد از ارسال فرسته، نسخه جدیدی در تاریخچه ایجاد نمی‌کند."
+    editing_grace_period_max_diff: "حداکثر تعداد تغییرات مجاز نویسه در دوره مهلت ویرایش. اگر تغییرات بیشتر از این مقدار باشد، یک نسخه جدید از پست ذخیره میشود. (سطح اعتماد ۰ و ۱)"
+    editing_grace_period_max_diff_high_trust: "حداکثر تعداد تغییرات مجاز نویسه در دوره مهلت ویرایش. اگر تغییرات بیشتر از این مقدار باشد، یک نسخه جدید از پست ذخیره میشود. (سطح اعتماد ۲ به بالا)"
+    staff_edit_locks_post: "اگر پست‌ توسط کارکنان ویرایش شود، ویرایشش قفل می‌شود"
+    post_edit_time_limit: "نویسنده tl0 یا tl1 می تواند پست خود را برای (n) دقیقه پس از ارسال ویرایش کند. برای امکان ویرایش همیشگی، روی ۰ تنظیم کنید."
+    tl2_post_edit_time_limit: "یک نویسنده tl2+ می تواند پست خود را برای (n) دقیقه پس از ارسال ویرایش کند. برای امکان ویرایش همیشگی، روی ۰ تنظیم کنید."
     edit_history_visible_to_public: "به همه اجازه بده تا نسخه قبلی نوشته ویرایش شده را ببینند. وقتی غیر‌فعال است٬ فقی اعضای همکار می‌توانند ببینند."
     delete_removed_posts_after: "نوشته های حذف شده توسط نویسنده، بعد از (n) ساعت به‌طور خودکار پاک می‌شوند. اگر روی ۰ تنظیم شود، همان موقع پاک خواهند شد. "
+    notify_users_after_responses_deleted_on_flagged_post: "هنگامی که یک پست گزارش و سپس حذف می‌شود، به همه کاربرانی که به آن پست پاسخ داده‌اند و پاسخشان حذف شده است، اطلاع داده می‌شود."
+    max_image_width: "حداکثر عرض تصاویر بندانگشتی در یک پست. تصاویری که عرض بیشتری داشته باشند، تغییر اندازه داده شده و در لایت‌باکس نمایش داده می‌شوند.\n\n"
+    max_image_height: "حداکثر طول تصاویر بندانگشتی در یک پست.\nتصاویری که طول بیشتری داشته باشند، تغییر اندازه داده شده و در لایت‌باکس نمایش داده می‌شوند.\n\n"
     fixed_category_positions: "اگر فعال باشد٬ شما این امکان را دارید تا دسته‌ندی‌ها را به ترتیب در یک نظم ثابت قرار دهید. اگر فعال نباشد، دسته‌بندی‌ها بر اساس فعالیتشان قرار می گیرند."
     fixed_category_positions_on_create: "اگر انتخاب شود بدین معنی است که ترتیب دسته‌بندی‌ها در پنجره ایجاد یک عنوان جدید مدیریت خواهد شد (نیازمند fixed_category_positions است)."
     add_rel_nofollow_to_user_content: 'nofollow REL را به تمام محتویات ارسال شده توسط کاربر اضافه کن، به جز برای پیوندهای داخلی (به همراه دامنه‌های والد). اگر این قسمت را عوض کنید، باید تمام نوشته‌ها را با دستور زیر rebake کنید: "rake posts:rebake"'
+    max_form_template_title_length: "حداکثر طول مجاز برای عناوین قالب فرم."
+    max_form_template_content_length: "حداکثر طول مجاز برای محتوای قالب فرم."
     post_excerpt_maxlength: "حداکثر طول یک نوشته گزیده/خلاصه."
+    topic_excerpt_maxlength: "حداکثر طول یک گزیده موضوع/خلاصه، تولید شده از اولین پست در یک موضوع."
     show_pinned_excerpt_mobile: "نمایش خلاصه موضوعات سنجاق شده در موبایل."
     show_pinned_excerpt_desktop: "نمایش خلاصه موضوعات سنجاق شده در کامپیوتر."
     post_onebox_maxlength: "حداکثر طول متن پیش‌نمایش لینک به نویسه."
+    logo: "تصویر لوگو در سمت چپ بالای سایت شما. از یک تصویر مستطیلی عریض با ارتفاع ۱۲۰ و نسبت تصویر بیشتر از ۳:۱ استفاده کنید. اگر خالی بماند، متن عنوان سایت نشان داده می شود."
+    logo_small: "تصویر لوگوی کوچک در سمت چپ بالای سایت شما که هنگام اسکرول کردن به پایین دیده می شود. از یک تصویر مربع ۱۲۰ × ۱۲۰ استفاده کنید. اگر خالی باقی بماند، علامت اصلی نشان داده خواهد شد."
     notification_email: "آدرس ایمیلی که در قسمت From: هنگام ارسال همه‌ی پیام‌های سیستمی استفاده می‌شود. دامنه مشخص شده در اینجا باید SPF, DKIM داشته باشد و رکورد PTR معکوس به درستی برای ورود ایمیل تنظیم شده باشد. "
     email_custom_headers: "یک لیست تفکیک شده از سرصفحه ایمیل‌های سفارشی"
     force_https: "اجبار به استفاده از HTTPS ، تا زمانی که HTTPS را کامل تنظیم نکرده‌اید این گزینه را فعال نکنید. آیا تمام CDN ها و شبکه‌های اجتماعی جهت ورود را بررسی کردید و تمام لوگو‌ها و وابستگی‌ها بدون مشکل با HTTPS کار می‌کنند؟"
@@ -1561,6 +1776,8 @@ fa_IR:
     max_daily_gravatar_crawls: "حداکثر تعداد دفعاتی که Discourse در یک روز Gravatar را برای آواتارهای سفارشی بررسی می کند"
     enable_user_directory: "شاخه کاربری را برای مرور ارائه کن"
     enable_group_directory: "یک فهرست راهنما برای گروه‌ها فراهم کنید"
+    allow_anonymous_mode: "گزینه‌ای را فعال کنید که به کاربران اجازه دهد برای ارسال نوشته‌ها به حالت ناشناس تغییر کنند. با فعال‌سازی، کاربران می‌توانند هویت خود را هنگام ایجاد نوشته‌ها یا موضوعات در وبگاه پنهان کنند. همچنین به اجازه پسندیده ناشناس مراجعه کنید."
+    allow_likes_in_anonymous_mode: "این تنظیمات را فعال کنید تا به کاربران اجازه دهید که در حالت ناشناس به نوشته‌ها واکنش پسندیدن دهند. با فعال‌سازی، کاربران می‌توانند هویت خود را هنگام واکنش پسندیدن دادن به نوشته‌ها یا موضوعات پنهان نگه دارند. همچنین به اجازه حالت ناشناس مراجعه کنید."
     anonymous_posting_min_trust_level: "حداقل سطح اعتماد برای فعال‌سازی نوشته گذاشتن در حالت ناشناس"
     anonymous_account_duration_minutes: "برای محافظت از ناشناس ماندن، هر N دقیقه برای هر کاربر یک حساب‌کاربری ناشناس بساز. برای مثال: اگر به ۶۰۰ تنظیم شود، به محض اینکه ۶۰۰ دقیقه از آخرین فرسته گذشت و کاربر به حالت ناشناس تغییر کرد، حساب کاربری جدید ناشناس ساخته می شود."
     hide_user_profiles_from_public: "غیر‌فعال‌سازی کارت کاربری، پروفایل کاربر و فهرست راهنمای کاربر برای کاربران ناشناس."
@@ -2713,23 +2930,41 @@ fa_IR:
         title: "بازیابی نوشته"
       delete_single:
         title: "حذف"
+        complete: "نوشته حذف شده."
       delete:
         title: "حذف…"
+      delete_and_ignore:
+        complete: "نوشته حذف شده."
       delete_and_agree:
         title: "حذف نوشته"
+        complete: "نوشته حذف شده."
       disagree:
         title: "خیر"
+        complete: "پرچم نادیده گرفته شد."
       ignore:
         title: "چشم پوشی"
+        complete: "پرچم نادیده گرفته شد."
+      ignore_and_do_nothing:
+        complete: "پرچم نادیده گرفته شد."
       approve:
         title: "تایید"
+        complete: "نوشته تایید شده."
+      approve_post:
+        complete: "نوشته تایید شده."
+      reject_post:
+        complete: "نوشته رد شده."
+      approve_user:
+        complete: "کاربر تایید شده."
       reject_user:
         title: "حذف کاربر…"
         delete:
           title: "حذف کاربر"
+          complete: "کاربر حذف شده."
       reject:
         title: "رد کردن"
         bundle_title: "رد کردن…"
+      delete_user:
+        complete: "کاربر حذف شده."
   fallback_username: "کاربران"
   user_status:
     errors:

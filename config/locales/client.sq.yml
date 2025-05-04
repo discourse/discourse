@@ -193,6 +193,10 @@ sq:
       dismiss: "Hiqe"
     bootstrap_mode: "Material Hyrës"
     back_button: "Kthehu mbrapa"
+    welcome_banner:
+      header:
+        anonymous_members: "Mirë se vini tek %{site_name}!"
+      search: "Kërko"
     themes:
       default_description: "Paracaktuar"
       broken_theme_alert: "Faqja juaj mund të mos funksionojë sepse një temë/komponent ka gabime."
@@ -454,10 +458,6 @@ sq:
       remove_confirmation: "Je të sigurt që dëshironi ta fshini këtë draft?"
       new_topic: "Draft i ri për temën"
       new_private_message: "Draft i ri i mesazhit personal"
-      abandon:
-        confirm: "Tashmë keni një projekt në zhvillim. Çfarë do të dëshironit të bëni me të?"
-        yes_value: "Harroni"
-        no_value: "Vazhdoni zhvillimin"
       dropdown:
         title: "Hapni menunë e drafteve më të fundit"
     topic_count_all:
@@ -589,6 +589,9 @@ sq:
         name: "Emri"
         fields: "Fushat"
         reject_reason: "Arsye"
+        scrubbed_reason: "Arsye"
+        scrub_record:
+          cancel_button: "Anulo"
       user_percentage:
         summary:
           one: "%{agreed}, %{disagreed}, %{ignored} (i flamurit të fundit)"
@@ -2053,6 +2056,8 @@ sq:
     modal:
       close: "mbylle"
       dismiss_error: "Hiqni gabimin"
+    multi_select:
+      search: "Kërkoni…"
     form_kit:
       reset: Rivendosni
       optional: opsionale
@@ -2293,10 +2298,6 @@ sq:
         name: "Google"
         title: "Identifikohu me Google"
         sr_title: "Identifikohu me Google"
-      twitter:
-        name: "Twitter"
-        title: "Identifikohu me Twitter"
-        sr_title: "Identifikohu me Twitter"
       instagram:
         name: "Instagram"
         title: "Identifikohu me Instagram"
@@ -2764,8 +2765,6 @@ sq:
       in_topics_posts: "në të gjitha temat dhe postimet"
       enter_hint: "ose shtypni Enter"
       in_posts_by: "në postimet nga %{username}"
-      browser_tip: "%{modifier} + f"
-      browser_tip_description: "përsëri për të përdorur kërkimin e shfletuesit"
       recent: "Kërkimet e fundit"
       clear_recent: "Pastro kërkimet e fundit"
       type:
@@ -3510,6 +3509,10 @@ sq:
       general: "Karakteristika të përgjithshme"
       settings: "Rregullimet"
       tags: "Etiketat"
+      localization:
+        name: "Emri"
+        description: "Përshkrimi"
+        remove: "Hiq"
       tags_placeholder: "(Opsionale) lista e etiketave të lejuara"
       tag_groups_placeholder: "(Opsionale) lista e grupeve të etiketave"
       required_tag_group:
@@ -3526,9 +3529,13 @@ sq:
       description: "Përshkrimi"
       logo: "Logo e kategorisë"
       background_image: "Imazhi i sfondit për kategorinë"
-      badge_colors: "Ngjyrat e stemës"
-      background_color: " Ngjyra e sfondit"
-      foreground_color: "Foreground color"
+      background_color: "Ngjyra"
+      styles:
+        icon: "Ikonë"
+        emoji: "Emoji"
+        options:
+          icon: "Ikonë"
+          emoji: "Emoji"
       name_placeholder: "Maksimumi një ose dy fjalë"
       color_placeholder: "Çdo ngjyrë web"
       delete_confirm: "Jeni i sigurtë që dëshironi ta fshini këtë kategori?"
@@ -3969,6 +3976,15 @@ sq:
       spreadsheet:
         show: "Shfaq"
         about: "Rreth"
+    discovery:
+      headings:
+        categories: "Të gjitha kategoritë"
+        filter_labels:
+          latest: "Më të fundit"
+          top: "Popullore"
+          new: "I Ri"
+          unread: "Të palexuara"
+          unseen: "E padukshme"
   admin_js:
     settings: "Rregullimet"
     admin:
@@ -3998,19 +4014,20 @@ sq:
           title: "Skedarë"
         legal:
           title: "Legale"
-        branding:
+        logo_and_fonts:
           logo:
             form:
               mobile: "Mobile"
               email: "Email"
+          fonts:
+            backfill_modal:
+              modal_yes: "Po"
         navigation:
           title: "Shfletimi"
         notifications:
           title: "Njoftimet"
         onebox:
           title: "Onebox"
-        other:
-          title: "Të tjerë"
         search_everything:
           title: "Kërko"
         security:
@@ -4042,6 +4059,8 @@ sq:
           sub_pages:
             templates:
               title: "Shabllonet"
+        email_logs:
+          sub_pages:
             sent:
               title: "Dërguar"
             skipped:
@@ -4187,6 +4206,36 @@ sq:
             failed: "Dështoi"
       home:
         title: "Kryefaqja"
+      account:
+        title: "Llogaria"
+        sidebar_link:
+          backups: "Rezervat"
+          whats_new:
+            title: "Çfarë ka të re?"
+      community:
+        title: "Komuniteti"
+        sidebar_link:
+          badges: "Stemat"
+          notifications: "Njoftimet"
+          permalinks: "Permalinks"
+          users: "Users"
+          groups: "Grupet"
+          legal: "Legale"
+      appearance:
+        sidebar_link:
+          emoji: "Emoji"
+          navigation: "Shfletimi"
+      email_settings:
+        title: "Cilësimet e emailit"
+      security:
+        title: "Siguria"
+      section_landing_pages:
+        account:
+          title: "Llogaria"
+          backups:
+            title: "Rezervat"
+          whats_new:
+            title: "Çfarë ka të re?"
       config_areas:
         about:
           your_organization: "Organizata juaj"
@@ -4213,9 +4262,25 @@ sq:
           delete: "Fshij"
           more_options:
             title: "Më shumë mundësi"
+        themes_and_components:
+          breadcrumb_title: "Personalizo"
+          components:
+            name: "Emri"
+            enabled: "Aktivizuar?"
+            by_author: "Nga %{name}"
+            learn_more: "Mësoni më shumë"
+            edit: "Redaktoni"
+            preview: "Parashikimi"
+            export: "Eksporto"
+            delete: "Fshij"
+            filter_by_all: "Të Gjithë"
         user_fields:
           type: "Lloji"
           delete: "Fshij"
+        color_palettes:
+          palette_name: "Emri"
+          colors:
+            title: "Ngjyrat"
       plugins:
         title: "Pluginet"
         name: "Emri"

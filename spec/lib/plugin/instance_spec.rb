@@ -340,7 +340,7 @@ TEXT
       plugin.send :register_assets!
 
       expect(DiscoursePluginRegistry.vendored_core_pretty_text.first).to eq(
-        "vendor/assets/javascripts/moment.js",
+        "app/assets/javascripts/discourse/node_modules/moment/moment.js",
       )
     end
   end
@@ -553,8 +553,6 @@ TEXT
       )
       expect(locale[:plural]).to eq(plural.with_indifferent_access)
 
-      expect(Rails.configuration.assets.precompile).to include("locales/foo_BAR.js")
-
       expect(JsLocaleHelper.find_moment_locale(["foo_BAR"])).to eq(locale[:moment_js])
       expect(JsLocaleHelper.find_moment_locale(["foo_BAR"], timezone_names: true)).to eq(
         locale[:moment_js_timezones],
@@ -569,14 +567,18 @@ TEXT
 
       expect(locale[:fallbackLocale]).to eq("pt_BR")
       expect(locale[:moment_js]).to eq(
-        ["pt-br", "#{Rails.root}/vendor/assets/javascripts/moment-locale/pt-br.js"],
+        [
+          "pt-br",
+          "#{Rails.root}/app/assets/javascripts/discourse/node_modules/moment/locale/pt-br.js",
+        ],
       )
       expect(locale[:moment_js_timezones]).to eq(
-        ["pt", "#{Rails.root}/vendor/assets/javascripts/moment-timezone-names-locale/pt.js"],
+        [
+          "pt",
+          "#{Rails.root}/node_modules/@discourse/moment-timezone-names-translations/locales/pt.js",
+        ],
       )
       expect(locale[:plural]).to be_nil
-
-      expect(Rails.configuration.assets.precompile).to include("locales/tup.js")
 
       expect(JsLocaleHelper.find_moment_locale(["tup"])).to eq(locale[:moment_js])
     end
@@ -589,11 +591,9 @@ TEXT
 
       expect(locale[:fallbackLocale]).to be_nil
       expect(locale[:moment_js]).to eq(
-        ["tlh", "#{Rails.root}/vendor/assets/javascripts/moment-locale/tlh.js"],
+        ["tlh", "#{Rails.root}/app/assets/javascripts/discourse/node_modules/moment/locale/tlh.js"],
       )
       expect(locale[:plural]).to eq(plural.with_indifferent_access)
-
-      expect(Rails.configuration.assets.precompile).to include("locales/tlh.js")
 
       expect(JsLocaleHelper.find_moment_locale(["tlh"])).to eq(locale[:moment_js])
     end
@@ -607,7 +607,6 @@ TEXT
       config/locales/client.foo_BAR.yml
       config/locales/server.foo_BAR.yml
       lib/javascripts/locale/moment_js/foo_BAR.js
-      assets/locales/foo_BAR.js.erb
     ].each do |path|
       it "does not register a new locale when #{path} is missing" do
         path = "#{plugin_path}/#{path}"
@@ -631,6 +630,15 @@ TEXT
         MyReviewable
       end
 
+      let(:new_scrubbable_type) do
+        class MyScrubbableReviewable < Reviewable
+          def scrub(reason, guardian)
+            # scrub logic
+          end
+        end
+        MyScrubbableReviewable
+      end
+
       it "adds the provided class to the existing types" do
         expect { register_reviewable_type }.to change { Reviewable.types.size }.by(1)
         expect(Reviewable.types).to include(new_type)
@@ -639,6 +647,16 @@ TEXT
       it "shows the correct source for the new type" do
         register_reviewable_type
         expect(Reviewable.source_for(new_type)).to eq("discourse-sample-plugin")
+      end
+
+      it "isn't listed as a scrubbable type if it doesn't have a scrub method" do
+        register_reviewable_type
+        expect(Reviewable.scrubbable_types).not_to include(new_type)
+      end
+
+      it "is listed as a scrubbable type if it has a scrub method" do
+        plugin_instance.register_reviewable_type(new_scrubbable_type)
+        expect(Reviewable.scrubbable_types).to include(new_scrubbable_type)
       end
 
       context "when the plugin is disabled" do

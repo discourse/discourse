@@ -3618,8 +3618,13 @@ gl:
         description: "Restaurar a publicación para que todos os usuarios a poidan ver."
       delete_single:
         title: "Eliminar"
+        complete: "Publicación eliminada."
+      delete_and_ignore:
+        complete: "Publicación eliminada."
       delete_and_ignore_replies:
         confirm: "Confirma que quere eliminar as respostas desta publicación tamén?"
+      delete_and_agree:
+        complete: "Publicación eliminada."
       delete_and_agree_replies:
         confirm: "Confirma que quere eliminar as respostas desta publicación tamén?"
       disagree_and_restore:
@@ -3643,6 +3648,7 @@ gl:
         delete:
           title: "Eliminar usuario"
           description: "O usuario será eliminado do foro."
+          complete: "Usuario eliminado."
         block:
           title: "Eliminar e bloquear usuario"
           description: "O usuario será eliminado e bloquearase a súa IP e enderezo electrónico."
@@ -3650,6 +3656,7 @@ gl:
         title: "Rexeitar"
       delete_user:
         reason: "Eliminado a través da cola de revisións"
+        complete: "Usuario eliminado."
   email_style:
     html_missing_placeholder: "O modelo HTML debe incluír %{placeholder}"
   notification_level:

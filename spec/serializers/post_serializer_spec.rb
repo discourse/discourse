@@ -380,7 +380,7 @@ RSpec.describe PostSerializer do
     end
   end
 
-  context "with allow_anonymous_likes enabled" do
+  context "with allow_likes_in_anonymous_mode enabled" do
     fab!(:user)
     fab!(:topic) { Fabricate(:topic, user: user) }
     fab!(:post) { Fabricate(:post, topic: topic, user: topic.user) }
@@ -402,8 +402,8 @@ RSpec.describe PostSerializer do
     end
 
     before do
-      SiteSetting.allow_anonymous_posting = true
-      SiteSetting.allow_anonymous_likes = true
+      SiteSetting.allow_anonymous_mode = true
+      SiteSetting.allow_likes_in_anonymous_mode = true
       SiteSetting.post_undo_action_window_mins = 10
       PostSerializer.any_instance.stubs(:post_actions).returns({ 2 => post_action })
     end

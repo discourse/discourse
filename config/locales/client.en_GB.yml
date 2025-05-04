@@ -89,10 +89,10 @@ en_GB:
         revert_to_regular: "Remove Staff Colour"
         delete_topic_error: "An error occurred whilst deleting this topic"
     category:
+      localization:
+        description: "Description"
       description: "Description"
-      badge_colors: "Badge colours"
-      background_color: "Background colour"
-      foreground_color: "Foreground colour"
+      background_color: "Colour"
       color_placeholder: "Any web colour"
       already_used: "This colour has been used by another category"
       uncategorized_general_warning: 'This category is special. It is used as the default category for new topics that do not have a category selected. If you want to prevent this behaviour and force category selection, <a href="%{settingLink}">please disable the setting here</a>. If you want to change the name or description, go to <a href="%{customizeLink}">Customise / Text Content</a>.'
@@ -130,11 +130,19 @@ en_GB:
           descriptions:
             users:
               anonymize: Anonymise user accounts.
+      appearance:
+        sidebar_link:
+          navigation: "Navigation"
       config_areas:
         flags:
           description: "Description"
           form:
             description: "Description"
+        themes_and_components:
+          breadcrumb_title: "Customise"
+        color_palettes:
+          colors:
+            title: "Colours"
       backups:
         upload:
           error: "There has been an error whilst uploading '%{filename}': %{message}"

@@ -1,6 +1,7 @@
 import hbs from "discourse/widgets/hbs-compiler";
 import { createWidget } from "discourse/widgets/widget";
 
+// glimmer-post-stream: has glimmer version
 export default createWidget("post-placeholder", {
   tagName: "article.placeholder",
   template: hbs`

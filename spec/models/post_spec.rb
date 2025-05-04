@@ -1414,6 +1414,8 @@ RSpec.describe Post do
 
   describe "#set_owner" do
     fab!(:post)
+    fab!(:admin)
+    fab!(:new_user) { Fabricate(:user) }
 
     it "will change owner of a post correctly" do
       post.set_owner(coding_horror, Discourse.system_user)
@@ -1441,6 +1443,35 @@ RSpec.describe Post do
         I18n.with_locale(SiteSetting.default_locale) { I18n.t("change_owner.post_revision_text") }
 
       expect(post.edit_reason).to eq(expected_reason)
+    end
+
+    it "triggers a post_owner_changed event" do
+      original_user = post.user
+
+      events = DiscourseEvent.track_events { post.set_owner(new_user, admin) }
+
+      change_event = events.find { |e| e[:event_name] == :post_owner_changed }
+
+      expect(change_event).to be_present
+      expect(change_event[:params][0]).to eq(post)
+      expect(change_event[:params][1]).to eq(original_user)
+      expect(change_event[:params][2]).to eq(new_user)
+      expect(post.reload.user).to eq(new_user)
+    end
+
+    it "doesn't trigger an event when user remains the same" do
+      same_user = post.user
+
+      events = DiscourseEvent.track_events { post.set_owner(same_user, admin) }
+
+      change_event = events.find { |e| e[:event_name] == :post_owner_changed }
+
+      expect(change_event).to be_nil
+    end
+
+    it "returns true when ownership changes successfully" do
+      result = post.set_owner(new_user, admin)
+      expect(result).to eq(true)
     end
   end
 

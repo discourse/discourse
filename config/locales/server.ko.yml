@@ -3753,8 +3753,13 @@ ko:
         description: "모든 사용자가 볼 수 있도록 게시물을 복원합니다."
       delete_single:
         title: "삭제"
+        complete: "게시물 삭제됨."
+      delete_and_ignore:
+        complete: "게시물 삭제됨."
       delete_and_ignore_replies:
         confirm: "게시물에 대한 댓글도 삭제할까요?"
+      delete_and_agree:
+        complete: "게시물 삭제됨."
       delete_and_agree_replies:
         confirm: "게시물에 대한 댓글도 삭제할까요?"
       disagree_and_restore:
@@ -3778,6 +3783,7 @@ ko:
         delete:
           title: "사용자 삭제"
           description: "사용자가 포럼에서 삭제됩니다."
+          complete: "사용자 삭제됨."
         block:
           title: "사용자 삭제 및 차단"
           description: "사용자가 삭제되고 IP 및 이메일 주소가 차단됩니다."
@@ -3795,6 +3801,7 @@ ko:
         title: "게시물 승인 및 복원"
       delete_user:
         reason: "검토 대기열을 통해 삭제됨"
+        complete: "사용자 삭제됨."
   email_style:
     html_missing_placeholder: "html 템플릿에는 %{placeholder} 포함이 필수입니다."
   notification_level:

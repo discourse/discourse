@@ -18,7 +18,7 @@ module("Discourse Chat | Component | chat-thread-heading", function (hooks) {
     assert.dom(".chat-thread__heading-title").hasText("A nice thread title");
   });
 
-  test("it doesn’t render heading when no title", async function (assert) {
+  test("it doesn't render heading when no title", async function (assert) {
     const thread = new ChatFabricators(getOwner(this)).thread({
       title: null,
     });

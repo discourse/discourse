@@ -32,6 +32,18 @@ function addHashtag(buffer, matches, state) {
       ["data-id", result.id],
     ];
 
+    if (result.style_type) {
+      token.attrs.push(["data-style-type", result.style_type]);
+    }
+
+    if (result.style_type === "emoji" && result.emoji) {
+      token.attrs.push(["data-emoji", result.emoji]);
+    }
+
+    if (result.style_type === "icon" && result.icon) {
+      token.attrs.push(["data-icon", result.icon]);
+    }
+
     // Most cases these will be the exact same, one standout is categories
     // which have a parent:child reference.
     if (result.slug !== result.ref) {
@@ -119,5 +131,8 @@ export function setup(helper) {
     "a[data-slug]",
     "a[data-ref]",
     "a[data-id]",
+    "a[data-style-type]",
+    "a[data-icon]",
+    "a[data-emoji]",
   ]);
 }

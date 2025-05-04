@@ -105,7 +105,7 @@ export default class GroupMembershipButton extends Component {
   <template>
     {{#if this.canJoinGroup}}
       <DButton
-        @action={{action "joinGroup"}}
+        @action={{this.joinGroup}}
         @icon="user-plus"
         @label="groups.join"
         @disabled={{this.updatingMembership}}
@@ -113,7 +113,7 @@ export default class GroupMembershipButton extends Component {
       />
     {{else if this.canLeaveGroup}}
       <DButton
-        @action={{action "leaveGroup"}}
+        @action={{this.leaveGroup}}
         @icon="user-xmark"
         @label="groups.leave"
         @disabled={{this.updatingMembership}}
@@ -121,7 +121,7 @@ export default class GroupMembershipButton extends Component {
       />
     {{else if this.canRequestMembership}}
       <DButton
-        @action={{action "showRequestMembershipForm"}}
+        @action={{this.showRequestMembershipForm}}
         @disabled={{this.loading}}
         @icon="user-plus"
         @label="groups.request"

@@ -2,7 +2,7 @@
 
 module FlagGuardian
   def can_edit_flag?(flag)
-    @user.admin? && !flag.system? && !flag.used?
+    @user.admin? && !flag.system?
   end
 
   def can_create_flag?

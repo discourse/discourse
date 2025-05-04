@@ -32,6 +32,7 @@ function topicWithUserStatus(topicId, mentionedUserId, status) {
 
 acceptance("Post inline mentions", function (needs) {
   needs.user();
+  needs.settings({ enable_user_status: true });
 
   const topicId = 130;
   const mentionedUserId = 1;
@@ -132,6 +133,7 @@ acceptance("Post inline mentions", function (needs) {
 
 acceptance("Post inline mentions – user status tooltip", function (needs) {
   needs.user();
+  needs.settings({ enable_user_status: true });
 
   const topicId = 130;
   const mentionedUserId = 1;
@@ -155,7 +157,7 @@ acceptance("Post inline mentions – user status tooltip", function (needs) {
       .dom(".topic-post .cooked .mention .user-status-message")
       .exists("user status is shown");
 
-    await mouseMove(".user-status-message");
+    await mouseMove(".topic-post .cooked .mention .user-status-message");
 
     assert
       .dom(".user-status-message-tooltip")
@@ -172,7 +174,9 @@ acceptance("Post inline mentions – user status tooltip", function (needs) {
   });
 });
 
-acceptance("Post inline mentions as an anonymous user", function () {
+acceptance("Post inline mentions as an anonymous user", function (needs) {
+  needs.settings({ enable_user_status: true });
+
   const topicId = 130;
   const mentionedUserId = 1;
   const status = {

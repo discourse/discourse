@@ -43,7 +43,7 @@ export default class PostMenuRepliesButton extends Component {
 
   <template>
     <DButton
-      class="show-replies btn-icon-text"
+      class="post-action-menu__show-replies show-replies btn-icon-text"
       ...attributes
       disabled={{this.disabled}}
       @action={{@buttonActions.toggleReplies}}

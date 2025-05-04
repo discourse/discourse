@@ -126,11 +126,10 @@ export default class ProsemirrorEditor extends Component {
     const params = this.pluginParams;
 
     const plugins = [
-      buildInputRules(this.extensions, this.schema, this.args.includeDefault),
+      buildInputRules(this.extensions, params, this.args.includeDefault),
       keymap(
         buildKeymap(
           this.extensions,
-          this.schema,
           this.keymapFromArgs,
           params,
           this.args.includeDefault
@@ -143,7 +142,11 @@ export default class ProsemirrorEditor extends Component {
       ...extractPlugins(this.extensions, params, this.handleAsyncPlugin),
     ];
 
-    this.parser = new Parser(this.extensions, this.args.includeDefault);
+    this.parser = new Parser(
+      this.extensions,
+      this.pluginParams,
+      this.args.includeDefault
+    );
     this.serializer = new Serializer(
       this.extensions,
       this.pluginParams,
@@ -154,8 +157,8 @@ export default class ProsemirrorEditor extends Component {
 
     this.view = new EditorView(container, {
       state,
-      nodeViews: extractNodeViews(this.extensions),
-      attributes: { class: this.args.class },
+      nodeViews: extractNodeViews(this.extensions, this.pluginParams),
+      attributes: { class: this.args.class ?? "" },
       editable: () => this.args.disabled !== true,
       dispatchTransaction: (tr) => {
         this.view.updateState(this.view.state.apply(tr));
@@ -210,12 +213,14 @@ export default class ProsemirrorEditor extends Component {
 
   @bind
   convertFromValue() {
+    const value = this.args.value ?? "";
+
     // Ignore the markdown we just serialized
-    if (this.args.value === this.#lastSerialized) {
+    if (value === this.#lastSerialized) {
       return;
     }
 
-    const doc = this.convertFromMarkdown(this.args.value);
+    const doc = this.convertFromMarkdown(value);
 
     const tr = this.view.state.tr;
     tr.replaceWith(0, this.view.state.doc.content.size, doc.content).setMeta(

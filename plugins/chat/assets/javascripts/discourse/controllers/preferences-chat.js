@@ -19,7 +19,11 @@ const CHAT_ATTRS = [
   "chat_header_indicator_preference",
   "chat_separate_sidebar_mode",
   "chat_send_shortcut",
+  "chat_quick_reaction_type",
+  "chat_quick_reactions_custom",
 ];
+
+export const CHAT_QUICK_REACTIONS_CUSTOM_DEFAULT = "heart|+1|smile";
 
 export const HEADER_INDICATOR_PREFERENCE_NEVER = "never";
 export const HEADER_INDICATOR_PREFERENCE_DM_AND_MENTIONS = "dm_and_mentions";
@@ -31,6 +35,17 @@ export default class PreferencesChatController extends Controller {
   @service siteSettings;
 
   subpageTitle = i18n("chat.admin.title");
+
+  chatQuickReactionTypes = [
+    {
+      label: i18n("chat.quick_reaction_type.options.frequent"),
+      value: "frequent",
+    },
+    {
+      label: i18n("chat.quick_reaction_type.options.custom"),
+      value: "custom",
+    },
+  ];
 
   chatSendShortcutOptions = [
     {
@@ -99,6 +114,13 @@ export default class PreferencesChatController extends Controller {
     return this.model.get("user_option.chat_send_shortcut");
   }
 
+  get chatQuickReactionsCustom() {
+    const emojis =
+      this.model.get("user_option.chat_quick_reactions_custom") ||
+      CHAT_QUICK_REACTIONS_CUSTOM_DEFAULT;
+    return emojis.split("|");
+  }
+
   @discourseComputed
   chatSounds() {
     return Object.keys(CHAT_SOUNDS).map((value) => {
@@ -112,6 +134,24 @@ export default class PreferencesChatController extends Controller {
       this.chatAudioManager.play(sound);
     }
     this.model.set("user_option.chat_sound", sound);
+  }
+
+  @action
+  onChangeQuickReactionType(value) {
+    this.model.set("user_option.chat_quick_reaction_type", value);
+    if (value === "custom") {
+      this.model.set(
+        "user_option.chat_quick_reactions_custom",
+        this.chatQuickReactionsCustom.join("|")
+      );
+    }
+  }
+
+  @action
+  didSelectEmoji(index, selected) {
+    let emoji = this.chatQuickReactionsCustom;
+    emoji[index] = selected;
+    this.model.set("user_option.chat_quick_reactions_custom", emoji.join("|"));
   }
 
   @action

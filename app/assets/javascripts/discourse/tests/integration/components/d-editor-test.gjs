@@ -1120,7 +1120,7 @@ third line`
       assert.strictEqual(
         this.value,
         initialValue + "",
-        "it doesn’t continue the list"
+        "doesn't continue the list"
       );
     },
     { enable_smart_lists: true }
@@ -1313,4 +1313,36 @@ third line`
       });
     }
   })();
+});
+
+module("Integration | Component | d-editor | rich editor", function (hooks) {
+  setupRenderingTest(hooks);
+
+  test("replaceText escapes markdown symbols that could be regexp symbols", async function (assert) {
+    this.siteSettings.rich_editor = true;
+
+    const initialValue = "Hello\n\n* world\n* am am here $";
+
+    withPluginApi("2.1.0", (api) => {
+      api.onToolbarCreate((toolbar) => {
+        toolbar.addButton({
+          id: "replace-text",
+          icon: "xmark",
+          group: "extras",
+          action: () => {
+            toolbar.context
+              .newToolbarEvent()
+              .replaceText(initialValue, "goodbye");
+          },
+          condition: () => true,
+        });
+      });
+    });
+
+    await render(<template><DEditor @value={{initialValue}} /></template>);
+    await click(".composer-toggle-switch");
+    await click("button.replace-text");
+
+    assert.dom(".ProseMirror p").hasText("goodbye");
+  });
 });

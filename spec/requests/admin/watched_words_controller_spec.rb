@@ -232,6 +232,19 @@ RSpec.describe Admin::WatchedWordsController do
           ["test", false],
         )
       end
+
+      it "handles files with invalid UTF-8 sequences" do
+        content = String.new("h\xE9llo\nworld\x99").force_encoding("Windows-1250")
+
+        post "/admin/customize/watched_words/upload.json",
+             params: {
+               action_key: "flag",
+               file: Rack::Test::UploadedFile.new(file_from_contents(content, "words.csv")),
+             }
+
+        expect(response.status).to eq(200)
+        expect(WatchedWord.pluck(:word)).to contain_exactly("héllo", "world™")
+      end
     end
   end
 

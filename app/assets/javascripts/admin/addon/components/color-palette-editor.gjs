@@ -3,8 +3,9 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import concatClass from "discourse/helpers/concat-class";
-import dIcon from "discourse/helpers/d-icon";
+import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export const LIGHT = "light";
@@ -32,13 +33,15 @@ const NavTab = <template>
       {{on "keydown" @action}}
       ...attributes
     >
-      {{dIcon @icon}}
+      {{icon @icon}}
       <span>{{@label}}</span>
     </a>
   </li>
 </template>;
 
 const Picker = class extends Component {
+  @service toasts;
+
   @action
   onInput(event) {
     const color = event.target.value.replace("#", "");
@@ -58,6 +61,34 @@ const Picker = class extends Component {
     } else {
       this.args.onLightChange(color);
       this.args.color.lightValue = color;
+    }
+  }
+
+  @action
+  onTextChange(event) {
+    const color = event.target.value;
+    if (this.args.showDark) {
+      this.args.onDarkChange(color);
+      this.args.color.darkValue = color;
+    } else {
+      this.args.onLightChange(color);
+      this.args.color.lightValue = color;
+    }
+  }
+
+  @action
+  onTextKeypress(event) {
+    const color = event.target.value + event.key;
+
+    if (color && !color.match(/^[0-9A-Fa-f]+$/)) {
+      event.preventDefault();
+      this.toasts.error({
+        data: {
+          message: i18n(
+            "admin.config_areas.color_palettes.illegal_character_in_color"
+          ),
+        },
+      });
     }
   }
 
@@ -102,10 +133,15 @@ const Picker = class extends Component {
       {{on "input" this.onInput}}
       {{on "change" this.onChange}}
     />
-    {{dIcon "hashtag"}}
-    <span
-      class="color-palette-editor__color-code"
-    >{{this.displayedColor}}</span>
+    {{icon "hashtag"}}
+    <input
+      class="color-palette-editor__text-input"
+      type="text"
+      maxlength="6"
+      value={{this.displayedColor}}
+      {{on "keypress" this.onTextKeypress}}
+      {{on "change" this.onTextChange}}
+    />
   </template>
 };
 

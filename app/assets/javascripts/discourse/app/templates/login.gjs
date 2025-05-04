@@ -29,12 +29,7 @@ export default RouteTemplate(
       {{loadingSpinner}}
     {{else}}
       {{#if
-        (and
-          @controller.siteSettings.full_page_login
-          (or
-            @controller.showLogin (not @controller.siteSettings.login_required)
-          )
-        )
+        (or @controller.showLogin (not @controller.siteSettings.login_required))
       }}
         {{! Show the full page login form }}
         <div class="login-fullpage">
@@ -47,6 +42,10 @@ export default RouteTemplate(
             <PluginOutlet
               @name="login-before-modal-body"
               @connectorTagName="div"
+              @outletArgs={{hash
+                flashChanged=this.flashChanged
+                flashTypeChanged=this.flashTypeChanged
+              }}
             />
 
             {{#if @controller.hasNoLoginOptions}}
@@ -215,6 +214,11 @@ export default RouteTemplate(
                   class="btn-primary login-button"
                 />
               </div>
+
+              <PluginOutlet
+                @name="below-login-buttons"
+                @outletArgs={{hash model=@controller.model}}
+              />
             </div>
           </div>
         </section>

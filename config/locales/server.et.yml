@@ -1086,6 +1086,11 @@ et:
         title: "Jah"
       delete_single:
         title: "Kustuta"
+        complete: "Postitus kustutatud."
+      delete_and_ignore:
+        complete: "Postitus kustutatud."
+      delete_and_agree:
+        complete: "Postitus kustutatud."
       disagree:
         title: "Ei"
       ignore:
@@ -1099,8 +1104,11 @@ et:
       reject_user:
         delete:
           title: "Kustuta kasutaja"
+          complete: "Kasutaja kustutatud."
       reject:
         title: "Lükka tagasi"
+      delete_user:
+        complete: "Kasutaja kustutatud."
   fallback_username: "kasutaja"
   activemodel:
     errors:

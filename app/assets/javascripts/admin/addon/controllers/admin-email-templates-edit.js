@@ -1,19 +1,27 @@
+import { cached, tracked } from "@glimmer/tracking";
 import Controller, { inject as controller } from "@ember/controller";
 import { action } from "@ember/object";
+import { dependentKeyCompat } from "@ember/object/compat";
 import { service } from "@ember/service";
+import BufferedProxy from "ember-buffered-proxy/proxy";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse/lib/decorators";
-import { bufferedProperty } from "discourse/mixins/buffered-content";
 import { i18n } from "discourse-i18n";
 
-export default class AdminEmailTemplatesEditController extends Controller.extend(
-  bufferedProperty("emailTemplate")
-) {
+export default class AdminEmailTemplatesEditController extends Controller {
   @service dialog;
   @controller adminEmailTemplates;
 
-  emailTemplate = null;
+  @tracked emailTemplate = null;
   saved = false;
+
+  @cached
+  @dependentKeyCompat
+  get buffered() {
+    return BufferedProxy.create({
+      content: this.emailTemplate,
+    });
+  }
 
   @discourseComputed("buffered.body", "buffered.subject")
   saveDisabled(body, subject) {
@@ -55,7 +63,7 @@ export default class AdminEmailTemplatesEditController extends Controller.extend
           .then((props) => {
             const buffered = this.buffered;
             buffered.setProperties(props);
-            this.commitBuffer();
+            this.buffered.applyChanges();
           })
           .catch(popupAjaxError);
       },

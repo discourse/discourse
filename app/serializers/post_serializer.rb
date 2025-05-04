@@ -298,6 +298,7 @@ class PostSerializer < BasicPostSerializer
 
   def reply_to_user
     {
+      id: object.reply_to_user.id,
       username: object.reply_to_user.username,
       name: object.reply_to_user.name,
       avatar_template: object.reply_to_user.avatar_template,
@@ -357,7 +358,7 @@ class PostSerializer < BasicPostSerializer
         summary.delete(:can_act)
       end
 
-      if actions.present? && SiteSetting.allow_anonymous_likes && sym == :like &&
+      if actions.present? && SiteSetting.allow_likes_in_anonymous_mode && sym == :like &&
            !scope.can_delete_post_action?(actions[id])
         summary.delete(:can_act)
       end

@@ -138,6 +138,10 @@ sw:
     software_update_prompt:
       dismiss: "Ondosha"
     back_button: "Iliyopita"
+    welcome_banner:
+      header:
+        anonymous_members: "Karibu kwenye %{site_name}!"
+      search: "Tafuta"
     themes:
       default_description: "Halisi"
     s3:
@@ -294,6 +298,9 @@ sw:
         email: "Barua Pepe"
         name: "Jina"
         reject_reason: "Sababu"
+        scrubbed_reason: "Sababu"
+        scrub_record:
+          cancel_button: "Ghairi"
       topics:
         topic: "Mada"
         deleted: "[Mada Imefutwa]"
@@ -1150,8 +1157,6 @@ sw:
       not_approved: "Akaunti yako bado haijathibitishwa. Utapata ujumbe kwa barua pepe ukiwa tayari kuingia."
       google_oauth2:
         name: "Google"
-      twitter:
-        name: "Twitter"
       instagram:
         name: "Instagram"
       facebook:
@@ -1894,6 +1899,10 @@ sw:
       general: "Jumla"
       settings: "Mipangilio"
       tags: "Lebo"
+      localization:
+        name: "Jina"
+        description: "Elezo"
+        remove: "Ondoa"
       tags_placeholder: "(Sio muhimu) orodha ya lebo zilizoruhusiwa."
       tag_groups_placeholder: "(Sio muhimu) orodha ya vikundi vyenye lebo zilizoruhusiwa."
       required_tag_group:
@@ -1909,9 +1918,13 @@ sw:
       description: "Maelezo"
       logo: "Nembo ya Kategoria"
       background_image: "Mandharinyuma ya Kategoria"
-      badge_colors: "Rangi za Beji"
-      background_color: "rangi ya Mandharinyuma"
-      foreground_color: "Rangi ya mandhari ya mbele"
+      background_color: "Rangi"
+      styles:
+        icon: "ikoni"
+        emoji: "Emoji"
+        options:
+          icon: "ikoni"
+          emoji: "Emoji"
       name_placeholder: "Neno moja au mawili"
       color_placeholder: "Rangi yoyote ya mtandao"
       delete_confirm: "Una uhakika unataka kufuta kategoria hii?"
@@ -2334,7 +2347,6 @@ sw:
               content: "Machapisho Yangu"
             invite:
               content: "Mualiko"
-      filter: "Chuja..."
       footer:
         interface_color_selector:
           light: "Hafifu"
@@ -2356,6 +2368,14 @@ sw:
       spreadsheet:
         show: "Onyesha"
         about: "Kuhusu"
+    discovery:
+      headings:
+        categories: "Kategoria Zote"
+        filter_labels:
+          latest: "Hivi Karibuni"
+          top: "Juu"
+          new: "Mpya"
+          unread: "Haijasomwa"
   admin_js:
     settings: "Mipangilio"
     admin:
@@ -2387,19 +2407,20 @@ sw:
           title: "Mafaili"
         legal:
           title: "Halali"
-        branding:
+        logo_and_fonts:
           logo:
             form:
               mobile: "Kifaa cha kiganjani"
               email: "Barua pepe"
+          fonts:
+            backfill_modal:
+              modal_yes: "Ndio"
         navigation:
           title: "Abiri"
         notifications:
           title: "Taarifa"
         onebox:
           title: "Onebox"
-        other:
-          title: "Nyingine"
         search_everything:
           title: "Tafuta"
         security:
@@ -2433,6 +2454,8 @@ sw:
               header_description: "Kihakiki maandishi ya barua pepe za jarida zinatomwa kwa watumiaji wasiotembelea jumuiya"
             templates:
               title: "Violezo"
+        email_logs:
+          sub_pages:
             sent:
               title: "Imetumwa"
             skipped:
@@ -2626,6 +2649,30 @@ sw:
             failed: "Kushindwa"
       home:
         title: "Nyumbani"
+      account:
+        title: "Akaunti"
+        sidebar_link:
+          backups: "Machelezo"
+      community:
+        title: "Jumuiya"
+        sidebar_link:
+          badges: "Beji"
+          notifications: "Taarifa"
+          permalinks: "Anwani za mtandao"
+          users: "Watumiaji"
+          groups: "Makundi"
+          legal: "Halali"
+      appearance:
+        sidebar_link:
+          emoji: "Emoji"
+          navigation: "Abiri"
+      security:
+        title: "Ulinzi"
+      section_landing_pages:
+        account:
+          title: "Akaunti"
+          backups:
+            title: "Machelezo"
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
@@ -2651,12 +2698,26 @@ sw:
         embeddable_host:
           edit: "Hariri"
           delete: "Futa"
-        look_and_feel:
+        themes_and_components:
+          breadcrumb_title: "Geuza Kukufaa"
           themes:
             title: "Mandhari"
+          components:
+            name: "Jina"
+            enabled: "Imeruhusiwa?"
+            learn_more: "Jifunze zaidi"
+            edit: "Hariri"
+            preview: "Kihakiki"
+            export: "Hamisha"
+            delete: "Futa"
+            filter_by_all: "Vyote"
         user_fields:
           type: "Aina"
           delete: "Futa"
+        color_palettes:
+          palette_name: "Jina"
+          colors:
+            title: "Rangi"
       plugins:
         title: "Programu-jalizi"
         name: "Jina"

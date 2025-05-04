@@ -525,6 +525,7 @@ module SiteSettingExtension
   def set_and_log(name, value, user = Discourse.system_user, detailed_message = nil)
     if has_setting?(name)
       prev_value = public_send(name)
+      return if prev_value == value
       set(name, value)
       # Logging via the rails console is already handled in add_override!
       log(name, value, prev_value, user, detailed_message) unless defined?(Rails::Console)

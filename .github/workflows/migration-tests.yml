@@ -14,7 +14,7 @@ on:
       - "migrations/**"
 
 concurrency:
-  group: migration-tests-${{ format('{0}-{1}', github.head_ref || github.run_number, github.job) }}
+  group: migration-tests-${{ format('{0}-{1}', github.ref_name, github.job) }}
   cancel-in-progress: true
 
 permissions:
@@ -23,21 +23,16 @@ permissions:
 jobs:
   tests:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
-    name: Tests with Ruby ${{ matrix.ruby }}
-    runs-on: ${{ (github.repository != 'discourse/discourse' && 'ubuntu-latest') || 'debian-12' }}
-    container: discourse/discourse_test:slim
+    name: Tests
+    runs-on: ${{ (github.repository_owner == 'discourse' && 'debian-12') || 'ubuntu-latest' }}
+    container: discourse/discourse_test:release
     timeout-minutes: 20
 
     env:
       RAILS_ENV: test
       PGUSER: discourse
       PGPASSWORD: discourse
-
-    strategy:
-      fail-fast: false
-
-      matrix:
-        ruby: ["3.3"]
+      LOAD_PLUGINS: 1
 
     steps:
       - name: Set working directory owner
@@ -62,23 +57,9 @@ jobs:
           sudo -E -u postgres script/start_test_db.rb
           sudo -u postgres psql -c "CREATE ROLE $PGUSER LOGIN SUPERUSER PASSWORD '$PGPASSWORD';"
 
-      - name: Container envs
-        id: container-envs
+      - name: Symlink vendor/bundle from image
         run: |
-          echo "ruby_version=$RUBY_VERSION" >> $GITHUB_OUTPUT
-          echo "debian_release=$DEBIAN_RELEASE" >> $GITHUB_OUTPUT
-        shell: bash
-
-      - name: Bundler cache
-        uses: actions/cache@v4
-        with:
-          path: vendor/bundle
-          key: >-
-            ${{ runner.os }}-
-            ${{ steps.container-envs.outputs.ruby_version }}-
-            ${{ steps.container-envs.outputs.debian_release }}-
-            ${{ hashFiles('**/Gemfile.lock') }}-
-            migrations-tooling
+          ln -s /var/www/discourse/vendor/bundle vendor/bundle
 
       - name: Setup gems
         run: |
@@ -88,10 +69,13 @@ jobs:
           bundle config --local without development
           bundle config --local with migrations
           bundle install --jobs $(($(nproc) - 1))
-          bundle clean
 
       - name: pnpm install
         run: pnpm install --frozen-lockfile
+
+      - name: Get CPU cores
+        id: cpu-info
+        run: echo "cpu-cores=$(nproc)" >> $GITHUB_OUTPUT
 
       - name: Fetch app state cache
         uses: actions/cache@v4
@@ -100,7 +84,8 @@ jobs:
           path: tmp/app-cache
           key: >-
             ${{ runner.os }}-
-            ${{ hashFiles('.github/workflows/tests.yml') }}-
+            ${{ steps.cpu-info.outputs.cpu-cores }}-
+            ${{ hashFiles('.github/workflows/migration-tests.yml') }}-
             ${{ hashFiles('db/**/*', 'plugins/**/db/**/*') }}-
             ${{ hashFiles('config/environments/test.rb') }}
 
@@ -126,11 +111,16 @@ jobs:
         if: steps.app-cache.outputs.cache-hit != 'true'
         run: rm -rf tmp/app-cache/uploads && cp -r public/uploads tmp/app-cache/uploads
 
-      #      - name: Check core database drift
-      #        run: |
-      #          mkdir /tmp/intermediate_db
-      #          ./migrations/scripts/schema_generator /tmp/intermediate_db/base_migration.sql
-      #          diff -u migrations/common/intermediate_db_schema/000_base_schema.sql /tmp/intermediate_db/base_migration.sql
+      - name: Validate IntermediateDB schema
+        run: |
+          migrations/bin/cli schema generate --db=intermediate_db
+
+          if [ ! -z "$(git status --porcelain migrations/db/intermediate_db_schema/)" ]; then
+            echo "IntermediateDB schema is not up to date."
+            echo "---------------------------------------------"
+            git -c color.ui=always diff migrations/db/intermediate_db_schema/
+            exit 1
+          fi
 
       - name: RSpec
         run: bin/rspec --default-path migrations/spec

@@ -17,76 +17,79 @@ module Migrations::Database::IntermediateDB
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     SQL
 
-    class << self
-      def create_for_file!(
+    def self.create_for_file(
+      path:,
+      filename: nil,
+      type: nil,
+      description: nil,
+      origin: nil,
+      user_id: nil
+    )
+      create(
+        id: ::Migrations::ID.hash(path),
+        filename: filename || File.basename(path),
         path:,
-        filename: nil,
-        type: nil,
-        description: nil,
-        origin: nil,
-        user_id: nil
+        type:,
+        description:,
+        origin:,
+        user_id:,
       )
-        create!(
-          id: ::Migrations::ID.hash(path),
-          filename: filename || File.basename(path),
-          path:,
-          type:,
-          description:,
-          origin:,
-          user_id:,
-        )
-      end
+    end
 
-      def create_for_url!(url:, filename:, type: nil, description: nil, origin: nil, user_id: nil)
-        create!(
-          id: ::Migrations::ID.hash(url),
-          filename:,
-          url:,
-          type:,
-          description:,
-          origin:,
-          user_id:,
-        )
-      end
-
-      def create_for_data!(data:, filename:, type: nil, description: nil, origin: nil, user_id: nil)
-        create!(
-          id: ::Migrations::ID.hash(data),
-          filename:,
-          data: ::Migrations::Database.to_blob(data),
-          type:,
-          description:,
-          origin:,
-          user_id:,
-        )
-      end
-
-      private
-
-      def create!(
-        id:,
+    def self.create_for_url(url:, filename:, type: nil, description: nil, origin: nil, user_id: nil)
+      create(
+        id: ::Migrations::ID.hash(url),
         filename:,
-        path: nil,
-        data: nil,
-        url: nil,
-        type: nil,
-        description: nil,
-        origin: nil,
-        user_id: nil
+        url:,
+        type:,
+        description:,
+        origin:,
+        user_id:,
       )
-        ::Migrations::Database::IntermediateDB.insert(
-          SQL,
-          id,
-          filename,
-          path,
-          data,
-          url,
-          type,
-          description,
-          origin,
-          user_id,
-        )
-      end
+    end
+
+    def self.create_for_data(
+      data:,
+      filename:,
+      type: nil,
+      description: nil,
+      origin: nil,
+      user_id: nil
+    )
+      create(
+        id: ::Migrations::ID.hash(data),
+        filename:,
+        data: ::Migrations::Database.to_blob(data),
+        type:,
+        description:,
+        origin:,
+        user_id:,
+      )
+    end
+
+    def self.create(
+      id:,
+      filename:,
+      path: nil,
+      data: nil,
+      url: nil,
+      type: nil,
+      description: nil,
+      origin: nil,
+      user_id: nil
+    )
+      ::Migrations::Database::IntermediateDB.insert(
+        SQL,
+        id,
+        filename,
+        path,
+        data,
+        url,
+        type,
+        description,
+        origin,
+        user_id,
+      )
     end
   end
 end

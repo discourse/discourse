@@ -51,7 +51,10 @@ sw:
             restricted_categories:
               label: Kategoria
           created: Imetengenezwa
-          topics: Mada
+          with_images: Picha
+          with_links: Viungo
+          with_code: Kodi
+          with_uploads: Upakiaji
         category_created_edited:
           fields:
             restricted_category:

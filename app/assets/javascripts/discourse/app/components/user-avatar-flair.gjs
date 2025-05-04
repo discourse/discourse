@@ -1,13 +1,14 @@
-import Component from "@ember/component";
-import { tagName } from "@ember-decorators/component";
+import Component from "@glimmer/component";
+import { service } from "@ember/service";
 import AvatarFlair from "discourse/components/avatar-flair";
 import autoGroupFlairForUser from "discourse/lib/avatar-flair";
-import discourseComputed from "discourse/lib/decorators";
 
-@tagName("")
 export default class UserAvatarFlair extends Component {
-  @discourseComputed("user")
-  flair(user) {
+  @service site;
+
+  get flair() {
+    const user = this.args.user;
+
     if (!user || !user.flair_group_id) {
       return;
     }

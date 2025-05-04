@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .d-header-wrap {
   position: sticky;
   top: 0;
@@ -12,6 +14,11 @@
   background-color: var(--header_background);
   box-shadow: var(--shadow-header);
   backface-visibility: hidden; /** do magic for scrolling performance **/
+  height: 3.66em;
+
+  @include viewport.from(sm) {
+    height: 4em;
+  }
 
   > .wrap {
     box-sizing: border-box;
@@ -44,16 +51,20 @@
   }
 
   .title {
-    --d-logo-height: 2.667em;
-    display: flex;
-    align-items: center;
-    height: 100%;
-    animation: fadein 0.5s;
+    --d-logo-height: 2.4em;
 
     // min-width acts as a placeholder if the small logo takes a while to load
     // it prevents topic title from shifting after the small logo loads
     // it's set to match the #site-logo height so square small logos don't resize when titles dock
     min-width: var(--d-logo-height);
+    display: flex;
+    align-items: center;
+    height: 100%;
+    animation: fadein 0.5s;
+
+    @include viewport.from(sm) {
+      --d-logo-height: 2.667em;
+    }
 
     @media (prefers-reduced-motion) {
       animation-duration: 0s;
@@ -85,8 +96,14 @@
 
   #site-text-logo {
     margin: 0;
+    font-size: var(--font-up-1);
+    font-weight: bold;
 
     @include ellipsis;
+
+    @include viewport.from(sm) {
+      font-size: var(--font-up-3);
+    }
   }
 
   .d-icon-house {
@@ -115,20 +132,14 @@
 
     .auth-buttons {
       display: flex;
+      gap: 0.5em;
     }
   }
 
-  .login-button,
-  .sign-up-button {
-    padding: 6px 10px;
-
-    .fa {
-      margin-right: 3px;
+  @include viewport.until(sm) {
+    .sign-up-button {
+      display: none;
     }
-  }
-
-  .login-button {
-    margin-left: 7px;
   }
 }
 
@@ -318,7 +329,6 @@
       "title title"
       "categories extra";
     grid-template-columns: auto minmax(2em, 1fr); // min must be as wide as ellipsis
-    align-items: baseline;
     gap: 0 0.5em;
 
     .header-title {
@@ -358,8 +368,12 @@
   .header-title {
     padding: 0;
     margin: 0;
-    font-size: var(--font-up-3);
     width: 100%;
+    font-size: var(--font-0);
+
+    @include viewport.from(sm) {
+      font-size: var(--font-up-3);
+    }
   }
 
   .categories-wrapper {
@@ -388,7 +402,6 @@
 
     .discourse-tags {
       display: inline;
-      color: var(--header_primary-high);
 
       @include ellipsis;
 
@@ -509,4 +522,15 @@ $mobile-avatar-height: 1.532em;
   max-height: 80vh;
   border-radius: var(--d-border-radius-large);
   overflow: auto;
+}
+
+.mobile-view {
+  // Hide header avatar + icons while topic title is visible in mobile header
+  .extra-info-wrapper ~ .panel {
+    .before-header-panel-outlet,
+    .header-buttons,
+    .d-header-icons {
+      display: none;
+    }
+  }
 }

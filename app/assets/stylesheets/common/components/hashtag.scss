@@ -31,26 +31,31 @@ a.hashtag {
 
   .d-icon,
   .hashtag-icon-placeholder {
-    font-size: var(--font-down-2);
-    margin: 0 0.3em 0 0;
+    font-size: var(--font-down-1);
+    margin: 0;
   }
 
   img.emoji {
-    width: 15px;
-    height: 15px;
-    vertical-align: text-bottom;
+    width: 0.93em;
+    height: 0.93em;
+    vertical-align: middle;
   }
 
   svg {
     display: inline;
   }
 
-  .hashtag-category-badge {
+  .hashtag-category-square {
     flex: 0 0 auto;
     width: 0.72em;
     height: 0.72em;
     margin-right: 0.25em;
     margin-left: 0.1em;
+    display: inline-block;
+  }
+
+  .hashtag-category-icon,
+  .hashtag-category-emoji {
     display: inline-block;
   }
 }
@@ -101,12 +106,21 @@ a.hashtag {
       margin-right: 0.25em;
     }
 
-    .hashtag-category-badge {
+    .hashtag-category-square,
+    .hashtag-category-icon,
+    .hashtag-category-emoji {
       flex: 0 0 auto;
-      width: 15px;
-      height: 15px;
+      width: 0.93em;
+      height: 0.93em;
       margin-right: 5px;
       display: inline-block;
+    }
+
+    .hashtag-category-icon .svg-icon,
+    .hashtag-category-emoji .emoji {
+      width: 0.93em;
+      height: 0.93em;
+      vertical-align: middle;
     }
   }
 

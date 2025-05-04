@@ -306,6 +306,10 @@ ar:
       dismiss: "تجاهل"
     bootstrap_mode: "خطوات البدء"
     back_button: "الرجوع"
+    welcome_banner:
+      header:
+        anonymous_members: "مرحبًا بك في %{site_name}!"
+      search: "البحث"
     themes:
       default_description: "افتراضي"
       broken_theme_alert: "قد لا يعمل موقعك كما ينبغي بسبب وجود أخطاء في السمة/المكوِّن."
@@ -649,10 +653,6 @@ ar:
       new_topic: "مسودة موضوع جديد"
       new_private_message: "مسودة رسالة خاصة جديدة"
       edit_topic: "تعديل مسودة الموضوع"
-      abandon:
-        confirm: "لديك بالفعل مسودة قيد التقدم. ماذا تريد أن تفعل بها؟"
-        yes_value: "تجاهل"
-        no_value: "استئناف التعديل"
       dropdown:
         title: "افتح قائمة أحدث المسودات"
         untitled: "مسودة دون عنوان"
@@ -823,6 +823,10 @@ ar:
         name: "الاسم"
         fields: "الحقول"
         reject_reason: "السبب"
+        scrubbed_reason: "السبب"
+        scrub_record:
+          reason_placeholder: "السبب..."
+          cancel_button: "إلغاء"
       user_percentage:
         summary:
           zero: "%{agreed}، %{disagreed}، %{ignored} (من آخر %{count} بلاغ)"
@@ -2498,6 +2502,9 @@ ar:
     modal:
       close: "إغلاق"
       dismiss_error: "تجاهل الخطأ"
+    multi_select:
+      no_results: "لا توجد نتائج"
+      search: "البحث…"
     form_kit:
       reset: إعادة التعيين
       optional: اختياري
@@ -2777,10 +2784,6 @@ ar:
         name: "Google"
         title: "تسجيل الدخول باستخدام Google"
         sr_title: "تسجيل الدخول باستخدام Google"
-      twitter:
-        name: "Twitter"
-        title: "تسجيل الدخول باستخدام Twitter"
-        sr_title: "تسجيل الدخول باستخدام Twitter"
       instagram:
         name: "Instagram"
         title: "تسجيل الدخول باستخدام Instagram"
@@ -3365,8 +3368,6 @@ ar:
       in_topics_posts: "في كل الموضوعات والمنشورات"
       enter_hint: "أو اضغط على Enter"
       in_posts_by: "في منشورات %{username}"
-      browser_tip: "%{modifier} + f"
-      browser_tip_description: "مرة أخرى لاستخدام بحث المتصفح الأصلي"
       recent: "عمليات البحث الأخيرة"
       clear_recent: "مسح عمليات البحث الأخيرة"
       type:
@@ -4605,6 +4606,10 @@ ar:
       settings: "الإعدادات"
       topic_template: "قالب"
       tags: "الوسوم"
+      localization:
+        name: "الاسم"
+        description: "الوصف"
+        remove: "إزالة"
       tags_allowed_tags: "حصر هذه الوسوم على هذه الفئة:"
       tags_allowed_tag_groups: "حصر مجموعات الوسوم هذه على هذه الفئة:"
       tags_placeholder: "(اختياري) قائمة الوسوم المسموح بها"
@@ -4632,9 +4637,13 @@ ar:
       logo_dark: "صورة شعار فئة الوضع الداكن"
       background_image: "صورة خلفية الفئة"
       background_image_dark: "صورة خلفية داكنة للفئة"
-      badge_colors: "ألوان الشارات"
-      background_color: "لون الخلفية"
-      foreground_color: "لون المقدمة"
+      background_color: "اللون"
+      styles:
+        icon: "الأيقونة"
+        emoji: "الرمز التعبيري"
+        options:
+          icon: "الأيقونة"
+          emoji: "الرمز التعبيري"
       color_used: "اللون قيد الاستخدام"
       predefined_colors: "خيارات الألوان المحدَّدة مسبقًا"
       name_placeholder: "كلمة أو كلمتان بحد أقصى"
@@ -5642,11 +5651,6 @@ ar:
       back_to_forum: "العودة إلى المنتدى"
       collapse_all_sections: "طي جميع الأقسام"
       expand_all_sections: "توسيع جميع الأقسام"
-      filter: "عامل التصفية..."
-      clear_filter: "مسح الفلتر"
-      no_results:
-        title: "لا توجد نتائج"
-        description: 'لم نتمكن من العثور على أي شيء يطابق "%{filter}".<br><br>هل تريد <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">البحث في إعدادات الموقع</a> أو <a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">قائمة المستخدمين ذوي دور المسؤول؟</a>'
       footer:
         interface_color_selector:
           light: "فاتح"
@@ -5768,6 +5772,16 @@ ar:
           paste: "لصق..."
           save: "الحفظ باسم..."
     powered_by_discourse: "بدعم من Discourse"
+    discovery:
+      headings:
+        categories: "كل الفئات"
+        filter_labels:
+          latest: "الحديثة"
+          top: "الأكثر نشاطًا"
+          new: "الجديدة"
+          unread: "غير المقروءة"
+          hot: "ساخن"
+          unseen: "غير مقروءة"
   admin_js:
     type_to_filter: "اكتب للتصفية…"
     settings: "الإعدادات"
@@ -5818,9 +5832,6 @@ ar:
         flags:
           title: "الإشراف"
           header_description: "يساعدك نظام البلاغات في Discourse وفريق المشرفين لديك على إدارة المحتوى وسلوك المستخدم، والحفاظ على مجتمعك محترمًا وصحيًا. الإعدادات الافتراضية مناسبة لمعظم المجتمعات ولا يتعين عليك تغييرها. ومع ذلك، إذا كان موقعك يحتوي على متطلبات معيَّنة، يمكنك إيقاف البلاغات التي لا تحتاج إليها وإضافة بلاغاتك المخصَّصة."
-        font_style:
-          title: "نمط الخط"
-          header_description: "تخصيص أنماط الخطوط المُستخدَمة في سماتك"
         files:
           title: "الملفات"
           header_description: "الإعدادات التي تتحكم في حدود أحجام الملفات ونوعها، وأحجام الصور الرمزية ومصادرها، وتخزين الملفات، وجودة الصور وضغطها، وغير ذلك"
@@ -5830,11 +5841,7 @@ ar:
         login_and_authentication:
           title: "تسجيل الدخول والمصادقة"
           header_description: "تكوين كيفية تسجيل دخول المستخدمين ومصادقتهم، والعبارات السرية، والمفاتيح، ومقِّدمي OAuth2، وغير ذلك"
-        logo:
-          title: "شعار الموقع"
-          header_description: "تخصيص الأشكال المختلفة لشعار موقعك"
-        branding:
-          title: "العلامة التجارية"
+        logo_and_fonts:
           logo:
             form:
               logo:
@@ -5843,6 +5850,13 @@ ar:
               email: "البريد الإلكتروني"
               manifest_screenshots:
                 description: "لقطات شاشة تعرض ميزات المثيل ووظيفته على صفحة رسالة التثبيت الخاصة به. يجب أن تكون جميع الصور من تحميلات محلية وبالأبعاد نفسها."
+          fonts:
+            title: "الخطوط"
+            form:
+              heading_font:
+                title: "خط العنوان"
+            backfill_modal:
+              modal_yes: "نعم"
         navigation:
           title: "التنقل"
           header_description: "تكوين روابط التنقل وعناصر القائمة لموقعك. يتضمَّن ذلك الموقع وسلوك قائمة التنقل الرئيسية، والروابط السريعة في أعلى الصفحة الرئيسية، والشريط الجانبي للمسؤول"
@@ -5852,9 +5866,6 @@ ar:
         onebox:
           title: "لوحة المعاينة"
           header_description: "تكوين كيفية إنشاء لوحات المعاينة وعرضها لموقعك"
-        other:
-          title: "أخرى"
-          header_description: "الإعدادات التي لا تناسب أي فئة أخرى"
         rate_limits:
           title: "حدود المعدل"
           header_description: "تكوين عدد المرات التي يمكن فيها للمستخدمين تنفيذ إجراءات معيَّنة، مثل إنشاء الموضوعات، وإرسال الرسائل، ونشر الردود"
@@ -5900,6 +5911,10 @@ ar:
         badges:
           title: "الشارات"
           header_description: "تكافئ الشارات المستخدمين على أنشطتهم ومساهماتهم وإنجازاتهم للإشادة بالسلوك الإيجابي والتفاعل داخل المجتمع والإقرار بهما وتشجيعهما"
+        content:
+          sub_pages:
+            posts_and_topics:
+              title: "المنشورات والموضوعات"
         permalinks:
           title: "الروابط الثابتة"
           header_description: "عمليات إعادة التوجيه التي سيتم تطبيقها على عناوين URL التي لا يعرفها المنتدى"
@@ -5923,9 +5938,6 @@ ar:
         site_texts:
           title: "نصوص الموقع"
         email:
-          title: "إعداد الخادم والسجلات"
-          header_description: "خصِّص القوالب المُستخدَمة لإنشاء الرسائل الإلكترونية، ومعاينة الرسائل الإلكترونية التلخيصية التي سيتم إرسالها، وعرض سجلات البريد الإلكتروني"
-          keywords: "البريد الإلكتروني | smtp | mailgun | sendgrid | مُرسَل | تم تخطيه | مرتد | مُستلَم | مرفوض | سجلات البريد الإلكتروني | ملخص المعاينة"
           sub_pages:
             preview_summary:
               title: "معاينة الملخص"
@@ -5934,6 +5946,8 @@ ar:
               title: "الاختبار المتقدم"
             templates:
               title: "القوالب"
+        email_logs:
+          sub_pages:
             sent:
               title: "المُرسَلة"
             skipped:
@@ -6503,6 +6517,66 @@ ar:
             failed: "فشل"
       home:
         title: "الصفحة الرئيسية"
+      account:
+        title: "الحساب"
+        sidebar_link:
+          backups: "النسخ الاحتياطية"
+          whats_new:
+            title: "ما الجديد؟"
+            keywords: "سجل التغييرات|الميزة|الإصدار"
+      community:
+        title: "المجتمع"
+        sidebar_link:
+          about_your_site: "نبذة عن موقعك"
+          badges: "الشارات"
+          login_and_authentication: "تسجيل الدخول والمصادقة"
+          notifications: "الإشعارات"
+          permalinks: "الروابط الثابتة"
+          trust_levels: "مستويات الثقة"
+          group_permissions: "أذونات المجموعة"
+          users: "المستخدمون"
+          groups: "المجموعات"
+          user_fields: "حقول المستخدم"
+          watched_words: "الكلمات المُراقَبة"
+          legal: "المسائل القانونية"
+          moderation_flags:
+            title: "الإشراف"
+            keywords: "بلاغ|مراجعة"
+      appearance:
+        title: "المظهر"
+        sidebar_link:
+          font_style: "نمط الخط"
+          site_logo: "شعار الموقع"
+          color_schemes: "لوحات الألوان"
+          emoji: "الرمز التعبيري"
+          navigation: "التنقل"
+          themes_and_components:
+            keywords: "الامتداد"
+          site_texts: "نصوص الموقع"
+      email_settings:
+        title: "إعدادات البريد الإلكتروني"
+        sidebar_link:
+          appearance: "المظهر"
+          server_setup:
+            title: "إعداد الخادم والسجلات"
+            keywords: "البريد الإلكتروني | smtp | mailgun | sendgrid | مُرسَل | تم تخطيه | مرتد | مُستلَم | مرفوض | سجلات البريد الإلكتروني | ملخص المعاينة"
+      security:
+        title: "الأمان"
+        sidebar_link:
+          security: "إعدادات الأمان"
+          spam: "إعدادات البريد العشوائي"
+          staff_action_logs:
+            title: "السجلات والفحص"
+            keywords: "سجلات الأخطاء | إجراءات الموظفين | رسائل البريد الإلكتروني التي تم فحصها | عناوين IP التي تم فحصها | عناوين URL التي تم فحصها | سجلات البحث"
+      section_landing_pages:
+        account:
+          title: "الحساب"
+          backups:
+            title: "النسخ الاحتياطية"
+            description: "قم بعمل نسخة احتياطية من بيانات موقعك"
+          whats_new:
+            title: "ما الجديد؟"
+            description: "اكتشف الإصدارات الجديدة والتحسينات في Discourse"
       config_areas:
         about:
           general_settings: "الإعدادات العامة"
@@ -6576,7 +6650,6 @@ ar:
             post: "المنشورات"
             chat_message: "رسائل الدردشة"
             enabled: "تفعيل هذا البلاغ المخصَّص بعد الحفظ"
-            alert: "بمجرد استخدام بلاغ مخصَّص، فإنه يمكن إيقافه فقط ولكن لا يمكن تعديلها أو حذفها."
             edit_flag: "تعديل البلاغ"
             non_editable: "لا يمكنك تعديل هذا البلاغ لأنه بلاغ نظام أو تم استخدامه بالفعل في نظام المراجعة، ومع ذلك لا يزال بإمكانك إيقافه."
             delete_flag: "حذف البلاغ"
@@ -6596,16 +6669,33 @@ ar:
           delete: "حذف"
           more_options:
             title: "خيارات إضافية"
-        look_and_feel:
+        themes_and_components:
+          breadcrumb_title: "تخصيص"
+          install: "تثبيت"
           themes:
-            title: "السمات"
+            title: "الواجهة"
             themes_intro: "قم بتثبيت سمة جديدة للبدء، أو إنشاء سمة خاصة بك من الصفر باستخدام هذه الموارد."
-            themes_intro_img_alt: "عنصر نائب لسمة جديدة"
-            set_default_theme: "التعيين كافتراضية"
-            default_theme: "السمة الافتراضية"
-            themes_description: "تُعد السمات تخصيصات موسَّعة تؤدي إلى تغيير عدة عناصر في نمط تصميم مدونتك، وغالبًا ما يتضمَّن أيضًا ميزات إضافية للواجهة الأمامية."
             new_theme: "سمة جديدة"
-            user_selectable: "قابلة للاختيار من قِبل المستخدم"
+          components:
+            title: "المكوِّنات"
+            install: "تثبيت"
+            name: "الاسم"
+            enabled: "مفعَّلة؟"
+            by_author: "بواسطة %{name}"
+            learn_more: "معرفة المزيد"
+            edit: "تعديل"
+            parent_themes_two: "%{name1} و%{name2}"
+            preview: "معاينة"
+            check_update: "تحقَّق من وجود تحديثات"
+            export: "تصدير"
+            convert: "تحويل"
+            delete: "حذف"
+            filter_by: "التصفية حسب"
+            filter_by_all: "الكل"
+            filter_by_used: "مُستخدَم"
+            filter_by_unused: "غير مُستخدَم"
+            delete_confirm: 'هل تريد بالتأكيد حذف "%{name}"؟'
+            badge_unused: "غير مُستخدَم"
         user_fields:
           field: "الحقل"
           type: "النوع"
@@ -6616,6 +6706,13 @@ ar:
           delete: "حذف"
           delete_successful: "تم حذف حقل المستخدم."
           save_successful: "تم حفظ حقل المستخدم."
+        color_palettes:
+          palette_name: "الاسم"
+          color_options:
+            toggle: "قابلة للاختيار من قِبل المستخدم"
+            toggle_description: "يمكن تحديد لوحة الألوان من قِبل المستخدمين"
+          colors:
+            title: "الألوان"
       plugins:
         title: "الإضافات"
         name: "الاسم"
@@ -6985,7 +7082,6 @@ ar:
           title: "الألوان"
           edit: "تعديل لوحات الألوان"
           long_title: "لوحات الألوان"
-          description: "لوحات الألوان تحدِّد الألوان الأساسية المُستخدَمة في واجهة موقعك، بينما يمكن للسمات أن توفِّر أنماطًا وتخطيطات ومكونات إضافية - وكلاهما يمكنه العمل معًا لإنشاء المظهر والشكل الفريد لموقعك، وكلاهما يمكن توفيرة للمستخدمين لاختيار تفضيلاتهم."
           about: "عدِّل الألوان التي تستخدمها سماتك. أنشئ لوحة ألوان جديدة للبدء."
           new_name: "لوحة ألوان جديدة"
           copy_name_prefix: "نسخة من"

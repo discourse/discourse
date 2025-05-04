@@ -3952,11 +3952,13 @@ cs:
         description: "Obnov příspěvek, aby ho mohli vidět všichni ostatní uživatelé."
       delete_single:
         title: "Smazat"
+        complete: "Příspěvek smazán."
       delete:
         title: "Odstranit…"
       delete_and_ignore:
         title: "Ignorovat nahlášení a smazat příspěvek"
         description: "Ignorovat nahlášení tím, že jej odstraněníte z fronty a smažete příspěvek; pokud jde o první příspěvek, smaže i téma. "
+        complete: "Příspěvek smazán."
       delete_and_ignore_replies:
         title: "Ignorovat nahlášení, smazat příspěvek a odpovědi"
         description: "Ignorovat nahlášení odstraněním z fronty, smazáním příspěvku a všech jeho odpovědí; pokud jde o první příspěvek, smaže i téma"
@@ -3964,6 +3966,7 @@ cs:
       delete_and_agree:
         title: "Odstranit příspěvek"
         description: "Souhlasit s nahlášením a smazat tento příspěvek. Pokud jde o první příspěvek, smaže i téma."
+        complete: "Příspěvek smazán."
       delete_and_agree_replies:
         title: "Smazat příspěvek a odpovědi"
         description: "Souhlasit s nahlášením a odstranit tento příspěvek a všechny jeho odpovědi; pokud jde první příspěvek, smaže i téma."
@@ -3973,29 +3976,37 @@ cs:
         description: "Obnov příspěvek, aby ho mohli vidět všichni ostatní uživatelé."
       disagree:
         title: "Ne"
+        complete: "Nahlášení ignorováno."
       discard_post:
         title: "Zahodit příspěvek"
       revise_and_reject_post:
         title: "Revize příspěvku..."
       ignore:
         title: "ignorovat"
+        complete: "Nahlášení ignorováno."
       ignore_and_do_nothing:
         title: "Nic nedělat"
         description: "Ignorovat nahlášením odstraněním z fronty bez jakékoli akce. Skryté příspěvky zůstanou skryté a budou řešeny pomocí automatických nástrojů."
+        complete: "Nahlášení ignorováno."
       approve:
         title: "Schválit"
+        complete: "Příspěvek schválen."
       approve_post:
         title: "Schválit příspěvek"
         confirm_closed: "Toto téma je uzavřeno. Chcete příspěvek přesto vytvořit?"
+        complete: "Příspěvek schválen."
       reject_post:
         title: "Odmítnout příspěvek"
+        complete: "Příspěvek zamítnut."
       approve_user:
         title: "Schválit uživatele"
+        complete: "Uživatel schválen."
       reject_user:
         title: "Odstranit uživatele..."
         delete:
           title: "Smazat uživatele"
           description: "Uživatel bude odstraněn z fóra."
+          complete: "Uživatel smazán."
         block:
           title: "Odstranit a blokovat uživatele"
           description: "Uživatel bude smazán a zablokujeme jeho IP a e-mailovou adresu."
@@ -4014,6 +4025,7 @@ cs:
         title: "Schválit a obnovit příspěvek"
       delete_user:
         reason: "Smazáno prostřednictvím fronty revizí"
+        complete: "Uživatel smazán."
   email_style:
     html_missing_placeholder: "Šablona html musí obsahovat %{placeholder}"
   notification_level:

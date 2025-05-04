@@ -77,6 +77,10 @@ be:
       category_changed: "Катэгорыя абноўлена %{when}"
     emails_are_disabled: "Адпраўка паведамленняў па электроннай пошце было глабальна адключана адміністратарам. Ні адно апавяшчэнне па электроннай пошце не будзе даслана."
     back_button: "Назад"
+    welcome_banner:
+      header:
+        anonymous_members: "Сардэчна запрашаем да сайта %{site_name}!"
+      search: "Пошук"
     themes:
       default_description: "Default"
     s3:
@@ -219,6 +223,9 @@ be:
         email: "Электронная пошта"
         name: "Імя"
         reject_reason: "прычына"
+        scrubbed_reason: "прычына"
+        scrub_record:
+          cancel_button: "Адмяніць"
       topics:
         topic: "Тэма"
         reviewable_count: "падлічваць"
@@ -830,8 +837,6 @@ be:
       not_approved: "Ваш рахунак яшчэ не было прынята. Вы атрымаеце апавяшчэнне па электроннай пошце, калі зможаце ўвайсці ў сістэму."
       google_oauth2:
         name: "Google"
-      twitter:
-        name: "Twitter"
       second_factor_toggle:
         totp: "Выкарыстоўвайце прыкладанне аутентификационное замест"
         backup_code: "Выкарыстоўваць рэзервовы код замест"
@@ -1180,6 +1185,10 @@ be:
       settings: "Налады"
       topic_template: "Шаблон"
       tags: "Тэгі"
+      localization:
+        name: "імя"
+        description: "Апісанне"
+        remove: "выдаліць"
       required_tag_group:
         delete: "Выдаліць"
       delete: "выдаліць катэгорыю"
@@ -1190,9 +1199,13 @@ be:
       save_error: У выпадку захавання катэгорыі адбылася памылка.
       name: "Назва катэгорыі"
       description: "апісанне"
-      badge_colors: "колеру значка"
-      background_color: "колер фону"
-      foreground_color: "колер тэксту"
+      background_color: "колер"
+      styles:
+        icon: "Абразка"
+        emoji: "Emoji"
+        options:
+          icon: "Абразка"
+          emoji: "Emoji"
       name_placeholder: "Не больш за аднаго-двух слоў"
       color_placeholder: "Любы вэб-колер"
       delete_confirm: "Вы ўпэўненыя, што жадаеце выдаліць гэтую катэгорыю?"
@@ -1481,7 +1494,6 @@ be:
               content_drafts: "Мае чарнавікі"
             review:
               content: "Патрабуе перагляду"
-      filter: "Filter..."
       footer:
         interface_color_selector:
           light: "святло"
@@ -1502,6 +1514,14 @@ be:
           reason: "чаму Вы рэдагуеце паведамленне?"
       spreadsheet:
         about: "Аб тэме"
+    discovery:
+      headings:
+        categories: "Усе катэгорыі"
+        filter_labels:
+          latest: "апошняя"
+          top: "Топ тэмаў"
+          new: "Новыя"
+          unread: "Непрачытаныя"
   admin_js:
     settings: "Налады"
     admin:
@@ -1536,19 +1556,20 @@ be:
           title: "файлы"
         legal:
           title: "Legal"
-        branding:
+        logo_and_fonts:
           logo:
             form:
               mobile: "Мабільны"
               email: "Электронная пошта"
               opengraph_image:
                 description: "Па змаўчанні адкрытага графіка малюнка выкарыстоўваецца, калі старонка не мае іншае падыходнае малюнка. Калі пакінуць пустым, то будзе выкарыстоўвацца вялікі значок."
+          fonts:
+            backfill_modal:
+              modal_yes: "ды"
         navigation:
           title: "рух"
         notifications:
           title: "Натыфікацыі"
-        other:
-          title: "іншае"
         search_everything:
           title: "Пошук"
         security:
@@ -1578,6 +1599,8 @@ be:
           sub_pages:
             templates:
               title: "шаблоны"
+        email_logs:
+          sub_pages:
             sent:
               title: "Sent"
             skipped:
@@ -1724,6 +1747,34 @@ be:
             failed: "памылка"
       home:
         title: "дома"
+      account:
+        title: "Аккаўнт"
+        sidebar_link:
+          backups: "Бэкапы"
+      community:
+        title: "супольнасць"
+        sidebar_link:
+          badges: "значкі"
+          notifications: "Натыфікацыі"
+          permalinks: "Сталыя спасылкі"
+          users: "карыстальнікаў"
+          groups: "групы"
+          legal: "Legal"
+          moderation_flags:
+            title: "Мадэрацыя"
+      appearance:
+        sidebar_link:
+          emoji: "Emoji"
+          navigation: "рух"
+          themes_and_components:
+            keywords: "пашырэнне"
+      security:
+        title: "Бяспека"
+      section_landing_pages:
+        account:
+          title: "Аккаўнт"
+          backups:
+            title: "Бэкапы"
       config_areas:
         about:
           company_name: "імя"
@@ -1746,9 +1797,22 @@ be:
         embeddable_host:
           edit: "рэдагаваць"
           delete: "выдаляць"
+        themes_and_components:
+          breadcrumb_title: "Кастамізаваць"
+          components:
+            name: "імя"
+            edit: "рэдагаваць"
+            preview: "Папярэдні прагляд"
+            export: "экспарт"
+            delete: "выдаляць"
+            filter_by_all: "Усё"
         user_fields:
           type: "Тып"
           delete: "выдаляць"
+        color_palettes:
+          palette_name: "імя"
+          colors:
+            title: "<......"
       plugins:
         title: "Плагіны"
         name: "Назва"

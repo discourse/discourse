@@ -22,7 +22,7 @@ const extension = {
       draggable: true,
       parseDOM: [{ tag: "table" }],
       toDOM() {
-        return ["table", 0];
+        return ["table", { class: "md-table" }, 0];
       },
     },
     table_head: {

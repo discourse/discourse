@@ -50,8 +50,6 @@ const DEFAULT_BINDINGS = {
   "!": { postAction: "showFlags" },
   "#": { handler: "goToPost", anonymous: true },
   "/": { handler: "toggleSearch", anonymous: true },
-  "meta+/": { handler: "filterSidebar", anonymous: true },
-  [`${PLATFORM_KEY_MODIFIER}+/`]: { handler: "filterSidebar", anonymous: true },
   "ctrl+alt+f": { handler: "toggleSearch", anonymous: true, global: true },
   "=": { handler: "toggleHamburgerMenu", anonymous: true },
   "?": { handler: "showHelpModal", anonymous: true },
@@ -60,8 +58,6 @@ const DEFAULT_BINDINGS = {
   b: { handler: "toggleBookmark" },
   c: { handler: "createTopic" },
   "shift+c": { handler: "focusComposer" },
-  "ctrl+f": { handler: "showPageSearch", anonymous: true },
-  "command+f": { handler: "showPageSearch", anonymous: true },
   "command+left": { handler: "webviewKeyboardBack", anonymous: true },
   "command+[": { handler: "webviewKeyboardBack", anonymous: true },
   "command+right": { handler: "webviewKeyboardForward", anonymous: true },
@@ -495,18 +491,6 @@ export default {
       event.stopPropagation();
     }
     composer.focusComposer(event);
-  },
-
-  filterSidebar() {
-    const filterInput = document.querySelector(".sidebar-filter__input");
-
-    if (filterInput) {
-      this._scrollTo(0);
-
-      if (!this.currentUser.use_experimental_admin_search) {
-        filterInput.focus();
-      }
-    }
   },
 
   fullscreenComposer() {

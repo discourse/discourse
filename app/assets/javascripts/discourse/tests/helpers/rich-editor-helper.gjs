@@ -61,7 +61,12 @@ export async function setupRichEditor(assert, markdown, multiToggle = false) {
     // or artifacts
     .replace(' class=""', "")
     // or a trailing-paragraph with an optional <br class="ProseMirror-trailingBreak"> inside
-    .replace(/<p>(<br class="ProseMirror-trailingBreak">)?<\/p>$/, "");
+    .replace(/<p>(<br class="ProseMirror-trailingBreak">)?<\/p>$/, "")
+    // or the codemark fake cursor
+    .replace(
+      '<span class="fake-cursor ProseMirror-widget" contenteditable="false"></span>',
+      ""
+    );
 
   return [self, html];
 }

@@ -114,7 +114,7 @@ RSpec.describe User do
     end
 
     context "when user is anonymous?" do
-      before { SiteSetting.allow_anonymous_posting = true }
+      before { SiteSetting.allow_anonymous_mode = true }
 
       it "should initiate bot for real user only" do
         user = Fabricate(:user, trust_level: 1)

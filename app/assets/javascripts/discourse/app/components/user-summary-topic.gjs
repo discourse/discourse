@@ -12,7 +12,12 @@ export default class UserSummaryTopic extends Component {
   <template>
     <PluginOutlet
       @name="user-summary-topic-wrapper"
-      @outletArgs={{hash topic=@topic url=@url}}
+      @outletArgs={{hash
+        topic=@topic
+        url=@url
+        createdAt=@createdAt
+        likes=@likes
+      }}
     >
       <span class="topic-info">
         {{formatDate @createdAt format="tiny" noTitle="true"}}

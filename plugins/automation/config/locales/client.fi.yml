@@ -163,11 +163,8 @@ fi:
               description: Valinnainen, käynnistyy vain, jos viestillä on jokin näistä tunnisteista
             restricted_categories:
               label: Luokat
-            restricted_groups:
+            restricted_inbox_groups:
               description: Valinnainen, käynnistyy vain, jos viestin ketju on henkilökohtainen viesti jossakin ryhmän postilaatikoista
-            ignore_group_members:
-              label: Ohita ryhmän jäsenet
-              description: Ohita triggeri, jos lähettäjä on edellä määritellyn ryhmän jäsen
             ignore_automated:
               label: Ohita automaattiset
               description: Ohita triggeri, jos lähettäjällä on sähköpostiosoite, joka ei ota vastaan vastauksia, tai se on automatisoidusta lähteestä. Koskee vain sähköpostitse luotuja viestejä.
@@ -182,7 +179,10 @@ fi:
               description: "Ohita triggeri, jos viesti on luotu sähköpostitse"
           created: Luotu
           edited: Muokattu
-          topics: Aiheet
+          with_images: Kuvat
+          with_links: Linkit
+          with_code: Koodi
+          with_uploads: Lataukset
         user_updated:
           fields:
             user_profile:

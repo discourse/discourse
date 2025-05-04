@@ -5,13 +5,13 @@ import { service } from "@ember/service";
 import { or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import GroupDefaultNotificationsModal from "discourse/components/modal/group-default-notifications";
-import { popupAutomaticMembershipAlert } from "discourse/controllers/groups-new";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
 export default class GroupManageSaveButton extends Component {
   @service modal;
+  @service groupAutomaticMembersDialog;
 
   saving = null;
   disabled = false;
@@ -51,7 +51,7 @@ export default class GroupManageSaveButton extends Component {
   }
 
   @action
-  save() {
+  async save() {
     if (this.beforeSave) {
       this.beforeSave();
     }
@@ -59,10 +59,15 @@ export default class GroupManageSaveButton extends Component {
     this.set("saving", true);
     const group = this.model;
 
-    popupAutomaticMembershipAlert(
+    const accepted = await this.groupAutomaticMembersDialog.showConfirm(
       group.id,
       group.automatic_membership_email_domains
     );
+
+    if (!accepted) {
+      this.set("saving", false);
+      return;
+    }
 
     const opts = {};
     if (this.updateExistingUsers !== null) {

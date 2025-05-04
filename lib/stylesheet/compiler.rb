@@ -9,22 +9,29 @@ module Stylesheet
     def self.compile_asset(asset, options = {})
       importer = Importer.new(options)
       file = importer.prepended_scss
+      filename = "_#{asset}_entrypoint.scss"
 
       if Importer::THEME_TARGETS.include?(asset.to_s)
         filename = "theme_#{options[:theme_id]}.scss"
         file += options[:theme_variables].to_s
         file += importer.theme_import(asset)
-      elsif plugin_assets = Importer.plugin_assets[asset.to_s]
-        filename = "#{asset}.scss"
+      elsif plugin_asset_info = Importer.plugin_assets[asset.to_s]
         options[:load_paths] = [] if options[:load_paths].nil?
+
+        plugin_assets = plugin_asset_info[:stylesheets]
+        plugin_path = plugin_asset_info[:plugin_path]
+        options[:load_paths] << plugin_path
+
         plugin_assets.each do |src|
-          file += File.read src
           options[:load_paths] << File.expand_path(File.dirname(src))
+          if src.end_with?(".scss")
+            file += "@import \"#{src}\";\n"
+          else
+            file += File.read(src)
+          end
         end
-      else
-        filename = "#{asset}.scss"
-        path = "#{ASSET_ROOT}/#{filename}"
-        file += File.read path
+      else # Core asset
+        file += "@import \"#{asset}\";\n"
 
         case asset.to_s
         when "embed", "publish"
@@ -56,6 +63,8 @@ module Stylesheet
           source_map_contents: true,
           load_paths: load_paths,
           silence_deprecations: %w[color-functions import global-builtin],
+          fatal_deprecations: options[:strict_deprecations] ? %w[mixed-decls] : [],
+          quiet: ENV["QUIET_SASS_DEPRECATIONS"] == "1",
         )
 
       result = engine.render

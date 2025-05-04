@@ -19,7 +19,7 @@ on:
       - "migrations/**"
 
 concurrency:
-  group: tests-${{ format('{0}-{1}', github.head_ref || github.run_number, github.job) }}
+  group: tests-${{ format('{0}-{1}', github.ref_name, github.job) }}
   cancel-in-progress: true
 
 permissions:
@@ -31,33 +31,30 @@ jobs:
     name: ${{ matrix.target }} ${{ matrix.build_type }}${{ (matrix.target == 'core' && matrix.build_type == 'frontend' && format(' ({0})', matrix.browser)) || '' }} # Update fetch-job-id step if changing this
     runs-on: ${{ (github.repository_owner == 'discourse' && 'debian-12') || 'ubuntu-latest' }}
     container: discourse/discourse_test:release
-    timeout-minutes: 20
+    timeout-minutes: ${{ (matrix.build_type == 'system' && matrix.target == 'plugin') && 30 || 20 }}
 
     env:
       RAILS_ENV: test
       PGUSER: discourse
       PGPASSWORD: discourse
       USES_PARALLEL_DATABASES: ${{ matrix.build_type == 'backend' || matrix.build_type == 'system' }}
-      CAPYBARA_DEFAULT_MAX_WAIT_TIME: 10
+      CAPYBARA_DEFAULT_MAX_WAIT_TIME: 20
       MINIO_RUNNER_LOG_LEVEL: DEBUG
       DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS: ${{ (matrix.build_type == 'system' || matrix.build_type == 'backend') && '1' }}
       CHEAP_SOURCE_MAPS: "1"
       MINIO_RUNNER_INSTALL_DIR: /home/discourse/.minio_runner
       TESTEM_BROWSER: ${{ (startsWith(matrix.browser, 'Firefox') && 'Firefox') || matrix.browser }}
       TESTEM_FIREFOX_PATH: ${{ (matrix.browser == 'Firefox Evergreen') && '/opt/firefox-evergreen/firefox' }}
+      EMBER_ENV: development
 
     strategy:
       fail-fast: false
 
       matrix:
-        build_type: [backend, frontend, system, annotations]
+        build_type: [backend, frontend, system]
         target: [core, plugins, themes]
         browser: [Chrome]
         exclude:
-          - build_type: annotations
-            target: plugins
-          - build_type: annotations
-            target: themes
           - build_type: backend
             target: themes
         include:
@@ -216,6 +213,22 @@ jobs:
           key: rspec-runtime-${{ matrix.build_type }}-${{ matrix.target }}-${{ github.run_id }}
           restore-keys: rspec-runtime-${{ matrix.build_type }}-${{ matrix.target }}-
 
+      - name: Check Annotations
+        if: matrix.build_type == 'backend' && matrix.target == 'core'
+        run: |
+          bin/rake annotate:ensure_all_indexes
+          bin/annotate --models --model-dir app/models
+
+          if [ ! -z "$(git status --porcelain app/models/)" ]; then
+            echo "Core annotations are not up to date. To resolve, run:"
+            echo "  bin/rake annotate:clean"
+            echo
+            echo "Or manually apply the diff printed below:"
+            echo "---------------------------------------------"
+            git -c color.ui=always diff app/models/
+            exit 1
+          fi
+
       - name: Check Zeitwerk reloading
         if: matrix.build_type == 'backend'
         env:
@@ -242,17 +255,14 @@ jobs:
       - name: Core QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'core'
         run: QUNIT_WRITE_EXECUTION_FILE=1 bin/rake qunit:test
-        timeout-minutes: 30
 
       - name: Plugin QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'plugins'
         run: QUNIT_WRITE_EXECUTION_FILE=1 bin/rake plugin:qunit['*']
-        timeout-minutes: 30
 
       - name: Theme QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'themes'
         run: DISCOURSE_DEV_DB=discourse_test bin/rake themes:qunit_all_official
-        timeout-minutes: 10
 
       - uses: actions/upload-artifact@v4
         if: always() && matrix.build_type == 'frontend'
@@ -262,7 +272,7 @@ jobs:
 
       - name: Ember Build for System Tests
         if: matrix.build_type == 'system'
-        run: bin/ember-cli --build
+        run: script/assemble_ember_build.rb
 
       - name: Core System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core'
@@ -275,17 +285,14 @@ jobs:
         env:
           CHECKOUT_TIMEOUT: 10
         run: |
-          GLOBIGNORE="plugins/chat/*";
-          LOAD_PLUGINS=1 RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation plugins/*/spec/system
+          LOAD_PLUGINS=1 RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --exclude-pattern="plugins/chat/*" --use-runtime-info --profile=50 --verbose --format documentation plugins/*/spec/system
         shell: bash
-        timeout-minutes: 30
 
       - name: Chat System Tests
         if: matrix.build_type == 'system' && matrix.target == 'chat'
         env:
           CHECKOUT_TIMEOUT: 10
         run: LOAD_PLUGINS=1 RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation plugins/chat/spec/system
-        timeout-minutes: 30
 
       - name: Theme System Tests
         if: matrix.build_type == 'system' && matrix.target == 'themes'
@@ -294,7 +301,6 @@ jobs:
         run: |
           RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --profile=50 --verbose --format documentation tmp/themes/*/spec/system
         shell: bash
-        timeout-minutes: 30
 
       - name: Check for failed system test screenshots
         id: check-failed-system-test-screenshots
@@ -342,23 +348,6 @@ jobs:
         with:
           name: flaky-test-reports-${{ matrix.build_type }}-${{ matrix.target }}
           path: tmp/turbo_rspec_flaky_tests-${{ matrix.build_type }}-${{ matrix.target }}-${{ steps.fetch-job-id.outputs.job_id }}.json
-
-      - name: Check Annotations
-        if: matrix.build_type == 'annotations'
-        run: |
-          bin/rake annotate:ensure_all_indexes
-          bin/annotate --models --model-dir app/models
-
-          if [ ! -z "$(git status --porcelain app/models/)" ]; then
-            echo "Core annotations are not up to date. To resolve, run:"
-            echo "  bin/rake annotate:clean"
-            echo
-            echo "Or manually apply the diff printed below:"
-            echo "---------------------------------------------"
-            git -c color.ui=always diff app/models/
-            exit 1
-          fi
-        timeout-minutes: 30
 
   merge:
     if: github.repository == 'discourse/discourse' && github.ref == 'refs/heads/main'

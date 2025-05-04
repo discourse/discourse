@@ -13,6 +13,7 @@ export default class ColorPicker extends Component {
   @action
   selectColor(color) {
     this.set("value", color);
+    this.onSelectColor?.(color);
   }
 
   @action
@@ -28,7 +29,7 @@ export default class ColorPicker extends Component {
       <ColorPickerChoice
         @color={{c}}
         @usedColors={{this.usedColors}}
-        @selectColor={{action "selectColor"}}
+        @selectColor={{this.selectColor}}
         @ariaLabel={{this.getColorLabel c}}
       >
         {{icon "check"}}

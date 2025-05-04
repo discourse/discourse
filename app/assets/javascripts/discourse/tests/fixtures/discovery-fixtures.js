@@ -1433,6 +1433,7 @@ export default {
           name: "bug",
           color: "e9dd00",
           text_color: "000000",
+          style_type: "square",
           slug: "bug",
           topic_count: 660,
           description:
@@ -1535,6 +1536,7 @@ export default {
           name: "feature",
           color: "0E76BD",
           text_color: "FFFFFF",
+          style_type: "square",
           slug: "feature",
           topic_count: 727,
           description:
@@ -1560,6 +1562,7 @@ export default {
               name: "spec",
               color: "33B0B0",
               text_color: "FFFFFF",
+              style_type: "square",
               slug: "spec",
               topic_count: 20,
               post_count: 278,
@@ -1657,6 +1660,7 @@ export default {
           name: "support",
           color: "b99",
           text_color: "FFFFFF",
+          style_type: "square",
           slug: "support",
           topic_count: 782,
           description:
@@ -1756,6 +1760,7 @@ export default {
           name: "dev",
           color: "000",
           text_color: "FFFFFF",
+          style_type: "square",
           slug: "dev",
           topic_count: 284,
           description:
@@ -1859,6 +1864,7 @@ export default {
           name: "ux",
           color: "5F497A",
           text_color: "FFFFFF",
+          style_type: "square",
           slug: "ux",
           topic_count: 184,
           description:
@@ -1960,6 +1966,7 @@ export default {
           name: "extensibility",
           color: "FE8432",
           text_color: "FFFFFF",
+          style_type: "square",
           slug: "extensibility",
           topic_count: 102,
           description:
@@ -2062,6 +2069,7 @@ export default {
           name: "hosting",
           color: "74CCED",
           text_color: "FFFFFF",
+          style_type: "square",
           slug: "hosting",
           topic_count: 69,
           description:
@@ -2163,6 +2171,7 @@ export default {
           name: "uncategorized",
           color: "0088CC",
           text_color: "FFFFFF",
+          style_type: "square",
           slug: "uncategorized",
           topic_count: 229,
           description: "",
@@ -2265,6 +2274,7 @@ export default {
           name: "login",
           color: "edb400",
           text_color: "FFFFFF",
+          style_type: "square",
           slug: "login",
           topic_count: 27,
           description:
@@ -2366,6 +2376,7 @@ export default {
           name: "meta",
           color: "aaa",
           text_color: "FFFFFF",
+          style_type: "square",
           slug: "meta",
           topic_count: 79,
           description:
@@ -2467,6 +2478,7 @@ export default {
           name: "discourse hub",
           color: "b2c79f",
           text_color: "FFFFFF",
+          style_type: "square",
           slug: "discourse-hub",
           topic_count: 4,
           description:
@@ -2567,6 +2579,7 @@ export default {
           name: "blog",
           color: "ED207B",
           text_color: "FFFFFF",
+          style_type: "square",
           slug: "blog",
           topic_count: 14,
           description:
@@ -2666,6 +2679,7 @@ export default {
           name: "faq",
           color: "33b",
           text_color: "FFFFFF",
+          style_type: "square",
           slug: "faq",
           topic_count: 49,
           description:
@@ -2769,6 +2783,7 @@ export default {
           name: "marketplace",
           color: "8C6238",
           text_color: "FFFFFF",
+          style_type: "square",
           slug: "marketplace",
           topic_count: 24,
           description:
@@ -2871,6 +2886,7 @@ export default {
           name: "howto",
           color: "76923C",
           text_color: "FFFFFF",
+          style_type: "square",
           slug: "howto",
           topic_count: 58,
           description:
@@ -6431,6 +6447,7 @@ export default {
           name: "Uncategorized",
           color: "0088CC",
           text_color: "FFFFFF",
+          style_type: "square",
           slug: "uncategorized",
           topic_count: 1,
           post_count: 0,
@@ -6458,6 +6475,7 @@ export default {
           name: "Site Feedback",
           color: "27AA5B",
           text_color: "FFFFFF",
+          style_type: "square",
           slug: "site-feedback",
           topic_count: 0,
           post_count: 0,

@@ -1,5 +1,4 @@
 import { htmlSafe } from "@ember/template";
-import { registerRawHelper } from "discourse/lib/helpers";
 
 let usernameDecorators = [];
 export function addUsernameSelectorDecorator(decorator) {
@@ -19,8 +18,6 @@ export function decorateUsername(username) {
 
   return decorations.length ? htmlSafe(decorations.join("")) : "";
 }
-
-registerRawHelper("decorate-username-selector", decorateUsernameSelector);
 
 export default function decorateUsernameSelector(username) {
   return decorateUsername(username);

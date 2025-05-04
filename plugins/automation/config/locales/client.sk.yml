@@ -176,15 +176,15 @@ sk:
             restricted_archetype:
               label: Typ témy
               description: Voliteľné, umožniť spúšťanie len na témy alebo osobné správy
-            restricted_user_group:
-              label: Obmedzená skupina používateľov
-              description: Voliteľné, spustí sa iba vtedy, ak je používateľ príspevku v tejto skupine
             restricted_groups:
+              label: Obmedzené skupiny
+              description: Voliteľné, spustí sa iba vtedy, ak je používateľ príspevku v niektorej z týchto skupín
+            restricted_inbox_groups:
               label: Obmedzené skupiny doručenej pošty
               description: Voliteľné, spustí sa iba vtedy, ak je témou príspevku osobná správa v jednej zo skupinových doručených schránok
-            ignore_group_members:
-              label: Ignorovať členov skupiny
-              description: Preskočte spúšťač, ak je odosielateľ členom vyššie uvedenej skupiny
+            excluded_groups:
+              label: Vylúčené skupiny
+              description: 'Voliteľné: Preskočte spúšťač, ak používateľ príspevku patrí do niektorej z týchto skupín'
             ignore_automated:
               label: Ignorovať automatizované
               description: Spúšťač preskočte, ak odosielateľ nemá odpoveď na e-mail alebo pochádza z automatizovaného zdroja. Platí len pre príspevky vytvorené e-mailom
@@ -197,10 +197,18 @@ sk:
             skip_via_email:
               label: "Preskočiť cez e-mail"
               description: "Vynechať spúšťač, ak bol príspevok vytvorený prostredníctvom e-mailu"
+            post_features:
+              label: Funkcie príspevku
+              description: "Voliteľné, obmedziť spúšťanie len na príspevky s týmito funkciami"
           created: Vytvorené
           edited: Upravené
-          topics: Témy
+          topics: Všetky témy
           personal_messages: Osobné správy
+          public_topics: Verejné témy (vylúčte všetky zabezpečené kategórie)
+          with_images: Obrázky
+          with_links: Odkazy
+          with_code: Kód
+          with_uploads: Nahrávanie
         user_updated:
           fields:
             user_profile:
@@ -425,6 +433,11 @@ sk:
           name:
             label: Spúšťač
         automation:
+          runs_today: "%{count} dnes"
+          runs_this_week: "%{count} tento týždeň"
+          runs_this_month: "%{count} tento mesiac"
+          runs:
+            label: Beží na
           name:
             label: Meno
           trigger:
@@ -443,5 +456,7 @@ sk:
             label: Zástupné symboly
           last_updated_at:
             label: Posledná aktualizácia
+          last_run:
+            label: Posledný beh
           last_updated_by:
             label: Aktualizované

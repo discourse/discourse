@@ -54,9 +54,11 @@ RSpec.describe "Chat New Message from params", type: :system do
     end
 
     it "creates a dm channel when none exists" do
-      expect { chat_page.visit_new_message([user_1, user_3]) }.to change { Chat::Channel.count }.by(
-        1,
-      )
+      original_channel_count = Chat::Channel.count
+
+      chat_page.visit_new_message([user_1, user_3])
+
+      try_until_success { expect(Chat::Channel.count - original_channel_count).to eq(1) }
 
       expect(page).to have_current_path(
         %r{/chat/c/#{group_slug([user_1, user_3])}/#{Chat::Channel.last.id}},

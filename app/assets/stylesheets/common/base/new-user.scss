@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 @mixin bordered-horizontal-nav($border-width) {
   li {
     flex: 1 1 auto;
@@ -76,6 +78,11 @@
         margin-top: 0.15em; // minor alignment
       }
     }
+  }
+
+  [class*="horizontal-overflow-nav__scroll-"] {
+    --fade-color: var(--d-content-background, var(--secondary));
+    background-color: var(--d-content-background, var(--secondary));
   }
 
   .user-navigation-secondary {
@@ -185,5 +192,71 @@
   .control-group {
     width: 100%;
     min-width: 16em;
+  }
+}
+
+@include viewport.until(sm) {
+  .user-content {
+    margin-top: 1em;
+  }
+
+  // user messages have some additional controls
+  // so we need a special layout to acommodate on small screens
+  .user-messages-page {
+    .user-navigation-secondary {
+      display: grid;
+      grid-template-areas:
+        "dropdown controls"
+        "nav-pills nav-pills";
+      grid-template-columns: 1fr auto;
+      font-size: var(--font-up-1);
+      gap: 0.5em;
+
+      .category-breadcrumb {
+        grid-area: dropdown;
+      }
+
+      .horizontal-overflow-nav {
+        grid-area: nav-pills;
+      }
+
+      .navigation-controls {
+        grid-area: controls;
+        font-size: var(--font-down-2);
+
+        .btn {
+          padding: 0.5em 1em;
+        }
+
+        .d-button-label,
+        .select-kit-header-wrapper .name {
+          display: none;
+        }
+
+        .d-icon {
+          margin: 0;
+        }
+      }
+
+      .user-nav-messages-dropdown {
+        max-width: unset;
+      }
+
+      .combo-box-header {
+        font-size: var(--font-0);
+      }
+    }
+
+    tbody {
+      border-top-width: 1px;
+    }
+
+    .user-content {
+      margin: 0;
+
+      table {
+        margin-top: -1px; // align under nav border
+      }
+    }
   }
 }

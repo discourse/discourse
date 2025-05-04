@@ -6,7 +6,6 @@ const Funnel = require("broccoli-funnel");
 const mergeTrees = require("broccoli-merge-trees");
 const fs = require("fs");
 const concat = require("broccoli-concat");
-const RawHandlebarsCompiler = require("discourse-hbr/raw-handlebars-compiler");
 const DiscoursePluginColocatedTemplateProcessor = require("./colocated-template-compiler");
 const EmberApp = require("ember-cli/lib/broccoli/ember-app");
 
@@ -15,19 +14,6 @@ function fixLegacyExtensions(tree) {
     getDestinationPath: function (relativePath) {
       if (relativePath.endsWith(".es6")) {
         return relativePath.slice(0, -4);
-      } else if (relativePath.endsWith(".raw.hbs")) {
-        relativePath = relativePath.replace(".raw.hbs", ".hbr");
-      }
-
-      if (relativePath.endsWith(".hbr")) {
-        if (relativePath.includes("/templates/")) {
-          relativePath = relativePath.replace("/templates/", "/raw-templates/");
-        } else if (relativePath.includes("/connectors/")) {
-          relativePath = relativePath.replace(
-            "/connectors/",
-            "/raw-templates/connectors/"
-          );
-        }
       }
 
       return relativePath;
@@ -200,8 +186,6 @@ module.exports = {
     tree = fixLegacyExtensions(tree);
     tree = unColocateConnectors(tree);
     tree = namespaceModules(tree, pluginName);
-
-    tree = RawHandlebarsCompiler(tree);
 
     const colocateBase = `discourse/plugins/${pluginName}`;
     tree = new DiscoursePluginColocatedTemplateProcessor(

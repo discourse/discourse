@@ -187,6 +187,10 @@ pt:
       dismiss: "Marcar como visto"
     bootstrap_mode: "Primeiros passos"
     back_button: "Retroceder"
+    welcome_banner:
+      header:
+        anonymous_members: "Bem-vindo a %{site_name}!"
+      search: "Pesquisar"
     themes:
       default_description: "Predefinição"
       broken_theme_alert: "Seu site pode não funcionar porque um tema ou componente têm erros."
@@ -362,9 +366,6 @@ pt:
       remove: "Remover"
       remove_confirmation: "Tem a certeza que pretende eliminar este rascunho?"
       new_topic: "Novo rascunho de tópico"
-      abandon:
-        yes_value: "Descartar"
-        no_value: "Retomar a edição"
     topic_count_all:
       one: "Ver %{count} tópico novo"
       other: "Ver %{count} tópicos novos"
@@ -494,6 +495,10 @@ pt:
         name: "Nome"
         fields: "campos"
         reject_reason: "Motivo"
+        scrubbed_reason: "Motivo"
+        scrub_record:
+          reason_placeholder: "Motivo..."
+          cancel_button: "Cancelar"
       user_percentage:
         summary:
           one: "%{agreed}, %{disagreed}, %{ignored} (da última sinalização)"
@@ -1687,6 +1692,8 @@ pt:
     modal:
       close: "fechar"
       dismiss_error: "Dispensar erro"
+    multi_select:
+      search: "Pesquisar…"
     form_kit:
       reset: Repor
       optional: opcional
@@ -1825,10 +1832,6 @@ pt:
       not_approved: "A sua conta ainda não foi aprovada. Será notificado por mensagem quando estiver pronto para iniciar a sessão."
       google_oauth2:
         name: "Google"
-      twitter:
-        name: "Twitter"
-        title: "Cadastrar-se com o Twitter"
-        sr_title: "Cadastrar-se com o Twitter"
       instagram:
         name: "Instagram"
         title: "Iniciar sessão com o Instagram"
@@ -2201,8 +2204,6 @@ pt:
       in_topics_posts: "em todos os tópicos e posts"
       enter_hint: "ou pressione Enter"
       in_posts_by: "em discussões por %{username}"
-      browser_tip: "%{modifier} + f"
-      browser_tip_description: "novamente para usar a pesquisa nativa do browser"
       recent: "pesquisas recentes"
       clear_recent: "Limpar pesquisas recentes"
       type:
@@ -2958,6 +2959,10 @@ pt:
       general: "Geral"
       settings: "Configurações"
       tags: "Etiquetas"
+      localization:
+        name: "Nome"
+        description: "Descrição"
+        remove: "Remover"
       tags_allowed_tags: "Restringir essas tags a esta categoria:"
       tags_allowed_tag_groups: "Restringir esses grupos de tags a esta categoria:"
       tags_placeholder: "(Opcional) lista de etiquetas permitidas"
@@ -2980,9 +2985,13 @@ pt:
       description: "Descrição"
       logo: "Logótipo da Categoria"
       background_image: "Imagem de Fundo da Categoria"
-      badge_colors: "Cores do crachá"
-      background_color: "Cor de fundo"
-      foreground_color: "Cor frontal"
+      background_color: "Cor"
+      styles:
+        icon: "Ícone"
+        emoji: "Emoji"
+        options:
+          icon: "Ícone"
+          emoji: "Emoji"
       name_placeholder: "Máximo de uma ou duas palavras"
       color_placeholder: "Qualquer cor da internet"
       delete_confirm: "Tem a certeza que deseja eliminar esta categoria?"
@@ -3593,6 +3602,15 @@ pt:
         show: "Mostrar"
         about: "Sobre"
     powered_by_discourse: "Alimentado pelo Discourse"
+    discovery:
+      headings:
+        categories: "Todas as categorias"
+        filter_labels:
+          latest: "Recente"
+          top: "Os Melhores"
+          new: "Novo"
+          unread: "Não Lido"
+          unseen: "Por ler"
   admin_js:
     settings: "Configurações"
     admin:
@@ -3633,21 +3651,22 @@ pt:
           title: "Ficheiros"
         legal:
           title: "Legal"
-        branding:
+        logo_and_fonts:
           logo:
             form:
               mobile: "Móvel"
               email: "Email"
               manifest_screenshots:
                 description: "Capturas de tela que mostrem os recursos e a funcionalidade da instância na página de incentivo à instalação. Todas as imagens devem ser envios locais e das mesmas dimensões."
+          fonts:
+            backfill_modal:
+              modal_yes: "Sim"
         navigation:
           title: "Navegação"
         notifications:
           title: "Notificações"
         onebox:
           title: "Caixa Única"
-        other:
-          title: "Outro"
         search_everything:
           title: "Pesquisar"
         security:
@@ -3685,6 +3704,8 @@ pt:
               header_description: "Pré-visualizar o conteúdo dos emails de resumo enviados aos utilizadores inativos"
             templates:
               title: "Templates"
+        email_logs:
+          sub_pages:
             sent:
               title: "Enviado"
             skipped:
@@ -3978,6 +3999,36 @@ pt:
             failed: "Falhado"
       home:
         title: "Início"
+      account:
+        title: "Conta"
+        sidebar_link:
+          backups: "Fazer Cópias de Segurança"
+      community:
+        title: "Comunidade"
+        sidebar_link:
+          badges: "Crachás"
+          notifications: "Notificações"
+          permalinks: "Hiperligações Permanentes"
+          users: "Utilizadores"
+          groups: "Grupos"
+          legal: "Legal"
+          moderation_flags:
+            title: "Moderação"
+      appearance:
+        title: "Aparência"
+        sidebar_link:
+          emoji: "Emoji"
+          navigation: "Navegação"
+      email_settings:
+        sidebar_link:
+          appearance: "Aparência"
+      security:
+        title: "Segurança"
+      section_landing_pages:
+        account:
+          title: "Conta"
+          backups:
+            title: "Fazer Cópias de Segurança"
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
@@ -4005,12 +4056,32 @@ pt:
         embeddable_host:
           edit: "Editar"
           delete: "Eliminar"
-        look_and_feel:
+        themes_and_components:
+          breadcrumb_title: "Personalizar"
+          install: "Instalar"
           themes:
             title: "Temas"
+          components:
+            title: "Componentes"
+            install: "Instalar"
+            name: "Nome"
+            enabled: "Ativado?"
+            by_author: "Por %{name}"
+            learn_more: "Saiba mais"
+            edit: "Editar"
+            preview: "Pré-visualização"
+            export: "Exportar"
+            convert: "Converter"
+            delete: "Eliminar"
+            filter_by_all: "Tudo"
+            delete_confirm: 'Tem certeza de que deseja excluir "%{name}"?'
         user_fields:
           type: "Tipo"
           delete: "Eliminar"
+        color_palettes:
+          palette_name: "Nome"
+          colors:
+            title: "Cores"
       plugins:
         title: "Plugins"
         name: "Nome"

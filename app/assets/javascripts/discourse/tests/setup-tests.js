@@ -1,6 +1,7 @@
 /* eslint-disable simple-import-sort/imports */
 import Application from "../app";
 import "./loader-shims";
+import "discourse/static/markdown-it";
 /* eslint-enable simple-import-sort/imports */
 
 import { getOwner } from "@ember/owner";
@@ -16,7 +17,10 @@ import QUnit from "qunit";
 import sinon from "sinon";
 import PreloadStore from "discourse/lib/preload-store";
 import { resetSettings as resetThemeSettings } from "discourse/lib/theme-settings-store";
-import { ScrollingDOMMethods } from "discourse/mixins/scrolling";
+import {
+  disableLoadMoreObserver,
+  enableLoadMoreObserver,
+} from "discourse/components/load-more";
 import Session from "discourse/models/session";
 import User from "discourse/models/user";
 import { resetCategoryCache } from "discourse/models/category";
@@ -212,7 +216,6 @@ export default function setupTests(config) {
     injectInto: null,
     properties: ["spy", "stub", "mock", "clock", "sandbox"],
     useFakeTimers: true,
-    useFakeServer: false,
   };
 
   // Stop the message bus so we don't get ajax calls
@@ -305,8 +308,12 @@ export default function setupTests(config) {
 
     resetCategoryCache();
 
-    sinon.stub(ScrollingDOMMethods, "bindOnScroll");
-    sinon.stub(ScrollingDOMMethods, "unbindOnScroll");
+    // Access the container that's set up in createApplication
+    const scrollManager = app.__container__.lookup("service:scroll-manager");
+    sinon.stub(scrollManager, "bindScrolling");
+    sinon.stub(scrollManager, "unbindScrolling");
+
+    disableLoadMoreObserver();
   });
 
   QUnit.testDone(function () {
@@ -332,6 +339,7 @@ export default function setupTests(config) {
 
     MessageBus.unsubscribe("*");
     localStorage.clear();
+    enableLoadMoreObserver();
   });
 
   if (getUrlParameter("qunit_disable_auto_start") === "1") {

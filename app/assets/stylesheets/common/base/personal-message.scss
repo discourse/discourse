@@ -1,9 +1,19 @@
+@use "lib/viewport";
+
 .archetype-private_message {
   --pm-border-radius: 0;
   --pm-padding: 1.25em;
 
   .topic-post {
-    margin-bottom: 0.5em;
+    @include viewport.from(sm) {
+      margin-bottom: 0.5em;
+    }
+
+    @include viewport.until(sm) {
+      article {
+        border-top: none;
+      }
+    }
 
     &:last-child {
       margin-bottom: 1.5em;
@@ -11,13 +21,14 @@
   }
 
   .regular.contents {
-    border-radius: 0 var(--pm-border-radius) var(--pm-border-radius)
-      var(--pm-border-radius);
+    border-radius: var(--pm-border-radius);
     border: 1px solid var(--primary-low);
     padding-left: var(--pm-padding);
+    margin-left: calc(var(--pm-padding) * -1);
 
-    .desktop-view & {
-      margin-left: calc(var(--pm-padding) * -1);
+    @include viewport.until(sm) {
+      margin-left: 0;
+      padding: 1.5em 1em 0;
     }
   }
 
@@ -26,15 +37,37 @@
     border: none;
   }
 
-  .topic-body .cooked {
-    box-sizing: border-box;
-    margin-top: 0.25em;
-    padding-right: calc(var(--topic-body-width-padding) * 2);
+  @include viewport.until(sm) {
+    .topic-avatar {
+      margin-bottom: -1em; // intentional overlap
+    }
+  }
+
+  .topic-body {
+    @include viewport.until(sm) {
+      .topic-body {
+        flex: 1 1 auto;
+      }
+    }
+
+    .cooked {
+      box-sizing: border-box;
+      margin-top: 0.25em;
+      padding-right: calc(var(--topic-body-width-padding) * 2);
+
+      @include viewport.until(sm) {
+        padding: 0;
+        margin: 0;
+      }
+    }
   }
 
   .post-menu-area {
-    padding-right: calc(var(--topic-body-width-padding) * 2);
     margin: 0.5em 0 var(--topic-body-width-padding);
+
+    @include viewport.from(sm) {
+      padding-right: var(--topic-body-width-padding);
+    }
   }
 
   .who-liked {
@@ -48,32 +81,52 @@
     background-color: var(--tertiary-very-low);
     border-color: var(--tertiary-very-low);
     margin-bottom: 1em;
-    margin-left: 1.65em;
-    padding: var(--pm-padding) 2em;
+    padding: var(--pm-padding) 1em;
+    width: 100%;
     max-width: calc(
       var(--topic-body-width) + var(--topic-body-width-padding) * 2 +
         var(--topic-avatar-width) - 1.65em
     );
 
+    @include viewport.from(sm) {
+      margin-left: 1.65em;
+      padding-inline: 2em;
+    }
+
     &.old {
       border: 1px solid var(--primary-low);
+
+      @include viewport.until(sm) {
+        padding-top: var(--pm-padding);
+      }
     }
   }
 
   .topic-map {
     border: none;
     padding-block: var(--pm-padding);
-    padding-left: calc(
-      48px - var(--pm-padding)
-    ); // 48px is the width of the avatar
     display: grid;
     grid-template-areas: "contents additional" "pm-map pm-map";
     grid-template-columns: 1fr auto;
+
+    @include viewport.from(sm) {
+      padding-left: calc(
+        48px - var(--pm-padding)
+      ); // 48px is the width of the avatar
+    }
 
     section {
       border: none;
       background: var(--primary-very-low);
       padding-inline: var(--pm-padding);
+
+      &:first-of-type {
+        border-radius: var(--pm-border-radius) var(--pm-border-radius) 0 0;
+      }
+
+      &:last-of-type {
+        border-radius: 0 0 var(--pm-border-radius) var(--pm-border-radius);
+      }
     }
 
     .map {

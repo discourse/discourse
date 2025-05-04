@@ -6,6 +6,7 @@ import { load } from "pretty-text/oneboxer";
 import { ajax } from "discourse/lib/ajax";
 import escapeRegExp from "discourse/lib/escape-regexp";
 import { isWhiteSpace } from "discourse/static/prosemirror/lib/markdown-it";
+import { isTopLevel } from "discourse-markdown-it/features/onebox";
 
 /** @type {RichEditorExtension} */
 const extension = {
@@ -14,7 +15,6 @@ const extension = {
       attrs: { url: {}, html: {} },
       selectable: true,
       group: "block",
-      atom: true,
       draggable: true,
       parseDOM: [
         {
@@ -43,7 +43,6 @@ const extension = {
       inline: true,
       group: "inline",
       selectable: true,
-      atom: true,
       draggable: true,
       parseDOM: [
         {
@@ -60,7 +59,7 @@ const extension = {
           {
             class: "inline-onebox",
             href: node.attrs.url,
-            contentEditable: false,
+            contentEditable: true,
           },
           node.attrs.title,
         ];
@@ -167,10 +166,11 @@ const extension = {
           const decorations = [];
           tr.doc.descendants((node, pos) => {
             const link = node.marks.find((mark) => mark.type.name === "link");
+
             if (
               link?.attrs.markup === "linkify" &&
-              link?.attrs.href === node.textContent &&
-              set.find(pos, pos + node.nodeSize).length === 0
+              set.find(pos, pos + node.nodeSize).length === 0 &&
+              isOutsideSelection(pos, node.nodeSize, tr)
             ) {
               const resolvedPos = tr.doc.resolve(pos);
               const isAtRoot = resolvedPos.depth === 1;
@@ -186,16 +186,23 @@ const extension = {
 
               const oneboxType = isInline ? "inline" : "full";
 
-              if (!failedUrls[oneboxType].has(node.textContent)) {
-                decorations.push(
-                  Decoration.inline(
-                    pos,
-                    pos + node.nodeSize,
-                    { class: "onebox-loading", nodeName: "span" },
-                    { oneboxUrl: node.textContent, oneboxType }
-                  )
-                );
+              // inline oneboxes should not be created for top-level links
+              if (isTopLevel(link.attrs.href) && isInline) {
+                return;
               }
+
+              if (failedUrls[oneboxType].has(link.attrs.href)) {
+                return;
+              }
+
+              decorations.push(
+                Decoration.inline(
+                  pos,
+                  pos + node.nodeSize,
+                  { class: "onebox-loading", nodeName: "span" },
+                  { oneboxUrl: link.attrs.href, oneboxType }
+                )
+              );
             }
           });
 
@@ -290,13 +297,14 @@ const extension = {
               const nodeAtPos = view.state.doc.nodeAt(decoration.from);
 
               const isTextNode = nodeAtPos?.isText;
-              const hasMatchingLink = nodeAtPos?.marks.find(
+
+              const matchingLink = nodeAtPos?.marks.find(
                 (mark) =>
                   mark.type.name === "link" &&
                   mark.attrs.href === decoration.spec.oneboxUrl
               );
 
-              if (!isTextNode || !hasMatchingLink) {
+              if (!isTextNode || !matchingLink) {
                 continue;
               }
 
@@ -304,7 +312,7 @@ const extension = {
                 if (decoration.spec.oneboxTitle) {
                   const oneboxNode =
                     view.state.schema.nodes.onebox_inline.create({
-                      url: decoration.spec.oneboxUrl,
+                      url: nodeAtPos.text,
                       title: decoration.spec.oneboxTitle,
                     });
 
@@ -315,7 +323,7 @@ const extension = {
               } else if (decoration.spec.oneboxType === "full") {
                 if (decoration.spec.oneboxHtml) {
                   const oneboxNode = view.state.schema.nodes.onebox.create({
-                    url: decoration.spec.oneboxUrl,
+                    url: nodeAtPos.text,
                     html: decoration.spec.oneboxHtml,
                   });
 
@@ -349,6 +357,31 @@ const extension = {
     return plugin;
   },
 };
+
+function isOutsideSelection(from, to, tr) {
+  const { selection, doc } = tr;
+
+  const nodeEnd = from + to;
+
+  if (selection.from <= nodeEnd && selection.to >= from) {
+    return false;
+  }
+
+  const text = doc.textBetween(
+    selection.to < from ? selection.to : nodeEnd,
+    selection.to < from ? from : selection.from,
+    " ",
+    " "
+  );
+
+  for (let i = 0; i < text.length; i++) {
+    if (isWhiteSpace(text[i])) {
+      return true;
+    }
+  }
+
+  return false;
+}
 
 // Dummy element to pass to the oneboxer
 // To avoid this, we need to refactor both oneboxer APIs

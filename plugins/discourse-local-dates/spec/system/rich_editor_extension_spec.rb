@@ -23,10 +23,9 @@ describe "Composer - ProseMirror editor - Local Dates extension", type: :system 
       open_composer_and_toggle_rich_editor
       rich.click
 
-      cdp.write_clipboard <<~MARKDOWN
+      cdp.copy_paste <<~MARKDOWN
         [date=2022-12-15 time=14:19:00 timezone="Asia/Singapore"]
       MARKDOWN
-      page.send_keys([SystemHelpers::PLATFORM_KEY_MODIFIER, "v"])
 
       expect(rich).to have_css(
         "span.discourse-local-date[data-timezone='Asia/Singapore']",
@@ -39,10 +38,9 @@ describe "Composer - ProseMirror editor - Local Dates extension", type: :system 
       open_composer_and_toggle_rich_editor
       rich.click
 
-      cdp.write_clipboard <<~MARKDOWN
+      cdp.copy_paste <<~MARKDOWN
         [date-range from=2022-12-15T14:19:00 to=2022-12-16T15:20:00 timezone="Asia/Singapore"]
       MARKDOWN
-      page.send_keys([SystemHelpers::PLATFORM_KEY_MODIFIER, "v"])
 
       expect(rich).to have_css("span.discourse-local-date-range")
       expect(rich).to have_css(

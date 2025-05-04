@@ -152,7 +152,7 @@ describe Chat::TranscriptService do
     MARKDOWN
   end
 
-  xit "generates the correct markdown for messages that are in reply to other messages" do
+  it "generates the correct markdown for messages that are in reply to other messages" do
     channel.update!(threading_enabled: false)
     thread = Fabricate(:chat_thread, channel: channel)
 
@@ -286,15 +286,18 @@ describe Chat::TranscriptService do
     MARKDOWN
   end
 
-  xit "generates reaction data for threaded messages" do
-    thread = Fabricate(:chat_thread, channel: channel)
-    thread_om =
+  it "generates reaction data for threaded messages" do
+    thread =
       Fabricate(
-        :chat_message,
-        user: user1,
-        chat_channel: channel,
-        thread: thread,
-        message: "an extremely insightful response :)",
+        :chat_thread,
+        channel: channel,
+        original_message:
+          Fabricate(
+            :chat_message,
+            chat_channel: channel,
+            user: user1,
+            message: "an extremely insightful response :)",
+          ),
       )
     thread_reply_1 =
       Fabricate(
@@ -314,7 +317,7 @@ describe Chat::TranscriptService do
       )
 
     Chat::MessageReaction.create!(
-      chat_message: thread_om,
+      chat_message: thread.original_message,
       user: Fabricate(:user, username: "bjorn"),
       emoji: "heart",
     )
@@ -337,13 +340,13 @@ describe Chat::TranscriptService do
     thread.update!(replies_count: 2)
     rendered =
       service(
-        [thread_om.id, thread_reply_1.id, thread_reply_2.id],
+        [thread.original_message.id, thread_reply_1.id, thread_reply_2.id],
         opts: {
           include_reactions: true,
         },
       ).generate_markdown
     expect(rendered).to eq(<<~MARKDOWN)
-    [chat quote="martinchat;#{thread_om.id};#{thread_om.created_at.iso8601}" channel="The Beam Discussions" channelId="#{channel.id}" multiQuote="true" chained="true" reactions="heart:bjorn" threadId="#{thread.id}" threadTitle="#{I18n.t("chat.transcript.default_thread_title")}"]
+    [chat quote="martinchat;#{thread.original_message.id};#{thread.original_message.created_at.iso8601}" channel="The Beam Discussions" channelId="#{channel.id}" multiQuote="true" chained="true" reactions="heart:bjorn" threadId="#{thread.id}" threadTitle="#{I18n.t("chat.transcript.default_thread_title")}"]
     an extremely insightful response :)
 
     [chat quote="brucechat;#{thread_reply_1.id};#{thread_reply_1.created_at.iso8601}" chained="true" reactions="+1:hvitserk;heart:sigurd"]
@@ -358,15 +361,13 @@ describe Chat::TranscriptService do
     MARKDOWN
   end
 
-  xit "generates a chat transcript for threaded messages" do
-    thread = Fabricate(:chat_thread, channel: channel)
-    thread_om =
+  it "generates a chat transcript for threaded messages" do
+    thread =
       Fabricate(
-        :chat_message,
-        chat_channel: channel,
-        user: user1,
-        thread: thread,
-        message: "reply to me!",
+        :chat_thread,
+        channel: channel,
+        original_message:
+          Fabricate(:chat_message, chat_channel: channel, user: user1, message: "reply to me!"),
       )
     thread_reply_1 =
       Fabricate(:chat_message, chat_channel: channel, user: user2, thread: thread, message: "done")
@@ -379,9 +380,10 @@ describe Chat::TranscriptService do
         message: "thanks",
       )
     thread.update!(replies_count: 2)
-    rendered = service([thread_om.id, thread_reply_1.id, thread_reply_2.id]).generate_markdown
+    rendered =
+      service([thread.original_message.id, thread_reply_1.id, thread_reply_2.id]).generate_markdown
     expect(rendered).to eq(<<~MARKDOWN)
-    [chat quote="martinchat;#{thread_om.id};#{thread_om.created_at.iso8601}" channel="The Beam Discussions" channelId="#{channel.id}" multiQuote="true" chained="true" threadId="#{thread.id}" threadTitle="#{I18n.t("chat.transcript.default_thread_title")}"]
+    [chat quote="martinchat;#{thread.original_message.id};#{thread.original_message.created_at.iso8601}" channel="The Beam Discussions" channelId="#{channel.id}" multiQuote="true" chained="true" threadId="#{thread.id}" threadTitle="#{I18n.t("chat.transcript.default_thread_title")}"]
     reply to me!
 
     [chat quote="brucechat;#{thread_reply_1.id};#{thread_reply_1.created_at.iso8601}" chained="true"]
@@ -396,15 +398,83 @@ describe Chat::TranscriptService do
     MARKDOWN
   end
 
-  xit "doesn't add thread info for threads with no replies" do
-    thread = Fabricate(:chat_thread, channel: channel)
-    thread_om =
+  it "includes all of the thread replies if only one message is supplied, and it is the thread OP" do
+    thread =
+      Fabricate(
+        :chat_thread,
+        channel: channel,
+        original_message:
+          Fabricate(:chat_message, chat_channel: channel, user: user1, message: "reply to me!"),
+      )
+    thread_reply_1 =
+      Fabricate(:chat_message, chat_channel: channel, user: user2, thread: thread, message: "done")
+    thread_reply_2 =
       Fabricate(
         :chat_message,
         chat_channel: channel,
         user: user1,
         thread: thread,
-        message: "has a reply",
+        message: "thanks",
+      )
+    thread.update!(original_message_id: thread.original_message.id, replies_count: 2)
+    rendered = service([thread.original_message.id]).generate_markdown
+    expect(rendered).to eq(<<~MARKDOWN)
+    [chat quote="martinchat;#{thread.original_message.id};#{thread.original_message.created_at.iso8601}" channel="The Beam Discussions" channelId="#{channel.id}" multiQuote="true" chained="true" threadId="#{thread.id}" threadTitle="#{I18n.t("chat.transcript.default_thread_title")}"]
+    reply to me!
+
+    [chat quote="brucechat;#{thread_reply_1.id};#{thread_reply_1.created_at.iso8601}" chained="true"]
+    done
+    [/chat]
+
+    [chat quote="martinchat;#{thread_reply_2.id};#{thread_reply_2.created_at.iso8601}" chained="true"]
+    thanks
+    [/chat]
+
+    [/chat]
+    MARKDOWN
+  end
+
+  it "does not chain replies if the thread messages are all by the same user" do
+    thread =
+      Fabricate(
+        :chat_thread,
+        channel: channel,
+        original_message:
+          Fabricate(:chat_message, chat_channel: channel, user: user1, message: "reply to me!"),
+      )
+    thread_reply_1 =
+      Fabricate(:chat_message, chat_channel: channel, user: user1, thread: thread, message: "done")
+    thread_reply_2 =
+      Fabricate(
+        :chat_message,
+        chat_channel: channel,
+        user: user1,
+        thread: thread,
+        message: "thanks",
+      )
+    thread.update!(original_message_id: thread.original_message.id, replies_count: 2)
+    rendered = service([thread.original_message.id]).generate_markdown
+    expect(rendered).to eq(<<~MARKDOWN)
+    [chat quote="martinchat;#{thread.original_message.id};#{thread.original_message.created_at.iso8601}" channel="The Beam Discussions" channelId="#{channel.id}" multiQuote="true" threadId="#{thread.id}" threadTitle="#{I18n.t("chat.transcript.default_thread_title")}"]
+    reply to me!
+
+    [chat quote="martinchat;#{thread_reply_1.id};#{thread_reply_1.created_at.iso8601}"]
+    done
+
+    thanks
+    [/chat]
+
+    [/chat]
+    MARKDOWN
+  end
+
+  it "doesn't add thread info for threads with no replies" do
+    thread =
+      Fabricate(
+        :chat_thread,
+        channel: channel,
+        original_message:
+          Fabricate(:chat_message, chat_channel: channel, user: user1, message: "has a reply"),
       )
     thread_message =
       Fabricate(
@@ -414,19 +484,27 @@ describe Chat::TranscriptService do
         message: "a reply",
         thread: thread,
       )
-    empty_thread_om =
+    empty_thread =
       Fabricate(
-        :chat_message,
-        chat_channel: channel,
-        user: user1,
-        thread: Fabricate(:chat_thread, channel: channel),
-        message: "no replies",
+        :chat_thread,
+        channel: channel,
+        original_message:
+          Fabricate(
+            :chat_message,
+            chat_channel: channel,
+            user: user1,
+            thread:,
+            message: "no replies",
+          ),
       )
 
     thread.update!(replies_count: 1)
-    rendered = service([thread_om.id, thread_message.id, empty_thread_om.id]).generate_markdown
+    rendered =
+      service(
+        [thread.original_message.id, thread_message.id, empty_thread.original_message.id],
+      ).generate_markdown
     expect(rendered).to eq(<<~MARKDOWN)
-    [chat quote="martinchat;#{thread_om.id};#{thread_om.created_at.iso8601}" channel="The Beam Discussions" channelId="#{channel.id}" multiQuote="true" chained="true" threadId="#{thread.id}" threadTitle="#{I18n.t("chat.transcript.default_thread_title")}"]
+    [chat quote="martinchat;#{thread.original_message.id};#{thread.original_message.created_at.iso8601}" channel="The Beam Discussions" channelId="#{channel.id}" multiQuote="true" chained="true" threadId="#{thread.id}" threadTitle="#{I18n.t("chat.transcript.default_thread_title")}"]
     has a reply
 
     [chat quote="brucechat;#{thread_message.id};#{thread_message.created_at.iso8601}" chained="true"]
@@ -435,7 +513,7 @@ describe Chat::TranscriptService do
 
     [/chat]
 
-    [chat quote="martinchat;#{empty_thread_om.id};#{empty_thread_om.created_at.iso8601}" chained="true"]
+    [chat quote="martinchat;#{empty_thread.original_message.id};#{empty_thread.original_message.created_at.iso8601}" chained="true"]
     no replies
     [/chat]
     MARKDOWN

@@ -142,7 +142,7 @@ HTML
 
     expect(baked).to include(field.javascript_cache.url)
     expect(field.javascript_cache.content).to include("@ember/template-factory")
-    expect(field.javascript_cache.content).to include("raw-handlebars")
+    expect(field.javascript_cache.content).to include("Raw templates are no longer supported")
   end
 
   it "can destroy unbaked theme without errors" do
@@ -292,7 +292,7 @@ HTML
 
       scss, _map =
         Stylesheet::Manager::Builder.new(
-          target: :desktop_theme,
+          target: :common_theme,
           theme: theme,
           manager: manager,
         ).compile(force: true)
@@ -319,7 +319,7 @@ HTML
 
       scss, _map =
         Stylesheet::Manager::Builder.new(
-          target: :desktop_theme,
+          target: :common_theme,
           theme: theme,
           manager: manager,
         ).compile(force: true)
@@ -333,7 +333,7 @@ HTML
 
       scss, _map =
         Stylesheet::Manager::Builder.new(
-          target: :desktop_theme,
+          target: :common_theme,
           theme: theme,
           manager: manager,
         ).compile(force: true)
@@ -351,7 +351,7 @@ HTML
 
       scss, _map =
         Stylesheet::Manager::Builder.new(
-          target: :desktop_theme,
+          target: :common_theme,
           theme: theme,
           manager: manager,
         ).compile(force: true)
@@ -575,12 +575,16 @@ HTML
 
     theme = Fabricate(:theme, user_selectable: true, user: user, color_scheme_id: cs1.id)
 
-    messages = MessageBus.track_publish { theme.save! }.filter { |m| m.channel == "/file-change" }
+    messages =
+      MessageBus
+        .track_publish do
+          theme.set_field(target: :common, name: :scss, value: "body { color: red; }")
+          theme.save!
+        end
+        .filter { |m| m.channel == "/file-change" }
     expect(messages.count).to eq(1)
-    expect(messages.first.data.map { |d| d[:target] }).to contain_exactly(
-      :desktop_theme,
-      :mobile_theme,
-    )
+
+    expect(messages.first.data.map { |d| d[:target] }).to contain_exactly(:common_theme)
 
     # With color scheme change:
     messages =
@@ -594,9 +598,8 @@ HTML
     expect(messages.first.data.map { |d| d[:target] }).to contain_exactly(
       :admin,
       :desktop,
-      :desktop_theme,
       :mobile,
-      :mobile_theme,
+      :common_theme,
     )
   end
 
@@ -883,7 +886,7 @@ HTML
       manager = Stylesheet::Manager.new(theme_id: theme.id)
 
       builder =
-        Stylesheet::Manager::Builder.new(target: :desktop_theme, theme: theme, manager: manager)
+        Stylesheet::Manager::Builder.new(target: :common_theme, theme: theme, manager: manager)
 
       builder.compile(force: true)
     end
@@ -917,7 +920,7 @@ HTML
 
       builder =
         Stylesheet::Manager::Builder.new(
-          target: :desktop_theme,
+          target: :common_theme,
           theme: child_theme,
           manager: manager,
         )
@@ -1594,6 +1597,107 @@ HTML
 
       expect(ThemeColorScheme.exists?(color_scheme_id: scheme.id)).to eq(false)
       expect(ColorScheme.unscoped.exists?(id: scheme.id)).to eq(false)
+    end
+  end
+
+  describe ".include_basic_relations" do
+    fab!(:parent_theme_1) do
+      Fabricate(
+        :theme,
+        theme_fields: [
+          ThemeField.new(
+            name: "en",
+            type_id: ThemeField.types[:yaml],
+            target_id: Theme.targets[:translations],
+            value: <<~YAML,
+            en:
+              theme_metadata:
+                description: "Description of my theme"
+          YAML
+          ),
+        ],
+      )
+    end
+
+    fab!(:parent_theme_2) do
+      Fabricate(
+        :theme,
+        theme_fields: [
+          ThemeField.new(
+            name: "en",
+            type_id: ThemeField.types[:yaml],
+            target_id: Theme.targets[:translations],
+            value: <<~YAML,
+            en:
+              theme_metadata:
+                description: "Description of my theme 2"
+          YAML
+          ),
+        ],
+      )
+    end
+
+    fab!(:component_1) do
+      Fabricate(
+        :theme,
+        component: true,
+        parent_themes: [parent_theme_1],
+        theme_fields: [
+          ThemeField.new(
+            name: "en",
+            type_id: ThemeField.types[:yaml],
+            target_id: Theme.targets[:translations],
+            value: <<~YAML,
+            en:
+              theme_metadata:
+                description: "Description of my component"
+            YAML
+          ),
+        ],
+      )
+    end
+
+    fab!(:component_2) do
+      Fabricate(
+        :theme,
+        component: true,
+        parent_themes: [parent_theme_2],
+        theme_fields: [
+          ThemeField.new(
+            name: "en",
+            type_id: ThemeField.types[:yaml],
+            target_id: Theme.targets[:translations],
+            value: <<~YAML,
+            en:
+              theme_metadata:
+                description: "Description of my component 2"
+            YAML
+          ),
+        ],
+      )
+    end
+
+    it "doesn't result in N+1 queries for descriptions" do
+      components = Theme.include_basic_relations.where(component: true, id: component_1.id)
+
+      queries_for_one =
+        track_sql_queries do
+          components.each do |component|
+            ComponentIndexSerializer.new(component, root: false).as_json
+          end
+        end
+
+      components =
+        Theme.include_basic_relations.where(component: true, id: [component_1.id, component_2.id])
+
+      queries_for_two =
+        track_sql_queries do
+          components.each do |component|
+            ComponentIndexSerializer.new(component, root: false).as_json
+          end
+        end
+
+      expect(queries_for_two.size).to eq(queries_for_one.size)
     end
   end
 end

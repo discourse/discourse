@@ -671,14 +671,25 @@ RSpec.describe ReviewablesController do
       fab!(:reviewable_phony) { Fabricate(:reviewable, type: "ReviewablePhony") }
 
       it "passes the added param into the reviewable class' perform method" do
-        MessageBus
-          .expects(:publish)
-          .with(
-            "/phony-reviewable-test",
-            { args: { :version => reviewable_phony.version, "fake_id" => "2" } },
-            user_ids: [1],
-          )
-          .once
+        MessageBus.expects(:publish).with(
+          "/phony-reviewable-test",
+          { args: { :version => reviewable_phony.version, "fake_id" => "2" } },
+          user_ids: [1],
+        )
+
+        MessageBus.expects(:publish).with(
+          "/reviewable_action",
+          {
+            success: true,
+            transition_to: :approved,
+            transition_to_id: 1,
+            remove_reviewable_ids: [reviewable_phony.id],
+            version: 1,
+            reviewable_count: 0,
+            unseen_reviewable_count: 0,
+          },
+          group_ids: [3],
+        )
 
         put "/review/#{reviewable_phony.id}/perform/approve_phony.json?version=#{reviewable_phony.version}",
             params: {
@@ -706,15 +717,18 @@ RSpec.describe ReviewablesController do
         SiteSetting.reviewable_claiming = "optional"
         PostActionCreator.spam(user0, post0)
         moderator = Fabricate(:moderator)
-        ReviewableClaimedTopic.create!(user: moderator, topic: post0.topic)
+        claim = ReviewableClaimedTopic.create!(user: moderator, topic: post0.topic)
 
         get "/review/topics.json"
         expect(response.code).to eq("200")
         json = response.parsed_body
         json_topic = json["reviewable_topics"].find { |rt| rt["id"] == post0.topic_id }
-        expect(json_topic["claimed_by_id"]).to eq(moderator.id)
+        expect(json_topic["claimed_by_id"]).to eq(claim.id)
 
-        json_user = json["users"].find { |u| u["id"] == json_topic["claimed_by_id"] }
+        json_claim = json["claimed_bies"].find { |c| c["id"] == claim.id }
+        expect(json_claim["user_id"]).to eq(moderator.id)
+
+        json_user = json["users"].find { |u| u["id"] == json_claim["user_id"] }
         expect(json_user).to be_present
       end
 
@@ -1004,6 +1018,74 @@ RSpec.describe ReviewablesController do
           let(:response_code) { 200 }
           let(:reviewable_deleted) { true }
         end
+      end
+    end
+
+    describe "#scrub" do
+      it "only allows admins to scrub reviewables" do
+        moderator = Fabricate(:moderator)
+
+        Jobs.run_immediately!
+        SiteSetting.must_approve_users = true
+        user = Fabricate(:user)
+        user.activate
+        reviewable = ReviewableUser.find_by(target: user)
+
+        sign_in(moderator)
+        put "/review/#{reviewable.id}/perform/delete_user.json?version=0"
+        expect(response.status).to eq(200)
+
+        put "/review/#{reviewable.id}/scrub.json?reason=spam"
+        expect(response.status).to eq(403)
+
+        sign_in(admin)
+        put "/review/#{reviewable.id}/scrub.json?reason=spam"
+        expect(response.status).to eq(200)
+      end
+
+      it "doesn't allow scrubbing of reviewables that haven't been rejected" do
+        Jobs.run_immediately!
+        SiteSetting.must_approve_users = true
+        user = Fabricate(:user)
+        user.activate
+        reviewable = ReviewableUser.find_by(target: user)
+
+        sign_in(admin)
+        put "/review/#{reviewable.id}/scrub.json?reason=spam"
+        expect(response.status).to eq(404)
+      end
+
+      it "doesn't allow scrubbing of reviewables that don't exist" do
+        sign_in(admin)
+        put "/review/123456789/scrub.json?reason=spam"
+        expect(response.status).to eq(404)
+      end
+
+      it "doesn't allow scrubbing of reviewables that aren't scrubbable" do
+        reviewable = Fabricate(:reviewable)
+        expect(Reviewable.scrubbable_types).not_to include(reviewable.type)
+
+        sign_in(admin)
+        put "/review/#{reviewable.id}/scrub.json?reason=spam"
+        expect(response.status).to eq(404)
+      end
+
+      it "doesn't allow scrubbing of reviewables that have already been scrubbed" do
+        Jobs.run_immediately!
+        SiteSetting.must_approve_users = true
+        user = Fabricate(:user)
+        user.activate
+        reviewable = ReviewableUser.find_by(target: user)
+
+        sign_in(admin)
+        put "/review/#{reviewable.id}/perform/delete_user.json?version=0"
+        expect(response.status).to eq(200)
+
+        put "/review/#{reviewable.id}/scrub.json?reason=spam"
+        expect(response.status).to eq(200)
+
+        put "/review/#{reviewable.id}/scrub.json?reason=spam"
+        expect(response.status).to eq(403)
       end
     end
 

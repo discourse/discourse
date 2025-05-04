@@ -133,7 +133,9 @@ export default class ComposerBody extends Component {
     this.lastMousePos = mouseYPos(event);
 
     DRAG_EVENTS.forEach((dragEvent) => {
-      document.addEventListener(dragEvent, this.throttledPerformDrag);
+      document.addEventListener(dragEvent, this.throttledPerformDrag, {
+        capture: true,
+      });
     });
 
     END_DRAG_EVENTS.forEach((endDragEvent) => {
@@ -148,7 +150,9 @@ export default class ComposerBody extends Component {
     this.appEvents.trigger("composer:resize-ended");
 
     DRAG_EVENTS.forEach((dragEvent) => {
-      document.removeEventListener(dragEvent, this.throttledPerformDrag);
+      document.removeEventListener(dragEvent, this.throttledPerformDrag, {
+        capture: true,
+      });
     });
 
     END_DRAG_EVENTS.forEach((endDragEvent) => {

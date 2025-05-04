@@ -2,8 +2,8 @@
 
 # mixin for all Guardian methods dealing with user permissions
 module UserGuardian
-  def can_claim_reviewable_topic?(topic)
-    SiteSetting.reviewable_claiming != "disabled" && can_review_topic?(topic)
+  def can_claim_reviewable_topic?(topic, automatic = false)
+    (SiteSetting.reviewable_claiming != "disabled" || automatic) && can_review_topic?(topic)
   end
 
   def can_pick_avatar?(user_avatar, upload)

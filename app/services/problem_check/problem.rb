@@ -18,7 +18,7 @@ class ProblemCheck::Problem
   end
 
   def to_h
-    { message: message, priority: priority, identifier: identifier }
+    { message:, priority:, identifier:, target: }
   end
   alias_method :attributes, :to_h
 
@@ -27,6 +27,6 @@ class ProblemCheck::Problem
 
     return if h[:message].blank?
 
-    new(h[:message], priority: h[:priority], identifier: h[:identifier])
+    new(h[:message], priority: h[:priority], identifier: h[:identifier], target: h[:target])
   end
 end

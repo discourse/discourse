@@ -3,7 +3,6 @@ import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import ReviewableCreatedBy from "discourse/components/reviewable-created-by";
@@ -11,6 +10,7 @@ import ReviewablePostEdits from "discourse/components/reviewable-post-edits";
 import ReviewablePostHeader from "discourse/components/reviewable-post-header";
 import ReviewableTopicLink from "discourse/components/reviewable-topic-link";
 import { bind } from "discourse/lib/decorators";
+import highlightWatchedWords from "discourse/lib/highlight-watched-words";
 import { i18n } from "discourse-i18n";
 
 export default class ReviewableFlaggedPost extends Component {
@@ -68,7 +68,7 @@ export default class ReviewableFlaggedPost extends Component {
           {{#if @reviewable.blank_post}}
             <p>{{i18n "review.deleted_post"}}</p>
           {{else}}
-            {{htmlSafe @reviewable.cooked}}
+            {{highlightWatchedWords @reviewable.cooked @reviewable}}
           {{/if}}
         </div>
 

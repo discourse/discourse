@@ -84,7 +84,7 @@ html:not(.keyboard-visible.mobile-view) {
   font-size: var(--font-up-4);
 }
 
-@media only screen and (max-device-width: 568px) {
+@media only screen and (device-width <= 568px) {
   .flag-modal-body .flag-message {
     height: 3em;
   }

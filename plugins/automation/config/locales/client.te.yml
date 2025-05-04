@@ -62,7 +62,10 @@ te:
             restricted_categories:
               label: వర్గాలు
           created: సృష్టించిన
-          topics: విషయాలు
+          with_images: చిత్రాలు
+          with_links: లింకులు
+          with_code: కోడ్
+          with_uploads: అప్‌లోడ్‌లు
         category_created_edited:
           fields:
             restricted_category:

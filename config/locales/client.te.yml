@@ -192,6 +192,10 @@ te:
       dismiss: "రద్దుచేయండి"
     bootstrap_mode: "ప్రారంభించడం"
     back_button: "వెనుకకు"
+    welcome_banner:
+      header:
+        anonymous_members: "%{site_name} కు సుస్వాగతం!"
+      search: "వెతుకు"
     themes:
       default_description: "అప్రమేయ"
       broken_theme_alert: "థీమ్ / కాంపోనెంట్‌లో లోపాలు ఉన్నందున మీ సైట్ పని చేయకపోవచ్చు."
@@ -388,10 +392,6 @@ te:
       remove_confirmation: "మీరు ఖచ్చితంగా ఈ చిత్తుప్రతిని తొలగించాలనుకుంటున్నారా?"
       new_topic: "కొత్త విషయం చిత్తుప్రతి"
       new_private_message: "కొత్త వ్యక్తిగత సందేశ చిత్తుప్రతి"
-      abandon:
-        confirm: "మీకు ఇప్పటికే చిత్తుప్రతి పురోగతిలో ఉంది. మీరు దానితో ఏమి చేయాలనుకుంటున్నారు?"
-        yes_value: "విస్మరించండి"
-        no_value: "సవరణను కొనసాగించండి"
     topic_count_all:
       one: "%{count} కొత్త విషయం చూడండి"
       other: "%{count} కొత్త విషయాలను చూడండి"
@@ -522,6 +522,9 @@ te:
         name: "పేరు"
         fields: "ఫీల్డ్స్"
         reject_reason: "కారణం"
+        scrubbed_reason: "కారణం"
+        scrub_record:
+          cancel_button: "రద్దుచేయండి"
       user_percentage:
         summary:
           one: "%{agreed}, %{disagreed}, %{ignored} (చివరి ఫిర్యాదు)"
@@ -1847,6 +1850,9 @@ te:
     modal:
       close: "మూసివేయండి"
       dismiss_error: "లోపాన్ని తీసివేయండి"
+    multi_select:
+      no_results: "ఫలితాలు లేవు"
+      search: "శోధించండి…"
     form_kit:
       reset: రీసెట్ చేయండి
       optional: ఐచ్ఛికం
@@ -2036,10 +2042,6 @@ te:
         name: "గూగుల్"
         title: "గూగుల్ తో లాగిన్ చేయండి"
         sr_title: "గూగుల్ ద్వారా లాగిన్"
-      twitter:
-        name: "ట్విట్టర్"
-        title: "X (ట్విట్టర్) తో లాగిన్ చేయండి"
-        sr_title: "X (ట్విట్టర్) ద్వారా లాగిన్"
       instagram:
         name: "ఇన్స్టాగ్రామ్"
         title: "Instagram తో లాగిన్ చేయండి"
@@ -2485,8 +2487,6 @@ te:
       in_topics_posts: "అన్ని విషయాలు మరియు పోస్ట్‌లలో"
       enter_hint: "లేదా ఎంటర్ నొక్కండి"
       in_posts_by: "%{username} ద్వారా పోస్ట్‌లలో"
-      browser_tip: "%{modifier} + f"
-      browser_tip_description: "బ్రౌజర్ శోధనను ఉపయోగించడానికి మళ్లీ"
       recent: "ఇటీవలి శోధనలు"
       clear_recent: "ఇటీవలి శోధనలను క్లియర్ చేయండి"
       type:
@@ -3446,6 +3446,10 @@ te:
       settings: "అమరికలు"
       topic_template: "టెంప్లేట్"
       tags: "ట్యాగులు"
+      localization:
+        name: "పేరు"
+        description: "వివరణ"
+        remove: "తీసివేయండి"
       tags_allowed_tags: "ఈ ట్యాగ్‌లను ఈ వర్గానికి పరిమితం చేయండి:"
       tags_allowed_tag_groups: "ఈ ట్యాగ్ సమూహాలను ఈ వర్గానికి పరిమితం చేయండి:"
       tags_placeholder: "(ఐచ్ఛికం) అనుమతించబడిన ట్యాగ్‌ల జాబితా"
@@ -3473,9 +3477,13 @@ te:
       logo_dark: "డార్క్ మోడ్ వర్గం లోగో చిత్రం"
       background_image: "వర్గం నేపథ్య చిత్రం"
       background_image_dark: "డార్క్ వర్గం నేపథ్య చిత్రం"
-      badge_colors: "బ్యాడ్జి రంగులు"
-      background_color: "నేపథ్య రంగు"
-      foreground_color: "ముందుభాగం రంగు"
+      background_color: "రంగు"
+      styles:
+        icon: "చిహ్నం"
+        emoji: "ఇమోజి"
+        options:
+          icon: "చిహ్నం"
+          emoji: "ఇమోజి"
       name_placeholder: "గరిష్టం ఒకటి లేదా రెండు పదాలు"
       color_placeholder: "ఏదేనీ జాల రంగు"
       delete_confirm: "మీరు నిజంగా ఈ వర్గాన్ని తొలగించాలనుకుంటున్నారా?"
@@ -4267,9 +4275,6 @@ te:
         forum:
           label: ఫోరం
       back_to_forum: "తిరిగి ఫోరమ్కి"
-      clear_filter: "ఫిల్టర్‌ని క్లియర్ చేయండి"
-      no_results:
-        title: "ఫలితాలు లేవు"
       footer:
         interface_color_selector:
           light: "లేత"
@@ -4374,6 +4379,16 @@ te:
           copy: "కాపీ..."
           paste: "అతికించండి..."
           save: "ఇలా సేవ్ చేయండి..."
+    discovery:
+      headings:
+        categories: "అన్ని వర్గాలు"
+        filter_labels:
+          latest: "తాజా"
+          top: "అగ్ర"
+          new: "కొత్త "
+          unread: "చదవని"
+          hot: "హాట్"
+          unseen: "చూడనవి"
   admin_js:
     type_to_filter: "ఫిల్టర్ చేయడానికి టైప్ చేయండి…"
     settings: "అమరికలు"
@@ -4419,10 +4434,7 @@ te:
           title: "ఫైళ్లు"
         legal:
           title: "చట్టపరమైన"
-        logo:
-          title: "సైట్ లోగో"
-        branding:
-          title: "బ్రాండింగ్"
+        logo_and_fonts:
           logo:
             form:
               logo:
@@ -4431,14 +4443,18 @@ te:
               email: "మెయిల్"
               manifest_screenshots:
                 description: "దాని ఇన్‌స్టాల్ ప్రాంప్ట్ పేజీలో మీ ఇన్‌స్టాన్స్ ఫీచర్‌లు మరియు ఫంక్షనాలిటీని ప్రదర్శించే స్క్రీన్‌షాట్‌లు. అన్ని చిత్రాలు స్థానిక అప్‌లోడ్‌లు మరియు ఒకే కొలతలు కలిగి ఉండాలి."
+          fonts:
+            form:
+              heading_font:
+                title: "శీర్షిక ఫాంట్"
+            backfill_modal:
+              modal_yes: "అవును"
         navigation:
           title: "నావిగేషన్"
         notifications:
           title: "ప్రకటనలు"
         onebox:
           title: "వన్బాక్స్"
-        other:
-          title: "ఇతర"
         search_everything:
           title: "శోధించండి"
         security:
@@ -4474,6 +4490,8 @@ te:
           sub_pages:
             templates:
               title: "టెంప్లేట్లు"
+        email_logs:
+          sub_pages:
             sent:
               title: "పంపిన"
             skipped:
@@ -4909,6 +4927,41 @@ te:
             failed: "విఫలం"
       home:
         title: "మొదటి పేజీ"
+      account:
+        title: "ఖాతా"
+        sidebar_link:
+          backups: "బ్యాకప్పులు"
+      community:
+        title: "సంఘం"
+        sidebar_link:
+          about_your_site: "మీ సైట్ గురించి"
+          badges: "బ్యాడ్జీలు"
+          notifications: "నోటిఫికేషన్‌లు"
+          permalinks: "శాశ్వత లింక్‌లు"
+          users: "సభ్యులు"
+          groups: "సమూహాలు"
+          legal: "చట్టపరమైన"
+          moderation_flags:
+            title: "మోడరేషన్"
+      appearance:
+        title: "స్వరూపం"
+        sidebar_link:
+          site_logo: "సైట్ లోగో"
+          emoji: "ఇమోజి"
+          navigation: "నావిగేషన్"
+          themes_and_components:
+            keywords: "ఎక్సటెన్షన్"
+      email_settings:
+        title: "ఇమెయిల్ సెట్టింగ్‌లు"
+        sidebar_link:
+          appearance: "స్వరూపం"
+      security:
+        title: "సెక్యూరిటీ"
+      section_landing_pages:
+        account:
+          title: "ఖాతా"
+          backups:
+            title: "బ్యాకప్పులు"
       config_areas:
         about:
           community_name: "సంఘం పేరు"
@@ -4941,12 +4994,36 @@ te:
         embeddable_host:
           edit: "సవరించండి"
           delete: "తొలగించు"
-        look_and_feel:
+        themes_and_components:
+          breadcrumb_title: "కస్టమైజ్"
+          install: "ఇన్‌స్టాల్ చేయండి"
           themes:
             title: "థీమ్స్"
+          components:
+            title: "భాగాలు"
+            install: "ఇన్‌స్టాల్ చేయండి"
+            name: "పేరు"
+            enabled: "ప్రారంభించబడిందా?"
+            by_author: " %{name} రాసిన"
+            learn_more: "మరింత తెలుసుకోండి"
+            edit: "సవరించండి"
+            preview: "ప్రివ్యూ"
+            export: "ఎగుమతి"
+            convert: "మార్చండి"
+            delete: "తొలగించు"
+            filter_by: "ద్వారా ఫిల్టర్ చేయండి"
+            filter_by_all: "అన్ని"
+            filter_by_used: "ఉపయోగించబడిన"
+            filter_by_unused: "ఉపయోగించని"
+            delete_confirm: 'మీరు "%{name}"ని ఖచ్చితంగా తొలగించాలనుకుంటున్నారా?'
+            badge_unused: "ఉపయోగించని"
         user_fields:
           type: "రకం"
           delete: "తొలగించు"
+        color_palettes:
+          palette_name: "పేరు"
+          colors:
+            title: "రంగులు"
       plugins:
         title: "చొప్పింతలు"
         name: "పేరు"

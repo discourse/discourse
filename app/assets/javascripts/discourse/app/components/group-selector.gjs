@@ -2,8 +2,8 @@ import Component from "@ember/component";
 import { isEmpty } from "@ember/utils";
 import { observes, on } from "@ember-decorators/object";
 import $ from "jquery";
+import groupAutocomplete from "discourse/lib/autocomplete/group";
 import discourseComputed from "discourse/lib/decorators";
-import { findRawTemplate } from "discourse/lib/raw-templates";
 import { i18n } from "discourse-i18n";
 
 export default class GroupSelector extends Component {
@@ -60,7 +60,7 @@ export default class GroupSelector extends Component {
           });
         });
       },
-      template: findRawTemplate("group-selector-autocomplete"),
+      template: groupAutocomplete,
     });
   }
 

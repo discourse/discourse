@@ -59,7 +59,10 @@ ca:
             restricted_categories:
               label: Categories
           created: Creat
-          topics: Temes
+          with_images: Imatges
+          with_links: Enllaços
+          with_code: Codi
+          with_uploads: Càrregues
         category_created_edited:
           fields:
             restricted_category:

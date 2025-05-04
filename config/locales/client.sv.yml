@@ -192,6 +192,10 @@ sv:
       dismiss: "Avfärda"
     bootstrap_mode: "Komma igång"
     back_button: "Tillbaka"
+    welcome_banner:
+      header:
+        anonymous_members: "Välkommen till %{site_name}!"
+      search: "Sök"
     themes:
       default_description: "Standard"
       broken_theme_alert: "Din webbplats kanske inte fungerar eftersom ett tema / komponent har fel."
@@ -387,10 +391,6 @@ sv:
       remove_confirmation: "Är du säker på att du vill ta bort detta utkast?"
       new_topic: "Nytt utkast för ämne"
       new_private_message: "Nytt utkast för personligt meddelande"
-      abandon:
-        confirm: "Du har redan ett pågående utkast. Vad vill du göra med det?"
-        yes_value: "Förkasta"
-        no_value: "Återuppta redigering"
     topic_count_all:
       one: "Visa %{count} nytt ämne"
       other: "Visa %{count} nya ämnen"
@@ -521,6 +521,10 @@ sv:
         name: "Namn"
         fields: "Fält"
         reject_reason: "Anledning"
+        scrubbed_reason: "Anledning"
+        scrub_record:
+          reason_placeholder: "Anledning..."
+          cancel_button: "Avbryt"
       user_percentage:
         summary:
           one: "%{agreed}, %{disagreed}, %{ignored} (av den senaste flaggan)"
@@ -1854,6 +1858,8 @@ sv:
     modal:
       close: "stäng"
       dismiss_error: "Avfärda fel"
+    multi_select:
+      search: "Sök…"
     form_kit:
       reset: Återställ
       optional: valfritt
@@ -2038,10 +2044,6 @@ sv:
         name: "Google"
         title: "Logga in med Google"
         sr_title: "Logga in med Google"
-      twitter:
-        name: "Twitter"
-        title: "Logga in med Twitter"
-        sr_title: "Logga in med Twitter"
       instagram:
         name: "Instagram"
         title: "Logga in med Instagram"
@@ -2490,8 +2492,6 @@ sv:
       in_topics_posts: "i alla ämnen och inlägg"
       enter_hint: "eller tryck Enter"
       in_posts_by: "i inlägg av %{username}"
-      browser_tip: "%{modifier} + f"
-      browser_tip_description: "igen för att använda inbyggd webbläsarsökning"
       recent: "Senaste sökningar"
       clear_recent: "Rensa senaste sökningar"
       type:
@@ -3444,6 +3444,10 @@ sv:
       settings: "Inställningar"
       topic_template: "Mall"
       tags: "Taggar"
+      localization:
+        name: "Namn"
+        description: "Beskrivning"
+        remove: "Ta bort"
       tags_allowed_tags: "Begränsa dessa taggar till följande kategori:"
       tags_allowed_tag_groups: "Begränsa dessa tagg-grupper till denna kategori:"
       tags_placeholder: "(Valfri) lista över tillåtna taggar"
@@ -3471,9 +3475,13 @@ sv:
       logo_dark: "Kategorilogotypbild för mörkt läge"
       background_image: "Kategori bakgrundsbild"
       background_image_dark: "Bakgrundsbild för mörk kategori"
-      badge_colors: "Utmärkelsefärg"
-      background_color: "Bakgrundsfärg"
-      foreground_color: "Förgrundsfärg"
+      background_color: "Färg"
+      styles:
+        icon: "Ikon"
+        emoji: "Emoji"
+        options:
+          icon: "Ikon"
+          emoji: "Emoji"
       name_placeholder: "Ett eller två ord max"
       color_placeholder: "Någon webbfärg"
       delete_confirm: "Är du säker på att du vill radera den kategorin?"
@@ -4258,7 +4266,6 @@ sv:
         forum:
           label: Forum
       back_to_forum: "Tillbaka till forumet"
-      filter: "Filter..."
       footer:
         interface_color_selector:
           light: "Ljust"
@@ -4363,6 +4370,16 @@ sv:
           copy: "Kopiera..."
           paste: "Klistra in..."
           save: "Spara som..."
+    discovery:
+      headings:
+        categories: "Alla kategorier"
+        filter_labels:
+          latest: "Senaste"
+          top: "Topp"
+          new: "Nya"
+          unread: "Olästa"
+          hot: "Hett"
+          unseen: "Osedda"
   admin_js:
     type_to_filter: "Skriv för att filtrera…"
     settings: "Inställningar"
@@ -4408,10 +4425,7 @@ sv:
           title: "Filer"
         legal:
           title: "Juridik"
-        logo:
-          title: "Webbplatsens logotyp"
-        branding:
-          title: "Varumärke"
+        logo_and_fonts:
           logo:
             form:
               logo:
@@ -4420,14 +4434,19 @@ sv:
               email: "E-postadress"
               manifest_screenshots:
                 description: "Skärmdumpar som visar dina instansfunktioner och funktionaliteten på dess installationsfrågesida. Alla bilder ska vara lokala uppladdningar, med samma dimensioner."
+          fonts:
+            title: "Typsnitt"
+            form:
+              heading_font:
+                title: "Typsnitt för rubrik"
+            backfill_modal:
+              modal_yes: "Ja"
         navigation:
           title: "Navigering"
         notifications:
           title: "Aviseringar"
         onebox:
           title: "Onebox"
-        other:
-          title: "Övrigt"
         search_everything:
           title: "Sök"
         security:
@@ -4466,6 +4485,8 @@ sv:
               header_description: "Förhandsgranska innehållet i sammanfattningen som skickas via e-post till inaktiva användare"
             templates:
               title: "Mallar"
+        email_logs:
+          sub_pages:
             sent:
               title: "Skickade"
             skipped:
@@ -4906,6 +4927,41 @@ sv:
             failed: "Misslyckad"
       home:
         title: "Hem"
+      account:
+        title: "Konto"
+        sidebar_link:
+          backups: "Säkerhetskopior"
+      community:
+        title: "Community"
+        sidebar_link:
+          about_your_site: "Om din webbplats"
+          badges: "Utmärkelser"
+          notifications: "Aviseringar"
+          permalinks: "Permalänkar"
+          users: "Användare"
+          groups: "Grupper"
+          legal: "Juridik"
+          moderation_flags:
+            title: "Moderering"
+      appearance:
+        title: "Utseende"
+        sidebar_link:
+          site_logo: "Webbplatsens logotyp"
+          emoji: "Emoji"
+          navigation: "Navigering"
+          themes_and_components:
+            keywords: "filnamnstillägg"
+      email_settings:
+        title: "E-postinställningar"
+        sidebar_link:
+          appearance: "Utseende"
+      security:
+        title: "Säkerhet"
+      section_landing_pages:
+        account:
+          title: "Konto"
+          backups:
+            title: "Säkerhetskopior"
       config_areas:
         about:
           community_name: "Forumets namn"
@@ -4939,12 +4995,36 @@ sv:
         embeddable_host:
           edit: "Redigera"
           delete: "Radera"
-        look_and_feel:
+        themes_and_components:
+          breadcrumb_title: "Anpassa"
+          install: "Installera"
           themes:
             title: "Teman"
+          components:
+            title: "Komponenter"
+            install: "Installera"
+            name: "Namn"
+            enabled: "Aktiverad?"
+            by_author: "Av %{name}"
+            learn_more: "Läs mer"
+            edit: "Redigera"
+            preview: "Förhandsgranska"
+            export: "Exportera"
+            convert: "Konvertera"
+            delete: "Radera"
+            filter_by: "Filtrera efter"
+            filter_by_all: "Alla"
+            filter_by_used: "Använt"
+            filter_by_unused: "Oanvänt"
+            delete_confirm: 'Är du säker på att du vill radera "%{name}"?'
+            badge_unused: "Oanvänt"
         user_fields:
           type: "Typ"
           delete: "Radera"
+        color_palettes:
+          palette_name: "Namn"
+          colors:
+            title: "Färger"
       plugins:
         title: "Tillägg"
         name: "Namn"

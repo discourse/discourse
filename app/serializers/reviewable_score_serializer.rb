@@ -17,7 +17,14 @@ class ReviewableScoreSerializer < ApplicationSerializer
     contains_media: "skip_media_review_groups",
   }
 
-  attributes :id, :score, :agree_stats, :reason, :created_at, :reviewed_at
+  attributes :id,
+             :score,
+             :agree_stats,
+             :reason,
+             :reason_type,
+             :reason_data,
+             :created_at,
+             :reviewed_at
 
   attribute :status_for_database, key: :status
 
@@ -55,6 +62,14 @@ class ReviewableScoreSerializer < ApplicationSerializer
     text
   end
 
+  def reason_type
+    object.reason
+  end
+
+  def reason_data
+    watched_words_found if object.reason == "watched_word"
+  end
+
   def include_reason?
     reason.present?
   end
@@ -75,20 +90,7 @@ class ReviewableScoreSerializer < ApplicationSerializer
   private
 
   def watched_word_reason(link)
-    if object.context.nil?
-      # If the words weren't recorded, try to guess them based on current settings.
-      if object.reviewable.respond_to?(:post)
-        s = object.reviewable.post.raw
-        s << " #{object.reviewable.post.topic.title}" if object.reviewable.post.post_number == 1
-      elsif object.reviewable.respond_to?(:payload)
-        s = object.reviewable.payload["raw"]
-        s << " #{object.reviewable.payload["title"]}" if object.reviewable.payload.key?("title")
-      end
-
-      words = WordWatcher.new(s).word_matches_across_all_actions
-    else
-      words = object.context.split(",")
-    end
+    words = watched_words_found
 
     if words.nil? || words.empty?
       text =
@@ -105,6 +107,25 @@ class ReviewableScoreSerializer < ApplicationSerializer
     end
 
     text
+  end
+
+  def watched_words_found
+    if object.context.nil?
+      # If the words weren't recorded, try to guess them based on current settings.
+      if object.reviewable.respond_to?(:post)
+        s = object.reviewable.post.raw.clone
+        s << " #{object.reviewable.post.topic.title}" if object.reviewable.post.post_number == 1
+      elsif object.reviewable.respond_to?(:payload)
+        s = object.reviewable.payload["raw"].clone
+        s << " #{object.reviewable.payload["title"]}" if object.reviewable.payload.key?("title")
+      end
+
+      words = WordWatcher.new(s).word_matches_across_all_actions
+    else
+      words = object.context.split(",")
+    end
+
+    words.map(&:downcase).uniq
   end
 
   def url_for(reason, text)

@@ -1,4 +1,4 @@
-import { cached } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
 import EmberObject, { computed } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { alias, and, equal, notEmpty, or } from "@ember/object/computed";
@@ -178,11 +178,11 @@ export default class Topic extends RestModel {
     return promise;
   }
 
-  static bulkOperation(topics, operation, options, tracked) {
+  static bulkOperation(topics, operation, options, isTracked) {
     const data = {
       topic_ids: topics.mapBy("id"),
       operation,
-      tracked,
+      tracked: isTracked,
     };
 
     if (options) {
@@ -197,8 +197,8 @@ export default class Topic extends RestModel {
     });
   }
 
-  static bulkOperationByFilter(filter, operation, options, tracked) {
-    const data = { filter, operation, tracked };
+  static bulkOperationByFilter(filter, operation, options, isTracked) {
+    const data = { filter, operation, tracked: isTracked };
 
     if (options) {
       if (options.categoryId) {
@@ -227,14 +227,18 @@ export default class Topic extends RestModel {
   }
 
   static resetNew(category, include_subcategories, opts = {}) {
-    let { tracked, tag, topicIds } = {
+    let {
+      tracked: isTracked,
+      tag,
+      topicIds,
+    } = {
       tracked: false,
       tag: null,
       topicIds: null,
       ...opts,
     };
 
-    const data = { tracked };
+    const data = { tracked: isTracked };
     if (category) {
       data.category_id = category.id;
       data.include_subcategories = include_subcategories;
@@ -297,6 +301,9 @@ export default class Topic extends RestModel {
   @service currentUser;
   @service siteSettings;
 
+  @tracked deleted_by;
+  @tracked deleted_at;
+
   message = null;
   errorLoading = false;
 
@@ -313,6 +320,11 @@ export default class Topic extends RestModel {
   @propertyEqual("last_read_post_number", "highest_post_number") readLastPost;
   @and("pinned", "readLastPost") canClearPin;
   @or("details.can_edit", "details.can_edit_tags") canEditTags;
+
+  @tracked _details = this.store.createRecord("topicDetails", {
+    id: this.id,
+    topic: this,
+  });
 
   @discourseComputed("last_read_post_number", "highest_post_number")
   visited(lastReadPostNumber, highestPostNumber) {
@@ -455,10 +467,7 @@ export default class Topic extends RestModel {
   }
 
   get details() {
-    return (this._details ??= this.store.createRecord("topicDetails", {
-      id: this.id,
-      topic: this,
-    }));
+    return this._details;
   }
 
   set details(value) {

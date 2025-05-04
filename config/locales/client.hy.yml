@@ -192,6 +192,10 @@ hy:
       dismiss: "Չեղարկել"
     bootstrap_mode: "Ինչպես սկսել"
     back_button: "Ետ"
+    welcome_banner:
+      header:
+        anonymous_members: "Բարի գալուստ %{site_name}!"
+      search: "Որոնում"
     themes:
       default_description: "Լռելյայն"
       broken_theme_alert: "Ձեր կայքը կարող է չաշխատել, քանի որ թեման / բաղադրիչը սխալներ ունեն:"
@@ -454,10 +458,6 @@ hy:
       remove_confirmation: "Իսկապե՞ս ուզում եք ջնջել այս սևագիրը:"
       new_topic: "Նոր թեմայի սևագիր"
       new_private_message: "Նոր անձնական հաղորդագրության սևագիր"
-      abandon:
-        confirm: "Դուք արդեն ունեք սևագիր: Ի՞նչ կցանկանայիք անել դրա հետ:"
-        yes_value: "Ջնջել"
-        no_value: "Վերսկսել խմբագրումը"
     topic_count_all:
       one: "Տեսնել %{count} նոր թեման"
       other: "Դիտել %{count} նոր թեմաները"
@@ -588,6 +588,9 @@ hy:
         name: "Անուն"
         fields: "Դաշտեր"
         reject_reason: "Պատճառ"
+        scrubbed_reason: "Պատճառ"
+        scrub_record:
+          cancel_button: "Չեղարկել"
       user_percentage:
         summary:
           one: "%{agreed}, %{disagreed}, %{ignored} (վերջին բողոքի)"
@@ -1968,6 +1971,8 @@ hy:
     modal:
       close: "փակել"
       dismiss_error: "Չեղարկել սխալը"
+    multi_select:
+      search: "Որոնել…"
     form_kit:
       reset: Զրոյացնել
       optional: ընտրովի
@@ -2120,10 +2125,6 @@ hy:
         name: "Google"
         title: "Մուտք Google-ով"
         sr_title: "Մուտք Google-ով"
-      twitter:
-        name: "Twitter"
-        title: "Մուտք Twitter-ով"
-        sr_title: "Մուտք Twitter-ով"
       instagram:
         name: "Instagram"
       facebook:
@@ -3149,6 +3150,10 @@ hy:
       general: "Ընդհանուր"
       settings: "Կարգավորումներ"
       tags: "Պիտակներ"
+      localization:
+        name: "Անուն"
+        description: "Նկարագրությունը"
+        remove: "Հեռացնել"
       tags_allowed_tags: "Սահմանափակել այս պիտակները՝ այս կատեգորիայում."
       tags_allowed_tag_groups: "Սահմանափակել այս պիտակների խմբերը այս կատեգորիայում."
       tags_placeholder: "(Ընտրովի) թույլատրված պիտակների ցանկը"
@@ -3170,9 +3175,13 @@ hy:
       description: "Նկարագրույթուն"
       logo: "Կատեգորիայի Լոգոյի Նկարը"
       background_image: "Կատեգորիայի Ֆոնի Նկարը"
-      badge_colors: "Կրծքանշանի գույները"
-      background_color: "Ֆոնի գույնը"
-      foreground_color: "Առաջին պլանի գույնը"
+      background_color: "Գույն"
+      styles:
+        icon: "Պատկերակ"
+        emoji: "Էմոջի"
+        options:
+          icon: "Պատկերակ"
+          emoji: "Էմոջի"
       name_placeholder: "Առավելագույնը մեկ կամ երկու բառ"
       color_placeholder: "Ցանկացած վեբ-գույն"
       delete_confirm: "Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել այս կատեգորիան:"
@@ -3802,6 +3811,16 @@ hy:
       spreadsheet:
         show: "Ցուցադրել"
         about: "Մասին"
+    discovery:
+      headings:
+        categories: "Բոլոր կատեգորիաները"
+        filter_labels:
+          latest: "Վերջինը"
+          top: "Ամենահայտնի"
+          new: "Նոր"
+          unread: "Չկարդացած"
+          hot: "Թոփ"
+          unseen: "Չդիտված"
   admin_js:
     settings: "Կարգավորումներ"
     admin:
@@ -3842,20 +3861,20 @@ hy:
           title: "Ֆայլեր"
         legal:
           title: "Օրինական"
-        branding:
-          title: "Բրենդինգ"
+        logo_and_fonts:
           logo:
             form:
               mobile: "Հեռախոսային"
               email: "Էլ. փոստ"
+          fonts:
+            backfill_modal:
+              modal_yes: "Այո"
         navigation:
           title: "Նավիգացիա"
         notifications:
           title: "Ծանուցումներ"
         onebox:
           title: "Onebox"
-        other:
-          title: "Այլ"
         search_everything:
           title: "Որոնում"
         security:
@@ -3891,6 +3910,8 @@ hy:
           sub_pages:
             templates:
               title: "Ձևանմուշներ"
+        email_logs:
+          sub_pages:
             sent:
               title: "Ուղարկված"
             skipped:
@@ -4175,6 +4196,38 @@ hy:
             failed: "Ձախողված"
       home:
         title: "Գլխավոր էջ"
+      account:
+        title: "Հաշիվ"
+        sidebar_link:
+          backups: "Պահուտսներ"
+      community:
+        title: "Համայնք"
+        sidebar_link:
+          badges: "Կրծքանշաններ"
+          notifications: "Ծանուցումներ"
+          permalinks: "Մշտահղումներ"
+          users: "Օգտատերեր"
+          groups: "Խմբեր"
+          legal: "Օրինական"
+          moderation_flags:
+            title: "Մոդերացիա"
+      appearance:
+        title: "Արտաքին տեսք"
+        sidebar_link:
+          emoji: "Էմոջի"
+          navigation: "Նավիգացիա"
+          themes_and_components:
+            keywords: "ընդլայնում"
+      email_settings:
+        sidebar_link:
+          appearance: "Արտաքին տեսք"
+      security:
+        title: "Անվտանգություն"
+      section_landing_pages:
+        account:
+          title: "Հաշիվ"
+          backups:
+            title: "Պահուտսներ"
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
@@ -4205,14 +4258,34 @@ hy:
           delete: "Ջնջել"
           more_options:
             title: "Ավելի շատ տարբերակներ"
-        look_and_feel:
+        themes_and_components:
+          breadcrumb_title: "Անհատականացնել"
+          install: "Տեղադրել"
           themes:
             title: "Թեմաներ"
+          components:
+            title: "Բաղադրիչներ"
+            install: "Տեղադրել"
+            name: "Անուն"
+            enabled: "Միացվա՞ծ է:"
+            by_author: "%{name}-Ի կողմԻց"
+            learn_more: "Իմանալ ավելին"
+            edit: "Խմբագրել"
+            preview: "Նախադիտում"
+            export: "Արտահանել"
+            convert: "Փոխակերպել"
+            delete: "Ջնջել"
+            filter_by_all: "Բոլորը"
+            delete_confirm: 'Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել <<%{name}>> :'
         user_fields:
           type: "Տիպը"
           more_options:
             title: "Ավելի շատ տարբերակներ"
           delete: "Ջնջել"
+        color_palettes:
+          palette_name: "Անուն"
+          colors:
+            title: "Գույներ"
       plugins:
         title: "Հավելումներ"
         name: "Անուն"

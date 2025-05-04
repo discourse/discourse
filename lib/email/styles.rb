@@ -381,7 +381,11 @@ module Email
         .split(";")
         .select(&:present?)
         .map { _1.split(":", 2).map(&:strip) }
-        .each { |k, v| styles[k] = v if k.present? && v.present? }
+        .each do |k, v|
+          next if k.blank? || v.blank?
+          next if styles[k]&.end_with?("!important") && !v.end_with?("!important")
+          styles[k] = v
+        end
 
       styles.map { |k, v| "#{k}:#{v}" }.join(";")
     end
@@ -393,10 +397,7 @@ module Email
     end
 
     def to_html
-      # needs to be before class + id strip because we need to style redacted
-      # media and also not double-redact already redacted from lower levels
       replace_secure_uploads_urls if SiteSetting.secure_uploads?
-      strip_classes_and_ids
       replace_relative_urls
       deduplicate_styles
 
@@ -541,15 +542,6 @@ module Email
             end
           return
           # rubocop:enable Lint/NonLocalExitFromIterator
-        end
-    end
-
-    def strip_classes_and_ids
-      @fragment
-        .css("*")
-        .each do |element|
-          element.delete("class")
-          element.delete("id")
         end
     end
 

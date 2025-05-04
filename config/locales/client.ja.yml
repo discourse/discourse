@@ -166,6 +166,10 @@ ja:
       dismiss: "閉じる"
     bootstrap_mode: "はじめに"
     back_button: "戻る"
+    welcome_banner:
+      header:
+        anonymous_members: "%{site_name} へようこそ！"
+      search: "検索"
     themes:
       default_description: "デフォルト"
       broken_theme_alert: "テーマ/コンポーネントにエラーがあるため、サイトが動作しない可能性があります。"
@@ -407,10 +411,6 @@ ja:
       remove_confirmation: "この下書きを削除してもよろしいですか？"
       new_topic: "新しいトピックの下書き"
       new_private_message: "新しい個人メッセージの下書き"
-      abandon:
-        confirm: "作成中の下書きがあります。どうしますか？"
-        yes_value: "破棄"
-        no_value: "編集を再開"
       dropdown:
         title: "最新の下書きメニューを開く"
         untitled: "無題の下書き"
@@ -540,6 +540,10 @@ ja:
         name: "名前"
         fields: "フィールド"
         reject_reason: "理由"
+        scrubbed_reason: "理由"
+        scrub_record:
+          reason_placeholder: "理由..."
+          cancel_button: "キャンセル"
       user_percentage:
         summary:
           other: "%{agreed}、%{disagreed}、%{ignored} (最後の %{count} 件の通報の内)"
@@ -1952,6 +1956,9 @@ ja:
     modal:
       close: "閉じる"
       dismiss_error: "エラーを閉じる"
+    multi_select:
+      no_results: "結果がありません"
+      search: "検索…"
     form_kit:
       reset: リセット
       optional: オプション
@@ -2174,10 +2181,6 @@ ja:
         name: "Google"
         title: "Google でサインイン"
         sr_title: "Google でサインイン"
-      twitter:
-        name: "Twitter"
-        title: "Twitter でサインイン"
-        sr_title: "Twitter でサインイン"
       instagram:
         name: "Instagram"
         title: "Instagram でログイン"
@@ -2617,8 +2620,6 @@ ja:
       in_topics_posts: "すべてのトピックと投稿"
       enter_hint: "または Enter キーを押します"
       in_posts_by: "%{username} の投稿内"
-      browser_tip: "%{modifier} + f"
-      browser_tip_description: "もう一度ネイティブブラウザ検索を使用します"
       recent: "最近の検索"
       clear_recent: "最近の検索をクリア"
       type:
@@ -3556,6 +3557,10 @@ ja:
       settings: "設定"
       topic_template: "テンプレート"
       tags: "タグ"
+      localization:
+        name: "名前"
+        description: "説明"
+        remove: "削除"
       tags_allowed_tags: "これらのタグをこのカテゴリに制限する:"
       tags_allowed_tag_groups: "これらのタググループをこのカテゴリに制限する:"
       tags_placeholder: "(オプション) 許可されたタグのリスト"
@@ -3583,9 +3588,13 @@ ja:
       logo_dark: "ダークモードのカテゴリロゴの画像"
       background_image: "カテゴリの背景画像"
       background_image_dark: "ダークのカテゴリ背景画像"
-      badge_colors: "バッジの色"
-      background_color: "背景色"
-      foreground_color: "前景色"
+      background_color: "色"
+      styles:
+        icon: "アイコン"
+        emoji: "絵文字"
+        options:
+          icon: "アイコン"
+          emoji: "絵文字"
       color_used: "使用中の色"
       predefined_colors: "既定の色オプション"
       name_placeholder: "簡単な名前にしてください"
@@ -4404,11 +4413,6 @@ ja:
       back_to_forum: "フォーラムに戻る"
       collapse_all_sections: "すべてのセクションを折りたたむ"
       expand_all_sections: "すべてのセクションを展開"
-      filter: "フィルタ..."
-      clear_filter: "フィルタをクリア"
-      no_results:
-        title: "結果がありません"
-        description: '‘%{filter}’ に一致するものは見つかりませんでした。<br><br><a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">サイト設定</a>または<a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">管理者ユーザーリストを検索</a>しますか？'
       footer:
         interface_color_selector:
           light: "ライト"
@@ -4510,6 +4514,16 @@ ja:
           paste: "貼り付け..."
           save: "名前を付けて保存..."
     powered_by_discourse: "Discourse 提供"
+    discovery:
+      headings:
+        categories: "すべてのカテゴリ"
+        filter_labels:
+          latest: "最新"
+          top: "人気"
+          new: "新規"
+          unread: "未読"
+          hot: "ホット"
+          unseen: "未読"
   admin_js:
     type_to_filter: "入力してフィルタ..."
     settings: "設定"
@@ -4559,9 +4573,6 @@ ja:
         flags:
           title: "モデレーション"
           header_description: "Discourse の通報システムは、あなたとあなたのモデレーターチームがコミュニティーの尊厳と健全性を保つためにコンテンツとユーザーの行動を管理する上で役立ちます。デフォルト設定はほとんどのコミュニティーに最適であるため、変更の必要はありません。ただし、サイトに特別な要件がある場合は、不要な通報を無効にし、独自のカスタム通報を追加できます。"
-        font_style:
-          title: "フォントスタイル"
-          header_description: "テーマで使用するフォントスタイルをカスタマイズする"
         files:
           title: "ファイル"
           header_description: "ファイルのサイズと形式の制限、アバターのサイズとソース、ファイルストレージ、画像の品質と圧縮などを制御する設定"
@@ -4571,11 +4582,7 @@ ja:
         login_and_authentication:
           title: "ログインと認証"
           header_description: "ユーザーのログインと認証方法、シークレットと鍵、OAuth2 プロバイダーなどを構成します"
-        logo:
-          title: "サイトのロゴ"
-          header_description: "サイトのロゴのバリエーションをカスタマイズします"
-        branding:
-          title: "ブランディング"
+        logo_and_fonts:
           logo:
             form:
               logo:
@@ -4586,6 +4593,13 @@ ja:
                 description: "インストールプロンプトページでインスタンスの特徴と機能を紹介するスクリーンショット。すべての画像はローカルアップロードであり、同じサイズである必要があります。"
               opengraph_image:
                 description: "デフォルトの opengraph 画像。ページにほかの適切な画像がない場合に使用されます。空のままにすると、large_icon が使用されます."
+          fonts:
+            title: "フォント"
+            form:
+              heading_font:
+                title: "見出しのフォント"
+            backfill_modal:
+              modal_yes: "はい"
         navigation:
           title: "ナビゲーション"
           header_description: "サイトのナビゲーションリンクとメニュー項目を構成します。これには、メインのナビゲーションメニュー、ホームページ上部のクイックリンク、および管理者サイドバーの場所と動作が含まれます。"
@@ -4595,9 +4609,6 @@ ja:
         onebox:
           title: "ワンボックス"
           header_description: "サイトのワンボックスプレビューの生成と表示方法を構成します"
-        other:
-          title: "その他"
-          header_description: "他のどのカテゴリにも当てはまらない設定"
         rate_limits:
           title: "レート制限"
           header_description: "トピックの作成、メッセージの送信、返信の投稿など、ユーザーが特定の操作を実行できる頻度を構成します"
@@ -4642,6 +4653,10 @@ ja:
           header_description: "レポートは、サイトで起きていることを理解するのに役立つ強力なツールです。トレンドの特定、問題の発見、データに基づく決定に役立ちます。"
         badges:
           title: "バッジ"
+        content:
+          sub_pages:
+            posts_and_topics:
+              title: "投稿とトピック"
         permalinks:
           title: "パーマリンク"
         user_fields:
@@ -4662,8 +4677,6 @@ ja:
         site_texts:
           title: "サイトのテキスト"
         email:
-          title: "サーバーのセットアップとログ"
-          keywords: "メール|smtp|mailgun|sendgrid|送信|スキップ|バウンス|受信|拒否|メールログ|要約をプレビュー"
           sub_pages:
             preview_summary:
               title: "要約をプレビュー"
@@ -4671,14 +4684,16 @@ ja:
               title: "高度なテスト"
             templates:
               title: "テンプレート"
+        email_logs:
+          sub_pages:
             sent:
-              title: "送信"
+              title: "送信済み"
             skipped:
               title: "スキップ"
             bounced:
               title: "バウンス"
             received:
-              title: "受け取った"
+              title: "受信"
             rejected:
               title: "拒否"
         email_appearance:
@@ -5179,6 +5194,66 @@ ja:
             failed: "失敗しました"
       home:
         title: "ホーム"
+      account:
+        title: "アカウント"
+        sidebar_link:
+          backups: "バックアップ"
+          whats_new:
+            title: "新着情報"
+            keywords: "変更ログ|機能|リリース"
+      community:
+        title: "コミュニティー"
+        sidebar_link:
+          about_your_site: "サイトについて"
+          badges: "バッジ"
+          login_and_authentication: "ログインと認証"
+          notifications: "通知"
+          permalinks: "パーマリンク"
+          trust_levels: "信頼レベル"
+          group_permissions: "グループ権限"
+          users: "ユーザー"
+          groups: "グループ"
+          user_fields: "ユーザーフィールド"
+          watched_words: "ウォッチ中の語"
+          legal: "法関連"
+          moderation_flags:
+            title: "モデレーション"
+            keywords: "通報|レビュー"
+      appearance:
+        title: "外観"
+        sidebar_link:
+          font_style: "フォントスタイル"
+          site_logo: "サイトのロゴ"
+          color_schemes: "色パレット"
+          emoji: "絵文字"
+          navigation: "ナビゲーション"
+          themes_and_components:
+            keywords: "拡張子"
+          site_texts: "サイトのテキスト"
+      email_settings:
+        title: "メールの設定"
+        sidebar_link:
+          appearance: "外観"
+          server_setup:
+            title: "サーバーのセットアップとログ"
+            keywords: "メール|smtp|mailgun|sendgrid|送信|スキップ|バウンス|受信|拒否|メールログ|要約をプレビュー"
+      security:
+        title: "セキュリティ"
+        sidebar_link:
+          security: "セキュリティの設定"
+          spam: "迷惑行為の設定"
+          staff_action_logs:
+            title: "ログとスクリーニング"
+            keywords: "エラーログ|スタッフの操作|スクリーン対象メール|スクリーン対象 IP|スクリーン対象 URL|検索ログ"
+      section_landing_pages:
+        account:
+          title: "アカウント"
+          backups:
+            title: "バックアップ"
+            description: "サイトのデータのバックアップを作成します"
+          whats_new:
+            title: "新着情報"
+            description: "Discourse の新しいリリースと改善点をご覧ください"
       config_areas:
         about:
           general_settings: "一般設定"
@@ -5252,7 +5327,6 @@ ja:
             post: "投稿"
             chat_message: "チャットメッセージ"
             enabled: "保存後にこのカスタム通報を有効にする"
-            alert: "カスタム通報が使用されると、無効にすることはできますが、編集や削除は行えません。"
             edit_flag: "通報を編集"
             non_editable: "これはシステム通報であるかレビューシステムですでに使用されているため編集できません。無効にすることはできます。"
             delete_flag: "通報を削除"
@@ -5272,16 +5346,32 @@ ja:
           delete: "削除"
           more_options:
             title: "その他のオプション"
-        look_and_feel:
+        themes_and_components:
+          breadcrumb_title: "カスタマイズ"
+          install: "インストール"
           themes:
             title: "テーマ"
             themes_intro: "新しいテーマをインストールするか、これらのリソースを使用して独自のテーマを新規作成します。"
-            themes_intro_img_alt: "新しいテーマのプレースホルダー"
-            set_default_theme: "デフォルトに設定"
-            default_theme: "デフォルトのテーマ"
-            themes_description: "テーマは、フォーラムのデザインの複数のスタイル要素を変更する広範なカスタマイズテンプレートであり、多くの場合、フロントエンドの追加機能も含まれています。"
             new_theme: "新しいテーマ"
-            user_selectable: "ユーザー選択可能"
+          components:
+            title: "コンポーネント"
+            install: "インストール"
+            name: "名前"
+            enabled: "有効化？"
+            by_author: "作成者: %{name}"
+            learn_more: "もっと読む"
+            edit: "編集"
+            preview: "プレビュー"
+            check_update: "アップデートを確認"
+            export: "エクスポート"
+            convert: "変換"
+            delete: "削除"
+            filter_by: "フィルタ基準:"
+            filter_by_all: "すべて"
+            filter_by_used: "使用中"
+            filter_by_unused: "未使用"
+            delete_confirm: '"%{name}" を削除してもよろしいですか？'
+            badge_unused: "未使用"
         user_fields:
           field: "フィールド"
           type: "タイプ"
@@ -5292,6 +5382,13 @@ ja:
           delete: "削除"
           delete_successful: "ユーザーフィールドは削除されました。"
           save_successful: "ユーザーフィールドは保存されました。"
+        color_palettes:
+          palette_name: "名前"
+          color_options:
+            toggle: "ユーザー選択可能"
+            toggle_description: "ユーザーが色パレットを選択できる"
+          colors:
+            title: "色"
       plugins:
         title: "プラグイン"
         name: "名前"
@@ -5626,7 +5723,6 @@ ja:
           title: "色"
           edit: "色パレットを編集"
           long_title: "色パレット"
-          description: "色パレットは、サイトのインターフェースに使用される主な色を定義しますが、テーマには追加のスタイル、レイアウト、およびコンポーネントが含まれます。これらを併用してサイト独自の外観と使い心地を作ることができます。また、ユーザーが好みに応じて選択できるようにすることもできます。"
           about: "テーマで使用する色を変更します。まず新しい色パレットを作成します。"
           new_name: "新しい色パレット"
           copy_name_prefix: "コピー元:"

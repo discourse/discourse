@@ -10,6 +10,7 @@ import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 import AdminConfigAreaEmptyList from "admin/components/admin-config-area-empty-list";
 import AdminFilteredSiteSettings from "admin/components/admin-filtered-site-settings";
+import AdminSiteSettingsChangesBanner from "admin/components/admin-site-settings-changes-banner";
 import SiteSetting from "admin/models/site-setting";
 
 export default class AdminAreaSettings extends Component {
@@ -94,5 +95,7 @@ export default class AdminAreaSettings extends Component {
         </ConditionalLoadingSpinner>
       {{/if}}
     </div>
+
+    <AdminSiteSettingsChangesBanner />
   </template>
 }

@@ -1,7 +1,18 @@
+@use "lib/viewport";
+
 .d-editor-container {
   display: flex;
   flex-grow: 1;
   max-width: 100%;
+
+  &--rich-editor-enabled .d-editor-textarea-wrapper textarea.d-editor-input {
+    font-family: var(--d-font-family--monospace);
+    font-variant-ligatures: none;
+
+    @include viewport.from(sm) {
+      font-size: var(--font-down-1);
+    }
+  }
 }
 
 .d-editor {
@@ -93,9 +104,12 @@
   overflow: auto;
 }
 
-.composing-whisper .d-editor-preview {
-  font-style: italic;
-  color: var(--primary-medium) !important;
+.composing-whisper {
+  .d-editor-preview,
+  .d-editor-input {
+    font-style: italic;
+    color: var(--primary-medium) !important;
+  }
 }
 
 .hide-preview .d-editor-preview-wrapper {
@@ -322,7 +336,7 @@
     font-size: var(--font-down-1);
   }
 
-  .btn:focus {
+  .btn:focus-visible {
     @include default-focus;
   }
 

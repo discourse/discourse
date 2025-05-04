@@ -60,13 +60,28 @@ export default class ChatemojiReactions {
   }
 
   get emojiReactions() {
-    const defaultReactions = this.siteSettings.default_emoji_reactions
+    const userQuickReactionsCustom = (
+      (this.currentUser.user_option.chat_quick_reaction_type === "custom" &&
+        this.currentUser.user_option.chat_quick_reactions_custom) ||
+      ""
+    )
       .split("|")
       .filter(Boolean);
 
-    return this.emojiStore
-      .favoritesForContext("chat")
-      .concat(defaultReactions)
+    const frequentReactions = this.emojiStore.favoritesForContext("chat");
+
+    const defaultReactions =
+      this.siteSettings.default_emoji_reactions.split("|");
+
+    const allReactionsInOrder = userQuickReactionsCustom
+      .concat(frequentReactions)
+      .concat(defaultReactions);
+
+    return allReactionsInOrder
+      .filter((item, index) => {
+        return allReactionsInOrder.indexOf(item) === index;
+      })
+      .filter(Boolean)
       .slice(0, 3)
       .map(
         (emoji) =>

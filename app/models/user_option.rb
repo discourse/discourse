@@ -48,7 +48,7 @@ class UserOption < ActiveRecord::Base
   end
 
   def self.text_sizes
-    @text_sizes ||= Enum.new(normal: 0, larger: 1, largest: 2, smaller: 3, smallest: 4)
+    @text_sizes ||= Enum.new(smallest: 4, smaller: 3, normal: 0, larger: 1, largest: 2)
   end
 
   def self.title_count_modes
@@ -266,8 +266,6 @@ end
 #  homepage_id                          :integer
 #  theme_ids                            :integer          default([]), not null, is an Array
 #  hide_profile_and_presence            :boolean          default(FALSE), not null
-#  hide_profile                         :boolean          default(FALSE), not null
-#  hide_presence                        :boolean          default(FALSE), not null
 #  text_size_key                        :integer          default(0), not null
 #  text_size_seq                        :integer          default(0), not null
 #  email_level                          :integer          default(1), not null
@@ -296,10 +294,14 @@ end
 #  sidebar_show_count_of_new_items      :boolean          default(FALSE), not null
 #  watched_precedence_over_muted        :boolean
 #  chat_separate_sidebar_mode           :integer          default(0), not null
-#  chat_send_shortcut                   :integer          default(0), not null
 #  topics_unread_when_closed            :boolean          default(TRUE), not null
 #  show_thread_title_prompts            :boolean          default(TRUE), not null
 #  enable_smart_lists                   :boolean          default(TRUE), not null
+#  hide_profile                         :boolean          default(FALSE), not null
+#  hide_presence                        :boolean          default(FALSE), not null
+#  chat_send_shortcut                   :integer          default(0), not null
+#  chat_quick_reaction_type             :integer          default(0), not null
+#  chat_quick_reactions_custom          :string
 #
 # Indexes
 #

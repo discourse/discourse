@@ -129,6 +129,9 @@ module Service
 
     # @!visibility private
     class Step
+      class DefaultValuesNotAllowed < StandardError
+      end
+
       attr_reader :name, :method_name, :class_name
 
       def initialize(name, method_name = name, class_name: nil)
@@ -157,7 +160,8 @@ module Service
         object = class_name&.new(context)
         method = object&.method(:call) || instance.method(method_name)
         if !object && method.parameters.any? { _1[0] != :keyreq }
-          raise "In #{type} '#{name}': default values in step implementations are not allowed. Maybe they could be defined in a params or options block?"
+          raise DefaultValuesNotAllowed,
+                "In #{type} '#{name}': default values in step implementations are not allowed. Maybe they could be defined in a params or options block?"
         end
         args = context.slice(*method.parameters.select { _1[0] == :keyreq }.map(&:last))
         context[result_key][:object] = object if object
@@ -195,8 +199,10 @@ module Service
           context[result_key].fail(invalid: true)
           context.fail!
         end
-      rescue ArgumentError => exception
-        context[result_key].fail(exception: exception, not_found: true)
+      rescue Failure, DefaultValuesNotAllowed
+        raise
+      rescue => exception
+        context[result_key].fail(exception:, not_found: true)
         context.fail!
       end
     end

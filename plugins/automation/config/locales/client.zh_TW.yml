@@ -63,7 +63,10 @@ zh_TW:
             restricted_categories:
               label: 分類
           created: 建立時間
-          topics: 話題
+          with_images: 圖片
+          with_links: 連結
+          with_code: 代碼
+          with_uploads: 上傳檔案
         category_created_edited:
           fields:
             restricted_category:

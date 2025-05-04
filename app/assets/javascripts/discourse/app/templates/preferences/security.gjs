@@ -9,6 +9,7 @@ import UserApiKeys from "discourse/components/user-preferences/user-api-keys";
 import UserPasskeys from "discourse/components/user-preferences/user-passkeys";
 import icon from "discourse/helpers/d-icon";
 import formatDate from "discourse/helpers/format-date";
+import routeAction from "discourse/helpers/route-action";
 import { i18n } from "discourse-i18n";
 
 export default RouteTemplate(
@@ -24,6 +25,7 @@ export default RouteTemplate(
             href
             {{on "click" @controller.changePassword}}
             class="btn btn-default"
+            id="change-password-button"
           >
             {{icon "envelope"}}
             {{#if @controller.model.no_password}}
@@ -35,6 +37,33 @@ export default RouteTemplate(
 
           {{@controller.passwordProgress}}
         </div>
+
+        {{#unless @controller.model.no_password}}
+          {{#if @controller.associatedAccountsLoaded}}
+            {{#if @controller.canRemovePassword}}
+              <div class="controls">
+                <a
+                  href
+                  {{on "click" @controller.removePassword}}
+                  hidden={{@controller.removePasswordInProgress}}
+                  id="remove-password-link"
+                >
+                  {{icon "trash-can"}}
+                  {{i18n "user.change_password.remove"}}
+                </a>
+              </div>
+            {{/if}}
+          {{else}}
+            <div class="controls">
+              <DButton
+                @action={{fn (routeAction "checkEmail") @controller.model}}
+                @title="admin.users.check_email.title"
+                @icon="envelope"
+                @label="admin.users.check_email.text"
+              />
+            </div>
+          {{/if}}
+        {{/unless}}
       </div>
 
       {{#if @controller.canUsePasskeys}}

@@ -16,13 +16,6 @@
   margin-bottom: 1em;
   border-radius: var(--d-border-radius-large);
 
-  &__search-menu {
-    .menu-panel-results .menu-panel.search-menu-panel {
-      position: unset;
-      padding: 0;
-    }
-  }
-
   &__wrap {
     box-sizing: border-box;
     position: relative;
@@ -31,6 +24,12 @@
     @include breakpoint(tablet) {
       padding: 1em 8px 1.25em;
       margin-top: 0.5em;
+    }
+
+    @include breakpoint("mobile-extra-large") {
+      display: block;
+      padding: 0.5em;
+      margin-top: 0;
     }
 
     > div {
@@ -42,13 +41,17 @@
       display: flex;
       position: relative;
 
+      @include breakpoint("mobile-extra-large") {
+        display: none;
+      }
+
       .search-menu-container {
         width: 100%;
         min-width: 0;
       }
     }
 
-    .d-icon-search {
+    .d-icon-magnifying-glass {
       margin: 0;
     }
 
@@ -57,22 +60,28 @@
     }
 
     .search-input {
-      #search-term {
+      .search-term__input {
         min-width: 0;
         flex: 1 1;
       }
     }
 
-    h1 {
+    .welcome-banner__title {
       font-size: var(--font-up-6);
       line-height: $line-height-medium;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
 
       @include breakpoint(tablet) {
         font-size: var(--font-up-4);
       }
+
+      @include breakpoint("mobile-extra-large") {
+        font-size: var(--font-up-2);
+      }
     }
 
-    h1,
+    .welcome-banner__title,
     p {
       text-align: center;
     }
@@ -117,17 +126,18 @@
     }
 
     .results {
+      @include float-down;
       box-sizing: border-box;
+      border-radius: var(--d-border-radius);
       background: var(--secondary);
-      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
-      position: absolute;
       z-index: 9;
       margin-left: auto;
       margin-right: auto;
       left: 0;
-      top: 2.75em;
+      top: 100%;
       right: 0;
-      padding: 0.5em;
+
+      @include float-down;
 
       @include breakpoint(mobile-extra-large) {
         width: 100%;
@@ -139,7 +149,7 @@
         margin: 0;
       }
 
-      .d-icon-search {
+      .d-icon-magnifying-glass {
         display: none;
       }
     }

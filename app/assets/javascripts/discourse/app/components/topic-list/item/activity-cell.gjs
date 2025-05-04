@@ -12,6 +12,7 @@ const ActivityCell = <template>
       "activity num topic-list-data"
       (coldAgeClass @topic.createdAt startDate=@topic.bumpedAt class="")
     }}
+    ...attributes
   >
     <a href={{@topic.lastPostUrl}} class="post-activity">
       {{~! no whitespace ~}}

@@ -164,14 +164,119 @@
 .admin-logo-form {
   .form-kit__section {
     .form-kit__container {
-      padding-left: 1em;
-      width: calc(100% - 1em) !important;
-      border-left: 1px solid var(--primary-low);
+      padding: 1em;
+      width: calc(100% - 2em) !important;
+      border: 1px solid var(--primary-low);
     }
+  }
+
+  #control-logo_dark .image-uploader.has-image .uploaded-image-preview {
+    background-color: #333;
+    background-clip: border-box;
   }
 
   .form-kit__field-toggle .form-kit__container-content.--full {
     // avoid label wrapping
     width: var(--form-kit-small-input) !important;
+  }
+}
+
+.admin-fonts-form {
+  &__more {
+    font-size: var(--font-down-1-rem);
+  }
+
+  .form-kit__field-custom {
+    width: 100% !important;
+
+    .form-kit__control-custom {
+      display: flex;
+      flex-wrap: wrap;
+      flex-direction: row;
+      justify-content: space-between;
+
+      .admin-fonts-form__button-option {
+        border: 1px solid var(--primary-low);
+        font-size: var(--font-down-1-rem);
+        max-height: 4em;
+        height: 50px;
+        margin-bottom: 1em;
+        padding: 0 0.65em;
+
+        &:hover {
+          border-color: var(--primary-low-mid);
+        }
+
+        &.active {
+          position: relative;
+          border: 2px solid var(--tertiary);
+
+          &::after {
+            position: absolute;
+            top: 35%;
+            left: 0.5rem;
+            font-family: "Segoe UI", Arial, sans-serif;
+            content: "\2714"; // ✔
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 1rem;
+            height: 1rem;
+            background-color: var(--tertiary);
+            color: var(--secondary);
+            border-radius: 9999px;
+            font-size: 0.5rem;
+            margin-left: 0.25rem;
+          }
+
+          &:hover {
+            border-color: var(--tertiary);
+          }
+        }
+
+        &.font {
+          flex: 0 0 32%;
+          max-width: 32%;
+
+          @media (max-width: $mobile-breakpoint) {
+            flex: 0 0 100%;
+            max-width: 100%;
+          }
+        }
+
+        &.text-size {
+          flex: 0 0 19%;
+          max-width: 19%;
+
+          // px must be used because there is different font size inside each button
+          height: 45px;
+
+          @media (max-width: $mobile-breakpoint) {
+            flex: 0 0 100%;
+            max-width: 100%;
+          }
+
+          &.smallest {
+            font-size: var(--base-font-size-smallest);
+          }
+
+          &.smaller {
+            font-size: var(--base-font-size-smaller);
+          }
+
+          &.normal {
+            font-size: var(--base-font-size-normal);
+          }
+
+          &.larger {
+            font-size: var(--base-font-size-larger);
+          }
+
+          &.largest {
+            font-size: var(--base-font-size-largest);
+          }
+        }
+      }
+    }
   }
 }

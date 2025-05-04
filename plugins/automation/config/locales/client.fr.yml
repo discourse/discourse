@@ -163,11 +163,8 @@ fr:
               description: Facultatif, ne se déclenchera que si la publication contient l'une de ces étiquettes
             restricted_categories:
               label: Catégories
-            restricted_groups:
+            restricted_inbox_groups:
               description: Facultatif, ne se déclenchera que si le sujet de la publication est un message direct dans l'une des boîtes de réception du groupe
-            ignore_group_members:
-              label: Ignorer les membres du groupe
-              description: Ignorer le déclencheur si l'expéditeur est membre du groupe spécifié ci-dessus
             ignore_automated:
               label: Ignorer l'automatisation
               description: Ignorer le déclencheur si l'expéditeur a un e-mail de non-réponse ou provient d'une source automatique. Ne s'applique qu'aux publications créées par e-mail
@@ -182,7 +179,10 @@ fr:
               description: "Ignorez le déclencheur si la publication a été créée par e-mail"
           created: Créé
           edited: Modifié
-          topics: Sujets
+          with_images: Images
+          with_links: Liens
+          with_code: Code
+          with_uploads: Fichiers envoyés
         user_updated:
           fields:
             user_profile:

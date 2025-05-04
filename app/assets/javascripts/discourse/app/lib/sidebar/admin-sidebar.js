@@ -1,6 +1,5 @@
 import { cached } from "@glimmer/tracking";
 import { warn } from "@ember/debug";
-import { htmlSafe } from "@ember/template";
 import { configNavForPlugin } from "discourse/lib/admin-plugin-config-nav";
 import { adminRouteValid } from "discourse/lib/admin-utilities";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
@@ -11,7 +10,6 @@ import BaseCustomSidebarPanel from "discourse/lib/sidebar/base-custom-sidebar-pa
 import BaseCustomSidebarSection from "discourse/lib/sidebar/base-custom-sidebar-section";
 import BaseCustomSidebarSectionLink from "discourse/lib/sidebar/base-custom-sidebar-section-link";
 import { ADMIN_PANEL } from "discourse/lib/sidebar/panels";
-import { escapeExpression } from "discourse/lib/utilities";
 import I18n, { i18n } from "discourse-i18n";
 
 let additionalAdminSidebarSectionLinks = {};
@@ -281,6 +279,9 @@ function pluginAdminRouteLinks(router) {
         if (pluginNavLinks.length) {
           pluginNavLinks = pluginNavLinks
             .map((link) => {
+              if (!link.icon) {
+                link.icon = "gear";
+              }
               if (link.route !== `${pluginAdminRoute}.${plugin.name}`) {
                 link.routeModels = [plugin.name];
                 return link;
@@ -407,40 +408,13 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
     });
   }
 
-  get filterable() {
+  get searchable() {
     return true;
   }
 
-  filterNoResultsDescription(filter) {
-    const currentUser = getOwnerWithFallback(this).lookup(
-      "service:current-user"
-    );
-
-    const escapedFilter = escapeExpression(filter);
-
-    const params = {
-      filter: escapedFilter,
-      settings_filter_url: getURL(
-        `/admin/site_settings/category/all_results?filter=${encodeURIComponent(
-          filter
-        )}`
-      ),
-      user_list_filter_url: getURL(
-        `/admin/users/list/active?username=${encodeURIComponent(filter)}`
-      ),
-    };
-
-    if (currentUser?.use_experimental_admin_search) {
-      return htmlSafe(
-        i18n("sidebar.no_results.description_admin_search", {
-          filter: escapedFilter,
-          admin_search_url: getURL(
-            `/admin/search?filter=${encodeURIComponent(filter)}`
-          ),
-        })
-      );
-    }
-
-    return htmlSafe(i18n("sidebar.no_results.description", params));
+  get onSearchClick() {
+    getOwnerWithFallback(this)
+      .lookup("service:modal")
+      .show(this.adminSidebarStateManager.modals.adminSearch);
   }
 }

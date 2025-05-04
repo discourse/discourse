@@ -167,15 +167,22 @@ hu:
               description: Opcionális, csak akkor aktiválódik, ha a bejegyzés rendelkezik ezen címkék bármelyikével
             restricted_categories:
               label: Kategóriák
-            restricted_user_group:
-              label: Korlátozott felhasználói csoport
-              description: Opcionális, csak akkor aktiválódik, ha a bejegyzés felhasználója ebben a csoportban van
+              description: Választható, csak akkor aktiválódik, ha a bejegyzés témája ezekbe a kategóriákba tartozik
+            exclude_subcategories:
+              label: Alkategóriák kizárása
+              description: Választható, csak akkor aktiválódik, ha a bejegyzés témája pontosan a fent megadott kategóriákba tartozik
+            restricted_archetype:
+              label: Téma típusa
+              description: Választható, csak témák vagy személyes üzenetek esetén engedélyezheti a kiváltást.
             restricted_groups:
+              label: Korlátozott csoportok
+              description: Választható, csak akkor lép működésbe, ha a bejegyzés felhasználója tagja a következő csoportok valamelyikének
+            restricted_inbox_groups:
               label: Korlátozott postafiók csoportok
               description: Nem kötelező, csak akkor aktiválódik, ha a bejegyzés témája egy személyes üzenet a csoportok egyikében
-            ignore_group_members:
-              label: Csoporttagok figyelmen kívül hagyása
-              description: Hagyja ki az eseményindítót, ha a feladó a fent meghatározott csoport tagja
+            excluded_groups:
+              label: Kizárt csoportok
+              description: Választható, kihagyja a kiváltást, ha a bejegyző felhasználó az alábbi csoportok valamelyikéhez tartozik
             ignore_automated:
               label: Automatizált figyelmen kívül hagyása
               description: Hagyja ki az eseményindítót, ha a feladónak van válasz e-mailje, vagy automatizált forrásból származik. Csak az e-mailben létrehozott bejegyzésekre vonatkozik
@@ -188,9 +195,18 @@ hu:
             skip_via_email:
               label: "Kihagyás e-mailben"
               description: "Hagyja ki az eseményindítót, ha a bejegyzés e-mailben jött létre"
+            post_features:
+              label: Bejegyzés funkciók
+              description: "Választható, korlátozza a kiváltást csak a következő jellemzőkkel rendelkező bejegyzésekre"
           created: Létrehozott
           edited: Szerkesztve
-          topics: Témák
+          topics: Minden téma
+          personal_messages: Személyes üzenetek
+          public_topics: Nyilvános témák (kivéve az összes biztonságos kategóriát)
+          with_images: Képek
+          with_links: Hivatkozások
+          with_code: Kód
+          with_uploads: Feltöltések
         user_updated:
           fields:
             user_profile:
@@ -415,6 +431,11 @@ hu:
           name:
             label: Trigger
         automation:
+          runs_today: "%{count} ma"
+          runs_this_week: "%{count} ezen a héten"
+          runs_this_month: "%{count} ebben a hónapban"
+          runs:
+            label: Fut
           name:
             label: Név
           trigger:
@@ -433,5 +454,7 @@ hu:
             label: Helyőrzők
           last_updated_at:
             label: Utolsó frissítés
+          last_run:
+            label: Utolsó futás
           last_updated_by:
             label: Frissítette

@@ -177,8 +177,8 @@ class CategoriesController < ApplicationController
       category_params.delete(:custom_fields)
 
       # properly null the value so the database constraint doesn't catch us
-      category_params[:email_in] = nil if category_params[:email_in].blank?
-      category_params[:minimum_required_tags] = 0 if category_params[:minimum_required_tags].blank?
+      category_params[:email_in] = nil if category_params[:email_in]&.blank?
+      category_params[:minimum_required_tags] = 0 if category_params[:minimum_required_tags]&.blank?
 
       old_permissions = cat.permissions_params
       old_permissions = { "everyone" => 1 } if old_permissions.empty?
@@ -539,6 +539,12 @@ class CategoriesController < ApplicationController
           conditional_param_keys << { moderating_group_ids: [] }
         end
 
+        if SiteSetting.experimental_content_localization?
+          conditional_param_keys << {
+            category_localizations_attributes: %i[id category_id locale name description _destroy],
+          }
+        end
+
         result =
           params.permit(
             *required_param_keys,
@@ -546,6 +552,9 @@ class CategoriesController < ApplicationController
             :name,
             :color,
             :text_color,
+            :style_type,
+            :emoji,
+            :icon,
             :email_in,
             :email_in_allow_strangers,
             :mailinglist_mirror,

@@ -223,7 +223,7 @@ module DiscourseUpdates
     end
 
     def bump_last_viewed_feature_date(user_id, feature_date)
-      Discourse.redis.hset(last_viewed_feature_dates_for_users_key, user_id.to_s, feature_date)
+      Discourse.redis.hset(last_viewed_feature_dates_for_users_key, user_id.to_s, feature_date.to_s)
     end
 
     def clean_state

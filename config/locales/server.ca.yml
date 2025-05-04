@@ -2895,8 +2895,13 @@ ca:
         description: "Restaura la publicació de manera que tots els usuaris puguin veure-la."
       delete_single:
         title: "Suprimeix"
+        complete: "Publicació suprimida."
+      delete_and_ignore:
+        complete: "Publicació suprimida."
       delete_and_ignore_replies:
         confirm: "Esteu segur que també voleu suprimir les respostes a la publicació?"
+      delete_and_agree:
+        complete: "Publicació suprimida."
       delete_and_agree_replies:
         confirm: "Esteu segur que també voleu suprimir les respostes a la publicació?"
       disagree_and_restore:
@@ -2920,6 +2925,7 @@ ca:
         delete:
           title: "Suprimeix l'usuari"
           description: "L'usuari serà suprimit del fòrum."
+          complete: "Usuari suprimit."
         block:
           title: "Suprimeix i bloca l'usuari"
           description: "Se suprimirà l'usuari i es blocarà la seva adreça IP i adreça de correu electrònic."
@@ -2927,6 +2933,7 @@ ca:
         title: "Rebutja"
       delete_user:
         reason: "Suprimit mitjançant cua de revisió"
+        complete: "Usuari suprimit."
   email_style:
     html_missing_placeholder: "La plantilla HTML ha d’incloure %{placeholder}"
   discord:

@@ -131,6 +131,36 @@ describe Chat::Message do
         )
       end
     end
+
+    context "with watched words" do
+      fab!(:watched_word) do
+        Fabricate(:watched_word, word: "badword", action: WatchedWord.actions[:block])
+      end
+
+      let(:text) { "this message contains badword and should be blocked" }
+
+      it "validates watched words for regular users" do
+        regular_user = Fabricate(:user)
+        message =
+          Chat::Message.new(
+            chat_channel: Fabricate(:chat_channel),
+            user: regular_user,
+            message: text,
+          )
+
+        expect(message).not_to be_valid
+      end
+
+      it "skips watched words validation for bot users" do
+        bot_user = Fabricate(:user, id: -999)
+        message =
+          Chat::Message.new(chat_channel: Fabricate(:chat_channel), user: bot_user, message: text)
+
+        message.validate_message
+
+        expect(message).to be_valid
+      end
+    end
   end
 
   describe ".in_thread?" do
@@ -322,7 +352,7 @@ describe Chat::Message do
       COOKED
     end
 
-    it "supports chat quote bbcode" do
+    it "supports chat transcripts" do
       chat_channel = Fabricate(:category_channel, name: "testchannel")
       user = Fabricate(:user, username: "chatbbcodeuser")
       user2 = Fabricate(:user, username: "otherbbcodeuser")
@@ -355,7 +385,7 @@ describe Chat::Message do
         )
 
       expect(cooked).to eq(<<~COOKED.chomp)
-        <div class="chat-transcript chat-transcript-chained" data-message-id="#{msg1.id}" data-username="chatbbcodeuser" data-datetime="#{msg1.created_at.iso8601}" data-channel-name="testchannel" data-channel-id="#{chat_channel.id}">
+        <div class="chat-transcript chat-transcript-chained" data-message-id="#{msg1.id}" data-username="chatbbcodeuser" data-datetime="#{msg1.created_at.iso8601}" data-chained="true" data-channel-name="testchannel" data-channel-id="#{chat_channel.id}" data-multiquote="true">
         <div class="chat-transcript-meta">
         Originally sent in <a href="/chat/c/-/#{chat_channel.id}">testchannel</a></div>
         <div class="chat-transcript-user">
@@ -369,7 +399,7 @@ describe Chat::Message do
         <div class="chat-transcript-messages">
         <p>this is the first message</p></div>
         </div>
-        <div class="chat-transcript chat-transcript-chained" data-message-id="#{msg2.id}" data-username="otherbbcodeuser" data-datetime="#{msg2.created_at.iso8601}">
+        <div class="chat-transcript chat-transcript-chained" data-message-id="#{msg2.id}" data-username="otherbbcodeuser" data-datetime="#{msg2.created_at.iso8601}" data-chained="true">
         <div class="chat-transcript-user">
         <div class="chat-transcript-user-avatar">
         <img alt="" width="24" height="24" src="#{avatar_src2}" class="avatar"></div>

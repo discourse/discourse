@@ -90,8 +90,8 @@ export default class EditCategoryImages extends buildCategoryPanel("images") {
       <label>{{i18n "category.logo"}}</label>
       <UppyImageUploader
         @imageUrl={{this.logoImageUrl}}
-        @onUploadDone={{action "logoUploadDone"}}
-        @onUploadDeleted={{action "logoUploadDeleted"}}
+        @onUploadDone={{this.logoUploadDone}}
+        @onUploadDeleted={{this.logoUploadDeleted}}
         @type="category_logo"
         @id="category-logo-uploader"
         class="no-repeat contain-image"
@@ -105,8 +105,8 @@ export default class EditCategoryImages extends buildCategoryPanel("images") {
       <label>{{i18n "category.logo_dark"}}</label>
       <UppyImageUploader
         @imageUrl={{this.logoImageDarkUrl}}
-        @onUploadDone={{action "logoDarkUploadDone"}}
-        @onUploadDeleted={{action "logoDarkUploadDeleted"}}
+        @onUploadDone={{this.logoDarkUploadDone}}
+        @onUploadDeleted={{this.logoDarkUploadDeleted}}
         @type="category_logo_dark"
         @id="category-dark-logo-uploader"
         class="no-repeat contain-image"
@@ -120,8 +120,8 @@ export default class EditCategoryImages extends buildCategoryPanel("images") {
       <label>{{i18n "category.background_image"}}</label>
       <UppyImageUploader
         @imageUrl={{this.backgroundImageUrl}}
-        @onUploadDone={{action "backgroundUploadDone"}}
-        @onUploadDeleted={{action "backgroundUploadDeleted"}}
+        @onUploadDone={{this.backgroundUploadDone}}
+        @onUploadDeleted={{this.backgroundUploadDeleted}}
         @type="category_background"
         @id="category-background-uploader"
       />
@@ -131,8 +131,8 @@ export default class EditCategoryImages extends buildCategoryPanel("images") {
       <label>{{i18n "category.background_image_dark"}}</label>
       <UppyImageUploader
         @imageUrl={{this.backgroundDarkImageUrl}}
-        @onUploadDone={{action "backgroundDarkUploadDone"}}
-        @onUploadDeleted={{action "backgroundDarkUploadDeleted"}}
+        @onUploadDone={{this.backgroundDarkUploadDone}}
+        @onUploadDeleted={{this.backgroundDarkUploadDeleted}}
         @type="category_background_dark"
         @id="category-dark-background-uploader"
       />

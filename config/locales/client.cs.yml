@@ -250,6 +250,11 @@ cs:
       dismiss: "Označit jako přečtené"
     bootstrap_mode: "Začínáme"
     back_button: "Zpět"
+    welcome_banner:
+      header:
+        logged_in_members: "Vítejte zpět, %{preferred_display_name}!"
+        anonymous_members: "Vítejte v %{site_name}!"
+      search: "Vyhledat"
     themes:
       default_description: "Výchozí"
       broken_theme_alert: "Váš web nemusí fungovat, protože motiv/komponenta obsahuje chyby."
@@ -555,10 +560,6 @@ cs:
       new_topic: "Nový koncept tématu"
       new_private_message: "Nový koncept soukromé zprávy"
       edit_topic: "Upravit koncept tématu"
-      abandon:
-        confirm: "Máte rozpracovaný koncept. Co byste s ním chtěli udělat?"
-        yes_value: "Zahodit"
-        no_value: "Pokračovat v úpravách"
       dropdown:
         title: "Otevřít nabídku nejnovějších konceptů"
         untitled: "Koncept bez názvu"
@@ -726,6 +727,10 @@ cs:
         name: "Jméno"
         fields: "Pole"
         reject_reason: "Důvod"
+        scrubbed_reason: "Reason"
+        scrub_record:
+          reason_placeholder: "Důvod..."
+          cancel_button: "Zrušit"
       user_percentage:
         summary:
           one: "%{agreed}, %{disagreed}, %{ignored} (posledního nahlášení)"
@@ -2299,6 +2304,9 @@ cs:
     modal:
       close: "zavřít"
       dismiss_error: "Skrýt chybu"
+    multi_select:
+      no_results: "Žádné výsledky"
+      search: "Vyhledat..."
     form_kit:
       reset: obnovit výchozí
       optional: volitelné
@@ -2572,10 +2580,6 @@ cs:
         name: "Google"
         title: "Přihlásit se přes Google"
         sr_title: "Přihlásit se přes Google"
-      twitter:
-        name: "Twitter"
-        title: "Přihlásit se přes Twitter"
-        sr_title: "Přihlásit se přes Twitter"
       instagram:
         name: "Instagram"
         title: "Přihlásit se přes Instagram"
@@ -3072,8 +3076,11 @@ cs:
         new_features: "Byly vydány nové funkce Discourse!"
         admin_problems: "na administrační nástěnce vašeho webu jsou nová doporučení"
     upload_selector:
+      change: "Změnit"
       delete: "Smazat"
       uploading: "Nahrávám"
+      processing: "Nahrává se"
+      select_file: "Kliknutím nahrajte nebo přetáhněte soubor"
       default_image_alt_text: obrázek
     search:
       sort_by: "Řadit podle"
@@ -3118,8 +3125,6 @@ cs:
       in_topics_posts: "ve všech tématech a příspěvcích"
       enter_hint: "nebo stiskněte Enter"
       in_posts_by: "v příspěvcích od %{username}"
-      browser_tip: "%{modifier} + f"
-      browser_tip_description: "znovu pro použití vyhledávání pomocí prohlížeče"
       recent: "Nedávná vyhledávání"
       clear_recent: "Vymazat poslední hledání"
       experience:
@@ -3492,7 +3497,7 @@ cs:
         few: "v tomto tématu tématu jsou %{count} 'líbí se'"
         many: "v tomto tématu tématu je %{count} 'líbí se'"
         other: "v tomto tématu tématu je %{count} 'líbí se'"
-      back_to_list: "Zpátky na seznam témat"
+      back_to_list: "Zpět na seznam témat"
       options: "Možnosti"
       show_links: "zobrazit odkazy v tomto tématu"
       collapse_details: "skrýt podrobnosti tématu"
@@ -3707,7 +3712,7 @@ cs:
         unarchive: "Navrátit z archivu"
         archive: "Archivovat téma"
         invisible: "Skrýt téma"
-        visible: "Seznam témat"
+        visible: "Zrušit skrytí tématu"
         reset_read: "Vynulovat počet čtení"
         make_public: "Zveřejnit jako téma…"
         make_private: "Konvertovat na soukromou zprávu"
@@ -4248,6 +4253,10 @@ cs:
       settings: "Nastavení"
       topic_template: "Šablona"
       tags: "Štítky"
+      localization:
+        name: "Jméno"
+        description: "Popis"
+        remove: "Smazat"
       tags_allowed_tags: "Omezit tyto štítky na tuto kategorii:"
       tags_allowed_tag_groups: "Omezit tuto kategorii pouze na tyto skupiny štítků:"
       tags_placeholder: "(Volitelné) seznam dovolených štítků"
@@ -4276,9 +4285,13 @@ cs:
       logo_description: "Doporučený poměr stran 1:1 s minimální velikostí 200 pixelů. Pokud ponecháte prázdné, nezobrazí se žádný obrázek."
       background_image: "Obrázek na pozadí této kategorie"
       background_image_dark: "Obrázek pozadí kategorie (tmavý)"
-      badge_colors: "Barvy štítku"
-      background_color: "Barva pozadí"
-      foreground_color: "Barva textu"
+      background_color: "Barva"
+      styles:
+        icon: "Ikona"
+        emoji: "Smajlíky :)"
+        options:
+          icon: "Ikona"
+          emoji: "Emoji"
       color_used: "Používaná barva"
       predefined_colors: "Předdefinované možnosti barev"
       name_placeholder: "Měl by být krátký a výstižný."
@@ -5225,13 +5238,6 @@ cs:
       back_to_forum: "Zpět na fórum"
       collapse_all_sections: "Sbalit všechny sekce"
       expand_all_sections: "Rozbalit všechny sekce"
-      filter: "Filtr..."
-      filter_links: "Filtrovat odkazy..."
-      clear_filter: "Vymazat filtr"
-      no_results:
-        title: "Žádné výsledky"
-        description: 'Nenašli jsme nic odpovídajícího ''%{filter}''.<br><br>Chtěli jste <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">prohledávat nastavení webu</a> nebo <a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">v seznamu administrace uživatelů?</a>'
-        description_admin_search: 'Nenašli jsme nic odpovídající ''%{filter}''.<br><br>Zkuste <a class="sidebar-additional-filter-admin-search" href="%{admin_search_url}">prohledat celé administrátorské rozhraní</a>.'
       footer:
         interface_color_selector:
           light: "Světlý režim"
@@ -5346,6 +5352,16 @@ cs:
           paste: "Vložit..."
           save: "Uložit jako..."
     powered_by_discourse: "Powered by Discourse"
+    discovery:
+      headings:
+        categories: "Všechny kategorie"
+        filter_labels:
+          latest: "Nejnovější"
+          top: "Nejlepší"
+          new: "Nový"
+          unread: "Nepřečtené"
+          hot: "Žhavé"
+          unseen: "Neshlédnutá"
   admin_js:
     type_to_filter: "Text pro filtrování..."
     settings: "Nastavení"
@@ -5397,9 +5413,6 @@ cs:
           title: "Moderování"
           header_description: "Systém nahlašování v Discourse pomáhá vám a vašemu moderátorskému týmu spravovat obsah a chování uživatelů, čímž udržuje vaši komunitu respektující a zdravou. Výchozí nastavení jsou vhodná pro většinu komunit a nemusíte je měnit. Pokud však má váš web zvláštní požadavky, můžete zakázat příznaky, které nepotřebujete, a přidat své vlastní příznaky."
           keywords: "flag|review|spam|illegal|nahlášení|revize|nelegální|ilegální"
-        font_style:
-          title: "Styl písma"
-          header_description: "Přizpůsobte si styly písma používané vašimi motivy"
         files:
           title: "Soubory"
           header_description: "Nastavení, která určují limity velikosti a typu souborů, velikosti a zdroje avatarů, ukládání souborů, kvalitu a kompresi obrázků a další."
@@ -5413,11 +5426,7 @@ cs:
         login_and_authentication:
           title: "Přihlášení a ověřování"
           header_description: "Nakonfigurujte, jak se uživatelé přihlašují a ověřují, secrets a klíče, poskytovatele OAuth2 a další"
-        logo:
-          title: "Logo webu"
-          header_description: "Přizpůsobte varianty loga vašeho webu"
-        branding:
-          title: "Branding"
+        logo_and_fonts:
           logo:
             title: "Logo"
             form:
@@ -5428,6 +5437,12 @@ cs:
               email: "Emaily"
               manifest_screenshots:
                 description: "Snímky obrazovky, které na stránce s výzvou k instalaci předvádějí funkce vaší instance a funkce. Všechny obrázky by měly být lokálně nahrávány a mít stejné rozměry."
+          fonts:
+            form:
+              heading_font:
+                title: "Písmo nadpisů"
+            backfill_modal:
+              modal_yes: "Ano"
         navigation:
           title: "Navigace"
           header_description: "Nastavte odkazy na navigaci a položky nabídky pro váš web. To zahrnuje umístění a chování primárního navigačního menu, rychlé odkazy v horní části domovské stránky, stejně jako správcovský postranní panel"
@@ -5437,9 +5452,6 @@ cs:
         onebox:
           title: "Onebox"
           header_description: "Nakonfigurujte, jak se pro váš web generují a zobrazují náhledy Onebox"
-        other:
-          title: "Ostatní"
-          header_description: "Nastavení, která nespadají do žádné jiné kategorie"
         rate_limits:
           title: "Limity"
           header_description: "Nakonfigurujte, jak často mohou uživatelé provádět určité akce, jako je vytváření témat, odesílání zpráv a odesílání odpovědí"
@@ -5491,6 +5503,10 @@ cs:
         badges:
           title: "Odznaky"
           header_description: "Odznaky odměňují uživatele za jejich aktivity, příspěvky a úspěchy, aby uznaly, potvrdily a podpořily pozitivní chování a zapojení v rámci komunity"
+        content:
+          sub_pages:
+            posts_and_topics:
+              title: "Příspěvky a témata"
         permalinks:
           title: "Trvalé odkazy"
           header_description: "Přesměrování se použije pro adresy URL, které fórum nezná"
@@ -5502,7 +5518,6 @@ cs:
           header_description: "Sledovaná slova jsou moderátorské nástroje, které mohou provádět různé akce včetně blokování, cenzurování, propojování nebo nahlašování příspěvků obsahujících určitá slova."
         color_palettes:
           title: "Palety barev"
-          header_description: "Barevné palety definují základní barvy používané napříč rozhraním vašich stránek, zatímco motivy mohou poskytnout další styly, rozložení a komponenty. Obojí se podílí na vytvoření jedinečného vzhledu a pocitu vašeho webu. Mohou být také zpřístupněny uživatelům k výběru jejich předvolby."
         emoji:
           title: "Smajlíky :)"
           header_description: "Přidejte nové emotikony, které budou dostupné všem. Vyberte více souborů a vytvořte emotikony pomocí jejich názvů souborů. Vybraná skupina bude použita pro všechny soubory, které jsou přidány současně."
@@ -5517,9 +5532,6 @@ cs:
           title: "Texty"
           header_description: "Přizpůsobte libovolný text použitý v Discourse tak, aby odpovídal obsahu a tónu vaší komunity"
         email:
-          title: "Nastavení a protokoly"
-          header_description: "Přizpůsobte si šablony používané k vytváření e-mailů, zobrazte si náhled odesílaného e-mailového souhrnu a zobrazte protokoly e-mailů"
-          keywords: "email|smtp|mailgun|sendgrid|sent|skipped|bounced|received|rejected|email logs|preview summary|odeslané|přeskočeno|vráceno|přijato|odmítnuto|protokoly e-mailů|náhled souhrnu"
           sub_pages:
             preview_summary:
               title: "Náhled souhrnu"
@@ -5530,6 +5542,8 @@ cs:
             templates:
               title: "Šablony"
               header_description: "Přizpůsobte si šablony používané k vytváření e-mailů"
+        email_logs:
+          sub_pages:
             sent:
               title: "Odeslané"
               header_description: "Zobrazení protokolu odeslaných e-mailů"
@@ -6103,6 +6117,64 @@ cs:
             failed: "Neúspěšný"
       home:
         title: "Domů"
+      account:
+        title: "Účet"
+        sidebar_link:
+          backups: "Zálohy"
+          whats_new:
+            title: "Co je nového?"
+            keywords: "changelog|feature|release|změna|funkce|vydání"
+      community:
+        title: "Komunita"
+        sidebar_link:
+          about_your_site: "O vašem webu"
+          badges: "Odznaky"
+          login_and_authentication: "Přihlášení a ověřování"
+          notifications: "Upozornění"
+          permalinks: "Trvalé odkazy"
+          trust_levels: "Úrovně důvěry"
+          group_permissions: "Skupinová oprávnění"
+          users: "Uživatelé"
+          groups: "Skupiny"
+          user_fields: "Uživatelská pole"
+          watched_words: "Sledovaná slova"
+          legal: "Právní záležitosti"
+          moderation_flags:
+            title: "Moderování"
+            keywords: "flag|review|nahlášení|revize"
+      appearance:
+        title: "Vzhled"
+        sidebar_link:
+          font_style: "Styl písma"
+          site_logo: "Logo webu"
+          color_schemes: "Palety barev"
+          emoji: "Emoji"
+          navigation: "Navigace"
+          site_texts: "Texty"
+      email_settings:
+        title: "Nastavení e-mailu"
+        sidebar_link:
+          appearance: "Vzhled"
+          server_setup:
+            title: "Nastavení a protokoly"
+            keywords: "email|smtp|mailgun|sendgrid|sent|skipped|bounced|received|rejected|email logs|preview summary|odeslané|přeskočeno|vráceno|přijato|odmítnuto|protokoly e-mailů|náhled souhrnu"
+      security:
+        title: "Zabezpečení"
+        sidebar_link:
+          security: "Zabezpečení"
+          spam: "Spam"
+          staff_action_logs:
+            title: "Protokoly a filtrování"
+            keywords: "error logs|staff action|screened emails|screened ips|screened urls|search logs|protokoly chyb|akce redaktorů|filtrované e-maily|filtrované IP adresy|filtrované URL|protokoly vyhledávání"
+      section_landing_pages:
+        account:
+          title: "Účet"
+          backups:
+            title: "Zálohy"
+            description: "Pořiďte si zálohu dat svého webu"
+          whats_new:
+            title: "Co je nového?"
+            description: "Objevte nové verze a vylepšení Discourse"
       config_areas:
         about:
           general_settings: "Obecná nastavení"
@@ -6178,7 +6250,6 @@ cs:
             post: "příspěvcích"
             chat_message: "zprávy v konverzaci"
             enabled: "Po uložení povolit tento vlastní příznak"
-            alert: "Jakmile je vlastní příznak použit, lze jej pouze zakázat, ale nelze jej upravovat ani mazat."
             edit_flag: "Upravit příznak"
             non_editable: "Tento příznak nemůžete upravit, protože se jedná o systémový příznak nebo byl již použit v systému revizí, ale stále jej můžete zakázat."
             delete_flag: "Odstranit příznak"
@@ -6198,16 +6269,33 @@ cs:
           delete: "Smazat"
           more_options:
             title: "Více možností"
-        look_and_feel:
+        themes_and_components:
+          breadcrumb_title: "Přizpůsobení"
+          install: "Instalovat"
           themes:
             title: "Motivy"
             themes_intro: "Chcete-li začít, nainstalujte si nový motiv, nebo si pomocí těchto zdrojů vytvořte vlastní od začátku."
-            themes_intro_img_alt: "Zástupce nového motivu"
-            set_default_theme: "Nastavit výchozí"
-            default_theme: "Výchozí motiv"
-            themes_description: "Motivy jsou rozsáhlé úpravy, které mění více prvků stylu designu fóra a často zahrnují i rozšířené funkce v uživatelském rozhraní."
             new_theme: "Nový motiv"
-            user_selectable: "Volitelný uživatelem"
+          components:
+            title: "Komponenty"
+            install: "Instalovat"
+            name: "Jméno"
+            enabled: "Zapnuto?"
+            by_author: "Od uživatele %{name}"
+            learn_more: "Zjistit více"
+            edit: "Upravit"
+            parent_themes_two: "%{name1} a %{name2}"
+            preview: "Náhled"
+            check_update: "Zkontrolovat aktualizace"
+            export: "Export"
+            convert: "Převést"
+            delete: "Smazat"
+            filter_by: "Filtrovat podle"
+            filter_by_all: "Vše"
+            filter_by_used: "Použitý"
+            filter_by_unused: "Nepoužitý"
+            delete_confirm: 'Opravdu chcete odstranit "%{name}"?'
+            badge_unused: "Nepoužitý"
         user_fields:
           field: "Pole"
           type: "Typ"
@@ -6218,6 +6306,13 @@ cs:
           delete: "Smazat"
           delete_successful: "Uživatelské pole odstraněno."
           save_successful: "Uživatelské pole uloženo."
+        color_palettes:
+          palette_name: "Jméno"
+          color_options:
+            toggle: "Volitelný uživatelem"
+            toggle_description: "Uživatelé si mohou tuto paletu vybrat"
+          colors:
+            title: "Barvy"
       plugins:
         title: "Pluginy"
         name: "Název"
@@ -6575,7 +6670,6 @@ cs:
           title: "Barvy"
           edit: "Upravit palety barev"
           long_title: "Palety barev"
-          description: "Barevné palety definují základní barvy používané v rozhraní webu, zatímco motivy mohou poskytovat další styly, rozvržení a komponenty – obojí může společně vytvářet jedinečný vzhled webu a obojí lze zpřístupnit uživatelům, aby si mohli vybrat, co jim vyhovuje."
           about: "Upravte barvy používané motivy. Pro začátek vytvořte novou paletu barev."
           new_name: "Nová paleta barev"
           copy_name_prefix: "Kopie"

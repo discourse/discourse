@@ -89,11 +89,11 @@
 
 .category-heading {
   max-width: 100%;
+  font-size: var(--font-up-3);
 
   p {
     margin-top: 0;
     line-height: var(--line-height-large);
-    font-size: var(--font-up-3);
   }
 }
 
@@ -130,16 +130,13 @@
 .topic-list-item.visited .topic-list-data,
 .latest-topic-list-item.visited,
 .category-topic-link.visited {
+  --tag-text-color: var(--primary-medium);
+
   a.title:not(.badge-notification) {
     color: var(--primary-medium);
   }
 
   .badge-category {
-    color: var(--primary-medium);
-  }
-
-  .discourse-tag,
-  .discourse-tag:visited {
     color: var(--primary-medium);
   }
 }
@@ -294,10 +291,6 @@
     align-items: center;
     gap: 0.5em;
 
-    .discourse-tags {
-      flex-wrap: wrap;
-    }
-
     a.discourse-tag.box {
       padding-top: 0;
       padding-bottom: 0;
@@ -310,6 +303,8 @@
     .participant-group-wrapper {
       display: flex;
       margin-left: 0.5em;
+      flex-wrap: wrap;
+      gap: 0.5em;
 
       .participant-group {
         padding: 0 5px;
@@ -479,4 +474,9 @@ div.education {
   white-space: nowrap;
   align-self: center;
   line-height: var(--line-height-medium);
+}
+
+#topic-list-heading {
+  line-height: var(--line-height-medium);
+  margin-bottom: 0.5em;
 }

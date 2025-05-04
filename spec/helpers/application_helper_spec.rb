@@ -62,7 +62,7 @@ RSpec.describe ApplicationHelper do
       it "deals correctly with subfolder" do
         set_subfolder "/community"
         expect(helper.preload_script("start-discourse")).to include(
-          "https://s3cdn.com/assets/start-discourse.js",
+          %r{https://s3cdn.com/assets/start-discourse-\w{8}.js},
         )
       end
 
@@ -71,7 +71,7 @@ RSpec.describe ApplicationHelper do
         set_cdn_url "https://awesome.com"
         set_subfolder "/community"
         expect(helper.preload_script("start-discourse")).to include(
-          "https://s3cdn.com/s3_subpath/assets/start-discourse.js",
+          %r{https://s3cdn.com/s3_subpath/assets/start-discourse-\w{8}.js},
         )
       end
 
@@ -79,68 +79,40 @@ RSpec.describe ApplicationHelper do
         helper.request.env["HTTP_ACCEPT_ENCODING"] = "br"
         link = helper.preload_script("start-discourse")
 
-        expect(link).to eq(
-          script_tag(
-            "https://s3cdn.com/assets/start-discourse.br.js",
-            "start-discourse",
-            helper.csp_nonce_placeholder,
-          ),
-        )
+        expect(link).to include(%r{https://s3cdn.com/assets/start-discourse-\w{8}.br.js})
       end
 
       it "gives s3 cdn if asset host is not set" do
         link = helper.preload_script("start-discourse")
 
-        expect(link).to eq(
-          script_tag(
-            "https://s3cdn.com/assets/start-discourse.js",
-            "start-discourse",
-            helper.csp_nonce_placeholder,
-          ),
-        )
+        expect(link).to include(%r{https://s3cdn.com/assets/start-discourse-\w{8}.js})
       end
 
       it "can fall back to gzip compression" do
         helper.request.env["HTTP_ACCEPT_ENCODING"] = "gzip"
         link = helper.preload_script("start-discourse")
-        expect(link).to eq(
-          script_tag(
-            "https://s3cdn.com/assets/start-discourse.gz.js",
-            "start-discourse",
-            helper.csp_nonce_placeholder,
-          ),
-        )
+        expect(link).to include(%r{https://s3cdn.com/assets/start-discourse-\w{8}.gz.js})
       end
 
       it "gives s3 cdn even if asset host is set" do
         set_cdn_url "https://awesome.com"
         link = helper.preload_script("start-discourse")
 
-        expect(link).to eq(
-          script_tag(
-            "https://s3cdn.com/assets/start-discourse.js",
-            "start-discourse",
-            helper.csp_nonce_placeholder,
-          ),
-        )
+        expect(link).to include(%r{https://s3cdn.com/assets/start-discourse-\w{8}.js})
       end
 
       it "gives s3 cdn but without brotli/gzip extensions for theme tests assets" do
         helper.request.env["HTTP_ACCEPT_ENCODING"] = "gzip, br"
         link = helper.preload_script("discourse/tests/theme_qunit_ember_jquery")
-        expect(link).to eq(
-          script_tag(
-            "https://s3cdn.com/assets/discourse/tests/theme_qunit_ember_jquery.js",
-            "discourse/tests/theme_qunit_ember_jquery",
-            helper.csp_nonce_placeholder,
-          ),
+        expect(link).to include(
+          %r{https://s3cdn.com/assets/discourse/tests/theme_qunit_ember_jquery-\w{8}.js},
         )
       end
 
       it "uses separate asset CDN if configured" do
         global_setting :s3_asset_cdn_url, "https://s3-asset-cdn.example.com"
         expect(helper.preload_script("start-discourse")).to include(
-          "https://s3-asset-cdn.example.com/assets/start-discourse.js",
+          %r{https://s3-asset-cdn.example.com/assets/start-discourse-\w{8}.js},
         )
       end
     end
@@ -626,7 +598,7 @@ RSpec.describe ApplicationHelper do
       it "returns the correct image" do
         SiteSetting.opengraph_image = Fabricate(:upload, url: "/images/og-image.png")
 
-        SiteSetting.twitter_summary_large_image = Fabricate(:upload, url: "/images/twitter.png")
+        SiteSetting.x_summary_large_image = Fabricate(:upload, url: "/images/twitter.png")
 
         SiteSetting.large_icon = Fabricate(:upload, url: "/images/large_icon.png")
 
@@ -641,11 +613,9 @@ RSpec.describe ApplicationHelper do
 
         SiteSetting.opengraph_image = nil
 
-        expect(helper.crawlable_meta_data).to include(
-          SiteSetting.site_twitter_summary_large_image_url,
-        )
+        expect(helper.crawlable_meta_data).to include(SiteSetting.site_x_summary_large_image_url)
 
-        SiteSetting.twitter_summary_large_image = nil
+        SiteSetting.x_summary_large_image = nil
 
         expect(helper.crawlable_meta_data).to include(SiteSetting.site_large_icon_url)
 
@@ -675,13 +645,13 @@ RSpec.describe ApplicationHelper do
         <meta name=\"twitter:image\" content=\"#{SiteSetting.site_logo_url}\" />
         HTML
 
-        SiteSetting.twitter_summary_large_image = Fabricate(:upload, url: "/images/twitter.png")
+        SiteSetting.x_summary_large_image = Fabricate(:upload, url: "/images/twitter.png")
 
         expect(helper.crawlable_meta_data).to include(<<~HTML)
-        <meta name=\"twitter:image\" content=\"#{SiteSetting.site_twitter_summary_large_image_url}\" />
+        <meta name=\"twitter:image\" content=\"#{SiteSetting.site_x_summary_large_image_url}\" />
         HTML
 
-        SiteSetting.twitter_summary_large_image = Fabricate(:upload, url: "/images/twitter.svg")
+        SiteSetting.x_summary_large_image = Fabricate(:upload, url: "/images/twitter.svg")
 
         expect(helper.crawlable_meta_data).to include(<<~HTML)
         <meta name=\"twitter:image\" content=\"#{SiteSetting.site_logo_url}\" />
@@ -744,6 +714,97 @@ RSpec.describe ApplicationHelper do
           "<meta property=\"og:site_name\" content=\"#{SiteSetting.title}\" />",
         )
       end
+    end
+  end
+
+  describe "#title_content" do
+    it "returns the correct title" do
+      SiteSetting.title = "Test Title"
+      result = helper.title_content
+
+      expect(result).to include("Test Title")
+    end
+
+    it "accepts a content argument" do
+      helper.stubs(:content_for?).with(:title).returns(true)
+      helper.stubs(:content_for).with(:title).returns("Custom Title")
+
+      result = helper.title_content
+
+      expect(result).to include("Custom Title")
+    end
+  end
+
+  describe "#description_content" do
+    it "returns the correct description" do
+      SiteSetting.site_description = "Test Description"
+      result = helper.description_content
+
+      expect(result).to include("Test Description")
+    end
+
+    it "accepts a content argument" do
+      @description_meta = "Custom Description"
+
+      result = helper.description_content
+
+      expect(result).to include("Custom Description")
+    end
+  end
+
+  describe "when a plugin registers the :meta_data_content modifier" do
+    let!(:plugin) { Plugin::Instance.new }
+    let!(:modifier) { :meta_data_content }
+    let!(:block) do
+      Proc.new do |content, property, opts|
+        next "modified by plugin" if property == :description
+        next "BIG TITLE" if property == :title
+        content
+      end
+    end
+
+    before { DiscoursePluginRegistry.register_modifier(plugin, modifier, &block) }
+    after { DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &block) }
+
+    it "allows the plugin to modify the meta tags" do
+      result =
+        helper.crawlable_meta_data(
+          description: "This is a test description",
+          title: "to be overridden",
+        )
+
+      expect(result).to include(
+        "<meta property=\"og:description\" content=\"modified by plugin\" />",
+      )
+      expect(result).to include("<meta property=\"og:title\" content=\"BIG TITLE\" />")
+    end
+
+    it "modifies the title tag" do
+      title = helper.title_content
+
+      expect(title).to include("BIG TITLE")
+    end
+
+    it "modifies the description tag" do
+      description = helper.description_content
+
+      expect(description).to include("modified by plugin")
+    end
+
+    it "does not modify the `title` SiteSetting" do
+      SiteSetting.title = "Test Title"
+      result = helper.title_content
+
+      expect(result).to include("BIG TITLE")
+      expect(SiteSetting.title).to eq("Test Title")
+    end
+
+    it "does not modify the `site_description` SiteSetting" do
+      SiteSetting.site_description = "Test Description"
+      result = helper.description_content
+
+      expect(result).to include("modified by plugin")
+      expect(SiteSetting.site_description).to eq("Test Description")
     end
   end
 

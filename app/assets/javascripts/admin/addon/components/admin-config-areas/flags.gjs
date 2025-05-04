@@ -4,7 +4,6 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { SYSTEM_FLAG_IDS } from "discourse/lib/constants";
 import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 import AdminFlagItem from "admin/components/admin-flag-item";
@@ -14,14 +13,6 @@ export default class AdminConfigAreasFlags extends Component {
   @service siteSettings;
 
   @tracked flags = this.site.flagTypes;
-
-  get addFlagButtonDisabled() {
-    return (
-      this.flags.filter(
-        (flag) => !Object.values(SYSTEM_FLAG_IDS).includes(flag.id)
-      ).length >= this.siteSettings.custom_flags_limit
-    );
-  }
 
   @bind
   isFirstFlag(flag) {

@@ -405,6 +405,14 @@ RSpec.configure do |config|
             if RSpec.current_example
               # Store timeout for later, we'll only raise it if the test otherwise passes
               RSpec.current_example.metadata[:_capybara_timeout_exception] ||= timeout_error
+
+              if RSpec.current_example.metadata[:dump_threads_on_failure]
+                RSpec.current_example.metadata[:_capybara_server_threads_backtraces] = Thread
+                  .list
+                  .reduce([]) { |array, thread| array << thread.backtrace }
+                  .uniq
+              end
+
               raise # re-raise original error
             else
               # Outside an example... maybe a `before(:all)` hook?
@@ -735,6 +743,21 @@ RSpec.configure do |config|
   config.after(:each, type: :system) do |example|
     lines = RSpec.current_example.metadata[:extra_failure_lines]
 
+    if example.exception &&
+         (
+           backtraces = RSpec.current_example.metadata[:_capybara_server_threads_backtraces]
+         ).present?
+      lines << "~~~~~~~ SERVER THREADS BACKTRACES ~~~~~~~"
+
+      backtraces.each_with_index do |backtrace, index|
+        lines << "\n" if index != 0
+        backtrace.each { |line| lines << line }
+      end
+
+      lines << "~~~~~~~ END SERVER THREADS BACKTRACES ~~~~~~~"
+      lines << "\n"
+    end
+
     # This is disabled by default because it is super verbose,
     # if you really need to dig into how selenium is communicating
     # for system tests then enable it.
@@ -998,6 +1021,10 @@ def silence_stdout
   yield
 ensure
   STDOUT.unstub(:write)
+end
+
+def Rails.logger=(logger)
+  raise "Setting Rails.logger is not allowed as it can lead to unexpected behavior in tests. Use `fake_logger = track_log_messages { ... }` instead."
 end
 
 def track_log_messages

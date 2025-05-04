@@ -28,10 +28,12 @@ class CategoryHashtagDataSource
         )
       item.slug = category.slug
       item.description = category.description_text
-      item.icon = icon
       item.colors = [category.parent_category&.color, category.color].compact
       item.relative_url = category.url
       item.id = category.id
+      item.style_type = category.style_type
+      item.icon = category.style_type == "icon" ? category.icon : icon
+      item.emoji = category.emoji if category.style_type == "emoji"
 
       # Single-level category hierarchy should be enough to distinguish between
       # categories here.
@@ -63,7 +65,17 @@ class CategoryHashtagDataSource
     base_search =
       Category
         .secured(guardian)
-        .select(:id, :parent_category_id, :slug, :name, :description, :color)
+        .select(
+          :id,
+          :parent_category_id,
+          :slug,
+          :name,
+          :description,
+          :color,
+          :style_type,
+          :icon,
+          :emoji,
+        )
         .includes(:parent_category)
 
     if condition == HashtagAutocompleteService.search_conditions[:starts_with]

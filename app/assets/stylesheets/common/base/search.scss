@@ -10,6 +10,10 @@
   font-weight: bold;
 }
 
+.search-menu-panel {
+  @include float-down;
+}
+
 .search-container {
   background: var(--d-content-background);
 
@@ -96,7 +100,6 @@
       display: flex;
       flex-wrap: wrap;
       padding: 1em 10%;
-      background-color: var(--secondary);
       border-bottom: 1px solid var(--primary-low);
 
       @include breakpoint(medium) {
@@ -348,6 +351,7 @@
     flex-wrap: wrap;
     margin-top: 0.25em;
     gap: 0 0.5em;
+    align-items: center;
 
     .badge-category__wrapper {
       max-width: 100%;
@@ -358,6 +362,7 @@
     flex-wrap: wrap;
     display: inline-flex;
     font-weight: normal;
+    align-items: center;
 
     .discourse-tag.simple {
       font-size: var(--font-down-1);

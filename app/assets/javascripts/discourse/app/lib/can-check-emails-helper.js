@@ -1,6 +1,6 @@
 export default class CanCheckEmailsHelper {
-  constructor(model, can_moderators_view_emails, currentUser) {
-    this.model = model;
+  constructor(model_id, can_moderators_view_emails, currentUser) {
+    this.model_id = model_id;
     this.can_moderators_view_emails = can_moderators_view_emails;
     this.currentUser = currentUser;
   }
@@ -18,7 +18,7 @@ export default class CanCheckEmailsHelper {
     const canStaffCheckEmails =
       this.can_moderators_view_emails && this.currentUser.staff;
     return (
-      this.model?.id === this.currentUser.id ||
+      this.model_id === this.currentUser.id ||
       this.canAdminCheckEmails ||
       canStaffCheckEmails
     );

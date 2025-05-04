@@ -27,7 +27,6 @@ loaderShim("a11y-dialog", () => importSync("a11y-dialog"));
 loaderShim("discourse-i18n", () => importSync("discourse-i18n"));
 loaderShim("ember-modifier", () => importSync("ember-modifier"));
 loaderShim("ember-route-template", () => importSync("ember-route-template"));
-loaderShim("handlebars", () => importSync("handlebars"));
 loaderShim("jquery", () => importSync("jquery"));
 loaderShim("js-yaml", () => importSync("js-yaml"));
 loaderShim("message-bus-client", () => importSync("message-bus-client"));
@@ -74,3 +73,4 @@ loaderShim("@messageformat/runtime/lib/cardinals", () =>
   importSync("@messageformat/runtime/lib/cardinals")
 );
 loaderShim("@ember/string", () => importSync("@ember/string"));
+loaderShim("moment", () => importSync("moment"));

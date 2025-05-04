@@ -126,7 +126,7 @@ acceptance("Search - Full Page", function (needs) {
     assert.dom(".fps-topic").exists({ count: 1 }, "has one post");
 
     assert
-      .dom(".topic-status .personal_message")
+      .dom(".topic-status .d-icon-envelope")
       .exists({ count: 1 }, "shows the right icon");
 
     assert

@@ -176,6 +176,10 @@ bs_BA:
     software_update_prompt:
       dismiss: "Odpusti"
     back_button: "Prethodno"
+    welcome_banner:
+      header:
+        anonymous_members: "Dobrodošli na %{site_name}!"
+      search: "Pretraži"
     themes:
       default_description: "Uobičajen"
     s3:
@@ -323,8 +327,6 @@ bs_BA:
       resume: "Nastavi"
       remove: "Ukloni"
       new_topic: "Nacrt nove teme"
-      abandon:
-        yes_value: "Odbaci"
     topic_count_all:
       one: "Pogledaj %{count} novu temu"
       few: "Pogledaj %{count} nove teme"
@@ -445,6 +447,10 @@ bs_BA:
         name: "Ime"
         fields: "Polja"
         reject_reason: "Reason"
+        scrubbed_reason: "Reason"
+        scrub_record:
+          reason_placeholder: "Razlog..."
+          cancel_button: "Odustani"
       user_percentage:
         agreed:
           one: "%{count}% slaže"
@@ -1572,8 +1578,6 @@ bs_BA:
       not_approved: "Vaš korisnički račun nije još uvijek odobren od strane administratora. Dobiti ćete email kada dobijete mogućnost da se ulogirate."
       google_oauth2:
         name: "Google"
-      twitter:
-        name: "Twitter"
       instagram:
         name: "Instagram"
       facebook:
@@ -2495,6 +2499,10 @@ bs_BA:
       general: "General"
       settings: "Postavke"
       tags: "Oznake"
+      localization:
+        name: "Ime"
+        description: "Opis"
+        remove: "Ukloni"
       tags_allowed_tags: "Ograničite ove oznake na ovu kategoriju:"
       tags_allowed_tag_groups: "Ograničite ove grupe oznaka na ovu kategoriju:"
       tags_placeholder: "(Opcionalno) lista dozvoljenih oznaka"
@@ -2515,9 +2523,13 @@ bs_BA:
       description: "Description"
       logo: "Category Logo Image"
       background_image: "Category Background Image"
-      badge_colors: "Badge colors"
-      background_color: "Background color"
-      foreground_color: "Foreground color"
+      background_color: "Color"
+      styles:
+        icon: "Icon"
+        emoji: "Emoji"
+        options:
+          icon: "Icon"
+          emoji: "Emoji"
       name_placeholder: "One or two words maximum"
       color_placeholder: "Any web color"
       delete_confirm: "Are you sure you want to delete this category?"
@@ -3102,7 +3114,6 @@ bs_BA:
               content: "Pregled"
             invite:
               content: "Invite"
-      filter: "Filter..."
     until: "Sve do:"
     form_templates:
       upload_field:
@@ -3123,6 +3134,14 @@ bs_BA:
       spreadsheet:
         show: "Show"
         about: "O nama"
+    discovery:
+      headings:
+        categories: "Sve kategorije"
+        filter_labels:
+          latest: "Zadnje"
+          top: "Top teme"
+          new: "Novi"
+          unread: "Nepročitano"
   admin_js:
     settings: "Postavke"
     admin:
@@ -3163,20 +3182,20 @@ bs_BA:
           title: "Files"
         legal:
           title: "Legal"
-        branding:
-          title: "Branding"
+        logo_and_fonts:
           logo:
             form:
               mobile: "Mobilno"
               email: "Email"
+          fonts:
+            backfill_modal:
+              modal_yes: "Da"
         navigation:
           title: "Navigacija"
         notifications:
           title: "Obavijest"
         onebox:
           title: "Onebox"
-        other:
-          title: "Other"
         search_everything:
           title: "Pretraži"
         security:
@@ -3214,6 +3233,8 @@ bs_BA:
               header_description: "Prikaži sadržaj sažetih poruka pošte poslanih neaktivnim korisnicima"
             templates:
               title: "Predlošci"
+        email_logs:
+          sub_pages:
             sent:
               title: "Poslano"
             skipped:
@@ -3489,6 +3510,36 @@ bs_BA:
             failed: "Neuspješno"
       home:
         title: "Naslovnica"
+      account:
+        title: "Račun"
+        sidebar_link:
+          backups: "Backups"
+      community:
+        title: "Zajednica"
+        sidebar_link:
+          badges: "Bedž"
+          notifications: "Obavijest"
+          permalinks: "Permalink-ovi"
+          users: "Korisnici"
+          groups: "Groups"
+          legal: "Legal"
+          moderation_flags:
+            title: "Moderacija"
+      appearance:
+        title: "Izgled"
+        sidebar_link:
+          emoji: "Emoji"
+          navigation: "Navigacija"
+      email_settings:
+        sidebar_link:
+          appearance: "Izgled"
+      security:
+        title: "Security"
+      section_landing_pages:
+        account:
+          title: "Račun"
+          backups:
+            title: "Backups"
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
@@ -3515,12 +3566,32 @@ bs_BA:
         embeddable_host:
           edit: "Edit"
           delete: "Delete"
-        look_and_feel:
+        themes_and_components:
+          breadcrumb_title: "Customize"
+          install: "Instaliraj"
           themes:
             title: "Teme"
+          components:
+            title: "Komponenti"
+            install: "Instaliraj"
+            name: "Ime"
+            enabled: "Omogućen?"
+            by_author: "Od %{name}"
+            learn_more: "Saznaj više"
+            edit: "Edit"
+            preview: "Pregled"
+            export: "Izvoz"
+            convert: "Pretvoriti"
+            delete: "Delete"
+            filter_by_all: "All"
+            delete_confirm: 'Jeste li sigurni da želite izbrisati "%{name}"?'
         user_fields:
           type: "Tip"
           delete: "Delete"
+        color_palettes:
+          palette_name: "Ime"
+          colors:
+            title: "Colors"
       plugins:
         title: "Pluginovi"
         name: "Ime"

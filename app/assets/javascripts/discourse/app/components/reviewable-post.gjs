@@ -1,9 +1,9 @@
 import Component from "@ember/component";
-import { htmlSafe } from "@ember/template";
 import ReviewableCreatedBy from "discourse/components/reviewable-created-by";
 import ReviewablePostEdits from "discourse/components/reviewable-post-edits";
 import ReviewablePostHeader from "discourse/components/reviewable-post-header";
 import ReviewableTopicLink from "discourse/components/reviewable-topic-link";
+import highlightWatchedWords from "discourse/lib/highlight-watched-words";
 import { i18n } from "discourse-i18n";
 
 export default class ReviewablePost extends Component {
@@ -25,7 +25,7 @@ export default class ReviewablePost extends Component {
           {{#if this.reviewable.blank_post}}
             <p>{{i18n "review.deleted_post"}}</p>
           {{else}}
-            {{htmlSafe this.reviewable.cooked}}
+            {{highlightWatchedWords this.reviewable.cooked this.reviewable}}
           {{/if}}
         </div>
         {{yield}}

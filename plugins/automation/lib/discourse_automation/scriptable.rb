@@ -73,14 +73,14 @@ module DiscourseAutomation
       end
     end
 
-    def placeholder(name = nil, triggerable: nil, &block)
+    def placeholder(placeholder_name = nil, triggerable: nil, &block)
       if block_given?
         result = yield(@automation.serialized_fields, @automation)
         Array(result).each do |name|
           @placeholders << { name: name.to_sym, triggerable: triggerable&.to_sym }
         end
-      elsif name
-        @placeholders << { name: name.to_sym, triggerable: triggerable&.to_sym }
+      elsif placeholder_name
+        @placeholders << { name: placeholder_name.to_sym, triggerable: triggerable&.to_sym }
       end
     end
 
@@ -254,7 +254,6 @@ module DiscourseAutomation
 
           if pm[:target_usernames].empty? && pm[:target_group_names].empty? &&
                pm[:target_emails].empty?
-            Rails.logger.warn "[discourse-automation] Did not send PM - no target usernames, groups or emails"
             return
           end
 
@@ -300,6 +299,7 @@ module DiscourseAutomation
 
           post_created = EncryptedPostCreator.new(sender, pm).create if prefers_encrypt
 
+          pm[:acting_user] = Discourse.system_user
           PostCreator.new(sender, pm).create! if !post_created
         end
       end

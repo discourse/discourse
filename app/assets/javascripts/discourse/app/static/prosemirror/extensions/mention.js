@@ -8,8 +8,6 @@ const extension = {
       attrs: { name: {} },
       inline: true,
       group: "inline",
-      content: "text*",
-      atom: true,
       draggable: true,
       selectable: false,
       parseDOM: [
@@ -31,26 +29,23 @@ const extension = {
     },
   },
 
-  inputRules: [
-    {
-      // TODO(renato): pass unicodeUsernames?
-      match: new RegExp(`(^|\\W)(${mentionRegex().source}) $`),
-      handler: (state, match, start, end) => {
-        if (
-          state.selection.$from.nodeBefore?.type === state.schema.nodes.mention
-        ) {
-          return null;
-        }
-        const mentionStart = start + match[1].length;
-        const name = match[2].slice(1);
-        return state.tr.replaceWith(mentionStart, end, [
-          state.schema.nodes.mention.create({ name }),
-          state.schema.text(" "),
-        ]);
-      },
-      options: { undoable: false },
+  inputRules: {
+    // TODO(renato): pass unicodeUsernames?
+    match: new RegExp(`(^|\\W)(${mentionRegex().source}) $`),
+    handler: (state, match, start, end) => {
+      const { $from } = state.selection;
+      if ($from.nodeBefore?.type === state.schema.nodes.mention) {
+        return null;
+      }
+      const mentionStart = start + match[1].length;
+      const name = match[2].slice(1);
+      return state.tr.replaceWith(mentionStart, end, [
+        state.schema.nodes.mention.create({ name }),
+        state.schema.text(" "),
+      ]);
     },
-  ],
+    options: { undoable: false },
+  },
 
   parse: {
     mention: {
@@ -58,13 +53,14 @@ const extension = {
       getAttrs: (token, tokens, i) => ({
         // this is not ideal, but working around the mention_open/close structure
         // a text is expected just after the mention_open token
-        name: tokens[i + 1].content.slice(1),
+        name: tokens.splice(i + 1, 1)[0].content.slice(1),
       }),
     },
   },
 
   serializeNode: {
-    mention: (state, node, parent, index) => {
+    mention(state, node, parent, index) {
+      state.flushClose();
       if (!isBoundary(state.out, state.out.length - 1)) {
         state.write(" ");
       }

@@ -169,6 +169,10 @@ ca:
     software_update_prompt:
       dismiss: "Descarta-ho"
     back_button: "Enrere"
+    welcome_banner:
+      header:
+        anonymous_members: "Benvingut a %{site_name}!"
+      search: "Cerca"
     themes:
       default_description: "Per defecte"
     s3:
@@ -325,9 +329,6 @@ ca:
       remove_confirmation: "Esteu segur que voleu suprimir aquest esborrany?"
       new_topic: "Esborrany de tema nou"
       new_private_message: "Nou esborrany de missatge personal"
-      abandon:
-        yes_value: "Descarta"
-        no_value: "Reprèn l'edició"
     topic_count_all:
       one: "Vegeu %{count} tema nou"
       other: "Vegeu %{count} temes nous"
@@ -442,6 +443,9 @@ ca:
         name: "Nom"
         fields: "Camps"
         reject_reason: "Motiu"
+        scrubbed_reason: "Motiu"
+        scrub_record:
+          cancel_button: "Cancel·la"
       user_percentage:
         agreed:
           one: "El %{count}% hi està d'acord"
@@ -1515,8 +1519,6 @@ ca:
       not_approved: "El vostre compte encara no ha estat aprovat. Us notificarem per correu quan tingueu permís per a iniciar sessió."
       google_oauth2:
         name: "Google"
-      twitter:
-        name: "Twitter"
       instagram:
         name: "Instagram"
       facebook:
@@ -2406,6 +2408,10 @@ ca:
       general: "General"
       settings: "Configuració"
       tags: "Etiquetes"
+      localization:
+        name: "Nom"
+        description: "Descripció"
+        remove: "Elimina"
       tags_allowed_tags: "Restringeix aquestes etiquetes per a aquesta categoria:"
       tags_allowed_tag_groups: "Restringeix aquests grups d'etiquetes a aquesta categoria:"
       tags_placeholder: "Llista (opcional) d'etiquetes permeses"
@@ -2426,9 +2432,13 @@ ca:
       description: "Descripció"
       logo: "Imatge del logo de la categoria"
       background_image: "Imatge de fons de la categoria"
-      badge_colors: "Colors d'insígnies"
-      background_color: "Color de fons"
-      foreground_color: "Color del primer pla"
+      background_color: "Color"
+      styles:
+        icon: "Icona"
+        emoji: "Emoji"
+        options:
+          icon: "Icona"
+          emoji: "Emoji"
       name_placeholder: "Una o dues paraules com a màxim"
       color_placeholder: "Qualsevol color web"
       delete_confirm: "Esteu segur que voleu suprimir aquesta categoria?"
@@ -2949,7 +2959,6 @@ ca:
               content: "Revisa"
             invite:
               content: "Convida"
-      filter: "Filtre..."
       footer:
         interface_color_selector:
           light: "Clar"
@@ -2975,6 +2984,14 @@ ca:
       spreadsheet:
         show: "Mostra"
         about: "Quant a"
+    discovery:
+      headings:
+        categories: "Totes les categories"
+        filter_labels:
+          latest: "Més recents"
+          top: "Principals"
+          new: "Nou"
+          unread: "No llegits"
   admin_js:
     settings: "Configuració"
     admin:
@@ -3015,20 +3032,20 @@ ca:
           title: "Fitxers"
         legal:
           title: "Legal"
-        branding:
-          title: "Brànding"
+        logo_and_fonts:
           logo:
             form:
               mobile: "Mòbil"
               email: "Correu electrònic"
+          fonts:
+            backfill_modal:
+              modal_yes: "Sí"
         navigation:
           title: "Navegació"
         notifications:
           title: "Notificacions"
         onebox:
           title: "Onebox"
-        other:
-          title: "Altres"
         search_everything:
           title: "Cerca"
         security:
@@ -3066,6 +3083,8 @@ ca:
               header_description: "Previsualitza el contingut dels correus de resum enviat a usuaris inactius"
             templates:
               title: "Plantilles"
+        email_logs:
+          sub_pages:
             sent:
               title: "Enviat"
             skipped:
@@ -3335,6 +3354,38 @@ ca:
             failed: "Fallits"
       home:
         title: "Pàgina principal"
+      account:
+        title: "Compte"
+        sidebar_link:
+          backups: "Còpies de seguretat"
+      community:
+        title: "Comunitat"
+        sidebar_link:
+          badges: "Insígnies"
+          notifications: "Notificacions"
+          permalinks: "Enllaços permanents"
+          users: "Usuaris"
+          groups: "Grups"
+          legal: "Legal"
+          moderation_flags:
+            title: "Moderació"
+      appearance:
+        title: "Aparença"
+        sidebar_link:
+          emoji: "Emoji"
+          navigation: "Navegació"
+          themes_and_components:
+            keywords: "extensió"
+      email_settings:
+        sidebar_link:
+          appearance: "Aparença"
+      security:
+        title: "Seguretat"
+      section_landing_pages:
+        account:
+          title: "Compte"
+          backups:
+            title: "Còpies de seguretat"
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
@@ -3361,12 +3412,32 @@ ca:
         embeddable_host:
           edit: "Edita"
           delete: "Suprimeix"
-        look_and_feel:
+        themes_and_components:
+          breadcrumb_title: "Personalitza"
+          install: "Instal·la"
           themes:
             title: "Aparences"
+          components:
+            title: "Components"
+            install: "Instal·la"
+            name: "Nom"
+            enabled: "Activat?"
+            by_author: "Per %{name}"
+            learn_more: "Per a saber-ne més"
+            edit: "Edita"
+            preview: "Previsualitza"
+            export: "Exporta"
+            convert: "Converteix"
+            delete: "Suprimeix"
+            filter_by_all: "Tot"
+            delete_confirm: 'Esteu segur que voleu suprimir "%{name}"?'
         user_fields:
           type: "Tipus"
           delete: "Suprimeix"
+        color_palettes:
+          palette_name: "Nom"
+          colors:
+            title: "Colors"
       plugins:
         title: "Connectors"
         name: "Nom"

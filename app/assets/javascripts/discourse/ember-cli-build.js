@@ -13,7 +13,6 @@ const { Webpack } = require("@embroider/webpack");
 const { StatsWriterPlugin } = require("webpack-stats-plugin");
 const { RetryChunkLoadPlugin } = require("webpack-retry-chunk-load-plugin");
 const withSideWatch = require("./lib/with-side-watch");
-const RawHandlebarsCompiler = require("discourse-hbr/raw-handlebars-compiler");
 const crypto = require("crypto");
 const commonBabelConfig = require("./lib/common-babel-config");
 const TerserPlugin = require("terser-webpack-plugin");
@@ -64,19 +63,10 @@ module.exports = function (defaults) {
 
     ...commonBabelConfig(),
 
-    vendorFiles: {
-      // Freedom patch - includes bug fix and async stack support
-      // https://github.com/discourse/backburner.js/commits/discourse-patches
-      backburner:
-        "node_modules/@discourse/backburner.js/dist/named-amd/backburner.js",
-    },
-
     trees: {
-      app: RawHandlebarsCompiler(
-        withSideWatch("app", {
-          watching: ["../discourse-markdown-it", "../truth-helpers"],
-        })
-      ),
+      app: withSideWatch("app", {
+        watching: ["../discourse-markdown-it", "../truth-helpers"],
+      }),
     },
   });
 
@@ -99,6 +89,12 @@ module.exports = function (defaults) {
   const terserPlugin = app.project.findAddonByName("ember-cli-terser");
   const applyTerser = (tree) => terserPlugin.postprocessTree("all", tree);
 
+  const pluginTrees = applyTerser(discoursePluginsTree);
+
+  if (process.env.SKIP_CORE_BUILD) {
+    return pluginTrees;
+  }
+
   let extraPublicTrees = [
     parsePluginClientSettings(discourseRoot, vendorJs, app),
     funnel(`${discourseRoot}/public/javascripts`, { destDir: "javascripts" }),
@@ -109,7 +105,7 @@ module.exports = function (defaults) {
       })
     ),
     applyTerser(generateScriptsTree(app)),
-    applyTerser(discoursePluginsTree),
+    pluginTrees,
   ];
 
   const assetCachebuster = process.env["DISCOURSE_ASSET_URL_SALT"] || "";
@@ -226,7 +222,6 @@ module.exports = function (defaults) {
           new RetryChunkLoadPlugin({
             retryDelay: 200,
             maxRetries: 2,
-            chunks: ["assets/discourse.js"],
           }),
         ],
       },

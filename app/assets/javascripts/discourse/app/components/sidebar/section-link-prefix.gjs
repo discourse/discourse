@@ -5,6 +5,7 @@ import { eq } from "truth-helpers";
 import { isHex } from "discourse/components/sidebar/section-link";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
+import replaceEmoji from "discourse/helpers/replace-emoji";
 
 export default class SidebarSectionLinkPrefix extends Component {
   get prefixValue() {
@@ -13,7 +14,9 @@ export default class SidebarSectionLinkPrefix extends Component {
     }
 
     switch (this.args.prefixType) {
-      case "span":
+      case "emoji":
+        return `:${this.args.prefixValue}:`;
+      case "square":
         let hexValues = this.args.prefixValue;
 
         hexValues = hexValues.reduce((acc, color) => {
@@ -54,14 +57,16 @@ export default class SidebarSectionLinkPrefix extends Component {
           </span>
         {{else if (eq @prefixType "icon")}}
           {{icon this.prefixValue class="prefix-icon"}}
-        {{else if (eq @prefixType "span")}}
+        {{else if (eq @prefixType "emoji")}}
+          {{replaceEmoji this.prefixValue class="prefix-emoji"}}
+        {{else if (eq @prefixType "square")}}
           <span
             style={{htmlSafe
               (concat
                 "background: linear-gradient(90deg, " this.prefixValue ")"
               )
             }}
-            class="prefix-span"
+            class="prefix-square"
           ></span>
         {{/if}}
 

@@ -236,11 +236,6 @@ class FinalDestination
       end
     end
 
-    if Oneboxer.cached_response_body_exists?(@uri.to_s)
-      @status = :resolved
-      return @uri
-    end
-
     headers = request_headers
     middlewares = Excon.defaults[:middlewares].dup
     middlewares << Excon::Middleware::Decompress if @http_verb == :get
@@ -294,13 +289,6 @@ class FinalDestination
 
     case response.status
     when 200
-      # Cache body of successful `get` requests
-      if @http_verb == :get
-        if Oneboxer.cache_response_body?(@uri)
-          Oneboxer.cache_response_body(@uri.to_s, response_body)
-        end
-      end
-
       if @follow_canonical
         next_url = fetch_canonical_url(response_body)
 

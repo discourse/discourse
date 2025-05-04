@@ -632,6 +632,7 @@ en:
         required: "You must claim items before you can review them."
         claimed_by_you: "You've claimed this item and can review it."
         claimed_by_other: "This item can only be reviewed by <b>%{username}</b>."
+        automatically_claimed_by: "This item is currently being reviewed by <b>%{username}</b>."
       claim:
         title: "claim this topic"
       unclaim:
@@ -669,6 +670,18 @@ en:
         name: "Name"
         fields: "Fields"
         reject_reason: "Reason"
+        scrubbed_by: "Record scrubbed by"
+        scrubbed_reason: "Reason"
+        scrubbed_at: "Scrubbed at"
+        scrubbed_reject_reason: "User rejected reason"
+        scrub_record:
+          button: Scrub record
+          confirm_title: Remove personal data
+          confirm_body: "Are you SURE you want to scrub this review queue record? All personal information (e.g. username, email, IP address) will be permanently removed from this record."
+          reason_title: "A reason for scrubbing this record is required."
+          reason_placeholder: "Reason..."
+          confirm_button: "Confirm removal"
+          cancel_button: "Cancel"
 
       user_percentage:
         summary:
@@ -1603,6 +1616,8 @@ en:
         choose: "Choose a password"
         verify_identity: "To continue, please verify your identity."
         title: "Password Reset"
+        remove: "Remove Password"
+        remove_detail: "Your account will no longer be accessible with a password unless you reset it."
 
       second_factor_backup:
         title: "Two-Factor Backup Codes"
@@ -2188,6 +2203,7 @@ en:
     user_tips:
       button: "Got it!"
       skip: "Skip tips"
+      dont_show_again: "Don't show this again"
 
       first_notification:
         title: "Your first notification!"
@@ -2232,6 +2248,10 @@ en:
     modal:
       close: "close"
       dismiss_error: "Dismiss error"
+    multi_select:
+      no_results: "No results"
+      search: "Search…"
+      label: "Select options"
     form_kit:
       reset: Reset
       optional: optional
@@ -2503,9 +2523,9 @@ en:
         title: "Sign in with Google"
         sr_title: "Sign in with Google"
       twitter:
-        name: "Twitter"
-        title: "Sign in with Twitter"
-        sr_title: "Sign in with Twitter"
+        name: "X"
+        title: "Sign in with X"
+        sr_title: "Sign in with X"
       instagram:
         name: "Instagram"
         title: "Log in with Instagram"
@@ -2755,8 +2775,8 @@ en:
       show_preview: "show preview"
       hide_preview: "hide preview"
 
-      switch_to_markdown: "Switch to standard Markdown editor"
-      switch_to_rich_text: "Switch to new rich text editor"
+      switch_to_markdown: "Switch to standard Markdown editor (%{keyboardShortcut})"
+      switch_to_rich_text: "Switch to new rich text editor (%{keyboardShortcut})"
       quote_post_title: "Quote whole post"
       bold_label: "B"
       bold_title: "Strong"
@@ -3023,9 +3043,8 @@ en:
       in_messages_tooltip: "switch to searching regular topics"
       in_topics_posts: "in all topics and posts"
       enter_hint: "or press Enter"
+      mobile_enter_hint: "or tap Search icon"
       in_posts_by: "in posts by %{username}"
-      browser_tip: "%{modifier} + f"
-      browser_tip_description: "again to use native browser search"
       recent: "Recent Searches"
       clear_recent: "Clear Recent Searches"
 
@@ -3411,6 +3430,9 @@ en:
           other {}
         }
 
+      reply_count_link:
+        one: "%{count} reply, jump to first post"
+        other: "%{count} replies, jump to first post"
       created_at: "Created: %{date}"
       bumped_at: "Latest: %{date}"
 
@@ -4103,6 +4125,14 @@ en:
       settings: "Settings"
       topic_template: "Template"
       tags: "Tags"
+      localizations: "Localizations"
+      localization:
+        locale: "Locale"
+        name: "Name"
+        description: "Description"
+        add: "Add new locale"
+        remove: "Remove"
+        hint: "There are currently no localizations for this category. Click 'Add new locale' below to begin adding localizations."
       tags_allowed_tags: "Restrict these tags to this category:"
       tags_allowed_tag_groups: "Restrict these tag groups to this category:"
       tags_placeholder: "(Optional) list of allowed tags"
@@ -4125,15 +4155,23 @@ en:
       creation_error: There has been an error during the creation of the category.
       save_error: There was an error saving the category.
       name: "Category Name"
+      untitled: "Untitled Category"
       description: "Description"
       logo: "Category Logo Image"
       logo_dark: "Dark Mode Category Logo Image"
       logo_description: "Recommended 1:1 aspect ratio with 200px minimum size. If left blank no image will be shown."
       background_image: "Category Background Image"
       background_image_dark: "Dark Category Background Image"
-      badge_colors: "Badge colors"
-      background_color: "Background color"
-      foreground_color: "Foreground color"
+      style: "Styles"
+      background_color: "Color"
+      styles:
+        type: "Style"
+        icon: "Icon"
+        emoji: "Emoji"
+        options:
+          square: "Square"
+          icon: "Icon"
+          emoji: "Emoji"
       color_used: "Color in use"
       predefined_colors: "Predefined color options"
       name_placeholder: "One or two words maximum"
@@ -4540,6 +4578,7 @@ en:
       shortcut_delimiter_newline: "%{shortcut1}<br>%{shortcut2}"
       title: "Keyboard Shortcuts"
       short_title: "Shortcuts"
+      search_ctrl_f_tip: "To search across this entire forum, press <kbd>/</kbd>"
       jump_to:
         title: "Jump To"
         home: "%{shortcut} Home"
@@ -5042,13 +5081,7 @@ en:
       back_to_forum: "Back to Forum"
       collapse_all_sections: "Collapse all sections"
       expand_all_sections: "Expand all sections"
-      filter: "Filter..."
-      filter_links: "Filter links..."
-      clear_filter: "Clear filter"
-      no_results:
-        title: "No results"
-        description: 'We couldn’t find anything matching ‘%{filter}’.<br><br>Did you want to <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">search site settings</a> or the <a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">admin user list?</a>'
-        description_admin_search: 'We couldn’t find anything matching ‘%{filter}’.<br><br>Try <a class="sidebar-additional-filter-admin-search" href="%{admin_search_url}">searching the entire admin interface</a>.'
+      search: "Search"
       footer:
         interface_color_selector:
           light: "Light"
@@ -5160,6 +5193,54 @@ en:
           paste: "Paste..."
           save: "Save as..."
     powered_by_discourse: "Powered by Discourse"
+    safari_15_warning: "Your browser will soon be incompatible with this community. To keep participating here, please upgrade your browser or <a href='%{url}'>learn more</a>."
+
+    discovery:
+      headings:
+        all:
+          default: "All %{filter} topics"
+          posted: "All topics you’ve posted in"
+          bookmarks: "All topics you’ve bookmarked"
+
+        category:
+          default: "%{filter} topics in %{category}"
+          posted: "Topics in %{category} you’ve posted in"
+          bookmarks: "Topics in %{category} you’ve bookmarked"
+
+        no_tags:
+          all_default: "All topics without tags"
+          category_default: "%{filter} topics in %{category} without tags"
+          all:
+            posted: "All topics without tags you've posted in"
+            bookmarks: "All topics without tags you've bookmarked"
+          category:
+            posted: "Topics in %{category} without tags you've posted in"
+            bookmarks: "Topics in %{category} without tags you've bookmarked"
+
+        single_tag:
+          default: "%{filter} topics tagged with %{tag}"
+          posted: "Topics tagged %{tag} you've posted in"
+          bookmarks: "Topics tagged %{tag} you’ve bookmarked"
+
+        multi_tag:
+          default: "%{filter} topics tagged %{tags}"
+          posted: "Topics tagged %{tags} you've posted in"
+          bookmarks: "Topics tagged %{tags} you’ve bookmarked"
+
+        category_tag:
+          default: "%{filter} topics in %{category} tagged with %{tag}"
+          posted: "Topics in %{category} tagged %{tag} you’ve posted in"
+          bookmarks: "Topics in %{category} tagged %{tag} you’ve bookmarked"
+
+        categories: "All categories"
+
+        filter_labels:
+          latest: "Latest"
+          top: "Top"
+          new: "New"
+          unread: "Unread"
+          hot: "Hot"
+          unseen: "Unseen"
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
@@ -5219,9 +5300,6 @@ en:
           title: "Moderation"
           header_description: "The flagging system in Discourse helps you and your moderator team manage content and user behavior, keeping your community respectful and healthy. The defaults are suitable for most communities and you don’t have to change them. However, if your site has particular requirements you can disable flags you don’t need and add your own custom flags."
           keywords: "flag|review|spam|illegal"
-        font_style:
-          title: "Font style"
-          header_description: "Customize the font styles used by your themes"
         files:
           title: "Files"
           header_description: "Settings that control file size and type limits, avatar sizes and sources, file storage, image quality and compression, and more"
@@ -5235,11 +5313,9 @@ en:
         login_and_authentication:
           title: "Login & authentication"
           header_description: "Configure how users log in and authenticate, secrets and keys, OAuth2 providers, and more"
-        logo:
-          title: "Site logo"
-          header_description: "Customize the variations of your site logo"
-        branding:
-          title: "Branding"
+        logo_and_fonts:
+          title: "Logo & fonts"
+          header_description: "Customize the variations of your site logo and fonts"
           logo:
             title: "Logo"
             form:
@@ -5304,6 +5380,27 @@ en:
                 title: "X summary large image"
                 description: "X card 'summary large image'. If left blank, regular card metadata is generated using the OpenGraph_image, as long as that is not also a .svg."
                 help_text: "recommended size is at least 280 x 150 pixels. Don't use an SVG image."
+          fonts:
+            title: "Fonts"
+            form:
+              more_fonts: "More fonts"
+              less_fonts: "Less fonts"
+              saved: "Font settings are saved."
+              base_font:
+                title: "Base font"
+              heading_font:
+                title: "Heading font"
+              default_text_size:
+                title: "Default text size"
+                description: "This size can be subsequently adjusted by each user according to their preferences."
+            backfill_modal:
+              title: "Apply new default text settings?"
+              description:
+                one: "You’ve updated the default text size. Would you like to apply this change to %{count} existing user?"
+                other: "You’ve updated the default text size. Would you like to apply this change to %{count} existing users?"
+              modal_yes: "Yes"
+              modal_no: "No, only apply going forward"
+
         navigation:
           title: "Navigation"
           header_description: "Configure the navigation links and menu items for your site. This includes the location and behavior of the primary navigation menu, the quick links at the top of the homepage, as well as the admin sidebar"
@@ -5313,9 +5410,6 @@ en:
         onebox:
           title: "Onebox"
           header_description: "Configure how onebox previews are generated and displayed for your site"
-        other:
-          title: "Other"
-          header_description: "Settings which do not fit into any other category"
         rate_limits:
           title: "Rate limits"
           header_description: "Configure how often users can perform certain actions, such as creating topics, sending messages, and posting replies"
@@ -5324,7 +5418,7 @@ en:
           header_description: "Configure search settings including logging and tokenization for Chinese and Japanese languages"
         search_everything:
           title: "Search"
-          header_description: "Find anything in the admin interface here. You can filter the results below, and your preferences will be remembered."
+          header_description: "Find anything in the admin interface here. You can filter the results below, and your preferences will be remembered. To open this search anywhere in the admin interface, press %{shortcutHTML}."
         security:
           title: "Security"
           header_description: "Configure security settings, including two-factor authentication, moderator privileges, and content security policies"
@@ -5366,12 +5460,40 @@ en:
         reports:
           title: "Reports"
           header_description: "Reports are a powerful tool to help you understand what’s happening on your site. They can help you identify trends, spot problems, and make decisions based on data."
+          sub_pages:
+            settings:
+              title: "Dashboard settings"
         badges:
           title: "Badges"
           header_description: "Badges reward users for their activities, contributions, and achievements to recognize, validate, and encourage positive behavior and engagement within the community"
+        analytics:
+          title: "Analytics & SEO"
+          header_description: "Improve your site’s visibility to search engines and configure how you track site visitors"
+          keywords: "search|google|sitemap"
+        interface:
+          title: "Interface & layout"
+          header_description: "Customize details of your site’s general layout and user interface"
+          keywords: "splash"
+        content:
+          title: "Content"
+          header_description: "Configure how your topics and posts are managed, and customize the content creation experience for your members"
+          keywords: "topics|posts|categories|tags"
+          sub_pages:
+            categories_and_tags:
+              title: "Categories & tags"
+            sharing:
+              title: "Sharing"
+            posts_and_topics:
+              title: "Posts & topics"
+            stats_and_thresholds:
+              title: "Stats & thresholds"
         permalinks:
           title: "Permalinks"
           header_description: "Redirections to apply for URLs not known by the forum"
+        user_defaults:
+          title: "User defaults"
+          header_description: "Set default values for settings that impact your users, configuring their onboarding experience"
+          keywords: "users|onboarding|new"
         user_fields:
           title: "User fields"
           header_description: "Create custom user fields to collect extra details about your community members. You can choose what information is required during sign-up, what shows on profiles, and what users can update."
@@ -5380,7 +5502,7 @@ en:
           header_description: "Watched words are moderation tools that can perform multiple different actions including blocking, censoring, linking, or flagging posts containing certain words"
         color_palettes:
           title: "Color palettes"
-          header_description: "Color palettes define the core colors used across your site’s interface, while themes can provide additional styling, layouts, and components. Both can work together to create your site’s unique look and feel, and both can be made available for users to select their preference"
+          header_description: "Color palettes define the core colors used across your site’s interface, while themes can provide additional styling, layouts, and components. Both can work together to create your site’s unique look and feel, and both can be made available for users to select their preference."
         emoji:
           title: "Emoji"
           header_description: "Add new emoji that will be available to everyone. Select multiple files to create emojis using their file names. The selected group will be used for all files that are added at the same time."
@@ -5391,14 +5513,25 @@ en:
           title: "Components"
           header_description: "Components are smaller customizations that can be added to themes in order to change specific elements of the style of your forum design"
           keywords: "theme|component|extension"
+        themes_and_components:
+          title: "Themes and components"
+          header_description: "Personalize your Discourse site with themes and components to match your needs"
+          keywords: "theme|component|extension|customize"
+        site_admin:
+          title: "Site admin"
+          header_description: "Configure various settings relating to the management of your site"
+          keywords: "discover|bootstrap|apps"
         site_texts:
           title: "Site texts"
           header_description: "Customize any text used in Discourse to match your community’s voice and tone"
         email:
-          title: "Server setup & logs"
-          header_description: "Customize the templates used to create emails, preview summary emails that will be sent out, and view email logs"
-          keywords: "email|smtp|mailgun|sendgrid|sent|skipped|bounced|received|rejected|email logs|preview summary"
+          title: "Email settings"
+          header_description: "Configure settings for emails that are sent to your members"
+          keywords: "digest|unsubscribe|email|smtp|mailgun|sendgrid|preview summary"
           sub_pages:
+            server_settings:
+              title: "Server settings"
+              header_description: "Configure settings for emails that are sent to your members"
             preview_summary:
               title: "Preview summary"
               header_description: "Preview the content of the summary emails sent to inactive users"
@@ -5408,6 +5541,11 @@ en:
             templates:
               title: "Templates"
               header_description: "Customize the templates used to create emails"
+        email_logs:
+          title: "Email logs"
+          header_description: "View logs for emails sent from your site"
+          keywords: "sent|skipped|bounced|received|rejected|email logs"
+          sub_pages:
             sent:
               title: "Sent"
               header_description: "View a log of emails that have been sent"
@@ -5462,6 +5600,8 @@ en:
         modal_title: "Search anything in admin"
         title: "Search"
         instructions: "Type to search for pages, settings, reports, themes, components, and more..."
+        full_page_link: "Switch to full page search"
+        no_results: "We couldn’t find anything matching ‘%{filter}’."
         result_types:
           page:
             one: "Page"
@@ -5652,6 +5792,7 @@ en:
             automatic_membership_user_count:
               one: "%{count} user has the new email domains and will be added to the group."
               other: "%{count} users have the new email domains and will be added to the group."
+            automatic_membership_user_unknown_count: "Users with one of the new email domains will be added to the group."
             automatic_membership_associated_groups: "Users who are members of a group on a service listed here will be automatically added to this group when they log in with the service."
             primary_group: "Automatically set as primary group"
           alert:
@@ -6102,7 +6243,8 @@ en:
             post: "posts"
             chat_message: "chat messages"
             enabled: "Enable this custom flag after saving"
-            alert: "Once a custom flag has been used, it can only be disabled but not edited or deleted."
+            create_warning: "Once a custom flag has been used, it can only be disabled or edited but not deleted."
+            edit_warning: "Editing the name and description of a flag can cause potential data inconsistencies. Once a custom flag has been used, it can only be disabled or edited but not deleted."
             edit_flag: "Edit flag"
             non_editable: "You cannot edit this flag because it is a system flag or has already been used in the review system, however you can still disable it."
             delete_flag: "Delete flag"
@@ -6134,9 +6276,44 @@ en:
             back: "Back to themes"
           components:
             title: "Components"
+            description: "Customizations that change surface elements of your forum design, or add extra front-end features"
             components_intro: "Install a new component to get started, or create your own from scratch using these resources."
             new_component: "New component"
             back: "Back to components"
+            install: "Install"
+            name: "Name"
+            used_on: "Used on"
+            enabled: "Enabled?"
+            by_author: "By %{name}"
+            learn_more: "Learn more"
+            edit: "Edit"
+            parent_themes_two: "%{name1} and %{name2}"
+            parent_themes_three: "%{name1}, %{name2} and %{name3}"
+            parent_themes_more_than_three:
+              one: "%{name1}, %{name2}, %{name3} and %{count} more"
+              other: "%{name1}, %{name2}, %{name3} and %{count} more"
+            add_to_theme: "Add to theme"
+            preview: "Preview"
+            update: "Update to latest"
+            check_update: "Check for updates"
+            update_available: "Update available!"
+            export: "Export"
+            convert: "Convert"
+            delete: "Delete"
+            filter_by: "Filter by"
+            filter_by_all: "All"
+            filter_by_used: "Used"
+            filter_by_unused: "Unused"
+            filter_by_updates_available: "Updates available"
+            search_components: "Type a component name"
+            new_update_for_component: "New update available for %{name}!"
+            component_up_to_date: '"%{name}" is up to date.'
+            updated_successfully: '"%{name}" has been updated successfully.'
+            delete_confirm: 'Are you sure you want to delete "%{name}"?'
+            deleted_successfully: '"%{name}" has been deleted successfully.'
+            no_components: "No components installed."
+            no_components_found: "No components match your filters."
+            badge_unused: "Unused"
         user_fields:
           field: "Field"
           type: "Type"
@@ -6155,12 +6332,13 @@ en:
             toggle_description: "Color palette can be selected by users"
           colors:
             title: "Colors"
-          fonts_and_logos_hint: "Looking to update your fonts and logos?"
-          go_to_branding: "Go to Branding"
+          logo_and_fonts_hint: "Looking to update your logo and fonts?"
+          go_to_logo_and_fonts: "Go to Logo & fonts"
           save_changes: "Save changes"
           unsaved_changes: "You have unsaved changes"
           copy_of: "Copy of %{name}"
           copy_created: 'A new copy of "%{name}" has been created'
+          illegal_character_in_color: "Colors consist of hexadecimal characters only"
       plugins:
         title: "Plugins"
         name: "Name"
@@ -6531,7 +6709,6 @@ en:
           title: "Colors"
           edit: "Edit color palettes"
           long_title: "Color palettes"
-          description: "Color palettes define the core colors used across your site’s interface, while themes can provide additional styling, layouts and components - both can work together to create your site’s unique look and feel, and both can be made available for users to select their preference."
           about: "Modify the colors used by your themes. Create a new color palette to start."
           new_name: "New color palette"
           copy_name_prefix: "Copy of"
@@ -6987,6 +7164,7 @@ en:
           dropdown: "Dropdown"
           upload: "Upload a file"
           multiselect: "Multiple choice"
+          tagchooser: "Tag Group selector"
         validations_modal:
           button_title: "Validations"
           modal_title: "Validation Options"
@@ -7032,6 +7210,8 @@ en:
           toggle_form_template: "form template enabled"
           select_template: "Select form templates"
           select_template_help: "Add/Edit Form Templates"
+        errors:
+          multiple_tags_not_allowed: 'You can''t select more tags from the "%{tag_name}". To avoid issues, use Form Template'
 
       impersonate:
         title: "Impersonate"
@@ -7489,6 +7669,15 @@ en:
       site_settings:
         title: "Site settings"
         description: "Configure the settings for your Discourse site to customize its appearance, functionality, and user experience."
+        discard:
+          one: "Discard change"
+          other: "Discard changes"
+        save:
+          one: "Save change"
+          other: "Save all changes"
+        dirty_banner:
+          one: "You have <b>%{count}</b> unsaved change"
+          other: "You have <b>%{count}</b> unsaved changes"
         emoji_list:
           invalid_input: "Emoji list should only contain valid emoji names, eg: hugs"
           add_emoji_button:

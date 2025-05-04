@@ -1,4 +1,4 @@
-html.composer-open {
+html.composer-open:not(.has-full-page-chat) {
   #main-outlet {
     padding-bottom: var(--composer-height);
     transition: padding-bottom 250ms ease;
@@ -32,7 +32,7 @@ html.composer-open {
   background-color: var(--secondary);
   box-shadow: var(--shadow-composer);
 
-  @media screen and (max-width: 1200px) {
+  @media screen and (width <= 1200px) {
     min-width: 0;
   }
 
@@ -41,23 +41,30 @@ html.composer-open {
   }
 
   .reply-area {
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
+    padding: 0.5em;
+
+    @include breakpoint("mobile-extra-large") {
+      padding-bottom: max(env(safe-area-inset-bottom), 6px);
+      flex-grow: 1;
+      min-height: 0;
+    }
+
+    @include breakpoint("mobile-extra-large", min-width) {
+      margin: 0 auto;
+      height: calc(100% - 11px);
+      width: 100%;
+    }
   }
 
   .with-form-template {
     overflow: auto;
     flex: 1;
 
-    .toggle-preview,
-    #mobile-file-upload,
-    .submit-panel .mobile-preview {
+    #mobile-file-upload {
       display: none;
-    }
-
-    .d-editor-preview-wrapper {
-      display: none;
-      flex: 0;
     }
   }
 
@@ -84,6 +91,28 @@ html.composer-open {
     min-height: var(--min-height);
     max-height: calc(100vh - var(--header-offset, 4em));
     padding-bottom: var(--composer-ipad-padding);
+
+    @include breakpoint("mobile-extra-large") {
+      z-index: z("mobile-composer");
+    }
+
+    .grippie {
+      cursor: row-resize;
+      padding: 0.25em 0;
+      background: var(--tertiary);
+
+      @media (pointer: coarse) {
+        padding: 0.35em 0;
+      }
+
+      &::before {
+        content: "";
+        display: block;
+        width: 1.5em;
+        margin: auto;
+        border-top: 3px double var(--tertiary-medium);
+      }
+    }
   }
 
   &.draft,
@@ -132,10 +161,14 @@ html.composer-open {
 
   .reply-to {
     color: var(--primary-high);
-    margin-bottom: 8px;
+    margin-bottom: 0.5em;
     display: flex;
     align-items: center;
     justify-content: flex-end;
+
+    @include breakpoint("mobile-extra-large") {
+      justify-content: space-between;
+    }
 
     .reply-details {
       flex: 1;
@@ -146,6 +179,10 @@ html.composer-open {
 
       .d-icon {
         color: var(--primary-medium);
+      }
+
+      @include breakpoint("mobile-extra-large") {
+        max-width: calc(100% - 75px);
       }
     }
 
@@ -177,7 +214,7 @@ html.composer-open {
 
         @include ellipsis;
 
-        @media screen and (max-width: 500px) {
+        @media screen and (width <= 500px) {
           display: none;
         }
       }
@@ -195,6 +232,24 @@ html.composer-open {
       display: flex;
       gap: 8px;
       margin-left: 8px;
+    }
+
+    // Protection for languages with long strings on very small screens. This
+    // has no effect on most users but we need it for some cases. If this is
+    // not added, "add edit reason" will overlap with the composer controls
+    @include breakpoint(mobile-small) {
+      .reply-details {
+        flex-wrap: wrap;
+      }
+
+      .display-edit-reason {
+        margin-top: 0.5em;
+      }
+
+      .composer-controls {
+        align-self: flex-start;
+        gap: 6px;
+      }
     }
   }
 
@@ -234,10 +289,17 @@ html.composer-open {
     width: 100%;
     align-items: center;
     position: relative;
+    gap: 0 0.5em;
   }
 
   .user-selector {
-    margin-bottom: 8px;
+    @include breakpoint("mobile-extra-large") {
+      flex-wrap: wrap;
+    }
+
+    @include breakpoint("mobile-extra-large", min-width) {
+      margin-bottom: 0.5em;
+    }
   }
 
   .title-input {
@@ -253,6 +315,13 @@ html.composer-open {
   .with-tags {
     .title-input {
       flex: 1 1 100%;
+    }
+
+    @include breakpoint("mobile-extra-large") {
+      .mini-tag-chooser,
+      .category-chooser {
+        z-index: z("base");
+      }
     }
 
     .archetype-private_message & {
@@ -331,17 +400,33 @@ html.composer-open {
 
   .add-warning {
     color: var(--primary-high);
-    padding-left: 8px;
-    margin-bottom: 0;
+    padding: 0.5em;
     display: flex;
+    line-height: var(--line-height-medium);
+    margin: 0;
+
+    @include breakpoint("mobile-extra-large") {
+      margin-bottom: 0.15em;
+    }
 
     input {
       margin-right: 8px;
     }
   }
 
+  @include breakpoint("mobile-extra-large") {
+    .users-input,
+    .add-warning {
+      width: 100%;
+    }
+
+    .users-input .select-kit.multi-select {
+      width: 100%;
+    }
+  }
+
   #reply-title {
-    margin-bottom: 8px;
+    margin-bottom: 0.5em;
     flex-basis: 50%;
     width: unset;
 
@@ -351,15 +436,19 @@ html.composer-open {
   }
 
   .category-input + .tags-input {
-    margin-left: 8px;
     width: auto;
-    max-width: calc(50% - 4px);
+    max-width: calc(50% - 0.25em);
   }
 
   .tags-input {
     position: relative;
-    margin: 0 0 8px 0;
+    margin: 0 0 0.5em 0;
     flex-grow: 1;
+
+    @include breakpoint("mobile-extra-large") {
+      width: 100%;
+      max-width: 50%;
+    }
 
     .mini-tag-chooser {
       z-index: z("composer", "dropdown");
@@ -377,13 +466,45 @@ html.composer-open {
     flex-direction: column;
     flex-grow: 1;
     min-height: 0;
+
+    .mobile-view & {
+      &:not(.toolbar-visible) {
+        .d-editor-button-bar {
+          display: none;
+        }
+      }
+    }
   }
 
   .submit-panel {
     align-items: center;
     display: flex;
     flex-shrink: 0;
-    margin-top: 8px;
+    margin-top: 0.5em;
+
+    @include breakpoint("mobile-extra-large") {
+      flex-wrap: wrap;
+      gap: 0.25em 0;
+
+      .create {
+        max-width: 50vw;
+
+        span {
+          @include ellipsis;
+        }
+      }
+    }
+
+    .mobile-file-upload {
+      &.hidden + .mobile-preview {
+        // Hide preview button while file is uploading to make room for upload progress
+        display: none;
+      }
+    }
+
+    .mobile-preview {
+      margin-left: 0.25em;
+    }
   }
 
   .save-or-cancel {
@@ -391,6 +512,11 @@ html.composer-open {
     display: flex;
     flex: 0 1 auto;
     margin-right: 1em;
+
+    @include breakpoint("mobile-extra-large") {
+      margin-right: 0.5em;
+      flex: 1 1 auto;
+    }
 
     .btn-primary {
       flex: 0 0 auto;
@@ -415,6 +541,14 @@ html.composer-open {
         background-color: transparent;
         background-image: none;
       }
+
+      @include breakpoint("mobile-extra-large") {
+        .d-icon {
+          font-size: var(--font-up-2);
+          color: var(--primary-medium);
+          padding: 0.35em;
+        }
+      }
     }
 
     .preview-template {
@@ -426,6 +560,14 @@ html.composer-open {
   #file-uploading {
     color: var(--primary-high);
     margin-right: 0.5em;
+
+    @include breakpoint("mobile-extra-large") {
+      margin-left: 0.5em;
+    }
+
+    @include breakpoint("mobile-extra-large", min-width) {
+      text-align: right;
+    }
   }
 
   #file-uploading {
@@ -467,6 +609,67 @@ html.composer-open {
       color: var(--primary-high);
     }
   }
+
+  .select-kit.is-expanded {
+    z-index: z("composer", "dropdown") + 1;
+
+    &.user-chooser {
+      // keeps user chooser a layer above AI autocomplete
+      z-index: z("composer", "dropdown") + 2;
+    }
+  }
+
+  @include breakpoint("mobile-extra-large", min-width) {
+    &.private-message {
+      .with-tags {
+        .title-and-category {
+          flex-wrap: nowrap;
+          gap: 0.5em;
+
+          .tags-input {
+            max-width: 50%;
+            flex: 1 1 auto;
+          }
+        }
+
+        .title-input {
+          max-width: 50%;
+          min-width: 0;
+
+          input {
+            min-width: 0;
+          }
+        }
+      }
+
+      #private-message-users,
+      .users-input {
+        width: 100%;
+        flex: 0 0 auto;
+
+        &.can-warn {
+          // space for warning, inverse of mini-tag-chooser width
+          width: 60%;
+        }
+      }
+
+      .add-warning {
+        flex: 1 1 auto;
+        overflow: hidden;
+
+        span {
+          // protects the space of the user input in case there's a very long translation
+          @include ellipsis;
+        }
+      }
+    }
+  }
+
+  &.closed {
+    .grippie {
+      display: none;
+    }
+  }
 }
 
 .autocomplete {
@@ -478,6 +681,10 @@ html.composer-open {
   border: 1px solid var(--primary-low);
   box-shadow: var(--shadow-dropdown);
   border-radius: 8px;
+
+  @include breakpoint("mobile-extra-large", min-width) {
+    max-width: 600px;
+  }
 
   ul {
     list-style: none;
@@ -718,6 +925,10 @@ div.ac-wrap {
       .grippie {
         display: none;
       }
+
+      .reply-area {
+        padding-bottom: 0.375em;
+      }
     }
 
     &.composer-open .with-topic-progress {
@@ -734,6 +945,43 @@ div.ac-wrap {
 
     &.open.show-preview {
       height: 70vh;
+    }
+
+    &.show-preview {
+      .submit-panel {
+        padding-top: 0.5em;
+        z-index: z("fullscreen") + 1;
+        background-color: var(--secondary);
+
+        .cancel,
+        .mobile-file-upload,
+        .mobile-preview {
+          display: none;
+        }
+      }
+
+      .d-editor-preview-wrapper {
+        position: absolute;
+        z-index: z("fullscreen");
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: var(--secondary);
+        border-bottom: 40px solid var(--secondary);
+        max-width: 100%;
+        margin: 0;
+        padding: 0.5em;
+        overflow: auto;
+
+        .d-editor-preview {
+          margin-bottom: 40px;
+        }
+      }
+
+      .composer-controls {
+        display: none;
+      }
     }
   }
 }
@@ -770,5 +1018,313 @@ div.ac-wrap {
   input:focus,
   textarea:focus {
     animation: blink_input_opacity_to_prevent_scrolling_when_focus 0.01s;
+  }
+}
+
+.composer-popup {
+  box-sizing: border-box;
+  position: absolute;
+  width: calc(50% - 16px);
+  top: 19px; // grippie (11px) + .reply-area padding (8px)
+  bottom: 8px;
+  right: 8px;
+  overflow-y: auto;
+  z-index: z("composer", "dropdown") + 1;
+  padding: 1.5em;
+  box-shadow: var(--shadow-dropdown);
+  background: var(--highlight-bg);
+
+  > p,
+  h3 {
+    &:first-of-type {
+      margin-top: 0;
+      margin-right: 3em;
+    }
+  }
+
+  &.urgent {
+    background: var(--danger-low);
+  }
+
+  &.education-message {
+    background-color: var(--tertiary-low);
+  }
+
+  &.dominating-topic-message,
+  &.get-a-room {
+    bottom: unset;
+    padding: 2.25em 6em 2.5em 2.25em;
+
+    p {
+      font-size: var(--font-up-1);
+    }
+
+    button:not(.close) {
+      margin-top: 0.5em;
+    }
+  }
+
+  h3 {
+    margin-bottom: 10px;
+  }
+
+  .btn.close {
+    flex-direction: row-reverse;
+    align-items: center;
+    position: absolute;
+    right: 0;
+    top: 0;
+    color: var(--primary-medium);
+    font-size: var(--font-0);
+
+    .d-icon {
+      color: currentcolor;
+      font-size: var(--font-up-1);
+      margin: 0 0 0 0.25em;
+    }
+
+    .discourse-no-touch & {
+      &:active,
+      &:focus {
+        background: transparent;
+
+        .d-icon {
+          color: var(--primary);
+        }
+      }
+    }
+  }
+
+  ul {
+    margin: 0;
+    padding: 0 0 0 1.5em;
+
+    &.list,
+    &.topics {
+      list-style: none;
+      padding: 0;
+    }
+
+    li {
+      font-weight: normal;
+      margin-top: 8px;
+    }
+  }
+
+  &:nth-of-type(2) {
+    width: calc(50% - 65px);
+  }
+}
+
+.custom-body {
+  background-color: var(--tertiary-low);
+
+  p {
+    max-width: 98%;
+  }
+}
+
+.similar-topics {
+  background-color: var(--tertiary-low);
+
+  .similar-topic {
+    margin-bottom: 0.5em;
+  }
+
+  a[href] {
+    color: var(--primary);
+  }
+
+  .posts-count {
+    background-color: var(--tertiary);
+  }
+
+  .topic-title {
+    flex: 0 1 auto;
+    margin-right: 0.5em;
+  }
+
+  span.badge-wrapper {
+    margin-left: 0;
+  }
+
+  .blurb {
+    color: var(--primary-high);
+  }
+
+  .topic-title,
+  .blurb {
+    margin-bottom: 0.5em;
+
+    .d-icon {
+      color: var(--primary-high);
+    }
+  }
+
+  span.topic {
+    display: flex;
+    flex-direction: column;
+
+    .first-line {
+      flex: 1;
+    }
+
+    .second-line {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 0.5em;
+
+      .discourse-tags {
+        font-size: var(--font-down-1);
+      }
+    }
+  }
+}
+
+.fullscreen-composer {
+  overflow: hidden;
+
+  .profiler-results {
+    display: none;
+  }
+
+  #reply-control {
+    &.fullscreen {
+      // important needed because of inline styles when height is changed manually with grippie
+      height: 100vh !important;
+      max-height: 100%; // prevents devices from miscalculating using vh
+      z-index: z("header") + 1;
+
+      @supports (--custom: property) {
+        height: calc(var(--composer-vh, 1vh) * 100) !important;
+      }
+
+      .d-editor-preview-wrapper {
+        margin-top: 1%;
+      }
+
+      .reply-to {
+        border-bottom: 1px solid var(--primary-low);
+        margin-bottom: 0;
+        padding-bottom: 8px;
+      }
+
+      .d-editor-textarea-wrapper {
+        border: none;
+      }
+
+      &.show-preview .d-editor-textarea-wrapper {
+        border-right: 1px solid var(--primary-low);
+      }
+
+      #draft-status,
+      #file-uploading {
+        margin-left: 0;
+        text-align: initial;
+      }
+
+      .composer-popup {
+        top: 30px;
+      }
+
+      &::before {
+        content: "";
+        background: var(--secondary);
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        z-index: -1;
+        left: 0;
+      }
+    }
+  }
+}
+
+.composer-fullscreen-prompt {
+  animation: fadeIn 1s ease-in-out;
+  animation-delay: 1.5s;
+  animation-direction: reverse;
+  animation-fill-mode: forwards;
+  position: fixed;
+  left: 50%;
+  top: 10%;
+  transform: translate(-50%, 0);
+  z-index: z("header") + 1;
+  background: var(--primary-very-high);
+  color: var(--secondary);
+  padding: 0.5em 0.75em;
+  pointer-events: none;
+  border-radius: 2px;
+
+  @media (prefers-reduced-motion) {
+    animation-duration: 0s;
+  }
+
+  .rtl & {
+    // R2 is not smart enough to support this swap
+    transform: translate(50%, 0);
+  }
+
+  kbd {
+    background: none;
+  }
+}
+
+// align the previewless composer with the topic content
+#reply-control:not(.fullscreen).hide-preview {
+  --composer-internal-padding: 1em;
+  --layout-gap: 2em;
+  --topic-width: calc(
+    var(--topic-body-width) + (var(--topic-body-width-padding) * 2)
+  );
+  width: 100%;
+  max-width: calc(var(--topic-width) + var(--topic-avatar-width));
+}
+
+body:not(.has-sidebar-page) {
+  #reply-control:not(.fullscreen).hide-preview {
+    margin-left: 0.67em;
+
+    // 1100px is equivalent to --d-max-width
+    @media screen and (width >= 1110px) {
+      margin-left: calc(((100% - var(--d-max-width)) / 2) + 0.67em);
+    }
+
+    // 790px is equivalent to --topic-width
+    @media screen and (width < 790px) {
+      max-width: calc(100% - calc(0.67em * 2));
+      margin-left: 0.67em;
+    }
+
+    @include breakpoint("mobile-extra-large") {
+      max-width: unset;
+      margin-inline: unset;
+    }
+  }
+}
+
+body.has-sidebar-page {
+  #reply-control:not(.fullscreen).hide-preview {
+    margin-left: calc(var(--d-sidebar-width) + var(--layout-gap));
+
+    // 1390px is equivalent to --d-max-width + --d-sidebar-width
+    @media screen and (width >= 1390px) {
+      left: calc(
+        (100% - var(--d-max-width) + var(--d-sidebar-width)) / 2
+      ); // 50% of the whitespace
+      margin-left: var(--layout-gap);
+    }
+
+    // This is when the topic width starts to shrink
+    @media screen and (width <= 1180px) {
+      width: calc(100% - var(--d-sidebar-width) - var(--layout-gap) - 0.67em);
+    }
+
+    // sidebar shrinks
+    @media screen and (width <= 1000px) {
+      --layout-gap: 1em;
+      margin-left: calc(var(--d-sidebar-width) + var(--layout-gap));
+    }
   }
 }

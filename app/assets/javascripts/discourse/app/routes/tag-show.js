@@ -29,7 +29,6 @@ export default class TagShowRoute extends DiscourseRoute {
   @service historyStore;
 
   queryParams = queryParams;
-  controllerName = "discovery/list";
   templateName = "discovery/list";
   routeConfig = {};
 

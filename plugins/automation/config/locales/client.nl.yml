@@ -163,11 +163,8 @@ nl:
               description: Optioneel, wordt alleen getriggerd als het bericht een van deze tags heeft
             restricted_categories:
               label: Categorieën
-            restricted_groups:
+            restricted_inbox_groups:
               description: Optioneel, wordt alleen getriggerd als het topic van het bericht een persoonlijk bericht is in een van de groepsinboxen
-            ignore_group_members:
-              label: Groepsleden negeren
-              description: Sla de trigger over als de afzender lid is van de hierboven opgegeven groep
             ignore_automated:
               label: Geautomatiseerd negeren
               description: Sla de trigger over als de afzender een noreply-e-mailadres heeft of een geautomatiseerde bron is. Alleen van toepassing op berichten die via e-mail zijn gemaakt
@@ -182,7 +179,10 @@ nl:
               description: "Sla de trigger over als het bericht via e-mail is aangemaakt"
           created: Gemaakt
           edited: Bewerkt
-          topics: Topics
+          with_images: Afbeeldingen
+          with_links: Links
+          with_code: Code
+          with_uploads: Uploads
         user_updated:
           fields:
             user_profile:

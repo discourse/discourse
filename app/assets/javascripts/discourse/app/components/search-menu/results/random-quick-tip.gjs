@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { focusSearchInput } from "discourse/components/search-menu";
 import concatClass from "discourse/helpers/concat-class";
 import { i18n } from "discourse-i18n";
 
@@ -67,7 +66,7 @@ export default class RandomQuickTip extends Component {
   tipSelected(e) {
     if (e.target.classList.contains("tip-clickable")) {
       this.args.searchTermChanged(this.randomTip.label);
-      focusSearchInput();
+      this.search.focusSearchInput();
 
       e.stopPropagation();
       e.preventDefault();
@@ -75,7 +74,7 @@ export default class RandomQuickTip extends Component {
   }
 
   <template>
-    <li class="search-random-quick-tip">
+    <li class="search-random-quick-tip" data-test-item="random-quick-tip">
       <button
         class={{concatClass
           "tip-label"

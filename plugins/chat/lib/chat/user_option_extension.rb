@@ -57,6 +57,10 @@ module Chat
       if !base.method_defined?(:show_thread_title_prompts?)
         base.attribute :show_thread_title_prompts, :boolean, default: true
       end
+
+      if !base.method_defined?(:chat_quick_reaction_type_frequent?)
+        base.enum :chat_quick_reaction_type, { frequent: 0, custom: 1 }, prefix: true
+      end
     end
   end
 end

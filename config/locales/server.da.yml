@@ -16,6 +16,7 @@ da:
       date_only: "%-d. %B, %Y"
       long: "%-d. %B %Y, %H:%M"
       no_day: "%B %Y"
+      calendar_ics: "%Y%m%dT%H%M%SZ"
   date:
     month_names:
     -
@@ -51,6 +52,7 @@ da:
   remove_posts_deleted_by_author: "Slettet af forfatteren"
   redirect_warning: "Vi kunne ikke bekræfte, at det link, du valgte, faktisk blev sendt til forummet. Hvis du alligevel ønsker at fortsætte, så benyt nedenstående link."
   on_another_topic: "På et andet emne"
+  topic_category_changed: "Fra %{from} til %{to}"
   topic_tag_changed:
     added: "Tilføjet %{added}"
   inline_oneboxer:
@@ -59,6 +61,7 @@ da:
   components:
     enabled_filter: "Aktiveret"
     disabled_filter: "Deaktiveret"
+    updates_available_filter: "Opdateringer Tilgængelige"
   themes:
     bad_color_scheme: "Kan ikke opdatere tema, ugyldigt farvepalette"
     other_error: "Der opstod en fejl under opdatering af temaet"
@@ -88,7 +91,10 @@ da:
       number_value_not_valid_min_max: "Værdien skal være mellem %{min} og %{max}."
       objects:
         required: "skal udfyldes"
+        not_valid_string_value: "skal være en streng"
         not_valid_integer_value: "skal være et heltal"
+        not_valid_float_value: "skal være en float"
+        not_valid_boolean_value: "skal være en boolean"
         string_value_not_valid_url: "skal være en gyldig URL"
     locale_errors:
       top_level_locale: "Den øverste nøgle i en locale fil skal matche det relevante locale's navn."
@@ -100,6 +106,7 @@ da:
       maximum_staged_user_per_email_reached: "Maksimalt antal af brugere oprettet pr. email."
       no_subject: "(intet emne)"
       no_body: "(intet meddelelsesindhold)"
+      attachments: "(vedhæftede filer)"
       missing_attachment: "(Vedhæftning %{filename} mangler)"
       errors:
         empty_email_error: "Dette sker når den rå email der modtages er tom."
@@ -170,6 +177,7 @@ da:
         other: har forkert længde (burde være %{count} tegn)
       other_than: "skal være andet end %{count}"
       auth_overrides_username: "Brugernavn skal opdateres på godkendelsesudbyderens side, da indstillingen `auth_overrides_username` er aktiveret."
+      required: "skal eksistere"
     template:
       body: ! "Der var problemer med følgende felter:"
       header:
@@ -556,6 +564,10 @@ da:
               too_many: "For mange ord til den handling"
             base:
               invalid_url: "Erstatnings URL er ugyldig"
+        sidebar_section_link:
+          attributes:
+            linkable_type:
+              invalid: "er ikke gyldig"
       <<: *errors
   uncategorized_category_name: "Ukategoriseret"
   general_category_name: "Overordnet"
@@ -580,6 +592,7 @@ da:
       disallowed_topic_tags: "Dette emne har mærker der ikke er tilladt af denne kategori: '%{tags}“"
       disallowed_tags_generic: "Dette emne har ikke tilladte mærker."
       slug_contains_non_ascii_chars: "indeholder ikke-ascii- tegn"
+      is_already_in_use: "er allerede i brug"
     cannot_delete:
       uncategorized: "Denne kategori er speciel. Den er beregnet som et opholdsområde for emner, der ikke har nogen kategori; den kan ikke slettes."
       has_subcategories: "Kan ikke slette denne kategori, fordi den har under kategorier."
@@ -595,6 +608,9 @@ da:
   post:
     image_placeholder:
       broken: "Dette billede er i stykker"
+      blocked_hotlinked: "Eksternt Billede"
+    media_placeholder:
+      blocked_hotlinked: "Eksterne Medier"
     has_likes:
       one: "%{count} Synes om"
       other: "%{count} Synes om"
@@ -756,6 +772,8 @@ da:
       title: "Upassende"
       short_description: 'En overtrædelse af <a href="%{base_path}/guidelines">vores retningslinjer for fællesskabet</a>'
     illegal:
+      title: "Illegal"
+      short_description: "Dette er ulovligt"
       email_title: 'Et indlæg i "%{title}" afkræver stillingtagen hos administrator'
       email_body: "%{link}\n\n%{message}"
     notify_user:
@@ -826,6 +844,8 @@ da:
       email_title: 'Emnet "%{title}" kræver moderator-opmærksomhed'
       email_body: "%{link}\n\n%{message}"
     illegal:
+      title: "Ulovlig"
+      short_description: "Dette er ulovligt"
       email_title: 'Et indlæg i "%{title}" afkræver stillingtagen hos administrator'
       email_body: "%{link}\n\n%{message}"
   flagging:
@@ -1228,6 +1248,7 @@ da:
     top_users_by_likes_received_from_inferior_trust_level:
       labels:
         user: Bruger
+        trust_level: Tillidsniveau
         qtt_like: Likes modtaget
     top_users_by_likes_received_from_a_variety_of_people:
       labels:
@@ -1264,7 +1285,9 @@ da:
       poll_pop3_timeout: "Forbindelsen til POP3-serveren udløber. Indgående e-mail kunne ikke hentes. Kontroller dine <a href='%{base_path}/admin/site_settings/category/email'>POP3-indstillinger</a> og tjenesteudbyder."
       poll_pop3_auth_error: "Forbindelsen til POP3-serveren mislykkes med en godkendelsesfejl. Kontroller dine <a href='%{base_path}/admin/site_settings/category/email'>POP3-indstillinger</a>."
       force_https: "Dit websted bruger SSL. Men '<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>' er endnu ikke aktiveret i dine webstedsindstillinger."
+      out_of_date_themes: "Opdateringer er tilgængelige for følgende temaer:%{themes_list}"
       google_analytics_version: "Din Discourse bruger i øjeblikket Google Analytics 3, som ikke længere vil blive understøttet efter juli 2023. <a href='https://meta.discourse.org/t/260498'>Opgrader til Google Analytics 4</a> nu for fortsat at modtage værdifulde indsigter og analyser af dit websteds ydeevne."
+    back_from_logster_text: "Tilbage til webstedet"
   site_settings:
     disabled: "deaktiveret"
     display_local_time_in_user_card: "Vis den lokale tid baseret på en brugers tidszone, når deres brugerkort åbnes."
@@ -3172,6 +3195,11 @@ da:
             choices:
               latest:
                 label: "Seneste"
+      branding:
+        title: "Webstedets logo"
+        fields:
+          logo:
+            label: "Primært logo"
       corporate:
         fields:
           governing_law:
@@ -3241,33 +3269,46 @@ da:
         description: "Gendan indlægget, så alle brugere kan se det."
       delete_single:
         title: "Slet"
+        complete: "Indlæg slettet."
       delete:
         title: "Slet…"
+      delete_and_ignore:
+        complete: "Indlæg slettet."
       delete_and_ignore_replies:
         confirm: "Er du sikker på, at du også vil slette svarene på indlægget?"
+      delete_and_agree:
+        complete: "Indlæg slettet."
       delete_and_agree_replies:
         confirm: "Er du sikker på, at du også vil slette svarene på indlægget?"
       disagree_and_restore:
         description: "Gendan indlægget, så alle brugere kan se det."
       disagree:
         title: "Nej"
+        complete: "Rapportering ignoreret."
       ignore:
         title: "Ignorér"
+        complete: "Rapportering ignoreret."
       ignore_and_do_nothing:
         title: "Gøre ingenting"
+        complete: "Rapportering ignoreret."
       approve:
         title: "Godkend"
+        complete: "Indlæg godkendt."
       approve_post:
         title: "Godkend Indlæg"
+        complete: "Indlæg godkendt."
       reject_post:
         title: "Afvis Indlæg"
+        complete: "Indlæg afvist."
       approve_user:
         title: "Godkend Bruger"
+        complete: "Bruger godkendt."
       reject_user:
         title: "Slet Bruger…"
         delete:
           title: "Slet Bruger"
           description: "Brugeren vil blive slettet fra forummet."
+          complete: "Bruger slettet."
         block:
           title: "Slet og Blokér Bruger"
           description: "Brugeren vil blive slettet, og vi vil blokere deres IP og e-mail-adresse."
@@ -3276,6 +3317,7 @@ da:
         bundle_title: "Afvis…"
       delete_user:
         reason: "Slettet via gennemgangskø"
+        complete: "Bruger slettet."
   email_style:
     html_missing_placeholder: "HTML-skabelonen skal indeholde %{placeholder}"
   notification_level:

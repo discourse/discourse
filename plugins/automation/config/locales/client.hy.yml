@@ -65,7 +65,10 @@ hy:
             restricted_categories:
               label: Կատեգորիաներ
           created: Ստեղծված
-          topics: Թեմաներ
+          with_images: Նկարներ
+          with_links: Հղումներ
+          with_code: Կոդ
+          with_uploads: Վերբեռնումներ
         category_created_edited:
           fields:
             restricted_category:

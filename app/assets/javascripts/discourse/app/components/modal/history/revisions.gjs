@@ -100,19 +100,23 @@ export default class Revisions extends Component {
       {{/if}}
       {{#if @model.tags_changes}}
         <div class="row -tag-revisions">
-          {{discourseTags
-            this.fakePreviousTagsTopic
-            tagClasses=this.previousTagClassesMap
-          }}
+          <span class="tag-revision__wrapper">
+            {{discourseTags
+              this.fakePreviousTagsTopic
+              tagClasses=this.previousTagClassesMap
+            }}
+          </span>
 
           {{#if (or @mobileView (eq @viewMode "inline"))}}
             &rarr;&nbsp;
           {{/if}}
 
-          {{discourseTags
-            this.fakeCurrentTagsTopic
-            tagClasses=this.currentTagClassesMap
-          }}
+          <span class="tag-revision__wrapper">
+            {{discourseTags
+              this.fakeCurrentTagsTopic
+              tagClasses=this.currentTagClassesMap
+            }}
+          </span>
         </div>
       {{/if}}
       {{#if @model.featured_link_changes}}

@@ -159,6 +159,10 @@ id:
     software_update_prompt:
       dismiss: "Bubar"
     bootstrap_mode: "Memulai"
+    welcome_banner:
+      header:
+        anonymous_members: "Selamat datang ke %{site_name}!"
+      search: "Cari"
     themes:
       default_description: "Asal"
       broken_theme_alert: "Situs Anda mungkin tidak akan bekerja karena suatu tema/komponen memiliki masalah."
@@ -349,10 +353,6 @@ id:
       remove_confirmation: "Anda yakin ingin menghapus rancangan ini?"
       new_topic: "Konsep topik baru"
       new_private_message: "Rancangan pesan pribadi baru"
-      abandon:
-        confirm: "Anda sudah memiliki draf yang sedang diproses. Apa yang ingin Anda lakukan dengannya?"
-        yes_value: "Batalkan"
-        no_value: "Lanjut menyunting"
     topic_count_all:
       other: "Lihat %{count} topik baru"
     topic_count_categories:
@@ -474,6 +474,9 @@ id:
         name: "Nama"
         fields: "bidang"
         reject_reason: "Alasan"
+        scrubbed_reason: "Alasan"
+        scrub_record:
+          cancel_button: "Batal"
       user_percentage:
         summary:
           other: "%{agreed}, %{disagreed}, %{ignored} (dari %{count} bendera terakhir)"
@@ -1552,8 +1555,6 @@ id:
       submit_new_email: "Perbarui Alamat Email"
       google_oauth2:
         name: "Google"
-      twitter:
-        name: "Twitter"
       instagram:
         name: "Instagram"
       facebook:
@@ -1950,6 +1951,10 @@ id:
       general: "Umum"
       settings: "Pengaturan"
       tags: "Label"
+      localization:
+        name: "Nama"
+        description: "Deskripsi"
+        remove: "Hapus"
       required_tag_group:
         delete: "Hapus"
       name: "Nama Kategori"
@@ -2238,7 +2243,6 @@ id:
       back_to_forum: "Kembali ke Forum"
       collapse_all_sections: "Tutup semua bagian"
       expand_all_sections: "Buka semua bagian"
-      filter: "Filter..."
     until: "Sampai:"
     form_template_chooser:
       select_template: "Pilih templat formulir"
@@ -2284,6 +2288,14 @@ id:
       spreadsheet:
         show: "Tunjukkan"
         about: "Tentang"
+    discovery:
+      headings:
+        categories: "Semua kategori"
+        filter_labels:
+          latest: "Terbaru"
+          new: "New"
+          unread: "Belum dibaca"
+          unseen: "Tak terlihat"
   admin_js:
     settings: "Pengaturan"
     admin:
@@ -2300,16 +2312,17 @@ id:
         email:
           title: "Surel"
       config:
-        branding:
+        logo_and_fonts:
           logo:
             form:
               email: "Surel"
+          fonts:
+            backfill_modal:
+              modal_yes: "Ya"
         navigation:
           title: "Navigasi"
         notifications:
           title: "Pemberitahuan"
-        other:
-          title: "Lainnya"
         search_everything:
           title: "Cari"
         spam:
@@ -2324,7 +2337,7 @@ id:
           sub_pages:
             logs:
               title: "Log"
-        email:
+        email_logs:
           sub_pages:
             sent:
               title: "Mengirim"
@@ -2438,6 +2451,19 @@ id:
             failed: "Gagal"
       home:
         title: "Beranda"
+      account:
+        title: "Akun"
+      community:
+        sidebar_link:
+          notifications: "Pemberitahuan"
+          users: "Pengguna"
+          groups: "Grup"
+      appearance:
+        sidebar_link:
+          navigation: "Navigasi"
+      section_landing_pages:
+        account:
+          title: "Akun"
       config_areas:
         about:
           community_name: "Nama komunitas"
@@ -2469,9 +2495,22 @@ id:
         embeddable_host:
           edit: "Ubah"
           delete: "Hapus"
+        themes_and_components:
+          breadcrumb_title: "Sesuaikan"
+          components:
+            name: "Nama"
+            enabled: "Diaktifkan?"
+            edit: "Ubah"
+            export: "Ekspor"
+            delete: "Hapus"
+            filter_by_all: "Semua"
         user_fields:
           type: "Tipe"
           delete: "Hapus"
+        color_palettes:
+          palette_name: "Nama"
+          colors:
+            title: "Warna"
       plugins:
         name: "Nama"
         enabled: "Diaktifkan?"

@@ -49,7 +49,7 @@ export default class TopicCell extends Component {
   }
 
   <template>
-    <td class="main-link clearfix topic-list-data" colspan="1">
+    <td class="main-link topic-list-data" colspan="1">
       <PluginOutlet
         @name="topic-list-before-link"
         @outletArgs={{hash topic=@topic}}
@@ -93,6 +93,10 @@ export default class TopicCell extends Component {
               @url={{@topic.lastUnreadUrl}}
             />
           {{~/if~}}
+          <PluginOutlet
+            @name="topic-list-after-badges"
+            @outletArgs={{hash topic=@topic}}
+          />
         </PluginOutlet>
       </span>
 

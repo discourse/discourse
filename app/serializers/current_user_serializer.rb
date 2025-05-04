@@ -72,11 +72,11 @@ class CurrentUserSerializer < BasicUserSerializer
              :sidebar_category_ids,
              :sidebar_sections,
              :new_new_view_enabled?,
-             :use_experimental_admin_search,
              :can_view_raw_email,
              :login_method,
              :has_unseen_features,
-             :can_see_emails
+             :can_see_emails,
+             :use_glimmer_post_stream_mode_auto_mode
 
   delegate :user_stat, to: :object, private: true
   delegate :any_posts, :draft_count, :pending_posts_count, :read_faq?, to: :user_stat
@@ -133,10 +133,6 @@ class CurrentUserSerializer < BasicUserSerializer
     scope.can_send_private_messages?
   end
 
-  def use_experimental_admin_search
-    object.staff? && object.in_any_groups?(SiteSetting.experimental_admin_search_enabled_groups_map)
-  end
-
   def has_unseen_features
     DiscourseUpdates.has_unseen_features?(object.id)
   end
@@ -146,7 +142,7 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def can_post_anonymously
-    SiteSetting.allow_anonymous_posting &&
+    SiteSetting.allow_anonymous_mode &&
       (is_anonymous || object.in_any_groups?(SiteSetting.anonymous_posting_allowed_groups_map))
   end
 
@@ -319,5 +315,13 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def include_can_see_emails?
     object.staff?
+  end
+
+  def use_glimmer_post_stream_mode_auto_mode
+    true
+  end
+
+  def include_use_glimmer_post_stream_mode_auto_mode?
+    scope.user.in_any_groups?(SiteSetting.glimmer_post_stream_mode_auto_groups_map)
   end
 end

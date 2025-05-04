@@ -24,7 +24,7 @@ describe "User preferences | Security", type: :system do
       authenticator = page.driver.browser.add_virtual_authenticator(options)
 
       user_preferences_security_page.visit(user)
-      user_preferences_security_page.visit_second_factor(password)
+      user_preferences_security_page.visit_second_factor(user, password)
 
       find(".security-key .new-security-key").click
       expect(user_preferences_security_page).to have_css("input#security-key-name")
@@ -36,12 +36,17 @@ describe "User preferences | Security", type: :system do
 
       user_menu.sign_out
 
+      # puts <<~STRING
+      # public_key_base64 = \"#{user.second_factor_security_keys.first.public_key}\"
+      # private_key_string = \"#{authenticator.credentials.first.private_key}\"
+      # STRING
+
       # login flow
       find(".d-header .login-button").click
       find("input#login-account-name").fill_in(with: user.username)
       find("input#login-account-password").fill_in(with: password)
 
-      find(".d-modal__footer .btn-primary").click
+      find("#login-button.btn-primary").click
       find("#security-key .btn-primary").click
 
       expect(page).to have_css(".header-dropdown-toggle.current-user")
@@ -54,7 +59,7 @@ describe "User preferences | Security", type: :system do
   shared_examples "passkeys" do
     before { SiteSetting.enable_passkeys = true }
 
-    it "adds a passkey and logs in with it" do
+    it "adds a passkey, removes user password, logs in with passkey" do
       options =
         ::Selenium::WebDriver::VirtualAuthenticatorOptions.new(
           user_verification: true,
@@ -94,6 +99,11 @@ describe "User preferences | Security", type: :system do
 
       # close the dialog (don't delete the key, we need it to login in the next step)
       find(".dialog-close").click
+
+      find("#remove-password-link").click
+      # already confirmed session for the passkey, so this will go straight for the confirmation dialog
+      find(".dialog-footer .btn-danger").click
+      expect(user_preferences_security_page).to have_no_css("#remove-password-link")
 
       user_menu.sign_out
 

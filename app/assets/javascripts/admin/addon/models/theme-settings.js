@@ -1,19 +1,8 @@
-import EmberObject from "@ember/object";
-import { alias } from "@ember/object/computed";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import SettingObjectHelper from "admin/lib/setting-object-helper";
+import SiteSetting from "admin/models/site-setting";
 
-export default class ThemeSettings extends EmberObject {
-  settingObjectHelper = new SettingObjectHelper(this);
-
-  @alias("settingObjectHelper.overridden") overridden;
-  @alias("settingObjectHelper.computedValueProperty") computedValueProperty;
-  @alias("settingObjectHelper.computedNameProperty") computedNameProperty;
-  @alias("settingObjectHelper.validValues") validValues;
-  @alias("settingObjectHelper.allowsNone") allowsNone;
-  @alias("settingObjectHelper.anyValue") anyValue;
-
+export default class ThemeSettings extends SiteSetting {
   updateSetting(themeId, newValue) {
     if (this.objects_schema) {
       newValue = JSON.stringify(newValue);

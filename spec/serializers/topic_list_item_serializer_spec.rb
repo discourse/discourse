@@ -207,4 +207,72 @@ RSpec.describe TopicListItemSerializer do
       DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &proc)
     end
   end
+
+  describe "#is_hot" do
+    describe "including the attr based on theme modifier or plugin registry" do
+      fab!(:hot_topic) { Fabricate(:topic) }
+
+      # Caching this directly to workaround the limit heuristic.
+      before { Discourse.cache.write(TopicHotScore::CACHE_KEY, Set.new([hot_topic.id])) }
+      after { Discourse.cache.delete(TopicHotScore::CACHE_KEY) }
+
+      context "without opt-in" do
+        before do
+          allow_any_instance_of(ThemeModifierHelper).to receive(:serialize_topic_is_hot).and_return(
+            false,
+          )
+        end
+
+        it "doesn't includes the attr" do
+          serialized =
+            TopicListItemSerializer.new(hot_topic, scope: Guardian.new, root: false).as_json
+
+          expect(serialized.key?(:is_hot)).to eq(false)
+        end
+      end
+
+      context "when theme modifier opts-in" do
+        before do
+          allow_any_instance_of(ThemeModifierHelper).to receive(:serialize_topic_is_hot).and_return(
+            true,
+          )
+        end
+
+        it "returns true if topic is hot" do
+          serialized =
+            TopicListItemSerializer.new(hot_topic, scope: Guardian.new, root: false).as_json
+
+          expect(serialized[:is_hot]).to eq(true)
+        end
+
+        it "returns false if topic is not hot" do
+          serialized = TopicListItemSerializer.new(topic, scope: Guardian.new, root: false).as_json
+
+          expect(serialized[:is_hot]).to eq(false)
+        end
+      end
+
+      context "when plugin registry opts-in" do
+        let(:modifier) { :serialize_topic_is_hot }
+        let(:proc) { Proc.new { true } }
+        let(:plugin) { Plugin::Instance.new }
+
+        before { DiscoursePluginRegistry.register_modifier(plugin, modifier, &proc) }
+        after { DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &proc) }
+
+        it "returns true if topic is hot" do
+          serialized =
+            TopicListItemSerializer.new(hot_topic, scope: Guardian.new, root: false).as_json
+
+          expect(serialized[:is_hot]).to eq(true)
+        end
+
+        it "returns false if topic is not hot" do
+          serialized = TopicListItemSerializer.new(topic, scope: Guardian.new, root: false).as_json
+
+          expect(serialized[:is_hot]).to eq(false)
+        end
+      end
+    end
+  end
 end

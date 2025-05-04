@@ -87,7 +87,7 @@ export default class UserController extends Controller {
       ariaLabel: this.collapsedInfo
         ? "user.sr_expand_profile"
         : "user.sr_collapse_profile",
-      action: "toggleProfile",
+      action: this.toggleProfile,
     };
   }
 
@@ -196,7 +196,7 @@ export default class UserController extends Controller {
   @computed("model.id", "currentUser.id")
   get canCheckEmails() {
     return new CanCheckEmailsHelper(
-      this.model,
+      this.model.id,
       this.canModeratorsViewEmails,
       this.currentUser
     ).canCheckEmails;

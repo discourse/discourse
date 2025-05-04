@@ -47,7 +47,8 @@ id:
             restricted_categories:
               label: Kategori
           created: Dibuat
-          topics: Topik
+          with_links: Tautan
+          with_code: Kode
         pm_created:
           fields:
             restricted_user:

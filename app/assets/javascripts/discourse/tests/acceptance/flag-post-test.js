@@ -23,189 +23,201 @@ async function pressEnter(selector, modifier) {
   });
 }
 
-acceptance("flagging", function (needs) {
-  needs.user({ admin: true });
-  needs.pretender((server, helper) => {
-    server.get("/u/uwe_keim.json", () => {
-      return helper.response(userFixtures["/u/charlie.json"]);
-    });
-    server.get("/admin/users/255.json", () => {
-      return helper.response({
-        id: 255,
-        automatic: false,
-        name: "admin",
-        username: "admin",
-        user_count: 0,
-        alias_level: 99,
-        visible: true,
-        automatic_membership_email_domains: "",
-        primary_group: false,
-        title: null,
-        grant_trust_level: null,
-        has_messages: false,
-        flair_url: null,
-        flair_bg_color: null,
-        flair_color: null,
-        bio_raw: null,
-        bio_cooked: null,
-        public_admission: false,
-        allow_membership_requests: true,
-        membership_request_template: "Please add me",
-        can_be_deleted: true,
-        can_delete_all_posts: true,
+["enabled", "disabled"].forEach((postStreamMode) => {
+  acceptance(
+    `flagging (glimmer_post_stream_mode = ${postStreamMode})`,
+    function (needs) {
+      needs.settings({
+        glimmer_post_stream_mode: postStreamMode,
       });
-    });
-    server.get("/admin/users/5.json", () => {
-      return helper.response({
-        id: 5,
-        automatic: false,
-        name: "user",
-        username: "user",
-        user_count: 0,
-        alias_level: 99,
-        visible: true,
-        automatic_membership_email_domains: "",
-        primary_group: false,
-        title: null,
-        grant_trust_level: null,
-        has_messages: false,
-        flair_url: null,
-        flair_bg_color: null,
-        flair_color: null,
-        bio_raw: null,
-        bio_cooked: null,
-        public_admission: false,
-        allow_membership_requests: true,
-        membership_request_template: "Please add me",
-        full_name: null,
+      needs.user({ admin: true });
+      needs.pretender((server, helper) => {
+        server.get("/u/uwe_keim.json", () => {
+          return helper.response(userFixtures["/u/charlie.json"]);
+        });
+        server.get("/admin/users/255.json", () => {
+          return helper.response({
+            id: 255,
+            automatic: false,
+            name: "admin",
+            username: "admin",
+            user_count: 0,
+            alias_level: 99,
+            visible: true,
+            automatic_membership_email_domains: "",
+            primary_group: false,
+            title: null,
+            grant_trust_level: null,
+            has_messages: false,
+            flair_url: null,
+            flair_bg_color: null,
+            flair_color: null,
+            bio_raw: null,
+            bio_cooked: null,
+            public_admission: false,
+            allow_membership_requests: true,
+            membership_request_template: "Please add me",
+            can_be_deleted: true,
+            can_delete_all_posts: true,
+          });
+        });
+        server.get("/admin/users/5.json", () => {
+          return helper.response({
+            id: 5,
+            automatic: false,
+            name: "user",
+            username: "user",
+            user_count: 0,
+            alias_level: 99,
+            visible: true,
+            automatic_membership_email_domains: "",
+            primary_group: false,
+            title: null,
+            grant_trust_level: null,
+            has_messages: false,
+            flair_url: null,
+            flair_bg_color: null,
+            flair_color: null,
+            bio_raw: null,
+            bio_cooked: null,
+            public_admission: false,
+            allow_membership_requests: true,
+            membership_request_template: "Please add me",
+            full_name: null,
+          });
+        });
+        server.put("/admin/users/5/silence", () => {
+          return helper.response({
+            silenced: true,
+          });
+        });
+        server.post("/post_actions", () => {
+          return helper.response({
+            response: true,
+          });
+        });
       });
-    });
-    server.put("/admin/users/5/silence", () => {
-      return helper.response({
-        silenced: true,
+
+      test("Flag modal opening", async function (assert) {
+        await visit("/t/internationalization-localization/280");
+        await openFlagModal();
+        assert.dom(".flag-modal-body").exists("shows the flag modal");
       });
-    });
-    server.post("/post_actions", () => {
-      return helper.response({
-        response: true,
+
+      test("Flag take action dropdown exists", async function (assert) {
+        await visit("/t/internationalization-localization/280");
+        await openFlagModal();
+        await click("#radio_inappropriate");
+        await selectKit(".reviewable-action-dropdown").expand();
+        assert
+          .dom("[data-value='agree_and_silence']")
+          .exists("it shows the silence action option");
+        assert
+          .dom("[data-value='agree_and_suspend']")
+          .exists("it shows the suspend action option");
+        assert
+          .dom("[data-value='agree_and_hide']")
+          .exists("it shows the hide action option");
       });
-    });
-  });
 
-  test("Flag modal opening", async function (assert) {
-    await visit("/t/internationalization-localization/280");
-    await openFlagModal();
-    assert.dom(".flag-modal-body").exists("shows the flag modal");
-  });
+      test("Can silence from take action", async function (assert) {
+        await visit("/t/internationalization-localization/280");
+        await openFlagModal();
+        await click("#radio_inappropriate");
+        await selectKit(".reviewable-action-dropdown").expand();
+        await click("[data-value='agree_and_silence']");
+        assert.dom(".silence-user-modal").exists("shows the silence modal");
+        assert.dom(".suspend-message").hasValue("", "penalty message is empty");
+        const silenceUntilCombobox = selectKit(".silence-until .combobox");
+        await silenceUntilCombobox.expand();
+        await silenceUntilCombobox.selectRowByValue("tomorrow");
+        assert.dom(".d-modal__body").exists();
+        await fillIn("input.silence-reason", "for breaking the rules");
 
-  test("Flag take action dropdown exists", async function (assert) {
-    await visit("/t/internationalization-localization/280");
-    await openFlagModal();
-    await click("#radio_inappropriate");
-    await selectKit(".reviewable-action-dropdown").expand();
-    assert
-      .dom("[data-value='agree_and_silence']")
-      .exists("it shows the silence action option");
-    assert
-      .dom("[data-value='agree_and_suspend']")
-      .exists("it shows the suspend action option");
-    assert
-      .dom("[data-value='agree_and_hide']")
-      .exists("it shows the hide action option");
-  });
+        await click(".perform-penalize");
+        assert.dom(".d-modal__body").doesNotExist();
+      });
 
-  test("Can silence from take action", async function (assert) {
-    await visit("/t/internationalization-localization/280");
-    await openFlagModal();
-    await click("#radio_inappropriate");
-    await selectKit(".reviewable-action-dropdown").expand();
-    await click("[data-value='agree_and_silence']");
-    assert.dom(".silence-user-modal").exists("shows the silence modal");
-    assert.dom(".suspend-message").hasValue("", "penalty message is empty");
-    const silenceUntilCombobox = selectKit(".silence-until .combobox");
-    await silenceUntilCombobox.expand();
-    await silenceUntilCombobox.selectRowByValue("tomorrow");
-    assert.dom(".d-modal__body").exists();
-    await fillIn("input.silence-reason", "for breaking the rules");
+      test("Message appears in penalty modal", async function (assert) {
+        this.siteSettings.penalty_include_post_message = true;
+        await visit("/t/internationalization-localization/280");
+        await openFlagModal();
+        await click("#radio_inappropriate");
+        await selectKit(".reviewable-action-dropdown").expand();
+        await click("[data-value='agree_and_silence']");
+        assert.dom(".silence-user-modal").exists("shows the silence modal");
+        assert
+          .dom(".suspend-message")
+          .hasValue(
+            "-------------------\n<p>Any plans to support localization of UI elements, so that I (for example) could set up a completely German speaking forum?</p>\n-------------------",
+            "penalty message is prefilled with post text"
+          );
+      });
 
-    await click(".perform-penalize");
-    assert.dom(".d-modal__body").doesNotExist();
-  });
+      test("Can delete spammer from spam", async function (assert) {
+        await visit("/t/internationalization-localization/280");
+        await openFlagModal();
+        await click("#radio_spam");
 
-  test("Message appears in penalty modal", async function (assert) {
-    this.siteSettings.penalty_include_post_message = true;
-    await visit("/t/internationalization-localization/280");
-    await openFlagModal();
-    await click("#radio_inappropriate");
-    await selectKit(".reviewable-action-dropdown").expand();
-    await click("[data-value='agree_and_silence']");
-    assert.dom(".silence-user-modal").exists("shows the silence modal");
-    assert
-      .dom(".suspend-message")
-      .hasValue(
-        "-------------------\n<p>Any plans to support localization of UI elements, so that I (for example) could set up a completely German speaking forum?</p>\n-------------------",
-        "penalty message is prefilled with post text"
-      );
-  });
+        assert.dom(".delete-spammer").exists();
+      });
 
-  test("Can delete spammer from spam", async function (assert) {
-    await visit("/t/internationalization-localization/280");
-    await openFlagModal();
-    await click("#radio_spam");
+      test("Gets dismissable warning from canceling incomplete silence from take action", async function (assert) {
+        await visit("/t/internationalization-localization/280");
+        await openFlagModal();
+        await click("#radio_inappropriate");
+        await selectKit(".reviewable-action-dropdown").expand();
+        await click("[data-value='agree_and_silence']");
 
-    assert.dom(".delete-spammer").exists();
-  });
+        const silenceUntilCombobox = selectKit(".silence-until .combobox");
+        await silenceUntilCombobox.expand();
+        await silenceUntilCombobox.selectRowByValue("tomorrow");
+        await fillIn("input.silence-reason", "for breaking the rules");
+        await click(".d-modal-cancel");
+        assert.dom(".dialog-body").exists();
 
-  test("Gets dismissable warning from canceling incomplete silence from take action", async function (assert) {
-    await visit("/t/internationalization-localization/280");
-    await openFlagModal();
-    await click("#radio_inappropriate");
-    await selectKit(".reviewable-action-dropdown").expand();
-    await click("[data-value='agree_and_silence']");
+        await click(".dialog-footer .btn-default");
+        assert.dom(".dialog-body").doesNotExist();
+        assert.dom(".silence-user-modal").exists("shows the silence modal");
 
-    const silenceUntilCombobox = selectKit(".silence-until .combobox");
-    await silenceUntilCombobox.expand();
-    await silenceUntilCombobox.selectRowByValue("tomorrow");
-    await fillIn("input.silence-reason", "for breaking the rules");
-    await click(".d-modal-cancel");
-    assert.dom(".dialog-body").exists();
+        await click(".d-modal-cancel");
+        assert.dom(".dialog-body").exists();
 
-    await click(".dialog-footer .btn-default");
-    assert.dom(".dialog-body").doesNotExist();
-    assert.dom(".silence-user-modal").exists("shows the silence modal");
+        await click(".dialog-footer .btn-primary");
+        assert.dom(".dialog-body").doesNotExist();
+      });
 
-    await click(".d-modal-cancel");
-    assert.dom(".dialog-body").exists();
+      test("CTRL + ENTER accepts the modal", async function (assert) {
+        await visit("/t/internationalization-localization/280");
+        await openFlagModal();
 
-    await click(".dialog-footer .btn-primary");
-    assert.dom(".dialog-body").doesNotExist();
-  });
+        await pressEnter(".d-modal", "ctrlKey");
+        assert
+          .dom(".d-modal")
+          .exists(
+            "The modal wasn't closed because the accept button was disabled"
+          );
 
-  test("CTRL + ENTER accepts the modal", async function (assert) {
-    await visit("/t/internationalization-localization/280");
-    await openFlagModal();
+        await click("#radio_inappropriate"); // this enables the accept button
+        await pressEnter(".d-modal", "ctrlKey");
+        assert.dom(".d-modal").doesNotExist("The modal was closed");
+      });
 
-    await pressEnter(".d-modal", "ctrlKey");
-    assert
-      .dom(".d-modal")
-      .exists("The modal wasn't closed because the accept button was disabled");
+      test("CMD or WINDOWS-KEY + ENTER accepts the modal", async function (assert) {
+        await visit("/t/internationalization-localization/280");
+        await openFlagModal();
 
-    await click("#radio_inappropriate"); // this enables the accept button
-    await pressEnter(".d-modal", "ctrlKey");
-    assert.dom(".d-modal").doesNotExist("The modal was closed");
-  });
+        await pressEnter(".d-modal", "metaKey");
+        assert
+          .dom(".d-modal")
+          .exists(
+            "The modal wasn't closed because the accept button was disabled"
+          );
 
-  test("CMD or WINDOWS-KEY + ENTER accepts the modal", async function (assert) {
-    await visit("/t/internationalization-localization/280");
-    await openFlagModal();
-
-    await pressEnter(".d-modal", "metaKey");
-    assert
-      .dom(".d-modal")
-      .exists("The modal wasn't closed because the accept button was disabled");
-
-    await click("#radio_inappropriate"); // this enables the accept button
-    await pressEnter(".d-modal", "ctrlKey");
-    assert.dom(".d-modal").doesNotExist("The modal was closed");
-  });
+        await click("#radio_inappropriate"); // this enables the accept button
+        await pressEnter(".d-modal", "ctrlKey");
+        assert.dom(".d-modal").doesNotExist("The modal was closed");
+      });
+    }
+  );
 });

@@ -92,11 +92,7 @@ export default class NewGroup extends Component {
         {{#if @members.length}}
           <div class="chat-message-creator__new-group-footer-container">
             <div class="chat-message-creator__new-group-footer">
-              <DButton
-                class="btn-primary btn-flat"
-                @label="cancel"
-                @action={{@cancel}}
-              />
+              <DButton class="btn-flat" @label="cancel" @action={{@cancel}} />
               <DButton
                 class="btn-primary create-chat-group"
                 @label="chat.new_message_modal.create_new_group_chat"

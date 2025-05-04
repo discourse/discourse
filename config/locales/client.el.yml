@@ -186,6 +186,10 @@ el:
       dismiss: "Απόρριψη"
     bootstrap_mode: "Ξεκινώντας"
     back_button: "Πίσω"
+    welcome_banner:
+      header:
+        anonymous_members: "Καλώς ήλθατε στην %{site_name}!"
+      search: "Αναζήτηση"
     themes:
       default_description: "Προεπιλογή"
       only_admins: "(αυτό το μήνυμα εμφανίζεται μόνο στους διαχειριστές του ιστότοπου)"
@@ -425,9 +429,6 @@ el:
       remove_confirmation: "Είστε βέβαιοι ότι θέλετε να διαγράψετε αυτό το προσχέδιο;"
       new_topic: "Νέο προσχέδιο θέματος"
       new_private_message: "Νέο πρόχειρο προσωπικό μήνυμα"
-      abandon:
-        yes_value: "Απόρριψη"
-        no_value: "Συνέχιση επεξεργασίας"
     topic_count_all:
       one: "Δείτε %{count} νέο θέμα"
       other: "Δείτε %{count} νέα θέματα"
@@ -557,6 +558,9 @@ el:
         name: "Όνομα"
         fields: "Πεδία"
         reject_reason: "Αιτία"
+        scrubbed_reason: "Αιτία"
+        scrub_record:
+          cancel_button: "Ακύρωση"
       user_percentage:
         agreed:
           one: "%{count} συμφωνεί"
@@ -1777,6 +1781,9 @@ el:
     modal:
       close: "κλείσιμο"
       dismiss_error: "Παράβλεψη σφάλματος"
+    multi_select:
+      no_results: "Δεν υπάρχουν αποτελέσματα"
+      search: "Αναζήτηση…"
     form_kit:
       reset: Επαναφορά
       optional: προεραιτικό
@@ -1971,10 +1978,6 @@ el:
         name: "Google"
         title: "Συνδεθείτε με Google"
         sr_title: "Συνδεθείτε με Google"
-      twitter:
-        name: "Twitter"
-        title: "Συνδεθείτε με Twitter"
-        sr_title: "Συνδεθείτε με Twitter"
       instagram:
         name: "Instagram"
         title: "Συνδεθείτε με Instagram"
@@ -2367,7 +2370,6 @@ el:
       in_topics_posts: "σε όλα τα θέματα και τις αναρτήσεις"
       enter_hint: "ή πατήστε Enter"
       in_posts_by: "σε δημοσιεύσεις από %{username}"
-      browser_tip: "%{modifier} + f"
       recent: "Πρόσφατες Αναζητήσεις"
       clear_recent: "Εκκαθάριση Πρόσφατων Αναζητήσεων"
       type:
@@ -3185,6 +3187,10 @@ el:
       general: "Γενικά"
       settings: "Ρυθμίσεις"
       tags: "Ετικέτες"
+      localization:
+        name: "Όνομα"
+        description: "Περιγραφή"
+        remove: "Αφαίρεση"
       tags_allowed_tags: "Περιορίστε αυτές τις ετικέτες σε αυτήν την κατηγορία:"
       tags_allowed_tag_groups: "Περιορίστε αυτές τις ομάδες ετικετών σε αυτήν την κατηγορία:"
       tags_placeholder: "(Προαιρετική) λίστα επιτρεπόμενων ετικετών"
@@ -3208,9 +3214,13 @@ el:
       description: "Περιγραφή"
       logo: "Εικονίδιο Κατηγορίας"
       background_image: "Εικόνα Φόντου Κατηγορίας"
-      badge_colors: "Χρώματα παρασήμων"
-      background_color: "Χρώμα φόντου"
-      foreground_color: "Χρώμα στο προσκήνιο"
+      background_color: "Χρώμα"
+      styles:
+        icon: "Σύμβολο"
+        emoji: "Emoji"
+        options:
+          icon: "Σύμβολο"
+          emoji: "Emoji"
       name_placeholder: "Μια ή δύο λέξεις το πολύ"
       color_placeholder: "Οποιοδήποτε χρώμα"
       delete_confirm: "Είσαι σίγουρος ότι θέλεις να διαγράψεις αυτή την κατηγορία;"
@@ -3901,9 +3911,6 @@ el:
       back_to_forum: "Πίσω στο Φόρουμ"
       collapse_all_sections: "Σύμπτυξη όλων των τμημάτων"
       expand_all_sections: "Ανάπτυξη όλων των τμημάτων"
-      filter: "Φίλτρο..."
-      no_results:
-        title: "Δεν υπάρχουν αποτελέσματα"
       footer:
         interface_color_selector:
           light: "Ανοιχτό"
@@ -3936,6 +3943,15 @@ el:
         show: "Εμφάνιση"
         about: "Σχετικά"
     powered_by_discourse: "Με την υποστήριξη του Discourse"
+    discovery:
+      headings:
+        categories: "Όλες οι κατηγορίες"
+        filter_labels:
+          latest: "Πρόσφατα"
+          top: "Κορυφαία"
+          new: "Νέο"
+          unread: "Αδιάβαστα"
+          hot: "Δημοφιλή"
   admin_js:
     settings: "Ρυθμίσεις"
     admin:
@@ -3978,20 +3994,20 @@ el:
           title: "Αρχεία"
         legal:
           title: "Νομικά"
-        branding:
-          title: "Επωνυμία"
+        logo_and_fonts:
           logo:
             form:
               mobile: "Mobile"
               email: "Email"
+          fonts:
+            backfill_modal:
+              modal_yes: "Ναι"
         navigation:
           title: "Πλοήγηση"
         notifications:
           title: "Ειδοποιήσεις"
         onebox:
           title: "Onebox"
-        other:
-          title: "Άλλα"
         search_everything:
           title: "Αναζήτηση"
         security:
@@ -4030,6 +4046,8 @@ el:
               header_description: "Προεπισκόπηση του περιεχομένου των συνοπτικών email που στάλθηκαν στους χρήστες που δεν ήταν ενεργοί"
             templates:
               title: "Πρότυπα"
+        email_logs:
+          sub_pages:
             sent:
               title: "Απεσταλμένα"
             skipped:
@@ -4329,6 +4347,39 @@ el:
             failed: "Απέτυχε"
       home:
         title: "Αρχική Σελίδα"
+      account:
+        title: "Λογαριασμός"
+        sidebar_link:
+          backups: "Αντίγραφα ασφαλέιας"
+      community:
+        title: "Κοινότητα"
+        sidebar_link:
+          badges: "Παράσημα"
+          notifications: "Ειδοποιήσεις"
+          permalinks: "Permalinks"
+          users: "Χρήστες"
+          groups: "Ομάδες"
+          legal: "Νομικά"
+          moderation_flags:
+            title: "Συντονισμός"
+      appearance:
+        title: "Εμφάνιση"
+        sidebar_link:
+          emoji: "Emoji"
+          navigation: "Πλοήγηση"
+      email_settings:
+        sidebar_link:
+          appearance: "Εμφάνιση"
+      security:
+        title: "Ασφάλεια"
+        sidebar_link:
+          security: "Ρυθμίσεις ασφαλείας"
+          spam: "Ρυθμίσεις spam"
+      section_landing_pages:
+        account:
+          title: "Λογαριασμός"
+          backups:
+            title: "Αντίγραφα ασφαλέιας"
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
@@ -4358,12 +4409,37 @@ el:
           delete: "Σβήσιμο"
           more_options:
             title: "Περισσότερες επιλογές"
-        look_and_feel:
+        themes_and_components:
+          breadcrumb_title: "Προσαρμογή"
+          install: "Εγκατάσταση"
           themes:
             title: "Θέματα"
+          components:
+            title: "Συστατικά"
+            install: "Εγκατάσταση"
+            name: "Όνομα"
+            enabled: "Ενεργοποιημένο;"
+            by_author: "Του/της %{name}"
+            learn_more: "Μάθετε περισσότερα"
+            edit: "Επεξεργασία"
+            parent_themes_two: "%{name1} και %{name2}"
+            preview: "Προεπισκόπηση"
+            export: "Εξαγωγή"
+            convert: "Μετατρέψτε"
+            delete: "Σβήσιμο"
+            filter_by: "Φιλτράρισμα κατά"
+            filter_by_all: "Όλα"
+            filter_by_used: "Χρησιμοποιημένο"
+            filter_by_unused: "Αχρησιμοποίητο"
+            delete_confirm: 'Είστε βέβαιοι πως θέλετε να διαγράψετε το «%{name}»;'
+            badge_unused: "Αχρησιμοποίητο"
         user_fields:
           type: "Τύπος"
           delete: "Σβήσιμο"
+        color_palettes:
+          palette_name: "Όνομα"
+          colors:
+            title: "Χρώματα"
       plugins:
         title: "Plugins"
         name: "Όνομα"

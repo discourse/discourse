@@ -2145,7 +2145,7 @@ RSpec.describe PostCreator do
     end
 
     it "does not generate for non-human, staged or anonymous users" do
-      SiteSetting.allow_anonymous_posting = true
+      SiteSetting.allow_anonymous_mode = true
 
       [anonymous, Discourse.system_user, staged].each do |user|
         expect(user.posts.size).to eq(0)

@@ -54,6 +54,8 @@ after_initialize do
   DiscoursePluginRegistry.register_flag_applies_to_type("Chat::Message", self)
 
   UserUpdater::OPTION_ATTR.push(:chat_enabled)
+  UserUpdater::OPTION_ATTR.push(:chat_quick_reaction_type)
+  UserUpdater::OPTION_ATTR.push(:chat_quick_reactions_custom)
   UserUpdater::OPTION_ATTR.push(:only_chat_push_notifications)
   UserUpdater::OPTION_ATTR.push(:chat_sound)
   UserUpdater::OPTION_ATTR.push(:ignore_channel_wide_mention)
@@ -250,6 +252,18 @@ after_initialize do
   add_to_serializer(:user_option, :chat_send_shortcut) { object.chat_send_shortcut }
 
   add_to_serializer(:current_user_option, :chat_send_shortcut) { object.chat_send_shortcut }
+
+  add_to_serializer(:user_option, :chat_quick_reaction_type) { object.chat_quick_reaction_type }
+  add_to_serializer(:current_user_option, :chat_quick_reaction_type) do
+    object.chat_quick_reaction_type
+  end
+
+  add_to_serializer(:user_option, :chat_quick_reactions_custom) do
+    object.chat_quick_reactions_custom
+  end
+  add_to_serializer(:current_user_option, :chat_quick_reactions_custom) do
+    object.chat_quick_reactions_custom
+  end
 
   on(:site_setting_changed) do |name, old_value, new_value|
     user_option_field = Chat::RETENTION_SETTINGS_TO_USER_OPTION_FIELDS[name.to_sym]

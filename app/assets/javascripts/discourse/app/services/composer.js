@@ -124,7 +124,6 @@ export default class ComposerService extends Service {
   composerHeight = null;
 
   @and("site.mobileView", "showPreview") forcePreview;
-  @or("isWhispering", "model.unlistTopic") whisperOrUnlistTopic;
   @alias("site.categoriesList") categories;
   @alias("topicController.model") topicModel;
   @reads("currentUser.staff") isStaffUser;
@@ -194,6 +193,22 @@ export default class ComposerService extends Service {
       !this.get("model.replyingToTopic") &&
       !this.get("model.editingPost")
     );
+  }
+
+  get replyingToUserId() {
+    if (this.get("model.editingPost")) {
+      const user = this.get("model.post.reply_to_user");
+      if (user) {
+        return user.id;
+      }
+    }
+
+    const user = this.get("model.post.user");
+    if (user) {
+      return user.id;
+    }
+
+    return this.get("model.topic.user_id");
   }
 
   get formTemplateInitialValues() {

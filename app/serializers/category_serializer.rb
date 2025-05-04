@@ -8,6 +8,10 @@ class CategorySerializer < SiteCategorySerializer
                :require_topic_approval
   end
 
+  class CategoryLocalizationSerializer < ApplicationSerializer
+    attributes :id, :category_id, :locale, :name, :description
+  end
+
   attributes :read_restricted,
              :available_groups,
              :auto_close_hours,
@@ -27,9 +31,13 @@ class CategorySerializer < SiteCategorySerializer
              :topic_featured_link_allowed,
              :search_priority,
              :moderating_group_ids,
-             :default_slow_mode_seconds
+             :default_slow_mode_seconds,
+             :style_type,
+             :emoji,
+             :icon
 
   has_one :category_setting, serializer: CategorySettingSerializer, embed: :objects
+  has_many :category_localizations, serializer: CategoryLocalizationSerializer, embed: :objects
 
   def include_moderating_group_ids?
     SiteSetting.enable_category_group_moderation?

@@ -192,6 +192,10 @@ nb_NO:
       dismiss: "Avslå"
     bootstrap_mode: "Kom godt i gang"
     back_button: "Forrige"
+    welcome_banner:
+      header:
+        anonymous_members: "Velkommen til %{site_name}!"
+      search: "Søk"
     themes:
       default_description: "Forvalg"
       broken_theme_alert: "Det kan hende at nettstedet ditt ikke fungerer fordi et tema/en komponent har feil."
@@ -435,10 +439,6 @@ nb_NO:
       remove_confirmation: "Er du sikker på at du vil slette dette utkastet?"
       new_topic: "Nytt emneutkast"
       new_private_message: "Nytt personlig meldingsutkast"
-      abandon:
-        confirm: "Du har allerede et utkast under arbeid. Hva vil du gjøre med det?"
-        yes_value: "Forkast"
-        no_value: "Gjenoppta redigering"
     topic_count_all:
       one: "Se %{count} nytt emne"
       other: "Se %{count} nye emner"
@@ -569,6 +569,10 @@ nb_NO:
         name: "Navn"
         fields: "Felter"
         reject_reason: "Begrunnelse"
+        scrubbed_reason: "Begrunnelse"
+        scrub_record:
+          reason_placeholder: "Begrunnelse..."
+          cancel_button: "Avbryt"
       user_percentage:
         summary:
           one: "%{agreed}, %{disagreed}, %{ignored} (av siste flagg)"
@@ -1976,6 +1980,8 @@ nb_NO:
     modal:
       close: "lukk"
       dismiss_error: "Avvis feil"
+    multi_select:
+      search: "Søk…"
     form_kit:
       reset: Tilbakestill
       optional: valgfritt
@@ -2208,10 +2214,6 @@ nb_NO:
         name: "Google"
         title: "Logg inn med Google"
         sr_title: "Logg inn med Google"
-      twitter:
-        name: "Twitter"
-        title: "Logg inn med Twitter"
-        sr_title: "Logg inn med Twitter"
       instagram:
         name: "Instagram"
         title: "Logg inn med Instagram"
@@ -2676,8 +2678,6 @@ nb_NO:
       in_topics_posts: "i alle emner og innlegg"
       enter_hint: "eller trykk Enter"
       in_posts_by: "i innlegg av %{username}"
-      browser_tip: "%{modifier} + f"
-      browser_tip_description: "igjen for å bruke innebygd nettlesersøk"
       recent: "Nylige søk"
       clear_recent: "Fjern nylige søk"
       type:
@@ -3653,6 +3653,10 @@ nb_NO:
       settings: "Innstillinger"
       topic_template: "Mal"
       tags: "Stikkord"
+      localization:
+        name: "Navn"
+        description: "Beskrivelse"
+        remove: "Fjern"
       tags_allowed_tags: "Begrens disse stikkordene til denne kategorien:"
       tags_allowed_tag_groups: "Begrens disse stikkordgruppene til denne kategorien:"
       tags_placeholder: "(Valgfritt) liste over tillatte stikkord"
@@ -3680,9 +3684,13 @@ nb_NO:
       logo_dark: "Kategori logobilde i mørkmodus"
       background_image: "Kategori bakgrunnsbilde"
       background_image_dark: "Mørk kategori bakgrunnsbilde"
-      badge_colors: "Merkefarger"
-      background_color: "Bakgrunnsfarge"
-      foreground_color: "Forgrunnsfarge"
+      background_color: "Farge"
+      styles:
+        icon: "Ikon"
+        emoji: "Emoji"
+        options:
+          icon: "Ikon"
+          emoji: "Emoji"
       name_placeholder: "Maksimalt ett eller to ord"
       color_placeholder: "Vilkårlig nettfarge"
       delete_confirm: "Er du sikker på at du vil slette denne kategorien?"
@@ -4331,7 +4339,6 @@ nb_NO:
               content: "Gjennomgang"
             invite:
               content: "Inviter"
-      filter: "Filtrer..."
       footer:
         interface_color_selector:
           light: "Lys"
@@ -4357,6 +4364,15 @@ nb_NO:
       spreadsheet:
         show: "Vis"
         about: "Om"
+    discovery:
+      headings:
+        categories: "Alle kategorier"
+        filter_labels:
+          latest: "Siste"
+          top: "Aktive"
+          new: "Ny"
+          unread: "Uleste"
+          unseen: "Usette"
   admin_js:
     type_to_filter: "Skriv for å filtrere…"
     settings: "Instillinger"
@@ -4398,19 +4414,20 @@ nb_NO:
           title: "Filer"
         legal:
           title: "Juridisk"
-        branding:
+        logo_and_fonts:
           logo:
             form:
               mobile: "Mobil"
               email: "E-post"
+          fonts:
+            backfill_modal:
+              modal_yes: "Ja"
         navigation:
           title: "Navigasjon"
         notifications:
           title: "Varsler"
         onebox:
           title: "Onebox"
-        other:
-          title: "Annet"
         search_everything:
           title: "Søk"
         security:
@@ -4448,6 +4465,8 @@ nb_NO:
               header_description: "Forhåndsvis innholde i oppsummerings-e-postene som sendes til inaktive brukere"
             templates:
               title: "Maler"
+        email_logs:
+          sub_pages:
             sent:
               title: "Sendt"
             skipped:
@@ -4712,6 +4731,36 @@ nb_NO:
             failed: "Feilet"
       home:
         title: "Hjem"
+      account:
+        title: "Konto"
+        sidebar_link:
+          backups: "Sikkerhetskopier"
+      community:
+        title: "Gemenskap"
+        sidebar_link:
+          badges: "Merker"
+          notifications: "Varsler"
+          permalinks: "Permalenker"
+          users: "Brukere"
+          groups: "Grupper"
+          legal: "Juridisk"
+          moderation_flags:
+            title: "Moderering"
+      appearance:
+        title: "Utseende"
+        sidebar_link:
+          emoji: "Emoji"
+          navigation: "Navigasjon"
+      email_settings:
+        sidebar_link:
+          appearance: "Utseende"
+      security:
+        title: "Sikkerhet"
+      section_landing_pages:
+        account:
+          title: "Konto"
+          backups:
+            title: "Sikkerhetskopier"
       config_areas:
         about:
           company_name: "Navn"
@@ -4742,14 +4791,34 @@ nb_NO:
           delete: "Slett"
           more_options:
             title: "Flere valg"
-        look_and_feel:
+        themes_and_components:
+          breadcrumb_title: "Tilpasse"
+          install: "Installer"
           themes:
             title: "Drakter"
+          components:
+            title: "Komponenter"
+            install: "Installer"
+            name: "Navn"
+            enabled: "Aktivert?"
+            by_author: "Av %{name}"
+            learn_more: "Finn ut mer"
+            edit: "Endre"
+            preview: "Forhåndsvis"
+            export: "Eksporter"
+            convert: "Konverter"
+            delete: "Slett"
+            filter_by_all: "Alle"
+            delete_confirm: 'Er du sikker på at du vil slette "%{name}?'
         user_fields:
           type: "Type"
           more_options:
             title: "Flere valg"
           delete: "Slett"
+        color_palettes:
+          palette_name: "Navn"
+          colors:
+            title: "Farger"
       plugins:
         title: "Utvidelser"
         name: "Navn"

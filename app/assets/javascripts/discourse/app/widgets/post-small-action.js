@@ -1,6 +1,10 @@
 import { computed } from "@ember/object";
 import { htmlSafe } from "@ember/template";
 import { h } from "virtual-dom";
+import {
+  GROUP_ACTION_CODES,
+  ICONS,
+} from "discourse/components/post/small-action";
 import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
 import { iconNode } from "discourse/lib/icon-library";
 import { userPath } from "discourse/lib/url";
@@ -20,7 +24,7 @@ export function actionDescriptionHtml(actionCode, createdAt, username, path) {
 
   let who = "";
   if (username) {
-    if (groupActionCodes.includes(actionCode)) {
+    if (GROUP_ACTION_CODES.includes(actionCode)) {
       who = `<a class="mention-group" href="/g/${username}">@${username}</a>`;
     } else {
       who = `<a class="mention" href="${userPath(username)}">@${username}</a>`;
@@ -50,41 +54,8 @@ export function actionDescription(
 
 const addPostSmallActionClassesCallbacks = [];
 
-const groupActionCodes = ["invited_group", "removed_group"];
-
-const icons = {
-  "closed.enabled": "lock",
-  "closed.disabled": "unlock-keyhole",
-  "autoclosed.enabled": "lock",
-  "autoclosed.disabled": "unlock-keyhole",
-  "archived.enabled": "folder",
-  "archived.disabled": "folder-open",
-  "pinned.enabled": "thumbtack",
-  "pinned.disabled": "thumbtack unpinned",
-  "pinned_globally.enabled": "thumbtack",
-  "pinned_globally.disabled": "thumbtack unpinned",
-  "banner.enabled": "thumbtack",
-  "banner.disabled": "thumbtack unpinned",
-  "visible.enabled": "far-eye",
-  "visible.disabled": "far-eye-slash",
-  split_topic: "right-from-bracket",
-  invited_user: "circle-plus",
-  invited_group: "circle-plus",
-  user_left: "circle-minus",
-  removed_user: "circle-minus",
-  removed_group: "circle-minus",
-  public_topic: "comment",
-  open_topic: "comment",
-  private_topic: "envelope",
-  autobumped: "hand-point-right",
-};
-
 export function addPostSmallActionIcon(key, icon) {
-  icons[key] = icon;
-}
-
-export function addGroupPostSmallActionCode(actionCode) {
-  groupActionCodes.push(actionCode);
+  ICONS[key] = icon;
 }
 
 export function addPostSmallActionClassesCallback(callback) {
@@ -95,6 +66,7 @@ export function resetPostSmallActionClassesCallbacks() {
   addPostSmallActionClassesCallbacks.length = 0;
 }
 
+// glimmer-post-stream: has glimmer version
 export default createWidget("post-small-action", {
   buildKey: (attrs) => `post-small-act-${attrs.id}`,
   tagName: "article.small-action.onscreen-post",
@@ -192,7 +164,7 @@ export default createWidget("post-small-action", {
     }
 
     return [
-      h("div.topic-avatar", iconNode(icons[attrs.actionCode] || "exclamation")),
+      h("div.topic-avatar", iconNode(ICONS[attrs.actionCode] || "exclamation")),
       h("div.small-action-desc", [
         h("div.small-action-contents", contents),
         h("div.small-action-buttons", buttons),

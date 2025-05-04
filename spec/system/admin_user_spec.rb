@@ -46,7 +46,7 @@ describe "Admin User Page", type: :system do
 
     it "displays username in the title" do
       expect(page).to have_css(".display-row.username")
-      expect(page.title).to eq("#{user.username} - Admin - Discourse")
+      expect(page.title).to eq("#{user.username} - Users - Admin - Discourse")
     end
 
     describe "the suspend user modal" do

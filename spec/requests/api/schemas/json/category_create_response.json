@@ -17,6 +17,21 @@
         "text_color": {
           "type": "string"
         },
+        "style_type": {
+          "type": "string"
+        },
+        "emoji": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "icon": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
         "slug": {
           "type": "string"
         },
@@ -172,6 +187,7 @@
           "require_reply_approval": null,
           "require_topic_approval": null
         },
+        "category_localizations": [],
         "read_only_banner": {
           "type": [
             "string",
@@ -279,6 +295,9 @@
         "name",
         "color",
         "text_color",
+        "style_type",
+        "emoji",
+        "icon",
         "slug",
         "topic_count",
         "post_count",

@@ -8,19 +8,22 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import SearchMenu from "discourse/components/search-menu";
 import bodyClass from "discourse/helpers/body-class";
 import { prioritizeNameFallback } from "discourse/lib/settings";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import { i18n } from "discourse-i18n";
 
 export default class WelcomeBanner extends Component {
   @service router;
   @service siteSettings;
   @service currentUser;
+  @service appEvents;
+  @service search;
 
   @tracked inViewport = true;
 
   checkViewport = modifier((element) => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        this.inViewport = entry.isIntersecting;
+        this.search.welcomeBannerSearchInViewport = entry.isIntersecting;
       },
       { threshold: 1.0 }
     );
@@ -28,6 +31,20 @@ export default class WelcomeBanner extends Component {
     observer.observe(element);
 
     return () => observer.disconnect();
+  });
+
+  handleKeyboardShortcut = modifier(() => {
+    const cb = (appEvent) => {
+      if (
+        (appEvent.type === "search" || appEvent.type === "page-search") &&
+        this.search.welcomeBannerSearchInViewport
+      ) {
+        this.search.focusSearchInput();
+        appEvent.event.preventDefault();
+      }
+    };
+    this.appEvents.on("header:keyboard-trigger", cb);
+    return () => this.appEvents.off("header:keyboard-trigger", cb);
   });
 
   get displayForRoute() {
@@ -54,7 +71,12 @@ export default class WelcomeBanner extends Component {
   }
 
   get shouldDisplay() {
-    if (!this.siteSettings.enable_welcome_banner) {
+    const enabled = applyValueTransformer(
+      "site-setting-enable-welcome-banner",
+      this.siteSettings.enable_welcome_banner
+    );
+
+    if (!enabled) {
       return false;
     }
 
@@ -63,14 +85,20 @@ export default class WelcomeBanner extends Component {
 
   <template>
     {{#if this.shouldDisplay}}
-      {{#if this.inViewport}}
+      {{#if this.search.welcomeBannerSearchInViewport}}
         {{bodyClass "welcome-banner--visible"}}
       {{/if}}
 
-      <div class="welcome-banner" {{this.checkViewport}}>
+      <div
+        class="welcome-banner"
+        {{this.checkViewport}}
+        {{this.handleKeyboardShortcut}}
+      >
         <div class="custom-search-banner welcome-banner__inner-wrapper">
           <div class="custom-search-banner-wrap welcome-banner__wrap">
-            <h1 class="welcome-banner__title">{{htmlSafe this.headerText}}</h1>
+            <div class="welcome-banner__title">
+              {{htmlSafe this.headerText}}
+            </div>
             <PluginOutlet @name="welcome-banner-below-headline" />
             <div class="search-menu welcome-banner__search-menu">
               <DButton
@@ -79,7 +107,10 @@ export default class WelcomeBanner extends Component {
                 @href="/search?expanded=true"
                 class="search-icon"
               />
-              <SearchMenu @location="welcome-banner" />
+              <SearchMenu
+                @location="welcome-banner"
+                @searchInputId="welcome-banner-search-input"
+              />
             </div>
             <PluginOutlet @name="welcome-banner-below-input" />
           </div>

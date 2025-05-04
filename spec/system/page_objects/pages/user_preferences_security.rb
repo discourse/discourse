@@ -8,11 +8,12 @@ module PageObjects
         self
       end
 
-      def visit_second_factor(password)
+      def visit_second_factor(user, password)
         click_button "Manage Two-Factor Authentication"
-
-        find(".dialog-body input#password").fill_in(with: password)
-        find(".dialog-body .btn-primary").click
+        find(".confirm-session input#password").fill_in(with: password)
+        find(".confirm-session .btn-primary:not([disabled])").click
+        expect(page).to have_current_path("/u/#{user.username}/preferences/second-factor")
+        self
       end
     end
   end

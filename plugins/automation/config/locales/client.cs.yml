@@ -71,7 +71,10 @@ cs:
             restricted_categories:
               label: Kategorie
           created: Vytvořený
-          topics: Témata
+          with_images: Obrázky
+          with_links: Odkazy
+          with_code: Kód
+          with_uploads: Nahrané soubory
         category_created_edited:
           fields:
             restricted_category:

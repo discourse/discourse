@@ -59,11 +59,20 @@ class FKForm extends Component {
 
   @action
   async checkIsDirty(transition) {
-    if (
+    let triggerConfirm = false;
+
+    const shouldCheck =
       this.formData.isDirty &&
       !transition.isAborted &&
-      !transition.queryParamsOnly
-    ) {
+      !transition.queryParamsOnly;
+
+    if (this.args.onDirtyCheck) {
+      triggerConfirm = shouldCheck && this.args.onDirtyCheck(transition);
+    } else {
+      triggerConfirm = shouldCheck;
+    }
+
+    if (triggerConfirm) {
       transition.abort();
 
       this.dialog.yesNoConfirm({
@@ -316,6 +325,7 @@ const Form = <template>
       @validateOn={{@validateOn}}
       @onRegisterApi={{@onRegisterApi}}
       @onReset={{@onReset}}
+      @onDirtyCheck={{@onDirtyCheck}}
       ...attributes
       as |components draftData|
     >

@@ -20,6 +20,10 @@ class ProblemCheck::GroupEmailCredentials < ProblemCheck
     [*Group.with_smtp_configured.pluck(:name), *Group.with_imap_configured.pluck(:name)]
   end
 
+  def translation_data(group)
+    { group_name: group.name, group_full_name: group.full_name }
+  end
+
   def smtp_errors
     return [] if !SiteSetting.enable_smtp
 
@@ -55,28 +59,10 @@ class ProblemCheck::GroupEmailCredentials < ProblemCheck
       blk.call
       nil
     rescue *EmailSettingsExceptionHandler::EXPECTED_EXCEPTIONS => err
-      message =
-        I18n.t(
-          "dashboard.problem.group_email_credentials",
-          {
-            base_path: Discourse.base_path,
-            group_name: group.name,
-            group_full_name: group.full_name,
-            error: EmailSettingsExceptionHandler.friendly_exception_message(err, group.smtp_server),
-          },
-        )
+      error_message =
+        EmailSettingsExceptionHandler.friendly_exception_message(err, group.smtp_server)
 
-      Problem.new(
-        message,
-        priority: "high",
-        identifier: "group_email_credentials",
-        target: group.id,
-        details: {
-          group_name: group.name,
-          group_full_name: group.full_name,
-          error: EmailSettingsExceptionHandler.friendly_exception_message(err, group.smtp_server),
-        },
-      )
+      problem(group, override_data: { error: error_message })
     rescue => err
       Discourse.warn_exception(
         err,

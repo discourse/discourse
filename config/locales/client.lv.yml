@@ -164,6 +164,10 @@ lv:
     software_update_prompt:
       dismiss: "Nerādīt"
     back_button: "Atpakaļ"
+    welcome_banner:
+      header:
+        anonymous_members: "Laipni lūdzam %{site_name}!"
+      search: "Meklēt"
     themes:
       default_description: "Noklusējums"
     s3:
@@ -315,9 +319,6 @@ lv:
       remove_confirmation: "Vai tiešām vēlaties dzēst šo melnrakstu?"
       new_topic: "Jaunas tēmas melnraksts"
       new_private_message: "Jauns personīgā ziņojuma melnraksts"
-      abandon:
-        yes_value: "Izmest"
-        no_value: "Atsākt rediģēšanu"
     preview: "priekšskatījums"
     cancel: "atcelt"
     save: "Saglabāt izmaiņas"
@@ -411,6 +412,9 @@ lv:
         name: "Vārds"
         fields: "Lauki"
         reject_reason: "Iemesls"
+        scrubbed_reason: "Iemesls"
+        scrub_record:
+          cancel_button: "Atcelt"
       topics:
         topic: "Tēmas"
         reviewable_count: "Skaits"
@@ -1594,8 +1598,6 @@ lv:
       not_approved: "Jūsu konts vēl nav apstiprināts. Jums tiks paziņots e-pastā, kad varēsiet pieslēgties."
       google_oauth2:
         name: "Google"
-      twitter:
-        name: "Twitter"
       instagram:
         name: "Instagram"
       facebook:
@@ -2325,6 +2327,10 @@ lv:
       general: "Vispārīgi"
       settings: "Iestatījumi"
       tags: "Tagi"
+      localization:
+        name: "Vārds"
+        description: "Apraksts"
+        remove: "Atcelt"
       tags_placeholder: "(Pēc izvēles) atļauto tagu saraksts"
       tag_groups_placeholder: "(Pēc izvēles) atļauto tagu grupu saraksts"
       required_tag_group:
@@ -2339,9 +2345,13 @@ lv:
       description: "Apraksts"
       logo: "Sadaļas logo attēls"
       background_image: "Sadaļas fona attēls"
-      badge_colors: "Žetona krāsas"
-      background_color: "Fona krāsa"
-      foreground_color: "Priekšplāna krāsa"
+      background_color: "Krāsa"
+      styles:
+        icon: "Ikona"
+        emoji: "Smaidiņi"
+        options:
+          icon: "Ikona"
+          emoji: "Smaidiņi"
       name_placeholder: "Ne vairāk par vienu vai diviem vārdiem"
       color_placeholder: "Jebkura interneta krāsa"
       delete_confirm: "Vai tiešām vēlies dzēst šo kategoriju?"
@@ -2812,7 +2822,6 @@ lv:
               content: "Pārskats"
             invite:
               content: "Ielūgt"
-      filter: "Filtri..."
     form_templates:
       upload_field:
         upload: "Augšupielādēt"
@@ -2833,6 +2842,15 @@ lv:
       spreadsheet:
         show: "Parādīt"
         about: "Par"
+    discovery:
+      headings:
+        categories: "Visas sadaļas"
+        filter_labels:
+          latest: "Pēdējais"
+          top: "Populārākās"
+          new: "jauns"
+          unread: "Nelasīts"
+          unseen: "Neredzēts"
   admin_js:
     settings: "Iestatījumi"
     admin:
@@ -2862,19 +2880,20 @@ lv:
           title: "Faili"
         legal:
           title: "Jurid."
-        branding:
+        logo_and_fonts:
           logo:
             form:
               mobile: "Mobilais"
               email: "E-pasts"
+          fonts:
+            backfill_modal:
+              modal_yes: "Jā"
         navigation:
           title: "Pārvietošanās"
         notifications:
           title: "Paziņojumi"
         onebox:
           title: "Onebox"
-        other:
-          title: "Citi"
         search_everything:
           title: "Meklēt"
         security:
@@ -2908,6 +2927,8 @@ lv:
               header_description: "Pārskatīt saturu e-pastam kas tiks sūtīts neaktīviem lietotājiem"
             templates:
               title: "Veidnes"
+        email_logs:
+          sub_pages:
             sent:
               title: "Nosūtne"
             skipped:
@@ -3092,6 +3113,30 @@ lv:
             failed: "Neizdevies"
       home:
         title: "Mājas"
+      account:
+        title: "Konts"
+        sidebar_link:
+          backups: "Dublējums (Backups)"
+      community:
+        title: "Kopiena"
+        sidebar_link:
+          badges: "Žetoni"
+          notifications: "Paziņojumi"
+          permalinks: "Patstāvīgā saite"
+          users: "Lietotāji"
+          groups: "Grupas"
+          legal: "Jurid."
+      appearance:
+        sidebar_link:
+          emoji: "Smaidiņi"
+          navigation: "Pārvietošanās"
+      security:
+        title: "Drošība"
+      section_landing_pages:
+        account:
+          title: "Konts"
+          backups:
+            title: "Dublējums (Backups)"
       config_areas:
         about:
           company_name: "Vārds"
@@ -3116,12 +3161,26 @@ lv:
         embeddable_host:
           edit: "Rediģēt"
           delete: "Dzēst"
-        look_and_feel:
+        themes_and_components:
+          breadcrumb_title: "Pielāgot"
           themes:
             title: "Dizaini"
+          components:
+            name: "Vārds"
+            enabled: "Ieslēgts?"
+            learn_more: "Uzzināt vairāk"
+            edit: "Rediģēt"
+            preview: "Priekšskatījums"
+            export: "Eksportēt"
+            delete: "Dzēst"
+            filter_by_all: "Viss"
         user_fields:
           type: "Tips"
           delete: "Dzēst"
+        color_palettes:
+          palette_name: "Vārds"
+          colors:
+            title: "Krāsas"
       plugins:
         title: "Spraudņi"
         name: "Nosaukums"

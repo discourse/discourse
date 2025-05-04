@@ -157,6 +157,10 @@ gl:
     software_update_prompt:
       dismiss: "Desbotar"
     back_button: "Volver"
+    welcome_banner:
+      header:
+        anonymous_members: "Dámoslle a benvida a %{site_name}!"
+      search: "Buscar"
     themes:
       default_description: "Predeterminado"
     s3:
@@ -308,9 +312,6 @@ gl:
       remove: "Retirar"
       remove_confirmation: "Confirma que quere retirar este borrador?"
       new_topic: "Borrador de novo tema"
-      abandon:
-        yes_value: "Desbotar"
-        no_value: "Retomar a edición"
     topic_count_all:
       one: "Ver %{count} tema novo"
       other: "Ver %{count} temas novos"
@@ -424,6 +425,10 @@ gl:
         name: "Nome"
         fields: "Campos"
         reject_reason: "Razón"
+        scrubbed_reason: "Motivo"
+        scrub_record:
+          reason_placeholder: "Razón..."
+          cancel_button: "Cancelar"
       user_percentage:
         summary:
           one: "%{agreed}, %{disagreed}, %{ignored} (%{count} alertas en total)"
@@ -1672,8 +1677,6 @@ gl:
       not_approved: "A súa conta non foi aínda aprobada. Notificaráselle por correo electrónico cando poida iniciar a sesión."
       google_oauth2:
         name: "Google"
-      twitter:
-        name: "Twitter"
       instagram:
         name: "Instagram"
       facebook:
@@ -2741,6 +2744,10 @@ gl:
       general: "Xeral"
       settings: "Configuración"
       tags: "Etiquetas"
+      localization:
+        name: "Nome"
+        description: "Descrición"
+        remove: "Retirar"
       tags_allowed_tags: "Restrinxir estas etiquetas a esta categoría:"
       tags_allowed_tag_groups: "Restrinxir estes grupos de etiquetas a esta categoría:"
       tags_placeholder: "lista de etiquetas permitidas (opcional)"
@@ -2763,9 +2770,13 @@ gl:
       description: "Descrición"
       logo: "Logotipo da categoría"
       background_image: "Imaxe do fondo da categoría"
-      badge_colors: "Cores das insignias"
-      background_color: "Cor do fondo"
-      foreground_color: "Cor do primeiro plano"
+      background_color: "Cor"
+      styles:
+        icon: "Icona"
+        emoji: "Emoji"
+        options:
+          icon: "Icona"
+          emoji: "Emoji"
       name_placeholder: "Dúas palabras como máximo"
       color_placeholder: "Calquera cor web"
       delete_confirm: "Confirma a eliminación desta categoría?"
@@ -3365,7 +3376,6 @@ gl:
               content: "Revisar"
             invite:
               content: "Convidar"
-      filter: "Filtrar..."
       footer:
         interface_color_selector:
           light: "Claro"
@@ -3391,6 +3401,14 @@ gl:
       spreadsheet:
         show: "Amosar"
         about: "Verbo de"
+    discovery:
+      headings:
+        categories: "Todas as categorías"
+        filter_labels:
+          latest: "Últimos"
+          top: "Destacados"
+          new: "Novo"
+          unread: "Pendentes de lectura"
   admin_js:
     settings: "Configuración"
     admin:
@@ -3431,8 +3449,7 @@ gl:
           title: "Ficheiros"
         legal:
           title: "Legal"
-        branding:
-          title: "Logo"
+        logo_and_fonts:
           logo:
             form:
               mobile: "Móbil"
@@ -3441,14 +3458,19 @@ gl:
                 description: "Capturas de pantalla que presentan as funcionalidades da súa instalación e funcionalidade na páxina de arranque da instalación. Todas as imaxes deberían ser cargas en local e das mesmas dimensións."
               opengraph_image:
                 description: "Imaxe de gráfico aberto predeterminada que se utiliza cando a páxina non ten ningunha outra imaxe adecuada."
+          fonts:
+            title: "Tipos de letra"
+            form:
+              heading_font:
+                title: "Tipo de letra de título"
+            backfill_modal:
+              modal_yes: "Si"
         navigation:
           title: "Navegación"
         notifications:
           title: "Notificacións"
         onebox:
           title: "Onebox"
-        other:
-          title: "Outro"
         search_everything:
           title: "Buscar"
         security:
@@ -3487,6 +3509,8 @@ gl:
               header_description: "Visualiza o contido das mensaxes de correo e o compendio enviado a usuarios inactivos"
             templates:
               title: "Modelos"
+        email_logs:
+          sub_pages:
             sent:
               title: "Enviada"
             skipped:
@@ -3790,6 +3814,38 @@ gl:
             failed: "Fallou"
       home:
         title: "Inicio"
+      account:
+        title: "Conta"
+        sidebar_link:
+          backups: "Copias de seguranza"
+      community:
+        title: "Comunidade"
+        sidebar_link:
+          badges: "Insignias"
+          notifications: "Notificacións"
+          permalinks: "Ligazóns permanentes"
+          users: "Usuarios"
+          groups: "Grupos"
+          legal: "Legal"
+          moderation_flags:
+            title: "Moderación"
+      appearance:
+        title: "Aparencia"
+        sidebar_link:
+          emoji: "Emoji"
+          navigation: "Navegación"
+          themes_and_components:
+            keywords: "extensión"
+      email_settings:
+        sidebar_link:
+          appearance: "Aparencia"
+      security:
+        title: "Seguranza"
+      section_landing_pages:
+        account:
+          title: "Conta"
+          backups:
+            title: "Copias de seguranza"
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
@@ -3817,12 +3873,32 @@ gl:
         embeddable_host:
           edit: "Editar"
           delete: "Eliminar"
-        look_and_feel:
+        themes_and_components:
+          breadcrumb_title: "Personalizar"
+          install: "Instalar"
           themes:
             title: "Temas"
+          components:
+            title: "Compoñentes"
+            install: "Instalar"
+            name: "Nome"
+            enabled: "Activado?"
+            by_author: "De %{name}"
+            learn_more: "Saber máis"
+            edit: "Editar"
+            preview: "Visualizar"
+            export: "Exportar"
+            convert: "Converter"
+            delete: "Eliminar"
+            filter_by_all: "Todas"
+            delete_confirm: 'Confirma a eliminación de «%{name}»?'
         user_fields:
           type: "Tipo"
           delete: "Eliminar"
+        color_palettes:
+          palette_name: "Nome"
+          colors:
+            title: "Cores"
       plugins:
         title: "Complementos"
         name: "Nome"
