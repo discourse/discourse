@@ -25,9 +25,9 @@ export default {
 
       // prior to v18, Safari has WASM memory growth bugs
       // eg https://github.com/emscripten-core/emscripten/issues/19144
-      let match = window.navigator.userAgent.match(/Mobile\/([0-9]+)\./);
-      let safariVersion = match ? parseInt(match[1], 10) : null;
-      if (capabilities.isSafari && safariVersion && safariVersion < 18) {
+      // startViewTransition was introduced in iOS 18, this allows us to
+      // feature detect and not rely on regexp parsing
+      if (capabilities.isSafari && !("startViewTransition" in document)) {
         return;
       }
 
