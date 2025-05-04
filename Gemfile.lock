@@ -562,7 +562,7 @@ GEM
     securerandom (0.4.1)
     selenium-devtools (0.135.0)
       selenium-webdriver (~> 4.2)
-    selenium-webdriver (4.31.0)
+    selenium-webdriver (4.32.0)
       base64 (~> 0.2)
       logger (~> 1.4)
       rexml (~> 3.2, >= 3.2.5)
@@ -1051,7 +1051,7 @@ CHECKSUMS
   sassc-embedded (1.80.2) sha256=625ac3923fe9af1a8072210cf22b01b66f3dc23748a4997a9b28bfdff7c7967d
   securerandom (0.4.1) sha256=cc5193d414a4341b6e225f0cb4446aceca8e50d5e1888743fac16987638ea0b1
   selenium-devtools (0.135.0) sha256=3862ec1f3e940a030f492b3691d11af35544789f961fcd0633cb89e4ea4251ec
-  selenium-webdriver (4.31.0) sha256=ddb2d88eee23cddb5d6a9dadd909427a9e5163718338e11a91eef2fbead100e9
+  selenium-webdriver (4.32.0) sha256=20dbdf27b586beeac9e2791a22312b414d0a30192b6ce144779f7dfde8ae8afe
   shoulda-matchers (6.5.0) sha256=ef6b572b2bed1ac4aba6ab2c5ff345a24b6d055a93a3d1c3bfc86d9d499e3f44
   sidekiq (7.3.9) sha256=1108712e1def89002b28e3545d5ae15d4a57ffd4d2c25d97bb1360988826b5a7
   simplecov (0.22.0) sha256=fe2622c7834ff23b98066bb0a854284b2729a569ac659f82621fc22ef36213a5
