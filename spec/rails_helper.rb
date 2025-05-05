@@ -772,8 +772,6 @@ RSpec.configure do |config|
     Scheduler::Defer.do_all_work
   end
 
-  $playwright_logger = nil
-
   config.before(:each, type: :system) do
     page.driver.with_playwright_page do |pw_page|
       $playwright_logger = PlaywrightLogger.new(pw_page)
