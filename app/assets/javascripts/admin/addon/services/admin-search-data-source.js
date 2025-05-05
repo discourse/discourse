@@ -15,6 +15,12 @@ const MIN_FILTER_LENGTH = 2;
 const MAX_TYPE_RESULT_COUNT_LOW = 15;
 const MAX_TYPE_RESULT_COUNT_HIGH = 50;
 
+const SEARCH_SCORES = {
+  labelStart: 20,
+  exactKeyword: 10,
+  fallback: 5,
+};
+
 function labelOrText(obj, fallback = "") {
   return obj.text || (obj.label ? i18n(obj.label) : fallback);
 }
@@ -262,7 +268,7 @@ export default class AdminSearchDataSource extends Service {
 
     opts.types = opts.types || ADMIN_SEARCH_RESULT_TYPES;
 
-    const filteredResults = [];
+    let filteredResults = [];
     const escapedFilterRegExp = escapeRegExp(filter.toLowerCase());
 
     // Pointless to render heaps of settings if the filter is quite low.
@@ -271,70 +277,42 @@ export default class AdminSearchDataSource extends Service {
         ? MAX_TYPE_RESULT_COUNT_LOW
         : MAX_TYPE_RESULT_COUNT_HIGH;
 
+    const labelStartRegex = new RegExp(`^${escapedFilterRegExp}`, "i");
     const exactKeywordRegexes = escapedFilterRegExp
       .split(" ")
       .map((keyword) => new RegExp(`(${keyword})\\b`, "i"));
-    const labelStartRegex = new RegExp(`^${escapedFilterRegExp}`, "i");
     const fallbackRegex = new RegExp(`${escapedFilterRegExp}`, "i");
-    let typeItemCounts = {};
-    opts.types.forEach((type) => {
-      typeItemCounts[type] = 0;
-    });
-    this.#partialSearch(
-      opts.types,
-      typeItemCounts,
-      perTypeLimit,
-      filteredResults,
-      (dataSourceItem) => {
-        return dataSourceItem.label.match(labelStartRegex);
-      }
-    );
-    this.#partialSearch(
-      opts.types,
-      typeItemCounts,
-      perTypeLimit,
-      filteredResults,
-      (dataSourceItem) => {
-        return exactKeywordRegexes.every((regex) =>
-          dataSourceItem.keywords.match(regex)
-        );
-      }
-    );
-    // return if we have exact matches as this is most important result
-    if (filteredResults.length > 0) {
-      return filteredResults;
-    }
-    this.#partialSearch(
-      opts.types,
-      typeItemCounts,
-      perTypeLimit,
-      filteredResults,
-      (dataSourceItem) => {
-        return dataSourceItem.keywords.match(fallbackRegex);
-      }
-    );
-    return filteredResults;
-  }
 
-  #partialSearch(
-    types,
-    typeItemCounts,
-    perTypeLimit,
-    filteredResults,
-    searchCallback
-  ) {
-    types.forEach((type) => {
+    opts.types.forEach((type) => {
+      const typeResults = [];
       this[`${type}DataSourceItems`].forEach((dataSourceItem) => {
+        dataSourceItem.score = 0;
+
+        if (dataSourceItem.label.match(labelStartRegex)) {
+          dataSourceItem.score =
+            dataSourceItem.score + SEARCH_SCORES.labelStart;
+        }
         if (
-          searchCallback(dataSourceItem) &&
-          typeItemCounts[type] <= perTypeLimit &&
-          !filteredResults.includes(dataSourceItem)
+          exactKeywordRegexes.every((regex) => {
+            return dataSourceItem.label.match(regex);
+          })
         ) {
-          filteredResults.push(dataSourceItem);
-          typeItemCounts[type]++;
+          dataSourceItem.score =
+            dataSourceItem.score + SEARCH_SCORES.exactKeyword;
+        }
+        if (dataSourceItem.keywords.match(fallbackRegex)) {
+          dataSourceItem.score = dataSourceItem.score + SEARCH_SCORES.fallback;
+        }
+
+        if (dataSourceItem.score > 0) {
+          typeResults.push(dataSourceItem);
         }
       });
+      filteredResults = filteredResults.concat(
+        typeResults.sort((a, b) => b.score - a.score).slice(0, perTypeLimit)
+      );
     });
+    return filteredResults.sort((a, b) => b.score - a.score);
   }
 
   #addPageLink(navMapSection, link, parentLabel = "") {
