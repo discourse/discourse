@@ -97,7 +97,7 @@ module Stylesheet
         return
       end
 
-      targets = target ? [target] : %w[desktop mobile admin common]
+      targets = target ? [target] : %w[admin common desktop mobile]
       Stylesheet::Manager.clear_core_cache!(targets)
       message =
         targets.map! { |name| Stylesheet::Manager.new.stylesheet_data(name.to_sym) }.flatten!
