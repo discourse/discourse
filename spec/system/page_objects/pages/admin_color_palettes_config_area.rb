@@ -8,7 +8,7 @@ module PageObjects
       end
 
       def palette(id)
-        find(".content-list li[data-palette-id=\"#{id}\"]")
+        find(".color-palettes-list li[data-palette-id=\"#{id}\"]")
       end
 
       def create_button
