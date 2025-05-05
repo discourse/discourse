@@ -137,6 +137,8 @@ module PageObjects
       end
 
       def reply_to(message)
+        messages.has_message?(id: message.id)
+
         if page.has_css?("html.mobile-view", wait: 0)
           click_message_action_mobile(message, "reply")
         else
