@@ -37,6 +37,7 @@ RSpec.describe "Header Search - Responsive Behavior", type: :system do
   end
 
   it "appears when search banner is not enabled & shows / hides based on viewport width" do
+    SiteSetting.enable_welcome_banner = false
     visit "/"
 
     # Default desktop view should show search field
