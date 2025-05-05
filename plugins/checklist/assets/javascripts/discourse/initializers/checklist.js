@@ -1,6 +1,6 @@
-import { getOwner } from "@ember/owner";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { iconHTML } from "discourse/lib/icon-library";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { i18n } from "discourse-i18n";
@@ -59,7 +59,8 @@ export function checklistSyntax(elem, postDecorator) {
   addUlClasses(boxes);
 
   // TODO (glimmer-post-stream): remove this when we remove the legacy post stream code
-  const postWidget = getOwner(this).lookup("service:site").useGlimmerPostStream
+  const postWidget = getOwnerWithFallback(this).lookup("service:site")
+    .useGlimmerPostStream
     ? null
     : postDecorator?.widget;
   const postModel = postDecorator?.getModel();
