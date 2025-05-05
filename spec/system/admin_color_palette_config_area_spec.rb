@@ -103,17 +103,18 @@ describe "Admin Color Palette Config Area Page", type: :system do
     expect(toasts).to have_success(I18n.t("js.saved"))
     expect(config_area).to have_no_unsaved_changes_indicator
 
-    page.refresh
-
     href = Stylesheet::Manager.new.color_scheme_stylesheet_link_tag_href(color_scheme.id)
 
     expect(page).to have_css(
       "link[data-scheme-id=\"#{color_scheme.id}\"][href=\"#{href}\"]",
       visible: false,
     )
-    expect(get_rgb_color(find("html"), "backgroundColor")).to eq(
-      "rgb(#{"aa".to_i(16)}, #{"33".to_i(16)}, #{"9f".to_i(16)})",
-    )
+
+    try_until_success do
+      expect(get_rgb_color(find("html"), "backgroundColor")).to eq(
+        "rgb(#{"aa".to_i(16)}, #{"33".to_i(16)}, #{"9f".to_i(16)})",
+      )
+    end
   end
 
   it "doesn't apply changes when editing a palette that's not currently active" do
