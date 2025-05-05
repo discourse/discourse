@@ -51,12 +51,6 @@ export default class AdminSiteSettingsFilterControls extends Component {
   }
 
   @action
-  toggleMenu() {
-    this.isMenuOpen = !this.isMenuOpen;
-    this.args.onToggleMenu();
-  }
-
-  @action
   transitionToCategory(category) {
     this.currentCategoryName = category;
     this.args.controller.transitionToCategory(category);
@@ -88,13 +82,6 @@ export default class AdminSiteSettingsFilterControls extends Component {
           @onChange={{this.transitionToCategory}}
         />
         <div class="inline-form">
-          {{#if @showMenu}}
-            <DButton
-              @action={{this.toggleMenu}}
-              @icon={{if this.isMenuOpen "xmark" "bars"}}
-              class="menu-toggle"
-            />
-          {{/if}}
           <input
             {{on "input" this.onChangeFilterInput}}
             id="setting-filter"

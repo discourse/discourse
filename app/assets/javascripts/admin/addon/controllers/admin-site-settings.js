@@ -74,12 +74,4 @@ export default class AdminSiteSettingsController extends Controller {
   filterChanged(filterData) {
     this.filterContent(filterData);
   }
-
-  @action
-  toggleMenu() {
-    const adminDetail = document.querySelector(".admin-detail");
-    ["mobile-closed", "mobile-open"].forEach((state) => {
-      adminDetail.classList.toggle(state);
-    });
-  }
 }

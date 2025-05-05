@@ -108,10 +108,6 @@ $mobile-breakpoint: 700px;
 
   &.admin-site-settings-category {
     overflow: hidden;
-
-    @media (width <= 500px) {
-      background-color: var(--primary-very-low);
-    }
   }
 }
 
@@ -740,10 +736,6 @@ $mobile-breakpoint: 700px;
       }
     }
 
-    @include breakpoint(mobile-extra-large) {
-      margin: 0 -10px;
-    }
-
     input {
       @include breakpoint(tablet) {
         max-width: 150px;
@@ -875,14 +867,6 @@ $mobile-breakpoint: 700px;
   @media (width <= 500px) {
     transition: transform 0.3s ease;
     transform: translateX(50%);
-  }
-}
-
-.admin-detail.mobile-closed {
-  @media (max-width: $mobile-breakpoint) {
-    transition: transform 0.3s ease;
-    transform: translateX(0);
-    padding: 30px 20px;
   }
 }
 
