@@ -28,27 +28,22 @@ We suggest having at least 4 GB RAM and 2 CPU cores.
 
 ## Install Discourse Dependencies
 
-As regular user run [this script][linux_script] in terminal, to setup Rails development environment:-
-
-```sh
-bash <(wget -qO- https://raw.githubusercontent.com/discourse/install-rails/main/linux)
-```
-
-This will install the following new packages on your system:
+You will need the following packages on your system:
 
 - [Git][git_link]
-- [rbenv][rbenv_link]
+- [rbenv][rbenv_link] or [asdf][asdf_link]
 - [ruby-build][ruby_build_link]
-- [Ruby][ruby_link] (stable)
+- [Ruby][ruby_link] (latest stable)
 - [Rails][rails_link]
 - [PostgreSQL][pg_link]
 - [SQLite][sqlite_link]
 - [Redis][redis_link]
-- [Bundler][bundler_link]
-- [MailHog][mg]
-- [ImageMagick][imagemagick_link]
+- [Node.js][node_link]
+- [pnpm][pnpm_link]
+- [MailHog][mh_link]\*\*
+- [ImageMagick][imagemagick_link]\*\*
 
-_In case you have any of this package pre-installed and don't want to run the entire script, see the [script][linux_script] and pick the packages you don't have currently installed. The script is fine-tuned for Discourse, and includes all the packages required for Discourse installation._
+_\*\* optional_
 
 Now that we have installed Discourse dependencies, let's move on to install Discourse itself.
 
@@ -64,7 +59,6 @@ _`~` indicates home folder, so Discourse source code will be available in your h
 
 ## Setup Database
 
-[details="Already completed by the install script"]
 Create role **with the same name as your Linux system username**:
 
 ```sh
@@ -141,22 +135,19 @@ Congratulations! You are now the admin of your own Discourse installation!
 
 Happy hacking! And to get started with that, see [Beginner’s Guide to Creating Discourse Plugins](https://meta.discourse.org/t/beginners-guide-to-creating-discourse-plugins/30515).
 
-[linux_script]: https://github.com/discourse/install-rails/blob/main/linux
 [git_link]: http://git-scm.com/
 [rbenv_link]: https://github.com/sstephenson/rbenv
+[asdf_link]: https://asdf-vm.com/guide/getting-started.html
+[node_link]: https://nodejs.org/en
 [ruby_build_link]: https://github.com/sstephenson/ruby-build
 [ruby_link]: https://www.ruby-lang.org/
 [rails_link]: http://rubyonrails.org/
 [pg_link]: http://www.postgresql.org/
 [sqlite_link]: https://sqlite.org/
 [redis_link]: http://redis.io/
-[bundler_link]: http://bundler.io/
 [imagemagick_link]: http://www.imagemagick.org/
-[meta]: https://meta.discourse.org/t/developers-guide-to-install-discourse-on-ubuntu/14727
-[gh]: https://github.com/techAPJ/discourse-development-ubuntu
-[install_guide]: https://github.com/discourse/discourse/blob/master/docs/INSTALL.md
-[docker_guide]: https://meta.discourse.org/t/beginners-guide-to-deploy-discourse-on-digital-ocean-using-docker/12156
-[mg]: https://github.com/mailhog/MailHog
+[pnpm_link]: https://pnpm.io/
+[mh_link]: https://github.com/mailhog/MailHog
 
 ---
 

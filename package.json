@@ -5,7 +5,7 @@
     "lint": "prettier --check '**/*.{md,json,mjs,yml}'",
     "lint:fix": "prettier --write '**/*.{md,json,mjs,yml}'"
   },
-  "dependencies": {
+  "devDependencies": {
     "prettier": "^3.4.2",
     "prettier-plugin-ember-template-tag": "^2.0.4"
   }

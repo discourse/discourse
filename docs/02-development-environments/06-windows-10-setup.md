@@ -22,27 +22,22 @@ Let’s begin!
 
 ## Install Discourse Dependencies
 
-As regular user run [this script](https://github.com/discourse/install-rails/blob/master/linux) in terminal, to setup Rails development environment:-
+You will need the following packages on your system:
 
-```sh
-bash <(wget -qO- https://raw.githubusercontent.com/discourse/install-rails/master/linux)
-```
+- [Git][git_link]
+- [rbenv][rbenv_link] or [asdf][asdf_link]
+- [ruby-build][ruby_build_link]
+- [Ruby][ruby_link] (latest stable)
+- [Rails][rails_link]
+- [PostgreSQL][pg_link]
+- [SQLite][sqlite_link]
+- [Redis][redis_link]
+- [Node.js][node_link]
+- [pnpm][pnpm_link]
+- [MailHog][mh_link]\*\*
+- [ImageMagick][imagemagick_link]\*\*
 
-This will install following new packages on your system:
-
-- [Git](http://git-scm.com/)
-- [rbenv](https://github.com/sstephenson/rbenv)
-- [ruby-build](https://github.com/sstephenson/ruby-build)
-- [Ruby](https://www.ruby-lang.org/) (stable)
-- [Rails](http://rubyonrails.org/)
-- [PostgreSQL](http://www.postgresql.org/)
-- [SQLite](https://sqlite.org/)
-- [Redis](http://redis.io/)
-- [Bundler](http://bundler.io/)
-- [MailHog](https://github.com/mailhog/MailHog)
-- [ImageMagick](http://www.imagemagick.org/)
-
-_In case you have any of this package pre-installed and don’t want to run entire script, see the [script](https://github.com/discourse/install-rails/blob/master/linux) and pick the packages you don’t have currently installed. The script is fine-tuned for Discourse, and includes all the packages required for Discourse installation._
+_\*\* optional_
 
 Now that we have installed Discourse dependencies, let’s move on to install Discourse itself.
 [/quote]
@@ -507,3 +502,17 @@ Any further issues that show up can be addressed in the future.
 ---
 
 _Last Reviewed by @SaraDev on [date=2022-06-15 time=19:00:00 timezone="America/Los_Angeles"]_
+
+[git_link]: http://git-scm.com/
+[rbenv_link]: https://github.com/sstephenson/rbenv
+[asdf_link]: https://asdf-vm.com/guide/getting-started.html
+[node_link]: https://nodejs.org/en
+[ruby_build_link]: https://github.com/sstephenson/ruby-build
+[ruby_link]: https://www.ruby-lang.org/
+[rails_link]: http://rubyonrails.org/
+[pg_link]: http://www.postgresql.org/
+[sqlite_link]: https://sqlite.org/
+[redis_link]: http://redis.io/
+[imagemagick_link]: http://www.imagemagick.org/
+[pnpm_link]: https://pnpm.io/
+[mh_link]: https://github.com/mailhog/MailHog
