@@ -249,6 +249,7 @@ module SvgSprite
         up-right-from-square
         upload
         user
+        user-check
         user-gear
         user-group
         user-pen
