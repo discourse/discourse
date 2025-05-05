@@ -36,13 +36,6 @@ export default class DiscourseRoute extends Route {
     once(this, this._refreshTitleOnce);
   }
 
-  redirectIfLoginRequired() {
-    const app = this.controllerFor("application");
-    if (app.get("loginRequired")) {
-      this.router.replaceWith("login");
-    }
-  }
-
   isCurrentUser(user) {
     if (!this.currentUser) {
       return false; // the current user is anonymous
