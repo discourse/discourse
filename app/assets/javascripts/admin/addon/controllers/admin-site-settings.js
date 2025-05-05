@@ -55,8 +55,7 @@ export default class AdminSiteSettingsController extends Controller {
   }
 
   @action
-  transitionToCategory(event) {
-    const selectedCategory = event.target.value;
+  transitionToCategory(selectedCategory) {
     this.router.transitionTo("adminSiteSettingsCategory", selectedCategory);
   }
 

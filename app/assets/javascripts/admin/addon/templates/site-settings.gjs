@@ -1,13 +1,12 @@
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
-import { LinkTo } from "@ember/routing";
 import RouteTemplate from "ember-route-template";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import DPageHeader from "discourse/components/d-page-header";
-import concatClass from "discourse/helpers/concat-class";
 import { i18n } from "discourse-i18n";
 import AdminSiteSettingsChangesBanner from "admin/components/admin-site-settings-changes-banner";
 import AdminSiteSettingsFilterControls from "admin/components/admin-site-settings-filter-controls";
+import ComboBox from "select-kit/components/combo-box";
 
 export default RouteTemplate(
   <template>
@@ -30,10 +29,14 @@ export default RouteTemplate(
       @onChangeFilter={{@controller.filterChanged}}
       @showMenu={{true}}
       @onToggleMenu={{@controller.toggleMenu}}
+      @controller={{@controller}}
     />
 
-    <div class="form-kit__container form-kit__field form-kit__field-select">
-      <div class="admin-nav__dropdown form-kit__container-content">
+    <div
+      class="form-kit__container form-kit__field form-kit__field-select admin-nav__dropdown"
+    >
+      <span class="form-kit__container-title">Admin Settings Category</span>
+      <div class="form-kit__container-content">
         <select
           class="admin-nav__select form-kit__control-select d-select"
           {{on "change" (fn @controller.transitionToCategory)}}

@@ -7,6 +7,7 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import DButton from "discourse/components/d-button";
 import { i18n } from "discourse-i18n";
+import ComboBox from "select-kit/components/combo-box";
 
 export default class AdminSiteSettingsFilterControls extends Component {
   @tracked filter = this.args.initialFilter || "";
@@ -52,6 +53,15 @@ export default class AdminSiteSettingsFilterControls extends Component {
   toggleMenu() {
     this.isMenuOpen = !this.isMenuOpen;
     this.args.onToggleMenu();
+  }
+
+  get siteSettingsCategories() {
+    return this.args.controller.visibleSiteSettings.map((category) => {
+      return {
+        id: category.nameKey,
+        name: i18n(category.nameKey),
+      };
+    });
   }
 
   <template>
@@ -100,5 +110,11 @@ export default class AdminSiteSettingsFilterControls extends Component {
         </label>
       </div>
     </div>
+    {{log @controller}}
+    <ComboBox
+      @value={{""}}
+      @content={{this.siteSettingsCategories}}
+      @onChange={{@controller.transitionToCategory}}
+    />
   </template>
 }
