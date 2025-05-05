@@ -466,6 +466,7 @@ RSpec.configure do |config|
       downloadsPath: Downloads::FOLDER,
       slowMo: ENV["PLAYWRIGHT_SLOW_MO_MS"].to_i, # https://playwright.dev/docs/api/class-browsertype#browser-type-launch-option-slow-mo
       playwright_cli_executable_path: "./node_modules/.bin/playwright",
+      logger: Logger.new(IO::NULL),
     }
 
     if ENV["CAPYBARA_REMOTE_DRIVER_URL"].present?
