@@ -78,6 +78,7 @@ class BulkImport::Generic < BulkImport::Base
     import_category_permissions
     import_category_users
     import_category_moderation_groups
+    update_read_restricted_flags
 
     import_topics
     import_posts
