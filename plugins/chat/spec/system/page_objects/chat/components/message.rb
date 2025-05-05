@@ -74,13 +74,10 @@ module PageObjects
           selector_method = args[:does_not_exist] ? :has_no_selector? : :has_selector?
 
           if text
-            text_options = {}
-
             page.find(context).send(
               selector_method,
               selector + " " + ".chat-message-text",
               (args[:exact] ? :exact_text : :text) => text,
-              **text_options,
             )
           else
             page.find(context).send(selector_method, selector)
