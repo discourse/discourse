@@ -32,24 +32,6 @@ export default RouteTemplate(
       @controller={{@controller}}
     />
 
-    <div
-      class="form-kit__container form-kit__field form-kit__field-select admin-nav__dropdown"
-    >
-      <span class="form-kit__container-title">Admin Settings Category</span>
-      <div class="form-kit__container-content">
-        <select
-          class="admin-nav__select form-kit__control-select d-select"
-          {{on "change" (fn @controller.transitionToCategory)}}
-        >
-          {{#each @controller.visibleSiteSettings as |category|}}
-            <option value={{category.nameKey}}>
-              {{category.name}}
-            </option>
-          {{/each}}
-        </select>
-      </div>
-    </div>
-
     <div class="admin-detail pull-left mobile-closed">
       {{outlet}}
     </div>

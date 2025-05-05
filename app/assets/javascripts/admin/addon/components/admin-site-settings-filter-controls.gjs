@@ -13,6 +13,7 @@ export default class AdminSiteSettingsFilterControls extends Component {
   @tracked filter = this.args.initialFilter || "";
   @tracked onlyOverridden = false;
   @tracked isMenuOpen = false;
+  @tracked currentCategoryName = this.args.controller.categoryNameKey;
 
   @action
   clearFilter() {
@@ -55,13 +56,23 @@ export default class AdminSiteSettingsFilterControls extends Component {
     this.args.onToggleMenu();
   }
 
+  @action
+  transitionToCategory(category) {
+    this.currentCategoryName = category;
+    this.args.controller.transitionToCategory(category);
+  }
+
   get siteSettingsCategories() {
     return this.args.controller.visibleSiteSettings.map((category) => {
       return {
         id: category.nameKey,
-        name: i18n(category.nameKey),
+        name: i18n(`admin.site_settings.categories.${category.nameKey}`),
       };
     });
+  }
+
+  get translatedCurrentCategoryName() {
+    return i18n(`admin.site_settings.categories.${this.currentCategoryName}`);
   }
 
   <template>
@@ -70,12 +81,12 @@ export default class AdminSiteSettingsFilterControls extends Component {
       {{didInsert this.runInitialFilter}}
       {{didUpdate this.runInitialFilter @initialFilter}}
     >
-      <ComboBox
-        @value={{@controller.categoryNameKey}}
-        @content={{this.siteSettingsCategories}}
-        @onChange={{@controller.transitionToCategory}}
-      />
       <div class="controls">
+        <ComboBox
+          @value={{this.translatedCurrentCategoryName}}
+          @content={{this.siteSettingsCategories}}
+          @onChange={{this.transitionToCategory}}
+        />
         <div class="inline-form">
           {{#if @showMenu}}
             <DButton
