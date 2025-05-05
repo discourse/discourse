@@ -421,34 +421,18 @@ class BulkImport::Generic < BulkImport::Base
     updated_count = 0
     skipped_count = 0
 
-    everyone_group_id = Group::AUTO_GROUPS[:everyone]
-    full_permission = CategoryGroup.permission_types[:full]
-
     Category
       .includes(:category_groups)
       .find_each do |category|
         processed_count += 1
-        has_everyone_full = false
-        has_everyone_other = false
-        has_any_permission = !category.category_groups.empty?
 
-        category.category_groups.each do |cg|
-          if cg.group_id == everyone_group_id
-            if cg.permission_type == full_permission
-              has_everyone_full = true
-              break
-            else
-              has_everyone_other = true
-            end
+        permissions = category.permissions_params
+        expected_read_restricted =
+          if permissions.empty?
+            false
+          else
+            Category.resolve_permissions(permissions).first
           end
-        end
-
-        expected_read_restricted = true
-        if !has_any_permission || has_everyone_full
-          expected_read_restricted = false
-        elsif has_everyone_other
-          expected_read_restricted = false
-        end
 
         current_read_restricted = category.read_restricted
 
