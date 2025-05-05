@@ -854,15 +854,15 @@ $mobile-breakpoint: 700px;
   .admin-site-settings-category-nav__item:hover {
     background: var(--d-sidebar-highlight-background);
   }
+
+  &__dropdown {
+    width: 250px;
+  }
 }
 
 .admin-detail {
   background-color: var(--secondary);
   margin-left: 0;
-  border-left: solid 1px var(--primary-low);
-  padding: 30px 0 90px 30px;
-  width: 82%;
-  box-sizing: border-box;
 
   @media (max-width: $mobile-breakpoint) {
     width: 100%;

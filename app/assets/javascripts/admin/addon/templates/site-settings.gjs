@@ -32,43 +32,20 @@ export default RouteTemplate(
       @onToggleMenu={{@controller.toggleMenu}}
     />
 
-    <div class="admin-nav admin-site-settings-category-nav pull-left">
-      <ul class="nav nav-stacked">
-        {{#each @controller.visibleSiteSettings as |category|}}
-          <li
-            class={{concatClass
-              "admin-site-settings-category-nav__item"
-              category.nameKey
-            }}
-          >
-            <LinkTo
-              @route="adminSiteSettingsCategory"
-              @model={{category.nameKey}}
-              class={{category.nameKey}}
-              title={{category.name}}
-            >
+    <div class="form-kit__container form-kit__field form-kit__field-select">
+      <div class="admin-nav__dropdown form-kit__container-content">
+        <select
+          class="admin-nav__select form-kit__control-select d-select"
+          {{on "change" (fn @controller.transitionToCategory)}}
+        >
+          {{#each @controller.visibleSiteSettings as |category|}}
+            <option value={{category.nameKey}}>
               {{category.name}}
-              {{#if category.count}}
-                <span class="count">({{category.count}})</span>
-              {{/if}}
-            </LinkTo>
-          </li>
-        {{/each}}
-      </ul>
+            </option>
+          {{/each}}
+        </select>
+      </div>
     </div>
-
-    {{!-- <div class="admin-nav admin-nav-dropdown">
-      <select
-        class="admin-site-settings-dropdown"
-        {{on "change" (fn @controller.transitionToCategory)}}
-      >
-        {{#each @controller.visibleSiteSettings as |category|}}
-          <option value={{category.nameKey}}>
-            {{category.name}}
-          </option>
-        {{/each}}
-      </select>
-    </div> --}}
 
     <div class="admin-detail pull-left mobile-closed">
       {{outlet}}
