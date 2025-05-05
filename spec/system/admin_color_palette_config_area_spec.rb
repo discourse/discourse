@@ -103,6 +103,8 @@ describe "Admin Color Palette Config Area Page", type: :system do
     expect(toasts).to have_success(I18n.t("js.saved"))
     expect(config_area).to have_no_unsaved_changes_indicator
 
+    page.refresh
+
     href = Stylesheet::Manager.new.color_scheme_stylesheet_link_tag_href(color_scheme.id)
 
     expect(page).to have_css(
