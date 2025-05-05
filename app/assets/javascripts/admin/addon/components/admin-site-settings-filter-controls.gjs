@@ -70,6 +70,11 @@ export default class AdminSiteSettingsFilterControls extends Component {
       {{didInsert this.runInitialFilter}}
       {{didUpdate this.runInitialFilter @initialFilter}}
     >
+      <ComboBox
+        @value={{@controller.categoryNameKey}}
+        @content={{this.siteSettingsCategories}}
+        @onChange={{@controller.transitionToCategory}}
+      />
       <div class="controls">
         <div class="inline-form">
           {{#if @showMenu}}
@@ -110,11 +115,5 @@ export default class AdminSiteSettingsFilterControls extends Component {
         </label>
       </div>
     </div>
-    {{log @controller}}
-    <ComboBox
-      @value={{""}}
-      @content={{this.siteSettingsCategories}}
-      @onChange={{@controller.transitionToCategory}}
-    />
   </template>
 }
