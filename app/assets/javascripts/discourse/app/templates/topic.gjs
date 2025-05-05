@@ -199,7 +199,6 @@ export default RouteTemplate(
               </div>
 
             {{else}}
-              {{! template-lint-disable no-invalid-interactive }}
               <h1
                 data-topic-id={{@controller.model.id}}
                 role="button"
