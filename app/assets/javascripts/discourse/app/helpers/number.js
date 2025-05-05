@@ -26,7 +26,7 @@ export default function number(orig, params = {}) {
   let addTitle = params.noTitle ? false : true;
 
   // Round off the thousands to one decimal place
-  const n = numberFormatter(orig);
+  const n = numberFormatter(orig, { maxDisplay: params.maxDisplay });
   if (n.toString() !== title.toString() && addTitle) {
     result += " title='" + escapeExpression(title) + "'";
   }

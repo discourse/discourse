@@ -86,6 +86,10 @@ class PageObjects::Pages::Wizard::BrandingStep < PageObjects::Pages::Wizard::Ste
   def has_upload?(field_id)
     wizard.find_field("image", field_id).has_css?(".wizard-container__button-upload.has-upload")
   end
+
+  def has_preview?(field_id)
+    wizard.find_field("image", field_id).has_css?(".wizard-container__preview")
+  end
 end
 
 class PageObjects::Pages::Wizard::StylingStep < PageObjects::Pages::Wizard::StepBase

@@ -3187,6 +3187,10 @@ el:
       general: "Γενικά"
       settings: "Ρυθμίσεις"
       tags: "Ετικέτες"
+      localization:
+        name: "Όνομα"
+        description: "Περιγραφή"
+        remove: "Αφαίρεση"
       tags_allowed_tags: "Περιορίστε αυτές τις ετικέτες σε αυτήν την κατηγορία:"
       tags_allowed_tag_groups: "Περιορίστε αυτές τις ομάδες ετικετών σε αυτήν την κατηγορία:"
       tags_placeholder: "(Προαιρετική) λίστα επιτρεπόμενων ετικετών"
@@ -3907,9 +3911,6 @@ el:
       back_to_forum: "Πίσω στο Φόρουμ"
       collapse_all_sections: "Σύμπτυξη όλων των τμημάτων"
       expand_all_sections: "Ανάπτυξη όλων των τμημάτων"
-      filter: "Φίλτρο..."
-      no_results:
-        title: "Δεν υπάρχουν αποτελέσματα"
       footer:
         interface_color_selector:
           light: "Ανοιχτό"
@@ -3942,6 +3943,15 @@ el:
         show: "Εμφάνιση"
         about: "Σχετικά"
     powered_by_discourse: "Με την υποστήριξη του Discourse"
+    discovery:
+      headings:
+        categories: "Όλες οι κατηγορίες"
+        filter_labels:
+          latest: "Πρόσφατα"
+          top: "Κορυφαία"
+          new: "Νέο"
+          unread: "Αδιάβαστα"
+          hot: "Δημοφιλή"
   admin_js:
     settings: "Ρυθμίσεις"
     admin:

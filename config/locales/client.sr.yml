@@ -2178,6 +2178,10 @@ sr:
       view: "Prikaži Teme u Kategoriji"
       general: "Opšti"
       settings: "Podešavanje"
+      localization:
+        name: "Ime foruma"
+        description: "Opis"
+        remove: "Ukloni"
       tags_placeholder: "(Opciono) lista dozvoljenih oznaka"
       tag_groups_placeholder: "(Opciono) lista dozvoljenih tagova"
       required_tag_group:
@@ -2604,6 +2608,14 @@ sr:
       spreadsheet:
         show: "Pokaži"
         about: "O nama"
+    discovery:
+      headings:
+        categories: "Sve kategorije"
+        filter_labels:
+          latest: "Poslednje"
+          top: "Top"
+          new: "Nova"
+          unread: "Nepročitano"
   admin_js:
     settings: "Podešavanja"
     admin:

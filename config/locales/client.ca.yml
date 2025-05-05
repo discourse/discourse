@@ -2408,6 +2408,10 @@ ca:
       general: "General"
       settings: "Configuració"
       tags: "Etiquetes"
+      localization:
+        name: "Nom"
+        description: "Descripció"
+        remove: "Elimina"
       tags_allowed_tags: "Restringeix aquestes etiquetes per a aquesta categoria:"
       tags_allowed_tag_groups: "Restringeix aquests grups d'etiquetes a aquesta categoria:"
       tags_placeholder: "Llista (opcional) d'etiquetes permeses"
@@ -2955,7 +2959,6 @@ ca:
               content: "Revisa"
             invite:
               content: "Convida"
-      filter: "Filtre..."
       footer:
         interface_color_selector:
           light: "Clar"
@@ -2981,6 +2984,14 @@ ca:
       spreadsheet:
         show: "Mostra"
         about: "Quant a"
+    discovery:
+      headings:
+        categories: "Totes les categories"
+        filter_labels:
+          latest: "Més recents"
+          top: "Principals"
+          new: "Nou"
+          unread: "No llegits"
   admin_js:
     settings: "Configuració"
     admin:

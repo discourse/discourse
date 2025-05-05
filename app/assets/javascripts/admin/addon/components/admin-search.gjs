@@ -1,8 +1,10 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
+import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
@@ -194,6 +196,15 @@ export default class AdminSearch extends Component {
       </div>
       <DButton class="btn-flat" @icon="filter" @action={{this.toggleFilters}} />
     </div>
+    {{#if @fullPageLink}}
+      <LinkTo
+        @route="adminSearch"
+        @query={{hash filter=this.filter}}
+        class="admin-search__full-page-link"
+      >
+        {{i18n "admin.search.full_page_link"}}
+      </LinkTo>
+    {{/if}}
 
     {{#if this.showFilters}}
       <AdminSearchFilters

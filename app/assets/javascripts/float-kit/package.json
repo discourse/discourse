@@ -14,10 +14,13 @@
     "start": "ember serve"
   },
   "dependencies": {
-    "@babel/core": "^7.26.10",
+    "@babel/core": "^7.27.1",
+    "@ember/render-modifiers": "^3.0.0",
+    "@floating-ui/dom": "^1.6.13",
     "ember-auto-import": "^2.10.0",
     "ember-cli-babel": "^8.2.0",
     "ember-cli-htmlbars": "^6.3.0",
+    "ember-curry-component": "^0.3.0",
     "ember-template-imports": "^4.3.0",
     "truth-helpers": "workspace:1.0.0"
   },

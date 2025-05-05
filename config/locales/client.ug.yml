@@ -3834,6 +3834,10 @@ ug:
       settings: "تەڭشەك"
       topic_template: "قېلىپ"
       tags: "بەلگە"
+      localization:
+        name: "ئىسمى"
+        description: "چۈشەندۈرۈش"
+        remove: "چىقىرىۋەت"
       tags_allowed_tags: "بۇ بەلگىلەرنى مەزكۇر سەھىپىدە چەكلەيدۇ:"
       tags_allowed_tag_groups: "بۇ بەلگە گۇرۇپپىسىنى مەزكۇر سەھىپىدە چەكلەيدۇ:"
       tags_placeholder: "(تاللاشچان) يول قويىدىغان بەلگە تىزىمى"
@@ -4740,12 +4744,6 @@ ug:
       back_to_forum: "مۇنبەرگە قايت"
       collapse_all_sections: "بارلىق بۆلەكلەرنى يىغ"
       expand_all_sections: "بارلىق بۆلەكلەرنى ياي"
-      filter: "سۈزگۈچ..."
-      filter_links: "سۈزگۈچ ئۇلانمىسى…"
-      clear_filter: "سۈزگۈچنى تازىلا"
-      no_results:
-        title: "نەتىجە يوق"
-        description_admin_search: 'بىز «%{filter}» غا ماس كېلىدىغان ھېچقانداق مەزمۇننى تاپالمىدۇق.<br><br><a class="sidebar-additional-filter-admin-search" href="%{admin_search_url}">پۈتكۈل باشقۇرۇش ئارايۈزىنى ئىزدە</a> نى سىناڭ.'
       footer:
         interface_color_selector:
           light: "يورۇق"
@@ -4853,6 +4851,16 @@ ug:
           save: "باشقا ئاتتا ساقلا…"
     powered_by_discourse: "Discourse دا ياسالغان"
     safari_15_warning: "توركۆرگۈڭىز بۇ جامائەت بىلەن تېزلا ماسلاشماسلىقى مۇمكىن. بۇ جامائەتكە قاتنىشىش ئۈچۈن، توركۆرگۈڭىزنى يۈكسەلتىڭ ياكى <a href='%{url}'>تېخىمۇ كۆپ بىلدۈرگۈ</a>."
+    discovery:
+      headings:
+        categories: "ھەممە سەھىپە"
+        filter_labels:
+          latest: "ئاخىرقى"
+          top: "قىزغىن"
+          new: "يېڭى"
+          unread: "ئوقۇلمىغان"
+          hot: "قىزىق"
+          unseen: "كۆرۈلمىگەن"
   admin_js:
     type_to_filter: "كىرگۈزۈلسە سۈزىدۇ…"
     settings: "تەڭشەكلەر"

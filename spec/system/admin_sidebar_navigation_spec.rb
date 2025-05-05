@@ -23,9 +23,19 @@ describe "Admin | Sidebar Navigation", type: :system do
     expect(sidebar).to be_visible
     expect(sidebar).to have_no_section("categories")
     expect(page).to have_no_css(".admin-main-nav")
+
     sidebar.click_back_to_forum
-    expect(page).to have_current_path("/")
+    expect(page).to have_current_path("/latest")
     expect(sidebar).to have_no_section("admin-root")
+  end
+
+  it "goes back to exactly the same page when clicking back to forum" do
+    visit("/hot")
+
+    sidebar.click_link_in_section("community", "admin")
+
+    sidebar.click_back_to_forum
+    expect(page).to have_current_path("/hot")
   end
 
   context "with subfolder" do
@@ -50,7 +60,6 @@ describe "Admin | Sidebar Navigation", type: :system do
     expect(links.map(&:text)).to eq(
       [
         I18n.t("admin_js.admin.dashboard.title"),
-        I18n.t("admin_js.admin.config.search_everything.title"),
         I18n.t("admin_js.admin.config.users.title"),
         I18n.t("admin_js.admin.config.groups.title"),
         I18n.t("admin_js.admin.config.site_settings.title"),
@@ -70,8 +79,10 @@ describe "Admin | Sidebar Navigation", type: :system do
       sidebar_dropdown.click
       expect(sidebar).to have_no_section("community")
       expect(page).to have_no_css(".admin-main-nav")
+
       sidebar.click_back_to_forum
-      expect(page).to have_current_path("/")
+      expect(page).to have_current_path("/latest")
+
       sidebar_dropdown.click
       expect(sidebar).to have_no_section("admin-root")
     end
@@ -86,11 +97,10 @@ describe "Admin | Sidebar Navigation", type: :system do
     )
 
     sidebar.toggle_all_sections
-    expect(page).to have_selector(".sidebar-section-link-content-text", count: 6)
+    expect(page).to have_selector(".sidebar-section-link-content-text", count: 5)
     expect(all(".sidebar-section-link-content-text").map(&:text)).to eq(
       [
         I18n.t("admin_js.admin.dashboard.title"),
-        I18n.t("admin_js.admin.config.search_everything.title"),
         I18n.t("admin_js.admin.config.users.title"),
         I18n.t("admin_js.admin.config.groups.title"),
         I18n.t("admin_js.admin.config.site_settings.title"),
@@ -106,7 +116,7 @@ describe "Admin | Sidebar Navigation", type: :system do
   end
 
   it "highlights the 'Themes and components' link when the themes page is visited" do
-    visit("/admin/customize/themes")
+    visit("/admin/config/customize/themes")
     expect(page).to have_css(
       '.sidebar-section-link-wrapper[data-list-item-name="admin_themes_and_components"] a.active',
     )
@@ -140,7 +150,6 @@ describe "Admin | Sidebar Navigation", type: :system do
     expect(links.map(&:text)).to eq(
       [
         I18n.t("admin_js.admin.dashboard.title"),
-        I18n.t("admin_js.admin.config.search_everything.title"),
         I18n.t("admin_js.admin.config.users.title"),
         I18n.t("admin_js.admin.config.groups.title"),
         I18n.t("admin_js.admin.config.whats_new.title"),

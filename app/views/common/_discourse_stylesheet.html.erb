@@ -1,8 +1,10 @@
 <%= discourse_color_scheme_stylesheets %>
 
 <%- if rtl? %>
+  <%= discourse_stylesheet_link_tag(:common_rtl) %>
   <%= discourse_stylesheet_link_tag(mobile_view? ? :mobile_rtl : :desktop_rtl) %>
 <%- else %>
+  <%= discourse_stylesheet_link_tag(:common) %>
   <%= discourse_stylesheet_link_tag(mobile_view? ? :mobile : :desktop) %>
 <%- end %>
 
@@ -27,5 +29,6 @@
 <%- end %>
 
 <%- if theme_id.present? %>
+  <%= discourse_stylesheet_link_tag(:common_theme) %>
   <%= discourse_stylesheet_link_tag(mobile_view? ? :mobile_theme : :desktop_theme) %>
 <%- end %>

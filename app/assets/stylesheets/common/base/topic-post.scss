@@ -615,6 +615,12 @@ nav.post-controls {
   }
 }
 
+blockquote {
+  margin-left: 0;
+  margin-right: 0;
+  padding: 0.75em;
+}
+
 // we use aside to hold expandable quotes (versus, say, static blockquotes)
 aside.quote {
   margin-top: 1em;

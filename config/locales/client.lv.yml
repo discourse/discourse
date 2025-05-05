@@ -2327,6 +2327,10 @@ lv:
       general: "Vispārīgi"
       settings: "Iestatījumi"
       tags: "Tagi"
+      localization:
+        name: "Vārds"
+        description: "Apraksts"
+        remove: "Atcelt"
       tags_placeholder: "(Pēc izvēles) atļauto tagu saraksts"
       tag_groups_placeholder: "(Pēc izvēles) atļauto tagu grupu saraksts"
       required_tag_group:
@@ -2818,7 +2822,6 @@ lv:
               content: "Pārskats"
             invite:
               content: "Ielūgt"
-      filter: "Filtri..."
     form_templates:
       upload_field:
         upload: "Augšupielādēt"
@@ -2839,6 +2842,15 @@ lv:
       spreadsheet:
         show: "Parādīt"
         about: "Par"
+    discovery:
+      headings:
+        categories: "Visas sadaļas"
+        filter_labels:
+          latest: "Pēdējais"
+          top: "Populārākās"
+          new: "jauns"
+          unread: "Nelasīts"
+          unseen: "Neredzēts"
   admin_js:
     settings: "Iestatījumi"
     admin:

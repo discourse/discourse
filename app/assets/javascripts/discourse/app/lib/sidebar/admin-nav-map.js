@@ -13,14 +13,6 @@ export const ADMIN_NAV_MAP = [
         moderator: true,
       },
       {
-        name: "admin_search",
-        route: "adminSearch",
-        label: "admin.config.search_everything.title",
-        description: "admin.config.search_everything.header_description",
-        icon: "magnifying-glass",
-        moderator: true,
-      },
-      {
         name: "admin_users",
         route: "adminUsers",
         label: "admin.config.users.title",
@@ -292,9 +284,7 @@ export const ADMIN_NAV_MAP = [
       },
       {
         name: "admin_themes_and_components",
-        route: "adminCustomizeThemes",
-        routeModels: ["themes"],
-        currentWhen: "adminCustomizeThemes",
+        route: "adminConfig.customize.themes",
         label: "admin.config.themes_and_components.title",
         description: "admin.config.themes_and_components.header_description",
         icon: "paintbrush",

@@ -1404,6 +1404,7 @@ end
 #  locked_by_id            :integer
 #  image_upload_id         :bigint
 #  outbound_message_id     :string
+#  locale                  :string(20)
 #
 # Indexes
 #

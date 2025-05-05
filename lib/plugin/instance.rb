@@ -814,9 +814,6 @@ class Plugin::Instance
 
     seed_data.each { |key, value| DiscoursePluginRegistry.register_seed_data(key, value) }
 
-    # Allow plugins to `register_asset` for images under /assets
-    Rails.configuration.assets.paths << File.dirname(path) + "/assets"
-
     # Automatically include rake tasks
     Rake.add_rakelib(File.dirname(path) + "/lib/tasks")
 
@@ -839,6 +836,7 @@ class Plugin::Instance
     end
 
     write_extra_js!
+    ensure_images_symlink!
   end
 
   def auth_provider(opts)
@@ -1373,28 +1371,15 @@ class Plugin::Instance
   protected
 
   def self.js_path
-    File.expand_path "#{Rails.root}/app/assets/javascripts/plugins"
-  end
-
-  def legacy_asset_paths
-    [
-      "#{Plugin::Instance.js_path}/#{directory_name}.js.erb",
-      "#{Plugin::Instance.js_path}/#{directory_name}_extra.js.erb",
-    ]
+    File.expand_path "#{Rails.root}/app/assets/generated"
   end
 
   def extra_js_file_path
-    @extra_js_file_path ||= "#{Plugin::Instance.js_path}/#{directory_name}_extra.js"
+    @extra_js_file_path ||=
+      "#{Plugin::Instance.js_path}/#{directory_name}/plugins/#{directory_name}_extra.js"
   end
 
   def write_extra_js!
-    # No longer used, but we want to make sure the files are no longer present
-    # so they don't accidently get compiled by Sprockets.
-    legacy_asset_paths.each do |path|
-      File.delete(path)
-    rescue Errno::ENOENT
-    end
-
     contents = javascript_includes.map { |js| File.read(js) }
 
     if contents.present?
@@ -1403,6 +1388,21 @@ class Plugin::Instance
     else
       begin
         File.delete(extra_js_file_path)
+      rescue Errno::ENOENT
+      end
+    end
+  end
+
+  def ensure_images_symlink!
+    link_from = "#{Rails.root}/app/assets/generated/#{directory_name}/images"
+    link_target = "#{directory}/assets/images"
+
+    if Dir.exist? link_target
+      ensure_directory(link_from)
+      Discourse::Utils.atomic_ln_s(link_target, link_from)
+    else
+      begin
+        File.delete(link_from)
       rescue Errno::ENOENT
       end
     end

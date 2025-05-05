@@ -57,8 +57,8 @@ describe "Topic page", type: :system do
       post3 = Fabricate(:post, topic: topic, cooked: "post3")
       post4 = Fabricate(:post, topic: topic, cooked: "post4")
 
-      PostDestroyer.new(Discourse.system_user, post2).destroy
-      PostDestroyer.new(Discourse.system_user, post3).destroy
+      PostDestroyer.new(Discourse.system_user, post2, context: "Automated testing").destroy
+      PostDestroyer.new(Discourse.system_user, post3, context: "Automated testing").destroy
 
       sign_in admin
     end

@@ -485,14 +485,6 @@ video {
   color: var(--primary);
 }
 
-/* solo quotes */
-blockquote {
-  /* leave browser defaults for top and bottom here */
-  margin-left: 0;
-  margin-right: 0;
-  padding: 12px;
-}
-
 /* quotes with attribution */
 .quote {
   & > blockquote {
