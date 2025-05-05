@@ -181,9 +181,10 @@ module SystemHelpers
       "document.querySelector('#{selector_to_make_tall}').style.height = '10000px'",
     )
 
-    sleep 0.1 # give time to browser
-
-    page.scroll_to(0, 1000)
+    try_until_success do
+      page.scroll_to(0, 1000)
+      expect(page.evaluate_script("window.scrollY")).to eq(1000)
+    end
   end
 
   def setup_or_skip_s3_system_test(enable_secure_uploads: false, enable_direct_s3_uploads: true)
