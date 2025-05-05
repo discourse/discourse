@@ -1933,9 +1933,13 @@ RSpec.describe Post do
           create_post(topic_id: topic.id, post_type: Post.types[:whisper])
         end
 
-      updates_topic_updated_at { PostDestroyer.new(Discourse.system_user, post).destroy }
+      updates_topic_updated_at do
+        PostDestroyer.new(Discourse.system_user, post, context: "Automated testing").destroy
+      end
 
-      updates_topic_updated_at { PostDestroyer.new(Discourse.system_user, post).recover }
+      updates_topic_updated_at do
+        PostDestroyer.new(Discourse.system_user, post, context: "Automated testing").recover
+      end
     end
   end
 

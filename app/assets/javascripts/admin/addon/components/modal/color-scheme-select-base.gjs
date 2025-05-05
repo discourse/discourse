@@ -19,12 +19,14 @@ export default class ColorSchemeSelectBase extends Component {
 
   <template>
     <DModal
+      class="create-color-palette"
       @title={{i18n "admin.customize.colors.select_base.title"}}
       @closeModal={{@closeModal}}
     >
       <:body>
         {{i18n "admin.customize.colors.select_base.description"}}
         <ComboBox
+          class="select-base-palette"
           @content={{@model.baseColorSchemes}}
           @value={{this.selectedBaseThemeId}}
           @onChange={{fn (mut this.selectedBaseThemeId)}}

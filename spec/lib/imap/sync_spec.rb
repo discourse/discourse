@@ -373,7 +373,11 @@ RSpec.describe Imap::Sync do
         provider.stubs(:uids).with(to: 100).returns([100])
         provider.stubs(:uids).with(from: 101).returns([])
 
-        PostDestroyer.new(Discourse.system_user, incoming_100.post).destroy
+        PostDestroyer.new(
+          Discourse.system_user,
+          incoming_100.post,
+          context: "Automated testing",
+        ).destroy
         provider
           .stubs(:emails)
           .with([100], %w[UID FLAGS LABELS ENVELOPE], anything)

@@ -60,7 +60,7 @@ export default class ThemesGridPlaceholder extends Component {
         preserveAspectRatio="xMidYMid slice"
       >
         <rect fill={{this.safeThemeColors.tertiary}} width="800" height="200" />
-        <g transform="translate(280, -100) scale(0.4)">
+        <g transform="translate(250, -120) scale(0.45)">
           <g
             fill="none"
             stroke={{this.safeThemeColors.secondary}}
