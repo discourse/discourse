@@ -49,7 +49,8 @@ class OptimizedImage < ActiveRecord::Base
     end
 
     # prefer to look up the thumbnail without grabbing any locks
-    thumbnail = find_by(upload_id: upload.id, width: width, height: height)
+    extension = ".#{opts[:format] || upload.extension}"
+    thumbnail = find_by(upload_id: upload.id, width: width, height: height, extension: extension)
 
     # correct bad thumbnail if needed
     if thumbnail && (thumbnail.url.blank? || thumbnail.version != VERSION)
@@ -72,7 +73,7 @@ class OptimizedImage < ActiveRecord::Base
 
     lock(upload.id, width, height) do
       # may have been generated since we got the lock
-      thumbnail = find_by(upload_id: upload.id, width: width, height: height)
+      thumbnail = find_by(upload_id: upload.id, width: width, height: height, extension: extension)
 
       # return the previous thumbnail if any
       return thumbnail if thumbnail
@@ -81,7 +82,6 @@ class OptimizedImage < ActiveRecord::Base
         Rails.logger.error("Could not find file in the store located at url: #{upload.url}")
       else
         # create a temp file with the same extension as the original
-        extension = ".#{opts[:format] || upload.extension}"
 
         return nil if extension.length == 1
 
@@ -93,7 +93,7 @@ class OptimizedImage < ActiveRecord::Base
         opts = opts.merge(quality: target_quality) if target_quality
         opts = opts.merge(upload_id: upload.id)
 
-        if upload.extension == "svg"
+        if extension == ".svg" && upload.extension == "svg"
           FileUtils.cp(original_path, temp_path)
           resized = true
         elsif opts[:crop]
@@ -185,7 +185,7 @@ class OptimizedImage < ActiveRecord::Base
     paths.each { |path| raise Discourse::InvalidAccess unless safe_path?(path) }
   end
 
-  IM_DECODERS = /\A(jpe?g|png|ico|gif|webp|avif)\z/i
+  IM_DECODERS = /\A(jpe?g|png|ico|gif|webp|avif|svg)\z/i
 
   def self.prepend_decoder!(path, ext_path = nil, opts = nil)
     opts ||= {}
