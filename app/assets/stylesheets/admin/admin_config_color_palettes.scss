@@ -1,4 +1,40 @@
-.admin-config.color-palettes-show {
+.admin-config.color-palettes {
+  .color-palettes-list {
+    ul {
+      list-style: none;
+      margin: 0;
+    }
+
+    li {
+      border-bottom: 1px solid var(--primary-low);
+
+      &:first-of-type {
+        border-top: 1px solid var(--primary-low);
+      }
+
+      a {
+        display: block;
+        padding: 10px;
+        color: var(--primary);
+
+        &:hover {
+          background-color: var(--primary-low);
+          color: var(--primary);
+        }
+
+        &.active {
+          font-weight: bold;
+          color: var(--primary);
+          background: var(--d-selected);
+        }
+      }
+    }
+  }
+
+  .create-new-palette {
+    margin-top: 1em;
+  }
+
   .admin-config-color-palettes {
     &__name-control {
       display: flex;

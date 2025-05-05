@@ -379,9 +379,17 @@ export default function () {
           this.route("settings", { path: "/" });
         });
 
-        this.route("color-palettes-show", {
-          path: "/colors/:palette_id",
-        });
+        this.route(
+          "colorPalettes",
+          {
+            path: "/colors",
+          },
+          function () {
+            this.route("show", {
+              path: "/:palette_id",
+            });
+          }
+        );
       }
     );
 
