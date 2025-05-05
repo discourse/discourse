@@ -20,8 +20,7 @@ acceptance("Shared Drafts", function () {
     await visit("/t/some-topic/9");
     assert.dom(".shared-draft-controls").exists();
 
-    assert.dom(".title-wrapper").exists("title wrapper is shown");
-    await click("#topic-title .can-edit-topic");
+    await click(".edit-topic");
 
     let categoryChooser = selectKit(".edit-topic-title .category-chooser");
     await categoryChooser.expand();

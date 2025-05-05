@@ -167,14 +167,10 @@ export default class TopicController extends Controller {
     }
   }
 
-  @discourseComputed(
-    "site.mobileView",
-    "capabilities.touch",
-    "model.details.can_edit"
-  )
-  showEditButton(mobileView, touch, canEdit) {
-    const tabletView = touch && window.matchMedia("(hover: none)").matches;
-    return (mobileView && canEdit) || (tabletView && canEdit);
+  @discourseComputed("model.details.can_edit")
+  showEditButton(canEdit) {
+    const canHover = window.matchMedia("(hover: hover)").matches;
+    return !canHover && canEdit;
   }
 
   @discourseComputed("site.mobileView", "model.posts_count")
@@ -388,14 +384,8 @@ export default class TopicController extends Controller {
   }
 
   @action
-  titleClick(event) {
-    let isAtTop =
-      this.currentPostId === this.model.postStream.posts.firstObject.id;
-
-    event?.preventDefault();
-    if (isAtTop) {
-      this.editTopic(event);
-    } else if (event && wantsNewWindow(event)) {
+  jumpTop(event) {
+    if (event && wantsNewWindow(event)) {
       return;
     } else {
       DiscourseURL.routeTo(this.get("model.firstPostUrl"), {
@@ -403,6 +393,15 @@ export default class TopicController extends Controller {
         keepFilter: true,
       });
     }
+  }
+
+  @action
+  titleClick(event) {
+    if (event && wantsNewWindow(event)) {
+      return;
+    }
+    event?.preventDefault();
+    this.editTopic(event);
   }
 
   @action
