@@ -126,7 +126,6 @@
     }
 
     .results {
-      @include float-down;
       box-sizing: border-box;
       border-radius: var(--d-border-radius);
       background: var(--secondary);
