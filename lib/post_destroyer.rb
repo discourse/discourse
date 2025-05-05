@@ -9,7 +9,13 @@ class PostDestroyer
     Post
       .where(deleted_at: nil, hidden: true)
       .where("hidden_at < ?", 30.days.ago)
-      .find_each { |post| PostDestroyer.new(Discourse.system_user, post).destroy }
+      .find_each do |post|
+        PostDestroyer.new(
+          Discourse.system_user,
+          post,
+          context: "Automatically destroyed hidden posts",
+        ).destroy
+      end
   end
 
   def self.destroy_stubs
@@ -57,6 +63,12 @@ class PostDestroyer
     @post = post
     @topic = post.topic || Topic.with_deleted.find_by(id: @post.topic_id)
     @opts = opts
+
+    if user == Discourse.system_user && opts[:context].blank?
+      Discourse.deprecate(<<~WARNING, drop_from: "3.6.0", output_in_test: true)
+        Using PostDestroyer as system user without providing a context will be an error in future versions.
+      WARNING
+    end
   end
 
   def destroy
