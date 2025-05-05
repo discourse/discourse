@@ -154,7 +154,7 @@ shared_examples "signup scenarios" do |signup_page_object, login_page_object|
         SiteSetting.auto_approve_email_domains = "awesomeemail.com"
       end
 
-      it "can signup but cannot login until approval" do |example|
+      it "can signup but cannot login until approval" do
         signup_form
           .open
           .fill_email(invite.email)
@@ -183,7 +183,7 @@ shared_examples "signup scenarios" do |signup_page_object, login_page_object|
         expect(page).to have_css(".header-dropdown-toggle.current-user")
       end
 
-      it "can login directly when using an auto approved email" do |example|
+      it "can login directly when using an auto approved email" do
         signup_form
           .open
           .fill_email("johndoe@awesomeemail.com")
