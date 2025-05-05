@@ -72,7 +72,7 @@
     "@embroider/macros": "^1.16.12",
     "@embroider/router": "^2.1.8",
     "@embroider/webpack": "^4.1.0",
-    "@floating-ui/dom": "^1.6.13",
+    "@floating-ui/dom": "^1.7.0",
     "@glimmer/component": "^1.1.2",
     "@glimmer/tracking": "^1.1.2",
     "@popperjs/core": "^2.11.8",
