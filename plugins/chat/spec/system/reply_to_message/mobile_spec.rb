@@ -90,7 +90,6 @@ RSpec.describe "Reply to message - channel - mobile", type: :system, mobile: tru
       )
 
       text = channel_page.send_message("this is a test message")
-
       expect(channel_page.messages).to have_message(text:)
     end
   end

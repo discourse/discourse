@@ -11,6 +11,7 @@ describe "Thread list in side panel | full page", type: :system do
   let(:side_panel) { PageObjects::Pages::ChatSidePanel.new }
   let(:thread_page) { PageObjects::Pages::ChatThread.new }
   let(:thread_list_page) { PageObjects::Components::Chat::ThreadList.new }
+  let(:cdp) { PageObjects::CDP.new }
 
   before do
     chat_system_bootstrap(current_user, [channel])
@@ -191,9 +192,7 @@ describe "Thread list in side panel | full page", type: :system do
 
         restore_message!(thread_1.original_message, user: other_user)
 
-        try_until_success(timeout: Capybara.default_max_wait_time * 2) do
-          expect(thread_list_page).to have_thread(thread_1)
-        end
+        expect(thread_list_page).to have_thread(thread_1)
       end
     end
 
