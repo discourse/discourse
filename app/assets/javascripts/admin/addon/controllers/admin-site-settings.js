@@ -54,6 +54,12 @@ export default class AdminSiteSettingsController extends Controller {
     );
   }
 
+  @action
+  transitionToCategory(event) {
+    const selectedCategory = event.target.value;
+    this.router.transitionTo("adminSiteSettingsCategory", selectedCategory);
+  }
+
   @debounce(INPUT_DELAY)
   filterContent(filterData) {
     if (this._skipBounce) {

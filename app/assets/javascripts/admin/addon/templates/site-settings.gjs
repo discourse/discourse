@@ -1,3 +1,5 @@
+import { fn } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { LinkTo } from "@ember/routing";
 import RouteTemplate from "ember-route-template";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
@@ -54,6 +56,19 @@ export default RouteTemplate(
         {{/each}}
       </ul>
     </div>
+
+    {{!-- <div class="admin-nav admin-nav-dropdown">
+      <select
+        class="admin-site-settings-dropdown"
+        {{on "change" (fn @controller.transitionToCategory)}}
+      >
+        {{#each @controller.visibleSiteSettings as |category|}}
+          <option value={{category.nameKey}}>
+            {{category.name}}
+          </option>
+        {{/each}}
+      </select>
+    </div> --}}
 
     <div class="admin-detail pull-left mobile-closed">
       {{outlet}}
