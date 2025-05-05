@@ -2702,6 +2702,8 @@ en:
       ok_proceed: "Ok, proceed"
 
       translations:
+        title: "Translating post"
+        select: "Select translation"
         save: "Save translation"
         original_content: "Original post content"
         placeholder: "Enter translation for post here..."

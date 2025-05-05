@@ -107,6 +107,7 @@ export default class ComposerService extends Service {
     : (this.keyValueStore.get("composer.showPreview") || "true") === "true";
 
   @tracked allowPreview = true;
+  @tracked selectedTranslationLocale = null;
   checkedMessages = false;
   messageCount = null;
   showEditReason = false;

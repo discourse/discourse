@@ -40,6 +40,7 @@ import UppyComposerUpload from "discourse/lib/uppy/composer-upload";
 import { formatUsername } from "discourse/lib/utilities";
 import Composer from "discourse/models/composer";
 import { i18n } from "discourse-i18n";
+import DropdownSelectBox from "select-kit/components/dropdown-select-box";
 import FormTemplateChooser from "select-kit/components/form-template-chooser";
 
 let uploadHandlers = [];
@@ -96,6 +97,7 @@ const DEBOUNCE_JIT_MS = 2000;
 @classNameBindings("composer.showToolbar:toolbar-visible", ":wmd-controls")
 export default class ComposerEditor extends Component {
   @service composer;
+  @service siteSettings;
 
   @tracked preview;
 
@@ -988,6 +990,10 @@ export default class ComposerEditor extends Component {
     return formTemplateIds?.length > 0 && !replyingToTopic && !editingPost;
   }
 
+  get availableLocales() {
+    return JSON.parse(this.siteSettings.available_locales);
+  }
+
   @action
   showUploadModal() {
     document.getElementById(this.fileUploadElementId).click();
@@ -1027,6 +1033,23 @@ export default class ComposerEditor extends Component {
         {{/if}}
       </div>
     {{else if this.showTranslationEditor}}
+      <div>
+        <DropdownSelectBox
+          @nameProperty="name"
+          @valueProperty="value"
+          @value={{this.composer.selectedTranslationLocale}}
+          @content={{this.availableLocales}}
+          @options={{hash
+            icon="globe"
+            showCaret=true
+            filterable=true
+            disabled=this.composer.loading
+            placement="bottom-start"
+            translatedNone=(i18n "composer.translations.select")
+          }}
+          class="translation-selector-dropdown btn-small"
+        />
+      </div>
       <div class="d-editor translation-editor">
         <DEditor
           @placeholder="composer.translations.placeholder"

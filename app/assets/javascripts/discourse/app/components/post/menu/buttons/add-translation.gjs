@@ -8,6 +8,8 @@ import { i18n } from "discourse-i18n";
 
 export default class PostMenuAddTranslationButton extends Component {
   @service composer;
+  @service currentUser;
+  @service siteSettings;
 
   @tracked showComposer = false;
 
@@ -23,11 +25,20 @@ export default class PostMenuAddTranslationButton extends Component {
 
   @action
   async addTranslation() {
+    if (
+      !this.currentUser ||
+      !this.siteSettings.experimental_content_localization ||
+      !this.currentUser.can_localize_content
+    ) {
+      return;
+    }
+
     await this.composer.open({
       action: Composer.ADD_TRANSLATION,
       draftKey: "translation",
       warningsDisabled: true,
       hijackPreview: this.originalPostContent,
+      post: this.args.post,
     });
   }
 

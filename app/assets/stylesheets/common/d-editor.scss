@@ -371,11 +371,28 @@
   height: 100%;
 }
 
-// TODO: not sure why these styles aren't applying?
-.d-editor-translation-preview-wrapper {
-  // border: 1px solid var(--primary);
-  // margin: 1rem;
-  &__header {
-    // font-size: var(--font-up-1);
+#reply-control.composer-action-add_translation {
+  .translation-selector-dropdown {
+    margin-bottom: 0.5rem;
+    .select-kit-body {
+      max-height: 300px;
+    }
+  }
+
+  .d-editor-preview .d-editor-translation-preview-wrapper {
+    border: 1px dashed var(--primary-300);
+    border-radius: var(--d-border-radius);
+    padding: 1rem;
+    margin-top: 1rem;
+
+    &__header {
+      background: var(--primary-low);
+      padding: 0.25rem 0.5rem;
+      border-radius: var(--d-border-radius);
+
+      position: absolute;
+      top: 2.5rem;
+      font-size: var(--font-down-1);
+    }
   }
 }
