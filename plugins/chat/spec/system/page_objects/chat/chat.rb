@@ -110,7 +110,7 @@ module PageObjects
 
       def has_finished_loading?(with_preloaded_channels: true)
         has_preloaded_channels? if with_preloaded_channels
-        has_no_css?(".chat-channel--not-loaded-once")
+        has_css?(".--loaded")
         has_no_css?(".chat-skeleton")
       end
 
