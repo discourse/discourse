@@ -432,6 +432,7 @@ Discourse::Application.routes.draw do
         put "/logo" => "logo#update"
         put "/fonts" => "fonts#update"
         get "colors/:id" => "color_palettes#show"
+        get "colors" => "color_palettes#index"
 
         resources :flags, only: %i[index new create update destroy] do
           put "toggle"

@@ -1,8 +1,11 @@
 import DiscourseRoute from "discourse/routes/discourse";
-import ColorScheme from "admin/models/color-scheme";
 
 export default class AdminConfigColorPalettesShowRoute extends DiscourseRoute {
   model(params) {
-    return ColorScheme.find(params.palette_id);
+    const id = parseInt(params.palette_id, 10);
+
+    return this.modelFor("adminConfig.colorPalettes").content.find(
+      (palette) => palette.id === id
+    );
   }
 }
