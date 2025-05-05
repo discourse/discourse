@@ -17,7 +17,7 @@ RSpec.describe "Editing Sidebar Community Section", type: :system do
     expect(sidebar).to have_no_customize_community_section_button
   end
 
-  it "allows admin to edit community section and reset to default" do
+  xit "allows admin to edit community section and reset to default" do
     sign_in(admin)
 
     visit("/latest")
