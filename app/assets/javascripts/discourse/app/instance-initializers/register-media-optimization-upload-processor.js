@@ -8,6 +8,10 @@ export default {
     const capabilities = owner.lookup("service:capabilities");
 
     if (siteSettings.composer_media_optimization_image_enabled) {
+      // Note that prior to v18, Safari has WASM memory growth bugs
+      // eg https://github.com/emscripten-core/emscripten/issues/19144
+      // this feature will need more work to be usable in Safari iOS
+      // both before and after v18
       if (
         capabilities.isIOS &&
         !siteSettings.composer_ios_media_optimisation_image_enabled
@@ -20,14 +24,6 @@ export default {
         return;
       }
       if (!("createImageBitmap" in self)) {
-        return;
-      }
-
-      // prior to v18, Safari has WASM memory growth bugs
-      // eg https://github.com/emscripten-core/emscripten/issues/19144
-      let match = window.navigator.userAgent.match(/Mobile\/([0-9]+)\./);
-      let safariVersion = match ? parseInt(match[1], 10) : null;
-      if (capabilities.isSafari && safariVersion && safariVersion < 18) {
         return;
       }
 
