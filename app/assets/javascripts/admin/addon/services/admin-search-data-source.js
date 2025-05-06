@@ -289,8 +289,7 @@ export default class AdminSearchDataSource extends Service {
         dataSourceItem.score = 0;
 
         if (dataSourceItem.label.match(labelStartRegex)) {
-          dataSourceItem.score =
-            dataSourceItem.score + SEARCH_SCORES.labelStart;
+          dataSourceItem.score += SEARCH_SCORES.labelStart;
         }
         if (
           exactKeywordRegexes.every((regex) => {
