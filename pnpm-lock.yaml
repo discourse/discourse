@@ -2685,9 +2685,6 @@ packages:
   '@types/node@22.15.12':
     resolution: {integrity: sha512-K0fpC/ZVeb8G9rm7bH7vI0KAec4XHEhBam616nVJCV51bKzJ6oA3luG4WdKoaztxe70QaNjS/xBmcDLmr4PiGw==}
 
-  '@types/node@22.15.3':
-    resolution: {integrity: sha512-lX7HFZeHf4QG/J7tBZqrCAXwz9J5RD56Y6MpP0eJkka8p+K0RY/yBTW7CYFJ4VGCclxqOLKmiGP5juQc6MKgcw==}
-
   '@types/qs@6.9.18':
     resolution: {integrity: sha512-kK7dgTYDyGqS+e2Q4aK9X3D7q234CIZ1Bv0q/7Z5IwRDoADNU81xXJK/YVyLbLTZCoIwUoDoffFeF+p/eIklAA==}
 
@@ -8854,9 +8851,6 @@ packages:
     resolution: {integrity: sha512-cYVsTjKl8b+FrnidjibDWskAv7UKOfcwaVZdp/it9n1s9fU3IkgDbhdIRKCW4JDsAlECJY0ytoVPT3sK6kideA==}
     engines: {node: '>=18'}
 
-  zod@3.24.3:
-    resolution: {integrity: sha512-HhY1oqzWCQWuUqvBFnsyrtZRhyPeR7SUGv+C4+MsisMuVfSPx8HpwWqH8tRahSlt6M3PiFAcoeFhZAqIXTxoSg==}
-
   zod@3.24.4:
     resolution: {integrity: sha512-OdqJE9UDRPwWsrHjLN2F8bPxvwJBK22EHLWtanu0LSYr5YqzsaaW3RMgmjwr8Rypg5k+meEJdSPXJZXE/yqOMg==}
 
@@ -10834,7 +10828,7 @@ snapshots:
   '@types/body-parser@1.19.5':
     dependencies:
       '@types/connect': 3.4.38
-      '@types/node': 22.15.3
+      '@types/node': 22.15.12
 
   '@types/chai-as-promised@7.1.8':
     dependencies:
@@ -10844,13 +10838,13 @@ snapshots:
 
   '@types/connect@3.4.38':
     dependencies:
-      '@types/node': 22.15.3
+      '@types/node': 22.15.12
 
   '@types/cookie@0.4.1': {}
 
   '@types/cors@2.8.17':
     dependencies:
-      '@types/node': 22.15.3
+      '@types/node': 22.15.12
 
   '@types/eslint-scope@3.7.7':
     dependencies:
@@ -10871,7 +10865,7 @@ snapshots:
 
   '@types/express-serve-static-core@4.19.6':
     dependencies:
-      '@types/node': 22.15.3
+      '@types/node': 22.15.12
       '@types/qs': 6.9.18
       '@types/range-parser': 1.2.7
       '@types/send': 0.17.4
@@ -10885,16 +10879,16 @@ snapshots:
 
   '@types/fs-extra@5.1.0':
     dependencies:
-      '@types/node': 22.15.3
+      '@types/node': 22.15.12
 
   '@types/fs-extra@8.1.5':
     dependencies:
-      '@types/node': 22.15.3
+      '@types/node': 22.15.12
 
   '@types/glob@8.1.0':
     dependencies:
       '@types/minimatch': 5.1.2
-      '@types/node': 22.15.3
+      '@types/node': 22.15.12
 
   '@types/http-errors@2.0.4': {}
 
@@ -10924,11 +10918,6 @@ snapshots:
   '@types/node@22.15.12':
     dependencies:
       undici-types: 6.21.0
-    optional: true
-
-  '@types/node@22.15.3':
-    dependencies:
-      undici-types: 6.21.0
 
   '@types/qs@6.9.18': {}
 
@@ -10941,19 +10930,19 @@ snapshots:
   '@types/rimraf@2.0.5':
     dependencies:
       '@types/glob': 8.1.0
-      '@types/node': 22.15.3
+      '@types/node': 22.15.12
 
   '@types/rsvp@4.0.9': {}
 
   '@types/send@0.17.4':
     dependencies:
       '@types/mime': 1.3.5
-      '@types/node': 22.15.3
+      '@types/node': 22.15.12
 
   '@types/serve-static@1.15.7':
     dependencies:
       '@types/http-errors': 2.0.4
-      '@types/node': 22.15.3
+      '@types/node': 22.15.12
       '@types/send': 0.17.4
 
   '@types/sizzle@2.3.8': {}
@@ -12190,7 +12179,7 @@ snapshots:
 
   chrome-launcher@1.1.2:
     dependencies:
-      '@types/node': 22.15.3
+      '@types/node': 22.15.12
       escape-string-regexp: 4.0.0
       is-wsl: 2.2.0
       lighthouse-logger: 2.0.1
@@ -13417,7 +13406,7 @@ snapshots:
       ember-source: 5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.27.1))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5)(webpack@5.99.7(@swc/core@1.11.24)(esbuild@0.25.3))
       lodash: 4.17.21
       winston: 3.14.2
-      zod: 3.24.3
+      zod: 3.24.4
     transitivePeerDependencies:
       - supports-color
 
@@ -13455,7 +13444,7 @@ snapshots:
     dependencies:
       '@types/cookie': 0.4.1
       '@types/cors': 2.8.17
-      '@types/node': 22.15.3
+      '@types/node': 22.15.12
       accepts: 1.3.8
       base64id: 2.0.0
       cookie: 0.4.2
@@ -15168,7 +15157,7 @@ snapshots:
 
   jest-worker@27.5.1:
     dependencies:
-      '@types/node': 22.15.3
+      '@types/node': 22.15.12
       merge-stream: 2.0.0
       supports-color: 8.1.1
 
@@ -18539,7 +18528,5 @@ snapshots:
   yocto-queue@1.1.1: {}
 
   yoctocolors-cjs@2.1.2: {}
-
-  zod@3.24.3: {}
 
   zod@3.24.4: {}
