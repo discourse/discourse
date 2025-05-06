@@ -17,11 +17,16 @@ registerDiscourseImplicitInjections();
 
 import Application from "@ember/application";
 import { VERSION } from "@ember/version";
+import "discourse/lib/theme-settings-store";
 // import require from "require";
 import { normalizeEmberEventHandling } from "discourse/lib/ember-events";
 import { isTesting } from "discourse/lib/environment";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { buildResolver } from "discourse/resolver";
+
+window.moduleBroker = {
+  lookup: (moduleName) => window.require(moduleName),
+};
 
 const _pluginCallbacks = [];
 let _unhandledThemeErrors = [];

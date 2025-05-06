@@ -3,6 +3,42 @@ import loaderShim from "discourse/lib/loader-shim";
 
 // AMD shims for the app bundle, see the comment in loader-shim.js
 // These effectively become public APIs for plugins, so add/remove them carefully
+loaderShim("@glimmer/component", () => importSync("@glimmer/component"));
+loaderShim("@ember/helper", () => importSync("@ember/helper"));
+loaderShim("@ember/modifier", () => importSync("@ember/modifier"));
+loaderShim("@ember/object", () => importSync("@ember/object"));
+loaderShim("@ember/template", () => importSync("@ember/template"));
+loaderShim("@ember/template-factory", () =>
+  importSync("@ember/template-factory")
+);
+loaderShim("@ember/render-modifiers/modifiers/did-insert", () =>
+  importSync("@ember/render-modifiers/modifiers/did-insert")
+);
+loaderShim("@ember/render-modifiers/modifiers/did-update", () =>
+  importSync("@ember/render-modifiers/modifiers/did-update")
+);
+loaderShim("@ember/runloop", () => importSync("@ember/runloop"));
+loaderShim("@ember/service", () => importSync("@ember/service"));
+loaderShim("@ember/component", () => importSync("@ember/component"));
+loaderShim("@glimmer/tracking", () => importSync("@glimmer/tracking"));
+loaderShim("discourse/components/conditional-loading-spinner", () =>
+  importSync("discourse/components/conditional-loading-spinner")
+);
+loaderShim("discourse/components/d-modal", () =>
+  importSync("discourse/components/d-modal")
+);
+loaderShim("discourse/components/d-button", () =>
+  importSync("discourse/components/d-button")
+);
+loaderShim("discourse/helpers/loading-spinner", () =>
+  importSync("discourse/helpers/loading-spinner")
+);
+loaderShim("discourse/lib/debounce", () =>
+  importSync("discourse/lib/debounce")
+);
+loaderShim("discourse/lib/plugin-api", () =>
+  importSync("discourse/lib/plugin-api")
+);
 loaderShim("@discourse/itsatrap", () => importSync("@discourse/itsatrap"));
 loaderShim("@ember-compat/tracked-built-ins", () =>
   importSync("@ember-compat/tracked-built-ins")

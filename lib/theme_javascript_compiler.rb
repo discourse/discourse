@@ -87,11 +87,7 @@ class ThemeJavascriptCompiler
 
   def prepend_settings(settings_hash)
     @output_tree.prepend ["settings.js", <<~JS]
-      (function() {
-        if ('require' in window) {
-          require("discourse/lib/theme-settings-store").registerSettings(#{@theme_id}, #{settings_hash.to_json});
-        }
-      })();
+      window.registerDiscourseThemeSettings(#{@theme_id}, #{settings_hash.to_json});
     JS
   end
 
