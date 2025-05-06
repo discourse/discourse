@@ -101,7 +101,7 @@ GEM
       rack-test (>= 0.6.3)
       regexp_parser (>= 1.5, < 3.0)
       xpath (~> 3.2)
-    capybara-playwright-driver (0.5.5)
+    capybara-playwright-driver (0.5.6)
       addressable
       capybara
       playwright-ruby-client (>= 1.16.0)
@@ -824,7 +824,7 @@ CHECKSUMS
   bullet (8.0.5) sha256=f517d571b73934ed6aaf6c62e6a215be2937c1e8e16a77b4aaf252bcc3e5dee6
   byebug (12.0.0) sha256=d4a150d291cca40b66ec9ca31f754e93fed8aa266a17335f71bb0afa7fca1a1e
   capybara (3.40.0) sha256=42dba720578ea1ca65fd7a41d163dd368502c191804558f6e0f71b391054aeef
-  capybara-playwright-driver (0.5.5) sha256=c2bea97497f2a3c045f0f337edf4869a247dbcdcc1f4392ecd57190bbb260896
+  capybara-playwright-driver (0.5.6) sha256=ef461ab97f9fca7df4ecdd10bb1b076d9246f804e89fc3ae127cf1677d855e26
   cbor (0.5.9.8) sha256=9ee097fc58d9bc5e406d112cd2d4e112c7354ec16f8b6ff34e4732c1e44b4eb7
   certified (1.0.0) sha256=aa4cdf0e90e7ee96f6e0ce3daae39eaa8f0486124e0d92daf64d2105aeb9069c
   cgi (0.4.2) sha256=a3cb190d46a820ca01a3e28bd5b64e67003ff99d7884b70512448566f35347e6
