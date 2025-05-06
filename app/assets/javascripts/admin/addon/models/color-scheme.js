@@ -11,9 +11,13 @@ import ColorSchemeColor from "admin/models/color-scheme-color";
 class ColorSchemes extends ArrayProxy {}
 
 export default class ColorScheme extends EmberObject {
-  static findAll() {
+  static findAll({ excludeThemeOwned = false } = {}) {
     const colorSchemes = ColorSchemes.create({ content: [], loading: true });
-    return ajax("/admin/color_schemes").then((all) => {
+    return ajax("/admin/color_schemes", {
+      data: {
+        exclude_theme_owned: excludeThemeOwned,
+      },
+    }).then((all) => {
       all.forEach((colorScheme) => {
         colorSchemes.pushObject(
           ColorScheme.create({
@@ -143,7 +147,7 @@ export default class ColorScheme extends EmberObject {
   }
 
   save(opts) {
-    if (this.is_base || this.disableSave) {
+    if (!opts?.forceSave && (this.is_base || this.disableSave)) {
       return;
     }
 
@@ -152,14 +156,17 @@ export default class ColorScheme extends EmberObject {
     const data = {};
     if (!opts || !opts.enabledOnly) {
       data.name = this.name;
-      data.user_selectable = this.user_selectable;
-      data.base_scheme_id = this.base_scheme_id;
-      data.colors = [];
-      this.colors.forEach((c) => {
-        if (!this.id || c.get("changed")) {
-          data.colors.pushObject(c.getProperties("name", "hex", "dark_hex"));
-        }
-      });
+
+      if (!opts?.saveNameOnly) {
+        data.user_selectable = this.user_selectable;
+        data.base_scheme_id = this.base_scheme_id;
+        data.colors = [];
+        this.colors.forEach((c) => {
+          if (!this.id || c.get("changed")) {
+            data.colors.pushObject(c.getProperties("name", "hex", "dark_hex"));
+          }
+        });
+      }
     }
 
     return ajax(`/admin/color_schemes${this.id ? `/${this.id}` : ""}.json`, {
@@ -172,9 +179,11 @@ export default class ColorScheme extends EmberObject {
         this.set("id", result.id);
       }
 
-      if (!opts || !opts.enabledOnly) {
-        this.startTrackingChanges();
-        this.colors.forEach((c) => c.startTrackingChanges());
+      if (!opts?.saveNameOnly) {
+        if (!opts || !opts.enabledOnly) {
+          this.startTrackingChanges();
+          this.colors.forEach((c) => c.startTrackingChanges());
+        }
       }
 
       this.setProperties({ savingStatus: i18n("saved"), saving: false });

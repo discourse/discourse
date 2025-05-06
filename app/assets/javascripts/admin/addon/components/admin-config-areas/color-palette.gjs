@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import Form from "discourse/components/form";
@@ -16,12 +15,25 @@ import ColorPaletteEditor, {
 export default class AdminConfigAreasColorPalette extends Component {
   @service toasts;
   @service router;
+  @service dialog;
 
   @tracked editingName = false;
   @tracked editorMode = LIGHT;
-  @tracked hasUnsavedChanges = false;
   @tracked saving = false;
-  hasChangedColors = false;
+  @tracked hasChangedName = false;
+  @tracked hasChangedUserSelectable = false;
+  @tracked hasChangedColors = false;
+
+  saveNameOnly = false;
+  fkApi;
+
+  get hasUnsavedChanges() {
+    return (
+      this.hasChangedName ||
+      this.hasChangedUserSelectable ||
+      this.hasChangedColors
+    );
+  }
 
   @cached
   get data() {
@@ -34,6 +46,11 @@ export default class AdminConfigAreasColorPalette extends Component {
   }
 
   @action
+  onRegisterApi(api) {
+    this.fkApi = api;
+  }
+
+  @action
   toggleEditingName() {
     this.editingName = !this.editingName;
   }
@@ -42,7 +59,6 @@ export default class AdminConfigAreasColorPalette extends Component {
   onLightColorChange(name, value) {
     const color = this.data.colors.find((c) => c.name === name);
     color.hex = value;
-    this.hasUnsavedChanges = true;
     this.hasChangedColors = true;
   }
 
@@ -50,7 +66,6 @@ export default class AdminConfigAreasColorPalette extends Component {
   onDarkColorChange(name, value) {
     const color = this.data.colors.find((c) => c.name === name);
     color.dark_hex = value;
-    this.hasUnsavedChanges = true;
     this.hasChangedColors = true;
   }
 
@@ -58,19 +73,32 @@ export default class AdminConfigAreasColorPalette extends Component {
   async handleSubmit(data) {
     this.saving = true;
     this.args.colorPalette.name = data.name;
-    this.args.colorPalette.user_selectable = data.user_selectable;
+
+    if (!this.saveNameOnly) {
+      this.args.colorPalette.user_selectable = data.user_selectable;
+    }
 
     try {
-      await this.args.colorPalette.save();
+      await this.args.colorPalette.save({
+        saveNameOnly: this.saveNameOnly,
+        forceSave: true,
+      });
       this.editingName = false;
-      this.hasUnsavedChanges = false;
+
       this.toasts.success({
         data: {
           message: i18n("saved"),
         },
       });
-      if (this.hasChangedColors) {
-        await this.applyColorChangesIfPossible();
+
+      this.hasChangedName = false;
+
+      if (!this.saveNameOnly) {
+        this.hasChangedUserSelectable = false;
+
+        if (this.hasChangedColors) {
+          await this.applyColorChangesIfPossible();
+        }
         this.hasChangedColors = false;
       }
     } catch (error) {
@@ -82,6 +110,16 @@ export default class AdminConfigAreasColorPalette extends Component {
       });
     } finally {
       this.saving = false;
+    }
+  }
+
+  @action
+  async triggerNameSave() {
+    this.saveNameOnly = true;
+    try {
+      await this.fkApi.submit();
+    } finally {
+      this.saveNameOnly = false;
     }
   }
 
@@ -108,15 +146,27 @@ export default class AdminConfigAreasColorPalette extends Component {
   }
 
   @action
+  async delete() {
+    return this.dialog.yesNoConfirm({
+      message: i18n("admin.config_areas.color_palettes.delete_confirm"),
+      didConfirm: async () => {
+        await this.args.colorPalette.destroy();
+        await this.router.replaceWith("adminConfig.colorPalettes");
+        await this.router.refresh();
+      },
+    });
+  }
+
+  @action
   handleNameChange(value, { set }) {
     set("name", value);
-    this.hasUnsavedChanges = true;
+    this.hasChangedName = true;
   }
 
   @action
   handleUserSelectableChange(value, { set }) {
     set("user_selectable", value);
-    this.hasUnsavedChanges = true;
+    this.hasChangedUserSelectable = true;
   }
 
   async applyColorChangesIfPossible() {
@@ -162,9 +212,10 @@ export default class AdminConfigAreasColorPalette extends Component {
 
   <template>
     <Form
+      data-palette-id={{@colorPalette.id}}
       @data={{this.data}}
       @onSubmit={{this.handleSubmit}}
-      data-palette-id={{@colorPalette.id}}
+      @onRegisterApi={{this.onRegisterApi}}
       as |form transientData|
     >
       <div>
@@ -181,6 +232,11 @@ export default class AdminConfigAreasColorPalette extends Component {
             {{#if transientData.editingName}}
               <div class="admin-config-color-palettes__name-control">
                 <field.Input />
+                <DButton
+                  class="btn-primary admin-config-color-palettes__save-name"
+                  @icon="check"
+                  @action={{this.triggerNameSave}}
+                />
                 <DButton
                   class="btn-flat"
                   @icon="xmark"
@@ -200,22 +256,19 @@ export default class AdminConfigAreasColorPalette extends Component {
               </field.Custom>
             {{/if}}
           </form.Field>
-          <DButton
-            class="duplicate-palette"
-            @label="admin.customize.copy"
-            @action={{this.duplicate}}
-          />
-        </div>
-        <form.Alert class="fonts-and-logos-hint">
-          <div class="admin-config-color-palettes__logo-and-fonts-hint">
-            <span>{{i18n
-                "admin.config_areas.color_palettes.logo_and_fonts_hint"
-              }}</span>
-            <LinkTo @route="adminConfig.logo-and-fonts">{{i18n
-                "admin.config_areas.color_palettes.go_to_logo_and_fonts"
-              }}</LinkTo>
+          <div class="admin-config-color-palettes__top-actions">
+            <DButton
+              class="duplicate-palette"
+              @label="admin.config_areas.color_palettes.duplicate"
+              @action={{this.duplicate}}
+            />
+            <DButton
+              class="btn-danger delete-palette"
+              @label="admin.config_areas.color_palettes.delete"
+              @action={{this.delete}}
+            />
           </div>
-        </form.Alert>
+        </div>
         <AdminConfigAreaCard
           @heading="admin.config_areas.color_palettes.color_options.title"
         >

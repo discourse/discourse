@@ -27,6 +27,14 @@ module PageObjects
         name_field.find("h2")
       end
 
+      def name_save_button
+        find(".admin-config-color-palettes__save-name")
+      end
+
+      def delete_button
+        find(".delete-palette")
+      end
+
       def user_selectable_field
         form.field("user_selectable")
       end
