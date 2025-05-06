@@ -86,7 +86,7 @@ module Middleware
       def blocked_crawler?
         @request.get? && !@request.xhr? && !@request.path.ends_with?("robots.txt") &&
           !@request.path.ends_with?("srv/status") &&
-          @request[Auth::DefaultCurrentUserProvider::API_KEY].nil? &&
+          @request.params[Auth::DefaultCurrentUserProvider::API_KEY].nil? &&
           @env[Auth::DefaultCurrentUserProvider::USER_API_KEY].nil? &&
           @env[Auth::DefaultCurrentUserProvider::HEADER_API_KEY].nil? &&
           CrawlerDetection.is_blocked_crawler?(crawler_identifier)
@@ -219,7 +219,7 @@ module Middleware
       def no_cache_bypass
         request = Rack::Request.new(@env)
         request.cookies["_bypass_cache"].nil? && (request.path != "/srv/status") &&
-          request[Auth::DefaultCurrentUserProvider::API_KEY].nil? &&
+          request.params[Auth::DefaultCurrentUserProvider::API_KEY].nil? &&
           @env[Auth::DefaultCurrentUserProvider::HEADER_API_KEY].nil? &&
           @env[Auth::DefaultCurrentUserProvider::USER_API_KEY].nil?
       end

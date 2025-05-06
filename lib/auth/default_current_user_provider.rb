@@ -113,11 +113,12 @@ class Auth::DefaultCurrentUserProvider
     user_api_key = @env[USER_API_KEY]
     api_key = @env[HEADER_API_KEY]
 
-    if !@env.blank? && request[PARAMETER_USER_API_KEY] && api_parameter_allowed?
-      user_api_key ||= request[PARAMETER_USER_API_KEY]
+    if !@env.blank? && request.params[PARAMETER_USER_API_KEY] && api_parameter_allowed?
+      user_api_key ||= request.params[PARAMETER_USER_API_KEY]
     end
 
-    api_key ||= request[API_KEY] if !@env.blank? && request[API_KEY] && api_parameter_allowed?
+    api_key ||= request.params[API_KEY] if !@env.blank? && request.params[API_KEY] &&
+      api_parameter_allowed?
 
     auth_token = find_auth_token
     current_user = nil
@@ -376,7 +377,7 @@ class Auth::DefaultCurrentUserProvider
 
   def lookup_api_user(api_key_value, request)
     if api_key = ApiKey.active.with_key(api_key_value).includes(:user).first
-      api_username = header_api_key? ? @env[HEADER_API_USERNAME] : request[API_USERNAME]
+      api_username = header_api_key? ? @env[HEADER_API_USERNAME] : request.params[API_USERNAME]
 
       return nil if !api_key.request_allowed?(@env)
 
@@ -385,10 +386,16 @@ class Auth::DefaultCurrentUserProvider
           api_key.user if !api_username || (api_key.user.username_lower == api_username.downcase)
         elsif api_username
           User.find_by(username_lower: api_username.downcase)
-        elsif user_id = header_api_key? ? @env[HEADER_API_USER_ID] : request["api_user_id"]
+        elsif user_id = header_api_key? ? @env[HEADER_API_USER_ID] : request.params["api_user_id"]
           User.find_by(id: user_id.to_i)
         elsif external_id =
-              header_api_key? ? @env[HEADER_API_USER_EXTERNAL_ID] : request["api_user_external_id"]
+              (
+                if header_api_key?
+                  @env[HEADER_API_USER_EXTERNAL_ID]
+                else
+                  request.params["api_user_external_id"]
+                end
+              )
           SingleSignOnRecord.find_by(external_id: external_id.to_s).try(:user)
         end
 
