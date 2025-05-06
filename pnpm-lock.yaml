@@ -110,8 +110,8 @@ importers:
         specifier: 1.8.2
         version: 1.8.2
       playwright:
-        specifier: 1.51.0
-        version: 1.51.0
+        specifier: 1.52.0
+        version: 1.52.0
       prettier:
         specifier: 3.5.3
         version: 3.5.3
@@ -7044,13 +7044,13 @@ packages:
     resolution: {integrity: sha512-nDywThFk1i4BQK4twPQ6TA4RT8bDY96yeuCVBWL3ePARCiEKDRSrNGbFIgUJpLp+XeIR65v8ra7WuJOFUBtkMA==}
     engines: {node: '>=8'}
 
-  playwright-core@1.51.0:
-    resolution: {integrity: sha512-x47yPE3Zwhlil7wlNU/iktF7t2r/URR3VLbH6EknJd/04Qc/PSJ0EY3CMXipmglLG+zyRxW6HNo2EGbKLHPWMg==}
+  playwright-core@1.52.0:
+    resolution: {integrity: sha512-l2osTgLXSMeuLZOML9qYODUQoPPnUsKsb5/P6LJ2e6uPKXUdPK5WYhN4z03G+YNbWmGDY4YENauNu4ZKczreHg==}
     engines: {node: '>=18'}
     hasBin: true
 
-  playwright@1.51.0:
-    resolution: {integrity: sha512-442pTfGM0xxfCYxuBa/Pu6B2OqxqqaYq39JS8QDMGThUvIOCd6s0ANDog3uwA0cHavVlnTQzGCN7Id2YekDSXA==}
+  playwright@1.52.0:
+    resolution: {integrity: sha512-JAwMNMBlxJ2oD1kce4KPtMkDeKGHQstdpFPcPH3maElAXon/QZeTvtsfXmTMRyO9TslfoYOXkSsvao2nE1ilTw==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -16372,11 +16372,11 @@ snapshots:
     dependencies:
       find-up: 3.0.0
 
-  playwright-core@1.51.0: {}
+  playwright-core@1.52.0: {}
 
-  playwright@1.51.0:
+  playwright@1.52.0:
     dependencies:
-      playwright-core: 1.51.0
+      playwright-core: 1.52.0
     optionalDependencies:
       fsevents: 2.3.2
 

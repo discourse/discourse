@@ -31,7 +31,7 @@
     "lint-to-the-future-eslint": "^3.1.0",
     "magnific-popup": "1.1.0",
     "pikaday": "1.8.2",
-    "playwright": "1.51.0",
+    "playwright": "1.52.0",
     "prettier": "3.5.3",
     "puppeteer-core": "^24.8.0",
     "squoosh": "https://codeload.github.com/discourse/squoosh/tar.gz/dc9649d",
