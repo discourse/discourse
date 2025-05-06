@@ -18,6 +18,7 @@ export default class AdminBadgesShowRoute extends Route {
     if (params.badge_id === "new") {
       return Badge.create({
         name: i18n("admin.badges.new_badge"),
+        enabled: true,
         badge_type_id: this.adminBadges.badgeTypes[0].id,
         badge_grouping_id: this.adminBadges.badgeGroupings[0].id,
         trigger: this.adminBadges.badgeTriggers[0].id,
