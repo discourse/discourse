@@ -6,6 +6,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
+import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import { i18n } from "discourse-i18n";
 import ComboBox from "select-kit/components/combo-box";
@@ -15,10 +16,6 @@ export default class AdminSiteSettingsFilterControls extends Component {
 
   @tracked filter = this.args.initialFilter || "";
   @tracked onlyOverridden = false;
-  @tracked
-  currentCategoryName = this.adminSiteSettings.categoryNameKey
-    ? this.adminSiteSettings.categoryNameKey
-    : null;
 
   @action
   clearFilter() {
@@ -57,7 +54,6 @@ export default class AdminSiteSettingsFilterControls extends Component {
 
   @action
   transitionToCategory(category) {
-    this.currentCategoryName = category;
     this.adminSiteSettings.transitionToCategory(category);
   }
 
@@ -71,7 +67,16 @@ export default class AdminSiteSettingsFilterControls extends Component {
   }
 
   get translatedCurrentCategoryName() {
-    return i18n(`admin.site_settings.categories.${this.currentCategoryName}`);
+    return i18n(
+      `admin.site_settings.categories.${this.adminSiteSettings.categoryNameKey}`
+    );
+  }
+
+  get showDropdown() {
+    return (
+      this.adminSiteSettings.target.currentRouteName ===
+      "adminSiteSettingsCategory"
+    );
   }
 
   <template>
@@ -81,7 +86,7 @@ export default class AdminSiteSettingsFilterControls extends Component {
       {{didUpdate this.runInitialFilter @initialFilter}}
     >
       <div class="controls">
-        {{#if this.currentCategoryName}}
+        {{#if this.showDropdown}}
           <ComboBox
             @value={{this.translatedCurrentCategoryName}}
             @content={{this.siteSettingsCategories}}
