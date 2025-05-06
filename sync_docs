@@ -52,6 +52,8 @@ docs
     end
   end
 
+exit 0 if !DOCS_API_KEY
+
 puts "Fetching remote info via data-explorer..."
 remote_topics = API.fetch_current_state
 
