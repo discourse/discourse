@@ -6,7 +6,6 @@ import DPageHeader from "discourse/components/d-page-header";
 import { i18n } from "discourse-i18n";
 import AdminSiteSettingsChangesBanner from "admin/components/admin-site-settings-changes-banner";
 import AdminSiteSettingsFilterControls from "admin/components/admin-site-settings-filter-controls";
-import ComboBox from "select-kit/components/combo-box";
 
 export default RouteTemplate(
   <template>
@@ -27,7 +26,6 @@ export default RouteTemplate(
     <AdminSiteSettingsFilterControls
       @initialFilter={{@controller.filter}}
       @onChangeFilter={{@controller.filterChanged}}
-      @controller={{@controller}}
     />
 
     <div class="admin-detail pull-left mobile-closed">

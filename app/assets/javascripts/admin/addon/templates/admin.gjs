@@ -9,13 +9,9 @@ export default RouteTemplate(
     {{htmlClass "admin-area"}}
     {{bodyClass "admin-interface"}}
 
-    <div class="row">
-      <div class="full-width">
-        <div class="boxed white admin-content">
-          <div class="admin-contents {{@controller.adminContentsClassName}}">
-            {{outlet}}
-          </div>
-        </div>
+    <div class="boxed white admin-content">
+      <div class="admin-contents {{@controller.adminContentsClassName}}">
+        {{outlet}}
       </div>
     </div>
   </template>

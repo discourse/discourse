@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { Input } from "@ember/component";
+import { inject as controller } from "@ember/controller";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
@@ -10,10 +11,14 @@ import { i18n } from "discourse-i18n";
 import ComboBox from "select-kit/components/combo-box";
 
 export default class AdminSiteSettingsFilterControls extends Component {
+  @controller adminSiteSettings;
+
   @tracked filter = this.args.initialFilter || "";
   @tracked onlyOverridden = false;
-  @tracked isMenuOpen = false;
-  @tracked currentCategoryName = this.args.controller.categoryNameKey;
+  @tracked
+  currentCategoryName = this.adminSiteSettings.categoryNameKey
+    ? this.adminSiteSettings.categoryNameKey
+    : null;
 
   @action
   clearFilter() {
@@ -53,11 +58,11 @@ export default class AdminSiteSettingsFilterControls extends Component {
   @action
   transitionToCategory(category) {
     this.currentCategoryName = category;
-    this.args.controller.transitionToCategory(category);
+    this.adminSiteSettings.transitionToCategory(category);
   }
 
   get siteSettingsCategories() {
-    return this.args.controller.visibleSiteSettings.map((category) => {
+    return this.adminSiteSettings.visibleSiteSettings.map((category) => {
       return {
         id: category.nameKey,
         name: i18n(`admin.site_settings.categories.${category.nameKey}`),
@@ -76,11 +81,13 @@ export default class AdminSiteSettingsFilterControls extends Component {
       {{didUpdate this.runInitialFilter @initialFilter}}
     >
       <div class="controls">
-        <ComboBox
-          @value={{this.translatedCurrentCategoryName}}
-          @content={{this.siteSettingsCategories}}
-          @onChange={{this.transitionToCategory}}
-        />
+        {{#if this.currentCategoryName}}
+          <ComboBox
+            @value={{this.translatedCurrentCategoryName}}
+            @content={{this.siteSettingsCategories}}
+            @onChange={{this.transitionToCategory}}
+          />
+        {{/if}}
         <div class="inline-form">
           <input
             {{on "input" this.onChangeFilterInput}}
