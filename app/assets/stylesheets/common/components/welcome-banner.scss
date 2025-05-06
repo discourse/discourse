@@ -89,9 +89,9 @@
       color: var(--primary-medium);
       height: 100%;
       position: absolute;
-
-      // left: 0;
-      left: calc(1rem - 0.65em); // to align with result panel, minus padding of search icon btn
+      left: calc(
+        1rem - 0.65em
+      ); // to align with result panel, minus padding of search icon btn
 
       .rtl & {
         right: 0;

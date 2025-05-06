@@ -138,7 +138,7 @@ $search-result-element-padding: 0.35em 1rem; // hate myself but .25em is too tig
         padding-top: calc(var(--header-offset));
       }
 
-      //temporary solution while waiting for dev to add conditional class
+      // temporary solution while waiting for dev to add conditional class
       :has(.search-context) & {
         padding-top: calc(var(--header-offset) + 2.25em);
       }
@@ -234,6 +234,7 @@ $search-result-element-padding: 0.35em 1rem; // hate myself but .25em is too tig
       align-items: center;
       gap: 0.5em;
     }
+
     .search-menu-assistant .search-menu-assistant-item,
     li[data-test-assistant-item="search-in-topics-posts"] {
       .search-link {
