@@ -101,7 +101,7 @@ GEM
       rack-test (>= 0.6.3)
       regexp_parser (>= 1.5, < 3.0)
       xpath (~> 3.2)
-    capybara-playwright-driver (0.5.5)
+    capybara-playwright-driver (0.5.6)
       addressable
       capybara
       playwright-ruby-client (>= 1.16.0)
@@ -266,7 +266,7 @@ GEM
     mime-types (3.6.2)
       logger
       mime-types-data (~> 3.2015)
-    mime-types-data (3.2025.0402)
+    mime-types-data (3.2025.0506)
     mini_mime (1.1.5)
     mini_racer (0.18.1)
       libv8-node (~> 23.6.1.0)
@@ -824,7 +824,7 @@ CHECKSUMS
   bullet (8.0.5) sha256=f517d571b73934ed6aaf6c62e6a215be2937c1e8e16a77b4aaf252bcc3e5dee6
   byebug (12.0.0) sha256=d4a150d291cca40b66ec9ca31f754e93fed8aa266a17335f71bb0afa7fca1a1e
   capybara (3.40.0) sha256=42dba720578ea1ca65fd7a41d163dd368502c191804558f6e0f71b391054aeef
-  capybara-playwright-driver (0.5.5) sha256=c2bea97497f2a3c045f0f337edf4869a247dbcdcc1f4392ecd57190bbb260896
+  capybara-playwright-driver (0.5.6) sha256=ef461ab97f9fca7df4ecdd10bb1b076d9246f804e89fc3ae127cf1677d855e26
   cbor (0.5.9.8) sha256=9ee097fc58d9bc5e406d112cd2d4e112c7354ec16f8b6ff34e4732c1e44b4eb7
   certified (1.0.0) sha256=aa4cdf0e90e7ee96f6e0ce3daae39eaa8f0486124e0d92daf64d2105aeb9069c
   cgi (0.4.2) sha256=a3cb190d46a820ca01a3e28bd5b64e67003ff99d7884b70512448566f35347e6
@@ -926,7 +926,7 @@ CHECKSUMS
   messageformat-wrapper (1.1.0) sha256=ecea879626e412d1bc841c457dacfcbb1a62cf88ca83573e4ea34bb371f160bc
   method_source (1.1.0) sha256=181301c9c45b731b4769bc81e8860e72f9161ad7d66dd99103c9ab84f560f5c5
   mime-types (3.6.2) sha256=6109148e6a6e656607510b74571deff8ecd9a97ab0dcec9b7431bdd0b74460af
-  mime-types-data (3.2025.0402) sha256=455cc502e76bf4260d9f4fc8484c6324a9d765c4917a6672cb5a13f7818719c0
+  mime-types-data (3.2025.0506) sha256=630937b0aac049944af8cb9dd40e9cd2aca55412b72a2a8842239b7102f4f6d5
   mini_mime (1.1.5) sha256=8681b7e2e4215f2a159f9400b5816d85e9d8c6c6b491e96a12797e798f8bccef
   mini_racer (0.18.1) sha256=c6694c37672da05027fe0894215a94c18a2117bdbb4ba90d80d275e4b23b3413
   mini_scheduler (0.18.0) sha256=d2f084f38da8d76c5844a92f0d6bd01fc9982a8b5e6c7679b6cf44c82da33503
