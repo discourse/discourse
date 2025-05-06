@@ -193,7 +193,7 @@ const DEPRECATED_POST_STREAM_WIDGETS = [
   "topic-post-visited-line",
 ];
 
-const POST_STREAM_DEPRECATION_OPTIONS = {
+export const POST_STREAM_DEPRECATION_OPTIONS = {
   since: "v3.5.0.beta1-dev",
   id: "discourse.post-stream-widget-overrides",
   // url: "", // TODO (glimmer-post-stream) uncomment when the topic is created on meta
