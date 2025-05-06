@@ -102,7 +102,7 @@ module("Integration | Component | <DecoratedHtml />", function (hooks) {
       withSilencedDeprecations("discourse.post-stream-widget-overrides", () => {
         helper.renderGlimmer(
           element,
-          hbs`<div id="render-glimmer">Hello from Glimmer Component</div>`
+          hbs("<div id='render-glimmer'>Hello from Glimmer Component</div>")
         );
       });
     };
