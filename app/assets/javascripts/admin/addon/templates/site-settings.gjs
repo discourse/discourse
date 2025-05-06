@@ -27,7 +27,6 @@ export default RouteTemplate(
     <AdminSiteSettingsFilterControls
       @initialFilter={{@controller.filter}}
       @onChangeFilter={{@controller.filterChanged}}
-      @onToggleMenu={{@controller.toggleMenu}}
       @controller={{@controller}}
     />
 
