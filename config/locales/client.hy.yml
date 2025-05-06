@@ -3787,6 +3787,7 @@ hy:
               content: "Վերանայում"
             invite:
               content: "Հրավիրել"
+      search: "Որոնում"
       footer:
         interface_color_selector:
           light: "Բաց"
@@ -4414,6 +4415,7 @@ hy:
           extra_files_upload: "Արտահանեք թեման՝ այս ֆայլերը դիտելու համար:"
           extra_files_remote: "Արտահանեք թեման կամ բացեք համապատասխան git պահոցը՝ այս ֆայլերը դիտելու համար:"
           preview: "Նախադիտում"
+          default: "Ակտիվ"
           is_default: "Թեման լռելյայն միացված է"
           user_selectable: "Թեման կարող է ընտրվել օգտատերերի կողմից"
           color_scheme: "Գունապնակ"
@@ -4483,8 +4485,6 @@ hy:
             error: "Այս թեման ավտոմատ կերպով անջատվել է, քանի որ այն համատեղելի չէ Discourse-ի այս տարբերակի հետ:"
             minimum: "Պահանջում է Discourse-ի %{version} կամ ավելի բարձր տարբերակ:"
             maximum: "Պահանջում է Discourse-ի %{version} կամ ավելի ցածր տարբերակ:"
-          update_to_latest: "Թարմացնել Վերջինով"
-          check_for_updates: "Ստուգել Թարմացումները"
           up_to_date: "Թեման ամենաթարմ տարբերակում է, վերջին անգամ ստուգվել է՝ "
           add: "Ավելացնել"
           theme_settings: "Թեմայի Կարգավորումները"

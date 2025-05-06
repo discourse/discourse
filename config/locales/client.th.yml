@@ -2508,6 +2508,7 @@ th:
               content: "รีวิว"
             invite:
               content: "เชิญ"
+      search: "ค้นหา"
     until: "จนถึง:"
     form_templates:
       upload_field:
@@ -2905,6 +2906,7 @@ th:
           edit: "แก้ไข"
           mobile: "โทรศัพท์"
           preview: "แสดงตัวอย่าง"
+          default: "ใช้งานอยู่"
           add_all_themes: "เพิ่มธีมทั้งหมด"
           inactive_themes: "ธีมที่ไม่ได้ใช้งาน:"
           cancel: "ยกเลิก"

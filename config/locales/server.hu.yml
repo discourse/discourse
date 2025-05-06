@@ -2466,7 +2466,6 @@ hu:
     default_navigation_menu_tags: "A kiválasztott címkék alapértelmezetten megjelennek a Navigációs Menü Címkék szekciójában."
     experimental_new_new_view_groups: 'Engedélyezzen egy új témalistát, amely egyesíti az olvasatlan és új témákat, és az oldalsávon lévő "Minden" hivatkozást jelölje be.'
     glimmer_post_stream_mode: "Szabályozhatja, hogy a rendszer használja-e az új „csillogó” post-stream megvalósítást. Az „auto” automatikusan bekapcsol, amint minden témája és bővítménye készen áll. Ez a megvalósítás aktív fejlesztés alatt áll, és nem termelési használatra készült. Ne dolgozzon ellene témákat/bővítményeket, amíg a megvalósítást nem véglegesítik és be nem jelentik."
-    glimmer_post_stream_mode_auto_groups: "Engedélyezze az új „ragyogó” bejegyzés menü megvalósítását „auto” módban a megadott felhasználói csoportok számára. Ez a megvalósítás aktív fejlesztés alatt áll, és nem alkalmas éles használatra. Ne fejlesszen hozzá témákat/bővítményeket, amíg a megvalósítást nem véglegesítik és be nem jelentik."
     experimental_form_templates: "Engedélyezze az űrlapsablonok funkciót. A sablonokat a következő helyen kezelheti: <a href='%{base_path}/admin/customize/form-templates'>Testreszabás / Sablonok</a>."
     show_preview_for_form_templates: "Az űrlapsablonok előnézetének engedélyezése"
     lazy_load_categories_groups: "Lusta betöltés alkalmazása a kategória információkra a kiválasztott csoportok felhasználói számára. Ez javítja a teljesítményt olyan webhelyeken, ahol sok kategória van."

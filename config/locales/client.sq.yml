@@ -3959,6 +3959,7 @@ sq:
               title_drafts: "Draftet e mia të papostuara"
             invite:
               content: "Fto"
+      search: "Kërko"
     form_templates:
       upload_field:
         upload: "Ngarko"
@@ -4378,6 +4379,7 @@ sq:
           edit: "Redakto"
           mobile: "Mobile"
           preview: "Parashikimi"
+          default: "Aktiv"
           cancel: "Anulo"
           upload: "Ngarko"
           installed: "Instaluar"

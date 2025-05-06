@@ -2959,6 +2959,7 @@ ca:
               content: "Revisa"
             invite:
               content: "Convida"
+      search: "Cerca"
       footer:
         interface_color_selector:
           light: "Clar"
@@ -3565,6 +3566,7 @@ ca:
           desktop: "Escriptori"
           mobile: "Mòbil"
           preview: "Previsualitza"
+          default: "Actiu"
           is_default: "L'aparença està habilitada per defecte"
           user_selectable: "Els usuaris poden seleccionar l'aparença"
           color_scheme: "Paleta de colors"
@@ -3625,8 +3627,6 @@ ca:
             error: "Aquesta aparença s'ha desactivat automàticament perquè no és compatible amb aquesta versió de Discourse."
             minimum: "Requereix una versió de Discourse %{version} o superior."
             maximum: "Requereix una versió de Discourse %{version} o inferior."
-          update_to_latest: "Actualitza al més recent"
-          check_for_updates: "Comprova si hi ha actualitzacions"
           up_to_date: "L'aparença és actualitzada, última comprovació:"
           add: "Afegeix"
           theme_settings: "Configuració de l'aparença"

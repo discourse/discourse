@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 zh_CN:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          styleguide: "Discourse 样式指南"
   js:
     styleguide:
       title: "样式指南"

@@ -3376,6 +3376,7 @@ gl:
               content: "Revisar"
             invite:
               content: "Convidar"
+      search: "Buscar"
       footer:
         interface_color_selector:
           light: "Claro"
@@ -4029,6 +4030,7 @@ gl:
           extra_files_upload: "Exportar tema para ver estes ficheiros."
           extra_files_remote: "Exportar o tema ou comprobar o repositorio git para ver estes ficheiros."
           preview: "Previsualizar"
+          default: "Activo"
           is_default: "O tema está activado de modo predeterminado"
           user_selectable: "O tema pode ser seleccionado polos usuarios"
           auto_update: "Actualización automática cando Discourse estea actualizado"
@@ -4101,8 +4103,6 @@ gl:
             error: "Este tema foi desactivado automaticamente porque non é compatíbel coa versión actual de Discourse."
             minimum: "Require a versión %{version} de Discourse ou unha superior."
             maximum: "Require a versión %{version} de Discourse ou unha inferior."
-          update_to_latest: "Actualizar o tema"
-          check_for_updates: "Buscar actualizacións"
           up_to_date: "O tema está actualizado, última comprobación:"
           has_overwritten_history: "A versión actual do tema xa non existe porque o historial de Git foi sobrescrito por un push forzado."
           add: "Engadir"

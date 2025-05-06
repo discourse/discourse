@@ -3650,6 +3650,7 @@ ko:
             invite:
               content: "초대"
               title: "새로운 멤버 초대"
+      search: "검색"
       footer:
         interface_color_selector:
           light: "라이트"
@@ -4340,6 +4341,7 @@ ko:
           extra_files_upload: "이 파일을 보려면 테마를 내보내세요."
           extra_files_remote: "이 파일을 보려면 테마를 내보내거나 Git 저장소를 확인하세요."
           preview: "미리보기"
+          default: "활성화 사용자"
           is_default: "디폴트로 테마가 활성화되었습니다"
           user_selectable: "사용자가 테마를 선택할 수 있습니다"
           auto_update: "Discourse 업데이트 시 자동 업데이트"
@@ -4412,8 +4414,6 @@ ko:
             error: "이 테마는이 버전의 Discourse와 호환되지 않기 때문에 자동으로 비활성화되었습니다."
             minimum: "Discourse 버전 %{version} 이상이 필요합니다."
             maximum: "Discourse 버전 %{version} 이하가 필요합니다."
-          update_to_latest: "최신으로 업데이트"
-          check_for_updates: "업데이트 체크하기"
           up_to_date: "테마가 최신입니다. 마지막 확인:"
           has_overwritten_history: "강제 푸시로 Git 히스토리를 덮어 썼으므로 현재 테마 버전이 더 이상 존재하지 않습니다."
           add: "추가"

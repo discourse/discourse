@@ -3445,6 +3445,7 @@ ro:
       back_to_forum: "Înapoi la forum"
       collapse_all_sections: "Restrânge toate secțiunile"
       expand_all_sections: "Extinde toate secțiunile"
+      search: "Caută"
       footer:
         interface_color_selector:
           light: "Luminos"
@@ -3781,7 +3782,8 @@ ro:
       search:
         modal_title: "Caută orice în admin"
         title: "Caută"
-        no_results: 'Nu am găsit nimic care să se potrivească cu „%{filter}”.'
+        full_page_link: "Comută la căutare în toată pagina"
+        no_results: "Nu am găsit nimic care să se potrivească cu „%{filter}”."
         result_types:
           page:
             one: "Pagină"
@@ -4334,19 +4336,26 @@ ro:
           desktop: "Desktop"
           mobile: "Mobil"
           preview: "Previzualizează"
+          default: "Activă"
           is_default: "Tema este activată implicit"
           user_selectable: "Tema poate fi aleasă de către utilizatori"
+          user_selectable_badge_label: "Selectabilă de către utilizator"
+          user_selectable_button_label: "Permite utilizatorilor să selecteze"
+          user_selectable_unavailable_button_label: "Fă indisponibil pentru utilizatori"
+          broken_badge_label: "Temă stricată"
           color_scheme_user_selectable: "Paleta de culori poate fi selectată de utilizatori"
           edit_color_scheme: "Editează paleta de culori"
           color_scheme_select: "Alege culorile folosite de către temă"
           custom_sections: "Secțiuni personalizate:"
           theme_components: "Componentele temei"
-          set_default_theme: "Setare implicită"
-          default_theme: "Temă implicită"
+          set_default_theme: "Setează ca activă"
+          default_theme: "Temă activă"
           set_default_success: "Temă implicită setată la %{theme}"
+          setting_was_saved: "Setarea temei a fost salvată"
           install_success: "%{theme} instalată cu succes!"
           cancel: "Anulează"
           broken_theme: "Dezactivează temă stricată"
+          update_available: "Necesită actualizare"
           collapse: Colaps
           uploads: "Urcări"
           variable_name: "Numele variabilei SCSS:"
@@ -4361,7 +4370,7 @@ ro:
           version: "Versiune:"
           enable: "Activează"
           disable: "Dezactivează"
-          update_to_latest: "Actualizat la ultima"
+          update_to_latest: "Actualizează la cea mai recentă"
           check_for_updates: "Caută actualizări"
           update_success: "%{theme} Actualizare finalizată"
           up_to_date: "Tema este actuală, ultima verificare:"

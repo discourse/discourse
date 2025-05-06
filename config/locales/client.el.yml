@@ -3911,6 +3911,7 @@ el:
       back_to_forum: "Πίσω στο Φόρουμ"
       collapse_all_sections: "Σύμπτυξη όλων των τμημάτων"
       expand_all_sections: "Ανάπτυξη όλων των τμημάτων"
+      search: "Αναζήτηση"
       footer:
         interface_color_selector:
           light: "Ανοιχτό"
@@ -4581,6 +4582,7 @@ el:
           extra_files_upload: "Εξαγωγή θέματος για προβολή αυτών των αρχείων."
           extra_files_remote: "Εξαγωγή θέματος ή ελέγξτε το αποθετήριο git για να δείτε αυτά τα αρχεία."
           preview: "Προεπισκόπηση"
+          default: "Ενεργοί"
           settings_editor: "Επεξεργαστής ρυθμίσεων"
           is_default: "Το θέμα είναι ενεργό εξ ορισμού"
           user_selectable: "Το θέμα μπορεί να επιλεχθεί από τους χρήστες"
@@ -4655,8 +4657,6 @@ el:
             error: "Αυτό το θέμα απενεργοποιήθηκε αυτόματα επειδή δεν είναι συμβατό με αυτήν την έκδοση του Discourse."
             minimum: "Απαιτείται έκδοση Discourse %{version} ή παραπάνω."
             maximum: "Απαιτείται έκδοση Discourse %{version} ή παρακάτω."
-          update_to_latest: "Ενημέρωση στην τελευταία έκδοση"
-          check_for_updates: "Έλεγχος για ενημερώσεις"
           updating: "Ενημερώνεται…"
           up_to_date: "Το θέμα είναι ενημερωμένο, τελευταίος έλεγχος:"
           add: "Προσθήκη"
