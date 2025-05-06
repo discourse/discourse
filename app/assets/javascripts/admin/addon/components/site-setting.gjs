@@ -40,32 +40,46 @@ export default class SiteSettingComponent extends Component.extend(
   }
 
   <template>
-    <div class="setting-label">
-      <h3>
-        {{this.settingName}}
+    <label class="form-kit__container-title">
+      {{this.settingName}}
 
-        {{#if this.staffLogFilter}}
-          <LinkTo
-            @route="adminLogs.staffActionLogs"
-            @query={{hash filters=this.staffLogFilter force_refresh=true}}
-            title={{i18n "admin.settings.history"}}
-          >
-            <span class="history-icon">
-              {{icon "clock-rotate-left"}}
-            </span>
-          </LinkTo>
+      {{#if this.overridden}}
+        {{#if this.setting.secret}}
+          <DButton
+            @action={{this.toggleSecret}}
+            @icon="far-eye-slash"
+            @ariaLabel="admin.settings.unmask"
+            class="setting-toggle-secret"
+          />
         {{/if}}
-      </h3>
-
-      {{#if this.defaultIsAvailable}}
         <DButton
-          class="btn-link"
-          @action={{this.setDefaultValues}}
-          @translatedLabel={{this.setting.setDefaultValuesLabel}}
+          class="btn-transparent undo setting-controls__undo"
+          @action={{this.resetDefault}}
+          @icon="arrow-rotate-left"
+          @title="admin.settings.reset"
         />
       {{/if}}
-    </div>
 
+      {{#if this.staffLogFilter}}
+        <LinkTo
+          @route="adminLogs.staffActionLogs"
+          @query={{hash filters=this.staffLogFilter force_refresh=true}}
+          title={{i18n "admin.settings.history"}}
+        >
+          <span class="history-icon">
+            {{icon "clock-rotate-left"}}
+          </span>
+        </LinkTo>
+      {{/if}}
+    </label>
+
+    {{#if this.defaultIsAvailable}}
+      <DButton
+        class="btn-link"
+        @action={{this.setDefaultValues}}
+        @translatedLabel={{this.setting.setDefaultValuesLabel}}
+      />
+    {{/if}}
     <div class="setting-value">
       {{#if this.settingEditButton}}
         <DButton
@@ -77,6 +91,10 @@ export default class SiteSettingComponent extends Component.extend(
 
         <Description @description={{this.setting.description}} />
       {{else}}
+        <SettingValidationMessage @message={{this.setting.validationMessage}} />
+        {{#if this.displayDescription}}
+          <Description @description={{this.setting.description}} />
+        {{/if}}
         <this.resolvedComponent
           @setting={{this.setting}}
           @value={{this.buffered.value}}
@@ -85,11 +103,8 @@ export default class SiteSettingComponent extends Component.extend(
           @allowAny={{this.allowAny}}
           @changeValueCallback={{this.changeValueCallback}}
           @setValidationMessage={{this.setValidationMessage}}
+          @class="form-kit__container-content"
         />
-        <SettingValidationMessage @message={{this.setting.validationMessage}} />
-        {{#if this.displayDescription}}
-          <Description @description={{this.setting.description}} />
-        {{/if}}
       {{/if}}
     </div>
 
@@ -110,22 +125,6 @@ export default class SiteSettingComponent extends Component.extend(
           class="cancel setting-controls__cancel"
         />
       </div>
-    {{else if this.overridden}}
-      {{#if this.setting.secret}}
-        <DButton
-          @action={{this.toggleSecret}}
-          @icon="far-eye-slash"
-          @ariaLabel="admin.settings.unmask"
-          class="setting-toggle-secret"
-        />
-      {{/if}}
-
-      <DButton
-        class="btn-default undo setting-controls__undo"
-        @action={{this.resetDefault}}
-        @icon="arrow-rotate-left"
-        @label="admin.settings.reset"
-      />
     {{/if}}
   </template>
 }

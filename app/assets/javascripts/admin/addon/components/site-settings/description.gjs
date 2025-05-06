@@ -1,5 +1,7 @@
 import { htmlSafe } from "@ember/template";
 
 <template>
-  <div class="desc">{{htmlSafe @description}}</div>
+  <p class="desc form-kit-text form-kit__container-description">{{htmlSafe
+      @description
+    }}</p>
 </template>
