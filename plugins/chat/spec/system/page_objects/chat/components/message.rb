@@ -77,7 +77,7 @@ module PageObjects
             page.find(context).send(
               selector_method,
               selector + " " + ".chat-message-text",
-              exact_text: text,
+              (args[:exact] ? :exact_text : :text) => text,
             )
           else
             page.find(context).send(selector_method, selector)

@@ -47,7 +47,7 @@ RSpec.describe "Editing sidebar categories navigation", type: :system do
       modal = sidebar.click_edit_categories_button
 
       expect(modal).to have_right_title(I18n.t("js.sidebar.categories_form_modal.title"))
-      try_until_success { expect(modal).to have_focus_on_filter_input }
+      expect(modal).to have_focus_on_filter_input
       expect(modal).to have_parent_category_color(category)
       expect(modal).to have_category_description_excerpt(category)
       expect(modal).to have_parent_category_color(category2)

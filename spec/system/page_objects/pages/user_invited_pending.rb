@@ -55,6 +55,7 @@ module PageObjects
       def visit(user)
         url = "/u/#{user.username_lower}/invited/pending"
         page.visit(url)
+        has_css?(".user-content.--loaded")
       end
 
       def invite_button

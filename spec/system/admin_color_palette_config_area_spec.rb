@@ -109,9 +109,12 @@ describe "Admin Color Palette Config Area Page", type: :system do
       "link[data-scheme-id=\"#{color_scheme.id}\"][href=\"#{href}\"]",
       visible: false,
     )
-    expect(find("html").native.css_value("background-color")).to eq(
-      "rgba(#{"aa".to_i(16)}, #{"33".to_i(16)}, #{"9f".to_i(16)}, 1)",
-    )
+
+    try_until_success do
+      expect(get_rgb_color(find("html"), "backgroundColor")).to eq(
+        "rgb(#{"aa".to_i(16)}, #{"33".to_i(16)}, #{"9f".to_i(16)})",
+      )
+    end
   end
 
   it "doesn't apply changes when editing a palette that's not currently active" do

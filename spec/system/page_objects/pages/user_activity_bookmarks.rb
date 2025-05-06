@@ -16,11 +16,16 @@ module PageObjects
       end
 
       def clear_query
-        fill_in_search("").submit_button.click
+        search_for("")
         self
       end
 
       def clear_query_with_backspace
+        search_element.click
+        page.execute_script(
+          "arguments[0].selectionStart = arguments[0].selectionEnd = arguments[0].value.length",
+          search_element.native,
+        )
         search_element.value.length.times { search_element.send_keys(:backspace) }
         self
       end
@@ -47,7 +52,7 @@ module PageObjects
       end
 
       def submit_button
-        @submit_button ||= page.find(".bookmark-search-form button")
+        page.find(".bookmark-search-form button")
       end
     end
   end

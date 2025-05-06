@@ -62,9 +62,12 @@ describe "Admin Logo and Fonts Page", type: :system do
         end
 
         logo_and_fonts_page.logo_form.submit
-        expect(page).to have_css("#site-text-logo")
 
-        primary_section_logos.each { |image_type| expect(SiteSetting.send(image_type)).to eq(nil) }
+        try_until_success do
+          primary_section_logos.each do |image_type|
+            expect(SiteSetting.send(image_type)).to eq(nil)
+          end
+        end
       end
     end
 

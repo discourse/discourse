@@ -3,6 +3,7 @@
 describe "Composer - ProseMirror editor", type: :system do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:tag)
+
   let(:cdp) { PageObjects::CDP.new }
   let(:composer) { PageObjects::Components::Composer.new }
   let(:rich) { composer.rich_editor }
@@ -54,15 +55,14 @@ describe "Composer - ProseMirror editor", type: :system do
 
     it "strips partially written emoji when using 'more' emoji modal" do
       open_composer_and_toggle_rich_editor
+
       composer.type_content("Why :repeat_single")
 
       expect(composer).to have_emoji_autocomplete
 
       # "more" emoji picker
-      composer.send_keys(:arrow_down, :enter)
-
+      composer.send_keys(:down, :enter)
       find("img[data-emoji='repeat_single_button']").click
-
       composer.toggle_rich_editor
 
       expect(composer).to have_value("Why :repeat_single_button: ")
@@ -82,7 +82,7 @@ describe "Composer - ProseMirror editor", type: :system do
       composer.type_content("1. Item 1\n5. Item 2")
 
       expect(rich).to have_css("ol li", text: "Item 1")
-      expect(find("ol ol", text: "Item 2")["start"]).to eq("5")
+      expect(find("ol ol", text: "Item 2")["start"]).to eq(5)
     end
 
     it "supports *, - or + to create an unordered list" do
@@ -242,13 +242,14 @@ describe "Composer - ProseMirror editor", type: :system do
       open_composer_and_toggle_rich_editor
       composer.type_content("Check out this link ")
       cdp.copy_paste("https://example.com/x")
-      composer.type_content(" ").type_content("in the middle of text")
+      composer.type_content(:space)
 
       expect(rich).to have_css(
         "a.inline-onebox[href='https://example.com/x']",
         text: "Example Site 1",
       )
 
+      composer.type_content("in the middle of text")
       composer.toggle_rich_editor
 
       expect(composer).to have_value(
@@ -276,11 +277,12 @@ describe "Composer - ProseMirror editor", type: :system do
       open_composer_and_toggle_rich_editor
       composer.type_content("Some text ")
       cdp.copy_paste("https://example.com/x")
-      composer.type_content(" ").type_content("more text")
+      composer.type_content(:space)
 
       expect(rich).to have_no_css("div.onebox-wrapper")
       expect(rich).to have_css("a.inline-onebox", text: "Example Site 1")
 
+      composer.type_content("more text")
       composer.toggle_rich_editor
 
       expect(composer).to have_value("Some text https://example.com/x more text")
@@ -362,7 +364,7 @@ describe "Composer - ProseMirror editor", type: :system do
       open_composer_and_toggle_rich_editor
       composer.type_content("Hey ")
       cdp.copy_paste("https://example.com/x")
-      composer.type_content(" ").type_content("and").type_content(" ")
+      composer.type_content(:space).type_content("and").type_content(:space)
       cdp.paste
       composer.type_content("\n")
 
@@ -479,7 +481,7 @@ describe "Composer - ProseMirror editor", type: :system do
       open_composer_and_toggle_rich_editor
       composer.type_content("```code block")
       composer.send_keys(:home)
-      composer.send_keys(%i[backspace])
+      composer.send_keys(:backspace)
 
       expect(rich).to have_css("p", text: "code block")
     end
@@ -518,21 +520,23 @@ describe "Composer - ProseMirror editor", type: :system do
 
   describe "pasting content" do
     it "does not freeze the editor when pasting markdown code blocks without a language" do
-      cdp.allow_clipboard
-      open_composer_and_toggle_rich_editor
+      with_logs do |logger|
+        open_composer_and_toggle_rich_editor
 
-      # The example is a bit convoluted, but it's the simplest way to reproduce the issue.
-      composer.type_content("This is a test\n\n")
-      cdp.copy_paste <<~MARKDOWN
-        ```
-        puts SiteSetting.all_settings(filter_categories: ["uncategorized"]).map { |setting| setting[:setting] }.join("\n")
-        ```
-      MARKDOWN
-      expect(page.driver.browser.logs.get(:browser)).not_to include(
-        "Maximum call stack size exceeded",
-      )
-      expect(rich).to have_css("pre code", wait: 1)
-      expect(rich).to have_css("select.code-language-select", wait: 1)
+        # The example is a bit convoluted, but it's the simplest way to reproduce the issue.
+        composer.type_content("This is a test\n\n")
+        cdp.copy_paste <<~MARKDOWN
+          ```
+          puts SiteSetting.all_settings(filter_categories: ["uncategorized"]).map { |setting| setting[:setting] }.join("\n")
+          ```
+        MARKDOWN
+
+        expect(logger.logs.map { |log| log[:message] }).not_to include(
+          "Maximum call stack size exceeded",
+        )
+        expect(rich).to have_css("pre code")
+        expect(rich).to have_css("select.code-language-select")
+      end
     end
 
     it "parses images copied from cooked with base62-sha1" do
@@ -594,7 +598,7 @@ describe "Composer - ProseMirror editor", type: :system do
         lines">
       HTML
 
-      img = rich.find("img")
+      img = rich.find("img:nth-of-type(1)")
 
       expect(img["src"]).to eq("https://example.com/image.png")
       expect(img["alt"]).to eq("alt with new lines")
@@ -613,7 +617,7 @@ describe "Composer - ProseMirror editor", type: :system do
       cdp.copy_test_image
       cdp.paste
 
-      expect(rich).to have_css("img", count: 1)
+      expect(rich).to have_css("img[data-orig-src]", count: 1)
 
       composer.focus # making sure the toggle click won't be captured as a double click
       composer.toggle_rich_editor
@@ -628,7 +632,9 @@ describe "Composer - ProseMirror editor", type: :system do
       cdp.copy_paste("This is a [link](https://example.com)")
       expect(rich).to have_css("a", text: "link")
 
-      composer.send_keys(%i[space left backspace])
+      composer.type_content(:space)
+      composer.type_content(:left)
+      composer.type_content(:backspace)
 
       expect(rich).to have_css("a", text: "lin")
     end
@@ -660,7 +666,8 @@ describe "Composer - ProseMirror editor", type: :system do
       expect(rich).to have_css("a", text: "www.example2.com")
       expect(rich).to have_css("a", count: 2)
 
-      composer.send_keys(%i[backspace backspace])
+      composer.send_keys(:backspace)
+      composer.send_keys(:backspace)
 
       expect(rich).to have_css("a", count: 1)
 
@@ -676,7 +683,8 @@ describe "Composer - ProseMirror editor", type: :system do
 
       expect(rich).to have_css("a", text: "https://example.com")
 
-      composer.send_keys(%i[backspace backspace])
+      composer.send_keys(:backspace)
+      composer.send_keys(:backspace)
 
       expect(rich).to have_css("a", text: "https://example.c")
     end
@@ -728,7 +736,7 @@ describe "Composer - ProseMirror editor", type: :system do
       end
 
       expect(composer).to have_no_in_progress_uploads
-      expect(rich).to have_css("img", count: 1)
+      expect(rich).to have_css("img:not(.ProseMirror-separator)", count: 1)
     end
   end
 
@@ -741,7 +749,8 @@ describe "Composer - ProseMirror editor", type: :system do
       expect(rich).to have_css("code", text: "code!")
 
       # within the code mark
-      composer.send_keys(%i[backspace backspace])
+      composer.send_keys(:backspace)
+      composer.send_keys(:backspace)
       composer.type_content("!")
 
       expect(rich).to have_css("code", text: "code!")
