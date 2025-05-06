@@ -297,7 +297,7 @@ export default class AdminSearchDataSource extends Service {
           })
         ) {
           dataSourceItem.score =
-            dataSourceItem.score + SEARCH_SCORES.exactKeyword;
+          dataSourceItem.score += SEARCH_SCORES.exactKeyword;
         }
         if (dataSourceItem.keywords.match(fallbackRegex)) {
           dataSourceItem.score = dataSourceItem.score + SEARCH_SCORES.fallback;
