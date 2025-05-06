@@ -39,17 +39,18 @@ class OptimizedImage < ActiveRecord::Base
     # no extension so try to guess it
     upload.fix_image_extension if (!upload.extension)
 
-    if !upload.extension.match?(IM_DECODERS) && upload.extension != "svg"
-      if !opts[:raise_on_error]
+    if !upload.extension.match?(IM_DECODERS)
+      if opts[:raise_on_error]
+        raise InvalidAccess
+      else
         # nothing to do ... bad extension, not an image
         return
-      else
-        raise InvalidAccess
       end
     end
 
     # prefer to look up the thumbnail without grabbing any locks
-    thumbnail = find_by(upload_id: upload.id, width: width, height: height)
+    extension = ".#{opts[:format] || upload.extension}"
+    thumbnail = find_by(upload_id: upload.id, width: width, height: height, extension: extension)
 
     # correct bad thumbnail if needed
     if thumbnail && (thumbnail.url.blank? || thumbnail.version != VERSION)
@@ -70,9 +71,18 @@ class OptimizedImage < ActiveRecord::Base
       original_path = external_copy&.path
     end
 
+    if extension == ".svg" && upload.extension != "svg"
+      if opts[:raise_on_error]
+        raise InvalidAccess
+      else
+        # we can not convert any images to svg, unsupported
+        return
+      end
+    end
+
     lock(upload.id, width, height) do
       # may have been generated since we got the lock
-      thumbnail = find_by(upload_id: upload.id, width: width, height: height)
+      thumbnail = find_by(upload_id: upload.id, width: width, height: height, extension: extension)
 
       # return the previous thumbnail if any
       return thumbnail if thumbnail
@@ -81,7 +91,6 @@ class OptimizedImage < ActiveRecord::Base
         Rails.logger.error("Could not find file in the store located at url: #{upload.url}")
       else
         # create a temp file with the same extension as the original
-        extension = ".#{opts[:format] || upload.extension}"
 
         return nil if extension.length == 1
 
@@ -93,7 +102,8 @@ class OptimizedImage < ActiveRecord::Base
         opts = opts.merge(quality: target_quality) if target_quality
         opts = opts.merge(upload_id: upload.id)
 
-        if upload.extension == "svg"
+        # special case, when "resizing" vectors we simply copy
+        if extension == ".svg"
           FileUtils.cp(original_path, temp_path)
           resized = true
         elsif opts[:crop]
@@ -103,6 +113,7 @@ class OptimizedImage < ActiveRecord::Base
         end
 
         if resized
+          # TODO: crop vs resize should be stored in the db, quality should be stored
           thumbnail =
             OptimizedImage.create!(
               upload_id: upload.id,
@@ -185,7 +196,7 @@ class OptimizedImage < ActiveRecord::Base
     paths.each { |path| raise Discourse::InvalidAccess unless safe_path?(path) }
   end
 
-  IM_DECODERS = /\A(jpe?g|png|ico|gif|webp|avif)\z/i
+  IM_DECODERS = /\A(jpe?g|png|ico|gif|webp|avif|svg)\z/i
 
   def self.prepend_decoder!(path, ext_path = nil, opts = nil)
     opts ||= {}
@@ -382,7 +393,7 @@ end
 #
 # Indexes
 #
-#  index_optimized_images_on_etag                            (etag)
-#  index_optimized_images_on_upload_id                       (upload_id)
-#  index_optimized_images_on_upload_id_and_width_and_height  (upload_id,width,height) UNIQUE
+#  index_optimized_images_on_etag       (etag)
+#  index_optimized_images_on_upload_id  (upload_id)
+#  index_optimized_images_unique        (upload_id,width,height,extension) UNIQUE
 #
