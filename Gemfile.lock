@@ -620,7 +620,7 @@ GEM
     uniform_notifier (1.16.0)
     uri (1.0.3)
     useragent (0.16.11)
-    version_gem (1.1.7)
+    version_gem (1.1.8)
     web-push (3.0.1)
       jwt (~> 2.0)
       openssl (~> 3.0)
@@ -1087,7 +1087,7 @@ CHECKSUMS
   uniform_notifier (1.16.0) sha256=99b39ee4a0864e3b49f375b5e5803eb26d35ed6eb1719c96407573a87bc4dbb5
   uri (1.0.3) sha256=e9f2244608eea2f7bc357d954c65c910ce0399ca5e18a7a29207ac22d8767011
   useragent (0.16.11) sha256=700e6413ad4bb954bb63547fa098dddf7b0ebe75b40cc6f93b8d54255b173844
-  version_gem (1.1.7) sha256=df3bacb16c09d9069d51625f6e009da28e69ed8f9cbd2dd14753cec944e0cacc
+  version_gem (1.1.8) sha256=a964767ecbe36551b9ff2e59099548c27569f2f7f94bdb09f609d76393a8e008
   web-push (3.0.1) sha256=5b4dd2f2bba3bd8951da6416492fe920a6f203d14d3080f943c5d01c0cc4b18d
   webmock (3.25.1) sha256=ab9d5d9353bcbe6322c83e1c60a7103988efc7b67cd72ffb9012629c3d396323
   webrick (1.9.1) sha256=b42d3c94f166f3fb73d87e9b359def9b5836c426fc8beacf38f2184a21b2a989
