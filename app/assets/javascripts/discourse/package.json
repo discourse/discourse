@@ -57,7 +57,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.27.1",
-    "@babel/standalone": "^7.27.1",
+    "@babel/standalone": "^7.27.2",
     "@colors/colors": "^1.6.0",
     "@discourse/itsatrap": "^2.0.10",
     "@ember-compat/tracked-built-ins": "^0.9.1",
