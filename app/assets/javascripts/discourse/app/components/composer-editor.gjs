@@ -15,6 +15,7 @@ import DEditor from "discourse/components/d-editor";
 import DEditorPreview from "discourse/components/d-editor-preview";
 import Wrapper from "discourse/components/form-template-field/wrapper";
 import PickFilesButton from "discourse/components/pick-files-button";
+import PostTranslationEditor from "discourse/components/post-translation-editor";
 import { ajax } from "discourse/lib/ajax";
 import { tinyAvatar } from "discourse/lib/avatar-utils";
 import { setupComposerPosition } from "discourse/lib/composer/composer-position";
@@ -40,7 +41,6 @@ import UppyComposerUpload from "discourse/lib/uppy/composer-upload";
 import { formatUsername } from "discourse/lib/utilities";
 import Composer from "discourse/models/composer";
 import { i18n } from "discourse-i18n";
-import DropdownSelectBox from "select-kit/components/dropdown-select-box";
 import FormTemplateChooser from "select-kit/components/form-template-chooser";
 
 let uploadHandlers = [];
@@ -990,10 +990,6 @@ export default class ComposerEditor extends Component {
     return formTemplateIds?.length > 0 && !replyingToTopic && !editingPost;
   }
 
-  get availableLocales() {
-    return JSON.parse(this.siteSettings.available_locales);
-  }
-
   @action
   showUploadModal() {
     document.getElementById(this.fileUploadElementId).click();
@@ -1033,31 +1029,7 @@ export default class ComposerEditor extends Component {
         {{/if}}
       </div>
     {{else if this.showTranslationEditor}}
-      <div>
-        <DropdownSelectBox
-          @nameProperty="name"
-          @valueProperty="value"
-          @value={{this.composer.selectedTranslationLocale}}
-          @content={{this.availableLocales}}
-          @options={{hash
-            icon="globe"
-            showCaret=true
-            filterable=true
-            disabled=this.composer.loading
-            placement="bottom-start"
-            translatedNone=(i18n "composer.translations.select")
-          }}
-          class="translation-selector-dropdown btn-small"
-        />
-      </div>
-      <div class="d-editor translation-editor">
-        <DEditor
-          @placeholder="composer.translations.placeholder"
-          @forcePreview={{true}}
-          @processPreview={{false}}
-          @hijackPreview={{this.composer.hijackPreview}}
-        />
-      </div>
+      <PostTranslationEditor @setupEditor={{this.setupEditor}} />
     {{else}}
       <DEditor
         @value={{this.composer.model.reply}}

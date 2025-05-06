@@ -1299,6 +1299,10 @@ export default class Composer extends RestModel {
     "minimumPostLength"
   )
   canSaveDraft() {
+    if (this.action === Composer.ADD_TRANSLATION) {
+      return false;
+    }
+
     if (this.draftSaving) {
       return false;
     }

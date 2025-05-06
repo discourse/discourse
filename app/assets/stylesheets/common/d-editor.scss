@@ -372,6 +372,20 @@
 }
 
 #reply-control.composer-action-add_translation {
+  .topic-title-translator {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+
+    input {
+      width: 48.5vw;
+    }
+  }
+
+  .d-editor-button-bar {
+    display: none;
+  }
+
   .translation-selector-dropdown {
     margin-bottom: 0.5rem;
     .select-kit-body {
@@ -391,8 +405,28 @@
       border-radius: var(--d-border-radius);
 
       position: absolute;
-      top: 2.5rem;
+      top: 5.5rem;
       font-size: var(--font-down-1);
     }
+  }
+}
+
+// TODO move to posts scss:
+.post-info.translations {
+  .btn:hover {
+    .d-button-label,
+    .d-icon {
+      color: var(--d-post-control-text-color);
+    }
+  }
+
+  .d-button-label {
+    padding-right: 0.25em;
+    color: var(--primary-med-or-secondary-med);
+  }
+
+  .d-icon {
+    order: 1;
+    color: var(--primary-med-or-secondary-med);
   }
 }

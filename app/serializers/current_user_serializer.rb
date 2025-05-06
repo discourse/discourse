@@ -77,7 +77,8 @@ class CurrentUserSerializer < BasicUserSerializer
              :has_unseen_features,
              :can_see_emails,
              :use_glimmer_post_stream_mode_auto_mode,
-             :can_localize_content
+             :can_localize_content,
+             :can_debug_localizations
 
   delegate :user_stat, to: :object, private: true
   delegate :any_posts, :draft_count, :pending_posts_count, :read_faq?, to: :user_stat
@@ -329,5 +330,10 @@ class CurrentUserSerializer < BasicUserSerializer
   def can_localize_content
     return false if !SiteSetting.experimental_content_localization
     scope.user.in_any_groups?(SiteSetting.experimental_content_localization_allowed_groups_map)
+  end
+
+  def can_debug_localizations
+    return false if !SiteSetting.experimental_content_localization
+    scope.user.in_any_groups?(SiteSetting.content_localization_debug_allowed_groups_map)
   end
 end

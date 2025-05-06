@@ -15,6 +15,7 @@ import {
   cannotPostAgain,
   durationTextFromSeconds,
 } from "discourse/helpers/slow-mode";
+import { ajax } from "discourse/lib/ajax";
 import { customPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu-options";
 import discourseDebounce from "discourse/lib/debounce";
 import discourseComputed from "discourse/lib/decorators";
@@ -1282,8 +1283,27 @@ export default class ComposerService extends Service {
     return promise;
   }
 
-  saveTranslation() {
+  async saveTranslation() {
     // save translation code here..
+    // TODO: encapsulate create/update logic in a model
+    await ajax("/post_localizations", {
+      type: "POST",
+      data: {
+        post_id: this.model.post.id,
+        locale: this.selectedTranslationLocale,
+        raw: this.model.reply,
+      },
+    });
+    // TODO: show number of created localizations on post
+    this.close();
+    // console.log(
+    //   "saving translation for",
+    //   this.selectedTranslationLocale,
+    //   this.model.post.id,
+    //   this.currentUser.id,
+    //   this.model.reply,
+    //   "<-- reply"
+    // );
   }
 
   @action
@@ -1304,7 +1324,7 @@ export default class ComposerService extends Service {
 
    @method open
    @param {Object} opts Options for creating a post
-   @param {String} opts.action The action we're performing: edit, reply, createTopic, createSharedDraft, privateMessage
+   @param {String} opts.action The action we're performing: edit, reply, createTopic, createSharedDraft, privateMessage, addTranslation
    @param {String} opts.draftKey
    @param {Post} [opts.post] The post we're replying to
    @param {Topic} [opts.topic] The topic we're replying to
