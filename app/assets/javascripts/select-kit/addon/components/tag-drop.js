@@ -1,7 +1,9 @@
 import { action, computed } from "@ember/object";
 import { readOnly } from "@ember/object/computed";
+import { service } from "@ember/service";
 import { classNameBindings, classNames } from "@ember-decorators/component";
 import { setting } from "discourse/lib/computed";
+import { bind } from "discourse/lib/decorators";
 import { makeArray } from "discourse/lib/helpers";
 import DiscourseURL, { getCategoryAndTagUrl } from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
@@ -12,7 +14,6 @@ import {
   pluginApiIdentifiers,
   selectKitOptions,
 } from "select-kit/components/select-kit";
-import TagsMixin from "select-kit/mixins/tags";
 
 export const NO_TAG_ID = "no-tags";
 export const ALL_TAGS_ID = "all-tags";
@@ -33,7 +34,9 @@ const MORE_TAGS_COLLECTION = "MORE_TAGS_COLLECTION";
   autoInsertNoneItem: false,
 })
 @pluginApiIdentifiers("tag-drop")
-export default class TagDrop extends ComboBoxComponent.extend(TagsMixin) {
+export default class TagDrop extends ComboBoxComponent {
+  @service tagUtils;
+
   @setting("max_tag_search_results") maxTagSearchResults;
   @setting("tags_sort_alphabetically") sortTagsAlphabetically;
   @setting("max_tags_in_filter_list") maxTagsInFilterList;
@@ -142,6 +145,22 @@ export default class TagDrop extends ComboBoxComponent.extend(TagsMixin) {
     }
   }
 
+  validateCreate(filter, content) {
+    return this.tagUtils.validateCreate(
+      filter,
+      content,
+      this.selectKit.options.maximum,
+      (e) => this.addError(e),
+      this.termMatchesForbidden,
+      (value) => this.getValue(value),
+      this.value
+    );
+  }
+
+  createContentFromInput(input) {
+    return this.tagUtils.createContentFromInput(input);
+  }
+
   search(filter) {
     if (filter) {
       const data = {
@@ -149,7 +168,11 @@ export default class TagDrop extends ComboBoxComponent.extend(TagsMixin) {
         limit: this.maxTagSearchResults,
       };
 
-      return this.searchTags("/tags/filter/search", data, this._transformJson);
+      return this.tagUtils.searchTags(
+        "/tags/filter/search",
+        data,
+        this._transformJson
+      );
     } else {
       return (this.content || []).map((tag) => {
         if (tag.id && tag.name) {
@@ -160,13 +183,18 @@ export default class TagDrop extends ComboBoxComponent.extend(TagsMixin) {
     }
   }
 
-  _transformJson(context, json) {
+  @bind
+  _transformJson(json) {
+    if (this.isDestroyed || this.isDestroying) {
+      return [];
+    }
+
     return json.results
       .sort((a, b) => a.id > b.id)
       .map((r) => {
-        const content = context.defaultItem(r.id, r.text);
+        const content = this.defaultItem(r.id, r.text);
         content.targetTagId = r.target_tag || r.id;
-        if (!context.currentCategory) {
+        if (!this.currentCategory) {
           content.count = r.count;
         }
         content.pmCount = r.pm_count;
