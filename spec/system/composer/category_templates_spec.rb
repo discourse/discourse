@@ -511,11 +511,11 @@ describe "Composer Form Templates", type: :system do
     expect(preview).to have_content("Peter Parker")
     dropdown = find("[name='4']")
     dropdown.click
-    dropdown.send_keys(:arrow_down)
+    dropdown.send_keys(:down)
     dropdown.send_keys(:enter)
 
     dropdown.click
-    dropdown.send_keys(:arrow_up)
+    dropdown.send_keys(:up)
     dropdown.send_keys(:enter)
 
     expect(preview).to have_content("Option 1")
@@ -600,11 +600,11 @@ describe "Composer Form Templates", type: :system do
 
       # event won't be triggered if not done this way
       tag_chooser2.click
-      tag_chooser2.send_keys(:arrow_down)
+      tag_chooser2.send_keys(:down)
       tag_chooser2.send_keys(:enter)
 
       tag_chooser2.click
-      tag_chooser2.send_keys(:arrow_up)
+      tag_chooser2.send_keys(:up)
       tag_chooser2.send_keys(:enter)
 
       # working description translations
@@ -625,7 +625,7 @@ describe "Composer Form Templates", type: :system do
       input = mini_tag_chooser.find("[name='filter-input-search']")
       input.set(tag1.name)
 
-      input.send_keys(:arrow_down)
+      input.send_keys(:down)
       input.send_keys(:enter)
 
       expect(mini_tag_chooser).to have_content(tag1.name)

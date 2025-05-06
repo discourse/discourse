@@ -41,7 +41,7 @@ describe "Request tracking", type: :system do
     end
 
     it "tracks a crawler visit correctly" do
-      # Can't change Selenium's user agent... so change site settings to make Discourse detect chrome as a crawler
+      # Can't change playwright user agent for now... so change site settings to make Discourse detect chrome as a crawler
       SiteSetting.crawler_user_agents += "|chrome"
 
       visit "/"

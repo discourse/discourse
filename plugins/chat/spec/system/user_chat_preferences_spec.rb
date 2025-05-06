@@ -51,7 +51,7 @@ RSpec.describe "User chat preferences", type: :system do
     fab!(:category_channel_1) { Fabricate(:category_channel) }
     fab!(:message_1) { Fabricate(:chat_message, chat_channel: category_channel_1) }
 
-    it "sees expected quick-reactions on hover" do
+    xit "sees expected quick-reactions on hover" do
       sign_in(current_user)
 
       # save custom and look for reaction

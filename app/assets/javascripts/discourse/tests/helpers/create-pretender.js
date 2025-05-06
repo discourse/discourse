@@ -907,17 +907,21 @@ export function applyDefaultHandlers(pretender) {
       store = store.reverse();
     }
 
-    return response(200, store);
+    return response(200, {
+      users: store,
+    });
   });
 
   pretender.get("/admin/users/list/new.json", () => {
-    return response(200, [
-      {
-        id: 2,
-        username: "sam",
-        email: "<small>sam@example.com</small>",
-      },
-    ]);
+    return response(200, {
+      users: [
+        {
+          id: 2,
+          username: "sam",
+          email: "<small>sam@example.com</small>",
+        },
+      ],
+    });
   });
 
   pretender.get("/admin/customize/site_texts", (request) => {

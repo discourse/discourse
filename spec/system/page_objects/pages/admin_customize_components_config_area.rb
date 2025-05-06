@@ -151,6 +151,12 @@ module PageObjects
         has_css?(".admin-config-components__component-row", count:)
       end
 
+      def components_shown
+        expect(page).to have_css(".admin-config-components__component-row")
+
+        all(".admin-config-components__component-row").map { |node| node["data-component-id"].to_i }
+      end
+
       def has_name_filter_input?
         has_css?(".admin-config-components__name-filter")
       end
