@@ -11,7 +11,7 @@
     "@csstools/postcss-light-dark-function": "^2.0.8",
     "@zxing/text-encoding": "^0.9.0",
     "autoprefixer": "^10.4.21",
-    "babel-plugin-ember-template-compilation": "^2.4.1",
+    "babel-plugin-ember-template-compilation": "^3.0.0",
     "content-tag": "^3.1.3",
     "core-js": "^3.42.0",
     "decorator-transforms": "^2.3.0",
