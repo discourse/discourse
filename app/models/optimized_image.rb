@@ -39,12 +39,12 @@ class OptimizedImage < ActiveRecord::Base
     # no extension so try to guess it
     upload.fix_image_extension if (!upload.extension)
 
-    if !upload.extension.match?(IM_DECODERS) && upload.extension != "svg"
-      if !opts[:raise_on_error]
+    if !upload.extension.match?(IM_DECODERS)
+      if opts[:raise_on_error]
+        raise InvalidAccess
+      else
         # nothing to do ... bad extension, not an image
         return
-      else
-        raise InvalidAccess
       end
     end
 
@@ -71,6 +71,15 @@ class OptimizedImage < ActiveRecord::Base
       original_path = external_copy&.path
     end
 
+    if extension == ".svg" && upload.extension != "svg"
+      if opts[:raise_on_error]
+        raise InvalidAccess
+      else
+        # we can not convert any images to svg, unsupported
+        return
+      end
+    end
+
     lock(upload.id, width, height) do
       # may have been generated since we got the lock
       thumbnail = find_by(upload_id: upload.id, width: width, height: height, extension: extension)
@@ -93,7 +102,8 @@ class OptimizedImage < ActiveRecord::Base
         opts = opts.merge(quality: target_quality) if target_quality
         opts = opts.merge(upload_id: upload.id)
 
-        if extension == ".svg" && upload.extension == "svg"
+        # special case, when "resizing" vectors we simply copy
+        if extension == ".svg"
           FileUtils.cp(original_path, temp_path)
           resized = true
         elsif opts[:crop]
@@ -103,6 +113,7 @@ class OptimizedImage < ActiveRecord::Base
         end
 
         if resized
+          # TODO: crop vs resize should be stored in the db, quality should be stored
           thumbnail =
             OptimizedImage.create!(
               upload_id: upload.id,
