@@ -2243,6 +2243,7 @@ id:
       back_to_forum: "Kembali ke Forum"
       collapse_all_sections: "Tutup semua bagian"
       expand_all_sections: "Buka semua bagian"
+      search: "Cari"
     until: "Sampai:"
     form_template_chooser:
       select_template: "Pilih templat formulir"
@@ -2560,6 +2561,7 @@ id:
           create_name: "Nama"
           save: "Simpan"
           edit: "Ubah"
+          default: "Aktif"
           selected:
             other: "%{count} dipilih"
           cancel: "Batal"

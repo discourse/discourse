@@ -473,14 +473,14 @@ ug:
       one: "%{count} يېڭى تېمىنى كۆرۈڭ"
       other: "%{count} يېڭى تېمىنى كۆرۈڭ"
     topic_count_categories:
-      one: "%{count} يېڭى ياكى يېڭىلانغان تېمىنى كۆرسىتىدۇ"
-      other: "%{count} يېڭى ياكى يېڭىلانغان تېمىنى كۆرسىتىدۇ"
+      one: "يېڭى ياكى يېڭىلانغان %{count} تېمىنى كۆرسىتىدۇ"
+      other: "يېڭى ياكى يېڭىلانغان %{count} تېمىنى كۆرسىتىدۇ"
     topic_count_latest:
-      one: "%{count} يېڭى ياكى يېڭىلانغان تېمىنى كۆرسىتىدۇ"
-      other: "%{count} يېڭى ياكى يېڭىلانغان تېمىنى كۆرسىتىدۇ"
+      one: "يېڭى ياكى يېڭىلانغان %{count} تېمىنى كۆرسىتىدۇ"
+      other: "يېڭى ياكى يېڭىلانغان %{count} تېمىنى كۆرسىتىدۇ"
     topic_count_unseen:
-      one: "%{count} يېڭى ياكى يېڭىلانغان تېمىنى كۆرسىتىدۇ"
-      other: "%{count} يېڭى ياكى يېڭىلانغان تېمىنى كۆرسىتىدۇ"
+      one: "يېڭى ياكى يېڭىلانغان %{count} تېمىنى كۆرسىتىدۇ"
+      other: "يېڭى ياكى يېڭىلانغان %{count} تېمىنى كۆرسىتىدۇ"
     topic_count_unread:
       one: "ئوقۇلمىغان %{count} تېمىنى كۆرسىتىدۇ"
       other: "ئوقۇلمىغان %{count} تېمىنى كۆرسىتىدۇ"
@@ -612,10 +612,15 @@ ug:
         name: "ئىسمى"
         fields: "بۆلەك"
         reject_reason: "سەۋەبى"
+        scrubbed_by: "خاتىرە ئۆچۈرگۈچى"
         scrubbed_reason: "سەۋەبى"
+        scrubbed_at: "ئۆچۈرگەن ۋاقتى"
         scrubbed_reject_reason: "ئىشلەتكۈچىنىڭ رەت قىلىش سەۋەبى"
         scrub_record:
+          button: خاتىرە ئۆچۈر
           confirm_title: شەخسىي ئۇچۇرنى چىقىرىۋېتىدۇ
+          confirm_body: "سىز بۇ تەكشۈرۈش ئۆچرىتىنى راستتىنلا ئۆچۈرەمسىز؟ بارلىق شەخسىي ئۇچۇر (مەسىلەن، ئىشلەتكۈچى ئاتى، ئېلخەت، IP ئادرېس) بۇ خاتىرىدىن مەڭگۈلۈك چىقىرىۋېتىلىدۇ."
+          reason_title: "بۇ خاتىرىنى ئۆچۈرۈشنىڭ سەۋەبىنى تەمىنلەش زۆرۈر."
           reason_placeholder: "سەۋەبى..."
           confirm_button: "چىقىرىۋېتىشنى جەزملە"
           cancel_button: "ۋاز كەچ"
@@ -3198,6 +3203,9 @@ ug:
           false {ياكى <a href="{basePath}/latest"> ئاخىرقى تېمىنى كۆرۈڭ</a>}
           other {}
         }
+      reply_count_link:
+        one: "%{count} جاۋاب، تۇنجى يازمىغا ئاتلايدۇ"
+        other: "%{count} جاۋاب، تۇنجى يازمىغا ئاتلايدۇ"
       created_at: "قۇرغان ۋاقتى: %{date}"
       bumped_at: "ئاخىرقى: %{date}"
       browse_all_categories_latest: "<a href='%{basePath}/categories'>ھەممە سەھىپىگە كۆز يۈگۈرت</a> ياكى <a href='%{basePath}/latest'>ئاخىرقى تېمىنى كۆرسەت</a>."
@@ -3834,10 +3842,14 @@ ug:
       settings: "تەڭشەك"
       topic_template: "قېلىپ"
       tags: "بەلگە"
+      localizations: "يەرلىكلەشتۈرۈش"
       localization:
+        locale: "يەرلىك"
         name: "ئىسمى"
         description: "چۈشەندۈرۈش"
+        add: "يېڭى يەرلىك تەڭشەك قوش"
         remove: "چىقىرىۋەت"
+        hint: "نۆۋەتتە بۇ سەھىپە تېخى يەرلىكلەشتۈرۈلمىگەن. تۆۋەندكى «يېڭى يەرلىكلەشتۈرۈش قوش» چېكىلسە يەرلىكلەشتۈرۈش قوشۇشنى باشلايدۇ."
       tags_allowed_tags: "بۇ بەلگىلەرنى مەزكۇر سەھىپىدە چەكلەيدۇ:"
       tags_allowed_tag_groups: "بۇ بەلگە گۇرۇپپىسىنى مەزكۇر سەھىپىدە چەكلەيدۇ:"
       tags_placeholder: "(تاللاشچان) يول قويىدىغان بەلگە تىزىمى"
@@ -4744,6 +4756,7 @@ ug:
       back_to_forum: "مۇنبەرگە قايت"
       collapse_all_sections: "بارلىق بۆلەكلەرنى يىغ"
       expand_all_sections: "بارلىق بۆلەكلەرنى ياي"
+      search: "ئىزدە"
       footer:
         interface_color_selector:
           light: "يورۇق"
@@ -4853,6 +4866,35 @@ ug:
     safari_15_warning: "توركۆرگۈڭىز بۇ جامائەت بىلەن تېزلا ماسلاشماسلىقى مۇمكىن. بۇ جامائەتكە قاتنىشىش ئۈچۈن، توركۆرگۈڭىزنى يۈكسەلتىڭ ياكى <a href='%{url}'>تېخىمۇ كۆپ بىلدۈرگۈ</a>."
     discovery:
       headings:
+        all:
+          default: "بارلىق %{filter} تېما"
+          posted: "سىز يوللىغان بارلىق تېما"
+          bookmarks: "سىز خەتكۈچكە قوشقان بارلىق تېما"
+        category:
+          default: "%{category} دىكى %{filter} تېما"
+          posted: "سىز %{category} غا يوللىغان تېما"
+          bookmarks: "سىز %{category} دا خەتكۈچكە قوشقان تېما"
+        no_tags:
+          all_default: "بەلگىسىز بارلىق تېما"
+          category_default: "%{category} دىكى %{filter} بەلگىسىز تېما"
+          all:
+            posted: "سىز يوللىغان خەتكۈچسىز بارلىق تېما"
+            bookmarks: "سىز خەتكۈچكە قوشقان خەتكۈچسىز بارلىق تېما"
+          category:
+            posted: "سىز %{category} غا يوللىغان بەلگىسىز تېما"
+            bookmarks: "سىز %{category} دا خەتكۈچكە قوشقان بەلگىسىز تېما"
+        single_tag:
+          default: "%{tag} بەلگە قوشۇلغان %{filter} تېما"
+          posted: "سىز يوللىغان %{tag} بەلگە قوشۇلغان تېما"
+          bookmarks: "سىز خەتكۈچكە قوشقان %{tag} بەلگە قوشۇلغان تېما"
+        multi_tag:
+          default: "%{tags} بەلگە قوشۇلغان %{filter} تېما"
+          posted: "سىز يوللىغان %{tags} بەلگە قوشۇلغان تېما"
+          bookmarks: "سىز خەتكۈچكە قوشقان %{tags} بەلگە قوشۇلغان تېما"
+        category_tag:
+          default: "%{category} دىكى %{tag} بەلگە قوشۇلغان %{filter} تېما"
+          posted: "سىز %{category}غا يوللىغان %{tag} بەلگە قوشۇلغان تېما"
+          bookmarks: "سىز %{category} دا خەتكۈچكە قوشقان %{tag} بەلگە قوشۇلغان تېما"
         categories: "ھەممە سەھىپە"
         filter_labels:
           latest: "ئاخىرقى"
@@ -5084,6 +5126,7 @@ ug:
         interface:
           title: "ئارايۈز ۋە جايلاشتۇرۇش"
           header_description: "تور بېكىتىڭىزنىڭ ئادەتتىكى جايلاشتۇرۇلۇشى ۋە ئىشلەتكۈچى ئارايۈزىنىڭ تەپسىلاتىنى خاسلاشتۇرىدۇ"
+          keywords: "يانتۇ سىزىق"
         content:
           title: "مەزمۇن"
           header_description: "تېما ۋە يازما قانداق باشقۇرۇلىدىغانلىقىنى سەپلەيدۇ ۋە ئەزالارنىڭ مەزمۇن قۇرۇش تەجرىبىسىنى خاسلاشتۇرىدۇ"
@@ -5209,6 +5252,8 @@ ug:
         modal_title: "باشقۇرۇش بېتىدىن ھەر قانداق نەرسىنى ئىزدەيدۇ"
         title: "ئىزدە"
         instructions: "ئىزدەيدىغان بەت، تەڭشەك، دوكلات، ئۆرنەك، بۆلەك ۋە باشقىلار كىرگۈزۈلىدۇ…"
+        full_page_link: "تولۇق بەت ئىزدەشكە ئالماشتۇرىدۇ"
+        no_results: "«%{filter}» غا ماس كېلىدىغان ھېچنېمە تاپالمىدۇق."
         result_types:
           page:
             one: "بەت"
@@ -5837,6 +5882,8 @@ ug:
             post: "يازما"
             chat_message: "سۆھبەت ئۇچۇرى"
             enabled: "بۇ ئىختىيارى پاش قىلىشنى ساقلىغاندىن كېيىن قوزغىتىدۇ"
+            create_warning: "ئىختىيارى پاش قىلىش ئىشلىتىلگەندىن كېيىن، ئۇنى پەقەت چەكلەش ياكى تەھرىرلەشكىلا بولىدۇ ئەمما ئۆچۈرگىلى بولمايدۇ."
+            edit_warning: "پاش قىلىنغان ئىسىم ۋە چۈشەندۈرۈش تەھرىرلەنسە ئۇچۇرنىڭ بىردەكلىكىگە تەسىر كۆرسىتىشى مۇمكىن. ئىختىيارى پاش قىلىش ئىشلىتىلسىلا، ئۇنى پەقەت چەكلىگىلى ياكى تەھرىرلىگىلى بولىدۇ ئەمما ئۆچۈرگىلى بولمايدۇ."
             edit_flag: "پاش قىلىش تەھرىر"
             non_editable: "بۇ پاش قىلىشنى تەھرىرلىيەلمەيسىز چۈنكى ئۇ سىستېما پاش قىلىشى ياكى تەستىقلاش سىستېمىسىدا ئىشلىتىلگەن، شۇنداقتىمۇ ئۇنى چەكلىيەلەيسىز."
             delete_flag: "پاش قىلىشنى ئۆچۈر"
@@ -6102,10 +6149,15 @@ ug:
           extra_files_upload: "بۇ ھۆججەتلەرنى كۆرۈش ئۈچۈن ئۆرنەكنى چىقىرىدۇ."
           extra_files_remote: "بۇ ھۆججەتلەرنى كۆرۈش ئۈچۈن ئۆرنەكنى چىقىرىدۇ ياكى git خەزىنىنى تەكشۈرىدۇ."
           preview: "ئالدىن كۆزەت"
+          default: "ئاكتىپ"
           settings_editor: "تەڭشەك تەھرىرلىگۈچ"
           show_advanced: "ئالىي تەڭشەكنى كۆرسىتىدۇ"
           is_default: "كۆڭۈلدىكى ھالەتتە ئۆرنەك قوزغىتىلغان"
           user_selectable: "ئىشلەتكۈچى ئۆرنەك تاللىيالايدۇ"
+          user_selectable_badge_label: "ئىشلەتكۈچى تاللىيالايدۇ"
+          user_selectable_button_label: "ئىشلەتكۈچىنىڭ تاللىشىغا يول قويىدۇ"
+          user_selectable_unavailable_button_label: "ئىشلەتكۈچى ئىشلىتەلمەيدۇ"
+          broken_badge_label: "بۇزۇلغان ئۆرنەك"
           color_scheme_user_selectable: "ئىشلەتكۈچى رەڭ تاختىسىنى تاللىيالايدۇ"
           auto_update: "Discourse يېڭىلانغاندا ئۆزلۈكىدىن يېڭىلىنىدۇ"
           color_scheme: "رەڭ تاختا"
@@ -6123,9 +6175,10 @@ ug:
           convert_theme_alert_generic: "بۇ ئۆرنەكنى راستتىنلا بۆلەككە ئايلاندۇرامسىز؟"
           convert_theme_tooltip: "بۇ ئۆرنەكنى بۆلەككە ئايلاندۇرىدۇ"
           inactive_themes: "ئاكتىپسىز ئۆرنەك:"
-          set_default_theme: "كۆڭۈلدىكىگە تەڭشە"
-          default_theme: "كۆڭۈلدىكى ئۆرنەك"
+          set_default_theme: "ئاكتىپ ھالەتكە تەڭشەيدۇ"
+          default_theme: "ئاكتىپ ئۆرنەك"
           set_default_success: "كۆڭۈلدىكى ئۆرنەك %{theme} غا تەڭشەلدى"
+          setting_was_saved: "ئۆرنەك تەڭشىكى ساقلانغان"
           install_success: "%{theme} مۇۋەپپەقىيەتلىك ئورنىتىلدى!"
           inactive_components: "ئىشلىتىلمىگەن بۆلەك:"
           selected:
@@ -6137,6 +6190,7 @@ ug:
           disabled_component_tooltip: "بۇ بۆلەك چەكلەنگەن"
           default_theme_tooltip: "بۇ ئۆرنەك تور بېكەتنىڭ كۆڭۈلدىكى ئۆرنىكى"
           updates_available_tooltip: "بۇ ئۆرنەكنىڭ يېڭىلانمىسى بار"
+          update_available: "يېڭىلاشقا موھتاج"
           and_x_more:
             one: "ۋە باشقا %{count}."
             other: "ۋە باشقا %{count}."
@@ -6785,6 +6839,8 @@ ug:
           toggle_form_template: "جەدۋەل قېلىپى قوزغىتىلدى"
           select_template: "جەدۋەل قېلىپى تاللىنىدۇ"
           select_template_help: "جەدۋەل قېلىپى قوش/تەھرىرلە"
+        errors:
+          multiple_tags_not_allowed: '«%{tag_name}» دىن تېخىمۇ كۆپ بەلگە تاللىيالمايسىز. مەسىلىنىڭ ئالدىنى ئېلىش ئۈچۈن، كۆزنەك قېلىپىنى ئىشلىتىڭ'
       impersonate:
         title: "تەقلىدلە"
         help: "بۇ قورالنى ئىشلىتىپ سازلاش ئۈچۈن ئىشلەتكۈچى ھېساباتىنى تەقلىدلەيدۇ. تاماملانغاندىن كېيىن چېكىنىشىڭىز كېرەك."

@@ -1494,6 +1494,7 @@ be:
               content_drafts: "Мае чарнавікі"
             review:
               content: "Патрабуе перагляду"
+      search: "Пошук"
       footer:
         interface_color_selector:
           light: "святло"
@@ -1889,6 +1890,7 @@ be:
           edit: "рэдагаваць"
           mobile: "Мабільны"
           preview: "папярэдні прагляд"
+          default: "актыўныя"
           cancel: "адмяніць"
           uploads: "Загрузкі"
           upload: "Загрузіць"

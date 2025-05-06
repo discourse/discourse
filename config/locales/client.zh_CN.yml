@@ -554,6 +554,7 @@ zh_CN:
         name: "姓名"
         fields: "字段"
         reject_reason: "原因"
+        scrubbed_by: "记录清除"
         scrubbed_reason: "原因"
         scrubbed_at: "擦除于"
         scrubbed_reject_reason: "用户被拒绝的原因"
@@ -4473,6 +4474,7 @@ zh_CN:
       back_to_forum: "返回论坛"
       collapse_all_sections: "收起所有版块"
       expand_all_sections: "展开所有版块"
+      search: "搜索"
       footer:
         interface_color_selector:
           light: "亮"
@@ -4595,8 +4597,16 @@ zh_CN:
           category:
             posted: "%{category} 中您发布过帖子的无标签话题"
             bookmarks: "%{category} 中您已添加书签的无标签话题"
+        single_tag:
+          default: "%{filter} 话题标签为 %{tag}"
+          posted: "已在您发表的内容中，标记为 %{tag} 的主题"
+          bookmarks: "已在您添加的书签中，标记为 %{tag} 的主题"
+        multi_tag:
+          default: "%{filter} 主题标签为 %{tags}"
+          posted: "已在您发表的内容中，标记为 %{tags} 的主题"
+          bookmarks: "已在您添加的书签中，标记为 %{tags} 的主题"
         category_tag:
-          default: "%{filter} 个话题位于 %{category} 中，标签为 %{tag}"
+          default: "%{filter} 话题在 %{category} 中标记为 %{tag}"
           posted: "您已在 %{category} 中发布过带有 %{tag} 标签的主题"
           bookmarks: "您已收藏了 %{category} 中标记为 %{tag} 的主题"
         categories: "所有类别"
@@ -4828,6 +4838,8 @@ zh_CN:
           keywords: "search|google|sitemap"
         interface:
           title: "界面与布局"
+          header_description: "自定义网站总体布局和用户界面"
+          keywords: "斜杠"
         content:
           title: "内容"
           header_description: "配置主题和帖子的管理方式，为您的成员自定义内容创作体验"
@@ -4847,6 +4859,7 @@ zh_CN:
         user_defaults:
           title: "用户默认设置"
           header_description: "为您的用户配置设置默认值，配置他们的入门体验"
+          keywords: "用户|初次使用|新用户"
         user_fields:
           title: "用户字段"
           header_description: "创建自定义用户字段以收集有关社区成员的额外详细信息。您可以选择在注册时需要哪些信息、个人资料上显示哪些内容以及用户可以更新哪些信息。"
@@ -4873,12 +4886,14 @@ zh_CN:
         site_admin:
           title: "站点管理员"
           header_description: "配置与站点管理相关的各种设置"
+          keywords: "发现|引导|应用程序"
         site_texts:
           title: "网站文本"
           header_description: "自定义 Discourse 中使用的任何文本，以匹配您社区的声音和语气"
         email:
           title: "电子邮件设置"
           header_description: "配置发送给成员的电子邮件的设置"
+          keywords: "摘要|取消订阅|电子邮件|smtp|mailgun|sendgrid|预览摘要"
           sub_pages:
             server_settings:
               title: "服务器设置"
@@ -4895,6 +4910,7 @@ zh_CN:
         email_logs:
           title: "电子邮件日志"
           header_description: "查看从您的站点发送的电子邮件的日志"
+          keywords: "已发送|已跳过|已退回|已接收|已拒绝|电子邮件日志"
           sub_pages:
             sent:
               title: "已发送"
@@ -4949,7 +4965,8 @@ zh_CN:
         modal_title: "搜索管理员页面中的任何内容"
         title: "搜索"
         instructions: "键入以搜索页面、设置、报告、主题、组件等等..."
-        no_results: '我们找不到任何与“%{filter}”匹配的内容。'
+        full_page_link: "切换到全页搜索"
+        no_results: "我们找不到任何与“%{filter}”匹配的内容。"
         result_types:
           page:
             other: "页面"
@@ -5829,10 +5846,15 @@ zh_CN:
           extra_files_upload: "导出主题以查看这些文件。"
           extra_files_remote: "导出主题或检查 git 仓库以查看这些文件。"
           preview: "预览"
+          default: "有效"
           settings_editor: "设置编辑器"
           show_advanced: "显示高级"
           is_default: "主题默认启用"
           user_selectable: "用户可以选择主题"
+          user_selectable_badge_label: "用户可选"
+          user_selectable_button_label: "允许用户选择"
+          user_selectable_unavailable_button_label: "使用户不可用"
+          broken_badge_label: "损坏的主题"
           color_scheme_user_selectable: "用户可以选择调色板"
           auto_update: "当 Discourse 更新时自动更新"
           color_scheme: "调色板"
@@ -5850,9 +5872,10 @@ zh_CN:
           convert_theme_alert_generic: "确定要将此主题转换为组件吗？"
           convert_theme_tooltip: "将此主题转换为组件"
           inactive_themes: "停用主题："
-          set_default_theme: "设为默认"
-          default_theme: "默认主题"
+          set_default_theme: "设置为活跃"
+          default_theme: "活跃主题"
           set_default_success: "默认主题设置为 %{theme}"
+          setting_was_saved: "主题设置已保存"
           install_success: "%{theme} 安装成功！"
           inactive_components: "未使用的组件："
           selected:
@@ -5863,6 +5886,7 @@ zh_CN:
           disabled_component_tooltip: "此组件已被禁用"
           default_theme_tooltip: "此主题是网站的默认主题"
           updates_available_tooltip: "此主题有可用更新"
+          update_available: "需要更新"
           and_x_more:
             other: "和其他 %{count} 个。"
           collapse: 收起

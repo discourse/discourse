@@ -3580,6 +3580,7 @@ pt:
               content: "Revisão"
             invite:
               content: "Convidar"
+      search: "Pesquisar"
     until: "Até:"
     form_templates:
       upload_field:
@@ -4215,6 +4216,7 @@ pt:
           extra_files_upload: "Exporte o tema para ver esses arquivos."
           extra_files_remote: "Exporte o tema ou verifique o repositório git para ver esses arquivos."
           preview: "Pré-visualização"
+          default: "Ativo"
           is_default: "O tema está habilitado por padrão"
           user_selectable: "O tema pode ser selecionado pelos usuários"
           auto_update: "Atualização automática quando o Discourse é atualizado"
@@ -4243,8 +4245,6 @@ pt:
           version: "Versão:"
           enable: "Ativar"
           disable: "Desativar"
-          update_to_latest: "Atualizar para o Mais Recente"
-          check_for_updates: "Procurar por Atualizações"
           up_to_date: "O tema está atualizado, verificado pela última vez:"
           has_overwritten_history: "A versão do tema atual não existe mais porque o histórico do Git foi sobrescrito por um push forçado."
           add: "Adicionar"

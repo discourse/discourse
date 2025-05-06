@@ -729,6 +729,7 @@ he:
         fields: "שדות"
         reject_reason: "סיבה"
         scrubbed_reason: "סיבה"
+        scrubbed_reject_reason: "סיבת דחיית המשתמש"
         scrub_record:
           confirm_title: הסרת נתונים אישיים
           reason_placeholder: "סיבה..."
@@ -5247,6 +5248,7 @@ he:
       back_to_forum: "חזרה לפורום"
       collapse_all_sections: "צמצום כל הסעיפים"
       expand_all_sections: "הרחבת כל הסעיפים"
+      search: "חיפוש"
       footer:
         interface_color_selector:
           light: "בהיר"
@@ -5750,7 +5752,7 @@ he:
         modal_title: "חיפוש כל דבר שהוא בניהול"
         title: "חיפוש"
         instructions: "אפשר להקליד כדי לחפש אחר עמודים, הגדרות, דוחות, ערכות עיצוב, רכיבים ועוד…"
-        no_results: 'לא מצאנו שום דבר שעונה על ‚%{filter}’.'
+        no_results: "לא מצאנו שום דבר שעונה על ‚%{filter}’."
         result_types:
           page:
             one: "עמוד"
@@ -6678,10 +6680,15 @@ he:
           extra_files_upload: "יש לייצא את ערכת העיצוב כדי לצפות בקבצים האלה."
           extra_files_remote: "יש לייצא את ערכת הנושא או לבדוק את מאגר ה־git כדי לצפות בקבצים אלה."
           preview: "תצוגה מקדימה"
+          default: "פעיל"
           settings_editor: "עורך הגדרות"
           show_advanced: "הצגת מתקדם"
           is_default: "ערכת עיצוב פעילה כברירת מחדל"
           user_selectable: "המשתמשים יכולים לבחור את ערכת העיצוב"
+          user_selectable_badge_label: "לבחירת המשתמש"
+          user_selectable_button_label: "לאפשר למשתמשים לבחור"
+          user_selectable_unavailable_button_label: "להפוך לבלתי זמינה למשתמשים"
+          broken_badge_label: "ערכת עיצוב פגומה"
           color_scheme_user_selectable: "המשתמשים יכולים לבחור את ערכת הצבעים"
           auto_update: "לעדכן אוטומטית כש־Discourse מעודכן"
           color_scheme: "לוח צבעים"
@@ -6699,9 +6706,10 @@ he:
           convert_theme_alert_generic: "להמיר את ערכת העיצוב הזאת לרכיב?"
           convert_theme_tooltip: "המרת ערכת עיצוב זו לרכיב"
           inactive_themes: "ערכות עיצוב בלתי פעילות:"
-          set_default_theme: "הגדרת ברירת מחדל"
-          default_theme: "ערכת עיצוב כברירת מחדל"
+          set_default_theme: "הגדרה כפעילה"
+          default_theme: "ערכת עיצוב פעילה"
           set_default_success: "ברירת המחדל של ערכת העיצוב הוגדרה לכדי %{theme}"
+          setting_was_saved: "הגדרת ערכת העיצוב נשמרה"
           install_success: "%{theme} הותקנה בהצלחה!"
           inactive_components: "רכיבים שאינם בשימוש:"
           selected:
@@ -6715,6 +6723,7 @@ he:
           disabled_component_tooltip: "הרכיב הזה נוטרל"
           default_theme_tooltip: "ערכת עיצוב זו מכהנת כברירת המחדל של האתר"
           updates_available_tooltip: "קיימים עדכונים לערכת עיצוב זו"
+          update_available: "דורש עדכון"
           and_x_more:
             one: "ו־%{count} נוספות."
             two: "ו־%{count} נוספות."
@@ -6778,8 +6787,8 @@ he:
             error: "ערכת עיצוב זו נוטרלה אוטומטית כיוון שאינה תואמת לגרסה זו של Discourse."
             minimum: "נדרש Discourse בגרסה %{version} ומעלה."
             maximum: "נדרש Discourse בגרסה %{version} ומטה."
-          update_to_latest: "עדכון לגרסה אחרונה"
-          check_for_updates: "בדיקת עדכונים"
+          update_to_latest: "עדכון לגרסה העדכנית ביותר"
+          check_for_updates: "חיפוש עדכונים"
           updating: "מתבצע עדכון…"
           update_success: "העדכון של %{theme} הושלם"
           up_to_date: "ערכת העיצוב עדכנית, מועד הבדיקה האחרונה:"
