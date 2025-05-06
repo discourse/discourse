@@ -3410,6 +3410,7 @@ bg:
               content: "Преглед"
             invite:
               content: "Покана"
+      search: "Търсене"
     form_template_chooser:
       select_template: "Изберете шаблони за формуляри"
     form_templates:
@@ -3836,6 +3837,7 @@ bg:
           edit: "Редактирай"
           mobile: "Мобилен"
           preview: "Преглед"
+          default: "Активни"
           cancel: "Прекрати"
           collapse: Намали
           upload: "Качване"

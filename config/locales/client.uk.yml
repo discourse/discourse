@@ -5256,6 +5256,7 @@ uk:
       back_to_forum: "Повернутися до форуму"
       collapse_all_sections: "Згорнути всі розділи"
       expand_all_sections: "Розгорнути всі розділи"
+      search: "Пошук"
       footer:
         interface_color_selector:
           light: "Світла"
@@ -5399,7 +5400,7 @@ uk:
           posted: "Теми з тегами %{tags} , у яких ви писали"
           bookmarks: "Теми з тегами %{tags}, які ви додали в закладки"
         category_tag:
-          default: "%{filter} теми в %{category} з тегами %{tag}"
+          default: "%{filter} тем у %{category} з тегом %{tag}"
           posted: "Теми в %{category} з тегами %{tag} , які ви публікували"
           bookmarks: "Теми в %{category} позначені тегами %{tag} , які ви додали в закладки"
         categories: "Всі розділи"
@@ -5761,7 +5762,8 @@ uk:
         modal_title: "Шукайте будь-що в адмінці"
         title: "Пошук"
         instructions: "Введіть текст для пошуку сторінок, налаштувань, звітів, тем, компонентів тощо..."
-        no_results: 'Ми не змогли знайти нічого, що відповідає "%{filter}".'
+        full_page_link: "Перейдіть до пошуку по всій сторінці"
+        no_results: "Ми не змогли знайти нічого, що відповідає \"%{filter}\"."
         result_types:
           page:
             one: "Сторінка"
@@ -6689,10 +6691,12 @@ uk:
           extra_files_upload: "Експортувати тему для перегляду цих файлів."
           extra_files_remote: "Експортуйте тему або перевірте сховище git, щоб переглянути ці файли."
           preview: "Попередній перегляд"
+          default: "Активні"
           settings_editor: "Редактор налаштувань"
           show_advanced: "Показати розширені"
           is_default: "Активувати за замовчуванням"
           user_selectable: "Користувачі можуть вибирати стиль"
+          user_selectable_badge_label: "Вибір користувача"
           color_scheme_user_selectable: "Кольорова палітра може бути обрана користувачами"
           auto_update: "Автоматичне оновлення при оновленні Discourse"
           color_scheme: "Колірна палітра"
@@ -6710,8 +6714,6 @@ uk:
           convert_theme_alert_generic: "Ви впевнені, що хочете перетворити цю тему на компонент?"
           convert_theme_tooltip: "Перетворити цю тему в компонент"
           inactive_themes: "Неактивні теми:"
-          set_default_theme: "Встановити за замовчуванням"
-          default_theme: "Стандартна тема"
           set_default_success: "Тема за замовчуванням встановлена як %{theme}"
           install_success: "%{theme} успішно встановлено!"
           inactive_components: "Невикористані компоненти:"
@@ -6789,8 +6791,8 @@ uk:
             error: "Ця тема була автоматично відключена, тому що вона не сумісна з цією версією Discourse."
             minimum: "Потрібна версія Discourse %{version} або вище."
             maximum: "Потрібна версія Discourse %{version} або нижче."
-          update_to_latest: "Оновити до останьої"
-          check_for_updates: "Перевірити оновлення"
+          update_to_latest: "Оновити до останньої версії"
+          check_for_updates: "Перевірте наявність оновлень"
           updating: "Оновлення…"
           update_success: "Оновлення %{theme} завершено"
           up_to_date: "Стиль поточної версії, остання перевірка:"

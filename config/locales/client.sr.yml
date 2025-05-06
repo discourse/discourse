@@ -2591,6 +2591,7 @@ sr:
             invite:
               content: "Pozovite"
               title: "Pozovi nove članove"
+      search: "Pretraži"
     form_templates:
       upload_field:
         upload: "Upload"
@@ -2951,6 +2952,7 @@ sr:
           create_name: "Ime foruma"
           save: "Sačuvaj"
           edit: "Izmeni"
+          default: "Aktivno"
           cancel: "Odustani"
           collapse: Spusti
           upload: "Učitaj"
