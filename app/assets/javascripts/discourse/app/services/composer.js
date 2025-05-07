@@ -15,7 +15,6 @@ import {
   cannotPostAgain,
   durationTextFromSeconds,
 } from "discourse/helpers/slow-mode";
-import { ajax } from "discourse/lib/ajax";
 import { customPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu-options";
 import discourseDebounce from "discourse/lib/debounce";
 import discourseComputed from "discourse/lib/decorators";
@@ -46,6 +45,7 @@ import Composer, {
   SAVE_LABELS,
 } from "discourse/models/composer";
 import Draft from "discourse/models/draft";
+import PostLocalization from "discourse/models/post-localization";
 import { i18n } from "discourse-i18n";
 
 async function loadDraft(store, opts = {}) {
@@ -1284,26 +1284,23 @@ export default class ComposerService extends Service {
   }
 
   async saveTranslation() {
-    // save translation code here..
-    // TODO: encapsulate create/update logic in a model
-    await ajax("/post_localizations", {
-      type: "POST",
-      data: {
-        post_id: this.model.post.id,
-        locale: this.selectedTranslationLocale,
-        raw: this.model.reply,
-      },
-    });
-    // TODO: show number of created localizations on post
-    this.close();
-    // console.log(
-    //   "saving translation for",
-    //   this.selectedTranslationLocale,
-    //   this.model.post.id,
-    //   this.currentUser.id,
-    //   this.model.reply,
-    //   "<-- reply"
-    // );
+    this.set("model.loading", true);
+
+    try {
+      await PostLocalization.createOrUpdate(
+        this.model.post.id,
+        this.selectedTranslationLocale,
+        this.model.reply
+      );
+    } catch (e) {
+      this.dialog.alert(e);
+    } finally {
+      this.set("model.loading", false);
+      this.selectedTranslationLocale = null;
+      this.close();
+    }
+
+    // TODO: if post is first_post then we need to update the topic title too
   }
 
   @action
@@ -1337,6 +1334,8 @@ export default class ComposerService extends Service {
    @param {String} [opts.draftSequence]
    @param {Boolean} [opts.skipJumpOnSave] Option to skip navigating to the post when saved in this composer session
    @param {Boolean} [opts.skipFormTemplate] Option to skip the form template even if configured for the category
+   @param {String} [opts.hijackPreview] Option to hijack the preview with custom content
+   @param {String} [opts.selectedTranslationLocale] The locale to use for the translation
    **/
   async open(opts = {}) {
     if (!opts.draftKey) {
@@ -1367,6 +1366,10 @@ export default class ComposerService extends Service {
 
     if (opts.hijackPreview) {
       this.set("hijackPreview", opts.hijackPreview);
+    }
+
+    if (opts.selectedTranslationLocale) {
+      this.selectedTranslationLocale = opts.selectedTranslationLocale;
     }
 
     // Scope the categories drop down to the category we opened the composer with.

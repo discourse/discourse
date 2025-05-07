@@ -28,8 +28,10 @@ export default class PostMetaData extends Component {
   }
 
   get shouldDisplayTranslationIndicator() {
-    // TODO add `post.has_translations` to the post model
-    return this.currentUser.can_debug_localizations;
+    return (
+      this.currentUser.can_debug_localizations &&
+      this.args.post?.has_post_localizations
+    );
   }
 
   <template>

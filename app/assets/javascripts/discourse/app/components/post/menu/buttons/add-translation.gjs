@@ -14,7 +14,6 @@ export default class PostMenuAddTranslationButton extends Component {
   @tracked showComposer = false;
 
   get originalPostContent() {
-    // todo i18n
     return `<div class='d-editor-translation-preview-wrapper'>
          <span class='d-editor-translation-preview-wrapper__header'>
           ${i18n("composer.translations.original_content")}

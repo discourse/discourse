@@ -1228,8 +1228,12 @@ Discourse::Application.routes.draw do
         put "merge_posts"
       end
     end
-    resources :post_localizations, only: %i[create update destroy]
-    resources :topic_localizations, only: %i[create update destroy]
+
+    post "/post_localizations/create_or_update", to: "post_localizations#create_or_update"
+    delete "/post_localizations/destroy", to: "post_localizations#destroy"
+
+    post "topic_localizations/create_or_update", to: "topic_localizations#create_or_update"
+    delete "topic_localizations/destroy", to: "topic_localizations#destroy"
 
     resources :bookmarks, only: %i[create destroy update] do
       put "toggle_pin"

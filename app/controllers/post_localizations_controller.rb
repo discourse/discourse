@@ -3,30 +3,28 @@
 class PostLocalizationsController < ApplicationController
   before_action :ensure_logged_in
 
-  def create
+  def create_or_update
     guardian.ensure_can_localize_content!
 
     params.require(%i[post_id locale raw])
-    PostLocalizationCreator.create(
-      post_id: params[:post_id],
-      locale: params[:locale],
-      raw: params[:raw],
-      user: current_user,
-    )
-    render json: success_json, status: :created
-  end
 
-  def update
-    guardian.ensure_can_localize_content!
-
-    params.require(%i[post_id locale raw])
-    PostLocalizationUpdater.update(
-      post_id: params[:post_id],
-      locale: params[:locale],
-      raw: params[:raw],
-      user: current_user,
-    )
-    render json: success_json, status: :ok
+    if PostLocalization.exists?(post_id: params[:post_id], locale: params[:locale])
+      PostLocalizationUpdater.update(
+        post_id: params[:post_id],
+        locale: params[:locale],
+        raw: params[:raw],
+        user: current_user,
+      )
+      render json: success_json, status: :ok
+    else
+      PostLocalizationCreator.create(
+        post_id: params[:post_id],
+        locale: params[:locale],
+        raw: params[:raw],
+        user: current_user,
+      )
+      render json: success_json, status: :created
+    end
   end
 
   def destroy

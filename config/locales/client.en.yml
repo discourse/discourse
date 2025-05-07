@@ -3911,6 +3911,13 @@ en:
 
       badge_granted_tooltip: "%{username} earned the '%{badge_name}' badge for this post!"
 
+      localizations:
+        table:
+          locale: "Locale"
+          actions: "Actions"
+          edit: "Edit"
+          delete: "Delete"
+
       errors:
         create: "Sorry, there was an error creating your post. Please try again."
         edit: "Sorry, there was an error editing your post. Please try again."
