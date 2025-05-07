@@ -5,6 +5,10 @@ module PageObjects
     class BulkUserDeleteConfirmation < Base
       MODAL_SELECTOR = ".bulk-user-delete-confirmation"
 
+      def confirm
+        confirm_button.click
+      end
+
       def confirm_button
         within(modal) { find(".btn.confirm-delete") }
       end

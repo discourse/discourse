@@ -3621,6 +3621,7 @@ lt:
               content: "Peržiūra"
             invite:
               content: "Kviesti"
+      search: "Paieška"
       footer:
         interface_color_selector:
           light: "Šviesi"
@@ -4258,6 +4259,7 @@ lt:
           extra_files_upload: "Norėdami peržiūrėti šiuos failus, eksportuokite temą."
           extra_files_remote: "Eksportuokite temą arba patikrinkite „git“ saugyklą, kad peržiūrėtumėte šiuos failus."
           preview: "Peržiūrėti"
+          default: "Aktyvūs"
           is_default: "Tema įgalinta pagal nutylėjimą"
           user_selectable: "Temą gali pasirinkti vartotojai"
           auto_update: "Automatinis naujinimas, kai Discourse atnaujinamas"
@@ -4329,8 +4331,6 @@ lt:
           required_version:
             minimum: "Reikalinga Discourse %{version} arba naujesnė versija."
             maximum: "Reikalinga Discourse %{version} arba senesnė versija."
-          update_to_latest: "Atnaujinti iki paskutinės"
-          check_for_updates: "Tikrinti atnaujinimus "
           up_to_date: "Tema yra naujausia, psakutinis tikrinimas: "
           add: "Pridėti"
           theme_settings: "Temos nustatymai"

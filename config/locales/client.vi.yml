@@ -3637,6 +3637,7 @@ vi:
               content: "Review"
             invite:
               content: "Mời"
+      search: "Tìm kiếm"
     until: "Cho đến khi:"
     form_templates:
       upload_field:
@@ -4356,6 +4357,7 @@ vi:
           extra_files_upload: "Xuất chủ đề để xem các tệp này."
           extra_files_remote: "Xuất Theme hoặc kiểm tra kho lưu trữ git để xem các tệp này."
           preview: "Xem trước"
+          default: "Kích hoạt"
           is_default: "Themes được bật theo mặc định"
           user_selectable: "Themes có thể được lựa chọn bởi người dùng"
           auto_update: "Tự động cập nhật khi Discourse được cập nhật"
@@ -4430,8 +4432,6 @@ vi:
             error: "Chủ đề này đã tự động bị tắt vì nó không tương thích với phiên bản Discourse này."
             minimum: "Yêu cầu phiên bản Discourse %{version} hoặc cao hơn."
             maximum: "Yêu cầu phiên bản Discourse %{version} hoặc thấp hơn."
-          update_to_latest: "Cập nhật lên mới nhất"
-          check_for_updates: "Kiểm tra cập nhật"
           updating: "Đang cập nhật…"
           up_to_date: "Chủ đề được cập nhật, kiểm tra lần cuối:"
           has_overwritten_history: "Phiên bản chủ đề hiện tại không còn tồn tại vì lịch sử Git đã bị ghi đè bởi một lực đẩy."

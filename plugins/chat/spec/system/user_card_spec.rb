@@ -30,7 +30,8 @@ RSpec.describe "User card", type: :system do
       context "when showing user card" do
         before do
           visit("/")
-          find("[data-user-card='#{topic_1.user.username}'").click
+          find("[data-user-card='#{topic_1.user.username}']").click
+          expect(page).to have_css(".user-card.show")
         end
 
         include_examples "not showing chat button"
@@ -43,7 +44,8 @@ RSpec.describe "User card", type: :system do
       context "when showing user card" do
         before do
           visit("/")
-          find("[data-user-card='#{topic_1.user.username}'").click
+          find("[data-user-card='#{topic_1.user.username}']").click
+          expect(page).to have_css(".user-card.show")
         end
 
         include_examples "showing chat button"
@@ -67,7 +69,8 @@ RSpec.describe "User card", type: :system do
     context "when showing user card" do
       before do
         visit("/")
-        find("[data-user-card='#{topic_1.user.username}'").click
+        find("[data-user-card='#{topic_1.user.username}']").click
+        expect(page).to have_css(".user-card.show")
       end
 
       include_examples "not showing chat button"

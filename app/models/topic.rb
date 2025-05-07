@@ -2233,6 +2233,7 @@ end
 #  bannered_until            :datetime
 #  external_id               :string
 #  visibility_reason_id      :integer
+#  locale                    :string(20)
 #
 # Indexes
 #

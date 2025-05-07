@@ -175,8 +175,12 @@ zh_CN:
               description: 可选，仅允许在主题或个人消息上触发
             restricted_groups:
               label: 受限制的群组
+              description: 可选，只有当发帖用户属于以下任一组时才会触发
             restricted_inbox_groups:
               description: 可选，仅在帖子的话题是某个群组收件箱中的个人消息时触发
+            excluded_groups:
+              label: 排除的群组
+              description: 可选，如果发帖用户属于以下组别，则跳过触发器
             ignore_automated:
               label: 忽略自动源
               description: 如果发件人的电子邮件地址包含 noreply 或来自动源，则跳过触发器。仅适用于通过电子邮件创建的帖子
@@ -189,9 +193,14 @@ zh_CN:
             skip_via_email:
               label: "通过电子邮件跳过"
               description: "如果帖子是通过电子邮件创建的，则跳过该触发器。"
+            post_features:
+              label: 帖子功能
+              description: "可选，仅限于触发具有这些功能的帖子"
           created: 创建
           edited: 已编辑
+          topics: 所有话题
           personal_messages: 个人信息
+          public_topics: 公共话题（排除所有安全类别）
           with_images: 图片
           with_links: 链接
           with_code: 代码
@@ -396,6 +405,7 @@ zh_CN:
               label: PM
             sender:
               label: PM 发送者
+              description: "确保发送者具有向接收者发送 PM 的正确权限"
         close_topic:
           fields:
             topic:
@@ -419,6 +429,11 @@ zh_CN:
           name:
             label: 触发器
         automation:
+          runs_today: "%{count} 今天"
+          runs_this_week: "%{count} 本周"
+          runs_this_month: "本月 %{count}"
+          runs:
+            label: 运行
           name:
             label: 名称
           trigger:
@@ -437,5 +452,7 @@ zh_CN:
             label: 占位符
           last_updated_at:
             label: 最后更新
+          last_run:
+            label: 最后一次运行
           last_updated_by:
             label: 更新者

@@ -7,7 +7,7 @@ on:
       - main
 
 concurrency:
-  group: licenses-${{ format('{0}-{1}', github.ref_name, github.job) }}
+  group: licenses-${{ format('{0}-{1}', github.head_ref || github.run_number, github.job) }}
   cancel-in-progress: true
 
 permissions:

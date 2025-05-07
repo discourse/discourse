@@ -2822,6 +2822,7 @@ lv:
               content: "Pārskats"
             invite:
               content: "Ielūgt"
+      search: "Meklēt"
     form_templates:
       upload_field:
         upload: "Augšupielādēt"
@@ -3283,6 +3284,7 @@ lv:
           desktop: "Personālais dators"
           mobile: "Mobilais"
           preview: "Priekšskatījums"
+          default: "Aktīvi"
           is_default: "Šis ir noklusējuma dizains"
           user_selectable: "Šo dizainu var izvēlēties lietotāji"
           color_scheme_select: "Izvēlieties krāsas, kuras lietos šis dizains"
@@ -3304,8 +3306,6 @@ lv:
           version: "Versija:"
           enable: "Ieslēgt"
           disable: "Atslēgt"
-          update_to_latest: "Atjaunināt uz pēdējo"
-          check_for_updates: "Pārbaudīt, vai nav atjauninājumi"
           up_to_date: "Dizains ir pilnībā atjaunināts, pēdējā parbaude:"
           add: "Pievienot"
           scss:

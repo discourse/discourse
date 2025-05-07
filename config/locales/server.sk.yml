@@ -2631,7 +2631,7 @@ sk:
     default_navigation_menu_tags: "Vybrané značky sa predvolene zobrazia v časti Značky v navigačnom menu."
     experimental_new_new_view_groups: 'Povoľte nový zoznam tém, ktorý kombinuje neprečítané a nové témy, a vytvorte naň odkaz "Všetko" v bočnom paneli.'
     glimmer_post_stream_mode: "Ovládanie, či sa použije nová implementácia postreamu \"glimmer\". 'auto' sa zapne automaticky, akonáhle sú všetky vaše témy a doplnky pripravené. Táto implementácia je v štádiu aktívneho vývoja a nie je určená na produkčné použitie. Nevyvíjajte proti nej témy/pluginy, kým nebude implementácia dokončená a oznámená."
-    glimmer_post_stream_mode_auto_groups: "Povolenie novej implementácie ponuky \"glimmer\" v režime \"auto\" pre zadané skupiny používateľov. Táto implementácia je v štádiu aktívneho vývoja a nie je určená na produkčné použitie. Nevyvíjajte proti nej témy/pluginy, kým nebude implementácia dokončená a oznámená."
+    glimmer_post_stream_mode_auto_groups: "Povolenie novej implementácie postreamu \"glimmer\" v režime \"auto\" pre zadané skupiny používateľov. Táto implementácia je v štádiu aktívneho vývoja a nie je určená na produkčné použitie. Nevyvíjajte proti nej témy/pluginy, kým nebude implementácia dokončená a oznámená."
     experimental_form_templates: "Povoľte funkciu šablón formulárov. Šablóny spravujte v časti <a href='%{base_path}/admin/customize/form-templates'>Prispôsobiť / Šablóny</a>."
     show_preview_for_form_templates: "Povolenie funkcie náhľadu pre šablóny formulárov"
     lazy_load_categories_groups: "Lenivé načítanie informácií o kategórii len pre používateľov týchto skupín. To zlepšuje výkon na stránkach s mnohými kategóriami."
@@ -2643,6 +2643,7 @@ sk:
     view_raw_email_allowed_groups: "Skupiny, ktoré môžu zobraziť nespracovaný obsah e-mailu, ak bol príspevok vytvorený pomocou prichádzajúceho e-mailu. To zahŕňa hlavičky e-mailov a ďalšie technické informácie."
     experimental_content_localization: "Zobrazuje lokalizovaný obsah pre používateľov na základe ich jazykových preferencií. Takýto obsah môže zahŕňať kategórie, značky, príspevky a témy. Na tejto funkcii sa intenzívne pracuje."
     rich_editor: "Povoľte bohatý editor, aby všetci používatelia mohli prepínať medzi súčasným režimom Markdown a novým bohatým textovým editorom pre intuitívnejšie a používateľsky prívetivejšie písanie. Bohatý textový editor je v štádiu aktívneho vývoja, takže ešte nie sú podporované všetky funkcie - <a href='https://meta.discourse.org/t/test-our-new-composer/352347' target='_blank'>viac informácií nájdete v časti Meta</a>."
+    experimental_content_localization_allowed_groups: 'Skupiny môžu aktualizovať lokalizovaný obsah. Vyžaduje, aby bola povolená "experimentálna lokalizácia obsahu".'
     errors:
       invalid_css_color: "Neplatná farba. Zadajte názov farby alebo hexadecimálnu hodnotu."
       invalid_email: "Nesprávna emailová adresa."
@@ -5347,6 +5348,14 @@ sk:
       restored: Obnovené
     bulk_user_delete: "odstránené v operácii hromadného vymazania"
     cli_bulk_post_delete: "Hromadné odstránenie z úlohy rake"
+    api_post_delete: "Odstránené cez API"
+    reminder_deleted: "Nahradené novou pripomienkou"
+    user_associated_posts_deleted: "Používateľ bol zničený"
+    imap_email_deleted: "E-mail bol odstránený na serveri IMAP"
+    imap_email_marked_as_spam: "E-mail bol presunutý do spamu na serveri IMAP"
+    auto_deleted_hidden_posts: "Automaticky odstránené skryté príspevky"
+    seed_data_topic_updated: "Téma počiatočných údajov bola aktualizovaná"
+    seed_data_topic_deleted: "Téma počiatočných údajov bola odstránená"
   reviewables:
     already_handled: "Ďakujeme, ale tento príspevok sme už preskúmali a rozhodli sme, že ho netreba znova označiť."
     already_handled_and_user_not_exist: "Ďakujem, ale niekto to už preskúmal a tento používateľ už neexistuje."
@@ -5551,6 +5560,8 @@ sk:
       duplicate_ids: "má duplicitné ID"
       reserved_id: "má vyhradené kľúčové slovo ako id: %{id}"
       unsafe_description: "má nebezpečný popis HTML"
+  content_localization:
+    not_allowed: "Tento obsah nie je povolené lokalizovať."
   activemodel:
     errors:
       <<: *errors

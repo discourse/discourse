@@ -6,6 +6,7 @@ describe "Admin Color Palette Config Area Page", type: :system do
 
   let(:config_area) { PageObjects::Pages::AdminColorPaletteConfigArea.new }
   let(:toasts) { PageObjects::Components::Toasts.new }
+  let(:dialog) { PageObjects::Components::Dialog.new }
 
   before { sign_in(admin) }
 
@@ -23,6 +24,31 @@ describe "Admin Color Palette Config Area Page", type: :system do
     expect(config_area).to have_no_unsaved_changes_indicator
     expect(color_scheme.reload.name).to eq("Changed name 2.0")
     expect(config_area.name_heading.text).to eq("Changed name 2.0")
+  end
+
+  it "allows quick-saving just the name without affecting other changes" do
+    config_area.visit(color_scheme.id)
+
+    config_area.edit_name_button.click
+    config_area.name_field.fill_in("Quick saved name")
+    config_area.color_palette_editor.input_for_color("primary").fill_in(with: "#abcdef")
+
+    expect(config_area).to have_unsaved_changes_indicator
+
+    config_area.name_save_button.click
+
+    expect(toasts).to have_success(I18n.t("js.saved"))
+    toasts.close_button.click
+
+    expect(color_scheme.reload.name).to eq("Quick saved name")
+
+    expect(config_area).to have_unsaved_changes_indicator
+    expect(color_scheme.colors.find_by(name: "primary")).to eq(nil)
+
+    config_area.form.submit
+    expect(toasts).to have_success(I18n.t("js.saved"))
+    expect(config_area).to have_no_unsaved_changes_indicator
+    expect(color_scheme.colors.reload.find_by(name: "primary").hex).to eq("abcdef")
   end
 
   it "allows changing the user selectable field" do
@@ -72,6 +98,28 @@ describe "Admin Color Palette Config Area Page", type: :system do
     expect(color_scheme.colors.find_by(name: "secondary").dark_hex).to eq("111222")
   end
 
+  it "allows reverting colors to their default values" do
+    color_scheme.update!(base_scheme_id: "Dark")
+    color_scheme.colors.create!(name: "primary", hex: "aaaaaa")
+
+    config_area.visit(color_scheme.id)
+
+    expect(config_area.color_palette_editor).to have_revert_button_for_color("primary")
+
+    config_area.color_palette_editor.revert_button_for_color("primary").click
+
+    expect(config_area.color_palette_editor.input_for_color("primary").value.downcase).to eq(
+      "#dddddd",
+    ) # Dark palette's primary is dddddd
+    expect(config_area).to have_unsaved_changes_indicator
+
+    config_area.form.submit
+
+    expect(color_scheme.colors.reload.find_by(name: "primary").hex).to eq("dddddd")
+    expect(config_area).to have_no_unsaved_changes_indicator
+    expect(config_area.color_palette_editor).to have_no_revert_button_for_color("primary")
+  end
+
   it "allows duplicating the color palette" do
     max_id = ColorScheme.maximum(:id)
     color_scheme.update!(user_selectable: true)
@@ -93,6 +141,18 @@ describe "Admin Color Palette Config Area Page", type: :system do
     expect(config_area.user_selectable_field.value).to eq(false)
   end
 
+  it "allows deleting a color palette" do
+    config_area.visit(color_scheme.id)
+
+    config_area.delete_button.click
+
+    dialog.click_yes
+
+    expect(page).to have_current_path("/admin/config/colors")
+
+    expect(ColorScheme.exists?(color_scheme.id)).to eq(false)
+  end
+
   it "applies the changes live when editing the currently active palette" do
     admin.user_option.update!(color_scheme_id: color_scheme.id)
     config_area.visit(color_scheme.id)
@@ -109,9 +169,12 @@ describe "Admin Color Palette Config Area Page", type: :system do
       "link[data-scheme-id=\"#{color_scheme.id}\"][href=\"#{href}\"]",
       visible: false,
     )
-    expect(find("html").native.css_value("background-color")).to eq(
-      "rgba(#{"aa".to_i(16)}, #{"33".to_i(16)}, #{"9f".to_i(16)}, 1)",
-    )
+
+    try_until_success do
+      expect(get_rgb_color(find("html"), "backgroundColor")).to eq(
+        "rgb(#{"aa".to_i(16)}, #{"33".to_i(16)}, #{"9f".to_i(16)})",
+      )
+    end
   end
 
   it "doesn't apply changes when editing a palette that's not currently active" do

@@ -1,5 +1,5 @@
-import { hbs } from "ember-cli-htmlbars";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import LazyVideo from "../discourse/components/lazy-video";
 import getVideoAttributes from "../lib/lazy-video-attributes";
 
 function initLazyEmbed(api) {
@@ -23,9 +23,17 @@ function initLazyEmbed(api) {
             }
           };
 
-          const lazyVideo = helper.renderGlimmer(
-            "p.lazy-video-wrapper",
-            hbs`<LazyVideo @videoAttributes={{@data.param}} @onLoadedVideo={{@data.onLoadedVideo}}/>`,
+          const lazyVideo = document.createElement("p");
+          lazyVideo.classList.add("lazy-video-wrapper");
+
+          helper.renderGlimmer(
+            lazyVideo,
+            <template>
+              <LazyVideo
+                @videoAttributes={{@data.param}}
+                @onLoadedVideo={{@data.onLoadedVideo}}
+              />
+            </template>,
             { param: videoAttributes, onLoadedVideo }
           );
 
@@ -41,6 +49,6 @@ export default {
   name: "discourse-lazy-videos",
 
   initialize() {
-    withPluginApi("1.6.0", initLazyEmbed);
+    withPluginApi(initLazyEmbed);
   },
 };

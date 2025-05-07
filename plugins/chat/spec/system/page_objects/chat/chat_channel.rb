@@ -107,6 +107,8 @@ module PageObjects
       end
 
       def bookmark_message(message)
+        messages.has_message?(id: message.id)
+
         if page.has_css?("html.mobile-view", wait: 0)
           click_message_action_mobile(message, "bookmark")
           expect(page).to have_css(".d-modal:not(.is-animating)")
@@ -135,6 +137,8 @@ module PageObjects
       end
 
       def reply_to(message)
+        messages.has_message?(id: message.id)
+
         if page.has_css?("html.mobile-view", wait: 0)
           click_message_action_mobile(message, "reply")
         else

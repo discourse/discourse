@@ -3978,6 +3978,7 @@ da:
       back_to_forum: "Tilbage til Forum"
       collapse_all_sections: "Sammenfold alle sektioner"
       expand_all_sections: "Udvid alle sektioner"
+      search: "Søg"
       footer:
         interface_color_selector:
           light: "Lys"
@@ -4784,6 +4785,7 @@ da:
           extra_files_upload: "Eksporter tema for at se disse filer."
           extra_files_remote: "Eksporter tema eller tjek git-arkivet for at se disse filer."
           preview: "Forhåndsvisning"
+          default: "Aktiv"
           is_default: "Tema er slået til som standard"
           user_selectable: "Tema kan vælges af brugerne"
           auto_update: "Opdater automatisk når Discourse er blevet opdateret"
@@ -4862,8 +4864,7 @@ da:
             error: "Dette tema er automatisk deaktiveret, fordi det ikke er kompatibelt med denne version af Discourse."
             minimum: "Kræver Discourse version %{version} eller nyere."
             maximum: "Kræver Discourse version %{version} eller under."
-          update_to_latest: "Opdatér til seneste"
-          check_for_updates: "Tjek efter opdateringer"
+          check_for_updates: "Se efter opdateringer"
           updating: "Opdaterer…"
           up_to_date: "Tema er opdateret, senest tjekket:"
           has_overwritten_history: "Nuværende temaversion findes ikke længere, fordi Git-historien er blevet overskrevet af et tvangsskub (push)"

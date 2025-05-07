@@ -47,7 +47,7 @@ export default {
         type: "page_view_anon_browser_reqs",
         title: "Anonymous Browser Pageviews",
         description:
-          "Number of pageviews by anonymous visitors using real browsers.",
+          "Number of pageviews by anonymous visitors using real browsers. Anonym to test word matching.",
         description_link: null,
       },
       {

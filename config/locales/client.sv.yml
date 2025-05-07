@@ -4266,6 +4266,7 @@ sv:
         forum:
           label: Forum
       back_to_forum: "Tillbaka till forumet"
+      search: "Sök"
       footer:
         interface_color_selector:
           light: "Ljust"
@@ -5183,6 +5184,7 @@ sv:
           extra_files_upload: "Exportera temat för att visa dessa filer."
           extra_files_remote: "Exportera temat eller kontrollera gitförvaringen för att visa dessa filer."
           preview: "Förhandsgranska"
+          default: "Aktiv"
           settings_editor: "Inställningar för redigerare"
           is_default: "Temat är aktiverat som standard"
           user_selectable: "Temat kan väljas av användare"
@@ -5267,8 +5269,6 @@ sv:
             error: "Det här temat har automatiskt inaktiverats på grund av att det inte är kompatibelt med den här versionen av Discourse."
             minimum: "Kräver Discourse version %{version} eller högre."
             maximum: "Kräver Discourse version %{version} eller lägre."
-          update_to_latest: "Uppdatera till senaste"
-          check_for_updates: "Sök efter uppdateringar"
           updating: "Uppdaterar…"
           up_to_date: "Temat är uppdaterat, senaste kontroll:"
           has_overwritten_history: "Nuvarande temaversion finns inte längre eftersom Git-historiken har skrivits över av en tvingad push."

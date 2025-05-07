@@ -1,32 +1,35 @@
-import { reads } from "@ember/object/computed";
-import Mixin from "@ember/object/mixin";
+import Service, { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { makeArray } from "discourse/lib/helpers";
 import { i18n } from "discourse-i18n";
 
-export default Mixin.create({
+export default class TagUtils extends Service {
+  @service siteSettings;
+  @service site;
+
   searchTags(url, data, callback) {
     return ajax(url, { data })
-      .then((json) => callback(this, json))
+      .then((json) => callback(json))
       .catch(popupAjaxError);
-  },
+  }
 
-  selectKitOptions: {
-    allowAny: "allowAnyTag",
-  },
-
-  allowAnyTag: reads("site.can_create_tag"),
-
-  validateCreate(filter, content) {
+  validateCreate(
+    filter,
+    content,
+    maximum,
+    addError,
+    termMatchesForbidden,
+    getValue,
+    value
+  ) {
     if (!filter.length) {
       return;
     }
 
-    const maximum = this.selectKit.options.maximum;
-    if (maximum && makeArray(this.value).length >= parseInt(maximum, 10)) {
-      this.addError(
+    if (maximum && makeArray(value).length >= parseInt(maximum, 10)) {
+      addError(
         i18n("select_kit.max_content_reached", {
           count: parseInt(maximum, 10),
         })
@@ -37,7 +40,7 @@ export default Mixin.create({
     const filterRegexp = new RegExp(this.site.tags_filter_regexp, "g");
     filter = filter.replace(filterRegexp, "").trim().toLowerCase();
 
-    if (this.termMatchesForbidden) {
+    if (termMatchesForbidden) {
       return false;
     }
 
@@ -46,11 +49,11 @@ export default Mixin.create({
     };
 
     const inCollection = content
-      .map((c) => toLowerCaseOrUndefined(this.getValue(c)))
+      .map((c) => toLowerCaseOrUndefined(getValue(c)))
       .filter(Boolean)
       .includes(filter);
 
-    const inSelection = (this.value || [])
+    const inSelection = (value || [])
       .map((s) => toLowerCaseOrUndefined(s))
       .filter(Boolean)
       .includes(filter);
@@ -60,7 +63,7 @@ export default Mixin.create({
     }
 
     return true;
-  },
+  }
 
   createContentFromInput(input) {
     // See lib/discourse_tagging#clean_tag.
@@ -75,5 +78,5 @@ export default Mixin.create({
     }
 
     return input;
-  },
-});
+  }
+}

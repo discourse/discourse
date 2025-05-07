@@ -4744,6 +4744,7 @@ de:
       back_to_forum: "Zurück zum Forum"
       collapse_all_sections: "Alle Abschnitte einklappen"
       expand_all_sections: "Alle Abschnitte erweitern"
+      search: "Suche"
       footer:
         interface_color_selector:
           light: "Hell"
@@ -4854,7 +4855,7 @@ de:
     discovery:
       headings:
         all:
-          default: "Alle %{filter} Themen"
+          default: "%{filter} Themen"
           posted: "Alle Themen, zu denen du beigetragen hast"
           bookmarks: "Alle Themen, die du mit einem Lesezeichen versehen hast."
         category:
@@ -4879,7 +4880,7 @@ de:
           posted: "Themen mit den Schlagwörtern %{tags}, zu denen du beigetragen hast"
           bookmarks: "Themen mit den Schlagwörtern %{tags}, die du mit einem Lesezeichen versehen hast"
         category_tag:
-          default: "%{filter} Themen in %{category} mit den Schlagwörtern %{tag}"
+          default: "%{filter} Themen in %{category} mit dem Schlagwort %{tag}"
           posted: "Themen in %{category} mit den Schlagwörtern %{tag}, zu denen du beigetragen hast"
           bookmarks: "Themen in %{category} mit den Schlagwörtern %{tag}, die du mit einem Lesezeichen versehen hast"
         categories: "Alle Kategorien"
@@ -5239,6 +5240,7 @@ de:
         modal_title: "Durchsuche alles im Adminbereich"
         title: "Suche"
         instructions: "Tippe, um nach Seiten, Einstellungen, Berichten, Themes, Komponenten und mehr zu suchen."
+        no_results: "Wir konnten nichts finden, das zu '%{filter}' passt."
         result_types:
           page:
             one: "Seite"
@@ -6134,10 +6136,12 @@ de:
           extra_files_upload: "Theme exportieren, um diese Dateien anzuzeigen."
           extra_files_remote: "Theme exportieren oder das Git-Repository überprüfen, um diese Dateien anzuzeigen."
           preview: "Vorschau"
+          default: "Aktiv"
           settings_editor: "Einstellungseditor"
           show_advanced: "Erweiterte anzeigen"
           is_default: "Theme ist standardmäßig aktiviert"
           user_selectable: "Theme kann von Benutzern ausgewählt werden"
+          user_selectable_badge_label: "Vom Benutzer wählbar"
           color_scheme_user_selectable: "Farbpalette kann von Benutzern ausgewählt werden"
           auto_update: "Automatisch aktualisieren, wenn Discourse aktualisiert wird"
           color_scheme: "Farbpalette"
@@ -6155,8 +6159,6 @@ de:
           convert_theme_alert_generic: "Bist du sicher, dass du dieses Theme in eine Komponente umwandeln möchtest?"
           convert_theme_tooltip: "Wandle dieses Theme in eine Komponente um"
           inactive_themes: "Inaktive Themes:"
-          set_default_theme: "Standard festlegen"
-          default_theme: "Standard-Theme"
           set_default_success: "Standard-Theme auf %{theme} festgelegt"
           install_success: "%{theme} erfolgreich installiert!"
           inactive_components: "Nicht verwendete Komponenten:"

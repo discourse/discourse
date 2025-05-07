@@ -2347,6 +2347,7 @@ sw:
               content: "Machapisho Yangu"
             invite:
               content: "Mualiko"
+      search: "Tafuta"
       footer:
         interface_color_selector:
           light: "Hafifu"
@@ -2828,6 +2829,7 @@ sw:
           desktop: "Eneo kazi la Kompyuta"
           mobile: "Kifaa cha kiganjani"
           preview: "Kihakiki"
+          default: "Mara kwa Mara"
           is_default: "Mandhari imewezeshwa kama chaguo-msingi"
           user_selectable: "Mandhari inaweza kuchaguliwa na watumiaji"
           color_scheme_select: "Chagua rangi zitakazotumika kwenye mandhari"
@@ -2852,8 +2854,6 @@ sw:
           version: "Toleo:"
           enable: "Wezesha"
           disable: "Sitisha"
-          update_to_latest: "Sasisha iwe Toleo Jipya"
-          check_for_updates: "Angalia Masasisho"
           up_to_date: "Mandhari hii ime toleo la sasa, mara ya mwisho imeangaliwa:"
           add: "Ongeza"
           theme_settings: "Mipangilio ya Mandhari"

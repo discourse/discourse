@@ -4339,6 +4339,7 @@ nb_NO:
               content: "Gjennomgang"
             invite:
               content: "Inviter"
+      search: "Søk"
       footer:
         interface_color_selector:
           light: "Lys"
@@ -4950,6 +4951,7 @@ nb_NO:
           extra_files_upload: "Eksporter tema for å vise disse filene."
           extra_files_remote: "Eksporter temaet eller sjekk git-repository for å vise disse filene."
           preview: "Forhåndsvis"
+          default: "Aktiv"
           is_default: "Drakt påskrudd som forvalg"
           user_selectable: "Drakten kan velges av brukerne"
           auto_update: "Automatisk oppdatering når Discourse er oppdatert"
@@ -5001,8 +5003,6 @@ nb_NO:
           enable: "Aktiver"
           disable: "Deaktiver"
           disabled: "Denne komponenten har blitt deaktivert."
-          update_to_latest: "Oppdater til seneste"
-          check_for_updates: "Se etter oppdateringer"
           up_to_date: "Drakten er oppdatert, sist sjekket:"
           add: "Legg til"
           theme_settings: "Draktinnstillinger"

@@ -73,8 +73,8 @@ export default class ChatRoute extends DiscourseRoute {
     this.chat.updatePresence();
 
     schedule("afterRender", () => {
-      document.body.classList.add("has-full-page-chat");
-      document.documentElement.classList.add("has-full-page-chat");
+      document.body.classList.add("has-full-page-chat", "has-chat");
+      document.documentElement.classList.add("has-full-page-chat", "has-chat");
       scrollTop();
     });
   }
@@ -98,8 +98,11 @@ export default class ChatRoute extends DiscourseRoute {
     this.chat.updatePresence();
 
     schedule("afterRender", () => {
-      document.body.classList.remove("has-full-page-chat");
-      document.documentElement.classList.remove("has-full-page-chat");
+      document.body.classList.remove("has-full-page-chat", "has-chat");
+      document.documentElement.classList.remove(
+        "has-full-page-chat",
+        "has-chat"
+      );
     });
   }
 }

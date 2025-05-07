@@ -62,10 +62,6 @@ export default class AdminSearch extends Component {
     );
   }
 
-  get showLoadingSpinner() {
-    return !this.adminSearchDataSource.isLoaded || this.loading;
-  }
-
   get noResultsDescription() {
     return i18n("admin.search.no_results", {
       filter: escapeExpression(this.filter),
@@ -215,7 +211,7 @@ export default class AdminSearch extends Component {
     {{/if}}
 
     <div class="admin-search__results">
-      <ConditionalLoadingSpinner @condition={{this.showLoadingSpinner}}>
+      <ConditionalLoadingSpinner @condition={{this.loading}}>
         {{#each this.searchResults as |result|}}
           <div class="admin-search__result" data-result-type={{result.type}}>
             <a
