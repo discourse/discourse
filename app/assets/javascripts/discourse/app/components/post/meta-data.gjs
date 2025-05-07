@@ -4,6 +4,7 @@ import { service } from "@ember/service";
 import PostMetaDataDate from "./meta-data/date";
 import PostMetaDataEditsIndicator from "./meta-data/edits-indicator";
 import PostMetaDataEmailIndicator from "./meta-data/email-indicator";
+import PostMetaDataLanguage from "./meta-data/language";
 import PostMetaDataLockedIndicator from "./meta-data/locked-indicator";
 import PostMetaDataPosterName from "./meta-data/poster-name";
 import PostMetaDataReadIndicator from "./meta-data/read-indicator";
@@ -32,6 +33,10 @@ export default class PostMetaData extends Component {
       this.currentUser?.can_debug_localizations &&
       this.args.post?.has_post_localizations
     );
+  }
+
+  get shouldDisplayLanguage() {
+    return this.args.post.is_localized && this.args.post.language;
   }
 
   <template>
@@ -86,6 +91,10 @@ export default class PostMetaData extends Component {
             @repliesAbove={{@repliesAbove}}
             @toggleReplyAbove={{@toggleReplyAbove}}
           />
+        {{/if}}
+
+        {{#if this.shouldDisplayLanguage}}
+          <PostMetaDataLanguage @post={{@post}} />
         {{/if}}
 
         <PostMetaDataDate @post={{@post}} />

@@ -4127,6 +4127,8 @@ en:
         title: "Share Post #%{post_number}"
         instructions: "Share a link to this post:"
 
+      original_language: "This post was originally written in %{language}"
+
     category:
       none: "(no category)"
       all: "All categories"
