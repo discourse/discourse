@@ -233,13 +233,6 @@ $search-result-element-padding: 0.35em 1rem; // hate myself but .25em is too tig
       align-items: center;
       gap: 0.5em;
     }
-
-    .search-menu-assistant .search-menu-assistant-item,
-    li[data-test-assistant-item="search-in-topics-posts"] {
-      .search-link {
-        gap: 0.25em;
-      }
-    }
   }
 
   .search-menu-initial-options {
