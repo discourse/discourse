@@ -18,6 +18,7 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "category-text-color",
   "composer-save-button-label",
   "composer-service-cannot-submit-post",
+  "create-topic-label",
   "flag-description",
   "flag-custom-placeholder",
   "flag-formatted-name",
