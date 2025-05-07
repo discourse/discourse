@@ -6326,6 +6326,8 @@ en:
           save_successful: "User field saved."
         color_palettes:
           palette_name: "Name"
+          duplicate: "Duplicate"
+          delete: "Delete"
           color_options:
             title: "Color options"
             toggle: "User selectable"
@@ -6339,6 +6341,7 @@ en:
           copy_of: "Copy of %{name}"
           copy_created: 'A new copy of "%{name}" has been created'
           illegal_character_in_color: "Colors consist of hexadecimal characters only"
+          delete_confirm: "Delete this color palette?"
       plugins:
         title: "Plugins"
         name: "Name"

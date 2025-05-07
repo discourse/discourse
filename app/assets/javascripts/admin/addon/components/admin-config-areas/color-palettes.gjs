@@ -6,7 +6,6 @@ import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import DButton from "discourse/components/d-button";
 import DPageHeader from "discourse/components/d-page-header";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import ColorSchemeSelectBaseModal from "admin/components/modal/color-scheme-select-base";
 
@@ -63,6 +62,14 @@ export default class AdminConfigAreasColorPalettes extends Component {
 
     <div class="admin-config-area">
       <div class="admin-config-area__aside color-palettes-list">
+        <PluginOutlet @name="admin-customize-colors-new-button">
+          <DButton
+            @action={{this.newColorPalette}}
+            @icon="plus"
+            @label="admin.customize.new"
+            class="btn-default create-new-palette"
+          />
+        </PluginOutlet>
         <ul>
           {{#each @palettes as |palette|}}
             {{#unless palette.is_base}}
@@ -72,21 +79,12 @@ export default class AdminConfigAreasColorPalettes extends Component {
                   @model={{palette}}
                   @replace={{true}}
                 >
-                  {{icon "paintbrush"}}
                   {{palette.description}}
                 </LinkTo>
               </li>
             {{/unless}}
           {{/each}}
         </ul>
-        <PluginOutlet @name="admin-customize-colors-new-button">
-          <DButton
-            @action={{this.newColorPalette}}
-            @icon="plus"
-            @label="admin.customize.new"
-            class="btn-default create-new-palette"
-          />
-        </PluginOutlet>
       </div>
 
       <div class="admin-config-area__primary-content">
