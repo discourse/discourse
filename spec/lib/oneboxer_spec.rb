@@ -627,6 +627,19 @@ RSpec.describe Oneboxer do
 
   describe "onebox custom user agent" do
     let!(:default_onebox_user_agent) { Discourse.user_agent }
+    let(:html) { <<~HTML }
+        <html>
+        <head>
+          <title>Discourse</title>
+          <meta property="og:image" content="https://shots.codepen.io/username/pen/dPPKdPM-800.jpg?version=1746597986" itemprop="thumbnailUrl">
+          <meta property="og:title" content="Discourse">
+          <link rel="alternate" type="application/json+oembed" href="https://codepen.io/api/oembed?url=https%3A%2F%2Fcodepen.io%2Fpento%2Fpen%2FdPPKdPM&format=json" title="Untitled" />
+        </head>
+        <body>
+           <p>body</p>
+        </body>
+        <html>
+      HTML
 
     it "uses the site setting value" do
       SiteSetting.force_custom_user_agent_hosts = "http://codepen.io|https://video.discourse.org/"
@@ -671,6 +684,28 @@ RSpec.describe Oneboxer do
           "User-Agent" => default_onebox_user_agent,
         },
       ).to_return(status: 200, body: "", headers: {})
+
+      expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to include(
+        "onebox-placeholder-container",
+      )
+    end
+
+    it "isn't able to override codepen.io" do
+      SiteSetting.force_custom_user_agent_hosts = "http://codepen.io|https://video.discourse.org/"
+      url = "https://codepen.io/pento/pen/dPPKdPM"
+
+      %i[head get].each do |method|
+        stub_request(method, url).with(
+          headers: {
+            "User-Agent" => default_onebox_user_agent,
+          },
+        ).to_return(status: 403, body: "", headers: {})
+        stub_request(method, url).with(
+          headers: {
+            "User-Agent" => "Discourse Forum Onebox v#{Discourse::VERSION::STRING}",
+          },
+        ).to_return(status: 200, body: html, headers: {})
+      end
 
       expect(Oneboxer.preview(url, invalidate_oneboxes: true)).to include(
         "onebox-placeholder-container",

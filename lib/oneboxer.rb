@@ -644,6 +644,11 @@ module Oneboxer
 
     uri = URI(url)
 
+    # Codepen looks for the old Discourse user agent
+    if uri.hostname == "codepen.io"
+      fd_options[:headers]["User-Agent"] = "Discourse Forum Onebox v#{Discourse::VERSION::STRING}"
+    end
+
     # For private GitHub repos, we get a 404 when trying to use
     # FinalDestination to request the final URL because no auth headers
     # are sent. In this case we can ignore redirects and go straight to
