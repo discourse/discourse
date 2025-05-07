@@ -75,6 +75,7 @@ import SelectKitComponent, {
   selectKitOptions,
 } from "select-kit/components/select-kit";
 import SelectKitBody from "select-kit/components/select-kit/select-kit-body";
+import { isNumeric } from "select-kit/lib/input-utils";
 
 @classNames("multi-select")
 @selectKitOptions({
@@ -199,7 +200,7 @@ export default class MultiSelect extends SelectKitComponent {
   @computed("value.[]", "content.[]", "selectKit.noneItem")
   get selectedContent() {
     const value = makeArray(this.value).map((v) =>
-      this.selectKit.options.castInteger && this._isNumeric(v) ? Number(v) : v
+      this.selectKit.options.castInteger && isNumeric(v) ? Number(v) : v
     );
 
     if (value.length) {
