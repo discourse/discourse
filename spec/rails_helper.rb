@@ -672,23 +672,6 @@ RSpec.configure do |config|
   system_tests_initialized = false
 
   config.before(:each, type: :system) do |example|
-    if example.metadata[:video]
-      Capybara.current_session.driver.on_save_screenrecord do |video|
-        saved_path =
-          File.join(
-            Capybara.save_path,
-            "#{example.metadata[:full_description].parameterize}-screenrecord.webm",
-          )
-
-        FileUtils.mv(video, saved_path)
-
-        if !ENV["CI"]
-          puts "\n🎥 Recorded video for: #{example.metadata[:full_description]}\n"
-          puts "#{saved_path}\n"
-        end
-      end
-    end
-
     if !system_tests_initialized
       # On Rails 7, we have seen instances of deadlocks between the lock in [ActiveRecord::ConnectionAdapaters::AbstractAdapter](https://github.com/rails/rails/blob/9d1673853f13cd6f756315ac333b20d512db4d58/activerecord/lib/active_record/connection_adapters/abstract_adapter.rb#L86)
       # and the lock in [ActiveRecord::ModelSchema](https://github.com/rails/rails/blob/9d1673853f13cd6f756315ac333b20d512db4d58/activerecord/lib/active_record/model_schema.rb#L550).
@@ -711,6 +694,27 @@ RSpec.configure do |config|
     setup_system_test
 
     BlockRequestsMiddleware.current_example_location = example.location
+
+    if example.metadata[:video]
+      Capybara.current_session.driver.on_save_screenrecord do |video|
+        saved_path =
+          File.join(
+            Capybara.save_path,
+            "#{example.metadata[:full_description].parameterize}-screenrecord.webm",
+          )
+
+        FileUtils.mv(video, saved_path)
+
+        if !ENV["CI"]
+          puts "\n🎥 Recorded video for: #{example.metadata[:full_description]}\n"
+          puts "#{saved_path}\n"
+        end
+      end
+    end
+
+    if example.metadata[:trace]
+      page.driver.start_tracing(screenshots: true, snapshots: true, sources: true)
+    end
   end
 
   config.after :each do |example|
@@ -763,6 +767,20 @@ RSpec.configure do |config|
   end
 
   config.after(:each, type: :system) do |example|
+    if example.metadata[:trace]
+      path =
+        File.join(
+          Capybara.save_path,
+          "#{example.metadata[:full_description].parameterize}-trace.zip",
+        )
+      page.driver.stop_tracing(path:)
+
+      if !ENV["CI"]
+        puts "\n🧭 Recorded trace for: #{example.metadata[:full_description]}\n"
+        puts "Open with `pnpm playwright show-trace #{path}`\n"
+      end
+    end
+
     lines = RSpec.current_example.metadata[:extra_failure_lines]
 
     if example.exception &&
