@@ -15,6 +15,7 @@ import {
   cannotPostAgain,
   durationTextFromSeconds,
 } from "discourse/helpers/slow-mode";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import { customPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu-options";
 import discourseDebounce from "discourse/lib/debounce";
 import discourseComputed from "discourse/lib/decorators";
@@ -46,6 +47,7 @@ import Composer, {
 } from "discourse/models/composer";
 import Draft from "discourse/models/draft";
 import PostLocalization from "discourse/models/post-localization";
+import TopicLocalization from "discourse/models/topic-localization";
 import { i18n } from "discourse-i18n";
 
 async function loadDraft(store, opts = {}) {
@@ -1286,21 +1288,33 @@ export default class ComposerService extends Service {
   async saveTranslation() {
     this.set("model.loading", true);
 
+    this.set("lastValidatedAt", Date.now());
+    this.appEvents.trigger("composer-service:last-validated-at-updated", {
+      model: this.model,
+    });
+
     try {
       await PostLocalization.createOrUpdate(
         this.model.post.id,
         this.selectedTranslationLocale,
         this.model.reply
       );
+
+      if (this.model.post.firstPost) {
+        await TopicLocalization.createOrUpdate(
+          this.model.post.topic_id,
+          this.selectedTranslationLocale,
+          this.model.title
+        );
+      }
+
+      this.close();
     } catch (e) {
-      this.dialog.alert(e);
+      popupAjaxError(e);
     } finally {
       this.set("model.loading", false);
       this.selectedTranslationLocale = null;
-      this.close();
     }
-
-    // TODO: if post is first_post then we need to update the topic title too
   }
 
   @action
