@@ -40,7 +40,7 @@ describe "Uploading files in the composer", type: :system do
   context "when video thumbnails are enabled" do
     before do
       SiteSetting.video_thumbnails_enabled = true
-      SiteSetting.authorized_extensions += "|mp4"
+      SiteSetting.authorized_extensions += "|webm"
     end
 
     it "generates a topic preview thumbnail from the video" do
@@ -48,7 +48,7 @@ describe "Uploading files in the composer", type: :system do
       expect(composer).to be_opened
       topic.fill_in_composer_title("Video upload test")
 
-      file_path_1 = file_from_fixtures("small.mp4", "media").path
+      file_path_1 = file_from_fixtures("small.webm", "media").path
       attach_file(file_path_1) { composer.click_toolbar_button("upload") }
 
       expect(composer).to have_no_in_progress_uploads
@@ -65,7 +65,7 @@ describe "Uploading files in the composer", type: :system do
       expect(composer).to be_opened
       topic.fill_in_composer_title("Video upload test")
 
-      file_path_1 = file_from_fixtures("small.mp4", "media").path
+      file_path_1 = file_from_fixtures("small.webm", "media").path
       attach_file(file_path_1) { composer.click_toolbar_button("upload") }
 
       expect(composer).to have_no_in_progress_uploads
@@ -99,7 +99,7 @@ describe "Uploading files in the composer", type: :system do
         HTMLVideoElement.prototype.__defineGetter__('videoHeight', function() { return 0; });
       JS
 
-      file_path_1 = file_from_fixtures("small.mp4", "media").path
+      file_path_1 = file_from_fixtures("small.webm", "media").path
       attach_file(file_path_1) { composer.click_toolbar_button("upload") }
 
       expect(composer).to have_no_in_progress_uploads
@@ -131,7 +131,7 @@ describe "Uploading files in the composer", type: :system do
         };
       JS
 
-      file_path_1 = file_from_fixtures("small.mp4", "media").path
+      file_path_1 = file_from_fixtures("small.webm", "media").path
       attach_file(file_path_1) { composer.click_toolbar_button("upload") }
 
       expect(composer).to have_no_in_progress_uploads
