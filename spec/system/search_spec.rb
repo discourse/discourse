@@ -19,7 +19,7 @@ describe "Search", type: :system do
 
     after { SearchIndexer.disable }
 
-    it "works and clears search page state", trace: true, video: true, mobile: true do
+    it "works and clears search page state", mobile: true do
       visit("/search")
 
       search_page.type_in_search("test")
