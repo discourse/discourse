@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require "theme_settings_object_validator"
+
 class ObjectsSettingValidator
   def initialize(opts = {})
     @opts = opts
@@ -12,7 +12,7 @@ class ObjectsSettingValidator
       return false
     end
     errors =
-      ThemeSettingsObjectValidator.validate_objects(schema: @opts[:schema], objects: parsed_value)
+      SchemaSettingsObjectValidator.validate_objects(schema: @opts[:schema], objects: parsed_value)
     if errors.empty?
       @error = nil
       true

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ThemeSettingsObjectValidator
+class SchemaSettingsObjectValidator
   class << self
     def validate_objects(schema:, objects:)
       error_messages = []
@@ -25,13 +25,13 @@ class ThemeSettingsObjectValidator
     end
   end
 
-  class ThemeSettingsObjectErrors
+  class SchemaSettingsObjectErrors
     def initialize
       @errors = []
     end
 
     def add_error(error, i18n_opts = {})
-      @errors << ThemeSettingsObjectError.new(error, i18n_opts)
+      @errors << SchemaSettingsObjectError.new(error, i18n_opts)
     end
 
     def humanize_messages(property_json_pointer)
@@ -42,7 +42,7 @@ class ThemeSettingsObjectValidator
       @errors.map(&:error_message)
     end
   end
-  class ThemeSettingsObjectError
+  class SchemaSettingsObjectError
     def initialize(error, i18n_opts = {})
       @error = error
       @i18n_opts = i18n_opts
@@ -218,7 +218,7 @@ class ThemeSettingsObjectValidator
 
   def add_error(property_name, key, i18n_opts = {})
     pointer = json_pointer(property_name)
-    @errors[pointer] ||= ThemeSettingsObjectErrors.new
+    @errors[pointer] ||= SchemaSettingsObjectErrors.new
     @errors[pointer].add_error(key, i18n_opts)
   end
 
