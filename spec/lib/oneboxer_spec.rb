@@ -633,7 +633,7 @@ RSpec.describe Oneboxer do
           <title>Discourse</title>
           <meta property="og:image" content="https://shots.codepen.io/username/pen/dPPKdPM-800.jpg?version=1746597986" itemprop="thumbnailUrl">
           <meta property="og:title" content="Discourse">
-          <link rel="alternate" type="application/json+oembed" href="https://codepen.io/api/oembed?url=https%3A%2F%2Fcodepen.io%2Fpento%2Fpen%2FdPPKdPM&format=json" title="Untitled" />
+          <link rel="alternate" type="application/json+oembed" href="https://codepen.io/api/oembed?url=https%3A%2F%2Fcodepen.io%2Fpento%2Fpen%2FdPPKdPM&format=json" title="Discourse" />
         </head>
         <body>
            <p>body</p>
