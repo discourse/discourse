@@ -673,14 +673,14 @@ RSpec.configure do |config|
 
   config.before(:each, type: :system) do |example|
     if example.metadata[:video]
-      Capybara.current_session.driver.on_save_screenrecord do |video_path|
+      Capybara.current_session.driver.on_save_screenrecord do |video|
         saved_path =
           File.join(
             Capybara.save_path,
             "#{example.metadata[:full_description].parameterize}-screenrecord.webm",
           )
 
-        File.write(saved_path, File.read(video_path))
+        FileUtils.mv(video, saved_path)
 
         if !ENV["CI"]
           puts "\n🎥 Recorded video for: #{example.metadata[:full_description]}\n"
@@ -697,7 +697,7 @@ RSpec.configure do |config|
             "#{example.metadata[:full_description].parameterize}-trace.zip",
           )
 
-        File.write(saved_path, File.read(trace))
+        FileUtils.mv(trace, saved_path)
 
         if !ENV["CI"]
           puts "\n🧭 Saved trace for: #{example.metadata[:full_description]}\n"
