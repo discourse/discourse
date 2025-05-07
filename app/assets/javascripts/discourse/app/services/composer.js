@@ -103,6 +103,7 @@ export default class ComposerService extends Service {
   @service site;
   @service siteSettings;
   @service store;
+  @service toasts;
 
   @tracked
   showPreview = this.site.mobileView
@@ -1309,11 +1310,17 @@ export default class ComposerService extends Service {
       }
 
       this.close();
+      this.toasts.success({
+        duration: 3000,
+        data: {
+          message: i18n("post.localizations.success"),
+        },
+      });
+      this.selectedTranslationLocale = null;
     } catch (e) {
       popupAjaxError(e);
     } finally {
       this.set("model.loading", false);
-      this.selectedTranslationLocale = null;
     }
   }
 

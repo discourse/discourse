@@ -3917,6 +3917,7 @@ en:
           actions: "Actions"
           edit: "Edit"
           delete: "Delete"
+        success: "Translations have been updated successfully."
 
       errors:
         create: "Sorry, there was an error creating your post. Please try again."
