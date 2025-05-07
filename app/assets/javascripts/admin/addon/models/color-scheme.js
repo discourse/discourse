@@ -13,11 +13,13 @@ class ColorSchemes extends ArrayProxy {}
 export default class ColorScheme extends EmberObject {
   static findAll({ excludeThemeOwned = false } = {}) {
     const colorSchemes = ColorSchemes.create({ content: [], loading: true });
-    return ajax("/admin/color_schemes", {
-      data: {
-        exclude_theme_owned: excludeThemeOwned,
-      },
-    }).then((all) => {
+
+    const data = {};
+    if (excludeThemeOwned) {
+      data.exclude_theme_owned = true;
+    }
+
+    return ajax("/admin/color_schemes", { data }).then((all) => {
       all.forEach((colorScheme) => {
         colorSchemes.pushObject(
           ColorScheme.create({

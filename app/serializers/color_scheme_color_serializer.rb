@@ -17,7 +17,9 @@ class ColorSchemeColorSerializer < ApplicationSerializer
   end
 
   def default_dark_hex
-    nil # for now
+    # TODO(osama) implement this when we add dark mode colors for built-in
+    # palettes
+    nil
   end
 
   def is_advanced

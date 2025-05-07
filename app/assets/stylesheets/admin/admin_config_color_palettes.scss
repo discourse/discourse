@@ -38,6 +38,13 @@
   .admin-config-color-palettes {
     &__name-control {
       display: flex;
+      gap: var(--space-1);
+
+      .form-kit__container-content,
+      .form-kit__control-input-wrapper,
+      input[name="name"] {
+        height: 100%;
+      }
 
       h2 {
         margin-bottom: 0;

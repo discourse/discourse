@@ -41,7 +41,6 @@ export default class AdminConfigAreasColorPalette extends Component {
       name: this.args.colorPalette.name,
       user_selectable: this.args.colorPalette.user_selectable,
       colors: this.args.colorPalette.colors,
-      editingName: this.editingName,
     };
   }
 
@@ -135,7 +134,9 @@ export default class AdminConfigAreasColorPalette extends Component {
       name: this.args.colorPalette.name,
     });
     await copy.save();
-    this.router.replaceWith("adminConfig.colorPalettes.show", copy);
+    await this.router.replaceWith("adminConfig.colorPalettes");
+    await this.router.refresh();
+    await this.router.replaceWith("adminConfig.colorPalettes.show", copy);
     this.toasts.success({
       data: {
         message: i18n("admin.config_areas.color_palettes.copy_created", {
@@ -220,16 +221,16 @@ export default class AdminConfigAreasColorPalette extends Component {
     >
       <div>
         <div class="admin-config-color-palettes__top-controls">
-          <form.Field
-            @name="name"
-            @showTitle={{false}}
-            @title={{i18n "admin.config_areas.color_palettes.palette_name"}}
-            @validation="required"
-            @format="full"
-            @onSet={{this.handleNameChange}}
-            as |field|
-          >
-            {{#if transientData.editingName}}
+          {{#if this.editingName}}
+            <form.Field
+              @name="name"
+              @showTitle={{false}}
+              @title={{i18n "admin.config_areas.color_palettes.palette_name"}}
+              @validation="required"
+              @format="full"
+              @onSet={{this.handleNameChange}}
+              as |field|
+            >
               <div class="admin-config-color-palettes__name-control">
                 <field.Input />
                 <DButton
@@ -243,19 +244,17 @@ export default class AdminConfigAreasColorPalette extends Component {
                   @action={{this.toggleEditingName}}
                 />
               </div>
-            {{else}}
-              <field.Custom>
-                <div class="admin-config-color-palettes__name-control">
-                  <h2>{{@colorPalette.name}}</h2>
-                  <DButton
-                    class="btn-flat"
-                    @icon="pencil"
-                    @action={{this.toggleEditingName}}
-                  />
-                </div>
-              </field.Custom>
-            {{/if}}
-          </form.Field>
+            </form.Field>
+          {{else}}
+            <div class="admin-config-color-palettes__name-control">
+              <h2>{{@colorPalette.name}}</h2>
+              <DButton
+                class="btn-flat"
+                @icon="pencil"
+                @action={{this.toggleEditingName}}
+              />
+            </div>
+          {{/if}}
           <div class="admin-config-color-palettes__top-actions">
             <DButton
               class="duplicate-palette"
