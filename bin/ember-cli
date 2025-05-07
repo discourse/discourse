@@ -60,6 +60,8 @@ if !system "pnpm", "--dir=#{RAILS_ROOT}", "install"
   exit 1
 end
 
+system "pnpm", "playwright", "install", "--with-deps", "--no-shell", "chromium"
+
 pnpm_env = {
   "TERM" => "dumb", # simple output from ember-cli, so we can parse/forward it more easily
 }

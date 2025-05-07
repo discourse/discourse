@@ -274,6 +274,10 @@ jobs:
         if: matrix.build_type == 'system'
         run: script/assemble_ember_build.rb
 
+      - name: Install playwright
+        if: matrix.build_type == 'system'
+        run: pnpm playwright install --with-deps --no-shell chromium
+
       - name: Core System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core'
         env:
