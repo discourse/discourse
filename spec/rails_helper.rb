@@ -715,6 +715,10 @@ RSpec.configure do |config|
     if example.metadata[:trace]
       page.driver.start_tracing(screenshots: true, snapshots: true, sources: true)
     end
+
+    page.driver.with_playwright_page do |pw_page|
+      $playwright_logger = PlaywrightLogger.new(pw_page)
+    end
   end
 
   config.after :each do |example|
@@ -758,12 +762,6 @@ RSpec.configure do |config|
     ActionMailer::Base.deliveries.clear
     Discourse.redis.flushdb
     Scheduler::Defer.do_all_work
-  end
-
-  config.before(:each, type: :system) do
-    page.driver.with_playwright_page do |pw_page|
-      $playwright_logger = PlaywrightLogger.new(pw_page)
-    end
   end
 
   config.after(:each, type: :system) do |example|
