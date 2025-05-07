@@ -6771,6 +6771,7 @@ he:
           actions:
             block: "חסימה"
             do_nothing: "לאפשר"
+            allow_admin: "לאפשר להנהלה"
           form:
             label: "חדשה:"
             ip_address: "כתובת IP"
