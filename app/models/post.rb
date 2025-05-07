@@ -1323,7 +1323,7 @@ class Post < ActiveRecord::Base
     PrettyText.extract_mentions(Nokogiri::HTML5.fragment(cooked))
   end
 
-  def has_localization?(locale)
+  def has_localization?(locale = I18n.locale)
     post_localizations.exists?(locale: locale.to_s.sub("-", "_"))
   end
 
