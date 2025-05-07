@@ -210,6 +210,7 @@ function drawableToImageData(drawable, isIOS) {
 
   // Check if the canvas is too large
   // iOS _still_ enforces a max pixel count of 16,777,216 per canvas
+  // ref: https://pqina.nl/blog/canvas-area-exceeds-the-maximum-limit/
   const maxLimit = 4096;
   const maximumPixelCount = maxLimit * maxLimit;
 
@@ -233,6 +234,7 @@ function drawableToImageData(drawable, isIOS) {
   const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
   // iOS strikes again, need to clear canvas to free up memory
+  // ref: https://pqina.nl/blog/total-canvas-memory-use-exceeds-the-maximum-limit/
   if (isIOS) {
     canvas.width = 1;
     canvas.height = 1;
