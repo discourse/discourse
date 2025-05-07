@@ -2,7 +2,6 @@ import Service, { service } from "@ember/service";
 import { Promise } from "rsvp";
 import { getAbsoluteURL, getURLWithCDN } from "discourse/lib/get-url";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
-import { fileToImageData } from "discourse/lib/media-optimization-utils";
 
 /**
  * This worker follows a particular promise/callback flow to ensure
@@ -63,44 +62,30 @@ export default class MediaOptimizationWorkerService extends Service {
       this.currentComposerUploadData = data;
       this.promiseResolvers[file.id] = resolve;
 
-      let imageData;
-      try {
-        imageData = await fileToImageData(file.data, this.capabilities.isIOS);
-      } catch (error) {
-        this.logIfDebug(error);
-        return resolve();
-      }
-
-      this.worker.postMessage(
-        {
-          type: "compress",
-          fileId: file.id,
-          file: imageData.data.buffer,
-          fileName: file.name,
-          width: imageData.width,
-          height: imageData.height,
-          settings: {
-            resize_threshold:
-              this.siteSettings
-                .composer_media_optimization_image_resize_dimensions_threshold,
-            resize_target:
-              this.siteSettings
-                .composer_media_optimization_image_resize_width_target,
-            resize_pre_multiply:
-              this.siteSettings
-                .composer_media_optimization_image_resize_pre_multiply,
-            resize_linear_rgb:
-              this.siteSettings
-                .composer_media_optimization_image_resize_linear_rgb,
-            encode_quality:
-              this.siteSettings
-                .composer_media_optimization_image_encode_quality,
-            debug_mode:
-              this.siteSettings.composer_media_optimization_debug_mode,
-          },
+      this.worker.postMessage({
+        type: "compress",
+        fileId: file.id,
+        file: file.data,
+        fileName: file.name,
+        isIOS: this.capabilities.isIOS,
+        settings: {
+          resize_threshold:
+            this.siteSettings
+              .composer_media_optimization_image_resize_dimensions_threshold,
+          resize_target:
+            this.siteSettings
+              .composer_media_optimization_image_resize_width_target,
+          resize_pre_multiply:
+            this.siteSettings
+              .composer_media_optimization_image_resize_pre_multiply,
+          resize_linear_rgb:
+            this.siteSettings
+              .composer_media_optimization_image_resize_linear_rgb,
+          encode_quality:
+            this.siteSettings.composer_media_optimization_image_encode_quality,
+          debug_mode: this.siteSettings.composer_media_optimization_debug_mode,
         },
-        [imageData.data.buffer]
-      );
+      });
       this.workerPendingCount++;
     });
   }
