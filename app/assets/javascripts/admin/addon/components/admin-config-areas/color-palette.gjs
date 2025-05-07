@@ -247,9 +247,11 @@ export default class AdminConfigAreasColorPalette extends Component {
             </form.Field>
           {{else}}
             <div class="admin-config-color-palettes__name-control">
-              <h2>{{@colorPalette.name}}</h2>
+              <h2
+                class="admin-config-color-palettes__name"
+              >{{@colorPalette.name}}</h2>
               <DButton
-                class="btn-flat"
+                class="btn-flat admin-config-color-palettes__edit-name"
                 @icon="pencil"
                 @action={{this.toggleEditingName}}
               />

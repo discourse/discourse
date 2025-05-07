@@ -16,7 +16,7 @@ module PageObjects
       end
 
       def edit_name_button
-        name_field.component.find(".btn-flat")
+        find(".admin-config-color-palettes__edit-name")
       end
 
       def name_field
@@ -24,7 +24,7 @@ module PageObjects
       end
 
       def name_heading
-        name_field.find("h2")
+        find(".admin-config-color-palettes__name")
       end
 
       def name_save_button
