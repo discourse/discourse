@@ -1146,6 +1146,12 @@ class Group < ActiveRecord::Base
       end
   end
 
+  def name_cannot_be_reserved
+    if RESERVED_NAMES.include?(name.to_s.downcase)
+      errors.add(:name, I18n.t("activerecord.errors.messages.reserved", name: name))
+    end
+  end
+
   def automatic_membership_email_domains_validator
     return if self.automatic_membership_email_domains.blank?
 
@@ -1306,14 +1312,6 @@ class Group < ActiveRecord::Base
       previous_name: self.name_before_last_save,
       group_id: self.id,
     )
-  end
-
-  private
-
-  def name_cannot_be_reserved
-    if RESERVED_NAMES.include?(name.to_s.downcase)
-      errors.add(:name, "'#{name}' is reserved and cannot be used.")
-    end
   end
 end
 
