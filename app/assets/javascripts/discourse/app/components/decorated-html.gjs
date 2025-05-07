@@ -1,10 +1,11 @@
 import Component from "@glimmer/component";
+import { hasInternalComponentManager } from "@glimmer/manager";
 import { untrack } from "@glimmer/validator";
 import { htmlSafe, isHTMLSafe } from "@ember/template";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import helperFn from "discourse/helpers/helper-fn";
 import deprecated from "discourse/lib/deprecated";
-import { POST_STREAM_DEPRECATION_OPTIONS } from "discourse/lib/plugin-api";
+import { POST_STREAM_DEPRECATION_OPTIONS } from "discourse/widgets/post-stream";
 
 const detachedDocument = document.implementation.createHTMLDocument("detached");
 
@@ -75,8 +76,30 @@ class DecorateHtmlHelper {
     this.#context = context;
   }
 
-  renderGlimmer(element, component, data) {
-    const info = { element, component, data };
+  renderGlimmer(targetElement, component, data) {
+    if (!(targetElement instanceof Element)) {
+      deprecated(
+        "Invalid `targetElement` passed to `helper.renderGlimmer` while using `api.decorateCookedElement` with the Glimmer Post Stream. `targetElement` must be a valid HTML element. This call has been ignored to prevent errors.",
+        POST_STREAM_DEPRECATION_OPTIONS
+      );
+
+      return;
+    }
+
+    if (!hasInternalComponentManager(component)) {
+      deprecated(
+        "Invalid `component` passed to `helper.renderGlimmer` while using `api.decorateCookedElement` with the Glimmer Post Stream. `component` must be a valid Glimmer component. If using a template compiled via ember-cli-htmlbars, replace it with the `<template>...</template>` syntax. This call has been ignored to prevent errors.",
+        POST_STREAM_DEPRECATION_OPTIONS
+      );
+
+      return;
+    }
+
+    const info = {
+      element: targetElement,
+      component,
+      data,
+    };
     this.#renderGlimmerInfos.push(info);
   }
 
@@ -107,7 +130,7 @@ class DecorateHtmlHelper {
       },
       scheduleRerender() {
         // This is a no-op when using the new glimmer components.
-        // the component will rerender automatically when the model changes.
+        // The component will rerender automatically when the model changes.
       },
     };
   }
