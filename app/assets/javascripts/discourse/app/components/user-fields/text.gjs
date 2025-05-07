@@ -22,10 +22,7 @@ export default class UserFieldText extends UserFieldBase {
           {{i18n "user_fields.optional"}}{{/unless~}}
       </label>
       {{#if this.validation.failed}}
-        <InputTip
-          @validation={{this.validation}}
-          class={{unless this.validation "hidden"}}
-        />
+        <InputTip @validation={{this.validation}} />
       {{else}}
         <div class="instructions">{{htmlSafe this.field.description}}</div>
       {{/if}}
