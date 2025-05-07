@@ -652,14 +652,12 @@ class PostSerializer < BasicPostSerializer
   end
 
   def has_post_localizations
-    PostLocalization.exists?(post_id: object.id)
+    object.post_localizations.any?
   end
 
   def post_localizations
-    localizations = PostLocalization.where(post_id: object.id)
-
     ActiveModel::ArraySerializer.new(
-      localizations,
+      object.post_localizations,
       each_serializer: PostLocalizationSerializer,
       root: false,
     ).as_json

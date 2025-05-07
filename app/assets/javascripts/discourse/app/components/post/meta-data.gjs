@@ -29,7 +29,7 @@ export default class PostMetaData extends Component {
 
   get shouldDisplayTranslationIndicator() {
     return (
-      this.currentUser.can_debug_localizations &&
+      this.currentUser?.can_debug_localizations &&
       this.args.post?.has_post_localizations
     );
   }
