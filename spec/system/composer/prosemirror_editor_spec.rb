@@ -366,7 +366,7 @@ describe "Composer - ProseMirror editor", type: :system do
       cdp.copy_paste("https://example.com/x")
       composer.type_content(:space).type_content("and").type_content(:space)
       cdp.paste
-      composer.type_content("\n")
+      composer.type_content(:enter)
 
       expect(rich).to have_css(
         "a.inline-onebox[href='https://example.com/x']",
