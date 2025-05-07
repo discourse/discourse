@@ -44,6 +44,7 @@ export default class PostMenuAddTranslationButton extends Component {
   <template>
     <DButton
       class="post-action-menu__add-translation"
+      @title="post.localizations.add"
       @icon="discourse-add-translation"
       @action={{this.addTranslation}}
       ...attributes
