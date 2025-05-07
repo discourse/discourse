@@ -689,23 +689,6 @@ RSpec.configure do |config|
       end
     end
 
-    if example.metadata[:trace]
-      Capybara.current_session.driver.on_save_trace do |trace|
-        saved_path =
-          File.join(
-            Capybara.save_path,
-            "#{example.metadata[:full_description].parameterize}-trace.zip",
-          )
-
-        FileUtils.mv(trace, saved_path)
-
-        if !ENV["CI"]
-          puts "\n🧭 Saved trace for: #{example.metadata[:full_description]}\n"
-          puts "Open with `pnpm playwright show-trace #{saved_path}`\n"
-        end
-      end
-    end
-
     if !system_tests_initialized
       # On Rails 7, we have seen instances of deadlocks between the lock in [ActiveRecord::ConnectionAdapaters::AbstractAdapter](https://github.com/rails/rails/blob/9d1673853f13cd6f756315ac333b20d512db4d58/activerecord/lib/active_record/connection_adapters/abstract_adapter.rb#L86)
       # and the lock in [ActiveRecord::ModelSchema](https://github.com/rails/rails/blob/9d1673853f13cd6f756315ac333b20d512db4d58/activerecord/lib/active_record/model_schema.rb#L550).

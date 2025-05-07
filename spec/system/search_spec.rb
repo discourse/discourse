@@ -19,32 +19,34 @@ describe "Search", type: :system do
 
     after { SearchIndexer.disable }
 
-    it "works and clears search page state", video: true, trace: true, mobile: true do
-      visit("/search")
+    it "works and clears search page state", mobile: true do
+      with_trace do
+        visit("/search")
 
-      search_page.type_in_search("test")
-      search_page.click_search_button
+        search_page.type_in_search("test")
+        search_page.click_search_button
 
-      expect(search_page).to have_search_result
-      expect(search_page).to have_no_heading_text("Search")
+        expect(search_page).to have_search_result
+        expect(search_page).to have_no_heading_text("Search")
 
-      click_logo
-      expect(page).to have_current_path("/")
-      expect(search_page).to be_not_active
+        click_logo
+        expect(page).to have_current_path("/")
+        expect(search_page).to be_not_active
 
-      page.go_back
-      # ensure results are still there when using browser's history
-      expect(search_page).to have_search_result
+        page.go_back
+        # ensure results are still there when using browser's history
+        expect(search_page).to have_search_result
 
-      click_logo
-      expect(page).to have_current_path("/")
+        click_logo
+        expect(page).to have_current_path("/")
 
-      search_page.click_search_icon
-      search_page.click_advanced_search_icon
+        search_page.click_search_icon
+        search_page.click_advanced_search_icon
 
-      expect(page).to have_css(".search-container")
-      expect(search_page).to have_no_search_result
-      expect(search_page).to have_heading_text("Search")
+        expect(page).to have_css(".search-container")
+        expect(search_page).to have_no_search_result
+        expect(search_page).to have_heading_text("Search")
+      end
     end
 
     it "navigates search results using J/K keys" do

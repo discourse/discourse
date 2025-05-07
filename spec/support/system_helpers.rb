@@ -342,4 +342,21 @@ module SystemHelpers
       }
     JS
   end
+
+  def with_trace
+    example = RSpec.current_example
+    path =
+      File.join(Capybara.save_path, "#{example.metadata[:full_description].parameterize}-trace.zip")
+
+    page.driver.start_tracing(screenshots: true, snapshots: true, sources: true)
+
+    yield
+
+    page.driver.stop_tracing(path:)
+
+    if !ENV["CI"]
+      puts "\n🎥 Recorded trace for: #{example.metadata[:full_description]}\n"
+      puts "Open with `pnpm playwright show-trace #{path}`\n"
+    end
+  end
 end
