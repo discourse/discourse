@@ -37,6 +37,8 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "parent-category-row-class",
   "parent-category-row-class-mobile",
   "post-class",
+  "post-flag-available-flags",
+  "post-flag-title",
   "post-menu-buttons",
   "post-menu-collapsed",
   "post-meta-data-poster-name-suppress-similar-name",
