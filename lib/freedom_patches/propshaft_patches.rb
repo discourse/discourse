@@ -11,14 +11,14 @@ Propshaft::Asset.prepend(
 Propshaft::Helper.prepend(
   Module.new do
     def compute_asset_path(path, options = {})
-      attempts = 0
+      attempt = 1
       super
     rescue Propshaft::MissingAssetError => e
-      if Rails.env.development?
+      if Rails.env.development? && attempt <= 3
         # Ember-cli might've replaced the assets
         Rails.application.assets.load_path.send(:clear_cache)
-        attempts += 1
-        retry if attempts < 3
+        attempt += 1
+        retry
       elsif Rails.env.test?
         # Assets might not be compiled in test mode. Just return a fake path
         "/assets/#{path.sub(".", "-aaaaaaaa.")}"
