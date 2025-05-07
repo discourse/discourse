@@ -59,6 +59,14 @@
 
       .image-uploader {
         display: flex;
+        gap: 0.5em;
+
+        .image-upload-controls {
+          display: flex;
+          flex-direction: column;
+          gap: 0.5em;
+          margin: 0 0 0.5em;
+        }
       }
 
       .uploaded-image-preview {
