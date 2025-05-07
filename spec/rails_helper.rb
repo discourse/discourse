@@ -459,7 +459,7 @@ RSpec.configure do |config|
 
     driver_options = {
       browser_type: :chromium,
-      channel: :chrome,
+      channel: :chromium,
       headless: (ENV["PLAYWRIGHT_HEADLESS"].presence || ENV["SELENIUM_HEADLESS"].presence) != "0",
       args: apply_base_chrome_args,
       acceptDownloads: true,
