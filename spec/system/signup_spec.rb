@@ -142,9 +142,13 @@ shared_examples "signup scenarios" do |signup_page_object, login_page_object|
           .fill_email(invite.email)
           .fill_username("john")
           .fill_password("supersecurepassword")
-          .click_create_account
+
+        expect(signup_form).to have_content("What you do for work")
+
+        signup_form.click_create_account
         expect(signup_form).to have_content(I18n.t("js.user_fields.required", name: "Occupation"))
         expect(signup_form).to have_no_css(".account-created")
+        expect(signup_form).to have_css(".tip.bad", text: "Please enter a value for \"Occupation\"")
       end
     end
 
@@ -345,13 +349,13 @@ shared_examples "signup scenarios" do |signup_page_object, login_page_object|
 end
 
 describe "Signup", type: :system do
-  context "when fullpage desktop" do
+  context "when desktop" do
     include_examples "signup scenarios",
                      PageObjects::Pages::Signup.new,
                      PageObjects::Pages::Login.new
   end
 
-  context "when fullpage mobile", mobile: true do
+  context "when mobile", mobile: true do
     include_examples "signup scenarios",
                      PageObjects::Pages::Signup.new,
                      PageObjects::Pages::Login.new
