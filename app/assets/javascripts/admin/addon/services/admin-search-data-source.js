@@ -19,6 +19,7 @@ const SEARCH_SCORES = {
   labelStart: 20,
   exactKeyword: 10,
   fallback: 5,
+  pageBonusScore: 20,
 };
 
 function labelOrText(obj, fallback = "") {
@@ -304,6 +305,10 @@ export default class AdminSearchDataSource extends Service {
         }
 
         if (dataSourceItem.score > 0) {
+          if (type === "page") {
+            dataSourceItem.score += SEARCH_SCORES.pageBonusScore;
+          }
+
           typeResults.push(dataSourceItem);
         }
       });
