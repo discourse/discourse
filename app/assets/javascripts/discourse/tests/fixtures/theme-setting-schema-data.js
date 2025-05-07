@@ -1,6 +1,9 @@
 import ThemeSettings from "admin/models/theme-settings";
-
-export default function schemaAndData(version = 1) {
+import SiteSetting from "admin/models/site-setting";
+import  {
+  SCHEMA_MODES,
+} from "admin/components/schema-theme-setting/editor";
+export default function schemaAndData(version = 1, mode = SCHEMA_MODES.THEME) {
   let schema, data;
 
   if (version === 1) {
@@ -204,6 +207,14 @@ export default function schemaAndData(version = 1) {
     ];
   } else {
     throw new Error("unknown fixture version");
+  }
+
+  if (mode === SCHEMA_MODES.PLUGIN) {
+    return SiteSetting.create({
+      schema: schema,
+      value: data,
+      setting: "objects_setting"
+    })
   }
 
   return ThemeSettings.create({
