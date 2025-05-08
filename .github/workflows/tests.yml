@@ -204,15 +204,6 @@ jobs:
         if: steps.app-cache.outputs.cache-hit != 'true'
         run: rm -rf tmp/app-cache/uploads && cp -r public/uploads tmp/app-cache/uploads
 
-      - name: Fetch turbo_rspec_runtime.log cache
-        uses: actions/cache@v4
-        id: test-runtime-cache
-        if: matrix.build_type == 'backend' || matrix.build_type == 'system'
-        with:
-          path: tmp/turbo_rspec_runtime.log
-          key: rspec-runtime-${{ matrix.build_type }}-${{ matrix.target }}-${{ github.run_id }}
-          restore-keys: rspec-runtime-${{ matrix.build_type }}-${{ matrix.target }}-
-
       - name: Check Annotations
         if: matrix.build_type == 'backend' && matrix.target == 'core'
         run: |
