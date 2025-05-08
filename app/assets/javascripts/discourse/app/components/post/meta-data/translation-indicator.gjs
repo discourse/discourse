@@ -7,6 +7,7 @@ import icon from "discourse/helpers/d-icon";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import Composer from "discourse/models/composer";
 import PostLocalization from "discourse/models/post-localization";
+import TopicLocalization from "discourse/models/topic-localization";
 import { i18n } from "discourse-i18n";
 import DTooltip from "float-kit/components/d-tooltip";
 
@@ -50,10 +51,13 @@ export default class PostMetaDataTranslationIndicator extends Component {
   }
 
   @action
-  deleteLocalization(locale) {
-    // TODO: destroy corresponding topic localization if present.
+  async deleteLocalization(locale) {
     try {
-      PostLocalization.destroy(this.args.post.id, locale);
+      await PostLocalization.destroy(this.args.post.id, locale);
+
+      if (this.args.post.firstPost) {
+        await TopicLocalization.destroy(this.args.post.topic_id, locale);
+      }
     } catch (error) {
       popupAjaxError(error);
     } finally {
