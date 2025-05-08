@@ -194,10 +194,6 @@ async function loadLibs(settings) {
   self.codecs = { mozjpeg_enc: mozjpeg_enc_module, resize: resize };
 }
 
-async function fileToDrawable(file) {
-  return await createImageBitmap(file);
-}
-
 function drawableToImageData(drawable, isIOS) {
   const width = drawable.width,
     height = drawable.height,
@@ -208,15 +204,16 @@ function drawableToImageData(drawable, isIOS) {
 
   let canvas = new OffscreenCanvas(width, height);
 
-  // Check if the canvas is too large
-  // iOS _still_ enforces a max pixel count of 16,777,216 per canvas
+  // Check if the canvas is > 16,777,216 pixels
+  // iOS Safari has a limit of 4096x4096 for canvas size
   // ref: https://pqina.nl/blog/canvas-area-exceeds-the-maximum-limit/
   const maxLimit = 4096;
   const maximumPixelCount = maxLimit * maxLimit;
 
+
   if (isIOS && width * height > maximumPixelCount) {
     logIfDebug(
-      `iOS canvas limit exceeded, original size: ${width}x${height}`
+      `iOS canvas resize needed, original size: ${width}x${height}`
     );
     const ratio = Math.min(maxLimit / width, maxLimit / height);
 
@@ -267,7 +264,14 @@ function jpegDecodeFailure(type, imageData) {
 }
 
 async function fileToImageData(file, isIOS) {
-  const drawable = await fileToDrawable(file);
+  const drawable = await createImageBitmap(file);
+
+  // TODO: look into why a canvas size of 9999x9999 is too large for iOS
+  // found this out through trial and error so far
+  if (isIOS && drawable.width * drawable.height > 9999 * 9999) {
+    throw `Canvas size too large for iOS: ${drawable.width}x${drawable.height}`;
+  }
+
   const imageData = drawableToImageData(drawable, isIOS);
 
   if (isTransparent(file.type, imageData)) {
