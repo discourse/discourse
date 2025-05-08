@@ -14,6 +14,7 @@ import DiscourseBanner from "discourse/components/discourse-banner";
 import DiscourseTopic from "discourse/components/discourse-topic";
 import MoreTopics from "discourse/components/more-topics";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import PostStream from "discourse/components/post-stream";
 import PostTextSelection from "discourse/components/post-text-selection";
 import PrivateMessageGlyph from "discourse/components/private-message-glyph";
 import ReviewableCreatedBy from "discourse/components/reviewable-created-by";
@@ -434,7 +435,7 @@ export default RouteTemplate(
                 </span>
 
                 {{#unless @controller.model.postStream.loadingFilter}}
-                  <ScrollingPostStream
+                  <PostStream
                     @posts={{@controller.postsToRender}}
                     @canCreatePost={{@controller.model.details.can_create_post}}
                     @multiSelect={{@controller.multiSelect}}

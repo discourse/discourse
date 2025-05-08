@@ -256,6 +256,7 @@ export default createWidget("post-stream", {
       transformed.nextPost = nextPost;
       transformed.mobileView = mobileView;
 
+      // TODO (glimmer-post-stream): implement this logic in the Glimmer component
       if (transformed.canManage || transformed.canSplitMergeTopic) {
         transformed.multiSelect = attrs.multiSelect;
 
