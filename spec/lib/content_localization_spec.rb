@@ -46,6 +46,13 @@ describe ContentLocalization do
         expect(ContentLocalization.show_translated_post?(post, scope)).to be false
       end
 
+      it "returns false when post raw is nil" do
+        post.update_columns(raw: "")
+        scope = create_scope
+
+        expect(ContentLocalization.show_translated_post?(post, scope)).to be false
+      end
+
       it "returns false when post locale is nil" do
         post.update!(locale: nil)
         scope = create_scope
@@ -64,6 +71,54 @@ describe ContentLocalization do
         scope = create_scope(cookie: ContentLocalization::SHOW_ORIGINAL_COOKIE)
 
         expect(ContentLocalization.show_translated_post?(post, scope)).to be false
+      end
+    end
+  end
+
+  describe ".show_translated_topic?" do
+    fab!(:topic)
+
+    it "returns true when criteria met" do
+      SiteSetting.experimental_content_localization = true
+      topic.update!(locale: "ja")
+      I18n.locale = "de"
+      scope = create_scope
+
+      expect(ContentLocalization.show_translated_topic?(topic, scope)).to be true
+    end
+
+    context "when criteria not met" do
+      before do
+        SiteSetting.experimental_content_localization = true
+        topic.update!(locale: "ja")
+        I18n.locale = "de"
+      end
+
+      it "returns false when experimental_content_localization is false" do
+        SiteSetting.experimental_content_localization = false
+        scope = create_scope
+
+        expect(ContentLocalization.show_translated_topic?(topic, scope)).to be false
+      end
+
+      it "returns false when topic locale is nil" do
+        topic.update!(locale: nil)
+        scope = create_scope
+
+        expect(ContentLocalization.show_translated_topic?(topic, scope)).to be false
+      end
+
+      it "returns false when topic is in user locale" do
+        topic.update!(locale: I18n.locale)
+        scope = create_scope
+
+        expect(ContentLocalization.show_translated_topic?(topic, scope)).to be false
+      end
+
+      it "returns false when show_original? is true" do
+        scope = create_scope(cookie: ContentLocalization::SHOW_ORIGINAL_COOKIE)
+
+        expect(ContentLocalization.show_translated_topic?(topic, scope)).to be false
       end
     end
   end
