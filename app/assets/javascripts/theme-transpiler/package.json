@@ -9,7 +9,7 @@
   "dependencies": {
     "@babel/standalone": "^7.27.2",
     "@csstools/postcss-light-dark-function": "^2.0.8",
-    "@rollup/browser": "^4.29.1",
+    "@rollup/browser": "^4.40.2",
     "@rollup/wasm-node": "^4.29.1",
     "@swc/wasm-web": "^1.10.4",
     "@zxing/text-encoding": "^0.9.0",

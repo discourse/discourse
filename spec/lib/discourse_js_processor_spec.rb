@@ -191,4 +191,14 @@ RSpec.describe DiscourseJsProcessor do
       expect(map["sourcesContent"]).to contain_exactly(*sources.values)
     end
   end
+
+  describe "Transpiler#rollup" do
+    it "can rollup code" do
+      sources = { "main.js" => "console.log('hello world');" }
+
+      result = DiscourseJsProcessor::Transpiler.new.rollup(sources, {})
+
+      puts result
+    end
+  end
 end

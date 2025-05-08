@@ -1025,8 +1025,8 @@ importers:
         specifier: ^2.0.8
         version: 2.0.8(postcss@8.5.3)
       '@rollup/browser':
-        specifier: ^4.29.1
-        version: 4.29.1
+        specifier: ^4.40.2
+        version: 4.40.2
       '@rollup/wasm-node':
         specifier: ^4.29.1
         version: 4.29.1
@@ -2105,6 +2105,7 @@ packages:
   '@faker-js/faker@9.7.0':
     resolution: {integrity: sha512-aozo5vqjCmDoXLNUJarFZx2IN/GgGaogY4TMJ6so/WLZOWpSV7fvj2dmrV6sEAnUm1O7aCrhTibjpzeDFgNqbg==}
     engines: {node: '>=18.0.0', npm: '>=9.0.0'}
+    deprecated: Please update to a newer version
 
   '@floating-ui/core@1.7.0':
     resolution: {integrity: sha512-FRdBLykrPPA6P76GGGqlex/e7fbe0F1ykgxHYNXQsH/iTEtjMj/f9bpY5oQqbjt5VgZvgz/uKXbGuROijh3VLA==}
@@ -2490,8 +2491,8 @@ packages:
     peerDependencies:
       prettier: 3.x
 
-  '@rollup/browser@4.29.1':
-    resolution: {integrity: sha512-CsDzu5HTqbY9++9B/jk6Ue/QzozVCnHqSau9ziD/x8nzxEfFsRniycDshZWaSGpHIqHn67PJbwFea83Nu6FQfQ==}
+  '@rollup/browser@4.40.2':
+    resolution: {integrity: sha512-X4Wn+Hgj1EPS3SVaP1qp3BN/X5hscLTLg2XtajnulKloJgBjl02viUonCdDUr2hwx+FjN5z00D8rGjiu/MAYuw==}
 
   '@rollup/wasm-node@4.29.1':
     resolution: {integrity: sha512-AOtO2Y+XzElJfmJgAECOgbutmKAK5XcKH7CipGDQDBMfLY04ezEoCHWEpmoX5L7/WH3k17rXMCClNiwDbWW+mw==}
@@ -10750,9 +10751,9 @@ snapshots:
       prettier: 3.5.3
       rxjs: 6.6.7
 
-  '@rollup/browser@4.29.1':
+  '@rollup/browser@4.40.2':
     dependencies:
-      '@types/estree': 1.0.6
+      '@types/estree': 1.0.7
 
   '@rollup/wasm-node@4.29.1':
     dependencies:

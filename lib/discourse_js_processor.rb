@@ -55,12 +55,12 @@ class DiscourseJsProcessor
       ctx.attach("rails.logger.warn", proc { |err| Rails.logger.warn(err.to_s) })
       ctx.attach("rails.logger.error", proc { |err| Rails.logger.error(err.to_s) })
 
-      # source =
-      #   if Rails.env.production?
-      #     File.read(TRANSPILER_PATH)
-      #   else
-      #     @processor_mutex.synchronize { build_theme_transpiler }
-      #   end
+      source =
+        if Rails.env.production?
+          File.read(TRANSPILER_PATH)
+        else
+          @processor_mutex.synchronize { build_theme_transpiler }
+        end
 
       source = File.read("app/assets/javascripts/theme-transpiler/theme-transpiler.js")
 
@@ -153,6 +153,10 @@ class DiscourseJsProcessor
 
     def terser(tree, opts)
       self.class.v8_call("minify", tree, opts, fetch_result_call: "getMinifyResult")
+    end
+
+    def rollup(tree, opts)
+      self.class.v8_call("rollup", tree, opts, fetch_result_call: "getRollupResult")
     end
 
     def post_css(css:, map:, source_map_file:)

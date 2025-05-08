@@ -3,9 +3,9 @@ import "core-js/actual/url";
 import patch from "./text-decoder-shim";
 patch();
 
-import { rollup } from "/Users/david/discourse/rollup/browser/dist/es/rollup.browser.js";
+import { rollup } from "@rollup/browser";
 const CONSOLE_PREFIX = "[DiscourseJsProcessor] ";
-// globalThis.window = {};
+globalThis.window = {};
 
 const oldConsole = globalThis.console;
 globalThis.console = {
@@ -104,58 +104,54 @@ globalThis.fetch = function (url) {
 // globalThis.window = dom.window.window;
 // globalThis.document = dom.window.document;
 
-const modules = {
-  "main.js": `import foo from 'foo.js'; console.log(foo); {
-    @test
-    someProp(){
-      console.log("prop");
-    }
-    
-  `,
-  "foo.js": "export default 42;",
+// const modules = {
+//   "main.js": `import foo from 'foo.js'; console.log(foo);`,
+//   "foo.js": "export default 42;",
+// };
+
+let lastRollupResult;
+let lastRollupError;
+globalThis.rollup = function (modules, options) {
+  const resultPromise = rollup({
+    input: "main.js",
+    logLevel: "info",
+    onLog(level, message) {
+      console.log(level, message);
+    },
+    plugins: [
+      {
+        name: "loader",
+        resolveId(source) {
+          console.log("resolveid");
+          if (modules.hasOwnProperty(source)) {
+            return source;
+          }
+        },
+        load(id) {
+          if (modules.hasOwnProperty(id)) {
+            return modules[id];
+          }
+        },
+      },
+    ],
+  });
+
+  resultPromise
+    .then((bundle) => {
+      return bundle.generate({ format: "es" });
+    })
+    .then(({ output }) => (lastRollupResult = output))
+    .catch((error) => (lastRollupError = error));
 };
 
-const rollupResult = rollup({
-  input: "main.js",
-  logLevel: "info",
-  onLog(level, message) {
-    console.log(level, message);
-  },
-  plugins: [
-    {
-      name: "loader",
-      resolveId(source) {
-        console.log("resolveid");
-        if (modules.hasOwnProperty(source)) {
-          return source;
-        }
-      },
-      load(id) {
-        if (modules.hasOwnProperty(id)) {
-          return modules[id];
-        }
-      },
-    },
-  ],
-});
+globalThis.getRollupResult = function () {
+  const error = lastRollupError;
+  const result = lastRollupResult;
 
-rollupResult
-  .then((bundle) => {
-    console.log("Hello 1");
-    return bundle.generate({ format: "es" });
-  })
-  .then(({ output }) => console.log("result", output[0].code))
-  .catch((error) => console.error("error: ", error, error.stack));
+  lastRollupError = lastRollupResult = null;
 
-let result;
-globalThis.getResult = function () {
+  if (error) {
+    throw error;
+  }
   return result;
 };
-
-globalThis.doSomething = async function doSomething() {
-  await new Promise((resolve) => resolve());
-  console.log("returned");
-  return "thing";
-};
-
-// console.log("done eval", rollupResult);
