@@ -2701,6 +2701,13 @@ en:
       esc_label: "dismiss message"
       ok_proceed: "Ok, proceed"
 
+      translations:
+        title: "Translating post"
+        select: "Select translation"
+        save: "Save translation"
+        original_content: "Original post content"
+        placeholder: "Enter translation for post here..."
+
       group_mentioned_limit:
         one: "<b>Warning!</b> You mentioned <a href='%{group_link}'>%{group}</a>, however this group has more members than the administrator configured mention limit of %{count} user. Nobody will be notified."
         other: "<b>Warning!</b> You mentioned <a href='%{group_link}'>%{group}</a>, however this group has more members than the administrator configured mention limit of %{count} users. Nobody will be notified."
@@ -3903,6 +3910,15 @@ en:
       view_all_posts: "View all posts"
 
       badge_granted_tooltip: "%{username} earned the '%{badge_name}' badge for this post!"
+
+      localizations:
+        table:
+          locale: "Locale"
+          actions: "Actions"
+          edit: "Edit"
+          delete: "Delete"
+        add: "Add new translation"
+        success: "Translations have been updated successfully"
 
       errors:
         create: "Sorry, there was an error creating your post. Please try again."
