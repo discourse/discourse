@@ -2,13 +2,18 @@
 import "core-js/actual/url";
 import patch from "./text-decoder-shim";
 patch();
-
+import { dirname, relative } from "path";
 import getRandomValues from "polyfill-crypto.getrandomvalues";
 globalThis.crypto = { getRandomValues };
-
 import { rollup } from "@rollup/browser";
 import { babel } from "@rollup/plugin-babel";
+import HTMLBarsInlinePrecompile from "babel-plugin-ember-template-compilation";
+import { Preprocessor } from "content-tag";
 import DecoratorTransforms from "decorator-transforms";
+import { precompile } from "ember-source/dist/ember-template-compiler";
+import BabelReplaceImports from "./babel-replace-imports";
+
+const preprocessor = new Preprocessor();
 
 const CONSOLE_PREFIX = "[DiscourseJsProcessor] ";
 globalThis.window = {};
@@ -61,8 +66,14 @@ globalThis.rollup = function (modules, options) {
     plugins: [
       {
         name: "loader",
-        resolveId(source) {
-          console.log("resolveid");
+        resolve: {
+          extensions: [".js", ".gjs"],
+        },
+        resolveId(source, context) {
+          if (source.startsWith(".")) {
+            source = relative(dirname(context), source);
+          }
+          console.log("resolveid", source, context);
           if (modules.hasOwnProperty(source)) {
             return source;
           }
@@ -76,8 +87,42 @@ globalThis.rollup = function (modules, options) {
       babel({
         extensions: [".js", ".gjs"],
         babelHelpers: "bundled",
-        plugins: [DecoratorTransforms],
+        plugins: [
+          DecoratorTransforms,
+          BabelReplaceImports,
+          [
+            HTMLBarsInlinePrecompile,
+            {
+              compiler: { precompile },
+              enableLegacyModules: [
+                "ember-cli-htmlbars",
+                "ember-cli-htmlbars-inline-precompile",
+                "htmlbars-inline-precompile",
+              ],
+            },
+          ],
+        ],
       }),
+      {
+        name: "gjs-transform",
+
+        transform: {
+          // Enforce running the gjs transform before any others like babel that expect valid JS
+          order: "pre",
+          handler(input, id) {
+            if (!id.endsWith(".gjs")) {
+              return null;
+            }
+            let { code, map } = preprocessor.process(input, {
+              filename: id,
+            });
+            return {
+              code,
+              map,
+            };
+          },
+        },
+      },
     ],
   });
 

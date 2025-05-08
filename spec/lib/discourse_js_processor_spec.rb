@@ -195,14 +195,17 @@ RSpec.describe DiscourseJsProcessor do
   describe "Transpiler#rollup" do
     it "can rollup code" do
       sources = {
-        "main.js" => "import 'hello.js'; console.log('hello world 2');",
-        "hello.js" => <<~JS,
+        "main.js" => "import './hello.gjs'; console.log('hello world 2');",
+        "hello.gjs" => <<~JS,
           someDecorator = () => {}
           class MyClass {
             @someDecorator
             myMethod() {
               console.log('hello world');
             }
+            <template>
+              <div>template content</div>
+            </template>
           }
         JS
       }
