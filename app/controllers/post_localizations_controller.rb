@@ -11,7 +11,8 @@ class PostLocalizationsController < ApplicationController
     localization = PostLocalization.find_by(post_id: params[:post_id], locale: params[:locale])
     if localization
       PostLocalizationUpdater.update(
-        localization: localization,
+        post_id: params[:post_id],
+        locale: params[:locale],
         raw: params[:raw],
         user: current_user,
       )

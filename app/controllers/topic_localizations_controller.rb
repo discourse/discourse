@@ -12,7 +12,8 @@ class TopicLocalizationsController < ApplicationController
       TopicLocalization.find_by(topic_id: params[:topic_id], locale: params[:locale])
     if topic_localization
       TopicLocalizationUpdater.update(
-        topic_localization: topic_localization,
+        topic_id: params[:topic_id],
+        locale: params[:locale],
         title: params[:title],
         user: current_user,
       )
