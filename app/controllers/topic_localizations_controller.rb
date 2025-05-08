@@ -8,10 +8,10 @@ class TopicLocalizationsController < ApplicationController
 
     params.require(%i[topic_id locale title])
 
-    if TopicLocalization.exists?(topic_id: params[:topic_id], locale: params[:locale])
+    topic_localization = TopicLocalization.find_by(topic_id: params[:topic_id], locale: params[:locale])
+    if topic_localization
       TopicLocalizationUpdater.update(
-        topic_id: params[:topic_id],
-        locale: params[:locale],
+        topic_localization: topic_localization,
         title: params[:title],
         user: current_user,
       )
