@@ -5,6 +5,7 @@ import AdminSearchModal from "admin/components/modal/admin-search";
 
 export default class AdminSidebarStateManager extends Service {
   @service sidebarState;
+  @service header;
 
   STORE_NAMESPACE = "discourse_admin_sidebar_experiment_";
   keywords = {};
@@ -67,6 +68,11 @@ export default class AdminSidebarStateManager extends Service {
     this.sidebarState.setSeparatedMode();
     this.sidebarState.hideSwitchPanelButtons();
     this.sidebarState.isForcingSidebar = true;
+
+    // we may navigate to admin from the header dropdown
+    // and when we do, we have to close it
+    this.header.hamburgerVisible = false;
+
     return true;
   }
 }
