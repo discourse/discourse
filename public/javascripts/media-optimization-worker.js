@@ -210,7 +210,6 @@ function drawableToImageData(drawable, isIOS) {
   const maxLimit = 4096;
   const maximumPixelCount = maxLimit * maxLimit;
 
-
   if (isIOS && width * height > maximumPixelCount) {
     logIfDebug(
       `iOS canvas resize needed, original size: ${width}x${height}`
