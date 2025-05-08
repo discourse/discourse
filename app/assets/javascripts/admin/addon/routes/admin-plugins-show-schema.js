@@ -4,14 +4,13 @@ import SiteSetting from "admin/models/site-setting";
 export default class AdminPluginsShowSchemaRoute extends Route {
   async model(params) {
     const plugin = this.modelFor("adminPlugins.show");
-
     const [pluginSettings] = await SiteSetting.findAll({
       plugin: plugin.id,
+      name: params.setting_name,
     });
 
-    const setting = pluginSettings.siteSettings.find(
-      (s) => s.setting === params.setting_name
-    );
+    const [setting] = pluginSettings.siteSettings;
+
     try {
       setting.value = JSON.parse(setting.value);
     } catch (e) {
