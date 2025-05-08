@@ -780,7 +780,7 @@ export default class DEditor extends Component {
         </div>
       </div>
       <DEditorPreview
-        @preview={{this.preview}}
+        @preview={{if @hijackPreview @hijackPreview this.preview}}
         @forcePreview={{this.forcePreview}}
         @onPreviewUpdated={{this.previewUpdated}}
         @outletArgs={{this.outletArgs}}
