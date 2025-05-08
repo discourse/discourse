@@ -7,6 +7,8 @@ import getRandomValues from "polyfill-crypto.getrandomvalues";
 globalThis.crypto = { getRandomValues };
 
 import { rollup } from "@rollup/browser";
+import { babel } from "@rollup/plugin-babel";
+import DecoratorTransforms from "decorator-transforms";
 
 const CONSOLE_PREFIX = "[DiscourseJsProcessor] ";
 globalThis.window = {};
@@ -71,6 +73,11 @@ globalThis.rollup = function (modules, options) {
           }
         },
       },
+      babel({
+        extensions: [".js", ".gjs"],
+        babelHelpers: "bundled",
+        plugins: [DecoratorTransforms],
+      }),
     ],
   });
 
