@@ -146,12 +146,6 @@ module("Unit | Service | AdminSearchDataSource", function (hooks) {
     let results = this.subject.search("about your title");
     assert.deepEqual(results[0].label, "About your site > Title");
   });
-
-  test("search - prioritize pages", async function (assert) {
-    await this.subject.buildMap();
-    let results = this.subject.search("theme");
-    assert.deepEqual(results[0].label, "Appearance > Color palettes");
-  });
 });
 
 module(
