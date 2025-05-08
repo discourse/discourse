@@ -98,6 +98,7 @@ const DEBOUNCE_JIT_MS = 2000;
 export default class ComposerEditor extends Component {
   @service composer;
   @service siteSettings;
+  @service currentUser;
 
   @tracked preview;
 
@@ -950,6 +951,13 @@ export default class ComposerEditor extends Component {
   }
 
   get showTranslationEditor() {
+    if (
+      !this.siteSettings.experimental_content_localization ||
+      !this.currentUser.can_localize_content
+    ) {
+      return false;
+    }
+
     if (this.composer.model.action === Composer.ADD_TRANSLATION) {
       return true;
     }
