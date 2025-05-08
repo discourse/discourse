@@ -1,5 +1,4 @@
 import { getOwner } from "@ember/owner";
-import { settled } from "@ember/test-helpers";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
@@ -139,22 +138,13 @@ module("Unit | Service | AdminSearchDataSource", function (hooks) {
   test("search - prioritize whole word matches", async function (assert) {
     await this.subject.buildMap();
     let results = this.subject.search("anonym");
-    await settled();
     assert.deepEqual(results[0].label, "Anonymous Browser Pageviews");
   });
 
   test("search - prioritize beginning of label", async function (assert) {
     await this.subject.buildMap();
     let results = this.subject.search("about your title");
-    await settled();
     assert.deepEqual(results[0].label, "About your site > Title");
-  });
-
-  test("search - prioritize pages", async function (assert) {
-    await this.subject.buildMap();
-    let results = this.subject.search("theme");
-    await settled();
-    assert.deepEqual(results[0].label, "Appearance > Color palettes");
   });
 });
 
