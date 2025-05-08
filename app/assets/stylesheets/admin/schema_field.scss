@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .schema-field {
   margin-bottom: 1em;
   width: 100%;
@@ -5,7 +7,7 @@
   grid-template-columns: 25% 1fr;
   gap: 1em;
 
-  @include breakpoint(mobile-extra-large) {
+  @include viewport.until(sm) {
     grid-template-columns: 1fr;
     grid-template-rows: auto 1fr;
     gap: 0;

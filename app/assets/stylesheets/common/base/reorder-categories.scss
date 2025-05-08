@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .reorder-categories {
   thead {
     th {
@@ -28,7 +30,7 @@
   .badge-category__wrapper .badge-category {
     max-width: 20em;
 
-    @include breakpoint(mobile-extra-large) {
+    @include viewport.until(sm) {
       max-width: 30vw;
     }
   }

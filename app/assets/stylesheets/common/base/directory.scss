@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .directory-table-top-scroll {
   width: 100%;
   overflow-x: auto;
@@ -17,7 +19,7 @@
       vertical-align: top;
     }
 
-    @include breakpoint("mobile-large") {
+    @include viewport.until(sm) {
       .filter-name {
         width: 100%;
       }
@@ -36,7 +38,7 @@
     display: flex;
     justify-content: space-between;
 
-    @include breakpoint("mobile-large") {
+    @include viewport.until(sm) {
       display: block;
     }
 
@@ -44,7 +46,7 @@
       color: var(--primary-medium);
       font-weight: normal;
 
-      @include breakpoint("mobile-large") {
+      @include viewport.until(sm) {
         display: block;
       }
     }
@@ -55,12 +57,12 @@
     font-size: var(--font-down-1);
     margin-bottom: 0.5em;
 
-    @include breakpoint("mobile-large") {
+    @include viewport.until(sm) {
       margin-bottom: 1em;
     }
   }
 
-  @include breakpoint("tablet") {
+  @include viewport.until(md) {
     .period-chooser .period-chooser-header h2.selected-name {
       font-size: var(--font-up-1);
     }
@@ -230,12 +232,12 @@
       padding: 0;
       width: 100%;
 
-      @include breakpoint(tablet) {
+      @include viewport.until(md) {
         // overrides existing media query
         font-size: var(--font-0);
       }
 
-      @include breakpoint("mobile-medium") {
+      @include viewport.until(sm) {
         font-size: var(--font-down-1);
       }
     }

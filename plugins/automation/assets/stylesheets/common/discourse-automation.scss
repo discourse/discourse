@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .admin-plugins.automation {
   .automations {
     .relative-date {
@@ -23,7 +25,7 @@
 
   .d-admin-table.automations {
     .d-admin-row__content {
-      @include breakpoint("tablet") {
+      @include viewport.until(md) {
         display: grid;
         grid-template-columns: 1fr;
         grid-template-rows: repeat(5, auto);
@@ -31,25 +33,25 @@
     }
 
     .d-admin-row__name {
-      @include breakpoint("tablet") {
+      @include viewport.until(md) {
         order: 1;
       }
     }
 
     .d-admin-row__detail.automations__runs {
-      @include breakpoint("tablet") {
+      @include viewport.until(md) {
         order: 2; // move below the name to avoid empty spacing
       }
     }
 
     .d-admin-row__detail.automations__updated-by {
-      @include breakpoint("tablet") {
+      @include viewport.until(md) {
         order: 3;
       }
     }
 
     .d-admin-row__detail.automations__enabled {
-      @include breakpoint("tablet") {
+      @include viewport.until(md) {
         order: 5;
       }
     }
@@ -61,7 +63,7 @@
       gap: 0.5em;
       justify-content: flex-end;
 
-      @include breakpoint("tablet") {
+      @include viewport.until(md) {
         order: 6;
       }
     }

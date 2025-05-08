@@ -1,21 +1,23 @@
+@use "lib/viewport";
+
 // Styles for admin/api
 .d-admin-table.web-hooks {
   .d-admin-row__overview.payload-url {
     word-wrap: break-word;
     max-width: 20vw;
 
-    @include breakpoint(medium) {
+    @include viewport.until(lg) {
       max-width: 70vw;
     }
   }
 
   .d-admin-row__detail.description {
-    @include breakpoint(medium) {
+    @include viewport.until(lg) {
       display: block;
     }
 
     .d-admin-row__mobile-label {
-      @include breakpoint(medium) {
+      @include viewport.until(lg) {
         display: block;
       }
     }
@@ -42,7 +44,7 @@
       &.input-area {
         width: 75%;
 
-        @include breakpoint(mobile-medium) {
+        @include viewport.until(sm) {
           width: 100%;
         }
 
@@ -116,7 +118,7 @@
         margin-bottom: 2px;
       }
 
-      @include breakpoint(mobile-large) {
+      @include viewport.until(sm) {
         grid-template-columns: repeat(2, 1fr);
         grid-row-gap: 0.5em;
 
@@ -162,7 +164,7 @@
     .hook-event {
       margin-bottom: 0.5em;
 
-      @include breakpoint(mobile-extra-large) {
+      @include viewport.until(sm) {
         width: 100%;
       }
     }

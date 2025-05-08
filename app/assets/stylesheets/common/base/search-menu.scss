@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 @mixin user-item-flex {
   display: flex;
   flex-direction: column;
@@ -16,7 +18,7 @@ $search-pad-horizontal: 0.5em;
 
 .search-menu.glimmer-search-menu {
   .search-input-wrapper {
-    @include breakpoint("mobile-extra-large") {
+    @include viewport.until(sm) {
       --search-input-wrapper-padding: 0.5rem;
       position: fixed;
       left: var(--search-input-wrapper-padding);
@@ -65,7 +67,7 @@ $search-pad-horizontal: 0.5em;
       }
     }
 
-    @include breakpoint("mobile-extra-large") {
+    @include viewport.until(sm) {
       .mobile-search-button + input.search-term__input {
         padding-left: 0;
       }
@@ -87,7 +89,7 @@ $search-pad-horizontal: 0.5em;
     }
   }
 
-  @include breakpoint("mobile-extra-large") {
+  @include viewport.until(sm) {
     .btn.search-context {
       margin: 0.25em 0 0 0;
       padding: 0.25em 0.5em;
@@ -123,7 +125,7 @@ $search-pad-horizontal: 0.5em;
       padding-top: $search-pad-vertical;
     }
 
-    @include breakpoint("mobile-extra-large") {
+    @include viewport.until(sm) {
       &,
       &.with-search-term {
         padding-top: 3rem;

@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 // --------------------------------------------------
 // Topic lists
 // --------------------------------------------------
@@ -285,7 +287,7 @@
   }
 }
 
-@include breakpoint(medium) {
+@include viewport.until(lg) {
   .nav-pills {
     > li > a {
       font-size: var(--font-0);

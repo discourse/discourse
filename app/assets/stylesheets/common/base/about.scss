@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .about {
   &__main-content {
     display: flex;
@@ -25,7 +27,7 @@
     padding: 1em 1em;
     margin-bottom: 1em;
 
-    @include breakpoint(tablet) {
+    @include viewport.until(md) {
       flex-direction: column;
     }
 
@@ -37,7 +39,7 @@
   &__stats-item {
     flex: 1 0 fit-content;
 
-    @include breakpoint(tablet) {
+    @include viewport.until(md) {
       margin-bottom: 1em;
 
       &:last-child {

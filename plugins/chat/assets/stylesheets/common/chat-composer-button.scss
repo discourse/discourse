@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .chat-composer-button {
   box-sizing: border-box;
   border: 0;
@@ -5,7 +7,7 @@
   background: none;
   padding-inline: 0.75rem;
 
-  @include breakpoint(mobile-large) {
+  @include viewport.until(sm) {
     width: 50px;
   }
 
