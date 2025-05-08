@@ -25,6 +25,7 @@ import { i18n } from "discourse-i18n";
 
 export default class LocalLoginForm extends Component {
   @service modal;
+  @service siteSettings;
 
   @tracked maskPassword = true;
   @tracked processingEmailLink = false;
@@ -129,9 +130,20 @@ export default class LocalLoginForm extends Component {
   handleForgotPassword(event) {
     event?.preventDefault();
 
+    let filledLoginName = this.args.loginName;
+
+    // no spaces, at least one dot, one @ with one or more characters before & after
+    const likelyEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+      filledLoginName?.trim()
+    );
+
+    if (this.siteSettings.hide_email_address_taken && !likelyEmail) {
+      filledLoginName = null;
+    }
+
     this.modal.show(ForgotPassword, {
       model: {
-        emailOrUsername: this.args.loginName,
+        emailOrUsername: filledLoginName,
       },
     });
   }
