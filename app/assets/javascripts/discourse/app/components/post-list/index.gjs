@@ -50,10 +50,11 @@ export default class PostList extends Component {
     ) {
       return;
     }
-    this.loading = true;
 
     const posts = this.args.posts;
+
     if (posts && posts.length) {
+      this.loading = true;
       try {
         const newPosts = await this.args.fetchMorePosts();
         this.args.posts.addObjects(newPosts);
