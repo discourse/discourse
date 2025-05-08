@@ -8,10 +8,10 @@ class PostLocalizationsController < ApplicationController
 
     params.require(%i[post_id locale raw])
 
-    if PostLocalization.exists?(post_id: params[:post_id], locale: params[:locale])
+    localization = PostLocalization.find_by(post_id: params[:post_id], locale: params[:locale])
+    if localization
       PostLocalizationUpdater.update(
-        post_id: params[:post_id],
-        locale: params[:locale],
+        localization: localization,
         raw: params[:raw],
         user: current_user,
       )
