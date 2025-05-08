@@ -194,11 +194,18 @@ RSpec.describe DiscourseJsProcessor do
 
   describe "Transpiler#rollup" do
     it "can rollup code" do
-      sources = { "main.js" => "console.log('hello world');" }
+      sources = {
+        "main.js" => "import 'hello.js'; console.log('hello world 2');",
+        "hello.js" => "console.log('hello world');",
+      }
 
       result = DiscourseJsProcessor::Transpiler.new.rollup(sources, {})
 
       puts result
+
+      code = result[0]["code"]
+      expect(code).to include("'hello world'")
+      expect(code).to include("'hello world 2'")
     end
   end
 end
