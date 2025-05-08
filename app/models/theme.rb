@@ -364,6 +364,12 @@ class Theme < ActiveRecord::Base
     end
   end
 
+  def screenshot_url
+    theme_fields
+      .find { |field| field.type_id == ThemeField.types[:theme_screenshot_upload_var] }
+      &.upload_url
+  end
+
   def switch_to_component!
     return if component
 
