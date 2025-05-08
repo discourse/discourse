@@ -958,7 +958,7 @@ export default class ComposerEditor extends Component {
       return false;
     }
 
-    if (this.composer.model.action === Composer.ADD_TRANSLATION) {
+    if (this.composer.model?.action === Composer.ADD_TRANSLATION) {
       return true;
     }
 
