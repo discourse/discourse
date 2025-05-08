@@ -273,7 +273,7 @@
     min-width: 275px;
     word-break: break-word;
 
-    @include breakpoint("mobile-large", min-width) {
+    @include viewport.from(sm) {
       display: flex;
     }
   }

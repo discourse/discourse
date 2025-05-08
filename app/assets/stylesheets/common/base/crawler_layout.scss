@@ -241,7 +241,7 @@ body > noscript {
     color: #666;
     display: inline-block;
 
-    @include breakpoint(tablet, min-width) {
+    @include viewport.from(md) {
       float: right;
     }
 

@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .admin-report {
   .conditional-loading-section {
     &.is-loading {
@@ -245,7 +247,7 @@
       outline: 1px solid var(--primary-low);
       margin-bottom: 0;
 
-      @include breakpoint("mobile-extra-large", min-width) {
+      @include viewport.from(sm) {
         margin-bottom: 0;
       }
 

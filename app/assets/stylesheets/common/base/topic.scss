@@ -316,7 +316,7 @@
       .mini-tag-chooser {
         margin-left: 0;
 
-        @include breakpoint(mobile-large, min-width) {
+        @include viewport.from(sm) {
           .selected-name {
             max-width: 500px;
           }
@@ -469,7 +469,7 @@ a[data-clicks]::after {
     width: 90%;
   }
 
-  @include breakpoint("mobile-extra-large", min-width) {
+  @include viewport.from(sm) {
     text-align: center;
   }
 

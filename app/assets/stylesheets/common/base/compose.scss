@@ -54,7 +54,7 @@ html.composer-open:not(.has-full-page-chat) {
       min-height: 0;
     }
 
-    @include breakpoint("mobile-extra-large", min-width) {
+    @include viewport.from(sm) {
       margin: 0 auto;
       height: calc(100% - 11px);
       width: 100%;
@@ -299,7 +299,7 @@ html.composer-open:not(.has-full-page-chat) {
       flex-wrap: wrap;
     }
 
-    @include breakpoint("mobile-extra-large", min-width) {
+    @include viewport.from(sm) {
       margin-bottom: 0.5em;
     }
   }
@@ -567,7 +567,7 @@ html.composer-open:not(.has-full-page-chat) {
       margin-left: 0.5em;
     }
 
-    @include breakpoint("mobile-extra-large", min-width) {
+    @include viewport.from(sm) {
       text-align: right;
     }
   }
@@ -621,7 +621,7 @@ html.composer-open:not(.has-full-page-chat) {
     }
   }
 
-  @include breakpoint("mobile-extra-large", min-width) {
+  @include viewport.from(sm) {
     &.private-message {
       .with-tags {
         .title-and-category {
@@ -684,7 +684,7 @@ html.composer-open:not(.has-full-page-chat) {
   box-shadow: var(--shadow-dropdown);
   border-radius: 8px;
 
-  @include breakpoint("mobile-extra-large", min-width) {
+  @include viewport.from(sm) {
     max-width: 600px;
   }
 

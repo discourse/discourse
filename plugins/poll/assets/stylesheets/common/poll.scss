@@ -7,7 +7,7 @@ div.poll-outer {
     display: grid;
     grid-template-areas: "poll" "info" "buttons";
 
-    @include breakpoint("mobile-extra-large", min-width) {
+    @include viewport.from(sm) {
       grid-template-columns: 1fr 10em;
       grid-template-areas: "poll info" "buttons buttons";
     }
@@ -112,7 +112,7 @@ div.poll-outer {
         }
       }
 
-      @include breakpoint("mobile-extra-large", min-width) {
+      @include viewport.from(sm) {
         gap: 0 1em;
         padding: 1em;
         border-left: 1px solid var(--primary-low);
@@ -128,7 +128,7 @@ div.poll-outer {
         width: 100%;
         gap: 0.25em 0;
 
-        @include breakpoint("mobile-extra-large", min-width) {
+        @include viewport.from(sm) {
           justify-content: center;
         }
 
@@ -155,7 +155,7 @@ div.poll-outer {
             }
           }
 
-          @include breakpoint("mobile-extra-large", min-width) {
+          @include viewport.from(sm) {
             &:not(:last-child) {
               margin-bottom: 0.25em;
             }
@@ -188,7 +188,7 @@ div.poll-outer {
           }
         }
 
-        @include breakpoint("mobile-extra-large", min-width) {
+        @include viewport.from(sm) {
           + .poll-info_instructions:not(:empty) {
             margin-top: 1.25em;
           }
@@ -206,7 +206,7 @@ div.poll-outer {
           display: none;
         }
 
-        @include breakpoint("mobile-extra-large", min-width) {
+        @include viewport.from(sm) {
           padding-top: 1.25em;
 
           &:not(:empty) {
@@ -232,7 +232,7 @@ div.poll-outer {
             margin-bottom: 0.5em;
           }
 
-          @include breakpoint("mobile-extra-large", min-width) {
+          @include viewport.from(sm) {
             &:not(:last-child) {
               margin-bottom: 1em;
             }
@@ -267,7 +267,7 @@ div.poll-outer {
         display: block;
       }
 
-      @include breakpoint("mobile-extra-large", min-width) {
+      @include viewport.from(sm) {
         .info-label {
           font-size: var(--font-up-2);
         }

@@ -250,7 +250,7 @@ table.screened-ip-addresses {
   td.ip_address {
     word-wrap: break-word;
 
-    @include breakpoint(tablet, min-width) {
+    @include viewport.from(md) {
       max-width: 20vw;
     }
   }

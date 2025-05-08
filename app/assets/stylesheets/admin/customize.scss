@@ -577,7 +577,7 @@
     .setting-label {
       word-wrap: break-word;
 
-      @include breakpoint(tablet, min-width) {
+      @include viewport.from(md) {
         width: 25%;
       }
 

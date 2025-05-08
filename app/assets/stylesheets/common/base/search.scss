@@ -233,7 +233,7 @@
         margin-top: 1em;
       }
 
-      @include breakpoint(mobile-extra-large, min-width) {
+      @include viewport.from(sm) {
         .search-advanced-options {
           column-count: 2;
           column-gap: 2em;
@@ -244,7 +244,7 @@
         }
       }
 
-      @include breakpoint(medium, min-width) {
+      @include viewport.from(lg) {
         .search-advanced-options {
           column-gap: 5em;
         }
