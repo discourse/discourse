@@ -126,6 +126,14 @@ describe ChatSDK::Thread do
       end
     end
 
+    context "when page_size is too large" do
+      it "fails" do
+        expect { described_class.messages(**params, page_size: 9999) }.to raise_error(
+          "Page size must be less than or equal to 50",
+        )
+      end
+    end
+
     context "when target_message doesn’t exist" do
       it "fails" do
         expect { described_class.messages(**params, target_message_id: -999) }.to raise_error(
