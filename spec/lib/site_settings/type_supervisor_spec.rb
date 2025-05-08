@@ -361,10 +361,9 @@ RSpec.describe SiteSettings::TypeSupervisor do
       end
 
       it "returns value for the given objects schema string setting" do
-        expect(settings.type_supervisor.to_db_value(:type_objects, "[]")).to eq [
-             "[]",
-             SiteSetting.types[:objects],
-           ]
+        expect(
+          settings.type_supervisor.to_db_value(:type_objects, "[{\"name\":\"Brett\"}]"),
+        ).to eq ["[{\"name\":\"Brett\"}]", SiteSetting.types[:objects]]
       end
     end
 
