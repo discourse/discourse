@@ -3,6 +3,9 @@ import "core-js/actual/url";
 import patch from "./text-decoder-shim";
 patch();
 
+import getRandomValues from "polyfill-crypto.getrandomvalues";
+globalThis.crypto = { getRandomValues };
+
 import { rollup } from "@rollup/browser";
 
 const CONSOLE_PREFIX = "[DiscourseJsProcessor] ";
@@ -21,13 +24,6 @@ globalThis.console = {
   error(...args) {
     globalThis.rails?.logger.error(CONSOLE_PREFIX + args.join(" "));
     oldConsole.error(...args);
-  },
-};
-
-globalThis.crypto = {
-  getRandomValues() {
-    // todo... not much random going on here
-    console.log("getRandomValues");
   },
 };
 
