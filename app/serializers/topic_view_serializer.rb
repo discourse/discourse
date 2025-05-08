@@ -78,6 +78,7 @@ class TopicViewSerializer < ApplicationSerializer
     :user_last_posted_at,
     :is_shared_draft,
     :slow_mode_enabled_until,
+    :has_localized_content,
   )
 
   has_one :details, serializer: TopicViewDetailsSerializer, root: false, embed: :objects
@@ -320,7 +321,22 @@ class TopicViewSerializer < ApplicationSerializer
 
   def fancy_title
     f = object.topic.fancy_title
-    modified = DiscoursePluginRegistry.apply_modifier(:topic_view_serializer_fancy_title, f, self)
-    modified || f
+
+    if ContentLocalization.show_translated_topic?(object.topic, scope)
+      object.topic.get_localization&.fancy_title.presence || f
+    else
+      f
+    end
+  end
+
+  def has_localized_content
+    topic_has_localization = !object.topic.in_user_locale? && object.topic.has_localization?
+    return true if topic_has_localization
+
+    object.posts.any? { |post| !post.in_user_locale? && post.has_localization? }
+  end
+
+  def include_has_localized_content?
+    SiteSetting.experimental_content_localization
   end
 end

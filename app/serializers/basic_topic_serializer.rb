@@ -6,7 +6,11 @@ class BasicTopicSerializer < ApplicationSerializer
 
   def fancy_title
     f = object.fancy_title
-    modified = DiscoursePluginRegistry.apply_modifier(:topic_serializer_fancy_title, f, self)
-    modified || f
+
+    if (ContentLocalization.show_translated_topic?(object, scope))
+      object.get_localization&.fancy_title.presence || f
+    else
+      f
+    end
   end
 end
