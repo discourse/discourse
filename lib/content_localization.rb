@@ -14,7 +14,16 @@ class ContentLocalization
   # @param post [Post] The post object
   # @return [Boolean]
   def self.show_translated_post?(post, scope)
-    SiteSetting.experimental_content_localization && post.locale.present? &&
+    SiteSetting.experimental_content_localization && post.raw.present? && post.locale.present? &&
       !post.in_user_locale? && !show_original?(scope)
+  end
+
+  # This method returns true when we should try to show the translated topic.
+  # @param scope [Object] The serializer scope from which the method is called
+  # @param topic [Topic] The topic record
+  # @return [Boolean]
+  def self.show_translated_topic?(topic, scope)
+    SiteSetting.experimental_content_localization && topic.locale.present? &&
+      !topic.in_user_locale? && !show_original?(scope)
   end
 end
