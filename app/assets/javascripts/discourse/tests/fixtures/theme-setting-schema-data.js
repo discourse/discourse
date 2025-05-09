@@ -1,8 +1,9 @@
 import ThemeSettings from "admin/models/theme-settings";
 import SiteSetting from "admin/models/site-setting";
-import  {
-  SCHEMA_MODES,
-} from "admin/components/schema-theme-setting/editor";
+export const SCHEMA_MODES = {
+  THEME: "theme",
+  PLUGIN: "plugin",
+};
 export default function schemaAndData(version = 1, mode = SCHEMA_MODES.THEME) {
   let schema, data;
 

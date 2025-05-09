@@ -1,13 +1,13 @@
 import { click, fillIn, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import schemaAndData from "discourse/tests/fixtures/theme-setting-schema-data";
+import schemaAndData, {
+  SCHEMA_MODES,
+} from "discourse/tests/fixtures/theme-setting-schema-data";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
-import AdminSchemaThemeSettingEditor, {
-  SCHEMA_MODES,
-} from "admin/components/schema-theme-setting/editor";
+import AdminSchemaThemeSettingEditor from "admin/components/schema-theme-setting/editor";
 import SiteSetting from "admin/models/site-setting";
 import ThemeSettings from "admin/models/theme-settings";
 
@@ -94,7 +94,12 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+          <AdminSchemaThemeSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
         </template>
       );
 
@@ -110,7 +115,12 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+          <AdminSchemaThemeSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
         </template>
       );
 
@@ -155,7 +165,12 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+          <AdminSchemaThemeSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
         </template>
       );
 
@@ -247,7 +262,12 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+          <AdminSchemaThemeSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
         </template>
       );
 
@@ -284,7 +304,12 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+          <AdminSchemaThemeSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
         </template>
       );
 
@@ -313,7 +338,12 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+          <AdminSchemaThemeSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
         </template>
       );
 
@@ -375,7 +405,12 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+          <AdminSchemaThemeSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
         </template>
       );
 
@@ -399,7 +434,12 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+          <AdminSchemaThemeSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
         </template>
       );
 
@@ -469,7 +509,12 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+          <AdminSchemaThemeSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
         </template>
       );
 
@@ -525,7 +570,12 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+          <AdminSchemaThemeSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
         </template>
       );
 
@@ -593,7 +643,12 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+          <AdminSchemaThemeSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
         </template>
       );
 
@@ -640,7 +695,12 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+          <AdminSchemaThemeSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
         </template>
       );
 
@@ -698,7 +758,12 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+          <AdminSchemaThemeSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
         </template>
       );
 
@@ -763,7 +828,12 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+          <AdminSchemaThemeSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
         </template>
       );
 
@@ -842,7 +912,12 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+          <AdminSchemaThemeSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
         </template>
       );
 
@@ -905,7 +980,12 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+          <AdminSchemaThemeSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
         </template>
       );
 
@@ -963,7 +1043,12 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+          <AdminSchemaThemeSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
         </template>
       );
 
@@ -1059,7 +1144,12 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+          <AdminSchemaThemeSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
         </template>
       );
 
@@ -1167,7 +1257,12 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+          <AdminSchemaThemeSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
         </template>
       );
 
@@ -1190,7 +1285,12 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+          <AdminSchemaThemeSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
         </template>
       );
 
@@ -1226,7 +1326,12 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+          <AdminSchemaThemeSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
         </template>
       );
 
@@ -1302,7 +1407,12 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+          <AdminSchemaThemeSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
         </template>
       );
 
@@ -1323,7 +1433,12 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+          <AdminSchemaThemeSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
         </template>
       );
 
@@ -1384,7 +1499,12 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+          <AdminSchemaThemeSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
         </template>
       );
 
@@ -1406,7 +1526,12 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+          <AdminSchemaThemeSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
         </template>
       );
 
@@ -1435,7 +1560,12 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+          <AdminSchemaThemeSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
         </template>
       );
 
@@ -1461,7 +1591,12 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+          <AdminSchemaThemeSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
         </template>
       );
 
@@ -1485,7 +1620,12 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+          <AdminSchemaThemeSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
         </template>
       );
 
@@ -1522,7 +1662,12 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+          <AdminSchemaThemeSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
         </template>
       );
 
@@ -1589,9 +1734,10 @@ module(
       await render(
         <template>
           <AdminSchemaThemeSettingEditor
-            @pluginId="1"
+            @id="1"
             @setting={{setting}}
-            @schemaMode={{SCHEMA_MODES.PLUGIN}}
+            @schema={{setting.schema}}
+            @routeToRedirect="adminPlugins.show.settings"
           />
         </template>
       );
@@ -1627,9 +1773,10 @@ module(
       await render(
         <template>
           <AdminSchemaThemeSettingEditor
-            @pluginId="1"
+            @id="1"
             @setting={{setting}}
-            @schemaMode={{SCHEMA_MODES.PLUGIN}}
+            @schema={{setting.schema}}
+            @routeToRedirect="adminPlugins.show.settings"
           />
         </template>
       );
@@ -1680,9 +1827,10 @@ module(
       await render(
         <template>
           <AdminSchemaThemeSettingEditor
-            @pluginId="1"
+            @id="1"
             @setting={{setting}}
-            @schemaMode={{SCHEMA_MODES.PLUGIN}}
+            @schema={{setting.schema}}
+            @routeToRedirect="adminPlugins.show.settings"
           />
         </template>
       );
@@ -1728,9 +1876,10 @@ module(
       await render(
         <template>
           <AdminSchemaThemeSettingEditor
-            @pluginId="1"
+            @id="1"
             @setting={{setting}}
-            @schemaMode={{SCHEMA_MODES.PLUGIN}}
+            @schema={{setting.schema}}
+            @routeToRedirect="adminPlugins.show.settings"
           />
         </template>
       );
@@ -1763,9 +1912,10 @@ module(
       await render(
         <template>
           <AdminSchemaThemeSettingEditor
-            @pluginId="1"
+            @id="1"
             @setting={{setting}}
-            @schemaMode={{SCHEMA_MODES.PLUGIN}}
+            @schema={{setting.schema}}
+            @routeToRedirect="adminPlugins.show.settings"
           />
         </template>
       );
@@ -1804,9 +1954,10 @@ module(
       await render(
         <template>
           <AdminSchemaThemeSettingEditor
-            @pluginId="1"
+            @id="1"
             @setting={{setting}}
-            @schemaMode={{SCHEMA_MODES.PLUGIN}}
+            @schema={{setting.schema}}
+            @routeToRedirect="adminPlugins.show.settings"
           />
         </template>
       );
@@ -1877,9 +2028,10 @@ module(
       await render(
         <template>
           <AdminSchemaThemeSettingEditor
-            @pluginId="1"
+            @id="1"
             @setting={{setting}}
-            @schemaMode={{SCHEMA_MODES.PLUGIN}}
+            @schema={{setting.schema}}
+            @routeToRedirect="adminPlugins.show.settings"
           />
         </template>
       );
@@ -1976,9 +2128,10 @@ module(
       await render(
         <template>
           <AdminSchemaThemeSettingEditor
-            @pluginId="1"
+            @id="1"
             @setting={{setting}}
-            @schemaMode={{SCHEMA_MODES.PLUGIN}}
+            @schema={{setting.schema}}
+            @routeToRedirect="adminPlugins.show.settings"
           />
         </template>
       );
@@ -2041,13 +2194,14 @@ module(
     });
 
     test("allows navigating through multiple levels of nesting", async function (assert) {
-      const setting = schemaAndData(1, SCHEMA_MODES.PLUGIN);
+      const setting = schemaAndData(1, SCHEMA_MODES.PLUG);
       await render(
         <template>
           <AdminSchemaThemeSettingEditor
-            @pluginId="1"
+            @id="1"
             @setting={{setting}}
-            @schemaMode={{SCHEMA_MODES.PLUGIN}}
+            @schema={{setting.schema}}
+            @routeToRedirect="adminPlugins.show.settings"
           />
         </template>
       );
