@@ -997,6 +997,9 @@ groups:
   max_automatic_membership_email_domains:
     default: 50
     hidden: true
+  show_additional_about_groups:
+    default: false
+    hidden: true
 
 posting:
   min_post_length:
