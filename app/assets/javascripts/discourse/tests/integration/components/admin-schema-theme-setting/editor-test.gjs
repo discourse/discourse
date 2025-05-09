@@ -2194,7 +2194,7 @@ module(
     });
 
     test("allows navigating through multiple levels of nesting", async function (assert) {
-      const setting = schemaAndData(1, SCHEMA_MODES.PLUG);
+      const setting = schemaAndData(1, SCHEMA_MODES.PLUGIN);
       await render(
         <template>
           <AdminSchemaThemeSettingEditor
