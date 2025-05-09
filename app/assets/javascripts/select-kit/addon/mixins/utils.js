@@ -4,25 +4,25 @@ import Mixin from "@ember/object/mixin";
 export default Mixin.create({
   defaultItem(value, name) {
     if (this.selectKit.valueProperty) {
-      const item = {};
-      item[this.selectKit.valueProperty] = value;
-      item[this.selectKit.nameProperty] = name;
-      return item;
-    } else {
-      return name || value;
+      return {
+        [this.selectKit.valueProperty]: value,
+        [this.selectKit.nameProperty]: name,
+      };
     }
+    return name || value;
   },
 
   itemForValue(value, content) {
     if (this.selectKit.valueProperty) {
       return content.findBy(this.selectKit.valueProperty, value);
-    } else {
-      return value;
     }
+    return value;
   },
 
   getProperty(item, property, options = { definedOnly: true }) {
-    const { definedOnly } = options;
+    if (!item) {
+      return null;
+    }
 
     if (item && typeof property === "string") {
       const attempt = get(item, property);
@@ -32,20 +32,13 @@ export default Mixin.create({
     }
 
     property = get(this.selectKit, property);
-
-    if (!item) {
-      return null;
+    if (!property) {
+      return options.definedOnly ? null : item;
     }
-
-    if (!property && definedOnly) {
-      return null;
-    } else if (!property) {
-      return item;
-    } else if (typeof property === "string") {
+    if (typeof property === "string") {
       return get(item, property);
-    } else {
-      return property(item);
     }
+    return property(item);
   },
 
   getValue(item) {
@@ -66,18 +59,17 @@ export default Mixin.create({
 
   _findInContent(content, item, type, getter) {
     const property = get(this.selectKit, type);
-
     if (!property) {
-      if (content.includes(item)) {
-        return item;
-      }
-    } else if (typeof property === "string") {
-      return content.findBy(property, this[getter](item));
-    } else {
-      const name = this[getter](item);
-      return content.find((contentItem) => {
-        return this[getter](contentItem) === name;
-      });
+      return content.includes(item) ? item : undefined;
     }
+
+    if (typeof property === "string") {
+      return content.findBy(property, this[getter](item));
+    }
+
+    const name = this[getter](item);
+    return content.find((contentItem) => {
+      return this[getter](contentItem) === name;
+    });
   },
 });
