@@ -86,7 +86,7 @@ class DecorateHtmlHelper {
       return;
     }
 
-    if (!hasInternalComponentManager(component)) {
+    if (component.name === "factory") {
       deprecated(
         "Invalid `component` passed to `helper.renderGlimmer` while using `api.decorateCookedElement` with the Glimmer Post Stream. `component` must be a valid Glimmer component. If using a template compiled via ember-cli-htmlbars, replace it with the `<template>...</template>` syntax. This call has been ignored to prevent errors.",
         POST_STREAM_DEPRECATION_OPTIONS
