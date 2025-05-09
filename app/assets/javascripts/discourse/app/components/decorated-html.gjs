@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { hasInternalComponentManager } from "@glimmer/manager";
 import { untrack } from "@glimmer/validator";
 import { htmlSafe, isHTMLSafe } from "@ember/template";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
