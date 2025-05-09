@@ -50,30 +50,26 @@ export default class BaseCustomSidebarPanel {
     return false;
   }
 
-  /**
-   * @returns {boolean} Controls whether the filter is shown
-   */
-  get filterable() {
-    return false;
-  }
-
   get expandActiveSection() {
     return false;
   }
 
-  get scrollActiveLinkIntoView() {
+  /**
+   * @returns {boolean} Controls whether the search is shown
+   */
+  get searchable() {
     return false;
   }
 
   /**
-   * @param {string} filter filter applied
-   *
-   * @returns {string | SafeString} Description displayed when the applied filter has no results.
-   * Use `htmlSafe` from `from "@ember/template` to use HTML strings.
+   * @returns {Function} Action when search input is clicked.
    */
-  // eslint-disable-next-line no-unused-vars
-  filterNoResultsDescription(filter) {
+  onSearchClick() {
     return null;
+  }
+
+  get scrollActiveLinkIntoView() {
+    return false;
   }
 
   #notImplemented() {

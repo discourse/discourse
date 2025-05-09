@@ -316,6 +316,7 @@ hu:
     site_settings:
       invalid_site_setting: "Nem létezik „%{name}” nevű beállítás"
       invalid_category_id: "Olyan kategóriát adott meg, amely nem létezik"
+      site_settings_are_deprecated: "A következő beállítások elavultak: %{old_names}. Használja helyette a %{new_names}"
       site_settings_are_hidden: "Nem módosíthatja a rejtett beállításokat: %{setting_names}"
       site_settings_are_shadowed_globally: "Ezeket a beállításokat nem módosíthatja, mert globálisan vannak konfigurálva: %{setting_names}"
       site_settings_are_unconfigurable: "Nem módosíthatja a nem konfigurálható beállításokat: %{setting_names}"
@@ -342,6 +343,7 @@ hu:
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Nem lehet letiltani a szalagkép metaadatait, ha a composer médiaoptimalizáló kép engedélyezve van. Kapcsolja ki ezt az opciót, mielőtt letiltaná a szalagkép metaadatokat."
       x_summary_large_image_no_svg: "A twitter:image metaadatokhoz használt Twitter összefoglaló képek nem lehetnek .svg képek."
       tl0_and_anonymous_flag: "A névtelen felhasználók számára meg kell adni a „webhely kapcsolatfelvételi e-mail-címét” vagy „az illegális tartalom bejelentéséhez szükséges e-mail-címet”."
+      allow_likes_in_anonymous_mode_without_anonymous_mode_enabled: "Ehhez a beállításhoz először engedélyezni kell az 'anonim mód engedélyezése' beállítást."
     conflicting_google_user_id: 'A fiók Google-fiók azonosítója megváltozott; biztonsági okokból a személyzet beavatkozása szükséges. Kérjük, lépjen kapcsolatba a személyzettel, és mutassa meg nekik a következő címet: <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "Sajnos nem tudtunk előnézetet generálni ehhez a weboldalhoz, mert a (z) „%{hostname}” szerver nem található. Az előnézet helyett csak egy link jelenik meg a bejegyzésben. :cry:"
@@ -576,6 +578,7 @@ hu:
         one: "'%{username}' már tagja ennek a csoportnak."
         other: "A következő felhasználók már tagjai ennek a csoportnak: %{username}"
       invalid_domain: "A(z) „%{domain}” nem érvényes domain."
+      too_many_domains: "Túl sok domain. Maximum %{max}."
       invalid_incoming_email: "A(z) „%{email}” nem érvényes e-mail cím."
       email_already_used_in_group: "A(z) „%{email}” címet már használja a(z) „%{group_name}” csoport."
       email_already_used_in_category: "A(z) „%{email}” címet már használja a(z) „%{category_name}” kategória."
@@ -585,6 +588,9 @@ hu:
         one: "Egyszerre legfeljebb %{count} felhasználót adhat hozzá"
         other: "Egyszerre legfeljebb %{count} felhasználót adhat hozzá"
       usernames_or_emails_required: "Felhasználónév vagy e-mail cím nem található"
+      counting_too_many_email_domains:
+        one: "Egyszerre legfeljebb %{count} e-mail tartományt lehet számolni."
+        other: "Egyszerre legfeljebb %{count} e-mail tartományt lehet számolni."
       no_invites_with_discourse_connect: "Csak regisztrált felhasználókat hívhat meg, ha a DiscourseConnect engedélyezve van"
       no_invites_without_local_logins: "Csak regisztrált felhasználókat hívhat meg, ha a helyi bejelentkezés le van tiltva"
     default_names:
@@ -1774,7 +1780,6 @@ hu:
     pending_users_reminder_delay_minutes: "Értesítse a moderátorokat, ha az új felhasználók ennél több perce várnak jóváhagyásra. Állítsa -1-re az értesítések kikapcsolásához."
     persistent_sessions: "A felhasználók bejelentkezve maradnak a böngésző bezárásakor"
     maximum_session_age: "A felhasználó bejelentkezve marad n órán keresztül az utolsó látogatása óta"
-    full_page_login: "Jelenítse meg a bejelentkezési és regisztrációs űrlapokat egy teljes oldalon (ha nincs bejelölve, a felhasználók modálisan látják az űrlapokat). "
     show_signup_form_email_instructions: Jelenítse meg az e-mailes utasításokat a regisztrációs űrlapon.
     show_signup_form_username_instructions: A felhasználónévre vonatkozó utasítások megjelenítése a regisztrációs űrlapon.
     show_signup_form_full_name_instructions: Mutassa meg a teljes névre vonatkozó utasításokat a regisztrációs űrlapon.
@@ -2233,6 +2238,7 @@ hu:
     enable_category_group_moderation: "Csoportok számára engedélyezi a tartalom moderálását specifikus kategóriákban"
     group_in_subject: "Állítsa be az e-mail tárgyában a %%{optional_pm} értéket a privát üzenetben szereplő első csoport nevére, lásd: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Standard e-mailek tárgyformátumának testreszabása</a>"
     allow_anonymous_mode: "Engedélyezze a felhasználók számára, hogy névtelen módra váltsanak a közzétételhez. Ha aktiválva van, a felhasználók eldönthetik, hogy személyazonosságukat elrejtse, amikor bejegyzéseket vagy témákat hoznak létre a webhelyen. Lásd még: \"névtelen kedvelések engedélyezése\"."
+    allow_likes_in_anonymous_mode: "Engedélyezze ezt a beállítást, hogy az oldalát névtelenül böngésző felhasználók is lájkolhassák a bejegyzéseket. Ha aktiválva van, a felhasználók dönthetnek úgy, hogy a bejegyzések vagy témák lájkolásakor az egész webhelyen elrejtik a személyazonosságukat. Lásd még `allow_anonymous_mode`."
     anonymous_posting_min_trust_level: "Minimális bizalmi szint a névtelen bejegyzés engedélyezéséhez."
     anonymous_posting_allowed_groups: "Csoportok, amelyek engedélyezik a névtelen bejegyzést"
     anonymous_account_duration_minutes: "Az anonimitás védelme érdekében N percenként új névtelen fiókot hoz létre minden felhasználó számára. Példa: ha 600-ra van állítva, amint 600 perc eltelik az utolsó bejegyzés óta ÉS a felhasználó névtelen módra vált, egy új névtelen fiók jön létre."
@@ -2282,6 +2288,7 @@ hu:
     auto_handle_queued_age: "Az ennyi nap után automatikusan kezeli a felülvizsgálatra váró bejegyzéseket. A jelzéseket figyelmen kívül hagyja. A sorban álló bejegyzések és felhasználók elutasításra kerülnek. Állítsa 0-ra a funkció kikapcsolásához."
     penalty_step_hours: "Alapértelmezett büntetések órában a felhasználók elnémításához vagy felfüggesztéséhez. Az első vétség alapértelmezetten az első értéket, a második vétség a második értéket veszi fel, és így tovább."
     penalty_include_post_message: "A sértő üzenet automatikus felvétele az e-mail üzenetsablonba, amikor elhallgattat vagy felfüggeszt egy felhasználót"
+    svg_icon_subset: "Adjon hozzá további FontAwesome ikonokat, amelyeket szeretne az eszközeibe beépíteni. Használja a no prefixet az egyszínű ikonokhoz, a 'far-' előtagot a normál ikonokhoz és a 'fab-' előtagot a márkaikonokhoz."
     max_prints_per_hour_per_user: "/print oldalmegjelenítések maximális száma (állítsa 0-ra a nyomtatás letiltásához)"
     full_name_requirement: "Állítsa be, hogy a teljes név mező kötelező, opcionális, vagy opcionális de rejtett mező legyen a regisztrációs űrlapon."
     interface_color_selector: "Konfigurálja, hogy hol érhető el az interfész színének világos/sötét módválasztója."
@@ -2452,16 +2459,15 @@ hu:
     suggest_weekends_in_date_pickers: "Tartalmazza a hétvégéket (szombat és vasárnap) a dátumválasztó javaslatai között (tiltsa le ezt, ha a Discourse-t csak hétköznap, hétfőtől péntekig használja)."
     show_bottom_topic_map: "Megjeleníti a téma térképét a téma alján, ha az legalább 10 választ tartalmaz."
     show_topic_map_in_topics_without_replies: "Megjeleníti a téma térképét akkor is, ha a témában nincsenek válaszok."
+    enable_welcome_banner: "Egy banner megjelenítése a fő témalistás oldalakon, hogy üdvözölje a tagokat, és lehetővé tegye számukra a webhely tartalmának keresését."
     splash_screen: "Ideiglenes betöltési képernyőt jelenít meg, amíg az oldal eszközei betöltődnek."
     navigation_menu: "Adja meg, hogy az oldalsáv vagy a fejléc legördülő menüje legyen az oldal fő navigációs menüje. Az oldalsáv ajánlott."
     default_navigation_menu_categories: "A kiválasztott kategóriák alapértelmezetten megjelennek a Navigációs Menü Kategóriák szekciójában."
     default_navigation_menu_tags: "A kiválasztott címkék alapértelmezetten megjelennek a Navigációs Menü Címkék szekciójában."
     experimental_new_new_view_groups: 'Engedélyezzen egy új témalistát, amely egyesíti az olvasatlan és új témákat, és az oldalsávon lévő "Minden" hivatkozást jelölje be.'
-    glimmer_topic_list_mode: "Szabályozza, hogy használatba kerül-e az új „glimmer” témalistamegvalósítás. Az „auto” beállítás automatikusan engedélyezi, amint az összes témája és bővítménye készen áll. További információért lásd a <a href='https://meta.discourse.org/t/343404'>Meta bejegyzést</a>."
-    glimmer_post_menu_mode: "Szabályozhatja, hogy a rendszer használja-e az új „ragyogó” bejegyzés menü megvalósítását. Az „auto” automatikusan bekapcsol, amint minden témája és bővítménye készen áll. Ez a megvalósítás aktív fejlesztés alatt áll, és nem éles használatra készült. Ne fejlesszen hozzá témákat/bővítményeket, amíg a megvalósítást nem véglegesítik és be nem jelentik."
-    glimmer_post_menu_groups: "Engedélyezze az új „ragyogó” bejegyzés menü megvalósítását „auto” módban a megadott felhasználói csoportok számára. Ez a megvalósítás aktív fejlesztés alatt áll, és nem alkalmas éles használatra. Ne fejlesszen hozzá témákat/bővítményeket, amíg a megvalósítást nem véglegesítik és be nem jelentik."
-    glimmer_post_stream_mode_auto_groups: "Engedélyezze az új „ragyogó” bejegyzés menü megvalósítását „auto” módban a megadott felhasználói csoportok számára. Ez a megvalósítás aktív fejlesztés alatt áll, és nem alkalmas éles használatra. Ne fejlesszen hozzá témákat/bővítményeket, amíg a megvalósítást nem véglegesítik és be nem jelentik."
+    glimmer_post_stream_mode: "Szabályozhatja, hogy a rendszer használja-e az új „csillogó” post-stream megvalósítást. Az „auto” automatikusan bekapcsol, amint minden témája és bővítménye készen áll. Ez a megvalósítás aktív fejlesztés alatt áll, és nem termelési használatra készült. Ne dolgozzon ellene témákat/bővítményeket, amíg a megvalósítást nem véglegesítik és be nem jelentik."
     experimental_form_templates: "Engedélyezze az űrlapsablonok funkciót. A sablonokat a következő helyen kezelheti: <a href='%{base_path}/admin/customize/form-templates'>Testreszabás / Sablonok</a>."
+    show_preview_for_form_templates: "Az űrlapsablonok előnézetének engedélyezése"
     lazy_load_categories_groups: "Lusta betöltés alkalmazása a kategória információkra a kiválasztott csoportok felhasználói számára. Ez javítja a teljesítményt olyan webhelyeken, ahol sok kategória van."
     experimental_auto_grid_images: "Automatikusan [grid] címkékbe csomagolja a képeket, ha 3 vagy több képet töltöttek fel a komponálóba."
     page_loading_indicator: "A Discourse-on belüli oldalnavigációk során megjelenő betöltési jelző konfigurálása. A 'Spinner' egy teljes oldalas jelző. A 'Slider' egy keskeny sávot jelenít meg a képernyő tetején."
@@ -2469,6 +2475,7 @@ hu:
     about_page_hidden_groups: "Ne jelenítse meg bizonyos csoportok tagjait a /about oldalon."
     adobe_analytics_tags_url: "Adobe Analytics címkék URL-je (`https://assets.adobedtm.com/...`)"
     view_raw_email_allowed_groups: "Csoportok, amelyek megtekinthetik egy bejegyzés nyers e-mail tartalmát, ha azt bejövő e-mailből hozták létre. Ez magában foglalja az e-mail fejléceket és egyéb technikai információkat."
+    experimental_content_localization: "Lokalizált tartalmakat jelenít meg a felhasználók számára a nyelvi beállításaik alapján. Ilyen tartalom lehetnek a kategóriák, címkék, bejegyzések és témák. Ezt a funkciót jelenleg nagy erőkkel fejlesztjük."
     errors:
       invalid_css_color: "Érvénytelen szín. Adjon meg egy színnevet vagy hexaértéket."
       invalid_email: "Érvénytelen e-mail cím."
@@ -2776,6 +2783,7 @@ hu:
       inactive_user: "Inaktív felhasználó"
       reviewable_reject_auto: "Automatikusan kezeli a sorba állított felülvizsgálati elemeket"
       reviewable_reject: "Felülvizsgált felhasználó elutasítva"
+      reviewable_details_scrubbed: "A felhasználó adatait törölte: %{staff}\n\nIndok: %{reason}\n\nIdőbélyegző: %{timestamp}"
     email_in_spam_header: "A felhasználó első e-mailje spamként lett megjelölve"
     already_silenced: "A felhasználót már elhallgattatta %{staff}, %{time_ago}."
     already_suspended: "A felhasználót már felfüggesztette %{staff}, %{time_ago}."
@@ -2783,6 +2791,7 @@ hu:
       one: "A %{username} felhasználónak %{count} bejegyzése van nyilvános témában vagy személyes üzenetben, ezért nem törölhetők."
       other: "A %{username} felhasználónak %{count} bejegyzése van nyilvános témában vagy személyes üzenetben, ezért nem törölhetők."
     cannot_bulk_delete: "Egy vagy több felhasználót nem lehet törölni, mert adminisztrátorok, túl sok, vagy nagyon régi bejegyzésük van."
+    cannot_remove_all_auth: "Legalább egy társított fiókkal, jelszóval vagy passkey-el kell rendelkeznie."
   unsubscribe_mailer:
     title: "Leiratkozás a levelezőről"
     subject_template: "Erősítsd meg, hogy a továbbiakban nem szeretnél e-mailes frissítéseket kapni a %{site_title} oldalról."
@@ -3558,10 +3567,15 @@ hu:
     in_reply_to: "Válasz"
     reply_by_email: "[Látogasson el a témához](%{base_url}%{url}), vagy válaszoljon erre az e-mailre."
     reply_by_email_pm: "[Üzenet megtekintése](%{base_url}%{url}) vagy válaszoljon erre az e-mail-re, hogy reagáljon a résztvevő(k)nek %{participants}."
+    reply_by_email_button_only: "[Téma megtekintése] (%{base_url}%{url})"
+    reply_by_email_pm_button_only: "[Üzenet megtekintése](%{base_url}%{url})"
     only_reply_by_email: "Válaszolj erre az e-mailre a válaszadáshoz!"
     only_reply_by_email_pm: "Válaszolj erre az e-mailre, hogy válaszolj neki: %{participants}."
+    only_reply_by_email_pm_button_only: "[Üzenet megtekintése](%{base_url}%{url})"
     visit_link_to_respond: "[Látogasd meg a témát](%{base_url}%{url}) a válaszadáshoz."
     visit_link_to_respond_pm: "[Üzenet megtekintése](%{base_url}%{url}) hogy válaszoljon a résztvevő(k)nek %{participants}."
+    visit_link_to_respond_button_only: "[Téma megtekintése] (%{base_url}%{url})"
+    visit_link_to_respond_pm_button_only: "[Üzenet megtekintése](%{base_url}%{url})"
     reply_above_line: "## Kérjük, írja be válaszát e sor fölé. ##"
     posted_by: "Beküldte: %{username}, ekkor: %{post_date}"
     pm_participants: "Résztvevők: %{participants}"
@@ -3840,6 +3854,17 @@ hu:
         El lett némítva a fórumon.
 
         Indoklás - %{reason}
+    account_deleted:
+      title: "Fiók törölve"
+      subject_template: "[%{email_prefix}] A fiókját törölték"
+      text_body_template: |
+        Üdvözöljük!
+
+        Ez egy automatikus üzenet a [%{site_name}](%{base_url}) feladótól, amely tájékoztatja Önt, hogy az ehhez az e-mail címhez tartozó felhasználói fiókot egy munkatárs törölte.
+
+        %{flag_reason}
+
+        Kérjük, tekintse át [közösségi irányelveinket] (%{base_url}/útmutatóinkat) a részletekért.
     account_exists:
       title: "A fiók már létezik"
       subject_template: "[%{email_prefix}] A fiók már létezik"
@@ -5008,6 +5033,7 @@ hu:
       revoked: Visszavonva
       restored: Visszaállított
     bulk_user_delete: "tömeges törlési művelettel törölve"
+    cli_bulk_post_delete: "Tömegesen törölve a rake feladatból"
   reviewables:
     already_handled: "Köszönjük, de már átnéztük ezt a bejegyzést, és úgy döntöttünk, hogy nem kell újra megjelölni."
     already_handled_and_user_not_exist: "Köszönjük, de valaki már felülvizsgálta, és ez a felhasználó már nem létezik."
@@ -5031,6 +5057,9 @@ hu:
       new_topics_unless_trust_level: "Az alacsony bizalmi szintű felhasználóknak rendelkezniük kell a stábtagok által jóváhagyott témákkal. Lásd: %{link}."
       fast_typer: "Új felhasználó gyanúsan gyorsan írta meg első bejegyzését, feltételezhetően bot vagy spammer. Lásd: %{link}."
       auto_silence_regex: "Új felhasználó, akinek az első bejegyzése megfelel a %{link} beállításnak."
+      watched_word:
+        one: "Ez a bejegyzés tartalmaz egy Figyelt szó, a megjelölt szó: %{words}. További információkért nézze meg a %{link} oldalt."
+        other: "Ez a bejegyzés tartalmaz több Figyelt szó, a megjelölt szavak: %{words}. További információkért nézze meg a %{link} oldalt."
       staged: "Az átmeneti felhasználók új témáit és bejegyzéseit a stábtagoknak jóvá kell hagynia. Lásd %{link}."
       category: "Az ebbe a kategóriába tartozó bejegyzésekhez egy stábtag kézi jóváhagyása szükséges. Lásd a %{link}."
       must_approve_users: "Minden új felhasználót jóvá kell hagynia egy stábtagnak. Lásd: %{link}."
@@ -5041,31 +5070,41 @@ hu:
       contains_media: "Ez a bejegyzés beágyazott médiát tartalmaz. Lásd: %{link}."
       queued_by_staff: "Egy stábtag úgy gondolja, hogy ezt a bejegyzést felül kell vizsgálni. Addig rejtve marad."
       links:
+        watched_word: figyelt szóbeállítások
         category: kategória beállítások
+      no_context:
+        watched_word: "Ez a bejegyzés egy Figyelt szót tartalmazott. További információért ellenőrizze a(z) %{link} oldalt."
     actions:
       agree:
         title: "Igen"
       agree_and_keep:
         title: "Bejegyzés megtartása"
         description: "Egyetértek a jelöléssel, de a bejegyzés változatlan marad."
+        complete: "A bejegyzés változatlan maradt."
       agree_and_keep_hidden:
         title: "Bejegyzés rejtve tartása"
         description: "Egyetértek a jelöléssel és a bejegyzés maradjon rejtve."
+        complete: "A bejegyzés rejtve marad."
       agree_and_suspend:
         title: "Felhasználó felfüggesztése"
         description: "Egyetértés a megjelöléssel, és a felhasználó felfüggesztése"
+        complete: "Felhasználó felfüggesztve."
       agree_and_silence:
         title: "Felhasználó némítása"
         description: "Egyetértés a megjelöléssel, és a felhasználó némítása"
+        complete: "Felhasználó elnémítva."
       agree_and_restore:
         title: "Bejegyzés visszaállítása"
         description: "A bejegyzés visszaállítása, hogy minden felhasználó láthassa."
+        complete: "A bejegyzés visszaállítva."
       agree_and_hide:
         title: "Bejegyzés elrejtése"
         description: "Egyetértek a jelöléssel, és elrejtem ezt a bejegyzést + automatikusan üzenetet küldök a felhasználónak, hogy szerkessze azt."
+        complete: "A bejegyzés elrejtve, a felhasználó értesítést kapott."
       agree_and_edit:
         title: "Elfogadás és bejegyzés szerkesztése"
         description: "Egyetértek a jelöléssel és szerkesztő megnyitása a bejegyzés szerkesztéséhez."
+        complete: "A megjelölést tudomásul vette, most már szerkesztheti a bejegyzést."
       delete_single:
         title: "Törlés"
         complete: "Bejegyzés törölve."
@@ -5079,6 +5118,7 @@ hu:
         title: "Megjelölés figyelmen kívül hagyása, bejegyzés és válaszok törlése"
         description: "Hagyja figyelmen kívül a megjelölést úgy, hogy eltávolítja a sorból, törölje a bejegyzést és az összes válaszát; ha az első hozzászólás, akkor töröld a témát is"
         confirm: "Biztos vagy benne, hogy törölni szeretnéd a hozzászólásra adott válaszokat is?"
+        complete: "A bejegyzés és a válaszok törölve."
       delete_and_agree:
         title: "Bejegyzés törlése"
         description: "Egyetértek a jelöléssel és bejegyzés törlése; ha ez az első hozzászólás, akkor töröld a témát is."
@@ -5087,16 +5127,20 @@ hu:
         title: "Bejegyzés és válaszok törlése"
         description: "Egyetértek a jelöléssek és bejegyzés törlése az össze válasszal; ha ez az első hozzászólás, akkor töröld a témát is."
         confirm: "Biztos vagy benne, hogy törölni szeretnéd a hozzászólásra adott válaszokat is?"
+        complete: "A bejegyzés és a válaszok törölve."
       disagree_and_restore:
         title: "Nem, bejegyzés visszaállítása"
         description: "A bejegyzés visszaállítása, hogy minden felhasználó láthassa."
+        complete: "A bejegyzés visszaállítva."
       disagree:
         title: "Nem"
         complete: "Megjelölés figyelmen kívül hagyva."
       discard_post:
         title: "Bejegyzés elvetése"
+        complete: "Bejegyzés elvetve."
       revise_and_reject_post:
         title: "Bejegyzés felülvizsgálata..."
+        complete: "A bejegyzés elutasítva, felülvizsgálatra vár."
       ignore:
         title: "Letiltás"
         complete: "Megjelölés figyelmen kívül hagyva."
@@ -5126,19 +5170,25 @@ hu:
         block:
           title: "Felhasználó törlése és blokkolása"
           description: "A felhasználót töröljük, IP-címét és e-mail címét pedig blokkoljuk."
+          complete: "Felhasználó törölve és letiltva."
       reject:
         title: "Elutasítás"
         bundle_title: "Elutasítás..."
       reject_and_suspend:
         title: "Felhasználó elutasítása és felfüggesztése"
+        complete: "A bejegyzés elutasítva, a felhasználó felfüggesztve."
       reject_and_silence:
         title: "Felhasználó elutasítása és elnémítása"
+        complete: "A bejegyzés elutasítva és a felhasználó elnémítva."
       reject_and_delete:
         title: "A bejegyzés elutasítása és törlése"
+        complete: "A bejegyzés elutasítva és törölve."
       reject_and_keep_deleted:
         title: "A bejegyzés maradjon törölve"
+        complete: "A bejegyzést elutasították és törölték."
       approve_and_restore:
         title: "Bejegyzés jóváhagyása és visszaállítása"
+        complete: "A bejegyzés jóváhagyva és visszaállítva."
       delete_user:
         reason: "Törölve az ellenőrzési soron keresztül"
         complete: "Felhasználó törölve."

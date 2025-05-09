@@ -1764,8 +1764,6 @@ ur:
       not_approved: "آپ کا اکاؤنٹ ابھی تک منظور نہیں کیا گیا ہے۔ جب آپ لاگ اِن کر سکیں گو اِی میل کے ذریعے آپ کو مطلع کر دیا جائے گا۔"
       google_oauth2:
         name: "گُوگَل"
-      twitter:
-        name: "Twitter"
       instagram:
         name: "اِنسٹاگرام"
       facebook:
@@ -2141,8 +2139,6 @@ ur:
       in_topics_posts: "تمام موضوعات اور پوسٹس میں"
       enter_hint: "یا انٹر دبائیں"
       in_posts_by: "%{username}کی طرف سے پوسٹس میں"
-      browser_tip: "%{modifier} + f"
-      browser_tip_description: "مقامی براؤزر کی تلاش کو دوبارہ استعمال کرنے کے لیے"
       recent: "حالیہ تلاشیں"
       clear_recent: "حالیہ تلاشیں صاف کریں"
       type:
@@ -2931,6 +2927,10 @@ ur:
       general: "عام"
       settings: "سیٹِنگ"
       tags: "ٹیگز"
+      localization:
+        name: "نام"
+        description: "تفصیل"
+        remove: "خارج کریں"
       tags_allowed_tags: "اس زُمرہ میں اِن ٹیگز کو محدود کریں:"
       tags_allowed_tag_groups: "اس زُمرہ میں اِن ٹیگ گروپس کو محدود کریں:"
       tags_placeholder: "(اختیاری) اجازت والے ٹیگز کی فہرست"
@@ -3620,7 +3620,7 @@ ur:
               content: "جائزہ لیں"
             invite:
               content: "دعوت دیں"
-      filter: "فِلٹر..."
+      search: "تلاش کریں"
       footer:
         interface_color_selector:
           light: "لائٹ"
@@ -3646,6 +3646,15 @@ ur:
       spreadsheet:
         show: "دکھائیں"
         about: "بارے میں"
+    discovery:
+      headings:
+        categories: "تمام زُمرَہ جات"
+        filter_labels:
+          latest: "تازہ ترین"
+          top: "سب سے اوپر"
+          new: "نئی"
+          unread: "بغیر پڑھے"
+          unseen: "ان دیکھا"
   admin_js:
     type_to_filter: "کو فلٹر کرنے کے لیے ٹائپ کریں…"
     settings: "ترتیبات"
@@ -3687,22 +3696,22 @@ ur:
           title: "فائلیں"
         legal:
           title: "قانونی"
-        branding:
-          title: "برانڈنگ"
+        logo_and_fonts:
           logo:
             form:
               mobile: "موبائل"
               email: "اِیمیل"
               manifest_screenshots:
                 description: "اسکرین شاٹس جو اس کے انسٹال پرامپٹ صفحہ پر آپ کی مثال کی خصوصیات اور فعالیت کو ظاہر کرتے ہیں۔ تمام تصاویر مقامی اپ لوڈز اور ایک جیسی ہونی چاہئیں۔"
+          fonts:
+            backfill_modal:
+              modal_yes: "جی ہاں"
         navigation:
           title: "نیویگیشن"
         notifications:
           title: "اطلاعات"
         onebox:
           title: "وَن باکس"
-        other:
-          title: "دیگر"
         search_everything:
           title: "تلاش کریں"
         security:
@@ -3738,6 +3747,8 @@ ur:
           sub_pages:
             templates:
               title: "ٹَیمپلیٹ"
+        email_logs:
+          sub_pages:
             sent:
               title: "بھیجا جا چکا"
             skipped:
@@ -4131,6 +4142,18 @@ ur:
             title: "تِھیمز"
           components:
             title: "اجزاء"
+            install: "انسٹال"
+            name: "نام"
+            enabled: "فعال؟"
+            by_author: "%{name} کی طرف سے"
+            learn_more: "مزید جانیں"
+            edit: "ترمیم کریں"
+            preview: "پیشگی دیکھیں"
+            export: "برآمد"
+            convert: "تبدیل کریں"
+            delete: "مٹائیں"
+            filter_by_all: "تمام"
+            delete_confirm: 'کیا آپ واقعی "%{name}" مٹانا چاہتے ہیں؟'
         user_fields:
           type: "قِسم"
           delete: "مٹائیں"
@@ -4266,6 +4289,7 @@ ur:
           extra_files_upload: "ان فائلوں کو دیکھنے کے لیے تھیم برآمد کریں۔"
           extra_files_remote: "ان فائلوں کو دیکھنے کے لیے تھیم ایکسپورٹ کریں یا گٹ ریپوزٹری کو چیک کریں۔"
           preview: "پیشگی دیکھیں"
+          default: "فعال"
           is_default: "تِھیم ڈیفالٹ کے طور پر فعال ہے"
           user_selectable: "صارفین تِھیم کو منتخب کرسکتے ہیں"
           auto_update: "ڈسکورس اپ ڈیٹ ہونے پر آٹو اپ ڈیٹ"
@@ -4338,8 +4362,6 @@ ur:
             error: "یہ تِھیم خود کار طریقے سے غیر فعال کر دی گئی ہے کیونکہ یہ ڈِسکورس کے اِس ورژن کیلئے ناموافق ہے۔"
             minimum: "ڈِسکورس ورژن %{version} یا اُس سے اوپر ضروری ہے۔"
             maximum: "ڈِسکورس ورژن %{version} یا اُس سے نیچے ضروری ہے۔"
-          update_to_latest: "تازہ ترین ورژن تک اِپ ڈَیٹ کریں"
-          check_for_updates: "اپ ڈیٹ کے لیے چیک کریں"
           up_to_date: "تِھیم اَپ ڈَیٹ ہے، آخری دفعہ چَیک کیا:"
           has_overwritten_history: "موجودہ تھیم ورژن اب موجود نہیں ہے کیونکہ گٹ ہسٹری کو زبردستی دھکا لگا کر اوور رائٹ کر دیا گیا ہے۔"
           add: "شامل کریں"

@@ -561,7 +561,7 @@ RSpec.describe UsernameChanger do
           it "replaces the username in quote tags when the post is deleted" do
             post =
               create_post_and_change_username(raw: raw) do |p|
-                PostDestroyer.new(Discourse.system_user, p).destroy
+                PostDestroyer.new(Discourse.system_user, p, context: "Automated testing").destroy
               end
 
             expect(post.raw).to eq(expected_raw)

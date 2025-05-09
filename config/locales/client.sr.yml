@@ -1607,6 +1607,8 @@ sr:
         fixed: "Učitaj stranicu"
     modal:
       close: "zatvori"
+    multi_select:
+      search: "Pretraži"
     form_kit:
       optional: opciono
       errors:
@@ -1705,8 +1707,6 @@ sr:
         name: "Google"
         title: "Prijavite se s Googleom"
         sr_title: "Prijavite se s Googleom"
-      twitter:
-        name: "Twitter"
       instagram:
         title: "Prijavite se s Instagramom"
         sr_title: "Prijavite se s Instagramom"
@@ -2178,6 +2178,10 @@ sr:
       view: "Prikaži Teme u Kategoriji"
       general: "Opšti"
       settings: "Podešavanje"
+      localization:
+        name: "Ime foruma"
+        description: "Opis"
+        remove: "Ukloni"
       tags_placeholder: "(Opciono) lista dozvoljenih oznaka"
       tag_groups_placeholder: "(Opciono) lista dozvoljenih tagova"
       required_tag_group:
@@ -2587,6 +2591,7 @@ sr:
             invite:
               content: "Pozovite"
               title: "Pozovi nove članove"
+      search: "Pretraži"
     form_templates:
       upload_field:
         upload: "Upload"
@@ -2604,6 +2609,14 @@ sr:
       spreadsheet:
         show: "Pokaži"
         about: "O nama"
+    discovery:
+      headings:
+        categories: "Sve kategorije"
+        filter_labels:
+          latest: "Poslednje"
+          top: "Top"
+          new: "Nova"
+          unread: "Nepročitano"
   admin_js:
     settings: "Podešavanja"
     admin:
@@ -2631,18 +2644,19 @@ sr:
           title: "Datoteke"
         legal:
           title: "Legalno"
-        branding:
+        logo_and_fonts:
           logo:
             form:
               email: "Email"
+          fonts:
+            backfill_modal:
+              modal_yes: "Da"
         navigation:
           title: "Navigacija"
         notifications:
           title: "Obaveštenja"
         onebox:
           title: "Onebox"
-        other:
-          title: "Ostalo"
         search_everything:
           title: "Pretraži"
         security:
@@ -2664,7 +2678,7 @@ sr:
           title: "Značke"
         emoji:
           title: "Emoji"
-        email:
+        email_logs:
           sub_pages:
             sent:
               title: "Poslato"
@@ -2844,6 +2858,15 @@ sr:
           delete: "Obriši"
         themes_and_components:
           breadcrumb_title: "Prilagođavanje"
+          components:
+            name: "Ime foruma"
+            enabled: "Omgućeno"
+            by_author: "Od %{name}"
+            learn_more: "Saznaj više"
+            edit: "Izmeni"
+            export: "Izvoz"
+            delete: "Obriši"
+            filter_by_all: "sve"
         user_fields:
           type: "Tip"
           delete: "Obriši"
@@ -2929,6 +2952,7 @@ sr:
           create_name: "Ime foruma"
           save: "Sačuvaj"
           edit: "Izmeni"
+          default: "Aktivno"
           cancel: "Odustani"
           collapse: Spusti
           upload: "Učitaj"

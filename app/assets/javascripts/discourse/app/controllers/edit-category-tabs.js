@@ -22,6 +22,7 @@ const FIELD_LIST = [
   "style_type",
   "emoji",
   "icon",
+  "localizations",
 ];
 
 export default class EditCategoryTabsController extends Controller {

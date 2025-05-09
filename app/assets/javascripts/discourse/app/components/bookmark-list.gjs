@@ -205,10 +205,7 @@ export default class BookmarkList extends Component {
 
   <template>
     <ConditionalLoadingSpinner @condition={{this.loading}}>
-      <LoadMore
-        @selector=".bookmark-list .bookmark-list-item"
-        @action={{this.loadMore}}
-      >
+      <LoadMore @action={{this.loadMore}}>
         <table class="topic-list bookmark-list">
           <thead class="topic-list-header">
             {{#if this.site.desktopView}}

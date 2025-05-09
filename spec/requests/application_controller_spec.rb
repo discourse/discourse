@@ -1074,11 +1074,13 @@ RSpec.describe ApplicationController do
       { HTTP_ACCEPT_LANGUAGE: locale }
     end
 
-    def locale_scripts(body)
+    def main_locale_scripts(body)
       Nokogiri::HTML5
         .parse(body)
-        .css('script[src*="assets/locales/"]')
-        .map { |script| script.attributes["src"].value }
+        .css('script[src*="extra-locales/"]')
+        .filter_map do |script|
+          script.attributes["src"].to_s[%r{extra-locales/[^/]+/([^/]+)/main.js}, 1]
+        end
     end
 
     context "with allow_user_locale disabled" do
@@ -1092,7 +1094,7 @@ RSpec.describe ApplicationController do
           it "uses the default locale" do
             get "/latest", headers: headers("fr")
             expect(response.status).to eq(200)
-            expect(locale_scripts(response.body)).to contain_exactly("/assets/locales/en.js")
+            expect(main_locale_scripts(response.body)).to contain_exactly("en")
           end
         end
 
@@ -1103,7 +1105,7 @@ RSpec.describe ApplicationController do
 
             get "/latest", headers: headers("fr")
             expect(response.status).to eq(200)
-            expect(locale_scripts(response.body)).to contain_exactly("/assets/locales/en.js")
+            expect(main_locale_scripts(response.body)).to contain_exactly("en")
           end
         end
       end
@@ -1121,13 +1123,13 @@ RSpec.describe ApplicationController do
           it "uses the locale from the headers" do
             get "/latest", headers: headers("fr")
             expect(response.status).to eq(200)
-            expect(locale_scripts(response.body)).to contain_exactly("/assets/locales/fr.js")
+            expect(main_locale_scripts(response.body)).to contain_exactly("fr")
           end
 
           it "doesn't leak after requests" do
             get "/latest", headers: headers("fr")
             expect(response.status).to eq(200)
-            expect(locale_scripts(response.body)).to contain_exactly("/assets/locales/fr.js")
+            expect(main_locale_scripts(response.body)).to contain_exactly("fr")
             expect(I18n.locale.to_s).to eq(SiteSettings::DefaultsProvider::DEFAULT_LOCALE)
           end
         end
@@ -1140,7 +1142,7 @@ RSpec.describe ApplicationController do
           it "uses the user's preferred locale" do
             get "/latest", headers: headers("fr")
             expect(response.status).to eq(200)
-            expect(locale_scripts(response.body)).to contain_exactly("/assets/locales/fr.js")
+            expect(main_locale_scripts(response.body)).to contain_exactly("fr")
           end
 
           it "serves a 404 page in the preferred locale" do
@@ -1153,7 +1155,7 @@ RSpec.describe ApplicationController do
           it "serves a RenderEmpty page in the preferred locale" do
             get "/u/#{user.username}/preferences/interface"
             expect(response.status).to eq(200)
-            expect(response.body).to have_tag("script", with: { src: "/assets/locales/fr.js" })
+            expect(main_locale_scripts(response.body)).to contain_exactly("fr")
           end
         end
       end
@@ -1166,7 +1168,7 @@ RSpec.describe ApplicationController do
 
           get "/latest", headers: headers("zh-CN")
           expect(response.status).to eq(200)
-          expect(locale_scripts(response.body)).to contain_exactly("/assets/locales/zh_CN.js")
+          expect(main_locale_scripts(response.body)).to contain_exactly("zh_CN")
         end
       end
 
@@ -1177,7 +1179,7 @@ RSpec.describe ApplicationController do
 
           get "/latest", headers: headers("")
           expect(response.status).to eq(200)
-          expect(locale_scripts(response.body)).to contain_exactly("/assets/locales/en.js")
+          expect(main_locale_scripts(response.body)).to contain_exactly("en")
         end
       end
     end
@@ -1194,7 +1196,7 @@ RSpec.describe ApplicationController do
           it "uses the locale from the cookie" do
             get "/latest", headers: { Cookie: "locale=es" }
             expect(response.status).to eq(200)
-            expect(locale_scripts(response.body)).to contain_exactly("/assets/locales/es.js")
+            expect(main_locale_scripts(response.body)).to contain_exactly("es")
             expect(I18n.locale.to_s).to eq(SiteSettings::DefaultsProvider::DEFAULT_LOCALE) # doesn't leak after requests
           end
         end
@@ -1203,7 +1205,7 @@ RSpec.describe ApplicationController do
           it "returns the locale and region separated by an underscore" do
             get "/latest", headers: { Cookie: "locale=zh-CN" }
             expect(response.status).to eq(200)
-            expect(locale_scripts(response.body)).to contain_exactly("/assets/locales/zh_CN.js")
+            expect(main_locale_scripts(response.body)).to contain_exactly("zh_CN")
           end
         end
       end
@@ -1215,7 +1217,7 @@ RSpec.describe ApplicationController do
 
           get "/latest", headers: { Cookie: "" }
           expect(response.status).to eq(200)
-          expect(locale_scripts(response.body)).to contain_exactly("/assets/locales/en.js")
+          expect(main_locale_scripts(response.body)).to contain_exactly("en")
         end
       end
     end
@@ -1232,7 +1234,7 @@ RSpec.describe ApplicationController do
           it "uses the locale from the param" do
             get "/latest?lang=es"
             expect(response.status).to eq(200)
-            expect(locale_scripts(response.body)).to contain_exactly("/assets/locales/es.js")
+            expect(main_locale_scripts(response.body)).to contain_exactly("es")
             expect(I18n.locale.to_s).to eq(SiteSettings::DefaultsProvider::DEFAULT_LOCALE) # doesn't leak after requests
           end
         end
@@ -1241,7 +1243,7 @@ RSpec.describe ApplicationController do
           it "returns the locale and region separated by an underscore" do
             get "/latest?lang=zh-CN"
             expect(response.status).to eq(200)
-            expect(locale_scripts(response.body)).to contain_exactly("/assets/locales/zh_CN.js")
+            expect(main_locale_scripts(response.body)).to contain_exactly("zh_CN")
           end
         end
       end
@@ -1253,7 +1255,7 @@ RSpec.describe ApplicationController do
 
           get "/latest"
           expect(response.status).to eq(200)
-          expect(locale_scripts(response.body)).to contain_exactly("/assets/locales/en.js")
+          expect(main_locale_scripts(response.body)).to contain_exactly("en")
         end
       end
     end

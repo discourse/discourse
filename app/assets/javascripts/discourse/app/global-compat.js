@@ -1,3 +1,4 @@
+import "discourse/lib/load-moment";
 import jQuery from "jquery";
 import virtualDom from "virtual-dom";
 import widgetHelpers from "discourse-widget-hbs/helpers";

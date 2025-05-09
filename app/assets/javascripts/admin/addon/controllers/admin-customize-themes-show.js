@@ -422,7 +422,7 @@ export default class AdminCustomizeThemesShowController extends Controller {
         model.setProperties({ recentlyInstalled: false });
         model.destroyRecord().then(() => {
           this.allThemes.removeObject(model);
-          this.router.transitionTo("adminCustomizeThemes");
+          this.router.transitionTo("adminConfig.customize.themes");
         });
       },
     });

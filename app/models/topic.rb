@@ -31,6 +31,8 @@ class Topic < ActiveRecord::Base
 
   attr_accessor :allowed_user_ids, :allowed_group_ids, :tags_changed, :includes_destination_category
 
+  has_many :topic_localizations, dependent: :destroy
+
   def self.max_fancy_title_length
     400
   end
@@ -2122,6 +2124,18 @@ class Topic < ActiveRecord::Base
     fields
   end
 
+  def has_localization?(locale = I18n.locale)
+    topic_localizations.exists?(locale: locale.to_s.sub("-", "_"))
+  end
+
+  def in_user_locale?
+    locale == I18n.locale.to_s
+  end
+
+  def get_localization(locale = I18n.locale)
+    topic_localizations.find_by(locale: locale.to_s.sub("-", "_"))
+  end
+
   private
 
   def invite_to_private_message(invited_by, target_user, guardian)
@@ -2231,6 +2245,7 @@ end
 #  bannered_until            :datetime
 #  external_id               :string
 #  visibility_reason_id      :integer
+#  locale                    :string(20)
 #
 # Indexes
 #

@@ -46,11 +46,12 @@ class Stylesheet::Manager
     color_scheme_name = Slug.for(color_scheme.name) + color_scheme&.id.to_s
     theme_string = theme_id ? "_theme#{theme_id}" : ""
     dark_string = dark ? "_dark" : ""
-    "#{COLOR_SCHEME_STYLESHEET}_#{color_scheme_name}_#{theme_string}_#{Discourse.current_hostname}#{dark_string}"
+    "#{COLOR_SCHEME_STYLESHEET}_#{color_scheme_name}_#{theme_string}_#{Discourse.current_hostname}_#{GlobalSetting.relative_url_root}_#{dark_string}"
   end
 
   def self.precompile_css
-    targets = %i[desktop mobile admin wizard desktop_rtl mobile_rtl admin_rtl wizard_rtl]
+    targets = %i[common desktop mobile admin wizard]
+    targets += targets.map { |t| :"#{t}_rtl" }
 
     targets +=
       Discourse.find_plugin_css_assets(
@@ -85,7 +86,7 @@ class Stylesheet::Manager
     color_schemes << ColorScheme.base
     color_schemes = color_schemes.compact.uniq
 
-    targets = %i[desktop_theme mobile_theme]
+    targets = %i[common_theme desktop_theme mobile_theme]
     compiled = Set.new
 
     themes.each do |theme_id, color_scheme_id|
@@ -104,7 +105,7 @@ class Stylesheet::Manager
             builder =
               Stylesheet::Manager::Builder.new(target: target, theme: theme, manager: manager)
 
-            next if theme.component && !scss_checker.has_scss(theme.id)
+            next if !scss_checker.has_scss(theme.id)
             $stderr.puts "precompile target: #{target} #{theme.name}"
             builder.compile(force: true)
             compiled << "#{target}_#{theme.id}"
@@ -285,14 +286,15 @@ class Stylesheet::Manager
   def stylesheet_details(target = :desktop, media = "all")
     target = target.to_sym
     current_hostname = Discourse.current_hostname
+    relative_url_root = GlobalSetting.relative_url_root
     is_theme_target = !!(target.to_s =~ THEME_REGEX)
 
     array_cache_key =
       (
         if is_theme_target
-          "array_themes_#{@theme_ids.join(",")}_#{target}_#{current_hostname}"
+          "array_themes_#{@theme_ids.join(",")}_#{target}_#{current_hostname}_#{relative_url_root}"
         else
-          "array_#{target}_#{current_hostname}"
+          "array_#{target}_#{current_hostname}_#{relative_url_root}"
         end
       )
 
@@ -313,7 +315,7 @@ class Stylesheet::Manager
             }
             builder = Builder.new(target: target, theme: theme, manager: self)
 
-            next if builder.theme&.component && !scss_checker.has_scss(theme_id)
+            next if !scss_checker.has_scss(theme_id)
             builder.compile unless File.exist?(builder.stylesheet_fullpath)
             href = builder.stylesheet_absolute_url
 

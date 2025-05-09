@@ -91,14 +91,18 @@
     }
   }
 
-  p[data-placeholder]::before {
-    pointer-events: none;
-    position: absolute;
-    padding-top: 2px;
-    padding-right: 0.5rem;
-    content: attr(data-placeholder);
-    color: var(--primary-400);
-    line-height: 1.1;
+  p[data-placeholder] {
+    overflow: hidden;
+
+    &::before {
+      pointer-events: none;
+      position: absolute;
+      padding-top: 2px;
+      padding-right: 0.5rem;
+      content: attr(data-placeholder);
+      color: var(--primary-400);
+      line-height: 1.1;
+    }
   }
 
   del {
@@ -254,7 +258,7 @@ li.ProseMirror-selectednode::after {
 .ProseMirror-gapcursor {
   display: none;
   pointer-events: none;
-  position: absolute;
+  position: sticky;
 }
 
 .ProseMirror-gapcursor::after {

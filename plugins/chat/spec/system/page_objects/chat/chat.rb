@@ -25,10 +25,12 @@ module PageObjects
 
       def open_from_header
         find(".chat-header-icon").click
+        has_css?("html.has-chat")
       end
 
       def close_from_header
         find(".chat-header-icon").click
+        has_no_css?("html.has-chat")
       end
 
       def has_header_href?(href)
@@ -53,19 +55,19 @@ module PageObjects
         drawer?(expectation: false, channel_id: channel_id, expanded: expanded)
       end
 
-      def visit_channel(channel, message_id: nil, with_preloaded_channels: true)
+      def visit_channel(channel, message_id: nil, with_preloaded_channels: true, check: true)
         visit(channel.url + (message_id ? "/#{message_id}" : ""))
-        has_finished_loading?(with_preloaded_channels: with_preloaded_channels)
+        has_finished_loading?(with_preloaded_channels: with_preloaded_channels) if check
       end
 
       def visit_user_threads
         visit("/chat/threads")
-        has_finished_loading?
+        has_css?(".c-user-threads.--loaded")
       end
 
       def visit_thread(thread)
         visit(thread.url)
-        has_css?(".chat-thread:not(.loading)[data-id=\"#{thread.id}\"]")
+        has_css?(".chat-thread.--loaded[data-id=\"#{thread.id}\"]")
       end
 
       def visit_threads_list(channel)
@@ -108,7 +110,7 @@ module PageObjects
 
       def has_finished_loading?(with_preloaded_channels: true)
         has_preloaded_channels? if with_preloaded_channels
-        has_no_css?(".chat-channel--not-loaded-once")
+        has_css?(".--loaded")
         has_no_css?(".chat-skeleton")
       end
 

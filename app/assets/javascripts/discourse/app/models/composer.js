@@ -42,7 +42,8 @@ export const CREATE_TOPIC = "createTopic",
   EDIT = "edit",
   NEW_PRIVATE_MESSAGE_KEY = "new_private_message",
   NEW_TOPIC_KEY = "new_topic",
-  EDIT_TOPIC_KEY = "topic_";
+  EDIT_TOPIC_KEY = "topic_",
+  ADD_TRANSLATION = "add_translation";
 
 function isEdit(action) {
   return action === EDIT || action === EDIT_SHARED_DRAFT;
@@ -139,6 +140,7 @@ export default class Composer extends RestModel {
   static PRIVATE_MESSAGE = PRIVATE_MESSAGE;
   static REPLY = REPLY;
   static EDIT = EDIT;
+  static ADD_TRANSLATION = ADD_TRANSLATION;
 
   // Draft key
   static NEW_PRIVATE_MESSAGE_KEY = NEW_PRIVATE_MESSAGE_KEY;
@@ -1297,6 +1299,10 @@ export default class Composer extends RestModel {
     "minimumPostLength"
   )
   canSaveDraft() {
+    if (this.action === Composer.ADD_TRANSLATION) {
+      return false;
+    }
+
     if (this.draftSaving) {
       return false;
     }

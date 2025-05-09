@@ -9,18 +9,20 @@
 @use "sass:math";
 @use "sass:string";
 @use "sass:map";
+@use "lib/viewport";
 
 $breakpoints: (
-  mobile-small: 320px,
-  mobile-medium: 350px,
-  mobile-large: 450px,
-  mobile-extra-large: 550px,
-  tablet: 768px,
-  medium: 850px,
-  large: 1000px,
-  extra-large: 1140px,
+  mobile-small: map.get(viewport.$breakpoints, sm),
+  mobile-medium: map.get(viewport.$breakpoints, sm),
+  mobile-large: map.get(viewport.$breakpoints, sm),
+  mobile-extra-large: map.get(viewport.$breakpoints, sm),
+  tablet: map.get(viewport.$breakpoints, md),
+  medium: map.get(viewport.$breakpoints, lg),
+  large: map.get(viewport.$breakpoints, lg),
+  extra-large: map.get(viewport.$breakpoints, xl),
 );
 
+/* breakpoint is a legacy mixin. Use `@use "lib/viewport"` instead. */
 @mixin breakpoint($bp, $rule: max-width, $type: screen, $sidebar: false) {
   /* stylelint-disable-next-line scss/no-global-function-names */
   $bp-value: map-get($breakpoints, $bp);
@@ -138,7 +140,6 @@ $hpad: 0.65em;
 @mixin post-aside {
   border-left: 5px solid var(--primary-300);
   background-color: var(--blend-primary-secondary-5);
-  border-radius: var(--d-border-radius);
 }
 
 @mixin float-down {

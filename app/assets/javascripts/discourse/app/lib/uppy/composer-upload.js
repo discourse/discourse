@@ -108,7 +108,9 @@ export default class UppyComposerUpload {
       this.fileInputEventListener
     );
 
-    this.#editorEl?.removeEventListener("paste", this._pasteEventListener);
+    this.#editorEl?.removeEventListener("paste", this._pasteEventListener, {
+      capture: true,
+    });
 
     this.appEvents.off(`${this.composerEventPrefix}:add-files`, this._addFiles);
     this.appEvents.off(
@@ -147,7 +149,9 @@ export default class UppyComposerUpload {
       this.#fileInputEl,
       this._addFiles
     );
-    this.#editorEl.addEventListener("paste", this._pasteEventListener, true);
+    this.#editorEl.addEventListener("paste", this._pasteEventListener, {
+      capture: true,
+    });
 
     this.uppyWrapper.uppyInstance = new Uppy({
       id: this.uppyId,

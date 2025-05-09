@@ -263,6 +263,20 @@ RSpec.describe Service::StepsInspector do
         end
       end
 
+      context "when an exception occurs inside the model step" do
+        before do
+          class DummyService
+            def fetch_model
+              raise "BOOM"
+            end
+          end
+        end
+
+        it "returns an error related to the exception" do
+          expect(error).to match(/BOOM \([^(]*RuntimeError[^)]*\)/)
+        end
+      end
+
       context "when the model has errors" do
         before do
           class DummyService

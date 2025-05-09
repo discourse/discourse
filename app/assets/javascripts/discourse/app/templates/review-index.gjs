@@ -63,10 +63,7 @@ export default RouteTemplate(
     <div class="reviewable-container">
       <div class="reviewable-list">
         {{#if @controller.reviewables}}
-          <LoadMore
-            @selector=".reviewable-item"
-            @action={{@controller.loadMore}}
-          >
+          <LoadMore @action={{@controller.loadMore}}>
             <div class="reviewables">
               {{#each @controller.reviewables as |r|}}
                 <ReviewableItem

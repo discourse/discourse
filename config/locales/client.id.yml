@@ -1555,8 +1555,6 @@ id:
       submit_new_email: "Perbarui Alamat Email"
       google_oauth2:
         name: "Google"
-      twitter:
-        name: "Twitter"
       instagram:
         name: "Instagram"
       facebook:
@@ -1953,6 +1951,10 @@ id:
       general: "Umum"
       settings: "Pengaturan"
       tags: "Label"
+      localization:
+        name: "Nama"
+        description: "Deskripsi"
+        remove: "Hapus"
       required_tag_group:
         delete: "Hapus"
       name: "Nama Kategori"
@@ -2241,7 +2243,7 @@ id:
       back_to_forum: "Kembali ke Forum"
       collapse_all_sections: "Tutup semua bagian"
       expand_all_sections: "Buka semua bagian"
-      filter: "Filter..."
+      search: "Cari"
     until: "Sampai:"
     form_template_chooser:
       select_template: "Pilih templat formulir"
@@ -2287,6 +2289,14 @@ id:
       spreadsheet:
         show: "Tunjukkan"
         about: "Tentang"
+    discovery:
+      headings:
+        categories: "Semua kategori"
+        filter_labels:
+          latest: "Terbaru"
+          new: "New"
+          unread: "Belum dibaca"
+          unseen: "Tak terlihat"
   admin_js:
     settings: "Pengaturan"
     admin:
@@ -2303,16 +2313,17 @@ id:
         email:
           title: "Surel"
       config:
-        branding:
+        logo_and_fonts:
           logo:
             form:
               email: "Surel"
+          fonts:
+            backfill_modal:
+              modal_yes: "Ya"
         navigation:
           title: "Navigasi"
         notifications:
           title: "Pemberitahuan"
-        other:
-          title: "Lainnya"
         search_everything:
           title: "Cari"
         spam:
@@ -2327,7 +2338,7 @@ id:
           sub_pages:
             logs:
               title: "Log"
-        email:
+        email_logs:
           sub_pages:
             sent:
               title: "Mengirim"
@@ -2487,6 +2498,13 @@ id:
           delete: "Hapus"
         themes_and_components:
           breadcrumb_title: "Sesuaikan"
+          components:
+            name: "Nama"
+            enabled: "Diaktifkan?"
+            edit: "Ubah"
+            export: "Ekspor"
+            delete: "Hapus"
+            filter_by_all: "Semua"
         user_fields:
           type: "Tipe"
           delete: "Hapus"
@@ -2543,6 +2561,7 @@ id:
           create_name: "Nama"
           save: "Simpan"
           edit: "Ubah"
+          default: "Aktif"
           selected:
             other: "%{count} dipilih"
           cancel: "Batal"

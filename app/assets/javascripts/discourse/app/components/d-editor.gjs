@@ -732,7 +732,7 @@ export default class DEditor extends Component {
                     <ToolbarPopupMenuOptions
                       @content={{this.popupMenuOptions}}
                       @onChange={{this.onPopupMenuAction}}
-                      @onOpen={{action b.action b}}
+                      @onOpen={{fn b.action b}}
                       @tabindex={{-1}}
                       @onKeydown={{this.rovingButtonBar}}
                       @options={{hash icon=b.icon focusAfterOnChange=false}}
@@ -740,7 +740,7 @@ export default class DEditor extends Component {
                     />
                   {{else}}
                     <DButton
-                      @action={{fn (action b.action) b}}
+                      @action={{fn b.action b}}
                       @translatedTitle={{b.title}}
                       @label={{b.label}}
                       @icon={{b.icon}}
@@ -780,7 +780,7 @@ export default class DEditor extends Component {
         </div>
       </div>
       <DEditorPreview
-        @preview={{this.preview}}
+        @preview={{if @hijackPreview @hijackPreview this.preview}}
         @forcePreview={{this.forcePreview}}
         @onPreviewUpdated={{this.previewUpdated}}
         @outletArgs={{this.outletArgs}}

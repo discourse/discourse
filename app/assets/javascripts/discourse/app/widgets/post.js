@@ -1219,6 +1219,7 @@ registerWidgetShim(
       @toggleReplies={{@toggleReplies}}
       @toggleReplyAbove={{@data.toggleReplyAbove}}
       @toggleWiki={{@data.toggleWiki}}
+      @topicPageQueryParams={{@data.topicPageQueryParams}}
       @unhidePost={{@data.unhidePost}}
       @unlockPost={{@data.unlockPost}}
       @updateTopicPageQueryParams={{@data.updateTopicPageQueryParams}}

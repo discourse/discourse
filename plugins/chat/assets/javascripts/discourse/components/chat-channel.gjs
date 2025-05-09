@@ -701,7 +701,7 @@ export default class ChatChannel extends Component {
         (if this.messagesLoader.loading "loading")
         (if this.pane.sending "chat-channel--sending")
         (if this.hasSavedScrollPosition "chat-channel--saved-scroll-position")
-        (unless this.messagesLoader.fetchedOnce "chat-channel--not-loaded-once")
+        (if this.messagesLoader.fetchedOnce "--loaded")
       }}
       {{willDestroy this.teardown}}
       {{didInsert this.setup}}

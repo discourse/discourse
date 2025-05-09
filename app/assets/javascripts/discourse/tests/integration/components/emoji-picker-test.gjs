@@ -1,4 +1,5 @@
 import { click, fillIn, render, triggerKeyEvent } from "@ember/test-helpers";
+import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
 import { module, skip, test } from "qunit";
 import Content from "discourse/components/emoji-picker/content";
 import emojisFixtures from "discourse/tests/fixtures/emojis-fixtures";
@@ -45,7 +46,7 @@ module("Integration | Component | emoji-picker-content", function (hooks) {
     await emojiPicker(".emoji-picker").tone(6);
 
     assert
-      .dom(`img[src="/images/emoji/twitter/raised_hands/6.png"]`)
+      .dom(`img[src="/images/emoji/twitter/raised_hands/6.png?v=${v}"]`)
       .exists("it applies the tone to emojis");
     assert
       .dom(".emoji-picker__diversity-trigger img[title='clap:t6']")
@@ -193,6 +194,20 @@ module("Integration | Component | emoji-picker-content", function (hooks) {
     await picker.select("raised_hands");
 
     assert.verifySteps(["raised_hands", "raised_hands:t2"]);
+  });
+
+  test("CDN url", async function (assert) {
+    this.siteSettings.external_emoji_url = "https://emoji.com";
+
+    await render(<template><Content /></template>);
+
+    assert
+      .dom('img[data-emoji="grinning"]')
+      .hasAttribute(
+        "src",
+        `https://emoji.com/twitter/grinning.png?v=${v}`,
+        "it uses the external emoji url"
+      );
   });
 
   test("When hovering an emoji", async function (assert) {

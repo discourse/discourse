@@ -38,7 +38,7 @@ export default class SelectedCollection extends Component {
           <DButton
             @translatedTitle={{tag.value}}
             @icon="xmark"
-            @action={{fn (action this.selectKit.deselect) tag.value}}
+            @action={{fn this.selectKit.deselect tag.value}}
             tabindex="0"
             class={{tag.classNames}}
           >

@@ -35,7 +35,13 @@ export default class DNavigation extends Component {
   @setting("fixed_category_positions") fixedCategoryPositions;
 
   get createTopicLabel() {
-    return this.site.desktopView ? "topic.create" : "";
+    const defaultKey = "topic.create";
+
+    return applyValueTransformer(
+      "create-topic-label",
+      this.site.desktopView ? defaultKey : "",
+      { site: this.site, defaultKey }
+    );
   }
 
   get showBulkSelectInNavControls() {

@@ -15,6 +15,7 @@ import DEditor from "discourse/components/d-editor";
 import DEditorPreview from "discourse/components/d-editor-preview";
 import Wrapper from "discourse/components/form-template-field/wrapper";
 import PickFilesButton from "discourse/components/pick-files-button";
+import PostTranslationEditor from "discourse/components/post-translation-editor";
 import { ajax } from "discourse/lib/ajax";
 import { tinyAvatar } from "discourse/lib/avatar-utils";
 import { setupComposerPosition } from "discourse/lib/composer/composer-position";
@@ -96,6 +97,8 @@ const DEBOUNCE_JIT_MS = 2000;
 @classNameBindings("composer.showToolbar:toolbar-visible", ":wmd-controls")
 export default class ComposerEditor extends Component {
   @service composer;
+  @service siteSettings;
+  @service currentUser;
 
   @tracked preview;
 
@@ -947,6 +950,21 @@ export default class ComposerEditor extends Component {
     this._selectedFormTemplateId = value;
   }
 
+  get showTranslationEditor() {
+    if (
+      !this.siteSettings.experimental_content_localization ||
+      !this.currentUser.can_localize_content
+    ) {
+      return false;
+    }
+
+    if (this.composer.model?.action === Composer.ADD_TRANSLATION) {
+      return true;
+    }
+
+    return false;
+  }
+
   @action
   async updateFormPreview() {
     const formTemplateData = prepareFormTemplateData(
@@ -1018,6 +1036,8 @@ export default class ComposerEditor extends Component {
           />
         {{/if}}
       </div>
+    {{else if this.showTranslationEditor}}
+      <PostTranslationEditor @setupEditor={{this.setupEditor}} />
     {{else}}
       <DEditor
         @value={{this.composer.model.reply}}

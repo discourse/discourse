@@ -1850,6 +1850,9 @@ te:
     modal:
       close: "మూసివేయండి"
       dismiss_error: "లోపాన్ని తీసివేయండి"
+    multi_select:
+      no_results: "ఫలితాలు లేవు"
+      search: "శోధించండి…"
     form_kit:
       reset: రీసెట్ చేయండి
       optional: ఐచ్ఛికం
@@ -2039,10 +2042,6 @@ te:
         name: "గూగుల్"
         title: "గూగుల్ తో లాగిన్ చేయండి"
         sr_title: "గూగుల్ ద్వారా లాగిన్"
-      twitter:
-        name: "ట్విట్టర్"
-        title: "X (ట్విట్టర్) తో లాగిన్ చేయండి"
-        sr_title: "X (ట్విట్టర్) ద్వారా లాగిన్"
       instagram:
         name: "ఇన్స్టాగ్రామ్"
         title: "Instagram తో లాగిన్ చేయండి"
@@ -2488,8 +2487,6 @@ te:
       in_topics_posts: "అన్ని విషయాలు మరియు పోస్ట్‌లలో"
       enter_hint: "లేదా ఎంటర్ నొక్కండి"
       in_posts_by: "%{username} ద్వారా పోస్ట్‌లలో"
-      browser_tip: "%{modifier} + f"
-      browser_tip_description: "బ్రౌజర్ శోధనను ఉపయోగించడానికి మళ్లీ"
       recent: "ఇటీవలి శోధనలు"
       clear_recent: "ఇటీవలి శోధనలను క్లియర్ చేయండి"
       type:
@@ -3449,6 +3446,10 @@ te:
       settings: "అమరికలు"
       topic_template: "టెంప్లేట్"
       tags: "ట్యాగులు"
+      localization:
+        name: "పేరు"
+        description: "వివరణ"
+        remove: "తీసివేయండి"
       tags_allowed_tags: "ఈ ట్యాగ్‌లను ఈ వర్గానికి పరిమితం చేయండి:"
       tags_allowed_tag_groups: "ఈ ట్యాగ్ సమూహాలను ఈ వర్గానికి పరిమితం చేయండి:"
       tags_placeholder: "(ఐచ్ఛికం) అనుమతించబడిన ట్యాగ్‌ల జాబితా"
@@ -4274,9 +4275,7 @@ te:
         forum:
           label: ఫోరం
       back_to_forum: "తిరిగి ఫోరమ్కి"
-      clear_filter: "ఫిల్టర్‌ని క్లియర్ చేయండి"
-      no_results:
-        title: "ఫలితాలు లేవు"
+      search: "వెతుకు"
       footer:
         interface_color_selector:
           light: "లేత"
@@ -4381,6 +4380,16 @@ te:
           copy: "కాపీ..."
           paste: "అతికించండి..."
           save: "ఇలా సేవ్ చేయండి..."
+    discovery:
+      headings:
+        categories: "అన్ని వర్గాలు"
+        filter_labels:
+          latest: "తాజా"
+          top: "అగ్ర"
+          new: "కొత్త "
+          unread: "చదవని"
+          hot: "హాట్"
+          unseen: "చూడనవి"
   admin_js:
     type_to_filter: "ఫిల్టర్ చేయడానికి టైప్ చేయండి…"
     settings: "అమరికలు"
@@ -4426,10 +4435,7 @@ te:
           title: "ఫైళ్లు"
         legal:
           title: "చట్టపరమైన"
-        logo:
-          title: "సైట్ లోగో"
-        branding:
-          title: "బ్రాండింగ్"
+        logo_and_fonts:
           logo:
             form:
               logo:
@@ -4438,14 +4444,18 @@ te:
               email: "మెయిల్"
               manifest_screenshots:
                 description: "దాని ఇన్‌స్టాల్ ప్రాంప్ట్ పేజీలో మీ ఇన్‌స్టాన్స్ ఫీచర్‌లు మరియు ఫంక్షనాలిటీని ప్రదర్శించే స్క్రీన్‌షాట్‌లు. అన్ని చిత్రాలు స్థానిక అప్‌లోడ్‌లు మరియు ఒకే కొలతలు కలిగి ఉండాలి."
+          fonts:
+            form:
+              heading_font:
+                title: "శీర్షిక ఫాంట్"
+            backfill_modal:
+              modal_yes: "అవును"
         navigation:
           title: "నావిగేషన్"
         notifications:
           title: "ప్రకటనలు"
         onebox:
           title: "వన్బాక్స్"
-        other:
-          title: "ఇతర"
         search_everything:
           title: "శోధించండి"
         security:
@@ -4481,6 +4491,8 @@ te:
           sub_pages:
             templates:
               title: "టెంప్లేట్లు"
+        email_logs:
+          sub_pages:
             sent:
               title: "పంపిన"
             skipped:
@@ -4990,6 +5002,22 @@ te:
             title: "థీమ్స్"
           components:
             title: "భాగాలు"
+            install: "ఇన్‌స్టాల్ చేయండి"
+            name: "పేరు"
+            enabled: "ప్రారంభించబడిందా?"
+            by_author: " %{name} రాసిన"
+            learn_more: "మరింత తెలుసుకోండి"
+            edit: "సవరించండి"
+            preview: "ప్రివ్యూ"
+            export: "ఎగుమతి"
+            convert: "మార్చండి"
+            delete: "తొలగించు"
+            filter_by: "ద్వారా ఫిల్టర్ చేయండి"
+            filter_by_all: "అన్ని"
+            filter_by_used: "ఉపయోగించబడిన"
+            filter_by_unused: "ఉపయోగించని"
+            delete_confirm: 'మీరు "%{name}"ని ఖచ్చితంగా తొలగించాలనుకుంటున్నారా?'
+            badge_unused: "ఉపయోగించని"
         user_fields:
           type: "రకం"
           delete: "తొలగించు"
@@ -5153,6 +5181,7 @@ te:
           extra_files_upload: "ఈ ఫైల్‌లను వీక్షించడానికి థీమ్‌ను ఎగుమతి చేయండి."
           extra_files_remote: "ఈ ఫైల్‌లను వీక్షించడానికి థీమ్‌ను ఎగుమతి చేయండి లేదా git రిపోజిటరీని తనిఖీ చేయండి."
           preview: "ప్రివ్యూ"
+          default: "క్రియాశీల"
           settings_editor: "అమరికల ఎడిటర్"
           is_default: "థీమ్ డిఫాల్ట్‌గా ప్రారంభించబడింది"
           user_selectable: "థీమ్‌ను సభ్యులు ఎంచుకోవచ్చు"
@@ -5237,8 +5266,6 @@ te:
             error: "ఈ థీమ్ స్వయంచాలకంగా నిలిపివేయబడింది ఎందుకంటే ఇది ఈ డిస్కోర్స్ సంస్కరణకు అనుకూలంగా లేదు."
             minimum: "డిస్కోర్స్ వెర్షన్ %{version} లేదా అంతకంటే ఎక్కువ అవసరం."
             maximum: "డిస్కోర్స్ వెర్షన్ %{version} లేదా దిగువన అవసరం."
-          update_to_latest: "లేటెస్ట్‌కి అప్‌డేట్ చేయండి"
-          check_for_updates: "తాజాకరణలకోసం ప్రయత్నించండి"
           updating: "నవీకరిస్తోంది…"
           up_to_date: "థీమ్ తాజాగా ఉంది, చివరిగా తనిఖీ చేయబడింది:"
           has_overwritten_history: "Git చరిత్ర ఫోర్స్ పుష్ ద్వారా భర్తీ చేయబడినందున ప్రస్తుత థీమ్ వెర్షన్ ఉనికిలో లేదు."

@@ -274,6 +274,7 @@ basic:
       - bookmark
       - admin
       - reply
+      - addTranslation
     area: "posts_and_topics"
   post_menu_hidden_items:
     client: true
@@ -290,6 +291,7 @@ basic:
       - bookmark
       - admin
       - reply
+      - addTranslation
     area: "posts_and_topics"
   share_links:
     client: true
@@ -728,9 +730,6 @@ login:
     default: 1440
     min: 1
     max: 175200
-  full_page_login:
-    default: true
-    client: true
   show_signup_form_email_instructions:
     client: true
     default: true
@@ -1002,6 +1001,10 @@ groups:
     default: false
   max_automatic_membership_email_domains:
     default: 50
+    hidden: true
+  show_additional_about_groups:
+    client: true
+    default: false
     hidden: true
 
 posting:
@@ -1928,9 +1931,6 @@ files:
     default: "wasm|jpg|jpeg|png|woff|woff2|svg|eot|ttf|otf|gif|webp|avif|js"
     type: list
     list_type: file_types
-  theme_download_screenshots:
-    default: false
-    hidden: true
   authorized_extensions:
     client: true
     default: "jpg|jpeg|png|gif|heic|heif|webp|avif"
@@ -3979,7 +3979,19 @@ experimental:
   rich_editor:
     client: true
     default: false
-    hidden: true
   experimental_content_localization:
     client: true
     default: false
+  experimental_content_localization_allowed_groups:
+    type: group_list
+    list_type: compact
+    allow_any: false
+    client: true
+    default: "1|2" # admin, moderator
+  content_localization_debug_allowed_groups:
+    type: group_list
+    list_type: compact
+    allow_any: false
+    client: true
+    default: "1|2" # admin, moderator
+    hidden: true

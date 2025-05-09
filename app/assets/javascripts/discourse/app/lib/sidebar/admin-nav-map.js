@@ -21,14 +21,6 @@ export const ADMIN_NAV_MAP = [
         moderator: true,
       },
       {
-        name: "admin_search",
-        route: "adminSearch",
-        label: "admin.config.search_everything.title",
-        description: "admin.config.search_everything.header_description",
-        icon: "magnifying-glass",
-        moderator: true,
-      },
-      {
         name: "admin_groups",
         route: "adminGroups",
         label: "admin.config.groups.title",
@@ -51,30 +43,6 @@ export const ADMIN_NAV_MAP = [
         icon: "gift",
         keywords: "admin.config.whats_new.keywords",
         moderator: true,
-      },
-    ],
-  },
-  {
-    name: "account",
-    label: "admin.config_sections.account.title",
-    links: [
-      {
-        name: "admin_backups",
-        route: "admin.backups",
-        label: "admin.config.backups.title",
-        description: "admin.config.backups.header_description",
-        icon: "box-archive",
-        settings_category: "backups",
-        multi_tabbed: true,
-        links: [
-          {
-            name: "admin_backups_logs",
-            route: "admin.backups.logs",
-            label: "admin.config.backups.sub_pages.logs.title",
-            description:
-              "admin.config.backups.sub_pages.logs.header_description",
-          },
-        ],
       },
     ],
   },
@@ -292,9 +260,7 @@ export const ADMIN_NAV_MAP = [
       },
       {
         name: "admin_themes_and_components",
-        route: "adminCustomizeThemes",
-        routeModels: ["themes"],
-        currentWhen: "adminCustomizeThemes",
+        route: "adminConfig.customize.themes",
         label: "admin.config.themes_and_components.title",
         description: "admin.config.themes_and_components.header_description",
         icon: "paintbrush",
@@ -479,6 +445,24 @@ export const ADMIN_NAV_MAP = [
     name: "advanced",
     label: "admin.config_sections.advanced.title",
     links: [
+      {
+        name: "admin_backups",
+        route: "admin.backups",
+        label: "admin.config.backups.title",
+        description: "admin.config.backups.header_description",
+        icon: "box-archive",
+        settings_category: "backups",
+        multi_tabbed: true,
+        links: [
+          {
+            name: "admin_backups_logs",
+            route: "admin.backups.logs",
+            label: "admin.config.backups.sub_pages.logs.title",
+            description:
+              "admin.config.backups.sub_pages.logs.header_description",
+          },
+        ],
+      },
       {
         name: "admin_api_keys",
         route: "adminApiKeys",

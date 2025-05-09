@@ -109,6 +109,14 @@ module PageObjects
         has_no_css?(".themes-list-search__input")
       end
 
+      def click_delete
+        find(".theme-controls .btn-danger").click
+      end
+
+      def confirm_delete
+        find(".dialog-footer .btn-primary").click
+      end
+
       private
 
       def setting_selector(setting_name, overridden: false)

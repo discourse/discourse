@@ -1578,8 +1578,6 @@ bs_BA:
       not_approved: "Vaš korisnički račun nije još uvijek odobren od strane administratora. Dobiti ćete email kada dobijete mogućnost da se ulogirate."
       google_oauth2:
         name: "Google"
-      twitter:
-        name: "Twitter"
       instagram:
         name: "Instagram"
       facebook:
@@ -2501,6 +2499,10 @@ bs_BA:
       general: "General"
       settings: "Postavke"
       tags: "Oznake"
+      localization:
+        name: "Ime"
+        description: "Opis"
+        remove: "Ukloni"
       tags_allowed_tags: "Ograničite ove oznake na ovu kategoriju:"
       tags_allowed_tag_groups: "Ograničite ove grupe oznaka na ovu kategoriju:"
       tags_placeholder: "(Opcionalno) lista dozvoljenih oznaka"
@@ -3112,7 +3114,7 @@ bs_BA:
               content: "Pregled"
             invite:
               content: "Invite"
-      filter: "Filter..."
+      search: "Pretraži"
     until: "Sve do:"
     form_templates:
       upload_field:
@@ -3133,6 +3135,14 @@ bs_BA:
       spreadsheet:
         show: "Show"
         about: "O nama"
+    discovery:
+      headings:
+        categories: "Sve kategorije"
+        filter_labels:
+          latest: "Zadnje"
+          top: "Top teme"
+          new: "Novi"
+          unread: "Nepročitano"
   admin_js:
     settings: "Postavke"
     admin:
@@ -3173,20 +3183,20 @@ bs_BA:
           title: "Files"
         legal:
           title: "Legal"
-        branding:
-          title: "Branding"
+        logo_and_fonts:
           logo:
             form:
               mobile: "Mobilno"
               email: "Email"
+          fonts:
+            backfill_modal:
+              modal_yes: "Da"
         navigation:
           title: "Navigacija"
         notifications:
           title: "Obavijest"
         onebox:
           title: "Onebox"
-        other:
-          title: "Other"
         search_everything:
           title: "Pretraži"
         security:
@@ -3224,6 +3234,8 @@ bs_BA:
               header_description: "Prikaži sadržaj sažetih poruka pošte poslanih neaktivnim korisnicima"
             templates:
               title: "Predlošci"
+        email_logs:
+          sub_pages:
             sent:
               title: "Poslano"
             skipped:
@@ -3562,6 +3574,18 @@ bs_BA:
             title: "Teme"
           components:
             title: "Komponenti"
+            install: "Instaliraj"
+            name: "Ime"
+            enabled: "Omogućen?"
+            by_author: "Od %{name}"
+            learn_more: "Saznaj više"
+            edit: "Edit"
+            preview: "Pregled"
+            export: "Izvoz"
+            convert: "Pretvoriti"
+            delete: "Delete"
+            filter_by_all: "All"
+            delete_confirm: 'Jeste li sigurni da želite izbrisati "%{name}"?'
         user_fields:
           type: "Tip"
           delete: "Delete"
@@ -3696,6 +3720,7 @@ bs_BA:
           desktop: "Desktop"
           mobile: "Mobilno"
           preview: "Pregled"
+          default: "Active"
           is_default: "Tema je podrazumevano omogućena"
           user_selectable: "Tema može odabrati korisnik"
           color_scheme: "Paleta boja"
@@ -3754,8 +3779,6 @@ bs_BA:
             error: "Ova tema je automatski onemogućena jer nije kompatibilna sa ovom verzijom Diskursa."
             minimum: "Potrebna je diskursna verzija %{version} ili iznad."
             maximum: "Potrebna je diskursna verzija %{version} ili ispod."
-          update_to_latest: "Ažuriraj na zadnje"
-          check_for_updates: "Potražite ažuriranja"
           up_to_date: "Tema je ažurna, posljednja provjerena:"
           add: "Dodaj"
           theme_settings: "Postavke teme"

@@ -74,7 +74,7 @@ RSpec.describe ReviewableClaimedTopicsController do
 
       it "works with deleted topics" do
         first_post = topic.first_post || Fabricate(:post, topic: topic)
-        PostDestroyer.new(Discourse.system_user, first_post).destroy
+        PostDestroyer.new(Discourse.system_user, first_post, context: "Automated testing").destroy
 
         post "/reviewable_claimed_topics.json", params: params
 
@@ -177,7 +177,7 @@ RSpec.describe ReviewableClaimedTopicsController do
     it "works with deleted topics" do
       SiteSetting.reviewable_claiming = "optional"
       first_post = topic.first_post || Fabricate(:post, topic: topic)
-      PostDestroyer.new(Discourse.system_user, first_post).destroy
+      PostDestroyer.new(Discourse.system_user, first_post, context: "Automated testing").destroy
 
       delete "/reviewable_claimed_topics/#{claimed.topic_id}.json"
 

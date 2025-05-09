@@ -1519,8 +1519,6 @@ ca:
       not_approved: "El vostre compte encara no ha estat aprovat. Us notificarem per correu quan tingueu permís per a iniciar sessió."
       google_oauth2:
         name: "Google"
-      twitter:
-        name: "Twitter"
       instagram:
         name: "Instagram"
       facebook:
@@ -2410,6 +2408,10 @@ ca:
       general: "General"
       settings: "Configuració"
       tags: "Etiquetes"
+      localization:
+        name: "Nom"
+        description: "Descripció"
+        remove: "Elimina"
       tags_allowed_tags: "Restringeix aquestes etiquetes per a aquesta categoria:"
       tags_allowed_tag_groups: "Restringeix aquests grups d'etiquetes a aquesta categoria:"
       tags_placeholder: "Llista (opcional) d'etiquetes permeses"
@@ -2957,7 +2959,7 @@ ca:
               content: "Revisa"
             invite:
               content: "Convida"
-      filter: "Filtre..."
+      search: "Cerca"
       footer:
         interface_color_selector:
           light: "Clar"
@@ -2983,6 +2985,14 @@ ca:
       spreadsheet:
         show: "Mostra"
         about: "Quant a"
+    discovery:
+      headings:
+        categories: "Totes les categories"
+        filter_labels:
+          latest: "Més recents"
+          top: "Principals"
+          new: "Nou"
+          unread: "No llegits"
   admin_js:
     settings: "Configuració"
     admin:
@@ -3023,20 +3033,20 @@ ca:
           title: "Fitxers"
         legal:
           title: "Legal"
-        branding:
-          title: "Brànding"
+        logo_and_fonts:
           logo:
             form:
               mobile: "Mòbil"
               email: "Correu electrònic"
+          fonts:
+            backfill_modal:
+              modal_yes: "Sí"
         navigation:
           title: "Navegació"
         notifications:
           title: "Notificacions"
         onebox:
           title: "Onebox"
-        other:
-          title: "Altres"
         search_everything:
           title: "Cerca"
         security:
@@ -3074,6 +3084,8 @@ ca:
               header_description: "Previsualitza el contingut dels correus de resum enviat a usuaris inactius"
             templates:
               title: "Plantilles"
+        email_logs:
+          sub_pages:
             sent:
               title: "Enviat"
             skipped:
@@ -3408,6 +3420,18 @@ ca:
             title: "Aparences"
           components:
             title: "Components"
+            install: "Instal·la"
+            name: "Nom"
+            enabled: "Activat?"
+            by_author: "Per %{name}"
+            learn_more: "Per a saber-ne més"
+            edit: "Edita"
+            preview: "Previsualitza"
+            export: "Exporta"
+            convert: "Converteix"
+            delete: "Suprimeix"
+            filter_by_all: "Tot"
+            delete_confirm: 'Esteu segur que voleu suprimir "%{name}"?'
         user_fields:
           type: "Tipus"
           delete: "Suprimeix"
@@ -3542,6 +3566,7 @@ ca:
           desktop: "Escriptori"
           mobile: "Mòbil"
           preview: "Previsualitza"
+          default: "Actiu"
           is_default: "L'aparença està habilitada per defecte"
           user_selectable: "Els usuaris poden seleccionar l'aparença"
           color_scheme: "Paleta de colors"
@@ -3602,8 +3627,6 @@ ca:
             error: "Aquesta aparença s'ha desactivat automàticament perquè no és compatible amb aquesta versió de Discourse."
             minimum: "Requereix una versió de Discourse %{version} o superior."
             maximum: "Requereix una versió de Discourse %{version} o inferior."
-          update_to_latest: "Actualitza al més recent"
-          check_for_updates: "Comprova si hi ha actualitzacions"
           up_to_date: "L'aparença és actualitzada, última comprovació:"
           add: "Afegeix"
           theme_settings: "Configuració de l'aparença"

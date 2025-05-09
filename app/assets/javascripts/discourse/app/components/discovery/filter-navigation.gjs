@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { Input } from "@ember/component";
-import { hash } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { and } from "truth-helpers";
@@ -67,7 +67,7 @@ export default class DiscoveryFilterNavigation extends Component {
           <Input
             class="topic-query-filter__filter-term"
             @value={{this.newQueryString}}
-            @enter={{action @updateTopicsListQueryParams this.newQueryString}}
+            @enter={{fn @updateTopicsListQueryParams this.newQueryString}}
             @type="text"
             id="queryStringInput"
             autocomplete="off"

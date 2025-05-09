@@ -30,6 +30,8 @@ uk:
           title: "Введення дати / часу"
         menus:
           title: "Меню"
+        multi_select:
+          title: "Множинний вибір"
         toasts:
           title: "Тости"
         font_scale:

@@ -5,7 +5,7 @@
     var(--composer-vh, 1vh) * 100 - var(--main-outlet-offset, 0px) - 1px -
       $inset
   );
-  height: calc($base-height - var(--composer-height, 0px));
+  height: calc($base-height);
 
   // mobile with keyboard opened
   html.keyboard-visible & {
@@ -14,13 +14,11 @@
 
   // ipad
   html.footer-nav-ipad & {
-    height: calc($base-height - var(--composer-height, 0px));
+    height: calc($base-height);
   }
 
   // PWA/HUB without keyboard
   html.footer-nav-visible:not(.keyboard-visible) & {
-    height: calc(
-      $base-height - var(--composer-height, 0px) - var(--footer-nav-height, 0px)
-    );
+    height: calc($base-height - var(--footer-nav-height, 0px));
   }
 }

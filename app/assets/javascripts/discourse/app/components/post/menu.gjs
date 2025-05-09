@@ -23,6 +23,7 @@ import {
 import { i18n } from "discourse-i18n";
 import PostMenuButtonConfig from "./menu/button-config";
 import PostMenuButtonWrapper from "./menu/button-wrapper";
+import PostMenuAddTranslationButton from "./menu/buttons/add-translation";
 import PostMenuAdminButton from "./menu/buttons/admin";
 import PostMenuBookmarkButton from "./menu/buttons/bookmark";
 import PostMenuCopyLinkButton from "./menu/buttons/copy-link";
@@ -51,6 +52,7 @@ const buttonKeys = Object.freeze({
   REPLIES: "replies",
   REPLY: "reply",
   SHARE: "share",
+  ADD_TRANSLATION: "addTranslation",
   SHOW_MORE: "showMore",
 });
 
@@ -66,6 +68,7 @@ const coreButtonComponents = new Map([
   [buttonKeys.REPLIES, PostMenuRepliesButton],
   [buttonKeys.REPLY, PostMenuReplyButton],
   [buttonKeys.SHARE, PostMenuShareButton],
+  [buttonKeys.ADD_TRANSLATION, PostMenuAddTranslationButton],
   [buttonKeys.SHOW_MORE, PostMenuShowMoreButton],
 ]);
 

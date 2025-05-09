@@ -1598,8 +1598,6 @@ lv:
       not_approved: "Jūsu konts vēl nav apstiprināts. Jums tiks paziņots e-pastā, kad varēsiet pieslēgties."
       google_oauth2:
         name: "Google"
-      twitter:
-        name: "Twitter"
       instagram:
         name: "Instagram"
       facebook:
@@ -2329,6 +2327,10 @@ lv:
       general: "Vispārīgi"
       settings: "Iestatījumi"
       tags: "Tagi"
+      localization:
+        name: "Vārds"
+        description: "Apraksts"
+        remove: "Atcelt"
       tags_placeholder: "(Pēc izvēles) atļauto tagu saraksts"
       tag_groups_placeholder: "(Pēc izvēles) atļauto tagu grupu saraksts"
       required_tag_group:
@@ -2820,7 +2822,7 @@ lv:
               content: "Pārskats"
             invite:
               content: "Ielūgt"
-      filter: "Filtri..."
+      search: "Meklēt"
     form_templates:
       upload_field:
         upload: "Augšupielādēt"
@@ -2841,6 +2843,15 @@ lv:
       spreadsheet:
         show: "Parādīt"
         about: "Par"
+    discovery:
+      headings:
+        categories: "Visas sadaļas"
+        filter_labels:
+          latest: "Pēdējais"
+          top: "Populārākās"
+          new: "jauns"
+          unread: "Nelasīts"
+          unseen: "Neredzēts"
   admin_js:
     settings: "Iestatījumi"
     admin:
@@ -2870,19 +2881,20 @@ lv:
           title: "Faili"
         legal:
           title: "Jurid."
-        branding:
+        logo_and_fonts:
           logo:
             form:
               mobile: "Mobilais"
               email: "E-pasts"
+          fonts:
+            backfill_modal:
+              modal_yes: "Jā"
         navigation:
           title: "Pārvietošanās"
         notifications:
           title: "Paziņojumi"
         onebox:
           title: "Onebox"
-        other:
-          title: "Citi"
         search_everything:
           title: "Meklēt"
         security:
@@ -2916,6 +2928,8 @@ lv:
               header_description: "Pārskatīt saturu e-pastam kas tiks sūtīts neaktīviem lietotājiem"
             templates:
               title: "Veidnes"
+        email_logs:
+          sub_pages:
             sent:
               title: "Nosūtne"
             skipped:
@@ -3152,6 +3166,15 @@ lv:
           breadcrumb_title: "Pielāgot"
           themes:
             title: "Dizaini"
+          components:
+            name: "Vārds"
+            enabled: "Ieslēgts?"
+            learn_more: "Uzzināt vairāk"
+            edit: "Rediģēt"
+            preview: "Priekšskatījums"
+            export: "Eksportēt"
+            delete: "Dzēst"
+            filter_by_all: "Viss"
         user_fields:
           type: "Tips"
           delete: "Dzēst"
@@ -3261,6 +3284,7 @@ lv:
           desktop: "Personālais dators"
           mobile: "Mobilais"
           preview: "Priekšskatījums"
+          default: "Aktīvi"
           is_default: "Šis ir noklusējuma dizains"
           user_selectable: "Šo dizainu var izvēlēties lietotāji"
           color_scheme_select: "Izvēlieties krāsas, kuras lietos šis dizains"
@@ -3282,8 +3306,6 @@ lv:
           version: "Versija:"
           enable: "Ieslēgt"
           disable: "Atslēgt"
-          update_to_latest: "Atjaunināt uz pēdējo"
-          check_for_updates: "Pārbaudīt, vai nav atjauninājumi"
           up_to_date: "Dizains ir pilnībā atjaunināts, pēdējā parbaude:"
           add: "Pievienot"
           scss:

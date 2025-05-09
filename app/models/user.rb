@@ -73,7 +73,10 @@ class User < ActiveRecord::Base
   has_one :user_stat, dependent: :destroy
   has_one :user_profile, dependent: :destroy, inverse_of: :user
   has_one :single_sign_on_record, dependent: :destroy
-  has_one :anonymous_user_master, class_name: "AnonymousUser", dependent: :destroy
+  has_one :anonymous_user_master,
+          class_name: "AnonymousUser",
+          dependent: :destroy,
+          strict_loading: false
   has_one :anonymous_user_shadow,
           ->(record) { where(active: true) },
           foreign_key: :master_user_id,
@@ -1316,6 +1319,10 @@ class User < ActiveRecord::Base
     !!(suspended_till && suspended_till > Time.zone.now)
   end
 
+  def silenced_till
+    main_user_record[:silenced_till]
+  end
+
   def silenced?
     !!(silenced_till && silenced_till > Time.zone.now)
   end
@@ -2144,6 +2151,10 @@ class User < ActiveRecord::Base
   end
 
   private
+
+  def main_user_record
+    anonymous? ? master_user : self
+  end
 
   def set_default_sidebar_section_links(update: false)
     return if staged? || bot?

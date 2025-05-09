@@ -231,7 +231,7 @@ export default class WebhookEvents extends Component {
       </div>
 
       {{#if this.events}}
-        <LoadMore @selector=".web-hook-events li" @action={{this.loadMore}}>
+        <LoadMore @action={{this.loadMore}}>
           <div class="web-hook-events content-list">
             <div class="heading-container">
               <div class="col heading first status">

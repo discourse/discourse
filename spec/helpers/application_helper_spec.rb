@@ -62,7 +62,7 @@ RSpec.describe ApplicationHelper do
       it "deals correctly with subfolder" do
         set_subfolder "/community"
         expect(helper.preload_script("start-discourse")).to include(
-          "https://s3cdn.com/assets/start-discourse.js",
+          %r{https://s3cdn.com/assets/start-discourse-\w{8}.js},
         )
       end
 
@@ -71,7 +71,7 @@ RSpec.describe ApplicationHelper do
         set_cdn_url "https://awesome.com"
         set_subfolder "/community"
         expect(helper.preload_script("start-discourse")).to include(
-          "https://s3cdn.com/s3_subpath/assets/start-discourse.js",
+          %r{https://s3cdn.com/s3_subpath/assets/start-discourse-\w{8}.js},
         )
       end
 
@@ -79,68 +79,40 @@ RSpec.describe ApplicationHelper do
         helper.request.env["HTTP_ACCEPT_ENCODING"] = "br"
         link = helper.preload_script("start-discourse")
 
-        expect(link).to eq(
-          script_tag(
-            "https://s3cdn.com/assets/start-discourse.br.js",
-            "start-discourse",
-            helper.csp_nonce_placeholder,
-          ),
-        )
+        expect(link).to include(%r{https://s3cdn.com/assets/start-discourse-\w{8}.br.js})
       end
 
       it "gives s3 cdn if asset host is not set" do
         link = helper.preload_script("start-discourse")
 
-        expect(link).to eq(
-          script_tag(
-            "https://s3cdn.com/assets/start-discourse.js",
-            "start-discourse",
-            helper.csp_nonce_placeholder,
-          ),
-        )
+        expect(link).to include(%r{https://s3cdn.com/assets/start-discourse-\w{8}.js})
       end
 
       it "can fall back to gzip compression" do
         helper.request.env["HTTP_ACCEPT_ENCODING"] = "gzip"
         link = helper.preload_script("start-discourse")
-        expect(link).to eq(
-          script_tag(
-            "https://s3cdn.com/assets/start-discourse.gz.js",
-            "start-discourse",
-            helper.csp_nonce_placeholder,
-          ),
-        )
+        expect(link).to include(%r{https://s3cdn.com/assets/start-discourse-\w{8}.gz.js})
       end
 
       it "gives s3 cdn even if asset host is set" do
         set_cdn_url "https://awesome.com"
         link = helper.preload_script("start-discourse")
 
-        expect(link).to eq(
-          script_tag(
-            "https://s3cdn.com/assets/start-discourse.js",
-            "start-discourse",
-            helper.csp_nonce_placeholder,
-          ),
-        )
+        expect(link).to include(%r{https://s3cdn.com/assets/start-discourse-\w{8}.js})
       end
 
       it "gives s3 cdn but without brotli/gzip extensions for theme tests assets" do
         helper.request.env["HTTP_ACCEPT_ENCODING"] = "gzip, br"
         link = helper.preload_script("discourse/tests/theme_qunit_ember_jquery")
-        expect(link).to eq(
-          script_tag(
-            "https://s3cdn.com/assets/discourse/tests/theme_qunit_ember_jquery.js",
-            "discourse/tests/theme_qunit_ember_jquery",
-            helper.csp_nonce_placeholder,
-          ),
+        expect(link).to include(
+          %r{https://s3cdn.com/assets/discourse/tests/theme_qunit_ember_jquery-\w{8}.js},
         )
       end
 
       it "uses separate asset CDN if configured" do
         global_setting :s3_asset_cdn_url, "https://s3-asset-cdn.example.com"
         expect(helper.preload_script("start-discourse")).to include(
-          "https://s3-asset-cdn.example.com/assets/start-discourse.js",
+          %r{https://s3-asset-cdn.example.com/assets/start-discourse-\w{8}.js},
         )
       end
     end

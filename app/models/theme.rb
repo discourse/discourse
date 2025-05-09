@@ -370,6 +370,12 @@ class Theme < ActiveRecord::Base
     end
   end
 
+  def screenshot_url
+    theme_fields
+      .find { |field| field.type_id == ThemeField.types[:theme_screenshot_upload_var] }
+      &.upload_url
+  end
+
   def switch_to_component!
     return if component
 
@@ -451,7 +457,7 @@ class Theme < ActiveRecord::Base
     all_themes: false
   )
     Stylesheet::Manager.clear_theme_cache!
-    targets = %i[mobile_theme desktop_theme]
+    targets = %i[common_theme mobile_theme desktop_theme]
 
     if with_scheme
       targets.prepend(:desktop, :mobile, :admin)
@@ -559,12 +565,10 @@ class Theme < ActiveRecord::Base
     if target == :translations
       fields = ThemeField.find_first_locale_fields(theme_ids, I18n.fallbacks[name])
     else
+      target = :common if target == :common_theme
       target = :mobile if target == :mobile_theme
       target = :desktop if target == :desktop_theme
-      fields =
-        ThemeField.find_by_theme_ids(theme_ids).where(
-          target_id: [Theme.targets[target], Theme.targets[:common]],
-        )
+      fields = ThemeField.find_by_theme_ids(theme_ids).where(target_id: Theme.targets[target])
       fields = fields.where(name: name.to_s) unless name.nil?
       fields = fields.order(:target_id)
     end

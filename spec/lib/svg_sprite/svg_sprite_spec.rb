@@ -97,11 +97,6 @@ RSpec.describe SvgSprite do
     expect(SvgSprite.all_icons).to include("far fa-building")
   end
 
-  it "raises an error in test for deprecated icons" do
-    allow(Rails.env).to receive(:test?).and_return(true)
-    expect { SvgSprite.search("fa-gamepad") }.to raise_error(Discourse::MissingIconError)
-  end
-
   it "includes icons defined in theme settings" do
     # Works for default settings:
     theme.set_field(target: :settings, name: :yaml, value: "custom_icon: dragon")

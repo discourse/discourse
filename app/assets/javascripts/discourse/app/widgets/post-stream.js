@@ -16,6 +16,12 @@ import RenderGlimmer from "discourse/widgets/render-glimmer";
 import { createWidget } from "discourse/widgets/widget";
 import { i18n } from "discourse-i18n";
 
+export const POST_STREAM_DEPRECATION_OPTIONS = {
+  since: "v3.5.0.beta1-dev",
+  id: "discourse.post-stream-widget-overrides",
+  // url: "", // TODO (glimmer-post-stream) uncomment when the topic is created on meta
+};
+
 export let havePostStreamWidgetExtensions = null;
 
 registerDeprecationHandler((_, opts) => {
@@ -392,6 +398,7 @@ export default createWidget("post-stream", {
               toggleReplyAbove: () =>
                 this.sendWidgetAction("toggleReplyAbove", post),
               toggleWiki: () => this.sendWidgetAction("toggleWiki", post),
+              topicPageQueryParams: attrs.topicPageQueryParams,
               unhidePost: () => this.sendWidgetAction("unhidePost", post),
               unlockPost: () => this.sendWidgetAction("unlockPost", post),
               updateTopicPageQueryParams: () =>

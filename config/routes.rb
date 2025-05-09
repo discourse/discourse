@@ -434,6 +434,7 @@ Discourse::Application.routes.draw do
         put "/fonts" => "fonts#update"
         get "colors/:id" => "color_palettes#show"
         get "theme-site-settings" => "theme_site_settings#index"
+        get "colors" => "color_palettes#index"
 
         resources :flags, only: %i[index new create update destroy] do
           put "toggle"
@@ -1230,6 +1231,12 @@ Discourse::Application.routes.draw do
       end
     end
 
+    post "/post_localizations/create_or_update", to: "post_localizations#create_or_update"
+    delete "/post_localizations/destroy", to: "post_localizations#destroy"
+
+    post "topic_localizations/create_or_update", to: "topic_localizations#create_or_update"
+    delete "topic_localizations/destroy", to: "topic_localizations#destroy"
+
     resources :bookmarks, only: %i[create destroy update] do
       put "toggle_pin"
     end
@@ -1579,14 +1586,6 @@ Discourse::Application.routes.draw do
     resources :drafts, only: %i[index create show destroy]
 
     get "/service-worker.js" => "static#service_worker_asset", :format => :js
-    if service_worker_asset = Rails.application.assets_manifest.assets["service-worker.js"]
-      # https://developers.google.com/web/fundamentals/codelabs/debugging-service-workers/
-      # Normally the browser will wait until a user closes all tabs that contain the
-      # current site before updating to a new Service Worker.
-      # Support the old Service Worker path to avoid routing error filling up the
-      # logs.
-      get service_worker_asset => "static#service_worker_asset", :format => :js
-    end
 
     get "cdn_asset/:site/*path" => "static#cdn_asset",
         :format => false,

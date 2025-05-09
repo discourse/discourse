@@ -725,6 +725,11 @@ uk:
       draft_channel_screen:
         header: "Нове повідомлення"
         cancel: "Скасувати"
+      quick_reaction_type:
+        title: "Реакції чату в один клік"
+        options:
+          frequent: "Найпоширеніші реакції в чаті"
+          custom: "Користувацькі реакції"
     notifications:
       chat_invitation: "запросив вас приєднатися до каналу чату"
       chat_invitation_html: "<span>%{username}</span> <span>запросив вас приєднатися до каналу чату</span>"

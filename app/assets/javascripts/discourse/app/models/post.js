@@ -209,6 +209,8 @@ export default class Post extends RestModel {
   @trackedPostProperty wiki;
   @trackedPostProperty yours;
   @trackedPostProperty user_custom_fields;
+  @trackedPostProperty has_post_localizations;
+  @trackedPostProperty post_localizations;
 
   @alias("can_edit") canEdit; // for compatibility with existing code
   @equal("trust_level", 0) new_user;
@@ -394,6 +396,13 @@ export default class Post extends RestModel {
 
   get isModeratorAction() {
     return this.post_type === this.site.post_types.moderator_action;
+  }
+
+  get isSmallAction() {
+    return (
+      this.post_type === this.site.post_types.small_action ||
+      this.action_code === "split_topic"
+    );
   }
 
   get liked() {

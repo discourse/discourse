@@ -7,6 +7,7 @@ import discourseComputed from "discourse/lib/decorators";
 import escape from "discourse/lib/escape";
 import { iconHTML } from "discourse/lib/icon-library";
 import {
+  ADD_TRANSLATION,
   CREATE_SHARED_DRAFT,
   CREATE_TOPIC,
   EDIT,
@@ -22,6 +23,7 @@ const TITLES = {
   [CREATE_TOPIC]: "topic.create_long",
   [CREATE_SHARED_DRAFT]: "composer.create_shared_draft",
   [EDIT_SHARED_DRAFT]: "composer.edit_shared_draft",
+  [ADD_TRANSLATION]: "composer.translations.title",
 };
 
 @classNames("composer-action-title")

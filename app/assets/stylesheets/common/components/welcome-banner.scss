@@ -13,8 +13,6 @@
 }
 
 .welcome-banner {
-  position: relative;
-  z-index: 1;
   margin-bottom: 1em;
   border-radius: var(--d-border-radius-large);
 
@@ -53,7 +51,7 @@
       }
     }
 
-    .d-icon-search {
+    .d-icon-magnifying-glass {
       margin: 0;
     }
 
@@ -68,9 +66,11 @@
       }
     }
 
-    h1 {
+    .welcome-banner__title {
       font-size: var(--font-up-6);
       line-height: $line-height-medium;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
 
       @include breakpoint(tablet) {
         font-size: var(--font-up-4);
@@ -81,7 +81,7 @@
       }
     }
 
-    h1,
+    .welcome-banner__title,
     p {
       text-align: center;
     }
@@ -149,7 +149,7 @@
         margin: 0;
       }
 
-      .d-icon-search {
+      .d-icon-magnifying-glass {
         display: none;
       }
     }

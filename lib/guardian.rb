@@ -11,6 +11,7 @@ require "guardian/sidebar_guardian"
 require "guardian/tag_guardian"
 require "guardian/topic_guardian"
 require "guardian/user_guardian"
+require "guardian/localization_guardian"
 
 # The guardian is responsible for confirming access to various site resources and operations
 class Guardian
@@ -21,6 +22,7 @@ class Guardian
   include GroupGuardian
   include PostGuardian
   include PostRevisionGuardian
+  include LocalizationGuardian
   include SidebarGuardian
   include TagGuardian
   include TopicGuardian

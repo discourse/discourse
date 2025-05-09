@@ -1712,6 +1712,8 @@ sk:
         choose: "Vyberte si heslo"
         verify_identity: "Ak chcete pokračovať, overte svoju totožnosť."
         title: "Obnovenie hesla"
+        remove: "Odstránenie hesla"
+        remove_detail: "Váš účet už nebude prístupný pomocou hesla, pokiaľ ho nezresetujete."
       second_factor_backup:
         title: "Dvojfaktorové záložné kódy"
         regenerate: "Znovu vygenerovať"
@@ -2281,6 +2283,7 @@ sk:
     user_tips:
       button: "Mám to!"
       skip: "Preskočiť tipy"
+      dont_show_again: "Toto už nezobrazovať"
       first_notification:
         title: "Vaše prvé upozornenie!"
         content: "Upozornenia slúžia na to, aby ste boli informovaní o dianí v komunite."
@@ -2319,6 +2322,10 @@ sk:
     modal:
       close: "zatvoriť"
       dismiss_error: "Odmietnuť chybu"
+    multi_select:
+      no_results: "Žiadne výsledky"
+      search: "Hľadať…"
+      label: "Vyberte možnosti"
     form_kit:
       reset: Resetovať
       optional: nepovinné
@@ -2589,9 +2596,9 @@ sk:
         title: "Prihlásenie pomocou služby Google"
         sr_title: "Prihlásenie pomocou služby Google"
       twitter:
-        name: "Twitter"
-        title: "Prihláste sa pomocou Twitteru"
-        sr_title: "Prihláste sa pomocou Twitteru"
+        name: "X"
+        title: "Prihláste sa pomocou X"
+        sr_title: "Prihláste sa pomocou X"
       instagram:
         name: "Instagram"
         title: "Prihláste sa pomocou Instagramu"
@@ -2851,8 +2858,8 @@ sk:
       uploading: "Nahráva sa…"
       show_preview: "zobraziť náhľad"
       hide_preview: "skryť náhľad"
-      switch_to_markdown: "Prepnutie na štandardný editor Markdown"
-      switch_to_rich_text: "Prepnutie na nový textový editor"
+      switch_to_markdown: "Prepnutie na štandardný editor Markdown (%{keyboardShortcut})"
+      switch_to_rich_text: "Prepnutie na nový textový editor (%{keyboardShortcut})"
       quote_post_title: "Citovať celý príspevok"
       bold_label: "B"
       bold_title: "Výrazne"
@@ -3138,9 +3145,8 @@ sk:
       in_messages_tooltip: "prepnúť na vyhľadávanie v bežných témach"
       in_topics_posts: "vo všetkých témach a príspevkoch"
       enter_hint: "alebo stlačte Enter"
+      mobile_enter_hint: "alebo ťuknite na ikonu Hľadať"
       in_posts_by: "v príspevkoch od %{username}"
-      browser_tip: "%{modifier} + f"
-      browser_tip_description: "znova použiť natívne vyhľadávanie v prehliadači"
       recent: "Nedávne vyhľadávania"
       clear_recent: "Vymazať nedávne vyhľadávania"
       experience:
@@ -3555,6 +3561,11 @@ sk:
           false { alebo <a href="{basePath}/latest">zobraziť najnovšie témy</a>}
           other {}
         }
+      reply_count_link:
+        one: "%{count} odpoveď, skok na prvý príspevok"
+        few: "%{count} odpovedí, skok na prvý príspevok"
+        many: "%{count} odpovedí, skok na prvý príspevok"
+        other: "%{count} odpovede, skok na prvý príspevok"
       created_at: "Vytvorené: %{date}"
       bumped_at: "Najnovšie: %{date}"
       browse_all_categories_latest: "<a href='%{basePath}/categories'>Prezrite si všetky kategórie</a> alebo <a href='%{basePath}/latest'>najnovšie témy</a>."
@@ -4261,6 +4272,14 @@ sk:
       settings: "Nastavenia"
       topic_template: "Šablóna"
       tags: "Značky"
+      localizations: "Lokalizácie"
+      localization:
+        locale: "Miestne nastavenie"
+        name: "Meno"
+        description: "Popis"
+        add: "Pridať nové miestne nastavenie"
+        remove: "Odstrániť"
+        hint: "V súčasnosti nie sú k dispozícii žiadne lokalizácie pre túto kategóriu. Kliknutím na \"Pridať novú lokalizáciu\" nižšie začnete pridávať lokalizácie."
       tags_allowed_tags: "Obmedziť tieto značky na túto kategóriu:"
       tags_allowed_tag_groups: "Obmedziť tieto skupiny značiek na túto kategóriu:"
       tags_placeholder: "(Voliteľné) zoznam povolených štítkov"
@@ -4717,6 +4736,7 @@ sk:
       shortcut_delimiter_newline: "%{shortcut1}<br>%{shortcut2}"
       title: "Klávesové skratky"
       short_title: "Skratky"
+      search_ctrl_f_tip: "Ak chcete vyhľadávať v celom tomto fóre, stlačte tlačidlo <kbd>/</kbd>"
       jump_to:
         title: "Choď na"
         home: "%{shortcut} Domov"
@@ -5242,13 +5262,7 @@ sk:
       back_to_forum: "Späť na fórum"
       collapse_all_sections: "Zbaliť všetky sekcie"
       expand_all_sections: "Rozbaľte všetky sekcie"
-      filter: "Filter..."
-      filter_links: "Filtrovanie odkazov..."
-      clear_filter: "Vymazať filter"
-      no_results:
-        title: "Žiadne výsledky"
-        description: 'Nenašli sme nič, čo by zodpovedalo ''%{filter}''.<br><br>Chceli ste <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">prehľadávať nastavenia stránky</a> alebo <a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">zoznam používateľov administrátora?</a>'
-        description_admin_search: 'Nenašli sme nič, čo by zodpovedalo ''%{filter}''.<br><br>Skúste <a class="sidebar-additional-filter-admin-search" href="%{admin_search_url}">prehľadávať celé rozhranie administrátora</a>.'
+      search: "Hľadať"
       footer:
         interface_color_selector:
           light: "Svetlá"
@@ -5364,6 +5378,45 @@ sk:
           save: "Uložiť ako..."
     powered_by_discourse: "Powered by Discourse"
     safari_15_warning: "Váš prehliadač bude čoskoro nekompatibilný s touto komunitou. Ak sa chcete naďalej zúčastňovať, aktualizujte svoj prehliadač alebo <a href='%{url}'>sa dozviete viac.</a>"
+    discovery:
+      headings:
+        all:
+          default: "Všetky témy %{filter}"
+          posted: "Všetky témy, ktoré ste zverejnili v"
+          bookmarks: "Všetky témy, ktoré ste si pridali do záložiek"
+        category:
+          default: "%{filter} tém v %{category}"
+          posted: "Témy v %{category} , v ktorých ste uverejnili príspevok"
+          bookmarks: "Témy na %{category} , ktoré ste si pridali do záložiek"
+        no_tags:
+          all_default: "Všetky témy bez značiek"
+          category_default: "%{filter} tém v %{category} bez značiek"
+          all:
+            posted: "Všetky témy bez značiek, ktoré ste zverejnili"
+            bookmarks: "Všetky témy bez značiek, ktoré ste si pridali do záložiek"
+          category:
+            posted: "Témy v %{category} bez štítkov, ktoré ste uverejnili"
+            bookmarks: "Témy v %{category} bez značiek, ktoré ste si pridali medzi záložky"
+        single_tag:
+          default: "%{filter} témy označené %{tag}"
+          posted: "Témy označené %{tag} , v ktorých ste uverejnili príspevok"
+          bookmarks: "Témy označené %{tag} , ktoré ste si pridali do záložiek"
+        multi_tag:
+          default: "%{filter} témy označené %{tags}"
+          posted: "Témy označené %{tags} , v ktorých ste uverejnili príspevok"
+          bookmarks: "Témy označené %{tags} , ktoré ste si pridali do záložiek"
+        category_tag:
+          default: "%{filter} témy v %{category} označené tagom %{tag}"
+          posted: "Témy v %{category} označené %{tag} , v ktorých ste uverejnili"
+          bookmarks: "Témy v %{category} označené %{tag} , ktoré ste si pridali medzi záložky"
+        categories: "Všetky kategórie"
+        filter_labels:
+          latest: "Najnovšie"
+          top: "Najlepšie"
+          new: "Nový"
+          unread: "Neprečítané"
+          hot: "Horúce"
+          unseen: "Nevidené"
   admin_js:
     type_to_filter: "Filtrovať..."
     settings: "Nastavenia"
@@ -5415,9 +5468,6 @@ sk:
           title: "Moderovanie"
           header_description: "Systém označovania v službe Discourse pomáha vám a vášmu moderátorskému tímu spravovať obsah a správanie používateľov, aby vaša komunita bola rešpektovaná a zdravá. Predvolené nastavenia sú vhodné pre väčšinu komunít a nemusíte ich meniť. Ak má však vaša stránka špecifické požiadavky, môžete vypnúť príznaky, ktoré nepotrebujete, a pridať vlastné príznaky."
           keywords: "príznak|recenzia|spam|nelegálne"
-        font_style:
-          title: "Štýl písma"
-          header_description: "Prispôsobenie štýlov písma používaných v témach"
         files:
           title: "Súbory"
           header_description: "Nastavenia, ktoré kontrolujú veľkosť a typ súborov, veľkosti a zdroje avatarov, ukladanie súborov, kvalitu a kompresiu obrázkov a ďalšie."
@@ -5431,11 +5481,9 @@ sk:
         login_and_authentication:
           title: "Prihlásenie a overovanie"
           header_description: "Nakonfigurujte spôsob prihlasovania a overovania používateľov, tajomstvá a kľúče, poskytovateľov OAuth2 a ďalšie"
-        logo:
-          title: "Logo stránky"
-          header_description: "Prispôsobenie variantov loga vášho webu"
-        branding:
-          title: "Branding"
+        logo_and_fonts:
+          title: "Logo a písma"
+          header_description: "Prispôsobenie variantov loga a písma vašej stránky"
           logo:
             title: "Logo"
             form:
@@ -5500,6 +5548,28 @@ sk:
                 title: "X súhrnný veľký obrázok"
                 description: "X karta \"súhrnný veľký obrázok\". Ak zostanú prázdne, bežné metadáta karty sa generujú pomocou OpenGraph_image, pokiaľ to nie je zároveň .svg."
                 help_text: "odporúčaná veľkosť je aspoň 280 x 150 pixelov. Nepoužívajte obrázok SVG."
+          fonts:
+            title: "Fonty"
+            form:
+              more_fonts: "Viac fontov"
+              less_fonts: "Menej fontov"
+              saved: "Nastavenia písma sú uložené."
+              base_font:
+                title: "Základné písmo"
+              heading_font:
+                title: "Písmo nadpisu"
+              default_text_size:
+                title: "Predvolená veľkosť textu"
+                description: "Túto veľkosť si môže každý používateľ následne upraviť podľa svojich preferencií."
+            backfill_modal:
+              title: "Použiť nové predvolené nastavenia textu?"
+              description:
+                one: "Aktualizovali ste predvolenú veľkosť textu. Chcete túto zmenu aplikovať na %{count} existujúceho používateľa?"
+                few: "Aktualizovali ste predvolenú veľkosť textu. Chcete túto zmenu aplikovať na %{count} existujúcich používateľov?"
+                many: "Aktualizovali ste predvolenú veľkosť textu. Chcete túto zmenu aplikovať na %{count} existujúcich používateľov?"
+                other: "Aktualizovali ste predvolenú veľkosť textu. Chcete túto zmenu aplikovať na %{count} existujúcich používateľov?"
+              modal_yes: "Áno"
+              modal_no: "Nie, prihlás sa len ďalej"
         navigation:
           title: "Navigácia"
           header_description: "Konfigurácia navigačných odkazov a položiek ponuky na vašom webe. To zahŕňa umiestnenie a správanie primárnej navigačnej ponuky, rýchlych odkazov v hornej časti domovskej stránky, ako aj bočného panela správcu."
@@ -5509,9 +5579,6 @@ sk:
         onebox:
           title: "Onebox"
           header_description: "Konfigurácia spôsobu generovania a zobrazovania náhľadov v rámčeku OneBox pre váš web"
-        other:
-          title: "Ostatné"
-          header_description: "Nastavenia, ktoré nepatria do žiadnej inej kategórie"
         rate_limits:
           title: "Limity sadzieb"
           header_description: "Konfigurácia toho, ako často môžu používatelia vykonávať určité činnosti, napríklad vytvárať témy, posielať správy a odosielať odpovede."
@@ -5520,7 +5587,7 @@ sk:
           header_description: "Konfigurácia nastavení vyhľadávania vrátane protokolovania a tokenizácie pre čínštinu a japončinu"
         search_everything:
           title: "Hľadať"
-          header_description: "Tu nájdete čokoľvek v rozhraní správcu. Výsledky môžete filtrovať nižšie a vaše preferencie sa zapamätajú."
+          header_description: "Tu nájdete čokoľvek v rozhraní správcu. Výsledky môžete filtrovať nižšie a vaše preferencie sa zapamätajú. Ak chcete otvoriť toto vyhľadávanie kdekoľvek v rozhraní správcu, stlačte tlačidlo %{shortcutHTML}."
         security:
           title: "Bezpečnosť"
           header_description: "Konfigurácia nastavení zabezpečenia vrátane dvojfaktorového overovania, oprávnení moderátora a zásad zabezpečenia obsahu"
@@ -5562,12 +5629,40 @@ sk:
         reports:
           title: "Hlásenia"
           header_description: "Správy sú účinným nástrojom, ktorý vám pomôže pochopiť, čo sa deje na vašom webe. Pomôžu vám identifikovať trendy, odhaliť problémy a prijímať rozhodnutia na základe údajov."
+          sub_pages:
+            settings:
+              title: "Nastavenia palubnej dosky"
         badges:
           title: "Odznaky"
           header_description: "Odznaky odmeňujú používateľov za ich aktivity, príspevky a úspechy s cieľom uznať, potvrdiť a podporiť pozitívne správanie a angažovanosť v rámci komunity"
+        analytics:
+          title: "Analytika a SEO"
+          header_description: "Zlepšenie viditeľnosti vášho webu vo vyhľadávačoch a konfigurácia sledovania návštevníkov webu"
+          keywords: "vyhľadávanie|google|mapa stránok"
+        interface:
+          title: "Rozhranie a rozloženie"
+          header_description: "Prispôsobenie podrobností všeobecného rozvrhnutia a používateľského rozhrania vášho webu"
+          keywords: "splash"
+        content:
+          title: "Obsah"
+          header_description: "Konfigurácia správy tém a príspevkov a prispôsobenie vytvárania obsahu pre svojich členov"
+          keywords: "témy|príspevky|kategórie|značky"
+          sub_pages:
+            categories_and_tags:
+              title: "Kategórie a značky"
+            sharing:
+              title: "Zdieľanie"
+            posts_and_topics:
+              title: "Príspevky a témy"
+            stats_and_thresholds:
+              title: "Štatistiky a prahové hodnoty"
         permalinks:
           title: "Trvalé odkazy"
           header_description: "Presmerovanie na adresy URL, ktoré fórum nepozná"
+        user_defaults:
+          title: "Predvolené nastavenia používateľa"
+          header_description: "Nastavenie predvolených hodnôt pre nastavenia, ktoré ovplyvňujú používateľov, a konfigurácia ich skúseností pri vstupe do systému"
+          keywords: "používatelia|nastupujú|noví"
         user_fields:
           title: "Používateľské polia"
           header_description: "Vytvorte si vlastné používateľské polia na zhromažďovanie ďalších podrobností o členoch komunity. Môžete si vybrať, aké informácie sa vyžadujú pri registrácii, čo sa zobrazí v profiloch a čo môžu používatelia aktualizovať."
@@ -5591,14 +5686,21 @@ sk:
           title: "Témy a komponenty"
           header_description: "Prispôsobte si svoju stránku Discourse pomocou tém a komponentov podľa svojich potrieb"
           keywords: "téma|komponent|rozšírenie|prispôsobiť"
+        site_admin:
+          title: "Správca stránky"
+          header_description: "Konfigurácia rôznych nastavení týkajúcich sa správy vášho webu"
+          keywords: "objaviť|bootstrap|aplikácie"
         site_texts:
           title: "Texty stránok"
           header_description: "Prispôsobenie akéhokoľvek textu používaného v Discourse tak, aby zodpovedal hlasu a tónu vašej komunity"
         email:
-          title: "Nastavenie servera a protokoly"
-          header_description: "Prispôsobte si šablóny používané na vytváranie e-mailov, zobrazte si náhľad súhrnných e-mailov, ktoré budú odoslané, a zobrazte protokoly e-mailov"
-          keywords: "email|smtp|mailgun|sendgrid|poslané|preskočený|odmeňované|prijaté|odmietnutý|e-mailové denníky|náhľad zhrnutia"
+          title: "Nastavenia e-mailu"
+          header_description: "Konfigurácia nastavení pre e-maily odosielané členom"
+          keywords: "digest|odhlásenie|mail|smtp|mailgun|sendgrid|prehľad súhrnu"
           sub_pages:
+            server_settings:
+              title: "Nastavenia servera"
+              header_description: "Konfigurácia nastavení pre e-maily odosielané členom"
             preview_summary:
               title: "Súhrn ukážky"
               header_description: "Náhľad obsahu súhrnných emailov zaslaných neaktívnym používateľom"
@@ -5608,6 +5710,11 @@ sk:
             templates:
               title: "Šablóny"
               header_description: "Prispôsobenie šablón používaných na vytváranie e-mailov"
+        email_logs:
+          title: "Protokoly e-mailov"
+          header_description: "Zobrazenie protokolov pre e-maily odoslané z vášho webu"
+          keywords: "odoslané|vynechané|odhlásené|prijaté|odmietnuté|záznamy e-mailov"
+          sub_pages:
             sent:
               title: "Odoslané"
               header_description: "Zobrazenie denníka odoslaných e-mailov"
@@ -5661,6 +5768,8 @@ sk:
         modal_title: "Vyhľadávanie čohokoľvek v aplikácii admin"
         title: "Hľadať"
         instructions: "Zadajte typ na vyhľadávanie stránok, nastavení, správ, tém, komponentov a ďalších..."
+        full_page_link: "Prepnutie na vyhľadávanie na celej stránke"
+        no_results: "Nenašli sme nič zodpovedajúce výrazu „%{filter}“."
         result_types:
           page:
             one: "Stránka"
@@ -6319,7 +6428,8 @@ sk:
             post: "príspevky"
             chat_message: "chat správy"
             enabled: "Po uložení povoľte tento vlastný príznak"
-            alert: "Po použití vlastného príznaku ho možno iba deaktivovať, ale nie upravovať ani vymazávať."
+            create_warning: "Po použití vlastného príznaku ho možno len vypnúť alebo upraviť, ale nie odstrániť."
+            edit_warning: "Úprava názvu a popisu príznaku môže spôsobiť potenciálne nekonzistentnosti údajov. Po použití vlastného príznaku ho možno len vypnúť alebo upraviť, ale nie odstrániť."
             edit_flag: "Upraviť príznak"
             non_editable: "Tento príznak nemôžete upraviť, pretože je to systémový príznak alebo už bol použitý v systéme hodnotenia, môžete ho však vypnúť."
             delete_flag: "Odstrániť príznak"
@@ -6351,9 +6461,46 @@ sk:
             back: "Späť na témy"
           components:
             title: "Komponenty"
+            description: "Prispôsobenia, ktoré menia povrchové prvky dizajnu vášho fóra alebo pridávajú ďalšie funkcie front-endu"
             components_intro: "Na začiatok si nainštalujte nový komponent alebo si vytvorte vlastný od začiatku pomocou týchto zdrojov."
             new_component: "Nový komponent"
             back: "Späť na komponenty"
+            install: "Inštalácia"
+            name: "Meno"
+            used_on: "Používa sa na"
+            enabled: "Povolené?"
+            by_author: "Od %{name}"
+            learn_more: "Zistite viac"
+            edit: "Upraviť"
+            parent_themes_two: "%{name1} a %{name2}"
+            parent_themes_three: "%{name1}, %{name2} a %{name3}"
+            parent_themes_more_than_three:
+              one: "%{name1}, %{name2}, %{name3} a %{count} viac"
+              few: "%{name1}, %{name2}, %{name3} a %{count} viac"
+              many: "%{name1}, %{name2}, %{name3} a %{count} viac"
+              other: "%{name1}, %{name2}, %{name3} a %{count} viac"
+            add_to_theme: "Pridať do témy"
+            preview: "Ukážka"
+            update: "Aktualizácia na najnovšiu verziu"
+            check_update: "Kontrola aktualizácií"
+            update_available: "Aktualizácia je k dispozícii!"
+            export: "Export"
+            convert: "Previesť"
+            delete: "Odstrániť"
+            filter_by: "Triediť podľa"
+            filter_by_all: "Všetky"
+            filter_by_used: "Použité"
+            filter_by_unused: "Nepoužité"
+            filter_by_updates_available: "Dostupné aktualizácie"
+            search_components: "Zadajte názov komponentu"
+            new_update_for_component: "Nová aktualizácia je k dispozícii pre %{name}!"
+            component_up_to_date: '„%{name}“ je aktuálne.'
+            updated_successfully: '"%{name}" bol úspešne aktualizovaný.'
+            delete_confirm: 'Naozaj chcete odstrániť „%{name}“?'
+            deleted_successfully: '"%{name}" bol úspešne odstránený.'
+            no_components: "Nie sú nainštalované žiadne komponenty."
+            no_components_found: "Žiadne komponenty nezodpovedajú vašim filtrom."
+            badge_unused: "Nepoužité"
         user_fields:
           field: "Pole"
           type: "Typ"
@@ -6372,8 +6519,8 @@ sk:
             toggle_description: "Farebná paleta môže byť vybraná používateľmi"
           colors:
             title: "Farby"
-          fonts_and_logos_hint: "Chcete aktualizovať svoje písma a logá?"
-          go_to_branding: "Prejsť na Branding"
+          logo_and_fonts_hint: "Chcete aktualizovať svoje logo a písma?"
+          go_to_logo_and_fonts: "Prejsť na Logo a písma"
           save_changes: "Uloženie zmien"
           unsaved_changes: "Máte neuložené zmeny"
           copy_of: "Kópia %{name}"
@@ -6550,10 +6697,15 @@ sk:
           extra_files_upload: "Téma exportu na zobrazenie týchto súborov."
           extra_files_remote: "Ak chcete zobraziť tieto súbory, exportujte tému alebo skontrolujte repozitár git."
           preview: "Ukážka"
+          default: "Aktívny"
           settings_editor: "Editor nastavení"
           show_advanced: "Zobraziť pokročilé"
           is_default: "Téma je predvolene povolená"
           user_selectable: "Tému si môžu vybrať používatelia"
+          user_selectable_badge_label: "Voliteľné používateľom"
+          user_selectable_button_label: "Umožniť používateľom vybrať"
+          user_selectable_unavailable_button_label: "Zneprístupniť používateľom"
+          broken_badge_label: "Zlomená téma"
           color_scheme_user_selectable: "Farebná paleta môže byť vybraná používateľmi"
           auto_update: "Automatická aktualizácia pri aktualizácii Discourse"
           color_scheme: "Paleta farieb"
@@ -6571,9 +6723,10 @@ sk:
           convert_theme_alert_generic: "Ste si istí, že chcete túto tému previesť na komponent?"
           convert_theme_tooltip: "Previesť túto tému na komponent"
           inactive_themes: "Neaktívne témy:"
-          set_default_theme: "Nastavenie predvoleného nastavenia"
-          default_theme: "Predvolená téma"
+          set_default_theme: "Nastaviť ako aktívne"
+          default_theme: "Aktívna téma"
           set_default_success: "Predvolená téma nastavená na %{theme}"
+          setting_was_saved: "Nastavenie témy bolo uložené"
           install_success: "%{theme} úspešne nainštalované!"
           inactive_components: "Nepoužité komponenty:"
           selected:
@@ -6587,6 +6740,7 @@ sk:
           disabled_component_tooltip: "Tento komponent bol zakázaný"
           default_theme_tooltip: "Táto téma je predvolená téma stránky"
           updates_available_tooltip: "Pre túto tému sú k dispozícii aktualizácie"
+          update_available: "Vyžaduje sa aktualizácia"
           and_x_more:
             one: "a %{count} viac."
             few: "a %{count} ďalších."
@@ -6650,8 +6804,8 @@ sk:
             error: "Táto téma bola automaticky vypnutá, pretože nie je kompatibilná s touto verziou Discourse."
             minimum: "Vyžaduje verziu Discourse %{version} alebo vyššiu."
             maximum: "Vyžaduje verziu Discourse %{version} alebo nižšiu."
-          update_to_latest: "Aktualizácia na najnovšie"
-          check_for_updates: "Skontrolovať aktualizácie"
+          update_to_latest: "Aktualizácia na najnovšiu verziu"
+          check_for_updates: "Kontrola aktualizácií"
           updating: "Aktualizujem..."
           update_success: "%{theme} Aktualizácia dokončená"
           up_to_date: "Téma je aktuálna, naposledy skontrolovaná:"
@@ -7203,6 +7357,7 @@ sk:
           dropdown: "Zoznam"
           upload: "Nahrať súbor"
           multiselect: "Viacnásobný výber"
+          tagchooser: "Výber skupiny značiek"
         validations_modal:
           button_title: "Overenia"
           modal_title: "Možnosti overovania"
@@ -7248,6 +7403,8 @@ sk:
           toggle_form_template: "povolená šablóna formulára"
           select_template: "Výber šablón formulárov"
           select_template_help: "Pridanie/úprava šablón formulárov"
+        errors:
+          multiple_tags_not_allowed: 'Nemôžete vybrať viac značiek z "%{tag_name}". Ak sa chcete vyhnúť problémom, použite šablónu formulára'
       impersonate:
         title: "Privlastniť"
         help: "Použite tento nástroj na privlastnenie si používateľského účtu na účely debugovania. Po skončení sa budete musieť odhlásiť."
@@ -7698,13 +7855,21 @@ sk:
       site_settings:
         title: "Nastavenia stránky"
         description: "Konfigurujte nastavenia svojej stránky Discourse a prispôsobte jej vzhľad, funkcie a používateľské prostredie."
-        discard: "Zahodenie zmien"
-        save: "Uložiť všetky zmeny"
+        discard:
+          one: "Zahodiť zmenu"
+          few: "Zahodenie zmien"
+          many: "Zahodenie zmien"
+          other: "Zahodenie zmien"
+        save:
+          one: "Uložiť zmenu"
+          few: "Uložiť všetky zmeny"
+          many: "Uložiť všetky zmeny"
+          other: "Uložiť všetky zmeny"
         dirty_banner:
-          one: "Máte <em>%{count}</em> neuloženú zmenu"
-          few: "Máte <em>%{count}</em> neuložených zmien"
-          many: "Máte <em>%{count}</em> neuložených zmien"
-          other: "Máte <em>%{count}</em> neuložené zmeny"
+          one: "Máte <b>%{count}</b> neuloženú zmenu"
+          few: "Máte <b>%{count}</b> neuložených zmien"
+          many: "Máte <b>%{count}</b> neuložené zmeny"
+          other: "Máte <b>%{count}</b> neuložené zmeny"
         emoji_list:
           invalid_input: "Zoznam emodži by mal obsahovať len platné názvy emodži, napr.: objatie"
           add_emoji_button:
