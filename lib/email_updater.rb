@@ -37,8 +37,6 @@ class EmailUpdater
       if secondary_emails_count >= SiteSetting.max_allowed_secondary_emails
         errors.add(:base, I18n.t("change_email.max_secondary_emails_error"))
       end
-      # else
-      #   old_email = @user.email
     end
 
     return if errors.present? || existing_user.present?
@@ -56,11 +54,6 @@ class EmailUpdater
         new_email: email,
       )
 
-    # if @change_req.new_record?
-    #   @change_req.requested_by = @guardian.user
-    #   @change_req.old_email = old_email
-    #   @change_req.new_email = email
-    # end
     @change_req.old_email = nil if add
     @change_req.requested_by = @guardian.user if @change_req.new_record?
 

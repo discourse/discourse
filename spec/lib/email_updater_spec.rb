@@ -438,26 +438,32 @@ RSpec.describe EmailUpdater do
   end
 
   context "when changing back to original email" do
-    let(:plus_email) { "new.email+123@example.com" }
+    let(:plus_email_1) { "new.email+11@example.com" }
+    let(:plus_email_2) { "new.email+22@example.com" }
     let(:user) { Fabricate(:user, email: old_email) }
     let(:updater) { EmailUpdater.new(guardian: user.guardian, user: user) }
 
     before do
       SiteSetting.normalize_emails = false
       SiteSetting.require_change_email_confirmation = true
-
-      updater.change_to(new_email)
-      updater.confirm(updater.change_req.old_email_token&.token)
-      updater.change_to(plus_email)
-      updater.confirm(updater.change_req.old_email_token&.token)
-      updater.change_to(old_email)
     end
 
     it "shows correct old email" do
-      expect(updater.change_req.old_email).to eq(plus_email)
-      expect(updater.change_req.new_email).to eq(old_email)
-      expect(updater.change_req.change_state).to eq(EmailChangeRequest.states[:authorizing_new])
-      expect(updater.change_req.old_email_token).to be_blank
+      updater.change_to(plus_email_1)
+      updater.confirm(updater.change_req.old_email_token&.token)
+      updater.confirm(updater.change_req.new_email_token&.token)
+
+      updater.change_to(old_email)
+      updater.confirm(updater.change_req.old_email_token&.token)
+      updater.confirm(updater.change_req.new_email_token&.token)
+
+      updater.change_to(plus_email_2)
+      updater.confirm(updater.change_req.old_email_token&.token)
+      updater.confirm(updater.change_req.new_email_token&.token)
+
+      updater.change_to(old_email)
+      expect(updater.change_req.old_email).to eq(plus_email_2)
+      expect(updater.change_req.old_email_token.email).to eq(plus_email_2)
     end
   end
 end
