@@ -19,6 +19,14 @@ import { buildResolver } from "discourse/resolver";
 const _pluginCallbacks = [];
 let _unhandledThemeErrors = [];
 
+console.log("run");
+window.moduleBroker = {
+  lookup: function (moduleName) {
+    return require(moduleName);
+  },
+};
+window.themePrefix = (str) => str;
+
 class Discourse extends Application {
   modulePrefix = "discourse";
   rootElement = "#main";
@@ -155,6 +163,12 @@ function loadInitializers(app) {
   for (let [moduleName, themeId] of discourseInstanceInitializers) {
     app.instanceInitializer(resolveDiscourseInitializer(moduleName, themeId));
   }
+
+  window.themeInitializers.forEach((obj) => {
+    for (const [moduleName, initializer] of Object.entries(obj)) {
+      app.instanceInitializer(initializer);
+    }
+  });
 
   // Plugins that are registered via `<script>` tags.
   for (let [i, callback] of _pluginCallbacks.entries()) {

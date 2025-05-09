@@ -33,10 +33,8 @@ class ThemeJavascriptCompiler
       output =
         if !has_content?
           { "code" => "" }
-        elsif @@terser_disabled || !@minify
-          { "code" => raw_content }
         else
-          DiscourseJsProcessor::Transpiler.new.terser(@output_tree.to_h, terser_config)
+          DiscourseJsProcessor::Transpiler.new.rollup(@output_tree.to_h, {})
         end
 
       @content = output["code"]
@@ -161,61 +159,19 @@ class ThemeJavascriptCompiler
     end
 
     # Transpile and write to output
-    tree.each_pair do |filename, content|
-      module_name, extension = filename.split(".", 2)
-
-      if extension == "js" || extension == "gjs"
-        append_module(content, module_name, extension, include_variables:)
-      elsif extension == "hbs"
-        append_ember_template(module_name, content)
-      else
-        append_js_error(filename, "unknown file extension '#{extension}' (#{filename})")
-      end
-    rescue CompileError => e
-      append_js_error filename, "#{e.message} (#{filename})"
-    end
+    tree.each_pair { |filename, content| @output_tree << [filename, content] }
   end
 
   def append_ember_template(name, hbs_template)
-    module_name = name
-    module_name = "/#{module_name}" if !module_name.start_with?("/")
-    module_name = "discourse/theme-#{@theme_id}#{module_name}"
-
-    # Mimics the ember-cli implementation
-    # https://github.com/ember-cli/ember-cli-htmlbars/blob/d5aa14b3/lib/template-compiler-plugin.js#L18-L26
-    script = <<~JS
-      import { hbs } from 'ember-cli-htmlbars';
-      export default hbs(#{hbs_template.to_json}, { moduleName: #{module_name.to_json} });
-    JS
-
-    template_module = DiscourseJsProcessor.transpile(script, "", module_name, theme_id: @theme_id)
-    @output_tree << ["#{name}.js", <<~JS]
-      if ('define' in window) {
-      #{template_module}
-      }
-    JS
-  rescue MiniRacer::RuntimeError, DiscourseJsProcessor::TranspileError => ex
-    raise CompileError.new ex.message
+    # TODO
   end
 
   def append_raw_script(filename, script)
-    @output_tree << [filename, script + "\n"]
+    #todo
   end
 
   def append_module(script, name, extension, include_variables: true)
-    original_filename = name
-    name = "discourse/theme-#{@theme_id}/#{name}"
-
-    script = "#{theme_settings}#{script}" if include_variables
-    transpiler = DiscourseJsProcessor::Transpiler.new
-
-    @output_tree << ["#{original_filename}.#{extension}", <<~JS]
-      if ('define' in window) {
-      #{transpiler.perform(script, "", name, theme_id: @theme_id, extension: extension).strip}
-      }
-    JS
-  rescue MiniRacer::RuntimeError, DiscourseJsProcessor::TranspileError => ex
-    raise CompileError.new ex.message
+    #todo
   end
 
   def append_js_error(filename, message)

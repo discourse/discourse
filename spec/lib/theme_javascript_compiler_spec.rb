@@ -89,6 +89,16 @@ RSpec.describe ThemeJavascriptCompiler do
     it "can handle multiple modules" do
       compiler.append_tree(
         {
+          "discourse/initializers/my-initializer.js" => <<~JS,
+            import MyComponent from "../components/mycomponent";
+
+            export default {
+              name: "my-initializer",
+              initialize() {
+                console.log("my-initializer", MyComponent);
+              },
+            };
+          JS
           "discourse/components/mycomponent.js" => <<~JS,
             import Component from "@glimmer/component";
             export default class MyComponent extends Component {}
@@ -96,10 +106,10 @@ RSpec.describe ThemeJavascriptCompiler do
           "discourse/templates/components/mycomponent.hbs" => "{{my-component-template}}",
         },
       )
-      expect(compiler.raw_content).to include(
+      expect(compiler.content).to include(
         'define("discourse/theme-1/discourse/components/mycomponent"',
       )
-      expect(compiler.raw_content).to include(
+      expect(compiler.content).to include(
         'define("discourse/theme-1/discourse/templates/components/mycomponent"',
       )
     end

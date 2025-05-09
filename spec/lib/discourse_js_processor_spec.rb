@@ -212,12 +212,30 @@ RSpec.describe DiscourseJsProcessor do
 
       result = DiscourseJsProcessor::Transpiler.new.rollup(sources, {})
 
-      puts result
-
-      code = result[0]["code"]
-      expect(code).to include("'hello world'")
-      expect(code).to include("'hello world 2'")
+      code = result["code"]
+      expect(code).to include('"hello world"')
+      expect(code).to include('"hello world 2"')
       expect(code).to include("dt7948") # Decorator transform
+
+      expect(result["map"]).not_to be_nil
+    end
+
+    it "supports decorators and class properties without error" do
+      script = <<~JS.chomp
+        class MyClass {
+          classProperty = 1;
+          #privateProperty = 1;
+          #privateMethod() {
+            console.log("hello world");
+          }
+          @decorated
+          myMethod(){
+          }
+        }
+      JS
+
+      result = DiscourseJsProcessor::Transpiler.new.rollup({ "main.js" => script }, {})
+      expect(result["code"]).to include("(()=>dt7948.n")
     end
   end
 end

@@ -1,9 +1,12 @@
+import BabelPresetEnv from "@babel/preset-env";
 import { rollup } from "@rollup/browser";
 import { babel } from "@rollup/plugin-babel";
 import HTMLBarsInlinePrecompile from "babel-plugin-ember-template-compilation";
 import DecoratorTransforms from "decorator-transforms";
 import { precompile } from "ember-source/dist/ember-template-compiler";
-import { dirname, relative } from "path";
+import { dirname, join } from "path";
+import { minify as terserMinify } from "terser";
+import { browsers } from "../discourse/config/targets";
 import BabelReplaceImports from "./babel-replace-imports";
 import { Preprocessor } from "./content-tag";
 
@@ -29,11 +32,28 @@ globalThis.fetch = function (url) {
   throw "fetch not implemented";
 };
 
+function generateMain(tree) {
+  const initializers = Object.keys(tree).filter((key) =>
+    key.includes("/initializers/")
+  );
+
+  let output = "export const initializers = {};\n";
+
+  let i = 1;
+  for (const initializer of initializers) {
+    output += `import Init${i} from "${initializer}";\n`;
+    output += `initializers["${initializer}"] = Init${i};\n`;
+    i += 1;
+  }
+
+  return output;
+}
+
 let lastRollupResult;
 let lastRollupError;
 globalThis.rollup = function (modules, options) {
   const resultPromise = rollup({
-    input: "main.js",
+    input: "virtual:main",
     logLevel: "info",
     onLog(level, message) {
       console.log(level, message);
@@ -45,15 +65,26 @@ globalThis.rollup = function (modules, options) {
           extensions: [".js", ".gjs"],
         },
         resolveId(source, context) {
-          if (source.startsWith(".")) {
-            source = relative(dirname(context), source);
-          }
-          console.log("resolveid", source, context);
-          if (modules.hasOwnProperty(source)) {
+          if (source === "virtual:main") {
             return source;
           }
+
+          if (source.startsWith(".")) {
+            source = join(dirname(context), source);
+          }
+
+          for (const ext of ["", ".js", ".gjs"]) {
+            const candidate = source + ext;
+            if (modules.hasOwnProperty(candidate)) {
+              return candidate;
+            }
+          }
+          return false;
         },
         load(id) {
+          if (id === "virtual:main") {
+            return generateMain(modules);
+          }
           if (modules.hasOwnProperty(id)) {
             return modules[id];
           }
@@ -63,7 +94,7 @@ globalThis.rollup = function (modules, options) {
         extensions: [".js", ".gjs"],
         babelHelpers: "bundled",
         plugins: [
-          DecoratorTransforms,
+          [DecoratorTransforms, { runEarly: true }],
           BabelReplaceImports,
           [
             HTMLBarsInlinePrecompile,
@@ -74,6 +105,19 @@ globalThis.rollup = function (modules, options) {
                 "ember-cli-htmlbars-inline-precompile",
                 "htmlbars-inline-precompile",
               ],
+            },
+          ],
+          // TODO: Ember this fallback
+          // TODO: template colocation
+          // TODO: themePrefix etc.
+          // TODO: widgetHbs (remove from d-calendar)
+        ],
+        presets: [
+          [
+            BabelPresetEnv,
+            {
+              modules: false,
+              targets: { browsers },
             },
           ],
         ],
@@ -98,12 +142,26 @@ globalThis.rollup = function (modules, options) {
           },
         },
       },
+      {
+        name: "terser",
+        async renderChunk(code, chunk, outputOptions) {
+          const defaultOptions = {
+            sourceMap:
+              outputOptions.sourcemap === true ||
+              typeof outputOptions.sourcemap === "string",
+          };
+
+          defaultOptions.module = true;
+
+          return await terserMinify(code, defaultOptions);
+        },
+      },
     ],
   });
 
   resultPromise
     .then((bundle) => {
-      return bundle.generate({ format: "es" });
+      return bundle.generate({ format: "es", sourcemap: true });
     })
     .then(({ output }) => (lastRollupResult = output))
     .catch((error) => (lastRollupError = error));
