@@ -104,6 +104,13 @@ export default class SearchTerm extends Component {
     e.preventDefault();
   }
 
+  @action
+  onFocusOut(e) {
+    // prevents focusout bubbling and closing the menu panel:
+    // `focusOutHandler` in `app/components/header.gjs`
+    e.stopPropagation();
+  }
+
   parseAndUpdateSearchTerm(originalVal, newVal) {
     // remove zero-width chars
     const parsedVal = newVal.replace(/[\u200B-\u200D\uFEFF]/, "");
@@ -127,6 +134,7 @@ export default class SearchTerm extends Component {
       {{on "keydown" this.onKeydown}}
       {{on "input" this.updateSearchTerm}}
       {{on "focus" @openSearchMenu}}
+      {{on "focusout" this.onFocusOut}}
       {{didInsert this.focus}}
     />
   </template>
