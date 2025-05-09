@@ -6675,31 +6675,31 @@ en:
           active_filter: "Active"
           inactive_filter: "Inactive"
           updates_available_filter: "Updates Available"
-          schema:
-            title: "Edit %{name} setting"
-            back_button: "Back to %{name}"
-            fields:
-              required: "*required"
-              groups:
-                at_least:
-                  one: "at least %{count} group is required"
-                  other: "at least %{count} groups are required"
-              categories:
-                at_least:
-                  one: "at least %{count} category is required"
-                  other: "at least %{count} categories are required"
-              tags:
-                at_least:
-                  one: "at least %{count} tag is required"
-                  other: "at least %{count} tags are required"
-              string:
-                too_short:
-                  one: "must be at least %{count} character"
-                  other: "must be at least %{count} characters"
-              number:
-                too_small: "must be greater than or equal to %{count}"
-                too_large: "must be less than or equal to %{count}"
-
+          
+        schema:
+          title: "Edit %{name} setting"
+          back_button: "Back to %{name}"
+          fields:
+            required: "*required"
+            groups:
+              at_least:
+                one: "at least %{count} group is required"
+                other: "at least %{count} groups are required"
+            categories:
+              at_least:
+                one: "at least %{count} category is required"
+                other: "at least %{count} categories are required"
+            tags:
+              at_least:
+                one: "at least %{count} tag is required"
+                other: "at least %{count} tags are required"
+            string:
+              too_short:
+                one: "must be at least %{count} character"
+                other: "must be at least %{count} characters"
+            number:
+              too_small: "must be greater than or equal to %{count}"
+              too_large: "must be less than or equal to %{count}"
         colors:
           select_base:
             title: "Select base color palette"

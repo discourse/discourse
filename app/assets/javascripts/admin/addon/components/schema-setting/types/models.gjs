@@ -4,7 +4,7 @@ import { action } from "@ember/object";
 import { isBlank } from "@ember/utils";
 import { i18n } from "discourse-i18n";
 
-export default class SchemaThemeSettingTypeModels extends Component {
+export default class SchemaSettingTypeModels extends Component {
   @tracked value = this.args.value;
 
   required = this.args.spec.required;
@@ -33,7 +33,7 @@ export default class SchemaThemeSettingTypeModels extends Component {
       (this.min && this.value && this.value.length < this.min) ||
       (this.required && isValueBlank)
     ) {
-      return i18n(`admin.customize.theme.schema.fields.${this.type}.at_least`, {
+      return i18n(`admin.customize.schema.fields.${this.type}.at_least`, {
         count: this.min || 1,
       });
     }

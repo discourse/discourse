@@ -8,10 +8,10 @@ import DButton from "discourse/components/d-button";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { cloneJSON } from "discourse/lib/object";
 import { i18n } from "discourse-i18n";
-import Tree from "admin/components/schema-theme-setting/editor/tree";
-import FieldInput from "admin/components/schema-theme-setting/field";
+import Tree from "admin/components/schema-setting/editor/tree";
+import FieldInput from "admin/components/schema-setting/field";
 
-export default class SchemaThemeSettingNewEditor extends Component {
+export default class SchemaSettingNewEditor extends Component {
   @service router;
 
   @tracked history = [];
@@ -67,7 +67,7 @@ export default class SchemaThemeSettingNewEditor extends Component {
 
     const lastHistory = this.history[this.history.length - 1];
 
-    return i18n("admin.customize.theme.schema.back_button", {
+    return i18n("admin.customize.schema.back_button", {
       name: this.generateSchemaTitle(
         this.#resolveDataFromPaths(lastHistory.dataPaths)[lastHistory.index],
         this.#resolveSchemaFromPaths(lastHistory.schemaPaths),
@@ -245,17 +245,17 @@ export default class SchemaThemeSettingNewEditor extends Component {
   }
 
   <template>
-    <div class="schema-theme-setting-editor">
+    <div class="schema-setting-editor">
       {{#if this.validationErrorMessage}}
-        <div class="schema-theme-setting-editor__errors">
+        <div class="schema-setting-editor__errors">
           <div class="alert alert-error">
             {{this.validationErrorMessage}}
           </div>
         </div>
       {{/if}}
 
-      <div class="schema-theme-setting-editor__wrapper">
-        <div class="schema-theme-setting-editor__navigation">
+      <div class="schema-setting-editor__wrapper">
+        <div class="schema-setting-editor__navigation">
           <Tree
             @data={{this.activeData}}
             @schema={{this.activeSchema}}
@@ -270,7 +270,7 @@ export default class SchemaThemeSettingNewEditor extends Component {
             @registerInputFieldObserver={{this.registerInputFieldObserver}}
           />
 
-          <div class="schema-theme-setting-editor__footer">
+          <div class="schema-setting-editor__footer">
             <DButton
               @disabled={{this.saveButtonDisabled}}
               @action={{this.saveChanges}}
@@ -280,7 +280,7 @@ export default class SchemaThemeSettingNewEditor extends Component {
           </div>
         </div>
 
-        <div class="schema-theme-setting-editor__fields">
+        <div class="schema-setting-editor__fields">
           {{#each this.fields as |field|}}
             <FieldInput
               @name={{field.name}}
@@ -297,7 +297,7 @@ export default class SchemaThemeSettingNewEditor extends Component {
             <DButton
               @action={{this.removeItem}}
               @icon="trash-can"
-              class="btn-danger schema-theme-setting-editor__remove-btn"
+              class="btn-danger schema-setting-editor__remove-btn"
             />
           {{/if}}
         </div>

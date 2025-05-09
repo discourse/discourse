@@ -7,7 +7,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
-import AdminSchemaThemeSettingEditor from "admin/components/schema-theme-setting/editor";
+import AdminSchemaSettingEditor from "admin/components/schema-setting/editor";
 import SiteSetting from "admin/models/site-setting";
 import ThemeSettings from "admin/models/theme-settings";
 
@@ -19,7 +19,7 @@ class TreeFromDOM {
   refresh() {
     this.nodes = [
       ...queryAll(
-        ".schema-theme-setting-editor__tree .schema-theme-setting-editor__tree-node.--parent"
+        ".schema-setting-editor__tree .schema-setting-editor__tree-node.--parent"
       ),
     ].map((container, index) => {
       const li = container;
@@ -27,20 +27,20 @@ class TreeFromDOM {
 
       const children = [
         ...queryAll(
-          `.schema-theme-setting-editor__tree-node.--child[data-test-parent-index="${index}"]`
+          `.schema-setting-editor__tree-node.--child[data-test-parent-index="${index}"]`
         ),
       ].map((child) => {
         return {
           element: child,
           textElement: child.querySelector(
-            ".schema-theme-setting-editor__tree-node-text"
+            ".schema-setting-editor__tree-node-text"
           ),
         };
       });
 
       const addButtons = [
         ...queryAll(
-          `.schema-theme-setting-editor__tree-add-button.--child[data-test-parent-index="${index}"]`
+          `.schema-setting-editor__tree-add-button.--child[data-test-parent-index="${index}"]`
         ),
       ];
 
@@ -50,7 +50,7 @@ class TreeFromDOM {
         addButtons,
         element: li,
         textElement: li.querySelector(
-          ".schema-theme-setting-editor__tree-node-text"
+          ".schema-setting-editor__tree-node-text"
         ),
       };
     });
@@ -80,12 +80,11 @@ class InputFieldsFromDOM {
   }
 }
 
-const TOP_LEVEL_ADD_BTN =
-  ".schema-theme-setting-editor__tree-add-button.--root";
-const REMOVE_ITEM_BTN = ".schema-theme-setting-editor__remove-btn";
+const TOP_LEVEL_ADD_BTN = ".schema-setting-editor__tree-add-button.--root";
+const REMOVE_ITEM_BTN = ".schema-setting-editor__remove-btn";
 
 module(
-  "Integration | Admin | Component | schema-theme-setting/editor",
+  "Integration | Admin | Themes | Component | schema-setting/editor",
   function (hooks) {
     setupRenderingTest(hooks);
 
@@ -94,7 +93,7 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor
+          <AdminSchemaSettingEditor
             @id="1"
             @setting={{setting}}
             @schema={{setting.objects_schema}}
@@ -115,7 +114,7 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor
+          <AdminSchemaSettingEditor
             @id="1"
             @setting={{setting}}
             @schema={{setting.objects_schema}}
@@ -165,7 +164,7 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor
+          <AdminSchemaSettingEditor
             @id="1"
             @setting={{setting}}
             @schema={{setting.objects_schema}}
@@ -262,7 +261,7 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor
+          <AdminSchemaSettingEditor
             @id="1"
             @setting={{setting}}
             @schema={{setting.objects_schema}}
@@ -304,7 +303,7 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor
+          <AdminSchemaSettingEditor
             @id="1"
             @setting={{setting}}
             @schema={{setting.objects_schema}}
@@ -338,7 +337,7 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor
+          <AdminSchemaSettingEditor
             @id="1"
             @setting={{setting}}
             @schema={{setting.objects_schema}}
@@ -354,7 +353,7 @@ module(
       await click(tree.nodes[1].children[1].element);
 
       assert.dom(".--back-btn").hasText(
-        i18n("admin.customize.theme.schema.back_button", {
+        i18n("admin.customize.schema.back_button", {
           name: "item 2",
         })
       );
@@ -363,7 +362,7 @@ module(
       await click(tree.nodes[1].children[0].element);
 
       assert.dom(".--back-btn").hasText(
-        i18n("admin.customize.theme.schema.back_button", {
+        i18n("admin.customize.schema.back_button", {
           name: "child 2-2",
         })
       );
@@ -371,7 +370,7 @@ module(
       await click(".--back-btn");
 
       assert.dom(".--back-btn").hasText(
-        i18n("admin.customize.theme.schema.back_button", {
+        i18n("admin.customize.schema.back_button", {
           name: "item 2",
         })
       );
@@ -405,7 +404,7 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor
+          <AdminSchemaSettingEditor
             @id="1"
             @setting={{setting}}
             @schema={{setting.objects_schema}}
@@ -434,7 +433,7 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor
+          <AdminSchemaSettingEditor
             @id="1"
             @setting={{setting}}
             @schema={{setting.objects_schema}}
@@ -509,7 +508,7 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor
+          <AdminSchemaSettingEditor
             @id="1"
             @setting={{setting}}
             @schema={{setting.objects_schema}}
@@ -530,7 +529,7 @@ module(
       inputFields.refresh();
 
       assert.dom(inputFields.fields.id.errorElement).hasText(
-        i18n("admin.customize.theme.schema.fields.string.too_short", {
+        i18n("admin.customize.schema.fields.string.too_short", {
           count: 2,
         })
       );
@@ -541,7 +540,7 @@ module(
 
       assert
         .dom(inputFields.fields.id.errorElement)
-        .hasText(i18n("admin.customize.theme.schema.fields.required"));
+        .hasText(i18n("admin.customize.schema.fields.required"));
     });
 
     test("input fields of type integer", async function (assert) {
@@ -570,7 +569,7 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor
+          <AdminSchemaSettingEditor
             @id="1"
             @setting={{setting}}
             @schema={{setting.objects_schema}}
@@ -593,7 +592,7 @@ module(
       inputFields.refresh();
 
       assert.dom(inputFields.fields.id.errorElement).hasText(
-        i18n("admin.customize.theme.schema.fields.number.too_large", {
+        i18n("admin.customize.schema.fields.number.too_large", {
           count: 10,
         })
       );
@@ -603,7 +602,7 @@ module(
       inputFields.refresh();
 
       assert.dom(inputFields.fields.id.errorElement).hasText(
-        i18n("admin.customize.theme.schema.fields.number.too_small", {
+        i18n("admin.customize.schema.fields.number.too_small", {
           count: 5,
         })
       );
@@ -614,7 +613,7 @@ module(
 
       assert
         .dom(inputFields.fields.id.errorElement)
-        .hasText(i18n("admin.customize.theme.schema.fields.required"));
+        .hasText(i18n("admin.customize.schema.fields.required"));
     });
 
     test("input fields of type float", async function (assert) {
@@ -643,7 +642,7 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor
+          <AdminSchemaSettingEditor
             @id="1"
             @setting={{setting}}
             @schema={{setting.objects_schema}}
@@ -666,7 +665,7 @@ module(
       inputFields.refresh();
 
       assert.dom(inputFields.fields.id.errorElement).hasText(
-        i18n("admin.customize.theme.schema.fields.number.too_large", {
+        i18n("admin.customize.schema.fields.number.too_large", {
           count: 10.5,
         })
       );
@@ -676,7 +675,7 @@ module(
       inputFields.refresh();
 
       assert.dom(inputFields.fields.id.errorElement).hasText(
-        i18n("admin.customize.theme.schema.fields.number.too_small", {
+        i18n("admin.customize.schema.fields.number.too_small", {
           count: 5.5,
         })
       );
@@ -687,7 +686,7 @@ module(
 
       assert
         .dom(inputFields.fields.id.errorElement)
-        .hasText(i18n("admin.customize.theme.schema.fields.required"));
+        .hasText(i18n("admin.customize.schema.fields.required"));
     });
 
     test("input fields of type boolean", async function (assert) {
@@ -695,7 +694,7 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor
+          <AdminSchemaSettingEditor
             @id="1"
             @setting={{setting}}
             @schema={{setting.objects_schema}}
@@ -758,7 +757,7 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor
+          <AdminSchemaSettingEditor
             @id="1"
             @setting={{setting}}
             @schema={{setting.objects_schema}}
@@ -828,7 +827,7 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor
+          <AdminSchemaSettingEditor
             @id="1"
             @setting={{setting}}
             @schema={{setting.objects_schema}}
@@ -856,7 +855,7 @@ module(
       inputFields.refresh();
 
       assert.dom(inputFields.fields.not_required_category.errorElement).hasText(
-        i18n("admin.customize.theme.schema.fields.categories.at_least", {
+        i18n("admin.customize.schema.fields.categories.at_least", {
           count: 2,
         })
       );
@@ -912,7 +911,7 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor
+          <AdminSchemaSettingEditor
             @id="1"
             @setting={{setting}}
             @schema={{setting.objects_schema}}
@@ -940,7 +939,7 @@ module(
       inputFields.refresh();
 
       assert.dom(inputFields.fields.required_category.errorElement).hasText(
-        i18n("admin.customize.theme.schema.fields.categories.at_least", {
+        i18n("admin.customize.schema.fields.categories.at_least", {
           count: 1,
         })
       );
@@ -980,7 +979,7 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor
+          <AdminSchemaSettingEditor
             @id="1"
             @setting={{setting}}
             @schema={{setting.objects_schema}}
@@ -1043,7 +1042,7 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor
+          <AdminSchemaSettingEditor
             @id="1"
             @setting={{setting}}
             @schema={{setting.objects_schema}}
@@ -1079,7 +1078,7 @@ module(
       assert
         .dom(inputFields.fields.required_tags_with_validations.errorElement)
         .hasText(
-          i18n("admin.customize.theme.schema.fields.tags.at_least", {
+          i18n("admin.customize.schema.fields.tags.at_least", {
             count: 2,
           })
         );
@@ -1094,7 +1093,7 @@ module(
       assert
         .dom(inputFields.fields.required_tags_with_validations.errorElement)
         .hasText(
-          i18n("admin.customize.theme.schema.fields.tags.at_least", {
+          i18n("admin.customize.schema.fields.tags.at_least", {
             count: 2,
           })
         );
@@ -1110,7 +1109,7 @@ module(
       inputFields.refresh();
 
       assert.dom(inputFields.fields.required_tags.errorElement).hasText(
-        i18n("admin.customize.theme.schema.fields.tags.at_least", {
+        i18n("admin.customize.schema.fields.tags.at_least", {
           count: 1,
         })
       );
@@ -1144,7 +1143,7 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor
+          <AdminSchemaSettingEditor
             @id="1"
             @setting={{setting}}
             @schema={{setting.objects_schema}}
@@ -1169,7 +1168,7 @@ module(
       inputFields.refresh();
 
       assert.dom(inputFields.fields.required_groups.errorElement).hasText(
-        i18n("admin.customize.theme.schema.fields.groups.at_least", {
+        i18n("admin.customize.schema.fields.groups.at_least", {
           count: 1,
         })
       );
@@ -1195,7 +1194,7 @@ module(
       assert
         .dom(inputFields.fields.groups_with_validations.errorElement)
         .hasText(
-          i18n("admin.customize.theme.schema.fields.groups.at_least", {
+          i18n("admin.customize.schema.fields.groups.at_least", {
             count: 2,
           })
         );
@@ -1257,7 +1256,7 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor
+          <AdminSchemaSettingEditor
             @id="1"
             @setting={{setting}}
             @schema={{setting.objects_schema}}
@@ -1285,7 +1284,7 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor
+          <AdminSchemaSettingEditor
             @id="1"
             @setting={{setting}}
             @schema={{setting.objects_schema}}
@@ -1326,7 +1325,7 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor
+          <AdminSchemaSettingEditor
             @id="1"
             @setting={{setting}}
             @schema={{setting.objects_schema}}
@@ -1359,7 +1358,7 @@ module(
       inputFields.refresh();
 
       assert.dom(".--back-btn").hasText(
-        i18n("admin.customize.theme.schema.back_button", {
+        i18n("admin.customize.schema.back_button", {
           name: "cool section is no longer cool",
         })
       );
@@ -1407,7 +1406,7 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor
+          <AdminSchemaSettingEditor
             @id="1"
             @setting={{setting}}
             @schema={{setting.objects_schema}}
@@ -1433,7 +1432,7 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor
+          <AdminSchemaSettingEditor
             @id="1"
             @setting={{setting}}
             @schema={{setting.objects_schema}}
@@ -1499,7 +1498,7 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor
+          <AdminSchemaSettingEditor
             @id="1"
             @setting={{setting}}
             @schema={{setting.objects_schema}}
@@ -1526,7 +1525,7 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor
+          <AdminSchemaSettingEditor
             @id="1"
             @setting={{setting}}
             @schema={{setting.objects_schema}}
@@ -1560,7 +1559,7 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor
+          <AdminSchemaSettingEditor
             @id="1"
             @setting={{setting}}
             @schema={{setting.objects_schema}}
@@ -1591,7 +1590,7 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor
+          <AdminSchemaSettingEditor
             @id="1"
             @setting={{setting}}
             @schema={{setting.objects_schema}}
@@ -1620,7 +1619,7 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor
+          <AdminSchemaSettingEditor
             @id="1"
             @setting={{setting}}
             @schema={{setting.objects_schema}}
@@ -1662,7 +1661,7 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor
+          <AdminSchemaSettingEditor
             @id="1"
             @setting={{setting}}
             @schema={{setting.objects_schema}}
@@ -1710,7 +1709,7 @@ module(
 );
 
 module(
-  "Integration | Admin | Plugins | Component | schema-theme-setting/editor",
+  "Integration | Admin | Plugins | Component | schema-setting/editor",
   function (hooks) {
     setupRenderingTest(hooks);
 
@@ -1733,7 +1732,7 @@ module(
       });
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor
+          <AdminSchemaSettingEditor
             @id="1"
             @setting={{setting}}
             @schema={{setting.schema}}
@@ -1772,7 +1771,7 @@ module(
       });
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor
+          <AdminSchemaSettingEditor
             @id="1"
             @setting={{setting}}
             @schema={{setting.schema}}
@@ -1789,14 +1788,14 @@ module(
       await fillIn(inputFields.fields.id.inputElement, "100");
       inputFields.refresh();
       assert.dom(inputFields.fields.id.errorElement).hasText(
-        i18n("admin.customize.theme.schema.fields.number.too_large", {
+        i18n("admin.customize.schema.fields.number.too_large", {
           count: 5,
         })
       );
       await fillIn(inputFields.fields.id.inputElement, "0");
       inputFields.refresh();
       assert.dom(inputFields.fields.id.errorElement).hasText(
-        i18n("admin.customize.theme.schema.fields.number.too_small", {
+        i18n("admin.customize.schema.fields.number.too_small", {
           count: 2,
         })
       );
@@ -1826,7 +1825,7 @@ module(
       });
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor
+          <AdminSchemaSettingEditor
             @id="1"
             @setting={{setting}}
             @schema={{setting.schema}}
@@ -1843,14 +1842,14 @@ module(
       await fillIn(inputFields.fields.id.inputElement, "100.0");
       inputFields.refresh();
       assert.dom(inputFields.fields.id.errorElement).hasText(
-        i18n("admin.customize.theme.schema.fields.number.too_large", {
+        i18n("admin.customize.schema.fields.number.too_large", {
           count: 5.5,
         })
       );
       await fillIn(inputFields.fields.id.inputElement, "0.2");
       inputFields.refresh();
       assert.dom(inputFields.fields.id.errorElement).hasText(
-        i18n("admin.customize.theme.schema.fields.number.too_small", {
+        i18n("admin.customize.schema.fields.number.too_small", {
           count: 2.5,
         })
       );
@@ -1875,7 +1874,7 @@ module(
       });
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor
+          <AdminSchemaSettingEditor
             @id="1"
             @setting={{setting}}
             @schema={{setting.schema}}
@@ -1911,7 +1910,7 @@ module(
       });
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor
+          <AdminSchemaSettingEditor
             @id="1"
             @setting={{setting}}
             @schema={{setting.schema}}
@@ -1953,7 +1952,7 @@ module(
       });
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor
+          <AdminSchemaSettingEditor
             @id="1"
             @setting={{setting}}
             @schema={{setting.schema}}
@@ -1974,7 +1973,7 @@ module(
       await categorySelector.collapse();
       inputFields.refresh();
       assert.dom(inputFields.fields.not_required_category.errorElement).hasText(
-        i18n("admin.customize.theme.schema.fields.categories.at_least", {
+        i18n("admin.customize.schema.fields.categories.at_least", {
           count: 2,
         })
       );
@@ -2027,7 +2026,7 @@ module(
       });
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor
+          <AdminSchemaSettingEditor
             @id="1"
             @setting={{setting}}
             @schema={{setting.schema}}
@@ -2062,7 +2061,7 @@ module(
       assert
         .dom(inputFields.fields.required_tags_with_validations.errorElement)
         .hasText(
-          i18n("admin.customize.theme.schema.fields.tags.at_least", {
+          i18n("admin.customize.schema.fields.tags.at_least", {
             count: 2,
           })
         );
@@ -2077,7 +2076,7 @@ module(
       assert
         .dom(inputFields.fields.required_tags_with_validations.errorElement)
         .hasText(
-          i18n("admin.customize.theme.schema.fields.tags.at_least", {
+          i18n("admin.customize.schema.fields.tags.at_least", {
             count: 2,
           })
         );
@@ -2093,7 +2092,7 @@ module(
       inputFields.refresh();
 
       assert.dom(inputFields.fields.required_tags.errorElement).hasText(
-        i18n("admin.customize.theme.schema.fields.tags.at_least", {
+        i18n("admin.customize.schema.fields.tags.at_least", {
           count: 1,
         })
       );
@@ -2127,7 +2126,7 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor
+          <AdminSchemaSettingEditor
             @id="1"
             @setting={{setting}}
             @schema={{setting.schema}}
@@ -2152,7 +2151,7 @@ module(
       inputFields.refresh();
 
       assert.dom(inputFields.fields.required_groups.errorElement).hasText(
-        i18n("admin.customize.theme.schema.fields.groups.at_least", {
+        i18n("admin.customize.schema.fields.groups.at_least", {
           count: 1,
         })
       );
@@ -2178,7 +2177,7 @@ module(
       assert
         .dom(inputFields.fields.groups_with_validations.errorElement)
         .hasText(
-          i18n("admin.customize.theme.schema.fields.groups.at_least", {
+          i18n("admin.customize.schema.fields.groups.at_least", {
             count: 2,
           })
         );
@@ -2197,7 +2196,7 @@ module(
       const setting = schemaAndData(1, SCHEMA_MODES.PLUGIN);
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor
+          <AdminSchemaSettingEditor
             @id="1"
             @setting={{setting}}
             @schema={{setting.schema}}
