@@ -374,6 +374,42 @@ describe "About page", type: :system do
     end
   end
 
+  describe "extra groups" do
+    let!(:extra_group) { Fabricate(:group, name: "illuminati") }
+
+    before do
+      SiteSetting.about_banner_image = nil
+      SiteSetting.show_additional_about_groups = true
+      SiteSetting.about_page_extra_groups = extra_groups_setting
+
+      extra_group.users << Fabricate(:user)
+    end
+
+    context "when extra groups are configured" do
+      let(:extra_groups_setting) { extra_group.id.to_s }
+
+      it "shows the extra groups" do
+        sign_in(admin)
+
+        about_page.visit
+
+        expect(about_page).to have_group_with_name("Illuminati")
+      end
+    end
+
+    context "when no extra groups are configured" do
+      let(:extra_groups_setting) { "" }
+
+      it "shows no extra groups" do
+        sign_in(admin)
+
+        about_page.visit
+
+        expect(about_page).to have_no_extra_groups
+      end
+    end
+  end
+
   describe "the edit link" do
     it "appears for admins" do
       sign_in(admin)
