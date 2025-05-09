@@ -1164,7 +1164,7 @@ Discourse::Application.routes.draw do
 
       get "#{root_path}/by-id/:id" => "groups#show"
 
-      scope path: "#{root_path}/:name" do
+      scope path: "#{root_path}/:name", constraints: { name: RouteFormat.username } do
         get "/" => "groups#show"
         get "activity" => "groups#show"
         get "activity/:filter" => "groups#show"
