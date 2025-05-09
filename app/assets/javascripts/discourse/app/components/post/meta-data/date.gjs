@@ -12,8 +12,8 @@ export default class PostMetaDataDate extends Component {
   @service modal;
 
   get date() {
-    if (this.args.post.wiki && this.args.post.lastWikiEdit) {
-      return this.args.post.lastWikiEdit;
+    if (this.args.post.wiki && this.args.post.last_wiki_edit) {
+      return this.args.post.last_wiki_edit;
     } else {
       return this.args.post.created_at;
     }
