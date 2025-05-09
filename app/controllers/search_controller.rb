@@ -34,6 +34,25 @@ class SearchController < ApplicationController
       raise Discourse::InvalidParameters.new("page parameter must not be greater than 10")
     end
 
+    if request.user_agent &&
+         CrawlerDetection.crawler?(request.user_agent, request.headers["HTTP_VIA"])
+      crawler_html = <<~HTML
+          <!DOCTYPE html>
+          <html>
+            <head>
+              <meta name='robots' content='noindex'>
+            </head>
+            <body>
+              <p><em>*waves hand*</em> This is not the content you are looking for</p>
+            </body>
+          </html>
+        HTML
+
+      response.headers["X-Robots-Tag"] = "noindex"
+
+      return(render html: crawler_html.html_safe, layout: false, content_type: "text/html")
+    end
+
     discourse_expires_in 1.minute
 
     search_args = {
