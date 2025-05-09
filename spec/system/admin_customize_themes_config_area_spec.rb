@@ -7,6 +7,7 @@ describe "Admin Customize Themes Config Area Page", type: :system do
 
   let(:config_area) { PageObjects::Pages::AdminCustomizeThemesConfigArea.new }
   let(:install_modal) { PageObjects::Modals::InstallTheme.new }
+  let(:admin_customize_themes_page) { PageObjects::Pages::AdminCustomizeThemes.new }
 
   before { sign_in(admin) }
 
@@ -40,9 +41,13 @@ describe "Admin Customize Themes Config Area Page", type: :system do
     expect(config_area).to have_no_badge(theme, "--selectable")
   end
 
-  it "allows to edit theme" do
+  it "allows to edit and delete theme" do
     config_area.visit
     config_area.click_edit(theme)
     expect(page).to have_current_path("/admin/customize/themes/#{theme.id}")
+
+    admin_customize_themes_page.click_delete
+    admin_customize_themes_page.confirm_delete
+    expect(page).to have_current_path("/admin/config/customize/themes")
   end
 end

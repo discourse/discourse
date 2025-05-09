@@ -6,6 +6,7 @@ import {
   classNames,
 } from "@ember-decorators/component";
 import { makeArray } from "discourse/lib/helpers";
+import { isValidInput } from "select-kit/lib/input-utils";
 import UtilsMixin from "select-kit/mixins/utils";
 
 @classNames("select-kit-header")
@@ -163,7 +164,7 @@ export default class SelectKitHeader extends Component.extend(UtilsMixin) {
       if (this.selectKit.isExpanded) {
         this._focusFilterInput();
       } else {
-        if (this.isValidInput(event.key)) {
+        if (isValidInput(event.key)) {
           this.selectKit.set("filter", event.key);
           this.selectKit.open(event);
           event.preventDefault();

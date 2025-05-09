@@ -134,6 +134,46 @@ module("Unit | Service | AdminSearchDataSource", function (hooks) {
       "/admin/reports/page_view_anon_browser_reqs"
     );
   });
+
+  test("search - prioritize whole word matches", async function (assert) {
+    await this.subject.buildMap();
+    let results = this.subject.search("anonym");
+    assert.deepEqual(results[0].label, "Anonymous Browser Pageviews");
+  });
+
+  test("search - prioritize beginning of label", async function (assert) {
+    await this.subject.buildMap();
+    let results = this.subject.search("about your title");
+    assert.deepEqual(results[0].label, "About your site > Title");
+  });
+
+  test("search - prioritize pages", async function (assert) {
+    this.subject.componentDataSourceItems = [];
+    this.subject.reportDataSourceItems = [];
+    this.subject.themeDataSourceItems = [];
+    this.subject.pageDataSourceItems = [
+      {
+        description: "first page",
+        icon: "house",
+        keywords: "exact setting",
+        label: "Page about exact setting",
+        type: "page",
+        url: "/admin",
+      },
+    ];
+    this.subject.settingDataSourceItems = [
+      {
+        description: "first setting",
+        icon: "house",
+        keywords: "exact setting",
+        label: "exact setting",
+        type: "setting",
+        url: "/admin",
+      },
+    ];
+    let results = this.subject.search("exact setting");
+    assert.deepEqual(results[0].label, "Page about exact setting");
+  });
 });
 
 module(

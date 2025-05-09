@@ -31,7 +31,7 @@ jobs:
     name: ${{ matrix.target }} ${{ matrix.build_type }}${{ (matrix.target == 'core' && matrix.build_type == 'frontend' && format(' ({0})', matrix.browser)) || '' }} # Update fetch-job-id step if changing this
     runs-on: ${{ (github.repository_owner == 'discourse' && 'debian-12') || 'ubuntu-latest' }}
     container: discourse/discourse_test:release
-    timeout-minutes: ${{ (matrix.build_type == 'system' && matrix.target == 'plugin') && 30 || 20 }}
+    timeout-minutes: ${{ ((matrix.build_type == 'system' && matrix.target == 'plugins') && 30) || 20 }}
 
     env:
       RAILS_ENV: test
@@ -273,6 +273,10 @@ jobs:
       - name: Ember Build for System Tests
         if: matrix.build_type == 'system'
         run: script/assemble_ember_build.rb
+
+      - name: Install playwright
+        if: matrix.build_type == 'system'
+        run: pnpm playwright install --with-deps --no-shell chromium
 
       - name: Core System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core'

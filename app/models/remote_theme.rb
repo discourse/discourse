@@ -269,19 +269,15 @@ class RemoteTheme < ActiveRecord::Base
       end
     end
 
-    # TODO (martin): Until we are ready to roll this out more
-    # widely, let's avoid doing this work for most sites.
-    if SiteSetting.theme_download_screenshots
-      begin
-        updated_fields.concat(
-          ThemeScreenshotsHandler.new(theme).parse_screenshots_as_theme_fields!(
-            theme_info["screenshots"],
-            importer,
-          ),
-        )
-      rescue ThemeScreenshotsHandler::ThemeScreenshotError => err
-        raise ImportError, err.message
-      end
+    begin
+      updated_fields.concat(
+        ThemeScreenshotsHandler.new(theme).parse_screenshots_as_theme_fields!(
+          theme_info["screenshots"],
+          importer,
+        ),
+      )
+    rescue ThemeScreenshotsHandler::ThemeScreenshotError => err
+      raise ImportError, err.message
     end
 
     # Update all theme attributes if this is just a placeholder

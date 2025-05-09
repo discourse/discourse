@@ -2701,6 +2701,13 @@ en:
       esc_label: "dismiss message"
       ok_proceed: "Ok, proceed"
 
+      translations:
+        title: "Translating post"
+        select: "Select translation"
+        save: "Save translation"
+        original_content: "Original post content"
+        placeholder: "Enter translation for post here..."
+
       group_mentioned_limit:
         one: "<b>Warning!</b> You mentioned <a href='%{group_link}'>%{group}</a>, however this group has more members than the administrator configured mention limit of %{count} user. Nobody will be notified."
         other: "<b>Warning!</b> You mentioned <a href='%{group_link}'>%{group}</a>, however this group has more members than the administrator configured mention limit of %{count} users. Nobody will be notified."
@@ -3904,6 +3911,15 @@ en:
 
       badge_granted_tooltip: "%{username} earned the '%{badge_name}' badge for this post!"
 
+      localizations:
+        table:
+          locale: "Locale"
+          actions: "Actions"
+          edit: "Edit"
+          delete: "Delete"
+        add: "Add new translation"
+        success: "Translations have been updated successfully"
+
       errors:
         create: "Sorry, there was an error creating your post. Please try again."
         edit: "Sorry, there was an error editing your post. Please try again."
@@ -4547,7 +4563,7 @@ en:
     custom_homepage:
       admin_message: 'One of your themes has enabled the "custom_homepage" modifier but it does not output anything in the [custom-homepage] connector. (This message is only shown to site administrators.)'
 
-    browser_update: 'Unfortunately, <a href="https://www.discourse.org/faq/#browser">your browser is unsupported</a>. Please <a href="https://browsehappy.com">switch to a supported browser</a> to view rich content, log in and reply.'
+    browser_update: 'Unfortunately, <a href="https://discourse.org/about#browser">your browser is unsupported</a>. Please <a href="https://browsehappy.com">switch to a supported browser</a> to view rich content, log in and reply.'
 
     permission_types:
       full: "Create / Reply / See"
@@ -6326,6 +6342,8 @@ en:
           save_successful: "User field saved."
         color_palettes:
           palette_name: "Name"
+          duplicate: "Duplicate"
+          delete: "Delete"
           color_options:
             title: "Color options"
             toggle: "User selectable"
@@ -6339,6 +6357,7 @@ en:
           copy_of: "Copy of %{name}"
           copy_created: 'A new copy of "%{name}" has been created'
           illegal_character_in_color: "Colors consist of hexadecimal characters only"
+          delete_confirm: "Delete this color palette?"
       plugins:
         title: "Plugins"
         name: "Name"

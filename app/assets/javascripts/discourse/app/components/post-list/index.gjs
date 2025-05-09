@@ -52,20 +52,17 @@ export default class PostList extends Component {
     }
     this.loading = true;
 
-    const posts = this.args.posts;
-    if (posts && posts.length) {
-      try {
-        const newPosts = await this.args.fetchMorePosts();
-        this.args.posts.addObjects(newPosts);
+    try {
+      const newPosts = await this.args.fetchMorePosts();
+      this.args.posts?.addObjects(newPosts);
 
-        if (newPosts.length === 0) {
-          this.canLoadMore = false;
-        }
-      } catch (error) {
-        popupAjaxError(error);
-      } finally {
-        this.loading = false;
+      if (newPosts.length === 0) {
+        this.canLoadMore = false;
       }
+    } catch (error) {
+      popupAjaxError(error);
+    } finally {
+      this.loading = false;
     }
   }
 

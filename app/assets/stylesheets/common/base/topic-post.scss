@@ -1006,6 +1006,31 @@ aside.quote {
   }
 }
 
+.post-info.translations {
+  .fk-d-tooltip__trigger {
+    &-container {
+      display: flex;
+      align-items: center;
+    }
+
+    .translation-count {
+      padding-right: 0.25em;
+    }
+
+    .translation-count,
+    .d-icon {
+      color: var(--primary-med-or-secondary-med);
+    }
+  }
+}
+
+.post-meta-data-translation-indicator-content {
+  ul {
+    list-style: none;
+    margin: 0;
+  }
+}
+
 pre {
   max-height: 2000px;
 

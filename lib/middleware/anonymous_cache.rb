@@ -18,6 +18,7 @@ module Middleware
         t: "key_cache_theme_ids",
         ca: "key_compress_anon",
         l: "key_locale",
+        lso: "key_show_original_content",
         cm: "key_forced_color_mode",
       }
     end
@@ -184,6 +185,10 @@ module Middleware
 
       def key_compress_anon
         GlobalSetting.compress_anon_cache
+      end
+
+      def key_show_original_content
+        @request.cookies.key?(ContentLocalization::SHOW_ORIGINAL_COOKIE)
       end
 
       def theme_ids
