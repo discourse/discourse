@@ -66,6 +66,11 @@ module PageObjects
         self
       end
 
+      def maximize
+        find("#{COMPOSER_ID} .toggle-fullscreen").click
+        self
+      end
+
       def append_content(content)
         current_content = composer_input.value
         composer_input.set(current_content + content)

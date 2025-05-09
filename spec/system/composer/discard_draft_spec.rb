@@ -94,4 +94,34 @@ describe "Composer - discard draft modal", type: :system do
       wait_for(timeout: 5) { Draft.count == 0 }
     end
   end
+
+  context "when clicking keep editing" do
+    fab!(:post_1) { Fabricate(:post, topic:, user: admin) }
+    let(:dialog) { PageObjects::Components::Dialog.new }
+
+    it "saves further changes made to draft" do
+      topic_page.visit_topic(post_1.topic)
+      topic_page.click_post_action_button(post_1, :edit)
+
+      composer.fill_content(" with")
+      composer.close
+
+      expect(discard_draft_modal).to be_open
+
+      discard_draft_modal.click_keep_editing
+
+      expect(discard_draft_modal).to be_closed
+
+      composer.fill_content(" latest updates")
+
+      composer.minimize
+
+      # reload the page to see if current draft reflects the changes
+      topic_page.visit_topic(post_1.topic)
+      topic_page.click_post_action_button(post_1, :edit)
+
+      expect(composer).to be_opened
+      expect(composer).to have_content("with latest updates")
+    end
+  end
 end

@@ -17,6 +17,12 @@ export default class DiscardDraftModal extends Component {
     this.args.closeModal();
   }
 
+  @action
+  async keepEditing() {
+    this.args.model.onKeepEditing();
+    this.args.closeModal();
+  }
+
   <template>
     <DModal
       @closeModal={{@closeModal}}
@@ -45,7 +51,7 @@ export default class DiscardDraftModal extends Component {
         {{/if}}
         <DButton
           @label="post.cancel_composer.keep_editing"
-          @action={{@closeModal}}
+          @action={{this.keepEditing}}
           class="keep-editing"
         />
       </:footer>
