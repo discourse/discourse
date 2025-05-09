@@ -250,7 +250,9 @@ module PageObjects
       end
 
       def click_footer_reply
-        find("#topic-footer-buttons .btn-primary", text: "Reply").click
+        button = find("#topic-footer-buttons .btn-primary", text: "Reply")
+        page.execute_script("arguments[0].scrollIntoView();", button)
+        button.click
         self
       end
 
