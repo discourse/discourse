@@ -80,7 +80,27 @@ module PageObjects
       end
 
       def expand_message_actions_mobile(message, delay: 2)
-        find(message_by_id_selector(message.id)).find(".chat-message-content").click(delay: delay)
+        message = find("#{message_by_id_selector(message.id)} .chat-message-content")
+        page.execute_script(<<-JS, message, delay)
+          arguments[0].dispatchEvent(new TouchEvent("touchstart", {
+            cancelable: true,
+            bubbles: true,
+            touches: [
+              new Touch({ identifier: Date.now(), target: arguments[0] })
+            ],
+          }));
+
+
+          setTimeout(() => {
+            arguments[0].dispatchEvent(new TouchEvent("touchend", {
+              cancelable: true,
+              bubbles: true,
+              touches: [
+                new Touch({ identifier: Date.now(), target: arguments[0] })
+              ],
+            }));
+          }, arguments[1] * 1000);
+        JS
       end
 
       def click_message_action_mobile(message, message_action)
