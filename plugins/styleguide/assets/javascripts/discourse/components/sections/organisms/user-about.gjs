@@ -1,6 +1,6 @@
 import DButton from "discourse/components/d-button";
+import ageWithTooltip from "discourse/helpers/age-with-tooltip";
 import boundAvatar from "discourse/helpers/bound-avatar";
-import boundDate from "discourse/helpers/bound-date";
 import icon from "discourse/helpers/d-icon";
 import htmlSafe from "discourse/helpers/html-safe";
 import { i18n } from "discourse-i18n";
@@ -214,11 +214,20 @@ const UserAbout = <template>
         <div class="secondary">
           <dl>
             <dt>{{i18n "user.created"}}</dt>
-            <dd>{{boundDate @dummy.user.created_at}}</dd>
+            <dd>
+              {{ageWithTooltip @dummy.user.created_at defaultFormat="medium"}}
+            </dd>
             <dt>{{i18n "user.last_posted"}}</dt>
-            <dd>{{boundDate @dummy.user.last_posted_at}}</dd>
+            <dd>
+              {{ageWithTooltip
+                @dummy.user.last_posted_at
+                defaultFormat="medium"
+              }}
+            </dd>
             <dt>{{i18n "user.last_seen"}}</dt>
-            <dd>{{boundDate @dummy.user.last_seen_at}}</dd>
+            <dd>
+              {{ageWithTooltip @dummy.user.last_seen_at defaultFormat="medium"}}
+            </dd>
             <dt>{{i18n "views"}}</dt>
             <dd>{{@dummy.user.profile_view_count}}</dd>
             <dt class="invited-by">{{i18n "user.invited_by"}}</dt>
@@ -369,11 +378,20 @@ const UserAbout = <template>
         <div class="secondary">
           <dl>
             <dt>{{i18n "user.created"}}</dt>
-            <dd>{{boundDate @dummy.user.created_at}}</dd>
+            <dd>
+              {{ageWithTooltip @dummy.user.created_at defaultFormat="medium"}}
+            </dd>
             <dt>{{i18n "user.last_posted"}}</dt>
-            <dd>{{boundDate @dummy.user.last_posted_at}}</dd>
+            <dd>
+              {{ageWithTooltip
+                @dummy.user.last_posted_at
+                defaultFormat="medium"
+              }}
+            </dd>
             <dt>{{i18n "user.last_seen"}}</dt>
-            <dd>{{boundDate @dummy.user.last_seen_at}}</dd>
+            <dd>
+              {{ageWithTooltip @dummy.user.last_seen_at defaultFormat="medium"}}
+            </dd>
             <dt>{{i18n "views"}}</dt>
             <dd>{{@dummy.user.profile_view_count}}</dd>
             <dt class="invited-by">{{i18n "user.invited_by"}}</dt>

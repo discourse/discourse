@@ -6,8 +6,8 @@ import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { and, eq, not } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import ageWithTooltip from "discourse/helpers/age-with-tooltip";
 import boundAvatarTemplate from "discourse/helpers/bound-avatar-template";
-import boundDate from "discourse/helpers/bound-date";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
@@ -36,7 +36,11 @@ export default class Revision extends Component {
           @name="revision-user-details-after"
           @outletArgs={{hash model=@model}}
         />
-        <span class="date">{{boundDate @model.created_at}}</span>
+
+        <span class="date">
+          {{ageWithTooltip @model.created_at defaultFormat="medium"}}
+        </span>
+
         {{#if @model.edit_reason}}
           <span class="edit-reason">{{@model.edit_reason}}</span>
         {{/if}}

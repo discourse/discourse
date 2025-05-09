@@ -3,8 +3,8 @@ import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { tagName } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
+import ageWithTooltip from "discourse/helpers/age-with-tooltip";
 import avatar from "discourse/helpers/avatar";
-import boundDate from "discourse/helpers/bound-date";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
@@ -70,7 +70,7 @@ export default class GroupManageLogsRow extends Component {
         {{/if}}
       </td>
 
-      <td>{{boundDate this.log.created_at}}</td>
+      <td>{{ageWithTooltip this.log.created_at defaultFormat="medium"}}</td>
 
       <td class="group-manage-logs-expand-details">
         {{#if this.log.prev_value}}

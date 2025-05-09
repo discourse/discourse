@@ -8,7 +8,7 @@ import ResponsiveTable from "discourse/components/responsive-table";
 import TableHeaderToggle from "discourse/components/table-header-toggle";
 import TextField from "discourse/components/text-field";
 import UserInfo from "discourse/components/user-info";
-import boundDate from "discourse/helpers/bound-date";
+import ageWithTooltip from "discourse/helpers/age-with-tooltip";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import { i18n } from "discourse-i18n";
 
@@ -64,7 +64,7 @@ export default RouteTemplate(
                       <span>{{i18n "groups.member_requested"}}</span>
                     </span>
                     <span class="directory-table__value">
-                      <span>{{boundDate m.requested_at}}</span>
+                      {{ageWithTooltip m.requested_at defaultFormat="medium"}}
                     </span>
                   </div>
                   <div
