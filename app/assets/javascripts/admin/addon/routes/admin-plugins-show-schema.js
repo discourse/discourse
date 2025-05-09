@@ -6,7 +6,7 @@ export default class AdminPluginsShowSchemaRoute extends Route {
     const plugin = this.modelFor("adminPlugins.show");
     const [pluginSettings] = await SiteSetting.findAll({
       plugin: plugin.id,
-      name: params.setting_name,
+      names: [params.setting_name],
     });
 
     const [setting] = pluginSettings.siteSettings;

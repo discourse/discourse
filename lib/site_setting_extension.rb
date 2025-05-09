@@ -207,7 +207,6 @@ module SiteSettingExtension
     filter_categories: nil,
     filter_plugin: nil,
     filter_names: nil,
-    filter_name: nil,
     filter_allowed_hidden: nil,
     filter_area: nil
   )
@@ -306,13 +305,6 @@ module SiteSettingExtension
       .select do |setting|
         if filter_names
           filter_names.include?(setting[:setting].to_s)
-        else
-          true
-        end
-      end
-      .select do |setting, _|
-        if filter_name
-          setting[:setting].to_s == filter_name.to_s
         else
           true
         end
