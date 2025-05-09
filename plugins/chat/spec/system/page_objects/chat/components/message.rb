@@ -41,7 +41,7 @@ module PageObjects
         end
 
         def open_mobile_actions
-          page.execute_script(<<-JS, component, 0.6)
+          page.execute_script(<<-JS, component)
             arguments[0].dispatchEvent(new TouchEvent("touchstart", {
               cancelable: true,
               bubbles: true,
@@ -59,7 +59,7 @@ module PageObjects
                   new Touch({ identifier: Date.now(), target: arguments[0] })
                 ],
               }));
-            }, arguments[1] * 1000);
+            }, 600);
           JS
         end
 
