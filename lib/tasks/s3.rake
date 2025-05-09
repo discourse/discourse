@@ -38,7 +38,7 @@ def upload(path, remote_path, content_type, content_encoding = nil, logger:)
   else
     logger << "Uploading: #{remote_path}\n"
 
-    File.open(path) { |file| helper.upload(file, remote_path, options) }
+    File.open(path, "rb") { |file| helper.upload(file, remote_path, options) }
   end
 end
 
