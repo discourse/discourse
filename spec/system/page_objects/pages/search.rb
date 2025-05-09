@@ -34,12 +34,19 @@ module PageObjects
         find(".search-cta").click
       end
 
+      def expand_dropdown
+        click_search_icon if !has_css?(".search-menu .search-menu-panel", wait: 0)
+        self
+      end
+
       def click_search_icon
         find(".d-header #search-button").click
+        self
       end
 
       def click_advanced_search_icon
-        find(".show-advanced-search").click
+        find(".d-header .show-advanced-search").click
+        self
       end
 
       def click_in_posts_by_user
