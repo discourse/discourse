@@ -998,6 +998,7 @@ groups:
     default: 50
     hidden: true
   show_additional_about_groups:
+    client: true
     default: false
     hidden: true
 
