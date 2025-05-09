@@ -32,12 +32,54 @@ module PageObjects
 
         def secondary_action(action)
           if page.has_css?("html.mobile-view", wait: 0)
-            component.find(".chat-message-text").click(delay: 0.6)
+            open_mobile_actions
             page.find(".chat-message-actions [data-id=\"#{action}\"]").click
           else
             open_more_menu
             page.find("[data-value='#{action}']").click
           end
+        end
+
+        def open_mobile_actions
+          page.execute_script(<<-JS, component)
+            arguments[0].dispatchEvent(new TouchEvent("touchstart", {
+              cancelable: true,
+              bubbles: true,
+              touches: [
+                new Touch({ identifier: Date.now(), target: arguments[0] })
+              ],
+            }));
+
+
+            setTimeout(() => {
+              arguments[0].dispatchEvent(new TouchEvent("touchend", {
+                cancelable: true,
+                bubbles: true,
+                touches: [
+                  new Touch({ identifier: Date.now(), target: arguments[0] })
+                ],
+              }));
+            }, 600);
+          JS
+        end
+
+        def bookmark
+          if page.has_css?("html.mobile-view", wait: 0)
+            secondary_action("bookmark")
+          else
+            hover
+            page.find(".chat-message-actions .bookmark-btn").click
+          end
+        end
+
+        def emoji(code)
+          if page.has_css?("html.mobile-view", wait: 0)
+            open_mobile_actions
+          else
+            hover
+          end
+
+          page.find(".chat-message-actions [data-emoji-name='#{code}']").click
         end
 
         def select(shift: false)
