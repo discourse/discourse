@@ -63,6 +63,15 @@ module PageObjects
           JS
         end
 
+        def bookmark
+          if page.has_css?("html.mobile-view", wait: 0)
+            secondary_action("bookmark")
+          else
+            hover
+            page.find(".chat-message-actions .bookmark-btn").click
+          end
+        end
+
         def emoji(code)
           if page.has_css?("html.mobile-view", wait: 0)
             open_mobile_actions

@@ -21,7 +21,7 @@ module PageObjects
         end
 
         def bookmark(message)
-          find(message).secondary_action("bookmark")
+          find(message).bookmark
         end
 
         def copy_text(message)
