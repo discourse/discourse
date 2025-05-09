@@ -50,4 +50,12 @@ describe "Admin Customize Themes Config Area Page", type: :system do
     admin_customize_themes_page.confirm_delete
     expect(page).to have_current_path("/admin/config/customize/themes")
   end
+
+  it "has new look when edit theme is visited directly and can go back to themes" do
+    visit("/admin/customize/themes/#{theme.id}")
+    expect(page).to have_css(".back-to-themes-and-components")
+    expect(admin_customize_themes_page).to have_back_button_to_themes_page
+    admin_customize_themes_page.click_back_to_themes
+    expect(page).to have_current_path("/admin/config/customize/themes")
+  end
 end
