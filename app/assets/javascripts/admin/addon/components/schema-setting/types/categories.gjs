@@ -1,11 +1,11 @@
 import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { and, not } from "truth-helpers";
-import FieldInputDescription from "admin/components/schema-theme-setting/field-input-description";
-import SchemaThemeSettingTypeModels from "admin/components/schema-theme-setting/types/models";
+import FieldInputDescription from "admin/components/schema-setting/field-input-description";
+import SchemaSettingTypeModels from "admin/components/schema-setting/types/models";
 import CategorySelector from "select-kit/components/category-selector";
 
-export default class SchemaThemeSettingTypeCategories extends SchemaThemeSettingTypeModels {
+export default class SchemaSettingTypeCategories extends SchemaSettingTypeModels {
   @tracked
   value =
     this.args.value?.map((categoryId) => {
