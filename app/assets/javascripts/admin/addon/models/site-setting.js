@@ -31,7 +31,6 @@ export default class SiteSetting extends EmberObject {
           }
           categories[s.category].pushObject(SiteSetting.create(s));
         });
-
         return Object.keys(categories).map(function (n) {
           return {
             nameKey: n,

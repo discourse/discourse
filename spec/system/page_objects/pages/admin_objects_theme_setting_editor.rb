@@ -22,7 +22,7 @@ module PageObjects
 
       def click_link(name, child: false)
         find(
-          ".schema-theme-setting-editor__navigation .schema-theme-setting-editor__tree-node#{child ? ".--child" : ".--parent"}",
+          ".schema-setting-editor__navigation .schema-setting-editor__tree-node#{child ? ".--child" : ".--parent"}",
           text: name,
         ).click
 
@@ -44,7 +44,7 @@ module PageObjects
       end
 
       def back
-        find(".customize-themes-show-schema__back").click
+        find(".customize-show-schema__back").click
         self
       end
 

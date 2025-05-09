@@ -26,7 +26,7 @@ class ThemeSettingsManager::Objects < ThemeSettingsManager
 
     value.each do |theme_setting_object|
       category_ids.merge(
-        ThemeSettingsObjectValidator.new(
+        SchemaSettingsObjectValidator.new(
           schema:,
           object: theme_setting_object,
         ).property_values_of_type("categories"),

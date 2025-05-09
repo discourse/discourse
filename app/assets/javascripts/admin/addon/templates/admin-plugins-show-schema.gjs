@@ -9,24 +9,21 @@ export default RouteTemplate(
   <template>
     <div class="customize-show-schema__header row">
       <LinkTo
-        @route="adminCustomizeThemes.show"
-        @model={{@model.theme.id}}
+        @route="adminPlugins.show.settings"
+        @model={{@model.plugin.id}}
         class="btn-transparent customize-show-schema__back"
       >
-        {{icon "arrow-left"}}{{@model.theme.name}}
+        {{icon "arrow-left"}}{{@model.plugin.name}}
       </LinkTo>
       <h2>
-        {{i18n
-          "admin.customize.schema.title"
-          (hash name=@model.setting.setting)
-        }}
+        {{i18n "admin.customize.schema.title" (hash name=@model.settingName)}}
       </h2>
     </div>
 
     <Editor
-      @id={{@model.theme.id}}
-      @routeToRedirect="adminCustomizeThemes.show"
-      @schema={{@model.setting.objects_schema}}
+      @id={{@model.plugin.id}}
+      @routeToRedirect="adminPlugins.show.settings"
+      @schema={{@model.setting.schema}}
       @setting={{@model.setting}}
     />
   </template>

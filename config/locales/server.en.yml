@@ -2790,6 +2790,7 @@ en:
         one: "Must be no more than %{count} character."
         other: "Must be no more than %{count} characters."
       invalid_json: "Invalid JSON."
+      invalid_object: "Invalid object."
       invalid_reply_by_email_address: "Value must contain '%{reply_key}' and be different from the notification email."
       invalid_alternative_reply_by_email_addresses: "All values must contain '%{reply_key}' and be different from the notification email."
       invalid_domain_hostname: "Must not include * or ? characters."

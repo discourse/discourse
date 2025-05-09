@@ -1,9 +1,9 @@
 import { and, not } from "truth-helpers";
-import FieldInputDescription from "admin/components/schema-theme-setting/field-input-description";
-import SchemaThemeSettingTypeModels from "admin/components/schema-theme-setting/types/models";
+import FieldInputDescription from "admin/components/schema-setting/field-input-description";
+import SchemaSettingTypeModels from "admin/components/schema-setting/types/models";
 import TagChooser from "select-kit/components/tag-chooser";
 
-export default class SchemaThemeSettingTypeTags extends SchemaThemeSettingTypeModels {
+export default class SchemaSettingTypeTags extends SchemaSettingTypeModels {
   type = "tags";
 
   get tagChooserOption() {

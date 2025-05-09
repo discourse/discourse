@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe ThemeSettingsObjectValidator do
+RSpec.describe SchemaSettingsObjectValidator do
   describe ".validate_objects" do
     it "should return the right array of humanized error messages for objects that are invalid" do
       schema = {

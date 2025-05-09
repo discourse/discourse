@@ -5,9 +5,9 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import DButton from "discourse/components/d-button";
 import icon from "discourse/helpers/d-icon";
-import ChildTreeNode from "admin/components/schema-theme-setting/editor/child-tree-node";
+import ChildTreeNode from "admin/components/schema-setting/editor/child-tree-node";
 
-export default class SchemaThemeSettingNewEditorChildTree extends Component {
+export default class SchemaSettingNewEditorChildTree extends Component {
   @tracked expanded = true;
 
   @action
@@ -27,7 +27,7 @@ export default class SchemaThemeSettingNewEditorChildTree extends Component {
 
   <template>
     <div
-      class="schema-theme-setting-editor__tree-node --heading"
+      class="schema-setting-editor__tree-node --heading"
       role="button"
       {{on "click" this.toggleVisibility}}
     >
@@ -48,12 +48,12 @@ export default class SchemaThemeSettingNewEditorChildTree extends Component {
           />
         {{/each}}
 
-        <li class="schema-theme-setting-editor__tree-node --child --add-button">
+        <li class="schema-setting-editor__tree-node --child --add-button">
           <DButton
             @action={{fn @addChildItem @name @parentNodeIndex}}
             @translatedLabel={{@schema.name}}
             @icon="plus"
-            class="btn-transparent schema-theme-setting-editor__tree-add-button --child"
+            class="btn-transparent schema-setting-editor__tree-add-button --child"
             data-test-parent-index={{@parentNodeIndex}}
           />
         </li>

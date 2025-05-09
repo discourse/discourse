@@ -6,9 +6,9 @@ import { gt } from "truth-helpers";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { bind } from "discourse/lib/decorators";
-import ChildTree from "admin/components/schema-theme-setting/editor/child-tree";
+import ChildTree from "admin/components/schema-setting/editor/child-tree";
 
-export default class SchemaThemeSettingNewEditorTreeNode extends Component {
+export default class SchemaSettingNewEditorTreeNode extends Component {
   @tracked text;
 
   childObjectsProperties = this.findChildObjectsProperties(
@@ -52,11 +52,11 @@ export default class SchemaThemeSettingNewEditorTreeNode extends Component {
       {{on "click" @onClick}}
       role="link"
       class={{concatClass
-        "schema-theme-setting-editor__tree-node --parent"
+        "schema-setting-editor__tree-node --parent"
         (if @active "--active")
       }}
     >
-      <div class="schema-theme-setting-editor__tree-node-text">
+      <div class="schema-setting-editor__tree-node-text">
         <span>{{this.text}}</span>
 
         {{#if (gt this.childObjectsProperties.length 0)}}
