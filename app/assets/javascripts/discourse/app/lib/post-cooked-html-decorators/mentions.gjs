@@ -61,16 +61,21 @@ export default function (element, context) {
 function _renderUserStatusOnMentions(mentions, user, helper) {
   mentions.forEach((mention) => {
     let wrapper = mention.querySelector(".user-status-message-wrapper");
-    if (!wrapper) {
-      wrapper = document.createElement("span");
-      wrapper.classList.add("user-status-message-wrapper");
-      mention.appendChild(wrapper);
-    }
 
-    helper.renderGlimmer(mention, CookedUserStatusMessage, {
-      wrapper,
-      status: user.status,
-    });
+    if (user.status) {
+      if (!wrapper) {
+        wrapper = document.createElement("span");
+        wrapper.classList.add("user-status-message-wrapper");
+        mention.appendChild(wrapper);
+      }
+
+      helper.renderGlimmer(mention, CookedUserStatusMessage, {
+        wrapper,
+        status: user.status,
+      });
+    } else {
+      wrapper?.remove?.();
+    }
   });
 }
 

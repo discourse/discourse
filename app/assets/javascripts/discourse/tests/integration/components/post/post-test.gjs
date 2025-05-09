@@ -61,6 +61,7 @@ module("Integration | Component | Post", function (hooks) {
       topic,
       like_count: 3,
       actions_summary: [{ id: 2, count: 1, hidden: false, can_act: true }],
+      created_at: new Date(new Date().getTime() - 30 * 60 * 1000),
     });
 
     this.post = post;
@@ -71,6 +72,14 @@ module("Integration | Component | Post", function (hooks) {
 
     assert.dom(".names").exists("includes poster name");
     assert.dom("a.post-date").exists("includes post date");
+
+    assert
+      .dom("a.post-date .relative-date")
+      .hasAttribute(
+        "data-time",
+        this.post.created_at.getTime().toString(10),
+        "the relative date has the correct time"
+      );
   });
 
   test("can add classes to the component", async function (assert) {
@@ -166,10 +175,19 @@ module("Integration | Component | Post", function (hooks) {
     this.post.wiki = true;
     this.post.version = 2;
     this.post.can_view_edit_history = true;
+    this.post.last_wiki_edit = new Date();
 
     await renderComponent(this.post, {
       showHistory: () => assert.step("show history called"),
     });
+
+    assert
+      .dom("a.post-date .relative-date")
+      .hasAttribute(
+        "data-time",
+        this.post.last_wiki_edit.getTime().toString(10),
+        "the relative date is based in the last time the wiki was edited"
+      );
 
     await click(".post-info .wiki");
     assert.verifySteps(
