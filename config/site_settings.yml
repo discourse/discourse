@@ -505,6 +505,29 @@ basic:
     default: ""
     type: group_list
     area: "group_permissions"
+  about_page_extra_groups:
+    client: true
+    default: ""
+    type: group_list
+    area: "about"
+  about_page_extra_groups_initial_members:
+    client: true
+    default: 6
+    type: integer
+    area: "about"
+  about_page_extra_groups_order:
+    client: true
+    default: "alphabetically"
+    type: enum
+    choices:
+      - "alphabetically"
+      - "order of creation"
+    area: "about"
+  about_page_extra_groups_show_description:
+    client: true
+    default: false
+    type: bool
+    area: "about"
   adobe_analytics_tags_url:
     default: ""
     regex: "assets.adobedtm.com"

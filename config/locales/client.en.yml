@@ -6228,12 +6228,21 @@ en:
           city_for_disputes_placeholder: "City"
           city_for_disputes_help: |
             Specify the city for resolving legal disputes related to this forum.
+          extra_groups:
+            heading: "Group listing"
+            description: "Extra groups to show on the About page."
+            groups: "Groups"
+            order: "Sort order"
+            initial_members: "Expanded members"
+            initial_members_description: "Number of group members to display before adding a View more button."
+            show_description: "Include description"
           optional: "(optional)"
           update: "Update"
           toasts:
             general_settings_saved: "General settings saved"
             contact_information_saved: "Contact information saved"
             your_organization_saved: "Your organization saved"
+            extra_groups_saved: "Group listing saved"
           saved: "saved!"
         flags:
           edit_header: "Edit Flag"
