@@ -46,6 +46,7 @@ jobs:
       TESTEM_BROWSER: ${{ (startsWith(matrix.browser, 'Firefox') && 'Firefox') || matrix.browser }}
       TESTEM_FIREFOX_PATH: ${{ (matrix.browser == 'Firefox Evergreen') && '/opt/firefox-evergreen/firefox' }}
       EMBER_ENV: development
+      INSTALL_OFFICIAL_PLUGINS: ${{ ((matrix.target == 'plugins' || matrix.target == 'plugins core features') && '1') || '0' }}
 
     strategy:
       fail-fast: false
@@ -59,7 +60,7 @@ jobs:
             target: themes
         include:
           - build_type: system
-            target: chat
+            target: "plugins core features"
           - build_type: frontend
             target: core
             browser: Firefox Evergreen
@@ -121,11 +122,11 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Checkout official plugins
-        if: matrix.target == 'plugins'
+        if: env.INSTALL_OFFICIAL_PLUGINS == '1'
         run: bin/rake plugin:install_all_official
 
       - name: Symlinking plugin gems from image
-        if: matrix.target == 'plugins'
+        if: env.INSTALL_OFFICIAL_PLUGINS == '1'
         run: |
           for dir in /var/www/discourse/plugins/*/gems; do
             plugin_name=$(basename "$(dirname "$dir")")
@@ -143,7 +144,7 @@ jobs:
           done
 
       - name: Pull compatible versions of plugins
-        if: matrix.target == 'plugins' && (github.ref_name != 'main' && github.base_ref != 'main')
+        if: env.INSTALL_OFFICIAL_PLUGINS == '1' && (github.ref_name != 'main' && github.base_ref != 'main')
         run: bin/rake plugin:pull_compatible_all
 
       - name: Checkout official themes
@@ -289,14 +290,16 @@ jobs:
         env:
           CHECKOUT_TIMEOUT: 10
         run: |
-          LOAD_PLUGINS=1 RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --exclude-pattern="plugins/chat/*" --use-runtime-info --profile=50 --verbose --format documentation plugins/*/spec/system
+          LOAD_PLUGINS=1 RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --exclude-patterns="**/core_features_spec.rb" --use-runtime-info --profile=50 --verbose --format documentation plugins/*/spec/system
         shell: bash
 
-      - name: Chat System Tests
-        if: matrix.build_type == 'system' && matrix.target == 'chat'
+      - name: Plugin Core Features System Tests
+        if: matrix.build_type == 'system' && matrix.target == 'plugins core features'
         env:
           CHECKOUT_TIMEOUT: 10
-        run: LOAD_PLUGINS=1 RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation plugins/chat/spec/system
+        run: |
+          LOAD_PLUGINS=1 RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --include-patterns="**/core_features_spec.rb" --use-runtime-info --profile=50 --verbose --format documentation plugins/*/spec/system
+        shell: bash
 
       - name: Theme System Tests
         if: matrix.build_type == 'system' && matrix.target == 'themes'
