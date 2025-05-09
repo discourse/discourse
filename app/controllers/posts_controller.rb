@@ -191,7 +191,7 @@ class PostsController < ApplicationController
     # Stuff the user in the request object, because that's what IncomingLink wants
     if params[:user_id]
       user = User.find_by(id: params[:user_id].to_i)
-      request["u"] = user.username_lower if user
+      request.params["u"] = user.username_lower if user
     end
 
     guardian.ensure_can_see!(post)

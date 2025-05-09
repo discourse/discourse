@@ -1311,7 +1311,7 @@ class TopicsController < ApplicationController
         current_user: current_user,
         topic_id: @topic_view.topic.id,
         post_number: @topic_view.current_post_number,
-        username: request["u"],
+        username: request.params["u"],
         ip_address: request.remote_ip,
       }
       # defer this way so we do not capture the whole controller
