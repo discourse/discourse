@@ -1643,6 +1643,7 @@ export default class ComposerService extends Service {
               this.appEvents.trigger("composer:cancelled");
               return resolve();
             },
+            onKeepEditing: () => resolve(),
           },
         });
       } else {
