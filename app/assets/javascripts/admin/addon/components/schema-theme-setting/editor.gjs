@@ -11,11 +11,6 @@ import { i18n } from "discourse-i18n";
 import Tree from "admin/components/schema-theme-setting/editor/tree";
 import FieldInput from "admin/components/schema-theme-setting/field";
 
-export const SCHEMA_MODES = {
-  THEME: "theme",
-  PLUGIN: "plugin",
-};
-
 export default class SchemaThemeSettingNewEditor extends Component {
   @service router;
 
@@ -27,8 +22,7 @@ export default class SchemaThemeSettingNewEditor extends Component {
   @tracked validationErrorMessage;
   inputFieldObserver = new Map();
   data = cloneJSON(this.args.setting.value);
-  schemaMode = this.args.schemaMode || SCHEMA_MODES.THEME;
-  schema = this.schemaModeKeys.schema;
+  schema = this.args.schema;
 
   @action
   onChildClick(index, propertyName, parentNodeIndex) {
@@ -231,32 +225,14 @@ export default class SchemaThemeSettingNewEditor extends Component {
     }
   }
 
-  get schemaModeKeys() {
-    if (this.schemaMode === SCHEMA_MODES.THEME) {
-      return {
-        id: this.args.themeId,
-        route: "adminCustomizeThemes.show",
-        schema: this.args.setting.objects_schema,
-      };
-    }
-    return {
-      id: this.args.pluginId,
-      route: "adminPlugins.show.settings",
-      schema: this.args.setting.schema,
-    };
-  }
-
   @action
   saveChanges() {
     this.saveButtonDisabled = true;
-
-    const { id, route } = this.schemaModeKeys;
-
     this.args.setting
-      .updateSetting(id, this.data)
+      .updateSetting(this.args.id, this.data)
       .then((result) => {
         this.args.setting.set("value", result[this.args.setting.setting]);
-        this.router.transitionTo(route, id);
+        this.router.transitionTo(this.args.routeToRedirect, this.args.id);
       })
       .catch((e) => {
         if (e.jqXHR.responseJSON && e.jqXHR.responseJSON.errors) {

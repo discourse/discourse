@@ -3,9 +3,7 @@ import { LinkTo } from "@ember/routing";
 import RouteTemplate from "ember-route-template";
 import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import Editor, {
-  SCHEMA_MODES,
-} from "admin/components/schema-theme-setting/editor";
+import Editor from "admin/components/schema-theme-setting/editor";
 
 export default RouteTemplate(
   <template>
@@ -26,8 +24,9 @@ export default RouteTemplate(
     </div>
 
     <Editor
-      @schemaMode={{SCHEMA_MODES.THEME}}
-      @themeId={{@model.theme.id}}
+      @id={{@model.theme.id}}
+      @routeToRedirect="adminCustomizeThemes.show"
+      @schema={{@model.setting.objects_schema}}
       @setting={{@model.setting}}
     />
   </template>
