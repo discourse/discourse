@@ -1,147 +1,147 @@
-// import { JSDOM } from "jsdom";
-import "core-js/actual/url";
-import patch from "./text-decoder-shim";
-patch();
-import { dirname, relative } from "path";
-import getRandomValues from "polyfill-crypto.getrandomvalues";
-globalThis.crypto = { getRandomValues };
-import { rollup } from "@rollup/browser";
-import { babel } from "@rollup/plugin-babel";
+import "./shims";
+import "./postcss";
+import "./theme-rollup";
+import { transform as babelTransform } from "@babel/standalone";
 import HTMLBarsInlinePrecompile from "babel-plugin-ember-template-compilation";
-import { Preprocessor } from "content-tag";
 import DecoratorTransforms from "decorator-transforms";
+import colocatedBabelPlugin from "ember-cli-htmlbars/lib/colocated-babel-plugin";
 import { precompile } from "ember-source/dist/ember-template-compiler";
-import BabelReplaceImports from "./babel-replace-imports";
+import EmberThisFallback from "ember-this-fallback";
+import { minify as terserMinify } from "terser";
+import { WidgetHbsCompiler } from "discourse-widget-hbs/lib/widget-hbs-compiler";
+import { browsers } from "../discourse/config/targets";
+import { Preprocessor } from "./content-tag";
 
-const preprocessor = new Preprocessor();
+const thisFallbackPlugin = EmberThisFallback._buildPlugin({
+  enableLogging: false,
+  isTheme: true,
+}).plugin;
 
-const CONSOLE_PREFIX = "[DiscourseJsProcessor] ";
-globalThis.window = {};
-
-const oldConsole = globalThis.console;
-globalThis.console = {
-  log(...args) {
-    globalThis.rails?.logger.info(CONSOLE_PREFIX + args.join(" "));
-    oldConsole.log(...args);
-  },
-  warn(...args) {
-    globalThis.rails?.logger.warn(CONSOLE_PREFIX + args.join(" "));
-    oldConsole.warn(...args);
-  },
-  error(...args) {
-    globalThis.rails?.logger.error(CONSOLE_PREFIX + args.join(" "));
-    oldConsole.error(...args);
-  },
-};
-
-import BindingsWasm from "./node_modules/@rollup/browser/dist/bindings_wasm_bg.wasm";
-
-const oldInstantiate = WebAssembly.instantiate;
-WebAssembly.instantiate = async function (bytes, bindings) {
-  if (bytes === BindingsWasm) {
-    const mod = new WebAssembly.Module(bytes);
-    const instance = new WebAssembly.Instance(mod, bindings);
-    return instance;
-  } else {
-    return oldInstantiate(...arguments);
+function manipulateAstNodeForTheme(node, themeId) {
+  // Magically add theme id as the first param for each of these helpers)
+  if (
+    node.path.parts &&
+    ["theme-i18n", "theme-prefix", "theme-setting"].includes(node.path.parts[0])
+  ) {
+    if (node.params.length === 1) {
+      node.params.unshift({
+        type: "NumberLiteral",
+        value: themeId,
+        original: themeId,
+        loc: { start: {}, end: {} },
+      });
+    }
   }
-};
+}
 
-globalThis.fetch = function (url) {
-  if (url.toString() === "http://example.com/bindings_wasm_bg.wasm") {
-    return new Promise((resolve) => resolve(BindingsWasm));
-  }
-  throw "fetch not implemented";
-};
-
-let lastRollupResult;
-let lastRollupError;
-globalThis.rollup = function (modules, options) {
-  const resultPromise = rollup({
-    input: "main.js",
-    logLevel: "info",
-    onLog(level, message) {
-      console.log(level, message);
-    },
-    plugins: [
-      {
-        name: "loader",
-        resolve: {
-          extensions: [".js", ".gjs"],
-        },
-        resolveId(source, context) {
-          if (source.startsWith(".")) {
-            source = relative(dirname(context), source);
-          }
-          console.log("resolveid", source, context);
-          if (modules.hasOwnProperty(source)) {
-            return source;
-          }
-        },
-        load(id) {
-          if (modules.hasOwnProperty(id)) {
-            return modules[id];
-          }
-        },
+function buildEmberTemplateManipulatorPlugin(themeId) {
+  return function () {
+    return {
+      name: "theme-template-manipulator",
+      visitor: {
+        SubExpression: (node) => manipulateAstNodeForTheme(node, themeId),
+        MustacheStatement: (node) => manipulateAstNodeForTheme(node, themeId),
       },
-      babel({
-        extensions: [".js", ".gjs"],
-        babelHelpers: "bundled",
-        plugins: [
-          DecoratorTransforms,
-          BabelReplaceImports,
-          [
-            HTMLBarsInlinePrecompile,
-            {
-              compiler: { precompile },
-              enableLegacyModules: [
-                "ember-cli-htmlbars",
-                "ember-cli-htmlbars-inline-precompile",
-                "htmlbars-inline-precompile",
-              ],
-            },
-          ],
-        ],
-      }),
-      {
-        name: "gjs-transform",
+    };
+  };
+}
 
-        transform: {
-          // Enforce running the gjs transform before any others like babel that expect valid JS
-          order: "pre",
-          handler(input, id) {
-            if (!id.endsWith(".gjs")) {
-              return null;
-            }
-            let { code, map } = preprocessor.process(input, {
-              filename: id,
-            });
-            return {
-              code,
-              map,
-            };
-          },
+function buildTemplateCompilerBabelPlugins({ extension, themeId }) {
+  const compiler = { precompile };
+
+  if (themeId && extension !== "gjs") {
+    compiler.precompile = (src, opts) => {
+      return precompile(src, {
+        ...opts,
+        plugins: {
+          ast: [
+            buildEmberTemplateManipulatorPlugin(themeId),
+            thisFallbackPlugin,
+          ],
         },
+      });
+    };
+  }
+
+  return [
+    colocatedBabelPlugin,
+    WidgetHbsCompiler,
+    [
+      HTMLBarsInlinePrecompile,
+      {
+        compiler,
+        enableLegacyModules: [
+          "ember-cli-htmlbars",
+          "ember-cli-htmlbars-inline-precompile",
+          "htmlbars-inline-precompile",
+        ],
       },
     ],
-  });
+  ];
+}
 
-  resultPromise
-    .then((bundle) => {
-      return bundle.generate({ format: "es" });
-    })
-    .then(({ output }) => (lastRollupResult = output))
-    .catch((error) => (lastRollupError = error));
+globalThis.transpile = function (source, options = {}) {
+  const { moduleId, filename, extension, skipModule, themeId } = options;
+
+  if (extension === "gjs") {
+    const preprocessor = new Preprocessor();
+    source = preprocessor.process(source).code;
+  }
+
+  const plugins = [];
+  plugins.push(...buildTemplateCompilerBabelPlugins({ extension, themeId }));
+  if (moduleId && !skipModule) {
+    plugins.push(["transform-modules-amd", { noInterop: true }]);
+  }
+  plugins.push([DecoratorTransforms, { runEarly: true }]);
+
+  try {
+    return babelTransform(source, {
+      moduleId,
+      filename,
+      ast: false,
+      plugins,
+      presets: [
+        [
+          "env",
+          {
+            modules: false,
+            targets: {
+              browsers,
+            },
+          },
+        ],
+      ],
+    }).code;
+  } catch (error) {
+    // Workaround for https://github.com/rubyjs/mini_racer/issues/262
+    error.message = JSON.stringify(error.message);
+    throw error;
+  }
 };
 
-globalThis.getRollupResult = function () {
-  const error = lastRollupError;
-  const result = lastRollupResult;
+// mini_racer doesn't have native support for getting the result of an async operation.
+// To work around that, we provide a getMinifyResult which can be used to fetch the result
+// in a followup method call.
+let lastMinifyError, lastMinifyResult;
 
-  lastRollupError = lastRollupResult = null;
+globalThis.minify = async function (sources, options) {
+  lastMinifyError = lastMinifyResult = null;
+  try {
+    lastMinifyResult = await terserMinify(sources, options);
+  } catch (e) {
+    lastMinifyError = e;
+  }
+};
+
+globalThis.getMinifyResult = function () {
+  const error = lastMinifyError;
+  const result = lastMinifyResult;
+
+  lastMinifyError = lastMinifyResult = null;
 
   if (error) {
-    throw error;
+    throw error.toString();
   }
   return result;
 };
