@@ -82,6 +82,7 @@ export default class Results extends Component {
               (and @inHeaderMobileView this.search.activeGlobalSearchTerm)
               "with-search-term"
             )
+            (if this.search.contextType "has-context")
           }}
           data-test-selector="search-menu-results"
         >

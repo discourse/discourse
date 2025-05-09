@@ -7,25 +7,21 @@
 
 @mixin separator {
   border-top: 1px solid var(--primary-low);
-  margin-top: 0.5em;
-  padding-top: 0.5em;
 }
 
 $search-pad-vertical: 0.25em;
 $search-pad-horizontal: 0.5em;
+$search-result-element-padding: 0.35em 1rem; // hate myself but .25em is too tight and .5 too loose
 
 .search-menu.glimmer-search-menu {
   .search-input-wrapper {
     @include breakpoint("mobile-extra-large") {
-      --search-input-wrapper-padding: 0.5rem;
       position: fixed;
-      left: var(--search-input-wrapper-padding);
-      right: var(--search-input-wrapper-padding);
-      top: var(--search-input-wrapper-padding);
-      width: calc(100dvw - calc(var(--search-input-wrapper-padding) * 2));
-      padding-bottom: var(--search-input-wrapper-padding);
+      left: 1rem;
+      right: 0.35rem; // to compensate for cancel button padding
+      top: 0.5em;
+      padding-bottom: 0.5em;
       background-color: var(--secondary);
-      z-index: z("base");
     }
   }
 }
@@ -40,7 +36,12 @@ $search-pad-horizontal: 0.5em;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 0.25rem;
+
+    .search-menu-panel & {
+      @include breakpoint("mobile-extra-large", $rule: min-width) {
+        padding: $search-result-element-padding;
+      }
+    }
   }
 
   .search-input {
@@ -51,7 +52,7 @@ $search-pad-horizontal: 0.5em;
     background: var(--d-input-bg-color);
     border: var(--d-input-border);
     border-radius: var(--d-input-border-radius);
-    padding: 0.25rem;
+    padding: 0.25em 0;
 
     input.search-term__input {
       background: none;
@@ -66,19 +67,8 @@ $search-pad-horizontal: 0.5em;
     }
 
     @include breakpoint("mobile-extra-large") {
-      .mobile-search-button + input.search-term__input {
-        padding-left: 0;
-      }
-    }
-
-    .btn.search-context {
-      margin: 2px;
-      margin-right: 0;
-      white-space: nowrap;
-      background-color: var(--primary-200);
-
-      &:hover {
-        background-color: var(--primary-medium);
+      .mobile-search-button ~ input.search-term__input {
+        padding-inline: 0;
       }
     }
 
@@ -87,18 +77,20 @@ $search-pad-horizontal: 0.5em;
     }
   }
 
-  @include breakpoint("mobile-extra-large") {
-    .btn.search-context {
-      margin: 0.25em 0 0 0;
-      padding: 0.25em 0.5em;
-    }
-  }
+  .menu-panel {
+    border: 0;
+    box-shadow: var(--shadow-dropdown);
+    padding: 0; // overrule generic menu panels to achieve full width hover effect
 
-  .heading {
-    padding: 5px 0 5px 5px;
+    @include breakpoint("mobile-extra-large", $rule: min-width) {
+      // alignment adjustment for search menu panel (within topic) on desktop to align with results
+      .search-input {
+        padding-right: calc(1rem - 0.65em);
+      }
 
-    .filter {
-      padding: 0 5px;
+      .search-term__input {
+        padding-left: 1rem;
+      }
     }
   }
 
@@ -114,291 +106,56 @@ $search-pad-horizontal: 0.5em;
     }
   }
 
+  .search-context {
+    white-space: nowrap;
+    background-color: var(--primary-200);
+
+    @include breakpoint("mobile-extra-large", $rule: min-width) {
+      margin-left: 1rem;
+      margin-right: 0;
+    }
+
+    @include breakpoint("mobile-extra-large") {
+      position: fixed;
+      top: calc(var(--header-offset) + 0.75em);
+      left: 1rem;
+      padding: 0.25em 0.5em;
+    }
+
+    &:hover {
+      background-color: var(--primary-medium);
+    }
+  }
+
   .results {
     display: flex;
     flex-direction: column;
     border-radius: var(--d-border-radius);
 
-    &.with-search-term {
-      padding-top: $search-pad-vertical;
-    }
-
     @include breakpoint("mobile-extra-large") {
-      &,
       &.with-search-term {
-        padding-top: 3rem;
-      }
-    }
-
-    .list {
-      min-width: 100px;
-
-      .item {
-        .blurb {
-          // https://css-tricks.com/snippets/css/prevent-long-urls-from-breaking-out-of-container/
-          overflow-wrap: break-word;
-          word-wrap: break-word;
-          word-break: break-word;
-          hyphens: auto;
-          margin-top: 0.25em;
-          color: var(--primary-high);
-          font-size: var(--font-down-1);
-        }
-      }
-    }
-
-    .search-result-topic {
-      .first-line {
-        display: block;
-        line-height: var(--line-height-medium);
+        padding-top: calc(var(--header-offset));
       }
 
-      .second-line {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: baseline;
-        gap: 0 0.5em;
+      // temporary solution while waiting for dev to add conditional class
+      :has(.search-context) & {
+        padding-top: calc(var(--header-offset) + 2.25em);
       }
-    }
-
-    .search-result-post {
-      .blurb {
-        font-size: var(--font-down-1);
-      }
-    }
-
-    .search-result-category {
-      .badge-category__wrapper {
-        font-size: var(--font-0);
-      }
-
-      .widget-link {
-        margin-bottom: 0;
-      }
-    }
-
-    .search-result-group .group-result,
-    .search-result-user {
-      .search-link {
-        display: flex;
-        align-items: center;
-
-        img.avatar {
-          margin-right: 10px;
-        }
-      }
-
-      .user-titles {
-        @include user-item-flex;
-
-        .name {
-          font-weight: 700;
-        }
-
-        .username,
-        .name,
-        .custom-field {
-          color: var(--primary-high-or-secondary-low);
-        }
-
-        .custom-field {
-          font-size: var(--font-down-2);
-        }
-      }
-
-      .user-result {
-        display: flex;
-        align-items: center;
-        font-size: var(--font-down-1);
-      }
-    }
-
-    .search-result-group .group-result {
-      display: flex;
-      gap: 0.5em;
-      align-items: center;
-
-      &:not(.--with-flair) {
-        svg {
-          padding: 0.43em; // matching avatar-flair width
-          background: var(--primary-200);
-          border-radius: 50%;
-        }
-      }
-
-      .d-icon {
-        font-size: var(--font-down-1);
-      }
-
-      .avatar-flair {
-        width: 1.62em;
-        height: 1.6em;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background: var(--primary-200);
-        color: var(--primary-medium);
-        border-radius: 50%;
-
-        &.avatar-flair-image {
-          background-repeat: no-repeat;
-          background-size: 100% 100%;
-        }
-
-        .d-icon {
-          font-size: var(--font-down-2);
-          color: currentcolor;
-        }
-      }
-
-      .group-names {
-        @include user-item-flex;
-        min-width: 0;
-
-        .name,
-        .slug {
-          @include ellipsis;
-        }
-
-        &.--group-with-slug {
-          .name {
-            font-weight: 700;
-          }
-        }
-      }
-    }
-
-    .search-result-category,
-    .search-result-tag {
-      + .search-result-user,
-      + .search-result-group {
-        @include separator;
-      }
-    }
-
-    .search-result-user .user-result img.avatar,
-    .search-item-user {
-      display: flex;
-      align-self: center;
-
-      img.avatar {
-        width: 20px;
-        height: 20px;
-        margin-right: 0.5em;
-      }
-
-      .username {
-        margin-right: 0.33em;
-      }
-    }
-
-    .label-suffix {
-      color: var(--primary-medium);
-      margin-right: 0.33em;
-    }
-
-    .badge-category__wrapper + .search-item-tag {
-      display: flex;
-      align-items: baseline;
-      margin-left: 0.33em;
-    }
-
-    .search-item-tag {
-      color: var(--primary-high);
-    }
-
-    .extra-hint {
-      color: var(--primary-low-mid);
-      font-size: var(--font-down-1);
-    }
-
-    .search-item-slug {
-      overflow-wrap: anywhere;
-      white-space: wrap;
-      min-width: 0;
-
-      .keyword {
-        margin-right: 0.33em;
-      }
-
-      .badge-wrapper {
-        font-size: var(--font-0);
-        margin-left: 2px;
-      }
-    }
-
-    .search-menu-initial-options {
-      + .search-result-tag,
-      + .search-result-category,
-      + .search-result-user,
-      + .search-result-group {
-        @include separator;
-      }
-    }
-
-    .search-menu-initial-options,
-    .search-result-tag,
-    .search-menu-assistant {
-      .search-item-prefix {
-        margin-right: 0.33em;
-      }
-
-      .badge-category__wrapper {
-        font-size: var(--font-0);
-      }
-
-      .search-link {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: baseline;
-
-        @include ellipsis;
-
-        .d-icon {
-          margin-right: 0.33em;
-          vertical-align: middle;
-        }
-
-        .d-icon-tag {
-          font-size: 0.7em;
-        }
-
-        .d-icon-magnifying-glass {
-          font-size: var(--font-down-1);
-        }
-      }
-    }
-  }
-
-  .browser-search-tip,
-  .search-random-quick-tip {
-    padding: $search-pad-vertical 1px;
-    font-size: var(--font-down-2);
-    color: var(--primary-medium);
-
-    .tip-label {
-      background-color: rgba(var(--tertiary-rgb), 0.1);
-      margin-right: 4px;
-      padding: 2px 4px;
-      display: inline-block;
-      border: none;
-
-      &.tip-clickable {
-        cursor: pointer;
-      }
-    }
-  }
-
-  .search-menu-recent {
-    @include separator;
-
-    .search-menu-assistant-item .search-link {
-      flex-wrap: nowrap;
     }
 
     .heading {
+      padding: 0.5em 0 0 1rem;
       display: flex;
+      align-items: center;
       justify-content: space-between;
+
+      .menu-panel & {
+        padding: 0.5em 0.5rem 0 1rem;
+      }
+
+      .filter {
+        padding: 0 5px;
+      }
 
       h4 {
         color: var(--primary-medium);
@@ -413,58 +170,46 @@ $search-pad-horizontal: 0.5em;
     }
   }
 
-  .browser-search-tip {
-    padding-top: 0.5em;
-  }
-
-  .searching {
-    display: flex;
-    align-items: center;
-
-    .spinner {
-      width: 0.75rem; // 12px
-      height: 0.75rem; // 12px
-      border-width: 0.125rem; // 2px
-      margin: 0 $hpad 0 0;
-    }
-
-    .show-advanced-search,
-    .clear-search {
-      .d-icon {
-        color: var(--primary-medium);
-      }
-
-      &:focus,
-      &:hover {
-        .d-icon {
-          color: var(--primary-high);
-        }
-      }
-    }
-
-    .clear-search {
-      padding-right: 0.25rem; // 4px
-    }
-
-    .show-advanced-search {
-      padding-left: 0.375rem; // 6px
-    }
-  }
-
-  .no-results {
-    padding: $search-pad-vertical $search-pad-horizontal;
-  }
-
   .search-link {
-    display: block;
-    padding: $search-pad-vertical $search-pad-horizontal;
+    padding: $search-result-element-padding;
+
+    &.category,
+    &.user,
+    &.tag {
+      display: flex;
+      align-items: center;
+      flex-wrap: nowrap;
+      gap: 0.5em;
+    }
 
     // This is purposefully redundant
     // the search widget can be used outside of the header
     // and the focus/hover styles from the header in those cases wouldn't follow
     &:focus,
     &:hover {
-      background-color: var(--highlight-bg);
+      background-color: var(--d-hover);
+    }
+
+    @include breakpoint("mobile-extra-large") {
+      padding-block: 0.5em;
+    }
+
+    .search-item-tag {
+      display: flex;
+      align-items: center;
+      gap: 0.25em;
+      color: var(--primary-high);
+    }
+
+    // overrules for legacy css
+    .topic-statuses {
+      float: none;
+
+      .topic-status .d-icon {
+        height: 1em;
+        width: 1em;
+        font-size: var(--font-down-1);
+      }
     }
 
     .topic {
@@ -472,16 +217,254 @@ $search-pad-horizontal: 0.5em;
     }
 
     .topic-title {
+      font-size: var(--font-up-1-rem);
       color: var(--tertiary);
       overflow-wrap: anywhere;
       margin-right: 0.25em;
     }
   }
 
-  .search-result-topic,
-  .search-result-post {
+  .search-menu-initial-options,
+  .search-result-tag,
+  .search-result-user,
+  .search-result-category {
     .search-link {
-      padding: 0.5em;
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
     }
   }
+
+  .search-menu-initial-options {
+    + .search-result-tag,
+    + .search-result-category,
+    + .search-result-user,
+    + .search-result-group {
+      @include separator;
+    }
+
+    .search-menu-recent {
+      @include separator;
+    }
+  }
+
+  .search-result-category {
+    .badge-category__wrapper {
+      font-size: var(--font-0);
+
+      .badge-category {
+        gap: 0.5em;
+      }
+    }
+
+    .widget-link {
+      margin-bottom: 0;
+    }
+  }
+
+  .search-result-topic,
+  .search-result-post {
+    .list {
+      min-width: 100px;
+
+      .search-link {
+        padding-block: 0.5em;
+      }
+
+      .first-line {
+        display: block;
+        line-height: var(--line-height-medium);
+      }
+
+      .second-line {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: 0 0.5em;
+      }
+
+      .item {
+        .blurb {
+          // https://css-tricks.com/snippets/css/prevent-long-urls-from-breaking-out-of-container/
+          overflow-wrap: break-word;
+          word-wrap: break-word;
+          word-break: break-word;
+          hyphens: auto;
+          color: var(--primary-high);
+          font-size: var(--font-down-1);
+        }
+      }
+    }
+  }
+
+  .search-result-group .group-result {
+    display: flex;
+    gap: 0.5em;
+    align-items: center;
+
+    &:not(.--with-flair) {
+      svg {
+        padding: 0.36em; // matching avatar-flair width
+        background: var(--primary-200);
+        border-radius: 50%;
+      }
+    }
+
+    .d-icon {
+      font-size: var(--font-down-1);
+    }
+
+    .avatar-flair {
+      width: 1.62em;
+      height: 1.6em;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: var(--primary-200);
+      color: var(--primary-medium);
+      border-radius: 50%;
+
+      &.avatar-flair-image {
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+      }
+
+      .d-icon {
+        font-size: var(--font-down-2);
+        color: currentcolor;
+      }
+    }
+
+    .group-names {
+      @include user-item-flex;
+      min-width: 0;
+
+      .name,
+      .slug {
+        @include ellipsis;
+      }
+
+      &.--group-with-slug {
+        .name {
+          font-weight: 700;
+        }
+      }
+    }
+  }
+
+  .search-result-category,
+  .search-result-tag {
+    + .search-result-user,
+    + .search-result-group {
+      @include separator;
+    }
+  }
+
+  .user-titles {
+    @include user-item-flex;
+
+    .name {
+      font-weight: 700;
+    }
+
+    .username,
+    .name,
+    .custom-field {
+      color: var(--primary-high-or-secondary-low);
+    }
+
+    .custom-field {
+      font-size: var(--font-down-2);
+    }
+  }
+
+  .user-result {
+    display: flex;
+    align-items: center;
+    font-size: var(--font-down-1);
+  }
+
+  .search-result-user .user-result img.avatar,
+  .search-item-user {
+    display: flex;
+    align-self: center;
+    gap: 0.5em;
+
+    img.avatar {
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  .label-suffix {
+    color: var(--primary-medium);
+  }
+
+  .extra-hint {
+    color: var(--primary-low-mid);
+    font-size: var(--font-down-1);
+  }
+
+  .search-item-slug {
+    overflow-wrap: anywhere;
+    white-space: wrap;
+    min-width: 0;
+
+    .keyword {
+      margin-right: 0.25em;
+    }
+
+    .badge-wrapper {
+      font-size: var(--font-0);
+      margin-left: 2px;
+    }
+  }
+}
+
+.search-random-quick-tip {
+  padding: max(0.5rem, 0.5em) 1rem;
+  font-size: var(--font-down-2);
+  color: var(--primary-medium);
+
+  .tip-label {
+    background-color: rgba(var(--tertiary-rgb), 0.1);
+    margin-right: 0.25em;
+    padding: 2px 4px;
+    display: inline-block;
+    border: none;
+
+    &.tip-clickable {
+      cursor: pointer;
+    }
+  }
+}
+
+.searching {
+  display: flex;
+  align-items: center;
+
+  .spinner {
+    width: 0.75rem; // 12px
+    height: 0.75rem; // 12px
+    border-width: 0.125rem; // 2px
+    margin: 0 $hpad 0 0;
+  }
+
+  .show-advanced-search,
+  .clear-search {
+    .d-icon {
+      color: var(--primary-medium);
+    }
+
+    &:focus,
+    &:hover {
+      .d-icon {
+        color: var(--primary-high);
+      }
+    }
+  }
+}
+
+.no-results {
+  padding: $search-result-element-padding;
 }

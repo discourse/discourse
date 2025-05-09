@@ -55,10 +55,6 @@
       margin: 0;
     }
 
-    .browser-search-tip {
-      display: none;
-    }
-
     .search-input {
       .search-term__input {
         min-width: 0;
@@ -93,7 +89,9 @@
       color: var(--primary-medium);
       height: 100%;
       position: absolute;
-      left: 0;
+      left: calc(
+        1rem - 0.65em
+      ); // to align with result panel, minus padding of search icon btn
 
       .rtl & {
         right: 0;
@@ -112,11 +110,11 @@
       }
 
       + .search-menu-container .search-input {
-        padding-left: 1.75em;
+        padding-left: 2em;
 
         .rtl & {
           padding-left: unset;
-          padding-right: 1.75em;
+          padding-right: 2em;
         }
       }
 
@@ -131,13 +129,9 @@
       border-radius: var(--d-border-radius);
       background: var(--secondary);
       z-index: 9;
-      margin-left: auto;
-      margin-right: auto;
       left: 0;
       top: 100%;
       right: 0;
-
-      @include float-down;
 
       @include breakpoint(mobile-extra-large) {
         width: 100%;
