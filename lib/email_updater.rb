@@ -94,7 +94,6 @@ class EmailUpdater
 
       email_token.update!(confirmed: true)
 
-      puts "Confirm for email_token.id: #{email_token.id}"
       @user = email_token.user
       @change_req =
         @user
