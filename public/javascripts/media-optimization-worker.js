@@ -122,19 +122,11 @@ onmessage = async function (e) {
       try {
         DedicatedWorkerGlobalScope.debugMode = e.data.settings.debug_mode;
 
-        let imageData;
-        try {
-          imageData = await fileToImageData(e.data.file, e.data.isIOS);
-        } catch (error) {
-          logIfDebug(error);
-          throw("Cannot get imageData from file");
-        }
-
         let optimized = await optimize(
-          imageData.data.buffer,
+          e.data.file,
           e.data.fileName,
-          imageData.width,
-          imageData.height,
+          e.data.width,
+          e.data.height,
           e.data.settings
         );
         postMessage(
@@ -192,94 +184,4 @@ async function loadLibs(settings) {
   await wasm_bindgen(settings.resize_wasm);
 
   self.codecs = { mozjpeg_enc: mozjpeg_enc_module, resize: resize };
-}
-
-function drawableToImageData(drawable, isIOS) {
-  const width = drawable.width,
-    height = drawable.height,
-    sx = 0,
-    sy = 0,
-    sw = width,
-    sh = height;
-
-  let canvas = new OffscreenCanvas(width, height);
-
-  // Check if the canvas is > 16,777,216 pixels
-  // iOS Safari has a limit of 4096x4096 for canvas size
-  // ref: https://pqina.nl/blog/canvas-area-exceeds-the-maximum-limit/
-  const maxLimit = 4096;
-  const maximumPixelCount = maxLimit * maxLimit;
-
-  if (isIOS && width * height > maximumPixelCount) {
-    logIfDebug(
-      `iOS canvas resize needed, original size: ${width}x${height}`
-    );
-    const ratio = Math.min(maxLimit / width, maxLimit / height);
-
-    canvas.width = Math.floor(width * ratio);
-    canvas.height = Math.floor(height * ratio);
-  }
-
-  // Draw image onto canvas
-  const ctx = canvas.getContext("2d");
-  if (!ctx) {
-    throw "Could not create canvas context";
-  }
-
-  ctx.drawImage(drawable, sx, sy, sw, sh, 0, 0, canvas.width, canvas.height);
-  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-
-  // iOS strikes again, need to clear canvas to free up memory
-  // ref: https://pqina.nl/blog/total-canvas-memory-use-exceeds-the-maximum-limit/
-  if (isIOS) {
-    canvas.width = 1;
-    canvas.height = 1;
-    ctx && ctx.clearRect(0, 0, 1, 1);
-  }
-
-  return imageData;
-}
-
-function isTransparent(type, imageData) {
-  if (!/(\.|\/)(png|webp)$/i.test(type)) {
-    return false;
-  }
-
-  for (let i = 0; i < imageData.data.length; i += 4) {
-    if (imageData.data[i + 3] < 255) {
-      return true;
-    }
-  }
-
-  return false;
-}
-
-function jpegDecodeFailure(type, imageData) {
-  if (!/(\.|\/)jpe?g$/i.test(type)) {
-    return false;
-  }
-
-  return imageData.data[3] === 0;
-}
-
-async function fileToImageData(file, isIOS) {
-  const drawable = await createImageBitmap(file);
-
-  // TODO: look into why a canvas size of 9999x9999 is too large for iOS
-  // found this out through trial and error so far
-  if (isIOS && drawable.width * drawable.height > 9999 * 9999) {
-    throw `Canvas size too large for iOS: ${drawable.width}x${drawable.height}`;
-  }
-
-  const imageData = drawableToImageData(drawable, isIOS);
-
-  if (isTransparent(file.type, imageData)) {
-    throw "Image has transparent pixels, won't convert to JPEG!";
-  }
-
-  if (jpegDecodeFailure(file.type, imageData)) {
-    throw "JPEG image has transparent pixel, decode failed!";
-  }
-
-  return imageData;
 }

@@ -2,6 +2,7 @@ import Service, { service } from "@ember/service";
 import { Promise } from "rsvp";
 import { getAbsoluteURL, getURLWithCDN } from "discourse/lib/get-url";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import { fileToImageData } from "discourse/lib/media-optimization-utils";
 
 /**
  * This worker follows a particular promise/callback flow to ensure
@@ -62,12 +63,21 @@ export default class MediaOptimizationWorkerService extends Service {
       this.currentComposerUploadData = data;
       this.promiseResolvers[file.id] = resolve;
 
+      let imageData;
+      try {
+        imageData = await fileToImageData(file.data, this.capabilities.isIOS);
+      } catch (error) {
+        this.logIfDebug(error);
+        return resolve();
+      }
+
       this.worker.postMessage({
         type: "compress",
         fileId: file.id,
-        file: file.data,
+        file: imageData.data.buffer,
         fileName: file.name,
-        isIOS: this.capabilities.isIOS,
+        width: imageData.width,
+        height: imageData.height,
         settings: {
           resize_threshold:
             this.siteSettings
