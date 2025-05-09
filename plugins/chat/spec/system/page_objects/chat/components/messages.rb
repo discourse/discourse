@@ -20,12 +20,24 @@ module PageObjects
           find(message).secondary_action("copyLink")
         end
 
+        def bookmark(message)
+          find(message).secondary_action("bookmark")
+        end
+
         def copy_text(message)
           find(message).secondary_action("copyText")
         end
 
         def flag(message)
           find(message).secondary_action("flag")
+        end
+
+        def reply_to(message)
+          find(message).secondary_action("reply")
+        end
+
+        def emoji(message, code)
+          find(message).emoji(code)
         end
 
         def delete(message)

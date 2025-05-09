@@ -74,38 +74,13 @@ module PageObjects
         message_by_id(message.id).find(".chat-message-expand").click
       end
 
+      def emoji(message, code)
+        messages.emoji(message, code)
+      end
+
       def expand_message_actions(message)
         hover_message(message)
         click_more_button
-      end
-
-      def expand_message_actions_mobile(message, delay: 2)
-        message = find("#{message_by_id_selector(message.id)} .chat-message-content")
-        page.execute_script(<<-JS, message, delay)
-          arguments[0].dispatchEvent(new TouchEvent("touchstart", {
-            cancelable: true,
-            bubbles: true,
-            touches: [
-              new Touch({ identifier: Date.now(), target: arguments[0] })
-            ],
-          }));
-
-
-          setTimeout(() => {
-            arguments[0].dispatchEvent(new TouchEvent("touchend", {
-              cancelable: true,
-              bubbles: true,
-              touches: [
-                new Touch({ identifier: Date.now(), target: arguments[0] })
-              ],
-            }));
-          }, arguments[1] * 1000);
-        JS
-      end
-
-      def click_message_action_mobile(message, message_action)
-        expand_message_actions_mobile(message, delay: 0.4)
-        find(".chat-message-actions [data-id=\"#{message_action}\"]").click
       end
 
       def hover_message(message)
@@ -127,15 +102,7 @@ module PageObjects
       end
 
       def bookmark_message(message)
-        messages.has_message?(id: message.id)
-
-        if page.has_css?("html.mobile-view", wait: 0)
-          click_message_action_mobile(message, "bookmark")
-          expect(page).to have_css(".d-modal:not(.is-animating)")
-        else
-          hover_message(message)
-          find(".bookmark-btn").click
-        end
+        messages.bookmark(message)
       end
 
       def click_more_button
@@ -160,7 +127,7 @@ module PageObjects
         messages.has_message?(id: message.id)
 
         if page.has_css?("html.mobile-view", wait: 0)
-          click_message_action_mobile(message, "reply")
+          messages.reply_to(message)
         else
           hover_message(message)
           find(".reply-btn").click
