@@ -49,9 +49,7 @@ class TreeFromDOM {
         children,
         addButtons,
         element: li,
-        textElement: li.querySelector(
-          ".schema-setting-editor__tree-node-text"
-        ),
+        textElement: li.querySelector(".schema-setting-editor__tree-node-text"),
       };
     });
   }

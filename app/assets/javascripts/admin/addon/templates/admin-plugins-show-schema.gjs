@@ -16,10 +16,7 @@ export default RouteTemplate(
         {{icon "arrow-left"}}{{@model.plugin.name}}
       </LinkTo>
       <h2>
-        {{i18n
-          "admin.customize.schema.title"
-          (hash name=@model.settingName)
-        }}
+        {{i18n "admin.customize.schema.title" (hash name=@model.settingName)}}
       </h2>
     </div>
 
