@@ -220,6 +220,7 @@ TEXT
           :conditional_scales,
           include_condition: -> { !!object.data&.[](:has_scales) },
         ) { 4096 }
+        @plugin.add_to_serializer(:trout, :smelly, include_condition: -> { false }) { "rainbow" }
 
         @serializer = TroutSerializer.new(@trout)
         @child_serializer = TroutJuniorSerializer.new(@trout)
@@ -317,6 +318,10 @@ TEXT
           # clear the underlying DiscourseEvent
           DiscourseEvent.off(:site_setting_changed, &event_handler)
         end
+      end
+
+      it "does not return attribute if include_condition is false" do
+        expect(@serializer.smelly).to eq(nil)
       end
     end
   end
