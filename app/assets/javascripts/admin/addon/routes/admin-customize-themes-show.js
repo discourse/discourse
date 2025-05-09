@@ -28,10 +28,12 @@ export default class AdminCustomizeThemesShowRoute extends Route {
 
     const parentController = this.controllerFor("adminCustomizeThemes");
 
-    const fromNewConfigPage = [
-      "adminConfig.customize.themes",
-      "adminConfig.customize.components",
-    ].includes(transition?.from?.name);
+    const fromNewConfigPage =
+      !transition.from ||
+      [
+        "adminConfig.customize.themes",
+        "adminConfig.customize.components",
+      ].includes(transition.from.name);
 
     parentController.setProperties({
       editingTheme: false,

@@ -38,6 +38,10 @@ module PageObjects
         )
       end
 
+      def click_back_to_themes
+        find(".back-to-themes-and-components a").click
+      end
+
       def has_back_button_to_components_page?
         has_css?(
           '.back-to-themes-and-components a[href="/admin/config/customize/components"]',
