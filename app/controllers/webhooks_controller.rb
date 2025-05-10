@@ -178,6 +178,43 @@ class WebhooksController < ActionController::Base
     success
   end
 
+  def netcorecloud
+    Rails.logger.info("Received Netcore webhook with events: #{params["_json"]}")
+
+    events = params["_json"]
+
+    begin
+      events.each do |event|
+        message_id = Email::MessageIdService.message_id_clean(event["X-APIHEADER"])
+        to_address = event["EMAIL"]
+
+        next if message_id.blank? || to_address.blank?
+
+        error_code = event["BOUNCE_REASONID"]
+
+        case event["EVENT"]
+        when "bounced"
+          case event["BOUNCE_TYPE"]
+          when "HARDBOUNCE"
+            process_bounce(message_id, to_address, SiteSetting.hard_bounce_score, error_code)
+          when "SOFTBOUNCE"
+            process_bounce(message_id, to_address, SiteSetting.soft_bounce_score, error_code)
+          end
+        when "dropped"
+          process_bounce(message_id, to_address, SiteSetting.hard_bounce_score, error_code)
+        end
+      end
+    rescue StandardError => e
+      Rails.logger.error(
+        "Failed to process Netcore webhook: #{e.message}\n#{e.backtrace.join("\n")}",
+      )
+      render json: { error: "Internal Server Error" }, status: 500
+      return
+    end
+
+    success
+  end
+
   def aws
     raw = request.raw_post
     json = JSON.parse(raw)

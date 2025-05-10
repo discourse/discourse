@@ -45,6 +45,7 @@ Discourse::Application.routes.draw do
     post "webhooks/postmark" => "webhooks#postmark"
     post "webhooks/sendgrid" => "webhooks#sendgrid"
     post "webhooks/sparkpost" => "webhooks#sparkpost"
+    post "webhooks/netcorecloud" => "webhooks#netcorecloud"
 
     scope path: nil, format: true, constraints: { format: :xml } do
       resources :sitemap, only: [:index]
