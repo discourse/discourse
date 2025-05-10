@@ -110,7 +110,7 @@ RSpec.describe "translate accelerator" do
     end
 
     after do
-      DiscoursePluginRegistry.reset!
+      DiscoursePluginRegistry.unregister_locale("foo")
       LocaleSiteSetting.reset!
     end
 
