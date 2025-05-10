@@ -29,6 +29,16 @@ RSpec.describe MetadataController do
       )
     end
 
+    it "includes share target configuration" do
+      get "/manifest.webmanifest"
+      expect(response.status).to eq(200)
+      manifest = JSON.parse(response.body)
+      expect(manifest["share_target"]).to be_present
+      expect(manifest["share_target"]["params"]["title"]).to eq("title")
+      expect(manifest["share_target"]["params"]["text"]).to eq("body")
+      expect(manifest["share_target"]["params"]["url"]).to eq("title")
+    end
+
     it "can guess mime types" do
       upload =
         UploadCreator.new(file_from_fixtures("logo.jpg"), "logo.jpg").create_for(
