@@ -1,6 +1,6 @@
 import { fn } from "@ember/helper";
 import DButton from "discourse/components/d-button";
-import boundDate from "discourse/helpers/bound-date";
+import ageWithTooltip from "discourse/helpers/age-with-tooltip";
 import routeAction from "discourse/helpers/route-action";
 import { i18n } from "discourse-i18n";
 
@@ -42,12 +42,12 @@ const UserApiKeys = <template>
 
             <p class="pref-user-api-keys__created-at">
               <span>{{i18n "user.api_approved"}}</span>
-              {{boundDate key.created_at}}
+              {{ageWithTooltip key.created_at format="medium"}}
             </p>
 
             <p class="pref-user-api-keys__last-used-at">
               <span>{{i18n "user.api_last_used_at"}}</span>
-              {{boundDate key.last_used_at}}
+              {{ageWithTooltip key.last_used_at format="medium"}}
             </p>
           </div>
         {{/each}}
