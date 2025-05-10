@@ -168,6 +168,10 @@ class DiscoursePluginRegistry
     self.locales[locale] = options
   end
 
+  def self.unregister_locale(locale)
+    self.locales.delete(locale)
+  end
+
   def register_archetype(name, options = {})
     Archetype.register(name, options)
   end
