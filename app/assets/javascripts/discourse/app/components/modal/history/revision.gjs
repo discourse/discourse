@@ -38,7 +38,7 @@ export default class Revision extends Component {
         />
 
         <span class="date">
-          {{ageWithTooltip @model.created_at defaultFormat="medium"}}
+          {{ageWithTooltip @model.created_at format="medium"}}
         </span>
 
         {{#if @model.edit_reason}}

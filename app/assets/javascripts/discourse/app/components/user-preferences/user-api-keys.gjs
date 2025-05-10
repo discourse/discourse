@@ -42,12 +42,12 @@ const UserApiKeys = <template>
 
             <p class="pref-user-api-keys__created-at">
               <span>{{i18n "user.api_approved"}}</span>
-              {{ageWithTooltip key.created_at defaultFormat="medium"}}
+              {{ageWithTooltip key.created_at format="medium"}}
             </p>
 
             <p class="pref-user-api-keys__last-used-at">
               <span>{{i18n "user.api_last_used_at"}}</span>
-              {{ageWithTooltip key.last_used_at defaultFormat="medium"}}
+              {{ageWithTooltip key.last_used_at format="medium"}}
             </p>
           </div>
         {{/each}}

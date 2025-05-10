@@ -64,7 +64,7 @@ export default RouteTemplate(
                       <span>{{i18n "groups.member_requested"}}</span>
                     </span>
                     <span class="directory-table__value">
-                      {{ageWithTooltip m.requested_at defaultFormat="medium"}}
+                      {{ageWithTooltip m.requested_at format="medium"}}
                     </span>
                   </div>
                   <div

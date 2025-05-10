@@ -70,7 +70,7 @@ export default class GroupManageLogsRow extends Component {
         {{/if}}
       </td>
 
-      <td>{{ageWithTooltip this.log.created_at defaultFormat="medium"}}</td>
+      <td>{{ageWithTooltip this.log.created_at format="medium"}}</td>
 
       <td class="group-manage-logs-expand-details">
         {{#if this.log.prev_value}}

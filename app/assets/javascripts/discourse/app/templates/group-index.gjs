@@ -223,7 +223,7 @@ export default RouteTemplate(
                       <span>{{i18n "groups.member_added"}}</span>
                     </span>
                     <span class="directory-table__value">
-                      {{ageWithTooltip m.added_at defaultFormat="medium"}}
+                      {{ageWithTooltip m.added_at format="medium"}}
                     </span>
                   </div>
                   <div
@@ -239,7 +239,7 @@ export default RouteTemplate(
                       </span>
                     {{/if}}
                     <span class="directory-table__value">
-                      {{ageWithTooltip m.last_posted_at defaultFormat="medium"}}
+                      {{ageWithTooltip m.last_posted_at format="medium"}}
                     </span>
                   </div>
                   <div
@@ -255,7 +255,7 @@ export default RouteTemplate(
                       </span>
                     {{/if}}
                     <span class="directory-table__value">
-                      {{ageWithTooltip m.last_seen_at defaultFormat="medium"}}
+                      {{ageWithTooltip m.last_seen_at format="medium"}}
                     </span>
                   </div>
                   {{#if @controller.canManageGroup}}

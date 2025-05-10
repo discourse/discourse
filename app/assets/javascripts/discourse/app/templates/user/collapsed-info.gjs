@@ -18,7 +18,7 @@ const CollapsedInfo = <template>
           <div>
             <dt class="created-at">{{i18n "user.created"}}</dt>
             <dd class="created-at">
-              {{ageWithTooltip @model.created_at defaultFormat="medium"}}
+              {{ageWithTooltip @model.created_at format="medium"}}
             </dd>
           </div>
         {{/if}}
@@ -26,7 +26,7 @@ const CollapsedInfo = <template>
           <div>
             <dt class="last-posted-at">{{i18n "user.last_posted"}}</dt>
             <dd class="last-posted-at">
-              {{ageWithTooltip @model.last_posted_at defaultFormat="medium"}}
+              {{ageWithTooltip @model.last_posted_at format="medium"}}
             </dd>
           </div>
         {{/if}}
@@ -34,7 +34,7 @@ const CollapsedInfo = <template>
           <div>
             <dt class="last-seen-at">{{i18n "user.last_seen"}}</dt>
             <dd class="last-seen-at">
-              {{ageWithTooltip @model.last_seen_at defaultFormat="medium"}}
+              {{ageWithTooltip @model.last_seen_at format="medium"}}
             </dd>
           </div>
         {{/if}}

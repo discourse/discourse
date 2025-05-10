@@ -215,18 +215,15 @@ const UserAbout = <template>
           <dl>
             <dt>{{i18n "user.created"}}</dt>
             <dd>
-              {{ageWithTooltip @dummy.user.created_at defaultFormat="medium"}}
+              {{ageWithTooltip @dummy.user.created_at format="medium"}}
             </dd>
             <dt>{{i18n "user.last_posted"}}</dt>
             <dd>
-              {{ageWithTooltip
-                @dummy.user.last_posted_at
-                defaultFormat="medium"
-              }}
+              {{ageWithTooltip @dummy.user.last_posted_at format="medium"}}
             </dd>
             <dt>{{i18n "user.last_seen"}}</dt>
             <dd>
-              {{ageWithTooltip @dummy.user.last_seen_at defaultFormat="medium"}}
+              {{ageWithTooltip @dummy.user.last_seen_at format="medium"}}
             </dd>
             <dt>{{i18n "views"}}</dt>
             <dd>{{@dummy.user.profile_view_count}}</dd>
@@ -379,18 +376,15 @@ const UserAbout = <template>
           <dl>
             <dt>{{i18n "user.created"}}</dt>
             <dd>
-              {{ageWithTooltip @dummy.user.created_at defaultFormat="medium"}}
+              {{ageWithTooltip @dummy.user.created_at format="medium"}}
             </dd>
             <dt>{{i18n "user.last_posted"}}</dt>
             <dd>
-              {{ageWithTooltip
-                @dummy.user.last_posted_at
-                defaultFormat="medium"
-              }}
+              {{ageWithTooltip @dummy.user.last_posted_at format="medium"}}
             </dd>
             <dt>{{i18n "user.last_seen"}}</dt>
             <dd>
-              {{ageWithTooltip @dummy.user.last_seen_at defaultFormat="medium"}}
+              {{ageWithTooltip @dummy.user.last_seen_at format="medium"}}
             </dd>
             <dt>{{i18n "views"}}</dt>
             <dd>{{@dummy.user.profile_view_count}}</dd>
