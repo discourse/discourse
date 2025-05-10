@@ -1,8 +1,8 @@
-import { LinkTo } from "@ember/routing";
+import { fn } from "@ember/helper";
+import { on } from "@ember/modifier";
 import RouteTemplate from "ember-route-template";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import DPageHeader from "discourse/components/d-page-header";
-import concatClass from "discourse/helpers/concat-class";
 import { i18n } from "discourse-i18n";
 import AdminSiteSettingsChangesBanner from "admin/components/admin-site-settings-changes-banner";
 import AdminSiteSettingsFilterControls from "admin/components/admin-site-settings-filter-controls";
@@ -26,34 +26,7 @@ export default RouteTemplate(
     <AdminSiteSettingsFilterControls
       @initialFilter={{@controller.filter}}
       @onChangeFilter={{@controller.filterChanged}}
-      @showMenu={{true}}
-      @onToggleMenu={{@controller.toggleMenu}}
     />
-
-    <div class="admin-nav admin-site-settings-category-nav pull-left">
-      <ul class="nav nav-stacked">
-        {{#each @controller.visibleSiteSettings as |category|}}
-          <li
-            class={{concatClass
-              "admin-site-settings-category-nav__item"
-              category.nameKey
-            }}
-          >
-            <LinkTo
-              @route="adminSiteSettingsCategory"
-              @model={{category.nameKey}}
-              class={{category.nameKey}}
-              title={{category.name}}
-            >
-              {{category.name}}
-              {{#if category.count}}
-                <span class="count">({{category.count}})</span>
-              {{/if}}
-            </LinkTo>
-          </li>
-        {{/each}}
-      </ul>
-    </div>
 
     <div class="admin-detail pull-left mobile-closed">
       {{outlet}}

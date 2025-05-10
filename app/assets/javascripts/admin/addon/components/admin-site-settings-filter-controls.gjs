@@ -1,17 +1,24 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { Input } from "@ember/component";
+import { inject as controller } from "@ember/controller";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import DButton from "discourse/components/d-button";
 import { i18n } from "discourse-i18n";
+import ComboBox from "select-kit/components/combo-box";
 
 export default class AdminSiteSettingsFilterControls extends Component {
+  @controller adminSiteSettings;
+
   @tracked filter = this.args.initialFilter || "";
   @tracked onlyOverridden = false;
-  @tracked isMenuOpen = false;
+  @tracked
+  currentCategoryName = this.adminSiteSettings.categoryNameKey
+    ? this.adminSiteSettings.categoryNameKey
+    : null;
 
   @action
   clearFilter() {
@@ -49,9 +56,22 @@ export default class AdminSiteSettingsFilterControls extends Component {
   }
 
   @action
-  toggleMenu() {
-    this.isMenuOpen = !this.isMenuOpen;
-    this.args.onToggleMenu();
+  transitionToCategory(category) {
+    this.currentCategoryName = category;
+    this.adminSiteSettings.transitionToCategory(category);
+  }
+
+  get siteSettingsCategories() {
+    return this.adminSiteSettings.visibleSiteSettings.map((category) => {
+      return {
+        id: category.nameKey,
+        name: i18n(`admin.site_settings.categories.${category.nameKey}`),
+      };
+    });
+  }
+
+  get translatedCurrentCategoryName() {
+    return i18n(`admin.site_settings.categories.${this.currentCategoryName}`);
   }
 
   <template>
@@ -61,14 +81,14 @@ export default class AdminSiteSettingsFilterControls extends Component {
       {{didUpdate this.runInitialFilter @initialFilter}}
     >
       <div class="controls">
+        {{#if this.currentCategoryName}}
+          <ComboBox
+            @value={{this.translatedCurrentCategoryName}}
+            @content={{this.siteSettingsCategories}}
+            @onChange={{this.transitionToCategory}}
+          />
+        {{/if}}
         <div class="inline-form">
-          {{#if @showMenu}}
-            <DButton
-              @action={{this.toggleMenu}}
-              @icon={{if this.isMenuOpen "xmark" "bars"}}
-              class="menu-toggle"
-            />
-          {{/if}}
           <input
             {{on "input" this.onChangeFilterInput}}
             id="setting-filter"

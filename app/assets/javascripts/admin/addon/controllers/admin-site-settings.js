@@ -54,6 +54,11 @@ export default class AdminSiteSettingsController extends Controller {
     );
   }
 
+  @action
+  transitionToCategory(selectedCategory) {
+    this.router.transitionTo("adminSiteSettingsCategory", selectedCategory);
+  }
+
   @debounce(INPUT_DELAY)
   filterContent(filterData) {
     if (this._skipBounce) {
@@ -68,13 +73,5 @@ export default class AdminSiteSettingsController extends Controller {
   @action
   filterChanged(filterData) {
     this.filterContent(filterData);
-  }
-
-  @action
-  toggleMenu() {
-    const adminDetail = document.querySelector(".admin-detail");
-    ["mobile-closed", "mobile-open"].forEach((state) => {
-      adminDetail.classList.toggle(state);
-    });
   }
 }
