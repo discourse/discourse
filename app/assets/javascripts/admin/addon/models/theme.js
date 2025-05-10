@@ -7,7 +7,7 @@ import RestModel from "discourse/models/rest";
 import { i18n } from "discourse-i18n";
 import ThemeSettings from "admin/models/theme-settings";
 
-const THEME_UPLOAD_VAR = 2;
+export const THEME_UPLOAD_VAR = 2;
 const FIELDS_IDS = [0, 1, 5, 6];
 
 export const THEMES = "themes";

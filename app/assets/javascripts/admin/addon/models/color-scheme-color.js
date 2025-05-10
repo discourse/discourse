@@ -14,6 +14,10 @@ export default class ColorSchemeColor extends EmberObject {
 
   @on("init")
   startTrackingChanges() {
+    if (this.skipChangeTracking) {
+      return;
+    }
+
     this.set("originals", {
       hex: this.hex || "FFFFFF",
       darkHex: this.dark_hex,

@@ -7,6 +7,9 @@ export default class AdminCustomizeThemesEditRoute extends Route {
   @service dialog;
   @service router;
 
+  themeIndexRoute = "adminCustomizeThemes.index";
+  themeEditRoute = "adminCustomizeThemes.edit";
+
   model(params) {
     const all = this.modelFor("adminCustomizeThemes");
     const model = all.findBy("id", parseInt(params.theme_id, 10));
@@ -17,7 +20,7 @@ export default class AdminCustomizeThemesEditRoute extends Route {
         field_name: params.field_name,
       };
     } else {
-      this.router.replaceWith("adminCustomizeThemes.index");
+      this.router.replaceWith(this.themeIndexRoute);
     }
   }
 
@@ -35,12 +38,12 @@ export default class AdminCustomizeThemesEditRoute extends Route {
       .get("fields")
       [wrapper.target].map((f) => f.name);
     if (wrapper.model.remote_theme && wrapper.model.remote_theme.is_git) {
-      this.router.transitionTo("adminCustomizeThemes.index");
+      this.router.transitionTo(this.themeIndexRoute);
       return;
     }
     if (!fields.includes(wrapper.field_name)) {
       this.router.transitionTo(
-        "adminCustomizeThemes.edit",
+        this.themeEditRoute,
         wrapper.model.id,
         wrapper.target,
         fields[0]
