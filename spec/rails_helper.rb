@@ -475,7 +475,11 @@ RSpec.configure do |config|
     end
 
     Capybara.register_driver(:playwright_chrome) do |app|
-      Capybara::Playwright::Driver.new(app, **driver_options, screen: { width: 1400, height: 1400 })
+      Capybara::Playwright::Driver.new(
+        app,
+        **driver_options,
+        viewport: ENV["PLAYWRIGHT_NO_VIEWPORT"] == "1" ? nil : { width: 1400, height: 1400 },
+      )
     end
 
     Capybara.register_driver(:playwright_mobile_chrome) do |app|
@@ -488,14 +492,7 @@ RSpec.configure do |config|
         userAgent:
           "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.4 Mobile/15E148 Safari/604.1",
         defaultBrowserType: "webkit",
-        screen: {
-          width: 390,
-          height: 844,
-        },
-        viewport: {
-          width: 390,
-          height: 664,
-        },
+        viewport: ENV["PLAYWRIGHT_NO_VIEWPORT"] == "1" ? nil : { width: 390, height: 664 },
       )
     end
 
