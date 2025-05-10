@@ -63,14 +63,14 @@ export default class PostCookedHtml extends Component {
           createDetachedElement: this.#createDetachedElement,
           currentUser: this.currentUser,
           helper,
-          renderNestedCookedContent: (
+          renderNestedPostCookedHtml: (
             nestedElement,
-            cooked,
+            nestedPost,
             extraDecorators
           ) => {
             const nestedArguments = {
-              cooked,
-              post: this.args.post,
+              post: nestedPost,
+              streamElement: false,
               highlightTerm: this.highlightTerm,
               extraDecorators: [
                 ...this.extraDecorators,

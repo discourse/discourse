@@ -47,14 +47,14 @@ export default function (element, context) {
 
   // cleanup code
   return () => {
-    state.extractedMentions = [];
-
     if (userStatusService.isEnabled) {
-      post?.mentioned_users?.forEach((user) => {
+      state.extractedMentions.forEach(({ user }) => {
         user.statusManager?.stopTrackingStatus?.();
         user.off?.("status-changed", element, _updateUserStatus);
       });
     }
+
+    state.extractedMentions = [];
   };
 }
 

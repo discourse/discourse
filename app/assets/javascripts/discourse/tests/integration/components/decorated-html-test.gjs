@@ -2,9 +2,11 @@ import { tracked } from "@glimmer/tracking";
 import { htmlSafe } from "@ember/template";
 import { render, settled } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
+import curryComponent from "ember-curry-component";
 import { module, test } from "qunit";
 import DecoratedHtml from "discourse/components/decorated-html";
 import { withSilencedDeprecations } from "discourse/lib/deprecated";
+import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Integration | Component | <DecoratedHtml />", function (hooks) {
@@ -49,6 +51,36 @@ module("Integration | Component | <DecoratedHtml />", function (hooks) {
     assert.dom("h1").hasText("Initial");
     assert.dom("#appended").hasText("Appended");
     assert.dom("#render-glimmer").hasText("Hello from Glimmer Component");
+  });
+
+  test("can decorate content with renderGlimmer using a curried componet", async function (assert) {
+    const state = new (class {
+      @tracked html = htmlSafe("<h1>Initial</h1>");
+    })();
+
+    const decorate = (element, helper) => {
+      element.innerHTML += "<div id='appended'>Appended</div>";
+      helper.renderGlimmer(
+        element,
+        curryComponent(
+          <template>
+            <div id="render-glimmer">Hello from {{@value}} Component</div>
+          </template>,
+          { value: "Curried" },
+          getOwnerWithFallback(this)
+        )
+      );
+    };
+
+    await render(
+      <template>
+        <DecoratedHtml @html={{state.html}} @decorate={{decorate}} />
+      </template>
+    );
+
+    assert.dom("h1").hasText("Initial");
+    assert.dom("#appended").hasText("Appended");
+    assert.dom("#render-glimmer").hasText("Hello from Curried Component");
   });
 
   test("renderGlimmer is ignored if receives invalid arguments", async function (assert) {
