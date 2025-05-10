@@ -68,6 +68,7 @@ export default function () {
     this.route("category", { path: "/c/*category_slug_path_with_id" });
 
     this.route("custom");
+    this.route("login-required");
   });
 
   this.route("groups", { resetNamespace: true, path: "/g" }, function () {

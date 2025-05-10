@@ -16,10 +16,6 @@ export default class DiscoveryRoute extends DiscourseRoute {
     filter: { refreshModel: true },
   };
 
-  redirect() {
-    return this.redirectIfLoginRequired();
-  }
-
   beforeModel(transition) {
     const url = transition.intent.url;
     let matches;
