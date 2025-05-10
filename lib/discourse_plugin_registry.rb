@@ -168,6 +168,12 @@ class DiscoursePluginRegistry
     self.locales[locale] = options
   end
 
+  def self.unregister_locale(locale)
+    raise "unregister_locale can only be used in tests" if !Rails.env.test?
+
+    self.locales.delete(locale)
+  end
+
   def register_archetype(name, options = {})
     Archetype.register(name, options)
   end
