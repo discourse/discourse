@@ -340,6 +340,10 @@ export default class SearchMenu extends Component {
 
             this.search.noResults = results.resultTypes.length === 0;
             this.search.results = results;
+            // focus out on topic search only
+            if (this.typeFilter === null) {
+              document.getElementById(this.searchInputId)?.blur();
+            }
           }
         })
         .catch(popupAjaxError)
