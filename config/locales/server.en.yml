@@ -288,6 +288,7 @@ en:
         other: "is limited to %{count} characters; you entered %{length}."
       invalid_boolean: "Invalid boolean."
       taken: "has already been taken"
+      reserved: "%{name} group name is reserved, choose a different name"
       accepted: must be accepted
       blank: can't be blank
       present: must be blank

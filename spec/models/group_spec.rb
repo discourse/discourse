@@ -50,6 +50,17 @@ RSpec.describe Group do
           )
         end
       end
+
+      context "when a group with a reserved name is created" do
+        it "should not be valid" do
+          new_group = Fabricate.build(:group, name: "by-id")
+          expect(new_group).to_not be_valid
+
+          expect(new_group.errors.full_messages.first).to include(
+            I18n.t("activerecord.errors.messages.reserved", name: "by-id"),
+          )
+        end
+      end
     end
   end
 
