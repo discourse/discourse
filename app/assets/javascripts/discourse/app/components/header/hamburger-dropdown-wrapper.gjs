@@ -7,6 +7,7 @@ import { waitForPromise } from "@ember/test-waiters";
 import { isTesting } from "discourse/lib/environment";
 import discourseLater from "discourse/lib/later";
 import { isDocumentRTL } from "discourse/lib/text-direction";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import { prefersReducedMotion } from "discourse/lib/utilities";
 import closeOnClickOutside from "../../modifiers/close-on-click-outside";
 import SidebarHamburgerDropdown from "../sidebar/hamburger-dropdown";
@@ -35,7 +36,15 @@ export default class HamburgerDropdownWrapper extends Component {
 
   @action
   clickOutside(e) {
-    if (e.target.closest(".sidebar-more-section-content")) {
+    let exceptionSelectors = [".sidebar-more-section-content"];
+
+    exceptionSelectors = applyValueTransformer(
+      "hamburger-dropdown-click-outside-exceptions",
+      exceptionSelectors,
+      { event: e }
+    );
+
+    if (exceptionSelectors.some((selector) => e.target.closest(selector))) {
       return;
     }
 
