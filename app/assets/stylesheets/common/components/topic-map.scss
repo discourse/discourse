@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .topic-map.--op {
   // topic map under OP
   border-top: 1px solid var(--primary-low);
@@ -42,7 +44,7 @@ body:not(.archetype-private_message) {
   padding-block: 0.5em;
   overflow-anchor: none;
 
-  @include breakpoint(mobile-large) {
+  @include viewport.until(sm) {
     font-size: var(--font-down-1);
   }
 

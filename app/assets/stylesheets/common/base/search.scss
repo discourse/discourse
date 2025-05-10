@@ -1,7 +1,9 @@
+@use "lib/viewport";
+
 @mixin search-page-spacing {
   padding: 1rem 10%;
 
-  @include breakpoint(medium) {
+  @include viewport.until(lg) {
     padding: 1rem;
   }
 }
@@ -68,7 +70,7 @@
       }
     }
 
-    @include breakpoint(mobile-extra-large) {
+    @include viewport.until(sm) {
       flex-direction: column;
 
       input.search-query,
@@ -91,7 +93,7 @@
     .search-results {
       @include search-page-spacing;
 
-      @include breakpoint(tablet) {
+      @include viewport.until(md) {
         padding: 1rem 0.5rem 1rem 0.25rem;
       }
     }
@@ -102,7 +104,7 @@
       padding: 1em 10%;
       border-bottom: 1px solid var(--primary-low);
 
-      @include breakpoint(medium) {
+      @include viewport.until(lg) {
         padding: 0.5em 0;
       }
 
@@ -119,7 +121,7 @@
       button {
         margin: 0 0.5em 0 0;
 
-        @include breakpoint(medium) {
+        @include viewport.until(lg) {
           margin: 0 0.5em 0.5em 0;
         }
       }
@@ -162,15 +164,15 @@
     gap: 2em 1em;
     grid: auto-flow / repeat(4, minmax(0, 1fr));
 
-    @include breakpoint(medium) {
+    @include viewport.until(lg) {
       grid: auto-flow / repeat(3, 1fr);
     }
 
-    @include breakpoint(tablet) {
+    @include viewport.until(md) {
       grid: auto-flow / 1fr 1fr;
     }
 
-    @include breakpoint(mobile-large) {
+    @include viewport.until(sm) {
       grid: auto-flow / 1fr;
     }
   }
@@ -231,7 +233,7 @@
         margin-top: 1em;
       }
 
-      @include breakpoint(mobile-extra-large, min-width) {
+      @include viewport.from(sm) {
         .search-advanced-options {
           column-count: 2;
           column-gap: 2em;
@@ -242,13 +244,13 @@
         }
       }
 
-      @include breakpoint(medium, min-width) {
+      @include viewport.from(lg) {
         .search-advanced-options {
           column-gap: 5em;
         }
       }
 
-      @include breakpoint(medium) {
+      @include viewport.until(lg) {
         .choices,
         .select-kit.multi-select {
           // overriding inline width from JS

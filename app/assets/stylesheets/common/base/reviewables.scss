@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .reviewable {
   background: var(--d-content-background);
 
@@ -255,7 +257,7 @@
     margin-right: 1em;
     padding-top: 0.35em;
 
-    @include breakpoint("mobile-large") {
+    @include viewport.until(sm) {
       float: left;
       margin-bottom: 1em;
     }
@@ -271,7 +273,7 @@
     min-width: 275px;
     word-break: break-word;
 
-    @include breakpoint("mobile-large", min-width) {
+    @include viewport.from(sm) {
       display: flex;
     }
   }
@@ -582,7 +584,7 @@
         padding: 0.5em;
       }
 
-      @include breakpoint("mobile-large") {
+      @include viewport.until(sm) {
         @include ellipsis;
         padding-right: 0.5em;
       }

@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 // Common styles for "user-info" component
 .user-info {
   display: flex;
@@ -12,7 +14,7 @@
   .user-detail {
     min-width: 0;
 
-    @include breakpoint(mobile-medium) {
+    @include viewport.until(sm) {
       font-size: var(--font-down-1);
     }
 

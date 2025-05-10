@@ -1,7 +1,9 @@
+@use "lib/viewport";
+
 .install-theme {
   display: flex;
 
-  @include breakpoint(mobile-extra-large) {
+  @include viewport.until(sm) {
     .install-theme-items {
       flex: 0 0 150px;
     }
@@ -91,7 +93,7 @@
   display: flex;
   align-items: center;
 
-  @include breakpoint(mobile-extra-large) {
+  @include viewport.until(sm) {
     flex-direction: column;
     align-items: initial;
   }
@@ -123,7 +125,7 @@
   }
 
   .popular-theme-buttons {
-    @include breakpoint(mobile-extra-large) {
+    @include viewport.until(sm) {
       display: flex;
       justify-content: space-between;
       align-items: center;

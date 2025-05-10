@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 #main-outlet > .regular {
   background: var(--d-content-background);
 }
@@ -1446,7 +1448,7 @@ span.mention {
   padding: 3em 5em 2em
     calc(var(--topic-avatar-width) + var(--topic-body-width-padding));
 
-  @include breakpoint(mobile-extra-large) {
+  @include viewport.until(sm) {
     padding: 1.5em 1.5em 0.25em;
   }
 
@@ -1485,7 +1487,7 @@ span.mention {
         }
       }
 
-      @include breakpoint(mobile-extra-large) {
+      @include viewport.until(sm) {
         &.btn-primary {
           margin-right: 100%;
         }

@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 div.poll-outer {
   div.poll {
     margin: 1em 0;
@@ -5,7 +7,7 @@ div.poll-outer {
     display: grid;
     grid-template-areas: "poll" "info" "buttons";
 
-    @include breakpoint("mobile-extra-large", min-width) {
+    @include viewport.from(sm) {
       grid-template-columns: 1fr 10em;
       grid-template-areas: "poll info" "buttons buttons";
     }
@@ -100,7 +102,7 @@ div.poll-outer {
       line-height: var(--line-height-medium);
       color: var(--primary-medium);
 
-      @include breakpoint("mobile-extra-large") {
+      @include viewport.until(sm) {
         border-top: 1px solid var(--primary-low);
         flex-direction: row-reverse;
 
@@ -110,7 +112,7 @@ div.poll-outer {
         }
       }
 
-      @include breakpoint("mobile-extra-large", min-width) {
+      @include viewport.from(sm) {
         gap: 0 1em;
         padding: 1em;
         border-left: 1px solid var(--primary-low);
@@ -126,11 +128,11 @@ div.poll-outer {
         width: 100%;
         gap: 0.25em 0;
 
-        @include breakpoint("mobile-extra-large", min-width) {
+        @include viewport.from(sm) {
           justify-content: center;
         }
 
-        @include breakpoint("mobile-extra-large") {
+        @include viewport.until(sm) {
           flex: 1 1 auto;
         }
 
@@ -147,13 +149,13 @@ div.poll-outer {
             text-align: center;
           }
 
-          @include breakpoint("mobile-extra-large") {
+          @include viewport.until(sm) {
             &:not(:last-child) {
               margin-right: 0.75em;
             }
           }
 
-          @include breakpoint("mobile-extra-large", min-width) {
+          @include viewport.from(sm) {
             &:not(:last-child) {
               margin-bottom: 0.25em;
             }
@@ -186,7 +188,7 @@ div.poll-outer {
           }
         }
 
-        @include breakpoint("mobile-extra-large", min-width) {
+        @include viewport.from(sm) {
           + .poll-info_instructions:not(:empty) {
             margin-top: 1.25em;
           }
@@ -204,7 +206,7 @@ div.poll-outer {
           display: none;
         }
 
-        @include breakpoint("mobile-extra-large", min-width) {
+        @include viewport.from(sm) {
           padding-top: 1.25em;
 
           &:not(:empty) {
@@ -212,7 +214,7 @@ div.poll-outer {
           }
         }
 
-        @include breakpoint("mobile-extra-large") {
+        @include viewport.until(sm) {
           padding-right: 1em;
           height: 100%;
           flex: 1 1 auto;
@@ -230,7 +232,7 @@ div.poll-outer {
             margin-bottom: 0.5em;
           }
 
-          @include breakpoint("mobile-extra-large", min-width) {
+          @include viewport.from(sm) {
             &:not(:last-child) {
               margin-bottom: 1em;
             }
@@ -265,7 +267,7 @@ div.poll-outer {
         display: block;
       }
 
-      @include breakpoint("mobile-extra-large", min-width) {
+      @include viewport.from(sm) {
         .info-label {
           font-size: var(--font-up-2);
         }
@@ -318,7 +320,7 @@ div.poll-outer {
           @include ellipsis;
         }
 
-        @include breakpoint("tablet") {
+        @include viewport.until(md) {
           flex: 1 1 0;
 
           &:first-child:last-child {
@@ -334,7 +336,7 @@ div.poll-outer {
           }
         }
 
-        @include breakpoint("mobile-large") {
+        @include viewport.until(sm) {
           &:first-child:last-child,
           &.cast-votes {
             // ok to expand button width on smaller screens

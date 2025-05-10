@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .form-kit__control-input {
   z-index: 1;
   min-width: auto !important;
@@ -39,7 +41,7 @@
   display: flex;
   align-items: center;
 
-  @include breakpoint(mobile-large) {
+  @include viewport.until(sm) {
     height: 2.25em;
   }
 }

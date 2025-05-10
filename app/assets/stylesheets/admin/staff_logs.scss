@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 // Styles for /admin/logs
 .log-details-modal {
   pre {
@@ -54,7 +56,7 @@
     }
   }
 
-  @include breakpoint(mobile-extra-large) {
+  @include viewport.until(sm) {
     table.staff-logs tr {
       grid-template-columns: 1fr 1fr 0.5fr;
 
@@ -233,7 +235,7 @@ table.screened-ip-addresses {
 
 // Screened URLs
 
-@include breakpoint(tablet) {
+@include viewport.until(md) {
   .screened-urls {
     td.domain {
       grid-column-start: 1;
@@ -248,12 +250,12 @@ table.screened-ip-addresses {
   td.ip_address {
     word-wrap: break-word;
 
-    @include breakpoint(tablet, min-width) {
+    @include viewport.from(md) {
       max-width: 20vw;
     }
   }
 
-  @include breakpoint(tablet) {
+  @include viewport.until(md) {
     td.email {
       grid-column-start: 1;
       grid-column-end: 3;
@@ -405,7 +407,7 @@ table.search-logs-list {
     }
   }
 
-  @include breakpoint(mobile-extra-large) {
+  @include viewport.until(sm) {
     tr {
       td.term {
         grid-column-start: 1;

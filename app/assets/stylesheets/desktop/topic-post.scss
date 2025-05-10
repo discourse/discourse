@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .full-width {
   margin-left: 0;
 }
@@ -583,7 +585,7 @@ video {
   margin-bottom: 5px;
   right: 10px;
 
-  @include breakpoint(extra-large, min-width) {
+  @include viewport.from(xl) {
     right: auto;
     margin-left: 330px;
     left: 50%;

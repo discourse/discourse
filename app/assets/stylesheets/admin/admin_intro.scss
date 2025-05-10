@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 // Unified styles for badge and customize pages
 .admin-intro {
   display: inline-block;
@@ -34,7 +36,7 @@
     margin-bottom: 5px;
   }
 
-  @include breakpoint(mobile-extra-large) {
+  @include viewport.until(sm) {
     width: 100%;
     margin: 2em 0;
 

@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 // Styles for /admin/users
 .display-row.associations .value {
   width: 750px;
@@ -134,7 +136,7 @@
     &.email {
       justify-content: start;
 
-      @include breakpoint("tablet") {
+      @include viewport.until(md) {
         grid-column-start: 1;
         grid-column-end: -1;
 

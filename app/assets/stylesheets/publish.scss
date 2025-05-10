@@ -1,3 +1,4 @@
+@use "lib/viewport";
 @import "common";
 
 .published-page-content-wrapper {
@@ -44,7 +45,7 @@
       margin: 0;
       line-height: var(--line-height-medium);
 
-      @include breakpoint(mobile-extra-large) {
+      @include viewport.until(sm) {
         font-size: var(--font-up-3);
       }
     }

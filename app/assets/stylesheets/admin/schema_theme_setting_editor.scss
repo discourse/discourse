@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .schema-theme-setting-editor {
   .schema-theme-setting-editor__wrapper {
     --schema-space: 0.5em;
@@ -6,7 +8,7 @@
     grid-template-rows: auto 1fr;
     gap: 0 5vw;
 
-    @include breakpoint(mobile-extra-large) {
+    @include viewport.until(sm) {
       --schema-space: 0.33em;
       gap: 0 1em;
     }
