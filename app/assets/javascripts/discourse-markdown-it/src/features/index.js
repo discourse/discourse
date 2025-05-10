@@ -7,6 +7,7 @@ import * as customTypographerReplacements from "./custom-typographer-replacement
 import * as dWrap from "./d-wrap";
 import * as emoji from "./emoji";
 import * as hashtagAutocomplete from "./hashtag-autocomplete";
+import * as hexColor from "./hex-color";
 import * as htmlImg from "./html-img";
 import * as imageControls from "./image-controls";
 import * as imageGrid from "./image-grid";
@@ -32,6 +33,7 @@ export default [
   feature("mentions", mentions),
   feature("image-grid", imageGrid),
   feature("image-controls", imageControls),
+  feature("hex-color", hexColor),
   feature("html-img", htmlImg),
   feature("hashtag-autocomplete", hashtagAutocomplete),
   feature("emoji", emoji),
