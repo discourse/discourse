@@ -31,7 +31,7 @@ describe "Composer using review_media", type: :system do
       composer.click_toolbar_button("upload")
     end
 
-    within(".d-editor-preview") { expect(page).to have_css("img") }
+    expect(page).to have_css(".d-editor-preview img")
 
     topic_page.send_reply
 
