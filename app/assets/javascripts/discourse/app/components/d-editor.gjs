@@ -70,7 +70,6 @@ export default class DEditor extends Component {
   /** @type {TextManipulation} */
   @tracked textManipulation;
   @tracked replacedToolbarComponent;
-  @tracked replacedToolbar;
 
   @tracked preview;
 
@@ -621,7 +620,6 @@ export default class DEditor extends Component {
 
   @action
   resetToolbar() {
-    this.replacedToolbar = false;
     this.replacedToolbarComponent = null;
   }
 
@@ -662,7 +660,6 @@ export default class DEditor extends Component {
       );
 
       const replaceToolbar = ({ component, data }) => {
-        this.replacedToolbar = true;
         this.replacedToolbarComponent = curryComponent(
           component,
           { data },
@@ -740,7 +737,7 @@ export default class DEditor extends Component {
             {{if this.isEditorFocused 'in-focus'}}"
         >
 
-          {{#if this.replacedToolbar}}
+          {{#if this.replacedToolbarComponent}}
             <div class="d-editor-button-bar --replaced-toolbar" role="toolbar">
               <div class="d-editor-replaced-toolbar">
                 <DButton
