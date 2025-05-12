@@ -1,4 +1,6 @@
-@include breakpoint(large) {
+@use "lib/viewport";
+
+@include viewport.until(lg) {
   .main-chat-outlet.has-side-panel-expanded {
     .c-routes.--channel {
       display: none;

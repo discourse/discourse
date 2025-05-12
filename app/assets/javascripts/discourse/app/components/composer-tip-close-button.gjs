@@ -9,4 +9,5 @@ const ComposerTipCloseButton = <template>
     class="btn-transparent close"
   />
 </template>;
+
 export default ComposerTipCloseButton;

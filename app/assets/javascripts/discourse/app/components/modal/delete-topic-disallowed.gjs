@@ -13,4 +13,5 @@ const DeleteTopicDisallowed = <template>
     </:footer>
   </DModal>
 </template>;
+
 export default DeleteTopicDisallowed;

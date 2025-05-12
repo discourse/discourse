@@ -2,6 +2,7 @@ import Service, { service } from "@ember/service";
 import { bind } from "discourse/lib/decorators";
 
 const HISTORY_THRESHOLD = 1000;
+
 // This service is responsible for managing the route history
 // mainly used by the `BackButton` component
 export default class RouteHistory extends Service {

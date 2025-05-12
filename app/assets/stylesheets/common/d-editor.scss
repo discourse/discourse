@@ -327,12 +327,12 @@
   box-sizing: border-box;
   flex-shrink: 0;
 
-  @include breakpoint(tablet) {
+  @include viewport.until(md) {
     // occupy available space on narrower screens
     grid-template-columns: repeat(auto-fit, minmax(2em, 1fr));
   }
 
-  @include breakpoint(mobile-medium) {
+  @include viewport.until(sm) {
     font-size: var(--font-down-1);
   }
 
