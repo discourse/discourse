@@ -118,4 +118,5 @@ const FontScale = <template>
     <p class="font-down-6">{{i18n "styleguide.sections.typography.example"}}</p>
   </StyleguideExample>
 </template>;
+
 export default FontScale;

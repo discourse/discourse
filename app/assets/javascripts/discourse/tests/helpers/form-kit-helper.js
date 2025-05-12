@@ -179,6 +179,7 @@ class Form {
     return !!this.element.querySelector(`[data-name="${name}"]`);
   }
 }
+
 export default function form(selector = "form") {
   const helper = new Form(selector);
 

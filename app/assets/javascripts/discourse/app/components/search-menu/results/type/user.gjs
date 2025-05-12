@@ -23,4 +23,5 @@ const User = <template>
     {{/if}}
   </div>
 </template>;
+
 export default User;

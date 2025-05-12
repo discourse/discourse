@@ -16,4 +16,5 @@ const StaffActionLogDetails = <template>
     </:footer>
   </DModal>
 </template>;
+
 export default StaffActionLogDetails;

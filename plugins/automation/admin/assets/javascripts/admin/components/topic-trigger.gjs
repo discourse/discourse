@@ -18,4 +18,5 @@ const TopicTrigger = <template>
     </div>
   </div>
 </template>;
+
 export default TopicTrigger;

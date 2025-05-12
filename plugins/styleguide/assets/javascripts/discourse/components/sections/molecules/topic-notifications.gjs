@@ -10,4 +10,5 @@ const TopicNotifications = <template>
     <TopicNotificationsButton @topic={{@dummy.topic}} @expanded={{false}} />
   </StyleguideExample>
 </template>;
+
 export default TopicNotifications;
