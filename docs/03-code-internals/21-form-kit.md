@@ -17,7 +17,7 @@ Here is the most basic example of a form:
 ```gjs
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import Form from "discourse/form";
+import Form from "discourse/components/form";
 
 export default class MyForm extends Component {
   @action
