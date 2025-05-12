@@ -49,10 +49,8 @@ esbuild
     bundle: true,
     minify: false,
     alias: {
-      util: "./node_modules/@zxing/text-encoding",
       path: "path-browserify",
       url: "./url-polyfill",
-      "source-map-js": "source-map-js",
     },
     banner: {
       js: `var process = { "env": { "EMBER_ENV": "production" }, "cwd": () => "/" };`,
