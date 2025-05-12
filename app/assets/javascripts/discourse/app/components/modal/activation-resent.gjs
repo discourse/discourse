@@ -13,4 +13,5 @@ const ActivationResent = <template>
     </:body>
   </DModal>
 </template>;
+
 export default ActivationResent;

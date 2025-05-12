@@ -123,4 +123,5 @@ const Colors = <template>
     </section>
   </StyleguideExample>
 </template>;
+
 export default Colors;

@@ -6,4 +6,5 @@ const BasicTopicList0 = <template>
     <BasicTopicList @topics={{@dummy.topics}} />
   </StyleguideExample>
 </template>;
+
 export default BasicTopicList0;
