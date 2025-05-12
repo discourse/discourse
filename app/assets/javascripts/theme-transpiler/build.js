@@ -51,6 +51,7 @@ esbuild
     alias: {
       path: "path-browserify",
       url: "./url-polyfill",
+      "source-map-js": "source-map-js",
     },
     banner: {
       js: `var process = { "env": { "EMBER_ENV": "production" }, "cwd": () => "/" };`,
