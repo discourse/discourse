@@ -16,4 +16,5 @@ const TagUpload = <template>
     </:body>
   </DModal>
 </template>;
+
 export default TagUpload;

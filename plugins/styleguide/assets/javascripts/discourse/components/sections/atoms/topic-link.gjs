@@ -6,4 +6,5 @@ const TopicLink = <template>
     {{topicLink @dummy.topic}}
   </StyleguideExample>
 </template>;
+
 export default TopicLink;

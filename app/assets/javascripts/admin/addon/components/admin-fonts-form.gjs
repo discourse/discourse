@@ -19,6 +19,7 @@ import {
 } from "admin/lib/constants";
 
 const ALL_FONTS = [...MAIN_FONTS, ...MORE_FONTS];
+
 export default class AdminFontsForm extends Component {
   @service siteSettings;
   @service siteSettingChangeTracker;

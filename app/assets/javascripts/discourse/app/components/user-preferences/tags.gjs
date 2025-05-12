@@ -81,4 +81,5 @@ const Tags = <template>
     />
   {{/if}}
 </template>;
+
 export default Tags;

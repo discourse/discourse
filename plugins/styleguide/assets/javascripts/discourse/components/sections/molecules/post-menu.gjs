@@ -10,4 +10,5 @@ const PostMenu = <template>
     />
   </StyleguideExample>
 </template>;
+
 export default PostMenu;

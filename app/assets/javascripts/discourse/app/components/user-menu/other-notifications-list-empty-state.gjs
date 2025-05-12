@@ -13,4 +13,5 @@ const OtherNotificationsListEmptyState = <template>
     </div>
   </div>
 </template>;
+
 export default OtherNotificationsListEmptyState;

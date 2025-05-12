@@ -423,4 +423,5 @@ const UserAbout = <template>
     </section>
   </StyleguideExample>
 </template>;
+
 export default UserAbout;
