@@ -11,9 +11,6 @@ patchedDependencies:
   babel-plugin-debug-macros@0.3.4:
     hash: wki6cycbrrm5sscamn5w4cujby
     path: patches/babel-plugin-debug-macros@0.3.4.patch
-  content-tag@3.1.3:
-    hash: lgdkxhmahesfzwpl4vwprolz5m
-    path: patches/content-tag@3.1.3.patch
   ember-source@5.12.0:
     hash: xx7mvsb7nmshqkkqhmf45r3hse
     path: patches/ember-source@5.12.0.patch
@@ -1024,9 +1021,6 @@ importers:
       '@csstools/postcss-light-dark-function':
         specifier: ^2.0.8
         version: 2.0.8(postcss@8.5.3)
-      '@zxing/text-encoding':
-        specifier: ^0.9.0
-        version: 0.9.0
       autoprefixer:
         specifier: ^10.4.21
         version: 10.4.21(postcss@8.5.3)
@@ -1034,8 +1028,8 @@ importers:
         specifier: ^2.4.1
         version: 2.4.1
       content-tag:
-        specifier: ^3.1.3
-        version: 3.1.3(patch_hash=lgdkxhmahesfzwpl4vwprolz5m)
+        specifier: ^4.0.0
+        version: 4.0.0
       core-js:
         specifier: ^3.42.0
         version: 3.42.0
@@ -1057,6 +1051,9 @@ importers:
       ember-this-fallback:
         specifier: ^0.4.0
         version: 0.4.0(patch_hash=znalyv6akdxlqfpmxunrdi3osa)(ember-cli-htmlbars@6.3.0)(ember-source@5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.27.1))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5)(webpack@5.99.8(@swc/core@1.11.24)(esbuild@0.25.4)))
+      fastestsmallesttextencoderdecoder:
+        specifier: ^1.0.22
+        version: 1.0.22
       path-browserify:
         specifier: ^1.0.1
         version: 1.0.1
@@ -2855,9 +2852,6 @@ packages:
   '@xtuc/long@4.2.2':
     resolution: {integrity: sha512-NuHqBY1PB/D8xU6s/thBgOAiAP7HOYDQ32+BFZILJ8ivkUkAHQnWfn6WhL79Owj1qmUnoN/YPhktdIoucipkAQ==}
 
-  '@zxing/text-encoding@0.9.0':
-    resolution: {integrity: sha512-U/4aVJ2mxI0aDNI8Uq0wEhMgY+u4CNtEb0om3+y3+niDAsoTCOB33UF0sxpzqzdqXLqmvc+vZyAt4O8pPdfkwA==}
-
   a11y-dialog@8.1.3:
     resolution: {integrity: sha512-fA1RKuGEeDnfqSUeigf0Yec8SHsn7Qng/V0Tw4lcwbwLl+4bigxqxm8b7UdBhl6cqGmKO/4USRXU1lkCdpW0/g==}
 
@@ -3961,6 +3955,9 @@ packages:
   content-tag@3.1.3:
     resolution: {integrity: sha512-4Kiv9mEroxuMXfWUNUHcljVJgxThCNk7eEswdHMXdzJnkBBaYDqDwzHkoh3F74JJhfU3taJOsgpR6oEGIDg17g==}
 
+  content-tag@4.0.0:
+    resolution: {integrity: sha512-qqJiY9nueYAI396MOmfOk+w/0KL6ERKxANQcSKcR0CrNTc38yT//b73l+WHr9brZx57bFHNaW7a/6Yll0bn95w==}
+
   content-type@1.0.5:
     resolution: {integrity: sha512-nTjqfcBFEipKdXCv4YDQWCfmcLZKm81ldF0pAopTvyrFGVbcR6P/VAAd5G7N+0tTr8QqiU0tFadD6FK4NtJwOA==}
     engines: {node: '>= 0.6'}
@@ -4928,6 +4925,9 @@ packages:
   fastest-levenshtein@1.0.16:
     resolution: {integrity: sha512-eRnCtTTtGZFpQCwhJiUOuxPQWRXVKYDn0b2PeHfXL6/Zi53SLAzAHfVhVWK2AryC/WH05kGfxhFIPvTF0SXQzg==}
     engines: {node: '>= 4.9.1'}
+
+  fastestsmallesttextencoderdecoder@1.0.22:
+    resolution: {integrity: sha512-Pb8d48e+oIuY4MaM64Cd7OW1gt4nxCHs7/ddPPZ/Ic3sg8yVGM7O9wDvZ7us6ScaUupzM+pfBolwtYhN1IxBIw==}
 
   fastq@1.19.1:
     resolution: {integrity: sha512-GwLTyxkCXjXbxqIhTsMI2Nui8huMPtnxg7krajPJAjnEG/iiOS7i+zCtWGZR9G0NBKbXKh6X9m9UIsYX/N6vvQ==}
@@ -11226,8 +11226,6 @@ snapshots:
 
   '@xtuc/long@4.2.2': {}
 
-  '@zxing/text-encoding@0.9.0': {}
-
   a11y-dialog@8.1.3:
     dependencies:
       focusable-selectors: 0.8.4
@@ -12483,11 +12481,13 @@ snapshots:
 
   content-tag-utils@0.3.1:
     dependencies:
-      content-tag: 3.1.3(patch_hash=lgdkxhmahesfzwpl4vwprolz5m)
+      content-tag: 3.1.3
 
   content-tag@2.0.3: {}
 
-  content-tag@3.1.3(patch_hash=lgdkxhmahesfzwpl4vwprolz5m): {}
+  content-tag@3.1.3: {}
+
+  content-tag@4.0.0: {}
 
   content-type@1.0.5: {}
 
@@ -13118,7 +13118,7 @@ snapshots:
       compression: 1.8.0
       configstore: 5.0.1
       console-ui: 3.1.2
-      content-tag: 3.1.3(patch_hash=lgdkxhmahesfzwpl4vwprolz5m)
+      content-tag: 3.1.3
       core-object: 3.1.5
       dag-map: 2.0.2
       diff: 7.0.0
@@ -13420,7 +13420,7 @@ snapshots:
   ember-template-imports@4.3.0:
     dependencies:
       broccoli-stew: 3.0.0
-      content-tag: 3.1.3(patch_hash=lgdkxhmahesfzwpl4vwprolz5m)
+      content-tag: 3.1.3
       ember-cli-version-checker: 5.1.2
     transitivePeerDependencies:
       - supports-color
@@ -13436,7 +13436,7 @@ snapshots:
       aria-query: 5.3.2
       chalk: 5.4.1
       ci-info: 4.2.0
-      content-tag: 3.1.3(patch_hash=lgdkxhmahesfzwpl4vwprolz5m)
+      content-tag: 3.1.3
       content-tag-utils: 0.3.1
       date-fns: 3.6.0
       ember-template-recast: 6.1.5
@@ -14133,6 +14133,8 @@ snapshots:
   fast-uri@3.0.6: {}
 
   fastest-levenshtein@1.0.16: {}
+
+  fastestsmallesttextencoderdecoder@1.0.22: {}
 
   fastq@1.19.1:
     dependencies:
@@ -15509,7 +15511,7 @@ snapshots:
 
   lint-to-the-future-ember-template@3.1.0(ember-template-lint@7.6.0(@babel/core@7.27.1)):
     dependencies:
-      content-tag: 3.1.3(patch_hash=lgdkxhmahesfzwpl4vwprolz5m)
+      content-tag: 3.1.3
       debug: 4.4.0(supports-color@8.1.1)
       ember-template-lint: 7.6.0(@babel/core@7.27.1)
       globby: 14.1.0
@@ -16566,7 +16568,7 @@ snapshots:
   prettier-plugin-ember-template-tag@2.0.5(prettier@3.5.3):
     dependencies:
       '@babel/core': 7.27.1(supports-color@8.1.1)
-      content-tag: 3.1.3(patch_hash=lgdkxhmahesfzwpl4vwprolz5m)
+      content-tag: 3.1.3
       prettier: 3.5.3
     transitivePeerDependencies:
       - supports-color
