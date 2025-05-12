@@ -1260,7 +1260,6 @@ en:
       said: "%{username}:"
       profile: "Profile"
       profile_possessive: "%{username}'s profile"
-      account_possessive: "%{name}'s account"
       mute: "Mute"
       edit: "Edit Preferences"
       download_archive:
@@ -2158,7 +2157,7 @@ en:
         title: "Registration IP Address"
       avatar:
         title: "Profile Picture"
-        header_title: "profile, messages, bookmarks and preferences"
+        header_title: "Notifications and account"
         name_and_description: "%{name} - %{description}"
         edit: "Edit Profile Picture"
       title:
@@ -3145,7 +3144,7 @@ en:
         additional_options:
           label: "Filter by post count and topic views"
 
-    hamburger_menu: "menu"
+    hamburger_menu: "Navigation menu"
     new_item: "new"
     go_back: "go back"
     not_logged_in_user: "user page with summary of current activity and preferences"
