@@ -128,7 +128,12 @@ export default class AssistantItem extends Component {
       ...(inTopicContext &&
         !this.args.searchAllTopics && { setTopicContext: true }),
     });
-    this.search.focusSearchInput();
+    // Do not focus input on all topics search. In mobile, this prevents virtual
+    // keyboard from hide-show-hide toggling (input is blurred in search-menu.gjs>pefrorm():345),
+    // since the main goal is to use maximum viewport height for showing search results
+    if (!this.args.searchAllTopics) {
+      this.search.focusSearchInput();
+    }
   }
 
   <template>
