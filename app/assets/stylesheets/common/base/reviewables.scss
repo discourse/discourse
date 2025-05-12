@@ -464,18 +464,6 @@
       white-space: nowrap;
     }
 
-    .approve-post,
-    .approve-post > summary {
-      background-color: var(--success);
-      color: var(--secondary);
-    }
-
-    .reject-post,
-    .reject-post > summary {
-      background-color: var(--danger);
-      color: var(--secondary);
-    }
-
     .reviewable-action,
     .reviewable-action-dropdown {
       margin-right: 0.5em;
