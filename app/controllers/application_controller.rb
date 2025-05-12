@@ -461,6 +461,10 @@ class ApplicationController < ActionController::Base
     @theme_id ||= ThemeResolver.resolve_theme_id(request, guardian, current_user)
   end
 
+  def skip_if_login_required
+    render html: nil, layout: true if !current_user && SiteSetting.login_required?
+  end
+
   def guardian
     # sometimes we log on a user in the middle of a request so we should throw
     # away the cached guardian instance when we do that

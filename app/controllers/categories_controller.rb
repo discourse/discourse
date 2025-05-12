@@ -18,6 +18,7 @@ class CategoriesController < ApplicationController
 
   before_action :fetch_category, only: %i[show update destroy visible_groups]
   before_action :initialize_staff_action_logger, only: %i[create update destroy]
+  before_action :skip_if_login_required
   skip_before_action :check_xhr,
                      only: %i[
                        index

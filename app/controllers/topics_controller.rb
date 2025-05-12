@@ -33,6 +33,7 @@ class TopicsController < ApplicationController
                  ]
 
   before_action :consider_user_for_promotion, only: :show
+  before_action :skip_if_login_required
 
   skip_before_action :check_xhr, only: %i[show feed]
 
