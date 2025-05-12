@@ -2158,7 +2158,6 @@ en:
         title: "Registration IP Address"
       avatar:
         title: "Profile Picture"
-        header_title: "profile, messages, bookmarks and preferences"
         name_and_description: "%{name} - %{description}"
         edit: "Edit Profile Picture"
       title:

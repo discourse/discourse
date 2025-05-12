@@ -3,6 +3,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { or } from "truth-helpers";
+import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import concatClass from "discourse/helpers/concat-class";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
@@ -35,7 +36,7 @@ export default class UserDropdown extends Component {
       }}
     >
       <PluginOutlet @name="user-dropdown-button__before" />
-      <button
+      <DButton
         id="toggle-current-user"
         class="icon btn-flat"
         aria-haspopup="true"
@@ -47,7 +48,7 @@ export default class UserDropdown extends Component {
         {{on "click" this.click}}
       >
         <Notifications @active={{@active}} />
-      </button>
+      </DButton>
       <PluginOutlet @name="user-dropdown-button__after" />
     </li>
   </template>
