@@ -91,6 +91,16 @@ describe "Reviewables", type: :system do
       expect(review_page).to have_no_post_body_collapsed
       expect(review_page).to have_no_post_body_toggle
     end
+
+    it "should apply correct button classes to actions" do
+      visit("/review")
+
+      expect(page).to have_css(".approve-post.btn-success")
+      expect(page).to have_css(".reject-post.btn-danger")
+
+      expect(page).to have_no_css(".approve-post.btn-default")
+      expect(page).to have_no_css(".reject-post.btn-default")
+    end
   end
 
   describe "when there is a queued post reviewable with a long post" do
