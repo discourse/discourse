@@ -1,11 +1,13 @@
+@use "lib/viewport";
+
 .d-admin-table {
-  @include breakpoint("tablet") {
+  @include viewport.until(md) {
     border-collapse: collapse;
     margin-bottom: var(--space-3);
   }
 
   thead {
-    @include breakpoint("tablet") {
+    @include viewport.until(md) {
       display: none;
     }
   }
@@ -18,7 +20,7 @@
     position: relative;
     padding: var(--space-1) 0;
 
-    @include breakpoint("tablet") {
+    @include viewport.until(md) {
       display: block;
       margin-bottom: var(--space-3);
       border: 1px solid var(--primary-low);
@@ -28,26 +30,26 @@
   td {
     vertical-align: middle;
 
-    @include breakpoint("tablet") {
+    @include viewport.until(md) {
       display: block;
       border-top: 1px solid var(--primary-low);
     }
 
     &:first-child {
-      @include breakpoint("tablet") {
+      @include viewport.until(md) {
         border-top: 0;
       }
     }
 
     &.d-admin-row__overview {
-      @include breakpoint("tablet") {
+      @include viewport.until(md) {
         width: auto;
         border-top: 0;
       }
     }
 
     &.d-admin-row__detail {
-      @include breakpoint("tablet") {
+      @include viewport.until(md) {
         display: flex;
         justify-content: space-between;
       }
@@ -57,7 +59,7 @@
       text-align: right;
       width: auto;
 
-      @include breakpoint("tablet") {
+      @include viewport.until(md) {
         position: absolute;
         top: -3px;
         right: 0;
@@ -158,7 +160,7 @@
   &-about {
     padding-right: var(--space-4);
 
-    @include breakpoint("tablet") {
+    @include viewport.until(md) {
       padding-top: var(--space-1);
     }
 
@@ -195,7 +197,7 @@
 .d-admin-row__mobile-label {
   display: none;
 
-  @include breakpoint("tablet") {
+  @include viewport.until(md) {
     display: inline-flex;
     color: var(--primary-high);
   }

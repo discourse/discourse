@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 #main-outlet {
   --below-topic-margin: 0.75em;
 }
@@ -181,7 +183,7 @@
       width: 100%;
     }
 
-    @include breakpoint("mobile-extra-large") {
+    @include viewport.until(sm) {
       .topic-category {
         margin-top: 0.25em;
       }
@@ -196,7 +198,7 @@
     width: 100%;
     z-index: z("base");
 
-    @include breakpoint("mobile-extra-large") {
+    @include viewport.until(sm) {
       font-size: var(--font-up-3);
     }
 
@@ -237,7 +239,7 @@
   .edit-category__wrapper {
     flex: 1 1 5%;
 
-    @include breakpoint(tablet) {
+    @include viewport.until(md) {
       min-width: 0; // allows category name to shrink to fit narrow screens
     }
 
@@ -249,7 +251,7 @@
   .edit-tags__wrapper {
     flex: 1 1 33%;
 
-    @include breakpoint(tablet) {
+    @include viewport.until(md) {
       flex: 1 1 100%; // force full row on narrow screens
     }
 
@@ -261,7 +263,7 @@
       flex-wrap: nowrap; // forces the whole input to wrap if needed, rather than individual tags
       min-width: 0;
 
-      @include breakpoint(tablet) {
+      @include viewport.until(md) {
         flex-wrap: wrap; // individual tags will need to wrap on narrow screens
       }
 
@@ -314,7 +316,7 @@
       .mini-tag-chooser {
         margin-left: 0;
 
-        @include breakpoint(mobile-large, min-width) {
+        @include viewport.from(sm) {
           .selected-name {
             max-width: 500px;
           }
@@ -463,11 +465,11 @@ a[data-clicks]::after {
   line-height: var(--line-height-medium);
   width: 60%;
 
-  @include breakpoint("mobile-extra-large") {
+  @include viewport.until(sm) {
     width: 90%;
   }
 
-  @include breakpoint("mobile-extra-large", min-width) {
+  @include viewport.from(sm) {
     text-align: center;
   }
 
@@ -477,7 +479,7 @@ a[data-clicks]::after {
     margin-right: auto;
     margin-top: 28px;
 
-    @include breakpoint("mobile-extra-large") {
+    @include viewport.until(sm) {
       margin-top: 20px;
     }
   }

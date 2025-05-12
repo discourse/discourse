@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .header-search--enabled,
 .search-header--visible {
   .panel .header-dropdown-toggle.search-dropdown,
@@ -46,11 +48,11 @@
           margin: 0 auto;
           position: relative;
 
-          @include breakpoint(large) {
+          @include viewport.until(lg) {
             width: 80%;
           }
 
-          @include breakpoint(tablet) {
+          @include viewport.until(md) {
             width: 90%;
           }
 
