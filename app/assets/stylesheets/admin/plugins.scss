@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 // Styles for /admin/plugins
 .admin-contents.admin-plugins {
   .controls {
@@ -10,7 +12,7 @@
     .admin-plugins-list__version {
       width: 14%;
 
-      @include breakpoint("tablet") {
+      @include viewport.until(md) {
         text-align: right;
         width: auto;
       }
@@ -19,7 +21,7 @@
     .d-admin-row__controls {
       width: 10%;
 
-      @include breakpoint("tablet") {
+      @include viewport.until(md) {
         width: auto;
       }
     }
@@ -114,7 +116,7 @@
       }
 
       .has-sidebar-page & {
-        @include breakpoint(large) {
+        @include viewport.until(lg) {
           span {
             display: none;
           }

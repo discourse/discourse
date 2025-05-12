@@ -14,7 +14,7 @@
       align-items: center;
       position: relative;
 
-      @include breakpoint(extra-large) {
+      @include viewport.until(xl) {
         font-size: var(--font-0);
       }
 
@@ -36,7 +36,7 @@
   }
 
   &.main-nav {
-    @include breakpoint(medium) {
+    @include viewport.until(lg) {
       li {
         .d-icon {
           font-size: var(--font-up-1);
@@ -50,7 +50,7 @@
     }
 
     .has-sidebar-page & {
-      @include breakpoint(large) {
+      @include viewport.until(lg) {
         span {
           display: none;
         }
@@ -120,7 +120,7 @@
       width: auto;
       margin: calc(var(--nav-space) / 2) 0;
 
-      @include breakpoint(extra-large) {
+      @include viewport.until(xl) {
         font-size: var(--font-down-1);
       }
 
@@ -133,7 +133,7 @@
       margin: calc(var(--nav-space) / 2) 0;
       flex-wrap: nowrap;
 
-      @include breakpoint(extra-large) {
+      @include viewport.until(xl) {
         font-size: var(--font-down-1);
       }
 

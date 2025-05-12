@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .menu-panel.slide-in {
   position: fixed;
   right: 0;
@@ -238,7 +240,7 @@
 .search-menu .menu-panel {
   width: 500px;
 
-  @include breakpoint("mobile-extra-large") {
+  @include viewport.until(sm) {
     &.search-menu-panel {
       width: 100vw;
       max-width: 100vw;
