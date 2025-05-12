@@ -424,7 +424,8 @@ const extension = {
               if (
                 menuInstance &&
                 menuInstance.expanded &&
-                menuInstance.options.data.href === attrs.href
+                menuInstance.options.data.href === attrs.href &&
+                menuInstance.options.data.text === attrs.text
               ) {
                 menuInstance.trigger = trigger;
 

@@ -2871,6 +2871,13 @@ en:
       delete_image_button: Delete Image
       toggle_image_grid: Toggle image grid
 
+      link_toolbar:
+        edit: "Edit link"
+        copy: "Copy link"
+        remove: "Remove link"
+        visit: "Visit link"
+        link_copied: "Link copied!"
+
     notifications:
       tooltip:
         regular:

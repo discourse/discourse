@@ -34,28 +34,47 @@ export default class ComposerLinkToolbar extends Component {
   @action
   copy() {
     clipboardCopy(this.args.data.href);
-    // TODO Show "Link copied!" inline
+
+    // TODO(renato) Show "Link copied!" inline
     this.toasts.success({
       duration: 1500,
-      data: { message: i18n("post.controls.link_copied") },
+      data: { message: i18n("composer.link_toolbar.link_copied") },
     });
   }
 
   get canUnlink() {
+    // Unlinking autolinked links is cumbersome (relies on escaping),
+    // it would be confusing to users so we just avoid it.
     return !AUTO_LINKS.includes(this.args.data.markup);
   }
 
   get canVisit() {
+    // Follows the same logic from preview and doesn't show the button for invalid URLs
     return !!getLinkify().matchAtStart(this.args.data.href);
   }
 
   <template>
     <div role="toolbar" class="composer-link-toolbar">
-      <DButton @icon="pen" class="btn-flat" @action={{this.startEditing}} />
-      <DButton @icon="copy" class="btn-flat" @action={{this.copy}} />
+      <DButton
+        @icon="pen"
+        class="btn-flat composer-link-toolbar__edit"
+        title={{i18n "composer.link_toolbar.edit"}}
+        @action={{this.startEditing}}
+      />
+      <DButton
+        @icon="copy"
+        class="btn-flat composer-link-toolbar__copy"
+        title={{i18n "composer.link_toolbar.copy"}}
+        @action={{this.copy}}
+      />
 
       {{#if this.canUnlink}}
-        <DButton @icon="link-slash" class="btn-flat" @action={{@data.unlink}} />
+        <DButton
+          @icon="link-slash"
+          class="btn-flat composer-link-toolbar__unlink"
+          title={{i18n "composer.link_toolbar.remove"}}
+          @action={{@data.unlink}}
+        />
       {{/if}}
 
       {{#if this.canVisit}}
@@ -66,6 +85,7 @@ export default class ComposerLinkToolbar extends Component {
           target="_blank"
           rel="noopener noreferrer"
           class="composer-link-toolbar__visit"
+          title={{i18n "composer.link_toolbar.visit"}}
         >
           {{icon "up-right-from-square"}}
         </a>
