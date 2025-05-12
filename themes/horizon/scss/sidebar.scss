@@ -1,0 +1,82 @@
+.sidebar-wrapper,
+.sidebar-hamburger-dropdown {
+  @include breakpoint(medium) {
+    background: var(--secondary);
+
+    .sidebar-footer-wrapper {
+      background: var(--secondary);
+
+      .sidebar-footer-container::before {
+        display: none;
+      }
+    }
+  }
+
+  .has-full-page-chat &,
+  .has-full-page-chat & .sidebar-footer-wrapper {
+    background: transparent;
+  }
+
+  .sidebar-container {
+    border-right: none;
+  }
+
+  .sidebar-sections {
+    padding: 0;
+  }
+
+  .sidebar-section-link {
+    transition: none;
+    border-radius: var(--d-border-radius);
+  }
+
+  .dropdown-menu__item .sidebar-section-link {
+    border-radius: 0;
+  }
+}
+
+.sidebar-section-wrapper {
+  @include breakpoint(extra-large, $rule: min-width) {
+    padding-block: 0.45em;
+  }
+
+  @include breakpoint(mobile-extra-large) {
+    .hamburger-panel .revamped & {
+      margin-bottom: var(--spacing-block-m);
+    }
+  }
+
+  .sidebar-section-header {
+    font-size: var(--font-down-2);
+  }
+
+  .sidebar-section-content {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+
+    @include breakpoint(extra-large, $rule: min-width) {
+      gap: var(--spacing-block-xs);
+    }
+  }
+}
+
+.sidebar-wrapper .sidebar-sections {
+  --scrollbarThumbBg: var(--d-selected);
+  padding: 0 1rem;
+}
+
+.sidebar-section-link-wrapper .sidebar-section-link:focus,
+.sidebar-section-link-wrapper .sidebar-section-link:hover {
+  .d-icon {
+    color: var(--primary);
+  }
+}
+
+.sidebar-new-topic-button__wrapper {
+  margin: 0 var(--spacing-inline-m) var(--spacing-block-l);
+
+  .sidebar-new-topic-button .d-icon {
+    display: none;
+  }
+}
