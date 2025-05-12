@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .d-modal.insert-hyperlink-modal {
   .insert-link {
     overflow-y: visible;
@@ -550,11 +552,11 @@
 .d-modal.grant-badge-modal {
   .d-modal {
     &__body {
-      @include breakpoint(medium) {
+      @include viewport.until(lg) {
         overflow: visible;
       }
 
-      @include breakpoint(mobile-extra-large) {
+      @include viewport.until(sm) {
         overflow: auto;
         flex-grow: 1;
       }

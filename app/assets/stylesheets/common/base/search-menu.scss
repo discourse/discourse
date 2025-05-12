@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 @mixin user-item-flex {
   display: flex;
   flex-direction: column;
@@ -15,7 +17,7 @@ $search-result-element-padding: 0.35em 1rem; // hate myself but .25em is too tig
 
 .search-menu.glimmer-search-menu {
   .search-input-wrapper {
-    @include breakpoint("mobile-extra-large") {
+    @include viewport.until(sm) {
       position: fixed;
       left: 1rem;
       right: 0.35rem; // to compensate for cancel button padding
@@ -38,7 +40,7 @@ $search-result-element-padding: 0.35em 1rem; // hate myself but .25em is too tig
     justify-content: space-between;
 
     .search-menu-panel & {
-      @include breakpoint("mobile-extra-large", $rule: min-width) {
+      @include viewport.from(sm) {
         padding: $search-result-element-padding;
       }
     }
@@ -66,7 +68,7 @@ $search-result-element-padding: 0.35em 1rem; // hate myself but .25em is too tig
       }
     }
 
-    @include breakpoint("mobile-extra-large") {
+    @include viewport.until(sm) {
       .mobile-search-button ~ input.search-term__input {
         padding-inline: 0;
       }
@@ -82,7 +84,7 @@ $search-result-element-padding: 0.35em 1rem; // hate myself but .25em is too tig
     box-shadow: var(--shadow-dropdown);
     padding: 0; // overrule generic menu panels to achieve full width hover effect
 
-    @include breakpoint("mobile-extra-large", $rule: min-width) {
+    @include viewport.from(sm) {
       // alignment adjustment for search menu panel (within topic) on desktop to align with results
       .search-input {
         padding-right: calc(1rem - 0.65em);
@@ -110,12 +112,12 @@ $search-result-element-padding: 0.35em 1rem; // hate myself but .25em is too tig
     white-space: nowrap;
     background-color: var(--primary-200);
 
-    @include breakpoint("mobile-extra-large", $rule: min-width) {
+    @include viewport.from(sm) {
       margin-left: 1rem;
       margin-right: 0;
     }
 
-    @include breakpoint("mobile-extra-large") {
+    @include viewport.until(sm) {
       position: fixed;
       top: calc(var(--header-offset) + 0.75em);
       left: 1rem;
@@ -132,7 +134,7 @@ $search-result-element-padding: 0.35em 1rem; // hate myself but .25em is too tig
     flex-direction: column;
     border-radius: var(--d-border-radius);
 
-    @include breakpoint("mobile-extra-large") {
+    @include viewport.until(sm) {
       &.with-search-term {
         padding-top: calc(var(--header-offset));
       }
@@ -190,7 +192,7 @@ $search-result-element-padding: 0.35em 1rem; // hate myself but .25em is too tig
       background-color: var(--d-hover);
     }
 
-    @include breakpoint("mobile-extra-large") {
+    @include viewport.until(sm) {
       padding-block: 0.5em;
     }
 

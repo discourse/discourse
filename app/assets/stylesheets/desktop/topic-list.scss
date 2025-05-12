@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 // --------------------------------------------------
 // Topic lists
 // --------------------------------------------------
@@ -246,6 +248,7 @@
 
 // These styles kick in a little earlier when the sidebar appears
 
+/* stylelint-disable-next-line discourse/no-breakpoint-mixin */
 @include breakpoint(medium, $sidebar: true) {
   .topic-list {
     // suppress views column
@@ -285,7 +288,7 @@
   }
 }
 
-@include breakpoint(medium) {
+@include viewport.until(lg) {
   .nav-pills {
     > li > a {
       font-size: var(--font-0);
