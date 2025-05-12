@@ -21,9 +21,10 @@ $search-result-element-padding: 0.35em 1rem; // hate myself but .25em is too tig
       position: fixed;
       left: 1rem;
       right: 0.35rem; // to compensate for cancel button padding
-      top: 0.5em;
-      padding-bottom: 0.5em;
+      top: 0;
+      padding-block: 0.5em;
       background-color: var(--secondary);
+      z-index: z("base");
     }
   }
 }
