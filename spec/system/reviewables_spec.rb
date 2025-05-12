@@ -96,10 +96,10 @@ describe "Reviewables", type: :system do
       visit("/review")
 
       expect(page).to have_css(".approve-post.btn-success")
-      expect(page).to have_css(".reject-post.btn-danger")
+      expect(page).to have_css(".reject-post. btn-danger")
 
       expect(page).to have_no_css(".approve-post.btn-default")
-      expect(page).to have_no_css(".reject-post.btn-default")
+      expect(page).to have_no_css(".reject-post. btn-default")
     end
   end
 
