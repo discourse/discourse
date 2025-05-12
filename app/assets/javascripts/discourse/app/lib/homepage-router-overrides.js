@@ -21,7 +21,7 @@ export default function applyRouterHomepageOverrides(router) {
   }
 }
 
-const homepageRewriteParam = "_discourse_homepage_rewrite";
+export const homepageRewriteParam = "_discourse_homepage_rewrite";
 
 /**
  * Returns a magic URL which `discovery-index` will redirect to.

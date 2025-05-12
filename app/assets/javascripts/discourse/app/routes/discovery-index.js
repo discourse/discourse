@@ -1,5 +1,8 @@
 import { service } from "@ember/service";
-import { homepageDestination } from "discourse/lib/homepage-router-overrides";
+import {
+  homepageDestination,
+  homepageRewriteParam,
+} from "discourse/lib/homepage-router-overrides";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import DiscourseRoute from "./discourse";
 
@@ -18,7 +21,7 @@ export default class DiscoveryIndex extends DiscourseRoute {
     }
 
     if (this.siteSettings.login_required && !this.currentUser) {
-      destination = "/login-required?_discourse_homepage_rewrite=1";
+      destination = `/login-required?${homepageRewriteParam}=1`;
     }
 
     this.router.transitionTo(destination);

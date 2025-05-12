@@ -7,7 +7,8 @@ shared_examples "login scenarios" do |login_page_object|
   let(:activate_account) { PageObjects::Pages::ActivateAccount.new }
   let(:user_preferences_security_page) { PageObjects::Pages::UserPreferencesSecurity.new }
   fab!(:user) { Fabricate(:user, username: "john", password: "supersecurepassword") }
-  fab!(:topic) { Fabricate(:topic, user: user) }
+  fab!(:category)
+  fab!(:topic) { Fabricate(:topic, user: user, category: category) }
   fab!(:topic2) { Fabricate(:topic, user: user) }
   fab!(:admin) { Fabricate(:admin, username: "admin", password: "supersecurepassword") }
   let(:user_menu) { PageObjects::Components::UserMenu.new }
@@ -150,6 +151,15 @@ shared_examples "login scenarios" do |login_page_object|
 
       expect(page.body).not_to include(topic.title)
       expect(page.body).not_to include(topic2.title)
+    end
+
+    it "does not leak category metadata if homepage is /categories" do
+      SiteSetting.top_menu = "categories|latest|new|unread|top"
+      visit "/"
+
+      expect(page).to have_css(".login-welcome")
+
+      expect(page.body).not_to include(category.name)
     end
   end
 

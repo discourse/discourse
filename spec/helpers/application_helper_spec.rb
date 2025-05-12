@@ -556,6 +556,25 @@ RSpec.describe ApplicationHelper do
       @application_layout_preloader.store_preloaded("test", %{["< \x80"]})
       expect(helper.preloaded_json).to include(%{"test":"[\\"\\u003c \uFFFD\\"]"})
     end
+
+    context "when login_required is true" do
+      before { SiteSetting.login_required = true }
+
+      it "does not include keys not listed in preloaded_anonymous_keys " do
+        @application_layout_preloader =
+          ApplicationLayoutPreloader.new(
+            guardian: Guardian.new(nil),
+            theme_id: nil,
+            theme_target: nil,
+            login_method: nil,
+          )
+
+        @application_layout_preloader.store_preloaded("testkey", "something")
+        preloaded_json = JSON.parse(helper.preloaded_json)
+        expect(preloaded_json.keys).not_to include("testkey")
+        expect(preloaded_json.keys).to eq(@application_layout_preloader.preloaded_anonymous_keys)
+      end
+    end
   end
 
   describe "client_side_setup_data" do
