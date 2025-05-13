@@ -28,7 +28,7 @@ Help your new members feel right at home when they first arrive.
 
 → Personalize your **[<kbd>welcome topic</kbd>](%{base_url}/t/-/5/)** and fill out your **[<kbd>about page</kbd>](%{base_url}/about)**.
 
-→ Customize your **[<kbd>site appearance</kbd>](%{base_url}/admin/config/logo-and-fonts)**.
+→ Customize your **[<kbd>site appearance</kbd>](%{base_url}/admin/config/logo)**.
 
 → Set up different **[<kbd>login methods</kbd>](%{base_url}/admin/config/login-and-authentication)** for your members.
 

@@ -53,9 +53,9 @@ export default class AdminFontChooser extends Component {
         class="admin-fonts-form__more font"
       >
         {{#if this.showMoreFonts}}
-          {{i18n "admin.config.logo_and_fonts.fonts.form.less_fonts"}}
+          {{i18n "admin.config.fonts.form.less_fonts"}}
         {{else}}
-          {{i18n "admin.config.logo_and_fonts.fonts.form.more_fonts"}}
+          {{i18n "admin.config.fonts.form.more_fonts"}}
         {{/if}}
       </DButton>
     </@field.Custom>

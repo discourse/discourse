@@ -84,7 +84,7 @@ export default class AdminFontsForm extends Component {
       this.toasts.success({
         duration: 3000,
         data: {
-          message: i18n("admin.config.logo_and_fonts.fonts.form.saved"),
+          message: i18n("admin.config.fonts.form.saved"),
         },
       });
       this.siteSettingChangeTracker.refreshPage({
@@ -120,7 +120,7 @@ export default class AdminFontsForm extends Component {
     >
       <form.Field
         @name="base_font"
-        @title={{i18n "admin.config.logo_and_fonts.fonts.form.base_font.title"}}
+        @title={{i18n "admin.config.fonts.form.base_font.title"}}
         @validation="required"
         @format="full"
         as |field|
@@ -132,9 +132,7 @@ export default class AdminFontsForm extends Component {
       </form.Field>
       <form.Field
         @name="heading_font"
-        @title={{i18n
-          "admin.config.logo_and_fonts.fonts.form.heading_font.title"
-        }}
+        @title={{i18n "admin.config.fonts.form.heading_font.title"}}
         @validation="required"
         @format="full"
         as |field|
@@ -146,11 +144,9 @@ export default class AdminFontsForm extends Component {
       </form.Field>
       <form.Field
         @name="default_text_size"
-        @title={{i18n
-          "admin.config.logo_and_fonts.fonts.form.default_text_size.title"
-        }}
+        @title={{i18n "admin.config.fonts.form.default_text_size.title"}}
         @description={{i18n
-          "admin.config.logo_and_fonts.fonts.form.default_text_size.description"
+          "admin.config.fonts.form.default_text_size.description"
         }}
         @validation="required"
         @format="full"
