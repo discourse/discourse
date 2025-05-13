@@ -1,11 +1,14 @@
 import { click, fillIn, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import schemaAndData from "discourse/tests/fixtures/theme-setting-schema-data";
+import schemaAndData, {
+  SCHEMA_MODES,
+} from "discourse/tests/fixtures/theme-setting-schema-data";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
-import AdminSchemaThemeSettingEditor from "admin/components/schema-theme-setting/editor";
+import AdminSchemaSettingEditor from "admin/components/schema-setting/editor";
+import SiteSetting from "admin/models/site-setting";
 import ThemeSettings from "admin/models/theme-settings";
 
 class TreeFromDOM {
@@ -16,7 +19,7 @@ class TreeFromDOM {
   refresh() {
     this.nodes = [
       ...queryAll(
-        ".schema-theme-setting-editor__tree .schema-theme-setting-editor__tree-node.--parent"
+        ".schema-setting-editor__tree .schema-setting-editor__tree-node.--parent"
       ),
     ].map((container, index) => {
       const li = container;
@@ -24,20 +27,20 @@ class TreeFromDOM {
 
       const children = [
         ...queryAll(
-          `.schema-theme-setting-editor__tree-node.--child[data-test-parent-index="${index}"]`
+          `.schema-setting-editor__tree-node.--child[data-test-parent-index="${index}"]`
         ),
       ].map((child) => {
         return {
           element: child,
           textElement: child.querySelector(
-            ".schema-theme-setting-editor__tree-node-text"
+            ".schema-setting-editor__tree-node-text"
           ),
         };
       });
 
       const addButtons = [
         ...queryAll(
-          `.schema-theme-setting-editor__tree-add-button.--child[data-test-parent-index="${index}"]`
+          `.schema-setting-editor__tree-add-button.--child[data-test-parent-index="${index}"]`
         ),
       ];
 
@@ -46,9 +49,7 @@ class TreeFromDOM {
         children,
         addButtons,
         element: li,
-        textElement: li.querySelector(
-          ".schema-theme-setting-editor__tree-node-text"
-        ),
+        textElement: li.querySelector(".schema-setting-editor__tree-node-text"),
       };
     });
   }
@@ -77,12 +78,11 @@ class InputFieldsFromDOM {
   }
 }
 
-const TOP_LEVEL_ADD_BTN =
-  ".schema-theme-setting-editor__tree-add-button.--root";
-const REMOVE_ITEM_BTN = ".schema-theme-setting-editor__remove-btn";
+const TOP_LEVEL_ADD_BTN = ".schema-setting-editor__tree-add-button.--root";
+const REMOVE_ITEM_BTN = ".schema-setting-editor__remove-btn";
 
 module(
-  "Integration | Admin | Component | schema-theme-setting/editor",
+  "Integration | Admin | Themes | Component | schema-setting/editor",
   function (hooks) {
     setupRenderingTest(hooks);
 
@@ -91,7 +91,12 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+          <AdminSchemaSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
         </template>
       );
 
@@ -107,7 +112,12 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+          <AdminSchemaSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
         </template>
       );
 
@@ -152,7 +162,12 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+          <AdminSchemaSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
         </template>
       );
 
@@ -244,7 +259,12 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+          <AdminSchemaSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
         </template>
       );
 
@@ -281,7 +301,12 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+          <AdminSchemaSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
         </template>
       );
 
@@ -310,7 +335,12 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+          <AdminSchemaSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
         </template>
       );
 
@@ -321,7 +351,7 @@ module(
       await click(tree.nodes[1].children[1].element);
 
       assert.dom(".--back-btn").hasText(
-        i18n("admin.customize.theme.schema.back_button", {
+        i18n("admin.customize.schema.back_button", {
           name: "item 2",
         })
       );
@@ -330,7 +360,7 @@ module(
       await click(tree.nodes[1].children[0].element);
 
       assert.dom(".--back-btn").hasText(
-        i18n("admin.customize.theme.schema.back_button", {
+        i18n("admin.customize.schema.back_button", {
           name: "child 2-2",
         })
       );
@@ -338,7 +368,7 @@ module(
       await click(".--back-btn");
 
       assert.dom(".--back-btn").hasText(
-        i18n("admin.customize.theme.schema.back_button", {
+        i18n("admin.customize.schema.back_button", {
           name: "item 2",
         })
       );
@@ -372,7 +402,12 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+          <AdminSchemaSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
         </template>
       );
 
@@ -396,7 +431,12 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+          <AdminSchemaSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
         </template>
       );
 
@@ -466,7 +506,12 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+          <AdminSchemaSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
         </template>
       );
 
@@ -482,7 +527,7 @@ module(
       inputFields.refresh();
 
       assert.dom(inputFields.fields.id.errorElement).hasText(
-        i18n("admin.customize.theme.schema.fields.string.too_short", {
+        i18n("admin.customize.schema.fields.string.too_short", {
           count: 2,
         })
       );
@@ -493,7 +538,7 @@ module(
 
       assert
         .dom(inputFields.fields.id.errorElement)
-        .hasText(i18n("admin.customize.theme.schema.fields.required"));
+        .hasText(i18n("admin.customize.schema.fields.required"));
     });
 
     test("input fields of type integer", async function (assert) {
@@ -522,7 +567,12 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+          <AdminSchemaSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
         </template>
       );
 
@@ -540,7 +590,7 @@ module(
       inputFields.refresh();
 
       assert.dom(inputFields.fields.id.errorElement).hasText(
-        i18n("admin.customize.theme.schema.fields.number.too_large", {
+        i18n("admin.customize.schema.fields.number.too_large", {
           count: 10,
         })
       );
@@ -550,7 +600,7 @@ module(
       inputFields.refresh();
 
       assert.dom(inputFields.fields.id.errorElement).hasText(
-        i18n("admin.customize.theme.schema.fields.number.too_small", {
+        i18n("admin.customize.schema.fields.number.too_small", {
           count: 5,
         })
       );
@@ -561,7 +611,7 @@ module(
 
       assert
         .dom(inputFields.fields.id.errorElement)
-        .hasText(i18n("admin.customize.theme.schema.fields.required"));
+        .hasText(i18n("admin.customize.schema.fields.required"));
     });
 
     test("input fields of type float", async function (assert) {
@@ -590,7 +640,12 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+          <AdminSchemaSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
         </template>
       );
 
@@ -608,7 +663,7 @@ module(
       inputFields.refresh();
 
       assert.dom(inputFields.fields.id.errorElement).hasText(
-        i18n("admin.customize.theme.schema.fields.number.too_large", {
+        i18n("admin.customize.schema.fields.number.too_large", {
           count: 10.5,
         })
       );
@@ -618,7 +673,7 @@ module(
       inputFields.refresh();
 
       assert.dom(inputFields.fields.id.errorElement).hasText(
-        i18n("admin.customize.theme.schema.fields.number.too_small", {
+        i18n("admin.customize.schema.fields.number.too_small", {
           count: 5.5,
         })
       );
@@ -629,7 +684,7 @@ module(
 
       assert
         .dom(inputFields.fields.id.errorElement)
-        .hasText(i18n("admin.customize.theme.schema.fields.required"));
+        .hasText(i18n("admin.customize.schema.fields.required"));
     });
 
     test("input fields of type boolean", async function (assert) {
@@ -637,7 +692,12 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+          <AdminSchemaSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
         </template>
       );
 
@@ -695,7 +755,12 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+          <AdminSchemaSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
         </template>
       );
 
@@ -760,7 +825,12 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+          <AdminSchemaSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
         </template>
       );
 
@@ -783,7 +853,7 @@ module(
       inputFields.refresh();
 
       assert.dom(inputFields.fields.not_required_category.errorElement).hasText(
-        i18n("admin.customize.theme.schema.fields.categories.at_least", {
+        i18n("admin.customize.schema.fields.categories.at_least", {
           count: 2,
         })
       );
@@ -839,7 +909,12 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+          <AdminSchemaSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
         </template>
       );
 
@@ -862,7 +937,7 @@ module(
       inputFields.refresh();
 
       assert.dom(inputFields.fields.required_category.errorElement).hasText(
-        i18n("admin.customize.theme.schema.fields.categories.at_least", {
+        i18n("admin.customize.schema.fields.categories.at_least", {
           count: 1,
         })
       );
@@ -902,7 +977,12 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+          <AdminSchemaSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
         </template>
       );
 
@@ -960,7 +1040,12 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+          <AdminSchemaSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
         </template>
       );
 
@@ -991,7 +1076,7 @@ module(
       assert
         .dom(inputFields.fields.required_tags_with_validations.errorElement)
         .hasText(
-          i18n("admin.customize.theme.schema.fields.tags.at_least", {
+          i18n("admin.customize.schema.fields.tags.at_least", {
             count: 2,
           })
         );
@@ -1006,7 +1091,7 @@ module(
       assert
         .dom(inputFields.fields.required_tags_with_validations.errorElement)
         .hasText(
-          i18n("admin.customize.theme.schema.fields.tags.at_least", {
+          i18n("admin.customize.schema.fields.tags.at_least", {
             count: 2,
           })
         );
@@ -1022,7 +1107,7 @@ module(
       inputFields.refresh();
 
       assert.dom(inputFields.fields.required_tags.errorElement).hasText(
-        i18n("admin.customize.theme.schema.fields.tags.at_least", {
+        i18n("admin.customize.schema.fields.tags.at_least", {
           count: 1,
         })
       );
@@ -1056,7 +1141,12 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+          <AdminSchemaSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
         </template>
       );
 
@@ -1076,7 +1166,7 @@ module(
       inputFields.refresh();
 
       assert.dom(inputFields.fields.required_groups.errorElement).hasText(
-        i18n("admin.customize.theme.schema.fields.groups.at_least", {
+        i18n("admin.customize.schema.fields.groups.at_least", {
           count: 1,
         })
       );
@@ -1102,7 +1192,7 @@ module(
       assert
         .dom(inputFields.fields.groups_with_validations.errorElement)
         .hasText(
-          i18n("admin.customize.theme.schema.fields.groups.at_least", {
+          i18n("admin.customize.schema.fields.groups.at_least", {
             count: 2,
           })
         );
@@ -1164,7 +1254,12 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+          <AdminSchemaSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
         </template>
       );
 
@@ -1187,7 +1282,12 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+          <AdminSchemaSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
         </template>
       );
 
@@ -1223,7 +1323,12 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+          <AdminSchemaSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
         </template>
       );
 
@@ -1251,7 +1356,7 @@ module(
       inputFields.refresh();
 
       assert.dom(".--back-btn").hasText(
-        i18n("admin.customize.theme.schema.back_button", {
+        i18n("admin.customize.schema.back_button", {
           name: "cool section is no longer cool",
         })
       );
@@ -1299,7 +1404,12 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+          <AdminSchemaSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
         </template>
       );
 
@@ -1320,7 +1430,12 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+          <AdminSchemaSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
         </template>
       );
 
@@ -1381,7 +1496,12 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+          <AdminSchemaSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
         </template>
       );
 
@@ -1403,7 +1523,12 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+          <AdminSchemaSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
         </template>
       );
 
@@ -1432,7 +1557,12 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+          <AdminSchemaSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
         </template>
       );
 
@@ -1458,7 +1588,12 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+          <AdminSchemaSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
         </template>
       );
 
@@ -1482,7 +1617,12 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+          <AdminSchemaSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
         </template>
       );
 
@@ -1519,7 +1659,12 @@ module(
 
       await render(
         <template>
-          <AdminSchemaThemeSettingEditor @themeId="1" @setting={{setting}} />
+          <AdminSchemaSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
         </template>
       );
 
@@ -1556,6 +1701,514 @@ module(
       assert.dom(tree.nodes[0].textElement).hasText("item 1");
       assert.dom(tree.nodes[1].textElement).hasText("item 2");
       assert.dom(inputFields.fields.name.inputElement).hasValue("item 1");
+      assert.dom(".--back-btn").doesNotExist();
+    });
+  }
+);
+
+module(
+  "Integration | Admin | Plugins | Component | schema-setting/editor",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    test("input fields of type string", async function (assert) {
+      const setting = SiteSetting.create({
+        setting: "objects_setting",
+        schema: {
+          name: "something",
+          properties: {
+            name: {
+              type: "string",
+            },
+          },
+        },
+        value: [
+          {
+            name: "some name",
+          },
+        ],
+      });
+      await render(
+        <template>
+          <AdminSchemaSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.schema}}
+            @routeToRedirect="adminPlugins.show.settings"
+          />
+        </template>
+      );
+      const inputFields = new InputFieldsFromDOM();
+      const tree = new TreeFromDOM();
+      assert.dom(inputFields.fields.name.labelElement).hasText("name");
+      assert.dom(inputFields.fields.name.inputElement).hasValue("some name");
+      assert.dom(tree.nodes[0].textElement).hasText("something 1");
+    });
+
+    test("input fields of type integer", async function (assert) {
+      const setting = SiteSetting.create({
+        setting: "objects_setting",
+        schema: {
+          name: "something",
+          properties: {
+            id: {
+              type: "integer",
+              required: true,
+              validations: {
+                max: 5,
+                min: 2,
+              },
+            },
+          },
+        },
+        value: [
+          {
+            id: 3,
+          },
+        ],
+      });
+      await render(
+        <template>
+          <AdminSchemaSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.schema}}
+            @routeToRedirect="adminPlugins.show.settings"
+          />
+        </template>
+      );
+      const inputFields = new InputFieldsFromDOM();
+      assert.dom(inputFields.fields.id.labelElement).hasText("id*");
+      assert.dom(inputFields.fields.id.inputElement).hasValue("3");
+      assert
+        .dom(inputFields.fields.id.inputElement)
+        .hasAttribute("type", "number");
+      await fillIn(inputFields.fields.id.inputElement, "100");
+      inputFields.refresh();
+      assert.dom(inputFields.fields.id.errorElement).hasText(
+        i18n("admin.customize.schema.fields.number.too_large", {
+          count: 5,
+        })
+      );
+      await fillIn(inputFields.fields.id.inputElement, "0");
+      inputFields.refresh();
+      assert.dom(inputFields.fields.id.errorElement).hasText(
+        i18n("admin.customize.schema.fields.number.too_small", {
+          count: 2,
+        })
+      );
+    });
+
+    test("input fields of type float", async function (assert) {
+      const setting = SiteSetting.create({
+        setting: "objects_setting",
+        schema: {
+          name: "something",
+          properties: {
+            id: {
+              type: "float",
+              required: true,
+              validations: {
+                max: 5.5,
+                min: 2.5,
+              },
+            },
+          },
+        },
+        value: [
+          {
+            id: 3.5,
+          },
+        ],
+      });
+      await render(
+        <template>
+          <AdminSchemaSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.schema}}
+            @routeToRedirect="adminPlugins.show.settings"
+          />
+        </template>
+      );
+      const inputFields = new InputFieldsFromDOM();
+      assert.dom(inputFields.fields.id.labelElement).hasText("id*");
+      assert.dom(inputFields.fields.id.inputElement).hasValue("3.5");
+      assert
+        .dom(inputFields.fields.id.inputElement)
+        .hasAttribute("type", "number");
+      await fillIn(inputFields.fields.id.inputElement, "100.0");
+      inputFields.refresh();
+      assert.dom(inputFields.fields.id.errorElement).hasText(
+        i18n("admin.customize.schema.fields.number.too_large", {
+          count: 5.5,
+        })
+      );
+      await fillIn(inputFields.fields.id.inputElement, "0.2");
+      inputFields.refresh();
+      assert.dom(inputFields.fields.id.errorElement).hasText(
+        i18n("admin.customize.schema.fields.number.too_small", {
+          count: 2.5,
+        })
+      );
+    });
+
+    test("input fields of type boolean", async function (assert) {
+      const setting = SiteSetting.create({
+        setting: "objects_setting",
+        schema: {
+          name: "something",
+          properties: {
+            boolean_field: {
+              type: "boolean",
+            },
+          },
+        },
+        value: [
+          {
+            boolean_field: true,
+          },
+        ],
+      });
+      await render(
+        <template>
+          <AdminSchemaSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.schema}}
+            @routeToRedirect="adminPlugins.show.settings"
+          />
+        </template>
+      );
+      const inputFields = new InputFieldsFromDOM();
+      assert
+        .dom(inputFields.fields.boolean_field.labelElement)
+        .hasText("boolean_field");
+      assert.dom(inputFields.fields.boolean_field.inputElement).isChecked();
+    });
+
+    test("input fields of type enum", async function (assert) {
+      const setting = SiteSetting.create({
+        setting: "objects_setting",
+        schema: {
+          name: "something",
+          properties: {
+            enum_field: {
+              type: "enum",
+              default: "awesome",
+              choices: ["nice", "cool", "awesome"],
+            },
+          },
+        },
+        value: [
+          {
+            enum_field: "awesome",
+          },
+        ],
+      });
+      await render(
+        <template>
+          <AdminSchemaSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.schema}}
+            @routeToRedirect="adminPlugins.show.settings"
+          />
+        </template>
+      );
+      const inputFields = new InputFieldsFromDOM();
+      assert
+        .dom(inputFields.fields.enum_field.labelElement)
+        .hasText("enum_field");
+      assert.dom(inputFields.fields.enum_field.inputElement).hasText("awesome");
+    });
+
+    test("input fields of type categories that is not required with min and max validations", async function (assert) {
+      const setting = SiteSetting.create({
+        setting: "objects_setting",
+        schema: {
+          name: "something",
+          properties: {
+            not_required_category: {
+              type: "categories",
+              validations: {
+                min: 2,
+                max: 3,
+              },
+            },
+          },
+        },
+        metadata: {
+          categories: {
+            6: {
+              id: 6,
+              name: "some category",
+            },
+          },
+        },
+        value: [{}],
+      });
+      await render(
+        <template>
+          <AdminSchemaSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.schema}}
+            @routeToRedirect="adminPlugins.show.settings"
+          />
+        </template>
+      );
+      const inputFields = new InputFieldsFromDOM();
+      assert
+        .dom(inputFields.fields.not_required_category.labelElement)
+        .hasText("not_required_category");
+      const categorySelector = selectKit(
+        `${inputFields.fields.not_required_category.selector} .select-kit`
+      );
+      assert.strictEqual(categorySelector.header().value(), null);
+      await categorySelector.expand();
+      await categorySelector.selectRowByIndex(1);
+      await categorySelector.collapse();
+      inputFields.refresh();
+      assert.dom(inputFields.fields.not_required_category.errorElement).hasText(
+        i18n("admin.customize.schema.fields.categories.at_least", {
+          count: 2,
+        })
+      );
+      await categorySelector.expand();
+      await categorySelector.selectRowByIndex(2);
+      await categorySelector.selectRowByIndex(3);
+      await categorySelector.selectRowByIndex(4);
+      assert
+        .dom(categorySelector.error())
+        .hasText("You can only select 3 items.");
+
+      await categorySelector.deselectItemByIndex(0);
+      await categorySelector.deselectItemByIndex(0);
+      await categorySelector.deselectItemByIndex(0);
+      await categorySelector.collapse();
+
+      inputFields.refresh();
+
+      assert
+        .dom(inputFields.fields.not_required_category.errorElement)
+        .doesNotExist();
+    });
+
+    test("input fields of type tags which is required", async function (assert) {
+      const setting = SiteSetting.create({
+        setting: "objects_setting",
+        schema: {
+          name: "something",
+          properties: {
+            required_tags: {
+              type: "tags",
+              required: true,
+            },
+            required_tags_with_validations: {
+              type: "tags",
+              required: true,
+              validations: {
+                min: 2,
+                max: 3,
+              },
+            },
+          },
+        },
+        value: [
+          {
+            required_tags: ["gazelle"],
+            required_tags_with_validations: ["gazelle", "cat"],
+          },
+        ],
+      });
+      await render(
+        <template>
+          <AdminSchemaSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.schema}}
+            @routeToRedirect="adminPlugins.show.settings"
+          />
+        </template>
+      );
+      const inputFields = new InputFieldsFromDOM();
+
+      let tagSelector = selectKit(
+        `${inputFields.fields.required_tags_with_validations.selector} .select-kit`
+      );
+
+      assert.strictEqual(tagSelector.header().value(), "gazelle,cat");
+
+      await tagSelector.expand();
+      await tagSelector.selectRowByIndex(2);
+      await tagSelector.collapse();
+
+      assert.strictEqual(tagSelector.header().value(), "gazelle,cat,dog");
+
+      await tagSelector.expand();
+      await tagSelector.deselectItemByName("gazelle");
+      await tagSelector.deselectItemByName("cat");
+      await tagSelector.deselectItemByName("dog");
+      await tagSelector.collapse();
+
+      assert.strictEqual(tagSelector.header().value(), null);
+
+      inputFields.refresh();
+
+      assert
+        .dom(inputFields.fields.required_tags_with_validations.errorElement)
+        .hasText(
+          i18n("admin.customize.schema.fields.tags.at_least", {
+            count: 2,
+          })
+        );
+
+      await tagSelector.expand();
+      await tagSelector.selectRowByIndex(1);
+
+      assert.strictEqual(tagSelector.header().value(), "gazelle");
+
+      inputFields.refresh();
+
+      assert
+        .dom(inputFields.fields.required_tags_with_validations.errorElement)
+        .hasText(
+          i18n("admin.customize.schema.fields.tags.at_least", {
+            count: 2,
+          })
+        );
+
+      tagSelector = selectKit(
+        `${inputFields.fields.required_tags.selector} .select-kit`
+      );
+
+      await tagSelector.expand();
+      await tagSelector.deselectItemByName("gazelle");
+      await tagSelector.collapse();
+
+      inputFields.refresh();
+
+      assert.dom(inputFields.fields.required_tags.errorElement).hasText(
+        i18n("admin.customize.schema.fields.tags.at_least", {
+          count: 1,
+        })
+      );
+    });
+
+    test("input fields of type groups", async function (assert) {
+      const setting = SiteSetting.create({
+        setting: "objects_setting",
+        schema: {
+          name: "something",
+          properties: {
+            required_groups: {
+              type: "groups",
+              required: true,
+            },
+            groups_with_validations: {
+              type: "groups",
+              validations: {
+                min: 2,
+                max: 3,
+              },
+            },
+          },
+        },
+        value: [
+          {
+            required_groups: [0, 1],
+          },
+        ],
+      });
+
+      await render(
+        <template>
+          <AdminSchemaSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.schema}}
+            @routeToRedirect="adminPlugins.show.settings"
+          />
+        </template>
+      );
+
+      const inputFields = new InputFieldsFromDOM();
+
+      let groupsSelector = selectKit(
+        `${inputFields.fields.required_groups.selector} .select-kit`
+      );
+
+      assert.strictEqual(groupsSelector.header().value(), "0,1");
+
+      await groupsSelector.expand();
+      await groupsSelector.deselectItemByValue("0");
+      await groupsSelector.deselectItemByValue("1");
+      await groupsSelector.collapse();
+
+      inputFields.refresh();
+
+      assert.dom(inputFields.fields.required_groups.errorElement).hasText(
+        i18n("admin.customize.schema.fields.groups.at_least", {
+          count: 1,
+        })
+      );
+
+      assert
+        .dom(inputFields.fields.groups_with_validations.labelElement)
+        .hasText("groups_with_validations");
+
+      groupsSelector = selectKit(
+        `${inputFields.fields.groups_with_validations.selector} .select-kit`
+      );
+
+      assert.strictEqual(groupsSelector.header().value(), null);
+
+      await groupsSelector.expand();
+      await groupsSelector.selectRowByIndex(1);
+      await groupsSelector.collapse();
+
+      assert.strictEqual(groupsSelector.header().value(), "1");
+
+      inputFields.refresh();
+
+      assert
+        .dom(inputFields.fields.groups_with_validations.errorElement)
+        .hasText(
+          i18n("admin.customize.schema.fields.groups.at_least", {
+            count: 2,
+          })
+        );
+
+      await groupsSelector.expand();
+      await groupsSelector.selectRowByIndex(2);
+      await groupsSelector.selectRowByIndex(3);
+      await groupsSelector.selectRowByIndex(4);
+
+      assert
+        .dom(groupsSelector.error())
+        .hasText("You can only select 3 items.");
+    });
+
+    test("allows navigating through multiple levels of nesting", async function (assert) {
+      const setting = schemaAndData(1, SCHEMA_MODES.SITE_SETTING);
+      await render(
+        <template>
+          <AdminSchemaSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.schema}}
+            @routeToRedirect="adminPlugins.show.settings"
+          />
+        </template>
+      );
+      const tree = new TreeFromDOM();
+      const inputFields = new InputFieldsFromDOM();
+      assert.strictEqual(tree.nodes.length, 3);
+      assert.dom(tree.nodes[0].textElement).hasText("item 1");
+      assert.dom(tree.nodes[1].textElement).hasText("item 2");
+      assert.dom(inputFields.fields.name.inputElement).hasValue("item 1");
+      assert.dom(inputFields.fields.name.labelElement).hasText("name");
       assert.dom(".--back-btn").doesNotExist();
     });
   }

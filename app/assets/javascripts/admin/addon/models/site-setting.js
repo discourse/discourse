@@ -31,7 +31,6 @@ export default class SiteSetting extends EmberObject {
           }
           categories[s.category].pushObject(SiteSetting.create(s));
         });
-
         return Object.keys(categories).map(function (n) {
           return {
             nameKey: n,
@@ -41,6 +40,17 @@ export default class SiteSetting extends EmberObject {
         });
       }
     );
+  }
+
+  static findByName(name) {
+    return ajax("/admin/site_settings", {
+      data: {
+        names: [name],
+      },
+    }).then(function (settings) {
+      const setting = settings.site_settings.find((s) => s.setting === name);
+      return SiteSetting.create(setting);
+    });
   }
 
   static update(key, value, opts = {}) {
