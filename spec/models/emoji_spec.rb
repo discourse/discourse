@@ -28,6 +28,10 @@ RSpec.describe Emoji do
       Emoji.clear_cache
     end
 
+    it "doesnt convert (TM) and (tm) do an emoji" do
+      expect(Emoji.lookup_unicode("trade_mark")).to eq("™")
+    end
+
     it "should return the emoji" do
       expect(Emoji.lookup_unicode("blonde_man")).to eq("👱‍♂️")
     end
