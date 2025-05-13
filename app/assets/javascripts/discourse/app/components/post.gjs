@@ -7,7 +7,6 @@ import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { TrackedAsyncData } from "ember-async-data";
-import Modifier from "ember-modifier";
 import { and, eq, not, or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import ShareTopicModal from "discourse/components/modal/share-topic";
@@ -327,300 +326,277 @@ export default class Post extends Component {
 
   <template>
     {{#if @cloaked}}
-      {{! temporary workaround to set the parent class using the modifier while the post stream widget is not modernized }}
-      {{! TODO (glimmer-post-stream): remove when the post stream is modernized and move the class to the outer div }}
-      <article
-        {{parentClass "post--cloaked cloaked-post" parentSelector="div"}}
-      ></article>
+      <div class="post--cloaked cloaked-post">
+      </div>
     {{else}}
-      {{#let
-        (hash
-          post=@post
-          actions=(hash updateTopicPageQueryParams=@updateTopicPageQueryParams)
-          topicPageQueryParams=@topicPageQueryParams
-        )
-        as |postOutletArgs|
-      }}
-        <PluginOutlet @name="post-article" @outletArgs={{postOutletArgs}}>
-          <article
-            {{parentClass
-              (concatClass
-                "topic-post"
-                "clearfix"
-                (if this.staged "post--staged staged")
-                (if @selected "post--selected selected")
-                (if @post.topicOwner "post--topic-owner topic-owner")
+      <div
+        class={{concatClass
+          "topic-post"
+          "clearfix"
+          (if this.staged "post--staged staged")
+          (if @selected "post--selected selected")
+          (if @post.topicOwner "post--topic-owner topic-owner")
+          (if this.isFromCurrentUser "post--current-user current-user-post")
+          (if
+            @post.group_moderator "post--category-moderator category-moderator"
+          )
+          (if @post.hidden "post--hidden post-hidden")
+          (if @post.deleted "post--deleted deleted")
+          (if
+            @post.primary_group_name
+            (concatClass
+              (concat "post--group-" @post.primary_group_name)
+              (concat "group-" @post.primary_group_name)
+            )
+          )
+          (if @post.wiki "post--wiki wiki")
+          (if @post.isWhisper "post--whisper whisper")
+          (if
+            (or @post.isModeratorAction (and @post.isWarning @post.firstPost))
+            "post--moderator moderator"
+            "post--regular regular"
+          )
+          (if @post.user_suspended "post--user-suspended user-suspended")
+          this.additionalClasses
+        }}
+      >
+        {{#let
+          (hash
+            post=@post
+            actions=(hash
+              updateTopicPageQueryParams=@updateTopicPageQueryParams
+            )
+            topicPageQueryParams=@topicPageQueryParams
+          )
+          as |postOutletArgs|
+        }}
+          <PluginOutlet @name="post-article" @outletArgs={{postOutletArgs}}>
+            <article
+              ...attributes
+              id={{this.id}}
+              class={{concatClass
+                "boxed"
+                "onscreen-post"
                 (if
-                  this.isFromCurrentUser "post--current-user current-user-post"
+                  this.hasRepliesAbove "post--has-replies-above replies-above"
                 )
                 (if
-                  @post.group_moderator
-                  "post--category-moderator category-moderator"
+                  @post.is_auto_generated
+                  "post--auto-generated is-auto-generated"
                 )
-                (if @post.hidden "post--hidden post-hidden")
-                (if @post.deleted "post--deleted deleted")
-                (if
-                  @post.primary_group_name
-                  (concatClass
-                    (concat "post--group-" @post.primary_group_name)
-                    (concat "group-" @post.primary_group_name)
-                  )
-                )
-                (if @post.wiki "post--wiki wiki")
-                (if @post.isWhisper "post--whisper whisper")
-                (if
-                  (or
-                    @post.isModeratorAction
-                    (and @post.isWarning @post.firstPost)
-                  )
-                  "post--moderator moderator"
-                  "post--regular regular"
-                )
-                (if @post.user_suspended "post--user-suspended user-suspended")
-                this.additionalClasses
-              )
-              parentSelector="div"
-            }}
-            ...attributes
-            id={{this.id}}
-            class={{concatClass
-              "boxed"
-              "onscreen-post"
-              (if this.hasRepliesAbove "post--has-replies-above replies-above")
-              (if
-                @post.is_auto_generated "post--auto-generated is-auto-generated"
-              )
-              (if @post.via_email "post--via-email via-email")
-            }}
-            aria-label={{i18n
-              "share.post"
-              (hash postNumber=@post.post_number username=@post.username)
-            }}
-            role="region"
-            data-post-id={{@post.id}}
-            data-topic-id={{@post.topicId}}
-            data-user-id={{@post.user_id}}
-          >
-            {{#if this.hasRepliesAbove}}
-              <div class="post__row row">
-                <section
-                  id={{concat "embedded-posts__top--" @post.post_number}}
-                  class="post__embedded-posts post__embedded-posts--top post__body embedded-posts top topic-body"
-                >
-                  <DButton
-                    class="post__collapse-button post__collapse-button-down collapse-down"
-                    @action={{this.toggleReplyAbove}}
-                    @icon="chevron-down"
-                    @title="post.collapse"
-                  />
-                  {{#each this.repliesAbove.value key="id" as |reply|}}
-                    <PostEmbedded
-                      @post={{reply}}
-                      @above={{true}}
-                      @highlightTerm={{this.search.highlightTerm}}
+                (if @post.via_email "post--via-email via-email")
+              }}
+              aria-label={{i18n
+                "share.post"
+                (hash postNumber=@post.post_number username=@post.username)
+              }}
+              role="region"
+              data-post-id={{@post.id}}
+              data-topic-id={{@post.topicId}}
+              data-user-id={{@post.user_id}}
+            >
+              {{#if this.hasRepliesAbove}}
+                <div class="post__row row">
+                  <section
+                    id={{concat "embedded-posts__top--" @post.post_number}}
+                    class="post__embedded-posts post__embedded-posts--top post__body embedded-posts top topic-body"
+                  >
+                    <DButton
+                      class="post__collapse-button post__collapse-button-down collapse-down"
+                      @action={{this.toggleReplyAbove}}
+                      @icon="chevron-down"
+                      @title="post.collapse"
                     />
-                  {{/each}}
-                </section>
-              </div>
-            {{/if}}
-            {{#if (and (not @post.deletedAt) @post.notice)}}
+                    {{#each this.repliesAbove.value key="id" as |reply|}}
+                      <PostEmbedded
+                        @post={{reply}}
+                        @above={{true}}
+                        @highlightTerm={{this.search.highlightTerm}}
+                      />
+                    {{/each}}
+                  </section>
+                </div>
+              {{/if}}
+              {{#if (and (not @post.deletedAt) @post.notice)}}
+                <div class="post__row row">
+                  <PostNotice @post={{@post}} />
+                </div>
+              {{/if}}
               <div class="post__row row">
-                <PostNotice @post={{@post}} />
-              </div>
-            {{/if}}
-            <div class="post__row row">
-              <PostAvatar @post={{@post}} />
-              <div class="post__body topic-body clearfix">
-                <PluginOutlet
-                  @name="post-metadata"
-                  @outletArgs={{postOutletArgs}}
-                >
-                  <PostMetaData
-                    @post={{@post}}
-                    @editPost={{@editPost}}
-                    @hasRepliesAbove={{this.hasRepliesAbove}}
-                    @isReplyingDirectlyToPostAbove={{this.isReplyingDirectlyToPostAbove}}
-                    @multiSelect={{@multiSelect}}
-                    @repliesAbove={{this.repliesAbove}}
-                    @selectBelow={{@selectBelow}}
-                    @selectReplies={{@selectReplies}}
-                    @selected={{@selected}}
-                    @showHistory={{@showHistory}}
-                    @showRawEmail={{@showRawEmail}}
-                    @togglePostSelection={{@togglePostSelection}}
-                    @toggleReplyAbove={{this.toggleReplyAbove}}
-                  />
-                </PluginOutlet>
-                <div
-                  class={{concatClass
-                    "post__regular regular"
-                    (unless this.repliesShown "post__contents contents")
-                    (if
-                      this.isReplyToTabDisplayed
-                      "post__contents--avoid-tab avoid-tab"
-                    )
-                  }}
-                >
+                <PostAvatar @post={{@post}} />
+                <div class="post__body topic-body clearfix">
                   <PluginOutlet
-                    @name="post-content-cooked-html"
+                    @name="post-metadata"
                     @outletArgs={{postOutletArgs}}
                   >
-                    <PostCookedHtml
+                    <PostMetaData
                       @post={{@post}}
-                      @highlightTerm={{this.search.highlightTerm}}
+                      @editPost={{@editPost}}
+                      @hasRepliesAbove={{this.hasRepliesAbove}}
+                      @isReplyingDirectlyToPostAbove={{this.isReplyingDirectlyToPostAbove}}
+                      @multiSelect={{@multiSelect}}
+                      @repliesAbove={{this.repliesAbove}}
+                      @selectBelow={{@selectBelow}}
+                      @selectReplies={{@selectReplies}}
+                      @selected={{@selected}}
+                      @showHistory={{@showHistory}}
+                      @showRawEmail={{@showRawEmail}}
+                      @togglePostSelection={{@togglePostSelection}}
+                      @toggleReplyAbove={{this.toggleReplyAbove}}
                     />
                   </PluginOutlet>
-
-                  {{#if @post.requestedGroupName}}
-                    <div class="post__group-request group-request">
-                      <a href={{this.groupRequestUrl}}>
-                        {{i18n "groups.requests.handle"}}
-                      </a>
-                    </div>
-                  {{/if}}
-
-                  {{#if (and @post.cooked_hidden @post.can_see_hidden_post)}}
-                    {{! template-lint-disable no-invalid-interactive }}
-                    <a
-                      class="post__expand-hidden expand-hidden"
-                      {{on "click" @expandHidden}}
+                  <div
+                    class={{concatClass
+                      "post__regular regular"
+                      (unless this.repliesShown "post__contents contents")
+                      (if
+                        this.isReplyToTabDisplayed
+                        "post__contents--avoid-tab avoid-tab"
+                      )
+                    }}
+                  >
+                    <PluginOutlet
+                      @name="post-content-cooked-html"
+                      @outletArgs={{postOutletArgs}}
                     >
-                      {{i18n "post.show_hidden"}}
-                    </a>
-                  {{/if}}
-
-                  {{#if
-                    (and
-                      (not this.expandedFirstPost.isResolved)
-                      @post.expandablePost
-                    )
-                  }}
-                    <DButton
-                      class="post__expand-button expand-post"
-                      @action={{this.expandFirstPost}}
-                      @translatedLabel={{if
-                        this.expandedFirstPost.isPending
-                        (i18n "loading")
-                        (concat (i18n "post.show_full") "...")
-                      }}
-                    />
-                  {{/if}}
-
-                  <section class="post__menu-area post-menu-area clearfix">
-                    <PostMenu
-                      @post={{@post}}
-                      @prevPost={{@prevPost}}
-                      @nextPost={{@nextPost}}
-                      @canCreatePost={{@canCreatePost}}
-                      @changeNotice={{@changeNotice}}
-                      @changePostOwner={{@changePostOwner}}
-                      @copyLink={{this.copyLink}}
-                      @deletePost={{@deletePost}}
-                      @editPost={{@editPost}}
-                      @filteredRepliesView={{this.filteredRepliesView}}
-                      @grantBadge={{@grantBadge}}
-                      @lockPost={{@lockPost}}
-                      @permanentlyDeletePost={{@permanentlyDeletePost}}
-                      @rebakePost={{@rebakePost}}
-                      @recoverPost={{@recoverPost}}
-                      @repliesShown={{this.repliesShown}}
-                      @replyToPost={{@replyToPost}}
-                      @share={{this.share}}
-                      @showFlags={{@showFlags}}
-                      @showLogin={{@showLogin}}
-                      @showPagePublish={{@showPagePublish}}
-                      @showReadIndicator={{@showReadIndicator}}
-                      @toggleLike={{this.toggleLike}}
-                      @togglePostType={{@togglePostType}}
-                      @toggleReplies={{this.toggleReplies}}
-                      @toggleWiki={{@toggleWiki}}
-                      @unhidePost={{@unhidePost}}
-                      @unlockPost={{@unlockPost}}
-                    />
-                  </section>
-
-                  {{#if this.repliesBelow}}
-                    <section
-                      id={{concat "embedded-posts__bottom--" @post.post_number}}
-                      class="post__embedded-posts post__embedded-posts--bottom embedded-posts bottom"
-                    >
-                      {{#each this.repliesBelow key="id" as |reply|}}
-                        <PostEmbedded
-                          role="region"
-                          aria-label={{i18n
-                            "post.sr_embedded_reply_description"
-                            post_number=@post.post_number
-                            username=reply.username
-                          }}
-                          @post={{reply}}
-                          @highlightTerm={{this.search.highlightTerm}}
-                        />
-                      {{/each}}
-
-                      <DButton
-                        class="post__collapse-button post__collapse-button-up collapse-up"
-                        @action={{this.toggleRepliesBelow}}
-                        @ariaLabel="post.sr_collapse_replies"
-                        @icon="chevron-up"
-                        @title="post.collapse"
+                      <PostCookedHtml
+                        @post={{@post}}
+                        @highlightTerm={{this.search.highlightTerm}}
                       />
+                    </PluginOutlet>
 
-                      {{#if this.canLoadMoreRepliesBelow}}
-                        <DButton
-                          class="post__load-more load-more-replies"
-                          @label="post.load_more_replies"
-                          @action={{this.loadMoreReplies}}
-                        />
-                      {{/if}}
+                    {{#if @post.requestedGroupName}}
+                      <div class="post__group-request group-request">
+                        <a href={{this.groupRequestUrl}}>
+                          {{i18n "groups.requests.handle"}}
+                        </a>
+                      </div>
+                    {{/if}}
+
+                    {{#if (and @post.cooked_hidden @post.can_see_hidden_post)}}
+                      {{! template-lint-disable no-invalid-interactive }}
+                      <a
+                        class="post__expand-hidden expand-hidden"
+                        {{on "click" @expandHidden}}
+                      >
+                        {{i18n "post.show_hidden"}}
+                      </a>
+                    {{/if}}
+
+                    {{#if
+                      (and
+                        (not this.expandedFirstPost.isResolved)
+                        @post.expandablePost
+                      )
+                    }}
+                      <DButton
+                        class="post__expand-button expand-post"
+                        @action={{this.expandFirstPost}}
+                        @translatedLabel={{if
+                          this.expandedFirstPost.isPending
+                          (i18n "loading")
+                          (concat (i18n "post.show_full") "...")
+                        }}
+                      />
+                    {{/if}}
+
+                    <section class="post__menu-area post-menu-area clearfix">
+                      <PostMenu
+                        @post={{@post}}
+                        @prevPost={{@prevPost}}
+                        @nextPost={{@nextPost}}
+                        @canCreatePost={{@canCreatePost}}
+                        @changeNotice={{@changeNotice}}
+                        @changePostOwner={{@changePostOwner}}
+                        @copyLink={{this.copyLink}}
+                        @deletePost={{@deletePost}}
+                        @editPost={{@editPost}}
+                        @filteredRepliesView={{this.filteredRepliesView}}
+                        @grantBadge={{@grantBadge}}
+                        @lockPost={{@lockPost}}
+                        @permanentlyDeletePost={{@permanentlyDeletePost}}
+                        @rebakePost={{@rebakePost}}
+                        @recoverPost={{@recoverPost}}
+                        @repliesShown={{this.repliesShown}}
+                        @replyToPost={{@replyToPost}}
+                        @share={{this.share}}
+                        @showFlags={{@showFlags}}
+                        @showLogin={{@showLogin}}
+                        @showPagePublish={{@showPagePublish}}
+                        @showReadIndicator={{@showReadIndicator}}
+                        @toggleLike={{this.toggleLike}}
+                        @togglePostType={{@togglePostType}}
+                        @toggleReplies={{this.toggleReplies}}
+                        @toggleWiki={{@toggleWiki}}
+                        @unhidePost={{@unhidePost}}
+                        @unlockPost={{@unlockPost}}
+                      />
                     </section>
-                  {{/if}}
-                </div>
 
-                <section class="post__actions post-actions">
-                  <PostActionsSummary @post={{@post}} />
-                </section>
-                <PostLinks @post={{@post}} />
+                    {{#if this.repliesBelow}}
+                      <section
+                        id={{concat
+                          "embedded-posts__bottom--"
+                          @post.post_number
+                        }}
+                        class="post__embedded-posts post__embedded-posts--bottom embedded-posts bottom"
+                      >
+                        {{#each this.repliesBelow key="id" as |reply|}}
+                          <PostEmbedded
+                            role="region"
+                            aria-label={{i18n
+                              "post.sr_embedded_reply_description"
+                              post_number=@post.post_number
+                              username=reply.username
+                            }}
+                            @post={{reply}}
+                            @highlightTerm={{this.search.highlightTerm}}
+                          />
+                        {{/each}}
+
+                        <DButton
+                          class="post__collapse-button post__collapse-button-up collapse-up"
+                          @action={{this.toggleRepliesBelow}}
+                          @ariaLabel="post.sr_collapse_replies"
+                          @icon="chevron-up"
+                          @title="post.collapse"
+                        />
+
+                        {{#if this.canLoadMoreRepliesBelow}}
+                          <DButton
+                            class="post__load-more load-more-replies"
+                            @label="post.load_more_replies"
+                            @action={{this.loadMoreReplies}}
+                          />
+                        {{/if}}
+                      </section>
+                    {{/if}}
+                  </div>
+
+                  <section class="post__actions post-actions">
+                    <PostActionsSummary @post={{@post}} />
+                  </section>
+                  <PostLinks @post={{@post}} />
+                </div>
               </div>
-            </div>
-            {{#if this.shouldShowTopicMap}}
-              <div class="post__topic-map topic-map --op">
-                <TopicMap
-                  @model={{@post.topic}}
-                  @cancelFilter={{@cancelFilter}}
-                  @topicDetails={{@post.topic.details}}
-                  @postStream={{@post.topic.postStream}}
-                  @showPMMap={{eq @post.topic.archetype "private_message"}}
-                  @showInvite={{@showInvite}}
-                  @removeAllowedGroup={{@removeAllowedGroup}}
-                  @removeAllowedUser={{@removeAllowedUser}}
-                />
-              </div>
-            {{/if}}
-          </article>
-        </PluginOutlet>
-      {{/let}}
+              {{#if this.shouldShowTopicMap}}
+                <div class="post__topic-map topic-map --op">
+                  <TopicMap
+                    @model={{@post.topic}}
+                    @cancelFilter={{@cancelFilter}}
+                    @topicDetails={{@post.topic.details}}
+                    @postStream={{@post.topic.postStream}}
+                    @showPMMap={{eq @post.topic.archetype "private_message"}}
+                    @showInvite={{@showInvite}}
+                    @removeAllowedGroup={{@removeAllowedGroup}}
+                    @removeAllowedUser={{@removeAllowedUser}}
+                  />
+                </div>
+              {{/if}}
+            </article>
+          </PluginOutlet>
+        {{/let}}
+      </div>
     {{/if}}
   </template>
 }
-
-// This modifier is just a temporary workaround to set the classes in the parent component while we have to use it
-// as a wrapper due to the render glimmer helper.
-// DO NOT export it to be used outside of this class. The code will be removed as soon as the post stream widget is
-// modernized.
-const parentClass = class extends Modifier {
-  @service elementClasses;
-
-  modify(element, classes, { parentSelector }) {
-    const parent = element.closest(parentSelector);
-
-    if (!parent) {
-      return;
-    }
-
-    this.elementClasses.registerClasses(
-      this,
-      parent,
-      classes.flatMap((c) => c?.split(" ")).filter(Boolean)
-    );
-  }
-};
