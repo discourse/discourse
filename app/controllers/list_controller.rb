@@ -48,7 +48,6 @@ class ListController < ApplicationController
                   :group_topics,
                   :filter,
                 ].flatten
-  before_action :skip_if_login_required
 
   rescue_from ActionController::Redirecting::UnsafeRedirectError do
     rescue_discourse_actions(:not_found, 404)

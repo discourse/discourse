@@ -30,11 +30,7 @@ class ApplicationLayoutPreloader
       preload_current_user_data
     end
 
-    if !@guardian.authenticated? && SiteSetting.login_required?
-      @preloaded.slice(*preloaded_anonymous_keys)
-    else
-      @preloaded
-    end
+    @preloaded
   end
 
   def banner_json
@@ -70,10 +66,6 @@ class ApplicationLayoutPreloader
     end
 
     MultiJson.dump(data)
-  end
-
-  def preloaded_anonymous_keys
-    %w[site siteSettings customHTML banner customEmoji isReadOnly isStaffWritesOnly activatedThemes]
   end
 
   private
