@@ -110,19 +110,22 @@ class SessionController < ApplicationController
       raise Discourse::ReadOnly if @readonly_mode
 
       if ENV["DISCOURSE_DEV_ALLOW_ANON_TO_IMPERSONATE"] != "1"
-        render(content_type: "text/plain", inline: <<~TEXT)
+        return render plain: <<~TEXT, status: 403
           To enable impersonating any user without typing passwords set the following ENV var
 
           export DISCOURSE_DEV_ALLOW_ANON_TO_IMPERSONATE=1
 
           You can do that in your bashrc of bash profile file or the script you use to launch the web server
         TEXT
-
-        return
       end
 
       user = User.find_by_username(params[:session_id])
-      raise "User #{params[:session_id]} not found" if user.blank?
+
+      if user.blank?
+        return render plain: "User #{params[:session_id]} not found", status: 403
+      elsif !user.active?
+        return render plain: "User #{params[:session_id]} is not active", status: 403
+      end
 
       log_on_user(user)
 
