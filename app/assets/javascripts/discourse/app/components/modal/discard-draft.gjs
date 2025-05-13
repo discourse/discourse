@@ -19,7 +19,7 @@ export default class DiscardDraftModal extends Component {
 
   @action
   async keepEditing() {
-    this.args.model.onKeepEditing();
+    await this.args.model.onKeepEditing();
     this.args.closeModal();
   }
 
