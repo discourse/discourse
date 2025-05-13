@@ -42,6 +42,18 @@ export default class SiteSetting extends EmberObject {
     );
   }
 
+  static findByName(name) {
+    return ajax("/admin/site_settings", {
+      data: {
+        names: [name],
+      },
+    }).then(function (settings) {
+      // just to be sure
+      const setting = settings.site_settings.find((s) => s.setting === name);
+      return SiteSetting.create(setting);
+    });
+  }
+
   static update(key, value, opts = {}) {
     const data = {};
     data[key] = value;
