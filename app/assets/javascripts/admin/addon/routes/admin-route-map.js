@@ -392,14 +392,13 @@ export default function () {
         );
       }
     );
-
+    this.route("schema", { path: "schema/:setting_name" });
     this.route(
       "adminPlugins",
       { path: "/plugins", resetNamespace: true },
       function () {
         this.route("index", { path: "/" });
         this.route("show", { path: "/:plugin_id" }, function () {
-          this.route("schema", { path: "schema/:setting_name" });
           this.route("settings");
         });
       }

@@ -1,11 +1,12 @@
 import Route from "@ember/routing/route";
+import { service } from "@ember/service";
 import SiteSetting from "admin/models/site-setting";
 
-export default class AdminPluginsShowSchemaRoute extends Route {
+export default class AdminSchemaRoute extends Route {
+  @service routeHistory;
+
   async model(params) {
-    const plugin = this.modelFor("adminPlugins.show");
-    const [pluginSettings] = await SiteSetting.findAll({
-      plugin: plugin.id,
+    const [, pluginSettings] = await SiteSetting.findAll({
       names: [params.setting_name],
     });
 
@@ -21,14 +22,14 @@ export default class AdminPluginsShowSchemaRoute extends Route {
       );
       setting.value = {};
     }
-    setting.updateSetting = async (_pluginId, value) => {
-      return SiteSetting.update(setting.setting, JSON.stringify(value));
+    setting.updateSetting = (settingName, value) => {
+      return SiteSetting.update(settingName, JSON.stringify(value));
     };
 
     return {
-      plugin,
       setting,
       settingName: params.setting_name,
+      goBackUrl: this.routeHistory.lastURL,
     };
   }
 }

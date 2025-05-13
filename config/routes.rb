@@ -102,11 +102,11 @@ Discourse::Application.routes.draw do
     namespace :admin, constraints: StaffConstraint.new do
       get "" => "admin#index"
       get "search" => "search#index"
+      get "schema/:setting_name" => "admin#index"
 
       get "plugins" => "plugins#index"
       get "plugins/:plugin_id" => "plugins#show"
       get "plugins/:plugin_id/settings" => "plugins#show"
-      get "plugins/:plugin_id/schema/:setting_name" => "plugins#show"
 
       resources :site_settings, only: %i[index update], constraints: AdminConstraint.new do
         collection { get "category/:id" => "site_settings#index" }
