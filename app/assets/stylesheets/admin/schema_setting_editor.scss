@@ -1,7 +1,7 @@
 @use "lib/viewport";
 
-.schema-theme-setting-editor {
-  .schema-theme-setting-editor__wrapper {
+.schema-setting-editor {
+  .schema-setting-editor__wrapper {
     --schema-space: 0.5em;
     display: grid;
     grid-template-columns: minmax(10em, 0.3fr) 1fr;
