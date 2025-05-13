@@ -168,11 +168,7 @@ export default Mixin.create({
     } else if (setting.schema) {
       return {
         action: () => {
-          this.router.transitionTo(
-            "adminPlugins.show.schema",
-            setting.plugin,
-            setting.setting
-          );
+          this.router.transitionTo("admin.schema", setting.setting);
         },
         label: "admin.site_settings.json_schema.edit",
         icon: "pencil",
