@@ -162,6 +162,7 @@ export default class TopicController extends Controller {
     return mobileView && postsCount > 3;
   }
 
+  // TODO (glimmer-post-stream) this method is not used in the Glimmer Post Stream
   @discourseComputed(
     "model.postStream.posts",
     "model.postStream.postsWithPlaceholders"
@@ -170,6 +171,7 @@ export default class TopicController extends Controller {
     return this.capabilities.isAndroid ? posts : postsWithPlaceholders;
   }
 
+  // TODO (glimmer-post-stream) is this still used?
   @discourseComputed("model.postStream.loadingFilter")
   androidLoading(loading) {
     return this.capabilities.isAndroid && loading;
