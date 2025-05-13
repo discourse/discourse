@@ -1,22 +1,53 @@
+@use "lib/viewport";
+
 #topic-footer-buttons {
   display: flex;
+  flex-direction: column;
+  gap: var(--below-topic-margin);
   max-width: calc(
     var(--topic-avatar-width) + var(--topic-body-width) +
       var(--topic-body-width-padding) * 2
   );
 
   html.anon & {
-    justify-content: end;
+    align-items: end;
   }
 
   .topic-footer-main-buttons {
     display: flex;
     gap: 0.5rem;
 
+    @include viewport.until(sm) {
+      gap: 0.75rem;
+      justify-content: space-between;
+
+      .btn,
+      .topic-notifications-button .btn,
+      .pinned-button .btn {
+        font-size: var(--font-up-1-rem);
+      }
+
+      html:not(.anon) & {
+        width: 100%;
+
+        .d-button-label {
+          display: none;
+        }
+
+        .d-icon {
+          margin-right: 0;
+        }
+      }
+    }
+
     &__actions {
       display: flex;
-      gap: 0.5rem;
+      gap: 0.75rem;
       flex-wrap: wrap;
+
+      @include viewport.from(sm) {
+        gap: 0.5rem;
+      }
     }
 
     .bookmark.bookmarked {
@@ -35,6 +66,19 @@
   .topic-notifications-button {
     .text {
       color: var(--primary-high);
+    }
+
+    @include viewport.until(sm) {
+      .selected-name .name {
+        display: none;
+      }
+    }
+
+    .reason {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin: 0;
     }
   }
 }
