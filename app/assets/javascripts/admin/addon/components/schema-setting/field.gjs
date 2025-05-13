@@ -1,16 +1,16 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { htmlSafe } from "@ember/template";
-import BooleanField from "admin/components/schema-theme-setting/types/boolean";
-import CategoriesField from "admin/components/schema-theme-setting/types/categories";
-import EnumField from "admin/components/schema-theme-setting/types/enum";
-import FloatField from "admin/components/schema-theme-setting/types/float";
-import GroupsField from "admin/components/schema-theme-setting/types/groups";
-import IntegerField from "admin/components/schema-theme-setting/types/integer";
-import StringField from "admin/components/schema-theme-setting/types/string";
-import TagsField from "admin/components/schema-theme-setting/types/tags";
+import BooleanField from "admin/components/schema-setting/types/boolean";
+import CategoriesField from "admin/components/schema-setting/types/categories";
+import EnumField from "admin/components/schema-setting/types/enum";
+import FloatField from "admin/components/schema-setting/types/float";
+import GroupsField from "admin/components/schema-setting/types/groups";
+import IntegerField from "admin/components/schema-setting/types/integer";
+import StringField from "admin/components/schema-setting/types/string";
+import TagsField from "admin/components/schema-setting/types/tags";
 
-export default class SchemaThemeSettingField extends Component {
+export default class SchemaSettingField extends Component {
   get component() {
     const type = this.args.spec.type;
 

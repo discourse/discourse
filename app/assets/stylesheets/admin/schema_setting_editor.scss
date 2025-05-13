@@ -13,7 +13,7 @@
       gap: 0 1em;
     }
 
-    .schema-theme-setting-editor__navigation {
+    .schema-setting-editor__navigation {
       overflow: hidden;
       align-self: start;
 
@@ -21,7 +21,7 @@
         list-style: none;
       }
 
-      .schema-theme-setting-editor__tree {
+      .schema-setting-editor__tree {
         border: 1px solid var(--primary-low);
         overflow: auto;
         margin: 0 0 2em 0;
@@ -52,7 +52,7 @@
           }
         }
 
-        .schema-theme-setting-editor__tree-node.--back-btn {
+        .schema-setting-editor__tree-node.--back-btn {
           cursor: pointer;
           width: 100%;
           border-bottom: 1px solid var(--primary-low);
@@ -63,7 +63,7 @@
             background: var(--primary-very-low);
           }
 
-          .schema-theme-setting-editor__tree-node-text {
+          .schema-setting-editor__tree-node-text {
             color: currentcolor;
 
             .d-icon {
@@ -74,7 +74,7 @@
           }
         }
 
-        .schema-theme-setting-editor__tree-node-text {
+        .schema-setting-editor__tree-node-text {
           padding: var(--schema-space);
           color: var(--primary);
           display: flex;
@@ -91,11 +91,11 @@
           }
         }
 
-        .schema-theme-setting-editor__tree-node {
+        .schema-setting-editor__tree-node {
           cursor: pointer;
 
           &.--active {
-            > .schema-theme-setting-editor__tree-node-text {
+            > .schema-setting-editor__tree-node-text {
               background-color: var(--tertiary);
               color: var(--secondary);
 
@@ -137,14 +137,14 @@
             margin-left: var(--schema-space);
             border-left: 1px solid var(--primary-200);
 
-            .schema-theme-setting-editor__tree-node-text {
+            .schema-setting-editor__tree-node-text {
               color: var(--primary-800);
             }
           }
         }
       }
 
-      .schema-theme-setting-editor__tree-add-button {
+      .schema-setting-editor__tree-add-button {
         color: var(--tertiary);
         width: 100%;
         line-height: 1.4; // match li height

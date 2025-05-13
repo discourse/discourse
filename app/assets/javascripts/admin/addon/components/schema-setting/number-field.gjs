@@ -5,9 +5,9 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { and, not } from "truth-helpers";
 import { i18n } from "discourse-i18n";
-import FieldInputDescription from "admin/components/schema-theme-setting/field-input-description";
+import FieldInputDescription from "admin/components/schema-setting/field-input-description";
 
-export default class SchemaThemeSettingNumberField extends Component {
+export default class SchemaSettingNumberField extends Component {
   @tracked touched = false;
   @tracked value = this.args.value;
   min = this.args.spec.validations?.min;
@@ -43,20 +43,20 @@ export default class SchemaThemeSettingNumberField extends Component {
 
     if (!this.value) {
       if (this.required) {
-        return i18n("admin.customize.theme.schema.fields.required");
+        return i18n("admin.customize.schema.fields.required");
       } else {
         return;
       }
     }
 
     if (this.min && this.value < this.min) {
-      return i18n("admin.customize.theme.schema.fields.number.too_small", {
+      return i18n("admin.customize.schema.fields.number.too_small", {
         count: this.min,
       });
     }
 
     if (this.max && this.value > this.max) {
-      return i18n("admin.customize.theme.schema.fields.number.too_large", {
+      return i18n("admin.customize.schema.fields.number.too_large", {
         count: this.max,
       });
     }

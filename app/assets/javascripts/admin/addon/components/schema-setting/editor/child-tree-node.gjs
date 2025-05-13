@@ -4,11 +4,11 @@ import icon from "discourse/helpers/d-icon";
 <template>
   <li
     role="link"
-    class="schema-theme-setting-editor__tree-node --child"
+    class="schema-setting-editor__tree-node --child"
     ...attributes
     {{on "click" @onChildClick}}
   >
-    <div class="schema-theme-setting-editor__tree-node-text">
+    <div class="schema-setting-editor__tree-node-text">
       <span>{{@generateSchemaTitle @object @schema @index}}</span>
       {{icon "chevron-right"}}
     </div>

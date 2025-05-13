@@ -2,9 +2,9 @@ import Component from "@glimmer/component";
 import { Input } from "@ember/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import FieldInputDescription from "admin/components/schema-theme-setting/field-input-description";
+import FieldInputDescription from "admin/components/schema-setting/field-input-description";
 
-export default class SchemaThemeSettingTypeBoolean extends Component {
+export default class SchemaSettingTypeBoolean extends Component {
   @action
   onInput(event) {
     this.args.onChange(event.currentTarget.checked);
