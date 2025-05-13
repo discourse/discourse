@@ -36,6 +36,16 @@ shared_examples "login scenarios" do |login_page_object|
       expect(page).to have_css(".header-dropdown-toggle.current-user")
     end
 
+    it "can login with redirect" do
+      EmailToken.confirm(Fabricate(:email_token, user: user).token)
+
+      login_form
+        .open_with_redirect("/about")
+        .fill(username: "john", password: "supersecurepassword")
+        .click_login
+      expect(page).to have_current_path("/about")
+    end
+
     it "can login and activate account" do
       login_form.open.fill(username: "john", password: "supersecurepassword").click_login
       expect(page).to have_css(".not-activated-modal")
@@ -238,6 +248,12 @@ shared_examples "login scenarios" do |login_page_object|
 
         expect(page).to have_css(".authorize-api-key .scopes")
       end
+
+      it "redirects when navigating to login with redirect param" do
+        mock_google_auth
+        login_form.open_with_redirect("/about")
+        expect(page).to have_current_path("/about")
+      end
     end
   end
 
@@ -272,6 +288,21 @@ shared_examples "login scenarios" do |login_page_object|
       login_form.click_login
 
       expect(page).to have_css(".header-dropdown-toggle.current-user")
+    end
+
+    it "can login with totp and redirect" do
+      login_form
+        .open_with_redirect("/about")
+        .fill(username: "john", password: "supersecurepassword")
+        .click_login
+
+      expect(page).to have_css(".second-factor")
+
+      totp = ROTP::TOTP.new(user_second_factor.data).now
+      find("#login-second-factor").fill_in(with: totp)
+      login_form.click_login
+
+      expect(page).to have_current_path("/about")
     end
 
     it "can login with backup code" do

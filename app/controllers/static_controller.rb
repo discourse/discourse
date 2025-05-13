@@ -27,9 +27,40 @@ class StaticController < ApplicationController
   }
   CUSTOM_PAGES = {} # Add via `#add_topic_static_page` in plugin API
 
+  def validate_redirect_param
+    redirect_path = params[:redirect]
+    if redirect_path.present?
+      raise Discourse::InvalidParameters.new(:redirect) unless redirect_path.is_a?(String)
+
+      begin
+        forum_uri = URI(Discourse.base_url)
+        uri = URI(redirect_path)
+
+        if uri.path.present? && !uri.path.starts_with?(login_path) &&
+             (uri.host.blank? || uri.host == forum_uri.host) && uri.path =~ %r{\A\/{1}[^\.\s]*\z}
+          return "#{uri.path}#{uri.query ? "?#{uri.query}" : ""}"
+        end
+      rescue URI::Error
+        # Do nothing if the URI is invalid
+      end
+    end
+
+    "/"
+  end
+
   def show
-    if current_user && (params[:id] == "login" || params[:id] == "signup")
-      return redirect_to(path "/")
+    if params[:id] == "signup" && current_user
+      return redirect_to path("/") if params[:id] == "signup"
+    end
+
+    if params[:id] == "login"
+      destination = validate_redirect_param
+
+      if (current_user)
+        return redirect_to(path(destination), allow_other_host: false)
+      elsif destination != "/"
+        cookies[:destination_url] = path(destination)
+      end
     end
 
     if SiteSetting.login_required? && current_user.nil? && %w[faq guidelines].include?(params[:id])
@@ -123,26 +154,7 @@ class StaticController < ApplicationController
     params.delete(:username)
     params.delete(:password)
 
-    destination = path("/")
-
-    redirect_location = params[:redirect]
-    if redirect_location.present? && !redirect_location.is_a?(String)
-      raise Discourse::InvalidParameters.new(:redirect)
-    elsif redirect_location.present? &&
-          begin
-            forum_uri = URI(Discourse.base_url)
-            uri = URI(redirect_location)
-
-            if uri.path.present? && !uri.path.starts_with?(login_path) &&
-                 (uri.host.blank? || uri.host == forum_uri.host) &&
-                 uri.path =~ %r{\A\/{1}[^\.\s]*\z}
-              destination = "#{uri.path}#{uri.query ? "?#{uri.query}" : ""}"
-            end
-          rescue URI::Error
-            # Do nothing if the URI is invalid
-          end
-    end
-
+    destination = validate_redirect_param
     redirect_to(destination, allow_other_host: false)
   end
 
