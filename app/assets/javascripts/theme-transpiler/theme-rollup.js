@@ -96,20 +96,7 @@ globalThis.rollup = function (modules, options) {
         babelHelpers: "bundled",
         plugins: [
           [DecoratorTransforms, { runEarly: true }],
-          // BabelReplaceImports,
-          [
-            HTMLBarsInlinePrecompile,
-            {
-              // compiler: { precompile },
-              targetFormat: "hbs",
-              // enableLegacyModules: [
-              //   "ember-cli-htmlbars",
-              //   "ember-cli-htmlbars-inline-precompile",
-              //   "htmlbars-inline-precompile",
-              // ],
-            },
-            "first-pass",
-          ],
+          BabelReplaceImports,
           AddThemeGlobals,
           [
             HTMLBarsInlinePrecompile,
@@ -121,7 +108,6 @@ globalThis.rollup = function (modules, options) {
                 "htmlbars-inline-precompile",
               ],
             },
-            "second-pass",
           ],
           // TODO: Ember this fallback
           // TODO: template colocation

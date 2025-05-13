@@ -2,38 +2,6 @@ export default function (babel) {
   const { types: t } = babel;
 
   const visitor = {
-    CallExpression(path) {
-      if (path.node.callee.name === "precompileTemplate") {
-        let scope = path.node.arguments[1].properties.find(
-          (prop) => prop.key.name === "scope"
-        );
-        if (!scope) {
-          scope = t.objectProperty(
-            t.identifier("scope"),
-            t.arrowFunctionExpression([], t.objectExpression([]))
-          );
-          path.node.arguments[1].properties.push(scope);
-        }
-
-        scope.value.body.properties.push(
-          t.objectProperty(
-            t.identifier("themePrefix"),
-            t.identifier("themePrefix"),
-            false,
-            true
-          )
-        );
-        scope.value.body.properties.push(
-          t.objectProperty(
-            t.identifier("settings"),
-            t.identifier("settings"),
-            false,
-            true
-          )
-        );
-      }
-    },
-
     Program(path) {
       const importDeclarations = [];
 
@@ -71,8 +39,6 @@ export default function (babel) {
             t.stringLiteral("discourse-theme")
           )
         );
-
-        path.scope.crawl();
       }
     },
   };
@@ -80,6 +46,7 @@ export default function (babel) {
   return {
     pre(file) {
       babel.traverse(file.ast, visitor, file.scope);
+      file.scope.crawl();
     },
   };
 }
