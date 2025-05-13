@@ -1357,6 +1357,7 @@ da:
         enforced_notice: "Du skal aktivere To-faktor godkendelse før du kan gå ind på denne side."
         disable: "Deaktivér"
         delete: "Slet"
+        delete_single_confirm_title: "Sletter en godkendelsesenhed"
         delete_backup_codes_confirm_title: "Sletning af backup-koder"
         save: "Gem"
         edit: "Rediger"
@@ -1411,6 +1412,7 @@ da:
           description: "Bekræft venligst, at du gerne vil have din e-mailadresse ændret til:"
           description_add: "Bekræft venligst, at du gerne vil tilføje en alternativ e-mailadresse:"
         authorizing_old:
+          title: "Bekræft gammel e-mailadresse"
           old_email: "Gammel e-mail: %{email}"
           new_email: "Ny e-mail: %{email}"
           confirm_success: "Vi har sendt en e-mail til din nye e-mail-adresse for at bekræfte ændringen!"
@@ -1648,6 +1650,7 @@ da:
           success: "Invitiationslinket blev genereret!"
           error: "Der opstod en fejl under generering af Invitationslink"
         invite:
+          new_title: "Inviter medlemmer"
           edit_title: "Rediger invitation"
           expires_in_time: "Udløber om %{time}"
           expired_at_time: "Udløb kl. %{time}"
@@ -1688,8 +1691,12 @@ da:
         title: "Adgangskode"
         common: "Denne adgangskode er for almindelig."
         same_as_username: "Dit password er det samme som dit brugernavn."
+        same_as_name: "Din adgangskode er den samme som dit navn."
         same_as_email: "Dit password er det samme som din email adresse."
         ok: "Din adgangskode ser fin ud."
+        instructions:
+          one: "Mindst %{count} tegn"
+          other: "Mindst %{count} tegn"
         required: "Indtast venligst en adgangskode"
         confirm: "Bekræft"
         incorrect_password: "Den indtastede adgangskode er forkert."
@@ -1779,6 +1786,7 @@ da:
     user_tips:
       button: "Forstået!"
       post_menu:
+        title: "Indlægsmenu"
         content: "Se, hvordan du ellers kan interagere med indlægget ved at klikke på de tre prikker!"
       topic_notification_levels:
         title: "Du følger nu dette emne"
@@ -1848,10 +1856,13 @@ da:
       no_internet: "Ingen internetforbindelse."
       refresh_page: "Genindlæs side"
     summary:
+      in_progress: "Opsummerer emne ved brug af AI"
+      model_used: "AI anvendt: %{model}"
       description:
         one: "Der er <b>%{count}</b> svar."
         other: "Der er <b>%{count}</b> svar."
       buttons:
+        hide: "Skjul resumé"
         generate: "Opsummer"
         regenerate: "Regenerér"
       description_time_MF: |
@@ -2009,6 +2020,8 @@ da:
         totp: "Brug en godkendelsesapp i stedet"
         backup_code: "Brug en backup kode i stedet"
         security_key: "Brug en sikkerhedsnøgle i stedet"
+      no_login_methods:
+        title: "Ingen login-metoder"
     invites:
       accept_title: "Invitation"
       welcome_to: "Velkommen til %{site_name}!"
@@ -2277,6 +2290,9 @@ da:
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
       liked_by_2_users: "%{username}, %{username2}"
+      liked_by_multiple_users:
+        one: "%{username} og %{count} anden"
+        other: "%{username} og %{count} andre"
       liked_consolidated_description:
         one: "syntes godt om %{count} af dine indlæg"
         other: "syntes godt om %{count} af dine indlæg"
@@ -2325,6 +2341,7 @@ da:
         quoted: "citeret"
         edited: "redigeret"
         liked: "nyt 'synes godt om'"
+        private_message: "ny personlig meddelelse"
         invited_to_private_message: "inviteret til personlig besked"
         invitee_accepted: "invitation accepteret"
         posted: "nyt indlæg"
@@ -2546,6 +2563,7 @@ da:
         bookmarks: "Du har ingen bogmærkede emner endnu."
         category: "Der er ingen emner i kategorien %{category}."
         top: "Der er ingen top emner"
+        filter: "Der er ingen emner."
         educate:
           new: '<p>Dine nye emner vil blive vist her. Som standard betragtes emner som nye og vil vise en <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> indikator, hvis de blev oprettet inden for de sidste 2 dage.</p><p>Besøg dine <a href="%{userPrefsUrl}">præferencer</a> for at ændre dette.</p>'
           unread: "<p>Dine ulæste emner vises her.</p><p>Som standard betragtes emner som ulæste og vil vise antal af ulæste <span class=\"badge unread-posts badge-notification\">1</span> hvis du:</p><ul><li>Oprettede emnet</li><li>Svarede på emnet</li><li>Læste emnet i mere end 5 minutter</li></ul><p>Eller hvis du udtrykkeligt har indstillet emnet til fulgt eller overvåget via \U0001F514 i hvert emne.</p><p>Besøg dine <a href=\"%{userPrefsUrl}\">præferencer</a> for at ændre dette.</p>"
@@ -2584,6 +2602,8 @@ da:
         name: "Slet"
       update_category:
         name: "Opdater Kategori"
+      reset_bump_dates:
+        name: "Nulstil Bump Datoer"
     topic:
       filter_to:
         one: "%{count} indlæg i emnet"
@@ -2978,7 +2998,9 @@ da:
     post:
       confirm_delete: "Er du sikker på, at du vil slette dette indlæg?"
       quote_reply: "Citér"
+      quote_reply_shortcut: "Citér (eller tryk q)"
       quote_edit: "Rediger"
+      quote_edit_shortcut: "Rediger (eller tryk på e)"
       quote_copy: "Kopier citat"
       quote_share: "Del"
       edit_reason: "Grund: "
@@ -2994,6 +3016,7 @@ da:
       show_hidden: "Vis ignoreret indhold."
       deleted_by_author_simple: "(indlæg slettet af forfatteren)"
       collapse: "fold sammen"
+      sr_date: "Indlægsdato"
       expand_collapse: "fold ud/ind"
       locked: "Et hjælperteam medlem har låst dette indlæg fra at blive redigeret"
       gap:
@@ -3636,6 +3659,9 @@ da:
         one: "Blev tildelt dette emblem %{count} gang"
         other: "Blev tildelt dette emblem %{count} gange"
       granted_on: "Tildelt %{date}"
+      others_count:
+        one: "Givet til andre %{count} gang"
+        other: "Givet til andre %{count} gange"
       title: Emblemer
       allow_title: "Du kan bruge dette emblem som en titel"
       multiple_grant: "Du kan optjene dette flere gange"
@@ -3890,6 +3916,7 @@ da:
           header_link_text: "Om"
         messages:
           header_link_text: "Beskeder"
+          header_action_title: "Opret en personlig meddelelse"
           links:
             inbox: "Indbakke"
             sent: "Sendt"
@@ -3899,6 +3926,7 @@ da:
             unread_with_count: "Ulæst (%{count})"
             archive: "Arkiv"
         tags:
+          none: "Du har ikke tilføjet nogen mærker."
           click_to_get_started: "Klik her for at komme i gang."
           header_link_text: "Tags"
           configure_defaults: "Konfigurer standardindstillinger"
@@ -3936,8 +3964,12 @@ da:
               title_drafts: "Mine uopslåede kladder"
             review:
               content: "Anmeldelse"
+              pending_count:
+                one: "%{count} afventer"
+                other: "%{count} afventer"
             invite:
               content: "Invitér"
+              title: "Inviter nye medlemmer"
       panels:
         forum:
           label: Forum
@@ -4009,17 +4041,22 @@ da:
       reports:
         title: "Liste over tilgængelige rapporter"
         sidebar_title: "Rapporter"
+        back: "Tilbage til alle rapporter"
         sidebar_link:
           all: "Alle rapporter"
       config:
         developer:
           title: "Udvikler"
+        experimental:
+          title: "Eksperimentel"
         files:
           title: "Filer"
         legal:
           title: "Jura"
         localization:
           title: "Lokalisering"
+        login_and_authentication:
+          title: "Login og godkendelse"
         logo:
           title: "Webstedets logo"
         navigation:
@@ -4036,6 +4073,8 @@ da:
           title: "Sikkerhed"
         spam:
           title: "Spam"
+        trust_levels:
+          title: "Tillidsniveauer"
         user_api:
           title: "Bruger API"
       new_features:
@@ -4206,10 +4245,13 @@ da:
         none_selected: "Vælg en gruppe for at komme i gang"
         no_custom_groups: "Opret en ny brugerdefineret gruppe"
       api_keys:
+        title: "API nøgler"
+        add: "Tilføj API-nøgle"
         edit: "Rediger"
         save: "Gem"
         cancel: "Annuller"
         continue: "Fortsæt"
+        back: "Tilbage til API-nøgler"
         revoke: "Tilbagekald"
         revoked: "Tilbagekaldt"
       api:
@@ -4218,17 +4260,20 @@ da:
         user: "Bruger"
         title: "API"
         key: "Nøgle"
+        keys: "Nøgler"
         created: Oprettet af
         updated: Opdateret
         never_used: Aldrig
         generate: "Generér"
         revoke: "Tilbagekald"
+        all_users: "Alle brugere"
         active_keys: "Aktive API-nøgler"
         manage_keys: Administrer nøgler
         show_details: Detaljer
         description: Beskrivelse
         no_description: (Ingen beskrivelse)
         all_api_keys: Alle API-nøgler
+        user_mode: Brugerniveau
         impersonate_all_users: Efterlign enhver bruger
         user_placeholder: Indtast brugernavn
         description_placeholder: Hvad skal denne nøgle bruges til?
@@ -4282,7 +4327,7 @@ da:
         create: "Opret"
         edit: "Redigér"
         save: "Gem"
-        show: "Begivenheder"
+        show: "Hændelser"
         delete: "Slet"
         cancel: "Annuller"
         controls: "Kontrolfunktioner"
@@ -4305,14 +4350,45 @@ da:
         groups_filter_instructions: "De relevante webhooks vil kun blive udløst, hvis eventet er relateret med angivne grupper. Lad stå tom for at udløse webhook for alle grupper."
         groups_filter: "Udløste grupper"
         delete_confirm: "Slet denne webhook?"
+        topic_event:
+          group_name: "Emnehændelser"
+          topic_created: "Emne er oprettet"
+          topic_revised: "Emne er revideret"
+          topic_edited: "Emne er opdateret"
+          topic_destroyed: "Emne er slettet"
+          topic_recovered: "Emne er genoprettet"
+        post_event:
+          group_name: "Indlægshændelser"
+          post_created: "Indlæg er oprettet"
+          post_edited: "Indlæg er opdateret"
+          post_destroyed: "Indlæg er slettet"
+          post_recovered: "Indlæg er genoprettet"
+        group_event:
+          group_name: "Gruppehændelser"
+          group_created: "Gruppe er oprettet"
+          group_updated: "Gruppe er opdateret"
+          group_destroyed: "Gruppe er slettet"
+        tag_event:
+          group_name: "Mærkehændelser"
+          tag_created: "Mærke er oprettet"
+          tag_updated: "Mærke er opdateret"
+          tag_destroyed: "Mærke er slettet"
+        category_event:
+          group_name: "Kategorihændelser"
+          category_created: "Kategori er oprettet"
+          category_updated: "Kategori er opdateret"
+          category_destroyed: "Kategori er slettet"
         user_event:
+          group_name: "Brugerhændelser"
           user_logged_in: "Bruger logget ind"
           user_logged_out: "Bruger logget ud"
+          user_confirmed_email: "Bruger bekræftet e-mail"
           user_created: "Bruger er oprettet"
           user_approved: "Bruger er godkendt"
           user_updated: "Bruger er opdateret"
           user_destroyed: "Bruger er slettet"
           user_suspended: "Bruger er suspenderet"
+          user_unsuspended: "Brugerens suspendering er ophævet"
         like_event:
           post_liked: "Når en bruger 'Synes godt om' et indlæg."
         group_user_event:
