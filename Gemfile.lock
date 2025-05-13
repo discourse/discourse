@@ -225,7 +225,7 @@ GEM
     jwt (2.10.1)
       base64
     kgio (2.11.4)
-    language_server-protocol (3.17.0.4)
+    language_server-protocol (3.17.0.5)
     libv8-node (23.6.1.0)
     libv8-node (23.6.1.0-aarch64-linux)
     libv8-node (23.6.1.0-arm64-darwin)
@@ -901,7 +901,7 @@ CHECKSUMS
   json_schemer (2.4.0) sha256=56cb6117bb5748d925b33ad3f415b513d41d25d0bbf57fe63c0a78ff05597c24
   jwt (2.10.1) sha256=e6424ae1d813f63e761a04d6284e10e7ec531d6f701917fadcd0d9b2deaf1cc5
   kgio (2.11.4) sha256=bda7a2146115998a5b07154e708e0ac02c38dcee7e793c33e2e14f600fdfffc6
-  language_server-protocol (3.17.0.4) sha256=c484626478664fd13482d8180947c50a8590484b1258b99b7aedb3b69df89669
+  language_server-protocol (3.17.0.5) sha256=fd1e39a51a28bf3eec959379985a72e296e9f9acfce46f6a79d31ca8760803cc
   libv8-node (23.6.1.0) sha256=5a72ed69e4ca1a29a9a4f6e2bdb9ae8e8d881524fb642f19692c0a058de74150
   libv8-node (23.6.1.0-aarch64-linux) sha256=8ef12223e2ec7a6b8f44b58c14d85d8861815c1ec59ad6f776c63dabc535aadb
   libv8-node (23.6.1.0-arm64-darwin) sha256=f217e3be9dc3579a4713520ac9644f4bfb733c8408d2b62c9044560b7f5cc031
