@@ -258,6 +258,8 @@
 
       &.is-destroying {
         animation: search-slide-out 0.2s ease-in forwards;
+        height: 4rem;
+        transition: none;
       }
 
       @keyframes search-slide-in {
