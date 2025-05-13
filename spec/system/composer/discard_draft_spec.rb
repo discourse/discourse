@@ -114,7 +114,7 @@ describe "Composer - discard draft modal", type: :system do
 
       composer.fill_content(" latest updates")
 
-      composer.minimize
+      wait_for(timeout: 5) { Draft.count == 1 }
 
       # reload the page to see if current draft reflects the changes
       topic_page.visit_topic(post_1.topic)
