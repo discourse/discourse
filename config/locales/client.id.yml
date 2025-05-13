@@ -1904,6 +1904,11 @@ id:
       has_replies:
         other: "%{count} Balasan"
       has_replies_count: "%{count}"
+      localizations:
+        table:
+          actions: "Aksi"
+          edit: "Ubah"
+          delete: "Hapus"
       errors:
         upload: "Maaf, terjadi kesalahan saat mengunggah %{file_name}. Silakan coba lagi."
         backup_too_large: "Maaf, file cadangan terlalu besar."
@@ -2510,6 +2515,7 @@ id:
           delete: "Hapus"
         color_palettes:
           palette_name: "Nama"
+          delete: "Hapus"
           colors:
             title: "Warna"
       plugins:

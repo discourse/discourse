@@ -1139,6 +1139,11 @@ be:
       quote_edit: "Рэдагаваць"
       quote_share: "Падзяліцца тэмай"
       edit_reason: "прычына: "
+      localizations:
+        table:
+          actions: "Дзеянні"
+          edit: "Рэдагаваць"
+          delete: "Выдаліць"
       errors:
         upload_not_authorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
       controls:
@@ -1812,6 +1817,7 @@ be:
           delete: "выдаляць"
         color_palettes:
           palette_name: "імя"
+          delete: "выдаляць"
           colors:
             title: "<......"
       plugins:

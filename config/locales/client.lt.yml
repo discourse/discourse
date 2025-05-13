@@ -1631,7 +1631,6 @@ lt:
         title: "Registracijos IP adresas"
       avatar:
         title: "Profilio nuotrauka"
-        header_title: "Profilis, žinutės, žymės ir nustatymai"
         name_and_description: "%{name} - %{description}"
         edit: "Redaguoti profilio nuotrauką"
       title:
@@ -2260,7 +2259,6 @@ lt:
           aria_label: filtruoti pagal daugiausia peržiūrų
         additional_options:
           label: "Filtruoti pagal įrašų skaičių ir temos peržiūras"
-    hamburger_menu: "meniu"
     new_item: "Nauja"
     go_back: "grįžti atgal"
     not_logged_in_user: "Vartotojo puslapis su veiksmų ir nustatymų aprašymu"
@@ -2773,6 +2771,11 @@ lt:
         other: "%{count} žmonėms patinka šis įrašas."
       in_reply_to: "Įkelti pirminį įrašą"
       view_all_posts: "Peržiūrėti visus įrašus"
+      localizations:
+        table:
+          actions: "Veiksmai"
+          edit: "Redaguoti"
+          delete: "Pašalinti"
       errors:
         create: "Atsiprašome, įvyko klaida kuriant įrašą. Prašome pamėginti dar kartą."
         edit: "Atsiprašome, įvyko klaida redaguojant įrašą. Prašome pamėginti dar kartą."
@@ -4129,8 +4132,10 @@ lt:
           delete: "Pašalinti"
         color_palettes:
           palette_name: "Vardas"
+          delete: "Pašalinti"
           colors:
             title: "Spalvos"
+          delete_confirm: "Ištrinti šią spalvų paletę?"
       plugins:
         title: "Plugins"
         name: "Vardas"

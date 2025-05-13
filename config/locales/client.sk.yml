@@ -1344,7 +1344,6 @@ sk:
       said: "%{username}:"
       profile: "Profil"
       profile_possessive: "Profil používateľa %{username}"
-      account_possessive: "%{name}účet"
       mute: "Ignorovať"
       edit: "Upraviť nastavenia"
       download_archive:
@@ -2244,7 +2243,6 @@ sk:
         title: "IP adresa pri registrácii"
       avatar:
         title: "Profilový obrázok"
-        header_title: "profil, správy, záložky a nastavenia"
         name_and_description: "%{name} - %{description}"
         edit: "Upraviť profilový obrázok"
       title:
@@ -2770,6 +2768,12 @@ sk:
       esc: "esc"
       esc_label: "zatvoriť správu"
       ok_proceed: "Ok, pokračujte"
+      translations:
+        title: "Preklad príspevku"
+        select: "Vyberte preklad"
+        save: "Uložiť preklad"
+        original_content: "Pôvodný obsah príspevku"
+        placeholder: "Sem zadajte preklad príspevku..."
       group_mentioned_limit:
         one: "<b>Varovanie!</b> Spomenuli ste <a href='%{group_link}'>%{group}</a>, avšak táto skupina má viac členov, ako je správcom nakonfigurovaný limit zmienky %{count} používateľa. Nikto nebude upozornený."
         few: "<b>Varovanie!</b> Spomenuli ste <a href='%{group_link}'>%{group}</a>, avšak táto skupina má viac členov ako limit spomenutí nastavený administrátorom, ktorý je %{count} používateľov. Nikto nebude upozornený."
@@ -3145,7 +3149,7 @@ sk:
       in_messages_tooltip: "prepnúť na vyhľadávanie v bežných témach"
       in_topics_posts: "vo všetkých témach a príspevkoch"
       enter_hint: "alebo stlačte Enter"
-      mobile_enter_hint: "alebo ťuknite na ikonu Hľadať"
+      mobile_enter_hint: "alebo ťuknite na položku Hľadať"
       in_posts_by: "v príspevkoch od %{username}"
       recent: "Nedávne vyhľadávania"
       clear_recent: "Vymazať nedávne vyhľadávania"
@@ -3234,7 +3238,6 @@ sk:
           aria_label: filtrovať podľa maximálneho počtu zobrazení
         additional_options:
           label: "Filtrovať podľa počtu príspevkov a zobrazení tém"
-    hamburger_menu: "menu"
     new_item: "nový"
     go_back: "späť"
     not_logged_in_user: "používateľská stránka so súhrnom aktivít a nastavení"
@@ -4045,6 +4048,14 @@ sk:
       in_reply_to: "Načítať rodičovský príspevok"
       view_all_posts: "Zobraziť všetky príspevky"
       badge_granted_tooltip: "%{username} získal za tento príspevok odznak '%{badge_name}'!"
+      localizations:
+        table:
+          locale: "Miestne nastavenie"
+          actions: "Akcie"
+          edit: "Upraviť"
+          delete: "Odstrániť"
+        add: "Pridať nový preklad"
+        success: "Preklady boli úspešne aktualizované"
       errors:
         create: "Ľutujeme, pri vytváraní príspevku nastala chyba. Prosím, skúste znovu."
         edit: "Ľutujeme, pri úprave príspevku nastala chyba. Prosím, skúste znovu."
@@ -4710,7 +4721,7 @@ sk:
         today: "Dnes"
     custom_homepage:
       admin_message: 'Jedna z vašich tém má povolený modifikátor "custom_homepage", ale v konektore [custom-homepage] sa nič nevypíše. (Táto správa sa zobrazuje len správcom stránok.)'
-    browser_update: 'Bohužiaľ, <a href="https://www.discourse.org/faq/#browser">váš prehliadač nie je podporovaný</a>. Prosím <a href="https://browsehappy.com">prepnite na podporovaný prehliadač</a> a pozrite si bohatý obsah, prihláste sa a odpovedzte.'
+    browser_update: 'Bohužiaľ, <a href="https://discourse.org/about#browser">váš prehliadač nie je podporovaný</a>. Pre zobrazenie bohatého obsahu <a href="https://browsehappy.com">prepnite na podporovaný prehliadač</a> , prihláste sa a odpovedzte.'
     permission_types:
       full: "Vytvor / Odpovedz / Zobraz"
       create_post: "Odpovedz / Zobraz"
@@ -6513,6 +6524,8 @@ sk:
           save_successful: "Používateľské pole uložené."
         color_palettes:
           palette_name: "Meno"
+          duplicate: "Duplikát"
+          delete: "Odstrániť"
           color_options:
             title: "Možnosti farieb"
             toggle: "Voliteľné používateľom"
@@ -6526,6 +6539,7 @@ sk:
           copy_of: "Kópia %{name}"
           copy_created: 'Bola vytvorená nová kópia "%{name}"'
           illegal_character_in_color: "Farby pozostávajú len z hexadecimálnych znakov"
+          delete_confirm: "Odstrániť túto paletu farieb?"
       plugins:
         title: "Pluginy"
         name: "Meno"

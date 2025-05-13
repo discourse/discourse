@@ -1093,7 +1093,6 @@ zh_TW:
       said: "%{username}："
       profile: "個人檔案"
       profile_possessive: "%{username} 的個人資料"
-      account_possessive: "%{name} 的帳戶"
       mute: "靜音"
       edit: "編輯喜好設定"
       download_archive:
@@ -1889,7 +1888,6 @@ zh_TW:
         title: "註冊之 IP 位址"
       avatar:
         title: "個人資料圖片"
-        header_title: "個人頁面、訊息、書籤和設置"
         name_and_description: "%{name} - %{description}"
         edit: "編輯個人資料照片"
       title:
@@ -2722,7 +2720,6 @@ zh_TW:
           aria_label: 按最大瀏覽量過濾
         additional_options:
           label: "依發表次數和主題瀏覽次數篩選"
-    hamburger_menu: "選單"
     new_item: "新增"
     go_back: "返回"
     not_logged_in_user: "使用者頁面（包含目前活動及喜好的摘要）"
@@ -3380,6 +3377,11 @@ zh_TW:
       in_reply_to: "載入父貼文"
       view_all_posts: "檢視所有貼文"
       badge_granted_tooltip: "%{username} 因此貼文獲得了“%{badge_name}”徽章！"
+      localizations:
+        table:
+          actions: "動作"
+          edit: "編輯"
+          delete: "刪除"
       errors:
         create: "抱歉，建立你的貼文時發生錯誤，請再試一次。"
         edit: "抱歉，編輯你的貼文時發生錯誤，請再試一次。"
@@ -3957,7 +3959,6 @@ zh_TW:
         today: "今天"
     custom_homepage:
       admin_message: '您的一個佈景主題已啟用「custom_homepage」修改器，但在 [custom-homepage] 連接器中沒有輸出任何內容。（此消息只顯示給網站管理員。）'
-    browser_update: '很抱歉，<a href="https://www.discourse.org/faq/#browser">您的瀏覽器不受支援</a>。請<a href="https://browsehappy.com">改用支援的瀏覽器</a>來檢視豐富的內容、登入和回覆。'
     permission_types:
       full: "建立 / 回覆 / 觀看"
       create_post: "回覆 / 觀看"
@@ -5484,11 +5485,14 @@ zh_TW:
           save_successful: "儲存使用者欄位。"
         color_palettes:
           palette_name: "名字"
+          duplicate: "複製"
+          delete: "刪除"
           color_options:
             toggle: "使用者可選"
             toggle_description: "調色盤可由使用者選擇"
           colors:
             title: "顏色"
+          delete_confirm: "刪除此調色盤？"
       plugins:
         title: "外掛"
         name: "名稱"

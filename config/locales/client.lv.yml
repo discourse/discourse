@@ -1417,7 +1417,6 @@ lv:
         title: "Reģistrēšanās IP adrese"
       avatar:
         title: "Profila attēls"
-        header_title: "profils, ziņas, grāmatzīmes un iestatījumi"
         name_and_description: "%{name} - %{description}"
         edit: "Rediģēt profila attēlu"
       title:
@@ -2237,6 +2236,11 @@ lv:
         zero: "%{count} cilvēkiem patika šis ieraksts."
         one: "%{count} cilvēkam patika šis ieraksts."
         other: "%{count} cilvēkiem patika šis ieraksts."
+      localizations:
+        table:
+          actions: "Darbības"
+          edit: "Rediģēt"
+          delete: "Dzēst"
       errors:
         create: "Atvainojiet, izveidojot jūsu ierakstu, notika kļūda. Lūdzu, mēģiniet vēlreiz."
         edit: "Atvainojiet, rediģējot jūsu ierakstu, notika kļūda. Lūdzu, mēģiniet vēlreiz."
@@ -3180,6 +3184,7 @@ lv:
           delete: "Dzēst"
         color_palettes:
           palette_name: "Vārds"
+          delete: "Dzēst"
           colors:
             title: "Krāsas"
       plugins:
