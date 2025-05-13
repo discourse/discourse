@@ -1900,7 +1900,7 @@ email:
 files:
   max_image_size_kb:
     client: true
-    default: 4096
+    default: 10240
     max: 102400
     type: file_size_restriction
   max_attachment_size_kb:
