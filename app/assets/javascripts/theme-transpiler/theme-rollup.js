@@ -7,6 +7,7 @@ import { precompile } from "ember-source/dist/ember-template-compiler";
 import { dirname, join } from "path";
 import { minify as terserMinify } from "terser";
 import { browsers } from "../discourse/config/targets";
+import AddThemeGlobals from "./add-theme-globals";
 import BabelReplaceImports from "./babel-replace-imports";
 import { Preprocessor } from "./content-tag";
 
@@ -95,7 +96,21 @@ globalThis.rollup = function (modules, options) {
         babelHelpers: "bundled",
         plugins: [
           [DecoratorTransforms, { runEarly: true }],
-          BabelReplaceImports,
+          // BabelReplaceImports,
+          [
+            HTMLBarsInlinePrecompile,
+            {
+              // compiler: { precompile },
+              targetFormat: "hbs",
+              // enableLegacyModules: [
+              //   "ember-cli-htmlbars",
+              //   "ember-cli-htmlbars-inline-precompile",
+              //   "htmlbars-inline-precompile",
+              // ],
+            },
+            "first-pass",
+          ],
+          AddThemeGlobals,
           [
             HTMLBarsInlinePrecompile,
             {
@@ -106,6 +121,7 @@ globalThis.rollup = function (modules, options) {
                 "htmlbars-inline-precompile",
               ],
             },
+            "second-pass",
           ],
           // TODO: Ember this fallback
           // TODO: template colocation

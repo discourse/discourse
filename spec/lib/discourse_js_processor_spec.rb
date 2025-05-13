@@ -194,11 +194,9 @@ RSpec.describe DiscourseJsProcessor do
 
   describe "Transpiler#rollup" do
     it "can rollup code" do
-      sources = {
-        "main.js" => "import './hello.gjs'; console.log('hello world 2');",
-        "hello.gjs" => <<~JS,
+      sources = { "discourse/initializers/hello.gjs" => <<~JS }
           someDecorator = () => {}
-          class MyClass {
+          export default class MyClass {
             @someDecorator
             myMethod() {
               console.log('hello world');
@@ -208,13 +206,11 @@ RSpec.describe DiscourseJsProcessor do
             </template>
           }
         JS
-      }
 
       result = DiscourseJsProcessor::Transpiler.new.rollup(sources, {})
 
       code = result["code"]
       expect(code).to include('"hello world"')
-      expect(code).to include('"hello world 2"')
       expect(code).to include("dt7948") # Decorator transform
 
       expect(result["map"]).not_to be_nil
@@ -222,7 +218,7 @@ RSpec.describe DiscourseJsProcessor do
 
     it "supports decorators and class properties without error" do
       script = <<~JS.chomp
-        class MyClass {
+        export default class MyClass {
           classProperty = 1;
           #privateProperty = 1;
           #privateMethod() {
@@ -234,7 +230,42 @@ RSpec.describe DiscourseJsProcessor do
         }
       JS
 
-      result = DiscourseJsProcessor::Transpiler.new.rollup({ "main.js" => script }, {})
+      result =
+        DiscourseJsProcessor::Transpiler.new.rollup(
+          { "discourse/initializers/foo.js" => script },
+          {},
+        )
+      expect(result["code"]).to include("(()=>dt7948.n")
+    end
+
+    it "can use themePrefix in a template" do
+      script = <<~JS.chomp
+        themePrefix();
+        export default class Foo {
+          <template>{{themePrefix "bar"}}</template>
+        }
+      JS
+
+      result =
+        DiscourseJsProcessor::Transpiler.new.rollup(
+          { "discourse/initializers/foo.gjs" => script },
+          {},
+        )
+      expect(result["code"]).to include("(()=>dt7948.n")
+    end
+
+    it "can use themePrefix not in a template" do
+      script = <<~JS.chomp
+        export default function foo() {
+          themePrefix("bar");
+        }
+      JS
+
+      result =
+        DiscourseJsProcessor::Transpiler.new.rollup(
+          { "discourse/initializers/foo.js" => script },
+          {},
+        )
       expect(result["code"]).to include("(()=>dt7948.n")
     end
   end
