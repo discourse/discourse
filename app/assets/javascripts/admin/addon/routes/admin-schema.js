@@ -6,11 +6,7 @@ export default class AdminSchemaRoute extends Route {
   @service routeHistory;
 
   async model(params) {
-    const [, pluginSettings] = await SiteSetting.findAll({
-      names: [params.setting_name],
-    });
-
-    const [setting] = pluginSettings.siteSettings;
+    const setting = await SiteSetting.findByName(params.setting_name);
 
     try {
       setting.value = JSON.parse(setting.value);
@@ -22,6 +18,7 @@ export default class AdminSchemaRoute extends Route {
       );
       setting.value = {};
     }
+
     setting.updateSetting = (settingName, value) => {
       return SiteSetting.update(settingName, JSON.stringify(value));
     };
