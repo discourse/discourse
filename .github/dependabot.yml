@@ -41,6 +41,11 @@ updates:
           - "> 1.2.0"
           - "< 2"
     groups:
+      development-dependencies:
+        dependency-type: development
+        update-types:
+          - patch
+          - minor
       rails:
         patterns:
           - "actionmailer"
