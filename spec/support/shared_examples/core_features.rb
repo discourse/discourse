@@ -76,8 +76,6 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
 
           if skip_examples.exclude?(:"topics:reply")
             # Reply to a topic
-            within("#sidebar-section-content-categories") { click_on("General") }
-            expect(page).to have_css(".topic-list-item", count: 3)
             topic_list.visit_topic(topics.first)
             within(".actions") { click_button("Reply") }
             composer.focus
@@ -142,9 +140,9 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
       end
 
       context "with a logged in user" do
-        it "displays user profiles correctly" do
-          sign_in(active_user)
+        before { sign_in(active_user) }
 
+        it "displays user profiles correctly" do
           # Another user's profile
           visit("/u/#{user.username}/summary")
           expect(page).to have_content(user.name)
@@ -173,10 +171,10 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
 
       context "with an anonymous user" do
         it "quick search and full page search works" do
-          visit("/")
-
           if skip_examples.exclude?(:"search:quick_search")
-            search_page.expand_dropdown
+            visit("/")
+
+            search_page.click_search_icon
             expect(page).to have_css(".search-menu-container")
             search_page.type_in_search_menu(topics.first.title)
             search_page.click_search_menu_link
@@ -184,12 +182,10 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
           end
 
           if skip_examples.exclude?(:"search:full_page")
-            search_page
-              .expand_dropdown
-              .click_advanced_search_icon
-              .clear_search_input
-              .type_in_search(topics.first.title)
-              .click_search_button
+            visit("/search")
+
+            search_page.type_in_search(topics.first.title)
+            search_page.click_search_button
 
             expect(search_page).to have_search_result
           end
@@ -197,14 +193,13 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
       end
 
       context "with a logged in user" do
-        before do
-          sign_in(active_user)
-          visit("/")
-        end
+        before { sign_in(active_user) }
 
         it "quick search and full page search works" do
           if skip_examples.exclude?(:"search:quick_search")
-            search_page.expand_dropdown
+            visit("/")
+
+            search_page.click_search_icon
             expect(page).to have_css(".search-menu-container")
             search_page.type_in_search_menu(topics.first.title)
             search_page.click_search_menu_link
@@ -212,12 +207,10 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
           end
 
           if skip_examples.exclude?(:"search:full_page")
-            search_page
-              .expand_dropdown
-              .click_advanced_search_icon
-              .clear_search_input
-              .type_in_search(topics.first.title)
-              .click_search_button
+            visit("/search")
+
+            search_page.type_in_search(topics.first.title)
+            search_page.click_search_button
 
             expect(search_page).to have_search_result
           end

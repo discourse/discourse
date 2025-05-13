@@ -37,11 +37,6 @@ module PageObjects
         find(".search-cta").click
       end
 
-      def expand_dropdown
-        click_search_icon if !has_css?(".search-menu .search-menu-panel", wait: 0)
-        self
-      end
-
       def click_search_icon
         find(".d-header #search-button").click
         self
