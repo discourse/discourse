@@ -56,7 +56,7 @@ class StaticController < ApplicationController
     if params[:id] == "login"
       destination = validate_redirect_param
 
-      if (current_user)
+      if current_user
         return redirect_to(path(destination), allow_other_host: false)
       elsif destination != "/"
         cookies[:destination_url] = path(destination)
