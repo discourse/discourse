@@ -2,7 +2,6 @@ import RouteTemplate from "ember-route-template";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import DPageHeader from "discourse/components/d-page-header";
 import { i18n } from "discourse-i18n";
-import AdminConfigAreaCard from "admin/components/admin-config-area-card";
 import AdminFontsForm from "admin/components/admin-fonts-form";
 
 export default RouteTemplate(
@@ -22,15 +21,7 @@ export default RouteTemplate(
       </DPageHeader>
       <div class="admin-config-area">
         <div class="admin-config-area__primary-content">
-          <AdminConfigAreaCard
-            @heading="admin.config.fonts.title"
-            @collapsable={{true}}
-            class="admin-config-area__fonts"
-          >
-            <:content>
-              <AdminFontsForm />
-            </:content>
-          </AdminConfigAreaCard>
+          <AdminFontsForm />
         </div>
       </div>
     </div>
