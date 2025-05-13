@@ -4044,52 +4044,6 @@ en:
     more_pm_participants:
       one: "%{participants} and %{count} other"
       other: "%{participants} and %{count} others"
-
-    invited_group_to_private_message_body: |
-      %{username} invited @%{group_name} to a message
-
-      > **[%{topic_title}](%{topic_url})**
-      >
-      > %{topic_excerpt}
-
-      at
-
-      > %{site_title} -- %{site_description}
-
-      To join the message, click the link below:
-
-      %{topic_url}
-
-    invited_to_private_message_body: |
-      %{username} invited you to a message
-
-      > **[%{topic_title}](%{topic_url})**
-      >
-      > %{topic_excerpt}
-
-      at
-
-      > %{site_title} -- %{site_description}
-
-      To join the message, click the link below:
-
-      %{topic_url}
-
-    invited_to_topic_body: |
-      %{username} invited you to a discussion
-
-      > **[%{topic_title}](%{topic_url})**
-      >
-      > %{topic_excerpt}
-
-      at
-
-      > %{site_title} -- %{site_description}
-
-      To join the discussion, click the link below:
-
-      %{topic_url}
-
     user_invited_to_private_message_pm_group:
       title: "User Invited Group to PM"
       subject_template: "[%{email_prefix}] %{username} invited @%{group_name} to a message '%{topic_title}'"
