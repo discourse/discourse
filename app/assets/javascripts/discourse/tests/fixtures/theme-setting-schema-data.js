@@ -2,7 +2,7 @@ import ThemeSettings from "admin/models/theme-settings";
 import SiteSetting from "admin/models/site-setting";
 export const SCHEMA_MODES = {
   THEME: "theme",
-  PLUGIN: "plugin",
+  SITE_SETTING: "SITE_SETTING",
 };
 export default function schemaAndData(version = 1, mode = SCHEMA_MODES.THEME) {
   let schema, data;
@@ -210,7 +210,7 @@ export default function schemaAndData(version = 1, mode = SCHEMA_MODES.THEME) {
     throw new Error("unknown fixture version");
   }
 
-  if (mode === SCHEMA_MODES.PLUGIN) {
+  if (mode === SCHEMA_MODES.SITE_SETTING) {
     return SiteSetting.create({
       schema: schema,
       value: data,
