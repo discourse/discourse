@@ -1700,7 +1700,7 @@ ro:
         title: "Înregistrare adresă IP"
       avatar:
         title: "Poză de profil"
-        header_title: "profil, mesaje, semne de carte și preferințe"
+        header_title: "Notificări și cont"
       title:
         title: "Titlu"
         none: "(nimic)"
@@ -1978,6 +1978,12 @@ ro:
       posting_not_on_topic: "În care subiect vrei să răspunzi?"
       saved_local_draft_tip: "salvat local"
       drafts_offline: "schiță offline"
+      translations:
+        title: "Traducere postare"
+        select: "Selectează traducere"
+        save: "Salvează traducere"
+        original_content: "Conținut postare originală"
+        placeholder: "Introdu aici traducerea pentru postare..."
       group_mentioned:
         one: "Menționând %{group} va notifica <a href='%{group_link}'>%{count} persoană</a>."
         few: "Menționând %{group} va notifica <a href='%{group_link}'>%{count} persoane</a>."
@@ -2162,6 +2168,7 @@ ro:
       in_this_topic: "în acest subiect"
       in_topics_posts: "în toate subiectele și postările"
       enter_hint: "sau apăsă Enter"
+      mobile_enter_hint: "sau atinge Căutare"
       in_posts_by: "în postări de la %{username}"
       recent: "Căutări recente"
       clear_recent: "Șterge căutările recente"
@@ -2236,6 +2243,7 @@ ro:
           placeholder: maxim
         additional_options:
           label: "Filtrează după numărul de mesaje postate și vizualizări de subiecte"
+    hamburger_menu: "Meniu de navigare"
     new_item: "nou"
     go_back: "înapoi"
     not_logged_in_user: "pagina utilizatorului cu rezumatul activităților și preferințelor"
@@ -2692,6 +2700,14 @@ ro:
         one: "O persoană a citit această postare."
         few: "%{count} persoane au citit această postare."
         other: "%{count} de persoane au citit această postare."
+      localizations:
+        table:
+          locale: "Locală"
+          actions: "Acțiuni"
+          edit: "Editează"
+          delete: "Șterge"
+        add: "Adaugă traducere nouă"
+        success: "Traducerile au fost actualizate cu succes"
       errors:
         create: "Ne pare rău, a apărut o eroare la creerea postării. Te rugăm să încerci iar."
         edit: "Ne pare rău, a apărut o eroare la editarea postării. Te rugăm să încerci iar."
@@ -3148,6 +3164,7 @@ ro:
         today: "Astăzi"
     custom_homepage:
       admin_message: 'Una dintre temele tale a activat modificatorul „custom_homepage”, dar nu afișează nimic în conectorul [custom-homepage]. (Acest mesaj este afișat doar administratorilor de site-uri).'
+    browser_update: 'Din păcate, <a href="https://discourse.org/about#browser">navigatorul tău nu este acceptat</a>. Te rugăm să <a href="https://browsehappy.com">treci la un navigator compatibil</a> pentru a vizualiza conținutul bogat, a te conecta și a răspunde.'
     permission_types:
       full: "Creează / Răspunde / Vizualizează"
       create_post: "Răspunde / Vizualizează"
@@ -4207,6 +4224,8 @@ ro:
           save_successful: "Câmp utilizator salvat."
         color_palettes:
           palette_name: "Nume"
+          duplicate: "Fă duplicat"
+          delete: "Șterge"
           color_options:
             title: "Opțiuni de culoare"
             toggle: "Selectabil de către utilizator"
@@ -4216,6 +4235,7 @@ ro:
           save_changes: "Salvează modificări"
           unsaved_changes: "Ai modificări nesalvate"
           illegal_character_in_color: "Culorile constau numai din caractere hexazecimale"
+          delete_confirm: "Ștergi această paletă de culori?"
       plugins:
         title: "Plugin-uri"
         name: "Nume"

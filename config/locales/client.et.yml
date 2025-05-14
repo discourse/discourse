@@ -1222,7 +1222,6 @@ et:
         title: "Registreerumise IP-aadress"
       avatar:
         title: "Profiilipilt"
-        header_title: "profiil, sõnumid, järjehoidjad ja eelistused"
       title:
         title: "Pealkiri"
         none: "(pole)"
@@ -2055,6 +2054,11 @@ et:
         other: "Vaatad %{count} vastust postitusele"
       in_reply_to: "Laadi algne postitus"
       view_all_posts: "Vaata kõiki postitusi"
+      localizations:
+        table:
+          actions: "Tegevused"
+          edit: "Muuda"
+          delete: "Kustuta"
       errors:
         create: "Vabandame, postituse loomisel tekkis viga. Palun proovi uuesti."
         edit: "Vabandame, postituse redigeerimisel tekkis viga. Palun proovi uuesti."
@@ -3073,8 +3077,10 @@ et:
           delete: "Kustuta"
         color_palettes:
           palette_name: "Nimi"
+          delete: "Kustuta"
           colors:
             title: "Värvid"
+          delete_confirm: "Kas kustutada see vävripalett?"
       plugins:
         title: "Plugin"
         name: "Nimi"

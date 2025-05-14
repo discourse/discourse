@@ -1477,7 +1477,6 @@ ar:
       said: "%{username}:"
       profile: "الملف الشخصي"
       profile_possessive: "الملف الشخصي لـ %{username}"
-      account_possessive: "حساب %{name}"
       mute: "كتم"
       edit: "تعديل التفضيلات"
       download_archive:
@@ -2425,7 +2424,6 @@ ar:
         title: "عنوان IP للتسجيل"
       avatar:
         title: "صورة الملف الشخصي"
-        header_title: "الملف الشخصي والرسائل والإشارات المرجعية والتفضيلات"
         name_and_description: "%{name} - %{description}"
         edit: "تعديل صورة الملف الشخصي"
       title:
@@ -3452,7 +3450,6 @@ ar:
           aria_label: التصفية حسب أقصى عدد من المشاهدات
         additional_options:
           label: "التصفية حسب عدد المنشورات وعدد مشاهدات الموضوع"
-    hamburger_menu: "القائمة"
     new_item: "جديد"
     go_back: "الرجوع"
     not_logged_in_user: "صفحة المستخدم مع ملخص عن نشاطه الحالي وتفضيلاته"
@@ -4359,6 +4356,11 @@ ar:
       in_reply_to: "تحميل المنشور الرئيسي"
       view_all_posts: "عرض جميع المنشورات"
       badge_granted_tooltip: "حصل %{username} على شارة \"%{badge_name}\" لهذا المنشور!"
+      localizations:
+        table:
+          actions: "الإجراءات"
+          edit: "تعديل"
+          delete: "حذف"
       errors:
         create: "عذرًا، حدث خطأ في أثناء إنشاء منشورك. يُرجى إعادة المحاولة."
         edit: "عذرا، حدث خطأ في أثناء تعديل منشورك. يُرجى إعادة المحاولة."
@@ -5059,7 +5061,6 @@ ar:
         today: "اليوم"
     custom_homepage:
       admin_message: 'لقد قامت إحدى السمات الخاصة بك بتفعيل المعدِّل "custom_homepage"، لكنه لا ينتج أي شيء في الموصِّل [custom-homepage]. (هذه الرسالة تظهر لمسؤولي الموقع فقط.)'
-    browser_update: 'عذرًا، <a href="https://www.discourse.org/faq/#browser">متصفحك غير مدعوم</a>. يُرجى <a href="https://browsehappy.com">التبديل إلى متصفح مدعوم</a> لعرض المحتوى الغني، وتسجيل الدخول والرد.'
     permission_types:
       full: "الإنشاء/الرد/العرض"
       create_post: "الرد/العرض"
@@ -6724,12 +6725,15 @@ ar:
           save_successful: "تم حفظ حقل المستخدم."
         color_palettes:
           palette_name: "الاسم"
+          duplicate: "تكرار"
+          delete: "حذف"
           color_options:
             toggle: "قابلة للاختيار من قِبل المستخدم"
             toggle_description: "يمكن تحديد لوحة الألوان من قِبل المستخدمين"
           colors:
             title: "الألوان"
           save_changes: "احفظ التغييرات"
+          delete_confirm: "هل تريد حذف لوحة الألوان هذه؟"
       plugins:
         title: "الإضافات"
         name: "الاسم"

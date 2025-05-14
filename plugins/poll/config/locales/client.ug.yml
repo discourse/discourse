@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 ug:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          poll: "Discourse راي سىناش"
   js:
     poll:
       voters:

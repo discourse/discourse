@@ -1101,7 +1101,6 @@ zh_CN:
       said: "%{username}："
       profile: "个人资料"
       profile_possessive: "%{username} 的个人资料"
-      account_possessive: "%{name} 的帐户"
       mute: "免打扰"
       edit: "编辑偏好设置"
       download_archive:
@@ -1903,7 +1902,7 @@ zh_CN:
         title: "注册 IP 地址"
       avatar:
         title: "个人资料照片"
-        header_title: "个人资料、消息、书签和偏好设置"
+        header_title: "通知和帐户"
         name_and_description: "%{name} - %{description}"
         edit: "编辑个人资料照片"
       title:
@@ -2355,6 +2354,12 @@ zh_CN:
       esc: "esc"
       esc_label: "忽略消息"
       ok_proceed: "好的，继续"
+      translations:
+        title: "正在翻译帖子"
+        select: "选择翻译"
+        save: "保存翻译"
+        original_content: "原始帖子内容"
+        placeholder: "在此输入帖子的翻译..."
       group_mentioned_limit:
         other: "<b>警告</b>！您提及了 <a href='%{group_link}'> %{group} </a>，但是此群组的成员数量超过了管理员配置的 %{count} 个用户的最大可提及数量限制。没有人会收到通知。"
       group_mentioned:
@@ -2658,7 +2663,7 @@ zh_CN:
       in_messages_tooltip: "切换为搜索常规话题"
       in_topics_posts: "在所有话题和帖子中"
       enter_hint: "或按 Enter"
-      mobile_enter_hint: "或点击“搜索”图标"
+      mobile_enter_hint: "或点击搜索"
       in_posts_by: "在 %{username} 的帖子中"
       recent: "最近的搜索"
       clear_recent: "清除最近的搜索"
@@ -2747,7 +2752,7 @@ zh_CN:
           aria_label: 按最大浏览量筛选
         additional_options:
           label: "按帖子数量和话题浏览量筛选"
-    hamburger_menu: "菜单"
+    hamburger_menu: "导航菜单"
     new_item: "新"
     go_back: "返回"
     not_logged_in_user: "包含当前活动和偏好设置总结的用户页面"
@@ -3407,6 +3412,14 @@ zh_CN:
       in_reply_to: "加载父帖子"
       view_all_posts: "查看所有帖子"
       badge_granted_tooltip: "%{username} 因此帖子赢得了 '%{badge_name}' 徽章！"
+      localizations:
+        table:
+          locale: "区域设置"
+          actions: "操作"
+          edit: "编辑"
+          delete: "删除"
+        add: "添加新翻译"
+        success: "翻译已成功更新"
       errors:
         create: "抱歉，创建您的帖子时出错。请重试。"
         edit: "抱歉，编辑您的帖子时出错。请重试。"
@@ -3988,7 +4001,7 @@ zh_CN:
         today: "今天"
     custom_homepage:
       admin_message: '您的一个主题已启用“custom_homepage”修改器，但在 [custom-homepage] 连接器中没有输出任何内容。（此消息只显示给网站管理员。）'
-    browser_update: '很抱歉，<a href="https://www.discourse.org/faq/#browser">您的浏览器不受支持</a>。请<a href="https://browsehappy.com">切换到支持的浏览器</a>查看富内容、登录和回复。'
+    browser_update: '很抱歉，<a href="https://discourse.org/about#browser">您的浏览器不受支持</a>。请<a href="https://browsehappy.com">切换到支持的浏览器</a>查看富内容、登录和回复。'
     permission_types:
       full: "创建/回复/查看"
       create_post: "回复/查看"
@@ -5662,6 +5675,8 @@ zh_CN:
           save_successful: "用户字段已保存。"
         color_palettes:
           palette_name: "名称"
+          duplicate: "复制"
+          delete: "删除"
           color_options:
             title: "颜色选项"
             toggle: "用户可选"
@@ -5675,6 +5690,7 @@ zh_CN:
           copy_of: "%{name}的副本"
           copy_created: '已创建“%{name}”的新副本'
           illegal_character_in_color: "颜色只应包含十六进制字符"
+          delete_confirm: "删除此调色板？"
       plugins:
         title: "插件"
         name: "名称"

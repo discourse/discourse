@@ -1575,7 +1575,6 @@ ur:
         title: "رجسٹریشن IP ایڈریس"
       avatar:
         title: "پروفائل تصویر"
-        header_title: "پروفائل، پیغامات، بک مارکس اور ترجیحات"
         name_and_description: "%{name} - %{description}"
         edit: "پروفائل تصویر میں ترمیم کریں"
       title:
@@ -2219,7 +2218,6 @@ ur:
           aria_label: زیادہ سے زیادہ آراء سے فلٹر
         additional_options:
           label: "پوسٹ کی گنتی اور موضوع کے ملاحظات کے لحاظ سے فلٹر"
-    hamburger_menu: "مینیو"
     new_item: "نیا"
     go_back: "واپس جائیں"
     not_logged_in_user: "موجودہ سرگرمی کے خلاصہ اور ترجیحات کے ساتھ صفحہِ صارف"
@@ -2748,6 +2746,11 @@ ur:
         other: "%{count} جوابات دیکھیں"
       in_reply_to: "پیرنٹ پوسٹ لوڈ کریں۔"
       view_all_posts: "تمام پوسٹس دیکھیں"
+      localizations:
+        table:
+          actions: "عمل"
+          edit: "ترمیم کریں"
+          delete: "مٹائیں"
       errors:
         create: "معذرت، آپ کی پوسٹ بنانے میں ایک خرابی کا سامنا کرنا پڑا۔ براہ مہربانی دوبارہ کوشش کریں۔"
         edit: "معذرت، آپ کی پوسٹ ترمیم کرنے میں ایک خرابی کا سامنا کرنا پڑا۔ براہ مہربانی دوبارہ کوشش کریں۔"
@@ -4159,8 +4162,11 @@ ur:
           delete: "مٹائیں"
         color_palettes:
           palette_name: "نام"
+          duplicate: "نقل"
+          delete: "مٹائیں"
           colors:
             title: "رنگ"
+          delete_confirm: "اِس رنگ کی تختی کومٹائیں؟"
       plugins:
         title: "پلَگ اِنز"
         name: "نام"
