@@ -186,12 +186,13 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
           end
 
           if skip_examples.exclude?(:"search:full_page")
-            search_page
-              .expand_dropdown
-              .click_advanced_search_icon
-              .clear_search_input
-              .type_in_search(topics.first.title)
-              .click_search_button
+            if advanced_search = first(".show-advanced-search")
+              advanced_search.click
+            else
+              search_page.expand_dropdown.click_advanced_search_icon
+            end
+
+            search_page.clear_search_input.type_in_search(topics.first.title).click_search_button
 
             expect(search_page).to have_search_result
           end
@@ -214,12 +215,13 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
           end
 
           if skip_examples.exclude?(:"search:full_page")
-            search_page
-              .expand_dropdown
-              .click_advanced_search_icon
-              .clear_search_input
-              .type_in_search(topics.first.title)
-              .click_search_button
+            if advanced_search = first(".show-advanced-search")
+              advanced_search.click
+            else
+              search_page.expand_dropdown.click_advanced_search_icon
+            end
+
+            search_page.clear_search_input.type_in_search(topics.first.title).click_search_button
 
             expect(search_page).to have_search_result
           end
