@@ -4620,7 +4620,7 @@ en:
     offline_page_message: "It looks like you are offline! Please check your network connection and try again."
 
   login_required:
-    welcome_message: "# [Welcome to %{title}](#welcome)"
+    welcome_message: "# Welcome to %{title}"
 
   upload:
     edit_reason: "downloaded local copies of images"
