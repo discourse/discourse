@@ -163,12 +163,7 @@ export default class AdminSearch extends Component {
         />
       </div>
     </div>
-    <div
-      id="admin-search-announcement"
-      class="sr-only"
-      aria-live="polite"
-      role="status"
-    >
+    <div class="sr-only" aria-live="polite" role="status">
       {{#if this.searchResults}}
         {{i18n
           "admin.search.result_count"
@@ -182,6 +177,11 @@ export default class AdminSearch extends Component {
         {{this.noResultsDescription}}
       {{/if}}
     </div>
+    {{#if (and this.filter (not this.searchResults.length) (not this.loading))}}
+      <p class="admin-search__no-results" aria-live="polite" role="status">
+        {{this.noResultsDescription}}
+      </p>
+    {{/if}}
     <div
       class="admin-search__results {{if this.searchResults '--has-results'}}"
     >
@@ -210,11 +210,6 @@ export default class AdminSearch extends Component {
             </a>
           </div>
         {{/each}}
-        {{#if (and (not this.searchResults) this.filter)}}
-          <p class="admin-search__no-results">
-            {{this.noResultsDescription}}
-          </p>
-        {{/if}}
       </ConditionalLoadingSpinner>
     </div>
   </template>
