@@ -39,7 +39,7 @@ describe "Admin User Page", type: :system do
 
     before { admin_user_page.visit(user) }
 
-    it "can list accounts with identic IPs" do
+    it "can list accounts with identical IPs" do
       find(".ip-lookup-trigger").click
 
       expect(page).to have_content("#{I18n.t("js.ip_lookup.other_accounts")}\n3")
