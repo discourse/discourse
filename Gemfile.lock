@@ -88,7 +88,7 @@ GEM
     bootsnap (1.18.4)
       msgpack (~> 1.2)
     builder (3.3.0)
-    bullet (8.0.6)
+    bullet (8.0.3)
       activesupport (>= 3.0.0)
       uniform_notifier (~> 1.11)
     byebug (12.0.0)
@@ -664,7 +664,7 @@ DEPENDENCIES
   better_errors
   binding_of_caller
   bootsnap
-  bullet
+  bullet (<= 8.0.3)
   byebug
   capybara
   capybara-playwright-driver
@@ -821,7 +821,7 @@ CHECKSUMS
   binding_of_caller (1.0.1) sha256=2b2902abff4246ddcfbc4da9b69bc4a019e22aeb300c2ff6289a173d4b90b29a
   bootsnap (1.18.4) sha256=ac4c42af397f7ee15521820198daeff545e4c360d2772c601fbdc2c07d92af55
   builder (3.3.0) sha256=497918d2f9dca528fdca4b88d84e4ef4387256d984b8154e9d5d3fe5a9c8835f
-  bullet (8.0.6) sha256=30cc4801df41bb4b80e866dd60dbcee37a6bc74d6912e43a520168c8d2ea060a
+  bullet (8.0.3) sha256=60e41446500a7e59272b3c2398cded214deec3662e883009de5bf30028a0642c
   byebug (12.0.0) sha256=d4a150d291cca40b66ec9ca31f754e93fed8aa266a17335f71bb0afa7fca1a1e
   capybara (3.40.0) sha256=42dba720578ea1ca65fd7a41d163dd368502c191804558f6e0f71b391054aeef
   capybara-playwright-driver (0.5.6) sha256=ef461ab97f9fca7df4ecdd10bb1b076d9246f804e89fc3ae127cf1677d855e26
