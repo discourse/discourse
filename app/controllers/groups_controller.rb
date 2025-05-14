@@ -370,7 +370,7 @@ class GroupsController < ApplicationController
   end
 
   def add_members
-    group = Group.find(params[:name])
+    group = Group.find(params[:id])
     guardian.ensure_can_edit!(group)
 
     users = users_from_params.to_a

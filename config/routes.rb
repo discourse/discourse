@@ -1163,6 +1163,7 @@ Discourse::Application.routes.draw do
           delete "members" => "groups#remove_member"
           delete "leave" => "groups#leave"
           put "handle_membership_request" => "groups#handle_membership_request"
+          put "members" => "groups#add_members"
         end
       end
 
@@ -1186,7 +1187,6 @@ Discourse::Application.routes.draw do
         get "manage/tags" => "groups#show"
         get "manage/logs" => "groups#show"
         get "permissions" => "groups#permissions"
-        put "members" => "groups#add_members"
 
         post "request_membership" => "groups#request_membership"
 
