@@ -5398,7 +5398,7 @@ en:
           title: "Fonts"
           form:
             more_fonts: "More fonts"
-            less_fonts: "Less fonts"
+            fewer_fonts: "Fewer fonts"
             saved: "Font settings are saved."
             base_font:
               title: "Base font"

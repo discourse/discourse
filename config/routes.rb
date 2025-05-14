@@ -429,7 +429,7 @@ Discourse::Application.routes.draw do
         get "trust-levels" => "site_settings#index"
         get "group-permissions" => "site_settings#index"
         get "/logo" => "logo#index"
-        get "/fonts" => "logo#index"
+        get "/fonts" => "fonts#index"
         put "/logo" => "logo#update"
         put "/fonts" => "fonts#update"
         get "colors/:id" => "color_palettes#show"
