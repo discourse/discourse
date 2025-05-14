@@ -3,6 +3,8 @@ import { hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import { isBlank } from "@ember/utils";
+import AboutPageExtraGroups from "discourse/components/about-page-extra-groups";
 import AboutPageUsers from "discourse/components/about-page-users";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import icon from "discourse/helpers/d-icon";
@@ -230,6 +232,13 @@ export default class AboutPage extends Component {
     return configs;
   }
 
+  get showExtraGroups() {
+    return (
+      this.siteSettings.show_additional_about_groups === true &&
+      !isBlank(this.siteSettings.about_page_extra_groups)
+    );
+  }
+
   <template>
     {{#if this.currentUser.admin}}
       <p>
@@ -294,6 +303,9 @@ export default class AboutPage extends Component {
           @connectorTagName="section"
           @outletArgs={{hash model=@model}}
         />
+        {{#if this.showExtraGroups}}
+          <AboutPageExtraGroups />
+        {{/if}}
       </div>
 
       <div class="about__right-side">
