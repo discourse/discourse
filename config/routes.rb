@@ -1151,6 +1151,8 @@ Discourse::Application.routes.draw do
                 only: %i[index new edit update],
                 id: RouteFormat.username,
                 path: root_path do
+        post "test_email_settings"
+
         collection do
           get "check-name" => "groups#check_name"
           get "custom/new" => "groups#new", :constraints => StaffConstraint.new
@@ -1202,7 +1204,6 @@ Discourse::Application.routes.draw do
         get "mentionable" => "groups#mentionable"
         get "messageable" => "groups#messageable"
         get "logs" => "groups#histories"
-        post "test_email_settings" => "groups#test_email_settings"
       end
     end
 

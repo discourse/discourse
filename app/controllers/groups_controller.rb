@@ -713,14 +713,14 @@ class GroupsController < ApplicationController
   end
 
   def test_email_settings
-    params.require(:name)
+    params.require(:group_id)
     params.require(:protocol)
     params.require(:port)
     params.require(:host)
     params.require(:username)
     params.require(:password)
 
-    group = Group.find(params[:name])
+    group = Group.find(params[:group_id])
     guardian.ensure_can_edit!(group)
 
     RateLimiter.new(current_user, "group_test_email_settings", 5, 1.minute).performed!
