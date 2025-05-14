@@ -8,17 +8,15 @@ acceptance("Admin - Users List", function (needs) {
 
   needs.pretender((server, helper) => {
     server.get("/admin/users/list/silenced.json", () =>
-      helper.response({
-        users: [
-          {
-            id: 2,
-            username: "kris",
-            email: "<small>kris@example.com</small>",
-            silenced_at: "2020-01-01T00:00:00.000Z",
-            silence_reason: "<strong>spam</strong>",
-          },
-        ],
-      })
+      helper.response([
+        {
+          id: 2,
+          username: "kris",
+          email: "<small>kris@example.com</small>",
+          silenced_at: "2020-01-01T00:00:00.000Z",
+          silence_reason: "<strong>spam</strong>",
+        },
+      ])
     );
   });
 

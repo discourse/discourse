@@ -21,12 +21,7 @@ export default class AdminUser extends User {
   static findAll(query, userFilter) {
     return ajax(`/admin/users/list/${query}.json`, {
       data: userFilter,
-    }).then((result) => {
-      return {
-        users: result.users.map((u) => AdminUser.create(u)),
-        meta: result.meta,
-      };
-    });
+    }).then((users) => users.map((u) => AdminUser.create(u)));
   }
 
   adminUserView = true;
