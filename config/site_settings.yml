@@ -1928,7 +1928,7 @@ files:
     type: file_size_restriction
   max_attachment_size_kb:
     client: true
-    default: 4096
+    default: 10240
     max: 1024000
     type: file_size_restriction
   system_user_max_attachment_size_kb:
