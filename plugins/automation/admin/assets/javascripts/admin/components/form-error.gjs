@@ -7,4 +7,5 @@ const FormError = <template>
     </div>
   {{/if}}
 </template>;
+
 export default FormError;

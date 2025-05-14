@@ -56,6 +56,8 @@ RSpec.describe WebHookPostSerializer do
       :topic_filtered_posts_count,
       :topic_archetype,
       :category_slug,
+      :has_post_localizations,
+      :post_localizations,
     )
   end
 

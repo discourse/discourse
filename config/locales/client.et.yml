@@ -1222,7 +1222,6 @@ et:
         title: "Registreerumise IP-aadress"
       avatar:
         title: "Profiilipilt"
-        header_title: "profiil, sõnumid, järjehoidjad ja eelistused"
       title:
         title: "Pealkiri"
         none: "(pole)"
@@ -2055,6 +2054,11 @@ et:
         other: "Vaatad %{count} vastust postitusele"
       in_reply_to: "Laadi algne postitus"
       view_all_posts: "Vaata kõiki postitusi"
+      localizations:
+        table:
+          actions: "Tegevused"
+          edit: "Muuda"
+          delete: "Kustuta"
       errors:
         create: "Vabandame, postituse loomisel tekkis viga. Palun proovi uuesti."
         edit: "Vabandame, postituse redigeerimisel tekkis viga. Palun proovi uuesti."
@@ -2671,6 +2675,7 @@ et:
       panels:
         forum:
           label: Foorum
+      search: "Otsi"
       footer:
         interface_color_selector:
           light: "Hele"
@@ -3072,8 +3077,10 @@ et:
           delete: "Kustuta"
         color_palettes:
           palette_name: "Nimi"
+          delete: "Kustuta"
           colors:
             title: "Värvid"
+          delete_confirm: "Kas kustutada see vävripalett?"
       plugins:
         title: "Plugin"
         name: "Nimi"
@@ -3185,6 +3192,7 @@ et:
           desktop: "Töölaud"
           mobile: "Mobiil"
           preview: "Eelvaade"
+          default: "Aktiivne"
           is_default: "Kujundus on vaikimisi sisse lülitatud"
           user_selectable: "Kasutajad saavad teemat valida"
           color_scheme: "Värvipalett"

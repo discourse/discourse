@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .form-kit__control-icon {
   width: 100% !important;
   min-width: var(--form-kit-small-input);
@@ -19,7 +21,7 @@
     padding-inline: 0.65em !important;
     height: 2em;
 
-    @include breakpoint(mobile-large) {
+    @include viewport.until(sm) {
       height: 2.25em;
     }
 

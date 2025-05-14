@@ -1631,7 +1631,6 @@ lt:
         title: "Registracijos IP adresas"
       avatar:
         title: "Profilio nuotrauka"
-        header_title: "Profilis, žinutės, žymės ir nustatymai"
         name_and_description: "%{name} - %{description}"
         edit: "Redaguoti profilio nuotrauką"
       title:
@@ -2260,7 +2259,6 @@ lt:
           aria_label: filtruoti pagal daugiausia peržiūrų
         additional_options:
           label: "Filtruoti pagal įrašų skaičių ir temos peržiūras"
-    hamburger_menu: "meniu"
     new_item: "Nauja"
     go_back: "grįžti atgal"
     not_logged_in_user: "Vartotojo puslapis su veiksmų ir nustatymų aprašymu"
@@ -2773,6 +2771,11 @@ lt:
         other: "%{count} žmonėms patinka šis įrašas."
       in_reply_to: "Įkelti pirminį įrašą"
       view_all_posts: "Peržiūrėti visus įrašus"
+      localizations:
+        table:
+          actions: "Veiksmai"
+          edit: "Redaguoti"
+          delete: "Pašalinti"
       errors:
         create: "Atsiprašome, įvyko klaida kuriant įrašą. Prašome pamėginti dar kartą."
         edit: "Atsiprašome, įvyko klaida redaguojant įrašą. Prašome pamėginti dar kartą."
@@ -3621,6 +3624,7 @@ lt:
               content: "Peržiūra"
             invite:
               content: "Kviesti"
+      search: "Paieška"
       footer:
         interface_color_selector:
           light: "Šviesi"
@@ -4128,8 +4132,10 @@ lt:
           delete: "Pašalinti"
         color_palettes:
           palette_name: "Vardas"
+          delete: "Pašalinti"
           colors:
             title: "Spalvos"
+          delete_confirm: "Ištrinti šią spalvų paletę?"
       plugins:
         title: "Plugins"
         name: "Vardas"
@@ -4258,6 +4264,7 @@ lt:
           extra_files_upload: "Norėdami peržiūrėti šiuos failus, eksportuokite temą."
           extra_files_remote: "Eksportuokite temą arba patikrinkite „git“ saugyklą, kad peržiūrėtumėte šiuos failus."
           preview: "Peržiūrėti"
+          default: "Aktyvūs"
           is_default: "Tema įgalinta pagal nutylėjimą"
           user_selectable: "Temą gali pasirinkti vartotojai"
           auto_update: "Automatinis naujinimas, kai Discourse atnaujinamas"
@@ -4329,8 +4336,6 @@ lt:
           required_version:
             minimum: "Reikalinga Discourse %{version} arba naujesnė versija."
             maximum: "Reikalinga Discourse %{version} arba senesnė versija."
-          update_to_latest: "Atnaujinti iki paskutinės"
-          check_for_updates: "Tikrinti atnaujinimus "
           up_to_date: "Tema yra naujausia, psakutinis tikrinimas: "
           add: "Pridėti"
           theme_settings: "Temos nustatymai"

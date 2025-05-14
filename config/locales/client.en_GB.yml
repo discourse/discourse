@@ -143,6 +143,7 @@ en_GB:
         color_palettes:
           colors:
             title: "Colours"
+          delete_confirm: "Delete this colour palette?"
       backups:
         upload:
           error: "There has been an error whilst uploading '%{filename}': %{message}"

@@ -121,6 +121,7 @@ onmessage = async function (e) {
     case "compress":
       try {
         DedicatedWorkerGlobalScope.debugMode = e.data.settings.debug_mode;
+
         let optimized = await optimize(
           e.data.file,
           e.data.fileName,

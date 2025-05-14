@@ -39,9 +39,6 @@ acceptance("Admin Sidebar - Sections", function (needs) {
       .dom(".sidebar-section[data-section-name='admin-root']")
       .exists("root section is displayed");
     assert
-      .dom(".sidebar-section[data-section-name='admin-account']")
-      .exists("account section is displayed");
-    assert
       .dom(".sidebar-section[data-section-name='admin-reports']")
       .exists("reports section is displayed");
     assert

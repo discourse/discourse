@@ -1700,4 +1700,22 @@ HTML
       expect(queries_for_two.size).to eq(queries_for_one.size)
     end
   end
+
+  describe "#screenshot_url" do
+    it "returns nil when no screenshot is set" do
+      expect(theme.screenshot_url).to be_nil
+    end
+
+    it "returns the upload URL when screenshot is set" do
+      upload = UploadCreator.new(file_from_fixtures("logo.png"), "logo.png").create_for(-1)
+      theme.set_field(
+        target: :common,
+        name: "screenshot",
+        upload_id: upload.id,
+        type: :theme_screenshot_upload_var,
+      )
+      theme.save!
+      expect(theme.screenshot_url).to eq(upload.url)
+    end
+  end
 end

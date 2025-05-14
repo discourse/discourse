@@ -185,6 +185,16 @@
   );
 }
 
+.btn-success {
+  @include btn(
+    $text-color: var(--secondary),
+    $bg-color: var(--success),
+    $icon-color: var(--success-low),
+    $hover-bg-color: var(--success-hover),
+    $hover-icon-color: var(--success-low)
+  );
+}
+
 // ✘ and ✔ buttons
 // --------------------------------------------------
 .btn.cancel {

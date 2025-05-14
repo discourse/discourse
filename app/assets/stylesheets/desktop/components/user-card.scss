@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 // shared styles for user and group cards
 .user-card,
 .group-card {
@@ -30,7 +32,7 @@
     }
   }
 
-  @include breakpoint("mobile-extra-large") {
+  @include viewport.until(sm) {
     // important for keeping the usercard uncropped
     // at 200% - 400% zoom levels
     --avatar-width: 4em;

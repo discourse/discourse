@@ -122,4 +122,5 @@ const Categories = <template>
     />
   </span>
 </template>;
+
 export default Categories;

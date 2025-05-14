@@ -58,10 +58,6 @@ export default class LoginRoute extends DiscourseRoute {
       );
     }
 
-    if (this.siteSettings.login_required) {
-      controller.set("showLogin", false);
-    }
-
     if (this.login.isOnlyOneExternalLoginMethod) {
       if (this.siteSettings.auth_immediately) {
         controller.set("isRedirectingToExternalAuth", true);

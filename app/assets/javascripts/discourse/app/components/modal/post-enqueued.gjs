@@ -26,4 +26,5 @@ const PostEnqueued = <template>
     </:footer>
   </DModal>
 </template>;
+
 export default PostEnqueued;

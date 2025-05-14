@@ -1323,6 +1323,18 @@ class Post < ActiveRecord::Base
     PrettyText.extract_mentions(Nokogiri::HTML5.fragment(cooked))
   end
 
+  def has_localization?(locale)
+    post_localizations.exists?(locale: locale.to_s.sub("-", "_"))
+  end
+
+  def in_user_locale?
+    locale == I18n.locale.to_s
+  end
+
+  def get_localization(locale = I18n.locale)
+    post_localizations.find_by(locale: locale.to_s.sub("-", "_"))
+  end
+
   private
 
   def parse_quote_into_arguments(quote)

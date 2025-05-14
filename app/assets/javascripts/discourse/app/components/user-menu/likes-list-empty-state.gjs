@@ -19,4 +19,5 @@ const LikesListEmptyState = <template>
     </div>
   </div>
 </template>;
+
 export default LikesListEmptyState;

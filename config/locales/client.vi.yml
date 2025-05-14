@@ -1560,7 +1560,6 @@ vi:
         title: "Địa chỉ IP đăng ký"
       avatar:
         title: "Ảnh đại diện"
-        header_title: "hồ sơ cá nhân, tin nhắn, đánh dấu và sở thích"
         name_and_description: "%{name} - %{description}"
         edit: "Chỉnh sửa ảnh đại diện"
       title:
@@ -2772,6 +2771,11 @@ vi:
         other: "Xem %{count} câu trả lời cho"
       in_reply_to: "Tải bài đăng gốc"
       view_all_posts: "Xem tất cả các bài viết"
+      localizations:
+        table:
+          actions: "Hành động"
+          edit: "Sửa"
+          delete: "Xóa"
       errors:
         create: "Xin lỗi, có lỗi xảy ra khi tạo bài viết của bạn. Vui lòng thử lại."
         edit: "Xin lỗi, có lỗi xảy ra khi sửa bài viết của bạn. Vui lòng thử lại."
@@ -3637,6 +3641,7 @@ vi:
               content: "Review"
             invite:
               content: "Mời"
+      search: "Tìm kiếm"
     until: "Cho đến khi:"
     form_templates:
       upload_field:
@@ -4217,8 +4222,11 @@ vi:
           delete: "Xóa"
         color_palettes:
           palette_name: "Tên"
+          duplicate: "Nhân bản"
+          delete: "Xóa"
           colors:
             title: "Màu sắc"
+          delete_confirm: "Xóa bảng màu này?"
       plugins:
         title: "Plugin"
         name: "Tên"
@@ -4356,6 +4364,7 @@ vi:
           extra_files_upload: "Xuất chủ đề để xem các tệp này."
           extra_files_remote: "Xuất Theme hoặc kiểm tra kho lưu trữ git để xem các tệp này."
           preview: "Xem trước"
+          default: "Kích hoạt"
           is_default: "Themes được bật theo mặc định"
           user_selectable: "Themes có thể được lựa chọn bởi người dùng"
           auto_update: "Tự động cập nhật khi Discourse được cập nhật"
@@ -4430,8 +4439,6 @@ vi:
             error: "Chủ đề này đã tự động bị tắt vì nó không tương thích với phiên bản Discourse này."
             minimum: "Yêu cầu phiên bản Discourse %{version} hoặc cao hơn."
             maximum: "Yêu cầu phiên bản Discourse %{version} hoặc thấp hơn."
-          update_to_latest: "Cập nhật lên mới nhất"
-          check_for_updates: "Kiểm tra cập nhật"
           updating: "Đang cập nhật…"
           up_to_date: "Chủ đề được cập nhật, kiểm tra lần cuối:"
           has_overwritten_history: "Phiên bản chủ đề hiện tại không còn tồn tại vì lịch sử Git đã bị ghi đè bởi một lực đẩy."

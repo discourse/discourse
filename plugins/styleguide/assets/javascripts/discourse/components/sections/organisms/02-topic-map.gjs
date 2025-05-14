@@ -9,4 +9,5 @@ const TopicMapOrganism = <template>
     />
   </StyleguideExample>
 </template>;
+
 export default TopicMapOrganism;

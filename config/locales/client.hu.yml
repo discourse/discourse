@@ -1177,7 +1177,6 @@ hu:
       said: "%{username}:"
       profile: "Profil"
       profile_possessive: "%{username} profilja"
-      account_possessive: "%{name} fiókja"
       mute: "Némítás"
       edit: "Beállítások szerkesztése"
       download_archive:
@@ -2012,7 +2011,6 @@ hu:
         title: "Regisztrációkor használt IP-cím"
       avatar:
         title: "Profilkép"
-        header_title: "profil, üzenetek, könyvjelzők és beállítások"
         name_and_description: "%{name} – %{description}"
         edit: "Profilkép szerkesztése"
       title:
@@ -2823,7 +2821,6 @@ hu:
       in_messages_tooltip: "váltás a szokásos témák keresésére"
       in_topics_posts: "az összes témában és bejegyzésben"
       enter_hint: "vagy nyomjon Entert"
-      mobile_enter_hint: "vagy koppintson a Keresés ikonra"
       in_posts_by: "%{username} bejegyzéseiben"
       recent: "Legutóbbi keresések"
       clear_recent: "Legutóbbi keresések törlése"
@@ -2912,7 +2909,6 @@ hu:
           aria_label: szűrés a megtekintések legnagyobb száma szerint
         additional_options:
           label: "Szűrés hozzászólásszám és témamegtekintés szerint"
-    hamburger_menu: "menü"
     new_item: "új"
     go_back: "visszalépés"
     not_logged_in_user: "felhasználói oldal a jelenlegi tevékenységek és beállítások összesítésével"
@@ -3625,6 +3621,12 @@ hu:
       in_reply_to: "Szülőbejegyzés betöltése"
       view_all_posts: "Az összes válasz megtekintése"
       badge_granted_tooltip: "%{username} megkapta a „%{badge_name}” jelvényt ezért a bejegyzésért!"
+      localizations:
+        table:
+          locale: "Nyelv"
+          actions: "Műveletek"
+          edit: "Szerkesztés"
+          delete: "Törlés"
       errors:
         create: "Sajnos hiba történt a bejegyzése létrehozása során. Próbálja újra."
         edit: "Sajnos hiba történt a bejegyzése szerkesztése során. Próbálja újra."
@@ -4238,7 +4240,6 @@ hu:
         today: "Utolsó 24 óra"
     custom_homepage:
       admin_message: 'Az egyik téma engedélyezte a "custom_homepage" módosítót, de nem ad ki semmit a [custom-homepage] csatlakozóban. (Ez az üzenet csak az oldal adminisztrátorainak jelenik meg.)'
-    browser_update: 'Sajnos <a href="https://www.discourse.org/faq/#browser">a böngésződ nem támogatott</a>. Kérlek, <a href="https://browsehappy.com">válts támogatott böngészőre</a> a gazdag tartalom megtekintéséhez, a bejelentkezéshez és a válaszadáshoz.'
     permission_types:
       full: "Létrehozás / Válaszolás / Megtekintés"
       create_post: "Válaszolás / Megtekintés"
@@ -4746,6 +4747,7 @@ hu:
       back_to_forum: "Vissza a fórumra"
       collapse_all_sections: "Minden szakasz összezárása"
       expand_all_sections: "Minden szakasz kibontása"
+      search: "Keresés"
       footer:
         interface_color_selector:
           light: "Világos"
@@ -4855,6 +4857,8 @@ hu:
     safari_15_warning: "Az Ön böngészője hamarosan nem lesz kompatibilis ezzel a közösséggel. Ha továbbra is részt szeretne venni itt, frissítse böngészőjét, vagy <a href='%{url}'>tudjon meg többet</a>."
     discovery:
       headings:
+        all:
+          default: "Minden %{filter} téma"
         categories: "Minden kategória"
         filter_labels:
           latest: "Legutóbbi"
@@ -5919,6 +5923,8 @@ hu:
           save_successful: "Felhasználói mező mentve."
         color_palettes:
           palette_name: "Név"
+          duplicate: "Megkettőz"
+          delete: "Törlés"
           color_options:
             title: "Színbeállítások"
             toggle: "Felhasználó által választható"
@@ -5932,6 +5938,7 @@ hu:
           copy_of: "%{name} másolata"
           copy_created: '%{name} Új példánya létrehozva'
           illegal_character_in_color: "A színek csak hexadecimális karakterekből állnak."
+          delete_confirm: "Törli ezt a színpalettát?"
       plugins:
         title: "Bővítmények"
         name: "Név"
@@ -6103,10 +6110,15 @@ hu:
           extra_files_upload: "Téma exportálása a fájlok megtekintéséhez."
           extra_files_remote: "A fájlok megtekintéséhez exportálja a témát, vagy ellenőrizze a git-tárat."
           preview: "Előnézet"
+          default: "Aktív"
           settings_editor: "Beállítások szerkesztő"
           show_advanced: "Haladó megjelenítése"
           is_default: "Ez a téma alapértelmezetten van bekapcsolva."
           user_selectable: "A téma a felhasználók által választható"
+          user_selectable_badge_label: "Felhasználó által választható"
+          user_selectable_button_label: "Felhasználók kiválaszthatják"
+          user_selectable_unavailable_button_label: "Elérhetetlenné tétel a felhasználók számára"
+          broken_badge_label: "Hibás téma"
           color_scheme_user_selectable: "A színpalettát a felhasználók választhatják ki"
           auto_update: "Automatikus frissítés a Discourse frissítésekor"
           color_scheme: "Színpaletta"
@@ -6124,9 +6136,10 @@ hu:
           convert_theme_alert_generic: "Biztos, hogy ezt a témát összetevővé akarja konvertálni?"
           convert_theme_tooltip: "A téma átalakítása összetevővé"
           inactive_themes: "Inaktív témák:"
-          set_default_theme: "Beállítás alapértelmezettként"
-          default_theme: "Alapértelmezett téma"
+          set_default_theme: "Beállítás aktívként"
+          default_theme: "Aktív téma"
           set_default_success: "Alapértelmezett téma: %{theme}"
+          setting_was_saved: "A témabeállítás mentésre került"
           install_success: "%{theme} sikeresen telepítve!"
           inactive_components: "Nem használt összetevők:"
           selected:
@@ -6138,6 +6151,7 @@ hu:
           disabled_component_tooltip: "Ez az összetevő le van tiltva"
           default_theme_tooltip: "Ez a téma a webhely alapértelmezett témája"
           updates_available_tooltip: "Frissítések érhetők el ehhez a témához"
+          update_available: "Frissítésre szorul"
           and_x_more:
             one: "és még további %{count}."
             other: "és még további %{count}."

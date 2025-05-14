@@ -2624,7 +2624,6 @@ he:
     default_navigation_menu_tags: "התגיות הנבחרות תוצגנה תחת סעיף התגיות של תפריט הניווט כברירת מחדל."
     experimental_new_new_view_groups: 'לאפשר רשימת נושאים חדשה המשלבת נושאים שלא נקראו וחדשים ולקשר אליה את „הכול” בסרגל הצד.'
     glimmer_post_stream_mode: "בקרה האם להשתמש במימוש תזרים הפוסט החדש ‚glimmer’. הערך ‚auto’ יפעיל אותו אוטומטית לאחר שכל ערכות העיצוב והתוספים שלך מוענים. המימוש הזה נמצא בפיתוח כרגע, ולא מיועד לשימוש יומיומי. לא לפתח על גביו ערכות עיצוב/תוספים עד שהמימוש יושלם ויוכרז רשמית."
-    glimmer_post_stream_mode_auto_groups: "הפעלת מימוש תפריט הפוסט החדש ‚glimmer’ במצב ‚auto’ לקבוצת המשתמשים שצוינה. המימוש הזה בפיתוח כרגע ואינו מיועד לשימוש יומיומי. לא לפתח ערכות עיצוב/תוספים על גביו עד שהמימוש יושלם ויוכרז רשמית."
     experimental_form_templates: "יש להפעיל את יכולת תבניות הטפסים. אפשר לנהל את התבניות דרך <a href='%{base_path}/admin/customize/form-templates'>התאמה / תבניות</a>."
     show_preview_for_form_templates: "הפעלת התצוגה המקדימה של יכולת תבניות הטפסים"
     lazy_load_categories_groups: "לטעון בעצלות את פרטי הקטגוריה רק למשתמשים בקבוצות האלה. הגדרה זו משפרת את הביצועים באתרים עם הרבה קטגוריות."
@@ -2634,6 +2633,8 @@ he:
     about_page_hidden_groups: "לא להציג חברים מקבוצות מסוימות בדף ‎/about."
     adobe_analytics_tags_url: "כתובת תגיות Adobe Analytics‏ (`https://assets.adobedtm.com/...‎`)"
     view_raw_email_allowed_groups: "קבוצות שיכולות לצפות בתוכן הגולמי של הודעות הדוא״ל של פוסט אם הוא נוצר מהודעת דוא״ל נכנסת. כולל כותרות דוא״ל ופירוט טכני נוסף."
+    experimental_content_localization: "הצגת תוכן מקומי עבור משתמשים בהתבסס על העדפות השפה שלהם. תוכן כזה עשוי לכלול קטגוריות, תגיות, פוסטים ונושאים. היכולת הזאת זוכה למאמצי פיתוח נרחבים."
+    experimental_content_localization_allowed_groups: 'קבוצות שמורשות לעדכן תוכן מקומי. נדרשת הפעלת „תרגום ניסיוני של תוכן”.'
     errors:
       invalid_css_color: "צבע שגוי. נא למלא את שם הצבע או ערך הקסדצימלי."
       invalid_email: "כתובת דוא״ל שגויה."
@@ -4374,7 +4375,7 @@ he:
     images:
       too_large: "סליחה, אך התמונה שאתם מנסים להעלות גדולה מידי. (הגודל המקסימלי הוא %{max_size_kb}KB), אנא שנו את הגודל ונסו שנית."
       too_large_humanized: "התמונה המועמדת לשליחה גדולה מדי (הגודל המרבי הוא %{max_size}), נא לשנות את הגודל ולנסות שוב."
-      larger_than_x_megapixels: "התמונה שניסית להעלות גדולה מדי (הגודל המרבי הוא %{max_image_megapixels} מגה-פיקסלים), נא לשנות את גודלה ולנסות שוב."
+      larger_than_x_megapixels: "התמונה עם שם הקובץ %{original_filename} גדולה מדי (הממדים המרביים הם %{max_image_megapixels} מגה־פיקסלים), נא לשנות את גודלה ולנסות שוב."
       size_not_found: "מצטערים, אבל לא יכולנו לקבוע את גודל התמונה. אולי יש בעיה טכנית בתמונה?"
     placeholders:
       too_large: "(תמונה שגודלה חורג מ־%{max_size_kb} ק״ב)"
@@ -5301,6 +5302,12 @@ he:
       restored: שוחזר
     bulk_user_delete: "נמחק בפעולת מחיקה מרוכזת"
     cli_bulk_post_delete: "נמחק במרוכז דרך משימת rake"
+    api_post_delete: "נמחק דרך ה־API"
+    reminder_deleted: "הוחלף בתזכורת חדשה"
+    user_associated_posts_deleted: "המשתמש הושמד"
+    imap_email_deleted: "הודעת הדוא״ל נמחקה משרת ה־IMAP"
+    imap_email_marked_as_spam: "הודעת הדוא״ל הועברה לספאם בשרת ה־IMAP"
+    auto_deleted_hidden_posts: "פוסטים מוסתרים שהושמדו אוטומטית"
   reviewables:
     already_handled: "תודה לך, כבר בדקנו את הפוסט הזה והחלטנו שאין צורך לסמן אותו בדגל פעם נוספת."
     already_handled_and_user_not_exist: "תודה, אבל כבר נערכה בדיקה והמשתמש הזה אינו קיים עוד."
@@ -5505,6 +5512,8 @@ he:
       duplicate_ids: "יש מזהים כפולים"
       reserved_id: "יש מילת מפתח שמורה בתור מזהה: %{id}"
       unsafe_description: "יש תיאור HTML מפוקפק"
+  content_localization:
+    not_allowed: "אין לך הרשאה לתרגם את התוכן הזה."
   activemodel:
     errors:
       <<: *errors

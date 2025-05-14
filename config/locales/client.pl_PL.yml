@@ -1340,7 +1340,6 @@ pl_PL:
       said: "%{username}:"
       profile: "Profil"
       profile_possessive: "profil %{username}"
-      account_possessive: "Konto %{name}"
       mute: "Wycisz"
       edit: "Edytuj ustawienia"
       download_archive:
@@ -1705,6 +1704,8 @@ pl_PL:
         choose: "Wybierz hasło"
         verify_identity: "Aby kontynuować, zweryfikuj swoją tożsamość."
         title: "Reset hasła"
+        remove: "Usuń hasło"
+        remove_detail: "Twoje konto nie będzie już dostępne za pomocą hasła, chyba że je zresetujesz."
       second_factor_backup:
         title: "Kody zapasowe weryfikacji dwuskładnikowej"
         regenerate: "Odnów"
@@ -2235,7 +2236,6 @@ pl_PL:
         title: "Adres IP rejestracji"
       avatar:
         title: "Awatar"
-        header_title: "profil, wiadomości, zakładki i ustawienia"
         name_and_description: "%{name} - %{description}"
         edit: "Edytuj zdjęcie profilowe"
       title:
@@ -2274,6 +2274,7 @@ pl_PL:
     user_tips:
       button: "Zrozumiano!"
       skip: "Pomiń wskazówki"
+      dont_show_again: "Nie pokazuj tego ponownie"
       first_notification:
         title: "Twoje pierwsze powiadomienie!"
         content: "Powiadomienia służą do informowania na bieżąco o tym, co dzieje się w społeczności."
@@ -2315,6 +2316,7 @@ pl_PL:
     multi_select:
       no_results: "Brak wyników"
       search: "Szukaj…"
+      label: "Wybierz opcje"
     form_kit:
       reset: Przywróć
       optional: opcjonalnie
@@ -2841,6 +2843,8 @@ pl_PL:
       uploading: "Przesyłanie…"
       show_preview: "pokaż podgląd"
       hide_preview: "ukryj podgląd"
+      switch_to_markdown: "Przełącz się na standardowy edytor Markdown (%{keyboardShortcut})"
+      switch_to_rich_text: "Przełącz się na nowy edytor tekstu sformatowanego (%{keyboardShortcut})"
       quote_post_title: "Cytuj cały wpis"
       bold_label: "B"
       bold_title: "Pogrubienie"
@@ -3214,7 +3218,6 @@ pl_PL:
           aria_label: filtrować według maksymalnych wyświetleń
         additional_options:
           label: "Filtruj według liczby postów i wyświetleń tematu"
-    hamburger_menu: "menu"
     new_item: "nowy"
     go_back: "wróć"
     not_logged_in_user: "strona użytkownika z podsumowaniem bieżących działań i ustawień"
@@ -4028,6 +4031,12 @@ pl_PL:
       in_reply_to: "Załaduj post nadrzędny"
       view_all_posts: "Wyświetl wszystkie posty"
       badge_granted_tooltip: "%{username} zdobył odznakę '%{badge_name}' za ten post!"
+      localizations:
+        table:
+          locale: "Język"
+          actions: "Akcje"
+          edit: "Edytuj"
+          delete: "Usuń"
       errors:
         create: "Przepraszamy, podczas tworzenia twojego wpisu wystąpił błąd. Spróbuj ponownie."
         edit: "Przepraszamy, podczas edytowania twojego wpisu wystąpił błąd. Spróbuj ponownie."
@@ -4255,10 +4264,14 @@ pl_PL:
       settings: "Ustawienia"
       topic_template: "Szablon"
       tags: "Tagi"
+      localizations: "Języki"
       localization:
+        locale: "Język"
         name: "Nazwa"
         description: "Opis"
+        add: "Dodaj nowy język"
         remove: "Usuń"
+        hint: "Obecnie nie ma żadnych lokalizacji dla tej kategorii. Kliknij \"Dodaj nowy język\" poniżej, aby rozpocząć dodawanie lokalizacji."
       tags_allowed_tags: "Zabroń następujących tagów w tej kategorii: "
       tags_allowed_tag_groups: "Zabroń następujących grup tagów w tej kategorii:"
       tags_placeholder: "(Opcjonalnie) lista dozwolonych tagów"
@@ -4681,7 +4694,6 @@ pl_PL:
         today: "Dzisiaj"
     custom_homepage:
       admin_message: 'Jeden z Twoich motywów włączył modyfikator „custom_homepage”, ale nie wyświetla on niczego w łączniku [custom-homepage]. (Ta wiadomość jest wyświetlana tylko administratorom strony.)'
-    browser_update: 'Niestety, <a href="https://www.discourse.org/faq/#browser">twoja przeglądarka nie jest obsługiwana</a>. Proszę <a href="https://browsehappy.com">przełączyć się na obsługiwaną przeglądarkę</a>, aby móc oglądać bogatą zawartość, zalogować się i odpowiedzieć.'
     permission_types:
       full: "tworzyć / odpowiadać / przeglądać"
       create_post: "odpowiadać / przeglądać"
@@ -4707,6 +4719,7 @@ pl_PL:
       shortcut_delimiter_newline: "%{shortcut1}<br>%{shortcut2}"
       title: "Skróty klawiszowe"
       short_title: "Skróty"
+      search_ctrl_f_tip: "Aby przeszukać całe forum, naciśnij <kbd>/</kbd>"
       jump_to:
         title: "Skocz do"
         home: "%{shortcut} Strona główna"
@@ -5232,6 +5245,7 @@ pl_PL:
       back_to_forum: "Powrót do forum"
       collapse_all_sections: "Zwiń wszystkie sekcje"
       expand_all_sections: "Rozwiń wszystkie sekcje"
+      search: "Szukaj"
       footer:
         interface_color_selector:
           light: "Jasny"
@@ -5349,6 +5363,10 @@ pl_PL:
     safari_15_warning: "Twoja przeglądarka wkrótce będzie niekompatybilna z tą społecznością. Aby nadal w niej uczestniczyć, zaktualizuj przeglądarkę lub <a href='%{url}'>dowiedz się więcej</a>."
     discovery:
       headings:
+        all:
+          default: "Wszystkie tematy %{filter}"
+        no_tags:
+          all_default: "Wszystkie tematy bez tagów"
         categories: "Wszystkie kategorie"
         filter_labels:
           latest: "Najnowsza"
@@ -5422,6 +5440,7 @@ pl_PL:
           title: "Logowanie i uwierzytelnianie"
           header_description: "Skonfiguruj sposób logowania i uwierzytelniania użytkowników, sekrety i klucze, dostawców OAuth2 i nie tylko."
         logo_and_fonts:
+          title: "Logo i czcionki"
           header_description: "Dostosuj odmiany logo i czcionek swojej witryny."
           logo:
             title: "Logo"
@@ -5570,13 +5589,25 @@ pl_PL:
           title: "Analityka i SEO"
           header_description: "Popraw widoczność swojej witryny w wyszukiwarkach i skonfiguruj sposób śledzenia odwiedzających."
           keywords: "wyszukiwania|google|mapa witryny"
+        interface:
+          title: "Interfejs i układ"
+          header_description: "Dostosuj szczegóły ogólnego układu witryny i interfejsu użytkownika."
         content:
           sub_pages:
+            categories_and_tags:
+              title: "Kategorie i tagi"
+            sharing:
+              title: "Udostępnianie"
             posts_and_topics:
               title: "Posty i tematy"
+            stats_and_thresholds:
+              title: "Statystyki i progi"
         permalinks:
           title: "Permalinki"
           header_description: "Przekierowania ubiegania się o adresy URL nieznane na forum"
+        user_defaults:
+          title: "Domyślne ustawienia użytkownika"
+          header_description: "Ustaw wartości domyślne dla ustawień, które mają wpływ na użytkowników, konfigurując ich środowisko wdrażania."
         user_fields:
           title: "Pola użytkownika"
           header_description: "Twórz niestandardowe pola użytkownika, aby zbierać dodatkowe informacje o członkach społeczności. Możesz wybrać, jakie informacje są wymagane podczas rejestracji, co jest wyświetlane w profilach i co użytkownicy mogą aktualizować."
@@ -5600,11 +5631,18 @@ pl_PL:
           title: "Motywy i komponenty"
           header_description: "Spersonalizuj swoją witrynę Discourse za pomocą motywów i komponentów dopasowanych do Twoich potrzeb."
           keywords: "motyw|komponent|rozszerzenie|dostosuj"
+        site_admin:
+          title: "Administrator witryny"
         site_texts:
           title: "Teksty witryny"
           header_description: "Dostosuj dowolny tekst używany w Discourse, aby pasował do głosu i tonu Twojej społeczności."
         email:
+          title: "Ustawienia poczty e-mail"
+          header_description: "Skonfiguruj ustawienia wiadomości e-mail wysyłanych do członków."
           sub_pages:
+            server_settings:
+              title: "Ustawienia serwera"
+              header_description: "Skonfiguruj ustawienia wiadomości e-mail wysyłanych do członków."
             preview_summary:
               title: "Podgląd podsumowania"
               header_description: "Podgląd treści zestawienia wysyłanego e-mailem do nieaktywnych użytkowników"
@@ -5615,6 +5653,8 @@ pl_PL:
               title: "Szablony"
               header_description: "Dostosuj szablony używane do tworzenia wiadomości e-mail"
         email_logs:
+          title: "Dzienniki e-mail"
+          header_description: "Wyświetl dzienniki wiadomości e-mail wysłanych z Twojej witryny."
           sub_pages:
             sent:
               title: "Wysłane"
@@ -5669,7 +5709,7 @@ pl_PL:
         modal_title: "Wyszukaj cokolwiek w panelu administracyjnym"
         title: "Szukaj"
         instructions: "Wpisz, aby wyszukać strony, ustawienia, raporty, motywy, komponenty i nie tylko..."
-        no_results: 'Nie znaleźliśmy niczego pasującego do ‘%{filter}’.'
+        no_results: "Nie znaleźliśmy niczego pasującego do ‘%{filter}’."
         result_types:
           page:
             one: "Strona"
@@ -6378,7 +6418,12 @@ pl_PL:
             filter_by_all: "Wszystkie"
             filter_by_used: "Używany"
             filter_by_unused: "Nieużywany"
+            component_up_to_date: '"%{name}" jest aktualny.'
+            updated_successfully: '"%{name}" został pomyślnie zaktualizowany.'
             delete_confirm: 'Czy na pewno chcesz usunąć "%{name}"?'
+            deleted_successfully: '"%{name}" został pomyślnie usunięty.'
+            no_components: "Brak zainstalowanych komponentów."
+            no_components_found: "Żadne komponenty nie pasują do twoich filtrów."
             badge_unused: "Nieużywany"
         user_fields:
           field: "Pole"
@@ -6392,17 +6437,22 @@ pl_PL:
           save_successful: "Pole użytkownika zapisane."
         color_palettes:
           palette_name: "Nazwa"
+          duplicate: "Powiel"
+          delete: "Usuń"
           color_options:
             title: "Opcje kolorów"
             toggle: "Możliwe do wyboru przez użytkownika"
             toggle_description: "Użytkownicy mogą wybrać paletę kolorów"
           colors:
             title: "Kolory"
+          logo_and_fonts_hint: "Chcesz zaktualizować swoje logo i czcionki?"
+          go_to_logo_and_fonts: "Przejdź do logo i czcionki"
           save_changes: "Zapisz zmiany"
           unsaved_changes: "Masz niezapisane zmiany"
           copy_of: "Kopia %{name}"
           copy_created: 'Utworzona została nowa kopia "%{name}".'
           illegal_character_in_color: "Kolory składają się wyłącznie ze znaków szesnastkowych"
+          delete_confirm: "Usunąć tę paletę kolorów?"
       plugins:
         title: "Wtyczki"
         name: "Nazwa"
@@ -6574,10 +6624,12 @@ pl_PL:
           extra_files_upload: "Eksportuj motyw, aby wyświetlić te pliki."
           extra_files_remote: "Eksportuj motyw lub sprawdź repozytorium git, aby wyświetlić te pliki."
           preview: "Podgląd"
+          default: "Aktywni"
           settings_editor: "Edytor ustawień"
           show_advanced: "Pokaż zaawansowane"
           is_default: "Motyw ustawiony jako domyślny"
           user_selectable: "Motyw może być ustawiany przez użytkowników"
+          user_selectable_badge_label: "Możliwe do wyboru przez użytkownika"
           color_scheme_user_selectable: "Użytkownicy mogą wybrać paletę kolorów"
           auto_update: "Automatycznie aktualizuj po aktualizacji Discourse"
           color_scheme: "Paleta Kolorów"
@@ -6595,8 +6647,6 @@ pl_PL:
           convert_theme_alert_generic: "Czy na pewno chcesz przekonwertować ten motyw na komponent?"
           convert_theme_tooltip: "Konwertuj ten motyw na komponent"
           inactive_themes: "Nieaktywne motywy:"
-          set_default_theme: "Ustaw domyślne"
-          default_theme: "Motyw domyślny"
           set_default_success: "Domyślny motyw ustawiony na %{theme}"
           install_success: "Motyw %{theme} zainstalowany pomyślnie!"
           inactive_components: "Nieużywane komponenty:"
@@ -6674,8 +6724,7 @@ pl_PL:
             error: "Ten motyw został automatycznie wyłączony, ponieważ nie jest kompatybilny z tą wersją Discourse."
             minimum: "Wymaga wersji %{version} Discourse'a lub wyższej."
             maximum: "Wymaga wersji %{version} Discourse'a lub niższej."
-          update_to_latest: "Zaktualizuj do najnowszej wersji"
-          check_for_updates: "Sprawdź dostępność aktualizacji"
+          check_for_updates: "Sprawdź aktualizacje"
           updating: "Aktualizowanie…"
           update_success: "Aktualizacja motywu %{theme} zakończona"
           up_to_date: "Motyw jest aktualny. Ostatnio sprawdzano:"

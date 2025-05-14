@@ -35,15 +35,13 @@ describe "Admin Customize Themes", type: :system do
 
       visit("/admin/customize/themes/#{theme.id}/common/head_tag/edit")
 
-      ace_content = find(".ace_content")
-      expect(ace_content.text).to eq("console.log('test')")
+      expect(find(".ace_content").text).to eq("console.log('test')")
     end
 
     it "can edit the js field" do
       visit("/admin/customize/themes/#{theme.id}/common/js/edit")
 
-      ace_content = find(".ace_content")
-      expect(ace_content.text).to include("// Your code here")
+      expect(find(".ace_content").text).to include("// Your code here")
       find(".ace_text-input", visible: false).fill_in(with: "console.log('test')\n")
       find(".save-theme").click
 
@@ -59,8 +57,7 @@ describe "Admin Customize Themes", type: :system do
         .find_by(target_id: Theme.targets[:extra_js])
         .update!(value: "console.log('second test')")
       visit("/admin/customize/themes/#{theme.id}/common/js/edit")
-      ace_content = find(".ace_content")
-      expect(ace_content.text).to include("console.log('second test')")
+      expect(find(".ace_content").text).to include("console.log('second test')")
     end
   end
 

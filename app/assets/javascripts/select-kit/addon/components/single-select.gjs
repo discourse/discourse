@@ -11,6 +11,7 @@ import SelectKitComponent, {
   selectKitOptions,
 } from "select-kit/components/select-kit";
 import SelectKitBody from "select-kit/components/select-kit/select-kit-body";
+import { isNumeric } from "select-kit/lib/input-utils";
 
 @classNames("single-select")
 @selectKitOptions({
@@ -26,7 +27,7 @@ export default class SingleSelect extends SelectKitComponent {
       let content;
 
       const value =
-        this.selectKit.options.castInteger && this._isNumeric(this.value)
+        this.selectKit.options.castInteger && isNumeric(this.value)
           ? Number(this.value)
           : this.value;
 

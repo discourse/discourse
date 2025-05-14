@@ -1138,7 +1138,6 @@ hy:
       said: "%{username} ՝"
       profile: "Պրոֆիլ"
       profile_possessive: "%{username}-ի պրոֆիլը"
-      account_possessive: "%{name}-ի հաշիվը"
       mute: "Խլացնել"
       edit: "Խմբագրել Նախընտրությունները"
       download_archive:
@@ -1910,7 +1909,6 @@ hy:
         title: "Գրանցման IP Հասցեն"
       avatar:
         title: "Պրոֆիլի Նկար"
-        header_title: "պրոֆիլ, հաղորդագրություններ, էջանշաններ և նախընտրություններ"
       title:
         title: "Վերնագիր"
         none: "(ոչ մի)"
@@ -3003,6 +3001,11 @@ hy:
       sr_post_like_count_button:
         one: "%{count} անձ հավանել է այս հրապարակումը."
         other: "%{count} մարդ հավանել է այս գրառումը."
+      localizations:
+        table:
+          actions: "Գործողություններ"
+          edit: "Խմբագրել"
+          delete: "Ջնջել"
       errors:
         create: "Ներողություն, Ձեր գրառումը ստեղծելիս տեղի է ունեցել սխալ: Խնդրում ենք կրկին փորձել:"
         edit: "Ներողություն, Ձեր գրառումը խմբագրելիս տեղի է ունեցել սխալ: Խնդրում ենք կրկին փորձել:"
@@ -3787,6 +3790,7 @@ hy:
               content: "Վերանայում"
             invite:
               content: "Հրավիրել"
+      search: "Որոնում"
       footer:
         interface_color_selector:
           light: "Բաց"
@@ -4284,8 +4288,10 @@ hy:
           delete: "Ջնջել"
         color_palettes:
           palette_name: "Անուն"
+          delete: "Ջնջել"
           colors:
             title: "Գույներ"
+          delete_confirm: "Ջնջե՞լ այս գունապնակը:"
       plugins:
         title: "Հավելումներ"
         name: "Անուն"
@@ -4414,6 +4420,7 @@ hy:
           extra_files_upload: "Արտահանեք թեման՝ այս ֆայլերը դիտելու համար:"
           extra_files_remote: "Արտահանեք թեման կամ բացեք համապատասխան git պահոցը՝ այս ֆայլերը դիտելու համար:"
           preview: "Նախադիտում"
+          default: "Ակտիվ"
           is_default: "Թեման լռելյայն միացված է"
           user_selectable: "Թեման կարող է ընտրվել օգտատերերի կողմից"
           color_scheme: "Գունապնակ"
@@ -4483,8 +4490,6 @@ hy:
             error: "Այս թեման ավտոմատ կերպով անջատվել է, քանի որ այն համատեղելի չէ Discourse-ի այս տարբերակի հետ:"
             minimum: "Պահանջում է Discourse-ի %{version} կամ ավելի բարձր տարբերակ:"
             maximum: "Պահանջում է Discourse-ի %{version} կամ ավելի ցածր տարբերակ:"
-          update_to_latest: "Թարմացնել Վերջինով"
-          check_for_updates: "Ստուգել Թարմացումները"
           up_to_date: "Թեման ամենաթարմ տարբերակում է, վերջին անգամ ստուգվել է՝ "
           add: "Ավելացնել"
           theme_settings: "Թեմայի Կարգավորումները"

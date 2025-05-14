@@ -8,4 +8,5 @@ const DModalCancel = <template>
     class="btn-flat d-modal-cancel"
   />
 </template>;
+
 export default DModalCancel;

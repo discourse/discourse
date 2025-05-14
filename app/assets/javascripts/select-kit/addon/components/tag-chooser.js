@@ -1,12 +1,13 @@
 import { action, computed } from "@ember/object";
+import { service } from "@ember/service";
 import { attributeBindings, classNames } from "@ember-decorators/component";
+import { bind } from "discourse/lib/decorators";
 import { makeArray } from "discourse/lib/helpers";
 import MultiSelectComponent from "select-kit/components/multi-select";
 import {
   pluginApiIdentifiers,
   selectKitOptions,
 } from "select-kit/components/select-kit";
-import TagsMixin from "select-kit/mixins/tags";
 
 @classNames("tag-chooser")
 @attributeBindings("categoryId")
@@ -18,7 +19,9 @@ import TagsMixin from "select-kit/mixins/tags";
   maximum: "maximumTagCount",
 })
 @pluginApiIdentifiers("tag-chooser")
-export default class TagChooser extends MultiSelectComponent.extend(TagsMixin) {
+export default class TagChooser extends MultiSelectComponent {
+  @service tagUtils;
+
   blockedTags = null;
   excludeSynonyms = false;
   excludeHasSynonyms = false;
@@ -81,6 +84,22 @@ export default class TagChooser extends MultiSelectComponent.extend(TagsMixin) {
     }
   }
 
+  validateCreate(filter, content) {
+    return this.tagUtils.validateCreate(
+      filter,
+      content,
+      this.selectKit.options.maximum,
+      (e) => this.addError(e),
+      this.termMatchesForbidden,
+      (value) => this.getValue(value),
+      this.value
+    );
+  }
+
+  createContentFromInput(input) {
+    return this.tagUtils.createContentFromInput(input);
+  }
+
   search(query) {
     const selectedTags = makeArray(this.tags).filter(Boolean);
 
@@ -107,28 +126,33 @@ export default class TagChooser extends MultiSelectComponent.extend(TagsMixin) {
       data.excludeHasSynonyms = true;
     }
 
-    return this.searchTags("/tags/filter/search", data, this._transformJson);
+    return this.tagUtils.searchTags(
+      "/tags/filter/search",
+      data,
+      this._transformJson
+    );
   }
 
-  _transformJson(context, json) {
-    if (context.isDestroyed || context.isDestroying) {
+  @bind
+  _transformJson(json) {
+    if (this.isDestroyed || this.isDestroying) {
       return [];
     }
 
     let results = json.results;
 
-    context.setProperties({
+    this.setProperties({
       termMatchesForbidden: json.forbidden ? true : false,
       termMatchErrorMessage: json.forbidden_message,
     });
 
-    if (context.blockedTags) {
+    if (this.blockedTags) {
       results = results.filter((result) => {
-        return !context.blockedTags.includes(result.id);
+        return !this.blockedTags.includes(result.id);
       });
     }
 
-    if (context.siteSettings.tags_sort_alphabetically) {
+    if (this.siteSettings.tags_sort_alphabetically) {
       results = results.sort((a, b) => a.id > b.id);
     }
 

@@ -1,6 +1,17 @@
 # frozen_string_literal: true
 
 RSpec.describe RemoteTheme do
+  before do
+    FastImage
+      .stubs(:size)
+      .with { |arg| arg.match(%r{/screenshots/light\.jpeg}) }
+      .returns([800, 600])
+    FastImage
+      .stubs(:size)
+      .with { |arg| arg.match(%r{/screenshots/dark\.jpeg}) }
+      .returns([1024, 768])
+  end
+
   describe "#import_theme" do
     def about_json(
       love_color: "FAFAFA",
@@ -195,7 +206,7 @@ RSpec.describe RemoteTheme do
       expect(theme.theme_modifier_set.serialize_topic_excerpts).to eq(true)
       expect(theme.theme_modifier_set.custom_homepage).to eq(true)
 
-      expect(theme.theme_fields.length).to eq(12)
+      expect(theme.theme_fields.length).to eq(14)
 
       mapped = Hash[*theme.theme_fields.map { |f| ["#{f.target_id}-#{f.name}", f.value] }.flatten]
 
@@ -216,7 +227,7 @@ RSpec.describe RemoteTheme do
         "export default function migrate(settings) {\n  return settings;\n}\n",
       )
 
-      expect(mapped.length).to eq(12)
+      expect(mapped.length).to eq(14)
 
       expect(theme.settings.length).to eq(2)
       expect(theme.settings[:boolean_setting].value).to eq(true)
@@ -390,8 +401,6 @@ RSpec.describe RemoteTheme do
     end
 
     describe "screenshots" do
-      before { SiteSetting.theme_download_screenshots = true }
-
       it "fails if any of the provided screenshots is not an accepted file type" do
         stub_const(ThemeScreenshotsHandler, "THEME_SCREENSHOT_ALLOWED_FILE_TYPES", [".bmp"]) do
           expect { RemoteTheme.import_theme(initial_repo_url) }.to raise_error(
@@ -439,15 +448,6 @@ RSpec.describe RemoteTheme do
       end
 
       it "creates uploads and associated theme fields for all theme screenshots" do
-        FastImage
-          .stubs(:size)
-          .with { |arg| arg.match(%r{/screenshots/light\.jpeg}) }
-          .returns([800, 600])
-        FastImage
-          .stubs(:size)
-          .with { |arg| arg.match(%r{/screenshots/dark\.jpeg}) }
-          .returns([1024, 768])
-
         theme = RemoteTheme.import_theme(initial_repo_url)
 
         screenshot_1 = theme.theme_fields.find_by(name: "screenshot_light")

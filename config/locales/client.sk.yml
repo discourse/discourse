@@ -1344,7 +1344,6 @@ sk:
       said: "%{username}:"
       profile: "Profil"
       profile_possessive: "Profil používateľa %{username}"
-      account_possessive: "%{name}účet"
       mute: "Ignorovať"
       edit: "Upraviť nastavenia"
       download_archive:
@@ -2244,7 +2243,6 @@ sk:
         title: "IP adresa pri registrácii"
       avatar:
         title: "Profilový obrázok"
-        header_title: "profil, správy, záložky a nastavenia"
         name_and_description: "%{name} - %{description}"
         edit: "Upraviť profilový obrázok"
       title:
@@ -2770,6 +2768,12 @@ sk:
       esc: "esc"
       esc_label: "zatvoriť správu"
       ok_proceed: "Ok, pokračujte"
+      translations:
+        title: "Preklad príspevku"
+        select: "Vyberte preklad"
+        save: "Uložiť preklad"
+        original_content: "Pôvodný obsah príspevku"
+        placeholder: "Sem zadajte preklad príspevku..."
       group_mentioned_limit:
         one: "<b>Varovanie!</b> Spomenuli ste <a href='%{group_link}'>%{group}</a>, avšak táto skupina má viac členov, ako je správcom nakonfigurovaný limit zmienky %{count} používateľa. Nikto nebude upozornený."
         few: "<b>Varovanie!</b> Spomenuli ste <a href='%{group_link}'>%{group}</a>, avšak táto skupina má viac členov ako limit spomenutí nastavený administrátorom, ktorý je %{count} používateľov. Nikto nebude upozornený."
@@ -3145,7 +3149,7 @@ sk:
       in_messages_tooltip: "prepnúť na vyhľadávanie v bežných témach"
       in_topics_posts: "vo všetkých témach a príspevkoch"
       enter_hint: "alebo stlačte Enter"
-      mobile_enter_hint: "alebo ťuknite na ikonu Hľadať"
+      mobile_enter_hint: "alebo ťuknite na položku Hľadať"
       in_posts_by: "v príspevkoch od %{username}"
       recent: "Nedávne vyhľadávania"
       clear_recent: "Vymazať nedávne vyhľadávania"
@@ -3234,7 +3238,6 @@ sk:
           aria_label: filtrovať podľa maximálneho počtu zobrazení
         additional_options:
           label: "Filtrovať podľa počtu príspevkov a zobrazení tém"
-    hamburger_menu: "menu"
     new_item: "nový"
     go_back: "späť"
     not_logged_in_user: "používateľská stránka so súhrnom aktivít a nastavení"
@@ -4045,6 +4048,14 @@ sk:
       in_reply_to: "Načítať rodičovský príspevok"
       view_all_posts: "Zobraziť všetky príspevky"
       badge_granted_tooltip: "%{username} získal za tento príspevok odznak '%{badge_name}'!"
+      localizations:
+        table:
+          locale: "Miestne nastavenie"
+          actions: "Akcie"
+          edit: "Upraviť"
+          delete: "Odstrániť"
+        add: "Pridať nový preklad"
+        success: "Preklady boli úspešne aktualizované"
       errors:
         create: "Ľutujeme, pri vytváraní príspevku nastala chyba. Prosím, skúste znovu."
         edit: "Ľutujeme, pri úprave príspevku nastala chyba. Prosím, skúste znovu."
@@ -4710,7 +4721,7 @@ sk:
         today: "Dnes"
     custom_homepage:
       admin_message: 'Jedna z vašich tém má povolený modifikátor "custom_homepage", ale v konektore [custom-homepage] sa nič nevypíše. (Táto správa sa zobrazuje len správcom stránok.)'
-    browser_update: 'Bohužiaľ, <a href="https://www.discourse.org/faq/#browser">váš prehliadač nie je podporovaný</a>. Prosím <a href="https://browsehappy.com">prepnite na podporovaný prehliadač</a> a pozrite si bohatý obsah, prihláste sa a odpovedzte.'
+    browser_update: 'Bohužiaľ, <a href="https://discourse.org/about#browser">váš prehliadač nie je podporovaný</a>. Pre zobrazenie bohatého obsahu <a href="https://browsehappy.com">prepnite na podporovaný prehliadač</a> , prihláste sa a odpovedzte.'
     permission_types:
       full: "Vytvor / Odpovedz / Zobraz"
       create_post: "Odpovedz / Zobraz"
@@ -5262,6 +5273,7 @@ sk:
       back_to_forum: "Späť na fórum"
       collapse_all_sections: "Zbaliť všetky sekcie"
       expand_all_sections: "Rozbaľte všetky sekcie"
+      search: "Hľadať"
       footer:
         interface_color_selector:
           light: "Svetlá"
@@ -5397,7 +5409,7 @@ sk:
             posted: "Témy v %{category} bez štítkov, ktoré ste uverejnili"
             bookmarks: "Témy v %{category} bez značiek, ktoré ste si pridali medzi záložky"
         single_tag:
-          default: "%{filter} tém označených %{tag}"
+          default: "%{filter} témy označené %{tag}"
           posted: "Témy označené %{tag} , v ktorých ste uverejnili príspevok"
           bookmarks: "Témy označené %{tag} , ktoré ste si pridali do záložiek"
         multi_tag:
@@ -5405,7 +5417,7 @@ sk:
           posted: "Témy označené %{tags} , v ktorých ste uverejnili príspevok"
           bookmarks: "Témy označené %{tags} , ktoré ste si pridali do záložiek"
         category_tag:
-          default: "%{filter} tém v %{category} označených %{tag}"
+          default: "%{filter} témy v %{category} označené tagom %{tag}"
           posted: "Témy v %{category} označené %{tag} , v ktorých ste uverejnili"
           bookmarks: "Témy v %{category} označené %{tag} , ktoré ste si pridali medzi záložky"
         categories: "Všetky kategórie"
@@ -5767,6 +5779,8 @@ sk:
         modal_title: "Vyhľadávanie čohokoľvek v aplikácii admin"
         title: "Hľadať"
         instructions: "Zadajte typ na vyhľadávanie stránok, nastavení, správ, tém, komponentov a ďalších..."
+        full_page_link: "Prepnutie na vyhľadávanie na celej stránke"
+        no_results: "Nenašli sme nič zodpovedajúce výrazu „%{filter}“."
         result_types:
           page:
             one: "Stránka"
@@ -6510,6 +6524,8 @@ sk:
           save_successful: "Používateľské pole uložené."
         color_palettes:
           palette_name: "Meno"
+          duplicate: "Duplikát"
+          delete: "Odstrániť"
           color_options:
             title: "Možnosti farieb"
             toggle: "Voliteľné používateľom"
@@ -6523,6 +6539,7 @@ sk:
           copy_of: "Kópia %{name}"
           copy_created: 'Bola vytvorená nová kópia "%{name}"'
           illegal_character_in_color: "Farby pozostávajú len z hexadecimálnych znakov"
+          delete_confirm: "Odstrániť túto paletu farieb?"
       plugins:
         title: "Pluginy"
         name: "Meno"
@@ -6694,10 +6711,15 @@ sk:
           extra_files_upload: "Téma exportu na zobrazenie týchto súborov."
           extra_files_remote: "Ak chcete zobraziť tieto súbory, exportujte tému alebo skontrolujte repozitár git."
           preview: "Ukážka"
+          default: "Aktívny"
           settings_editor: "Editor nastavení"
           show_advanced: "Zobraziť pokročilé"
           is_default: "Téma je predvolene povolená"
           user_selectable: "Tému si môžu vybrať používatelia"
+          user_selectable_badge_label: "Voliteľné používateľom"
+          user_selectable_button_label: "Umožniť používateľom vybrať"
+          user_selectable_unavailable_button_label: "Zneprístupniť používateľom"
+          broken_badge_label: "Zlomená téma"
           color_scheme_user_selectable: "Farebná paleta môže byť vybraná používateľmi"
           auto_update: "Automatická aktualizácia pri aktualizácii Discourse"
           color_scheme: "Paleta farieb"
@@ -6715,9 +6737,10 @@ sk:
           convert_theme_alert_generic: "Ste si istí, že chcete túto tému previesť na komponent?"
           convert_theme_tooltip: "Previesť túto tému na komponent"
           inactive_themes: "Neaktívne témy:"
-          set_default_theme: "Nastavenie predvoleného nastavenia"
-          default_theme: "Predvolená téma"
+          set_default_theme: "Nastaviť ako aktívne"
+          default_theme: "Aktívna téma"
           set_default_success: "Predvolená téma nastavená na %{theme}"
+          setting_was_saved: "Nastavenie témy bolo uložené"
           install_success: "%{theme} úspešne nainštalované!"
           inactive_components: "Nepoužité komponenty:"
           selected:
@@ -6731,6 +6754,7 @@ sk:
           disabled_component_tooltip: "Tento komponent bol zakázaný"
           default_theme_tooltip: "Táto téma je predvolená téma stránky"
           updates_available_tooltip: "Pre túto tému sú k dispozícii aktualizácie"
+          update_available: "Vyžaduje sa aktualizácia"
           and_x_more:
             one: "a %{count} viac."
             few: "a %{count} ďalších."
@@ -6794,8 +6818,8 @@ sk:
             error: "Táto téma bola automaticky vypnutá, pretože nie je kompatibilná s touto verziou Discourse."
             minimum: "Vyžaduje verziu Discourse %{version} alebo vyššiu."
             maximum: "Vyžaduje verziu Discourse %{version} alebo nižšiu."
-          update_to_latest: "Aktualizácia na najnovšie"
-          check_for_updates: "Skontrolovať aktualizácie"
+          update_to_latest: "Aktualizácia na najnovšiu verziu"
+          check_for_updates: "Kontrola aktualizácií"
           updating: "Aktualizujem..."
           update_success: "%{theme} Aktualizácia dokončená"
           up_to_date: "Téma je aktuálna, naposledy skontrolovaná:"

@@ -8,7 +8,8 @@ describe "Discourse dev tools", type: :system do
     expect(page).not_to have_css(".dev-tools-toolbar")
 
     # Enable dev tools, and wait for page to reload
-    page.evaluate_script("enableDevTools()")
+    page.driver.with_playwright_page { |pw_page| pw_page.evaluate("window.enableDevTools()") }
+
     expect(page).to have_css(".dev-tools-toolbar")
 
     # Turn on plugin outlet debugging, and check they appear
