@@ -245,8 +245,6 @@
       width: 100vw;
       max-width: 100vw;
       padding: 0;
-      transform-origin: 66%;
-      transition: height 0.2s ease-in;
 
       &.empty-panel {
         height: 4rem;
@@ -262,20 +260,17 @@
 
       @keyframes search-slide-in {
         from {
-          opacity: 0;
-          transform: scaleX(0);
+          transform: translateY(-100%);
         }
       }
 
       @keyframes search-slide-out {
         from {
-          transform: scaleX(1);
-          opacity: 1;
+          transform: translateY(0);
         }
 
         to {
-          opacity: 0;
-          transform: scaleX(0);
+          transform: translateY(-100%);
         }
       }
 
