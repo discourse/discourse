@@ -5610,11 +5610,14 @@ en:
           header_description: "Discourse has the ability to embed the comments from a topic in a remote site using a Javascript API that creates an IFRAME"
 
       search:
-        modal_title: "Search anything in admin"
+        modal_title: "Search everything in admin"
         title: "Search"
-        instructions: "Type to search for pages, settings, reports, themes, components, and more..."
+        instructions: "Search everything in admin..."
         full_page_link: "Switch to full page search"
-        no_results: "We couldn’t find anything matching ‘%{filter}’."
+        no_results: 'We couldn’t find anything matching "%{filter}".'
+        result_count:
+          one: '%{count} result for "%{filter}"'
+          other: '%{count} results for "%{filter}"'
         result_types:
           page:
             one: "Page"
@@ -6707,7 +6710,7 @@ en:
           active_filter: "Active"
           inactive_filter: "Inactive"
           updates_available_filter: "Updates Available"
-          
+
         schema:
           title: "Edit %{name} setting"
           back_button: "Back to %{name}"
