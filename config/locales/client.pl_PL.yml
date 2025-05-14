@@ -1340,7 +1340,6 @@ pl_PL:
       said: "%{username}:"
       profile: "Profil"
       profile_possessive: "profil %{username}"
-      account_possessive: "Konto %{name}"
       mute: "Wycisz"
       edit: "Edytuj ustawienia"
       download_archive:
@@ -2237,7 +2236,6 @@ pl_PL:
         title: "Adres IP rejestracji"
       avatar:
         title: "Awatar"
-        header_title: "profil, wiadomości, zakładki i ustawienia"
         name_and_description: "%{name} - %{description}"
         edit: "Edytuj zdjęcie profilowe"
       title:
@@ -3132,7 +3130,6 @@ pl_PL:
       in_messages_tooltip: "przełącz się na wyszukiwanie regularnych tematów"
       in_topics_posts: "we wszystkich tematach i postach"
       enter_hint: "lub naciśnij Enter"
-      mobile_enter_hint: "lub dotknij ikony wyszukiwania"
       in_posts_by: "w postach %{username}"
       recent: "Ostatnie wyszukiwania"
       clear_recent: "Wyczyść ostatnie wyszukiwania"
@@ -3221,7 +3218,6 @@ pl_PL:
           aria_label: filtrować według maksymalnych wyświetleń
         additional_options:
           label: "Filtruj według liczby postów i wyświetleń tematu"
-    hamburger_menu: "menu"
     new_item: "nowy"
     go_back: "wróć"
     not_logged_in_user: "strona użytkownika z podsumowaniem bieżących działań i ustawień"
@@ -4035,6 +4031,12 @@ pl_PL:
       in_reply_to: "Załaduj post nadrzędny"
       view_all_posts: "Wyświetl wszystkie posty"
       badge_granted_tooltip: "%{username} zdobył odznakę '%{badge_name}' za ten post!"
+      localizations:
+        table:
+          locale: "Język"
+          actions: "Akcje"
+          edit: "Edytuj"
+          delete: "Usuń"
       errors:
         create: "Przepraszamy, podczas tworzenia twojego wpisu wystąpił błąd. Spróbuj ponownie."
         edit: "Przepraszamy, podczas edytowania twojego wpisu wystąpił błąd. Spróbuj ponownie."
@@ -4692,7 +4694,6 @@ pl_PL:
         today: "Dzisiaj"
     custom_homepage:
       admin_message: 'Jeden z Twoich motywów włączył modyfikator „custom_homepage”, ale nie wyświetla on niczego w łączniku [custom-homepage]. (Ta wiadomość jest wyświetlana tylko administratorom strony.)'
-    browser_update: 'Niestety, <a href="https://www.discourse.org/faq/#browser">twoja przeglądarka nie jest obsługiwana</a>. Proszę <a href="https://browsehappy.com">przełączyć się na obsługiwaną przeglądarkę</a>, aby móc oglądać bogatą zawartość, zalogować się i odpowiedzieć.'
     permission_types:
       full: "tworzyć / odpowiadać / przeglądać"
       create_post: "odpowiadać / przeglądać"
@@ -6436,6 +6437,8 @@ pl_PL:
           save_successful: "Pole użytkownika zapisane."
         color_palettes:
           palette_name: "Nazwa"
+          duplicate: "Powiel"
+          delete: "Usuń"
           color_options:
             title: "Opcje kolorów"
             toggle: "Możliwe do wyboru przez użytkownika"
@@ -6449,6 +6452,7 @@ pl_PL:
           copy_of: "Kopia %{name}"
           copy_created: 'Utworzona została nowa kopia "%{name}".'
           illegal_character_in_color: "Kolory składają się wyłącznie ze znaków szesnastkowych"
+          delete_confirm: "Usunąć tę paletę kolorów?"
       plugins:
         title: "Wtyczki"
         name: "Nazwa"

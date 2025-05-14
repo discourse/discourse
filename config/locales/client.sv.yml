@@ -1063,7 +1063,6 @@ sv:
       said: "%{username}:"
       profile: "Profil"
       profile_possessive: "%{username}:s profil"
-      account_possessive: "%{name}:s konto"
       mute: "Tysta"
       edit: "Redigera inställningar"
       download_archive:
@@ -1789,7 +1788,6 @@ sv:
         title: "IP-adress vid registrering"
       avatar:
         title: "Profilbild"
-        header_title: "profil, meddelanden, bokmärken och inställningar"
         name_and_description: "%{name} - %{description}"
         edit: "Redigera profilbild"
       title:
@@ -2575,7 +2573,6 @@ sv:
           aria_label: filtrera efter största antal visningar
         additional_options:
           label: "Filtrera efter inläggsantal och ämnesvisningar"
-    hamburger_menu: "meny"
     new_item: "ny"
     go_back: "gå tillbaka"
     not_logged_in_user: "användarsida med sammanställning av aktuell aktivitet och inställningar"
@@ -3245,6 +3242,11 @@ sv:
         other: "Visar %{count} svar på"
       in_reply_to: "Ladda överordnat inlägg"
       view_all_posts: "Visa alla inlägg"
+      localizations:
+        table:
+          actions: "Åtgärder"
+          edit: "Redigera"
+          delete: "Ta bort"
       errors:
         create: "Tyvärr uppstod det ett fel under skapandet av ditt inlägg. Vi ber dig försöka igen."
         edit: "Tyvärr uppstod det ett fel under ändringen av ditt inlägg. Vi ber dig försöka igen."
@@ -3795,7 +3797,6 @@ sv:
         this_month: "Månad"
         this_week: "Vecka"
         today: "Idag"
-    browser_update: 'Tyvärr stöds inte <a href="https://www.discourse.org/faq/#browser">din webbläsare</a>. Vänligen <a href="https://browsehappy.com">byt till en webbläsare som stöds</a> för att se innehåll, logga in och svara.'
     permission_types:
       full: "Skapa / svara / se"
       create_post: "Svara / se"
@@ -5024,8 +5025,11 @@ sv:
           delete: "Radera"
         color_palettes:
           palette_name: "Namn"
+          duplicate: "Duplicera"
+          delete: "Radera"
           colors:
             title: "Färger"
+          delete_confirm: "Radera den här färgpaletten?"
       plugins:
         title: "Tillägg"
         name: "Namn"

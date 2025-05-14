@@ -4409,7 +4409,7 @@ sk:
     images:
       too_large: "Ľutujeme, obrázok, ktorý sa pokúšate nahrať, je príliš veľký (maximálna veľkosť je %{max_size_kb}KB), prosím zmenšite ho a skúste znovu. "
       too_large_humanized: "Ľutujeme, obrázok, ktorý sa pokúšate nahrať, je príliš veľký (maximálna veľkosť je %{max_size}), zmeňte jeho veľkosť a skúste to znova."
-      larger_than_x_megapixels: "Je nám ľúto, ale obrázok, ktorý sa snažíte nahrať, je príliš veľký (maximálny rozmer je %{max_image_megapixels} megapixelov), zmeňte jeho veľkosť a skúste to znova."
+      larger_than_x_megapixels: "Prepáčte, obrázok s názvom súboru %{original_filename} je príliš veľký (maximálny rozmer je %{max_image_megapixels} megapixelov), zmeňte jeho veľkosť a skúste to znova."
       size_not_found: "Ľutujeme, ale nepodarilo sa nám zistiť veľkosť obrázku. Nie je nahodou poškodený?"
     placeholders:
       too_large: "(obrázok väčší ako %{max_size_kb}KB)"

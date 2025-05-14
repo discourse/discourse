@@ -1354,7 +1354,6 @@ ca:
         title: "Registre d'adreça IP"
       avatar:
         title: "Foto de perfil"
-        header_title: "perfil, missatges, preferits i preferències"
       title:
         title: "Títol"
         none: "(cap)"
@@ -2280,6 +2279,11 @@ ca:
       sr_post_like_count_button:
         one: "La publicació agrada a %{count} persona."
         other: "La publicació agrada a %{count} persones."
+      localizations:
+        table:
+          actions: "Accions"
+          edit: "Edita"
+          delete: "Suprimeix"
       errors:
         create: "S'ha produït un error en crear la vostra publicació. Torneu-ho a provar."
         edit: "S'ha produït un error en editar la vostra publicació. Torneu-ho a provar."
@@ -3437,8 +3441,10 @@ ca:
           delete: "Suprimeix"
         color_palettes:
           palette_name: "Nom"
+          delete: "Suprimeix"
           colors:
             title: "Colors"
+          delete_confirm: "Voleu suprimir aquesta paleta de colors?"
       plugins:
         title: "Connectors"
         name: "Nom"

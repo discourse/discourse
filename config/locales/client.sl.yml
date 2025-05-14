@@ -1638,7 +1638,6 @@ sl:
         title: "Registracijski IP naslov"
       avatar:
         title: "Slika profila"
-        header_title: "profil, zasebna sporočila, zaznamki in nastavitve"
         name_and_description: "%{name} - %{description}"
       title:
         title: "Naziv"
@@ -2804,6 +2803,11 @@ sl:
         few: "Oglejte si to objavo in njene %{count} odgovore"
         other: "Oglejte si to objavo in njenih %{count} odgovorov"
       view_all_posts: "Ogled vseh objav"
+      localizations:
+        table:
+          actions: "Akcije"
+          edit: "Uredi"
+          delete: "Izbriši"
       errors:
         create: "Oprostite, pri ustvarjanju vašega prispevka je prišlo do napake. Poskusite ponovno."
         edit: "Oprostite, pri ustvarjanju vašega prispevka je prišlo do napake. Poskusite ponovno."
@@ -4111,6 +4115,7 @@ sl:
           delete: "Izbriši"
         color_palettes:
           palette_name: "Ime"
+          delete: "Izbriši"
           colors:
             title: "Barve"
       plugins:

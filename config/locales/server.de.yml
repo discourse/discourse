@@ -4181,7 +4181,7 @@ de:
     images:
       too_large: "Entschuldige, das Bild, das du hochladen möchtest, ist zu groß (maximale Dateigröße: %{max_size_kb} KB). Bitte verkleinere es und versuche es erneut."
       too_large_humanized: "Entschuldige, das Bild, das du hochladen möchtest, ist zu groß (maximale Dateigröße: %{max_size}). Bitte verkleinere es und versuche es erneut."
-      larger_than_x_megapixels: "Entschuldige, das Bild, das du hochladen möchtest, ist zu groß (maximale Auflösung: %{max_image_megapixels} Megapixel). Bitte verkleinere es und versuche es erneut."
+      larger_than_x_megapixels: "Entschuldige, das Bild mit dem Dateinamen %{original_filename} ist zu groß (maximale Auflösung: %{max_image_megapixels} Megapixel). Bitte verkleinere es und versuche es erneut."
       size_not_found: "Entschuldige, aber wir konnten die Größe des Bildes nicht bestimmen. Vielleicht ist das Bild beschädigt?"
     placeholders:
       too_large: "(Bild größer als %{max_size_kb} KB)"
@@ -5099,6 +5099,12 @@ de:
       restored: Wiederhergestellt
     bulk_user_delete: "bei einem Massenlöschvorgang gelöscht"
     cli_bulk_post_delete: "Massenlöschung aus dem rake Task"
+    api_post_delete: "Per API gelöscht"
+    reminder_deleted: "Ersetzt durch neue Erinnerung"
+    user_associated_posts_deleted: "Benutzer wurde zerstört"
+    imap_email_deleted: "E-Mail wurde auf dem IMAP-Server gelöscht"
+    imap_email_marked_as_spam: "E-Mail wurde auf dem IMAP-Server in den Spam-Ordner verschoben"
+    auto_deleted_hidden_posts: "Versteckte Beiträge automatisch gelöscht"
   reviewables:
     already_handled: "Vielen Dank, aber wir haben diesen Beitrag bereits überprüft und festgestellt, dass er nicht erneut gemeldet werden muss."
     already_handled_and_user_not_exist: "Danke, aber jemand hat es bereits überprüft und dieser Benutzer existiert nicht mehr."
