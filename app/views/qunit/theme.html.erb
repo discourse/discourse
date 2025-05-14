@@ -31,6 +31,7 @@
         <%= File.read("#{Rails.root}/app/assets/javascripts/discourse/node_modules/qunit/qunit/qunit.css").html_safe %>
       </style>
 
+      <%= discourse_stylesheet_link_tag(:common, theme_id: nil) %>
       <%= discourse_stylesheet_link_tag(:desktop, theme_id: nil) %>
     <%- else %>
       <style>

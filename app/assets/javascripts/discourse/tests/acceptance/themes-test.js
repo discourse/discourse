@@ -7,58 +7,47 @@ acceptance("Theme", function (needs) {
   needs.user();
 
   needs.pretender((server, helper) => {
+    const themes = [
+      {
+        id: 42,
+        name: "discourse-incomplete-theme",
+        created_at: "2022-01-01T12:00:00.000Z",
+        updated_at: "2022-01-01T12:00:00.000Z",
+        component: false,
+        color_scheme: null,
+        user_selectable: false,
+        remote_theme_id: 42,
+        supported: true,
+        description: null,
+        enabled: true,
+        child_themes: [],
+        remote_theme: {
+          id: 42,
+          remote_url: "git@github.com:discourse/discourse-incomplete-theme.git",
+          remote_version: null,
+          local_version: null,
+          commits_behind: null,
+          branch: null,
+          remote_updated_at: null,
+          updated_at: "2022-01-01T12:00:00.000Z",
+          last_error_text: null,
+          is_git: true,
+          license_url: null,
+          about_url: null,
+          authors: null,
+          theme_version: null,
+          minimum_discourse_version: null,
+          maximum_discourse_version: null,
+        },
+      },
+    ];
+
     server.get("/admin/themes", () => {
-      return helper.response(200, {
-        themes: [
-          {
-            id: 42,
-            name: "discourse-incomplete-theme",
-            created_at: "2022-01-01T12:00:00.000Z",
-            updated_at: "2022-01-01T12:00:00.000Z",
-            component: false,
-            color_scheme: null,
-            color_scheme_id: null,
-            user_selectable: false,
-            auto_update: true,
-            remote_theme_id: 42,
-            settings: [],
-            supported: true,
-            description: null,
-            enabled: true,
-            user: {
-              id: 1,
-              username: "foo",
-              name: null,
-              avatar_template:
-                "/letter_avatar_proxy/v4/letter/f/3be4f8/{size}.png",
-              title: "Tester",
-            },
-            theme_fields: [],
-            child_themes: [],
-            parent_themes: [],
-            remote_theme: {
-              id: 42,
-              remote_url:
-                "git@github.com:discourse/discourse-incomplete-theme.git",
-              remote_version: null,
-              local_version: null,
-              commits_behind: null,
-              branch: null,
-              remote_updated_at: null,
-              updated_at: "2022-01-01T12:00:00.000Z",
-              last_error_text: null,
-              is_git: true,
-              license_url: null,
-              about_url: null,
-              authors: null,
-              theme_version: null,
-              minimum_discourse_version: null,
-              maximum_discourse_version: null,
-            },
-            translations: [],
-          },
-        ],
-      });
+      return helper.response(200, { themes });
+    });
+
+    server.get("/admin/config/customize/themes", () => {
+      return helper.response(200, { themes });
     });
 
     server.post("/admin/themes/import", (request) => {

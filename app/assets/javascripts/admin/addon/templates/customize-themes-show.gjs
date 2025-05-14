@@ -490,6 +490,7 @@ export default RouteTemplate(
               <div class="mini-title">{{i18n
                   "admin.customize.theme.extra_files"
                 }}</div>
+              {{! template-lint-disable no-nested-interactive }}
               <details>
                 <summary>
                   {{#if @controller.model.remote_theme}}

@@ -17,6 +17,7 @@ const hashString = (str) => {
  */
 
 const namespacesToPrefix = ["--csstools-light-dark-toggle-"];
+
 export default function postcssVariablePrefixer() {
   let hash;
 

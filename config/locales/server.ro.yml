@@ -1871,7 +1871,7 @@ ro:
       too_large: "Ne pare rău, dar fișierul pe care încerci să îl încarci este prea mare (mărimea maximă este de %{max_size_kb}KB)."
     images:
       too_large: "Ne pare rău, dar imaginea pe care încerci să o încarci este prea mare (mărimea maximă este de %{max_size_kb}KB), te rugăm să o redimensionezi și apoi să încerci din nou."
-      larger_than_x_megapixels: "Ne pare rău, imaginea pe care încerci să o încarci este prea mare (dimensiunea maximă este %{max_image_megapixels} megapixeli), te rugăm să o redimensionezi și să încerci din nou."
+      larger_than_x_megapixels: "Scuze, imaginea cu numele de fișier %{original_filename} este prea mare (dimensiunea maximă este de %{max_image_megapixels} megapixeli), te rugăm să o redimensionezi și să încerci din nou."
       size_not_found: "Ne pare rău, nu am putut determina mărimea imaginii. Poate este coruptă?"
   avatar:
     missing: "Ne pare rău, dar nu putem găsi avatarul asociat cu această adresă de email. Ai putea să îl încarci din nou?"
@@ -2167,6 +2167,12 @@ ro:
   staff_action_logs:
     json_too_long: "Valorile nu au fost înregistrate pentru că depășesc limitele lungimii coloanei"
     unknown: "necunoscută"
+    api_post_delete: "Șters prin API"
+    reminder_deleted: "Înlocuit de un nou memento"
+    user_associated_posts_deleted: "Utilizatorul a fost distrus"
+    imap_email_deleted: "Emailul a fost șters de pe serverul IMAP"
+    imap_email_marked_as_spam: "Emailul a fost mutat în spam pe serverul IMAP"
+    auto_deleted_hidden_posts: "Postări ascunse distruse automat"
   reviewables:
     priorities:
       low: "Scăzut"

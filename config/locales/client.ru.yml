@@ -1319,7 +1319,6 @@ ru:
       said: "%{username}:"
       profile: "Профиль"
       profile_possessive: "Профиль пользователя %{username}"
-      account_possessive: "Аккаунт %{name}"
       mute: "Отключить"
       edit: "Изменить настройки"
       download_archive:
@@ -2215,7 +2214,6 @@ ru:
         title: "IP-адрес регистрации"
       avatar:
         title: "Аватар"
-        header_title: "профиль, сообщения, закладки и настройки"
         name_and_description: "%{name} — %{description}"
         edit: "Изменить аватар"
       title:
@@ -3166,7 +3164,6 @@ ru:
           aria_label: Фильтр по максимальному количеству просмотров
         additional_options:
           label: "Фильтр по количеству сообщений и просмотров тем"
-    hamburger_menu: "Меню"
     new_item: "новый"
     go_back: "вернуться"
     not_logged_in_user: "страница пользователя с историей его последней активности и настроек"
@@ -3975,6 +3972,11 @@ ru:
       in_reply_to: "Загрузить родительское сообщение"
       view_all_posts: "Показать все сообщения"
       badge_granted_tooltip: "%{username} получил(а) награду «%{badge_name}» за эту публикацию!"
+      localizations:
+        table:
+          actions: "Темы"
+          edit: "Отредактировать"
+          delete: "Удалить"
       errors:
         create: "Не удалось создать сообщение из-за ошибки. Попробуйте ещё раз."
         edit: "Не удалось изменить сообщение. Попробуйте ещё раз."
@@ -4624,7 +4626,6 @@ ru:
         today: "Сегодня"
     custom_homepage:
       admin_message: 'В одной из ваших тем включен модификатор «custom_homepage», но он ничего не выводит в коннектор [custom-homepage]. (Это сообщение отображается только для администраторов сайта.)'
-    browser_update: '<a href="https://www.discourse.org/faq/#browser">Ваш браузер не поддерживается</a>. <a href="https://browsehappy.com">Обновите его</a> для полноценной работы с сайтом.'
     permission_types:
       full: "Создавать / Отвечать / Просматривать"
       create_post: "Отвечать / Просматривать"
@@ -5172,6 +5173,7 @@ ru:
       back_to_forum: "Вернуться на форум"
       collapse_all_sections: "Свернуть все разделы"
       expand_all_sections: "Развернуть все разделы"
+      search: "Найти"
       footer:
         interface_color_selector:
           light: "Светлая"
@@ -6197,11 +6199,14 @@ ru:
           save_successful: "Пользовательское поле сохранено."
         color_palettes:
           palette_name: "Название"
+          duplicate: "Дублировать"
+          delete: "Удалить"
           color_options:
             toggle: "Выбирается пользователем"
             toggle_description: "Пользователи могут выбирать цветовую палитру"
           colors:
             title: "Цвета"
+          delete_confirm: "Удалить эту цветовую палитру?"
       plugins:
         title: "Плагины"
         name: "Название"
@@ -6372,9 +6377,11 @@ ru:
           extra_files_upload: "Экспортируйте тему для просмотра файлов."
           extra_files_remote: "Экспортируйте тему или откройте соответствующий git-репозиторий для просмотра файлов."
           preview: "Предварительный просмотр"
+          default: "Активна"
           settings_editor: "Редактор настроек"
           is_default: "Активирована по умолчанию"
           user_selectable: "Тема может быть выбрана пользователем"
+          user_selectable_badge_label: "Выбирается пользователем"
           color_scheme_user_selectable: "Пользователи могут выбирать цветовую палитру"
           auto_update: "Автообновление при обновлении Discourse"
           color_scheme: "Цветовая палитра"
@@ -6392,8 +6399,6 @@ ru:
           convert_theme_alert_generic: "Действительно преобразовать эту тему в компонент?"
           convert_theme_tooltip: "Преобразовать эту тему в компонент"
           inactive_themes: "Неактивные темы:"
-          set_default_theme: "Установить по умолчанию"
-          default_theme: "Тема по умолчанию"
           set_default_success: "Тема по умолчанию установлена на «%{theme}»"
           install_success: "Тема «%{theme}» успешно установлена!"
           inactive_components: "Неиспользуемые компоненты:"
@@ -6468,7 +6473,6 @@ ru:
             error: "Тема была автоматически отключена, поскольку она несовместима с этой версией Discourse."
             minimum: "Требуется версия Discourse %{version} или выше."
             maximum: "Требуется версия Discourse %{version} или ниже."
-          update_to_latest: "Обновить"
           check_for_updates: "Проверить обновления"
           updating: "Обновление…"
           update_success: "Обновление темы «%{theme}» завершено"

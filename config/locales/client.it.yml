@@ -1159,7 +1159,6 @@ it:
       said: "%{username}:"
       profile: "Profilo"
       profile_possessive: "Profilo di %{username}"
-      account_possessive: "Account di %{name}"
       mute: "Silenzia"
       edit: "Modifica opzioni"
       download_archive:
@@ -1991,7 +1990,6 @@ it:
         title: "Indirizzo IP di Registrazione"
       avatar:
         title: "Immagine Profilo"
-        header_title: "profilo, messaggi, segnalibri e preferenze"
         name_and_description: "%{name} - %{description}"
         edit: "Modifica immagine profilo"
       title:
@@ -2858,7 +2856,6 @@ it:
           aria_label: filtra per visualizzazioni massime
         additional_options:
           label: "Filtra per numero di messaggi e visualizzazioni dell'argomento"
-    hamburger_menu: "menu"
     new_item: "nuovo"
     go_back: "indietro"
     not_logged_in_user: "pagina utente con riepilogo delle attività correnti e delle impostazioni"
@@ -3565,6 +3562,11 @@ it:
       in_reply_to: "Carica messaggio padre"
       view_all_posts: "Visualizza tutti i messaggi"
       badge_granted_tooltip: "%{username} ha ottenuto il distintivo \"%{badge_name}\" per questo messaggio!"
+      localizations:
+        table:
+          actions: "Azioni"
+          edit: "Modifica"
+          delete: "Cancella"
       errors:
         create: "Spiacenti, si è verificato un errore nel creare il tuo messaggio. Prova di nuovo."
         edit: "Spiacenti, si è verificato un errore nel modificare il tuo messaggio. Prova di nuovo."
@@ -4162,7 +4164,6 @@ it:
         today: "Oggi"
     custom_homepage:
       admin_message: 'Uno dei tuoi argomenti ha abilitato il modificatore "custom_homepage", ma non invia alcun risultato al connettore [custom-homepage]. (Messaggio visibile solo agli amministratori del sito)'
-    browser_update: 'Purtroppo, <a href="https://www.discourse.org/faq/#browser">il tuo browser non è supportato</a>. Per visualizzare i contenuti multimediali, <a href="https://browsehappy.com">passa a un browser supportato</a>, accedi e rispondi.'
     permission_types:
       full: "Crea / Rispondi / Visualizza"
       create_post: "Rispondi / Visualizza"
@@ -4666,6 +4667,7 @@ it:
       back_to_forum: "Torna al forum"
       collapse_all_sections: "Comprimi tutte le sezioni"
       expand_all_sections: "Espandi tutte le sezioni"
+      search: "Cerca"
       footer:
         interface_color_selector:
           light: "Chiaro"
@@ -5663,11 +5665,14 @@ it:
           save_successful: "Campo utente salvato."
         color_palettes:
           palette_name: "Nome"
+          duplicate: "Duplica"
+          delete: "Elimina"
           color_options:
             toggle: "Selezionabile dall'utente"
             toggle_description: "Lo schema di colori può essere selezionato dagli utenti"
           colors:
             title: "Colori"
+          delete_confirm: "Eliminare questa tavolozza dei colori?"
       plugins:
         title: "Plugin"
         name: "Nome"
@@ -5838,9 +5843,11 @@ it:
           extra_files_upload: "Esporta il tema per visualizzare questi file."
           extra_files_remote: "Esporta il tema o consulta l'archivio git per visualizzare questi file."
           preview: "Anteprima"
+          default: "Attivi"
           settings_editor: "Editor delle impostazioni"
           is_default: "Il tema è abilitato per impostazione predefinita"
           user_selectable: "Il tema può essere selezionato dagli utenti"
+          user_selectable_badge_label: "Selezionabile dall'utente"
           color_scheme_user_selectable: "Lo schema di colori può essere selezionato dagli utenti"
           auto_update: "Aggiorna automaticamente quando Discourse viene aggiornato"
           color_scheme: "Tavolozza dei colori"
@@ -5858,8 +5865,6 @@ it:
           convert_theme_alert_generic: "Sei sicuro di voler convertire questo tema in componente?"
           convert_theme_tooltip: "Converti questo Tema in Componente"
           inactive_themes: "Temi non attivi:"
-          set_default_theme: "Imposta predefinito"
-          default_theme: "Tema predefinito"
           set_default_success: "Tema predefinito impostato su %{theme}"
           install_success: "%{theme} installato con successo!"
           inactive_components: "Componenti inutilizzati:"
@@ -5930,8 +5935,7 @@ it:
             error: "Questo tema è stato disattivato automaticamente perché non compatibile con questa versione di Discourse."
             minimum: "Richiede versione %{version} o superiore di Discourse."
             maximum: "Richiede versione %{version} o inferiore di Discourse."
-          update_to_latest: "Aggiorna all'ultima versione"
-          check_for_updates: "Controllo Aggiornamenti"
+          check_for_updates: "Controlla gli aggiornamenti"
           updating: "Aggiornamento…"
           update_success: "Aggiornamento %{theme} completato"
           up_to_date: "Il tema è aggiornato, ultima verifica:"

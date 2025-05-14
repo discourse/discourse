@@ -6,4 +6,5 @@ const Tag = <template>
   {{icon "tag"}}
   {{discourseTag (or @result.id @result) tagName="span"}}
 </template>;
+
 export default Tag;

@@ -14,4 +14,5 @@ const CharCounter0 = <template>
     </CharCounter>
   </StyleguideExample>
 </template>;
+
 export default CharCounter0;

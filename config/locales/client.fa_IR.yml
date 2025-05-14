@@ -1163,7 +1163,6 @@ fa_IR:
       said: "%{username}:"
       profile: "نمایه"
       profile_possessive: "نمایه‌ی %{username}"
-      account_possessive: "حساب کاربری %{name}"
       mute: "بی‌صدا"
       edit: "ویرایش تنظیمات"
       download_archive:
@@ -1995,7 +1994,6 @@ fa_IR:
         title: "نشانی IP ثبت‌نامی"
       avatar:
         title: "عکس نمایه"
-        header_title: "نمایه، پیام‌ها، نشانک‌ها و تنظیمات شخصی"
         name_and_description: "%{name} - %{description}"
         edit: "ویرایش تصویر پروفایل"
       title:
@@ -2872,7 +2870,6 @@ fa_IR:
           aria_label: فیلتر بر اساس حداکثر بازدید
         additional_options:
           label: "بر اساس تعداد پست‌ها و بازدیدهای موضوع فیلتر کنید"
-    hamburger_menu: "منو"
     new_item: "تازه"
     go_back: "برگردید"
     not_logged_in_user: "صفحه کاربر با خلاصه ای از فعالیت های و تنظیمات"
@@ -3579,6 +3576,11 @@ fa_IR:
       in_reply_to: "پست اصلی را بارگیری کنید"
       view_all_posts: "نمایش همه نوشته‌ها"
       badge_granted_tooltip: "کاربر %{username} به خاطر این پست، نشان \"%{badge_name}\" را کسب کرد!"
+      localizations:
+        table:
+          actions: "عملیات"
+          edit: "ویرایش"
+          delete: "حذف"
       errors:
         create: "متأسفیم، در ایجاد نوشته‌ی شما خطایی روی داد. لطفاً دوباره تلاش کنید."
         edit: "متأسفیم، در ویرایش نوشته‌ی شما خطایی روی داد. لطفاً دوباره تلاش کنید."
@@ -4180,7 +4182,6 @@ fa_IR:
         today: "امروز"
     custom_homepage:
       admin_message: 'یکی از پوسته‌های شما، اصلاح‌کننده «custom_homepage» را فعال کرده است؛ اما چیزی را در رابط [custom-homepage] خروجی نمی‌دهد. (این پیام فقط برای مدیران سایت نمایش داده می شود.)'
-    browser_update: 'متأسفانه، <a href="https://www.discourse.org/faq/#browser">مرورگر شما پشتیبانی نمی شود</a>. لطفاً برای مشاهده محتوای غنی، وارد شدن به حساب کاربری و پاسخ دادن، <a href="https://browsehappy.com">به مرورگر پشتیبانی شده منتقل شوید</a>.'
     permission_types:
       full: "ساختن / پاسخ دادن / دیدن"
       create_post: "پاسخ دادن / دیدن"
@@ -4681,6 +4682,7 @@ fa_IR:
       back_to_forum: "بازگشت به انجمن"
       collapse_all_sections: "جمع‌کردن همه بخش‌ها"
       expand_all_sections: "گستردن همه بخش‌ها"
+      search: "جستجو"
       footer:
         interface_color_selector:
           light: "روشن"
@@ -5666,11 +5668,14 @@ fa_IR:
           save_successful: "فیلد کاربر ذخیره شد."
         color_palettes:
           palette_name: "نام"
+          duplicate: "تکراری"
+          delete: "حذف"
           color_options:
             toggle: "قابل انتخاب توسط کاربر"
             toggle_description: "پالت رنگ می‌تواند توسط کاربران انتخاب شود"
           colors:
             title: "رنگ‌ها"
+          delete_confirm: "این پالت رنگ حذف شود؟"
       plugins:
         title: "افزونه‌ها"
         name: "نام"
@@ -5840,9 +5845,11 @@ fa_IR:
           extra_files_upload: "برای مشاهده این فایل‌ها، پوسته را صادر کنید."
           extra_files_remote: "برای مشاهده این فایل‌ها، پوسته را صادر کنید یا مخزن git را بررسی کنید."
           preview: "پیش‌نمایش"
+          default: "فعال"
           settings_editor: "تنظیمات ویرایشگر"
           is_default: "قالب پیش‌فرض"
           user_selectable: "قالب توسط کاربر قابل تغییر است"
+          user_selectable_badge_label: "قابل انتخاب توسط کاربر"
           color_scheme_user_selectable: "پالت رنگ می‌تواند توسط کاربران انتخاب شود"
           auto_update: "به‌روزرسانی خودکار هنگام به‌روزرسانی Discourse"
           color_scheme: "پالت رنگ"
@@ -5860,8 +5867,6 @@ fa_IR:
           convert_theme_alert_generic: "آیا مطمئن هستید که می خواهید این پوسته را به کامپوننت تبدیل کنید؟"
           convert_theme_tooltip: "تبدیل این تم به کامپوننت"
           inactive_themes: "تم های غیر فعال:"
-          set_default_theme: "تنظیم به عنوان پیش‌فرض"
-          default_theme: "پوسته پیش‌فرض"
           set_default_success: "پوسته پیش‌فرض روی %{theme} تنظیم شد."
           install_success: "%{theme} با موفقیت نصب شد!"
           inactive_components: "کامپوننت‌های بلااستفاده:"
@@ -5929,7 +5934,6 @@ fa_IR:
             error: "این پوسته به طور خودکار غیرفعال شده است زیرا با این نسخه از Discourse سازگار نیست."
             minimum: "نیاز به نسخه %{version} دیسکورس یا بالاتر"
             maximum: "نیاز به نسخه %{version} دیسکورس یا پایین‌تر"
-          update_to_latest: "به‌روز‌رسانی به آخرین نسخه"
           check_for_updates: "برررسی به‌روز‌رسانی‌ها"
           updating: "در حال به‌روز‌رسانی..."
           update_success: "%{theme} به روز رسانی کامل شد"

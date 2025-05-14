@@ -4387,7 +4387,6 @@ pl_PL:
     images:
       too_large: "Przepraszamy, obraz, który próbujesz przesłać jest zbyt duży (maksymalny rozmiar to %{max_size_kb}KB), proszę zmienić rozmiar i spróbować ponownie."
       too_large_humanized: "Przepraszamy, obraz, który próbujesz przesłać jest za duży (maksymalny rozmiar to %{max_size}), zmień jego rozmiar i spróbuj ponownie."
-      larger_than_x_megapixels: "Przepraszamy, obraz, który próbujesz przesłać, jest zbyt duży (maksymalny rozmiar to %{max_image_megapixels} megapikseli), zmień jego rozmiar i spróbuj ponownie."
       size_not_found: "Przepraszamy, ale nie udało się ustalić rozmiaru obrazu. Może twój obraz jest uszkodzony?"
     placeholders:
       too_large: "(obraz większy niż %{max_size_kb}KB)"
@@ -5525,6 +5524,8 @@ pl_PL:
       duplicate_ids: "ma zduplikowane identyfikatory"
       reserved_id: "ma zastrzeżone słowo kluczowe jako id: %{id}"
       unsafe_description: "zawiera niebezpieczny opis HTML"
+  content_localization:
+    not_allowed: "Nie możesz lokalizować tej zawartości."
   activemodel:
     errors:
       <<: *errors

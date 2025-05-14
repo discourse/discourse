@@ -124,6 +124,14 @@ RSpec.describe Middleware::AnonymousCache do
       }.not_to raise_error
     end
 
+    it "handles showing original content" do
+      show_orig_key =
+        new_helper("HTTP_COOKIE" => ContentLocalization::SHOW_ORIGINAL_COOKIE).cache_key
+      regular_key = new_helper.cache_key
+
+      expect(show_orig_key).not_to eq(regular_key)
+    end
+
     context "when cached" do
       let!(:helper) { new_helper("ANON_CACHE_DURATION" => 10) }
 

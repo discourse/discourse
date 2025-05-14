@@ -54,7 +54,7 @@ module("Integration | Component | AdminSearch", function (hooks) {
     await click(filterButtonCss("setting"));
     assert.dom(".admin-search__result").doesNotExist();
 
-    await fillIn(".admin-search__input-field", "admin login");
+    await fillIn(".admin-search__input-field", "admin logins");
     assert.dom(".admin-search__result").exists({ count: 1 });
 
     await click(filterButtonCss("report"));

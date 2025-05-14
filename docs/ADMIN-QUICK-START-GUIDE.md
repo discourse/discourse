@@ -12,7 +12,7 @@ Email is required for new account signups and notifications.
 
 Collaborating with others?
 
-→ **[<kbd>Send invites</kbd>](%{base_url}/my/invited)** to your team members.
+→ **[<kbd>Send invites</kbd>](%{base_url}/new-invite)** to your team members.
 
 ## :speech_balloon: Start some conversations
 
@@ -28,7 +28,7 @@ Help your new members feel right at home when they first arrive.
 
 → Personalize your **[<kbd>welcome topic</kbd>](%{base_url}/t/-/5/)** and fill out your **[<kbd>about page</kbd>](%{base_url}/about)**.
 
-→ Customize your **[<kbd>site appearance</kbd>](%{base_url}/admin/config/logo-and-fonts)**.
+→ Customize your **[<kbd>site appearance</kbd>](%{base_url}/admin/config/logo)**.
 
 → Set up different **[<kbd>login methods</kbd>](%{base_url}/admin/config/login-and-authentication)** for your members.
 
@@ -36,7 +36,7 @@ Help your new members feel right at home when they first arrive.
 
 Welcome a few people in - the more, the merrier!
 
-→ Send out **[<kbd>invites</kbd>](%{base_url}/my/invited)** or send people the link to your community.
+→ Send out **[<kbd>invites</kbd>](%{base_url}/new-invite)** or send people the link to your community.
 
 ## :books: Learn more about Discourse
 

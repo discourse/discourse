@@ -456,6 +456,8 @@ module ApplicationHelper
     if current_user && !crawler_layout?
       params.key?(:print)
     else
+      return false if !current_user && SiteSetting.login_required?
+
       crawler_layout? || !mobile_view? || !modern_mobile_device?
     end
   end

@@ -48,5 +48,17 @@ RSpec.describe HomepageHelper do
         expect(HomepageHelper.resolve).to eq("top")
       end
     end
+
+    context "with login required" do
+      before do
+        SiteSetting.login_required = true
+        SiteSetting.top_menu = "new|top|latest|unread"
+      end
+
+      it "returns a blank route for anon, first result from top menu for authenticated user" do
+        expect(HomepageHelper.resolve).to eq("blank")
+        expect(HomepageHelper.resolve(nil, user)).to eq("new")
+      end
+    end
   end
 end

@@ -30,10 +30,12 @@ zh_CN:
     chat_editing_grace_period_max_diff_low_trust: "聊天编辑宽限期内允许的最大字符更改数，超过此值将在聊天消息旁边显示（已编辑）标签（信任级别 0 和 1）。"
     chat_editing_grace_period_max_diff_high_trust: "聊天编辑宽限期内允许的最大字符更改数，超过此值将在聊天消息旁边显示（已编辑）标签（信任级别 2 及以上）。"
     chat_preferred_index: "加载/聊天时的首选项标签页。"
+    allow_chat_in_anonymous_mode: "启用此设置以允许匿名浏览您网站的用户使用聊天。 此设置需要启用“允许匿名模式”设置。"
     errors:
       chat_default_channel: "默认聊天频道必须是公共频道。"
       direct_message_enabled_groups_invalid: "您必须为此设置至少指定一个群组。如果您不希望管理人员以外的任何人发送直接消息，请选择管理人员群组。"
       chat_upload_not_allowed_secure_uploads: "当启用安全上传网站设置时，不允许在聊天中上传文件。"
+      allow_chat_in_anonymous_mode_invalid: "此设置需要先启用“允许匿名模式”设置。"
   system_messages:
     private_channel_title: "频道 %{id}"
     chat_channel_archive_complete:
@@ -59,6 +61,7 @@ zh_CN:
     deleted_chat_username: 已删除
     errors:
       users_cant_be_added_to_channel: "无法将用户添加到此频道。"
+      user_cant_be_removed_from_channel: "无法将用户从该频道中移除"
       channel_exists_for_category: "此类别和名称的频道已经存在"
       channel_new_message_disallowed:
         archived: "该频道已被归档，无法发送新消息"

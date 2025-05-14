@@ -1477,7 +1477,6 @@ ar:
       said: "%{username}:"
       profile: "الملف الشخصي"
       profile_possessive: "الملف الشخصي لـ %{username}"
-      account_possessive: "حساب %{name}"
       mute: "كتم"
       edit: "تعديل التفضيلات"
       download_archive:
@@ -2425,7 +2424,6 @@ ar:
         title: "عنوان IP للتسجيل"
       avatar:
         title: "صورة الملف الشخصي"
-        header_title: "الملف الشخصي والرسائل والإشارات المرجعية والتفضيلات"
         name_and_description: "%{name} - %{description}"
         edit: "تعديل صورة الملف الشخصي"
       title:
@@ -3452,7 +3450,6 @@ ar:
           aria_label: التصفية حسب أقصى عدد من المشاهدات
         additional_options:
           label: "التصفية حسب عدد المنشورات وعدد مشاهدات الموضوع"
-    hamburger_menu: "القائمة"
     new_item: "جديد"
     go_back: "الرجوع"
     not_logged_in_user: "صفحة المستخدم مع ملخص عن نشاطه الحالي وتفضيلاته"
@@ -4359,6 +4356,11 @@ ar:
       in_reply_to: "تحميل المنشور الرئيسي"
       view_all_posts: "عرض جميع المنشورات"
       badge_granted_tooltip: "حصل %{username} على شارة \"%{badge_name}\" لهذا المنشور!"
+      localizations:
+        table:
+          actions: "الإجراءات"
+          edit: "تعديل"
+          delete: "حذف"
       errors:
         create: "عذرًا، حدث خطأ في أثناء إنشاء منشورك. يُرجى إعادة المحاولة."
         edit: "عذرا، حدث خطأ في أثناء تعديل منشورك. يُرجى إعادة المحاولة."
@@ -5059,7 +5061,6 @@ ar:
         today: "اليوم"
     custom_homepage:
       admin_message: 'لقد قامت إحدى السمات الخاصة بك بتفعيل المعدِّل "custom_homepage"، لكنه لا ينتج أي شيء في الموصِّل [custom-homepage]. (هذه الرسالة تظهر لمسؤولي الموقع فقط.)'
-    browser_update: 'عذرًا، <a href="https://www.discourse.org/faq/#browser">متصفحك غير مدعوم</a>. يُرجى <a href="https://browsehappy.com">التبديل إلى متصفح مدعوم</a> لعرض المحتوى الغني، وتسجيل الدخول والرد.'
     permission_types:
       full: "الإنشاء/الرد/العرض"
       create_post: "الرد/العرض"
@@ -5651,6 +5652,7 @@ ar:
       back_to_forum: "العودة إلى المنتدى"
       collapse_all_sections: "طي جميع الأقسام"
       expand_all_sections: "توسيع جميع الأقسام"
+      search: "البحث"
       footer:
         interface_color_selector:
           light: "فاتح"
@@ -5772,6 +5774,7 @@ ar:
           paste: "لصق..."
           save: "الحفظ باسم..."
     powered_by_discourse: "بدعم من Discourse"
+    safari_15_warning: "سيُصبح متصفّحك غير متوافق مع هذا المجتمع قريبًا. للاستمرار في المشاركة هنا، يُرجى ترقية متصفّحك أو <a href='%{url}'>الاطّلاع على المزيد</a>."
     discovery:
       headings:
         categories: "كل الفئات"
@@ -5843,7 +5846,9 @@ ar:
           header_description: "تكوين كيفية تسجيل دخول المستخدمين ومصادقتهم، والعبارات السرية، والمفاتيح، ومقِّدمي OAuth2، وغير ذلك"
         logo_and_fonts:
           logo:
+            title: "الشعار"
             form:
+              saved: "حُفظت إعدادات الشعار."
               logo:
                 title: "الشعار الرئيسي"
               mobile: "الجوَّال"
@@ -5908,10 +5913,19 @@ ar:
         reports:
           title: "التقارير"
           header_description: "تُعَد التقارير أداةً قوية لمساعدتك على فيهم ما يحدث على موقعك. ويمكنها مساعدتك في تحديد الاتجاهات الرائجة، واكتشاف المشكلات، واتخاذ القرارات استنادًا إلى البيانات."
+          sub_pages:
+            settings:
+              title: "إعدادات لوحة التحكم"
         badges:
           title: "الشارات"
           header_description: "تكافئ الشارات المستخدمين على أنشطتهم ومساهماتهم وإنجازاتهم للإشادة بالسلوك الإيجابي والتفاعل داخل المجتمع والإقرار بهما وتشجيعهما"
+        analytics:
+          title: "التحليلات وتحسين محركات البحث (SEO)"
+          header_description: "حسّن ظهور موقعك لمحركات البحث وتكوين كيفية تتبع زوار الموقع"
+        interface:
+          title: "الواجهة والتخطيط"
         content:
+          title: "المحتوى"
           sub_pages:
             posts_and_topics:
               title: "المنشورات والموضوعات"
@@ -5939,6 +5953,8 @@ ar:
           title: "نصوص الموقع"
         email:
           sub_pages:
+            server_settings:
+              title: "إعدادات الخادم"
             preview_summary:
               title: "معاينة الملخص"
               header_description: "معاينة محتوى الرسائل الإلكترونية التلخيصية المُرسَلة إلى الأعضاء غير النشطين"
@@ -5947,6 +5963,7 @@ ar:
             templates:
               title: "القوالب"
         email_logs:
+          title: "سجلات البريد الإلكتروني"
           sub_pages:
             sent:
               title: "المُرسَلة"
@@ -6708,11 +6725,15 @@ ar:
           save_successful: "تم حفظ حقل المستخدم."
         color_palettes:
           palette_name: "الاسم"
+          duplicate: "تكرار"
+          delete: "حذف"
           color_options:
             toggle: "قابلة للاختيار من قِبل المستخدم"
             toggle_description: "يمكن تحديد لوحة الألوان من قِبل المستخدمين"
           colors:
             title: "الألوان"
+          save_changes: "احفظ التغييرات"
+          delete_confirm: "هل تريد حذف لوحة الألوان هذه؟"
       plugins:
         title: "الإضافات"
         name: "الاسم"
@@ -6883,9 +6904,11 @@ ar:
           extra_files_upload: "يجب تصدير السمة لعرض هذه الملفات."
           extra_files_remote: "يجب تصدير السمة أو التحقُّق من مستودع Git لعرض هذه الملفات."
           preview: "معاينة"
+          default: "نشطة"
           settings_editor: "محرر الإعدادات"
           is_default: "السمة مفعَّلة بشكلٍٍ افتراضي"
           user_selectable: "يمكن للمستخدمين تحديد السمة"
+          user_selectable_badge_label: "قابلة للاختيار من قِبل المستخدم"
           color_scheme_user_selectable: "يمكن تحديد لوحة الألوان من قِبل المستخدمين"
           auto_update: "التحديث التلقائي عند تحديث Discourse"
           color_scheme: "لوحة الألوان"
@@ -6903,8 +6926,6 @@ ar:
           convert_theme_alert_generic: "هل تريد بالتأكيد تحويل هذه السمة إلى مكوِّن؟"
           convert_theme_tooltip: "تحويل هذه السمة إلى مكوِّن"
           inactive_themes: "السمات غير النشطة:"
-          set_default_theme: "التعيين كافتراضية"
-          default_theme: "السمة الافتراضية"
           set_default_success: "السمة الافتراضية مُعيَّنة على %{theme}"
           install_success: "تم تثبيت السمة %{theme} بنجاح!"
           inactive_components: "المكوِّنات غير المستخدمة:"
@@ -6945,6 +6966,8 @@ ar:
           unsaved_parent_themes: "لم تخصِّص المكوِّن للسمات، هل تريد المضي قدمًا؟"
           discard: "تجاهل"
           stay: "البقاء"
+          css_html: "رمز مخصّص"
+          edit_css_html: "حرّر الرمز"
           delete_upload_confirm: "هل تريد حذف هذا الملف؟ (قد يتوقف ملف CSS عن العمل!)"
           component_on_themes: "تضمين العنصر في هذه السمات"
           included_components: "المكوِّنات المضمَّنة"
@@ -6983,8 +7006,7 @@ ar:
             error: "تم إيقاف هذه السمة تلقائيًا لأنها غير متوافقة مع هذا الإصدار من Discourse."
             minimum: "تتطلَّب الإصدار %{version} من Discourse أو أحدث."
             maximum: "تتطلَّب الإصدار %{version} من Discourse أو أقدم."
-          update_to_latest: "تحديث إلى الإصدار الأخير"
-          check_for_updates: "التحقُّق من وجود تحديثات"
+          check_for_updates: "تحقَّق من وجود تحديثات"
           updating: "جارٍ التحديث…"
           update_success: "اكتمل تحديث السمة %{theme}"
           up_to_date: "السمة محدَّثة، تاريخ آخر تحقُّق:"

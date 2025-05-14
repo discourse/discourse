@@ -2,40 +2,89 @@
 
 RSpec.describe Admin::Config::CustomizeController do
   fab!(:admin)
-  fab!(:parent_theme_1) { Fabricate(:theme) }
-  fab!(:parent_theme_2) { Fabricate(:theme) }
-
-  fab!(:used_component) do
-    Fabricate(
-      :theme,
-      name: "AweSome comp",
-      component: true,
-      parent_themes: [parent_theme_1, parent_theme_2],
-    )
-  end
-  fab!(:unused_component) { Fabricate(:theme, name: "some comp", component: true) }
-  fab!(:remote_component) do
-    Fabricate(
-      :theme,
-      component: true,
-      remote_theme: RemoteTheme.create!(remote_url: "https://github.com/discourse/discourse-tc"),
-    )
-  end
-  fab!(:remote_component_with_update) do
-    Fabricate(
-      :theme,
-      component: true,
-      remote_theme:
-        RemoteTheme.create!(
-          remote_url: "https://github.com/discourse/discourse",
-          commits_behind: 1,
-        ),
-    )
-  end
 
   before { sign_in(admin) }
 
+  describe "#themes" do
+    fab!(:theme1) { Fabricate(:theme, name: "Theme 1", component: false) }
+    fab!(:theme2) { Fabricate(:theme, name: "Theme 2", component: false) }
+    fab!(:component) { Fabricate(:theme, name: "Component", component: true) }
+
+    it "returns only non-component themes" do
+      get "/admin/config/customize/themes.json"
+
+      expect(response.status).to eq(200)
+
+      themes = response.parsed_body["themes"]
+      theme_ids = themes.map { |t| t["id"] }
+
+      expect(theme_ids).to include(theme1.id)
+      expect(theme_ids).to include(theme2.id)
+      expect(theme_ids).not_to include(component.id)
+    end
+
+    it "includes color scheme in response" do
+      color_scheme = Fabricate(:color_scheme)
+      theme1.update!(color_scheme_id: color_scheme.id)
+
+      get "/admin/config/customize/themes.json"
+
+      expect(response.status).to eq(200)
+
+      theme_response = response.parsed_body["themes"].find { |t| t["id"] == theme1.id }
+      expect(theme_response["color_scheme"]["id"]).to eq(color_scheme.id)
+    end
+
+    it "includes screenshot_url in response" do
+      upload = UploadCreator.new(file_from_fixtures("logo.png"), "logo.png").create_for(-1)
+      theme1.set_field(
+        target: :common,
+        name: "screenshot",
+        upload_id: upload.id,
+        type: :theme_screenshot_upload_var,
+      )
+      theme1.save!
+
+      get "/admin/config/customize/themes.json"
+
+      expect(response.status).to eq(200)
+
+      theme_response = response.parsed_body["themes"].find { |t| t["id"] == theme1.id }
+      expect(theme_response["screenshot_url"]).to eq(upload.url)
+    end
+  end
+
   describe "#components" do
+    fab!(:parent_theme_1) { Fabricate(:theme) }
+    fab!(:parent_theme_2) { Fabricate(:theme) }
+
+    fab!(:used_component) do
+      Fabricate(
+        :theme,
+        name: "AweSome comp",
+        component: true,
+        parent_themes: [parent_theme_1, parent_theme_2],
+      )
+    end
+    fab!(:unused_component) { Fabricate(:theme, name: "some comp", component: true) }
+    fab!(:remote_component) do
+      Fabricate(
+        :theme,
+        component: true,
+        remote_theme: RemoteTheme.create!(remote_url: "https://github.com/discourse/discourse-tc"),
+      )
+    end
+    fab!(:remote_component_with_update) do
+      Fabricate(
+        :theme,
+        component: true,
+        remote_theme:
+          RemoteTheme.create!(
+            remote_url: "https://github.com/discourse/discourse",
+            commits_behind: 1,
+          ),
+      )
+    end
     context "when filtering by `used`" do
       it "returns components that have a parent theme" do
         get "/admin/config/customize/components.json", params: { status: "used" }

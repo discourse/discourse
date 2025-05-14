@@ -79,7 +79,7 @@ export default class AdminLogoForm extends Component {
       this.toasts.success({
         duration: 3000,
         data: {
-          message: i18n("admin.config.logo_and_fonts.logo.form.saved"),
+          message: i18n("admin.config.logo.form.saved"),
         },
       });
       this.siteSettingChangeTracker.refreshPage(data);
@@ -131,13 +131,9 @@ export default class AdminLogoForm extends Component {
       >
         <form.Field
           @name="logo"
-          @title={{i18n "admin.config.logo_and_fonts.logo.form.logo.title"}}
-          @description={{i18n
-            "admin.config.logo_and_fonts.logo.form.logo.description"
-          }}
-          @helpText={{i18n
-            "admin.config.logo_and_fonts.logo.form.logo.help_text"
-          }}
+          @title={{i18n "admin.config.logo.form.logo.title"}}
+          @description={{i18n "admin.config.logo.form.logo.description"}}
+          @helpText={{i18n "admin.config.logo.form.logo.help_text"}}
           @onSet={{fn this.handleUpload "logo"}}
           as |field|
         >
@@ -145,9 +141,7 @@ export default class AdminLogoForm extends Component {
         </form.Field>
         <form.Field
           @name="logo_dark_required"
-          @title={{i18n
-            "admin.config.logo_and_fonts.logo.form.logo_dark.required"
-          }}
+          @title={{i18n "admin.config.logo.form.logo_dark.required"}}
           @format="full"
           as |field|
         >
@@ -157,12 +151,8 @@ export default class AdminLogoForm extends Component {
           <form.Section>
             <form.Field
               @name="logo_dark"
-              @title={{i18n
-                "admin.config.logo_and_fonts.logo.form.logo_dark.title"
-              }}
-              @helpText={{i18n
-                "admin.config.logo_and_fonts.logo.form.logo_dark.help_text"
-              }}
+              @title={{i18n "admin.config.logo.form.logo_dark.title"}}
+              @helpText={{i18n "admin.config.logo.form.logo_dark.help_text"}}
               @onSet={{fn this.handleUpload "logo_dark"}}
               as |field|
             >
@@ -172,15 +162,9 @@ export default class AdminLogoForm extends Component {
         {{/if}}
         <form.Field
           @name="large_icon"
-          @title={{i18n
-            "admin.config.logo_and_fonts.logo.form.large_icon.title"
-          }}
-          @description={{i18n
-            "admin.config.logo_and_fonts.logo.form.large_icon.description"
-          }}
-          @helpText={{i18n
-            "admin.config.logo_and_fonts.logo.form.large_icon.help_text"
-          }}
+          @title={{i18n "admin.config.logo.form.large_icon.title"}}
+          @description={{i18n "admin.config.logo.form.large_icon.description"}}
+          @helpText={{i18n "admin.config.logo.form.large_icon.help_text"}}
           @onSet={{fn this.handleUpload "large_icon"}}
           @placeholderUrl={{this.placeholders.large_icon}}
           as |field|
@@ -189,10 +173,8 @@ export default class AdminLogoForm extends Component {
         </form.Field>
         <form.Field
           @name="favicon"
-          @title={{i18n "admin.config.logo_and_fonts.logo.form.favicon.title"}}
-          @description={{i18n
-            "admin.config.logo_and_fonts.logo.form.favicon.description"
-          }}
+          @title={{i18n "admin.config.logo.form.favicon.title"}}
+          @description={{i18n "admin.config.logo.form.favicon.description"}}
           @onSet={{fn this.handleUpload "favicon"}}
           @placeholderUrl={{this.placeholders.favicon}}
           as |field|
@@ -201,15 +183,9 @@ export default class AdminLogoForm extends Component {
         </form.Field>
         <form.Field
           @name="logo_small"
-          @title={{i18n
-            "admin.config.logo_and_fonts.logo.form.logo_small.title"
-          }}
-          @description={{i18n
-            "admin.config.logo_and_fonts.logo.form.logo_small.description"
-          }}
-          @helpText={{i18n
-            "admin.config.logo_and_fonts.logo.form.logo_small.help_text"
-          }}
+          @title={{i18n "admin.config.logo.form.logo_small.title"}}
+          @description={{i18n "admin.config.logo.form.logo_small.description"}}
+          @helpText={{i18n "admin.config.logo.form.logo_small.help_text"}}
           @onSet={{fn this.handleUpload "logo_small"}}
           as |field|
         >
@@ -217,9 +193,7 @@ export default class AdminLogoForm extends Component {
         </form.Field>
         <form.Field
           @name="logo_small_dark_required"
-          @title={{i18n
-            "admin.config.logo_and_fonts.logo.form.logo_small_dark.required"
-          }}
+          @title={{i18n "admin.config.logo.form.logo_small_dark.required"}}
           @format="full"
           as |field|
         >
@@ -229,11 +203,9 @@ export default class AdminLogoForm extends Component {
           <form.Section>
             <form.Field
               @name="logo_small_dark"
-              @title={{i18n
-                "admin.config.logo_and_fonts.logo.form.logo_small_dark.title"
-              }}
+              @title={{i18n "admin.config.logo.form.logo_small_dark.title"}}
               @helpText={{i18n
-                "admin.config.logo_and_fonts.logo.form.logo_small_dark.help_text"
+                "admin.config.logo.form.logo_small_dark.help_text"
               }}
               @onSet={{fn this.handleUpload "logo_small_dark"}}
               as |field|
@@ -244,7 +216,7 @@ export default class AdminLogoForm extends Component {
         {{/if}}
 
         <AdminConfigAreaCardSection
-          @heading={{i18n "admin.config.logo_and_fonts.logo.form.mobile"}}
+          @heading={{i18n "admin.config.logo.form.mobile"}}
           class="admin-logo-form__mobile-section"
           @collapsable={{true}}
           @collapsed={{true}}
@@ -252,15 +224,11 @@ export default class AdminLogoForm extends Component {
           <:content>
             <form.Field
               @name="mobile_logo"
-              @title={{i18n
-                "admin.config.logo_and_fonts.logo.form.mobile_logo.title"
-              }}
+              @title={{i18n "admin.config.logo.form.mobile_logo.title"}}
               @description={{i18n
-                "admin.config.logo_and_fonts.logo.form.mobile_logo.description"
+                "admin.config.logo.form.mobile_logo.description"
               }}
-              @helpText={{i18n
-                "admin.config.logo_and_fonts.logo.form.mobile_logo.help_text"
-              }}
+              @helpText={{i18n "admin.config.logo.form.mobile_logo.help_text"}}
               @onSet={{fn this.handleUpload "mobile_logo"}}
               @placeholderUrl={{this.placeholders.mobile_logo}}
               as |field|
@@ -269,9 +237,7 @@ export default class AdminLogoForm extends Component {
             </form.Field>
             <form.Field
               @name="mobile_logo_dark_required"
-              @title={{i18n
-                "admin.config.logo_and_fonts.logo.form.mobile_logo_dark.required"
-              }}
+              @title={{i18n "admin.config.logo.form.mobile_logo_dark.required"}}
               @format="full"
               as |field|
             >
@@ -282,10 +248,10 @@ export default class AdminLogoForm extends Component {
                 <form.Field
                   @name="mobile_logo_dark"
                   @title={{i18n
-                    "admin.config.logo_and_fonts.logo.form.mobile_logo_dark.title"
+                    "admin.config.logo.form.mobile_logo_dark.title"
                   }}
                   @helpText={{i18n
-                    "admin.config.logo_and_fonts.logo.form.mobile_logo_dark.help_text"
+                    "admin.config.logo.form.mobile_logo_dark.help_text"
                   }}
                   @onSet={{fn this.handleUpload "mobile_logo_dark"}}
                   as |field|
@@ -296,14 +262,12 @@ export default class AdminLogoForm extends Component {
             {{/if}}
             <form.Field
               @name="manifest_icon"
-              @title={{i18n
-                "admin.config.logo_and_fonts.logo.form.manifest_icon.title"
-              }}
+              @title={{i18n "admin.config.logo.form.manifest_icon.title"}}
               @description={{i18n
-                "admin.config.logo_and_fonts.logo.form.manifest_icon.description"
+                "admin.config.logo.form.manifest_icon.description"
               }}
               @helpText={{i18n
-                "admin.config.logo_and_fonts.logo.form.manifest_icon.help_text"
+                "admin.config.logo.form.manifest_icon.help_text"
               }}
               @onSet={{fn this.handleUpload "manifest_icon"}}
               as |field|
@@ -313,10 +277,10 @@ export default class AdminLogoForm extends Component {
             <form.Field
               @name="manifest_screenshots"
               @title={{i18n
-                "admin.config.logo_and_fonts.logo.form.manifest_screenshots.title"
+                "admin.config.logo.form.manifest_screenshots.title"
               }}
               @description={{i18n
-                "admin.config.logo_and_fonts.logo.form.manifest_screenshots.description"
+                "admin.config.logo.form.manifest_screenshots.description"
               }}
               @format="full"
               as |field|
@@ -333,14 +297,12 @@ export default class AdminLogoForm extends Component {
             </form.Field>
             <form.Field
               @name="apple_touch_icon"
-              @title={{i18n
-                "admin.config.logo_and_fonts.logo.form.apple_touch_icon.title"
-              }}
+              @title={{i18n "admin.config.logo.form.apple_touch_icon.title"}}
               @description={{i18n
-                "admin.config.logo_and_fonts.logo.form.apple_touch_icon.description"
+                "admin.config.logo.form.apple_touch_icon.description"
               }}
               @helpText={{i18n
-                "admin.config.logo_and_fonts.logo.form.apple_touch_icon.help_text"
+                "admin.config.logo.form.apple_touch_icon.help_text"
               }}
               @onSet={{fn this.handleUpload "apple_touch_icon"}}
               @placeholderUrl={{this.placeholders.apple_touch_icon}}
@@ -351,7 +313,7 @@ export default class AdminLogoForm extends Component {
           </:content>
         </AdminConfigAreaCardSection>
         <AdminConfigAreaCardSection
-          @heading={{i18n "admin.config.logo_and_fonts.logo.form.email"}}
+          @heading={{i18n "admin.config.logo.form.email"}}
           class="admin-logo-form__email-section"
           @collapsable={{true}}
           @collapsed={{true}}
@@ -359,15 +321,11 @@ export default class AdminLogoForm extends Component {
           <:content>
             <form.Field
               @name="digest_logo"
-              @title={{i18n
-                "admin.config.logo_and_fonts.logo.form.digest_logo.title"
-              }}
+              @title={{i18n "admin.config.logo.form.digest_logo.title"}}
               @description={{i18n
-                "admin.config.logo_and_fonts.logo.form.digest_logo.description"
+                "admin.config.logo.form.digest_logo.description"
               }}
-              @helpText={{i18n
-                "admin.config.logo_and_fonts.logo.form.digest_logo.help_text"
-              }}
+              @helpText={{i18n "admin.config.logo.form.digest_logo.help_text"}}
               @onSet={{fn this.handleUpload "digest_logo"}}
               @placeholderUrl={{this.placeholders.digest_logo}}
               as |field|
@@ -380,7 +338,7 @@ export default class AdminLogoForm extends Component {
           </:content>
         </AdminConfigAreaCardSection>
         <AdminConfigAreaCardSection
-          @heading={{i18n "admin.config.logo_and_fonts.logo.form.social_media"}}
+          @heading={{i18n "admin.config.logo.form.social_media"}}
           class="admin-logo-form__social-media-section"
           @collapsable={{true}}
           @collapsed={{true}}
@@ -388,11 +346,9 @@ export default class AdminLogoForm extends Component {
           <:content>
             <form.Field
               @name="opengraph_image"
-              @title={{i18n
-                "admin.config.logo_and_fonts.logo.form.opengraph_image.title"
-              }}
+              @title={{i18n "admin.config.logo.form.opengraph_image.title"}}
               @description={{i18n
-                "admin.config.logo_and_fonts.logo.form.opengraph_image.description"
+                "admin.config.logo.form.opengraph_image.description"
               }}
               @onSet={{fn this.handleUpload "opengraph_image"}}
               @placeholderUrl={{this.placeholders.opengraph_image}}

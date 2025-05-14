@@ -40,6 +40,17 @@
         }
       }
 
+      .image-uploader {
+        display: flex;
+        flex-direction: column;
+
+        .image-upload-controls {
+          display: flex;
+          gap: 0.5em;
+          margin: 0 0 0.5em;
+        }
+      }
+
       .uploaded-image-preview {
         background-size: contain;
         background-repeat: no-repeat;

@@ -41,7 +41,7 @@ module PageObjects
 
       def has_saved_successfully?
         PageObjects::Components::Toasts.new.has_success?(
-          I18n.t("admin_js.admin.config.logo_and_fonts.fonts.form.saved"),
+          I18n.t("admin_js.admin.config.fonts.form.saved"),
         )
       end
 

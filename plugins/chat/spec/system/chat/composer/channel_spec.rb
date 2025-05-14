@@ -8,6 +8,7 @@ RSpec.describe "Chat | composer | channel", type: :system do
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
   let(:thread_page) { PageObjects::Pages::ChatThread.new }
+  let(:cdp) { PageObjects::CDP.new }
 
   before do
     chat_system_bootstrap
@@ -71,15 +72,15 @@ RSpec.describe "Chat | composer | channel", type: :system do
 
     it "updates the message instantly" do
       chat_page.visit_channel(channel_1)
-      page.driver.browser.network_conditions = { offline: true }
-      channel_page.edit_message(message_1, "instant")
 
-      expect(channel_page.messages).to have_message(
-        text: message_1.message + " instant",
-        persisted: false,
-      )
-    ensure
-      page.driver.browser.network_conditions = { offline: false }
+      cdp.with_network_disconnected do
+        channel_page.edit_message(message_1, "instant")
+
+        expect(channel_page.messages).to have_message(
+          text: message_1.message + " instant",
+          persisted: false,
+        )
+      end
     end
 
     context "when pressing escape" do

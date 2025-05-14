@@ -1161,7 +1161,6 @@ fr:
       said: "%{username} :"
       profile: "Profil"
       profile_possessive: "Profil de %{username}"
-      account_possessive: "Compte de %{name}"
       mute: "Mettre en sourdine"
       edit: "Modifier les préférences"
       download_archive:
@@ -1993,7 +1992,6 @@ fr:
         title: "Adresse IP d'enregistrement"
       avatar:
         title: "Image de profil"
-        header_title: "profil, messages, signets et préférences"
         name_and_description: "%{name} - %{description}"
         edit: "Modifier l'image de profil"
       title:
@@ -2860,7 +2858,6 @@ fr:
           aria_label: filtrer par nombre de vues maximal
         additional_options:
           label: "Filtrer par nombre de messages et vues par sujet"
-    hamburger_menu: "menu"
     new_item: "nouveau"
     go_back: "retour"
     not_logged_in_user: "page utilisateur avec un résumé de l'activité et les préférences"
@@ -3567,6 +3564,11 @@ fr:
       in_reply_to: "Charger le message parent"
       view_all_posts: "Afficher tous les messages"
       badge_granted_tooltip: "%{username} a obtenu le badge « %{badge_name} » pour cette publication !"
+      localizations:
+        table:
+          actions: "Actions"
+          edit: "Modifier"
+          delete: "Supprimer"
       errors:
         create: "Nous sommes désolés, une erreur est survenue lors de la création de votre message. Veuillez réessayer."
         edit: "Nous sommes désolés, une erreur est survenue lors de la modification de votre message. Veuillez réessayer."
@@ -4164,7 +4166,6 @@ fr:
         today: "Aujourd'hui"
     custom_homepage:
       admin_message: 'L''un de vos thèmes a activé le modificateur « custom_homepage », mais il n''affiche rien dans le connecteur [custom-homepage]. (Ce message s''adresse uniquement aux administrateurs du site.)'
-    browser_update: 'Malheureusement, <a href="https://www.discourse.org/faq/#browser">votre navigateur n''est pas pris en charge</a>. Merci de <a href="https://browsehappy.com">mettre à jour votre navigateur</a> pour afficher le contenu enrichi, vous connecter et répondre.'
     permission_types:
       full: "Créer/Répondre/Voir"
       create_post: "Répondre/Voir"
@@ -4668,6 +4669,7 @@ fr:
       back_to_forum: "Retour au forum"
       collapse_all_sections: "Réduire toutes les sections"
       expand_all_sections: "Développer toutes les sections"
+      search: "Recherche"
       footer:
         interface_color_selector:
           light: "Clair"
@@ -5663,11 +5665,14 @@ fr:
           save_successful: "Champ utilisateur enregistré."
         color_palettes:
           palette_name: "Nom"
+          duplicate: "Dupliquer"
+          delete: "Supprimer"
           color_options:
             toggle: "Sélectionnable par l'utilisateur"
             toggle_description: "La palette de couleurs peut être sélectionnée par les utilisateurs"
           colors:
             title: "Couleurs"
+          delete_confirm: "Supprimer cette palette de couleurs ?"
       plugins:
         title: "Extensions"
         name: "Nom"
@@ -5838,9 +5843,11 @@ fr:
           extra_files_upload: "Exportez le thème pour voir ces fichiers."
           extra_files_remote: "Exportez le thème ou vérifiez le dépôt Git pour voir ces fichiers."
           preview: "Prévisualiser"
+          default: "Actifs"
           settings_editor: "Éditeur de paramètres"
           is_default: "Thème activé par défaut"
           user_selectable: "Thème sélectionnable par les utilisateurs"
+          user_selectable_badge_label: "Sélectionnable par l'utilisateur"
           color_scheme_user_selectable: "La palette de couleurs peut être sélectionnée par les utilisateurs"
           auto_update: "Mettre à jour automatiquement lors des mises à jour de Discourse"
           color_scheme: "Palette de couleurs"
@@ -5858,8 +5865,6 @@ fr:
           convert_theme_alert_generic: "Voulez-vous vraiment convertir ce thème en composant ?"
           convert_theme_tooltip: "Convertir ce thème en composant"
           inactive_themes: "Thèmes inactifs :"
-          set_default_theme: "Définir par défaut"
-          default_theme: "Thème par défaut"
           set_default_success: "Thème par défaut défini sur %{theme}"
           install_success: "%{theme} installé avec succès !"
           inactive_components: "Composants non utilisés :"
@@ -5930,7 +5935,6 @@ fr:
             error: "Ce thème a été désactivé automatiquement car il n'est pas compatible avec cette version de Discourse."
             minimum: "Nécessite la version %{version} ou supérieure de Discourse."
             maximum: "Nécessite la version %{version} ou inférieure de Discourse."
-          update_to_latest: "Mettre à jour"
           check_for_updates: "Vérifier les mises à jour"
           updating: "Mise à jour…"
           update_success: "%{theme} Mise à jour terminée"

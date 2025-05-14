@@ -12,6 +12,7 @@ import {
 import icon from "discourse/helpers/d-icon";
 import { makeArray } from "discourse/lib/helpers";
 import { i18n } from "discourse-i18n";
+import { isValidInput } from "select-kit/lib/input-utils";
 import UtilsMixin from "select-kit/mixins/utils";
 
 @classNames("select-kit-row")
@@ -194,7 +195,7 @@ export default class SelectKitRow extends Component.extend(UtilsMixin) {
         event.preventDefault();
         event.stopPropagation();
       } else {
-        if (this.isValidInput(event.key)) {
+        if (isValidInput(event.key)) {
           this.selectKit.set("filter", event.key);
           this.selectKit.triggerSearch();
           this.selectKit.focusFilter();
