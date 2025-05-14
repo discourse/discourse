@@ -128,6 +128,7 @@ export default class PostSmallAction extends Component {
 
   <template>
     <article
+      ...attributes
       id={{concat "post_" @post.post_number}}
       class={{concatClass
         "small-action"

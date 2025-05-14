@@ -325,12 +325,12 @@ export default class Post extends Component {
   }
 
   <template>
-    {{#if @cloaked}}
-      <div class="post--cloaked cloaked-post">
-      </div>
-    {{else}}
-      <div
-        class={{concatClass
+    <div
+      ...attributes
+      class={{if
+        @cloaked
+        "post--cloaked cloaked-post"
+        (concatClass
           "topic-post"
           "clearfix"
           (if this.staged "post--staged staged")
@@ -358,8 +358,11 @@ export default class Post extends Component {
           )
           (if @post.user_suspended "post--user-suspended user-suspended")
           this.additionalClasses
-        }}
-      >
+        )
+      }}
+      data-post-number={{@post.post_number}}
+    >
+      {{#unless @cloaked}}
         {{#let
           (hash
             post=@post
@@ -372,7 +375,6 @@ export default class Post extends Component {
         }}
           <PluginOutlet @name="post-article" @outletArgs={{postOutletArgs}}>
             <article
-              ...attributes
               id={{this.id}}
               class={{concatClass
                 "boxed"
@@ -596,7 +598,7 @@ export default class Post extends Component {
             </article>
           </PluginOutlet>
         {{/let}}
-      </div>
-    {{/if}}
+      {{/unless}}
+    </div>
   </template>
 }

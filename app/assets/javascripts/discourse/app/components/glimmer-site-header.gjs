@@ -155,6 +155,7 @@ export default class GlimmerSiteHeader extends Component {
       parseInt(docStyle.getPropertyValue("--header-offset"), 10) || 0;
     const newHeaderOffset = Math.floor(headerWrapBottom);
     if (currentHeaderOffset !== newHeaderOffset) {
+      this.header.headerOffset = newHeaderOffset;
       docStyle.setProperty("--header-offset", `${newHeaderOffset}px`);
     }
 
@@ -164,6 +165,7 @@ export default class GlimmerSiteHeader extends Component {
       headerWrapBottom + mainOutletOffsetTop
     );
     if (currentMainOutletOffset !== newMainOutletOffset) {
+      this.header.mainOutletOffset = newMainOutletOffset;
       docStyle.setProperty("--main-outlet-offset", `${newMainOutletOffset}px`);
     }
   }
@@ -199,6 +201,10 @@ export default class GlimmerSiteHeader extends Component {
       );
       this._resizeObserver.observe(document.querySelector(".discourse-root"));
     }
+
+    // the resize observer will not trigger on the first render, so we need to call it manually to get the initial value
+    // set just after the header is inserted
+    this.recalculateHeaderOffset();
   }
 
   _handleArrowKeysNav(event) {

@@ -1731,5 +1731,9 @@ html.discourse-no-touch .fullscreen-table-wrapper:hover {
 }
 
 .glimmer-post-stream {
-  background: rgba(255, 0, 0, 0.05);
+  background: #555;
+
+  .post--cloaked {
+    background: rebeccapurple;
+  }
 }

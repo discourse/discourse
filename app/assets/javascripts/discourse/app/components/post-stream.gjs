@@ -1,8 +1,13 @@
 import Component from "@glimmer/component";
-import { cached } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
 import { fn, get, hash } from "@ember/helper";
 import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
+import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
+import { TrackedSet } from "@ember-compat/tracked-built-ins";
+import { modifier } from "ember-modifier";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import LoadMore from "discourse/components/load-more";
 import PostFilteredNotice from "discourse/components/post/filtered-notice";
@@ -17,14 +22,52 @@ import PostTimeGap from "./post/time-gap";
 import PostVisitedLine from "./post/visited-line";
 
 const MS_PER_DAY = 1000 * 60 * 60 * 24;
+const POST_MODEL = Symbol("POST");
+const SLACK_FACTOR = 5;
+
+let cloakingEnabled = true;
+const cloakingPrevented = new TrackedSet();
+
+export function disableCloaking() {
+  cloakingEnabled = false;
+}
+
+export function preventCloaking(postId) {
+  preventCloaking.add(postId);
+}
 
 export default class PostStream extends Component {
   @service appEvents;
   @service capabilities;
+  @service header;
   @service screenTrack;
   @service search;
   @service site;
   @service siteSettings;
+
+  @tracked cloakOffset = Math.ceil(window.innerHeight * SLACK_FACTOR);
+
+  observedPostNodes = new Set();
+  cloakedPosts = {};
+  postsOnScreen = new TrackedSet();
+
+  setCloakedHeight = modifier((element, [cloaking]) => {
+    if (cloaking) {
+      element.style.height = `${cloaking.height}px`;
+      return;
+    }
+
+    element.style.height = "";
+  });
+
+  viewportObserver;
+  cloakingObserver;
+
+  // #topVisible = null; // Tracks the topmost post currently visible in the viewport
+  // #bottomVisible = null; // Tracks the bottommost post currently visible in the viewport
+  // #currentPostObj = null; // The current post being viewed/scrolled through
+  // #currentVisible = null; // The currently visible post in the viewport (may be different from #currentPostObj)
+  // #currentPercent = null;
 
   constructor() {
     super(...arguments);
@@ -65,6 +108,10 @@ export default class PostStream extends Component {
     this.appEvents.off("post-stream:refresh", this, "_debouncedScroll");
     this.appEvents.off("post-stream:refresh", this, "_refresh");
     this.appEvents.off("post-stream:posted", this, "_posted");
+
+    // disconnect the intersection observers
+    this.viewportObserver.disconnect();
+    this.cloakingObserver.disconnect();
   }
 
   get gapsBefore() {
@@ -145,6 +192,52 @@ export default class PostStream extends Component {
   }
 
   @bind
+  updateIntersectionObservers(element, _, { headerOffset, cloakOffset }) {
+    console.log("updateIntersectionObservers", {
+      headerOffset,
+      cloakOffset,
+    });
+
+    const headerMargin = headerOffset * -1;
+
+    this.cloakingObserver?.disconnect?.();
+    this.viewportObserver?.disconnect?.();
+
+    this.cloakingObserver = this.#initializeObserver(this.trackCloakedPosts, {
+      rootMargin: `${cloakOffset}px 0px`,
+      threshold: 0,
+    });
+
+    this.viewportObserver = this.#initializeObserver(this.trackVisiblePosts, {
+      rootMargin: `${headerMargin}px 0px 0px 0px`,
+      threshold: [0, 1],
+    });
+
+    for (const node of this.observedPostNodes) {
+      this.cloakingObserver.observe(node);
+      this.viewportObserver.observe(node);
+    }
+  }
+
+  @bind
+  registerPostNode(element, [post]) {
+    element[POST_MODEL] = post;
+
+    if (!this.observedPostNodes.has(element)) {
+      this.observedPostNodes.add(element);
+      this.cloakingObserver.observe(element);
+      this.viewportObserver.observe(element);
+    }
+  }
+
+  unregisterPostNode(element) {
+    delete element[POST_MODEL];
+
+    this.cloakingObserver.unobserve(element);
+    this.viewportObserver.unobserve(element);
+  }
+
+  @bind
   shouldShowTimeGap(daysSince) {
     return daysSince > this.siteSettings.show_time_gap_days;
   }
@@ -161,6 +254,63 @@ export default class PostStream extends Component {
     );
   }
 
+  @bind
+  trackCloakedPosts(event) {
+    const { target, isIntersecting } = event;
+    const post = target[POST_MODEL];
+    // console.log("trackCloakedPosts", {
+    //   target,
+    //   post,
+    //   event,
+    // });
+
+    if (isIntersecting) {
+      console.log("uncloaked post", {
+        post_number: target[POST_MODEL].post_number,
+      });
+      delete this.cloakedPosts[post.id];
+    } else {
+      // requestAnimationFrame is used to prevent a `[Violation] Forced reflow while executing JavaScript` warning
+      requestAnimationFrame(() => {
+        let height = target.clientHeight;
+
+        const style = window.getComputedStyle(target);
+        height +=
+          parseFloat(style.borderTopWidth) +
+          parseFloat(style.borderBottomWidth);
+
+        console.log("cloaked post", {
+          post_number: target[POST_MODEL].post_number,
+        });
+        this.cloakedPosts[post.id] = {
+          height,
+        };
+      });
+    }
+  }
+
+  @bind
+  trackVisiblePosts(event) {
+    const { target, isIntersecting } = event;
+    const post = target[POST_MODEL];
+
+    if (isIntersecting) {
+      this.postsOnScreen.add(post);
+      // console.log("entered viewport", {
+      //   target,
+      //   post,
+      //   event,
+      // });
+    } else {
+      this.postsOnScreen.delete(post);
+      // console.log("exited viewport", {
+      //   target,
+      //   post,
+      //   event,
+      // });
+    }
+  }
+
   @action
   loadMoreAbove(firstAvailablePost) {
     this.args.topVisibleChanged({ post: firstAvailablePost });
@@ -171,15 +321,39 @@ export default class PostStream extends Component {
     this.args.bottomVisibleChanged({ post: lastAvailablePost });
   }
 
+  #initializeObserver(callback, { rootMargin, threshold }) {
+    return new IntersectionObserver(
+      (entries) => {
+        entries.forEach(callback);
+      },
+      { threshold, rootMargin, root: document }
+    );
+  }
+
   <template>
     <div class="post-stream glimmer-post-stream">
-      <ConditionalLoadingSpinner @condition={{@postStream.loadingAbove}}>
+      <ConditionalLoadingSpinner
+        @condition={{@postStream.loadingAbove}}
+        {{didInsert
+          this.updateIntersectionObservers
+          headerOffset=this.header.headerOffset
+          cloakOffset=this.cloakOffset
+        }}
+        {{didUpdate
+          this.updateIntersectionObservers
+          headerOffset=this.header.headerOffset
+          cloakOffset=this.cloakOffset
+        }}
+      >
+        {{#if @postStream.canPrependMore}}
+          <LoadMore @action={{fn this.loadMoreAbove this.firstAvailablePost}} />
+        {{/if}}
         {{#if @postStream.canPrependMore}}
           <LoadMore @action={{fn this.loadMoreAbove this.firstAvailablePost}} />
         {{/if}}
       </ConditionalLoadingSpinner>
 
-      {{#each this.postTuples as |tuple index|}}
+      {{#each this.postTuples key="post.id" as |tuple index|}}
         {{#let
           (get tuple "post") (get tuple "previousPost") (get tuple "nextPost")
           as |post previousPost nextPost|
@@ -203,15 +377,13 @@ export default class PostStream extends Component {
               {{/if}}
             {{/let}}
 
-            {{#if post.isSmallAction}}
-              <PostSmallAction
-                @post={{post}}
-                @deletePost={{fn @deletePost post}}
-                @editPost={{fn @editPost post}}
-                @recoverPost={{fn @recoverPost post}}
-              />
-            {{else}}
-              <Post
+            {{#let
+              (if post.isSmallAction PostSmallAction Post)
+              (get this.cloakedPosts post.id)
+              as |PostComponent cloaked|
+            }}
+              <PostComponent
+                @cloaked={{cloaked}}
                 @post={{post}}
                 @prevPost={{previousPost}}
                 @nextPost={{nextPost}}
@@ -250,8 +422,12 @@ export default class PostStream extends Component {
                 @unhidePost={{fn @unhidePost post}}
                 @unlockPost={{fn @unlockPost post}}
                 @updateTopicPageQueryParams={{@updateTopicPageQueryParams}}
+                {{this.setCloakedHeight cloaked}}
+                {{didInsert this.registerPostNode post}}
+                {{didUpdate this.registerPostNode post cloaked}}
+                {{willDestroy this.unregisterPostNode post}}
               />
-            {{/if}}
+            {{/let}}
 
             {{#let (get this.gapsAfter post.id) as |gap|}}
               {{#if gap}}
