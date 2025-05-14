@@ -51,7 +51,7 @@
     "prosemirror-schema-list": "^1.5.1",
     "prosemirror-state": "^1.4.3",
     "prosemirror-transform": "^1.10.4",
-    "prosemirror-view": "^1.39.2",
+    "prosemirror-view": "^1.39.3",
     "moment": "2.30.1",
     "moment-timezone": "0.5.45"
   },
