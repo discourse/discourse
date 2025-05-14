@@ -406,6 +406,18 @@ RSpec.describe PostsController do
         expect(response.status).to eq(200)
       end
 
+      it "triggers DiscourseEvent with :posts_destroyed and correct params" do
+        sign_in(poster)
+        # Use spy to monitor DiscourseEvent.trigger
+        allow(DiscourseEvent).to receive(:trigger).and_call_original
+        delete "/posts/destroy_many.json", params: { post_ids: [post1.id, post2.id] }
+        expect(DiscourseEvent).to have_received(:trigger).with(
+          :posts_destroyed,
+          kind_of(Array),
+          poster,
+        )
+      end
+
       it "updates the highest read data for the forum" do
         sign_in(poster)
         Topic.expects(:reset_highest).twice
