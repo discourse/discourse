@@ -362,7 +362,8 @@ export default function () {
         this.route("developer", function () {
           this.route("settings", { path: "/" });
         });
-        this.route("logo-and-fonts");
+        this.route("logo");
+        this.route("fonts");
         this.route("navigation", function () {
           this.route("settings", { path: "/" });
         });

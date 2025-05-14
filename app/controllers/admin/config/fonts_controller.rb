@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 class Admin::Config::FontsController < Admin::AdminController
+  def index
+  end
+
   def update
     SiteSetting::Update.call(
       guardian:,
