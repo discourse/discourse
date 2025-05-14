@@ -323,7 +323,6 @@ export default RouteTemplate(
               </div>
             {{/if}}
             <div class="login-right-side">
-              SIGNUP LOGIN RIGHT SIDE
               <LoginButtons
                 @externalLogin={{@controller.externalLogin}}
                 @context="create-account"
