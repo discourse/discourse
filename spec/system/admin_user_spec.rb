@@ -39,6 +39,12 @@ describe "Admin User Page", type: :system do
 
     before { admin_user_page.visit(user) }
 
+    it "can list accounts with identic IPs" do
+      find(".ip-lookup-trigger").click
+
+      expect(page).to have_content("#{I18n.t("js.ip_lookup.other_accounts")}\n3")
+    end
+
     it "displays the suspend and silence buttons" do
       expect(admin_user_page).to have_suspend_button
       expect(admin_user_page).to have_silence_button

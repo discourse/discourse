@@ -72,7 +72,8 @@ export default class IpLookup extends Component {
         });
         this.totalOthersWithSameIP = result.total;
 
-        const users = await AdminUser.findAll("active", data);
+        let users = await AdminUser.findAll("active", data)?.users;
+
         this.otherAccounts = users;
         this.otherAccountsLoading = false;
       }
