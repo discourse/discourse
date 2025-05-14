@@ -68,7 +68,7 @@ describe "Admin Search", type: :system do
     search_modal.search("very long search phrase")
 
     expect(search_modal).to have_content(
-      "We couldn’t find anything matching ‘very long search phrase’.",
+      'We couldn’t find anything matching "very long search phrase".',
     )
   end
 
