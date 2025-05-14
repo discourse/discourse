@@ -6,7 +6,7 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
-import { TrackedSet } from "@ember-compat/tracked-built-ins";
+import { TrackedObject, TrackedSet } from "@ember-compat/tracked-built-ins";
 import { modifier } from "ember-modifier";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import LoadMore from "discourse/components/load-more";
@@ -48,7 +48,7 @@ export default class PostStream extends Component {
   @tracked cloakOffset = Math.ceil(window.innerHeight * SLACK_FACTOR);
 
   observedPostNodes = new Set();
-  cloakedPosts = {};
+  cloakedPosts = new TrackedObject();
   postsOnScreen = new TrackedSet();
 
   setCloakedHeight = modifier((element, [cloaking]) => {
