@@ -9,6 +9,7 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
   let(:composer) { PageObjects::Components::Composer.new }
   let(:topic_list) { PageObjects::Components::TopicList.new }
   let(:topic_page) { PageObjects::Pages::Topic.new }
+  let(:discovery_page) { PageObjects::Pages::Discovery.new }
 
   if skip_examples.exclude?(:login)
     describe "Login" do
@@ -65,7 +66,7 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
             expect(page).to have_css(".topic-list-item", count: 4)
 
             # List topics for a category
-            within("#sidebar-section-content-categories") { click_on("General") }
+            discovery_page.category_drop.select_row_by_name("General")
             expect(page).to have_css(".topic-list-item", count: 3)
 
             # Display a specific topic
@@ -76,7 +77,8 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
 
           if skip_examples.exclude?(:"topics:reply")
             # Reply to a topic
-            within("#sidebar-section-content-categories") { click_on("General") }
+            find("#site-logo", visible: true).click
+            discovery_page.category_drop.select_row_by_name("General")
             expect(page).to have_css(".topic-list-item", count: 3)
             topic_list.visit_topic(topics.first)
             within(".actions") { click_button("Reply") }
