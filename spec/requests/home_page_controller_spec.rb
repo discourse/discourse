@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-RSpec.describe CustomHomepageController do
-  describe "#index" do
+RSpec.describe HomePageController do
+  describe "#custom" do
     context "with crawler view" do
       it "should display the menu by default" do
         get "/custom", headers: { "HTTP_USER_AGENT" => "Googlebot" }

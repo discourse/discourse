@@ -43,11 +43,19 @@ acceptance("Static pages", function () {
 
   test("Login-required page", async function (assert) {
     this.siteSettings.login_required = true;
-    await visit("/login");
+    await visit("/");
 
-    assert.strictEqual(currentRouteName(), "login");
+    assert.strictEqual(currentRouteName(), "discovery.login-required");
     assert.dom(".body-page").exists("The content is present");
     assert.dom(".sign-up-button").exists();
     assert.dom(".login-button").exists();
+  });
+
+  test("Login-required - Login Route", async function (assert) {
+    this.siteSettings.login_required = true;
+    await visit("/login");
+
+    assert.strictEqual(currentRouteName(), "login");
+    assert.dom(".login-fullpage").exists("The login full page form is shown");
   });
 });
