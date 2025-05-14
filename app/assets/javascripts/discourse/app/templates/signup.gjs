@@ -56,7 +56,7 @@ export default RouteTemplate(
               @controller.authOptions.auth_provider
             }}
           >
-            <SignupProgressBar @step="signup" />
+            <SignupProgressBar @step={{@controller.progressBarStep}} />
             <WelcomeHeader
               id="create-account-title"
               @header={{i18n "create_account.header_title"}}

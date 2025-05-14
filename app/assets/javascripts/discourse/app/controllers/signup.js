@@ -383,6 +383,11 @@ export default class SignupPageController extends Controller {
     return hasAtLeastOneLoginButton && !authOptions;
   }
 
+  @discourseComputed("authOptions")
+  progressBarStep(authOptions) {
+    return authOptions ? "activate" : "signup";
+  }
+
   fetchConfirmationValue() {
     if (this._challengeDate === undefined && this._hpPromise) {
       // Request already in progress
