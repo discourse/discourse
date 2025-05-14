@@ -462,10 +462,8 @@ import { i18n } from "discourse-i18n";
       });
 
       test("Autosaves drafts after clicking keep editing in discard modal", async function (assert) {
-        const saveDraftStub = sinon.stub();
-
         pretender.post("/drafts.json", function () {
-          saveDraftStub();
+          assert.step("saveDraft");
           return response(200, {});
         });
 
@@ -479,7 +477,7 @@ import { i18n } from "discourse-i18n";
           "fills in the composer"
         );
 
-        assert.true(saveDraftStub.calledOnce, "first draft is auto saved");
+        assert.verifySteps(["saveDraft"], "first draft is auto saved");
 
         await click("#reply-control button.cancel");
 
@@ -503,7 +501,7 @@ import { i18n } from "discourse-i18n";
           "update content in the composer"
         );
 
-        assert.true(saveDraftStub.calledTwice, "second draft is saved");
+        assert.verifySteps(["saveDraft"], "second draft is saved");
 
         await click("#reply-control button.create");
 
