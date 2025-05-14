@@ -380,7 +380,7 @@ export default class SignupPageController extends Controller {
 
   @discourseComputed("authOptions", "hasAtLeastOneLoginButton")
   showRightSide(authOptions, hasAtLeastOneLoginButton) {
-    return hasAtLeastOneLoginButton && !authOptions;
+    return !authOptions && hasAtLeastOneLoginButton;
   }
 
   @discourseComputed("authOptions")
