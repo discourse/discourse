@@ -316,11 +316,14 @@ export default RouteTemplate(
             {{/if}}
           </div>
 
-          {{#if @controller.hasAtLeastOneLoginButton}}
+          {{#if @controller.showRightSide}}
             {{#if @controller.site.mobileView}}
-              <div class="login-or-separator"><span>
-                  {{i18n "login.or"}}</span></div>{{/if}}
+              <div class="login-or-separator">
+                <span>{{i18n "login.or"}}</span>
+              </div>
+            {{/if}}
             <div class="login-right-side">
+              SIGNUP LOGIN RIGHT SIDE
               <LoginButtons
                 @externalLogin={{@controller.externalLogin}}
                 @context="create-account"

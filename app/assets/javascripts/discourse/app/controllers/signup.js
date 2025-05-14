@@ -378,6 +378,11 @@ export default class SignupPageController extends Controller {
     return findAll().length > 0;
   }
 
+  @discourseComputed("authOptions", "hasAtLeastOneLoginButton")
+  showRightSide(authOptions, hasAtLeastOneLoginButton) {
+    return hasAtLeastOneLoginButton && !authOptions;
+  }
+
   fetchConfirmationValue() {
     if (this._challengeDate === undefined && this._hpPromise) {
       // Request already in progress

@@ -26,6 +26,8 @@ shared_examples "social authentication scenarios" do |signup_page_object, login_
         expect(signup_form).to have_no_password_input
         expect(signup_form).to have_valid_username
         expect(signup_form).to have_valid_email
+        expect(signup_form).to have_no_right_side_column
+
         signup_form.click_create_account
         expect(page).to have_css(".header-dropdown-toggle.current-user")
       end
@@ -44,6 +46,8 @@ shared_examples "social authentication scenarios" do |signup_page_object, login_
         expect(signup_form).to have_no_password_input
         expect(signup_form).to have_valid_username
         expect(signup_form).to have_valid_email
+        expect(signup_form).to have_no_right_side_column
+
         signup_form.click_create_account
         expect(page).to have_css(".header-dropdown-toggle.current-user")
       end
@@ -58,6 +62,8 @@ shared_examples "social authentication scenarios" do |signup_page_object, login_
           expect(signup_form).to have_no_password_input
           expect(signup_form).to have_valid_username
           expect(signup_form).to have_valid_email
+          expect(signup_form).to have_no_right_side_column
+
           signup_form.click_create_account
           expect(page).to have_css(".account-created")
         end
@@ -77,6 +83,7 @@ shared_examples "social authentication scenarios" do |signup_page_object, login_
         expect(signup_form).to have_no_password_input
         expect(signup_form).to have_valid_username
         expect(signup_form).to have_valid_email
+        expect(signup_form).to have_no_right_side_column
         signup_form.click_create_account
         expect(page).to have_css(".header-dropdown-toggle.current-user")
       end
@@ -91,6 +98,7 @@ shared_examples "social authentication scenarios" do |signup_page_object, login_
           expect(signup_form).to have_no_password_input
           expect(signup_form).to have_valid_username
           expect(signup_form).to have_valid_email
+          expect(signup_form).to have_no_right_side_column
           signup_form.click_create_account
           expect(page).to have_css(".account-created")
         end
@@ -111,6 +119,7 @@ shared_examples "social authentication scenarios" do |signup_page_object, login_
         signup_form.fill_email(OmniauthHelpers::EMAIL)
         expect(signup_form).to have_valid_username
         expect(signup_form).to have_valid_email
+        expect(signup_form).to have_no_right_side_column
         signup_form.click_create_account
         expect(page).to have_css(".account-created")
       end
@@ -145,6 +154,7 @@ shared_examples "social authentication scenarios" do |signup_page_object, login_
         expect(signup_form).to have_no_password_input
         expect(signup_form).to have_valid_username
         expect(signup_form).to have_valid_email
+        expect(signup_form).to have_no_right_side_column
         signup_form.click_create_account
         expect(page).to have_css(".header-dropdown-toggle.current-user")
       end
@@ -167,6 +177,7 @@ shared_examples "social authentication scenarios" do |signup_page_object, login_
         expect(signup_form).to have_no_password_input
         expect(signup_form).to have_valid_username
         expect(signup_form).to have_valid_email
+        expect(signup_form).to have_no_right_side_column
         signup_form.click_create_account
         expect(page).to have_css(".header-dropdown-toggle.current-user")
       end
@@ -186,6 +197,7 @@ shared_examples "social authentication scenarios" do |signup_page_object, login_
         expect(signup_form).to have_no_password_input
         expect(signup_form).to have_valid_username
         expect(signup_form).to have_valid_email
+        expect(signup_form).to have_no_right_side_column
         signup_form.click_create_account
         expect(page).to have_css(".header-dropdown-toggle.current-user")
       end
