@@ -275,6 +275,15 @@ module("Integration | Component | Post", function (hooks) {
     assert.strictEqual(count(".post-info.whisper"), 1);
   });
 
+  test("language", async function (assert) {
+    this.post.is_localized = true;
+    this.post.language = "English";
+
+    await renderComponent(this.post);
+
+    assert.dom(".post-language").exists();
+  });
+
   test("read indicator", async function (assert) {
     this.post.read = true;
 
