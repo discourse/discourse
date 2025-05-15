@@ -2,7 +2,6 @@
 
 RSpec.describe "Header Search - Responsive Behavior", type: :system do
   fab!(:user)
-  fab!(:topics) { Fabricate.times(20, :post).map(&:topic) }
 
   before do
     SiteSetting.search_experience = "search_field"
@@ -13,57 +12,46 @@ RSpec.describe "Header Search - Responsive Behavior", type: :system do
     SiteSetting.enable_welcome_banner = true
     visit "/"
 
-    # Default desktop view should show search field
-    expect(page).to have_no_css(".floating-search-input")
-    expect(page).to have_no_css(".search-dropdown")
+    expect(page).to have_no_search_field
+    expect(page).to have_no_search_icon
 
-    page.scroll_to(0, 500)
+    fake_scroll_down_long
 
-    expect(page).to have_css(".floating-search-input", wait: 1)
+    expect(page).to have_search_field
 
-    # Resize to narrow width
     page.current_window.resize_to(500, 1024)
 
-    # Wait for the transition to complete and check for search icon
-    expect(page).to have_css(".d-header-icons .search-dropdown", wait: 5)
-    expect(page).to have_no_css(".floating-seach-input")
+    expect(page).to have_search_icon
+    expect(page).to have_no_search_field
 
-    # Resize back to wider width
     page.current_window.resize_to(1000, 1024)
 
-    # Wait for the transition to complete and check for search field
-    expect(page).to have_css(".floating-search-input", wait: 5)
-    expect(page).to have_no_css(".search-dropdown")
+    expect(page).to have_search_field
+    expect(page).to have_no_search_icon
   end
 
   it "appears when search banner is not enabled & shows / hides based on viewport width" do
     SiteSetting.enable_welcome_banner = false
     visit "/"
 
-    # Default desktop view should show search field
-    expect(page).to have_css(".floating-search-input")
-    expect(page).to have_no_css(".search-dropdown")
+    expect(page).to have_search_field
+    expect(page).to have_no_search_icon
 
-    # Resize to narrow width
     page.current_window.resize_to(500, 1024)
 
-    # Wait for the transition to complete and check for search icon
-    expect(page).to have_css(".d-header-icons .search-dropdown", wait: 5)
-    expect(page).to have_no_css(".floating-seach-input")
+    expect(page).to have_search_icon
+    expect(page).to have_no_search_field
 
-    # Resize back to wider width
     page.current_window.resize_to(1000, 1024)
 
-    # Wait for the transition to complete and check for search field
-    expect(page).to have_css(".floating-search-input", wait: 5)
-    expect(page).to have_no_css(".search-dropdown")
+    expect(page).to have_search_field
+    expect(page).to have_no_search_icon
   end
 
   it "does not appear when search setting is set to icon" do
     SiteSetting.search_experience = "search_icon"
     visit "/"
 
-    # Default desktop view should show search field
-    expect(page).to have_no_css(".floating-search-input")
+    expect(page).to have_no_search_field
   end
 end
