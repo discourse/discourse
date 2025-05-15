@@ -5,6 +5,7 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
+import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { TrackedObject, TrackedSet } from "@ember-compat/tracked-built-ins";
 import { modifier } from "ember-modifier";
@@ -12,6 +13,7 @@ import ConditionalLoadingSpinner from "discourse/components/conditional-loading-
 import LoadMore from "discourse/components/load-more";
 import PostFilteredNotice from "discourse/components/post/filtered-notice";
 import { bind } from "discourse/lib/decorators";
+import offsetCalculator from "discourse/lib/offset-calculator";
 import { Placeholder } from "discourse/lib/posts-with-placeholders";
 import DiscourseURL from "discourse/lib/url";
 import Post from "./post";
@@ -49,8 +51,6 @@ export default class PostStream extends Component {
 
   observedPostNodes = new Set();
   cloakedPosts = new TrackedObject();
-  postsOnScreen = new TrackedSet();
-
   setCloakedHeight = modifier((element, [cloaking]) => {
     if (cloaking) {
       element.style.height = `${cloaking.height}px`;
@@ -59,9 +59,10 @@ export default class PostStream extends Component {
 
     element.style.height = "";
   });
-
   viewportObserver;
   cloakingObserver;
+
+  #postsOnScreen = {};
 
   // #topVisible = null; // Tracks the topmost post currently visible in the viewport
   // #bottomVisible = null; // Tracks the bottommost post currently visible in the viewport
@@ -295,14 +296,14 @@ export default class PostStream extends Component {
     const post = target[POST_MODEL];
 
     if (isIntersecting) {
-      this.postsOnScreen.add(post);
+      this.#postsOnScreen[post.id] = { post, node: target };
       // console.log("entered viewport", {
       //   target,
       //   post,
       //   event,
       // });
     } else {
-      this.postsOnScreen.delete(post);
+      delete this.#postsOnScreen[post.id];
       // console.log("exited viewport", {
       //   target,
       //   post,
@@ -312,13 +313,48 @@ export default class PostStream extends Component {
   }
 
   @action
-  loadMoreAbove(firstAvailablePost) {
-    this.args.topVisibleChanged({ post: firstAvailablePost });
+  loadMoreAbove(post) {
+    this.args.topVisibleChanged({
+      post,
+      refresh: () => {
+        const refreshedElem = this.#postsOnScreen[post.id]?.node;
+
+        if (!refreshedElem) {
+          return;
+        }
+
+        // The getOffsetTop function calculates the total offset distance of an element from the top of the document.
+        // Unlike `element.offsetTop` which only returns the offset relative to its nearest positioned ancestor, this
+        // function recursively accumulates the offsetTop of an element and all of its offset parents(ancestors).
+        // This ensures the total distance is measured from the very top of the document, accounting for any nested
+        // elements and their respective offsets.
+        const getOffsetTop = (element) => {
+          if (!element) {
+            return 0;
+          }
+          return element.offsetTop + getOffsetTop(element.offsetParent);
+        };
+
+        window.scrollTo({
+          top: getOffsetTop(refreshedElem) - offsetCalculator(),
+        });
+
+        // This seems weird, but somewhat infrequently a rerender
+        // will cause the browser to scroll to the top of the document
+        // in Chrome. This makes sure the scroll works correctly if that
+        // happens.
+        schedule("afterRender", () => {
+          window.scrollTo({
+            top: getOffsetTop(refreshedElem) - offsetCalculator(),
+          });
+        });
+      },
+    });
   }
 
   @action
-  loadMoreBelow(lastAvailablePost) {
-    this.args.bottomVisibleChanged({ post: lastAvailablePost });
+  loadMoreBelow(post) {
+    this.args.bottomVisibleChanged({ post });
   }
 
   #initializeObserver(callback, { rootMargin, threshold }) {
@@ -345,9 +381,6 @@ export default class PostStream extends Component {
           cloakOffset=this.cloakOffset
         }}
       >
-        {{#if @postStream.canPrependMore}}
-          <LoadMore @action={{fn this.loadMoreAbove this.firstAvailablePost}} />
-        {{/if}}
         {{#if @postStream.canPrependMore}}
           <LoadMore @action={{fn this.loadMoreAbove this.firstAvailablePost}} />
         {{/if}}
