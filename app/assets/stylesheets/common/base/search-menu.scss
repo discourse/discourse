@@ -13,7 +13,7 @@
 
 $search-pad-vertical: 0.25em;
 $search-pad-horizontal: 0.5em;
-$search-result-element-padding: 0.35em 1rem; // hate myself but .25em is too tight and .5 too loose
+$search-result-element-padding: 0.5em 1rem; // hate myself but .25em is too tight and .5 too loose
 
 .search-menu.glimmer-search-menu {
   .search-input-wrapper {
@@ -86,8 +86,6 @@ $search-result-element-padding: 0.35em 1rem; // hate myself but .25em is too tig
   }
 
   .menu-panel {
-    border: 0;
-    box-shadow: var(--shadow-dropdown);
     padding: 0; // overrule generic menu panels to achieve full width hover effect
 
     @include viewport.from(sm) {
@@ -138,7 +136,6 @@ $search-result-element-padding: 0.35em 1rem; // hate myself but .25em is too tig
   .results {
     display: flex;
     flex-direction: column;
-    padding-top: $search-pad-vertical;
     border-radius: var(--d-border-radius);
 
     .heading {
@@ -420,7 +417,7 @@ $search-result-element-padding: 0.35em 1rem; // hate myself but .25em is too tig
 }
 
 .search-random-quick-tip {
-  padding: max(0.5rem, 0.5em) 1rem;
+  padding: 0 1rem max(0.5rem, 0.5em);
   font-size: var(--font-down-2);
   color: var(--primary-medium);
 
