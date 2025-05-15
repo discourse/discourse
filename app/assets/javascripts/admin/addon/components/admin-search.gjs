@@ -15,8 +15,6 @@ import { escapeExpression } from "discourse/lib/utilities";
 import autoFocus from "discourse/modifiers/auto-focus";
 import { i18n } from "discourse-i18n";
 
-const ADMIN_SEARCH_FILTERS = "admin_search_filters";
-
 export default class AdminSearch extends Component {
   @service adminSearchDataSource;
   @service keyValueStore;
@@ -26,22 +24,9 @@ export default class AdminSearch extends Component {
   @tracked searchResults = [];
   @tracked showFilters = true;
   @tracked loading = false;
-  typeFilters = new TrackedObject({
-    page: true,
-    setting: true,
-    theme: true,
-    component: true,
-    report: true,
-  });
 
   constructor() {
     super(...arguments);
-
-    if (this.keyValueStore.getItem(ADMIN_SEARCH_FILTERS)) {
-      this.typeFilters = new TrackedObject(
-        JSON.parse(this.keyValueStore.getItem(ADMIN_SEARCH_FILTERS))
-      );
-    }
 
     this.adminSearchDataSource.buildMap().then(() => {
       if (this.filter !== "") {
@@ -49,12 +34,6 @@ export default class AdminSearch extends Component {
         this.runSearch();
       }
     });
-  }
-
-  get visibleTypes() {
-    return Object.keys(this.typeFilters).filter(
-      (type) => this.typeFilters[type]
-    );
   }
 
   get noResultsDescription() {
@@ -137,9 +116,7 @@ export default class AdminSearch extends Component {
   }
 
   #search() {
-    this.searchResults = this.adminSearchDataSource.search(this.filter, {
-      types: this.visibleTypes,
-    });
+    this.searchResults = this.adminSearchDataSource.search(this.filter);
     this.loading = false;
   }
 
