@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import ClassicComponent from "@ember/component";
 import templateOnly from "@ember/component/template-only";
 import { hash } from "@ember/helper";
 import { getOwner } from "@ember/owner";
@@ -1053,6 +1054,83 @@ module(
     test("links up template with extra connector class", async function (assert) {
       await render(hbs`<PluginOutlet @name="test-name" />`);
       assert.dom(".legacy-test").hasText("Hello world from legacy");
+    });
+  }
+);
+
+module(
+  "Integration | Component | plugin-outlet | argument currying",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    test("makes arguments available at top level", async function (assert) {
+      extraConnectorComponent(
+        "test-name",
+        <template>
+          <span class="gjs-test">{{@arg1}} from gjs</span>
+        </template>
+      );
+
+      await render(
+        <template>
+          <PluginOutlet
+            @name="test-name"
+            @outletArgs={{hash arg1="Hello world"}}
+          />
+        </template>
+      );
+      assert.dom(".gjs-test").hasText("Hello world from gjs");
+    });
+
+    test("makes arguments available at top level in classic components", async function (assert) {
+      extraConnectorComponent(
+        "test-name",
+        class extends ClassicComponent {
+          <template>
+            <span class="classic-test">{{this.arg1}} from classic</span>
+          </template>
+        }
+      );
+
+      await render(
+        <template>
+          <PluginOutlet
+            @name="test-name"
+            @outletArgs={{hash arg1="Hello world"}}
+          />
+        </template>
+      );
+      assert.dom(".classic-test").hasText("Hello world from classic");
+    });
+
+    test("makes arguments available at top level in classic components", async function (assert) {
+      extraConnectorComponent(
+        "test-name",
+        class extends ClassicComponent {
+          get arg1() {
+            return "overridden";
+          }
+
+          <template>
+            <span class="classic-test">{{this.arg1}} from classic</span>
+          </template>
+        }
+      );
+
+      await withSilencedDeprecationsAsync(
+        "discourse.plugin-outlet-classic-args-clash",
+        async () => {
+          await render(
+            <template>
+              <PluginOutlet
+                @name="test-name"
+                @outletArgs={{hash arg1="Hello world"}}
+              />
+            </template>
+          );
+        }
+      );
+      assert.dom(".classic-test").hasText("overridden from classic");
     });
   }
 );
