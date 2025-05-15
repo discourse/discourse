@@ -574,7 +574,7 @@ describe "Post menu", type: :system do
       expect(topic_page).to have_post_action_button(post, :replies)
 
       replies_button = topic_page.find_post_action_button(post, :replies)
-      expect(replies_button[:disabled]).to eq("true")
+      expect(replies_button[:disabled]).to eq(true)
     end
 
     it "displays the replies when clicked" do

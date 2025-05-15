@@ -112,7 +112,7 @@ RSpec.describe "Admin editing objects type theme setting", type: :system do
         .fill_in_field("name", "")
         .save
 
-      expect(find(".schema-theme-setting-editor__errors")).to have_text(
+      expect(find(".schema-setting-editor__errors")).to have_text(
         "The property at JSON Pointer '/0/name' must be present. The property at JSON Pointer '/1/name' must be present. The property at JSON Pointer '/1/links/0/name' must be present.",
       )
     end

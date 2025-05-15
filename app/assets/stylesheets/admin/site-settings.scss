@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .admin-controls.admin-site-settings-filter-controls
   .controls
   .admin-site-settings-filter-controls__input {
@@ -31,7 +33,7 @@
   background-color: var(--secondary);
   border-top: 2px solid var(--tertiary);
 
-  @include breakpoint("mobile-extra-large") {
+  @include viewport.until(sm) {
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
@@ -42,7 +44,7 @@
     display: flex;
     gap: var(--space-3);
 
-    @include breakpoint("mobile-extra-large") {
+    @include viewport.until(sm) {
       flex-direction: column;
     }
   }

@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 a.loading-onebox {
   &::before {
     content: "";
@@ -248,7 +250,7 @@ aside.onebox {
         float: none;
       }
 
-      @include breakpoint(mobile-extra-large) {
+      @include viewport.until(sm) {
         // Prevent twitter embeds from being taller than the mobile viewport
         iframe {
           max-height: 70vh;
@@ -473,7 +475,7 @@ pre.onebox code ol.lines li.selected {
     grid-template-columns: 2.5em minmax(0, 1fr);
     gap: 0.25em 0.75em;
 
-    @include breakpoint(mobile-extra-large) {
+    @include viewport.until(sm) {
       gap: 0.25em 0.5em;
       grid-template-columns: 1.5em minmax(0, 1fr);
       grid-template-areas:

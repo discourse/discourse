@@ -318,7 +318,7 @@ RSpec.describe PostDestroyer do
             end
 
             def changes_deleted_at_to_nil
-              PostDestroyer.new(Discourse.system_user, @reply).destroy
+              PostDestroyer.new(Discourse.system_user, @reply, context: "Automated testing").destroy
               @reply.reload
               expect(@reply.user_deleted).to eq(false)
               expect(@reply.deleted_at).not_to eq(nil)
@@ -925,7 +925,7 @@ RSpec.describe PostDestroyer do
 
     it "should not send the flags_agreed_and_post_deleted message if it was deleted by system" do
       expect(ReviewableFlaggedPost.pending.count).to eq(1)
-      PostDestroyer.new(Discourse.system_user, second_post).destroy
+      PostDestroyer.new(Discourse.system_user, second_post, context: "Automated testing").destroy
       expect(Jobs::SendSystemMessage.jobs.size).to eq(0)
       expect(ReviewableFlaggedPost.pending.count).to eq(0)
     end
@@ -1065,7 +1065,7 @@ RSpec.describe PostDestroyer do
     end
 
     fab!(:post)
-    let(:reporter) { Discourse.system_user }
+    let(:reporter) { Fabricate(:moderator) }
     let(:reply) { Fabricate(:post, topic: post.topic) }
     let(:reviewable_reply) { PostActionCreator.off_topic(reporter, reply).reviewable }
 

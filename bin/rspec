@@ -19,6 +19,6 @@ if ENV["LOAD_PLUGINS"].nil? && ARGV.any? { |pattern| pattern.include?("plugins/"
   ENV["LOAD_PLUGINS"] = "1"
 end
 
-ENV["SELENIUM_HEADLESS"] = "0" if ARGV.delete("--headful")
+ENV["PLAYWRIGHT_HEADLESS"] = "0" if ARGV.delete("--headful")
 
 load Gem.bin_path("rspec-core", "rspec")

@@ -115,7 +115,6 @@ export default class AdminUsersListShowController extends Controller {
     })
       .then((result) => {
         this._results[page] = result;
-
         if (result.length === 0) {
           this._canLoadMore = false;
         }

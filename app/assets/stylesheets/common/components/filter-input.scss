@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .filter-input-container {
   display: flex;
   align-items: center;
@@ -16,7 +18,7 @@
     border: none;
     outline: none;
 
-    @include breakpoint(tablet, min-width) {
+    @include viewport.from(md) {
       .chat-browse-view__actions & {
         width: 210px;
       }

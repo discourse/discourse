@@ -12,6 +12,9 @@ RSpec.describe "Admin Chat CSV exports", type: :system do
   end
 
   it "exports chat messages" do
+    orignal_save_path = Capybara.save_path
+    Capybara.save_path = Downloads::FOLDER
+
     Jobs.run_immediately!
     message_1 = Fabricate(:chat_message, created_at: 12.months.ago)
     message_2 = Fabricate(:chat_message, created_at: 6.months.ago)
@@ -53,6 +56,7 @@ RSpec.describe "Admin Chat CSV exports", type: :system do
     assert_message(exported_data.fourth, message_3)
     assert_message(exported_data.fifth, message_4)
   ensure
+    Capybara.save_path = orignal_save_path
     csv_export_pm_page.clear_downloads
   end
 

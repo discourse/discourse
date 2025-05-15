@@ -1139,6 +1139,11 @@ be:
       quote_edit: "Рэдагаваць"
       quote_share: "Падзяліцца тэмай"
       edit_reason: "прычына: "
+      localizations:
+        table:
+          actions: "Дзеянні"
+          edit: "Рэдагаваць"
+          delete: "Выдаліць"
       errors:
         upload_not_authorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
       controls:
@@ -1494,6 +1499,7 @@ be:
               content_drafts: "Мае чарнавікі"
             review:
               content: "Патрабуе перагляду"
+      search: "Пошук"
       footer:
         interface_color_selector:
           light: "святло"
@@ -1811,6 +1817,7 @@ be:
           delete: "выдаляць"
         color_palettes:
           palette_name: "імя"
+          delete: "выдаляць"
           colors:
             title: "<......"
       plugins:
@@ -1889,6 +1896,7 @@ be:
           edit: "рэдагаваць"
           mobile: "Мабільны"
           preview: "папярэдні прагляд"
+          default: "актыўныя"
           cancel: "адмяніць"
           uploads: "Загрузкі"
           upload: "Загрузіць"

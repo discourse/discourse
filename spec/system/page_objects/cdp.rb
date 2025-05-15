@@ -7,23 +7,10 @@ module PageObjects
     include RSpec::Matchers
 
     def allow_clipboard
-      cdp_params = {
-        origin: page.server_url,
-        permission: {
-          name: "clipboard-read",
-        },
-        setting: "granted",
-      }
-      page.driver.browser.execute_cdp("Browser.setPermission", **cdp_params)
-
-      cdp_params = {
-        origin: page.server_url,
-        permission: {
-          name: "clipboard-write",
-        },
-        setting: "granted",
-      }
-      page.driver.browser.execute_cdp("Browser.setPermission", **cdp_params)
+      page.driver.with_playwright_page do |pw_page|
+        pw_page.context.grant_permissions(["clipboard-read"], origin: pw_page.url)
+        pw_page.context.grant_permissions(["clipboard-write"], origin: pw_page.url)
+      end
     end
 
     def read_clipboard
@@ -85,29 +72,92 @@ module PageObjects
     end
 
     def with_network_disconnected
-      begin
-        page.driver.browser.network_conditions = { offline: true }
-        yield
-      ensure
-        page.driver.browser.network_conditions = { offline: false }
+      page.driver.with_playwright_page do |pw_page|
+        begin
+          cdp_client = pw_page.context.new_cdp_session(pw_page)
+
+          cdp_client.send_message(
+            "Network.emulateNetworkConditions",
+            params: {
+              offline: true,
+              latency: 0,
+              downloadThroughput: -1,
+              uploadThroughput: -1,
+            },
+          )
+
+          yield
+        ensure
+          cdp_client.send_message(
+            "Network.emulateNetworkConditions",
+            params: {
+              offline: false,
+              latency: 0,
+              downloadThroughput: -1,
+              uploadThroughput: -1,
+            },
+          )
+        end
       end
     end
 
     def with_slow_download
-      begin
-        page.driver.browser.network_conditions = { latency: 20_000, download_throughput: 1 }
-        yield
-      ensure
-        page.driver.browser.network_conditions = { latency: 0 }
+      page.driver.with_playwright_page do |pw_page|
+        begin
+          cdp_client = pw_page.context.new_cdp_session(pw_page)
+
+          cdp_client.send_message(
+            "Network.emulateNetworkConditions",
+            params: {
+              offline: false,
+              latency: 20_000,
+              downloadThroughput: 1,
+              uploadThroughput: -1,
+            },
+          )
+
+          yield
+        ensure
+          cdp_client.send_message(
+            "Network.emulateNetworkConditions",
+            params: {
+              offline: false,
+              latency: 0,
+              downloadThroughput: -1,
+              uploadThroughput: -1,
+            },
+          )
+        end
       end
     end
 
     def with_slow_upload
-      begin
-        page.driver.browser.network_conditions = { latency: 20_000, upload_throughput: 1 }
-        yield
-      ensure
-        page.driver.browser.network_conditions = { latency: 0 }
+      page.driver.with_playwright_page do |pw_page|
+        begin
+          cdp_client = pw_page.context.new_cdp_session(pw_page)
+
+          cdp_client.send_message(
+            "Network.emulateNetworkConditions",
+            params: {
+              offline: false,
+              latency: 20_000,
+              downloadThroughput: -1,
+              uploadThroughput: 1,
+            },
+          )
+
+          yield
+        ensure
+          cdp_client.send_message(
+            "Network.emulateNetworkConditions",
+            params: {
+              offline: false,
+              latency: 0,
+              downloadThroughput: -1,
+              uploadThroughput: -1,
+            },
+          )
+        end
       end
     end
   end

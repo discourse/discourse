@@ -21,7 +21,11 @@ class DestroyTask
       @io.puts "Deleting #{topic.slug}..."
       first_post = topic.ordered_posts.first
       return @io.puts "Topic.ordered_posts.first was nil" if first_post.nil?
-      @io.puts PostDestroyer.new(Discourse.system_user, first_post).destroy
+      @io.puts PostDestroyer.new(
+                 Discourse.system_user,
+                 first_post,
+                 context: I18n.t("staff_action_logs.cli_bulk_post_delete"),
+               ).destroy
     end
   end
 
@@ -37,7 +41,11 @@ class DestroyTask
     topics.find_each do |topic|
       first_post = topic.ordered_posts.first
       return @io.puts "Topic.ordered_posts.first was nil for topic: #{topic.id}" if first_post.nil?
-      PostDestroyer.new(Discourse.system_user, first_post).destroy
+      PostDestroyer.new(
+        Discourse.system_user,
+        first_post,
+        context: I18n.t("staff_action_logs.cli_bulk_post_delete"),
+      ).destroy
     end
     topics = Topic.where(category_id: c.id, pinned_at: nil)
     @io.puts "There are #{topics.count} topics that could not be deleted in #{c.slug} category"
@@ -97,7 +105,11 @@ class DestroyTask
       .find_each do |pm|
         @io.puts "Destroying #{pm.slug} pm"
         first_post = pm.ordered_posts.first
-        @io.puts PostDestroyer.new(Discourse.system_user, first_post).destroy
+        @io.puts PostDestroyer.new(
+                   Discourse.system_user,
+                   first_post,
+                   context: I18n.t("staff_action_logs.cli_bulk_post_delete"),
+                 ).destroy
       end
   end
 

@@ -1,6 +1,4 @@
 # frozen_string_literal: true
-require_relative "deprecated_icon_handler"
-#
 #  A class that handles interaction between a plugin and the Discourse App.
 #
 class DiscoursePluginRegistry
@@ -158,8 +156,7 @@ class DiscoursePluginRegistry
   end
 
   def self.register_svg_icon(icon)
-    DeprecatedIconHandler.convert_icon(icon) if Rails.env.test?
-    self.svg_icons << icon
+    self.svg_icons << icon.strip
   end
 
   def register_css(filename, plugin_directory_name)
@@ -169,6 +166,12 @@ class DiscoursePluginRegistry
 
   def self.register_locale(locale, options = {})
     self.locales[locale] = options
+  end
+
+  def self.unregister_locale(locale)
+    raise "unregister_locale can only be used in tests" if !Rails.env.test?
+
+    self.locales.delete(locale)
   end
 
   def register_archetype(name, options = {})

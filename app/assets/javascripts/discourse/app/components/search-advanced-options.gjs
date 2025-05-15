@@ -769,6 +769,7 @@ export default class SearchAdvancedOptions extends Component {
   }
 
   <template>
+    {{! template-lint-disable no-nested-interactive }}
     <summary>
       {{i18n "search.advanced.title"}}
     </summary>

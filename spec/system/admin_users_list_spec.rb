@@ -68,7 +68,7 @@ describe "Admin Users Page", type: :system do
       confirmation_modal.fill_in_confirmation_phase(user_count: 2)
       expect(confirmation_modal).to have_confirm_button_enabled
 
-      confirmation_modal.confirm_button.click
+      confirmation_modal.confirm
 
       expect(confirmation_modal).to have_successful_log_entry_for_user(
         user: user_1,
@@ -83,6 +83,7 @@ describe "Admin Users Page", type: :system do
       expect(confirmation_modal).to have_no_error_log_entries
 
       confirmation_modal.close
+
       expect(admin_users_page).to have_no_users([user_1.id, user_2.id])
       expect(User.where(id: [user_1.id, user_2.id]).count).to eq(0)
     end
@@ -107,8 +108,11 @@ describe "Admin Users Page", type: :system do
       admin_users_page.bulk_actions_dropdown.option(".bulk-delete").click
 
       expect(confirmation_modal).to be_open
+
       confirmation_modal.fill_in_confirmation_phase(user_count: 2)
-      confirmation_modal.confirm_button.click
+      confirmation_modal.confirm
+
+      expect(confirmation_modal).to have_content("Starting bulk delete…")
       expect(confirmation_modal).to have_successful_log_entry_for_user(
         user: user_1,
         position: 1,
@@ -136,7 +140,7 @@ describe "Admin Users Page", type: :system do
 
       user_1.update!(admin: true)
 
-      confirmation_modal.confirm_button.click
+      confirmation_modal.confirm
       expect(confirmation_modal).to have_error_log_entry(
         I18n.t("js.generic_error_with_reason", error: I18n.t("user.cannot_bulk_delete")),
       )
@@ -155,7 +159,7 @@ describe "Admin Users Page", type: :system do
       admin_users_page.bulk_actions_dropdown.option(".bulk-delete").click
       confirmation_modal.fill_in_confirmation_phase(user_count: 1)
       confirmation_modal.block_ip_and_email_checkbox.click
-      confirmation_modal.confirm_button.click
+      confirmation_modal.confirm
 
       expect(confirmation_modal).to have_successful_log_entry_for_user(
         user: user_1,

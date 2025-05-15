@@ -13,12 +13,10 @@
         }
       }
 
-      .select-kit-collection {
+      .select-kit-body {
         border: 1px solid var(--primary-low);
         background-clip: padding-box;
         box-shadow: var(--shadow-dropdown);
-        padding: 0;
-        max-height: 100%;
       }
 
       .select-kit-row {
@@ -64,6 +62,11 @@
             white-space: normal;
           }
         }
+      }
+
+      .select-kit-collection {
+        padding: 0;
+        max-height: 100%;
       }
 
       .select-kit-header {

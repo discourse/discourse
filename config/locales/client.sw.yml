@@ -1007,7 +1007,6 @@ sw:
         title: "Usajili wa Anwani ya Mtandao"
       avatar:
         title: "Picha ya mtumiaji"
-        header_title: "maelezo mafupi, ujumbe, mialamisho na mapendekezo"
       title:
         title: "Kichwa cha Habari"
         none: "(hakuna)"
@@ -1797,6 +1796,11 @@ sw:
       sr_post_like_count_button:
         one: "Mtu %{count} amevutiwa na hii."
         other: "Watu %{count} wamevutiwa na hii."
+      localizations:
+        table:
+          actions: "Vitendo"
+          edit: "Hariri"
+          delete: "Futa"
       errors:
         create: "Samahani, hitilafu imetokea wakati wa kutengeneza chapisho lako. Tafadhali jaribu tena."
         edit: "Samahani, hitilafu imetokea wakati wa kuhariri chapisho lako. Tafadhali jaribu tena."
@@ -2347,6 +2351,7 @@ sw:
               content: "Machapisho Yangu"
             invite:
               content: "Mualiko"
+      search: "Tafuta"
       footer:
         interface_color_selector:
           light: "Hafifu"
@@ -2716,6 +2721,7 @@ sw:
           delete: "Futa"
         color_palettes:
           palette_name: "Jina"
+          delete: "Futa"
           colors:
             title: "Rangi"
       plugins:
@@ -2828,6 +2834,7 @@ sw:
           desktop: "Eneo kazi la Kompyuta"
           mobile: "Kifaa cha kiganjani"
           preview: "Kihakiki"
+          default: "Mara kwa Mara"
           is_default: "Mandhari imewezeshwa kama chaguo-msingi"
           user_selectable: "Mandhari inaweza kuchaguliwa na watumiaji"
           color_scheme_select: "Chagua rangi zitakazotumika kwenye mandhari"
@@ -2852,8 +2859,6 @@ sw:
           version: "Toleo:"
           enable: "Wezesha"
           disable: "Sitisha"
-          update_to_latest: "Sasisha iwe Toleo Jipya"
-          check_for_updates: "Angalia Masasisho"
           up_to_date: "Mandhari hii ime toleo la sasa, mara ya mwisho imeangaliwa:"
           add: "Ongeza"
           theme_settings: "Mipangilio ya Mandhari"

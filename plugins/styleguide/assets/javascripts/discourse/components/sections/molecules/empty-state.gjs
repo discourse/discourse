@@ -6,4 +6,5 @@ const EmptyState0 = <template>
     <EmptyState @title={{@dummy.sentence}} @body={{@dummy.short_sentence}} />
   </StyleguideExample>
 </template>;
+
 export default EmptyState0;

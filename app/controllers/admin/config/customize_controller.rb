@@ -4,6 +4,14 @@ class Admin::Config::CustomizeController < Admin::AdminController
   PAGE_SIZE = 20
 
   def themes
+    themes =
+      Theme
+        .include_basic_relations
+        .includes(:theme_fields, color_scheme: [:color_scheme_colors])
+        .where(component: false)
+        .order(:name)
+
+    render json: { themes: serialize_data(themes, ThemeIndexSerializer) }
   end
 
   def components

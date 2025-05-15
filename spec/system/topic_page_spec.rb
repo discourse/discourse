@@ -57,8 +57,8 @@ describe "Topic page", type: :system do
       post3 = Fabricate(:post, topic: topic, cooked: "post3")
       post4 = Fabricate(:post, topic: topic, cooked: "post4")
 
-      PostDestroyer.new(Discourse.system_user, post2).destroy
-      PostDestroyer.new(Discourse.system_user, post3).destroy
+      PostDestroyer.new(Discourse.system_user, post2, context: "Automated testing").destroy
+      PostDestroyer.new(Discourse.system_user, post3, context: "Automated testing").destroy
 
       sign_in admin
     end
@@ -104,9 +104,17 @@ describe "Topic page", type: :system do
     it "select the last paragraph" do
       visit "/t/#{topic.slug}/#{topic.id}/1"
 
-      # select the last paragraph by triple clicking
-      element = page.driver.browser.find_element(id: "test-last-cooked-paragraph")
-      page.driver.browser.action.move_to(element).click.click.click.perform
+      paragraph = find("#test-last-cooked-paragraph")
+
+      page.driver.with_playwright_page do |pw_page|
+        paragraph.hover
+
+        rect = paragraph.native.bounding_box
+        x = rect["x"] + rect["width"] / 2
+        y = rect["y"] + rect["height"] / 2
+
+        pw_page.mouse.click(x, y, clickCount: 3)
+      end
 
       # get the selected text in the browser
       select_content = page.evaluate_script("window.getSelection().toString()")

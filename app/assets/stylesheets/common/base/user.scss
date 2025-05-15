@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 // Common styles for "/user" section
 // These styles are also used for "/groups" — test those pages if making significant changes
 .user-content-wrapper {
@@ -639,7 +641,7 @@
     }
 
     .select-kit.multi-select {
-      @include breakpoint(mobile-extra-large) {
+      @include viewport.until(sm) {
         width: 100%;
       }
     }

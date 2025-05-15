@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 :root {
   --d-sidebar-width: #{$d-sidebar-width};
   --d-sidebar-row-horizontal-padding: 1rem;
@@ -45,11 +47,11 @@
   --d-sidebar-active-prefix-background: var(--primary-200);
   --d-sidebar-active-suffix-color: var(--tertiary-med-or-tertiary);
 
-  @include breakpoint("mobile-extra-large") {
+  @include viewport.until(sm) {
     --d-sidebar-row-height: 2.4em;
   }
 
-  @include breakpoint(large) {
+  @include viewport.until(lg) {
     --d-sidebar-width: #{$d-sidebar-narrow-width};
   }
 }
@@ -206,7 +208,7 @@
     border-bottom: 2px solid transparent;
     margin-bottom: -2px;
 
-    @include breakpoint("mobile-extra-large") {
+    @include viewport.until(sm) {
       grid-template-columns: 2em 4.5em repeat(2, 1fr);
     }
 
@@ -229,7 +231,7 @@
     .link-icon {
       grid-column: 2;
 
-      @include breakpoint("mobile-extra-large") {
+      @include viewport.until(sm) {
         grid-column: 1;
       }
     }
@@ -237,7 +239,7 @@
     .input-group {
       margin: 0 0.5em;
 
-      @include breakpoint(mobile-large) {
+      @include viewport.until(sm) {
         margin: 0 0.25em;
       }
     }
@@ -272,7 +274,7 @@
     grid-template-columns: auto 1fr auto;
     gap: 0.5em 1em;
 
-    @include breakpoint("mobile-extra-large") {
+    @include viewport.until(sm) {
       grid-template-columns: auto 1fr;
       justify-items: left;
 

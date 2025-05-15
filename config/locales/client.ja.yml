@@ -1079,7 +1079,6 @@ ja:
       said: "%{username}:"
       profile: "プロファイル"
       profile_possessive: "%{username} のプロファイル"
-      account_possessive: "%{name} のアカウント"
       mute: "ミュート"
       edit: "プロファイルを編集"
       download_archive:
@@ -1879,7 +1878,6 @@ ja:
         title: "登録時の IP アドレス"
       avatar:
         title: "プロファイル画像"
-        header_title: "プロファイル、メッセージ、ブックマーク、設定"
         name_and_description: "%{name} - %{description}"
         edit: "プロファイル画像を編集"
       title:
@@ -2704,7 +2702,6 @@ ja:
           aria_label: 最大閲覧数でフィルタ
         additional_options:
           label: "投稿数とトピックの閲覧数でフィルタ"
-    hamburger_menu: "メニュー"
     new_item: "新規"
     go_back: "戻る"
     not_logged_in_user: "現在のアクティビティと設定に関するユーザーの概要ページ"
@@ -3360,6 +3357,11 @@ ja:
       in_reply_to: "親投稿を読み込む"
       view_all_posts: "すべての投稿を表示"
       badge_granted_tooltip: "%{username} はこの投稿で '%{badge_name}' バッジを獲得しました！"
+      localizations:
+        table:
+          actions: "操作"
+          edit: "編集"
+          delete: "削除"
       errors:
         create: "投稿を作成中にエラーが発生しました。もう一度お試しください。"
         edit: "投稿を編集中にエラーが発生しました。もう一度お試しください。"
@@ -3931,7 +3933,6 @@ ja:
         today: "今日"
     custom_homepage:
       admin_message: 'テーマの 1 つで "custom_homepage" 修飾子が有効になっていますが、[custom-homepage] コネクタには何も出力されません。(このメッセージはサイト管理者にのみ表示されます。)'
-    browser_update: '残念ながら、<a href="https://www.discourse.org/faq/#browser">あなたのブラウザはサポートされていません</a>。リッチコンテンツを表示するには<a href="https://browsehappy.com">サポートされているブラウザに切り替え</a>てから、ログインして返信してください。'
     permission_types:
       full: "作成 / 返信 / 閲覧"
       create_post: "返信 / 閲覧"
@@ -4413,6 +4414,7 @@ ja:
       back_to_forum: "フォーラムに戻る"
       collapse_all_sections: "すべてのセクションを折りたたむ"
       expand_all_sections: "すべてのセクションを展開"
+      search: "検索"
       footer:
         interface_color_selector:
           light: "ライト"
@@ -5384,11 +5386,14 @@ ja:
           save_successful: "ユーザーフィールドは保存されました。"
         color_palettes:
           palette_name: "名前"
+          duplicate: "複製"
+          delete: "削除"
           color_options:
             toggle: "ユーザー選択可能"
             toggle_description: "ユーザーが色パレットを選択できる"
           colors:
             title: "色"
+          delete_confirm: "この色パレットを削除しますか？"
       plugins:
         title: "プラグイン"
         name: "名前"
@@ -5559,9 +5564,11 @@ ja:
           extra_files_upload: "これらのファイルを表示するにはテーマをエクスポートします。"
           extra_files_remote: "これらのファイルを表示するには、テーマをエクスポートするか、Git リポジトリをチェックします。"
           preview: "プレビュー"
+          default: "アクティブ"
           settings_editor: "設定エディター"
           is_default: "テーマはデフォルトで有効"
           user_selectable: "ユーザーがテーマを選択できる"
+          user_selectable_badge_label: "ユーザー選択可能"
           color_scheme_user_selectable: "ユーザーが色パレットを選択できる"
           auto_update: "Discourse が更新された時に自動更新する"
           color_scheme: "色パレット"
@@ -5579,8 +5586,6 @@ ja:
           convert_theme_alert_generic: "このテーマをコンポーネントに変換してもよろしいですか？"
           convert_theme_tooltip: "このテーマをコンポーネントに変換します"
           inactive_themes: "非アクティブなテーマ:"
-          set_default_theme: "デフォルトに設定"
-          default_theme: "デフォルトのテーマ"
           set_default_success: "デフォルトのテーマは %{theme} に設定されました"
           install_success: "%{theme} が正常にインストールされました！"
           inactive_components: "未使用のコンポーネント:"
@@ -5649,7 +5654,6 @@ ja:
             error: "このテーマは、このバージョンの Discourse と互換性がないため、自動的に無効になりました。"
             minimum: "Discourse バージョン %{version} 以上が必要です。"
             maximum: "Discourse バージョン %{version} 以下が必要です。"
-          update_to_latest: "最新に更新"
           check_for_updates: "アップデートを確認"
           updating: "更新中…"
           update_success: "%{theme} の更新が完了しました"

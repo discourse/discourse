@@ -21,4 +21,5 @@ const NotificationsListEmptyState = <template>
     </div>
   </div>
 </template>;
+
 export default NotificationsListEmptyState;

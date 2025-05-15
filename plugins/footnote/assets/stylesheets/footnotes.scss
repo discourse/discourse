@@ -141,6 +141,7 @@
     padding-top: 0.5rem;
     background-color: var(--primary-50);
     border-radius: var(--d-border-radius);
+    z-index: z("modal", "tooltip");
 
     &:focus-within {
       outline: 1px solid var(--primary-low);

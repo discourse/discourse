@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ColorSchemeColorSerializer < ApplicationSerializer
-  attributes :name, :hex, :default_hex, :is_advanced, :dark_hex
+  attributes :name, :hex, :default_hex, :is_advanced, :dark_hex, :default_dark_hex
 
   def hex
     object.hex # otherwise something crazy is returned
@@ -14,6 +14,12 @@ class ColorSchemeColorSerializer < ApplicationSerializer
       # it is a base color so it is already default
       object.hex
     end
+  end
+
+  def default_dark_hex
+    # TODO(osama) implement this when we add dark mode colors for built-in
+    # palettes
+    nil
   end
 
   def is_advanced

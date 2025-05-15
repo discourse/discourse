@@ -56,7 +56,7 @@ export default RouteTemplate(
               @controller.authOptions.auth_provider
             }}
           >
-            <SignupProgressBar @step="signup" />
+            <SignupProgressBar @step={{@controller.progressBarStep}} />
             <WelcomeHeader
               id="create-account-title"
               @header={{i18n "create_account.header_title"}}
@@ -316,10 +316,12 @@ export default RouteTemplate(
             {{/if}}
           </div>
 
-          {{#if @controller.hasAtLeastOneLoginButton}}
+          {{#if @controller.showRightSide}}
             {{#if @controller.site.mobileView}}
-              <div class="login-or-separator"><span>
-                  {{i18n "login.or"}}</span></div>{{/if}}
+              <div class="login-or-separator">
+                <span>{{i18n "login.or"}}</span>
+              </div>
+            {{/if}}
             <div class="login-right-side">
               <LoginButtons
                 @externalLogin={{@controller.externalLogin}}

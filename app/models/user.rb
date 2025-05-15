@@ -73,7 +73,10 @@ class User < ActiveRecord::Base
   has_one :user_stat, dependent: :destroy
   has_one :user_profile, dependent: :destroy, inverse_of: :user
   has_one :single_sign_on_record, dependent: :destroy
-  has_one :anonymous_user_master, class_name: "AnonymousUser", dependent: :destroy
+  has_one :anonymous_user_master,
+          class_name: "AnonymousUser",
+          dependent: :destroy,
+          strict_loading: false
   has_one :anonymous_user_shadow,
           ->(record) { where(active: true) },
           foreign_key: :master_user_id,

@@ -119,11 +119,10 @@ group :test do
   gem "webmock", require: false
   gem "fakeweb", require: false
   gem "simplecov", require: false
-  gem "selenium-webdriver", "~> 4.14", require: false
-  gem "selenium-devtools", require: false
   gem "test-prof"
   gem "rails-dom-testing", require: false
   gem "minio_runner", require: false
+  gem "capybara-playwright-driver"
 end
 
 group :test, :development do
@@ -155,7 +154,7 @@ end
 
 group :development do
   gem "ruby-prof", require: false, platform: :mri
-  gem "bullet", require: !!ENV["BULLET"]
+  gem "bullet", "<= 8.0.3", require: !!ENV["BULLET"]
   gem "better_errors", platform: :mri, require: !!ENV["BETTER_ERRORS"]
   gem "binding_of_caller"
   gem "yaml-lint"

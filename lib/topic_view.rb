@@ -936,6 +936,7 @@ class TopicView
         :deleted_by,
         :incoming_email,
         :image_upload,
+        :post_localizations,
       )
 
     @posts = @posts.includes({ user: :user_status }) if SiteSetting.enable_user_status

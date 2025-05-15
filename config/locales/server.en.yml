@@ -288,6 +288,7 @@ en:
         other: "is limited to %{count} characters; you entered %{length}."
       invalid_boolean: "Invalid boolean."
       taken: "has already been taken"
+      reserved: "%{name} group name is reserved, choose a different name"
       accepted: must be accepted
       blank: can't be blank
       present: must be blank
@@ -2764,6 +2765,10 @@ en:
     page_loading_indicator: "Configure the loading indicator which appears during page navigations within Discourse. 'Spinner' is a full page indicator. 'Slider' shows a narrow bar at the top of the screen."
     show_user_menu_avatars: "Show user avatars in the user menu"
     about_page_hidden_groups: "Do not show members of specific groups on the /about page."
+    about_page_extra_groups: "Groups to show on the about page below the moderators."
+    about_page_extra_groups_initial_members: "Number of members to expand on each group on the about page."
+    about_page_extra_groups_show_description: "Whether to include the group descriptions on the about page."
+    about_page_extra_groups_order: "Ordering of the extra groups on the about page."
     adobe_analytics_tags_url: "Adobe Analytics tags URL (`https://assets.adobedtm.com/...`)"
     view_raw_email_allowed_groups: "Groups which can view the raw email content of a post if it was created by an incoming email. This includes email headers and other technical information."
     experimental_content_localization: "Displays localized content for users based on their language preferences. Such content may include categories, tags, posts, and topics. This feature is under heavy development."
@@ -2790,6 +2795,7 @@ en:
         one: "Must be no more than %{count} character."
         other: "Must be no more than %{count} characters."
       invalid_json: "Invalid JSON."
+      invalid_object: "Invalid object."
       invalid_reply_by_email_address: "Value must contain '%{reply_key}' and be different from the notification email."
       invalid_alternative_reply_by_email_addresses: "All values must contain '%{reply_key}' and be different from the notification email."
       invalid_domain_hostname: "Must not include * or ? characters."
@@ -4614,7 +4620,7 @@ en:
     offline_page_message: "It looks like you are offline! Please check your network connection and try again."
 
   login_required:
-    welcome_message: "# [Welcome to %{title}](#welcome)"
+    welcome_message: "# Welcome to %{title}"
 
   upload:
     edit_reason: "downloaded local copies of images"
@@ -4641,7 +4647,7 @@ en:
     images:
       too_large: "Sorry, the image you are trying to upload is too big (maximum size is %{max_size_kb}KB), please resize it and try again."
       too_large_humanized: "Sorry, the image you are trying to upload is too big (maximum size is %{max_size}), please resize it and try again."
-      larger_than_x_megapixels: "Sorry, the image you are trying to upload is too large (maximum dimension is %{max_image_megapixels} megapixels), please resize it and try again."
+      larger_than_x_megapixels: "Sorry, the image with filename %{original_filename} is too large (maximum dimension is %{max_image_megapixels} megapixels), please resize it and try again."
       size_not_found: "Sorry, but we couldn't determine the size of the image. Maybe your image is corrupted?"
     placeholders:
       too_large: "(image larger than %{max_size_kb}KB)"
@@ -5588,6 +5594,14 @@ en:
       restored: Restored
     bulk_user_delete: "deleted in a bulk delete operation"
     cli_bulk_post_delete: "Bulk deleted from rake task"
+    api_post_delete: "Deleted via API"
+    reminder_deleted: "Replaced by new reminder"
+    user_associated_posts_deleted: "User was destroyed"
+    imap_email_deleted: "Email has been deleted on the IMAP server"
+    imap_email_marked_as_spam: "Email has been moved to spam on the IMAP server"
+    auto_deleted_hidden_posts: "Automatically destroyed hidden posts"
+    seed_data_topic_updated: "Seed data topic updated"
+    seed_data_topic_deleted: "Seed data topic deleted"
 
   reviewables:
     already_handled: "Thanks, but we've already reviewed that post and determined it does not need to be flagged again."

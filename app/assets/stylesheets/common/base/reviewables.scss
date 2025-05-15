@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .reviewable {
   background: var(--d-content-background);
 
@@ -40,22 +42,55 @@
     flex-direction: row;
     margin-top: 1em;
 
+    @include viewport.until(sm) {
+      flex-direction: column;
+    }
+
     .reviewable-list {
       flex: 1;
       box-sizing: border-box;
       max-width: 760px; // Match topic post width
       min-width: 0;
       margin-right: auto;
+
+      @include viewport.until(sm) {
+        order: 2;
+        width: 100%;
+        padding-bottom: 4em;
+      }
     }
 
     .reviewable-filters {
       width: 250px;
       height: 100%;
       box-sizing: border-box;
+
+      @include viewport.until(sm) {
+        order: 1;
+        margin: 0 0 1em 0;
+        padding: 0.5em 1em 1em 1em;
+        width: 100%;
+        background-color: var(--primary-very-low);
+
+        .reviewable-filters-actions {
+          display: flex;
+          justify-content: space-between;
+        }
+
+        .reviewable-filter {
+          .filter-label {
+            margin: 0;
+          }
+        }
+      }
     }
 
     .reviewable-list + .reviewable-filters {
       margin-left: 1em;
+
+      @include viewport.until(sm) {
+        margin: 0 0 0.5em 0;
+      }
     }
   }
 }
@@ -255,7 +290,7 @@
     margin-right: 1em;
     padding-top: 0.35em;
 
-    @include breakpoint("mobile-large") {
+    @include viewport.until(sm) {
       float: left;
       margin-bottom: 1em;
     }
@@ -271,7 +306,7 @@
     min-width: 275px;
     word-break: break-word;
 
-    @include breakpoint("mobile-large", min-width) {
+    @include viewport.from(sm) {
       display: flex;
     }
   }
@@ -450,6 +485,17 @@
     margin: 1.5rem 0 1rem;
     background: var(--secondary);
     padding: 1rem;
+
+    @include viewport.until(sm) {
+      .reviewable-post-header,
+      .post-body {
+        max-width: 100%;
+
+        p {
+          overflow-x: scroll;
+        }
+      }
+    }
   }
 
   .reviewable-actions {
@@ -460,23 +506,6 @@
 
     button {
       white-space: nowrap;
-    }
-
-    .approve-post,
-    .approve-post > summary {
-      background-color: var(--success);
-      color: var(--secondary);
-    }
-
-    .reject-post,
-    .reject-post > summary {
-      background-color: var(--danger);
-      color: var(--secondary);
-    }
-
-    .reviewable-action,
-    .reviewable-action-dropdown {
-      margin-right: 0.5em;
     }
   }
 }
@@ -512,6 +541,13 @@
   margin-top: 1rem;
   min-width: 50%;
   color: var(--primary-high);
+
+  @include viewport.until(sm) {
+    display: flex;
+    width: 100%;
+    overflow-x: scroll;
+    border-top: 1px solid var(--primary-low);
+  }
 
   &__table-wrapper {
     overflow-x: scroll;
@@ -557,8 +593,32 @@
     color: var(--danger);
   }
 
+  @include viewport.until(sm) {
+    thead {
+      tr {
+        display: flex;
+        flex-direction: column;
+        border: 0;
+      }
+    }
+  }
+
   tbody {
     border-width: 1px;
+
+    @include viewport.until(sm) {
+      display: flex;
+      border: 0;
+
+      tr {
+        border: 0;
+      }
+
+      .reviewable-score {
+        display: flex;
+        flex-direction: column;
+      }
+    }
 
     td {
       white-space: nowrap;
@@ -582,7 +642,7 @@
         padding: 0.5em;
       }
 
-      @include breakpoint("mobile-large") {
+      @include viewport.until(sm) {
         @include ellipsis;
         padding-right: 0.5em;
       }
@@ -647,4 +707,10 @@
 
 .unknown-reviewables__options {
   margin-top: 1em;
+}
+
+@include viewport.until(sm) {
+  .reviewable-scores-and-history table {
+    width: 100%;
+  }
 }

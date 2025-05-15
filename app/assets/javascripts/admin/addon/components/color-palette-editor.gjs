@@ -4,6 +4,7 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
@@ -11,16 +12,36 @@ import { i18n } from "discourse-i18n";
 export const LIGHT = "light";
 export const DARK = "dark";
 
+function isColorOverriden(color, darkModeActive) {
+  if (darkModeActive) {
+    return color.defaultDarkValue && color.defaultDarkValue !== color.darkValue;
+  } else {
+    return (
+      color.defaultLightValue && color.defaultLightValue !== color.lightValue
+    );
+  }
+}
+
 class Color {
   @tracked lightValue;
   @tracked darkValue;
 
-  constructor({ name, lightValue, darkValue, description, translatedName }) {
+  constructor({
+    name,
+    lightValue,
+    darkValue,
+    description,
+    translatedName,
+    defaultLightValue,
+    defaultDarkValue,
+  }) {
     this.name = name;
     this.lightValue = lightValue;
     this.darkValue = darkValue;
     this.displayName = translatedName;
     this.description = description;
+    this.defaultLightValue = defaultLightValue;
+    this.defaultDarkValue = defaultDarkValue;
   }
 }
 
@@ -168,6 +189,8 @@ export default class ColorPaletteEditor extends Component {
         darkValue: color.dark_hex,
         description: color.description,
         translatedName: color.translatedName,
+        defaultLightValue: color.default_hex,
+        defaultDarkValue: color.default_dark_hex,
       });
     });
   }
@@ -183,6 +206,17 @@ export default class ColorPaletteEditor extends Component {
       } else {
         this.selectedMode = newMode;
       }
+    }
+  }
+
+  @action
+  revert(color) {
+    if (this.darkModeActive) {
+      this.args.onDarkColorChange(color.name, color.defaultDarkValue);
+      color.darkValue = color.defaultDarkValue;
+    } else {
+      this.args.onLightColorChange(color.name, color.defaultLightValue);
+      color.lightValue = color.defaultLightValue;
     }
   }
 
@@ -212,18 +246,37 @@ export default class ColorPaletteEditor extends Component {
           >
             <div class="color-palette-editor__color-info">
               <div class="color-palette-editor__color-description">
-                {{color.description}}
+                {{#if color.description}}
+                  {{color.description}}
+                {{else}}
+                  {{color.displayName}}
+                {{/if}}
               </div>
-              <div class="color-palette-editor__color-name">
-                {{color.displayName}}
-              </div>
+              {{#if color.description}}
+                <div class="color-palette-editor__color-name">
+                  {{color.displayName}}
+                </div>
+              {{/if}}
             </div>
-            <div class="color-palette-editor__picker">
-              <Picker
-                @color={{color}}
-                @showDark={{this.darkModeActive}}
-                @onLightChange={{fn @onLightColorChange color.name}}
-                @onDarkChange={{fn @onDarkColorChange color.name}}
+            <div class="color-palette-editor__color-controls">
+              <div class="color-palette-editor__picker">
+                <Picker
+                  @color={{color}}
+                  @showDark={{this.darkModeActive}}
+                  @onLightChange={{fn @onLightColorChange color.name}}
+                  @onDarkChange={{fn @onDarkColorChange color.name}}
+                />
+              </div>
+              <DButton
+                class={{concatClass
+                  "btn-flat"
+                  "color-palette-editor__revert"
+                  (unless
+                    (isColorOverriden color this.darkModeActive) "--hidden"
+                  )
+                }}
+                @icon="arrow-rotate-left"
+                @action={{fn this.revert color}}
               />
             </div>
           </div>
