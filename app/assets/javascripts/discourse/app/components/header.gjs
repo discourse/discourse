@@ -116,7 +116,6 @@ export default class GlimmerHeader extends Component {
   handleAnimationComplete() {
     this.hasClosingAnimation = false;
     this.search.visible = false;
-    this.toggleBodyScrolling(false);
   }
 
   @action
@@ -170,11 +169,9 @@ export default class GlimmerHeader extends Component {
     }
 
     if (this.site.mobileView && this.search.visible) {
-      // hide is delayed for the duration of `search-slide-out` animation
       this.hasClosingAnimation = true;
     } else {
       this.search.visible = !this.search.visible;
-      this.toggleBodyScrolling(true);
     }
 
     if (!this.search.visible) {

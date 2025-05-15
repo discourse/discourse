@@ -244,43 +244,35 @@
     &.search-menu-panel {
       width: 100vw;
       max-width: 100vw;
-      padding: 0;
-      transform-origin: 66%;
-      transition: height 0.2s ease-in;
 
       &.empty-panel {
-        height: 4rem;
+        height: auto;
       }
 
       &.slide-in {
-        animation: search-slide-in 0.2s ease-out forwards;
+        animation: search-slidein 0.3s ease-out forwards;
       }
 
       &.is-destroying {
-        animation: search-slide-out 0.2s ease-in forwards;
+        animation: search-slideout 0.3s ease-in forwards;
       }
 
-      @keyframes search-slide-in {
+      @keyframes search-slidein {
         from {
           opacity: 0;
-          transform: scaleX(0);
+          transform: translateY(-100%);
         }
       }
 
-      @keyframes search-slide-out {
-        from {
-          transform: scaleX(1);
+      @keyframes search-slideout {
+        80% {
           opacity: 1;
         }
 
-        to {
+        100% {
           opacity: 0;
-          transform: scaleX(0);
+          transform: translateY(-100%);
         }
-      }
-
-      .btn-cancel-mobile-search {
-        align-self: stretch;
       }
     }
   }

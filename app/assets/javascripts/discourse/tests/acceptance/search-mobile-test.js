@@ -52,7 +52,7 @@ acceptance("Search - Mobile", function (needs) {
         "search results are listed on search value present"
       );
 
-      await click('[data-test-button="clear-search-input"]');
+      await click('[data-test-anchor="clear-search-input"]');
 
       assert
         .dom('[data-test-selector="search-menu-results"]')
@@ -64,7 +64,7 @@ acceptance("Search - Mobile", function (needs) {
     test("with empty input search", async function (assert) {
       await visit("/");
       await click("#search-button");
-      await click('[data-test-button="cancel-mobile-search"]');
+      await click('[data-test-button="cancel-search-mobile"]');
 
       assert
         .dom('[data-test-selector="menu-panel"]')
@@ -82,7 +82,7 @@ acceptance("Search - Mobile", function (needs) {
         "search results are listed on search value present"
       );
 
-      await click('[data-test-button="cancel-mobile-search"]');
+      await click('[data-test-button="cancel-search-mobile"]');
       await click("#search-button");
 
       assert.dom('[data-test-input="search-term"]').hasNoValue();
