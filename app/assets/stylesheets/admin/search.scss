@@ -46,7 +46,6 @@
 // Results
 .admin-search__result {
   border-top: 1px solid var(--primary-low);
-  padding: var(--space-3) var(--space-4);
   display: block;
 
   &:first-child {
@@ -85,14 +84,19 @@
     margin-top: var(--space-1);
   }
 
-  &__result-link {
+  &-link {
+    box-sizing: border-box;
     display: inline-block;
     width: 100%;
-    pointer-events: auto;
+    padding: var(--space-3) var(--space-4);
 
-    &:focus {
-      outline: auto;
+    &:focus-visible {
+      outline: none;
     }
+  }
+
+  &:focus-within {
+    background: var(--d-selected);
   }
 }
 
