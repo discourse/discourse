@@ -1,3 +1,5 @@
+import rollupVirtualImports from "./rollup-virtual-imports";
+
 export default function (babel) {
   const { types: t } = babel;
 
@@ -5,7 +7,7 @@ export default function (babel) {
     visitor: {
       ImportDeclaration(path) {
         const moduleName = path.node.source.value;
-        if (moduleName.startsWith(".")) {
+        if (moduleName.startsWith(".") || rollupVirtualImports[moduleName]) {
           return;
         }
 

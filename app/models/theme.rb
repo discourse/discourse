@@ -6,7 +6,7 @@ require "json_schemer"
 class Theme < ActiveRecord::Base
   include GlobalPath
 
-  BASE_COMPILER_VERSION = 93
+  BASE_COMPILER_VERSION = 99
 
   class SettingsMigrationError < StandardError
   end
@@ -184,11 +184,8 @@ class Theme < ActiveRecord::Base
         .to_h
 
     if all_extra_js.present?
-      js_compiler = ThemeJavascriptCompiler.new(id, name)
+      js_compiler = ThemeJavascriptCompiler.new(id, name, build_settings_hash)
       js_compiler.append_tree(all_extra_js)
-      settings_hash = build_settings_hash
-
-      js_compiler.prepend_settings(settings_hash) if settings_hash.present?
 
       javascript_cache || build_javascript_cache
       javascript_cache.update!(content: js_compiler.content, source_map: js_compiler.source_map)

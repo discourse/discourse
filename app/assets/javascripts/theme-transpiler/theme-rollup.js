@@ -1,6 +1,6 @@
 import BabelPresetEnv from "@babel/preset-env";
 import { rollup } from "@rollup/browser";
-import { babel } from "@rollup/plugin-babel";
+import { babel, getBabelOutputPlugin } from "@rollup/plugin-babel";
 import HTMLBarsInlinePrecompile from "babel-plugin-ember-template-compilation";
 import DecoratorTransforms from "decorator-transforms";
 import { precompile } from "ember-source/dist/ember-template-compiler";
@@ -10,6 +10,7 @@ import { browsers } from "../discourse/config/targets";
 import AddThemeGlobals from "./add-theme-globals";
 import BabelReplaceImports from "./babel-replace-imports";
 import { Preprocessor } from "./content-tag";
+import rollupVirtualImports from "./rollup-virtual-imports";
 
 const preprocessor = new Preprocessor();
 
@@ -33,26 +34,9 @@ globalThis.fetch = function (url) {
   throw "fetch not implemented";
 };
 
-function generateMain(tree) {
-  const initializers = Object.keys(tree).filter((key) =>
-    key.includes("/initializers/")
-  );
-
-  let output = "export const initializers = {};\n";
-
-  let i = 1;
-  for (const initializer of initializers) {
-    output += `import Init${i} from "${initializer}";\n`;
-    output += `initializers["${initializer}"] = Init${i};\n`;
-    i += 1;
-  }
-
-  return output;
-}
-
 let lastRollupResult;
 let lastRollupError;
-globalThis.rollup = function (modules, options) {
+globalThis.rollup = function (modules, opts) {
   const resultPromise = rollup({
     input: "virtual:main",
     logLevel: "info",
@@ -66,7 +50,7 @@ globalThis.rollup = function (modules, options) {
           extensions: [".js", ".gjs"],
         },
         resolveId(source, context) {
-          if (source === "virtual:main") {
+          if (rollupVirtualImports[source]) {
             return source;
           }
 
@@ -83,20 +67,22 @@ globalThis.rollup = function (modules, options) {
           return false;
         },
         load(id) {
-          if (id === "virtual:main") {
-            return generateMain(modules);
+          if (rollupVirtualImports[id]) {
+            return rollupVirtualImports[id](modules, opts);
           }
           if (modules.hasOwnProperty(id)) {
             return modules[id];
           }
         },
       },
+      getBabelOutputPlugin({
+        plugins: [BabelReplaceImports],
+      }),
       babel({
         extensions: [".js", ".gjs"],
         babelHelpers: "bundled",
         plugins: [
           [DecoratorTransforms, { runEarly: true }],
-          BabelReplaceImports,
           AddThemeGlobals,
           [
             HTMLBarsInlinePrecompile,

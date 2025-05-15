@@ -249,9 +249,11 @@ RSpec.describe DiscourseJsProcessor do
       result =
         DiscourseJsProcessor::Transpiler.new.rollup(
           { "discourse/initializers/foo.gjs" => script },
-          {},
+          { themeId: 22 },
         )
-      expect(result["code"]).to include("(()=>dt7948.n")
+      expect(result["code"]).to include(
+        'window.moduleBroker.lookup("discourse/lib/theme-settings-store")',
+      )
     end
 
     it "can use themePrefix not in a template" do
@@ -264,9 +266,11 @@ RSpec.describe DiscourseJsProcessor do
       result =
         DiscourseJsProcessor::Transpiler.new.rollup(
           { "discourse/initializers/foo.js" => script },
-          {},
+          { themeId: 22 },
         )
-      expect(result["code"]).to include("(()=>dt7948.n")
+      expect(result["code"]).to include(
+        'window.moduleBroker.lookup("discourse/lib/theme-settings-store")',
+      )
     end
   end
 end

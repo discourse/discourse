@@ -18,11 +18,12 @@ class ThemeJavascriptCompiler
     @@terser_disabled = false
   end
 
-  def initialize(theme_id, theme_name, minify: true)
+  def initialize(theme_id, theme_name, settings, minify: true)
     @theme_id = theme_id
     @output_tree = []
     @theme_name = theme_name
     @minify = minify
+    @settings = settings
   end
 
   def compile!
@@ -34,7 +35,10 @@ class ThemeJavascriptCompiler
         if !has_content?
           { "code" => "" }
         else
-          DiscourseJsProcessor::Transpiler.new.rollup(@output_tree.to_h, {})
+          DiscourseJsProcessor::Transpiler.new.rollup(
+            @output_tree.to_h,
+            { themeId: @theme_id, settings: @settings },
+          )
         end
 
       @content = output["code"]
@@ -81,16 +85,6 @@ class ThemeJavascriptCompiler
 
   def has_content?
     @output_tree.present?
-  end
-
-  def prepend_settings(settings_hash)
-    @output_tree.prepend ["settings.js", <<~JS]
-      (function() {
-        if ('require' in window) {
-          require("discourse/lib/theme-settings-store").registerSettings(#{@theme_id}, #{settings_hash.to_json});
-        }
-      })();
-    JS
   end
 
   def append_tree(tree, include_variables: true)

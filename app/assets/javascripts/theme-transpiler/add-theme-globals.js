@@ -36,7 +36,7 @@ export default function (babel) {
         path.node.body.push(
           t.importDeclaration(
             importDeclarations,
-            t.stringLiteral("discourse-theme")
+            t.stringLiteral("virtual:theme")
           )
         );
       }
