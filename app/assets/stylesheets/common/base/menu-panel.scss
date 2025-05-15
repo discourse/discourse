@@ -327,7 +327,6 @@
       flex-wrap: nowrap;
       height: 100%;
       align-items: center;
-      overflow-x: visible;
       overflow-y: auto; // really short viewports
     }
 
@@ -340,7 +339,7 @@
         // button, a, and everything else
         align-items: center;
         margin: 0;
-        padding: 0.35em 1rem;
+        padding: 0.5em 1rem;
         flex: 1 1 auto;
       }
 
