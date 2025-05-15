@@ -3,6 +3,10 @@ import { getOwner } from "@ember/owner";
 import { render, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import {
+  disableRaiseOnDeprecation,
+  enableRaiseOnDeprecation,
+} from "discourse/tests/helpers/raise-on-deprecation";
 import DToast from "float-kit/components/d-toast";
 import DToastInstance from "float-kit/lib/d-toast-instance";
 
@@ -23,6 +27,14 @@ function createCustomToastInstance(owner, options, newClose) {
 
 module("Integration | Component | FloatKit | d-toast", function (hooks) {
   setupRenderingTest(hooks);
+
+  hooks.beforeEach(function () {
+    disableRaiseOnDeprecation();
+  });
+
+  hooks.afterEach(function () {
+    enableRaiseOnDeprecation();
+  });
 
   test("swipe up to close", async function (assert) {
     let closing = false;
@@ -62,13 +74,18 @@ module("Integration | Component | FloatKit | d-toast", function (hooks) {
 
     assert
       .dom(".fk-d-toast")
-      .hasAttribute("data-test-duration", "3000", "it defaults to 3000ms");
+      .hasAttribute(
+        "data-test-duration",
+        "9999",
+        "it accepts an arbitrary duration for backwards compatibility"
+      );
 
     toast = new DToastInstance(getOwner(this), {
       duration: "short",
       data: { message: "test" },
     });
     await render(<template><DToast @toast={{toast}} /></template>);
+
     assert
       .dom(".fk-d-toast")
       .hasAttribute(
@@ -82,6 +99,7 @@ module("Integration | Component | FloatKit | d-toast", function (hooks) {
       data: { message: "test" },
     });
     await render(<template><DToast @toast={{toast}} /></template>);
+
     assert
       .dom(".fk-d-toast")
       .hasAttribute(

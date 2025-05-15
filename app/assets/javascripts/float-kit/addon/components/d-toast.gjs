@@ -4,6 +4,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { and } from "truth-helpers";
 import concatClass from "discourse/helpers/concat-class";
+import deprecated from "discourse/lib/deprecated";
 import { getMaxAnimationTimeMs } from "discourse/lib/swipe-events";
 import swipe from "discourse/modifiers/swipe";
 import autoCloseToast from "float-kit/modifiers/auto-close-toast";
@@ -66,8 +67,15 @@ export default class DToast extends Component {
 
     if (duration === "long") {
       return 5000;
-    } else {
+    } else if (duration === "short") {
       return 3000;
+    } else {
+      deprecated(
+        "The duration property of the d-toast component is deprecated. Use `short` or `long` instead.",
+        { id: "float-kit.d-toast.duration" }
+      );
+
+      return duration;
     }
   }
 
