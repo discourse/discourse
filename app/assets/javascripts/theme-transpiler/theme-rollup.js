@@ -95,9 +95,12 @@ globalThis.rollup = function (modules, opts) {
               ],
             },
           ],
+          // TODO: add components/helpers/modifiers to resolver (for hbs)
           // TODO: Ember this fallback
           // TODO: template colocation
           // TODO: widgetHbs (remove from d-calendar)
+          // TODO: sourcemaps
+          // TODO: connectors
         ],
         presets: [
           [
