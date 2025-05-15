@@ -146,7 +146,8 @@ export default class UppyImageUploader extends Component {
   <template>
     <div
       id={{@id}}
-      class="image-uploader {{if @imageUrl 'has-image' 'no-image'}}"
+      class="image-uploader form-kit__control-image
+        {{if @imageUrl 'has-image' 'no-image'}}"
       ...attributes
     >
       <div
