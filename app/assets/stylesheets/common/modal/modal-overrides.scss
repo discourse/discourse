@@ -304,23 +304,6 @@
 }
 
 .d-modal.chat-modal-new-message {
-  align-items: flex-start;
-
-  .d-modal {
-    &__container {
-      width: var(--modal-max-width);
-      margin-top: 1rem;
-    }
-
-    &__body {
-      padding: 0;
-
-      input {
-        width: auto;
-      }
-    }
-  }
-
   .chat-message-creator {
     &__add-members-header-container {
       padding-inline: 1rem 0.5rem;
@@ -559,6 +542,27 @@
       @include viewport.until(sm) {
         overflow: auto;
         flex-grow: 1;
+      }
+    }
+  }
+}
+
+.d-modal.--quick-palette {
+  align-items: flex-start;
+
+  .d-modal {
+    &__container {
+      width: var(--modal-max-width);
+      margin-top: 1rem;
+      padding-block: 1rem;
+    }
+
+    &__body {
+      padding: 0;
+      gap: 0;
+
+      input {
+        width: auto;
       }
     }
   }

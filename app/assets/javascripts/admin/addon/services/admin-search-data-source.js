@@ -262,12 +262,10 @@ export default class AdminSearchDataSource extends Service {
     this._mapCached = true;
   }
 
-  search(filter, opts = {}) {
+  search(filter) {
     if (filter.length < MIN_FILTER_LENGTH) {
       return [];
     }
-
-    opts.types = opts.types || ADMIN_SEARCH_RESULT_TYPES;
 
     let filteredResults = [];
     const escapedFilterRegExp = escapeRegExp(filter.toLowerCase());
@@ -284,7 +282,7 @@ export default class AdminSearchDataSource extends Service {
       .map((keyword) => new RegExp(`(${keyword})\\b`, "i"));
     const fallbackRegex = new RegExp(`${escapedFilterRegExp}`, "i");
 
-    opts.types.forEach((type) => {
+    ADMIN_SEARCH_RESULT_TYPES.forEach((type) => {
       const typeResults = [];
       this[`${type}DataSourceItems`].forEach((dataSourceItem) => {
         dataSourceItem.score = 0;
