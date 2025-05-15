@@ -64,9 +64,7 @@ export default class DToast extends Component {
   get duration() {
     let duration = this.args.toast.options.duration;
 
-    if (duration === "short") {
-      return 3000;
-    } else if (duration === "long") {
+    if (duration === "long") {
       return 5000;
     } else {
       return 3000;
