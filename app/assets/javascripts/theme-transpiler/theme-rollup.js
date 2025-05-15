@@ -97,7 +97,6 @@ globalThis.rollup = function (modules, opts) {
           ],
           // TODO: Ember this fallback
           // TODO: template colocation
-          // TODO: themePrefix etc.
           // TODO: widgetHbs (remove from d-calendar)
         ],
         presets: [
