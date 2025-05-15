@@ -269,6 +269,7 @@ basic:
       - bookmark
       - admin
       - reply
+      - addTranslation
     area: "posts_and_topics"
   post_menu_hidden_items:
     client: true
@@ -285,6 +286,7 @@ basic:
       - bookmark
       - admin
       - reply
+      - addTranslation
     area: "posts_and_topics"
   share_links:
     client: true
@@ -503,6 +505,29 @@ basic:
     default: ""
     type: group_list
     area: "group_permissions"
+  about_page_extra_groups:
+    client: true
+    default: ""
+    type: group_list
+    area: "about"
+  about_page_extra_groups_initial_members:
+    client: true
+    default: 6
+    type: integer
+    area: "about"
+  about_page_extra_groups_order:
+    client: true
+    default: "alphabetically"
+    type: enum
+    choices:
+      - "alphabetically"
+      - "order of creation"
+    area: "about"
+  about_page_extra_groups_show_description:
+    client: true
+    default: false
+    type: bool
+    area: "about"
   adobe_analytics_tags_url:
     default: ""
     regex: "assets.adobedtm.com"
@@ -994,6 +1019,10 @@ groups:
     default: false
   max_automatic_membership_email_domains:
     default: 50
+    hidden: true
+  show_additional_about_groups:
+    client: true
+    default: false
     hidden: true
 
 posting:
@@ -1894,12 +1923,12 @@ email:
 files:
   max_image_size_kb:
     client: true
-    default: 4096
+    default: 10240
     max: 102400
     type: file_size_restriction
   max_attachment_size_kb:
     client: true
-    default: 4096
+    default: 10240
     max: 1024000
     type: file_size_restriction
   system_user_max_attachment_size_kb:
@@ -1920,9 +1949,6 @@ files:
     default: "wasm|jpg|jpeg|png|woff|woff2|svg|eot|ttf|otf|gif|webp|avif|js"
     type: list
     list_type: file_types
-  theme_download_screenshots:
-    default: false
-    hidden: true
   authorized_extensions:
     client: true
     default: "jpg|jpeg|png|gif|heic|heif|webp|avif"
@@ -2151,7 +2177,7 @@ files:
     client: true
     hidden: true
   composer_ios_media_optimisation_image_enabled:
-    default: false
+    default: true
     client: true
     hidden: true
   video_thumbnails_enabled:
@@ -3978,3 +4004,10 @@ experimental:
     allow_any: false
     client: true
     default: "1|2" # admin, moderator
+  content_localization_debug_allowed_groups:
+    type: group_list
+    list_type: compact
+    allow_any: false
+    client: true
+    default: "1|2" # admin, moderator
+    hidden: true

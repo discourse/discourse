@@ -1115,7 +1115,6 @@ nb_NO:
       said: "%{username}:"
       profile: "Profil"
       profile_possessive: "%{username}s profil"
-      account_possessive: "%{name}s konto"
       mute: "Ignorer"
       edit: "Rediger innstillinger"
       download_archive:
@@ -1909,7 +1908,6 @@ nb_NO:
         title: "Registreringens IP-adresse."
       avatar:
         title: "Profilbilde"
-        header_title: "Profil, meldinger, bokmerker og innstillinger"
         name_and_description: "%{name} - %{description}"
         edit: "Rediger profilbilde"
       title:
@@ -2762,7 +2760,6 @@ nb_NO:
           aria_label: filtrer etter maksimal antall visninger
         additional_options:
           label: "Filtrer etter antall innlegg og emnevisninger"
-    hamburger_menu: "meny"
     new_item: "ny"
     go_back: "gå tilbake"
     not_logged_in_user: "brukerside med oppsummering av nåværende aktivtet og innstillinger"
@@ -3454,6 +3451,11 @@ nb_NO:
         other: "Viser %{count} svar til"
       in_reply_to: "Last inn overordnet innlegg"
       view_all_posts: "Vis alle innlegg"
+      localizations:
+        table:
+          actions: "Handlinger"
+          edit: "Endre"
+          delete: "Slett"
       errors:
         create: "Beklager, det oppstod en feil ved å publisere ditt innlegg. Prøv igjen."
         edit: "Det oppstod en feil ved redigeringen av ditt innlegg. Prøv igjen."
@@ -4339,6 +4341,7 @@ nb_NO:
               content: "Gjennomgang"
             invite:
               content: "Inviter"
+      search: "Søk"
       footer:
         interface_color_selector:
           light: "Lys"
@@ -4817,6 +4820,7 @@ nb_NO:
           delete: "Slett"
         color_palettes:
           palette_name: "Navn"
+          delete: "Slett"
           colors:
             title: "Farger"
       plugins:
@@ -4950,6 +4954,7 @@ nb_NO:
           extra_files_upload: "Eksporter tema for å vise disse filene."
           extra_files_remote: "Eksporter temaet eller sjekk git-repository for å vise disse filene."
           preview: "Forhåndsvis"
+          default: "Aktiv"
           is_default: "Drakt påskrudd som forvalg"
           user_selectable: "Drakten kan velges av brukerne"
           auto_update: "Automatisk oppdatering når Discourse er oppdatert"
@@ -5001,8 +5006,6 @@ nb_NO:
           enable: "Aktiver"
           disable: "Deaktiver"
           disabled: "Denne komponenten har blitt deaktivert."
-          update_to_latest: "Oppdater til seneste"
-          check_for_updates: "Se etter oppdateringer"
           up_to_date: "Drakten er oppdatert, sist sjekket:"
           add: "Legg til"
           theme_settings: "Draktinnstillinger"

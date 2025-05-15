@@ -34,6 +34,10 @@
     font-size: var(--font-down-1);
   }
 
+  &__color-controls {
+    display: flex;
+  }
+
   &__picker {
     display: flex;
     justify-content: center;
@@ -46,6 +50,10 @@
       color: var(--primary-high);
       font-size: var(--font-down-2);
     }
+  }
+
+  &__revert.--hidden {
+    visibility: hidden;
   }
 
   input[type="color"] {

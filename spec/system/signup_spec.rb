@@ -5,7 +5,7 @@ shared_examples "signup scenarios" do |signup_page_object, login_page_object|
   let(:login_form) { login_page_object }
   let(:invite_form) { PageObjects::Pages::InviteForm.new }
   let(:activate_account) { PageObjects::Pages::ActivateAccount.new }
-  let(:invite) { Fabricate(:invite, email: "johndoe@example.com") }
+  let(:invite) { Fabricate(:invite) }
   let(:topic) { Fabricate(:topic, title: "Super cool topic") }
 
   context "when anyone can create an account" do
@@ -14,28 +14,29 @@ shared_examples "signup scenarios" do |signup_page_object, login_page_object|
     it "can signup" do
       signup_form
         .open
-        .fill_email("johndoe@example.com")
+        .fill_email(invite.email)
         .fill_username("john")
         .fill_password("supersecurepassword")
       expect(signup_form).to have_valid_fields
 
       signup_form.click_create_account
-      expect(page).to have_css(".account-created")
+
+      expect(page).to have_current_path("/u/account-created")
     end
 
     it "can signup and activate account" do
       signup_form
         .open
-        .fill_email("johndoe@example.com")
+        .fill_email(invite.email)
         .fill_username("john")
         .fill_password("supersecurepassword")
       expect(signup_form).to have_valid_fields
 
       signup_form.click_create_account
-      expect(page).to have_css(".account-created")
+      expect(page).to have_current_path("/u/account-created")
 
       mail = ActionMailer::Base.deliveries.first
-      expect(mail.to).to contain_exactly("johndoe@example.com")
+      expect(mail.to).to contain_exactly(invite.email)
       activation_link = mail.body.to_s[%r{/u/activate-account/\S+}]
 
       visit activation_link
@@ -61,7 +62,7 @@ shared_examples "signup scenarios" do |signup_page_object, login_page_object|
       expect(invite_form).to have_successful_message
 
       mail = ActionMailer::Base.deliveries.first
-      expect(mail.to).to contain_exactly("johndoe@example.com")
+      expect(mail.to).to contain_exactly(invite.email)
       activation_link = mail.body.to_s[%r{/u/activate-account/\S+}]
 
       visit activation_link
@@ -72,11 +73,7 @@ shared_examples "signup scenarios" do |signup_page_object, login_page_object|
     end
 
     it "cannot signup with a common password" do
-      signup_form
-        .open
-        .fill_email("johndoe@example.com")
-        .fill_username("john")
-        .fill_password("0123456789")
+      signup_form.open.fill_email(invite.email).fill_username("john").fill_password("0123456789")
       expect(signup_form).to have_valid_fields
 
       signup_form.click_create_account
@@ -91,20 +88,20 @@ shared_examples "signup scenarios" do |signup_page_object, login_page_object|
       it "can signup with valid code" do
         signup_form
           .open
-          .fill_email("johndoe@example.com")
+          .fill_email(invite.email)
           .fill_username("john")
           .fill_password("supersecurepassword")
           .fill_code("cupcake")
         expect(signup_form).to have_valid_fields
 
         signup_form.click_create_account
-        expect(page).to have_css(".account-created")
+        expect(page).to have_current_path("/u/account-created")
       end
 
       it "cannot signup with invalid code" do
         signup_form
           .open
-          .fill_email("johndoe@example.com")
+          .fill_email(invite.email)
           .fill_username("john")
           .fill_password("supersecurepassword")
           .fill_code("pudding")
@@ -129,25 +126,29 @@ shared_examples "signup scenarios" do |signup_page_object, login_page_object|
       it "can signup when filling the custom field" do
         signup_form
           .open
-          .fill_email("johndoe@example.com")
+          .fill_email(invite.email)
           .fill_username("john")
           .fill_password("supersecurepassword")
           .fill_custom_field("Occupation", "Jedi")
         expect(signup_form).to have_valid_fields
 
         signup_form.click_create_account
-        expect(page).to have_css(".account-created")
+        expect(page).to have_current_path("/u/account-created")
       end
 
       it "cannot signup without filling the custom field" do
         signup_form
           .open
-          .fill_email("johndoe@example.com")
+          .fill_email(invite.email)
           .fill_username("john")
           .fill_password("supersecurepassword")
-          .click_create_account
+
+        expect(signup_form).to have_content("What you do for work")
+
+        signup_form.click_create_account
         expect(signup_form).to have_content(I18n.t("js.user_fields.required", name: "Occupation"))
         expect(signup_form).to have_no_css(".account-created")
+        expect(signup_form).to have_css(".tip.bad", text: "Please enter a value for \"Occupation\"")
       end
     end
 
@@ -160,13 +161,14 @@ shared_examples "signup scenarios" do |signup_page_object, login_page_object|
       it "can signup but cannot login until approval" do
         signup_form
           .open
-          .fill_email("johndoe@example.com")
+          .fill_email(invite.email)
           .fill_username("john")
           .fill_password("supersecurepassword")
         expect(signup_form).to have_valid_fields
         signup_form.click_create_account
 
         wait_for(timeout: 5) { User.find_by(username: "john") != nil }
+        expect(page).to have_current_path("/u/account-created")
 
         visit "/"
         login_form.open
@@ -180,6 +182,8 @@ shared_examples "signup scenarios" do |signup_page_object, login_page_object|
         EmailToken.confirm(Fabricate(:email_token, user: user).token)
 
         login_form.click_login
+
+        expect(page).to have_current_path("/")
         expect(page).to have_css(".header-dropdown-toggle.current-user")
       end
 
@@ -189,18 +193,19 @@ shared_examples "signup scenarios" do |signup_page_object, login_page_object|
           .fill_email("johndoe@awesomeemail.com")
           .fill_username("john")
           .fill_password("supersecurepassword")
+
         expect(signup_form).to have_valid_fields
+
         signup_form.click_create_account
 
-        wait_for(timeout: 5) { User.find_by(username: "john") != nil }
-        user = User.find_by(username: "john")
-        EmailToken.confirm(Fabricate(:email_token, user: user).token)
+        expect(page).to have_current_path("/u/account-created")
 
+        user = User.find_by(username: "john")
+        EmailToken.confirm(Fabricate(:email_token, user:).token)
         visit "/"
-        login_form.open
-        login_form.fill_username("john")
-        login_form.fill_password("supersecurepassword")
-        login_form.click_login
+        login_form.open.fill_username("john").fill_password("supersecurepassword").click_login
+
+        expect(page).to have_current_path("/")
         expect(page).to have_css(".header-dropdown-toggle.current-user")
       end
     end
@@ -211,16 +216,16 @@ shared_examples "signup scenarios" do |signup_page_object, login_page_object|
       it "can signup and activate account" do
         visit("/discuss/signup")
         signup_form
-          .fill_email("johndoe@example.com")
+          .fill_email(invite.email)
           .fill_username("john")
           .fill_password("supersecurepassword")
         expect(signup_form).to have_valid_fields
 
         signup_form.click_create_account
-        expect(page).to have_css(".account-created")
+        expect(page).to have_current_path("/discuss/u/account-created")
 
         mail = ActionMailer::Base.deliveries.first
-        expect(mail.to).to contain_exactly("johndoe@example.com")
+        expect(mail.to).to contain_exactly(invite.email)
         activation_link = mail.body.to_s[%r{\S+/u/activate-account/\S+}]
 
         visit activation_link
@@ -243,7 +248,7 @@ shared_examples "signup scenarios" do |signup_page_object, login_page_object|
     it "cannot signup" do
       signup_form
         .open
-        .fill_email("johndoe@example.com")
+        .fill_email("blocked@example.com")
         .fill_username("john")
         .fill_password("supersecurepassword")
       expect(signup_form).to have_valid_username
@@ -265,7 +270,7 @@ shared_examples "signup scenarios" do |signup_page_object, login_page_object|
     end
 
     it "can signup with invite link" do
-      invite = Fabricate(:invite, email: "johndoe@example.com")
+      invite = Fabricate(:invite)
       visit "/invites/#{invite.invite_key}?t=#{invite.email_token}"
 
       find("#new-account-password").fill_in(with: "supersecurepassword")
@@ -274,13 +279,14 @@ shared_examples "signup scenarios" do |signup_page_object, login_page_object|
       find(".create-account__password-tip-validation").has_css?("#password-validation.good")
       find(".invitation-cta__accept").click
 
+      expect(page).to have_current_path("/")
       expect(page).to have_css(".header-dropdown-toggle.current-user")
     end
   end
 
   it "correctly loads the invites page" do
     inviter = Fabricate(:user)
-    invite = Fabricate(:invite, email: "johndoe@example.com", invited_by: inviter)
+    invite = Fabricate(:invite, invited_by: inviter)
     visit "/invites/#{invite.invite_key}?t=#{invite.email_token}"
 
     expect(page).to have_css(".invited-by .user-info[data-username='#{inviter.username}']")
@@ -343,13 +349,13 @@ shared_examples "signup scenarios" do |signup_page_object, login_page_object|
 end
 
 describe "Signup", type: :system do
-  context "when fullpage desktop" do
+  context "when desktop" do
     include_examples "signup scenarios",
                      PageObjects::Pages::Signup.new,
                      PageObjects::Pages::Login.new
   end
 
-  context "when fullpage mobile", mobile: true do
+  context "when mobile", mobile: true do
     include_examples "signup scenarios",
                      PageObjects::Pages::Signup.new,
                      PageObjects::Pages::Login.new

@@ -26,4 +26,5 @@ const Categories = <template>
     {{/each}}
   </StyleguideExample>
 </template>;
+
 export default Categories;

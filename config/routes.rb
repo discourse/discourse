@@ -102,6 +102,7 @@ Discourse::Application.routes.draw do
     namespace :admin, constraints: StaffConstraint.new do
       get "" => "admin#index"
       get "search" => "search#index"
+      get "schema/:setting_name" => "admin#index"
 
       get "plugins" => "plugins#index"
       get "plugins/:plugin_id" => "plugins#show"
@@ -428,7 +429,8 @@ Discourse::Application.routes.draw do
         get "experimental" => "site_settings#index"
         get "trust-levels" => "site_settings#index"
         get "group-permissions" => "site_settings#index"
-        get "/logo-and-fonts" => "logo#index"
+        get "/logo" => "logo#index"
+        get "/fonts" => "fonts#index"
         put "/logo" => "logo#update"
         put "/fonts" => "fonts#update"
         get "colors/:id" => "color_palettes#show"
@@ -550,6 +552,7 @@ Discourse::Application.routes.draw do
     post "login" => "static#enter"
 
     get "login" => "static#show", :id => "login"
+    get "login-required" => "static#show", :id => "login"
     get "login-preferences" => "static#show", :id => "login"
     get "signup" => "static#show", :id => "signup"
     get "password-reset" => "static#show", :id => "password_reset"
@@ -1146,18 +1149,9 @@ Discourse::Application.routes.draw do
 
     %w[groups g].each do |root_path|
       resources :groups,
-                only: %i[index show new edit update],
+                only: %i[index new edit update],
                 id: RouteFormat.username,
                 path: root_path do
-        get "posts.rss" => "groups#posts_feed", :format => :rss
-        get "mentions.rss" => "groups#mentions_feed", :format => :rss
-
-        get "members"
-        get "posts"
-        get "mentions"
-        get "mentionable"
-        get "messageable"
-        get "logs" => "groups#histories"
         post "test_email_settings"
 
         collection do
@@ -1167,34 +1161,50 @@ Discourse::Application.routes.draw do
         end
 
         member do
-          %w[
-            activity
-            activity/:filter
-            requests
-            messages
-            messages/inbox
-            messages/archive
-            manage
-            manage/profile
-            manage/members
-            manage/membership
-            manage/interaction
-            manage/email
-            manage/categories
-            manage/tags
-            manage/logs
-          ].each { |path| get path => "groups#show" }
-
-          get "permissions" => "groups#permissions"
-          put "members" => "groups#add_members"
           put "owners" => "groups#add_owners"
           put "join" => "groups#join"
           delete "members" => "groups#remove_member"
           delete "leave" => "groups#leave"
-          post "request_membership" => "groups#request_membership"
           put "handle_membership_request" => "groups#handle_membership_request"
-          post "notifications" => "groups#set_notifications"
+          put "members" => "groups#add_members"
         end
+      end
+
+      get "#{root_path}/by-id/:id" => "groups#show"
+
+      scope path: "#{root_path}/:name", constraints: { name: RouteFormat.username } do
+        get "/" => "groups#show"
+        get "activity" => "groups#show"
+        get "activity/:filter" => "groups#show"
+        get "requests" => "groups#show"
+        get "messages" => "groups#show"
+        get "messages/inbox" => "groups#show"
+        get "messages/archive" => "groups#show"
+        get "manage" => "groups#show"
+        get "manage/profile" => "groups#show"
+        get "manage/members" => "groups#show"
+        get "manage/membership" => "groups#show"
+        get "manage/interaction" => "groups#show"
+        get "manage/email" => "groups#show"
+        get "manage/categories" => "groups#show"
+        get "manage/tags" => "groups#show"
+        get "manage/logs" => "groups#show"
+        get "permissions" => "groups#permissions"
+
+        post "request_membership" => "groups#request_membership"
+
+        post "notifications" => "groups#set_notifications",
+             :as => :"#{root_path}_group_set_notifications"
+
+        get "posts.rss" => "groups#posts_feed", :format => :rss
+        get "mentions.rss" => "groups#mentions_feed", :format => :rss
+
+        get "members" => "groups#members"
+        get "posts" => "groups#posts"
+        get "mentions" => "groups#mentions"
+        get "mentionable" => "groups#mentionable"
+        get "messageable" => "groups#messageable"
+        get "logs" => "groups#histories"
       end
     end
 
@@ -1229,8 +1239,12 @@ Discourse::Application.routes.draw do
         put "merge_posts"
       end
     end
-    resources :post_localizations, only: %i[create update destroy]
-    resources :topic_localizations, only: %i[create update destroy]
+
+    post "/post_localizations/create_or_update", to: "post_localizations#create_or_update"
+    delete "/post_localizations/destroy", to: "post_localizations#destroy"
+
+    post "topic_localizations/create_or_update", to: "topic_localizations#create_or_update"
+    delete "topic_localizations/destroy", to: "topic_localizations#destroy"
 
     resources :bookmarks, only: %i[create destroy update] do
       put "toggle_pin"
@@ -1696,11 +1710,13 @@ Discourse::Application.routes.draw do
          constraints: HomePageConstraint.new("finish_installation"),
          as: "installation_redirect"
 
-    root to: "custom_homepage#index",
+    root to: "home_page#custom",
          constraints: HomePageConstraint.new("custom"),
-         as: "custom_index"
+         as: "home_page_custom"
 
-    get "/custom" => "custom_homepage#index"
+    root to: "home_page#blank", constraints: HomePageConstraint.new("blank"), as: "home_page_blank"
+
+    get "/custom" => "home_page#custom"
 
     get "/user-api-key/new" => "user_api_keys#new"
     post "/user-api-key" => "user_api_keys#create"

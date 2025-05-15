@@ -9,12 +9,12 @@ export default class AdminSearchModal extends Component {
   <template>
     <DModal
       @closeModal={{@closeModal}}
-      class="admin-search-modal"
+      class="admin-search-modal --quick-palette"
       @title="admin.search.modal_title"
       @inline={{@inline}}
       @hideHeader={{true}}
     >
-      <AdminSearch @fullPageLink={{true}} />
+      <AdminSearch />
     </DModal>
   </template>
 }

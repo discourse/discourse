@@ -162,5 +162,25 @@ RSpec.describe PrettyText::Helpers do
       Guardian.expects(:new).with(Discourse.system_user).returns(guardian_system)
       PrettyText::Helpers.hashtag_lookup("somecooltag", nil, %w[category tag])
     end
+
+    it "falls back to system user when cooking_user is deleted" do
+      user.destroy
+
+      expect(
+        PrettyText::Helpers.hashtag_lookup("somecooltag::tag", user.id, %w[category tag]),
+      ).to eq(
+        {
+          relative_url: tag.url,
+          text: "somecooltag",
+          description: "Coolest things ever",
+          colors: nil,
+          icon: "tag",
+          id: tag.id,
+          slug: "somecooltag",
+          ref: "somecooltag::tag",
+          type: "tag",
+        },
+      )
+    end
   end
 end

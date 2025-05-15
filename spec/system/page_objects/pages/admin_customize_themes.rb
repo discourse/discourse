@@ -38,6 +38,10 @@ module PageObjects
         )
       end
 
+      def click_back_to_themes
+        find(".back-to-themes-and-components a").click
+      end
+
       def has_back_button_to_components_page?
         has_css?(
           '.back-to-themes-and-components a[href="/admin/config/customize/components"]',
@@ -107,6 +111,14 @@ module PageObjects
 
       def has_no_search?
         has_no_css?(".themes-list-search__input")
+      end
+
+      def click_delete
+        find(".theme-controls .btn-danger").click
+      end
+
+      def confirm_delete
+        find(".dialog-footer .btn-primary").click
       end
 
       private

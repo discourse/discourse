@@ -1264,6 +1264,7 @@ export default class PostStream extends RestModel {
     post.user = this.store.createRecord("user", {
       id: post.user_id,
       username: post.username,
+      avatar_template: post.avatar_template,
     });
 
     if (post.user_status) {

@@ -1354,7 +1354,6 @@ ca:
         title: "Registre d'adreça IP"
       avatar:
         title: "Foto de perfil"
-        header_title: "perfil, missatges, preferits i preferències"
       title:
         title: "Títol"
         none: "(cap)"
@@ -2280,6 +2279,11 @@ ca:
       sr_post_like_count_button:
         one: "La publicació agrada a %{count} persona."
         other: "La publicació agrada a %{count} persones."
+      localizations:
+        table:
+          actions: "Accions"
+          edit: "Edita"
+          delete: "Suprimeix"
       errors:
         create: "S'ha produït un error en crear la vostra publicació. Torneu-ho a provar."
         edit: "S'ha produït un error en editar la vostra publicació. Torneu-ho a provar."
@@ -2959,6 +2963,7 @@ ca:
               content: "Revisa"
             invite:
               content: "Convida"
+      search: "Cerca"
       footer:
         interface_color_selector:
           light: "Clar"
@@ -3436,8 +3441,10 @@ ca:
           delete: "Suprimeix"
         color_palettes:
           palette_name: "Nom"
+          delete: "Suprimeix"
           colors:
             title: "Colors"
+          delete_confirm: "Voleu suprimir aquesta paleta de colors?"
       plugins:
         title: "Connectors"
         name: "Nom"
@@ -3565,6 +3572,7 @@ ca:
           desktop: "Escriptori"
           mobile: "Mòbil"
           preview: "Previsualitza"
+          default: "Actiu"
           is_default: "L'aparença està habilitada per defecte"
           user_selectable: "Els usuaris poden seleccionar l'aparença"
           color_scheme: "Paleta de colors"
@@ -3625,8 +3633,6 @@ ca:
             error: "Aquesta aparença s'ha desactivat automàticament perquè no és compatible amb aquesta versió de Discourse."
             minimum: "Requereix una versió de Discourse %{version} o superior."
             maximum: "Requereix una versió de Discourse %{version} o inferior."
-          update_to_latest: "Actualitza al més recent"
-          check_for_updates: "Comprova si hi ha actualitzacions"
           up_to_date: "L'aparença és actualitzada, última comprovació:"
           add: "Afegeix"
           theme_settings: "Configuració de l'aparença"

@@ -38,4 +38,5 @@ const TopicListItem0 = <template>
     <LatestTopicListItem @topic={{@dummy.topic}} />
   </StyleguideExample>
 </template>;
+
 export default TopicListItem0;

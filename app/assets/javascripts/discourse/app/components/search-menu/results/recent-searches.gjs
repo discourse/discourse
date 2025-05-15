@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import FlatButton from "discourse/components/flat-button";
+import DButton from "discourse/components/d-button";
 import AssistantItem from "discourse/components/search-menu/results/assistant-item";
 import User from "discourse/models/user";
 import { i18n } from "discourse-i18n";
@@ -53,15 +53,15 @@ export default class RecentSearches extends Component {
       <div class="search-menu-recent">
         <div class="heading">
           <h4>{{i18n "search.recent"}}</h4>
-          <FlatButton
+          <DButton
             @title="search.clear_recent"
             @icon="xmark"
             @action={{this.clearRecent}}
-            class="clear-recent-searches"
+            class="btn-flat clear-recent-searches"
           />
         </div>
 
-        {{#each this.currentUser.recent_searches as |slug index|}}
+        {{#each this.currentUser.recent_searches as |slug|}}
           <AssistantItem
             @icon="clock-rotate-left"
             @label={{slug}}
@@ -70,7 +70,6 @@ export default class RecentSearches extends Component {
             @searchTermChanged={{@searchTermChanged}}
             @usage="recent-search"
             @concatSlug={{true}}
-            data-test-assistant-item="recent-search-{{index}}"
           />
         {{/each}}
       </div>

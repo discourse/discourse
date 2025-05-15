@@ -1627,7 +1627,6 @@ ko:
         title: "등록 IP 주소"
       avatar:
         title: "프로필 사진"
-        header_title: "프로필, 메시지, 북마크 및 환경설정"
         name_and_description: "%{name} - %{description}"
         edit: "프로필 사진 변경"
       title:
@@ -2274,7 +2273,6 @@ ko:
           aria_label: 최대 조회수로 필터링
         additional_options:
           label: "게시물 수 및 주제 조회수로 필터링"
-    hamburger_menu: "메뉴"
     new_item: "신규"
     go_back: "뒤로 가기"
     not_logged_in_user: "현재 활동 및 환경설정에 대한 요약이 포함된 사용자 페이지"
@@ -2796,6 +2794,11 @@ ko:
         other: "다음의 댓글 %{count}개 보기"
       in_reply_to: "상위 게시물 로드"
       view_all_posts: "모든 게시물 보기"
+      localizations:
+        table:
+          actions: "작업"
+          edit: "편집"
+          delete: "삭제"
       errors:
         create: "게시물을 생성하는 중에 오류가 발생했습니다. 다시 시도하세요."
         edit: "게시물을 편집하는 중에 오류가 발생했습니다. 다시 시도하세요."
@@ -3278,7 +3281,6 @@ ko:
         this_month: "월"
         this_week: "주"
         today: "오늘"
-    browser_update: '<a href="https://www.discourse.org/faq/#browser">브라우저 버전이 너무 낮아 이 사이트에서 작동하지 않습니다</a>. <a href="https://browsehappy.com">브라우저를 업그레이드</a>하여 서식 있는 콘텐츠를 표시하고 로그인하여 댓글도 달아보세요.'
     permission_types:
       full: "생성 / 댓글 / 보기"
       create_post: "댓글 / 보기"
@@ -3650,6 +3652,7 @@ ko:
             invite:
               content: "초대"
               title: "새로운 멤버 초대"
+      search: "검색"
       footer:
         interface_color_selector:
           light: "라이트"
@@ -4207,8 +4210,10 @@ ko:
           delete: "삭제하기"
         color_palettes:
           palette_name: "그룹명"
+          delete: "삭제하기"
           colors:
             title: "색상"
+          delete_confirm: "이 색상 표를 삭제 하시겠습니까?"
       plugins:
         title: "플러그인"
         name: "이름"
@@ -4340,6 +4345,7 @@ ko:
           extra_files_upload: "이 파일을 보려면 테마를 내보내세요."
           extra_files_remote: "이 파일을 보려면 테마를 내보내거나 Git 저장소를 확인하세요."
           preview: "미리보기"
+          default: "활성화 사용자"
           is_default: "디폴트로 테마가 활성화되었습니다"
           user_selectable: "사용자가 테마를 선택할 수 있습니다"
           auto_update: "Discourse 업데이트 시 자동 업데이트"
@@ -4412,8 +4418,6 @@ ko:
             error: "이 테마는이 버전의 Discourse와 호환되지 않기 때문에 자동으로 비활성화되었습니다."
             minimum: "Discourse 버전 %{version} 이상이 필요합니다."
             maximum: "Discourse 버전 %{version} 이하가 필요합니다."
-          update_to_latest: "최신으로 업데이트"
-          check_for_updates: "업데이트 체크하기"
           up_to_date: "테마가 최신입니다. 마지막 확인:"
           has_overwritten_history: "강제 푸시로 Git 히스토리를 덮어 썼으므로 현재 테마 버전이 더 이상 존재하지 않습니다."
           add: "추가"

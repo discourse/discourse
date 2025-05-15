@@ -62,7 +62,7 @@ export default class AdminConfigAreasUserFieldsList extends Component {
       await field.destroyRecord();
       this.fields.removeObject(field);
       this.toasts.success({
-        duration: 3000,
+        duration: "short",
         data: {
           message: i18n("admin.config_areas.user_fields.delete_successful"),
         },

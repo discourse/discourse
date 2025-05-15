@@ -1177,7 +1177,6 @@ tr_TR:
       said: "%{username}:"
       profile: "Profil"
       profile_possessive: "%{username} adlı kullanıcının profili"
-      account_possessive: "%{name} adlı kişinin hesabı"
       mute: "Sessiz"
       edit: "Tercihleri Düzenle"
       download_archive:
@@ -2011,7 +2010,6 @@ tr_TR:
         title: "Kayıt IP Adresi"
       avatar:
         title: "Profil Resmi"
-        header_title: "profil, mesajlar, yer imleri ve tercihler"
         name_and_description: "%{name} - %{description}"
         edit: "Profil Resmini Düzenle"
       title:
@@ -2822,7 +2820,6 @@ tr_TR:
       in_messages_tooltip: "normal konuları aramaya geç"
       in_topics_posts: "tüm konularda ve gönderilerde"
       enter_hint: "veya Enter tuşuna basın"
-      mobile_enter_hint: "veya Arama simgesine dokunun"
       in_posts_by: "@%{username} adlı kullanıcının gönderilerinde"
       recent: "Son Aramalar"
       clear_recent: "Son Aramaları Temizle"
@@ -2910,7 +2907,6 @@ tr_TR:
           aria_label: en fazla görüntülemeye göre filtrele
         additional_options:
           label: "Gönderi sayısına ve konu görüntülemelerine göre filtrele"
-    hamburger_menu: "menü"
     new_item: "yeni"
     go_back: "geri dön"
     not_logged_in_user: "güncel etkinliğin ve tercihlerin özetinin bulunduğu kullanıcı sayfası"
@@ -3617,6 +3613,11 @@ tr_TR:
       in_reply_to: "Ana gönderiyi yükle"
       view_all_posts: "Tüm gönderileri görüntüle"
       badge_granted_tooltip: "%{username}, bu gönderi için \"%{badge_name}\" rozetini kazandı!"
+      localizations:
+        table:
+          actions: "Eylemler"
+          edit: "Düzenle"
+          delete: "Sil"
       errors:
         create: "Üzgünüz, gönderiniz oluşturulurken bir hata oluştu. Lütfen tekrar deneyin."
         edit: "Üzgünüz, gönderiniz düzenlenirken bir hata oluştu. Lütfen tekrar deneyin."
@@ -4214,7 +4215,6 @@ tr_TR:
         today: "Bugün"
     custom_homepage:
       admin_message: 'Temalarınızdan biri "custom_homepage" değiştiricisini etkinleştirdi ancak [custom-homepage] bağlayıcısında hiçbir çıktı vermiyor. (Bu mesaj yalnızca site yöneticilerine gösterilir.)'
-    browser_update: 'Ne yazık ki <a href="https://www.discourse.org/faq/#browser">tarayıcınız desteklenmiyor</a>. Lütfen zengin içeriği görüntülemek, giriş yapmak ve yanıtlamak için <a href="https://browsehappy.com">desteklenen bir tarayıcıya geçin.</a>'
     permission_types:
       full: "Oluştur / Yanıtla / Bak"
       create_post: "Yanıtla / Bak"
@@ -4718,6 +4718,7 @@ tr_TR:
       back_to_forum: "Foruma geri dön"
       collapse_all_sections: "Tüm bölümleri daralt"
       expand_all_sections: "Tüm bölümleri genişlet"
+      search: "Ara"
       footer:
         interface_color_selector:
           light: "Açık"
@@ -5752,11 +5753,14 @@ tr_TR:
           save_successful: "Kullanıcı alanı kaydedildi."
         color_palettes:
           palette_name: "Ad"
+          duplicate: "Eş Kopya"
+          delete: "Sil"
           color_options:
             toggle: "Kullanıcı tarafından seçilebilir"
             toggle_description: "Renk paleti, kullanıcılar tarafından seçilebilir"
           colors:
             title: "Renkler"
+          delete_confirm: "Bu renk paleti silinsin mi?"
       plugins:
         title: "Eklentiler"
         name: "Ad"
@@ -5927,9 +5931,11 @@ tr_TR:
           extra_files_upload: "Bu dosyaları görüntülemek için temayı dışa aktarın."
           extra_files_remote: "Bu dosyaları görüntülemek için temayı dışa aktarın veya git deposunu kontrol edin."
           preview: "Ön İzleme"
+          default: "Aktif"
           settings_editor: "Ayar Düzenleyici"
           is_default: "Tema varsayılan olarak etkinleştirildi"
           user_selectable: "Tema kullanıcılar tarafından seçilebilir"
+          user_selectable_badge_label: "Kullanıcı tarafından seçilebilir"
           color_scheme_user_selectable: "Renk paleti, kullanıcılar tarafından seçilebilir"
           auto_update: "Discourse güncellendiğinde otomatik olarak güncelle"
           color_scheme: "Renk Paleti"
@@ -5947,8 +5953,6 @@ tr_TR:
           convert_theme_alert_generic: "Bu temayı bileşene dönüştürmek istediğinizden emin misiniz?"
           convert_theme_tooltip: "Bu temayı bileşene dönüştür"
           inactive_themes: "Etkin olmayan temalar:"
-          set_default_theme: "Varsayılanı ayarla"
-          default_theme: "Varsayılan tema"
           set_default_success: "Varsayılan tema %{theme} olarak ayarlandı"
           install_success: "%{theme} başarıyla yüklendi!"
           inactive_components: "Kullanılmayan bileşenler:"
@@ -6019,7 +6023,6 @@ tr_TR:
             error: "Bu tema, Discourse'un bu sürümüyle uyumlu olmadığı için otomatik olarak devre dışı bırakıldı."
             minimum: "Dircourse %{version} sürümü veya üstünü gerektirir."
             maximum: "Discourse sürüm %{version} veya altı gerektirir."
-          update_to_latest: "En Sona Güncelle"
           check_for_updates: "Güncellemeleri kontrol et"
           updating: "Güncelleniyor…"
           update_success: "%{theme} Güncelleme tamamlandı"

@@ -307,6 +307,7 @@ class UploadCreator
         I18n.t(
           "upload.images.larger_than_x_megapixels",
           max_image_megapixels: SiteSetting.max_image_megapixels,
+          original_filename: @upload.original_filename,
         ),
       )
     end

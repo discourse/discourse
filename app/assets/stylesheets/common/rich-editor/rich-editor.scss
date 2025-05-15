@@ -197,7 +197,6 @@
 
 // stylelint-disable-next-line no-duplicate-selectors
 .ProseMirror {
-  position: relative;
   word-wrap: break-word;
   white-space: break-spaces;
 }
@@ -259,7 +258,7 @@ li.ProseMirror-selectednode::after {
 .ProseMirror-gapcursor {
   display: none;
   pointer-events: none;
-  position: absolute;
+  position: sticky;
 }
 
 .ProseMirror-gapcursor::after {

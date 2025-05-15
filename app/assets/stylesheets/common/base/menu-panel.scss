@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .menu-panel.slide-in {
   position: fixed;
   right: 0;
@@ -237,51 +239,6 @@
 
 .search-menu .menu-panel {
   width: 500px;
-
-  @include breakpoint("mobile-extra-large") {
-    &.search-menu-panel {
-      width: 100vw;
-      max-width: 100vw;
-      padding: 0.5rem 0.5rem 0;
-      transform-origin: 66%;
-      transition: height 0.2s ease-in;
-
-      &.empty-panel {
-        height: 4rem;
-      }
-
-      &.slide-in {
-        animation: search-slide-in 0.2s ease-out forwards;
-      }
-
-      &.is-destroying {
-        animation: search-slide-out 0.2s ease-in forwards;
-      }
-
-      @keyframes search-slide-in {
-        from {
-          opacity: 0;
-          transform: scaleX(0);
-        }
-      }
-
-      @keyframes search-slide-out {
-        from {
-          transform: scaleX(1);
-          opacity: 1;
-        }
-
-        to {
-          opacity: 0;
-          transform: scaleX(0);
-        }
-      }
-
-      .btn-cancel-mobile-search {
-        padding: 1rem 0.625rem;
-      }
-    }
-  }
 }
 
 .user-menu.revamped {
