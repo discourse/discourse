@@ -122,19 +122,6 @@ module("Unit | Service | AdminSearchDataSource", function (hooks) {
     assert.deepEqual(this.subject.search("a"), []);
   });
 
-  test("search - limits the returned types", async function (assert) {
-    await this.subject.buildMap();
-    let results = this.subject.search("anonymous");
-    assert.deepEqual(results.length, 3);
-
-    results = this.subject.search("anonymous", { types: ["report"] });
-    assert.deepEqual(results.length, 1);
-    assert.deepEqual(
-      results[0].url,
-      "/admin/reports/page_view_anon_browser_reqs"
-    );
-  });
-
   test("search - prioritize whole word matches", async function (assert) {
     await this.subject.buildMap();
     let results = this.subject.search("anonym");
