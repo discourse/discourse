@@ -19,6 +19,9 @@
   }
 
   &-toggle {
+    border: 1px solid var(--primary-200);
+    border-radius: var(--d-input-border-radius);
+    padding: 1rem;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
