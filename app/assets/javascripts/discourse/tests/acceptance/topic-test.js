@@ -106,7 +106,7 @@ import { i18n } from "discourse-i18n";
       test("Showing and hiding the edit controls", async function (assert) {
         await visit("/t/internationalization-localization/280");
 
-        await click("#topic-title .d-icon-pencil");
+        await click("#topic-title .can-edit-topic");
 
         assert.dom("#edit-title").exists("shows the editing controls");
         assert
@@ -123,7 +123,7 @@ import { i18n } from "discourse-i18n";
 
         await visit("/t/internationalization-localization/280");
 
-        await click("#topic-title .d-icon-pencil");
+        await click("#topic-title .can-edit-topic");
         await fillIn("#edit-title", "this is the new title");
         await categoryChooser.expand();
         await categoryChooser.selectRowByValue(4);
@@ -168,7 +168,7 @@ import { i18n } from "discourse-i18n";
 
       test("Updating the topic title with emojis", async function (assert) {
         await visit("/t/internationalization-localization/280");
-        await click("#topic-title .d-icon-pencil");
+        await click("#topic-title .can-edit-topic");
 
         await fillIn("#edit-title", "emojis title :bike: :blonde_woman:t6:");
 
@@ -181,7 +181,7 @@ import { i18n } from "discourse-i18n";
 
       test("Updating the topic title with unicode emojis", async function (assert) {
         await visit("/t/internationalization-localization/280");
-        await click("#topic-title .d-icon-pencil");
+        await click("#topic-title .can-edit-topic");
 
         await fillIn("#edit-title", "emojis title 👨‍🌾🙏");
 
@@ -195,7 +195,7 @@ import { i18n } from "discourse-i18n";
       test("Updating the topic title with unicode emojis without whitespace", async function (assert) {
         this.siteSettings.enable_inline_emoji_translation = true;
         await visit("/t/internationalization-localization/280");
-        await click("#topic-title .d-icon-pencil");
+        await click("#topic-title .can-edit-topic");
 
         await fillIn("#edit-title", "Test🙂Title");
 
@@ -297,7 +297,8 @@ import { i18n } from "discourse-i18n";
           .dom(".title-wrapper .topic-featured-link")
           .exists("link is shown with topic title");
 
-        await click(".title-wrapper .edit-topic");
+        assert.dom(".title-wrapper").exists("title wrapper is shown");
+        await click("#topic-title .can-edit-topic");
         assert
           .dom(".title-wrapper .remove-featured-link")
           .exists("link to remove featured link");
@@ -453,7 +454,8 @@ import { i18n } from "discourse-i18n";
           .dom(".title-wrapper .topic-featured-link")
           .exists("link is shown with topic title");
 
-        await click(".title-wrapper .edit-topic");
+        assert.dom(".title-wrapper").exists("title wrapper is shown");
+        await click(".title-wrapper .can-edit-topic");
         assert
           .dom(".title-wrapper .remove-featured-link")
           .exists("link to remove featured link");

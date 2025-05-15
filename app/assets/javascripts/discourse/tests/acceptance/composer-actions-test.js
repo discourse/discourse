@@ -112,7 +112,7 @@ acceptance("Composer Actions", function (needs) {
 
     await visit("/t/internationalization-localization/280");
 
-    await click("#topic-title .d-icon-pencil");
+    await click("#topic-title .can-edit-topic");
     await categoryChooser.expand();
     await categoryChooser.selectRowByValue(4);
     await click("#topic-title .submit-edit");
