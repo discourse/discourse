@@ -57,7 +57,7 @@
   }
 
   &:hover {
-    background-color: var(--tertiary-very-low);
+    background-color: var(--d-hover);
   }
 
   &-name {
@@ -96,7 +96,7 @@
   }
 
   &:focus-within {
-    background: var(--d-selected);
+    background: var(--d-hover);
   }
 }
 
