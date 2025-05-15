@@ -489,6 +489,7 @@ export default class Post extends RestModel {
       deleted_by: null,
       user_deleted: false,
       can_delete: false,
+      isRecovering: true,
     });
 
     return ajax(`/posts/${this.id}/recover`, {
@@ -501,11 +502,12 @@ export default class Post extends RestModel {
           user_deleted: false,
           can_delete: true,
           version: data.version,
+          isRecovering: false,
         });
       })
       .catch((error) => {
         popupAjaxError(error);
-        this.setProperties(initProperties);
+        this.setProperties({...initProperties, isRecovering: false});
       });
   }
 
@@ -568,10 +570,13 @@ export default class Post extends RestModel {
   }
 
   destroy(deletedBy, opts) {
+    this.set("isDeleting", true);
     return this.setDeletedState(deletedBy).then(() => {
       return ajax("/posts/" + this.id, {
         data: { context: window.location.pathname, ...opts },
         type: "DELETE",
+      }).finally(() => {
+        this.set("isDeleting", false);
       });
     });
   }
