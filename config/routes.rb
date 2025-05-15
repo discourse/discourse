@@ -1151,6 +1151,8 @@ Discourse::Application.routes.draw do
                 only: %i[index new edit update],
                 id: RouteFormat.username,
                 path: root_path do
+        post "test_email_settings"
+
         collection do
           get "check-name" => "groups#check_name"
           get "custom/new" => "groups#new", :constraints => StaffConstraint.new
@@ -1163,6 +1165,7 @@ Discourse::Application.routes.draw do
           delete "members" => "groups#remove_member"
           delete "leave" => "groups#leave"
           put "handle_membership_request" => "groups#handle_membership_request"
+          put "members" => "groups#add_members"
         end
       end
 
@@ -1186,7 +1189,6 @@ Discourse::Application.routes.draw do
         get "manage/tags" => "groups#show"
         get "manage/logs" => "groups#show"
         get "permissions" => "groups#permissions"
-        put "members" => "groups#add_members"
 
         post "request_membership" => "groups#request_membership"
 
@@ -1202,7 +1204,6 @@ Discourse::Application.routes.draw do
         get "mentionable" => "groups#mentionable"
         get "messageable" => "groups#messageable"
         get "logs" => "groups#histories"
-        post "test_email_settings" => "groups#test_email_settings"
       end
     end
 
