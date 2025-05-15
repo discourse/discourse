@@ -62,7 +62,7 @@ module Stylesheet
           source_map_file: source_map_file,
           source_map_contents: true,
           load_paths: load_paths,
-          silence_deprecations: %w[color-functions import global-builtin],
+          silence_deprecations: %w[color-functions import global-builtin mixed-decls],
           fatal_deprecations: options[:strict_deprecations] ? %w[mixed-decls] : [],
           quiet: ENV["QUIET_SASS_DEPRECATIONS"] == "1",
         )
