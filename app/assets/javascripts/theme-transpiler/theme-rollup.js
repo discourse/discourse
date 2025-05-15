@@ -101,6 +101,7 @@ globalThis.rollup = function (modules, opts) {
           // TODO: widgetHbs (remove from d-calendar)
           // TODO: sourcemaps
           // TODO: connectors
+          // TODO: should babel presetEnv be on output?
         ],
         presets: [
           [
