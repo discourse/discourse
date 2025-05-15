@@ -90,11 +90,6 @@ export default class SiteSettingComponent extends Component.extend(
 
         <Description @description={{this.setting.description}} />
       {{else}}
-        {{#if this.setting.validationMessage}}
-          <SettingValidationMessage
-            @message={{this.setting.validationMessage}}
-          />
-        {{/if}}
         {{#if this.displayDescription}}
           <Description @description={{this.setting.description}} />
         {{/if}}
@@ -108,6 +103,11 @@ export default class SiteSettingComponent extends Component.extend(
           @setValidationMessage={{this.setValidationMessage}}
           @class="form-kit__container-content --large"
         />
+        {{#if this.setting.validationMessage}}
+          <SettingValidationMessage
+            @message={{this.setting.validationMessage}}
+          />
+        {{/if}}
       {{/if}}
     </div>
 

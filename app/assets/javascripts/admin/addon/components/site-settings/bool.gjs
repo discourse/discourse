@@ -21,13 +21,16 @@ export default class Bool extends Component {
   }
 
   <template>
-    <label class="checkbox-label">
+    <label class="checkbox-label form-kit__control-checkbox-label">
       <input
         {{on "input" this.onToggle}}
         type="checkbox"
         checked={{this.enabled}}
+        class="form-kit__control-checkbox"
       />
-      <span>{{htmlSafe @setting.description}}</span>
+      <span class="form-kit__control-checkbox-title">{{htmlSafe
+          @setting.description
+        }}</span>
     </label>
   </template>
 }

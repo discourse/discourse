@@ -30,124 +30,13 @@
     width: 100%;
   }
 
-  input {
-    width: 100%;
+  .form-kit__container input:not([type="checkbox"]),
+  .form-kit__container .value-list,
+  .form-kit__container .select-kit,
+  .form-kit__control-checkbox-label,
+  .form-kit .select-kit-body,
+  .form-kit .color-picker,
+  .form-kit .file-size-picker {
+    width: var(--form-kit-large-input);
   }
 }
-
-//       .uploaded-image-preview {
-//         background-size: contain;
-//         background-repeat: no-repeat;
-//         background-color: var(--primary-medium);
-//       }
-//     }
-
-//     .setting-controls {
-//       float: left;
-//     }
-
-//     .input-setting-string,
-//     .input-setting-integer,
-//     .input-setting-textarea {
-//       width: 100%;
-
-//       @media (max-width: $mobile-breakpoint) {
-//         width: 100%;
-//       }
-//     }
-
-//     .input-setting-textarea {
-//       height: 150px;
-//     }
-
-//     .input-setting-list {
-//       padding: 1px;
-//       background-color: var(--secondary);
-//       border: 1px solid var(--primary-low);
-//       border-radius: 3px;
-//       transition:
-//         border linear 0.2s,
-//         box-shadow linear 0.2s;
-
-//       @media (max-width: $mobile-breakpoint) {
-//         width: 100%;
-//       }
-
-//       li.sortable-placeholder {
-//         @include unselectable;
-//         padding: 3px 5px 3px 18px;
-//         margin: 3px 0 3px 5px;
-//         position: relative;
-//         line-height: var(--line-height-small);
-//         cursor: default;
-//         border: 1px dashed var(--primary-low-mid);
-//         border-radius: 3px;
-//         background-clip: padding-box;
-//         background-color: transparent;
-//         width: 3em;
-//         height: 1em;
-//       }
-//     }
-
-//     .desc,
-//     .validation-error {
-//       padding-top: 3px;
-//       font-size: var(--font-down-1);
-//       line-height: var(--line-height-large);
-//     }
-
-//     .validation-error {
-//       color: var(--danger);
-//     }
-
-//     .desc {
-//       color: var(--primary-medium);
-//     }
-//   }
-
-//   .setting.overridden {
-//     .values input {
-//       background-color: var(--highlight-bg);
-//     }
-
-//     h3 {
-//       position: relative;
-
-//       &::before {
-//         content: "";
-//         position: absolute;
-//         top: 0.5rem;
-//         left: -1rem;
-//         width: 0.5rem;
-//         height: 0.5rem;
-//         border-radius: 100%;
-//         background-color: var(--highlight-high);
-//       }
-//     }
-//   }
-
-//   .setting.overridden.string {
-//     input[type="text"],
-//     input[type="password"],
-//     textarea {
-//       background-color: var(--highlight-bg);
-//     }
-//   }
-
-//   .warning {
-//     color: var(--danger);
-//   }
-
-//   .file-types-list__button {
-//     margin-top: 0.5em;
-//     margin-bottom: 0.2em;
-//   }
-
-//   .discourse-tags {
-//     gap: var(--space-1);
-
-//     .simple {
-//       margin-right: var(--space-1);
-//     }
-//   }
-// }
