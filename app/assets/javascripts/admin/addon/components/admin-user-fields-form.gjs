@@ -85,7 +85,7 @@ export default class AdminUserFieldsForm extends Component {
 
       this.router.transitionTo("adminUserFields.index");
       this.toasts.success({
-        duration: 3000,
+        duration: "short",
         data: {
           message: i18n("admin.config_areas.user_fields.save_successful"),
         },

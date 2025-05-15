@@ -43,7 +43,7 @@ export default class AdminConfigAreasThemes extends Component {
           theme: theme.name,
         }),
       },
-      duration: 2000,
+      duration: "short",
     });
     this.router.refresh();
   }
