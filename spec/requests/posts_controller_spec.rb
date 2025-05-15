@@ -405,6 +405,18 @@ RSpec.describe PostsController do
         delete "/posts/destroy_many.json", params: { post_ids: [post1.id, post2.id] }
         expect(response.status).to eq(200)
       end
+      # bookmark
+      it "triggers DiscourseEvent with :posts_destroyed and correct params" do
+        sign_in(poster)
+        events =
+          DiscourseEvent.track_events do
+            delete "/posts/destroy_many.json", params: { post_ids: [post1.id, post2.id] }
+          end
+        event = events.find { |e| e[:event_name] == :posts_destroyed }
+        expect(event).to be_present
+        expect(event[:params][0].length).to eq(2)
+        expect(event[:params][1]).to eq(poster)
+      end
 
       it "updates the highest read data for the forum" do
         sign_in(poster)
