@@ -5,7 +5,7 @@ import SiteSetting from "admin/components/site-setting";
 export default RouteTemplate(
   <template>
     {{#if @controller.filteredContent}}
-      <section class="form-horizontal settings form-ki --large">
+      <section class="form-horizontal settings form-kit">
         {{#each @controller.filteredContent as |setting|}}
           <SiteSetting @setting={{setting}} />
         {{/each}}
