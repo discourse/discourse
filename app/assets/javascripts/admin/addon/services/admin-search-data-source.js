@@ -15,6 +15,13 @@ const MIN_FILTER_LENGTH = 2;
 const MAX_TYPE_RESULT_COUNT_LOW = 15;
 const MAX_TYPE_RESULT_COUNT_HIGH = 50;
 
+const SEARCH_SCORES = {
+  labelStart: 20,
+  exactKeyword: 10,
+  fallback: 5,
+  pageBonusScore: 20,
+};
+
 function labelOrText(obj, fallback = "") {
   return obj.text || (obj.label ? i18n(obj.label) : fallback);
 }
@@ -255,14 +262,12 @@ export default class AdminSearchDataSource extends Service {
     this._mapCached = true;
   }
 
-  search(filter, opts = {}) {
+  search(filter) {
     if (filter.length < MIN_FILTER_LENGTH) {
       return [];
     }
 
-    opts.types = opts.types || ADMIN_SEARCH_RESULT_TYPES;
-
-    const filteredResults = [];
+    let filteredResults = [];
     const escapedFilterRegExp = escapeRegExp(filter.toLowerCase());
 
     // Pointless to render heaps of settings if the filter is quite low.
@@ -271,22 +276,45 @@ export default class AdminSearchDataSource extends Service {
         ? MAX_TYPE_RESULT_COUNT_LOW
         : MAX_TYPE_RESULT_COUNT_HIGH;
 
-    opts.types.forEach((type) => {
-      let typeItemCount = 0;
+    const labelStartRegex = new RegExp(`^${escapedFilterRegExp}`, "i");
+    const exactKeywordRegexes = escapedFilterRegExp
+      .split(" ")
+      .map((keyword) => new RegExp(`(${keyword})\\b`, "i"));
+    const fallbackRegex = new RegExp(`${escapedFilterRegExp}`, "i");
+
+    ADMIN_SEARCH_RESULT_TYPES.forEach((type) => {
+      const typeResults = [];
       this[`${type}DataSourceItems`].forEach((dataSourceItem) => {
-        // TODO (martin) There is likely a much better way of doing this matching
-        // that will support fuzzy searches, for now let's go with the most basic thing.
+        dataSourceItem.score = 0;
+
+        if (dataSourceItem.label.match(labelStartRegex)) {
+          dataSourceItem.score += SEARCH_SCORES.labelStart;
+        }
         if (
-          dataSourceItem.keywords.match(escapedFilterRegExp) &&
-          typeItemCount <= perTypeLimit
+          exactKeywordRegexes.every((regex) => {
+            return dataSourceItem.label.match(regex);
+          })
         ) {
-          filteredResults.push(dataSourceItem);
-          typeItemCount++;
+          dataSourceItem.score = dataSourceItem.score +=
+            SEARCH_SCORES.exactKeyword;
+        }
+        if (dataSourceItem.keywords.match(fallbackRegex)) {
+          dataSourceItem.score += SEARCH_SCORES.fallback;
+        }
+
+        if (dataSourceItem.score > 0) {
+          if (type === "page") {
+            dataSourceItem.score += SEARCH_SCORES.pageBonusScore;
+          }
+
+          typeResults.push(dataSourceItem);
         }
       });
+      filteredResults = filteredResults.concat(
+        typeResults.sort((a, b) => b.score - a.score).slice(0, perTypeLimit)
+      );
     });
-
-    return filteredResults;
+    return filteredResults.sort((a, b) => b.score - a.score);
   }
 
   #addPageLink(navMapSection, link, parentLabel = "") {

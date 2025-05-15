@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 :root {
   --d-sidebar-width: #{$d-sidebar-width};
   --d-sidebar-row-horizontal-padding: 1rem;
@@ -45,11 +47,11 @@
   --d-sidebar-active-prefix-background: var(--primary-200);
   --d-sidebar-active-suffix-color: var(--tertiary-med-or-tertiary);
 
-  @include breakpoint("mobile-extra-large") {
+  @include viewport.until(sm) {
     --d-sidebar-row-height: 2.4em;
   }
 
-  @include breakpoint(large) {
+  @include viewport.until(lg) {
     --d-sidebar-width: #{$d-sidebar-narrow-width};
   }
 }
@@ -206,7 +208,7 @@
     border-bottom: 2px solid transparent;
     margin-bottom: -2px;
 
-    @include breakpoint("mobile-extra-large") {
+    @include viewport.until(sm) {
       grid-template-columns: 2em 4.5em repeat(2, 1fr);
     }
 
@@ -229,7 +231,7 @@
     .link-icon {
       grid-column: 2;
 
-      @include breakpoint("mobile-extra-large") {
+      @include viewport.until(sm) {
         grid-column: 1;
       }
     }
@@ -237,7 +239,7 @@
     .input-group {
       margin: 0 0.5em;
 
-      @include breakpoint(mobile-large) {
+      @include viewport.until(sm) {
         margin: 0 0.25em;
       }
     }
@@ -272,7 +274,7 @@
     grid-template-columns: auto 1fr auto;
     gap: 0.5em 1em;
 
-    @include breakpoint("mobile-extra-large") {
+    @include viewport.until(sm) {
       grid-template-columns: auto 1fr;
       justify-items: left;
 
@@ -351,28 +353,45 @@
   }
 }
 
-.sidebar-filter {
-  margin-top: 1em;
-  margin-bottom: 1em;
-  border: 1px solid var(--primary-400);
-  border-radius: var(--d-input-border-radius);
-  background: var(--secondary);
-  width: calc(
-    var(--d-sidebar-width) - 2 * var(--d-sidebar-row-horizontal-padding)
-  );
-
-  &:focus-within {
-    border-color: var(--tertiary);
-    outline: 1px solid var(--tertiary);
-    outline-offset: -1px;
-  }
+.sidebar-search {
+  width: 100%;
 
   &__input-container {
-    position: relative;
     display: flex;
     align-items: center;
-    background: var(--secondary);
-    border-radius: var(--d-input-border-radius);
+    border: 1px solid var(--primary-400);
+    background: var(--d-input-bg-color);
+    box-sizing: border-box;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+  }
+
+  &__icon.btn.btn-transparent {
+    border: 0;
+    background: var(--d-input-bg-color);
+    padding-left: var(--d-sidebar-row-horizontal-padding);
+    padding-right: var(--d-sidebar-row-horizontal-padding);
+
+    &:hover {
+      background: var(--d-input-bg-color) !important;
+    }
+
+    .d-icon:hover {
+      color: var(--primary-high);
+    }
+  }
+
+  &__input[type="text"] {
+    margin-bottom: 0;
+    border: 0;
+    padding: 0;
+    width: 100%;
+    height: var(--d-sidebar-row-height);
+    cursor: pointer;
+
+    &:focus {
+      outline: none;
+    }
   }
 
   &__shortcut-hint {
@@ -381,35 +400,6 @@
     margin-right: 0.5em;
     font-size: var(--font-down-3);
     color: var(--primary-medium);
-  }
-
-  &__input[type="text"] {
-    border: 0;
-    background: none;
-    margin-bottom: 0;
-    height: 2em;
-    width: 100%;
-
-    &:focus-within {
-      outline: 0;
-    }
-  }
-
-  &__clear {
-    width: 2em;
-    height: 2em;
-    color: var(--primary-medium);
-    background-color: var(--secondary);
-  }
-}
-
-.sidebar-no-results {
-  display: block;
-  margin: 0.5em var(--d-sidebar-row-horizontal-padding) 0
-    var(--d-sidebar-row-horizontal-padding);
-
-  &__title {
-    font-weight: bold;
   }
 }
 

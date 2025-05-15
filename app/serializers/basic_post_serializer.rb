@@ -35,8 +35,11 @@ class BasicPostSerializer < ApplicationSerializer
       end
     else
       cooked = object.filter_quotes(@parent_post)
-      modified = DiscoursePluginRegistry.apply_modifier(:basic_post_serializer_cooked, cooked, self)
-      modified || cooked
+
+      translated_cooked =
+        object.get_localization&.cooked if ContentLocalization.show_translated_post?(object, scope)
+
+      translated_cooked || cooked
     end
   end
 

@@ -13,7 +13,7 @@ import ResponsiveTable from "discourse/components/responsive-table";
 import TableHeaderToggle from "discourse/components/table-header-toggle";
 import TextField from "discourse/components/text-field";
 import UserInfo from "discourse/components/user-info";
-import boundDate from "discourse/helpers/bound-date";
+import ageWithTooltip from "discourse/helpers/age-with-tooltip";
 import icon from "discourse/helpers/d-icon";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import routeAction from "discourse/helpers/route-action";
@@ -97,14 +97,11 @@ export default RouteTemplate(
       </div>
 
       {{#if @controller.hasMembers}}
-        <LoadMore
-          @selector=".directory-table .directory-table__cell"
-          @action={{@controller.loadMore}}
-        >
+        <LoadMore @action={{@controller.loadMore}}>
           <ResponsiveTable
             @className="group-members
           {{if @controller.isBulk 'sticky-header' ''}}
-          {{if @controller.canManageGroup 'group-members--can-manage' ''}}"
+            {{if @controller.canManageGroup 'group-members--can-manage' ''}}"
           >
             <:header>
               <TableHeaderToggle
@@ -226,7 +223,7 @@ export default RouteTemplate(
                       <span>{{i18n "groups.member_added"}}</span>
                     </span>
                     <span class="directory-table__value">
-                      {{boundDate m.added_at}}
+                      {{ageWithTooltip m.added_at format="medium"}}
                     </span>
                   </div>
                   <div
@@ -242,7 +239,7 @@ export default RouteTemplate(
                       </span>
                     {{/if}}
                     <span class="directory-table__value">
-                      {{boundDate m.last_posted_at}}
+                      {{ageWithTooltip m.last_posted_at format="medium"}}
                     </span>
                   </div>
                   <div
@@ -258,7 +255,7 @@ export default RouteTemplate(
                       </span>
                     {{/if}}
                     <span class="directory-table__value">
-                      {{boundDate m.last_seen_at}}
+                      {{ageWithTooltip m.last_seen_at format="medium"}}
                     </span>
                   </div>
                   {{#if @controller.canManageGroup}}

@@ -26,6 +26,8 @@ shared_examples "social authentication scenarios" do |signup_page_object, login_
         expect(signup_form).to have_no_password_input
         expect(signup_form).to have_valid_username
         expect(signup_form).to have_valid_email
+        expect(signup_form).to have_no_right_side_column
+
         signup_form.click_create_account
         expect(page).to have_css(".header-dropdown-toggle.current-user")
       end
@@ -44,6 +46,8 @@ shared_examples "social authentication scenarios" do |signup_page_object, login_
         expect(signup_form).to have_no_password_input
         expect(signup_form).to have_valid_username
         expect(signup_form).to have_valid_email
+        expect(signup_form).to have_no_right_side_column
+
         signup_form.click_create_account
         expect(page).to have_css(".header-dropdown-toggle.current-user")
       end
@@ -58,6 +62,8 @@ shared_examples "social authentication scenarios" do |signup_page_object, login_
           expect(signup_form).to have_no_password_input
           expect(signup_form).to have_valid_username
           expect(signup_form).to have_valid_email
+          expect(signup_form).to have_no_right_side_column
+
           signup_form.click_create_account
           expect(page).to have_css(".account-created")
         end
@@ -77,6 +83,7 @@ shared_examples "social authentication scenarios" do |signup_page_object, login_
         expect(signup_form).to have_no_password_input
         expect(signup_form).to have_valid_username
         expect(signup_form).to have_valid_email
+        expect(signup_form).to have_no_right_side_column
         signup_form.click_create_account
         expect(page).to have_css(".header-dropdown-toggle.current-user")
       end
@@ -91,6 +98,7 @@ shared_examples "social authentication scenarios" do |signup_page_object, login_
           expect(signup_form).to have_no_password_input
           expect(signup_form).to have_valid_username
           expect(signup_form).to have_valid_email
+          expect(signup_form).to have_no_right_side_column
           signup_form.click_create_account
           expect(page).to have_css(".account-created")
         end
@@ -111,6 +119,7 @@ shared_examples "social authentication scenarios" do |signup_page_object, login_
         signup_form.fill_email(OmniauthHelpers::EMAIL)
         expect(signup_form).to have_valid_username
         expect(signup_form).to have_valid_email
+        expect(signup_form).to have_no_right_side_column
         signup_form.click_create_account
         expect(page).to have_css(".account-created")
       end
@@ -145,6 +154,7 @@ shared_examples "social authentication scenarios" do |signup_page_object, login_
         expect(signup_form).to have_no_password_input
         expect(signup_form).to have_valid_username
         expect(signup_form).to have_valid_email
+        expect(signup_form).to have_no_right_side_column
         signup_form.click_create_account
         expect(page).to have_css(".header-dropdown-toggle.current-user")
       end
@@ -167,13 +177,13 @@ shared_examples "social authentication scenarios" do |signup_page_object, login_
         expect(signup_form).to have_no_password_input
         expect(signup_form).to have_valid_username
         expect(signup_form).to have_valid_email
+        expect(signup_form).to have_no_right_side_column
         signup_form.click_create_account
         expect(page).to have_css(".header-dropdown-toggle.current-user")
       end
     end
 
     # These tests use Google, but they should be the same for all providers
-
     context "when opening the external auth from /login" do
       before { SiteSetting.enable_google_oauth2_logins = true }
       after { reset_omniauth_config(:google_oauth2) }
@@ -187,6 +197,7 @@ shared_examples "social authentication scenarios" do |signup_page_object, login_
         expect(signup_form).to have_no_password_input
         expect(signup_form).to have_valid_username
         expect(signup_form).to have_valid_email
+        expect(signup_form).to have_no_right_side_column
         signup_form.click_create_account
         expect(page).to have_css(".header-dropdown-toggle.current-user")
       end
@@ -273,8 +284,7 @@ shared_examples "social authentication scenarios" do |signup_page_object, login_
           mock_google_auth
 
           visit("/login")
-          expect(page).to have_css(".login-welcome")
-          expect(page).to have_css(".site-logo")
+          expect(page).to have_css(".btn-social")
 
           visit("/")
           expect(page).to have_css(".login-welcome")
@@ -454,29 +464,13 @@ end
 describe "Social authentication", type: :system do
   before { SiteSetting.full_name_requirement = "optional_at_signup" }
 
-  context "when desktop" do
-    before { SiteSetting.full_page_login = false }
-    include_examples "social authentication scenarios",
-                     PageObjects::Modals::Signup.new,
-                     PageObjects::Modals::Login.new
-  end
-
-  context "when mobile", mobile: true do
-    before { SiteSetting.full_page_login = false }
-    include_examples "social authentication scenarios",
-                     PageObjects::Modals::Signup.new,
-                     PageObjects::Modals::Login.new
-  end
-
   context "when fullpage desktop" do
-    before { SiteSetting.full_page_login = true }
     include_examples "social authentication scenarios",
                      PageObjects::Pages::Signup.new,
                      PageObjects::Pages::Login.new
   end
 
   context "when fullpage mobile", mobile: true do
-    before { SiteSetting.full_page_login = true }
     include_examples "social authentication scenarios",
                      PageObjects::Pages::Signup.new,
                      PageObjects::Pages::Login.new

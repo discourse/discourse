@@ -38,6 +38,7 @@ export default class ComposerToggleSwitch extends Component {
       title={{this.label}}
       {{! template-lint-disable no-pointer-down-event-binding }}
       {{on "mousedown" this.mouseDown}}
+      data-rich-editor={{@state}}
       ...attributes
     >
       <span class="composer-toggle-switch__slider">

@@ -80,4 +80,5 @@ const Bem = <template>
       and avoids unnecessary repetition of the block class.</p>
   </div>
 </template>;
+
 export default Bem;

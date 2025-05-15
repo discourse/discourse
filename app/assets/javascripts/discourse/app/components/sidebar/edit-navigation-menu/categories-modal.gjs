@@ -11,6 +11,7 @@ import DButton from "discourse/components/d-button";
 import EditNavigationMenuModal from "discourse/components/sidebar/edit-navigation-menu/modal";
 import borderColor from "discourse/helpers/border-color";
 import categoryBadge from "discourse/helpers/category-badge";
+import concatClass from "discourse/helpers/concat-class";
 import dirSpan from "discourse/helpers/dir-span";
 import loadingSpinner from "discourse/helpers/loading-spinner";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -111,6 +112,7 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
   @service siteSettings;
 
   @tracked initialLoad = true;
+  @tracked filtered = false;
   @tracked fetchedCategoriesGroupings = [];
   @tracked
   selectedCategoryIds = new TrackedSet([
@@ -258,6 +260,8 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
 
   @serialized
   async performSearch() {
+    this.filtered = false;
+
     const requestedFilter = this.selectedFilter;
     const requestedMode = this.selectedMode;
     const selectedCategoriesNeedsUpdate =
@@ -317,9 +321,11 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
       this.lastPage = false;
       this.initialLoad = false;
       this.loadAnotherPage = false;
+      this.filtered = true;
     }
   }
 
+  @action
   async loadMore() {
     this.loadAnotherPage = true;
     this.debouncedSendRequest();
@@ -427,7 +433,12 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
       @closeModal={{@closeModal}}
       class="sidebar__edit-navigation-menu__categories-modal"
     >
-      <form class="sidebar-categories-form">
+      <form
+        class={{concatClass
+          "sidebar-categories-form"
+          (if this.filtered "--filtered")
+        }}
+      >
         {{#if this.initialLoad}}
           <div class="sidebar-categories-form__loading">
             {{loadingSpinner size="small"}}

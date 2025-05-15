@@ -1,3 +1,4 @@
+@use "lib/viewport";
 @import "common/foundation/mixins";
 
 .display-welcome-banner {
@@ -13,8 +14,6 @@
 }
 
 .welcome-banner {
-  position: relative;
-  z-index: 1;
   margin-bottom: 1em;
   border-radius: var(--d-border-radius-large);
 
@@ -23,12 +22,12 @@
     position: relative;
     padding: 1.5em 0 3em;
 
-    @include breakpoint(tablet) {
+    @include viewport.until(md) {
       padding: 1em 8px 1.25em;
       margin-top: 0.5em;
     }
 
-    @include breakpoint("mobile-extra-large") {
+    @include viewport.until(sm) {
       display: block;
       padding: 0.5em;
       margin-top: 0;
@@ -43,7 +42,7 @@
       display: flex;
       position: relative;
 
-      @include breakpoint("mobile-extra-large") {
+      @include viewport.until(sm) {
         display: none;
       }
 
@@ -53,12 +52,8 @@
       }
     }
 
-    .d-icon-search {
+    .d-icon-magnifying-glass {
       margin: 0;
-    }
-
-    .browser-search-tip {
-      display: none;
     }
 
     .search-input {
@@ -68,20 +63,22 @@
       }
     }
 
-    h1 {
+    .welcome-banner__title {
       font-size: var(--font-up-6);
       line-height: $line-height-medium;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
 
-      @include breakpoint(tablet) {
+      @include viewport.until(md) {
         font-size: var(--font-up-4);
       }
 
-      @include breakpoint("mobile-extra-large") {
+      @include viewport.until(sm) {
         font-size: var(--font-up-2);
       }
     }
 
-    h1,
+    .welcome-banner__title,
     p {
       text-align: center;
     }
@@ -93,7 +90,9 @@
       color: var(--primary-medium);
       height: 100%;
       position: absolute;
-      left: 0;
+      left: calc(
+        1rem - 0.65em
+      ); // to align with result panel, minus padding of search icon btn
 
       .rtl & {
         right: 0;
@@ -112,11 +111,11 @@
       }
 
       + .search-menu-container .search-input {
-        padding-left: 1.75em;
+        padding-left: 2em;
 
         .rtl & {
           padding-left: unset;
-          padding-right: 1.75em;
+          padding-right: 2em;
         }
       }
 
@@ -131,15 +130,11 @@
       border-radius: var(--d-border-radius);
       background: var(--secondary);
       z-index: 9;
-      margin-left: auto;
-      margin-right: auto;
       left: 0;
       top: 100%;
       right: 0;
 
-      @include float-down;
-
-      @include breakpoint(mobile-extra-large) {
+      @include viewport.until(sm) {
         width: 100%;
       }
 
@@ -149,7 +144,7 @@
         margin: 0;
       }
 
-      .d-icon-search {
+      .d-icon-magnifying-glass {
         display: none;
       }
     }

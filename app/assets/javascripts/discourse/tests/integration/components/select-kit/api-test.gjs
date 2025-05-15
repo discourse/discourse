@@ -8,7 +8,7 @@ import selectKit, {
 } from "discourse/tests/helpers/select-kit-helper";
 import ComboBox from "select-kit/components/combo-box";
 import SingleSelect from "select-kit/components/single-select";
-import { clearCallbacks } from "select-kit/mixins/plugin-api";
+import { clearCallbacks } from "select-kit/lib/plugin-api";
 
 module("Integration | Component | select-kit/api", function (hooks) {
   setupRenderingTest(hooks);

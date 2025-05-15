@@ -589,6 +589,11 @@ ug:
       draft_channel_screen:
         header: "يېڭى ئۇچۇر"
         cancel: "ۋاز كەچ"
+      quick_reaction_type:
+        title: "بىر چېكىپ پاراڭلىشىش ئىنكاسى"
+        options:
+          frequent: "دائىم ئىشلىتىلىدىغان پاراڭلىشىش ئىنكاسى"
+          custom: "ئىختىيارى ئىنكاس"
     notifications:
       chat_invitation: "سۆھبەت قانىلىغا تەكلىپ قىلىندىڭىز"
       chat_invitation_html: "<span>%{username}</span> <span>سىزنى سۆھبەت قانىلىغا تەكلىپ قىلدى</span>"

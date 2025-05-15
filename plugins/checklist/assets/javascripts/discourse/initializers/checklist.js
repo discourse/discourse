@@ -1,5 +1,6 @@
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { iconHTML } from "discourse/lib/icon-library";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { i18n } from "discourse-i18n";
@@ -57,7 +58,11 @@ export function checklistSyntax(elem, postDecorator) {
   const boxes = [...elem.getElementsByClassName("chcklst-box")];
   addUlClasses(boxes);
 
-  const postWidget = postDecorator?.widget;
+  // TODO (glimmer-post-stream): remove this when we remove the legacy post stream code
+  const postWidget = getOwnerWithFallback(this).lookup("service:site")
+    .useGlimmerPostStream
+    ? null
+    : postDecorator?.widget;
   const postModel = postDecorator?.getModel();
 
   if (!postModel?.can_edit) {
@@ -151,8 +156,11 @@ export function checklistSyntax(elem, postDecorator) {
           edit_reason: i18n("checklist.edit_reason"),
         });
 
-        postWidget.attrs.isSaving = false;
-        postWidget.scheduleRerender();
+        // TODO (glimmer-post-stream): remove the following code when removing the legacy post stream code
+        if (postWidget) {
+          postWidget.attrs.isSaving = false;
+          postWidget.scheduleRerender();
+        }
       } catch (e) {
         popupAjaxError(e);
       } finally {
@@ -168,6 +176,6 @@ export default {
   name: "checklist",
 
   initialize() {
-    withPluginApi("0.1", (api) => initializePlugin(api));
+    withPluginApi((api) => initializePlugin(api));
   },
 };

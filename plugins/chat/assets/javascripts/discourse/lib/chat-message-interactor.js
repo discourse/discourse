@@ -263,7 +263,7 @@ export default class ChatemojiReactions {
   copyText() {
     clipboardCopy(this.message.message);
     this.toasts.success({
-      duration: 3000,
+      duration: "short",
       data: { message: i18n("chat.text_copied") },
     });
   }
@@ -283,7 +283,7 @@ export default class ChatemojiReactions {
     url = url.indexOf("/") === 0 ? protocol + "//" + host + url : url;
     clipboardCopy(url);
     this.toasts.success({
-      duration: 1500,
+      duration: "short",
       data: { message: i18n("chat.link_copied") },
     });
   }

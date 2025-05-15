@@ -5,18 +5,14 @@ import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
+import { and, not } from "truth-helpers";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
 import icon from "discourse/helpers/d-icon";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
+import { escapeExpression } from "discourse/lib/utilities";
 import autoFocus from "discourse/modifiers/auto-focus";
 import { i18n } from "discourse-i18n";
-import AdminSearchFilters from "admin/components/admin-search-filters";
-import { ADMIN_SEARCH_RESULT_TYPES } from "admin/lib/constants";
-
-const ADMIN_SEARCH_FILTERS = "admin_search_filters";
 
 export default class AdminSearch extends Component {
   @service adminSearchDataSource;
@@ -27,22 +23,9 @@ export default class AdminSearch extends Component {
   @tracked searchResults = [];
   @tracked showFilters = true;
   @tracked loading = false;
-  typeFilters = new TrackedObject({
-    page: true,
-    setting: true,
-    theme: true,
-    component: true,
-    report: true,
-  });
 
   constructor() {
     super(...arguments);
-
-    if (this.keyValueStore.getItem(ADMIN_SEARCH_FILTERS)) {
-      this.typeFilters = new TrackedObject(
-        JSON.parse(this.keyValueStore.getItem(ADMIN_SEARCH_FILTERS))
-      );
-    }
 
     this.adminSearchDataSource.buildMap().then(() => {
       if (this.filter !== "") {
@@ -52,46 +35,19 @@ export default class AdminSearch extends Component {
     });
   }
 
-  get visibleTypes() {
-    return Object.keys(this.typeFilters).filter(
-      (type) => this.typeFilters[type]
-    );
-  }
-
-  get showLoadingSpinner() {
-    return !this.adminSearchDataSource.isLoaded || this.loading;
-  }
-
-  @action
-  toggleFilters() {
-    this.showFilters = !this.showFilters;
-  }
-
-  @action
-  toggleTypeFilter(type) {
-    this.typeFilters[type] = !this.typeFilters[type];
-
-    const allFiltersShowing = Object.values(this.typeFilters).every(
-      (value) => value
-    );
-
-    if (!allFiltersShowing) {
-      this.keyValueStore.setItem(
-        ADMIN_SEARCH_FILTERS,
-        JSON.stringify(this.typeFilters)
-      );
-    } else {
-      this.keyValueStore.removeItem(ADMIN_SEARCH_FILTERS);
-    }
-
-    this.search();
+  get noResultsDescription() {
+    return i18n("admin.search.no_results", {
+      filter: escapeExpression(this.filter),
+    });
   }
 
   @action
   changeSearchTerm(event) {
     this.searchResults = [];
     this.filter = event.target.value;
-    this.runSearch();
+    if (this.filter.length > 0) {
+      this.runSearch();
+    }
   }
 
   @action
@@ -159,15 +115,15 @@ export default class AdminSearch extends Component {
   }
 
   #search() {
-    this.searchResults = this.adminSearchDataSource.search(this.filter, {
-      types: this.visibleTypes,
-    });
+    this.searchResults = this.adminSearchDataSource.search(this.filter);
     this.loading = false;
   }
 
   <template>
     <div
-      class="admin-search__input-container"
+      class="admin-search__input-container
+        {{if this.searchResults '--has-results'}}
+        "
       {{didUpdate this.initialFilterUpdated @initialFilter}}
     >
       <div class="admin-search__input-group">
@@ -182,19 +138,30 @@ export default class AdminSearch extends Component {
           placeholder={{i18n "admin.search.instructions"}}
         />
       </div>
-      <DButton class="btn-flat" @icon="filter" @action={{this.toggleFilters}} />
     </div>
-
-    {{#if this.showFilters}}
-      <AdminSearchFilters
-        @toggleTypeFilter={{this.toggleTypeFilter}}
-        @typeFilters={{this.typeFilters}}
-        @types={{ADMIN_SEARCH_RESULT_TYPES}}
-      />
+    <div class="sr-only" aria-live="polite" role="status">
+      {{#if this.searchResults}}
+        {{i18n
+          "admin.search.result_count"
+          count=this.searchResults.length
+          filter=this.filter
+        }}
+      {{/if}}
+      {{#if
+        (and this.filter (not this.searchResults.length) (not this.loading))
+      }}
+        {{this.noResultsDescription}}
+      {{/if}}
+    </div>
+    {{#if (and this.filter (not this.searchResults.length) (not this.loading))}}
+      <p class="admin-search__no-results" aria-live="polite" role="status">
+        {{this.noResultsDescription}}
+      </p>
     {{/if}}
-
-    <div class="admin-search__results">
-      <ConditionalLoadingSpinner @condition={{this.showLoadingSpinner}}>
+    <div
+      class="admin-search__results {{if this.searchResults '--has-results'}}"
+    >
+      <ConditionalLoadingSpinner @condition={{this.loading}}>
         {{#each this.searchResults as |result|}}
           <div class="admin-search__result" data-result-type={{result.type}}>
             <a

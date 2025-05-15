@@ -3589,4 +3589,43 @@ RSpec.describe Topic do
       end
     end
   end
+
+  describe "#has_localization?" do
+    it "returns true if the topic has localization" do
+      topic = Fabricate(:topic)
+      Fabricate(:topic_localization, topic: topic, locale: "zh_CN")
+
+      expect(topic.has_localization?(:zh_CN)).to eq(true)
+      expect(topic.has_localization?(:"zh_CN")).to eq(true)
+      expect(topic.has_localization?("zh-CN")).to eq(true)
+
+      expect(topic.has_localization?("z")).to eq(false)
+    end
+  end
+
+  describe "#get_localization" do
+    it "returns the localization with the specified locale" do
+      I18n.locale = "ja"
+      topic = Fabricate(:topic)
+      zh_localization = Fabricate(:topic_localization, topic: topic, locale: "zh_CN")
+      ja_localization = Fabricate(:topic_localization, topic: topic, locale: "ja")
+
+      expect(topic.get_localization(:zh_CN)).to eq(zh_localization)
+      expect(topic.get_localization("zh-CN")).to eq(zh_localization)
+      expect(topic.get_localization("xx")).to eq(nil)
+      expect(topic.get_localization).to eq(ja_localization)
+    end
+  end
+
+  describe "#in_user_locale?" do
+    it "returns true if the topic has localization in the user's locale" do
+      I18n.locale = "ja"
+      topic = Fabricate(:topic, locale: "ja")
+
+      expect(topic.in_user_locale?).to eq(true)
+
+      topic.update!(locale: "es")
+      expect(topic.in_user_locale?).to eq(false)
+    end
+  end
 end

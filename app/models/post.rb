@@ -67,6 +67,8 @@ class Post < ActiveRecord::Base
 
   has_many :user_actions, foreign_key: :target_post_id
 
+  has_many :post_localizations, dependent: :destroy
+
   belongs_to :image_upload, class_name: "Upload"
 
   has_many :post_hotlinked_media, dependent: :destroy, class_name: "PostHotlinkedMedia"
@@ -1321,6 +1323,18 @@ class Post < ActiveRecord::Base
     PrettyText.extract_mentions(Nokogiri::HTML5.fragment(cooked))
   end
 
+  def has_localization?(locale = I18n.locale)
+    post_localizations.exists?(locale: locale.to_s.sub("-", "_"))
+  end
+
+  def in_user_locale?
+    locale == I18n.locale.to_s
+  end
+
+  def get_localization(locale = I18n.locale)
+    post_localizations.find_by(locale: locale.to_s.sub("-", "_"))
+  end
+
   private
 
   def parse_quote_into_arguments(quote)
@@ -1402,6 +1416,7 @@ end
 #  locked_by_id            :integer
 #  image_upload_id         :bigint
 #  outbound_message_id     :string
+#  locale                  :string(20)
 #
 # Indexes
 #

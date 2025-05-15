@@ -115,7 +115,6 @@ export default class AdminUsersListShowController extends Controller {
     })
       .then((result) => {
         this._results[page] = result;
-
         if (result.length === 0) {
           this._canLoadMore = false;
         }
@@ -133,6 +132,9 @@ export default class AdminUsersListShowController extends Controller {
 
   @action
   loadMore() {
+    if (this.refreshing) {
+      return;
+    }
     this._page += 1;
     this._refreshUsers();
   }
@@ -229,7 +231,7 @@ export default class AdminUsersListShowController extends Controller {
 
   #showBulkSelectionLimitToast(event) {
     this.toasts.error({
-      duration: 3000,
+      duration: "short",
       data: {
         message: i18n("admin.users.bulk_actions.too_many_selected_users", {
           count: MAX_BULK_SELECT_LIMIT,

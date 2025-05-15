@@ -1171,7 +1171,6 @@ pt_BR:
       said: "%{username}:"
       profile: "Perfil"
       profile_possessive: "Perfil de %{username}"
-      account_possessive: "Conta de %{name}"
       mute: "Silenciar"
       edit: "Editar preferências"
       download_archive:
@@ -2003,7 +2002,6 @@ pt_BR:
         title: "Endereço IP do cadastro"
       avatar:
         title: "Imagem do perfil"
-        header_title: "perfil, mensagens, favoritos e preferências"
         name_and_description: "%{name} - %{description}"
         edit: "Editar imagem do perfil"
       title:
@@ -2080,6 +2078,9 @@ pt_BR:
     modal:
       close: "fechar"
       dismiss_error: "Descartar erro"
+    multi_select:
+      no_results: "Nenhum resultado"
+      search: "Pesquisar…"
     form_kit:
       reset: Redefinir
       optional: opcional
@@ -2315,10 +2316,6 @@ pt_BR:
         name: "Google"
         title: "Conectar com o Google"
         sr_title: "Conectar com o Google"
-      twitter:
-        name: "Twitter"
-        title: "Conectar com o Twitter"
-        sr_title: "Conectar com o Twitter"
       instagram:
         name: "Instagram"
         title: "Entrar com o Instagram"
@@ -2796,8 +2793,6 @@ pt_BR:
       in_topics_posts: "em todos os tópicos e postagens"
       enter_hint: "ou pressione Enter"
       in_posts_by: "em postagens por %{username}"
-      browser_tip: "%{modifier} + f"
-      browser_tip_description: "usar novamente pesquisa de navegador"
       recent: "Pesquisas recentes"
       clear_recent: "Remover pesquisas recentes"
       experience:
@@ -2884,7 +2879,6 @@ pt_BR:
           aria_label: filtrar por visualizações máximas
         additional_options:
           label: "Filtrar por contagem de postagens e visualizações de tópico"
-    hamburger_menu: "menu"
     new_item: "novo"
     go_back: "voltar"
     not_logged_in_user: "página do(a) usuário(a) com resumo de atividades e preferências atuais"
@@ -3591,6 +3585,11 @@ pt_BR:
       in_reply_to: "Carregar postagem pai"
       view_all_posts: "visualizar todas as postagens"
       badge_granted_tooltip: "%{username} recebeu o emblema '%{badge_name} para esta postagem!"
+      localizations:
+        table:
+          actions: "Ações"
+          edit: "Editar"
+          delete: "Excluir"
       errors:
         create: "Desculpe, houve um erro ao criar sua postagem. Tente outra vez."
         edit: "Desculpe, houve um erro ao editar sua postagem. Tente outra vez."
@@ -3798,6 +3797,10 @@ pt_BR:
       settings: "Configurações"
       topic_template: "Modelo"
       tags: "Etiquetas"
+      localization:
+        name: "Nome"
+        description: "Descrição"
+        remove: "Remover"
       tags_allowed_tags: "Restringir estas etiquetas a esta categoria:"
       tags_allowed_tag_groups: "Restringir estes grupos de etiquetas a esta categoria:"
       tags_placeholder: "(Opcional) lista de etiquetas permitidas"
@@ -3820,14 +3823,17 @@ pt_BR:
       creation_error: Houve um erro durante a criação da categoria.
       save_error: Houve um erro ao salvar a categoria.
       name: "Nome da categoria"
+      untitled: "Categoria sem título"
       description: "Descrição"
       logo: "Imagem do logotipo da categoria"
       logo_dark: "Imagem do logotipo da categoria Modo Escuro"
       logo_description: "Proporção de aspecto recomendada 1:1 com tamanho mínimo de 200px. Se deixado em branco, nenhuma imagem será exibida."
       background_image: "Imagem de fundo da categoria"
       background_image_dark: "Imagem escura de fundo da categoria"
+      style: "Estilos"
       background_color: "Cor"
       styles:
+        type: "Estilo"
         icon: "Ícone"
         emoji: "Emoji"
         options:
@@ -4186,7 +4192,6 @@ pt_BR:
         today: "Hoje"
     custom_homepage:
       admin_message: 'Um dos seus temas ativou o modificador "custom_homepage" sem gerar nada no conector [custom-homepage]. (Esta mensagem é exibida apenas para administradores(as) do site.)'
-    browser_update: 'Infelizmente, <a href="https://www.discourse.org/faq/#browser">seu navegador não é compatível</a>. <a href="https://browsehappy.com">Use um navegador compatível</a> para visualizar um conteúdo interessante, entrar com a conta e responder.'
     permission_types:
       full: "Criar/Responder/Ver"
       create_post: "Responder/Ver"
@@ -4692,12 +4697,7 @@ pt_BR:
       back_to_forum: "Voltar para o Fórum"
       collapse_all_sections: "Recolher todas as seções"
       expand_all_sections: "Expandir todas as seções"
-      filter: "Filtro..."
-      clear_filter: "Limpar filtro"
-      no_results:
-        title: "Nenhum resultado"
-        description: 'Não foi possível encontrar nenhum "%{filter}" correspondente.<br><br>Você queria <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">procurar as configurações do site</a> ou a <a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">lista de usuários(as) administradores(as)?</a>'
-        description_admin_search: 'Não conseguimos encontrar nada correspondente a ''%{filter}''.<br><br>Tente <a class="sidebar-additional-filter-admin-search" href="%{admin_search_url}">pesquisar em toda a interface de administração</a>.'
+      search: "Pesquisar"
       footer:
         interface_color_selector:
           light: "Claro"
@@ -4804,6 +4804,16 @@ pt_BR:
           paste: "Colar..."
           save: "Salvar como..."
     powered_by_discourse: "Com tecnologia Discourse"
+    discovery:
+      headings:
+        categories: "Todas as categorias"
+        filter_labels:
+          latest: "Últimos"
+          top: "Melhores"
+          new: "Novo"
+          unread: "Não lidas"
+          hot: "Em alta"
+          unseen: "Não vistos"
   admin_js:
     type_to_filter: "Digite para filtrar..."
     settings: "Configurações"
@@ -4855,9 +4865,6 @@ pt_BR:
           title: "Moderação"
           header_description: "O sistema de sinalização do Discourse ajuda o(a) usuário(a) e sua equipe de moderadores(as) a gerenciar conteúdo e comportamento do(a) usuário(a), promovendo um ambiente saudável e respeitoso na comunidade. As definições padrão são apropriadas para a maior parte das comunidades e não precisarão ser alteradas. Contudo, caso seu site tenha algum requisito específico, você pode desativar os sinalizadores desnecessários e adicionar os seus."
           keywords: "denunciar|revisar|spam|ilegal"
-        font_style:
-          title: "Estilo de fonte"
-          header_description: "Personalize os estilos de fonte usados pelos seus temas"
         files:
           title: "Arquivos"
           header_description: "Configurações para controlar limites de tipo e tamanho de arquivo, origens e tamanhos de avatar, armazenamento de arquivo, compactação e qualidade de imagem etc."
@@ -4871,11 +4878,7 @@ pt_BR:
         login_and_authentication:
           title: "Acesso e autenticação"
           header_description: "Configure o acesso e autenticação de usuários(as), chaves e segredos, provedores OAuth2 e muito mais"
-        logo:
-          title: "Logotipo do site"
-          header_description: "Personalize as variações do logotipo do seu site"
-        branding:
-          title: "Identidade visual"
+        logo_and_fonts:
           logo:
             title: "Logotipo"
             form:
@@ -4928,6 +4931,13 @@ pt_BR:
                 description: "Imagem opengraph padrão, usada quando a página não tiver outra imagem adequada. Se for deixada em branco, large_icon será usado."
               x_summary_large_image:
                 help_text: "o tamanho recomendado é de pelo menos 280 x 150 pixels. Não use uma imagem SVG."
+          fonts:
+            title: "Fontes"
+            form:
+              heading_font:
+                title: "Fonte do cabeçalho"
+            backfill_modal:
+              modal_yes: "Sim"
         navigation:
           title: "Navegação"
           header_description: "Configure itens de menu e links de navegação para seu site, inclusive a localização e comportamento do menu de navegação principal, links rápidos no topo da página inicial e a barra lateral da administração"
@@ -4937,9 +4947,6 @@ pt_BR:
         onebox:
           title: "Onebox"
           header_description: "Configure a pré-visualização, geração e exibição do Onebox para seu site"
-        other:
-          title: "Outras"
-          header_description: "Configurações que não pertencem a outras categorias"
         rate_limits:
           title: "Limites de frequência"
           header_description: "Configure a frequência com a qual os(as) usuários(as) podem realizar certas ações, como criar tópicos, enviar mensagens e postar respostas"
@@ -4948,7 +4955,6 @@ pt_BR:
           header_description: "Configure definições de pesquisa, inclusive registro e tokenização para chinês e japonês"
         search_everything:
           title: "Pesquisar"
-          header_description: "Encontre qualquer coisa na interface de administração aqui. Você pode filtrar os resultados abaixo, e suas preferências serão lembradas."
         security:
           title: "Segurança"
           header_description: "Configurar definições de segurança, inclusive autenticação de dois fatores, privilégios de moderador(a) e políticas de segurança de conteúdo"
@@ -4993,6 +4999,10 @@ pt_BR:
         badges:
           title: "Emblemas"
           header_description: "Os(as) usuários(as) recebem emblemas como recompensa por suas atividades, contribuições e realizações. Isso é uma forma de reconhecer, validar e incentivar comportamentos positivos e o envolvimento na comunidade"
+        content:
+          sub_pages:
+            posts_and_topics:
+              title: "Postagens no tópico"
         permalinks:
           title: "Links permanentes"
           header_description: "Redirecionamentos para aplicar nas URLs que não são conhecidas pelo fórum"
@@ -5018,9 +5028,6 @@ pt_BR:
           title: "Textos do site"
           header_description: "Personalize qualquer texto usado no Discourse para corresponder à voz e ao tom da sua comunidade"
         email:
-          title: "Registros e configurações do servidor"
-          header_description: "Personalize os modelos usados para criar e-mails, pré-visualize e-mails de resumo que serão enviados e visualize logs de e-mail"
-          keywords: "e-mail|smtp|mailgun|sendgrid|enviado|ignorado|retornado|recebido|recusado|registros de e-mail|resumo de pré-visualização"
           sub_pages:
             preview_summary:
               title: "Pré-visualizar resumo"
@@ -5031,6 +5038,8 @@ pt_BR:
             templates:
               title: "Modelos"
               header_description: "Personalizar os modelos usados para criar e-mails"
+        email_logs:
+          sub_pages:
             sent:
               title: "Enviado(a)"
               header_description: "Ver um log de e-mails que foram enviados"
@@ -5705,7 +5714,6 @@ pt_BR:
             post: "postagens"
             chat_message: "mensagens de chat"
             enabled: "Ativar este sinalizador personalizado após salvar"
-            alert: "Após ser utilizado, o sinalizador personalizado poderá ser desativado, mas não ser editado nem excluído."
             edit_flag: "Editar sinalizador"
             non_editable: "Você não pode editar este sinalizador porque é um sinalizador de sistema ou já foi utilizado no sistema de revisão. Mas ainda pode desativar."
             delete_flag: "Excluir sinalizador"
@@ -5734,6 +5742,24 @@ pt_BR:
             new_theme: "Novo tema"
           components:
             title: "Componentes"
+            install: "Instalar"
+            name: "Nome"
+            enabled: "Ativado(a)?"
+            by_author: "De %{name}"
+            learn_more: "Saiba mais"
+            edit: "Editar"
+            parent_themes_two: "%{name1} e %{name2}"
+            preview: "Pré-visualizar"
+            check_update: "Verificar atualizações"
+            export: "Exportar"
+            convert: "Converter"
+            delete: "Excluir"
+            filter_by: "Filtrar por"
+            filter_by_all: "Tudo"
+            filter_by_used: "Usado(a)"
+            filter_by_unused: "Não usado(a)"
+            delete_confirm: 'Você tem certeza de que deseja excluir "%{name}"?'
+            badge_unused: "Não usado(a)"
         user_fields:
           field: "Campo"
           type: "Tipo"
@@ -5746,11 +5772,14 @@ pt_BR:
           save_successful: "Campo de usuário(a) salvo."
         color_palettes:
           palette_name: "Nome"
+          duplicate: "Duplicado"
+          delete: "Excluir"
           color_options:
             toggle: "Selecionável por usuário(a)"
             toggle_description: "A paleta de cores pode ser selecionado pelos(as) usuários(as)"
           colors:
             title: "Cores"
+          delete_confirm: "Excluir esta paleta de cores?"
       plugins:
         title: "Plugins"
         name: "Nome"
@@ -5921,9 +5950,11 @@ pt_BR:
           extra_files_upload: "Exporte o tema para visualizar estes arquivos."
           extra_files_remote: "Exporte o tema ou verifique o repositório git para visualizar estes arquivos."
           preview: "Pré-visualização"
+          default: "Ativo(a)"
           settings_editor: "Editor de configurações"
           is_default: "O tema está ativado por padrão"
           user_selectable: "O tema pode ser selecionado pelos(as) usuários(as)"
+          user_selectable_badge_label: "Selecionável por usuário(a)"
           color_scheme_user_selectable: "A paleta de cores pode ser selecionado pelos(as) usuários(as)"
           auto_update: "Atualizar automaticamente quando o Discourse for atualizado"
           color_scheme: "Paleta de cores"
@@ -5941,8 +5972,6 @@ pt_BR:
           convert_theme_alert_generic: "Tem certeza de que quer converter este tema em um componente?"
           convert_theme_tooltip: "Converter este tema em componente"
           inactive_themes: "Temas inativos:"
-          set_default_theme: "Definir padrão"
-          default_theme: "Tema padrão"
           set_default_success: "Tema padrão definido como %{theme}"
           install_success: "Tema %{theme} instalado!"
           inactive_components: "Componentes não usados"
@@ -6015,7 +6044,6 @@ pt_BR:
             error: "Este tema foi desativado automaticamente porque não é compatível com esta versão do Discourse."
             minimum: "Requer versão do Discourse %{version} ou mais recente."
             maximum: "Requer versão do Discourse %{version} ou menos recente."
-          update_to_latest: "Atualize para o mais recente"
           check_for_updates: "Verificar atualizações"
           updating: "Atualizando…"
           update_success: "Atualização de %{theme} concluída"

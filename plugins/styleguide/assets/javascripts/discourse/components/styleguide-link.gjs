@@ -10,4 +10,5 @@ const StyleguideLink = <template>
     {{sectionTitle @section.id}}
   </LinkTo>
 </template>;
+
 export default StyleguideLink;

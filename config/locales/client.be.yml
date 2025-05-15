@@ -837,8 +837,6 @@ be:
       not_approved: "Ваш рахунак яшчэ не было прынята. Вы атрымаеце апавяшчэнне па электроннай пошце, калі зможаце ўвайсці ў сістэму."
       google_oauth2:
         name: "Google"
-      twitter:
-        name: "Twitter"
       second_factor_toggle:
         totp: "Выкарыстоўвайце прыкладанне аутентификационное замест"
         backup_code: "Выкарыстоўваць рэзервовы код замест"
@@ -1141,6 +1139,11 @@ be:
       quote_edit: "Рэдагаваць"
       quote_share: "Падзяліцца тэмай"
       edit_reason: "прычына: "
+      localizations:
+        table:
+          actions: "Дзеянні"
+          edit: "Рэдагаваць"
+          delete: "Выдаліць"
       errors:
         upload_not_authorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
       controls:
@@ -1187,6 +1190,10 @@ be:
       settings: "Налады"
       topic_template: "Шаблон"
       tags: "Тэгі"
+      localization:
+        name: "імя"
+        description: "Апісанне"
+        remove: "выдаліць"
       required_tag_group:
         delete: "Выдаліць"
       delete: "выдаліць катэгорыю"
@@ -1492,7 +1499,7 @@ be:
               content_drafts: "Мае чарнавікі"
             review:
               content: "Патрабуе перагляду"
-      filter: "Filter..."
+      search: "Пошук"
       footer:
         interface_color_selector:
           light: "святло"
@@ -1513,6 +1520,14 @@ be:
           reason: "чаму Вы рэдагуеце паведамленне?"
       spreadsheet:
         about: "Аб тэме"
+    discovery:
+      headings:
+        categories: "Усе катэгорыі"
+        filter_labels:
+          latest: "апошняя"
+          top: "Топ тэмаў"
+          new: "Новыя"
+          unread: "Непрачытаныя"
   admin_js:
     settings: "Налады"
     admin:
@@ -1547,19 +1562,20 @@ be:
           title: "файлы"
         legal:
           title: "Legal"
-        branding:
+        logo_and_fonts:
           logo:
             form:
               mobile: "Мабільны"
               email: "Электронная пошта"
               opengraph_image:
                 description: "Па змаўчанні адкрытага графіка малюнка выкарыстоўваецца, калі старонка не мае іншае падыходнае малюнка. Калі пакінуць пустым, то будзе выкарыстоўвацца вялікі значок."
+          fonts:
+            backfill_modal:
+              modal_yes: "ды"
         navigation:
           title: "рух"
         notifications:
           title: "Натыфікацыі"
-        other:
-          title: "іншае"
         search_everything:
           title: "Пошук"
         security:
@@ -1589,6 +1605,8 @@ be:
           sub_pages:
             templates:
               title: "шаблоны"
+        email_logs:
+          sub_pages:
             sent:
               title: "Sent"
             skipped:
@@ -1787,11 +1805,19 @@ be:
           delete: "выдаляць"
         themes_and_components:
           breadcrumb_title: "Кастамізаваць"
+          components:
+            name: "імя"
+            edit: "рэдагаваць"
+            preview: "Папярэдні прагляд"
+            export: "экспарт"
+            delete: "выдаляць"
+            filter_by_all: "Усё"
         user_fields:
           type: "Тып"
           delete: "выдаляць"
         color_palettes:
           palette_name: "імя"
+          delete: "выдаляць"
           colors:
             title: "<......"
       plugins:
@@ -1870,6 +1896,7 @@ be:
           edit: "рэдагаваць"
           mobile: "Мабільны"
           preview: "папярэдні прагляд"
+          default: "актыўныя"
           cancel: "адмяніць"
           uploads: "Загрузкі"
           upload: "Загрузіць"

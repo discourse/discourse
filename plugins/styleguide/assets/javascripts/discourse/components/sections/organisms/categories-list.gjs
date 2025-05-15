@@ -6,4 +6,5 @@ const CategoriesList = <template>
     <CategoriesOnly @categories={{@dummy.categories}} />
   </StyleguideExample>
 </template>;
+
 export default CategoriesList;

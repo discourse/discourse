@@ -14,17 +14,15 @@ const Layout = <template>
     {{/if}}
   </div>
 
-  <span>
-    <PluginOutlet
-      @name="discovery-list-controls-above"
-      @connectorTagName="div"
-      @outletArgs={{hash
-        category=@model.category
-        tag=@model.tag
-        toggleTagInfo=@toggleTagInfo
-      }}
-    />
-  </span>
+  <PluginOutlet
+    @name="discovery-list-controls-above"
+    @connectorTagName="div"
+    @outletArgs={{hash
+      category=@model.category
+      tag=@model.tag
+      toggleTagInfo=@toggleTagInfo
+    }}
+  />
 
   <div class="list-controls">
     <PluginOutlet
@@ -83,12 +81,11 @@ const Layout = <template>
     </div>
   </div>
 
-  <span>
-    <PluginOutlet
-      @name="discovery-below"
-      @connectorTagName="div"
-      @outletArgs={{hash category=@model.category tag=@model.tag}}
-    />
-  </span>
+  <PluginOutlet
+    @name="discovery-below"
+    @connectorTagName="div"
+    @outletArgs={{hash category=@model.category tag=@model.tag}}
+  />
 </template>;
+
 export default Layout;

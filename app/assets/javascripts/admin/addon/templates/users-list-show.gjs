@@ -89,11 +89,7 @@ export default RouteTemplate(
         </div>
       {{/if}}
     </div>
-    <LoadMore
-      @selector=".directory-table .directory-table__cell"
-      @action={{@controller.loadMore}}
-      class="users-list-container"
-    >
+    <LoadMore @action={{@controller.loadMore}} class="users-list-container">
       {{#if @controller.users}}
         <ResponsiveTable
           @className={{concatClass "users-list" @controller.query}}

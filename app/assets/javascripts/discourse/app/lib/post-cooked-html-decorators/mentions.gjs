@@ -47,30 +47,35 @@ export default function (element, context) {
 
   // cleanup code
   return () => {
-    state.extractedMentions = [];
-
     if (userStatusService.isEnabled) {
-      post?.mentioned_users?.forEach((user) => {
+      state.extractedMentions.forEach(({ user }) => {
         user.statusManager?.stopTrackingStatus?.();
         user.off?.("status-changed", element, _updateUserStatus);
       });
     }
+
+    state.extractedMentions = [];
   };
 }
 
 function _renderUserStatusOnMentions(mentions, user, helper) {
   mentions.forEach((mention) => {
     let wrapper = mention.querySelector(".user-status-message-wrapper");
-    if (!wrapper) {
-      wrapper = document.createElement("span");
-      wrapper.classList.add("user-status-message-wrapper");
-      mention.appendChild(wrapper);
-    }
 
-    helper.renderGlimmer(mention, CookedUserStatusMessage, {
-      wrapper,
-      status: user.status,
-    });
+    if (user.status) {
+      if (!wrapper) {
+        wrapper = document.createElement("span");
+        wrapper.classList.add("user-status-message-wrapper");
+        mention.appendChild(wrapper);
+      }
+
+      helper.renderGlimmer(mention, CookedUserStatusMessage, {
+        wrapper,
+        status: user.status,
+      });
+    } else {
+      wrapper?.remove?.();
+    }
   });
 }
 

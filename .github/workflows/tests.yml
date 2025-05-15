@@ -31,7 +31,7 @@ jobs:
     name: ${{ matrix.target }} ${{ matrix.build_type }}${{ (matrix.target == 'core' && matrix.build_type == 'frontend' && format(' ({0})', matrix.browser)) || '' }} # Update fetch-job-id step if changing this
     runs-on: ${{ (github.repository_owner == 'discourse' && 'debian-12') || 'ubuntu-latest' }}
     container: discourse/discourse_test:release
-    timeout-minutes: 20
+    timeout-minutes: ${{ ((matrix.build_type == 'system' && matrix.target == 'plugins') && 30) || 20 }}
 
     env:
       RAILS_ENV: test
@@ -51,14 +51,10 @@ jobs:
       fail-fast: false
 
       matrix:
-        build_type: [backend, frontend, system, annotations]
+        build_type: [backend, frontend, system]
         target: [core, plugins, themes]
         browser: [Chrome]
         exclude:
-          - build_type: annotations
-            target: plugins
-          - build_type: annotations
-            target: themes
           - build_type: backend
             target: themes
         include:
@@ -217,6 +213,22 @@ jobs:
           key: rspec-runtime-${{ matrix.build_type }}-${{ matrix.target }}-${{ github.run_id }}
           restore-keys: rspec-runtime-${{ matrix.build_type }}-${{ matrix.target }}-
 
+      - name: Check Annotations
+        if: matrix.build_type == 'backend' && matrix.target == 'core'
+        run: |
+          bin/rake annotate:ensure_all_indexes
+          bin/annotate --models --model-dir app/models
+
+          if [ ! -z "$(git status --porcelain app/models/)" ]; then
+            echo "Core annotations are not up to date. To resolve, run:"
+            echo "  bin/rake annotate:clean"
+            echo
+            echo "Or manually apply the diff printed below:"
+            echo "---------------------------------------------"
+            git -c color.ui=always diff app/models/
+            exit 1
+          fi
+
       - name: Check Zeitwerk reloading
         if: matrix.build_type == 'backend'
         env:
@@ -243,17 +255,14 @@ jobs:
       - name: Core QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'core'
         run: QUNIT_WRITE_EXECUTION_FILE=1 bin/rake qunit:test
-        timeout-minutes: 30
 
       - name: Plugin QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'plugins'
         run: QUNIT_WRITE_EXECUTION_FILE=1 bin/rake plugin:qunit['*']
-        timeout-minutes: 30
 
       - name: Theme QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'themes'
         run: DISCOURSE_DEV_DB=discourse_test bin/rake themes:qunit_all_official
-        timeout-minutes: 10
 
       - uses: actions/upload-artifact@v4
         if: always() && matrix.build_type == 'frontend'
@@ -264,6 +273,10 @@ jobs:
       - name: Ember Build for System Tests
         if: matrix.build_type == 'system'
         run: script/assemble_ember_build.rb
+
+      - name: Install playwright
+        if: matrix.build_type == 'system'
+        run: pnpm playwright install --with-deps --no-shell chromium
 
       - name: Core System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core'
@@ -278,14 +291,12 @@ jobs:
         run: |
           LOAD_PLUGINS=1 RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --exclude-pattern="plugins/chat/*" --use-runtime-info --profile=50 --verbose --format documentation plugins/*/spec/system
         shell: bash
-        timeout-minutes: 30
 
       - name: Chat System Tests
         if: matrix.build_type == 'system' && matrix.target == 'chat'
         env:
           CHECKOUT_TIMEOUT: 10
         run: LOAD_PLUGINS=1 RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation plugins/chat/spec/system
-        timeout-minutes: 30
 
       - name: Theme System Tests
         if: matrix.build_type == 'system' && matrix.target == 'themes'
@@ -294,10 +305,9 @@ jobs:
         run: |
           RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --profile=50 --verbose --format documentation tmp/themes/*/spec/system
         shell: bash
-        timeout-minutes: 30
 
-      - name: Check for failed system test screenshots
-        id: check-failed-system-test-screenshots
+      - name: Check for failed system test artifacts
+        id: check-failed-system-test-artifacts
         if: always() && matrix.build_type == 'system'
         run: |
           if [ -d tmp/capybara ] && [ "$(ls -A tmp/capybara/)" ]; then
@@ -307,12 +317,15 @@ jobs:
           fi
         shell: bash
 
-      - name: Upload failed system test screenshots
+      - name: Upload failed system test artifacts
         uses: actions/upload-artifact@v4
-        if: always() && steps.check-failed-system-test-screenshots.outputs.exists == 'true'
+        if: always() && steps.check-failed-system-test-artifacts.outputs.exists == 'true'
         with:
-          name: failed-system-test-screenshots-${{ matrix.build_type }}-${{ matrix.target }}
-          path: tmp/capybara/*.png
+          name: failed-system-test-artifacts-${{ matrix.build_type }}-${{ matrix.target }}
+          path: |
+            tmp/capybara/*.png
+            tmp/capybara/*.zip
+            tmp/capybara/*.webm
 
       - name: Check for flaky tests report
         id: check-flaky-spec-report
@@ -343,23 +356,6 @@ jobs:
           name: flaky-test-reports-${{ matrix.build_type }}-${{ matrix.target }}
           path: tmp/turbo_rspec_flaky_tests-${{ matrix.build_type }}-${{ matrix.target }}-${{ steps.fetch-job-id.outputs.job_id }}.json
 
-      - name: Check Annotations
-        if: matrix.build_type == 'annotations'
-        run: |
-          bin/rake annotate:ensure_all_indexes
-          bin/annotate --models --model-dir app/models
-
-          if [ ! -z "$(git status --porcelain app/models/)" ]; then
-            echo "Core annotations are not up to date. To resolve, run:"
-            echo "  bin/rake annotate:clean"
-            echo
-            echo "Or manually apply the diff printed below:"
-            echo "---------------------------------------------"
-            git -c color.ui=always diff app/models/
-            exit 1
-          fi
-        timeout-minutes: 30
-
   merge:
     if: github.repository == 'discourse/discourse' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
@@ -368,8 +364,8 @@ jobs:
       - name: Merge Artifacts
         uses: actions/upload-artifact/merge@v4
         with:
-          name: failed-system-test-screenshots
-          pattern: failed-system-test-screenshots-*
+          name: failed-system-test-artifacts
+          pattern: failed-system-test-artifacts-*
           delete-merged: true
           separate-directories: false
         # Don't fail the job if there aren't any artifacts to merge.

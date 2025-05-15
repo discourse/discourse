@@ -96,7 +96,7 @@ export default class AdminFlagsForm extends Component {
         type: "POST",
         data,
       });
-      this.site.flagTypes.push(response.flag);
+      this.site.flagTypes.pushObject(response.flag);
       this.router.transitionTo("adminConfig.flags");
     } catch (error) {
       popupAjaxError(error);

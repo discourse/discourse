@@ -1477,7 +1477,6 @@ ar:
       said: "%{username}:"
       profile: "الملف الشخصي"
       profile_possessive: "الملف الشخصي لـ %{username}"
-      account_possessive: "حساب %{name}"
       mute: "كتم"
       edit: "تعديل التفضيلات"
       download_archive:
@@ -2425,7 +2424,6 @@ ar:
         title: "عنوان IP للتسجيل"
       avatar:
         title: "صورة الملف الشخصي"
-        header_title: "الملف الشخصي والرسائل والإشارات المرجعية والتفضيلات"
         name_and_description: "%{name} - %{description}"
         edit: "تعديل صورة الملف الشخصي"
       title:
@@ -2502,6 +2500,9 @@ ar:
     modal:
       close: "إغلاق"
       dismiss_error: "تجاهل الخطأ"
+    multi_select:
+      no_results: "لا توجد نتائج"
+      search: "البحث…"
     form_kit:
       reset: إعادة التعيين
       optional: اختياري
@@ -2781,10 +2782,6 @@ ar:
         name: "Google"
         title: "تسجيل الدخول باستخدام Google"
         sr_title: "تسجيل الدخول باستخدام Google"
-      twitter:
-        name: "Twitter"
-        title: "تسجيل الدخول باستخدام Twitter"
-        sr_title: "تسجيل الدخول باستخدام Twitter"
       instagram:
         name: "Instagram"
         title: "تسجيل الدخول باستخدام Instagram"
@@ -3369,8 +3366,6 @@ ar:
       in_topics_posts: "في كل الموضوعات والمنشورات"
       enter_hint: "أو اضغط على Enter"
       in_posts_by: "في منشورات %{username}"
-      browser_tip: "%{modifier} + f"
-      browser_tip_description: "مرة أخرى لاستخدام بحث المتصفح الأصلي"
       recent: "عمليات البحث الأخيرة"
       clear_recent: "مسح عمليات البحث الأخيرة"
       type:
@@ -3455,7 +3450,6 @@ ar:
           aria_label: التصفية حسب أقصى عدد من المشاهدات
         additional_options:
           label: "التصفية حسب عدد المنشورات وعدد مشاهدات الموضوع"
-    hamburger_menu: "القائمة"
     new_item: "جديد"
     go_back: "الرجوع"
     not_logged_in_user: "صفحة المستخدم مع ملخص عن نشاطه الحالي وتفضيلاته"
@@ -4362,6 +4356,11 @@ ar:
       in_reply_to: "تحميل المنشور الرئيسي"
       view_all_posts: "عرض جميع المنشورات"
       badge_granted_tooltip: "حصل %{username} على شارة \"%{badge_name}\" لهذا المنشور!"
+      localizations:
+        table:
+          actions: "الإجراءات"
+          edit: "تعديل"
+          delete: "حذف"
       errors:
         create: "عذرًا، حدث خطأ في أثناء إنشاء منشورك. يُرجى إعادة المحاولة."
         edit: "عذرا، حدث خطأ في أثناء تعديل منشورك. يُرجى إعادة المحاولة."
@@ -4609,6 +4608,10 @@ ar:
       settings: "الإعدادات"
       topic_template: "قالب"
       tags: "الوسوم"
+      localization:
+        name: "الاسم"
+        description: "الوصف"
+        remove: "إزالة"
       tags_allowed_tags: "حصر هذه الوسوم على هذه الفئة:"
       tags_allowed_tag_groups: "حصر مجموعات الوسوم هذه على هذه الفئة:"
       tags_placeholder: "(اختياري) قائمة الوسوم المسموح بها"
@@ -5058,7 +5061,6 @@ ar:
         today: "اليوم"
     custom_homepage:
       admin_message: 'لقد قامت إحدى السمات الخاصة بك بتفعيل المعدِّل "custom_homepage"، لكنه لا ينتج أي شيء في الموصِّل [custom-homepage]. (هذه الرسالة تظهر لمسؤولي الموقع فقط.)'
-    browser_update: 'عذرًا، <a href="https://www.discourse.org/faq/#browser">متصفحك غير مدعوم</a>. يُرجى <a href="https://browsehappy.com">التبديل إلى متصفح مدعوم</a> لعرض المحتوى الغني، وتسجيل الدخول والرد.'
     permission_types:
       full: "الإنشاء/الرد/العرض"
       create_post: "الرد/العرض"
@@ -5650,11 +5652,7 @@ ar:
       back_to_forum: "العودة إلى المنتدى"
       collapse_all_sections: "طي جميع الأقسام"
       expand_all_sections: "توسيع جميع الأقسام"
-      filter: "عامل التصفية..."
-      clear_filter: "مسح الفلتر"
-      no_results:
-        title: "لا توجد نتائج"
-        description: 'لم نتمكن من العثور على أي شيء يطابق "%{filter}".<br><br>هل تريد <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">البحث في إعدادات الموقع</a> أو <a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">قائمة المستخدمين ذوي دور المسؤول؟</a>'
+      search: "البحث"
       footer:
         interface_color_selector:
           light: "فاتح"
@@ -5776,6 +5774,17 @@ ar:
           paste: "لصق..."
           save: "الحفظ باسم..."
     powered_by_discourse: "بدعم من Discourse"
+    safari_15_warning: "سيُصبح متصفّحك غير متوافق مع هذا المجتمع قريبًا. للاستمرار في المشاركة هنا، يُرجى ترقية متصفّحك أو <a href='%{url}'>الاطّلاع على المزيد</a>."
+    discovery:
+      headings:
+        categories: "كل الفئات"
+        filter_labels:
+          latest: "الحديثة"
+          top: "الأكثر نشاطًا"
+          new: "الجديدة"
+          unread: "غير المقروءة"
+          hot: "ساخن"
+          unseen: "غير مقروءة"
   admin_js:
     type_to_filter: "اكتب للتصفية…"
     settings: "الإعدادات"
@@ -5826,9 +5835,6 @@ ar:
         flags:
           title: "الإشراف"
           header_description: "يساعدك نظام البلاغات في Discourse وفريق المشرفين لديك على إدارة المحتوى وسلوك المستخدم، والحفاظ على مجتمعك محترمًا وصحيًا. الإعدادات الافتراضية مناسبة لمعظم المجتمعات ولا يتعين عليك تغييرها. ومع ذلك، إذا كان موقعك يحتوي على متطلبات معيَّنة، يمكنك إيقاف البلاغات التي لا تحتاج إليها وإضافة بلاغاتك المخصَّصة."
-        font_style:
-          title: "نمط الخط"
-          header_description: "تخصيص أنماط الخطوط المُستخدَمة في سماتك"
         files:
           title: "الملفات"
           header_description: "الإعدادات التي تتحكم في حدود أحجام الملفات ونوعها، وأحجام الصور الرمزية ومصادرها، وتخزين الملفات، وجودة الصور وضغطها، وغير ذلك"
@@ -5838,19 +5844,24 @@ ar:
         login_and_authentication:
           title: "تسجيل الدخول والمصادقة"
           header_description: "تكوين كيفية تسجيل دخول المستخدمين ومصادقتهم، والعبارات السرية، والمفاتيح، ومقِّدمي OAuth2، وغير ذلك"
-        logo:
-          title: "شعار الموقع"
-          header_description: "تخصيص الأشكال المختلفة لشعار موقعك"
-        branding:
-          title: "العلامة التجارية"
+        logo_and_fonts:
           logo:
+            title: "الشعار"
             form:
+              saved: "حُفظت إعدادات الشعار."
               logo:
                 title: "الشعار الرئيسي"
               mobile: "الجوَّال"
               email: "البريد الإلكتروني"
               manifest_screenshots:
                 description: "لقطات شاشة تعرض ميزات المثيل ووظيفته على صفحة رسالة التثبيت الخاصة به. يجب أن تكون جميع الصور من تحميلات محلية وبالأبعاد نفسها."
+          fonts:
+            title: "الخطوط"
+            form:
+              heading_font:
+                title: "خط العنوان"
+            backfill_modal:
+              modal_yes: "نعم"
         navigation:
           title: "التنقل"
           header_description: "تكوين روابط التنقل وعناصر القائمة لموقعك. يتضمَّن ذلك الموقع وسلوك قائمة التنقل الرئيسية، والروابط السريعة في أعلى الصفحة الرئيسية، والشريط الجانبي للمسؤول"
@@ -5860,9 +5871,6 @@ ar:
         onebox:
           title: "لوحة المعاينة"
           header_description: "تكوين كيفية إنشاء لوحات المعاينة وعرضها لموقعك"
-        other:
-          title: "أخرى"
-          header_description: "الإعدادات التي لا تناسب أي فئة أخرى"
         rate_limits:
           title: "حدود المعدل"
           header_description: "تكوين عدد المرات التي يمكن فيها للمستخدمين تنفيذ إجراءات معيَّنة، مثل إنشاء الموضوعات، وإرسال الرسائل، ونشر الردود"
@@ -5905,9 +5913,22 @@ ar:
         reports:
           title: "التقارير"
           header_description: "تُعَد التقارير أداةً قوية لمساعدتك على فيهم ما يحدث على موقعك. ويمكنها مساعدتك في تحديد الاتجاهات الرائجة، واكتشاف المشكلات، واتخاذ القرارات استنادًا إلى البيانات."
+          sub_pages:
+            settings:
+              title: "إعدادات لوحة التحكم"
         badges:
           title: "الشارات"
           header_description: "تكافئ الشارات المستخدمين على أنشطتهم ومساهماتهم وإنجازاتهم للإشادة بالسلوك الإيجابي والتفاعل داخل المجتمع والإقرار بهما وتشجيعهما"
+        analytics:
+          title: "التحليلات وتحسين محركات البحث (SEO)"
+          header_description: "حسّن ظهور موقعك لمحركات البحث وتكوين كيفية تتبع زوار الموقع"
+        interface:
+          title: "الواجهة والتخطيط"
+        content:
+          title: "المحتوى"
+          sub_pages:
+            posts_and_topics:
+              title: "المنشورات والموضوعات"
         permalinks:
           title: "الروابط الثابتة"
           header_description: "عمليات إعادة التوجيه التي سيتم تطبيقها على عناوين URL التي لا يعرفها المنتدى"
@@ -5931,10 +5952,9 @@ ar:
         site_texts:
           title: "نصوص الموقع"
         email:
-          title: "إعداد الخادم والسجلات"
-          header_description: "خصِّص القوالب المُستخدَمة لإنشاء الرسائل الإلكترونية، ومعاينة الرسائل الإلكترونية التلخيصية التي سيتم إرسالها، وعرض سجلات البريد الإلكتروني"
-          keywords: "البريد الإلكتروني | smtp | mailgun | sendgrid | مُرسَل | تم تخطيه | مرتد | مُستلَم | مرفوض | سجلات البريد الإلكتروني | ملخص المعاينة"
           sub_pages:
+            server_settings:
+              title: "إعدادات الخادم"
             preview_summary:
               title: "معاينة الملخص"
               header_description: "معاينة محتوى الرسائل الإلكترونية التلخيصية المُرسَلة إلى الأعضاء غير النشطين"
@@ -5942,6 +5962,9 @@ ar:
               title: "الاختبار المتقدم"
             templates:
               title: "القوالب"
+        email_logs:
+          title: "سجلات البريد الإلكتروني"
+          sub_pages:
             sent:
               title: "المُرسَلة"
             skipped:
@@ -6644,7 +6667,6 @@ ar:
             post: "المنشورات"
             chat_message: "رسائل الدردشة"
             enabled: "تفعيل هذا البلاغ المخصَّص بعد الحفظ"
-            alert: "بمجرد استخدام بلاغ مخصَّص، فإنه يمكن إيقافه فقط ولكن لا يمكن تعديلها أو حذفها."
             edit_flag: "تعديل البلاغ"
             non_editable: "لا يمكنك تعديل هذا البلاغ لأنه بلاغ نظام أو تم استخدامه بالفعل في نظام المراجعة، ومع ذلك لا يزال بإمكانك إيقافه."
             delete_flag: "حذف البلاغ"
@@ -6673,6 +6695,24 @@ ar:
             new_theme: "سمة جديدة"
           components:
             title: "المكوِّنات"
+            install: "تثبيت"
+            name: "الاسم"
+            enabled: "مفعَّلة؟"
+            by_author: "بواسطة %{name}"
+            learn_more: "معرفة المزيد"
+            edit: "تعديل"
+            parent_themes_two: "%{name1} و%{name2}"
+            preview: "معاينة"
+            check_update: "تحقَّق من وجود تحديثات"
+            export: "تصدير"
+            convert: "تحويل"
+            delete: "حذف"
+            filter_by: "التصفية حسب"
+            filter_by_all: "الكل"
+            filter_by_used: "مُستخدَم"
+            filter_by_unused: "غير مُستخدَم"
+            delete_confirm: 'هل تريد بالتأكيد حذف "%{name}"؟'
+            badge_unused: "غير مُستخدَم"
         user_fields:
           field: "الحقل"
           type: "النوع"
@@ -6685,11 +6725,15 @@ ar:
           save_successful: "تم حفظ حقل المستخدم."
         color_palettes:
           palette_name: "الاسم"
+          duplicate: "تكرار"
+          delete: "حذف"
           color_options:
             toggle: "قابلة للاختيار من قِبل المستخدم"
             toggle_description: "يمكن تحديد لوحة الألوان من قِبل المستخدمين"
           colors:
             title: "الألوان"
+          save_changes: "احفظ التغييرات"
+          delete_confirm: "هل تريد حذف لوحة الألوان هذه؟"
       plugins:
         title: "الإضافات"
         name: "الاسم"
@@ -6860,9 +6904,11 @@ ar:
           extra_files_upload: "يجب تصدير السمة لعرض هذه الملفات."
           extra_files_remote: "يجب تصدير السمة أو التحقُّق من مستودع Git لعرض هذه الملفات."
           preview: "معاينة"
+          default: "نشطة"
           settings_editor: "محرر الإعدادات"
           is_default: "السمة مفعَّلة بشكلٍٍ افتراضي"
           user_selectable: "يمكن للمستخدمين تحديد السمة"
+          user_selectable_badge_label: "قابلة للاختيار من قِبل المستخدم"
           color_scheme_user_selectable: "يمكن تحديد لوحة الألوان من قِبل المستخدمين"
           auto_update: "التحديث التلقائي عند تحديث Discourse"
           color_scheme: "لوحة الألوان"
@@ -6880,8 +6926,6 @@ ar:
           convert_theme_alert_generic: "هل تريد بالتأكيد تحويل هذه السمة إلى مكوِّن؟"
           convert_theme_tooltip: "تحويل هذه السمة إلى مكوِّن"
           inactive_themes: "السمات غير النشطة:"
-          set_default_theme: "التعيين كافتراضية"
-          default_theme: "السمة الافتراضية"
           set_default_success: "السمة الافتراضية مُعيَّنة على %{theme}"
           install_success: "تم تثبيت السمة %{theme} بنجاح!"
           inactive_components: "المكوِّنات غير المستخدمة:"
@@ -6922,6 +6966,8 @@ ar:
           unsaved_parent_themes: "لم تخصِّص المكوِّن للسمات، هل تريد المضي قدمًا؟"
           discard: "تجاهل"
           stay: "البقاء"
+          css_html: "رمز مخصّص"
+          edit_css_html: "حرّر الرمز"
           delete_upload_confirm: "هل تريد حذف هذا الملف؟ (قد يتوقف ملف CSS عن العمل!)"
           component_on_themes: "تضمين العنصر في هذه السمات"
           included_components: "المكوِّنات المضمَّنة"
@@ -6960,8 +7006,7 @@ ar:
             error: "تم إيقاف هذه السمة تلقائيًا لأنها غير متوافقة مع هذا الإصدار من Discourse."
             minimum: "تتطلَّب الإصدار %{version} من Discourse أو أحدث."
             maximum: "تتطلَّب الإصدار %{version} من Discourse أو أقدم."
-          update_to_latest: "تحديث إلى الإصدار الأخير"
-          check_for_updates: "التحقُّق من وجود تحديثات"
+          check_for_updates: "تحقَّق من وجود تحديثات"
           updating: "جارٍ التحديث…"
           update_success: "اكتمل تحديث السمة %{theme}"
           up_to_date: "السمة محدَّثة، تاريخ آخر تحقُّق:"

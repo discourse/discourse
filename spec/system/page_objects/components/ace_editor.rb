@@ -4,7 +4,7 @@ module PageObjects
   module Components
     class AceEditor < PageObjects::Components::Base
       def type_input(content)
-        editor_input.send_keys(content)
+        editor_input.fill_in(with: content)
         self
       end
 

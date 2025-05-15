@@ -22,7 +22,9 @@ export default RouteTemplate(
           />
         </:breadcrumbs>
         <:actions as |actions|>
-          <AdminBackupsActions @actions={{actions}} @backups={{@model}} />
+          {{#if @controller.siteSettings.enable_backups}}
+            <AdminBackupsActions @actions={{actions}} @backups={{@model}} />
+          {{/if}}
         </:actions>
         <:tabs>
           <NavItem

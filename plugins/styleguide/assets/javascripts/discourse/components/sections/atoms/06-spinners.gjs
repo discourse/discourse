@@ -9,4 +9,5 @@ const Spinners = <template>
     <div class="spinner"></div>
   </StyleguideExample>
 </template>;
+
 export default Spinners;

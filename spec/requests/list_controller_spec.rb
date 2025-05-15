@@ -356,6 +356,20 @@ RSpec.describe ListController do
         expect(response.parsed_body["topic_list"]["categories"]).to eq(nil)
       end
     end
+
+    context "when login required" do
+      before do
+        SiteSetting.login_required = true
+        SiteSetting.bootstrap_mode_enabled = false
+        SiteSetting.has_login_hint = false
+      end
+
+      it "returns nothing from topic list on homepage for login required" do
+        get "/"
+        expect(response.status).to eq(200)
+        expect(response.body).not_to include(topic.title)
+      end
+    end
   end
 
   describe "categories and X" do

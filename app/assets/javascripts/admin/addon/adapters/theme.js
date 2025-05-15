@@ -7,6 +7,13 @@ export default class Theme extends RestAdapter {
     return "/admin/";
   }
 
+  pathFor(store, type, findArgs) {
+    if (findArgs?.useConfigAreaEndpoint) {
+      return "/admin/config/customize/themes";
+    }
+    return super.pathFor(...arguments);
+  }
+
   afterFindAll(results) {
     let map = {};
 

@@ -1631,7 +1631,6 @@ lt:
         title: "Registracijos IP adresas"
       avatar:
         title: "Profilio nuotrauka"
-        header_title: "Profilis, žinutės, žymės ir nustatymai"
         name_and_description: "%{name} - %{description}"
         edit: "Redaguoti profilio nuotrauką"
       title:
@@ -1823,10 +1822,6 @@ lt:
         name: "Google"
         title: "Prisijunkite naudodami “Google”"
         sr_title: "Prisijunkite naudodami “Google”"
-      twitter:
-        name: "Twitter"
-        title: "Prisijunkite naudodami “Twitter”"
-        sr_title: "Prisijunkite naudodami “Twitter”"
       instagram:
         name: "Instagram"
         title: "Prisijunkite naudodami “Instagram”"
@@ -2184,8 +2179,6 @@ lt:
       in_topics_posts: "visose temose ir žinutėse"
       enter_hint: "arba paspauskite Enter"
       in_posts_by: "pranešimuose %{username}"
-      browser_tip: "%{modifier} + f"
-      browser_tip_description: "dar kartą norėdami naudoti savosios naršyklės paiešką"
       recent: "Naujausios paieškos"
       clear_recent: "Išvalyti naujausias paieškas"
       type:
@@ -2266,7 +2259,6 @@ lt:
           aria_label: filtruoti pagal daugiausia peržiūrų
         additional_options:
           label: "Filtruoti pagal įrašų skaičių ir temos peržiūras"
-    hamburger_menu: "meniu"
     new_item: "Nauja"
     go_back: "grįžti atgal"
     not_logged_in_user: "Vartotojo puslapis su veiksmų ir nustatymų aprašymu"
@@ -2779,6 +2771,11 @@ lt:
         other: "%{count} žmonėms patinka šis įrašas."
       in_reply_to: "Įkelti pirminį įrašą"
       view_all_posts: "Peržiūrėti visus įrašus"
+      localizations:
+        table:
+          actions: "Veiksmai"
+          edit: "Redaguoti"
+          delete: "Pašalinti"
       errors:
         create: "Atsiprašome, įvyko klaida kuriant įrašą. Prašome pamėginti dar kartą."
         edit: "Atsiprašome, įvyko klaida redaguojant įrašą. Prašome pamėginti dar kartą."
@@ -2940,6 +2937,10 @@ lt:
       general: "Bendriniai"
       settings: "Nustatymai"
       tags: "Žymos"
+      localization:
+        name: "Vardas"
+        description: "Aprašymas"
+        remove: "Pašalinti"
       tags_allowed_tags: "Apribokite šias žymas šioje kategorijoje:"
       tags_allowed_tag_groups: "Apribokite šias žymų grupes šioje kategorijoje:"
       tags_placeholder: "(Neprivaloma) leidžiamų žymų sąrašas"
@@ -3623,7 +3624,7 @@ lt:
               content: "Peržiūra"
             invite:
               content: "Kviesti"
-      filter: "Filtruoti..."
+      search: "Paieška"
       footer:
         interface_color_selector:
           light: "Šviesi"
@@ -3649,6 +3650,15 @@ lt:
       spreadsheet:
         show: "Rodyti"
         about: "Apie"
+    discovery:
+      headings:
+        categories: "Visos kategorijos"
+        filter_labels:
+          latest: "Naujausia"
+          top: "Populiarios"
+          new: "Nauji"
+          unread: "Neperskaitytos"
+          unseen: "Nematytas"
   admin_js:
     type_to_filter: "Įveskite filtrą…"
     settings: "Nustatymai"
@@ -3690,20 +3700,23 @@ lt:
           title: "Failai"
         legal:
           title: "Naudojimosi taisyklės"
-        branding:
-          title: "Prekinis ženklas"
+        logo_and_fonts:
           logo:
             form:
               mobile: "Mobilus"
               email: "El. paštas"
+          fonts:
+            form:
+              heading_font:
+                title: "Antraštės šriftas"
+            backfill_modal:
+              modal_yes: "Taip"
         navigation:
           title: "Navigacija"
         notifications:
           title: "Pranešimai"
         onebox:
           title: "Laukelio nustatymai"
-        other:
-          title: "Kiti"
         search_everything:
           title: "Paieška"
         security:
@@ -3740,6 +3753,8 @@ lt:
           sub_pages:
             templates:
               title: "Juodraščiai"
+        email_logs:
+          sub_pages:
             sent:
               title: "Išsiųsti"
             skipped:
@@ -4100,13 +4115,27 @@ lt:
             title: "Temos"
           components:
             title: "Komponentai"
+            install: "diegti"
+            name: "Vardas"
+            enabled: "Galimas?"
+            by_author: "Pagal %{name}"
+            learn_more: "Sužinoti daugiau"
+            edit: "Redaguoti"
+            preview: "Peržiūrėti"
+            export: "Eksportuoti"
+            convert: "Paversti"
+            delete: "Pašalinti"
+            filter_by_all: "Visos"
+            delete_confirm: 'Ar tikrai norite ištrinti „%{name}“?'
         user_fields:
           type: "Tipas"
           delete: "Pašalinti"
         color_palettes:
           palette_name: "Vardas"
+          delete: "Pašalinti"
           colors:
             title: "Spalvos"
+          delete_confirm: "Ištrinti šią spalvų paletę?"
       plugins:
         title: "Plugins"
         name: "Vardas"
@@ -4235,6 +4264,7 @@ lt:
           extra_files_upload: "Norėdami peržiūrėti šiuos failus, eksportuokite temą."
           extra_files_remote: "Eksportuokite temą arba patikrinkite „git“ saugyklą, kad peržiūrėtumėte šiuos failus."
           preview: "Peržiūrėti"
+          default: "Aktyvūs"
           is_default: "Tema įgalinta pagal nutylėjimą"
           user_selectable: "Temą gali pasirinkti vartotojai"
           auto_update: "Automatinis naujinimas, kai Discourse atnaujinamas"
@@ -4306,8 +4336,6 @@ lt:
           required_version:
             minimum: "Reikalinga Discourse %{version} arba naujesnė versija."
             maximum: "Reikalinga Discourse %{version} arba senesnė versija."
-          update_to_latest: "Atnaujinti iki paskutinės"
-          check_for_updates: "Tikrinti atnaujinimus "
           up_to_date: "Tema yra naujausia, psakutinis tikrinimas: "
           add: "Pridėti"
           theme_settings: "Temos nustatymai"

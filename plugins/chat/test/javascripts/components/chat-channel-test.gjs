@@ -201,7 +201,7 @@ module(
 
       assert
         .dom(
-          `.user-status-message-tooltip img[alt='${mentionedUser.status.emoji}']`
+          `.user-status-message-tooltip-content img[alt='${mentionedUser.status.emoji}']`
         )
         .exists("status emoji is correct");
     });

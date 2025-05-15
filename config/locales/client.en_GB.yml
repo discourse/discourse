@@ -89,6 +89,8 @@ en_GB:
         revert_to_regular: "Remove Staff Colour"
         delete_topic_error: "An error occurred whilst deleting this topic"
     category:
+      localization:
+        description: "Description"
       description: "Description"
       background_color: "Colour"
       color_placeholder: "Any web colour"
@@ -141,6 +143,7 @@ en_GB:
         color_palettes:
           colors:
             title: "Colours"
+          delete_confirm: "Delete this colour palette?"
       backups:
         upload:
           error: "There has been an error whilst uploading '%{filename}': %{message}"

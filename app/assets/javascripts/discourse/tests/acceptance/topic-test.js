@@ -647,6 +647,68 @@ import { i18n } from "discourse-i18n";
   );
 
   acceptance(
+    `Cooked quoted content (glimmer_post_stream_mode = ${postStreamMode})`,
+    function (needs) {
+      needs.settings({
+        glimmer_post_stream_mode: postStreamMode,
+      });
+
+      needs.pretender((server, helper) => {
+        server.get("/posts/by_number/280/3", () =>
+          helper.response(
+            200,
+            topicFixtures["/t/280/1.json"].post_stream.posts[2]
+          )
+        );
+      });
+
+      test("The quoted content is toggled correclty", async function (assert) {
+        await visit("/t/internationalization-localization/280");
+
+        assert
+          .dom(
+            "#post_5 .cooked .quote[data-topic='280'][data-post='3'] .quote-controls .quote-toggle"
+          )
+          .hasAttribute("aria-expanded", "false");
+        assert
+          .dom("#post_5 .quote[data-topic='280'][data-post='3']")
+          .includesText(
+            'So you could replace that lookup table with the "de" one to get German.'
+          )
+          .doesNotIncludeText(
+            "Yep, all strings are going through a lookup table.*"
+          );
+
+        await click(
+          "#post_5 .cooked .quote[data-topic='280'][data-post='3'] .quote-controls .quote-toggle"
+        );
+
+        assert
+          .dom(
+            "#post_5 .cooked .quote[data-topic='280'][data-post='3'] .quote-controls .quote-toggle"
+          )
+          .hasAttribute("aria-expanded", "true");
+        assert
+          .dom("#post_5 .quote[data-topic='280'][data-post='3']")
+          .includesText(
+            'So you could replace that lookup table with the "de" one to get German.'
+          )
+          .includesText("Yep, all strings are going through a lookup table.*");
+
+        await click(
+          "#post_5 .cooked .quote[data-topic='280'][data-post='3'] .quote-controls .quote-toggle"
+        );
+
+        assert
+          .dom(
+            "#post_5 .cooked .quote[data-topic='280'][data-post='3'] .quote-controls .quote-toggle"
+          )
+          .hasAttribute("aria-expanded", "false");
+      });
+    }
+  );
+
+  acceptance(
     `Topic stats update automatically (glimmer_post_stream_mode = ${postStreamMode})`,
     function (needs) {
       needs.settings({

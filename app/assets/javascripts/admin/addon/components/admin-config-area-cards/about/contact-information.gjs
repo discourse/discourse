@@ -62,7 +62,7 @@ export default class AdminConfigAreasAboutContactInformation extends Component {
         },
       });
       this.toasts.success({
-        duration: 3000,
+        duration: "short",
         data: {
           message: i18n(
             "admin.config_areas.about.toasts.contact_information_saved"

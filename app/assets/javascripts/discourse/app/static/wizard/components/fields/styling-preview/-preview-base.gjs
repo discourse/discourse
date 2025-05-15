@@ -28,6 +28,7 @@ function canvasFor(image, w, h) {
 }
 
 const scale = window.devicePixelRatio;
+
 export default class PreviewBase extends Component {
   ctx = null;
   loaded = false;

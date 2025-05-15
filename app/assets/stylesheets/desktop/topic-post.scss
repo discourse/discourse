@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .full-width {
   margin-left: 0;
 }
@@ -485,14 +487,6 @@ video {
   color: var(--primary);
 }
 
-/* solo quotes */
-blockquote {
-  /* leave browser defaults for top and bottom here */
-  margin-left: 0;
-  margin-right: 0;
-  padding: 12px;
-}
-
 /* quotes with attribution */
 .quote {
   & > blockquote {
@@ -591,7 +585,7 @@ blockquote {
   margin-bottom: 5px;
   right: 10px;
 
-  @include breakpoint(extra-large, min-width) {
+  @include viewport.from(xl) {
     right: auto;
     margin-left: 330px;
     left: 50%;

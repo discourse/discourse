@@ -1772,7 +1772,6 @@ fi:
     pending_users_reminder_delay_minutes: "Ilmoita valvojille, jos uusi käyttäjä on odottanut hyväksyntää kauemmin kuin näin monta minuuttia. Aseta -1, jos haluat poistaa ilmoitukset käytöstä."
     persistent_sessions: "Käyttäjät pysyvät sisäänkirjautuneena, vaikka selain on suljettuna"
     maximum_session_age: "Käyttäjä pysyy sisäänkirjautuneena n tuntia vierailunsa jälkeen"
-    full_page_login: "Näytä kirjautumis- ja rekisteröitymislomakkeet koko sivulla (jos tätä ei ole valittu, käyttäjät näkevät lomakkeet modaali-ikkunassa). "
     show_signup_form_email_instructions: Näytä sähköpostiohjeet rekisteröitymislomakkeessa.
     show_signup_form_username_instructions: Näytä käyttäjätunnusohjeet rekisteröitymislomakkeessa.
     show_signup_form_full_name_instructions: Näytä koko nimen ohjeet rekisteröitymislomakkeessa.
@@ -2453,10 +2452,6 @@ fi:
     default_navigation_menu_categories: "Valitut alueet näkyvät navigointivalikon Alueet-osiossa oletuksena."
     default_navigation_menu_tags: "Valitut tunnisteet näkyvät navigointivalikon Tunnisteet-osiossa oletuksena."
     experimental_new_new_view_groups: 'Ota käyttöön uusien ketjujen luettelo, joka yhdistää lukemattomat ja uudet ketjut, ja linkitä sivupalkin "Kaikki"-linkki siihen.'
-    glimmer_topic_list_mode: "Hallitse, käytetäänkö uutta glimmer-ketjuluettelouudistusta. Arvo \"auto\" ottaa sen käyttöön automaattisesti, kun kaikki teemasi ja lisäosasi ovat valmiita. Katso lisätietoja <a href='https://meta.discourse.org/t/343404'>Meta-ketjusta</a>."
-    glimmer_post_menu_mode: "Hallitse, käytetäänkö uutta glimmer-viestivalikkouudistusta. \"Auto\" ottaa sen käyttöön automaattisesti, kun kaikki teemasi ja lisäosasi ovat valmiita. Tämä uudistus on aktiivisesti kehitteillä, eikä sitä ole tarkoitettu tuotantokäyttöön. Älä kehitä teemoja tai lisäosia sen mukaan ennen kuin uudistus on viimeistelty ja julkistettu."
-    glimmer_post_menu_groups: "Ota käyttöön uusi glimmer-viestivalikkouudistus \"auto\"-tilassa määritetyille käyttäjäryhmille. Tämä uudistus on aktiivisesti kehitteillä, eikä sitä ole tarkoitettu tuotantokäyttöön. Älä kehitä teemoja tai lisäosia sen mukaan ennen kuin uudistus on viimeistelty ja julkistettu."
-    glimmer_post_stream_mode_auto_groups: "Ota käyttöön uusi glimmer-viestivalikkouudistus \"auto\"-tilassa määritetyille käyttäjäryhmille. Tämä uudistus on aktiivisesti kehitteillä, eikä sitä ole tarkoitettu tuotantokäyttöön. Älä kehitä teemoja tai lisäosia sen mukaan ennen kuin uudistus on viimeistelty ja julkistettu."
     experimental_form_templates: "Ota lomakemalliominaisuus käyttöön.Voit hallinnoida malleja kohdassa <a href='%{base_path}/admin/customize/form-templates'>Mukauta / Mallit</a>."
     lazy_load_categories_groups: "Käytä laiskaa latausta alueen tietoihin vain näiden ryhmien käyttäjille. Tämä parantaa suorituskykyä sivustoilla, joilla on useita alueita."
     page_loading_indicator: "Määritä latausilmaisin, joka näkyy Discoursessa sivujen navigointien aikana. \"Spinner\" on koko sivun ilmaisin. \"Slider\" näyttää kapean palkin ruudun yläosassa."
@@ -4132,7 +4127,6 @@ fi:
     images:
       too_large: "Kuva, jonka yritit ladata, on liian suuri (suurin sallittu koko on %{max_size_kb} kt), pienennä kuvaa ja yritä uudestaan."
       too_large_humanized: "Kuva, jonka yritit ladata, on liian suuri (suurin sallittu koko on %{max_size}), pienennä kuvaa ja yritä uudestaan."
-      larger_than_x_megapixels: "Kuva, jonka yritit ladata, on liian suuri (maksimikoko on %{max_image_megapixels} megapikseliä). Muuta kuvan kokoa ja yritä uudelleen."
       size_not_found: "Emme pystyneet selvittämään kuvan kokoa. Ehkä kuvatiedosto on vahingoittunut?"
     placeholders:
       too_large: "(kuva on suurempi kuin %{max_size_kb} kt)"

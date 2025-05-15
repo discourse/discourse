@@ -88,7 +88,10 @@ export default class ChatThreadsManager {
       this.#cache(model);
     }
 
-    if (threadObject?.meta?.message_bus_last_ids?.thread_message_bus_last_id) {
+    if (
+      threadObject?.meta?.message_bus_last_ids?.thread_message_bus_last_id !==
+      undefined
+    ) {
       model.threadMessageBusLastId =
         threadObject.meta.message_bus_last_ids.thread_message_bus_last_id;
     }

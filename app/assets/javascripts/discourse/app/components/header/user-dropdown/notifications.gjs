@@ -24,7 +24,7 @@ export default class Notifications extends Component {
     return htmlSafe(
       renderAvatar(this.currentUser, {
         imageSize: this.avatarSize,
-        title: i18n("user.avatar.header_title"),
+        hideTitle: true,
         template: this.currentUser.avatar_template,
         username: this.currentUser.username,
         name: this.siteSettings.enable_names && this.currentUser.name,

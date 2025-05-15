@@ -8,13 +8,14 @@ module SystemHelpers
     msg = "Test paused. Press enter to resume, or `d` + enter to start debugger.\n\n"
     msg += "Browser inspection URLs:\n"
 
-    base_url = page.driver.browser.send(:devtools_address)
-    uri = URI(base_url)
-    response = Net::HTTP.get(uri.hostname, "/json/list", uri.port)
+    response =
+      Net::HTTP.get(CHROME_REMOTE_DEBUGGING_ADDRESS, "/json/list", CHROME_REMOTE_DEBUGGING_PORT)
 
     socat_pid = nil
 
-    if exposed_port = ENV["SELENIUM_FORWARD_DEVTOOLS_TO_PORT"]
+    if exposed_port =
+         ENV["PLAYWRIGHT_FORWARD_DEVTOOLS_TO_PORT"].presence ||
+           ENV["SELENIUM_FORWARD_DEVTOOLS_TO_PORT"].presence
       socat_pid =
         fork do
           chrome_port = uri.port
@@ -22,14 +23,10 @@ module SystemHelpers
         end
     end
 
-    # Fetch devtools urls
-    base_url = page.driver.browser.send(:devtools_address)
-    uri = URI(base_url)
-    response = Net::HTTP.get(uri.hostname, "/json/list", uri.port)
     JSON
       .parse(response)
       .each do |result|
-        devtools_url = "#{base_url}#{result["devtoolsFrontendUrl"]}"
+        devtools_url = result["devtoolsFrontendUrl"]
 
         devtools_url = devtools_url.gsub(":#{uri.port}", ":#{exposed_port}") if exposed_port
 
@@ -123,8 +120,8 @@ module SystemHelpers
     old_element_y = nil
 
     try_until_success(timeout: timeout) do
-      current_element_x = element.rect.x
-      current_element_y = element.rect.y
+      current_element_x = element.rect[:x]
+      current_element_y = element.rect[:y]
 
       stopped_moving = current_element_x == old_element_x && current_element_y == old_element_y
 
@@ -136,20 +133,23 @@ module SystemHelpers
   end
 
   def resize_window(width: nil, height: nil)
-    original_size = page.driver.browser.manage.window.size
-    page.driver.browser.manage.window.resize_to(
-      width || original_size.width,
-      height || original_size.height,
+    original_size = Capybara.current_session.current_window.size
+    Capybara.current_session.current_window.resize_to(
+      width || original_size[0],
+      height || original_size[1],
     )
     yield
   ensure
-    page.driver.browser.manage.window.resize_to(original_size.width, original_size.height)
+    Capybara.current_session.current_window.resize_to(original_size[0], original_size[1])
   end
 
   def using_browser_timezone(timezone, &example)
     using_session(timezone) do
-      page.driver.browser.devtools.emulation.set_timezone_override(timezone_id: timezone)
-      freeze_time(&example)
+      page.driver.with_playwright_page do |pw_page|
+        cdp_session = pw_page.context.new_cdp_session(pw_page)
+        cdp_session.send_message("Emulation.setTimezoneOverride", params: { timezoneId: timezone })
+        freeze_time(&example)
+      end
     end
   end
 
@@ -180,6 +180,9 @@ module SystemHelpers
     page.execute_script(
       "document.querySelector('#{selector_to_make_tall}').style.height = '10000px'",
     )
+
+    sleep 0.1 # most resilient solution for now
+
     page.scroll_to(0, 1000)
   end
 
@@ -198,7 +201,8 @@ module SystemHelpers
     SiteSetting.enable_direct_s3_uploads = enable_direct_s3_uploads
     SiteSetting.secure_uploads = enable_secure_uploads
 
-    MinioRunner.start
+    # On CI, the minio binary is preinstalled in the docker image so there is no need for us to check for a new binary
+    MinioRunner.start(install: ENV["CI"] ? false : true)
   end
 
   def skip_unless_s3_system_specs_enabled!
@@ -219,5 +223,123 @@ module SystemHelpers
 
   def is_mobile?
     !!RSpec.current_example.metadata[:mobile]
+  end
+
+  def with_logs
+    playwright_logger = nil
+    page.driver.with_playwright_page { |pw_page| playwright_logger = PlaywrightLogger.new(pw_page) }
+
+    yield(playwright_logger)
+  end
+
+  # This method can be used to run a system test with a user that has a physical security key by adding a virtual
+  # authenticator to the browser. It will automatically remove the virtual authenticator after the block is executed.
+  #
+  # Example:
+  #  with_security_key(user, options) do
+  #    <your system test code here>
+  #  end
+  #
+  def with_security_key(user)
+    # The public and private keys are complicated to generate programmatically, so we generate it by running the
+    # `spec/user_preferences/security_keys_spec.rb` test and uncommenting the lines that print the keys.
+    public_key_base64 =
+      "pQECAyYgASFYIJhY+jDNJM8g0lyKP3ivDxs+mrKXqfKUY3f7Uo4pWTPDIlggj03xktSm0JTSqbDefhu5WAKH7VRQmWXotjtI/8ka/P0="
+    private_key_base64 =
+      "MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQg2AWg10o6aoM0s55halZvcQLnpM2tVO2D8Ugw7wFCjzyhRANCAASYWPowzSTPINJcij94rw8bPpqyl6nylGN3-1KOKVkzw49N8ZLUptCU0qmw3n4buVgCh-1UUJll6LY7SP_JGvz9"
+    credential_id_base64 = Base64.strict_encode64(SecureRandom.random_bytes(32))
+    credential_id_bytes = Base64.urlsafe_decode64(credential_id_base64)
+    private_key_bytes = Base64.urlsafe_decode64(private_key_base64)
+
+    with_virtual_authenticator do |cdp_client, authenticator_id|
+      cdp_client.send_message(
+        "WebAuthn.addCredential",
+        params: {
+          authenticatorId: authenticator_id,
+          credential: {
+            credentialId: Base64.strict_encode64(credential_id_bytes),
+            isResidentCredential: false,
+            rpId: DiscourseWebauthn.rp_id,
+            privateKey: Base64.strict_encode64(private_key_bytes),
+            signCount: 1,
+          },
+        },
+      )
+
+      Fabricate(
+        :user_security_key,
+        user:,
+        public_key: public_key_base64,
+        credential_id: credential_id_base64,
+        name: "First Key",
+      )
+
+      yield
+    end
+  end
+
+  def with_virtual_authenticator(options = {})
+    page.driver.with_playwright_page do |pw_page|
+      cdp_client = pw_page.context.new_cdp_session(pw_page)
+      cdp_client.send_message("WebAuthn.enable")
+
+      authenticator_options = {
+        protocol: "ctap2",
+        transport: "usb",
+        hasResidentKey: false,
+        hasUserVerification: false,
+        automaticPresenceSimulation: true,
+      }.merge(options)
+
+      response =
+        cdp_client.send_message(
+          "WebAuthn.addVirtualAuthenticator",
+          params: {
+            options: authenticator_options,
+          },
+        )
+
+      authenticator_id = response["authenticatorId"]
+
+      begin
+        yield(cdp_client, authenticator_id)
+      ensure
+        cdp_client.send_message(
+          "WebAuthn.removeVirtualAuthenticator",
+          params: {
+            authenticatorId: authenticator_id,
+          },
+        )
+
+        cdp_client.send_message("WebAuthn.disable")
+      end
+    end
+  end
+
+  def add_cookie(options = {})
+    page.driver.with_playwright_page do |playwright_page|
+      playwright_page.context.add_cookies(
+        [{ domain: Discourse.current_hostname, path: "/" }.merge(options)],
+      )
+    end
+  end
+
+  def get_style(element, key)
+    script = "window.getComputedStyle(arguments[0]).getPropertyValue(arguments[1])"
+    page.evaluate_script(script, element, key)
+  end
+
+  def get_rgb_color(element, property = "backgroundColor")
+    element.native.evaluate(<<~JS)
+      (el) => {
+        const color = window.getComputedStyle(el).#{property};
+        const tempDiv = document.createElement('div');
+        tempDiv.style.#{property} = color;
+        document.body.appendChild(tempDiv);
+        const rgbColor = window.getComputedStyle(tempDiv).#{property};
+        document.body.removeChild(tempDiv);
+        return rgbColor;
+      }
+    JS
   end
 end

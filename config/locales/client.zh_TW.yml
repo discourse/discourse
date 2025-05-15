@@ -1093,7 +1093,6 @@ zh_TW:
       said: "%{username}："
       profile: "個人檔案"
       profile_possessive: "%{username} 的個人資料"
-      account_possessive: "%{name} 的帳戶"
       mute: "靜音"
       edit: "編輯喜好設定"
       download_archive:
@@ -1889,7 +1888,6 @@ zh_TW:
         title: "註冊之 IP 位址"
       avatar:
         title: "個人資料圖片"
-        header_title: "個人頁面、訊息、書籤和設置"
         name_and_description: "%{name} - %{description}"
         edit: "編輯個人資料照片"
       title:
@@ -1966,6 +1964,9 @@ zh_TW:
     modal:
       close: "關閉"
       dismiss_error: "忽略錯誤"
+    multi_select:
+      no_results: "沒有結果"
+      search: "搜尋…"
     form_kit:
       reset: 重置
       optional: 選擇性
@@ -2174,10 +2175,6 @@ zh_TW:
         name: "Google"
         title: "使用 Google 登入"
         sr_title: "使用 Google 登入"
-      twitter:
-        name: "Twitter"
-        title: "使用 Twitter 登入"
-        sr_title: "使用 Twitter 登入"
       instagram:
         name: "Instagram"
         title: "使用 Instagram 登入"
@@ -2395,8 +2392,6 @@ zh_TW:
       uploading: "上傳中..."
       show_preview: "顯示預覽"
       hide_preview: "隱藏預覽"
-      switch_to_markdown: "切換到標準 Markdown 編輯器"
-      switch_to_rich_text: "切換到新格式化文字編輯器"
       quote_post_title: "引用完整貼文"
       bold_label: "B"
       bold_title: "粗體"
@@ -2638,8 +2633,6 @@ zh_TW:
       in_topics_posts: "在所有主題和貼文中"
       enter_hint: "或按 Enter"
       in_posts_by: "在 %{username}的貼文中"
-      browser_tip: "%{modifier} + f"
-      browser_tip_description: "再次使用原生瀏覽器搜索"
       recent: "最近搜尋"
       clear_recent: "清除最近搜尋"
       experience:
@@ -2727,7 +2720,6 @@ zh_TW:
           aria_label: 按最大瀏覽量過濾
         additional_options:
           label: "依發表次數和主題瀏覽次數篩選"
-    hamburger_menu: "選單"
     new_item: "新增"
     go_back: "返回"
     not_logged_in_user: "使用者頁面（包含目前活動及喜好的摘要）"
@@ -3385,6 +3377,11 @@ zh_TW:
       in_reply_to: "載入父貼文"
       view_all_posts: "檢視所有貼文"
       badge_granted_tooltip: "%{username} 因此貼文獲得了“%{badge_name}”徽章！"
+      localizations:
+        table:
+          actions: "動作"
+          edit: "編輯"
+          delete: "刪除"
       errors:
         create: "抱歉，建立你的貼文時發生錯誤，請再試一次。"
         edit: "抱歉，編輯你的貼文時發生錯誤，請再試一次。"
@@ -3582,6 +3579,10 @@ zh_TW:
       settings: "設定"
       topic_template: "範本"
       tags: "標記"
+      localization:
+        name: "名字"
+        description: "簡述"
+        remove: "移除"
       tags_allowed_tags: "將這些標籤（Tags）限制為此分類做使用："
       tags_allowed_tag_groups: "將這些標籤群組限制在此類別使用："
       tags_placeholder: "（可選）允許使用的標籤列表"
@@ -3958,7 +3959,6 @@ zh_TW:
         today: "今天"
     custom_homepage:
       admin_message: '您的一個佈景主題已啟用「custom_homepage」修改器，但在 [custom-homepage] 連接器中沒有輸出任何內容。（此消息只顯示給網站管理員。）'
-    browser_update: '很抱歉，<a href="https://www.discourse.org/faq/#browser">您的瀏覽器不受支援</a>。請<a href="https://browsehappy.com">改用支援的瀏覽器</a>來檢視豐富的內容、登入和回覆。'
     permission_types:
       full: "建立 / 回覆 / 觀看"
       create_post: "回覆 / 觀看"
@@ -4440,13 +4440,7 @@ zh_TW:
       back_to_forum: "返回論壇"
       collapse_all_sections: "折疊所有區段"
       expand_all_sections: "展開所有區段"
-      filter: "篩選..."
-      filter_links: "篩選連結..."
-      clear_filter: "清除篩選"
-      no_results:
-        title: "沒有結果"
-        description: '我們找不到任何與「%{filter}」相符的內容。<br><br>是否想要 <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">搜尋網站設定</a> 或 <a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">管理員使用者清單？</a>'
-        description_admin_search: '我們找不到任何與「%{filter}」相符的內容。<br><br>試試 <a class="sidebar-additional-filter-admin-search" href="%{admin_search_url}">搜尋整個管理介面</a>。'
+      search: "搜索"
       footer:
         interface_color_selector:
           light: "輕亮"
@@ -4550,6 +4544,16 @@ zh_TW:
           save: "另存為..."
     powered_by_discourse: "由 Discourse 提供支持"
     safari_15_warning: "您的瀏覽器與這個社群站不相容，要持續互動的話，請升級您的瀏覽器或是 <a href='%{url}'>瞭解更多</a>。"
+    discovery:
+      headings:
+        categories: "所有分類"
+        filter_labels:
+          latest: "最新版本"
+          top: "精選"
+          new: "新使用者"
+          unread: "未讀"
+          hot: "熱門"
+          unseen: "未讀"
   admin_js:
     type_to_filter: "篩選類型…"
     settings: "設定"
@@ -4601,9 +4605,6 @@ zh_TW:
           title: "管理"
           header_description: "Discourse 中的檢舉系統可以幫助您和您的版主團隊管理內容和使用者行為，讓您的社群保持尊重和健康。預設值適合大多數社區，您不必更改。不過，如果您的網站有特殊需求，您可以停用不需要的檢舉，並新增您自己的自訂檢舉。"
           keywords: "標記 | 評論 | 垃圾郵件 | 非法"
-        font_style:
-          title: "字體樣式"
-          header_description: "自訂您的佈景主題使用的字體樣式"
         files:
           title: "檔案"
           header_description: "控制檔案大小和類型限制、頭像大小和來源、檔案儲存空間、影像品質和壓縮等設定"
@@ -4617,11 +4618,7 @@ zh_TW:
         login_and_authentication:
           title: "登入與驗證"
           header_description: "設定使用者登入和驗證方式、密碼和金鑰、OAuth2 提供者等"
-        logo:
-          title: "網站標誌"
-          header_description: "自訂網站標誌的變化"
-        branding:
-          title: "品牌（Branding）"
+        logo_and_fonts:
           logo:
             title: "標誌"
             form:
@@ -4686,6 +4683,9 @@ zh_TW:
                 title: "X 摘要大圖片"
                 description: "X 卡片的「摘要大圖像」。如果留空，只要 OpenGraph_image 不是 .svg，就會使用 OpenGraph_image 產生一般的卡片元資料。"
                 help_text: "建議尺寸至少為 280 x 150 像素。請勿使用 SVG 影像。"
+          fonts:
+            backfill_modal:
+              modal_yes: "是"
         navigation:
           title: "導覽"
           header_description: "設定網站的導覽連結和功能表項目。這包括主導航功能表的位置和行為、首頁頂部的快速鏈接以及管理側邊欄"
@@ -4695,9 +4695,6 @@ zh_TW:
         onebox:
           title: "單一框"
           header_description: "設定如何為您的網站產生和顯示單一框預覽"
-        other:
-          title: "其他"
-          header_description: "不適用於任何其他類別的設定"
         rate_limits:
           title: "速率限制"
           header_description: "配置使用者執行特定操作（例如創建話題、發送訊息和發布回覆）的頻率"
@@ -4706,7 +4703,6 @@ zh_TW:
           header_description: "設定中文和日語的搜尋設定，包括記錄和令牌化"
         search_everything:
           title: "搜尋"
-          header_description: "在這裡的管理介面中尋找任何東西。您可以在下方篩選結果，您的偏好設定將會被記住。"
         security:
           title: "安全性"
           header_description: "設定安全設定，包括二次驗證、主持人權限和內容安全政策"
@@ -4751,6 +4747,10 @@ zh_TW:
         badges:
           title: "徽章"
           header_description: "徽章可獎勵使用者的活動、貢獻和成就，以表揚、確認和鼓勵社群內的正面行為和參與。"
+        content:
+          sub_pages:
+            posts_and_topics:
+              title: "貼文和主題"
         permalinks:
           title: "固定連結"
           header_description: "為論壇無法識別的 URL 應用的重新導向。"
@@ -4778,9 +4778,6 @@ zh_TW:
           title: "網站文字"
           header_description: "自定義 Discourse 中使用的任何文本，以匹配社區的聲音和語調"
         email:
-          title: "伺服器設定和記錄檔"
-          header_description: "自訂用於製作電子郵件的範本、預覽將要寄出的摘要電子郵件，以及檢視電子郵件記錄。"
-          keywords: "電子郵件|smtp|mailgun|sendgrid|已發送|已跳過|已退回|已收到|已拒絕|電子郵件日誌|預覽摘要"
           sub_pages:
             preview_summary:
               title: "預覽摘要"
@@ -4791,6 +4788,8 @@ zh_TW:
             templates:
               title: "範本"
               header_description: "自訂用於製作電子郵件的範本"
+        email_logs:
+          sub_pages:
             sent:
               title: "送出"
               header_description: "檢視已傳送的電子郵件記錄"
@@ -5428,7 +5427,6 @@ zh_TW:
             post: "貼文"
             chat_message: "聊天訊息"
             enabled: "儲存後啟用此自訂檢舉"
-            alert: "一旦使用自訂檢舉，它只能被停用，而不能被編輯或刪除。"
             edit_flag: "編輯檢舉"
             non_editable: "您無法編輯此檢舉，因為它是系統檢舉或已在審核系統中使用，但是您仍然可以停用它。"
             delete_flag: "刪除檢舉"
@@ -5458,6 +5456,23 @@ zh_TW:
             new_theme: "新佈景主題"
           components:
             title: "元件"
+            install: "安裝"
+            name: "名字"
+            enabled: "啟用?"
+            by_author: "作者 %{name}"
+            learn_more: "了解更多"
+            edit: "編輯"
+            preview: "預覽"
+            check_update: "檢查更新"
+            export: "匯出"
+            convert: "轉換"
+            delete: "刪除"
+            filter_by: "篩選依據"
+            filter_by_all: "全部"
+            filter_by_used: "已使用"
+            filter_by_unused: "未使用"
+            delete_confirm: '你確定要刪除%{name}嗎？'
+            badge_unused: "未使用"
         user_fields:
           field: "欄位"
           type: "類型"
@@ -5470,11 +5485,14 @@ zh_TW:
           save_successful: "儲存使用者欄位。"
         color_palettes:
           palette_name: "名字"
+          duplicate: "複製"
+          delete: "刪除"
           color_options:
             toggle: "使用者可選"
             toggle_description: "調色盤可由使用者選擇"
           colors:
             title: "顏色"
+          delete_confirm: "刪除此調色盤？"
       plugins:
         title: "外掛"
         name: "名稱"
@@ -5645,10 +5663,12 @@ zh_TW:
           extra_files_upload: "匯出主題以檢視這些檔案。"
           extra_files_remote: "導出主題或檢查 git 存儲庫以查看這些文件。"
           preview: "預覽"
+          default: "啟用的"
           settings_editor: "設定編輯器"
           show_advanced: "顯示進階"
           is_default: "佈景主題預設啟用"
           user_selectable: "使用者可選取佈景主題"
+          user_selectable_badge_label: "使用者可選"
           color_scheme_user_selectable: "調色盤可由使用者選擇"
           auto_update: "當 Discourse 更新時自動更新"
           color_scheme: "調色盤"
@@ -5666,8 +5686,6 @@ zh_TW:
           convert_theme_alert_generic: "您確定要將此主題轉換為元件嗎？"
           convert_theme_tooltip: "轉換此佈景主題為元件"
           inactive_themes: "未啟用的佈景主題"
-          set_default_theme: "設定預設值"
-          default_theme: "預設主題"
           set_default_success: "預設主題設定為 %{theme}"
           install_success: "%{theme} 安裝成功！"
           inactive_components: "未使用的元件："
@@ -5739,7 +5757,6 @@ zh_TW:
             error: "由於佈景主題與此版本的 Discourse 不相容，此佈景主題已被自動停用。"
             minimum: "需要 Discourse%{version} 或更新的版本。"
             maximum: "需要 Discourse %{version} 或更舊的版本。"
-          update_to_latest: "更新至最新版本"
           check_for_updates: "檢查更新"
           updating: "更新中…"
           update_success: "%{theme} 更新完成"

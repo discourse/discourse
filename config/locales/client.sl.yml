@@ -1638,7 +1638,6 @@ sl:
         title: "Registracijski IP naslov"
       avatar:
         title: "Slika profila"
-        header_title: "profil, zasebna sporočila, zaznamki in nastavitve"
         name_and_description: "%{name} - %{description}"
       title:
         title: "Naziv"
@@ -1863,10 +1862,6 @@ sl:
         name: "Google"
         title: "Prijavite se z Googlom"
         sr_title: "Prijavite se z Googlom"
-      twitter:
-        name: "Twitter"
-        title: "Prijavite se s Twitterjem"
-        sr_title: "Prijavite se s Twitterjem"
       instagram:
         name: "Instagram"
         title: "Prijavite se z Instagramom"
@@ -2808,6 +2803,11 @@ sl:
         few: "Oglejte si to objavo in njene %{count} odgovore"
         other: "Oglejte si to objavo in njenih %{count} odgovorov"
       view_all_posts: "Ogled vseh objav"
+      localizations:
+        table:
+          actions: "Akcije"
+          edit: "Uredi"
+          delete: "Izbriši"
       errors:
         create: "Oprostite, pri ustvarjanju vašega prispevka je prišlo do napake. Poskusite ponovno."
         edit: "Oprostite, pri ustvarjanju vašega prispevka je prišlo do napake. Poskusite ponovno."
@@ -2968,6 +2968,10 @@ sl:
       general: "Splošno"
       settings: "Nastavitve"
       tags: "Oznake"
+      localization:
+        name: "Ime"
+        description: "Opis"
+        remove: "Odstrani"
       tags_allowed_tags: "Omeji te oznake na to kategorijo:"
       tags_allowed_tag_groups: "Omeji te skupine oznak na to kategorijo:"
       tags_placeholder: "(neobvezno) seznam dovoljenih oznak"
@@ -3649,7 +3653,7 @@ sl:
               content: "Pregled"
             invite:
               content: "Povabi"
-      filter: "Filter..."
+      search: "Išči"
     until: "Do:"
     form_templates:
       upload_field:
@@ -3703,6 +3707,14 @@ sl:
       spreadsheet:
         show: "Prikaži"
         about: "O nas"
+    discovery:
+      headings:
+        categories: "Vse kategorije"
+        filter_labels:
+          latest: "Najnovejše"
+          top: "Najboljše"
+          new: "Nova"
+          unread: "Neprebrane"
   admin_js:
     settings: "Nastavitve"
     admin:
@@ -3743,19 +3755,20 @@ sl:
           title: "Datoteke"
         legal:
           title: "Pravno"
-        branding:
+        logo_and_fonts:
           logo:
             form:
               mobile: "Mobilno"
               email: "E-naslov"
+          fonts:
+            backfill_modal:
+              modal_yes: "Ja"
         navigation:
           title: "Navigacija"
         notifications:
           title: "Obvestila"
         onebox:
           title: "Onebox"
-        other:
-          title: "Drugo"
         search_everything:
           title: "Išči"
         security:
@@ -3789,6 +3802,8 @@ sl:
           sub_pages:
             templates:
               title: "Predloge"
+        email_logs:
+          sub_pages:
             sent:
               title: "Poslano"
             received:
@@ -4085,11 +4100,22 @@ sl:
           breadcrumb_title: "Prilagodi"
           themes:
             title: "Videzi"
+          components:
+            name: "Ime"
+            enabled: "Vključeno?"
+            by_author: "Od %{name}"
+            learn_more: "Več o tem"
+            edit: "Uredi"
+            preview: "Predogled"
+            export: "Izvozi"
+            delete: "Izbriši"
+            filter_by_all: "Vse"
         user_fields:
           type: "Tip"
           delete: "Izbriši"
         color_palettes:
           palette_name: "Ime"
+          delete: "Izbriši"
           colors:
             title: "Barve"
       plugins:
@@ -4178,6 +4204,7 @@ sl:
           desktop: "Namizno"
           mobile: "Mobilno"
           preview: "Predogled"
+          default: "Aktivni"
           auto_update: "Samodejno posodobi ob posodobitvi Discourse"
           convert_component_alert_generic: "Ali ste prepričani, da želite pretvoriti to komponento v temo?"
           convert_theme_alert_generic: "Ali ste prepričani, da želite pretvoriti to temo v komponento?"
