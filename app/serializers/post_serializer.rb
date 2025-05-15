@@ -96,7 +96,10 @@ class PostSerializer < BasicPostSerializer
              :mentioned_users,
              :post_url,
              :has_post_localizations,
-             :post_localizations
+             :post_localizations,
+             :locale,
+             :is_localized,
+             :language
 
   def initialize(object, opts)
     super(object, opts)
@@ -661,6 +664,34 @@ class PostSerializer < BasicPostSerializer
       each_serializer: PostLocalizationSerializer,
       root: false,
     ).as_json
+  end
+
+  def raw
+    if ContentLocalization.show_translated_post?(object, scope)
+      object.get_localization(I18n.locale)&.raw || object.raw
+    else
+      object.raw
+    end
+  end
+
+  def include_locale?
+    SiteSetting.experimental_content_localization
+  end
+
+  def is_localized
+    ContentLocalization.show_translated_post?(object, scope) && object.has_localization?
+  end
+
+  def include_is_localized?
+    SiteSetting.experimental_content_localization
+  end
+
+  def language
+    LocaleSiteSetting.get_language_name(object.locale) || locale
+  end
+
+  def include_language?
+    SiteSetting.experimental_content_localization && object.locale.present?
   end
 
   private

@@ -453,7 +453,8 @@ a[data-clicks]::after {
   @include click-counter-badge;
 }
 
-.post-info a {
+.post-info a,
+.post-info svg {
   color: var(--primary-medium);
 }
 
