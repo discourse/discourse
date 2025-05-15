@@ -391,59 +391,64 @@ export default class SearchMenu extends Component {
       {{! template-lint-disable no-invalid-interactive }}
       {{on "keydown" this.onKeydown}}
     >
-      <div
-        class={{concatClass "search-input" (concat "search-input--" @location)}}
-      >
-        {{#if this.search.inTopicContext}}
-          <DButton
-            @icon="xmark"
-            @label="search.in_this_topic"
-            @title="search.in_this_topic_tooltip"
-            @action={{this.clearTopicContext}}
-            class="btn-small search-context"
+      <div class="search-input-wrapper">
+        <div
+          class={{concatClass
+            "search-input"
+            (concat "search-input--" @location)
+          }}
+        >
+          {{#if this.search.inTopicContext}}
+            <DButton
+              @icon="xmark"
+              @label="search.in_this_topic"
+              @title="search.in_this_topic_tooltip"
+              @action={{this.clearTopicContext}}
+              class="btn-small search-context"
+            />
+          {{else if this.inPMInboxContext}}
+            <DButton
+              @icon="xmark"
+              @label="search.in_messages"
+              @title="search.in_messages_tooltip"
+              @action={{this.clearPMInboxContext}}
+              class="btn-small search-context"
+            />
+          {{/if}}
+
+          <PluginOutlet
+            @name="search-menu-before-term-input"
+            @outletArgs={{hash openSearchMenu=this.open}}
           />
-        {{else if this.inPMInboxContext}}
-          <DButton
-            @icon="xmark"
-            @label="search.in_messages"
-            @title="search.in_messages_tooltip"
-            @action={{this.clearPMInboxContext}}
-            class="btn-small search-context"
+
+          <SearchTerm
+            @searchTermChanged={{this.searchTermChanged}}
+            @typeFilter={{this.typeFilter}}
+            @updateTypeFilter={{this.updateTypeFilter}}
+            @triggerSearch={{this.triggerSearch}}
+            @fullSearch={{this.fullSearch}}
+            @clearPMInboxContext={{this.clearPMInboxContext}}
+            @clearTopicContext={{this.clearTopicContext}}
+            @closeSearchMenu={{this.close}}
+            @openSearchMenu={{this.open}}
+            @autofocus={{@autofocusInput}}
+            @inputId={{this.searchInputId}}
           />
-        {{/if}}
 
-        <PluginOutlet
-          @name="search-menu-before-term-input"
-          @outletArgs={{hash openSearchMenu=this.open}}
-        />
-
-        <SearchTerm
-          @searchTermChanged={{this.searchTermChanged}}
-          @typeFilter={{this.typeFilter}}
-          @updateTypeFilter={{this.updateTypeFilter}}
-          @triggerSearch={{this.triggerSearch}}
-          @fullSearch={{this.fullSearch}}
-          @clearPMInboxContext={{this.clearPMInboxContext}}
-          @clearTopicContext={{this.clearTopicContext}}
-          @closeSearchMenu={{this.close}}
-          @openSearchMenu={{this.open}}
-          @autofocus={{@autofocusInput}}
-          @inputId={{this.searchInputId}}
-        />
-
-        {{#if this.loading}}
-          <div class="searching">
-            {{loadingSpinner}}
-          </div>
-        {{else}}
-          <div class="searching">
-            <PluginOutlet @name="search-menu-before-advanced-search" />
-            {{#if this.search.activeGlobalSearchTerm}}
-              <ClearButton @clearSearch={{this.clearSearch}} />
-            {{/if}}
-            <AdvancedButton @openAdvancedSearch={{this.openAdvancedSearch}} />
-          </div>
-        {{/if}}
+          {{#if this.loading}}
+            <div class="searching">
+              {{loadingSpinner}}
+            </div>
+          {{else}}
+            <div class="searching">
+              <PluginOutlet @name="search-menu-before-advanced-search" />
+              {{#if this.search.activeGlobalSearchTerm}}
+                <ClearButton @clearSearch={{this.clearSearch}} />
+              {{/if}}
+              <AdvancedButton @openAdvancedSearch={{this.openAdvancedSearch}} />
+            </div>
+          {{/if}}
+        </div>
       </div>
 
       {{#if @inlineResults}}
