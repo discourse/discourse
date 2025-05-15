@@ -61,6 +61,18 @@ export default class DToast extends Component {
     }).finished;
   }
 
+  get duration() {
+    let duration = this.args.toast.options.duration;
+
+    if (duration === "short") {
+      return 3000;
+    } else if (duration === "long") {
+      return 5000;
+    } else {
+      return 3000;
+    }
+  }
+
   <template>
     <output
       role={{if @toast.options.autoClose "status" "log"}}
@@ -68,11 +80,12 @@ export default class DToast extends Component {
       class={{concatClass "fk-d-toast" @toast.options.class}}
       {{autoCloseToast
         close=@toast.close
-        duration=@toast.options.duration
+        duration=this.duration
         progressBar=this.progressBar
         enabled=@toast.options.autoClose
       }}
       {{swipe onDidSwipe=this.didSwipe onDidEndSwipe=this.didEndSwipe}}
+      data-test-duration={{this.duration}}
     >
       <@toast.options.component
         @data={{@toast.options.data}}

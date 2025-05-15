@@ -1311,7 +1311,7 @@ export default class ComposerService extends Service {
 
       this.close();
       this.toasts.success({
-        duration: 3000,
+        duration: "short",
         data: {
           message: i18n("post.localizations.success"),
         },

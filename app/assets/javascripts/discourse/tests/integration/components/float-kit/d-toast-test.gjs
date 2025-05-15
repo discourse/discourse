@@ -52,4 +52,42 @@ module("Integration | Component | FloatKit | d-toast", function (hooks) {
 
     assert.true(closing);
   });
+
+  test("duration", async function (assert) {
+    let toast = new DToastInstance(getOwner(this), {
+      duration: 9999,
+      data: { message: "test" },
+    });
+    await render(<template><DToast @toast={{toast}} /></template>);
+
+    assert
+      .dom(".fk-d-toast")
+      .hasAttribute("data-test-duration", "3000", "it defaults to 3000ms");
+
+    toast = new DToastInstance(getOwner(this), {
+      duration: "short",
+      data: { message: "test" },
+    });
+    await render(<template><DToast @toast={{toast}} /></template>);
+    assert
+      .dom(".fk-d-toast")
+      .hasAttribute(
+        "data-test-duration",
+        "3000",
+        "it `converts `short` to 3000ms"
+      );
+
+    toast = new DToastInstance(getOwner(this), {
+      duration: "long",
+      data: { message: "test" },
+    });
+    await render(<template><DToast @toast={{toast}} /></template>);
+    assert
+      .dom(".fk-d-toast")
+      .hasAttribute(
+        "data-test-duration",
+        "5000",
+        "it `converts `long` to 5000ms"
+      );
+  });
 });

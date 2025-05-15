@@ -237,7 +237,7 @@ export default class AdminUsersListShowController extends Controller {
 
   #showBulkSelectionLimitToast(event) {
     this.toasts.error({
-      duration: 3000,
+      duration: "short",
       data: {
         message: i18n("admin.users.bulk_actions.too_many_selected_users", {
           count: MAX_BULK_SELECT_LIMIT,
