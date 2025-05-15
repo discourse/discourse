@@ -12,4 +12,5 @@ const FullscreenTable = <template>
     </:body>
   </DModal>
 </template>;
+
 export default FullscreenTable;

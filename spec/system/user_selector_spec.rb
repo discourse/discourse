@@ -15,7 +15,7 @@ describe "User selector", type: :system do
     it "correctly shows the user" do
       visit("/t/-/#{topic.id}")
       find(".btn-primary.create").click
-      find(".d-editor-input").fill_in(with: "Hello @som")
+      find(".d-editor-input").send_keys("Hello @som")
 
       within(".autocomplete.ac-user") do |el|
         expect(el).to have_selector(".selected .avatar[title=someone]")
@@ -28,7 +28,7 @@ describe "User selector", type: :system do
     it "correctly shows the user" do
       visit("/t/-/#{topic.id}")
       find(".btn-primary.create").click
-      find(".d-editor-input").fill_in(with: "Hello @adm")
+      find(".d-editor-input").send_keys("Hello @adm")
 
       within(".autocomplete.ac-user") do |el|
         expect(el).to have_selector(".selected .d-icon-users")

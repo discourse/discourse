@@ -47,13 +47,6 @@ class ThemeSerializer < BasicThemeSerializer
     @include_theme_field_values || object.remote_theme_id.nil?
   end
 
-  def screenshot_url
-    object
-      .theme_fields
-      .find { |field| field.type_id == ThemeField.types[:theme_screenshot_upload_var] }
-      &.upload_url
-  end
-
   def child_themes
     object.child_themes
   end

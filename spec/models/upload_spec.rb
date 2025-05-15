@@ -111,7 +111,11 @@ RSpec.describe Upload do
     upload = UploadCreator.new(huge_image, "image.png").create_for(user_id)
     expect(upload.persisted?).to eq(false)
     expect(upload.errors.messages[:base].first).to eq(
-      I18n.t("upload.images.larger_than_x_megapixels", max_image_megapixels: 10),
+      I18n.t(
+        "upload.images.larger_than_x_megapixels",
+        max_image_megapixels: 10,
+        original_filename: upload.original_filename,
+      ),
     )
   end
 

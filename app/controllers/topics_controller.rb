@@ -697,7 +697,7 @@ class TopicsController < ApplicationController
     PostDestroyer.new(
       current_user,
       topic.ordered_posts.with_deleted.first,
-      context: params[:context],
+      context: params[:context].presence || I18n.t("staff_action_logs.api_post_delete"),
       force_destroy: force_destroy,
     ).destroy
 

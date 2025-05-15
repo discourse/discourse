@@ -1699,7 +1699,6 @@ bg:
         title: "IP адрес при регистрацията."
       avatar:
         title: "Аватар"
-        header_title: "профил, съобщения, отметки и предпочитания"
         name_and_description: "%{name} - %{description}"
         edit: "Редактиране на профилната снимка"
       title:
@@ -2799,6 +2798,11 @@ bg:
         other: "Преглед на %{count} отговора на"
       in_reply_to: "Заредете родителска публикация"
       view_all_posts: "Вижте всички публикации"
+      localizations:
+        table:
+          actions: "Действия"
+          edit: "Редактирай"
+          delete: "Изтрий"
       errors:
         create: "При създаването на Вашата публикация се получи грешка. Моля, опитайте отново."
         edit: "Съжаляваме, възникна грешка при редактирането на публикацията. Моля, опитайте отново. "
@@ -3410,6 +3414,7 @@ bg:
               content: "Преглед"
             invite:
               content: "Покана"
+      search: "Търсене"
     form_template_chooser:
       select_template: "Изберете шаблони за формуляри"
     form_templates:
@@ -3729,6 +3734,7 @@ bg:
           delete: "Изтрий"
         color_palettes:
           palette_name: "Име"
+          delete: "Изтрий"
           colors:
             title: "Цветове"
       plugins:
@@ -3836,6 +3842,7 @@ bg:
           edit: "Редактирай"
           mobile: "Мобилен"
           preview: "Преглед"
+          default: "Активни"
           cancel: "Прекрати"
           collapse: Намали
           upload: "Качване"

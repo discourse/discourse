@@ -1159,7 +1159,6 @@ es:
       said: "%{username}:"
       profile: "Perfil"
       profile_possessive: "Perfil de %{username}"
-      account_possessive: "Cuenta de %{name}"
       mute: "Silenciar"
       edit: "Editar preferencias"
       download_archive:
@@ -1991,7 +1990,6 @@ es:
         title: "Dirección IP del registro"
       avatar:
         title: "Imagen de perfil"
-        header_title: "perfil, mensajes, marcadores y preferencias"
         name_and_description: "%{name} - %{description}"
         edit: "Editar foto de perfil"
       title:
@@ -2858,7 +2856,6 @@ es:
           aria_label: filtrar por número máximo de visitas
         additional_options:
           label: "Filtra por número de respuestas y visitas del tema"
-    hamburger_menu: "menú"
     new_item: "nuevo"
     go_back: "volver"
     not_logged_in_user: "página de usuario con resumen de la actividad y preferencias actuales"
@@ -3565,6 +3562,11 @@ es:
       in_reply_to: "Cargar publicación principal"
       view_all_posts: "Ver todas las publicaciones"
       badge_granted_tooltip: "¡%{username} ha ganado la medalla '%{badge_name}' por esta publicación!"
+      localizations:
+        table:
+          actions: "Acciones"
+          edit: "Editar"
+          delete: "Eliminar"
       errors:
         create: "Lo sentimos, se produjo un error al crear tu publicación. Inténtalo de nuevo."
         edit: "Lo sentimos, se produjo un error al editar tu publicación. Inténtalo de nuevo."
@@ -4162,7 +4164,6 @@ es:
         today: "Hoy"
     custom_homepage:
       admin_message: 'Uno de tus temas ha activado el modificador «custom_homepage», pero no muestra nada en el conector [custom-homepage]. (Este mensaje solo se muestra a los administradores del sitio).'
-    browser_update: 'Por desgracia, <a href="https://www.discourse.org/faq/#browser">tu navegador no es compatible</a>. Por favor, <a href="https://browsehappy.com">usa otro navegador</a> para ver el contenido completo, iniciar sesión y responder.'
     permission_types:
       full: "Crear / Responder / Ver"
       create_post: "Responder / Ver"
@@ -4666,6 +4667,7 @@ es:
       back_to_forum: "Volver al Foro"
       collapse_all_sections: "Contraer todas las secciones"
       expand_all_sections: "Expandir todas las secciones"
+      search: "Buscar"
       footer:
         interface_color_selector:
           light: "Claro"
@@ -5660,11 +5662,14 @@ es:
           save_successful: "Campo de usuario guardado."
         color_palettes:
           palette_name: "Nombre"
+          duplicate: "Duplicar"
+          delete: "Eliminar"
           color_options:
             toggle: "Seleccionable por el usuario"
             toggle_description: "Los usuarios pueden seleccionar la paleta de colores"
           colors:
             title: "Colores"
+          delete_confirm: "¿Eliminar esta paleta de color?"
       plugins:
         title: "Plugins"
         name: "Nombre"
@@ -5835,9 +5840,11 @@ es:
           extra_files_upload: "Exporta el tema para ver estos archivos."
           extra_files_remote: "Exporta el tema o consulta el repositorio de git para ver estos archivos."
           preview: "Vista previa"
+          default: "Activo"
           settings_editor: "Editor de ajustes"
           is_default: "El tema está activado por defecto"
           user_selectable: "El tema puede ser seleccionado por usuarios"
+          user_selectable_badge_label: "Seleccionable por el usuario"
           color_scheme_user_selectable: "Los usuarios pueden seleccionar la paleta de colores"
           auto_update: "Actualizar automáticamente junto a Discourse"
           color_scheme: "Paleta de color"
@@ -5855,8 +5862,6 @@ es:
           convert_theme_alert_generic: "¿Seguro que quieres convertir este tema en componente?"
           convert_theme_tooltip: "Convertir este tema en componente"
           inactive_themes: "Temas inactivos:"
-          set_default_theme: "Establecer como predeterminado"
-          default_theme: "Tema predeterminado"
           set_default_success: "Tema predeterminado establecido en %{theme}"
           install_success: "¡%{theme} Instalado correctamente!"
           inactive_components: "Componentes sin usar:"
@@ -5927,7 +5932,6 @@ es:
             error: "Este tema se desactivó automáticamente porque no es compatible con esta versión de Discourse."
             minimum: "Necesita la versión de Discourse %{version} o superior."
             maximum: "Necesita la versión de Discourse %{version} o inferior."
-          update_to_latest: "Actualizar a lo último"
           check_for_updates: "Buscar actualizaciones"
           updating: "Actualizando…"
           update_success: "Actualización de %{theme} completada"

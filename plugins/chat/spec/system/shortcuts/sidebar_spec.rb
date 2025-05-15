@@ -21,7 +21,7 @@ RSpec.describe "Shortcuts | sidebar", type: :system do
     context "when on homepage" do
       it "does nothing" do
         visit("/")
-        find("body").send_keys(%i[alt arrow_down])
+        find("body").send_keys(%i[alt down])
 
         expect(sidebar_page).to have_no_active_channel(channel_1)
         expect(sidebar_page).to have_no_active_channel(dm_channel_1)
@@ -33,15 +33,15 @@ RSpec.describe "Shortcuts | sidebar", type: :system do
         chat.visit_channel(channel_1)
         expect(sidebar_page).to have_active_channel(channel_1)
 
-        find("body").send_keys(%i[alt arrow_down])
+        find("body").send_keys(%i[alt down])
 
         expect(sidebar_page).to have_active_channel(dm_channel_1)
 
-        find("body").send_keys(%i[alt arrow_down])
+        find("body").send_keys(%i[alt down])
 
         expect(sidebar_page).to have_active_channel(channel_1)
 
-        find("body").send_keys(%i[alt arrow_up])
+        find("body").send_keys(%i[alt up])
 
         expect(sidebar_page).to have_active_channel(dm_channel_1)
       end
@@ -67,7 +67,7 @@ RSpec.describe "Shortcuts | sidebar", type: :system do
     context "when on homepage" do
       it "does nothing" do
         visit("/")
-        find("body").send_keys(%i[alt shift arrow_down])
+        find("body").send_keys(%i[alt shift down])
 
         expect(sidebar_page).to have_no_active_channel(channel_1)
         expect(sidebar_page).to have_no_active_channel(channel_2)
@@ -81,15 +81,15 @@ RSpec.describe "Shortcuts | sidebar", type: :system do
         chat.visit_channel(channel_1)
         expect(sidebar_page).to have_active_channel(channel_1)
 
-        find("body").send_keys(%i[alt shift arrow_down])
+        find("body").send_keys(%i[alt shift down])
 
         expect(sidebar_page).to have_active_channel(channel_1)
 
-        find("body").send_keys(%i[alt shift arrow_down])
+        find("body").send_keys(%i[alt shift down])
 
         expect(sidebar_page).to have_active_channel(channel_1)
 
-        find("body").send_keys(%i[alt shift arrow_up])
+        find("body").send_keys(%i[alt shift up])
 
         expect(sidebar_page).to have_active_channel(channel_1)
       end
@@ -109,12 +109,12 @@ RSpec.describe "Shortcuts | sidebar", type: :system do
         )
         expect(sidebar_page).to have_unread_channel(dm_channel_2)
 
-        find("body").send_keys(%i[alt shift arrow_down])
+        find("body").send_keys(%i[alt shift down])
 
         expect(sidebar_page).to have_active_channel(channel_2)
         expect(sidebar_page).to have_no_unread_channel(channel_2)
 
-        find("body").send_keys(%i[alt shift arrow_down])
+        find("body").send_keys(%i[alt shift down])
 
         expect(sidebar_page).to have_active_channel(dm_channel_2)
         expect(sidebar_page).to have_no_unread_channel(dm_channel_2)
@@ -127,7 +127,7 @@ RSpec.describe "Shortcuts | sidebar", type: :system do
         )
         expect(sidebar_page).to have_unread_channel(channel_1)
 
-        find("body").send_keys(%i[alt shift arrow_up])
+        find("body").send_keys(%i[alt shift up])
 
         expect(sidebar_page).to have_active_channel(channel_1)
         expect(sidebar_page).to have_no_unread_channel(channel_1)
@@ -135,7 +135,7 @@ RSpec.describe "Shortcuts | sidebar", type: :system do
         Fabricate(:chat_message, chat_channel: dm_channel_1, message: "bye now!", use_service: true)
         expect(sidebar_page).to have_unread_channel(dm_channel_1)
 
-        find("body").send_keys(%i[alt shift arrow_up])
+        find("body").send_keys(%i[alt shift up])
 
         expect(sidebar_page).to have_active_channel(dm_channel_1)
         expect(sidebar_page).to have_no_unread_channel(dm_channel_1)
@@ -151,7 +151,7 @@ RSpec.describe "Shortcuts | sidebar", type: :system do
         Fabricate(:chat_message, chat_channel: channel_4, message: "yes, hello!", use_service: true)
         expect(sidebar_page).to have_unread_channel(channel_4)
 
-        find("body").send_keys(%i[alt shift arrow_down])
+        find("body").send_keys(%i[alt shift down])
 
         expect(sidebar_page).to have_active_channel(channel_4)
         expect(sidebar_page).to have_no_unread_channel(channel_4)
@@ -164,7 +164,7 @@ RSpec.describe "Shortcuts | sidebar", type: :system do
         )
         expect(sidebar_page).to have_unread_channel(channel_3)
 
-        find("body").send_keys(%i[alt shift arrow_up])
+        find("body").send_keys(%i[alt shift up])
 
         expect(sidebar_page).to have_active_channel(channel_3)
         expect(sidebar_page).to have_no_unread_channel(channel_3)
@@ -177,7 +177,7 @@ RSpec.describe "Shortcuts | sidebar", type: :system do
         )
         expect(sidebar_page).to have_unread_channel(channel_4)
 
-        find("body").send_keys(%i[alt shift arrow_up])
+        find("body").send_keys(%i[alt shift up])
 
         expect(sidebar_page).to have_active_channel(channel_2)
         expect(sidebar_page).to have_no_unread_channel(channel_2)
@@ -193,8 +193,8 @@ RSpec.describe "Shortcuts | sidebar", type: :system do
         Fabricate(:chat_message, chat_channel: channel_4, message: "howdy!", use_service: true)
         expect(sidebar_page).to have_unread_channel(channel_4)
 
-        find("body").send_keys(%i[alt shift arrow_up])
-        find("body").send_keys(%i[alt shift arrow_down])
+        find("body").send_keys(%i[alt shift up])
+        find("body").send_keys(%i[alt shift down])
 
         expect(sidebar_page).to have_active_channel(channel_4)
       end

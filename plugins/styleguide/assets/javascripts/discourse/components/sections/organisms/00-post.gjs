@@ -10,4 +10,5 @@ const Post = <template>
     />
   </StyleguideExample>
 </template>;
+
 export default Post;

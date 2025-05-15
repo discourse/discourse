@@ -10,6 +10,7 @@ import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import { i18n } from "discourse-i18n";
 
 const { TOTP, BACKUP_CODE, SECURITY_KEY } = SECOND_FACTOR_METHODS;
+
 export default class SecondFactorAuthController extends Controller {
   TOTP = TOTP;
   BACKUP_CODE = BACKUP_CODE;

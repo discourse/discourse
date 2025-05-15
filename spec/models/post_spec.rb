@@ -1933,9 +1933,13 @@ RSpec.describe Post do
           create_post(topic_id: topic.id, post_type: Post.types[:whisper])
         end
 
-      updates_topic_updated_at { PostDestroyer.new(Discourse.system_user, post).destroy }
+      updates_topic_updated_at do
+        PostDestroyer.new(Discourse.system_user, post, context: "Automated testing").destroy
+      end
 
-      updates_topic_updated_at { PostDestroyer.new(Discourse.system_user, post).recover }
+      updates_topic_updated_at do
+        PostDestroyer.new(Discourse.system_user, post, context: "Automated testing").recover
+      end
     end
   end
 
@@ -2354,6 +2358,45 @@ RSpec.describe Post do
       expect(
         Post.public_posts_count_per_day(10.days.ago, 5.days.ago, nil, false, [group.id]),
       ).to eq(6.days.ago.to_date => 1, 7.days.ago.to_date => 1)
+    end
+  end
+
+  describe "#has_localization?" do
+    it "returns true if the post has localization" do
+      post = Fabricate(:post)
+      Fabricate(:post_localization, post: post, locale: "zh_CN")
+
+      expect(post.has_localization?(:zh_CN)).to eq(true)
+      expect(post.has_localization?(:"zh_CN")).to eq(true)
+      expect(post.has_localization?("zh-CN")).to eq(true)
+
+      expect(post.has_localization?("z")).to eq(false)
+    end
+  end
+
+  describe "#get_localization" do
+    it "returns the localization with the specified locale" do
+      I18n.locale = "ja"
+      post = Fabricate(:post)
+      zh_localization = Fabricate(:post_localization, post: post, locale: "zh_CN")
+      ja_localization = Fabricate(:post_localization, post: post, locale: "ja")
+
+      expect(post.get_localization(:zh_CN)).to eq(zh_localization)
+      expect(post.get_localization("zh-CN")).to eq(zh_localization)
+      expect(post.get_localization("xx")).to eq(nil)
+      expect(post.get_localization).to eq(ja_localization)
+    end
+  end
+
+  describe "#in_user_locale?" do
+    it "returns true if the post has localization in the user's locale" do
+      I18n.locale = "ja"
+      post = Fabricate(:post, locale: "ja")
+
+      expect(post.in_user_locale?).to eq(true)
+
+      post.update!(locale: "es")
+      expect(post.in_user_locale?).to eq(false)
     end
   end
 end

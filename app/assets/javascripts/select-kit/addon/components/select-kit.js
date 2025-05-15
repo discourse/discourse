@@ -18,6 +18,7 @@ import deprecated from "discourse/lib/deprecated";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import { makeArray } from "discourse/lib/helpers";
 import { i18n } from "discourse-i18n";
+import { normalize } from "select-kit/lib/input-utils";
 import {
   applyContentPluginApiCallbacks,
   applyOnChangePluginApiCallbacks,
@@ -1280,6 +1281,10 @@ export default class SelectKit extends Component.extend(UtilsMixin) {
         this.set(to, this.get(from));
       }
     });
+  }
+
+  _normalize(input) {
+    return normalize(input);
   }
 }
 

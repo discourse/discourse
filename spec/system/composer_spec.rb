@@ -28,13 +28,14 @@ describe "Composer", type: :system do
     fab!(:second_reply) { Fabricate(:post, topic: topic, user: second_reply_user) }
     let!(:second_reply_post) { PageObjects::Components::Post.new(second_reply.post_number) }
 
+    before { SiteSetting.enable_names = false }
+
     it "the topic owner if replying to topic" do
       page.visit "/t/#{topic.id}"
 
       op_post.reply
       expect(composer).to be_opened
-
-      composer.fill_content("@")
+      composer.type_content("@")
 
       expect(composer.mention_menu_autocomplete_username_list).to eq(
         [op.username, second_reply_user.username], # must be first the topic owner
@@ -46,8 +47,7 @@ describe "Composer", type: :system do
 
       second_reply_post.reply
       expect(composer).to be_opened
-
-      composer.fill_content("@")
+      composer.type_content("@")
 
       expect(composer.mention_menu_autocomplete_username_list).to eq(
         [second_reply_user.username, topic_user.username], # must be first the reply user
@@ -62,11 +62,12 @@ describe "Composer", type: :system do
 
       sign_in(admin)
       page.visit "/t/#{topic.id}"
-
       reply_post.edit
+
       expect(composer).to be_opened
 
-      composer.fill_content("@")
+      composer.type_content(" @")
+
       expect(composer.mention_menu_autocomplete_username_list).to eq(
         [second_reply_user.username, user.username, topic_user.username],
       )

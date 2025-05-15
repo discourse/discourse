@@ -362,7 +362,8 @@ export default function () {
         this.route("developer", function () {
           this.route("settings", { path: "/" });
         });
-        this.route("logo-and-fonts");
+        this.route("logo");
+        this.route("fonts");
         this.route("navigation", function () {
           this.route("settings", { path: "/" });
         });
@@ -379,12 +380,20 @@ export default function () {
           this.route("settings", { path: "/" });
         });
 
-        this.route("color-palettes-show", {
-          path: "/colors/:palette_id",
-        });
+        this.route(
+          "colorPalettes",
+          {
+            path: "/colors",
+          },
+          function () {
+            this.route("show", {
+              path: "/:palette_id",
+            });
+          }
+        );
       }
     );
-
+    this.route("schema", { path: "schema/:setting_name" });
     this.route(
       "adminPlugins",
       { path: "/plugins", resetNamespace: true },

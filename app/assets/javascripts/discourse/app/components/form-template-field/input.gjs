@@ -35,4 +35,5 @@ const Input0 = <template>
     />
   </div>
 </template>;
+
 export default Input0;

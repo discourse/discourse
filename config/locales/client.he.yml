@@ -729,6 +729,7 @@ he:
         fields: "שדות"
         reject_reason: "סיבה"
         scrubbed_reason: "סיבה"
+        scrubbed_reject_reason: "סיבת דחיית המשתמש"
         scrub_record:
           confirm_title: הסרת נתונים אישיים
           reason_placeholder: "סיבה..."
@@ -1338,7 +1339,6 @@ he:
       said: "%{username}:"
       profile: "פרופיל"
       profile_possessive: "הפרופיל של %{username}"
-      account_possessive: "החשבון של %{name}"
       mute: "השתקה"
       edit: "עריכת העדפות"
       download_archive:
@@ -2237,7 +2237,6 @@ he:
         title: "כתובת IP בהרשמה"
       avatar:
         title: "תמונת פרופיל"
-        header_title: "פרופיל, הודעות, סימניות והעדפות"
         name_and_description: "%{name} - %{description}"
         edit: "עריכת תמונת פרופיל"
       title:
@@ -2757,6 +2756,12 @@ he:
       esc: "esc"
       esc_label: "התעלמות מהודעה"
       ok_proceed: "בסדר, להמשיך"
+      translations:
+        title: "תרגום פוסט"
+        select: "בחירת תרגום"
+        save: "שמירת תרגום"
+        original_content: "תוכן פוסט מקורי"
+        placeholder: "נא למלא כאן תרגום לפוסט…"
       group_mentioned_limit:
         one: "<b>זהירות!</b> ציינת את <a href='%{group_link}'>%{group}</a>, אך בקבוצה זו יש יותר חברים מההגבלה שהוגדרה על ידי הנהלת המערכת של עד משתמש %{count}. אף אחד לא יקבל הודעה."
         two: "<b>זהירות!</b> ציינת את <a href='%{group_link}'>%{group}</a>, אך בקבוצה זו יש יותר חברים מההגבלה שהוגדרה על ידי הנהלת המערכת של עד %{count} משתמשים. אף אחד לא יקבל הודעה."
@@ -3132,7 +3137,6 @@ he:
       in_messages_tooltip: "מעבר לחיפוש בנושאים רגילים"
       in_topics_posts: "בכל הנושאים והפוסטים"
       enter_hint: "או ללחוץ על Enter"
-      mobile_enter_hint: "או לגעת בכפתור החיפוש"
       in_posts_by: "בפוסטים מאת %{username}"
       recent: "חיפושים אחרונים"
       clear_recent: "ניקוי חיפושים אחרונים"
@@ -3221,7 +3225,6 @@ he:
           aria_label: סינון לפי כמות הצפיות המרבית
         additional_options:
           label: "סינון לפי כמות פוסטים וצפיות בנושאים"
-    hamburger_menu: "תפריט"
     new_item: "חדש"
     go_back: "חזור אחורה"
     not_logged_in_user: "עמוד משתמש עם סיכום פעילות נוכחית והעדפות"
@@ -4036,6 +4039,14 @@ he:
       in_reply_to: "טעינת הפוסט ההורה"
       view_all_posts: "הצגת כל הפוסטים"
       badge_granted_tooltip: "ל־%{username} יש זכאות לעיטור ‚%{badge_name}’ על הפוסט!"
+      localizations:
+        table:
+          locale: "הגדרות מקומיות"
+          actions: "פעולות"
+          edit: "עריכה"
+          delete: "מחיקה"
+        add: "הוספת תרגום חדש"
+        success: "התרגומים עודכנו בהצלחה"
       errors:
         create: "אירעה שגיאה ביצירת הפוסט שלך. נא לנסות שוב, עמך הסליחה."
         edit: "אירעה שגיאה בעריכת הפוסט שלך. נא לנסות שוב, עמך הסליחה."
@@ -4695,7 +4706,7 @@ he:
         today: "היום"
     custom_homepage:
       admin_message: 'אחת מערכות הנושא שלך הפעילה את אפשרות "דף הבית מותאם אישית" אך הוא אינו מוציא דבר במֵחבַּר [דף הבית המותאם אישית]. (הודעה זו מוצגת רק למנהלי האתר.)'
-    browser_update: 'אתרע מזלך וכי <a href="https://www.discourse.org/faq/#browser">דפדפנך אינו נתמך עוד</a>. נא <a href="https://browsehappy.com">לעבור לדפדפן נתמך</a> כדי לצפות בתוכן עשיר, להיכנס ולהגיב.'
+    browser_update: 'אתרע מזלך וכי <a href="https://discourse.org/about#browser">דפדפנך אינו נתמך עוד</a>. נא <a href="https://browsehappy.com">לעבור לדפדפן נתמך</a> כדי לצפות בתוכן עשיר, להיכנס ולהגיב.'
     permission_types:
       full: "יצירה / תגובה / צפייה"
       create_post: "תגובה / צפייה"
@@ -5247,6 +5258,7 @@ he:
       back_to_forum: "חזרה לפורום"
       collapse_all_sections: "צמצום כל הסעיפים"
       expand_all_sections: "הרחבת כל הסעיפים"
+      search: "חיפוש"
       footer:
         interface_color_selector:
           light: "בהיר"
@@ -5750,7 +5762,7 @@ he:
         modal_title: "חיפוש כל דבר שהוא בניהול"
         title: "חיפוש"
         instructions: "אפשר להקליד כדי לחפש אחר עמודים, הגדרות, דוחות, ערכות עיצוב, רכיבים ועוד…"
-        no_results: 'לא מצאנו שום דבר שעונה על ‚%{filter}’.'
+        no_results: "לא מצאנו שום דבר שעונה על ‚%{filter}’."
         result_types:
           page:
             one: "עמוד"
@@ -6494,6 +6506,8 @@ he:
           save_successful: "שדה משתמש נשמר."
         color_palettes:
           palette_name: "שם"
+          duplicate: "שכפול"
+          delete: "מחיקה"
           color_options:
             title: "אפשרויות צבע"
             toggle: "לבחירת המשתמש"
@@ -6507,6 +6521,7 @@ he:
           copy_of: "עותק של %{name}"
           copy_created: 'נוצר עותק חדש של „%{name}”'
           illegal_character_in_color: "הצבעים מורכבים מתווים הקסדצימליים בלבד"
+          delete_confirm: "למחוק לוח צבעים זה?"
       plugins:
         title: "תוספים"
         name: "שם"
@@ -6678,10 +6693,15 @@ he:
           extra_files_upload: "יש לייצא את ערכת העיצוב כדי לצפות בקבצים האלה."
           extra_files_remote: "יש לייצא את ערכת הנושא או לבדוק את מאגר ה־git כדי לצפות בקבצים אלה."
           preview: "תצוגה מקדימה"
+          default: "פעיל"
           settings_editor: "עורך הגדרות"
           show_advanced: "הצגת מתקדם"
           is_default: "ערכת עיצוב פעילה כברירת מחדל"
           user_selectable: "המשתמשים יכולים לבחור את ערכת העיצוב"
+          user_selectable_badge_label: "לבחירת המשתמש"
+          user_selectable_button_label: "לאפשר למשתמשים לבחור"
+          user_selectable_unavailable_button_label: "להפוך לבלתי זמינה למשתמשים"
+          broken_badge_label: "ערכת עיצוב פגומה"
           color_scheme_user_selectable: "המשתמשים יכולים לבחור את ערכת הצבעים"
           auto_update: "לעדכן אוטומטית כש־Discourse מעודכן"
           color_scheme: "לוח צבעים"
@@ -6699,9 +6719,10 @@ he:
           convert_theme_alert_generic: "להמיר את ערכת העיצוב הזאת לרכיב?"
           convert_theme_tooltip: "המרת ערכת עיצוב זו לרכיב"
           inactive_themes: "ערכות עיצוב בלתי פעילות:"
-          set_default_theme: "הגדרת ברירת מחדל"
-          default_theme: "ערכת עיצוב כברירת מחדל"
+          set_default_theme: "הגדרה כפעילה"
+          default_theme: "ערכת עיצוב פעילה"
           set_default_success: "ברירת המחדל של ערכת העיצוב הוגדרה לכדי %{theme}"
+          setting_was_saved: "הגדרת ערכת העיצוב נשמרה"
           install_success: "%{theme} הותקנה בהצלחה!"
           inactive_components: "רכיבים שאינם בשימוש:"
           selected:
@@ -6715,6 +6736,7 @@ he:
           disabled_component_tooltip: "הרכיב הזה נוטרל"
           default_theme_tooltip: "ערכת עיצוב זו מכהנת כברירת המחדל של האתר"
           updates_available_tooltip: "קיימים עדכונים לערכת עיצוב זו"
+          update_available: "דורש עדכון"
           and_x_more:
             one: "ו־%{count} נוספות."
             two: "ו־%{count} נוספות."
@@ -6778,8 +6800,8 @@ he:
             error: "ערכת עיצוב זו נוטרלה אוטומטית כיוון שאינה תואמת לגרסה זו של Discourse."
             minimum: "נדרש Discourse בגרסה %{version} ומעלה."
             maximum: "נדרש Discourse בגרסה %{version} ומטה."
-          update_to_latest: "עדכון לגרסה אחרונה"
-          check_for_updates: "בדיקת עדכונים"
+          update_to_latest: "עדכון לגרסה העדכנית ביותר"
+          check_for_updates: "חיפוש עדכונים"
           updating: "מתבצע עדכון…"
           update_success: "העדכון של %{theme} הושלם"
           up_to_date: "ערכת העיצוב עדכנית, מועד הבדיקה האחרונה:"

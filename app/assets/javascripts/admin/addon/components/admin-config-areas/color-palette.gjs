@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import Form from "discourse/components/form";
@@ -16,12 +15,25 @@ import ColorPaletteEditor, {
 export default class AdminConfigAreasColorPalette extends Component {
   @service toasts;
   @service router;
+  @service dialog;
 
   @tracked editingName = false;
   @tracked editorMode = LIGHT;
-  @tracked hasUnsavedChanges = false;
   @tracked saving = false;
-  hasChangedColors = false;
+  @tracked hasChangedName = false;
+  @tracked hasChangedUserSelectable = false;
+  @tracked hasChangedColors = false;
+
+  saveNameOnly = false;
+  fkApi;
+
+  get hasUnsavedChanges() {
+    return (
+      this.hasChangedName ||
+      this.hasChangedUserSelectable ||
+      this.hasChangedColors
+    );
+  }
 
   @cached
   get data() {
@@ -29,8 +41,12 @@ export default class AdminConfigAreasColorPalette extends Component {
       name: this.args.colorPalette.name,
       user_selectable: this.args.colorPalette.user_selectable,
       colors: this.args.colorPalette.colors,
-      editingName: this.editingName,
     };
+  }
+
+  @action
+  onRegisterApi(api) {
+    this.fkApi = api;
   }
 
   @action
@@ -42,7 +58,6 @@ export default class AdminConfigAreasColorPalette extends Component {
   onLightColorChange(name, value) {
     const color = this.data.colors.find((c) => c.name === name);
     color.hex = value;
-    this.hasUnsavedChanges = true;
     this.hasChangedColors = true;
   }
 
@@ -50,7 +65,6 @@ export default class AdminConfigAreasColorPalette extends Component {
   onDarkColorChange(name, value) {
     const color = this.data.colors.find((c) => c.name === name);
     color.dark_hex = value;
-    this.hasUnsavedChanges = true;
     this.hasChangedColors = true;
   }
 
@@ -58,30 +72,53 @@ export default class AdminConfigAreasColorPalette extends Component {
   async handleSubmit(data) {
     this.saving = true;
     this.args.colorPalette.name = data.name;
-    this.args.colorPalette.user_selectable = data.user_selectable;
+
+    if (!this.saveNameOnly) {
+      this.args.colorPalette.user_selectable = data.user_selectable;
+    }
 
     try {
-      await this.args.colorPalette.save();
+      await this.args.colorPalette.save({
+        saveNameOnly: this.saveNameOnly,
+        forceSave: true,
+      });
       this.editingName = false;
-      this.hasUnsavedChanges = false;
+
       this.toasts.success({
         data: {
           message: i18n("saved"),
         },
       });
-      if (this.hasChangedColors) {
-        await this.applyColorChangesIfPossible();
+
+      this.hasChangedName = false;
+
+      if (!this.saveNameOnly) {
+        this.hasChangedUserSelectable = false;
+
+        if (this.hasChangedColors) {
+          await this.applyColorChangesIfPossible();
+        }
         this.hasChangedColors = false;
       }
     } catch (error) {
       this.toasts.error({
-        duration: 3000,
+        duration: "short",
         data: {
           message: extractError(error),
         },
       });
     } finally {
       this.saving = false;
+    }
+  }
+
+  @action
+  async triggerNameSave() {
+    this.saveNameOnly = true;
+    try {
+      await this.fkApi.submit();
+    } finally {
+      this.saveNameOnly = false;
     }
   }
 
@@ -97,7 +134,9 @@ export default class AdminConfigAreasColorPalette extends Component {
       name: this.args.colorPalette.name,
     });
     await copy.save();
-    this.router.replaceWith("adminConfig.color-palettes-show", copy);
+    await this.router.replaceWith("adminConfig.colorPalettes");
+    await this.router.refresh();
+    await this.router.replaceWith("adminConfig.colorPalettes.show", copy);
     this.toasts.success({
       data: {
         message: i18n("admin.config_areas.color_palettes.copy_created", {
@@ -108,15 +147,27 @@ export default class AdminConfigAreasColorPalette extends Component {
   }
 
   @action
+  async delete() {
+    return this.dialog.yesNoConfirm({
+      message: i18n("admin.config_areas.color_palettes.delete_confirm"),
+      didConfirm: async () => {
+        await this.args.colorPalette.destroy();
+        await this.router.replaceWith("adminConfig.colorPalettes");
+        await this.router.refresh();
+      },
+    });
+  }
+
+  @action
   handleNameChange(value, { set }) {
     set("name", value);
-    this.hasUnsavedChanges = true;
+    this.hasChangedName = true;
   }
 
   @action
   handleUserSelectableChange(value, { set }) {
     set("user_selectable", value);
-    this.hasUnsavedChanges = true;
+    this.hasChangedUserSelectable = true;
   }
 
   async applyColorChangesIfPossible() {
@@ -162,13 +213,15 @@ export default class AdminConfigAreasColorPalette extends Component {
 
   <template>
     <Form
+      data-palette-id={{@colorPalette.id}}
       @data={{this.data}}
       @onSubmit={{this.handleSubmit}}
+      @onRegisterApi={{this.onRegisterApi}}
       as |form transientData|
     >
-      <div class="admin-config-area">
-        <div class="admin-config-area__primary-content">
-          <div class="admin-config-color-palettes__top-controls">
+      <div>
+        <div class="admin-config-color-palettes__top-controls">
+          {{#if this.editingName}}
             <form.Field
               @name="name"
               @showTitle={{false}}
@@ -178,104 +231,104 @@ export default class AdminConfigAreasColorPalette extends Component {
               @onSet={{this.handleNameChange}}
               as |field|
             >
-              {{#if transientData.editingName}}
-                <div class="admin-config-color-palettes__name-control">
-                  <field.Input />
-                  <DButton
-                    class="btn-flat"
-                    @icon="xmark"
-                    @action={{this.toggleEditingName}}
-                  />
-                </div>
-              {{else}}
-                <field.Custom>
-                  <div class="admin-config-color-palettes__name-control">
-                    <h2>{{@colorPalette.name}}</h2>
-                    <DButton
-                      class="btn-flat"
-                      @icon="pencil"
-                      @action={{this.toggleEditingName}}
-                    />
-                  </div>
-                </field.Custom>
-              {{/if}}
-            </form.Field>
-            <DButton
-              class="duplicate-palette"
-              @label="admin.customize.copy"
-              @action={{this.duplicate}}
-            />
-          </div>
-          <form.Alert class="fonts-and-logos-hint">
-            <div class="admin-config-color-palettes__logo-and-fonts-hint">
-              <span>{{i18n
-                  "admin.config_areas.color_palettes.logo_and_fonts_hint"
-                }}</span>
-              <LinkTo @route="adminConfig.logo-and-fonts">{{i18n
-                  "admin.config_areas.color_palettes.go_to_logo_and_fonts"
-                }}</LinkTo>
-            </div>
-          </form.Alert>
-          <AdminConfigAreaCard
-            @heading="admin.config_areas.color_palettes.color_options.title"
-          >
-            <:content>
-              <form.Field
-                @name="user_selectable"
-                @title={{i18n
-                  "admin.config_areas.color_palettes.color_options.toggle"
-                }}
-                @showTitle={{false}}
-                @description={{i18n
-                  "admin.config_areas.color_palettes.color_options.toggle_description"
-                }}
-                @format="full"
-                @onSet={{this.handleUserSelectableChange}}
-                as |field|
-              >
-                <field.Toggle />
-              </form.Field>
-            </:content>
-          </AdminConfigAreaCard>
-          <AdminConfigAreaCard
-            @heading="admin.config_areas.color_palettes.colors.title"
-          >
-            <:content>
-              <form.Field
-                @name="colors"
-                @title={{i18n "admin.config_areas.color_palettes.colors.title"}}
-                @showTitle={{false}}
-                @format="full"
-                as |field|
-              >
-                <field.Custom>
-                  <ColorPaletteEditor
-                    @initialMode={{this.editorMode}}
-                    @colors={{transientData.colors}}
-                    @onLightColorChange={{this.onLightColorChange}}
-                    @onDarkColorChange={{this.onDarkColorChange}}
-                    @onTabSwitch={{this.onEditorTabSwitch}}
-                  />
-                </field.Custom>
-              </form.Field>
-            </:content>
-          </AdminConfigAreaCard>
-          <AdminConfigAreaCard>
-            <:content>
-              <div class="admin-config-color-palettes__save-card">
-                {{#if this.hasUnsavedChanges}}
-                  <span class="admin-config-color-palettes__unsaved-changes">
-                    {{i18n "admin.config_areas.color_palettes.unsaved_changes"}}
-                  </span>
-                {{/if}}
-                <form.Submit
-                  @isLoading={{this.saving}}
-                  @label="admin.config_areas.color_palettes.save_changes"
+              <div class="admin-config-color-palettes__name-control">
+                <field.Input />
+                <DButton
+                  class="btn-primary admin-config-color-palettes__save-name"
+                  @icon="check"
+                  @action={{this.triggerNameSave}}
+                />
+                <DButton
+                  class="btn-flat"
+                  @icon="xmark"
+                  @action={{this.toggleEditingName}}
                 />
               </div>
-            </:content>
-          </AdminConfigAreaCard>
+            </form.Field>
+          {{else}}
+            <div class="admin-config-color-palettes__name-control">
+              <h2
+                class="admin-config-color-palettes__name"
+              >{{@colorPalette.name}}</h2>
+              <DButton
+                class="btn-flat admin-config-color-palettes__edit-name"
+                @icon="pencil"
+                @action={{this.toggleEditingName}}
+              />
+            </div>
+          {{/if}}
+          <div class="admin-config-color-palettes__top-actions">
+            <DButton
+              class="duplicate-palette"
+              @label="admin.config_areas.color_palettes.duplicate"
+              @action={{this.duplicate}}
+            />
+            <DButton
+              class="btn-danger delete-palette"
+              @label="admin.config_areas.color_palettes.delete"
+              @action={{this.delete}}
+            />
+          </div>
         </div>
+        <AdminConfigAreaCard
+          @heading="admin.config_areas.color_palettes.color_options.title"
+        >
+          <:content>
+            <form.Field
+              @name="user_selectable"
+              @title={{i18n
+                "admin.config_areas.color_palettes.color_options.toggle"
+              }}
+              @showTitle={{false}}
+              @description={{i18n
+                "admin.config_areas.color_palettes.color_options.toggle_description"
+              }}
+              @format="full"
+              @onSet={{this.handleUserSelectableChange}}
+              as |field|
+            >
+              <field.Toggle />
+            </form.Field>
+          </:content>
+        </AdminConfigAreaCard>
+        <AdminConfigAreaCard
+          @heading="admin.config_areas.color_palettes.colors.title"
+        >
+          <:content>
+            <form.Field
+              @name="colors"
+              @title={{i18n "admin.config_areas.color_palettes.colors.title"}}
+              @showTitle={{false}}
+              @format="full"
+              as |field|
+            >
+              <field.Custom>
+                <ColorPaletteEditor
+                  @initialMode={{this.editorMode}}
+                  @colors={{transientData.colors}}
+                  @onLightColorChange={{this.onLightColorChange}}
+                  @onDarkColorChange={{this.onDarkColorChange}}
+                  @onTabSwitch={{this.onEditorTabSwitch}}
+                />
+              </field.Custom>
+            </form.Field>
+          </:content>
+        </AdminConfigAreaCard>
+        <AdminConfigAreaCard>
+          <:content>
+            <div class="admin-config-color-palettes__save-card">
+              {{#if this.hasUnsavedChanges}}
+                <span class="admin-config-color-palettes__unsaved-changes">
+                  {{i18n "admin.config_areas.color_palettes.unsaved_changes"}}
+                </span>
+              {{/if}}
+              <form.Submit
+                @isLoading={{this.saving}}
+                @label="admin.config_areas.color_palettes.save_changes"
+              />
+            </div>
+          </:content>
+        </AdminConfigAreaCard>
       </div>
     </Form>
   </template>

@@ -145,6 +145,7 @@ import {
 } from "discourse/widgets/post-small-action";
 import {
   addPostTransformCallback,
+  POST_STREAM_DEPRECATION_OPTIONS,
   preventCloak,
 } from "discourse/widgets/post-stream";
 import { disableNameSuppression } from "discourse/widgets/poster-name";
@@ -192,12 +193,6 @@ const DEPRECATED_POST_STREAM_WIDGETS = [
   "select-post",
   "topic-post-visited-line",
 ];
-
-const POST_STREAM_DEPRECATION_OPTIONS = {
-  since: "v3.5.0.beta1-dev",
-  id: "discourse.post-stream-widget-overrides",
-  // url: "", // TODO (glimmer-post-stream) uncomment when the topic is created on meta
-};
 
 const blockedModifications = ["component:topic-list"];
 

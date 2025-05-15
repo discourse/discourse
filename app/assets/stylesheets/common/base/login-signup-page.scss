@@ -250,7 +250,6 @@ body.signup-page {
 
   .tip {
     font-size: var(--font-down-1);
-    min-height: 1.4em;
     display: block;
 
     &.bad {
@@ -332,7 +331,8 @@ body.signup-page {
   }
 }
 
-// Signup page
+// Signup and invite page
+.invite-page,
 .signup-fullpage {
   .password-confirmation {
     display: none;

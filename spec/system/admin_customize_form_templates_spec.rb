@@ -132,11 +132,11 @@ describe "Admin Customize Form Templates", type: :system do
       form_template_page.type_in_template_name("New Template")
       ace_editor.type_input(
         "- type: input\n  id: name
-\b\b- type: textarea\n  id: description
-\b\b- type: checkbox\n  id: checkbox
-\b\b- type: dropdown\n  id: dropdown
-\b\b- type: upload\n  id: upload
-\b\b- type: multi-select\n  id: multi-select",
+- type: textarea\n  id: description
+- type: checkbox\n  id: checkbox
+- type: dropdown\n  id: dropdown
+- type: upload\n  id: upload
+- type: multi-select\n  id: multi-select",
       )
       form_template_page.click_preview_button
       expect(form_template_page).to have_input_field("input")

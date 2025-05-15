@@ -1410,7 +1410,6 @@ bs_BA:
         title: "IP Adresa prilikom registracije"
       avatar:
         title: "Profilna slika"
-        header_title: "profil, poruke, zabilješke i postavke"
       title:
         title: "Naslov"
         none: "(ništa)"
@@ -2360,6 +2359,11 @@ bs_BA:
         one: "Objava se sviđa %{count} osobi."
         few: "%{count} se sviđa objava."
         other: "%{count} se sviđa objava."
+      localizations:
+        table:
+          actions: "Akcije"
+          edit: "Edit"
+          delete: "Delete"
       errors:
         create: "Sorry, there was an error creating your post. Please try again."
         edit: "Sorry, there was an error editing your post. Please try again."
@@ -3114,6 +3118,7 @@ bs_BA:
               content: "Pregled"
             invite:
               content: "Invite"
+      search: "Pretraži"
     until: "Sve do:"
     form_templates:
       upload_field:
@@ -3590,8 +3595,10 @@ bs_BA:
           delete: "Delete"
         color_palettes:
           palette_name: "Ime"
+          delete: "Delete"
           colors:
             title: "Colors"
+          delete_confirm: "Izbrisati ovu paletu boja?"
       plugins:
         title: "Pluginovi"
         name: "Ime"
@@ -3719,6 +3726,7 @@ bs_BA:
           desktop: "Desktop"
           mobile: "Mobilno"
           preview: "Pregled"
+          default: "Active"
           is_default: "Tema je podrazumevano omogućena"
           user_selectable: "Tema može odabrati korisnik"
           color_scheme: "Paleta boja"
@@ -3777,8 +3785,6 @@ bs_BA:
             error: "Ova tema je automatski onemogućena jer nije kompatibilna sa ovom verzijom Diskursa."
             minimum: "Potrebna je diskursna verzija %{version} ili iznad."
             maximum: "Potrebna je diskursna verzija %{version} ili ispod."
-          update_to_latest: "Ažuriraj na zadnje"
-          check_for_updates: "Potražite ažuriranja"
           up_to_date: "Tema je ažurna, posljednja provjerena:"
           add: "Dodaj"
           theme_settings: "Postavke teme"

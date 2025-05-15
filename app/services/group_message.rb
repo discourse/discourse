@@ -70,7 +70,13 @@ class GroupMessage
         )
     end
 
-    posts.find_each { |post| PostDestroyer.new(Discourse.system_user, post).destroy }
+    posts.find_each do |post|
+      PostDestroyer.new(
+        Discourse.system_user,
+        post,
+        context: I18n.t("staff_action_logs.reminder_deleted"),
+      ).destroy
+    end
   end
 
   def message_params

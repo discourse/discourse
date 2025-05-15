@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .header-search--enabled,
 .search-header--visible {
   .panel .header-dropdown-toggle.search-dropdown,
@@ -37,7 +39,7 @@
 
   .floating-search-input {
     width: 100%;
-    max-width: 550px; // half of defualt d-max-width
+    max-width: 550px; // half of default d-max-width
 
     .search-banner {
       height: 100%;
@@ -52,11 +54,11 @@
           margin: 0 auto;
           position: relative;
 
-          @include breakpoint(large) {
+          @include viewport.until(lg) {
             width: 80%;
           }
 
-          @include breakpoint(tablet) {
+          @include viewport.until(md) {
             width: 90%;
           }
 
@@ -78,7 +80,7 @@
             justify-content: flex-end;
 
             .show-advanced-search,
-            .clear-search {
+            a.clear-search {
               display: inline-flex;
               align-items: center;
             }
@@ -86,10 +88,9 @@
 
           .search-icon {
             background: transparent;
-            padding: 0.25em;
             pointer-events: none;
             color: var(--header_primary-medium);
-            margin-left: 0.3em;
+            margin-left: calc(1rem - 0.65em);
             height: 100%;
             position: absolute;
             z-index: 2;
@@ -103,7 +104,7 @@
 
           .search-input {
             display: flex;
-            padding: 0 0 0 1.5em;
+            padding: 0 0 0 2em;
             border-radius: var(--d-input-border-radius);
 
             .search-term__input {
@@ -124,7 +125,6 @@
               display: none;
             }
             background: var(--secondary);
-            padding: 0.5em;
             position: relative;
             box-sizing: border-box;
             width: 100%;

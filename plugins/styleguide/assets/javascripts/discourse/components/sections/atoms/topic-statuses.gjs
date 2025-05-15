@@ -30,4 +30,5 @@ const TopicStatuses = <template>
     <TopicStatus @topic={{@dummy.topic}} />
   </StyleguideExample>
 </template>;
+
 export default TopicStatuses;

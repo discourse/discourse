@@ -21,6 +21,7 @@ export default class UserInvitedShowController extends Controller {
   invitesCount = null;
   canLoadMore = true;
   invitesLoading = false;
+  hasLoadedInitialInvites = false;
   reinvitedAll = false;
   removedAll = false;
   searchTerm = "";
@@ -129,16 +130,20 @@ export default class UserInvitedShowController extends Controller {
         this.filter,
         this.searchTerm,
         model.invites.length
-      ).then((invite_model) => {
-        this.set("invitesLoading", false);
-        model.invites.pushObjects(invite_model.invites);
-        if (
-          invite_model.invites.length === 0 ||
-          invite_model.invites.length < this.siteSettings.invites_per_page
-        ) {
-          this.set("canLoadMore", false);
-        }
-      });
+      )
+        .then((invite_model) => {
+          this.set("invitesLoading", false);
+          model.invites.pushObjects(invite_model.invites);
+          if (
+            invite_model.invites.length === 0 ||
+            invite_model.invites.length < this.siteSettings.invites_per_page
+          ) {
+            this.set("canLoadMore", false);
+          }
+        })
+        .finally(() => {
+          this.set("hasLoadedInitialInvites", true);
+        });
     }
   }
 }

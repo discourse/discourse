@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .sidebar-tags-form {
   height: 100%;
   display: grid;
@@ -23,7 +25,7 @@
       padding: 0.33em 0;
       font-weight: normal;
 
-      @include breakpoint(tablet) {
+      @include viewport.until(md) {
         // extra tappable space
         padding: 0.5em 0;
       }

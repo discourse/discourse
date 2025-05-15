@@ -156,7 +156,11 @@ class UserDestroyer
       if post.is_first_post? && category_topic_ids.include?(post.topic_id)
         post.update!(user: Discourse.system_user)
       else
-        PostDestroyer.new(@actor.staff? ? @actor : Discourse.system_user, post).destroy
+        PostDestroyer.new(
+          @actor.staff? ? @actor : Discourse.system_user,
+          post,
+          context: I18n.t("staff_action_logs.user_associated_posts_deleted"),
+        ).destroy
       end
 
       if post.topic && post.is_first_post?

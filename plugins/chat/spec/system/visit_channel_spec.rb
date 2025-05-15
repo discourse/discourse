@@ -24,7 +24,7 @@ RSpec.describe "Visit channel", type: :system do
     end
 
     it "shows a not found page" do
-      chat.visit_channel(category_channel_1, with_preloaded_channels: false)
+      visit("/chat/c/-/#{category_channel_1.id}")
 
       expect(page).to have_content(I18n.t("page_not_found.title"))
     end
@@ -33,7 +33,7 @@ RSpec.describe "Visit channel", type: :system do
   context "when chat enabled" do
     context "when anonymous" do
       it "redirects to homepage" do
-        chat.visit_channel(category_channel_1, with_preloaded_channels: false)
+        visit("/chat/c/-/#{category_channel_1.id}")
 
         expect(page).to have_current_path("/latest")
       end
@@ -46,7 +46,7 @@ RSpec.describe "Visit channel", type: :system do
         before { current_user.user_option.update!(chat_enabled: false) }
 
         it "redirects to homepage" do
-          chat.visit_channel(category_channel_1, with_preloaded_channels: false)
+          visit("/chat/c/-/#{category_channel_1.id}")
 
           expect(page).to have_current_path("/latest")
         end
@@ -56,7 +56,7 @@ RSpec.describe "Visit channel", type: :system do
         before { SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:staff] }
 
         it "redirects homepage" do
-          chat.visit_channel(category_channel_1, with_preloaded_channels: false)
+          visit("/chat/c/-/#{category_channel_1.id}")
 
           expect(page).to have_current_path("/latest")
         end
@@ -81,7 +81,7 @@ RSpec.describe "Visit channel", type: :system do
       context "when channel is not accessible" do
         context "when category channel" do
           it "shows an error" do
-            chat.visit_channel(private_category_channel_1)
+            visit("/chat/c/-/#{private_category_channel_1.id}")
 
             expect(page).to have_content(I18n.t("invalid_access"))
           end
@@ -89,7 +89,7 @@ RSpec.describe "Visit channel", type: :system do
 
         context "when direct message channel" do
           it "shows an error" do
-            chat.visit_channel(inaccessible_dm_channel_1)
+            visit("/chat/c/-/#{inaccessible_dm_channel_1.id}")
 
             expect(page).to have_content(I18n.t("invalid_access"))
           end

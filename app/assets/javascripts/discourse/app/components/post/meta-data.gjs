@@ -1,16 +1,21 @@
 import Component from "@glimmer/component";
 import { getOwner } from "@ember/owner";
+import { service } from "@ember/service";
 import PostMetaDataDate from "./meta-data/date";
 import PostMetaDataEditsIndicator from "./meta-data/edits-indicator";
 import PostMetaDataEmailIndicator from "./meta-data/email-indicator";
+import PostMetaDataLanguage from "./meta-data/language";
 import PostMetaDataLockedIndicator from "./meta-data/locked-indicator";
 import PostMetaDataPosterName from "./meta-data/poster-name";
 import PostMetaDataReadIndicator from "./meta-data/read-indicator";
 import PostMetaDataReplyToTab from "./meta-data/reply-to-tab";
 import PostMetaDataSelectPost from "./meta-data/select-post";
+import PostMetaDataTranslationIndicator from "./meta-data/translation-indicator";
 import PostMetaDataWhisperIndicator from "./meta-data/whisper-indicator";
 
 export default class PostMetaData extends Component {
+  @service currentUser;
+
   get displayPosterName() {
     return this.args.displayPosterName ?? true;
   }
@@ -23,6 +28,17 @@ export default class PostMetaData extends Component {
     return PostMetaDataReplyToTab.shouldRender(this.args, null, getOwner(this));
   }
 
+  get shouldDisplayTranslationIndicator() {
+    return (
+      this.currentUser?.can_debug_localizations &&
+      this.args.post?.has_post_localizations
+    );
+  }
+
+  get shouldDisplayLanguage() {
+    return this.args.post.is_localized && this.args.post.language;
+  }
+
   <template>
     <div class="topic-meta-data" role="heading" aria-level="2">
       {{#if this.displayPosterName}}
@@ -30,6 +46,10 @@ export default class PostMetaData extends Component {
       {{/if}}
 
       <div class="post-infos">
+        {{#if this.shouldDisplayTranslationIndicator}}
+          <PostMetaDataTranslationIndicator @post={{@post}} />
+        {{/if}}
+
         {{#if @post.isWhisper}}
           <PostMetaDataWhisperIndicator @post={{@post}} />
         {{/if}}
@@ -71,6 +91,10 @@ export default class PostMetaData extends Component {
             @repliesAbove={{@repliesAbove}}
             @toggleReplyAbove={{@toggleReplyAbove}}
           />
+        {{/if}}
+
+        {{#if this.shouldDisplayLanguage}}
+          <PostMetaDataLanguage @post={{@post}} />
         {{/if}}
 
         <PostMetaDataDate @post={{@post}} />

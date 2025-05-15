@@ -15,11 +15,8 @@ export default class Search extends Service {
   @tracked inTopicContext = false;
   @tracked visible = false;
   @tracked results = {};
-  @tracked noResults = false; // TODO: shouldn't `noResults` default value be `true`?
-  @tracked welcomeBannerSearchInViewport = applyValueTransformer(
-    "site-setting-enable-welcome-banner",
-    this.siteSettings.enable_welcome_banner
-  );
+  @tracked noResults = false;
+  @tracked welcomeBannerSearchInViewport = false;
 
   // only relative for the widget search menu
   searchContextEnabled = false; // checkbox to scope search

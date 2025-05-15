@@ -1335,7 +1335,6 @@ cs:
       said: "%{username}:"
       profile: "Profil"
       profile_possessive: "Profil uživatele %{username}"
-      account_possessive: "Účet uživatele %{name}"
       mute: "Ignorovat"
       edit: "Upravit nastavení"
       download_archive:
@@ -2227,7 +2226,6 @@ cs:
         title: "Registrační IP adresa"
       avatar:
         title: "Profilový obrázek"
-        header_title: "profil, zprávy, záložky a nastavení"
         name_and_description: "%{name} - %{description}"
         edit: "Upravit profilový obrázek"
       title:
@@ -3212,7 +3210,6 @@ cs:
           aria_label: filtrovat podle maximálního počtu zobrazení
         additional_options:
           label: "Filtrovat podle počtu příspěvků a zobrazení tématu"
-    hamburger_menu: "nabídka"
     new_item: "nové"
     go_back: "jít zpět"
     not_logged_in_user: "stránka uživatele s přehledem o aktuální činnosti a nastavení"
@@ -4026,6 +4023,11 @@ cs:
       in_reply_to: "Načíst nadřazený příspěvek"
       view_all_posts: "Zobrazit všechny příspěvky"
       badge_granted_tooltip: "%{username} získal/a za tento příspěvek odznak '%{badge_name}'!"
+      localizations:
+        table:
+          actions: "Akce"
+          edit: "Upravit"
+          delete: "Smazat"
       errors:
         create: "Bohužel nastala chyba při vytváření příspěvku. Prosím zkuste to znovu."
         edit: "Bohužel nastala chyba při editaci příspěvku. Prosím zkuste to znovu."
@@ -4687,7 +4689,6 @@ cs:
         today: "Dnes"
     custom_homepage:
       admin_message: 'Jeden z vašich motivů má povolený modifikátor "custom_homepage", ale do konektoru [custom-homepage] nic neprodukuje. (Tato zpráva se zobrazuje pouze správcům webu.)'
-    browser_update: 'Prohlížeč <a href="https://www.discourse.org/faq/#browser">bohužel není podporován</a>. Chcete-li zobrazit bohatý obsah, přihlásit se a odpovídat, přepněte prosím <a href="https://browsehappy.com">na podporovaný prohlížeč</a> .'
     permission_types:
       full: "Vytvářet / Odpovídat / Prohlížet"
       create_post: "Odpovídat / Prohlížet"
@@ -5238,6 +5239,7 @@ cs:
       back_to_forum: "Zpět na fórum"
       collapse_all_sections: "Sbalit všechny sekce"
       expand_all_sections: "Rozbalit všechny sekce"
+      search: "Vyhledat"
       footer:
         interface_color_selector:
           light: "Světlý režim"
@@ -6308,11 +6310,14 @@ cs:
           save_successful: "Uživatelské pole uloženo."
         color_palettes:
           palette_name: "Jméno"
+          duplicate: "Duplikovat"
+          delete: "Smazat"
           color_options:
             toggle: "Volitelný uživatelem"
             toggle_description: "Uživatelé si mohou tuto paletu vybrat"
           colors:
             title: "Barvy"
+          delete_confirm: "Odstranit tuto paletu barev?"
       plugins:
         title: "Pluginy"
         name: "Název"
@@ -6483,9 +6488,11 @@ cs:
           extra_files_upload: "Chcete-li tyto soubory zobrazit, exportujte motiv."
           extra_files_remote: "Chcete-li tyto soubory zobrazit, exportujte motiv nebo zkontrolujte úložiště git."
           preview: "Náhled"
+          default: "Aktivní"
           settings_editor: "Editor nastavení"
           is_default: "Výchozí motiv"
           user_selectable: "Motiv může být zvolen uživatelem"
+          user_selectable_badge_label: "Volitelný uživatelem"
           color_scheme_user_selectable: "Uživatelé si mohou tuto paletu vybrat"
           auto_update: "Automaticky aktualizovat při aktualizaci Discourse"
           color_scheme: "Paleta barev"
@@ -6503,8 +6510,6 @@ cs:
           convert_theme_alert_generic: "Opravdu chcete tento motiv převést na komponentu?"
           convert_theme_tooltip: "Převést tento motiv na komponentu"
           inactive_themes: "Neaktivní motivy:"
-          set_default_theme: "Nastavit výchozí"
-          default_theme: "Výchozí motiv"
           set_default_success: "Výchozí motiv nastaven na %{theme}"
           install_success: "%{theme} úspěšně nainstalován!"
           inactive_components: "Nepoužité komponenty:"
@@ -6579,7 +6584,6 @@ cs:
             error: "Tento motiv byl automaticky deaktivován, protože není kompatibilní s touto verzí Discourse."
             minimum: "Vyžaduje Discourse verze %{version} nebo vyšší."
             maximum: "Vyžaduje verzi Discourse %{version} nebo nižší."
-          update_to_latest: "Aktualizovat na nejnovější"
           check_for_updates: "Zkontrolovat aktualizace"
           updating: "Probíhá aktualizace…"
           update_success: "Aktualizace %{theme} dokončena"
