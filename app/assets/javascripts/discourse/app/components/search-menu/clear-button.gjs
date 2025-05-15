@@ -2,10 +2,9 @@ import { on } from "@ember/modifier";
 import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
-<template>
+const ClearButton = <template>
   <a
     class="clear-search"
-    data-test-anchor="clear-search-input"
     aria-label="clear_input"
     title={{i18n "search.clear_search"}}
     href
@@ -13,4 +12,5 @@ import { i18n } from "discourse-i18n";
   >
     {{icon "xmark"}}
   </a>
-</template>
+</template>;
+export default ClearButton;

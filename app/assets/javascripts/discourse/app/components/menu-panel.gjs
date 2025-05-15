@@ -1,10 +1,9 @@
 import concatClass from "discourse/helpers/concat-class";
 
-<template>
+const MenuPanel = <template>
   <div
     class={{concatClass "menu-panel" @panelClass @animationClass}}
     data-max-width="500"
-    data-test-selector="menu-panel"
   >
     <div class="panel-body">
       <div class="panel-body-contents">
@@ -12,4 +11,5 @@ import concatClass from "discourse/helpers/concat-class";
       </div>
     </div>
   </div>
-</template>
+</template>;
+export default MenuPanel;
