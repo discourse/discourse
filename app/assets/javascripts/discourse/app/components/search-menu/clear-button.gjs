@@ -1,13 +1,15 @@
-import DButton from "discourse/components/d-button";
+import { on } from "@ember/modifier";
+import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 <template>
-  <DButton
-    class="btn-transparent clear-search"
-    data-test-button="clear-search-input"
+  <a
+    class="clear-search"
     aria-label="clear_input"
     title={{i18n "search.clear_search"}}
-    @action={{@clearSearch}}
-    @icon="xmark"
-  />
+    href
+    {{on "click" @clearSearch}}
+  >
+    {{icon "xmark"}}
+  </a>
 </template>

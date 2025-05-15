@@ -61,7 +61,7 @@ export default class RecentSearches extends Component {
           />
         </div>
 
-        {{#each this.currentUser.recent_searches as |slug index|}}
+        {{#each this.currentUser.recent_searches as |slug|}}
           <AssistantItem
             @icon="clock-rotate-left"
             @label={{slug}}
@@ -70,7 +70,6 @@ export default class RecentSearches extends Component {
             @searchTermChanged={{@searchTermChanged}}
             @usage="recent-search"
             @concatSlug={{true}}
-            data-test-assistant-item="recent-search-{{index}}"
           />
         {{/each}}
       </div>

@@ -11,7 +11,6 @@ describe "User page search", type: :system do
     search_page.click_search_icon
     search_page.click_in_posts_by_user
 
-    expect(page).to have_css(".search-menu-container")
     expect(search_page).to have_found_no_results
     expect(search_page.search_term).to eq("@#{user.username}")
   end
