@@ -35,8 +35,21 @@ $search-result-element-padding: 0.35em 1rem; // hate myself but .25em is too tig
     overflow-y: auto;
   }
 
+  .search-input-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .search-menu-panel & {
+      @include viewport.from(sm) {
+        padding: $search-result-element-padding;
+      }
+    }
+  }
+
   .search-input {
     position: relative;
+    flex-grow: 1;
     display: flex;
     align-items: center;
     background: var(--d-input-bg-color);
