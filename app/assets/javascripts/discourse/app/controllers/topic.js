@@ -552,7 +552,7 @@ export default class TopicController extends Controller {
     }
 
     if (firstLoadedPost && firstLoadedPost === post) {
-      postStream.prependMore().then(() => refresh());
+      postStream.prependMore().then(() => refresh?.());
     }
   }
 
@@ -569,9 +569,9 @@ export default class TopicController extends Controller {
       lastLoadedPost === post &&
       postStream.get("canAppendMore")
     ) {
-      postStream.appendMore().then(() => refresh());
+      postStream.appendMore().then(() => refresh?.());
       // show loading stuff
-      refresh();
+      refresh?.();
     }
   }
 
