@@ -97,7 +97,7 @@ export default class AdminConfigAreasComponents extends Component {
           theme: component.name,
         }),
       },
-      duration: 2000,
+      duration: "short",
     });
     this.load();
   }
@@ -328,7 +328,7 @@ class ComponentRow extends Component {
       if (data.theme.remote_theme.commits_behind > 0) {
         this.hasUpdates = true;
         this.toasts.default({
-          duration: 5000,
+          duration: "long",
           data: {
             message: i18n(
               "admin.config_areas.themes_and_components.components.new_update_for_component",
@@ -339,7 +339,7 @@ class ComponentRow extends Component {
       } else {
         this.hasUpdates = false;
         this.toasts.default({
-          duration: 5000,
+          duration: "long",
           data: {
             message: i18n(
               "admin.config_areas.themes_and_components.components.component_up_to_date",
@@ -361,7 +361,7 @@ class ComponentRow extends Component {
       await this.save({ remote_update: true });
       this.hasUpdates = false;
       this.toasts.success({
-        duration: 5000,
+        duration: "long",
         data: {
           message: i18n(
             "admin.config_areas.themes_and_components.components.updated_successfully",
@@ -387,7 +387,7 @@ class ComponentRow extends Component {
             type: "DELETE",
           });
           this.toasts.success({
-            duration: 5000,
+            duration: "long",
             data: {
               message: i18n(
                 "admin.config_areas.themes_and_components.components.deleted_successfully",
@@ -398,7 +398,7 @@ class ComponentRow extends Component {
           this.args.refresh();
         } catch (error) {
           this.toasts.error({
-            duration: 5000,
+            duration: "long",
             data: {
               message: extractErrorInfo(error),
             },
@@ -418,7 +418,7 @@ class ComponentRow extends Component {
       });
     } catch (error) {
       this.toasts.error({
-        duration: 5000,
+        duration: "long",
         data: {
           message: extractErrorInfo(error),
         },

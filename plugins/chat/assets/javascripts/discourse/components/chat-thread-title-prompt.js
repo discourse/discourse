@@ -81,7 +81,7 @@ export default class ChatThreadTitlePrompt extends Component {
 
   show() {
     this.toasts.default({
-      duration: 5000,
+      duration: "long",
       showProgressBar: true,
       class: "thread-toast",
       data: {

@@ -45,7 +45,7 @@ export default class AdminConfigAreasAboutExtraGroups extends Component {
         },
       });
       this.toasts.success({
-        duration: 30000,
+        duration: "short",
         data: {
           message: i18n("admin.config_areas.about.toasts.extra_groups_saved"),
         },
