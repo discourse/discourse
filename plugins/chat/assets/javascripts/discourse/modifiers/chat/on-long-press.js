@@ -32,7 +32,9 @@ export default class ChatOnLongPress extends Modifier {
     this.onLongPressEnd = onLongPressEnd || (() => {});
     this.onLongPressCancel = onLongPressCancel || (() => {});
 
-    this.element.addEventListener("pointerdown", this.handlePointerDown);
+    this.element.addEventListener("touchstart", this.handleTouchStart, {
+      passive: true,
+    });
   }
 
   @bind
@@ -40,36 +42,36 @@ export default class ChatOnLongPress extends Modifier {
     cancel(this.timeout);
 
     if (this.capabilities.touch) {
-      this.element.removeEventListener("pointermove", this.onCancel);
-      this.element.removeEventListener("pointerup", this.onCancel);
-      this.element.removeEventListener("pointercancel", this.onCancel);
+      this.element.removeEventListener("touchmove", this.onCancel, {
+        passive: true,
+      });
+      this.element.removeEventListener("touchend", this.onCancel);
+      this.element.removeEventListener("touchcancel", this.onCancel);
     }
 
     this.onLongPressCancel(this.element);
   }
 
   @bind
-  handlePointerDown(event) {
-    // Handle multi-touch
-    if (event.isPrimary === false) {
+  handleTouchStart(event) {
+    if (event.touches.length > 1) {
       this.onCancel();
       return;
     }
-
     this.onLongPressStart(this.element, event);
-
-    this.element.addEventListener("pointermove", this.onCancel);
-    this.element.addEventListener("pointerup", this.onCancel);
-    this.element.addEventListener("pointercancel", this.onCancel);
-
+    this.element.addEventListener("touchmove", this.onCancel, {
+      passive: true,
+    });
+    this.element.addEventListener("touchend", this.onCancel);
+    this.element.addEventListener("touchcancel", this.onCancel);
     this.timeout = discourseLater(() => {
       if (this.isDestroying || this.isDestroyed) {
         return;
       }
 
-      // Add one-time event handler to prevent default action
-      this.element.addEventListener("pointerup", cancelEvent, {
+      this.element.addEventListener("touchend", cancelEvent, {
         once: true,
+        passive: true,
       });
 
       this.onLongPressEnd(this.element, event);
@@ -81,8 +83,9 @@ export default class ChatOnLongPress extends Modifier {
       return;
     }
 
-    // Remove the main pointerdown listener
-    this.element.removeEventListener("pointerdown", this.handlePointerDown);
+    this.element.removeEventListener("touchstart", this.handleTouchStart, {
+      passive: true,
+    });
 
     this.onCancel();
   }

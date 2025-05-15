@@ -1159,7 +1159,6 @@ nl:
       said: "%{username}:"
       profile: "Profiel"
       profile_possessive: "Profiel van %{username}"
-      account_possessive: "Account van %{name}"
       mute: "Dempen"
       edit: "Voorkeuren bewerken"
       download_archive:
@@ -1991,7 +1990,6 @@ nl:
         title: "IP-adres bij registratie"
       avatar:
         title: "Profielafbeelding"
-        header_title: "profiel, berichten, bladwijzers en voorkeuren"
         name_and_description: "%{name} - %{description}"
         edit: "Profielafbeelding bewerken"
       title:
@@ -2858,7 +2856,6 @@ nl:
           aria_label: filteren op maximumaantal weergaven
         additional_options:
           label: "Filteren op aantal berichten en topicweergaven"
-    hamburger_menu: "menu"
     new_item: "nieuw"
     go_back: "terug"
     not_logged_in_user: "gebruikerspagina met samenvatting van huidige activiteit en voorkeuren"
@@ -3565,6 +3562,11 @@ nl:
       in_reply_to: "Bovenliggend bericht laden"
       view_all_posts: "Alle berichten weergeven"
       badge_granted_tooltip: "%{username} heeft de badge '%{badge_name}' verdiend voor dit bericht!"
+      localizations:
+        table:
+          actions: "Acties"
+          edit: "Bewerken"
+          delete: "Verwijderen"
       errors:
         create: "Sorry, er is een fout opgetreden bij het plaatsen van je bericht. Probeer het opnieuw."
         edit: "Sorry, er is een fout opgetreden bij het bewerken van je bericht. Probeer het opnieuw."
@@ -4162,7 +4164,6 @@ nl:
         today: "Vandaag"
     custom_homepage:
       admin_message: 'Een van je thema''s heeft de modificator "custom_homepage" ingeschakeld, maar voert niets uit naar de connector [custom-homepage]. (Deze melding wordt alleen weergegeven voor sitebeheerders.)'
-    browser_update: '<a href="https://www.discourse.org/faq/#browser">Je browser wordt niet ondersteund</a> helaas. <a href="https://browsehappy.com">Schakel over naar een ondersteunde browser</a> om rijke inhoud te bekijken, je aan te melden en te antwoorden.'
     permission_types:
       full: "Maken / Antwoorden / Weergeven"
       create_post: "Antwoorden / Weergeven"
@@ -5660,11 +5661,14 @@ nl:
           save_successful: "Gebruikersveld opgeslagen."
         color_palettes:
           palette_name: "Naam"
+          duplicate: "Dupliceren"
+          delete: "Verwijderen"
           color_options:
             toggle: "Door gebruiker te selecteren"
             toggle_description: "Kleurenpalet kan door gebruikers worden geselecteerd"
           colors:
             title: "Kleuren"
+          delete_confirm: "Dit kleurenpalet verwijderen?"
       plugins:
         title: "Plug-ins"
         name: "Naam"

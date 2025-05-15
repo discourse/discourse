@@ -42,7 +42,6 @@ class Plugin::Metadata
         discourse-lazy-videos
         discourse-local-dates
         discourse-login-with-amazon
-        discourse-logster-rate-limit-checker
         discourse-logster-transporter
         discourse-lti
         discourse-math

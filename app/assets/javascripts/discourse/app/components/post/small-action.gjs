@@ -117,10 +117,6 @@ export default class PostSmallAction extends Component {
   }
 
   get path() {
-    if (!this.args.post.action_code_path || this.args.post.topic?.id) {
-      return;
-    }
-
     return getURL(
       this.args.post.action_code_path || `/t/${this.args.post.topic.id}`
     );

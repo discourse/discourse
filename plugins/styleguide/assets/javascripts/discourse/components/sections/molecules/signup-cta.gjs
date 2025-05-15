@@ -6,4 +6,5 @@ const SignupCta0 = <template>
     <SignupCta />
   </StyleguideExample>
 </template>;
+
 export default SignupCta0;

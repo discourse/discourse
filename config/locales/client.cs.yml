@@ -1335,7 +1335,6 @@ cs:
       said: "%{username}:"
       profile: "Profil"
       profile_possessive: "Profil uživatele %{username}"
-      account_possessive: "Účet uživatele %{name}"
       mute: "Ignorovat"
       edit: "Upravit nastavení"
       download_archive:
@@ -2227,7 +2226,6 @@ cs:
         title: "Registrační IP adresa"
       avatar:
         title: "Profilový obrázek"
-        header_title: "profil, zprávy, záložky a nastavení"
         name_and_description: "%{name} - %{description}"
         edit: "Upravit profilový obrázek"
       title:
@@ -3212,7 +3210,6 @@ cs:
           aria_label: filtrovat podle maximálního počtu zobrazení
         additional_options:
           label: "Filtrovat podle počtu příspěvků a zobrazení tématu"
-    hamburger_menu: "nabídka"
     new_item: "nové"
     go_back: "jít zpět"
     not_logged_in_user: "stránka uživatele s přehledem o aktuální činnosti a nastavení"
@@ -4026,6 +4023,11 @@ cs:
       in_reply_to: "Načíst nadřazený příspěvek"
       view_all_posts: "Zobrazit všechny příspěvky"
       badge_granted_tooltip: "%{username} získal/a za tento příspěvek odznak '%{badge_name}'!"
+      localizations:
+        table:
+          actions: "Akce"
+          edit: "Upravit"
+          delete: "Smazat"
       errors:
         create: "Bohužel nastala chyba při vytváření příspěvku. Prosím zkuste to znovu."
         edit: "Bohužel nastala chyba při editaci příspěvku. Prosím zkuste to znovu."
@@ -4687,7 +4689,6 @@ cs:
         today: "Dnes"
     custom_homepage:
       admin_message: 'Jeden z vašich motivů má povolený modifikátor "custom_homepage", ale do konektoru [custom-homepage] nic neprodukuje. (Tato zpráva se zobrazuje pouze správcům webu.)'
-    browser_update: 'Prohlížeč <a href="https://www.discourse.org/faq/#browser">bohužel není podporován</a>. Chcete-li zobrazit bohatý obsah, přihlásit se a odpovídat, přepněte prosím <a href="https://browsehappy.com">na podporovaný prohlížeč</a> .'
     permission_types:
       full: "Vytvářet / Odpovídat / Prohlížet"
       create_post: "Odpovídat / Prohlížet"
@@ -6309,11 +6310,14 @@ cs:
           save_successful: "Uživatelské pole uloženo."
         color_palettes:
           palette_name: "Jméno"
+          duplicate: "Duplikovat"
+          delete: "Smazat"
           color_options:
             toggle: "Volitelný uživatelem"
             toggle_description: "Uživatelé si mohou tuto paletu vybrat"
           colors:
             title: "Barvy"
+          delete_confirm: "Odstranit tuto paletu barev?"
       plugins:
         title: "Pluginy"
         name: "Název"

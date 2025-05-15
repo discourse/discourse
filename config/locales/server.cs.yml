@@ -3261,7 +3261,6 @@ cs:
     images:
       too_large: "Litujeme, obrázek, který se pokoušíte nahrát, je příliš velký (maximální velikost je %{max_size_kb}kB), změňte jeho velikost a zkuste to znovu."
       too_large_humanized: "Omlouváme se, ale obrázek, který se snažíte nahrát, je příliš velký (maximální velikost je %{max_size}), změňte prosím jeho velikost a zkuste to znovu."
-      larger_than_x_megapixels: "Litujeme, obrázek, který se pokoušíte nahrát, je příliš velký (maximální rozměr je %{max_image_megapixels} megapixelů), změňte jeho velikost a zkuste to znovu."
       size_not_found: "Bohužel se nepodařilo zjistit velikost obrázku. Není soubor s obrázkem poškozený?"
     placeholders:
       too_large: "(obrázek větší než %{max_size_kb}KB)"

@@ -87,4 +87,5 @@ const Layout = <template>
     @outletArgs={{hash category=@model.category tag=@model.tag}}
   />
 </template>;
+
 export default Layout;

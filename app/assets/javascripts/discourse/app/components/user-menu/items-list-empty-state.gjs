@@ -7,4 +7,5 @@ const ItemsListEmptyState = <template>
     </span>
   </div>
 </template>;
+
 export default ItemsListEmptyState;

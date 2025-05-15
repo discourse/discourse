@@ -94,7 +94,9 @@ class PostSerializer < BasicPostSerializer
              :user_suspended,
              :user_status,
              :mentioned_users,
-             :post_url
+             :post_url,
+             :has_post_localizations,
+             :post_localizations
 
   def initialize(object, opts)
     super(object, opts)
@@ -647,6 +649,18 @@ class PostSerializer < BasicPostSerializer
 
   def include_mentioned_users?
     SiteSetting.enable_user_status
+  end
+
+  def has_post_localizations
+    object.post_localizations.any?
+  end
+
+  def post_localizations
+    ActiveModel::ArraySerializer.new(
+      object.post_localizations,
+      each_serializer: PostLocalizationSerializer,
+      root: false,
+    ).as_json
   end
 
   private

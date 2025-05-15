@@ -1630,7 +1630,6 @@ pt:
         title: "Endereço de IP de Registo"
       avatar:
         title: "Imagem de Perfil"
-        header_title: "perfil, mensagens, marcadores e preferências"
         name_and_description: "%{name} - %{description}"
         edit: "Editar Imagem de Perfil"
       title:
@@ -2273,7 +2272,6 @@ pt:
           placeholder: mínimo
         max_views:
           placeholder: máximo
-    hamburger_menu: "menu"
     new_item: "novo"
     go_back: "voltar atrás"
     not_logged_in_user: "página de utilizador com resumo da atividade atual e preferências "
@@ -2796,6 +2794,11 @@ pt:
         other: "Visualizando %{count} respostas para"
       in_reply_to: "Carregar post principal"
       view_all_posts: "Ver todos os posts"
+      localizations:
+        table:
+          actions: "Ações"
+          edit: "Editar"
+          delete: "Eliminar"
       errors:
         create: "Desculpe, ocorreu um erro ao criar a sua mensagem. Por favor, tente novamente."
         edit: "Desculpe, ocorreu um erro ao editar a sua mensagem. Por favor, tente novamente."
@@ -4081,8 +4084,10 @@ pt:
           delete: "Eliminar"
         color_palettes:
           palette_name: "Nome"
+          delete: "Eliminar"
           colors:
             title: "Cores"
+          delete_confirm: "Excluir esta paleta de cores?"
       plugins:
         title: "Plugins"
         name: "Nome"

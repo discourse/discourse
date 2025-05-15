@@ -10,4 +10,5 @@ const TopicListOrganism = <template>
     <TopicList @topics={{@dummy.topics}} @showPosters={{false}} />
   </StyleguideExample>
 </template>;
+
 export default TopicListOrganism;

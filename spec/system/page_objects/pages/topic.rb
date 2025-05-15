@@ -43,8 +43,8 @@ module PageObjects
         has_css?("h1 .fancy-title", text: text)
       end
 
-      def has_post_content?(post)
-        post_by_number(post).has_content? post.raw
+      def has_post_content?(post_number:, content:)
+        find(post_by_number_selector(post_number)).has_content?(content)
       end
 
       def has_deleted_post?(post)
@@ -250,7 +250,9 @@ module PageObjects
       end
 
       def click_footer_reply
-        find("#topic-footer-buttons .btn-primary", text: "Reply").click
+        button = find("#topic-footer-buttons .btn-primary", text: "Reply")
+        page.execute_script("arguments[0].scrollIntoView();", button)
+        button.click
         self
       end
 

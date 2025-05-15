@@ -4,7 +4,9 @@ describe "Composer using review_media", type: :system do
   fab!(:current_user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:topic) { Fabricate(:topic, category: Category.find(SiteSetting.uncategorized_category_id)) }
   fab!(:post) { Fabricate(:post, topic: topic) }
+
   let(:topic_page) { PageObjects::Pages::Topic.new }
+  let(:composer) { PageObjects::Components::Composer.new }
 
   before do
     SiteSetting.skip_review_media_groups = Group::AUTO_GROUPS[:trust_level_3]
@@ -25,14 +27,12 @@ describe "Composer using review_media", type: :system do
   it "flags a post with an image" do
     topic_page.visit_topic_and_open_composer(topic)
     topic_page.fill_in_composer(" this one has an upload: ")
-    attach_file "file-uploader",
-                "#{Rails.root}/spec/fixtures/images/logo.jpg",
-                make_visible: {
-                  display: "block",
-                  visibility: "visible",
-                  opacity: 1,
-                }
-    within(".d-editor-preview") { expect(page).to have_css("img") }
+    attach_file(file_from_fixtures("logo.jpg", "images").path) do
+      composer.click_toolbar_button("upload")
+    end
+
+    expect(page).to have_css(".d-editor-preview img")
+
     topic_page.send_reply
 
     expect(page).to have_css(".post-enqueued-modal")

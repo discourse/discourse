@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 // Customize area
 .email-template {
   input {
@@ -575,7 +577,7 @@
     .setting-label {
       word-wrap: break-word;
 
-      @include breakpoint(tablet, min-width) {
+      @include viewport.from(md) {
         width: 25%;
       }
 
@@ -916,7 +918,7 @@
 }
 
 .admin-permalinks {
-  @include breakpoint(tablet) {
+  @include viewport.until(md) {
     .d-page-subheader,
     .admin-config-area,
     .admin-config-area__primary-content,
@@ -1009,7 +1011,7 @@
     }
   }
 
-  @include breakpoint(mobile-medium) {
+  @include viewport.until(sm) {
     table.grid tr {
       grid-template-columns: repeat(2, 1fr);
 

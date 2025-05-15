@@ -30,6 +30,24 @@ module PageObjects
           ".color-palette-editor__colors-item[data-color-name=\"#{name}\"] input[type=\"color\"]",
         )
       end
+
+      def has_revert_button_for_color?(name)
+        component.has_css?(
+          ".color-palette-editor__colors-item[data-color-name='#{name}'] .color-palette-editor__revert:not(.--hidden)",
+        )
+      end
+
+      def has_no_revert_button_for_color?(name)
+        component.has_no_css?(
+          ".color-palette-editor__colors-item[data-color-name='#{name}'] .color-palette-editor__revert:not(.--hidden)",
+        )
+      end
+
+      def revert_button_for_color(name)
+        component.find(
+          ".color-palette-editor__colors-item[data-color-name='#{name}'] .color-palette-editor__revert",
+        )
+      end
     end
   end
 end

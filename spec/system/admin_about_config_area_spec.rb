@@ -6,7 +6,15 @@ describe "Admin About Config Area Page", type: :system do
 
   let(:config_area) { PageObjects::Pages::AdminAboutConfigArea.new }
 
-  before { sign_in(admin) }
+  let!(:extra_group_1) { Fabricate(:group, name: "extra1") }
+  let!(:extra_group_2) { Fabricate(:group, name: "extra2") }
+  let!(:extra_group_3) { Fabricate(:group, name: "extra3") }
+
+  before do
+    SiteSetting.show_additional_about_groups = true
+
+    sign_in(admin)
+  end
 
   context "when all fields have existing values" do
     before do
@@ -25,6 +33,11 @@ describe "Admin About Config Area Page", type: :system do
       SiteSetting.company_name = "kitty company inc."
       SiteSetting.governing_law = "kitty jurisdiction"
       SiteSetting.city_for_disputes = "no disputes allowed"
+
+      SiteSetting.about_page_extra_groups = "#{extra_group_1.id}|#{extra_group_2.id}"
+      SiteSetting.about_page_extra_groups_initial_members = 5
+      SiteSetting.about_page_extra_groups_order = "order of creation"
+      SiteSetting.about_page_extra_groups_show_description = true
     end
 
     it "populates all input fields correctly" do
@@ -67,6 +80,13 @@ describe "Admin About Config Area Page", type: :system do
       expect(config_area.your_organization_section.city_for_disputes_input.value).to eq(
         "no disputes allowed",
       )
+
+      expect(config_area.group_listing_section.groups_input.value).to eq(
+        "#{extra_group_1.id},#{extra_group_2.id}",
+      )
+      expect(config_area.group_listing_section.initial_members_input.value).to eq("5")
+      expect(config_area.group_listing_section.order_input.value).to eq("order of creation")
+      expect(config_area.group_listing_section.show_description_input.value).to eq(true)
     end
   end
 
@@ -213,6 +233,25 @@ describe "Admin About Config Area Page", type: :system do
       expect(SiteSetting.company_name).to eq("lil' company")
       expect(SiteSetting.governing_law).to eq("wild west law")
       expect(SiteSetting.city_for_disputes).to eq("teeb el shouq")
+    end
+  end
+
+  describe "the group listing card" do
+    it "can saves its fields to their corresponding site settings" do
+      config_area.visit
+
+      config_area.group_listing_section.groups_input.select("extra3")
+      config_area.group_listing_section.initial_members_input.fill_in("3")
+      config_area.group_listing_section.order_input.select("alphabetically")
+      config_area.group_listing_section.show_description_input.uncheck
+
+      config_area.group_listing_section.submit
+      expect(config_area.group_listing_section).to have_saved_successfully
+
+      expect(SiteSetting.about_page_extra_groups).to include(extra_group_3.id.to_s)
+      expect(SiteSetting.about_page_extra_groups_initial_members).to eq(3)
+      expect(SiteSetting.about_page_extra_groups_order).to eq("alphabetically")
+      expect(SiteSetting.about_page_extra_groups_show_description).to eq(false)
     end
   end
 end
