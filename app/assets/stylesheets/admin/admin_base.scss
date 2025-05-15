@@ -727,7 +727,9 @@ $mobile-breakpoint: 700px;
     width: 100%;
     padding: 10px;
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
+    gap: 0.5rem;
 
     .inline-form {
       // Hacky, but fixes email preview summary
