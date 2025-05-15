@@ -5,7 +5,6 @@ import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { and, not } from "truth-helpers";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import icon from "discourse/helpers/d-icon";
