@@ -180,6 +180,11 @@
   }
 }
 
+#site-setting-image-uploader-logo_dark .uploaded-image-preview {
+  background-color: #333;
+  background-clip: border-box;
+}
+
 .admin-fonts-form {
   &__more {
     font-size: var(--font-down-1-rem);
