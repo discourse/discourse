@@ -9,7 +9,7 @@
     &-label {
       display: flex;
       gap: 0.5rem;
-      font-weight: normal !important;
+      font-weight: normal;
       margin: 0;
       color: var(--primary);
       font-size: var(--font-down-1-rem);
@@ -17,6 +17,10 @@
       .form-kit__field[data-disabled] & {
         cursor: not-allowed;
       }
+    }
+
+    &-title {
+      font-weight: 500;
     }
 
     &--small {
@@ -39,6 +43,6 @@
   }
 
   &__control-checkbox-description {
-    color: var(--primary-medium);
+    @include default-description;
   }
 }

@@ -1,0 +1,7 @@
+@use "lib/viewport";
+
+@mixin default-description {
+  margin: 0;
+  font-size: var(--font-down-1-rem);
+  color: var(--primary-800);
+}
