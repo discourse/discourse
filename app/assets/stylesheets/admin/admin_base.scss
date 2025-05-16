@@ -97,6 +97,10 @@ $mobile-breakpoint: 700px;
     gap: 0.5rem;
   }
 
+  .admin-config-area-card__content .form-kit__field {
+    margin-left: -0.5rem;
+  }
+
   .form-kit__field {
     width: 100%;
     padding: 0.5rem;
