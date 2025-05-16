@@ -5,11 +5,11 @@
   --topic-body-width: #{$topic-body-width};
   --topic-body-width-padding: #{$topic-body-width-padding};
   --topic-avatar-width: #{$topic-avatar-width};
-  --d-border-radius: 2px;
-  --d-border-radius-large: 2px;
+  --d-border-radius: 0.25rem;
+  --d-border-radius-large: calc(var(--d-border-radius) * 2);
   --d-nav-pill-border-radius: var(--d-border-radius);
-  --d-button-border-radius: 2px;
-  --d-input-border-radius: 2px;
+  --d-button-border-radius: var(--d-border-radius);
+  --d-input-border-radius: var(--d-border-radius);
   --d-content-background: initial;
   --d-button-transition: none;
 }
