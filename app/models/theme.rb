@@ -96,10 +96,10 @@ class Theme < ActiveRecord::Base
         -> do
           includes(
             :remote_theme,
-            :color_scheme,
             :user,
             :locale_fields,
             :theme_translation_overrides,
+            color_scheme: %i[theme],
             parent_themes: %i[color_scheme locale_fields theme_translation_overrides],
           )
         end
