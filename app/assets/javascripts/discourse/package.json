@@ -114,7 +114,7 @@
     "ember-decorators": "^6.1.1",
     "ember-exam": "^9.1.0",
     "ember-load-initializers": "^3.0.1",
-    "ember-modifier": "^4.2.0",
+    "ember-modifier": "^4.2.2",
     "ember-qunit": "^9.0.3",
     "ember-source": "~5.12.0",
     "ember-template-imports": "^4.3.0",
