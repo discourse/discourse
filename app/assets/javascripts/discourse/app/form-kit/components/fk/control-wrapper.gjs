@@ -6,7 +6,7 @@ import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { eq } from "truth-helpers";
 import FKLabel from "discourse/form-kit/components/fk/label";
 import FKMeta from "discourse/form-kit/components/fk/meta";
-import FKOptional from "discourse/form-kit/components/fk/optional";
+import FKRequired from "discourse/form-kit/components/fk/required";
 import FKText from "discourse/form-kit/components/fk/text";
 import FKTooltip from "discourse/form-kit/components/fk/tooltip";
 import concatClass from "discourse/helpers/concat-class";
@@ -72,7 +72,7 @@ export default class FKControlWrapper extends Component {
           >
             <span>{{@field.title}}</span>
 
-            <FKOptional @field={{@field}} />
+            <FKRequired @field={{@field}} />
             <FKTooltip @field={{@field}} />
           </FKLabel>
         {{/if}}

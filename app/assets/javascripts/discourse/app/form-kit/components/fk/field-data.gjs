@@ -94,7 +94,7 @@ export default class FKFieldData extends Component {
    * @type {string}
    */
   get format() {
-    return this.args.format;
+    return this.args.format ?? "full";
   }
 
   /**
