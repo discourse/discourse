@@ -1,0 +1,105 @@
+html {
+  --accent-color: #{$tertiary} !important;
+  --accent-text-color: #fff;
+
+  // Background Colors
+  --background-color: light-dark(
+    oklch(from #{$tertiary} 96% calc(c * 0.125) h),
+    oklch(from #{$tertiary} 10% 0.025 h)
+  ) !important;
+  --d-content-background: light-dark(
+    oklch(from #{$secondary} calc(2 * l) c h),
+    oklch(from #{$secondary} l c h)
+  ) !important;
+
+  // HeaderColors
+  --header_primary-low-mid: light-dark(
+    oklch(from #{$tertiary} 73.5% calc(c * 0.5) h),
+    oklch(from #{$tertiary} l calc(c * 0.25) h)
+  ) !important;
+  --header_primary-medium: light-dark(
+    oklch(from #{$tertiary} 54% calc(c * 0.5) h),
+    oklch(from #{$tertiary} calc(l * 1.35) calc(c * 0.25) h)
+  ) !important;
+
+  // Sidebar Colors
+  --d-sidebar-border-color: light-dark(
+    oklch(from #{$tertiary} 88% calc(c * 0.25) h),
+    oklch(from #{$tertiary} calc(l * 0.7) calc(c * 0.25) h)
+  ) !important;
+  --d-sidebar-link-color: light-dark(
+    oklch(from #{$tertiary} calc(l * 0.8) calc(c * 0.25) h),
+    oklch(from #{$tertiary} calc(l * 1.5) calc(c * 0.25) h)
+  ) !important;
+  --d-sidebar-active-color: #{$primary} !important;
+  --d-sidebar-suffix-color: light-dark(
+    oklch(from #{$tertiary} l calc(c * 0.9) h),
+    oklch(from #{$tertiary} l calc(c * 0.9) h)
+  ) !important;
+
+  // Other Colors
+  --d-selected: light-dark(
+    oklch(from #{$tertiary} 92% calc(c * 0.5) h),
+    oklch(from #{$tertiary} calc(l * 0.7) calc(c * 0.25) h)
+  ) !important;
+  --d-nav-color--active: light-dark(
+    oklch(from #{$tertiary} l c h),
+    oklch(from #{$tertiary} calc(l * 1.2) c h)
+  ) !important;
+  --d-nav-color--hover: light-dark(
+    oklch(from #{$tertiary} l c h),
+    oklch(from #{$tertiary} calc(l * 1.2) c h)
+  ) !important;
+  --link-color: light-dark(
+    oklch(from #{$tertiary} l c h),
+    oklch(from #{$tertiary} calc(l * 0.95) c h)
+  ) !important;
+  --link-color-hover: light-dark(
+    oklch(from #{$tertiary} l c h),
+    oklch(from #{$tertiary} calc(l * 1.5) calc(c * 2.25) h)
+  ) !important;
+  --tertiary-hover: #{$tertiary} !important;
+
+  // Search Colors
+  --search-color: light-dark(
+    oklch(from #{$tertiary} l c h),
+    oklch(from #{$tertiary} calc(l * 1.5) calc(c * 0.25) h)
+  ) !important;
+
+  // Topic Card Colors
+  --topic-card-shadow: light-dark(
+    oklch(from #{$tertiary} calc(l * 1.85) calc(c * 0.5) h),
+    oklch(from #{$tertiary} calc(l * 0.2) calc(c * 0.01) h / 0.25)
+  ) !important;
+
+  // Button Colors
+  --button-box-shadow: light-dark(
+    oklch(from #{$tertiary} calc(l * 1.5) calc(c * 0.35) h),
+    oklch(from #{$tertiary} calc(l * 0.75) calc(c * 0.5) h)
+  ) !important;
+  --d-sidebar-highlight-hover-icon: var(--d-sidebar-link-color) !important;
+  --d-sidebar-highlight-hover-background: var(--d-selected) !important;
+  --d-sidebar-link-icon-color: var(--d-sidebar-link-color) !important;
+  --d-sidebar-header-color: var(--d-sidebar-link-color) !important;
+  --d-sidebar-header-icon-color: var(--d-sidebar-link-color) !important;
+  --d-sidebar-active-suffix-color: var(--d-sidebar-suffix-color) !important;
+  --d-sidebar-background: var(--background-color) !important;
+  --d-sidebar-footer-fade: var(--background-color) !important;
+  --d-sidebar-prefix-background: var(--d-selected) !important;
+  --d-sidebar-active-prefix-background: light-dark(
+    oklch(from var(--d-selected) calc(l * 0.85) c h),
+    oklch(from var(--d-selected) calc(l * 0.7) c h)
+  ) !important;
+  --d-sidebar-highlight-prefix-background: light-dark(
+    oklch(from var(--d-selected) calc(l * 0.85) c h),
+    oklch(from var(--d-selected) calc(l * 0.7) c h)
+  ) !important;
+  --d-sidebar-highlight-suffix-color: var(
+    --d-sidebar-active-suffix-color
+  ) !important;
+  --d-sidebar-highlight-color: var(--primary) !important;
+  --d-sidebar-highlight-background: var(--d-selected) !important;
+  --d-sidebar-section-link-icon-size: 1em !important;
+  --d-hover: oklch(from var(--d-selected) l c h / 0.75) !important;
+  --d-input-bg-color: var(--d-content-background) !important;
+}

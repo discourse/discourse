@@ -1,0 +1,65 @@
+// Fixing bulk select (only needed for desktop)
+.bulk-select-enabled {
+  .topic-list-header .topic-list-data.default {
+    position: sticky;
+    top: 10em;
+  }
+
+  .topic-author-avatar-data {
+    display: none;
+  }
+
+  .bulk-select.topic-list-data {
+    grid-area: bulk-select;
+    margin-left: -0.5em;
+
+    @media screen and (max-width: 576px) {
+      margin-top: 0;
+
+      label {
+        padding-block: 0.345em;
+      }
+    }
+
+    input {
+      transform: scale(1.5);
+    }
+  }
+}
+
+.topic-list-header {
+  tr {
+    border: none;
+  }
+
+  .topic-list-data {
+    padding: 0;
+
+    &:not(.default) {
+      display: none;
+    }
+
+    &.default {
+      .bulk-select,
+      span:not(.bulk-select-topics, .d-button-label) {
+        display: none;
+      }
+    }
+  }
+
+  .bulk-select-topics {
+    position: absolute;
+    right: -1em;
+    background: var(--secondary);
+    border-radius: 0 0 0 var(--d-border-radius);
+    padding: 1em;
+
+    @media screen and (max-width: 1048px) {
+      right: 0;
+    }
+
+    button {
+      white-space: nowrap;
+    }
+  }
+}
