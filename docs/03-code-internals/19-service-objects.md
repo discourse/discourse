@@ -106,7 +106,7 @@ This is the generic step, you provide a name, and it will run the defined method
 
 This specialized step helps to remove some boilerplate when dealing with models. By default, it will execute the method named `fetch_<name>`. In the above example, you can see we name our model `:user` and the corresponding method is named `fetch_user`.
 
-Here, you can fetch (or instantiate) a model as you see fit. If the step returns a falsy value, then the execution flow will stop here. If an `ActiveRecord` model is returned, it will call `#invalid?` on it to determine whether the model is valid. If not, the execution flow will stop.
+Here, you can fetch (or instantiate) a model as you see fit. If the step returns a falsy value, or an exception is raised, then the execution flow will stop here. If an `ActiveRecord` model is returned, it will call `#invalid?` on it to determine whether the model is valid. If not, the execution flow will stop.
 
 This step is also compatible with collections: if a collection is fetched but empty, the execution flow will stop.
 
@@ -348,11 +348,11 @@ This step cannot fail.
 
 This step helps to remove some boilerplate when fetching/instantiating models or a collection of models. A model can be pretty much anything (not only `ActiveRecord` models), being a single object or a collection. The result of the step will be stored in the context as `name` (so, by default, it would be `context[:model]`).
 
-The step will fail if the model is `nil`, empty or invalid (in the case of an `ActiveRecord` object). Its result object can be inspected by accessing the `result.model.<name>` key of the main result object. The model result object exposes one or two keys:
+The step will fail if the model is `nil`, empty, invalid (in the case of an `ActiveRecord` object) or if an exception is raised. Its result object can be inspected by accessing the `result.model.<name>` key of the main result object. The model result object exposes one or two keys:
 
 - _invalid_: will be `true` if the model has been found but is invalid.
 - _not_found_: will be `true` if the model was not found.
-- _exception_: the exception that made the model not found.
+- _exception_: the exception that caused the step to fail.
 
 ### `policy(name = :default, class_name: nil)`
 
