@@ -28,9 +28,8 @@
     &:not(:disabled) {
       background-color: var(--secondary) !important;
       color: var(--primary) !important;
-      border-color: var(--primary);
-      outline: 1px solid var(--primary);
-      outline-offset: -1px;
+
+      @include default-focus;
 
       .d-icon {
         color: inherit !important;
@@ -42,7 +41,7 @@
     .discourse-no-touch & {
       background-color: var(--secondary);
       color: var(--primary);
-      border-color: var(--primary);
+      border-color: var(--tertiary);
 
       .d-icon {
         color: inherit;
