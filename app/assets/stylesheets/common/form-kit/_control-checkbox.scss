@@ -1,14 +1,14 @@
 .form-kit {
   &__control-checkbox {
     &[type="checkbox"] {
-      margin: 0.17em;
-      margin-right: 0;
-      margin-left: 0;
+      margin: 0;
+      height: 1rem;
+      width: 1rem;
     }
 
     &-label {
       display: flex;
-      gap: 0.5em;
+      gap: 0.5rem;
       font-weight: normal !important;
       margin: 0;
       color: var(--primary);
