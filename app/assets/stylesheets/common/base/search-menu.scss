@@ -11,19 +11,19 @@
   border-top: 1px solid var(--primary-low);
 }
 
-.search-menu.glimmer-search-menu {
+:root {
   --search-result-element-padding: 0.5em 1rem;
+}
 
-  .search-input-wrapper {
-    @include viewport.until(sm) {
-      position: fixed;
-      left: 1rem;
-      right: 0.35rem; // to compensate for cancel button padding
-      top: 0;
-      padding-block: 0.5em;
-      background-color: var(--secondary);
-      z-index: z("base");
-    }
+.search-menu.glimmer-search-menu .search-input-wrapper {
+  @include viewport.until(sm) {
+    position: fixed;
+    left: 1rem;
+    right: 0.35rem; // to compensate for cancel button padding
+    top: 0;
+    padding-block: 0.5em;
+    background-color: var(--secondary);
+    z-index: z("base");
   }
 }
 
@@ -40,7 +40,7 @@
 
     .search-menu-panel & {
       @include viewport.from(sm) {
-        padding: 0.75em 1rem 0.5em;
+        padding: 0.75em 1rem 0.25em;
       }
     }
   }
@@ -415,9 +415,13 @@
 }
 
 .search-random-quick-tip {
-  padding: 0 1rem max(0.75rem, 0.75em);
+  padding: max(0.75rem, 0.75em) 1rem;
   font-size: var(--font-down-2);
   color: var(--primary-medium);
+
+  .search-menu-panel & {
+    padding: 0.5rem 1rem max(0.75rem, 0.75em);
+  }
 
   .tip-label {
     background-color: rgba(var(--tertiary-rgb), 0.1);
