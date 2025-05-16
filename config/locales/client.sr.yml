@@ -2109,6 +2109,11 @@ sr:
       sr_collapse_replies: "Spusti ugrađene odgovore"
       expand_collapse: "proširi/skupi"
       unread: "Poruka je nepročitana"
+      localizations:
+        table:
+          actions: "Akcije"
+          edit: "Izmeni"
+          delete: "Obriši"
       errors:
         create: "Žao nam je, dogodila se greška pri otvaranju tvoje poruke. Molimo pokušajte ponovo."
         edit: "Žao nam je, dogodila se greška pri izmenjivanju tvoje poruke. Molimo pokušajte ponovo."
@@ -2872,6 +2877,7 @@ sr:
           delete: "Obriši"
         color_palettes:
           palette_name: "Ime foruma"
+          delete: "Obriši"
           colors:
             title: "Boje"
       plugins:

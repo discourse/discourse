@@ -1178,7 +1178,6 @@ hr:
       said: "%{username}:"
       profile: "Profil"
       profile_possessive: "Profil korisnika %{username}"
-      account_possessive: "Račun od %{name}"
       mute: "Utišaj"
       edit: "Uredi postavke"
       download_archive:
@@ -1903,7 +1902,6 @@ hr:
         title: "Registracijska IP adresa"
       avatar:
         title: "Profilna slika"
-        header_title: "profil, poruke, oznake i postavke"
         name_and_description: "%{name} - %{description}"
         edit: "Uredi sliku profila"
       title:
@@ -2718,7 +2716,6 @@ hr:
           aria_label: filtrirajte prema maksimalnom broju pregleda
         additional_options:
           label: "Filtrirajte prema broju postova i pregledima teme"
-    hamburger_menu: "izbornik"
     new_item: "novo"
     go_back: "idi natrag"
     not_logged_in_user: "stranica korisnika sa sažetkom trenutnih aktivnosti i postavki"
@@ -3423,6 +3420,11 @@ hr:
         other: "Pregled %{count} odgovora na"
       in_reply_to: "Učitaj nadređeni post"
       view_all_posts: "Pogledajte sve postove"
+      localizations:
+        table:
+          actions: "Akcije"
+          edit: "Uredi"
+          delete: "Pobriši"
       errors:
         create: "Žao nam je, dogodila se greška u stvaranju tvoje objave. Molimo pokušajte ponovo."
         edit: "Žao nam je, dogodila se greška u izmjenjivanju tvoje objave. Molimo pokušajte ponovo."
@@ -3961,7 +3963,6 @@ hr:
         this_month: "Mjesec"
         this_week: "Tjedan"
         today: "Danas"
-    browser_update: 'Nažalost, <a href="https://www.discourse.org/faq/#browser">vaš preglednik nije podržan</a>. Prebacite se <a href="https://browsehappy.com">na podržani preglednik</a> za pregled bogatog sadržaja, prijavite se i odgovorite.'
     permission_types:
       full: "Otvoriti / Odgovoriti / Vidjeti"
       create_post: "Odgovoriti / Vidjeti"
@@ -4991,8 +4992,11 @@ hr:
           delete: "Pobriši"
         color_palettes:
           palette_name: "Ime"
+          duplicate: "Dupliciraj"
+          delete: "Pobriši"
           colors:
             title: "Boje"
+          delete_confirm: "Izbrisati ovu paletu boja?"
       plugins:
         title: "Dodaci"
         name: "Naziv"

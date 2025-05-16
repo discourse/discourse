@@ -177,6 +177,7 @@ zh_CN:
               label: 受限制的群组
               description: 可选，只有当发帖用户属于以下任一组时才会触发
             restricted_inbox_groups:
+              label: 受限收件箱组
               description: 可选，仅在帖子的话题是某个群组收件箱中的个人消息时触发
             excluded_groups:
               label: 排除的群组

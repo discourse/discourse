@@ -21,9 +21,10 @@ $search-result-element-padding: 0.35em 1rem; // hate myself but .25em is too tig
       position: fixed;
       left: 1rem;
       right: 0.35rem; // to compensate for cancel button padding
-      top: 0.5em;
-      padding-bottom: 0.5em;
+      top: 0;
+      padding-block: 0.5em;
       background-color: var(--secondary);
+      z-index: z("base");
     }
   }
 }
@@ -60,17 +61,22 @@ $search-result-element-padding: 0.35em 1rem; // hate myself but .25em is too tig
       background: none;
       border: 0;
       margin-bottom: 0;
-      width: 0;
-      flex: 1 1 auto;
+      width: auto;
+      flex-grow: 1;
 
       &:focus {
         outline: none;
       }
     }
 
-    @include viewport.until(sm) {
-      .mobile-search-button ~ input.search-term__input {
-        padding-inline: 0;
+    .btn.search-context {
+      margin: 2px;
+      margin-right: 0;
+      white-space: nowrap;
+      background-color: var(--primary-200);
+
+      &:hover {
+        background-color: var(--primary-medium);
       }
     }
 
@@ -132,18 +138,8 @@ $search-result-element-padding: 0.35em 1rem; // hate myself but .25em is too tig
   .results {
     display: flex;
     flex-direction: column;
+    padding-top: $search-pad-vertical;
     border-radius: var(--d-border-radius);
-
-    @include viewport.until(sm) {
-      &.with-search-term {
-        padding-top: calc(var(--header-offset));
-      }
-
-      // temporary solution while waiting for dev to add conditional class
-      :has(.search-context) & {
-        padding-top: calc(var(--header-offset) + 2.25em);
-      }
-    }
 
     .heading {
       padding: 0.5em 0 0 1rem;

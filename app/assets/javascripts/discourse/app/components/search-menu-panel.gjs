@@ -2,10 +2,8 @@ import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import MenuPanel from "discourse/components/menu-panel";
 import SearchMenu from "discourse/components/search-menu";
-import concatClass from "discourse/helpers/concat-class";
 
 export default class SearchMenuPanel extends Component {
-  @service search;
   @service site;
 
   get animationClass() {
@@ -17,10 +15,7 @@ export default class SearchMenuPanel extends Component {
   <template>
     <MenuPanel
       @animationClass={{this.animationClass}}
-      @panelClass={{concatClass
-        "search-menu-panel"
-        (unless this.search.activeGlobalSearchTerm "empty-panel")
-      }}
+      @panelClass="search-menu-panel"
     >
       <SearchMenu
         @onClose={{@closeSearchMenu}}

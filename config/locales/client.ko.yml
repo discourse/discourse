@@ -1627,7 +1627,6 @@ ko:
         title: "등록 IP 주소"
       avatar:
         title: "프로필 사진"
-        header_title: "프로필, 메시지, 북마크 및 환경설정"
         name_and_description: "%{name} - %{description}"
         edit: "프로필 사진 변경"
       title:
@@ -2274,7 +2273,6 @@ ko:
           aria_label: 최대 조회수로 필터링
         additional_options:
           label: "게시물 수 및 주제 조회수로 필터링"
-    hamburger_menu: "메뉴"
     new_item: "신규"
     go_back: "뒤로 가기"
     not_logged_in_user: "현재 활동 및 환경설정에 대한 요약이 포함된 사용자 페이지"
@@ -2796,6 +2794,11 @@ ko:
         other: "다음의 댓글 %{count}개 보기"
       in_reply_to: "상위 게시물 로드"
       view_all_posts: "모든 게시물 보기"
+      localizations:
+        table:
+          actions: "작업"
+          edit: "편집"
+          delete: "삭제"
       errors:
         create: "게시물을 생성하는 중에 오류가 발생했습니다. 다시 시도하세요."
         edit: "게시물을 편집하는 중에 오류가 발생했습니다. 다시 시도하세요."
@@ -3278,7 +3281,6 @@ ko:
         this_month: "월"
         this_week: "주"
         today: "오늘"
-    browser_update: '<a href="https://www.discourse.org/faq/#browser">브라우저 버전이 너무 낮아 이 사이트에서 작동하지 않습니다</a>. <a href="https://browsehappy.com">브라우저를 업그레이드</a>하여 서식 있는 콘텐츠를 표시하고 로그인하여 댓글도 달아보세요.'
     permission_types:
       full: "생성 / 댓글 / 보기"
       create_post: "댓글 / 보기"
@@ -4208,8 +4210,10 @@ ko:
           delete: "삭제하기"
         color_palettes:
           palette_name: "그룹명"
+          delete: "삭제하기"
           colors:
             title: "색상"
+          delete_confirm: "이 색상 표를 삭제 하시겠습니까?"
       plugins:
         title: "플러그인"
         name: "이름"

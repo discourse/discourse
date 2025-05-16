@@ -1159,7 +1159,6 @@ it:
       said: "%{username}:"
       profile: "Profilo"
       profile_possessive: "Profilo di %{username}"
-      account_possessive: "Account di %{name}"
       mute: "Silenzia"
       edit: "Modifica opzioni"
       download_archive:
@@ -1991,7 +1990,6 @@ it:
         title: "Indirizzo IP di Registrazione"
       avatar:
         title: "Immagine Profilo"
-        header_title: "profilo, messaggi, segnalibri e preferenze"
         name_and_description: "%{name} - %{description}"
         edit: "Modifica immagine profilo"
       title:
@@ -2858,7 +2856,6 @@ it:
           aria_label: filtra per visualizzazioni massime
         additional_options:
           label: "Filtra per numero di messaggi e visualizzazioni dell'argomento"
-    hamburger_menu: "menu"
     new_item: "nuovo"
     go_back: "indietro"
     not_logged_in_user: "pagina utente con riepilogo delle attività correnti e delle impostazioni"
@@ -3565,6 +3562,11 @@ it:
       in_reply_to: "Carica messaggio padre"
       view_all_posts: "Visualizza tutti i messaggi"
       badge_granted_tooltip: "%{username} ha ottenuto il distintivo \"%{badge_name}\" per questo messaggio!"
+      localizations:
+        table:
+          actions: "Azioni"
+          edit: "Modifica"
+          delete: "Cancella"
       errors:
         create: "Spiacenti, si è verificato un errore nel creare il tuo messaggio. Prova di nuovo."
         edit: "Spiacenti, si è verificato un errore nel modificare il tuo messaggio. Prova di nuovo."
@@ -4162,7 +4164,6 @@ it:
         today: "Oggi"
     custom_homepage:
       admin_message: 'Uno dei tuoi argomenti ha abilitato il modificatore "custom_homepage", ma non invia alcun risultato al connettore [custom-homepage]. (Messaggio visibile solo agli amministratori del sito)'
-    browser_update: 'Purtroppo, <a href="https://www.discourse.org/faq/#browser">il tuo browser non è supportato</a>. Per visualizzare i contenuti multimediali, <a href="https://browsehappy.com">passa a un browser supportato</a>, accedi e rispondi.'
     permission_types:
       full: "Crea / Rispondi / Visualizza"
       create_post: "Rispondi / Visualizza"
@@ -5664,11 +5665,14 @@ it:
           save_successful: "Campo utente salvato."
         color_palettes:
           palette_name: "Nome"
+          duplicate: "Duplica"
+          delete: "Elimina"
           color_options:
             toggle: "Selezionabile dall'utente"
             toggle_description: "Lo schema di colori può essere selezionato dagli utenti"
           colors:
             title: "Colori"
+          delete_confirm: "Eliminare questa tavolozza dei colori?"
       plugins:
         title: "Plugin"
         name: "Nome"

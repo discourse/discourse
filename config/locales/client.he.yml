@@ -1339,7 +1339,6 @@ he:
       said: "%{username}:"
       profile: "פרופיל"
       profile_possessive: "הפרופיל של %{username}"
-      account_possessive: "החשבון של %{name}"
       mute: "השתקה"
       edit: "עריכת העדפות"
       download_archive:
@@ -2238,7 +2237,6 @@ he:
         title: "כתובת IP בהרשמה"
       avatar:
         title: "תמונת פרופיל"
-        header_title: "פרופיל, הודעות, סימניות והעדפות"
         name_and_description: "%{name} - %{description}"
         edit: "עריכת תמונת פרופיל"
       title:
@@ -2758,6 +2756,12 @@ he:
       esc: "esc"
       esc_label: "התעלמות מהודעה"
       ok_proceed: "בסדר, להמשיך"
+      translations:
+        title: "תרגום פוסט"
+        select: "בחירת תרגום"
+        save: "שמירת תרגום"
+        original_content: "תוכן פוסט מקורי"
+        placeholder: "נא למלא כאן תרגום לפוסט…"
       group_mentioned_limit:
         one: "<b>זהירות!</b> ציינת את <a href='%{group_link}'>%{group}</a>, אך בקבוצה זו יש יותר חברים מההגבלה שהוגדרה על ידי הנהלת המערכת של עד משתמש %{count}. אף אחד לא יקבל הודעה."
         two: "<b>זהירות!</b> ציינת את <a href='%{group_link}'>%{group}</a>, אך בקבוצה זו יש יותר חברים מההגבלה שהוגדרה על ידי הנהלת המערכת של עד %{count} משתמשים. אף אחד לא יקבל הודעה."
@@ -3133,7 +3137,6 @@ he:
       in_messages_tooltip: "מעבר לחיפוש בנושאים רגילים"
       in_topics_posts: "בכל הנושאים והפוסטים"
       enter_hint: "או ללחוץ על Enter"
-      mobile_enter_hint: "או לגעת בכפתור החיפוש"
       in_posts_by: "בפוסטים מאת %{username}"
       recent: "חיפושים אחרונים"
       clear_recent: "ניקוי חיפושים אחרונים"
@@ -3222,7 +3225,6 @@ he:
           aria_label: סינון לפי כמות הצפיות המרבית
         additional_options:
           label: "סינון לפי כמות פוסטים וצפיות בנושאים"
-    hamburger_menu: "תפריט"
     new_item: "חדש"
     go_back: "חזור אחורה"
     not_logged_in_user: "עמוד משתמש עם סיכום פעילות נוכחית והעדפות"
@@ -4037,6 +4039,14 @@ he:
       in_reply_to: "טעינת הפוסט ההורה"
       view_all_posts: "הצגת כל הפוסטים"
       badge_granted_tooltip: "ל־%{username} יש זכאות לעיטור ‚%{badge_name}’ על הפוסט!"
+      localizations:
+        table:
+          locale: "הגדרות מקומיות"
+          actions: "פעולות"
+          edit: "עריכה"
+          delete: "מחיקה"
+        add: "הוספת תרגום חדש"
+        success: "התרגומים עודכנו בהצלחה"
       errors:
         create: "אירעה שגיאה ביצירת הפוסט שלך. נא לנסות שוב, עמך הסליחה."
         edit: "אירעה שגיאה בעריכת הפוסט שלך. נא לנסות שוב, עמך הסליחה."
@@ -4696,7 +4706,7 @@ he:
         today: "היום"
     custom_homepage:
       admin_message: 'אחת מערכות הנושא שלך הפעילה את אפשרות "דף הבית מותאם אישית" אך הוא אינו מוציא דבר במֵחבַּר [דף הבית המותאם אישית]. (הודעה זו מוצגת רק למנהלי האתר.)'
-    browser_update: 'אתרע מזלך וכי <a href="https://www.discourse.org/faq/#browser">דפדפנך אינו נתמך עוד</a>. נא <a href="https://browsehappy.com">לעבור לדפדפן נתמך</a> כדי לצפות בתוכן עשיר, להיכנס ולהגיב.'
+    browser_update: 'אתרע מזלך וכי <a href="https://discourse.org/about#browser">דפדפנך אינו נתמך עוד</a>. נא <a href="https://browsehappy.com">לעבור לדפדפן נתמך</a> כדי לצפות בתוכן עשיר, להיכנס ולהגיב.'
     permission_types:
       full: "יצירה / תגובה / צפייה"
       create_post: "תגובה / צפייה"
@@ -6496,6 +6506,8 @@ he:
           save_successful: "שדה משתמש נשמר."
         color_palettes:
           palette_name: "שם"
+          duplicate: "שכפול"
+          delete: "מחיקה"
           color_options:
             title: "אפשרויות צבע"
             toggle: "לבחירת המשתמש"
@@ -6509,6 +6521,7 @@ he:
           copy_of: "עותק של %{name}"
           copy_created: 'נוצר עותק חדש של „%{name}”'
           illegal_character_in_color: "הצבעים מורכבים מתווים הקסדצימליים בלבד"
+          delete_confirm: "למחוק לוח צבעים זה?"
       plugins:
         title: "תוספים"
         name: "שם"

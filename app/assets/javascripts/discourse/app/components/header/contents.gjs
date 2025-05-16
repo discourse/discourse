@@ -44,15 +44,21 @@ export default class Contents extends Component {
     if (
       this.site.mobileView ||
       this.args.narrowDesktop ||
-      this.router.currentURL?.match(/\/(signup|login|invites|activate-account)/)
+      this.router.currentURL?.match(
+        /\/(signup|login|invites|activate-account)/
+      ) ||
+      this.search.welcomeBannerSearchInViewport
     ) {
       return false;
     }
 
-    return (
+    if (
       this.search.searchExperience === "search_field" &&
-      !this.args.topicInfoVisible
-    );
+      !this.args.topicInfoVisible &&
+      !this.search.welcomeBannerSearchInViewport
+    ) {
+      return true;
+    }
   }
 
   <template>

@@ -7,8 +7,6 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
   fab!(:active_user) { Fabricate(:active_user, password: "secure_password") }
 
   let(:composer) { PageObjects::Components::Composer.new }
-  let(:topic_list) { PageObjects::Components::TopicList.new }
-  let(:topic_page) { PageObjects::Pages::Topic.new }
 
   if skip_examples.exclude?(:login)
     describe "Login" do
@@ -18,15 +16,16 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
 
       it "logs in" do
         visit("/")
-
-        expect(page).to have_css("header .login-button", visible: true)
-
         login_form.open
         login_form.fill_username(active_user.username)
         login_form.fill_password("secure_password")
         login_form.click_login
-
         expect(page).to have_css(".current-user", visible: true)
+      end
+
+      it "displays a login button in the header" do
+        visit("/")
+        expect(page).to have_css("header .login-button", visible: true)
       end
     end
   end
@@ -35,17 +34,18 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
     describe "Topics" do
       if skip_examples.exclude?(:"topics:read")
         context "with an anonymous user" do
-          it "correctly allows a user to interact with topics" do
-            visit "/"
+          before { visit "/" }
 
-            # List latest topics
+          it "lists latest topics" do
             expect(page).to have_css(".topic-list-item", count: 4)
+          end
 
-            # List topics for a category
+          it "lists topics for a category" do
             within("#sidebar-section-content-categories") { click_on("General") }
             expect(page).to have_css(".topic-list-item", count: 3)
+          end
 
-            # Display a specific topic
+          it "displays a specific topic" do
             click_on(topics.first.title)
             expect(page).to have_content(topics.first.title)
             expect(page).to have_content(topics.first.first_post.raw)
@@ -59,26 +59,27 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
           visit "/"
         end
 
-        it "correctly allows a user to interact with topics" do
-          if skip_examples.exclude?(:"topics:read")
-            # List latest topics
+        if skip_examples.exclude?(:"topics:read")
+          it "lists latest topics" do
             expect(page).to have_css(".topic-list-item", count: 4)
+          end
 
-            # List topics for a category
+          it "lists topics for a category" do
             within("#sidebar-section-content-categories") { click_on("General") }
             expect(page).to have_css(".topic-list-item", count: 3)
+          end
 
-            # Display a specific topic
-            topic_list.visit_topic(topics.first)
+          it "displays a specific topic" do
+            click_on(topics.first.title)
             expect(page).to have_content(topics.first.title)
             expect(page).to have_content(topics.first.first_post.raw)
           end
+        end
 
-          if skip_examples.exclude?(:"topics:reply")
-            # Reply to a topic
-            within("#sidebar-section-content-categories") { click_on("General") }
-            expect(page).to have_css(".topic-list-item", count: 3)
-            topic_list.visit_topic(topics.first)
+        if skip_examples.exclude?(:"topics:reply")
+          it "replies in a topic" do
+            click_on(topics.first.title)
+            expect(page).to have_content(topics.first.first_post.raw)
             within(".actions") { click_button("Reply") }
             composer.focus
             send_keys("This is a long enough reply.")
@@ -86,24 +87,17 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
             within(".save-or-cancel") { click_button("Reply") }
             expect(page).to have_content("This is a long enough reply.")
           end
+        end
 
-          if skip_examples.exclude?(:"topics:create")
-            # Creates a new topic
-            find("#site-logo", visible: true).click
+        if skip_examples.exclude?(:"topics:create")
+          it "creates a new topic" do
             find("#create-topic", visible: true).click
             composer.fill_title("This is a new topic")
             composer.fill_content("This is a long enough sentence.")
-
             expect(page).to have_css(".d-editor-preview p", visible: true)
-
             within(".save-or-cancel") { click_button("Create Topic") }
-
-            expect(topic_page).to have_title("This is a new topic")
-
-            expect(topic_page).to have_post_content(
-              post_number: 1,
-              content: "This is a long enough sentence.",
-            )
+            expect(page).to have_content("This is a new topic")
+            expect(page).to have_content("This is a long enough sentence.")
           end
         end
       end
@@ -142,15 +136,15 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
       end
 
       context "with a logged in user" do
-        it "displays user profiles correctly" do
-          sign_in(active_user)
+        before { sign_in(active_user) }
 
-          # Another user's profile
+        it "displays a user’s profile" do
           visit("/u/#{user.username}/summary")
           expect(page).to have_content(user.name)
           expect(page).to have_content("Message")
+        end
 
-          # Own profile
+        it "displays the user’s own profile" do
           visit("/u/#{active_user.username}/summary")
           expect(page).to have_content(active_user.name)
           expect(page).to have_content("Preferences")
@@ -172,24 +166,22 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
       after { SearchIndexer.disable }
 
       context "with an anonymous user" do
-        it "quick search and full page search works" do
-          visit("/")
-
-          if skip_examples.exclude?(:"search:quick_search")
-            search_page.expand_dropdown
-            expect(page).to have_css(".search-menu-container")
+        if skip_examples.exclude?(:"search:quick_search")
+          it "searches using the quick search" do
+            visit("/")
+            search_page.click_search_icon
             search_page.type_in_search_menu(topics.first.title)
             search_page.click_search_menu_link
             expect(search_page).to have_topic_title_for_first_search_result(topics.first.title)
           end
+        end
 
-          if skip_examples.exclude?(:"search:full_page")
-            search_page
-              .expand_dropdown
-              .click_advanced_search_icon
-              .clear_search_input
-              .type_in_search(topics.first.title)
-              .click_search_button
+        if skip_examples.exclude?(:"search:full_page")
+          it "searches using the full page search" do
+            visit("/search")
+
+            search_page.type_in_search(topics.first.title)
+            search_page.click_search_button
 
             expect(search_page).to have_search_result
           end
@@ -197,27 +189,24 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
       end
 
       context "with a logged in user" do
-        before do
-          sign_in(active_user)
-          visit("/")
-        end
+        before { sign_in(active_user) }
 
-        it "quick search and full page search works" do
-          if skip_examples.exclude?(:"search:quick_search")
-            search_page.expand_dropdown
-            expect(page).to have_css(".search-menu-container")
+        if skip_examples.exclude?(:"search:quick_search")
+          it "searches using the quick search" do
+            visit("/")
+            search_page.click_search_icon
             search_page.type_in_search_menu(topics.first.title)
             search_page.click_search_menu_link
             expect(search_page).to have_topic_title_for_first_search_result(topics.first.title)
           end
+        end
 
-          if skip_examples.exclude?(:"search:full_page")
-            search_page
-              .expand_dropdown
-              .click_advanced_search_icon
-              .clear_search_input
-              .type_in_search(topics.first.title)
-              .click_search_button
+        if skip_examples.exclude?(:"search:full_page")
+          it "searches using the full page search" do
+            visit("/search")
+
+            search_page.type_in_search(topics.first.title)
+            search_page.click_search_button
 
             expect(search_page).to have_search_result
           end

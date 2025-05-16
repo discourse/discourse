@@ -590,6 +590,7 @@ ug:
         header: "يېڭى ئۇچۇر"
         cancel: "ۋاز كەچ"
       quick_reaction_type:
+        title: "بىر چېكىپ پاراڭلىشىش ئىنكاسى"
         options:
           frequent: "دائىم ئىشلىتىلىدىغان پاراڭلىشىش ئىنكاسى"
           custom: "ئىختىيارى ئىنكاس"

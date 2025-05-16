@@ -1171,7 +1171,6 @@ pt_BR:
       said: "%{username}:"
       profile: "Perfil"
       profile_possessive: "Perfil de %{username}"
-      account_possessive: "Conta de %{name}"
       mute: "Silenciar"
       edit: "Editar preferências"
       download_archive:
@@ -2003,7 +2002,6 @@ pt_BR:
         title: "Endereço IP do cadastro"
       avatar:
         title: "Imagem do perfil"
-        header_title: "perfil, mensagens, favoritos e preferências"
         name_and_description: "%{name} - %{description}"
         edit: "Editar imagem do perfil"
       title:
@@ -2881,7 +2879,6 @@ pt_BR:
           aria_label: filtrar por visualizações máximas
         additional_options:
           label: "Filtrar por contagem de postagens e visualizações de tópico"
-    hamburger_menu: "menu"
     new_item: "novo"
     go_back: "voltar"
     not_logged_in_user: "página do(a) usuário(a) com resumo de atividades e preferências atuais"
@@ -3588,6 +3585,11 @@ pt_BR:
       in_reply_to: "Carregar postagem pai"
       view_all_posts: "visualizar todas as postagens"
       badge_granted_tooltip: "%{username} recebeu o emblema '%{badge_name} para esta postagem!"
+      localizations:
+        table:
+          actions: "Ações"
+          edit: "Editar"
+          delete: "Excluir"
       errors:
         create: "Desculpe, houve um erro ao criar sua postagem. Tente outra vez."
         edit: "Desculpe, houve um erro ao editar sua postagem. Tente outra vez."
@@ -3821,14 +3823,17 @@ pt_BR:
       creation_error: Houve um erro durante a criação da categoria.
       save_error: Houve um erro ao salvar a categoria.
       name: "Nome da categoria"
+      untitled: "Categoria sem título"
       description: "Descrição"
       logo: "Imagem do logotipo da categoria"
       logo_dark: "Imagem do logotipo da categoria Modo Escuro"
       logo_description: "Proporção de aspecto recomendada 1:1 com tamanho mínimo de 200px. Se deixado em branco, nenhuma imagem será exibida."
       background_image: "Imagem de fundo da categoria"
       background_image_dark: "Imagem escura de fundo da categoria"
+      style: "Estilos"
       background_color: "Cor"
       styles:
+        type: "Estilo"
         icon: "Ícone"
         emoji: "Emoji"
         options:
@@ -4187,7 +4192,6 @@ pt_BR:
         today: "Hoje"
     custom_homepage:
       admin_message: 'Um dos seus temas ativou o modificador "custom_homepage" sem gerar nada no conector [custom-homepage]. (Esta mensagem é exibida apenas para administradores(as) do site.)'
-    browser_update: 'Infelizmente, <a href="https://www.discourse.org/faq/#browser">seu navegador não é compatível</a>. <a href="https://browsehappy.com">Use um navegador compatível</a> para visualizar um conteúdo interessante, entrar com a conta e responder.'
     permission_types:
       full: "Criar/Responder/Ver"
       create_post: "Responder/Ver"
@@ -5768,11 +5772,14 @@ pt_BR:
           save_successful: "Campo de usuário(a) salvo."
         color_palettes:
           palette_name: "Nome"
+          duplicate: "Duplicado"
+          delete: "Excluir"
           color_options:
             toggle: "Selecionável por usuário(a)"
             toggle_description: "A paleta de cores pode ser selecionado pelos(as) usuários(as)"
           colors:
             title: "Cores"
+          delete_confirm: "Excluir esta paleta de cores?"
       plugins:
         title: "Plugins"
         name: "Nome"

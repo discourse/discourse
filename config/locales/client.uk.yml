@@ -1344,7 +1344,6 @@ uk:
       said: "%{username}:"
       profile: "Профіль"
       profile_possessive: "Профіль користувача %{username}"
-      account_possessive: "Обліковий запис %{name}"
       mute: "Приглушити"
       edit: "Редагувати налаштування"
       download_archive:
@@ -2242,7 +2241,6 @@ uk:
         title: "IP Адреса реєстрації"
       avatar:
         title: "Аватар"
-        header_title: "профіль, повідомлення, закладки та налаштування"
         name_and_description: "%{name} - %{description}"
         edit: "Редагувати зображення профілю"
       title:
@@ -2762,6 +2760,12 @@ uk:
       esc: "esc"
       esc_label: "відхилити повідомлення"
       ok_proceed: "Добре, продовжуйте"
+      translations:
+        title: "Переклад матеріалу"
+        select: "Виберіть переклад"
+        save: "Зберегти переклад"
+        original_content: "Оригінальний текст публікації"
+        placeholder: "Введіть переклад для повідомлення тут..."
       group_mentioned_limit:
         one: "<b>Увага!</b> Ви згадали <a href='%{group_link}'>%{group}</a>, в якій більше учасників, ніж встановлений адміністратором ліміт згадок на %{count} користувачів. Ніхто не отримає сповіщення."
         few: "<b>Увага!</b> Ви згадали <a href='%{group_link}'>%{group}</a>, в якій більше учасників, ніж встановлений адміністратором ліміт згадок на %{count} користувачів. Ніхто не отримає сповіщення."
@@ -3137,7 +3141,7 @@ uk:
       in_messages_tooltip: "перейти до пошуку у звичайних темах"
       in_topics_posts: "в усіх темах і дописах"
       enter_hint: "або натисніть Enter"
-      mobile_enter_hint: "або торкніться значка Пошук"
+      mobile_enter_hint: "або натисніть Пошук"
       in_posts_by: "в дописах від %{username}"
       recent: "Останні пошукові запити"
       clear_recent: "Очистити останні пошукові запити"
@@ -3226,7 +3230,6 @@ uk:
           aria_label: фільтрувати за максимальною кількістю переглядів
         additional_options:
           label: "Фільтруйте за кількістю дописів і переглядами тем"
-    hamburger_menu: "меню"
     new_item: "новий"
     go_back: "повернутися назад"
     not_logged_in_user: "сторінка користувача з підсумком поточної діяльності та налаштуваннями"
@@ -4045,6 +4048,14 @@ uk:
       in_reply_to: "Завантажити батьківський допис"
       view_all_posts: "Переглянути всі дописи"
       badge_granted_tooltip: "%{username} отримав знак «%{badge_name}» за цю публікацію!"
+      localizations:
+        table:
+          locale: "Локаль"
+          actions: "Дії"
+          edit: "Редагувати"
+          delete: "Видалити"
+        add: "Додати новий переклад"
+        success: "Переклади були успішно оновлені"
       errors:
         create: "Вибачте, під час створення допису сталася помилка. Будь ласка, спробуйте ще раз."
         edit: "Вибачте, під час редагування вашого допису сталася помилка. Будь ласка, спробуйте ще раз."
@@ -4704,7 +4715,7 @@ uk:
         today: "Today"
     custom_homepage:
       admin_message: 'В одній з ваших тем увімкнено модифікатор "custom_homepage", але він нічого не виводить у коннекторі [custom-homepage]. (Це повідомлення показується лише адміністраторам сайту).'
-    browser_update: 'На жаль, <a href="https://www.discourse.org/faq/#browser">ваш браузер не підтримується</a>. Будь ласка, <a href="https://browsehappy.com">перейдіть на підтримуваний браузер</a> , щоб повноцінно переглянути вміст, увійти та відповісти.'
+    browser_update: 'На жаль, <a href="https://discourse.org/about#browser">ваш браузер не підтримується</a>. Будь ласка, <a href="https://browsehappy.com">перейдіть на підтримуваний браузер</a> , щоб повноцінно переглянути вміст, увійти та відповісти.'
     permission_types:
       full: "Створювати / Відповідати / Бачити"
       create_post: "Відповісти / Див"
@@ -6507,6 +6518,8 @@ uk:
           save_successful: "Поле користувача збережено."
         color_palettes:
           palette_name: "Імʼя"
+          duplicate: "Дублювати"
+          delete: "Видалити"
           color_options:
             title: "Параметри кольору"
             toggle: "Вибір користувача"
@@ -6520,6 +6533,7 @@ uk:
           copy_of: "Копія %{name}"
           copy_created: 'Створено нову копію "%{name}"'
           illegal_character_in_color: "Кольори складаються лише з шістнадцяткових символів"
+          delete_confirm: "видалити цю колірну палітру?"
       plugins:
         title: "Плагіни"
         name: "Ім'я"
@@ -6697,6 +6711,9 @@ uk:
           is_default: "Активувати за замовчуванням"
           user_selectable: "Користувачі можуть вибирати стиль"
           user_selectable_badge_label: "Вибір користувача"
+          user_selectable_button_label: "Дозволити користувачам вибирати"
+          user_selectable_unavailable_button_label: "Зробити недоступним для користувачів"
+          broken_badge_label: "Зламана тема"
           color_scheme_user_selectable: "Кольорова палітра може бути обрана користувачами"
           auto_update: "Автоматичне оновлення при оновленні Discourse"
           color_scheme: "Колірна палітра"
@@ -6714,7 +6731,10 @@ uk:
           convert_theme_alert_generic: "Ви впевнені, що хочете перетворити цю тему на компонент?"
           convert_theme_tooltip: "Перетворити цю тему в компонент"
           inactive_themes: "Неактивні теми:"
+          set_default_theme: "Встановити як активну"
+          default_theme: "Активна тема"
           set_default_success: "Тема за замовчуванням встановлена як %{theme}"
+          setting_was_saved: "Налаштування теми збережено"
           install_success: "%{theme} успішно встановлено!"
           inactive_components: "Невикористані компоненти:"
           selected:
@@ -6728,6 +6748,7 @@ uk:
           disabled_component_tooltip: "Цей компонент відключений"
           default_theme_tooltip: "Ця тема є темою за замовчуванням на сайті"
           updates_available_tooltip: "Доступні оновлення для цієї теми"
+          update_available: "Потребує оновлення"
           and_x_more:
             one: "і більше %{count}."
             few: "і більше %{count}."

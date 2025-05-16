@@ -654,16 +654,48 @@ RSpec.describe TopicViewSerializer do
       expect(json[:fancy_title]).to eq("Hur dur this is a title")
     end
 
-    it "returns the fancy title with a modifier" do
-      plugin = Plugin::Instance.new
-      modifier = :topic_view_serializer_fancy_title
-      proc = Proc.new { "X" }
-      DiscoursePluginRegistry.register_modifier(plugin, modifier, &proc)
-      json = serialize_topic(topic, user)
+    it "returns the localized fancy_title" do
+      SiteSetting.experimental_content_localization = true
+      Fabricate(:topic_localization, topic:, fancy_title: "X", locale: "ja")
+      I18n.locale = "ja"
+      topic.update!(locale: "en")
 
+      json = serialize_topic(topic, user)
       expect(json[:fancy_title]).to eq("X")
-    ensure
-      DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &proc)
+    end
+  end
+
+  describe "#has_localized_content" do
+    before { SiteSetting.experimental_content_localization = true }
+
+    it "returns true if the topic has localization" do
+      Fabricate(:topic_localization, topic:, locale: "ja")
+      I18n.locale = "ja"
+      topic.update!(locale: "en")
+
+      json = serialize_topic(topic, user)
+      expect(json[:has_localized_content]).to eq(true)
+    end
+
+    it "returns true if any post has localization" do
+      loc = Fabricate(:post_localization, locale: "ja")
+      I18n.locale = "ja"
+      loc.post.update!(locale: "en")
+
+      json = serialize_topic(loc.post.topic, user)
+      expect(json[:has_localized_content]).to eq(true)
+    end
+
+    it "returns false if the topic does not have localization" do
+      json = serialize_topic(topic, user)
+      expect(json[:has_localized_content]).to eq(false)
+    end
+
+    it "does not return attribute if setting is disabled" do
+      SiteSetting.experimental_content_localization = false
+
+      json = serialize_topic(topic, user)
+      expect(json[:has_localized_content]).to eq(nil)
     end
   end
 end

@@ -409,18 +409,27 @@
   }
 
   .d-editor-preview .d-editor-translation-preview-wrapper {
+    --translation-preview-padding: 1rem;
+    box-sizing: border-box;
     border: 1px dashed var(--primary-300);
     border-radius: var(--d-border-radius);
-    padding: 1rem;
-    margin-top: 1rem;
+    padding: var(--translation-preview-padding);
+    position: relative;
+    height: 100%;
+    padding-top: calc(var(--translation-preview-padding) * 2);
 
     &__header {
-      background: var(--primary-low);
-      padding: 0.25rem 0.5rem;
-      border-radius: var(--d-border-radius);
       position: absolute;
-      top: 5.5rem;
-      font-size: var(--font-down-1);
+      display: inline-flex;
+      align-items: center;
+      height: 1.5rem;
+      top: 0;
+      left: 0;
+      background: var(--primary-very-low);
+      padding: 0.45rem var(--translation-preview-padding);
+      border-radius: var(--d-border-radius);
+      font-size: var(--font-down-1-rem);
+      color: var(--primary-high);
     }
   }
 }

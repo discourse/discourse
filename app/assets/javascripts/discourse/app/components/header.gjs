@@ -10,7 +10,7 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import DAG from "discourse/lib/dag";
 import scrollLock from "discourse/lib/scroll-lock";
 import { scrollTop } from "discourse/lib/scroll-top";
-import delayedDestroy from "discourse/modifiers/delayed-destroy";
+import DiscourseURL from "discourse/lib/url";
 import AuthButtons from "./header/auth-buttons";
 import Contents from "./header/contents";
 import HamburgerDropdownWrapper from "./header/hamburger-dropdown-wrapper";
@@ -48,7 +48,7 @@ export default class GlimmerHeader extends Component {
   @service appEvents;
   @service header;
 
-  @tracked hasClosingAnimation = false;
+  @tracked skipSearchContext = this.site.mobileView;
 
   appEventsListeners = modifierFn(() => {
     this.appEvents.on(
@@ -113,13 +113,6 @@ export default class GlimmerHeader extends Component {
   });
 
   @action
-  handleAnimationComplete() {
-    this.hasClosingAnimation = false;
-    this.search.visible = false;
-    this.toggleBodyScrolling(false);
-  }
-
-  @action
   closeCurrentMenu() {
     if (this.search.visible) {
       this.toggleSearchMenu();
@@ -160,23 +153,23 @@ export default class GlimmerHeader extends Component {
 
   @action
   toggleSearchMenu() {
-    if (
-      this.site.mobileView &&
-      this.router.currentRouteName === "full-page-search"
-    ) {
-      scrollTop();
-      document.querySelector(".full-page-search").focus();
-      return false;
+    if (this.site.mobileView) {
+      const context = this.search.searchContext;
+      let params = "";
+      if (context) {
+        params = `?context=${context.type}&context_id=${context.id}&skip_context=${this.skipSearchContext}`;
+      }
+
+      if (this.router.currentRouteName === "full-page-search") {
+        scrollTop();
+        document.querySelector(".full-page-search").focus();
+        return false;
+      } else {
+        return DiscourseURL.routeTo("/search" + params);
+      }
     }
 
-    if (this.site.mobileView && this.search.visible) {
-      // hide is delayed for the duration of `search-slide-out` animation
-      this.hasClosingAnimation = true;
-    } else {
-      this.search.visible = !this.search.visible;
-      this.toggleBodyScrolling(true);
-    }
-
+    this.search.visible = !this.search.visible;
     if (!this.search.visible) {
       this.search.highlightTerm = "";
       this.search.inTopicContext = false;
@@ -303,13 +296,8 @@ export default class GlimmerHeader extends Component {
           {{#if this.search.visible}}
             <SearchMenuWrapper
               @closeSearchMenu={{this.toggleSearchMenu}}
-              @searchInputId="icon-search-input"
               {{this.handleFocus}}
-              {{delayedDestroy
-                animate=this.hasClosingAnimation
-                elementSelector=".menu-panel.search-menu-panel.slide-in"
-                onComplete=this.handleAnimationComplete
-              }}
+              @searchInputId="icon-search-input"
             />
           {{else if this.header.hamburgerVisible}}
             <HamburgerDropdownWrapper

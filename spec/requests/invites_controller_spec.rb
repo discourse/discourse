@@ -120,6 +120,44 @@ RSpec.describe InvitesController do
         expect(response.status).to eq(200)
       end
 
+      it "doesn't automatically redirect to the topic if the invite has expired" do
+        invite.update!(topics: [Fabricate(:topic)])
+        invite.update!(expires_at: 1.day.ago)
+
+        get "/invites/#{invite.invite_key}"
+        expect(response.status).to eq(200)
+
+        expect(response.body).to have_tag(:body, with: { class: "no-ember" })
+        expect(response.body).to include(I18n.t("invite.expired", base_url: Discourse.base_url))
+      end
+
+      it "shows the accept invite page when the user can access the topic, but the invite would also add them to a group" do
+        invite.update!(topics: [Fabricate(:topic)])
+        InvitedGroup.create!(invite: invite, group: group)
+
+        get "/invites/#{invite.invite_key}"
+        expect(response.status).to eq(200)
+        expect(response.body).not_to have_tag(:body, with: { class: "no-ember" })
+        expect(response.body).not_to include(
+          I18n.t(
+            "invite.not_found_template",
+            site_name: SiteSetting.title,
+            base_url: Discourse.base_url,
+          ),
+        )
+      end
+
+      it "automatically redirects to the topic if the user can access it, and they're already a member of the invite group" do
+        invite.update!(topics: [Fabricate(:topic)])
+
+        group.add(user)
+        InvitedGroup.create!(invite: invite, group: group)
+
+        get "/invites/#{invite.invite_key}"
+        expect(response.status).to eq(302)
+        expect(response.location).to eq(invite.topics.first.url)
+      end
+
       it "shows the accept invite page when user's email matches the invite email" do
         invite.update_columns(email: user.email)
 

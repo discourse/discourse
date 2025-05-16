@@ -202,12 +202,13 @@
       font-size: var(--font-up-3);
     }
 
-    a {
-      color: var(--primary);
+    &.can-edit-topic:hover {
+      outline: 2px solid var(--tertiary);
+      border-radius: var(--d-border-radius);
     }
   }
 
-  a.edit-topic .d-icon {
+  &.can-edit-topic .d-icon {
     font-size: 0.8em;
   }
 
@@ -453,7 +454,8 @@ a[data-clicks]::after {
   @include click-counter-badge;
 }
 
-.post-info a {
+.post-info a,
+.post-info svg {
   color: var(--primary-medium);
 }
 

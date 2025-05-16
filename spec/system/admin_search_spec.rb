@@ -61,19 +61,6 @@ describe "Admin Search", type: :system do
     )
   end
 
-  it "can go to full page search with link" do
-    visit "/admin"
-    sidebar.click_search_input
-    search_modal.search("min_topic_title")
-    search_modal.click_switch_to_full_page
-
-    expect(page).to have_current_path("/admin/search?filter=min_topic_title")
-    expect(search_modal.find_result("setting", 0)).to have_content("Min topic title length")
-    expect(search_modal.find_result("setting", 0)).to have_content(
-      I18n.t("site_settings.min_topic_title_length"),
-    )
-  end
-
   it "informs user about no results" do
     visit "/admin"
     sidebar.click_search_input
@@ -81,7 +68,7 @@ describe "Admin Search", type: :system do
     search_modal.search("very long search phrase")
 
     expect(search_modal).to have_content(
-      "We couldn’t find anything matching ‘very long search phrase’.",
+      'We couldn’t find anything matching "very long search phrase".',
     )
   end
 

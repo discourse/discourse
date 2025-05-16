@@ -1007,7 +1007,6 @@ sw:
         title: "Usajili wa Anwani ya Mtandao"
       avatar:
         title: "Picha ya mtumiaji"
-        header_title: "maelezo mafupi, ujumbe, mialamisho na mapendekezo"
       title:
         title: "Kichwa cha Habari"
         none: "(hakuna)"
@@ -1797,6 +1796,11 @@ sw:
       sr_post_like_count_button:
         one: "Mtu %{count} amevutiwa na hii."
         other: "Watu %{count} wamevutiwa na hii."
+      localizations:
+        table:
+          actions: "Vitendo"
+          edit: "Hariri"
+          delete: "Futa"
       errors:
         create: "Samahani, hitilafu imetokea wakati wa kutengeneza chapisho lako. Tafadhali jaribu tena."
         edit: "Samahani, hitilafu imetokea wakati wa kuhariri chapisho lako. Tafadhali jaribu tena."
@@ -2717,6 +2721,7 @@ sw:
           delete: "Futa"
         color_palettes:
           palette_name: "Jina"
+          delete: "Futa"
           colors:
             title: "Rangi"
       plugins:

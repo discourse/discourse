@@ -362,7 +362,8 @@ export default function () {
         this.route("developer", function () {
           this.route("settings", { path: "/" });
         });
-        this.route("logo-and-fonts");
+        this.route("logo");
+        this.route("fonts");
         this.route("navigation", function () {
           this.route("settings", { path: "/" });
         });
@@ -392,7 +393,7 @@ export default function () {
         );
       }
     );
-
+    this.route("schema", { path: "schema/:setting_name" });
     this.route(
       "adminPlugins",
       { path: "/plugins", resetNamespace: true },

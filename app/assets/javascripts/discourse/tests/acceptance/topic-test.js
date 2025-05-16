@@ -106,7 +106,7 @@ import { i18n } from "discourse-i18n";
       test("Showing and hiding the edit controls", async function (assert) {
         await visit("/t/internationalization-localization/280");
 
-        await click("#topic-title .d-icon-pencil");
+        await click("#topic-title .can-edit-topic");
 
         assert.dom("#edit-title").exists("shows the editing controls");
         assert
@@ -123,7 +123,7 @@ import { i18n } from "discourse-i18n";
 
         await visit("/t/internationalization-localization/280");
 
-        await click("#topic-title .d-icon-pencil");
+        await click("#topic-title .can-edit-topic");
         await fillIn("#edit-title", "this is the new title");
         await categoryChooser.expand();
         await categoryChooser.selectRowByValue(4);
@@ -168,7 +168,7 @@ import { i18n } from "discourse-i18n";
 
       test("Updating the topic title with emojis", async function (assert) {
         await visit("/t/internationalization-localization/280");
-        await click("#topic-title .d-icon-pencil");
+        await click("#topic-title .can-edit-topic");
 
         await fillIn("#edit-title", "emojis title :bike: :blonde_woman:t6:");
 
@@ -181,7 +181,7 @@ import { i18n } from "discourse-i18n";
 
       test("Updating the topic title with unicode emojis", async function (assert) {
         await visit("/t/internationalization-localization/280");
-        await click("#topic-title .d-icon-pencil");
+        await click("#topic-title .can-edit-topic");
 
         await fillIn("#edit-title", "emojis title 👨‍🌾🙏");
 
@@ -195,7 +195,7 @@ import { i18n } from "discourse-i18n";
       test("Updating the topic title with unicode emojis without whitespace", async function (assert) {
         this.siteSettings.enable_inline_emoji_translation = true;
         await visit("/t/internationalization-localization/280");
-        await click("#topic-title .d-icon-pencil");
+        await click("#topic-title .can-edit-topic");
 
         await fillIn("#edit-title", "Test🙂Title");
 
@@ -297,7 +297,8 @@ import { i18n } from "discourse-i18n";
           .dom(".title-wrapper .topic-featured-link")
           .exists("link is shown with topic title");
 
-        await click(".title-wrapper .edit-topic");
+        assert.dom(".title-wrapper").exists("title wrapper is shown");
+        await click("#topic-title .can-edit-topic");
         assert
           .dom(".title-wrapper .remove-featured-link")
           .exists("link to remove featured link");
@@ -453,7 +454,8 @@ import { i18n } from "discourse-i18n";
           .dom(".title-wrapper .topic-featured-link")
           .exists("link is shown with topic title");
 
-        await click(".title-wrapper .edit-topic");
+        assert.dom(".title-wrapper").exists("title wrapper is shown");
+        await click(".title-wrapper .can-edit-topic");
         assert
           .dom(".title-wrapper .remove-featured-link")
           .exists("link to remove featured link");
@@ -640,6 +642,68 @@ import { i18n } from "discourse-i18n";
         await visit("/t/-/280");
         await click("a.by-post-id");
         assert.true(currentURL().includes("/280"));
+      });
+    }
+  );
+
+  acceptance(
+    `Cooked quoted content (glimmer_post_stream_mode = ${postStreamMode})`,
+    function (needs) {
+      needs.settings({
+        glimmer_post_stream_mode: postStreamMode,
+      });
+
+      needs.pretender((server, helper) => {
+        server.get("/posts/by_number/280/3", () =>
+          helper.response(
+            200,
+            topicFixtures["/t/280/1.json"].post_stream.posts[2]
+          )
+        );
+      });
+
+      test("The quoted content is toggled correclty", async function (assert) {
+        await visit("/t/internationalization-localization/280");
+
+        assert
+          .dom(
+            "#post_5 .cooked .quote[data-topic='280'][data-post='3'] .quote-controls .quote-toggle"
+          )
+          .hasAttribute("aria-expanded", "false");
+        assert
+          .dom("#post_5 .quote[data-topic='280'][data-post='3']")
+          .includesText(
+            'So you could replace that lookup table with the "de" one to get German.'
+          )
+          .doesNotIncludeText(
+            "Yep, all strings are going through a lookup table.*"
+          );
+
+        await click(
+          "#post_5 .cooked .quote[data-topic='280'][data-post='3'] .quote-controls .quote-toggle"
+        );
+
+        assert
+          .dom(
+            "#post_5 .cooked .quote[data-topic='280'][data-post='3'] .quote-controls .quote-toggle"
+          )
+          .hasAttribute("aria-expanded", "true");
+        assert
+          .dom("#post_5 .quote[data-topic='280'][data-post='3']")
+          .includesText(
+            'So you could replace that lookup table with the "de" one to get German.'
+          )
+          .includesText("Yep, all strings are going through a lookup table.*");
+
+        await click(
+          "#post_5 .cooked .quote[data-topic='280'][data-post='3'] .quote-controls .quote-toggle"
+        );
+
+        assert
+          .dom(
+            "#post_5 .cooked .quote[data-topic='280'][data-post='3'] .quote-controls .quote-toggle"
+          )
+          .hasAttribute("aria-expanded", "false");
       });
     }
   );
