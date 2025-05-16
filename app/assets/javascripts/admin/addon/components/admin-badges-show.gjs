@@ -210,6 +210,11 @@ export default class AdminBadgesShow extends Component {
   }
 
   @action
+  toggleBadgeEnabled(value, { set }) {
+    set("enabled", value);
+  }
+
+  @action
   async handleDelete() {
     if (!this.args.badge?.id) {
       return this.router.transitionTo("adminBadges.index");
@@ -245,25 +250,12 @@ export default class AdminBadgesShow extends Component {
       >
         <form.Header as |header|>
           <header.Title>
-            {{iconOrImage data}}
             <span class="badge-display-name">{{data.name}}</span>
           </header.Title>
           <header.Subtitle>
             This is a subtitle
           </header.Subtitle>
         </form.Header>
-
-        <form.Field
-          @name="enabled"
-          @validation="required"
-          @title={{i18n "admin.badges.status"}}
-          as |field|
-        >
-          <field.Question
-            @yesLabel={{i18n "admin.badges.enabled"}}
-            @noLabel={{i18n "admin.badges.disabled"}}
-          />
-        </form.Field>
 
         {{#if this.readOnly}}
           <form.Container data-name="name" @title={{i18n "admin.badges.name"}}>
@@ -291,25 +283,17 @@ export default class AdminBadgesShow extends Component {
           </form.Field>
         {{/if}}
 
-        <form.Section @title="Design" @subtitle="this is a subtitle">
-          <form.Field
-            @name="badge_type_id"
-            @title={{i18n "admin.badges.badge_type"}}
-            @description="This is a required field"
-            @helpText="This is a required field"
-            @validation="required"
-            @disabled={{this.readOnly}}
-            as |field|
-          >
-            <field.Select as |select|>
-              {{#each this.badgeTypes as |badgeType|}}
-                <select.Option @value={{badgeType.id}}>
-                  {{badgeType.name}}
-                </select.Option>
-              {{/each}}
-            </field.Select>
-          </form.Field>
+        <form.Field
+          @name="enabled"
+          @validation="required"
+          @title={{i18n "admin.badges.status"}}
+          @onSet={{this.toggleBadgeEnabled}}
+          as |field|
+        >
+          <field.Toggle />
+        </form.Field>
 
+        <form.Section @title="Design">
           <form.ConditionalContent
             @activeName={{if data.image_url "upload-image" "choose-icon"}}
             as |cc|
@@ -348,6 +332,23 @@ export default class AdminBadgesShow extends Component {
               </Content>
             </cc.Contents>
           </form.ConditionalContent>
+          <form.Field
+            @name="badge_type_id"
+            @title={{i18n "admin.badges.badge_type"}}
+            @description="This is a required field"
+            @helpText="This is a required field"
+            @validation="required"
+            @disabled={{this.readOnly}}
+            as |field|
+          >
+            <field.Select as |select|>
+              {{#each this.badgeTypes as |badgeType|}}
+                <select.Option @value={{badgeType.id}}>
+                  {{badgeType.name}}
+                </select.Option>
+              {{/each}}
+            </field.Select>
+          </form.Field>
 
           {{#if this.readOnly}}
             <form.Container
