@@ -38,6 +38,7 @@
 }
 
 .menu-panel {
+  --list-item-padding: 0.5em 1rem;
   box-shadow: var(--shadow-dropdown);
   background-color: var(--secondary);
   z-index: z("header");
@@ -346,7 +347,7 @@
         // button, a, and everything else
         align-items: center;
         margin: 0;
-        padding: 0.5em 1rem;
+        padding: var(--list-item-padding);
         flex: 1 1 auto;
       }
 
@@ -538,10 +539,7 @@
 
     a {
       display: flex;
-    }
-
-    button {
-      padding: 0.25em 0.5em;
+      padding: var(--list-item-padding);
     }
 
     a,
@@ -623,7 +621,6 @@
     a {
       color: var(--primary);
       align-items: center;
-      padding: 0.5em 1rem;
 
       .item-label {
         font-weight: bold;
