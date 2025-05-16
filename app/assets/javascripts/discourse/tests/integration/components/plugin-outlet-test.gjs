@@ -1026,21 +1026,6 @@ module(
   }
 );
 
-module("Integration | Component | plugin-outlet | tagName", function (hooks) {
-  setupRenderingTest(hooks);
-
-  test("supports the `@tagName` argument", async function (assert) {
-    await withSilencedDeprecationsAsync(
-      "discourse.plugin-outlet-tag-name",
-      async () =>
-        await render(
-          <template><PluginOutlet @name="test-name" @tagName="div" /></template>
-        )
-    );
-    assert.dom("div").exists();
-  });
-});
-
 module(
   "Integration | Component | plugin-outlet | legacy extraConnectorClass",
   function (hooks) {
