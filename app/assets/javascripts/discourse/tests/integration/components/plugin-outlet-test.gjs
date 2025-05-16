@@ -1103,7 +1103,7 @@ module(
       assert.dom(".classic-test").hasText("Hello world from classic");
     });
 
-    test("makes arguments available at top level in classic components", async function (assert) {
+    test("guards against name clashes in classic components", async function (assert) {
       extraConnectorComponent(
         "test-name",
         class extends ClassicComponent {
