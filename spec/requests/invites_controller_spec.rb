@@ -137,7 +137,7 @@ RSpec.describe InvitesController do
 
         get "/invites/#{invite.invite_key}"
         expect(response.status).to eq(200)
-        expect(response.body).to_not have_tag(:body, with: { class: "no-ember" })
+        expect(response.body).not_to have_tag(:body, with: { class: "no-ember" })
         expect(response.body).not_to include(
           I18n.t(
             "invite.not_found_template",

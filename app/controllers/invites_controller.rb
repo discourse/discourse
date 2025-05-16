@@ -42,7 +42,7 @@ class InvitesController < ApplicationController
       end
     end
 
-    show_invite(invite) if invite.present?
+    show_invite(invite)
   rescue RateLimiter::LimitExceeded => e
     flash.now[:error] = e.description
     render layout: "no_ember"
