@@ -28,18 +28,21 @@ class InvitesController < ApplicationController
 
     invite = Invite.find_by(invite_key: params[:id])
 
-    # automatically redirect to the topic if the user is logged in and can see it
+    if !invite.present? || !invite.redeemable?
+      show_irredeemable_invite(invite)
+      return
+    end
+
+    # automatically redirect to the topic if the user is logged in and can see it,
+    # but only if the invite wouldn't also add the user to a group
     if current_user
-      if topic = invite.topics.first
+      new_group_ids = invite.groups.pluck(:id) - current_user.group_users.pluck(:group_id)
+      if new_group_ids.empty? && topic = invite.topics.first
         return redirect_to(topic.url) if current_user.guardian.can_see?(topic)
       end
     end
 
-    if invite.present? && invite.redeemable?
-      show_invite(invite)
-    else
-      show_irredeemable_invite(invite)
-    end
+    show_invite(invite)
   rescue RateLimiter::LimitExceeded => e
     flash.now[:error] = e.description
     render layout: "no_ember"
