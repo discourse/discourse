@@ -499,6 +499,9 @@ class BulkImport::Base
     id
     name
     full_name
+    public_admission
+    public_exit
+    allow_membership_requests
     title
     bio_raw
     bio_cooked
@@ -508,6 +511,7 @@ class BulkImport::Base
     messageable_level
     created_at
     updated_at
+    assignable_level
   ]
 
   USER_COLUMNS = %i[
@@ -615,7 +619,7 @@ class BulkImport::Base
 
   USER_FOLLOWER_COLUMNS = %i[user_id follower_id level created_at updated_at]
 
-  GROUP_USER_COLUMNS = %i[group_id user_id created_at updated_at]
+  GROUP_USER_COLUMNS = %i[group_id user_id owner created_at updated_at]
 
   USER_CUSTOM_FIELD_COLUMNS = %i[user_id name value created_at updated_at]
 
@@ -658,6 +662,8 @@ class BulkImport::Base
   CATEGORY_TAG_GROUP_COLUMNS = %i[category_id tag_group_id created_at updated_at]
 
   CATEGORY_USER_COLUMNS = %i[category_id user_id notification_level last_seen_at]
+
+  CATEGORY_MODERATION_GROUP_COLUMNS = %i[category_id group_id created_at updated_at]
 
   TOPIC_COLUMNS = %i[
     id
@@ -1039,6 +1045,10 @@ class BulkImport::Base
 
   def create_category_users(rows, &block)
     create_records(rows, "category_user", CATEGORY_USER_COLUMNS, &block)
+  end
+
+  def create_category_moderation_groups(rows, &block)
+    create_records(rows, "category_moderation_group", CATEGORY_MODERATION_GROUP_COLUMNS, &block)
   end
 
   def create_topics(rows, &block)
@@ -1465,6 +1475,12 @@ class BulkImport::Base
     category_group[:created_at] = NOW
     category_group[:updated_at] = NOW
     category_group
+  end
+
+  def process_category_moderation_group(category_moderation_group)
+    category_moderation_group[:created_at] ||= NOW
+    category_moderation_group[:updated_at] ||= NOW
+    category_moderation_group
   end
 
   def process_category_tag_group(category_tag_group)
