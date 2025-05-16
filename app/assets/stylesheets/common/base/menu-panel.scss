@@ -340,6 +340,7 @@
       flex: 1 1 auto;
       display: flex;
       flex-direction: column;
+      max-height: 3.25em;
 
       > * {
         // button, a, and everything else
