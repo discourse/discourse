@@ -36,6 +36,7 @@ import TopicTimerInfo from "discourse/components/topic-timer-info";
 import TopicTitle from "discourse/components/topic-title";
 import ageWithTooltip from "discourse/helpers/age-with-tooltip";
 import bodyClass from "discourse/helpers/body-class";
+import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import htmlSafe from "discourse/helpers/html-safe";
@@ -96,160 +97,165 @@ export default RouteTemplate(
             @cancelled={{@controller.cancelEditingTopic}}
             @save={{@controller.finishedEditingTopic}}
             @model={{@controller.model}}
+            @class={{@controller.topicTitleClass}}
           >
-            {{#if @controller.editingTopic}}
-              <div class="edit-topic-title">
-                <PrivateMessageGlyph
-                  @shouldShow={{@controller.model.isPrivateMessage}}
-                />
+            <div
+              role="button"
+              class={{concatClass
+                "edit-topic-title"
+                @controller.topicTitleClass
+              }}
+              aria-label={{i18n "edit_topic"}}
+              {{on "click" @controller.titleClick}}
+            >
+              {{#if @controller.editingTopic}}
+                <div class="edit-topic-title">
+                  <PrivateMessageGlyph
+                    @shouldShow={{@controller.model.isPrivateMessage}}
+                  />
 
-                <div class="edit-title__wrapper">
+                  <div class="edit-title__wrapper">
+                    <PluginOutlet
+                      @name="edit-topic-title"
+                      @outletArgs={{hash
+                        model=@controller.model
+                        buffered=@controller.buffered
+                      }}
+                    >
+                      <TextField
+                        @id="edit-title"
+                        @value={{@controller.buffered.title}}
+                        @maxlength={{@controller.siteSettings.max_topic_title_length}}
+                        @autofocus="true"
+                      />
+                    </PluginOutlet>
+                  </div>
+
+                  {{#if @controller.showCategoryChooser}}
+                    <div class="edit-category__wrapper">
+                      <PluginOutlet
+                        @name="edit-topic-category"
+                        @outletArgs={{hash
+                          model=@controller.model
+                          buffered=@controller.buffered
+                        }}
+                      >
+                        <CategoryChooser
+                          @value={{@controller.buffered.category_id}}
+                          @onChange={{@controller.topicCategoryChanged}}
+                          class="small"
+                        />
+                      </PluginOutlet>
+                    </div>
+                  {{/if}}
+
+                  {{#if @controller.canEditTags}}
+                    <div class="edit-tags__wrapper">
+                      <PluginOutlet
+                        @name="edit-topic-tags"
+                        @outletArgs={{hash
+                          model=@controller.model
+                          buffered=@controller.buffered
+                        }}
+                      >
+                        <MiniTagChooser
+                          @value={{@controller.buffered.tags}}
+                          @onChange={{@controller.topicTagsChanged}}
+                          @options={{hash
+                            filterable=true
+                            categoryId=@controller.buffered.category_id
+                            minimum=@controller.minimumRequiredTags
+                            filterPlaceholder="tagging.choose_for_topic"
+                            useHeaderFilter=true
+                          }}
+                        />
+                      </PluginOutlet>
+                    </div>
+                  {{/if}}
+
                   <PluginOutlet
-                    @name="edit-topic-title"
+                    @name="edit-topic"
+                    @connectorTagName="div"
                     @outletArgs={{hash
                       model=@controller.model
                       buffered=@controller.buffered
                     }}
-                  >
-                    <TextField
-                      @id="edit-title"
-                      @value={{@controller.buffered.title}}
-                      @maxlength={{@controller.siteSettings.max_topic_title_length}}
-                      @autofocus="true"
-                    />
-                  </PluginOutlet>
-                </div>
-
-                {{#if @controller.showCategoryChooser}}
-                  <div class="edit-category__wrapper">
-                    <PluginOutlet
-                      @name="edit-topic-category"
-                      @outletArgs={{hash
-                        model=@controller.model
-                        buffered=@controller.buffered
-                      }}
-                    >
-                      <CategoryChooser
-                        @value={{@controller.buffered.category_id}}
-                        @onChange={{@controller.topicCategoryChanged}}
-                        class="small"
-                      />
-                    </PluginOutlet>
-                  </div>
-                {{/if}}
-
-                {{#if @controller.canEditTags}}
-                  <div class="edit-tags__wrapper">
-                    <PluginOutlet
-                      @name="edit-topic-tags"
-                      @outletArgs={{hash
-                        model=@controller.model
-                        buffered=@controller.buffered
-                      }}
-                    >
-                      <MiniTagChooser
-                        @value={{@controller.buffered.tags}}
-                        @onChange={{@controller.topicTagsChanged}}
-                        @options={{hash
-                          filterable=true
-                          categoryId=@controller.buffered.category_id
-                          minimum=@controller.minimumRequiredTags
-                          filterPlaceholder="tagging.choose_for_topic"
-                          useHeaderFilter=true
-                        }}
-                      />
-                    </PluginOutlet>
-                  </div>
-                {{/if}}
-
-                <PluginOutlet
-                  @name="edit-topic"
-                  @connectorTagName="div"
-                  @outletArgs={{hash
-                    model=@controller.model
-                    buffered=@controller.buffered
-                  }}
-                />
-
-                <div class="edit-controls">
-                  <DButton
-                    @action={{@controller.finishedEditingTopic}}
-                    @icon="check"
-                    @ariaLabel="composer.save_edit"
-                    class="btn-primary submit-edit"
-                  />
-                  <DButton
-                    @action={{@controller.cancelEditingTopic}}
-                    @icon="xmark"
-                    @ariaLabel="composer.cancel"
-                    class="btn-default cancel-edit"
                   />
 
-                  {{#if @controller.canRemoveTopicFeaturedLink}}
-                    <a
-                      href
-                      {{on "click" @controller.removeFeaturedLink}}
-                      class="remove-featured-link"
-                      title={{i18n "composer.remove_featured_link"}}
-                    >
-                      {{icon "circle-xmark"}}
-                      {{@controller.featuredLinkDomain}}
-                    </a>
-                  {{/if}}
+                  <div class="edit-controls">
+                    <DButton
+                      @action={{@controller.finishedEditingTopic}}
+                      @icon="check"
+                      @ariaLabel="composer.save_edit"
+                      class="btn-primary submit-edit"
+                    />
+                    <DButton
+                      @action={{@controller.cancelEditingTopic}}
+                      @icon="xmark"
+                      @ariaLabel="composer.cancel"
+                      class="btn-default cancel-edit"
+                    />
+
+                    {{#if @controller.canRemoveTopicFeaturedLink}}
+                      <a
+                        href
+                        {{on "click" @controller.removeFeaturedLink}}
+                        class="remove-featured-link"
+                        title={{i18n "composer.remove_featured_link"}}
+                      >
+                        {{icon "circle-xmark"}}
+                        {{@controller.featuredLinkDomain}}
+                      </a>
+                    {{/if}}
+                  </div>
                 </div>
-              </div>
 
-            {{else}}
-              <h1
-                data-topic-id={{@controller.model.id}}
-                role="button"
-                class={{@controller.topicTitleClass}}
-                aria-label={{i18n "edit_topic"}}
-                {{on "click" @controller.titleClick}}
-              >
-                {{#unless @controller.model.is_warning}}
-                  {{#if @controller.canSendPms}}
-                    <PrivateMessageGlyph
-                      @shouldShow={{@controller.model.isPrivateMessage}}
-                      @href={{@controller.pmPath}}
-                      @title="topic_statuses.personal_message.title"
-                      @ariaLabel="user.messages.inbox"
-                    />
-                  {{else}}
-                    <PrivateMessageGlyph
-                      @shouldShow={{@controller.model.isPrivateMessage}}
-                    />
+              {{else}}
+                <h1 data-topic-id={{@controller.model.id}}>
+                  {{#unless @controller.model.is_warning}}
+                    {{#if @controller.canSendPms}}
+                      <PrivateMessageGlyph
+                        @shouldShow={{@controller.model.isPrivateMessage}}
+                        @href={{@controller.pmPath}}
+                        @title="topic_statuses.personal_message.title"
+                        @ariaLabel="user.messages.inbox"
+                      />
+                    {{else}}
+                      <PrivateMessageGlyph
+                        @shouldShow={{@controller.model.isPrivateMessage}}
+                      />
+                    {{/if}}
+                  {{/unless}}
+
+                  {{#if @controller.model.details.loaded}}
+                    <TopicStatus @topic={{@controller.model}} />
+                    <span class="fancy-title">
+                      {{htmlSafe @controller.model.fancyTitle}}
+                    </span>
                   {{/if}}
-                {{/unless}}
 
-                {{#if @controller.model.details.loaded}}
-                  <TopicStatus @topic={{@controller.model}} />
-                  <span class="fancy-title">
-                    {{htmlSafe @controller.model.fancyTitle}}
-                  </span>
-                {{/if}}
+                  {{#if @controller.showEditButton}}
+                    {{icon "pencil"}}
+                  {{/if}}
 
-                {{#if @controller.showEditButton}}
-                  {{icon "pencil"}}
-                {{/if}}
+                  <PluginOutlet
+                    @name="topic-title-suffix"
+                    @outletArgs={{hash model=@controller.model}}
+                  />
+                </h1>
 
                 <PluginOutlet
-                  @name="topic-title-suffix"
-                  @outletArgs={{hash model=@controller.model}}
-                />
-              </h1>
+                  @name="topic-category-wrapper"
+                  @outletArgs={{hash topic=@controller.model}}
+                >
+                  <TopicCategory
+                    @topic={{@controller.model}}
+                    class="topic-category"
+                  />
+                </PluginOutlet>
 
-              <PluginOutlet
-                @name="topic-category-wrapper"
-                @outletArgs={{hash topic=@controller.model}}
-              >
-                <TopicCategory
-                  @topic={{@controller.model}}
-                  class="topic-category"
-                />
-              </PluginOutlet>
-
-            {{/if}}
+              {{/if}}
+            </div>
           </TopicTitle>
 
           {{#if @controller.model.publishedPage}}
