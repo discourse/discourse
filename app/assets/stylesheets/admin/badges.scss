@@ -51,11 +51,32 @@
         background-color: var(--tertiary-medium);
         border-radius: 3px;
       }
+
+      .admin-badge-list-item {
+        border: none;
+      }
+
+      .admin-badge-list-item a {
+        padding: 0.5rem 1rem;
+      }
+
+      .admin-badge-list-item a:hover {
+        background-color: var(--d-hover);
+        border-radius: var(--d-border-radius);
+      }
     }
 
     .user-badge {
       border: none;
       background-color: unset;
+      padding: 0;
+      font-size: var(--font-0);
+      display: flex;
+      gap: 1rem;
+    }
+
+    .user-badge .badge-display-name {
+      margin: 0;
     }
   }
 
@@ -82,7 +103,7 @@
   }
 
   .current-badge {
-    margin: 20px;
+    margin-left: 1rem;
 
     .form-kit__field-question {
       .form-kit__control-radio-label {
@@ -91,7 +112,9 @@
     }
 
     .readonly-field {
-      color: var(--primary-high);
+      margin: 0;
+      font-size: var(--font-down-1-rem);
+      color: var(--primary-800);
     }
 
     .badge-preview {
