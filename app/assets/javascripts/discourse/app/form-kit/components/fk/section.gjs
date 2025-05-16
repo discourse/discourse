@@ -6,7 +6,7 @@ const FKSection = <template>
     {{#if (or @title @subtitle)}}
       <div class="form-kit__section-header">
         {{#if @title}}
-          <h2 class="form-kit__section-title">{{@title}}</h2>
+          <h3 class="form-kit__section-title">{{@title}}</h3>
         {{/if}}
 
         {{#if @subtitle}}
