@@ -5,11 +5,7 @@ class ColorSchemeSerializer < ApplicationSerializer
   has_many :colors, serializer: ColorSchemeColorSerializer, embed: :objects
 
   def theme_name
-    object.theme&.name
-  end
-
-  def theme_id
-    object.theme&.id
+    (options[:theme] || object.theme)&.name
   end
 
   def colors

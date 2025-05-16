@@ -3,7 +3,8 @@
 require "base64"
 
 class ThemeSerializer < BasicThemeSerializer
-  attributes :color_scheme_id,
+  attributes :color_scheme,
+             :color_scheme_id,
              :user_selectable,
              :auto_update,
              :remote_theme_id,
@@ -15,7 +16,6 @@ class ThemeSerializer < BasicThemeSerializer
              :theme_fields,
              :screenshot_url
 
-  has_one :color_scheme, serializer: ColorSchemeSerializer, embed: :object
   has_one :user, serializer: UserNameSerializer, embed: :object
   has_one :disabled_by, serializer: UserNameSerializer, embed: :object
 
@@ -30,6 +30,14 @@ class ThemeSerializer < BasicThemeSerializer
     @errors = []
 
     object.theme_fields.each { |o| @errors << o.error if o.error }
+  end
+
+  def color_scheme
+    ColorSchemeSerializer.new(object.color_scheme, root: false, theme: object)
+  end
+
+  def include_color_scheme?
+    object.color_scheme_id
   end
 
   def theme_fields
