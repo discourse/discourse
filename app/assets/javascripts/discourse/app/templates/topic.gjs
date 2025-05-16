@@ -97,16 +97,13 @@ export default RouteTemplate(
             @cancelled={{@controller.cancelEditingTopic}}
             @save={{@controller.finishedEditingTopic}}
             @model={{@controller.model}}
-            @class={{@controller.topicTitleClass}}
           >
             <div
               role="button"
-              class={{concatClass
-                "edit-topic-title"
-                @controller.topicTitleClass
-              }}
+              class={{concatClass "title-wrapper" @controller.topicTitleClass}}
               aria-label={{i18n "edit_topic"}}
               {{on "click" @controller.titleClick}}
+              title={{i18n "edit_topic"}}
             >
               {{#if @controller.editingTopic}}
                 <div class="edit-topic-title">

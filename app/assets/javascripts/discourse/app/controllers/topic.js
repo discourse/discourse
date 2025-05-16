@@ -158,13 +158,18 @@ export default class TopicController extends Controller {
     return loaded && isSharedDraft;
   }
 
-  @discourseComputed("model.details.can_edit")
-  topicTitleClass(canEdit) {
+  @discourseComputed("model.details.can_edit", "editingTopic")
+  topicTitleClass(canEdit, isEditingTopic) {
+    let classes = ["edit-topic"];
     if (canEdit) {
-      return "edit-topic can-edit-topic";
-    } else {
-      return "edit-topic";
+      classes.push("can-edit-topic");
     }
+
+    if (isEditingTopic) {
+      classes.push("editing-topic");
+    }
+
+    return classes.join(" ");
   }
 
   @discourseComputed("model.details.can_edit")

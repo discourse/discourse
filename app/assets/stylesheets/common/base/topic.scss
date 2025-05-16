@@ -174,6 +174,7 @@
   .title-wrapper {
     display: flex;
     flex-wrap: wrap;
+    gap: 0.5rem;
 
     @media screen and (width >= 925px) {
       width: 90%; // topic title isn't full-width on wide screens
@@ -188,6 +189,31 @@
         margin-top: 0.25em;
       }
     }
+
+    &.can-edit-topic h1,
+    &.can-edit-topic .badge-category__wrapper,
+    &.can-edit-topic .topic-header-extra {
+      outline: 2px solid transparent;
+      border-radius: var(--d-border-radius);
+      transition: outline ease-in-out 0.2s;
+      padding: 0.25rem;
+      margin-left: -0.25rem;
+      margin-top: -0.25rem;
+    }
+
+    &.can-edit-topic:not(.editing-topic) {
+      cursor: pointer;
+    }
+
+    &.can-edit-topic:not(.editing-topic) h1:hover,
+    &.can-edit-topic:not(.editing-topic) .badge-category__wrapper:hover,
+    &.can-edit-topic:not(.editing-topic) .topic-header-extra:hover {
+      outline: 2px solid var(--primary-300);
+    }
+
+    &.editing-topic {
+      transition: none;
+    }
   }
 
   h1 {
@@ -200,16 +226,6 @@
 
     @include viewport.until(sm) {
       font-size: var(--font-up-3);
-    }
-
-    &.can-edit-topic {
-      outline: 2px solid transparent;
-      border-radius: var(--d-border-radius);
-      transition: outline ease-in-out 0.2s;
-    }
-
-    &.can-edit-topic:hover {
-      outline: 2px solid var(--tertiary);
     }
   }
 
