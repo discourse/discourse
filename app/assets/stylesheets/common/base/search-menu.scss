@@ -11,11 +11,9 @@
   border-top: 1px solid var(--primary-low);
 }
 
-$search-pad-vertical: 0.25em;
-$search-pad-horizontal: 0.5em;
-$search-result-element-padding: 0.5em 1rem;
-
 .search-menu.glimmer-search-menu {
+  --search-result-element-padding: 0.5em 1rem;
+
   .search-input-wrapper {
     @include viewport.until(sm) {
       position: fixed;
@@ -42,7 +40,7 @@ $search-result-element-padding: 0.5em 1rem;
 
     .search-menu-panel & {
       @include viewport.from(sm) {
-        padding: $search-result-element-padding;
+        padding: 0.75em 1rem 0.5em;
       }
     }
   }
@@ -166,7 +164,7 @@ $search-result-element-padding: 0.5em 1rem;
   }
 
   .search-link {
-    padding: $search-result-element-padding;
+    padding: var(--search-result-element-padding);
 
     &.category,
     &.user,
@@ -417,7 +415,7 @@ $search-result-element-padding: 0.5em 1rem;
 }
 
 .search-random-quick-tip {
-  padding: 0 1rem max(0.5rem, 0.5em);
+  padding: 0 1rem max(0.75rem, 0.75em);
   font-size: var(--font-down-2);
   color: var(--primary-medium);
 
@@ -461,5 +459,5 @@ $search-result-element-padding: 0.5em 1rem;
 }
 
 .no-results {
-  padding: $search-result-element-padding;
+  padding: var(--search-result-element-padding);
 }

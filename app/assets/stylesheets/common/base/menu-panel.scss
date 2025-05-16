@@ -242,6 +242,7 @@
 }
 
 .user-menu.revamped {
+  --user-menu-border-width: 1px;
   right: 0;
   width: 320px;
   padding: 0;
@@ -257,6 +258,7 @@
     padding: 0;
     overflow-y: auto;
     overscroll-behavior: contain;
+    margin-inline: calc(var(--user-menu-border-width) * -1);
   }
 
   .tabs-list {
@@ -267,7 +269,7 @@
       display: flex;
       position: relative;
       border-radius: 0;
-      padding: 0.875em;
+      padding: 0.875em 1em 0.875em 0.875em;
 
       @media screen and (height <= 400px) {
         // helps with 400% zoom level
@@ -297,14 +299,18 @@
         background-color: var(--d-selected);
       }
 
-      &:hover {
-        background-color: var(--d-hover);
+      .discourse-no-touch & {
+        &:hover {
+          background-color: var(--d-hover);
+          border-left: var(--user-menu-border-width) solid var(--primary-low);
+          padding-left: calc(0.875em - var(--user-menu-border-width));
+        }
       }
     }
   }
 
   .bottom-tabs {
-    border-top: 1px solid var(--primary-low);
+    border-top: var(--user-menu-border-width) solid var(--primary-low);
   }
 
   .panel-body-contents {
@@ -316,7 +322,7 @@
     width: 320px;
     justify-content: space-between;
     box-sizing: border-box;
-    border-right: 1px solid var(--primary-low);
+    border-right: var(--user-menu-border-width) solid var(--primary-low);
     min-width: 0; // makes sure menu tabs don't go off screen
   }
 
@@ -387,7 +393,7 @@
     }
 
     hr {
-      border-top: 1px solid var(--primary-low);
+      border-top: var(--user-menu-border-width) solid var(--primary-low);
       width: 100%;
     }
   }
