@@ -2,14 +2,20 @@
 
 @mixin default-input {
   width: 100%;
-  height: 2em;
+  height: 2.25rem;
   background: var(--secondary);
-  border: 1px solid var(--primary-low-mid) !important;
+  border: 1px solid var(--primary-300) !important;
   border-radius: var(--d-input-border-radius);
-  padding: 0 0.5em !important;
+  padding: 0.25rem 0.75rem !important;
   box-sizing: border-box;
   margin: 0 !important;
   appearance: none;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  box-shadow:
+    0 0 #0000,
+    0 0 #0000,
+    0 1px 2px 0 rgba(0, 0, 0, 0.05);
 
   @content;
 
@@ -26,9 +32,9 @@
     &:not(:disabled) {
       background-color: var(--secondary) !important;
       color: var(--primary) !important;
-      border-color: var(--tertiary);
-      outline: 2px solid var(--tertiary);
-      outline-offset: -2px;
+      border-color: var(--primary);
+      outline: 1px solid var(--primary);
+      outline-offset: -1px;
 
       .d-icon {
         color: inherit !important;
@@ -40,7 +46,7 @@
     .discourse-no-touch & {
       background-color: var(--secondary);
       color: var(--primary);
-      border-color: var(--tertiary);
+      border-color: var(--primary);
 
       .d-icon {
         color: inherit;

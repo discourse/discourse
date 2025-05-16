@@ -16,10 +16,6 @@ module PageObjects
       def input_enter
         find(".admin-search__input-field").send_keys(:enter)
       end
-
-      def click_switch_to_full_page
-        find(".admin-search__full-page-link").click
-      end
     end
   end
 end

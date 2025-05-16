@@ -19,7 +19,7 @@
     "test": "ember test"
   },
   "dependencies": {
-    "@faker-js/faker": "^9.7.0",
+    "@faker-js/faker": "^9.8.0",
     "@glimmer/syntax": "0.93.1",
     "@highlightjs/cdn-assets": "11.11.1",
     "@json-editor/json-editor": "2.15.2",
@@ -51,7 +51,7 @@
     "prosemirror-schema-list": "^1.5.1",
     "prosemirror-state": "^1.4.3",
     "prosemirror-transform": "^1.10.4",
-    "prosemirror-view": "^1.39.2",
+    "prosemirror-view": "^1.39.3",
     "moment": "2.30.1",
     "moment-timezone": "0.5.45"
   },

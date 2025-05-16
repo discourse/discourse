@@ -83,7 +83,7 @@ export default class AdminFontsForm extends Component {
         },
       });
       this.toasts.success({
-        duration: 3000,
+        duration: "short",
         data: {
           message: i18n("admin.config.fonts.form.saved"),
         },
@@ -96,7 +96,7 @@ export default class AdminFontsForm extends Component {
       });
     } catch (err) {
       this.toasts.error({
-        duration: 3000,
+        duration: "short",
         data: {
           message: err.jqXHR.responseJSON.errors[0],
         },

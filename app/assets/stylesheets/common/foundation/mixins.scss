@@ -117,7 +117,7 @@ $hpad: 0.65em;
 // for consistent sizing across inputs, buttons and dropdowns
 @mixin form-item-sizing {
   border: 1px solid transparent;
-  font-size: var(--font-0);
+  font-size: var(--font-down-1-rem);
   line-height: normal;
   box-sizing: border-box;
   padding: $vpad $hpad;
@@ -151,9 +151,9 @@ $hpad: 0.65em;
 }
 
 @mixin default-focus() {
-  border-color: var(--tertiary);
-  outline: 2px solid var(--tertiary);
-  outline-offset: -2px;
+  border-color: var(--primary);
+  outline: 1px solid var(--primary);
+  outline-offset: -1px;
 }
 
 /// Helper function to easily use an SVG inline in CSS

@@ -3,8 +3,7 @@ import { i18n } from "discourse-i18n";
 
 <template>
   <DButton
-    class="btn-transparent show-advanced-search"
-    data-test-button="show-advanced-search"
+    class="show-advanced-search btn-transparent"
     title={{i18n "search.open_advanced"}}
     @action={{@openAdvancedSearch}}
     @icon="sliders"

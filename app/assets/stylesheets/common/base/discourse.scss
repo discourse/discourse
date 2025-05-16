@@ -8,7 +8,7 @@
   --d-max-width: 1110px;
   --d-input-bg-color: var(--secondary);
   --d-input-text-color: var(--primary);
-  --d-input-border: 1px solid var(--primary-400);
+  --d-input-border: 1px solid var(--primary-200);
   --d-input-bg-color--disabled: var(--primary-very-low);
   --d-input-text-color--disabled: var(--primary-medium);
   --d-input-border--disabled: 1px solid var(--primary-low);
@@ -190,10 +190,6 @@ label {
   margin-bottom: 5px;
   align-items: flex-start;
   color: var(--primary-high);
-
-  &:not(.checkbox-label) {
-    font-weight: bold;
-  }
 
   > .d-icon {
     align-self: center;
@@ -391,7 +387,7 @@ textarea {
   button,
   select,
   textarea {
-    font-size: var(--font-0);
+    font-size: var(--font-down-1-rem);
     font-weight: normal;
     line-height: var(--line-height-medium);
   }
@@ -400,7 +396,7 @@ textarea {
   textarea {
     display: inline-block;
     margin-bottom: 9px;
-    font-size: var(--font-0);
+    font-size: var(--font-down-1-rem);
     line-height: var(--line-height-large);
     color: var(--primary);
   }

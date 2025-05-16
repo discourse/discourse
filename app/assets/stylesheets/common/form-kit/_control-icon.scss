@@ -3,6 +3,7 @@
 .form-kit__control-icon {
   width: 100% !important;
   min-width: var(--form-kit-small-input);
+  height: 2.5rem;
 
   .formatted-selection {
     display: none !important;
@@ -19,7 +20,7 @@
 
   .select-kit-header {
     padding-inline: 0.65em !important;
-    height: 2em;
+    height: 2.5em;
 
     @include viewport.until(sm) {
       height: 2.25em;
