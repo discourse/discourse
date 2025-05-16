@@ -1067,7 +1067,7 @@ module(
       extraConnectorComponent(
         "test-name",
         <template>
-          <span class="gjs-test">{{@arg1}} from glimmer</span>
+          <span class="glimmer-test">{{@arg1}} from glimmer</span>
         </template>
       );
 
