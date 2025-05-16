@@ -28,6 +28,9 @@
     .admin-badge-list {
       height: 70vh;
       overflow-y: scroll;
+      padding: 0.5rem;
+      border: var(--d-input-border);
+      border-radius: var(--d-border-radius);
 
       .list-badge {
         float: right;
@@ -90,7 +93,7 @@
   }
 
   .current-badge {
-    margin-left: 1rem;
+    margin-left: 2rem;
 
     .form-kit__field-question {
       .form-kit__control-radio-label {
