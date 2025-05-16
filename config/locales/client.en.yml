@@ -2253,7 +2253,7 @@ en:
       label: "Select options"
     form_kit:
       reset: Reset
-      optional: optional
+      required: required
       errors_summary_title: "This form contains errors:"
       dirty_form: "You didn't submit your changes! Are you sure you want to leave?"
       errors:

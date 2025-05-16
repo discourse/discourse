@@ -15,6 +15,7 @@ import FKControlConditionalContent from "discourse/form-kit/components/fk/contro
 import FKErrorsSummary from "discourse/form-kit/components/fk/errors-summary";
 import FKField from "discourse/form-kit/components/fk/field";
 import FKFieldset from "discourse/form-kit/components/fk/fieldset";
+import FKHeader from "discourse/form-kit/components/fk/header";
 import FKInputGroup from "discourse/form-kit/components/fk/input-group";
 import FKObject from "discourse/form-kit/components/fk/object";
 import Row from "discourse/form-kit/components/fk/row";
@@ -278,6 +279,7 @@ class FKForm extends Component {
 
       {{yield
         (hash
+          Header=FKHeader
           Row=Row
           Section=FKSection
           Fieldset=FKFieldset

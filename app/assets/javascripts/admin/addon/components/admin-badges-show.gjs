@@ -243,11 +243,15 @@ export default class AdminBadgesShow extends Component {
         class="badge-form current-badge content-body"
         as |form data|
       >
-
-        <h2 class="current-badge-header">
-          {{iconOrImage data}}
-          <span class="badge-display-name">{{data.name}}</span>
-        </h2>
+        <form.Header as |header|>
+          <header.Title>
+            {{iconOrImage data}}
+            <span class="badge-display-name">{{data.name}}</span>
+          </header.Title>
+          <header.Subtitle>
+            This is a subtitle
+          </header.Subtitle>
+        </form.Header>
 
         <form.Field
           @name="enabled"
@@ -279,16 +283,20 @@ export default class AdminBadgesShow extends Component {
             @name="name"
             @disabled={{this.readOnly}}
             @validation="required"
+            @description="This is a required field"
+            @helpText="This is a required field"
             as |field|
           >
             <field.Input />
           </form.Field>
         {{/if}}
 
-        <form.Section @title="Design">
+        <form.Section @title="Design" @subtitle="this is a subtitle">
           <form.Field
             @name="badge_type_id"
             @title={{i18n "admin.badges.badge_type"}}
+            @description="This is a required field"
+            @helpText="This is a required field"
             @validation="required"
             @disabled={{this.readOnly}}
             as |field|
@@ -492,7 +500,6 @@ export default class AdminBadgesShow extends Component {
               @title={{i18n "admin.badges.allow_title"}}
               @showTitle={{false}}
               @name="allow_title"
-              @format="full"
               as |field|
             >
               <field.Checkbox />
@@ -503,7 +510,6 @@ export default class AdminBadgesShow extends Component {
               @showTitle={{false}}
               @name="multiple_grant"
               @disabled={{this.readOnly}}
-              @format="full"
               as |field|
             >
               <field.Checkbox />
@@ -519,7 +525,6 @@ export default class AdminBadgesShow extends Component {
               @showTitle={{false}}
               @name="listable"
               @disabled={{this.readOnly}}
-              @format="full"
               as |field|
             >
               <field.Checkbox />
@@ -530,7 +535,6 @@ export default class AdminBadgesShow extends Component {
               @showTitle={{false}}
               @name="show_posts"
               @disabled={{this.readOnly}}
-              @format="full"
               as |field|
             >
               <field.Checkbox />
@@ -541,7 +545,6 @@ export default class AdminBadgesShow extends Component {
               @showTitle={{false}}
               @name="show_in_post_header"
               @disabled={{this.disableBadgeOnPosts data}}
-              @format="full"
               as |field|
             >
               <field.Checkbox>

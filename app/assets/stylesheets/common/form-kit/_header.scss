@@ -1,0 +1,21 @@
+.form-kit__header-title {
+  margin: 0;
+  font-size: var(--font-up-1-rem);
+}
+
+.form-kit__header-subtitle {
+  margin: 0;
+  font-size: var(--font-down-1-rem);
+  color: var(--primary-very-high);
+}
+
+.form-kit__header {
+  width: 100%;
+}
+
+.form-kit__header-separator {
+  height: 1px;
+  width: 100%;
+  background-color: var(--primary-low-mid);
+  margin-top: 1rem;
+}

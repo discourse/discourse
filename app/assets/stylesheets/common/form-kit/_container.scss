@@ -1,6 +1,6 @@
 .form-kit__container {
   display: flex;
-  gap: 0.25rem;
+  gap: 0.5rem;
   flex-direction: column;
   align-items: flex-start;
 
@@ -10,24 +10,34 @@
     }
   }
 
-  &-title {
-    display: inline;
-    gap: 0.25em;
+  &-description {
     margin: 0;
     font-size: var(--font-down-1-rem);
-    color: var(--primary-high);
+    color: var(--primary-very-high);
+  }
+
+  &-help-text {
+    margin: 0;
+    font-size: var(--font-down-1-rem);
+    color: var(--primary-very-high);
+  }
+
+  &-title {
+    display: inline;
+    gap: 0.5rem;
+    margin: 0;
+    font-size: var(--font-down-1-rem);
+    color: var(--primary);
     font-weight: bold;
-    padding-bottom: 0.25em;
   }
 
   &-subtitle {
     display: flex;
     align-items: center;
-    gap: 0.25em;
+    gap: 0.5rem;
     margin: 0;
     font-size: var(--font-down-1-rem);
     color: var(--primary-high);
-    padding-bottom: 0.25em;
 
     > * {
       margin: 0;
@@ -42,7 +52,7 @@
 
   &-content {
     display: flex;
-    gap: 0.25em;
+    gap: 0.5rem;
     flex-direction: row;
     align-items: flex-start;
     max-width: 100%;
