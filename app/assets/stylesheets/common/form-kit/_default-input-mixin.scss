@@ -32,9 +32,9 @@
     &:not(:disabled) {
       background-color: var(--secondary) !important;
       color: var(--primary) !important;
-      border-color: var(--tertiary);
-      outline: 2px solid var(--tertiary);
-      outline-offset: -2px;
+      border-color: var(--primary);
+      outline: 1px solid var(--primary);
+      outline-offset: -1px;
 
       .d-icon {
         color: inherit !important;
@@ -46,7 +46,7 @@
     .discourse-no-touch & {
       background-color: var(--secondary);
       color: var(--primary);
-      border-color: var(--tertiary);
+      border-color: var(--primary);
 
       .d-icon {
         color: inherit;

@@ -1,16 +1,20 @@
 .form-kit__control-radio-label {
   display: flex;
-  gap: 0.5em;
+  gap: 0.5rem;
   font-weight: normal !important;
   margin: 0;
   color: var(--primary);
+  align-items: center;
+  line-height: 1;
 
   .form-kit__field[data-disabled] & {
     cursor: not-allowed;
   }
 
   input[type="radio"] {
-    margin-right: 0; // old input overrule
+    margin: 0; // old input overrule
+    width: 1rem;
+    height: 1rem;
   }
 }
 
@@ -26,8 +30,8 @@
 
 .form-kit__inline-radio {
   display: flex;
-  gap: 1.5rem;
-  align-items: center;
+  gap: 0.75rem;
+  flex-direction: column;
 
   input[type="radio"] {
     margin-right: 0; // old input overrule
