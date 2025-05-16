@@ -86,6 +86,30 @@ $mobile-breakpoint: 700px;
 .admin-contents {
   position: relative;
 
+  .form-kit {
+    --form-kit-large-input: 500px;
+    gap: 0.5rem;
+  }
+
+  .admin-config-area-card__content .form-kit__field {
+    margin-left: -0.5rem;
+  }
+
+  .form-kit__field {
+    width: 100%;
+    padding: 0.5rem;
+    box-sizing: border-box;
+  }
+
+  .form-kit__field:hover {
+    background-color: var(--primary-50);
+  }
+
+  .form-kit__field.overridden {
+    background-color: var(--primary-50);
+    box-shadow: -2px 0 0 var(--tertiary);
+  }
+
   .nav-stacked {
     @media screen and (width <= 700px) {
       margin: 0;

@@ -1,6 +1,6 @@
 @use "lib/viewport";
 
 .form-kit__control-select {
-  height: 2.25rem !important;
-  border: 1px solid var(--primary-low-mid);
+  height: 2.25rem;
+  border: 1px solid var(--d-input-border);
 }
