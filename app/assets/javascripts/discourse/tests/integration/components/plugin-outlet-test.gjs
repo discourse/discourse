@@ -1067,7 +1067,7 @@ module(
       extraConnectorComponent(
         "test-name",
         <template>
-          <span class="gjs-test">{{@arg1}} from gjs</span>
+          <span class="gjs-test">{{@arg1}} from glimmer</span>
         </template>
       );
 
@@ -1079,7 +1079,7 @@ module(
           />
         </template>
       );
-      assert.dom(".gjs-test").hasText("Hello world from gjs");
+      assert.dom(".glimmer-test").hasText("Hello world from glimmer");
     });
 
     test("makes arguments available at top level in classic components", async function (assert) {
