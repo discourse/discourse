@@ -12,6 +12,7 @@ import { modifier } from "ember-modifier";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import LoadMore from "discourse/components/load-more";
 import PostFilteredNotice from "discourse/components/post/filtered-notice";
+import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
 import offsetCalculator from "discourse/lib/offset-calculator";
 import { Placeholder } from "discourse/lib/posts-with-placeholders";
@@ -47,22 +48,27 @@ export default class PostStream extends Component {
   @service site;
   @service siteSettings;
 
+  @tracked cloakAbove;
+  @tracked cloakBelow;
   @tracked cloakOffset = Math.ceil(window.innerHeight * SLACK_FACTOR);
+  @tracked onScreenBoundaries = {
+    min: null,
+    max: null,
+  };
+  lastUncloakedPost = null;
 
   observedPostNodes = new Set();
-  cloakedPosts = new TrackedObject();
-  setCloakedHeight = modifier((element, [cloaking]) => {
-    if (cloaking) {
-      element.style.height = `${cloaking.height}px`;
-      return;
-    }
+  uncloakedPostNumbers = new Set();
 
-    element.style.height = "";
-  });
+  cloakedPostsHeight = {};
   viewportObserver;
   cloakingObserver;
 
   #postsOnScreen = {};
+  #observedCloakBoundaries = {
+    above: null,
+    below: null,
+  };
 
   // #topVisible = null; // Tracks the topmost post currently visible in the viewport
   // #bottomVisible = null; // Tracks the bottommost post currently visible in the viewport
@@ -193,12 +199,20 @@ export default class PostStream extends Component {
   }
 
   @bind
-  updateIntersectionObservers(element, _, { headerOffset, cloakOffset }) {
-    console.log("updateIntersectionObservers", {
-      headerOffset,
-      cloakOffset,
-    });
+  isCloaked(post, { above, below }) {
+    if (post.post_number < above || post.post_number > below) {
+      // console.log("isCloaked", this.cloakedPostsHeight);
+    }
 
+    const height = this.cloakedPostsHeight[post.id];
+
+    return height && (post.post_number < above || post.post_number > below)
+      ? { height: this.cloakedPostsHeight[post.id] }
+      : null;
+  }
+
+  @bind
+  updateIntersectionObservers(element, _, { headerOffset, cloakOffset }) {
     const headerMargin = headerOffset * -1;
 
     this.cloakingObserver?.disconnect?.();
@@ -259,20 +273,28 @@ export default class PostStream extends Component {
   trackCloakedPosts(event) {
     const { target, isIntersecting } = event;
     const post = target[POST_MODEL];
-    // console.log("trackCloakedPosts", {
-    //   target,
-    //   post,
-    //   event,
-    // });
+    const postNumber = post.post_number;
+
+    if (this.#observedCloakBoundaries.below === null) {
+      this.#observedCloakBoundaries.below = postNumber;
+    }
+    if (this.#observedCloakBoundaries.above === null) {
+      this.#observedCloakBoundaries.above = postNumber;
+    }
 
     if (isIntersecting) {
-      console.log("uncloaked post", {
-        post_number: target[POST_MODEL].post_number,
-      });
-      delete this.cloakedPosts[post.id];
-    } else {
-      // requestAnimationFrame is used to prevent a `[Violation] Forced reflow while executing JavaScript` warning
-      requestAnimationFrame(() => {
+      this.uncloakedPostNumbers.add(postNumber);
+      // entering the visibility area
+      delete this.cloakedPostsHeight[post.id];
+
+      if (postNumber < this.#observedCloakBoundaries.above) {
+        this.#observedCloakBoundaries.above = postNumber;
+      } else if (postNumber > this.#observedCloakBoundaries.below) {
+        this.#observedCloakBoundaries.below = postNumber;
+      }
+
+      // TODO the height needs to be set after the changes are rendered
+      if (!target.style.height) {
         let height = target.clientHeight;
 
         const style = window.getComputedStyle(target);
@@ -280,20 +302,69 @@ export default class PostStream extends Component {
           parseFloat(style.borderTopWidth) +
           parseFloat(style.borderBottomWidth);
 
-        console.log("cloaked post", {
-          post_number: target[POST_MODEL].post_number,
-        });
-        this.cloakedPosts[post.id] = {
-          height,
-        };
-      });
+        target.style.height = height + "px";
+      }
+
+      // console.log("uncloaking", postNumber, this.#observedCloakBoundaries);
+    } else {
+      this.uncloakedPostNumbers.delete(postNumber);
+      // TODO the height needs to be set after the changes are rendered
+      let height = target.clientHeight;
+
+      const style = window.getComputedStyle(target);
+      height +=
+        parseFloat(style.borderTopWidth) + parseFloat(style.borderBottomWidth);
+
+      this.cloakedPostsHeight[post.id] = height;
+      target.style.height = height + "px";
+
+      // requestAnimationFrame is used to prevent a `[Violation] Forced reflow while executing JavaScript` warning
+      // caused by measuring the element's height in the intersection observer callback
+      // requestAnimationFrame(() => {
+      if (
+        postNumber > this.#observedCloakBoundaries.above &&
+        postNumber < this.#observedCloakBoundaries.below
+      ) {
+        if (
+          ![...this.uncloakedPostNumbers].some((value) => value <= postNumber)
+        ) {
+          this.#observedCloakBoundaries.above = postNumber + 1;
+        } else {
+          this.#observedCloakBoundaries.below = postNumber - 1;
+        }
+      }
+
+      // console.log(
+      //   "cloaking",
+      //   postNumber,
+      //   this.#observedCloakBoundaries,
+      //   this.cloakedPostsHeight
+      // );
     }
+
+    if (
+      this.#observedCloakBoundaries.above !== this.cloakAbove &&
+      this.#observedCloakBoundaries.below !== this.cloakBelow
+    ) {
+      discourseDebounce(
+        this,
+        this._setActiveCloakBoundaries,
+        { ...this.#observedCloakBoundaries },
+        10
+      );
+    }
+  }
+
+  _setActiveCloakBoundaries({ above, below }) {
+    this.cloakAbove = above;
+    this.cloakBelow = below;
   }
 
   @bind
   trackVisiblePosts(event) {
     const { target, isIntersecting } = event;
     const post = target[POST_MODEL];
+    const postNumber = post.post_number;
 
     if (isIntersecting) {
       this.#postsOnScreen[post.id] = { post, node: target };
@@ -304,12 +375,23 @@ export default class PostStream extends Component {
       // });
     } else {
       delete this.#postsOnScreen[post.id];
-      // console.log("exited viewport", {
-      //   target,
-      //   post,
-      //   event,
-      // });
     }
+
+    // update the information about the boundaries of the posts on screen
+    this.onScreenBoundaries = Object.values(this.#postsOnScreen).reduce(
+      (acc, { post: onScreen }) => {
+        if (acc.min === null || onScreen.post_number < acc.min) {
+          acc.min = onScreen.post_number;
+        }
+
+        if (acc.max === null || onScreen.post_number > acc.max) {
+          acc.max = onScreen.post_number;
+        }
+
+        return acc;
+      },
+      { min: null, max: null }
+    );
   }
 
   @action
@@ -412,11 +494,14 @@ export default class PostStream extends Component {
 
             {{#let
               (if post.isSmallAction PostSmallAction Post)
-              (get this.cloakedPosts post.id)
-              as |PostComponent cloaked|
+              as |PostComponent|
             }}
               <PostComponent
-                @cloaked={{cloaked}}
+                @cloaked={{this.isCloaked
+                  post
+                  above=this.cloakAbove
+                  below=this.cloakBelow
+                }}
                 @post={{post}}
                 @prevPost={{previousPost}}
                 @nextPost={{nextPost}}
@@ -455,9 +540,8 @@ export default class PostStream extends Component {
                 @unhidePost={{fn @unhidePost post}}
                 @unlockPost={{fn @unlockPost post}}
                 @updateTopicPageQueryParams={{@updateTopicPageQueryParams}}
-                {{this.setCloakedHeight cloaked}}
                 {{didInsert this.registerPostNode post}}
-                {{didUpdate this.registerPostNode post cloaked}}
+                {{didUpdate this.registerPostNode post}}
                 {{willDestroy this.unregisterPostNode post}}
               />
             {{/let}}
