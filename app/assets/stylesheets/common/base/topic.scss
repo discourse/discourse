@@ -202,9 +202,14 @@
       font-size: var(--font-up-3);
     }
 
+    &.can-edit-topic {
+      outline: 2px solid transparent;
+      border-radius: var(--d-border-radius);
+      transition: outline ease-in-out 0.2s;
+    }
+
     &.can-edit-topic:hover {
       outline: 2px solid var(--tertiary);
-      border-radius: var(--d-border-radius);
     }
   }
 
