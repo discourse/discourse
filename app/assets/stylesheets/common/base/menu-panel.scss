@@ -38,8 +38,8 @@
 }
 
 .menu-panel {
-  border: 1px solid var(--primary-low);
-  box-shadow: var(--shadow-menu-panel);
+  --list-item-padding: 0.5em 1rem;
+  box-shadow: var(--shadow-dropdown);
   background-color: var(--secondary);
   z-index: z("header");
   padding: 0.5em;
@@ -169,7 +169,8 @@
   }
 
   hr {
-    margin: 3px 0;
+    margin: 0;
+    height: auto;
   }
 
   .panel-header {
@@ -199,9 +200,9 @@
 
   .panel-body-bottom {
     display: flex;
-    flex: 1 0 0%; // safari height fix
-    margin-top: 0.5em;
+    flex: 1 0 0;
     flex-wrap: wrap;
+    padding: 0.75em 0.75em max(env(safe-area-inset-bottom), 0.75em);
 
     .show-all {
       display: flex;
@@ -242,6 +243,7 @@
 }
 
 .user-menu.revamped {
+  --user-menu-border-width: 1px;
   right: 0;
   width: 320px;
   padding: 0;
@@ -254,10 +256,10 @@
   .menu-tabs-container {
     display: flex;
     flex-direction: column;
-    border-left: 1px solid var(--primary-low);
-    padding: 0.75em 0 0;
+    padding: 0;
     overflow-y: auto;
     overscroll-behavior: contain;
+    margin-inline: calc(var(--user-menu-border-width) * -1);
   }
 
   .tabs-list {
@@ -268,7 +270,7 @@
       display: flex;
       position: relative;
       border-radius: 0;
-      padding: 0.857em;
+      padding: 0.875em 1em 0.875em 0.875em;
 
       @media screen and (height <= 400px) {
         // helps with 400% zoom level
@@ -298,14 +300,18 @@
         background-color: var(--d-selected);
       }
 
-      &:hover {
-        background-color: var(--d-hover);
+      .discourse-no-touch & {
+        &:hover {
+          background-color: var(--d-hover);
+          border-left: var(--user-menu-border-width) solid var(--primary-low);
+          padding-left: calc(0.875em - var(--user-menu-border-width));
+        }
       }
     }
   }
 
   .bottom-tabs {
-    border-top: 1px solid var(--primary-low);
+    border-top: var(--user-menu-border-width) solid var(--primary-low);
   }
 
   .panel-body-contents {
@@ -315,16 +321,14 @@
 
   .quick-access-panel {
     width: 320px;
-    padding: 0.75em;
-    padding-bottom: max(env(safe-area-inset-bottom), 0.75em);
     justify-content: space-between;
     box-sizing: border-box;
+    border-right: var(--user-menu-border-width) solid var(--primary-low);
     min-width: 0; // makes sure menu tabs don't go off screen
   }
 
   #quick-access-profile {
     display: inline;
-    max-height: 99%; //  macOS Chrome sometimes adds an unneeded scrollbar at 100%
 
     ul {
       flex-wrap: nowrap;
@@ -335,14 +339,16 @@
 
     li {
       flex: 1 1 auto;
-      max-height: 3em; // prevent buttons from getting too tall
+      display: flex;
+      flex-direction: column;
+      max-height: 3.25em;
 
       > * {
         // button, a, and everything else
-        height: 100%;
         align-items: center;
         margin: 0;
-        padding: 0 0.5em;
+        padding: var(--list-item-padding);
+        flex: 1 1 auto;
       }
 
       img.emoji {
@@ -389,7 +395,7 @@
     }
 
     hr {
-      border-top: 1px solid var(--primary-low);
+      border-top: var(--user-menu-border-width) solid var(--primary-low);
       width: 100%;
     }
   }
@@ -416,9 +422,6 @@
   flex-direction: column;
   min-height: 0;
   max-height: 100%;
-  border-top: 1px solid var(--primary-low);
-  padding-top: 0.75em;
-  margin-top: -1px;
 
   /* as a big ol' click target, don't let text inside be selected */
   @include unselectable;
@@ -534,15 +537,9 @@
       }
     }
 
-    a,
-    .profile-tab-btn {
+    a {
       display: flex;
-      margin: 0.25em;
-      padding: 0 0.25em;
-    }
-
-    button {
-      padding: 0.25em 0.5em;
+      padding: var(--list-item-padding);
     }
 
     a,
@@ -624,7 +621,6 @@
     a {
       color: var(--primary);
       align-items: center;
-      padding: 0.15em 0;
 
       .item-label {
         font-weight: bold;
@@ -675,11 +671,15 @@
       }
     }
 
-    &.unread .icon-avatar__icon-wrapper {
-      background: var(--tertiary);
+    &.unread,
+    &.pending {
+      .icon-avatar__icon-wrapper {
+        background: var(--tertiary);
+        font-size: var(--font-down-1);
 
-      .d-icon {
-        color: var(--secondary);
+        .d-icon {
+          color: var(--secondary);
+        }
       }
     }
   }
