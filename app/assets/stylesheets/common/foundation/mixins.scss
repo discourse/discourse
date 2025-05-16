@@ -151,9 +151,8 @@ $hpad: 0.65em;
 }
 
 @mixin default-focus() {
-  border-color: var(--primary);
-  outline: 1px solid var(--primary);
-  outline-offset: -1px;
+  outline: 2px solid var(--tertiary);
+  outline-offset: -2px;
 }
 
 /// Helper function to easily use an SVG inline in CSS

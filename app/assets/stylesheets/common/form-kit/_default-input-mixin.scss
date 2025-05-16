@@ -10,6 +10,7 @@
   box-sizing: border-box;
   margin: 0 !important;
   appearance: none;
+  font-size: var(--font-down-1-rem);
   box-shadow:
     0 0 rgba(0, 0, 0, 0),
     0 0 rgba(0, 0, 0, 0),
@@ -17,24 +18,23 @@
 
   @content;
 
-  &:focus,
-  &:focus-visible,
-  &:focus:focus-visible,
-  &:active {
-    // these `!important` flags are another great case for having a button element without that pesky default styling
-    &:not(:disabled) {
-      background-color: var(--secondary) !important;
-      color: var(--primary) !important;
-      border-color: var(--primary);
-      outline: 1px solid var(--primary);
-      outline-offset: -1px;
+  // &:focus,
+  // &:focus-visible,
+  // &:focus:focus-visible,
+  // &:active {
+  //   // these `!important` flags are another great case for having a button element without that pesky default styling
+  //   &:not(:disabled) {
+  //     background-color: var(--secondary) !important;
+  //     color: var(--primary) !important;
+  //     border-color: var(--primary);
+  //     outline: 1px solid var(--primary);
+  //     outline-offset: -1px;
 
-      .d-icon {
-        color: inherit !important;
-      }
-    }
-  }
-
+  //     .d-icon {
+  //       color: inherit !important;
+  //     }
+  //   }
+  // }
   &:hover:not(:disabled) {
     .discourse-no-touch & {
       background-color: var(--secondary);
