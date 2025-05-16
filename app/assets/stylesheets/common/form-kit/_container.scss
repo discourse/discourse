@@ -11,15 +11,13 @@
   }
 
   &-description {
-    margin: 0;
-    font-size: var(--font-down-1-rem);
-    color: var(--primary-high);
+    @include default-description;
   }
 
   &-help-text {
     margin: 0;
     font-size: var(--font-down-1-rem);
-    color: var(--primary-high-or-secondary-low);
+    color: var(--primary-800);
   }
 
   &-title {
