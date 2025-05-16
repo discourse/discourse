@@ -106,13 +106,19 @@ class Users::OmniauthCallbacksController < ApplicationController
   end
 
   def failure
-    error_key = params[:message].to_s.gsub(/[^\w-]/, "")
-    error_key = "generic" if error_key.blank?
+    if provider = params[:provider].presence || params[:strategy].presence
+      if authenticator = Discourse.enabled_authenticators.find { _1.name == provider }
+        provider = authenticator.display_name
+      end
+    end
 
-    flash[:error] = I18n.t(
-      "login.omniauth_error.#{error_key}",
-      default: I18n.t("login.omniauth_error.generic"),
-    ).html_safe
+    if provider.blank? && Discourse.enabled_authenticators.size == 1
+      provider = Discourse.enabled_authenticators.first.display_name
+    end
+
+    key = params[:message].to_s.gsub(/[^\w-]/, "").presence || "generic"
+    default = I18n.t("login.omniauth_error.generic", provider:)
+    flash[:error] = I18n.t("login.omniauth_error.#{key}", provider:, default:).html_safe
 
     render "failure"
   end

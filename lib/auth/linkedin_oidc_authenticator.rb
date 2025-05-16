@@ -45,6 +45,10 @@ class Auth::LinkedInOidcAuthenticator < Auth::ManagedAuthenticator
     "linkedin_oidc"
   end
 
+  def display_name
+    "LinkedIn"
+  end
+
   def enabled?
     SiteSetting.enable_linkedin_oidc_logins
   end
