@@ -2,7 +2,7 @@
 
 @mixin default-input {
   width: 100%;
-  height: 2em;
+  height: 2.25rem;
   background: var(--secondary);
   border: 1px solid var(--primary-low-mid) !important;
   border-radius: var(--d-input-border-radius);
@@ -12,11 +12,6 @@
   appearance: none;
 
   @content;
-
-  @include viewport.until(sm) {
-    width: 100% !important;
-    height: 2.25em;
-  }
 
   &:focus,
   &:focus-visible,
