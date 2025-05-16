@@ -47,4 +47,12 @@ class Admin::Config::CustomizeController < Admin::AdminController
 
     render json: { has_more:, components: serialize_data(components, ComponentIndexSerializer) }
   end
+
+  def theme
+    params.require(:id)
+  end
+
+  def component
+    theme
+  end
 end
