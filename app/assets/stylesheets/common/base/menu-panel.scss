@@ -674,12 +674,15 @@
       }
     }
 
-    &.unread .icon-avatar__icon-wrapper {
-      background: var(--tertiary);
-      font-size: var(--font-down-1);
+    &.unread,
+    &.pending {
+      .icon-avatar__icon-wrapper {
+        background: var(--tertiary);
+        font-size: var(--font-down-1);
 
-      .d-icon {
-        color: var(--secondary);
+        .d-icon {
+          color: var(--secondary);
+        }
       }
     }
   }
