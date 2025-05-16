@@ -105,7 +105,7 @@ $mobile-breakpoint: 700px;
     background-color: var(--primary-50);
   }
 
-  .form-kit__field.overridden {
+  .form-kit.--overridden .form-kit__field {
     background-color: var(--primary-50);
     box-shadow: -2px 0 0 var(--tertiary);
   }
