@@ -1,11 +1,3 @@
-// // styles for admin/settings
-// .settings {
-//   .setting {
-//     .history-icon {
-//       opacity: 0;
-//       transition: opacity 0.3s;
-//       color: var(--primary-medium);
-//     }
 .admin-interface {
   .form-kit__container-title .history-icon {
     opacity: 0;
@@ -38,5 +30,13 @@
   .form-kit .color-picker,
   .form-kit .file-size-picker {
     width: var(--form-kit-large-input);
+  }
+
+  .form-kit__container input[type="text"],
+  .form-kit__container .select-kit {
+    box-shadow:
+      0 0 #0000,
+      0 0 #0000,
+      0 1px 2px 0 rgba(0, 0, 0, 0.05);
   }
 }

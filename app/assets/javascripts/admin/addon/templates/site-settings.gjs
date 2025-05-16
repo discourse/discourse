@@ -28,7 +28,7 @@ export default RouteTemplate(
       @onChangeFilter={{@controller.filterChanged}}
     />
 
-    <div class="admin-detail pull-left mobile-closed">
+    <div class="admin-detail mobile-closed">
       {{outlet}}
     </div>
 
