@@ -8,10 +8,6 @@ class ColorSchemeSerializer < ApplicationSerializer
     object.theme&.name
   end
 
-  def theme_id
-    object.theme&.id
-  end
-
   def colors
     db_colors = object.colors.index_by(&:name)
     object.resolved_colors.map do |name, default|

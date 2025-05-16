@@ -169,8 +169,10 @@ class Admin::ThemesController < Admin::AdminController
   end
 
   def index
-    @themes = Theme.include_relations.order(:name)
-    @color_schemes = ColorScheme.all.includes(:theme, color_scheme_colors: :color_scheme).to_a
+    @themes = Theme.strict_loading.include_relations.order(:name)
+
+    @color_schemes =
+      ColorScheme.strict_loading.all.includes(:theme, color_scheme_colors: :color_scheme).to_a
 
     payload = {
       themes: serialize_data(@themes, ThemeSerializer),
