@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
-import ClassicComponent from "@ember/component";
 import { concat } from "@ember/helper";
 import { get } from "@ember/object";
 import { getOwner } from "@ember/owner";
@@ -19,8 +18,6 @@ import {
 
 const GET_DEPRECATION_MSG =
   "Plugin outlet context is no longer an EmberObject - using `get()` is deprecated.";
-const TAG_NAME_DEPRECATION_MSG =
-  "The `tagName` argument to PluginOutlet is deprecated. If a wrapper element is required, define it manually around the outlet call. Using tagName will prevent wrapper PluginOutlets from functioning correctly.";
 const ARGS_DEPRECATION_MSG =
   "PluginOutlet arguments should now be passed using `@outletArgs=` instead of `@args=`";
 
@@ -66,12 +63,6 @@ export default class PluginOutletComponent extends Component {
 
   constructor() {
     const result = super(...arguments);
-
-    if (this.args.tagName) {
-      deprecated(`${TAG_NAME_DEPRECATION_MSG} (outlet: ${this.args.name})`, {
-        id: "discourse.plugin-outlet-tag-name",
-      });
-    }
 
     if (this.args.args) {
       deprecated(`${ARGS_DEPRECATION_MSG} (outlet: ${this.args.name})`, {
@@ -133,39 +124,8 @@ export default class PluginOutletComponent extends Component {
     );
   }
 
-  // Older plugin outlets have a `tagName` which we need to preserve for backwards-compatibility
-  get wrapperComponent() {
-    return PluginOutletWithTagNameWrapper;
-  }
-
   <template>
-    {{~#if @tagName~}}
-      {{!
-    Older outlets have a wrapper tagName. RFC0389 proposes an interface for dynamic tag names, which we may want to use in future.
-    But for now, this classic component wrapper takes care of the tagName.
-  }}
-      <this.wrapperComponent @tagName={{@tagName}}>
-        {{~#each (this.getConnectors) as |c|~}}
-          {{~#if c.componentClass~}}
-            <c.componentClass @outletArgs={{this.outletArgsWithDeprecations}} />
-          {{~else if @defaultGlimmer~}}
-            <c.templateOnly @outletArgs={{this.outletArgsWithDeprecations}} />
-          {{~else~}}
-            <PluginConnector
-              @connector={{c}}
-              @args={{this.outletArgs}}
-              @deprecatedArgs={{@deprecatedArgs}}
-              @outletArgs={{this.outletArgsWithDeprecations}}
-              @tagName={{or @connectorTagName ""}}
-              @layout={{c.template}}
-              class={{c.classicClassNames}}
-            />
-          {{~/if~}}
-        {{~/each~}}
-      </this.wrapperComponent>
-    {{~else if (this.connectorsExist hasBlock=(has-block))~}}
-      {{! The modern path: no wrapper element = no classic component }}
-
+    {{#if (this.connectorsExist hasBlock=(has-block))~}}
       {{~#if (has-block)~}}
         <PluginOutlet
           @name={{concat @name "__before"}}
@@ -208,5 +168,3 @@ export default class PluginOutletComponent extends Component {
     {{~/if~}}
   </template>
 }
-
-class PluginOutletWithTagNameWrapper extends ClassicComponent {}
