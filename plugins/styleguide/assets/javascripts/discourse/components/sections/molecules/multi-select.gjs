@@ -1,12 +1,16 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { array, fn } from "@ember/helper";
 import { action } from "@ember/object";
 import DMultiSelect from "discourse/components/d-multi-select";
+import ChatChannelMultiSelect from "discourse/plugins/chat/discourse/components/chat-channel-multi-select";
 import StyleguideComponent from "../../styleguide/component";
 import StyleguideExample from "../../styleguide-example";
 
 export default class MultiSelect extends Component {
   @tracked selection = [{ id: 1, name: "foo" }];
+
+  @tracked selectedChannels = null;
 
   @action
   onChange(selection) {
@@ -38,6 +42,20 @@ export default class MultiSelect extends Component {
             <:result as |result|>{{result.name}}</:result>
             <:selection as |result|>{{result.name}}</:selection>
           </DMultiSelect>
+        </:sample>
+      </StyleguideComponent>
+    </StyleguideExample>
+    <StyleguideExample @title="<ChatChannelMultiSelect />">
+      <StyleguideComponent @tag="d-multi-select component">
+        <:sample>
+          <ChatChannelMultiSelect
+            @onChange={{fn (mut this.selectedChannels)}}
+            @initialIds={{array 2}}
+            @selection={{this.selectedChannels}}
+          >
+            <:result as |result|>{{result.name}}</:result>
+            <:selection as |result|>{{result.name}}</:selection>
+          </ChatChannelMultiSelect>
         </:sample>
       </StyleguideComponent>
     </StyleguideExample>

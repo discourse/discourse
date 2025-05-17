@@ -77,7 +77,7 @@ export default class DMultiSelect extends Component {
 
   @action
   focus(input) {
-    input.focus();
+    input.focus({ preventScroll: true });
   }
 
   @action

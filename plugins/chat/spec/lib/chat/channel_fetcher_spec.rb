@@ -22,6 +22,16 @@ describe Chat::ChannelFetcher do
 
   before { SiteSetting.chat_allowed_groups = chatters }
 
+  describe ".secured_public_channel_search" do
+    it "can filter by ids" do
+      filtered_channel = Fabricate(:category_channel, chatable: category)
+
+      channels = described_class.secured_public_channel_search(guardian, ids: [filtered_channel.id])
+
+      expect(channels).to contain_exactly(filtered_channel)
+    end
+  end
+
   describe ".structured" do
     it "returns open channel only" do
       category_channel.user_chat_channel_memberships.create!(user: user1, following: true)
