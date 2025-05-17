@@ -20,6 +20,8 @@ class Theme < ActiveRecord::Base
 
   belongs_to :user
   belongs_to :color_scheme
+  alias_method :color_palette, :color_scheme
+
   has_many :theme_fields, dependent: :destroy, validate: false
   has_many :theme_settings, dependent: :destroy
   has_many :theme_translation_overrides, dependent: :destroy
@@ -51,6 +53,8 @@ class Theme < ActiveRecord::Base
           class_name: "ColorScheme",
           through: :theme_color_scheme,
           source: :color_scheme
+  alias_method :owned_color_palette, :owned_color_scheme
+  alias_method :owned_color_palette=, :owned_color_scheme=
 
   has_many :locale_fields,
            -> { filter_locale_fields(I18n.fallbacks[I18n.locale]) },
@@ -88,6 +92,7 @@ class Theme < ActiveRecord::Base
             :theme_settings,
             :settings_field,
             :color_scheme,
+            :owned_color_scheme,
             theme_fields: %i[upload theme_settings_migration],
           )
         end
@@ -1020,6 +1025,41 @@ class Theme < ActiveRecord::Base
 
   def user_selectable_count
     UserOption.where(theme_ids: [id]).count
+  end
+
+  def find_or_create_owned_color_palette
+    Theme.transaction do
+      next self.owned_color_palette if self.owned_color_palette
+
+      palette = self.color_palette || ColorScheme.base
+
+      copy = palette.dup
+      copy.theme_id = self.id
+      copy.base_scheme_id = nil
+      copy.user_selectable = false
+      copy.via_wizard = false
+      copy.save!
+
+      palette.colors.each do |color|
+        copy_color = color.dup
+        copy_color.color_scheme_id = copy.id
+        copy_color.save!
+      end
+      copy.reload
+
+      begin
+        self.owned_color_palette = copy
+      rescue ActiveRecord::RecordNotUnique
+        # race condition, another process has created a
+        # palette for this theme.
+        # reload the theme and return the existing palette
+        copy.destroy!
+        self.reload
+        self.owned_color_palette
+      else
+        copy
+      end
+    end
   end
 
   private

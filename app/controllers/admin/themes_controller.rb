@@ -170,7 +170,12 @@ class Admin::ThemesController < Admin::AdminController
 
   def index
     @themes = Theme.include_relations.order(:name)
-    @color_schemes = ColorScheme.all.includes(:theme, color_scheme_colors: :color_scheme).to_a
+    @color_schemes =
+      ColorScheme
+        .all
+        .without_theme_owned_palettes
+        .includes(:theme, color_scheme_colors: :color_scheme)
+        .to_a
 
     payload = {
       themes: serialize_data(@themes, ThemeSerializer),
@@ -365,6 +370,19 @@ class Admin::ThemesController < Admin::AdminController
     raise Discourse::InvalidParameters.new(:setting_name) unless theme_setting
 
     render_serialized(theme_setting, ThemeObjectsSettingMetadataSerializer, root: false)
+  end
+
+  def change_colors
+    theme = Theme.find_by(id: params[:id])
+    raise Discourse::NotFound if !theme
+
+    palette = theme.find_or_create_owned_color_palette
+
+    colors = params.permit(colors: %i[name hex dark_hex])
+
+    ColorSchemeRevisor.revise(palette, colors, update_existing_colors_only: true)
+
+    render_serialized(palette, ColorSchemeSerializer, root: false)
   end
 
   private
