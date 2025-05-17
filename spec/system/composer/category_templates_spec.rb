@@ -500,41 +500,29 @@ describe "Composer Form Templates", type: :system do
 
   it "shows preview of the form correctly for all input types" do
     topic_title = "A topic about Batman"
-
     category_page.visit(category_with_template_7)
     category_page.new_topic_button.click
     composer.fill_title(topic_title)
-
-    preview = find(".d-editor-preview")
-
     composer.fill_form_template_field("input", "Peter Parker")
-    expect(preview).to have_content("Peter Parker")
-    dropdown = find("[name='4']")
-    dropdown.click
-    dropdown.send_keys(:down)
-    dropdown.send_keys(:enter)
 
-    dropdown.click
-    dropdown.send_keys(:up)
-    dropdown.send_keys(:enter)
+    expect(find(".d-editor-preview")).to have_content("Peter Parker")
 
-    expect(preview).to have_content("Option 1")
+    find(:select, "4").find(:option, "Option 2").select_option
+    find(:select, "4").find(:option, "Option 1").select_option
 
-    multi_select = find("[name='6']")
-    multi_select.find("option", text: "Option 4").click(:control)
+    expect(find(".d-editor-preview")).to have_content("Option 1")
 
-    expect(preview).to have_content("Option 4")
+    find(:select, "6").find(:option, "Option 4").select_option
 
-    textarea = find("textarea")
+    expect(find(".d-editor-preview")).to have_content("Option 4")
+
     message = "This is a test message!"
+    find("textarea").fill_in(with: message)
 
-    textarea.fill_in(with: message)
+    expect(find(".d-editor-preview")).to have_content(message)
 
-    preview = find(".d-editor-preview")
-    expect(preview).to have_content(message)
-
-    attach_file "5-uploader", "#{Rails.root}/spec/fixtures/images/logo.png", make_visible: true
-    expect(preview).to have_css("img")
+    attach_file("5-uploader", "#{Rails.root}/spec/fixtures/images/logo.png", make_visible: true)
+    expect(find(".d-editor-preview")).to have_css("img")
   end
 
   context "when using tagchooser" do
@@ -588,28 +576,14 @@ describe "Composer Form Templates", type: :system do
       category_page.visit(category_with_tagchooser_template)
       category_page.new_topic_button.click
 
-      tag_chooser1 = find("[name='1']")
-      tag_chooser2 = find("[name='2']")
+      expect(find("[name='1']")).to have_content("#{tag3.name.upcase}")
+      expect(find("[name='2']")).to have_content("#{tag4.name.upcase}")
 
-      expect(tag_chooser1).to have_content("#{tag3.name.upcase}")
-      expect(tag_chooser2).to have_content("#{tag4.name.upcase}")
+      find(:select, "1").find(:option, tag1.description).select_option
+      find(:select, "2").find(:option, tag2.description).select_option
 
-      tag_chooser1.find("option", text: tag1.description).click(:control)
-
-      expect(tag_chooser1.value).to eq(["#{tag1.description}"])
-
-      # event won't be triggered if not done this way
-      tag_chooser2.click
-      tag_chooser2.send_keys(:down)
-      tag_chooser2.send_keys(:enter)
-
-      tag_chooser2.click
-      tag_chooser2.send_keys(:up)
-      tag_chooser2.send_keys(:enter)
-
-      # working description translations
-      expect(tag_chooser1).to have_content("#{tag1.description}")
-      expect(tag_chooser2).to have_content("#{tag2.description}")
+      expect(page).to have_select("1", selected: tag1.description)
+      expect(page).to have_select("2", selected: tag2.description)
 
       mini_tag_chooser = PageObjects::Components::SelectKit.new(".mini-tag-chooser")
       expect(mini_tag_chooser).to have_selected_name("#{tag1.name},#{tag2.name}")
@@ -618,23 +592,14 @@ describe "Composer Form Templates", type: :system do
     it "updates form when selecting tags in the composer" do
       category_page.visit(category_with_tagchooser_template)
       category_page.new_topic_button.click
+      mini_tag_chooser = PageObjects::Components::SelectKit.new(".mini-tag-chooser")
+      mini_tag_chooser.select_row_by_name(tag1.name)
 
-      mini_tag_chooser = find(".mini-tag-chooser")
-      mini_tag_chooser.click
+      expect(page).to have_select("1", selected: tag1.description)
 
-      input = mini_tag_chooser.find("[name='filter-input-search']")
-      input.set(tag1.name)
+      mini_tag_chooser.unselect_by_name(tag1.name)
 
-      input.send_keys(:down)
-      input.send_keys(:enter)
-
-      expect(mini_tag_chooser).to have_content(tag1.name)
-
-      tag_chooser1 = find("[name='1']")
-      expect(tag_chooser1.value).to eq([tag1.description])
-
-      mini_tag_chooser.find("button").click
-      expect(tag_chooser1.value).to eq([])
+      expect(mini_tag_chooser).to have_no_selection
     end
   end
 end
