@@ -68,19 +68,17 @@ RSpec.describe "Quoting chat message transcripts", type: :system do
 
       it "quotes the messages" do
         chat_page.visit_channel(chat_channel_1)
-
         clip_text = copy_messages_to_clipboard([message_1, message_2])
         topic_page.visit_topic_and_open_composer(post_1.topic)
         topic_page.fill_in_composer("This is a new post!\n\n" + clip_text)
-        within(".d-editor-preview") { expect(page).to have_css(".chat-transcript", count: 2) }
 
+        expect(page).to have_css(".d-editor-preview .chat-transcript", count: 2)
         expect(page).to have_content("Originally sent in #{chat_channel_1.name}")
 
         topic_page.send_reply
 
         selector = topic_page.post_by_number_selector(2)
-        expect(page).to have_css(selector)
-        within(selector) { expect(page).to have_css(".chat-transcript", count: 2) }
+        expect(page).to have_css("#{selector} .chat-transcript", count: 2)
       end
     end
 
