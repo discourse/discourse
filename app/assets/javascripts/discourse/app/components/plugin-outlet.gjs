@@ -125,7 +125,7 @@ export default class PluginOutletComponent extends Component {
   }
 
   <template>
-    {{#if (this.connectorsExist hasBlock=(has-block))~}}
+    {{~#if (this.connectorsExist hasBlock=(has-block))~}}
       {{~#if (has-block)~}}
         <PluginOutlet
           @name={{concat @name "__before"}}
