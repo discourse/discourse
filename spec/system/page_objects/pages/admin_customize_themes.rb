@@ -3,6 +3,54 @@
 module PageObjects
   module Pages
     class AdminCustomizeThemes < PageObjects::Pages::Base
+      def visit(id)
+        page.visit("/admin/customize/themes/#{id}")
+      end
+
+      def has_color_palette_editor?
+        page.has_css?(".color-palette-editor")
+      end
+
+      def has_no_color_palette_editor?
+        page.has_no_css?(".color-palette-editor")
+      end
+
+      def has_color_scheme_selector?
+        page.has_css?(".theme-settings__color-scheme")
+      end
+
+      def has_no_color_scheme_selector?
+        page.has_no_css?(".theme-settings__color-scheme")
+      end
+
+      def color_palette_editor
+        PageObjects::Components::ColorPaletteEditor.new(page.find(".color-palette-editor"))
+      end
+
+      def palette_editor_save_button
+        page.find(".admin-theme__save-palette-changes")
+      end
+
+      def has_palette_editor_save_button?
+        page.has_css?(".admin-theme__save-palette-changes")
+      end
+
+      def has_no_palette_editor_save_button?
+        page.has_no_css?(".admin-theme__save-palette-changes")
+      end
+
+      def palette_editor_discard_button
+        page.find(".admin-theme__discard-palette-changes")
+      end
+
+      def has_palette_editor_discard_button?
+        page.has_css?(".admin-theme__discard-palette-changes")
+      end
+
+      def has_no_palette_editor_discard_button?
+        page.has_no_css?(".admin-theme__discard-palette-changes")
+      end
+
       def has_inactive_themes?
         has_css?(".inactive-indicator")
       end

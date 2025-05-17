@@ -13,6 +13,7 @@ import formatUsername from "discourse/helpers/format-username";
 import htmlSafe from "discourse/helpers/html-safe";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
+import ColorPaletteEditor from "admin/components/color-palette-editor";
 import InlineEditCheckbox from "admin/components/inline-edit-checkbox";
 import ThemeSettingEditor from "admin/components/theme-setting-editor";
 import ThemeSettingRelativesSelector from "admin/components/theme-setting-relatives-selector";
@@ -341,52 +342,56 @@ export default RouteTemplate(
           {{/if}}
 
           {{#unless @controller.model.component}}
-            <section
-              class="form-horizontal theme settings control-unit theme-settings__color-scheme"
-            >
-              <div class="row setting">
-                <div class="setting-label">
-                  {{i18n "admin.customize.theme.color_scheme"}}
-                </div>
+            {{#unless
+              @controller.siteSettings.use_overhauled_theme_color_palette
+            }}
+              <section
+                class="form-horizontal theme settings control-unit theme-settings__color-scheme"
+              >
+                <div class="row setting">
+                  <div class="setting-label">
+                    {{i18n "admin.customize.theme.color_scheme"}}
+                  </div>
 
-                <div class="setting-value">
-                  <div class="color-palette-input-group">
-                    <ColorPalettes
-                      @content={{@controller.colorSchemes}}
-                      @value={{@controller.colorSchemeId}}
-                      @icon="paintbrush"
-                      @options={{hash filterable=true}}
-                    />
-                    {{#if @controller.colorSchemeId}}
+                  <div class="setting-value">
+                    <div class="color-palette-input-group">
+                      <ColorPalettes
+                        @content={{@controller.colorSchemes}}
+                        @value={{@controller.colorSchemeId}}
+                        @icon="paintbrush"
+                        @options={{hash filterable=true}}
+                      />
+                      {{#if @controller.colorSchemeId}}
+                        <DButton
+                          @icon="pencil"
+                          @action={{@controller.editColorScheme}}
+                          @title="admin.customize.theme.edit_color_scheme"
+                        />
+                      {{/if}}
+                    </div>
+
+                    <div class="desc">{{i18n
+                        "admin.customize.theme.color_scheme_select"
+                      }}</div>
+                  </div>
+
+                  <div class="setting-controls">
+                    {{#if @controller.colorSchemeChanged}}
                       <DButton
-                        @icon="pencil"
-                        @action={{@controller.editColorScheme}}
-                        @title="admin.customize.theme.edit_color_scheme"
+                        @action={{@controller.changeScheme}}
+                        @icon="check"
+                        class="ok submit-edit"
+                      />
+                      <DButton
+                        @action={{@controller.cancelChangeScheme}}
+                        @icon="xmark"
+                        class="cancel cancel-edit"
                       />
                     {{/if}}
                   </div>
-
-                  <div class="desc">{{i18n
-                      "admin.customize.theme.color_scheme_select"
-                    }}</div>
                 </div>
-
-                <div class="setting-controls">
-                  {{#if @controller.colorSchemeChanged}}
-                    <DButton
-                      @action={{@controller.changeScheme}}
-                      @icon="check"
-                      class="ok submit-edit"
-                    />
-                    <DButton
-                      @action={{@controller.cancelChangeScheme}}
-                      @icon="xmark"
-                      class="cancel cancel-edit"
-                    />
-                  {{/if}}
-                </div>
-              </div>
-            </section>
+              </section>
+            {{/unless}}
           {{/unless}}
 
           {{#if @controller.model.component}}
@@ -409,6 +414,31 @@ export default RouteTemplate(
                 />
               </div>
             </section>
+          {{/if}}
+
+          {{#if @controller.siteSettings.use_overhauled_theme_color_palette}}
+            {{#unless @controller.model.component}}
+              <section class="form-horizontal theme settings control-unit">
+                <ColorPaletteEditor
+                  @colors={{@controller.model.colorPalette.colors}}
+                  @onLightColorChange={{@controller.onLightColorChange}}
+                  @onDarkColorChange={{@controller.onDarkColorChange}}
+                  @hideRevertButton={{true}}
+                />
+                {{#if @controller.hasChangedColors}}
+                  <DButton
+                    class="admin-theme__save-palette-changes btn-primary"
+                    @icon="check"
+                    @action={{@controller.saveColorChanges}}
+                  />
+                  <DButton
+                    class="admin-theme__discard-palette-changes btn-default"
+                    @icon="xmark"
+                    @action={{@controller.discardColorChanges}}
+                  />
+                {{/if}}
+              </section>
+            {{/unless}}
           {{/if}}
 
           {{#unless @controller.model.remote_theme.is_git}}

@@ -250,6 +250,7 @@ Discourse::Application.routes.draw do
           get "translations/:locale" => "themes#get_translations"
           put "setting" => "themes#update_single_setting"
           get "objects_setting_metadata/:setting_name" => "themes#objects_setting_metadata"
+          put "change-colors" => "themes#change_colors"
         end
 
         collection do

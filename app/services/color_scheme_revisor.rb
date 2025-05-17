@@ -6,11 +6,11 @@ class ColorSchemeRevisor
     @params = params
   end
 
-  def self.revise(color_scheme, params)
-    self.new(color_scheme, params).revise
+  def self.revise(color_scheme, params, update_existing_colors_only: false)
+    self.new(color_scheme, params).revise(update_existing_colors_only:)
   end
 
-  def revise
+  def revise(update_existing_colors_only: false)
     ColorScheme.transaction do
       @color_scheme.name = @params[:name] if @params.has_key?(:name)
       @color_scheme.user_selectable = @params[:user_selectable] if @params.has_key?(
@@ -23,7 +23,7 @@ class ColorSchemeRevisor
         @params[:colors].each do |c|
           if existing = @color_scheme.colors_by_name[c[:name]]
             existing.update(c)
-          else
+          elsif !update_existing_colors_only
             @color_scheme.color_scheme_colors << ColorSchemeColor.new(
               name: c[:name],
               hex: c[:hex],

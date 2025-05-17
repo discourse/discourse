@@ -5,7 +5,7 @@ describe "Admin Customize Themes", type: :system do
   fab!(:theme) { Fabricate(:theme, name: "Cool theme 1") }
   fab!(:admin) { Fabricate(:admin, locale: "en") }
 
-  let(:admin_customize_themes_page) { PageObjects::Pages::AdminCustomizeThemes.new }
+  let(:theme_page) { PageObjects::Pages::AdminCustomizeThemes.new }
 
   before { sign_in(admin) }
 
@@ -148,9 +148,90 @@ describe "Admin Customize Themes", type: :system do
   context "when visting a component's page" do
     fab!(:component) { Fabricate(:theme, component: true, name: "Cool component 493") }
 
-    xit "has a link to the components page" do
+    it "has a link to the components page" do
       visit("/admin/customize/themes/#{component.id}")
-      expect(admin_customize_themes_page).to have_back_button_to_components_page
+      expect(theme_page).to have_back_button_to_components_page
+    end
+  end
+
+  describe "theme color palette editor" do
+    before { SiteSetting.use_overhauled_theme_color_palette = true }
+
+    it "shows color palette editor when feature is enabled" do
+      theme_page.visit(theme.id)
+
+      expect(theme_page).to have_color_palette_editor
+      expect(theme_page).to have_no_color_scheme_selector
+    end
+
+    it "doesn't show color palette editor when feature is disabled" do
+      SiteSetting.use_overhauled_theme_color_palette = false
+      theme_page.visit(theme.id)
+
+      expect(theme_page).to have_no_color_palette_editor
+      expect(theme_page).to have_color_scheme_selector
+    end
+
+    it "allows editing colors without affecting other themes" do
+      theme_page.visit(theme.id)
+
+      original_hex = theme_page.color_palette_editor.get_color_value("primary")
+      theme_page.color_palette_editor.change_color("primary", "#ff000e")
+
+      expect(theme_page).to have_palette_editor_save_button
+      expect(theme_page).to have_palette_editor_discard_button
+
+      theme_page.palette_editor_save_button.click
+
+      page.refresh
+
+      updated_color = theme_page.color_palette_editor.get_color_value("primary")
+      expect(updated_color).to eq("#ff000e")
+
+      other_theme = Fabricate(:theme)
+      theme_page.visit(other_theme.id)
+      expect(theme_page.color_palette_editor.get_color_value("primary")).to eq("#222222")
+    end
+
+    it "allows discarding unsaved color changes" do
+      theme_page.visit(theme.id)
+
+      original_hex = theme_page.color_palette_editor.get_color_value("primary")
+
+      theme_page.color_palette_editor.change_color("primary", "#10ff00")
+
+      theme_page.palette_editor_discard_button.click
+
+      expect(theme_page).to have_no_palette_editor_save_button
+      expect(theme_page).to have_no_palette_editor_discard_button
+
+      updated_color = theme_page.color_palette_editor.get_color_value("primary")
+      expect(updated_color).to eq(original_hex)
+    end
+
+    it "allows editing dark mode colors" do
+      theme_page.visit(theme.id)
+
+      theme_page.color_palette_editor.switch_to_dark_tab
+
+      original_dark_hex = theme_page.color_palette_editor.get_color_value("primary")
+      theme_page.color_palette_editor.change_color("primary", "#000fff")
+
+      theme_page.palette_editor_save_button.click
+
+      page.refresh
+      theme_page.color_palette_editor.switch_to_dark_tab
+
+      updated_dark_color = theme_page.color_palette_editor.get_color_value("primary")
+      expect(updated_dark_color).to eq("#000fff")
+    end
+
+    it "doesn't show color palette editor for component themes" do
+      component = Fabricate(:theme, component: true)
+      theme_page.visit(component.id)
+
+      expect(theme_page).to have_no_color_palette_editor
+      expect(theme_page).to have_no_color_scheme_selector
     end
   end
 end

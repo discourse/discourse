@@ -14,34 +14,9 @@ export const DARK = "dark";
 
 function isColorOverriden(color, darkModeActive) {
   if (darkModeActive) {
-    return color.defaultDarkValue && color.defaultDarkValue !== color.darkValue;
+    return color.default_dark_hex && color.default_dark_hex !== color.dark_hex;
   } else {
-    return (
-      color.defaultLightValue && color.defaultLightValue !== color.lightValue
-    );
-  }
-}
-
-class Color {
-  @tracked lightValue;
-  @tracked darkValue;
-
-  constructor({
-    name,
-    lightValue,
-    darkValue,
-    description,
-    translatedName,
-    defaultLightValue,
-    defaultDarkValue,
-  }) {
-    this.name = name;
-    this.lightValue = lightValue;
-    this.darkValue = darkValue;
-    this.displayName = translatedName;
-    this.description = description;
-    this.defaultLightValue = defaultLightValue;
-    this.defaultDarkValue = defaultDarkValue;
+    return color.default_hex && color.default_hex !== color.hex;
   }
 }
 
@@ -67,9 +42,9 @@ const Picker = class extends Component {
   onInput(event) {
     const color = event.target.value.replace("#", "");
     if (this.args.showDark) {
-      this.args.color.darkValue = color;
+      this.args.onDarkChange(color);
     } else {
-      this.args.color.lightValue = color;
+      this.args.onLightChange(color);
     }
   }
 
@@ -78,10 +53,8 @@ const Picker = class extends Component {
     const color = event.target.value.replace("#", "");
     if (this.args.showDark) {
       this.args.onDarkChange(color);
-      this.args.color.darkValue = color;
     } else {
       this.args.onLightChange(color);
-      this.args.color.lightValue = color;
     }
   }
 
@@ -90,10 +63,8 @@ const Picker = class extends Component {
     const color = event.target.value;
     if (this.args.showDark) {
       this.args.onDarkChange(color);
-      this.args.color.darkValue = color;
     } else {
       this.args.onLightChange(color);
-      this.args.color.lightValue = color;
     }
   }
 
@@ -116,19 +87,20 @@ const Picker = class extends Component {
   get displayedColor() {
     let color;
     if (this.args.showDark) {
-      color = this.args.color.darkValue ?? this.args.color.lightValue;
+      color = this.args.color.dark_hex;
     } else {
-      color = this.args.color.lightValue ?? this.args.color.darkValue;
+      color = this.args.color.hex;
     }
+
     return this.ensureSixDigitsHex(color);
   }
 
   get activeValue() {
     let color;
     if (this.args.showDark) {
-      color = this.args.color.darkValue ?? this.args.color.lightValue;
+      color = this.args.color.dark_hex;
     } else {
-      color = this.args.color.lightValue ?? this.args.color.darkValue;
+      color = this.args.color.hex;
     }
 
     if (color) {
@@ -181,20 +153,6 @@ export default class ColorPaletteEditor extends Component {
     return this.currentMode === DARK;
   }
 
-  get colors() {
-    return this.args.colors.map((color) => {
-      return new Color({
-        name: color.name,
-        lightValue: color.hex,
-        darkValue: color.dark_hex,
-        description: color.description,
-        translatedName: color.translatedName,
-        defaultLightValue: color.default_hex,
-        defaultDarkValue: color.default_dark_hex,
-      });
-    });
-  }
-
   @action
   changeMode(newMode, event) {
     if (
@@ -212,11 +170,9 @@ export default class ColorPaletteEditor extends Component {
   @action
   revert(color) {
     if (this.darkModeActive) {
-      this.args.onDarkColorChange(color.name, color.defaultDarkValue);
-      color.darkValue = color.defaultDarkValue;
+      this.args.onDarkColorChange(color.name, color.default_dark_hex);
     } else {
-      this.args.onLightColorChange(color.name, color.defaultLightValue);
-      color.lightValue = color.defaultLightValue;
+      this.args.onLightColorChange(color.name, color.default_hex);
     }
   }
 
@@ -239,7 +195,7 @@ export default class ColorPaletteEditor extends Component {
         />
       </div>
       <div class="color-palette-editor__colors-list">
-        {{#each this.colors as |color|}}
+        {{#each @colors as |color|}}
           <div
             data-color-name={{color.name}}
             class="color-palette-editor__colors-item"
@@ -249,12 +205,12 @@ export default class ColorPaletteEditor extends Component {
                 {{#if color.description}}
                   {{color.description}}
                 {{else}}
-                  {{color.displayName}}
+                  {{color.translatedName}}
                 {{/if}}
               </div>
               {{#if color.description}}
                 <div class="color-palette-editor__color-name">
-                  {{color.displayName}}
+                  {{color.translatedName}}
                 </div>
               {{/if}}
             </div>
@@ -267,17 +223,19 @@ export default class ColorPaletteEditor extends Component {
                   @onDarkChange={{fn @onDarkColorChange color.name}}
                 />
               </div>
-              <DButton
-                class={{concatClass
-                  "btn-flat"
-                  "color-palette-editor__revert"
-                  (unless
-                    (isColorOverriden color this.darkModeActive) "--hidden"
-                  )
-                }}
-                @icon="arrow-rotate-left"
-                @action={{fn this.revert color}}
-              />
+              {{#unless @hideRevertButton}}
+                <DButton
+                  class={{concatClass
+                    "btn-flat"
+                    "color-palette-editor__revert"
+                    (unless
+                      (isColorOverriden color this.darkModeActive) "--hidden"
+                    )
+                  }}
+                  @icon="arrow-rotate-left"
+                  @action={{fn this.revert color}}
+                />
+              {{/unless}}
             </div>
           </div>
         {{/each}}
