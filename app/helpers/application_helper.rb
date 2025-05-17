@@ -576,7 +576,10 @@ module ApplicationHelper
 
     return if theme_id.blank?
 
-    @scheme_id = Theme.where(id: theme_id).pick(:color_scheme_id)
+    if SiteSetting.use_overhauled_theme_color_palette
+      @scheme_id = ThemeColorScheme.where(theme_id: theme_id).pick(:color_scheme_id)
+    end
+    @scheme_id ||= Theme.where(id: theme_id).pick(:color_scheme_id)
   end
 
   def dark_scheme_id
