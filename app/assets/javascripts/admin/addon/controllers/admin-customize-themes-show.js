@@ -254,6 +254,18 @@ export default class AdminCustomizeThemesShowController extends Controller {
     return userId > 0 && !defaultTheme;
   }
 
+  @discourseComputed(
+    "model.colorPalette.colors.@each.{hex,originalHex,dark_hex,originalDarkHex}"
+  )
+  hasChangedColors() {
+    return this.model.colorPalette.colors.some((color) => {
+      return (
+        color.hex !== color.originalHex ||
+        color.dark_hex !== color.originalDarkHex
+      );
+    });
+  }
+
   @action
   refreshModel() {
     this.send("routeRefreshModel");
@@ -475,5 +487,27 @@ export default class AdminCustomizeThemesShowController extends Controller {
   @action
   editColorScheme() {
     this.router.transitionTo("adminCustomize.colors.show", this.colorSchemeId);
+  }
+
+  @action
+  onLightColorChange(name, value) {
+    const color = this.model.colorPalette.colors.find((c) => c.name === name);
+    color.hex = value;
+  }
+
+  @action
+  onDarkColorChange(name, value) {
+    const color = this.model.colorPalette.colors.find((c) => c.name === name);
+    color.dark_hex = value;
+  }
+
+  @action
+  async saveColorChanges() {
+    await this.model.changeColors();
+  }
+
+  @action
+  discardColorChanges() {
+    this.model.discardColorChanges();
   }
 }

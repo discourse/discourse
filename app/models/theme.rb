@@ -20,6 +20,8 @@ class Theme < ActiveRecord::Base
 
   belongs_to :user
   belongs_to :color_scheme
+  alias_method :color_palette, :color_scheme
+
   has_many :theme_fields, dependent: :destroy, validate: false
   has_many :theme_settings, dependent: :destroy
   has_many :theme_translation_overrides, dependent: :destroy
@@ -51,6 +53,8 @@ class Theme < ActiveRecord::Base
           class_name: "ColorScheme",
           through: :theme_color_scheme,
           source: :color_scheme
+  alias_method :owned_color_palette, :owned_color_scheme
+  alias_method :owned_color_palette=, :owned_color_scheme=
 
   has_many :locale_fields,
            -> { filter_locale_fields(I18n.fallbacks[I18n.locale]) },
@@ -87,6 +91,7 @@ class Theme < ActiveRecord::Base
             :theme_settings,
             :settings_field,
             color_scheme: %i[color_scheme_colors],
+            owned_color_scheme: %i[color_scheme_colors],
             theme_fields: %i[upload theme_settings_migration],
             child_themes: %i[color_scheme locale_fields theme_translation_overrides],
           )
@@ -1022,6 +1027,40 @@ class Theme < ActiveRecord::Base
 
   def user_selectable_count
     UserOption.where(theme_ids: [id]).count
+  end
+
+  def find_or_create_owned_color_palette
+    Theme.transaction do
+      next self.owned_color_palette if self.owned_color_palette
+
+      palette = self.color_palette || ColorScheme.base
+
+      copy = palette.dup
+      copy.theme_id = self.id
+      copy.base_scheme_id = nil
+      copy.user_selectable = false
+      copy.via_wizard = false
+      copy.save!
+
+      result =
+        ThemeColorScheme.insert_all(
+          [{ theme_id: self.id, color_scheme_id: copy.id }],
+          unique_by: :index_theme_color_schemes_on_theme_id,
+        )
+
+      if result.rows.size == 0
+        # race condition, a palette has already been associated with this theme
+        copy.destroy!
+        self.reload.owned_color_palette
+      else
+        palette.colors.each do |color|
+          copy_color = color.dup
+          copy_color.color_scheme_id = copy.id
+          copy_color.save!
+        end
+        copy.reload
+      end
+    end
   end
 
   private

@@ -1718,4 +1718,49 @@ HTML
       expect(theme.screenshot_url).to eq(upload.url)
     end
   end
+
+  describe "#find_or_create_owned_color_palette" do
+    it "correctly associates a theme with its owned color palette" do
+      palette = theme.find_or_create_owned_color_palette
+
+      expect(palette.owning_theme).to eq(theme)
+      expect(theme.owned_color_palette).to eq(palette)
+    end
+
+    it "ensures owned color palette is not user selectable" do
+      palette = theme.find_or_create_owned_color_palette
+
+      expect(palette.user_selectable).to eq(false)
+    end
+
+    it "copies colors from base or theme color scheme" do
+      theme_without_scheme = Fabricate(:theme, color_scheme: nil)
+      base_palette = theme_without_scheme.find_or_create_owned_color_palette
+
+      expect(base_palette.colors.length).to be > 0
+      expect(base_palette.colors.map(&:name).sort).to eq(ColorScheme.base.colors.map(&:name).sort)
+
+      custom_palette =
+        Fabricate(
+          :color_scheme,
+          colors: [ColorSchemeColor.new(name: "custom", hex: "11ccff", dark_hex: "ee9955")],
+        )
+      theme_with_scheme = Fabricate(:theme, color_scheme: custom_palette)
+      custom_palette = theme_with_scheme.find_or_create_owned_color_palette
+
+      expect(custom_palette.colors.length).to be > 0
+      expect(custom_palette.colors.map(&:name).sort).to eq(custom_palette.colors.map(&:name).sort)
+    end
+
+    it "returns the existing palette if a race condition occurs and a theme-owned palette is created while it's executing" do
+      expect(theme.owned_color_palette).to eq(nil)
+
+      palette = Fabricate(:color_scheme)
+      ThemeColorScheme.create!(theme_id: theme.id, color_scheme_id: palette.id)
+
+      expect(theme.owned_color_palette).to eq(nil)
+      expect(theme.find_or_create_owned_color_palette.id).to eq(palette.id)
+      expect(theme.owned_color_palette).to eq(palette)
+    end
+  end
 end
