@@ -46,6 +46,7 @@ export default Mixin.create({
   siteSettingChangeTracker: service(),
   attributeBindings: ["setting.setting:data-setting"],
   classNameBindings: [":row", ":setting", "overridden", "typeClass"],
+  classNames: ["form-kit__container", "form-kit__field"],
 
   content: alias("setting"),
   isSecret: oneWay("setting.secret"),

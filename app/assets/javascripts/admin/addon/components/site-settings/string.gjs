@@ -4,7 +4,10 @@ import TextField from "discourse/components/text-field";
 export default class String extends Component {
   <template>
     {{#if this.setting.textarea}}
-      <Textarea @value={{this.value}} class="input-setting-textarea" />
+      <Textarea
+        @value={{this.value}}
+        class="input-setting-textarea form-kit__control-textarea"
+      />
     {{else if this.isSecret}}
       <Input
         @type="password"

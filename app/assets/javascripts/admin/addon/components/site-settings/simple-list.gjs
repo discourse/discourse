@@ -17,6 +17,7 @@ export default class SiteSettingSimpleList extends Component {
       @onChange={{this.onChange}}
       @choices={{this.setting.choices}}
       @allowAny={{this.setting.allow_any}}
+      @class="form-kit__container-content --large"
     />
   </template>
 }

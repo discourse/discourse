@@ -11,6 +11,7 @@ export default class Enum extends Component {
       @valueProperty={{this.setting.computedValueProperty}}
       @nameProperty={{this.setting.computedNameProperty}}
       @options={{hash castInteger=true allowAny=this.setting.allowsNone}}
+      @class="form-kit__control-select"
     />
 
     {{this.preview}}
