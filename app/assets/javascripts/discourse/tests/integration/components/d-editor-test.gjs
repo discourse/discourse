@@ -8,6 +8,7 @@ import {
   settled,
   triggerEvent,
   triggerKeyEvent,
+  waitUntil,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import DEditor from "discourse/components/d-editor";
@@ -1313,6 +1314,44 @@ third line`
       });
     }
   })();
+
+  test("toolbar replacement", async function (assert) {
+    const self = this;
+    this.set("value", "hello world");
+
+    await render(
+      <template>
+        <DEditor @value={{self.value}} @composerEvents={{true}} />
+      </template>
+    );
+
+    assert.dom(".d-editor-button-bar").exists();
+    assert.dom(".d-editor-button-bar.--replaced-toolbar").doesNotExist();
+
+    const CustomButton = <template>
+      <button data-custom>Custom Button</button>
+    </template>;
+
+    this.container
+      .lookup("service:app-events")
+      .trigger("composer:replace-toolbar", { component: CustomButton });
+
+    await waitUntil(
+      () => find(".d-editor-button-bar.--replaced-toolbar") !== null
+    );
+
+    assert.dom(".d-editor-replaced-toolbar button").exists();
+
+    assert
+      .dom(".d-editor-replaced-toolbar button[data-custom]")
+      .hasText("Custom Button");
+
+    // Back button
+    await click(".d-editor-replaced-toolbar .btn-flat");
+
+    assert.dom(".d-editor-button-bar").exists();
+    assert.dom(".d-editor-button-bar.--replaced-toolbar").doesNotExist();
+  });
 });
 
 module("Integration | Component | d-editor | rich editor", function (hooks) {
