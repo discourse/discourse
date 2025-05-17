@@ -81,7 +81,7 @@ RSpec.describe Users::OmniauthCallbacksController do
     it "should display the failure message if needed" do
       get "/auth/failure"
       expect(response.status).to eq(200)
-      expect(response.body).to include(I18n.t("login.omniauth_error.generic"))
+      expect(response.body).to include(I18n.t("login.omniauth_error.generic", provider: "Google"))
     end
 
     describe "request" do

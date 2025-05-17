@@ -8,6 +8,11 @@ class Auth::Authenticator
     raise NotImplementedError
   end
 
+  # Used in error messages and for display purposes
+  def display_name
+    name
+  end
+
   def enabled?
     raise NotImplementedError
   end
