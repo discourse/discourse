@@ -1,8 +1,11 @@
 import Component from "@glimmer/component";
+import { cached } from "@glimmer/tracking";
+import { action } from "@ember/object";
 import { htmlSafe } from "@ember/template";
 import { eq } from "truth-helpers";
 import Form from "discourse/components/form";
 import { humanizedSettingName } from "discourse/lib/site-settings-utils";
+import SiteSetting from "admin/models/site-setting";
 
 export default class FormKitSiteSettingWrapper extends Component {
   get settingTitle() {
@@ -12,8 +15,38 @@ export default class FormKitSiteSettingWrapper extends Component {
     );
   }
 
+  @cached
+  get formData() {
+    return {
+      [this.args.setting.setting]: this.args.setting.value,
+    };
+  }
+
+  @action
+  async save(data) {
+    this.args.setting.buffered.set(
+      this.args.setting.setting,
+      data[this.args.setting.setting]
+    );
+    this.args.setting.buffered.applyChanges();
+
+    const params = {};
+    params[this.args.setting.setting] = {
+      value: data[this.args.setting.setting],
+      backfill: false,
+    };
+
+    await SiteSetting.bulkUpdate(params);
+  }
+
   <template>
-    <Form class={{if @setting.overridden "--overridden"}} as |form|>
+    <Form
+      @submitOn="focusout"
+      @onSubmit={{this.save}}
+      @data={{this.formData}}
+      class={{if @setting.overridden "--overridden"}}
+      as |form|
+    >
       <form.Field
         @name={{@setting.setting}}
         @title={{this.settingTitle}}

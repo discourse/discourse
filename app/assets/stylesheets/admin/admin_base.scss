@@ -885,6 +885,12 @@ $mobile-breakpoint: 700px;
     width: 100%;
     border: none;
   }
+
+  .form-horizontal {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
 }
 
 .admin-detail.mobile-open {

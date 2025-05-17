@@ -120,9 +120,19 @@ class FKForm extends Component {
       unregisterField: instance.unregisterField,
       triggerRevalidationFor: instance.triggerRevalidationFor,
       remove: instance.remove,
+      onFocusOut: instance.onFieldFocusOut,
     };
 
     return curryComponent(klass, baseArguments, getOwner(this));
+  }
+
+  @action
+  onFieldFocusOut() {
+    console.log("onFieldFocusOut", this.args.submitOn);
+    if (this.args.submitOn === "focusout") {
+      console.log("should submit");
+      this.onSubmit();
+    }
   }
 
   @action
@@ -349,6 +359,7 @@ const Form = <template>
     <FKForm
       @data={{data}}
       @onSubmit={{@onSubmit}}
+      @submitOn={{@submitOn}}
       @validate={{@validate}}
       @validateOn={{@validateOn}}
       @onRegisterApi={{@onRegisterApi}}
