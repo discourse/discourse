@@ -6,7 +6,7 @@ module ThemeResolver
 
     theme_id = nil
 
-    if (preview_theme_id = request[:preview_theme_id]&.to_i) &&
+    if (preview_theme_id = request.params["preview_theme_id"]&.to_i) &&
          guardian.allow_themes?([preview_theme_id], include_preview: true)
       theme_id = preview_theme_id
     end
