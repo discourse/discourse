@@ -89,7 +89,7 @@ RSpec.describe "translate accelerator" do
   end
 
   describe "plugins" do
-    before do
+    it "loads plural rules from plugins" do
       DiscoursePluginRegistry.register_locale(
         "foo",
         name: "Foo",
@@ -107,20 +107,15 @@ RSpec.describe "translate accelerator" do
 
       LocaleSiteSetting.reset!
       I18n.reload!
-    end
-
-    after do
-      DiscoursePluginRegistry.unregister_locale("foo")
-      LocaleSiteSetting.reset!
-    end
-
-    it "loads plural rules from plugins" do
       I18n.locale = :foo
 
       expect(I18n.t("i18n.plural.keys")).to eq(%i[one few other])
       expect(I18n.t("items", count: 1)).to eq("one item")
       expect(I18n.t("items", count: 3)).to eq("some items")
       expect(I18n.t("items", count: 20)).to eq("20 items")
+    ensure
+      DiscoursePluginRegistry.unregister_locale("foo")
+      LocaleSiteSetting.reset!
     end
   end
 
