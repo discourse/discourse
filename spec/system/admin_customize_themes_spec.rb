@@ -35,13 +35,13 @@ describe "Admin Customize Themes", type: :system do
 
       visit("/admin/customize/themes/#{theme.id}/common/head_tag/edit")
 
-      expect(find(".ace_content").text).to eq("console.log('test')")
+      expect(find(".ace_content")).to have_content("console.log('test')")
     end
 
     it "can edit the js field" do
       visit("/admin/customize/themes/#{theme.id}/common/js/edit")
 
-      expect(find(".ace_content").text).to include("// Your code here")
+      expect(find(".ace_content")).to have_content("// Your code here")
       find(".ace_text-input", visible: false).fill_in(with: "console.log('test')\n")
       find(".save-theme").click
 
@@ -57,7 +57,8 @@ describe "Admin Customize Themes", type: :system do
         .find_by(target_id: Theme.targets[:extra_js])
         .update!(value: "console.log('second test')")
       visit("/admin/customize/themes/#{theme.id}/common/js/edit")
-      expect(find(".ace_content").text).to include("console.log('second test')")
+
+      expect(find(".ace_content")).to have_content("console.log('second test')")
     end
   end
 
@@ -139,7 +140,8 @@ describe "Admin Customize Themes", type: :system do
       expect(theme_translations_settings_editor.get_input_value).to have_content("Hello there!")
 
       theme_translations_picker = PageObjects::Components::SelectKit.new(".translation-selector")
-      expect(theme_translations_picker.component.text).to eq("English (US)")
+
+      expect(theme_translations_picker.component).to have_content("English (US)")
     end
   end
 
