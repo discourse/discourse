@@ -237,7 +237,8 @@ RSpec.describe UsersController do
       end
 
       it "fails without a secure session" do
-        put "/u/#{user.username}/remove-password.json" #
+        user.update!(created_at: Time.zone.now - 8.minutes)
+        put "/u/#{user.username}/remove-password.json"
         expect(response.status).to eq(403)
       end
 
@@ -246,9 +247,15 @@ RSpec.describe UsersController do
         put "/u/#{user.username}/remove-password.json"
         expect(response.status).to eq(200)
       end
+
+      it "succeeds with a newly-created user" do
+        user.update!(created_at: Time.zone.now - 1.minute)
+        put "/u/#{user.username}/remove-password.json"
+        expect(response.status).to eq(200)
+      end
     end
 
-    context "when logged in and has associated accout" do
+    context "when logged in and has associated account" do
       let(:plugin_auth_provider) do
         authenticator_class =
           Class.new(Auth::ManagedAuthenticator) do
@@ -273,6 +280,7 @@ RSpec.describe UsersController do
       end
 
       it "fails without a secure session" do
+        user.update!(created_at: Time.zone.now - 8.minutes)
         put "/u/#{user.username}/remove-password.json" #
         expect(response.status).to eq(403)
       end
@@ -6786,14 +6794,28 @@ RSpec.describe UsersController do
         SiteSetting.enable_discourse_connect = false
       end
 
-      context "when the session is unconfirmed" do
-        it "returns unconfirmed session response" do
-          post "/u/second_factors.json"
+      it "returns unconfirmed session response when user was created more than N minutes ago" do
+        user1.created_at = Time.zone.now - 10.minutes
+        user1.save!(validate: false)
 
-          expect(response.status).to eq(200)
-          response_body = response.parsed_body
-          expect(response_body["unconfirmed_session"]).to eq(true)
-        end
+        post "/u/second_factors.json"
+
+        expect(response.status).to eq(200)
+        response_body = response.parsed_body
+        expect(response_body["unconfirmed_session"]).to eq(true)
+      end
+
+      it "returns empty list for a recently created user" do
+        user1.created_at = Time.zone.now - 1.minutes
+        user1.save!(validate: false)
+
+        post "/u/second_factors.json"
+
+        expect(response.status).to eq(200)
+        response_body = response.parsed_body
+
+        expect(response_body["unconfirmed_session"]).to eq(nil)
+        expect(response_body["security_keys"]).to eq([])
       end
 
       context "when the session is confirmed" do
