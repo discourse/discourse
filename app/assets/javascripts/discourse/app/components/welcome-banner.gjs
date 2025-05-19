@@ -27,7 +27,10 @@ export default class WelcomeBanner extends Component {
 
     observer.observe(element);
 
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      this.search.welcomeBannerSearchInViewport = false;
+    };
   });
 
   handleKeyboardShortcut = modifier(() => {
