@@ -23,11 +23,13 @@ export default class AdminSearch extends Component {
   @tracked searchResults = [];
   @tracked showFilters = true;
   @tracked loading = false;
+  @tracked dataReady = false;
 
   constructor() {
     super(...arguments);
 
     this.adminSearchDataSource.buildMap().then(() => {
+      this.dataReady = true;
       if (this.filter !== "") {
         this.loading = true;
         this.runSearch();
@@ -119,6 +121,10 @@ export default class AdminSearch extends Component {
     this.loading = false;
   }
 
+  get showLoadingSpinner() {
+    return this.filter !== "" && (this.loading || !this.dataReady);
+  }
+
   <template>
     <div
       class="admin-search__input-container
@@ -148,12 +154,22 @@ export default class AdminSearch extends Component {
         }}
       {{/if}}
       {{#if
-        (and this.filter (not this.searchResults.length) (not this.loading))
+        (and
+          this.filter
+          (not this.searchResults.length)
+          (not this.showLoadingSpinner)
+        )
       }}
         {{this.noResultsDescription}}
       {{/if}}
     </div>
-    {{#if (and this.filter (not this.searchResults.length) (not this.loading))}}
+    {{#if
+      (and
+        this.filter
+        (not this.searchResults.length)
+        (not this.showLoadingSpinner)
+      )
+    }}
       <p class="admin-search__no-results" aria-live="polite" role="status">
         {{this.noResultsDescription}}
       </p>
@@ -161,7 +177,7 @@ export default class AdminSearch extends Component {
     <div
       class="admin-search__results {{if this.searchResults '--has-results'}}"
     >
-      <ConditionalLoadingSpinner @condition={{this.loading}}>
+      <ConditionalLoadingSpinner @condition={{this.showLoadingSpinner}}>
         {{#each this.searchResults as |result|}}
           <div class="admin-search__result" data-result-type={{result.type}}>
             <a
