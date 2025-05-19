@@ -124,6 +124,7 @@ class ThemeField < ActiveRecord::Base
     errors << I18n.t("themes.errors.optimized_link") if contains_optimized_link?(html)
 
     js_compiler = ThemeJavascriptCompiler.new(theme_id, self.theme.name)
+    deprecated_template_names = []
 
     doc = Nokogiri::HTML5.fragment(html)
 
@@ -145,6 +146,7 @@ class ThemeField < ActiveRecord::Base
               "discourse/templates/#{name.delete_prefix("/")}",
               hbs_template,
             )
+            deprecated_template_names << name
           end
         rescue ThemeJavascriptCompiler::CompileError => ex
           js_compiler.append_js_error("discourse/templates/#{name}", ex.message)
@@ -153,6 +155,28 @@ class ThemeField < ActiveRecord::Base
 
         node.remove
       end
+
+    if deprecated_template_names.present?
+      js = <<~JS
+        import deprecated from "discourse/lib/deprecated";
+
+        export default {
+          initialize(){
+            const names = #{deprecated_template_names.to_json};
+            names.forEach((name) => {
+              deprecated(
+                `[${name}] adding templates to a theme using <script type='text/x-handlebars'> is deprecated. Move to dedicated .hbs or .gjs files.`,
+                {
+                  id: "discourse.script-tag-hbs",
+                  url: "https://meta.discourse.org/t/366482",
+                }
+              )
+            });
+          }
+        }
+      JS
+      js_compiler.append_module(js, "discourse/initializers/script-tag-hbs-deprecations", "js")
+    end
 
     doc
       .css('script[type="text/discourse-plugin"]')
@@ -166,12 +190,20 @@ class ThemeField < ActiveRecord::Base
         begin
           js = <<~JS
           import { withPluginApi } from "discourse/lib/plugin-api";
+          import deprecated from "discourse/lib/deprecated";
 
           export default {
             name: #{initializer_name.inspect},
             after: "inject-objects",
 
             initialize() {
+              deprecated(
+                "Adding JS code using <script type='text/x-handlebars'> is deprecated. Move this code to a dedicated JavaScript file.",
+                {
+                  id: "discourse.script-tag-discourse-plugin",
+                  url: "https://meta.discourse.org/t/366482",
+                }
+              )
               withPluginApi(#{version.inspect}, (api) => {
                 #{node.inner_html}
               });
