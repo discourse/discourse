@@ -43,7 +43,7 @@ export default class ArgsTable extends Component {
     window[`arg${globalI}`] = value;
     /* eslint-disable no-console */
     console.log(
-      `[plugin outlet debug] \`@${key}\` saved to global \`arg${globalI}\`, and logged below:`
+      `[plugin outlet debug] \`@outletArgs.${key}\` saved to global \`arg${globalI}\`, and logged below:`
     );
     console.log(value);
     /* eslint-enable no-console */
@@ -53,7 +53,7 @@ export default class ArgsTable extends Component {
 
   <template>
     {{#each this.renderArgs as |arg|}}
-      <div class="key"><span class="fw">@{{arg.key}}</span>:</div>
+      <div class="key"><span class="fw">{{arg.key}}</span>:</div>
       <div class="value">
         <span class="fw">{{arg.value}}</span>
         <a
