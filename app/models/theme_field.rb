@@ -548,7 +548,7 @@ class ThemeField < ActiveRecord::Base
     css, _source_map =
       begin
         compile_scss(prepended_scss)
-      rescue SassC::SyntaxError => e
+      rescue SassC::SyntaxError, DiscourseJsProcessor::TranspileError => e
         # We don't want to raise a blocking error here
         # admin theme editor or discourse_theme CLI will show it nonetheless
         Rails.logger.error "SCSS compilation error: #{e.message}"
@@ -568,7 +568,7 @@ class ThemeField < ActiveRecord::Base
       else
         self.error = nil unless error.nil?
       end
-    rescue SassC::SyntaxError, SassC::NotRenderedError => e
+    rescue SassC::SyntaxError, SassC::NotRenderedError, DiscourseJsProcessor::TranspileError => e
       self.error = e.message unless self.destroyed?
     end
     self.compiler_version = Theme.compiler_version
