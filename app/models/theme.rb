@@ -337,6 +337,10 @@ class Theme < ActiveRecord::Base
     SiteSetting.default_theme_id == id
   end
 
+  def system?
+    id < 0
+  end
+
   def supported?
     if minimum_version = remote_theme&.minimum_discourse_version
       return false unless Discourse.has_needed_version?(Discourse::VERSION::STRING, minimum_version)

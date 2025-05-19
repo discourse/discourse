@@ -184,67 +184,73 @@ export default RouteTemplate(
       </section>
     {{/if}}
 
-    {{#unless @controller.model.remote_theme.is_git}}
-      <div class="control-unit">
-        <div class="mini-title">{{i18n "admin.customize.theme.css_html"}}</div>
-        {{#if @controller.model.hasEditedFields}}
-          <div class="description">{{i18n
-              "admin.customize.theme.custom_sections"
+    {{#unless @controller.model.system}}
+      {{#unless @controller.model.remote_theme.is_git}}
+        <div class="control-unit">
+          <div class="mini-title">{{i18n
+              "admin.customize.theme.css_html"
             }}</div>
-          <ul>
-            {{#each @controller.editedFieldsFormatted as |field|}}
-              <li>{{field}}</li>
-            {{/each}}
-          </ul>
-        {{else}}
-          <div class="description">
-            {{i18n "admin.customize.theme.edit_css_html_help"}}
-          </div>
-        {{/if}}
+          {{#if @controller.model.hasEditedFields}}
+            <div class="description">{{i18n
+                "admin.customize.theme.custom_sections"
+              }}</div>
+            <ul>
+              {{#each @controller.editedFieldsFormatted as |field|}}
+                <li>{{field}}</li>
+              {{/each}}
+            </ul>
+          {{else}}
+            <div class="description">
+              {{i18n "admin.customize.theme.edit_css_html_help"}}
+            </div>
+          {{/if}}
 
-        <DButton
-          @action={{@controller.editTheme}}
-          @label="admin.customize.theme.edit_css_html"
-          class="btn-default edit"
-        />
-      </div>
+          <DButton
+            @action={{@controller.editTheme}}
+            @label="admin.customize.theme.edit_css_html"
+            class="btn-default edit"
+          />
+        </div>
+      {{/unless}}
 
-      <div class="control-unit">
-        <div class="mini-title">{{i18n "admin.customize.theme.uploads"}}</div>
-        {{#if @controller.model.uploads}}
-          <ul class="removable-list">
-            {{#each @controller.model.uploads as |upload|}}
-              <li>
-                {{! template-lint-disable no-unnecessary-curly-strings }}
-                {{! workaround for https://github.com/typed-ember/glint/issues/840 }}
-                <span class="col">{{"$"}}{{upload.name}}:
-                  <a
-                    href={{upload.url}}
-                    rel="noopener noreferrer"
-                    target="_blank"
-                  >{{upload.filename}}</a></span>
-                <span class="col">
-                  <DButton
-                    @action={{fn @controller.removeUpload upload}}
-                    @icon="xmark"
-                    class="second btn-default btn-default cancel-edit"
-                  />
-                </span>
-              </li>
-            {{/each}}
-          </ul>
-        {{else}}
-          <div class="description">{{i18n
-              "admin.customize.theme.no_uploads"
-            }}</div>
-        {{/if}}
-        <DButton
-          @action={{@controller.addUploadModal}}
-          @icon="plus"
-          @label="admin.customize.theme.add"
-          class="btn-default"
-        />
-      </div>
+      {{#unless @controller.model.system}}
+        <div class="control-unit">
+          <div class="mini-title">{{i18n "admin.customize.theme.uploads"}}</div>
+          {{#if @controller.model.uploads}}
+            <ul class="removable-list">
+              {{#each @controller.model.uploads as |upload|}}
+                <li>
+                  {{! template-lint-disable no-unnecessary-curly-strings }}
+                  {{! workaround for https://github.com/typed-ember/glint/issues/840 }}
+                  <span class="col">{{"$"}}{{upload.name}}:
+                    <a
+                      href={{upload.url}}
+                      rel="noopener noreferrer"
+                      target="_blank"
+                    >{{upload.filename}}</a></span>
+                  <span class="col">
+                    <DButton
+                      @action={{fn @controller.removeUpload upload}}
+                      @icon="xmark"
+                      class="second btn-default btn-default cancel-edit"
+                    />
+                  </span>
+                </li>
+              {{/each}}
+            </ul>
+          {{else}}
+            <div class="description">{{i18n
+                "admin.customize.theme.no_uploads"
+              }}</div>
+          {{/if}}
+          <DButton
+            @action={{@controller.addUploadModal}}
+            @icon="plus"
+            @label="admin.customize.theme.add"
+            class="btn-default"
+          />
+        </div>
+      {{/unless}}
     {{/unless}}
 
     {{#if @controller.extraFiles.length}}
@@ -379,12 +385,14 @@ export default RouteTemplate(
           class="btn-default btn-normal"
         />
       {{/if}}
-      <DButton
-        @action={{@controller.destroyTheme}}
-        @label="admin.customize.delete"
-        @icon="trash-can"
-        class="btn-danger"
-      />
+      {{#unless @controller.model.system}}
+        <DButton
+          @action={{@controller.destroyTheme}}
+          @label="admin.customize.delete"
+          @icon="trash-can"
+          class="btn-danger"
+        />
+      {{/unless}}
     </div>
   </template>
 );
