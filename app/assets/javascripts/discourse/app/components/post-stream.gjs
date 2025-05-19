@@ -23,7 +23,9 @@ import PostSmallAction from "./post/small-action";
 import PostTimeGap from "./post/time-gap";
 import PostVisitedLine from "./post/visited-line";
 
-const CLOAKING_BATCH_TIMEOUT_MS = 10;
+const CLOAKABLE_CLASS = "post-stream__cloakable-item";
+const CLOAKABLE_CLASS_SELECTOR = `.${CLOAKABLE_CLASS}`;
+const CLOAKING_BATCH_INTERVAL_MS = 10;
 const DAY_MS = 1000 * 60 * 60 * 24;
 const POST_MODEL = Symbol("POST");
 const SLACK_FACTOR = 5;
@@ -237,6 +239,10 @@ export default class PostStream extends Component {
   registerPostNode(element, [post]) {
     element[POST_MODEL] = post;
 
+    if (!element.classList.contains(CLOAKABLE_CLASS)) {
+      element.classList.add(CLOAKABLE_CLASS);
+    }
+
     if (!this.observedPostNodes.has(element)) {
       this.observedPostNodes.add(element);
       this.cloakingObserver.observe(element);
@@ -329,7 +335,7 @@ export default class PostStream extends Component {
         this._setActiveCloakBoundaries,
         { ...this.#observedCloakBoundaries },
         [...this.uncloakedPostNumbers],
-        CLOAKING_BATCH_TIMEOUT_MS
+        CLOAKING_BATCH_INTERVAL_MS
       );
     }
   }
@@ -341,7 +347,7 @@ export default class PostStream extends Component {
     schedule("afterRender", () => {
       requestAnimationFrame(() => {
         document
-          .querySelectorAll(".topic-post")
+          .querySelectorAll(CLOAKABLE_CLASS_SELECTOR)
           .forEach((element) => (element.style.height = ""));
       });
     });
