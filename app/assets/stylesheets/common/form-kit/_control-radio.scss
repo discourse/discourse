@@ -8,6 +8,10 @@
   line-height: 1;
   font-size: var(--font-down-1-rem);
 
+  &:hover {
+    cursor: pointer;
+  }
+
   .form-kit__field[data-disabled] & {
     cursor: not-allowed;
   }

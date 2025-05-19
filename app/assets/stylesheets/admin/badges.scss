@@ -57,11 +57,11 @@
       }
 
       .admin-badge-list-item a {
-        padding: 0.5rem 1rem;
+        padding: 0 var(--d-sidebar-row-horizontal-padding);
       }
 
-      .admin-badge-list-item a:hover {
-        background-color: var(--d-hover);
+      .admin-badge-list-item a:not(.active):hover {
+        background-color: var(--d-sidebar-highlight-background);
         border-radius: var(--d-border-radius);
       }
     }
@@ -73,6 +73,7 @@
       font-size: var(--font-0);
       display: flex;
       gap: 1rem;
+      height: var(--d-sidebar-row-height);
     }
 
     .user-badge .badge-display-name {

@@ -1,8 +1,7 @@
 @use "lib/viewport";
 
 .form-kit__control-icon {
-  width: 100% !important;
-  min-width: var(--form-kit-small-input);
+  width: 5rem !important;
 
   .formatted-selection {
     display: none !important;

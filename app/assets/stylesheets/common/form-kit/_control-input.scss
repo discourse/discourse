@@ -41,10 +41,7 @@
   background: var(--primary-very-low);
   display: flex;
   align-items: center;
-  box-shadow:
-    0 0 #0000,
-    0 0 #0000,
-    0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  box-shadow: var(--form-kis-shadow);
 
   @include viewport.until(sm) {
     height: 2.25em;
