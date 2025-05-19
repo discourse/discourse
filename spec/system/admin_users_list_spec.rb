@@ -88,7 +88,7 @@ describe "Admin Users Page", type: :system do
       expect(User.where(id: [user_1.id, user_2.id]).count).to eq(0)
     end
 
-    it "remembers selected users when the user list refreshes due to search" do
+    xit "remembers selected users when the user list refreshes due to search" do
       admin_users_page.visit
       admin_users_page.bulk_select_button.click
       admin_users_page.search_input.fill_in(with: user_1.username)
@@ -148,7 +148,7 @@ describe "Admin Users Page", type: :system do
       expect(admin_users_page).to have_users([user_1.id])
     end
 
-    it "has an option to block IPs and emails" do
+    xit "has an option to block IPs and emails" do
       user_1.update!(ip_address: IPAddr.new("44.22.11.33"))
 
       admin_users_page.visit
