@@ -7,8 +7,7 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
-import { TrackedObject, TrackedSet } from "@ember-compat/tracked-built-ins";
-import { modifier } from "ember-modifier";
+import { TrackedSet } from "@ember-compat/tracked-built-ins";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import LoadMore from "discourse/components/load-more";
 import PostFilteredNotice from "discourse/components/post/filtered-notice";
@@ -24,7 +23,8 @@ import PostSmallAction from "./post/small-action";
 import PostTimeGap from "./post/time-gap";
 import PostVisitedLine from "./post/visited-line";
 
-const MS_PER_DAY = 1000 * 60 * 60 * 24;
+const CLOAKING_BATCH_TIMEOUT_MS = 10;
+const DAY_MS = 1000 * 60 * 60 * 24;
 const POST_MODEL = Symbol("POST");
 const SLACK_FACTOR = 5;
 
@@ -36,7 +36,7 @@ export function disableCloaking() {
 }
 
 export function preventCloaking(postId) {
-  preventCloaking.add(postId);
+  cloakingPrevented.add(postId);
 }
 
 export default class PostStream extends Component {
@@ -55,7 +55,6 @@ export default class PostStream extends Component {
     min: null,
     max: null,
   };
-  lastUncloakedPost = null;
 
   observedPostNodes = new Set();
   uncloakedPostNumbers = new Set();
@@ -186,7 +185,7 @@ export default class PostStream extends Component {
       return null;
     }
 
-    return Math.floor((time2 - time1) / MS_PER_DAY);
+    return Math.floor((time2 - time1) / DAY_MS);
   }
 
   get shouldShowFilteredNotice() {
@@ -200,8 +199,8 @@ export default class PostStream extends Component {
 
   @bind
   isCloaked(post, { above, below }) {
-    if (post.post_number < above || post.post_number > below) {
-      // console.log("isCloaked", this.cloakedPostsHeight);
+    if (!cloakingEnabled) {
+      return false;
     }
 
     const height = this.cloakedPostsHeight[post.id];
@@ -220,7 +219,7 @@ export default class PostStream extends Component {
 
     this.cloakingObserver = this.#initializeObserver(this.trackCloakedPosts, {
       rootMargin: `${cloakOffset}px 0px`,
-      threshold: 0,
+      threshold: [0, 1],
     });
 
     this.viewportObserver = this.#initializeObserver(this.trackVisiblePosts, {
@@ -273,6 +272,11 @@ export default class PostStream extends Component {
   trackCloakedPosts(event) {
     const { target, isIntersecting } = event;
     const post = target[POST_MODEL];
+
+    if (!post) {
+      return;
+    }
+
     const postNumber = post.post_number;
 
     if (this.#observedCloakBoundaries.below === null) {
@@ -292,35 +296,16 @@ export default class PostStream extends Component {
       } else if (postNumber > this.#observedCloakBoundaries.below) {
         this.#observedCloakBoundaries.below = postNumber;
       }
-
-      // TODO the height needs to be set after the changes are rendered
-      if (!target.style.height) {
-        let height = target.clientHeight;
-
-        const style = window.getComputedStyle(target);
-        height +=
-          parseFloat(style.borderTopWidth) +
-          parseFloat(style.borderBottomWidth);
-
-        target.style.height = height + "px";
-      }
-
-      // console.log("uncloaking", postNumber, this.#observedCloakBoundaries);
     } else {
       this.uncloakedPostNumbers.delete(postNumber);
-      // TODO the height needs to be set after the changes are rendered
-      let height = target.clientHeight;
 
+      let height = target.clientHeight;
       const style = window.getComputedStyle(target);
       height +=
         parseFloat(style.borderTopWidth) + parseFloat(style.borderBottomWidth);
-
       this.cloakedPostsHeight[post.id] = height;
       target.style.height = height + "px";
 
-      // requestAnimationFrame is used to prevent a `[Violation] Forced reflow while executing JavaScript` warning
-      // caused by measuring the element's height in the intersection observer callback
-      // requestAnimationFrame(() => {
       if (
         postNumber > this.#observedCloakBoundaries.above &&
         postNumber < this.#observedCloakBoundaries.below
@@ -333,13 +318,6 @@ export default class PostStream extends Component {
           this.#observedCloakBoundaries.below = postNumber - 1;
         }
       }
-
-      // console.log(
-      //   "cloaking",
-      //   postNumber,
-      //   this.#observedCloakBoundaries,
-      //   this.cloakedPostsHeight
-      // );
     }
 
     if (
@@ -350,7 +328,8 @@ export default class PostStream extends Component {
         this,
         this._setActiveCloakBoundaries,
         { ...this.#observedCloakBoundaries },
-        10
+        [...this.uncloakedPostNumbers],
+        CLOAKING_BATCH_TIMEOUT_MS
       );
     }
   }
@@ -358,21 +337,23 @@ export default class PostStream extends Component {
   _setActiveCloakBoundaries({ above, below }) {
     this.cloakAbove = above;
     this.cloakBelow = below;
+
+    schedule("afterRender", () => {
+      requestAnimationFrame(() => {
+        document
+          .querySelectorAll(".topic-post")
+          .forEach((element) => (element.style.height = ""));
+      });
+    });
   }
 
   @bind
   trackVisiblePosts(event) {
     const { target, isIntersecting } = event;
     const post = target[POST_MODEL];
-    const postNumber = post.post_number;
 
     if (isIntersecting) {
       this.#postsOnScreen[post.id] = { post, node: target };
-      // console.log("entered viewport", {
-      //   target,
-      //   post,
-      //   event,
-      // });
     } else {
       delete this.#postsOnScreen[post.id];
     }
