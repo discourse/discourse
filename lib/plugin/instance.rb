@@ -1446,7 +1446,6 @@ class Plugin::Instance
 
       if valid_locale?(opts)
         DiscoursePluginRegistry.register_locale(locale, opts)
-        Rails.configuration.assets.precompile << "locales/#{locale}.js"
       else
         msg = "Invalid locale! #{opts.inspect}"
         # The logger isn't always present during boot / parsing locales from plugins
