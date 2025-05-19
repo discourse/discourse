@@ -16,8 +16,8 @@ describe "Private Message", type: :system do
 
       post.topic.remove_allowed_user(sender, recipient)
 
-      expect(page).to have_no_css("h1", text: post.topic.title)
       expect(page).to have_current_path("/u/#{recipient.username}/messages")
+      expect(page).to have_no_css("h1", text: post.topic.title)
     end
   end
 end
