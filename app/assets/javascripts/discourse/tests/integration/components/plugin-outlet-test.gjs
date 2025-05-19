@@ -1172,7 +1172,10 @@ module(
     });
 
     test("no whitespace for used wrapper outlet", async function (assert) {
-      extraConnectorComponent("test-name", <template>{{yield}}</template>);
+      extraConnectorComponent(
+        "test-name",
+        <template>{{! template-lint-disable no-yield-only }}{{yield}}</template>
+      );
       await render(
         <template>
           <div class="test-wrapper"><PluginOutlet
