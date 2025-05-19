@@ -142,6 +142,7 @@ GEM
     drb (2.2.1)
     dry-initializer (3.2.0)
     email_reply_trimmer (0.2.0)
+    erb (5.0.1)
     erubi (1.13.1)
     excon (1.2.5)
       logger
@@ -447,7 +448,8 @@ GEM
       msgpack (>= 0.4.3)
       optimist (>= 3.0.0)
     rchardet (1.9.0)
-    rdoc (6.13.1)
+    rdoc (6.14.0)
+      erb
       psych (>= 4.0.0)
     redcarpet (3.6.1)
     redis (5.4.0)
@@ -859,6 +861,7 @@ CHECKSUMS
   drb (2.2.1) sha256=e9d472bf785f558b96b25358bae115646da0dbfd45107ad858b0bc0d935cb340
   dry-initializer (3.2.0) sha256=37d59798f912dc0a1efe14a4db4a9306989007b302dcd5f25d0a2a20c166c4e3
   email_reply_trimmer (0.2.0) sha256=05843fa5ee1a2037235f1f3c876e922f613e2b4406fea5bb14212d1708d6c525
+  erb (5.0.1) sha256=760439803b36cc93eca8a266aab614614e588024a89bc30a62e78d98ff452c23
   erubi (1.13.1) sha256=a082103b0885dbc5ecf1172fede897f9ebdb745a4b97a5e8dc63953db1ee4ad9
   excon (1.2.5) sha256=ca040bb61bc0059968f34a17115a00d2db8562e3c0c5c5c7432072b551c85a9d
   execjs (2.10.0) sha256=6bcb8be8f0052ff9d370b65d1c080f2406656e150452a0abdb185a133048450d
@@ -1013,7 +1016,7 @@ CHECKSUMS
   rb-inotify (0.11.1) sha256=a0a700441239b0ff18eb65e3866236cd78613d6b9f78fea1f9ac47a85e47be6e
   rbtrace (0.5.1) sha256=e8cba64d462bfb8ba102d7be2ecaacc789247d52ac587d8003549d909cb9c5dc
   rchardet (1.9.0) sha256=26889486cdd83b378652baf7603f71d93e431bb11bc237b4cd8c65151af4a590
-  rdoc (6.13.1) sha256=62a0dac99493c94e8eb7a3fb44e55aefcb4cecb119f7991f25bddc5ed8d472f7
+  rdoc (6.14.0) sha256=2c46de58d7129b8743fcf6d76e3db971bdc914150e15ac06b386549bd82ed7db
   redcarpet (3.6.1) sha256=d444910e6aa55480c6bcdc0cdb057626e8a32c054c29e793fa642ba2f155f445
   redis (5.4.0) sha256=798900d869418a9fc3977f916578375b45c38247a556b61d58cba6bb02f7d06b
   redis-client (0.24.0) sha256=ee65ee39cb2c38608b734566167fd912384f3c1241f59075e22858f23a085dbb
