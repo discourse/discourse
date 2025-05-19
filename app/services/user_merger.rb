@@ -11,20 +11,44 @@ class UserMerger
 
   def merge!
     update_username
-    move_posts
+
+    moving_posts = Benchmark.measure { move_posts }
+    puts "time moving posts: #{moving_posts.real.round(2)} "
+
     update_user_ids
-    merge_given_daily_likes
-    merge_post_timings
-    merge_user_visits
-    update_site_settings
-    merge_user_attributes
-    merge_user_associated_accounts
 
-    DiscourseEvent.trigger(:merging_users, @source_user, @target_user)
-    update_user_stats
+    mdl = Benchmark.measure { merge_given_daily_likes }
+    puts "time merging given daily likes: #{mdl.real.round(2)} "
 
-    delete_source_user
-    log_merge
+    mpt = Benchmark.measure { merge_post_timings }
+    puts "time merging post timings: #{mpt.real.round(2)} "
+
+    muv = Benchmark.measure { merge_user_visits }
+
+    puts "time merging user visits: #{muv.real.round(2)} "
+
+    uss = Benchmark.measure { update_site_settings }
+
+    puts "time updating site settings: #{uss.real.round(2)} "
+
+    muat = Benchmark.measure { merge_user_attributes }
+    puts "time merging user attributes: #{muat.real.round(2)} "
+
+    muaa = Benchmark.measure { merge_user_associated_accounts }
+    puts "time merging user assocaited accounts: #{muaa.real.round(2)} "
+
+    merging_users =
+      Benchmark.measure { DiscourseEvent.trigger(:merging_users, @source_user, @target_user) }
+    puts "time merging users (trigger): #{merging_users.real.round(2)} "
+
+    uustats = Benchmark.measure { update_user_stats }
+    puts "update user stats: #{uustats.real.round(2)} "
+
+    dsource = Benchmark.measure { delete_source_user }
+    puts "delete source user: #{dsource.real.round(2)} "
+
+    log = Benchmark.measure { log_merge }
+    puts "log merge: #{log.real.round(2)} "
 
     @target_user.reload
   end
