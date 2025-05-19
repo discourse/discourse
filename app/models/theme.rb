@@ -90,8 +90,6 @@ class Theme < ActiveRecord::Base
           include_basic_relations.includes(
             :theme_settings,
             :settings_field,
-            color_scheme: %i[color_scheme_colors],
-            owned_color_scheme: %i[color_scheme_colors],
             theme_fields: %i[upload theme_settings_migration],
             child_themes: %i[color_scheme locale_fields theme_translation_overrides],
           )
@@ -104,7 +102,8 @@ class Theme < ActiveRecord::Base
             :user,
             :locale_fields,
             :theme_translation_overrides,
-            color_scheme: %i[theme],
+            color_scheme: %i[theme color_scheme_colors],
+            owned_color_scheme: %i[theme color_scheme_colors],
             parent_themes: %i[color_scheme locale_fields theme_translation_overrides],
           )
         end
