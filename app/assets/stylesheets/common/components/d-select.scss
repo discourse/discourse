@@ -14,10 +14,7 @@
   background-repeat: no-repeat;
   background-position: right 0.5rem center;
   background-size: 16px 12px;
-  box-shadow:
-    0 0 rgba(0, 0, 0, 0),
-    0 0 rgba(0, 0, 0, 0),
-    0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  box-shadow: var(--form-kis-shadow);
   cursor: pointer;
 
   &:focus,
