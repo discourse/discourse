@@ -6,8 +6,12 @@ class ColorSchemeRevisor
     @params = params
   end
 
-  def self.revise(color_scheme, params, update_existing_colors_only: false)
-    self.new(color_scheme, params).revise(update_existing_colors_only:)
+  def self.revise(color_scheme, params)
+    self.new(color_scheme, params).revise
+  end
+
+  def self.revise_existing_colors_only(color_scheme, params)
+    self.new(color_scheme, params).revise(update_existing_colors_only: true)
   end
 
   def revise(update_existing_colors_only: false)
