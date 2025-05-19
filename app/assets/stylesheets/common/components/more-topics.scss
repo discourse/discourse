@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .more-topics__container {
   position: relative;
   padding-bottom: max(env(safe-area-inset-bottom), 1em);
@@ -5,6 +7,10 @@
 
   .nav {
     margin-block: 0;
+
+    @include viewport.until(lg) {
+      font-size: var(--font-down-1);
+    }
 
     li {
       .btn {
