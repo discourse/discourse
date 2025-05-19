@@ -24,6 +24,7 @@ class UploadCreator
     stop
     style
     svg
+    symbol
     text
     textPath
     tref
