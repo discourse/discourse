@@ -1724,7 +1724,7 @@ HTML
       palette = theme.find_or_create_owned_color_palette
 
       expect(palette.owning_theme).to eq(theme)
-      expect(theme.owned_color_palette).to eq(palette)
+      expect(theme.reload.owned_color_palette).to eq(palette)
     end
 
     it "ensures owned color palette is not user selectable" do
