@@ -160,16 +160,16 @@ export default class PluginOutletComponent extends Component {
 
       {{~#each (this.getConnectors hasBlock=(has-block)) as |c|~}}
         {{~#if c.componentClass~}}
-          {{#let
+          {{~#let
             (this.safeCurryComponent
               c.componentClass this.outletArgsWithDeprecations
             )
             as |CurriedComponent|
-          }}
+          ~}}
             <CurriedComponent
               @outletArgs={{this.outletArgsWithDeprecations}}
             >{{yield}}</CurriedComponent>
-          {{/let}}
+          {{~/let~}}
         {{~else if @defaultGlimmer~}}
           <c.templateOnly
             @outletArgs={{this.outletArgsWithDeprecations}}
