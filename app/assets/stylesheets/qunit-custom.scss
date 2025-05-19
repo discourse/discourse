@@ -272,9 +272,9 @@ body {
     --bronze: #cd7f32;
     --shadow-modal: 0 8px 60px rgba(0, 0, 0, 1);
     --shadow-composer: 0 -1px 40px rgba(0, 0, 0, 0.35);
-    --shadow-menu-panel: 0 8px 12px rgba(0, 0, 0, 0.35);
     --shadow-card: 0 4px 14px rgba(0, 0, 0, 0.5);
     --shadow-dropdown: 0 2px 12px 0 rgba(0, 0, 0, 0.25);
+    --shadow-menu-panel: var(--shadow-dropdown);
     --shadow-header: 0 2px 4px -1px rgba(0, 0, 0, 0.45);
     --shadow-footer-nav: 0 0 2px 0 rgba(0, 0, 0, 0.4);
     --shadow-focus-danger: 0 0 6px 0 var(--danger);

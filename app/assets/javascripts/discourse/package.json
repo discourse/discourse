@@ -29,7 +29,7 @@
     "decorator-transforms": "^2.3.0",
     "discourse-widget-hbs": "workspace:1.0.0",
     "ember-curry-component": "^0.3.0",
-    "ember-resolver": "^13.1.0",
+    "ember-resolver": "^13.1.1",
     "ember-route-template": "^1.0.3",
     "ember-tracked-storage-polyfill": "^1.0.0",
     "highlight.js": "11.11.1",

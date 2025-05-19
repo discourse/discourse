@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import ClassicComponent from "@ember/component";
 import templateOnly from "@ember/component/template-only";
 import { hash } from "@ember/helper";
 import { getOwner } from "@ember/owner";
@@ -1026,21 +1027,6 @@ module(
   }
 );
 
-module("Integration | Component | plugin-outlet | tagName", function (hooks) {
-  setupRenderingTest(hooks);
-
-  test("supports the `@tagName` argument", async function (assert) {
-    await withSilencedDeprecationsAsync(
-      "discourse.plugin-outlet-tag-name",
-      async () =>
-        await render(
-          <template><PluginOutlet @name="test-name" @tagName="div" /></template>
-        )
-    );
-    assert.dom("div").exists();
-  });
-});
-
 module(
   "Integration | Component | plugin-outlet | legacy extraConnectorClass",
   function (hooks) {
@@ -1068,6 +1054,136 @@ module(
     test("links up template with extra connector class", async function (assert) {
       await render(hbs`<PluginOutlet @name="test-name" />`);
       assert.dom(".legacy-test").hasText("Hello world from legacy");
+    });
+  }
+);
+
+module(
+  "Integration | Component | plugin-outlet | argument currying",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    test("makes arguments available at top level", async function (assert) {
+      extraConnectorComponent(
+        "test-name",
+        <template>
+          <span class="glimmer-test">{{@arg1}} from glimmer</span>
+        </template>
+      );
+
+      await render(
+        <template>
+          <PluginOutlet
+            @name="test-name"
+            @outletArgs={{hash arg1="Hello world"}}
+          />
+        </template>
+      );
+      assert.dom(".glimmer-test").hasText("Hello world from glimmer");
+    });
+
+    test("makes arguments available at top level in classic components", async function (assert) {
+      extraConnectorComponent(
+        "test-name",
+        class extends ClassicComponent {
+          <template>
+            <span class="classic-test">{{this.arg1}} from classic</span>
+          </template>
+        }
+      );
+
+      await render(
+        <template>
+          <PluginOutlet
+            @name="test-name"
+            @outletArgs={{hash arg1="Hello world"}}
+          />
+        </template>
+      );
+      assert.dom(".classic-test").hasText("Hello world from classic");
+    });
+
+    test("guards against name clashes in classic components", async function (assert) {
+      extraConnectorComponent(
+        "test-name",
+        class extends ClassicComponent {
+          get arg1() {
+            return "overridden";
+          }
+
+          <template>
+            <span class="classic-test">{{this.arg1}} from classic</span>
+          </template>
+        }
+      );
+
+      await withSilencedDeprecationsAsync(
+        "discourse.plugin-outlet-classic-args-clash",
+        async () => {
+          await render(
+            <template>
+              <PluginOutlet
+                @name="test-name"
+                @outletArgs={{hash arg1="Hello world"}}
+              />
+            </template>
+          );
+        }
+      );
+      assert.dom(".classic-test").hasText("overridden from classic");
+    });
+  }
+);
+
+module(
+  "Integration | Component | plugin-outlet | whitespace",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    test("no whitespace for unused outlet", async function (assert) {
+      await render(
+        <template>
+          <div class="test-wrapper"><PluginOutlet @name="test-name" /></div>
+        </template>
+      );
+      assert.dom(".test-wrapper").hasText(/^$/, "no whitespace"); // using regex to avoid hasText builtin strip
+    });
+
+    test("no whitespace for used outlet", async function (assert) {
+      extraConnectorComponent("test-name", <template></template>);
+
+      await render(
+        <template>
+          <div class="test-wrapper"><PluginOutlet @name="test-name" /></div>
+        </template>
+      );
+      assert.dom(".test-wrapper").hasText(/^$/, "no whitespace"); // using regex to avoid hasText builtin strip
+    });
+
+    test("no whitespace for unused wrapper outlet", async function (assert) {
+      await render(
+        <template>
+          <div class="test-wrapper"><PluginOutlet
+              @name="test-name"
+            >foo</PluginOutlet></div>
+        </template>
+      );
+      assert.dom(".test-wrapper").hasText(/^foo$/, "no whitespace"); // using regex to avoid hasText builtin strip
+    });
+
+    test("no whitespace for used wrapper outlet", async function (assert) {
+      extraConnectorComponent(
+        "test-name",
+        <template>{{! template-lint-disable no-yield-only }}{{yield}}</template>
+      );
+      await render(
+        <template>
+          <div class="test-wrapper"><PluginOutlet
+              @name="test-name"
+            >foo</PluginOutlet></div>
+        </template>
+      );
+      assert.dom(".test-wrapper").hasText(/^foo$/, "no whitespace"); // using regex to avoid hasText builtin strip
     });
   }
 );
