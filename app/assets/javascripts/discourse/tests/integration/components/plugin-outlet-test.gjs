@@ -1134,3 +1134,53 @@ module(
     });
   }
 );
+
+module(
+  "Integration | Component | plugin-outlet | whitespace",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    test("no whitespace for unused outlet", async function (assert) {
+      await render(
+        <template>
+          <div class="test-wrapper"><PluginOutlet @name="test-name" /></div>
+        </template>
+      );
+      assert.dom(".test-wrapper").hasText(/^$/, "no whitespace"); // using regex to avoid hasText builtin strip
+    });
+
+    test("no whitespace for used outlet", async function (assert) {
+      extraConnectorComponent("test-name", <template></template>);
+
+      await render(
+        <template>
+          <div class="test-wrapper"><PluginOutlet @name="test-name" /></div>
+        </template>
+      );
+      assert.dom(".test-wrapper").hasText(/^$/, "no whitespace"); // using regex to avoid hasText builtin strip
+    });
+
+    test("no whitespace for unused wrapper outlet", async function (assert) {
+      await render(
+        <template>
+          <div class="test-wrapper"><PluginOutlet
+              @name="test-name"
+            >foo</PluginOutlet></div>
+        </template>
+      );
+      assert.dom(".test-wrapper").hasText(/^foo$/, "no whitespace"); // using regex to avoid hasText builtin strip
+    });
+
+    test("no whitespace for used wrapper outlet", async function (assert) {
+      extraConnectorComponent("test-name", <template>{{yield}}</template>);
+      await render(
+        <template>
+          <div class="test-wrapper"><PluginOutlet
+              @name="test-name"
+            >foo</PluginOutlet></div>
+        </template>
+      );
+      assert.dom(".test-wrapper").hasText(/^foo$/, "no whitespace"); // using regex to avoid hasText builtin strip
+    });
+  }
+);
