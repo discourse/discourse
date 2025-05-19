@@ -199,14 +199,14 @@ export default class PostStream extends Component {
 
   @bind
   isCloaked(post, { above, below }) {
-    if (!cloakingEnabled) {
+    if (!cloakingEnabled || cloakingPrevented.has(post.id)) {
       return false;
     }
 
     const height = this.cloakedPostsHeight[post.id];
 
     return height && (post.post_number < above || post.post_number > below)
-      ? { height: this.cloakedPostsHeight[post.id] }
+      ? { height }
       : null;
   }
 
