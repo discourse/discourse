@@ -186,8 +186,8 @@ importers:
         specifier: ^3.0.1
         version: 3.0.1(ember-source@5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.27.1))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5)(webpack@5.99.8(@swc/core@1.11.24)(esbuild@0.25.4)))
       ember-resolver:
-        specifier: ^13.1.0
-        version: 13.1.0(ember-source@5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.27.1))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5)(webpack@5.99.8(@swc/core@1.11.24)(esbuild@0.25.4)))
+        specifier: ^13.1.1
+        version: 13.1.1
       ember-source:
         specifier: ~5.12.0
         version: 5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.27.1))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5)(webpack@5.99.8(@swc/core@1.11.24)(esbuild@0.25.4))
@@ -291,8 +291,8 @@ importers:
         specifier: ^0.3.0
         version: 0.3.0(@babel/core@7.27.1)
       ember-resolver:
-        specifier: ^13.1.0
-        version: 13.1.0(ember-source@5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.27.1))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5)(webpack@5.99.8(@swc/core@1.11.24)(esbuild@0.25.4)))
+        specifier: ^13.1.1
+        version: 13.1.1
       ember-route-template:
         specifier: ^1.0.3
         version: 1.0.3
@@ -741,8 +741,8 @@ importers:
         specifier: ^3.0.1
         version: 3.0.1(ember-source@5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.27.1))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5)(webpack@5.99.8(@swc/core@1.11.24)(esbuild@0.25.4)))
       ember-resolver:
-        specifier: ^13.1.0
-        version: 13.1.0(ember-source@5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.27.1))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5)(webpack@5.99.8(@swc/core@1.11.24)(esbuild@0.25.4)))
+        specifier: ^13.1.1
+        version: 13.1.1
       ember-source:
         specifier: ~5.12.0
         version: 5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.27.1))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5)(webpack@5.99.8(@swc/core@1.11.24)(esbuild@0.25.4))
@@ -828,8 +828,8 @@ importers:
         specifier: ^3.0.1
         version: 3.0.1(ember-source@5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.27.1))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5)(webpack@5.99.8(@swc/core@1.11.24)(esbuild@0.25.4)))
       ember-resolver:
-        specifier: ^13.1.0
-        version: 13.1.0(ember-source@5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.27.1))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5)(webpack@5.99.8(@swc/core@1.11.24)(esbuild@0.25.4)))
+        specifier: ^13.1.1
+        version: 13.1.1
       ember-source:
         specifier: ~5.12.0
         version: 5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.27.1))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5)(webpack@5.99.8(@swc/core@1.11.24)(esbuild@0.25.4))
@@ -904,8 +904,8 @@ importers:
         specifier: ^3.0.1
         version: 3.0.1(ember-source@5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.27.1))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5)(webpack@5.99.8(@swc/core@1.11.24)(esbuild@0.25.4)))
       ember-resolver:
-        specifier: ^13.1.0
-        version: 13.1.0(ember-source@5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.27.1))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5)(webpack@5.99.8(@swc/core@1.11.24)(esbuild@0.25.4)))
+        specifier: ^13.1.1
+        version: 13.1.1
       ember-source:
         specifier: ~5.12.0
         version: 5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.27.1))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5)(webpack@5.99.8(@swc/core@1.11.24)(esbuild@0.25.4))
@@ -998,8 +998,8 @@ importers:
         specifier: ^3.0.1
         version: 3.0.1(ember-source@5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.27.1))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5)(webpack@5.99.8(@swc/core@1.11.24)(esbuild@0.25.4)))
       ember-resolver:
-        specifier: ^13.1.0
-        version: 13.1.0(ember-source@5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.27.1))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5)(webpack@5.99.8(@swc/core@1.11.24)(esbuild@0.25.4)))
+        specifier: ^13.1.1
+        version: 13.1.1
       ember-source:
         specifier: ~5.12.0
         version: 5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.27.1))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5)(webpack@5.99.8(@swc/core@1.11.24)(esbuild@0.25.4))
@@ -4426,14 +4426,9 @@ packages:
       '@ember/test-helpers': '>=3.0.3'
       qunit: ^2.13.0
 
-  ember-resolver@13.1.0:
-    resolution: {integrity: sha512-t/PjXLCl5tM9EQXGIFoBgHiA41HkLJpfo17Nud5Cy9eyUPGcnsMjWJqQ+O5QHA0E63Sp+zTn4y/RS5Tu2v2ydg==}
+  ember-resolver@13.1.1:
+    resolution: {integrity: sha512-rA4RDuTm/F9AzYX2+g7EY3QWU48kyF9+Ck8IE8VQipnlwv2Q42kdRWiw7hfeQbRxx6XoSZCak6nzAG9ePd/+Ug==}
     engines: {node: 14.* || 16.* || >= 18}
-    peerDependencies:
-      ember-source: ^4.12.0 || >= 5.0.0
-    peerDependenciesMeta:
-      ember-source:
-        optional: true
 
   ember-rfc176-data@0.3.18:
     resolution: {integrity: sha512-JtuLoYGSjay1W3MQAxt3eINWXNYYQliK90tLwtb8aeCuQK8zKGCRbBodVIrkcTqshULMnRuTOS6t1P7oQk3g6Q==}
@@ -13295,11 +13290,9 @@ snapshots:
       - '@glint/template'
       - supports-color
 
-  ember-resolver@13.1.0(ember-source@5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.27.1))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5)(webpack@5.99.8(@swc/core@1.11.24)(esbuild@0.25.4))):
+  ember-resolver@13.1.1:
     dependencies:
       ember-cli-babel: 7.26.11
-    optionalDependencies:
-      ember-source: 5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.27.1))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5)(webpack@5.99.8(@swc/core@1.11.24)(esbuild@0.25.4))
     transitivePeerDependencies:
       - supports-color
 
