@@ -2,7 +2,7 @@
 
 class StrippedLengthValidator < ActiveModel::EachValidator
   def self.validate(record, attribute, value, range)
-    if value.blank?
+    if value.blank? && range.begin > 0
       record.errors.add attribute, I18n.t("errors.messages.blank")
     elsif value.length > range.end
       record.errors.add attribute,
@@ -11,12 +11,8 @@ class StrippedLengthValidator < ActiveModel::EachValidator
                           count: range.end,
                           length: value.length,
                         )
-    else
-      value = get_sanitized_value(value)
-
-      if value.length < range.begin
-        record.errors.add attribute, I18n.t("errors.messages.too_short", count: range.begin)
-      end
+    elsif get_sanitized_value(value).length < range.begin
+      record.errors.add attribute, I18n.t("errors.messages.too_short", count: range.begin)
     end
   end
 
