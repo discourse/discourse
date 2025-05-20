@@ -8,7 +8,7 @@ module DiscourseAutomation
       automations =
         DiscourseAutomation::Automation
           .strict_loading
-          .includes(:fields, :pending_automations)
+          .includes(:fields, :pending_automations, :last_updated_by)
           .order(:name)
           .limit(500)
           .all
@@ -26,7 +26,11 @@ module DiscourseAutomation
 
     def show
       automation =
-        DiscourseAutomation::Automation.includes(:fields, :pending_automations).find(params[:id])
+        DiscourseAutomation::Automation.includes(
+          :fields,
+          :pending_automations,
+          :last_updated_by,
+        ).find(params[:id])
       render_serialized_automation(automation)
     end
 
