@@ -26,18 +26,16 @@ export default class NavItem extends Component {
     }
 
     if (isPresent(this.args.currentWhen)) {
-      const input = this.args.currentWhen;
-
-      if (typeof input === "boolean") {
-        return input;
+      const currentWhen = this.args.currentWhen;
+      if (typeof currentWhen === "boolean") {
+        return currentWhen;
+      } else if (typeof currentWhen === "string") {
+        return currentWhen
+          .split(" ")
+          .some((route) => route === this.router.currentRoute.name);
+      } else {
+        return false;
       }
-
-      const routes = input?.split?.(" ")?.filter(Boolean);
-      if (routes?.length) {
-        return routes.some((str) => str === this.router.currentRoute.name);
-      }
-
-      return false;
     }
 
     if (this.args.routeParam) {
