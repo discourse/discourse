@@ -4584,24 +4584,23 @@ ja:
         login_and_authentication:
           title: "ログインと認証"
           header_description: "ユーザーのログインと認証方法、シークレットと鍵、OAuth2 プロバイダーなどを構成します"
-        logo_and_fonts:
-          logo:
-            form:
-              logo:
-                title: "プライマリーロゴ"
-              mobile: "モバイル"
-              email: "メール"
-              manifest_screenshots:
-                description: "インストールプロンプトページでインスタンスの特徴と機能を紹介するスクリーンショット。すべての画像はローカルアップロードであり、同じサイズである必要があります。"
-              opengraph_image:
-                description: "デフォルトの opengraph 画像。ページにほかの適切な画像がない場合に使用されます。空のままにすると、large_icon が使用されます."
-          fonts:
-            title: "フォント"
-            form:
-              heading_font:
-                title: "見出しのフォント"
-            backfill_modal:
-              modal_yes: "はい"
+        logo:
+          form:
+            logo:
+              title: "プライマリーロゴ"
+            mobile: "モバイル"
+            email: "メール"
+            manifest_screenshots:
+              description: "インストールプロンプトページでインスタンスの特徴と機能を紹介するスクリーンショット。すべての画像はローカルアップロードであり、同じサイズである必要があります。"
+            opengraph_image:
+              description: "デフォルトの opengraph 画像。ページにほかの適切な画像がない場合に使用されます。空のままにすると、large_icon が使用されます."
+        fonts:
+          title: "フォント"
+          form:
+            heading_font:
+              title: "見出しのフォント"
+          backfill_modal:
+            modal_yes: "はい"
         navigation:
           title: "ナビゲーション"
           header_description: "サイトのナビゲーションリンクとメニュー項目を構成します。これには、メインのナビゲーションメニュー、ホームページ上部のクイックリンク、および管理者サイドバーの場所と動作が含まれます。"
@@ -5299,6 +5298,8 @@ ja:
           city_for_disputes_placeholder: "都市"
           city_for_disputes_help: |
             このフォーラムに関連する法的紛争を解決するための都市を指定します。
+          extra_groups:
+            groups: "グループ"
           optional: "(オプション)"
           update: "更新"
           toasts:
@@ -5700,26 +5701,26 @@ ja:
           active_filter: "アクティブ"
           inactive_filter: "非アクティブ"
           updates_available_filter: "アップデートあり"
-          schema:
-            title: "%{name} 設定の編集"
-            back_button: "%{name} に戻る"
-            fields:
-              required: "*必須"
-              groups:
-                at_least:
-                  other: "%{count} 個以上のグループが必要です"
-              categories:
-                at_least:
-                  other: "%{count} 個以上のカテゴリが必要です"
-              tags:
-                at_least:
-                  other: "%{count} 個以上のタグが必要です"
-              string:
-                too_short:
-                  other: "は %{count} 文字以上である必要があります"
-              number:
-                too_small: "は %{count} 以上である必要があります"
-                too_large: "は %{count} 以下の値である必要があります"
+        schema:
+          title: "%{name} 設定の編集"
+          back_button: "%{name} に戻る"
+          fields:
+            required: "*必須"
+            groups:
+              at_least:
+                other: "%{count} 個以上のグループが必要です"
+            categories:
+              at_least:
+                other: "%{count} 個以上のカテゴリが必要です"
+            tags:
+              at_least:
+                other: "%{count} 個以上のタグが必要です"
+            string:
+              too_short:
+                other: "は %{count} 文字以上である必要があります"
+            number:
+              too_small: "は %{count} 以上である必要があります"
+              too_large: "は %{count} 以下の値である必要があります"
         colors:
           select_base:
             title: "基本色パレットを選択してください"

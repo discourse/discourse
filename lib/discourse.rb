@@ -523,7 +523,7 @@ module Discourse
   end
 
   def self.enabled_authenticators
-    authenticators.select { |authenticator| authenticator.enabled? }
+    authenticators.select(&:enabled?)
   end
 
   def self.cache

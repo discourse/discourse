@@ -2736,14 +2736,13 @@ et:
           title: "Failid"
         legal:
           title: "Õiguslik"
-        logo_and_fonts:
-          logo:
-            form:
-              mobile: "Mobiil"
-              email: "Meiliaadress"
-          fonts:
-            backfill_modal:
-              modal_yes: "Jah"
+        logo:
+          form:
+            mobile: "Mobiil"
+            email: "Meiliaadress"
+        fonts:
+          backfill_modal:
+            modal_yes: "Jah"
         navigation:
           title: "Navigatsioon"
         notifications:
@@ -3035,6 +3034,8 @@ et:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
           company_name: "Nimi"
+          extra_groups:
+            groups: "Rühmad"
           optional: "(valikuline)"
           saved: "salvestatud!"
         flags:
@@ -3224,12 +3225,12 @@ et:
           active_filter: "Aktiivne"
           inactive_filter: "Mitteaktiivne"
           updates_available_filter: "Uuendused on saadaval"
-          schema:
-            fields:
-              required: "*nõutud"
-              number:
-                too_small: "peab olema suurem või võrdne kui %{count}"
-                too_large: "peab olema väiksem või võrdne kui %{count}"
+        schema:
+          fields:
+            required: "*nõutud"
+            number:
+              too_small: "peab olema suurem või võrdne kui %{count}"
+              too_large: "peab olema väiksem või võrdne kui %{count}"
         colors:
           title: "Värvid"
           copy_name_prefix: "Koopia sellest"

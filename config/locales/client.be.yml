@@ -1562,16 +1562,15 @@ be:
           title: "файлы"
         legal:
           title: "Legal"
-        logo_and_fonts:
-          logo:
-            form:
-              mobile: "Мабільны"
-              email: "Электронная пошта"
-              opengraph_image:
-                description: "Па змаўчанні адкрытага графіка малюнка выкарыстоўваецца, калі старонка не мае іншае падыходнае малюнка. Калі пакінуць пустым, то будзе выкарыстоўвацца вялікі значок."
-          fonts:
-            backfill_modal:
-              modal_yes: "ды"
+        logo:
+          form:
+            mobile: "Мабільны"
+            email: "Электронная пошта"
+            opengraph_image:
+              description: "Па змаўчанні адкрытага графіка малюнка выкарыстоўваецца, калі старонка не мае іншае падыходнае малюнка. Калі пакінуць пустым, то будзе выкарыстоўвацца вялікі значок."
+        fonts:
+          backfill_modal:
+            modal_yes: "ды"
         navigation:
           title: "рух"
         notifications:
@@ -1784,6 +1783,8 @@ be:
       config_areas:
         about:
           company_name: "імя"
+          extra_groups:
+            groups: "групы"
           saved: "захавана!"
         flags:
           description: "Апісанне"
@@ -1909,11 +1910,11 @@ be:
           add: "Дадаць"
           all_filter: "Усё"
           active_filter: "актыўныя"
-          schema:
-            fields:
-              required: "*абавязковыя"
-              number:
-                too_large: "павінен быць менш або роўны %{count}"
+        schema:
+          fields:
+            required: "*абавязковыя"
+            number:
+              too_large: "павінен быць менш або роўны %{count}"
         colors:
           title: "<......"
           copy_name_prefix: "капіяваць з"

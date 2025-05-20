@@ -4325,8 +4325,6 @@ ru:
   offline:
     title: "Не удаётся загрузить приложение"
     offline_page_message: "Вы не в сети. Проверьте сетевое подключение и попробуйте снова."
-  login_required:
-    welcome_message: "# [Добро пожаловать на сайт «%{title}»](#welcome)"
   upload:
     edit_reason: "изображения скачаны и сохранены локально"
     unauthorized: "Вы не можете загрузить файл данного типа (разрешённые типы файлов: %{authorized_extensions})."

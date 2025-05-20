@@ -4842,22 +4842,21 @@ nl:
         login_and_authentication:
           title: "Aanmelden en verificatie"
           header_description: "Configureer hoe gebruikers zich aanmelden en verifiëren, geheimen en sleutels, OAuth2-providers en meer"
-        logo_and_fonts:
-          logo:
-            form:
-              logo:
-                title: "Primair logo"
-              mobile: "Mobiel"
-              email: "E-mail"
-              manifest_screenshots:
-                description: "Schermafbeeldingen die de eigenschappen en functies van je instantie tonen op de installatiepromptpagina. Alle afbeeldingen moeten lokale uploads zijn en dezelfde afmetingen hebben."
-          fonts:
-            title: "Lettertypen"
-            form:
-              heading_font:
-                title: "Lettertype kop"
-            backfill_modal:
-              modal_yes: "Ja"
+        logo:
+          form:
+            logo:
+              title: "Primair logo"
+            mobile: "Mobiel"
+            email: "E-mail"
+            manifest_screenshots:
+              description: "Schermafbeeldingen die de eigenschappen en functies van je instantie tonen op de installatiepromptpagina. Alle afbeeldingen moeten lokale uploads zijn en dezelfde afmetingen hebben."
+        fonts:
+          title: "Lettertypen"
+          form:
+            heading_font:
+              title: "Lettertype kop"
+          backfill_modal:
+            modal_yes: "Ja"
         navigation:
           title: "Navigatie"
           header_description: "Configureer de navigatielinks en menuopties voor je site. Dit omvat de locatie en het gedrag van het primaire navigatiemenu, de snelle links bovenaan de startpagina en de zijbalk voor beheer"
@@ -5573,6 +5572,8 @@ nl:
           city_for_disputes_placeholder: "Plaats"
           city_for_disputes_help: |
             Geef de plaats op waar juridische geschillen met betrekking tot dit forum worden afgehandeld.
+          extra_groups:
+            groups: "Groepen"
           optional: "(optioneel)"
           update: "Bijwerken"
           toasts:
@@ -5978,30 +5979,30 @@ nl:
           active_filter: "Actief"
           inactive_filter: "Inactief"
           updates_available_filter: "Updates beschikbaar"
-          schema:
-            title: "Instelling %{name} bewerken"
-            back_button: "Terug naar %{name}"
-            fields:
-              required: "*vereist"
-              groups:
-                at_least:
-                  one: "minimaal %{count} groep is vereist"
-                  other: "minimaal %{count} groepen zijn vereist"
-              categories:
-                at_least:
-                  one: "minimaal %{count} categorie is vereist"
-                  other: "minimaal %{count} categorieën zijn vereist"
-              tags:
-                at_least:
-                  one: "minimaal %{count} tag is vereist"
-                  other: "minimaal %{count} tags zijn vereist"
-              string:
-                too_short:
-                  one: "moet minimaal %{count} teken lang zijn"
-                  other: "moet minimaal %{count} tekens lang zijn"
-              number:
-                too_small: "moet groter dan of gelijk aan %{count} zijn"
-                too_large: "moet kleiner dan of gelijk aan %{count} zijn"
+        schema:
+          title: "Instelling %{name} bewerken"
+          back_button: "Terug naar %{name}"
+          fields:
+            required: "*vereist"
+            groups:
+              at_least:
+                one: "minimaal %{count} groep is vereist"
+                other: "minimaal %{count} groepen zijn vereist"
+            categories:
+              at_least:
+                one: "minimaal %{count} categorie is vereist"
+                other: "minimaal %{count} categorieën zijn vereist"
+            tags:
+              at_least:
+                one: "minimaal %{count} tag is vereist"
+                other: "minimaal %{count} tags zijn vereist"
+            string:
+              too_short:
+                one: "moet minimaal %{count} teken lang zijn"
+                other: "moet minimaal %{count} tekens lang zijn"
+            number:
+              too_small: "moet groter dan of gelijk aan %{count} zijn"
+              too_large: "moet kleiner dan of gelijk aan %{count} zijn"
         colors:
           select_base:
             title: "Basiskleurenpalet selecteren"

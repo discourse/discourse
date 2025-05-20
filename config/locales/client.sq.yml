@@ -4017,14 +4017,13 @@ sq:
           title: "Skedarë"
         legal:
           title: "Legale"
-        logo_and_fonts:
-          logo:
-            form:
-              mobile: "Mobile"
-              email: "Email"
-          fonts:
-            backfill_modal:
-              modal_yes: "Po"
+        logo:
+          form:
+            mobile: "Mobile"
+            email: "Email"
+        fonts:
+          backfill_modal:
+            modal_yes: "Po"
         navigation:
           title: "Shfletimi"
         notifications:
@@ -4243,6 +4242,8 @@ sq:
         about:
           your_organization: "Organizata juaj"
           company_name: "Emri"
+          extra_groups:
+            groups: "Grupet"
           saved: "u ruajt!"
         flags:
           description: "Përshkrimi"
@@ -4400,12 +4401,16 @@ sq:
             text: "CSS e ngjitur"
           all_filter: "Të Gjithë"
           active_filter: "Aktiv"
-          schema:
-            fields:
-              required: "*e nevojshme"
-              number:
-                too_small: "must be greater than or equal to %{count}"
-                too_large: "must be less than or equal to %{count}"
+        schema:
+          fields:
+            required: "*e nevojshme"
+            string:
+              too_short:
+                one: "duhet të jetë të paktën %{count} karakter"
+                other: "must be at least %{count} characters"
+            number:
+              too_small: "must be greater than or equal to %{count}"
+              too_large: "must be less than or equal to %{count}"
         colors:
           title: "Ngjyrat"
           copy_name_prefix: "Kopje e"

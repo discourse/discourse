@@ -2,6 +2,11 @@
   .nav {
     margin-block: 0 7px;
     border-bottom: 1px solid var(--primary-low);
+
+    li {
+      position: relative;
+      bottom: -1px; // compensate for the border-bottom
+    }
   }
 
   .more-content-topics {

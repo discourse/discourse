@@ -2649,13 +2649,12 @@ sr:
           title: "Datoteke"
         legal:
           title: "Legalno"
-        logo_and_fonts:
-          logo:
-            form:
-              email: "Email"
-          fonts:
-            backfill_modal:
-              modal_yes: "Da"
+        logo:
+          form:
+            email: "Email"
+        fonts:
+          backfill_modal:
+            modal_yes: "Da"
         navigation:
           title: "Navigacija"
         notifications:
@@ -2840,6 +2839,8 @@ sr:
       config_areas:
         about:
           company_name: "Ime foruma"
+          extra_groups:
+            groups: "Grupe"
           optional: "(opciono)"
           saved: "sačuvano!"
         flags:
@@ -2976,9 +2977,9 @@ sr:
             text: "Footer"
           all_filter: "sve"
           active_filter: "Aktivno"
-          schema:
-            fields:
-              required: "*potrebno"
+        schema:
+          fields:
+            required: "*potrebno"
         colors:
           title: "Boje"
           copy_name_prefix: "Kopija od"

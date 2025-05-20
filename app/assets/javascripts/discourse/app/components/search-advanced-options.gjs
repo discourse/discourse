@@ -947,7 +947,7 @@ export default class SearchAdvancedOptions extends Component {
           <label class="control-label">{{i18n
               "search.advanced.post.time.label"
             }}</label>
-          <div class="controls inline-form full-width">
+          <div class="controls inline-form">
             <ComboBox
               @id="postTime"
               @valueProperty="value"
