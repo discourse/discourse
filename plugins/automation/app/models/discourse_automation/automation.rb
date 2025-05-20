@@ -4,6 +4,8 @@ module DiscourseAutomation
   class Automation < ActiveRecord::Base
     self.table_name = "discourse_automation_automations"
 
+    belongs_to :last_updated_by, class_name: "User", foreign_key: "last_updated_by_id"
+
     has_many :fields,
              class_name: "DiscourseAutomation::Field",
              dependent: :delete_all,
@@ -17,7 +19,6 @@ module DiscourseAutomation
              class_name: "DiscourseAutomation::PendingPm",
              dependent: :delete_all,
              foreign_key: "automation_id"
-
     has_many :stats, class_name: "DiscourseAutomation::Stat", dependent: :delete_all
 
     validates :script, presence: true
