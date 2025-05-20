@@ -4,7 +4,10 @@ module DiscourseAutomation
   class Field < ActiveRecord::Base
     self.table_name = "discourse_automation_fields"
 
-    belongs_to :automation, class_name: "DiscourseAutomation::Automation"
+    belongs_to :automation,
+               class_name: "DiscourseAutomation::Automation",
+               foreign_key: :automation_id,
+               inverse_of: :fields
 
     around_save :on_update_callback
 

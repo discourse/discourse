@@ -7,7 +7,8 @@ module DiscourseAutomation
     has_many :fields,
              class_name: "DiscourseAutomation::Field",
              dependent: :delete_all,
-             foreign_key: "automation_id"
+             foreign_key: "automation_id",
+             inverse_of: :automation
     has_many :pending_automations,
              class_name: "DiscourseAutomation::PendingAutomation",
              dependent: :delete_all,
@@ -27,6 +28,16 @@ module DiscourseAutomation
     end
 
     attr_accessor :running_in_background
+
+    def trigger=(new_trigger)
+      @triggerable = nil
+      super
+    end
+
+    def script=(new_script)
+      @scriptable = nil
+      super
+    end
 
     def running_in_background!
       @running_in_background = true

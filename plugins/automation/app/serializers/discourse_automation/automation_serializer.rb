@@ -61,7 +61,7 @@ module DiscourseAutomation
         not_found: scriptable.not_found,
         templates:
           process_templates(filter_fields_with_priority(scriptable.fields, object.trigger&.to_sym)),
-        fields: process_fields(object.fields.where(target: "script")),
+        fields: process_fields(script_fields),
       }
     end
 
@@ -80,7 +80,7 @@ module DiscourseAutomation
         doc: I18n.exists?(doc_key, :en) ? I18n.t(doc_key) : nil,
         not_found: triggerable&.not_found,
         templates: process_templates(triggerable&.fields || []),
-        fields: process_fields(object.fields.where(target: "trigger")),
+        fields: process_fields(trigger_fields),
         settings: triggerable&.settings,
       }
     end
@@ -139,6 +139,14 @@ module DiscourseAutomation
         fields || [],
         each_serializer: DiscourseAutomation::FieldSerializer,
       ).as_json || []
+    end
+
+    def script_fields
+      object.fields.select { |f| f.target == "script" }
+    end
+
+    def trigger_fields
+      object.fields.select { |f| f.target == "trigger" }
     end
 
     def scriptable
