@@ -32,8 +32,8 @@ export default class NavItem extends Component {
         return input;
       }
 
-      const routes = input.split(" ").filter(Boolean);
-      if (routes.length) {
+      const routes = input?.split?.(" ")?.filter(Boolean);
+      if (routes?.length) {
         return routes.some((str) => str === this.router.currentRoute.name);
       }
 
