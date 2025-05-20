@@ -25,7 +25,7 @@ $calendar-icon: '<svg xmlns="http://www.w3.org/2000/svg" width="14px" height="16
     }
 
     // iOS doesn't display the placeholder attribute for date inputs
-    html.ios-device &::after {
+    html.ios-device &:not(.--has-value)::after {
       font-size: var(--font-0);
       color: var(--primary-medium);
       content: attr(placeholder);
