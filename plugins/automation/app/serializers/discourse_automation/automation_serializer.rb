@@ -14,10 +14,7 @@ module DiscourseAutomation
     attribute :stats
 
     def last_updated_by
-      BasicUserSerializer.new(
-        User.find_by(id: object.last_updated_by_id) || Discourse.system_user,
-        root: false,
-      ).as_json
+      BasicUserSerializer.new(object.last_updated_by || Discourse.system_user, root: false).as_json
     end
 
     def include_next_pending_automation_at?
