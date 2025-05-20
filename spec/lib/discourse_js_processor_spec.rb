@@ -259,7 +259,7 @@ RSpec.describe DiscourseJsProcessor do
     it "can use themePrefix not in a template" do
       script = <<~JS.chomp
         export default function foo() {
-          themePrefix("bar");
+          return themePrefix("bar");
         }
       JS
 

@@ -1,21 +1,25 @@
 export default {
-  "virtual:main": (tree, { themeId, settings }) => {
-    const initializers = Object.keys(tree).filter((key) =>
-      key.includes("/initializers/")
-    );
-
+  "virtual:main": (tree) => {
     let output = `
       import "virtual:init-settings";
     `;
 
-    output += "export const initializers = {};\n";
+    output += "const themeCompatModules = {};\n";
 
     let i = 1;
-    for (const initializer of initializers) {
-      output += `import Init${i} from "${initializer}";\n`;
-      output += `initializers["${initializer}"] = Init${i};\n`;
+    for (const moduleFilename of Object.keys(tree)) {
+      if (moduleFilename.endsWith(".hbs")) {
+        continue;
+      }
+
+      const moduleName = moduleFilename.replace(/\.[^\.]+(\.es6)?$/, "");
+
+      output += `import * as Mod${i} from "${moduleName}";\n`;
+      output += `themeCompatModules["${moduleName}"] = Mod${i};\n`;
       i += 1;
     }
+
+    output += "export default themeCompatModules;\n";
 
     return output;
   },
