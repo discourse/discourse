@@ -25,10 +25,10 @@ import PostVisitedLine from "./post/visited-line";
 
 const CLOAKABLE_CLASS = "post-stream__cloakable-item";
 const CLOAKABLE_CLASS_SELECTOR = `.${CLOAKABLE_CLASS}`;
-const CLOAKING_BATCH_INTERVAL_MS = 10;
 const DAY_MS = 1000 * 60 * 60 * 24;
 const POST_MODEL = Symbol("POST");
 const RESIZE_DEBOUNCE_MS = 100;
+const SCROLL_BATCH_INTERVAL_MS = 10;
 const SLACK_FACTOR = 50;
 
 let cloakingEnabled = true;
@@ -90,7 +90,7 @@ export default class PostStream extends Component {
     this.appEvents.on("post-stream:posted", this, "_posted");
 
     // track the window height to update the cloaking area
-    window.addEventListener("resize", this._debouncedOnWindowResize, {
+    window.addEventListener("resize", this._onWindowResize, {
       passive: true,
     });
 
@@ -107,7 +107,7 @@ export default class PostStream extends Component {
 
     // document.removeEventListener("touchmove", this._debouncedScroll);
     // window.removeEventListener("scroll", this._debouncedScroll);
-    window.removeEventListener("resize", this._debouncedOnWindowResize);
+    window.removeEventListener("resize", this._onWindowResize);
 
     this.appEvents.off("post-stream:refresh", this, "_debouncedScroll");
     this.appEvents.off("post-stream:refresh", this, "_refresh");
@@ -295,10 +295,13 @@ export default class PostStream extends Component {
 
     const percent = 1 - intersectionRatio;
 
-    console.log("PostStream trackCurrentPost", post.post_number, percent);
+    console.log(
+      "PostStream trackCurrentPost debounced",
+      post.post_number,
+      percent
+    );
 
-    // TODO (glimmer-post-stream) needs debouncing
-    this.args.currentPostScrolled({ percent });
+    this._onCurrentPostScrolled({ percent });
   }
 
   @bind
@@ -362,7 +365,7 @@ export default class PostStream extends Component {
         this._setActiveCloakBoundaries,
         { ...this.#observedCloakBoundaries },
         [...this.uncloakedPostNumbers],
-        CLOAKING_BATCH_INTERVAL_MS
+        SCROLL_BATCH_INTERVAL_MS
       );
     }
   }
@@ -445,7 +448,27 @@ export default class PostStream extends Component {
   }
 
   @bind
-  _debouncedOnWindowResize(event) {
+  _onCurrentPostChanged(event) {
+    discourseDebounce(
+      this,
+      this.args.currentPostChanged,
+      event,
+      SCROLL_BATCH_INTERVAL_MS
+    );
+  }
+
+  @bind
+  _onCurrentPostScrolled(event) {
+    discourseDebounce(
+      this,
+      this.args.currentPostScrolled,
+      event,
+      SCROLL_BATCH_INTERVAL_MS
+    );
+  }
+
+  @bind
+  _onWindowResize(event) {
     discourseDebounce(this, this._updateCloakOffset, event, RESIZE_DEBOUNCE_MS);
   }
 
@@ -464,12 +487,6 @@ export default class PostStream extends Component {
 
   _updateCloakOffset() {
     this.cloakOffset = Math.ceil(window.innerHeight * SLACK_FACTOR);
-    console.log(
-      "Cloaking offset updated",
-      this.cloakOffset,
-      window.innerHeight,
-      SLACK_FACTOR
-    );
   }
 
   #initializeObserver(callback, { rootMargin, threshold }) {
@@ -494,8 +511,7 @@ export default class PostStream extends Component {
     const newPost = newElement[POST_MODEL];
 
     if (currentPost !== newPost) {
-      // TODO (glimmer-post-stream) needs debouncing
-      this.args.currentPostChanged({ post: newPost });
+      this._onCurrentPostChanged({ post: newPost });
     }
 
     this.#currentPostObserver.observe(newElement);
