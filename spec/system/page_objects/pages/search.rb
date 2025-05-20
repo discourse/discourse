@@ -44,11 +44,7 @@ module PageObjects
 
       def click_search_icon
         find(".d-header #search-button").click
-        self
-      end
-
-      def click_advanced_search_icon
-        find(".d-header .show-advanced-search").click
+        has_css?(is_mobile? ? ".search-container" : ".search-menu-container")
         self
       end
 

@@ -77,7 +77,7 @@ export default class AdminLogoForm extends Component {
         },
       });
       this.toasts.success({
-        duration: 3000,
+        duration: "short",
         data: {
           message: i18n("admin.config.logo.form.saved"),
         },
@@ -85,7 +85,7 @@ export default class AdminLogoForm extends Component {
       this.siteSettingChangeTracker.refreshPage(data);
     } catch (err) {
       this.toasts.error({
-        duration: 3000,
+        duration: "short",
         data: {
           message: err.jqXHR.responseJSON.errors[0],
         },

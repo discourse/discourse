@@ -166,8 +166,22 @@ export default class DateInput extends Component {
     return null;
   }
 
+  _toggleHasValueClass(value) {
+    const input = this.element.querySelector(".date-picker");
+    if (!input) {
+      return;
+    }
+
+    if (value) {
+      input.classList.add("--has-value");
+    } else {
+      input.classList.remove("--has-value");
+    }
+  }
+
   @action
   onChangeDate(event) {
+    this._toggleHasValueClass(event.target.value);
     this._handleSelection(event.target.value);
   }
 

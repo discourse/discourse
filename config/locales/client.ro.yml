@@ -2845,6 +2845,7 @@ ro:
       share:
         title: "Distribuie postarea #%{post_number}"
         instructions: "Distribuie un link către această postare:"
+      original_language: "Această postare a fost scrisă inițial în %{language}"
     category:
       none: "(nicio categorie)"
       all: "Toate categoriile"
@@ -3601,46 +3602,51 @@ ro:
           keywords: "locale|language|timezone|unicode|ltr"
         login_and_authentication:
           header_description: "Configurează modul în care utilizatorii se conectează și se autentifică, secretele și cheile, furnizorii OAuth2 și multe altele"
-        logo_and_fonts:
-          title: "Logo și fonturi"
-          header_description: "Personalizează variațiile logo-ului și fonturilor site-ului tău"
-          logo:
-            title: "Logo"
-            form:
-              saved: "Setările logoului sunt salvate."
-              logo:
-                title: "Logo principal"
-                description: "Apare în partea de navigare de sus a site-ului, precum și în partea de sus a notificărilor prin email ale site-ului."
-                help_text: "Dimensiunea recomandată este de 600 x 80 pixeli."
-              logo_dark:
-                required: "Folosești un alt logo pentru modul întunecat?"
-                title: "Logo principal întunecat"
-                help_text: "Dimensiunea recomandată este de 600 x 80 pixeli."
-              large_icon:
-                title: "Pictograma pătrată"
-              mobile: "Mobil"
-              email: "E-mail"
-          fonts:
-            title: "Fonturi"
-            form:
-              more_fonts: "Mai multe fonturi"
-              less_fonts: "Mai puține fonturi"
-              saved: "Setările fontului sunt salvate."
-              base_font:
-                title: "Font de bază"
-              heading_font:
-                title: "Font titlu"
-              default_text_size:
-                title: "Dimensiune text implicită"
-                description: "Această dimensiune poate fi ajustată ulterior de fiecare utilizator în funcție de preferințele sale."
-            backfill_modal:
-              title: "Aplici setări noi implicite de text?"
-              description:
-                one: "Ai actualizat dimensiunea implicită a textului. Vrei să aplici această modificare la %{count} utilizator existent?"
-                few: "Ai actualizat dimensiunea implicită a textului. Vrei să aplici această modificare la %{count} utilizatori existenți?"
-                other: "Ai actualizat dimensiunea implicită a textului. Vrei să aplici această modificare la %{count} de utilizatori existenți?"
-              modal_yes: "Da"
-              modal_no: "Nu, aplică doar în continuare"
+        logo:
+          title: "Logo"
+          form:
+            saved: "Setările logoului sunt salvate."
+            logo:
+              title: "Logo principal"
+              description: "Apare în partea de navigare de sus a site-ului, precum și în partea de sus a notificărilor prin email ale site-ului."
+              help_text: "Dimensiunea recomandată este de 600 x 80 pixeli."
+            logo_dark:
+              required: "Folosești un alt logo pentru modul întunecat?"
+              title: "Logo principal întunecat"
+              help_text: "Dimensiunea recomandată este de 600 x 80 pixeli."
+            large_icon:
+              title: "Pictograma pătrată"
+              help_text: "Dimensiunea recomandată este de 512 x 512 pixeli."
+            square_icon_dark:
+              help_text: "Dimensiunea recomandată este de 512 x 512 pixeli."
+            logo_small:
+              help_text: "Dimensiunea recomandată este de 120 x 120 pixeli."
+            logo_small_dark:
+              help_text: "Dimensiunea recomandată este de 120 x 120 pixeli."
+            mobile: "Mobil"
+            email: "E-mail"
+            manifest_icon:
+              help_text: "Dimensiunea recomandată este de 512 x 512 pixeli."
+        fonts:
+          title: "Fonturi"
+          form:
+            more_fonts: "Mai multe fonturi"
+            saved: "Setările fontului sunt salvate."
+            base_font:
+              title: "Font de bază"
+            heading_font:
+              title: "Font titlu"
+            default_text_size:
+              title: "Dimensiune text implicită"
+              description: "Această dimensiune poate fi ajustată ulterior de fiecare utilizator în funcție de preferințele sale."
+          backfill_modal:
+            title: "Aplici setări noi implicite de text?"
+            description:
+              one: "Ai actualizat dimensiunea implicită a textului. Vrei să aplici această modificare la %{count} utilizator existent?"
+              few: "Ai actualizat dimensiunea implicită a textului. Vrei să aplici această modificare la %{count} utilizatori existenți?"
+              other: "Ai actualizat dimensiunea implicită a textului. Vrei să aplici această modificare la %{count} de utilizatori existenți?"
+            modal_yes: "Da"
+            modal_no: "Nu, aplică doar în continuare"
         navigation:
           title: "Navigare"
           header_description: "Configurează legăturile de navigare și elementele de meniu pentru site-ul tău. Aceasta include locația și comportamentul meniului principal de navigare, legăturile rapide din partea de sus a paginii de pornire, precum și bara laterală de administrare."
@@ -3799,8 +3805,13 @@ ro:
       search:
         modal_title: "Caută orice în admin"
         title: "Caută"
+        instructions: "Caută orice în admin..."
         full_page_link: "Comută la căutare în toată pagina"
-        no_results: "Nu am găsit nimic care să se potrivească cu „%{filter}”."
+        no_results: 'Nu am găsit nimic care să se potrivească cu „%{filter}”.'
+        result_count:
+          one: 'Un rezultat pentru „%{filter}”'
+          few: '%{count} rezultate pentru „%{filter}”'
+          other: '%{count} de rezultate pentru „%{filter}”'
         result_types:
           page:
             one: "Pagină"
@@ -4138,7 +4149,17 @@ ro:
           city_for_disputes_placeholder: "Oraș"
           city_for_disputes_help: |
             Specifică orașul pentru soluționarea litigiilor legale legate de acest forum.
+          extra_groups:
+            heading: "Listare grup"
+            description: "Grupuri suplimentare de afișat pe pagina „Despre”."
+            groups: "Grupuri"
+            order: "Ordine sortare"
+            initial_members: "Membri extinși"
+            initial_members_description: "Numărul de membri ai grupului care vor fi afișați înainte de adăugarea unui buton „Vezi mai mulți”."
+            show_description: "Include descriere"
           optional: "(opțional)"
+          toasts:
+            extra_groups_saved: "Listare grup salvată"
           saved: "salvat!"
         flags:
           description: "Descriere"
@@ -4409,29 +4430,34 @@ ro:
           all_filter: "Toate"
           active_filter: "Activi"
           inactive_filter: "Inactivă"
-          schema:
-            title: "Editează setarea %{name}"
-            back_button: "Înapoi la %{name}"
-            fields:
-              required: "*obligatoriu"
-              groups:
-                at_least:
-                  one: "cel puțin %{count} grup este necesar"
-                  few: "cel puțin %{count} grupuri sunt necesare"
-                  other: "cel puțin %{count} de grupuri sunt necesare"
-              categories:
-                at_least:
-                  one: "este necesară cel puțin %{count} categorie"
-                  few: "sunt necesare cel puțin %{count} categorii"
-                  other: "sunt necesare cel puțin %{count} de categorii"
-              tags:
-                at_least:
-                  one: "cel puțin %{count} etichetă este necesară"
-                  few: "cel puțin %{count} etichete sunt necesare"
-                  other: "cel puțin %{count} de etichete sunt necesare"
-              number:
-                too_small: "trebuie să fie mai mare sau egal cu %{count}"
-                too_large: "trebuie să fie mai mic sau egal cu %{count}"
+        schema:
+          title: "Editează setarea %{name}"
+          back_button: "Înapoi la %{name}"
+          fields:
+            required: "*obligatoriu"
+            groups:
+              at_least:
+                one: "este necesar cel puțin un grup"
+                few: "sunt necesare cel puțin %{count} grupuri"
+                other: "sunt necesare cel puțin %{count} de grupuri"
+            categories:
+              at_least:
+                one: "este necesară cel puțin o categorie"
+                few: "sunt necesare cel puțin %{count} categorii"
+                other: "sunt necesare cel puțin %{count} de categorii"
+            tags:
+              at_least:
+                one: "este necesară cel puțin o etichetă"
+                few: "sunt necesare cel puțin %{count} etichete"
+                other: "sunt necesare cel puțin %{count} de etichete"
+            string:
+              too_short:
+                one: "trebuie să aibă cel puțin un caracter"
+                few: "trebuie să aibă cel puțin %{count} caractere"
+                other: "trebuie să aibă cel puțin %{count} de caractere"
+            number:
+              too_small: "trebuie să fie mai mare sau egal cu %{count}"
+              too_large: "trebuie să fie mai mic sau egal cu %{count}"
         colors:
           title: "Culori"
           edit: "Editează paletă de culori"

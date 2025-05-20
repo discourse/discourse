@@ -35,7 +35,7 @@ export default class AdminPermalinksIndexController extends Controller {
     let linkElement = document.querySelector(`#admin-permalink-${pl.id}`);
     clipboardCopy(linkElement.textContent);
     this.toasts.success({
-      duration: 3000,
+      duration: "short",
       data: {
         message: i18n("admin.permalink.copy_success"),
       },

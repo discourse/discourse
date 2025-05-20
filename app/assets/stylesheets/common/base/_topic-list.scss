@@ -242,7 +242,7 @@
   }
 
   .topic-list-data {
-    line-height: var(--line-height-large);
+    line-height: var(--line-height-medium);
     text-align: left;
     vertical-align: middle;
   }
@@ -291,7 +291,9 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 0.5em;
+    margin-top: 0.3125em;
+    gap: 0 0.5em;
+    line-height: var(--line-height-large);
 
     a.discourse-tag.box {
       padding-top: 0;

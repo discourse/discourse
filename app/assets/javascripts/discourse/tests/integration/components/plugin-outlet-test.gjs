@@ -1026,21 +1026,6 @@ module(
   }
 );
 
-module("Integration | Component | plugin-outlet | tagName", function (hooks) {
-  setupRenderingTest(hooks);
-
-  test("supports the `@tagName` argument", async function (assert) {
-    await withSilencedDeprecationsAsync(
-      "discourse.plugin-outlet-tag-name",
-      async () =>
-        await render(
-          <template><PluginOutlet @name="test-name" @tagName="div" /></template>
-        )
-    );
-    assert.dom("div").exists();
-  });
-});
-
 module(
   "Integration | Component | plugin-outlet | legacy extraConnectorClass",
   function (hooks) {
@@ -1068,6 +1053,59 @@ module(
     test("links up template with extra connector class", async function (assert) {
       await render(hbs`<PluginOutlet @name="test-name" />`);
       assert.dom(".legacy-test").hasText("Hello world from legacy");
+    });
+  }
+);
+
+module(
+  "Integration | Component | plugin-outlet | whitespace",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    test("no whitespace for unused outlet", async function (assert) {
+      await render(
+        <template>
+          <div class="test-wrapper"><PluginOutlet @name="test-name" /></div>
+        </template>
+      );
+      assert.dom(".test-wrapper").hasText(/^$/, "no whitespace"); // using regex to avoid hasText builtin strip
+    });
+
+    test("no whitespace for used outlet", async function (assert) {
+      extraConnectorComponent("test-name", <template></template>);
+
+      await render(
+        <template>
+          <div class="test-wrapper"><PluginOutlet @name="test-name" /></div>
+        </template>
+      );
+      assert.dom(".test-wrapper").hasText(/^$/, "no whitespace"); // using regex to avoid hasText builtin strip
+    });
+
+    test("no whitespace for unused wrapper outlet", async function (assert) {
+      await render(
+        <template>
+          <div class="test-wrapper"><PluginOutlet
+              @name="test-name"
+            >foo</PluginOutlet></div>
+        </template>
+      );
+      assert.dom(".test-wrapper").hasText(/^foo$/, "no whitespace"); // using regex to avoid hasText builtin strip
+    });
+
+    test("no whitespace for used wrapper outlet", async function (assert) {
+      extraConnectorComponent(
+        "test-name",
+        <template>{{! template-lint-disable no-yield-only }}{{yield}}</template>
+      );
+      await render(
+        <template>
+          <div class="test-wrapper"><PluginOutlet
+              @name="test-name"
+            >foo</PluginOutlet></div>
+        </template>
+      );
+      assert.dom(".test-wrapper").hasText(/^foo$/, "no whitespace"); // using regex to avoid hasText builtin strip
     });
   }
 );

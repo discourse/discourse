@@ -3865,14 +3865,13 @@ hy:
           title: "Ֆայլեր"
         legal:
           title: "Օրինական"
-        logo_and_fonts:
-          logo:
-            form:
-              mobile: "Հեռախոսային"
-              email: "Էլ. փոստ"
-          fonts:
-            backfill_modal:
-              modal_yes: "Այո"
+        logo:
+          form:
+            mobile: "Հեռախոսային"
+            email: "Էլ. փոստ"
+        fonts:
+          backfill_modal:
+            modal_yes: "Այո"
         navigation:
           title: "Նավիգացիա"
         notifications:
@@ -4236,6 +4235,8 @@ hy:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
           company_name: "Անուն"
+          extra_groups:
+            groups: "Խմբեր"
           optional: "(ընտրովի)"
           saved: "պահված է!"
         flags:
@@ -4513,12 +4514,16 @@ hy:
           all_filter: "Բոլորը"
           active_filter: "Ակտիվ"
           inactive_filter: "Ոչ ակտիվ"
-          schema:
-            fields:
-              required: "*պարտադիր"
-              number:
-                too_small: "պետք է լինի մեծ կամ հավասար %{count} -ի"
-                too_large: "Պետք է լինի փոքր կամ հավասար %{count} -ի"
+        schema:
+          fields:
+            required: "*պարտադիր"
+            string:
+              too_short:
+                one: "պետք է լինի առնվազն %{count} նիշ"
+                other: "պետք է լինի առնվազն %{count} սիմվոլ"
+            number:
+              too_small: "պետք է լինի մեծ կամ հավասար %{count} -ի"
+              too_large: "Պետք է լինի փոքր կամ հավասար %{count} -ի"
         colors:
           select_base:
             title: "Ընտրել հիմնական գունապնակը"

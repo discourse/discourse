@@ -4893,62 +4893,71 @@ tr_TR:
         login_and_authentication:
           title: "Giriş ve kimlik doğrulama"
           header_description: "Kullanıcıların oturum açma ve kimlik doğrulama yöntemlerini, gizli dizileri ve anahtarları, OAuth2 sağlayıcılarını ve daha fazlasını yapılandırın"
-        logo_and_fonts:
-          logo:
-            form:
-              logo:
-                title: "Birincil logo"
-              mobile: "Mobil"
-              email: "E-posta"
-              mobile_logo:
-                description: "Sitenizin mobil versiyonunda kullanılan logo. Boş bırakılırsa, `logo` ayarındaki resim kullanılacaktır."
-                help_text: "Yüksekliği 120 ve en boy oranı 3:1'den büyük olan geniş dikdörtgen bir resim kullanın."
-              mobile_logo_dark:
-                required: "Karanlık mod için farklı bir mobil logo mu kullanacaksınız?"
-                title: "Mobil logo koyu"
-                help_text: "Yüksekliği 120 ve en boy oranı 3:1'den büyük olan geniş dikdörtgen bir resim kullanın."
-              manifest_icon:
-                title: "Manifest simgesi"
-                description: "Android'de logo/açılış resmi olarak kullanılan resim. Boş bırakılırsa, large_icon kullanılacaktır."
-                help_text: "Önerilen boyut 512 x 512 pikseldir."
-              manifest_screenshots:
-                title: "Manifest ekran görüntüleri"
-                description: "Kurulum istemi sayfasında örneğinizin özelliklerini ve işlevselliğini gösteren ekran görüntüleri. Tüm görüntüler yerel yüklemeler olmalı ve aynı boyutlarda olmalıdır."
-              apple_touch_icon:
-                title: "Apple dokunmatik simgesi"
-                description: "Apple dokunmatik cihazlar için kullanılan simge. Boş bırakılırsa, large_icon kullanılacaktır."
-                help_text: "Önerilen boyut 180 x 180 pikseldir. Şeffaf arka plan önerilmez."
-              digest_logo:
-                title: "Digest logosu"
-                description: "Sitenizin e-posta özetinin üst kısmında kullanılan alternatif logo görüntüsü. Boş bırakılırsa, `logo` ayarındaki görüntü kullanılacaktır."
-                help_text: "Geniş bir dikdörtgen görüntü kullanın. SVG görüntüsü kullanmayın."
-              opengraph_image:
-                title: "OpenGraph görüntüsü"
-                description: "Varsayılan opengraph görüntüsü, sayfada başka uygun görüntü olmadığında kullanılır. Boş bırakılırsa large_icon kullanılır."
-              x_summary_large_image:
-                title: "X özeti büyük resim"
-                description: "X kartı 'özet büyük resim'. Boş bırakılırsa, aynı zamanda bir .svg olmadığı sürece OpenGraph_image kullanılarak normal kart meta verileri oluşturulur."
-                help_text: "Önerilen boyut en az 280 x 150 pikseldir. SVG resmi kullanmayın."
-          fonts:
-            title: "Yazı Tipleri"
-            form:
-              more_fonts: "Daha fazla yazı tipi"
-              less_fonts: "Daha az yazı tipi"
-              saved: "Yazı tipi ayarları kaydedildi."
-              base_font:
-                title: "Temel yazı tipi"
-              heading_font:
-                title: "Başlık yazı tipi"
-              default_text_size:
-                title: "Varsayılan metin boyutu"
-                description: "Bu boyut daha sonra her kullanıcı tarafından kendi tercihine göre ayarlanabilir."
-            backfill_modal:
-              title: "Yeni varsayılan metin ayarları uygulansın mı?"
-              description:
-                one: "Varsayılan metin boyutunu güncellediniz. Bu değişikliği %{count} mevcut kullanıcıya uygulamak ister misiniz?"
-                other: "Varsayılan metin boyutunu güncellediniz. Bu değişikliği %{count} mevcut kullanıcıya uygulamak ister misiniz?"
-              modal_yes: "Evet"
-              modal_no: "Hayır, sadece ileriye dönük olarak uygula"
+        logo:
+          form:
+            logo:
+              title: "Birincil logo"
+              help_text: "Önerilen boyut 600 x 80 pikseldir."
+            logo_dark:
+              help_text: "Önerilen boyut 600 x 80 pikseldir."
+            large_icon:
+              help_text: "Önerilen boyut 512 x 512 pikseldir."
+            square_icon_dark:
+              help_text: "Önerilen boyut 512 x 512 pikseldir."
+            logo_small:
+              help_text: "Önerilen boyut 120 x 120 pikseldir."
+            logo_small_dark:
+              help_text: "Önerilen boyut 120 x 120 pikseldir."
+            mobile: "Mobil"
+            email: "E-posta"
+            mobile_logo:
+              description: "Sitenizin mobil versiyonunda kullanılan logo. Boş bırakılırsa, `logo` ayarındaki resim kullanılacaktır."
+              help_text: "Yüksekliği 120 ve en boy oranı 3:1'den büyük olan geniş dikdörtgen bir resim kullanın."
+            mobile_logo_dark:
+              required: "Karanlık mod için farklı bir mobil logo mu kullanacaksınız?"
+              title: "Mobil logo koyu"
+              help_text: "Yüksekliği 120 ve en boy oranı 3:1'den büyük olan geniş dikdörtgen bir resim kullanın."
+            manifest_icon:
+              title: "Manifest simgesi"
+              description: "Android'de logo/açılış resmi olarak kullanılan resim. Boş bırakılırsa, large_icon kullanılacaktır."
+              help_text: "Önerilen boyut 512 x 512 pikseldir."
+            manifest_screenshots:
+              title: "Manifest ekran görüntüleri"
+              description: "Kurulum istemi sayfasında örneğinizin özelliklerini ve işlevselliğini gösteren ekran görüntüleri. Tüm görüntüler yerel yüklemeler olmalı ve aynı boyutlarda olmalıdır."
+            apple_touch_icon:
+              title: "Apple dokunmatik simgesi"
+              description: "Apple dokunmatik cihazlar için kullanılan simge. Boş bırakılırsa, large_icon kullanılacaktır."
+              help_text: "Önerilen boyut 180 x 180 pikseldir. Şeffaf arka plan önerilmez."
+            digest_logo:
+              title: "Digest logosu"
+              description: "Sitenizin e-posta özetinin üst kısmında kullanılan alternatif logo görüntüsü. Boş bırakılırsa, `logo` ayarındaki görüntü kullanılacaktır."
+              help_text: "Geniş bir dikdörtgen görüntü kullanın. SVG görüntüsü kullanmayın."
+            opengraph_image:
+              title: "OpenGraph görüntüsü"
+              description: "Varsayılan opengraph görüntüsü, sayfada başka uygun görüntü olmadığında kullanılır. Boş bırakılırsa large_icon kullanılır."
+            x_summary_large_image:
+              title: "X özeti büyük resim"
+              description: "X kartı 'özet büyük resim'. Boş bırakılırsa, aynı zamanda bir .svg olmadığı sürece OpenGraph_image kullanılarak normal kart meta verileri oluşturulur."
+              help_text: "Önerilen boyut en az 280 x 150 pikseldir. SVG resmi kullanmayın."
+        fonts:
+          title: "Yazı Tipleri"
+          form:
+            more_fonts: "Daha fazla yazı tipi"
+            saved: "Yazı tipi ayarları kaydedildi."
+            base_font:
+              title: "Temel yazı tipi"
+            heading_font:
+              title: "Başlık yazı tipi"
+            default_text_size:
+              title: "Varsayılan metin boyutu"
+              description: "Bu boyut daha sonra her kullanıcı tarafından kendi tercihine göre ayarlanabilir."
+          backfill_modal:
+            title: "Yeni varsayılan metin ayarları uygulansın mı?"
+            description:
+              one: "Varsayılan metin boyutunu güncellediniz. Bu değişikliği %{count} mevcut kullanıcıya uygulamak ister misiniz?"
+              other: "Varsayılan metin boyutunu güncellediniz. Bu değişikliği %{count} mevcut kullanıcıya uygulamak ister misiniz?"
+            modal_yes: "Evet"
+            modal_no: "Hayır, sadece ileriye dönük olarak uygula"
         navigation:
           title: "Gezinme"
           header_description: "Siteniz için gezinme bağlantılarını ve menü ögelerini yapılandırın. Bu, birincil gezinme menüsünün konumunu ve davranışını, ana sayfanın üst kısmındaki hızlı bağlantıları ve yönetici kenar çubuğunu içerir"
@@ -5665,6 +5674,8 @@ tr_TR:
           city_for_disputes_placeholder: "Şehir"
           city_for_disputes_help: |
             Bu forumla ilgili yasal anlaşmazlıkların çözümü için şehri belirtin.
+          extra_groups:
+            groups: "Grup"
           optional: "(isteğe bağlı)"
           update: "Güncelle"
           toasts:
@@ -6070,30 +6081,30 @@ tr_TR:
           active_filter: "Aktif"
           inactive_filter: "Aktif Değil"
           updates_available_filter: "Güncellemeler Mevcut"
-          schema:
-            title: "%{name} ayarını düzenle"
-            back_button: "%{name} adlı kişiye geri dön"
-            fields:
-              required: "*gerekli"
-              groups:
-                at_least:
-                  one: "en az %{count} grup gerekli"
-                  other: "en az %{count} grup gerekli"
-              categories:
-                at_least:
-                  one: "en az %{count} kategori gerekli"
-                  other: "en az %{count} kategori gerekli"
-              tags:
-                at_least:
-                  one: "en az %{count} etiket gerekli"
-                  other: "en az %{count} etiket gerekli"
-              string:
-                too_short:
-                  one: "en az %{count} karakter olmalı"
-                  other: "en az %{count} karakter olmalı"
-              number:
-                too_small: "%{count} değerine eşit veya bu değerden büyük olmalı"
-                too_large: "%{count} değerine eşit veya bu değerden az olmalı"
+        schema:
+          title: "%{name} ayarını düzenle"
+          back_button: "%{name} adlı kişiye geri dön"
+          fields:
+            required: "*gerekli"
+            groups:
+              at_least:
+                one: "en az %{count} grup gerekli"
+                other: "en az %{count} grup gerekli"
+            categories:
+              at_least:
+                one: "en az %{count} kategori gerekli"
+                other: "en az %{count} kategori gerekli"
+            tags:
+              at_least:
+                one: "en az %{count} etiket gerekli"
+                other: "en az %{count} etiket gerekli"
+            string:
+              too_short:
+                one: "en az %{count} karakter olmalı"
+                other: "en az %{count} karakter olmalı"
+            number:
+              too_small: "%{count} değerine eşit veya bu değerden büyük olmalı"
+              too_large: "%{count} değerine eşit veya bu değerden az olmalı"
         colors:
           select_base:
             title: "Temel renk paletini seçin"

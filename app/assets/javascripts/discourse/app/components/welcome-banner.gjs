@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { modifier } from "ember-modifier";
@@ -18,8 +17,6 @@ export default class WelcomeBanner extends Component {
   @service appEvents;
   @service search;
 
-  @tracked inViewport = true;
-
   checkViewport = modifier((element) => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -30,7 +27,10 @@ export default class WelcomeBanner extends Component {
 
     observer.observe(element);
 
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      this.search.welcomeBannerSearchInViewport = false;
+    };
   });
 
   handleKeyboardShortcut = modifier(() => {
@@ -83,11 +83,17 @@ export default class WelcomeBanner extends Component {
     return this.displayForRoute;
   }
 
+  get bodyClasses() {
+    return this.shouldDisplay && this.search.welcomeBannerSearchInViewport
+      ? "welcome-banner--enabled welcome-banner--visible"
+      : this.shouldDisplay
+        ? "welcome-banner--enabled"
+        : "";
+  }
+
   <template>
+    {{bodyClass this.bodyClasses}}
     {{#if this.shouldDisplay}}
-      {{#if this.search.welcomeBannerSearchInViewport}}
-        {{bodyClass "welcome-banner--visible"}}
-      {{/if}}
 
       <div
         class="welcome-banner"

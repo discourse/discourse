@@ -6,4 +6,4 @@ import contentTagWasm from "./node_modules/content-tag/pkg/standalone/content_ta
 
 export { Preprocessor };
 
-initSync(contentTagWasm);
+initSync({ module: contentTagWasm });

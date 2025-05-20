@@ -102,7 +102,7 @@ export default class AdminConfigAreasColorPalette extends Component {
       }
     } catch (error) {
       this.toasts.error({
-        duration: 3000,
+        duration: "short",
         data: {
           message: extractError(error),
         },

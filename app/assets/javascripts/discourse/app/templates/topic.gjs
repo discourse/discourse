@@ -200,7 +200,13 @@ export default RouteTemplate(
               </div>
 
             {{else}}
-              <h1 data-topic-id={{@controller.model.id}}>
+              <h1
+                data-topic-id={{@controller.model.id}}
+                role="button"
+                class={{@controller.topicTitleClass}}
+                aria-label={{i18n "edit_topic"}}
+                {{on "click" @controller.titleClick}}
+              >
                 {{#unless @controller.model.is_warning}}
                   {{#if @controller.canSendPms}}
                     <PrivateMessageGlyph
@@ -218,22 +224,13 @@ export default RouteTemplate(
 
                 {{#if @controller.model.details.loaded}}
                   <TopicStatus @topic={{@controller.model}} />
-                  <a
-                    href={{@controller.model.url}}
-                    {{on "click" @controller.jumpTop}}
-                    class="fancy-title"
-                  >
+                  <span class="fancy-title">
                     {{htmlSafe @controller.model.fancyTitle}}
-                  </a>
+                  </span>
                 {{/if}}
 
-                {{#if @controller.model.details.can_edit}}
-                  <a
-                    href
-                    {{on "click" @controller.editTopic}}
-                    class="edit-topic"
-                    title={{i18n "edit_topic"}}
-                  >{{icon "pencil"}}</a>
+                {{#if @controller.showEditButton}}
+                  {{icon "pencil"}}
                 {{/if}}
 
                 <PluginOutlet

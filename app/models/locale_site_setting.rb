@@ -53,6 +53,10 @@ class LocaleSiteSetting < EnumSiteSetting
     @lock.synchronize { @values = @language_names = @supported_locales = nil }
   end
 
+  def self.get_language_name(locale)
+    values.find { |v| v[:value] == locale.to_s.sub("-", "_") }&.[](:name)
+  end
+
   FALLBACKS = { en_GB: :en }
 
   def self.fallback_locale(locale)

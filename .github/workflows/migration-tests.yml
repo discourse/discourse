@@ -24,7 +24,7 @@ jobs:
   tests:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
     name: Tests
-    runs-on: ${{ (github.repository_owner == 'discourse' && 'debian-12') || 'ubuntu-latest' }}
+    runs-on: ${{ (github.repository_owner == 'discourse' && 'debian-12-8core') || 'ubuntu-latest' }}
     container: discourse/discourse_test:release
     timeout-minutes: 20
 

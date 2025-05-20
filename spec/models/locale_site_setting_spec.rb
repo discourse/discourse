@@ -116,4 +116,19 @@ RSpec.describe LocaleSiteSetting do
       end
     end
   end
+
+  describe ".get_language_name" do
+    it "returns the language name for a valid locale" do
+      expect(LocaleSiteSetting.get_language_name("en")).to eq("English (US)")
+      expect(LocaleSiteSetting.get_language_name("es")).to eq("Español")
+    end
+
+    it "returns nil for a locale that doesn't exist" do
+      expect(LocaleSiteSetting.get_language_name("xx")).to be_nil
+    end
+
+    it "handles symbol locales" do
+      expect(LocaleSiteSetting.get_language_name(:en_GB)).to eq("English (UK)")
+    end
+  end
 end

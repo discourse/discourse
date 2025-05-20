@@ -5,7 +5,13 @@ module DiscourseAutomation
     requires_plugin DiscourseAutomation::PLUGIN_NAME
 
     def index
-      automations = DiscourseAutomation::Automation.order(:name).all
+      automations =
+        DiscourseAutomation::Automation
+          .strict_loading
+          .includes(:fields, :pending_automations, :last_updated_by)
+          .order(:name)
+          .limit(500)
+          .all
       serializer =
         ActiveModel::ArraySerializer.new(
           automations,
@@ -19,7 +25,12 @@ module DiscourseAutomation
     end
 
     def show
-      automation = DiscourseAutomation::Automation.find(params[:id])
+      automation =
+        DiscourseAutomation::Automation.includes(
+          :fields,
+          :pending_automations,
+          :last_updated_by,
+        ).find(params[:id])
       render_serialized_automation(automation)
     end
 
@@ -43,7 +54,8 @@ module DiscourseAutomation
     def update
       params.require(:automation)
 
-      automation = DiscourseAutomation::Automation.find(params[:id])
+      automation =
+        DiscourseAutomation::Automation.includes(:fields, :pending_automations).find(params[:id])
       if automation.scriptable.forced_triggerable
         params[:trigger] = automation.scriptable.forced_triggerable[:triggerable].to_s
       end

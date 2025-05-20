@@ -11,7 +11,7 @@ uk:
     models:
       fields:
         required_field: 'Поле `%{name}` має бути заповнене: `%{target}:%{target_name}`.'
-        invalid_field: 'Компонент поля `%{component}` не підходить: `%{target}:%{target_name}.`'
+        invalid_field: 'Компонент поля `%{component}` не підходить для: `%{target}:%{target_name}`.'
         invalid_metadata: Дані для `%{field}` недійсні або компонент `%{component}` невідомий.
     triggerables:
       errors:

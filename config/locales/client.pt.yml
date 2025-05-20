@@ -3655,16 +3655,15 @@ pt:
           title: "Ficheiros"
         legal:
           title: "Legal"
-        logo_and_fonts:
-          logo:
-            form:
-              mobile: "Móvel"
-              email: "Email"
-              manifest_screenshots:
-                description: "Capturas de tela que mostrem os recursos e a funcionalidade da instância na página de incentivo à instalação. Todas as imagens devem ser envios locais e das mesmas dimensões."
-          fonts:
-            backfill_modal:
-              modal_yes: "Sim"
+        logo:
+          form:
+            mobile: "Móvel"
+            email: "Email"
+            manifest_screenshots:
+              description: "Capturas de tela que mostrem os recursos e a funcionalidade da instância na página de incentivo à instalação. Todas as imagens devem ser envios locais e das mesmas dimensões."
+        fonts:
+          backfill_modal:
+            modal_yes: "Sim"
         navigation:
           title: "Navegação"
         notifications:
@@ -4037,6 +4036,8 @@ pt:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
           company_name: "Nome"
+          extra_groups:
+            groups: "Grupos"
           optional: "(opcional)"
           update: "Atualização"
           saved: "guardado!"
@@ -4287,12 +4288,12 @@ pt:
           all_filter: "Tudo"
           active_filter: "Ativo"
           inactive_filter: "Inativo"
-          schema:
-            fields:
-              required: "*necessário"
-              number:
-                too_small: "tem que ser maior ou igual a %{count}"
-                too_large: "tem que ser menos ou igual a %{count}"
+        schema:
+          fields:
+            required: "*necessário"
+            number:
+              too_small: "tem que ser maior ou igual a %{count}"
+              too_large: "tem que ser menos ou igual a %{count}"
         colors:
           select_base:
             description: "Paleta de base:"

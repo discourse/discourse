@@ -3715,14 +3715,13 @@ vi:
           title: "Tập tin"
         legal:
           title: "Legal"
-        logo_and_fonts:
-          logo:
-            form:
-              mobile: "Điện thoại"
-              email: "Email"
-          fonts:
-            backfill_modal:
-              modal_yes: "Đồng ý"
+        logo:
+          form:
+            mobile: "Điện thoại"
+            email: "Email"
+        fonts:
+          backfill_modal:
+            modal_yes: "Đồng ý"
         navigation:
           title: "Điều hướng"
         notifications:
@@ -4175,6 +4174,8 @@ vi:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
           company_name: "Tên"
+          extra_groups:
+            groups: "Nhóm"
           optional: "(tùy chọn)"
           update: "Cập nhật"
           saved: "đã lưu"
@@ -4478,15 +4479,15 @@ vi:
           all_filter: "All"
           active_filter: "Kích hoạt"
           inactive_filter: "Không hoạt động"
-          schema:
-            fields:
-              required: "*bắt buộc"
-              string:
-                too_short:
-                  other: "phải ít nhất %{count} ký tự"
-              number:
-                too_small: "phải lớn hơn hoặc bằng %{count}"
-                too_large: "phải nhỏ hơn hoặc bằng %{count}"
+        schema:
+          fields:
+            required: "*bắt buộc"
+            string:
+              too_short:
+                other: "phải ít nhất %{count} ký tự"
+            number:
+              too_small: "phải lớn hơn hoặc bằng %{count}"
+              too_large: "phải nhỏ hơn hoặc bằng %{count}"
         colors:
           select_base:
             title: "Chọn bảng màu cơ bản"
