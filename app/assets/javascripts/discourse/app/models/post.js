@@ -211,6 +211,8 @@ export default class Post extends RestModel {
   @trackedPostProperty user_custom_fields;
   @trackedPostProperty has_post_localizations;
   @trackedPostProperty post_localizations;
+  @trackedPostProperty isDeleting = false;
+  @trackedPostProperty isRecovering = false;
 
   @alias("can_edit") canEdit; // for compatibility with existing code
   @equal("trust_level", 0) new_user;
@@ -476,7 +478,13 @@ export default class Post extends RestModel {
   }
 
   // Recover a deleted post
-  recover() {
+  async recover() {
+    if (this.isRecovering) {
+      return;
+    }
+
+    this.set("isRecovering", true);
+
     const initProperties = this.getProperties(
       "deleted_at",
       "deleted_by",
@@ -489,26 +497,29 @@ export default class Post extends RestModel {
       deleted_by: null,
       user_deleted: false,
       can_delete: false,
-      isRecovering: true,
     });
 
-    return ajax(`/posts/${this.id}/recover`, {
-      type: "PUT",
-    })
-      .then((data) => {
-        this.setProperties({
-          cooked: data.cooked,
-          raw: data.raw,
-          user_deleted: false,
-          can_delete: true,
-          version: data.version,
-          isRecovering: false,
-        });
-      })
-      .catch((error) => {
-        popupAjaxError(error);
-        this.setProperties({...initProperties, isRecovering: false});
+    try {
+      const data = await ajax(`/posts/${this.id}/recover`, {
+        type: "PUT",
       });
+
+      this.setProperties({
+        cooked: data.cooked,
+        raw: data.raw,
+        user_deleted: false,
+        can_delete: true,
+        version: data.version,
+      });
+
+      return data;
+    } catch (error) {
+      popupAjaxError(error);
+      this.setProperties(initProperties);
+      throw error;
+    } finally {
+      this.set("isRecovering", false);
+    }
   }
 
   /**
@@ -569,18 +580,23 @@ export default class Post extends RestModel {
     }
   }
 
-  destroy(deletedBy, opts) {
+  async destroy(deletedBy, opts) {
+    if (this.isDeleting) {
+      return;
+    }
+
     this.set("isDeleting", true);
-    return this.setDeletedState(deletedBy).then(() => {
-      return ajax("/posts/" + this.id, {
+
+    try {
+      await this.setDeletedState(deletedBy);
+      return await ajax("/posts/" + this.id, {
         data: { context: window.location.pathname, ...opts },
         type: "DELETE",
-      }).finally(() => {
-        this.set("isDeleting", false);
       });
-    });
+    } finally {
+      this.set("isDeleting", false);
+    }
   }
-
   /**
    * Updates a post from another's attributes. This will normally happen when a post is loading but
    * is already found in an identity map.
