@@ -7,6 +7,10 @@ class Auth::GithubAuthenticator < Auth::ManagedAuthenticator
     "github"
   end
 
+  def display_name
+    "GitHub"
+  end
+
   def enabled?
     SiteSetting.enable_github_logins
   end

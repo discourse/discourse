@@ -42,6 +42,10 @@ class Auth::DiscordAuthenticator < Auth::ManagedAuthenticator
     "discord"
   end
 
+  def display_name
+    "Discord"
+  end
+
   def enabled?
     SiteSetting.enable_discord_logins?
   end
