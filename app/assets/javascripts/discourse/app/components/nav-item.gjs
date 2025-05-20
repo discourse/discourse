@@ -3,6 +3,7 @@ import Component from "@glimmer/component";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import { isPresent } from "@ember/utils";
 import concatClass from "discourse/helpers/concat-class";
 import getURL from "discourse/lib/get-url";
 import { iconHTML } from "discourse/lib/icon-library";
@@ -24,8 +25,19 @@ export default class NavItem extends Component {
       return;
     }
 
-    if (this.args.currentWhen) {
-      return this.args.currentWhen(this.router.currentRoute);
+    if (isPresent(this.args.currentWhen)) {
+      const input = this.args.currentWhen;
+
+      if (typeof input === "boolean") {
+        return input;
+      }
+
+      const routes = input.split(" ").filter(Boolean);
+      if (routes.length) {
+        return routes.some((str) => str === this.router.currentRoute.name);
+      }
+
+      return false;
     }
 
     if (this.args.routeParam) {

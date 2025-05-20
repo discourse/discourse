@@ -27,14 +27,6 @@ export default class AdminBadges extends Component {
     });
   }
 
-  @action
-  activeBadges(currentRoute) {
-    return (
-      currentRoute.name === "adminBadges.index" ||
-      currentRoute.name === "adminBadges.show"
-    );
-  }
-
   <template>
     <div class="badges">
       <DPageHeader
@@ -83,7 +75,7 @@ export default class AdminBadges extends Component {
           <NavItem
             @route="adminBadges.index"
             @label="admin.config.badges.title"
-            @currentWhen={{this.activeBadges}}
+            @currentWhen="adminBadges.show adminBadges.index"
             class="admin-badges-tabs__index"
           />
         </:tabs>
