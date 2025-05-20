@@ -29,6 +29,16 @@ module DiscourseAutomation
 
     attr_accessor :running_in_background
 
+    def trigger=(new_trigger)
+      @triggerable = nil
+      super
+    end
+
+    def script=(new_script)
+      @scriptable = nil
+      super
+    end
+
     def running_in_background!
       @running_in_background = true
     end
