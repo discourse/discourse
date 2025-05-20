@@ -21,7 +21,7 @@ module DiscourseAutomation
     end
 
     def include_next_pending_automation_at?
-      object.pending_automations.exists?
+      object.pending_automations.present?
     end
 
     def next_pending_automation_at
