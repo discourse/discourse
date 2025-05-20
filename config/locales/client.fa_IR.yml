@@ -4860,16 +4860,15 @@ fa_IR:
         login_and_authentication:
           title: "ورود و احراز هویت"
           header_description: "نحوه ورود و احراز هویت کاربران، اسرار و کلیدها، ارائه دهندگان OAuth2 و موارد دیگر را پیکربندی کنید"
-        logo_and_fonts:
-          logo:
-            form:
-              logo:
-                title: "لوگوی اصلی"
-              mobile: "موبایل"
-              email: "ایمیل"
-          fonts:
-            backfill_modal:
-              modal_yes: "بله"
+        logo:
+          form:
+            logo:
+              title: "لوگوی اصلی"
+            mobile: "موبایل"
+            email: "ایمیل"
+        fonts:
+          backfill_modal:
+            modal_yes: "بله"
         navigation:
           title: "ناوبری"
           header_description: "پیوندهای ناوبری و آیتم‌های منو را برای سایت خود پیکربندی کنید. این شامل مکان و رفتار منوی پیمایش اصلی، پیوندهای سریع در بالای صفحه اصلی، و همچنین نوار کناری مدیریت است."
@@ -5002,7 +5001,6 @@ fa_IR:
         embedding:
           title: "جاسازی"
       search:
-        modal_title: "جستجو در مدیریت"
         title: "جستجو"
         result_types:
           page:
@@ -5581,6 +5579,8 @@ fa_IR:
           city_for_disputes_placeholder: "شهر"
           city_for_disputes_help: |
             شهر حل و فصل اختلافات حقوقی مربوط به این انجمن را مشخص کنید.
+          extra_groups:
+            groups: "گروه‌ها"
           optional: "(اختیاری)"
           update: "به روز رسانی"
           toasts:
@@ -5980,30 +5980,30 @@ fa_IR:
           active_filter: "فعال"
           inactive_filter: "غیر‌فعال"
           updates_available_filter: "به‌روزرسانی‌های موجود"
-          schema:
-            title: "ویرایش تنظیمات %{name}"
-            back_button: "بازگشت به %{name}"
-            fields:
-              required: "*مورد نیاز"
-              groups:
-                at_least:
-                  one: "حداقل %{count} گروه مورد نیاز است"
-                  other: "حداقل %{count} گروه مورد نیاز است"
-              categories:
-                at_least:
-                  one: "حداقل %{count} دسته مورد نیاز است"
-                  other: "حداقل %{count} دسته مورد نیاز است"
-              tags:
-                at_least:
-                  one: "حداقل %{count} برچسب مورد نیاز است"
-                  other: "حداقل %{count} برچسب مورد نیاز است"
-              string:
-                too_short:
-                  one: "نباید کمتر از %{count} نویسه باشد"
-                  other: "نباید کمتر از %{count} نویسه باشد"
-              number:
-                too_small: "باید بزرگتر یا مساوی %{count} باشد"
-                too_large: "باید کمتر و یا مساوی %{count} باشد"
+        schema:
+          title: "ویرایش تنظیمات %{name}"
+          back_button: "بازگشت به %{name}"
+          fields:
+            required: "*مورد نیاز"
+            groups:
+              at_least:
+                one: "حداقل %{count} گروه مورد نیاز است"
+                other: "حداقل %{count} گروه مورد نیاز است"
+            categories:
+              at_least:
+                one: "حداقل %{count} دسته مورد نیاز است"
+                other: "حداقل %{count} دسته مورد نیاز است"
+            tags:
+              at_least:
+                one: "حداقل %{count} برچسب مورد نیاز است"
+                other: "حداقل %{count} برچسب مورد نیاز است"
+            string:
+              too_short:
+                one: "نباید کمتر از %{count} نویسه باشد"
+                other: "نباید کمتر از %{count} نویسه باشد"
+            number:
+              too_small: "باید بزرگتر یا مساوی %{count} باشد"
+              too_large: "باید کمتر و یا مساوی %{count} باشد"
         colors:
           select_base:
             title: "پالت رنگ پایه را انتخاب کنید"

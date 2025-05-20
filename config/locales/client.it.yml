@@ -4844,24 +4844,23 @@ it:
         login_and_authentication:
           title: "Accesso e autenticazione"
           header_description: "Configura le modalità di accesso e autenticazione degli utenti, segreti e chiavi, fornitori OAuth2 e altro ancora"
-        logo_and_fonts:
-          logo:
-            form:
-              logo:
-                title: "Logo primario"
-              mobile: "Mobile"
-              email: "Email"
-              manifest_screenshots:
-                description: "Schermate che mostrano le caratteristiche e le funzionalità nella pagina di installazione. Tutte le immagini devono essere caricate in locale e delle stesse dimensioni."
-              opengraph_image:
-                description: "Immagine opengraph predefinita, utilizzata quando la pagina non ha altre immagini adatte. Se lasciato vuoto, verrà usato large_icon."
-          fonts:
-            title: "Caratteri"
-            form:
-              heading_font:
-                title: "Carattere dell'intestazione"
-            backfill_modal:
-              modal_yes: "Sì"
+        logo:
+          form:
+            logo:
+              title: "Logo primario"
+            mobile: "Mobile"
+            email: "Email"
+            manifest_screenshots:
+              description: "Schermate che mostrano le caratteristiche e le funzionalità nella pagina di installazione. Tutte le immagini devono essere caricate in locale e delle stesse dimensioni."
+            opengraph_image:
+              description: "Immagine opengraph predefinita, utilizzata quando la pagina non ha altre immagini adatte. Se lasciato vuoto, verrà usato large_icon."
+        fonts:
+          title: "Caratteri"
+          form:
+            heading_font:
+              title: "Carattere dell'intestazione"
+          backfill_modal:
+            modal_yes: "Sì"
         navigation:
           title: "Navigazione"
           header_description: "Configura i link di navigazione e le voci di menu per il tuo sito. Ciò include la posizione e il comportamento del menu di navigazione principale, i link rapidi in cima alla home page, nonché la barra laterale di amministrazione"
@@ -5577,6 +5576,8 @@ it:
           city_for_disputes_placeholder: "Città"
           city_for_disputes_help: |
             Specifica la città in cui risolvere le controversie legali relative a questo forum.
+          extra_groups:
+            groups: "Gruppi"
           optional: "(opzionale)"
           update: "Aggiorna"
           toasts:
@@ -5982,30 +5983,30 @@ it:
           active_filter: "Attivi"
           inactive_filter: "Non attivi"
           updates_available_filter: "Aggiornamenti disponibili"
-          schema:
-            title: "Modifica l'impostazione %{name}"
-            back_button: "Torna a %{name}"
-            fields:
-              required: "*obbligatorio"
-              groups:
-                at_least:
-                  one: "è richiesto almeno %{count} gruppo"
-                  other: "sono richiesti almeno %{count} gruppi"
-              categories:
-                at_least:
-                  one: "è richiesta almeno %{count} categoria"
-                  other: "sono richieste almeno %{count} categorie"
-              tags:
-                at_least:
-                  one: "è richiesta almeno %{count} etichetta"
-                  other: "sono richieste almeno %{count} etichette"
-              string:
-                too_short:
-                  one: "deve essere almeno di %{count} carattere"
-                  other: "deve essere almeno di %{count} caratteri"
-              number:
-                too_small: "deve essere maggiore o uguale a %{count}"
-                too_large: "deve essere minore o uguale a %{count}"
+        schema:
+          title: "Modifica l'impostazione %{name}"
+          back_button: "Torna a %{name}"
+          fields:
+            required: "*obbligatorio"
+            groups:
+              at_least:
+                one: "è richiesto almeno %{count} gruppo"
+                other: "sono richiesti almeno %{count} gruppi"
+            categories:
+              at_least:
+                one: "è richiesta almeno %{count} categoria"
+                other: "sono richieste almeno %{count} categorie"
+            tags:
+              at_least:
+                one: "è richiesta almeno %{count} etichetta"
+                other: "sono richieste almeno %{count} etichette"
+            string:
+              too_short:
+                one: "deve essere almeno di %{count} carattere"
+                other: "deve essere almeno di %{count} caratteri"
+            number:
+              too_small: "deve essere maggiore o uguale a %{count}"
+              too_large: "deve essere minore o uguale a %{count}"
         colors:
           select_base:
             title: "Seleziona la tavolozza dei colori di base"

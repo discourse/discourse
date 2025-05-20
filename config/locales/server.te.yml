@@ -2199,8 +2199,6 @@ te:
     search_button: "వెతుకు"
   offline:
     title: "యాప్ లోడ్ కాలేదు"
-  login_required:
-    welcome_message: "# [ %{title} కు స్వాగతం] (#స్వాగతం)"
   upload:
     edit_reason: "చిత్రాల స్థానిక కాపీలను డౌన్‌లోడ్ చేసారు"
     unauthorized: "క్షమించండి, మీరు అప్‌లోడ్ చేయడానికి ప్రయత్నిస్తున్న ఫైల్‌కు అధికారం లేదు (అధీకృత పొడిగింపులు: %{authorized_extensions})."

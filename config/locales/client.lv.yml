@@ -2885,14 +2885,13 @@ lv:
           title: "Faili"
         legal:
           title: "Jurid."
-        logo_and_fonts:
-          logo:
-            form:
-              mobile: "Mobilais"
-              email: "E-pasts"
-          fonts:
-            backfill_modal:
-              modal_yes: "Jā"
+        logo:
+          form:
+            mobile: "Mobilais"
+            email: "E-pasts"
+        fonts:
+          backfill_modal:
+            modal_yes: "Jā"
         navigation:
           title: "Pārvietošanās"
         notifications:
@@ -3145,6 +3144,8 @@ lv:
       config_areas:
         about:
           company_name: "Vārds"
+          extra_groups:
+            groups: "Grupas"
           optional: "(pēc izvēles)"
           saved: "saglabāts!"
         flags:
@@ -3318,9 +3319,9 @@ lv:
           all_filter: "Viss"
           active_filter: "Aktīvi"
           inactive_filter: "Neaktīvs"
-          schema:
-            fields:
-              required: "*nepieciešams"
+        schema:
+          fields:
+            required: "*nepieciešams"
         colors:
           title: "Krāsas"
           undo: "Atsaukt"
