@@ -45,27 +45,53 @@ globalThis.rollup = function (modules, opts) {
     },
     plugins: [
       {
-        name: "loader",
-        resolve: {
-          extensions: [".js", ".gjs", ".hbs"],
+        name: "extensionsearch",
+        async resolveId(source, context) {
+          console.log(`Running extensionsearch ${source}`);
+          for (const ext of ["", ".js", ".gjs", ".hbs"]) {
+            console.log(ext);
+            let resolved;
+            try {
+              resolved = await this.resolve(`${source}${ext}`, context, {
+                skipSelf: true,
+              });
+            } catch {
+              console.log("caught");
+            }
+            console.log(`finished resolve, ${source}${ext}, `);
+            console.log(JSON.stringify(resolved));
+            if (resolved) {
+              return resolved;
+            }
+          }
+          return false;
         },
+      },
+      {
+        name: "loader",
         resolveId(source, context) {
           if (rollupVirtualImports[source]) {
             return source;
           }
 
+          console.log(source);
+          console.log(Object.keys(modules));
+
           if (source.startsWith(".")) {
             source = join(dirname(context), source);
           }
 
-          for (const ext of ["", ".js", ".gjs", ".hbs"]) {
-            const candidate = source + ext;
-            if (modules.hasOwnProperty(candidate)) {
-              return candidate;
-            }
+          if (modules.hasOwnProperty(source)) {
+            return source;
           }
 
-          return false;
+          // for (const ext of ["", ".js", ".gjs", ".hbs"]) {
+          //   const candidate = source + ext;
+          //   if (modules.hasOwnProperty(candidate)) {
+          //     return candidate;
+          //   }
+          // }
+          // return false;
         },
         load(id) {
           if (rollupVirtualImports[id]) {
@@ -119,7 +145,6 @@ globalThis.rollup = function (modules, opts) {
         transform: {
           order: "pre",
           handler(input, id) {
-            console.log(`running hbs ${id} ${JSON.stringify(input)}`);
             if (id.endsWith(".hbs")) {
               return `
               import { hbs } from 'ember-cli-htmlbars';
