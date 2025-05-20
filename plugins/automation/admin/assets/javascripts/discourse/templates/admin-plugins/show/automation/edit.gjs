@@ -195,13 +195,6 @@ export default RouteTemplate(
                   <Input
                     @type="checkbox"
                     @checked={{@controller.automationForm.enabled}}
-                    {{on
-                      "click"
-                      (withEventValue
-                        (fn (mut @controller.automationForm.enabled))
-                        "target.checked"
-                      )
-                    }}
                   />
                 </div>
               {{/if}}
