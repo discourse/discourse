@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";

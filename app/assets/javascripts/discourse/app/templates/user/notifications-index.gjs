@@ -1,4 +1,3 @@
-import { hash } from "@ember/helper";
 import RouteTemplate from "ember-route-template";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import EmptyState from "discourse/components/empty-state";

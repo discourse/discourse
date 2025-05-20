@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { hash } from "@ember/helper";
 import { service } from "@ember/service";
 import { and, not } from "truth-helpers";
 import ConditionalLoadingSection from "discourse/components/conditional-loading-section";

@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
-import { hash } from "@ember/helper";
 import { service } from "@ember/service";
 import { eq, or } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";

@@ -1,4 +1,3 @@
-import { hash } from "@ember/helper";
 import { eq } from "truth-helpers";
 import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";

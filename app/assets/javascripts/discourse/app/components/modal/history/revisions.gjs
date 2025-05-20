@@ -1,5 +1,4 @@
 import Component from "@ember/component";
-import { hash } from "@ember/helper";
 import EmberObject from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";

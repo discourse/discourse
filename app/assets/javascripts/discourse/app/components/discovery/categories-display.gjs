@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { hash } from "@ember/helper";
 import { service } from "@ember/service";
 import CategoriesAndLatestTopics from "discourse/components/categories-and-latest-topics";
 import CategoriesAndTopTopics from "discourse/components/categories-and-top-topics";

@@ -1,4 +1,4 @@
-import { concat, fn, get, hash } from "@ember/helper";
+import { concat, fn, get } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { LinkTo } from "@ember/routing";
 import RouteTemplate from "ember-route-template";

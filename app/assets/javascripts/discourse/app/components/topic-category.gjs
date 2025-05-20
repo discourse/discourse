@@ -1,5 +1,4 @@
 import Component from "@ember/component";
-import { hash } from "@ember/helper";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import boundCategoryLink from "discourse/helpers/bound-category-link";
 import discourseTags from "discourse/helpers/discourse-tags";

@@ -1,4 +1,3 @@
-import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import RouteTemplate from "ember-route-template";
 import DiscourseBanner from "discourse/components/discourse-banner";

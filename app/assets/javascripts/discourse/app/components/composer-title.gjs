@@ -1,5 +1,4 @@
 import Component from "@ember/component";
-import { hash } from "@ember/helper";
 import EmberObject from "@ember/object";
 import { alias, or } from "@ember/object/computed";
 import { next, schedule } from "@ember/runloop";

@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { hash } from "@ember/helper";
 import { htmlSafe } from "@ember/template";
 import { gt } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";

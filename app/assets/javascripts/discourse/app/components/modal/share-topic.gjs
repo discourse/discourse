@@ -1,5 +1,4 @@
 import Component, { Input } from "@ember/component";
-import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { readOnly } from "@ember/object/computed";
 import { getOwner } from "@ember/owner";

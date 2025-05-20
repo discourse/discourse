@@ -1,5 +1,4 @@
 import Component, { Input } from "@ember/component";
-import { hash } from "@ember/helper";
 import { tagName } from "@ember-decorators/component";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import icon from "discourse/helpers/d-icon";

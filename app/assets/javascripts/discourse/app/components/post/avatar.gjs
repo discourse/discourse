@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { hash } from "@ember/helper";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import UserAvatar from "discourse/components/user-avatar";
 import UserAvatarFlair from "discourse/components/user-avatar-flair";

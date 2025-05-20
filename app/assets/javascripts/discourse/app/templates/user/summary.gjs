@@ -1,4 +1,3 @@
-import { hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
 import { htmlSafe } from "@ember/template";
 import RouteTemplate from "ember-route-template";

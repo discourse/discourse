@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { assert } from "@ember/debug";
-import { hash } from "@ember/helper";
 import { dasherize } from "@ember/string";
 import { htmlSafe } from "@ember/template";
 import { or } from "truth-helpers";

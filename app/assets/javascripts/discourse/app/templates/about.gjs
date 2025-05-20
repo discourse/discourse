@@ -1,4 +1,3 @@
-import { hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
 import RouteTemplate from "ember-route-template";
 import AboutPage from "discourse/components/about-page";

@@ -1,4 +1,3 @@
-import { hash } from "@ember/helper";
 import RouteTemplate from "ember-route-template";
 import DNavigationItem from "discourse/components/d-navigation-item";
 import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";

@@ -1,4 +1,3 @@
-import { hash } from "@ember/helper";
 import RouteTemplate from "ember-route-template";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import htmlSafe from "discourse/helpers/html-safe";

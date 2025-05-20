@@ -1,4 +1,3 @@
-import { hash } from "@ember/helper";
 import { htmlSafe } from "@ember/template";
 import RouteTemplate from "ember-route-template";
 import DButton from "discourse/components/d-button";

@@ -1,4 +1,3 @@
-import { hash } from "@ember/helper";
 import RouteTemplate from "ember-route-template";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import UserApiKeys from "discourse/components/user-preferences/user-api-keys";

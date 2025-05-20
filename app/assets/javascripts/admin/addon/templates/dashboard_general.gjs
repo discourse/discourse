@@ -1,4 +1,3 @@
-import { hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
 import RouteTemplate from "ember-route-template";
 import ConditionalLoadingSection from "discourse/components/conditional-loading-section";

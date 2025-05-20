@@ -1,4 +1,4 @@
-import { fn, hash } from "@ember/helper";
+import { fn } from "@ember/helper";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";

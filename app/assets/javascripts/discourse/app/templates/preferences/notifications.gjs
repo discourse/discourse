@@ -1,4 +1,4 @@
-import { fn, hash } from "@ember/helper";
+import { fn } from "@ember/helper";
 import RouteTemplate from "ember-route-template";
 import DesktopNotificationConfig from "discourse/components/desktop-notification-config";
 import PluginOutlet from "discourse/components/plugin-outlet";

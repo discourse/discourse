@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { concat, get, hash } from "@ember/helper";
+import { concat, get } from "@ember/helper";
 import { service } from "@ember/service";
 import { eq } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";

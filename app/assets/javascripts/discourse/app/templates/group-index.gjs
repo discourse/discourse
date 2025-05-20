@@ -1,5 +1,5 @@
 import { Input } from "@ember/component";
-import { fn, hash } from "@ember/helper";
+import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import RouteTemplate from "ember-route-template";
 import { or } from "truth-helpers";

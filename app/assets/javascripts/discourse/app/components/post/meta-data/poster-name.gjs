@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { concat, hash } from "@ember/helper";
+import { concat } from "@ember/helper";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import { and, or } from "truth-helpers";

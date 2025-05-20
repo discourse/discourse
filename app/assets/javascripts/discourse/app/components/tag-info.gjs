@@ -1,5 +1,5 @@
 import Component, { Textarea } from "@ember/component";
-import { array, fn, hash } from "@ember/helper";
+import { array, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { and, reads } from "@ember/object/computed";

@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { hash } from "@ember/helper";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { eq, not } from "truth-helpers";

@@ -1,4 +1,3 @@
-import { hash } from "@ember/helper";
 import { htmlSafe } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import coldAgeClass from "discourse/helpers/cold-age-class";

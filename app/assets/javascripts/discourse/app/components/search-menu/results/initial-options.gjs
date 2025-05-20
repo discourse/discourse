@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { hash } from "@ember/helper";
 import { service } from "@ember/service";
 import { and, or } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";

@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { get, hash } from "@ember/helper";
+import { get } from "@ember/helper";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";

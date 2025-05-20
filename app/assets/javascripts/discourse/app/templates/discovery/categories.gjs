@@ -1,4 +1,3 @@
-import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import RouteTemplate from "ember-route-template";
 import { and } from "truth-helpers";

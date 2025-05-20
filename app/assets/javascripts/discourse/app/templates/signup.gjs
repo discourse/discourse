@@ -1,5 +1,4 @@
 import { Input } from "@ember/component";
-import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { htmlSafe } from "@ember/template";
 import RouteTemplate from "ember-route-template";

@@ -1,4 +1,3 @@
-import { hash } from "@ember/helper";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PrivateMessageMap from "discourse/components/topic-map/private-message-map";
 import TopicMapSummary from "discourse/components/topic-map/topic-map-summary";

@@ -1,4 +1,3 @@
-import { hash } from "@ember/helper";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import DialogHolder from "dialog-holder/components/dialog-holder";
 import RouteTemplate from "ember-route-template";

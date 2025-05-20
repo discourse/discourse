@@ -1,5 +1,4 @@
 import Component from "@ember/component";
-import { hash } from "@ember/helper";
 import EmberObject from "@ember/object";
 import { not } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";

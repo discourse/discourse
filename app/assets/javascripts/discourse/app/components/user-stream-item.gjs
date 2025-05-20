@@ -1,5 +1,5 @@
 import Component from "@ember/component";
-import { fn, hash } from "@ember/helper";
+import { fn } from "@ember/helper";
 import { computed } from "@ember/object";
 import { htmlSafe } from "@ember/template";
 import { classNameBindings, tagName } from "@ember-decorators/component";

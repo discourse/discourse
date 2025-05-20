@@ -1,5 +1,4 @@
 import Component from "@ember/component";
-import { hash } from "@ember/helper";
 import { htmlSafe } from "@ember/template";
 import CategoryTitleLink from "discourse/components/category-title-link";
 import ParentCategoryRow from "discourse/components/parent-category-row";

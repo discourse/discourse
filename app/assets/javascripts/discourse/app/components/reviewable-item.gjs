@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
-import { concat, fn, hash } from "@ember/helper";
+import { concat, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action, set } from "@ember/object";
 import { alias } from "@ember/object/computed";

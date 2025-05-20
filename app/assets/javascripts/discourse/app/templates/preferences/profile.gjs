@@ -1,5 +1,5 @@
 import { Input } from "@ember/component";
-import { array, fn, hash } from "@ember/helper";
+import { array, fn } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
 import RouteTemplate from "ember-route-template";
 import DButton from "discourse/components/d-button";

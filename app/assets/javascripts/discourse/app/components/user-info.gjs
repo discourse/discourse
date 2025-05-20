@@ -1,5 +1,4 @@
 import Component from "@ember/component";
-import { hash } from "@ember/helper";
 import { alias } from "@ember/object/computed";
 import {
   attributeBindings,

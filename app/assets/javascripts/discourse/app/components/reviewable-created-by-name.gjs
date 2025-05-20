@@ -1,4 +1,3 @@
-import { hash } from "@ember/helper";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import UserLink from "discourse/components/user-link";
 import icon from "discourse/helpers/d-icon";

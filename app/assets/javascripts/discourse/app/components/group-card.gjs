@@ -1,4 +1,3 @@
-import { hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
 import AvatarFlair from "discourse/components/avatar-flair";
 import GroupInfo from "discourse/components/group-info";

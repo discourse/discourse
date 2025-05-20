@@ -1,5 +1,4 @@
 import Component from "@ember/component";
-import { hash } from "@ember/helper";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { classNameBindings, tagName } from "@ember-decorators/component";
