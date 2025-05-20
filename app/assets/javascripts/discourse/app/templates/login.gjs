@@ -162,6 +162,7 @@ export default RouteTemplate(
             {{/unless}}
           {{/if}}
         </div>
+        <PluginOutlet @name="below-login-page" />
       </div>
     {{/if}}
   </template>
