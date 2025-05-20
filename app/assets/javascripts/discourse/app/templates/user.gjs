@@ -11,6 +11,7 @@ import UserStatusMessage from "discourse/components/user-status-message";
 import icon from "discourse/helpers/d-icon";
 import formatUsername from "discourse/helpers/format-username";
 import htmlSafe from "discourse/helpers/html-safe";
+import lazyHash from "discourse/helpers/lazy-hash";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import routeAction from "discourse/helpers/route-action";
 import userStatus from "discourse/helpers/user-status";
@@ -23,7 +24,7 @@ export default RouteTemplate(
     <PluginOutlet
       @name="above-user-profile"
       @connectorTagName="div"
-      @outletArgs={{hash model=@controller.model}}
+      @outletArgs={{lazyHash model=@controller.model}}
     />
     <div
       class="container
@@ -159,7 +160,7 @@ export default RouteTemplate(
             <div class="primary">
               <PluginOutlet
                 @name="before-user-profile-avatar"
-                @outletArgs={{hash model=@controller.model}}
+                @outletArgs={{lazyHash model=@controller.model}}
               />
               <UserProfileAvatar @user={{@controller.model}} @tagName="" />
               <div class="primary-textual">
@@ -202,7 +203,7 @@ export default RouteTemplate(
                     <PluginOutlet
                       @name="user-post-names"
                       @connectorTagName="div"
-                      @outletArgs={{hash model=@controller.model}}
+                      @outletArgs={{lazyHash model=@controller.model}}
                     />
                   </span>
                 </div>
@@ -255,7 +256,7 @@ export default RouteTemplate(
                     <PluginOutlet
                       @name="user-location-and-website"
                       @connectorTagName="div"
-                      @outletArgs={{hash model=@controller.model}}
+                      @outletArgs={{lazyHash model=@controller.model}}
                     />
                   </span>
                 </div>
@@ -263,7 +264,7 @@ export default RouteTemplate(
                 <PluginOutlet
                   @name="before-user-profile-bio"
                   @connectorTagName="div"
-                  @outletArgs={{hash
+                  @outletArgs={{lazyHash
                     model=@controller.model
                     publicUserFields=@controller.publicUserFields
                     collapsedInfo=@controller.collapsedInfo
@@ -338,7 +339,7 @@ export default RouteTemplate(
                       <PluginOutlet
                         @name="user-profile-public-fields"
                         @connectorTagName="div"
-                        @outletArgs={{hash
+                        @outletArgs={{lazyHash
                           publicUserFields=@controller.publicUserFields
                           model=@controller.model
                         }}
@@ -351,7 +352,7 @@ export default RouteTemplate(
                   <PluginOutlet
                     @name="user-profile-primary"
                     @connectorTagName="div"
-                    @outletArgs={{hash model=@controller.model}}
+                    @outletArgs={{lazyHash model=@controller.model}}
                   />
                 </span>
               </div>
@@ -394,7 +395,7 @@ export default RouteTemplate(
                   <PluginOutlet
                     @name="user-profile-controls"
                     @connectorTagName="li"
-                    @outletArgs={{hash model=@controller.model}}
+                    @outletArgs={{lazyHash model=@controller.model}}
                   />
 
                   {{#if @controller.canExpandProfile}}

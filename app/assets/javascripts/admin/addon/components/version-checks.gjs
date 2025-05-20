@@ -4,6 +4,7 @@ import CustomHtml from "discourse/components/custom-html";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import icon from "discourse/helpers/d-icon";
 import dashIfEmpty from "discourse/helpers/dash-if-empty";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
 
 export default class VersionChecks extends Component {
@@ -150,7 +151,7 @@ export default class VersionChecks extends Component {
 
       <PluginOutlet
         @name="admin-upgrade-header"
-        @outletArgs={{hash versionCheck=this.versionCheck}}
+        @outletArgs={{lazyHash versionCheck=this.versionCheck}}
       />
     </div>
   </template>

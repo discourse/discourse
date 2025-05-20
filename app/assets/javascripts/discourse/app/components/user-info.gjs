@@ -11,6 +11,7 @@ import UserAvatarFlair from "discourse/components/user-avatar-flair";
 import UserStatusMessage from "discourse/components/user-status-message";
 import avatar from "discourse/helpers/avatar";
 import formatUsername from "discourse/helpers/format-username";
+import lazyHash from "discourse/helpers/lazy-hash";
 import discourseComputed from "discourse/lib/decorators";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 import { userPath } from "discourse/lib/url";
@@ -89,7 +90,7 @@ export default class UserInfo extends Component {
         <PluginOutlet
           @name="after-user-name"
           @connectorTagName="span"
-          @outletArgs={{hash user=this.user}}
+          @outletArgs={{lazyHash user=this.user}}
         />
       </div>
       <div class="title">{{@user.title}}</div>
@@ -103,7 +104,7 @@ export default class UserInfo extends Component {
     <PluginOutlet
       @name="after-user-info"
       @connectorTagName="div"
-      @outletArgs={{hash user=this.user}}
+      @outletArgs={{lazyHash user=this.user}}
     />
   </template>
 }

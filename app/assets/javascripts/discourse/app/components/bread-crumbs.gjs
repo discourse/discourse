@@ -5,6 +5,7 @@ import { classNameBindings, tagName } from "@ember-decorators/component";
 //  A breadcrumb including category drop downs
 import PluginOutlet from "discourse/components/plugin-outlet";
 import categoryVariables from "discourse/helpers/category-variables";
+import lazyHash from "discourse/helpers/lazy-hash";
 import discourseComputed from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
 import CategoryDrop from "select-kit/components/category-drop";
@@ -134,7 +135,7 @@ export default class BreadCrumbs extends Component {
     <PluginOutlet
       @name="bread-crumbs-left"
       @connectorTagName="li"
-      @outletArgs={{hash
+      @outletArgs={{lazyHash
         tagId=this.tag.id
         additionalTags=this.additionalTags
         noSubcategories=this.noSubcategories
@@ -196,7 +197,7 @@ export default class BreadCrumbs extends Component {
     <PluginOutlet
       @name="bread-crumbs-right"
       @connectorTagName="li"
-      @outletArgs={{hash
+      @outletArgs={{lazyHash
         tagId=this.tag.id
         additionalTags=this.additionalTags
         noSubcategories=this.noSubcategories

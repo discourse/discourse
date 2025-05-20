@@ -7,6 +7,7 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import MenuTab from "discourse/components/user-menu/menu-tab";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { bind } from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
 import getUrl from "discourse/lib/get-url";
@@ -365,7 +366,7 @@ export default class UserMenu extends Component {
 
             <PluginOutlet
               @name="user-menu-tabs-list__after"
-              @outletArgs={{hash user=this.currentUser}}
+              @outletArgs={{lazyHash user=this.currentUser}}
             />
           </div>
           <div

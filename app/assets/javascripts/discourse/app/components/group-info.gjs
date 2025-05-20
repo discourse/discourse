@@ -1,12 +1,13 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import lazyHash from "discourse/helpers/lazy-hash";
 
 export default class GroupInfo extends Component {
   <template>
     <PluginOutlet
       @name="group-info-details"
-      @outletArgs={{hash group=@group}}
+      @outletArgs={{lazyHash group=@group}}
       @defaultGlimmer={{true}}
     >
       <span class="group-info-details">

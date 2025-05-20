@@ -11,6 +11,7 @@ import ConditionalLoadingSpinner from "discourse/components/conditional-loading-
 import LoadMore from "discourse/components/load-more";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import SubcategoriesWithFeaturedTopics from "discourse/components/subcategories-with-featured-topics";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { MAX_UNOPTIMIZED_CATEGORIES } from "discourse/lib/constants";
 
 const subcategoryComponents = {
@@ -95,7 +96,7 @@ export default class CategoriesDisplay extends Component {
     <PluginOutlet
       @name="above-discovery-categories"
       @connectorTagName="div"
-      @outletArgs={{hash categories=@categories topics=@topics}}
+      @outletArgs={{lazyHash categories=@categories topics=@topics}}
     />
     {{#if this.canLoadMore}}
       <LoadMore @action={{@loadMore}}>

@@ -2,6 +2,7 @@ import { hash } from "@ember/helper";
 import RouteTemplate from "ember-route-template";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import getUrl from "discourse/helpers/get-url";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
 import AdminReport from "admin/components/admin-report";
 import DashboardPeriodSelector from "admin/components/dashboard-period-selector";
@@ -63,7 +64,7 @@ export default RouteTemplate(
         <PluginOutlet
           @name="admin-dashboard-moderation-bottom"
           @connectorTagName="div"
-          @outletArgs={{hash filters=@controller.lastWeekFilters}}
+          @outletArgs={{lazyHash filters=@controller.lastWeekFilters}}
         />
       </div>
     </div>

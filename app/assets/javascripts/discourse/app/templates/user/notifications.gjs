@@ -9,6 +9,7 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import bodyClass from "discourse/helpers/body-class";
 import icon from "discourse/helpers/d-icon";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
 
 export default RouteTemplate(
@@ -80,7 +81,7 @@ export default RouteTemplate(
         <PluginOutlet
           @name="user-notifications-bottom"
           @connectorTagName="li"
-          @outletArgs={{hash model=@controller.model}}
+          @outletArgs={{lazyHash model=@controller.model}}
         />
 
       </HorizontalOverflowNav>

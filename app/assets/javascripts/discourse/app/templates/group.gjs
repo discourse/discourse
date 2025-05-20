@@ -9,6 +9,7 @@ import GroupMembershipButton from "discourse/components/group-membership-button"
 import GroupNavigation from "discourse/components/group-navigation";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import icon from "discourse/helpers/d-icon";
+import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
 import { i18n } from "discourse-i18n";
 import DTooltip from "float-kit/components/d-tooltip";
@@ -19,7 +20,7 @@ export default RouteTemplate(
       <PluginOutlet
         @name="before-group-container"
         @connectorTagName="div"
-        @outletArgs={{hash group=@controller.model}}
+        @outletArgs={{lazyHash group=@controller.model}}
       />
     </span>
 
@@ -108,7 +109,7 @@ export default RouteTemplate(
           <PluginOutlet
             @name="group-details-after"
             @connectorTagName="div"
-            @outletArgs={{hash model=@controller.model}}
+            @outletArgs={{lazyHash model=@controller.model}}
           />
         </div>
 

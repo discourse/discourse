@@ -4,6 +4,7 @@ import DesktopNotificationConfig from "discourse/components/desktop-notification
 import PluginOutlet from "discourse/components/plugin-outlet";
 import SaveControls from "discourse/components/save-controls";
 import UserNotificationSchedule from "discourse/components/user-notification-schedule";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
 import ComboBox from "select-kit/components/combo-box";
 
@@ -44,7 +45,10 @@ export default RouteTemplate(
           <PluginOutlet
             @name="user-preferences-desktop-notifications"
             @connectorTagName="div"
-            @outletArgs={{hash model=@controller.model save=@controller.save}}
+            @outletArgs={{lazyHash
+              model=@controller.model
+              save=@controller.save
+            }}
           />
         </span>
       </div>
@@ -56,7 +60,7 @@ export default RouteTemplate(
       <PluginOutlet
         @name="user-preferences-notifications"
         @connectorTagName="div"
-        @outletArgs={{hash model=@controller.model save=@controller.save}}
+        @outletArgs={{lazyHash model=@controller.model save=@controller.save}}
       />
     </span>
 
@@ -66,7 +70,7 @@ export default RouteTemplate(
       <PluginOutlet
         @name="user-custom-controls"
         @connectorTagName="div"
-        @outletArgs={{hash model=@controller.model}}
+        @outletArgs={{lazyHash model=@controller.model}}
       />
     </span>
 

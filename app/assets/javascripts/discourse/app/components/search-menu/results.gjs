@@ -9,6 +9,7 @@ import Assistant from "discourse/components/search-menu/results/assistant";
 import InitialOptions from "discourse/components/search-menu/results/initial-options";
 import MoreLink from "discourse/components/search-menu/results/more-link";
 import Types from "discourse/components/search-menu/results/types";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
 import CategoryViewComponent from "./results/type/category";
 import GroupViewComponent from "./results/type/group";
@@ -68,7 +69,7 @@ export default class Results extends Component {
         <div class="results">
           <PluginOutlet
             @name="search-menu-results-top"
-            @outletArgs={{hash
+            @outletArgs={{lazyHash
               closeSearchMenu=@closeSearchMenu
               searchTerm=this.search.activeGlobalSearchTerm
               inTopicContext=this.search.inTopicContext
@@ -134,12 +135,12 @@ export default class Results extends Component {
             {{/if}}
             <PluginOutlet
               @name="search-menu-with-results-bottom"
-              @outletArgs={{hash resultTypes=this.resultTypesWithComponent}}
+              @outletArgs={{lazyHash resultTypes=this.resultTypesWithComponent}}
             />
           {{/if}}
           <PluginOutlet
             @name="search-menu-results-bottom"
-            @outletArgs={{hash
+            @outletArgs={{lazyHash
               inTopicContext=this.search.inTopicContext
               searchTermChanged=@searchTermChanged
               searchTopics=@searchTopics

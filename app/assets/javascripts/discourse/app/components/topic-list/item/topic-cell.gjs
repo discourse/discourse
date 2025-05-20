@@ -13,6 +13,7 @@ import TopicPostBadges from "discourse/components/topic-post-badges";
 import TopicStatus from "discourse/components/topic-status";
 import categoryLink from "discourse/helpers/category-link";
 import discourseTags from "discourse/helpers/discourse-tags";
+import lazyHash from "discourse/helpers/lazy-hash";
 import topicFeaturedLink from "discourse/helpers/topic-featured-link";
 import { groupPath } from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
@@ -52,19 +53,19 @@ export default class TopicCell extends Component {
     <td class="main-link topic-list-data" colspan="1">
       <PluginOutlet
         @name="topic-list-before-link"
-        @outletArgs={{hash topic=@topic}}
+        @outletArgs={{lazyHash topic=@topic}}
       />
 
       <span class="link-top-line" role="heading" aria-level="2">
         {{~! no whitespace ~}}
         <PluginOutlet
           @name="topic-list-before-status"
-          @outletArgs={{hash topic=@topic}}
+          @outletArgs={{lazyHash topic=@topic}}
         />
         {{~! no whitespace ~}}
         <PluginOutlet
           @name="topic-list-topic-cell-link-top-line"
-          @outletArgs={{hash topic=@topic tagsForUser=@tagsForUser}}
+          @outletArgs={{lazyHash topic=@topic tagsForUser=@tagsForUser}}
         >
           {{~! no whitespace ~}}
           <TopicStatus @topic={{@topic}} @context="topic-list" />
@@ -81,7 +82,7 @@ export default class TopicCell extends Component {
           {{~/if~}}
           <PluginOutlet
             @name="topic-list-after-title"
-            @outletArgs={{hash topic=@topic}}
+            @outletArgs={{lazyHash topic=@topic}}
           />
           {{~! no whitespace ~}}
           <UnreadIndicator @topic={{@topic}} />
@@ -95,7 +96,7 @@ export default class TopicCell extends Component {
           {{~/if~}}
           <PluginOutlet
             @name="topic-list-after-badges"
-            @outletArgs={{hash topic=@topic}}
+            @outletArgs={{lazyHash topic=@topic}}
           />
         </PluginOutlet>
       </span>
@@ -103,18 +104,18 @@ export default class TopicCell extends Component {
       <div class="link-bottom-line">
         <PluginOutlet
           @name="topic-list-topic-cell-link-bottom-line"
-          @outletArgs={{hash topic=@topic tagsForUser=@tagsForUser}}
+          @outletArgs={{lazyHash topic=@topic tagsForUser=@tagsForUser}}
         >
           {{#unless @hideCategory}}
             {{#unless @topic.isPinnedUncategorized}}
               <PluginOutlet
                 @name="topic-list-before-category"
-                @outletArgs={{hash topic=@topic}}
+                @outletArgs={{lazyHash topic=@topic}}
               />
               {{categoryLink @topic.category}}
               <PluginOutlet
                 @name="topic-list-after-category"
-                @outletArgs={{hash topic=@topic}}
+                @outletArgs={{lazyHash topic=@topic}}
               />
             {{/unless}}
           {{/unless}}
@@ -140,7 +141,7 @@ export default class TopicCell extends Component {
 
       <PluginOutlet
         @name="topic-list-main-link-bottom"
-        @outletArgs={{hash topic=@topic expandPinned=@expandPinned}}
+        @outletArgs={{lazyHash topic=@topic expandPinned=@expandPinned}}
       />
     </td>
   </template>

@@ -2,6 +2,7 @@ import { hash } from "@ember/helper";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import UserLink from "discourse/components/user-link";
 import icon from "discourse/helpers/d-icon";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
 
 const ReviewableCreatedByName = <template>
@@ -19,7 +20,7 @@ const ReviewableCreatedByName = <template>
     <PluginOutlet
       @name="after-reviewable-post-user"
       @connectorTagName="div"
-      @outletArgs={{hash user=@user}}
+      @outletArgs={{lazyHash user=@user}}
     />
   </div>
 </template>;

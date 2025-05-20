@@ -12,6 +12,7 @@ import FlagActionType from "discourse/components/flag-action-type";
 import FlagSelection from "discourse/components/flag-selection";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import ReviewableBundledAction from "discourse/components/reviewable-bundled-action";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { reload } from "discourse/helpers/page-reloader";
 import { MAX_MESSAGE_LENGTH } from "discourse/models/post-action-type";
 import User from "discourse/models/user";
@@ -237,7 +238,7 @@ export default class Flag extends Component {
         <PluginOutlet
           @name="after-flag-modal-review-process-description"
           @connectorTagName="div"
-          @outletArgs={{hash post=@model.flagModel}}
+          @outletArgs={{lazyHash post=@model.flagModel}}
         />
         <form>
           <FlagSelection
@@ -260,7 +261,7 @@ export default class Flag extends Component {
         <PluginOutlet
           @name="flag-modal-bottom"
           @connectorTagName="div"
-          @outletArgs={{hash post=@model.flagModel}}
+          @outletArgs={{lazyHash post=@model.flagModel}}
         />
       </:body>
       <:footer>

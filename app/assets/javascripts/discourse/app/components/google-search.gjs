@@ -3,6 +3,7 @@ import { hash } from "@ember/helper";
 import { alias } from "@ember/object/computed";
 import { classNameBindings, classNames } from "@ember-decorators/component";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import lazyHash from "discourse/helpers/lazy-hash";
 import discourseComputed from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
@@ -20,7 +21,7 @@ export default class GoogleSearch extends Component {
   <template>
     <PluginOutlet
       @name="google-search"
-      @outletArgs={{hash searchTerm=this.searchTerm siteUrl=this.siteUrl}}
+      @outletArgs={{lazyHash searchTerm=this.searchTerm siteUrl=this.siteUrl}}
       @defaultGlimmer={{true}}
     >
       <form action="//google.com/search" id="google-search" class="inline-form">

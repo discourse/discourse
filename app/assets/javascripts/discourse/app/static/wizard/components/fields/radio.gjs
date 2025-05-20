@@ -4,6 +4,7 @@ import { on } from "@ember/modifier";
 import { action, set } from "@ember/object";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import concatClass from "discourse/helpers/concat-class";
+import lazyHash from "discourse/helpers/lazy-hash";
 import withEventValue from "discourse/helpers/with-event-value";
 
 export default class Radio extends Component {
@@ -42,7 +43,7 @@ export default class Radio extends Component {
           <label class="wizard-container__label">
             <PluginOutlet
               @name="wizard-radio"
-              @outletArgs={{hash disabled=choice.disabled}}
+              @outletArgs={{lazyHash disabled=choice.disabled}}
             >
               <input
                 type="radio"
@@ -59,7 +60,7 @@ export default class Radio extends Component {
 
             <PluginOutlet
               @name="below-wizard-radio"
-              @outletArgs={{hash disabled=choice.disabled}}
+              @outletArgs={{lazyHash disabled=choice.disabled}}
             />
           </label>
         </div>

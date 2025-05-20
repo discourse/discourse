@@ -8,6 +8,7 @@ import { eq } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import categoryBadge from "discourse/helpers/category-badge";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { CATEGORY_STYLE_TYPES } from "discourse/lib/constants";
 import getURL from "discourse/lib/get-url";
 import Category from "discourse/models/category";
@@ -158,7 +159,7 @@ export default class EditCategoryGeneral extends Component {
 
       <PluginOutlet
         @name="category-name-fields-details"
-        @outletArgs={{hash form=@form category=@category}}
+        @outletArgs={{lazyHash form=@form category=@category}}
       >
         {{#unless @category.isUncategorizedCategory}}
           <@form.Field

@@ -6,6 +6,7 @@ import { tagName } from "@ember-decorators/component";
 import ParentCategoryRow from "discourse/components/parent-category-row";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import icon from "discourse/helpers/d-icon";
+import lazyHash from "discourse/helpers/lazy-hash";
 import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
@@ -63,7 +64,7 @@ export default class CategoriesOnly extends Component {
   <template>
     <PluginOutlet
       @name="categories-only-wrapper"
-      @outletArgs={{hash categories=this.categories}}
+      @outletArgs={{lazyHash categories=this.categories}}
     >
       {{#if this.categories}}
         {{#if this.filteredCategories}}
@@ -71,7 +72,7 @@ export default class CategoriesOnly extends Component {
             <div class="category-list {{if this.showTopics 'with-topics'}}">
               <PluginOutlet
                 @name="mobile-categories"
-                @outletArgs={{hash categories=this.filteredCategories}}
+                @outletArgs={{lazyHash categories=this.filteredCategories}}
               >
                 {{#each this.filteredCategories as |c|}}
                   <ParentCategoryRow
@@ -174,7 +175,10 @@ export default class CategoriesOnly extends Component {
     <PluginOutlet
       @name="below-categories-only"
       @connectorTagName="div"
-      @outletArgs={{hash categories=this.categories showTopics=this.showTopics}}
+      @outletArgs={{lazyHash
+        categories=this.categories
+        showTopics=this.showTopics
+      }}
     />
   </template>
 }

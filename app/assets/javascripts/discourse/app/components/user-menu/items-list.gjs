@@ -9,6 +9,7 @@ import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import MenuItem from "discourse/components/user-menu/menu-item";
 import icon from "discourse/helpers/d-icon";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
 
 export default class UserMenuItemsList extends Component {
@@ -107,7 +108,7 @@ export default class UserMenuItemsList extends Component {
   <template>
     <PluginOutlet
       @name="before-panel-body"
-      @outletArgs={{hash closeUserMenu=@closeUserMenu}}
+      @outletArgs={{lazyHash closeUserMenu=@closeUserMenu}}
     />
     {{#if this.loading}}
       <div class="spinner-container">
@@ -143,7 +144,7 @@ export default class UserMenuItemsList extends Component {
         {{/if}}
         <PluginOutlet
           @name="panel-body-bottom"
-          @outletArgs={{hash
+          @outletArgs={{lazyHash
             itemsCacheKey=this.itemsCacheKey
             closeUserMenu=@closeUserMenu
             showDismiss=this.showDismiss
@@ -154,14 +155,14 @@ export default class UserMenuItemsList extends Component {
     {{else}}
       <PluginOutlet
         @name="user-menu-items-list-empty-state"
-        @outletArgs={{hash model=this}}
+        @outletArgs={{lazyHash model=this}}
       >
         <this.resolvedEmptyStateComponent />
       </PluginOutlet>
     {{/if}}
     <PluginOutlet
       @name="after-panel-body"
-      @outletArgs={{hash closeUserMenu=@closeUserMenu}}
+      @outletArgs={{lazyHash closeUserMenu=@closeUserMenu}}
     />
   </template>
 }

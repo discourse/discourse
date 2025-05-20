@@ -8,6 +8,7 @@ import basePath from "discourse/helpers/base-path";
 import formatDate from "discourse/helpers/format-date";
 import getUrl from "discourse/helpers/get-url";
 import htmlSafe from "discourse/helpers/html-safe";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
 import AdminReport from "admin/components/admin-report";
 import DashboardPeriodSelector from "admin/components/dashboard-period-selector";
@@ -223,7 +224,7 @@ export default RouteTemplate(
       <PluginOutlet
         @name="admin-dashboard-general-bottom"
         @connectorTagName="div"
-        @outletArgs={{hash filters=@controller.filters}}
+        @outletArgs={{lazyHash filters=@controller.filters}}
       />
     </ConditionalLoadingSpinner>
   </template>

@@ -6,6 +6,7 @@ import GroupMembershipButton from "discourse/components/group-membership-button"
 import PluginOutlet from "discourse/components/plugin-outlet";
 import icon from "discourse/helpers/d-icon";
 import htmlSafe from "discourse/helpers/html-safe";
+import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
 import { i18n } from "discourse-i18n";
 
@@ -74,7 +75,7 @@ const GroupCard = <template>
           <PluginOutlet
             @name="group-index-box-after"
             @connectorTagName="div"
-            @outletArgs={{hash model=@group}}
+            @outletArgs={{lazyHash model=@group}}
           />
         </span>
       </div>

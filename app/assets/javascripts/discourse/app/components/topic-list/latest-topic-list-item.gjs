@@ -11,6 +11,7 @@ import categoryLink from "discourse/helpers/category-link";
 import concatClass from "discourse/helpers/concat-class";
 import discourseTags from "discourse/helpers/discourse-tags";
 import formatDate from "discourse/helpers/format-date";
+import lazyHash from "discourse/helpers/lazy-hash";
 import topicFeaturedLink from "discourse/helpers/topic-featured-link";
 import topicLink from "discourse/helpers/topic-link";
 import { applyValueTransformer } from "discourse/lib/transformer";
@@ -45,12 +46,12 @@ export default class LatestTopicListItem extends Component {
       <PluginOutlet
         @name="above-latest-topic-list-item"
         @connectorTagName="div"
-        @outletArgs={{hash topic=@topic}}
+        @outletArgs={{lazyHash topic=@topic}}
       />
 
       <PluginOutlet
         @name="latest-topic-list-item-topic-poster"
-        @outletArgs={{hash topic=@topic}}
+        @outletArgs={{lazyHash topic=@topic}}
       >
         <div class="topic-poster">
           <UserLink @user={{@topic.lastPosterUser}}>
@@ -64,7 +65,7 @@ export default class LatestTopicListItem extends Component {
         <div class="top-row">
           <PluginOutlet
             @name="latest-topic-list-item-main-link-top-row"
-            @outletArgs={{hash topic=@topic}}
+            @outletArgs={{lazyHash topic=@topic}}
           >
             <TopicStatus @topic={{@topic}} @context="topic-list" />
 
@@ -83,7 +84,7 @@ export default class LatestTopicListItem extends Component {
         <div class="bottom-row">
           <PluginOutlet
             @name="latest-topic-list-item-main-link-bottom-row"
-            @outletArgs={{hash topic=@topic}}
+            @outletArgs={{lazyHash topic=@topic}}
           >
             {{categoryLink @topic.category~}}
             {{~discourseTags @topic mode="list"}}
@@ -91,7 +92,7 @@ export default class LatestTopicListItem extends Component {
           <PluginOutlet
             @name="below-latest-topic-list-item-bottom-row"
             @connectorTagName="span"
-            @outletArgs={{hash topic=@topic}}
+            @outletArgs={{lazyHash topic=@topic}}
           />
         </div>
       </div>
@@ -100,11 +101,11 @@ export default class LatestTopicListItem extends Component {
         <PluginOutlet
           @name="above-latest-topic-list-item-post-count"
           @connectorTagName="div"
-          @outletArgs={{hash topic=@topic}}
+          @outletArgs={{lazyHash topic=@topic}}
         />
         <PluginOutlet
           @name="latest-topic-list-item-topic-stats"
-          @outletArgs={{hash topic=@topic}}
+          @outletArgs={{lazyHash topic=@topic}}
         >
           <ItemRepliesCell @topic={{@topic}} @tagName="div" />
           <div class="topic-last-activity">

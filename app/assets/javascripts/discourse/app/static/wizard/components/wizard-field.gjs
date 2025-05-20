@@ -5,6 +5,7 @@ import { dasherize } from "@ember/string";
 import { htmlSafe } from "@ember/template";
 import { or } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import lazyHash from "discourse/helpers/lazy-hash";
 import fields from "./fields";
 
 export default class WizardFieldComponent extends Component {
@@ -83,7 +84,7 @@ export default class WizardFieldComponent extends Component {
 
         <PluginOutlet
           @name="below-wizard-extra-description"
-          @outletArgs={{hash
+          @outletArgs={{lazyHash
             id=@field.id
             disabled=@field.disabled
             value=@field.value
@@ -93,7 +94,7 @@ export default class WizardFieldComponent extends Component {
 
       <PluginOutlet
         @name="below-wizard-field"
-        @outletArgs={{hash
+        @outletArgs={{lazyHash
           id=@field.id
           disabled=@field.disabled
           value=@field.value

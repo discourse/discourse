@@ -8,6 +8,7 @@ import { htmlSafe } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
+import lazyHash from "discourse/helpers/lazy-hash";
 import escape from "discourse/lib/escape";
 import { iconHTML } from "discourse/lib/icon-library";
 import { i18n } from "discourse-i18n";
@@ -88,7 +89,7 @@ export default class ThemesListItem extends Component {
           <PluginOutlet
             @name="admin-customize-themes-list-item"
             @connectorTagName="span"
-            @outletArgs={{hash theme=@theme}}
+            @outletArgs={{lazyHash theme=@theme}}
           />
         </span>
 

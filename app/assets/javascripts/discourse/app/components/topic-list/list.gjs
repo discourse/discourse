@@ -7,6 +7,7 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import Header from "discourse/components/topic-list/header";
 import Item from "discourse/components/topic-list/item";
 import concatClass from "discourse/helpers/concat-class";
+import lazyHash from "discourse/helpers/lazy-hash";
 import DAG from "discourse/lib/dag";
 import {
   applyMutableValueTransformer,
@@ -217,7 +218,7 @@ export default class TopicList extends Component {
 
       <PluginOutlet
         @name="before-topic-list-body"
-        @outletArgs={{hash
+        @outletArgs={{lazyHash
           topics=@topics
           selected=this.selected
           bulkSelectEnabled=this.bulkSelectEnabled
@@ -257,7 +258,7 @@ export default class TopicList extends Component {
 
           <PluginOutlet
             @name="after-topic-list-item"
-            @outletArgs={{hash topic=topic index=index}}
+            @outletArgs={{lazyHash topic=topic index=index}}
             @connectorTagName="tr"
           />
         {{/each}}
@@ -265,7 +266,7 @@ export default class TopicList extends Component {
 
       <PluginOutlet
         @name="after-topic-list-body"
-        @outletArgs={{hash
+        @outletArgs={{lazyHash
           topics=@topics
           selected=this.selected
           bulkSelectEnabled=this.bulkSelectEnabled

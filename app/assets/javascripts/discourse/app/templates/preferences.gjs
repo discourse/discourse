@@ -5,6 +5,7 @@ import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav"
 import PluginOutlet from "discourse/components/plugin-outlet";
 import bodyClass from "discourse/helpers/body-class";
 import icon from "discourse/helpers/d-icon";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
 
 export default RouteTemplate(
@@ -99,12 +100,12 @@ export default RouteTemplate(
         <PluginOutlet
           @name="user-preferences-nav-under-interface"
           @connectorTagName="div"
-          @outletArgs={{hash model=@controller.model}}
+          @outletArgs={{lazyHash model=@controller.model}}
         />
         <PluginOutlet
           @name="user-preferences-nav"
           @connectorTagName="li"
-          @outletArgs={{hash model=@controller.model}}
+          @outletArgs={{lazyHash model=@controller.model}}
         />
       </HorizontalOverflowNav>
     </div>
@@ -114,7 +115,7 @@ export default RouteTemplate(
         <PluginOutlet
           @name="above-user-preferences"
           @connectorTagName="div"
-          @outletArgs={{hash model=@controller.model}}
+          @outletArgs={{lazyHash model=@controller.model}}
         />
       </span>
 

@@ -6,6 +6,7 @@ import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav"
 import PluginOutlet from "discourse/components/plugin-outlet";
 import MessagesDropdown from "discourse/components/user-nav/messages-dropdown";
 import bodyClass from "discourse/helpers/body-class";
+import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
 
 export default RouteTemplate(
@@ -14,7 +15,7 @@ export default RouteTemplate(
 
     <PluginOutlet
       @name="user-messages-above-navigation"
-      @outletArgs={{hash model=@controller.model}}
+      @outletArgs={{lazyHash model=@controller.model}}
     />
 
     <div class="user-navigation user-navigation-secondary">
@@ -55,7 +56,7 @@ export default RouteTemplate(
         {{/if}}
         <PluginOutlet
           @name="user-messages-controls-bottom"
-          @outletArgs={{hash showNewPM=@controller.showNewPM}}
+          @outletArgs={{lazyHash showNewPM=@controller.showNewPM}}
         />
       </div>
     </div>

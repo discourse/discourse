@@ -5,6 +5,7 @@ import { tagName } from "@ember-decorators/component";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import icon from "discourse/helpers/d-icon";
 import formatDate from "discourse/helpers/format-date";
+import lazyHash from "discourse/helpers/lazy-hash";
 import number from "discourse/helpers/number";
 
 @tagName("li")
@@ -12,7 +13,7 @@ export default class UserSummaryTopic extends Component {
   <template>
     <PluginOutlet
       @name="user-summary-topic-wrapper"
-      @outletArgs={{hash
+      @outletArgs={{lazyHash
         topic=@topic
         url=@url
         createdAt=@createdAt

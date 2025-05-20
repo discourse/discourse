@@ -5,6 +5,7 @@ import { action } from "@ember/object";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { isiPad } from "discourse/lib/utilities";
 import observeIntersection from "discourse/modifiers/observe-intersection";
 
@@ -57,7 +58,7 @@ export default class TopicTitle extends Component {
       <PluginOutlet
         @name="topic-title"
         @connectorTagName="div"
-        @outletArgs={{hash model=@model}}
+        @outletArgs={{lazyHash model=@model}}
       />
     </div>
   </template>

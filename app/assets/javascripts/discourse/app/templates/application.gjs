@@ -26,6 +26,7 @@ import Sidebar from "discourse/components/sidebar";
 import SoftwareUpdatePrompt from "discourse/components/software-update-prompt";
 import TopicEntrance from "discourse/components/topic-entrance";
 import WelcomeBanner from "discourse/components/welcome-banner";
+import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
 import { i18n } from "discourse-i18n";
 import DMenus from "float-kit/components/d-menus";
@@ -48,7 +49,9 @@ export default RouteTemplate(
       <PluginOutlet
         @name="above-site-header"
         @connectorTagName="div"
-        @outletArgs={{hash currentPath=@controller.router._router.currentPath}}
+        @outletArgs={{lazyHash
+          currentPath=@controller.router._router.currentPath
+        }}
       />
 
       {{#if @controller.showSiteHeader}}
@@ -74,7 +77,9 @@ export default RouteTemplate(
       <PluginOutlet
         @name="below-site-header"
         @connectorTagName="div"
-        @outletArgs={{hash currentPath=@controller.router._router.currentPath}}
+        @outletArgs={{lazyHash
+          currentPath=@controller.router._router.currentPath
+        }}
       />
 
       <div id="main-outlet-wrapper" class="wrap" role="main">
@@ -104,7 +109,7 @@ export default RouteTemplate(
             <PluginOutlet
               @name="top-notices"
               @connectorTagName="div"
-              @outletArgs={{hash
+              @outletArgs={{lazyHash
                 currentPath=@controller.router._router.currentPath
               }}
             />
@@ -115,7 +120,7 @@ export default RouteTemplate(
           <CardContainer />
           <PluginOutlet
             @name="main-outlet-bottom"
-            @outletArgs={{hash showFooter=@controller.showFooter}}
+            @outletArgs={{lazyHash showFooter=@controller.showFooter}}
           />
         </div>
 
@@ -129,7 +134,7 @@ export default RouteTemplate(
       <PluginOutlet
         @name="above-footer"
         @connectorTagName="div"
-        @outletArgs={{hash showFooter=@controller.showFooter}}
+        @outletArgs={{lazyHash showFooter=@controller.showFooter}}
       />
       {{#if @controller.showFooter}}
         <CustomHtml
@@ -141,7 +146,7 @@ export default RouteTemplate(
       <PluginOutlet
         @name="below-footer"
         @connectorTagName="div"
-        @outletArgs={{hash showFooter=@controller.showFooter}}
+        @outletArgs={{lazyHash showFooter=@controller.showFooter}}
       />
 
       <ModalContainer />

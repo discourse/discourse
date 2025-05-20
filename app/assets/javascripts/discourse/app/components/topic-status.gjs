@@ -7,6 +7,7 @@ import { and } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import icon from "discourse/helpers/d-icon";
 import element from "discourse/helpers/element";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
 
 export default class TopicStatus extends Component {
@@ -109,7 +110,7 @@ export default class TopicStatus extends Component {
       {{~/if~}}
       <PluginOutlet
         @name="after-topic-status"
-        @outletArgs={{hash topic=@topic context=@context}}
+        @outletArgs={{lazyHash topic=@topic context=@context}}
       />
       {{~! no whitespace ~}}
     </this.wrapperElement>

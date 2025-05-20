@@ -4,6 +4,7 @@ import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import UserStatusMessage from "discourse/components/user-status-message";
+import lazyHash from "discourse/helpers/lazy-hash";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import ChatChannelUnreadIndicator from "../chat-channel-unread-indicator";
 
@@ -80,7 +81,7 @@ export default class ChatChannelName extends Component {
         {{#if this.showPluginOutlet}}
           <PluginOutlet
             @name="after-chat-channel-username"
-            @outletArgs={{hash user=@user}}
+            @outletArgs={{lazyHash user=@user}}
             @tagName=""
             @connectorTagName=""
           />

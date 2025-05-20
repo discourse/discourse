@@ -7,6 +7,7 @@ import { service } from "@ember/service";
 import { modifier as modifierFn } from "ember-modifier";
 import { and, eq, not, or } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import lazyHash from "discourse/helpers/lazy-hash";
 import DAG from "discourse/lib/dag";
 import scrollLock from "discourse/lib/scroll-lock";
 import { scrollTop } from "discourse/lib/scroll-top";
@@ -324,7 +325,7 @@ export default class GlimmerHeader extends Component {
       </div>
       <PluginOutlet
         @name="after-header"
-        @outletArgs={{hash minimized=@topicInfoVisible}}
+        @outletArgs={{lazyHash minimized=@topicInfoVisible}}
       />
     </header>
   </template>

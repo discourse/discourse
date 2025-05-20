@@ -11,6 +11,7 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import UserInfo from "discourse/components/user-info";
 import formatDate from "discourse/helpers/format-date";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
 
 export default RouteTemplate(
@@ -61,7 +62,7 @@ export default RouteTemplate(
           >
             <PluginOutlet
               @name="selectable-user-badges"
-              @outletArgs={{hash
+              @outletArgs={{lazyHash
                 selectableUserBadges=@controller.selectableUserBadges
                 closeAction=@controller.toggleSetUserTitle
               }}

@@ -13,6 +13,7 @@ import UserSummaryUser from "discourse/components/user-summary-user";
 import UserSummaryUsersList from "discourse/components/user-summary-users-list";
 import bodyClass from "discourse/helpers/body-class";
 import categoryLink from "discourse/helpers/category-link";
+import lazyHash from "discourse/helpers/lazy-hash";
 import shortenUrl from "discourse/helpers/shorten-url";
 import { i18n } from "discourse-i18n";
 
@@ -23,7 +24,7 @@ export default RouteTemplate(
     <div class="user-content" id="user-content">
       <PluginOutlet
         @name="above-user-summary-stats"
-        @outletArgs={{hash model=@controller.model user=@controller.user}}
+        @outletArgs={{lazyHash model=@controller.model user=@controller.user}}
       />
       {{#if @controller.model.can_see_summary_stats}}
         <div class="top-section stats-section">
@@ -153,7 +154,10 @@ export default RouteTemplate(
             <PluginOutlet
               @name="user-summary-stat"
               @connectorTagName="li"
-              @outletArgs={{hash model=@controller.model user=@controller.user}}
+              @outletArgs={{lazyHash
+                model=@controller.model
+                user=@controller.user
+              }}
             />
           </ul>
         </div>
@@ -161,7 +165,7 @@ export default RouteTemplate(
 
       <PluginOutlet
         @name="below-user-summary-stats"
-        @outletArgs={{hash model=@controller.model user=@controller.user}}
+        @outletArgs={{lazyHash model=@controller.model user=@controller.user}}
       />
 
       <div class="top-section replies-and-topics-section">
@@ -302,7 +306,7 @@ export default RouteTemplate(
                   <tr>
                     <PluginOutlet
                       @name="user-summary-top-category-row"
-                      @outletArgs={{hash
+                      @outletArgs={{lazyHash
                         category=category
                         user=@controller.user
                       }}
@@ -354,7 +358,7 @@ export default RouteTemplate(
               {{/each}}
               <PluginOutlet
                 @name="after-user-summary-badges"
-                @outletArgs={{hash
+                @outletArgs={{lazyHash
                   model=@controller.model
                   user=@controller.user
                 }}

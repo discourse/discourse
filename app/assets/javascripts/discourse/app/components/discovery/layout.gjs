@@ -2,6 +2,7 @@ import { hash } from "@ember/helper";
 import CategoryReadOnlyBanner from "discourse/components/category-read-only-banner";
 import DiscourseBanner from "discourse/components/discourse-banner";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import lazyHash from "discourse/helpers/lazy-hash";
 
 const Layout = <template>
   <div class="container">
@@ -17,7 +18,7 @@ const Layout = <template>
   <PluginOutlet
     @name="discovery-list-controls-above"
     @connectorTagName="div"
-    @outletArgs={{hash
+    @outletArgs={{lazyHash
       category=@model.category
       tag=@model.tag
       toggleTagInfo=@toggleTagInfo
@@ -28,7 +29,7 @@ const Layout = <template>
     <PluginOutlet
       @name="discovery-navigation-bar-above"
       @connectorTagName="div"
-      @outletArgs={{hash category=@model.category tag=@model.tag}}
+      @outletArgs={{lazyHash category=@model.category tag=@model.tag}}
     />
     <div class="container">
       {{yield to="navigation"}}
@@ -38,7 +39,7 @@ const Layout = <template>
   <PluginOutlet
     @name="discovery-above"
     @connectorTagName="div"
-    @outletArgs={{hash category=@model.category tag=@model.tag}}
+    @outletArgs={{lazyHash category=@model.category tag=@model.tag}}
   />
 
   <div class="container list-container">
@@ -48,7 +49,7 @@ const Layout = <template>
           {{yield to="header"}}
           <PluginOutlet
             @name="header-list-container-bottom"
-            @outletArgs={{hash category=@model.category tag=@model.tag}}
+            @outletArgs={{lazyHash category=@model.category tag=@model.tag}}
           />
         </div>
       </div>
@@ -57,12 +58,12 @@ const Layout = <template>
       <div class="full-width">
         <PluginOutlet
           @name="before-list-area"
-          @outletArgs={{hash category=@model.category tag=@model.tag}}
+          @outletArgs={{lazyHash category=@model.category tag=@model.tag}}
         />
         <div id="list-area">
           <PluginOutlet
             @name="discovery-list-area"
-            @outletArgs={{hash
+            @outletArgs={{lazyHash
               category=@model.category
               tag=@model.tag
               model=@model
@@ -72,7 +73,7 @@ const Layout = <template>
             <PluginOutlet
               @name="discovery-list-container-top"
               @connectorTagName="span"
-              @outletArgs={{hash category=@model.category tag=@model.tag}}
+              @outletArgs={{lazyHash category=@model.category tag=@model.tag}}
             />
             {{yield to="list"}}
           </PluginOutlet>
@@ -84,7 +85,7 @@ const Layout = <template>
   <PluginOutlet
     @name="discovery-below"
     @connectorTagName="div"
-    @outletArgs={{hash category=@model.category tag=@model.tag}}
+    @outletArgs={{lazyHash category=@model.category tag=@model.tag}}
   />
 </template>;
 

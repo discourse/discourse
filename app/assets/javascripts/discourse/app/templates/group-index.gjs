@@ -16,6 +16,7 @@ import UserInfo from "discourse/components/user-info";
 import ageWithTooltip from "discourse/helpers/age-with-tooltip";
 import icon from "discourse/helpers/d-icon";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
+import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
 import { i18n } from "discourse-i18n";
 
@@ -123,7 +124,7 @@ export default RouteTemplate(
 
               <PluginOutlet
                 @name="group-index-table-header-after-username"
-                @outletArgs={{hash
+                @outletArgs={{lazyHash
                   group=@controller.model
                   asc=@controller.asc
                   order=@controller.order
@@ -213,7 +214,7 @@ export default RouteTemplate(
 
                   <PluginOutlet
                     @name="group-index-table-row-after-username"
-                    @outletArgs={{hash member=m}}
+                    @outletArgs={{lazyHash member=m}}
                   />
 
                   <div

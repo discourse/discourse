@@ -12,6 +12,7 @@ import avatar from "discourse/helpers/avatar";
 import categoryLink from "discourse/helpers/category-link";
 import icon from "discourse/helpers/d-icon";
 import formatDate from "discourse/helpers/format-date";
+import lazyHash from "discourse/helpers/lazy-hash";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import { propertyEqual } from "discourse/lib/computed";
 import discourseComputed from "discourse/lib/decorators";
@@ -66,7 +67,7 @@ export default class UserStreamItem extends Component {
   <template>
     <PluginOutlet
       @name="user-stream-item-above"
-      @outletArgs={{hash item=@item}}
+      @outletArgs={{lazyHash item=@item}}
     />
 
     <div class="user-stream-item__header info">
@@ -126,7 +127,7 @@ export default class UserStreamItem extends Component {
         <PluginOutlet
           @name="user-stream-item-header"
           @connectorTagName="div"
-          @outletArgs={{hash item=@item}}
+          @outletArgs={{lazyHash item=@item}}
         />
       </span>
     </div>

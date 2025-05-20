@@ -5,6 +5,7 @@ import { service } from "@ember/service";
 import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import icon from "discourse/helpers/d-icon";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
 import GroupDropdown from "select-kit/components/group-dropdown";
 
@@ -48,7 +49,7 @@ export default class GroupNavigation extends Component {
       {{/each}}
       <PluginOutlet
         @name="group-reports-nav-item"
-        @outletArgs={{hash group=@group}}
+        @outletArgs={{lazyHash group=@group}}
         @connectorTagName="li"
       />
     </HorizontalOverflowNav>

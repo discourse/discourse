@@ -4,6 +4,7 @@ import { htmlSafe } from "@ember/template";
 import { gt } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import UserAvatarFlair from "discourse/components/user-avatar-flair";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { avatarImg } from "discourse/lib/avatar-utils";
 import { userPath } from "discourse/lib/url";
 
@@ -56,7 +57,7 @@ export default class TopicParticipant extends Component {
   <template>
     <PluginOutlet
       @name="topic-participant"
-      @outletArgs={{hash participant=@participant}}
+      @outletArgs={{lazyHash participant=@participant}}
     >
       <div class={{this.participantClasses}}>
         <a

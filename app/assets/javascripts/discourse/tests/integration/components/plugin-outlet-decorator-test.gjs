@@ -3,6 +3,7 @@ import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { withSilencedDeprecations } from "discourse/lib/deprecated";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -53,7 +54,7 @@ module("Plugin Outlet - Decorator", function (hooks) {
         <PluginOutlet
           @connectorTagName="div"
           @name="my-outlet-name"
-          @outletArgs={{hash value=true}}
+          @outletArgs={{lazyHash value=true}}
         />
       </template>
     );

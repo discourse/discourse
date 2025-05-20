@@ -5,6 +5,7 @@ import DiscourseBanner from "discourse/components/discourse-banner";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TagList from "discourse/components/tag-list";
 import TagsAdminDropdown from "discourse/components/tags-admin-dropdown";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
 
 export default RouteTemplate(
@@ -26,7 +27,7 @@ export default RouteTemplate(
         <PluginOutlet
           @name="tags-below-title"
           @connectorTagName="div"
-          @outletArgs={{hash model=@controller.model}}
+          @outletArgs={{lazyHash model=@controller.model}}
         />
       </div>
 

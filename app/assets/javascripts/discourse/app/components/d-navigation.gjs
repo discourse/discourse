@@ -16,6 +16,7 @@ import NavigationBar from "discourse/components/navigation-bar";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TagNotificationsTracking from "discourse/components/tag-notifications-tracking";
 import TopicDismissButtons from "discourse/components/topic-dismiss-buttons";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { setting } from "discourse/lib/computed";
 import discourseComputed from "discourse/lib/decorators";
 import { filterTypeForMode } from "discourse/lib/filter-mode";
@@ -242,7 +243,7 @@ export default class DNavigation extends Component {
 
     <PluginOutlet
       @name="after-breadcrumbs"
-      @outletArgs={{hash
+      @outletArgs={{lazyHash
         categories=this.categories
         category=this.category
         tag=this.tag
@@ -319,7 +320,7 @@ export default class DNavigation extends Component {
 
       <PluginOutlet
         @name="before-create-topic-button"
-        @outletArgs={{hash
+        @outletArgs={{lazyHash
           canCreateTopic=this.canCreateTopic
           createTopicDisabled=this.createTopicDisabled
           createTopicLabel=this.createTopicLabel
@@ -341,7 +342,7 @@ export default class DNavigation extends Component {
 
       <PluginOutlet
         @name="after-create-topic-button"
-        @outletArgs={{hash
+        @outletArgs={{lazyHash
           canCreateTopic=this.canCreateTopic
           createTopicDisabled=this.createTopicDisabled
           createTopicLabel=this.createTopicLabel

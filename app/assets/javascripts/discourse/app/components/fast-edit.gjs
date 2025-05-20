@@ -5,6 +5,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { translateModKey } from "discourse/lib/utilities";
@@ -93,7 +94,7 @@ export default class FastEdit extends Component {
         <PluginOutlet
           @name="fast-edit-footer-after"
           @defaultGlimmer={{true}}
-          @outletArgs={{hash
+          @outletArgs={{lazyHash
             initialValue=@initialValue
             newValue=@newValue
             updateValue=this.updateValueProperty

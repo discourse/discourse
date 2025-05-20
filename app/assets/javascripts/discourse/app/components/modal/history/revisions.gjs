@@ -10,6 +10,7 @@ import Avatar from "discourse/helpers/bound-avatar-template";
 import icon from "discourse/helpers/d-icon";
 import discourseTags from "discourse/helpers/discourse-tags";
 import htmlSafe from "discourse/helpers/html-safe";
+import lazyHash from "discourse/helpers/lazy-hash";
 
 function tagClasses(tagChanges, state, className) {
   return (tagChanges || []).reduce((classMap, tagChange) => {
@@ -131,7 +132,7 @@ export default class Revisions extends Component {
         <PluginOutlet
           @name="post-revisions"
           @connectorTagName="div"
-          @outletArgs={{hash model=@model}}
+          @outletArgs={{lazyHash model=@model}}
         />
       </span>
 

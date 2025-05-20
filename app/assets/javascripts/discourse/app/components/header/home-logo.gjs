@@ -5,6 +5,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import concatClass from "discourse/helpers/concat-class";
+import lazyHash from "discourse/helpers/lazy-hash";
 import getURL from "discourse/lib/get-url";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { applyValueTransformer } from "discourse/lib/transformer";
@@ -89,12 +90,15 @@ export default class HomeLogo extends Component {
   }
 
   <template>
-    <PluginOutlet @name="home-logo" @outletArgs={{hash minimized=@minimized}}>
+    <PluginOutlet
+      @name="home-logo"
+      @outletArgs={{lazyHash minimized=@minimized}}
+    >
       <div class={{concatClass (if @minimized "title--minimized") "title"}}>
         <a href={{this.href}} {{on "click" this.click}}>
           <PluginOutlet
             @name="home-logo-contents"
-            @outletArgs={{hash
+            @outletArgs={{lazyHash
               logoSmallUrl=this.logoSmallUrl
               logoSmallUrlDark=this.logoSmallUrlDark
               logoUrl=this.logoUrl

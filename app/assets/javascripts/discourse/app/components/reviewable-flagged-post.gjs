@@ -9,6 +9,7 @@ import ReviewableCreatedBy from "discourse/components/reviewable-created-by";
 import ReviewablePostEdits from "discourse/components/reviewable-post-edits";
 import ReviewablePostHeader from "discourse/components/reviewable-post-header";
 import ReviewableTopicLink from "discourse/components/reviewable-topic-link";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { bind } from "discourse/lib/decorators";
 import highlightWatchedWords from "discourse/lib/highlight-watched-words";
 import { i18n } from "discourse-i18n";
@@ -84,7 +85,7 @@ export default class ReviewableFlaggedPost extends Component {
           <PluginOutlet
             @name="after-reviewable-flagged-post-body"
             @connectorTagName="div"
-            @outletArgs={{hash model=@reviewable}}
+            @outletArgs={{lazyHash model=@reviewable}}
           />
         </span>
         {{yield}}
