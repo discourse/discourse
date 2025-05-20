@@ -28,7 +28,8 @@ const CLOAKABLE_CLASS_SELECTOR = `.${CLOAKABLE_CLASS}`;
 const CLOAKING_BATCH_INTERVAL_MS = 10;
 const DAY_MS = 1000 * 60 * 60 * 24;
 const POST_MODEL = Symbol("POST");
-const SLACK_FACTOR = 5;
+const RESIZE_DEBOUNCE_MS = 100;
+const SLACK_FACTOR = 50;
 
 let cloakingEnabled = true;
 const cloakingPrevented = new TrackedSet();
@@ -52,7 +53,7 @@ export default class PostStream extends Component {
 
   @tracked cloakAbove;
   @tracked cloakBelow;
-  @tracked cloakOffset = Math.ceil(window.innerHeight * SLACK_FACTOR);
+  @tracked cloakOffset;
   @tracked onScreenBoundaries = {
     min: null,
     max: null,
@@ -61,15 +62,16 @@ export default class PostStream extends Component {
   observedPostNodes = new Set();
   uncloakedPostNumbers = new Set();
 
-  cloakedPostsHeight = {};
-  viewportObserver;
-  cloakingObserver;
-
+  #cloakedPostsHeight = {};
+  #cloakingObserver;
+  #currentPostElement;
+  #currentPostObserver;
   #postsOnScreen = {};
   #observedCloakBoundaries = {
     above: null,
     below: null,
   };
+  #viewportObserver;
 
   // #topVisible = null; // Tracks the topmost post currently visible in the viewport
   // #bottomVisible = null; // Tracks the bottommost post currently visible in the viewport
@@ -80,24 +82,17 @@ export default class PostStream extends Component {
   constructor() {
     super(...arguments);
 
-    this._previouslyNearby = new Set();
-
-    const opts = {
-      passive: true,
-    };
-    document.addEventListener("touchmove", this._debouncedScroll, opts);
-    window.addEventListener("scroll", this._debouncedScroll, opts);
+    // initialize the cloaking offset area
+    this._updateCloakOffset();
 
     // TODO (glimmer-post-stream) do we need this?
-    // if (this.site.useGlimmerPostStream) {
-    //   next(() => this._scrollTriggered());
-    // } else {
-    //   this._scrollTriggered();
-    // }
-
-    // TODO (glimmer-post-stream) do we need this?
-    this.appEvents.on("post-stream:refresh", this, "_debouncedScroll");
+    // this.appEvents.on("post-stream:refresh", this, "_debouncedScroll");
     this.appEvents.on("post-stream:posted", this, "_posted");
+
+    // track the window height to update the cloaking area
+    window.addEventListener("resize", this._debouncedOnWindowResize, {
+      passive: true,
+    });
 
     // restore scroll position on browsers with aggressive BFCaches (like Safari)
     window.onpageshow = function (event) {
@@ -110,16 +105,19 @@ export default class PostStream extends Component {
   willDestroy() {
     super.willDestroy(...arguments);
 
-    document.removeEventListener("touchmove", this._debouncedScroll);
-    window.removeEventListener("scroll", this._debouncedScroll);
+    // document.removeEventListener("touchmove", this._debouncedScroll);
+    // window.removeEventListener("scroll", this._debouncedScroll);
+    window.removeEventListener("resize", this._debouncedOnWindowResize);
 
     this.appEvents.off("post-stream:refresh", this, "_debouncedScroll");
     this.appEvents.off("post-stream:refresh", this, "_refresh");
     this.appEvents.off("post-stream:posted", this, "_posted");
 
     // disconnect the intersection observers
-    this.viewportObserver.disconnect();
-    this.cloakingObserver.disconnect();
+    this.#currentPostObserver.disconnect();
+    this.#currentPostObserver.sconnect();
+    this.#viewportObserver.disconnect();
+    this.#cloakingObserver.disconnect();
   }
 
   get gapsBefore() {
@@ -205,7 +203,7 @@ export default class PostStream extends Component {
       return false;
     }
 
-    const height = this.cloakedPostsHeight[post.id];
+    const height = this.#cloakedPostsHeight[post.id];
 
     return height && (post.post_number < above || post.post_number > below)
       ? { height }
@@ -216,22 +214,34 @@ export default class PostStream extends Component {
   updateIntersectionObservers(element, _, { headerOffset, cloakOffset }) {
     const headerMargin = headerOffset * -1;
 
-    this.cloakingObserver?.disconnect?.();
-    this.viewportObserver?.disconnect?.();
+    this.#currentPostObserver?.disconnect?.();
+    this.#cloakingObserver?.disconnect?.();
+    this.#viewportObserver?.disconnect?.();
 
-    this.cloakingObserver = this.#initializeObserver(this.trackCloakedPosts, {
+    this.#currentPostObserver = this.#initializeObserver(
+      this.trackCurrentPost,
+      {
+        rootMargin: `${headerMargin}px 0px 0px 0px`,
+        threshold: Array.from({ length: 101 }, (_, i) =>
+          Number((i * 0.01).toFixed(2))
+        ),
+      }
+    );
+
+    this.#cloakingObserver = this.#initializeObserver(this.trackCloakedPosts, {
       rootMargin: `${cloakOffset}px 0px`,
       threshold: [0, 1],
     });
 
-    this.viewportObserver = this.#initializeObserver(this.trackVisiblePosts, {
+    // TODO (glimmer-post-stream) is it enough to track every 5% of the post?
+    this.#viewportObserver = this.#initializeObserver(this.trackVisiblePosts, {
       rootMargin: `${headerMargin}px 0px 0px 0px`,
       threshold: [0, 1],
     });
 
-    for (const node of this.observedPostNodes) {
-      this.cloakingObserver.observe(node);
-      this.viewportObserver.observe(node);
+    for (const element of this.observedPostNodes) {
+      this.#cloakingObserver.observe(element);
+      this.#viewportObserver.observe(element);
     }
   }
 
@@ -245,16 +255,16 @@ export default class PostStream extends Component {
 
     if (!this.observedPostNodes.has(element)) {
       this.observedPostNodes.add(element);
-      this.cloakingObserver.observe(element);
-      this.viewportObserver.observe(element);
+      this.#cloakingObserver.observe(element);
+      this.#viewportObserver.observe(element);
     }
   }
 
   unregisterPostNode(element) {
     delete element[POST_MODEL];
 
-    this.cloakingObserver.unobserve(element);
-    this.viewportObserver.unobserve(element);
+    this.#cloakingObserver.unobserve(element);
+    this.#viewportObserver.unobserve(element);
   }
 
   @bind
@@ -275,8 +285,25 @@ export default class PostStream extends Component {
   }
 
   @bind
-  trackCloakedPosts(event) {
-    const { target, isIntersecting } = event;
+  trackCurrentPost(entry) {
+    const { target, intersectionRatio, isIntersecting } = entry;
+    const post = target[POST_MODEL];
+
+    if (!isIntersecting) {
+      return;
+    }
+
+    const percent = 1 - intersectionRatio;
+
+    console.log("PostStream trackCurrentPost", post.post_number, percent);
+
+    // TODO (glimmer-post-stream) needs debouncing
+    this.args.currentPostScrolled({ percent });
+  }
+
+  @bind
+  trackCloakedPosts(entry) {
+    const { target, isIntersecting } = entry;
     const post = target[POST_MODEL];
 
     if (!post) {
@@ -295,7 +322,7 @@ export default class PostStream extends Component {
     if (isIntersecting) {
       this.uncloakedPostNumbers.add(postNumber);
       // entering the visibility area
-      delete this.cloakedPostsHeight[post.id];
+      delete this.#cloakedPostsHeight[post.id];
 
       if (postNumber < this.#observedCloakBoundaries.above) {
         this.#observedCloakBoundaries.above = postNumber;
@@ -309,7 +336,7 @@ export default class PostStream extends Component {
       const style = window.getComputedStyle(target);
       height +=
         parseFloat(style.borderTopWidth) + parseFloat(style.borderBottomWidth);
-      this.cloakedPostsHeight[post.id] = height;
+      this.#cloakedPostsHeight[post.id] = height;
       target.style.height = height + "px";
 
       if (
@@ -340,28 +367,15 @@ export default class PostStream extends Component {
     }
   }
 
-  _setActiveCloakBoundaries({ above, below }) {
-    this.cloakAbove = above;
-    this.cloakBelow = below;
-
-    schedule("afterRender", () => {
-      requestAnimationFrame(() => {
-        document
-          .querySelectorAll(CLOAKABLE_CLASS_SELECTOR)
-          .forEach((element) => (element.style.height = ""));
-      });
-    });
-  }
-
   @bind
-  trackVisiblePosts(event) {
-    const { target, isIntersecting } = event;
+  trackVisiblePosts(entry) {
+    const { target, isIntersecting } = entry;
     const post = target[POST_MODEL];
 
     if (isIntersecting) {
-      this.#postsOnScreen[post.id] = { post, node: target };
+      this.#postsOnScreen[post.post_number] = { post, element: target };
     } else {
-      delete this.#postsOnScreen[post.id];
+      delete this.#postsOnScreen[post.post_number];
     }
 
     // update the information about the boundaries of the posts on screen
@@ -379,6 +393,10 @@ export default class PostStream extends Component {
       },
       { min: null, max: null }
     );
+
+    this.#updateCurrentPost(
+      this.#postsOnScreen[this.onScreenBoundaries.min]?.element
+    );
   }
 
   @action
@@ -386,7 +404,7 @@ export default class PostStream extends Component {
     this.args.topVisibleChanged({
       post,
       refresh: () => {
-        const refreshedElem = this.#postsOnScreen[post.id]?.node;
+        const refreshedElem = this.#postsOnScreen[post.post_number]?.element;
 
         if (!refreshedElem) {
           return;
@@ -426,6 +444,34 @@ export default class PostStream extends Component {
     this.args.bottomVisibleChanged({ post });
   }
 
+  @bind
+  _debouncedOnWindowResize(event) {
+    discourseDebounce(this, this._updateCloakOffset, event, RESIZE_DEBOUNCE_MS);
+  }
+
+  _setActiveCloakBoundaries({ above, below }) {
+    this.cloakAbove = above;
+    this.cloakBelow = below;
+
+    schedule("afterRender", () => {
+      requestAnimationFrame(() => {
+        document
+          .querySelectorAll(CLOAKABLE_CLASS_SELECTOR)
+          .forEach((element) => (element.style.height = ""));
+      });
+    });
+  }
+
+  _updateCloakOffset() {
+    this.cloakOffset = Math.ceil(window.innerHeight * SLACK_FACTOR);
+    console.log(
+      "Cloaking offset updated",
+      this.cloakOffset,
+      window.innerHeight,
+      SLACK_FACTOR
+    );
+  }
+
   #initializeObserver(callback, { rootMargin, threshold }) {
     return new IntersectionObserver(
       (entries) => {
@@ -433,6 +479,27 @@ export default class PostStream extends Component {
       },
       { threshold, rootMargin, root: document }
     );
+  }
+
+  #updateCurrentPost(newElement) {
+    if (!newElement || this.#currentPostElement === newElement) {
+      return;
+    }
+
+    if (this.#currentPostElement) {
+      this.#currentPostObserver.unobserve(this.#currentPostElement);
+    }
+
+    const currentPost = this.#currentPostElement?.[POST_MODEL];
+    const newPost = newElement[POST_MODEL];
+
+    if (currentPost !== newPost) {
+      // TODO (glimmer-post-stream) needs debouncing
+      this.args.currentPostChanged({ post: newPost });
+    }
+
+    this.#currentPostObserver.observe(newElement);
+    this.#currentPostElement = newElement;
   }
 
   <template>
