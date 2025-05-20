@@ -387,7 +387,7 @@ RSpec.describe Email::MessageBuilder do
     end
   end
 
-  describe "subject_template" do
+  describe "template" do
     let(:templated_builder) { Email::MessageBuilder.new(to_address, template: "mystery") }
     let(:rendered_template) { "rendered template" }
 
@@ -438,6 +438,43 @@ RSpec.describe Email::MessageBuilder do
           ).save!
         expect(templated_builder.subject).to match("some email prefix")
         expect(templated_builder.subject).to match("customized subject")
+      end
+    end
+
+    context "when template arguments include html" do
+      it "escapes arguments for html body" do
+        bad_title = "<a href=\"https://zelda.com\">a bad link</a>"
+        bad_user_name = "<a href=\"https://link.com\">link</a>"
+
+        builder =
+          Email::MessageBuilder.new(
+            to_address,
+            {
+              template: "invite_mailer",
+              topic_title: bad_title,
+              inviter_name: bad_user_name,
+              topic_excerpt: "an excerpt",
+              site_title: "hyrule",
+              site_description: "kingdom",
+              invite_link: "link.com/invite",
+            },
+          )
+
+        expect(builder.body).to eq(<<~EMAIL)
+          &amp;lt;a href=&amp;quot;https://link.com&amp;quot;&amp;gt;link&amp;lt;/a&amp;gt; invited you to a discussion
+
+          > **&amp;lt;a href=&amp;quot;https://zelda.com&amp;quot;&amp;gt;a bad link&amp;lt;/a&amp;gt;**
+          >
+          > an excerpt
+
+          at
+
+          > hyrule -- kingdom
+
+          If you're interested, click the link below:
+
+          link.com/invite
+        EMAIL
       end
     end
   end

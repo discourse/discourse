@@ -188,6 +188,14 @@ module Email
       body = nil
 
       if @opts[:template]
+        template_args_to_escape = %i[topic_title inviter_name]
+
+        template_args_to_escape.each do |key|
+          next if !@template_args.key?(key)
+
+          @template_args[key] = escaped_template_arg(key)
+        end
+
         body = I18n.t("#{@opts[:template]}.text_body_template", template_args).dup
       else
         body = @opts[:body].dup
@@ -336,6 +344,15 @@ module Email
     def site_alias_email(source)
       from_alias = Email.site_title
       %Q|"#{Email.cleanup_alias(from_alias)}" <#{source}>|
+    end
+
+    private
+
+    def escaped_template_arg(key)
+      value = template_args[key].dup
+      # explicitly escaped twice, as Mailers will mark the body as html_safe
+      once_escaped = String.new(ERB::Util.html_escape(value))
+      ERB::Util.html_escape(once_escaped)
     end
   end
 end
