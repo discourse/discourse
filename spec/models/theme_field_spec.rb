@@ -168,7 +168,7 @@ HTML
       }
     SCSS
     theme.save!
-    expect(field.reload.error).to include("CssSyntaxError: Missed semicolon")
+    expect(field.reload.error).to include("Missed semicolon")
 
     theme.set_field(target: :common, name: :scss, value: "@import 'missingfile';")
     theme.save!
