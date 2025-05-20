@@ -4878,66 +4878,65 @@ pt_BR:
         login_and_authentication:
           title: "Acesso e autenticação"
           header_description: "Configure o acesso e autenticação de usuários(as), chaves e segredos, provedores OAuth2 e muito mais"
-        logo_and_fonts:
-          logo:
-            title: "Logotipo"
-            form:
-              saved: "As configurações do logotipo foram salvas."
-              logo:
-                title: "Logotipo principal"
-                description: "Aparece na navegação superior do site, bem como no topo das notificações de e-mail do site."
-                help_text: "O tamanho recomendado é 600 x 80 pixels."
-              logo_dark:
-                help_text: "O tamanho recomendado é 600 x 80 pixels."
-              large_icon:
-                title: "Ícone quadrado"
-                description: "Uma versão quadrada da imagem do logotipo aparece na parte superior da administração e também é o logotipo do aplicativo na tela inicial do celular."
-                help_text: "O tamanho recomendado é 512 x 512 pixels."
-              square_icon_dark:
-                required: "Usar um ícone quadrado diferente para o modo escuro?"
-                help_text: "O tamanho recomendado é 512 x 512 pixels."
-              favicon:
-                title: "Favicon"
-                description: "O logotipo aparecerá como ícone na aba do navegador e nos favoritos/marcadores do navegador."
-              logo_small:
-                title: "Logotipo pequeno"
-                description: "A pequena imagem do logotipo no canto superior à esquerda do site, exibida ao rolar para baixo. Se for deixada em branco, um glifo da página inicial será exibido."
-                help_text: "O tamanho recomendado é 120 x 120 pixels."
-              logo_small_dark:
-                required: "Usar um logotipo pequeno diferente para o modo escuro?"
-                help_text: "O tamanho recomendado é 120 x 120 pixels."
-              mobile: "Móvel"
-              email: "E-mail"
-              social_media: "Redes sociais"
-              mobile_logo:
-                title: "Logotipo móvel"
-                description: "O logotipo usado na versão mobile do seu site. Se deixado em branco, a imagem da configuração \"logo\" será usada."
-                help_text: "Use uma imagem retangular larga com altura de 120 e proporção maior que 3:1."
-              mobile_logo_dark:
-                required: "Usar um logotipo móvel diferente para o modo escuro?"
-                help_text: "Use uma imagem retangular larga com altura de 120 e proporção maior que 3:1."
-              manifest_icon:
-                description: "Imagem usada como logotipo/imagem inicial no Android. Se deixado em branco, large_icon será usado."
-                help_text: "O tamanho recomendado é 512 x 512 pixels."
-              manifest_screenshots:
-                description: "Capturas de tela que mostram os recursos e funcionalidades da sua instância na sua página de alerta de instalação. Todas as imagens devem ser envios locais e devem ter as mesmas dimensões."
-              apple_touch_icon:
-                description: "Ícone usado para dispositivos Apple touch. Se deixado em branco, large_icon será usado."
-                help_text: "O tamanho recomendado é 180 x 180 pixels. Um fundo transparente não é recomendado."
-              digest_logo:
-                description: "A imagem do logotipo alternativo usada na parte superior do resumo de e-mail do seu site. Se for deixada em branco, a imagem da configuração \"logotipo\" será usada."
-                help_text: "Usar uma imagem retangular larga. Não usar uma imagem SVG."
-              opengraph_image:
-                description: "Imagem opengraph padrão, usada quando a página não tiver outra imagem adequada. Se for deixada em branco, large_icon será usado."
-              x_summary_large_image:
-                help_text: "o tamanho recomendado é de pelo menos 280 x 150 pixels. Não use uma imagem SVG."
-          fonts:
-            title: "Fontes"
-            form:
-              heading_font:
-                title: "Fonte do cabeçalho"
-            backfill_modal:
-              modal_yes: "Sim"
+        logo:
+          title: "Logotipo"
+          form:
+            saved: "As configurações do logotipo foram salvas."
+            logo:
+              title: "Logotipo principal"
+              description: "Aparece na navegação superior do site, bem como no topo das notificações de e-mail do site."
+              help_text: "O tamanho recomendado é 600 x 80 pixels."
+            logo_dark:
+              help_text: "O tamanho recomendado é 600 x 80 pixels."
+            large_icon:
+              title: "Ícone quadrado"
+              description: "Uma versão quadrada da imagem do logotipo aparece na parte superior da administração e também é o logotipo do aplicativo na tela inicial do celular."
+              help_text: "O tamanho recomendado é 512 x 512 pixels."
+            square_icon_dark:
+              required: "Usar um ícone quadrado diferente para o modo escuro?"
+              help_text: "O tamanho recomendado é 512 x 512 pixels."
+            favicon:
+              title: "Favicon"
+              description: "O logotipo aparecerá como ícone na aba do navegador e nos favoritos/marcadores do navegador."
+            logo_small:
+              title: "Logotipo pequeno"
+              description: "A pequena imagem do logotipo no canto superior à esquerda do site, exibida ao rolar para baixo. Se for deixada em branco, um glifo da página inicial será exibido."
+              help_text: "O tamanho recomendado é 120 x 120 pixels."
+            logo_small_dark:
+              required: "Usar um logotipo pequeno diferente para o modo escuro?"
+              help_text: "O tamanho recomendado é 120 x 120 pixels."
+            mobile: "Móvel"
+            email: "E-mail"
+            social_media: "Redes sociais"
+            mobile_logo:
+              title: "Logotipo móvel"
+              description: "O logotipo usado na versão mobile do seu site. Se deixado em branco, a imagem da configuração \"logo\" será usada."
+              help_text: "Use uma imagem retangular larga com altura de 120 e proporção maior que 3:1."
+            mobile_logo_dark:
+              required: "Usar um logotipo móvel diferente para o modo escuro?"
+              help_text: "Use uma imagem retangular larga com altura de 120 e proporção maior que 3:1."
+            manifest_icon:
+              description: "Imagem usada como logotipo/imagem inicial no Android. Se deixado em branco, large_icon será usado."
+              help_text: "O tamanho recomendado é 512 x 512 pixels."
+            manifest_screenshots:
+              description: "Capturas de tela que mostram os recursos e funcionalidades da sua instância na sua página de alerta de instalação. Todas as imagens devem ser envios locais e devem ter as mesmas dimensões."
+            apple_touch_icon:
+              description: "Ícone usado para dispositivos Apple touch. Se deixado em branco, large_icon será usado."
+              help_text: "O tamanho recomendado é 180 x 180 pixels. Um fundo transparente não é recomendado."
+            digest_logo:
+              description: "A imagem do logotipo alternativo usada na parte superior do resumo de e-mail do seu site. Se for deixada em branco, a imagem da configuração \"logotipo\" será usada."
+              help_text: "Usar uma imagem retangular larga. Não usar uma imagem SVG."
+            opengraph_image:
+              description: "Imagem opengraph padrão, usada quando a página não tiver outra imagem adequada. Se for deixada em branco, large_icon será usado."
+            x_summary_large_image:
+              help_text: "o tamanho recomendado é de pelo menos 280 x 150 pixels. Não use uma imagem SVG."
+        fonts:
+          title: "Fontes"
+          form:
+            heading_font:
+              title: "Fonte do cabeçalho"
+          backfill_modal:
+            modal_yes: "Sim"
         navigation:
           title: "Navegação"
           header_description: "Configure itens de menu e links de navegação para seu site, inclusive a localização e comportamento do menu de navegação principal, links rápidos no topo da página inicial e a barra lateral da administração"
@@ -5088,7 +5087,6 @@ pt_BR:
           header_description: "Com o Discourse, você pode incorporar os componentes de um tópico em um site remoto através de uma API de java que cria um IFRAME"
       search:
         title: "Pesquisar"
-        instructions: "Digite para pesquisar páginas, configurações, relatórios, temas, componentes e mais..."
         result_types:
           page:
             one: "Página"
@@ -5684,6 +5682,8 @@ pt_BR:
           city_for_disputes_placeholder: "Cidade"
           city_for_disputes_help: |
             Especifique a cidade para a solução de disputas legais relacionadas a este fórum.
+          extra_groups:
+            groups: "Grupos"
           optional: "(opcional)"
           update: "Atualizar"
           toasts:
@@ -6107,30 +6107,30 @@ pt_BR:
           active_filter: "Ativo(a)"
           inactive_filter: "Inativo(a)"
           updates_available_filter: "Atualizações disponíveis"
-          schema:
-            title: "Editar %{name} configuração"
-            back_button: "Voltar para %{name}"
-            fields:
-              required: "*necessário(a)"
-              groups:
-                at_least:
-                  one: "Requer pelo menos %{count} grupo"
-                  other: "Requer pelo menos %{count} grupos"
-              categories:
-                at_least:
-                  one: "Requer pelo menos %{count} categoria"
-                  other: "Requer pelo menos %{count} categorias"
-              tags:
-                at_least:
-                  one: "Requer pelo menos %{count} etiqueta"
-                  other: "Requer pelo menos %{count} etiquetas"
-              string:
-                too_short:
-                  one: "deve ter no mínimo %{count} caractere"
-                  other: "deve ter no mínimo %{count} caracteres"
-              number:
-                too_small: "deve ser maior ou igual a %{count}"
-                too_large: "deve ser menor ou igual a %{count}"
+        schema:
+          title: "Editar %{name} configuração"
+          back_button: "Voltar para %{name}"
+          fields:
+            required: "*necessário(a)"
+            groups:
+              at_least:
+                one: "Requer pelo menos %{count} grupo"
+                other: "Requer pelo menos %{count} grupos"
+            categories:
+              at_least:
+                one: "Requer pelo menos %{count} categoria"
+                other: "Requer pelo menos %{count} categorias"
+            tags:
+              at_least:
+                one: "Requer pelo menos %{count} etiqueta"
+                other: "Requer pelo menos %{count} etiquetas"
+            string:
+              too_short:
+                one: "deve ter no mínimo %{count} caractere"
+                other: "deve ter no mínimo %{count} caracteres"
+            number:
+              too_small: "deve ser maior ou igual a %{count}"
+              too_large: "deve ser menor ou igual a %{count}"
         colors:
           select_base:
             title: "Selecionar paleta de cores básicas"

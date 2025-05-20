@@ -4129,33 +4129,32 @@ da:
           title: "Lokalisering"
         login_and_authentication:
           title: "Login og godkendelse"
-        logo_and_fonts:
-          logo:
-            title: "Logo"
-            form:
-              saved: "Logo indstillinger er gemt."
-              logo:
-                title: "Primært logo"
-              logo_dark:
-                title: "Primært logo mørkt"
-              logo_small_dark:
-                title: "Lille, mørkt logo"
-              mobile: "Mobil"
-              email: "E-mail"
-              social_media: "Sociale medier"
-              mobile_logo:
-                title: "Mobil logo"
-              apple_touch_icon:
-                title: "Apple touch-ikon"
-              opengraph_image:
-                title: "OpenGraph billede"
-          fonts:
-            title: "Skrifttyper"
-            form:
-              heading_font:
-                title: "Overskrifts skrifttype"
-            backfill_modal:
-              modal_yes: "Ja"
+        logo:
+          title: "Logo"
+          form:
+            saved: "Logo indstillinger er gemt."
+            logo:
+              title: "Primært logo"
+            logo_dark:
+              title: "Primært logo mørkt"
+            logo_small_dark:
+              title: "Lille, mørkt logo"
+            mobile: "Mobil"
+            email: "E-mail"
+            social_media: "Sociale medier"
+            mobile_logo:
+              title: "Mobil logo"
+            apple_touch_icon:
+              title: "Apple touch-ikon"
+            opengraph_image:
+              title: "OpenGraph billede"
+        fonts:
+          title: "Skrifttyper"
+          form:
+            heading_font:
+              title: "Overskrifts skrifttype"
+          backfill_modal:
+            modal_yes: "Ja"
         navigation:
           title: "Navigation"
         notifications:
@@ -4622,11 +4621,15 @@ da:
         sidebar_link:
           about_your_site: "Om dit websted"
           badges: "Emblemer"
+          login_and_authentication: "Login- og autentificering"
           notifications: "Notifikationer"
           permalinks: "Permalinks"
           trust_levels: "Tillidsniveauer"
+          group_permissions: "Gruppetilladelser"
           users: "Brugere"
           groups: "Grupper"
+          user_fields: "Brugerfelter"
+          watched_words: "Overvågede ord"
           legal: "Jura"
           moderation_flags:
             title: "Moderation"
@@ -4634,6 +4637,7 @@ da:
         title: "Udseende"
         sidebar_link:
           site_logo: "Webstedslogo"
+          color_schemes: "Farvepaletter"
           emoji: "Humørikon"
           navigation: "Navigation"
           themes_and_components:
@@ -4649,11 +4653,14 @@ da:
         sidebar_link:
           security: "Sikkerhedsindstillinger"
           spam: "Spam indstillinger"
+          staff_action_logs:
+            title: "Logs & screening"
       section_landing_pages:
         account:
           title: "Konto"
           backups:
             title: "Backups"
+            description: "Tag en sikkerhedskopi af dit websteds data"
           whats_new:
             title: "Hvad er nyt?"
       config_areas:
@@ -4671,6 +4678,8 @@ da:
           governing_law_placeholder: "Provins, stat eller land"
           city_for_disputes: "By for tvister"
           city_for_disputes_placeholder: "By"
+          extra_groups:
+            groups: "Grupper"
           optional: "(valgfri)"
           update: "Opdater"
           toasts:
@@ -5016,12 +5025,12 @@ da:
           active_filter: "Aktiv"
           inactive_filter: "Inaktiv"
           updates_available_filter: "Opdateringer Tilgængelige"
-          schema:
-            fields:
-              required: "*obligatoriske"
-              number:
-                too_small: "skal være større eller lig med %{count}"
-                too_large: "skal være mindre end eller lig med %{count}"
+        schema:
+          fields:
+            required: "*obligatoriske"
+            number:
+              too_small: "skal være større eller lig med %{count}"
+              too_large: "skal være mindre end eller lig med %{count}"
         colors:
           select_base:
             title: "Vælg basisfarvepalet"
