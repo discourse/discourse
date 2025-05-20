@@ -1,9 +1,11 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
-import { concat } from "@ember/helper";
+import ClassicComponent from "@ember/component";
+import { concat, hash } from "@ember/helper";
 import { get } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
+import curryComponent from "ember-curry-component";
 import { or } from "truth-helpers";
 import PluginConnector from "discourse/components/plugin-connector";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -124,6 +126,29 @@ export default class PluginOutletComponent extends Component {
     );
   }
 
+  @bind
+  safeCurryComponent(component, args) {
+    if (component.prototype instanceof ClassicComponent) {
+      for (const arg of Object.keys(args)) {
+        if (component.prototype.hasOwnProperty(arg)) {
+          deprecated(
+            `Unable to set @${arg} on connector for ${this.args.name}, because a property on the component class clashes with the argument name. Resolve the clash, or convert to a glimmer component.`,
+            {
+              id: "discourse.plugin-outlet-classic-args-clash",
+            }
+          );
+
+          // Build a clone of `args`, without the offending key, while preserving getters
+          const descriptors = Object.getOwnPropertyDescriptors(args);
+          delete descriptors[arg];
+          args = Object.defineProperties({}, descriptors);
+        }
+      }
+    }
+
+    return curryComponent(component, args, getOwner(this));
+  }
+
   <template>
     {{~#if (this.connectorsExist hasBlock=(has-block))~}}
       {{~#if (has-block)~}}
@@ -135,9 +160,16 @@ export default class PluginOutletComponent extends Component {
 
       {{~#each (this.getConnectors hasBlock=(has-block)) as |c|~}}
         {{~#if c.componentClass~}}
-          <c.componentClass
-            @outletArgs={{this.outletArgsWithDeprecations}}
-          >{{yield}}</c.componentClass>
+          {{~#let
+            (this.safeCurryComponent
+              c.componentClass this.outletArgsWithDeprecations
+            )
+            as |CurriedComponent|
+          ~}}
+            <CurriedComponent
+              @outletArgs={{this.outletArgsWithDeprecations}}
+            >{{yield}}</CurriedComponent>
+          {{~/let~}}
         {{~else if @defaultGlimmer~}}
           <c.templateOnly
             @outletArgs={{this.outletArgsWithDeprecations}}
