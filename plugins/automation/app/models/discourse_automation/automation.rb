@@ -7,7 +7,8 @@ module DiscourseAutomation
     has_many :fields,
              class_name: "DiscourseAutomation::Field",
              dependent: :delete_all,
-             foreign_key: "automation_id"
+             foreign_key: "automation_id",
+             inverse_of: :automation
     has_many :pending_automations,
              class_name: "DiscourseAutomation::PendingAutomation",
              dependent: :delete_all,
