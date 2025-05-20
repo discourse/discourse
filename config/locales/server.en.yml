@@ -5759,6 +5759,9 @@ en:
       approve_and_restore:
         title: "Approve and Restore post"
         complete: "Post approved and restored."
+      approve_and_unhide:
+        title: "Approve and Unhide post"
+        complete: "Post approved and unhidden"
       delete_user:
         reason: "Deleted via review queue"
         complete: "User deleted."
