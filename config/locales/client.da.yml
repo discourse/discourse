@@ -413,6 +413,7 @@ da:
       new_topic: "Nyt emne-kladde"
       new_private_message: "Ny personlig meddelelseskladde"
       abandon:
+        confirm: "Du har allerede en kladde i gang. Hvad vil du gerne gøre med den?"
         yes_value: "Kassér"
         no_value: "Genoptag redigering"
       dropdown:
@@ -4439,11 +4440,17 @@ da:
         sidebar_link:
           about_your_site: "Om dit websted"
           badges: "Emblemer"
+          login_and_authentication: "Login- og autentificering"
           notifications: "Notifikationer"
           permalinks: "Permalinks"
           trust_levels: "Tillidsniveauer"
+          group_permissions: "Gruppetilladelser"
           users: "Brugere"
           groups: "Grupper"
+          localization:
+            title: "Lokalisering"
+          user_fields: "Brugerfelter"
+          watched_words: "Overvågede ord"
           legal: "Jura"
           moderation_flags:
             title: "Moderation"
@@ -4451,6 +4458,7 @@ da:
         title: "Udseende"
         sidebar_link:
           site_logo: "Webstedslogo"
+          color_schemes: "Farvepaletter"
           emoji: "Humørikon"
           navigation: "Navigation"
           themes: "Temaer"
@@ -4466,11 +4474,14 @@ da:
         sidebar_link:
           security: "Sikkerhedsindstillinger"
           spam: "Spam indstillinger"
+          staff_action_logs:
+            title: "Logs & screening"
       section_landing_pages:
         account:
           title: "Konto"
           backups:
             title: "Backups"
+            description: "Tag en sikkerhedskopi af dit websteds data"
           whats_new:
             title: "Hvad er nyt?"
       config_areas:
@@ -4509,6 +4520,7 @@ da:
             invalid_applies_to: "Obligatoriske"
             topic: "emner"
             post: "indlæg"
+            alert: "Når en brugerdefineret flag er blevet brugt, kan den kun deaktiveres, men ikke redigeres eller slettes."
           more_options:
             move_up: "Flyt op"
             move_down: "Flyt ned"
@@ -4519,11 +4531,13 @@ da:
           edit: "Rediger"
           delete: "Slet"
         look_and_feel:
+          title: "Udseende og fornemmelse"
           themes:
             title: "Temaer"
             set_default_theme: "Indstil som standard"
             default_theme: "Standard tema"
             new_theme: "Nyt tema"
+            user_selectable: "Kan vælges af brugeren"
         user_fields:
           field: "Felt"
           type: "Type"
@@ -4847,8 +4861,13 @@ da:
           inactive_filter: "Inaktiv"
           updates_available_filter: "Opdateringer Tilgængelige"
           schema:
+            back_button: "Tilbage til %{name}"
             fields:
               required: "*obligatoriske"
+              groups:
+                at_least:
+                  one: "mindst %{count} gruppe er påkrævet"
+                  other: "mindst %{count} grupper er påkrævet"
               number:
                 too_small: "skal være større eller lig med %{count}"
                 too_large: "skal være mindre end eller lig med %{count}"

@@ -985,7 +985,7 @@ cs:
       manage:
         title: "Spravovat"
         name: "Název"
-        full_name: "Celé název"
+        full_name: "Celý název"
         add_members: "Přidat uživatele"
         invite_members: "Pozvat"
         delete_member_confirm: "Odstranit '%{username}' ze '%{group}' skupiny?"

@@ -802,6 +802,7 @@ da:
       description: "Kladde redigeres i et andet vindue. Genindlæs venligst denne side."
     too_many_drafts:
       title: "For mange kladder"
+      description: "Du har nået det maksimale antal tilladte kladder. Slet venligst nogle af [dine kladder](%{base_url}/my/activity/drafts) og prøv igen."
   draft_backup:
     pm_title: "Sikkerhedskopiér Kladder fra igangværende emner"
     pm_body: "Emne, der indeholder backup-kladder"
@@ -1002,8 +1003,19 @@ da:
         user_api: "Bruger API"
       yaxis: "Dag"
     consolidated_page_views_browser_detection:
+      xaxis:
+        page_view_anon_browser: "Anonym Browser"
+        page_view_logged_in_browser: "Indlogget browser"
+        page_view_crawler: "Kendt Crawler"
+        page_view_other: "Andre sidevisninger"
       yaxis: "Dag"
     site_traffic:
+      title: "Webstedstrafik"
+      xaxis:
+        page_view_anon_browser: "Sidevisninger (anonyme)"
+        page_view_logged_in_browser: "Sidevisninger (logget ind)"
+        page_view_crawler: "Kendte crawlere"
+        page_view_other: "Anden trafik"
       yaxis: "Dag"
       description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
@@ -1573,6 +1585,7 @@ da:
     allowed_embed_selectors: "En kommasepareret liste over CSS-elementer, der er tilladt i embeds."
     embed_post_limit: "Maksimum antal indlæg, der skal indlejres."
     embed_username_required: "Brugernavnet til oprettelse af emne er påkrævet."
+    delete_drafts_older_than_n_days: "Slet kladder, der ikke er blevet ændret i mere end (n) dage."
     enable_emoji_shortcuts: "Almindelig smiley-tekst såsom :) :p :( vil blive konverteret til humørikoner"
     emoji_autocomplete_min_chars: "Minimum antal tegn krævet for at aktivere autofuldførelses humørikoner-popup"
     enable_inline_emoji_translation: "Aktiverer oversættelse for inline humørikoner (uden mellemrum eller tegnsætning før)"
@@ -1613,6 +1626,7 @@ da:
     force_lowercase_tags: "Tving alle nye mærker til at kun benytte små bogstaver."
     shared_drafts_category: "Aktiver funktionen Delte kladder ved at angive en kategori for emneudkast. Emner i denne kategori vil blive undertrykt fra emnelister for personalebrugere."
     shared_drafts_min_trust_level: "Tillad brugere at se og redigere Delte kladder."
+    shared_drafts_allowed_groups: "Tillad brugere i disse grupper at se og redigere delte kladder."
     push_notifications_icon: "Emblemikonet, der vises i meddelelseshjørnet. Et monokromatisk PNG på 96×96 med gennemsigtighed anbefales."
     allow_changing_staged_user_tracking: "Tillad, at en forhåndsoprettet brugers kategori- og mærke notifikationsindstillinger ændres af en administratorbruger."
     errors:
