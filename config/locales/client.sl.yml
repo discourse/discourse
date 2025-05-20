@@ -3755,14 +3755,13 @@ sl:
           title: "Datoteke"
         legal:
           title: "Pravno"
-        logo_and_fonts:
-          logo:
-            form:
-              mobile: "Mobilno"
-              email: "E-naslov"
-          fonts:
-            backfill_modal:
-              modal_yes: "Ja"
+        logo:
+          form:
+            mobile: "Mobilno"
+            email: "E-naslov"
+        fonts:
+          backfill_modal:
+            modal_yes: "Ja"
         navigation:
           title: "Navigacija"
         notifications:
@@ -4074,6 +4073,8 @@ sl:
       config_areas:
         about:
           company_name: "Ime"
+          extra_groups:
+            groups: "Skupine"
           optional: "(neobvezno)"
           saved: "shranjeno!"
         flags:
@@ -4230,11 +4231,11 @@ sl:
           all_filter: "Vse"
           active_filter: "Aktivni"
           inactive_filter: "Nedejaven"
-          schema:
-            fields:
-              required: "*zahtevano"
-              number:
-                too_large: "mora biti manj ali enako kot %{count}"
+        schema:
+          fields:
+            required: "*zahtevano"
+            number:
+              too_large: "mora biti manj ali enako kot %{count}"
         colors:
           title: "Barve"
           copy_name_prefix: "Kopija od"

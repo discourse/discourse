@@ -132,6 +132,7 @@ ro:
     messages:
       invalid_boolean: "Valoare logică invalidă."
       taken: "nu este disponibil"
+      reserved: "Numele grupului %{name} este rezervat, alege un alt nume."
       accepted: trebuie acceptat
       blank: nu poate fi gol
       present: trebuie să fie gol
@@ -1292,6 +1293,10 @@ ro:
     experimental_form_templates: "Activează caracteristica șabloane de formulare. Gestionează șabloanele la <a href='%{base_path}/admin/customize/form-templates'>Personalizare/șabloane</a>."
     show_preview_for_form_templates: "Activează funcționalitatea de previzualizare pentru șabloanele de formulare"
     show_user_menu_avatars: "Arată avatare utilizator în meniul utilizatorului"
+    about_page_extra_groups: "Grupuri de afișat pe pagina despre sub moderatori."
+    about_page_extra_groups_initial_members: "Numărul de membri pentru a extinde fiecare grup pe pagina „Despre”."
+    about_page_extra_groups_show_description: "Dacă se includ descrierile grupurilor pe pagina „Despre”."
+    about_page_extra_groups_order: "Ordonarea grupurilor suplimentare pe pagina „Despre”."
     experimental_content_localization_allowed_groups: 'Grupuri cărora li se permite să actualizeze conținutul localizat. Necesită ca „localizarea experimentală a conținutului” să fie activată.'
     errors:
       invalid_email: "Adresă de email invalidă."
@@ -1304,6 +1309,7 @@ ro:
       must_include_latest: "Meniul de sus trebuie să includă tab-ul \"recente\"."
       invalid_string: "Valoare invalidă."
       invalid_string_min_max: "Trebuie să aibă între %{min} și %{max} caractere."
+      invalid_object: "Obiect nevalid."
       invalid_reply_by_email_address: "Valoarea trebuie să conțină '%{reply_key}' și să fie diferită de emailul de notificare."
       invalid_alternative_reply_by_email_addresses: "Toate valorile trebuie să conțină '%{reply_key}' și să fie diferite de emailul de notificare."
       pop3_polling_host_is_empty: "Trebuie să setezi „numele serverului de POP3” înainte să poți activa retragerea de emailuri prin POP3"
@@ -1861,6 +1867,8 @@ ro:
     see_more: "Mai multe"
     search_title: "Caută în site"
     search_button: "Caută"
+  login_required:
+    welcome_message: "# Bine ai venit pe %{title}"
   upload:
     edit_reason: "copii locale ale imaginilor descărcate"
     unauthorized: "Ne pare rău, fișierul pe care-l încerci să-l încarci nu este autorizat (extensii autorizate: %{authorized_extensions})."

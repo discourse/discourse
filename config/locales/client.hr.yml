@@ -4495,14 +4495,13 @@ hr:
           title: "Datoteke"
         legal:
           title: "Legalno"
-        logo_and_fonts:
-          logo:
-            form:
-              mobile: "Mobilni"
-              email: "E-mail"
-          fonts:
-            backfill_modal:
-              modal_yes: "Da"
+        logo:
+          form:
+            mobile: "Mobilni"
+            email: "E-mail"
+        fonts:
+          backfill_modal:
+            modal_yes: "Da"
         navigation:
           title: "Navigacija"
         notifications:
@@ -4943,6 +4942,8 @@ hr:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
           company_name: "Ime"
+          extra_groups:
+            groups: "Grupe"
           optional: "(opcionalno)"
           update: "Ažuriraj"
           saved: "spremljeno!"
@@ -5259,12 +5260,12 @@ hr:
           active_filter: "Aktivno"
           inactive_filter: "Neaktivan"
           updates_available_filter: "Ažuriranja dostupna"
-          schema:
-            fields:
-              required: "*potrebno"
-              number:
-                too_small: "mora biti veće ili jednako %{count}"
-                too_large: "mora biti manje ili jednako %{count}"
+        schema:
+          fields:
+            required: "*potrebno"
+            number:
+              too_small: "mora biti veće ili jednako %{count}"
+              too_large: "mora biti manje ili jednako %{count}"
         colors:
           select_base:
             title: "Odaberite osnovnu paletu boja"

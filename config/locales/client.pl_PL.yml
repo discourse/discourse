@@ -5439,90 +5439,86 @@ pl_PL:
         login_and_authentication:
           title: "Logowanie i uwierzytelnianie"
           header_description: "Skonfiguruj sposób logowania i uwierzytelniania użytkowników, sekrety i klucze, dostawców OAuth2 i nie tylko."
-        logo_and_fonts:
-          title: "Logo i czcionki"
-          header_description: "Dostosuj odmiany logo i czcionek swojej witryny."
-          logo:
-            title: "Logo"
-            form:
-              saved: "Ustawienia logo zostały zapisane."
-              logo:
-                title: "Podstawowe logo"
-                description: "Pojawia się w górnej nawigacji witryny, a także w górnej części powiadomień e-mail witryny."
-                help_text: "Zalecany rozmiar to 600 x 80 pikseli."
-              logo_dark:
-                required: "Użyć innego logo dla trybu ciemnego?"
-                title: "Główne logo ciemne"
-                help_text: "Zalecany rozmiar to 600 x 80 pikseli."
-              large_icon:
-                title: "Kwadratowa ikona"
-                description: "Kwadratowa wersja obrazu logo jest wyświetlana u góry panelu administracyjnego i stanowi również logo aplikacji na ekranie głównym urządzenia mobilnego."
-                help_text: "Zalecany rozmiar to 512 x 512 pikseli."
-              square_icon_dark:
-                required: "Użyć innej ikony kwadratowej dla trybu ciemnego?"
-                title: "Kwadratowa ikona ciemna"
-                help_text: "Zalecany rozmiar to 512 x 512 pikseli."
-              favicon:
-                title: "Favicon"
-                description: "Logo pojawi się jako ikona na karcie przeglądarki i w ulubionych/zakładkach przeglądarki."
-              logo_small:
-                title: "Małe logo"
-                description: "Mały obraz logo w lewym górnym rogu Twojej witryny, widoczny podczas przewijania w dół. Jeśli pozostanie puste, wyświetlany będzie glif strony głównej."
-                help_text: "Zalecany rozmiar to 120 x 120 pikseli."
-              logo_small_dark:
-                required: "Użyć innego małego logo w trybie ciemnym?"
-                title: "Małe logo ciemne"
-                help_text: "Zalecany rozmiar to 120 x 120 pikseli."
-              mobile: "Mobilnie"
-              email: "E-mail"
-              social_media: "Media społecznościowe"
-              mobile_logo:
-                title: "Logo mobilne"
-                description: "Logo używane w mobilnej wersji twojej strony. Jeśli pozostanie puste, użyty zostanie obraz z ustawienia `logo`."
-                help_text: "Użyj szerokiego prostokątnego obrazu o wysokości 120 i proporcjach większych niż 3:1."
-              mobile_logo_dark:
-                required: "Użyć innego logo dla trybu ciemnego?"
-                title: "Logo mobilne ciemne"
-                help_text: "Użyj szerokiego prostokątnego obrazu o wysokości 120 i proporcjach większych niż 3:1."
-              manifest_icon:
-                title: "Ikona manifestu"
-                description: "Obraz używany jako logo/splash na Androidzie. Jeśli pozostawisz puste, użyta zostanie ikona large_icon."
-                help_text: "Zalecany rozmiar to 512 x 512 pikseli."
-              manifest_screenshots:
-                title: "Zrzuty ekranu manifestu"
-                description: "Zrzuty ekranu, które pokazują możliwości i funkcjonalność Twojej instancji na stronie instalacyjnej. Wszystkie obrazy powinny być przesłane lokalnie i o tych samych wymiarach."
-              apple_touch_icon:
-                title: "Ikona Apple touch"
-                description: "Ikona używana dla urządzeń dotykowych Apple. Jeśli pozostawisz puste, użyta zostanie ikona large_icon."
-                help_text: "Zalecany rozmiar to 180 x 180 pikseli. Przezroczyste tło nie jest zalecane."
-              digest_logo:
-                title: "Logo skrótu"
-                description: "Alternatywny obraz logo używany w górnej części podsumowania wiadomości e-mail Twojej witryny. Jeśli pozostanie puste, użyty zostanie obraz z ustawienia `logo`."
-                help_text: "Użyj obrazu w kształcie szerokiego prostokąta. Nie używaj obrazu SVG."
-              opengraph_image:
-                title: "Obraz OpenGraph"
-                description: "Domyślny obraz opengraph, używany, gdy strona nie ma innego odpowiedniego obrazu. Jeśli pozostanie puste, zostanie użyty large_icon."
-              x_summary_large_image:
-                title: "Duży obraz w podsumowaniu X"
-                description: "Karta X 'summary large image'. Jeśli pozostanie puste, standardowe metadane karty zostaną wygenerowane na podstawie obrazu OpenGraph, o ile nie jest on w formacie .svg."
-                help_text: "Zalecany rozmiar to co najmniej 280 x 150 pikseli. Nie używaj obrazu SVG."
-          fonts:
-            title: "Czcionki"
-            form:
-              more_fonts: "Więcej czcionek"
-              less_fonts: "Mniej czcionek"
-              saved: "Ustawienia czcionki zostały zapisane."
-              base_font:
-                title: "Czcionka podstawowa"
-              heading_font:
-                title: "Czcionka nagłówków"
-              default_text_size:
-                title: "Domyślny rozmiar tekstu"
-                description: "Rozmiar ten może być następnie dostosowany przez każdego użytkownika zgodnie z jego preferencjami."
-            backfill_modal:
-              title: "Zastosować nowe domyślne ustawienia tekstu?"
-              modal_yes: "Tak"
-              modal_no: "Nie, aplikuj tylko w przyszłości"
+        logo:
+          title: "Logo"
+          form:
+            saved: "Ustawienia logo zostały zapisane."
+            logo:
+              title: "Podstawowe logo"
+              description: "Pojawia się w górnej nawigacji witryny, a także w górnej części powiadomień e-mail witryny."
+              help_text: "Zalecany rozmiar to 600 x 80 pikseli."
+            logo_dark:
+              required: "Użyć innego logo dla trybu ciemnego?"
+              title: "Główne logo ciemne"
+              help_text: "Zalecany rozmiar to 600 x 80 pikseli."
+            large_icon:
+              title: "Kwadratowa ikona"
+              description: "Kwadratowa wersja obrazu logo jest wyświetlana u góry panelu administracyjnego i stanowi również logo aplikacji na ekranie głównym urządzenia mobilnego."
+              help_text: "Zalecany rozmiar to 512 x 512 pikseli."
+            square_icon_dark:
+              required: "Użyć innej ikony kwadratowej dla trybu ciemnego?"
+              title: "Kwadratowa ikona ciemna"
+              help_text: "Zalecany rozmiar to 512 x 512 pikseli."
+            favicon:
+              title: "Favicon"
+              description: "Logo pojawi się jako ikona na karcie przeglądarki i w ulubionych/zakładkach przeglądarki."
+            logo_small:
+              title: "Małe logo"
+              description: "Mały obraz logo w lewym górnym rogu Twojej witryny, widoczny podczas przewijania w dół. Jeśli pozostanie puste, wyświetlany będzie glif strony głównej."
+              help_text: "Zalecany rozmiar to 120 x 120 pikseli."
+            logo_small_dark:
+              required: "Użyć innego małego logo w trybie ciemnym?"
+              title: "Małe logo ciemne"
+              help_text: "Zalecany rozmiar to 120 x 120 pikseli."
+            mobile: "Mobilnie"
+            email: "E-mail"
+            social_media: "Media społecznościowe"
+            mobile_logo:
+              title: "Logo mobilne"
+              description: "Logo używane w mobilnej wersji twojej strony. Jeśli pozostanie puste, użyty zostanie obraz z ustawienia `logo`."
+              help_text: "Użyj szerokiego prostokątnego obrazu o wysokości 120 i proporcjach większych niż 3:1."
+            mobile_logo_dark:
+              required: "Użyć innego logo dla trybu ciemnego?"
+              title: "Logo mobilne ciemne"
+              help_text: "Użyj szerokiego prostokątnego obrazu o wysokości 120 i proporcjach większych niż 3:1."
+            manifest_icon:
+              title: "Ikona manifestu"
+              description: "Obraz używany jako logo/splash na Androidzie. Jeśli pozostawisz puste, użyta zostanie ikona large_icon."
+              help_text: "Zalecany rozmiar to 512 x 512 pikseli."
+            manifest_screenshots:
+              title: "Zrzuty ekranu manifestu"
+              description: "Zrzuty ekranu, które pokazują możliwości i funkcjonalność Twojej instancji na stronie instalacyjnej. Wszystkie obrazy powinny być przesłane lokalnie i o tych samych wymiarach."
+            apple_touch_icon:
+              title: "Ikona Apple touch"
+              description: "Ikona używana dla urządzeń dotykowych Apple. Jeśli pozostawisz puste, użyta zostanie ikona large_icon."
+              help_text: "Zalecany rozmiar to 180 x 180 pikseli. Przezroczyste tło nie jest zalecane."
+            digest_logo:
+              title: "Logo skrótu"
+              description: "Alternatywny obraz logo używany w górnej części podsumowania wiadomości e-mail Twojej witryny. Jeśli pozostanie puste, użyty zostanie obraz z ustawienia `logo`."
+              help_text: "Użyj obrazu w kształcie szerokiego prostokąta. Nie używaj obrazu SVG."
+            opengraph_image:
+              title: "Obraz OpenGraph"
+              description: "Domyślny obraz opengraph, używany, gdy strona nie ma innego odpowiedniego obrazu. Jeśli pozostanie puste, zostanie użyty large_icon."
+            x_summary_large_image:
+              title: "Duży obraz w podsumowaniu X"
+              description: "Karta X 'summary large image'. Jeśli pozostanie puste, standardowe metadane karty zostaną wygenerowane na podstawie obrazu OpenGraph, o ile nie jest on w formacie .svg."
+              help_text: "Zalecany rozmiar to co najmniej 280 x 150 pikseli. Nie używaj obrazu SVG."
+        fonts:
+          title: "Czcionki"
+          form:
+            more_fonts: "Więcej czcionek"
+            saved: "Ustawienia czcionki zostały zapisane."
+            base_font:
+              title: "Czcionka podstawowa"
+            heading_font:
+              title: "Czcionka nagłówków"
+            default_text_size:
+              title: "Domyślny rozmiar tekstu"
+              description: "Rozmiar ten może być następnie dostosowany przez każdego użytkownika zgodnie z jego preferencjami."
+          backfill_modal:
+            title: "Zastosować nowe domyślne ustawienia tekstu?"
+            modal_yes: "Tak"
+            modal_no: "Nie, aplikuj tylko w przyszłości"
         navigation:
           title: "Nawigacja"
           header_description: "Skonfiguruj łącza nawigacyjne i elementy menu dla swojej witryny. Obejmuje to lokalizację i zachowanie głównego menu nawigacyjnego, szybkich linków u góry strony głównej, a także paska bocznego administratora"
@@ -5706,10 +5702,7 @@ pl_PL:
           title: "Osadzanie"
           header_description: "Discourse ma możliwość osadzania komentarzy z tematu w zdalnej witrynie za pomocą interfejsu API Javascript, który tworzy IFRAME"
       search:
-        modal_title: "Wyszukaj cokolwiek w panelu administracyjnym"
         title: "Szukaj"
-        instructions: "Wpisz, aby wyszukać strony, ustawienia, raporty, motywy, komponenty i nie tylko..."
-        no_results: "Nie znaleźliśmy niczego pasującego do ‘%{filter}’."
         result_types:
           page:
             one: "Strona"
@@ -6338,6 +6331,8 @@ pl_PL:
           city_for_disputes_placeholder: "Miasto"
           city_for_disputes_help: |
             Określ miasto rozstrzygania sporów prawnych związanych z tym forum.
+          extra_groups:
+            groups: "Grupy"
           optional: "(opcjonalne)"
           update: "Aktualizuj"
           toasts:
@@ -6445,8 +6440,6 @@ pl_PL:
             toggle_description: "Użytkownicy mogą wybrać paletę kolorów"
           colors:
             title: "Kolory"
-          logo_and_fonts_hint: "Chcesz zaktualizować swoje logo i czcionki?"
-          go_to_logo_and_fonts: "Przejdź do logo i czcionki"
           save_changes: "Zapisz zmiany"
           unsaved_changes: "Masz niezapisane zmiany"
           copy_of: "Kopia %{name}"
@@ -6790,38 +6783,38 @@ pl_PL:
           active_filter: "Aktywni"
           inactive_filter: "Nieaktywny"
           updates_available_filter: "Dostępne aktualizacje"
-          schema:
-            title: "Edytuj ustawienie %{name}"
-            back_button: "Powrót do %{name}"
-            fields:
-              required: "*wymagane"
-              groups:
-                at_least:
-                  one: "wymagana jest co najmniej %{count} grupa"
-                  few: "wymagane są co najmniej %{count} grupy"
-                  many: "wymaganych jest co najmniej %{count} grup"
-                  other: "wymaganych jest co najmniej %{count} grup"
-              categories:
-                at_least:
-                  one: "wymagana jest co najmniej %{count} kategoria"
-                  few: "wymagane są co najmniej %{count} kategorie"
-                  many: "wymaganych jest co najmniej %{count} kategorii"
-                  other: "wymaganych jest co najmniej %{count} kategorii"
-              tags:
-                at_least:
-                  one: "wymagany jest co najmniej %{count} tag"
-                  few: "wymagane są co najmniej %{count} tagi"
-                  many: "wymagane jest co najmniej %{count} tagów"
-                  other: "wymagane jest co najmniej %{count} tagów"
-              string:
-                too_short:
-                  one: "musi zawierać co najmniej %{count} znak"
-                  few: "musi zawierać co najmniej %{count} znaki"
-                  many: "musi zawierać co najmniej %{count} znaków"
-                  other: "musi zawierać co najmniej %{count} znaków"
-              number:
-                too_small: "musi być większe lub równe %{count}"
-                too_large: "musi być mniejszy lub równy %{count}"
+        schema:
+          title: "Edytuj ustawienie %{name}"
+          back_button: "Powrót do %{name}"
+          fields:
+            required: "*wymagane"
+            groups:
+              at_least:
+                one: "wymagana jest co najmniej %{count} grupa"
+                few: "wymagane są co najmniej %{count} grupy"
+                many: "wymagane są co najmniej %{count} grupy"
+                other: "wymaganych jest co najmniej %{count} grup"
+            categories:
+              at_least:
+                one: "wymagana jest co najmniej %{count} kategoria"
+                few: "wymagane są co najmniej %{count} kategorie"
+                many: "wymagane są co najmniej %{count} kategorie"
+                other: "wymaganych jest co najmniej %{count} kategorii"
+            tags:
+              at_least:
+                one: "wymagany jest co najmniej %{count} tag"
+                few: "wymagane są co najmniej %{count} tagi"
+                many: "wymagane jest co najmniej %{count} tagów"
+                other: "wymagane jest co najmniej %{count} tagów"
+            string:
+              too_short:
+                one: "musi zawierać co najmniej %{count} znak"
+                few: "musi zawierać co najmniej %{count} znaki"
+                many: "musi zawierać co najmniej %{count} znaki"
+                other: "musi zawierać co najmniej %{count} znaki"
+            number:
+              too_small: "musi być większe lub równe %{count}"
+              too_large: "musi być mniejszy lub równy %{count}"
         colors:
           select_base:
             title: "Wybierz podstawową paletę kolorów"

@@ -4842,24 +4842,23 @@ fi:
         login_and_authentication:
           title: "Kirjautuminen ja todennus"
           header_description: "Määritä käyttäjien kirjautumis- ja todennustavat, salatunnukset ja avaimet, OAuth2-palveluntarjoajat ja muuta"
-        logo_and_fonts:
-          logo:
-            form:
-              logo:
-                title: "Ensisijainen logo"
-              mobile: "Mobiili"
-              email: "Sähköpostiosoite"
-              manifest_screenshots:
-                description: "Näyttökuvat, jotka esittelevät esiintymäsi ominaisuuksia ja toimintoja sen asennuskehotussivulla. Kaikkien kuvien täytyy olla paikallisia ja samankokoisia."
-              opengraph_image:
-                description: "Oletuksena käytettävä opengraph-kuva, käytetään, kun sivulla ei ole muita sopivia kuvia. Jos jätetty tyhjäksi, large_icon-kuvaa käytetään."
-          fonts:
-            title: "Fontit"
-            form:
-              heading_font:
-                title: "Otsikon fontti"
-            backfill_modal:
-              modal_yes: "Kyllä"
+        logo:
+          form:
+            logo:
+              title: "Ensisijainen logo"
+            mobile: "Mobiili"
+            email: "Sähköpostiosoite"
+            manifest_screenshots:
+              description: "Näyttökuvat, jotka esittelevät esiintymäsi ominaisuuksia ja toimintoja sen asennuskehotussivulla. Kaikkien kuvien täytyy olla paikallisia ja samankokoisia."
+            opengraph_image:
+              description: "Oletuksena käytettävä opengraph-kuva, käytetään, kun sivulla ei ole muita sopivia kuvia. Jos jätetty tyhjäksi, large_icon-kuvaa käytetään."
+        fonts:
+          title: "Fontit"
+          form:
+            heading_font:
+              title: "Otsikon fontti"
+          backfill_modal:
+            modal_yes: "Kyllä"
         navigation:
           title: "Navigointi"
           header_description: "Määritä sivustosi navigointilinkit ja valikon kohteet. Tämä sisältää ensisijaisen navigointivalikon sijainnin ja toiminnan, etusivun yläosassa olevat pikalinkit sekä ylläpitäjän sivupalkin"
@@ -5574,6 +5573,8 @@ fi:
           city_for_disputes_placeholder: "Kaupunki"
           city_for_disputes_help: |
             Määritä kaupunki tähän foorumiin liittyvien oikeudellisten riitojen ratkaisemiseksi.
+          extra_groups:
+            groups: "Ryhmät"
           optional: "(valinnainen)"
           update: "Päivitä"
           toasts:
@@ -5979,30 +5980,30 @@ fi:
           active_filter: "Aktiivinen"
           inactive_filter: "Ei aktiivinen"
           updates_available_filter: "Päivityksiä on saatavilla"
-          schema:
-            title: "Muokkaa asetusta %{name}"
-            back_button: "Takaisin kohteeseen %{name}"
-            fields:
-              required: "*pakolliset"
-              groups:
-                at_least:
-                  one: "vähintään %{count} ryhmä vaaditaan"
-                  other: "vähintään %{count} ryhmää vaaditaan"
-              categories:
-                at_least:
-                  one: "vähintään %{count} alue vaaditaan"
-                  other: "vähintään %{count} aluetta vaaditaan"
-              tags:
-                at_least:
-                  one: "vähintään %{count} tunniste vaaditaan"
-                  other: "vähintään %{count} tunnistetta vaaditaan"
-              string:
-                too_short:
-                  one: "täytyy olla vähintään %{count} merkki"
-                  other: "täytyy olla vähintään %{count} merkkiä"
-              number:
-                too_small: "täytyy olla suurempi tai yhtä suuri kuin %{count}"
-                too_large: "täytyy olla pienempi tai yhtä suuri kuin %{count}"
+        schema:
+          title: "Muokkaa asetusta %{name}"
+          back_button: "Takaisin kohteeseen %{name}"
+          fields:
+            required: "*pakolliset"
+            groups:
+              at_least:
+                one: "vähintään %{count} ryhmä vaaditaan"
+                other: "vähintään %{count} ryhmää vaaditaan"
+            categories:
+              at_least:
+                one: "vähintään %{count} alue vaaditaan"
+                other: "vähintään %{count} aluetta vaaditaan"
+            tags:
+              at_least:
+                one: "vähintään %{count} tunniste vaaditaan"
+                other: "vähintään %{count} tunnistetta vaaditaan"
+            string:
+              too_short:
+                one: "täytyy olla vähintään %{count} merkki"
+                other: "täytyy olla vähintään %{count} merkkiä"
+            number:
+              too_small: "täytyy olla suurempi tai yhtä suuri kuin %{count}"
+              too_large: "täytyy olla pienempi tai yhtä suuri kuin %{count}"
         colors:
           select_base:
             title: "Valitse perusväripaletti"

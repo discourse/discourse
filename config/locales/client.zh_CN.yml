@@ -3604,6 +3604,7 @@ zh_CN:
       share:
         title: "分享帖子 #%{post_number}"
         instructions: "分享此帖子的链接："
+      original_language: "这篇文章最初是用 %{language} 写的"
     category:
       none: "（无类别）"
       all: "所有类别"
@@ -4694,92 +4695,89 @@ zh_CN:
         login_and_authentication:
           title: "登录与身份验证"
           header_description: "配置用户登录与身份验证方式、秘密与密钥、OAuth2 提供商等。"
-        logo_and_fonts:
-          title: "Logo 和字体"
-          header_description: "自定义网站徽标和字体的变化"
-          logo:
-            title: "徽标"
-            form:
-              saved: "徽标设置已保存。"
-              logo:
-                title: "主要徽标"
-                description: "显示在网站顶部导航以及网站电子邮件通知的顶部。"
-                help_text: "建议尺寸为 600 x 80 像素。"
-              logo_dark:
-                required: "为暗色模式下使用不同的徽标？"
-                title: "深色主徽标"
-                help_text: "建议尺寸为 600 x 80 像素。"
-              large_icon:
-                title: "方形图标"
-                description: "徽标图像的方形版本出现在管理的顶部，也是移动主屏幕应用程序的徽标。"
-                help_text: "建议尺寸为 512 x 512 像素。"
-              square_icon_dark:
-                required: "为暗色模式使用不同的方形图标？"
-                title: "深色方形图标"
-                help_text: "建议尺寸为 512 x 512 像素。"
-              favicon:
-                title: "网站图标"
-                description: "徽标将作为图标出现在浏览器选项卡和浏览器收藏夹/书签中。"
-              logo_small:
-                title: "小徽标"
-                description: "您的网站左上角的小徽标图像，向下滚动时可见。如果留空，将显示主页字形。"
-                help_text: "建议尺寸为 120 x 120 像素。"
-              logo_small_dark:
-                required: "为暗色模式使用不同的小徽标？"
-                title: "深色小徽标"
-                help_text: "建议尺寸为 120 x 120 像素。"
-              mobile: "移动"
-              email: "电子邮件"
-              social_media: "社交媒体"
-              mobile_logo:
-                title: "移动徽标"
-                description: "您网站的移动版本上使用的徽标。如果留空，则将使用“徽标”设置中的图像。"
-                help_text: "使用高度为 120 且长宽比大于 3:1 的宽矩形图像。"
-              mobile_logo_dark:
-                required: "为暗色模式使用不同的移动徽标？"
-                title: "深色移动徽标"
-                help_text: "使用高度为 120 且长宽比大于 3:1 的宽矩形图像。"
-              manifest_icon:
-                title: "清单图标"
-                description: "用作安卓（Android）上的徽标/启动图像的图像。如果留空，将使用 large_icon。"
-                help_text: "建议尺寸为 512 x 512 像素。"
-              manifest_screenshots:
-                title: "清单截图"
-                description: "在安装提示页面上展示您的实例特色和功能的屏幕截图。所有图片均应为本地上传且尺寸相同。"
-              apple_touch_icon:
-                title: "苹果（Apple）触摸图标"
-                description: "用于苹果（Apple）触摸设备的图标。如果留空，将使用 large_icon。"
-                help_text: "建议尺寸为 180 x 180 像素。不建议使用透明背景。"
-              digest_logo:
-                title: "摘要徽标"
-                description: "您网站的电子邮件摘要顶部使用的备用徽标图像。如果留空，则将使用“徽标”设置中的图像。"
-                help_text: "使用宽矩形图像。不要使用 SVG 图像。"
-              opengraph_image:
-                title: "OpenGraph 图像"
-                description: "默认 opengraph 图像，当页面没有其他合适的图像时使用。如果留空，将使用 large_icon。"
-              x_summary_large_image:
-                title: "X 摘要大图"
-                description: "X 卡“摘要大图”。如果留空，则使用 OpenGraph_image 生成常规卡片元数据，只要它不是 .svg。"
-                help_text: "建议尺寸至少为 280 x 150 像素。不要使用 SVG 图像。"
-          fonts:
-            title: "字体"
-            form:
-              more_fonts: "更多字体"
-              less_fonts: "减少字体"
-              saved: "字体设置已保存。"
-              base_font:
-                title: "基本字体"
-              heading_font:
-                title: "标题字体"
-              default_text_size:
-                title: "默认文本大小"
-                description: "随后，每个用户都可以根据自己的喜好调整这一尺寸。"
-            backfill_modal:
-              title: "应用新的默认文本设置？"
-              description:
-                other: "您已经更新了默认文字大小。您想将此更改应用于 %{count} 现有用户吗？"
-              modal_yes: "是"
-              modal_no: "否，只适用于未来"
+        logo:
+          title: "徽标"
+          form:
+            saved: "徽标设置已保存。"
+            logo:
+              title: "主要徽标"
+              description: "显示在网站顶部导航以及网站电子邮件通知的顶部。"
+              help_text: "建议尺寸为 600 x 80 像素。"
+            logo_dark:
+              required: "为暗色模式下使用不同的徽标？"
+              title: "深色主徽标"
+              help_text: "建议尺寸为 600 x 80 像素。"
+            large_icon:
+              title: "方形图标"
+              description: "徽标图像的方形版本出现在管理的顶部，也是移动主屏幕应用程序的徽标。"
+              help_text: "建议尺寸为 512 x 512 像素。"
+            square_icon_dark:
+              required: "为暗色模式使用不同的方形图标？"
+              title: "深色方形图标"
+              help_text: "建议尺寸为 512 x 512 像素。"
+            favicon:
+              title: "网站图标"
+              description: "徽标将作为图标出现在浏览器选项卡和浏览器收藏夹/书签中。"
+            logo_small:
+              title: "小徽标"
+              description: "您的网站左上角的小徽标图像，向下滚动时可见。如果留空，将显示主页字形。"
+              help_text: "建议尺寸为 120 x 120 像素。"
+            logo_small_dark:
+              required: "为暗色模式使用不同的小徽标？"
+              title: "深色小徽标"
+              help_text: "建议尺寸为 120 x 120 像素。"
+            mobile: "移动"
+            email: "电子邮件"
+            social_media: "社交媒体"
+            mobile_logo:
+              title: "移动徽标"
+              description: "您网站的移动版本上使用的徽标。如果留空，则将使用“徽标”设置中的图像。"
+              help_text: "使用高度为 120 且长宽比大于 3:1 的宽矩形图像。"
+            mobile_logo_dark:
+              required: "为暗色模式使用不同的移动徽标？"
+              title: "深色移动徽标"
+              help_text: "使用高度为 120 且长宽比大于 3:1 的宽矩形图像。"
+            manifest_icon:
+              title: "清单图标"
+              description: "用作安卓（Android）上的徽标/启动图像的图像。如果留空，将使用 large_icon。"
+              help_text: "建议尺寸为 512 x 512 像素。"
+            manifest_screenshots:
+              title: "清单截图"
+              description: "在安装提示页面上展示您的实例特色和功能的屏幕截图。所有图片均应为本地上传且尺寸相同。"
+            apple_touch_icon:
+              title: "苹果（Apple）触摸图标"
+              description: "用于苹果（Apple）触摸设备的图标。如果留空，将使用 large_icon。"
+              help_text: "建议尺寸为 180 x 180 像素。不建议使用透明背景。"
+            digest_logo:
+              title: "摘要徽标"
+              description: "您网站的电子邮件摘要顶部使用的备用徽标图像。如果留空，则将使用“徽标”设置中的图像。"
+              help_text: "使用宽矩形图像。不要使用 SVG 图像。"
+            opengraph_image:
+              title: "OpenGraph 图像"
+              description: "默认 opengraph 图像，当页面没有其他合适的图像时使用。如果留空，将使用 large_icon。"
+            x_summary_large_image:
+              title: "X 摘要大图"
+              description: "X 卡“摘要大图”。如果留空，则使用 OpenGraph_image 生成常规卡片元数据，只要它不是 .svg。"
+              help_text: "建议尺寸至少为 280 x 150 像素。不要使用 SVG 图像。"
+        fonts:
+          title: "字体"
+          form:
+            more_fonts: "更多字体"
+            fewer_fonts: "更少的字体"
+            saved: "字体设置已保存。"
+            base_font:
+              title: "基本字体"
+            heading_font:
+              title: "标题字体"
+            default_text_size:
+              title: "默认文本大小"
+              description: "随后，每个用户都可以根据自己的喜好调整这一尺寸。"
+          backfill_modal:
+            title: "应用新的默认文本设置？"
+            description:
+              other: "您已经更新了默认文字大小。您想将此更改应用于 %{count} 现有用户吗？"
+            modal_yes: "是"
+            modal_no: "否，只适用于未来"
         navigation:
           title: "导航"
           header_description: "配置网站的导航链接与菜单项。这包括主导航菜单、首页顶部快速链接以及管理边栏的位置和行为"
@@ -4975,11 +4973,13 @@ zh_CN:
           title: "嵌入"
           header_description: "Discourse 能够使用创建 IFRAME 的 Javascript API 在远程网站中嵌入话题的评论"
       search:
-        modal_title: "搜索管理员页面中的任何内容"
+        modal_title: "在管理员页面中搜索所有内容"
         title: "搜索"
-        instructions: "键入以搜索页面、设置、报告、主题、组件等等..."
+        instructions: "在管理员页面中搜索所有内容..."
         full_page_link: "切换到全页搜索"
-        no_results: "我们找不到任何与“%{filter}”匹配的内容。"
+        no_results: '我们找不到任何与 "%{filter}" 匹配的内容。'
+        result_count:
+          other: '%{count} 个搜索 “%{filter}” 的结果'
         result_types:
           page:
             other: "页面"
@@ -5563,12 +5563,19 @@ zh_CN:
           city_for_disputes_placeholder: "城市"
           city_for_disputes_help: |
             指定解决与本论坛相关的法律纠纷的城市。
+          extra_groups:
+            heading: "群组列表"
+            description: "在“关于”页面上显示的额外群组。"
+            groups: "群组"
+            order: "排序"
+            show_description: "包括描述"
           optional: "（可选）"
           update: "更新"
           toasts:
             general_settings_saved: "常规设置已保存"
             contact_information_saved: "联系信息已保存"
             your_organization_saved: "您的组织已保存"
+            extra_groups_saved: "群组列表已保存"
           saved: "已保存！"
         flags:
           edit_header: "编辑举报"
@@ -5683,8 +5690,6 @@ zh_CN:
             toggle_description: "用户可以选择调色板"
           colors:
             title: "颜色"
-          logo_and_fonts_hint: "想要更新您的 Logo 和字体？"
-          go_to_logo_and_fonts: "前往 Logo 和字体"
           save_changes: "保存更改"
           unsaved_changes: "您有未保存的更改"
           copy_of: "%{name}的副本"
@@ -6027,26 +6032,26 @@ zh_CN:
           active_filter: "有效"
           inactive_filter: "停用"
           updates_available_filter: "有可用更新"
-          schema:
-            title: "编辑 %{name} 设置"
-            back_button: "返回 %{name}"
-            fields:
-              required: "*必选"
-              groups:
-                at_least:
-                  other: "至少需要 %{count} 个群组"
-              categories:
-                at_least:
-                  other: "至少需要 %{count} 个类别"
-              tags:
-                at_least:
-                  other: "至少需要 %{count} 个标签"
-              string:
-                too_short:
-                  other: "必须至少为 %{count} 个字符"
-              number:
-                too_small: "必须大于或等于 %{count}"
-                too_large: "必须小于或等于 %{count}"
+        schema:
+          title: "编辑 %{name} 设置"
+          back_button: "返回 %{name}"
+          fields:
+            required: "*必选"
+            groups:
+              at_least:
+                other: "至少需要 %{count} 个群组"
+            categories:
+              at_least:
+                other: "至少需要 %{count} 个类别"
+            tags:
+              at_least:
+                other: "至少需要 %{count} 个标签"
+            string:
+              too_short:
+                other: "必须至少为 %{count} 个字符"
+            number:
+              too_small: "必须大于或等于 %{count}"
+              too_large: "必须小于或等于 %{count}"
         colors:
           select_base:
             title: "选择基础调色板"

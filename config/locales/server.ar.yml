@@ -4501,8 +4501,6 @@ ar:
   offline:
     title: "لا يمكن تحميل التطبيق"
     offline_page_message: "يبدو أنك غير متصل! يُرجى التحقُّق من اتصال الشبكة وإعادة المحاولة."
-  login_required:
-    welcome_message: "# [مرحبًا بك في %{title}](#welcome)"
   upload:
     edit_reason: "تم تنزيل نسخ محلية من الصور"
     unauthorized: "عذرًا، الملف الذي تحاول تحميله غير مسموح به (الامتدادات المسموح بها: %{authorized_extensions})."

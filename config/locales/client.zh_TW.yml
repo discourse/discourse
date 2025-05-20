@@ -4618,74 +4618,73 @@ zh_TW:
         login_and_authentication:
           title: "登入與驗證"
           header_description: "設定使用者登入和驗證方式、密碼和金鑰、OAuth2 提供者等"
-        logo_and_fonts:
-          logo:
-            title: "標誌"
-            form:
-              saved: "標誌設定已儲存。"
-              logo:
-                title: "主要標誌"
-                description: "出現在網站的頂部導覽，以及網站的電子郵件通知頂部。"
-                help_text: "建議尺寸為 600 x 80 像素。"
-              logo_dark:
-                required: "暗黑模式要使用不同的標誌嗎？"
-                title: "主標誌深色"
-                help_text: "建議尺寸為 600 x 80 像素。"
-              large_icon:
-                title: "方形圖示"
-                description: "方形版本的標誌圖片會出現在管理頂端，同時也是行動首頁應用程式的標誌。"
-                help_text: "建議尺寸為 512 x 512 像素。"
-              square_icon_dark:
-                required: "暗黑模式下使用不同的方形圖示嗎？"
-                title: "深色方形圖示"
-                help_text: "建議尺寸為 512 x 512 像素。"
-              favicon:
-                title: "網站圖示"
-                description: "標誌將作為圖示出現在瀏覽器標籤和瀏覽器收藏夾/書籤中。"
-              logo_small:
-                title: "小型標誌"
-                description: "向下捲動時可以看到網站左上角的小標誌圖像。如果留空，則會顯示主頁字形。"
-                help_text: "建議尺寸為 120 x 120 像素。"
-              logo_small_dark:
-                required: "暗黑模式要使用不同的小標誌嗎？"
-                title: "小標誌深色"
-                help_text: "建議尺寸為 120 x 120 像素。"
-              mobile: "行動裝置"
-              email: "Email"
-              social_media: "社交媒體"
-              mobile_logo:
-                title: "行動標誌"
-                description: "您網站的移動版本上使用的徽標。如果保留空白，則將使用「logo」設置中的圖像。"
-                help_text: "使用高度為 120 且寬高比大於 3:1 的寬矩形影像。"
-              mobile_logo_dark:
-                required: "在黑暗模式下使用不同的行動標誌？"
-                title: "行動標誌深色"
-                help_text: "使用高度為 120 且寬高比大於 3:1 的寬矩形影像。"
-              manifest_icon:
-                title: "Manifest 圖示"
-                description: "在 Android 上用作徽標/展示圖像的圖像。如果保留空白，將使用large_icon。"
-                help_text: "建議尺寸為 512 x 512 像素。"
-              manifest_screenshots:
-                title: "Manifest 螢幕截圖"
-                description: "在安裝提示頁面上展示您的實例特色和功能的螢幕截圖。所有圖片均應為本地上傳且尺寸相同。"
-              apple_touch_icon:
-                title: "Apple 觸控圖示"
-                description: "Apple 觸控裝置使用的圖示。如果留空，則會使用 large_icon。"
-                help_text: "建議尺寸為 180 x 180 像素。不建議使用透明背景。"
-              digest_logo:
-                title: "摘要標誌"
-                description: "網站電子郵件摘要頂部使用的替代標誌圖像。如果保留空白，則將使用「logo」設置中的圖像。"
-                help_text: "使用寬矩形影像。請勿使用 SVG 影像。"
-              opengraph_image:
-                title: "OpenGraph 影像"
-                description: "預設的 opengraph 圖像，當頁面沒有其他合適的圖像時使用。如果保留空白，將使用大圖標。"
-              x_summary_large_image:
-                title: "X 摘要大圖片"
-                description: "X 卡片的「摘要大圖像」。如果留空，只要 OpenGraph_image 不是 .svg，就會使用 OpenGraph_image 產生一般的卡片元資料。"
-                help_text: "建議尺寸至少為 280 x 150 像素。請勿使用 SVG 影像。"
-          fonts:
-            backfill_modal:
-              modal_yes: "是"
+        logo:
+          title: "標誌"
+          form:
+            saved: "標誌設定已儲存。"
+            logo:
+              title: "主要標誌"
+              description: "出現在網站的頂部導覽，以及網站的電子郵件通知頂部。"
+              help_text: "建議尺寸為 600 x 80 像素。"
+            logo_dark:
+              required: "暗黑模式要使用不同的標誌嗎？"
+              title: "主標誌深色"
+              help_text: "建議尺寸為 600 x 80 像素。"
+            large_icon:
+              title: "方形圖示"
+              description: "方形版本的標誌圖片會出現在管理頂端，同時也是行動首頁應用程式的標誌。"
+              help_text: "建議尺寸為 512 x 512 像素。"
+            square_icon_dark:
+              required: "暗黑模式下使用不同的方形圖示嗎？"
+              title: "深色方形圖示"
+              help_text: "建議尺寸為 512 x 512 像素。"
+            favicon:
+              title: "網站圖示"
+              description: "標誌將作為圖示出現在瀏覽器標籤和瀏覽器收藏夾/書籤中。"
+            logo_small:
+              title: "小型標誌"
+              description: "向下捲動時可以看到網站左上角的小標誌圖像。如果留空，則會顯示主頁字形。"
+              help_text: "建議尺寸為 120 x 120 像素。"
+            logo_small_dark:
+              required: "暗黑模式要使用不同的小標誌嗎？"
+              title: "小標誌深色"
+              help_text: "建議尺寸為 120 x 120 像素。"
+            mobile: "行動裝置"
+            email: "Email"
+            social_media: "社交媒體"
+            mobile_logo:
+              title: "行動標誌"
+              description: "您網站的移動版本上使用的徽標。如果保留空白，則將使用「logo」設置中的圖像。"
+              help_text: "使用高度為 120 且寬高比大於 3:1 的寬矩形影像。"
+            mobile_logo_dark:
+              required: "在黑暗模式下使用不同的行動標誌？"
+              title: "行動標誌深色"
+              help_text: "使用高度為 120 且寬高比大於 3:1 的寬矩形影像。"
+            manifest_icon:
+              title: "Manifest 圖示"
+              description: "在 Android 上用作徽標/展示圖像的圖像。如果保留空白，將使用large_icon。"
+              help_text: "建議尺寸為 512 x 512 像素。"
+            manifest_screenshots:
+              title: "Manifest 螢幕截圖"
+              description: "在安裝提示頁面上展示您的實例特色和功能的螢幕截圖。所有圖片均應為本地上傳且尺寸相同。"
+            apple_touch_icon:
+              title: "Apple 觸控圖示"
+              description: "Apple 觸控裝置使用的圖示。如果留空，則會使用 large_icon。"
+              help_text: "建議尺寸為 180 x 180 像素。不建議使用透明背景。"
+            digest_logo:
+              title: "摘要標誌"
+              description: "網站電子郵件摘要頂部使用的替代標誌圖像。如果保留空白，則將使用「logo」設置中的圖像。"
+              help_text: "使用寬矩形影像。請勿使用 SVG 影像。"
+            opengraph_image:
+              title: "OpenGraph 影像"
+              description: "預設的 opengraph 圖像，當頁面沒有其他合適的圖像時使用。如果保留空白，將使用大圖標。"
+            x_summary_large_image:
+              title: "X 摘要大圖片"
+              description: "X 卡片的「摘要大圖像」。如果留空，只要 OpenGraph_image 不是 .svg，就會使用 OpenGraph_image 產生一般的卡片元資料。"
+              help_text: "建議尺寸至少為 280 x 150 像素。請勿使用 SVG 影像。"
+        fonts:
+          backfill_modal:
+            modal_yes: "是"
         navigation:
           title: "導覽"
           header_description: "設定網站的導覽連結和功能表項目。這包括主導航功能表的位置和行為、首頁頂部的快速鏈接以及管理側邊欄"
@@ -4840,9 +4839,7 @@ zh_TW:
           title: "嵌入"
           header_description: "Discourse 能夠使用創建 IFRAME 的 Javascript API 將主題中的註釋嵌入遠程網站中"
       search:
-        modal_title: "搜尋管理員頁面中的任何內容"
         title: "搜索"
-        instructions: "輸入以搜尋頁面、設定、報表、佈景主題、元件等..."
         result_types:
           page:
             other: "頁面"
@@ -5397,6 +5394,8 @@ zh_TW:
           city_for_disputes_placeholder: "城市"
           city_for_disputes_help: |
             指定解決與該論壇相關的法律糾紛的城市。
+          extra_groups:
+            groups: "群組"
           optional: "(選擇性)"
           update: "更新"
           toasts:
@@ -5820,26 +5819,25 @@ zh_TW:
           active_filter: "啟用的"
           inactive_filter: "不活躍"
           updates_available_filter: "有可用更新"
-          schema:
-            title: "在主題中使用核心 SCSS 顏色變數已棄用。請改用 CSS 自訂屬性。請參閱<a href=\"https://meta.discourse.org/t/-/77551#color-variables-2\" target=\"_blank\">本指南</a>，了解更多詳細資訊。"
-            back_button: "返回 %{name}"
-            fields:
-              required: "*必要設定"
-              groups:
-                at_least:
-                  other: "至少需要 %{count} 個群組"
-              categories:
-                at_least:
-                  other: "至少需要 %{count} 個類別"
-              tags:
-                at_least:
-                  other: "至少需要 %{count} 個標籤"
-              string:
-                too_short:
-                  other: "必須至少 %{count} 個字"
-              number:
-                too_small: "必須大於或等於 %{count}"
-                too_large: "必須少於或等於 %{count}"
+        schema:
+          back_button: "返回 %{name}"
+          fields:
+            required: "*必要設定"
+            groups:
+              at_least:
+                other: "至少需要 %{count} 個群組"
+            categories:
+              at_least:
+                other: "至少需要 %{count} 個類別"
+            tags:
+              at_least:
+                other: "至少需要 %{count} 個標籤"
+            string:
+              too_short:
+                other: "必須至少 %{count} 個字"
+            number:
+              too_small: "必須大於或等於 %{count}"
+              too_large: "必須少於或等於 %{count}"
         colors:
           select_base:
             title: "選擇調色盤"

@@ -1170,8 +1170,6 @@ bg:
     see_more: "Повече"
     search_title: "Търси този сайт"
     search_button: "Търсене"
-  login_required:
-    welcome_message: "# [Добре дошли в %{title}](#добре дошли)"
   upload:
     edit_reason: "изтеглено локално копие на изображенията"
     unauthorized: "Съжеляваме, Файлът е забранен за качване (разрешени разширения : %{authorized_extensions})."

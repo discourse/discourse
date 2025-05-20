@@ -5844,24 +5844,23 @@ ar:
         login_and_authentication:
           title: "تسجيل الدخول والمصادقة"
           header_description: "تكوين كيفية تسجيل دخول المستخدمين ومصادقتهم، والعبارات السرية، والمفاتيح، ومقِّدمي OAuth2، وغير ذلك"
-        logo_and_fonts:
-          logo:
-            title: "الشعار"
-            form:
-              saved: "حُفظت إعدادات الشعار."
-              logo:
-                title: "الشعار الرئيسي"
-              mobile: "الجوَّال"
-              email: "البريد الإلكتروني"
-              manifest_screenshots:
-                description: "لقطات شاشة تعرض ميزات المثيل ووظيفته على صفحة رسالة التثبيت الخاصة به. يجب أن تكون جميع الصور من تحميلات محلية وبالأبعاد نفسها."
-          fonts:
-            title: "الخطوط"
-            form:
-              heading_font:
-                title: "خط العنوان"
-            backfill_modal:
-              modal_yes: "نعم"
+        logo:
+          title: "الشعار"
+          form:
+            saved: "حُفظت إعدادات الشعار."
+            logo:
+              title: "الشعار الرئيسي"
+            mobile: "الجوَّال"
+            email: "البريد الإلكتروني"
+            manifest_screenshots:
+              description: "لقطات شاشة تعرض ميزات المثيل ووظيفته على صفحة رسالة التثبيت الخاصة به. يجب أن تكون جميع الصور من تحميلات محلية وبالأبعاد نفسها."
+        fonts:
+          title: "الخطوط"
+          form:
+            heading_font:
+              title: "خط العنوان"
+          backfill_modal:
+            modal_yes: "نعم"
         navigation:
           title: "التنقل"
           header_description: "تكوين روابط التنقل وعناصر القائمة لموقعك. يتضمَّن ذلك الموقع وسلوك قائمة التنقل الرئيسية، والروابط السريعة في أعلى الصفحة الرئيسية، والشريط الجانبي للمسؤول"
@@ -6637,6 +6636,8 @@ ar:
           city_for_disputes_placeholder: "المدينة"
           city_for_disputes_help: |
             حدِّد المدينة لحل النزاعات القانونية المتعلقة بهذا المنتدى.
+          extra_groups:
+            groups: "مجموعتان"
           optional: "(اختياري)"
           update: "تحديث"
           toasts:
@@ -7057,46 +7058,46 @@ ar:
           active_filter: "نشطة"
           inactive_filter: "غير نشطة"
           updates_available_filter: "تتوفَّر تحديثات"
-          schema:
-            title: "تعديل إعداد %{name}"
-            back_button: "العودة إلى %{name}"
-            fields:
-              required: "*مطلوب"
-              groups:
-                at_least:
-                  zero: "مطلوب %{count} مجموعة على الأقل"
-                  one: "مطلوب مجموعة واحدة (%{count}) على الأقل"
-                  two: "مطلوب مجموعتان (%{count}) على الأقل"
-                  few: "مطلوب %{count} مجموعات على الأقل"
-                  many: "مطلوب %{count} مجموعة على الأقل"
-                  other: "مطلوب %{count} مجموعة على الأقل"
-              categories:
-                at_least:
-                  zero: "مطلوب %{count} فئة على الأقل"
-                  one: "مطلوب فئة واحدة (%{count})"
-                  two: "مطلوب فئتان (%{count})"
-                  few: "مطلوب %{count} فئات على الأقل"
-                  many: "مطلوب %{count} فئة على الأقل"
-                  other: "مطلوب %{count} فئة على الأقل"
-              tags:
-                at_least:
-                  zero: "مطلوب %{count} وسم على الأقل"
-                  one: "مطلوب وسم واحد (%{count}) على الأقل"
-                  two: "مطلوب وسمان (%{count}) على الأقل"
-                  few: "مطلوب %{count} وسوم على الأقل"
-                  many: "مطلوب %{count} وسمًا على الأقل"
-                  other: "مطلوب %{count} وسم على الأقل"
-              string:
-                too_short:
-                  zero: "يجب ألا يقل عن %{count} حرف"
-                  one: "يجب ألا يقل عن حرف واحد (%{count})"
-                  two: "يجب ألا يقل عن حرفَين (%{count})"
-                  few: "يجب ألا يقل عن %{count} أحرف"
-                  many: "يجب ألا يقل عن %{count} حرفًا"
-                  other: "يجب ألا يقل عن %{count} حرف"
-              number:
-                too_small: "يجب أن تكون القيمة أكبر من أو تساوي %{count}"
-                too_large: "يجب أن تكون القيمة أقل من أو تساوي %{count}"
+        schema:
+          title: "تعديل إعداد %{name}"
+          back_button: "العودة إلى %{name}"
+          fields:
+            required: "*مطلوب"
+            groups:
+              at_least:
+                zero: "مطلوب %{count} مجموعات على الأقل"
+                one: "مطلوب مجموعة واحدة (%{count}) على الأقل"
+                two: "مطلوب مجموعتان (%{count}) على الأقل"
+                few: "مطلوب %{count} مجموعات على الأقل"
+                many: "مطلوب %{count} مجموعات على الأقل"
+                other: "مطلوب %{count} مجموعات على الأقل"
+            categories:
+              at_least:
+                zero: "مطلوب %{count} فئات على الأقل"
+                one: "مطلوب فئة واحدة (%{count})"
+                two: "مطلوب فئتان (%{count})"
+                few: "مطلوب %{count} فئات على الأقل"
+                many: "مطلوب %{count} فئات على الأقل"
+                other: "مطلوب %{count} فئات على الأقل"
+            tags:
+              at_least:
+                zero: "مطلوب %{count} وسمًا على الأقل"
+                one: "مطلوب وسم واحد (%{count}) على الأقل"
+                two: "مطلوب وسمان (%{count}) على الأقل"
+                few: "مطلوب %{count} وسوم على الأقل"
+                many: "مطلوب %{count} وسمًا على الأقل"
+                other: "مطلوب %{count} وسمًا على الأقل"
+            string:
+              too_short:
+                zero: "يجب ألا يقل عن %{count} حرفًا"
+                one: "يجب ألا يقل عن حرف واحد (%{count})"
+                two: "يجب ألا يقل عن حرفَين (%{count})"
+                few: "يجب ألا يقل عن %{count} أحرف"
+                many: "يجب ألا يقل عن %{count} حرفًا"
+                other: "يجب ألا يقل عن %{count} حرفًا"
+            number:
+              too_small: "يجب أن تكون القيمة أكبر من أو تساوي %{count}"
+              too_large: "يجب أن تكون القيمة أقل من أو تساوي %{count}"
         colors:
           select_base:
             title: "تحديد لوحة الألوان الأساسية"
