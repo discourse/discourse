@@ -1,6 +1,5 @@
 import { Input } from "@ember/component";
 import { fn, hash } from "@ember/helper";
-import { on } from "@ember/modifier";
 import RouteTemplate from "ember-route-template";
 import { and } from "truth-helpers";
 import BackButton from "discourse/components/back-button";
