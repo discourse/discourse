@@ -24,6 +24,10 @@ export default class NavItem extends Component {
       return;
     }
 
+    if (this.args.currentWhen) {
+      return this.args.currentWhen(this.router.currentRoute);
+    }
+
     if (this.args.routeParam) {
       // This is needed because the setting route is underneath /admin/plugins/:plugin_id,
       // but is not a child route of the plugin routes themselves. E.g. discourse-ai
@@ -58,9 +62,15 @@ export default class NavItem extends Component {
           @current-when={{this.active}}
         >{{this.contents}}</LinkTo>
       {{else if @route}}
-        <LinkTo @route={{@route}}>{{this.contents}}</LinkTo>
+        <LinkTo
+          @route={{@route}}
+          @current-when={{this.active}}
+        >{{this.contents}}</LinkTo>
       {{else}}
-        <a href={{getURL @path}} data-auto-route="true">{{this.contents}}</a>
+        <a
+          href={{getURL @path}}
+          data-auto-route="admin.badges"
+        >{{this.contents}}</a>
       {{/if}}
     </li>
   </template>
