@@ -47,7 +47,7 @@ globalThis.rollup = function (modules, opts) {
       {
         name: "loader",
         resolve: {
-          extensions: [".js", ".gjs"],
+          extensions: [".js", ".gjs", ".hbs"],
         },
         resolveId(source, context) {
           if (rollupVirtualImports[source]) {
@@ -58,12 +58,13 @@ globalThis.rollup = function (modules, opts) {
             source = join(dirname(context), source);
           }
 
-          for (const ext of ["", ".js", ".gjs"]) {
+          for (const ext of ["", ".js", ".gjs", ".hbs"]) {
             const candidate = source + ext;
             if (modules.hasOwnProperty(candidate)) {
               return candidate;
             }
           }
+
           return false;
         },
         load(id) {
@@ -75,11 +76,12 @@ globalThis.rollup = function (modules, opts) {
           }
         },
       },
+
       getBabelOutputPlugin({
         plugins: [BabelReplaceImports],
       }),
       babel({
-        extensions: [".js", ".gjs"],
+        extensions: [".js", ".gjs", ".hbs"],
         babelHelpers: "bundled",
         plugins: [
           [DecoratorTransforms, { runEarly: true }],
@@ -95,7 +97,6 @@ globalThis.rollup = function (modules, opts) {
               ],
             },
           ],
-          // TODO: add components/helpers/modifiers to resolver (for hbs)
           // TODO: Ember this fallback
           // TODO: template colocation
           // TODO: widgetHbs (remove from d-calendar)
@@ -113,6 +114,21 @@ globalThis.rollup = function (modules, opts) {
           ],
         ],
       }),
+      {
+        name: "hbs",
+        transform: {
+          order: "pre",
+          handler(input, id) {
+            console.log(`running hbs ${id} ${JSON.stringify(input)}`);
+            if (id.endsWith(".hbs")) {
+              return `
+              import { hbs } from 'ember-cli-htmlbars';
+              export default hbs(${JSON.stringify(input)}, { moduleName: ${JSON.stringify(id)} });
+            `;
+            }
+          },
+        },
+      },
       {
         name: "gjs-transform",
 

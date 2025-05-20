@@ -8,10 +8,6 @@ export default {
 
     let i = 1;
     for (const moduleFilename of Object.keys(tree)) {
-      if (moduleFilename.endsWith(".hbs")) {
-        continue;
-      }
-
       const moduleName = moduleFilename.replace(/\.[^\.]+(\.es6)?$/, "");
 
       output += `import * as Mod${i} from "${moduleName}";\n`;

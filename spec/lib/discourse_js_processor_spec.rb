@@ -273,4 +273,17 @@ RSpec.describe DiscourseJsProcessor do
       )
     end
   end
+
+  it "can compile hbs" do
+    template = <<~HBS.chomp
+      {{log "hello world"}}
+    HBS
+
+    result =
+      DiscourseJsProcessor::Transpiler.new.rollup(
+        { "discourse/connectors/outlet-name/foo.hbs" => template },
+        { themeId: 22 },
+      )
+    expect(result["code"]).to include("createTemplateFactory")
+  end
 end
