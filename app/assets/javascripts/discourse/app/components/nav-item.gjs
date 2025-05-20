@@ -67,10 +67,7 @@ export default class NavItem extends Component {
           @current-when={{this.active}}
         >{{this.contents}}</LinkTo>
       {{else}}
-        <a
-          href={{getURL @path}}
-          data-auto-route="admin.badges"
-        >{{this.contents}}</a>
+        <a href={{getURL @path}} data-auto-route="true">{{this.contents}}</a>
       {{/if}}
     </li>
   </template>
