@@ -1026,15 +1026,24 @@ div.ac-wrap {
 .composer-popup {
   box-sizing: border-box;
   position: absolute;
-  width: calc(50% - 16px);
-  top: 19px; // grippie (11px) + .reply-area padding (8px)
-  bottom: 8px;
-  right: 8px;
+  width: calc(60%);
+  max-height: 50%;
+  bottom: 3.7rem;
+  right: 1rem;
   overflow-y: auto;
   z-index: z("composer", "dropdown") + 1;
-  padding: 1.5em;
+  padding: 1.5em 1.5rem 0.75em 1.5rem;
   box-shadow: var(--shadow-dropdown);
   background: var(--highlight-bg);
+
+  .show-preview & {
+    bottom: 3.2rem;
+    width: calc(50% - 16px);
+  }
+
+  .blurb {
+    display: none;
+  }
 
   > p,
   h3 {
@@ -1169,6 +1178,9 @@ div.ac-wrap {
 
     .first-line {
       flex: 1;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
     }
 
     .second-line {
