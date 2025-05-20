@@ -236,6 +236,7 @@ export default class ComposerMessages extends Component {
     }
 
     this.similarTopics.clear();
+    this.similarTopics.pushObjects(topics.content);
 
     if (this.similarTopics.length > 0) {
       this._similarTopicsMessage.set("similarTopics", this.similarTopics);
