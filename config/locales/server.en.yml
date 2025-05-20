@@ -3000,7 +3000,7 @@ en:
     not_available: "Not available. Try %{suggestion}?"
     something_already_taken: "Something went wrong, perhaps the username or email is already registered. Try the forgot password link."
     omniauth_error:
-      generic: "Sorry, there was an error while trying to authenticate with %{provider}. Please try again."
+      generic: "Sorry, there was an error while trying to authorize your account with %{provider}. Please try again."
       csrf_detected: "Sorry, the authorization timed out, or you have switched browsers. Please try again."
       request_error: "Sorry, an error occurred when starting the authorization. Please try again."
       invalid_iat: "Sorry, we are unable to verify the authorization token due to server clock differences. Please try again."
