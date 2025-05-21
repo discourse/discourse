@@ -6,7 +6,6 @@ import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import dirSpan from "discourse/helpers/dir-span";
 import element from "discourse/helpers/element";
 
-//@tagName("h3")
 export default class CategoryTitleLink extends Component {
   get displayName() {
     if (this.args.unstyled === true) {
