@@ -8,5 +8,6 @@ module.exports = {
     "require-button-type": false,
     "no-action": true,
     "require-strict-mode": true,
+    "discourse/plugin-outlet-lazy-hash": false,
   },
 };

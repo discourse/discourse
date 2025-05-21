@@ -3,7 +3,7 @@ import { concat, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { eq } from "truth-helpers";
+import { eq, or } from "truth-helpers";
 import avatar from "discourse/helpers/bound-avatar-template";
 import icon from "discourse/helpers/d-icon";
 import getURL from "discourse/lib/get-url";
@@ -38,7 +38,11 @@ export default class Participant extends Component {
         title={{@username}}
       >
         {{#if (eq @type "user")}}
-          {{avatar @user.avatar_template "tiny" (hash title=@username)}}
+          {{avatar
+            @user.avatar_template
+            (or @avatarSize "tiny")
+            (hash title=@username)
+          }}
         {{else}}
           <span>
             {{icon "users"}}

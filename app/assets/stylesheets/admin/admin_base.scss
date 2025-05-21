@@ -69,8 +69,8 @@ $mobile-breakpoint: 700px;
       height: 100%;
       background: linear-gradient(
         to right,
-        rgba(var(--secondary-rgb), 1),
-        rgba(var(--secondary-rgb), 0)
+        rgb(var(--secondary-rgb), 1),
+        rgb(var(--secondary-rgb), 0)
       );
     }
 
@@ -82,8 +82,8 @@ $mobile-breakpoint: 700px;
       height: 100%;
       background: linear-gradient(
         to right,
-        rgba(var(--secondary-rgb), 0),
-        rgba(var(--secondary-rgb), 1)
+        rgb(var(--secondary-rgb), 0),
+        rgb(var(--secondary-rgb), 1)
       );
     }
   }
@@ -328,8 +328,8 @@ $mobile-breakpoint: 700px;
         height: $gradientHeight;
         background: linear-gradient(
           to top,
-          rgba(var(--secondary-rgb), 1),
-          rgba(var(--secondary-rgb), 0.15)
+          rgb(var(--secondary-rgb), 1),
+          rgb(var(--secondary-rgb), 0.15)
         );
       }
     }
@@ -683,8 +683,8 @@ $mobile-breakpoint: 700px;
       height: calc(100% - 5px);
       background: linear-gradient(
         to right,
-        rgba(var(--primary-low-rgb), 1),
-        rgba(var(--primary-low-rgb), 0)
+        rgb(var(--primary-low-rgb), 1),
+        rgb(var(--primary-low-rgb), 0)
       );
     }
 
@@ -696,8 +696,8 @@ $mobile-breakpoint: 700px;
       height: calc(100% - 5px);
       background: linear-gradient(
         to right,
-        rgba(var(--primary-low-rgb), 0),
-        rgba(var(--primary-low-rgb), 1)
+        rgb(var(--primary-low-rgb), 0),
+        rgb(var(--primary-low-rgb), 1)
       );
     }
   }

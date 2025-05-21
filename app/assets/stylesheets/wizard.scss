@@ -79,7 +79,7 @@ body.wizard {
   position: relative;
   z-index: 11;
   background-color: var(--secondary);
-  box-shadow: 0 4px 19px 6px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 19px 6px rgb(0, 0, 0, 0.05);
   box-sizing: border-box;
   margin: 1em auto;
   border: 1px solid var(--primary-low);
@@ -532,7 +532,7 @@ body.wizard {
     .wizard-container__label:hover
     .wizard-container__checkbox-slider::before {
     background: var(--secondary);
-    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 0 0 1px rgb(0, 0, 0, 0.15);
   }
 
   &__checkbox:checked + .wizard-container__checkbox-slider {
