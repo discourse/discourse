@@ -32,8 +32,8 @@ importers:
         specifier: ^7.27.1
         version: 7.27.1(@babel/core@7.27.1)
       '@discourse/lint-configs':
-        specifier: ^2.17.2
-        version: 2.17.2(ember-template-lint@7.6.0(@babel/core@7.27.1))(eslint@9.26.0)(postcss@8.5.3)(prettier@3.5.3)(stylelint@16.19.1(typescript@5.6.3))
+        specifier: ^2.18.0
+        version: 2.19.0(ember-template-lint@7.7.0(@babel/core@7.27.1))(eslint@9.27.0)(postcss@8.5.3)(prettier@3.5.3)(stylelint@16.19.1(typescript@5.6.3))
       '@discourse/moment-timezone-names-translations':
         specifier: ^1.0.0
         version: 1.0.0
@@ -74,14 +74,14 @@ importers:
         specifier: ^9.1.2
         version: 9.1.2
       ember-template-lint:
-        specifier: 7.6.0
-        version: 7.6.0(@babel/core@7.27.1)
+        specifier: 7.7.0
+        version: 7.7.0(@babel/core@7.27.1)
       esbuild:
         specifier: ^0.25.4
         version: 0.25.4
       eslint:
-        specifier: 9.26.0
-        version: 9.26.0
+        specifier: 9.27.0
+        version: 9.27.0
       jsdoc:
         specifier: ^4.0.4
         version: 4.0.4
@@ -96,10 +96,10 @@ importers:
         version: 2.6.3(encoding@0.1.13)
       lint-to-the-future-ember-template:
         specifier: ^3.1.0
-        version: 3.1.0(ember-template-lint@7.6.0(@babel/core@7.27.1))
+        version: 3.1.0(ember-template-lint@7.7.0(@babel/core@7.27.1))
       lint-to-the-future-eslint:
         specifier: ^3.1.0
-        version: 3.1.0(eslint@9.26.0)
+        version: 3.1.0(eslint@9.27.0)
       magnific-popup:
         specifier: 1.1.0
         version: 1.1.0
@@ -1745,11 +1745,11 @@ packages:
   '@discourse/itsatrap@2.0.10':
     resolution: {integrity: sha512-Jn1gdiyHMGUsmUfLFf4Q7VnTAv0l7NePbegU6pKhKHEmbzV3FosGxq30fTOYgVyTS1bxqGjlA6LvQttJpv3ROw==}
 
-  '@discourse/lint-configs@2.17.2':
-    resolution: {integrity: sha512-hb0n4GDYZj6zKQq+Ls9dlYpC4wCT1vSTxsm2KZTyabCiDipDkYXXabDV+cirNrHfDuDrVXIe7Wsxn4OWX0zbrQ==}
+  '@discourse/lint-configs@2.19.0':
+    resolution: {integrity: sha512-r9r+GO+4JdQXQ+31Ue+XdIbInSFogp83z8dPrs09eQekcsah3dkkUPzloWrqmB3X2mBMRiCPB07ebTWQLXqjcQ==}
     peerDependencies:
-      ember-template-lint: 7.6.0
-      eslint: 9.26.0
+      ember-template-lint: 7.7.0
+      eslint: 9.27.0
       prettier: 3.5.3
       stylelint: 16.19.1
 
@@ -2057,24 +2057,24 @@ packages:
     resolution: {integrity: sha512-+GPzk8PlG0sPpzdU5ZvIRMPidzAnZDl/s9L+y13iodqvb8leL53bTannOrQ/Im7UkpsmFU5Ily5U60LWixnmLg==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@eslint/core@0.13.0':
-    resolution: {integrity: sha512-yfkgDw1KR66rkT5A8ci4irzDysN7FRpq3ttJolR88OqQikAWqwA8j5VZyas+vjyBNFIJ7MfybJ9plMILI2UrCw==}
+  '@eslint/core@0.14.0':
+    resolution: {integrity: sha512-qIbV0/JZr7iSDjqAc60IqbLdsj9GDt16xQtWD+B78d/HAlvysGdZZ6rpJHGAc2T0FQx1X6thsSPdnoiGKdNtdg==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
   '@eslint/eslintrc@3.3.1':
     resolution: {integrity: sha512-gtF186CXhIl1p4pJNGZw8Yc6RlshoePRvE0X91oPGb3vZ8pM3qOS9W9NGPat9LziaBV7XrJWGylNQXkGcnM3IQ==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@eslint/js@9.26.0':
-    resolution: {integrity: sha512-I9XlJawFdSMvWjDt6wksMCrgns5ggLNfFwFvnShsleWruvXM514Qxk8V246efTw+eo9JABvVz+u3q2RiAowKxQ==}
+  '@eslint/js@9.27.0':
+    resolution: {integrity: sha512-G5JD9Tu5HJEu4z2Uo4aHY2sLV64B7CDMXxFzqzjl3NKd6RVzSXNoE80jk7Y0lJkTTkjiIhBAqmlYwjuBY3tvpA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
   '@eslint/object-schema@2.1.6':
     resolution: {integrity: sha512-RBMg5FRL0I0gs51M/guSAj5/e14VQ4tpZnQNWwuDT66P14I43ItmPfIZRhO9fUVIPOAQXU47atlywZ/czoqFPA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@eslint/plugin-kit@0.2.8':
-    resolution: {integrity: sha512-ZAoA40rNMPwSm+AeHpCq8STiNAwzWLJuP8Xv4CHIc9wv/PSuExjMrmjfYNj682vW0OOiZ1HKxzvjQr9XZIisQA==}
+  '@eslint/plugin-kit@0.3.1':
+    resolution: {integrity: sha512-0J+zgWxHN+xXONWIyPWKFMgVuJoZuGiIFu8yxk7RJjxkzpGmyja5wRFqZIVtjDVOQpV+Rw0iOAjYPE2eQyjr0w==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
   '@faker-js/faker@9.8.0':
@@ -2361,10 +2361,6 @@ packages:
 
   '@messageformat/runtime@3.0.1':
     resolution: {integrity: sha512-6RU5ol2lDtO8bD9Yxe6CZkl0DArdv0qkuoZC+ZwowU+cdRlVE1157wjCmlA5Rsf1Xc/brACnsZa5PZpEDfTFFg==}
-
-  '@modelcontextprotocol/sdk@1.11.2':
-    resolution: {integrity: sha512-H9vwztj5OAqHg9GockCQC06k1natgcxWQSRpQcPJf6i5+MWBzfKkRtxGbjQf0X2ihii0ffLZCRGbYV2f2bjNCQ==}
-    engines: {node: '>=18'}
 
   '@nicolo-ribaudo/eslint-scope-5-internals@5.1.1-v1':
     resolution: {integrity: sha512-54/JRvkLIzzDWshCWfuhadfrfZVPiElY8Fcgmg1HroEly/EDSszzhBAsarCux+D/kOslTRquNzuyGSmUSTTHGg==}
@@ -4455,8 +4451,8 @@ packages:
     resolution: {integrity: sha512-jZ5D6KLKU8up/AynZltmKh4lkXBPgTGSPgomprI/55XvIVqn42UNUpEz7ra/mO3QiGODDZOUesbggPe49i38sQ==}
     engines: {node: 16.* || >= 18}
 
-  ember-template-lint@7.6.0:
-    resolution: {integrity: sha512-FqSPRB4w16Yy1fIwXPJgekSYcNFkvRvTePsgEc1C8o1gd/8bE0LgmkTXjf6pgGdIG477wMR1NyOm7oDCQNleVA==}
+  ember-template-lint@7.7.0:
+    resolution: {integrity: sha512-KVQNeCdZHglpMm0YY4itu18xzw+IYeLLceWlL9tplCNcsQLSDYynyOvkzuQQH+y4JYN7aFnlxlxSGPyCOpBLZg==}
     engines: {node: ^18.18.0 || >= 20.9.0}
     hasBin: true
 
@@ -4711,8 +4707,8 @@ packages:
     resolution: {integrity: sha512-UyLnSehNt62FFhSwjZlHmeokpRK59rcz29j+F1/aDgbkbRTk7wIc9XzdoasMUbRNKDM0qQt/+BJ4BrpFeABemw==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  eslint@9.26.0:
-    resolution: {integrity: sha512-Hx0MOjPh6uK9oq9nVsATZKE/Wlbai7KFjfCuw9UHaguDW3x+HF0O5nIi3ud39TWgrTjTO5nHxmL3R1eANinWHQ==}
+  eslint@9.27.0:
+    resolution: {integrity: sha512-ixRawFQuMB9DZ7fjU3iGGganFDp3+45bPOdaRurcFHSXO1e/sYwUX/FtQZpLZJR6SjMoJH8hR2pPEAfDyCoU2Q==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
     hasBin: true
     peerDependencies:
@@ -4776,14 +4772,6 @@ packages:
     resolution: {integrity: sha512-mQw+2fkQbALzQ7V0MY0IqdnXNOeTtP4r0lN9z7AAawCXgqea7bDii20AYrIBrFd/Hx0M2Ocz6S111CaFkUcb0Q==}
     engines: {node: '>=0.8.x'}
 
-  eventsource-parser@3.0.1:
-    resolution: {integrity: sha512-VARTJ9CYeuQYb0pZEPbzi740OWFgpHe7AYJ2WFZVnUDUQp5Dk2yJUgF36YsZ81cOyxT0QxmXD2EQpapAouzWVA==}
-    engines: {node: '>=18.0.0'}
-
-  eventsource@3.0.7:
-    resolution: {integrity: sha512-CRT1WTyuQoD771GW56XEZFQ/ZoSfWid1alKGDYMmkt2yl8UXrVR4pspqWNEcqKvVIzg6PAltWjxcSSPrboA4iA==}
-    engines: {node: '>=18.0.0'}
-
   exec-sh@0.3.6:
     resolution: {integrity: sha512-nQn+hI3yp+oD0huYhKwvYI32+JFeq+XkNcD1GAo3Y/MjxsfVGmrrzrnzjWiNY6f+pUCP440fThsFh5gZrRAU/w==}
 
@@ -4821,12 +4809,6 @@ packages:
 
   exponential-backoff@3.1.1:
     resolution: {integrity: sha512-dX7e/LHVJ6W3DE1MHWi9S1EYzDESENfLrYohG2G++ovZrYOkm4Knwa0mc1cn84xJOR4KEU0WSchhLbd0UklbHw==}
-
-  express-rate-limit@7.5.0:
-    resolution: {integrity: sha512-eB5zbQh5h+VenMPM3fh+nw1YExi5nMr6HUCR62ELSP11huvxm/Uir1H1QEyTkk5QX6A58pX6NmaTMceKZ0Eodg==}
-    engines: {node: '>= 16'}
-    peerDependencies:
-      express: ^4.11 || 5 || ^5.0.0-beta.1
 
   express@4.21.2:
     resolution: {integrity: sha512-28HqgMZAmih1Czt9ny7qr6ek2qddF4FclbMzwhCREB6OFfH+rXAnuNCwo1/wFvrtbgsQDb4kSbX9de9lFbrXnA==}
@@ -5299,8 +5281,8 @@ packages:
     resolution: {integrity: sha512-oahGvuMGQlPw/ivIYBjVSrWAfWLBeku5tpPE2fOPLi+WHffIWbuh2tCjhyQhTBPMf5E9jDEH4FOmTYgYwbKwtQ==}
     engines: {node: '>=18'}
 
-  globals@16.0.0:
-    resolution: {integrity: sha512-iInW14XItCXET01CQFqudPOWP2jYMl7T+QRQT+UNcR/iQncN/F0UNpgd76iFkBPgNQb4+X3LV9tLJYzwh+Gl3A==}
+  globals@16.1.0:
+    resolution: {integrity: sha512-aibexHNbb/jiUSObBgpHLj+sIuUmJnYcgXBlrfsiDZ9rt4aF2TFRbyLgZ2iFQuVZ1K5Mx3FVkbKRSgKrbK3K2g==}
     engines: {node: '>=18'}
 
   globalthis@1.0.4:
@@ -7025,10 +7007,6 @@ packages:
   pikaday@1.8.2:
     resolution: {integrity: sha512-TNtsE+34BIax3WtkB/qqu5uepV1McKYEgvL3kWzU7aqPCpMEN6rBF3AOwu4WCwAealWlBGobXny/9kJb49C1ew==}
 
-  pkce-challenge@5.0.0:
-    resolution: {integrity: sha512-ueGLflrrnvwB3xuo/uGob5pd5FN7l0MsLf0Z87o/UQmRtwjvfylfc9MurIxRAWywCYTgrvpXBcqjV4OfCYGCIQ==}
-    engines: {node: '>=16.20.0'}
-
   pkg-dir@4.2.0:
     resolution: {integrity: sha512-HRDzbaKjC+AOWVXxAU/x54COGeIv9eb+6CkDSQoNTt4XyWoIJvuPsXizxu/Fr23EiekbtZwmh1IcIG/l/a10GQ==}
     engines: {node: '>=8'}
@@ -8048,21 +8026,15 @@ packages:
   styled_string@0.0.1:
     resolution: {integrity: sha512-DU2KZiB6VbPkO2tGSqQ9n96ZstUPjW7X4sGO6V2m1myIQluX0p1Ol8BrA/l6/EesqhMqXOIXs3cJNOy1UuU2BA==}
 
-  stylelint-config-recommended-scss@14.1.0:
-    resolution: {integrity: sha512-bhaMhh1u5dQqSsf6ri2GVWWQW5iUjBYgcHkh7SgDDn92ijoItC/cfO/W+fpXshgTQWhwFkP1rVcewcv4jaftRg==}
-    engines: {node: '>=18.12.0'}
+  stylelint-config-recommended-scss@15.0.1:
+    resolution: {integrity: sha512-V24bxkNkFGggqPVJlP9iXaBabwSGEG7QTz+PyxrRtjPkcF+/NsWtB3tKYvFYEmczRkWiIEfuFMhGpJFj9Fxe6Q==}
+    engines: {node: '>=20'}
     peerDependencies:
       postcss: ^8.3.3
-      stylelint: ^16.6.1
+      stylelint: ^16.16.0
     peerDependenciesMeta:
       postcss:
         optional: true
-
-  stylelint-config-recommended@14.0.1:
-    resolution: {integrity: sha512-bLvc1WOz/14aPImu/cufKAZYfXs/A/owZfSMZ4N+16WGXLoX5lOir53M6odBxvhgmgdxCVnNySJmZKx73T93cg==}
-    engines: {node: '>=18.12.0'}
-    peerDependencies:
-      stylelint: ^16.1.0
 
   stylelint-config-recommended@16.0.0:
     resolution: {integrity: sha512-4RSmPjQegF34wNcK1e1O3Uz91HN8P1aFdFzio90wNK9mjgAI19u5vsU868cVZboKzCaa5XbpvtTzAAGQAxpcXA==}
@@ -8070,21 +8042,15 @@ packages:
     peerDependencies:
       stylelint: ^16.16.0
 
-  stylelint-config-standard-scss@14.0.0:
-    resolution: {integrity: sha512-6Pa26D9mHyi4LauJ83ls3ELqCglU6VfCXchovbEqQUiEkezvKdv6VgsIoMy58i00c854wVmOw0k8W5FTpuaVqg==}
-    engines: {node: '>=18.12.0'}
+  stylelint-config-standard-scss@15.0.1:
+    resolution: {integrity: sha512-8pmmfutrMlPHukLp+Th9asmk21tBXMVGxskZCzkRVWt1d8Z0SrXjUUQ3vn9KcBj1bJRd5msk6yfEFM0UYHBRdg==}
+    engines: {node: '>=20'}
     peerDependencies:
       postcss: ^8.3.3
-      stylelint: ^16.11.0
+      stylelint: ^16.18.0
     peerDependenciesMeta:
       postcss:
         optional: true
-
-  stylelint-config-standard@36.0.1:
-    resolution: {integrity: sha512-8aX8mTzJ6cuO8mmD5yon61CWuIM4UD8Q5aBcWKGSf6kg+EC3uhB+iOywpTK4ca6ZL7B49en8yanOFtUW0qNzyw==}
-    engines: {node: '>=18.12.0'}
-    peerDependencies:
-      stylelint: ^16.1.0
 
   stylelint-config-standard@38.0.0:
     resolution: {integrity: sha512-uj3JIX+dpFseqd/DJx8Gy3PcRAJhlEZ2IrlFOc4LUxBX/PNMEQ198x7LCOE2Q5oT9Vw8nyc4CIL78xSqPr6iag==}
@@ -8859,11 +8825,6 @@ packages:
     resolution: {integrity: sha512-cYVsTjKl8b+FrnidjibDWskAv7UKOfcwaVZdp/it9n1s9fU3IkgDbhdIRKCW4JDsAlECJY0ytoVPT3sK6kideA==}
     engines: {node: '>=18'}
 
-  zod-to-json-schema@3.24.5:
-    resolution: {integrity: sha512-/AuWwMP+YqiPbsJx5D6TfgRTc4kTLjsh5SOcd4bLsfUg2RcEXrFMJl1DGgdHy2aCfsIA/cr/1JM0xcB2GZji8g==}
-    peerDependencies:
-      zod: ^3.24.1
-
   zod@3.25.7:
     resolution: {integrity: sha512-YGdT1cVRmKkOg6Sq7vY7IkxdphySKnXhaUmFI4r4FcuFVNgpCb9tZfNwXbT6BPjD5oz0nubFsoo9pIqKrDcCvg==}
 
@@ -8910,11 +8871,11 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@babel/eslint-parser@7.27.1(@babel/core@7.27.1)(eslint@9.26.0)':
+  '@babel/eslint-parser@7.27.1(@babel/core@7.27.1)(eslint@9.27.0)':
     dependencies:
       '@babel/core': 7.27.1(supports-color@8.1.1)
       '@nicolo-ribaudo/eslint-scope-5-internals': 5.1.1-v1
-      eslint: 9.26.0
+      eslint: 9.27.0
       eslint-visitor-keys: 2.1.0
       semver: 6.3.1
 
@@ -9691,25 +9652,25 @@ snapshots:
 
   '@discourse/itsatrap@2.0.10': {}
 
-  '@discourse/lint-configs@2.17.2(ember-template-lint@7.6.0(@babel/core@7.27.1))(eslint@9.26.0)(postcss@8.5.3)(prettier@3.5.3)(stylelint@16.19.1(typescript@5.6.3))':
+  '@discourse/lint-configs@2.19.0(ember-template-lint@7.7.0(@babel/core@7.27.1))(eslint@9.27.0)(postcss@8.5.3)(prettier@3.5.3)(stylelint@16.19.1(typescript@5.6.3))':
     dependencies:
       '@babel/core': 7.27.1(supports-color@8.1.1)
-      '@babel/eslint-parser': 7.27.1(@babel/core@7.27.1)(eslint@9.26.0)
+      '@babel/eslint-parser': 7.27.1(@babel/core@7.27.1)(eslint@9.27.0)
       '@babel/plugin-proposal-decorators': 7.27.1(@babel/core@7.27.1)
-      ember-template-lint: 7.6.0(@babel/core@7.27.1)
-      eslint: 9.26.0
-      eslint-plugin-decorator-position: 6.0.0(@babel/eslint-parser@7.27.1(@babel/core@7.27.1)(eslint@9.26.0))(eslint@9.26.0)
-      eslint-plugin-ember: 12.5.0(@babel/core@7.27.1)(eslint@9.26.0)
-      eslint-plugin-import: 2.31.0(eslint@9.26.0)
-      eslint-plugin-qunit: 8.1.2(eslint@9.26.0)
-      eslint-plugin-simple-import-sort: 12.1.1(eslint@9.26.0)
-      eslint-plugin-sort-class-members: 1.21.0(eslint@9.26.0)
-      globals: 16.0.0
+      ember-template-lint: 7.7.0(@babel/core@7.27.1)
+      eslint: 9.27.0
+      eslint-plugin-decorator-position: 6.0.0(@babel/eslint-parser@7.27.1(@babel/core@7.27.1)(eslint@9.27.0))(eslint@9.27.0)
+      eslint-plugin-ember: 12.5.0(@babel/core@7.27.1)(eslint@9.27.0)
+      eslint-plugin-import: 2.31.0(eslint@9.27.0)
+      eslint-plugin-qunit: 8.1.2(eslint@9.27.0)
+      eslint-plugin-simple-import-sort: 12.1.1(eslint@9.27.0)
+      eslint-plugin-sort-class-members: 1.21.0(eslint@9.27.0)
+      globals: 16.1.0
       prettier: 3.5.3
       prettier-plugin-ember-template-tag: 2.0.5(prettier@3.5.3)
       stylelint: 16.19.1(typescript@5.6.3)
       stylelint-config-standard: 38.0.0(stylelint@16.19.1(typescript@5.6.3))
-      stylelint-config-standard-scss: 14.0.0(postcss@8.5.3)(stylelint@16.19.1(typescript@5.6.3))
+      stylelint-config-standard-scss: 15.0.1(postcss@8.5.3)(stylelint@16.19.1(typescript@5.6.3))
       stylelint-scss: 6.12.0(stylelint@16.19.1(typescript@5.6.3))
       typescript: 5.8.3
     transitivePeerDependencies:
@@ -10104,9 +10065,9 @@ snapshots:
   '@esbuild/win32-x64@0.25.4':
     optional: true
 
-  '@eslint-community/eslint-utils@4.7.0(eslint@9.26.0)':
+  '@eslint-community/eslint-utils@4.7.0(eslint@9.27.0)':
     dependencies:
-      eslint: 9.26.0
+      eslint: 9.27.0
       eslint-visitor-keys: 3.4.3
 
   '@eslint-community/regexpp@4.12.1': {}
@@ -10121,7 +10082,7 @@ snapshots:
 
   '@eslint/config-helpers@0.2.2': {}
 
-  '@eslint/core@0.13.0':
+  '@eslint/core@0.14.0':
     dependencies:
       '@types/json-schema': 7.0.15
 
@@ -10139,13 +10100,13 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@eslint/js@9.26.0': {}
+  '@eslint/js@9.27.0': {}
 
   '@eslint/object-schema@2.1.6': {}
 
-  '@eslint/plugin-kit@0.2.8':
+  '@eslint/plugin-kit@0.3.1':
     dependencies:
-      '@eslint/core': 0.13.0
+      '@eslint/core': 0.14.0
       levn: 0.4.1
 
   '@faker-js/faker@9.8.0': {}
@@ -10547,21 +10508,6 @@ snapshots:
   '@messageformat/runtime@3.0.1':
     dependencies:
       make-plural: 7.4.0
-
-  '@modelcontextprotocol/sdk@1.11.2':
-    dependencies:
-      content-type: 1.0.5
-      cors: 2.8.5
-      cross-spawn: 7.0.6
-      eventsource: 3.0.7
-      express: 5.1.0
-      express-rate-limit: 7.5.0(express@5.1.0)
-      pkce-challenge: 5.0.0
-      raw-body: 3.0.0
-      zod: 3.25.7
-      zod-to-json-schema: 3.24.5(zod@3.25.7)
-    transitivePeerDependencies:
-      - supports-color
 
   '@nicolo-ribaudo/eslint-scope-5-internals@5.1.1-v1':
     dependencies:
@@ -13220,10 +13166,10 @@ snapshots:
 
   ember-disable-prototype-extensions@1.1.3: {}
 
-  ember-eslint-parser@0.5.9(@babel/core@7.27.1)(eslint@9.26.0):
+  ember-eslint-parser@0.5.9(@babel/core@7.27.1)(eslint@9.27.0):
     dependencies:
       '@babel/core': 7.27.1(supports-color@8.1.1)
-      '@babel/eslint-parser': 7.27.1(@babel/core@7.27.1)(eslint@9.26.0)
+      '@babel/eslint-parser': 7.27.1(@babel/core@7.27.1)(eslint@9.27.0)
       '@glimmer/syntax': 0.92.3
       content-tag: 2.0.3
       eslint-scope: 7.2.2
@@ -13376,7 +13322,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  ember-template-lint@7.6.0(@babel/core@7.27.1):
+  ember-template-lint@7.7.0(@babel/core@7.27.1):
     dependencies:
       '@babel/generator': 7.27.1
       '@babel/parser': 7.27.2
@@ -13660,36 +13606,36 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-module-utils@2.12.0(eslint-import-resolver-node@0.3.9)(eslint@9.26.0):
+  eslint-module-utils@2.12.0(eslint-import-resolver-node@0.3.9)(eslint@9.27.0):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
-      eslint: 9.26.0
+      eslint: 9.27.0
       eslint-import-resolver-node: 0.3.9
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-decorator-position@6.0.0(@babel/eslint-parser@7.27.1(@babel/core@7.27.1)(eslint@9.26.0))(eslint@9.26.0):
+  eslint-plugin-decorator-position@6.0.0(@babel/eslint-parser@7.27.1(@babel/core@7.27.1)(eslint@9.27.0))(eslint@9.27.0):
     dependencies:
       '@babel/core': 7.27.1(supports-color@8.1.1)
       '@babel/plugin-proposal-decorators': 7.27.1(@babel/core@7.27.1)
       '@ember-data/rfc395-data': 0.0.4
       ember-rfc176-data: 0.3.18
-      eslint: 9.26.0
+      eslint: 9.27.0
       snake-case: 3.0.4
     optionalDependencies:
-      '@babel/eslint-parser': 7.27.1(@babel/core@7.27.1)(eslint@9.26.0)
+      '@babel/eslint-parser': 7.27.1(@babel/core@7.27.1)(eslint@9.27.0)
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-ember@12.5.0(@babel/core@7.27.1)(eslint@9.26.0):
+  eslint-plugin-ember@12.5.0(@babel/core@7.27.1)(eslint@9.27.0):
     dependencies:
       '@ember-data/rfc395-data': 0.0.4
       css-tree: 3.1.0
-      ember-eslint-parser: 0.5.9(@babel/core@7.27.1)(eslint@9.26.0)
+      ember-eslint-parser: 0.5.9(@babel/core@7.27.1)(eslint@9.27.0)
       ember-rfc176-data: 0.3.18
-      eslint: 9.26.0
-      eslint-utils: 3.0.0(eslint@9.26.0)
+      eslint: 9.27.0
+      eslint-utils: 3.0.0(eslint@9.27.0)
       estraverse: 5.3.0
       lodash.camelcase: 4.3.0
       lodash.kebabcase: 4.1.1
@@ -13698,7 +13644,7 @@ snapshots:
     transitivePeerDependencies:
       - '@babel/core'
 
-  eslint-plugin-import@2.31.0(eslint@9.26.0):
+  eslint-plugin-import@2.31.0(eslint@9.27.0):
     dependencies:
       '@rtsao/scc': 1.1.0
       array-includes: 3.1.8
@@ -13707,9 +13653,9 @@ snapshots:
       array.prototype.flatmap: 1.3.3
       debug: 3.2.7
       doctrine: 2.1.0
-      eslint: 9.26.0
+      eslint: 9.27.0
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.12.0(eslint-import-resolver-node@0.3.9)(eslint@9.26.0)
+      eslint-module-utils: 2.12.0(eslint-import-resolver-node@0.3.9)(eslint@9.27.0)
       hasown: 2.0.2
       is-core-module: 2.16.1
       is-glob: 4.0.3
@@ -13725,20 +13671,20 @@ snapshots:
       - eslint-import-resolver-webpack
       - supports-color
 
-  eslint-plugin-qunit@8.1.2(eslint@9.26.0):
+  eslint-plugin-qunit@8.1.2(eslint@9.27.0):
     dependencies:
-      eslint-utils: 3.0.0(eslint@9.26.0)
+      eslint-utils: 3.0.0(eslint@9.27.0)
       requireindex: 1.2.0
     transitivePeerDependencies:
       - eslint
 
-  eslint-plugin-simple-import-sort@12.1.1(eslint@9.26.0):
+  eslint-plugin-simple-import-sort@12.1.1(eslint@9.27.0):
     dependencies:
-      eslint: 9.26.0
+      eslint: 9.27.0
 
-  eslint-plugin-sort-class-members@1.21.0(eslint@9.26.0):
+  eslint-plugin-sort-class-members@1.21.0(eslint@9.27.0):
     dependencies:
-      eslint: 9.26.0
+      eslint: 9.27.0
 
   eslint-scope@5.1.1:
     dependencies:
@@ -13755,9 +13701,9 @@ snapshots:
       esrecurse: 4.3.0
       estraverse: 5.3.0
 
-  eslint-utils@3.0.0(eslint@9.26.0):
+  eslint-utils@3.0.0(eslint@9.27.0):
     dependencies:
-      eslint: 9.26.0
+      eslint: 9.27.0
       eslint-visitor-keys: 2.1.0
 
   eslint-visitor-keys@2.1.0: {}
@@ -13766,20 +13712,19 @@ snapshots:
 
   eslint-visitor-keys@4.2.0: {}
 
-  eslint@9.26.0:
+  eslint@9.27.0:
     dependencies:
-      '@eslint-community/eslint-utils': 4.7.0(eslint@9.26.0)
+      '@eslint-community/eslint-utils': 4.7.0(eslint@9.27.0)
       '@eslint-community/regexpp': 4.12.1
       '@eslint/config-array': 0.20.0
       '@eslint/config-helpers': 0.2.2
-      '@eslint/core': 0.13.0
+      '@eslint/core': 0.14.0
       '@eslint/eslintrc': 3.3.1
-      '@eslint/js': 9.26.0
-      '@eslint/plugin-kit': 0.2.8
+      '@eslint/js': 9.27.0
+      '@eslint/plugin-kit': 0.3.1
       '@humanfs/node': 0.16.6
       '@humanwhocodes/module-importer': 1.0.1
       '@humanwhocodes/retry': 0.4.3
-      '@modelcontextprotocol/sdk': 1.11.2
       '@types/estree': 1.0.7
       '@types/json-schema': 7.0.15
       ajv: 6.12.6
@@ -13804,7 +13749,6 @@ snapshots:
       minimatch: 3.1.2
       natural-compare: 1.4.0
       optionator: 0.9.4
-      zod: 3.25.7
     transitivePeerDependencies:
       - supports-color
 
@@ -13845,12 +13789,6 @@ snapshots:
   events-to-array@1.1.2: {}
 
   events@3.3.0: {}
-
-  eventsource-parser@3.0.1: {}
-
-  eventsource@3.0.7:
-    dependencies:
-      eventsource-parser: 3.0.1
 
   exec-sh@0.3.6: {}
 
@@ -13931,10 +13869,6 @@ snapshots:
       homedir-polyfill: 1.0.3
 
   exponential-backoff@3.1.1: {}
-
-  express-rate-limit@7.5.0(express@5.1.0):
-    dependencies:
-      express: 5.1.0
 
   express@4.21.2:
     dependencies:
@@ -14621,7 +14555,7 @@ snapshots:
 
   globals@14.0.0: {}
 
-  globals@16.0.0: {}
+  globals@16.1.0: {}
 
   globalthis@1.0.4:
     dependencies:
@@ -15459,18 +15393,18 @@ snapshots:
     dependencies:
       uc.micro: 2.1.0
 
-  lint-to-the-future-ember-template@3.1.0(ember-template-lint@7.6.0(@babel/core@7.27.1)):
+  lint-to-the-future-ember-template@3.1.0(ember-template-lint@7.7.0(@babel/core@7.27.1)):
     dependencies:
       content-tag: 3.1.3
       debug: 4.4.1(supports-color@8.1.1)
-      ember-template-lint: 7.6.0(@babel/core@7.27.1)
+      ember-template-lint: 7.7.0(@babel/core@7.27.1)
       globby: 14.1.0
     transitivePeerDependencies:
       - supports-color
 
-  lint-to-the-future-eslint@3.1.0(eslint@9.26.0):
+  lint-to-the-future-eslint@3.1.0(eslint@9.27.0):
     dependencies:
-      eslint: 9.26.0
+      eslint: 9.27.0
       globby: 14.1.0
       import-cwd: 3.0.0
 
@@ -16402,8 +16336,6 @@ snapshots:
   picomatch@4.0.2: {}
 
   pikaday@1.8.2: {}
-
-  pkce-challenge@5.0.0: {}
 
   pkg-dir@4.2.0:
     dependencies:
@@ -17580,35 +17512,26 @@ snapshots:
 
   styled_string@0.0.1: {}
 
-  stylelint-config-recommended-scss@14.1.0(postcss@8.5.3)(stylelint@16.19.1(typescript@5.6.3)):
+  stylelint-config-recommended-scss@15.0.1(postcss@8.5.3)(stylelint@16.19.1(typescript@5.6.3)):
     dependencies:
       postcss-scss: 4.0.9(postcss@8.5.3)
       stylelint: 16.19.1(typescript@5.6.3)
-      stylelint-config-recommended: 14.0.1(stylelint@16.19.1(typescript@5.6.3))
+      stylelint-config-recommended: 16.0.0(stylelint@16.19.1(typescript@5.6.3))
       stylelint-scss: 6.12.0(stylelint@16.19.1(typescript@5.6.3))
     optionalDependencies:
       postcss: 8.5.3
-
-  stylelint-config-recommended@14.0.1(stylelint@16.19.1(typescript@5.6.3)):
-    dependencies:
-      stylelint: 16.19.1(typescript@5.6.3)
 
   stylelint-config-recommended@16.0.0(stylelint@16.19.1(typescript@5.6.3)):
     dependencies:
       stylelint: 16.19.1(typescript@5.6.3)
 
-  stylelint-config-standard-scss@14.0.0(postcss@8.5.3)(stylelint@16.19.1(typescript@5.6.3)):
+  stylelint-config-standard-scss@15.0.1(postcss@8.5.3)(stylelint@16.19.1(typescript@5.6.3)):
     dependencies:
       stylelint: 16.19.1(typescript@5.6.3)
-      stylelint-config-recommended-scss: 14.1.0(postcss@8.5.3)(stylelint@16.19.1(typescript@5.6.3))
-      stylelint-config-standard: 36.0.1(stylelint@16.19.1(typescript@5.6.3))
+      stylelint-config-recommended-scss: 15.0.1(postcss@8.5.3)(stylelint@16.19.1(typescript@5.6.3))
+      stylelint-config-standard: 38.0.0(stylelint@16.19.1(typescript@5.6.3))
     optionalDependencies:
       postcss: 8.5.3
-
-  stylelint-config-standard@36.0.1(stylelint@16.19.1(typescript@5.6.3)):
-    dependencies:
-      stylelint: 16.19.1(typescript@5.6.3)
-      stylelint-config-recommended: 14.0.1(stylelint@16.19.1(typescript@5.6.3))
 
   stylelint-config-standard@38.0.0(stylelint@16.19.1(typescript@5.6.3)):
     dependencies:
@@ -18581,9 +18504,5 @@ snapshots:
   yocto-queue@1.2.1: {}
 
   yoctocolors-cjs@2.1.2: {}
-
-  zod-to-json-schema@3.24.5(zod@3.25.7):
-    dependencies:
-      zod: 3.25.7
 
   zod@3.25.7: {}
