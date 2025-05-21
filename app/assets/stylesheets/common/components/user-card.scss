@@ -60,7 +60,7 @@
 
   .card-content {
     padding: 10px;
-    background: rgba(var(--secondary-rgb), 0.85);
+    background: rgb(var(--secondary-rgb), 0.85);
 
     &::after {
       content: "";

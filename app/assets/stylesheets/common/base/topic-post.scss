@@ -785,7 +785,7 @@ aside.quote {
   }
 
   .insert-quote + .quote-sharing {
-    border-left: 1px solid rgba(255, 255, 255, 0.3);
+    border-left: 1px solid rgb(255, 255, 255, 0.3);
   }
 
   .btn-flat {
@@ -1616,7 +1616,7 @@ iframe {
     > .d-icon {
       padding: 0.5em;
       margin: 0.5em;
-      background-color: rgba(var(--always-black-rgb), 0.25);
+      background-color: rgb(var(--always-black-rgb), 0.25);
       color: var(--secondary-or-primary);
       cursor: pointer;
       display: none;
@@ -1707,8 +1707,8 @@ html.discourse-no-touch .fullscreen-table-wrapper:hover {
   &.--has-overflow,
   &.--editable {
     box-shadow:
-      0 2px 5px 0 rgba(var(--always-black-rgb), 0.1),
-      0 2px 10px 0 rgba(var(--always-black-rgb), 0.1);
+      0 2px 5px 0 rgb(var(--always-black-rgb), 0.1),
+      0 2px 10px 0 rgb(var(--always-black-rgb), 0.1);
   }
 }
 

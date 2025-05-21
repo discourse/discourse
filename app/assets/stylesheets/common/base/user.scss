@@ -197,7 +197,7 @@
     }
 
     .details {
-      background: rgba(var(--secondary-rgb), 0.8);
+      background: rgb(var(--secondary-rgb), 0.8);
       border-bottom: 1px solid var(--primary-low);
 
       .groups {
@@ -251,7 +251,7 @@
     &.collapsed-info {
       .details {
         margin-top: 0;
-        background: rgba(var(--secondary-rgb), 0.8);
+        background: rgb(var(--secondary-rgb), 0.8);
 
         .bio {
           display: none;

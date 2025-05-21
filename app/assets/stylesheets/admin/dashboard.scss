@@ -32,8 +32,8 @@
       height: 100%;
       background: linear-gradient(
         to left,
-        rgba(var(--secondary-rgb), 1),
-        rgba(var(--secondary-rgb), 0)
+        rgb(var(--secondary-rgb), 1),
+        rgb(var(--secondary-rgb), 0)
       );
     }
 
@@ -45,8 +45,8 @@
       height: 100%;
       background: linear-gradient(
         to right,
-        rgba(var(--secondary-rgb), 0),
-        rgba(var(--secondary-rgb), 1)
+        rgb(var(--secondary-rgb), 0),
+        rgb(var(--secondary-rgb), 1)
       );
     }
 
