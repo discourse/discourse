@@ -1,11 +1,8 @@
 import { tracked } from "@glimmer/tracking";
-import EmberObject from "@ember/object";
 import { render, settled } from "@ember/test-helpers";
-import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import CategoryTitleLink from "discourse/components/category-title-link";
 import Category from "discourse/models/category";
-import RestModel from "discourse/models/rest";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Integration | Component | Category Title Link", function (hooks) {
