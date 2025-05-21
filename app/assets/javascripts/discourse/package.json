@@ -27,6 +27,7 @@
     "@messageformat/runtime": "^3.0.1",
     "ace-builds": "^1.41.0",
     "decorator-transforms": "^2.3.0",
+    "diff": "^8.0.1",
     "discourse-widget-hbs": "workspace:1.0.0",
     "ember-curry-component": "^0.3.0",
     "ember-resolver": "^13.1.1",
@@ -35,6 +36,8 @@
     "highlight.js": "11.11.1",
     "immer": "^10.1.1",
     "jspreadsheet-ce": "^4.15.0",
+    "moment": "2.30.1",
+    "moment-timezone": "0.5.45",
     "morphlex": "^0.0.16",
     "orderedmap": "^2.1.1",
     "pretty-text": "workspace:1.0.0",
@@ -51,9 +54,7 @@
     "prosemirror-schema-list": "^1.5.1",
     "prosemirror-state": "^1.4.3",
     "prosemirror-transform": "^1.10.4",
-    "prosemirror-view": "^1.39.3",
-    "moment": "2.30.1",
-    "moment-timezone": "0.5.45"
+    "prosemirror-view": "^1.39.3"
   },
   "devDependencies": {
     "@babel/core": "^7.27.1",
