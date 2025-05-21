@@ -682,6 +682,94 @@ RSpec.describe UserNotifications do
     end
   end
 
+  describe ".user_mentioned" do
+    let(:response_by_user) { Fabricate(:user, name: "John Doe") }
+    let(:category) { Fabricate(:category, name: "India") }
+
+    let(:topic) { Fabricate(:topic, category: category, title: "Super cool topic") }
+
+    let(:user) { Fabricate(:user) }
+    let(:post) { Fabricate(:post, topic: topic, raw: "This is My super duper cool topic") }
+    let(:response) do
+      Fabricate(
+        :basic_reply,
+        topic: post.topic,
+        user: response_by_user,
+        raw: "@#{user.username} response to post",
+      )
+    end
+    let(:notification) { Fabricate(:mentioned_notification, user: user, post: response) }
+
+    context "when user has name" do
+      it "generates a correct email" do
+        mail =
+          UserNotifications.user_mentioned(
+            user,
+            post: response,
+            notification_type: notification.notification_type,
+            notification_data_hash: notification.data_hash,
+          )
+
+        # from should include full user name
+        expect(mail[:from].display_names).to eql(["John Doe via Discourse"])
+
+        # subject should include category name
+        expect(mail.subject).to match(/India/)
+
+        mail_html = mail.html_part.body.to_s
+
+        expect(mail_html.scan(%r{@#{user.name}</a> response to post}).count).to eq(1)
+
+        expect(mail_html.scan(/Visit Topic/).count).to eq(1)
+
+        expect(mail_html.scan(/to respond/).count).to eq(1)
+
+        # 1 unsubscribe
+        expect(mail_html.scan(/To unsubscribe/).count).to eq(1)
+
+        # side effect, topic user is updated with post number
+        tu = TopicUser.get(post.topic_id, user)
+        expect(tu.last_emailed_post_number).to eq(response.post_number)
+      end
+    end
+
+    context "when user doesn't have a name" do
+      it "generates a correct email" do
+        user.name = nil
+        user.save
+
+        mail =
+          UserNotifications.user_mentioned(
+            user,
+            post: response,
+            notification_type: notification.notification_type,
+            notification_data_hash: notification.data_hash,
+          )
+
+        # from should include full user name
+        expect(mail[:from].display_names).to eql(["John Doe via Discourse"])
+
+        # subject should include category name
+        expect(mail.subject).to match(/India/)
+
+        mail_html = mail.html_part.body.to_s
+
+        expect(mail_html.scan(%r{@#{user.username}</a> response to post}).count).to eq(1)
+
+        expect(mail_html.scan(/Visit Topic/).count).to eq(1)
+
+        expect(mail_html.scan(/to respond/).count).to eq(1)
+
+        # 1 unsubscribe
+        expect(mail_html.scan(/To unsubscribe/).count).to eq(1)
+
+        # side effect, topic user is updated with post number
+        tu = TopicUser.get(post.topic_id, user)
+        expect(tu.last_emailed_post_number).to eq(response.post_number)
+      end
+    end
+  end
+
   describe ".user_posted" do
     let(:response_by_user) { Fabricate(:user, name: "John Doe", username: "john") }
     let(:topic) { Fabricate(:topic, title: "Super cool topic") }
