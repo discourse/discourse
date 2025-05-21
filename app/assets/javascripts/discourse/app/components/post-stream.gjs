@@ -404,7 +404,9 @@ export default class PostStream extends Component {
 
     // update the current post to enable fine grained scrolling tracking for it
     this.#updateCurrentPost(
-      this.#postsOnScreen[this.#onScreenBoundaries.min]?.element
+      this.#onScreenBoundaries.min !== null
+        ? this.#postsOnScreen[this.#onScreenBoundaries.min]?.element
+        : null
     );
   }
 
@@ -496,7 +498,7 @@ export default class PostStream extends Component {
   }
 
   #updateCurrentPost(newElement) {
-    if (!newElement || this.#currentPostElement === newElement) {
+    if (this.#currentPostElement === newElement) {
       return;
     }
 
@@ -505,7 +507,7 @@ export default class PostStream extends Component {
     }
 
     const currentPost = this.#currentPostElement?.[POST_MODEL];
-    const newPost = newElement[POST_MODEL];
+    const newPost = newElement?.[POST_MODEL];
 
     if (currentPost !== newPost) {
       discourseDebounce(
@@ -516,8 +518,11 @@ export default class PostStream extends Component {
       );
     }
 
-    this.#currentPostObserver.observe(newElement);
     this.#currentPostElement = newElement;
+
+    if (newElement) {
+      this.#currentPostObserver.observe(newElement);
+    }
   }
 
   #updateScreenTracking(postsOnScreen) {
@@ -531,10 +536,6 @@ export default class PostStream extends Component {
         readPostNumbers.push(post.post_number);
       }
     });
-
-    if (!onScreenPostsNumbers.length) {
-      return;
-    }
 
     this.screenTrack.setOnscreen(onScreenPostsNumbers, readPostNumbers);
   }
