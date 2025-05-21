@@ -411,7 +411,7 @@ export default class TopicMapSummary extends Component {
       {{/if}}
       <PluginOutlet
         @name="topic-map-participants-after"
-        @outletArgs={{hash topic=@topic}}
+        @outletArgs={{lazyHash topic=@topic}}
       />
       <div class="topic-map__buttons">
         {{#if this.readTimeMinutes}}
