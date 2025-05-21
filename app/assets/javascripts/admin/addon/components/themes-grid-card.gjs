@@ -35,7 +35,7 @@ export default class ThemeCard extends Component {
   }
 
   get themeRouteModels() {
-    return ["themes", this.args.theme.id];
+    return [this.args.theme.id];
   }
 
   get themePreviewUrl() {
@@ -184,7 +184,7 @@ export default class ThemeCard extends Component {
           <div class="theme-card__controls">
             <DButton
               @translatedLabel={{i18n "admin.customize.theme.edit"}}
-              @route="adminCustomizeThemes.show"
+              @route="adminConfig.themeShow"
               @routeModels={{this.themeRouteModels}}
               class="btn-secondary theme-card__button edit"
               @preventFocus={{true}}
