@@ -98,19 +98,7 @@ export default RouteTemplate(
             @save={{@controller.finishedEditingTopic}}
             @model={{@controller.model}}
           >
-            <div
-              role="button"
-              class={{concatClass
-                "title-wrapper edit-topic"
-                (if @controller.editingTopic "editing-topic")
-                (if @controller.model.details.can_edit "can-edit-topic")
-                (if @controller.titleTextHighlighted "title-highlighted")
-              }}
-              aria-label={{i18n "edit_topic"}}
-              {{on "pointermove" @controller.handlePointerMove}}
-              {{on "pointerup" @controller.handlePointerUp}}
-              title={{i18n "edit_topic"}}
-            >
+            <div class="title-wrapper">
               {{#if @controller.editingTopic}}
                 <div class="edit-topic-title">
                   <PrivateMessageGlyph
@@ -214,7 +202,20 @@ export default RouteTemplate(
                 </div>
 
               {{else}}
-                <h1 data-topic-id={{@controller.model.id}}>
+                <h1
+                  data-topic-id={{@controller.model.id}}
+                  role="button"
+                  class={{concatClass
+                    "title-wrapper edit-topic"
+                    (if @controller.editingTopic "editing-topic")
+                    (if @controller.model.details.can_edit "can-edit-topic")
+                    (if @controller.titleTextHighlighted "title-highlighted")
+                  }}
+                  aria-label={{i18n "edit_topic"}}
+                  {{on "pointermove" @controller.handlePointerMove}}
+                  {{on "pointerup" @controller.handlePointerUp}}
+                  title={{i18n "edit_topic"}}
+                >
                   {{#unless @controller.model.is_warning}}
                     {{#if @controller.canSendPms}}
                       <PrivateMessageGlyph
