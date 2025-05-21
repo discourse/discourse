@@ -328,6 +328,7 @@ class FKForm extends Component {
             forwardEvent=true
             class="form-kit__button"
             label="form_kit.reset"
+            disabled=true
           )
           Field=(this.componentFor FKField)
           Collection=(this.componentFor FKCollection)
