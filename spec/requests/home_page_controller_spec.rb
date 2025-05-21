@@ -1,8 +1,13 @@
 # frozen_string_literal: true
 
 RSpec.describe HomePageController do
-  describe "#custom" do
+  describe "homepage" do
     context "with crawler view" do
+      before do
+        SiteSetting.site_description = "This is a test description"
+        SiteSetting.has_login_hint = false
+      end
+
       it "should display the menu by default" do
         get "/custom", headers: { "HTTP_USER_AGENT" => "Googlebot" }
 
@@ -42,6 +47,27 @@ RSpec.describe HomePageController do
           Discourse.plugins.delete plugin
           DiscoursePluginRegistry.reset!
         end
+      end
+
+      it "should display the site description on the homepage" do
+        get "/", headers: { "HTTP_USER_AGENT" => "Googlebot" }
+
+        expect(response.status).to eq(200)
+        expect(response.body).to include("<p>This is a test description</p>")
+        expect(response.body).to include(
+          "<meta name=\"description\" content=\"This is a test description\">",
+        )
+      end
+
+      it "should not display the site description on another route" do
+        get "/top", headers: { "HTTP_USER_AGENT" => "Googlebot" }
+
+        expect(response.status).to eq(200)
+        expect(response.body).not_to include("<p>This is a test description</p>")
+        # but still includes the meta tag
+        expect(response.body).to include(
+          "<meta name=\"description\" content=\"This is a test description\">",
+        )
       end
     end
   end
