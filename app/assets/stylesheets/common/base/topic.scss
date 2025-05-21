@@ -186,24 +186,24 @@
       }
     }
 
-    .can-edit-topic .fancy-title {
+    &.can-edit-topic .fancy-title {
       outline: 2px solid transparent;
       border-radius: var(--d-border-radius);
       transition: outline ease-in-out 0.2s;
       padding: 0.25rem;
-      margin-left: -0.25rem;
-      margin-top: -0.25rem;
+      transition-delay: 0.1s;
     }
 
-    .can-edit-topic:not(.editing-topic) {
+    &.can-edit-topic:not(.editing-topic) {
       cursor: pointer;
     }
 
-    .can-edit-topic:not(.editing-topic, .title-highlighted):hover .fancy-title {
+    &.can-edit-topic:not(.editing-topic, .title-highlighted):hover
+      .fancy-title {
       outline: 2px solid var(--primary-300);
     }
 
-    .editing-topic {
+    &.editing-topic {
       transition: none;
     }
   }

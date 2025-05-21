@@ -98,7 +98,14 @@ export default RouteTemplate(
             @save={{@controller.finishedEditingTopic}}
             @model={{@controller.model}}
           >
-            <div class="title-wrapper">
+            <div
+              class={{concatClass
+                "title-wrapper"
+                (if @controller.editingTopic "editing-topic")
+                (if @controller.model.details.can_edit "can-edit-topic")
+                (if @controller.titleTextHighlighted "title-highlighted")
+              }}
+            >
               {{#if @controller.editingTopic}}
                 <div class="edit-topic-title">
                   <PrivateMessageGlyph
@@ -205,12 +212,7 @@ export default RouteTemplate(
                 <h1
                   data-topic-id={{@controller.model.id}}
                   role="button"
-                  class={{concatClass
-                    "title-wrapper edit-topic"
-                    (if @controller.editingTopic "editing-topic")
-                    (if @controller.model.details.can_edit "can-edit-topic")
-                    (if @controller.titleTextHighlighted "title-highlighted")
-                  }}
+                  class={{concatClass "title-wrapper edit-topic"}}
                   aria-label={{i18n "edit_topic"}}
                   {{on "pointermove" @controller.handlePointerMove}}
                   {{on "pointerup" @controller.handlePointerUp}}
