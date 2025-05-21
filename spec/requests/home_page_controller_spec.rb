@@ -53,14 +53,21 @@ RSpec.describe HomePageController do
         get "/", headers: { "HTTP_USER_AGENT" => "Googlebot" }
 
         expect(response.status).to eq(200)
-        expect(response.body).to include("This is a test description")
+        expect(response.body).to include("<p>This is a test description</p>")
+        expect(response.body).to include(
+          "<meta name=\"description\" content=\"This is a test description\">",
+        )
       end
 
       it "should not display the site description on another route" do
         get "/top", headers: { "HTTP_USER_AGENT" => "Googlebot" }
 
         expect(response.status).to eq(200)
-        expect(response.body).to include("This is a test description")
+        expect(response.body).not_to include("<p>This is a test description</p>")
+        # but still includes the meta tag
+        expect(response.body).to include(
+          "<meta name=\"description\" content=\"This is a test description\">",
+        )
       end
     end
   end
