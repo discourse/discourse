@@ -58,28 +58,29 @@ export default class FormKitSiteSettingWrapper extends Component {
         @title={{this.settingTitle}}
         @description={{htmlSafe @setting.description}}
         @primaryActionsComponent={{component PrimaryActions setting=@setting}}
-        as |field|
       >
-        <:test>
-          test
-        </:test>
-        {{#if (eq @setting.type "string")}}
-          <field.Input />
-        {{else if (eq @setting.type "upload")}}
-          <field.Image @type="site_setting" />
-        {{else if (eq @setting.type "bool")}}
-          <field.Checkbox>
-            {{htmlSafe @setting.description}}
-          </field.Checkbox>
-        {{else if (eq @setting.type "enum")}}
-          <field.Select as |select|>
-            {{#each @setting.valid_values as |item|}}
-              <select.Option @value={{item.value}}>
-                {{item.name}}
-              </select.Option>
-            {{/each}}
-          </field.Select>
-        {{/if}}
+        <:primary-actions>
+          primary-actions
+        </:primary-actions>
+        <:body as |field|>
+          {{#if (eq @setting.type "string")}}
+            <field.Input />
+          {{else if (eq @setting.type "upload")}}
+            <field.Image @type="site_setting" />
+          {{else if (eq @setting.type "bool")}}
+            <field.Checkbox>
+              {{htmlSafe @setting.description}}
+            </field.Checkbox>
+          {{else if (eq @setting.type "enum")}}
+            <field.Select as |select|>
+              {{#each @setting.valid_values as |item|}}
+                <select.Option @value={{item.value}}>
+                  {{item.name}}
+                </select.Option>
+              {{/each}}
+            </field.Select>
+          {{/if}}
+        </:body>
       </form.Field>
     </Form>
   </template>
