@@ -102,6 +102,7 @@ export default class TopicController extends Controller {
   currentPostId = null;
   userLastReadPostNumber = null;
   highestPostNumber = null;
+  titleTextHighlighted = false;
   _progressIndex = null;
   _retryInProgress = false;
   _retryRateLimited = false;
@@ -156,20 +157,6 @@ export default class TopicController extends Controller {
   @discourseComputed("model.postStream.loaded", "model.is_shared_draft")
   showSharedDraftControls(loaded, isSharedDraft) {
     return loaded && isSharedDraft;
-  }
-
-  @discourseComputed("model.details.can_edit", "editingTopic")
-  topicTitleClass(canEdit, isEditingTopic) {
-    let classes = ["edit-topic"];
-    if (canEdit) {
-      classes.push("can-edit-topic");
-    }
-
-    if (isEditingTopic) {
-      classes.push("editing-topic");
-    }
-
-    return classes.join(" ");
   }
 
   @discourseComputed("model.details.can_edit")
@@ -406,7 +393,24 @@ export default class TopicController extends Controller {
       return;
     }
     event?.preventDefault();
+    const selection = window.getSelection();
+    if (selection.toString().length > 0) {
+      return;
+    }
     this.editTopic(event);
+  }
+
+  @action
+  handlePointerMove() {
+    const selection = window.getSelection();
+    this.set("titleTextHighlighted", selection.toString().length > 0);
+  }
+
+  @action
+  handlePointerUp(event) {
+    if (!this.titleTextHighlighted) {
+      this.editTopic(event);
+    }
   }
 
   @action

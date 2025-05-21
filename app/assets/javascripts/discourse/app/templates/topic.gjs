@@ -100,9 +100,15 @@ export default RouteTemplate(
           >
             <div
               role="button"
-              class={{concatClass "title-wrapper" @controller.topicTitleClass}}
+              class={{concatClass
+                "title-wrapper edit-topic"
+                (if @controller.editingTopic "editing-topic")
+                (if @controller.model.details.can_edit "can-edit-topic")
+                (if @controller.titleTextHighlighted "title-highlighted")
+              }}
               aria-label={{i18n "edit_topic"}}
-              {{on "click" @controller.titleClick}}
+              {{on "pointermove" @controller.handlePointerMove}}
+              {{on "pointerup" @controller.handlePointerUp}}
               title={{i18n "edit_topic"}}
             >
               {{#if @controller.editingTopic}}

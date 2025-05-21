@@ -190,7 +190,7 @@
       }
     }
 
-    &.can-edit-topic h1,
+    &.can-edit-topic .fancy-title,
     &.can-edit-topic .badge-category__wrapper,
     &.can-edit-topic .topic-header-extra {
       outline: 2px solid transparent;
@@ -205,9 +205,11 @@
       cursor: pointer;
     }
 
-    &.can-edit-topic:not(.editing-topic) h1:hover,
-    &.can-edit-topic:not(.editing-topic) .badge-category__wrapper:hover,
-    &.can-edit-topic:not(.editing-topic) .topic-header-extra:hover {
+    &.can-edit-topic:not(.editing-topic, .title-highlighted) .fancy-title:hover,
+    &.can-edit-topic:not(.editing-topic, .title-highlighted)
+      .badge-category__wrapper:hover,
+    &.can-edit-topic:not(.editing-topic, .title-highlighted)
+      .topic-header-extra:hover {
       outline: 2px solid var(--primary-300);
     }
 
