@@ -23,28 +23,7 @@ import FKControlWrapper from "discourse/form-kit/components/fk/control-wrapper";
 import FKFieldData from "discourse/form-kit/components/fk/field-data";
 import FKRow from "discourse/form-kit/components/fk/row";
 
-const RowColWrapper = <template>
-  <FKRow as |row|>
-    <row.Col @size={{@size}}>
-      {{yield}}
-    </row.Col>
-  </FKRow>
-</template>;
-
-const EmptyWrapper = <template>
-  {{! template-lint-disable no-yield-only }}
-  {{yield}}
-</template>;
-
 export default class FKField extends Component {
-  get wrapper() {
-    if (this.args.size) {
-      return RowColWrapper;
-    } else {
-      return EmptyWrapper;
-    }
-  }
-
   @action
   componentFor(component, field) {
     const instance = this;
@@ -94,33 +73,51 @@ export default class FKField extends Component {
       @placeholderUrl={{@placeholderUrl}}
       as |field|
     >
-      <this.wrapper @size={{@size}}>
-        {{yield
-          (hash
-            Custom=(this.componentFor FKControlCustom field)
-            Code=(this.componentFor FKControlCode field)
-            Question=(this.componentFor FKControlQuestion field)
-            Textarea=(this.componentFor FKControlTextarea field)
-            Checkbox=(this.componentFor FKControlCheckbox field)
-            Image=(this.componentFor FKControlImage field)
-            Password=(this.componentFor FKControlPassword field)
-            Composer=(this.componentFor FKControlComposer field)
-            Icon=(this.componentFor FKControlIcon field)
-            Emoji=(this.componentFor FKControlEmoji field)
-            Toggle=(this.componentFor FKControlToggle field)
-            Menu=(this.componentFor FKControlMenu field)
-            Select=(this.componentFor FKControlSelect field)
-            Input=(this.componentFor FKControlInput field)
-            RadioGroup=(this.componentFor FKControlRadioGroup field)
-            Calendar=(this.componentFor FKControlCalendar field)
-            errorId=field.errorId
-            id=field.id
-            name=field.name
-            set=field.set
-            value=field.value
-          )
-        }}
-      </this.wrapper>
+      {{#let
+        (hash
+          Custom=(this.componentFor FKControlCustom field)
+          Code=(this.componentFor FKControlCode field)
+          Question=(this.componentFor FKControlQuestion field)
+          Textarea=(this.componentFor FKControlTextarea field)
+          Checkbox=(this.componentFor FKControlCheckbox field)
+          Image=(this.componentFor FKControlImage field)
+          Password=(this.componentFor FKControlPassword field)
+          Composer=(this.componentFor FKControlComposer field)
+          Icon=(this.componentFor FKControlIcon field)
+          Emoji=(this.componentFor FKControlEmoji field)
+          Toggle=(this.componentFor FKControlToggle field)
+          Menu=(this.componentFor FKControlMenu field)
+          Select=(this.componentFor FKControlSelect field)
+          Input=(this.componentFor FKControlInput field)
+          RadioGroup=(this.componentFor FKControlRadioGroup field)
+          Calendar=(this.componentFor FKControlCalendar field)
+          errorId=field.errorId
+          id=field.id
+          name=field.name
+          set=field.set
+          value=field.value
+        )
+        as |yieldArgs|
+      }}
+        {{#if @size}}
+          <FKRow as |row|>
+            <row.Col @size={{@size}}>
+              {{#if (has-block "body")}}
+                {{yield yieldArgs to="body"}}
+              {{else}}
+                {{yield yieldArgs}}
+              {{/if}}
+            </row.Col>
+          </FKRow>
+        {{else}}
+          {{yield to="primary-actions"}}
+          {{#if (has-block "body")}}
+            {{yield yieldArgs to="body"}}
+          {{else}}
+            {{yield yieldArgs}}
+          {{/if}}
+        {{/if}}
+      {{/let}}
     </FKFieldData>
   </template>
 }

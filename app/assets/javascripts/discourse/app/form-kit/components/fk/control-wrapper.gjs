@@ -78,12 +78,7 @@ export default class FKControlWrapper extends Component {
             <FKTooltip @field={{@field}} />
             <FKMenu @field={{@field}} />
 
-            <@field.primaryActionsComponent
-              @field={{@field}}
-              @actions={{FKPrimaryActions}}
-            />
-
-            {{yield to="test"}}
+            {{yield to="primary-actions"}}
           </FKLabel>
         {{/if}}
 

@@ -368,7 +368,11 @@ const Form = <template>
       ...attributes
       as |components draftData|
     >
-      {{yield components draftData}}
+      {{#if (has-block "body")}}
+        {{yield components draftData to="body"}}
+      {{else}}
+        {{yield components draftData}}
+      {{/if}}
     </FKForm>
   {{/each}}
 </template>;
