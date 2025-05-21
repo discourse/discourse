@@ -408,6 +408,10 @@ export default class TopicMapSummary extends Component {
           @userFilters={{@postStream.userFilters}}
         />
       {{/if}}
+      <PluginOutlet
+        @name="topic-map-participants-after"
+        @outletArgs={{hash topic=@topic}}
+      />
       <div class="topic-map__buttons">
         {{#if this.readTimeMinutes}}
           <div class="estimated-read-time">
