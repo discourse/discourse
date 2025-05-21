@@ -211,7 +211,7 @@ export default class PostStream extends Component {
   }
 
   @bind
-  updateIntersectionObservers(element, _, { headerOffset, cloakOffset }) {
+  updateIntersectionObservers(_, __, { headerOffset, cloakOffset }) {
     const headerMargin = headerOffset * -1;
 
     this.#currentPostObserver?.disconnect?.();
@@ -222,6 +222,7 @@ export default class PostStream extends Component {
       this.trackCurrentPost,
       {
         rootMargin: `${headerMargin}px 0px 0px 0px`,
+        // eslint-disable-next-line no-shadow
         threshold: Array.from({ length: 101 }, (_, i) =>
           Number((i * 0.01).toFixed(2))
         ),
@@ -358,7 +359,7 @@ export default class PostStream extends Component {
     ) {
       discourseDebounce(
         this,
-        this.#updateActiveCloakBoundaries,
+        this.#updateCloakActiveBoundaries,
         { ...this.#observedCloakBoundaries },
         [...this.uncloakedPostNumbers],
         SCROLL_BATCH_INTERVAL_MS
@@ -447,17 +448,9 @@ export default class PostStream extends Component {
     });
   }
 
-  #updateActiveCloakBoundaries({ above, below }) {
-    this.cloakAbove = above;
-    this.cloakBelow = below;
-
-    schedule("afterRender", () => {
-      requestAnimationFrame(() => {
-        document
-          .querySelectorAll(CLOAKABLE_CLASS_SELECTOR)
-          .forEach((element) => (element.style.height = ""));
-      });
-    });
+  @action
+  loadMoreBelow(post) {
+    this.args.bottomVisibleChanged({ post });
   }
 
   #initializeObserver(callback, { rootMargin, threshold }) {
@@ -467,11 +460,6 @@ export default class PostStream extends Component {
       },
       { threshold, rootMargin, root: document }
     );
-  }
-
-  @action
-  loadMoreBelow(post) {
-    this.args.bottomVisibleChanged({ post });
   }
 
   #onCurrentPostChanged(event) {
@@ -488,6 +476,19 @@ export default class PostStream extends Component {
 
   #onWindowResize(event) {
     discourseDebounce(this, this.#updateCloakOffset, event, RESIZE_DEBOUNCE_MS);
+  }
+
+  #updateCloakActiveBoundaries({ above, below }) {
+    this.cloakAbove = above;
+    this.cloakBelow = below;
+
+    schedule("afterRender", () => {
+      requestAnimationFrame(() => {
+        document
+          .querySelectorAll(CLOAKABLE_CLASS_SELECTOR)
+          .forEach((element) => (element.style.height = ""));
+      });
+    });
   }
 
   #updateCloakOffset() {
