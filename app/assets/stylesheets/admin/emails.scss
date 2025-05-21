@@ -128,7 +128,7 @@
   .email-list {
     .sent-email-reply-key {
       .reply-key {
-        word-break: break-word;
+        overflow-wrap: anywhere;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -139,7 +139,7 @@
     .sent-email-post-link-with-smtp-response {
       width: 100%;
       display: inline-block;
-      word-break: break-word;
+      overflow-wrap: anywhere;
 
       code {
         font-size: var(--font-down-2);

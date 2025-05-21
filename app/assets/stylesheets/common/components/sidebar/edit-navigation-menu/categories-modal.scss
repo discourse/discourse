@@ -68,8 +68,6 @@
     color: var(--primary-high);
     font-size: var(--font-down-1);
     margin: 0.25em 0;
-
-    // avoids long words (like urls) from breaking the layou
-    word-break: break-word;
+    overflow-wrap: anywhere; // avoids long words (like urls) from breaking the layout
   }
 }

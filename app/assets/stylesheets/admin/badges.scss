@@ -77,7 +77,7 @@
     .badge-display-name {
       font-size: var(--font-up-1);
       font-weight: bold;
-      word-break: break-word;
+      overflow-wrap: anywhere;
     }
   }
 

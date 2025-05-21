@@ -52,7 +52,7 @@
 
   &__body {
     padding-bottom: 0.25rem;
-    word-break: break-word;
+    overflow-wrap: anywhere;
     overflow: hidden;
     display: -webkit-box;
     -webkit-box-orient: vertical;

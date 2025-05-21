@@ -1222,7 +1222,7 @@ blockquote > *:last-child {
     flex: 1 1 100%;
     font-weight: normal;
     margin-top: 0.5em;
-    word-break: break-word;
+    overflow-wrap: anywhere;
     min-width: 0; // Allows content like oneboxes to shrink
     color: var(--primary);
 

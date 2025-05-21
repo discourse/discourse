@@ -148,7 +148,7 @@
     margin-top: 0.5em;
     margin-bottom: 0.5em;
     font-size: var(--font-down-2);
-    word-break: break-word;
+    overflow-wrap: anywhere;
   }
 }
 
@@ -157,7 +157,7 @@
 
   a.title {
     padding: 15px 0;
-    word-break: break-word;
+    overflow-wrap: anywhere;
     color: var(--primary);
   }
 

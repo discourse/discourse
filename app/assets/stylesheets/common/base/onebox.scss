@@ -567,7 +567,7 @@ pre.onebox code ol.lines li.selected {
     max-height: 400px;
     white-space: pre-wrap;
     overflow-y: auto;
-    word-break: break-word;
+    overflow-wrap: anywhere;
     font-family: var(--d-font-family--monospace);
     font-size: 0.875em;
     line-height: calc((13 + 4) / 13);

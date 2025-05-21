@@ -89,7 +89,7 @@
           flex: 1 1 auto;
 
           span {
-            word-break: break-word;
+            overflow-wrap: anywhere;
             line-height: var(--line-height-medium);
           }
         }
