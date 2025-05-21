@@ -71,6 +71,7 @@ export default class FKField extends Component {
     <FKFieldData
       @name={{@name}}
       @data={{@data}}
+      @primaryActionsComponent={{@primaryActionsComponent}}
       @onFocusOut={{@onFocusOut}}
       @triggerRevalidationFor={{@triggerRevalidationFor}}
       @title={{@title}}

@@ -7,6 +7,7 @@ import { eq } from "truth-helpers";
 import FKLabel from "discourse/form-kit/components/fk/label";
 import FKMenu from "discourse/form-kit/components/fk/menu";
 import FKMeta from "discourse/form-kit/components/fk/meta";
+import FKPrimaryActions from "discourse/form-kit/components/fk/primary-actions";
 import FKRequired from "discourse/form-kit/components/fk/required";
 import FKText from "discourse/form-kit/components/fk/text";
 import FKTooltip from "discourse/form-kit/components/fk/tooltip";
@@ -76,6 +77,13 @@ export default class FKControlWrapper extends Component {
             <FKRequired @field={{@field}} />
             <FKTooltip @field={{@field}} />
             <FKMenu @field={{@field}} />
+
+            <@field.primaryActionsComponent
+              @field={{@field}}
+              @actions={{FKPrimaryActions}}
+            />
+
+            {{yield to="test"}}
           </FKLabel>
         {{/if}}
 

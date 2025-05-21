@@ -107,6 +107,14 @@ export default class FKFieldData extends Component {
   }
 
   /**
+   * Optional component for primary actions.
+   * @type {string}
+   */
+  get primaryActionsComponent() {
+    return this.args.primaryActionsComponent;
+  }
+
+  /**
    * Format of the title.
    * @type {string}
    */
