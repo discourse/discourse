@@ -7,6 +7,12 @@ import Form from "discourse/components/form";
 import { humanizedSettingName } from "discourse/lib/site-settings-utils";
 import SiteSetting from "admin/models/site-setting";
 
+const PrimaryActions = <template>
+  <@actions as |actions|>
+    <actions.Button @icon="gear" />
+  </@actions>
+</template>;
+
 export default class FormKitSiteSettingWrapper extends Component {
   get settingTitle() {
     return humanizedSettingName(
@@ -51,12 +57,15 @@ export default class FormKitSiteSettingWrapper extends Component {
         @name={{@setting.setting}}
         @title={{this.settingTitle}}
         @description={{htmlSafe @setting.description}}
+        @primaryActionsComponent={{component PrimaryActions setting=@setting}}
         as |field|
       >
+        <:test>
+          test
+        </:test>
         {{#if (eq @setting.type "string")}}
           <field.Input />
         {{else if (eq @setting.type "upload")}}
-          {{log @setting}}
           <field.Image @type="site_setting" />
         {{else if (eq @setting.type "bool")}}
           <field.Checkbox>
