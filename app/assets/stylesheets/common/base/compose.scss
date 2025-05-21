@@ -1035,6 +1035,7 @@ div.ac-wrap {
   padding: 1.5em 1.5rem 0.75em 1.5rem;
   box-shadow: var(--shadow-dropdown);
   border-radius: var(--d-border-radius-large);
+
   .show-preview & {
     right: 1.5rem;
     bottom: 4.2rem;
@@ -1140,17 +1141,14 @@ div.ac-wrap {
     margin-bottom: 0.5em;
   }
 
-  .topic-title {
-    flex: 0 1 auto;
-    margin-right: 0.5em;
-  }
-
   span.badge-wrapper {
     margin-left: 0;
   }
 
   .topic-title {
     margin-bottom: 0.5em;
+    flex: 0 1 auto;
+    margin-right: 0.5em;
 
     .d-icon {
       color: var(--primary-high);
