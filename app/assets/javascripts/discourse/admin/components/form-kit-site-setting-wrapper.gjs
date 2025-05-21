@@ -7,11 +7,8 @@ import Form from "discourse/components/form";
 import { humanizedSettingName } from "discourse/lib/site-settings-utils";
 import SiteSetting from "admin/models/site-setting";
 
-const PrimaryActions = <template>
-  <@actions as |actions|>
-    <actions.Button @icon="gear" />
-  </@actions>
-</template>;
+const PrimaryActions = <template><@actions.Button @icon="gear" /></template>;
+const SecondaryActions = <template><@actions.Button @icon="gear" /></template>;
 
 export default class FormKitSiteSettingWrapper extends Component {
   get settingTitle() {
@@ -62,10 +59,10 @@ export default class FormKitSiteSettingWrapper extends Component {
           {{#if (eq @setting.type "string")}}
             <field.Input>
               <:primary-actions as |actions|>
-                <actions.Button @icon="gear" />
+                <PrimaryActions @actions={{actions}} />
               </:primary-actions>
               <:secondary-actions as |actions|>
-                <actions.Button @icon="pencil" />
+                <SecondaryActions @actions={{actions}} />
               </:secondary-actions>
             </field.Input>
           {{else if (eq @setting.type "upload")}}
