@@ -7,11 +7,9 @@ export default RouteTemplate(
   <template>
     {{#if @controller.filteredContent}}
       <section class="form-horizontal settings">
-        {{#each @controller.filteredContent as |setting|}}
-          <FormKitSiteSettingWrapper @setting={{setting}} />
-          {{! <hr /> }}
-          {{!-- <SiteSetting @setting={{setting}} /> --}}
-        {{/each}}
+
+        <FormKitSiteSettingWrapper @settings={{@controller.filteredContent}} />
+
         {{#if @controller.category.hasMore}}
           <p class="warning">{{i18n
               "admin.site_settings.more_site_setting_results"

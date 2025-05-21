@@ -110,97 +110,103 @@ class SecondaryActions extends Component {
 }
 
 export default class FormKitSiteSettingWrapper extends Component {
-  get settingTitle() {
-    return humanizedSettingName(
-      this.args.setting.setting,
-      this.args.setting.label
-    );
+  @action
+  settingTitle(setting) {
+    return humanizedSettingName(setting.setting, setting.label);
   }
 
   @cached
   get formData() {
-    return {
-      [this.args.setting.setting]: this.args.setting.value,
-    };
+    const data = {};
+    this.args.settings.forEach((setting) => {
+      data[setting.setting] = setting.value;
+    });
+    return data;
   }
 
   @action
   async save(data) {
-    this.args.setting.buffered.set(
-      this.args.setting.setting,
-      data[this.args.setting.setting]
-    );
-    this.args.setting.buffered.applyChanges();
-
-    const params = {};
-    params[this.args.setting.setting] = {
-      value: data[this.args.setting.setting],
-      backfill: false,
-    };
-
-    await SiteSetting.bulkUpdate(params);
+    // this.args.setting.buffered.set(
+    //   this.args.setting.setting,
+    //   data[this.args.setting.setting]
+    // );
+    // this.args.setting.buffered.applyChanges();
+    // const params = {};
+    // params[this.args.setting.setting] = {
+    //   value: data[this.args.setting.setting],
+    //   backfill: false,
+    // };
+    // await SiteSetting.bulkUpdate(params);
   }
 
   <template>
     <Form
       @onSubmit={{this.save}}
       @data={{this.formData}}
-      class={{if @setting.overridden "--overridden"}}
+      {{!-- class={{if @setting.overridden "--overridden"}} --}}
       as |form|
     >
-      <form.Field
-        @name={{@setting.setting}}
-        @title={{this.settingTitle}}
-        @description={{htmlSafe @setting.description}}
-      >
-        <:body as |field|>
-          {{#if (eq @setting.type "string")}}
-            <field.Input>
-              <:primary-actions as |actions|>
-                <PrimaryActions
-                  @field={{field}}
-                  @actions={{actions}}
-                  @setting={{@setting}}
-                  @save={{this.save}}
-                />
-              </:primary-actions>
-              <:secondary-actions as |actions|>
-                <SecondaryActions
-                  @field={{field}}
-                  @actions={{actions}}
-                  @setting={{@setting}}
-                  @save={{this.save}}
-                />
-              </:secondary-actions>
-            </field.Input>
-          {{else if (eq @setting.type "upload")}}
-            <field.Image @type="site_setting">
-              <:primary-actions>
-                primary
-              </:primary-actions>
-            </field.Image>
-          {{else if (eq @setting.type "bool")}}
-            <field.Checkbox>
-              {{htmlSafe @setting.description}}
-            </field.Checkbox>
-          {{else if (eq @setting.type "enum")}}
-            <field.Select as |select|>
-              {{#each @setting.valid_values as |item|}}
-                <select.Option @value={{item.value}}>
-                  {{item.name}}
-                </select.Option>
-              {{/each}}
-            </field.Select>
-          {{else if (eq @setting.type "group")}}
-            <field.Custom>
-              {{log field.set}}
-              <GroupList @onChange={{field.set}} @value={{field.value}} />
-            </field.Custom>
-          {{else}}
-            {{@setting.type}}
-          {{/if}}
-        </:body>
-      </form.Field>
+      {{#each @settings as |setting|}}
+        <form.Field
+          @name={{setting.setting}}
+          @title={{this.settingTitle setting}}
+          @description={{htmlSafe setting.description}}
+          @emphasis={{setting.overridden}}
+        >
+          <:body as |field|>
+            {{#if (eq setting.type "string")}}
+              <field.Input>
+                <:primary-actions as |actions|>
+                  <PrimaryActions
+                    @field={{field}}
+                    @actions={{actions}}
+                    @setting={{setting}}
+                    @save={{this.save}}
+                  />
+                </:primary-actions>
+                <:secondary-actions as |actions|>
+                  <SecondaryActions
+                    @field={{field}}
+                    @actions={{actions}}
+                    @setting={{setting}}
+                    @save={{this.save}}
+                  />
+                </:secondary-actions>
+              </field.Input>
+            {{else if (eq setting.type "upload")}}
+              <field.Image @type="site_setting">
+                <:primary-actions>
+                  primary
+                </:primary-actions>
+              </field.Image>
+            {{else if (eq setting.type "bool")}}
+              <field.Checkbox>
+                {{htmlSafe setting.description}}
+              </field.Checkbox>
+            {{else if (eq setting.type "enum")}}
+              <field.Select as |select|>
+                {{#each setting.valid_values as |item|}}
+                  <select.Option @value={{item.value}}>
+                    {{item.name}}
+                  </select.Option>
+                {{/each}}
+              </field.Select>
+            {{else if (eq setting.type "group")}}
+              <field.Custom>
+                {{field.value}}
+                <GroupList @onChange={{field.set}} @value={{field.value}} />
+              </field.Custom>
+            {{else}}
+              {{setting.type}}
+            {{/if}}
+          </:body>
+        </form.Field>
+      {{/each}}
+
+      <form.Actions>
+        <form.Submit />
+        <form.Reset />
+      </form.Actions>
     </Form>
   </template>
 }

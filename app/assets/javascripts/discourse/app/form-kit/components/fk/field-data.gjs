@@ -52,6 +52,10 @@ export default class FKFieldData extends Component {
     return !this.isPristine;
   }
 
+  get emphasis() {
+    return this.args.emphasis;
+  }
+
   get isPristine() {
     const patches = this.args.data.patches.filter((patch) => {
       return (

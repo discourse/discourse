@@ -50,6 +50,7 @@ export default class FKField extends Component {
     <FKFieldData
       @name={{@name}}
       @data={{@data}}
+      @emphasis={{@emphasis}}
       @triggerRevalidationFor={{@triggerRevalidationFor}}
       @title={{@title}}
       @tooltip={{@tooltip}}
@@ -89,6 +90,7 @@ export default class FKField extends Component {
           Input=(this.componentFor FKControlInput field)
           RadioGroup=(this.componentFor FKControlRadioGroup field)
           Calendar=(this.componentFor FKControlCalendar field)
+          emphasis=field.emphasis
           errorId=field.errorId
           id=field.id
           name=field.name
