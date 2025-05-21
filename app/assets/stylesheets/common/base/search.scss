@@ -301,7 +301,7 @@
   padding: 0;
   margin-bottom: 2em;
   max-width: 100%;
-  overflow-wrap: anywhere;
+  word-break: break-word;
   position: relative;
 
   &.bulk-select-enabled {

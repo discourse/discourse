@@ -59,7 +59,7 @@
     max-width: 350px;
     min-width: 50px;
     margin-left: 12px;
-    overflow-wrap: anywhere;
+    word-break: break-word;
 
     @media (max-width: $mobile-breakpoint) {
       text-align: left;

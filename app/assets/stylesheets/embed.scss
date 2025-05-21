@@ -65,7 +65,7 @@ article.post {
     padding: 10px 0;
     margin-left: 65px;
     word-wrap: break-word;
-    overflow-wrap: anywhere;
+    word-break: break-word;
 
     pre {
       white-space: pre-wrap;

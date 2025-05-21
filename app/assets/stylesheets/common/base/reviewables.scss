@@ -304,7 +304,7 @@
     width: 100%;
     margin-top: 1em;
     min-width: 275px;
-    overflow-wrap: anywhere;
+    word-break: break-word;
 
     @include viewport.from(sm) {
       display: flex;

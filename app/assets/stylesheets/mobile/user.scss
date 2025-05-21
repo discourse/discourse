@@ -96,7 +96,7 @@
 
       .primary-textual {
         flex: 1 1 100%;
-        overflow-wrap: anywhere;
+        word-break: break-word;
         margin: 0;
         max-width: 100%;
       }

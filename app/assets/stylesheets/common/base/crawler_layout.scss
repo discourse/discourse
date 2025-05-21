@@ -73,7 +73,7 @@ body > noscript {
     div.post {
       overflow: auto;
       max-width: 100%;
-      overflow-wrap: anywhere;
+      word-break: break-word;
 
       img {
         max-width: 100%;
@@ -151,7 +151,7 @@ body > noscript {
       margin: 0;
 
       td {
-        overflow-wrap: anywhere;
+        word-break: break-word;
 
         &.posters {
           a:not(:last-of-type) {

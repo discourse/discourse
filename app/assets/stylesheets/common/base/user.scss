@@ -417,7 +417,7 @@
     }
 
     span {
-      overflow-wrap: anywhere; // Prevents long emails from breaking the modal width
+      word-break: break-word; // Prevents long emails from breaking the modal width
     }
 
     input[type="radio"] {

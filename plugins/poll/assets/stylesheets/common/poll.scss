@@ -24,7 +24,7 @@ div.poll-outer {
     li[data-poll-option-id] {
       color: var(--primary);
       padding: 0.5em 0;
-      overflow-wrap: anywhere;
+      word-break: break-word;
 
       button {
         background-color: transparent;

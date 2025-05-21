@@ -43,7 +43,7 @@
 
     a.title {
       padding: 15px 0;
-      overflow-wrap: anywhere;
+      word-break: break-word;
       color: var(--primary);
     }
 

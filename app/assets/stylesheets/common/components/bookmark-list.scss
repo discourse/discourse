@@ -46,7 +46,7 @@ $mobile-breakpoint: 700px;
       line-height: var(--line-height-medium);
 
       span {
-        overflow-wrap: anywhere;
+        word-break: break-word;
       }
 
       &.bookmark-expired-reminder {

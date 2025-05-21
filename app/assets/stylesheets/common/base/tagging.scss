@@ -302,7 +302,7 @@
       max-width: 90px;
 
       ul li a {
-        overflow-wrap: anywhere;
+        word-break: break-word;
         max-width: 90px;
         font-size: var(--font-down-1);
       }
