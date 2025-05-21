@@ -172,10 +172,6 @@
   margin-bottom: 1em;
 
   .title-wrapper {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-
     @media screen and (width >= 925px) {
       width: 90%; // topic title isn't full-width on wide screens
     }
