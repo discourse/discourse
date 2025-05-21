@@ -29,7 +29,7 @@ const DAY_MS = 1000 * 60 * 60 * 24;
 const POST_MODEL = Symbol("POST");
 const RESIZE_DEBOUNCE_MS = 100;
 const SCROLL_BATCH_INTERVAL_MS = 10;
-const SLACK_FACTOR = 50;
+const SLACK_FACTOR = 5;
 
 let cloakingEnabled = true;
 const cloakingPrevented = new TrackedSet();
@@ -54,10 +54,6 @@ export default class PostStream extends Component {
   @tracked cloakAbove;
   @tracked cloakBelow;
   @tracked cloakOffset;
-  @tracked onScreenBoundaries = {
-    min: null,
-    max: null,
-  };
 
   observedPostNodes = new Set();
   uncloakedPostNumbers = new Set();
@@ -71,6 +67,10 @@ export default class PostStream extends Component {
     above: null,
     below: null,
   };
+  #onScreenBoundaries = {
+    min: null,
+    max: null,
+  };
   #viewportObserver;
 
   // #topVisible = null; // Tracks the topmost post currently visible in the viewport
@@ -83,14 +83,14 @@ export default class PostStream extends Component {
     super(...arguments);
 
     // initialize the cloaking offset area
-    this._updateCloakOffset();
+    this.#updateCloakOffset();
 
     // TODO (glimmer-post-stream) do we need this?
     // this.appEvents.on("post-stream:refresh", this, "_debouncedScroll");
     this.appEvents.on("post-stream:posted", this, "_posted");
 
     // track the window height to update the cloaking area
-    window.addEventListener("resize", this._onWindowResize, {
+    window.addEventListener("resize", this.#onWindowResize, {
       passive: true,
     });
 
@@ -107,7 +107,7 @@ export default class PostStream extends Component {
 
     // document.removeEventListener("touchmove", this._debouncedScroll);
     // window.removeEventListener("scroll", this._debouncedScroll);
-    window.removeEventListener("resize", this._onWindowResize);
+    window.removeEventListener("resize", this.#onWindowResize);
 
     this.appEvents.off("post-stream:refresh", this, "_debouncedScroll");
     this.appEvents.off("post-stream:refresh", this, "_refresh");
@@ -287,21 +287,17 @@ export default class PostStream extends Component {
   @bind
   trackCurrentPost(entry) {
     const { target, intersectionRatio, isIntersecting } = entry;
-    const post = target[POST_MODEL];
 
     if (!isIntersecting) {
       return;
     }
 
-    const percent = 1 - intersectionRatio;
-
-    console.log(
-      "PostStream trackCurrentPost debounced",
-      post.post_number,
-      percent
+    discourseDebounce(
+      this,
+      this.#onCurrentPostScrolled,
+      { element: target, percent: 1 - intersectionRatio },
+      SCROLL_BATCH_INTERVAL_MS
     );
-
-    this._onCurrentPostScrolled({ percent });
   }
 
   @bind
@@ -362,7 +358,7 @@ export default class PostStream extends Component {
     ) {
       discourseDebounce(
         this,
-        this._setActiveCloakBoundaries,
+        this.#updateActiveCloakBoundaries,
         { ...this.#observedCloakBoundaries },
         [...this.uncloakedPostNumbers],
         SCROLL_BATCH_INTERVAL_MS
@@ -381,8 +377,16 @@ export default class PostStream extends Component {
       delete this.#postsOnScreen[post.post_number];
     }
 
+    // update the screen tracking information
+    discourseDebounce(
+      this,
+      this.#updateScreenTracking,
+      this.#postsOnScreen,
+      SCROLL_BATCH_INTERVAL_MS
+    );
+
     // update the information about the boundaries of the posts on screen
-    this.onScreenBoundaries = Object.values(this.#postsOnScreen).reduce(
+    this.#onScreenBoundaries = Object.values(this.#postsOnScreen).reduce(
       (acc, { post: onScreen }) => {
         if (acc.min === null || onScreen.post_number < acc.min) {
           acc.min = onScreen.post_number;
@@ -397,8 +401,9 @@ export default class PostStream extends Component {
       { min: null, max: null }
     );
 
+    // update the current post to enable fine grained scrolling tracking for it
     this.#updateCurrentPost(
-      this.#postsOnScreen[this.onScreenBoundaries.min]?.element
+      this.#postsOnScreen[this.#onScreenBoundaries.min]?.element
     );
   }
 
@@ -442,37 +447,7 @@ export default class PostStream extends Component {
     });
   }
 
-  @action
-  loadMoreBelow(post) {
-    this.args.bottomVisibleChanged({ post });
-  }
-
-  @bind
-  _onCurrentPostChanged(event) {
-    discourseDebounce(
-      this,
-      this.args.currentPostChanged,
-      event,
-      SCROLL_BATCH_INTERVAL_MS
-    );
-  }
-
-  @bind
-  _onCurrentPostScrolled(event) {
-    discourseDebounce(
-      this,
-      this.args.currentPostScrolled,
-      event,
-      SCROLL_BATCH_INTERVAL_MS
-    );
-  }
-
-  @bind
-  _onWindowResize(event) {
-    discourseDebounce(this, this._updateCloakOffset, event, RESIZE_DEBOUNCE_MS);
-  }
-
-  _setActiveCloakBoundaries({ above, below }) {
+  #updateActiveCloakBoundaries({ above, below }) {
     this.cloakAbove = above;
     this.cloakBelow = below;
 
@@ -485,10 +460,6 @@ export default class PostStream extends Component {
     });
   }
 
-  _updateCloakOffset() {
-    this.cloakOffset = Math.ceil(window.innerHeight * SLACK_FACTOR);
-  }
-
   #initializeObserver(callback, { rootMargin, threshold }) {
     return new IntersectionObserver(
       (entries) => {
@@ -496,6 +467,31 @@ export default class PostStream extends Component {
       },
       { threshold, rootMargin, root: document }
     );
+  }
+
+  @action
+  loadMoreBelow(post) {
+    this.args.bottomVisibleChanged({ post });
+  }
+
+  #onCurrentPostChanged(event) {
+    this.args.currentPostChanged(event);
+  }
+
+  #onCurrentPostScrolled({ element, ...event }) {
+    if (element !== this.#currentPostElement) {
+      return;
+    }
+
+    this.args.currentPostScrolled(event);
+  }
+
+  #onWindowResize(event) {
+    discourseDebounce(this, this.#updateCloakOffset, event, RESIZE_DEBOUNCE_MS);
+  }
+
+  #updateCloakOffset() {
+    this.cloakOffset = Math.ceil(window.innerHeight * SLACK_FACTOR);
   }
 
   #updateCurrentPost(newElement) {
@@ -511,11 +507,35 @@ export default class PostStream extends Component {
     const newPost = newElement[POST_MODEL];
 
     if (currentPost !== newPost) {
-      this._onCurrentPostChanged({ post: newPost });
+      discourseDebounce(
+        this,
+        this.#onCurrentPostChanged,
+        { post: newPost },
+        SCROLL_BATCH_INTERVAL_MS
+      );
     }
 
     this.#currentPostObserver.observe(newElement);
     this.#currentPostElement = newElement;
+  }
+
+  #updateScreenTracking(postsOnScreen) {
+    const onScreenPostsNumbers = [];
+    const readPostNumbers = [];
+
+    Object.values(postsOnScreen).forEach(({ post }) => {
+      onScreenPostsNumbers.push(post.post_number);
+
+      if (post.read) {
+        readPostNumbers.push(post.post_number);
+      }
+    });
+
+    if (!onScreenPostsNumbers.length) {
+      return;
+    }
+
+    this.screenTrack.setOnscreen(onScreenPostsNumbers, readPostNumbers);
   }
 
   <template>
