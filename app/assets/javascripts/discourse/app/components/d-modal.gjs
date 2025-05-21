@@ -193,6 +193,12 @@ export default class DModal extends Component {
       this.animating = false;
     }
 
+    if (this.site.desktopView) {
+      this.animating = true;
+      await this.#animatePopOff();
+      this.animating = false;
+    }
+
     this.args.closeModal({ initiatedBy });
   }
 
@@ -260,6 +266,21 @@ export default class DModal extends Component {
       {
         fill: "forwards",
         duration: getMaxAnimationTimeMs(),
+      }
+    ).finished;
+  }
+
+  async #animatePopOff() {
+    await this.modalContainer.animate(
+      [
+        { transform: "scale(1)", opacity: 1, offset: 0 },
+        { transform: "scale(1.1)", opacity: 1, offset: 0.7 },
+        { transform: "scale(0)", opacity: 0, offset: 1 },
+      ],
+      {
+        fill: "forwards",
+        duration: 400,
+        easing: "cubic-bezier(0.4, 0, 0.2, 1)",
       }
     ).finished;
   }

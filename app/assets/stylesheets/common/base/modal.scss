@@ -538,31 +538,3 @@
   max-width: 500px;
   margin-bottom: 2em;
 }
-
-// animatiing experiment
-.d-modal {
-  &.is-closing {
-    animation: pop-off 0.3s forwards;
-
-    @media (prefers-reduced-motion) {
-      animation-duration: 0s;
-    }
-  }
-}
-
-@keyframes pop-off {
-  0% {
-    transform: scale(1);
-    opacity: 1;
-  }
-
-  50% {
-    transform: scale(1.05);
-    opacity: 1;
-  }
-
-  100% {
-    transform: scale(0);
-    opacity: 0;
-  }
-}
