@@ -1,5 +1,6 @@
 import { cached } from "@glimmer/tracking";
 import { warn } from "@ember/debug";
+import { htmlSafe } from "@ember/template";
 import { configNavForPlugin } from "discourse/lib/admin-plugin-config-nav";
 import { adminRouteValid } from "discourse/lib/admin-utilities";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
@@ -10,6 +11,7 @@ import BaseCustomSidebarPanel from "discourse/lib/sidebar/base-custom-sidebar-pa
 import BaseCustomSidebarSection from "discourse/lib/sidebar/base-custom-sidebar-section";
 import BaseCustomSidebarSectionLink from "discourse/lib/sidebar/base-custom-sidebar-section-link";
 import { ADMIN_PANEL } from "discourse/lib/sidebar/panels";
+import { escapeExpression } from "discourse/lib/utilities";
 import I18n, { i18n } from "discourse-i18n";
 
 let additionalAdminSidebarSectionLinks = {};
@@ -409,7 +411,27 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
   }
 
   get searchable() {
-    return true;
+    const currentUser = getOwnerWithFallback(this).lookup(
+      "service:current-user"
+    );
+    return currentUser.admin;
+  }
+
+  get filterable() {
+    const currentUser = getOwnerWithFallback(this).lookup(
+      "service:current-user"
+    );
+    return !currentUser.admin && currentUser.moderator;
+  }
+
+  filterNoResultsDescription(filter) {
+    const escapedFilter = escapeExpression(filter);
+
+    return htmlSafe(
+      i18n("sidebar.no_results.description_admin_search", {
+        filter: escapedFilter,
+      })
+    );
   }
 
   get onSearchClick() {

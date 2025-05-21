@@ -5096,6 +5096,11 @@ en:
         forum:
           label: Forum
       back_to_forum: "Back to Forum"
+      filter_links: "Filter links..."
+      clear_filter: "Clear filter"
+      no_results:
+        title: "No results"
+        description_admin_search: 'We couldn’t find anything matching ‘%{filter}’.'
       collapse_all_sections: "Collapse all sections"
       expand_all_sections: "Expand all sections"
       search: "Search"
