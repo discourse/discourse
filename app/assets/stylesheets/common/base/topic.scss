@@ -152,6 +152,7 @@
 .title-wrapper {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
 
   .topic-statuses {
     line-height: 1.2;
@@ -186,25 +187,32 @@
       }
     }
 
-    &.can-edit-topic .fancy-title {
-      outline: 2px solid transparent;
-      border-radius: var(--d-border-radius);
-      transition: outline ease-in-out 0.2s;
-      padding: 0.25rem;
-      transition-delay: 0.1s;
+    @include viewport.from(md) {
+      &.can-edit-topic .fancy-title {
+        outline: 2px solid transparent;
+        border-radius: var(--d-border-radius);
+        transition: outline ease-in-out 0.2s;
+        padding: 0.25rem;
+        transition-delay: 0.1s;
+      }
+
+      &.can-edit-topic:not(.editing-topic) {
+        cursor: pointer;
+      }
+
+      &.can-edit-topic:not(.editing-topic, .title-highlighted):hover
+        .fancy-title {
+        outline: 2px solid var(--primary-300);
+      }
+
+      &.editing-topic {
+        transition: none;
+      }
     }
 
-    &.can-edit-topic:not(.editing-topic) {
-      cursor: pointer;
-    }
-
-    &.can-edit-topic:not(.editing-topic, .title-highlighted):hover
-      .fancy-title {
-      outline: 2px solid var(--primary-300);
-    }
-
-    &.editing-topic {
-      transition: none;
+    &.can-edit-topic .title-wrapper .d-icon {
+      margin-left: 0.5rem;
+      font-size: var(--font-down-2);
     }
   }
 
@@ -219,10 +227,6 @@
     @include viewport.until(sm) {
       font-size: var(--font-up-3);
     }
-  }
-
-  &.can-edit-topic .d-icon {
-    font-size: 0.8em;
   }
 
   .edit-topic-title {
