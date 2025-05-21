@@ -25,18 +25,6 @@ const SUPPORTED_TYPES = [
 export default class FKControlInput extends Component {
   static controlType = "input";
 
-  onFocusOut = modifierFn((element, [onFocusOut]) => {
-    if (onFocusOut) {
-      element.addEventListener("focusout", onFocusOut);
-    }
-
-    return () => {
-      if (onFocusOut) {
-        element.removeEventListener("focusout", onFocusOut);
-      }
-    };
-  });
-
   constructor(owner, args) {
     super(...arguments);
 
@@ -88,7 +76,6 @@ export default class FKControlInput extends Component {
         disabled={{@field.disabled}}
         ...attributes
         {{on "input" this.handleInput}}
-        {{this.onFocusOut @field.onFocusOut}}
       />
 
       {{#if @after}}

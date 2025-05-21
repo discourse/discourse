@@ -57,16 +57,23 @@ export default class FormKitSiteSettingWrapper extends Component {
         @name={{@setting.setting}}
         @title={{this.settingTitle}}
         @description={{htmlSafe @setting.description}}
-        @primaryActionsComponent={{component PrimaryActions setting=@setting}}
       >
-        <:primary-actions>
-          primary-actions
-        </:primary-actions>
         <:body as |field|>
           {{#if (eq @setting.type "string")}}
-            <field.Input />
+            <field.Input>
+              <:primary-actions as |actions|>
+                <actions.Button @icon="gear" />
+              </:primary-actions>
+              <:secondary-actions as |actions|>
+                <actions.Button @icon="pencil" />
+              </:secondary-actions>
+            </field.Input>
           {{else if (eq @setting.type "upload")}}
-            <field.Image @type="site_setting" />
+            <field.Image @type="site_setting">
+              <:primary-actions>
+                primary
+              </:primary-actions>
+            </field.Image>
           {{else if (eq @setting.type "bool")}}
             <field.Checkbox>
               {{htmlSafe @setting.description}}
