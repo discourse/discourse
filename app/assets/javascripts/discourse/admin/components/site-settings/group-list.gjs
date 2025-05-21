@@ -22,7 +22,11 @@ export default class GroupList extends Component {
 
   @action
   onChangeGroupListSetting(value) {
-    this.set("value", value.join(this.tokenSeparator));
+    if (this.onChange) {
+      this.onChange(value.join(this.tokenSeparator));
+    } else {
+      this.set("value", value.join(this.tokenSeparator));
+    }
   }
 
   <template>

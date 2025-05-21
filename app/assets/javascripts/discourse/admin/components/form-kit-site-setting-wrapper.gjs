@@ -8,11 +8,26 @@ import { eq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import Form from "discourse/components/form";
 import { humanizedSettingName } from "discourse/lib/site-settings-utils";
+import GroupList from "admin/components/site-settings/group-list";
 import SiteSetting from "admin/models/site-setting";
 
 class PrimaryActions extends Component {
   @service toasts;
   @service router;
+
+  get cannotRevert() {
+    return this.args.field.value === this.args.setting.default;
+  }
+
+  @action
+  async revertToDefault(menu) {
+    await menu.close();
+
+    this.args.field.set(this.args.setting.default);
+    this.args.save({
+      [this.args.setting.setting]: this.args.field.value,
+    });
+  }
 
   @action
   settingHistory() {
@@ -46,6 +61,14 @@ class PrimaryActions extends Component {
       <:content as |menu|>
         <menu.Dropdown as |dropdown|>
           <dropdown.item>
+            <DButton
+              @disabled={{this.cannotRevert}}
+              @action={{fn this.revertToDefault menu}}
+            >
+              Reset Setting
+            </DButton>
+          </dropdown.item>
+          <dropdown.item>
             <DButton @action={{fn this.copyStettingAsUrl menu}}>Copy Setting as
               URL</DButton>
           </dropdown.item>
@@ -64,18 +87,6 @@ class SecondaryActions extends Component {
     await this.args.field.rollback();
   }
 
-  get cannotRevert() {
-    return this.args.field.value === this.args.setting.default;
-  }
-
-  @action
-  revertToDefault() {
-    this.args.field.set(this.args.setting.default);
-    this.args.save({
-      [this.args.setting.setting]: this.args.field.value,
-    });
-  }
-
   @action
   save() {
     this.args.save({
@@ -85,11 +96,6 @@ class SecondaryActions extends Component {
   }
 
   <template>
-    <@actions.Button
-      @icon="arrow-rotate-left"
-      @disabled={{this.cannotRevert}}
-      @action={{this.revertToDefault}}
-    />
     <@actions.Button
       @icon="check"
       @disabled={{@field.isPristine}}
@@ -185,6 +191,13 @@ export default class FormKitSiteSettingWrapper extends Component {
                 </select.Option>
               {{/each}}
             </field.Select>
+          {{else if (eq @setting.type "group")}}
+            <field.Custom>
+              {{log field.set}}
+              <GroupList @onChange={{field.set}} @value={{field.value}} />
+            </field.Custom>
+          {{else}}
+            {{@setting.type}}
           {{/if}}
         </:body>
       </form.Field>
