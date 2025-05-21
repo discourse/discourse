@@ -5,9 +5,12 @@ Rails.application.config.after_initialize do |config|
     require "listen"
 
     listener =
-      Listen.to("#{Rails.root}/themes") do
+      Listen.to("#{Rails.root}/themes") do |modified, added, removed|
+        filepath = modified.first || added.first || removed.first
+        theme_name = filepath.gsub("#{Rails.root}/themes/", "").split("/").first
+
         Rails.logger.info "Theme folder changed. Syncing..."
-        CoreThemesManager.sync!
+        CoreThemesManager.sync_theme!(theme_name)
       end
     listener.start
   end

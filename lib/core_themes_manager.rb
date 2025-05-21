@@ -1,13 +1,18 @@
 # frozen_string_literal: true
 
-CORE_THEMES = { "Horizon" => -1 }
 class CoreThemesManager
+  CORE_THEMES = { "foundation" => -1, "horizon" => -2 }
   def self.sync!
-    CORE_THEMES.each do |theme_name, theme_id|
-      RemoteTheme.import_theme_from_directory(
-        "#{Rails.root}/themes/#{theme_name}",
-        theme_id: theme_id,
-      )
-    end
+    CORE_THEMES.keys.each { |theme_name| sync_theme!(theme_name) }
+  end
+
+  def self.sync_theme!(theme_name)
+    theme_id = CORE_THEMES[theme_name]
+    return unless theme_id
+    RemoteTheme.import_theme_from_directory(
+      "#{Rails.root}/themes/#{theme_name}",
+      theme_id: theme_id,
+    )
+    Stylesheet::Manager.clear_theme_cache!
   end
 end
