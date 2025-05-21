@@ -123,6 +123,7 @@
   }
 
   .names__primary {
+    @include ellipsis;
     line-height: var(--line-height-medium);
     font-size: var(--font-up-5);
     font-weight: bold;
