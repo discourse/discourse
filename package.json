@@ -41,10 +41,10 @@
   },
   "scripts": {
     "dev": "concurrently \"bin/ember-cli server --environment=development\" \"RAILS_ENV=development bin/rails server\"",
-    "lint": "concurrently \"npm:lint:*(!fix)\" --names \"lint:\"",
+    "lint": "concurrently \"pnpm:lint:*(!fix)\" --names \"lint:\"",
     "lint:css": "pnpm stylelint 'app/assets/stylesheets/**/*.scss' $(script/list_bundled_plugins '/assets/stylesheets/**/*.scss')",
     "lint:css:fix": "pnpm stylelint --fix 'app/assets/stylesheets/**/*.scss' $(script/list_bundled_plugins '/assets/stylesheets/**/*.scss')",
-    "lint:fix": "concurrently \"npm:lint:*:fix\" --names \"fix:\"",
+    "lint:fix": "concurrently \"pnpm:lint:*:fix\" --names \"fix:\"",
     "lint:js": "eslint ./app/assets/javascripts $(script/list_bundled_plugins) --cache --no-error-on-unmatched-pattern",
     "lint:js:fix": "eslint --fix ./app/assets/javascripts $(script/list_bundled_plugins) --no-error-on-unmatched-pattern",
     "lint:hbs": "ember-template-lint 'app/assets/javascripts/**/*.{gjs,hbs}' 'plugins/*/assets/javascripts/**/*.{gjs,hbs}' 'plugins/*/admin/assets/javascripts/**/*.{gjs,hbs}'",
