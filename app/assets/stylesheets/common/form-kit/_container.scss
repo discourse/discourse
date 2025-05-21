@@ -4,6 +4,10 @@
   flex-direction: column;
   align-items: flex-start;
 
+  &-secondary-actions {
+    margin-left: auto;
+  }
+
   &.--column {
     .form-kit__container-content {
       flex-direction: column;

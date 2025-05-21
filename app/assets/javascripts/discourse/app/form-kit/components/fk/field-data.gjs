@@ -3,7 +3,6 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import ValidationParser from "discourse/form-kit/lib/validation-parser";
 import Validator from "discourse/form-kit/lib/validator";
-import noop from "discourse/helpers/noop";
 import uniqueId from "discourse/helpers/unique-id";
 
 /**
@@ -96,22 +95,6 @@ export default class FKFieldData extends Component {
    */
   get format() {
     return this.args.format ?? "full";
-  }
-
-  /**
-   * Called when a control loses focus.
-   * @type {string}
-   */
-  get onFocusOut() {
-    return this.args.onFocusOut;
-  }
-
-  /**
-   * Optional component for primary actions.
-   * @type {string}
-   */
-  get primaryActionsComponent() {
-    return this.args.primaryActionsComponent;
   }
 
   /**
