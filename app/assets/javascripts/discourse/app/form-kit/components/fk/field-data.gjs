@@ -48,6 +48,33 @@ export default class FKFieldData extends Component {
     return this.args.data.get(this.name);
   }
 
+  get isDirty() {
+    return !this.isPristine;
+  }
+
+  get isPristine() {
+    const patches = this.args.data.patches.filter((patch) => {
+      return (
+        Array.isArray(patch.path) &&
+        patch.path.length === 1 &&
+        patch.path[0] === this.name
+      );
+    });
+    const inversePatches = this.args.data.inversePatches.filter((patch) => {
+      return (
+        Array.isArray(patch.path) &&
+        patch.path.length === 1 &&
+        patch.path[0] === this.name
+      );
+    });
+    return patches.length + inversePatches.length === 0;
+  }
+
+  @action
+  async rollback(name) {
+    await this.args.data.rollback(name);
+  }
+
   /**
    * Parses the validation rules for the field.
    * @type {Object|null}

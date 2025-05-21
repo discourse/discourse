@@ -11,6 +11,7 @@ import FKRequired from "discourse/form-kit/components/fk/required";
 import FKText from "discourse/form-kit/components/fk/text";
 import FKTooltip from "discourse/form-kit/components/fk/tooltip";
 import concatClass from "discourse/helpers/concat-class";
+import DMenu from "float-kit/components/d-menu";
 
 export default class FKControlWrapper extends Component {
   @tracked controlWidth = "auto";
@@ -79,6 +80,7 @@ export default class FKControlWrapper extends Component {
             {{#let
               (hash
                 Button=(component DButton class="form-kit__button btn-flat")
+                Menu=(component DMenu class="form-kit__menu")
               )
               as |actions|
             }}

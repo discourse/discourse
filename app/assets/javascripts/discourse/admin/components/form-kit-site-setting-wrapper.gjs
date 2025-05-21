@@ -1,14 +1,107 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
+import { concat, fn } from "@ember/helper";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { eq } from "truth-helpers";
+import DButton from "discourse/components/d-button";
 import Form from "discourse/components/form";
 import { humanizedSettingName } from "discourse/lib/site-settings-utils";
 import SiteSetting from "admin/models/site-setting";
 
-const PrimaryActions = <template><@actions.Button @icon="gear" /></template>;
-const SecondaryActions = <template><@actions.Button @icon="gear" /></template>;
+class PrimaryActions extends Component {
+  @service toasts;
+  @service router;
+
+  @action
+  settingHistory() {
+    this.router.transitionTo("adminLogs.staffActionLogs", {
+      queryParams: {
+        filters: {
+          subject: this.args.setting.setting,
+          action_name: "change_site_setting",
+        },
+        force_refresh: true,
+      },
+    });
+  }
+
+  @action
+  async copyStettingAsUrl(menu) {
+    await menu.close();
+
+    const url = `${window.location.origin}/admin/site_settings/category/all_results?filter=${this.args.setting.setting}`;
+    navigator.clipboard.writeText(url).then(() => {
+      this.toasts.success({ data: { message: "Copied to clipboard!" } });
+    });
+  }
+
+  <template>
+    <@actions.Menu
+      @identifier={{concat "site-setting-menu-" @setting.setting}}
+      @icon="gear"
+      @class="btn-flat"
+    >
+      <:content as |menu|>
+        <menu.Dropdown as |dropdown|>
+          <dropdown.item>
+            <DButton @action={{fn this.copyStettingAsUrl menu}}>Copy Setting as
+              URL</DButton>
+          </dropdown.item>
+          <dropdown.item>
+            <DButton @action={{this.settingHistory}}>Setting History</DButton>
+          </dropdown.item>
+        </menu.Dropdown>
+      </:content>
+    </@actions.Menu>
+  </template>
+}
+
+class SecondaryActions extends Component {
+  @action
+  async discardChanges() {
+    await this.args.field.rollback();
+  }
+
+  get cannotRevert() {
+    return this.args.field.value === this.args.setting.default;
+  }
+
+  @action
+  revertToDefault() {
+    this.args.field.set(this.args.setting.default);
+    this.args.save({
+      [this.args.setting.setting]: this.args.field.value,
+    });
+  }
+
+  @action
+  save() {
+    this.args.save({
+      [this.args.setting.setting]: this.args.field.value,
+    });
+    this.args.field.resetPatches();
+  }
+
+  <template>
+    <@actions.Button
+      @icon="arrow-rotate-left"
+      @disabled={{this.cannotRevert}}
+      @action={{this.revertToDefault}}
+    />
+    <@actions.Button
+      @icon="check"
+      @disabled={{@field.isPristine}}
+      @action={{this.save}}
+    />
+    <@actions.Button
+      @icon="xmark"
+      @disabled={{@field.isPristine}}
+      @action={{this.discardChanges}}
+    />
+  </template>
+}
 
 export default class FormKitSiteSettingWrapper extends Component {
   get settingTitle() {
@@ -44,7 +137,6 @@ export default class FormKitSiteSettingWrapper extends Component {
 
   <template>
     <Form
-      @submitOn="focusout"
       @onSubmit={{this.save}}
       @data={{this.formData}}
       class={{if @setting.overridden "--overridden"}}
@@ -59,10 +151,20 @@ export default class FormKitSiteSettingWrapper extends Component {
           {{#if (eq @setting.type "string")}}
             <field.Input>
               <:primary-actions as |actions|>
-                <PrimaryActions @actions={{actions}} />
+                <PrimaryActions
+                  @field={{field}}
+                  @actions={{actions}}
+                  @setting={{@setting}}
+                  @save={{this.save}}
+                />
               </:primary-actions>
               <:secondary-actions as |actions|>
-                <SecondaryActions @actions={{actions}} />
+                <SecondaryActions
+                  @field={{field}}
+                  @actions={{actions}}
+                  @setting={{@setting}}
+                  @save={{this.save}}
+                />
               </:secondary-actions>
             </field.Input>
           {{else if (eq @setting.type "upload")}}

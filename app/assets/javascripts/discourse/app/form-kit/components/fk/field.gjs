@@ -94,6 +94,10 @@ export default class FKField extends Component {
           name=field.name
           set=field.set
           value=field.value
+          isDirty=field.isDirty
+          isPristine=field.isPristine
+          rollback=field.rollback
+          resetPatches=@data.resetPatches
         )
         as |yieldArgs|
       }}

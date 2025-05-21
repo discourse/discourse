@@ -3,6 +3,7 @@
  */
 import { tracked } from "@glimmer/tracking";
 import { next } from "@ember/runloop";
+import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { applyPatches, enablePatches, produce } from "immer";
 
 enablePatches();
@@ -30,13 +31,13 @@ export default class FKFormData {
    * The patches to be applied.
    * @type {Array}
    */
-  patches = [];
+  @tracked patches = new TrackedArray();
 
   /**
    * The inverse patches to be applied, useful for rollback.
    * @type {Array}
    */
-  inversePatches = [];
+  @tracked inversePatches = new TrackedArray();
 
   /**
    * Creates an instance of Changeset.
@@ -111,11 +112,13 @@ export default class FKFormData {
    * Rolls back all changes by applying the inverse patches.
    * @return {Promise<void>} A promise that resolves after the rollback is complete.
    */
-  async rollback() {
-    while (this.inversePatches.length > 0) {
-      this.draftData = applyPatches(this.draftData, [
-        this.inversePatches.pop(),
-      ]);
+  async rollback(name) {
+    const inversePatches = name
+      ? this.inversePatches.filter((patch) => patch.path[0] === name)
+      : this.inversePatches;
+
+    while (inversePatches.length > 0) {
+      this.draftData = applyPatches(this.draftData, [inversePatches.pop()]);
     }
 
     this.resetPatches();
@@ -201,7 +204,7 @@ export default class FKFormData {
    * Resets the patches and inverse patches.
    */
   resetPatches() {
-    this.patches = [];
-    this.inversePatches = [];
+    this.patches = new TrackedArray();
+    this.inversePatches = new TrackedArray();
   }
 }
