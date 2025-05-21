@@ -110,7 +110,6 @@ export default class FKField extends Component {
             </row.Col>
           </FKRow>
         {{else}}
-          {{yield to="primary-actions"}}
           {{#if (has-block "body")}}
             {{yield yieldArgs to="body"}}
           {{else}}
