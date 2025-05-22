@@ -103,7 +103,6 @@ export default RouteTemplate(
                 "title-wrapper"
                 (if @controller.editingTopic "editing-topic")
                 (if @controller.model.details.can_edit "can-edit-topic")
-                (if @controller.titleTextHighlighted "title-highlighted")
               }}
             >
               {{#if @controller.editingTopic}}
@@ -214,8 +213,7 @@ export default RouteTemplate(
                   role="button"
                   class={{concatClass "title-wrapper edit-topic"}}
                   aria-label={{i18n "edit_topic"}}
-                  {{on "pointermove" @controller.handlePointerMove}}
-                  {{on "pointerup" @controller.handlePointerUp}}
+                  {{on "click" @controller.titleClick}}
                   title={{i18n "edit_topic"}}
                 >
                   {{#unless @controller.model.is_warning}}

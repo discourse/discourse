@@ -1,4 +1,4 @@
-import { click, fillIn, triggerEvent, visit } from "@ember/test-helpers";
+import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
 import { cloneJSON } from "discourse/lib/object";
@@ -112,9 +112,7 @@ acceptance("Composer Actions", function (needs) {
 
     await visit("/t/internationalization-localization/280");
 
-    await triggerEvent("#topic-title .can-edit-topic", "pointerdown");
-    await triggerEvent("#topic-title .can-edit-topic", "pointermove");
-    await triggerEvent("#topic-title .can-edit-topic", "pointerup");
+    await click("#topic-title .can-edit-topic .edit-topic");
     await categoryChooser.expand();
     await categoryChooser.selectRowByValue(4);
     await click("#topic-title .submit-edit");

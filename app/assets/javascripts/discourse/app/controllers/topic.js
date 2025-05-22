@@ -8,6 +8,7 @@ import { service } from "@ember/service";
 import { isEmpty, isPresent } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
 import BufferedProxy from "ember-buffered-proxy/proxy";
+import { log } from "qunit";
 import { Promise } from "rsvp";
 import {
   CLOSE_INITIATED_BY_BUTTON,
@@ -102,7 +103,6 @@ export default class TopicController extends Controller {
   currentPostId = null;
   userLastReadPostNumber = null;
   highestPostNumber = null;
-  titleTextHighlighted = false;
   _progressIndex = null;
   _retryInProgress = false;
   _retryRateLimited = false;
@@ -398,19 +398,6 @@ export default class TopicController extends Controller {
       return;
     }
     this.editTopic(event);
-  }
-
-  @action
-  handlePointerMove() {
-    const selection = window.getSelection();
-    this.set("titleTextHighlighted", selection.toString().length > 0);
-  }
-
-  @action
-  handlePointerUp(event) {
-    if (!this.titleTextHighlighted) {
-      this.editTopic(event);
-    }
   }
 
   @action
