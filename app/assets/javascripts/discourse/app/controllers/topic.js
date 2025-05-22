@@ -392,6 +392,7 @@ export default class TopicController extends Controller {
       return;
     }
     event?.preventDefault();
+    // If the user is selecting the title, don't go into edit mode
     const selection = window.getSelection();
     if (selection.toString().length > 0) {
       return;
