@@ -4,6 +4,7 @@ import deprecated from "discourse/lib/deprecated";
 import DiscourseTemplateMap from "discourse/lib/discourse-template-map";
 import { isTesting } from "discourse/lib/environment";
 import { RAW_TOPIC_LIST_DEPRECATION_OPTIONS } from "discourse/lib/plugin-api";
+import { getThemeInfo } from "discourse/lib/source-identifier";
 
 let THROW_GJS_ERROR = isTesting();
 
@@ -18,6 +19,24 @@ export function overrideThrowGjsError(value) {
 
 const LEGACY_TOPIC_LIST_OVERRIDES = ["topic-list", "topic-list-item"];
 
+function sourceForModuleName(name) {
+  const pluginMatch = name.match(/^discourse\/plugins\/([^\/]+)\//)?.[1];
+  if (pluginMatch) {
+    return {
+      type: "plugin",
+      name: pluginMatch,
+    };
+  }
+
+  const themeMatch = name.match(/^discourse\/theme-(\d+)\//)?.[1];
+  if (themeMatch) {
+    return {
+      ...getThemeInfo(parseInt(themeMatch, 10)),
+      type: "theme",
+    };
+  }
+}
+
 export default {
   after: ["populate-template-map", "mobile"],
 
@@ -31,11 +50,15 @@ export default {
       }
 
       let componentName = templateKey;
+      const finalOverrideModuleName = moduleNames[moduleNames.length - 1];
+
       if (mobile) {
         deprecated(
           `Mobile-specific hbs templates are deprecated. Use responsive CSS or {{#if this.site.mobileView}} instead. [${templateKey}]`,
           {
             id: "discourse.mobile-templates",
+            url: "https://meta.discourse.org/t/355668",
+            source: sourceForModuleName(finalOverrideModuleName),
           }
         );
         if (this.site.mobileView) {
@@ -58,7 +81,6 @@ export default {
       // it's safe to call it original template here because the override wasn't set yet.
       const originalTemplate = GlimmerManager.getComponentTemplate(component);
       const isStrictMode = originalTemplate?.()?.parsedLayout?.isStrictMode;
-      const finalOverrideModuleName = moduleNames[moduleNames.length - 1];
 
       if (isStrictMode) {
         const message =
@@ -75,14 +97,18 @@ export default {
           // Special handling for these, with a different deprecation id, so the auto-feature-flag works correctly
           deprecated(
             `Overriding '${componentName}' template is deprecated. Use the value transformer 'topic-list-columns' and other new topic-list plugin APIs instead.`,
-            RAW_TOPIC_LIST_DEPRECATION_OPTIONS
+            {
+              ...RAW_TOPIC_LIST_DEPRECATION_OPTIONS,
+              source: sourceForModuleName(finalOverrideModuleName),
+            }
           );
         } else {
           deprecated(
-            `[${finalOverrideModuleName}] Overriding component templates is deprecated, and will soon be disabled. Use plugin outlets, CSS, or other customization APIs instead.`,
+            `Overriding component templates is deprecated, and will soon be disabled. Use plugin outlets, CSS, or other customization APIs instead. [${finalOverrideModuleName}]`,
             {
               id: "discourse.component-template-overrides",
-              url: "https://meta.discourse.org/t/247487",
+              url: "https://meta.discourse.org/t/355668",
+              source: sourceForModuleName(finalOverrideModuleName),
             }
           );
         }
