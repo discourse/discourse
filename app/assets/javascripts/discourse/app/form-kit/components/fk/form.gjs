@@ -6,6 +6,7 @@ import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
+import { TrackedMap } from "@ember-compat/tracked-built-ins";
 import curryComponent from "ember-curry-component";
 import DButton from "discourse/components/d-button";
 import FKAlert from "discourse/form-kit/components/fk/alert";
@@ -36,7 +37,7 @@ class FKForm extends Component {
 
   @tracked isSubmitting = false;
 
-  fields = new Map();
+  fields = new TrackedMap();
 
   formData = new FKFormData(this.args.data ?? {});
 
@@ -102,6 +103,14 @@ class FKForm extends Component {
     }
 
     return validateOn;
+  }
+
+  get dirtyCount() {
+    const paths = new Set();
+    this.formData.patches.forEach((patch) => {
+      paths.add(patch.path[0]);
+    });
+    return paths.size;
   }
 
   @action
@@ -321,6 +330,7 @@ class FKForm extends Component {
             class="btn-primary form-kit__button"
             type="submit"
             isLoading=this.isSubmitting
+            label=@label
           )
           Reset=(component
             DButton
@@ -338,6 +348,7 @@ class FKForm extends Component {
           set=this.set
           setProperties=this.setProperties
           addItemToCollection=this.addItemToCollection
+          dirtyCount=this.dirtyCount
         )
         this.formData.draftData
       }}

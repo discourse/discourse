@@ -124,28 +124,29 @@ export default class FormKitSiteSettingWrapper extends Component {
     return data;
   }
 
-  @action
-  async save(data) {
-    // this.args.setting.buffered.set(
-    //   this.args.setting.setting,
-    //   data[this.args.setting.setting]
-    // );
-    // this.args.setting.buffered.applyChanges();
-    // const params = {};
-    // params[this.args.setting.setting] = {
-    //   value: data[this.args.setting.setting],
-    //   backfill: false,
-    // };
-    // await SiteSetting.bulkUpdate(params);
+  async save(data, fields) {
+    const params = {};
+
+    Object.keys(data).forEach((key) => {
+      const value = data[key];
+
+      // this.args.setting.buffered.set(
+      //   this.args.setting.setting,
+      //   data[this.args.setting.setting]
+      // );
+      // this.args.setting.buffered.applyChanges();
+
+      params[key] = {
+        value,
+        backfill: false,
+      };
+    });
+
+    await SiteSetting.bulkUpdate(params);
   }
 
   <template>
-    <Form
-      @onSubmit={{this.save}}
-      @data={{this.formData}}
-      {{!-- class={{if @setting.overridden "--overridden"}} --}}
-      as |form|
-    >
+    <Form @onSubmit={{this.save}} @data={{this.formData}} as |form|>
       {{#each @settings as |setting|}}
         <form.Field
           @name={{setting.setting}}
@@ -203,9 +204,15 @@ export default class FormKitSiteSettingWrapper extends Component {
         </form.Field>
       {{/each}}
 
-      <form.Actions>
-        <form.Submit />
-        <form.Reset />
+      <form.Actions class="site-settings-form__floating-actions">
+        {{log form}}
+        {{#if form.dirtyCount}}
+          You have
+          {{form.dirtyCount}}
+          unsaved change(s)
+        {{/if}}
+        <form.Reset @translatedLabel="Discard change" />
+        <form.Submit @translatedLabel="Save change" />
       </form.Actions>
     </Form>
   </template>
