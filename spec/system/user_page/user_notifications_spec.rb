@@ -82,6 +82,9 @@ describe "User notifications", type: :system do
 
         notification = user_notifications_page.notification(group_mention_notification)
 
+        puts "prioritize_username_in_ux: #{SiteSetting.prioritize_username_in_ux}"
+        puts "User name: #{user.name}, username: #{user.username}"
+
         expect(notification).to have_content(group.name)
         expect(notification).to have_content(user.name)
       end
