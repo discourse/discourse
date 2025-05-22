@@ -523,8 +523,6 @@ export default class PostStream extends Component {
   }
 
   #currentPostWasScrolled({ element, ...event }) {
-    console.log("current post was scrolled", element, event);
-
     if (element !== this.#currentPostElement) {
       return;
     }
@@ -568,8 +566,6 @@ export default class PostStream extends Component {
   }
 
   #toggleBottomEyelineTracking(enabled) {
-    console.log("bottom eyeline tracking", enabled);
-
     this.#bottomEyelineTrackingEnabled = enabled;
     if (enabled) {
       if (this.#currentPostElement) {
