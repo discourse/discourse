@@ -23,6 +23,19 @@ describe "Admin Customize Themes Config Area Page", type: :system do
     expect(install_modal.popular_options.first).to have_text("Air")
   end
 
+  it "opens an install modal when coming from the install theme button on Meta" do
+    config_area.visit(
+      { "repoName" => "discourse-air", "repoUrl" => "https://github.com/discourse/discourse-air" },
+    )
+
+    expect(install_modal).to be_open
+    expect(install_modal).to have_content("github.com/discourse/discourse-air")
+
+    install_modal.close
+
+    expect(page).to have_current_path("/admin/config/customize/themes")
+  end
+
   it "allows to mark theme as active" do
     config_area.visit
     expect(config_area).to have_badge(theme, "--active")

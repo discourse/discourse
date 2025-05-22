@@ -53,6 +53,9 @@ class LiveDevelopmentInit {
       } else if (me === "development-mode-theme-changed") {
         if (
           window.location.pathname.startsWith("/admin/customize/themes") ||
+          window.location.pathname.startsWith(
+            "/admin/config/customize/themes"
+          ) ||
           window.location.pathname.startsWith("/admin/config/look-and-feel")
         ) {
           // Don't refresh users on routes which make theme changes - would be very inconvenient.
