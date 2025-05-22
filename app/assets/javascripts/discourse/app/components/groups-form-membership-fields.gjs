@@ -6,6 +6,7 @@ import { not, readOnly } from "@ember/object/computed";
 import ExpandingTextArea from "discourse/components/expanding-text-area";
 import GroupFlairInputs from "discourse/components/group-flair-inputs";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import lazyHash from "discourse/helpers/lazy-hash";
 import withEventValue from "discourse/helpers/with-event-value";
 import discourseComputed from "discourse/lib/decorators";
 import AssociatedGroup from "discourse/models/associated-group";
@@ -183,7 +184,7 @@ export default class GroupsFormMembershipFields extends Component {
         <PluginOutlet
           @name="groups-form-membership-below-automatic"
           @connectorTagName="div"
-          @outletArgs={{hash model=this.model}}
+          @outletArgs={{lazyHash model=this.model}}
         />
       </span>
 

@@ -4,6 +4,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DEditor from "discourse/components/d-editor";
 import TextField from "discourse/components/text-field";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
 import DropdownSelectBox from "select-kit/components/dropdown-select-box";
 
@@ -85,7 +86,10 @@ export default class PostTranslationEditor extends Component {
         @disableSubmit={{this.composer.disableSubmit}}
         @topicId={{this.composer.model.topic.id}}
         @categoryId={{this.composer.model.category.id}}
-        @outletArgs={{hash composer=this.composer.model editorType="composer"}}
+        @outletArgs={{lazyHash
+          composer=this.composer.model
+          editorType="composer"
+        }}
       />
     </div>
   </template>

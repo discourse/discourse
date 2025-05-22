@@ -4,6 +4,7 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import PreferenceCheckbox from "discourse/components/preference-checkbox";
 import SaveControls from "discourse/components/save-controls";
 import htmlSafe from "discourse/helpers/html-safe";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
 import ComboBox from "select-kit/components/combo-box";
 
@@ -85,7 +86,7 @@ export default RouteTemplate(
         <PluginOutlet
           @name="user-preferences-emails-pref-email-settings"
           @connectorTagName="div"
-          @outletArgs={{hash model=@controller.model save=@controller.save}}
+          @outletArgs={{lazyHash model=@controller.model save=@controller.save}}
         />
       </span>
     </div>
@@ -161,7 +162,7 @@ export default RouteTemplate(
       <PluginOutlet
         @name="user-preferences-emails"
         @connectorTagName="div"
-        @outletArgs={{hash model=@controller.model save=@controller.save}}
+        @outletArgs={{lazyHash model=@controller.model save=@controller.save}}
       />
     </span>
 
@@ -171,7 +172,7 @@ export default RouteTemplate(
       <PluginOutlet
         @name="user-custom-controls"
         @connectorTagName="div"
-        @outletArgs={{hash model=@controller.model}}
+        @outletArgs={{lazyHash model=@controller.model}}
       />
     </span>
 

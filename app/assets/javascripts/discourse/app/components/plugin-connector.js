@@ -27,7 +27,7 @@ export default class PluginConnector extends Component {
         defineProperty(
           this,
           key,
-          computed("args", function () {
+          computed(`args.${key}`, function () {
             return this.args[key];
           })
         );

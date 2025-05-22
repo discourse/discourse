@@ -3,6 +3,7 @@ import { fn, hash } from "@ember/helper";
 import { or } from "@ember/object/computed";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TextField from "discourse/components/text-field";
+import lazyHash from "discourse/helpers/lazy-hash";
 import discourseComputed from "discourse/lib/decorators";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import { i18n } from "discourse-i18n";
@@ -221,7 +222,7 @@ export default class GroupsFormInteractionFields extends Component {
           <PluginOutlet
             @name="group-email-in"
             @connectorTagName="div"
-            @outletArgs={{hash model=this.model}}
+            @outletArgs={{lazyHash model=this.model}}
           />
         </span>
       </div>
@@ -246,7 +247,7 @@ export default class GroupsFormInteractionFields extends Component {
       <PluginOutlet
         @name="groups-interaction-custom-options"
         @connectorTagName="div"
-        @outletArgs={{hash model=this.model}}
+        @outletArgs={{lazyHash model=this.model}}
       />
     </span>
   </template>

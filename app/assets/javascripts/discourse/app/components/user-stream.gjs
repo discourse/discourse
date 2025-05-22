@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
@@ -10,6 +9,7 @@ import PostList from "discourse/components/post-list";
 import avatar from "discourse/helpers/avatar";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import ClickTrack from "discourse/lib/click-track";
 import DiscourseURL from "discourse/lib/url";
@@ -134,7 +134,7 @@ export default class UserStreamComponent extends Component {
       <:abovePostItemHeader as |post|>
         <PluginOutlet
           @name="user-stream-item-above"
-          @outletArgs={{hash item=post}}
+          @outletArgs={{lazyHash item=post}}
         />
       </:abovePostItemHeader>
       <:belowPostItemMetaData as |post|>
@@ -142,7 +142,7 @@ export default class UserStreamComponent extends Component {
           <PluginOutlet
             @name="user-stream-item-header"
             @connectorTagName="div"
-            @outletArgs={{hash item=post}}
+            @outletArgs={{lazyHash item=post}}
           />
         </span>
       </:belowPostItemMetaData>

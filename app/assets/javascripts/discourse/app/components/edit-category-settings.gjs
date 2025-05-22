@@ -10,6 +10,7 @@ import TextField from "discourse/components/text-field";
 import icon from "discourse/helpers/d-icon";
 import getUrl from "discourse/helpers/get-url";
 import htmlSafe from "discourse/helpers/html-safe";
+import lazyHash from "discourse/helpers/lazy-hash";
 import withEventValue from "discourse/helpers/with-event-value";
 import { setting } from "discourse/lib/computed";
 import { SEARCH_PRIORITIES } from "discourse/lib/constants";
@@ -556,7 +557,7 @@ export default class EditCategorySettings extends buildCategoryPanel(
           <PluginOutlet
             @name="category-email-in"
             @connectorTagName="div"
-            @outletArgs={{hash category=this.category}}
+            @outletArgs={{lazyHash category=this.category}}
           />
         </span>
       {{/if}}
@@ -578,7 +579,7 @@ export default class EditCategorySettings extends buildCategoryPanel(
     <section>
       <PluginOutlet
         @name="category-custom-settings"
-        @outletArgs={{hash category=this.category}}
+        @outletArgs={{lazyHash category=this.category}}
       />
     </section>
   </template>

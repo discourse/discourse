@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn, hash } from "@ember/helper";
+import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
@@ -16,6 +16,7 @@ import ageWithTooltip from "discourse/helpers/age-with-tooltip";
 import categoryLink from "discourse/helpers/category-link";
 import icon from "discourse/helpers/d-icon";
 import discourseTags from "discourse/helpers/discourse-tags";
+import lazyHash from "discourse/helpers/lazy-hash";
 import topicFeaturedLink from "discourse/helpers/topic-featured-link";
 import { bind, debounce } from "discourse/lib/decorators";
 import domUtils from "discourse/lib/dom-utils";
@@ -547,7 +548,7 @@ export default class TopicTimelineScrollArea extends Component {
       <div class="timeline-controls">
         <PluginOutlet
           @name="timeline-controls-before"
-          @outletArgs={{hash model=@model}}
+          @outletArgs={{lazyHash model=@model}}
         />
 
         {{#if this.displayLocalizationToggle}}
@@ -691,7 +692,7 @@ export default class TopicTimelineScrollArea extends Component {
 
         <PluginOutlet
           @name="timeline-footer-controls-after"
-          @outletArgs={{hash model=@model fullscreen=@fullscreen}}
+          @outletArgs={{lazyHash model=@model fullscreen=@fullscreen}}
         />
       </div>
     {{/if}}

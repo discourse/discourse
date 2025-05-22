@@ -1,4 +1,4 @@
-import { fn, hash } from "@ember/helper";
+import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { htmlSafe } from "@ember/template";
 import RouteTemplate from "ember-route-template";
@@ -9,6 +9,7 @@ import UserApiKeys from "discourse/components/user-preferences/user-api-keys";
 import UserPasskeys from "discourse/components/user-preferences/user-passkeys";
 import icon from "discourse/helpers/d-icon";
 import formatDate from "discourse/helpers/format-date";
+import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
 import { i18n } from "discourse-i18n";
 
@@ -181,7 +182,7 @@ export default RouteTemplate(
       <PluginOutlet
         @name="user-preferences-security"
         @connectorTagName="div"
-        @outletArgs={{hash model=@controller.model save=this.save}}
+        @outletArgs={{lazyHash model=@controller.model save=this.save}}
       />
     </span>
 
@@ -191,7 +192,7 @@ export default RouteTemplate(
       <PluginOutlet
         @name="user-custom-controls"
         @connectorTagName="div"
-        @outletArgs={{hash model=@controller.model}}
+        @outletArgs={{lazyHash model=@controller.model}}
       />
     </span>
   </template>
