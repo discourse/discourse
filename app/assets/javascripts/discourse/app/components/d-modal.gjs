@@ -194,13 +194,11 @@ export default class DModal extends Component {
     }
 
     if (this.site.desktopView) {
-      if (!window.matchMedia("(prefers-reduced-motion)").matches) {
-        try {
-          this.animating = true;
-          await this.#animatePopOff();
-        } finally {
-          this.animating = false;
-        }
+      try {
+        this.animating = true;
+        await this.#animatePopOff();
+      } finally {
+        this.animating = false;
       }
     }
 
