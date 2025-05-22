@@ -69,8 +69,8 @@ class PrimaryActions extends Component {
             </DButton>
           </dropdown.item>
           <dropdown.item>
-            <DButton @action={{fn this.copyStettingAsUrl menu}}>Copy Setting as
-              URL</DButton>
+            <DButton @action={{fn this.copyStettingAsUrl menu}}>Copy link to
+              setting</DButton>
           </dropdown.item>
           <dropdown.item>
             <DButton @action={{this.settingHistory}}>Setting History</DButton>
@@ -88,11 +88,8 @@ class SecondaryActions extends Component {
   }
 
   @action
-  save() {
-    this.args.save({
-      [this.args.setting.setting]: this.args.field.value,
-    });
-    this.args.field.resetPatches();
+  async save(event) {
+    await this.args.form.submit(event, this.args.field);
   }
 
   <template>
@@ -100,6 +97,7 @@ class SecondaryActions extends Component {
       @icon="check"
       @disabled={{@field.isPristine}}
       @action={{this.save}}
+      @forwardEvent={{true}}
     />
     <@actions.Button
       @icon="xmark"
@@ -117,6 +115,7 @@ export default class FormKitSiteSettingWrapper extends Component {
 
   @cached
   get formData() {
+    console.log("compute form data");
     const data = {};
     this.args.settings.forEach((setting) => {
       data[setting.setting] = setting.value;
@@ -126,22 +125,18 @@ export default class FormKitSiteSettingWrapper extends Component {
 
   async save(data, fields) {
     const params = {};
-
     Object.keys(data).forEach((key) => {
       const value = data[key];
-
       // this.args.setting.buffered.set(
       //   this.args.setting.setting,
       //   data[this.args.setting.setting]
       // );
       // this.args.setting.buffered.applyChanges();
-
       params[key] = {
         value,
         backfill: false,
       };
     });
-
     await SiteSetting.bulkUpdate(params);
   }
 
@@ -159,6 +154,7 @@ export default class FormKitSiteSettingWrapper extends Component {
               <field.Input>
                 <:primary-actions as |actions|>
                   <PrimaryActions
+                    @form={{form}}
                     @field={{field}}
                     @actions={{actions}}
                     @setting={{setting}}
@@ -167,6 +163,7 @@ export default class FormKitSiteSettingWrapper extends Component {
                 </:primary-actions>
                 <:secondary-actions as |actions|>
                   <SecondaryActions
+                    @form={{form}}
                     @field={{field}}
                     @actions={{actions}}
                     @setting={{setting}}
@@ -205,7 +202,7 @@ export default class FormKitSiteSettingWrapper extends Component {
       {{/each}}
 
       <form.Actions class="site-settings-form__floating-actions">
-        {{log form}}
+        {{log form.isDirty}}
         {{#if form.dirtyCount}}
           You have
           {{form.dirtyCount}}

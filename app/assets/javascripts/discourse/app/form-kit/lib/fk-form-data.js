@@ -89,23 +89,38 @@ export default class FKFormData {
   /**
    * Executes the patches to update the data.
    */
-  execute() {
-    this.data = applyPatches(this.data, this.patches);
+  execute(patches = this.patches) {
+    this.data = applyPatches(this.data, patches);
   }
 
   /**
    * Reverts the patches to update the data.
    */
-  unexecute() {
-    this.data = applyPatches(this.data, this.inversePatches);
+  unexecute(inversePatches = this.inversePatches) {
+    this.data = applyPatches(this.data, inversePatches);
   }
 
   /**
    * Saves the changes by executing the patches and resetting them.
    */
-  save() {
-    this.execute();
-    this.resetPatches();
+  async save(name) {
+    if (name) {
+      const patches = this.patches.filter((patch) => patch.path[0] === name);
+      this.execute(patches);
+      this.patches = new TrackedArray(
+        this.patches.filter((patch) => patch.path[0] !== name)
+      );
+      this.inversePatches = new TrackedArray(
+        this.inversePatches.filter((patch) => patch.path[0] !== name)
+      );
+    } else {
+      this.execute();
+      this.resetPatches();
+    }
+
+    console.log("save", name);
+
+    await new Promise((resolve) => next(resolve));
   }
 
   /**

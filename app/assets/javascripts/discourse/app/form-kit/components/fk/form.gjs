@@ -102,6 +102,7 @@ class FKForm extends Component {
   }
 
   get dirtyCount() {
+    console.log(this.formData, this.formData.patches);
     const paths = new Set();
     this.formData.patches.forEach((patch) => {
       paths.add(patch.path[0]);
@@ -205,7 +206,7 @@ class FKForm extends Component {
   }
 
   @action
-  async onSubmit(event) {
+  async onSubmit(event, field) {
     event?.preventDefault();
 
     if (this.isSubmitting) {
@@ -215,12 +216,18 @@ class FKForm extends Component {
     try {
       this.isSubmitting = true;
 
-      await this.validate(this.fields.values());
+      await this.validate(field ? [field] : this.fields.values());
 
       if (this.formData.isValid) {
-        this.formData.save();
+        this.formData.save(field?.name);
 
-        await this.args.onSubmit?.(this.formData.draftData);
+        if (field) {
+          await this.args.onSubmit?.({
+            [field.name]: this.formData.get(field.name),
+          });
+        } else {
+          await this.args.onSubmit?.(this.formData.draftData);
+        }
       }
     } finally {
       this.isSubmitting = false;
@@ -314,7 +321,18 @@ class FKForm extends Component {
             label="form_kit.reset"
             disabled=true
           )
-          Field=(this.componentFor FKField)
+          Field=(component
+            FKField
+            errors=this.formData.errors
+            data=this.formData
+            patches=this.formData.patches
+            addError=this.addError
+            registerField=this.registerField
+            unregisterField=this.unregisterField
+            triggerRevalidationFor=this.triggerRevalidationFor
+            remove=this.remove
+            set=this.set
+          )
           Collection=(this.componentFor FKCollection)
           Object=(this.componentFor FKObject)
           InputGroup=(this.componentFor FKInputGroup)
@@ -323,6 +341,7 @@ class FKForm extends Component {
           setProperties=this.setProperties
           addItemToCollection=this.addItemToCollection
           dirtyCount=this.dirtyCount
+          submit=this.onSubmit
         )
         this.formData.draftData
       }}
