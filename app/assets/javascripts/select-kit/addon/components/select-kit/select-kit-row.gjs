@@ -13,7 +13,7 @@ import icon from "discourse/helpers/d-icon";
 import { makeArray } from "discourse/lib/helpers";
 import { i18n } from "discourse-i18n";
 import { isValidInput } from "select-kit/lib/input-utils";
-import UtilsMixin from "select-kit/mixins/utils";
+import selectKitPropUtils from "select-kit/lib/select-kit-prop-utils";
 
 @classNames("select-kit-row")
 @tagName("li")
@@ -35,7 +35,8 @@ import UtilsMixin from "select-kit/mixins/utils";
   "isNone:none",
   "item.classNames"
 )
-export default class SelectKitRow extends Component.extend(UtilsMixin) {
+@selectKitPropUtils
+export default class SelectKitRow extends Component {
   tabIndex = 0;
   index = 0;
   role = "menuitemradio";
