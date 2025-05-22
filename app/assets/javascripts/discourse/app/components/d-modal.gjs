@@ -290,13 +290,13 @@ export default class DModal extends Component {
         ],
         {
           fill: "forwards",
-          duration: 300,
+          duration: getMaxAnimationTimeMs(300),
           easing: "cubic-bezier(0.4, 0, 0.2, 1)",
         }
       ).finished,
       backdrop.animate([{ opacity: 0.6 }, { opacity: 0 }], {
         fill: "forwards",
-        duration: 300,
+        duration: getMaxAnimationTimeMs(300),
         easing: "cubic-bezier(0.4, 0, 0.2, 1)",
       }).finished,
     ]);
