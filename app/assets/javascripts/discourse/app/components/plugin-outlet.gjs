@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import ClassicComponent from "@ember/component";
-import { concat, hash } from "@ember/helper";
+import { concat } from "@ember/helper";
 import { get } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";

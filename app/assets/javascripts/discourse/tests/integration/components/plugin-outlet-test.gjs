@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import ClassicComponent from "@ember/component";
 import templateOnly from "@ember/component/template-only";
-import { hash } from "@ember/helper";
 import { getOwner } from "@ember/owner";
 import { click, find, render, settled } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
