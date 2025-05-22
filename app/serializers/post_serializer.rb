@@ -666,7 +666,7 @@ class PostSerializer < BasicPostSerializer
     SiteSetting.experimental_content_localization
   end
 
-  def include_post_localizaitons_count?
+  def include_post_localizations_count?
     SiteSetting.experimental_content_localization
   end
 
