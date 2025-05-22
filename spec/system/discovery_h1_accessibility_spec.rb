@@ -17,17 +17,17 @@ describe "Discovery heading accessibility", type: :system do
 
   it "shows correct heading for tagged view" do
     visit "/tags/#{tag.name}"
-    expect(page).to have_selector("h1", text: "Latest topics tagged with help")
+    expect(page).to have_selector("h1", text: "Latest topics tagged help")
   end
 
   it "shows correct heading for category + tag view" do
     visit "/tags/c/#{category.slug}/#{category.id}/#{tag.name}"
-    expect(page).to have_selector("h1", text: "Latest topics in General tagged with help")
+    expect(page).to have_selector("h1", text: "Latest topics in General tagged help")
   end
 
   it "shows correct heading for no tags view" do
-    visit "/tags/none"
-    expect(page).to have_selector("h1", text: "All topics without tags")
+    visit "/tag/none"
+    expect(page).to have_selector("h1", text: "Latest topics without tags")
   end
 
   it "shows default heading for latest topics" do

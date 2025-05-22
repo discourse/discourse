@@ -50,7 +50,7 @@ module("Component | discovery/accessible-discovery-heading", function (hooks) {
     assert
       .dom("#topic-list-heading")
       .hasText(
-        "topics in Development tagged with javascript",
+        "topics in Development tagged javascript",
         "The label is correct for a category and tag"
       );
   });
