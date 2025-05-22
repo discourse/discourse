@@ -514,10 +514,16 @@ export default class PostStream extends Component {
     const distanceToBottom = documentHeight - topicBottomAbsolute;
 
     // Calculate scroll area and progress
-    const scrollableArea = Math.min(viewportHeight, distanceToBottom);
+    const scrollableArea = Math.min(
+      viewportHeight,
+      distanceToBottom,
+      documentHeight - viewportHeight
+    );
     const remainingScroll = documentHeight - viewportHeight - scrollPosition;
     const progress =
-      1 - Math.min(1, Math.max(0, remainingScroll / scrollableArea));
+      scrollableArea > 0
+        ? 1 - Math.min(1, Math.max(0, remainingScroll / scrollableArea))
+        : 1;
 
     // Return interpolated position between boundaries based on progress
     return topBoundary + progress * (bottomBoundary - topBoundary);
