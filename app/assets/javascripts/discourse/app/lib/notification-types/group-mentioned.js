@@ -8,7 +8,7 @@ export default class extends NotificationTypeBase {
     let name;
 
     if (!this.siteSettings.prioritize_username_in_ux) {
-      name = this.notification.data.original_name || this.username;
+      name = this.notification.data.display_name || this.username;
     } else {
       name = this.username;
     }
