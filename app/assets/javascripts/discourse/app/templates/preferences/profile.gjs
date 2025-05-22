@@ -1,5 +1,5 @@
 import { Input } from "@ember/component";
-import { array, fn, hash } from "@ember/helper";
+import { array, fn } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
 import RouteTemplate from "ember-route-template";
 import DButton from "discourse/components/d-button";
@@ -10,6 +10,7 @@ import SaveControls from "discourse/components/save-controls";
 import UppyImageUploader from "discourse/components/uppy-image-uploader";
 import UserField from "discourse/components/user-field";
 import htmlSafe from "discourse/helpers/html-safe";
+import lazyHash from "discourse/helpers/lazy-hash";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import { i18n } from "discourse-i18n";
 import ComboBox from "select-kit/components/combo-box";
@@ -229,19 +230,19 @@ export default RouteTemplate(
       <PluginOutlet
         @name="user-preferences-profile"
         @connectorTagName="div"
-        @outletArgs={{hash model=@controller.model save=@controller.save}}
+        @outletArgs={{lazyHash model=@controller.model save=@controller.save}}
       />
 
       <PluginOutlet
         @name="user-custom-preferences"
         @connectorTagName="div"
-        @outletArgs={{hash model=@controller.model}}
+        @outletArgs={{lazyHash model=@controller.model}}
       />
 
       <PluginOutlet
         @name="user-custom-controls"
         @connectorTagName="div"
-        @outletArgs={{hash model=@controller.model}}
+        @outletArgs={{lazyHash model=@controller.model}}
       />
     {{/unless}}
 

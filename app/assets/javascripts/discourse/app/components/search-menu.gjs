@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { concat, hash } from "@ember/helper";
+import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
@@ -15,6 +15,7 @@ import ClearButton from "discourse/components/search-menu/clear-button";
 import Results from "discourse/components/search-menu/results";
 import SearchTerm from "discourse/components/search-menu/search-term";
 import concatClass from "discourse/helpers/concat-class";
+import lazyHash from "discourse/helpers/lazy-hash";
 import loadingSpinner from "discourse/helpers/loading-spinner";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
@@ -418,7 +419,7 @@ export default class SearchMenu extends Component {
 
           <PluginOutlet
             @name="search-menu-before-term-input"
-            @outletArgs={{hash openSearchMenu=this.open}}
+            @outletArgs={{lazyHash openSearchMenu=this.open}}
           />
 
           <SearchTerm

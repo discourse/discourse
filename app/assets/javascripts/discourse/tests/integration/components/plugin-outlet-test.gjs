@@ -8,6 +8,7 @@ import { module, test } from "qunit";
 import sinon from "sinon";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import deprecatedOutletArgument from "discourse/helpers/deprecated-outlet-argument";
+import lazyHash from "discourse/helpers/lazy-hash";
 import deprecated, {
   withSilencedDeprecations,
   withSilencedDeprecationsAsync,
@@ -175,7 +176,7 @@ module("Integration | Component | plugin-outlet", function (hooks) {
         this.template = hbs`
           <PluginOutlet
             @name="outlet-with-default"
-            @outletArgs={{hash
+            @outletArgs={{lazyHash
               shouldDisplay=this.shouldDisplay
               yieldCore=this.yieldCore
               enableClashingConnector=this.enableClashingConnector
@@ -272,7 +273,7 @@ module("Integration | Component | plugin-outlet", function (hooks) {
         await render(hbs`
           <PluginOutlet
             @name="outlet-with-default"
-            @outletArgs={{hash shouldDisplay=true}}
+            @outletArgs={{lazyHash shouldDisplay=true}}
           >
             <span class="result">Core implementation</span>
           </PluginOutlet>
@@ -301,7 +302,7 @@ module("Integration | Component | plugin-outlet", function (hooks) {
         await render(hbs`
           <PluginOutlet
             @name="outlet-with-default"
-            @outletArgs={{hash shouldDisplay=true}}
+            @outletArgs={{lazyHash shouldDisplay=true}}
           >
             <span class="result">Core implementation</span>
           </PluginOutlet>
@@ -327,7 +328,7 @@ module("Integration | Component | plugin-outlet", function (hooks) {
         await render(hbs`
           <PluginOutlet
             @name="outlet-with-default"
-            @outletArgs={{hash shouldDisplay=true}}
+            @outletArgs={{lazyHash shouldDisplay=true}}
           >
             <span class="result">Core implementation</span>
           </PluginOutlet>
@@ -355,7 +356,7 @@ module("Integration | Component | plugin-outlet", function (hooks) {
         await render(hbs`
           <PluginOutlet
             @name="outlet-with-default"
-            @outletArgs={{hash shouldDisplay=true}}
+            @outletArgs={{lazyHash shouldDisplay=true}}
           >
             <span class="result">Core implementation</span>
           </PluginOutlet>
@@ -389,7 +390,7 @@ module("Integration | Component | plugin-outlet", function (hooks) {
     await render(hbs`
       <PluginOutlet
         @name="test-name"
-        @outletArgs={{hash shouldDisplay=this.shouldDisplay}}
+        @outletArgs={{lazyHash shouldDisplay=this.shouldDisplay}}
       />
     `);
     assert
@@ -428,7 +429,7 @@ module("Integration | Component | plugin-outlet", function (hooks) {
     await render(hbs`
       <PluginOutlet
         @name="test-name"
-        @outletArgs={{hash shouldDisplay=this.shouldDisplay}}
+        @outletArgs={{lazyHash shouldDisplay=this.shouldDisplay}}
       />
     `);
 
@@ -595,7 +596,7 @@ module("Integration | Component | plugin-outlet", function (hooks) {
         <template>
           <PluginOutlet
             @name="test-name"
-            @outletArgs={{hash shouldDisplay=true}}
+            @outletArgs={{lazyHash shouldDisplay=true}}
             @deprecatedArgs={{hash
               argNotUsed=(deprecatedOutletArgument value=true)
             }}
@@ -631,7 +632,7 @@ module(
 
     test("uses classic PluginConnector by default", async function (assert) {
       await render(hbs`
-        <PluginOutlet @name="test-name" @outletArgs={{hash hello="world"}} />
+        <PluginOutlet @name="test-name" @outletArgs={{lazyHash hello="world"}} />
       `);
 
       assert.dom(".outletArgHelloValue").hasText("world");
@@ -642,7 +643,7 @@ module(
       await render(hbs`
         <PluginOutlet
           @name="test-name"
-          @outletArgs={{hash hello="world"}}
+          @outletArgs={{lazyHash hello="world"}}
           @defaultGlimmer={{true}}
         />
       `);
@@ -671,7 +672,7 @@ module(
       await render(hbs`
         <PluginOutlet
           @name="test-name"
-          @outletArgs={{hash hello="world" someBoolean=this.someBoolean}}
+          @outletArgs={{lazyHash hello="world" someBoolean=this.someBoolean}}
         />
       `);
 
@@ -702,7 +703,7 @@ module(
             <template>
               <PluginOutlet
                 @name="test-name"
-                @outletArgs={{hash hello="world"}}
+                @outletArgs={{lazyHash hello="world"}}
                 @defaultGlimmer={{true}}
               />
             </template>
@@ -733,7 +734,7 @@ module(
       await render(hbs`
         <PluginOutlet
           @name="test-name"
-          @outletArgs={{hash hello="world" someBoolean=this.someBoolean}}
+          @outletArgs={{lazyHash hello="world" someBoolean=this.someBoolean}}
         />
       `);
 
@@ -761,7 +762,7 @@ module(
       await render(hbs`
         <PluginOutlet
           @name="test-name"
-          @outletArgs={{hash hello="world" someBoolean=this.someBoolean}}
+          @outletArgs={{lazyHash hello="world" someBoolean=this.someBoolean}}
         />
       `);
 
@@ -949,7 +950,7 @@ module(
 
       test("unused arguments", async function (assert) {
         await render(hbs`
-          <PluginOutlet @name="test-name" @outletArgs={{hash hello="world"}} @deprecatedArgs={{hash argNotUsed=(deprecated-outlet-argument value="not used")}} />
+          <PluginOutlet @name="test-name" @outletArgs={{lazyHash hello="world"}} @deprecatedArgs={{hash argNotUsed=(deprecated-outlet-argument value="not used")}} />
         `);
 
         // deprecated argument still works
