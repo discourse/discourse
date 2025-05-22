@@ -86,6 +86,7 @@ describe "User notifications", type: :system do
         puts "prioritize_username_in_ux: #{SiteSetting.prioritize_username_in_ux}"
         puts "User name: #{user.name}, username: #{user.username}"
         puts group_mention_notification.inspect
+        puts group_mention_notification.data
 
         expect(notification).to have_content(group.name)
         expect(notification).to have_content(user.name)
