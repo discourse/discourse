@@ -206,6 +206,12 @@ module(
       tree.refresh();
       assert.strictEqual(tree.nodes.length, 4);
 
+      const inputFields = new InputFieldsFromDOM();
+      assert.dom(inputFields.fields.name.labelElement).hasText("Level 2 Label");
+      assert
+        .dom(inputFields.fields.name.descriptionElement)
+        .hasText("Description for level 2");
+
       assert.dom(tree.nodes[0].textElement).hasText("child 2-1");
       assert.false(tree.nodes[0].active);
       assert.strictEqual(tree.nodes[0].children.length, 0);
