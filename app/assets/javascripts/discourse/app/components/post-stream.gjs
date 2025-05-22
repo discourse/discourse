@@ -126,6 +126,10 @@ export default class PostStream extends Component {
     this.#currentPostObserver.disconnect();
     this.#viewportObserver.disconnect();
     this.#cloakingObserver.disconnect();
+
+    if (DEBUG_EYELINE) {
+      this.#bottomEyelineDebugElement.remove();
+    }
   }
 
   get gapsBefore() {
