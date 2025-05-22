@@ -1035,6 +1035,7 @@ div.ac-wrap {
   padding: 1.5em 1.5rem 0.75em 1.5rem;
   box-shadow: var(--shadow-dropdown);
   border-radius: var(--d-border-radius-large);
+  background: var(--secondary);
 
   .show-preview & {
     right: 1.5rem;
