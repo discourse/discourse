@@ -211,9 +211,11 @@ module("Integration | Component | ColorPaletteEditor", function (hooks) {
 
     const onLightColorChange = (name, value) => {
       lightChanges.push([name, value]);
+      colors.find((color) => color.name === name).hex = value;
     };
     const onDarkColorChange = (name, value) => {
       darkChanges.push([name, value]);
+      colors.find((color) => color.name === name).dark_hex = value;
     };
 
     await render(
@@ -238,15 +240,15 @@ module("Integration | Component | ColorPaletteEditor", function (hooks) {
       "abcdef",
       "text input value for the primary color updates for `input` events"
     );
-    assert.strictEqual(
-      lightChanges.length,
-      0,
-      "light color change callbacks aren't triggered for `input` events"
+    assert.deepEqual(
+      lightChanges,
+      [["primary", "abcdef"]],
+      "light color change callbacks are triggered for `input` events"
     );
     assert.strictEqual(
       darkChanges.length,
       0,
-      "dark color change callbacks aren't triggered for `input` events"
+      "dark color change callbacks aren't triggered for `input` events when the light color changes"
     );
 
     await this.subject.color("primary").sendColorChangeEvent("#fedcba");
@@ -263,8 +265,11 @@ module("Integration | Component | ColorPaletteEditor", function (hooks) {
     );
     assert.deepEqual(
       lightChanges,
-      [["primary", "fedcba"]],
-      "light color change callbacks are triggered for `change` eventswhen the light color changes"
+      [
+        ["primary", "abcdef"],
+        ["primary", "fedcba"],
+      ],
+      "light color change callbacks are triggered for `change` events when the light color changes"
     );
 
     assert.strictEqual(
@@ -306,12 +311,12 @@ module("Integration | Component | ColorPaletteEditor", function (hooks) {
     assert.strictEqual(
       lightChanges.length,
       0,
-      "light color change callbacks aren't triggered for `input` events"
+      "light color change callbacks aren't triggered for `input` events when the dark color changes"
     );
-    assert.strictEqual(
-      darkChanges.length,
-      0,
-      "dark color change callbacks aren't triggered for `input` events"
+    assert.deepEqual(
+      darkChanges,
+      [["header_background", "776655"]],
+      "dark color change callbacks are triggered for `input` events"
     );
 
     await this.subject
@@ -330,8 +335,11 @@ module("Integration | Component | ColorPaletteEditor", function (hooks) {
     );
     assert.deepEqual(
       darkChanges,
-      [["header_background", "99aaff"]],
-      "dark color change callbacks are triggered for `change` eventswhen the dark color changes"
+      [
+        ["header_background", "776655"],
+        ["header_background", "99aaff"],
+      ],
+      "dark color change callbacks are triggered for `change` events when the dark color changes"
     );
 
     assert.strictEqual(
@@ -403,9 +411,11 @@ module("Integration | Component | ColorPaletteEditor", function (hooks) {
 
     const onLightColorChange = (name, value) => {
       lightChanges.push([name, value]);
+      colors.find((color) => color.name === name).hex = value;
     };
     const onDarkColorChange = (name, value) => {
       darkChanges.push([name, value]);
+      colors.find((color) => color.name === name).dark_hex = value;
     };
 
     await render(

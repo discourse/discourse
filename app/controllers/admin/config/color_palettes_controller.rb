@@ -4,6 +4,10 @@ class Admin::Config::ColorPalettesController < Admin::AdminController
   end
 
   def show
-    render_serialized(ColorScheme.find(params[:id]), ColorSchemeSerializer, root: false)
+    render_serialized(
+      ColorScheme.without_theme_owned_palettes.find(params[:id]),
+      ColorSchemeSerializer,
+      root: false,
+    )
   end
 end

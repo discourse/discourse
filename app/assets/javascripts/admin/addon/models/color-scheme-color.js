@@ -9,8 +9,16 @@ export default class ColorSchemeColor extends EmberObject {
   @tracked hex;
   @tracked dark_hex;
 
+  @tracked originalHex = this.hex;
+  @tracked originalDarkHex = this.dark_hex;
+
   // Whether the current value is different than Discourse's default color scheme.
   @propertyNotEqual("hex", "default_hex") overridden;
+
+  discardColorChange() {
+    this.hex = this.originalHex;
+    this.dark_hex = this.originalDarkHex;
+  }
 
   @on("init")
   startTrackingChanges() {

@@ -30,15 +30,7 @@ export default class ColorScheme extends EmberObject {
             theme_name: colorScheme.theme_name,
             base_scheme_id: colorScheme.base_scheme_id,
             user_selectable: colorScheme.user_selectable,
-            colors: colorScheme.colors.map((c) => {
-              return ColorSchemeColor.create({
-                name: c.name,
-                hex: c.hex,
-                dark_hex: c.dark_hex,
-                default_hex: c.default_hex,
-                is_advanced: c.is_advanced,
-              });
-            }),
+            colors: colorScheme.colors,
           })
         );
       });
@@ -56,15 +48,7 @@ export default class ColorScheme extends EmberObject {
       theme_name: json.theme_name,
       base_scheme_id: json.base_scheme_id,
       user_selectable: json.user_selectable,
-      colors: json.colors.map((c) => {
-        return ColorSchemeColor.create({
-          name: c.name,
-          hex: c.hex,
-          dark_hex: c.dark_hex,
-          default_hex: c.default_hex,
-          is_advanced: c.is_advanced,
-        });
-      }),
+      colors: json.colors,
     });
   }
 
@@ -76,6 +60,10 @@ export default class ColorScheme extends EmberObject {
   init() {
     super.init(...arguments);
 
+    const colors = A(this.colors ?? []);
+    this.colors = colors.map((c) => {
+      return ColorSchemeColor.create(c);
+    });
     this.startTrackingChanges();
   }
 
