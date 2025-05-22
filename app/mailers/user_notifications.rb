@@ -394,7 +394,7 @@ class UserNotifications < ActionMailer::Base
     opts[:show_category_in_subject] = true
     opts[:show_tags_in_subject] = true
 
-    if SiteSetting.prioritize_username_in_ux
+    if !SiteSetting.prioritize_username_in_ux
       opts[:post].cooked = replace_username_with_name_from_post(opts[:post], user)
     end
 

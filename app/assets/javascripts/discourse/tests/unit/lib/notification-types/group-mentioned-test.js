@@ -1,3 +1,4 @@
+import Service from "@ember/service";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import { deepMerge } from "discourse/lib/object";
@@ -19,6 +20,7 @@ function getNotification(overrides = {}) {
         topic_id: 449,
         fancy_title: "This is fancy title &lt;a&gt;!",
         slug: "this-is-fancy-title",
+        acting_user_name: "Osama Obama",
         data: {
           topic_title: "this is title before it becomes fancy <a>!",
           original_post_id: 112,
@@ -37,17 +39,48 @@ function getNotification(overrides = {}) {
 module("Unit | Notification Types | group-mentioned", function (hooks) {
   setupTest(hooks);
 
+  hooks.beforeEach(function () {
+    this.owner.register(
+      "service:site-settings",
+      class extends Service {
+        prioritize_username_in_ux = true;
+      }
+    );
+
+    this.siteSettings = this.owner.lookup("service:site-settings");
+  });
+
   test("label", function (assert) {
     const notification = getNotification();
+
     const director = createRenderDirector(
       notification,
       "group_mentioned",
       this.siteSettings
     );
+
     assert.strictEqual(
       director.label,
       "osama @hikers",
-      "contains the user who mentioned and the mentioned group"
+      "contains the user's username who mentioned and the mentioned group"
+    );
+  });
+
+  test("label uses the user's name when prioritize_username_in_ux is false", function (assert) {
+    this.siteSettings.prioritize_username_in_ux = false;
+
+    const notification = getNotification();
+
+    const director = createRenderDirector(
+      notification,
+      "group_mentioned",
+      this.siteSettings
+    );
+
+    assert.strictEqual(
+      director.label,
+      "Osama Obama @hikers",
+      "contains the user's name who mentioned and the mentioned group"
     );
   });
 });

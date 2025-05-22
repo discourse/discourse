@@ -70,9 +70,9 @@ describe "User notifications", type: :system do
 
     before { group.add(user2) }
 
-    context "when prioritize_username_in_ux is true" do
+    context "when prioritize_username_in_ux is false" do
       before do
-        SiteSetting.prioritize_username_in_ux = true
+        SiteSetting.prioritize_username_in_ux = false
         sign_in(user2)
       end
       it "shows the user name in the notification" do
