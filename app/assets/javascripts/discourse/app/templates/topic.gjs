@@ -115,7 +115,7 @@ export default RouteTemplate(
                   <div class="edit-title__wrapper">
                     <PluginOutlet
                       @name="edit-topic-title"
-                      @outletArgs={{hash
+                      @outletArgs={{lazyHash
                         model=@controller.model
                         buffered=@controller.buffered
                       }}
@@ -132,7 +132,7 @@ export default RouteTemplate(
                     <div class="edit-category__wrapper">
                       <PluginOutlet
                         @name="edit-topic-category"
-                        @outletArgs={{hash
+                        @outletArgs={{lazyHash
                           model=@controller.model
                           buffered=@controller.buffered
                         }}
@@ -150,7 +150,7 @@ export default RouteTemplate(
                     <div class="edit-tags__wrapper">
                       <PluginOutlet
                         @name="edit-topic-tags"
-                        @outletArgs={{hash
+                        @outletArgs={{lazyHash
                           model=@controller.model
                           buffered=@controller.buffered
                         }}
@@ -173,7 +173,7 @@ export default RouteTemplate(
                   <PluginOutlet
                     @name="edit-topic"
                     @connectorTagName="div"
-                    @outletArgs={{hash
+                    @outletArgs={{lazyHash
                       model=@controller.model
                       buffered=@controller.buffered
                     }}
@@ -206,7 +206,6 @@ export default RouteTemplate(
                     {{/if}}
                   </div>
                 </div>
-
               {{else}}
                 <h1
                   data-topic-id={{@controller.model.id}}
@@ -244,13 +243,13 @@ export default RouteTemplate(
 
                   <PluginOutlet
                     @name="topic-title-suffix"
-                    @outletArgs={{hash model=@controller.model}}
+                    @outletArgs={{lazyHash model=@controller.model}}
                   />
                 </h1>
 
                 <PluginOutlet
                   @name="topic-category-wrapper"
-                  @outletArgs={{hash topic=@controller.model}}
+                  @outletArgs={{lazyHash topic=@controller.model}}
                 >
                   <TopicCategory
                     @topic={{@controller.model}}
