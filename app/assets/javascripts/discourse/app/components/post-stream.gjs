@@ -31,6 +31,9 @@ const RESIZE_DEBOUNCE_MS = 100;
 const SCROLL_BATCH_INTERVAL_MS = 10;
 const SLACK_FACTOR = 5;
 
+// change this value to true to debug the eyeline position
+const DEBUG_EYELINE = true;
+
 let cloakingEnabled = true;
 const cloakingPrevented = new TrackedSet();
 
@@ -58,6 +61,9 @@ export default class PostStream extends Component {
   observedPostNodes = new Set();
   uncloakedPostNumbers = new Set();
 
+  #bottomBoundaryElement;
+  #bottomEyelineDebugElement;
+  #bottomEyelineTrackingEnabled = false;
   #cloakedPostsHeight = {};
   #cloakingObserver;
   #currentPostElement;
@@ -72,12 +78,7 @@ export default class PostStream extends Component {
     max: null,
   };
   #viewportObserver;
-
-  // #topVisible = null; // Tracks the topmost post currently visible in the viewport
-  // #bottomVisible = null; // Tracks the bottommost post currently visible in the viewport
-  // #currentPostObj = null; // The current post being viewed/scrolled through
-  // #currentVisible = null; // The currently visible post in the viewport (may be different from #currentPostObj)
-  // #currentPercent = null;
+  #wrapperElement;
 
   constructor() {
     super(...arguments);
@@ -86,13 +87,15 @@ export default class PostStream extends Component {
     this.#updateCloakOffset();
 
     // TODO (glimmer-post-stream) do we need this?
-    // this.appEvents.on("post-stream:refresh", this, "_debouncedScroll");
     this.appEvents.on("post-stream:posted", this, "_posted");
 
-    // track the window height to update the cloaking area
-    window.addEventListener("resize", this.#onWindowResize, {
+    const opts = {
       passive: true,
-    });
+    };
+
+    // track the window height to update the cloaking area
+    window.addEventListener("resize", this.onWindowResize, opts);
+    window.addEventListener("scroll", this.onScroll, opts);
 
     // restore scroll position on browsers with aggressive BFCaches (like Safari)
     window.onpageshow = function (event) {
@@ -100,6 +103,14 @@ export default class PostStream extends Component {
         DiscourseURL.routeTo(this.location.pathname);
       }
     };
+
+    if (DEBUG_EYELINE) {
+      this.#bottomEyelineDebugElement = document.createElement("div");
+      this.#bottomEyelineDebugElement.classList.add(
+        "post-stream__bottom-eyeline"
+      );
+      document.body.prepend(this.#bottomEyelineDebugElement);
+    }
   }
 
   willDestroy() {
@@ -107,15 +118,12 @@ export default class PostStream extends Component {
 
     // document.removeEventListener("touchmove", this._debouncedScroll);
     // window.removeEventListener("scroll", this._debouncedScroll);
-    window.removeEventListener("resize", this.#onWindowResize);
+    window.removeEventListener("resize", this.onWindowResize);
 
-    this.appEvents.off("post-stream:refresh", this, "_debouncedScroll");
-    this.appEvents.off("post-stream:refresh", this, "_refresh");
     this.appEvents.off("post-stream:posted", this, "_posted");
 
     // disconnect the intersection observers
     this.#currentPostObserver.disconnect();
-    this.#currentPostObserver.sconnect();
     this.#viewportObserver.disconnect();
     this.#cloakingObserver.disconnect();
   }
@@ -211,39 +219,25 @@ export default class PostStream extends Component {
   }
 
   @bind
-  updateIntersectionObservers(_, __, { headerOffset, cloakOffset }) {
-    const headerMargin = headerOffset * -1;
+  onScroll() {
+    const viewportOffset = this.#calculateBottomEyelineViewportOffset();
 
-    this.#currentPostObserver?.disconnect?.();
-    this.#cloakingObserver?.disconnect?.();
-    this.#viewportObserver?.disconnect?.();
-
-    this.#currentPostObserver = this.#initializeObserver(
-      this.trackCurrentPost,
-      {
-        rootMargin: `${headerMargin}px 0px 0px 0px`,
-        // eslint-disable-next-line no-shadow
-        threshold: Array.from({ length: 101 }, (_, i) =>
-          Number((i * 0.01).toFixed(2))
-        ),
-      }
-    );
-
-    this.#cloakingObserver = this.#initializeObserver(this.trackCloakedPosts, {
-      rootMargin: `${cloakOffset}px 0px`,
-      threshold: [0, 1],
-    });
-
-    // TODO (glimmer-post-stream) is it enough to track every 5% of the post?
-    this.#viewportObserver = this.#initializeObserver(this.trackVisiblePosts, {
-      rootMargin: `${headerMargin}px 0px 0px 0px`,
-      threshold: [0, 1],
-    });
-
-    for (const element of this.observedPostNodes) {
-      this.#cloakingObserver.observe(element);
-      this.#viewportObserver.observe(element);
+    if (DEBUG_EYELINE) {
+      this.#debugUpdateBottomEyelinePosition(viewportOffset);
     }
+
+    if (this.#bottomEyelineTrackingEnabled) {
+      discourseDebounce(
+        this,
+        this.#findPostMatchingBottomEyeline,
+        SCROLL_BATCH_INTERVAL_MS
+      );
+    }
+  }
+
+  @bind
+  onWindowResize(event) {
+    discourseDebounce(this, this.#updateCloakOffset, event, RESIZE_DEBOUNCE_MS);
   }
 
   @bind
@@ -261,11 +255,41 @@ export default class PostStream extends Component {
     }
   }
 
+  @bind
+  setWrapperElement(element) {
+    this.#wrapperElement = element;
+
+    schedule("afterRender", () => {
+      this.onScroll();
+    });
+  }
+
+  @bind
+  setBottomBoundaryElement(element) {
+    this.#bottomBoundaryElement = element;
+    this.#viewportObserver?.observe(element);
+  }
+
+  @bind
   unregisterPostNode(element) {
     delete element[POST_MODEL];
 
-    this.#cloakingObserver.unobserve(element);
-    this.#viewportObserver.unobserve(element);
+    this.#cloakingObserver?.unobserve(element);
+    this.#viewportObserver?.unobserve(element);
+  }
+
+  @bind
+  #debugUpdateBottomEyelinePosition(viewportOffset) {
+    if (this.#bottomEyelineDebugElement) {
+      Object.assign(this.#bottomEyelineDebugElement.style, {
+        position: "fixed",
+        top: `${viewportOffset}px`,
+        width: "100%",
+        border: "1px solid red",
+        opacity: this.#bottomEyelineTrackingEnabled ? 1 : 0.25,
+        zIndex: 999999,
+      });
+    }
   }
 
   @bind
@@ -295,7 +319,7 @@ export default class PostStream extends Component {
 
     discourseDebounce(
       this,
-      this.#onCurrentPostScrolled,
+      this.#currentPostWasScrolled,
       { element: target, percent: 1 - intersectionRatio },
       SCROLL_BATCH_INTERVAL_MS
     );
@@ -368,46 +392,53 @@ export default class PostStream extends Component {
   }
 
   @bind
-  trackVisiblePosts(entry) {
+  trackViewport(entry) {
     const { target, isIntersecting } = entry;
-    const post = target[POST_MODEL];
 
-    if (isIntersecting) {
-      this.#postsOnScreen[post.post_number] = { post, element: target };
+    if (target === this.#bottomBoundaryElement) {
+      this.#toggleBottomEyelineTracking(isIntersecting);
     } else {
-      delete this.#postsOnScreen[post.post_number];
+      this.#trackVisiblePosts(entry);
+    }
+  }
+
+  @bind
+  updateIntersectionObservers(_, __, { headerOffset, cloakOffset }) {
+    const headerMargin = headerOffset * -1;
+
+    this.#currentPostObserver?.disconnect();
+    this.#cloakingObserver?.disconnect();
+    this.#viewportObserver?.disconnect();
+
+    this.#currentPostObserver = this.#initializeObserver(
+      this.trackCurrentPost,
+      {
+        rootMargin: `${headerMargin}px 0px 0px 0px`,
+        // eslint-disable-next-line no-shadow
+        threshold: Array.from({ length: 101 }, (_, i) =>
+          Number((i * 0.01).toFixed(2))
+        ),
+      }
+    );
+
+    this.#cloakingObserver = this.#initializeObserver(this.trackCloakedPosts, {
+      rootMargin: `${cloakOffset}px 0px`,
+      threshold: [0, 1],
+    });
+
+    this.#viewportObserver = this.#initializeObserver(this.trackViewport, {
+      rootMargin: `${headerMargin}px 0px 0px 0px`,
+      threshold: [0, 1],
+    });
+
+    for (const element of this.observedPostNodes) {
+      this.#cloakingObserver.observe(element);
+      this.#viewportObserver.observe(element);
     }
 
-    // update the screen tracking information
-    discourseDebounce(
-      this,
-      this.#updateScreenTracking,
-      this.#postsOnScreen,
-      SCROLL_BATCH_INTERVAL_MS
-    );
-
-    // update the information about the boundaries of the posts on screen
-    this.#onScreenBoundaries = Object.values(this.#postsOnScreen).reduce(
-      (acc, { post: onScreen }) => {
-        if (acc.min === null || onScreen.post_number < acc.min) {
-          acc.min = onScreen.post_number;
-        }
-
-        if (acc.max === null || onScreen.post_number > acc.max) {
-          acc.max = onScreen.post_number;
-        }
-
-        return acc;
-      },
-      { min: null, max: null }
-    );
-
-    // update the current post to enable fine grained scrolling tracking for it
-    this.#updateCurrentPost(
-      this.#onScreenBoundaries.min !== null
-        ? this.#postsOnScreen[this.#onScreenBoundaries.min]?.element
-        : null
-    );
+    if (this.#bottomBoundaryElement) {
+      this.#viewportObserver.observe(this.#bottomBoundaryElement);
+    }
   }
 
   @action
@@ -455,6 +486,78 @@ export default class PostStream extends Component {
     this.args.bottomVisibleChanged({ post });
   }
 
+  #calculateBottomEyelineViewportOffset() {
+    // Get viewport and scroll data
+    const viewportHeight = window.innerHeight;
+    const scrollPosition = window.scrollY;
+    const documentHeight = Math.max(
+      document.body.scrollHeight,
+      document.documentElement.scrollHeight
+    );
+
+    // Calculate boundaries
+    const topBoundary = Math.max(
+      this.header.headerOffset,
+      this.#wrapperElement.getBoundingClientRect().top
+    );
+    const bottomBoundary =
+      this.#bottomBoundaryElement?.getBoundingClientRect()?.top ??
+      viewportHeight;
+
+    // Calculate distance from topic bottom to document bottom
+    const topicBottomAbsolute = bottomBoundary + scrollPosition;
+    const distanceToBottom = documentHeight - topicBottomAbsolute;
+
+    // Calculate scroll area and progress
+    const scrollableArea = Math.min(viewportHeight, distanceToBottom);
+    const remainingScroll = documentHeight - viewportHeight - scrollPosition;
+    const progress =
+      1 - Math.min(1, Math.max(0, remainingScroll / scrollableArea));
+
+    // Return interpolated position between boundaries based on progress
+    return topBoundary + progress * (bottomBoundary - topBoundary);
+  }
+
+  #currentPostWasChanged(event) {
+    this.args.currentPostChanged(event);
+  }
+
+  #currentPostWasScrolled({ element, ...event }) {
+    console.log("current post was scrolled", element, event);
+
+    if (element !== this.#currentPostElement) {
+      return;
+    }
+
+    this.args.currentPostScrolled(event);
+  }
+
+  #findPostMatchingBottomEyeline() {
+    const eyeLineOffset = this.#calculateBottomEyelineViewportOffset();
+
+    let target, percentScrolled;
+    for (const { element } of Object.values(this.#postsOnScreen)) {
+      const { top, bottom } = element.getBoundingClientRect();
+
+      if (eyeLineOffset >= top && eyeLineOffset <= bottom) {
+        target = element;
+        percentScrolled = (eyeLineOffset - top) / (bottom - top);
+        break;
+      }
+    }
+
+    if (target) {
+      this.#updateCurrentPost(target);
+
+      discourseDebounce(
+        this,
+        this.#currentPostWasScrolled,
+        { element: target, percent: percentScrolled },
+        SCROLL_BATCH_INTERVAL_MS
+      );
+    }
+  }
+
   #initializeObserver(callback, { rootMargin, threshold }) {
     return new IntersectionObserver(
       (entries) => {
@@ -464,20 +567,55 @@ export default class PostStream extends Component {
     );
   }
 
-  #onCurrentPostChanged(event) {
-    this.args.currentPostChanged(event);
+  #toggleBottomEyelineTracking(enabled) {
+    console.log("bottom eyeline tracking", enabled);
+
+    this.#bottomEyelineTrackingEnabled = enabled;
+    if (enabled) {
+      this.onScroll();
+    }
   }
 
-  #onCurrentPostScrolled({ element, ...event }) {
-    if (element !== this.#currentPostElement) {
-      return;
+  #trackVisiblePosts(entry) {
+    const { target, isIntersecting } = entry;
+    const post = target[POST_MODEL];
+
+    if (isIntersecting) {
+      this.#postsOnScreen[post.post_number] = { post, element: target };
+    } else {
+      delete this.#postsOnScreen[post.post_number];
     }
 
-    this.args.currentPostScrolled(event);
-  }
+    // update the screen tracking information
+    discourseDebounce(
+      this,
+      this.#updateScreenTracking,
+      this.#postsOnScreen,
+      SCROLL_BATCH_INTERVAL_MS
+    );
 
-  #onWindowResize(event) {
-    discourseDebounce(this, this.#updateCloakOffset, event, RESIZE_DEBOUNCE_MS);
+    // update the information about the boundaries of the posts on screen
+    this.#onScreenBoundaries = Object.values(this.#postsOnScreen).reduce(
+      (acc, { post: onScreen }) => {
+        if (acc.min === null || onScreen.post_number < acc.min) {
+          acc.min = onScreen.post_number;
+        }
+
+        if (acc.max === null || onScreen.post_number > acc.max) {
+          acc.max = onScreen.post_number;
+        }
+
+        return acc;
+      },
+      { min: null, max: null }
+    );
+
+    // update the current post to enable fine grained scrolling tracking for it
+    this.#updateCurrentPost(
+      this.#onScreenBoundaries.min !== null
+        ? this.#postsOnScreen[this.#onScreenBoundaries.min]?.element
+        : null
+    );
   }
 
   #updateCloakActiveBoundaries({ above, below }) {
@@ -512,7 +650,7 @@ export default class PostStream extends Component {
     if (currentPost !== newPost) {
       discourseDebounce(
         this,
-        this.#onCurrentPostChanged,
+        this.#currentPostWasChanged,
         { post: newPost },
         SCROLL_BATCH_INTERVAL_MS
       );
@@ -521,7 +659,9 @@ export default class PostStream extends Component {
     this.#currentPostElement = newElement;
 
     if (newElement) {
-      this.#currentPostObserver.observe(newElement);
+      if (!this.#bottomEyelineTrackingEnabled) {
+        this.#currentPostObserver.observe(newElement);
+      }
     }
   }
 
@@ -541,7 +681,10 @@ export default class PostStream extends Component {
   }
 
   <template>
-    <div class="post-stream glimmer-post-stream">
+    <div
+      class="post-stream glimmer-post-stream"
+      {{didInsert this.setWrapperElement}}
+    >
       <ConditionalLoadingSpinner
         @condition={{@postStream.loadingAbove}}
         {{didInsert
@@ -658,6 +801,11 @@ export default class PostStream extends Component {
       <ConditionalLoadingSpinner @condition={{@postStream.loadingBelow}}>
         {{#if @postStream.canAppendMore}}
           <LoadMore @action={{fn this.loadMoreBelow this.lastAvailablePost}} />
+        {{else}}
+          <div
+            class="post-stream__bottom-boundary"
+            {{didInsert this.setBottomBoundaryElement}}
+          ></div>
         {{/if}}
       </ConditionalLoadingSpinner>
 
