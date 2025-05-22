@@ -951,7 +951,7 @@ module(
 
       test("unused arguments", async function (assert) {
         await render(hbs`
-          <PluginOutlet @name="test-name" @outletArgs={{lazyHash hello="world"}} @deprecatedArgs={{hash argNotUsed=(deprecated-outlet-argument value="not used")}} />
+          <PluginOutlet @name="test-name" @outletArgs={{lazyHash hello="world"}} @deprecatedArgs={{lazyHash argNotUsed=(deprecated-outlet-argument value="not used")}} />
         `);
 
         // deprecated argument still works
