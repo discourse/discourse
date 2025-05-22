@@ -28,6 +28,7 @@ function getNotification(overrides = {}) {
           original_username: "kolary",
           original_name: "Osama Obama",
           display_username: "osama",
+          display_name: "Osama Obama",
           group_id: 333,
           group_name: "hikers",
         },
@@ -44,7 +45,7 @@ module("Unit | Notification Types | group-mentioned", function (hooks) {
     this.owner.register(
       "service:site-settings",
       class extends Service {
-        prioritize_username_in_ux = true;
+        prioritize_full_name_in_ux = false;
       }
     );
 
@@ -68,7 +69,7 @@ module("Unit | Notification Types | group-mentioned", function (hooks) {
   });
 
   test("label uses the user's name when prioritize_username_in_ux is false", function (assert) {
-    this.siteSettings.prioritize_username_in_ux = false;
+    this.siteSettings.prioritize_full_name_in_ux = true;
 
     const notification = getNotification();
 
