@@ -1,6 +1,10 @@
 // --------------------------------------------------
 // Topic lists
 // --------------------------------------------------
+.list-container .full-width {
+  margin-left: 0;
+}
+
 .topic-list {
   &-body {
     border-width: 1px;
