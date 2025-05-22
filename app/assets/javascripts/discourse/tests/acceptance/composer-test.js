@@ -1443,6 +1443,34 @@ import { i18n } from "discourse-i18n";
           );
       });
 
+      test("buttons with shortcuts can have their shortcut in title conditionally hidden", async function (assert) {
+        withPluginApi((api) => {
+          api.onToolbarCreate((toolbar) => {
+            toolbar.addButton({
+              id: "smile",
+              group: "extras",
+              name: "smile",
+              icon: "far-face-smile",
+              title: "cheese",
+              shortcut: "ALT+S",
+              hideShortcutInTitle: true,
+            });
+          });
+        });
+
+        await visit("/t/internationalization-localization/280");
+        await click(".post-controls button.reply");
+        await fillIn(".d-editor-input", "hello the world");
+
+        assert
+          .dom(".d-editor-button-bar .smile")
+          .hasAttribute(
+            "title",
+            i18n("cheese"),
+            "shows the title without the shortcut"
+          );
+      });
+
       test("buttons can support a shortcut that triggers a custom action", async function (assert) {
         withPluginApi("1.37.1", (api) => {
           api.onToolbarCreate((toolbar) => {
