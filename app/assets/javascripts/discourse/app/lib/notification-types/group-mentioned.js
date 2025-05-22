@@ -8,7 +8,7 @@ export default class extends NotificationTypeBase {
     let name;
     
     console.error(this.siteSettings.prioritize_username_in_ux, "prioritize_username_in_ux");
-    console.error(this.notification, "notification")
+console.error(JSON.stringify(this.notification, null, 2), "notification");
     console.error(this.notification.data, "notification")
     console.error(this.notification.acting_user_name, "user name")
     if (!this.siteSettings.prioritize_username_in_ux) {
