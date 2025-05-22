@@ -7,14 +7,267 @@ output:
 
 schema:
   tables:
+    badges:
+      columns:
+        add:
+          - name: "existing_id"
+            datatype: "text"
+        exclude:
+          - "grant_count"
+    categories:
+      columns:
+        add:
+          - name: "about_topic_title"
+            datatype: text
+          - name: "existing_id"
+            datatype: text
+        exclude:
+          - "contains_messages"
+          - "latest_post_id"
+          - "latest_topic_id"
+          - "name_lower"
+          - "post_count"
+          - "posts_day"
+          - "posts_month"
+          - "posts_week"
+          - "posts_year"
+          - "topic_count"
+          - "topics_day"
+          - "topics_month"
+          - "topics_week"
+          - "topics_year"
+    category_custom_fields:
+      primary_key_column_names: [ "category_id", "name" ]
+      columns:
+        exclude:
+          - "created_at"
+          - "id"
+    category_users:
+      columns:
+        exclude:
+          - "id"
+    chat_channels:
+      columns:
+        add:
+          - name: "is_group"
+            datatype: boolean
+        exclude:
+          - "last_message_id"
+          - "user_count_stale"
+    chat_mentions: {}
+    chat_message_reactions:
+      primary_key_column_names: [ "chat_message_id", "user_id", "emoji" ]
+      columns:
+        exclude:
+          - "id"
+    chat_messages:
+      columns:
+        add:
+          - name: "original_message"
+            datatype: text
+        exclude:
+          - "cooked_version"
+          - "cooked"
+    chat_threads:
+      primary_key_column_names: [original_id, channel_id, original_message_id, original_message_user_id ]
+    group_users:
+      primary_key_column_names: [ "group_id", "user_id" ]
+    groups:
+      columns:
+        include:
+          - "allow_membership_requests"
+          - "allow_unknown_sender_topic_replies"
+          - "automatic"
+          - "automatic_membership_email_domains"
+          - "bio_raw"
+          - "created_at"
+          - "default_notification_level"
+          - "flair_bg_color"
+          - "flair_color"
+          - "flair_icon"
+          - "flair_upload_id"
+          - "full_name"
+          - "grant_trust_level"
+          - "id"
+          - "members_visibility_level"
+          - "membership_request_template"
+          - "mentionable_level"
+          - "messageable_level"
+          - "name"
+          - "primary_group"
+          - "public_admission"
+          - "public_exit"
+          - "title"
+          - "visibility_level"
+    muted_users:
+      columns:
+        exclude:
+          - "id"
+      primary_key_column_names: [ "user_id", "muted_user_id" ]
+    permalinks:
+      primary_key_column_names: [ "url" ]
+      columns:
+        add:
+          - name: "external_url_placeholders"
+            datatype: json
+        exclude:
+          - "created_at"
+          - "id"
+    poll_options:
+      columns:
+        exclude:
+          - "digest"
+          - "html"
+    poll_votes:
+      primary_key_column_names: [ "poll_option_id", "user_id" ]
+    polls: {}
+    post_custom_fields:
+      primary_key_column_names: [ "post_id", "name" ]
+      columns:
+        exclude:
+          - "created_at"
+          - "id"
+    posts:
+      columns:
+        add:
+          - name: "original_raw"
+            datatype: text
+          - name: "reply_to_post_id"
+            datatype: numeric
+        exclude:
+          - "action_code"
+          - "baked_at"
+          - "baked_version"
+          - "bookmark_count"
+          - "cook_method"
+          - "cooked"
+          - "edit_reason"
+          - "illegal_count"
+          - "incoming_link_count"
+          - "inappropriate_count"
+          - "like_score"
+          - "notify_moderators_count"
+          - "notify_user_count"
+          - "off_topic_count"
+          - "outbound_message_id"
+          - "percent_rank"
+          - "public_version"
+          - "raw_email"
+          - "reply_quoted"
+          - "reply_to_post_number"
+          - "score"
+          - "self_edits"
+          - "sort_order"
+          - "version"
+          - "via_email"
+          - "word_count"
+      indexes:
+        - name: "posts_by_topic_post_number"
+          columns:
+            - "topic_id"
+            - "post_number"
+    tag_groups: {}
+    tag_users:
+      primary_key_column_names: [ "tag_id", "user_id" ]
+    tags:
+      columns:
+        add:
+          - name: "tag_group_id"
+            datatype: numeric
+        exclude:
+          - "pm_topic_count"
+          - "public_topic_count"
+          - "staff_topic_count"
+    topic_tags:
+      primary_key_column_names: [ "topic_id", "tag_id" ]
+    topic_users:
+      primary_key_column_names: ["user_id",  "topic_id" ]
+      columns:
+        exclude:
+          - "id"
+    topics:
+      columns:
+        exclude:
+          - "external_id"
+          - "fancy_title"
+          - "highest_post_number"
+          - "highest_staff_post_number"
+          - "last_post_user_id"
+          - "last_posted_at"
+          - "like_count"
+          - "moderator_posts_count"
+          - "notify_moderators_count"
+          - "participant_count"
+          - "percent_rank"
+          - "posts_count"
+          - "reply_count"
+          - "reviewable_score"
+          - "score"
+          - "slow_mode_seconds"
+          - "spam_count"
+          - "visibility_reason_id"
+          - "word_count"
+    user_associated_accounts:
+      primary_key_column_names: [ "user_id", "provider_name" ]
+      columns:
+        exclude:
+          - "id"
+          - "created_at"
+    user_badges:
+      columns:
+        exclude:
+          - "id"
+          - "notification_id"
+          - "seq"
+    user_chat_channel_memberships:
+      primary_key_column_names: [ "user_id", "chat_channel_id" ]
+      columns:
+        exclude:
+          - "id"
+    user_chat_thread_memberships:
+      primary_key_column_names: [ "user_id", "thread_id" ]
+      columns:
+        exclude:
+          - "id"
+    user_custom_fields:
+      columns:
+        add:
+          - name: "field_id"
+            datatype: numeric
+            nullable: false
+          - name: "is_multiselect_field"
+            datatype: boolean
+            nullable: false
+        exclude:
+          - "id"
+          - "created_at"
+      indexes:
+        - name: "user_field_values_multiselect"
+          columns:
+            - "user_id"
+            - "field_id"
+            - "value"
+          unique: true
+          condition: "WHERE is_multiselect_field = TRUE"
+        - name: "user_field_values_not_multiselect"
+          columns:
+            - "user_id"
+            - "field_id"
+          unique: true
+          condition: "WHERE is_multiselect_field = FALSE"
     user_emails:
       columns:
         include:
+          - "created_at"
           - "email"
           - "primary"
           - "user_id"
-          - "created_at"
       primary_key_column_names: [ "email" ]
+    user_fields:
+      columns:
+        add:
+          - name: "options"
+            datatype: json
     user_options:
       primary_key_column_names: [ "user_id" ]
     users:
@@ -34,6 +287,7 @@ schema:
           - "suspended_at"
           - "suspended_till"
           - "username_lower"
+
 
   global:
     columns:
@@ -63,11 +317,8 @@ schema:
         - "backup_metadata"
         - "badge_groupings"
         - "badge_types"
-        - "badges"
         - "bookmarks"
-        - "categories"
         - "categories_web_hooks"
-        - "category_custom_fields"
         - "category_featured_topics"
         - "category_form_templates"
         - "category_groups"
@@ -79,20 +330,14 @@ schema:
         - "category_tag_groups"
         - "category_tag_stats"
         - "category_tags"
-        - "category_users"
         - "chat_channel_archives"
         - "chat_channel_custom_fields"
-        - "chat_channels"
         - "chat_drafts"
         - "chat_mention_notifications"
-        - "chat_mentions"
         - "chat_message_custom_fields"
         - "chat_message_interactions"
-        - "chat_message_reactions"
         - "chat_message_revisions"
-        - "chat_messages"
         - "chat_thread_custom_fields"
-        - "chat_threads"
         - "chat_webhook_events"
         - "child_themes"
         - "color_scheme_colors"
@@ -130,8 +375,6 @@ schema:
         - "group_mentions"
         - "group_requests"
         - "group_tag_notification_defaults"
-        - "group_users"
-        - "groups"
         - "groups_web_hooks"
         - "ignored_users"
         - "imap_sync_logs"
@@ -147,19 +390,13 @@ schema:
         - "linked_topics"
         - "message_bus"
         - "moved_posts"
-        - "muted_users"
         - "notifications"
         - "oauth2_user_infos"
         - "onceoff_logs"
         - "optimized_images"
-        - "permalinks"
         - "plugin_store_rows"
-        - "poll_options"
-        - "poll_votes"
-        - "polls"
         - "post_action_types"
         - "post_actions"
-        - "post_custom_fields"
         - "post_details"
         - "post_hotlinked_media"
         - "post_localizations"
@@ -169,7 +406,6 @@ schema:
         - "post_search_data"
         - "post_stats"
         - "post_timings"
-        - "posts"
         - "problem_check_trackers"
         - "published_pages"
         - "push_subscriptions"
@@ -200,10 +436,7 @@ schema:
         - "summary_sections"
         - "tag_group_memberships"
         - "tag_group_permissions"
-        - "tag_groups"
         - "tag_search_data"
-        - "tag_users"
-        - "tags"
         - "tags_web_hooks"
         - "theme_color_schemes"
         - "theme_fields"
@@ -225,13 +458,10 @@ schema:
         - "topic_links"
         - "topic_localizations"
         - "topic_search_data"
-        - "topic_tags"
         - "topic_thumbnails"
         - "topic_timers"
-        - "topic_users"
         - "topic_view_stats"
         - "topic_views"
-        - "topics"
         - "translation_overrides"
         - "unsubscribe_keys"
         - "upload_references"
@@ -242,18 +472,12 @@ schema:
         - "user_api_key_scopes"
         - "user_api_keys"
         - "user_archived_messages"
-        - "user_associated_accounts"
         - "user_associated_groups"
         - "user_auth_token_logs"
         - "user_auth_tokens"
         - "user_avatars"
-        - "user_badges"
-        - "user_chat_channel_memberships"
-        - "user_chat_thread_memberships"
-        - "user_custom_fields"
         - "user_exports"
         - "user_field_options"
-        - "user_fields"
         - "user_histories"
         - "user_ip_address_histories"
         - "user_notification_schedules"
