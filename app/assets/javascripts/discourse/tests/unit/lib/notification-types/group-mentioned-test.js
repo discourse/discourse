@@ -26,6 +26,7 @@ function getNotification(overrides = {}) {
           original_post_id: 112,
           original_post_type: 1,
           original_username: "kolary",
+          original_name: "Osama Obama",
           display_username: "osama",
           group_id: 333,
           group_name: "hikers",
