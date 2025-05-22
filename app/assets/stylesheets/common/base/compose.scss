@@ -1154,175 +1154,175 @@ div.ac-wrap {
     .d-icon {
       color: var(--primary-high);
     }
+  }
 
-    span.topic {
+  span.topic {
+    display: flex;
+    flex-direction: column;
+
+    .first-line {
+      flex: 1;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .second-line {
       display: flex;
-      flex-direction: column;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 0.5em;
 
-      .first-line {
-        flex: 1;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
-      }
-
-      .second-line {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: baseline;
-        gap: 0.5em;
-
-        .discourse-tags {
-          font-size: var(--font-down-1);
-        }
+      .discourse-tags {
+        font-size: var(--font-down-1);
       }
     }
   }
+}
 
-  .fullscreen-composer {
-    overflow: hidden;
+.fullscreen-composer {
+  overflow: hidden;
 
-    .profiler-results {
-      display: none;
-    }
+  .profiler-results {
+    display: none;
+  }
 
-    #reply-control {
-      &.fullscreen {
-        // important needed because of inline styles when height is changed manually with grippie
-        height: 100vh !important;
-        max-height: 100%; // prevents devices from miscalculating using vh
-        z-index: z("header") + 1;
+  #reply-control {
+    &.fullscreen {
+      // important needed because of inline styles when height is changed manually with grippie
+      height: 100vh !important;
+      max-height: 100%; // prevents devices from miscalculating using vh
+      z-index: z("header") + 1;
 
-        @supports (--custom: property) {
-          height: calc(var(--composer-vh, 1vh) * 100) !important;
-        }
+      @supports (--custom: property) {
+        height: calc(var(--composer-vh, 1vh) * 100) !important;
+      }
 
-        .d-editor-preview-wrapper {
-          margin-top: 1%;
-        }
+      .d-editor-preview-wrapper {
+        margin-top: 1%;
+      }
 
-        .reply-to {
-          border-bottom: 1px solid var(--primary-low);
-          margin-bottom: 0;
-          padding-bottom: 8px;
-        }
+      .reply-to {
+        border-bottom: 1px solid var(--primary-low);
+        margin-bottom: 0;
+        padding-bottom: 8px;
+      }
 
-        .d-editor-textarea-wrapper {
-          border: none;
-        }
+      .d-editor-textarea-wrapper {
+        border: none;
+      }
 
-        &.show-preview .d-editor-textarea-wrapper {
-          border-right: 1px solid var(--primary-low);
-        }
+      &.show-preview .d-editor-textarea-wrapper {
+        border-right: 1px solid var(--primary-low);
+      }
 
-        #draft-status,
-        #file-uploading {
-          margin-left: 0;
-          text-align: initial;
-        }
+      #draft-status,
+      #file-uploading {
+        margin-left: 0;
+        text-align: initial;
+      }
 
-        .composer-popup {
-          top: 30px;
-        }
+      .composer-popup {
+        top: 30px;
+      }
 
-        &::before {
-          content: "";
-          background: var(--secondary);
-          width: 100%;
-          height: 100%;
-          position: fixed;
-          z-index: -1;
-          left: 0;
-        }
+      &::before {
+        content: "";
+        background: var(--secondary);
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        z-index: -1;
+        left: 0;
       }
     }
   }
+}
 
-  .composer-fullscreen-prompt {
-    animation: fadeIn 1s ease-in-out;
-    animation-delay: 1.5s;
-    animation-direction: reverse;
-    animation-fill-mode: forwards;
-    position: fixed;
-    left: 50%;
-    top: 10%;
-    transform: translate(-50%, 0);
-    z-index: z("header") + 1;
-    background: var(--primary-very-high);
-    color: var(--secondary);
-    padding: 0.5em 0.75em;
-    pointer-events: none;
-    border-radius: 2px;
+.composer-fullscreen-prompt {
+  animation: fadeIn 1s ease-in-out;
+  animation-delay: 1.5s;
+  animation-direction: reverse;
+  animation-fill-mode: forwards;
+  position: fixed;
+  left: 50%;
+  top: 10%;
+  transform: translate(-50%, 0);
+  z-index: z("header") + 1;
+  background: var(--primary-very-high);
+  color: var(--secondary);
+  padding: 0.5em 0.75em;
+  pointer-events: none;
+  border-radius: 2px;
 
-    @media (prefers-reduced-motion) {
-      animation-duration: 0s;
-    }
-
-    .rtl & {
-      // R2 is not smart enough to support this swap
-      transform: translate(50%, 0);
-    }
-
-    kbd {
-      background: none;
-    }
+  @media (prefers-reduced-motion) {
+    animation-duration: 0s;
   }
 
-  // align the previewless composer with the topic content
+  .rtl & {
+    // R2 is not smart enough to support this swap
+    transform: translate(50%, 0);
+  }
+
+  kbd {
+    background: none;
+  }
+}
+
+// align the previewless composer with the topic content
+#reply-control:not(.fullscreen).hide-preview {
+  --composer-internal-padding: 1em;
+  --layout-gap: 2em;
+  --topic-width: calc(
+    var(--topic-body-width) + (var(--topic-body-width-padding) * 2)
+  );
+  width: 100%;
+  max-width: calc(var(--topic-width) + var(--topic-avatar-width));
+}
+
+body:not(.has-sidebar-page) {
   #reply-control:not(.fullscreen).hide-preview {
-    --composer-internal-padding: 1em;
-    --layout-gap: 2em;
-    --topic-width: calc(
-      var(--topic-body-width) + (var(--topic-body-width-padding) * 2)
-    );
-    width: 100%;
-    max-width: calc(var(--topic-width) + var(--topic-avatar-width));
-  }
+    margin-left: 0.67em;
 
-  body:not(.has-sidebar-page) {
-    #reply-control:not(.fullscreen).hide-preview {
+    // 1100px is equivalent to --d-max-width
+    @media screen and (width >= 1110px) {
+      margin-left: calc(((100% - var(--d-max-width)) / 2) + 0.67em);
+    }
+
+    // 790px is equivalent to --topic-width
+    @media screen and (width < 790px) {
+      max-width: calc(100% - calc(0.67em * 2));
       margin-left: 0.67em;
+    }
 
-      // 1100px is equivalent to --d-max-width
-      @media screen and (width >= 1110px) {
-        margin-left: calc(((100% - var(--d-max-width)) / 2) + 0.67em);
-      }
-
-      // 790px is equivalent to --topic-width
-      @media screen and (width < 790px) {
-        max-width: calc(100% - calc(0.67em * 2));
-        margin-left: 0.67em;
-      }
-
-      @include viewport.until(sm) {
-        max-width: unset;
-        margin-inline: unset;
-      }
+    @include viewport.until(sm) {
+      max-width: unset;
+      margin-inline: unset;
     }
   }
+}
 
-  body.has-sidebar-page {
-    #reply-control:not(.fullscreen).hide-preview {
+body.has-sidebar-page {
+  #reply-control:not(.fullscreen).hide-preview {
+    margin-left: calc(var(--d-sidebar-width) + var(--layout-gap));
+
+    // 1390px is equivalent to --d-max-width + --d-sidebar-width
+    @media screen and (width >= 1390px) {
+      left: calc(
+        (100% - var(--d-max-width) + var(--d-sidebar-width)) / 2
+      ); // 50% of the whitespace
+      margin-left: var(--layout-gap);
+    }
+
+    // This is when the topic width starts to shrink
+    @media screen and (width <= 1180px) {
+      width: calc(100% - var(--d-sidebar-width) - var(--layout-gap) - 0.67em);
+    }
+
+    // sidebar shrinks
+    @media screen and (width <= 1000px) {
+      --layout-gap: 1em;
       margin-left: calc(var(--d-sidebar-width) + var(--layout-gap));
-
-      // 1390px is equivalent to --d-max-width + --d-sidebar-width
-      @media screen and (width >= 1390px) {
-        left: calc(
-          (100% - var(--d-max-width) + var(--d-sidebar-width)) / 2
-        ); // 50% of the whitespace
-        margin-left: var(--layout-gap);
-      }
-
-      // This is when the topic width starts to shrink
-      @media screen and (width <= 1180px) {
-        width: calc(100% - var(--d-sidebar-width) - var(--layout-gap) - 0.67em);
-      }
-
-      // sidebar shrinks
-      @media screen and (width <= 1000px) {
-        --layout-gap: 1em;
-        margin-left: calc(var(--d-sidebar-width) + var(--layout-gap));
-      }
     }
   }
 }
