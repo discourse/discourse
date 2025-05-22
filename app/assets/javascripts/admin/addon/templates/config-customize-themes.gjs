@@ -10,6 +10,11 @@ export default RouteTemplate(
       @label={{i18n "admin.config_areas.themes_and_components.themes.title"}}
     />
 
-    <Themes @themes={{@controller.model}} />
+    <Themes
+      @repoUrl={{@controller.model.repoUrl}}
+      @repoName={{@controller.model.repoName}}
+      @themes={{@controller.model.themes}}
+      @clearParams={{this.clearParams}}
+    />
   </template>
 );
