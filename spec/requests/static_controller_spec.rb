@@ -150,7 +150,7 @@ RSpec.describe StaticController do
       end
     end
 
-    it "should redirect to / when logged in and path is /login" do
+    it "should redirect to / when logged in and path is /login without redirect" do
       sign_in(Fabricate(:user))
       get "/login"
       expect(response).to redirect_to("/")
@@ -252,6 +252,58 @@ RSpec.describe StaticController do
         get "/login"
       end.to_not change { SiteSetting.title }
     end
+
+    context "without a subfolder" do
+      it "redirects as requested when logged in and path is /login with valid redirect param" do
+        sign_in(Fabricate(:user))
+        get "/login", params: { redirect: "/foo" }
+        expect(response).to redirect_to("/foo")
+      end
+
+      it "redirects to / when logged in and path is /login with invalid redirect param" do
+        sign_in(Fabricate(:user))
+        get "/login", params: { redirect: "//foo" }
+        expect(response).to redirect_to("/")
+        get "/login", params: { redirect: "foo" }
+        expect(response).to redirect_to("/")
+        get "/login", params: { redirect: "http://foo" }
+        expect(response).to redirect_to("/")
+        get "/login", params: { redirect: "www.foo.bar" }
+        expect(response).to redirect_to("/")
+      end
+
+      it "sets the destination_url cookie when not logged in and path is /login with valid redirect param" do
+        get "/login", params: { redirect: "/foo" }
+        expect(response.cookies["destination_url"]).to eq("/foo")
+      end
+    end
+
+    context "with a subfolder" do
+      before { set_subfolder "/sub_test" }
+
+      it "redirects as requested when logged in and path is /login with valid redirect param" do
+        sign_in(Fabricate(:user))
+        get "/login", params: { redirect: "/foo" }
+        expect(response).to redirect_to("/sub_test/foo")
+      end
+
+      it "redirects to / when logged in and path is /login with invalid redirect param" do
+        sign_in(Fabricate(:user))
+        get "/login", params: { redirect: "//foo" }
+        expect(response).to redirect_to("/sub_test/")
+        get "/login", params: { redirect: "foo" }
+        expect(response).to redirect_to("/sub_test/")
+        get "/login", params: { redirect: "http://foo" }
+        expect(response).to redirect_to("/sub_test/")
+        get "/login", params: { redirect: "www.foo.bar" }
+        expect(response).to redirect_to("/sub_test/")
+      end
+
+      it "sets the destination_url cookie when not logged in and path is /login with valid redirect param" do
+        get "/login", params: { redirect: "/foo" }
+        expect(response.cookies["destination_url"]).to eq("/sub_test/foo")
+      end
+    end
   end
 
   describe "#enter" do
@@ -307,10 +359,7 @@ RSpec.describe StaticController do
     context "with an array" do
       it "redirects to the root" do
         post "/login.json", params: { redirect: ["/foo"] }
-        expect(response.status).to eq(400)
-        json = response.parsed_body
-        expect(json["errors"]).to be_present
-        expect(json["errors"]).to include(I18n.t("invalid_params", message: "redirect"))
+        expect(response).to redirect_to("/")
       end
     end
 

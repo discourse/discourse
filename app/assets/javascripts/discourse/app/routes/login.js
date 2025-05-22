@@ -1,5 +1,6 @@
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
+import DiscourseURL from "discourse/lib/url";
 import { defaultHomepage } from "discourse/lib/utilities";
 import StaticPage from "discourse/models/static-page";
 import DiscourseRoute from "discourse/routes/discourse";
@@ -9,7 +10,11 @@ export default class LoginRoute extends DiscourseRoute {
   @service router;
   @service login;
 
-  beforeModel() {
+  beforeModel(transition) {
+    if (transition.from) {
+      this.internalReferrer = this.router.urlFor(transition.from.name);
+    }
+
     if (this.siteSettings.login_required) {
       if (
         this.login.isOnlyOneExternalLoginMethod &&
@@ -48,6 +53,10 @@ export default class LoginRoute extends DiscourseRoute {
     controller.set("canSignUp", canSignUp);
     controller.set("flashType", "");
     controller.set("flash", "");
+
+    if (this.internalReferrer || DiscourseURL.isInternal(document.referrer)) {
+      controller.set("referrerUrl", this.internalReferrer || document.referrer);
+    }
 
     if (this.siteSettings.login_required) {
       controller.set("showLogin", false);

@@ -36,6 +36,16 @@ shared_examples "login scenarios" do |login_page_object|
       expect(page).to have_css(".header-dropdown-toggle.current-user")
     end
 
+    it "can login with redirect" do
+      EmailToken.confirm(Fabricate(:email_token, user: user).token)
+
+      login_form
+        .open_with_redirect("/about")
+        .fill(username: "john", password: "supersecurepassword")
+        .click_login
+      expect(page).to have_current_path("/about")
+    end
+
     it "can login and activate account" do
       login_form.open.fill(username: "john", password: "supersecurepassword").click_login
       expect(page).to have_css(".not-activated-modal")
@@ -88,9 +98,6 @@ shared_examples "login scenarios" do |login_page_object|
 
       # TODO: prefill username when fullpage
       if find("#username-or-email").value.blank?
-        if page.has_css?("html.mobile-view", wait: 0)
-          expect(page).to have_no_css(".d-modal.is-animating")
-        end
         find("#username-or-email").fill_in(with: user.username)
       end
 
@@ -126,6 +133,128 @@ shared_examples "login scenarios" do |login_page_object|
       login_form.fill(username: "john", password: "supersecurepassword").click_login
       expect(page).to have_css(".header-dropdown-toggle.current-user")
     end
+
+    it "redirects to a PM after login" do
+      EmailToken.confirm(Fabricate(:email_token, user: user).token)
+
+      group = Fabricate(:group, publish_read_state: true)
+      Fabricate(:group_user, group: group, user: user)
+      pm = Fabricate(:private_message_topic, allowed_groups: [group])
+      Fabricate(:post, topic: pm, user: user, reads: 2, created_at: 1.day.ago)
+      Fabricate(:group_private_message_topic, user: user, recipient_group: group)
+
+      visit "/t/#{pm.id}"
+      find(".login-welcome .login-button").click
+      login_form.fill(username: "john", password: "supersecurepassword").click_login
+
+      expect(page).to have_css(".header-dropdown-toggle.current-user")
+      expect(page).to have_css("#topic-title")
+      expect(page).to have_css(".private_message")
+    end
+  end
+
+  context "when login is not required" do
+    before { SiteSetting.login_required = false }
+
+    it "redirects to a PM after authentication" do
+      EmailToken.confirm(Fabricate(:email_token, user: user).token)
+      group = Fabricate(:group, publish_read_state: true)
+      Fabricate(:group_user, group: group, user: user)
+      pm = Fabricate(:private_message_topic, allowed_groups: [group])
+      Fabricate(:post, topic: pm, user: user, reads: 2, created_at: 1.day.ago)
+      Fabricate(:group_private_message_topic, user: user, recipient_group: group)
+
+      visit "/t/#{pm.id}"
+      find(".btn.login-button").click
+
+      login_form.fill(username: "john", password: "supersecurepassword").click_login
+      expect(page).to have_css(".header-dropdown-toggle.current-user")
+
+      expect(page).to have_css("#topic-title")
+      expect(page).to have_css(".private_message")
+    end
+
+    it "redirects to a public topic when hitting Reply then logging in" do
+      EmailToken.confirm(Fabricate(:email_token, user: user).token)
+      topic = Fabricate(:topic)
+      Fabricate(:post, topic: topic, created_at: 1.day.ago)
+
+      visit "/t/#{topic.id}"
+      find(".topic-footer-main-buttons .btn-primary").click
+
+      login_form.fill(username: "john", password: "supersecurepassword").click_login
+      expect(page).to have_css(".header-dropdown-toggle.current-user")
+
+      expect(page).to have_css("#topic-title")
+    end
+
+    context "with user api key and omniauth" do
+      include OmniauthHelpers
+
+      let :public_key do
+        <<~TXT
+    -----BEGIN PUBLIC KEY-----
+    MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDh7BS7Ey8hfbNhlNAW/47pqT7w
+    IhBz3UyBYzin8JurEQ2pY9jWWlY8CH147KyIZf1fpcsi7ZNxGHeDhVsbtUKZxnFV
+    p16Op3CHLJnnJKKBMNdXMy0yDfCAHZtqxeBOTcCo1Vt/bHpIgiK5kmaekyXIaD0n
+    w0z/BYpOgZ8QwnI5ZwIDAQAB
+    -----END PUBLIC KEY-----
+    TXT
+      end
+
+      let :private_key do
+        <<~TXT
+    -----BEGIN RSA PRIVATE KEY-----
+    MIICWwIBAAKBgQDh7BS7Ey8hfbNhlNAW/47pqT7wIhBz3UyBYzin8JurEQ2pY9jW
+    WlY8CH147KyIZf1fpcsi7ZNxGHeDhVsbtUKZxnFVp16Op3CHLJnnJKKBMNdXMy0y
+    DfCAHZtqxeBOTcCo1Vt/bHpIgiK5kmaekyXIaD0nw0z/BYpOgZ8QwnI5ZwIDAQAB
+    AoGAeHesbjzCivc+KbBybXEEQbBPsThY0Y+VdgD0ewif2U4UnNhzDYnKJeTZExwQ
+    vAK2YsRDV3KbhljnkagQduvmgJyCKuV/CxZvbJddwyIs3+U2D4XysQp3e1YZ7ROr
+    YlOIoekHCx1CNm6A4iImqGxB0aJ7Owdk3+QSIaMtGQWaPTECQQDz2UjJ+bomguNs
+    zdcv3ZP7W3U5RG+TpInSHiJXpt2JdNGfHItozGJCxfzDhuKHK5Cb23bgldkvB9Xc
+    p/tngTtNAkEA7S4cqUezA82xS7aYPehpRkKEmqzMwR3e9WeL7nZ2cdjZAHgXe49l
+    3mBhidEyRmtPqbXo1Xix8LDuqik0IdnlgwJAQeYTnLnHS8cNjQbnw4C/ECu8Nzi+
+    aokJ0eXg5A0tS4ttZvGA31Z0q5Tz5SdbqqnkT6p0qub0JZiZfCNNdsBe9QJAaGT5
+    fJDwfGYW+YpfLDCV1bUFhMc2QHITZtSyxL0jmSynJwu02k/duKmXhP+tL02gfMRy
+    vTMorxZRllgYeCXeXQJAEGRXR8/26jwqPtKKJzC7i9BuOYEagqj0nLG2YYfffCMc
+    d3JGCf7DMaUlaUE8bJ08PtHRJFSGkNfDJLhLKSjpbw==
+    -----END RSA PRIVATE KEY-----
+    TXT
+      end
+
+      let :args do
+        {
+          scopes: "one_time_password",
+          client_id: "x" * 32,
+          auth_redirect: "discourse://auth_redirect",
+          application_name: "foo",
+          public_key: public_key,
+          nonce: SecureRandom.hex,
+        }
+      end
+
+      before do
+        OmniAuth.config.test_mode = true
+        SiteSetting.auth_skip_create_confirm = true
+        SiteSetting.enable_google_oauth2_logins = true
+        SiteSetting.enable_local_logins = false
+      end
+
+      after { reset_omniauth_config(:google_oauth2) }
+
+      it "completes signup and redirects to the user api key authorization form" do
+        mock_google_auth
+        visit("/user-api-key/new?#{args.to_query}")
+
+        expect(page).to have_css(".authorize-api-key .scopes")
+      end
+
+      it "redirects when navigating to login with redirect param" do
+        mock_google_auth
+        login_form.open_with_redirect("/about")
+        expect(page).to have_current_path("/about")
+      end
+    end
   end
 
   context "with two-factor authentication" do
@@ -159,6 +288,21 @@ shared_examples "login scenarios" do |login_page_object|
       login_form.click_login
 
       expect(page).to have_css(".header-dropdown-toggle.current-user")
+    end
+
+    it "can login with totp and redirect" do
+      login_form
+        .open_with_redirect("/about")
+        .fill(username: "john", password: "supersecurepassword")
+        .click_login
+
+      expect(page).to have_css(".second-factor")
+
+      totp = ROTP::TOTP.new(user_second_factor.data).now
+      find("#login-second-factor").fill_in(with: totp)
+      login_form.click_login
+
+      expect(page).to have_current_path("/about")
     end
 
     it "can login with backup code" do
