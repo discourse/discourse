@@ -1,6 +1,5 @@
 import { cached } from "@glimmer/tracking";
 import { warn } from "@ember/debug";
-import { htmlSafe } from "@ember/template";
 import { configNavForPlugin } from "discourse/lib/admin-plugin-config-nav";
 import { adminRouteValid } from "discourse/lib/admin-utilities";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
@@ -427,11 +426,9 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
   filterNoResultsDescription(filter) {
     const escapedFilter = escapeExpression(filter);
 
-    return htmlSafe(
-      i18n("sidebar.no_results.description_admin_search", {
-        filter: escapedFilter,
-      })
-    );
+    i18n("sidebar.no_results.description_admin_search", {
+      filter: escapedFilter,
+    });
   }
 
   get onSearchClick() {
