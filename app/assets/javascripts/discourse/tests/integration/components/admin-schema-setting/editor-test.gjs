@@ -72,6 +72,9 @@ class InputFieldsFromDOM {
         inputElement: field.querySelector(".schema-field__input").children[0],
         countElement: field.querySelector(".schema-field__input-count"),
         errorElement: field.querySelector(".schema-field__input-error"),
+        descriptionElement: field.querySelector(
+          ".schema-field__input-description"
+        ),
         selector: `.schema-field[data-name="${field.dataset.name}"]`,
       };
     });
@@ -2210,6 +2213,14 @@ module(
       assert.dom(inputFields.fields.name.inputElement).hasValue("item 1");
       assert.dom(inputFields.fields.name.labelElement).hasText("name");
       assert.dom(".--back-btn").doesNotExist();
+
+      await click(tree.nodes[0].children[0].element);
+      tree.refresh();
+      inputFields.refresh();
+      assert.dom(inputFields.fields.name.labelElement).hasText("Level 2 Label");
+      assert
+        .dom(inputFields.fields.name.descriptionElement)
+        .hasText("Description for level 2");
     });
   }
 );
