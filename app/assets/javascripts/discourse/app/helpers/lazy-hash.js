@@ -1,5 +1,5 @@
 import { setInternalHelperManager } from "@glimmer/manager";
-import { createConstRef, valueForRef } from "@glimmer/reference";
+import { createComputeRef, valueForRef } from "@glimmer/reference";
 import { dependentKeyCompat } from "@ember/object/compat";
 
 class LazyHash {
@@ -24,5 +24,10 @@ class LazyHash {
 // Like ember's builtin hash helper, but instead of returning a reified object
 // every time its referenced, it returns a static proxy object with auto-trackable keys.
 export default setInternalHelperManager(({ named: namedRefs }) => {
-  return createConstRef(new LazyHash(namedRefs));
+  let instance;
+  return createComputeRef(
+    () => (instance ??= new LazyHash(namedRefs)),
+    null,
+    "lazy-hash"
+  );
 }, {});
