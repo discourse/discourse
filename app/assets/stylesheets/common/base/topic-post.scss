@@ -1009,7 +1009,7 @@ aside.quote {
 }
 
 .post-info.translations {
-  .fk-d-tooltip__trigger {
+  .fk-d-menu__trigger {
     &-container {
       display: flex;
       align-items: center;
@@ -1027,9 +1027,8 @@ aside.quote {
 }
 
 .post-meta-data-translation-indicator-content {
-  ul {
-    list-style: none;
-    margin: 0;
+  .fk-d-menu__inner-content {
+    padding: 0.5rem;
   }
 }
 

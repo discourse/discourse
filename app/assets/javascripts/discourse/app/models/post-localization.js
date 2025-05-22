@@ -2,6 +2,15 @@ import { ajax } from "discourse/lib/ajax";
 import RestModel from "discourse/models/rest";
 
 export default class PostLocalization extends RestModel {
+  static find(postId) {
+    return ajax(`/post_localizations/${postId}`, {
+      type: "GET",
+      data: {
+        post_id: postId,
+      },
+    });
+  }
+
   static createOrUpdate(postId, locale, raw) {
     return ajax("/post_localizations/create_or_update", {
       type: "POST",
