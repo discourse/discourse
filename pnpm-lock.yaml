@@ -285,8 +285,8 @@ importers:
         specifier: ^2.3.0
         version: 2.3.0(@babel/core@7.27.1)
       diff:
-        specifier: ^8.0.1
-        version: 8.0.1
+        specifier: ^8.0.2
+        version: 8.0.2
       discourse-widget-hbs:
         specifier: workspace:1.0.0
         version: link:../discourse-widget-hbs
@@ -4202,8 +4202,8 @@ packages:
     resolution: {integrity: sha512-PJWHUb1RFevKCwaFA9RlG5tCd+FO5iRh9A8HEtkmBH2Li03iJriB6m6JIN4rGz3K3JLawI7/veA1xzRKP6ISBw==}
     engines: {node: '>=0.3.1'}
 
-  diff@8.0.1:
-    resolution: {integrity: sha512-rEaM3KmVm78zE3dFZaop3aCQa2MTm+T4kcigUFLVU/KbOYdiY6JnL2g2puOYnct3QFw9pjZadaCbCZ1O8ArMlQ==}
+  diff@8.0.2:
+    resolution: {integrity: sha512-sSuxWU5j5SR9QQji/o2qMvqRNYRDOcBTgsJ/DeCf4iSN4gW+gNMXM7wFIP+fdXZxoNiAnHUTGjCr+TSWXdRDKg==}
     engines: {node: '>=0.3.1'}
 
   dir-glob@3.0.1:
@@ -12625,7 +12625,7 @@ snapshots:
 
   diff@7.0.0: {}
 
-  diff@8.0.1: {}
+  diff@8.0.2: {}
 
   dir-glob@3.0.1:
     dependencies:
