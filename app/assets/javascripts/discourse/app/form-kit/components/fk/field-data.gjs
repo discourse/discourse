@@ -71,6 +71,7 @@ export default class FKFieldData extends Component {
         patch.path[0] === this.name
       );
     });
+
     return patches.length + inversePatches.length === 0;
   }
 
