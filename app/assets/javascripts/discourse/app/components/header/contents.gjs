@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { hash } from "@ember/helper";
 import { service } from "@ember/service";
 import { and } from "truth-helpers";
 import deprecatedOutletArgument from "discourse/helpers/deprecated-outlet-argument";
@@ -70,7 +69,7 @@ export default class Contents extends Component {
           topicInfo=@topicInfo
           topicInfoVisible=@topicInfoVisible
         }}
-        @deprecatedArgs={{hash
+        @deprecatedArgs={{lazyHash
           topic=(deprecatedOutletArgument
             value=this.header.topic
             message="The argument 'topic' is deprecated on the outlet 'header-contents__before', use 'topicInfo' or 'topicInfoVisible' instead"
@@ -122,7 +121,7 @@ export default class Contents extends Component {
             topicInfo=@topicInfo
             topicInfoVisible=@topicInfoVisible
           }}
-          @deprecatedArgs={{hash
+          @deprecatedArgs={{lazyHash
             topic=(deprecatedOutletArgument
               value=this.header.topic
               message="The argument 'topic' is deprecated on the outlet 'before-header-panel', use 'topicInfo' or 'topicInfoVisible' instead"
@@ -142,7 +141,7 @@ export default class Contents extends Component {
             topicInfo=@topicInfo
             topicInfoVisible=@topicInfoVisible
           }}
-          @deprecatedArgs={{hash
+          @deprecatedArgs={{lazyHash
             topic=(deprecatedOutletArgument
               value=this.header.topic
               message="The argument 'topic' is deprecated on the outlet 'after-header-panel', use 'topicInfo' or 'topicInfoVisible' instead"
@@ -160,7 +159,7 @@ export default class Contents extends Component {
           topicInfo=@topicInfo
           topicInfoVisible=@topicInfoVisible
         }}
-        @deprecatedArgs={{hash
+        @deprecatedArgs={{lazyHash
           topic=(deprecatedOutletArgument
             value=this.header.topic
             message="The argument 'topic' is deprecated on the outlet 'header-contents__after', use 'topicInfo' or 'topicInfoVisible' instead"
