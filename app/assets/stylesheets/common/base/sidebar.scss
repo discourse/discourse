@@ -378,7 +378,7 @@
   }
 
   &__shortcut-hint {
-    background-color: rgba(var(--tertiary-rgb), 0.1);
+    background-color: rgb(var(--tertiary-rgb) / 10%);
     padding: 0.25em 0.5em;
     margin-right: 0.5em;
     font-size: var(--font-down-3);
