@@ -96,6 +96,7 @@ export default class PostStream extends Component {
     // track the window height to update the cloaking area
     window.addEventListener("resize", this.onWindowResize, opts);
     window.addEventListener("scroll", this.onScroll, opts);
+    window.addEventListener("touchmove", this.onScroll, opts);
 
     // restore scroll position on browsers with aggressive BFCaches (like Safari)
     window.onpageshow = function (event) {
@@ -116,9 +117,9 @@ export default class PostStream extends Component {
   willDestroy() {
     super.willDestroy(...arguments);
 
-    // document.removeEventListener("touchmove", this._debouncedScroll);
-    // window.removeEventListener("scroll", this._debouncedScroll);
     window.removeEventListener("resize", this.onWindowResize);
+    window.removeEventListener("scroll", this.onScroll);
+    window.removeEventListener("touchmove", this.onScroll);
 
     this.appEvents.off("post-stream:posted", this, "_posted");
 
