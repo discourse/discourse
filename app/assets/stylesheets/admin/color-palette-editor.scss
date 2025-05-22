@@ -40,16 +40,30 @@
 
   &__picker {
     display: flex;
-    justify-content: center;
     align-items: center;
-    padding: 5px 10px;
-    gap: 5px;
+    gap: var(--space-2);
+    padding: var(--space-2);
     border: 1px solid var(--primary-low);
+    border-radius: var(--d-input-border-radius);
 
-    .d-icon-hashtag {
-      color: var(--primary-high);
-      font-size: var(--font-down-2);
+    &:focus-within {
+      border-color: var(--tertiary);
+      outline: 2px solid var(--tertiary);
+      outline-offset: -2px;
     }
+  }
+
+  &__input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  &__icon {
+    position: absolute;
+    pointer-events: none;
+    color: var(--primary-medium);
+    font-size: var(--font-down-2);
   }
 
   &__revert.--hidden {
@@ -59,12 +73,19 @@
   input[type="color"] {
     width: 23px;
     height: 23px;
+    border-radius: 100px;
   }
 
   input[type="text"] {
     font-family: monospace;
     margin: 0;
-    width: 5em;
+    width: 4.5rem;
+    padding-left: var(--space-4);
+    border: none;
+
+    &:focus {
+      outline: none;
+    }
   }
 
   &__color-code {

@@ -126,15 +126,17 @@ const Picker = class extends Component {
       {{on "input" this.onInput}}
       {{on "change" this.onChange}}
     />
-    {{icon "hashtag"}}
-    <input
-      class="color-palette-editor__text-input"
-      type="text"
-      maxlength="6"
-      value={{this.displayedColor}}
-      {{on "keypress" this.onTextKeypress}}
-      {{on "change" this.onTextChange}}
-    />
+    <div class="color-palette-editor__input-wrapper">
+      {{icon "hashtag" class="color-palette-editor__icon"}}    
+      <input
+        class="color-palette-editor__text-input"
+        type="text"
+        maxlength="6"
+        value={{this.displayedColor}}
+        {{on "keypress" this.onTextKeypress}}
+        {{on "change" this.onTextChange}}
+      />
+    </div>
   </template>
 };
 
