@@ -572,7 +572,15 @@ export default class PostStream extends Component {
 
     this.#bottomEyelineTrackingEnabled = enabled;
     if (enabled) {
+      if (this.#currentPostElement) {
+        this.#currentPostObserver.unobserve(this.#currentPostElement);
+      }
+
       this.onScroll();
+    } else {
+      if (this.#currentPostElement) {
+        this.#currentPostObserver.observe(this.#currentPostElement);
+      }
     }
   }
 
