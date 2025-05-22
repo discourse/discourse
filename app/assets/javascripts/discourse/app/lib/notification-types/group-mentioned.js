@@ -6,13 +6,9 @@ export default class extends NotificationTypeBase {
 
   get label() {
     let name;
-    
-    console.error(this.siteSettings.prioritize_username_in_ux, "prioritize_username_in_ux");
-console.error(JSON.stringify(this.notification, null, 2), "notification");
-    console.error(this.notification.data, "notification")
-    console.error(this.notification.acting_user_name, "user name")
+
     if (!this.siteSettings.prioritize_username_in_ux) {
-      name = this.notification.acting_user_name || this.username;
+      name = this.notification.data.original_name || this.username;
     } else {
       name = this.username;
     }
