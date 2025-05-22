@@ -376,7 +376,6 @@ RSpec.describe Site do
 
   context "when there are anonymous users with different locales" do
     let(:anon_guardian) { Guardian.new }
-    let!(:original_available_locales) { I18n.available_locales }
     let(:original_locale) { I18n.locale }
 
     before do
@@ -387,7 +386,7 @@ RSpec.describe Site do
     end
 
     after do
-      I18n.available_locales = original_available_locales
+      I18n.available_locales = nil
       I18n.locale = original_locale
     end
 

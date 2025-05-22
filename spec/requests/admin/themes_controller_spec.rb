@@ -476,6 +476,44 @@ RSpec.describe Admin::ThemesController do
 
         expect(theme_json["remote_theme"]["remote_version"]).to eq("7")
       end
+
+      it "does not result in N+1 queries" do
+        # warmup
+        get "/admin/themes.json"
+        expect(response.status).to eq(200)
+
+        theme = Fabricate(:theme, color_scheme: Fabricate(:color_scheme))
+        Fabricate(
+          :theme_field,
+          target_id: Theme.targets[:translations],
+          theme: theme,
+          name: "en",
+          value:
+            "en:\n  theme_metadata:\n    description: \"A simple, beautiful theme that improves the out of the box experience for Discourse sites.\"\n  topic_pinned: \"Pinned\"\n  topic_hot: \"Hot\"\n  user_replied: \"replied\"\n  user_posted: \"posted\"\n  user_updated: \"updated\"\n",
+        )
+        first_request_queries =
+          track_sql_queries do
+            get "/admin/themes.json"
+            expect(response.status).to eq(200)
+          end
+
+        theme_2 = Fabricate(:theme, color_scheme: Fabricate(:color_scheme))
+        Fabricate(
+          :theme_field,
+          target_id: Theme.targets[:translations],
+          theme: theme_2,
+          name: "en",
+          value:
+            "en:\n  theme_metadata:\n    description: \"A simple, beautiful theme that improves the out of the box experience for Discourse sites.\"\n  topic_pinned: \"Pinned\"\n  topic_hot: \"Hot\"\n  user_replied: \"replied\"\n  user_posted: \"posted\"\n  user_updated: \"updated\"\n",
+        )
+        second_request_queries =
+          track_sql_queries do
+            get "/admin/themes.json"
+            expect(response.status).to eq(200)
+          end
+
+        expect(first_request_queries.count).to eq(second_request_queries.count)
+      end
     end
 
     it "allows themes and components to be edited" do

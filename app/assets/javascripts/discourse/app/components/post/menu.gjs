@@ -14,6 +14,7 @@ import SmallUserList, {
 } from "discourse/components/small-user-list";
 import UserTip from "discourse/components/user-tip";
 import concatClass from "discourse/helpers/concat-class";
+import lazyHash from "discourse/helpers/lazy-hash";
 import DAG from "discourse/lib/dag";
 import {
   applyBehaviorTransformer,
@@ -612,7 +613,7 @@ export default class PostMenu extends Component {
     {{! <section class="post-menu-area clearfix"> }}
     <PluginOutlet
       @name="post-menu"
-      @outletArgs={{hash post=@post state=this.state}}
+      @outletArgs={{lazyHash post=@post state=this.state}}
     >
       <nav
         {{! this.collapsed is included in the check below because "Show More" button can be overriden to be always visible }}

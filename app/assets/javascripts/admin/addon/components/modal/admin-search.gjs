@@ -5,6 +5,17 @@ import AdminSearch from "admin/components/admin-search";
 
 export default class AdminSearchModal extends Component {
   @service currentUser;
+  @service router;
+
+  constructor() {
+    super(...arguments);
+    this.router.on("routeWillChange", this.args.closeModal);
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.router.off("routeWillChange", this.args.closeModal);
+  }
 
   <template>
     <DModal

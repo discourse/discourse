@@ -3700,17 +3700,16 @@ lt:
           title: "Failai"
         legal:
           title: "Naudojimosi taisyklės"
-        logo_and_fonts:
-          logo:
-            form:
-              mobile: "Mobilus"
-              email: "El. paštas"
-          fonts:
-            form:
-              heading_font:
-                title: "Antraštės šriftas"
-            backfill_modal:
-              modal_yes: "Taip"
+        logo:
+          form:
+            mobile: "Mobilus"
+            email: "El. paštas"
+        fonts:
+          form:
+            heading_font:
+              title: "Antraštės šriftas"
+          backfill_modal:
+            modal_yes: "Taip"
         navigation:
           title: "Navigacija"
         notifications:
@@ -4085,6 +4084,8 @@ lt:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
           company_name: "Vardas"
+          extra_groups:
+            groups: "Grupės"
           optional: "(pasoronktinai)"
           update: "Atnaujinti"
           saved: "išsaugota!"
@@ -4358,12 +4359,12 @@ lt:
           all_filter: "Visos"
           active_filter: "Aktyvūs"
           inactive_filter: "Neaktyvus"
-          schema:
-            fields:
-              required: "*privalomi"
-              number:
-                too_small: "turi būti didesnis arba lygus %{count}"
-                too_large: "turi būti mažesnis arba lygus %{count}"
+        schema:
+          fields:
+            required: "*privalomi"
+            number:
+              too_small: "turi būti didesnis arba lygus %{count}"
+              too_large: "turi būti mažesnis arba lygus %{count}"
         colors:
           select_base:
             title: "Pasirinkite pagrindinę spalvų paletę"

@@ -9,6 +9,7 @@ import UserBadge from "discourse/components/user-badge";
 import ageWithTooltip from "discourse/helpers/age-with-tooltip";
 import avatar from "discourse/helpers/avatar";
 import icon from "discourse/helpers/d-icon";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
 import ComboBox from "select-kit/components/combo-box";
 
@@ -34,7 +35,7 @@ export default RouteTemplate(
         {{else}}
           <PluginOutlet
             @name="badge-granter-form"
-            @outletArgs={{hash
+            @outletArgs={{lazyHash
               availableBadges=@controller.availableBadges
               userBadges=@controller.userBadges
               user=@controller.user
@@ -67,7 +68,7 @@ export default RouteTemplate(
 
         <PluginOutlet
           @name="badge-granter-table"
-          @outletArgs={{hash
+          @outletArgs={{lazyHash
             groupedBadges=@controller.groupedBadges
             revokeBadge=@controller.revokeBadge
             expandGroup=@controller.expandGroup

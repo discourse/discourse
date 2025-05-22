@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { Input } from "@ember/component";
-import { fn, hash } from "@ember/helper";
+import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { and } from "truth-helpers";
@@ -10,6 +10,7 @@ import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import bodyClass from "discourse/helpers/body-class";
 import icon from "discourse/helpers/d-icon";
+import lazyHash from "discourse/helpers/lazy-hash";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
 import { resettableTracked } from "discourse/lib/tracked-tools";
@@ -75,7 +76,7 @@ export default class DiscoveryFilterNavigation extends Component {
           {{! EXPERIMENTAL OUTLET - don't use because it will be removed soon  }}
           <PluginOutlet
             @name="below-filter-input"
-            @outletArgs={{hash
+            @outletArgs={{lazyHash
               updateQueryString=this.updateQueryString
               newQueryString=this.newQueryString
             }}

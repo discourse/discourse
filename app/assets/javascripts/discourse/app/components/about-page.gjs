@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
@@ -8,6 +7,7 @@ import AboutPageExtraGroups from "discourse/components/about-page-extra-groups";
 import AboutPageUsers from "discourse/components/about-page-users";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import icon from "discourse/helpers/d-icon";
+import lazyHash from "discourse/helpers/lazy-hash";
 import escape from "discourse/lib/escape";
 import { number } from "discourse/lib/formatter";
 import I18n, { i18n } from "discourse-i18n";
@@ -259,7 +259,7 @@ export default class AboutPage extends Component {
       <PluginOutlet
         @name="about-after-description"
         @connectorTagName="section"
-        @outletArgs={{hash model=@model}}
+        @outletArgs={{lazyHash model=@model}}
       />
     </section>
     <div class="about__main-content">
@@ -289,7 +289,7 @@ export default class AboutPage extends Component {
         <PluginOutlet
           @name="about-after-admins"
           @connectorTagName="section"
-          @outletArgs={{hash model=@model}}
+          @outletArgs={{lazyHash model=@model}}
         />
 
         {{#if @model.moderators.length}}
@@ -301,7 +301,7 @@ export default class AboutPage extends Component {
         <PluginOutlet
           @name="about-after-moderators"
           @connectorTagName="section"
-          @outletArgs={{hash model=@model}}
+          @outletArgs={{lazyHash model=@model}}
         />
         {{#if this.showExtraGroups}}
           <AboutPageExtraGroups />

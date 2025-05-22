@@ -1,10 +1,10 @@
-import { hash } from "@ember/helper";
 import RouteTemplate from "ember-route-template";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import DPageHeader from "discourse/components/d-page-header";
 import NavItem from "discourse/components/nav-item";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import icon from "discourse/helpers/d-icon";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
 import AdminPluginsList from "admin/components/admin-plugins-list";
 
@@ -64,7 +64,7 @@ export default RouteTemplate(
         <PluginOutlet
           @name="admin-below-plugins-index"
           @connectorTagName="div"
-          @outletArgs={{hash model=@controller.model}}
+          @outletArgs={{lazyHash model=@controller.model}}
         />
       </span>
     </div>

@@ -6,7 +6,7 @@ require "json_schemer"
 class Theme < ActiveRecord::Base
   include GlobalPath
 
-  BASE_COMPILER_VERSION = 87
+  BASE_COMPILER_VERSION = 88
 
   class SettingsMigrationError < StandardError
   end
@@ -84,11 +84,11 @@ class Theme < ActiveRecord::Base
   scope :include_relations,
         -> do
           include_basic_relations.includes(
-            :child_themes,
             :theme_settings,
             :settings_field,
-            :color_scheme,
+            color_scheme: %i[color_scheme_colors],
             theme_fields: %i[upload theme_settings_migration],
+            child_themes: %i[color_scheme locale_fields theme_translation_overrides],
           )
         end
 
@@ -99,7 +99,8 @@ class Theme < ActiveRecord::Base
             :user,
             :locale_fields,
             :theme_translation_overrides,
-            parent_themes: %i[locale_fields theme_translation_overrides],
+            color_scheme: %i[theme],
+            parent_themes: %i[color_scheme locale_fields theme_translation_overrides],
           )
         end
 
@@ -658,15 +659,16 @@ class Theme < ActiveRecord::Base
     end
   end
 
-  def internal_translations
-    @internal_translations ||= translations(internal: true)
+  def internal_translations(preloaded_locale_fields: nil)
+    @internal_translations ||=
+      translations(internal: true, preloaded_locale_fields: preloaded_locale_fields)
   end
 
-  def translations(internal: false)
+  def translations(internal: false, preloaded_locale_fields: nil)
     fallbacks = I18n.fallbacks[I18n.locale]
     begin
       data =
-        locale_fields.first&.translation_data(
+        (preloaded_locale_fields&.first || locale_fields.first)&.translation_data(
           with_overrides: false,
           internal: internal,
           fallback_fields: locale_fields,

@@ -40,6 +40,7 @@ import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import htmlSafe from "discourse/helpers/html-safe";
+import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
 import stickyAvatars from "discourse/modifiers/sticky-avatars";
 import { i18n } from "discourse-i18n";
@@ -84,7 +85,7 @@ export default RouteTemplate(
         <PluginOutlet
           @name="topic-above-post-stream"
           @connectorTagName="div"
-          @outletArgs={{hash
+          @outletArgs={{lazyHash
             model=@controller.model
             editFirstPost=@controller.editFirstPost
           }}
@@ -127,7 +128,6 @@ export default RouteTemplate(
                       />
                     </PluginOutlet>
                   </div>
-
                   {{#if @controller.showCategoryChooser}}
                     <div class="edit-category__wrapper">
                       <PluginOutlet
@@ -339,7 +339,7 @@ export default RouteTemplate(
             <PluginOutlet
               @name="topic-navigation"
               @connectorTagName="div"
-              @outletArgs={{hash
+              @outletArgs={{lazyHash
                 topic=@controller.model
                 renderTimeline=info.renderTimeline
                 topicProgressExpanded=info.topicProgressExpanded
@@ -386,7 +386,7 @@ export default RouteTemplate(
                   <PluginOutlet
                     @name="before-topic-progress"
                     @connectorTagName="div"
-                    @outletArgs={{hash
+                    @outletArgs={{lazyHash
                       model=@controller.model
                       jumpToPost=@controller.jumpToPost
                     }}
@@ -416,7 +416,7 @@ export default RouteTemplate(
             <PluginOutlet
               @name="topic-navigation-bottom"
               @connectorTagName="div"
-              @outletArgs={{hash model=@controller.model}}
+              @outletArgs={{lazyHash model=@controller.model}}
             />
           </TopicNavigation>
 
@@ -436,7 +436,7 @@ export default RouteTemplate(
                   <PluginOutlet
                     @name="topic-above-posts"
                     @connectorTagName="div"
-                    @outletArgs={{hash model=@controller.model}}
+                    @outletArgs={{lazyHash model=@controller.model}}
                   />
                 </span>
 
@@ -539,7 +539,7 @@ export default RouteTemplate(
                           <div class="reviewable-actions">
                             <PluginOutlet
                               @name="topic-additional-reviewable-actions"
-                              @outletArgs={{hash pending=pending}}
+                              @outletArgs={{lazyHash pending=pending}}
                             />
                             <DButton
                               @label="review.delete"
@@ -628,7 +628,7 @@ export default RouteTemplate(
               <PluginOutlet
                 @name="topic-area-bottom"
                 @connectorTagName="div"
-                @outletArgs={{hash model=@controller.model}}
+                @outletArgs={{lazyHash model=@controller.model}}
               />
             </section>
           </div>
@@ -644,7 +644,7 @@ export default RouteTemplate(
                 <PluginOutlet
                   @name="topic-above-footer-buttons"
                   @connectorTagName="div"
-                  @outletArgs={{hash model=@controller.model}}
+                  @outletArgs={{lazyHash model=@controller.model}}
                 />
               </span>
 
@@ -683,14 +683,14 @@ export default RouteTemplate(
             <PluginOutlet
               @name="topic-above-suggested"
               @connectorTagName="div"
-              @outletArgs={{hash model=@controller.model}}
+              @outletArgs={{lazyHash model=@controller.model}}
             />
           </span>
 
           <MoreTopics @topic={{@controller.model}} />
           <PluginOutlet
             @name="topic-below-suggested"
-            @outletArgs={{hash model=@controller.model}}
+            @outletArgs={{lazyHash model=@controller.model}}
           />
         {{/if}}
       {{else}}

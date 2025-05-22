@@ -1,12 +1,13 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
-import { concat, fn, hash } from "@ember/helper";
+import { concat, fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import MenuTab from "discourse/components/user-menu/menu-tab";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { bind } from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
 import getUrl from "discourse/lib/get-url";
@@ -365,7 +366,7 @@ export default class UserMenu extends Component {
 
             <PluginOutlet
               @name="user-menu-tabs-list__after"
-              @outletArgs={{hash user=this.currentUser}}
+              @outletArgs={{lazyHash user=this.currentUser}}
             />
           </div>
           <div

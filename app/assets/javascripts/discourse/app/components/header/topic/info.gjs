@@ -9,6 +9,7 @@ import TopicStatus from "discourse/components/topic-status";
 import categoryLink from "discourse/helpers/category-link";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import renderTags from "discourse/lib/render-tags";
 import DiscourseURL from "discourse/lib/url";
@@ -89,7 +90,7 @@ export default class Info extends Component {
     >
       <PluginOutlet
         @name="header-topic-info__before"
-        @outletArgs={{hash topic=@topicInfo}}
+        @outletArgs={{lazyHash topic=@topicInfo}}
       />
       <div class={{concatClass (if this.twoRows "two-rows") "extra-info"}}>
         <div class="title-wrapper">
@@ -123,7 +124,7 @@ export default class Info extends Component {
               <span class="header-topic-title-suffix">
                 <PluginOutlet
                   @name="header-topic-title-suffix"
-                  @outletArgs={{hash topic=@topicInfo}}
+                  @outletArgs={{lazyHash topic=@topicInfo}}
                 />
               </span>
             {{/if}}
@@ -142,7 +143,7 @@ export default class Info extends Component {
               <div class="categories-wrapper">
                 <PluginOutlet
                   @name="header-categories-wrapper"
-                  @outletArgs={{hash category=@topicInfo.category}}
+                  @outletArgs={{lazyHash category=@topicInfo.category}}
                 >
                   {{#if @topicInfo.category.parentCategory}}
                     {{#if
@@ -201,7 +202,7 @@ export default class Info extends Component {
       </div>
       <PluginOutlet
         @name="header-topic-info__after"
-        @outletArgs={{hash topic=@topicInfo}}
+        @outletArgs={{lazyHash topic=@topicInfo}}
       />
     </div>
   </template>

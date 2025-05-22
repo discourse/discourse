@@ -1,4 +1,3 @@
-import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import RouteTemplate from "ember-route-template";
 import { and } from "truth-helpers";
@@ -9,6 +8,7 @@ import Navigation from "discourse/components/discovery/navigation";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import bodyClass from "discourse/helpers/body-class";
 import concatClass from "discourse/helpers/concat-class";
+import lazyHash from "discourse/helpers/lazy-hash";
 
 export default RouteTemplate(
   <template>
@@ -65,7 +65,7 @@ export default RouteTemplate(
         <PluginOutlet
           @name="below-discovery-categories"
           @connectorTagName="div"
-          @outletArgs={{hash
+          @outletArgs={{lazyHash
             categories=@controller.model.categories
             topics=@controller.model.topics
           }}

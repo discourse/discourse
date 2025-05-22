@@ -237,7 +237,11 @@ export function buildArgsWithDeprecations(args, deprecatedArgs, opts = {}) {
 
   if (args) {
     Object.keys(args).forEach((key) => {
-      Object.defineProperty(output, key, { value: args[key] });
+      Object.defineProperty(output, key, {
+        get() {
+          return args[key];
+        },
+      });
     });
   }
 

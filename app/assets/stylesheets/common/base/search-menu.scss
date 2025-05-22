@@ -11,21 +11,19 @@
   border-top: 1px solid var(--primary-low);
 }
 
-$search-pad-vertical: 0.25em;
-$search-pad-horizontal: 0.5em;
-$search-result-element-padding: 0.35em 1rem; // hate myself but .25em is too tight and .5 too loose
+:root {
+  --search-result-element-padding: 0.5em 1rem;
+}
 
-.search-menu.glimmer-search-menu {
-  .search-input-wrapper {
-    @include viewport.until(sm) {
-      position: fixed;
-      left: 1rem;
-      right: 0.35rem; // to compensate for cancel button padding
-      top: 0;
-      padding-block: 0.5em;
-      background-color: var(--secondary);
-      z-index: z("base");
-    }
+.search-menu.glimmer-search-menu .search-input-wrapper {
+  @include viewport.until(sm) {
+    position: fixed;
+    left: 1rem;
+    right: 0.35rem; // to compensate for cancel button padding
+    top: 0;
+    padding-block: 0.5em;
+    background-color: var(--secondary);
+    z-index: z("base");
   }
 }
 
@@ -42,7 +40,7 @@ $search-result-element-padding: 0.35em 1rem; // hate myself but .25em is too tig
 
     .search-menu-panel & {
       @include viewport.from(sm) {
-        padding: $search-result-element-padding;
+        padding: 0.75em 1rem 0.25em;
       }
     }
   }
@@ -86,8 +84,6 @@ $search-result-element-padding: 0.35em 1rem; // hate myself but .25em is too tig
   }
 
   .menu-panel {
-    border: 0;
-    box-shadow: var(--shadow-dropdown);
     padding: 0; // overrule generic menu panels to achieve full width hover effect
 
     @include viewport.from(sm) {
@@ -138,7 +134,6 @@ $search-result-element-padding: 0.35em 1rem; // hate myself but .25em is too tig
   .results {
     display: flex;
     flex-direction: column;
-    padding-top: $search-pad-vertical;
     border-radius: var(--d-border-radius);
 
     .heading {
@@ -169,7 +164,7 @@ $search-result-element-padding: 0.35em 1rem; // hate myself but .25em is too tig
   }
 
   .search-link {
-    padding: $search-result-element-padding;
+    padding: var(--search-result-element-padding);
 
     &.category,
     &.user,
@@ -420,12 +415,16 @@ $search-result-element-padding: 0.35em 1rem; // hate myself but .25em is too tig
 }
 
 .search-random-quick-tip {
-  padding: max(0.5rem, 0.5em) 1rem;
+  padding: max(0.75rem, 0.75em) 1rem;
   font-size: var(--font-down-2);
   color: var(--primary-medium);
 
+  .search-menu-panel & {
+    padding: 0.5rem 1rem max(0.75rem, 0.75em);
+  }
+
   .tip-label {
-    background-color: rgba(var(--tertiary-rgb), 0.1);
+    background-color: rgb(var(--tertiary-rgb), 0.1);
     margin-right: 0.25em;
     padding: 2px 4px;
     display: inline-block;
@@ -464,5 +463,5 @@ $search-result-element-padding: 0.35em 1rem; // hate myself but .25em is too tig
 }
 
 .no-results {
-  padding: $search-result-element-padding;
+  padding: var(--search-result-element-padding);
 }

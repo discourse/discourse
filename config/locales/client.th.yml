@@ -2571,14 +2571,13 @@ th:
           title: "ไฟล์"
         legal:
           title: "กฎ"
-        logo_and_fonts:
-          logo:
-            form:
-              mobile: "โทรศัพท์"
-              email: "อีเมล"
-          fonts:
-            backfill_modal:
-              modal_yes: "ใช่"
+        logo:
+          form:
+            mobile: "โทรศัพท์"
+            email: "อีเมล"
+        fonts:
+          backfill_modal:
+            modal_yes: "ใช่"
         navigation:
           title: "การนำทาง"
         notifications:
@@ -2797,6 +2796,8 @@ th:
       config_areas:
         about:
           company_name: "ชื่อ"
+          extra_groups:
+            groups: "กลุ่ม"
           optional: "(ทางเลือก)"
           update: "อัปเดต"
           saved: "บันทึกแล้ว!"
@@ -2944,9 +2945,9 @@ th:
           all_filter: "ทั้งหมด"
           active_filter: "ใช้งานอยู่"
           inactive_filter: "ไม่ใช้งาน"
-          schema:
-            fields:
-              required: "*ต้องการ"
+        schema:
+          fields:
+            required: "*ต้องการ"
         colors:
           title: "สี"
           undo: "เลิกทำ"

@@ -447,7 +447,7 @@ pre.onebox code ol.lines li {
 
 pre.onebox code ol.lines li.selected {
   background-color: var(--highlight-bg);
-  border-left-color: rgba(var(--primary-rgb), 0.2);
+  border-left-color: rgb(var(--primary-rgb), 0.2);
 }
 
 .onebox-warning-message {
@@ -771,7 +771,7 @@ aside.onebox.twitterstatus .onebox-body {
     z-index: z("base");
     font-size: var(--font-down-1);
     color: #fff;
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: rgb(0, 0, 0, 0.6);
 
     @include ellipsis;
     max-width: 100%;
@@ -1034,7 +1034,7 @@ aside.onebox.mixcloud-preview {
   background-color: black;
 
   .video-placeholder-overlay {
-    background-color: rgba(0, 0, 0, 0.25);
+    background-color: rgb(0, 0, 0, 0.25);
     padding: 1rem;
     position: absolute;
     left: 50%;
@@ -1045,7 +1045,7 @@ aside.onebox.mixcloud-preview {
       border-radius: var(--d-border-radius);
       color: #fff;
       display: flex;
-      filter: drop-shadow(3px 3px 2px rgba(0, 0, 0, 0.25));
+      filter: drop-shadow(3px 3px 2px rgb(0, 0, 0, 0.25));
       height: 2.3rem;
       transition: transform 0.15s;
       width: 2.3rem;
@@ -1057,7 +1057,7 @@ aside.onebox.mixcloud-preview {
 
     .spinner {
       border-color: #fff;
-      border-right-color: rgba(0, 0, 0, 0);
+      border-right-color: rgb(0, 0, 0, 0);
       margin: 0;
     }
   }

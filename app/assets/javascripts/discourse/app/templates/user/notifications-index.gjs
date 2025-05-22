@@ -1,9 +1,9 @@
-import { hash } from "@ember/helper";
 import RouteTemplate from "ember-route-template";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import EmptyState from "discourse/components/empty-state";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import MenuItem from "discourse/components/user-menu/menu-item";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
 import NotificationsFilter from "select-kit/components/notifications-filter";
 
@@ -33,7 +33,7 @@ export default RouteTemplate(
         />
         <PluginOutlet
           @name="user-notifications-after-filter"
-          @outletArgs={{hash items=@controller.items}}
+          @outletArgs={{lazyHash items=@controller.items}}
         />
       </div>
 
@@ -47,7 +47,7 @@ export default RouteTemplate(
           <ConditionalLoadingSpinner @condition={{@controller.loading}} />
           <PluginOutlet
             @name="user-notifications-list-bottom"
-            @outletArgs={{hash controller=@controller}}
+            @outletArgs={{lazyHash controller=@controller}}
           />
         </div>
       {{/if}}

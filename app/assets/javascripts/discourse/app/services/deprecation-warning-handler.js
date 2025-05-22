@@ -17,7 +17,6 @@ export const CRITICAL_DEPRECATIONS = [
   "discourse.bootbox",
   "discourse.add-header-panel",
   "discourse.header-widget-overrides",
-  "discourse.plugin-outlet-tag-name",
   "discourse.add-flag-property",
   "discourse.breadcrumbs.childCategories",
   "discourse.breadcrumbs.firstCategory",
@@ -32,6 +31,7 @@ export const CRITICAL_DEPRECATIONS = [
   "discourse.mobile-view",
   "discourse.mobile-templates",
   "discourse.component-template-overrides",
+  "discourse.plugin-outlet-classic-args-clash",
 ];
 
 if (DEBUG) {

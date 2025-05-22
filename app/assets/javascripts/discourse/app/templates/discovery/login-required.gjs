@@ -1,4 +1,3 @@
-import { hash } from "@ember/helper";
 import { htmlSafe } from "@ember/template";
 import RouteTemplate from "ember-route-template";
 import DButton from "discourse/components/d-button";
@@ -6,6 +5,7 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import bodyClass from "discourse/helpers/body-class";
 import hideApplicationHeaderButtons from "discourse/helpers/hide-application-header-buttons";
 import hideApplicationSidebar from "discourse/helpers/hide-application-sidebar";
+import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
 
 export default RouteTemplate(
@@ -20,7 +20,7 @@ export default RouteTemplate(
         <div class="login-welcome">
           <PluginOutlet
             @name="above-login"
-            @outletArgs={{hash model=@controller.model}}
+            @outletArgs={{lazyHash model=@controller.model}}
           />
           <PluginOutlet @name="above-static" />
 
@@ -31,7 +31,7 @@ export default RouteTemplate(
           <PluginOutlet @name="below-static" />
           <PluginOutlet
             @name="below-login"
-            @outletArgs={{hash model=@controller.model}}
+            @outletArgs={{lazyHash model=@controller.model}}
           />
 
           <div class="body-page-button-container">
@@ -53,7 +53,7 @@ export default RouteTemplate(
 
           <PluginOutlet
             @name="below-login-buttons"
-            @outletArgs={{hash model=@controller.model}}
+            @outletArgs={{lazyHash model=@controller.model}}
           />
         </div>
       </div>

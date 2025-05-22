@@ -3037,14 +3037,13 @@ ca:
           title: "Fitxers"
         legal:
           title: "Legal"
-        logo_and_fonts:
-          logo:
-            form:
-              mobile: "Mòbil"
-              email: "Correu electrònic"
-          fonts:
-            backfill_modal:
-              modal_yes: "Sí"
+        logo:
+          form:
+            mobile: "Mòbil"
+            email: "Correu electrònic"
+        fonts:
+          backfill_modal:
+            modal_yes: "Sí"
         navigation:
           title: "Navegació"
         notifications:
@@ -3395,6 +3394,8 @@ ca:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
           company_name: "Nom"
+          extra_groups:
+            groups: "Grups"
           optional: "(opcional)"
           saved: "desat!"
         flags:
@@ -3656,12 +3657,12 @@ ca:
           all_filter: "Tot"
           active_filter: "Actiu"
           inactive_filter: "Inactiu"
-          schema:
-            fields:
-              required: "*necessari"
-              number:
-                too_small: "ha de ser més gran o igual que %{count}"
-                too_large: "ha de ser igual o menor que %{count}"
+        schema:
+          fields:
+            required: "*necessari"
+            number:
+              too_small: "ha de ser més gran o igual que %{count}"
+              too_large: "ha de ser igual o menor que %{count}"
         colors:
           select_base:
             title: "Seleccioneu la paleta de colors base"

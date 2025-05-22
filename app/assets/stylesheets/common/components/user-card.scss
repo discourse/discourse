@@ -60,7 +60,7 @@
 
   .card-content {
     padding: 10px;
-    background: rgba(var(--secondary-rgb), 0.85);
+    background: rgb(var(--secondary-rgb), 0.85);
 
     &::after {
       content: "";
@@ -123,6 +123,7 @@
   }
 
   .names__primary {
+    @include ellipsis;
     line-height: var(--line-height-medium);
     font-size: var(--font-up-5);
     font-weight: bold;
