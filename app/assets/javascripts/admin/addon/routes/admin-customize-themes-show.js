@@ -23,22 +23,14 @@ export default class AdminCustomizeThemesShowRoute extends Route {
     }
   }
 
-  setupController(controller, model, transition) {
+  setupController(controller, model) {
     super.setupController(...arguments);
 
     const parentController = this.controllerFor("adminCustomizeThemes");
 
-    const fromNewConfigPage =
-      !transition.from ||
-      [
-        "adminConfig.customize.themes",
-        "adminConfig.customize.components",
-      ].includes(transition.from.name);
-
     parentController.setProperties({
       editingTheme: false,
       currentTab: model.get("component") ? COMPONENTS : THEMES,
-      fromNewConfigPage,
     });
 
     controller.setProperties({
@@ -50,7 +42,6 @@ export default class AdminCustomizeThemesShowRoute extends Route {
       editingName: false,
       editingThemeSetting: false,
       userLocale: parentController.get("model.extras.locale"),
-      fromNewConfigPage,
     });
 
     this.handleHighlight(model);
