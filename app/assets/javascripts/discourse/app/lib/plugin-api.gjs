@@ -3,7 +3,7 @@
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 
-export const PLUGIN_API_VERSION = "2.1.1";
+export const PLUGIN_API_VERSION = "2.1.2";
 
 import Component from "@glimmer/component";
 import $ from "jquery";

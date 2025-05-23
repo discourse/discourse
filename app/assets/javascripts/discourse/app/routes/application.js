@@ -11,6 +11,7 @@ import getURL from "discourse/lib/get-url";
 import logout from "discourse/lib/logout";
 import mobile from "discourse/lib/mobile";
 import identifySource, { consolePrefix } from "discourse/lib/source-identifier";
+import { applyBehaviorTransformer } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
 import { postRNWebviewMessage } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
@@ -43,29 +44,39 @@ export default class ApplicationRoute extends DiscourseRoute {
 
   @action
   loading(transition) {
-    this.loadingSlider.transitionStarted();
-    transition.finally(() => {
-      this.loadingSlider.transitionEnded();
-    });
-    return false;
+    applyBehaviorTransformer(
+      "application-route-loading",
+      () => {
+        this.loadingSlider.transitionStarted();
+        transition.finally(() => this.loadingSlider.transitionEnded());
+        return false;
+      },
+      { transition, currentUser: this.currentUser }
+    );
   }
 
   @action
   willTransition(transition) {
-    if (
-      this.restrictedRouting.isRestricted &&
-      !this.restrictedRouting.isAllowedRoute(transition.to.name)
-    ) {
-      transition.abort();
-      this.router.replaceWith(
-        this.restrictedRouting.redirectRoute,
-        this.currentUser
-      );
+    applyBehaviorTransformer(
+      "application-route-will-transition",
+      () => {
+        if (
+          this.restrictedRouting.isRestricted &&
+          !this.restrictedRouting.isAllowedRoute(transition.to.name)
+        ) {
+          transition.abort();
+          this.router.replaceWith(
+            this.restrictedRouting.redirectRoute,
+            this.currentUser
+          );
 
-      return false;
-    }
+          return false;
+        }
 
-    return true;
+        return true;
+      },
+      { transition, currentUser: this.currentUser }
+    );
   }
 
   @action

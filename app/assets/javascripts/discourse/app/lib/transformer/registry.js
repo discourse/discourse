@@ -1,5 +1,7 @@
 export const BEHAVIOR_TRANSFORMERS = Object.freeze([
   // use only lowercase names
+  "application-route-loading",
+  "application-route-will-transition",
   "composer-position:correct-scroll-position",
   "composer-position:editor-touch-move",
   "discovery-topic-list-load-more",
@@ -19,8 +21,8 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "composer-save-button-label",
   "composer-service-cannot-submit-post",
   "create-topic-label",
-  "flag-description",
   "flag-custom-placeholder",
+  "flag-description",
   "flag-formatted-name",
   "hamburger-dropdown-click-outside-exceptions",
   "header-notifications-avatar-size",
