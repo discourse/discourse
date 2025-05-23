@@ -270,25 +270,20 @@ const extension = {
   },
 };
 
-async function checkUserExists(username) {
-  if (!username || username.length < 1 || invalidUsernames.has(username)) {
-    return { exists: false };
+async function validateMention(name) {
+  if (!name || name.length < 1 || invalidUsernames.has(name)) {
+    return false;
   }
 
   try {
-    const user = await User.findByUsername(username);
-    if (user) {
-      return { exists: true };
-    }
+    return !!(await User.findByUsername(name));
   } catch (error) {
-    invalidUsernames.add(username);
-    return { exists: false, error };
-  }
-}
+    // eslint-disable-next-line no-console
+    console.warn("Validation failed for", name, error);
 
-async function validateMention(name) {
-  const result = await checkUserExists(name);
-  return result.exists;
+    invalidUsernames.add(name);
+    return false;
+  }
 }
 
 export default extension;
