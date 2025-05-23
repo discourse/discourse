@@ -190,11 +190,10 @@
     touch-action: pan-y pinch-zoom;
     overflow: hidden;
     height: 100%;
-    max-height: inherit;
   }
 
   .panel-body-contents {
-    max-height: inherit;
+    max-height: 100%;
     width: 100%;
     display: flex;
     flex-direction: column;
