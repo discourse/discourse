@@ -45,13 +45,13 @@ module Chat
     policy :can_view_channel
     model :membership, optional: true
     step :enabled_threads?
-    step :determine_target_message_id
+    model :target_message_id, optional: true
     policy :target_message_exists
-    step :fetch_messages
-    step :fetch_thread_ids
-    step :fetch_tracking
-    step :fetch_thread_participants
-    step :fetch_thread_memberships
+    model :messages, optional: true
+    model :thread_ids, optional: true
+    model :tracking, optional: true
+    model :thread_participants, optional: true
+    model :thread_memberships, optional: true
     step :update_membership_last_viewed_at
     step :update_user_last_channel
 
@@ -73,19 +73,19 @@ module Chat
       guardian.can_preview_chat_channel?(channel)
     end
 
-    def determine_target_message_id(params:, membership:)
+    def fetch_target_message_id(params:, membership:)
       if params.fetch_from_last_read
-        context[:target_message_id] = membership&.last_read_message_id
+        membership&.last_read_message_id
       else
-        context[:target_message_id] = params.target_message_id
+        params.target_message_id
       end
     end
 
-    def target_message_exists(channel:, guardian:)
-      return true if context.target_message_id.blank?
+    def target_message_exists(channel:, guardian:, target_message_id:)
+      return true if target_message_id.blank?
 
       target_message =
-        Chat::Message.with_deleted.find_by(id: context.target_message_id, chat_channel: channel)
+        Chat::Message.with_deleted.find_by(id: target_message_id, chat_channel: channel)
       return false if target_message.blank?
 
       return true if !target_message.trashed?
@@ -122,7 +122,7 @@ module Chat
         end
       )
 
-      context[:messages] = [
+      [
         messages_data[:messages],
         messages_data[:past_messages]&.reverse,
         messages_data[:target_message],
@@ -130,42 +130,31 @@ module Chat
       ].flatten.compact
     end
 
-    def fetch_tracking(guardian:)
-      context[:tracking] = {}
-
-      return if !context.thread_ids.present?
-
-      context[:tracking] = ::Chat::TrackingStateReportQuery.call(
-        guardian: guardian,
-        thread_ids: context.thread_ids,
-        include_threads: true,
-      )
-    end
-
     def fetch_thread_ids(messages:)
-      context[:thread_ids] = messages.map(&:thread_id).compact.uniq
+      messages.map(&:thread_id).compact.uniq
     end
 
-    def fetch_thread_participants(messages:)
-      return if context.thread_ids.empty?
+    def fetch_tracking(guardian:, thread_ids:)
+      return {} if thread_ids.blank?
 
-      context[:thread_participants] = ::Chat::ThreadParticipantQuery.call(
-        thread_ids: context.thread_ids,
-      )
+      ::Chat::TrackingStateReportQuery.(guardian:, thread_ids:, include_threads: true)
     end
 
-    def fetch_thread_memberships(guardian:)
-      return if context.thread_ids.empty?
+    def fetch_thread_participants(messages:, thread_ids:)
+      return if thread_ids.blank?
 
-      context[:thread_memberships] = ::Chat::UserChatThreadMembership.where(
-        thread_id: context.thread_ids,
-        user_id: guardian.user.id,
-      )
+      ::Chat::ThreadParticipantQuery.(thread_ids:)
     end
 
-    def update_membership_last_viewed_at(guardian:)
+    def fetch_thread_memberships(guardian:, thread_ids:)
+      return if thread_ids.blank?
+
+      ::Chat::UserChatThreadMembership.where(thread_id: thread_ids, user_id: guardian.user.id)
+    end
+
+    def update_membership_last_viewed_at(guardian:, membership:)
       Scheduler::Defer.later "Chat::ListChannelMessages - defer update_membership_last_viewed_at" do
-        context.membership&.update!(last_viewed_at: Time.zone.now)
+        membership&.update!(last_viewed_at: Time.zone.now)
       end
     end
 
