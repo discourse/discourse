@@ -1,5 +1,12 @@
 import { mentionRegex } from "pretty-text/mentions";
-import { isBoundary } from "discourse/static/prosemirror/lib/markdown-it";
+import User from "discourse/models/user";
+import {
+  isBoundary,
+  isWhiteSpace,
+} from "discourse/static/prosemirror/lib/markdown-it";
+import { getChangedRanges } from "discourse/static/prosemirror/lib/plugin-utils";
+
+const invalidUsernames = new Set();
 
 /** @type {RichEditorExtension} */
 const extension = {
@@ -15,7 +22,8 @@ const extension = {
           tag: "a.mention",
           preserveWhitespace: "full",
           getAttrs: (dom) => {
-            return { name: dom.getAttribute("data-name") };
+            const name = dom.getAttribute("data-name");
+            return { name };
           },
         },
       ],
@@ -29,30 +37,10 @@ const extension = {
     },
   },
 
-  inputRules: {
-    // TODO(renato): pass unicodeUsernames?
-    match: new RegExp(`(^|\\W)(${mentionRegex().source}) $`),
-    handler: (state, match, start, end) => {
-      const { $from } = state.selection;
-      if ($from.nodeBefore?.type === state.schema.nodes.mention) {
-        return null;
-      }
-      const mentionStart = start + match[1].length;
-      const name = match[2].slice(1);
-      return state.tr.replaceWith(mentionStart, end, [
-        state.schema.nodes.mention.create({ name }),
-        state.schema.text(" "),
-      ]);
-    },
-    options: { undoable: false },
-  },
-
   parse: {
     mention: {
       block: "mention",
       getAttrs: (token, tokens, i) => ({
-        // this is not ideal, but working around the mention_open/close structure
-        // a text is expected just after the mention_open token
         name: tokens.splice(i + 1, 1)[0].content.slice(1),
       }),
     },
@@ -74,6 +62,238 @@ const extension = {
       }
     },
   },
+
+  plugins({
+    pmState: { Plugin, PluginKey },
+    pmView: { Decoration, DecorationSet },
+  }) {
+    const plugin = new PluginKey("mention");
+
+    function findMentionsInNode(node, pos) {
+      if (!node.isText) {
+        return [];
+      }
+
+      const decorations = [];
+      const text = node.text;
+      let match;
+
+      const regex = new RegExp(
+        `(^|\\W)(${mentionRegex().source})(?=\\s|$)`,
+        "g"
+      );
+
+      while ((match = regex.exec(text)) !== null) {
+        const name = match[2].slice(1);
+        const start = pos + match.index + match[1].length;
+        const end = start + match[2].length;
+
+        if (invalidUsernames.has(name)) {
+          continue;
+        }
+
+        // Create the decoration to mark where we'll replace with a mention
+        // The decoration will be replaced completely during the validation process
+        decorations.push(
+          Decoration.inline(start, end, {
+            class: "mention-loading",
+            nodeName: "span",
+            "data-name": name,
+          })
+        );
+      }
+
+      return decorations;
+    }
+
+    const mentionPlugin = new Plugin({
+      key: plugin,
+      state: {
+        init() {
+          return DecorationSet.empty;
+        },
+        apply(tr, set, oldState, newState) {
+          const meta = tr.getMeta(plugin);
+
+          if (meta?.removeDecorations) {
+            set = set.remove(meta.removeDecorations);
+          }
+
+          set = set.map(tr.mapping, tr.doc);
+
+          if (!isWhiteSpace(tr.doc.textContent.slice(-1))) {
+            return set;
+          }
+
+          const changedRanges = getChangedRanges(tr);
+
+          changedRanges.forEach(({ new: { from, to } }) => {
+            const decorations = [];
+
+            newState.doc.nodesBetween(from, to, (node, pos) => {
+              const newDecorations = findMentionsInNode(node, pos);
+              decorations.push(...newDecorations);
+              return true;
+            });
+
+            if (decorations.length > 0) {
+              set = set.add(newState.doc, decorations);
+            }
+          });
+
+          return set;
+        },
+      },
+
+      props: {
+        decorations(state) {
+          return this.getState(state);
+        },
+      },
+
+      view() {
+        return {
+          update(view) {
+            const decorations = plugin.getState(view.state);
+
+            let pendingDecorations = [];
+            let removeDecorations = [];
+            let pendingChanges = [];
+
+            function traverseDecorationSet(decorSet) {
+              if (decorSet.local) {
+                decorSet.local.forEach((decoration) => {
+                  if (decoration.type?.attrs?.class === "mention-loading") {
+                    pendingDecorations.push(decoration);
+                  }
+                });
+              }
+
+              // Check children (recursively)
+              // DecorationSet children are structured as [start, end, child, start, end, child, ...]
+              if (decorSet.children) {
+                for (let i = 2; i < decorSet.children.length; i += 3) {
+                  if (decorSet.children[i]) {
+                    traverseDecorationSet(decorSet.children[i]);
+                  }
+                }
+              }
+            }
+
+            traverseDecorationSet(decorations);
+
+            if (view._processingMentions) {
+              return;
+            }
+
+            if (pendingDecorations.length === 0) {
+              return;
+            }
+
+            view._processingMentions = true;
+
+            const processMentions = async () => {
+              try {
+                for (const decoration of pendingDecorations) {
+                  const from = decoration.from + 1;
+                  const to = decoration.to + 1;
+                  const text = view.state.doc.textBetween(from, to);
+
+                  if (!text) {
+                    removeDecorations.push(decoration);
+                    continue;
+                  }
+
+                  const username = decoration.type?.attrs?.["data-name"];
+
+                  if (!username || invalidUsernames.has(username)) {
+                    removeDecorations.push(decoration);
+                    continue;
+                  }
+
+                  try {
+                    const isValid = await validateMention(username);
+
+                    // creates a mention node directly at the decoration position
+                    // completely replaces the span.mention-loading element
+                    if (isValid) {
+                      pendingChanges.push({
+                        type: "replace",
+                        from,
+                        to,
+                        node: view.state.schema.nodes.mention.create({
+                          name: username,
+                        }),
+                      });
+                    } else {
+                      // replaces invalid mentions with plain text
+                      pendingChanges.push({
+                        type: "replace",
+                        from,
+                        to,
+                        node: view.state.schema.text(text),
+                      });
+                    }
+                  } catch (error) {
+                    // eslint-disable-next-line no-console
+                    console.warn("[mention] Error validating mention:", error);
+                  } finally {
+                    removeDecorations.push(decoration);
+                  }
+                }
+
+                const tr = view.state.tr;
+
+                if (pendingChanges.length) {
+                  pendingChanges.forEach((change) => {
+                    if (change.type === "replace") {
+                      tr.replaceWith(change.from, change.to, change.node);
+                    }
+                  });
+                }
+
+                if (removeDecorations.length) {
+                  tr.setMeta(plugin, { removeDecorations });
+                  removeDecorations = [];
+                }
+
+                view.dispatch(tr);
+              } finally {
+                view._processingMentions = false;
+              }
+            };
+
+            processMentions().then(() => {
+              view._processingMentions = false;
+            });
+          },
+        };
+      },
+    });
+
+    return mentionPlugin;
+  },
 };
+
+async function checkUserExists(username) {
+  if (!username || username.length < 1 || invalidUsernames.has(username)) {
+    return { exists: false };
+  }
+
+  try {
+    const user = await User.findByUsername(username);
+    if (user) {
+      return { exists: true };
+    }
+  } catch (error) {
+    invalidUsernames.add(username);
+    return { exists: false, error };
+  }
+}
+
+async function validateMention(name) {
+  const result = await checkUserExists(name);
+  return result.exists;
+}
 
 export default extension;
