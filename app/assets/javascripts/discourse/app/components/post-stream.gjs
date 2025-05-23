@@ -379,7 +379,7 @@ export default class PostStream extends Component {
     }
 
     if (
-      this.#observedCloakBoundaries.above !== this.cloakAbove &&
+      this.#observedCloakBoundaries.above !== this.cloakAbove ||
       this.#observedCloakBoundaries.below !== this.cloakBelow
     ) {
       discourseDebounce(
