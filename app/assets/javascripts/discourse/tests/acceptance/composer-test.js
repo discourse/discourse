@@ -682,36 +682,36 @@ import { i18n } from "discourse-i18n";
 
         assert
           .dom("#reply-control.open")
-          .exists("starts in open state by default");
+          .isVisible("starts in open state by default");
 
         await click(".toggle-fullscreen");
 
         assert
           .dom("#reply-control.fullscreen")
-          .exists("expands composer to full screen");
+          .isVisible("expands composer to full screen");
 
         assert
           .dom(".composer-fullscreen-prompt")
-          .exists("the exit fullscreen prompt is visible");
+          .isVisible("the fullscreen prompt is visible");
 
         await click(".toggle-fullscreen");
 
         assert
           .dom("#reply-control.open")
-          .exists("collapses composer to regular size");
+          .isVisible("collapses composer to regular size");
 
         await fillIn(".d-editor-input", "This is a dirty reply");
         await click(".toggler");
 
         assert
           .dom("#reply-control.draft")
-          .exists("collapses composer to draft bar");
+          .isVisible("collapses composer to draft bar");
 
         await click(".toggle-fullscreen");
 
         assert
           .dom("#reply-control.open")
-          .exists("from draft, it expands composer back to open state");
+          .isVisible("from draft, it expands composer back to open state");
       });
 
       test("Composer fullscreen submit button", async function (assert) {
