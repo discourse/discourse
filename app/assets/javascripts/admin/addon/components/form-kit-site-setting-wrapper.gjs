@@ -93,17 +93,19 @@ class SecondaryActions extends Component {
   }
 
   <template>
-    <@actions.Button
-      @icon="check"
-      @disabled={{@field.isPristine}}
-      @action={{this.save}}
-      @forwardEvent={{true}}
-    />
-    <@actions.Button
-      @icon="xmark"
-      @disabled={{@field.isPristine}}
-      @action={{this.discardChanges}}
-    />
+    {{#unless @field.isPristine}}
+      <@actions.Button
+        @icon="check"
+        @disabled={{@field.isPristine}}
+        @action={{this.save}}
+        @forwardEvent={{true}}
+      />
+      <@actions.Button
+        @icon="xmark"
+        @disabled={{@field.isPristine}}
+        @action={{this.discardChanges}}
+      />
+    {{/unless}}
   </template>
 }
 
