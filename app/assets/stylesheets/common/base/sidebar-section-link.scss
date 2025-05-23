@@ -23,7 +23,7 @@
     color: var(--d-sidebar-link-color);
     transition: background-color 0.25s;
 
-    &:focus,
+    &:focus-visible,
     &:hover {
       background: var(--d-sidebar-highlight-background);
       color: var(--d-sidebar-highlight-color);
