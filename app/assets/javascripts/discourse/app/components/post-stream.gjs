@@ -68,6 +68,7 @@ export default class PostStream extends Component {
   #cloakingObserver;
   #currentPostElement;
   #currentPostObserver;
+  #currentPostEyelineTrackingEnabled = false;
   #postsOnScreen = {};
   #observedCloakBoundaries = {
     above: null,
@@ -124,9 +125,9 @@ export default class PostStream extends Component {
     this.appEvents.off("post-stream:posted", this, "_posted");
 
     // disconnect the intersection observers
-    this.#currentPostObserver.disconnect();
-    this.#viewportObserver.disconnect();
-    this.#cloakingObserver.disconnect();
+    this.#currentPostObserver?.disconnect();
+    this.#viewportObserver?.disconnect();
+    this.#cloakingObserver?.disconnect();
 
     if (DEBUG_EYELINE) {
       this.#bottomEyelineDebugElement.remove();
@@ -225,34 +226,17 @@ export default class PostStream extends Component {
 
   @bind
   onScroll() {
-    const viewportOffset = this.#calculateBottomEyelineViewportOffset();
-
-    if (DEBUG_EYELINE) {
-      this.#debugUpdateBottomEyelinePosition(viewportOffset);
-    }
-
-    if (!this.#bottomEyelineTrackingEnabled) {
-      const viewportHeight = window.innerHeight;
-      const currentPostHeight =
-        this.#currentPostElement?.getBoundingClientRect()?.height;
-
-      if (currentPostHeight > viewportHeight) {
-        this.#bottomEyelineTrackingEnabled = true;
-      }
-    }
-
-    if (this.#bottomEyelineTrackingEnabled) {
-      discourseDebounce(
-        this,
-        this.#findPostMatchingBottomEyeline,
-        SCROLL_BATCH_INTERVAL_MS
-      );
-    }
+    discourseDebounce(this, this.#scrollTriggered, SCROLL_BATCH_INTERVAL_MS);
   }
 
   @bind
   onWindowResize(event) {
-    discourseDebounce(this, this.#updateCloakOffset, event, RESIZE_DEBOUNCE_MS);
+    discourseDebounce(
+      this,
+      this.#windowResizeTriggered,
+      event,
+      RESIZE_DEBOUNCE_MS
+    );
   }
 
   @bind
@@ -275,7 +259,7 @@ export default class PostStream extends Component {
     this.#wrapperElement = element;
 
     schedule("afterRender", () => {
-      this.onScroll();
+      this.#scrollTriggered();
     });
   }
 
@@ -300,8 +284,10 @@ export default class PostStream extends Component {
         position: "fixed",
         top: `${viewportOffset}px`,
         width: "100%",
-        border: "1px solid red",
-        opacity: this.#bottomEyelineTrackingEnabled ? 1 : 0.25,
+        border: this.#isEyelineTrackingEnabled
+          ? "1px solid red"
+          : "1px solid green",
+        opacity: this.#isEyelineTrackingEnabled ? 1 : 0.25,
         zIndex: 999999,
       });
     }
@@ -551,9 +537,7 @@ export default class PostStream extends Component {
     this.args.currentPostScrolled(event);
   }
 
-  #findPostMatchingBottomEyeline() {
-    const eyeLineOffset = this.#calculateBottomEyelineViewportOffset();
-
+  #findPostMatchingBottomEyeline(eyeLineOffset) {
     let target, percentScrolled;
     for (const { element } of Object.values(this.#postsOnScreen)) {
       const { top, bottom } = element.getBoundingClientRect();
@@ -583,16 +567,52 @@ export default class PostStream extends Component {
     );
   }
 
+  #isCurrentPostHigherThanViewport() {
+    const viewportHeight = window.innerHeight;
+    const currentPostHeight =
+      this.#currentPostElement?.getBoundingClientRect()?.height;
+
+    return currentPostHeight > viewportHeight;
+  }
+
+  get #isEyelineTrackingEnabled() {
+    return (
+      this.#bottomEyelineTrackingEnabled ||
+      this.#currentPostEyelineTrackingEnabled
+    );
+  }
+
+  #scrollTriggered() {
+    const eyelineOffset = this.#calculateBottomEyelineViewportOffset();
+
+    if (this.#isEyelineTrackingEnabled) {
+      discourseDebounce(
+        this,
+        this.#findPostMatchingBottomEyeline,
+        eyelineOffset,
+        SCROLL_BATCH_INTERVAL_MS
+      );
+    }
+
+    if (DEBUG_EYELINE) {
+      this.#debugUpdateBottomEyelinePosition(eyelineOffset);
+    }
+  }
+
   #toggleBottomEyelineTracking(enabled) {
     this.#bottomEyelineTrackingEnabled = enabled;
+
     if (enabled) {
       if (this.#currentPostElement) {
         this.#currentPostObserver.unobserve(this.#currentPostElement);
       }
 
-      this.onScroll();
+      this.#scrollTriggered();
     } else {
-      if (this.#currentPostElement) {
+      if (
+        this.#currentPostElement &&
+        !this.#currentPostEyelineTrackingEnabled
+      ) {
         this.#currentPostObserver.observe(this.#currentPostElement);
       }
     }
@@ -633,7 +653,7 @@ export default class PostStream extends Component {
     );
 
     // update the current post to enable fine grained scrolling tracking for it
-    if (!this.#bottomEyelineTrackingEnabled) {
+    if (!this.#isEyelineTrackingEnabled) {
       this.#updateCurrentPost(
         this.#onScreenBoundaries.min !== null
           ? this.#postsOnScreen[this.#onScreenBoundaries.min]?.element
@@ -671,7 +691,12 @@ export default class PostStream extends Component {
     const currentPost = this.#currentPostElement?.[POST_MODEL];
     const newPost = newElement?.[POST_MODEL];
 
+    this.#currentPostElement = newElement;
+    this.#updateCurrentPostEyelineTrackingEnabled();
+
     if (currentPost !== newPost) {
+      this.#scrollTriggered();
+
       discourseDebounce(
         this,
         this.#currentPostWasChanged,
@@ -680,13 +705,16 @@ export default class PostStream extends Component {
       );
     }
 
-    this.#currentPostElement = newElement;
-
     if (newElement) {
-      if (!this.#bottomEyelineTrackingEnabled) {
+      if (!this.#isEyelineTrackingEnabled) {
         this.#currentPostObserver.observe(newElement);
       }
     }
+  }
+
+  #updateCurrentPostEyelineTrackingEnabled() {
+    this.#currentPostEyelineTrackingEnabled =
+      this.#isCurrentPostHigherThanViewport();
   }
 
   #updateScreenTracking(postsOnScreen) {
@@ -702,6 +730,11 @@ export default class PostStream extends Component {
     });
 
     this.screenTrack.setOnscreen(onScreenPostsNumbers, readPostNumbers);
+  }
+
+  #windowResizeTriggered(event) {
+    this.#updateCloakOffset(event);
+    this.#updateCurrentPostEyelineTrackingEnabled();
   }
 
   <template>
