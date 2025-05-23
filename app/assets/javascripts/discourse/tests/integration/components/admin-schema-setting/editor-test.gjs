@@ -1553,7 +1553,7 @@ module(
 
       const inputFields = new InputFieldsFromDOM();
 
-      assert.dom(inputFields.fields.name.labelElement).hasText("name");
+      assert.dom(inputFields.fields.name.labelElement).hasText("Level 2 Label");
 
       await click(TOP_LEVEL_ADD_BTN);
       tree.refresh();
