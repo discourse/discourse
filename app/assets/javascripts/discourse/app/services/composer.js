@@ -846,13 +846,7 @@ export default class ComposerService extends Service {
 
     const composer = this.model;
 
-    if (
-      isEmpty(composer?.reply) &&
-      isEmpty(composer?.title) &&
-      !this.hasFormTemplate
-    ) {
-      this.close();
-    } else if (composer?.viewOpenOrFullscreen) {
+    if (composer?.viewOpenOrFullscreen) {
       this.shrink();
     } else {
       await this.cancelComposer();
@@ -1671,15 +1665,7 @@ export default class ComposerService extends Service {
   }
 
   shrink() {
-    if (
-      this.get("model.replyDirty") ||
-      (this.get("model.canEditTitle") && this.get("model.titleDirty")) ||
-      this.hasFormTemplate
-    ) {
-      this.collapse();
-    } else {
-      this.close();
-    }
+    this.collapse();
   }
 
   _saveDraft() {
