@@ -231,6 +231,16 @@ export default class PostStream extends Component {
       this.#debugUpdateBottomEyelinePosition(viewportOffset);
     }
 
+    if (!this.#bottomEyelineTrackingEnabled) {
+      const viewportHeight = window.innerHeight;
+      const currentPostHeight =
+        this.#currentPostElement?.getBoundingClientRect()?.height;
+
+      if (currentPostHeight > viewportHeight) {
+        this.#bottomEyelineTrackingEnabled = true;
+      }
+    }
+
     if (this.#bottomEyelineTrackingEnabled) {
       discourseDebounce(
         this,
@@ -557,13 +567,10 @@ export default class PostStream extends Component {
 
     if (target) {
       this.#updateCurrentPost(target);
-
-      discourseDebounce(
-        this,
-        this.#currentPostWasScrolled,
-        { element: target, percent: percentScrolled },
-        SCROLL_BATCH_INTERVAL_MS
-      );
+      this.#currentPostWasScrolled({
+        element: target,
+        percent: percentScrolled,
+      });
     }
   }
 
@@ -626,11 +633,13 @@ export default class PostStream extends Component {
     );
 
     // update the current post to enable fine grained scrolling tracking for it
-    this.#updateCurrentPost(
-      this.#onScreenBoundaries.min !== null
-        ? this.#postsOnScreen[this.#onScreenBoundaries.min]?.element
-        : null
-    );
+    if (!this.#bottomEyelineTrackingEnabled) {
+      this.#updateCurrentPost(
+        this.#onScreenBoundaries.min !== null
+          ? this.#postsOnScreen[this.#onScreenBoundaries.min]?.element
+          : null
+      );
+    }
   }
 
   #updateCloakActiveBoundaries({ above, below }) {
