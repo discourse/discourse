@@ -139,7 +139,7 @@ RSpec.describe Chat::ListChannelMessages do
     context "with no params" do
       fab!(:messages) { Fabricate.times(20, :chat_message, chat_channel: channel) }
 
-      it { is_expected.to be_a_success }
+      it { is_expected.to run_successfully }
 
       it "returns messages" do
         expect(result.can_load_more_past).to eq(false)
@@ -158,7 +158,7 @@ RSpec.describe Chat::ListChannelMessages do
 
       let(:optional_params) { { target_date: 2.days.ago } }
 
-      it { is_expected.to be_a_success }
+      it { is_expected.to run_successfully }
 
       it "includes past and future messages" do
         expect(result.messages).to eq([past_message, future_message])
@@ -175,7 +175,7 @@ RSpec.describe Chat::ListChannelMessages do
         thread_1.add(user)
       end
 
-      it { is_expected.to be_a_success }
+      it { is_expected.to run_successfully }
 
       it "returns tracking" do
         Fabricate(:chat_message, chat_channel: channel, thread: thread_1)
@@ -195,7 +195,7 @@ RSpec.describe Chat::ListChannelMessages do
       context "when thread is forced" do
         before { thread_1.update!(force: true) }
 
-        it { is_expected.to be_a_success }
+        it { is_expected.to run_successfully }
 
         it "returns tracking" do
           Fabricate(:chat_message, chat_channel: channel, thread: thread_1)
@@ -222,7 +222,7 @@ RSpec.describe Chat::ListChannelMessages do
         thread_1.add(user)
       end
 
-      it { is_expected.to be_a_success }
+      it { is_expected.to run_successfully }
 
       it "returns tracking" do
         Fabricate(:chat_message, chat_channel: channel, thread: thread_1)
