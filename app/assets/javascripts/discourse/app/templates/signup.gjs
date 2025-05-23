@@ -56,16 +56,18 @@ export default RouteTemplate(
               @controller.authOptions.auth_provider
             }}
           >
-            <SignupProgressBar @step={{@controller.progressBarStep}} />
-            <WelcomeHeader
-              id="create-account-title"
-              @header={{i18n "create_account.header_title"}}
-            >
-              <PluginOutlet
-                @name="create-account-header-bottom"
-                @outletArgs={{lazyHash showLogin=(routeAction "showLogin")}}
-              />
-            </WelcomeHeader>
+            {{#unless @controller.skipConfirmation}}
+              <SignupProgressBar @step={{@controller.progressBarStep}} />
+              <WelcomeHeader
+                id="create-account-title"
+                @header={{i18n "create_account.header_title"}}
+              >
+                <PluginOutlet
+                  @name="create-account-header-bottom"
+                  @outletArgs={{lazyHash showLogin=(routeAction "showLogin")}}
+                />
+              </WelcomeHeader>
+            {{/unless}}
             {{#if @controller.showCreateForm}}
               <form id="login-form">
                 {{#if @controller.associateHtml}}
