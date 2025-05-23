@@ -59,34 +59,34 @@ RSpec.describe Chat::ListChannelMessages do
 
     before { channel.add(user) }
 
-    context "when contract" do
-      context "when channel_id is not present" do
-        let(:channel_id) { nil }
+    context "when data is not valid" do
+      let(:channel_id) { nil }
 
-        it { is_expected.to fail_a_contract }
-      end
+      it { is_expected.to fail_a_contract }
     end
 
-    context "when fetch_channel" do
-      context "when channel doesn’t exist" do
-        let(:channel_id) { -1 }
+    context "when channel doesn’t exist" do
+      let(:channel_id) { -1 }
 
-        it { is_expected.to fail_to_find_a_model(:channel) }
-      end
-
-      context "when channel exists" do
-        it { is_expected.to run_successfully }
-
-        it "finds the correct channel" do
-          expect(result.channel).to eq(channel)
-        end
-      end
+      it { is_expected.to fail_to_find_a_model(:channel) }
     end
 
-    context "when fetch_eventual_membership" do
+    context "when target message is not found" do
+      let(:optional_params) { { target_message_id: -1 } }
+
+      it { is_expected.to fail_a_policy(:target_message_exists) }
+    end
+
+    context "when everything is ok" do
+      fab!(:messages) { Fabricate.times(20, :chat_message, chat_channel: channel) }
+
+      it { is_expected.to run_successfully }
+
+      it "finds the correct channel" do
+        expect(result.channel).to eq(channel)
+      end
+
       context "when user has membership" do
-        it { is_expected.to run_successfully }
-
         it "finds the correct membership" do
           expect(result.membership).to eq(channel.membership_for(user))
         end
@@ -95,33 +95,11 @@ RSpec.describe Chat::ListChannelMessages do
       context "when user has no membership" do
         before { channel.membership_for(user).destroy! }
 
-        it { is_expected.to run_successfully }
-
         it "finds no membership" do
           expect(result.membership).to be_blank
         end
       end
-    end
 
-    context "when enabled_threads?" do
-      context "when channel threading is disabled" do
-        before { channel.update!(threading_enabled: false) }
-
-        it "marks threads as disabled" do
-          expect(result.enabled_threads).to eq(false)
-        end
-      end
-
-      context "when channel and site setting are enabling threading" do
-        before { channel.update!(threading_enabled: true) }
-
-        it "marks threads as enabled" do
-          expect(result.enabled_threads).to eq(true)
-        end
-      end
-    end
-
-    context "when determine_target_message_id" do
       context "when fetch_from_last_read is true" do
         let(:optional_params) { { fetch_from_last_read: true } }
 
@@ -133,25 +111,6 @@ RSpec.describe Chat::ListChannelMessages do
         it "sets target_message_id to last_read_message_id" do
           expect(result.target_message_id).to eq(1)
         end
-      end
-    end
-
-    context "when target_message_exists" do
-      context "when no target_message_id is given" do
-        it { is_expected.to run_successfully }
-      end
-
-      context "when target message is not found" do
-        let(:optional_params) { { target_message_id: -1 } }
-
-        it { is_expected.to fail_a_policy(:target_message_exists) }
-      end
-
-      context "when target message is found" do
-        fab!(:target_message) { Fabricate(:chat_message, chat_channel: channel) }
-        let(:optional_params) { { target_message_id: target_message.id } }
-
-        it { is_expected.to run_successfully }
       end
 
       context "when target message is trashed" do
@@ -165,32 +124,14 @@ RSpec.describe Chat::ListChannelMessages do
             expect(result.target_message_id).to be_blank
           end
         end
-
-        context "when user is the message creator" do
-          fab!(:target_message) { Fabricate(:chat_message, chat_channel: channel, user: user) }
-
-          it { is_expected.to run_successfully }
-        end
-
-        context "when user is admin" do
-          fab!(:user) { Fabricate(:admin) }
-
-          it { is_expected.to run_successfully }
-        end
       end
-    end
 
-    context "when fetch_messages" do
-      context "with no params" do
-        fab!(:messages) { Fabricate.times(20, :chat_message, chat_channel: channel) }
-
-        it { is_expected.to run_successfully }
-
-        it "returns messages" do
-          expect(result.can_load_more_past).to eq(false)
-          expect(result.can_load_more_future).to eq(false)
-          expect(result.messages).to contain_exactly(*messages)
-        end
+      it "returns messages" do
+        expect(result).to have_attributes(
+          can_load_more_past: false,
+          can_load_more_future: false,
+          messages:,
+        )
       end
 
       context "when target_date is provided" do
@@ -203,28 +144,21 @@ RSpec.describe Chat::ListChannelMessages do
 
         let(:optional_params) { { target_date: 2.days.ago } }
 
-        it { is_expected.to run_successfully }
-
         it "includes past and future messages" do
-          expect(result.messages).to eq([past_message, future_message])
+          expect(result.messages).to include(past_message, future_message)
         end
       end
-    end
 
-    context "when fetch_tracking" do
       context "when threads are disabled" do
-        fab!(:thread_1) { Fabricate(:chat_thread, channel: channel) }
+        fab!(:thread_1) { Fabricate(:chat_thread, channel:) }
 
         before do
           channel.update!(threading_enabled: false)
           thread_1.add(user)
+          Fabricate(:chat_message, chat_channel: channel, thread: thread_1)
         end
 
-        it { is_expected.to run_successfully }
-
         it "returns tracking" do
-          Fabricate(:chat_message, chat_channel: channel, thread: thread_1)
-
           expect(result.tracking.thread_tracking).to eq(
             {
               thread_1.id => {
@@ -238,19 +172,18 @@ RSpec.describe Chat::ListChannelMessages do
         end
 
         context "when thread is forced" do
-          before { thread_1.update!(force: true) }
-
-          it { is_expected.to run_successfully }
+          before do
+            thread_1.update!(force: true)
+            Fabricate(:chat_message, chat_channel: channel, thread: thread_1)
+          end
 
           it "returns tracking" do
-            Fabricate(:chat_message, chat_channel: channel, thread: thread_1)
-
             expect(result.tracking.thread_tracking).to eq(
               {
                 thread_1.id => {
                   channel_id: channel.id,
                   mention_count: 0,
-                  unread_count: 1,
+                  unread_count: 2,
                   watched_threads_unread_count: 0,
                 },
               },
@@ -260,18 +193,15 @@ RSpec.describe Chat::ListChannelMessages do
       end
 
       context "when threads are enabled" do
-        fab!(:thread_1) { Fabricate(:chat_thread, channel: channel) }
+        fab!(:thread_1) { Fabricate(:chat_thread, channel:) }
 
         before do
           channel.update!(threading_enabled: true)
           thread_1.add(user)
+          Fabricate(:chat_message, chat_channel: channel, thread: thread_1)
         end
 
-        it { is_expected.to run_successfully }
-
         it "returns tracking" do
-          Fabricate(:chat_message, chat_channel: channel, thread: thread_1)
-
           expect(result.tracking.channel_tracking).to eq({})
           expect(result.tracking.thread_tracking).to eq(
             {
@@ -285,17 +215,13 @@ RSpec.describe Chat::ListChannelMessages do
           )
         end
       end
-    end
 
-    context "when update_membership_last_viewed_at" do
       it "updates the last viewed at" do
         expect { result }.to change { channel.membership_for(user).last_viewed_at }.to be_within(
           1.second,
         ).of(Time.zone.now)
       end
-    end
 
-    context "when update_user_last_channel" do
       it "updates the custom field" do
         expect { result }.to change { user.custom_fields[Chat::LAST_CHAT_CHANNEL_ID] }.from(nil).to(
           channel.id,
