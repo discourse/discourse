@@ -1,9 +1,6 @@
 import { mentionRegex } from "pretty-text/mentions";
 import User from "discourse/models/user";
-import {
-  isBoundary,
-  isWhiteSpace,
-} from "discourse/static/prosemirror/lib/markdown-it";
+import { isBoundary } from "discourse/static/prosemirror/lib/markdown-it";
 import { getChangedRanges } from "discourse/static/prosemirror/lib/plugin-utils";
 
 const invalidUsernames = new Set();
@@ -121,7 +118,7 @@ const extension = {
 
           set = set.map(tr.mapping, tr.doc);
 
-          if (!isWhiteSpace(tr.doc.textContent.slice(-1))) {
+          if (!isBoundary(tr.doc.textContent.slice(-1), 0)) {
             return set;
           }
 
