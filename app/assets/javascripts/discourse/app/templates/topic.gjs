@@ -428,7 +428,7 @@ export default RouteTemplate(
                     <PluginOutlet
                       @name="topic-above-posts"
                       @connectorTagName="div"
-                      @outletArgs={{hash model=@controller.model}}
+                      @outletArgs={{lazyHash model=@controller.model}}
                     />
                   </span>
 
