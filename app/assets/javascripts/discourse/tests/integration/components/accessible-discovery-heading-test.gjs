@@ -20,7 +20,7 @@ module("Component | discovery/accessible-discovery-heading", function (hooks) {
 
   test("it renders the correct label for a single tag", async function (assert) {
     this.setProperties({
-      filter: "tag",
+      filter: "top",
       tag: { id: "javascript" },
     });
 
@@ -31,14 +31,14 @@ module("Component | discovery/accessible-discovery-heading", function (hooks) {
     assert
       .dom("#topic-list-heading")
       .hasText(
-        "topics tagged with javascript",
+        "Top topics tagged javascript",
         "The label is correct for a single tag"
       );
   });
 
   test("it renders the correct label for a category and tag", async function (assert) {
     this.setProperties({
-      filter: "tag",
+      filter: "latest",
       category: { name: "Development" },
       tag: { id: "javascript" },
     });
@@ -50,7 +50,7 @@ module("Component | discovery/accessible-discovery-heading", function (hooks) {
     assert
       .dom("#topic-list-heading")
       .hasText(
-        "topics in Development tagged with javascript",
+        "Latest topics in Development tagged javascript",
         "The label is correct for a category and tag"
       );
   });
