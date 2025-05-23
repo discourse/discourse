@@ -1,3 +1,4 @@
+import { Textarea } from "@ember/component";
 import { array, concat, fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { getProperties } from "@ember/object";
@@ -23,7 +24,6 @@ import SelectedPosts from "discourse/components/selected-posts";
 import SharedDraftControls from "discourse/components/shared-draft-controls";
 import SignupCta from "discourse/components/signup-cta";
 import SlowModeInfo from "discourse/components/slow-mode-info";
-import TextField from "discourse/components/text-field";
 import TopicAdminMenu from "discourse/components/topic-admin-menu";
 import TopicCategory from "discourse/components/topic-category";
 import TopicFooterButtons from "discourse/components/topic-footer-buttons";
@@ -120,11 +120,14 @@ export default RouteTemplate(
                         buffered=@controller.buffered
                       }}
                     >
-                      <TextField
+                      <Textarea
                         @id="edit-title"
                         @value={{@controller.buffered.title}}
                         @maxlength={{@controller.siteSettings.max_topic_title_length}}
-                        @autofocus="true"
+                        autofocus="true"
+                        id="edit-title"
+                        {{on "input" @controller.autoResize}}
+                        {{on "focusin" @controller.autoResize}}
                       />
                     </PluginOutlet>
                   </div>

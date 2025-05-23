@@ -8,6 +8,7 @@ import { service } from "@ember/service";
 import { isEmpty, isPresent } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
 import BufferedProxy from "ember-buffered-proxy/proxy";
+import { log } from "qunit";
 import { Promise } from "rsvp";
 import {
   CLOSE_INITIATED_BY_BUTTON,
@@ -372,6 +373,15 @@ export default class TopicController extends Controller {
     if (this.get("model.details.can_edit")) {
       this.set("editingTopic", true);
     }
+  }
+
+  @action
+  autoResize(event) {
+    const textArea = event.target;
+    const scrollHeight = textArea.scrollHeight;
+
+    textArea.style.height = "auto";
+    textArea.style.height = scrollHeight + "px";
   }
 
   @action

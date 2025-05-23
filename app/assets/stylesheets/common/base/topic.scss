@@ -192,7 +192,6 @@
         outline: 2px solid transparent;
         border-radius: var(--d-border-radius);
         transition: outline ease-in-out 0.2s;
-        padding: 0.25rem;
         transition-delay: 0.1s;
       }
 
@@ -206,6 +205,20 @@
 
       &.editing-topic {
         transition: none;
+      }
+
+      &.editing-topic #edit-title {
+        border: none;
+        font-size: var(--font-up-4);
+        line-height: var(--line-height-medium);
+        font-weight: bold;
+        padding: 0;
+        resize: none;
+        height: var(--font-up-4);
+      }
+
+      &.editing-topic #edit-title:focus {
+        outline: none;
       }
     }
 
