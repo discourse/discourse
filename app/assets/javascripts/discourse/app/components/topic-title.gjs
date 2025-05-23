@@ -50,10 +50,7 @@ export default class TopicTitle extends Component {
       id="topic-title"
       class="container"
     >
-      <div class="title-wrapper">
-        {{yield}}
-      </div>
-
+      {{yield}}
       <PluginOutlet
         @name="topic-title"
         @connectorTagName="div"

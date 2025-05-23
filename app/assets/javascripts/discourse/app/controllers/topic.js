@@ -61,6 +61,7 @@ export function registerCustomPostMessageCallback(type, callback) {
 
 export default class TopicController extends Controller {
   @service composer;
+  @service capabilities;
   @service dialog;
   @service documentTitle;
   @service screenTrack;
@@ -155,6 +156,12 @@ export default class TopicController extends Controller {
   @discourseComputed("model.postStream.loaded", "model.is_shared_draft")
   showSharedDraftControls(loaded, isSharedDraft) {
     return loaded && isSharedDraft;
+  }
+
+  @discourseComputed("model.details.can_edit")
+  showEditButton(canEdit) {
+    const canHover = window.matchMedia("(hover: hover)").matches;
+    return !canHover && canEdit;
   }
 
   @discourseComputed("site.mobileView", "model.posts_count")
@@ -371,13 +378,26 @@ export default class TopicController extends Controller {
   jumpTop(event) {
     if (event && wantsNewWindow(event)) {
       return;
+    } else {
+      DiscourseURL.routeTo(this.get("model.firstPostUrl"), {
+        skipIfOnScreen: false,
+        keepFilter: true,
+      });
     }
+  }
 
+  @action
+  titleClick(event) {
+    if (event && wantsNewWindow(event)) {
+      return;
+    }
     event?.preventDefault();
-    DiscourseURL.routeTo(this.get("model.firstPostUrl"), {
-      skipIfOnScreen: false,
-      keepFilter: true,
-    });
+    // If the user is selecting the title, don't go into edit mode
+    const selection = window.getSelection();
+    if (selection.toString().length > 0) {
+      return;
+    }
+    this.editTopic(event);
   }
 
   @action

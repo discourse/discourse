@@ -152,6 +152,7 @@
 .title-wrapper {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
 
   .topic-statuses {
     line-height: 1.2;
@@ -172,13 +173,6 @@
   margin-bottom: 1em;
 
   .title-wrapper {
-    display: flex;
-    flex-wrap: wrap;
-
-    @media screen and (width >= 925px) {
-      width: 90%; // topic title isn't full-width on wide screens
-    }
-
     input#edit-title {
       width: 100%;
     }
@@ -187,6 +181,33 @@
       .topic-category {
         margin-top: 0.25em;
       }
+    }
+
+    @media (hover: hover) {
+      &.can-edit-topic .fancy-title {
+        outline: 2px solid transparent;
+        border-radius: var(--d-border-radius);
+        transition: outline ease-in-out 0.2s;
+        padding: 0.25rem;
+        transition-delay: 0.1s;
+      }
+
+      &.can-edit-topic:not(.editing-topic) {
+        cursor: pointer;
+      }
+
+      &.can-edit-topic:not(.editing-topic):hover .fancy-title {
+        outline: 2px solid var(--primary-400);
+      }
+
+      &.editing-topic {
+        transition: none;
+      }
+    }
+
+    &.can-edit-topic .title-wrapper .d-icon {
+      margin-left: 0.5rem;
+      font-size: var(--font-down-2);
     }
   }
 
@@ -201,14 +222,6 @@
     @include viewport.until(sm) {
       font-size: var(--font-up-3);
     }
-
-    a {
-      color: var(--primary);
-    }
-  }
-
-  a.edit-topic .d-icon {
-    font-size: 0.8em;
   }
 
   .edit-topic-title {
