@@ -2926,6 +2926,9 @@ developer:
     default: 50
     hidden: true
     client: true
+  viewport_based_mobile_mode:
+    default: false
+    client: true
 
 navigation:
   navigation_menu:

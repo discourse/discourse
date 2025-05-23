@@ -2,6 +2,7 @@ import EmberObject from "@ember/object";
 import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import NavigationBar from "discourse/components/navigation-bar";
+import { forceMobile } from "discourse/lib/mobile";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 const navItems = [
@@ -65,7 +66,7 @@ module("Integration | Component | navigation-bar", function (hooks) {
   });
 
   test("display navigation bar items behind a dropdown on mobile", async function (assert) {
-    this.site.mobileView = true;
+    forceMobile();
 
     await render(<template><NavigationBar @navItems={{navItems}} /></template>);
 
