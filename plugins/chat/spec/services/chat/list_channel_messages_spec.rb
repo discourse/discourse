@@ -49,7 +49,7 @@ RSpec.describe Chat::ListChannelMessages do
     subject(:result) { described_class.call(params:, **dependencies) }
 
     fab!(:user)
-    fab!(:channel) { Fabricate(:chat_channel) }
+    fab!(:channel) { Fabricate(:chat_channel, threading_enabled: true) }
 
     let(:guardian) { Guardian.new(user) }
     let(:channel_id) { channel.id }
@@ -78,7 +78,22 @@ RSpec.describe Chat::ListChannelMessages do
     end
 
     context "when everything is ok" do
-      fab!(:messages) { Fabricate.times(20, :chat_message, chat_channel: channel) }
+      fab!(:thread) { Fabricate(:chat_thread, channel:) }
+      fab!(:messages) do
+        [thread.original_message, *Fabricate.times(20, :chat_message, chat_channel: channel)]
+      end
+
+      let(:tracking) { double }
+      let(:thread_ids) { [thread.id] }
+
+      before do
+        thread.add(user)
+        allow(Chat::TrackingStateReportQuery).to receive(:call).with(
+          guardian:,
+          thread_ids:,
+          include_threads: true,
+        ).and_return(tracking)
+      end
 
       it { is_expected.to run_successfully }
 
@@ -149,71 +164,8 @@ RSpec.describe Chat::ListChannelMessages do
         end
       end
 
-      context "when threads are disabled" do
-        fab!(:thread_1) { Fabricate(:chat_thread, channel:) }
-
-        before do
-          channel.update!(threading_enabled: false)
-          thread_1.add(user)
-          Fabricate(:chat_message, chat_channel: channel, thread: thread_1)
-        end
-
-        it "returns tracking" do
-          expect(result.tracking.thread_tracking).to eq(
-            {
-              thread_1.id => {
-                channel_id: channel.id,
-                mention_count: 0,
-                unread_count: 0,
-                watched_threads_unread_count: 0,
-              },
-            },
-          )
-        end
-
-        context "when thread is forced" do
-          before do
-            thread_1.update!(force: true)
-            Fabricate(:chat_message, chat_channel: channel, thread: thread_1)
-          end
-
-          it "returns tracking" do
-            expect(result.tracking.thread_tracking).to eq(
-              {
-                thread_1.id => {
-                  channel_id: channel.id,
-                  mention_count: 0,
-                  unread_count: 2,
-                  watched_threads_unread_count: 0,
-                },
-              },
-            )
-          end
-        end
-      end
-
-      context "when threads are enabled" do
-        fab!(:thread_1) { Fabricate(:chat_thread, channel:) }
-
-        before do
-          channel.update!(threading_enabled: true)
-          thread_1.add(user)
-          Fabricate(:chat_message, chat_channel: channel, thread: thread_1)
-        end
-
-        it "returns tracking" do
-          expect(result.tracking.channel_tracking).to eq({})
-          expect(result.tracking.thread_tracking).to eq(
-            {
-              thread_1.id => {
-                channel_id: channel.id,
-                mention_count: 0,
-                unread_count: 1,
-                watched_threads_unread_count: 0,
-              },
-            },
-          )
-        end
+      it "returns tracking" do
+        expect(result.tracking).to eq(tracking)
       end
 
       it "updates the last viewed at" do
