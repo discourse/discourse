@@ -1063,7 +1063,6 @@ el:
       said: "%{username}:"
       profile: "Προφίλ"
       profile_possessive: "Προφίλ %{username}"
-      account_possessive: "Λογαριασμός %{name}"
       mute: "Σίγαση"
       edit: "Επεξεργασία Ρυθμίσεων"
       download_archive:
@@ -1710,7 +1709,6 @@ el:
         title: "Διεύθυνσης IP Εγγραφής"
       avatar:
         title: "Εικόνα προφίλ"
-        header_title: "προφίλ, μηνύματα, σελιδοδείκτες και προτιμήσεις"
         name_and_description: "%{name} - %{description}"
         edit: "Επεξεργασία Εικόνας Προφίλ"
       title:
@@ -3022,6 +3020,11 @@ el:
       sr_post_like_count_button:
         one: "%{count} άτομο πάτησε \"μου αρέσει\" στη δημοσίευση."
         other: "%{count} άτομα πάτησαν \"Μου αρέσει\" στην ανάρτηση."
+      localizations:
+        table:
+          actions: "Ενέργειες"
+          edit: "Επεξεργασία"
+          delete: "Σβήσιμο"
       errors:
         create: "Λυπούμαστε, παρουσιάστηκε σφάλμα κατά την δημιουργία της ανάρτησης. Προσπάθησε πάλι."
         edit: "Λυπούμαστε, παρουσιάστηκε σφάλμα κατά την επεξεργασία της ανάρτησης. Προσπάθησε πάλι."
@@ -3995,14 +3998,13 @@ el:
           title: "Αρχεία"
         legal:
           title: "Νομικά"
-        logo_and_fonts:
-          logo:
-            form:
-              mobile: "Mobile"
-              email: "Email"
-          fonts:
-            backfill_modal:
-              modal_yes: "Ναι"
+        logo:
+          form:
+            mobile: "Mobile"
+            email: "Email"
+        fonts:
+          backfill_modal:
+            modal_yes: "Ναι"
         navigation:
           title: "Πλοήγηση"
         notifications:
@@ -4385,6 +4387,8 @@ el:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
           company_name: "Όνομα"
+          extra_groups:
+            groups: "Ομάδες"
           optional: "(προεραιτικό)"
           update: "Ενημέρωση"
           saved: "αποθηκεύτηκε!"
@@ -4439,8 +4443,11 @@ el:
           delete: "Σβήσιμο"
         color_palettes:
           palette_name: "Όνομα"
+          duplicate: "Διπλότυπο"
+          delete: "Σβήσιμο"
           colors:
             title: "Χρώματα"
+          delete_confirm: "Διαγραφή αυτής της παλέτας χρωμάτων;"
       plugins:
         title: "Plugins"
         name: "Όνομα"
@@ -4685,14 +4692,18 @@ el:
           active_filter: "Ενεργοί"
           inactive_filter: "Ανενεργό"
           updates_available_filter: "Διαθέσιμες ενημερώσεις"
-          schema:
-            title: "Επεξεργασία ρύθμισης %{name}"
-            back_button: "Πίσω σε %{name}"
-            fields:
-              required: "*απαιτείται"
-              number:
-                too_small: "πρέπει να είναι μεγαλύτερο ή ίσο με %{count}"
-                too_large: "πρέπει να είναι λιγότερο ή ίσο με %{count}"
+        schema:
+          title: "Επεξεργασία ρύθμισης %{name}"
+          back_button: "Πίσω σε %{name}"
+          fields:
+            required: "*απαιτείται"
+            string:
+              too_short:
+                one: "πρέπει να είναι τουλάχιστον %{count} χαρακτήρας"
+                other: "πρέπει να είναι τουλάχιστον %{count} χαρακτήρες"
+            number:
+              too_small: "πρέπει να είναι μεγαλύτερο ή ίσο με %{count}"
+              too_large: "πρέπει να είναι λιγότερο ή ίσο με %{count}"
         colors:
           select_base:
             title: "Επιλογή βασικής παλέτας χρωμάτων"

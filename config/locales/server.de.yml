@@ -263,6 +263,7 @@ de:
         other: "darf höchstens %{count} Zeichen lang sein; du hast %{length} eingegeben."
       invalid_boolean: "Ungültiger boolescher Wert."
       taken: "wird bereits verwendet"
+      reserved: "%{name} Gruppenname reserviert ist, wähle einen anderen Namen"
       accepted: muss akzeptiert werden
       blank: darf nicht leer sein
       present: muss leer sein
@@ -2486,6 +2487,10 @@ de:
     page_loading_indicator: "Die Ladeanzeige konfigurieren, die bei der Seitennavigation in Discourse erscheint. „Spinner“ ist ein ganzseitiger Indikator. „Slider“ zeigt einen schmalen Balken am oberen Rand des Bildschirms an."
     show_user_menu_avatars: "Benutzeravatare im Benutzermenü anzeigen"
     about_page_hidden_groups: "Mitglieder bestimmter Gruppen nicht auf der /about-Seite anzeigen."
+    about_page_extra_groups: "Gruppen, die auf der Seite „Über uns“ unter den Moderatoren angezeigt werden sollen."
+    about_page_extra_groups_initial_members: "Anzahl der Mitglieder, die pro Gruppe auf der „Über uns“-Seite angezeigt werden, bevor eine „Mehr anzeigen“-Schaltfläche erscheint."
+    about_page_extra_groups_show_description: "Ob die Gruppenbeschreibungen auf der Seite „Über uns“ angezeigt werden sollen."
+    about_page_extra_groups_order: "Reihenfolge der zusätzlichen Gruppen auf der Seite „Über uns“."
     adobe_analytics_tags_url: "„Adobe Analytics“-Schlagwort-URL (`https://assets.adobedtm.com/...`)"
     view_raw_email_allowed_groups: "Gruppen, die den unformatierten E-Mail-Inhalt eines Beitrags einsehen können, wenn dieser durch eine eingehende E-Mail erstellt wurde. Dazu gehören E-Mail-Kopfzeilen und andere technische Informationen."
     experimental_content_localization: "Zeigt lokalisierte Inhalte basierend auf den Spracheinstellungen der Benutzer an. Diese Inhalte können Kategorien, Schlagwörter, Beiträge und Themen umfassen. Diese Funktion wird derzeit intensiv entwickelt."
@@ -2512,6 +2517,7 @@ de:
         one: "Darf nicht länger als %{count} Zeichen sein."
         other: "Darf nicht länger als %{count} Zeichen sein."
       invalid_json: "Ungültiges JSON."
+      invalid_object: "Ungültiges Objekt."
       invalid_reply_by_email_address: "Wert muss „%{reply_key}“ enthalten und sich von der Benachrichtigungs-E-Mail unterscheiden."
       invalid_alternative_reply_by_email_addresses: "Alle Werte müssen „%{reply_key}“ enthalten und sich von der Benachrichtigungs-E-Mail unterscheiden."
       invalid_domain_hostname: "Darf kein * oder ? enthalten."
@@ -4155,7 +4161,7 @@ de:
     title: "App kann nicht geladen werden"
     offline_page_message: "Sieht so aus, als wärst du offline! Bitte überprüfe deine Netzwerkverbindung und probiere es noch einmal."
   login_required:
-    welcome_message: "# [Willkommen bei %{title}](#welcome)"
+    welcome_message: "# Willkommen bei %{title}"
   upload:
     edit_reason: "lokale Kopien von Bildern heruntergeladen"
     unauthorized: "Entschuldige, die Datei, die du hochladen möchtest, ist nicht erlaubt (erlaubte Dateiendungen sind: %{authorized_extensions})."
@@ -4181,7 +4187,7 @@ de:
     images:
       too_large: "Entschuldige, das Bild, das du hochladen möchtest, ist zu groß (maximale Dateigröße: %{max_size_kb} KB). Bitte verkleinere es und versuche es erneut."
       too_large_humanized: "Entschuldige, das Bild, das du hochladen möchtest, ist zu groß (maximale Dateigröße: %{max_size}). Bitte verkleinere es und versuche es erneut."
-      larger_than_x_megapixels: "Entschuldige, das Bild, das du hochladen möchtest, ist zu groß (maximale Auflösung: %{max_image_megapixels} Megapixel). Bitte verkleinere es und versuche es erneut."
+      larger_than_x_megapixels: "Entschuldige, das Bild mit dem Dateinamen %{original_filename} ist zu groß (maximale Auflösung: %{max_image_megapixels} Megapixel). Bitte verkleinere es und versuche es erneut."
       size_not_found: "Entschuldige, aber wir konnten die Größe des Bildes nicht bestimmen. Vielleicht ist das Bild beschädigt?"
     placeholders:
       too_large: "(Bild größer als %{max_size_kb} KB)"
@@ -5099,6 +5105,14 @@ de:
       restored: Wiederhergestellt
     bulk_user_delete: "bei einem Massenlöschvorgang gelöscht"
     cli_bulk_post_delete: "Massenlöschung aus dem rake Task"
+    api_post_delete: "Per API gelöscht"
+    reminder_deleted: "Ersetzt durch neue Erinnerung"
+    user_associated_posts_deleted: "Benutzer wurde zerstört"
+    imap_email_deleted: "E-Mail wurde auf dem IMAP-Server gelöscht"
+    imap_email_marked_as_spam: "E-Mail wurde auf dem IMAP-Server in den Spam-Ordner verschoben"
+    auto_deleted_hidden_posts: "Versteckte Beiträge automatisch gelöscht"
+    seed_data_topic_updated: "Systemvorlage für Thema aktualisiert"
+    seed_data_topic_deleted: "Systemvorlage für Thema gelöscht"
   reviewables:
     already_handled: "Vielen Dank, aber wir haben diesen Beitrag bereits überprüft und festgestellt, dass er nicht erneut gemeldet werden muss."
     already_handled_and_user_not_exist: "Danke, aber jemand hat es bereits überprüft und dieser Benutzer existiert nicht mehr."

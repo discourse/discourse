@@ -1699,7 +1699,6 @@ bg:
         title: "IP адрес при регистрацията."
       avatar:
         title: "Аватар"
-        header_title: "профил, съобщения, отметки и предпочитания"
         name_and_description: "%{name} - %{description}"
         edit: "Редактиране на профилната снимка"
       title:
@@ -2799,6 +2798,11 @@ bg:
         other: "Преглед на %{count} отговора на"
       in_reply_to: "Заредете родителска публикация"
       view_all_posts: "Вижте всички публикации"
+      localizations:
+        table:
+          actions: "Действия"
+          edit: "Редактирай"
+          delete: "Изтрий"
       errors:
         create: "При създаването на Вашата публикация се получи грешка. Моля, опитайте отново."
         edit: "Съжаляваме, възникна грешка при редактирането на публикацията. Моля, опитайте отново. "
@@ -3471,14 +3475,13 @@ bg:
           title: "Файлове"
         legal:
           title: "Правни"
-        logo_and_fonts:
-          logo:
-            form:
-              mobile: "Мобилен"
-              email: "Имейл "
-          fonts:
-            backfill_modal:
-              modal_yes: "Да"
+        logo:
+          form:
+            mobile: "Мобилен"
+            email: "Имейл "
+        fonts:
+          backfill_modal:
+            modal_yes: "Да"
         navigation:
           title: "Навигация"
         notifications:
@@ -3691,6 +3694,8 @@ bg:
       config_areas:
         about:
           company_name: "Име"
+          extra_groups:
+            groups: "Групи"
           optional: "(по избор)"
           update: "Актуализация"
           saved: "запазено!"
@@ -3730,6 +3735,7 @@ bg:
           delete: "Изтрий"
         color_palettes:
           palette_name: "Име"
+          delete: "Изтрий"
           colors:
             title: "Цветове"
       plugins:
@@ -3857,12 +3863,12 @@ bg:
             text: "ембеднато CSS"
           all_filter: "Всички"
           active_filter: "Активни"
-          schema:
-            fields:
-              required: "*задъжителни"
-              number:
-                too_small: "трябва да бъде по-голямо или равно на %{count}"
-                too_large: "трябва да бъде по-малко или равно на %{count}"
+        schema:
+          fields:
+            required: "*задъжителни"
+            number:
+              too_small: "трябва да бъде по-голямо или равно на %{count}"
+              too_large: "трябва да бъде по-малко или равно на %{count}"
         colors:
           title: "Цветове"
           copy_name_prefix: "Копие на"

@@ -1417,7 +1417,6 @@ lv:
         title: "Reģistrēšanās IP adrese"
       avatar:
         title: "Profila attēls"
-        header_title: "profils, ziņas, grāmatzīmes un iestatījumi"
         name_and_description: "%{name} - %{description}"
         edit: "Rediģēt profila attēlu"
       title:
@@ -2237,6 +2236,11 @@ lv:
         zero: "%{count} cilvēkiem patika šis ieraksts."
         one: "%{count} cilvēkam patika šis ieraksts."
         other: "%{count} cilvēkiem patika šis ieraksts."
+      localizations:
+        table:
+          actions: "Darbības"
+          edit: "Rediģēt"
+          delete: "Dzēst"
       errors:
         create: "Atvainojiet, izveidojot jūsu ierakstu, notika kļūda. Lūdzu, mēģiniet vēlreiz."
         edit: "Atvainojiet, rediģējot jūsu ierakstu, notika kļūda. Lūdzu, mēģiniet vēlreiz."
@@ -2881,14 +2885,13 @@ lv:
           title: "Faili"
         legal:
           title: "Jurid."
-        logo_and_fonts:
-          logo:
-            form:
-              mobile: "Mobilais"
-              email: "E-pasts"
-          fonts:
-            backfill_modal:
-              modal_yes: "Jā"
+        logo:
+          form:
+            mobile: "Mobilais"
+            email: "E-pasts"
+        fonts:
+          backfill_modal:
+            modal_yes: "Jā"
         navigation:
           title: "Pārvietošanās"
         notifications:
@@ -3141,6 +3144,8 @@ lv:
       config_areas:
         about:
           company_name: "Vārds"
+          extra_groups:
+            groups: "Grupas"
           optional: "(pēc izvēles)"
           saved: "saglabāts!"
         flags:
@@ -3180,6 +3185,7 @@ lv:
           delete: "Dzēst"
         color_palettes:
           palette_name: "Vārds"
+          delete: "Dzēst"
           colors:
             title: "Krāsas"
       plugins:
@@ -3313,9 +3319,9 @@ lv:
           all_filter: "Viss"
           active_filter: "Aktīvi"
           inactive_filter: "Neaktīvs"
-          schema:
-            fields:
-              required: "*nepieciešams"
+        schema:
+          fields:
+            required: "*nepieciešams"
         colors:
           title: "Krāsas"
           undo: "Atsaukt"

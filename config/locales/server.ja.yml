@@ -3976,8 +3976,6 @@ ja:
   offline:
     title: "アプリを読み込めません"
     offline_page_message: "オフラインになっているようです！ネットワーク接続を確認して、もう一度お試しください。"
-  login_required:
-    welcome_message: "# [%{title}へようこそ](#welcome)"
   upload:
     edit_reason: "ダウンロードされた画像のコピー"
     unauthorized: "アップロードしようとしているファイルは許可されていません (許可されている拡張子: %{authorized_extensions})。"
@@ -4003,7 +4001,6 @@ ja:
     images:
       too_large: "アップロードしようとしている画像が大きすぎます (最大サイズは %{max_size_kb} KB です)。サイズを変更してもう一度お試しください。"
       too_large_humanized: "アップロードしようとしている画像が大きすぎます (最大サイズは %{max_size} です)。サイズを変更してもう一度お試しください。"
-      larger_than_x_megapixels: "アップロードしようとしている画像が大きすぎます (最大サイズは %{max_image_megapixels} メガピクセルです)。サイズを変更してもう一度お試しください。"
       size_not_found: "画像のサイズを判定できませんでした。画像が破損している可能性があります。"
     placeholders:
       too_large: "(%{max_size_kb}KB を超える画像)"

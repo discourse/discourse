@@ -4103,8 +4103,6 @@ es:
   offline:
     title: "Se se puede cargar la app"
     offline_page_message: "¡Parece que no estás conectado! Revisa tu conexión a internet e inténtalo de nuevo."
-  login_required:
-    welcome_message: "# [Te damos la bienvenida a %{title}](#welcome)"
   upload:
     edit_reason: "copias locales de imágenes descargadas"
     unauthorized: "Lo sentimos, el archivo que estás intentando subir no está permitido (extensiones autorizadas: %{authorized_extensions})."
@@ -4130,7 +4128,6 @@ es:
     images:
       too_large: "Lo sentimos, la imagen que estás intentando subir es demasiado grande (el tamaño máximo es %{max_size_kb}%KB). Modifica sus dimensiones e inténtalo de nuevo."
       too_large_humanized: "Lo sentimos, la imagen que estás intentando subir es demasiado grande (el tamaño máximo es %{max_size}). Reduce su tamaño e inténtalo de nuevo."
-      larger_than_x_megapixels: "Lo sentimos, la imagen que estás intentando cargar es demasiado grande (la dimensión máxima es %{max_image_megapixels} megapíxeles), cambia su tamaño e inténtalo de nuevo."
       size_not_found: "Lo sentimos, no hemos podido determinar el tamaño de la imagen. ¿Quizás el archivo está corrupto?"
     placeholders:
       too_large: "(imagen más grande que %{max_size_kb}KB)"

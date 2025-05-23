@@ -1,15 +1,14 @@
 import Component from "@glimmer/component";
-import { hash } from "@ember/helper";
+import { tracked } from "@glimmer/tracking";
 import { service } from "@ember/service";
-import { and, not, or } from "truth-helpers";
+import { and, not } from "truth-helpers";
 import ConditionalLoadingSection from "discourse/components/conditional-loading-section";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import ActiveFilters from "discourse/components/search-menu/active-filters";
 import Assistant from "discourse/components/search-menu/results/assistant";
 import InitialOptions from "discourse/components/search-menu/results/initial-options";
 import MoreLink from "discourse/components/search-menu/results/more-link";
 import Types from "discourse/components/search-menu/results/types";
-import concatClass from "discourse/helpers/concat-class";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
 import CategoryViewComponent from "./results/type/category";
 import GroupViewComponent from "./results/type/group";
@@ -29,6 +28,8 @@ const SEARCH_RESULTS_COMPONENT_TYPE = {
 
 export default class Results extends Component {
   @service search;
+
+  @tracked searchTopics = this.args.searchTopics;
 
   get renderInitialOptions() {
     return !this.search.activeGlobalSearchTerm && !this.args.inPMInboxContext;
@@ -62,33 +63,12 @@ export default class Results extends Component {
   }
 
   <template>
-    {{#if
-      (and
-        @inHeaderMobileView (or this.search.inTopicContext @inPMInboxContext)
-      )
-    }}
-      <ActiveFilters
-        @inPMInboxContext={{@inPMInboxContext}}
-        @clearPMInboxContext={{@clearPMInboxContext}}
-      />
-    {{/if}}
-
     {{#unless this.inTopicContext}}
       <ConditionalLoadingSection @isLoading={{this.loading}}>
-        <div
-          class={{concatClass
-            "results"
-            (if
-              (and @inHeaderMobileView this.search.activeGlobalSearchTerm)
-              "with-search-term"
-            )
-            (if this.search.contextType "has-context")
-          }}
-          data-test-selector="search-menu-results"
-        >
+        <div class="results">
           <PluginOutlet
             @name="search-menu-results-top"
-            @outletArgs={{hash
+            @outletArgs={{lazyHash
               closeSearchMenu=@closeSearchMenu
               searchTerm=this.search.activeGlobalSearchTerm
               inTopicContext=this.search.inTopicContext
@@ -109,7 +89,6 @@ export default class Results extends Component {
           {{else if this.renderInitialOptions}}
             <InitialOptions
               @searchInputId={{@searchInputId}}
-              @inHeaderMobileView={{@inHeaderMobileView}}
               @closeSearchMenu={{@closeSearchMenu}}
               @searchTermChanged={{@searchTermChanged}}
             />
@@ -118,7 +97,6 @@ export default class Results extends Component {
               {{! render the first couple suggestions before a search has been performed}}
               <InitialOptions
                 @searchInputId={{@searchInputId}}
-                @inHeaderMobileView={{@inHeaderMobileView}}
                 @closeSearchMenu={{@closeSearchMenu}}
                 @searchTermChanged={{@searchTermChanged}}
               />
@@ -156,12 +134,12 @@ export default class Results extends Component {
             {{/if}}
             <PluginOutlet
               @name="search-menu-with-results-bottom"
-              @outletArgs={{hash resultTypes=this.resultTypesWithComponent}}
+              @outletArgs={{lazyHash resultTypes=this.resultTypesWithComponent}}
             />
           {{/if}}
           <PluginOutlet
             @name="search-menu-results-bottom"
-            @outletArgs={{hash
+            @outletArgs={{lazyHash
               inTopicContext=this.search.inTopicContext
               searchTermChanged=@searchTermChanged
               searchTopics=@searchTopics

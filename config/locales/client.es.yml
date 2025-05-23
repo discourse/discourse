@@ -1159,7 +1159,6 @@ es:
       said: "%{username}:"
       profile: "Perfil"
       profile_possessive: "Perfil de %{username}"
-      account_possessive: "Cuenta de %{name}"
       mute: "Silenciar"
       edit: "Editar preferencias"
       download_archive:
@@ -1991,7 +1990,6 @@ es:
         title: "Dirección IP del registro"
       avatar:
         title: "Imagen de perfil"
-        header_title: "perfil, mensajes, marcadores y preferencias"
         name_and_description: "%{name} - %{description}"
         edit: "Editar foto de perfil"
       title:
@@ -2858,7 +2856,6 @@ es:
           aria_label: filtrar por número máximo de visitas
         additional_options:
           label: "Filtra por número de respuestas y visitas del tema"
-    hamburger_menu: "menú"
     new_item: "nuevo"
     go_back: "volver"
     not_logged_in_user: "página de usuario con resumen de la actividad y preferencias actuales"
@@ -3565,6 +3562,11 @@ es:
       in_reply_to: "Cargar publicación principal"
       view_all_posts: "Ver todas las publicaciones"
       badge_granted_tooltip: "¡%{username} ha ganado la medalla '%{badge_name}' por esta publicación!"
+      localizations:
+        table:
+          actions: "Acciones"
+          edit: "Editar"
+          delete: "Eliminar"
       errors:
         create: "Lo sentimos, se produjo un error al crear tu publicación. Inténtalo de nuevo."
         edit: "Lo sentimos, se produjo un error al editar tu publicación. Inténtalo de nuevo."
@@ -4162,7 +4164,6 @@ es:
         today: "Hoy"
     custom_homepage:
       admin_message: 'Uno de tus temas ha activado el modificador «custom_homepage», pero no muestra nada en el conector [custom-homepage]. (Este mensaje solo se muestra a los administradores del sitio).'
-    browser_update: 'Por desgracia, <a href="https://www.discourse.org/faq/#browser">tu navegador no es compatible</a>. Por favor, <a href="https://browsehappy.com">usa otro navegador</a> para ver el contenido completo, iniciar sesión y responder.'
     permission_types:
       full: "Crear / Responder / Ver"
       create_post: "Responder / Ver"
@@ -4841,24 +4842,23 @@ es:
         login_and_authentication:
           title: "Inicio de sesión y autenticación"
           header_description: "Configura cómo se conectan y autentican los usuarios, secretos y claves, proveedores de OAuth2, etc."
-        logo_and_fonts:
-          logo:
-            form:
-              logo:
-                title: "Logotipo principal"
-              mobile: "Móvil"
-              email: "Correo electrónico"
-              manifest_screenshots:
-                description: "Capturas de pantalla para mostrar las funcionalidades del sitio web en la pantalla de instalación. Todas las imágenes deben ser alojadas localmente y tener las mismas dimensiones."
-              opengraph_image:
-                description: "Imagen de gráfico abierto predeterminada, utilizada cuando la página no tiene otra imagen adecuada. Si se deja en blanco, se utilizará large_icon."
-          fonts:
-            title: "Tipos de letra"
-            form:
-              heading_font:
-                title: "Tipo de letra para encabezados"
-            backfill_modal:
-              modal_yes: "Sí"
+        logo:
+          form:
+            logo:
+              title: "Logotipo principal"
+            mobile: "Móvil"
+            email: "Correo electrónico"
+            manifest_screenshots:
+              description: "Capturas de pantalla para mostrar las funcionalidades del sitio web en la pantalla de instalación. Todas las imágenes deben ser alojadas localmente y tener las mismas dimensiones."
+            opengraph_image:
+              description: "Imagen de gráfico abierto predeterminada, utilizada cuando la página no tiene otra imagen adecuada. Si se deja en blanco, se utilizará large_icon."
+        fonts:
+          title: "Tipos de letra"
+          form:
+            heading_font:
+              title: "Tipo de letra para encabezados"
+          backfill_modal:
+            modal_yes: "Sí"
         navigation:
           title: "Navegación"
           header_description: "Configura los enlaces de navegación y los elementos de menú de tu sitio. Esto incluye la ubicación y el comportamiento del menú de navegación principal, los enlaces rápidos de la parte superior de la página de inicio, así como la barra lateral de administración."
@@ -5573,6 +5573,8 @@ es:
           city_for_disputes_placeholder: "Ciudad"
           city_for_disputes_help: |
             Especifica la ciudad para resolver las disputas legales relacionadas con este foro.
+          extra_groups:
+            groups: "Grupos"
           optional: "(opcional)"
           update: "Actualizar"
           toasts:
@@ -5661,11 +5663,14 @@ es:
           save_successful: "Campo de usuario guardado."
         color_palettes:
           palette_name: "Nombre"
+          duplicate: "Duplicar"
+          delete: "Eliminar"
           color_options:
             toggle: "Seleccionable por el usuario"
             toggle_description: "Los usuarios pueden seleccionar la paleta de colores"
           colors:
             title: "Colores"
+          delete_confirm: "¿Eliminar esta paleta de color?"
       plugins:
         title: "Plugins"
         name: "Nombre"
@@ -5975,30 +5980,30 @@ es:
           active_filter: "Activo"
           inactive_filter: "Inactivo"
           updates_available_filter: "Actualizaciones disponibles"
-          schema:
-            title: "Editar el ajuste de %{name}"
-            back_button: "Volver a %{name}"
-            fields:
-              required: "*obligatorio"
-              groups:
-                at_least:
-                  one: "se requiere al menos %{count} grupo"
-                  other: "se requieren al menos %{count} grupos"
-              categories:
-                at_least:
-                  one: "se requiere al menos %{count} categoría"
-                  other: "se requieren al menos %{count} categorías"
-              tags:
-                at_least:
-                  one: "Se requiere al menos %{count} etiqueta"
-                  other: "se requieren al menos %{count} etiquetas"
-              string:
-                too_short:
-                  one: "debe tener al menos %{count} carácter"
-                  other: "debe tener al menos %{count} caracteres"
-              number:
-                too_small: "debe ser mayor o igual que %{count}"
-                too_large: "debe ser menor o igual que %{count}"
+        schema:
+          title: "Editar el ajuste de %{name}"
+          back_button: "Volver a %{name}"
+          fields:
+            required: "*obligatorio"
+            groups:
+              at_least:
+                one: "se requiere al menos %{count} grupo"
+                other: "se requieren al menos %{count} grupos"
+            categories:
+              at_least:
+                one: "se requiere al menos %{count} categoría"
+                other: "se requieren al menos %{count} categorías"
+            tags:
+              at_least:
+                one: "Se requiere al menos %{count} etiqueta"
+                other: "se requieren al menos %{count} etiquetas"
+            string:
+              too_short:
+                one: "debe tener al menos %{count} carácter"
+                other: "debe tener al menos %{count} caracteres"
+            number:
+              too_small: "debe ser mayor o igual que %{count}"
+              too_large: "debe ser menor o igual que %{count}"
         colors:
           select_base:
             title: "Seleccionar paleta base de color"

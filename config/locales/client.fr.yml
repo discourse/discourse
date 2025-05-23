@@ -1161,7 +1161,6 @@ fr:
       said: "%{username} :"
       profile: "Profil"
       profile_possessive: "Profil de %{username}"
-      account_possessive: "Compte de %{name}"
       mute: "Mettre en sourdine"
       edit: "Modifier les préférences"
       download_archive:
@@ -1993,7 +1992,6 @@ fr:
         title: "Adresse IP d'enregistrement"
       avatar:
         title: "Image de profil"
-        header_title: "profil, messages, signets et préférences"
         name_and_description: "%{name} - %{description}"
         edit: "Modifier l'image de profil"
       title:
@@ -2860,7 +2858,6 @@ fr:
           aria_label: filtrer par nombre de vues maximal
         additional_options:
           label: "Filtrer par nombre de messages et vues par sujet"
-    hamburger_menu: "menu"
     new_item: "nouveau"
     go_back: "retour"
     not_logged_in_user: "page utilisateur avec un résumé de l'activité et les préférences"
@@ -3567,6 +3564,11 @@ fr:
       in_reply_to: "Charger le message parent"
       view_all_posts: "Afficher tous les messages"
       badge_granted_tooltip: "%{username} a obtenu le badge « %{badge_name} » pour cette publication !"
+      localizations:
+        table:
+          actions: "Actions"
+          edit: "Modifier"
+          delete: "Supprimer"
       errors:
         create: "Nous sommes désolés, une erreur est survenue lors de la création de votre message. Veuillez réessayer."
         edit: "Nous sommes désolés, une erreur est survenue lors de la modification de votre message. Veuillez réessayer."
@@ -4164,7 +4166,6 @@ fr:
         today: "Aujourd'hui"
     custom_homepage:
       admin_message: 'L''un de vos thèmes a activé le modificateur « custom_homepage », mais il n''affiche rien dans le connecteur [custom-homepage]. (Ce message s''adresse uniquement aux administrateurs du site.)'
-    browser_update: 'Malheureusement, <a href="https://www.discourse.org/faq/#browser">votre navigateur n''est pas pris en charge</a>. Merci de <a href="https://browsehappy.com">mettre à jour votre navigateur</a> pour afficher le contenu enrichi, vous connecter et répondre.'
     permission_types:
       full: "Créer/Répondre/Voir"
       create_post: "Répondre/Voir"
@@ -4843,24 +4844,23 @@ fr:
         login_and_authentication:
           title: "Connexion et authentification"
           header_description: "Configurez la manière dont les utilisateurs se connectent et s'authentifient, les secrets et les clés, les fournisseurs OAuth2, etc."
-        logo_and_fonts:
-          logo:
-            form:
-              logo:
-                title: "Logo principal"
-              mobile: "Mobile"
-              email: "E-mail"
-              manifest_screenshots:
-                description: "Captures d'écran qui mettent en valeur les atouts et les fonctionnalités de votre instance du logiciel. Ces images doivent toutes être enregistrées localement sur le serveur et posséder des dimensions identiques."
-              opengraph_image:
-                description: "Image opengraph par défaut, utilisée lorsque la page n'a pas d'autre image appropriée. Si vous laissez ce champ vide, « large_icon » sera utilisée."
-          fonts:
-            title: "Polices"
-            form:
-              heading_font:
-                title: "Police de titre"
-            backfill_modal:
-              modal_yes: "Oui"
+        logo:
+          form:
+            logo:
+              title: "Logo principal"
+            mobile: "Mobile"
+            email: "E-mail"
+            manifest_screenshots:
+              description: "Captures d'écran qui mettent en valeur les atouts et les fonctionnalités de votre instance du logiciel. Ces images doivent toutes être enregistrées localement sur le serveur et posséder des dimensions identiques."
+            opengraph_image:
+              description: "Image opengraph par défaut, utilisée lorsque la page n'a pas d'autre image appropriée. Si vous laissez ce champ vide, « large_icon » sera utilisée."
+        fonts:
+          title: "Polices"
+          form:
+            heading_font:
+              title: "Police de titre"
+          backfill_modal:
+            modal_yes: "Oui"
         navigation:
           title: "Navigation"
           header_description: "Configurez les liens de navigation et les éléments de menu de votre site. Cela inclut l'emplacement et le comportement du menu de navigation principal, les liens rapides en haut de la page d'accueil, ainsi que la barre latérale d'administration"
@@ -5576,6 +5576,8 @@ fr:
           city_for_disputes_placeholder: "Ville"
           city_for_disputes_help: |
             Précisez la ville où résoudre les litiges juridiques liés à ce forum.
+          extra_groups:
+            groups: "Groupes"
           optional: "(facultatif)"
           update: "Mettre à jour"
           toasts:
@@ -5664,11 +5666,14 @@ fr:
           save_successful: "Champ utilisateur enregistré."
         color_palettes:
           palette_name: "Nom"
+          duplicate: "Dupliquer"
+          delete: "Supprimer"
           color_options:
             toggle: "Sélectionnable par l'utilisateur"
             toggle_description: "La palette de couleurs peut être sélectionnée par les utilisateurs"
           colors:
             title: "Couleurs"
+          delete_confirm: "Supprimer cette palette de couleurs ?"
       plugins:
         title: "Extensions"
         name: "Nom"
@@ -5978,30 +5983,30 @@ fr:
           active_filter: "Actif"
           inactive_filter: "Inactif"
           updates_available_filter: "Mises à jour disponibles"
-          schema:
-            title: "Modifier le paramètre %{name}"
-            back_button: "Retour à %{name}"
-            fields:
-              required: "*requis"
-              groups:
-                at_least:
-                  one: "au moins %{count} groupe est requis"
-                  other: "au moins %{count} groupes sont requis"
-              categories:
-                at_least:
-                  one: "au moins %{count} catégorie est requise"
-                  other: "au moins %{count} catégories sont requises"
-              tags:
-                at_least:
-                  one: "au moins %{count} étiquette est requise"
-                  other: "au moins %{count} étiquettes sont requises"
-              string:
-                too_short:
-                  one: "doit contenir au moins %{count} caractère"
-                  other: "doit contenir au moins %{count} caractères"
-              number:
-                too_small: "doit être supérieur ou égal à %{count}"
-                too_large: "doit être inférieur ou égal à %{count}"
+        schema:
+          title: "Modifier le paramètre %{name}"
+          back_button: "Retour à %{name}"
+          fields:
+            required: "*requis"
+            groups:
+              at_least:
+                one: "au moins %{count} groupe est requis"
+                other: "au moins %{count} groupes sont requis"
+            categories:
+              at_least:
+                one: "au moins %{count} catégorie est requise"
+                other: "au moins %{count} catégories sont requises"
+            tags:
+              at_least:
+                one: "au moins %{count} étiquette est requise"
+                other: "au moins %{count} étiquettes sont requises"
+            string:
+              too_short:
+                one: "doit contenir au moins %{count} caractère"
+                other: "doit contenir au moins %{count} caractères"
+            number:
+              too_small: "doit être supérieur ou égal à %{count}"
+              too_large: "doit être inférieur ou égal à %{count}"
         colors:
           select_base:
             title: "Sélectionner la palette de couleurs de base"

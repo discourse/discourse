@@ -3521,8 +3521,6 @@ sv:
   offline:
     title: "Det går inte att ladda appen"
     offline_page_message: "Det ser ut som om du är offline! Kontrollera din nätverksanslutning och försök igen."
-  login_required:
-    welcome_message: "# [Välkommen till %{title}](#välkommen)"
   upload:
     edit_reason: "hämtade lokala kopior av bilder"
     unauthorized: "Tyvärr är filen som du försöker ladda upp inte tillåten (tillåtna filtyper: %{authorized_extensions})."
@@ -3548,7 +3546,6 @@ sv:
     images:
       too_large: "Tyvärr är bilden som du försöker ladda upp för stor (maxstorlek är %{max_size_kb} kB). Ändra storleken och försök igen."
       too_large_humanized: "Tyvärr är bilden som du försöker ladda upp för stor (maximal storlek är %{max_size}). Ändra storlek på den och försök igen."
-      larger_than_x_megapixels: "Tyvärr är bilden som du försöker ladda upp för stor (maximal dimension är %{max_image_megapixels} megapixlar). Ändra storleken och försök igen."
       size_not_found: "Tyvärr kunde vi inte avgöra bildens storlek. Kanske är din bildfil skadad?"
     placeholders:
       too_large: "(bild större än %{max_size_kb} kB)"

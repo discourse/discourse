@@ -16,6 +16,7 @@ import DEditorPreview from "discourse/components/d-editor-preview";
 import Wrapper from "discourse/components/form-template-field/wrapper";
 import PickFilesButton from "discourse/components/pick-files-button";
 import PostTranslationEditor from "discourse/components/post-translation-editor";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import { tinyAvatar } from "discourse/lib/avatar-utils";
 import { setupComposerPosition } from "discourse/lib/composer/composer-position";
@@ -1054,7 +1055,10 @@ export default class ComposerEditor extends Component {
         @onPopupMenuAction={{this.composer.onPopupMenuAction}}
         @popupMenuOptions={{this.composer.popupMenuOptions}}
         @disabled={{this.composer.disableTextarea}}
-        @outletArgs={{hash composer=this.composer.model editorType="composer"}}
+        @outletArgs={{lazyHash
+          composer=this.composer.model
+          editorType="composer"
+        }}
         @topicId={{this.composer.model.topic.id}}
         @categoryId={{this.composer.model.category.id}}
         @replyingToUserId={{this.composer.replyingToUserId}}

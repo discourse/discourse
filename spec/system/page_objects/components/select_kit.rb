@@ -58,6 +58,10 @@ module PageObjects
         component.find(".select-kit-header[data-name='#{name}']")
       end
 
+      def has_no_selection?
+        component.has_no_css?(".selected-choice")
+      end
+
       def has_selected_choice_name?(name)
         component.find(".selected-choice[data-name='#{name}']")
       end
@@ -98,6 +102,10 @@ module PageObjects
 
       def select_row_by_index(index)
         expanded_component.find(".select-kit-row[data-index='#{index}']").click
+      end
+
+      def unselect_by_name(name)
+        expanded_component.find(".selected-choice[data-name='#{name}']").click
       end
     end
   end

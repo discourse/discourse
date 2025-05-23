@@ -1059,7 +1059,6 @@ te:
       said: "%{username}:"
       profile: "ప్రొఫైల్"
       profile_possessive: "%{username} యొక్క ప్రొఫైల్"
-      account_possessive: "%{name} యొక్క ఖాతా"
       mute: "నిశ్శబ్దం"
       edit: "ప్రాధాన్యతలను సవరించండి"
       download_archive:
@@ -1781,7 +1780,6 @@ te:
         title: "రిజిస్ట్రేషన్ ఐపీ చిరునామా"
       avatar:
         title: "ప్రొఫైల్ చిత్రం"
-        header_title: "ప్రొఫైల్, సందేశాలు, బుక్‌మార్క్‌లు మరియు ప్రాధాన్యతలు"
         name_and_description: "%{name} - %{description}"
         edit: "ప్రొఫైల్ చిత్రాన్ని సవరించండి"
       title:
@@ -2570,7 +2568,6 @@ te:
           aria_label: గరిష్ట వీక్షణల ద్వారా ఫిల్టర్ చేయండి
         additional_options:
           label: "పోస్ట్ కౌంట్ మరియు విషయం వీక్షణల వారీగా ఫిల్టర్ చేయండి"
-    hamburger_menu: "మెను"
     new_item: "కొత్త"
     go_back: "వెనక్కు మరలు"
     not_logged_in_user: "సభ్యుని ప్రస్తుత కలాపాల మరియు అభిరూపాల సారాంశ పుట"
@@ -3247,6 +3244,11 @@ te:
         other: "మీరు %{count} ప్రత్యుత్తరాలను వీక్షిస్తున్నారు"
       in_reply_to: "పేరెంట్ పోస్ట్‌ని లోడ్ చేయండి"
       view_all_posts: "అన్ని పోస్ట్‌లను వీక్షించండి"
+      localizations:
+        table:
+          actions: "చర్యలు"
+          edit: "సవరించండి"
+          delete: "తొలగించండి"
       errors:
         create: "క్షమించండి, మీ పోస్ట్‌ని సృష్టించడంలో లోపం ఏర్పడింది. దయచేసి మళ్లీ ప్రయత్నించండి."
         edit: "క్షమించండి, మీ పోస్ట్‌ని సవరించడంలో లోపం ఏర్పడింది. దయచేసి మళ్లీ ప్రయత్నించండి."
@@ -3803,7 +3805,6 @@ te:
         this_month: "ఈ నెల"
         this_week: "వారం"
         today: "ఈ రోజు"
-    browser_update: 'దురదృష్టవశాత్తూ, <a href="https://www.discourse.org/faq/#browser">మీ బ్రౌజర్‌కి మద్దతు లేదు</a>. దయచేసి రిచ్ కంటెంట్‌ను వీక్షించడానికి, లాగిన్ చేయడానికి మరియు ప్రత్యుత్తరం ఇవ్వడానికి <a href="https://browsehappy.com">మద్దతు ఉన్న బ్రౌజర్‌కి మారండి</a> .'
     permission_types:
       full: "సృష్టించడం / ప్రత్యుత్తరం ఇవ్వడం / చూడడం"
       create_post: "ప్రత్యుత్తరం ఇవ్వండి / చూడండి"
@@ -4435,21 +4436,20 @@ te:
           title: "ఫైళ్లు"
         legal:
           title: "చట్టపరమైన"
-        logo_and_fonts:
-          logo:
-            form:
-              logo:
-                title: "ప్రాథమిక లోగో"
-              mobile: "మొబైల్"
-              email: "మెయిల్"
-              manifest_screenshots:
-                description: "దాని ఇన్‌స్టాల్ ప్రాంప్ట్ పేజీలో మీ ఇన్‌స్టాన్స్ ఫీచర్‌లు మరియు ఫంక్షనాలిటీని ప్రదర్శించే స్క్రీన్‌షాట్‌లు. అన్ని చిత్రాలు స్థానిక అప్‌లోడ్‌లు మరియు ఒకే కొలతలు కలిగి ఉండాలి."
-          fonts:
-            form:
-              heading_font:
-                title: "శీర్షిక ఫాంట్"
-            backfill_modal:
-              modal_yes: "అవును"
+        logo:
+          form:
+            logo:
+              title: "ప్రాథమిక లోగో"
+            mobile: "మొబైల్"
+            email: "మెయిల్"
+            manifest_screenshots:
+              description: "దాని ఇన్‌స్టాల్ ప్రాంప్ట్ పేజీలో మీ ఇన్‌స్టాన్స్ ఫీచర్‌లు మరియు ఫంక్షనాలిటీని ప్రదర్శించే స్క్రీన్‌షాట్‌లు. అన్ని చిత్రాలు స్థానిక అప్‌లోడ్‌లు మరియు ఒకే కొలతలు కలిగి ఉండాలి."
+        fonts:
+          form:
+            heading_font:
+              title: "శీర్షిక ఫాంట్"
+          backfill_modal:
+            modal_yes: "అవును"
         navigation:
           title: "నావిగేషన్"
         notifications:
@@ -4972,6 +4972,8 @@ te:
           company_name_placeholder: "ఆక్మే సంస్థ"
           governing_law: "పాలక చట్టం"
           city_for_disputes: "వివాదాలకు నగరం"
+          extra_groups:
+            groups: "సమూహాలు"
           optional: "(ఐచ్ఛికం)"
           update: "నవీకరించండి"
           saved: "సేవ్ చేయబడింది!"
@@ -5023,8 +5025,11 @@ te:
           delete: "తొలగించు"
         color_palettes:
           palette_name: "పేరు"
+          duplicate: "నకిలీ చేయండి"
+          delete: "తొలగించు"
           colors:
             title: "రంగులు"
+          delete_confirm: "ఈ రంగుల పాలెట్‌ను తొలగించాలా?"
       plugins:
         title: "చొప్పింతలు"
         name: "పేరు"
@@ -5311,12 +5316,12 @@ te:
           active_filter: "క్రియాశీల"
           inactive_filter: "నిష్క్రియ"
           updates_available_filter: "అప్‌డేట్‌లు అందుబాటులో ఉన్నాయి"
-          schema:
-            back_button: "తిరిగి %{name}కి"
-            fields:
-              number:
-                too_small: "%{count} కన్నా సమానం లేదా ఎక్కువ ఉండాలి"
-                too_large: "%{count} కన్నా సమానం లేదా తక్కువగా ఉండాలి"
+        schema:
+          back_button: "తిరిగి %{name}కి"
+          fields:
+            number:
+              too_small: "%{count} కన్నా సమానం లేదా ఎక్కువ ఉండాలి"
+              too_large: "%{count} కన్నా సమానం లేదా తక్కువగా ఉండాలి"
         colors:
           select_base:
             title: "బేస్ కలర్ పాలెట్ ఎంచుకోండి"

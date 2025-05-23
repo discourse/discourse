@@ -1399,8 +1399,6 @@ id:
     page_title: "Halaman Tidak Ditemukan"
     see_more: "Selengkapnya"
     search_button: "Cari"
-  login_required:
-    welcome_message: "# [Selamat datang di %{title}](#welcome)"
   upload:
     images:
       size_not_found: "Maaf, kami tidak dapat mendeteksi ukuran dari gambar. Apa berkas gambar yang Anda unggah rusak?"

@@ -1,8 +1,8 @@
 import Component, { Input } from "@ember/component";
-import { hash } from "@ember/helper";
 import { tagName } from "@ember-decorators/component";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import icon from "discourse/helpers/d-icon";
+import lazyHash from "discourse/helpers/lazy-hash";
 
 @tagName("")
 export default class Checkbox extends Component {
@@ -10,7 +10,7 @@ export default class Checkbox extends Component {
     <label class="wizard-container__label">
       <PluginOutlet
         @name="wizard-checkbox"
-        @outletArgs={{hash disabled=this.field.disabled}}
+        @outletArgs={{lazyHash disabled=this.field.disabled}}
       >
         <Input
           @type="checkbox"
@@ -29,7 +29,7 @@ export default class Checkbox extends Component {
 
       <PluginOutlet
         @name="below-wizard-checkbox"
-        @outletArgs={{hash disabled=this.field.disabled}}
+        @outletArgs={{lazyHash disabled=this.field.disabled}}
       />
     </label>
   </template>

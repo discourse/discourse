@@ -4,10 +4,6 @@
   position: sticky;
   top: 0;
   z-index: z("header");
-
-  @include viewport.until(sm) {
-    z-index: z("mobile-header");
-  }
 }
 
 .d-header {

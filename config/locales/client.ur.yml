@@ -1575,7 +1575,6 @@ ur:
         title: "رجسٹریشن IP ایڈریس"
       avatar:
         title: "پروفائل تصویر"
-        header_title: "پروفائل، پیغامات، بک مارکس اور ترجیحات"
         name_and_description: "%{name} - %{description}"
         edit: "پروفائل تصویر میں ترمیم کریں"
       title:
@@ -2219,7 +2218,6 @@ ur:
           aria_label: زیادہ سے زیادہ آراء سے فلٹر
         additional_options:
           label: "پوسٹ کی گنتی اور موضوع کے ملاحظات کے لحاظ سے فلٹر"
-    hamburger_menu: "مینیو"
     new_item: "نیا"
     go_back: "واپس جائیں"
     not_logged_in_user: "موجودہ سرگرمی کے خلاصہ اور ترجیحات کے ساتھ صفحہِ صارف"
@@ -2748,6 +2746,11 @@ ur:
         other: "%{count} جوابات دیکھیں"
       in_reply_to: "پیرنٹ پوسٹ لوڈ کریں۔"
       view_all_posts: "تمام پوسٹس دیکھیں"
+      localizations:
+        table:
+          actions: "عمل"
+          edit: "ترمیم کریں"
+          delete: "مٹائیں"
       errors:
         create: "معذرت، آپ کی پوسٹ بنانے میں ایک خرابی کا سامنا کرنا پڑا۔ براہ مہربانی دوبارہ کوشش کریں۔"
         edit: "معذرت، آپ کی پوسٹ ترمیم کرنے میں ایک خرابی کا سامنا کرنا پڑا۔ براہ مہربانی دوبارہ کوشش کریں۔"
@@ -3696,16 +3699,15 @@ ur:
           title: "فائلیں"
         legal:
           title: "قانونی"
-        logo_and_fonts:
-          logo:
-            form:
-              mobile: "موبائل"
-              email: "اِیمیل"
-              manifest_screenshots:
-                description: "اسکرین شاٹس جو اس کے انسٹال پرامپٹ صفحہ پر آپ کی مثال کی خصوصیات اور فعالیت کو ظاہر کرتے ہیں۔ تمام تصاویر مقامی اپ لوڈز اور ایک جیسی ہونی چاہئیں۔"
-          fonts:
-            backfill_modal:
-              modal_yes: "جی ہاں"
+        logo:
+          form:
+            mobile: "موبائل"
+            email: "اِیمیل"
+            manifest_screenshots:
+              description: "اسکرین شاٹس جو اس کے انسٹال پرامپٹ صفحہ پر آپ کی مثال کی خصوصیات اور فعالیت کو ظاہر کرتے ہیں۔ تمام تصاویر مقامی اپ لوڈز اور ایک جیسی ہونی چاہئیں۔"
+        fonts:
+          backfill_modal:
+            modal_yes: "جی ہاں"
         navigation:
           title: "نیویگیشن"
         notifications:
@@ -4112,6 +4114,8 @@ ur:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
           company_name: "نام"
+          extra_groups:
+            groups: "گروپس"
           optional: "(اختیاری)"
           update: "اپ ڈیٹ"
           saved: "محفوظ کر لیا گیا!"
@@ -4159,8 +4163,11 @@ ur:
           delete: "مٹائیں"
         color_palettes:
           palette_name: "نام"
+          duplicate: "نقل"
+          delete: "مٹائیں"
           colors:
             title: "رنگ"
+          delete_confirm: "اِس رنگ کی تختی کومٹائیں؟"
       plugins:
         title: "پلَگ اِنز"
         name: "نام"
@@ -4401,12 +4408,12 @@ ur:
           all_filter: "تمام"
           active_filter: "فعال"
           inactive_filter: "غیر فعال"
-          schema:
-            fields:
-              required: "*درکار"
-              number:
-                too_small: "%{count}سے بڑا یا اس کے برابر ہونا چاہیے"
-                too_large: "%{count}سے کم یا اس کے برابر ہونا چاہیے"
+        schema:
+          fields:
+            required: "*درکار"
+            number:
+              too_small: "%{count}سے بڑا یا اس کے برابر ہونا چاہیے"
+              too_large: "%{count}سے کم یا اس کے برابر ہونا چاہیے"
         colors:
           select_base:
             title: "بَیس رنگ پیلیٹ منتخب کریں"

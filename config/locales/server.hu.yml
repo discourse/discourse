@@ -2476,6 +2476,8 @@ hu:
     adobe_analytics_tags_url: "Adobe Analytics címkék URL-je (`https://assets.adobedtm.com/...`)"
     view_raw_email_allowed_groups: "Csoportok, amelyek megtekinthetik egy bejegyzés nyers e-mail tartalmát, ha azt bejövő e-mailből hozták létre. Ez magában foglalja az e-mail fejléceket és egyéb technikai információkat."
     experimental_content_localization: "Lokalizált tartalmakat jelenít meg a felhasználók számára a nyelvi beállításaik alapján. Ilyen tartalom lehetnek a kategóriák, címkék, bejegyzések és témák. Ezt a funkciót jelenleg nagy erőkkel fejlesztjük."
+    rich_editor: "Engedélyezze a szerkesztőt, hogy minden felhasználó válthasson a jelenlegi Markdown mód és az új szövegszerkesztő között az intuitívabb és felhasználóbarátabb szerkesztés érdekében. A szövegszerkesztő aktív fejlesztés alatt áll, így még nem minden funkció támogatott - <a href='https://meta.discourse.org/t/test-our-new-composer/352347' target='_blank'>további részletekért lásd a Meta oldalon</a>."
+    experimental_content_localization_allowed_groups: 'Lokalizált tartalom frissítésére jogosult csoportok. A "kísérleti tartalom lokalizáció" engedélyezése szükséges.'
     errors:
       invalid_css_color: "Érvénytelen szín. Adjon meg egy színnevet vagy hexaértéket."
       invalid_email: "Érvénytelen e-mail cím."
@@ -4088,8 +4090,6 @@ hu:
   offline:
     title: "Nem lehet betölteni az alkalmazást"
     offline_page_message: "Úgy tűnik, offline vagy! Kérjük, ellenőrizze a hálózati kapcsolatot, és próbálja újra."
-  login_required:
-    welcome_message: "# [Üdvözöljük a(z) %{title} oldalon](#welcome)"
   upload:
     edit_reason: "letöltött képek helyi másolatai"
     unauthorized: "Sajnos a feltölteni kívánt fájl nem engedélyezett (engedélyezett kiterjesztések: %{authorized_extensions})."
@@ -4115,7 +4115,6 @@ hu:
     images:
       too_large: "Sajnáljuk, a feltölteni kívánt kép túl nagy (a maximális méret %{max_size_kb}KB), kérjük, méretezze át, és próbálja újra."
       too_large_humanized: "Sajnáljuk, a feltölteni kívánt kép túl nagy (a maximális méret %{max_size}), kérjük, méretezze át, és próbálja újra."
-      larger_than_x_megapixels: "Sajnáljuk, a feltölteni kívánt kép túl nagy (a maximális méret %{max_image_megapixels} megapixel), kérjük, méretezze át, és próbálja újra."
       size_not_found: "Sajnáljuk, de nem tudtuk megállapítani a kép méretét. Lehet, hogy a kép sérült?"
     placeholders:
       too_large: "(a kép nagyobb, mint %{max_size_kb}KB)"
@@ -5034,6 +5033,12 @@ hu:
       restored: Visszaállított
     bulk_user_delete: "tömeges törlési művelettel törölve"
     cli_bulk_post_delete: "Tömegesen törölve a rake feladatból"
+    api_post_delete: "API-n keresztül törölve"
+    reminder_deleted: "Új emlékeztetővel helyettesítve"
+    user_associated_posts_deleted: "A felhasználó megsemmisült"
+    imap_email_deleted: "Az e-mail törölve lett az IMAP-kiszolgálóról."
+    imap_email_marked_as_spam: "Az e-mail átkerült a spam mappába az IMAP szerveren."
+    auto_deleted_hidden_posts: "Automatikusan megsemmisített rejtett bejegyzések"
   reviewables:
     already_handled: "Köszönjük, de már átnéztük ezt a bejegyzést, és úgy döntöttünk, hogy nem kell újra megjelölni."
     already_handled_and_user_not_exist: "Köszönjük, de valaki már felülvizsgálta, és ez a felhasználó már nem létezik."

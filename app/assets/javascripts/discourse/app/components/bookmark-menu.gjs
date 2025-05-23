@@ -131,7 +131,7 @@ export default class BookmarkMenu extends Component {
         // a bookmark, it switches to the other Edit/Delete menu.
         this.quicksaved = true;
         this.toasts.success({
-          duration: 1500,
+          duration: "short",
           views: ["mobile"],
           data: { message: i18n("bookmarks.bookmarked_success") },
         });
@@ -170,7 +170,7 @@ export default class BookmarkMenu extends Component {
       const response = await this.bookmarkManager.delete();
       this.bookmarkManager.afterDelete(response, this.existingBookmark.id);
       this.toasts.success({
-        duration: 1500,
+        duration: "short",
         data: {
           icon: "trash-can",
           message: i18n("bookmarks.deleted_bookmark_success"),
@@ -199,7 +199,7 @@ export default class BookmarkMenu extends Component {
       try {
         await this.bookmarkManager.save();
         this.toasts.success({
-          duration: 1500,
+          duration: "short",
           views: ["mobile"],
           data: { message: i18n("bookmarks.reminder_set_success") },
         });

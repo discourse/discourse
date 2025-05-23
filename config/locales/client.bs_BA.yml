@@ -1410,7 +1410,6 @@ bs_BA:
         title: "IP Adresa prilikom registracije"
       avatar:
         title: "Profilna slika"
-        header_title: "profil, poruke, zabilješke i postavke"
       title:
         title: "Naslov"
         none: "(ništa)"
@@ -2360,6 +2359,11 @@ bs_BA:
         one: "Objava se sviđa %{count} osobi."
         few: "%{count} se sviđa objava."
         other: "%{count} se sviđa objava."
+      localizations:
+        table:
+          actions: "Akcije"
+          edit: "Edit"
+          delete: "Delete"
       errors:
         create: "Sorry, there was an error creating your post. Please try again."
         edit: "Sorry, there was an error editing your post. Please try again."
@@ -3183,14 +3187,13 @@ bs_BA:
           title: "Files"
         legal:
           title: "Legal"
-        logo_and_fonts:
-          logo:
-            form:
-              mobile: "Mobilno"
-              email: "Email"
-          fonts:
-            backfill_modal:
-              modal_yes: "Da"
+        logo:
+          form:
+            mobile: "Mobilno"
+            email: "Email"
+        fonts:
+          backfill_modal:
+            modal_yes: "Da"
         navigation:
           title: "Navigacija"
         notifications:
@@ -3545,6 +3548,8 @@ bs_BA:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
           company_name: "Ime"
+          extra_groups:
+            groups: "Groups"
           optional: "(opciono)"
           saved: "sačuvano!"
         flags:
@@ -3591,8 +3596,10 @@ bs_BA:
           delete: "Delete"
         color_palettes:
           palette_name: "Ime"
+          delete: "Delete"
           colors:
             title: "Colors"
+          delete_confirm: "Izbrisati ovu paletu boja?"
       plugins:
         title: "Pluginovi"
         name: "Ime"
@@ -3802,9 +3809,9 @@ bs_BA:
           all_filter: "All"
           active_filter: "Active"
           inactive_filter: "Neaktivan"
-          schema:
-            fields:
-              required: "*required"
+        schema:
+          fields:
+            required: "*required"
         colors:
           select_base:
             title: "Odaberite osnovnu paletu boja"

@@ -1,8 +1,8 @@
 import Component from "@ember/component";
-import { hash } from "@ember/helper";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import boundCategoryLink from "discourse/helpers/bound-category-link";
 import discourseTags from "discourse/helpers/discourse-tags";
+import lazyHash from "discourse/helpers/lazy-hash";
 import topicFeaturedLink from "discourse/helpers/topic-featured-link";
 
 // Injections don't occur without a class
@@ -30,7 +30,7 @@ export default class TopicCategory extends Component {
       <PluginOutlet
         @name="topic-category"
         @connectorTagName="div"
-        @outletArgs={{hash topic=this.topic category=this.topic.category}}
+        @outletArgs={{lazyHash topic=this.topic category=this.topic.category}}
       />
     </span>
   </template>

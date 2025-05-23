@@ -1560,7 +1560,6 @@ vi:
         title: "Địa chỉ IP đăng ký"
       avatar:
         title: "Ảnh đại diện"
-        header_title: "hồ sơ cá nhân, tin nhắn, đánh dấu và sở thích"
         name_and_description: "%{name} - %{description}"
         edit: "Chỉnh sửa ảnh đại diện"
       title:
@@ -2772,6 +2771,11 @@ vi:
         other: "Xem %{count} câu trả lời cho"
       in_reply_to: "Tải bài đăng gốc"
       view_all_posts: "Xem tất cả các bài viết"
+      localizations:
+        table:
+          actions: "Hành động"
+          edit: "Sửa"
+          delete: "Xóa"
       errors:
         create: "Xin lỗi, có lỗi xảy ra khi tạo bài viết của bạn. Vui lòng thử lại."
         edit: "Xin lỗi, có lỗi xảy ra khi sửa bài viết của bạn. Vui lòng thử lại."
@@ -3711,14 +3715,13 @@ vi:
           title: "Tập tin"
         legal:
           title: "Legal"
-        logo_and_fonts:
-          logo:
-            form:
-              mobile: "Điện thoại"
-              email: "Email"
-          fonts:
-            backfill_modal:
-              modal_yes: "Đồng ý"
+        logo:
+          form:
+            mobile: "Điện thoại"
+            email: "Email"
+        fonts:
+          backfill_modal:
+            modal_yes: "Đồng ý"
         navigation:
           title: "Điều hướng"
         notifications:
@@ -4171,6 +4174,8 @@ vi:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
           company_name: "Tên"
+          extra_groups:
+            groups: "Nhóm"
           optional: "(tùy chọn)"
           update: "Cập nhật"
           saved: "đã lưu"
@@ -4218,8 +4223,11 @@ vi:
           delete: "Xóa"
         color_palettes:
           palette_name: "Tên"
+          duplicate: "Nhân bản"
+          delete: "Xóa"
           colors:
             title: "Màu sắc"
+          delete_confirm: "Xóa bảng màu này?"
       plugins:
         title: "Plugin"
         name: "Tên"
@@ -4471,15 +4479,15 @@ vi:
           all_filter: "All"
           active_filter: "Kích hoạt"
           inactive_filter: "Không hoạt động"
-          schema:
-            fields:
-              required: "*bắt buộc"
-              string:
-                too_short:
-                  other: "phải ít nhất %{count} ký tự"
-              number:
-                too_small: "phải lớn hơn hoặc bằng %{count}"
-                too_large: "phải nhỏ hơn hoặc bằng %{count}"
+        schema:
+          fields:
+            required: "*bắt buộc"
+            string:
+              too_short:
+                other: "phải ít nhất %{count} ký tự"
+            number:
+              too_small: "phải lớn hơn hoặc bằng %{count}"
+              too_large: "phải nhỏ hơn hoặc bằng %{count}"
         colors:
           select_base:
             title: "Chọn bảng màu cơ bản"

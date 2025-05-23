@@ -1344,7 +1344,6 @@ sk:
       said: "%{username}:"
       profile: "Profil"
       profile_possessive: "Profil používateľa %{username}"
-      account_possessive: "%{name}účet"
       mute: "Ignorovať"
       edit: "Upraviť nastavenia"
       download_archive:
@@ -2244,7 +2243,7 @@ sk:
         title: "IP adresa pri registrácii"
       avatar:
         title: "Profilový obrázok"
-        header_title: "profil, správy, záložky a nastavenia"
+        header_title: "Oznámenia a účet"
         name_and_description: "%{name} - %{description}"
         edit: "Upraviť profilový obrázok"
       title:
@@ -2770,6 +2769,12 @@ sk:
       esc: "esc"
       esc_label: "zatvoriť správu"
       ok_proceed: "Ok, pokračujte"
+      translations:
+        title: "Preklad príspevku"
+        select: "Vyberte preklad"
+        save: "Uložiť preklad"
+        original_content: "Pôvodný obsah príspevku"
+        placeholder: "Sem zadajte preklad príspevku..."
       group_mentioned_limit:
         one: "<b>Varovanie!</b> Spomenuli ste <a href='%{group_link}'>%{group}</a>, avšak táto skupina má viac členov, ako je správcom nakonfigurovaný limit zmienky %{count} používateľa. Nikto nebude upozornený."
         few: "<b>Varovanie!</b> Spomenuli ste <a href='%{group_link}'>%{group}</a>, avšak táto skupina má viac členov ako limit spomenutí nastavený administrátorom, ktorý je %{count} používateľov. Nikto nebude upozornený."
@@ -3145,7 +3150,7 @@ sk:
       in_messages_tooltip: "prepnúť na vyhľadávanie v bežných témach"
       in_topics_posts: "vo všetkých témach a príspevkoch"
       enter_hint: "alebo stlačte Enter"
-      mobile_enter_hint: "alebo ťuknite na ikonu Hľadať"
+      mobile_enter_hint: "alebo ťuknite na položku Hľadať"
       in_posts_by: "v príspevkoch od %{username}"
       recent: "Nedávne vyhľadávania"
       clear_recent: "Vymazať nedávne vyhľadávania"
@@ -3234,7 +3239,7 @@ sk:
           aria_label: filtrovať podľa maximálneho počtu zobrazení
         additional_options:
           label: "Filtrovať podľa počtu príspevkov a zobrazení tém"
-    hamburger_menu: "menu"
+    hamburger_menu: "Navigačné menu"
     new_item: "nový"
     go_back: "späť"
     not_logged_in_user: "používateľská stránka so súhrnom aktivít a nastavení"
@@ -4045,6 +4050,14 @@ sk:
       in_reply_to: "Načítať rodičovský príspevok"
       view_all_posts: "Zobraziť všetky príspevky"
       badge_granted_tooltip: "%{username} získal za tento príspevok odznak '%{badge_name}'!"
+      localizations:
+        table:
+          locale: "Miestne nastavenie"
+          actions: "Akcie"
+          edit: "Upraviť"
+          delete: "Odstrániť"
+        add: "Pridať nový preklad"
+        success: "Preklady boli úspešne aktualizované"
       errors:
         create: "Ľutujeme, pri vytváraní príspevku nastala chyba. Prosím, skúste znovu."
         edit: "Ľutujeme, pri úprave príspevku nastala chyba. Prosím, skúste znovu."
@@ -4259,6 +4272,7 @@ sk:
       share:
         title: "Zdieľať príspevok #%{post_number}"
         instructions: "Zdieľať odkaz na tento príspevok:"
+      original_language: "Tento príspevok bol pôvodne napísaný v %{language}"
     category:
       none: "(Bez kategórie)"
       all: "Všetky kategórie"
@@ -4710,7 +4724,7 @@ sk:
         today: "Dnes"
     custom_homepage:
       admin_message: 'Jedna z vašich tém má povolený modifikátor "custom_homepage", ale v konektore [custom-homepage] sa nič nevypíše. (Táto správa sa zobrazuje len správcom stránok.)'
-    browser_update: 'Bohužiaľ, <a href="https://www.discourse.org/faq/#browser">váš prehliadač nie je podporovaný</a>. Prosím <a href="https://browsehappy.com">prepnite na podporovaný prehliadač</a> a pozrite si bohatý obsah, prihláste sa a odpovedzte.'
+    browser_update: 'Bohužiaľ, <a href="https://discourse.org/about#browser">váš prehliadač nie je podporovaný</a>. Pre zobrazenie bohatého obsahu <a href="https://browsehappy.com">prepnite na podporovaný prehliadač</a> , prihláste sa a odpovedzte.'
     permission_types:
       full: "Vytvor / Odpovedz / Zobraz"
       create_post: "Odpovedz / Zobraz"
@@ -5481,95 +5495,92 @@ sk:
         login_and_authentication:
           title: "Prihlásenie a overovanie"
           header_description: "Nakonfigurujte spôsob prihlasovania a overovania používateľov, tajomstvá a kľúče, poskytovateľov OAuth2 a ďalšie"
-        logo_and_fonts:
-          title: "Logo a písma"
-          header_description: "Prispôsobenie variantov loga a písma vašej stránky"
-          logo:
-            title: "Logo"
-            form:
-              saved: "Nastavenia loga sú uložené."
-              logo:
-                title: "Primárne logo"
-                description: "Zobrazuje sa v hornej časti navigácie stránky, ako aj v hornej časti e-mailových oznámení stránky."
-                help_text: "Odporúčaná veľkosť je 600 x 80 pixelov."
-              logo_dark:
-                required: "Použiť iné logo pre tmavý režim?"
-                title: "Primárne logo tmavé"
-                help_text: "Odporúčaná veľkosť je 600 x 80 pixelov."
-              large_icon:
-                title: "Štvorcová ikona"
-                description: "V hornej časti administrácie sa zobrazuje štvorcová verzia loga, ktorá je zároveň logom aplikácie na domovskej obrazovke mobilného telefónu."
-                help_text: "Odporúčaná veľkosť je 512 x 512 pixelov."
-              square_icon_dark:
-                required: "Používanie inej štvorcovej ikony pre tmavý režim?"
-                title: "Štvorcová ikona tmavá"
-                help_text: "Odporúčaná veľkosť je 512 x 512 pixelov."
-              favicon:
-                title: "Favicon"
-                description: "Logo sa zobrazí ako ikona na karte prehliadača a v obľúbených položkách/záložkách prehliadača."
-              logo_small:
-                title: "Malé logo"
-                description: "Malý obrázok loga v ľavom hornom rohu vašej stránky, ktorý vidíte pri posúvaní nadol. Ak zostane prázdny, zobrazí sa domovský glyf."
-                help_text: "Odporúčaná veľkosť je 120 x 120 pixelov."
-              logo_small_dark:
-                required: "Použiť iné malé logo pre tmavý režim?"
-                title: "Malé logo tmavé"
-                help_text: "Odporúčaná veľkosť je 120 x 120 pixelov."
-              mobile: "Mobil"
-              email: "Email"
-              social_media: "Sociálne médiá"
-              mobile_logo:
-                title: "Mobilné logo"
-                description: "Logo použité na mobilnej verzii vašej stránky. Ak zostane prázdny, použije sa obrázok z nastavenia `logo`."
-                help_text: "Použite široký obdĺžnikový obrázok s výškou 120 a pomerom strán väčším ako 3:1."
-              mobile_logo_dark:
-                required: "Chcete použiť iné mobilné logo pre tmavý režim?"
-                title: "Mobilné logo tmavé"
-                help_text: "Použite široký obdĺžnikový obrázok s výškou 120 a pomerom strán väčším ako 3:1."
-              manifest_icon:
-                title: "Ikona manifestu"
-                description: "Obrázok použitý ako logo/splash obrázok v systéme Android. Ak zostane prázdny, použije sa large_icon."
-                help_text: "Odporúčaná veľkosť je 512 x 512 pixelov."
-              manifest_screenshots:
-                title: "Snímky obrazovky Manifest"
-                description: "Snímky obrazovky, ktoré prezentujú vlastnosti a funkcie vašej inštancie na stránke s výzvou na inštaláciu. Všetky obrázky by mali byť nahrané lokálne a mali by mať rovnaké rozmery."
-              apple_touch_icon:
-                title: "Ikona Apple touch"
-                description: "Ikona používaná pre dotykové zariadenia Apple. Ak zostane prázdna, použije sa large_icon."
-                help_text: "Odporúčaná veľkosť je 180 x 180 pixelov. Priehľadné pozadie sa neodporúča."
-              digest_logo:
-                title: "Logo Digest"
-                description: "Alternatívny obrázok loga, ktorý sa používa v hornej časti súhrnu e-mailu na vašej stránke. Ak zostane prázdny, použije sa obrázok z nastavenia `logo`."
-                help_text: "Použite široký obdĺžnikový obrázok. Nepoužívajte obrázok SVG."
-              opengraph_image:
-                title: "Obrázok OpenGraph"
-                description: "Predvolený obrázok opengraph, ktorý sa používa, ak stránka nemá iný vhodný obrázok. Ak zostane prázdny, použije sa large_icon."
-              x_summary_large_image:
-                title: "X súhrnný veľký obrázok"
-                description: "X karta \"súhrnný veľký obrázok\". Ak zostanú prázdne, bežné metadáta karty sa generujú pomocou OpenGraph_image, pokiaľ to nie je zároveň .svg."
-                help_text: "odporúčaná veľkosť je aspoň 280 x 150 pixelov. Nepoužívajte obrázok SVG."
-          fonts:
-            title: "Fonty"
-            form:
-              more_fonts: "Viac fontov"
-              less_fonts: "Menej fontov"
-              saved: "Nastavenia písma sú uložené."
-              base_font:
-                title: "Základné písmo"
-              heading_font:
-                title: "Písmo nadpisu"
-              default_text_size:
-                title: "Predvolená veľkosť textu"
-                description: "Túto veľkosť si môže každý používateľ následne upraviť podľa svojich preferencií."
-            backfill_modal:
-              title: "Použiť nové predvolené nastavenia textu?"
-              description:
-                one: "Aktualizovali ste predvolenú veľkosť textu. Chcete túto zmenu aplikovať na %{count} existujúceho používateľa?"
-                few: "Aktualizovali ste predvolenú veľkosť textu. Chcete túto zmenu aplikovať na %{count} existujúcich používateľov?"
-                many: "Aktualizovali ste predvolenú veľkosť textu. Chcete túto zmenu aplikovať na %{count} existujúcich používateľov?"
-                other: "Aktualizovali ste predvolenú veľkosť textu. Chcete túto zmenu aplikovať na %{count} existujúcich používateľov?"
-              modal_yes: "Áno"
-              modal_no: "Nie, prihlás sa len ďalej"
+        logo:
+          title: "Logo"
+          form:
+            saved: "Nastavenia loga sú uložené."
+            logo:
+              title: "Primárne logo"
+              description: "Zobrazuje sa v hornej časti navigácie stránky, ako aj v hornej časti e-mailových oznámení stránky."
+              help_text: "Odporúčaná veľkosť je 600 x 80 pixelov."
+            logo_dark:
+              required: "Použiť iné logo pre tmavý režim?"
+              title: "Primárne logo tmavé"
+              help_text: "Odporúčaná veľkosť je 600 x 80 pixelov."
+            large_icon:
+              title: "Štvorcová ikona"
+              description: "V hornej časti administrácie sa zobrazuje štvorcová verzia loga, ktorá je zároveň logom aplikácie na domovskej obrazovke mobilného telefónu."
+              help_text: "Odporúčaná veľkosť je 512 x 512 pixelov."
+            square_icon_dark:
+              required: "Používanie inej štvorcovej ikony pre tmavý režim?"
+              title: "Štvorcová ikona tmavá"
+              help_text: "Odporúčaná veľkosť je 512 x 512 pixelov."
+            favicon:
+              title: "Favicon"
+              description: "Logo sa zobrazí ako ikona na karte prehliadača a v obľúbených položkách/záložkách prehliadača."
+            logo_small:
+              title: "Malé logo"
+              description: "Malý obrázok loga v ľavom hornom rohu vašej stránky, ktorý vidíte pri posúvaní nadol. Ak zostane prázdny, zobrazí sa domovský glyf."
+              help_text: "Odporúčaná veľkosť je 120 x 120 pixelov."
+            logo_small_dark:
+              required: "Použiť iné malé logo pre tmavý režim?"
+              title: "Malé logo tmavé"
+              help_text: "Odporúčaná veľkosť je 120 x 120 pixelov."
+            mobile: "Mobil"
+            email: "Email"
+            social_media: "Sociálne médiá"
+            mobile_logo:
+              title: "Mobilné logo"
+              description: "Logo použité na mobilnej verzii vašej stránky. Ak zostane prázdny, použije sa obrázok z nastavenia `logo`."
+              help_text: "Použite široký obdĺžnikový obrázok s výškou 120 a pomerom strán väčším ako 3:1."
+            mobile_logo_dark:
+              required: "Chcete použiť iné mobilné logo pre tmavý režim?"
+              title: "Mobilné logo tmavé"
+              help_text: "Použite široký obdĺžnikový obrázok s výškou 120 a pomerom strán väčším ako 3:1."
+            manifest_icon:
+              title: "Ikona manifestu"
+              description: "Obrázok použitý ako logo/splash obrázok v systéme Android. Ak zostane prázdny, použije sa large_icon."
+              help_text: "Odporúčaná veľkosť je 512 x 512 pixelov."
+            manifest_screenshots:
+              title: "Snímky obrazovky Manifest"
+              description: "Snímky obrazovky, ktoré prezentujú vlastnosti a funkcie vašej inštancie na stránke s výzvou na inštaláciu. Všetky obrázky by mali byť nahrané lokálne a mali by mať rovnaké rozmery."
+            apple_touch_icon:
+              title: "Ikona Apple touch"
+              description: "Ikona používaná pre dotykové zariadenia Apple. Ak zostane prázdna, použije sa large_icon."
+              help_text: "Odporúčaná veľkosť je 180 x 180 pixelov. Priehľadné pozadie sa neodporúča."
+            digest_logo:
+              title: "Logo Digest"
+              description: "Alternatívny obrázok loga, ktorý sa používa v hornej časti súhrnu e-mailu na vašej stránke. Ak zostane prázdny, použije sa obrázok z nastavenia `logo`."
+              help_text: "Použite široký obdĺžnikový obrázok. Nepoužívajte obrázok SVG."
+            opengraph_image:
+              title: "Obrázok OpenGraph"
+              description: "Predvolený obrázok opengraph, ktorý sa používa, ak stránka nemá iný vhodný obrázok. Ak zostane prázdny, použije sa large_icon."
+            x_summary_large_image:
+              title: "X súhrnný veľký obrázok"
+              description: "X karta \"súhrnný veľký obrázok\". Ak zostanú prázdne, bežné metadáta karty sa generujú pomocou OpenGraph_image, pokiaľ to nie je zároveň .svg."
+              help_text: "odporúčaná veľkosť je aspoň 280 x 150 pixelov. Nepoužívajte obrázok SVG."
+        fonts:
+          title: "Fonty"
+          form:
+            more_fonts: "Viac fontov"
+            fewer_fonts: "Menej fontov"
+            saved: "Nastavenia písma sú uložené."
+            base_font:
+              title: "Základné písmo"
+            heading_font:
+              title: "Písmo nadpisu"
+            default_text_size:
+              title: "Predvolená veľkosť textu"
+              description: "Túto veľkosť si môže každý používateľ následne upraviť podľa svojich preferencií."
+          backfill_modal:
+            title: "Použiť nové predvolené nastavenia textu?"
+            description:
+              one: "Aktualizovali ste predvolenú veľkosť textu. Chcete túto zmenu aplikovať na %{count} existujúceho používateľa?"
+              few: "Aktualizovali ste predvolenú veľkosť textu. Chcete túto zmenu aplikovať na %{count} existujúcich používateľov?"
+              many: "Aktualizovali ste predvolenú veľkosť textu. Chcete túto zmenu aplikovať na %{count} existujúcich používateľov?"
+              other: "Aktualizovali ste predvolenú veľkosť textu. Chcete túto zmenu aplikovať na %{count} existujúcich používateľov?"
+            modal_yes: "Áno"
+            modal_no: "Nie, prihlás sa len ďalej"
         navigation:
           title: "Navigácia"
           header_description: "Konfigurácia navigačných odkazov a položiek ponuky na vašom webe. To zahŕňa umiestnenie a správanie primárnej navigačnej ponuky, rýchlych odkazov v hornej časti domovskej stránky, ako aj bočného panela správcu."
@@ -5765,11 +5776,16 @@ sk:
           title: "Vkladám"
           header_description: "Discourse má možnosť vložiť komentáre z témy na vzdialenú stránku pomocou rozhrania API pre Javascript, ktoré vytvorí okno IFRAME"
       search:
-        modal_title: "Vyhľadávanie čohokoľvek v aplikácii admin"
+        modal_title: "Vyhľadať všetko v administrácii"
         title: "Hľadať"
-        instructions: "Zadajte typ na vyhľadávanie stránok, nastavení, správ, tém, komponentov a ďalších..."
+        instructions: "Vyhľadať všetko v administrácii..."
         full_page_link: "Prepnutie na vyhľadávanie na celej stránke"
-        no_results: "Nenašli sme nič zodpovedajúce výrazu „%{filter}“."
+        no_results: 'Nenašli sme nič, čo by zodpovedalo "%{filter}".'
+        result_count:
+          one: '%{count} výsledok pre "%{filter}"'
+          few: '%{count} výsledokov pre "%{filter}"'
+          many: '%{count} výsledokov pre "%{filter}"'
+          other: '%{count} výsledky pre "%{filter}"'
         result_types:
           page:
             one: "Stránka"
@@ -6398,12 +6414,21 @@ sk:
           city_for_disputes_placeholder: "Mesto"
           city_for_disputes_help: |
             Uveďte mesto na riešenie právnych sporov týkajúcich sa tohto fóra.
+          extra_groups:
+            heading: "Zoznam skupín"
+            description: "Ďalšie skupiny, ktoré sa zobrazujú na stránke O nás."
+            groups: "Skupiny"
+            order: "Poradie triedenia"
+            initial_members: "Rozšírenie počtu členov"
+            initial_members_description: "Počet členov skupiny, ktorí sa majú zobraziť pred pridaním tlačidla Zobraziť viac."
+            show_description: "Zahrnúť popis"
           optional: "(nepovinné)"
           update: "Aktualizovať"
           toasts:
             general_settings_saved: "Všeobecné nastavenia uložené"
             contact_information_saved: "Kontaktné informácie uložené"
             your_organization_saved: "Vaša organizácia uložená"
+            extra_groups_saved: "Záznam skupiny bol uložený"
           saved: "uložené!"
         flags:
           edit_header: "Upraviť príznak"
@@ -6513,19 +6538,20 @@ sk:
           save_successful: "Používateľské pole uložené."
         color_palettes:
           palette_name: "Meno"
+          duplicate: "Duplikát"
+          delete: "Odstrániť"
           color_options:
             title: "Možnosti farieb"
             toggle: "Voliteľné používateľom"
             toggle_description: "Farebná paleta môže byť vybraná používateľmi"
           colors:
             title: "Farby"
-          logo_and_fonts_hint: "Chcete aktualizovať svoje logo a písma?"
-          go_to_logo_and_fonts: "Prejsť na Logo a písma"
           save_changes: "Uloženie zmien"
           unsaved_changes: "Máte neuložené zmeny"
           copy_of: "Kópia %{name}"
           copy_created: 'Bola vytvorená nová kópia "%{name}"'
           illegal_character_in_color: "Farby pozostávajú len z hexadecimálnych znakov"
+          delete_confirm: "Odstrániť túto paletu farieb?"
       plugins:
         title: "Pluginy"
         name: "Meno"
@@ -6871,38 +6897,38 @@ sk:
           active_filter: "Aktívny"
           inactive_filter: "Neaktívne"
           updates_available_filter: "Dostupné aktualizácie"
-          schema:
-            title: "Úprava nastavenia %{name}"
-            back_button: "Späť na %{name}"
-            fields:
-              required: "*povinné"
-              groups:
-                at_least:
-                  one: "vyžaduje sa aspoň %{count} skupina"
-                  few: "je potrebných aspoň %{count} skupín"
-                  many: "je potrebných aspoň %{count} skupín"
-                  other: "sú potrebné aspoň %{count} skupiny"
-              categories:
-                at_least:
-                  one: "vyžaduje sa aspoň %{count} kategória"
-                  few: "vyžaduje sa aspoň %{count} kategórií"
-                  many: "vyžaduje sa aspoň %{count} kategórií"
-                  other: "vyžadujú sa aspoň %{count} kategórie"
-              tags:
-                at_least:
-                  one: "vyžaduje sa aspoň %{count} značka"
-                  few: "vyžadujú sa aspoň %{count} značiek"
-                  many: "vyžadujú sa aspoň %{count} značiek"
-                  other: "vyžadujú sa aspoň %{count} značky"
-              string:
-                too_short:
-                  one: "musí mať aspoň %{count} znak"
-                  few: "musí mať minimálne %{count} znakov"
-                  many: "musí mať minimálne %{count} znakov"
-                  other: "musí mať minimálne %{count} znaky"
-              number:
-                too_small: "musí byť väčšie alebo rovné %{count}"
-                too_large: "musí byť menej alebo rovné %{count}"
+        schema:
+          title: "Úprava nastavenia %{name}"
+          back_button: "Späť na %{name}"
+          fields:
+            required: "*povinné"
+            groups:
+              at_least:
+                one: "vyžaduje sa aspoň %{count} skupina"
+                few: "je potrebných aspoň %{count} skupín"
+                many: "sú potrebné aspoň %{count} skupiny"
+                other: "sú potrebné aspoň %{count} skupiny"
+            categories:
+              at_least:
+                one: "vyžaduje sa aspoň %{count} kategória"
+                few: "vyžaduje sa aspoň %{count} kategórií"
+                many: "vyžadujú sa aspoň %{count} kategórie"
+                other: "vyžadujú sa aspoň %{count} kategórie"
+            tags:
+              at_least:
+                one: "vyžaduje sa aspoň %{count} značka"
+                few: "vyžadujú sa aspoň %{count} značiek"
+                many: "vyžadujú sa aspoň %{count} značky"
+                other: "vyžadujú sa aspoň %{count} značky"
+            string:
+              too_short:
+                one: "musí mať aspoň %{count} znak"
+                few: "musí mať minimálne %{count} znaky"
+                many: "musí mať minimálne %{count} znaky"
+                other: "musí mať minimálne %{count} znaky"
+            number:
+              too_small: "musí byť väčšie alebo rovné %{count}"
+              too_large: "musí byť menej alebo rovné %{count}"
         colors:
           select_base:
             title: "Vyberte základnú paletu farieb"

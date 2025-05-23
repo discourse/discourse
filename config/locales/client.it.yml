@@ -1159,7 +1159,6 @@ it:
       said: "%{username}:"
       profile: "Profilo"
       profile_possessive: "Profilo di %{username}"
-      account_possessive: "Account di %{name}"
       mute: "Silenzia"
       edit: "Modifica opzioni"
       download_archive:
@@ -1991,7 +1990,6 @@ it:
         title: "Indirizzo IP di Registrazione"
       avatar:
         title: "Immagine Profilo"
-        header_title: "profilo, messaggi, segnalibri e preferenze"
         name_and_description: "%{name} - %{description}"
         edit: "Modifica immagine profilo"
       title:
@@ -2858,7 +2856,6 @@ it:
           aria_label: filtra per visualizzazioni massime
         additional_options:
           label: "Filtra per numero di messaggi e visualizzazioni dell'argomento"
-    hamburger_menu: "menu"
     new_item: "nuovo"
     go_back: "indietro"
     not_logged_in_user: "pagina utente con riepilogo delle attività correnti e delle impostazioni"
@@ -3565,6 +3562,11 @@ it:
       in_reply_to: "Carica messaggio padre"
       view_all_posts: "Visualizza tutti i messaggi"
       badge_granted_tooltip: "%{username} ha ottenuto il distintivo \"%{badge_name}\" per questo messaggio!"
+      localizations:
+        table:
+          actions: "Azioni"
+          edit: "Modifica"
+          delete: "Cancella"
       errors:
         create: "Spiacenti, si è verificato un errore nel creare il tuo messaggio. Prova di nuovo."
         edit: "Spiacenti, si è verificato un errore nel modificare il tuo messaggio. Prova di nuovo."
@@ -4162,7 +4164,6 @@ it:
         today: "Oggi"
     custom_homepage:
       admin_message: 'Uno dei tuoi argomenti ha abilitato il modificatore "custom_homepage", ma non invia alcun risultato al connettore [custom-homepage]. (Messaggio visibile solo agli amministratori del sito)'
-    browser_update: 'Purtroppo, <a href="https://www.discourse.org/faq/#browser">il tuo browser non è supportato</a>. Per visualizzare i contenuti multimediali, <a href="https://browsehappy.com">passa a un browser supportato</a>, accedi e rispondi.'
     permission_types:
       full: "Crea / Rispondi / Visualizza"
       create_post: "Rispondi / Visualizza"
@@ -4843,24 +4844,23 @@ it:
         login_and_authentication:
           title: "Accesso e autenticazione"
           header_description: "Configura le modalità di accesso e autenticazione degli utenti, segreti e chiavi, fornitori OAuth2 e altro ancora"
-        logo_and_fonts:
-          logo:
-            form:
-              logo:
-                title: "Logo primario"
-              mobile: "Mobile"
-              email: "Email"
-              manifest_screenshots:
-                description: "Schermate che mostrano le caratteristiche e le funzionalità nella pagina di installazione. Tutte le immagini devono essere caricate in locale e delle stesse dimensioni."
-              opengraph_image:
-                description: "Immagine opengraph predefinita, utilizzata quando la pagina non ha altre immagini adatte. Se lasciato vuoto, verrà usato large_icon."
-          fonts:
-            title: "Caratteri"
-            form:
-              heading_font:
-                title: "Carattere dell'intestazione"
-            backfill_modal:
-              modal_yes: "Sì"
+        logo:
+          form:
+            logo:
+              title: "Logo primario"
+            mobile: "Mobile"
+            email: "Email"
+            manifest_screenshots:
+              description: "Schermate che mostrano le caratteristiche e le funzionalità nella pagina di installazione. Tutte le immagini devono essere caricate in locale e delle stesse dimensioni."
+            opengraph_image:
+              description: "Immagine opengraph predefinita, utilizzata quando la pagina non ha altre immagini adatte. Se lasciato vuoto, verrà usato large_icon."
+        fonts:
+          title: "Caratteri"
+          form:
+            heading_font:
+              title: "Carattere dell'intestazione"
+          backfill_modal:
+            modal_yes: "Sì"
         navigation:
           title: "Navigazione"
           header_description: "Configura i link di navigazione e le voci di menu per il tuo sito. Ciò include la posizione e il comportamento del menu di navigazione principale, i link rapidi in cima alla home page, nonché la barra laterale di amministrazione"
@@ -5576,6 +5576,8 @@ it:
           city_for_disputes_placeholder: "Città"
           city_for_disputes_help: |
             Specifica la città in cui risolvere le controversie legali relative a questo forum.
+          extra_groups:
+            groups: "Gruppi"
           optional: "(opzionale)"
           update: "Aggiorna"
           toasts:
@@ -5664,11 +5666,14 @@ it:
           save_successful: "Campo utente salvato."
         color_palettes:
           palette_name: "Nome"
+          duplicate: "Duplica"
+          delete: "Elimina"
           color_options:
             toggle: "Selezionabile dall'utente"
             toggle_description: "Lo schema di colori può essere selezionato dagli utenti"
           colors:
             title: "Colori"
+          delete_confirm: "Eliminare questa tavolozza dei colori?"
       plugins:
         title: "Plugin"
         name: "Nome"
@@ -5978,30 +5983,30 @@ it:
           active_filter: "Attivi"
           inactive_filter: "Non attivi"
           updates_available_filter: "Aggiornamenti disponibili"
-          schema:
-            title: "Modifica l'impostazione %{name}"
-            back_button: "Torna a %{name}"
-            fields:
-              required: "*obbligatorio"
-              groups:
-                at_least:
-                  one: "è richiesto almeno %{count} gruppo"
-                  other: "sono richiesti almeno %{count} gruppi"
-              categories:
-                at_least:
-                  one: "è richiesta almeno %{count} categoria"
-                  other: "sono richieste almeno %{count} categorie"
-              tags:
-                at_least:
-                  one: "è richiesta almeno %{count} etichetta"
-                  other: "sono richieste almeno %{count} etichette"
-              string:
-                too_short:
-                  one: "deve essere almeno di %{count} carattere"
-                  other: "deve essere almeno di %{count} caratteri"
-              number:
-                too_small: "deve essere maggiore o uguale a %{count}"
-                too_large: "deve essere minore o uguale a %{count}"
+        schema:
+          title: "Modifica l'impostazione %{name}"
+          back_button: "Torna a %{name}"
+          fields:
+            required: "*obbligatorio"
+            groups:
+              at_least:
+                one: "è richiesto almeno %{count} gruppo"
+                other: "sono richiesti almeno %{count} gruppi"
+            categories:
+              at_least:
+                one: "è richiesta almeno %{count} categoria"
+                other: "sono richieste almeno %{count} categorie"
+            tags:
+              at_least:
+                one: "è richiesta almeno %{count} etichetta"
+                other: "sono richieste almeno %{count} etichette"
+            string:
+              too_short:
+                one: "deve essere almeno di %{count} carattere"
+                other: "deve essere almeno di %{count} caratteri"
+            number:
+              too_small: "deve essere maggiore o uguale a %{count}"
+              too_large: "deve essere minore o uguale a %{count}"
         colors:
           select_base:
             title: "Seleziona la tavolozza dei colori di base"

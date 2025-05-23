@@ -305,6 +305,7 @@ sk:
         other: "je obmedzený na %{count} znakov, zadali ste %{length}."
       invalid_boolean: "Neplatná logická hodnota."
       taken: "je už použité"
+      reserved: "%{name} názov skupiny je rezervovaný, vyberte iný názov"
       accepted: sa musí akceptovať
       blank: nesmie byť prázdne
       present: musí byť prázdne
@@ -2639,6 +2640,10 @@ sk:
     page_loading_indicator: "Nakonfigurujte indikátor načítania, ktorý sa zobrazí počas navigácie po stránkach v rámci Discourse. „Spinner“ je indikátor celej strany. „Posuvník“ zobrazuje úzky pruh v hornej časti obrazovky."
     show_user_menu_avatars: "Zobraziť používateľské avatary v používateľskej ponuke"
     about_page_hidden_groups: "Nezobrazujte členov konkrétnych skupín na stránke /o nás."
+    about_page_extra_groups: "Skupiny, ktoré sa zobrazujú na stránke o skupine pod moderátormi."
+    about_page_extra_groups_initial_members: "Počet členov na rozšírenie každej skupiny na stránke o skupine."
+    about_page_extra_groups_show_description: "Či sa majú popisy skupín uvádzať na stránke o skupine."
+    about_page_extra_groups_order: "Usporiadanie ďalších skupín na stránke o používateľovi."
     adobe_analytics_tags_url: "Adresa URL značiek Adobe Analytics (`https://assets.adobedtm.com/...`)"
     view_raw_email_allowed_groups: "Skupiny, ktoré môžu zobraziť nespracovaný obsah e-mailu, ak bol príspevok vytvorený pomocou prichádzajúceho e-mailu. To zahŕňa hlavičky e-mailov a ďalšie technické informácie."
     experimental_content_localization: "Zobrazuje lokalizovaný obsah pre používateľov na základe ich jazykových preferencií. Takýto obsah môže zahŕňať kategórie, značky, príspevky a témy. Na tejto funkcii sa intenzívne pracuje."
@@ -2669,6 +2674,7 @@ sk:
         many: "Nesmie byť dlhší než %{count} znakov."
         other: "Nesmie byť dlhší než %{count} znakov."
       invalid_json: "Neplatný JSON."
+      invalid_object: "Neplatný objekt."
       invalid_reply_by_email_address: "Hodnota musí obsahovať '%{reply_key}' a byť odlišná od notifikačného emailu."
       invalid_alternative_reply_by_email_addresses: "Všetky hodnoty musia obsahovať '%{reply_key}' a musia sa líšiť od notifikačného e-mailu."
       invalid_domain_hostname: "Nesmie obsahovať znaky * alebo ?."
@@ -4383,7 +4389,7 @@ sk:
     title: "Nie je možné načítať aplikáciu"
     offline_page_message: "Vyzerá to, že ste offline! Skontrolujte prosím svoje sieťové pripojenie a skúste to znova."
   login_required:
-    welcome_message: "# [Vitajte v %{title}](#welcome)"
+    welcome_message: "# Vitajte na %{title}"
   upload:
     edit_reason: "stiahnuté lokálne kópie obrázkov"
     unauthorized: "Ľutujeme, súbor, ktorý sa pokúšate nahrať nemá povolenú príponu (povolené prípony sú: %{authorized_extensions})."
@@ -4409,7 +4415,7 @@ sk:
     images:
       too_large: "Ľutujeme, obrázok, ktorý sa pokúšate nahrať, je príliš veľký (maximálna veľkosť je %{max_size_kb}KB), prosím zmenšite ho a skúste znovu. "
       too_large_humanized: "Ľutujeme, obrázok, ktorý sa pokúšate nahrať, je príliš veľký (maximálna veľkosť je %{max_size}), zmeňte jeho veľkosť a skúste to znova."
-      larger_than_x_megapixels: "Je nám ľúto, ale obrázok, ktorý sa snažíte nahrať, je príliš veľký (maximálny rozmer je %{max_image_megapixels} megapixelov), zmeňte jeho veľkosť a skúste to znova."
+      larger_than_x_megapixels: "Prepáčte, obrázok s názvom súboru %{original_filename} je príliš veľký (maximálny rozmer je %{max_image_megapixels} megapixelov), zmeňte jeho veľkosť a skúste to znova."
       size_not_found: "Ľutujeme, ale nepodarilo sa nám zistiť veľkosť obrázku. Nie je nahodou poškodený?"
     placeholders:
       too_large: "(obrázok väčší ako %{max_size_kb}KB)"

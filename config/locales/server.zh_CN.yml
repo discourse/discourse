@@ -242,6 +242,7 @@ zh_CN:
         other: "最多只能有 %{count} 个字符；您输入了 %{length} 个字符。"
       invalid_boolean: "布尔值无效。"
       taken: "已被采用"
+      reserved: "%{name} 组名已保留，请选择其他名称"
       accepted: 必须被接受
       blank: 不能为空
       present: 必须为空
@@ -2433,6 +2434,7 @@ zh_CN:
       invalid_string_max:
         other: "不得超过 %{count} 个字符。"
       invalid_json: "无效的 JSON。"
+      invalid_object: "无效对象。"
       invalid_reply_by_email_address: "值必须包含 '%{reply_key}' 并且与通知电子邮件不同。"
       invalid_alternative_reply_by_email_addresses: "所有值必须包含 '%{reply_key}' 并且与通知电子邮件不同。"
       invalid_domain_hostname: "不得包括 * 或 ? 字符。"
@@ -4043,7 +4045,7 @@ zh_CN:
     title: "无法加载应用"
     offline_page_message: "您好像离线了！请检查您的网络连接，然后重试。"
   login_required:
-    welcome_message: "# [欢迎来到 %{title}](#welcome)"
+    welcome_message: "# 欢迎来到 %{title}"
   upload:
     edit_reason: "下载图片的本地副本"
     unauthorized: "抱歉，您尝试上传的文件不被允许（允许的扩展名：%{authorized_extensions}）。"
@@ -4069,7 +4071,7 @@ zh_CN:
     images:
       too_large: "抱歉，您尝试上传的图片过大（大小上限为 %{max_size_kb}KB），请调整大小并重试。"
       too_large_humanized: "抱歉，您尝试上传的图片太大（大小上限为 %{max_size}），请调整大小并重试。"
-      larger_than_x_megapixels: "抱歉，您尝试上传的图片过大（大小上限为 %{max_image_megapixels}00 万像素），请调整大小并重试。"
+      larger_than_x_megapixels: "抱歉，文件名为 %{original_filename} 的图片过大（最大尺寸为 %{max_image_megapixels} 万像素），请调整大小后再试。"
       size_not_found: "抱歉，我们无法确定图片的大小。也许您的图片已被损坏？"
     placeholders:
       too_large: "（图片大小超过 %{max_size_kb}KB）"
@@ -4977,6 +4979,14 @@ zh_CN:
       restored: 已恢复
     bulk_user_delete: "已通过批量删除操作删除"
     cli_bulk_post_delete: "从 rake 任务中批量删除"
+    api_post_delete: "已通过 API 删除"
+    reminder_deleted: "由新的提醒替换"
+    user_associated_posts_deleted: "用户已被删除"
+    imap_email_deleted: "电子邮件已在 IMAP 服务器上删除"
+    imap_email_marked_as_spam: "电子邮件已在 IMAP 服务器上移至垃圾邮件"
+    auto_deleted_hidden_posts: "自动删除隐藏的帖子"
+    seed_data_topic_updated: "种子数据主题已更新"
+    seed_data_topic_deleted: "种子数据主题已删除"
   reviewables:
     already_handled: "谢谢，但我们已经审核该帖子并确定不需要再次举报它。"
     already_handled_and_user_not_exist: "谢谢，但有人已经审核过了，该用户已不存在。"

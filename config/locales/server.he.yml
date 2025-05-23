@@ -2631,6 +2631,10 @@ he:
     page_loading_indicator: "הגדרת מחוון הטעינה שמופיע במהלך ניווט בין עמודים ב־Discourse. ‚שבשבת’ הוא מחוון עמוד מלא. ‚מד התקדמות’ מציג סרגל צר בראש המסך."
     show_user_menu_avatars: "הצגת תמונות ייצוגיות של משתמשים בתפריט המשתמש"
     about_page_hidden_groups: "לא להציג חברים מקבוצות מסוימות בדף ‎/about."
+    about_page_extra_groups: "קבוצות להצגה בעמוד ‚על אודות’ מתחת למפקחים."
+    about_page_extra_groups_initial_members: "מספר חברים להרחבה על כל קבוצה בעמוד ‚על אודות’."
+    about_page_extra_groups_show_description: "האם לכלול את תיאורי הקבוצות בעמוד ‚על אודות’."
+    about_page_extra_groups_order: "סידור הקבוצות הנוספות בעמוד על אודות."
     adobe_analytics_tags_url: "כתובת תגיות Adobe Analytics‏ (`https://assets.adobedtm.com/...‎`)"
     view_raw_email_allowed_groups: "קבוצות שיכולות לצפות בתוכן הגולמי של הודעות הדוא״ל של פוסט אם הוא נוצר מהודעת דוא״ל נכנסת. כולל כותרות דוא״ל ופירוט טכני נוסף."
     experimental_content_localization: "הצגת תוכן מקומי עבור משתמשים בהתבסס על העדפות השפה שלהם. תוכן כזה עשוי לכלול קטגוריות, תגיות, פוסטים ונושאים. היכולת הזאת זוכה למאמצי פיתוח נרחבים."
@@ -2660,6 +2664,7 @@ he:
         many: "אסור יותר מ־%{count} תווים."
         other: "אסור יותר מ־%{count} תווים."
       invalid_json: "JSON פגום."
+      invalid_object: "פריט שגוי."
       invalid_reply_by_email_address: "הערך חייב להכיל '%{reply_key}' ולהיות שונה מכתובת הדוא״ל להתראה."
       invalid_alternative_reply_by_email_addresses: "על כל הערכים לכלול ‚%{reply_key}’ ולהיות שונים מהדוא״ל לעדכונים."
       invalid_domain_hostname: "אסור לכלול את התווים * או ?."
@@ -4349,7 +4354,7 @@ he:
     title: "לא ניתן לטעון את היישום"
     offline_page_message: "נראה כאילו אין לך תקשורת לאינטרנט! נא לבדוק את חיבור הרשת שלך ולנסות שוב."
   login_required:
-    welcome_message: "# [ברוך בואך אל %{title}](#welcome)"
+    welcome_message: "# ברוך בואך אל %{title}"
   upload:
     edit_reason: "עותקים מקומיים של תמונות שהורדו"
     unauthorized: "הקובץ שמועמד להעלאה אינו מורשה (סיומות מורשות: %{authorized_extensions}), עמך הסליחה."
@@ -4375,7 +4380,7 @@ he:
     images:
       too_large: "סליחה, אך התמונה שאתם מנסים להעלות גדולה מידי. (הגודל המקסימלי הוא %{max_size_kb}KB), אנא שנו את הגודל ונסו שנית."
       too_large_humanized: "התמונה המועמדת לשליחה גדולה מדי (הגודל המרבי הוא %{max_size}), נא לשנות את הגודל ולנסות שוב."
-      larger_than_x_megapixels: "התמונה שניסית להעלות גדולה מדי (הגודל המרבי הוא %{max_image_megapixels} מגה-פיקסלים), נא לשנות את גודלה ולנסות שוב."
+      larger_than_x_megapixels: "התמונה עם שם הקובץ %{original_filename} גדולה מדי (הממדים המרביים הם %{max_image_megapixels} מגה־פיקסלים), נא לשנות את גודלה ולנסות שוב."
       size_not_found: "מצטערים, אבל לא יכולנו לקבוע את גודל התמונה. אולי יש בעיה טכנית בתמונה?"
     placeholders:
       too_large: "(תמונה שגודלה חורג מ־%{max_size_kb} ק״ב)"
@@ -5307,6 +5312,7 @@ he:
     user_associated_posts_deleted: "המשתמש הושמד"
     imap_email_deleted: "הודעת הדוא״ל נמחקה משרת ה־IMAP"
     imap_email_marked_as_spam: "הודעת הדוא״ל הועברה לספאם בשרת ה־IMAP"
+    auto_deleted_hidden_posts: "פוסטים מוסתרים שהושמדו אוטומטית"
   reviewables:
     already_handled: "תודה לך, כבר בדקנו את הפוסט הזה והחלטנו שאין צורך לסמן אותו בדגל פעם נוספת."
     already_handled_and_user_not_exist: "תודה, אבל כבר נערכה בדיקה והמשתמש הזה אינו קיים עוד."

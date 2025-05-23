@@ -12,6 +12,7 @@ import icon from "discourse/helpers/d-icon";
 import formatDate from "discourse/helpers/format-date";
 import formatUsername from "discourse/helpers/format-username";
 import htmlSafe from "discourse/helpers/html-safe";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
 import InlineEditCheckbox from "admin/components/inline-edit-checkbox";
 import ThemeSettingEditor from "admin/components/theme-setting-editor";
@@ -55,7 +56,7 @@ export default RouteTemplate(
           <PluginOutlet
             @name="admin-customize-themes-show-top"
             @connectorTagName="div"
-            @outletArgs={{hash theme=@controller.model}}
+            @outletArgs={{lazyHash theme=@controller.model}}
           />
         </span>
 
@@ -84,7 +85,7 @@ export default RouteTemplate(
 
         <PluginOutlet
           @name="admin-customize-theme-before-errors"
-          @outletArgs={{hash theme=@controller.model}}
+          @outletArgs={{lazyHash theme=@controller.model}}
         />
 
         {{#each @controller.model.errors as |error|}}
@@ -564,7 +565,7 @@ export default RouteTemplate(
 
           <PluginOutlet
             @name="admin-customize-theme-before-controls"
-            @outletArgs={{hash theme=@controller.model}}
+            @outletArgs={{lazyHash theme=@controller.model}}
           />
           <div class="theme-controls">
             <a

@@ -1177,7 +1177,6 @@ hu:
       said: "%{username}:"
       profile: "Profil"
       profile_possessive: "%{username} profilja"
-      account_possessive: "%{name} fiókja"
       mute: "Némítás"
       edit: "Beállítások szerkesztése"
       download_archive:
@@ -2012,7 +2011,6 @@ hu:
         title: "Regisztrációkor használt IP-cím"
       avatar:
         title: "Profilkép"
-        header_title: "profil, üzenetek, könyvjelzők és beállítások"
         name_and_description: "%{name} – %{description}"
         edit: "Profilkép szerkesztése"
       title:
@@ -2823,7 +2821,6 @@ hu:
       in_messages_tooltip: "váltás a szokásos témák keresésére"
       in_topics_posts: "az összes témában és bejegyzésben"
       enter_hint: "vagy nyomjon Entert"
-      mobile_enter_hint: "vagy koppintson a Keresés ikonra"
       in_posts_by: "%{username} bejegyzéseiben"
       recent: "Legutóbbi keresések"
       clear_recent: "Legutóbbi keresések törlése"
@@ -2912,7 +2909,6 @@ hu:
           aria_label: szűrés a megtekintések legnagyobb száma szerint
         additional_options:
           label: "Szűrés hozzászólásszám és témamegtekintés szerint"
-    hamburger_menu: "menü"
     new_item: "új"
     go_back: "visszalépés"
     not_logged_in_user: "felhasználói oldal a jelenlegi tevékenységek és beállítások összesítésével"
@@ -3625,6 +3621,12 @@ hu:
       in_reply_to: "Szülőbejegyzés betöltése"
       view_all_posts: "Az összes válasz megtekintése"
       badge_granted_tooltip: "%{username} megkapta a „%{badge_name}” jelvényt ezért a bejegyzésért!"
+      localizations:
+        table:
+          locale: "Nyelv"
+          actions: "Műveletek"
+          edit: "Szerkesztés"
+          delete: "Törlés"
       errors:
         create: "Sajnos hiba történt a bejegyzése létrehozása során. Próbálja újra."
         edit: "Sajnos hiba történt a bejegyzése szerkesztése során. Próbálja újra."
@@ -4238,7 +4240,6 @@ hu:
         today: "Utolsó 24 óra"
     custom_homepage:
       admin_message: 'Az egyik téma engedélyezte a "custom_homepage" módosítót, de nem ad ki semmit a [custom-homepage] csatlakozóban. (Ez az üzenet csak az oldal adminisztrátorainak jelenik meg.)'
-    browser_update: 'Sajnos <a href="https://www.discourse.org/faq/#browser">a böngésződ nem támogatott</a>. Kérlek, <a href="https://browsehappy.com">válts támogatott böngészőre</a> a gazdag tartalom megtekintéséhez, a bejelentkezéshez és a válaszadáshoz.'
     permission_types:
       full: "Létrehozás / Válaszolás / Megtekintés"
       create_post: "Válaszolás / Megtekintés"
@@ -4856,6 +4857,8 @@ hu:
     safari_15_warning: "Az Ön böngészője hamarosan nem lesz kompatibilis ezzel a közösséggel. Ha továbbra is részt szeretne venni itt, frissítse böngészőjét, vagy <a href='%{url}'>tudjon meg többet</a>."
     discovery:
       headings:
+        all:
+          default: "Minden %{filter} téma"
         categories: "Minden kategória"
         filter_labels:
           latest: "Legutóbbi"
@@ -4928,90 +4931,86 @@ hu:
         login_and_authentication:
           title: "Bejelentkezés és hitelesítés"
           header_description: "Konfigurálja a felhasználók bejelentkezési és hitelesítési módját, a titkokat és kulcsokat, az OAuth2-szolgáltatókat stb"
-        logo_and_fonts:
-          title: "Logó és betűtípusok"
-          header_description: "Testreszabhatja webhelye logójának és betűtípusainak változatait"
-          logo:
-            title: "Logó"
-            form:
-              saved: "A logó beállításai mentésre kerülnek."
-              logo:
-                title: "Elsődleges logó"
-                description: "Megjelenik a webhely felső navigációs sávjában, valamint a webhely e-mail értesítéseinek felső részén."
-                help_text: "Az ajánlott méret 600 x 80 pixel."
-              logo_dark:
-                required: "Használjon másik logót sötét módban?"
-                title: "Elsődleges sötét logó"
-                help_text: "Az ajánlott méret 600 x 80 pixel."
-              large_icon:
-                title: "Négyzet alakú ikon"
-                description: "A logó képének négyzetes változata az adminisztráció tetején jelenik meg, és egyben a mobil kezdőképernyőjének logója is."
-                help_text: "Az ajánlott méret 512 x 512 pixel."
-              square_icon_dark:
-                required: "Másik négyzet ikon használata a sötét módhoz?"
-                title: "Sötét négyzet alakú ikon"
-                help_text: "Az ajánlott méret 512 x 512 pixel."
-              favicon:
-                title: "Favicon"
-                description: "A logó ikonként jelenik meg a böngésző lapon és a böngésző kedvencei/könyvjelzői között."
-              logo_small:
-                title: "Kis logó"
-                description: "A webhelye bal felső sarkában megjelenő kis logó kép, amely görgetéskor látható. Ha üresen hagyja, egy házikó ikon fog megjelenni."
-                help_text: "Az ajánlott méret 120 x 120 pixel."
-              logo_small_dark:
-                required: "Használjon egy másik kis logót a sötét módhoz?"
-                title: "Kis sötét logó"
-                help_text: "Az ajánlott méret 120 x 120 pixel."
-              mobile: "Mobil"
-              email: "E-mail:"
-              social_media: "Közösségi média"
-              mobile_logo:
-                title: "Mobil logó"
-                description: "A webhely mobil verzióján használt logó. Ha üresen hagyja, akkor a \"logó\" beállításban szereplő képet fogja használni."
-                help_text: "Használjon széles, téglalap alakú, 120 magasságú és 3:1-nél nagyobb képarányú képet."
-              mobile_logo_dark:
-                required: "Más mobillogót használjon a sötét módhoz?"
-                title: "Sötét mobillogó"
-                help_text: "Használjon széles, téglalap alakú, 120 magasságú és 3:1-nél nagyobb képarányú képet."
-              manifest_icon:
-                description: "Az Androidon logóként/splash képként használt kép. Ha üresen hagyja, a large_icon lesz használatban."
-                help_text: "Az ajánlott méret 512 x 512 pixel."
-              manifest_screenshots:
-                description: "Képernyőképek, amelyek bemutatják az Ön példányának jellemzőit és funkcionalitását a telepítés oldalon. Minden képnek helyi feltöltésűnek kell lennie és azonos méretűnek."
-              apple_touch_icon:
-                title: "Apple touch ikon"
-                description: "Apple érintőképernyős eszközökhöz használt ikon. Ha üresen hagyja, a large_icon lesz használatban."
-                help_text: "Az ajánlott méret 180 x 180 pixel. Az átlátszó háttér nem ajánlott."
-              digest_logo:
-                description: "A webhelye e-mailes összefoglalójának tetején használt alternatív logókép. Ha üresen hagyja, akkor a „logó” beállításból származó kép kerül felhasználásra."
-                help_text: "Használjon széles téglalap alakú képet. Ne használjon SVG-képet."
-              opengraph_image:
-                title: "OpenGraph kép"
-                description: "Alapértelmezett opengraph kép, amely akkor használatos, amikor az oldalnak nincs más megfelelő képe. Ha üresen hagyja, a large_icon lesz használva."
-              x_summary_large_image:
-                title: "X összefoglaló nagy kép"
-                description: "X kártya 'összefoglaló nagy kép'. Ha üresen hagyja, a kártya metaadatai az OpenGraph_image segítségével generálódnak, feltéve, hogy az nem .svg."
-                help_text: "az ajánlott méret legalább 280 x 150 pixel. Ne használjon SVG-képet."
-          fonts:
-            title: "Betűtípusok"
-            form:
-              more_fonts: "További betűtípusok"
-              less_fonts: "Kevesebb betűtípus"
-              saved: "A betűtípus beállítások mentésre kerültek"
-              base_font:
-                title: "Alap betűtípus"
-              heading_font:
-                title: "Fejléc betűtípus"
-              default_text_size:
-                title: "Alapértelmezett szövegméret"
-                description: "Ezt a méretet a későbbiekben minden felhasználó saját igényei szerint módosíthatja."
-            backfill_modal:
-              title: "Alkalmaz új alapértelmezett szövegbeállításokat?"
-              description:
-                one: "Módosította az alapértelmezett szövegméretet. Alkalmazni szeretné ezt a módosítást %{count} meglévő felhasználóra?"
-                other: "Módosította az alapértelmezett szövegméretet. Alkalmazni szeretné ezt a módosítást %{count} meglévő felhasználóra?"
-              modal_yes: "Igen"
-              modal_no: "Nem, csak a jövőben alkalmazandó"
+        logo:
+          title: "Logó"
+          form:
+            saved: "A logó beállításai mentésre kerülnek."
+            logo:
+              title: "Elsődleges logó"
+              description: "Megjelenik a webhely felső navigációs sávjában, valamint a webhely e-mail értesítéseinek felső részén."
+              help_text: "Az ajánlott méret 600 x 80 pixel."
+            logo_dark:
+              required: "Használjon másik logót sötét módban?"
+              title: "Elsődleges sötét logó"
+              help_text: "Az ajánlott méret 600 x 80 pixel."
+            large_icon:
+              title: "Négyzet alakú ikon"
+              description: "A logó képének négyzetes változata az adminisztráció tetején jelenik meg, és egyben a mobil kezdőképernyőjének logója is."
+              help_text: "Az ajánlott méret 512 x 512 pixel."
+            square_icon_dark:
+              required: "Másik négyzet ikon használata a sötét módhoz?"
+              title: "Sötét négyzet alakú ikon"
+              help_text: "Az ajánlott méret 512 x 512 pixel."
+            favicon:
+              title: "Favicon"
+              description: "A logó ikonként jelenik meg a böngésző lapon és a böngésző kedvencei/könyvjelzői között."
+            logo_small:
+              title: "Kis logó"
+              description: "A webhelye bal felső sarkában megjelenő kis logó kép, amely görgetéskor látható. Ha üresen hagyja, egy házikó ikon fog megjelenni."
+              help_text: "Az ajánlott méret 120 x 120 pixel."
+            logo_small_dark:
+              required: "Használjon egy másik kis logót a sötét módhoz?"
+              title: "Kis sötét logó"
+              help_text: "Az ajánlott méret 120 x 120 pixel."
+            mobile: "Mobil"
+            email: "E-mail:"
+            social_media: "Közösségi média"
+            mobile_logo:
+              title: "Mobil logó"
+              description: "A webhely mobil verzióján használt logó. Ha üresen hagyja, akkor a \"logó\" beállításban szereplő képet fogja használni."
+              help_text: "Használjon széles, téglalap alakú, 120 magasságú és 3:1-nél nagyobb képarányú képet."
+            mobile_logo_dark:
+              required: "Más mobillogót használjon a sötét módhoz?"
+              title: "Sötét mobillogó"
+              help_text: "Használjon széles, téglalap alakú, 120 magasságú és 3:1-nél nagyobb képarányú képet."
+            manifest_icon:
+              description: "Az Androidon logóként/splash képként használt kép. Ha üresen hagyja, a large_icon lesz használatban."
+              help_text: "Az ajánlott méret 512 x 512 pixel."
+            manifest_screenshots:
+              description: "Képernyőképek, amelyek bemutatják az Ön példányának jellemzőit és funkcionalitását a telepítés oldalon. Minden képnek helyi feltöltésűnek kell lennie és azonos méretűnek."
+            apple_touch_icon:
+              title: "Apple touch ikon"
+              description: "Apple érintőképernyős eszközökhöz használt ikon. Ha üresen hagyja, a large_icon lesz használatban."
+              help_text: "Az ajánlott méret 180 x 180 pixel. Az átlátszó háttér nem ajánlott."
+            digest_logo:
+              description: "A webhelye e-mailes összefoglalójának tetején használt alternatív logókép. Ha üresen hagyja, akkor a „logó” beállításból származó kép kerül felhasználásra."
+              help_text: "Használjon széles téglalap alakú képet. Ne használjon SVG-képet."
+            opengraph_image:
+              title: "OpenGraph kép"
+              description: "Alapértelmezett opengraph kép, amely akkor használatos, amikor az oldalnak nincs más megfelelő képe. Ha üresen hagyja, a large_icon lesz használva."
+            x_summary_large_image:
+              title: "X összefoglaló nagy kép"
+              description: "X kártya 'összefoglaló nagy kép'. Ha üresen hagyja, a kártya metaadatai az OpenGraph_image segítségével generálódnak, feltéve, hogy az nem .svg."
+              help_text: "az ajánlott méret legalább 280 x 150 pixel. Ne használjon SVG-képet."
+        fonts:
+          title: "Betűtípusok"
+          form:
+            more_fonts: "További betűtípusok"
+            saved: "A betűtípus beállítások mentésre kerültek"
+            base_font:
+              title: "Alap betűtípus"
+            heading_font:
+              title: "Fejléc betűtípus"
+            default_text_size:
+              title: "Alapértelmezett szövegméret"
+              description: "Ezt a méretet a későbbiekben minden felhasználó saját igényei szerint módosíthatja."
+          backfill_modal:
+            title: "Alkalmaz új alapértelmezett szövegbeállításokat?"
+            description:
+              one: "Módosította az alapértelmezett szövegméretet. Alkalmazni szeretné ezt a módosítást %{count} meglévő felhasználóra?"
+              other: "Módosította az alapértelmezett szövegméretet. Alkalmazni szeretné ezt a módosítást %{count} meglévő felhasználóra?"
+            modal_yes: "Igen"
+            modal_no: "Nem, csak a jövőben alkalmazandó"
         navigation:
           title: "Navigáció"
           header_description: "Konfigurálja a navigációs hivatkozásokat és a menüelemeket a webhelyéhez. Ide tartozik az elsődleges navigációs menü helye és viselkedése, a kezdőlap tetején található gyorshivatkozások, valamint az adminisztrátori oldalsáv"
@@ -5206,9 +5205,7 @@ hu:
           title: "Beágyazás"
           header_description: "A Discourse képes beágyazni egy téma hozzászólásait egy távoli webhelyre egy Javascript API segítségével, amely létrehoz egy IFRAME-t."
       search:
-        modal_title: "Keresés adminban"
         title: "Keresés"
-        instructions: "Írja be, hogy keressen oldalakat, beállításokat, jelentéseket, témákat, összetevőket és még sok mást..."
         result_types:
           page:
             one: "Oldal"
@@ -5807,6 +5804,8 @@ hu:
           city_for_disputes_placeholder: "Város"
           city_for_disputes_help: |
             Adja meg a várost a fórummal kapcsolatos jogi viták rendezésére.
+          extra_groups:
+            groups: "Csoportok"
           optional: "(nem kötelező)"
           update: "Frissítés"
           toasts:
@@ -5920,19 +5919,20 @@ hu:
           save_successful: "Felhasználói mező mentve."
         color_palettes:
           palette_name: "Név"
+          duplicate: "Megkettőz"
+          delete: "Törlés"
           color_options:
             title: "Színbeállítások"
             toggle: "Felhasználó által választható"
             toggle_description: "A színpalettát a felhasználók választhatják ki"
           colors:
             title: "Színek"
-          logo_and_fonts_hint: "Szeretné frissíteni a logóját és betűtípusait?"
-          go_to_logo_and_fonts: "Lépjen a Logó és betűtípusok oldalra"
           save_changes: "Módosítások mentése"
           unsaved_changes: "Nem mentett módosításai vannak"
           copy_of: "%{name} másolata"
           copy_created: '%{name} Új példánya létrehozva'
           illegal_character_in_color: "A színek csak hexadecimális karakterekből állnak."
+          delete_confirm: "Törli ezt a színpalettát?"
       plugins:
         title: "Bővítmények"
         name: "Név"
@@ -6110,6 +6110,9 @@ hu:
           is_default: "Ez a téma alapértelmezetten van bekapcsolva."
           user_selectable: "A téma a felhasználók által választható"
           user_selectable_badge_label: "Felhasználó által választható"
+          user_selectable_button_label: "Felhasználók kiválaszthatják"
+          user_selectable_unavailable_button_label: "Elérhetetlenné tétel a felhasználók számára"
+          broken_badge_label: "Hibás téma"
           color_scheme_user_selectable: "A színpalettát a felhasználók választhatják ki"
           auto_update: "Automatikus frissítés a Discourse frissítésekor"
           color_scheme: "Színpaletta"
@@ -6127,7 +6130,10 @@ hu:
           convert_theme_alert_generic: "Biztos, hogy ezt a témát összetevővé akarja konvertálni?"
           convert_theme_tooltip: "A téma átalakítása összetevővé"
           inactive_themes: "Inaktív témák:"
+          set_default_theme: "Beállítás aktívként"
+          default_theme: "Aktív téma"
           set_default_success: "Alapértelmezett téma: %{theme}"
+          setting_was_saved: "A témabeállítás mentésre került"
           install_success: "%{theme} sikeresen telepítve!"
           inactive_components: "Nem használt összetevők:"
           selected:
@@ -6139,6 +6145,7 @@ hu:
           disabled_component_tooltip: "Ez az összetevő le van tiltva"
           default_theme_tooltip: "Ez a téma a webhely alapértelmezett témája"
           updates_available_tooltip: "Frissítések érhetők el ehhez a témához"
+          update_available: "Frissítésre szorul"
           and_x_more:
             one: "és még további %{count}."
             other: "és még további %{count}."
@@ -6265,30 +6272,30 @@ hu:
           active_filter: "Aktív"
           inactive_filter: "Inaktív"
           updates_available_filter: "Frissítések érhetők el"
-          schema:
-            title: "%{name} beállítások szerkesztése"
-            back_button: "%{name}-hoz vissza"
-            fields:
-              required: "*kötelező"
-              groups:
-                at_least:
-                  one: "legalább a %{count} csoportra van szükség"
-                  other: "legalább %{count} csoportra van szükség"
-              categories:
-                at_least:
-                  one: "legalább %{count} kategóriára van szükség"
-                  other: "legalább %{count} kategóriára van szükség"
-              tags:
-                at_least:
-                  one: "legalább %{count} címke szükséges"
-                  other: "legalább %{count} címke szükséges"
-              string:
-                too_short:
-                  one: "nem lehet rövidebb, mint %{count} karakter"
-                  other: "nem lehet rövidebb, mint %{count} karakter"
-              number:
-                too_small: "nagyobb vagy egyenlőnek kell lennie, mint %{count}"
-                too_large: "kisebb vagy egyenlőnek kell lennie, mint %{count}"
+        schema:
+          title: "%{name} beállítások szerkesztése"
+          back_button: "%{name}-hoz vissza"
+          fields:
+            required: "*kötelező"
+            groups:
+              at_least:
+                one: "legalább a %{count} csoportra van szükség"
+                other: "legalább %{count} csoportra van szükség"
+            categories:
+              at_least:
+                one: "legalább %{count} kategóriára van szükség"
+                other: "legalább %{count} kategóriára van szükség"
+            tags:
+              at_least:
+                one: "legalább %{count} címke szükséges"
+                other: "legalább %{count} címke szükséges"
+            string:
+              too_short:
+                one: "nem lehet rövidebb, mint %{count} karakter"
+                other: "legalább %{count} karakteresnek kell lennie"
+            number:
+              too_small: "nagyobb vagy egyenlőnek kell lennie, mint %{count}"
+              too_large: "kisebb vagy egyenlőnek kell lennie, mint %{count}"
         colors:
           select_base:
             title: "Válassza ki az alapszín palettát"

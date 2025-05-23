@@ -1159,7 +1159,6 @@ fi:
       said: "%{username}:"
       profile: "Profiili"
       profile_possessive: "Käyttäjän %{username} profiili"
-      account_possessive: "Käyttäjän %{name} tili"
       mute: "Vaimenna"
       edit: "Muokkaa asetuksia"
       download_archive:
@@ -1991,7 +1990,6 @@ fi:
         title: "IP-osoite rekisteröityessä"
       avatar:
         title: "Profiilikuva"
-        header_title: "profiili, viestit, kirjanmerkit ja asetukset"
         name_and_description: "%{name} - %{description}"
         edit: "Muokkaa profiilikuvaa"
       title:
@@ -2858,7 +2856,6 @@ fi:
           aria_label: suodata enimmäiskatselukertojen mukaan
         additional_options:
           label: "Suodata viestien määrän ja ketjun katselukertojen mukaan"
-    hamburger_menu: "valikko"
     new_item: "uusi"
     go_back: "palaa takaisin"
     not_logged_in_user: "käyttäjäsivu, jossa on yhteenveto käyttäjän viimeaikaisesta toiminnasta sekä käyttäjäasetukset"
@@ -3565,6 +3562,11 @@ fi:
       in_reply_to: "Lataa emoviesti"
       view_all_posts: "Näytä kaikki viestit"
       badge_granted_tooltip: "%{username} ansaitsi kunniamerkin %{badge_name} tästä viestistä!"
+      localizations:
+        table:
+          actions: "Toiminnot"
+          edit: "Muokkaa"
+          delete: "Poista"
       errors:
         create: "Viestin luonti epäonnistui. Yritä uudelleen."
         edit: "Viestin muokkaus epäonnistui. Yritä uudelleen."
@@ -4162,7 +4164,6 @@ fi:
         today: "Tänään"
     custom_homepage:
       admin_message: 'Yksi teemoistasi on ottanut käyttöön "custom_homepage"-muuntimen, mutta se ei tuota mitään [custom-homepage]-liittimessä. (Tämä viesti näytetään vain sivuston ylläpitäjille.)'
-    browser_update: 'Valitettavasti <a href="https://www.discourse.org/faq/#browser">selaintasi ei tueta</a>. <a href="https://browsehappy.com">Vaihda tuettuun selaimeen</a>, niin voit katsella monipuolista sisältöä, kirjautua sisään ja vastata.'
     permission_types:
       full: "Luoda / Vastata / Nähdä"
       create_post: "Vastata / Nähdä"
@@ -4841,24 +4842,23 @@ fi:
         login_and_authentication:
           title: "Kirjautuminen ja todennus"
           header_description: "Määritä käyttäjien kirjautumis- ja todennustavat, salatunnukset ja avaimet, OAuth2-palveluntarjoajat ja muuta"
-        logo_and_fonts:
-          logo:
-            form:
-              logo:
-                title: "Ensisijainen logo"
-              mobile: "Mobiili"
-              email: "Sähköpostiosoite"
-              manifest_screenshots:
-                description: "Näyttökuvat, jotka esittelevät esiintymäsi ominaisuuksia ja toimintoja sen asennuskehotussivulla. Kaikkien kuvien täytyy olla paikallisia ja samankokoisia."
-              opengraph_image:
-                description: "Oletuksena käytettävä opengraph-kuva, käytetään, kun sivulla ei ole muita sopivia kuvia. Jos jätetty tyhjäksi, large_icon-kuvaa käytetään."
-          fonts:
-            title: "Fontit"
-            form:
-              heading_font:
-                title: "Otsikon fontti"
-            backfill_modal:
-              modal_yes: "Kyllä"
+        logo:
+          form:
+            logo:
+              title: "Ensisijainen logo"
+            mobile: "Mobiili"
+            email: "Sähköpostiosoite"
+            manifest_screenshots:
+              description: "Näyttökuvat, jotka esittelevät esiintymäsi ominaisuuksia ja toimintoja sen asennuskehotussivulla. Kaikkien kuvien täytyy olla paikallisia ja samankokoisia."
+            opengraph_image:
+              description: "Oletuksena käytettävä opengraph-kuva, käytetään, kun sivulla ei ole muita sopivia kuvia. Jos jätetty tyhjäksi, large_icon-kuvaa käytetään."
+        fonts:
+          title: "Fontit"
+          form:
+            heading_font:
+              title: "Otsikon fontti"
+          backfill_modal:
+            modal_yes: "Kyllä"
         navigation:
           title: "Navigointi"
           header_description: "Määritä sivustosi navigointilinkit ja valikon kohteet. Tämä sisältää ensisijaisen navigointivalikon sijainnin ja toiminnan, etusivun yläosassa olevat pikalinkit sekä ylläpitäjän sivupalkin"
@@ -5573,6 +5573,8 @@ fi:
           city_for_disputes_placeholder: "Kaupunki"
           city_for_disputes_help: |
             Määritä kaupunki tähän foorumiin liittyvien oikeudellisten riitojen ratkaisemiseksi.
+          extra_groups:
+            groups: "Ryhmät"
           optional: "(valinnainen)"
           update: "Päivitä"
           toasts:
@@ -5661,11 +5663,14 @@ fi:
           save_successful: "Käyttäjäkenttä tallennettu."
         color_palettes:
           palette_name: "Nimi"
+          duplicate: "Monista"
+          delete: "Poista"
           color_options:
             toggle: "Käyttäjän valittavissa"
             toggle_description: "Käyttäjät voivat valita väripaletin"
           colors:
             title: "Värit"
+          delete_confirm: "Poistetaanko tämä väripaletti?"
       plugins:
         title: "Lisäosat"
         name: "Nimi"
@@ -5975,30 +5980,30 @@ fi:
           active_filter: "Aktiivinen"
           inactive_filter: "Ei aktiivinen"
           updates_available_filter: "Päivityksiä on saatavilla"
-          schema:
-            title: "Muokkaa asetusta %{name}"
-            back_button: "Takaisin kohteeseen %{name}"
-            fields:
-              required: "*pakolliset"
-              groups:
-                at_least:
-                  one: "vähintään %{count} ryhmä vaaditaan"
-                  other: "vähintään %{count} ryhmää vaaditaan"
-              categories:
-                at_least:
-                  one: "vähintään %{count} alue vaaditaan"
-                  other: "vähintään %{count} aluetta vaaditaan"
-              tags:
-                at_least:
-                  one: "vähintään %{count} tunniste vaaditaan"
-                  other: "vähintään %{count} tunnistetta vaaditaan"
-              string:
-                too_short:
-                  one: "täytyy olla vähintään %{count} merkki"
-                  other: "täytyy olla vähintään %{count} merkkiä"
-              number:
-                too_small: "täytyy olla suurempi tai yhtä suuri kuin %{count}"
-                too_large: "täytyy olla pienempi tai yhtä suuri kuin %{count}"
+        schema:
+          title: "Muokkaa asetusta %{name}"
+          back_button: "Takaisin kohteeseen %{name}"
+          fields:
+            required: "*pakolliset"
+            groups:
+              at_least:
+                one: "vähintään %{count} ryhmä vaaditaan"
+                other: "vähintään %{count} ryhmää vaaditaan"
+            categories:
+              at_least:
+                one: "vähintään %{count} alue vaaditaan"
+                other: "vähintään %{count} aluetta vaaditaan"
+            tags:
+              at_least:
+                one: "vähintään %{count} tunniste vaaditaan"
+                other: "vähintään %{count} tunnistetta vaaditaan"
+            string:
+              too_short:
+                one: "täytyy olla vähintään %{count} merkki"
+                other: "täytyy olla vähintään %{count} merkkiä"
+            number:
+              too_small: "täytyy olla suurempi tai yhtä suuri kuin %{count}"
+              too_large: "täytyy olla pienempi tai yhtä suuri kuin %{count}"
         colors:
           select_base:
             title: "Valitse perusväripaletti"

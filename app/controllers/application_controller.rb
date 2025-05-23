@@ -80,6 +80,7 @@ class ApplicationController < ActionController::Base
             CrawlerDetection.crawler?(request.user_agent, request.headers["HTTP_VIA"])
         )
   end
+  helper_method :use_crawler_layout?
 
   def perform_refresh_session
     refresh_session(current_user) unless @readonly_mode
@@ -753,6 +754,7 @@ class ApplicationController < ActionController::Base
       cookies[:destination_url] = destination_url
       redirect_to path("/auth/#{Discourse.enabled_authenticators.first.name}")
     else
+      return if request.path == path("/") && !cookies[:authentication_data]
       # save original URL in a cookie (javascript redirects after login in this case)
       cookies[:destination_url] = destination_url
       redirect_to path("/login")

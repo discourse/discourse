@@ -533,7 +533,7 @@ en:
       other: "See %{count} new topics"
 
     preview: "preview"
-    cancel: "cancel"
+    cancel: "Cancel"
 
     deleting: "Deleting…"
 
@@ -4127,6 +4127,8 @@ en:
         title: "Share Post #%{post_number}"
         instructions: "Share a link to this post:"
 
+      original_language: "This post was originally written in %{language}"
+
     category:
       none: "(no category)"
       all: "All categories"
@@ -5094,6 +5096,11 @@ en:
         forum:
           label: Forum
       back_to_forum: "Back to Forum"
+      filter_links: "Filter links..."
+      clear_filter: "Clear filter"
+      no_results:
+        title: "No results"
+        description_admin_search: 'We couldn’t find anything matching ‘%{filter}’.'
       collapse_all_sections: "Collapse all sections"
       expand_all_sections: "Expand all sections"
       search: "Search"
@@ -5213,49 +5220,76 @@ en:
     discovery:
       headings:
         all:
-          default: "All %{filter} topics"
+          latest: "All latest topics"
+          top: "All top topics"
+          new: "All new topics"
+          unread: "All unread topics"
+          unseen: "All unseen topics"
+          hot: "All hot topics"
           posted: "All topics you’ve posted in"
           bookmarks: "All topics you’ve bookmarked"
+          default: "All %{filter} topics"
 
         category:
-          default: "%{filter} topics in %{category}"
+          latest: "Latest topics in %{category}"
+          top: "Top topics in %{category}"
+          new: "New topics in %{category}"
+          unread: "Unread topics in %{category}"
+          unseen: "Unseen topics in %{category}"
+          hot: "Hot topics in %{category}"
           posted: "Topics in %{category} you’ve posted in"
           bookmarks: "Topics in %{category} you’ve bookmarked"
-
-        no_tags:
-          all_default: "All topics without tags"
-          category_default: "%{filter} topics in %{category} without tags"
-          all:
-            posted: "All topics without tags you've posted in"
-            bookmarks: "All topics without tags you've bookmarked"
-          category:
-            posted: "Topics in %{category} without tags you've posted in"
-            bookmarks: "Topics in %{category} without tags you've bookmarked"
+          default: "%{filter} topics in %{category}"
 
         single_tag:
-          default: "%{filter} topics tagged with %{tag}"
-          posted: "Topics tagged %{tag} you've posted in"
+          latest: "Latest topics tagged %{tag}"
+          top: "Top topics tagged %{tag}"
+          new: "New topics tagged %{tag}"
+          unread: "Unread topics tagged %{tag}"
+          unseen: "Unseen topics tagged %{tag}"
+          hot: "Hot topics tagged %{tag}"
+          posted: "Topics tagged %{tag} you’ve posted in"
           bookmarks: "Topics tagged %{tag} you’ve bookmarked"
+          default: "%{filter} topics tagged %{tag}"
 
         multi_tag:
-          default: "%{filter} topics tagged %{tags}"
-          posted: "Topics tagged %{tags} you've posted in"
-          bookmarks: "Topics tagged %{tags} you’ve bookmarked"
+          default: "Topics tagged %{tags}"
 
         category_tag:
-          default: "%{filter} topics in %{category} tagged with %{tag}"
+          latest: "Latest topics in %{category} tagged %{tag}"
+          top: "Top topics in %{category} tagged %{tag}"
+          new: "New topics in %{category} tagged %{tag}"
+          unread: "Unread topics in %{category} tagged %{tag}"
+          unseen: "Unseen topics in %{category} tagged %{tag}"
+          hot: "Hot topics in %{category} tagged %{tag}"
           posted: "Topics in %{category} tagged %{tag} you’ve posted in"
           bookmarks: "Topics in %{category} tagged %{tag} you’ve bookmarked"
+          default: "%{filter} topics in %{category} tagged %{tag}"
+
+        no_tags:
+          all:
+            latest: "Latest topics without tags"
+            top: "Top topics without tags"
+            new: "New topics without tags"
+            unread: "Unread topics without tags"
+            unseen: "Unseen topics without tags"
+            hot: "Hot topics without tags"
+            posted: "Topics without tags you’ve posted in"
+            bookmarks: "Topics without tags you’ve bookmarked"
+            default: "Topics without tags"
+
+          category:
+            latest: "Latest topics in %{category} without tags"
+            top: "Top topics in %{category} without tags"
+            new: "New topics in %{category} without tags"
+            unread: "Unread topics in %{category} without tags"
+            unseen: "Unseen topics in %{category} without tags"
+            hot: "Hot topics in %{category} without tags"
+            posted: "Topics in %{category} without tags you’ve posted in"
+            bookmarks: "Topics in %{category} without tags you’ve bookmarked"
+            default: "%{filter} topics in %{category} without tags"
 
         categories: "All categories"
-
-        filter_labels:
-          latest: "Latest"
-          top: "Top"
-          new: "New"
-          unread: "Unread"
-          hot: "Hot"
-          unseen: "Unseen"
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
@@ -5328,93 +5362,91 @@ en:
         login_and_authentication:
           title: "Login & authentication"
           header_description: "Configure how users log in and authenticate, secrets and keys, OAuth2 providers, and more"
-        logo_and_fonts:
-          title: "Logo & fonts"
-          header_description: "Customize the variations of your site logo and fonts"
-          logo:
-            title: "Logo"
-            form:
-              saved: "Logo settings are saved."
-              logo:
-                title: "Primary logo"
-                description: "Appears on the site's top navigation, as well as the top of the site's Email Notifications."
-                help_text: "Recommended size is 600 x 80 pixels."
-              logo_dark:
-                required: "Use a different logo for dark mode?"
-                title: "Primary logo dark"
-                help_text: "Recommended size is 600 x 80 pixels."
-              large_icon:
-                title: "Square icon"
-                description: "A squared version of the logo image appears at the top of the administration and is also the mobile home screen app logo."
-                help_text: "Recommended size is 512 x 512 pixels."
-              square_icon_dark:
-                required: "Use a different square icon for dark mode?"
-                title: "Square icon dark"
-                help_text: "Recommended size is 512 x 512 pixels."
-              favicon:
-                title: "Favicon"
-                description: "The logo will appear as the icon in the browser tab and the browser favorites/bookmarks."
-              logo_small:
-                title: "Small logo"
-                description: "The small logo image at the top left of your site, seen when scrolling down. If left blank, a home glyph will be shown."
-                help_text: "Recommended size is 120 x 120 pixels."
-              logo_small_dark:
-                required: "Use a different small logo for dark mode?"
-                title: "Small logo dark"
-                help_text: "Recommended size is 120 x 120 pixels."
-              mobile: "Mobile"
-              email: "Email"
-              social_media: "Social media"
-              mobile_logo:
-                title: "Mobile logo"
-                description: "The logo used on mobile version of your site. If left blank, the image from the `logo` setting will be used."
-                help_text: "Use a wide rectangular image with a height of 120 and an aspect ratio greater than 3:1."
-              mobile_logo_dark:
-                required: "Use a different mobile logo for dark mode?"
-                title: "Mobile logo dark"
-                help_text: "Use a wide rectangular image with a height of 120 and an aspect ratio greater than 3:1."
-              manifest_icon:
-                title: "Manifest icon"
-                description: "Image used as logo/splash image on Android. If left blank, large_icon will be used."
-                help_text: "Recommended size is 512 x 512 pixels."
-              manifest_screenshots:
-                title: "Manifest screenshots"
-                description: "Screenshots that showcase your instance features and functionality on its install prompt page. All images should be local uploads and of the same dimensions."
-              apple_touch_icon:
-                title: "Apple touch icon"
-                description: "Icon used for Apple touch devices. If left blank, large_icon will be used."
-                help_text: "Recommended size is 180 x 180 pixels. A transparent background is not recommended."
-              digest_logo:
-                title: "Digest logo"
-                description: "The alternate logo image used at the top of your site's email summary. If left blank, the image from the `logo` setting will be used."
-                help_text: "Use a wide rectangle image. Don't use an SVG image."
-              opengraph_image:
-                title: "OpenGraph image"
-                description: "Default opengraph image, used when the page has no other suitable image. If left blank, large_icon will be used."
-              x_summary_large_image:
-                title: "X summary large image"
-                description: "X card 'summary large image'. If left blank, regular card metadata is generated using the OpenGraph_image, as long as that is not also a .svg."
-                help_text: "recommended size is at least 280 x 150 pixels. Don't use an SVG image."
-          fonts:
-            title: "Fonts"
-            form:
-              more_fonts: "More fonts"
-              less_fonts: "Less fonts"
-              saved: "Font settings are saved."
-              base_font:
-                title: "Base font"
-              heading_font:
-                title: "Heading font"
-              default_text_size:
-                title: "Default text size"
-                description: "This size can be subsequently adjusted by each user according to their preferences."
-            backfill_modal:
-              title: "Apply new default text settings?"
-              description:
-                one: "You’ve updated the default text size. Would you like to apply this change to %{count} existing user?"
-                other: "You’ve updated the default text size. Would you like to apply this change to %{count} existing users?"
-              modal_yes: "Yes"
-              modal_no: "No, only apply going forward"
+
+        logo:
+          title: "Logo"
+          form:
+            saved: "Logo settings are saved."
+            logo:
+              title: "Primary logo"
+              description: "Appears on the site's top navigation, as well as the top of the site's Email Notifications."
+              help_text: "Recommended size is 600 x 80 pixels."
+            logo_dark:
+              required: "Use a different logo for dark mode?"
+              title: "Primary logo dark"
+              help_text: "Recommended size is 600 x 80 pixels."
+            large_icon:
+              title: "Square icon"
+              description: "A squared version of the logo image appears at the top of the administration and is also the mobile home screen app logo."
+              help_text: "Recommended size is 512 x 512 pixels."
+            square_icon_dark:
+              required: "Use a different square icon for dark mode?"
+              title: "Square icon dark"
+              help_text: "Recommended size is 512 x 512 pixels."
+            favicon:
+              title: "Favicon"
+              description: "The logo will appear as the icon in the browser tab and the browser favorites/bookmarks."
+            logo_small:
+              title: "Small logo"
+              description: "The small logo image at the top left of your site, seen when scrolling down. If left blank, a home glyph will be shown."
+              help_text: "Recommended size is 120 x 120 pixels."
+            logo_small_dark:
+              required: "Use a different small logo for dark mode?"
+              title: "Small logo dark"
+              help_text: "Recommended size is 120 x 120 pixels."
+            mobile: "Mobile"
+            email: "Email"
+            social_media: "Social media"
+            mobile_logo:
+              title: "Mobile logo"
+              description: "The logo used on mobile version of your site. If left blank, the image from the `logo` setting will be used."
+              help_text: "Use a wide rectangular image with a height of 120 and an aspect ratio greater than 3:1."
+            mobile_logo_dark:
+              required: "Use a different mobile logo for dark mode?"
+              title: "Mobile logo dark"
+              help_text: "Use a wide rectangular image with a height of 120 and an aspect ratio greater than 3:1."
+            manifest_icon:
+              title: "Manifest icon"
+              description: "Image used as logo/splash image on Android. If left blank, large_icon will be used."
+              help_text: "Recommended size is 512 x 512 pixels."
+            manifest_screenshots:
+              title: "Manifest screenshots"
+              description: "Screenshots that showcase your instance features and functionality on its install prompt page. All images should be local uploads and of the same dimensions."
+            apple_touch_icon:
+              title: "Apple touch icon"
+              description: "Icon used for Apple touch devices. If left blank, large_icon will be used."
+              help_text: "Recommended size is 180 x 180 pixels. A transparent background is not recommended."
+            digest_logo:
+              title: "Digest logo"
+              description: "The alternate logo image used at the top of your site's email summary. If left blank, the image from the `logo` setting will be used."
+              help_text: "Use a wide rectangle image. Don't use an SVG image."
+            opengraph_image:
+              title: "OpenGraph image"
+              description: "Default opengraph image, used when the page has no other suitable image. If left blank, large_icon will be used."
+            x_summary_large_image:
+              title: "X summary large image"
+              description: "X card 'summary large image'. If left blank, regular card metadata is generated using the OpenGraph_image, as long as that is not also a .svg."
+              help_text: "recommended size is at least 280 x 150 pixels. Don't use an SVG image."
+        fonts:
+          title: "Fonts"
+          form:
+            more_fonts: "More fonts"
+            fewer_fonts: "Fewer fonts"
+            saved: "Font settings are saved."
+            base_font:
+              title: "Base font"
+            heading_font:
+              title: "Heading font"
+            default_text_size:
+              title: "Default text size"
+              description: "This size can be subsequently adjusted by each user according to their preferences."
+          backfill_modal:
+            title: "Apply new default text settings?"
+            description:
+              one: "You’ve updated the default text size. Would you like to apply this change to %{count} existing user?"
+              other: "You’ve updated the default text size. Would you like to apply this change to %{count} existing users?"
+            modal_yes: "Yes"
+            modal_no: "No, only apply going forward"
 
         navigation:
           title: "Navigation"
@@ -5529,7 +5561,7 @@ en:
           header_description: "Components are smaller customizations that can be added to themes in order to change specific elements of the style of your forum design"
           keywords: "theme|component|extension"
         themes_and_components:
-          title: "Themes and components"
+          title: "Themes & components"
           header_description: "Personalize your Discourse site with themes and components to match your needs"
           keywords: "theme|component|extension|customize"
         site_admin:
@@ -5612,11 +5644,14 @@ en:
           header_description: "Discourse has the ability to embed the comments from a topic in a remote site using a Javascript API that creates an IFRAME"
 
       search:
-        modal_title: "Search anything in admin"
+        modal_title: "Search everything in admin"
         title: "Search"
-        instructions: "Type to search for pages, settings, reports, themes, components, and more..."
+        instructions: "Search everything in admin..."
         full_page_link: "Switch to full page search"
-        no_results: "We couldn’t find anything matching ‘%{filter}’."
+        no_results: 'We couldn’t find anything matching "%{filter}".'
+        result_count:
+          one: '%{count} result for "%{filter}"'
+          other: '%{count} results for "%{filter}"'
         result_types:
           page:
             one: "Page"
@@ -6228,12 +6263,21 @@ en:
           city_for_disputes_placeholder: "City"
           city_for_disputes_help: |
             Specify the city for resolving legal disputes related to this forum.
+          extra_groups:
+            heading: "Group listing"
+            description: "Extra groups to show on the About page."
+            groups: "Groups"
+            order: "Sort order"
+            initial_members: "Expanded members"
+            initial_members_description: "Number of group members to display before adding a View more button."
+            show_description: "Include description"
           optional: "(optional)"
           update: "Update"
           toasts:
             general_settings_saved: "General settings saved"
             contact_information_saved: "Contact information saved"
             your_organization_saved: "Your organization saved"
+            extra_groups_saved: "Group listing saved"
           saved: "saved!"
         flags:
           edit_header: "Edit Flag"
@@ -6280,8 +6324,6 @@ en:
           more_options:
             title: "More options"
         themes_and_components:
-          title: "Themes and components"
-          description: "Personalize your Discourse site with themes and components to match your needs."
           breadcrumb_title: "Customize"
           install: "Install"
           themes:
@@ -6349,8 +6391,6 @@ en:
             toggle_description: "Color palette can be selected by users"
           colors:
             title: "Colors"
-          logo_and_fonts_hint: "Looking to update your logo and fonts?"
-          go_to_logo_and_fonts: "Go to Logo & fonts"
           save_changes: "Save changes"
           unsaved_changes: "You have unsaved changes"
           copy_of: "Copy of %{name}"
@@ -6702,31 +6742,31 @@ en:
           active_filter: "Active"
           inactive_filter: "Inactive"
           updates_available_filter: "Updates Available"
-          schema:
-            title: "Edit %{name} setting"
-            back_button: "Back to %{name}"
-            fields:
-              required: "*required"
-              groups:
-                at_least:
-                  one: "at least %{count} group is required"
-                  other: "at least %{count} groups are required"
-              categories:
-                at_least:
-                  one: "at least %{count} category is required"
-                  other: "at least %{count} categories are required"
-              tags:
-                at_least:
-                  one: "at least %{count} tag is required"
-                  other: "at least %{count} tags are required"
-              string:
-                too_short:
-                  one: "must be at least %{count} character"
-                  other: "must be at least %{count} characters"
-              number:
-                too_small: "must be greater than or equal to %{count}"
-                too_large: "must be less than or equal to %{count}"
 
+        schema:
+          title: "Edit %{name} setting"
+          back_button: "Back to %{name}"
+          fields:
+            required: "*required"
+            groups:
+              at_least:
+                one: "at least %{count} group is required"
+                other: "at least %{count} groups are required"
+            categories:
+              at_least:
+                one: "at least %{count} category is required"
+                other: "at least %{count} categories are required"
+            tags:
+              at_least:
+                one: "at least %{count} tag is required"
+                other: "at least %{count} tags are required"
+            string:
+              too_short:
+                one: "must be at least %{count} character"
+                other: "must be at least %{count} characters"
+            number:
+              too_small: "must be greater than or equal to %{count}"
+              too_large: "must be less than or equal to %{count}"
         colors:
           select_base:
             title: "Select base color palette"

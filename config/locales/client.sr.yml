@@ -2109,6 +2109,11 @@ sr:
       sr_collapse_replies: "Spusti ugrađene odgovore"
       expand_collapse: "proširi/skupi"
       unread: "Poruka je nepročitana"
+      localizations:
+        table:
+          actions: "Akcije"
+          edit: "Izmeni"
+          delete: "Obriši"
       errors:
         create: "Žao nam je, dogodila se greška pri otvaranju tvoje poruke. Molimo pokušajte ponovo."
         edit: "Žao nam je, dogodila se greška pri izmenjivanju tvoje poruke. Molimo pokušajte ponovo."
@@ -2644,13 +2649,12 @@ sr:
           title: "Datoteke"
         legal:
           title: "Legalno"
-        logo_and_fonts:
-          logo:
-            form:
-              email: "Email"
-          fonts:
-            backfill_modal:
-              modal_yes: "Da"
+        logo:
+          form:
+            email: "Email"
+        fonts:
+          backfill_modal:
+            modal_yes: "Da"
         navigation:
           title: "Navigacija"
         notifications:
@@ -2835,6 +2839,8 @@ sr:
       config_areas:
         about:
           company_name: "Ime foruma"
+          extra_groups:
+            groups: "Grupe"
           optional: "(opciono)"
           saved: "sačuvano!"
         flags:
@@ -2872,6 +2878,7 @@ sr:
           delete: "Obriši"
         color_palettes:
           palette_name: "Ime foruma"
+          delete: "Obriši"
           colors:
             title: "Boje"
       plugins:
@@ -2970,9 +2977,9 @@ sr:
             text: "Footer"
           all_filter: "sve"
           active_filter: "Aktivno"
-          schema:
-            fields:
-              required: "*potrebno"
+        schema:
+          fields:
+            required: "*potrebno"
         colors:
           title: "Boje"
           copy_name_prefix: "Kopija od"

@@ -1627,7 +1627,6 @@ ko:
         title: "등록 IP 주소"
       avatar:
         title: "프로필 사진"
-        header_title: "프로필, 메시지, 북마크 및 환경설정"
         name_and_description: "%{name} - %{description}"
         edit: "프로필 사진 변경"
       title:
@@ -2274,7 +2273,6 @@ ko:
           aria_label: 최대 조회수로 필터링
         additional_options:
           label: "게시물 수 및 주제 조회수로 필터링"
-    hamburger_menu: "메뉴"
     new_item: "신규"
     go_back: "뒤로 가기"
     not_logged_in_user: "현재 활동 및 환경설정에 대한 요약이 포함된 사용자 페이지"
@@ -2796,6 +2794,11 @@ ko:
         other: "다음의 댓글 %{count}개 보기"
       in_reply_to: "상위 게시물 로드"
       view_all_posts: "모든 게시물 보기"
+      localizations:
+        table:
+          actions: "작업"
+          edit: "편집"
+          delete: "삭제"
       errors:
         create: "게시물을 생성하는 중에 오류가 발생했습니다. 다시 시도하세요."
         edit: "게시물을 편집하는 중에 오류가 발생했습니다. 다시 시도하세요."
@@ -3278,7 +3281,6 @@ ko:
         this_month: "월"
         this_week: "주"
         today: "오늘"
-    browser_update: '<a href="https://www.discourse.org/faq/#browser">브라우저 버전이 너무 낮아 이 사이트에서 작동하지 않습니다</a>. <a href="https://browsehappy.com">브라우저를 업그레이드</a>하여 서식 있는 콘텐츠를 표시하고 로그인하여 댓글도 달아보세요.'
     permission_types:
       full: "생성 / 댓글 / 보기"
       create_post: "댓글 / 보기"
@@ -3728,22 +3730,21 @@ ko:
           title: "파일"
         legal:
           title: "법률조항"
-        logo_and_fonts:
-          logo:
-            form:
-              mobile: "모바일"
-              email: "이메일"
-              manifest_screenshots:
-                description: "설치 프롬프트 페이지에서 인스턴스 기능을 보여주는 스크린 샷입니다. 모든 이미지는 로컬 업로드여야 하며 크기가 동일해야 합니다."
-              opengraph_image:
-                description: "페이지에 다른 적합한 이미지가 없을 때 사용되는 기본 오픈 그래프 이미지. 비워두면 large_icon이 사용됩니다."
-          fonts:
-            title: "글꼴"
-            form:
-              heading_font:
-                title: "제목 글꼴"
-            backfill_modal:
-              modal_yes: "예"
+        logo:
+          form:
+            mobile: "모바일"
+            email: "이메일"
+            manifest_screenshots:
+              description: "설치 프롬프트 페이지에서 인스턴스 기능을 보여주는 스크린 샷입니다. 모든 이미지는 로컬 업로드여야 하며 크기가 동일해야 합니다."
+            opengraph_image:
+              description: "페이지에 다른 적합한 이미지가 없을 때 사용되는 기본 오픈 그래프 이미지. 비워두면 large_icon이 사용됩니다."
+        fonts:
+          title: "글꼴"
+          form:
+            heading_font:
+              title: "제목 글꼴"
+          backfill_modal:
+            modal_yes: "예"
         navigation:
           title: "내비게이션"
         notifications:
@@ -4161,6 +4162,8 @@ ko:
           contact_url_placeholder: "https://johnny-smith.com/contact"
           your_organization: "조직"
           company_name: "그룹명"
+          extra_groups:
+            groups: "그룹"
           optional: "(선택 사항)"
           update: "업데이트"
           saved: "저장되었습니다!"
@@ -4208,8 +4211,10 @@ ko:
           delete: "삭제하기"
         color_palettes:
           palette_name: "그룹명"
+          delete: "삭제하기"
           colors:
             title: "색상"
+          delete_confirm: "이 색상 표를 삭제 하시겠습니까?"
       plugins:
         title: "플러그인"
         name: "이름"
@@ -4452,15 +4457,15 @@ ko:
           all_filter: "전체"
           active_filter: "활성화 사용자"
           inactive_filter: "비활성화"
-          schema:
-            fields:
-              required: "*필수"
-              string:
-                too_short:
-                  other: "최소 %{count}자 이상이어야 합니다."
-              number:
-                too_small: "%{count}보다 크거나 같아야 함"
-                too_large: "%{count}보다 작거나 같아야 함"
+        schema:
+          fields:
+            required: "*필수"
+            string:
+              too_short:
+                other: "최소 %{count}자 이상이어야 합니다."
+            number:
+              too_small: "%{count}보다 크거나 같아야 함"
+              too_large: "%{count}보다 작거나 같아야 함"
         colors:
           select_base:
             title: "베이스 색상 팔레트 선택"

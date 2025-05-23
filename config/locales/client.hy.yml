@@ -1138,7 +1138,6 @@ hy:
       said: "%{username} ՝"
       profile: "Պրոֆիլ"
       profile_possessive: "%{username}-ի պրոֆիլը"
-      account_possessive: "%{name}-ի հաշիվը"
       mute: "Խլացնել"
       edit: "Խմբագրել Նախընտրությունները"
       download_archive:
@@ -1910,7 +1909,6 @@ hy:
         title: "Գրանցման IP Հասցեն"
       avatar:
         title: "Պրոֆիլի Նկար"
-        header_title: "պրոֆիլ, հաղորդագրություններ, էջանշաններ և նախընտրություններ"
       title:
         title: "Վերնագիր"
         none: "(ոչ մի)"
@@ -3003,6 +3001,11 @@ hy:
       sr_post_like_count_button:
         one: "%{count} անձ հավանել է այս հրապարակումը."
         other: "%{count} մարդ հավանել է այս գրառումը."
+      localizations:
+        table:
+          actions: "Գործողություններ"
+          edit: "Խմբագրել"
+          delete: "Ջնջել"
       errors:
         create: "Ներողություն, Ձեր գրառումը ստեղծելիս տեղի է ունեցել սխալ: Խնդրում ենք կրկին փորձել:"
         edit: "Ներողություն, Ձեր գրառումը խմբագրելիս տեղի է ունեցել սխալ: Խնդրում ենք կրկին փորձել:"
@@ -3862,14 +3865,13 @@ hy:
           title: "Ֆայլեր"
         legal:
           title: "Օրինական"
-        logo_and_fonts:
-          logo:
-            form:
-              mobile: "Հեռախոսային"
-              email: "Էլ. փոստ"
-          fonts:
-            backfill_modal:
-              modal_yes: "Այո"
+        logo:
+          form:
+            mobile: "Հեռախոսային"
+            email: "Էլ. փոստ"
+        fonts:
+          backfill_modal:
+            modal_yes: "Այո"
         navigation:
           title: "Նավիգացիա"
         notifications:
@@ -4233,6 +4235,8 @@ hy:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
           company_name: "Անուն"
+          extra_groups:
+            groups: "Խմբեր"
           optional: "(ընտրովի)"
           saved: "պահված է!"
         flags:
@@ -4285,8 +4289,10 @@ hy:
           delete: "Ջնջել"
         color_palettes:
           palette_name: "Անուն"
+          delete: "Ջնջել"
           colors:
             title: "Գույներ"
+          delete_confirm: "Ջնջե՞լ այս գունապնակը:"
       plugins:
         title: "Հավելումներ"
         name: "Անուն"
@@ -4508,12 +4514,16 @@ hy:
           all_filter: "Բոլորը"
           active_filter: "Ակտիվ"
           inactive_filter: "Ոչ ակտիվ"
-          schema:
-            fields:
-              required: "*պարտադիր"
-              number:
-                too_small: "պետք է լինի մեծ կամ հավասար %{count} -ի"
-                too_large: "Պետք է լինի փոքր կամ հավասար %{count} -ի"
+        schema:
+          fields:
+            required: "*պարտադիր"
+            string:
+              too_short:
+                one: "պետք է լինի առնվազն %{count} նիշ"
+                other: "պետք է լինի առնվազն %{count} սիմվոլ"
+            number:
+              too_small: "պետք է լինի մեծ կամ հավասար %{count} -ի"
+              too_large: "Պետք է լինի փոքր կամ հավասար %{count} -ի"
         colors:
           select_base:
             title: "Ընտրել հիմնական գունապնակը"

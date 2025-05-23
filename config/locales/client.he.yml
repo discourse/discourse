@@ -1339,7 +1339,6 @@ he:
       said: "%{username}:"
       profile: "פרופיל"
       profile_possessive: "הפרופיל של %{username}"
-      account_possessive: "החשבון של %{name}"
       mute: "השתקה"
       edit: "עריכת העדפות"
       download_archive:
@@ -2238,7 +2237,7 @@ he:
         title: "כתובת IP בהרשמה"
       avatar:
         title: "תמונת פרופיל"
-        header_title: "פרופיל, הודעות, סימניות והעדפות"
+        header_title: "התראות וחשבון"
         name_and_description: "%{name} - %{description}"
         edit: "עריכת תמונת פרופיל"
       title:
@@ -2758,6 +2757,12 @@ he:
       esc: "esc"
       esc_label: "התעלמות מהודעה"
       ok_proceed: "בסדר, להמשיך"
+      translations:
+        title: "תרגום פוסט"
+        select: "בחירת תרגום"
+        save: "שמירת תרגום"
+        original_content: "תוכן פוסט מקורי"
+        placeholder: "נא למלא כאן תרגום לפוסט…"
       group_mentioned_limit:
         one: "<b>זהירות!</b> ציינת את <a href='%{group_link}'>%{group}</a>, אך בקבוצה זו יש יותר חברים מההגבלה שהוגדרה על ידי הנהלת המערכת של עד משתמש %{count}. אף אחד לא יקבל הודעה."
         two: "<b>זהירות!</b> ציינת את <a href='%{group_link}'>%{group}</a>, אך בקבוצה זו יש יותר חברים מההגבלה שהוגדרה על ידי הנהלת המערכת של עד %{count} משתמשים. אף אחד לא יקבל הודעה."
@@ -3133,7 +3138,7 @@ he:
       in_messages_tooltip: "מעבר לחיפוש בנושאים רגילים"
       in_topics_posts: "בכל הנושאים והפוסטים"
       enter_hint: "או ללחוץ על Enter"
-      mobile_enter_hint: "או לגעת בכפתור החיפוש"
+      mobile_enter_hint: "או לגעת בחיפוש"
       in_posts_by: "בפוסטים מאת %{username}"
       recent: "חיפושים אחרונים"
       clear_recent: "ניקוי חיפושים אחרונים"
@@ -3222,7 +3227,7 @@ he:
           aria_label: סינון לפי כמות הצפיות המרבית
         additional_options:
           label: "סינון לפי כמות פוסטים וצפיות בנושאים"
-    hamburger_menu: "תפריט"
+    hamburger_menu: "תפריט ניווט"
     new_item: "חדש"
     go_back: "חזור אחורה"
     not_logged_in_user: "עמוד משתמש עם סיכום פעילות נוכחית והעדפות"
@@ -4037,6 +4042,14 @@ he:
       in_reply_to: "טעינת הפוסט ההורה"
       view_all_posts: "הצגת כל הפוסטים"
       badge_granted_tooltip: "ל־%{username} יש זכאות לעיטור ‚%{badge_name}’ על הפוסט!"
+      localizations:
+        table:
+          locale: "הגדרות מקומיות"
+          actions: "פעולות"
+          edit: "עריכה"
+          delete: "מחיקה"
+        add: "הוספת תרגום חדש"
+        success: "התרגומים עודכנו בהצלחה"
       errors:
         create: "אירעה שגיאה ביצירת הפוסט שלך. נא לנסות שוב, עמך הסליחה."
         edit: "אירעה שגיאה בעריכת הפוסט שלך. נא לנסות שוב, עמך הסליחה."
@@ -4251,6 +4264,7 @@ he:
       share:
         title: "שיתוף פוסט מס׳ %{post_number}"
         instructions: "שיתוף קישור לפוסט זה:"
+      original_language: "הפוסט הזה נכתב במקור ב%{language}"
     category:
       none: "(ללא קטגוריה)"
       all: "כל הקטגוריות"
@@ -4696,7 +4710,7 @@ he:
         today: "היום"
     custom_homepage:
       admin_message: 'אחת מערכות הנושא שלך הפעילה את אפשרות "דף הבית מותאם אישית" אך הוא אינו מוציא דבר במֵחבַּר [דף הבית המותאם אישית]. (הודעה זו מוצגת רק למנהלי האתר.)'
-    browser_update: 'אתרע מזלך וכי <a href="https://www.discourse.org/faq/#browser">דפדפנך אינו נתמך עוד</a>. נא <a href="https://browsehappy.com">לעבור לדפדפן נתמך</a> כדי לצפות בתוכן עשיר, להיכנס ולהגיב.'
+    browser_update: 'אתרע מזלך וכי <a href="https://discourse.org/about#browser">דפדפנך אינו נתמך עוד</a>. נא <a href="https://browsehappy.com">לעבור לדפדפן נתמך</a> כדי לצפות בתוכן עשיר, להיכנס ולהגיב.'
     permission_types:
       full: "יצירה / תגובה / צפייה"
       create_post: "תגובה / צפייה"
@@ -5467,94 +5481,86 @@ he:
         login_and_authentication:
           title: "כניסה ואימות"
           header_description: "הגדרה איך משתמשים נכנסים ועוברים אימות, סודות ומפתחות, ספקי OAuth2 ועוד"
-        logo_and_fonts:
-          title: "לוגו וגופנים"
-          header_description: "התאמת הגווני לוגו האתר והגופנים שלך"
-          logo:
-            title: "לוגו"
-            form:
-              saved: "הגדרות הלוגו נשמרות."
-              logo:
-                title: "לוגו עיקרי"
-                description: "מופיע באזור הניווט העליון של האתר, כמו גם בחלק העליון של הודעות הדוא״ל של האתר."
-                help_text: "הגודל המומלץ הוא ‎600 × 80 פיקסלים."
-              logo_dark:
-                required: "האם להשתמש בלוגו אחר עבור מצב כהה?"
-                title: "לוגו עיקרי כהה"
-                help_text: "הגודל המומלץ הוא ‎600 × 80 פיקסלים."
-              large_icon:
-                title: "סמל מרובע"
-                description: "גרסה מרובעת של תמונת הלוגו מופיעה בחלק העליון של הניהול והיא גם לוגו היישומון במסך הבית של המכשיר הנייד."
-                help_text: "הגודל המומלץ הוא ‎512 × 512 פיקסלים."
-              square_icon_dark:
-                required: "האם להשתמש בסמל מרובע אחר עבור מצב כהה?"
-                title: "סמל מרובע כהה"
-                help_text: "הגודל המומלץ הוא ‎512 × 512 פיקסלים."
-              favicon:
-                title: "Favicon (סמל אתר)"
-                description: "הלוגו יופיע בתור הסמל בלשוניות הדפדפנים ובמועדפים/סימניות בדפדפנים."
-              logo_small:
-                title: "לוגו קטן"
-                description: "תמונת הלוגו הקטנה בפינה הימנית של האתר שלך, מופיעה בעת גלילה כלפי מטה. במקרה של העדר בחירה, תופיע אות הבית."
-                help_text: "הגודל המומלץ הוא ‎120 × 120 פיקסלים."
-              logo_small_dark:
-                required: "האם להשתמש בלוגו קטן אחר עבור מצב כהה?"
-                title: "לוגו קטן כהה"
-                help_text: "הגודל המומלץ הוא ‎120 × 120 פיקסלים."
-              mobile: "נייד"
-              email: "דוא״ל"
-              social_media: "רשתות חברתיות"
-              mobile_logo:
-                title: "לוגו לנייד"
-                description: "הלוגו לשימוש לגרסה של האתר שלך לניידים. בהעדר בחירה, ייעשה שימוש בתמונה מהגדרת `logo` (לוגו)."
-                help_text: "יש להשתמש בתמונה מרובעת רחבה בגובה 120 ויחס גובה־רוחב של יותר מ־3:1."
-              mobile_logo_dark:
-                required: "האם להשתמש בלוגו אחר לנייד עבור מצב כהה?"
-                title: "לוגו כהה לנייד"
-                help_text: "יש להשתמש בתמונה מרובעת רחבה בגובה 120 ויחס גובה־רוחב של יותר מ־3:1."
-              manifest_icon:
-                title: "סמל ייצוגי"
-                description: "תמונה שתשמש כתמונת לוגו/פתיחה ב־Android. אם הבחירה תישאר ריקה, יוגדר ל־large_icon (סמל גדול)."
-                help_text: "הגודל המומלץ הוא ‎512 × 512 פיקסלים."
-              manifest_screenshots:
-                title: "תמונות מסך ייצוגיות"
-                description: "צילומי מסך שמציגים לראווה את היכולות והתכונות של העותק שלך בעמוד תהליך ההתקנה. כל התמונות חייבות להיות העלאות מקומיות ובאותם הממדים."
-              apple_touch_icon:
-                title: "סמל Apple touch"
-                description: "סמל המשמש למכשירי Apple touch. אם נותר ריק, ייעשה שימוש ב־large_icon (סמל גדול)."
-                help_text: "הגודל המומלץ הוא 180 × 180 פיקסלים. לא מומלץ רקע שקוף."
-              digest_logo:
-                title: "לוגו תמצית"
-                description: "תמונת הלוגו החלופית בה נעשה שימוש בתקצירי הדוא״ל שנשלחים מהאתר שלך. במקרה של העדר בחירה, ייעשה שימוש בהגדרות התמונה מה־`logo`."
-                help_text: "כדאי להשתמש בתמונה מרובעת. לא להשתמש בתמונת SVG."
-              opengraph_image:
-                title: "תמונת OpenGraph"
-                description: "תמונת opengraph כברירת מחדל, נעשה בה שימוש כאשר לעמוד אין תמונות אחרות מתאימות. אם השדה נשאר ריק, ייעשה שימוש ב־large_icon (סמל גדול)."
-              x_summary_large_image:
-                title: "תמונה גדולה לתקציר ב־X"
-                help_text: "הגודל המומלץ הוא ‎280 × 150 פיקסלים לפחות. לא להשתמש בתמונת SVG."
-          fonts:
-            title: "גופנים"
-            form:
-              more_fonts: "גופנים נוספים"
-              less_fonts: "פחות גופנים"
-              saved: "הגדרות הגופנים נשמרות."
-              base_font:
-                title: "גופן בסיס"
-              heading_font:
-                title: "גופן כותרת"
-              default_text_size:
-                title: "גודל כתב כברירת מחדל"
-                description: "את הגודל הזה יוכלו המשתמשים להתאים לעצמם באופן פרטני בהתאם להעדפותיהם."
-            backfill_modal:
-              title: "להחיל את הגדרות ברירת המחדל החדשות על הטקסט?"
-              description:
-                one: "עדכנת את גודל הכתב כברירת מחדל. להחיל את השינוי הזה על משתמש קיים?"
-                two: "עדכנת את גודל הכתב כברירת מחדל. להחיל את השינויים הזה על שני משתמשים קיימים?"
-                many: "עדכנת את גודל הכתב כברירת מחדל. להחיל את השינויים הזה על %{count} משתמשים קיימים?"
-                other: "עדכנת את גודל הכתב כברירת מחדל. להחיל את השינויים הזה על %{count} משתמשים קיימים?"
-              modal_yes: "כן"
-              modal_no: "לא, להחיל רק מעתה ואילך"
+        logo:
+          title: "לוגו"
+          form:
+            saved: "הגדרות הלוגו נשמרות."
+            logo:
+              title: "לוגו עיקרי"
+              description: "מופיע באזור הניווט העליון של האתר, כמו גם בחלק העליון של הודעות הדוא״ל של האתר."
+              help_text: "הגודל המומלץ הוא ‎600 × 80 פיקסלים."
+            logo_dark:
+              required: "האם להשתמש בלוגו אחר עבור מצב כהה?"
+              title: "לוגו עיקרי כהה"
+              help_text: "הגודל המומלץ הוא ‎600 × 80 פיקסלים."
+            large_icon:
+              title: "סמל מרובע"
+              description: "גרסה מרובעת של תמונת הלוגו מופיעה בחלק העליון של הניהול והיא גם לוגו היישומון במסך הבית של המכשיר הנייד."
+              help_text: "הגודל המומלץ הוא ‎512 × 512 פיקסלים."
+            square_icon_dark:
+              required: "האם להשתמש בסמל מרובע אחר עבור מצב כהה?"
+              title: "סמל מרובע כהה"
+              help_text: "הגודל המומלץ הוא ‎512 × 512 פיקסלים."
+            favicon:
+              title: "Favicon (סמל אתר)"
+              description: "הלוגו יופיע בתור הסמל בלשוניות הדפדפנים ובמועדפים/סימניות בדפדפנים."
+            logo_small:
+              title: "לוגו קטן"
+              description: "תמונת הלוגו הקטנה בפינה הימנית של האתר שלך, מופיעה בעת גלילה כלפי מטה. במקרה של העדר בחירה, תופיע אות הבית."
+              help_text: "הגודל המומלץ הוא ‎120 × 120 פיקסלים."
+            logo_small_dark:
+              required: "האם להשתמש בלוגו קטן אחר עבור מצב כהה?"
+              title: "לוגו קטן כהה"
+              help_text: "הגודל המומלץ הוא ‎120 × 120 פיקסלים."
+            mobile: "נייד"
+            email: "דוא״ל"
+            social_media: "רשתות חברתיות"
+            mobile_logo:
+              title: "לוגו לנייד"
+              description: "הלוגו לשימוש לגרסה של האתר שלך לניידים. בהעדר בחירה, ייעשה שימוש בתמונה מהגדרת `logo` (לוגו)."
+              help_text: "יש להשתמש בתמונה מרובעת רחבה בגובה 120 ויחס גובה־רוחב של יותר מ־3:1."
+            mobile_logo_dark:
+              required: "האם להשתמש בלוגו אחר לנייד עבור מצב כהה?"
+              title: "לוגו כהה לנייד"
+              help_text: "יש להשתמש בתמונה מרובעת רחבה בגובה 120 ויחס גובה־רוחב של יותר מ־3:1."
+            manifest_icon:
+              title: "סמל ייצוגי"
+              description: "תמונה שתשמש כתמונת לוגו/פתיחה ב־Android. אם הבחירה תישאר ריקה, יוגדר ל־large_icon (סמל גדול)."
+              help_text: "הגודל המומלץ הוא ‎512 × 512 פיקסלים."
+            manifest_screenshots:
+              title: "תמונות מסך ייצוגיות"
+              description: "צילומי מסך שמציגים לראווה את היכולות והתכונות של העותק שלך בעמוד תהליך ההתקנה. כל התמונות חייבות להיות העלאות מקומיות ובאותם הממדים."
+            apple_touch_icon:
+              title: "סמל Apple touch"
+              description: "סמל המשמש למכשירי Apple touch. אם נותר ריק, ייעשה שימוש ב־large_icon (סמל גדול)."
+              help_text: "הגודל המומלץ הוא 180 × 180 פיקסלים. לא מומלץ רקע שקוף."
+            digest_logo:
+              title: "לוגו תמצית"
+              description: "תמונת הלוגו החלופית בה נעשה שימוש בתקצירי הדוא״ל שנשלחים מהאתר שלך. במקרה של העדר בחירה, ייעשה שימוש בהגדרות התמונה מה־`logo`."
+              help_text: "כדאי להשתמש בתמונה מרובעת. לא להשתמש בתמונת SVG."
+            opengraph_image:
+              title: "תמונת OpenGraph"
+              description: "תמונת opengraph כברירת מחדל, נעשה בה שימוש כאשר לעמוד אין תמונות אחרות מתאימות. אם השדה נשאר ריק, ייעשה שימוש ב־large_icon (סמל גדול)."
+            x_summary_large_image:
+              title: "תמונה גדולה לתקציר ב־X"
+              help_text: "הגודל המומלץ הוא ‎280 × 150 פיקסלים לפחות. לא להשתמש בתמונת SVG."
+        fonts:
+          title: "גופנים"
+          form:
+            more_fonts: "גופנים נוספים"
+            fewer_fonts: "פחות גופנים"
+            saved: "הגדרות הגופנים נשמרות."
+            base_font:
+              title: "גופן בסיס"
+            heading_font:
+              title: "גופן כותרת"
+            default_text_size:
+              title: "גודל כתב כברירת מחדל"
+              description: "את הגודל הזה יוכלו המשתמשים להתאים לעצמם באופן פרטני בהתאם להעדפותיהם."
+          backfill_modal:
+            title: "להחיל את הגדרות ברירת המחדל החדשות על הטקסט?"
+            modal_yes: "כן"
+            modal_no: "לא, להחיל רק מעתה ואילך"
         navigation:
           title: "ניווט"
           header_description: "הגדרת קישורי הניווט ופריטי התפריט לאתר שלך. לרבות המקום וההתנהגות של תפריט הניווט הראשי, הקישורים המהירים בראש עמוד הבית לרבות סרגל צד הניהול"
@@ -5749,10 +5755,15 @@ he:
           title: "שילוב (embedding)"
           header_description: "ל־Discourse יש יכולת להטמיע הערות מנושא לאתר מרוחק עם API ב־Javascript שיוצר IFRAME (חלונית פנימית)"
       search:
-        modal_title: "חיפוש כל דבר שהוא בניהול"
+        modal_title: "חיפוש בכול הניהול"
         title: "חיפוש"
-        instructions: "אפשר להקליד כדי לחפש אחר עמודים, הגדרות, דוחות, ערכות עיצוב, רכיבים ועוד…"
-        no_results: "לא מצאנו שום דבר שעונה על ‚%{filter}’."
+        instructions: "חיפוש בכול הניהול…"
+        no_results: 'לא מצאנו שום דבר שעונה על „%{filter}”.'
+        result_count:
+          one: 'תוצאה עבור „%{filter}”'
+          two: 'שתי תוצאות עבור „%{filter}”'
+          many: '%{count} תוצאות עבור „%{filter}”'
+          other: '%{count} תוצאות עבור „%{filter}”'
         result_types:
           page:
             one: "עמוד"
@@ -6381,12 +6392,21 @@ he:
           city_for_disputes_placeholder: "עיר"
           city_for_disputes_help: |
             נא לציין את העיר ליישוב סכסוכים משפטיים שקשורים בפורום הזה.
+          extra_groups:
+            heading: "רשימת קבוצות"
+            description: "קבוצות נוספות להצגה בעמוד ‚על אודות’."
+            groups: "קבוצות"
+            order: "סדר מיון"
+            initial_members: "חברים בהרחבה"
+            initial_members_description: "מספר חברי הקבוצה להצגה לפני הוספת כפתור ‚להציג עוד’."
+            show_description: "כולל התיאור"
           optional: "(רשות)"
           update: "עדכון"
           toasts:
             general_settings_saved: "הגדרות כלליות נשמרו"
             contact_information_saved: "פרטי קשר נשמרו"
             your_organization_saved: "הארגון שלך נשמר"
+            extra_groups_saved: "רשימת הקבוצות נשמרה"
           saved: "נשמר!"
         flags:
           edit_header: "עריכת סימון"
@@ -6496,19 +6516,20 @@ he:
           save_successful: "שדה משתמש נשמר."
         color_palettes:
           palette_name: "שם"
+          duplicate: "שכפול"
+          delete: "מחיקה"
           color_options:
             title: "אפשרויות צבע"
             toggle: "לבחירת המשתמש"
             toggle_description: "המשתמשים יכולים לבחור את ערכת הצבעים"
           colors:
             title: "צבעים"
-          logo_and_fonts_hint: "מעניין אותך לעדכן את הלוגו והגופנים שלך?"
-          go_to_logo_and_fonts: "מעבר ללוגו וגופנים"
           save_changes: "שמירת השינויים"
           unsaved_changes: "יש שינויים שלא נשמרו"
           copy_of: "עותק של %{name}"
           copy_created: 'נוצר עותק חדש של „%{name}”'
           illegal_character_in_color: "הצבעים מורכבים מתווים הקסדצימליים בלבד"
+          delete_confirm: "למחוק לוח צבעים זה?"
       plugins:
         title: "תוספים"
         name: "שם"
@@ -6853,38 +6874,14 @@ he:
           active_filter: "פעיל"
           inactive_filter: "לא פעיל"
           updates_available_filter: "עדכונים זמינים"
-          schema:
-            title: "עריכת הגדרת %{name}"
-            back_button: "חזרה אל %{name}"
-            fields:
-              required: "*נדרש"
-              groups:
-                at_least:
-                  one: "צריך לפחות קבוצה אחת"
-                  two: "צריך לפחות שתי קבוצות"
-                  many: "צריך לפחות %{count} קבוצות"
-                  other: "צריך לפחות %{count} קבוצות"
-              categories:
-                at_least:
-                  one: "דרושה לפחות קטגוריה"
-                  two: "דרושות לפחות שתי קטגוריות"
-                  many: "דרושות לפחות %{count} קטגוריות"
-                  other: "דרושות לפחות %{count} קטגוריות"
-              tags:
-                at_least:
-                  one: "צריך לפחות תגית אחת"
-                  two: "צריך לפחות שתי תגיות"
-                  many: "צריך לפחות %{count} תגיות"
-                  other: "צריך לפחות %{count} תגיות"
-              string:
-                too_short:
-                  one: "חייב להיות תו אחד לפחות"
-                  two: "חייבים להיות שני תווים לפחות"
-                  many: "חייבים להיות %{count} תווים לפחות"
-                  other: "חייבים להיות %{count} תווים לפחות"
-              number:
-                too_small: "חייב להיות גדול או שווה ל־%{count}"
-                too_large: "חייב להיות קטן או שווה ל־%{count}"
+        schema:
+          title: "עריכת הגדרת %{name}"
+          back_button: "חזרה אל %{name}"
+          fields:
+            required: "*נדרש"
+            number:
+              too_small: "חייב להיות גדול או שווה ל־%{count}"
+              too_large: "חייב להיות קטן או שווה ל־%{count}"
         colors:
           select_base:
             title: "בחירת לוח צבעים בסיסי"

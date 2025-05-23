@@ -14,6 +14,7 @@ import UsernamePreference from "discourse/components/username-preference";
 import boundAvatar from "discourse/helpers/bound-avatar";
 import icon from "discourse/helpers/d-icon";
 import dasherize from "discourse/helpers/dasherize";
+import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
 import { i18n } from "discourse-i18n";
 import ComboBox from "select-kit/components/combo-box";
@@ -365,7 +366,7 @@ export default RouteTemplate(
       <PluginOutlet
         @name="user-preferences-account"
         @connectorTagName="div"
-        @outletArgs={{hash model=@controller.model save=@controller.save}}
+        @outletArgs={{lazyHash model=@controller.model save=@controller.save}}
       />
     </span>
 
@@ -375,7 +376,7 @@ export default RouteTemplate(
       <PluginOutlet
         @name="user-custom-controls"
         @connectorTagName="div"
-        @outletArgs={{hash model=@controller.model}}
+        @outletArgs={{lazyHash model=@controller.model}}
       />
     </span>
 

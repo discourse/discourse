@@ -32,7 +32,7 @@
     padding: 0.8em 0.33em;
 
     &:first-of-type {
-      padding-left: 0.67em;
+      padding-inline: 0.67em;
     }
 
     &:last-of-type {
@@ -108,8 +108,8 @@
   }
 
   .posters a:first-child .avatar.latest:not(.single) {
-    box-shadow: 0 0 3px 1px rgba(var(--tertiary-rgb), 0.35);
-    border: 1px solid rgba(var(--tertiary-rgb), 0.5);
+    box-shadow: 0 0 3px 1px rgb(var(--tertiary-rgb), 0.35);
+    border: 1px solid rgb(var(--tertiary-rgb), 0.5);
     position: relative;
     left: -2px;
   }

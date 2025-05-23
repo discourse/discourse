@@ -1,13 +1,13 @@
-import { hash } from "@ember/helper";
 import { eq } from "truth-helpers";
 import concatClass from "discourse/helpers/concat-class";
+import lazyHash from "discourse/helpers/lazy-hash";
 import PluginOutlet from "./plugin-outlet";
 
 const ConditionalLoadingSpinner = <template>
   <PluginOutlet
     @name="conditional-loading-spinner"
     @defaultGlimmer={{true}}
-    @outletArgs={{hash condition=@condition size=@size}}
+    @outletArgs={{lazyHash condition=@condition size=@size}}
   >
     <div
       class={{concatClass

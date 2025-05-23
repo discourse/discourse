@@ -914,7 +914,16 @@ RSpec.describe Stylesheet::Manager do
       %w[common desktop mobile admin wizard common_rtl desktop_rtl mobile_rtl admin_rtl wizard_rtl]
     end
 
-    let(:theme_targets) { %i[common_theme desktop_theme mobile_theme] }
+    let(:theme_targets) do
+      %i[
+        common_theme
+        desktop_theme
+        mobile_theme
+        common_theme_rtl
+        desktop_theme_rtl
+        mobile_theme_rtl
+      ]
+    end
 
     before do
       STDERR.stubs(:write)
@@ -959,8 +968,8 @@ RSpec.describe Stylesheet::Manager do
       output = capture_output(:stderr) { Stylesheet::Manager.precompile_theme_css }
 
       # Ensure we force compile each theme only once
-      expect(output.scan(/#{child_theme_with_css.name}/).length).to eq(1)
-      expect(StylesheetCache.count).to eq(33) # (1 theme with css) + 32 color schemes (2 themes * 8 color schemes (7 defaults + 1 theme scheme) * 2 (light and dark mode per scheme))
+      expect(output.scan(/#{child_theme_with_css.name}/).length).to eq(2) # ltr/rtl
+      expect(StylesheetCache.count).to eq(34) # (1 theme with rtl/ltr) + 32 color schemes (2 themes * 8 color schemes (7 defaults + 1 theme scheme) * 2 (light and dark mode per scheme))
     end
 
     it "generates precompiled CSS - core and themes" do
@@ -968,9 +977,9 @@ RSpec.describe Stylesheet::Manager do
       Stylesheet::Manager.precompile_theme_css
 
       results = StylesheetCache.pluck(:target)
-      expect(results.size).to eq(43) # 10 core targets + 1 theme + 32 color schemes (light and dark mode per scheme)
+      expect(results.size).to eq(44) # 10 core targets + 2 theme (ltr/rtl) + 32 color schemes (light and dark mode per scheme)
 
-      expect(results.count { |target| target =~ /^common_theme_/ }).to eq(1)
+      expect(results.count { |target| target =~ /^common_theme_/ }).to eq(2) # ltr/rtl
     end
 
     it "correctly generates precompiled CSS - core and themes and no default theme" do
@@ -980,7 +989,7 @@ RSpec.describe Stylesheet::Manager do
       Stylesheet::Manager.precompile_theme_css
 
       results = StylesheetCache.pluck(:target)
-      expect(results.size).to eq(43) # 10 core targets + 1 theme + 32 color schemes (light and dark mode per scheme)
+      expect(results.size).to eq(44) # 10 core targets + theme rtl/ltr + 32 color schemes (light and dark mode per scheme)
 
       expect(results).to include("color_definitions_#{scheme1.name}_#{scheme1.id}_#{user_theme.id}")
       expect(results).to include(

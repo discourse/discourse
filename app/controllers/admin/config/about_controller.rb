@@ -57,6 +57,19 @@ class Admin::Config::AboutController < Admin::AdminController
       }
     end
 
+    if extra_groups = params[:extra_groups]
+      settings << { setting_name: "about_page_extra_groups", value: extra_groups[:groups] }
+      settings << {
+        setting_name: "about_page_extra_groups_initial_members",
+        value: extra_groups[:initial_members],
+      }
+      settings << { setting_name: "about_page_extra_groups_order", value: extra_groups[:order] }
+      settings << {
+        setting_name: "about_page_extra_groups_show_description",
+        value: extra_groups[:show_description],
+      }
+    end
+
     SiteSetting::Update.call(
       guardian:,
       params: {

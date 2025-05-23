@@ -12,7 +12,7 @@
   --d-sidebar-admin-background: var(--primary-very-low);
 
   // must be rgba for gradient
-  --d-sidebar-footer-fade: rgba(var(--secondary-rgb), 1);
+  --d-sidebar-footer-fade: rgb(var(--secondary-rgb), 1);
   --d-sidebar-header-color: var(--primary-medium);
   --d-sidebar-header-icon-color: var(--primary-medium);
   --d-sidebar-border-color: var(--primary-low);
@@ -102,7 +102,7 @@
     flex: 1;
     padding: 1.5rem 1rem 1rem;
     overflow-x: hidden;
-    overflow-y: overlay;
+    overflow-y: auto;
 
     // custom scrollbar styling
     --scrollbarBg: transparent;
@@ -353,6 +353,68 @@
   }
 }
 
+.sidebar-filter {
+  margin-top: 1em;
+  margin-bottom: 1em;
+  border: 1px solid var(--primary-400);
+  border-radius: var(--d-input-border-radius);
+  background: var(--secondary);
+  width: calc(
+    var(--d-sidebar-width) - 2 * var(--d-sidebar-row-horizontal-padding)
+  );
+
+  &:focus-within {
+    border-color: var(--tertiary);
+    outline: 1px solid var(--tertiary);
+    outline-offset: -1px;
+  }
+
+  &__input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: var(--secondary);
+    border-radius: var(--d-input-border-radius);
+  }
+
+  &__shortcut-hint {
+    background-color: rgb(var(--tertiary-rgb) / 10%);
+    padding: 0.25em 0.5em;
+    margin-right: 0.5em;
+    font-size: var(--font-down-3);
+    color: var(--primary-medium);
+  }
+
+  &__input[type="text"] {
+    border: 0;
+    background: none;
+    margin-bottom: 0;
+    height: 2em;
+    width: 100%;
+
+    &:focus-within {
+      outline: 0;
+    }
+  }
+
+  &__clear {
+    width: 2em;
+    height: 2em;
+    color: var(--primary-medium);
+    background-color: var(--secondary);
+  }
+}
+
+.sidebar-no-results {
+  display: block;
+  margin: 0.5em var(--d-sidebar-row-horizontal-padding) 0
+    var(--d-sidebar-row-horizontal-padding);
+
+  &__title {
+    font-weight: bold;
+  }
+}
+
 .sidebar-search {
   width: 100%;
 
@@ -395,7 +457,7 @@
   }
 
   &__shortcut-hint {
-    background-color: rgba(var(--tertiary-rgb), 0.1);
+    background-color: rgb(var(--tertiary-rgb), 0.1);
     padding: 0.25em 0.5em;
     margin-right: 0.5em;
     font-size: var(--font-down-3);

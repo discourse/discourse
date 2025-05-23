@@ -1319,7 +1319,6 @@ ru:
       said: "%{username}:"
       profile: "Профиль"
       profile_possessive: "Профиль пользователя %{username}"
-      account_possessive: "Аккаунт %{name}"
       mute: "Отключить"
       edit: "Изменить настройки"
       download_archive:
@@ -2215,7 +2214,6 @@ ru:
         title: "IP-адрес регистрации"
       avatar:
         title: "Аватар"
-        header_title: "профиль, сообщения, закладки и настройки"
         name_and_description: "%{name} — %{description}"
         edit: "Изменить аватар"
       title:
@@ -3166,7 +3164,6 @@ ru:
           aria_label: Фильтр по максимальному количеству просмотров
         additional_options:
           label: "Фильтр по количеству сообщений и просмотров тем"
-    hamburger_menu: "Меню"
     new_item: "новый"
     go_back: "вернуться"
     not_logged_in_user: "страница пользователя с историей его последней активности и настроек"
@@ -3975,6 +3972,11 @@ ru:
       in_reply_to: "Загрузить родительское сообщение"
       view_all_posts: "Показать все сообщения"
       badge_granted_tooltip: "%{username} получил(а) награду «%{badge_name}» за эту публикацию!"
+      localizations:
+        table:
+          actions: "Темы"
+          edit: "Отредактировать"
+          delete: "Удалить"
       errors:
         create: "Не удалось создать сообщение из-за ошибки. Попробуйте ещё раз."
         edit: "Не удалось изменить сообщение. Попробуйте ещё раз."
@@ -4624,7 +4626,6 @@ ru:
         today: "Сегодня"
     custom_homepage:
       admin_message: 'В одной из ваших тем включен модификатор «custom_homepage», но он ничего не выводит в коннектор [custom-homepage]. (Это сообщение отображается только для администраторов сайта.)'
-    browser_update: '<a href="https://www.discourse.org/faq/#browser">Ваш браузер не поддерживается</a>. <a href="https://browsehappy.com">Обновите его</a> для полноценной работы с сайтом.'
     permission_types:
       full: "Создавать / Отвечать / Просматривать"
       create_post: "Отвечать / Просматривать"
@@ -5355,22 +5356,21 @@ ru:
         login_and_authentication:
           title: "Вход и аутентификация"
           header_description: "Настройте способ входа и аутентификации пользователей, идентификаторы ключей доступа и секретные ключи доступа, поставщиков OAuth2 и многое другое"
-        logo_and_fonts:
-          logo:
-            form:
-              logo:
-                title: "Основной логотип"
-              mobile: "Мобильная"
-              email: "Эл. почта"
-              manifest_screenshots:
-                description: "Скриншоты, демонстрирующие особенности и функциональные возможности приложения, отображаемые на странице с запросом на установку. Все изображения должны быть загружены локально и иметь одинаковые размеры."
-          fonts:
-            title: "Шрифты"
-            form:
-              heading_font:
-                title: "Шрифт заголовка"
-            backfill_modal:
-              modal_yes: "Да"
+        logo:
+          form:
+            logo:
+              title: "Основной логотип"
+            mobile: "Мобильная"
+            email: "Эл. почта"
+            manifest_screenshots:
+              description: "Скриншоты, демонстрирующие особенности и функциональные возможности приложения, отображаемые на странице с запросом на установку. Все изображения должны быть загружены локально и иметь одинаковые размеры."
+        fonts:
+          title: "Шрифты"
+          form:
+            heading_font:
+              title: "Шрифт заголовка"
+          backfill_modal:
+            modal_yes: "Да"
         navigation:
           title: "Навигация"
           header_description: "Настрой навигационные ссылки и пункты меню для своего сайта. Сюда входит расположение и поведение основного навигационного меню, быстрых ссылок в верхней части главной страницы, а также боковой панели администратора"
@@ -6110,6 +6110,8 @@ ru:
           city_for_disputes_placeholder: "Город"
           city_for_disputes_help: |
             Укажите город для разрешения правовых споров, связанных с данным форумом.
+          extra_groups:
+            groups: "Группы"
           optional: "(необязательно)"
           update: "Обновить"
           toasts:
@@ -6198,11 +6200,14 @@ ru:
           save_successful: "Пользовательское поле сохранено."
         color_palettes:
           palette_name: "Название"
+          duplicate: "Дублировать"
+          delete: "Удалить"
           color_options:
             toggle: "Выбирается пользователем"
             toggle_description: "Пользователи могут выбирать цветовую палитру"
           colors:
             title: "Цвета"
+          delete_confirm: "Удалить эту цветовую палитру?"
       plugins:
         title: "Плагины"
         name: "Название"
@@ -6518,38 +6523,38 @@ ru:
           active_filter: "Активна"
           inactive_filter: "Неактивна"
           updates_available_filter: "Доступны обновления"
-          schema:
-            title: "Изменить настройку «%{name}»"
-            back_button: "Назад (%{name})"
-            fields:
-              required: "*обязательное"
-              groups:
-                at_least:
-                  one: "необходима как минимум %{count} группа"
-                  few: "необходимо как минимум %{count} группы"
-                  many: "необходимо как минимум %{count} групп"
-                  other: "необходимо как минимум %{count} группы"
-              categories:
-                at_least:
-                  one: "необходима как минимум %{count} категория"
-                  few: "необходимо как минимум %{count} категории"
-                  many: "необходимо как минимум %{count} категорий"
-                  other: "необходимо как минимум %{count} категории"
-              tags:
-                at_least:
-                  one: "необходим как минимум %{count} тег"
-                  few: "необходимо как минимум %{count} тега"
-                  many: "необходимо как минимум %{count} тегов"
-                  other: "необходимо как минимум %{count} тега"
-              string:
-                too_short:
-                  one: "необходим как минимум %{count} символ"
-                  few: "необходимо как минимум %{count} символа"
-                  many: "необходимо как минимум %{count} символов"
-                  other: "необходимо как минимум %{count} символа"
-              number:
-                too_small: "должно быть больше или равно %{count}"
-                too_large: "должно быть меньше или равно %{count}"
+        schema:
+          title: "Изменить настройку «%{name}»"
+          back_button: "Назад (%{name})"
+          fields:
+            required: "*обязательное"
+            groups:
+              at_least:
+                one: "необходима как минимум %{count} группа"
+                few: "необходимо как минимум %{count} группы"
+                many: "необходимо как минимум %{count} групп"
+                other: "необходимо как минимум %{count} групп"
+            categories:
+              at_least:
+                one: "необходима как минимум %{count} категория"
+                few: "необходимо как минимум %{count} категории"
+                many: "необходимо как минимум %{count} категорий"
+                other: "необходимо как минимум %{count} категорий"
+            tags:
+              at_least:
+                one: "необходим как минимум %{count} тег"
+                few: "необходимо как минимум %{count} тега"
+                many: "необходимо как минимум %{count} тегов"
+                other: "необходимо как минимум %{count} тегов"
+            string:
+              too_short:
+                one: "необходим как минимум %{count} символ"
+                few: "минимум символов: %{count}"
+                many: "необходимо как минимум %{count} символов"
+                other: "минимум символов: %{count}"
+            number:
+              too_small: "должно быть больше или равно %{count}"
+              too_large: "должно быть меньше или равно %{count}"
         colors:
           select_base:
             title: "Выберите базовую цветовую палитру"

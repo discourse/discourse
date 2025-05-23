@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { Input } from "@ember/component";
-import { fn, hash } from "@ember/helper";
+import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
@@ -13,6 +13,7 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import RadioButton from "discourse/components/radio-button";
 import TextField from "discourse/components/text-field";
 import htmlSafe from "discourse/helpers/html-safe";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
 import { mergeTopic, movePosts } from "discourse/models/topic";
@@ -395,7 +396,7 @@ export default class MoveToTopic extends Component {
                   />
                   <PluginOutlet
                     @name="split-new-topic-title-after"
-                    @outletArgs={{hash
+                    @outletArgs={{lazyHash
                       selectedPosts=@model.selectedPosts
                       updateTopicName=this.updateTopicName
                     }}
@@ -411,7 +412,7 @@ export default class MoveToTopic extends Component {
                   />
                   <PluginOutlet
                     @name="split-new-topic-category-after"
-                    @outletArgs={{hash
+                    @outletArgs={{lazyHash
                       selectedPosts=@model.selectedPosts
                       updateCategoryId=this.updateCategoryId
                     }}
@@ -427,7 +428,7 @@ export default class MoveToTopic extends Component {
                     />
                     <PluginOutlet
                       @name="split-new-topic-tag-after"
-                      @outletArgs={{hash
+                      @outletArgs={{lazyHash
                         selectedPosts=@model.selectedPosts
                         updateTags=this.updateTags
                         tags=this.tags

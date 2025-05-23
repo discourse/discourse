@@ -1,6 +1,8 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
+import { next } from "@ember/runloop";
 import { service } from "@ember/service";
+import { isPresent } from "@ember/utils";
 import { i18n } from "discourse-i18n";
 import InstallThemeCard from "admin/components/admin-config-area-cards/install-theme-card";
 import InstallThemeModal from "admin/components/modal/install-theme";
@@ -11,6 +13,24 @@ export default class AdminConfigAreasThemes extends Component {
   @service modal;
   @service router;
   @service toasts;
+
+  constructor() {
+    super(...arguments);
+
+    if (isPresent(this.args.repoName) && isPresent(this.args.repoUrl)) {
+      next(() => {
+        this.modal.show(InstallThemeModal, {
+          model: {
+            uploadUrl: this.args.repoUrl,
+            uploadName: this.args.repoName,
+            selection: "directRepoInstall",
+            clearParams: this.clearParams,
+            ...this.installThemeOptions(),
+          },
+        });
+      });
+    }
+  }
 
   @action
   installModal() {
@@ -27,7 +47,7 @@ export default class AdminConfigAreasThemes extends Component {
     return {
       selectedType: THEMES,
       userId: null,
-      content: [],
+      content: this.args.themes,
       installedThemes: this.args.themes,
       addTheme: this.addTheme,
       updateSelectedType: () => {},
@@ -43,9 +63,22 @@ export default class AdminConfigAreasThemes extends Component {
           theme: theme.name,
         }),
       },
-      duration: 2000,
+      duration: "short",
     });
+    this.router.transitionTo(
+      `adminConfig.customize.${theme.component ? "components" : "themes"}`,
+      {
+        queryParams: { repoUrl: null, repoName: null },
+      }
+    );
     this.router.refresh();
+  }
+
+  @action
+  clearParams() {
+    this.router.transitionTo(this.router.currentRouteName, {
+      queryParams: { repoUrl: null, repoName: null },
+    });
   }
 
   <template>

@@ -2,7 +2,7 @@ import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
-import Site from "discourse/models/site";
+import { forceMobile } from "discourse/lib/mobile";
 import {
   addChatDrawerStateCallback,
   resetChatDrawerStateCallbacks,
@@ -33,7 +33,7 @@ module(
       assert.false(this.subject.isFullPagePreferred);
 
       this.subject.prefersDrawer();
-      Site.currentProp("mobileView", true);
+      forceMobile();
 
       assert.true(this.subject.isFullPagePreferred);
     });

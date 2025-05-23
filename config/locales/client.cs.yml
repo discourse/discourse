@@ -1004,7 +1004,7 @@ cs:
       manage:
         title: "Spravovat"
         name: "Název"
-        full_name: "Celé název"
+        full_name: "Celý název"
         add_members: "Přidat uživatele"
         invite_members: "Pozvat"
         delete_member_confirm: "Odstranit '%{username}' ze '%{group}' skupiny?"
@@ -1335,7 +1335,6 @@ cs:
       said: "%{username}:"
       profile: "Profil"
       profile_possessive: "Profil uživatele %{username}"
-      account_possessive: "Účet uživatele %{name}"
       mute: "Ignorovat"
       edit: "Upravit nastavení"
       download_archive:
@@ -2227,7 +2226,6 @@ cs:
         title: "Registrační IP adresa"
       avatar:
         title: "Profilový obrázek"
-        header_title: "profil, zprávy, záložky a nastavení"
         name_and_description: "%{name} - %{description}"
         edit: "Upravit profilový obrázek"
       title:
@@ -3212,7 +3210,6 @@ cs:
           aria_label: filtrovat podle maximálního počtu zobrazení
         additional_options:
           label: "Filtrovat podle počtu příspěvků a zobrazení tématu"
-    hamburger_menu: "nabídka"
     new_item: "nové"
     go_back: "jít zpět"
     not_logged_in_user: "stránka uživatele s přehledem o aktuální činnosti a nastavení"
@@ -4026,6 +4023,11 @@ cs:
       in_reply_to: "Načíst nadřazený příspěvek"
       view_all_posts: "Zobrazit všechny příspěvky"
       badge_granted_tooltip: "%{username} získal/a za tento příspěvek odznak '%{badge_name}'!"
+      localizations:
+        table:
+          actions: "Akce"
+          edit: "Upravit"
+          delete: "Smazat"
       errors:
         create: "Bohužel nastala chyba při vytváření příspěvku. Prosím zkuste to znovu."
         edit: "Bohužel nastala chyba při editaci příspěvku. Prosím zkuste to znovu."
@@ -4687,7 +4689,6 @@ cs:
         today: "Dnes"
     custom_homepage:
       admin_message: 'Jeden z vašich motivů má povolený modifikátor "custom_homepage", ale do konektoru [custom-homepage] nic neprodukuje. (Tato zpráva se zobrazuje pouze správcům webu.)'
-    browser_update: 'Prohlížeč <a href="https://www.discourse.org/faq/#browser">bohužel není podporován</a>. Chcete-li zobrazit bohatý obsah, přihlásit se a odpovídat, přepněte prosím <a href="https://browsehappy.com">na podporovaný prohlížeč</a> .'
     permission_types:
       full: "Vytvářet / Odpovídat / Prohlížet"
       create_post: "Odpovídat / Prohlížet"
@@ -5427,23 +5428,22 @@ cs:
         login_and_authentication:
           title: "Přihlášení a ověřování"
           header_description: "Nakonfigurujte, jak se uživatelé přihlašují a ověřují, secrets a klíče, poskytovatele OAuth2 a další"
-        logo_and_fonts:
-          logo:
-            title: "Logo"
-            form:
-              saved: "Nastavení loga je uloženo."
-              logo:
-                title: "Primární logo"
-              mobile: "Mobilní verze"
-              email: "Emaily"
-              manifest_screenshots:
-                description: "Snímky obrazovky, které na stránce s výzvou k instalaci předvádějí funkce vaší instance a funkce. Všechny obrázky by měly být lokálně nahrávány a mít stejné rozměry."
-          fonts:
-            form:
-              heading_font:
-                title: "Písmo nadpisů"
-            backfill_modal:
-              modal_yes: "Ano"
+        logo:
+          title: "Logo"
+          form:
+            saved: "Nastavení loga je uloženo."
+            logo:
+              title: "Primární logo"
+            mobile: "Mobilní verze"
+            email: "Emaily"
+            manifest_screenshots:
+              description: "Snímky obrazovky, které na stránce s výzvou k instalaci předvádějí funkce vaší instance a funkce. Všechny obrázky by měly být lokálně nahrávány a mít stejné rozměry."
+        fonts:
+          form:
+            heading_font:
+              title: "Písmo nadpisů"
+          backfill_modal:
+            modal_yes: "Ano"
         navigation:
           title: "Navigace"
           header_description: "Nastavte odkazy na navigaci a položky nabídky pro váš web. To zahrnuje umístění a chování primárního navigačního menu, rychlé odkazy v horní části domovské stránky, stejně jako správcovský postranní panel"
@@ -5595,7 +5595,6 @@ cs:
           title: "Zabudování"
           header_description: "Diskuse má schopnost vložit komentáře z tématu na vzdálený web pomocí Javascript API, které vytváří IFRAME"
       search:
-        modal_title: "Vyhledejte cokoliv v administraci"
         title: "Vyhledat"
         result_types:
           page:
@@ -6221,6 +6220,8 @@ cs:
           city_for_disputes_placeholder: "Město"
           city_for_disputes_help: |
             Uveďte město pro řešení právních sporů souvisejících s tímto fórem.
+          extra_groups:
+            groups: "Skupiny"
           optional: "(volitelné)"
           update: "Aktualizovat"
           toasts:
@@ -6309,11 +6310,14 @@ cs:
           save_successful: "Uživatelské pole uloženo."
         color_palettes:
           palette_name: "Jméno"
+          duplicate: "Duplikovat"
+          delete: "Smazat"
           color_options:
             toggle: "Volitelný uživatelem"
             toggle_description: "Uživatelé si mohou tuto paletu vybrat"
           colors:
             title: "Barvy"
+          delete_confirm: "Odstranit tuto paletu barev?"
       plugins:
         title: "Pluginy"
         name: "Název"
@@ -6631,38 +6635,38 @@ cs:
           active_filter: "Aktivní"
           inactive_filter: "Neaktivní"
           updates_available_filter: "Dostupné aktualizace"
-          schema:
-            title: "Upravit nastavení %{name}"
-            back_button: "Zpět na %{name}"
-            fields:
-              required: "*nezbytnosti"
-              groups:
-                at_least:
-                  one: "je vyžadována alespoň %{count} skupina"
-                  few: "jsou vyžadovány alespoň %{count} skupiny"
-                  many: "je vyžadováno alespoň %{count} skupin"
-                  other: "je vyžadováno alespoň %{count} skupin"
-              categories:
-                at_least:
-                  one: "je vyžadována alespoň %{count} kategorie"
-                  few: "jsou vyžadovány alespoň %{count} kategorie"
-                  many: "je vyžadováno alespoň %{count} kategorií"
-                  other: "je vyžadováno alespoň %{count} kategorií"
-              tags:
-                at_least:
-                  one: "je vyžadován alespoň %{count} štítek"
-                  few: "jsou vyžadovány alespoň %{count} štítky"
-                  many: "je vyžadováno alespoň %{count} štítků"
-                  other: "je vyžadováno alespoň %{count} štítků"
-              string:
-                too_short:
-                  one: "musí mít alespoň %{count} znak"
-                  few: "musí mít alespoň %{count} znaky"
-                  many: "musí mít alespoň %{count} znaků"
-                  other: "musí mít alespoň %{count} znaků"
-              number:
-                too_small: "musí být větší nebo rovno %{count}"
-                too_large: "musí být menší nebo roven %{count}"
+        schema:
+          title: "Upravit nastavení %{name}"
+          back_button: "Zpět na %{name}"
+          fields:
+            required: "*povinné"
+            groups:
+              at_least:
+                one: "je vyžadována alespoň %{count} skupina"
+                few: "jsou vyžadovány alespoň %{count} skupiny"
+                many: "je vyžadováno alespoň %{count} skupin"
+                other: "je vyžadováno alespoň %{count} skupin"
+            categories:
+              at_least:
+                one: "je vyžadována alespoň %{count} kategorie"
+                few: "jsou vyžadovány alespoň %{count} kategorie"
+                many: "je vyžadováno alespoň %{count} kategorií"
+                other: "je vyžadováno alespoň %{count} kategorií"
+            tags:
+              at_least:
+                one: "je vyžadován alespoň %{count} štítek"
+                few: "jsou vyžadovány alespoň %{count} štítky"
+                many: "je vyžadováno alespoň %{count} štítků"
+                other: "je vyžadováno alespoň %{count} štítků"
+            string:
+              too_short:
+                one: "musí mít alespoň %{count} znak"
+                few: "musí mít alespoň %{count} znaky"
+                many: "musí mít alespoň %{count} znaků"
+                other: "musí mít alespoň %{count} znaků"
+            number:
+              too_small: "musí být větší nebo rovno %{count}"
+              too_large: "musí být menší nebo roven %{count}"
         colors:
           select_base:
             title: "Vyberte základní paletu barev"

@@ -1163,7 +1163,6 @@ fa_IR:
       said: "%{username}:"
       profile: "نمایه"
       profile_possessive: "نمایه‌ی %{username}"
-      account_possessive: "حساب کاربری %{name}"
       mute: "بی‌صدا"
       edit: "ویرایش تنظیمات"
       download_archive:
@@ -1995,7 +1994,6 @@ fa_IR:
         title: "نشانی IP ثبت‌نامی"
       avatar:
         title: "عکس نمایه"
-        header_title: "نمایه، پیام‌ها، نشانک‌ها و تنظیمات شخصی"
         name_and_description: "%{name} - %{description}"
         edit: "ویرایش تصویر پروفایل"
       title:
@@ -2872,7 +2870,6 @@ fa_IR:
           aria_label: فیلتر بر اساس حداکثر بازدید
         additional_options:
           label: "بر اساس تعداد پست‌ها و بازدیدهای موضوع فیلتر کنید"
-    hamburger_menu: "منو"
     new_item: "تازه"
     go_back: "برگردید"
     not_logged_in_user: "صفحه کاربر با خلاصه ای از فعالیت های و تنظیمات"
@@ -3579,6 +3576,11 @@ fa_IR:
       in_reply_to: "پست اصلی را بارگیری کنید"
       view_all_posts: "نمایش همه نوشته‌ها"
       badge_granted_tooltip: "کاربر %{username} به خاطر این پست، نشان \"%{badge_name}\" را کسب کرد!"
+      localizations:
+        table:
+          actions: "عملیات"
+          edit: "ویرایش"
+          delete: "حذف"
       errors:
         create: "متأسفیم، در ایجاد نوشته‌ی شما خطایی روی داد. لطفاً دوباره تلاش کنید."
         edit: "متأسفیم، در ویرایش نوشته‌ی شما خطایی روی داد. لطفاً دوباره تلاش کنید."
@@ -4180,7 +4182,6 @@ fa_IR:
         today: "امروز"
     custom_homepage:
       admin_message: 'یکی از پوسته‌های شما، اصلاح‌کننده «custom_homepage» را فعال کرده است؛ اما چیزی را در رابط [custom-homepage] خروجی نمی‌دهد. (این پیام فقط برای مدیران سایت نمایش داده می شود.)'
-    browser_update: 'متأسفانه، <a href="https://www.discourse.org/faq/#browser">مرورگر شما پشتیبانی نمی شود</a>. لطفاً برای مشاهده محتوای غنی، وارد شدن به حساب کاربری و پاسخ دادن، <a href="https://browsehappy.com">به مرورگر پشتیبانی شده منتقل شوید</a>.'
     permission_types:
       full: "ساختن / پاسخ دادن / دیدن"
       create_post: "پاسخ دادن / دیدن"
@@ -4859,16 +4860,15 @@ fa_IR:
         login_and_authentication:
           title: "ورود و احراز هویت"
           header_description: "نحوه ورود و احراز هویت کاربران، اسرار و کلیدها، ارائه دهندگان OAuth2 و موارد دیگر را پیکربندی کنید"
-        logo_and_fonts:
-          logo:
-            form:
-              logo:
-                title: "لوگوی اصلی"
-              mobile: "موبایل"
-              email: "ایمیل"
-          fonts:
-            backfill_modal:
-              modal_yes: "بله"
+        logo:
+          form:
+            logo:
+              title: "لوگوی اصلی"
+            mobile: "موبایل"
+            email: "ایمیل"
+        fonts:
+          backfill_modal:
+            modal_yes: "بله"
         navigation:
           title: "ناوبری"
           header_description: "پیوندهای ناوبری و آیتم‌های منو را برای سایت خود پیکربندی کنید. این شامل مکان و رفتار منوی پیمایش اصلی، پیوندهای سریع در بالای صفحه اصلی، و همچنین نوار کناری مدیریت است."
@@ -5001,7 +5001,6 @@ fa_IR:
         embedding:
           title: "جاسازی"
       search:
-        modal_title: "جستجو در مدیریت"
         title: "جستجو"
         result_types:
           page:
@@ -5580,6 +5579,8 @@ fa_IR:
           city_for_disputes_placeholder: "شهر"
           city_for_disputes_help: |
             شهر حل و فصل اختلافات حقوقی مربوط به این انجمن را مشخص کنید.
+          extra_groups:
+            groups: "گروه‌ها"
           optional: "(اختیاری)"
           update: "به روز رسانی"
           toasts:
@@ -5667,11 +5668,14 @@ fa_IR:
           save_successful: "فیلد کاربر ذخیره شد."
         color_palettes:
           palette_name: "نام"
+          duplicate: "تکراری"
+          delete: "حذف"
           color_options:
             toggle: "قابل انتخاب توسط کاربر"
             toggle_description: "پالت رنگ می‌تواند توسط کاربران انتخاب شود"
           colors:
             title: "رنگ‌ها"
+          delete_confirm: "این پالت رنگ حذف شود؟"
       plugins:
         title: "افزونه‌ها"
         name: "نام"
@@ -5976,30 +5980,30 @@ fa_IR:
           active_filter: "فعال"
           inactive_filter: "غیر‌فعال"
           updates_available_filter: "به‌روزرسانی‌های موجود"
-          schema:
-            title: "ویرایش تنظیمات %{name}"
-            back_button: "بازگشت به %{name}"
-            fields:
-              required: "*مورد نیاز"
-              groups:
-                at_least:
-                  one: "حداقل %{count} گروه مورد نیاز است"
-                  other: "حداقل %{count} گروه مورد نیاز است"
-              categories:
-                at_least:
-                  one: "حداقل %{count} دسته مورد نیاز است"
-                  other: "حداقل %{count} دسته مورد نیاز است"
-              tags:
-                at_least:
-                  one: "حداقل %{count} برچسب مورد نیاز است"
-                  other: "حداقل %{count} برچسب مورد نیاز است"
-              string:
-                too_short:
-                  one: "نباید کمتر از %{count} نویسه باشد"
-                  other: "نباید کمتر از %{count} نویسه باشد"
-              number:
-                too_small: "باید بزرگتر یا مساوی %{count} باشد"
-                too_large: "باید کمتر و یا مساوی %{count} باشد"
+        schema:
+          title: "ویرایش تنظیمات %{name}"
+          back_button: "بازگشت به %{name}"
+          fields:
+            required: "*مورد نیاز"
+            groups:
+              at_least:
+                one: "حداقل %{count} گروه مورد نیاز است"
+                other: "حداقل %{count} گروه مورد نیاز است"
+            categories:
+              at_least:
+                one: "حداقل %{count} دسته مورد نیاز است"
+                other: "حداقل %{count} دسته مورد نیاز است"
+            tags:
+              at_least:
+                one: "حداقل %{count} برچسب مورد نیاز است"
+                other: "حداقل %{count} برچسب مورد نیاز است"
+            string:
+              too_short:
+                one: "نباید کمتر از %{count} نویسه باشد"
+                other: "نباید کمتر از %{count} نویسه باشد"
+            number:
+              too_small: "باید بزرگتر یا مساوی %{count} باشد"
+              too_large: "باید کمتر و یا مساوی %{count} باشد"
         colors:
           select_base:
             title: "پالت رنگ پایه را انتخاب کنید"

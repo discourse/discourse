@@ -11,20 +11,19 @@
   border-top: 1px solid var(--primary-low);
 }
 
-$search-pad-vertical: 0.25em;
-$search-pad-horizontal: 0.5em;
-$search-result-element-padding: 0.35em 1rem; // hate myself but .25em is too tight and .5 too loose
+:root {
+  --search-result-element-padding: 0.5em 1rem;
+}
 
-.search-menu.glimmer-search-menu {
-  .search-input-wrapper {
-    @include viewport.until(sm) {
-      position: fixed;
-      left: 1rem;
-      right: 0.35rem; // to compensate for cancel button padding
-      top: 0.5em;
-      padding-bottom: 0.5em;
-      background-color: var(--secondary);
-    }
+.search-menu.glimmer-search-menu .search-input-wrapper {
+  @include viewport.until(sm) {
+    position: fixed;
+    left: 1rem;
+    right: 0.35rem; // to compensate for cancel button padding
+    top: 0;
+    padding-block: 0.5em;
+    background-color: var(--secondary);
+    z-index: z("base");
   }
 }
 
@@ -41,7 +40,7 @@ $search-result-element-padding: 0.35em 1rem; // hate myself but .25em is too tig
 
     .search-menu-panel & {
       @include viewport.from(sm) {
-        padding: $search-result-element-padding;
+        padding: 0.75em 1rem 0.25em;
       }
     }
   }
@@ -60,17 +59,22 @@ $search-result-element-padding: 0.35em 1rem; // hate myself but .25em is too tig
       background: none;
       border: 0;
       margin-bottom: 0;
-      width: 0;
-      flex: 1 1 auto;
+      width: auto;
+      flex-grow: 1;
 
       &:focus {
         outline: none;
       }
     }
 
-    @include viewport.until(sm) {
-      .mobile-search-button ~ input.search-term__input {
-        padding-inline: 0;
+    .btn.search-context {
+      margin: 2px;
+      margin-right: 0;
+      white-space: nowrap;
+      background-color: var(--primary-200);
+
+      &:hover {
+        background-color: var(--primary-medium);
       }
     }
 
@@ -80,8 +84,6 @@ $search-result-element-padding: 0.35em 1rem; // hate myself but .25em is too tig
   }
 
   .menu-panel {
-    border: 0;
-    box-shadow: var(--shadow-dropdown);
     padding: 0; // overrule generic menu panels to achieve full width hover effect
 
     @include viewport.from(sm) {
@@ -134,17 +136,6 @@ $search-result-element-padding: 0.35em 1rem; // hate myself but .25em is too tig
     flex-direction: column;
     border-radius: var(--d-border-radius);
 
-    @include viewport.until(sm) {
-      &.with-search-term {
-        padding-top: calc(var(--header-offset));
-      }
-
-      // temporary solution while waiting for dev to add conditional class
-      :has(.search-context) & {
-        padding-top: calc(var(--header-offset) + 2.25em);
-      }
-    }
-
     .heading {
       padding: 0.5em 0 0 1rem;
       display: flex;
@@ -173,7 +164,7 @@ $search-result-element-padding: 0.35em 1rem; // hate myself but .25em is too tig
   }
 
   .search-link {
-    padding: $search-result-element-padding;
+    padding: var(--search-result-element-padding);
 
     &.category,
     &.user,
@@ -424,12 +415,16 @@ $search-result-element-padding: 0.35em 1rem; // hate myself but .25em is too tig
 }
 
 .search-random-quick-tip {
-  padding: max(0.5rem, 0.5em) 1rem;
+  padding: max(0.75rem, 0.75em) 1rem;
   font-size: var(--font-down-2);
   color: var(--primary-medium);
 
+  .search-menu-panel & {
+    padding: 0.5rem 1rem max(0.75rem, 0.75em);
+  }
+
   .tip-label {
-    background-color: rgba(var(--tertiary-rgb), 0.1);
+    background-color: rgb(var(--tertiary-rgb), 0.1);
     margin-right: 0.25em;
     padding: 2px 4px;
     display: inline-block;
@@ -468,5 +463,5 @@ $search-result-element-padding: 0.35em 1rem; // hate myself but .25em is too tig
 }
 
 .no-results {
-  padding: $search-result-element-padding;
+  padding: var(--search-result-element-padding);
 }

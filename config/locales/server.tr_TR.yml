@@ -4059,8 +4059,6 @@ tr_TR:
   offline:
     title: "Uygulama yüklenemiyor"
     offline_page_message: "Görünüşe göre çevrimdışısınız! Lütfen ağ bağlantınızı kontrol edip tekrar deneyin."
-  login_required:
-    welcome_message: "# [%{title} forumuna hoş geldiniz](#welcome)"
   upload:
     edit_reason: "görüntülerin yerel kopyaları indirildi"
     unauthorized: "Üzgünüz, yüklemeye çalıştığınız dosyaya izin verilmiyor (izin verilen uzantılar: %{authorized_extensions})."
@@ -4086,7 +4084,6 @@ tr_TR:
     images:
       too_large: "Üzgünüz, yüklemeye çalıştığınız resim çok büyük (maksimum boyut %{max_size_kb} KB), lütfen yeniden boyutlandırın ve tekrar deneyin."
       too_large_humanized: "Üzgünüz, yüklemeye çalıştığınız görüntü çok büyük (maksimum boyut %{max_size}), lütfen yeniden boyutlandırın ve tekrar deneyin."
-      larger_than_x_megapixels: "Üzgünüz, yüklemeye çalıştığınız görüntü çok büyük (maksimum boyut %{max_image_megapixels} megapiksel), lütfen yeniden boyutlandırın ve tekrar deneyin."
       size_not_found: "Üzgünüz, ancak görüntünün boyutunu belirleyemedik. Belki de görüntünüz bozuktur?"
     placeholders:
       too_large: "(%{max_size_kb} KB'den büyük görüntü)"
