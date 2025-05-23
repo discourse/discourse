@@ -189,6 +189,9 @@
     touch-action: pan-y pinch-zoom;
     overflow: hidden;
     height: 100%;
+    @include viewport.from(sm) {
+      max-height: calc(100vh - var(--header-offset));
+    }
   }
 
   .panel-body-contents {
