@@ -652,8 +652,16 @@ export default class PostStream extends Component {
       { min: null, max: null }
     );
 
+    // test if the old current post is still on the screen
+    const currentPostNumber =
+      this.#currentPostElement?.[POST_MODEL]?.post_number;
+    const currentPostIsOnScreen =
+      this.#onScreenBoundaries.min !== null &&
+      currentPostNumber >= this.#onScreenBoundaries.min &&
+      currentPostNumber <= this.#onScreenBoundaries.max;
+
     // update the current post to enable fine grained scrolling tracking for it
-    if (!this.#isEyelineTrackingEnabled) {
+    if (!this.#isEyelineTrackingEnabled || !currentPostIsOnScreen) {
       this.#updateCurrentPost(
         this.#onScreenBoundaries.min !== null
           ? this.#postsOnScreen[this.#onScreenBoundaries.min]?.element
