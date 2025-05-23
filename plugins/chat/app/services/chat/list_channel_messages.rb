@@ -130,8 +130,6 @@ module Chat
     end
 
     def fetch_tracking(guardian:, thread_ids:)
-      return {} if thread_ids.blank?
-
       ::Chat::TrackingStateReportQuery.(guardian:, thread_ids:, include_threads: true)
     end
 
