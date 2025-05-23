@@ -8,6 +8,7 @@ import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
 import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
 import EmptyChannelsList from "discourse/plugins/chat/discourse/components/empty-channels-list";
@@ -130,7 +131,7 @@ export default class ChannelsListDirect extends Component {
     <PluginOutlet
       @name="below-direct-chat-channels"
       @tagName=""
-      @outletArgs={{hash inSidebar=this.inSidebar}}
+      @outletArgs={{lazyHash inSidebar=this.inSidebar}}
     />
   </template>
 }

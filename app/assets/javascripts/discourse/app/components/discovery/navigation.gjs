@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { array, hash } from "@ember/helper";
+import { array } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import AddCategoryTagClasses from "discourse/components/add-category-tag-classes";
@@ -11,6 +11,7 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import bodyClass from "discourse/helpers/body-class";
 import concatClass from "discourse/helpers/concat-class";
 import dirSpan from "discourse/helpers/dir-span";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { calculateFilterMode } from "discourse/lib/filter-mode";
 import { TRACKED_QUERY_PARAM_VALUE } from "discourse/lib/topic-list-tracked-filter";
 import DiscourseURL from "discourse/lib/url";
@@ -85,7 +86,7 @@ export default class DiscoveryNavigation extends Component {
     {{#if @category}}
       <PluginOutlet
         @name="above-category-heading"
-        @outletArgs={{hash category=@category tag=@tag}}
+        @outletArgs={{lazyHash category=@category tag=@tag}}
       />
 
       <section class="category-heading">
@@ -100,7 +101,7 @@ export default class DiscoveryNavigation extends Component {
           <PluginOutlet
             @name="category-heading"
             @connectorTagName="div"
-            @outletArgs={{hash category=@category tag=@tag}}
+            @outletArgs={{lazyHash category=@category tag=@tag}}
           />
         </span>
       </section>
@@ -145,7 +146,7 @@ export default class DiscoveryNavigation extends Component {
         <PluginOutlet
           @name="category-navigation"
           @connectorTagName="div"
-          @outletArgs={{hash category=@category tag=@tag}}
+          @outletArgs={{lazyHash category=@category tag=@tag}}
         />
       {{/if}}
 
@@ -153,7 +154,7 @@ export default class DiscoveryNavigation extends Component {
         <PluginOutlet
           @name="tag-navigation"
           @connectorTagName="div"
-          @outletArgs={{hash category=@category tag=@tag}}
+          @outletArgs={{lazyHash category=@category tag=@tag}}
         />
       {{/if}}
     </section>

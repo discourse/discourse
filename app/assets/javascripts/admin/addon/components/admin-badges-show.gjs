@@ -8,6 +8,7 @@ import Form from "discourse/components/form";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import icon from "discourse/helpers/d-icon";
 import iconOrImage from "discourse/helpers/icon-or-image";
+import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -555,7 +556,7 @@ export default class AdminBadgesShow extends Component {
 
         <PluginOutlet
           @name="admin-above-badge-buttons"
-          @outletArgs={{hash badge=this.buffered form=form}}
+          @outletArgs={{lazyHash badge=this.buffered form=form}}
         />
 
         <form.Actions>

@@ -3,13 +3,14 @@ import { LinkTo } from "@ember/routing";
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import ageWithTooltip from "discourse/helpers/age-with-tooltip";
+import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
 import { i18n } from "discourse-i18n";
 
 const CollapsedInfo = <template>
   <PluginOutlet
     @name="user-profile-above-collapsed-info"
-    @outletArgs={{hash model=@model collapsedInfo=@collapsedInfo}}
+    @outletArgs={{lazyHash model=@model collapsedInfo=@collapsedInfo}}
   />
   {{#unless @collapsedInfo}}
     <div class="secondary" id="collapsed-info-panel">
@@ -104,7 +105,7 @@ const CollapsedInfo = <template>
 
         <PluginOutlet
           @name="user-profile-secondary"
-          @outletArgs={{hash model=@model}}
+          @outletArgs={{lazyHash model=@model}}
         />
       </dl>
     </div>

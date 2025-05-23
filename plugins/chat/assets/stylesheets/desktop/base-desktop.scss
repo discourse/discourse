@@ -29,8 +29,8 @@
       cursor: pointer;
       border-radius: var(--d-border-radius);
       box-shadow:
-        0 2px 5px 0 rgba(var(--always-black-rgb), 0.1),
-        0 2px 10px 0 rgba(var(--always-black-rgb), 0.1);
+        0 2px 5px 0 rgb(var(--always-black-rgb), 0.1),
+        0 2px 10px 0 rgb(var(--always-black-rgb), 0.1);
     }
   }
 }

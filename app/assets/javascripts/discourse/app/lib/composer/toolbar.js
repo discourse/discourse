@@ -148,6 +148,7 @@ export default class Toolbar {
       preventFocus: buttonAttrs.preventFocus || false,
       condition: buttonAttrs.condition || (() => true),
       shortcutAction: buttonAttrs.shortcutAction, // (optional) custom shortcut action
+      hideShortcutInTitle: buttonAttrs.hideShortcutInTitle || false, // (optional) hide shortcut in title
     };
 
     if (buttonAttrs.sendAction) {
@@ -160,7 +161,12 @@ export default class Toolbar {
         PLATFORM_KEY_MODIFIER + "+"
       )}${translateModKey(buttonAttrs.shortcut)}`;
 
-      createdButton.title = `${title} (${shortcutTitle})`;
+      if (buttonAttrs.hideShortcutInTitle) {
+        createdButton.title = title;
+      } else {
+        createdButton.title = `${title} (${shortcutTitle})`;
+      }
+
       this.shortcuts[
         `${PLATFORM_KEY_MODIFIER}+${buttonAttrs.shortcut}`.toLowerCase()
       ] = createdButton;

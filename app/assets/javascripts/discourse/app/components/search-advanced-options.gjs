@@ -11,6 +11,7 @@ import DButton from "discourse/components/d-button";
 import DateInput from "discourse/components/date-input";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import icon from "discourse/helpers/d-icon";
+import lazyHash from "discourse/helpers/lazy-hash";
 import withEventValue from "discourse/helpers/with-event-value";
 import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
@@ -778,7 +779,7 @@ export default class SearchAdvancedOptions extends Component {
         <PluginOutlet
           @name="advanced-search-options-above"
           @connectorTagName="div"
-          @outletArgs={{hash
+          @outletArgs={{lazyHash
             searchedTerms=this.searchedTerms
             onChangeSearchedTermField=this.onChangeSearchedTermField
           }}
@@ -947,7 +948,7 @@ export default class SearchAdvancedOptions extends Component {
           <label class="control-label">{{i18n
               "search.advanced.post.time.label"
             }}</label>
-          <div class="controls inline-form full-width">
+          <div class="controls inline-form">
             <ComboBox
               @id="postTime"
               @valueProperty="value"
@@ -969,7 +970,7 @@ export default class SearchAdvancedOptions extends Component {
         <PluginOutlet
           @name="advanced-search-options-below"
           @connectorTagName="div"
-          @outletArgs={{hash
+          @outletArgs={{lazyHash
             searchedTerms=this.searchedTerms
             onChangeSearchedTermField=this.onChangeSearchedTermField
           }}

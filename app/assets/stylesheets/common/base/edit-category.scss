@@ -68,8 +68,8 @@ div.edit-category {
       &::after {
         background: linear-gradient(
           to right,
-          rgba(var(--secondary-rgb), 0),
-          rgba(var(--secondary-rgb), 1)
+          rgb(var(--secondary-rgb), 0),
+          rgb(var(--secondary-rgb), 1)
         );
         content: "";
         position: absolute;

@@ -340,10 +340,6 @@ class ListController < ApplicationController
       @params = { period: period }
       @rss_description = "top_#{period}"
 
-      if use_crawler_layout?
-        @title = I18n.t("js.filters.top.#{period}.title") + " - #{SiteSetting.title}"
-      end
-
       respond_with_list(list)
     end
 

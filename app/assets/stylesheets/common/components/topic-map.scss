@@ -102,13 +102,13 @@ body:not(.archetype-private_message) {
       gap: 0.75em;
 
       &.--single-stat {
-        button {
+        .fk-d-menu__trigger {
           flex-direction: row;
           gap: 0.25em;
 
           span {
             font-size: var(--font-0);
-            color: var(--primary-700) !important;
+            color: var(--primary-700);
             min-width: unset;
             overflow: visible;
           }

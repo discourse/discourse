@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
-import { hash } from "@ember/helper";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import UserAvatar from "discourse/components/user-avatar";
 import UserAvatarFlair from "discourse/components/user-avatar-flair";
 import icon from "discourse/helpers/d-icon";
+import lazyHash from "discourse/helpers/lazy-hash";
 
 export default class PostAvatar extends Component {
   get size() {
@@ -27,7 +27,7 @@ export default class PostAvatar extends Component {
     <div class="topic-avatar">
       <PluginOutlet
         @name="post-avatar"
-        @outletArgs={{hash
+        @outletArgs={{lazyHash
           post=@post
           size=this.size
           user=this.user

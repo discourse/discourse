@@ -1,4 +1,4 @@
-import { concat, fn, get, hash } from "@ember/helper";
+import { concat, fn, get } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { LinkTo } from "@ember/routing";
 import RouteTemplate from "ember-route-template";
@@ -17,6 +17,7 @@ import icon from "discourse/helpers/d-icon";
 import formatDuration from "discourse/helpers/format-duration";
 import htmlSafe from "discourse/helpers/html-safe";
 import i18nYesNo from "discourse/helpers/i18n-yes-no";
+import lazyHash from "discourse/helpers/lazy-hash";
 import number from "discourse/helpers/number";
 import rawDate from "discourse/helpers/raw-date";
 import { i18n } from "discourse-i18n";
@@ -195,7 +196,10 @@ export default RouteTemplate(
             {{/if}}
             <PluginOutlet
               @name="admin-users-list-thead-after"
-              @outletArgs={{hash order=@controller.order asc=@controller.asc}}
+              @outletArgs={{lazyHash
+                order=@controller.order
+                asc=@controller.asc
+              }}
             />
 
             {{#if @controller.siteSettings.must_approve_users}}
@@ -370,7 +374,7 @@ export default RouteTemplate(
 
                 <PluginOutlet
                   @name="admin-users-list-td-after"
-                  @outletArgs={{hash user=user query=@controller.query}}
+                  @outletArgs={{lazyHash user=user query=@controller.query}}
                 />
 
                 {{#if @controller.siteSettings.must_approve_users}}
@@ -415,7 +419,7 @@ export default RouteTemplate(
                   <PluginOutlet
                     @name="admin-users-list-icon"
                     @connectorTagName="div"
-                    @outletArgs={{hash user=user query=@controller.query}}
+                    @outletArgs={{lazyHash user=user query=@controller.query}}
                   />
                 </div>
               </div>

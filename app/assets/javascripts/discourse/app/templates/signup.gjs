@@ -1,5 +1,4 @@
 import { Input } from "@ember/component";
-import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { htmlSafe } from "@ember/template";
 import RouteTemplate from "ember-route-template";
@@ -21,6 +20,7 @@ import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import hideApplicationHeaderButtons from "discourse/helpers/hide-application-header-buttons";
 import hideApplicationSidebar from "discourse/helpers/hide-application-sidebar";
+import lazyHash from "discourse/helpers/lazy-hash";
 import loadingSpinner from "discourse/helpers/loading-spinner";
 import routeAction from "discourse/helpers/route-action";
 import valueEntered from "discourse/helpers/value-entered";
@@ -63,7 +63,7 @@ export default RouteTemplate(
             >
               <PluginOutlet
                 @name="create-account-header-bottom"
-                @outletArgs={{hash showLogin=(routeAction "showLogin")}}
+                @outletArgs={{lazyHash showLogin=(routeAction "showLogin")}}
               />
             </WelcomeHeader>
             {{#if @controller.showCreateForm}}
@@ -156,7 +156,7 @@ export default RouteTemplate(
 
                 <PluginOutlet
                   @name="create-account-before-password"
-                  @outletArgs={{hash
+                  @outletArgs={{lazyHash
                     accountName=@controller.accountName
                     accountUsername=@controller.accountUsername
                     accountPassword=@controller.accountPassword
@@ -250,7 +250,7 @@ export default RouteTemplate(
 
                 <PluginOutlet
                   @name="create-account-after-password"
-                  @outletArgs={{hash
+                  @outletArgs={{lazyHash
                     accountName=@controller.accountName
                     accountUsername=@controller.accountUsername
                     accountPassword=@controller.accountPassword
@@ -291,7 +291,7 @@ export default RouteTemplate(
 
                 <PluginOutlet
                   @name="create-account-after-user-fields"
-                  @outletArgs={{hash
+                  @outletArgs={{lazyHash
                     accountName=@controller.accountName
                     accountUsername=@controller.accountUsername
                     accountPassword=@controller.accountPassword

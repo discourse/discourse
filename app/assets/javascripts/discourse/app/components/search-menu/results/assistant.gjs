@@ -1,9 +1,10 @@
 import Component from "@glimmer/component";
-import { concat, get, hash } from "@ember/helper";
+import { concat, get } from "@ember/helper";
 import { service } from "@ember/service";
 import { eq } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import AssistantItem from "discourse/components/search-menu/results/assistant-item";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
 
 const suggestionShortcuts = [
@@ -212,7 +213,7 @@ export default class Assistant extends Component {
       {{else}}
         <PluginOutlet
           @name="search-menu-results-assistant-shortcut-top"
-          @outletArgs={{hash suggestionShortcuts=this.suggestionShortcuts}}
+          @outletArgs={{lazyHash suggestionShortcuts=this.suggestionShortcuts}}
         />
         {{#each this.suggestionShortcuts as |item|}}
           <AssistantItem

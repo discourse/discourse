@@ -79,7 +79,7 @@ body.wizard {
   position: relative;
   z-index: 11;
   background-color: var(--secondary);
-  box-shadow: 0 4px 19px 6px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 19px 6px rgb(0, 0, 0, 0.05);
   box-sizing: border-box;
   margin: 1em auto;
   border: 1px solid var(--primary-low);
@@ -106,15 +106,6 @@ body.wizard {
         margin: 0 0 0.5em;
       }
     }
-
-    &.styling {
-      max-width: 100%;
-      width: auto;
-
-      @include viewport.until(sm) {
-        width: 95%;
-      }
-    }
   }
 
   &__fields {
@@ -134,32 +125,6 @@ body.wizard {
 
     @include viewport.until(md) {
       font-size: var(--font-up-2);
-    }
-  }
-
-  &__step.branding .wizard-container__field {
-    @include viewport.until(sm) {
-      max-width: 100%;
-    }
-  }
-
-  &__step.branding .wizard-container__preview {
-    background-color: var(--primary-very-low);
-    border-radius: 0.5em;
-    padding: 1em;
-    margin-bottom: 1em;
-  }
-
-  &__step.branding .wizard-container__preview canvas {
-    @include viewport.until(sm) {
-      max-width: 100%;
-      height: auto !important;
-    }
-  }
-
-  &__step.styling .wizard-container__field.styling-preview-field {
-    label {
-      display: none;
     }
   }
 
@@ -183,19 +148,6 @@ body.wizard {
 
   &__field label {
     display: block;
-  }
-
-  &__field.text-governing-law,
-  &__field.text-city-for-disputes {
-    @media only screen and (width <= 568px) {
-      display: none;
-    }
-  }
-
-  &__field.dropdown-field.dropdown-homepage-style {
-    .wizard-container__dropdown {
-      height: auto;
-    }
   }
 
   &__step-form {
@@ -228,58 +180,6 @@ body.wizard {
       @media only screen and (width <= 925px) {
         display: none;
       }
-    }
-  }
-
-  .preview-nav {
-    display: flex;
-    justify-content: flex-end;
-    position: relative;
-    padding-right: 10px;
-
-    .preview-nav-button {
-      text-align: center;
-      padding: 10px 15px;
-      cursor: pointer;
-      margin-left: 10px;
-      font-size: 14px;
-      font-weight: bold;
-      color: var(--primary-high);
-
-      &.active {
-        background: var(--secondary);
-        border-bottom-left-radius: 10px;
-        border-bottom-right-radius: 10px;
-        color: var(--tertiary);
-        border-top: none;
-      }
-    }
-  }
-
-  .previews {
-    position: relative;
-    height: 320px;
-    width: 628px;
-    overflow: hidden;
-    background: var(--secondary);
-    border-radius: 10px;
-    cursor: grab;
-    user-select: none;
-
-    &.dragging {
-      cursor: grabbing;
-    }
-
-    .topic-preview {
-      position: absolute;
-      left: 0;
-      top: 0;
-    }
-
-    .homepage-preview {
-      position: absolute;
-      left: calc(100% + 25px);
-      top: 0;
     }
   }
 
@@ -319,10 +219,6 @@ body.wizard {
     @include viewport.until(sm) {
       min-height: 30em;
     }
-  }
-
-  &__step.branding .wizard-container__description {
-    font-size: var(--font-0);
   }
 
   &__buttons-left {
@@ -526,10 +422,6 @@ body.wizard {
     font-size: var(--font-up-1);
   }
 
-  &__step.styling .wizard-container__label {
-    font-size: var(--font-0);
-  }
-
   &__label.required {
     display: inline;
     color: var(--danger);
@@ -577,28 +469,6 @@ body.wizard {
 
   &__dropdown .select-kit-header:not(.btn) {
     border-radius: 4px;
-  }
-
-  &__dropdown.color-palettes .select-kit-row.color-palettes-row .name {
-    flex: 0 0 30%;
-  }
-
-  &__dropdown.color-palettes .select-kit-row.color-palettes-row .palettes {
-    flex: 1 1 70%;
-    overflow: hidden;
-  }
-
-  &__dropdown.homepage-style-selector {
-    .select-kit-row {
-      .name {
-        font-weight: bold;
-      }
-
-      .desc {
-        display: block;
-        margin-top: 0.1em;
-      }
-    }
   }
 
   &__field.checkbox-field .wizard-container__label {
@@ -662,7 +532,7 @@ body.wizard {
     .wizard-container__label:hover
     .wizard-container__checkbox-slider::before {
     background: var(--secondary);
-    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 0 0 1px rgb(0, 0, 0, 0.15);
   }
 
   &__checkbox:checked + .wizard-container__checkbox-slider {
@@ -742,10 +612,6 @@ body.wizard {
 
   label .svg-icon {
     top: 2px;
-  }
-
-  .wizard-container__image-upload canvas {
-    border: 1px solid rgba(0, 0, 0, 0.2);
   }
 
   .finish-installation {

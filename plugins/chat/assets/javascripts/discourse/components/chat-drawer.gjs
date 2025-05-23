@@ -1,5 +1,4 @@
 import Component from "@ember/component";
-import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { cancel, next, throttle } from "@ember/runloop";
 import { service } from "@ember/service";
@@ -10,6 +9,7 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import bodyClass from "discourse/helpers/body-class";
 import concatClass from "discourse/helpers/concat-class";
 import htmlClass from "discourse/helpers/html-class";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { bind } from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import DiscourseURL from "discourse/lib/url";
@@ -258,7 +258,7 @@ export default class ChatDrawer extends Component {
 
           <PluginOutlet
             @name="chat-drawer-before-content"
-            @outletArgs={{hash
+            @outletArgs={{lazyHash
               currentRouteName=this.chatDrawerRouter.currentRouteName
             }}
           />

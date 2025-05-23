@@ -75,6 +75,7 @@ export default class AdminBadges extends Component {
           <NavItem
             @route="adminBadges.index"
             @label="admin.config.badges.title"
+            @currentWhen="adminBadges.show adminBadges.index"
             class="admin-badges-tabs__index"
           />
         </:tabs>

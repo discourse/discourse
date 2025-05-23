@@ -3187,14 +3187,13 @@ bs_BA:
           title: "Files"
         legal:
           title: "Legal"
-        logo_and_fonts:
-          logo:
-            form:
-              mobile: "Mobilno"
-              email: "Email"
-          fonts:
-            backfill_modal:
-              modal_yes: "Da"
+        logo:
+          form:
+            mobile: "Mobilno"
+            email: "Email"
+        fonts:
+          backfill_modal:
+            modal_yes: "Da"
         navigation:
           title: "Navigacija"
         notifications:
@@ -3549,6 +3548,8 @@ bs_BA:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
           company_name: "Ime"
+          extra_groups:
+            groups: "Groups"
           optional: "(opciono)"
           saved: "sačuvano!"
         flags:
@@ -3808,9 +3809,9 @@ bs_BA:
           all_filter: "All"
           active_filter: "Active"
           inactive_filter: "Neaktivan"
-          schema:
-            fields:
-              required: "*required"
+        schema:
+          fields:
+            required: "*required"
         colors:
           select_base:
             title: "Odaberite osnovnu paletu boja"

@@ -3998,14 +3998,13 @@ el:
           title: "Αρχεία"
         legal:
           title: "Νομικά"
-        logo_and_fonts:
-          logo:
-            form:
-              mobile: "Mobile"
-              email: "Email"
-          fonts:
-            backfill_modal:
-              modal_yes: "Ναι"
+        logo:
+          form:
+            mobile: "Mobile"
+            email: "Email"
+        fonts:
+          backfill_modal:
+            modal_yes: "Ναι"
         navigation:
           title: "Πλοήγηση"
         notifications:
@@ -4388,6 +4387,8 @@ el:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
           company_name: "Όνομα"
+          extra_groups:
+            groups: "Ομάδες"
           optional: "(προεραιτικό)"
           update: "Ενημέρωση"
           saved: "αποθηκεύτηκε!"
@@ -4691,14 +4692,18 @@ el:
           active_filter: "Ενεργοί"
           inactive_filter: "Ανενεργό"
           updates_available_filter: "Διαθέσιμες ενημερώσεις"
-          schema:
-            title: "Επεξεργασία ρύθμισης %{name}"
-            back_button: "Πίσω σε %{name}"
-            fields:
-              required: "*απαιτείται"
-              number:
-                too_small: "πρέπει να είναι μεγαλύτερο ή ίσο με %{count}"
-                too_large: "πρέπει να είναι λιγότερο ή ίσο με %{count}"
+        schema:
+          title: "Επεξεργασία ρύθμισης %{name}"
+          back_button: "Πίσω σε %{name}"
+          fields:
+            required: "*απαιτείται"
+            string:
+              too_short:
+                one: "πρέπει να είναι τουλάχιστον %{count} χαρακτήρας"
+                other: "πρέπει να είναι τουλάχιστον %{count} χαρακτήρες"
+            number:
+              too_small: "πρέπει να είναι μεγαλύτερο ή ίσο με %{count}"
+              too_large: "πρέπει να είναι λιγότερο ή ίσο με %{count}"
         colors:
           select_base:
             title: "Επιλογή βασικής παλέτας χρωμάτων"

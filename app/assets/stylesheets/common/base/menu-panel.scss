@@ -8,7 +8,7 @@
 
   // ensure there's always space to click outside on tiny devices
   max-width: 90vw;
-  box-shadow: 0 0 30px -2px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 30px -2px rgb(0, 0, 0, 0.5);
   height: 100dvh;
 
   .panel-body {
@@ -20,7 +20,7 @@
   height: 100%;
   width: 100%;
   position: fixed;
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: rgb(0, 0, 0, 0.3);
   top: 0;
   left: 0;
   display: none;
@@ -231,6 +231,10 @@
 
   .badge-notification {
     vertical-align: text-bottom;
+  }
+
+  .sidebar-filter {
+    width: 100%;
   }
 
   .sidebar-search {

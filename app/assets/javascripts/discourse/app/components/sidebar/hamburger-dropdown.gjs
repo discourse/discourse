@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { schedule } from "@ember/runloop";
@@ -7,6 +6,7 @@ import { service } from "@ember/service";
 import { or } from "truth-helpers";
 import DeferredRender from "discourse/components/deferred-render";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import lazyHash from "discourse/helpers/lazy-hash";
 import ApiPanels from "./api-panels";
 import Footer from "./footer";
 import Sections from "./sections";
@@ -57,7 +57,7 @@ export default class SidebarHamburgerDropdown extends Component {
               >
                 <PluginOutlet
                   @name="before-sidebar-sections"
-                  @outletArgs={{hash
+                  @outletArgs={{lazyHash
                     toggleNavigationMenu=@toggleNavigationMenu
                   }}
                 />

@@ -242,6 +242,7 @@ zh_CN:
         other: "最多只能有 %{count} 个字符；您输入了 %{length} 个字符。"
       invalid_boolean: "布尔值无效。"
       taken: "已被采用"
+      reserved: "%{name} 组名已保留，请选择其他名称"
       accepted: 必须被接受
       blank: 不能为空
       present: 必须为空
@@ -2433,6 +2434,7 @@ zh_CN:
       invalid_string_max:
         other: "不得超过 %{count} 个字符。"
       invalid_json: "无效的 JSON。"
+      invalid_object: "无效对象。"
       invalid_reply_by_email_address: "值必须包含 '%{reply_key}' 并且与通知电子邮件不同。"
       invalid_alternative_reply_by_email_addresses: "所有值必须包含 '%{reply_key}' 并且与通知电子邮件不同。"
       invalid_domain_hostname: "不得包括 * 或 ? 字符。"
@@ -4043,7 +4045,7 @@ zh_CN:
     title: "无法加载应用"
     offline_page_message: "您好像离线了！请检查您的网络连接，然后重试。"
   login_required:
-    welcome_message: "# [欢迎来到 %{title}](#welcome)"
+    welcome_message: "# 欢迎来到 %{title}"
   upload:
     edit_reason: "下载图片的本地副本"
     unauthorized: "抱歉，您尝试上传的文件不被允许（允许的扩展名：%{authorized_extensions}）。"

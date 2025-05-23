@@ -3,8 +3,8 @@
 module PageObjects
   module Pages
     class AdminCustomizeThemesConfigArea < PageObjects::Pages::Base
-      def visit
-        page.visit("/admin/config/customize")
+      def visit(query_params = {})
+        page.visit("/admin/config/customize?#{query_params.to_query}")
       end
 
       def find_theme_card(theme)

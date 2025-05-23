@@ -1,5 +1,5 @@
 import Component, { Textarea } from "@ember/component";
-import { array, fn, hash } from "@ember/helper";
+import { array, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { and, reads } from "@ember/object/computed";
@@ -14,6 +14,7 @@ import basePath from "discourse/helpers/base-path";
 import categoryLink from "discourse/helpers/category-link";
 import icon from "discourse/helpers/d-icon";
 import discourseTag from "discourse/helpers/discourse-tag";
+import lazyHash from "discourse/helpers/lazy-hash";
 import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -380,7 +381,7 @@ export default class TagInfo extends Component {
         {{#if this.canAdminTag}}
           <PluginOutlet
             @name="tag-custom-settings"
-            @outletArgs={{hash tag=this.tagInfo}}
+            @outletArgs={{lazyHash tag=this.tagInfo}}
             @connectorTagName="section"
           />
 
