@@ -46,7 +46,6 @@ module Chat
     model :channel
     policy :can_view_channel
     model :membership, optional: true
-    step :enabled_threads?
     model :target_message_id, optional: true
     policy :target_message_exists
     model :messages, optional: true
@@ -65,10 +64,6 @@ module Chat
 
     def fetch_membership(channel:, guardian:)
       channel.membership_for(guardian.user)
-    end
-
-    def enabled_threads?(channel:)
-      context[:enabled_threads] = channel.threading_enabled
     end
 
     def can_view_channel(guardian:, channel:)
@@ -99,13 +94,13 @@ module Chat
       true
     end
 
-    def fetch_messages(channel:, params:, guardian:, enabled_threads:, target_message_id:)
+    def fetch_messages(channel:, params:, guardian:, target_message_id:)
       messages_data =
         ::Chat::MessagesQuery.call(
           channel:,
           guardian:,
           target_message_id:,
-          include_thread_messages: !enabled_threads,
+          include_thread_messages: !channel.threading_enabled?,
           **params.slice(:page_size, :direction, :target_date),
         )
 
@@ -115,7 +110,7 @@ module Chat
 
       messages_data[:target_message] = (
         if messages_data[:target_message]&.thread_reply? &&
-             (enabled_threads || messages_data[:target_message].thread&.force)
+             (channel.threading_enabled? || messages_data[:target_message].thread&.force)
           []
         else
           [messages_data[:target_message]]
