@@ -141,12 +141,12 @@ export default class SchemaSettingNewEditor extends Component {
     return descriptions[key];
   }
 
-  fieldLabel(fieldName) {
-    return this.descriptions(fieldName, "label") || fieldName;
+  fieldLabel(fieldName, spec) {
+    return this.descriptions(fieldName, "label") || spec?.label || fieldName;
   }
 
-  fieldDescription(fieldName) {
-    return this.descriptions(fieldName, "description");
+  fieldDescription(fieldName, spec) {
+    return this.descriptions(fieldName, "description") || spec?.description;
   }
 
   get fields() {
@@ -163,8 +163,8 @@ export default class SchemaSettingNewEditor extends Component {
           name,
           spec,
           value: activeObject[name],
-          description: this.fieldDescription(name),
-          label: this.fieldLabel(name),
+          description: this.fieldDescription(name, spec),
+          label: this.fieldLabel(name, spec),
         });
       }
     }

@@ -23,6 +23,8 @@ export default function schemaAndData(version = 1, mode = SCHEMA_MODES.THEME) {
             properties: {
               name: {
                 type: "string",
+                label: "Level 2 Label",
+                description: "Description for level 2",
               },
               grandchildren: {
                 type: "objects",
