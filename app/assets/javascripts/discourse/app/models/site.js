@@ -1,5 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import EmberObject, { computed, get } from "@ember/object";
+import { dependentKeyCompat } from "@ember/object/compat";
 import { alias, sort } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
@@ -8,6 +9,7 @@ import discourseComputed from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
+import Mobile from "discourse/lib/mobile";
 import PreloadStore from "discourse/lib/preload-store";
 import singleton from "discourse/lib/singleton";
 import Archetype from "discourse/models/archetype";
@@ -81,6 +83,7 @@ export default class Site extends RestModel {
 
   @service siteSettings;
   @service currentUser;
+  @service capabilities;
 
   @tracked categories;
 
@@ -95,6 +98,25 @@ export default class Site extends RestModel {
 
     this.topicCountDesc = ["topic_count:desc"];
     this.categories = this.categories || [];
+  }
+
+  @dependentKeyCompat
+  get desktopView() {
+    return !this.mobileView;
+  }
+
+  @dependentKeyCompat
+  get mobileView() {
+    if (this.siteSettings.viewport_based_mobile_mode) {
+      return !this.capabilities.viewport.sm;
+    } else {
+      return Mobile.mobileView;
+    }
+  }
+
+  @dependentKeyCompat
+  get isMobileDevice() {
+    return this.mobileView;
   }
 
   get useGlimmerPostStream() {

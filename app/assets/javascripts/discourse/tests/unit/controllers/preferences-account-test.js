@@ -8,9 +8,6 @@ module("Unit | Controller | preferences/account", function (hooks) {
     const siteSettings = this.owner.lookup("service:site-settings");
     siteSettings.enable_google_oauth2_logins = true;
 
-    const site = this.owner.lookup("service:site");
-    site.set("isMobileDevice", false);
-
     const controller = this.owner.lookup("controller:preferences/account");
     controller.setProperties({
       model: {

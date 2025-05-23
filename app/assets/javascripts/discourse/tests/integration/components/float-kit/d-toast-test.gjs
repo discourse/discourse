@@ -2,6 +2,7 @@ import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { render, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import { forceMobile } from "discourse/lib/mobile";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import {
   disableRaiseOnDeprecation,
@@ -38,7 +39,7 @@ module("Integration | Component | FloatKit | d-toast", function (hooks) {
 
   test("swipe up to close", async function (assert) {
     let closing = false;
-    this.site.mobileView = true;
+    forceMobile();
     const toast = createCustomToastInstance(getOwner(this), {}, () => {
       closing = true;
     });

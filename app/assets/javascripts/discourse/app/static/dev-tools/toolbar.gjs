@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import icon from "discourse/helpers/d-icon";
 import draggable from "discourse/modifiers/draggable";
@@ -13,6 +14,8 @@ import SafeModeButton from "./safe-mode/button";
 import VerboseLocalizationButton from "./verbose-localization/button";
 
 export default class Toolbar extends Component {
+  @service siteSettings;
+
   @tracked top = 250;
   @tracked ownSize = 0;
 
@@ -63,7 +66,9 @@ export default class Toolbar extends Component {
       <PluginOutletDebugButton />
       <SafeModeButton />
       <VerboseLocalizationButton />
-      <MobileViewButton />
+      {{#unless this.siteSettings.viewport_based_mobile_mode}}
+        <MobileViewButton />
+      {{/unless}}
       <button
         title="Disable dev tools"
         class="disable-dev-tools"
