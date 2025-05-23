@@ -33,13 +33,15 @@
 
 .form-kit__before-input,
 .form-kit__after-input {
-  border: 1px solid var(--primary-low-mid);
+  font-size: var(--font-down-1-rem);
+  border: var(--d-input-border);
   padding-inline: 0.5em;
-  height: 2em;
+  height: 2.25rem;
   box-sizing: border-box;
-  background: var(--primary-low);
+  background: var(--primary-very-low);
   display: flex;
   align-items: center;
+  box-shadow: var(--form-kis-shadow);
 
   @include viewport.until(sm) {
     height: 2.25em;

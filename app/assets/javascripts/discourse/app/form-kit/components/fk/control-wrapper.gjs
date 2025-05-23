@@ -1,15 +1,17 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { concat, fn } from "@ember/helper";
+import { concat, fn, hash } from "@ember/helper";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { eq } from "truth-helpers";
+import DButton from "discourse/components/d-button";
 import FKLabel from "discourse/form-kit/components/fk/label";
 import FKMeta from "discourse/form-kit/components/fk/meta";
-import FKOptional from "discourse/form-kit/components/fk/optional";
+import FKRequired from "discourse/form-kit/components/fk/required";
 import FKText from "discourse/form-kit/components/fk/text";
 import FKTooltip from "discourse/form-kit/components/fk/tooltip";
 import concatClass from "discourse/helpers/concat-class";
+import DMenu from "float-kit/components/d-menu";
 
 export default class FKControlWrapper extends Component {
   @tracked controlWidth = "auto";
@@ -53,6 +55,7 @@ export default class FKControlWrapper extends Component {
         (concat "form-kit__field-" this.controlType)
         (if this.error "has-error")
         (if @field.disabled "is-disabled")
+        (if @field.emphasis "has-emphasis")
         (if (eq @field.format "full") "--full")
       }}
       data-disabled={{@field.disabled}}
@@ -72,8 +75,25 @@ export default class FKControlWrapper extends Component {
           >
             <span>{{@field.title}}</span>
 
-            <FKOptional @field={{@field}} />
+            <FKRequired @field={{@field}} />
             <FKTooltip @field={{@field}} />
+
+            {{#let
+              (hash
+                Button=(component DButton class="form-kit__button btn-flat")
+                Menu=(component DMenu class="form-kit__menu")
+              )
+              as |actions|
+            }}
+
+              <div class="form-kit__container-primary-actions">
+                {{yield actions to="primary-actions"}}
+              </div>
+
+              <div class="form-kit__container-secondary-actions">
+                {{yield actions to="secondary-actions"}}
+              </div>
+            {{/let}}
           </FKLabel>
         {{/if}}
 
