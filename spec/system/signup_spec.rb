@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-shared_examples "signup scenarios" do |signup_page_object, login_page_object|
-  let(:signup_form) { signup_page_object }
-  let(:login_form) { login_page_object }
+shared_examples "signup scenarios" do
+  let(:signup_form) { PageObjects::Pages::Signup.new }
+  let(:login_form) { PageObjects::Pages::Login.new }
   let(:invite_form) { PageObjects::Pages::InviteForm.new }
   let(:activate_account) { PageObjects::Pages::ActivateAccount.new }
   let(:invite) { Fabricate(:invite) }
@@ -379,14 +379,10 @@ end
 
 describe "Signup", type: :system do
   context "when desktop" do
-    include_examples "signup scenarios",
-                     PageObjects::Pages::Signup.new,
-                     PageObjects::Pages::Login.new
+    include_examples "signup scenarios"
   end
 
   context "when mobile", mobile: true do
-    include_examples "signup scenarios",
-                     PageObjects::Pages::Signup.new,
-                     PageObjects::Pages::Login.new
+    include_examples "signup scenarios"
   end
 end
