@@ -2774,6 +2774,7 @@ en:
     experimental_content_localization: "Displays localized content for users based on their language preferences. Such content may include categories, tags, posts, and topics. This feature is under heavy development."
     rich_editor: "Enable the rich editor so all users can switch between the current Markdown mode and the new rich text editor for more intuitive and user-friendly composition. The rich text editor is under active development, so not all features are supported yet — <a href='https://meta.discourse.org/t/test-our-new-composer/352347' target='_blank'>see Meta for more details</a>."
     experimental_content_localization_allowed_groups: 'Groups allowed to update localized content. Requires "experimental content localization" to be enabled.'
+    viewport_based_mobile_mode: "EXPERIMENTAL: Disable the user-agent-based mobile/desktop modes and use viewport width instead."
     errors:
       invalid_css_color: "Invalid color. Enter a color name or hex value."
       invalid_email: "Invalid email address."

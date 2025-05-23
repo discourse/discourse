@@ -2,8 +2,8 @@
 
 require "rotp"
 
-shared_examples "login scenarios" do |login_page_object|
-  let(:login_form) { login_page_object }
+shared_examples "login scenarios" do
+  let(:login_form) { PageObjects::Pages::Login.new }
   let(:activate_account) { PageObjects::Pages::ActivateAccount.new }
   let(:user_preferences_security_page) { PageObjects::Pages::UserPreferencesSecurity.new }
   fab!(:user) { Fabricate(:user, username: "john", password: "supersecurepassword") }
@@ -411,10 +411,10 @@ end
 
 describe "Login", type: :system do
   context "when desktop" do
-    include_examples "login scenarios", PageObjects::Pages::Login.new
+    include_examples "login scenarios"
   end
 
   context "when mobile", mobile: true do
-    include_examples "login scenarios", PageObjects::Pages::Login.new
+    include_examples "login scenarios"
   end
 end

@@ -59,10 +59,12 @@ const Mobile = {
 
 export function forceMobile() {
   mobileForced = true;
+  Mobile.init();
 }
 
 export function resetMobile() {
   mobileForced = false;
+  Mobile.init();
 }
 
 export default Mobile;

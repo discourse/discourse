@@ -533,7 +533,7 @@ en:
       other: "See %{count} new topics"
 
     preview: "preview"
-    cancel: "cancel"
+    cancel: "Cancel"
 
     deleting: "Deleting…"
 
@@ -5227,49 +5227,76 @@ en:
     discovery:
       headings:
         all:
-          default: "All %{filter} topics"
+          latest: "All latest topics"
+          top: "All top topics"
+          new: "All new topics"
+          unread: "All unread topics"
+          unseen: "All unseen topics"
+          hot: "All hot topics"
           posted: "All topics you’ve posted in"
           bookmarks: "All topics you’ve bookmarked"
+          default: "All %{filter} topics"
 
         category:
-          default: "%{filter} topics in %{category}"
+          latest: "Latest topics in %{category}"
+          top: "Top topics in %{category}"
+          new: "New topics in %{category}"
+          unread: "Unread topics in %{category}"
+          unseen: "Unseen topics in %{category}"
+          hot: "Hot topics in %{category}"
           posted: "Topics in %{category} you’ve posted in"
           bookmarks: "Topics in %{category} you’ve bookmarked"
-
-        no_tags:
-          all_default: "All topics without tags"
-          category_default: "%{filter} topics in %{category} without tags"
-          all:
-            posted: "All topics without tags you've posted in"
-            bookmarks: "All topics without tags you've bookmarked"
-          category:
-            posted: "Topics in %{category} without tags you've posted in"
-            bookmarks: "Topics in %{category} without tags you've bookmarked"
+          default: "%{filter} topics in %{category}"
 
         single_tag:
-          default: "%{filter} topics tagged with %{tag}"
-          posted: "Topics tagged %{tag} you've posted in"
+          latest: "Latest topics tagged %{tag}"
+          top: "Top topics tagged %{tag}"
+          new: "New topics tagged %{tag}"
+          unread: "Unread topics tagged %{tag}"
+          unseen: "Unseen topics tagged %{tag}"
+          hot: "Hot topics tagged %{tag}"
+          posted: "Topics tagged %{tag} you’ve posted in"
           bookmarks: "Topics tagged %{tag} you’ve bookmarked"
+          default: "%{filter} topics tagged %{tag}"
 
         multi_tag:
-          default: "%{filter} topics tagged %{tags}"
-          posted: "Topics tagged %{tags} you've posted in"
-          bookmarks: "Topics tagged %{tags} you’ve bookmarked"
+          default: "Topics tagged %{tags}"
 
         category_tag:
-          default: "%{filter} topics in %{category} tagged with %{tag}"
+          latest: "Latest topics in %{category} tagged %{tag}"
+          top: "Top topics in %{category} tagged %{tag}"
+          new: "New topics in %{category} tagged %{tag}"
+          unread: "Unread topics in %{category} tagged %{tag}"
+          unseen: "Unseen topics in %{category} tagged %{tag}"
+          hot: "Hot topics in %{category} tagged %{tag}"
           posted: "Topics in %{category} tagged %{tag} you’ve posted in"
           bookmarks: "Topics in %{category} tagged %{tag} you’ve bookmarked"
+          default: "%{filter} topics in %{category} tagged %{tag}"
+
+        no_tags:
+          all:
+            latest: "Latest topics without tags"
+            top: "Top topics without tags"
+            new: "New topics without tags"
+            unread: "Unread topics without tags"
+            unseen: "Unseen topics without tags"
+            hot: "Hot topics without tags"
+            posted: "Topics without tags you’ve posted in"
+            bookmarks: "Topics without tags you’ve bookmarked"
+            default: "Topics without tags"
+
+          category:
+            latest: "Latest topics in %{category} without tags"
+            top: "Top topics in %{category} without tags"
+            new: "New topics in %{category} without tags"
+            unread: "Unread topics in %{category} without tags"
+            unseen: "Unseen topics in %{category} without tags"
+            hot: "Hot topics in %{category} without tags"
+            posted: "Topics in %{category} without tags you’ve posted in"
+            bookmarks: "Topics in %{category} without tags you’ve bookmarked"
+            default: "%{filter} topics in %{category} without tags"
 
         categories: "All categories"
-
-        filter_labels:
-          latest: "Latest"
-          top: "Top"
-          new: "New"
-          unread: "Unread"
-          hot: "Hot"
-          unseen: "Unseen"
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:

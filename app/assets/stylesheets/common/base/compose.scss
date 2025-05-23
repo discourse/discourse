@@ -1154,27 +1154,27 @@ div.ac-wrap {
     .d-icon {
       color: var(--primary-high);
     }
-  }
 
-  span.topic {
-    display: flex;
-    flex-direction: column;
-
-    .first-line {
-      flex: 1;
-      text-overflow: ellipsis;
-      overflow: hidden;
-      white-space: nowrap;
-    }
-
-    .second-line {
+    span.topic {
       display: flex;
-      flex-wrap: wrap;
-      align-items: baseline;
-      gap: 0.5em;
+      flex-direction: column;
 
-      .discourse-tags {
-        font-size: var(--font-down-1);
+      .first-line {
+        flex: 1;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+      }
+
+      .second-line {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: 0.5em;
+
+        .discourse-tags {
+          font-size: var(--font-down-1);
+        }
       }
     }
   }
