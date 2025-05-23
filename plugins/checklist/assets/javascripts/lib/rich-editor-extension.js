@@ -40,7 +40,6 @@ const extension = {
           end,
           state.schema.nodes.check.create({ checked: match[2] === "x" })
         ),
-      options: { undoable: false },
     },
   ],
 

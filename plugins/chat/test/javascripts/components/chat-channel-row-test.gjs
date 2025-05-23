@@ -3,6 +3,7 @@ import { getOwner } from "@ember/owner";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import CoreFabricators from "discourse/lib/fabricators";
+import { forceMobile, resetMobile } from "discourse/lib/mobile";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import ChatChannelRow from "discourse/plugins/chat/discourse/components/chat-channel-row";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
@@ -101,7 +102,7 @@ module("Discourse Chat | Component | chat-channel-row", function (hooks) {
   test("renders membership toggling button when necessary", async function (assert) {
     const self = this;
 
-    this.site.desktopView = false;
+    forceMobile();
 
     await render(
       <template>
@@ -121,7 +122,7 @@ module("Discourse Chat | Component | chat-channel-row", function (hooks) {
 
     assert.dom(".toggle-channel-membership-button").doesNotExist();
 
-    this.site.desktopView = true;
+    resetMobile();
 
     await render(
       <template>

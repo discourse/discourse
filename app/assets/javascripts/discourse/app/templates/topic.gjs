@@ -179,12 +179,38 @@ export default RouteTemplate(
                     }}
                   />
 
+<<<<<<< HEAD
                   <div class="edit-controls">
                     <DButton
                       @action={{@controller.finishedEditingTopic}}
                       @icon="check"
                       @ariaLabel="composer.save_edit"
                       class="btn-primary submit-edit"
+=======
+                  {{#if @controller.canRemoveTopicFeaturedLink}}
+                    <a
+                      href
+                      {{on "click" @controller.removeFeaturedLink}}
+                      class="remove-featured-link"
+                      title={{i18n "composer.remove_featured_link"}}
+                    >
+                      {{icon "circle-xmark"}}
+                      {{@controller.featuredLinkDomain}}
+                    </a>
+                  {{/if}}
+                </div>
+              </div>
+
+            {{else}}
+              <h1 data-topic-id={{@controller.model.id}}>
+                {{#unless @controller.model.is_warning}}
+                  {{#if @controller.canSendPms}}
+                    <PrivateMessageGlyph
+                      @shouldShow={{@controller.model.isPrivateMessage}}
+                      @href={{@controller.pmPath}}
+                      @title="topic_statuses.personal_message.title"
+                      @ariaLabel="user.messages.inbox"
+>>>>>>> b15c1d28c95513cfbeaae4f9d9d7d06b2a0cd9bb
                     />
                     <DButton
                       @action={{@controller.cancelEditingTopic}}
@@ -237,6 +263,7 @@ export default RouteTemplate(
                     </span>
                   {{/if}}
 
+<<<<<<< HEAD
                   {{#if @controller.showEditButton}}
                     {{icon "pencil"}}
                   {{/if}}
@@ -246,6 +273,27 @@ export default RouteTemplate(
                     @outletArgs={{lazyHash model=@controller.model}}
                   />
                 </h1>
+=======
+                {{#if @controller.model.details.loaded}}
+                  <TopicStatus @topic={{@controller.model}} />
+                  <a
+                    href={{@controller.model.url}}
+                    {{on "click" @controller.jumpTop}}
+                    class="fancy-title"
+                  >
+                    {{htmlSafe @controller.model.fancyTitle}}
+                  </a>
+                {{/if}}
+
+                {{#if @controller.model.details.can_edit}}
+                  <a
+                    href
+                    {{on "click" @controller.editTopic}}
+                    class="edit-topic"
+                    title={{i18n "edit_topic"}}
+                  >{{icon "pencil"}}</a>
+                {{/if}}
+>>>>>>> b15c1d28c95513cfbeaae4f9d9d7d06b2a0cd9bb
 
                 <PluginOutlet
                   @name="topic-category-wrapper"

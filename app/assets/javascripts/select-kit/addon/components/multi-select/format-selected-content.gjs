@@ -2,12 +2,11 @@ import Component from "@ember/component";
 import { computed } from "@ember/object";
 import { tagName } from "@ember-decorators/component";
 import { makeArray } from "discourse/lib/helpers";
-import UtilsMixin from "select-kit/mixins/utils";
+import selectKitPropUtils from "select-kit/lib/select-kit-prop-utils";
 
 @tagName("")
-export default class FormatSelectedContent extends Component.extend(
-  UtilsMixin
-) {
+@selectKitPropUtils
+export default class FormatSelectedContent extends Component {
   content = null;
   selectKit = null;
 

@@ -65,13 +65,18 @@ export default class AdminConfigAreasThemes extends Component {
       },
       duration: "short",
     });
-    this.clearParams(theme.component ? "components" : "themes");
+    this.router.transitionTo(
+      `adminConfig.customize.${theme.component ? "components" : "themes"}`,
+      {
+        queryParams: { repoUrl: null, repoName: null },
+      }
+    );
     this.router.refresh();
   }
 
   @action
-  clearParams(type) {
-    this.router.transitionTo(`adminConfig.customize.${type ?? "themes"}`, {
+  clearParams() {
+    this.router.transitionTo(this.router.currentRouteName, {
       queryParams: { repoUrl: null, repoName: null },
     });
   }
