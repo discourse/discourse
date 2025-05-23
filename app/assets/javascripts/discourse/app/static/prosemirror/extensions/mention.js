@@ -260,9 +260,7 @@ const extension = {
               }
             };
 
-            processMentions().then(() => {
-              view._processingMentions = false;
-            });
+            processMentions();
           },
         };
       },
