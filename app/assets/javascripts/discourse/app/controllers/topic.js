@@ -162,6 +162,7 @@ export default class TopicController extends Controller {
     return mobileView && postsCount > 3;
   }
 
+  // TODO (glimmer-post-stream) this method is not used in the Glimmer Post Stream
   @discourseComputed(
     "model.postStream.posts",
     "model.postStream.postsWithPlaceholders"
@@ -170,6 +171,7 @@ export default class TopicController extends Controller {
     return this.capabilities.isAndroid ? posts : postsWithPlaceholders;
   }
 
+  // TODO (glimmer-post-stream) is this still used?
   @discourseComputed("model.postStream.loadingFilter")
   androidLoading(loading) {
     return this.capabilities.isAndroid && loading;
@@ -550,7 +552,7 @@ export default class TopicController extends Controller {
     }
 
     if (firstLoadedPost && firstLoadedPost === post) {
-      postStream.prependMore().then(() => refresh());
+      postStream.prependMore().then(() => refresh?.());
     }
   }
 
@@ -567,9 +569,9 @@ export default class TopicController extends Controller {
       lastLoadedPost === post &&
       postStream.get("canAppendMore")
     ) {
-      postStream.appendMore().then(() => refresh());
+      postStream.appendMore().then(() => refresh?.());
       // show loading stuff
-      refresh();
+      refresh?.();
     }
   }
 

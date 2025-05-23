@@ -6,7 +6,7 @@ import PostNoticeNewUser from "./new-user";
 export default class PostNoticeReturningUser extends PostNoticeNewUser {
   get time() {
     const timeAgo =
-      (new Date() - new Date(this.args.notice.lastPostedAt)) / 1000;
+      (new Date() - new Date(this.args.notice.last_posted_at)) / 1000;
     return relativeAgeMediumSpan(timeAgo, true);
   }
 
