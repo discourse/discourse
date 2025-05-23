@@ -7,7 +7,7 @@ import {
 } from "@ember-decorators/component";
 import { makeArray } from "discourse/lib/helpers";
 import { isValidInput } from "select-kit/lib/input-utils";
-import UtilsMixin from "select-kit/mixins/utils";
+import selectKitPropUtils from "select-kit/lib/select-kit-prop-utils";
 
 @classNames("select-kit-header")
 @classNameBindings("isFocused")
@@ -19,7 +19,8 @@ import UtilsMixin from "select-kit/mixins/utils";
   "buttonTitle:title",
   "selectKit.options.autofocus:autofocus"
 )
-export default class SelectKitHeader extends Component.extend(UtilsMixin) {
+@selectKitPropUtils
+export default class SelectKitHeader extends Component {
   selectKit = null;
   role = "listbox";
   tabindex = 0;

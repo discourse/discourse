@@ -6,10 +6,11 @@ import { guidFor } from "@ember/object/internals";
 import { tagName } from "@ember-decorators/component";
 import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import UtilsMixin from "select-kit/mixins/utils";
+import selectKitPropUtils from "select-kit/lib/select-kit-prop-utils";
 
 @tagName("")
-export default class SelectedChoice extends Component.extend(UtilsMixin) {
+@selectKitPropUtils
+export default class SelectedChoice extends Component {
   item = null;
   selectKit = null;
   extraClass = null;
