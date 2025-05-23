@@ -48,12 +48,7 @@
       }
 
       &:hover {
-        color: var(--d-nav-color--hover);
-        background: var(--d-nav-bg-color--hover);
-
-        .d-icon {
-          color: var(--d-nav-color--hover);
-        }
+        @include nav-hover;
       }
     }
 
