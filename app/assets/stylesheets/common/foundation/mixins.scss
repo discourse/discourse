@@ -291,8 +291,8 @@ $hpad: 0.65em;
 }
 
 @mixin nav-hover() {
-  color: var(--d-nav-color--active);
-  background: var(--d-nav-bg-color--active);
+  color: var(--d-nav-color--hover);
+  background: var(--d-nav-bg-color--hover);
 
   .d-icon {
     color: var(--d-nav-color--active);
