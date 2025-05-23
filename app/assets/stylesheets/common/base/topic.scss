@@ -183,7 +183,7 @@
       }
     }
 
-    @include viewport.from(md) {
+    @media (hover: hover) {
       &.can-edit-topic .fancy-title {
         outline: 2px solid transparent;
         border-radius: var(--d-border-radius);
