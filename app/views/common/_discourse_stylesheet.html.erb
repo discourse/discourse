@@ -37,11 +37,11 @@
 <% end %>
 
 <%- if theme_id.present? %>
-  <%= discourse_stylesheet_link_tag(:common_theme) %>
+  <%= discourse_stylesheet_link_tag(:common_theme, supports_rtl: true) %>
   <% if SiteSetting.viewport_based_mobile_mode %>
-    <%= discourse_stylesheet_link_tag(:mobile_theme, media: "(max-width: 39.99999rem)") %>
-    <%= discourse_stylesheet_link_tag(:desktop_theme, media: "(min-width: 40rem)") %>
+    <%= discourse_stylesheet_link_tag(:mobile_theme, media: "(max-width: 39.99999rem)", supports_rtl: true) %>
+    <%= discourse_stylesheet_link_tag(:desktop_theme, media: "(min-width: 40rem)", supports_rtl: true) %>
   <% else %>
-    <%= discourse_stylesheet_link_tag(mobile_view? ? :mobile_theme : :desktop_theme) %>
+    <%= discourse_stylesheet_link_tag(mobile_view? ? :mobile_theme : :desktop_theme, supports_rtl: true) %>
   <% end %>
 <%- end %>
