@@ -5,7 +5,7 @@ module Chat
   # or fetching paginated messages from last read.
   #
   # @example
-  #  Chat::ListChannelMessages.call(params: { channel_id: 2, **optional_params }, guardian: guardian)
+  #  Chat::ListChannelMessages.call(params: { channel_id: 2, **optional_params }, guardian:)
   #
   class ListChannelMessages
     include Service::Base
@@ -18,7 +18,7 @@ module Chat
 
     params do
       attribute :channel_id, :integer
-      attribute :page_size, :integer
+      attribute :page_size
 
       # If this is not present, then we just fetch messages with page_size
       # and direction.
@@ -30,7 +30,7 @@ module Chat
       validates :channel_id, presence: true
       validates :page_size,
                 numericality: {
-                  less_than_or_equal_to: ::Chat::MessagesQuery::MAX_PAGE_SIZE,
+                  less_than_or_equal_to: Chat::MessagesQuery::MAX_PAGE_SIZE,
                   only_integer: true,
                 },
                 allow_nil: true
@@ -39,6 +39,8 @@ module Chat
                   in: Chat::MessagesQuery::VALID_DIRECTIONS,
                 },
                 allow_nil: true
+
+      after_validation { self.page_size ||= Chat::MessagesQuery::MAX_PAGE_SIZE }
     end
 
     model :channel
@@ -104,9 +106,7 @@ module Chat
           guardian:,
           target_message_id:,
           include_thread_messages: !enabled_threads,
-          page_size: params.page_size || Chat::MessagesQuery::MAX_PAGE_SIZE,
-          direction: params.direction,
-          target_date: params.target_date,
+          **params.slice(:page_size, :direction, :target_date),
         )
 
       context[:can_load_more_past] = messages_data[:can_load_more_past]
