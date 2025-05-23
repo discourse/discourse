@@ -17,7 +17,7 @@ class Stylesheet::Manager
   private_constant :CACHE_PATH
 
   MANIFEST_DIR = "#{Rails.root}/tmp/cache/assets/#{Rails.env}"
-  THEME_REGEX = /_theme\z/
+  THEME_REGEX = /_theme(_rtl)?\z/
   COLOR_SCHEME_STYLESHEET = "color_definitions"
 
   @@lock = Mutex.new
@@ -87,6 +87,7 @@ class Stylesheet::Manager
     color_schemes = color_schemes.compact.uniq
 
     targets = %i[common_theme desktop_theme mobile_theme]
+    targets += targets.map { |t| :"#{t}_rtl" }
     compiled = Set.new
 
     themes.each do |theme_id, color_scheme_id|
@@ -95,7 +96,7 @@ class Stylesheet::Manager
       targets.each do |target|
         next if theme_id == -1
 
-        scss_checker = ScssChecker.new(target, manager.theme_ids)
+        scss_checker = ScssChecker.new(target.to_s.delete_suffix("_rtl"), manager.theme_ids)
 
         manager
           .load_themes(manager.theme_ids)
