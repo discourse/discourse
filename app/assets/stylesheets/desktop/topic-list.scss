@@ -198,21 +198,24 @@
   }
 
   .show-more {
-    width: 100%;
-    z-index: z("base");
-    position: absolute;
-    top: 0;
+    @include viewport.from(sm) {
+      z-index: z("base");
+      position: absolute;
+      width: auto;
+      right: 50%;
+      transform: translateX(50%);
 
-    .alert {
-      margin: 0;
-      padding: 1.1em 2em 1.1em 0.65em;
-      gap: 0.65em;
-      align-items: center;
-
-      &.loading {
-        color: var(--primary-medium);
-        cursor: default;
+      .alert {
+        padding: var(--spacing-block-sm) var(--spacing-inline-m);
+        border-radius: var(--d-border-radius-large);
+        font-size: var(--font-down-1-rem);
+        margin: 0;
       }
+    }
+
+    &.loading {
+      color: var(--primary-medium);
+      cursor: default;
     }
   }
 }
