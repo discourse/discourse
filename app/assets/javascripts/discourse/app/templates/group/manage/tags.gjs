@@ -3,6 +3,7 @@ import RouteTemplate from "ember-route-template";
 import GroupManageSaveButton from "discourse/components/group-manage-save-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import icon from "discourse/helpers/d-icon";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
 import TagChooser from "select-kit/components/tag-chooser";
 
@@ -13,7 +14,7 @@ export default RouteTemplate(
       <PluginOutlet
         @name="before-manage-group-tags"
         @connectorTagName="div"
-        @outletArgs={{hash model=@controller.model}}
+        @outletArgs={{lazyHash model=@controller.model}}
       />
 
       <div class="control-group">

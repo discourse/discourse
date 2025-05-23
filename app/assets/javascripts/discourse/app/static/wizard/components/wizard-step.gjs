@@ -11,7 +11,7 @@ import emoji from "discourse/helpers/emoji";
 import { i18n } from "discourse-i18n";
 import WizardField from "./wizard-field";
 
-const READY_STEP_INDEX = 5;
+const READY_STEP_INDEX = 3;
 
 export default class WizardStepComponent extends Component {
   @tracked saving = false;

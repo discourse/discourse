@@ -5,6 +5,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { or } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { logSearchLinkClick } from "discourse/lib/search";
 import DiscourseURL from "discourse/lib/url";
@@ -76,7 +77,7 @@ export default class Types extends Component {
       <div class={{resultType.componentName}}>
         <PluginOutlet
           @name="search-menu-results-type-top"
-          @outletArgs={{hash resultType=resultType}}
+          @outletArgs={{lazyHash resultType=resultType}}
         />
         <ul
           class="list"

@@ -1,4 +1,4 @@
-import { fn, hash } from "@ember/helper";
+import { fn } from "@ember/helper";
 import RouteTemplate from "ember-route-template";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PreferenceCheckbox from "discourse/components/preference-checkbox";
@@ -6,6 +6,7 @@ import SaveControls from "discourse/components/save-controls";
 import Categories from "discourse/components/user-preferences/categories";
 import Tags from "discourse/components/user-preferences/tags";
 import bodyClass from "discourse/helpers/body-class";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
 import ComboBox from "select-kit/components/combo-box";
 
@@ -67,7 +68,7 @@ export default RouteTemplate(
 
         <PluginOutlet
           @name="user-preferences-tracking-topics"
-          @outletArgs={{hash
+          @outletArgs={{lazyHash
             model=@controller.model
             customAttrNames=@controller.customAttrNames
           }}

@@ -3,6 +3,7 @@ import Component from "@glimmer/component";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import { isPresent } from "@ember/utils";
 import concatClass from "discourse/helpers/concat-class";
 import getURL from "discourse/lib/get-url";
 import { iconHTML } from "discourse/lib/icon-library";
@@ -22,6 +23,19 @@ export default class NavItem extends Component {
   get active() {
     if (!this.args.route || !this.router.currentRoute) {
       return;
+    }
+
+    if (isPresent(this.args.currentWhen)) {
+      const currentWhen = this.args.currentWhen;
+      if (typeof currentWhen === "boolean") {
+        return currentWhen;
+      } else if (typeof currentWhen === "string") {
+        return currentWhen
+          .split(" ")
+          .some((route) => route === this.router.currentRoute.name);
+      } else {
+        return false;
+      }
     }
 
     if (this.args.routeParam) {
@@ -58,7 +72,10 @@ export default class NavItem extends Component {
           @current-when={{this.active}}
         >{{this.contents}}</LinkTo>
       {{else if @route}}
-        <LinkTo @route={{@route}}>{{this.contents}}</LinkTo>
+        <LinkTo
+          @route={{@route}}
+          @current-when={{this.active}}
+        >{{this.contents}}</LinkTo>
       {{else}}
         <a href={{getURL @path}} data-auto-route="true">{{this.contents}}</a>
       {{/if}}

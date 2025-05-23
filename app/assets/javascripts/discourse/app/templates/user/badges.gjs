@@ -1,8 +1,9 @@
-import { fn, hash } from "@ember/helper";
+import { fn } from "@ember/helper";
 import RouteTemplate from "ember-route-template";
 import BadgeCard from "discourse/components/badge-card";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import bodyClass from "discourse/helpers/body-class";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
 
 export default RouteTemplate(
@@ -12,7 +13,7 @@ export default RouteTemplate(
     <section class="user-content" id="user-content">
       <PluginOutlet
         @name="user-badges-content"
-        @outletArgs={{hash
+        @outletArgs={{lazyHash
           sortedBadges=@controller.sortedBadges
           maxFavBadges=@controller.siteSettings.max_favorite_badges
           favoriteBadges=@controller.favoriteBadges
@@ -45,7 +46,7 @@ export default RouteTemplate(
           {{/each}}
           <PluginOutlet
             @name="after-user-profile-badges"
-            @outletArgs={{hash user=@controller.user.model}}
+            @outletArgs={{lazyHash user=@controller.user.model}}
           />
         </div>
       </PluginOutlet>

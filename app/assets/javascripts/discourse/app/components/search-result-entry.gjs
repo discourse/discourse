@@ -1,5 +1,5 @@
 import Component from "@ember/component";
-import { fn, hash } from "@ember/helper";
+import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { htmlSafe } from "@ember/template";
@@ -18,6 +18,7 @@ import categoryLink from "discourse/helpers/category-link";
 import icon from "discourse/helpers/d-icon";
 import discourseTags from "discourse/helpers/discourse-tags";
 import formatDate from "discourse/helpers/format-date";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { logSearchLinkClick } from "discourse/lib/search";
 
@@ -47,7 +48,7 @@ export default class SearchResultEntry extends Component {
   <template>
     <PluginOutlet
       @name="search-results-topic-avatar-wrapper"
-      @outletArgs={{hash post=this.post}}
+      @outletArgs={{lazyHash post=this.post}}
     >
       <div class="author">
         <a href={{this.post.userPath}} data-user-card={{this.post.username}}>
@@ -92,7 +93,7 @@ export default class SearchResultEntry extends Component {
           </span>
           <PluginOutlet
             @name="search-results-topic-title-suffix"
-            @outletArgs={{hash topic=this.post.topic}}
+            @outletArgs={{lazyHash topic=this.post.topic}}
           />
         </a>
 
@@ -108,7 +109,7 @@ export default class SearchResultEntry extends Component {
             <PluginOutlet
               @name="full-page-search-category"
               @connectorTagName="div"
-              @outletArgs={{hash post=this.post}}
+              @outletArgs={{lazyHash post=this.post}}
             />
           </span>
         </div>
@@ -116,7 +117,7 @@ export default class SearchResultEntry extends Component {
 
       <PluginOutlet
         @name="search-result-entry-blurb-wrapper"
-        @outletArgs={{hash post=this.post logClick=this.logClick}}
+        @outletArgs={{lazyHash post=this.post logClick=this.logClick}}
       >
         <div class="blurb container">
           <span class="date">
@@ -140,7 +141,7 @@ export default class SearchResultEntry extends Component {
 
       <PluginOutlet
         @name="search-result-entry-stats-wrapper"
-        @outletArgs={{hash post=this.post}}
+        @outletArgs={{lazyHash post=this.post}}
       >
         {{#if this.showLikeCount}}
           {{#if this.post.like_count}}

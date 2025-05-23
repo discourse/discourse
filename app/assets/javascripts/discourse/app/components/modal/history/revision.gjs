@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
@@ -10,6 +9,7 @@ import ageWithTooltip from "discourse/helpers/age-with-tooltip";
 import boundAvatarTemplate from "discourse/helpers/bound-avatar-template";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
 
 export default class Revision extends Component {
@@ -34,7 +34,7 @@ export default class Revision extends Component {
         </LinkTo>
         <PluginOutlet
           @name="revision-user-details-after"
-          @outletArgs={{hash model=@model}}
+          @outletArgs={{lazyHash model=@model}}
         />
 
         <span class="date">

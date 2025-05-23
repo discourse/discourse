@@ -5096,6 +5096,11 @@ en:
         forum:
           label: Forum
       back_to_forum: "Back to Forum"
+      filter_links: "Filter links..."
+      clear_filter: "Clear filter"
+      no_results:
+        title: "No results"
+        description_admin_search: 'We couldn’t find anything matching ‘%{filter}’.'
       collapse_all_sections: "Collapse all sections"
       expand_all_sections: "Expand all sections"
       search: "Search"
@@ -5529,7 +5534,7 @@ en:
           header_description: "Components are smaller customizations that can be added to themes in order to change specific elements of the style of your forum design"
           keywords: "theme|component|extension"
         themes_and_components:
-          title: "Themes and components"
+          title: "Themes & components"
           header_description: "Personalize your Discourse site with themes and components to match your needs"
           keywords: "theme|component|extension|customize"
         site_admin:
@@ -6292,8 +6297,6 @@ en:
           more_options:
             title: "More options"
         themes_and_components:
-          title: "Themes and components"
-          description: "Personalize your Discourse site with themes and components to match your needs."
           breadcrumb_title: "Customize"
           install: "Install"
           themes:

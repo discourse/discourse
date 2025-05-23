@@ -39,6 +39,7 @@ import bodyClass from "discourse/helpers/body-class";
 import icon from "discourse/helpers/d-icon";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import htmlSafe from "discourse/helpers/html-safe";
+import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
 import stickyAvatars from "discourse/modifiers/sticky-avatars";
 import { i18n } from "discourse-i18n";
@@ -83,7 +84,7 @@ export default RouteTemplate(
         <PluginOutlet
           @name="topic-above-post-stream"
           @connectorTagName="div"
-          @outletArgs={{hash
+          @outletArgs={{lazyHash
             model=@controller.model
             editFirstPost=@controller.editFirstPost
           }}
@@ -106,7 +107,7 @@ export default RouteTemplate(
                 <div class="edit-title__wrapper">
                   <PluginOutlet
                     @name="edit-topic-title"
-                    @outletArgs={{hash
+                    @outletArgs={{lazyHash
                       model=@controller.model
                       buffered=@controller.buffered
                     }}
@@ -124,7 +125,7 @@ export default RouteTemplate(
                   <div class="edit-category__wrapper">
                     <PluginOutlet
                       @name="edit-topic-category"
-                      @outletArgs={{hash
+                      @outletArgs={{lazyHash
                         model=@controller.model
                         buffered=@controller.buffered
                       }}
@@ -142,7 +143,7 @@ export default RouteTemplate(
                   <div class="edit-tags__wrapper">
                     <PluginOutlet
                       @name="edit-topic-tags"
-                      @outletArgs={{hash
+                      @outletArgs={{lazyHash
                         model=@controller.model
                         buffered=@controller.buffered
                       }}
@@ -165,7 +166,7 @@ export default RouteTemplate(
                 <PluginOutlet
                   @name="edit-topic"
                   @connectorTagName="div"
-                  @outletArgs={{hash
+                  @outletArgs={{lazyHash
                     model=@controller.model
                     buffered=@controller.buffered
                   }}
@@ -200,13 +201,7 @@ export default RouteTemplate(
               </div>
 
             {{else}}
-              <h1
-                data-topic-id={{@controller.model.id}}
-                role="button"
-                class={{@controller.topicTitleClass}}
-                aria-label={{i18n "edit_topic"}}
-                {{on "click" @controller.titleClick}}
-              >
+              <h1 data-topic-id={{@controller.model.id}}>
                 {{#unless @controller.model.is_warning}}
                   {{#if @controller.canSendPms}}
                     <PrivateMessageGlyph
@@ -224,24 +219,33 @@ export default RouteTemplate(
 
                 {{#if @controller.model.details.loaded}}
                   <TopicStatus @topic={{@controller.model}} />
-                  <span class="fancy-title">
+                  <a
+                    href={{@controller.model.url}}
+                    {{on "click" @controller.jumpTop}}
+                    class="fancy-title"
+                  >
                     {{htmlSafe @controller.model.fancyTitle}}
-                  </span>
+                  </a>
                 {{/if}}
 
-                {{#if @controller.showEditButton}}
-                  {{icon "pencil"}}
+                {{#if @controller.model.details.can_edit}}
+                  <a
+                    href
+                    {{on "click" @controller.editTopic}}
+                    class="edit-topic"
+                    title={{i18n "edit_topic"}}
+                  >{{icon "pencil"}}</a>
                 {{/if}}
 
                 <PluginOutlet
                   @name="topic-title-suffix"
-                  @outletArgs={{hash model=@controller.model}}
+                  @outletArgs={{lazyHash model=@controller.model}}
                 />
               </h1>
 
               <PluginOutlet
                 @name="topic-category-wrapper"
-                @outletArgs={{hash topic=@controller.model}}
+                @outletArgs={{lazyHash topic=@controller.model}}
               >
                 <TopicCategory
                   @topic={{@controller.model}}
@@ -329,7 +333,7 @@ export default RouteTemplate(
             <PluginOutlet
               @name="topic-navigation"
               @connectorTagName="div"
-              @outletArgs={{hash
+              @outletArgs={{lazyHash
                 topic=@controller.model
                 renderTimeline=info.renderTimeline
                 topicProgressExpanded=info.topicProgressExpanded
@@ -376,7 +380,7 @@ export default RouteTemplate(
                   <PluginOutlet
                     @name="before-topic-progress"
                     @connectorTagName="div"
-                    @outletArgs={{hash
+                    @outletArgs={{lazyHash
                       model=@controller.model
                       jumpToPost=@controller.jumpToPost
                     }}
@@ -406,7 +410,7 @@ export default RouteTemplate(
             <PluginOutlet
               @name="topic-navigation-bottom"
               @connectorTagName="div"
-              @outletArgs={{hash model=@controller.model}}
+              @outletArgs={{lazyHash model=@controller.model}}
             />
           </TopicNavigation>
 
@@ -426,7 +430,7 @@ export default RouteTemplate(
                   <PluginOutlet
                     @name="topic-above-posts"
                     @connectorTagName="div"
-                    @outletArgs={{hash model=@controller.model}}
+                    @outletArgs={{lazyHash model=@controller.model}}
                   />
                 </span>
 
@@ -529,7 +533,7 @@ export default RouteTemplate(
                           <div class="reviewable-actions">
                             <PluginOutlet
                               @name="topic-additional-reviewable-actions"
-                              @outletArgs={{hash pending=pending}}
+                              @outletArgs={{lazyHash pending=pending}}
                             />
                             <DButton
                               @label="review.delete"
@@ -618,7 +622,7 @@ export default RouteTemplate(
               <PluginOutlet
                 @name="topic-area-bottom"
                 @connectorTagName="div"
-                @outletArgs={{hash model=@controller.model}}
+                @outletArgs={{lazyHash model=@controller.model}}
               />
             </section>
           </div>
@@ -634,7 +638,7 @@ export default RouteTemplate(
                 <PluginOutlet
                   @name="topic-above-footer-buttons"
                   @connectorTagName="div"
-                  @outletArgs={{hash model=@controller.model}}
+                  @outletArgs={{lazyHash model=@controller.model}}
                 />
               </span>
 
@@ -673,14 +677,14 @@ export default RouteTemplate(
             <PluginOutlet
               @name="topic-above-suggested"
               @connectorTagName="div"
-              @outletArgs={{hash model=@controller.model}}
+              @outletArgs={{lazyHash model=@controller.model}}
             />
           </span>
 
           <MoreTopics @topic={{@controller.model}} />
           <PluginOutlet
             @name="topic-below-suggested"
-            @outletArgs={{hash model=@controller.model}}
+            @outletArgs={{lazyHash model=@controller.model}}
           />
         {{/if}}
       {{else}}

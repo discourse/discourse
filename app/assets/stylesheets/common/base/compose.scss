@@ -1028,17 +1028,19 @@ div.ac-wrap {
   position: absolute;
   width: calc(60%);
   max-height: 50%;
-  bottom: 3.7rem;
+  bottom: 4.2rem;
   right: 1rem;
   overflow-y: auto;
   z-index: z("composer", "dropdown") + 1;
   padding: 1.5em 1.5rem 0.75em 1.5rem;
   box-shadow: var(--shadow-dropdown);
-  background: var(--highlight-bg);
+  border-radius: var(--d-border-radius-large);
+  background: var(--secondary);
 
   .show-preview & {
-    bottom: 3.2rem;
-    width: calc(50% - 16px);
+    right: 1.5rem;
+    bottom: 4.2rem;
+    width: calc(50% - 2rem);
   }
 
   .blurb {
@@ -1083,8 +1085,8 @@ div.ac-wrap {
     flex-direction: row-reverse;
     align-items: center;
     position: absolute;
-    right: 0;
-    top: 0;
+    right: 0.5rem;
+    top: 0.5rem;
     color: var(--primary-medium);
     font-size: var(--font-0);
 
@@ -1136,61 +1138,43 @@ div.ac-wrap {
 }
 
 .similar-topics {
-  background-color: var(--tertiary-low);
-
   .similar-topic {
     margin-bottom: 0.5em;
-  }
-
-  a[href] {
-    color: var(--primary);
-  }
-
-  .posts-count {
-    background-color: var(--tertiary);
-  }
-
-  .topic-title {
-    flex: 0 1 auto;
-    margin-right: 0.5em;
   }
 
   span.badge-wrapper {
     margin-left: 0;
   }
 
-  .blurb {
-    color: var(--primary-high);
-  }
-
-  .topic-title,
-  .blurb {
+  .topic-title {
     margin-bottom: 0.5em;
+    flex: 0 1 auto;
+    margin-right: 0.5em;
 
     .d-icon {
       color: var(--primary-high);
     }
-  }
 
-  span.topic {
-    display: flex;
-    flex-direction: column;
-
-    .first-line {
-      flex: 1;
-      text-overflow: ellipsis;
-      overflow: hidden;
-      white-space: nowrap;
-    }
-
-    .second-line {
+    span.topic {
       display: flex;
-      flex-wrap: wrap;
-      align-items: baseline;
-      gap: 0.5em;
+      flex-direction: column;
 
-      .discourse-tags {
-        font-size: var(--font-down-1);
+      .first-line {
+        flex: 1;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+      }
+
+      .second-line {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: 0.5em;
+
+        .discourse-tags {
+          font-size: var(--font-down-1);
+        }
       }
     }
   }

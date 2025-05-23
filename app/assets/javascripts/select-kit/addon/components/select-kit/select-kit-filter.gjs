@@ -11,12 +11,13 @@ import {
 import icon from "discourse/helpers/d-icon";
 import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
-import UtilsMixin from "select-kit/mixins/utils";
+import selectKitPropUtils from "select-kit/lib/select-kit-prop-utils";
 
 @classNames("select-kit-filter")
 @classNameBindings("isExpanded:is-expanded")
 @attributeBindings("role")
-export default class SelectKitFilter extends Component.extend(UtilsMixin) {
+@selectKitPropUtils
+export default class SelectKitFilter extends Component {
   tabIndex = -1;
 
   @not("isHidden") isExpanded;
