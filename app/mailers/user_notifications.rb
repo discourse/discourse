@@ -393,6 +393,11 @@ class UserNotifications < ActionMailer::Base
     opts[:use_site_subject] = true
     opts[:show_category_in_subject] = true
     opts[:show_tags_in_subject] = true
+
+    if !SiteSetting.prioritize_username_in_ux
+      opts[:post].cooked = replace_username_with_name_from_post(opts[:post], user)
+    end
+
     notification_email(user, opts)
   end
 
@@ -706,6 +711,7 @@ class UserNotifications < ActionMailer::Base
           (SiteSetting.max_emails_per_day_per_user - 1)
 
       in_reply_to_post = post.reply_to_post if user.user_option.email_in_reply_to
+
       if SiteSetting.private_email?
         message = I18n.t("system_messages.contents_hidden")
       else
@@ -871,5 +877,20 @@ class UserNotifications < ActionMailer::Base
         .where("created_at > ?", date)
         .count
         .tap { Discourse.redis.setex(key, 1.day, _1) }
+  end
+
+  def replace_username_with_name_from_post(post, user)
+    alnum = '\p{Alphabetic}\p{Mark}\p{Decimal_Number}'
+    mention_regex =
+      /
+      @(
+        [#{alnum}_]                    
+        [#{alnum}._-]{0,58}            
+        [#{alnum}]                     
+      ) |
+      @([#{alnum}_])                   
+    /ux
+
+    post.cooked.gsub!(mention_regex) { |match| user.name ? "@#{user.name}" : match }
   end
 end

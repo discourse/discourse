@@ -92,6 +92,24 @@ Fabricator(:mentioned_notification, from: :notification) do
   end
 end
 
+Fabricator(:group_mentioned_notification, from: :notification) do
+  transient :group
+  notification_type Notification.types[:group_mentioned]
+  data do |attrs|
+    {
+      topic_title: attrs[:topic].title,
+      original_post_id: attrs[:post].id,
+      original_post_type: attrs[:post].post_type,
+      original_username: attrs[:post].user.username,
+      revision_number: nil,
+      display_username: attrs[:post].user.username,
+      display_name: attrs[:user].name,
+      group_id: attrs[:group].id,
+      group_name: attrs[:group].name,
+    }.to_json
+  end
+end
+
 Fabricator(:watching_first_post_notification, from: :notification) do
   notification_type Notification.types[:watching_first_post]
   data do |attrs|
