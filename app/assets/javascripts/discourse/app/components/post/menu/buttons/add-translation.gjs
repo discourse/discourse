@@ -22,6 +22,14 @@ export default class PostMenuAddTranslationButton extends Component {
       </div>`;
   }
 
+  get showTranslationButton() {
+    return (
+      this.currentUser &&
+      this.siteSettings.experimental_content_localization &&
+      this.currentUser.can_localize_content
+    );
+  }
+
   @action
   async addTranslation() {
     if (
@@ -42,12 +50,14 @@ export default class PostMenuAddTranslationButton extends Component {
   }
 
   <template>
-    <DButton
-      class="post-action-menu__add-translation"
-      @title="post.localizations.add"
-      @icon="discourse-add-translation"
-      @action={{this.addTranslation}}
-      ...attributes
-    />
+    {{#if this.showTranslationButton}}
+      <DButton
+        class="post-action-menu__add-translation"
+        @title="post.localizations.add"
+        @icon="discourse-add-translation"
+        @action={{this.addTranslation}}
+        ...attributes
+      />
+    {{/if}}
   </template>
 }
