@@ -28,6 +28,7 @@ module Migrations::Database::Schema
 
     def output_columns(table)
       column_definitions = create_column_definitions(table)
+      column_definitions << "" if table.primary_key_column_names.size > 1
       @output.puts column_definitions.join(",\n")
     end
 
