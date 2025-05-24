@@ -223,7 +223,7 @@ export default class ThemeCard extends Component {
                       <dropdown.item>
                         <DButton
                           @action={{this.updateTheme}}
-                          @icon="download"
+                          @icon="cloud-arrow-down"
                           class="theme-card__button update"
                           @preventFocus={{true}}
                           @translatedLabel={{i18n
