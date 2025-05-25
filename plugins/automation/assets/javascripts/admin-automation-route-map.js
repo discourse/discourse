@@ -6,7 +6,6 @@ export default {
   map() {
     this.route(
       "automation",
-      { path: "automations" },
 
       function () {
         this.route("new");
