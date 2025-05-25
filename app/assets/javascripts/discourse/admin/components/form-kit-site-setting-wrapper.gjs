@@ -117,7 +117,6 @@ export default class FormKitSiteSettingWrapper extends Component {
 
   @cached
   get formData() {
-    console.log("compute form data");
     const data = {};
     this.args.settings.forEach((setting) => {
       data[setting.setting] = setting.value;
@@ -184,12 +183,34 @@ export default class FormKitSiteSettingWrapper extends Component {
                 {{htmlSafe setting.description}}
               </field.Checkbox>
             {{else if (eq setting.type "enum")}}
-              <field.Select as |select|>
-                {{#each setting.valid_values as |item|}}
-                  <select.Option @value={{item.value}}>
-                    {{item.name}}
-                  </select.Option>
-                {{/each}}
+              <field.Select>
+                <:body as |select|>
+                  {{log select}}
+                  {{#each setting.valid_values as |item|}}
+                    <select.Option @value={{item.value}}>
+                      {{item.name}}
+                    </select.Option>
+                  {{/each}}
+                </:body>
+
+                <:primary-actions as |actions|>
+                  <PrimaryActions
+                    @form={{form}}
+                    @field={{field}}
+                    @actions={{actions}}
+                    @setting={{setting}}
+                    @save={{this.save}}
+                  />
+                </:primary-actions>
+                <:secondary-actions as |actions|>
+                  <SecondaryActions
+                    @form={{form}}
+                    @field={{field}}
+                    @actions={{actions}}
+                    @setting={{setting}}
+                    @save={{this.save}}
+                  />
+                </:secondary-actions>
               </field.Select>
             {{else if (eq setting.type "group")}}
               <field.Custom>
@@ -204,7 +225,6 @@ export default class FormKitSiteSettingWrapper extends Component {
       {{/each}}
 
       <form.Actions class="site-settings-form__floating-actions">
-        {{log form.isDirty}}
         {{#if form.dirtyCount}}
           You have
           {{form.dirtyCount}}

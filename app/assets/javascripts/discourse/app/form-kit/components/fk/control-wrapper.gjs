@@ -136,7 +136,11 @@ export default class FKControlWrapper extends Component {
           ...attributes
           as |components|
         >
-          {{yield components}}
+          {{#if (has-block "body")}}
+            {{yield components to="body"}}
+          {{else}}
+            {{yield components}}
+          {{/if}}
         </@component>
 
         {{#if @field.helpText}}
