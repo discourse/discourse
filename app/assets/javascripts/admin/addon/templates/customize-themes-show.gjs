@@ -7,7 +7,6 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import TextField from "discourse/components/text-field";
 import UserLink from "discourse/components/user-link";
 import avatar from "discourse/helpers/avatar";
-import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import formatDate from "discourse/helpers/format-date";
 import formatUsername from "discourse/helpers/format-username";
@@ -26,32 +25,25 @@ export default RouteTemplate(
     {{#if @controller.editingThemeSetting}}
       {{outlet}}
     {{else}}
-      {{#if @controller.fromNewConfigPage}}
-        <div class="back-to-themes-and-components">
-          <LinkTo
-            @route={{if
+      <div class="back-to-themes-and-components">
+        <LinkTo
+          @route={{if
+            @controller.model.component
+            "adminConfig.customize.components"
+            "adminConfig.customize.themes"
+          }}
+        >
+          {{icon "angle-left"}}
+          {{i18n
+            (if
               @controller.model.component
-              "adminConfig.customize.components"
-              "adminConfig.customize.themes"
-            }}
-          >
-            {{icon "angle-left"}}
-            {{i18n
-              (if
-                @controller.model.component
-                "admin.config_areas.themes_and_components.components.back"
-                "admin.config_areas.themes_and_components.themes.back"
-              )
-            }}
-          </LinkTo>
-        </div>
-      {{/if}}
-      <div
-        class={{concatClass
-          "show-current-style"
-          (unless @controller.fromNewConfigPage "legacy")
-        }}
-      >
+              "admin.config_areas.themes_and_components.components.back"
+              "admin.config_areas.themes_and_components.themes.back"
+            )
+          }}
+        </LinkTo>
+      </div>
+      <div class="show-current-style">
         <span>
           <PluginOutlet
             @name="admin-customize-themes-show-top"

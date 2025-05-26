@@ -99,6 +99,14 @@ import { i18n } from "discourse-i18n";
           "sets --composer-height to 400px when creating topic"
         );
 
+        await click(".toggle-minimize");
+        assert.strictEqual(
+          document.documentElement.style.getPropertyValue("--composer-height"),
+          "40px",
+          "sets --composer-height to 40px when composer is minimized without content"
+        );
+
+        await click(".toggle-fullscreen");
         await fillIn(
           ".d-editor-input",
           "this is the *content* of a new topic post"
@@ -118,7 +126,7 @@ import { i18n } from "discourse-i18n";
         );
 
         await fillIn(".d-editor-input", "");
-        await click(".toggle-minimize");
+        await click(".btn.cancel");
         assert.strictEqual(
           document.documentElement.style.getPropertyValue("--composer-height"),
           "",

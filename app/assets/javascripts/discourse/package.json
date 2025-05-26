@@ -27,7 +27,7 @@
     "@messageformat/runtime": "^3.0.1",
     "ace-builds": "^1.41.0",
     "decorator-transforms": "^2.3.0",
-    "diff": "^8.0.1",
+    "diff": "^8.0.2",
     "discourse-widget-hbs": "workspace:1.0.0",
     "ember-curry-component": "^0.3.0",
     "ember-resolver": "^13.1.1",

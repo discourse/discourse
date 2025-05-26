@@ -1,16 +1,16 @@
 # frozen_string_literal: true
 
-shared_context "with omniauth setup" do |signup_page_object, login_page_object|
+shared_context "with omniauth setup" do
   include OmniauthHelpers
 
-  let(:login_form) { login_page_object }
-  let(:signup_form) { signup_page_object }
+  let(:login_form) { PageObjects::Pages::Login.new }
+  let(:signup_form) { PageObjects::Pages::Signup.new }
 
   before { OmniAuth.config.test_mode = true }
 end
 
-shared_examples "social authentication scenarios" do |signup_page_object, login_page_object|
-  include_context "with omniauth setup", signup_page_object, login_page_object
+shared_examples "social authentication scenarios" do
+  include_context "with omniauth setup"
 
   context "when user does not exist" do
     context "with Facebook" do
@@ -465,14 +465,10 @@ describe "Social authentication", type: :system do
   before { SiteSetting.full_name_requirement = "optional_at_signup" }
 
   context "when fullpage desktop" do
-    include_examples "social authentication scenarios",
-                     PageObjects::Pages::Signup.new,
-                     PageObjects::Pages::Login.new
+    include_examples "social authentication scenarios"
   end
 
   context "when fullpage mobile", mobile: true do
-    include_examples "social authentication scenarios",
-                     PageObjects::Pages::Signup.new,
-                     PageObjects::Pages::Login.new
+    include_examples "social authentication scenarios"
   end
 end

@@ -1,0 +1,100 @@
+@use "lib/viewport";
+
+// Topic list navigation & controls
+.list-controls {
+  background: var(--d-content-background);
+
+  @include viewport.until(sm) {
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+  }
+
+  .combo-box .combo-box-header {
+    background: var(--secondary);
+    color: var(--primary);
+    border: 1px solid var(--primary-medium);
+    font-size: var(--font-0);
+    height: 100%;
+
+    &:focus {
+      border-color: var(--tertiary);
+    }
+  }
+
+  .select-kit {
+    .select-kit-collection {
+      max-height: 40vh;
+    }
+  }
+}
+
+.navigation-container {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.category-breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--nav-space) 0; // used if the breadcrumb dropdowns wrap
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--nav-space) 0;
+
+  > li {
+    // only target the top-level li, not dropdowns
+    display: flex;
+    margin-right: 0.5em;
+    margin-bottom: 0;
+  }
+}
+
+.mobile-view {
+  .list-controls {
+    #create-topic {
+      box-sizing: border-box;
+      display: flex;
+      align-self: stretch;
+      align-items: center;
+    }
+  }
+
+  .list-control-toggle-link-trigger {
+    font-size: var(--font-up-1-rem);
+    font-weight: bold;
+    color: var(--primary-high);
+    padding: 0;
+
+    &:hover,
+    &:focus {
+      background: none;
+    }
+
+    .d-icon {
+      color: inherit;
+      font-size: var(--font-down-2);
+      margin-left: 0.5em;
+    }
+  }
+
+  .fk-d-menu-modal.list-control-toggle-link-content {
+    .dropdown-menu {
+      display: flex;
+      flex-direction: column;
+
+      a {
+        display: block;
+        color: var(--primary);
+
+        &.active {
+          background: var(--d-selected);
+          font-weight: bold;
+        }
+      }
+    }
+  }
+}

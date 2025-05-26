@@ -11,6 +11,7 @@ import {
 import { module, test } from "qunit";
 import DButton from "discourse/components/d-button";
 import element_ from "discourse/helpers/element";
+import { forceMobile } from "discourse/lib/mobile";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import DDefaultToast from "float-kit/components/d-default-toast";
 import DMenu from "float-kit/components/d-menu";
@@ -53,7 +54,7 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
   });
 
   test("@modalForMobile", async function (assert) {
-    this.site.mobileView = true;
+    forceMobile();
 
     await render(
       <template>

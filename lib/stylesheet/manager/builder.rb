@@ -51,7 +51,7 @@ class Stylesheet::Manager::Builder
           strict_deprecations: %i[desktop mobile admin wizard].include?(@target),
         )
       rescue SassC::SyntaxError, SassC::NotRenderedError, DiscourseJsProcessor::TranspileError => e
-        if Stylesheet::Importer::THEME_TARGETS.include?(@target.to_s)
+        if Stylesheet::Manager::THEME_REGEX.match?(@target.to_s)
           # no special errors for theme, handled in theme editor
           ["/* SCSS compilation error: #{e.message} */", nil]
         elsif @target.to_s == Stylesheet::Manager::COLOR_SCHEME_STYLESHEET && Rails.env.production?
@@ -177,8 +177,9 @@ class Stylesheet::Manager::Builder
   end
 
   def scss_digest
-    if %i[common_theme mobile_theme desktop_theme].include?(@target)
-      resolve_baked_field(@target.to_s.sub("_theme", ""), :scss)
+    base_target = @target.to_s.delete_suffix("_rtl").to_sym
+    if %i[common_theme mobile_theme desktop_theme].include?(base_target)
+      resolve_baked_field(base_target.to_s.delete_suffix("_theme"), :scss)
     elsif @target == :embedded_theme
       resolve_baked_field(:common, :embedded_scss)
     else
