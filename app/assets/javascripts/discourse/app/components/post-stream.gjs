@@ -154,6 +154,10 @@ export default class PostStream extends Component {
     return this.posts[0];
   }
 
+  get highlightTerm() {
+    return this.search.highlightTerm;
+  }
+
   get lastAvailablePost() {
     return this.posts.at(-1);
   }
@@ -695,6 +699,7 @@ export default class PostStream extends Component {
                 @expandHidden={{fn @expandHidden post}}
                 @filteringRepliesToPostNumber={{@filteringRepliesToPostNumber}}
                 @grantBadge={{fn @grantBadge post}}
+                @highlightTerm={{this.highlightTerm}}
                 @lockPost={{fn @lockPost post}}
                 @multiSelect={{@multiSelect}}
                 @permanentlyDeletePost={{fn @permanentlyDeletePost post}}

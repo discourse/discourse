@@ -413,7 +413,7 @@ export default class Post extends Component {
                       <PostEmbedded
                         @post={{reply}}
                         @above={{true}}
-                        @highlightTerm={{this.search.highlightTerm}}
+                        @highlightTerm={{@highlightTerm}}
                       />
                     {{/each}}
                   </section>
@@ -463,7 +463,7 @@ export default class Post extends Component {
                     >
                       <PostCookedHtml
                         @post={{@post}}
-                        @highlightTerm={{this.search.highlightTerm}}
+                        @highlightTerm={{@highlightTerm}}
                       />
                     </PluginOutlet>
 
@@ -552,7 +552,7 @@ export default class Post extends Component {
                               username=reply.username
                             }}
                             @post={{reply}}
-                            @highlightTerm={{this.search.highlightTerm}}
+                            @highlightTerm={{@highlightTerm}}
                           />
                         {{/each}}
 
