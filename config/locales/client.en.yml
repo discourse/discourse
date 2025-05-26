@@ -4181,6 +4181,7 @@ en:
       background_image_dark: "Dark Category Background Image"
       style: "Styles"
       background_color: "Color"
+      foreground_color: "Foreground color"
       styles:
         type: "Style"
         icon: "Icon"

@@ -22,6 +22,7 @@ export default class EditCategoryGeneral extends Component {
   @service site;
   @service siteSettings;
 
+  textColors = ["FFFFFF", "000000"];
   uncategorizedSiteSettingLink = getURL(
     "/admin/site_settings/category/all_results?filter=allow_uncategorized_topics"
   );
@@ -123,7 +124,40 @@ export default class EditCategoryGeneral extends Component {
 
   @action
   updateColor(field, newColor) {
-    field.set(newColor.replace("#", ""));
+    const bgColor = newColor.replace("#", "");
+
+    if (field.value === bgColor) {
+      return;
+    }
+
+    field.set(bgColor);
+
+    if (field.name === "color") {
+      const currentTextColor = this.args.transientData.text_color;
+      const colorDifference = this.colorDifference(bgColor, currentTextColor);
+
+      if (colorDifference < 400) {
+        const index = this.textColors.indexOf(currentTextColor) === 0 ? 1 : 0;
+        document.querySelectorAll(".edit-text-color button")[index]?.click();
+      }
+    }
+  }
+
+  @action
+  colorDifference(color1, color2) {
+    const r1 = parseInt(color1.substr(0, 2), 16);
+    const g1 = parseInt(color1.substr(2, 2), 16);
+    const b1 = parseInt(color1.substr(4, 2), 16);
+
+    const r2 = parseInt(color2.substr(0, 2), 16);
+    const g2 = parseInt(color2.substr(2, 2), 16);
+    const b2 = parseInt(color2.substr(4, 2), 16);
+
+    const rDiff = Math.max(r1, r2) - Math.min(r1, r2);
+    const gDiff = Math.max(g1, g2) - Math.min(g1, g2);
+    const bDiff = Math.max(b1, b2) - Math.min(b1, b2);
+
+    return rDiff + gDiff + bDiff;
   }
 
   get categoryDescription() {
@@ -296,6 +330,31 @@ export default class EditCategoryGeneral extends Component {
                 <ColorPicker
                   @colors={{this.backgroundColors}}
                   @usedColors={{this.usedBackgroundColors}}
+                  @value={{readonly field.value}}
+                  @ariaLabel={{i18n "category.predefined_colors"}}
+                  @onSelectColor={{fn this.updateColor field}}
+                />
+              </div>
+            </div>
+          </field.Custom>
+        </@form.Field>
+
+        <@form.Field
+          @name="text_color"
+          @title={{i18n "category.foreground_color"}}
+          @format="full"
+          as |field|
+        >
+          <field.Custom>
+            <div class="category-color-editor">
+              <div class="colorpicker-wrapper edit-text-color">
+                <ColorInput
+                  @hexValue={{readonly field.value}}
+                  @ariaLabelledby="foreground-color-label"
+                  @onChangeColor={{fn this.updateColor field}}
+                />
+                <ColorPicker
+                  @colors={{this.textColors}}
                   @value={{readonly field.value}}
                   @ariaLabel={{i18n "category.predefined_colors"}}
                   @onSelectColor={{fn this.updateColor field}}

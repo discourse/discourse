@@ -135,35 +135,26 @@ acceptance("Category text color", function (needs) {
   test("Category text color is set based on contrast", async function (assert) {
     await visit("/new-category");
 
-    let previewTextColor = document
-      .querySelector(".category-style .badge-category__wrapper")
-      .style.getPropertyValue("--category-badge-text-color")
-      .trim();
+    let previewTextColor = document.querySelectorAll(
+      ".edit-text-color .hex-input"
+    )[0].value;
 
     assert.strictEqual(
       previewTextColor,
-      "#FFFFFF",
+      "FFFFFF",
       "has the default text color"
     );
 
     await fillIn("input.category-name", "testing");
     await fillIn(".category-color-editor .hex-input", "EEEEEE");
-    await click("#save-category");
 
-    assert.strictEqual(
-      currentURL(),
-      "/c/testing/edit/general",
-      "it transitions to the category edit route"
-    );
-
-    previewTextColor = document
-      .querySelector(".category-style .badge-category__wrapper")
-      .style.getPropertyValue("--category-badge-text-color")
-      .trim();
+    previewTextColor = document.querySelectorAll(
+      ".edit-text-color .hex-input"
+    )[0].value;
 
     assert.strictEqual(
       previewTextColor,
-      "#000000",
+      "000000",
       "sets the contrast text color"
     );
   });
