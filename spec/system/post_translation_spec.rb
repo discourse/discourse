@@ -12,6 +12,7 @@ describe "Post translations", type: :system do
 
   before do
     sign_in(user)
+    SiteSetting.experimental_content_localization_supported_locales = "en|fr|es|pt_BR"
     SiteSetting.experimental_content_localization = true
     SiteSetting.experimental_content_localization_allowed_groups = Group::AUTO_GROUPS[:everyone]
     SiteSetting.post_menu =
