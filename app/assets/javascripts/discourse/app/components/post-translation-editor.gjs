@@ -19,6 +19,10 @@ export default class PostTranslationEditor extends Component {
         "|"
       );
 
+    if (!supportedLocales.includes(this.siteSettings.default_locale)) {
+      supportedLocales.push(this.siteSettings.default_locale);
+    }
+
     const filtered = allAvailableLocales.filter((locale) => {
       return supportedLocales.includes(locale.value);
     });
