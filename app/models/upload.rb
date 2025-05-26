@@ -495,7 +495,7 @@ class Upload < ActiveRecord::Base
 
     if secure_status_did_change && SiteSetting.s3_use_acls && Discourse.store.external?
       begin
-        Discourse.store.update_upload_ACL(self)
+        Discourse.store.update_upload_access_control(self)
       rescue Aws::S3::Errors::NotImplemented => err
         Discourse.warn_exception(
           err,
