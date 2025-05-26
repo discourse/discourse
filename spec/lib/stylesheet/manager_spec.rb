@@ -45,6 +45,16 @@ RSpec.describe Stylesheet::Manager do
       end
     end
 
+    it "generates RTL stylesheets for themes with components" do
+      manager = manager(theme.id)
+
+      hrefs = manager.stylesheet_details(:common_theme_rtl, "all")
+      expect(hrefs.size).to eq(2)
+      expect(hrefs.map { |href| href[:theme_id] }).to contain_exactly(theme.id, child_theme.id)
+      expect(hrefs[0][:new_href]).to start_with("/stylesheets/common_theme_rtl_")
+      expect(hrefs[1][:new_href]).to start_with("/stylesheets/common_theme_rtl_")
+    end
+
     it "generates the right links for non-theme targets" do
       manager = manager(nil)
 
