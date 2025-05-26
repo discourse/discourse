@@ -77,8 +77,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :has_unseen_features,
              :can_see_emails,
              :use_glimmer_post_stream_mode_auto_mode,
-             :can_localize_content,
-             :can_debug_localizations
+             :can_localize_content
 
   delegate :user_stat, to: :object, private: true
   delegate :any_posts, :draft_count, :pending_posts_count, :read_faq?, to: :user_stat
