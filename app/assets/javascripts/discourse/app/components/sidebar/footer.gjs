@@ -23,6 +23,9 @@ export default class SidebarFooter extends Component {
   }
 
   get showToggleMobileButton() {
+    if (this.siteSettings.viewport_based_mobile_mode) {
+      return false;
+    }
     return (
       this.site.mobileView ||
       (this.siteSettings.enable_mobile_theme && this.capabilities.touch)

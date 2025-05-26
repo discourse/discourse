@@ -99,6 +99,14 @@ import { i18n } from "discourse-i18n";
           "sets --composer-height to 400px when creating topic"
         );
 
+        await click(".toggle-minimize");
+        assert.strictEqual(
+          document.documentElement.style.getPropertyValue("--composer-height"),
+          "40px",
+          "sets --composer-height to 40px when composer is minimized without content"
+        );
+
+        await click(".toggle-fullscreen");
         await fillIn(
           ".d-editor-input",
           "this is the *content* of a new topic post"
@@ -118,7 +126,7 @@ import { i18n } from "discourse-i18n";
         );
 
         await fillIn(".d-editor-input", "");
-        await click(".toggle-minimize");
+        await click(".btn.cancel");
         assert.strictEqual(
           document.documentElement.style.getPropertyValue("--composer-height"),
           "",
@@ -461,6 +469,51 @@ import { i18n } from "discourse-i18n";
           .hasNoValue("discards draft and reset composer textarea");
       });
 
+      test("Autosaves drafts after clicking keep editing in discard modal", async function (assert) {
+        pretender.post("/drafts.json", function () {
+          assert.step("saveDraft");
+          return response(200, {});
+        });
+
+        await visit("/t/internationalization-localization/280");
+
+        await click("#topic-footer-buttons .btn.create");
+
+        await fillIn(".d-editor-input", "this is draft content of the reply");
+
+        assert.verifySteps(["saveDraft"], "first draft is auto saved");
+
+        await click("#reply-control button.cancel");
+
+        assert
+          .dom(".discard-draft-modal.modal")
+          .exists("pops up the discard drafts modal");
+
+        await click(".d-modal__footer button.keep-editing");
+        assert.dom(".discard-draft-modal.modal").doesNotExist("hides modal");
+
+        assert
+          .dom(".d-editor-input")
+          .hasValue(
+            "this is draft content of the reply",
+            "composer has the content of the first draft"
+          );
+
+        await fillIn(
+          ".d-editor-input",
+          "this is the updated content of the reply",
+          "update content in the composer"
+        );
+
+        assert.verifySteps(["saveDraft"], "second draft is saved");
+
+        await click("#reply-control button.create");
+
+        assert
+          .dom(".topic-post:last-of-type .cooked p")
+          .hasText("this is the updated content of the reply");
+      });
+
       test("Create an enqueued Reply", async function (assert) {
         pretender.post("/posts", function () {
           return response(200, {
@@ -682,36 +735,36 @@ import { i18n } from "discourse-i18n";
 
         assert
           .dom("#reply-control.open")
-          .exists("starts in open state by default");
+          .isVisible("starts in open state by default");
 
         await click(".toggle-fullscreen");
 
         assert
           .dom("#reply-control.fullscreen")
-          .exists("expands composer to full screen");
+          .isVisible("expands composer to full screen");
 
         assert
           .dom(".composer-fullscreen-prompt")
-          .exists("the exit fullscreen prompt is visible");
+          .isVisible("the fullscreen prompt is visible");
 
         await click(".toggle-fullscreen");
 
         assert
           .dom("#reply-control.open")
-          .exists("collapses composer to regular size");
+          .isVisible("collapses composer to regular size");
 
         await fillIn(".d-editor-input", "This is a dirty reply");
         await click(".toggler");
 
         assert
           .dom("#reply-control.draft")
-          .exists("collapses composer to draft bar");
+          .isVisible("collapses composer to draft bar");
 
         await click(".toggle-fullscreen");
 
         assert
           .dom("#reply-control.open")
-          .exists("from draft, it expands composer back to open state");
+          .isVisible("from draft, it expands composer back to open state");
       });
 
       test("Composer fullscreen submit button", async function (assert) {

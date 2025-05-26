@@ -193,6 +193,15 @@ export default class DModal extends Component {
       this.animating = false;
     }
 
+    if (this.site.desktopView) {
+      try {
+        this.animating = true;
+        await this.#animatePopOff();
+      } finally {
+        this.animating = false;
+      }
+    }
+
     this.args.closeModal({ initiatedBy });
   }
 
@@ -262,6 +271,33 @@ export default class DModal extends Component {
         duration: getMaxAnimationTimeMs(),
       }
     ).finished;
+  }
+
+  async #animatePopOff() {
+    const backdrop = this.wrapperElement.nextElementSibling;
+
+    if (!backdrop) {
+      return;
+    }
+
+    await Promise.all([
+      this.modalContainer.animate(
+        [
+          { transform: "scale(1)", opacity: 1, offset: 0 },
+          { transform: "scale(0)", opacity: 0, offset: 1 },
+        ],
+        {
+          fill: "forwards",
+          duration: getMaxAnimationTimeMs(300),
+          easing: "cubic-bezier(0.4, 0, 0.2, 1)",
+        }
+      ).finished,
+      backdrop.animate([{ opacity: 0.6 }, { opacity: 0 }], {
+        fill: "forwards",
+        duration: getMaxAnimationTimeMs(300),
+        easing: "cubic-bezier(0.4, 0, 0.2, 1)",
+      }).finished,
+    ]);
   }
 
   <template>

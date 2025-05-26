@@ -72,6 +72,9 @@ class InputFieldsFromDOM {
         inputElement: field.querySelector(".schema-field__input").children[0],
         countElement: field.querySelector(".schema-field__input-count"),
         errorElement: field.querySelector(".schema-field__input-error"),
+        descriptionElement: field.querySelector(
+          ".schema-field__input-description"
+        ),
         selector: `.schema-field[data-name="${field.dataset.name}"]`,
       };
     });
@@ -202,6 +205,12 @@ module(
 
       tree.refresh();
       assert.strictEqual(tree.nodes.length, 4);
+
+      const inputFields = new InputFieldsFromDOM();
+      assert.dom(inputFields.fields.name.labelElement).hasText("Level 2 Label");
+      assert
+        .dom(inputFields.fields.name.descriptionElement)
+        .hasText("Description for level 2");
 
       assert.dom(tree.nodes[0].textElement).hasText("child 2-1");
       assert.false(tree.nodes[0].active);
@@ -1544,7 +1553,7 @@ module(
 
       const inputFields = new InputFieldsFromDOM();
 
-      assert.dom(inputFields.fields.name.labelElement).hasText("name");
+      assert.dom(inputFields.fields.name.labelElement).hasText("Level 2 Label");
 
       await click(TOP_LEVEL_ADD_BTN);
       tree.refresh();
@@ -2210,6 +2219,14 @@ module(
       assert.dom(inputFields.fields.name.inputElement).hasValue("item 1");
       assert.dom(inputFields.fields.name.labelElement).hasText("name");
       assert.dom(".--back-btn").doesNotExist();
+
+      await click(tree.nodes[0].children[0].element);
+      tree.refresh();
+      inputFields.refresh();
+      assert.dom(inputFields.fields.name.labelElement).hasText("Level 2 Label");
+      assert
+        .dom(inputFields.fields.name.descriptionElement)
+        .hasText("Description for level 2");
     });
   }
 );

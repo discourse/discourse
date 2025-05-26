@@ -1,50 +1,5 @@
 @use "lib/viewport";
 
-// Topic list navigation & controls
-.list-controls {
-  background: var(--d-content-background);
-
-  .combo-box .combo-box-header {
-    background: var(--secondary);
-    color: var(--primary);
-    border: 1px solid var(--primary-medium);
-    font-size: var(--font-0);
-    height: 100%;
-
-    &:focus {
-      border-color: var(--tertiary);
-    }
-  }
-
-  .select-kit {
-    .select-kit-collection {
-      max-height: 40vh;
-    }
-  }
-}
-
-.navigation-container {
-  width: 100%;
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.category-breadcrumb {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--nav-space) 0; // used if the breadcrumb dropdowns wrap
-  list-style: none;
-  padding: 0;
-  margin: 0 0 var(--nav-space) 0;
-
-  > li {
-    // only target the top-level li, not dropdowns
-    display: flex;
-    margin-right: 0.5em;
-    margin-bottom: 0;
-  }
-}
-
 #navigation-bar {
   display: flex;
   flex-wrap: wrap;

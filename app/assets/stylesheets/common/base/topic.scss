@@ -48,6 +48,10 @@
       &.topic-progress-expanded {
         z-index: z("fullscreen");
       }
+
+      > * {
+        margin-bottom: 0.5em;
+      }
     }
 
     .topic-navigation-popup {
@@ -85,6 +89,10 @@
       grid-area: posts;
       grid-row: 3;
       width: auto;
+
+      > * {
+        height: 100%;
+      }
     }
 
     .timeline-container:not(.timeline-fullscreen) {
@@ -202,13 +210,12 @@
       font-size: var(--font-up-3);
     }
 
-    &.can-edit-topic:hover {
-      outline: 2px solid var(--tertiary);
-      border-radius: var(--d-border-radius);
+    a {
+      color: var(--primary);
     }
   }
 
-  &.can-edit-topic .d-icon {
+  a.edit-topic .d-icon {
     font-size: 0.8em;
   }
 
