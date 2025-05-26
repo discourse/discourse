@@ -3917,6 +3917,9 @@ en:
           edit: "Edit"
           delete: "Delete"
         add: "Add new translation"
+        view:
+          one: "View %{count} translated locale"
+          other: "View %{count} translated locales"
         success: "Translations have been updated successfully"
 
       errors:
@@ -5100,7 +5103,7 @@ en:
       clear_filter: "Clear filter"
       no_results:
         title: "No results"
-        description_admin_search: 'We couldn’t find anything matching ‘%{filter}’.'
+        description_admin_search: "We couldn’t find anything matching ‘%{filter}’."
       collapse_all_sections: "Collapse all sections"
       expand_all_sections: "Expand all sections"
       search: "Search"
