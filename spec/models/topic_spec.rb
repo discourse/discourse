@@ -1,7 +1,7 @@
 # encoding: utf-8
 # frozen_string_literal: true
 
-RSpec.describe Topic do
+describe Topic do
   let(:now) { Time.zone.local(2013, 11, 20, 8, 0) }
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:user1) { Fabricate(:user, refresh_auto_groups: true) }
@@ -1645,12 +1645,10 @@ RSpec.describe Topic do
     end
   end
 
-  describe "banner" do
+  describe "banners" do
     fab!(:topic)
     fab!(:user) { topic.user }
-    let(:banner) { { html: "<p>BANNER</p>", url: topic.url, key: topic.id } }
-
-    before { topic.stubs(:banner).returns(banner) }
+    fab!(:first_post) { Fabricate(:post, topic: topic, user: topic.user, cooked: "<p>BANNER</p>") }
 
     describe "make_banner!" do
       it "changes the topic archetype to 'banner'" do
@@ -1707,6 +1705,22 @@ RSpec.describe Topic do
 
           expect(topic.archetype).to eq(Archetype.default)
         end
+      end
+    end
+
+    describe "#banner" do
+      it "returns the banner hash" do
+        expect(topic.banner).to include(html: "<p>BANNER</p>", key: topic.id, url: topic.url)
+      end
+
+      it "returns a localized banner" do
+        SiteSetting.experimental_content_localization = true
+
+        first_post.update!(locale: "en")
+        I18n.locale = :ja
+        Fabricate(:post_localization, post: first_post, locale: :ja, cooked: "<p>バナー</p>")
+
+        expect(topic.banner(Guardian.new(user))).to include(html: "<p>バナー</p>")
       end
     end
   end
@@ -2604,7 +2618,7 @@ RSpec.describe Topic do
     end
   end
 
-  describe "#secure_category?" do
+  describe "#read_restricted_category??" do
     let(:category) { Category.new }
 
     it "is true if the category is secure" do

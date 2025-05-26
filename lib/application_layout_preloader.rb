@@ -4,7 +4,7 @@ class ApplicationLayoutPreloader
   include ReadOnlyMixin
 
   def self.banner_json_cache
-    @banner_json_cache ||= DistributedCache.new("banner_json")
+    @banner_json_cache = DistributedCache.new("banner_json")
   end
 
   def initialize(guardian:, theme_id:, theme_target:, login_method:)
@@ -41,7 +41,7 @@ class ApplicationLayoutPreloader
       .banner_json_cache
       .defer_get_set("json") do
         topic = Topic.where(archetype: Archetype.banner).first
-        banner = topic.present? ? topic.banner : {}
+        banner = topic.present? ? topic.banner(@guardian) : {}
         MultiJson.dump(banner)
       end
   end
