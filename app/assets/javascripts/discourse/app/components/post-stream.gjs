@@ -63,12 +63,9 @@ export default class PostStream extends Component {
 
   #bottomBoundaryElement;
   #bottomEyelineDebugElement;
-  #bottomEyelineTrackingEnabled = false;
   #cloakedPostsHeight = {};
   #cloakingObserver;
   #currentPostElement;
-  #currentPostObserver;
-  #currentPostEyelineTrackingEnabled = false;
   #postsOnScreen = {};
   #observedCloakBoundaries = {
     above: null,
@@ -127,7 +124,6 @@ export default class PostStream extends Component {
     this.appEvents.off("post-stream:refresh", this, this.#scrollTriggered);
 
     // disconnect the intersection observers
-    this.#currentPostObserver?.disconnect();
     this.#viewportObserver?.disconnect();
     this.#cloakingObserver?.disconnect();
 
@@ -183,10 +179,6 @@ export default class PostStream extends Component {
     }
 
     return result;
-  }
-
-  get highlightTerm() {
-    return this.search.highlightTerm;
   }
 
   isPlaceholder(post) {
@@ -251,8 +243,8 @@ export default class PostStream extends Component {
 
     if (!this.observedPostNodes.has(element)) {
       this.observedPostNodes.add(element);
-      this.#cloakingObserver.observe(element);
-      this.#viewportObserver.observe(element);
+      this.#cloakingObserver?.observe(element);
+      this.#viewportObserver?.observe(element);
     }
   }
 
@@ -268,7 +260,6 @@ export default class PostStream extends Component {
   @bind
   setBottomBoundaryElement(element) {
     this.#bottomBoundaryElement = element;
-    this.#viewportObserver?.observe(element);
   }
 
   @bind
@@ -286,10 +277,8 @@ export default class PostStream extends Component {
         position: "fixed",
         top: `${viewportOffset}px`,
         width: "100%",
-        border: this.#isEyelineTrackingEnabled
-          ? "1px solid red"
-          : "1px solid green",
-        opacity: this.#isEyelineTrackingEnabled ? 1 : 0.25,
+        border: "1px solid red",
+        opacity: 1,
         zIndex: 999999,
       });
     }
@@ -309,22 +298,6 @@ export default class PostStream extends Component {
       arrayIndex !== postsLength - 1 && // do not show on the last post displayed
       maxPostNumber <= this.args.highestPostNumber && // do not show in the last existing post
       this.args.lastReadPostNumber === post.post_number
-    );
-  }
-
-  @bind
-  trackCurrentPost(entry) {
-    const { target, intersectionRatio, isIntersecting } = entry;
-
-    if (!isIntersecting) {
-      return;
-    }
-
-    discourseDebounce(
-      this,
-      this.#currentPostWasScrolled,
-      { element: target, percent: 1 - intersectionRatio },
-      SCROLL_BATCH_INTERVAL_MS
     );
   }
 
@@ -395,41 +368,56 @@ export default class PostStream extends Component {
   }
 
   @bind
-  trackViewport(entry) {
+  trackVisiblePosts(entry) {
     const { target, isIntersecting } = entry;
+    const post = target[POST_MODEL];
 
-    if (target === this.#bottomBoundaryElement) {
-      this.#toggleBottomEyelineTracking(isIntersecting);
+    if (isIntersecting) {
+      this.#postsOnScreen[post.post_number] = { post, element: target };
     } else {
-      this.#trackVisiblePosts(entry);
+      delete this.#postsOnScreen[post.post_number];
     }
+
+    // update the information about the boundaries of the posts on screen
+    this.#onScreenBoundaries = Object.values(this.#postsOnScreen).reduce(
+      (acc, { post: onScreen }) => {
+        if (acc.min === null || onScreen.post_number < acc.min) {
+          acc.min = onScreen.post_number;
+        }
+
+        if (acc.max === null || onScreen.post_number > acc.max) {
+          acc.max = onScreen.post_number;
+        }
+
+        return acc;
+      },
+      { min: null, max: null }
+    );
+
+    // update the screen tracking information
+    discourseDebounce(
+      this,
+      this.#updateScreenTracking,
+      this.#postsOnScreen,
+      SCROLL_BATCH_INTERVAL_MS
+    );
+
+    this.#scrollTriggered();
   }
 
   @bind
   updateIntersectionObservers(_, __, { headerOffset, cloakOffset }) {
     const headerMargin = headerOffset * -1;
 
-    this.#currentPostObserver?.disconnect();
     this.#cloakingObserver?.disconnect();
     this.#viewportObserver?.disconnect();
-
-    this.#currentPostObserver = this.#initializeObserver(
-      this.trackCurrentPost,
-      {
-        rootMargin: `${headerMargin}px 0px 0px 0px`,
-        // eslint-disable-next-line no-shadow
-        threshold: Array.from({ length: 101 }, (_, i) =>
-          Number((i * 0.01).toFixed(2))
-        ),
-      }
-    );
 
     this.#cloakingObserver = this.#initializeObserver(this.trackCloakedPosts, {
       rootMargin: `${cloakOffset}px 0px`,
       threshold: [0, 1],
     });
 
-    this.#viewportObserver = this.#initializeObserver(this.trackViewport, {
+    this.#viewportObserver = this.#initializeObserver(this.trackVisiblePosts, {
       rootMargin: `${headerMargin}px 0px 0px 0px`,
       threshold: [0, 1],
     });
@@ -437,10 +425,6 @@ export default class PostStream extends Component {
     for (const element of this.observedPostNodes) {
       this.#cloakingObserver.observe(element);
       this.#viewportObserver.observe(element);
-    }
-
-    if (this.#bottomBoundaryElement) {
-      this.#viewportObserver.observe(this.#bottomBoundaryElement);
     }
   }
 
@@ -569,21 +553,6 @@ export default class PostStream extends Component {
     );
   }
 
-  #isCurrentPostHigherThanViewport() {
-    const viewportHeight = window.innerHeight;
-    const currentPostHeight =
-      this.#currentPostElement?.getBoundingClientRect()?.height;
-
-    return currentPostHeight > viewportHeight;
-  }
-
-  get #isEyelineTrackingEnabled() {
-    return (
-      this.#bottomEyelineTrackingEnabled ||
-      this.#currentPostEyelineTrackingEnabled
-    );
-  }
-
   #postedTriggered(staged) {
     if (staged) {
       schedule("afterRender", () => {
@@ -596,88 +565,15 @@ export default class PostStream extends Component {
   #scrollTriggered() {
     const eyelineOffset = this.#calculateBottomEyelineViewportOffset();
 
-    if (this.#isEyelineTrackingEnabled) {
-      discourseDebounce(
-        this,
-        this.#findPostMatchingBottomEyeline,
-        eyelineOffset,
-        SCROLL_BATCH_INTERVAL_MS
-      );
-    }
-
-    if (DEBUG_EYELINE) {
-      this.#debugUpdateBottomEyelinePosition(eyelineOffset);
-    }
-  }
-
-  #toggleBottomEyelineTracking(enabled) {
-    this.#bottomEyelineTrackingEnabled = enabled;
-
-    if (enabled) {
-      if (this.#currentPostElement) {
-        this.#currentPostObserver.unobserve(this.#currentPostElement);
-      }
-
-      this.#scrollTriggered();
-    } else {
-      if (
-        this.#currentPostElement &&
-        !this.#currentPostEyelineTrackingEnabled
-      ) {
-        this.#currentPostObserver.observe(this.#currentPostElement);
-      }
-    }
-  }
-
-  #trackVisiblePosts(entry) {
-    const { target, isIntersecting } = entry;
-    const post = target[POST_MODEL];
-
-    if (isIntersecting) {
-      this.#postsOnScreen[post.post_number] = { post, element: target };
-    } else {
-      delete this.#postsOnScreen[post.post_number];
-    }
-
-    // update the screen tracking information
     discourseDebounce(
       this,
-      this.#updateScreenTracking,
-      this.#postsOnScreen,
+      this.#findPostMatchingBottomEyeline,
+      eyelineOffset,
       SCROLL_BATCH_INTERVAL_MS
     );
 
-    // update the information about the boundaries of the posts on screen
-    this.#onScreenBoundaries = Object.values(this.#postsOnScreen).reduce(
-      (acc, { post: onScreen }) => {
-        if (acc.min === null || onScreen.post_number < acc.min) {
-          acc.min = onScreen.post_number;
-        }
-
-        if (acc.max === null || onScreen.post_number > acc.max) {
-          acc.max = onScreen.post_number;
-        }
-
-        return acc;
-      },
-      { min: null, max: null }
-    );
-
-    // test if the old current post is still on the screen
-    const currentPostNumber =
-      this.#currentPostElement?.[POST_MODEL]?.post_number;
-    const currentPostIsOnScreen =
-      this.#onScreenBoundaries.min !== null &&
-      currentPostNumber >= this.#onScreenBoundaries.min &&
-      currentPostNumber <= this.#onScreenBoundaries.max;
-
-    // update the current post to enable fine grained scrolling tracking for it
-    if (!this.#isEyelineTrackingEnabled || !currentPostIsOnScreen) {
-      this.#updateCurrentPost(
-        this.#onScreenBoundaries.min !== null
-          ? this.#postsOnScreen[this.#onScreenBoundaries.min]?.element
-          : null
-      );
+    if (DEBUG_EYELINE) {
+      this.#debugUpdateBottomEyelinePosition(eyelineOffset);
     }
   }
 
@@ -703,37 +599,14 @@ export default class PostStream extends Component {
       return;
     }
 
-    if (this.#currentPostElement) {
-      this.#currentPostObserver.unobserve(this.#currentPostElement);
-    }
-
     const currentPost = this.#currentPostElement?.[POST_MODEL];
     const newPost = newElement?.[POST_MODEL];
 
     this.#currentPostElement = newElement;
-    this.#updateCurrentPostEyelineTrackingEnabled();
 
     if (currentPost !== newPost) {
-      this.#scrollTriggered();
-
-      discourseDebounce(
-        this,
-        this.#currentPostWasChanged,
-        { post: newPost },
-        SCROLL_BATCH_INTERVAL_MS
-      );
+      this.#currentPostWasChanged({ post: newPost });
     }
-
-    if (newElement) {
-      if (!this.#isEyelineTrackingEnabled) {
-        this.#currentPostObserver.observe(newElement);
-      }
-    }
-  }
-
-  #updateCurrentPostEyelineTrackingEnabled() {
-    this.#currentPostEyelineTrackingEnabled =
-      this.#isCurrentPostHigherThanViewport();
   }
 
   #updateScreenTracking(postsOnScreen) {
@@ -753,27 +626,24 @@ export default class PostStream extends Component {
 
   #windowResizeTriggered(event) {
     this.#updateCloakOffset(event);
-    this.#updateCurrentPostEyelineTrackingEnabled();
   }
 
   <template>
     <div
       class="post-stream glimmer-post-stream"
       {{didInsert this.setWrapperElement}}
+      {{didInsert
+        this.updateIntersectionObservers
+        headerOffset=this.header.headerOffset
+        cloakOffset=this.cloakOffset
+      }}
+      {{didUpdate
+        this.updateIntersectionObservers
+        headerOffset=this.header.headerOffset
+        cloakOffset=this.cloakOffset
+      }}
     >
-      <ConditionalLoadingSpinner
-        @condition={{@postStream.loadingAbove}}
-        {{didInsert
-          this.updateIntersectionObservers
-          headerOffset=this.header.headerOffset
-          cloakOffset=this.cloakOffset
-        }}
-        {{didUpdate
-          this.updateIntersectionObservers
-          headerOffset=this.header.headerOffset
-          cloakOffset=this.cloakOffset
-        }}
-      >
+      <ConditionalLoadingSpinner @condition={{@postStream.loadingAbove}}>
         {{#if @postStream.canPrependMore}}
           <LoadMore @action={{fn this.loadMoreAbove this.firstAvailablePost}} />
         {{/if}}
