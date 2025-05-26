@@ -7,11 +7,90 @@ function getButtonLabel(labelKey, defaultLabel) {
   return i18n(labelKey) === defaultLabel ? null : labelKey;
 }
 
-export default class Toolbar {
-  constructor(opts) {
-    const { siteSettings, capabilities } = opts;
+const DEFAULT_GROUP = "main";
+
+export class ToolbarBase {
+  constructor(opts = {}) {
     this.shortcuts = {};
     this.context = null;
+    this.groups = [{ group: DEFAULT_GROUP, buttons: [] }];
+    this.siteSettings = opts.siteSettings || {};
+    this.capabilities = opts.capabilities || {};
+  }
+
+  addButton(buttonAttrs) {
+    const g = this.groups.findBy("group", buttonAttrs.group || DEFAULT_GROUP);
+
+    const createdButton = {
+      id: buttonAttrs.id,
+      tabindex: buttonAttrs.tabindex || "-1",
+      className: buttonAttrs.className || buttonAttrs.id,
+      label: buttonAttrs.label,
+      icon: buttonAttrs.icon,
+      href: buttonAttrs.href,
+      action: (button) => {
+        buttonAttrs.action
+          ? buttonAttrs.action(button)
+          : this.context.send("toolbarButton", button);
+
+        // appEvents is only available on the main toolbar
+        // only custom plugins listen to this event
+        this.context.appEvents?.trigger(
+          "d-editor:toolbar-button-clicked",
+          button
+        );
+      },
+      perform: buttonAttrs.perform || function () {},
+      trimLeading: buttonAttrs.trimLeading,
+      popupMenu: buttonAttrs.popupMenu,
+      preventFocus: buttonAttrs.preventFocus || false,
+      condition: buttonAttrs.condition,
+      sendAction: buttonAttrs.sendAction,
+      shortcutAction: buttonAttrs.shortcutAction, // (optional) custom shortcut action
+      hideShortcutInTitle: buttonAttrs.hideShortcutInTitle || false, // (optional) hide shortcut in title
+    };
+
+    const title = i18n(buttonAttrs.title || `composer.${buttonAttrs.id}_title`);
+    if (buttonAttrs.shortcut) {
+      const shortcutTitle = `${translateModKey(
+        PLATFORM_KEY_MODIFIER + "+"
+      )}${translateModKey(buttonAttrs.shortcut)}`;
+
+      if (buttonAttrs.hideShortcutInTitle) {
+        createdButton.title = title;
+      } else {
+        createdButton.title = `${title} (${shortcutTitle})`;
+      }
+      this.shortcuts[
+        `${PLATFORM_KEY_MODIFIER}+${buttonAttrs.shortcut}`.toLowerCase()
+      ] = createdButton;
+    } else {
+      createdButton.title = title;
+    }
+
+    if (buttonAttrs.unshift) {
+      g.buttons.unshift(createdButton);
+    } else {
+      g.buttons.push(createdButton);
+    }
+  }
+
+  addSeparator(group = DEFAULT_GROUP) {
+    const g = this.groups.findBy("group", group);
+    if (!g) {
+      throw new Error(`Couldn't find toolbar group ${group}`);
+    }
+
+    g.buttons.push({ type: "separator" });
+  }
+}
+
+/**
+ * Standard editor toolbar with default buttons
+ */
+export default class Toolbar extends ToolbarBase {
+  constructor(opts) {
+    super(opts);
 
     this.groups = [
       { group: "fontStyles", buttons: [] },
@@ -70,7 +149,7 @@ export default class Toolbar {
         }),
     });
 
-    if (!capabilities.touch) {
+    if (!this.capabilities.touch) {
       this.addButton({
         id: "code",
         group: "insertions",
@@ -106,7 +185,7 @@ export default class Toolbar {
       });
     }
 
-    if (siteSettings.support_mixed_text_direction) {
+    if (this.siteSettings.support_mixed_text_direction) {
       this.addButton({
         id: "toggle-direction",
         group: "extras",
@@ -116,68 +195,6 @@ export default class Toolbar {
         preventFocus: true,
         perform: (e) => e.toggleDirection(),
       });
-    }
-
-    this.groups[this.groups.length - 1].lastGroup = true;
-  }
-
-  addButton(buttonAttrs) {
-    const g = this.groups.findBy("group", buttonAttrs.group);
-    if (!g) {
-      throw new Error(`Couldn't find toolbar group ${buttonAttrs.group}`);
-    }
-
-    const createdButton = {
-      id: buttonAttrs.id,
-      tabindex: buttonAttrs.tabindex || "-1",
-      className: buttonAttrs.className || buttonAttrs.id,
-      label: buttonAttrs.label,
-      icon: buttonAttrs.icon,
-      action: (button) => {
-        buttonAttrs.action
-          ? buttonAttrs.action(button)
-          : this.context.send("toolbarButton", button);
-        this.context.appEvents.trigger(
-          "d-editor:toolbar-button-clicked",
-          button
-        );
-      },
-      perform: buttonAttrs.perform || function () {},
-      trimLeading: buttonAttrs.trimLeading,
-      popupMenu: buttonAttrs.popupMenu || false,
-      preventFocus: buttonAttrs.preventFocus || false,
-      condition: buttonAttrs.condition || (() => true),
-      shortcutAction: buttonAttrs.shortcutAction, // (optional) custom shortcut action
-      hideShortcutInTitle: buttonAttrs.hideShortcutInTitle || false, // (optional) hide shortcut in title
-    };
-
-    if (buttonAttrs.sendAction) {
-      createdButton.sendAction = buttonAttrs.sendAction;
-    }
-
-    const title = i18n(buttonAttrs.title || `composer.${buttonAttrs.id}_title`);
-    if (buttonAttrs.shortcut) {
-      const shortcutTitle = `${translateModKey(
-        PLATFORM_KEY_MODIFIER + "+"
-      )}${translateModKey(buttonAttrs.shortcut)}`;
-
-      if (buttonAttrs.hideShortcutInTitle) {
-        createdButton.title = title;
-      } else {
-        createdButton.title = `${title} (${shortcutTitle})`;
-      }
-
-      this.shortcuts[
-        `${PLATFORM_KEY_MODIFIER}+${buttonAttrs.shortcut}`.toLowerCase()
-      ] = createdButton;
-    } else {
-      createdButton.title = title;
-    }
-
-    if (buttonAttrs.unshift) {
-      g.buttons.unshift(createdButton);
-    } else {
-      g.buttons.push(createdButton);
     }
   }
 }
