@@ -124,24 +124,19 @@ export default class EditCategoryGeneral extends Component {
 
   @action
   updateColor(field, newColor) {
-    const bgColor = newColor.replace("#", "");
-
-    if (field.value === bgColor) {
-      return;
-    }
-
-    field.set(bgColor);
+    const color = newColor.replace("#", "");
 
     if (field.name === "color") {
-      const whiteColorDiff = this.colorDifference(bgColor, this.textColors[0]);
-      const blackColorDiff = this.colorDifference(bgColor, this.textColors[1]);
+      const whiteColorDiff = this.colorDifference(color, this.textColors[0]);
+      const blackColorDiff = this.colorDifference(color, this.textColors[1]);
       const colorIndex = whiteColorDiff > blackColorDiff ? 0 : 1;
 
-      if (this.args.transientData.text_color === this.textColors[colorIndex]) {
-        return;
-      }
-
-      document.querySelectorAll(".edit-text-color button")[colorIndex]?.click();
+      this.args.form.setProperties({
+        color,
+        text_color: this.textColors[colorIndex],
+      });
+    } else {
+      field.set(color);
     }
   }
 
