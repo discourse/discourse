@@ -2616,6 +2616,8 @@ en:
         one: "%{count} topic in this category"
         other: "%{count} topics in this category"
 
+    timezone_input:
+      ambiguous_ist: "IST is ambiguous, please select a specific timezone (eg: Asia/Kolkata)"
     select_kit:
       delete_item: "Delete %{name}"
       filter_by: "Filter by: %{name}"
@@ -5100,7 +5102,7 @@ en:
       clear_filter: "Clear filter"
       no_results:
         title: "No results"
-        description_admin_search: 'We couldn’t find anything matching ‘%{filter}’.'
+        description_admin_search: "We couldn’t find anything matching ‘%{filter}’."
       collapse_all_sections: "Collapse all sections"
       expand_all_sections: "Expand all sections"
       search: "Search"
