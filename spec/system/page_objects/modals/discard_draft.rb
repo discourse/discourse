@@ -19,10 +19,6 @@ module PageObjects
       def click_discard
         footer.find("button.discard-draft").click
       end
-
-      def click_keep_editing
-        footer.find("button.keep-editing").click
-      end
     end
   end
 end
