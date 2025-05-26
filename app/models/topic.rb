@@ -1384,10 +1384,15 @@ class Topic < ActiveRecord::Base
     Jobs.cancel_scheduled_job(:remove_banner, topic_id: self.id)
   end
 
-  def banner
+  def banner(guardian = nil)
     post = self.ordered_posts.first
 
-    { html: post.cooked, key: self.id, url: self.url }
+    html = post.cooked
+    if (guardian && ContentLocalization.show_translated_post?(post, guardian))
+      html = post.get_localization&.cooked.presence || html
+    end
+
+    { html:, key: self.id, url: self.url }
   end
 
   cattr_accessor :slug_computed_callbacks
