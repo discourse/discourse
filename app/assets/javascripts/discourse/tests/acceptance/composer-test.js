@@ -471,11 +471,7 @@ import { i18n } from "discourse-i18n";
 
         await click("#topic-footer-buttons .btn.create");
 
-        await fillIn(
-          ".d-editor-input",
-          "this is draft content of the reply",
-          "fills in the composer"
-        );
+        await fillIn(".d-editor-input", "this is draft content of the reply");
 
         assert.verifySteps(["saveDraft"], "first draft is auto saved");
 
