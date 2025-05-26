@@ -161,13 +161,6 @@ export default class TopicTimelineScrollArea extends Component {
     return true;
   }
 
-  get displayLocalizationToggle() {
-    return (
-      this.siteSettings.experimental_content_localization &&
-      this.args.model.has_localized_content
-    );
-  }
-
   get canCreatePost() {
     return this.args.model.details?.can_create_post;
   }
@@ -550,10 +543,6 @@ export default class TopicTimelineScrollArea extends Component {
           @name="timeline-controls-before"
           @outletArgs={{lazyHash model=@model}}
         />
-
-        {{#if this.displayLocalizationToggle}}
-          <TopicLocalizedContentToggle @topic={{@model}} />
-        {{/if}}
 
         <TopicAdminMenu
           @topic={{@model}}
