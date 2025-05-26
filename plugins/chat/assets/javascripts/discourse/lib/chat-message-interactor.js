@@ -77,7 +77,6 @@ export default class ChatemojiReactions {
       .map((emoji) => {
         if (
           this.emojiStore.diversity !== DEFAULT_DIVERSITY &&
-          !/:t[1-6]$/.test(emoji) &&
           isSkinTonableEmoji(emoji)
         ) {
           return `${emoji}:t${this.emojiStore.diversity}`;

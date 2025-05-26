@@ -44,13 +44,8 @@ export default class EmojiStore extends Service {
     )
       .slice(0, MAX_DISPLAYED_EMOJIS)
       .map((emoji) => {
-        // No need to add a skin tone if
-        // - It's still the default setting
-        // - It already has a skin tone added
-        // - The emoji can't have a skin tone
         if (
           this.diversity === DEFAULT_DIVERSITY ||
-          /:t[1-6]$/.test(emoji) ||
           !isSkinTonableEmoji(emoji)
         ) {
           return emoji;
