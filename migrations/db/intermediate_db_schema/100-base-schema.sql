@@ -88,9 +88,10 @@ CREATE TABLE category_custom_fields
 CREATE TABLE category_users
 (
     category_id        NUMERIC  NOT NULL,
+    user_id            NUMERIC  NOT NULL,
     last_seen_at       DATETIME,
     notification_level INTEGER  NOT NULL,
-    user_id            NUMERIC  NOT NULL
+    PRIMARY KEY (category_id, user_id)
 );
 
 CREATE TABLE chat_channels
@@ -173,10 +174,8 @@ CREATE TABLE group_users
 (
     group_id           NUMERIC  NOT NULL,
     user_id            NUMERIC  NOT NULL,
-    created_at         DATETIME NOT NULL,
     first_unread_pm_at DATETIME NOT NULL,
     notification_level INTEGER,
-    original_id        NUMERIC  NOT NULL,
     owner              BOOLEAN,
     PRIMARY KEY (group_id, user_id)
 );
@@ -191,6 +190,7 @@ CREATE TABLE "groups"
     bio_raw                            TEXT,
     created_at                         DATETIME NOT NULL,
     default_notification_level         INTEGER,
+    existing_id                        TEXT,
     flair_bg_color                     TEXT,
     flair_color                        TEXT,
     flair_icon                         TEXT,

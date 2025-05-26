@@ -16,6 +16,7 @@ module Migrations::Database::IntermediateDB
         bio_raw,
         created_at,
         default_notification_level,
+        existing_id,
         flair_bg_color,
         flair_color,
         flair_icon,
@@ -34,7 +35,7 @@ module Migrations::Database::IntermediateDB
         visibility_level
       )
       VALUES (
-        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
       )
     SQL
 
@@ -47,6 +48,7 @@ module Migrations::Database::IntermediateDB
       bio_raw: nil,
       created_at:,
       default_notification_level: nil,
+      existing_id: nil,
       flair_bg_color: nil,
       flair_color: nil,
       flair_icon: nil,
@@ -74,6 +76,7 @@ module Migrations::Database::IntermediateDB
         bio_raw,
         ::Migrations::Database.format_datetime(created_at),
         default_notification_level,
+        existing_id,
         flair_bg_color,
         flair_color,
         flair_icon,
