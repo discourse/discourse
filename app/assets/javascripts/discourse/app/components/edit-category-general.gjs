@@ -81,10 +81,10 @@ export default class EditCategoryGeneral extends Component {
     const category = this.args.category;
 
     const previewCategory = Category.create({
+      id: category.id,
       name: transientData.name || i18n("category.untitled"),
       color: transientData.color,
-      id: category.id,
-      text_color: category.text_color,
+      text_color: transientData.text_color,
       parent_category_id: parseInt(category.get("parent_category_id"), 10),
       read_restricted: category.get("read_restricted"),
     });
