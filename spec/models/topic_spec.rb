@@ -2618,7 +2618,7 @@ describe Topic do
     end
   end
 
-  describe "#read_restricted_category??" do
+  describe "#read_restricted_category?" do
     let(:category) { Category.new }
 
     it "is true if the category is secure" do
