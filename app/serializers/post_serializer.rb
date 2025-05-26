@@ -663,11 +663,11 @@ class PostSerializer < BasicPostSerializer
   end
 
   def include_has_post_localizations?
-    SiteSetting.experimental_content_localization
+    object&.user&.guardian&.can_localize_content?
   end
 
   def include_post_localizations_count?
-    SiteSetting.experimental_content_localization
+    object&.user&.guardian&.can_localize_content?
   end
 
   def raw
