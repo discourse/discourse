@@ -1,6 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import Service, { service } from "@ember/service";
 import { TrackedArray, TrackedObject } from "@ember-compat/tracked-built-ins";
+import { isSkinTonableEmoji } from "pretty-text/emoji";
 import KeyValueStore from "discourse/lib/key-value-store";
 
 export const SKIN_TONE_STORE_KEY = "emojiSelectedDiversity";
@@ -38,9 +39,27 @@ export default class EmojiStore extends Service {
   }
 
   favoritesForContext(context) {
-    return this.#sortEmojisByFrequency(
+    const data = this.#sortEmojisByFrequency(
       this.#recentEmojisForContext(context)
-    ).slice(0, MAX_DISPLAYED_EMOJIS);
+    )
+      .slice(0, MAX_DISPLAYED_EMOJIS)
+      .map((emoji) => {
+        // No need to add a skin tone if
+        // - It's still the default setting
+        // - It already has a skin tone added
+        // - The emoji can't have a skin tone
+        if (
+          this.diversity === DEFAULT_DIVERSITY ||
+          /:t[1-6]$/.test(emoji) ||
+          !isSkinTonableEmoji(emoji)
+        ) {
+          return emoji;
+        }
+
+        return `${emoji}:t${this.diversity}`;
+      });
+
+    return data;
   }
 
   reset() {
