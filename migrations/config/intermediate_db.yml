@@ -43,6 +43,7 @@ schema:
           - "created_at"
           - "id"
     category_users:
+      primary_key_column_names: [ "category_id", "user_id" ]
       columns:
         exclude:
           - "id"
@@ -72,8 +73,15 @@ schema:
       primary_key_column_names: [original_id, channel_id, original_message_id, original_message_user_id ]
     group_users:
       primary_key_column_names: [ "group_id", "user_id" ]
+      columns:
+        exclude:
+          - "id"
+          - "created_at"
     groups:
       columns:
+        add:
+          - name: "existing_id"
+            datatype: text
         include:
           - "allow_membership_requests"
           - "allow_unknown_sender_topic_replies"
