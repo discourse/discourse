@@ -82,7 +82,7 @@ export default class PostMenuAddTranslationButton extends Component {
           @identifier="post-action-menu-edit-translations"
           @triggers={{array "click"}}
           class="update-translations-menu"
-          @title="post.localizations.add"
+          @title={{i18n "post.localizations.add"}}
           @icon="discourse-add-translation"
           @onRegisterApi={{this.onRegisterApi}}
           @arrow={{false}}
