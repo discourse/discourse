@@ -4009,13 +4009,6 @@ experimental:
     client: true
     default: "1|2" # admin, moderator
     area: "localization"
-  content_localization_debug_allowed_groups:
-    type: group_list
-    list_type: compact
-    allow_any: false
-    client: true
-    default: "1|2" # admin, moderator
-    hidden: true
   experimental_content_localization_supported_locales:
     default: ""
     type: list

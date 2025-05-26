@@ -3922,6 +3922,8 @@ en:
         view:
           one: "View %{count} translated locale"
           other: "View %{count} translated locales"
+        modal:
+          title: "Translations for post"
         success: "Translations have been updated successfully"
 
       errors:

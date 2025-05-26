@@ -5,12 +5,14 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
+import PostTranslationsModal from "discourse/components/modal/post-translations";
 import Composer from "discourse/models/composer";
 import { i18n } from "discourse-i18n";
 import DMenu from "float-kit/components/d-menu";
 
 export default class PostMenuAddTranslationButton extends Component {
   @service composer;
+  @service modal;
   @service currentUser;
   @service siteSettings;
 
@@ -46,6 +48,7 @@ export default class PostMenuAddTranslationButton extends Component {
   @action
   viewTranslations() {
     // TODO: trigger a modal to view/edit translations
+    this.modal.show(PostTranslationsModal, { model: { post: this.args.post } });
   }
 
   @action
@@ -89,16 +92,16 @@ export default class PostMenuAddTranslationButton extends Component {
             <DropdownMenu as |dropdown|>
               <dropdown.item class="update-translations-menu__view">
                 <DButton
-                  class="post-action-menu__add-translation"
+                  class="post-action-menu__view-translation"
                   @translatedLabel={{this.viewTranslationLabel}}
                   @icon="eye"
                   @action={{this.viewTranslations}}
                   ...attributes
                 />
               </dropdown.item>
-              <dropdown.item class="bookmark-menu__row">
+              <dropdown.item class="update-translations-menu__add">
                 <DButton
-                  class="update-translations-menu__add"
+                  class="post-action-menu__add-translation"
                   @label="post.localizations.add"
                   @icon="plus"
                   @action={{this.addTranslation}}

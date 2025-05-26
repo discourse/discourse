@@ -1008,30 +1008,6 @@ aside.quote {
   }
 }
 
-.post-info.translations {
-  .fk-d-menu__trigger {
-    &-container {
-      display: flex;
-      align-items: center;
-    }
-
-    .translation-count {
-      padding-right: 0.25em;
-    }
-
-    .translation-count,
-    .d-icon {
-      color: var(--primary-med-or-secondary-med);
-    }
-  }
-}
-
-.post-meta-data-translation-indicator-content {
-  .fk-d-menu__inner-content {
-    padding: 0.5rem;
-  }
-}
-
 pre {
   max-height: 2000px;
 

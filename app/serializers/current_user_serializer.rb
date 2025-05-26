@@ -331,9 +331,4 @@ class CurrentUserSerializer < BasicUserSerializer
     return false if !SiteSetting.experimental_content_localization
     scope.user.in_any_groups?(SiteSetting.experimental_content_localization_allowed_groups_map)
   end
-
-  def can_debug_localizations
-    return false if !SiteSetting.experimental_content_localization
-    scope.user.in_any_groups?(SiteSetting.content_localization_debug_allowed_groups_map)
-  end
 end
