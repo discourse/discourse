@@ -128,7 +128,7 @@ shared_examples "social authentication scenarios" do
           expect(page).to have_css(".header-dropdown-toggle.current-user")
         end
 
-        it "lets user input Name when no name is provided" do
+        it "works with a provided name" do
           mock_github_auth(name: "Some Name")
           visit("/")
 
