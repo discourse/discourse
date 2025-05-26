@@ -1,3 +1,4 @@
+import { action } from "@ember/object";
 import { classNames } from "@ember-decorators/component";
 import ComboBoxComponent from "select-kit/components/combo-box";
 import {
@@ -28,5 +29,15 @@ export default class TimezoneInput extends ComboBoxComponent {
     return (
       moment.locale() !== "en" && typeof moment.tz.localizedNames === "function"
     );
+  }
+
+  _onChangeWrapper(timezone) {
+    // We support IST for India, but IST is not a valid timezone
+    // it's ambiguous with other timezones like Dublin or Jerusalem
+    if (timezone === "IST") {
+      timezone = "Asia/Kolkata";
+    }
+
+    return super._onChangeWrapper(timezone);
   }
 }
