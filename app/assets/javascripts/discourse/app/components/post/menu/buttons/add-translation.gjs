@@ -47,7 +47,6 @@ export default class PostMenuAddTranslationButton extends Component {
 
   @action
   viewTranslations() {
-    // TODO: trigger a modal to view/edit translations
     this.modal.show(PostTranslationsModal, { model: { post: this.args.post } });
   }
 
@@ -96,7 +95,6 @@ export default class PostMenuAddTranslationButton extends Component {
                   @translatedLabel={{this.viewTranslationLabel}}
                   @icon="eye"
                   @action={{this.viewTranslations}}
-                  ...attributes
                 />
               </dropdown.item>
               <dropdown.item class="update-translations-menu__add">
@@ -105,7 +103,6 @@ export default class PostMenuAddTranslationButton extends Component {
                   @label="post.localizations.add"
                   @icon="plus"
                   @action={{this.addTranslation}}
-                  ...attributes
                 />
               </dropdown.item>
             </DropdownMenu>
