@@ -11,7 +11,10 @@ export default class BackToForum extends Component {
     const lastNonAdminUrl = this.routeHistory.history.find(
       (url) => !url.startsWith("/admin")
     );
-    if (lastNonAdminUrl) {
+    if (
+      lastNonAdminUrl &&
+      this.routeHistory.router.currentURL.startsWith("/admin")
+    ) {
       return getURL(lastNonAdminUrl);
     }
     return getURL("/");
