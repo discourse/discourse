@@ -12,6 +12,7 @@ import PostCountOrBadges from "discourse/components/topic-list/post-count-or-bad
 import TopicExcerpt from "discourse/components/topic-list/topic-excerpt";
 import TopicLink from "discourse/components/topic-list/topic-link";
 import TopicStatus from "discourse/components/topic-status";
+import UserLink from "discourse/components/user-link";
 import avatar from "discourse/helpers/avatar";
 import categoryLink from "discourse/helpers/category-link";
 import concatClass from "discourse/helpers/concat-class";
@@ -301,14 +302,17 @@ export default class Item extends Component {
                   @name="topic-list-item-mobile-avatar"
                   @outletArgs={{lazyHash topic=@topic}}
                 >
-                  <a
-                    href={{@topic.lastPostUrl}}
-                    aria-label={{i18n
+                  <UserLink
+                    @ariaLabel={{i18n
                       "latest_poster_link"
                       username=@topic.lastPosterUser.username
                     }}
-                    data-user-card={{@topic.lastPosterUser.username}}
-                  >{{avatar @topic.lastPosterUser imageSize="large"}}</a>
+                    @username={{@topic.lastPosterUser.username}}
+                  >
+                    {{avatar
+                      @topic.lastPosterUser
+                      imageSize="large"
+                    }}</UserLink>
                 </PluginOutlet>
               {{/if}}
             </div>
