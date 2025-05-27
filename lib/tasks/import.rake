@@ -97,6 +97,32 @@ def insert_topic_views
 end
 
 def insert_user_actions
+  log "Inserting user actions for LIKE = 1..."
+
+  DB.exec <<~SQL
+    INSERT INTO user_actions (action_type, user_id, target_topic_id, target_post_id, acting_user_id, created_at, updated_at)
+    SELECT 1 /* like */, pa.user_id, p.topic_id, p.id, pa.user_id, pa.created_at, pa.updated_at
+    FROM post_actions pa
+         JOIN posts p ON pa.post_id = p.id
+    WHERE pa.post_action_type_id = 2 /* like */
+      AND pa.deleted_at IS NULL
+      AND p.deleted_at IS NULL
+    ON CONFLICT DO NOTHING
+  SQL
+
+  log "Inserting user actions for WAS_LIKED = 2..."
+
+  DB.exec <<~SQL
+    INSERT INTO user_actions (action_type, user_id, target_topic_id, target_post_id, acting_user_id, created_at, updated_at)
+    SELECT 2 /* was_liked */, p.user_id, p.topic_id, p.id, pa.user_id, pa.created_at, pa.updated_at
+    FROM post_actions pa
+         JOIN posts p ON pa.post_id = p.id
+    WHERE pa.post_action_type_id = 2 /* like */
+      AND pa.deleted_at IS NULL
+      AND p.deleted_at IS NULL
+    ON CONFLICT DO NOTHING
+  SQL
+
   log "Inserting user actions for NEW_TOPIC = 4..."
 
   DB.exec <<-SQL
