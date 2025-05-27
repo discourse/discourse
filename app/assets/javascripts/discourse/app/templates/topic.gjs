@@ -250,7 +250,7 @@ export default RouteTemplate(
                       "btn"
                       "btn-default"
                       "no-text"
-                      (if @controller.site.mobileView "btn-transparent")
+                      (if @controller.capabilities.touch "btn-transparent")
                     }}
                     title={{i18n "edit_topic"}}
                   >{{icon "pencil"}}</a>

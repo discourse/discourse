@@ -70,6 +70,7 @@ export default class TopicController extends Controller {
   @service siteSettings;
   @service site;
   @service appEvents;
+  @service capabilities;
 
   @tracked model;
 
