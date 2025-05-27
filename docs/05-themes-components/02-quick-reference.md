@@ -70,37 +70,18 @@ javascripts/
 
 ### Javascript <small>[read more](https://meta.discourse.org/t/using-the-pluginapi-in-site-customizations/41281)</small>
 
-```html
-<!-- Define in </head> section of theme-->
-<script type="text/discourse-plugin" version="0.8">
-  console.log("I am ", api.getCurrentUser().username);
-</script>
+```gjs
+// {theme}/javascripts/api-initializers/init-theme.gjs
+import { apiInitializer } from "discourse/lib/api";
+
+export default apiInitializer((api) => {
+  // Your code here
+});
 ```
 
 [:link: JS Plugin API](https://github.com/discourse/discourse/blob/main/app/assets/javascripts/discourse/app/lib/plugin-api.gjs)
 
 [:link: Multi-file Javascript](https://meta.discourse.org/t/splitting-up-theme-javascript-into-multiple-files/119369)
-
-### Templates <small>[read more](https://meta.discourse.org/t/adding-plugin-outlets-using-a-theme/32727)</small>
-
-```html
-<!-- Define in </head> section of theme-->
-
-<!-- Plugin Outlet -->
-<script
-  type="text/x-handlebars"
-  data-template-name="/connectors/below-footer/arbitrary-unique-name"
->
-  This is displayed below the footer
-</script>
-
-<!-- Override Core -->
-<script type="text/x-handlebars" data-template-name="list/topic-list-item.raw">
-  This used to be a topic list item
-</script>
-```
-
-[:link: Locate outlets](https://meta.discourse.org/t/plugin-outlet-locations-theme-component/100673)
 
 ### Settings <small>[read more](https://meta.discourse.org/t/how-to-add-settings-to-your-discourse-theme/82557)</small>
 
@@ -121,10 +102,10 @@ Access from JavaScript:
 console.log(settings.fruit);
 ```
 
-Access from templates:
+Access from gjs templates:
 
-```hbs
-{{theme-setting "fruit"}}
+```gjs
+<template>{{settings.fruit}}</template>
 ```
 
 Access from scss:
@@ -152,12 +133,17 @@ en:
 Access from JavaScript:
 
 ```js
-I18n.t(themePrefix("my_translation_key"));
+import { i18n } from "discourse-i18n";
+i18n(themePrefix("my_translation_key"));
 ```
 
-Access from templates:
+Access from gjs templates:
 
-```hbs
-{{theme-i18n "my_translation_key"}}
-{{d-button label=(theme-prefix "my_translation_key")}}
+```gjs
+import { i18n } from "discourse-i18n";
+
+<template>
+  {{i18n (themePrefix "my_translation_key")}}
+  <DButton @label={{theme-prefix "my_translation_key"}} />
+</template>
 ```

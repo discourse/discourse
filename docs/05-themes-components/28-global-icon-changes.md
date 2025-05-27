@@ -12,12 +12,16 @@ This is an easy way to change a Discourse icon globally.
    ![image|690x211,70%](/assets/global-icon-changes-1.png)
 3. Search a new icon here https://fontawesome.com/icons?d=gallery, e.g. [external-link-alt](https://fontawesome.com/icons/external-link-alt?style=solid)
 
-4. Customize and add the code in your `admin > customize > themes > Header` tab
+4. Customize and add the code in your `admin > customize > themes > edit code -> JS` tab
 
-```js
-<script type="text/discourse-plugin" version="0.11">
-  api.replaceIcon('link', 'external-link-tab');
-</script>
+```gjs
+// {theme}/javascripts/discourse/api-initializers/init-theme.gjs
+
+import { apiInitializer } from "discourse/lib/api";
+
+export default apiInitializer((api) => {
+  api.replaceIcon("link", "external-link-tab");
+});
 ```
 
 5. Icons that are not used by default from Discourse must be added in the site setting `svg icon subset` then force refresh your browser to see the changes applied.
@@ -35,10 +39,8 @@ _Note that there is already a theme component that allow you to [change the Like
 The "heart" icon, used to give Like, is hardcoded with other names (`'d-liked'` and `'d-unliked'`) and should be treated differently than other icons, so to change the :heart: icon with :+1: icon:
 
 ```js
-<script type="text/discourse-plugin" version="0.11">
-  api.replaceIcon('d-liked', 'thumbs-up'); api.replaceIcon('d-unliked',
-  'thumbs-o-up');
-</script>
+api.replaceIcon("d-liked", "thumbs-up");
+api.replaceIcon("d-unliked", "thumbs-o-up");
 ```
 
 ![like|267x73,60%](/assets/global-icon-changes-3.png)
@@ -48,10 +50,7 @@ but on the badge page the icon is still "heart":
 so to change it on that page we add:
 
 ```js
-<script type="text/discourse-plugin" version="0.11">
-  api.replaceIcon('d-liked', 'thumbs-up'); api.replaceIcon('d-unliked',
-  'thumbs-up'); api.replaceIcon('heart', 'thumbs-up');
-</script>
+api.replaceIcon("heart", "thumbs-up");
 ```
 
 ![firefox_2018-04-24_18-47-50|457x172,60%](/assets/global-icon-changes-6.png)
@@ -59,9 +58,7 @@ so to change it on that page we add:
 Another example:
 
 ```js
-<script type="text/discourse-plugin" version="0.11">
-  api.replaceIcon('d-watching', 'eye');
-</script>
+api.replaceIcon("d-watching", "eye");
 ```
 
 changes the watching icon:

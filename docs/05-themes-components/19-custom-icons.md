@@ -80,14 +80,18 @@ For an SVG sprite called `my-icons.svg`, your about.json should include this:
 
 # Step 3 (optional) - Overriding default icons
 
-Now that your spritesheet is set, you can tell Discourse to replace icons. This is how you do it (you can add this to your `header.html` file)
+Now that your spritesheet is set, you can tell Discourse to replace icons. This is how you do it from an api-initializer:
 
-```html
-<script type="text/discourse-plugin" version="0.8">
-  api.replaceIcon('bars', 'my-theme-icon-bars');
-  api.replaceIcon('link', 'my-theme-icon-link');
-  <!-- etc -->
-</script>
+```gjs
+// {theme}/javascripts/discourse/api-initializers/init-theme.gjs
+
+import { apiInitializer } from "discourse/lib/api";
+
+export default apiInitializer((api) => {
+  api.replaceIcon("bars", "my-theme-icon-bars");
+  api.replaceIcon("link", "my-theme-icon-link");
+  // etc.
+});
 ```
 
 The first ID, `bars`, is the default icon ID in Discourse and the second is the ID of your replacement icon. The easiest way to find an ID of one of our icons is to inspect the icon in your browser.
@@ -99,5 +103,3 @@ Here the icon name follows the `d-icon-` prefix. So in this example it's `d-unli
 Most of our icons follow the icon names from https://fontawesome.com/, but there are exceptions (which is why checking the ID in your inspector is the most reliable method). You can see all the exceptions in the `const REPLACEMENTS` block [here on github](https://github.com/discourse/discourse/blob/0b5d5b0d40ecf4b1588a442598410ea64d7869d5/app/assets/javascripts/discourse-common/addon/lib/icon-library.js#L14).
 
 That's it. You can now style Discourse with your own custom icons!
-
-<div data-theme-toc="true"> </div>

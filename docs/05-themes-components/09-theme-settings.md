@@ -205,13 +205,18 @@ If your user tries to enter a value that's not within the allowed range, they'll
 
 <h3 id='heading--settings-js-css'>Access to settings in your JS/CSS/Handlebars</h3>
 
-To have access to setting in your theme JS code, the `script` tag that wraps your code must have a `type="text/discourse-plugin"` attribute as well as `version` specified like so:
+Theme settings are made available globally as a `settings` variable in theme JavaScript files. For example:
 
-```hbs
-<script type="text/discourse-plugin" version="0.8.13">
-  alert(settings.integer_setting + 1); console.log(settings.string_setting);
-</script>
+```gjs
+// {theme}/javascripts/discourse/api-initializers/init-theme.gjs
+import { apiInitializer } from "discourse/lib/api";
+
+export default apiInitializer((api) => {
+  console.log("settings are", settings);
+});
 ```
+
+This `settings` object is also usable as normal within `.gjs` `<template>` tags.
 
 In CSS, you'll get a variable created for every setting of your theme and each variable will have the same name as the setting it represents.
 
@@ -224,137 +229,6 @@ html {
 }
 ```
 
-Similarly, theme settings are available in handlebars templates that you define in your theme whether you're overriding a core template, or creating your own. For example if you have something like this in your theme:
-
-```hbs
-<script type="text/x-handlebars" data-template-name="my-template">
-  <h1>{{theme-setting "your_setting_key"}}</h1>
-</script>
-```
-
-It'll render with your setting value.
-
-You may want to use a boolean setting as a condition for an `{{#if}}` block in your template, this is how you can do that:
-
-```hbs
-<script type="text/x-handlebars" data-template-name="my-template">
-  {{#if (theme-setting "my_boolean_setting")}}
-    <h1>Value is true!</h1>
-  {{else}}
-    <h1>Value is false!</h1>
-  {{/if}}
-</script>
-```
-
----
-
-If you have a question about this or there is something unclear, feel free to ask - I'll try to answer/clarify as much as I can. Also this is a wiki post, so contributions to improve this are greatly appreciated! :sunflower:
-
----
-
-## :question: Frequently Asked Questions
-
-[quote="p0fi, post:27, topic:82557"]
-Can I combine javascript and handlebars in there somehow too? I would like to get the current year using javascript to put it in the string too.
-[/quote]
-
-Not directly; you’ll need to use the `registerConnectorClass` plugin API to add an attribute that has the current year to the connector instance behind your connector template. See an [example](https://github.com/OsamaSayegh/discourse-tab-bar-theme/blob/c05adce3274ffee821eadac8f81ffb54b85e5045/mobile/head_tag.html#L91) from my theme.
-
-My theme sets the `tabs` attributes which is then referenced in the Handlebars template at the end of the file. You can do something like `this.set("year", compute current year here)` in the `setupComponent` method and then in your template you can access the year value like this `{{year}}`.
-
-[quote="Jay Pfaffman, post:29, topic:82557, full:true, username:pfaffman"]
-What if I have a setting like
-
-```yaml
-my_text:
-  type: string
-  default: "<a href='https://google.com/'>Google!</a>"
-```
-
-and then want to do
-
-```hbs
-<script type="text/x-handlebars" data-template-name="my-template">
-  {{theme-setting "my_text"}}
-</script>
-```
-
-It doesn’t give me my link but instead displays all the HTML. Is there a way to fix that?
-[/quote]
-
-You can use the Ember's `html-safe` helper here and it will render the HTML instead of the text.
-
-```hbs
-{{html-safe (theme-setting "my_text")}}
-```
-
-[quote="Alex P., post:33, topic:82557, full:true, username:Alex_P"]
-[quote]
-the `script` tag that wraps your code must have a `type="text/discourse-plugin"` attribute as well as `version` specified like so:
-[/quote]
-
-What’s that version value? Is it supposed to be the version of my plugin?
-[/quote]
-
-No, that’s the version of our [Plugin API](https://github.com/discourse/discourse/blob/e6b5b6eae348aa0f6148589a07e9ade0f08bae59/app/assets/javascripts/discourse/app/lib/plugin-api.js#L112)
-
-We bump that every time a new method is added to the API so that themes / plugins which relay on methods that were recently added to the plugin API don’t end up breaking sites which haven’t been updated.
-
-You don’t really need to worry about this a lot because:
-
-1. We don’t add new methods very often
-2. Most sites that use Discourse are updated very frequently.
-
-[quote="Marcus Baw, post:44, topic:82557, username:pacharanero"]
-Is it possible to access the theme settings from within the Ruby code as opposed to the JS?
-[/quote]
-
-To access theme settings in Ruby you need to call the `settings` method on a theme like so: `Theme.find(<id>).settings`. It will return an array which contains a [`ThemeSettingsManager`](https://github.com/discourse/discourse/blob/66151d805609839a333500248149da4cc5e9cae3/lib/theme_settings_manager.rb#L1) instance for each setting and from it you can get the setting name and value by calling the `name` and `value` methods respectively.
-
-[quote="Heddson, post:47, topic:82557"]
-Could things break if I don’t prefix my setting names with something like my theme name?
-[/quote]
-
-In JavaScript and hbs templates, there is no way this can happen. The `settings` variable that you use to access your theme settings is local to your theme and only contains your theme settings. In hbs templates, the settings of each theme are namespaced with their theme’s primary key in the database, so conflicts are impossible.
-
-[quote="Manuel, post:50, topic:82557, full:true, username:nolo"]
-When I use a list in settings, I get the values as:
-
-```
-value1,value2,value3|value1,value2,value3
-```
-
-Is it possible to modify this output by declaring a different list_type? I’d like to use values from a list in Scss, but I think I could only de-structure the list if the output is formatted as
-
-```
-value1 value2 value3,
-value1 value2 value3;
-```
-
-[/quote]
-
-You can create custom SCSS functions to transform settings values into whatever format you want. E.g., in your case I think all you need is a string replace function that replaces commas with whitespace and pipes with commas? Here is an implementation of a string replace function in SCSS: [Str-replace Function | CSS-Tricks](https://css-tricks.com/snippets/sass/str-replace-function/)
-
-[quote="Jonathan Shaw, post:60, topic:82557, full:true, username:JonathanShaw"]
-Is it possible to access settings from another theme or component. e.g. if you have the category icons theme component installed, can you access information about the icons defined in its settings in a different custom theme component?
-[/quote]
-
-There is not a supported way to access the settings of another theme/component.
-
-[quote="Alex, post:62, topic:82557, username:daemon"]
-Is it possible to divide the settings into sections, e.g. with horizontal lines in between?
-
-And is it possible to integrate some kind of heading?
-[/quote]
-
-No, neither of those things are possible at the moment.
-
----
-
 ## :link: Related Topics
 
 - https://meta.discourse.org/t/developer-s-guide-to-discourse-themes/93648
-
----
-
-_Last Reviewed by @keegan on [date=2022-10-06 timezone="America/Vancouver"]_

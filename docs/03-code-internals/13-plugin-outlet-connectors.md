@@ -62,22 +62,6 @@ If you need custom logic as well, see the other ℹ️ sections below.
 [/details]
 [/quote]
 
-[quote]
-[details=ℹ️ Defining template via theme </head>]
-We recommend using a dedicated file for your connector template. However, Discourse does still support defining a template via a `<script>` tag in your theme's `</head>` section. In that case, a definition would look like
-
-```html
-<script
-  type="text/x-handlebars"
-  data-template-name="/connectors/{outlet-name}/{connector-name}"
->
-  Template content here
-</script>
-```
-
-[/details]
-[/quote]
-
 # Using outlet arguments
 
 Plugin Outlets provide information about the surrounding context via `@outletArgs`. The arguments passed to each outlet vary. An easy way to view the arguments is to add this to your template:

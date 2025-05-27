@@ -63,21 +63,14 @@ body {
 
 ### Javascript
 
-```html
-<script type="text/discourse-plugin" version="0.8">
-  console.log(settings.theme_uploads.balloons)
-</script>
-```
+```gjs
+// {theme}/javascripts/discourse/api-initializers/init-theme.gjs
 
-### Handlebars
+import { apiInitializer } from "discourse/lib/api";
 
-```html
-<script
-  type="text/x-handlebars"
-  data-template-name="/connectors/topic-above-post-stream/foobar"
->
-  <img src="{{theme-setting "theme_uploads.balloons"}}">
-</script>
+export default apiInitializer((api) => {
+  console.log(settings.theme_uploads.balloons);
+});
 ```
 
 ### HTML
@@ -114,18 +107,6 @@ Inside theme js you can now get the URL for an asset with:
 settings.theme_uploads.name
 ```
 
-And then you can do:
-
-```
-handlebars: {{theme-setting "theme_uploads.balloons"}}
-
-javascript: settings.theme_uploads.balloons
-```
-
 ## Additional Information
 
 - https://meta.discourse.org/t/create-and-share-a-font-theme-component/62462
-
----
-
-_Last Reviewed by @SaraDev on [date=2022-06-10 time=13:00:00 timezone="America/Los_Angeles"]_
