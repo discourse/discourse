@@ -3255,7 +3255,7 @@ sk:
         user_requires_approval: "%{username} vyžaduje schválenie"
         default_item: "revidovateľná položka #%{reviewable_id}"
     topics:
-      new_messages_marker: "posledná návševa"
+      new_messages_marker: "posledná návšteva"
       bulk:
         confirm: "Potvrďte"
         select_all: "Vyber všetko"
