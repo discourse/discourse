@@ -303,7 +303,7 @@
   }
 }
 
-.d-modal.chat-modal-new-message {
+.d-modal.chat-modal-new-message.--quick-palette {
   .chat-message-creator {
     &__add-members-header-container {
       padding-inline: 1rem 0.5rem;
@@ -329,6 +329,7 @@
       &__container {
         width: 100%;
         margin-top: 0;
+        border-radius: 0;
       }
     }
   }
@@ -552,7 +553,7 @@
 
   .d-modal {
     &__container {
-      width: var(--modal-max-width);
+      width: var(--modal-max-width, 100%);
       margin-top: 1rem;
       padding-block: 1rem;
     }
