@@ -286,4 +286,35 @@ RSpec.describe DiscourseJsProcessor do
       )
     expect(result["code"]).to include("createTemplateFactory")
   end
+
+  it "handles colocation" do
+    js = <<~JS.chomp
+      import Component from "@glimmer/component";
+      export default class MyComponent extends Component {}
+    JS
+
+    template = <<~HBS.chomp
+      {{log "hello world"}}
+    HBS
+
+    onlyTemplate = <<~HBS.chomp
+      {{log "hello galaxy"}}
+    HBS
+
+    result =
+      DiscourseJsProcessor::Transpiler.new.rollup(
+        {
+          "discourse/components/foo.js" => js,
+          "discourse/components/foo.hbs" => template,
+          "discourse/components/bar.hbs" => onlyTemplate,
+        },
+        { themeId: 22 },
+      )
+
+    expect(result["code"]).to include("setComponentTemplate")
+    expect(result["code"]).to include(
+      "bar = setComponentTemplate(__COLOCATED_TEMPLATE__, templateOnly());",
+    )
+    # puts result["code"]
+  end
 end

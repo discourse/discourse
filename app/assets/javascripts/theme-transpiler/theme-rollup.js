@@ -1,8 +1,10 @@
 import BabelPresetEnv from "@babel/preset-env";
+// import templateColocationPlugin from "@embroider/addon-dev/template-colocation-plugin";
 import { rollup } from "@rollup/browser";
 import { babel, getBabelOutputPlugin } from "@rollup/plugin-babel";
 import HTMLBarsInlinePrecompile from "babel-plugin-ember-template-compilation";
 import DecoratorTransforms from "decorator-transforms";
+import colocatedBabelPlugin from "ember-cli-htmlbars/lib/colocated-babel-plugin";
 import { precompile } from "ember-source/dist/ember-template-compiler";
 import { dirname, join } from "path";
 import { minify as terserMinify } from "terser";
@@ -48,14 +50,25 @@ globalThis.rollup = function (modules, opts) {
         name: "extensionsearch",
         async resolveId(source, context) {
           console.log(`Running extensionsearch ${source}`);
+
+          if (source.match(/\.(js|gjs|hbs)$/)) {
+            return null;
+          }
+
           for (const ext of ["", ".js", ".gjs", ".hbs"]) {
             console.log(ext);
             let resolved;
             try {
-              resolved = await this.resolve(`${source}${ext}`, context, {
+              resolved = await this.resolve(
+                `${source}${ext}`,
+                context /*, {
                 skipSelf: true,
-              });
-            } catch {
+              }*/
+              );
+            } catch (error) {
+              if (!error.message.includes("Cannot access the file system")) {
+                throw error;
+              }
               console.log("caught");
             }
             console.log(`finished resolve, ${source}${ext}, `);
@@ -64,6 +77,7 @@ globalThis.rollup = function (modules, opts) {
               return resolved;
             }
           }
+
           return false;
         },
       },
@@ -103,6 +117,78 @@ globalThis.rollup = function (modules, opts) {
         },
       },
 
+      {
+        name: "colocation",
+        async resolveId(source, context) {
+          if (source.endsWith(".js")) {
+            let hbs;
+            try {
+              hbs = await this.resolve(source.replace(/.js$/, ".hbs"));
+            } catch (error) {
+              if (!error.message.includes("Cannot access the file system")) {
+                throw error;
+              }
+            }
+
+            let js;
+            try {
+              js = await this.resolve(source);
+            } catch (error) {
+              if (!error.message.includes("Cannot access the file system")) {
+                throw error;
+              }
+            }
+
+            if (!js && hbs) {
+              return {
+                id: source,
+                meta: {
+                  "rollup-hbs-plugin": {
+                    type: "template-only-component-js",
+                  },
+                },
+              };
+            }
+          }
+        },
+
+        load(id) {
+          if (
+            this.getModuleInfo(id)?.meta?.["rollup-hbs-plugin"]?.type ===
+            "template-only-component-js"
+          ) {
+            return {
+              code: `import templateOnly from '@ember/component/template-only';\nexport default templateOnly();\n`,
+            };
+          }
+        },
+
+        transform: {
+          // order: "pre",
+          async handler(input, id) {
+            if (id.endsWith(".js")) {
+              let hbs;
+              try {
+                hbs = await this.resolve(id.replace(/.js$/, ".hbs"));
+              } catch (error) {
+                if (!error.message.includes("Cannot access the file system")) {
+                  throw error;
+                }
+              }
+
+              if (hbs) {
+                return `
+                  import template from '${hbs.id}';
+                  const __COLOCATED_TEMPLATE__ = template;
+
+                  ${input}
+                `;
+              }
+            }
+          },
+        },
+      },
+
       getBabelOutputPlugin({
         plugins: [BabelReplaceImports],
       }),
@@ -112,6 +198,8 @@ globalThis.rollup = function (modules, opts) {
         plugins: [
           [DecoratorTransforms, { runEarly: true }],
           AddThemeGlobals,
+          // "@embroider/addon-dev/template-colocation-plugin",
+          colocatedBabelPlugin,
           [
             HTMLBarsInlinePrecompile,
             {
@@ -147,9 +235,9 @@ globalThis.rollup = function (modules, opts) {
           handler(input, id) {
             if (id.endsWith(".hbs")) {
               return `
-              import { hbs } from 'ember-cli-htmlbars';
-              export default hbs(${JSON.stringify(input)}, { moduleName: ${JSON.stringify(id)} });
-            `;
+                import { hbs } from 'ember-cli-htmlbars';
+                export default hbs(${JSON.stringify(input)}, { moduleName: ${JSON.stringify(id)} });
+              `;
             }
           },
         },
@@ -174,20 +262,20 @@ globalThis.rollup = function (modules, opts) {
           },
         },
       },
-      {
-        name: "terser",
-        async renderChunk(code, chunk, outputOptions) {
-          const defaultOptions = {
-            sourceMap:
-              outputOptions.sourcemap === true ||
-              typeof outputOptions.sourcemap === "string",
-          };
+      // {
+      //   name: "terser",
+      //   async renderChunk(code, chunk, outputOptions) {
+      //     const defaultOptions = {
+      //       sourceMap:
+      //         outputOptions.sourcemap === true ||
+      //         typeof outputOptions.sourcemap === "string",
+      //     };
 
-          defaultOptions.module = true;
+      //     defaultOptions.module = true;
 
-          return await terserMinify(code, defaultOptions);
-        },
-      },
+      //     return await terserMinify(code, defaultOptions);
+      //   },
+      // },
     ],
   });
 
