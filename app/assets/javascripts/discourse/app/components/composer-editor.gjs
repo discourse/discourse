@@ -131,10 +131,9 @@ export default class ComposerEditor extends Component {
 
   @discourseComputed("composer.model.requiredCategoryMissing")
   replyPlaceholder(requiredCategoryMissing) {
-    let placeholder;
-    if (requiredCategoryMissing) {
-      placeholder = "composer.reply_placeholder_choose_category";
-    } else {
+    let placeholder = "composer.reply_placeholder_choose_category";
+
+    if (!requiredCategoryMissing) {
       const key = authorizesOneOrMoreImageExtensions(
         this.currentUser.staff,
         this.siteSettings
