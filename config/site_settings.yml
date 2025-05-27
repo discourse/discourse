@@ -3180,9 +3180,6 @@ uncategorized:
     validator: "RegexpListValidator"
     area: "permalinks"
 
-  max_similar_results:
-    default: 5
-    area: "posts_and_topics"
   minimum_topics_similar:
     default: 50
     area: "posts_and_topics"
