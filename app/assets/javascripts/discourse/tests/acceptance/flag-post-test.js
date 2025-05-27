@@ -6,11 +6,13 @@ import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 async function openFlagModal() {
   if (
-    document.querySelector(".topic-post:first-child button.show-more-actions")
+    document.querySelector(
+      ".topic-post[data-post-number='1'] button.show-more-actions"
+    )
   ) {
-    await click(".topic-post:first-child button.show-more-actions");
+    await click(".topic-post[data-post-number='1'] button.show-more-actions");
   }
-  await click(".topic-post:first-child button.create-flag");
+  await click(".topic-post[data-post-number='1'] button.create-flag");
 }
 
 async function pressEnter(selector, modifier) {

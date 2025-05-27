@@ -1091,9 +1091,11 @@ export default createWidget("post", {
   shadowTree: true,
 
   buildAttributes(attrs) {
-    return attrs.height
+    const heightStyle = attrs.height
       ? { style: `min-height: ${attrs.height}px` }
       : undefined;
+
+    return { "data-post-number": attrs.post_number, ...heightStyle };
   },
 
   buildId(attrs) {

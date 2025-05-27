@@ -8,6 +8,7 @@ import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { TrackedSet } from "@ember-compat/tracked-built-ins";
+import { and, not } from "truth-helpers";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import LoadMore from "discourse/components/load-more";
 import PostFilteredNotice from "discourse/components/post/filtered-notice";
@@ -633,6 +634,7 @@ export default class PostStream extends Component {
   }
 
   <template>
+    <ConditionalLoadingSpinner @condition={{@postStream.loadingAbove}} />
     <div
       class="post-stream glimmer-post-stream"
       {{didInsert this.setWrapperElement}}
@@ -647,11 +649,9 @@ export default class PostStream extends Component {
         cloakOffset=this.cloakOffset
       }}
     >
-      <ConditionalLoadingSpinner @condition={{@postStream.loadingAbove}}>
-        {{#if @postStream.canPrependMore}}
-          <LoadMore @action={{fn this.loadMoreAbove this.firstAvailablePost}} />
-        {{/if}}
-      </ConditionalLoadingSpinner>
+      {{#if (and (not @postStream.loadingAbove) @postStream.canPrependMore)}}
+        <LoadMore @action={{fn this.loadMoreAbove this.firstAvailablePost}} />
+      {{/if}}
 
       {{#each this.postTuples key="post.id" as |tuple index|}}
         {{#let
@@ -749,7 +749,7 @@ export default class PostStream extends Component {
         {{/let}}
       {{/each}}
 
-      <ConditionalLoadingSpinner @condition={{@postStream.loadingBelow}}>
+      {{#if (not @postStream.loadingBelow)}}
         {{#if @postStream.canAppendMore}}
           <LoadMore @action={{fn this.loadMoreBelow this.lastAvailablePost}} />
         {{else}}
@@ -758,7 +758,7 @@ export default class PostStream extends Component {
             {{didInsert this.setBottomBoundaryElement}}
           ></div>
         {{/if}}
-      </ConditionalLoadingSpinner>
+      {{/if}}
 
       {{#if this.shouldShowFilteredNotice}}
         <PostFilteredNotice
@@ -769,5 +769,6 @@ export default class PostStream extends Component {
         />
       {{/if}}
     </div>
+    <ConditionalLoadingSpinner @condition={{@postStream.loadingBelow}} />
   </template>
 }
