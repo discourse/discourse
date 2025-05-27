@@ -195,11 +195,16 @@
       .edit-topic {
         opacity: 0;
         transition: opacity 0.15s linear;
+        background: none;
       }
 
       &:hover {
         .edit-topic {
           opacity: 1;
+
+          &:hover {
+            background: var(--primary-medium);
+          }
         }
       }
     }
