@@ -28,6 +28,7 @@
     "fastestsmallesttextencoderdecoder": "^1.0.22",
     "handlebars": "^4.7.8",
     "jsdom": "^25.0.1",
+    "magic-string": "^0.30.17",
     "path-browserify": "^1.0.1",
     "polyfill-crypto.getrandomvalues": "^1.0.0",
     "postcss": "^8.5.3",

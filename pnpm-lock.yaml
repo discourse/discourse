@@ -1078,6 +1078,9 @@ importers:
       jsdom:
         specifier: ^25.0.1
         version: 25.0.1(supports-color@8.1.1)
+      magic-string:
+        specifier: ^0.30.17
+        version: 0.30.17
       path-browserify:
         specifier: ^1.0.1
         version: 1.0.1
@@ -6679,6 +6682,9 @@ packages:
 
   magic-string@0.25.9:
     resolution: {integrity: sha512-RmF0AsMzgt25qzqqLc1+MbHmhdx0ojF2Fvs4XnOqz2ZOBXzzkEwc/dJQZCYHAn7v1jbVOjAZfK8msRn4BxO4VQ==}
+
+  magic-string@0.30.17:
+    resolution: {integrity: sha512-sNPKHvyjVf7gyjwS4xGTaW/mCnF8wnjtifKBEhxfZ7E/S8tQ0rssrwGNn6q8JH/ohItJfSQp9mBtQYuTlH5QnA==}
 
   magnific-popup@1.1.0:
     resolution: {integrity: sha512-ghSa/1TKsOUL6ZlHfcfFCoB9Wms2nqaDdBEPh6QX9jFYQyMkUu7ciU1mrxedWWq4NM2m1C/llhHKLt6GKRYOzg==}
@@ -16498,6 +16504,10 @@ snapshots:
   magic-string@0.25.9:
     dependencies:
       sourcemap-codec: 1.4.8
+
+  magic-string@0.30.17:
+    dependencies:
+      '@jridgewell/sourcemap-codec': 1.5.0
 
   magnific-popup@1.1.0: {}
 

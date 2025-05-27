@@ -6,6 +6,7 @@ import HTMLBarsInlinePrecompile from "babel-plugin-ember-template-compilation";
 import DecoratorTransforms from "decorator-transforms";
 import colocatedBabelPlugin from "ember-cli-htmlbars/lib/colocated-babel-plugin";
 import { precompile } from "ember-source/dist/ember-template-compiler";
+import MagicString from "magic-string";
 import { dirname, join } from "path";
 import { minify as terserMinify } from "terser";
 import { browsers } from "../discourse/config/targets";
@@ -47,7 +48,7 @@ globalThis.rollup = function (modules, opts) {
     },
     plugins: [
       {
-        name: "extensionsearch",
+        name: "discourse-extensionsearch",
         async resolveId(source, context) {
           console.log(`Running extensionsearch ${source}`);
 
@@ -82,7 +83,7 @@ globalThis.rollup = function (modules, opts) {
         },
       },
       {
-        name: "loader",
+        name: "discourse-loader",
         resolveId(source, context) {
           if (rollupVirtualImports[source]) {
             return source;
@@ -118,7 +119,7 @@ globalThis.rollup = function (modules, opts) {
       },
 
       {
-        name: "colocation",
+        name: "discourse-colocation",
         async resolveId(source, context) {
           if (source.endsWith(".js")) {
             let hbs;
@@ -177,12 +178,17 @@ globalThis.rollup = function (modules, opts) {
               }
 
               if (hbs) {
-                return `
-                  import template from '${hbs.id}';
-                  const __COLOCATED_TEMPLATE__ = template;
+                const s = new MagicString(input);
+                s.prepend(
+                  `import template from '${hbs.id}';
+const __COLOCATED_TEMPLATE__ = template;
+`
+                );
 
-                  ${input}
-                `;
+                return {
+                  code: s.toString(),
+                  map: s.generateMap({ hires: true }),
+                };
               }
             }
           },
@@ -229,21 +235,24 @@ globalThis.rollup = function (modules, opts) {
         ],
       }),
       {
-        name: "hbs",
+        name: "discourse-hbs",
         transform: {
           order: "pre",
           handler(input, id) {
             if (id.endsWith(".hbs")) {
-              return `
+              return {
+                code: `
                 import { hbs } from 'ember-cli-htmlbars';
                 export default hbs(${JSON.stringify(input)}, { moduleName: ${JSON.stringify(id)} });
-              `;
+              `,
+                map: { mappings: "" },
+              };
             }
           },
         },
       },
       {
-        name: "gjs-transform",
+        name: "discourse-gjs-transform",
 
         transform: {
           // Enforce running the gjs transform before any others like babel that expect valid JS
@@ -263,7 +272,7 @@ globalThis.rollup = function (modules, opts) {
         },
       },
       // {
-      //   name: "terser",
+      //   name: "discourse-terser",
       //   async renderChunk(code, chunk, outputOptions) {
       //     const defaultOptions = {
       //       sourceMap:

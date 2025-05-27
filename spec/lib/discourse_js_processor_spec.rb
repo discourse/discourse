@@ -315,6 +315,6 @@ RSpec.describe DiscourseJsProcessor do
     expect(result["code"]).to include(
       "bar = setComponentTemplate(__COLOCATED_TEMPLATE__, templateOnly());",
     )
-    # puts result["code"]
+    puts result["code"]
   end
 end
