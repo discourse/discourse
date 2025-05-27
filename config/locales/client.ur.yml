@@ -3651,13 +3651,9 @@ ur:
         about: "بارے میں"
     discovery:
       headings:
+        multi_tag:
+          default: "ٹاپکس %{tags} کے ساتھ ٹَیگ کردہ"
         categories: "تمام زُمرَہ جات"
-        filter_labels:
-          latest: "تازہ ترین"
-          top: "سب سے اوپر"
-          new: "نئی"
-          unread: "بغیر پڑھے"
-          unseen: "ان دیکھا"
   admin_js:
     type_to_filter: "کو فلٹر کرنے کے لیے ٹائپ کریں…"
     settings: "ترتیبات"

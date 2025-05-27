@@ -263,7 +263,7 @@ sw:
       one: "Angalia Topiki %{count} Mpya"
       other: "Angalia Topiki %{count} Mpya"
     preview: "kihakiki"
-    cancel: "ghairi"
+    cancel: "Ghairi"
     save: "Hifadhi Mabadiliko"
     saved: "Imehifadhiwa!"
     upload: "Pakia"
@@ -2375,12 +2375,9 @@ sw:
         about: "Kuhusu"
     discovery:
       headings:
+        multi_tag:
+          default: "Mada zenye lebo %{tags}"
         categories: "Kategoria Zote"
-        filter_labels:
-          latest: "Hivi Karibuni"
-          top: "Juu"
-          new: "Mpya"
-          unread: "Haijasomwa"
   admin_js:
     settings: "Mipangilio"
     admin:

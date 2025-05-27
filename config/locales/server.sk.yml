@@ -717,26 +717,6 @@ sk:
       few: "%{count} príspevky"
       many: "%{count} príspevkov"
       other: "%{count} príspevkov"
-    "new-topic": |
-      Vitajte na %{site_name} &mdash; **ďakujeme, že ste začali novú konverzáciu!**
-
-      - Znie názov zaujímavo, keď ho prečítate nahlas? Je to dobré zhrnutie?
-
-      - Kto by sa o to mohol zaujímať? Prečo je to dôležité? Aké odpovede očakávate?
-
-      - Zahrňte bežne používané slová do svojej témy, aby ju ostatní mohli *nájsť*. Na zoskupenie svojej témy s príbuznými témami vyberte kategóriu (alebo značku).
-
-      Viac informácií nájdete v [našich pravidlách komunity](%{base_path}/guidelines). Tento panel sa zobrazí iba pri vašich prvých %{education_posts_text}.
-    "new-reply": |
-      Vitajte na stránke %{site_name} &mdash; **ďakujeme, že prispievate!**
-
-      - Buďte milí k ostatným členom komunity.
-
-      - Prispieva vaša odpoveď ku konverzácii?
-
-      - Konštruktívna kritika je vítaná, kritizujte však *myšlienky*, nie ľudí.
-
-      Pre viac informácií, [si prečítajte naše pokyny pre komunitu](%{base_path}/guidelines). Hneď potom, ako v rámci vášho nového účtu napíšete %{education_posts_text}, sa už tento panel viac nebude zobrazovať.
     avatar: |2
 
       ### Čo takto nastaviť svoj profilový obrázok?
@@ -754,19 +734,11 @@ sk:
       Svoj predchádzajúci príspevok môžete upraviť pridaním citácie zvýraznením textu a výberom tlačidla <b>citovať odpoveď</b>, ktoré sa zobrazí.
 
       Je jednoduchšie pre všetkých čítať témy, ktoré majú menej, ale podrobnejších odpovedí, než veľa malých, individuálnych odpovedí.
-    dominating_topic: V tejto téme ste toho napísali veľa! Zvážte, či dať ostatným príležitosť odpovedať tu a diskutovať o veciach aj medzi sebou.
     get_a_room:
       one: Už ste raz odpovedali na @%{reply_username} , vedeli ste, že namiesto toho im môžete poslať osobnú správu?
       few: Odpovedali ste na @%{reply_username} %{count} krát, vedeli ste, že namiesto toho im môžete poslať osobnú správu?
       many: Odpovedali ste na @%{reply_username} %{count} krát, vedeli ste, že namiesto toho im môžete poslať osobnú správu?
       other: Odpovedali ste na @%{reply_username} %{count} krát, vedeli ste, že namiesto toho im môžete poslať osobnú správu?
-    dont_feed_the_trolls: Tento príspevok už bol označený pre pozornosť moderátora. Ste si istý, že naň chcete odpovedať? Odpovede na negatívny obsah majú tendenciu podporovať ďalšie negatívne správanie.
-    too_many_replies: |
-      ### Dosiahli ste limit odpovedí pre túto tému
-
-      Je nám ľúto, ale noví používatelia sú dočasne obmedzení na %{newuser_max_replies_per_topic} odpovede v tej istej téme.
-
-      Namiesto pridávania ďalšej odpovede zvážte, prosím, úpravu svojich predchádzajúcich odpovedí alebo návštevu iných tém.
     reviving_old_topic: |
       ### Oživiť túto tému?
 
@@ -2250,7 +2222,6 @@ sk:
     authorized_extensions: "Zoznam prípon súborov povolených na nahrávanie"
     authorized_extensions_for_staff: "Zoznam prípon súborov povolených na nahrávanie pre personál okrem zoznamu definovaného v nastavení lokality „authorized_extensions“."
     theme_authorized_extensions: "Zoznam prípon súborov povolených na nahrávanie tém"
-    max_similar_results: "Koľko podobných tém sa má zobraziť nad editorom ak vytvára novú tému. Porovnanie je založené na nadpise a tele správy."
     max_image_megapixels: "Maximálny počet megapixelov povolený pre obrázok. Obrázky s vyšším počtom megapixelov budú zamietnuté."
     title_prettify: "Predchádzať bežným malým preklepom a chybám, zapnutým kapitálkam, malému prvému znaku, duplikácií ! a ?, extra . na konci a podobne."
     title_remove_extraneous_space: "Odstráňte úvodné biele znaky pred koncovou interpunkciou."
@@ -2904,10 +2875,10 @@ sk:
     not_available: "Nie je k dispozícii. Skúste %{suggestion}?"
     something_already_taken: "Niečo sa pokazilo, možno je tento užívateľ, alebo e-mail už registrovaný, vyskúšajte odkaz pre zabudnuté heslo"
     omniauth_error:
-      generic: "Ľutujeme, pri autorizácii vášho účtu sa vyskytla chyba. Prosím skúste znova."
-      csrf_detected: "Časový limit autorizácie vypršal alebo ste zmenili prehliadač. Prosím skúste znova."
-      request_error: "Pri spustení autorizácie došlo k chybe. Skúste to prosím znova."
-      invalid_iat: "Nie je možné overiť autorizačný token z dôvodu rozdielov v hodinách servera. Skúste to prosím znova."
+      generic: "Prepáčte, pri pokuse o autorizáciu vášho účtu s %{provider}sa vyskytla chyba. Skúste to znova."
+      csrf_detected: "Prepáčte, časový limit autorizácie vypršal alebo ste prepli prehliadač. Skúste to znova."
+      request_error: "Prepáčte, pri spustení autorizácie sa vyskytla chyba. Skúste to znova."
+      invalid_iat: "Prepáčte, ale kvôli rozdielom v čase servera sa nám nepodarilo overiť autorizačný token. Skúste to znova."
     omniauth_error_unknown: "Niečo sa pokazilo pri spracovaní vášho prihlásenia, skúste to prosím znova."
     omniauth_confirm_title: "Prihláste sa pomocou stránky %{provider}"
     omniauth_confirm_button: "Pokračovať"
@@ -5519,6 +5490,9 @@ sk:
       approve_and_restore:
         title: "Schváliť a obnoviť príspevok"
         complete: "Príspevok schválený a obnovený."
+      approve_and_unhide:
+        title: "Schváliť a Odkryť príspevok"
+        complete: "Príspevok schválený a odkrytý"
       delete_user:
         reason: "Odstránené prostredníctvom poradia na kontrolu"
         complete: "Používateľ odstránený."

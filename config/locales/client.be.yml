@@ -189,7 +189,7 @@ be:
       label: "Чарнавікі"
       remove: "выдаліць"
     preview: "папярэдні прагляд"
-    cancel: "адмена"
+    cancel: "адмяніць"
     save: "Захаваць змены"
     saved: "Захавана!"
     upload: "Загрузіць"
@@ -1523,11 +1523,6 @@ be:
     discovery:
       headings:
         categories: "Усе катэгорыі"
-        filter_labels:
-          latest: "апошняя"
-          top: "Топ тэмаў"
-          new: "Новыя"
-          unread: "Непрачытаныя"
   admin_js:
     settings: "Налады"
     admin:

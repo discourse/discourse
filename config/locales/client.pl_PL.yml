@@ -596,7 +596,7 @@ pl_PL:
       many: "Zobacz %{count} nowych tematów"
       other: "Zobacz %{count} nowych tematów"
     preview: "podgląd"
-    cancel: "anuluj"
+    cancel: "Anuluj"
     deleting: "Usuwanie…"
     save: "Zapisz zmiany"
     saving: "Zapisywanie…"
@@ -5243,6 +5243,11 @@ pl_PL:
         forum:
           label: Forum
       back_to_forum: "Powrót do forum"
+      filter_links: "Filtruj linki..."
+      clear_filter: "Wyczyść filtr"
+      no_results:
+        title: "Brak wyników"
+        description_admin_search: "Nie znaleźliśmy niczego pasującego do ‘%{filter}’."
       collapse_all_sections: "Zwiń wszystkie sekcje"
       expand_all_sections: "Rozwiń wszystkie sekcje"
       search: "Szukaj"
@@ -5365,16 +5370,9 @@ pl_PL:
       headings:
         all:
           default: "Wszystkie tematy %{filter}"
-        no_tags:
-          all_default: "Wszystkie tematy bez tagów"
+        multi_tag:
+          default: "Tematy otagowane %{tags}"
         categories: "Wszystkie kategorie"
-        filter_labels:
-          latest: "Najnowsza"
-          top: "Popularne"
-          new: "Nowa"
-          unread: "Nieprzeczytane"
-          hot: "Gorące"
-          unseen: "Niewidziany"
   admin_js:
     type_to_filter: "Pisz, aby filtrować…"
     settings: "Ustawienia"
@@ -5624,7 +5622,6 @@ pl_PL:
           header_description: "Komponenty to mniejsze modyfikacje, które można dodać do motywów w celu zmiany określonych elementów stylu twojego forum"
           keywords: "motyw|komponent|rozszerzenie"
         themes_and_components:
-          title: "Motywy i komponenty"
           header_description: "Spersonalizuj swoją witrynę Discourse za pomocą motywów i komponentów dopasowanych do Twoich potrzeb."
           keywords: "motyw|komponent|rozszerzenie|dostosuj"
         site_admin:
@@ -6383,8 +6380,6 @@ pl_PL:
           more_options:
             title: "Więcej opcji"
         themes_and_components:
-          title: "Motywy i komponenty"
-          description: "Spersonalizuj swoją witrynę Discourse za pomocą motywów i komponentów dopasowanych do Twoich potrzeb."
           breadcrumb_title: "Wygląd"
           install: "Zainstaluj"
           themes:
