@@ -18,6 +18,10 @@ export default class UserLink extends Component {
   }
 
   get href() {
+    if (this.hideFromAnonUser) {
+      return null;
+    }
+
     const url = this.args.href || this.args.user?.path;
     if (url) {
       return url;
