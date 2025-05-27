@@ -58,7 +58,7 @@ RSpec.describe "Localized topic" do
       topic_list.visit_topic_with_title("孫子兵法からの人生戦略")
 
       expect(topic_page.has_topic_title?("孫子兵法からの人生戦略")).to eq(true)
-      page.find(".timeline-controls button.btn-toggle-localized-content").click
+      page.find("button.btn-toggle-localized-content").click
 
       expect(topic_page.has_topic_title?("Life strategies from The Art of War")).to eq(true)
 

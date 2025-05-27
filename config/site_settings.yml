@@ -251,7 +251,7 @@ basic:
       - posted
       - bookmarks
       - hot
-    area: "navigation"
+    area: "interface"
   post_menu:
     client: true
     type: list
@@ -327,12 +327,12 @@ basic:
     client: true
     enum: "CategoryPageStyle"
     default: "categories_and_latest_topics"
-    area: "navigation"
+    area: "interface"
   mobile_category_page_style:
     client: true
     enum: "MobileCategoryPageStyle"
     default: "categories_with_featured_topics"
-    area: "navigation"
+    area: "interface"
   category_colors:
     client: true
     type: list
@@ -4001,12 +4001,14 @@ experimental:
   experimental_content_localization:
     client: true
     default: false
+    area: "localization"
   experimental_content_localization_allowed_groups:
     type: group_list
     list_type: compact
     allow_any: false
     client: true
     default: "1|2" # admin, moderator
+    area: "localization"
   content_localization_debug_allowed_groups:
     type: group_list
     list_type: compact
@@ -4014,3 +4016,11 @@ experimental:
     client: true
     default: "1|2" # admin, moderator
     hidden: true
+  experimental_content_localization_supported_locales:
+    default: ""
+    type: list
+    client: true
+    list_type: named
+    allow_any: false
+    choices: "LocaleSiteSetting.values"
+    area: "localization"

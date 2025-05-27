@@ -469,6 +469,51 @@ import { i18n } from "discourse-i18n";
           .hasNoValue("discards draft and reset composer textarea");
       });
 
+      test("Autosaves drafts after clicking keep editing in discard modal", async function (assert) {
+        pretender.post("/drafts.json", function () {
+          assert.step("saveDraft");
+          return response(200, {});
+        });
+
+        await visit("/t/internationalization-localization/280");
+
+        await click("#topic-footer-buttons .btn.create");
+
+        await fillIn(".d-editor-input", "this is draft content of the reply");
+
+        assert.verifySteps(["saveDraft"], "first draft is auto saved");
+
+        await click("#reply-control button.cancel");
+
+        assert
+          .dom(".discard-draft-modal.modal")
+          .exists("pops up the discard drafts modal");
+
+        await click(".d-modal__footer button.keep-editing");
+        assert.dom(".discard-draft-modal.modal").doesNotExist("hides modal");
+
+        assert
+          .dom(".d-editor-input")
+          .hasValue(
+            "this is draft content of the reply",
+            "composer has the content of the first draft"
+          );
+
+        await fillIn(
+          ".d-editor-input",
+          "this is the updated content of the reply",
+          "update content in the composer"
+        );
+
+        assert.verifySteps(["saveDraft"], "second draft is saved");
+
+        await click("#reply-control button.create");
+
+        assert
+          .dom(".topic-post:last-of-type .cooked p")
+          .hasText("this is the updated content of the reply");
+      });
+
       test("Create an enqueued Reply", async function (assert) {
         pretender.post("/posts", function () {
           return response(200, {

@@ -48,6 +48,10 @@
       &.topic-progress-expanded {
         z-index: z("fullscreen");
       }
+
+      > * {
+        margin-bottom: 0.5em;
+      }
     }
 
     .topic-navigation-popup {
@@ -85,6 +89,10 @@
       grid-area: posts;
       grid-row: 3;
       width: auto;
+
+      > * {
+        height: 100%;
+      }
     }
 
     .timeline-container:not(.timeline-fullscreen) {
