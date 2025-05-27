@@ -165,9 +165,13 @@ export default class SignupPageController extends Controller {
     return authOptions && !canEditUsername;
   }
 
-  @discourseComputed("authOptions", "authOptions.can_edit_name")
-  nameDisabled(authOptions, canEditName) {
-    return authOptions && !canEditName;
+  @discourseComputed(
+    "authOptions",
+    "authOptions.can_edit_name",
+    "authOptions.name"
+  )
+  nameDisabled(authOptions, canEditName, name) {
+    return authOptions && !canEditName && name && name.length > 0;
   }
 
   @discourseComputed
