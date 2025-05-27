@@ -708,7 +708,6 @@ class Topic < ActiveRecord::Base
   MAX_SIMILAR_BODY_LENGTH = 200
 
   def self.similar_to(title, raw, user = nil)
-    return [] if SiteSetting.max_similar_results == 0
     return [] if title.blank?
 
     raw = raw.presence || ""
@@ -759,7 +758,7 @@ class Topic < ActiveRecord::Base
         .where("c.topic_id IS NULL")
         .where("topics.category_id NOT IN (#{excluded_category_ids_sql})")
         .order("ts_rank(search_data, #{tsquery}) DESC")
-        .limit(SiteSetting.max_similar_results * 3)
+        .limit(10)
 
     candidate_ids = candidates.pluck(:id)
 
@@ -770,7 +769,7 @@ class Topic < ActiveRecord::Base
         .joins("JOIN posts AS p ON p.topic_id = topics.id AND p.post_number = 1")
         .where("topics.id IN (?)", candidate_ids)
         .order("similarity DESC")
-        .limit(SiteSetting.max_similar_results)
+        .limit(3)
 
     if raw.present?
       similars.select(

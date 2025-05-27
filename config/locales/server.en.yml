@@ -2267,7 +2267,6 @@ en:
     authorized_extensions: "A list of file extensions allowed for upload"
     authorized_extensions_for_staff: "A list of file extensions allowed for upload for staff users in addition to the list defined in the `authorized_extensions` site setting."
     theme_authorized_extensions: "A list of file extensions allowed for theme uploads"
-    max_similar_results: "How many similar topics to show above the editor when composing a new topic. Comparison is based on title and body."
 
     max_image_megapixels: "Maximum number of megapixels allowed for an image. Images with a higher number of megapixels will be rejected."
 
