@@ -8,6 +8,7 @@ import {
   triggerEvent,
   triggerKeyEvent,
   visit,
+  waitFor,
 } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
@@ -554,13 +555,18 @@ import { i18n } from "discourse-i18n";
         await fillIn(".d-editor-input", "will return empty json");
         await fillIn("#reply-title", "This is the new text for the title");
 
+        const done = assert.async();
+
         pretender.put("/posts/:post_id", async () => {
           // at this point, request is in flight, so post is staged
-          assert.dom(".topic-post").exists();
-          assert.dom(".topic-post").hasClass("staged");
+          await waitFor(".topic-post.staged");
+
+          assert.dom(".topic-post.staged").exists();
           assert
             .dom(".topic-post.staged .cooked")
             .hasText("will return empty json");
+
+          done();
 
           return response(200, {});
         });
