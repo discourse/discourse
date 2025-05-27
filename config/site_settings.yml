@@ -522,6 +522,7 @@ basic:
     choices:
       - "alphabetically"
       - "order of creation"
+      - "order of theme setting"
     area: "about"
   about_page_extra_groups_show_description:
     client: true
