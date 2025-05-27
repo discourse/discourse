@@ -12,7 +12,7 @@ module PageObjects
         PageObjects::Components::SelectKit.new(".notifications-filter")
       end
 
-      def notification(notification)
+      def find_notification(notification)
         find(".notification a[href='#{notification.url}']")
       end
 
