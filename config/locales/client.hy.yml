@@ -477,7 +477,7 @@ hy:
       one: "Տեսնել %{count} նոր թեման"
       other: "Դիտել %{count} նոր թեմաները"
     preview: "նախադիտում"
-    cancel: "չեղարկել"
+    cancel: "Չեղարկել"
     deleting: "Ջնջվում է…"
     save: "Պահպանել Փոփոխությունները"
     saving: "Պահպանվում է…"
@@ -3817,14 +3817,9 @@ hy:
         about: "Մասին"
     discovery:
       headings:
+        multi_tag:
+          default: "%{tags} թեգով թեմաներ "
         categories: "Բոլոր կատեգորիաները"
-        filter_labels:
-          latest: "Վերջինը"
-          top: "Ամենահայտնի"
-          new: "Նոր"
-          unread: "Չկարդացած"
-          hot: "Թոփ"
-          unseen: "Չդիտված"
   admin_js:
     settings: "Կարգավորումներ"
     admin:

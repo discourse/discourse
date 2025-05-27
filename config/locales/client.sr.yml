@@ -538,7 +538,7 @@ sr:
       few: "Pogledajte %{count} nove teme"
       other: "Pogledajte %{count} novih tema"
     preview: "prikaži"
-    cancel: "otkaži"
+    cancel: "Odustani"
     deleting: "Brisanje…"
     save: "Sačuvaj izmene"
     saving: "Snimanje…"
@@ -2617,11 +2617,6 @@ sr:
     discovery:
       headings:
         categories: "Sve kategorije"
-        filter_labels:
-          latest: "Poslednje"
-          top: "Top"
-          new: "Nova"
-          unread: "Nepročitano"
   admin_js:
     settings: "Podešavanja"
     admin:

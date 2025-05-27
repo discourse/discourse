@@ -224,6 +224,7 @@ hr:
     back_button: "Natrag"
     welcome_banner:
       header:
+        logged_in_members: "Dobrodošli natrag, %{preferred_display_name}!"
         anonymous_members: "Dobrodošli na %{site_name}"
       search: "Pretraživanje"
     themes:
@@ -499,7 +500,7 @@ hr:
       few: "Pregledajte %{count} nove teme."
       other: "Pregledajte %{count} nove teme."
     preview: "Predprikaz"
-    cancel: "otkaži"
+    cancel: "Odustani"
     deleting: "Brisanje…"
     save: "Zabilježi promjene"
     saving: "Spremanje…"
@@ -4448,12 +4449,6 @@ hr:
     discovery:
       headings:
         categories: "Sve kategorije"
-        filter_labels:
-          latest: "Posljednje"
-          top: "Najaktivnije"
-          new: "Novo"
-          unread: "Nepročitano"
-          unseen: "Neviđeno"
   admin_js:
     type_to_filter: "Upišite za filtriranje…"
     settings: "Postavke"

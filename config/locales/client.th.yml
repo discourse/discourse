@@ -2537,11 +2537,6 @@ th:
     discovery:
       headings:
         categories: "หมวดหมู่ทั้งหมด"
-        filter_labels:
-          latest: "ล่าสุด"
-          top: "บน"
-          new: "ใหม่"
-          unread: "ยังไม่อ่าน"
   admin_js:
     settings: "การตั้งค่า"
     admin:

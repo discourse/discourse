@@ -5260,6 +5260,11 @@ he:
         forum:
           label: פורום
       back_to_forum: "חזרה לפורום"
+      filter_links: "סינון קישורים…"
+      clear_filter: "פינוי המסנן"
+      no_results:
+        title: "אין תוצאות"
+        description_admin_search: "לא מצאנו שום דבר שעונה על ‚%{filter}’."
       collapse_all_sections: "צמצום כל הסעיפים"
       expand_all_sections: "הרחבת כל הסעיפים"
       search: "חיפוש"
@@ -5381,42 +5386,61 @@ he:
     discovery:
       headings:
         all:
-          default: "כל %{filter} הנושאים"
+          latest: "כל הנושאים האחרונים"
+          top: "כל הנושאים המובילים"
+          new: "כל הנושאים החדשים"
+          unread: "כל הנושאים שלא נקראו"
+          unseen: "כל הנושאים שלא נצפו"
+          hot: "כל הנושאים החמים"
           posted: "כל הנושאים שפרסמת בהם"
           bookmarks: "כל הנושאים שהוספת לסימניות"
+          default: "כל %{filter} הנושאים"
         category:
-          default: "%{filter} נושאים ב%{category}"
+          latest: "הנושאים האחרונים ב%{category}"
+          top: "הנושאים המובילים ב%{category}"
+          new: "הנושאים החדשים ב%{category}"
+          unread: "הנושאים שלא נקראו ב%{category}"
+          unseen: "הנושאים שלא נצפו ב%{category}"
+          hot: "נושאים חמים ב%{category}"
           posted: "נושאים ב%{category} שפרסמת בהם"
           bookmarks: "נושאים ב%{category} שהוספת לסימניות"
-        no_tags:
-          all_default: "כל הנושאים ללא תגיות"
-          category_default: "%{filter} נושאים ב%{category} בלי תגיות"
-          all:
-            posted: "כל הנושאים ללא התגיות שפרסמת בהם"
-            bookmarks: "כל הנושאים ללא התגיות שהוספת לסימניות"
-          category:
-            posted: "נושאים ב%{category} ללא תיוג שפרסמת בהם"
-            bookmarks: "נושאים ב%{category} ללא תיוג שהוספת לסימניות"
+          default: "%{filter} נושאים ב%{category}"
         single_tag:
-          default: "%{filter} נושאים עם התיוג %{tag}"
+          latest: "הנושאים העדכניים ביותר עם התיוג %{tag}"
+          top: "נושאים מובילים עם התיוג %{tag}"
+          new: "נושאים חדשים עם התיוג %{tag}"
+          unread: "נושאים שלא נקראו עם התיוג %{tag}"
+          unseen: "נושאים שלא נצפו עם התיוג %{tag}"
+          hot: "נושאים חמים עם התיוג %{tag}"
           posted: "נושאים עם התיוג %{tag} שפרסמת בהם"
           bookmarks: "נושאים עם התיוג %{tag} שהוספת לסימניות"
+          default: "%{filter} נושאים עם התיוג %{tag}"
         multi_tag:
-          default: "%{filter} נושאים עם התיוג %{tags}"
-          posted: "נושאים עם התיוג %{tags} שפרסמת בהם"
-          bookmarks: "נושאים עם התיוג %{tags} שהוספת לסימניות"
+          default: "נושאים שמתויגים ב־%{tags}"
         category_tag:
-          default: "%{filter} נושאים ב%{category} עם התיוג %{tag}"
+          latest: "נושאים עדכניים ב%{category} עם התיוג %{tag}"
+          top: "נושאים מובילים ב%{category} עם התיוג %{tag}"
+          new: "נושאים חדשים ב%{category} עם התיוג %{tag}"
+          unread: "נושאים שלא נקראו ב%{category} עם התיוג %{tag}"
+          unseen: "נושאים שלא נצפו ב%{category} עם התיוג %{tag}"
+          hot: "נושאים חמים ב%{category} עם התיוג %{tag}"
           posted: "נושאים ב%{category} עם התיוג %{tag} שפרסמת בהם"
           bookmarks: "נושאים ב%{category} עם התיוג %{tag} שהוספת לסימניות"
+          default: "%{filter} נושאים ב%{category} עם התיוג %{tag}"
+        no_tags:
+          all:
+            latest: "נושאים עדכניים ללא תיוג"
+            top: "נושאים מובילים ללא תיוג"
+            new: "נושאים חדשים ללא תיוג"
+            unread: "נושאים שלא נקראו ללא תיוג"
+            unseen: "נושאים שלא נצפו ללא תיוג"
+            hot: "נושאים חמים ללא תיוג"
+            posted: "נושאים ללא תיוג שפרסמת בהם"
+            bookmarks: "נושאים ללא תיוג שהוספת לסימניות"
+            default: "נושאים ללא תיוג"
+          category:
+            default: "%{filter} נושאים ב%{category} בלי תגיות"
         categories: "כל הקטגוריות"
-        filter_labels:
-          latest: "אחרונות"
-          top: "מובילים"
-          new: "חדשות"
-          unread: "טרם נקראו"
-          hot: "חמים"
-          unseen: "לא נראו"
   admin_js:
     type_to_filter: "יש להקליד לסינון…"
     settings: "הגדרות"
@@ -6453,8 +6477,6 @@ he:
           more_options:
             title: "אפשרויות נוספות"
         themes_and_components:
-          title: "ערכות עיצוב ורכיבים"
-          description: "התאמת אתר ה־Discourse לטעמך עם ערכות עיצוב ורכיבים שיענו על הצרכים שלך."
           breadcrumb_title: "התאמה אישית"
           install: "התקנה"
           themes:

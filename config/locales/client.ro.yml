@@ -480,7 +480,7 @@ ro:
       few: "Vezi %{count} subiecte noi"
       other: "Vezi %{count} de subiecte noi"
     preview: "previzualizează"
-    cancel: "anulează"
+    cancel: "Anulare"
     save: "Salvează modificări"
     saved: "Salvat!"
     upload: "Încarcă"
@@ -3461,6 +3461,11 @@ ro:
         forum:
           label: Forum
       back_to_forum: "Înapoi la forum"
+      filter_links: "Filtrează legături..."
+      clear_filter: "Elimină filtrul"
+      no_results:
+        title: "Fără rezultate"
+        description_admin_search: "Nu am găsit nimic care să se potrivească cu „%{filter}”."
       collapse_all_sections: "Restrânge toate secțiunile"
       expand_all_sections: "Extinde toate secțiunile"
       search: "Caută"
@@ -3538,13 +3543,9 @@ ro:
     safari_15_warning: "Navigatorul tău va fi în curând incompatibil cu această comunitate. Pentru a continua să participi aici, te rugăm să-ți actualizezi navigatorul sau <a href='%{url}'>să afli mai multe</a>."
     discovery:
       headings:
+        multi_tag:
+          default: "Subiecte etichetate %{tags}"
         categories: "Toate categoriile"
-        filter_labels:
-          latest: "Ultimele"
-          top: "Top"
-          new: "Noi"
-          unread: "Necitite"
-          unseen: "Nevăzute"
   admin_js:
     type_to_filter: "Tastează pentru a filtra…"
     settings: "Opțiuni"

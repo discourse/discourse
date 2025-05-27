@@ -622,17 +622,6 @@ hu:
     until_posts:
       one: "%{count} bejegyzés"
       other: "%{count} bejegyzés"
-    "new-topic": |
-      Üdvözlünk a %{site_name} oldalon! **Köszönjük, hogy új beszélgetést indítaszl!**
-
-      - Érdekesnek tűnik a cím, ha hangosan felolvasod? Jó az összefoglaló?
-
-      - Kit érdekelne ez? Miért számít? Milyen válaszokat szeretnél kapni?
-
-      - Helyezz el a témában gyakran használt, releváns szavakat, hogy mások megtalálhassák. Ha a témát csoportosítani szeretnéd a kapcsolódó témákkal, válassz ki egy kategóriát (vagy címkét).
-
-      További információért lásd [közösségi irányelveinket](%{base_path}/guidelines). Ez a panel csak az első %{education_posts_text} alkalommal jelenik meg.
-    "new-reply": "Üdvözlöm a %{site_name} &mdash; oldalán- **köszönjük a hozzájárulást**\n\n- Legyen kedves a közösség többi tagjához!\n\n- A válasza javítja a beszélgetést?\n\n- Az építő kritikáknak mindig örülünk, de vigyázzon, hogy a *felvetést* kritizálja, ne a hozzászólót. \n\nA szabályzatunkat megtalálja ide kattintva: [közösségi irányelvek](%{base_path}/guidelines). Ez a panel csak az első %{education_posts_text} megírásakor fog megjelenni, utána magától eltűnik.\n"
     avatar: |
       ### Mit szólnál egy képhez a fiókodhoz?
 
@@ -649,17 +638,9 @@ hu:
       Korábbi válaszát úgy szerkesztheti idézet hozzáadásához, hogy kiemeli a szöveget, és kiválasztja a megjelenő <b>quote reply</b> gombot.
 
       Mindenki számára könnyebb elolvasni azokat a témákat, amelyekben kevesebb mélyreható válasz van, mint a sok apró, egyedi válasz.
-    dominating_topic: Sokat írt ebben a témában! Fontolja meg, hogy lehetőséget ad másoknak arra, hogy itt válaszoljanak, és megbeszéljék egymással a dolgokat.
     get_a_room:
       one: 'Egyszer már válaszoltál neki: @%{reply_username} , tudtad, hogy küldhetsz neki személyes üzenetet is?'
       other: 'Már válaszoltál neki: @%{reply_username} , %{count} alkalommal , tudtad, hogy küldhetsz neki személyes üzenetet is?'
-    dont_feed_the_trolls: Ezt a bejegyzést már megjelölték moderátor figyelmébe. Biztos, hogy válaszolni akarsz rá? A negatív tartalomra adott válaszok inkább negatív viselkedésre ösztönöznek.
-    too_many_replies: |
-      ### Elérted a válaszkorlátot ebben a témában
-
-      Sajnáljuk, de az új felhasználók ideiglenesen %{newuser_max_replies_per_topic} válaszra korlátozódnak ugyanabban a témában.
-
-      Új válasz hozzáadása helyett fontold meg korábbi válaszaid szerkesztését vagy más témák felkeresését.
     reviving_old_topic: |
       ### Biztosan fel akarod éleszteni ezt a témát?
 
@@ -2087,7 +2068,6 @@ hu:
     authorized_extensions: "A feltölthető fájlkiterjesztések listája"
     authorized_extensions_for_staff: "A stábtagok számára feltölthető fájlkiterjesztések listája az \"authorized_extensions\" webhelybeállításban meghatározott listán kívül."
     theme_authorized_extensions: "A témafeltöltéseknél engedélyezett fájlkiterjesztések listája"
-    max_similar_results: "Hány hasonló témát mutasson a szerkesztő felett új téma összeállításakor. Az összehasonlítás a címen és a tartalmon alapul."
     max_image_megapixels: "Egy képhez megengedett maximális megapixelszám. A nagyobb megapixelszámú képeket a rendszer elutasítja."
     title_prettify: "Megakadályozza a gyakori címhibákat és elírásokat, beleértve a csupa nagybetűs írást, a kisbetűs kezdést, a többszörös ! és ? jeleket, a felesleges pontot a végén, stb."
     title_remove_extraneous_space: "Szóközök eltávolítása a záró írásjel előtt."
@@ -2687,11 +2667,6 @@ hu:
     errors: "%{errors}"
     not_available: "Nem elérhető. Esetleg %{suggestion}?"
     something_already_taken: "Valami hiba történt, lehet hogy a felhasználónév vagy az e-mail cím már regisztrálva van. Próbálja meg az elfelejtett jelszó hivatkozást."
-    omniauth_error:
-      generic: "Elnézést, hiba történt a fiók engedélyezése során. Kérjük, próbálja meg újra."
-      csrf_detected: "Az engedélyezés időtúllépése lejárt, vagy böngészőt váltott. Kérjük, próbálja újra."
-      request_error: "Hiba történt az engedélyezés elindításakor. Kérjük, próbálja újra."
-      invalid_iat: "Kiszolgálói óra eltérések miatt nem sikerült ellenőrizni az engedélyezési tokent. Kérjük, próbálja meg újra."
     omniauth_error_unknown: "Hiba történt a bejelentkezési adatok feldolgozásakor. Kérjük, próbálja újra."
     omniauth_confirm_title: "Jelentkezzen be a %{provider} használatával"
     omniauth_confirm_button: "Folytatás"
