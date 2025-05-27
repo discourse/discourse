@@ -251,7 +251,7 @@ basic:
       - posted
       - bookmarks
       - hot
-    area: "navigation"
+    area: "interface"
   post_menu:
     client: true
     type: list
@@ -327,12 +327,12 @@ basic:
     client: true
     enum: "CategoryPageStyle"
     default: "categories_and_latest_topics"
-    area: "navigation"
+    area: "interface"
   mobile_category_page_style:
     client: true
     enum: "MobileCategoryPageStyle"
     default: "categories_with_featured_topics"
-    area: "navigation"
+    area: "interface"
   category_colors:
     client: true
     type: list
