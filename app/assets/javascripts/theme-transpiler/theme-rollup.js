@@ -293,7 +293,10 @@ const __COLOCATED_TEMPLATE__ = template;
       return bundle.generate({ format: "es", sourcemap: true });
     })
     .then(({ output }) => (lastRollupResult = output))
-    .catch((error) => (lastRollupError = error));
+    .catch((error) => {
+      console.error(error);
+      lastRollupError = error;
+    });
 };
 
 globalThis.getRollupResult = function () {
