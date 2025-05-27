@@ -513,7 +513,7 @@ import { i18n } from "discourse-i18n";
         await click("#reply-control button.create");
 
         assert
-          .dom(".topic-post:last-of-type .cooked p")
+          .dom(".topic-post:nth-last-child(1 of .topic-post) .cooked p")
           .hasText("this is the updated content of the reply");
       });
 
