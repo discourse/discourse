@@ -198,6 +198,7 @@ el:
       regions:
         ap_northeast_1: "Ασία Ειρηνικός (Τόκιο)"
         ap_northeast_2: "Ασία Ειρηνικός (Σεούλ)"
+        ap_east_1: "Ασία Ειρηνικός (Χονγκ Κονγκ)"
         ap_south_1: "Ασία Ειρηνικός (Mumbai)"
         ap_southeast_1: "Ασία Ειρηνικός (Σιγκαπούρη)"
         ap_southeast_2: "Ασία Ειρηνικός (Σίδνεϊ)"
@@ -429,7 +430,12 @@ el:
         yes_value: "Απόρριψη"
         no_value: "Συνέχιση επεξεργασίας"
       dropdown:
+        title: "Άνοιγμα του μενού των πιο πρόσφατων προσχεδίων"
+        untitled: "Προσχέδιο χωρίς τίτλο"
         view_all: "προβολή όλων"
+        other_drafts:
+          one: "+%{count} ακόμη προσχέδιο"
+          other: "+%{count} ακόμη προσχέδια"
     topic_count_all:
       one: "Δείτε %{count} νέο θέμα"
       other: "Δείτε %{count} νέα θέματα"
@@ -618,6 +624,8 @@ el:
         type: "Αιτία"
         status: "Κατάσταση"
         submitted_by: "Αναφέρθηκε από"
+        reviewed_by: "Αναθεωρήθηκε από"
+        reviewed_timestamp: "Ημερομηνία αναθεώρησης"
       statuses:
         pending:
           title: "Εκκρεμή"
@@ -1442,6 +1450,7 @@ el:
         approval_required: "Ένας συντονιστής θα πρέπει να εγκρίνει το νέο σας λογαριασμό πριν αποκτήσετε πρόσβαση στην ιστοσελίδα. Θα λάβετε ένα email όταν ο λογαριασμός σας εγκριθεί!"
       name:
         title: "Όνομα"
+        title_optional: "Όνομα (προαιρετικό)"
         instructions: "Το ονοματεπώνυμό σου (προαιρετικό)"
         instructions_required: "Το ονοματεπώνυμό σου"
         required: "Παρακαλώ εισαγάγετε ένα όνομα"
@@ -1495,6 +1504,7 @@ el:
       location: "Τοποθεσία"
       website: "Ιστοσελίδα"
       email_settings: "Email"
+      hide_profile: "Απόκρυψη του δημόσιου προφίλ μου"
       enable_physical_keyboard: "Ενεργοποιήστε την υποστήριξη φυσικού πληκτρολογίου στο iPad"
       text_size:
         title: "Μέγεθος κειμένου"
@@ -1617,6 +1627,7 @@ el:
           copy_link: "Αντιγραφή συνδέσμου"
           link_copied: "Ο σύνδεσμος αντιγράφηκε!"
           share_link: "Κοινοποίηση συνδέσμου"
+          edit_link_options: "Επεξεργαστείτε τις επιλογές σύνδεσης ή στείλτε την μέσω email."
           show_advanced: "Εμφάνιση Προχωρημένων Επιλογών"
           hide_advanced: "Απόκρυψη Προχωρημένων Επιλογών"
           restrict: "Περιορισμός σε"
@@ -1629,10 +1640,14 @@ el:
           expires_at: "Λήγει στις"
           expires_after: "Λήγει μετά από"
           custom_message: "Προσαρμοσμένο μήνυμα"
+          custom_message_placeholder: "Προσθέστε μια προσωπική σημείωση στην πρόσκλησή σας"
           send_invite_email: "Αποθήκευση και Αποστολή email"
           send_invite_email_instructions: "Περιορισμός πρόσκλησης σε email για αποστολή email πρόσκλησης"
           update_invite: "Ενημέρωση"
+          update_invite_and_send_email: "Ενημέρωση και αποστολή email"
           cancel: "Ακύρωση"
+          create_link: "Δημιουργία συνδέσμου"
+          create_link_and_send_email: "Δημιουργία συνδέσμου και αποστολή email"
         bulk_invite:
           none: "Δεν υπάρχουν προσκλήσεις για εμφάνιση σε αυτή τη σελίδα."
           text: "Μαζική πρόσκληση"

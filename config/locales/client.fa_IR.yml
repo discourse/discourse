@@ -160,6 +160,8 @@ fa_IR:
       removed_user: "%{who} در %{when} حذف شد"
       removed_group: "%{who} در %{when} حذف شد"
       autobumped: "این مطلب %{when} به صدر مطالب آورده شد."
+      tags_changed: "برچسب‌ها به‌روزرسانی شدند %{when}"
+      category_changed: "دسته‌بندی به‌روزرسانی شد %{when}"
       autoclosed:
         enabled: "در %{when} بسته شد"
         disabled: "در %{when} باز شد"
@@ -4645,6 +4647,9 @@ fa_IR:
               title: "فهرست همه‌ی کاربران"
             my_posts:
               content: "نوشته‌های من"
+              content_drafts: "پیش‌نویس‌های من"
+              title: "فعالیت اخیر موضوع‌های من"
+              title_drafts: "پیش‌نویس‌های ارسال‌نشده‌ی من"
               draft_count:
                 one: "%{count} پیش‌نویس"
                 other: "%{count} پیش‌نویس"
@@ -4804,7 +4809,7 @@ fa_IR:
           title: "حقوقی"
           header_description: "تنظیمات قانونی، مانند شرایط خدمات، خط مشی رازداری، جزئیات تماس و ملاحظات خاص اتحادیه اروپا را پیکربندی کنید"
         localization:
-          title: "بومی‌سازی"
+          title: "محلی‌سازی"
           header_description: "زبان رابط انجمن خود و سایر گزینه‌های محلی سازی را برای اعضای خود پیکربندی کنید"
         login_and_authentication:
           title: "ورود و احراز هویت"
@@ -5329,7 +5334,7 @@ fa_IR:
           users: "کاربران"
           groups: "گروه‌ها"
           localization:
-            title: "بومی‌سازی"
+            title: "محلی‌سازی"
             keywords: "محل|زبان|منطقه زمانی|یونیکد|ltr"
           user_fields: "فیلدهای کاربر"
           watched_words: "کلمات تماشا شده"
