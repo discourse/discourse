@@ -40,6 +40,13 @@ export default class AboutPageExtraGroups extends Component {
         this.siteSettings.about_page_extra_groups_order === "order of creation"
       ) {
         groupsToFetch.sort((a, b) => a.id - b.id);
+      } else if (
+        this.siteSettings.about_page_extra_groups_order ===
+        "order of theme setting"
+      ) {
+        groupsToFetch.sort(
+          (a, b) => groupsSetting.indexOf(a.id) - groupsSetting.indexOf(b.id)
+        );
       }
 
       const groupPromises = groupsToFetch.map(async (group) => {
