@@ -233,7 +233,7 @@ export default RouteTemplate(
                   <a
                     href
                     {{on "click" @controller.editTopic}}
-                    class="edit-topic"
+                    class="edit-topic btn btn-default no-text"
                     title={{i18n "edit_topic"}}
                   >{{icon "pencil"}}</a>
                 {{/if}}

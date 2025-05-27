@@ -22,6 +22,16 @@
     color: var(--primary-med-or-secondary-med);
     font-size: 0.857rem;
   }
+
+  .edit-topic {
+    visibility: hidden;
+  }
+
+  &:hover {
+    .edit-topic {
+      visibility: visible;
+    }
+  }
 }
 
 #topic-filter {
