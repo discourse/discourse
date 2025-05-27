@@ -271,8 +271,11 @@ export default class PostStream extends Component {
   unregisterPostNode(element) {
     delete element[POST_MODEL];
 
-    this.#cloakingObserver?.unobserve(element);
-    this.#viewportObserver?.unobserve(element);
+    if (this.observedPostNodes.has(element)) {
+      this.observedPostNodes.delete(element);
+      this.#cloakingObserver?.unobserve(element);
+      this.#viewportObserver?.unobserve(element);
+    }
   }
 
   @bind
