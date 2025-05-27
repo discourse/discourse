@@ -222,23 +222,20 @@ export default RouteTemplate(
                 {{#if @controller.model.details.loaded}}
                   <TopicStatus @topic={{@controller.model}} />
 
-                  {{#if @controller.model.details.can_edit}}
-                    <a
-                      href
-                      {{on "click" @controller.editTopic}}
-                      class="fancy-title"
-                    >
-                      {{htmlSafe @controller.model.fancyTitle}}
-                    </a>
-                  {{else}}
-                    <a
-                      href={{@controller.model.url}}
-                      {{on "click" @controller.jumpTop}}
-                      class="fancy-title"
-                    >
-                      {{htmlSafe @controller.model.fancyTitle}}
-                    </a>
-                  {{/if}}
+                  <a
+                    href={{@controller.model.url}}
+                    {{on
+                      "click"
+                      (if
+                        @controller.model.details.can_edit
+                        @controller.editTopic
+                        @controller.jumpTop
+                      )
+                    }}
+                    class="fancy-title"
+                  >
+                    {{htmlSafe @controller.model.fancyTitle}}
+                  </a>
                 {{/if}}
 
                 {{#if @controller.model.details.can_edit}}
