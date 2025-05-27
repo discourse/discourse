@@ -37,6 +37,7 @@ import TopicTimerInfo from "discourse/components/topic-timer-info";
 import TopicTitle from "discourse/components/topic-title";
 import ageWithTooltip from "discourse/helpers/age-with-tooltip";
 import bodyClass from "discourse/helpers/body-class";
+import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import htmlSafe from "discourse/helpers/html-safe";
@@ -244,7 +245,13 @@ export default RouteTemplate(
                   <a
                     href
                     {{on "click" @controller.editTopic}}
-                    class="edit-topic btn btn-default no-text"
+                    class={{concatClass
+                      "edit-topic"
+                      "btn"
+                      "btn-default"
+                      "no-text"
+                      (if @controller.site.mobileView "btn-transparent")
+                    }}
                     title={{i18n "edit_topic"}}
                   >{{icon "pencil"}}</a>
                 {{/if}}
