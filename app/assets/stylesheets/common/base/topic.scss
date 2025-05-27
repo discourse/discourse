@@ -191,7 +191,7 @@
       width: 100%;
     }
 
-    html.discourse-touch {
+    html.discourse-no-touch & {
       .edit-topic {
         opacity: 0;
         transition: opacity 0.15s linear;
