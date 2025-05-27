@@ -191,6 +191,19 @@
       width: 100%;
     }
 
+    @media (hover: hover) {
+      .edit-topic {
+        opacity: 0;
+        transition: opacity 0.15s linear;
+      }
+
+      &:hover {
+        .edit-topic {
+          opacity: 1;
+        }
+      }
+    }
+
     @include viewport.until(sm) {
       .topic-category {
         margin-top: 0.25em;
