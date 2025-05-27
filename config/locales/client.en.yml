@@ -3924,6 +3924,7 @@ en:
           other: "View %{count} translated locales"
         modal:
           title: "Translations for post"
+          confirm_delete: "Are you sure you want to delete translations for '%{languageCode}'?"
         success: "Translations have been updated successfully"
 
       errors:

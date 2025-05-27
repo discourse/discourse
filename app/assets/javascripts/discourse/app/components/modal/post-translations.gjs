@@ -16,6 +16,7 @@ export default class PostTranslationsModal extends Component {
   @service composer;
   @service currentUser;
   @service siteSettings;
+  @service dialog;
 
   @tracked postLocalizations = null;
   @tracked loading = false;
@@ -87,6 +88,18 @@ export default class PostTranslationsModal extends Component {
     }
   }
 
+  @action
+  delete(locale) {
+    return this.dialog.yesNoConfirm({
+      message: i18n("post.localizations.modal.confirm_delete", {
+        languageCode: locale,
+      }),
+      didConfirm: () => {
+        return this.deleteLocalization(locale);
+      },
+    });
+  }
+
   <template>
     <DModal
       @title={{i18n "post.localizations.modal.title"}}
@@ -123,7 +136,7 @@ export default class PostTranslationsModal extends Component {
                       class="btn-danger btn-transparent"
                       @icon="trash-can"
                       @label="post.localizations.table.delete"
-                      @action={{fn this.deleteLocalization localization.locale}}
+                      @action={{fn this.delete localization.locale}}
                     />
                   </td>
                 </tr>

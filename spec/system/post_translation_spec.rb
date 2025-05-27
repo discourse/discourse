@@ -71,6 +71,7 @@ describe "Post translations", type: :system do
     fab!(:post_localization) do
       Fabricate(:post_localization, post: post, locale: "fr", raw: "Bonjour le monde")
     end
+    let(:confirmation_dialog) { PageObjects::Components::Dialog.new }
 
     it "allows a user to add a new translation" do
       topic_page.visit_topic(topic)
@@ -141,6 +142,8 @@ describe "Post translations", type: :system do
       find("#post_#{post.post_number} .post-action-menu-edit-translations-trigger").click
       find(".post-action-menu__view-translation").click
       find(".post-translations-modal__delete-action .btn").click
+      expect(confirmation_dialog).to be_open
+      confirmation_dialog.click_yes
 
       post.reload
       topic.reload
