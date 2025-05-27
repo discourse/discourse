@@ -88,7 +88,7 @@ export default class FutureDateInput extends Component {
       return {
         id: s.id,
         name: i18n(s.label),
-        time: s.time,
+        time: s.timeFn?.(),
         timeFormatted: formatTime(s),
         icon: s.icon,
       };
