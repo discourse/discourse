@@ -35,7 +35,6 @@
   flex-direction: column;
   background-color: var(--secondary);
   position: relative;
-  border: 1px solid var(--primary-400);
   border-radius: var(--d-input-border-radius);
   min-height: 0;
 
@@ -319,21 +318,25 @@
 
 // d-editor bar button sizing
 .d-editor-button-bar {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(2.35em, 1fr));
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
   align-items: center;
-  border-bottom: 1px solid var(--primary-low);
-  width: 100%;
-  box-sizing: border-box;
-  flex-shrink: 0;
+  margin-top: 0.25rem;
 
-  @include viewport.until(md) {
-    // occupy available space on narrower screens
-    grid-template-columns: repeat(auto-fit, minmax(2em, 1fr));
+  .composer-toggle-switch {
+    min-width: 3.35em;
+    height: 2.2rem;
   }
 
-  @include viewport.until(sm) {
-    font-size: var(--font-down-1);
+  @include viewport.until(md) {
+    .composer-toggle-switch {
+      min-width: 3.5rem;
+    }
+
+    .btn {
+      min-width: 2.5rem;
+    }
   }
 
   .btn:focus-visible {
@@ -341,10 +344,13 @@
   }
 
   .btn {
+    min-width: 2.35em;
+    height: 2.2rem;
     margin: 0;
     background-color: transparent;
     color: var(--primary-medium);
     border-radius: var(--d-border-radius);
+    transition: background-color 0.2s ease;
 
     .d-icon {
       color: currentcolor;
@@ -352,8 +358,16 @@
 
     .discourse-no-touch & {
       &:hover {
-        color: var(--primary-low);
+        background-color: var(--primary-low);
+
+        .d-icon {
+          color: var(--primary-medium);
+        }
       }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      transition-duration: 0ms;
     }
   }
 
