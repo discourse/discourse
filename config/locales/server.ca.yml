@@ -351,12 +351,6 @@ ca:
       Podeu editar la vostra darrera resposta per a afegir una citació. Per a fer-ho, seleccioneu text i premeu el botó de <b>cita resposta</b> que apareixerà.
 
       És més fàcil seguir un tema quan té poques respostes en profunditat que no pas moltes respostes curtes i individuals.
-    too_many_replies: |
-      ### Heu assolit el límit de respostes per a aquest tema
-
-      Ho sentim, però els usuaris nous estan temporalment limitats a %{newuser_max_replies_per_topic} respostes al mateix tema.
-
-      En comptes d'afegir-hi una altra resposta, considereu l'edició de les respostes prèvies o visiteu altres temes.
     reviving_old_topic: |
       ### Voleu revifar aquest tema?
 
@@ -1375,7 +1369,6 @@ ca:
     min_title_similar_length: "Longitud mínima d'un títol abans que sigui consultat per a temes semblants."
     category_colors: "Llista de valors de color hexadecimal permesos per a categories."
     dark_mode_none: "Cap"
-    max_similar_results: "Quants temes semblants es mostren per damunt de l'editor quan es redacta un tema nou. La comparació es basa en el títol i el cos."
     max_image_megapixels: "Nombre màxim de megapíxels permesos en una imatge. Es rebutjaran les imatges amb un nombre més alt de megapíxels. "
     title_prettify: "Evita errades tipogràfiques freqüents en el títol, incloent-hi tot en majúscula, primer caràcter en minúscula, exclamacions i interrogants múltiples, punts extres al final, etc."
     title_remove_extraneous_space: "Elimina els espais blancs de davant de la puntuació final."
@@ -1727,11 +1720,6 @@ ca:
     errors: "%{errors}"
     not_available: "No disponible. Proveu: %{suggestion}"
     something_already_taken: "Alguna cosa ha anat malament. Potser el nom d'usuari o l'adreça de correu ja han estat registrats. Proveu l'enllaç de contrasenya oblidada."
-    omniauth_error:
-      generic: "Ho sentim, s'ha produït un error en autoritzar el vostre compte. Torneu a intentar-ho."
-      csrf_detected: "L'autorització ha esgotat el temps o heu canviat de navegador. Torneu a intentar-ho."
-      request_error: "S'ha produït un error en iniciar l'autorització. Torneu-ho a provar."
-      invalid_iat: "No es pot verificar el testimoni d'autorització a causa de les diferències del rellotge del servidor. Torneu a intentar-ho."
     omniauth_confirm_title: "Inici de sessió mitjançant %{provider}"
     omniauth_confirm_button: "Continua"
     authenticator_error_no_valid_email: "No es permeten adreces de correu associades amb %{account}. Potser us cal configurar el compte amb una adreça de correu diferent."

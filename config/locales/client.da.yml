@@ -440,7 +440,7 @@ da:
       one: "Se %{count} nyt emne"
       other: "Se %{count} nye emner"
     preview: "forhåndsvising"
-    cancel: "annuller"
+    cancel: "Annuller"
     deleting: "Sletter…"
     save: "Gem ændringer"
     saving: "Gemmer…"
@@ -4014,6 +4014,9 @@ da:
         forum:
           label: Forum
       back_to_forum: "Tilbage til Forum"
+      clear_filter: "Ryd filter"
+      no_results:
+        title: "Ingen resultater"
       collapse_all_sections: "Sammenfold alle sektioner"
       expand_all_sections: "Udvid alle sektioner"
       search: "Søg"
@@ -4070,13 +4073,9 @@ da:
     powered_by_discourse: "Drevet af Discourse"
     discovery:
       headings:
+        multi_tag:
+          default: "Emner tagget %{tags}"
         categories: "Alle kategorier"
-        filter_labels:
-          latest: "Seneste"
-          top: "Top"
-          new: "Nye"
-          unread: "Ulæste"
-          unseen: "Usete"
   admin_js:
     type_to_filter: "Skriv for at filtrere…"
     settings: "Indstillinger"
@@ -4200,8 +4199,6 @@ da:
           title: "Temaer"
         components:
           title: "komponenter"
-        themes_and_components:
-          title: "Temaer og komponenter"
         email:
           sub_pages:
             server_settings:

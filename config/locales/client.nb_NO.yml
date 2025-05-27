@@ -458,7 +458,7 @@ nb_NO:
       one: "Se %{count} nytt emne"
       other: "Se %{count} nye emner"
     preview: "forhåndsvisning"
-    cancel: "avbryt"
+    cancel: "Avbryt"
     deleting: "forhåndsvisning"
     save: "Lagre endringer"
     saving: "Lagrer…"
@@ -4370,12 +4370,6 @@ nb_NO:
     discovery:
       headings:
         categories: "Alle kategorier"
-        filter_labels:
-          latest: "Siste"
-          top: "Aktive"
-          new: "Ny"
-          unread: "Uleste"
-          unseen: "Usette"
   admin_js:
     type_to_filter: "Skriv for å filtrere…"
     settings: "Instillinger"

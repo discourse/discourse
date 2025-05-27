@@ -348,7 +348,7 @@ ca:
       one: "Vegeu %{count} tema nou"
       other: "Vegeu %{count} temes nous"
     preview: "previsualitza"
-    cancel: "cancel·la"
+    cancel: "Cancel·la"
     save: "Desa els canvis"
     saved: "Desat!"
     upload: "Carrega"
@@ -2991,12 +2991,9 @@ ca:
         about: "Quant a"
     discovery:
       headings:
+        multi_tag:
+          default: "Temes etiquetats amb %{tags}"
         categories: "Totes les categories"
-        filter_labels:
-          latest: "Més recents"
-          top: "Principals"
-          new: "Nou"
-          unread: "No llegits"
   admin_js:
     settings: "Configuració"
     admin:

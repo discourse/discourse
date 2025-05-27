@@ -479,7 +479,7 @@ sq:
       one: "Shikoni %{count} temë të re"
       other: "Shikoni %{count} tema të reja"
     preview: "shiko"
-    cancel: "anulo"
+    cancel: "Anulo"
     deleting: "Po fshihet…"
     save: "Ruaj ndryshimet"
     saving: "Po ruhet..."
@@ -3982,12 +3982,6 @@ sq:
     discovery:
       headings:
         categories: "Të gjitha kategoritë"
-        filter_labels:
-          latest: "Më të fundit"
-          top: "Popullore"
-          new: "I Ri"
-          unread: "Të palexuara"
-          unseen: "E padukshme"
   admin_js:
     settings: "Rregullimet"
     admin:

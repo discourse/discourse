@@ -611,26 +611,6 @@ it:
     until_posts:
       one: "%{count} messaggio"
       other: "%{count} messaggi"
-    "new-topic": |
-      Benvenuto in %{site_name} &mdash; **grazie per aver iniziato una nuova conversazione!**
-
-      - Il titolo sembra interessante se lo leggi ad alta voce? È una buona sintesi?
-
-      - Chi sarebbe interessato a questo argomento? Perché è importante? Che tipo di risposte vuoi?
-
-      - Includi le parole comunemente usate nel tuo argomento in modo che gli altri possano *trovarlo*. Per raggruppare il tuo argomento con argomenti correlati, seleziona una categoria (o un'etichetta).
-
-      Per ulteriori informazioni, [vedi le linee guida della nostra comunità](%{base_path}/guidelines). Questo pannello apparirà solo per il tuo primo %{education_posts_text}.
-    "new-reply": |
-      Benvenuti a %{site_name} &mdash; **grazie per aver contribuito!**
-
-      - Sii gentile con i membri della tua comunità.
-
-      - La tua risposta migliora la conversazione?
-
-      - La critica costruttiva è benvenuta, ma critica le idee*, non le persone.
-
-      Per ulteriori informazioni, [vedi le nostre linee guida della comunità](%{base_path}/guidelines). Questo pannello apparirà solo per il primo %{education_posts_text}.
     avatar: |
       ### Che ne dici di aggiungere un'immagine al tuo account?
 
@@ -647,17 +627,9 @@ it:
       Puoi modificare la risposta precedente per aggiungere una citazione evidenziando il testo e selezionando il pulsante <b>Cita</b> che comparirà.
 
       E' più facile per chiunque leggere argomenti che hanno poche risposte ma più dettagliate, rispetto a molte brevi risposte singole.
-    dominating_topic: Hai pubblicato molte volte in questo argomento! Prendi in considerazione l'idea di dare ad altri l'opportunità di rispondere qui e discutere anche tra loro.
     get_a_room:
       one: Abbiamo notato che hai già risposto una volta a @%{reply_username}. Sapevi che puoi anche scambiare messaggi personali con questa persona?
       other: Abbiamo notato che hai già risposto %{count} volte a @%{reply_username}. Sapevi che puoi anche scambiare messaggi personali con questa persona?
-    dont_feed_the_trolls: Questo messaggio è già stato segnalato all'attenzione del moderatore. Vuoi davvero rispondere? Le risposte a contenuti negativi tendono a incoraggiare altri comportamenti negativi.
-    too_many_replies: |
-      ### Hai raggiungo il limite di risposte per questo argomento
-
-      Spiacenti, ma i nuovi utenti hanno un limite temporaneo di %{newuser_max_replies_per_topic} risposte nello stesso argomento.
-
-      Invece di aggiungere un'altra risposta, per favore valuta la possibilità di modificare le tue precedenti risposte o di visitare altri argomenti.
     reviving_old_topic: |
       ### Vuoi riportare in vita questo argomento?
 
@@ -2078,7 +2050,6 @@ it:
     authorized_extensions: "Un elenco di estensioni di file consentite per il caricamento"
     authorized_extensions_for_staff: "Un elenco di estensioni di file consentite per il caricamento da parte dello staff in aggiunta all'elenco definito nell'impostazione del sito `authorized_extensions`."
     theme_authorized_extensions: "Un elenco di estensioni di file consentite per i caricamenti di temi"
-    max_similar_results: "Quanti argomenti simili mostrare sopra l'editor quando si scrive un nuovo argomento. Il paragone viene fatto sul titolo e sul corpo."
     max_image_megapixels: "Numero massimo di megapixel consentiti per un'immagine. Le immagini con un numero maggiore di megapixel verranno rifiutate."
     title_prettify: "Evita refusi ed errori comuni nei titoli, incluso il testo tutto maiuscolo, il primo carattere minuscolo, troppi caratteri ! e ?, puntini aggiuntivi alla fine della parola ecc."
     title_remove_extraneous_space: "Rimuovi gli spazi bianchi davanti alla punteggiatura."
@@ -2667,11 +2638,6 @@ it:
     errors: "%{errors}"
     not_available: "Non disponibile. Provare %{suggestion}?"
     something_already_taken: "Qualcosa è andato storto, forse il nome utente o l'email sono già registrati. Prova a recuperare la password."
-    omniauth_error:
-      generic: "Siamo spiacenti, c'è stato un errore durante l'autorizzazione del tuo account. Per favore riprova."
-      csrf_detected: "L'autorizzazione è scaduta, o hai cambiato browser. Per favore riprova."
-      request_error: "Si è verificato un errore durante l'avvio dell'autorizzazione. Riprova."
-      invalid_iat: "Impossibile verificare il token di autorizzazione a causa della differenza di orario dei server. Per favore riprova."
     omniauth_error_unknown: "Si è verificato un errore durante l'accesso, riprova."
     omniauth_confirm_title: "Accedi usando %{provider}"
     omniauth_confirm_button: "Continua"

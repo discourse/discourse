@@ -4412,6 +4412,9 @@ ja:
         forum:
           label: フォーラム
       back_to_forum: "フォーラムに戻る"
+      clear_filter: "フィルタをクリア"
+      no_results:
+        title: "結果がありません"
       collapse_all_sections: "すべてのセクションを折りたたむ"
       expand_all_sections: "すべてのセクションを展開"
       search: "検索"
@@ -4518,14 +4521,9 @@ ja:
     powered_by_discourse: "Discourse 提供"
     discovery:
       headings:
+        multi_tag:
+          default: "%{tags} がタグ付けされたトピック"
         categories: "すべてのカテゴリ"
-        filter_labels:
-          latest: "最新"
-          top: "人気"
-          new: "新規"
-          unread: "未読"
-          hot: "ホット"
-          unseen: "未読"
   admin_js:
     type_to_filter: "入力してフィルタ..."
     settings: "設定"

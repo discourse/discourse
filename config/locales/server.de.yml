@@ -623,26 +623,6 @@ de:
     until_posts:
       one: "%{count} Beitrag"
       other: "%{count} Beiträge"
-    "new-topic": |
-      Willkommen bei %{site_name} &mdash; **danke für das Erstellen eines neuen Themas!**
-
-      - Klingt der Titel interessant, wenn du ihn laut liest? Ist er eine gute Zusammenfassung?
-
-      - Wer würde sich für dieses Thema interessieren? Warum ist es wichtig? Welche Art von Antworten wünschst du dir?
-
-      - Verwende gebräuchliche Wörter, damit andere das Thema *finden* können. Wähle eine Kategorie (oder ein Schlagwort), um es mit ähnlichen Themen zu gruppieren.
-
-      Mehr Tipps findest du in [unseren Community-Richtlinien](%{base_path}/guidelines). Dieses Panel wird nur bei deinen ersten %{education_posts_text} angezeigt.
-    "new-reply": |
-      Willkommen bei %{site_name} &mdash; **danke für deinen Beitrag!**
-
-      - Sei nett zu deinen Community-Mitgliedern.
-
-      - Verbessert dein Beitrag das Gespräch?
-
-      - Konstruktive Kritik ist erwünscht, aber kritisiere *Ideen*, nicht Menschen.
-
-      Beachte bitte auch [unsere Community-Richtlinien](%{base_path}/guidelines). Dieser Hilfetext wird nur bei deinen ersten %{education_posts_text} angezeigt.
     avatar: |
       ### Wie wärs mit einem Bild für dein Konto?
 
@@ -659,17 +639,9 @@ de:
       Du kannst deine letzte Antwort bearbeiten, um ein Zitat hinzuzufügen, indem du den Text auswählst und auf die erscheinende Schaltfläche <b>Zitat</b> klickst.
 
       Es ist für alle einfacher, Themen zu lesen, die wenige umfassende Antworten statt viele kleine und einzelne Antworten haben.
-    dominating_topic: Du hast in diesem Thema schon eine Menge gepostet! Gib doch auch anderen die Möglichkeit, hier zu antworten und miteinander zu diskutieren.
     get_a_room:
       one: Du hast @%{reply_username} einmal geantwortet. Wusstest du, dass du der Person stattdessen eine persönliche Nachricht schicken kannst?
       other: Du hast @%{reply_username} %{count} Mal geantwortet. Wusstest du, dass du der Person stattdessen eine persönliche Nachricht schicken kannst?
-    dont_feed_the_trolls: Dieser Beitrag wurde bereits für die Moderation gemeldet. Bist du sicher, dass du darauf antworten möchtest? Antworten auf negative Inhalte ermutigen eher zu noch mehr negativem Verhalten.
-    too_many_replies: |
-      ### Du hast das Antwort-Limit für dieses Thema erreicht
-
-      Entschuldige, aber neue Benutzer sind vorübergehend auf %{newuser_max_replies_per_topic} Antworten im selben Thema beschränkt.
-
-      Anstatt eine weitere Antwort hinzuzufügen, denke darüber nach, deine vorherigen Antworten zu bearbeiten oder andere Themen zu besuchen.
     reviving_old_topic: |
       ### Thema neu beleben?
 
@@ -2097,7 +2069,6 @@ de:
     authorized_extensions: "Eine Liste der zulässigen Dateierweiterungen für Uploads"
     authorized_extensions_for_staff: "Eine Liste der Dateierweiterungen, die für Uploads von Team-Mitgliedern zulässig sind (gilt zusätzlich zu der in der Website-Einstellung `authorized_extensions` definierten Liste)."
     theme_authorized_extensions: "Eine Liste der erlaubten Dateierweiterungen für Themen-Uploads"
-    max_similar_results: "Anzahl ähnlicher Themen, die beim Erstellen eines neuen Themas über dem Editor angezeigt werden. Ähnlichkeit wird anhand des Titels und Inhalts bestimmt."
     max_image_megapixels: "Maximal zulässige Anzahl von Megapixeln für ein Bild. Bilder mit einer höheren Anzahl von Megapixeln werden abgelehnt."
     title_prettify: "Verhindert gängige Fehler im Titel, z. B. reine Großschreibung, Kleinbuchstaben am Anfang, mehrere ! und ?, überflüssiger . am Ende usw."
     title_remove_extraneous_space: "Entferne führende Leerzeichen vor dem Satzzeichen am Ende."
@@ -2496,6 +2467,8 @@ de:
     experimental_content_localization: "Zeigt lokalisierte Inhalte basierend auf den Spracheinstellungen der Benutzer an. Diese Inhalte können Kategorien, Schlagwörter, Beiträge und Themen umfassen. Diese Funktion wird derzeit intensiv entwickelt."
     rich_editor: "Aktiviere den Rich-Text-Editor, damit alle Benutzer zwischen dem aktuellen Markdown-Modus und dem neuen Rich-Text-Editor für intuitiveres und benutzerfreundlicheres Verfassen wechseln können. Der Rich-Text-Editor befindet sich in der Entwicklung, daher werden noch nicht alle Funktionen unterstützt — <a href='https://meta.discourse.org/t/test-our-new-composer/352347' target='_blank'>siehe Meta für weitere Details</a>."
     experimental_content_localization_allowed_groups: 'Gruppen, die lokalisierte Inhalte aktualisieren dürfen. Erfordert, dass die „experimental content localization“ aktiviert ist.'
+    experimental_content_localization_supported_locales: "Liste der unterstützten Gebietsschemas für die Aktualisierung der lokalisierten Inhalte"
+    viewport_based_mobile_mode: "EXPERIMENTELL: Deaktiviere die User-Agent-basierten Mobil-/Desktop-Modi und verwende stattdessen die Viewport-Breite."
     errors:
       invalid_css_color: "Ungültige Farbe. Gib einen Farbnamen oder einen Hexadezimalwert ein."
       invalid_email: "Ungültige E-Mail-Adresse."
@@ -2707,10 +2680,10 @@ de:
     not_available: "Nicht verfügbar. Wie wäre es mit %{suggestion}?"
     something_already_taken: "Etwas ist schiefgelaufen. Vielleicht ist dieser Benutzername oder diese E-Mail-Adresse bereits registriert. Versuche es mit dem „Passwort vergessen“-Link."
     omniauth_error:
-      generic: "Entschuldige, bei der Authentifizierung deines Kontos ist ein Fehler aufgetreten. Versuche es bitte noch einmal."
-      csrf_detected: "Authentifizierung abgelaufen oder Browser gewechselt. Versuche es bitte noch einmal."
-      request_error: "Beim Start der Authentifizierung ist ein Fehler aufgetreten. Versuche es bitte noch einmal."
-      invalid_iat: "Authentifizierungstoken kann wegen Differenzen der Server-Uhrzeit nicht geprüft werden. Versuch es bitte noch einmal."
+      generic: "Bei der Autorisierung deines Kontos mit %{provider} ist leider ein Fehler aufgetreten. Bitte versuche es erneut."
+      csrf_detected: "Die Autorisierung ist leider abgelaufen oder du hast den Browser gewechselt. Bitte versuche es erneut."
+      request_error: "Beim Start der Autorisierung ist leider ein Fehler aufgetreten. Bitte versuche es erneut."
+      invalid_iat: "Das Autorisierungstoken kann wegen unterschiedlicher Server-Uhrzeiten leider nicht geprüft werden. Bitte versuche es erneut."
     omniauth_error_unknown: "Bei der Verarbeitung deiner Anmeldung ist etwas schiefgelaufen, bitte versuche es noch einmal."
     omniauth_confirm_title: "Anmeldung per %{provider}"
     omniauth_confirm_button: "Weiter"
@@ -5268,6 +5241,9 @@ de:
       approve_and_restore:
         title: "Beitrag genehmigen und wiederherstellen"
         complete: "Beitrag genehmigt und wiederhergestellt."
+      approve_and_unhide:
+        title: "Beitrag genehmigen und nicht länger verstecken"
+        complete: "Beitrag genehmigt und wieder sichtbar gemacht"
       delete_user:
         reason: "Gelöscht via Warteschlange zur Überprüfung"
         complete: "Benutzer gelöscht."

@@ -576,26 +576,6 @@ zh_CN:
   education:
     until_posts:
       other: "%{count} 个帖子"
-    "new-topic": |
-      欢迎加入 %{site_name} &mdash; **感谢您开始新对话**！
-
-      - 如果您大声朗读出标题，听起来有趣吗？能否很好地概括内容？
-
-      - 谁会对此感兴趣？为什么会感兴趣？您想得到怎样的回应？
-
-      - 在您的话题中包含常用词，以便其他人能够“找到”它。要将您的话题与相关话题并为一组，请选择一个类别（或标签）。
-
-      有关详情，[请参阅我们的社区准则](%{base_path}/guidelines)。此面板仅在您的前 %{education_posts_text}出现。
-    "new-reply": |
-      欢迎加入 %{site_name} &mdash; **感谢您的贡献**！
-
-      - 请对其他社区成员保持友善。
-
-      - 您的回复是否有益于交流？
-
-      - 欢迎有建设性的批评，但是请对事不对人。
-
-      有关详情，[请参阅我们的社区准则](%{base_path}/guidelines)。此面板仅在您的前 %{education_posts_text}出现。
     avatar: |
       ### 想更改您的头像吗？
 
@@ -612,16 +592,8 @@ zh_CN:
       您可以突出显示文本并选择出现的<b>引用回复</b>按钮，对您之前的回复进行编辑以添加引用。
 
       这样，每个人都可以更轻松地阅读具有少量嵌套回复的话题，而不是查看大量的个别回复。
-    dominating_topic: 您在此话题中发布了很多内容！考虑一下让其他人有机会在这里进行回复并互相讨论。
     get_a_room:
       other: 您已回复 @%{reply_username} %{count} 次，您知道您可以向他们发送个人消息吗？
-    dont_feed_the_trolls: 此帖子已被标记为需要版主关注。确定要回复它吗？对负面内容的回复往往会鼓励更多的负面行为。
-    too_many_replies: |
-      ### 您已达到此话题的回复上限
-
-      抱歉，但新用户被暂时限制为只能在同一个话题中回复 %{newuser_max_replies_per_topic} 次。
-
-      与其添加另一个回复，不如考虑编辑您以前的回复，或访问其他话题。
     reviving_old_topic: |
       ### 复活此话题？
 
@@ -2021,7 +1993,6 @@ zh_CN:
     authorized_extensions: "可以上传的文件扩展名列表"
     authorized_extensions_for_staff: "除了在 `authorized_extensions` 网站设置中定义的列表外，管理人员用户可以上传的文件扩展名列表。"
     theme_authorized_extensions: "上传主题时允许使用的文件扩展名列表"
-    max_similar_results: "撰写新话题时，在编辑器上方显示的类似话题数。比较基于标题和正文。"
     max_image_megapixels: "图片允许的最大百万像素数。具有更高百万像素数的图片将被拒绝。"
     title_prettify: "防止常见的标题拼写错误和错误，包括全部大写、第一个字符小写、多个 ! 和 ?、结尾出现额外的 . 等。"
     title_remove_extraneous_space: "移除末尾标点符号前面的前导空格。"
@@ -2603,11 +2574,6 @@ zh_CN:
     errors: "%{errors}"
     not_available: "不可用，试试 %{suggestion}？"
     something_already_taken: "出了点问题，可能该用户名或电子邮件地址已被注册，试试点击忘记密码链接。"
-    omniauth_error:
-      generic: "抱歉，验证您的帐户时出错。请重试。"
-      csrf_detected: "授权超时，或者您已切换浏览器。请重试。"
-      request_error: "启动授权时发生错误。请重试。"
-      invalid_iat: "由于服务器时钟差异，无法验证授权令牌。请重试。"
     omniauth_error_unknown: "处理您的登录时出错，请重试。"
     omniauth_confirm_title: "使用 %{provider} 登录"
     omniauth_confirm_button: "继续"

@@ -160,6 +160,8 @@ fa_IR:
       removed_user: "%{who} در %{when} حذف شد"
       removed_group: "%{who} در %{when} حذف شد"
       autobumped: "این مطلب %{when} به صدر مطالب آورده شد."
+      tags_changed: "برچسب‌ها به‌روزرسانی شدند %{when}"
+      category_changed: "دسته‌بندی به‌روزرسانی شد %{when}"
       autoclosed:
         enabled: "در %{when} بسته شد"
         disabled: "در %{when} باز شد"
@@ -194,6 +196,7 @@ fa_IR:
     back_button: "بازگشت"
     welcome_banner:
       header:
+        logged_in_members: "خوش آمدید، %{preferred_display_name}!"
         anonymous_members: "به %{site_name} خوش آمدید!"
       search: "جستجو"
     themes:
@@ -478,7 +481,7 @@ fa_IR:
       one: "مشاهده %{count} موضوع جدید"
       other: "مشاهده %{count} موضوع جدید"
     preview: "پیش‌نمایش"
-    cancel: "لغو"
+    cancel: "انصراف"
     deleting: "در حال حذف ..."
     save: "ذخیره سازی تغییرات"
     saving: "در‌حال ذخیره‌سازی..."
@@ -565,6 +568,7 @@ fa_IR:
         required: "قبل از بازنگری موارد باید آن‌ها را درخواست دهید."
         claimed_by_you: "می‌توانید این مورد را درخواست کنید و آن را بازنگری کنید."
         claimed_by_other: "این مورد فقط توسط کاربر<b>%{username} </b>قابل بازنگری است."
+        automatically_claimed_by: "این مورد توسط <b>%{username}</b> در حال بازنگری است."
       claim:
         title: "درخواست این مبحث"
       unclaim:
@@ -2742,6 +2746,7 @@ fa_IR:
         new_features: "ویژگی‌های جدید دیسکورس منتشر شده است!"
         admin_problems: "توصیه‌های جدید در پیشخوان سایت شما"
     upload_selector:
+      change: "تغییر"
       delete: "حذف"
       uploading: "در حال بروز‌رسانی "
       default_image_alt_text: تصویر
@@ -3578,9 +3583,12 @@ fa_IR:
       badge_granted_tooltip: "کاربر %{username} به خاطر این پست، نشان \"%{badge_name}\" را کسب کرد!"
       localizations:
         table:
+          locale: "زبان"
           actions: "عملیات"
           edit: "ویرایش"
           delete: "حذف"
+        add: "افزودن ترجمه جدید"
+        success: "ترجمه‌ها با موفقیت به‌روزرسانی شدند."
       errors:
         create: "متأسفیم، در ایجاد نوشته‌ی شما خطایی روی داد. لطفاً دوباره تلاش کنید."
         edit: "متأسفیم، در ویرایش نوشته‌ی شما خطایی روی داد. لطفاً دوباره تلاش کنید."
@@ -3788,10 +3796,14 @@ fa_IR:
       settings: "تنظیمات"
       topic_template: "قالب"
       tags: "برچسب‌ها"
+      localizations: "محلی‌سازی‌ها"
       localization:
+        locale: "زبان"
         name: "نام"
         description: "توضیح"
+        add: "افزودن زبان جدید"
         remove: "پاک کردن"
+        hint: "در حال حاضر هیچ محلی‌سازی برای این دسته‌بندی وجود ندارد. برای افزودن محلی‌سازی، روی «افزودن زبان جدید» در زیر کلیک کنید."
       tags_allowed_tags: "محدودکردن این برچسب‌ها به این دسته‌بندی:"
       tags_allowed_tag_groups: "این گروه برچسب را به این دسته محدود کنید:"
       tags_placeholder: "(اختیاری) فهرست برچسب‌های قابل استفاده"
@@ -4663,6 +4675,9 @@ fa_IR:
               title: "فهرست همه‌ی کاربران"
             my_posts:
               content: "نوشته‌های من"
+              content_drafts: "پیش‌نویس‌های من"
+              title: "فعالیت اخیر موضوع‌های من"
+              title_drafts: "پیش‌نویس‌های ارسال‌نشده‌ی من"
               draft_count:
                 one: "%{count} پیش‌نویس"
                 other: "%{count} پیش‌نویس"
@@ -4680,6 +4695,11 @@ fa_IR:
         forum:
           label: انجمن
       back_to_forum: "بازگشت به انجمن"
+      filter_links: "فیلتر کردن پیوندها..."
+      clear_filter: "حذف کردن فیلتر"
+      no_results:
+        title: "هیچ نتیجه‌ای وجود ندارد"
+        description_admin_search: "ما نتوانستیم چیزی مطابق با «%{filter}» پیدا کنیم."
       collapse_all_sections: "جمع‌کردن همه بخش‌ها"
       expand_all_sections: "گستردن همه بخش‌ها"
       search: "جستجو"
@@ -4791,14 +4811,9 @@ fa_IR:
     safari_15_warning: "مرورگر شما به زودی دیگر با این انجمن سازگار نخواهد بود. برای ادامه مشارکت در اینجا، لطفا مرورگر خود را ارتقا دهید یا <a href='%{url}'>اطلاعات بیشتری کسب کنید</a>."
     discovery:
       headings:
+        multi_tag:
+          default: "موضوعات برچسب خورده %{tags}"
         categories: "همه‌ی دسته‌بندی‌ها"
-        filter_labels:
-          latest: "آخرین"
-          top: "برترین‌ها"
-          new: "تازه"
-          unread: "خوانده‌ نشده‌"
-          hot: "داغ"
-          unseen: "دیده نشده"
   admin_js:
     type_to_filter: "برای فیلتر کردن تایپ کنید..."
     settings: "تنظیمات"
@@ -4854,7 +4869,7 @@ fa_IR:
           title: "حقوقی"
           header_description: "تنظیمات قانونی، مانند شرایط خدمات، خط مشی رازداری، جزئیات تماس و ملاحظات خاص اتحادیه اروپا را پیکربندی کنید"
         localization:
-          title: "بومی‌سازی"
+          title: "محلی‌سازی"
           header_description: "زبان رابط انجمن خود و سایر گزینه‌های محلی سازی را برای اعضای خود پیکربندی کنید"
           keywords: "محل|زبان|منطقه زمانی|یونیکد|ltr"
         login_and_authentication:
@@ -5898,6 +5913,7 @@ fa_IR:
           unsaved_changes_alert: "تغییرات‌تان را هنوز ذخیره نکرده‌اید، می‌خواهید آن‌ها را نادیده گرفته و ادامه دهید؟"
           discard: "دور انداختن"
           stay: "ماندن"
+          edit_css_html: "ویرایش کد"
           delete_upload_confirm: "حذف فایل بارگذاری شده؟ (شاید قالب CSS با مشکل مواجه شود!)"
           add_all: "افزودن همه"
           import_web_tip: "مخزن شامل قالب است"
@@ -5974,6 +5990,10 @@ fa_IR:
               %{example}
 
               برای جلوگیری از تداخل با افزونه‌ها و/یا هسته، پیشوند برای نام ویژگی توصیه می‌شود.
+          head_tag:
+            text: "<head>"
+          body_tag:
+            text: "<body>"
           js:
             text: "JS"
           all_filter: "همه"
