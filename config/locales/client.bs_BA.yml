@@ -352,7 +352,7 @@ bs_BA:
       few: "Pogledaj %{count} nove teme"
       other: "Pogledaj %{count} novih tema"
     preview: "predprikaz"
-    cancel: "otkaži"
+    cancel: "Odustani"
     save: "Spremiti promjene"
     saved: "Spremljeno!"
     upload: "Učitaj"
@@ -3142,11 +3142,6 @@ bs_BA:
     discovery:
       headings:
         categories: "Sve kategorije"
-        filter_labels:
-          latest: "Zadnje"
-          top: "Top teme"
-          new: "Novi"
-          unread: "Nepročitano"
   admin_js:
     settings: "Postavke"
     admin:

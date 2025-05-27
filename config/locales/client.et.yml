@@ -333,7 +333,7 @@ et:
       one: "Vaata %{count} uut teemat"
       other: "Vaata %{count} uut teemat"
     preview: "eelvaade"
-    cancel: "tühista"
+    cancel: "Tühista"
     deleting: "Kustutan..."
     save: "Salvesta muudatused"
     saving: "Salvestan..."
@@ -2699,12 +2699,9 @@ et:
         about: "Teave"
     discovery:
       headings:
+        multi_tag:
+          default: "%{tags}-ga sildistatud teemad"
         categories: "Kõik kategooriad"
-        filter_labels:
-          latest: "Värskeimad"
-          top: "Juhtivad"
-          new: "Uus"
-          unread: "Lugemata"
   admin_js:
     settings: "Sätted"
     admin:

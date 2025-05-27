@@ -497,26 +497,6 @@ sv:
     until_posts:
       one: "%{count} inlägg"
       other: "%{count} inlägg"
-    "new-topic": |
-      Välkommen till %{site_name} &mdash; **tack för att du startade en ny konversation**
-
-      - Låter rubriken intressant om du läser den högt? Ger det en bra sammanfattning?
-
-      - Vem skulle kunna vara intresserad av detta? Varför är det viktigt? Vad för typ av svar förväntar du dig?
-
-      - Inkludera vanliga förekommande ord i ditt ämne så att andra kan *hitta* det. För att gruppera ditt ämne med relaterade ämnen, välj en kategori (eller tagg).
-
-      För mer information kan du läsa [riktlinjerna](%{base_path}/guidelines). Detta meddelande visas enbart vid ditt första %{education_posts_text}.
-    "new-reply": |
-      Välkommen till %{site_name} &mdash; **tack för att du bidrar!**
-
-      - Var snäll mot andra medlemmar.
-
-      - Bidrar ditt svar till samtalet på något sätt?
-
-      - Konstruktiv kritik välkomnas, men kritisera då *idéer* och inte personer.
-
-      För mer information kan du läsa [forumets riktlinjer](%{base_path}/guidelines). Detta meddelande visas enbart vid ditt första %{education_posts_text}.
     avatar: |
       ### Hur vore det med en bild för ditt konto?
 
@@ -533,14 +513,6 @@ sv:
       Du kan redigera ditt tidigare svar och lägga till ett citat genom att markera text och välja knappen <b>citera</b> som dyker upp.
 
       Det blir lättare för alla att läsa ämnen som har färre in-på-djupet-svar istället för flera små, individuella svar.
-    dominating_topic: Du har skrivit mycket i det här ämnet! Tänk på att ge andra en möjlighet att svara här och diskutera med andra också.
-    dont_feed_the_trolls: Det här inlägget har redan flaggats för moderatorns uppmärksamhet. Är du säker på att du vill svara på det? Svar på negativt innehåll tenderar att uppmuntra till mer negativt beteende.
-    too_many_replies: |
-      ### Du har nått svarsgränsen för detta ämne
-
-      Tyvärr är nya användare tillfälligt begränsade till %{newuser_max_replies_per_topic} svar i samma ämne.
-
-      Istället för att lägga till ytterligare ett svar, ber vi dig överväga att redigera dina tidigare svar, eller besök andra ämnen.
     reviving_old_topic: |
       ### Återuppliva detta ämne?
 
@@ -1834,7 +1806,6 @@ sv:
     authorized_extensions: "En lista över alla filändelser som är tillåtna för uppladdning"
     authorized_extensions_for_staff: "En lista över alla filändelser som är tillåtna för uppladdning för personalanvändare utöver listan som definieras i webbplatsinställningen `authorized_extensions`."
     theme_authorized_extensions: "En lista över alla filändelser som är tillåtna för temauppladdningar"
-    max_similar_results: "Hur många liknande ämnen som visas ovanför redigeraren vid författandet av ett nytt ämne. Jämförelsen är baserad på ämnesrubrik och innehåll."
     max_image_megapixels: "Maximalt antal megapixlar tillåtet för en bild. Bilder med ett högre värde av megapixlar kommer att avvisas."
     title_prettify: "Förhindra vanliga felskrivningar och misstag, inklusive endast versaler, inledande gemen, flera ! och ?, extra . i slutet osv."
     title_remove_extraneous_space: "Ta bort blanksteg framför slutpunkt."
@@ -2330,11 +2301,6 @@ sv:
     errors: "%{errors}"
     not_available: "Inte tillgänglig. Testa %{suggestion}?"
     something_already_taken: "Något gick fel. Kanske har användarnamnet eller e-postadressen redan registrerats. Testa Glömt lösenord-länken."
-    omniauth_error:
-      generic: "Tyvärr uppstod det ett fel när ditt konto skulle auktoriseras. Vi ber dig försöka igen."
-      csrf_detected: "Auktoriseringen dröjde för länge, eller så har du bytt webbläsare. Vi ber dig försöka igen."
-      request_error: "Ett fel uppstod vid start av auktorisering. Vi ber dig försöka igen."
-      invalid_iat: "Kunde inte verifiera behörighetsbevis på grund av skillnader mellan klockorna i servrarna. Vi ber dig försöka igen."
     omniauth_error_unknown: "Något gick fel med din inloggning, vi ber dig försöka igen."
     omniauth_confirm_title: "Logga in genom %{provider}"
     omniauth_confirm_button: "Fortsätt"

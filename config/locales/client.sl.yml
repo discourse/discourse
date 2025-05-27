@@ -424,7 +424,7 @@ sl:
       few: "Poglej %{count} nove teme"
       other: "Poglej %{count} novih tem"
     preview: "predogled"
-    cancel: "prekliči"
+    cancel: "Prekliči"
     deleting: "Brišem..."
     save: "Shrani spremembe"
     saving: "Shranjujem..."
@@ -3710,11 +3710,6 @@ sl:
     discovery:
       headings:
         categories: "Vse kategorije"
-        filter_labels:
-          latest: "Najnovejše"
-          top: "Najboljše"
-          new: "Nova"
-          unread: "Neprebrane"
   admin_js:
     settings: "Nastavitve"
     admin:

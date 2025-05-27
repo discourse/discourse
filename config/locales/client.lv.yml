@@ -320,7 +320,7 @@ lv:
       new_topic: "Jaunas tēmas melnraksts"
       new_private_message: "Jauns personīgā ziņojuma melnraksts"
     preview: "priekšskatījums"
-    cancel: "atcelt"
+    cancel: "Atcelt"
     save: "Saglabāt izmaiņas"
     saved: "Saglabāts!"
     upload: "Augšuplādēt"
@@ -2850,12 +2850,6 @@ lv:
     discovery:
       headings:
         categories: "Visas sadaļas"
-        filter_labels:
-          latest: "Pēdējais"
-          top: "Populārākās"
-          new: "jauns"
-          unread: "Nelasīts"
-          unseen: "Neredzēts"
   admin_js:
     settings: "Iestatījumi"
     admin:

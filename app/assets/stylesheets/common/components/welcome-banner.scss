@@ -157,6 +157,11 @@
       color: var(--primary);
     }
   }
+
+  .search-menu-panel {
+    // hacky but best guestimate we can do: full height of the viewport minus the header, minus the welcome banner spacing,  minus font-size:6 title
+    max-height: calc(100vh - var(--header-offset) - -3em - 4em);
+  }
 }
 
 // hide search icon from default search menu

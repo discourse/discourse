@@ -5650,6 +5650,9 @@ ar:
         forum:
           label: المنتدى
       back_to_forum: "العودة إلى المنتدى"
+      clear_filter: "مسح الفلتر"
+      no_results:
+        title: "لا توجد نتائج"
       collapse_all_sections: "طي جميع الأقسام"
       expand_all_sections: "توسيع جميع الأقسام"
       search: "البحث"
@@ -5777,14 +5780,9 @@ ar:
     safari_15_warning: "سيُصبح متصفّحك غير متوافق مع هذا المجتمع قريبًا. للاستمرار في المشاركة هنا، يُرجى ترقية متصفّحك أو <a href='%{url}'>الاطّلاع على المزيد</a>."
     discovery:
       headings:
+        multi_tag:
+          default: "الموضوعات التي تم وضع وسم عليها %{tags}"
         categories: "كل الفئات"
-        filter_labels:
-          latest: "الحديثة"
-          top: "الأكثر نشاطًا"
-          new: "الجديدة"
-          unread: "غير المقروءة"
-          hot: "ساخن"
-          unseen: "غير مقروءة"
   admin_js:
     type_to_filter: "اكتب للتصفية…"
     settings: "الإعدادات"

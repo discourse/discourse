@@ -339,7 +339,7 @@ class BulkImport::Generic < BulkImport::Base
     puts "", "Importing category permissions..."
 
     permissions = query(<<~SQL)
-      SELECT c.id AS category_id, 
+      SELECT c.id AS category_id,
             p.value -> 'group_id' AS group_id,
             p.value -> 'existing_group_id' AS existing_group_id,
             p.value -> 'permission_type' AS permission_type
@@ -2123,6 +2123,11 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def import_answers
+    unless defined?(::DiscourseSolved)
+      puts "  Skipping import of solved topics"
+      return
+    end
+
     puts "", "Importing solutions into discourse_solved_solved_topics..."
 
     solutions = query(<<~SQL)
@@ -2151,7 +2156,6 @@ class BulkImport::Generic < BulkImport::Base
 
     puts "", "Importing solutions into user actions..."
 
-    existing_fields = nil
     solutions.reset
 
     action_type = UserAction::SOLVED
@@ -3089,9 +3093,9 @@ class BulkImport::Generic < BulkImport::Base
     puts "", "Importing reactions..."
 
     reactions = query(<<~SQL)
-      SELECT r.*, 
-            COALESCE((SELECT COUNT(*) 
-                      FROM discourse_reactions_reaction_users ru 
+      SELECT r.*,
+            COALESCE((SELECT COUNT(*)
+                      FROM discourse_reactions_reaction_users ru
                       WHERE ru.reaction_id = r.id), 0) as count
       FROM discourse_reactions_reactions r
       ORDER BY r.post_id, r.reaction_value

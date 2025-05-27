@@ -677,26 +677,6 @@ cs:
       few: "%{count} příspěvky"
       many: "%{count} příspěvků"
       other: "%{count} příspěvků"
-    "new-topic": |
-      Vítejte v %{site_name} &mdash; **děkujeme za založení nové konverzace!**
-
-      - Zní název zajímavě, když si ho přečtete nahlas? Je to dobré shrnutí?
-
-      - Koho by to mohlo zajímat? Proč je to důležité? Jaké reakce chcete získat?
-
-      - Do tématu zahrňte běžně používaná slova, aby ho ostatní mohli *najít*. Chcete-li své téma seskupit se souvisejícími tématy, vyberte kategorii (nebo štítek).
-
-      Více informací naleznete [v zásadách naší komunity](%{base_path}/guidelines). Tento panel se zobrazí pouze u vašeho prvního %{education_posts_text}.
-    "new-reply": |
-      Vítejte v %{site_name} &mdash; **díky za příspěvek!**
-
-      - Buďte na ostatní členy komunity milí.
-
-      - Přispívá vaše odpověď k diskuzi?
-
-      - Konstruktivní kritika je vítaná, ale kritizujte *myšlenky*, ne lidi.
-
-      Další doporučení máme v [zásadách komunity](%{base_path}/guidelines). Tento panel se zobrazí pouze pro váš první %{education_posts_text}.
     avatar: |
       ### Nechcete si nastavit svůj profilový obrázek?
 
@@ -713,19 +693,11 @@ cs:
       Svou předchozí odpověď můžete upravit a přidat citát tak, že v původním příspěvku zvýrazníte text a vyberete zobrazené tlačítko <b>Citovat</b> .
 
       Pro každého je snazší číst témata, která mají menší množství podrobných odpovědí oproti spoustě malých, jednotlivých odpovědí.
-    dominating_topic: Do tohoto tématu jste toho již napsali hodně! Zvažte, zda nedát ostatním příležitost zde odpovědět a probrat věci také mezi sebou.
     get_a_room:
       one: Již jste jednou odpověděli uživateli @%{reply_username}, věděli jste, že jim místo toho můžete poslat soukromou zprávu?
       few: Již jste %{count}x odpověděli uživateli @%{reply_username}, věděli jste, že jim místo toho můžete poslat soukromou zprávu?
       many: Již jste %{count}x odpověděli uživateli @%{reply_username}, věděli jste, že jim místo toho můžete poslat soukromou zprávu?
       other: Již jste %{count}x odpověděli uživateli @%{reply_username}, věděli jste, že jim místo toho můžete poslat soukromou zprávu?
-    dont_feed_the_trolls: Tento příspěvek již byl nahlášen moderátorovi. Opravdu na něj chcete odpovědět? Odpovědi na nevhodný obsah mají tendenci podporovat nevhodné chování.
-    too_many_replies: |
-      ### Dosáhli jste limitu odpovědí na toto téma
-
-      Je nám líto, ale noví uživatelé mají dočasně omezený počet %{newuser_max_replies_per_topic} odpovědí ve stejném tématu.
-
-      Místo přidávání další odpovědi zvažte prosím úpravu svých předchozích odpovědí nebo návštěvu jiných témat.
     reviving_old_topic: |
       ### Oživit toto téma?
 
@@ -1943,11 +1915,6 @@ cs:
     errors: "%{errors}"
     not_available: "Není k dispozici. Nechcete zkusit %{suggestion}?"
     something_already_taken: "Nastala chyba při zpracování, zřejmě je dané uživatelské jméno nebo email již zaregistrován. Zkuste odkaz pro obnovení hesla."
-    omniauth_error:
-      generic: "Omlouváme se, došlo k chybě při autorizaci vašeho účtu. Zkuste to prosím znovu."
-      csrf_detected: "Autorizace vypršela nebo jste změnili prohlížeč. Zkuste to prosím znovu."
-      request_error: "Při spuštění autorizace došlo k chybě. Zkuste to prosím znovu."
-      invalid_iat: "Nelze ověřit autorizační token kvůli rozdílům v hodinách serveru. Zkuste to prosím znovu."
     omniauth_error_unknown: "Něco se pokazilo při zpracování vašeho přihlášení, zkuste to prosím znovu."
     omniauth_confirm_title: "Přihlásit pomocí %{provider}"
     omniauth_confirm_button: "Pokračovat"

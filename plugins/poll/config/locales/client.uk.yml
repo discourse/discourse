@@ -13,10 +13,10 @@ uk:
   js:
     poll:
       voters:
-        one: "виборця"
-        few: "виборців"
-        many: "виборців"
-        other: "проголосували"
+        one: "виборець"
+        few: "виборці"
+        many: "виборці"
+        other: "виборці"
       total_votes:
         one: "голос"
         few: "голосів"

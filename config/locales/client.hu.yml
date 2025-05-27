@@ -488,7 +488,7 @@ hu:
       one: "Nézzen meg %{count} új témát"
       other: "Nézzen meg %{count} új témát"
     preview: "előnézet"
-    cancel: "mégse"
+    cancel: "Mégse"
     deleting: "Törlés…"
     save: "Módosítások mentése"
     saving: "Mentés…"
@@ -4745,6 +4745,10 @@ hu:
         forum:
           label: Fórum
       back_to_forum: "Vissza a fórumra"
+      filter_links: "Linkek szűrése..."
+      clear_filter: "Szűrő kiürítése"
+      no_results:
+        title: "Nincs eredmény"
       collapse_all_sections: "Minden szakasz összezárása"
       expand_all_sections: "Minden szakasz kibontása"
       search: "Keresés"
@@ -4859,14 +4863,9 @@ hu:
       headings:
         all:
           default: "Minden %{filter} téma"
+        multi_tag:
+          default: "Témák a(z) %{tags} címkével"
         categories: "Minden kategória"
-        filter_labels:
-          latest: "Legutóbbi"
-          top: "Népszerű"
-          new: "Új"
-          unread: "Olvasatlan"
-          hot: "Felkapott"
-          unseen: "Nem látott"
   admin_js:
     type_to_filter: "Írj ide a szűréshez.."
     settings: "Beállítások"
@@ -5123,7 +5122,6 @@ hu:
           header_description: "Az összetevők kisebb testreszabások, amelyek hozzáadhatók a témákhoz, hogy megváltoztassák a fórum kialakításának stílusát"
           keywords: "téma|összetevő|bővítmény"
         themes_and_components:
-          title: "Témák és összetevők"
           header_description: "Személyre szabhatja Discourse oldalát az igényeinek megfelelő témákkal és összetevőkkel"
           keywords: "téma|összetevő|kiterjesztés|testreszabás"
         site_admin:
@@ -5858,8 +5856,6 @@ hu:
           more_options:
             title: "További lehetőségek"
         themes_and_components:
-          title: "Témák és összetevők"
-          description: "Személyre szabhatja Discourse oldalát az igényeinek megfelelő témákkal és összetevőkkell."
           breadcrumb_title: "Személyre szabás"
           install: "Telepítés"
           themes:

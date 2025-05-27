@@ -611,26 +611,6 @@ fi:
     until_posts:
       one: "ensimmäisen %{count} viestin"
       other: "ensimmäisen %{count} viestin"
-    "new-topic": |
-      Tervetuloa, tämä on %{site_name} &mdash; **kiitos uuden keskustelun aloittamisesta!**
-
-      – Kuulostaako otsikko mielenkiintoiselta, jos luet sen ääneen? Kuvaako se ketjua hyvin?
-
-      – Ketä tämä ketju voisi kiinnostaa? Mikä on sen tarkoitus? Minkälaisia vastauksia haluaisit?
-
-      – Sisällytä tekstiin yleisesti käytettyjä sanoja, jotta muut voivat *löytää* sen. Voit ryhmitellä ketjun vastaavien viestiketjujen kanssa valitsemalla sille sopivan keskustelualueen (tai tunnisteen)
-
-      Lue lisää vinkkejä [ohjeista](%{base_path}/guidelines). Tämä ohjepaneeli näytetään vain %{education_posts_text} ajan.
-    "new-reply": |
-      Tervetuloa, tämä on %{site_name} &mdash; **kiitos keskusteluun osallistumisesta!**
-
-      – Ole ystävällinen muille käyttäjille.
-
-      – Parantaako vastauksesi keskustelua jollain tapaa?
-
-      – Rakentava palaute on tervetullutta, mutta kritisoi *ideoita*, älä ihmisiä.
-
-      Lue lisää vinkkejä [ohjeista](%{base_path}/guidelines). Tämä ohjepaneeli näytetään vain %{education_posts_text} ajan.
     avatar: |
       ### Mitäpä jos lisäisit kuvan käyttäjätiliisi?
 
@@ -647,17 +627,9 @@ fi:
       Voit muokata edellistä viestiäsi ja lisätä siihen lainauksen maalaamalla lainattavan viestin tekstiä ja klikkaamalla ilmestyvää <b>lainaa</b>-painiketta.
 
       On helpompaa lukea ketjua, jossa on vähemmän pidempiä vastauksia kuin sellaista, jossa on paljon lyhyitä yksittäisiä vastauksia.
-    dominating_topic: Olet kirjoittanut paljon tähän ketjuun! Voisit antaa muille mahdollisuuden vastata täällä ja keskustella asioista myös keskenään.
     get_a_room:
       one: Olet vastannut käyttäjälle @%{reply_username} kerran, tiesitkö, että voit lähettää hänelle henkilökohtaisen viestin?
       other: Olet vastannut käyttäjälle @%{reply_username} %{count} kertaa, tiesitkö, että voit lähettää hänelle henkilökohtaisen viestin?
-    dont_feed_the_trolls: Tästä viestistä on jo ilmoitettu ylläpidolle. Haluatko varmasti vastata siihen? Vastaukset negatiiviseen sisältöön rohkaisevat negatiivisempaan käyttäytymiseen.
-    too_many_replies: |
-      ### Olet kirjoittanut enimmäismäärän vastauksia tähän ketjuun
-
-      Valitettavasti uusien käyttäjien viestien määrä on rajoitettu %{newuser_max_replies_per_topic} vastaukseen samassa ketjussa.
-
-      Harkitse edellisten viestiesi muokkaamista uuden viestin kirjoittamisen sijaan tai vieraile muissa ketjuissa.
     reviving_old_topic: |
       ### Herätetäänkö tämä ketju?
 
@@ -2078,7 +2050,6 @@ fi:
     authorized_extensions: "Luettelo verkkoon ladattavissa olevista tiedostopäätteistä"
     authorized_extensions_for_staff: "Luettelo tiedostopäätteistä, jotka ovat sallittuja henkilökunnan jäsenille niiden lisäksi, jotka on määritelty sivustoasetuksella \"authorized_extensions\"."
     theme_authorized_extensions: "Luettelo tiedostopäätteistä, jotka sallitaan teemojen latauksissa verkkoon"
-    max_similar_results: "Kuinka monta samankaltaista ketjua näytetään viestikentän päällä uutta ketjua aloitettaessa. Vertailu perustuu sekä otsikkoon että leipätekstiin."
     max_image_megapixels: "Suurin sallittu megapikselimäärä kuvalle. Kuvat, joissa on enemmän megapikseleitä, hylätään."
     title_prettify: "Estä yleiset kirjoitusvirheet otsikossa, kuten pelkät isot kirjaimet, pieni ensimmäinen kirjain, useat !- ja ?-merkit ym."
     title_remove_extraneous_space: "Poista lopettavia välimerkkejä edeltävät tyhjät merkit."
@@ -2666,11 +2637,6 @@ fi:
     errors: "%{errors}"
     not_available: "Ei saatavissa. Kokeile %{suggestion}?"
     something_already_taken: "Jokin meni vikaan. Tämä käyttäjätunnus tai sähköpostiosoite on ehkä jo rekisteröity, kokeile salasanan unohduslinkkiä."
-    omniauth_error:
-      generic: "Pahoittelut, tilisi valtuuttaminen epäonnistui. Yritä uudelleen."
-      csrf_detected: "Valtuuttaminen aikakatkaistiin tai vaihdoit selainta. Yritä uudelleen."
-      request_error: "Valtuuttamista aloitettaessa tapahtui virhe. Yritä uudelleen."
-      invalid_iat: "Valtuutustunnistetta ei voida vahvistaa palvelinkellojen eron vuoksi. Yritä uudelleen."
     omniauth_error_unknown: "Jokin meni vikaan kirjautumisesi käsittelyssä, yritä uudelleen."
     omniauth_confirm_title: "Kirjaudu tavalla %{provider}"
     omniauth_confirm_button: "Jatka"

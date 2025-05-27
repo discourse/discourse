@@ -485,7 +485,7 @@ fi:
       one: "Näytä %{count} uusi ketju"
       other: "Näytä %{count} uutta ketjua"
     preview: "esikatselu"
-    cancel: "peruuta"
+    cancel: "Peruuta"
     deleting: "Poistetaan…"
     save: "Tallenna muutokset"
     saving: "Tallennetaan…"
@@ -4665,6 +4665,9 @@ fi:
         forum:
           label: Keskustelualuea
       back_to_forum: "Takaisin foorumille"
+      clear_filter: "Tyhjennä suodatin"
+      no_results:
+        title: "Ei tuloksia"
       collapse_all_sections: "Pienennä kaikki osiot"
       expand_all_sections: "Laajenna kaikki osiot"
       search: "Hae"
@@ -4775,14 +4778,9 @@ fi:
     powered_by_discourse: "Voimanlähteenä Discourse"
     discovery:
       headings:
+        multi_tag:
+          default: "Ketjut tunnisteella %{tags}"
         categories: "Kaikki alueet"
-        filter_labels:
-          latest: "Tuoreimmat"
-          top: "Suositut"
-          new: "Uudet"
-          unread: "Lukemattomat"
-          hot: "Liekeissä"
-          unseen: "Näkemätön"
   admin_js:
     type_to_filter: "Kirjoita suodattaaksesi…"
     settings: "Asetukset"

@@ -611,26 +611,6 @@ es:
     until_posts:
       one: "%{count} publicación"
       other: "%{count} publicaciones"
-    "new-topic": |
-      Te damos la bienvenida a %{site_name}. **¡Gracias por empezar un nuevo tema!**
-
-      - ¿Suena el título interesante si lo lees en alto? ¿Es un buen resumen del contenido?
-
-      - ¿A quién le podría interesar? ¿Por qué importa? ¿Qué tipo de respuestas buscas?
-
-      - Incluye palabras comúnmente utilizadas en tu tema para que los demás puedan **encontrarlo**. Para agrupar el tema con otros relacionados, selecciona una categoría (o etiqueta).
-
-      Para más información [consulta nuestra guía](%{base_path}/guidelines). Este panel solo aparecerá para tus primeras %{education_posts_text}.
-    "new-reply": |
-      Te damos la bienvenida a %{site_name}. **¡Gracias por contribuir!**
-
-      - Sé amable con las demás personas de la comunidad.
-
-      - ¿Aporta tu respuesta a la conversación?
-
-      - Las críticas constructivas son bienvenidas, pero recuerda criticar las *ideas*, y no a las personas.
-
-      Para más información [consulta nuestra guía](%{base_path}/guidelines). Este panel solo aparecerá para tus primeras %{education_posts_text}.
     avatar: |
       ### ¿Qué tal si eliges una imagen para tu cuenta?
 
@@ -647,17 +627,9 @@ es:
       Puedes editar tu anterior respuesta para añadir una cita. Para ello, selecciona el texto que quieras citar y pulsa el botón <b>citar respuesta</b> que aparecerá.
 
       Es más fácil leer temas que tengan menos respuestas (aunque más profundas), que tener que leer muchas respuestas individuales.
-    dominating_topic: '¡Has publicado mucho en este tema! Considera la posibilidad de dar a los demás la oportunidad de responder aquí y debatir también entre ellos.'
     get_a_room:
       one: Has respondido a @%{reply_username} una vez, ¿sabías que podrías enviarle un mensaje privado en su lugar?
       other: Has respondido a @%{reply_username} %{count} veces, ¿sabías que también puedes enviarle un mensaje rivado directamente?
-    dont_feed_the_trolls: Este mensaje ya ha sido marcado para llamar la atención del moderador. ¿Seguro que deseas responder a él? Las respuestas a contenido negativo tienden a fomentar un comportamiento más negativo.
-    too_many_replies: |
-      ### Has llegado al límite de respuestas en este tema
-
-      Lo sentimos, los nuevos usuarios tienen temporalmente un límite de %{newuser_max_replies_per_topic} respuestas en el mismo tema.
-
-      En vez de añadir otra respuesta, puedes editar tus respuestas anteriores o visitar otros temas.
     reviving_old_topic: |
       ### ¿Revivir este tema?
 
@@ -2078,7 +2050,6 @@ es:
     authorized_extensions: "Una lista de extensiones de archivo permitidas para subir"
     authorized_extensions_for_staff: "Una lista de extensiones de archivo permitidas para subir para los usuarios del personal, además de la lista definida en la configuración del sitio «authorized_extensions»."
     theme_authorized_extensions: "Una lista de las extensiones de archivo permitidas para subir temas"
-    max_similar_results: "Cantidad de temas similares que se muestran encima del editor cuando se está creando un nuevo tema. La comparación se basa en el título y el cuerpo del tema."
     max_image_megapixels: "Número máximo de megapíxeles permitidos para una imagen. Las imágenes con un numero de megapíxeles mayor que este se rechazarán."
     title_prettify: "Prevenir errores comunes en el título, incluidos los títulos escritos todo mayúsculas, con la primera letra en minúscula, con múltiples signos ! o ?, . adicional al final, etc."
     title_remove_extraneous_space: "Eliminar los espacios en blanco delante de la puntuación final."
@@ -2667,11 +2638,6 @@ es:
     errors: "%{errors}"
     not_available: "No disponible. ¿Quieres probar con %{suggestion}?"
     something_already_taken: "Algo ha salido mal, quizá el nombre de usuario o el correo electrónico ya han sido registrados. Prueba con el enlace de olvidé mi contraseña."
-    omniauth_error:
-      generic: "Lo sentimos, se produjo un error al autorizar tu cuenta. Inténtalo de nuevo."
-      csrf_detected: "Se agotó el tiempo de autorización o cambiaste de navegador. Inténtalo de nuevo."
-      request_error: "Ha ocurrido un error al empezar la autorización. Inténtalo de nuevo."
-      invalid_iat: "No se pudo verificar el token de autorización debido a diferencias en el horario del servidor. Inténtalo de nuevo."
     omniauth_error_unknown: "Ha ocurrido un error al procesar tu inicio de sesión. Inténtalo de nuevo."
     omniauth_confirm_title: "Inicia sesión a través de %{provider}"
     omniauth_confirm_button: "Continuar"

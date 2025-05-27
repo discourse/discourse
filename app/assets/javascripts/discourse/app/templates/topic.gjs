@@ -28,6 +28,7 @@ import TextField from "discourse/components/text-field";
 import TopicAdminMenu from "discourse/components/topic-admin-menu";
 import TopicCategory from "discourse/components/topic-category";
 import TopicFooterButtons from "discourse/components/topic-footer-buttons";
+import TopicLocalizedContentToggle from "discourse/components/topic-localized-content-toggle";
 import TopicMap from "discourse/components/topic-map/index";
 import TopicNavigation from "discourse/components/topic-navigation";
 import TopicProgress from "discourse/components/topic-progress";
@@ -340,6 +341,11 @@ export default RouteTemplate(
                 topicProgressExpanded=info.topicProgressExpanded
               }}
             />
+
+            {{#if @controller.model.has_localized_content}}
+              <TopicLocalizedContentToggle @topic={{@controller.model}} />
+            {{/if}}
+
             {{#if info.renderTimeline}}
               <TopicTimeline
                 @info={{info}}

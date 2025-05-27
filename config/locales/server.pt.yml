@@ -1129,7 +1129,6 @@ pt:
     min_title_similar_length: "Tamanho mínimo do título antes de ser verificado por tópicos semelhantes."
     category_colors: "Lista de valores hexadecimais das cores permitidas nas categorias."
     dark_mode_none: "Nenhum"
-    max_similar_results: "Quantos tópicos semelhantes a serem exibidos acima do editor ao compor um novo tópico. A comparação é baseada no título e no corpo."
     title_prettify: "Prevenir erros comuns em títulos, incluindo caps-lock ligado, primeira letra minúscula, excesso de ! e ?, pontos extras no final, etc."
     topic_views_heat_low: "Após todas estas visualizações, o campo de visitas fica ligeiramente destacado."
     topic_views_heat_medium: "Após todas estas visualizações, o campo de visitas fica moderadamente destacado."

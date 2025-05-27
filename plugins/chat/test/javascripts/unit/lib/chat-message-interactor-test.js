@@ -45,6 +45,21 @@ module("Discourse Chat | Unit | chat-message-interactor", function (hooks) {
     );
   });
 
+  test("emojiReactions with diversity set applies to site defaults", function (assert) {
+    updateCurrentUser({
+      user_option: {
+        chat_quick_reaction_type: "frequent",
+      },
+    });
+
+    this.emojiStore.diversity = 2;
+
+    assert.deepEqual(
+      this.messageInteractor.emojiReactions.map((r) => r.emoji),
+      ["+1:t2", "heart", "tada"]
+    );
+  });
+
   test("emojiReactions with top 3 frequent", function (assert) {
     this.emojiStore.trackEmojiForContext("eyes", "chat");
     this.emojiStore.trackEmojiForContext("camera", "chat");
