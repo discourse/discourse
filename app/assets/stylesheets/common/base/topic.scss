@@ -191,7 +191,7 @@
       width: 100%;
     }
 
-    @media (hover: hover) {
+    html.discourse-touch {
       .edit-topic {
         opacity: 0;
         transition: opacity 0.15s linear;
