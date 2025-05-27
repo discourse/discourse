@@ -72,10 +72,6 @@ export default class PostStream extends Component {
     above: null,
     below: null,
   };
-  #onScreenBoundaries = {
-    min: null,
-    max: null,
-  };
   #viewportObserver;
   #wrapperElement;
 
@@ -385,22 +381,6 @@ export default class PostStream extends Component {
     } else {
       delete this.#postsOnScreen[post.post_number];
     }
-
-    // update the information about the boundaries of the posts on screen
-    this.#onScreenBoundaries = Object.values(this.#postsOnScreen).reduce(
-      (acc, { post: onScreen }) => {
-        if (acc.min === null || onScreen.post_number < acc.min) {
-          acc.min = onScreen.post_number;
-        }
-
-        if (acc.max === null || onScreen.post_number > acc.max) {
-          acc.max = onScreen.post_number;
-        }
-
-        return acc;
-      },
-      { min: null, max: null }
-    );
 
     // update the screen tracking information
     discourseDebounce(
@@ -752,7 +732,7 @@ export default class PostStream extends Component {
         {{/let}}
       {{/each}}
 
-      {{#if (not @postStream.loadingBelow)}}
+      {{#unless @postStream.loadingBelow}}
         {{#if @postStream.canAppendMore}}
           <LoadMore @action={{fn this.loadMoreBelow this.lastAvailablePost}} />
         {{else}}
@@ -761,7 +741,7 @@ export default class PostStream extends Component {
             {{didInsert this.setBottomBoundaryElement}}
           ></div>
         {{/if}}
-      {{/if}}
+      {{/unless}}
 
       {{#if this.shouldShowFilteredNotice}}
         <PostFilteredNotice
