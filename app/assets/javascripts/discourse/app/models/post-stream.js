@@ -1,8 +1,10 @@
+import { tracked } from "@glimmer/tracking";
 import { get } from "@ember/object";
 import { and, equal, not, or } from "@ember/object/computed";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
+import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import discourseComputed from "discourse/lib/decorators";
@@ -35,6 +37,8 @@ export function resetLastEditNotificationClick() {
 export default class PostStream extends RestModel {
   @service currentUser;
   @service store;
+
+  @tracked gaps;
 
   posts = null;
   stream = null;
@@ -1050,6 +1054,11 @@ export default class PostStream extends RestModel {
       delete postStreamData.posts;
 
       // Update our attributes
+      const trackedGaps = {
+        before: new TrackedObject(postStreamData.gaps?.before || {}),
+        after: new TrackedObject(postStreamData.gaps?.after || {}),
+      };
+      postStreamData.gaps = trackedGaps;
       this.setProperties(postStreamData);
     }
   }
