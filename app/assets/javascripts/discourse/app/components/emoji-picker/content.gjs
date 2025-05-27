@@ -503,7 +503,10 @@ export default class EmojiPicker extends Component {
                     width="18"
                     height="18"
                     class="emoji"
-                    src={{get emojis "0.url"}}
+                    src={{tonableEmojiUrl
+                      (get emojis "0")
+                      this.emojiStore.diversity
+                    }}
                   />
                 {{/if}}
               </DButton>
