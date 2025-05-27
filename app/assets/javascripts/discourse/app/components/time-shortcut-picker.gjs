@@ -18,6 +18,7 @@ import {
   TIME_SHORTCUT_TYPES,
 } from "discourse/lib/time-shortcut";
 import { laterToday, now, parseCustomDatetime } from "discourse/lib/time-utils";
+import { i18n } from "discourse-i18n";
 
 const BINDINGS = {
   "l t": {
