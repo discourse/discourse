@@ -146,7 +146,9 @@ class TagsController < ::ApplicationController
         Tag
           .where_name(params[:tag_id])
           .where.not(target_tag_id: nil)
-          .joins("JOIN tags parent_tags ON parent_tags.id = tags.target_tag_id")
+          .joins(
+            "JOIN tags parent_tags ON parent_tags.id = tags.target_tag_id AND tags.target_tag_id != tags.id",
+          )
           .pick("parent_tags.name")
 
       if parent_tag_name
