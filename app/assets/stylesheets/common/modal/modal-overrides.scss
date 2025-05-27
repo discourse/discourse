@@ -552,7 +552,7 @@
 
   .d-modal {
     &__container {
-      width: var(--modal-max-width);
+      width: var(--modal-max-width, 100%);
       margin-top: 1rem;
       padding-block: 1rem;
     }
