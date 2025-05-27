@@ -43,7 +43,8 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import { configureRaiseOnDeprecation } from "discourse/tests/helpers/raise-on-deprecation";
 import { resetSettings } from "discourse/tests/helpers/site-settings";
-import { disableCloaking } from "discourse/widgets/post-stream";
+import { disableCloaking } from "discourse/components/post-stream";
+import { disableCloaking as disableWidgetCloaking } from "discourse/widgets/post-stream";
 import deprecated from "discourse/lib/deprecated";
 import { setDefaultOwner } from "discourse/lib/get-owner";
 import { setupS3CDN, setupURL } from "discourse/lib/get-url";
@@ -205,6 +206,7 @@ function writeSummaryLine(message) {
 
 export default function setupTests(config) {
   disableCloaking();
+  disableWidgetCloaking();
 
   setupDeprecationCounter(QUnit);
 
