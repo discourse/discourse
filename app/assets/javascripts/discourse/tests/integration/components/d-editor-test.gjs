@@ -1329,7 +1329,7 @@ third line`
       title: "Custom Toolbar Button",
     });
 
-    withPluginApi("0.1", (api) => {
+    withPluginApi((api) => {
       api.onToolbarCreate((toolbar) => {
         toolbar.addButton({
           id: "replace-toolbar",
