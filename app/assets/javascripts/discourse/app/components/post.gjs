@@ -327,9 +327,8 @@ export default class Post extends Component {
   <template>
     <div
       ...attributes
-      class={{if
+      class={{unless
         @cloaked
-        "post--cloaked cloaked-post"
         (concatClass
           "topic-post"
           "clearfix"

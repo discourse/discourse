@@ -1,12 +1,13 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
-import { fn, get, hash } from "@ember/helper";
+import { concat, fn, get, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
 import { TrackedSet } from "@ember-compat/tracked-built-ins";
 import { and, not } from "truth-helpers";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
@@ -24,8 +25,6 @@ import PostSmallAction from "./post/small-action";
 import PostTimeGap from "./post/time-gap";
 import PostVisitedLine from "./post/visited-line";
 
-const CLOAKABLE_CLASS = "post-stream__cloakable-item";
-const CLOAKABLE_CLASS_SELECTOR = `.${CLOAKABLE_CLASS}`;
 const DAY_MS = 1000 * 60 * 60 * 24;
 const POST_MODEL = Symbol("POST");
 const RESIZE_DEBOUNCE_MS = 100;
@@ -200,9 +199,9 @@ export default class PostStream extends Component {
   }
 
   @bind
-  isCloaked(post, { above, below }) {
-    if (!cloakingEnabled || cloakingPrevented.has(post.id)) {
-      return false;
+  getCloakingData(post, { above, below }) {
+    if (!cloakingEnabled || !post || cloakingPrevented.has(post.id)) {
+      return null;
     }
 
     const height = this.#cloakedPostsHeight[post.id];
@@ -230,10 +229,6 @@ export default class PostStream extends Component {
   @bind
   registerPostNode(element, [post]) {
     element[POST_MODEL] = post;
-
-    if (!element.classList.contains(CLOAKABLE_CLASS)) {
-      element.classList.add(CLOAKABLE_CLASS);
-    }
 
     if (!this.observedPostNodes.has(element)) {
       this.observedPostNodes.add(element);
@@ -334,7 +329,6 @@ export default class PostStream extends Component {
       height +=
         parseFloat(style.borderTopWidth) + parseFloat(style.borderBottomWidth);
       this.#cloakedPostsHeight[post.id] = height;
-      target.style.height = height + "px";
 
       if (
         postNumber > this.#observedCloakBoundaries.above &&
@@ -358,7 +352,6 @@ export default class PostStream extends Component {
         this,
         this.#updateCloakActiveBoundaries,
         { ...this.#observedCloakBoundaries },
-        [...this.uncloakedPostNumbers],
         SCROLL_BATCH_INTERVAL_MS
       );
     }
@@ -552,14 +545,6 @@ export default class PostStream extends Component {
   #updateCloakActiveBoundaries({ above, below }) {
     this.cloakAbove = above;
     this.cloakBelow = below;
-
-    schedule("afterRender", () => {
-      requestAnimationFrame(() => {
-        document
-          .querySelectorAll(CLOAKABLE_CLASS_SELECTOR)
-          .forEach((element) => (element.style.height = ""));
-      });
-    });
   }
 
   #updateCloakOffset() {
@@ -646,14 +631,18 @@ export default class PostStream extends Component {
 
             {{#let
               (if post.isSmallAction PostSmallAction Post)
-              as |PostComponent|
+              (this.getCloakingData
+                post above=this.cloakAbove below=this.cloakBelow
+              )
+              as |PostComponent cloakingData|
             }}
               <PostComponent
-                @cloaked={{this.isCloaked
-                  post
-                  above=this.cloakAbove
-                  below=this.cloakBelow
+                class={{if cloakingData "post-stream--cloaked"}}
+                style={{if
+                  cloakingData
+                  (htmlSafe (concat "height:" cloakingData.height "px"))
                 }}
+                @cloaked={{cloakingData}}
                 @post={{post}}
                 @prevPost={{previousPost}}
                 @nextPost={{nextPost}}
