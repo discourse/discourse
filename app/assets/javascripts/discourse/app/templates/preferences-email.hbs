@@ -54,3 +54,17 @@
     {{/if}}
   </form>
 </section>
+
+<span>
+  <PluginOutlet
+    @name="preferences-email"
+    @connectorTagName="div"
+    @outletArgs={{hash model=this.model}}
+  />
+</span>
+
+<SaveControls
+  @model={{this.model}}
+  @action={{action "save"}}
+  @saved={{this.saved}}
+/>
