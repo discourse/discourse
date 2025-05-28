@@ -1,6 +1,10 @@
 plugins:
+  discourse_local_dates_email_timezone:
+    default: "Etc/UTC"
+    client: true
+    area: "localization"
   discourse_local_dates_email_format:
-    default: "YYYY-MM-DDTHH:mm:ss[Z]"
+    default: "llll UTC"
     client: true
   discourse_local_dates_enabled:
     default: true
