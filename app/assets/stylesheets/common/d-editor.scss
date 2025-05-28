@@ -35,6 +35,7 @@
   flex-direction: column;
   background-color: var(--secondary);
   position: relative;
+  border: 1px solid var(--primary-400);
   border-radius: var(--d-input-border-radius);
   min-height: 0;
 
@@ -325,18 +326,7 @@
   margin-top: 0.25rem;
 
   .composer-toggle-switch {
-    min-width: 3.35em;
-    height: 2.2rem;
-  }
-
-  @include viewport.until(md) {
-    .composer-toggle-switch {
-      min-width: 3.5rem;
-    }
-
-    .btn {
-      min-width: 2.5rem;
-    }
+    padding: 0 0.5rem;
   }
 
   .btn:focus-visible {
@@ -344,13 +334,10 @@
   }
 
   .btn {
-    min-width: 2.35em;
-    height: 2.2rem;
     margin: 0;
     background-color: transparent;
     color: var(--primary-medium);
     border-radius: var(--d-border-radius);
-    transition: background-color 0.2s ease;
 
     .d-icon {
       color: currentcolor;
@@ -364,10 +351,6 @@
           color: var(--primary-medium);
         }
       }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      transition-duration: 0ms;
     }
   }
 
