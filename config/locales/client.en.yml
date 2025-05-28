@@ -6822,13 +6822,13 @@ en:
             description: "Subtle highlight"
           danger:
             name: "danger"
-            description: "Delete or error actions"
+            description: "Errors and delete actions"
           success:
             name: "success"
             description: "Successful actions"
           love:
             name: "love"
-            description: "Like button color"
+            description: "Like button"
           selected:
             name: "selected"
             description: "Active or selected items"
