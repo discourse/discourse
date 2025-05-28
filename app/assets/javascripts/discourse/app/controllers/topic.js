@@ -112,6 +112,7 @@ export default class TopicController extends Controller {
     this.appEvents.on("post:show-revision", this, "_showRevision");
     this.appEvents.on("post:created", this, () => {
       this._removeDeleteOnOwnerReplyBookmarks();
+      // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
       this.appEvents.trigger("post-stream:refresh", { force: true });
     });
   }
@@ -306,6 +307,7 @@ export default class TopicController extends Controller {
   }
 
   _forceRefreshPostStream() {
+    // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
     this.appEvents.trigger("post-stream:refresh", { force: true });
   }
 
@@ -744,7 +746,9 @@ export default class TopicController extends Controller {
     }
 
     const user = this.currentUser;
-    const refresh = () => this.appEvents.trigger("post-stream:refresh");
+    const refresh = () =>
+      // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
+      this.appEvents.trigger("post-stream:refresh");
     const hasReplies = post.get("reply_count") > 0;
     const loadedPosts = this.get("model.postStream.posts");
 
@@ -915,6 +919,7 @@ export default class TopicController extends Controller {
           return;
         }
         changedIds.forEach((id) =>
+          // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
           this.appEvents.trigger("post-stream:refresh", { id })
         );
       });
@@ -1742,6 +1747,7 @@ export default class TopicController extends Controller {
   onMessage(data) {
     const topic = this.model;
     const refresh = (args) =>
+      // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
       this.appEvents.trigger("post-stream:refresh", args);
 
     if (isPresent(data.notification_level_change)) {
@@ -1892,6 +1898,7 @@ export default class TopicController extends Controller {
       postStream.get("posts").forEach((post) => {
         if (!post.read && postNumbers.includes(post.post_number)) {
           post.set("read", true);
+          // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
           this.appEvents.trigger("post-stream:refresh", { id: post.get("id") });
         }
       });

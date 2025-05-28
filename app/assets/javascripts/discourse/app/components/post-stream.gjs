@@ -81,10 +81,6 @@ export default class PostStream extends Component {
     // initialize the cloaking offset area
     this.#updateCloakOffset();
 
-    // TODO (glimmer-post-stream) do we need this?
-    this.appEvents.on("post-stream:posted", this, this.#postedTriggered);
-    this.appEvents.on("post-stream:refresh", this, this.#scrollTriggered);
-
     const opts = {
       passive: true,
     };
@@ -116,9 +112,6 @@ export default class PostStream extends Component {
     window.removeEventListener("resize", this.onWindowResize);
     window.removeEventListener("scroll", this.onScroll);
     window.removeEventListener("touchmove", this.onScroll);
-
-    this.appEvents.off("post-stream:posted", this, this.#postedTriggered);
-    this.appEvents.off("post-stream:refresh", this, this.#scrollTriggered);
 
     // disconnect the intersection observers
     this.#viewportObserver?.disconnect();
@@ -539,15 +532,6 @@ export default class PostStream extends Component {
       },
       { threshold, rootMargin, root: document }
     );
-  }
-
-  #postedTriggered(staged) {
-    if (staged) {
-      schedule("afterRender", () => {
-        const postNumber = staged.post_number;
-        DiscourseURL.jumpToPost(postNumber, { skipIfOnScreen: true });
-      });
-    }
   }
 
   #scrollTriggered() {

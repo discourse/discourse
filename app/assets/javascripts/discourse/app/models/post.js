@@ -644,6 +644,7 @@ export default class Post extends RestModel {
       target: "post",
       targetId: this.id,
     });
+    // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
     this.appEvents.trigger("post-stream:refresh", { id: this.id });
   }
 

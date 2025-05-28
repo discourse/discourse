@@ -315,6 +315,7 @@ export default class SearchMenu extends Component {
           // when starting the query
           if (results) {
             if (this.searchContext) {
+              // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
               this.appEvents.trigger("post-stream:refresh", {
                 force: true,
               });

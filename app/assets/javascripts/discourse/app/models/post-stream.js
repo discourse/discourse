@@ -284,6 +284,7 @@ export default class PostStream extends RestModel {
         ? element.getBoundingClientRect().top
         : null;
 
+      // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
       this.appEvents.trigger("post-stream:refresh");
 
       DiscourseURL.jumpToPost(postNumber, {
@@ -304,6 +305,7 @@ export default class PostStream extends RestModel {
       post_id: postID,
     });
     return this.refresh({ refreshInPlace: true }).then(() => {
+      // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
       this.appEvents.trigger("post-stream:refresh");
 
       if (this.posts && this.posts.length > 1) {
@@ -438,6 +440,7 @@ export default class PostStream extends RestModel {
   }
 
   gapExpanded() {
+    // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
     this.appEvents.trigger("post-stream:refresh");
 
     // resets the reply count in posts-filtered-notice
