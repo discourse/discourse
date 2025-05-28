@@ -245,7 +245,7 @@ export default RouteTemplate(
                     class={{concatClass
                       "edit-topic"
                       "btn"
-                      "btn-default"
+                      "btn-flat"
                       "no-text"
                       (if @controller.capabilities.touch "btn-transparent")
                     }}

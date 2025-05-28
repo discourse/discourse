@@ -203,7 +203,8 @@
           opacity: 1;
 
           &:hover {
-            background: var(--primary-medium);
+            background: var(--d-post-control-background--hover);
+            color: var(--d-post-control-text-color--hover);
           }
         }
       }
