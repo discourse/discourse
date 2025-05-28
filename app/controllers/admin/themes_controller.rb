@@ -356,6 +356,32 @@ class Admin::ThemesController < Admin::AdminController
     render json: updated_setting, status: :ok
   end
 
+  def update_theme_site_setting
+    Themes::ThemeSiteSettingUpsert.call(
+      params: {
+        theme_id: params[:id],
+        name: params[:name],
+        value: params[:value],
+      },
+      guardian:,
+    ) do
+      on_success do |theme_site_setting:|
+        if theme_site_setting.present?
+          render json: success_json.merge(theme_site_setting.as_json(only: %i[name value theme_id]))
+        else
+          render json: success_json
+        end
+      end
+    end
+
+    # # TODO (martin)
+    # #
+    # # Logging the change
+    # # Updating site setting cache?
+    # # Messagebus to client to update client site settings
+    # render json: setting.as_json(only: %i[name value theme_id]), status: :ok
+  end
+
   def schema
   end
 

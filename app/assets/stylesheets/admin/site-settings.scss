@@ -52,3 +52,16 @@
     font-weight: 700;
   }
 }
+
+.admin-theme-site-settings-row {
+  &__setting {
+    .setting-label {
+      margin: 0;
+    }
+
+    .setting-description {
+      color: var(--primary-medium);
+      font-size: var(--font-down-1);
+    }
+  }
+}
