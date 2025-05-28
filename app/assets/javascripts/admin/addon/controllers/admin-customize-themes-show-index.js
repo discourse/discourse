@@ -23,7 +23,7 @@ import ThemeUploadAddModal from "../components/theme-upload-add";
 
 const THEME_UPLOAD_VAR = 2;
 
-export default class AdminCustomizeThemesShowController extends Controller {
+export default class AdminCustomizeThemesShowIndexController extends Controller {
   @service dialog;
   @service router;
   @service siteSettings;
@@ -487,27 +487,5 @@ export default class AdminCustomizeThemesShowController extends Controller {
   @action
   editColorScheme() {
     this.router.transitionTo("adminCustomize.colors.show", this.colorSchemeId);
-  }
-
-  @action
-  onLightColorChange(name, value) {
-    const color = this.model.colorPalette.colors.find((c) => c.name === name);
-    color.hex = value;
-  }
-
-  @action
-  onDarkColorChange(name, value) {
-    const color = this.model.colorPalette.colors.find((c) => c.name === name);
-    color.dark_hex = value;
-  }
-
-  @action
-  async saveColorChanges() {
-    await this.model.changeColors();
-  }
-
-  @action
-  discardColorChanges() {
-    this.model.discardColorChanges();
   }
 }
