@@ -23,8 +23,8 @@ export default class ComposerToolbarButtons extends Component {
   }
 
   <template>
-    {{#each @data.groups as |group|}}
-      {{#each group.buttons as |button|}}
+    {{#each @data.groups key="group" as |group|}}
+      {{#each group.buttons key="id" as |button|}}
         {{#if (this.applyCondition button)}}
           {{#if button.href}}
             <a
