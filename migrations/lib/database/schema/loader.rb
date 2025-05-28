@@ -45,7 +45,7 @@ module Migrations::Database::Schema
           Column.new(
             name: name_for(column),
             datatype: datatype_for(column),
-            nullable: column.null || column.default,
+            nullable: nullable_for(column, config),
             max_length: column.type == :text ? column.limit : nil,
             is_primary_key: primary_key_column_names.include?(column.name),
           )
@@ -100,6 +100,16 @@ module Migrations::Database::Schema
       else
         raise "Unknown datatype: #{datatype}"
       end
+    end
+
+    def nullable_for(column, config)
+      modified_column = config.dig(:columns, :modify)&.find { |col| col[:name] == column.name }
+      return modified_column[:nullable] unless modified_column&.dig(:nullable).nil?
+
+      global_nullable = @global.modified_nullable(column.name)
+      return global_nullable unless global_nullable.nil?
+
+      column.null || column.default.present?
     end
 
     def indexes(config)

@@ -18,7 +18,7 @@ module Migrations::Database::IntermediateDB
       )
     SQL
 
-    def self.create(email:, created_at:, primary: nil, user_id:)
+    def self.create(email:, created_at: nil, primary: nil, user_id:)
       ::Migrations::Database::IntermediateDB.insert(
         SQL,
         email,
