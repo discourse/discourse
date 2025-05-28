@@ -37,6 +37,7 @@ import TopicTimerInfo from "discourse/components/topic-timer-info";
 import TopicTitle from "discourse/components/topic-title";
 import ageWithTooltip from "discourse/helpers/age-with-tooltip";
 import bodyClass from "discourse/helpers/body-class";
+import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import htmlSafe from "discourse/helpers/html-safe";
@@ -220,9 +221,17 @@ export default RouteTemplate(
 
                 {{#if @controller.model.details.loaded}}
                   <TopicStatus @topic={{@controller.model}} />
+
                   <a
                     href={{@controller.model.url}}
-                    {{on "click" @controller.jumpTop}}
+                    {{on
+                      "click"
+                      (if
+                        @controller.model.details.can_edit
+                        @controller.editTopic
+                        @controller.jumpTop
+                      )
+                    }}
                     class="fancy-title"
                   >
                     {{htmlSafe @controller.model.fancyTitle}}
@@ -233,7 +242,13 @@ export default RouteTemplate(
                   <a
                     href
                     {{on "click" @controller.editTopic}}
-                    class="edit-topic"
+                    class={{concatClass
+                      "edit-topic"
+                      "btn"
+                      "btn-default"
+                      "no-text"
+                      (if @controller.capabilities.touch "btn-transparent")
+                    }}
                     title={{i18n "edit_topic"}}
                   >{{icon "pencil"}}</a>
                 {{/if}}
