@@ -179,6 +179,7 @@ export default class Post extends RestModel {
   @trackedPostProperty expandedExcerpt;
   @trackedPostProperty group_moderator;
   @trackedPostProperty hidden;
+  @trackedPostProperty id;
   @trackedPostProperty is_auto_generated;
   @trackedPostProperty last_wiki_edit;
   @trackedPostProperty likeAction;
@@ -195,6 +196,7 @@ export default class Post extends RestModel {
   @trackedPostProperty reply_count;
   @trackedPostProperty reply_to_user;
   @trackedPostProperty staff;
+  @trackedPostProperty staged;
   @trackedPostProperty title_is_group;
   @trackedPostProperty trust_level;
   @trackedPostProperty updated_at;

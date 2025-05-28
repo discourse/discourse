@@ -38,23 +38,22 @@ export default class PostStream extends RestModel {
   @service currentUser;
   @service store;
 
+  @tracked filter;
+  @tracked filterRepliesToPostNumber;
+  @tracked filterUpwardsPostID;
   @tracked gaps;
-
-  posts = null;
-  stream = null;
-  userFilters = null;
-  loaded = null;
-  loadingAbove = null;
-  loadingBelow = null;
-  loadingFilter = null;
-  loadingNearPost = null;
-  stagingPost = null;
-  postsWithPlaceholders = null;
-  timelineLookup = null;
-  filterRepliesToPostNumber = null;
-  filterUpwardsPostID = null;
-  filter = null;
-  lastId = null;
+  @tracked lastId;
+  @tracked loaded;
+  @tracked loadingAbove;
+  @tracked loadingBelow;
+  @tracked loadingFilter;
+  @tracked loadingNearPost;
+  @tracked postsWithPlaceholders;
+  @tracked stagingPost;
+  @tracked stream;
+  @tracked timelineLookup;
+  @tracked userFilters;
+  @tracked posts;
 
   @or("loadingAbove", "loadingBelow", "loadingFilter", "stagingPost") loading;
   @not("loading") notLoading;
