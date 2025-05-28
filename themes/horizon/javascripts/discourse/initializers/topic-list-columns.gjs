@@ -83,6 +83,34 @@ export default {
       api.registerValueTransformer("topic-list-item-mobile-layout", () => {
         return false;
       });
+
+      api.registerBehaviorTransformer(
+        "topic-list-item-click",
+        ({ context: { event }, next }) => {
+          if (event.target.closest("a, button, input")) {
+            return next();
+          }
+
+          event.preventDefault();
+          event.stopPropagation();
+
+          const topicLink = event.target
+            .closest("tr")
+            .querySelector("a.raw-topic-link");
+
+          // Redespatch the click on the topic link, so that all key-handing is sorted
+          topicLink.dispatchEvent(
+            new MouseEvent("click", {
+              ctrlKey: event.ctrlKey,
+              metaKey: event.metaKey,
+              shiftKey: event.shiftKey,
+              button: event.button,
+              bubbles: true,
+              cancelable: true,
+            })
+          );
+        }
+      );
     });
   },
 };

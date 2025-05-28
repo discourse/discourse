@@ -132,5 +132,6 @@
       "header_primary": "ffffff",
       "hover": "584B3E"
     }
-  }
+  },
+  "screenshots": ["screenshots/light.png", "screenshots/dark.png"]
 }

@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .user-main .about.collapsed-info .details {
   background: var(--d-content-background);
 }
@@ -104,4 +106,36 @@ input[type="color"]:focus,
 
 .period-chooser-header {
   border-radius: 0;
+}
+
+// compatibility with the top contributors sidebar theme component
+// https://meta.discourse.org/t/top-contributors-sidebar/215110
+.list-container
+  #list-area
+  > .contents
+  > .topic-list:has(.discourse-top-contributors) {
+  grid-template-areas: "head head" "body sidebar";
+  grid-template-rows: auto 1fr;
+
+  @include viewport.until(lg) {
+    grid-template-areas: "head head" "body body";
+  }
+
+  tbody {
+    display: flex;
+  }
+
+  .discourse-top-contributors {
+    width: auto;
+    box-sizing: border-box;
+
+    @include viewport.until(lg) {
+      display: none;
+    }
+
+    .top-contributors-heading {
+      font-size: var(--font-up-2);
+      padding-bottom: 0.5em;
+    }
+  }
 }

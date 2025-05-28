@@ -19,6 +19,8 @@
 
     .grippie {
       background: var(--tertiary-low);
+      border-top-right-radius: var(--d-border-radius);
+      border-top-left-radius: var(--d-border-radius);
     }
 
     .user-selector,

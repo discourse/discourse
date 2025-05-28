@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .sidebar-wrapper,
 .sidebar-hamburger-dropdown {
   @include breakpoint(medium) {
@@ -78,5 +80,14 @@
 
   .sidebar-new-topic-button .d-icon {
     display: none;
+  }
+}
+
+// put the draft menu above the slide-out hamburger on small desktop screens
+@include viewport.until(md) {
+  html:not(.mobile-view) {
+    .topic-drafts-menu-content {
+      z-index: z("modal", "overlay");
+    }
   }
 }

@@ -38,7 +38,7 @@ export default class UserColorPaletteSelector extends Component {
 
   get userColorPalettes() {
     const availablePalettes = listColorSchemes(this.site)
-      .map((userPalette) => {
+      ?.map((userPalette) => {
         return {
           ...userPalette,
           accent: `#${
@@ -56,7 +56,7 @@ export default class UserColorPaletteSelector extends Component {
     // Match the light scheme with the corresponding dark id based in the name
     return (
       availablePalettes
-        .map((palette) => {
+        ?.map((palette) => {
           if (palette.is_dark) {
             return palette;
           }

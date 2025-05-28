@@ -40,6 +40,7 @@
   grid-column-gap: 12px;
   grid-row-gap: 8px;
   border-radius: var(--d-border-radius);
+  cursor: pointer;
 
   td.main-link .link-top-line {
     grid-row: 1/2;
@@ -253,6 +254,10 @@
     padding: 0;
     top: -2px;
     min-width: unset;
+  }
+
+  .badge-notification.new-topic::before {
+    display: none;
   }
 
   // timestamp
@@ -720,15 +725,8 @@ body.user-messages-page {
   }
 }
 
-.mobile-view {
-  .link-top-line .event-date-container {
-    display: inline;
-    margin-top: 0;
-  }
-
-  .topic-list-body .topic-list-item .link-top-line .event-date {
-    position: relative;
-    margin-left: 0;
-    top: -0.125em;
-  }
+.event-date-container {
+  display: inline-flex;
+  position: relative;
+  top: -0.25em; // optical alignment
 }
