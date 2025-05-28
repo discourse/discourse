@@ -28,6 +28,7 @@ module Migrations::Database::IntermediateDB
         emoji,
         existing_id,
         icon,
+        locale,
         mailinglist_mirror,
         minimum_required_tags,
         name,
@@ -57,7 +58,7 @@ module Migrations::Database::IntermediateDB
       )
       VALUES (
         ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
-        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
       )
     SQL
 
@@ -82,6 +83,7 @@ module Migrations::Database::IntermediateDB
       emoji: nil,
       existing_id: nil,
       icon: nil,
+      locale: nil,
       mailinglist_mirror: nil,
       minimum_required_tags: nil,
       name:,
@@ -131,6 +133,7 @@ module Migrations::Database::IntermediateDB
         emoji,
         existing_id,
         icon,
+        locale,
         ::Migrations::Database.format_boolean(mailinglist_mirror),
         minimum_required_tags,
         name,
