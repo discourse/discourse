@@ -253,7 +253,8 @@ export default class TimeShortcutPicker extends Component {
         this.keyValueStore.lastCustomDate = this.customDate;
       }
     } else {
-      dateTime = this.options.findBy("id", type).timeFn();
+      const option = this.options.findBy("id", type);
+      dateTime = option?.timeFn?.();
     }
 
     this.setProperties({
@@ -262,7 +263,15 @@ export default class TimeShortcutPicker extends Component {
     });
 
     if (this.onTimeSelected) {
-      this.onTimeSelected(type, dateTime);
+      // Pass the type and either a function that returns the datetime, or a datetime value
+      if (type === TIME_SHORTCUT_TYPES.CUSTOM) {
+        // For custom datetimes, create a function that returns the datetime
+        this.onTimeSelected(type, () => dateTime);
+      } else {
+        // For preset options, pass the timeFn function directly
+        const option = this.options.findBy("id", type);
+        this.onTimeSelected(type, option?.timeFn || (() => dateTime));
+      }
     }
   }
 

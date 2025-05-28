@@ -57,10 +57,18 @@ describe "Bookmarking posts and topics", type: :system do
     visit_topic_and_open_bookmark_menu(post)
     bookmark_menu.click_menu_option("custom")
     bookmark_modal.select_preset_reminder(:tomorrow)
-    expect(topic_page).to have_post_bookmarked(post, with_reminder: true)
+
+    # Wait for the bookmark to be created with a reminder in the database
     try_until_success(frequency: 0.5) do
-      expect(Bookmark.find_by(bookmarkable: post, user: current_user).reminder_at).not_to be_blank
+      bookmark = Bookmark.find_by(bookmarkable: post, user: current_user)
+      expect(bookmark&.reminder_at).not_to be_blank
     end
+
+    # Reload the page to ensure we see the updated UI state
+    topic_page.visit_topic(topic)
+
+    # The bookmark should have a reminder icon
+    expect(topic_page).to have_post_bookmarked(post, with_reminder: true)
   end
 
   it "allows choosing a different auto_delete_preference to the user preference and remembers it when reopening the modal" do

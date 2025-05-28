@@ -13,7 +13,8 @@ module PageObjects
 
       def select_preset_reminder(identifier)
         find("#tap_tile_#{identifier}").click
-        closed?
+        # Wait for modal to fully close
+        has_no_css?(".bookmark-reminder-modal", wait: 5) # Use standard Capybara wait
       end
 
       def has_active_preset?(identifier)
