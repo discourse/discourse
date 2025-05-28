@@ -6710,6 +6710,13 @@ en:
           remote_theme_edits: "If you want to edit this theme, you must <a href='%{repoURL}' target='_blank'>submit a change on its repository</a>"
           repo_unreachable: "Couldn't contact the Git repository of this theme. Error message:"
           imported_from_archive: "This theme was imported from a .zip file"
+          settings: "Settings"
+          colors: "Colors"
+          unsaved_colors:
+            one: "You have %{count} unsaved color"
+            other: "You have %{count} unsaved colors"
+          save_colors: "Save colors"
+          discard_colors: "Discard"
           scss:
             text: "CSS"
             title: "Custom CSS rules with support for SCSS syntax"

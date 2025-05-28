@@ -160,7 +160,8 @@ describe "Admin Customize Themes", type: :system do
     it "shows color palette editor when feature is enabled" do
       theme_page.visit(theme.id)
 
-      expect(theme_page).to have_color_palette_editor
+      expect(theme_page).to have_colors_tab
+      expect(theme_page).to have_settings_tab
       expect(theme_page).to have_no_color_scheme_selector
     end
 
@@ -168,42 +169,46 @@ describe "Admin Customize Themes", type: :system do
       SiteSetting.use_overhauled_theme_color_palette = false
       theme_page.visit(theme.id)
 
-      expect(theme_page).to have_no_color_palette_editor
+      expect(theme_page).to have_no_colors_tab
+      expect(theme_page).to have_no_settings_tab
       expect(theme_page).to have_color_scheme_selector
     end
 
     it "allows editing colors without affecting other themes" do
       theme_page.visit(theme.id)
+      theme_page.colors_tab.click
+
+      expect(theme_page).to have_current_path("/admin/customize/themes/#{theme.id}/colors")
 
       original_hex = theme_page.color_palette_editor.get_color_value("primary")
       theme_page.color_palette_editor.change_color("primary", "#ff000e")
 
-      expect(theme_page).to have_palette_editor_save_button
-      expect(theme_page).to have_palette_editor_discard_button
-
-      theme_page.palette_editor_save_button.click
+      expect(theme_page.changes_banner).to be_visible
+      theme_page.changes_banner.click_save
 
       page.refresh
+      expect(theme_page).to have_colors_tab_active
 
       updated_color = theme_page.color_palette_editor.get_color_value("primary")
       expect(updated_color).to eq("#ff000e")
 
       other_theme = Fabricate(:theme)
       theme_page.visit(other_theme.id)
+      theme_page.colors_tab.click
       expect(theme_page.color_palette_editor.get_color_value("primary")).to eq("#222222")
     end
 
     it "allows discarding unsaved color changes" do
       theme_page.visit(theme.id)
+      theme_page.colors_tab.click
 
       original_hex = theme_page.color_palette_editor.get_color_value("primary")
 
       theme_page.color_palette_editor.change_color("primary", "#10ff00")
 
-      theme_page.palette_editor_discard_button.click
+      theme_page.changes_banner.click_discard
 
-      expect(theme_page).to have_no_palette_editor_save_button
-      expect(theme_page).to have_no_palette_editor_discard_button
+      expect(theme_page.changes_banner).to be_hidden
 
       updated_color = theme_page.color_palette_editor.get_color_value("primary")
       expect(updated_color).to eq(original_hex)
@@ -211,13 +216,14 @@ describe "Admin Customize Themes", type: :system do
 
     it "allows editing dark mode colors" do
       theme_page.visit(theme.id)
+      theme_page.colors_tab.click
 
       theme_page.color_palette_editor.switch_to_dark_tab
 
       original_dark_hex = theme_page.color_palette_editor.get_color_value("primary")
       theme_page.color_palette_editor.change_color("primary", "#000fff")
 
-      theme_page.palette_editor_save_button.click
+      theme_page.changes_banner.click_save
 
       page.refresh
       theme_page.color_palette_editor.switch_to_dark_tab
@@ -226,11 +232,11 @@ describe "Admin Customize Themes", type: :system do
       expect(updated_dark_color).to eq("#000fff")
     end
 
-    it "doesn't show color palette editor for component themes" do
+    it "doesn't show colors tab or DPageHeader for components" do
       component = Fabricate(:theme, component: true)
       theme_page.visit(component.id)
+      expect(theme_page.header).to be_hidden
 
-      expect(theme_page).to have_no_color_palette_editor
       expect(theme_page).to have_no_color_scheme_selector
     end
   end

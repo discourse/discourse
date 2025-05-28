@@ -127,7 +127,7 @@ const Picker = class extends Component {
       {{on "change" this.onChange}}
     />
     <div class="color-palette-editor__input-wrapper">
-      {{icon "hashtag" class="color-palette-editor__icon"}}    
+      {{icon "hashtag" class="color-palette-editor__icon"}}
       <input
         class="color-palette-editor__text-input"
         type="text"
