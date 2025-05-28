@@ -57,6 +57,8 @@ export default RouteTemplate(
     {{/let}}
 
     <DiscourseTopic
+      {{! TODO (glimmer-post-stream) remove the modifier below.
+         The Glimmer Post Stream applies the sticky-avatar class to all posts }}
       {{stickyAvatars}}
       @multiSelect={{@controller.multiSelect}}
       @enteredAt={{@controller.enteredAt}}

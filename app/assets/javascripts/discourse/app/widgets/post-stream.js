@@ -214,7 +214,7 @@ createWidget("filter-show-all", {
 });
 
 export default createWidget("post-stream", {
-  tagName: "div.post-stream",
+  tagName: "div.post-stream.widget-post-stream",
 
   html(attrs) {
     const posts = attrs.posts || [];

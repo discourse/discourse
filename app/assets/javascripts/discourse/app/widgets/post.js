@@ -1108,6 +1108,9 @@ export default createWidget("post", {
     }
     const classNames = ["topic-post", "clearfix"];
 
+    if (!attrs.mobileView) {
+      classNames.push("sticky-avatar");
+    }
     if (attrs.id === -1 || attrs.isSaving || attrs.staged) {
       classNames.push("staged");
     }

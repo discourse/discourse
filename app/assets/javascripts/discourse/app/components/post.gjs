@@ -333,6 +333,7 @@ export default class Post extends Component {
         (concatClass
           "topic-post"
           "clearfix"
+          (unless this.site.mobileView "post--sticky-avatar sticky-avatar")
           (if this.staged "post--staged staged")
           (if @selected "post--selected selected")
           (if @post.topicOwner "post--topic-owner topic-owner")
