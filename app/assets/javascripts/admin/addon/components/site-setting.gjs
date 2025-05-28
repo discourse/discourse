@@ -1,21 +1,20 @@
 import { tracked } from "@glimmer/tracking";
-import Component from "@glimmer/component";
-import { action } from "@ember/object";
+import Component from "@ember/component";
 import { hash } from "@ember/helper";
+import { action } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { getOwner } from "@ember/owner";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isNone } from "@ember/utils";
-import { on } from "@ember/modifier";
 import DButton from "discourse/components/d-button";
-import icon from "discourse/helpers/d-icon";
-import { i18n } from "discourse-i18n";
 import JsonSchemaEditorModal from "discourse/components/modal/json-schema-editor";
+import icon from "discourse/helpers/d-icon";
 import { deepEqual } from "discourse/lib/object";
 import { humanizedSettingName } from "discourse/lib/site-settings-utils";
 import { splitString } from "discourse/lib/utilities";
+import { i18n } from "discourse-i18n";
 import SettingValidationMessage from "admin/components/setting-validation-message";
 import Description from "admin/components/site-settings/description";
 import SiteSetting from "admin/models/site-setting";
@@ -43,7 +42,7 @@ const CUSTOM_TYPES = [
   "named_list",
   "file_size_restriction",
   "file_types_list",
-  "font_list"
+  "font_list",
 ];
 
 export default class SiteSettingComponent extends Component {
@@ -57,9 +56,32 @@ export default class SiteSettingComponent extends Component {
   @tracked isSecret = null;
   updateExistingUsers = null;
 
+  // Classic component attributes
+  classNameBindings = [":row", ":setting", "overridden", "typeClass"];
+  attributeBindings = ["setting.setting:data-setting"];
+
+  _handleKeydown = (event) => {
+    if (
+      event.key === "Enter" &&
+      event.target.classList.contains("input-setting-string")
+    ) {
+      this.save();
+    }
+  };
+
   constructor() {
     super(...arguments);
     this.isSecret = this.setting?.secret;
+  }
+
+  didInsertElement() {
+    super.didInsertElement(...arguments);
+    this.element.addEventListener("keydown", this._handleKeydown);
+  }
+
+  willDestroyElement() {
+    super.willDestroyElement(...arguments);
+    this.element.removeEventListener("keydown", this._handleKeydown);
   }
 
   get resolvedComponent() {
@@ -177,12 +199,12 @@ export default class SiteSettingComponent extends Component {
               },
               value: this.buffered.value,
               settingName: setting.setting,
-              jsonSchema: setting.json_schema
-            }
+              jsonSchema: setting.json_schema,
+            },
           });
         },
         label: "admin.site_settings.json_schema.edit",
-        icon: "pencil"
+        icon: "pencil",
       };
     } else if (setting.schema) {
       return {
@@ -190,7 +212,7 @@ export default class SiteSettingComponent extends Component {
           this.router.transitionTo("admin.schema", setting.setting);
         },
         label: "admin.site_settings.json_schema.edit",
-        icon: "pencil"
+        icon: "pencil",
       };
     } else if (setting.objects_schema) {
       return {
@@ -201,7 +223,7 @@ export default class SiteSettingComponent extends Component {
           );
         },
         label: "admin.customize.theme.edit_objects_theme_setting",
-        icon: "pencil"
+        icon: "pencil",
       };
     }
     return null;
@@ -246,7 +268,7 @@ export default class SiteSettingComponent extends Component {
 
       if (this.setting.requiresReload) {
         this.siteSettingChangeTracker.refreshPage({
-          [this.setting.setting]: this.setting.value
+          [this.setting.setting]: this.setting.value,
         });
       }
     } catch (e) {
@@ -304,116 +326,100 @@ export default class SiteSettingComponent extends Component {
     return false;
   }
 
-  @action
-  _handleKeydown(event) {
-    if (
-      event.key === "Enter" &&
-      event.target.classList.contains("input-setting-string")
-    ) {
-      this.save();
-    }
-  }
-
   _save() {
     const setting = this.buffered;
     return SiteSetting.update(setting.setting, setting.value, {
-      updateExistingUsers: this.setting.updateExistingUsers
+      updateExistingUsers: this.setting.updateExistingUsers,
     });
   }
 
   <template>
-    <div
-      {{on "keydown" this._handleKeydown}}
-      class="row setting {{if this.overridden 'overridden'}} {{this.typeClass}}"
-      data-setting={{this.setting.setting}}
-    >
-      <div class="setting-label">
-        <h3>
-          {{this.settingName}}
+    <div class="setting-label">
+      <h3>
+        {{this.settingName}}
 
-          {{#if this.staffLogFilter}}
-            <LinkTo
-              @route="adminLogs.staffActionLogs"
-              @query={{hash filters=this.staffLogFilter force_refresh=true}}
-              title={{i18n "admin.settings.history"}}
-            >
-              <span class="history-icon">
-                {{icon "clock-rotate-left"}}
-              </span>
-            </LinkTo>
-          {{/if}}
-        </h3>
-
-        {{#if this.defaultIsAvailable}}
-          <DButton
-            class="btn-link"
-            @action={{this.setDefaultValues}}
-            @translatedLabel={{this.setting.setDefaultValuesLabel}}
-          />
+        {{#if this.staffLogFilter}}
+          <LinkTo
+            @route="adminLogs.staffActionLogs"
+            @query={{hash filters=this.staffLogFilter force_refresh=true}}
+            title={{i18n "admin.settings.history"}}
+          >
+            <span class="history-icon">
+              {{icon "clock-rotate-left"}}
+            </span>
+          </LinkTo>
         {{/if}}
-      </div>
+      </h3>
 
-      <div class="setting-value">
-        {{#if this.settingEditButton}}
-          <DButton
-            @action={{this.settingEditButton.action}}
-            @icon={{this.settingEditButton.icon}}
-            @label={{this.settingEditButton.label}}
-            class="setting-value-edit-button"
-          />
-
-          <Description @description={{this.setting.description}} />
-        {{else}}
-          <this.resolvedComponent
-            @setting={{this.setting}}
-            @value={{this.buffered.value}}
-            @preview={{this.preview}}
-            @isSecret={{this.isSecret}}
-            @allowAny={{this.allowAny}}
-            @changeValueCallback={{this.changeValueCallback}}
-            @setValidationMessage={{this.setValidationMessage}}
-          />
-          <SettingValidationMessage @message={{this.setting.validationMessage}} />
-          {{#if this.displayDescription}}
-            <Description @description={{this.setting.description}} />
-          {{/if}}
-        {{/if}}
-      </div>
-
-      {{#if this.dirty}}
-        <div class="setting-controls">
-          <DButton
-            @action={{this.update}}
-            @icon="check"
-            @isLoading={{this.disableControls}}
-            @ariaLabel="admin.settings.save"
-            class="ok setting-controls__ok"
-          />
-          <DButton
-            @action={{this.cancel}}
-            @icon="xmark"
-            @isLoading={{this.disableControls}}
-            @ariaLabel="admin.settings.cancel"
-            class="cancel setting-controls__cancel"
-          />
-        </div>
-      {{else if this.overridden}}
-        {{#if this.setting.secret}}
-          <DButton
-            @action={{this.toggleSecret}}
-            @icon="far-eye-slash"
-            @ariaLabel="admin.settings.unmask"
-            class="setting-toggle-secret"
-          />
-        {{/if}}
-
+      {{#if this.defaultIsAvailable}}
         <DButton
-          class="btn-default undo setting-controls__undo"
-          @action={{this.resetDefault}}
-          @icon="arrow-rotate-left"
-          @label="admin.settings.reset"
+          class="btn-link"
+          @action={{this.setDefaultValues}}
+          @translatedLabel={{this.setting.setDefaultValuesLabel}}
         />
       {{/if}}
     </div>
+
+    <div class="setting-value">
+      {{#if this.settingEditButton}}
+        <DButton
+          @action={{this.settingEditButton.action}}
+          @icon={{this.settingEditButton.icon}}
+          @label={{this.settingEditButton.label}}
+          class="setting-value-edit-button"
+        />
+
+        <Description @description={{this.setting.description}} />
+      {{else}}
+        <this.resolvedComponent
+          @setting={{this.setting}}
+          @value={{this.buffered.value}}
+          @preview={{this.preview}}
+          @isSecret={{this.isSecret}}
+          @allowAny={{this.allowAny}}
+          @changeValueCallback={{this.changeValueCallback}}
+          @setValidationMessage={{this.setValidationMessage}}
+        />
+        <SettingValidationMessage @message={{this.setting.validationMessage}} />
+        {{#if this.displayDescription}}
+          <Description @description={{this.setting.description}} />
+        {{/if}}
+      {{/if}}
+    </div>
+
+    {{#if this.dirty}}
+      <div class="setting-controls">
+        <DButton
+          @action={{this.update}}
+          @icon="check"
+          @isLoading={{this.disableControls}}
+          @ariaLabel="admin.settings.save"
+          class="ok setting-controls__ok"
+        />
+        <DButton
+          @action={{this.cancel}}
+          @icon="xmark"
+          @isLoading={{this.disableControls}}
+          @ariaLabel="admin.settings.cancel"
+          class="cancel setting-controls__cancel"
+        />
+      </div>
+    {{else if this.overridden}}
+      {{#if this.setting.secret}}
+        <DButton
+          @action={{this.toggleSecret}}
+          @icon="far-eye-slash"
+          @ariaLabel="admin.settings.unmask"
+          class="setting-toggle-secret"
+        />
+      {{/if}}
+
+      <DButton
+        class="btn-default undo setting-controls__undo"
+        @action={{this.resetDefault}}
+        @icon="arrow-rotate-left"
+        @label="admin.settings.reset"
+      />
+    {{/if}}
   </template>
 }
