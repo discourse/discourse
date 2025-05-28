@@ -6825,7 +6825,7 @@ en:
             description: "Delete or error actions"
           success:
             name: "success"
-            description: "For successful actions"
+            description: "Successful actions"
           love:
             name: "love"
             description: "Like button color"
