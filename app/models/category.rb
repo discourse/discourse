@@ -1388,6 +1388,7 @@ end
 #  style_type                                :integer          default("square"), not null
 #  emoji                                     :string
 #  icon                                      :string
+#  locale                                    :string(20)
 #
 # Indexes
 #
