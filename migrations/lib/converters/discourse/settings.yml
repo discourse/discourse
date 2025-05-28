@@ -7,3 +7,6 @@ source_db:
   user: "username"
   password: "password"
   dbname: "discourse_source_db"
+
+categories:
+  skip_existing_ids: false
