@@ -4,7 +4,7 @@ plugins:
     client: true
     area: "localization"
   discourse_local_dates_email_format:
-    default: "llll UTC"
+    default: "llll z"
     client: true
   discourse_local_dates_enabled:
     default: true

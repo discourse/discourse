@@ -19,7 +19,7 @@ RSpec.describe PrettyText do
 
   describe "emails simplified rendering" do
     it "works with default markup" do
-      SiteSetting.discourse_local_dates_email_format = "YYYY-MM-DDTHH:mm:ss[Z] UTC"
+      SiteSetting.discourse_local_dates_email_format = "YYYY-MM-DDTHH:mm:ss[Z] z"
       cooked = PrettyText.cook("[date=2018-05-08]")
       cooked_mail =
         generate_html(
