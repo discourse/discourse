@@ -8,7 +8,7 @@
   "keywords": [],
   "dependencies": {
     "@babel/standalone": "^7.27.2",
-    "@csstools/postcss-light-dark-function": "^2.0.8",
+    "@csstools/postcss-light-dark-function": "^2.0.9",
     "autoprefixer": "^10.4.21",
     "babel-plugin-ember-template-compilation": "^2.4.1",
     "content-tag": "^4.0.0",
