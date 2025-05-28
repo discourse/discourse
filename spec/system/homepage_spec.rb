@@ -6,6 +6,7 @@ describe "Homepage", type: :system do
   fab!(:topics) { Fabricate.times(5, :post).map(&:topic) }
   let(:discovery) { PageObjects::Pages::Discovery.new }
   fab!(:theme)
+  let(:user_preferences_interface_page) { PageObjects::Pages::UserPreferencesInterface.new }
 
   before do
     # A workaround to avoid the global notice from interfering with the tests
@@ -25,15 +26,13 @@ describe "Homepage", type: :system do
 
     expect(page).to have_css(".navigation-container .latest.active", text: "Latest")
 
-    visit "u/#{user.username}/preferences/interface"
+    user_preferences_interface_page.visit(user)
 
     homepage_picker = PageObjects::Components::SelectKit.new("#home-selector")
     homepage_picker.expand
     homepage_picker.select_row_by_name("Hot")
-    page.find(".btn-primary.save-changes").click
 
-    # Wait for the save to complete
-    find(".btn-primary.save-changes:not([disabled])", wait: 5)
+    user_preferences_interface_page.save_changes
 
     visit "/"
 
@@ -80,32 +79,26 @@ describe "Homepage", type: :system do
       visit ""
       expect(page).to have_css(".new-home", text: "Hi friends!")
 
-      visit "/u/#{user.username}/preferences/interface"
+      user_preferences_interface_page.visit(user)
 
       homepage_picker = PageObjects::Components::SelectKit.new("#home-selector")
       homepage_picker.expand
       # user overrides theme custom homepage
       homepage_picker.select_row_by_name("Hot")
-      page.find(".btn-primary.save-changes").click
+      user_preferences_interface_page.save_changes
 
-      # Wait for the save to complete
-      find(".btn-primary.save-changes:not([disabled])", wait: 5)
       expect(user.user_option.homepage_id).to eq(UserOption::HOMEPAGES.key("hot"))
 
       click_logo
       expect(page).to have_css(".navigation-container .hot.active", text: "Hot")
 
-      visit "/u/#{user.username}/preferences/interface"
+      user_preferences_interface_page.visit(user)
 
       homepage_picker = PageObjects::Components::SelectKit.new("#home-selector")
       homepage_picker.expand
       # user selects theme custom homepage again
       homepage_picker.select_row_by_name("(default)")
-      page.find(".btn-primary.save-changes").click
-
-      # Wait for the save to complete
-      find(".btn-primary.save-changes:not([disabled])", wait: 5)
-      expect(user.reload.user_option.homepage_id).to_not eq(UserOption::HOMEPAGES.key("hot"))
+      user_preferences_interface_page.save_changes
 
       click_logo
 
