@@ -18,7 +18,7 @@ import { i18n } from "discourse-i18n";
 
 export default class InsertHyperlink extends Component {
   @tracked linkText = this.args.model.linkText;
-  @tracked linkUrl = "";
+  @tracked linkUrl = this.args.model.linkUrl ?? "";
   @tracked selectedRow = -1;
   @tracked searchResults = [];
   @tracked searchLoading = false;
