@@ -71,10 +71,7 @@ RSpec.describe FormTemplatesController do
         fab!(:tag4) { Fabricate(:tag) }
         fab!(:tag_synonym) { Fabricate(:tag, name: "discourse") }
 
-        fab!(:tag_group1) do
-          # Synonyms are added to tag groups once the synonym is created
-          Fabricate(:tag_group, name: "tag_group1", tags: [tag1, tag3])
-        end
+        fab!(:tag_group1) { Fabricate(:tag_group, name: "tag_group1", tags: [tag1, tag3]) }
         fab!(:tag_group2) { Fabricate(:tag_group, name: "tag_group2", tags: [tag2, tag4]) }
 
         fab!(:tag_groups_form_template) do
