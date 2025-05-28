@@ -28,25 +28,26 @@ RSpec.describe "Bookmark message", type: :system do
 
       expect(channel_page).to have_bookmarked_message(message_1)
     end
+    context "when in a long thread" do
+      it "supports linking to a bookmark in a long thread" do
+        category_channel_1.update!(threading_enabled: true)
+        category_channel_1.add(current_user)
 
-    it "supports linking to a bookmark in a long thread" do
-      category_channel_1.update!(threading_enabled: true)
-      category_channel_1.add(current_user)
+        thread =
+          chat_thread_chain_bootstrap(
+            channel: category_channel_1,
+            users: [current_user, Fabricate(:user)],
+            messages_count: 51,
+          )
 
-      thread =
-        chat_thread_chain_bootstrap(
-          channel: category_channel_1,
-          users: [current_user, Fabricate(:user)],
-          messages_count: Chat::MessagesQuery::MAX_PAGE_SIZE + 1,
-        )
+        first_message = thread.replies.first
 
-      first_message = thread.replies.first
+        bookmark = Bookmark.create!(bookmarkable: first_message, user: current_user)
 
-      bookmark = Bookmark.create!(bookmarkable: first_message, user: current_user)
+        visit bookmark.bookmarkable.url
 
-      visit bookmark.bookmarkable.url
-
-      expect(thread_page).to have_bookmarked_message(first_message)
+        expect(thread_page).to have_bookmarked_message(first_message)
+      end
     end
 
     context "in drawer mode" do

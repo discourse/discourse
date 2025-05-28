@@ -34,12 +34,7 @@ module Chat
                   in: Chat::MessagesQuery::VALID_DIRECTIONS,
                 },
                 allow_nil: true
-      validates :page_size,
-                numericality: {
-                  less_than_or_equal_to: Chat::MessagesQuery::MAX_PAGE_SIZE,
-                  only_integer: true,
-                },
-                allow_nil: true
+      validates :page_size, numericality: { only_integer: true }, allow_nil: true
     end
 
     model :thread
@@ -94,7 +89,7 @@ module Chat
           guardian: guardian,
           target_message_id: context.target_message_id,
           thread_id: thread.id,
-          page_size: params.page_size || Chat::MessagesQuery::MAX_PAGE_SIZE,
+          page_size: params.page_size,
           direction: params.direction,
           target_date: params.target_date,
           include_target_message_id:

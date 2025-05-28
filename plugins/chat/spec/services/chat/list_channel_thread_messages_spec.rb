@@ -11,7 +11,6 @@ RSpec.describe Chat::ListChannelThreadMessages do
     it do
       is_expected.to allow_values(Chat::MessagesQuery::MAX_PAGE_SIZE, 1, "1", nil).for(:page_size)
     end
-    it { is_expected.not_to allow_values(Chat::MessagesQuery::MAX_PAGE_SIZE + 1).for(:page_size) }
   end
 
   describe ".call" do

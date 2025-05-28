@@ -106,6 +106,12 @@ RSpec.describe Chat::MessagesQuery do
       stub_const(described_class, "MAX_PAGE_SIZE", 1) { expect(query[:messages].length).to eq(1) }
     end
 
+    it "limits results to MAX_PAGE_SIZE" do
+      options[:page_size] = 2
+      options[:target_message_id] = nil
+      stub_const(described_class, "MAX_PAGE_SIZE", 1) { expect(query[:messages].length).to eq(1) }
+    end
+
     describe "when some messages are in threads" do
       fab!(:thread) { Fabricate(:chat_thread, channel: channel) }
 
