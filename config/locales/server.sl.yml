@@ -243,12 +243,6 @@ sl:
       Vašem prejšnem odgovoru lahko dodate citat tako da označite besedilo in izberete gumb <b>Citiraj</b>, ki se bo pojavil nad označenim besedilom.
 
       Lažje je slediti razpravi, kjer je manj bolj poglobljenih prispevkov, kot pa tam kjer je več manjših, ločenih prispevkov.
-    too_many_replies: |
-      ### Dosegli ste omejitev odgovorov v tej temi
-
-      Novi uporabniki so začasno omejeni na %{newuser_max_replies_per_topic} odgovorov v posamezni temi.
-
-      Namesto, da dodate nov odgovor, razmislite o spremembi obstoječega odgovora ali preberite še kakšno drugo temo.
     reviving_old_topic: |
       ### Oživi to temo?
 

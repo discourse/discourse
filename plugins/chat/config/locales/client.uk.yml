@@ -188,18 +188,18 @@ uk:
                       { isAdmin, select,
                         true {
                           { notificationLimit, plural,
-                              one {Згадування @{group1} перевищує <a href="{siteSettingUrl}" target="_blank">ліміт повідомлень</a> користувача.}
-                              few {Згадування @{group1} перевищує <a href="{siteSettingUrl}" target="_blank">ліміт повідомлень</a> # користувачів.}
-                              many {Згадування @{group1} перевищує <a href="{siteSettingUrl}" target="_blank">ліміт повідомлень</a> # користувачів.}
-                              other {Згадування @{group1} перевищує <a href="{siteSettingUrl}" target="_blank">ліміт повідомлень</a> # користувачів.}
+                              one {Згадування @{group1} перевищує <a href="{siteSettingUrl}" target="_blank">ліміт сповіщень</a> користувача.}
+                              few {Згадування @{group1} перевищує <a href="{siteSettingUrl}" target="_blank">ліміт сповіщень</a> (# користувачів).}
+                              many {Згадування @{group1} перевищує <a href="{siteSettingUrl}" target="_blank">ліміт сповіщень</a> (# користувачів).}
+                              other {Згадування @{group1} перевищує <a href="{siteSettingUrl}" target="_blank">ліміт сповіщень</a> (# користувачів).}
                           }
                         }
                         false {
                           { notificationLimit, plural,
-                              one {Згадування @{group1} перевищує ліміт повідомлень # користувача.}
-                              few {Згадування @{group1} перевищує ліміт повідомлень # користувачів.}
-                              many {Згадування @{group1} перевищує ліміт повідомлень # користувачів.}
-                              other {Згадування @{group1} перевищує ліміт повідомлень # користувачів.}
+                              one {Згадування @{group1} перевищує ліміт сповіщень (# користувача).}
+                              few {Згадування @{group1} перевищує ліміт сповіщень (# користувачів).}
+                              many {Згадування @{group1} перевищує ліміт сповіщень (# користувачів).}
+                              other {Згадування @{group1} перевищує ліміт сповіщень (# користувачів).}
                           }
                         }
                         other {}
@@ -209,18 +209,18 @@ uk:
                       { isAdmin, select,
                         true {
                           { notificationLimit, plural,
-                              one {Згадування @{group1} та @{group2} перевищує <a href="{siteSettingUrl}" target="_blank">ліміт повідомлень</a> # користувача.}
-                              few {Згадування @{group1} та @{group2} перевищує <a href="{siteSettingUrl}" target="_blank">ліміт повідомлень</a> # користувачів.}
-                              many {Згадування @{group1} та @{group2} перевищує <a href="{siteSettingUrl}" target="_blank">ліміт повідомлень</a> # користувачів.}
-                              other {Згадування @{group1} та @{group2} перевищує <a href="{siteSettingUrl}" target="_blank">ліміт повідомлень</a> # користувачів.}
+                              one {Згадування @{group1} та @{group2} перевищує <a href="{siteSettingUrl}" target="_blank">ліміт сповіщень</a> (# користувача).}
+                              few {Згадування @{group1} та @{group2} перевищує <a href="{siteSettingUrl}" target="_blank">ліміт сповіщень</a> (# користувачів).}
+                              many {Згадування @{group1} та @{group2} перевищує <a href="{siteSettingUrl}" target="_blank">ліміт сповіщень</a> (# користувачів).}
+                              other {Згадування @{group1} та @{group2} перевищує <a href="{siteSettingUrl}" target="_blank">ліміт сповіщень</a> (# користувачів).}
                           }
                         }
                         false {
                           { notificationLimit, plural,
-                              one {Згадування @{group1} та @{group2} перевищує ліміт повідомлень # користувача.}
-                              few {Згадування @{group1} та @{group2} перевищує ліміт повідомлень # користувачів.}
-                              many {Згадування @{group1} та @{group2} перевищує ліміт повідомлень # користувачів.}
-                              other {Згадування @{group1} та @{group2} перевищує ліміт повідомлень # користувачів.}
+                              one {Згадування @{group1} та @{group2} перевищує ліміт сповіщень (# користувача).}
+                              few {Згадування @{group1} та @{group2} перевищує ліміт сповіщень (# користувачів).}
+                              many {Згадування @{group1} та @{group2} перевищує ліміт сповіщень (# користувачів).}
+                              other {Згадування @{group1} та @{group2} перевищує ліміт сповіщень (# користувачів).}
                           }
                         }
                         other {}
@@ -230,18 +230,18 @@ uk:
                       { isAdmin, select,
                         true {
                           { notificationLimit, plural,
-                             one {Згадування цих {groupCount} груп перевищує <a href="{siteSettingUrl}" target="_blank">ліміт повідомлень</a> # користувача.}
-                             few {Згадування цих {groupCount} груп перевищує <a href="{siteSettingUrl}" target="_blank">ліміт повідомлень</a> # користувачів.}
-                             many {Згадування цих {groupCount} груп перевищує <a href="{siteSettingUrl}" target="_blank">ліміт повідомлень</a> # користувачів.}
-                             other {Згадування цих {groupCount} груп перевищує <a href="{siteSettingUrl}" target="_blank">ліміт повідомлень</a> # користувачів.}
+                             one {Згадування цих {groupCount} груп перевищує <a href="{siteSettingUrl}" target="_blank">ліміт сповіщень</a> (# користувача).}
+                             few {Згадування цих {groupCount} груп перевищує <a href="{siteSettingUrl}" target="_blank">ліміт сповіщень</a> (# користувачів).}
+                             many {Згадування цих {groupCount} груп перевищує <a href="{siteSettingUrl}" target="_blank">ліміт сповіщень</a> (# користувачів).}
+                             other {Згадування цих {groupCount} груп перевищує <a href="{siteSettingUrl}" target="_blank">ліміт сповіщень</a> (# користувачів).}
                           }
                         }
                         false {
                           { notificationLimit, plural,
-                            one {Згадування цих {groupCount} груп перевищує ліміт повідомлень # користувача.}
-                            few {Згадування цих {groupCount} груп перевищує ліміт повідомлень # користувачів.}
-                            many {Згадування цих {groupCount} груп перевищує ліміт повідомлень # користувачів.}
-                            other {Згадування цих {groupCount} груп перевищує ліміт повідомлень # користувачів.}
+                            one {Згадування цих {groupCount} груп перевищує ліміт сповіщень (# користувача).}
+                            few {Згадування цих {groupCount} груп перевищує ліміт сповіщень (# користувачів).}
+                            many {Згадування цих {groupCount} груп перевищує ліміт сповіщень (# користувачів).}
+                            other {Згадування цих {groupCount} груп перевищує ліміт сповіщень (# користувачів).}
                           }
                         }
                         other {}
@@ -636,7 +636,7 @@ uk:
             many: "Ви збираєтеся створити нове повідомлення і заповнити його <b>%{count}</b> вибраними повідомленнями чату."
             other: "Ви збираєтеся створити нове повідомлення і заповнити його <b>%{count}</b> вибраними повідомленнями чату."
       replying_indicator:
-        single_user: "%{username} набирає"
+        single_user: "%{username} набирає текст"
         multiple_users: "%{commaSeparatedUsernames} і %{lastUsername} набирають"
         many_users:
           one: "%{commaSeparatedUsernames} та %{count} інший набирають текст"

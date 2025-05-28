@@ -100,6 +100,7 @@
             padding: 0;
             border: 1px solid var(--primary-low);
             border-radius: var(--d-border-radius);
+            max-height: calc(100vh - var(--header-offset));
           }
 
           .search-input {

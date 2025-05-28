@@ -357,7 +357,7 @@ vi:
     topic_count_new:
       other: "Xem %{count} chủ đề mới"
     preview: "xem trước"
-    cancel: "hủy"
+    cancel: "Huỷ"
     deleting: "Đang xóa…"
     save: "Lưu thay đổi"
     saving: "Đang lưu…"
@@ -3666,12 +3666,6 @@ vi:
     discovery:
       headings:
         categories: "Tất cả danh mục"
-        filter_labels:
-          latest: "Mới nhất"
-          top: "Top"
-          new: "Mới"
-          unread: "Chưa đọc"
-          unseen: "Không nhìn thấy"
   admin_js:
     type_to_filter: "Gõ vào bộ lọc…"
     settings: "Cài đặt"

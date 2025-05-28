@@ -410,7 +410,7 @@ sv:
       one: "Visa %{count} nytt ämne"
       other: "Visa %{count} nya ämnen"
     preview: "förhandsgranska"
-    cancel: "avbryt"
+    cancel: "Avbryt"
     deleting: "Raderar…"
     save: "Spara ändringar"
     saving: "Sparar…"
@@ -4374,14 +4374,9 @@ sv:
           save: "Spara som..."
     discovery:
       headings:
+        multi_tag:
+          default: "Ämnen taggade med %{tags}"
         categories: "Alla kategorier"
-        filter_labels:
-          latest: "Senaste"
-          top: "Topp"
-          new: "Nya"
-          unread: "Olästa"
-          hot: "Hett"
-          unseen: "Osedda"
   admin_js:
     type_to_filter: "Skriv för att filtrera…"
     settings: "Inställningar"

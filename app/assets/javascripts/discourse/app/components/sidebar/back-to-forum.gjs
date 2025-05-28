@@ -8,11 +8,15 @@ export default class BackToForum extends Component {
   @service routeHistory;
 
   get href() {
-    const lastNonAdminUrl = this.routeHistory.history.find(
-      (url) => !url.startsWith("/admin")
-    );
-    if (lastNonAdminUrl) {
-      return getURL(lastNonAdminUrl);
+    const lastForumUrl = this.routeHistory.history.find((url) => {
+      return !url.startsWith("/admin") && !url.startsWith("/chat");
+    });
+
+    if (
+      lastForumUrl &&
+      this.routeHistory.router.currentURL.startsWith("/admin")
+    ) {
+      return getURL(lastForumUrl);
     }
     return getURL("/");
   }

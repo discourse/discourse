@@ -366,7 +366,7 @@ id:
     topic_count_new:
       other: "Lihat %{count} topik baru"
     preview: "pratinjau"
-    cancel: "batal"
+    cancel: "Batal"
     deleting: "Menghapus…"
     save: "Simpan Perubahan"
     saving: "Menyimpan…"
@@ -2297,11 +2297,6 @@ id:
     discovery:
       headings:
         categories: "Semua kategori"
-        filter_labels:
-          latest: "Terbaru"
-          new: "New"
-          unread: "Belum dibaca"
-          unseen: "Tak terlihat"
   admin_js:
     settings: "Pengaturan"
     admin:

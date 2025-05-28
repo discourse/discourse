@@ -48,6 +48,7 @@
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+  max-height: 100vh;
 
   // remove once glimmer search menu in place
   .widget-link,
@@ -590,6 +591,7 @@
 
   .spinner-container {
     min-height: 2em;
+    margin: auto;
   }
 
   .spinner {

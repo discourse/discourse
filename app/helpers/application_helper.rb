@@ -178,8 +178,10 @@ module ApplicationHelper
 
   def html_classes
     list = []
-    list << (mobile_view? ? "mobile-view" : "desktop-view")
-    list << (mobile_device? ? "mobile-device" : "not-mobile-device")
+    unless SiteSetting.viewport_based_mobile_mode
+      list << (mobile_view? ? "mobile-view" : "desktop-view")
+      list << (mobile_device? ? "mobile-device" : "not-mobile-device")
+    end
     list << "rtl" if rtl?
     list << text_size_class
     list << "anon" unless current_user
@@ -654,7 +656,13 @@ module ApplicationHelper
         stylesheet_manager
       end
 
-    manager.stylesheet_link_tag(name, "all", self.method(:add_resource_preload_list))
+    name = :"#{name}_rtl" if opts[:supports_rtl] && rtl?
+
+    manager.stylesheet_link_tag(
+      name,
+      opts[:media] || "all",
+      self.method(:add_resource_preload_list),
+    )
   end
 
   def discourse_preload_color_scheme_stylesheets

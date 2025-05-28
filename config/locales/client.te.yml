@@ -411,7 +411,7 @@ te:
       one: "%{count} కొత్త విషయం చూడండి"
       other: "%{count} కొత్త విషయాలను చూడండి"
     preview: "ప్రివ్యూ"
-    cancel: "రద్దు చేయండి"
+    cancel: "రద్దుచేయండి"
     deleting: "తొలగించబడుతోంది…"
     save: "మార్పులను సేవ్ చేయండి"
     saving: "సేవ్ చేయబడుతోంది…"
@@ -4276,6 +4276,9 @@ te:
         forum:
           label: ఫోరం
       back_to_forum: "తిరిగి ఫోరమ్కి"
+      clear_filter: "ఫిల్టర్‌ని క్లియర్ చేయండి"
+      no_results:
+        title: "ఫలితాలు లేవు"
       search: "వెతుకు"
       footer:
         interface_color_selector:
@@ -4384,13 +4387,6 @@ te:
     discovery:
       headings:
         categories: "అన్ని వర్గాలు"
-        filter_labels:
-          latest: "తాజా"
-          top: "అగ్ర"
-          new: "కొత్త "
-          unread: "చదవని"
-          hot: "హాట్"
-          unseen: "చూడనవి"
   admin_js:
     type_to_filter: "ఫిల్టర్ చేయడానికి టైప్ చేయండి…"
     settings: "అమరికలు"

@@ -488,7 +488,7 @@ tr_TR:
       one: "%{count} yeni konuya bakın"
       other: "%{count} yeni konuya bakın"
     preview: "ön izleme"
-    cancel: "iptal et"
+    cancel: "İptal et"
     deleting: "Siliniyor…"
     save: "Değişiklikleri Kaydet"
     saving: "Kaydediliyor…"
@@ -4716,6 +4716,9 @@ tr_TR:
         forum:
           label: Forum
       back_to_forum: "Foruma geri dön"
+      clear_filter: "Filtreyi temizle"
+      no_results:
+        title: "Sonuç yok"
       collapse_all_sections: "Tüm bölümleri daralt"
       expand_all_sections: "Tüm bölümleri genişlet"
       search: "Ara"
@@ -4826,14 +4829,9 @@ tr_TR:
     powered_by_discourse: "Discourse tarafından desteklenmektedir"
     discovery:
       headings:
+        multi_tag:
+          default: "%{tags} etiketli konular"
         categories: "Tüm kategoriler"
-        filter_labels:
-          latest: "En son"
-          top: "En iyi"
-          new: "Yeni"
-          unread: "Okunmamış"
-          hot: "Popüler"
-          unseen: "Görülmemiş"
   admin_js:
     type_to_filter: "Filtrelemek için yazın…"
     settings: "Ayarlar"

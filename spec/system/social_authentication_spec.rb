@@ -1,16 +1,16 @@
 # frozen_string_literal: true
 
-shared_context "with omniauth setup" do |signup_page_object, login_page_object|
+shared_context "with omniauth setup" do
   include OmniauthHelpers
 
-  let(:login_form) { login_page_object }
-  let(:signup_form) { signup_page_object }
+  let(:login_form) { PageObjects::Pages::Login.new }
+  let(:signup_form) { PageObjects::Pages::Signup.new }
 
   before { OmniAuth.config.test_mode = true }
 end
 
-shared_examples "social authentication scenarios" do |signup_page_object, login_page_object|
-  include_context "with omniauth setup", signup_page_object, login_page_object
+shared_examples "social authentication scenarios" do
+  include_context "with omniauth setup"
 
   context "when user does not exist" do
     context "with Facebook" do
@@ -101,6 +101,46 @@ shared_examples "social authentication scenarios" do |signup_page_object, login_
           expect(signup_form).to have_no_right_side_column
           signup_form.click_create_account
           expect(page).to have_css(".account-created")
+        end
+      end
+
+      context "when Full Name is set to Required and auth overrides name" do
+        before do
+          SiteSetting.full_name_requirement = "required_at_signup"
+          SiteSetting.auth_overrides_name = true
+        end
+
+        it "lets user input Name when no name is provided" do
+          mock_github_auth(name: "")
+          visit("/")
+
+          signup_form.open.click_social_button("github")
+          expect(signup_form).to be_open
+          expect(signup_form).to have_no_password_input
+          expect(signup_form).to have_valid_username
+          expect(signup_form).to have_valid_email
+          expect(signup_form).to have_editable_name_input
+
+          signup_form.fill_input("#new-account-name", "Test User")
+
+          expect(signup_form).to have_no_right_side_column
+          signup_form.click_create_account
+          expect(page).to have_css(".header-dropdown-toggle.current-user")
+        end
+
+        it "works with a provided name" do
+          mock_github_auth(name: "Some Name")
+          visit("/")
+
+          signup_form.open.click_social_button("github")
+          expect(signup_form).to be_open
+          expect(signup_form).to have_no_password_input
+          expect(signup_form).to have_valid_username
+          expect(signup_form).to have_valid_email
+          expect(signup_form).to have_disabled_name_input
+
+          signup_form.click_create_account
+          expect(page).to have_css(".header-dropdown-toggle.current-user")
         end
       end
     end
@@ -465,14 +505,10 @@ describe "Social authentication", type: :system do
   before { SiteSetting.full_name_requirement = "optional_at_signup" }
 
   context "when fullpage desktop" do
-    include_examples "social authentication scenarios",
-                     PageObjects::Pages::Signup.new,
-                     PageObjects::Pages::Login.new
+    include_examples "social authentication scenarios"
   end
 
   context "when fullpage mobile", mobile: true do
-    include_examples "social authentication scenarios",
-                     PageObjects::Pages::Signup.new,
-                     PageObjects::Pages::Login.new
+    include_examples "social authentication scenarios"
   end
 end

@@ -251,7 +251,7 @@ basic:
       - posted
       - bookmarks
       - hot
-    area: "navigation"
+    area: "interface"
   post_menu:
     client: true
     type: list
@@ -327,12 +327,12 @@ basic:
     client: true
     enum: "CategoryPageStyle"
     default: "categories_and_latest_topics"
-    area: "navigation"
+    area: "interface"
   mobile_category_page_style:
     client: true
     enum: "MobileCategoryPageStyle"
     default: "categories_with_featured_topics"
-    area: "navigation"
+    area: "interface"
   category_colors:
     client: true
     type: list
@@ -522,6 +522,7 @@ basic:
     choices:
       - "alphabetically"
       - "order of creation"
+      - "order of theme setting"
     area: "about"
   about_page_extra_groups_show_description:
     client: true
@@ -2926,6 +2927,9 @@ developer:
     default: 50
     hidden: true
     client: true
+  viewport_based_mobile_mode:
+    default: false
+    client: true
 
 navigation:
   navigation_menu:
@@ -3176,9 +3180,6 @@ uncategorized:
     validator: "RegexpListValidator"
     area: "permalinks"
 
-  max_similar_results:
-    default: 5
-    area: "posts_and_topics"
   minimum_topics_similar:
     default: 50
     area: "posts_and_topics"
@@ -3998,16 +3999,19 @@ experimental:
   experimental_content_localization:
     client: true
     default: false
+    area: "localization"
   experimental_content_localization_allowed_groups:
     type: group_list
     list_type: compact
     allow_any: false
     client: true
     default: "1|2" # admin, moderator
-  content_localization_debug_allowed_groups:
-    type: group_list
-    list_type: compact
-    allow_any: false
+    area: "localization"
+  experimental_content_localization_supported_locales:
+    default: ""
+    type: list
     client: true
-    default: "1|2" # admin, moderator
-    hidden: true
+    list_type: named
+    allow_any: false
+    choices: "LocaleSiteSetting.values"
+    area: "localization"

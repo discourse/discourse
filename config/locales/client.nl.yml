@@ -485,7 +485,7 @@ nl:
       one: "%{count} nieuw topic weergeven"
       other: "%{count} nieuwe topics weergeven"
     preview: "voorbeeld"
-    cancel: "annuleren"
+    cancel: "Annuleren"
     deleting: "Verwijderen…"
     save: "Wijzigingen opslaan"
     saving: "Opslaan…"
@@ -4665,6 +4665,9 @@ nl:
         forum:
           label: Forum
       back_to_forum: "Terug naar forum"
+      clear_filter: "Filter wissen"
+      no_results:
+        title: "Geen resultaten"
       collapse_all_sections: "Alle secties samenvouwen"
       expand_all_sections: "Alle secties uitvouwen"
       search: "Zoeken"
@@ -4775,14 +4778,9 @@ nl:
     powered_by_discourse: "Mogelijk gemaakt door Discourse"
     discovery:
       headings:
+        multi_tag:
+          default: "Topics met de tag %{tags}"
         categories: "Alle categorieën"
-        filter_labels:
-          latest: "Nieuwste"
-          top: "Top"
-          new: "Nieuw"
-          unread: "Ongelezen"
-          hot: "Veelgelezen"
-          unseen: "Ongezien"
   admin_js:
     type_to_filter: "Typ om te filteren…"
     settings: "Instellingen"

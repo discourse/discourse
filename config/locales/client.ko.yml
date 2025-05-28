@@ -3652,6 +3652,8 @@ ko:
             invite:
               content: "초대"
               title: "새로운 멤버 초대"
+      no_results:
+        title: "결과 없음"
       search: "검색"
       footer:
         interface_color_selector:
@@ -3682,13 +3684,9 @@ ko:
         about: "소개"
     discovery:
       headings:
+        multi_tag:
+          default: "토픽에%{tags}태그가 달렸습니다"
         categories: "모든 카테고리"
-        filter_labels:
-          latest: "최신"
-          top: "인기글"
-          new: "신규"
-          unread: "읽지 않음"
-          unseen: "읽지 않음"
   admin_js:
     type_to_filter: "필터 입력..."
     settings: "설정"

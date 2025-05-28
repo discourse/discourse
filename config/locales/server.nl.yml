@@ -611,26 +611,6 @@ nl:
     until_posts:
       one: "%{count} bericht"
       other: "%{count} berichten"
-    "new-topic": |
-      Welkom op %{site_name} &mdash; **bedankt voor het starten van een nieuw gesprek! **
-
-      - Klinkt de titel interessant als je hem hardop voorleest? Is het een goede samenvatting?
-
-      - Wie zou hierin geïnteresseerd zijn? Waarom is het belangrijk? Wat voor reacties wil je?
-
-      - Voeg veelgebruikte woorden toe aan je topic, zodat anderen het kunnen vinden*. Selecteer een categorie (of tag) om je topic te groeperen met gerelateerde topics.
-
-      Voor meer informatie, [zie onze communityrichtlijnen](%{base_path}/guidelines). Dit venster wordt alleen weergegeven alleen voor je eerste %{education_posts_text}.
-    "new-reply": |
-      Welkom op %{site_name} &mdash; **bedankt voor je bijdrage!**
-
-      - Wees aardig voor de andere communityleden.
-
-      - Verbetert je antwoord het gesprek?
-
-      - Opbouwende kritiek is welkom, maar bekritiseer *ideeën*, niet mensen.
-
-      Voor meer informatie, [zie onze communityrichtlijnen](%{base_path}/guidelines). Dit venster wordt alleen weergegeven voor je eerste %{education_posts_text}.
     avatar: |
       ### Wat dacht je van een afbeelding voor je account?
 
@@ -647,17 +627,9 @@ nl:
       Je kunt je eerdere antwoord bewerken om een citaat toe te voegen door tekst te markeren en de knop <b>Bericht citeren</b> die verschijnt te selecteren.
 
       Het is voor iedereen makkelijker om topics te lezen die minder, maar uitgebreidere antwoorden bevatten dan met veel kleine, individuele antwoorden.
-    dominating_topic: Je hebt veel geplaatst in dit topic! Overweeg om anderen de kans te geven om hier te reageren en ook met elkaar te overleggen.
     get_a_room:
       one: Je hebt één keer geantwoord op @%{reply_username}. Wist je dat je diegene in plaats daarvan een persoonlijk bericht kunt sturen?
       other: Je hebt %{count} keer geantwoord op @%{reply_username}. Wist je dat je diegene in plaats daarvan een persoonlijk bericht kunt sturen?
-    dont_feed_the_trolls: Dit bericht is al gemarkeerd voor aandacht van de moderator. Weet je zeker dat je erop wilt antwoorden? Antwoorden op negatieve content hebben de neiging om meer negatief gedrag aan te moedigen.
-    too_many_replies: |
-      ### Je hebt de antwoordlimiet voor dit topic bereikt
-
-      Sorry, nieuwe gebruikers hebben een tijdelijke beperking van %{newuser_max_replies_per_topic} antwoorden in hetzelfde topic.
-
-      Overweeg je eerdere antwoorden te bewerken of andere topics te bezoeken in plaats van nog een antwoord toe te voegen.
     reviving_old_topic: |
       ### Dit topic nieuw leven inblazen?
 
@@ -2078,7 +2050,6 @@ nl:
     authorized_extensions: "Een lijst van bestandsextensies die kunnen worden geüpload"
     authorized_extensions_for_staff: "Een lijst van toegestane bestandsextensies voor uploaden voor medewerkers, naast de lijst gedefinieerd in de website-instelling 'authorized_extensions'."
     theme_authorized_extensions: "Een lijst van bestandsextensies die zijn toegestaan voor thema-uploads"
-    max_similar_results: "Hoeveel vergelijkbare topics om boven de editor te weergeven bij het opstellen van een nieuw topic. Vergelijking is gebaseerd op titel en inhoud."
     max_image_megapixels: "Maximale aantal toegestane megapixels voor een afbeelding. Afbeeldingen met een groter aantal megapixels worden geweigerd."
     title_prettify: "Veelvoorkomende fouten in titels voorkomen, waaronder alles in hoofdletters, eerste woord zonder hoofdletter, meerdere ! en ?, een extra . aan het eind, etc."
     title_remove_extraneous_space: "Voorloopspaties voor de eindinterpunctie verwijderen."
@@ -2667,11 +2638,6 @@ nl:
     errors: "%{errors}"
     not_available: "Niet beschikbaar. %{suggestion} proberen?"
     something_already_taken: "Er is iets misgegaan; mogelijk is de gebruikersnaam of het e-mailadres al geregistreerd. Probeer de link 'Wachtwoord vergeten'."
-    omniauth_error:
-      generic: "Sorry, er is een fout opgetreden bij het autoriseren van je account. Probeer het opnieuw."
-      csrf_detected: "Time-out bij autorisatie, of je bent van browser gewisseld. Probeer het opnieuw."
-      request_error: "Er is een fout opgetreden bij het begin van de autorisatie. Probeer het opnieuw."
-      invalid_iat: "Kan autorisatietoken niet verifiëren vanwege verschillen met de serverklok. Probeer het opnieuw."
     omniauth_error_unknown: "Er is iets misgegaan bij het verwerken van je aanmelding. Probeer het opnieuw."
     omniauth_confirm_title: "Aanmelden via %{provider}"
     omniauth_confirm_button: "Doorgaan"
