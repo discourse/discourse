@@ -9,15 +9,19 @@ class CopyAddGroupsToAboutComponentSettings < ActiveRecord::Migration[7.2]
   }
 
   def up
+    theme_id = DB.query_single(<<~SQL).first
+      SELECT id
+      FROM themes
+      WHERE name = 'Add Groups to About'
+      AND enabled = true
+    SQL
+
+    return if theme_id.blank?
+
     theme_settings = execute(<<~SQL).to_a
       SELECT name, value
       FROM theme_settings
-      WHERE theme_id = (
-        SELECT id
-        FROM themes
-        WHERE name = 'Add Groups to About'
-        AND enabled = true
-      )
+      WHERE theme_id = #{theme_id}
     SQL
 
     return if theme_settings.blank?
