@@ -81,7 +81,7 @@ describe "User notifications", type: :system do
 
         expect(user_notifications_page).to have_notification(group_mention_notification)
 
-        notification = user_notifications_page.notification(group_mention_notification)
+        notification = user_notifications_page.find_notification(group_mention_notification)
 
         expect(notification).to have_content(group.name)
         expect(notification).to have_content(user.name)
