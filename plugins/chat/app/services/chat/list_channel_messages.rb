@@ -18,7 +18,7 @@ module Chat
 
     params do
       attribute :channel_id, :integer
-      attribute :page_size
+      attribute :page_size, :integer
 
       # If this is not present, then we just fetch messages with page_size
       # and direction.
@@ -31,7 +31,9 @@ module Chat
       validates :page_size,
                 numericality: {
                   less_than_or_equal_to: Chat::MessagesQuery::MAX_PAGE_SIZE,
+                  greater_than_or_equal_to: 1,
                   only_integer: true,
+                  only_numeric: true,
                 },
                 allow_nil: true
       validates :direction,

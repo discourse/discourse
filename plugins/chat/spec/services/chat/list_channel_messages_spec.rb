@@ -3,11 +3,9 @@
 RSpec.describe Chat::ListChannelMessages do
   describe described_class::Contract, type: :model do
     it { is_expected.to validate_presence_of(:channel_id) }
+    it { is_expected.to allow_values(1, Chat::MessagesQuery::MAX_PAGE_SIZE, nil).for(:page_size) }
     it do
-      is_expected.to validate_numericality_of(:page_size)
-        .is_less_than_or_equal_to(Chat::MessagesQuery::MAX_PAGE_SIZE)
-        .only_integer
-        .allow_nil
+      is_expected.not_to allow_values(0, Chat::MessagesQuery::MAX_PAGE_SIZE + 1).for(:page_size)
     end
     it do
       is_expected.to validate_inclusion_of(:direction).in_array(
