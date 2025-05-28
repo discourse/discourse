@@ -49,6 +49,7 @@ CREATE TABLE categories
     emoji                                     TEXT,
     existing_id                               TEXT,
     icon                                      TEXT,
+    locale                                    TEXT,
     mailinglist_mirror                        BOOLEAN,
     minimum_required_tags                     INTEGER,
     name                                      TEXT     NOT NULL,
