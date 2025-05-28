@@ -48,6 +48,10 @@
     color: var(--primary-high);
   }
 
+  &-title .form-kit__button {
+    padding: 0;
+  }
+
   &-subtitle {
     display: flex;
     align-items: center;
