@@ -42,7 +42,7 @@ const CUSTOM_TYPES = [
   "named_list",
   "file_size_restriction",
   "file_types_list",
-  "font_list",
+  "font_list"
 ];
 
 export default class SiteSettingComponent extends Component {
@@ -60,12 +60,12 @@ export default class SiteSettingComponent extends Component {
   classNameBindings = [":row", ":setting", "overridden", "typeClass"];
   attributeBindings = ["setting.setting:data-setting"];
 
-  _handleKeydown = (event) => {
+  _handleKeydown = async (event) => {
     if (
       event.key === "Enter" &&
       event.target.classList.contains("input-setting-string")
     ) {
-      this.save();
+      await this.save();
     }
   };
 
@@ -100,7 +100,7 @@ export default class SiteSettingComponent extends Component {
   }
 
   get overridden() {
-    return this.setting.default !== this.buffered.value;
+    return this.setting.default !== this.buffered.get("value");
   }
 
   get displayDescription() {
@@ -108,7 +108,7 @@ export default class SiteSettingComponent extends Component {
   }
 
   get dirty() {
-    let bufferVal = this.buffered.value;
+    let bufferVal = this.buffered.get("value");
     let settingVal = this.setting?.value;
 
     if (isNone(bufferVal)) {
@@ -132,7 +132,7 @@ export default class SiteSettingComponent extends Component {
 
   get preview() {
     const setting = this.setting;
-    const value = this.buffered.value;
+    const value = this.buffered.get("value");
     const preview = setting.preview;
     if (preview) {
       const escapedValue = preview.replace(/\{\{value\}\}/g, value);
@@ -169,7 +169,7 @@ export default class SiteSettingComponent extends Component {
   }
 
   get bufferedValues() {
-    const value = this.buffered.value;
+    const value = this.buffered.get("value");
     return splitString(value, "|");
   }
 
@@ -195,16 +195,16 @@ export default class SiteSettingComponent extends Component {
           this.modal.show(JsonSchemaEditorModal, {
             model: {
               updateValue: (value) => {
-                this.buffered.value = value;
+                this.buffered.set("value", value);
               },
-              value: this.buffered.value,
+              value: this.buffered.get("value"),
               settingName: setting.setting,
-              jsonSchema: setting.json_schema,
-            },
+              jsonSchema: setting.json_schema
+            }
           });
         },
         label: "admin.site_settings.json_schema.edit",
-        icon: "pencil",
+        icon: "pencil"
       };
     } else if (setting.schema) {
       return {
@@ -212,7 +212,7 @@ export default class SiteSettingComponent extends Component {
           this.router.transitionTo("admin.schema", setting.setting);
         },
         label: "admin.site_settings.json_schema.edit",
-        icon: "pencil",
+        icon: "pencil"
       };
     } else if (setting.objects_schema) {
       return {
@@ -223,7 +223,7 @@ export default class SiteSettingComponent extends Component {
           );
         },
         label: "admin.customize.theme.edit_objects_theme_setting",
-        icon: "pencil",
+        icon: "pencil"
       };
     }
     return null;
@@ -268,7 +268,7 @@ export default class SiteSettingComponent extends Component {
 
       if (this.setting.requiresReload) {
         this.siteSettingChangeTracker.refreshPage({
-          [this.setting.setting]: this.setting.value,
+          [this.setting.setting]: this.setting.value
         });
       }
     } catch (e) {
@@ -291,7 +291,7 @@ export default class SiteSettingComponent extends Component {
 
   @action
   changeValueCallback(value) {
-    this.buffered.value = value;
+    this.buffered.set("value", value);
   }
 
   @action
@@ -307,7 +307,7 @@ export default class SiteSettingComponent extends Component {
 
   @action
   resetDefault() {
-    this.buffered.value = this.setting.default;
+    this.buffered.set("value", this.setting.default);
     this.setting.validationMessage = null;
   }
 
@@ -318,18 +318,21 @@ export default class SiteSettingComponent extends Component {
 
   @action
   setDefaultValues() {
-    this.buffered.value = this.bufferedValues
-      .concat(this.defaultValues)
-      .uniq()
-      .join("|");
+    this.buffered.set(
+      "value",
+      this.bufferedValues
+        .concat(this.defaultValues)
+        .uniq()
+        .join("|")
+    );
     this.setting.validationMessage = null;
     return false;
   }
 
   _save() {
     const setting = this.buffered;
-    return SiteSetting.update(setting.setting, setting.value, {
-      updateExistingUsers: this.setting.updateExistingUsers,
+    return SiteSetting.update(setting.get("setting"), setting.get("value"), {
+      updateExistingUsers: this.setting.updateExistingUsers
     });
   }
 
