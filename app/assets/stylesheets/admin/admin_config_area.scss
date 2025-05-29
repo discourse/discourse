@@ -1,7 +1,7 @@
 .admin-config-area-card {
   padding: 20px 5px 20px 20px;
   border: 1px solid var(--primary-low);
-  border-radius: 2px;
+  border-radius: var(--d-border-radius);
   background-color: var(--secondary);
   margin-bottom: 1em;
 

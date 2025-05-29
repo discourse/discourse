@@ -95,6 +95,8 @@
     align-items: center;
     justify-content: center;
     border-bottom: 1px solid var(--primary-low);
+    border-top-left-radius: var(--d-border-radius);
+    border-top-right-radius: var(--d-border-radius);
 
     svg {
       width: 100%;
@@ -108,7 +110,6 @@
     height: 100%;
     object-fit: cover;
     object-position: top left;
-    border-radius: calc(var(--d-border-radius) + 1px);
   }
 
   .ember-checkbox {
@@ -243,6 +244,10 @@
   height: 100%;
   display: flex;
   flex-direction: column;
+
+  &:hover {
+    border-color: var(--tertiary-medium);
+  }
 
   .admin-config-area-card__content {
     margin: 0;
