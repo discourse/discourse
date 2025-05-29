@@ -172,9 +172,9 @@ export default class ColorPaletteEditor extends Component {
   @action
   revert(color) {
     if (this.darkModeActive) {
-      this.args.onDarkColorChange(color.name, color.default_dark_hex);
+      this.args.onDarkColorChange(color, color.default_dark_hex);
     } else {
-      this.args.onLightColorChange(color.name, color.default_hex);
+      this.args.onLightColorChange(color, color.default_hex);
     }
   }
 
