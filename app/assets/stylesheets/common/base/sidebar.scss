@@ -427,6 +427,7 @@
     box-sizing: border-box;
     margin-top: 0.5em;
     margin-bottom: 0.5em;
+    border-radius: var(--d-input-border-radius);
   }
 
   &__icon.btn.btn-transparent {
