@@ -1,7 +1,6 @@
 @use "lib/viewport";
 
 .archetype-private_message {
-  --pm-border-radius: 0;
   --pm-padding: 1.25em;
 
   .topic-post {
@@ -21,7 +20,7 @@
   }
 
   .regular.contents {
-    border-radius: var(--pm-border-radius);
+    border-radius: var(--d-border-radius);
     border: 1px solid var(--primary-low);
     padding-left: var(--pm-padding);
     margin-left: calc(var(--pm-padding) * -1);
@@ -77,7 +76,7 @@
 
   .post-notice {
     box-sizing: border-box;
-    border-radius: var(--pm-border-radius);
+    border-radius: var(--d-border-radius);
     background-color: var(--tertiary-very-low);
     border-color: var(--tertiary-very-low);
     margin-bottom: 1em;
@@ -108,6 +107,7 @@
     display: grid;
     grid-template-areas: "contents additional" "pm-map pm-map";
     grid-template-columns: 1fr auto;
+    border-radius: var(--d-border-radius);
 
     @include viewport.from(sm) {
       padding-left: calc(
@@ -121,11 +121,11 @@
       padding-inline: var(--pm-padding);
 
       &:first-of-type {
-        border-radius: var(--pm-border-radius) var(--pm-border-radius) 0 0;
+        border-radius: var(--d-border-radius) var(--d-border-radius) 0 0;
       }
 
       &:last-of-type {
-        border-radius: 0 0 var(--pm-border-radius) var(--pm-border-radius);
+        border-radius: 0 0 var(--d-border-radius) var(--d-border-radius);
       }
     }
 
@@ -158,14 +158,14 @@
         border: none;
         background: var(--primary-low);
         padding: 2px 4px;
-        border-radius: var(--pm-border-radius);
+        border-radius: var(--d-border-radius);
       }
     }
   }
 
   .map:first-of-type .buttons .btn {
     border: none;
-    border-radius: var(--pm-border-radius);
+    border-radius: var(--d-border-radius);
   }
 
   .embedded-posts {
@@ -193,7 +193,7 @@
     &.top {
       .cooked {
         border: 1px solid var(--primary-low);
-        border-radius: var(--pm-border-radius);
+        border-radius: var(--d-border-radius);
         margin-left: calc(var(--pm-padding) * -1);
         padding-left: 2.15em;
       }

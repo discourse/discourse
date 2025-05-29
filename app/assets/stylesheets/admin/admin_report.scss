@@ -244,7 +244,7 @@
     .admin-section-landing-item {
       padding: var(--space-4);
       border-radius: var(--d-border-radius);
-      outline: 1px solid var(--primary-low);
+      border: 1px solid var(--primary-low);
       margin-bottom: 0;
 
       @include viewport.from(sm) {
@@ -252,11 +252,7 @@
       }
 
       &:hover {
-        border: 0;
-        box-shadow:
-          0 0 0 1px var(--primary-300),
-          0 0 0 4px var(--primary-100);
-        transition: all 0.2s ease-in-out;
+        border: 1px solid var(--primary-low-mid);
       }
     }
   }
