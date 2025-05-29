@@ -86,7 +86,7 @@ acceptance("Admin - Themes - Install modal", function (needs) {
     const themeUrl = "git@github.com:discourse/discourse.git";
     await visit("/admin/config/customize/themes");
 
-    await click(".theme-install-card__install-button");
+    await click(".d-page-subheader__actions .btn-primary");
     await click("#remote");
     await fillIn(urlInput, themeUrl);
     await click(".install-theme-content .inputs .advanced-repo");
@@ -97,7 +97,7 @@ acceptance("Admin - Themes - Install modal", function (needs) {
 
     await click(".d-modal__footer .d-modal-cancel");
 
-    await click(".theme-install-card__install-button");
+    await click(".d-page-subheader__actions .btn-primary");
     await click("#remote");
     await click(".install-theme-content .inputs .advanced-repo");
     assert.dom(urlInput).hasValue("", "url input is reset");
@@ -114,7 +114,7 @@ acceptance("Admin - Themes - Install modal", function (needs) {
       "discourse@discourse.git.backlog.com:/TEST_THEME/test-theme.git";
     await visit("/admin/customize/themes");
 
-    await click(".theme-install-card__install-button");
+    await click(".d-page-subheader__actions .btn-primary");
     await click("#remote");
     await fillIn(urlInput, themeUrl);
     await click(".install-theme-content .inputs .advanced-repo");
@@ -162,7 +162,7 @@ acceptance("Admin - Themes - Install modal", function (needs) {
 
   test("installed themes are matched with the popular list by URL", async function (assert) {
     await visit("/admin/config/customize/themes");
-    await click(".theme-install-card__install-button");
+    await click(".d-page-subheader__actions .btn-primary");
 
     assert
       .dom(

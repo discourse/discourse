@@ -172,7 +172,6 @@ export default class AdminConfigAreasComponents extends Component {
     >
       <:actions as |actions|>
         <actions.Primary
-          disabled={{this.loading}}
           @label="admin.config_areas.themes_and_components.components.install"
           @action={{this.installModal}}
         />
