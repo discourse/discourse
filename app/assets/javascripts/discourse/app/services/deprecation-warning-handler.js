@@ -32,6 +32,7 @@ export const CRITICAL_DEPRECATIONS = [
   "discourse.mobile-templates",
   "discourse.component-template-overrides",
   "discourse.plugin-outlet-classic-args-clash",
+  "discourse.decorate-plugin-outlet",
 ];
 
 if (DEBUG) {
