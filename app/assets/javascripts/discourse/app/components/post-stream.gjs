@@ -59,19 +59,14 @@ export default class PostStream extends Component {
   @tracked cloakBelow;
   @tracked cloakOffset;
 
-  observedPostNodes = new Set();
-  uncloakedPostNumbers = new Set();
-
   #bottomBoundaryElement;
   #bottomEyelineDebugElement;
   #cloakedPostsHeight = {};
   #cloakingObserver;
   #currentPostElement;
+  #observedPostNodes = new Set();
   #postsOnScreen = {};
-  #observedCloakBoundaries = {
-    above: null,
-    below: null,
-  };
+  #uncloakedPostNumbers = new Set();
   #viewportObserver;
   #wrapperElement;
 
@@ -231,8 +226,8 @@ export default class PostStream extends Component {
   registerPostNode(element, [post]) {
     element[POST_MODEL] = post;
 
-    if (!this.observedPostNodes.has(element)) {
-      this.observedPostNodes.add(element);
+    if (!this.#observedPostNodes.has(element)) {
+      this.#observedPostNodes.add(element);
       this.#cloakingObserver?.observe(element);
       this.#viewportObserver?.observe(element);
     }
@@ -256,8 +251,8 @@ export default class PostStream extends Component {
   unregisterPostNode(element) {
     delete element[POST_MODEL];
 
-    if (this.observedPostNodes.has(element)) {
-      this.observedPostNodes.delete(element);
+    if (this.#observedPostNodes.has(element)) {
+      this.#observedPostNodes.delete(element);
       this.#cloakingObserver?.unobserve(element);
       this.#viewportObserver?.unobserve(element);
     }
@@ -305,57 +300,25 @@ export default class PostStream extends Component {
 
     const postNumber = post.post_number;
 
-    if (this.#observedCloakBoundaries.below === null) {
-      this.#observedCloakBoundaries.below = postNumber;
-    }
-    if (this.#observedCloakBoundaries.above === null) {
-      this.#observedCloakBoundaries.above = postNumber;
-    }
-
     if (isIntersecting) {
-      this.uncloakedPostNumbers.add(postNumber);
+      this.#uncloakedPostNumbers.add(postNumber);
       // entering the visibility area
       delete this.#cloakedPostsHeight[post.id];
-
-      if (postNumber < this.#observedCloakBoundaries.above) {
-        this.#observedCloakBoundaries.above = postNumber;
-      } else if (postNumber > this.#observedCloakBoundaries.below) {
-        this.#observedCloakBoundaries.below = postNumber;
-      }
     } else {
-      this.uncloakedPostNumbers.delete(postNumber);
+      this.#uncloakedPostNumbers.delete(postNumber);
 
       let height = target.clientHeight;
       const style = window.getComputedStyle(target);
       height +=
         parseFloat(style.borderTopWidth) + parseFloat(style.borderBottomWidth);
       this.#cloakedPostsHeight[post.id] = height;
-
-      if (
-        postNumber > this.#observedCloakBoundaries.above &&
-        postNumber < this.#observedCloakBoundaries.below
-      ) {
-        if (
-          ![...this.uncloakedPostNumbers].some((value) => value <= postNumber)
-        ) {
-          this.#observedCloakBoundaries.above = postNumber + 1;
-        } else {
-          this.#observedCloakBoundaries.below = postNumber - 1;
-        }
-      }
     }
 
-    if (
-      this.#observedCloakBoundaries.above !== this.cloakAbove ||
-      this.#observedCloakBoundaries.below !== this.cloakBelow
-    ) {
-      discourseDebounce(
-        this,
-        this.#updateCloakActiveBoundaries,
-        { ...this.#observedCloakBoundaries },
-        SCROLL_BATCH_INTERVAL_MS
-      );
-    }
+    discourseDebounce(
+      this,
+      this.#updateCloakActiveBoundaries,
+      SCROLL_BATCH_INTERVAL_MS
+    );
   }
 
   @bind
@@ -397,7 +360,7 @@ export default class PostStream extends Component {
       threshold: [0, 1],
     });
 
-    for (const element of this.observedPostNodes) {
+    for (const element of this.#observedPostNodes) {
       this.#cloakingObserver.observe(element);
       this.#viewportObserver.observe(element);
     }
@@ -545,6 +508,16 @@ export default class PostStream extends Component {
 
   #updateCloakActiveBoundaries({ above, below }) {
     console.log("active boundaries", above, below);
+  #updateCloakActiveBoundaries() {
+    const uncloackedPostNumbers = Array.from(this.#uncloakedPostNumbers);
+
+    let above = uncloackedPostNumbers[0] || 0;
+    let below = above;
+    for (let i = 1; i < uncloackedPostNumbers.length; i++) {
+      const postNumber = uncloackedPostNumbers[i];
+      above = Math.min(postNumber, above);
+      below = Math.max(postNumber, below);
+    }
     this.cloakAbove = above;
     this.cloakBelow = below;
   }
