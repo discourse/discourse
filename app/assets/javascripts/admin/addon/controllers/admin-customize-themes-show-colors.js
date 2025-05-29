@@ -24,8 +24,7 @@ export default class AdminCustomizeThemesShowColorsController extends Controller
   }
 
   @action
-  onLightColorChange(name, value) {
-    const color = this.model.colorPalette.colors.find((c) => c.name === name);
+  onLightColorChange(color, value) {
     color.hex = value;
     if (color.hex !== color.originalHex) {
       this.pendingLightColors.add(name);
@@ -37,8 +36,7 @@ export default class AdminCustomizeThemesShowColorsController extends Controller
   }
 
   @action
-  onDarkColorChange(name, value) {
-    const color = this.model.colorPalette.colors.find((c) => c.name === name);
+  onDarkColorChange(color, value) {
     color.dark_hex = value;
     if (color.dark_hex !== color.originalDarkHex) {
       this.pendingDarkColors.add(name);

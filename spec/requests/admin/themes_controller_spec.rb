@@ -1514,8 +1514,6 @@ RSpec.describe Admin::ThemesController do
       it "creates a theme-owned color palette if one doesn't exist" do
         expect(theme.owned_color_palette).to be_nil
 
-        max_id = ColorScheme.maximum(:id) || 0
-
         put "/admin/themes/#{theme.id}/change-colors.json",
             params: {
               colors: [{ name: "primary", hex: "ff0000", dark_hex: "0000ff" }],
@@ -1533,7 +1531,11 @@ RSpec.describe Admin::ThemesController do
 
       it "updates an existing theme-owned color palette" do
         palette = theme.find_or_create_owned_color_palette
-        color = palette.colors.find_by(name: "primary")
+        primary_color = palette.colors.find_by(name: "primary")
+        secondary_color = palette.colors.find_by(name: "secondary")
+
+        original_secondary_hex = secondary_color.hex
+        original_secondary_dark_hex = secondary_color.dark_hex
 
         put "/admin/themes/#{theme.id}/change-colors.json",
             params: {
@@ -1541,29 +1543,15 @@ RSpec.describe Admin::ThemesController do
             }
 
         expect(response.status).to eq(200)
-        color.reload
-        expect(color.hex).to eq("aabbcc")
-        expect(color.dark_hex).to eq("ccddee")
-      end
 
-      it "only updates specified colors" do
-        palette = theme.find_or_create_owned_color_palette
-        primary_color = palette.colors.find_by(name: "primary")
-        secondary_color = palette.colors.find_by(name: "secondary")
-
-        original_secondary_hex = secondary_color.hex
-
-        put "/admin/themes/#{theme.id}/change-colors.json",
-            params: {
-              colors: [{ name: "primary", hex: "112233", dark_hex: "445566" }],
-            }
-
-        expect(response.status).to eq(200)
         primary_color.reload
         secondary_color.reload
 
-        expect(primary_color.hex).to eq("112233")
+        expect(primary_color.hex).to eq("aabbcc")
+        expect(primary_color.dark_hex).to eq("ccddee")
+
         expect(secondary_color.hex).to eq(original_secondary_hex)
+        expect(secondary_color.dark_hex).to eq(original_secondary_dark_hex)
       end
 
       it "returns the updated palette in the response" do

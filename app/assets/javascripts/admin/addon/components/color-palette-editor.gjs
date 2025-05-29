@@ -221,8 +221,8 @@ export default class ColorPaletteEditor extends Component {
                 <Picker
                   @color={{color}}
                   @showDark={{this.darkModeActive}}
-                  @onLightChange={{fn @onLightColorChange color.name}}
-                  @onDarkChange={{fn @onDarkColorChange color.name}}
+                  @onLightChange={{fn @onLightColorChange color}}
+                  @onDarkChange={{fn @onDarkColorChange color}}
                 />
               </div>
               {{#unless @hideRevertButton}}
