@@ -76,6 +76,7 @@ class BulkImport::Base
     @html_entities = HTMLEntities.new
     @encoding = CHARSET_MAP[charset]
     @bbcode_to_md = true if use_bbcode_to_md?
+    @assign_plugin_enabled = defined?(::DiscourseAssign)
 
     @markdown =
       Redcarpet::Markdown.new(
@@ -511,8 +512,8 @@ class BulkImport::Base
     messageable_level
     created_at
     updated_at
-    assignable_level
   ]
+  GROUP_COLUMNS << :assignable_level if defined?(::DiscourseAssign)
 
   USER_COLUMNS = %i[
     id
@@ -649,7 +650,6 @@ class BulkImport::Base
     description
     position
     parent_category_id
-    read_restricted
     uploaded_logo_id
     created_at
     updated_at
@@ -803,6 +803,14 @@ class BulkImport::Base
     updated_at
     multiple_grant
     query
+    allow_title
+    icon
+    listable
+    target_posts
+    enabled
+    auto_revoke
+    trigger
+    show_posts
   ]
 
   USER_BADGE_COLUMNS = %i[badge_id user_id granted_at granted_by_id seq post_id created_at]
@@ -1235,6 +1243,7 @@ class BulkImport::Base
 
     group[:created_at] ||= NOW
     group[:updated_at] ||= group[:created_at]
+    group[:assignable_level] ||= Group::ALIAS_LEVELS[:nobody] if @assign_plugin_enabled
     group
   end
 
@@ -1415,6 +1424,7 @@ class BulkImport::Base
   end
 
   def process_group_user(group_user)
+    group_user[:owner] ||= false
     group_user[:created_at] = NOW
     group_user[:updated_at] = NOW
     group_user
@@ -1450,7 +1460,6 @@ class BulkImport::Base
     category[:slug] ||= Slug.for(name_lower, "") # TODO Ensure that slug doesn't exist yet
     category[:description] = (category[:description] || "").scrub.strip.presence
     category[:user_id] ||= Discourse::SYSTEM_USER_ID
-    category[:read_restricted] = false if category[:read_restricted].nil?
     category[:created_at] ||= NOW
     category[:updated_at] ||= category[:created_at]
 

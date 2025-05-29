@@ -78,7 +78,7 @@ class BulkImport::Generic < BulkImport::Base
     import_category_permissions
     import_category_users
     import_category_moderation_groups
-    update_read_restricted_flags
+    update_category_read_restricted
 
     import_topics
     import_posts
@@ -379,7 +379,7 @@ class BulkImport::Generic < BulkImport::Base
       group_id = group_id_from_imported_id(row["group_id"])
 
       next unless category_id && group_id
-      next if existing_moderation_groups.include?([category_id, group_id])
+      next unless existing_moderation_groups.add?([category_id, group_id])
 
       { category_id: category_id, group_id: group_id }
     end
@@ -414,7 +414,7 @@ class BulkImport::Generic < BulkImport::Base
     category_users.close
   end
 
-  def update_read_restricted_flags
+  def update_category_read_restricted
     puts "", "Updating category read_restricted flags..."
     start_time = Time.now
     processed_count = 0
@@ -422,11 +422,16 @@ class BulkImport::Generic < BulkImport::Base
     skipped_count = 0
 
     Category
-      .includes(:category_groups)
+      .includes(category_groups: :group)
       .find_each do |category|
         processed_count += 1
 
-        permissions = category.permissions_params
+        permissions = {}
+        category.category_groups.each do |category_group|
+          group = category_group.group
+          permissions[category_group.group_name] = category_group.permission_type if group.present?
+        end
+
         expected_read_restricted =
           if permissions.empty?
             false
@@ -459,19 +464,20 @@ class BulkImport::Generic < BulkImport::Base
     create_groups(groups) do |row|
       next if group_id_from_imported_id(row["id"]).present?
 
-      {
+      group_data = {
         imported_id: row["id"],
         name: row["name"],
         full_name: row["full_name"],
-        public_admission: row["public_admission"],
-        public_exit: row["public_exit"],
-        allow_membership_requests: row["allow_membership_requests"],
+        public_admission: row["public_admission"] || false,
+        public_exit: row["public_exit"] || false,
+        allow_membership_requests: row["allow_membership_requests"] || false,
         visibility_level: row["visibility_level"],
         members_visibility_level: row["members_visibility_level"],
         mentionable_level: row["mentionable_level"],
         messageable_level: row["messageable_level"],
-        assignable_level: row["assignable_level"],
       }
+      group_data[:assignable_level] = row["assignable_level"] if defined?(::DiscourseAssign)
+      group_data
     end
 
     groups.close
@@ -609,13 +615,12 @@ class BulkImport::Generic < BulkImport::Base
     puts "", "Importing user options..."
 
     users = query(<<~SQL)
-      SELECT id, timezone, email_level, email_messages_level, email_digests, hide_profile_and_presence
+      SELECT id, timezone, email_level, email_messages_level, email_digests
         FROM users
        WHERE timezone IS NOT NULL
           OR email_level IS NOT NULL
           OR email_messages_level IS NOT NULL
           OR email_digests IS NOT NULL
-          OR hide_profile_and_presence IS NOT NULL
        ORDER BY id
     SQL
 
@@ -631,7 +636,9 @@ class BulkImport::Generic < BulkImport::Base
         email_level: row["email_level"],
         email_messages_level: row["email_messages_level"],
         email_digests: row["email_digests"],
-        hide_profile_and_presence: row["hide_profile_and_presence"] || false,
+        hide_profile_and_presence: false,
+        hide_profile: false,
+        hide_presence: false,
       }
     end
 
@@ -2023,10 +2030,17 @@ class BulkImport::Generic < BulkImport::Base
         )
       @tag_mapping[row["id"]] = tag.id
 
-      if row["tag_group_id"] && !row["tag_group_id"].empty?
-        intermediate_group_ids = JSON.parse(row["tag_group_id"])
+      intermediate_group_ids = []
+      if row["tag_group_ids"] && !row["tag_group_ids"].empty?
+        intermediate_group_ids = JSON.parse(row["tag_group_ids"])
+      elsif row["tag_group_id"] && !row["tag_group_id"].empty?
+        # Support old single tag_group_id
+        intermediate_group_ids = [row["tag_group_id"]]
+      end
 
+      if intermediate_group_ids.any?
         intermediate_group_ids.each do |intermediate_group_id|
+          intermediate_group_id = intermediate_group_id.to_i if intermediate_group_id.is_a?(String)
           discourse_tag_group_id = @tag_group_mapping[intermediate_group_id]
 
           if discourse_tag_group_id
@@ -2476,6 +2490,15 @@ class BulkImport::Generic < BulkImport::Base
         image_upload_id:
           row["image_upload_id"] ? upload_id_from_original_id(row["image_upload_id"]) : nil,
         query: row["query"],
+        multiple_grant: to_boolean(row["multiple_grant"]),
+        allow_title: to_boolean(row["allow_title"]),
+        icon: row["icon"],
+        listable: to_boolean(row["listable"]),
+        target_posts: to_boolean(row["target_posts"]),
+        enabled: to_boolean(row["enabled"]),
+        auto_revoke: to_boolean(row["auto_revoke"]),
+        trigger: row["trigger"],
+        show_posts: to_boolean(row["show_posts"]),
       }
     end
 
@@ -2506,6 +2529,24 @@ class BulkImport::Generic < BulkImport::Base
     end
 
     user_badges.close
+
+    puts "", "Updating badge grant counts..."
+    start_time = Time.now
+
+    DB.exec(<<~SQL)
+        WITH
+          grants AS (
+                      SELECT badge_id, COUNT(*) AS grant_count FROM user_badges GROUP BY badge_id
+                    )
+
+      UPDATE badges
+         SET grant_count = grants.grant_count
+        FROM grants
+       WHERE badges.id = grants.badge_id
+         AND badges.grant_count <> grants.grant_count
+    SQL
+
+    puts "  Update took #{(Time.now - start_time).to_i} seconds."
   end
 
   def import_anniversary_user_badges
