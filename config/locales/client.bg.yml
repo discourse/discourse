@@ -383,7 +383,7 @@ bg:
       one: "Вижте %{count} нова тема"
       other: "Вижте %{count} нови теми"
     preview: "преглед"
-    cancel: "прекрати"
+    cancel: "Прекрати"
     deleting: "Изтриване…"
     save: "Запазете промените"
     saving: "Запазване…"
@@ -3440,12 +3440,6 @@ bg:
     discovery:
       headings:
         categories: "Всички категории"
-        filter_labels:
-          latest: "Последни"
-          top: "Топ"
-          new: "Нова"
-          unread: "Непрочетени"
-          unseen: "Непрегледани"
   admin_js:
     settings: "Настройки"
     admin:

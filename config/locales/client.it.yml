@@ -485,7 +485,7 @@ it:
       one: "Vedi %{count} nuovo argomento"
       other: "Vedi %{count} nuovi argomenti"
     preview: "anteprima"
-    cancel: "annulla"
+    cancel: "Annulla"
     deleting: "Eliminazione…"
     save: "Salva Modifiche"
     saving: "Salvataggio…"
@@ -4665,6 +4665,9 @@ it:
         forum:
           label: Forum
       back_to_forum: "Torna al forum"
+      clear_filter: "Cancella il filtro"
+      no_results:
+        title: "Nessun risultato"
       collapse_all_sections: "Comprimi tutte le sezioni"
       expand_all_sections: "Espandi tutte le sezioni"
       search: "Cerca"
@@ -4775,14 +4778,9 @@ it:
     powered_by_discourse: "Con tecnologia Discourse"
     discovery:
       headings:
+        multi_tag:
+          default: "Argomenti etichettati %{tags}"
         categories: "Tutte le categorie"
-        filter_labels:
-          latest: "Più recenti"
-          top: "Popolari"
-          new: "Nuovo"
-          unread: "Non letti"
-          hot: "Novità"
-          unseen: "Non visualizzati"
   admin_js:
     type_to_filter: "Digita per filtrare…"
     settings: "Impostazioni"

@@ -388,26 +388,6 @@ vi:
   education:
     until_posts:
       other: "%{count} bài đăng"
-    "new-topic": |
-      Chào mừng bạn đến với %{site_name} &mdash; **cảm ơn vì đã bắt đầu một cuộc trò chuyện mới! **
-
-      - Tiêu đề có nghe thú vị nếu bạn đọc to không? Đó có phải là một bản tóm tắt hay không?
-
-      - Ai sẽ quan tâm đến điều này? Tại sao nó lại quan trọng? Bạn muốn loại phản hồi nào?
-
-      - Bao gồm các từ thường được sử dụng trong chủ đề của bạn để những người khác có thể *tìm thấy* nó. Để nhóm chủ đề của bạn với các chủ đề liên quan, hãy chọn một dang mục (hoặc thẻ).
-
-      Để biết thêm, [xem hướng dẫn cộng đồng của chúng tôi](%{base_path}/guidelines). Bảng điều khiển này sẽ chỉ xuất hiện cho %{education_posts_text} đầu tiên của bạn.
-    "new-reply": |
-      Chào mừng bạn đến với %{site_name} &mdash; **cảm ơn bạn đã đóng góp!**
-
-      - Hãy tử tế với các thành viên trong cộng đồng của bạn.
-
-      - Câu trả lời của bạn có cải thiện cuộc trò chuyện không?
-
-      - Phê bình mang tính xây dựng được hoan nghênh, nhưng chỉ trích *ý tưởng*, không phải con người.
-
-      Để biết thêm, [xem nguyên tắc cộng đồng của chúng tôi](%{base_path}/guidelines). Bảng điều khiển này sẽ chỉ xuất hiện cho %{education_posts_text} đầu tiên của bạn.
   activerecord:
     attributes:
       category:
@@ -1203,7 +1183,6 @@ vi:
     min_title_similar_length: "Chiều dài tối thiểu của tiêu đề trước khi kiểm tra trùng chủ đề."
     category_colors: "Danh sách mã màu hexa cho phép cho danh mục."
     dark_mode_none: "Không có gì"
-    max_similar_results: "Số lượng chủ đề tương tự hiển thị phía trên bộ soạn thảo khi soạn chủ đề mới, so sánh dựa trên tiêu đề và nội dung."
     title_prettify: "Ngăn chặn lỗi chính tả và sai sót phổ biến trong tiêu đề, bao gồm tất cả là chữ hoa, ký tự đầu tiên là chữ thường, sử dụng quá nhiều ! và ?, thêm . ở cuối..."
     automatic_topic_heat_values: 'Tự động cập nhật cài đặt "lượt xem chủ đề nổi bật" và "lượt thích chủ đề nổi bật" dựa trên hoạt động của trang web.'
     topic_views_heat_low: "Sau bao nhiêu lượt xem thì số lượt xem sẽ nổi bật một chút."
@@ -1427,11 +1406,6 @@ vi:
     errors: "%{errors}"
     not_available: "Không có sẵn. Thử %{suggestion}?"
     something_already_taken: "Có lỗi xảy ra, tên đăng nhập hoặc email đã được đăng ký. Thử sử dụng chức năng quên mật khẩu."
-    omniauth_error:
-      generic: "Xin lỗi, đã xảy ra lỗi khi ủy quyền tài khoản của bạn. Vui lòng thử lại."
-      csrf_detected: "Đã hết thời gian ủy quyền hoặc bạn đã chuyển đổi trình duyệt. Vui lòng thử lại."
-      request_error: "Đã xảy ra lỗi khi bắt đầu ủy quyền. Vui lòng thử lại."
-      invalid_iat: "Không thể xác minh mã thông báo ủy quyền do sự khác biệt về đồng hồ máy chủ. Vui lòng thử lại."
     omniauth_error_unknown: "Đã xảy ra lỗi khi xử lý thông tin đăng nhập của bạn, vui lòng thử lại."
     omniauth_confirm_title: "Đăng nhập bằng %{provider}"
     omniauth_confirm_button: "Tiếp tục"

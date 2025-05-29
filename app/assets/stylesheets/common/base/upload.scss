@@ -5,7 +5,7 @@
   height: 80px;
   margin-bottom: 0.5em;
   box-sizing: border-box;
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-input-border-radius);
   background-origin: content-box;
   background-clip: content-box;
 
@@ -71,6 +71,7 @@
     height: 100%;
     background-color: var(--primary-very-low);
     transition: background 0.25s;
+    border-radius: var(--d-input-border-radius);
 
     &:hover {
       background-color: var(--tertiary-very-low);
@@ -83,6 +84,7 @@
       width: 100%;
       height: 100%;
       box-sizing: border-box;
+      border-radius: var(--d-input-border-radius);
 
       svg {
         color: var(--primary-high);

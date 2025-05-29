@@ -428,7 +428,7 @@ lt:
       many: "Pamatyk %{count} naujų temų"
       other: "Pamatyk %{count} naujas temas"
     preview: "Peržiūrėti"
-    cancel: "atšaukti"
+    cancel: "Atšaukti"
     save: "Išsaugoti pakeitimus"
     saved: "Išsaugota!"
     upload: "Įkelti"
@@ -3652,13 +3652,9 @@ lt:
         about: "Apie"
     discovery:
       headings:
+        multi_tag:
+          default: "Temos pažymėtos %{tags}"
         categories: "Visos kategorijos"
-        filter_labels:
-          latest: "Naujausia"
-          top: "Populiarios"
-          new: "Nauji"
-          unread: "Neperskaitytos"
-          unseen: "Nematytas"
   admin_js:
     type_to_filter: "Įveskite filtrą…"
     settings: "Nustatymai"

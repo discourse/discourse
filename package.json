@@ -21,7 +21,7 @@
     "chrome-remote-interface": "^0.33.3",
     "concurrently": "^9.1.2",
     "ember-template-lint": "7.7.0",
-    "esbuild": "^0.25.4",
+    "esbuild": "^0.25.5",
     "eslint": "9.27.0",
     "jsdoc": "^4.0.4",
     "lefthook": "^1.11.13",
@@ -36,7 +36,7 @@
     "puppeteer-core": "^24.9.0",
     "squoosh": "https://codeload.github.com/discourse/squoosh/tar.gz/dc9649d",
     "stylelint": "16.19.1",
-    "terser": "^5.39.2",
+    "terser": "^5.40.0",
     "typescript": "5.6.x"
   },
   "scripts": {

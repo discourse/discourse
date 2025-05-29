@@ -999,6 +999,24 @@ import { i18n } from "discourse-i18n";
           );
       });
 
+      test("modified placeholder with composer-editor-reply-placeholder is rendered", async function (assert) {
+        withPluginApi("0.8.14", (api) => {
+          api.registerValueTransformer(
+            "composer-editor-reply-placeholder",
+            () => {
+              return "modified_value";
+            }
+          );
+        });
+
+        await visit("/t/34");
+        await click("article#post_3 button.reply");
+
+        assert
+          .dom(".d-editor-container textarea")
+          .hasAttribute("placeholder", i18n("modified_value"));
+      });
+
       test("reply button has envelope icon when replying to private message", async function (assert) {
         await visit("/t/34");
         await click("article#post_3 button.reply");

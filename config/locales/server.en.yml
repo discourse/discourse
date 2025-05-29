@@ -684,26 +684,18 @@ en:
       other: "%{count} posts"
 
     "new-topic": |
-      Welcome to %{site_name} &mdash; **thanks for starting a new conversation!**
+      Thanks for contributing to %{site_name}!
 
-      - Does the title sound interesting if you read it out loud? Is it a good summary?
+      Before you post, please select a category or tag to group this topic with related discussions so that it's easy for others to find it.
 
-      - Who would be interested in this? Why does it matter? What kind of responses do you want?
-
-      - Include commonly used words in your topic so others can *find* it. To group your topic with related topics, select a category (or tag).
-
-      For more, [see our community guidelines](%{base_path}/guidelines). This panel will only appear for your first %{education_posts_text}.
+      For more tips and advice on participating in our community, [check out our community guidelines](%{base_path}/guidelines).
 
     "new-reply": |
-      Welcome to %{site_name} &mdash; **thanks for contributing!**
+      Thanks for contributing to %{site_name}!
 
-      - Be kind to your fellow community members.
+      Remember, we're all real people. Please be kind to your fellow community members.
 
-      - Does your reply improve the conversation?
-
-      - Constructive criticism is welcome, but criticize *ideas*, not people.
-
-      For more, [see our community guidelines](%{base_path}/guidelines). This panel will only appear for your first %{education_posts_text}.
+      For more tips and advice on participating in our community, [check out our community guidelines](%{base_path}/guidelines).
 
     avatar: |
       ### How about a picture for your account?
@@ -723,20 +715,16 @@ en:
 
       It’s easier for everyone to read topics that have fewer in-depth replies versus lots of small, individual replies.
 
-    dominating_topic: You’ve posted a lot in this topic! Consider giving others an opportunity to reply here and discuss things with each other as well.
+    dominating_topic: You've posted a lot in this topic! Consider giving others an opportunity to participate, too.
 
     get_a_room:
       one: You’ve replied to @%{reply_username} once, did you know you could send them a personal message instead?
       other: You’ve replied to @%{reply_username} %{count} times, did you know you could send them a personal message instead?
 
-    dont_feed_the_trolls: This post has already been flagged for moderator attention. Are you sure you wish to reply to it? Replies to negative content tend to encourage more negative behavior.
+    dont_feed_the_trolls: This post was flagged for moderator attention. Replying to negative content can encourage more negative behavior - are you sure you want to continue?
 
     too_many_replies: |
-      ### You have reached the reply limit for this topic
-
-      We’re sorry, but new users are temporarily limited to %{newuser_max_replies_per_topic} replies in the same topic.
-
-      Instead of adding another reply, please consider editing your previous replies, or visiting other topics.
+      New users are temporarily limited to %{newuser_max_replies_per_topic} replies in the same topic. Please consider visiting other topics to keep getting to know the community.
 
     reviving_old_topic: |
       ### Revive this topic?
@@ -2267,7 +2255,6 @@ en:
     authorized_extensions: "A list of file extensions allowed for upload"
     authorized_extensions_for_staff: "A list of file extensions allowed for upload for staff users in addition to the list defined in the `authorized_extensions` site setting."
     theme_authorized_extensions: "A list of file extensions allowed for theme uploads"
-    max_similar_results: "How many similar topics to show above the editor when composing a new topic. Comparison is based on title and body."
 
     max_image_megapixels: "Maximum number of megapixels allowed for an image. Images with a higher number of megapixels will be rejected."
 

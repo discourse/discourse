@@ -310,12 +310,6 @@ nb_NO:
       Du kan redigere det forrige svaret ditt om du ønsker å legge til et sitat ved å merke teksten som skal siteres og velge <b>Sitat</b> knappen som spretter opp.
 
       Det er lettere for alle å lese emner som har færre og mer dyptgående innlegg enn et stort antall små, individuelle svar.
-    too_many_replies: |
-      ### Du har nådd grensen for svar i dette emnet
-
-      Vi beklager, men nye brukere er midlertidig begrenset til å skrive %{newuser_max_replies_per_topic} svar per emne.
-
-      I stedet for å legge til et nytt svar, vurder om du kan redigere et tidligere svar, eller besøk et annet emne i mellomtiden.
     reviving_old_topic: |
       ### Gjennopplive dette emnet?
 

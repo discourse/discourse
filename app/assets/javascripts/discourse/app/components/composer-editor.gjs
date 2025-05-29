@@ -34,6 +34,7 @@ import {
 } from "discourse/lib/link-mentions";
 import { loadOneboxes } from "discourse/lib/load-oneboxes";
 import { generateCookFunction } from "discourse/lib/text";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import {
   authorizesOneOrMoreImageExtensions,
   IMAGE_MARKDOWN_REGEX,
@@ -130,17 +131,23 @@ export default class ComposerEditor extends Component {
 
   @discourseComputed("composer.model.requiredCategoryMissing")
   replyPlaceholder(requiredCategoryMissing) {
-    if (requiredCategoryMissing) {
-      return "composer.reply_placeholder_choose_category";
-    } else {
+    let placeholder = "composer.reply_placeholder_choose_category";
+
+    if (!requiredCategoryMissing) {
       const key = authorizesOneOrMoreImageExtensions(
         this.currentUser.staff,
         this.siteSettings
       )
         ? "reply_placeholder"
         : "reply_placeholder_no_images";
-      return `composer.${key}`;
+      placeholder = `composer.${key}`;
     }
+
+    return applyValueTransformer(
+      "composer-editor-reply-placeholder",
+      placeholder,
+      { model: this.composer }
+    );
   }
 
   @discourseComputed
