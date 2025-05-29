@@ -1018,7 +1018,8 @@ div.ac-wrap {
   //
   // Source https://gist.github.com/kiding/72721a0553fa93198ae2bb6eefaa3299
   input:focus,
-  textarea:focus {
+  textarea:focus,
+  [contenteditable="true"]:focus-within {
     animation: blink_input_opacity_to_prevent_scrolling_when_focus 0.01s;
   }
 }
