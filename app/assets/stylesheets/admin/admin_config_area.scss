@@ -3,7 +3,6 @@
   border: 1px solid var(--primary-low);
   border-radius: var(--d-border-radius);
   background-color: var(--secondary);
-  margin-bottom: 1em;
 
   &__label-optional {
     color: var(--primary-medium);
@@ -117,6 +116,7 @@
 .admin-empty-list {
   padding: 1em;
   border: 1px solid var(--primary-low);
+  border-radius: var(--d-border-radius);
 
   &__cta-button {
     display: flex;
