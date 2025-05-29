@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 class AddUtcToSetting < ActiveRecord::Migration[7.2]
   def up
-    # we changed the setting so UTC is no longer appeneded, we append it now in the format
+    # we changed the setting so UTC is no longer appended, we append it now in the format
     execute <<~SQL
       UPDATE site_settings
       SET value = value || ' z'
