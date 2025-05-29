@@ -82,7 +82,7 @@ GEM
       erubi (>= 1.0.0)
       rack (>= 0.9.0)
       rouge (>= 1.0.0)
-    bigdecimal (3.1.9)
+    bigdecimal (3.2.0)
     binding_of_caller (1.0.1)
       debug_inspector (>= 1.2.0)
     bootsnap (1.18.6)
@@ -174,25 +174,25 @@ GEM
     fspath (3.1.2)
     globalid (1.2.1)
       activesupport (>= 6.1)
-    google-protobuf (4.31.0)
+    google-protobuf (4.31.1)
       bigdecimal
       rake (>= 13)
-    google-protobuf (4.31.0-aarch64-linux-gnu)
+    google-protobuf (4.31.1-aarch64-linux-gnu)
       bigdecimal
       rake (>= 13)
-    google-protobuf (4.31.0-aarch64-linux-musl)
+    google-protobuf (4.31.1-aarch64-linux-musl)
       bigdecimal
       rake (>= 13)
-    google-protobuf (4.31.0-arm64-darwin)
+    google-protobuf (4.31.1-arm64-darwin)
       bigdecimal
       rake (>= 13)
-    google-protobuf (4.31.0-x86_64-darwin)
+    google-protobuf (4.31.1-x86_64-darwin)
       bigdecimal
       rake (>= 13)
-    google-protobuf (4.31.0-x86_64-linux-gnu)
+    google-protobuf (4.31.1-x86_64-linux-gnu)
       bigdecimal
       rake (>= 13)
-    google-protobuf (4.31.0-x86_64-linux-musl)
+    google-protobuf (4.31.1-x86_64-linux-musl)
       bigdecimal
       rake (>= 13)
     guess_html_encoding (0.0.11)
@@ -826,7 +826,7 @@ CHECKSUMS
   base64 (0.2.0) sha256=0f25e9b21a02a0cc0cea8ef92b2041035d39350946e8789c562b2d1a3da01507
   benchmark (0.4.0) sha256=0f12f8c495545e3710c3e4f0480f63f06b4c842cc94cec7f33a956f5180e874a
   better_errors (2.10.1) sha256=f798f1bac93f3e775925b7fcb24cffbcf0bb62ee2210f5350f161a6b75fc0a73
-  bigdecimal (3.1.9) sha256=2ffc742031521ad69c2dfc815a98e426a230a3d22aeac1995826a75dabfad8cc
+  bigdecimal (3.2.0) sha256=f220c34e07d98b04e02eb23193bee436fab9afcd551f43dce8837a1b4aa80762
   binding_of_caller (1.0.1) sha256=2b2902abff4246ddcfbc4da9b69bc4a019e22aeb300c2ff6289a173d4b90b29a
   bootsnap (1.18.6) sha256=0ae2393c1e911e38be0f24e9173e7be570c3650128251bf06240046f84a07d00
   builder (3.3.0) sha256=497918d2f9dca528fdca4b88d84e4ef4387256d984b8154e9d5d3fe5a9c8835f
@@ -886,13 +886,13 @@ CHECKSUMS
   ffi (1.17.2-x86_64-linux-musl) sha256=97c0eb3981414309285a64dc4d466bd149e981c279a56371ef811395d68cb95c
   fspath (3.1.2) sha256=b5ac9bafb97e2c8f8f9e303cd98ebd484be76fe9aa588bc4d01c6d99e78c9d75
   globalid (1.2.1) sha256=70bf76711871f843dbba72beb8613229a49429d1866828476f9c9d6ccc327ce9
-  google-protobuf (4.31.0) sha256=4db6fe6c92dd683aa9671432c38976685aaf9ba2f92450eebd63d76bcdbe4891
-  google-protobuf (4.31.0-aarch64-linux-gnu) sha256=7649e7e74d27c23b22cd4cd09714184e80629d1f87540b59819761082cc44989
-  google-protobuf (4.31.0-aarch64-linux-musl) sha256=a6097e563b7fdc5fca969565cd2e026796db4e5b5abb815d858a427349f65d35
-  google-protobuf (4.31.0-arm64-darwin) sha256=2b21ed0b14c07ce63b2aa7872621edd934fb1b19879e90c211aa3e1ca056bcfb
-  google-protobuf (4.31.0-x86_64-darwin) sha256=b10658bcc4c903e662cbafd79ec859d99debfce6e524ca64d144318a4f8c8e71
-  google-protobuf (4.31.0-x86_64-linux-gnu) sha256=3d4f8784e448ef91831251d6c0b1d6427f1ca251cd2d33c67446d40a444d0b18
-  google-protobuf (4.31.0-x86_64-linux-musl) sha256=d4447e1ea7119836cf5c88137b4e9f845cc8bfc9d7fd5645360c72d6f7f6d393
+  google-protobuf (4.31.1) sha256=022bc82931a0860a7f2ace41bd48e904c8e65032c1d5eefc33294b5edf9741f8
+  google-protobuf (4.31.1-aarch64-linux-gnu) sha256=d5b8268b2e07776b15a73ed96ca416eab771821b162b239dbdbfb2c85e2d17e5
+  google-protobuf (4.31.1-aarch64-linux-musl) sha256=fcd5b79ac4048e89e44c4c64fb432fa6400ec3c2f0344a7effa95fbc6895d24a
+  google-protobuf (4.31.1-arm64-darwin) sha256=177ca61d254e4516d42997aa9d3127fd5e04ffc60c4ad333b1515ded6d7af89d
+  google-protobuf (4.31.1-x86_64-darwin) sha256=bdf067d1456167275ca7ce269922a99d24fcb9071d86429289cd73f0cf536ae4
+  google-protobuf (4.31.1-x86_64-linux-gnu) sha256=7def6dbf996dab289dd541a3ee8b201e2c3e35911c274325ad9b483ebffb6dcd
+  google-protobuf (4.31.1-x86_64-linux-musl) sha256=7d99d7728d9d7a6fda36130acac2a9947b868e28fe3f4aec4131cebce0d420f9
   guess_html_encoding (0.0.11) sha256=cab6468b945f38673fc41ad147fbbc89693b3c6c34b03b071e2ed669a603e098
   hana (1.3.7) sha256=5425db42d651fea08859811c29d20446f16af196308162894db208cac5ce9b0d
   hashdiff (1.2.0) sha256=c984f13e115bfc9953332e8e83bd9d769cfde9944e2d54e07eb9df7b76e140b5
