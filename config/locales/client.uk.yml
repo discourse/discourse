@@ -600,7 +600,7 @@ uk:
       many: "Переглянути %{count} нових тем"
       other: "Переглянути %{count} нових тем"
     preview: "попередній перегляд"
-    cancel: "скасувати"
+    cancel: "Скасувати"
     deleting: "Видалення"
     save: "Зберегти зміни"
     saving: "Збереження"
@@ -2678,6 +2678,8 @@ uk:
         few: "в цьому розділі %{count} теми"
         many: "в цьому розділі %{count} тем"
         other: "в цьому розділі %{count} тем"
+    timezone_input:
+      ambiguous_ist: "IST неоднозначний, будь ласка, виберіть певний часовий пояс (наприклад: Азія/Калькутта)"
     select_kit:
       delete_item: "Видалити %{name}"
       filter_by: "Фільтрувати за: %{name}"
@@ -3283,10 +3285,10 @@ uk:
           other: "Закладки — %{count} непрочитаних закладок"
         review_queue: "Премодерація"
         review_queue_with_unread:
-          one: "Черга премодерації - %{count} елемент потребує перевірки"
-          few: "Черга премодерації - %{count} елементи потребують перевірки"
-          many: "Черга премодерації - %{count} елементів потребують перевірки"
-          other: "Черга премодерації - %{count} елементи потребують перевірки"
+          one: "Черга премодерації – %{count} елемент потребує перевірки"
+          few: "Черга премодерації – %{count} елементи потребують перевірки"
+          many: "Черга премодерації – %{count} елементів потребують перевірки"
+          other: "Черга премодерації - %{count} елементів потребують перевірки"
         other_notifications: "Інші сповіщення"
         other_notifications_with_unread:
           one: "Інші сповіщення – %{count} непрочитане повідомлення"
@@ -5268,6 +5270,11 @@ uk:
         forum:
           label: Форум
       back_to_forum: "Повернутися до форуму"
+      filter_links: "Фільтр посилання..."
+      clear_filter: "Очистити фільтр"
+      no_results:
+        title: "Немає результатів"
+        description_admin_search: "Ми не змогли знайти нічого, що відповідає \"%{filter}\"."
       collapse_all_sections: "Згорнути всі розділи"
       expand_all_sections: "Розгорнути всі розділи"
       search: "Пошук"
@@ -5389,42 +5396,69 @@ uk:
     discovery:
       headings:
         all:
-          default: "Всі %{filter} теми"
+          latest: "Всі останні теми"
+          top: "Всі Топ Теми"
+          new: "Всі нові теми"
+          unread: "Всі непрочитані теми"
+          unseen: "Усі непомічені теми"
+          hot: "Усі гарячі теми"
           posted: "Усі теми, у яких ви писали"
           bookmarks: "Всі теми, які ви додали до закладок"
+          default: "Всі %{filter} теми"
         category:
-          default: "%{filter} тем у %{category}"
+          latest: "Останні теми в %{category}"
+          top: "Топ-теми в %{category}"
+          new: "Нові теми в %{category}"
+          unread: "Непрочитані теми в %{category}"
+          unseen: "Небачені теми в %{category}"
+          hot: "Гарячі теми в %{category}"
           posted: "Теми в %{category} , у яких ви писали"
           bookmarks: "Теми в %{category}, які ви додали до закладок"
-        no_tags:
-          all_default: "Всі теми без тегів"
-          category_default: "%{filter} теми в %{category} без тегів"
-          all:
-            posted: "Всі теми без тегів, в яких ви писали"
-            bookmarks: "Усі теми без тегів, які ви додали в закладки"
-          category:
-            posted: "Теми в %{category} без тегів, у яких ви писали"
-            bookmarks: "Теми в %{category} без тегів, які ви додали в закладки"
+          default: "%{filter} тем у %{category}"
         single_tag:
-          default: "%{filter} теми з тегом %{tag}"
+          latest: "Останні теми з тегом %{tag}"
+          top: "Найпопулярніші теми з тегом %{tag}"
+          new: "Нові теми з тегом %{tag}"
+          unread: "Непрочитані теми з тегом %{tag}"
+          unseen: "Непереглянуті теми з тегом %{tag}"
+          hot: "Гарячі теми з тегом %{tag}"
           posted: "Теми з тегом %{tag} , в яких ви писали"
           bookmarks: "Теми з тегом %{tag} , які ви додали до закладок"
+          default: "%{filter} теми з тегом %{tag}"
         multi_tag:
-          default: "%{filter} теми з тегами %{tags}"
-          posted: "Теми з тегами %{tags} , у яких ви писали"
-          bookmarks: "Теми з тегами %{tags}, які ви додали в закладки"
+          default: "Теми з теґом %{tags}"
         category_tag:
-          default: "%{filter} тем у %{category} з тегом %{tag}"
+          latest: "Останні теми в %{category} з тегом %{tag}"
+          top: "Найпопулярніші теми в %{category} з тегом %{tag}"
+          new: "Нові теми в %{category} з тегом %{tag}"
+          unread: "Непрочитані теми в %{category} з тегом %{tag}"
+          unseen: "Небачені теми в %{category} з тегом %{tag}"
+          hot: "Гарячі теми в %{category} з тегом %{tag}"
           posted: "Теми в %{category} з тегами %{tag} , які ви публікували"
           bookmarks: "Теми в %{category} позначені тегами %{tag} , які ви додали в закладки"
+          default: "%{filter} теми в %{category} з тегами %{tag}"
+        no_tags:
+          all:
+            latest: "Останні теми без тегів"
+            top: "Топ тем без тегів"
+            new: "Нові теми без тегів"
+            unread: "Непрочитані теми без тегів"
+            unseen: "Непереглянуті теми без тегів"
+            hot: "Гарячі теми без тегів"
+            posted: "Теми без тегів, в яких ви писали"
+            bookmarks: "Теми без тегів, які ви додали до закладок"
+            default: "Теми без тегів"
+          category:
+            latest: "Останні теми в %{category} без тегів"
+            top: "Топ теми в %{category} без тегів"
+            new: "Нові теми в %{category} без тегів"
+            unread: "Непрочитані теми в %{category} без тегів"
+            unseen: "Непереглянуті теми в %{category} без тегів"
+            hot: "Гарячі теми в %{category} без тегів"
+            posted: "Теми в %{category} без тегів, в яких ви писали"
+            bookmarks: "Теми в %{category} без тегів, які ви додали до закладок"
+            default: "%{filter} теми в %{category} без тегів"
         categories: "Всі розділи"
-        filter_labels:
-          latest: "Остання"
-          top: "Топ"
-          new: "Нові"
-          unread: "Непрочитані"
-          hot: "Гаряче"
-          unseen: "Непереглянуті"
   admin_js:
     type_to_filter: "Текст для пошуку…"
     settings: "Налаштування"
@@ -6469,8 +6503,6 @@ uk:
           more_options:
             title: "Більше опцій"
         themes_and_components:
-          title: "Теми та компоненти"
-          description: "Персоналізуйте свій сайт Discourse за допомогою тем і компонентів відповідно до ваших потреб."
           breadcrumb_title: "Customize"
           install: "Install"
           themes:

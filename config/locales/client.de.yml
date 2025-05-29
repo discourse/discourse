@@ -2422,6 +2422,8 @@ de:
       topic_count:
         one: "%{count} Thema in dieser Kategorie"
         other: "%{count} Themen in dieser Kategorie"
+    timezone_input:
+      ambiguous_ist: "IST ist zweideutig, bitte wähle eine bestimmte Zeitzone (z.B. Asien/Kolkata)"
     select_kit:
       delete_item: "%{name} löschen"
       filter_by: "Filtern nach: %{name}"
@@ -4756,6 +4758,11 @@ de:
         forum:
           label: Forum
       back_to_forum: "Zurück zum Forum"
+      filter_links: "Links filtern..."
+      clear_filter: "Filter löschen"
+      no_results:
+        title: "Keine Ergebnisse"
+        description_admin_search: "Wir konnten nichts finden, das zu '%{filter}' passt."
       collapse_all_sections: "Alle Abschnitte einklappen"
       expand_all_sections: "Alle Abschnitte erweitern"
       search: "Suche"
@@ -4869,42 +4876,69 @@ de:
     discovery:
       headings:
         all:
-          default: "%{filter} Themen"
+          latest: "Alle aktuellen Themen"
+          top: "Alle angesagten Themen"
+          new: "Alle neuen Themen"
+          unread: "Alle ungelesenen Themen"
+          unseen: "Alle ungesehenen Themen"
+          hot: "Alle heißen Themen"
           posted: "Alle Themen, zu denen du beigetragen hast"
           bookmarks: "Alle Themen, die du mit einem Lesezeichen versehen hast."
+          default: "%{filter} Themen"
         category:
-          default: "%{filter} Themen in %{category}"
+          latest: "Aktuelle Themen in %{category}"
+          top: "Top-Themen in %{category}"
+          new: "Neue Themen in %{category}"
+          unread: "Ungelesene Themen in %{category}"
+          unseen: "Ungesehene Themen in %{category}"
+          hot: "Heiße Themen in %{category}"
           posted: "Themen in %{category}, zu denen du beigetragen hast"
           bookmarks: "Themen in %{category}, die du mit einem Lesezeichen versehen hast"
-        no_tags:
-          all_default: "Alle Themen ohne Schlagwörter"
-          category_default: "%{filter} Themen in %{category} ohne Schlagwörter"
-          all:
-            posted: "Alle Themen ohne Schlagwörter, zu denen du beigetragen hast"
-            bookmarks: "Alle Themen ohne Schlagwörter, die du mit einem Lesezeichen versehen hast"
-          category:
-            posted: "Themen in %{category} ohne Schlagwörter, zu denen du beigetragen hast"
-            bookmarks: "Themen in %{category} ohne Schlagwörter, die du mit einem Lesezeichen versehen hast"
+          default: "%{filter} Themen in %{category}"
         single_tag:
-          default: "%{filter} Themen mit dem Schlagwort %{tag}"
+          latest: "Aktuelle Themen mit dem Schlagwort %{tag}"
+          top: "Angesagte Themen mit dem Schlagwort %{tag}"
+          new: "Neue Themen mit dem Schlagwort %{tag}"
+          unread: "Ungelesene Themen mit dem Schlagwort %{tag}"
+          unseen: "Ungesehene Themen mit dem Schlagwort %{tag}"
+          hot: "Heiße Themen mit dem Schlagwort %{tag}"
           posted: "Themen mit dem Schlagwort %{tag}, zu denen du beigetragen hast"
           bookmarks: "Themen mit dem Schlagwort %{tag}, die du mit einem Lesezeichen versehen hast"
+          default: "%{filter} Themen mit dem Schlagwort %{tag}"
         multi_tag:
-          default: "%{filter} Themen mit den Schlagwörtern %{tags}"
-          posted: "Themen mit den Schlagwörtern %{tags}, zu denen du beigetragen hast"
-          bookmarks: "Themen mit den Schlagwörtern %{tags}, die du mit einem Lesezeichen versehen hast"
+          default: "Themen mit den Schlagwörtern %{tags}"
         category_tag:
-          default: "%{filter} Themen in %{category} mit dem Schlagwort %{tag}"
+          latest: "Aktuelle Themen in %{category} mit dem Schlagwort %{tag}"
+          top: "Angesagte Themen in %{category} mit dem Schlagwort %{tag}"
+          new: "Neue Themen in %{category} mit dem Schlagwort %{tag}"
+          unread: "Ungelesene Themen in %{category} mit dem Schlagwort %{tag}"
+          unseen: "Ungesehene Themen in %{category} mit dem Schlagwort %{tag}"
+          hot: "Heiße Themen in %{category} mit dem Schlagwort %{tag}"
           posted: "Themen in %{category} mit den Schlagwörtern %{tag}, zu denen du beigetragen hast"
           bookmarks: "Themen in %{category} mit den Schlagwörtern %{tag}, die du mit einem Lesezeichen versehen hast"
+          default: "%{filter} Themen in %{category} mit dem Schlagwort %{tag}"
+        no_tags:
+          all:
+            latest: "Aktuelle Themen ohne Schlagwörter"
+            top: "Angesagte Themen ohne Schlagwörter"
+            new: "Neue Themen ohne Schlagwörter"
+            unread: "Ungelesene Themen ohne Schlagwörter"
+            unseen: "Ungesehene Themen ohne Schlagwörter"
+            hot: "Heiße Themen ohne Schlagwörter"
+            posted: "Themen ohne Schlagwörter, zu denen du beigetragen hast"
+            bookmarks: "Themen ohne Schlagwörter, die du mit einem Lesezeichen versehen hast"
+            default: "Themen ohne Schlagwörter"
+          category:
+            latest: "Aktuelle Themen in %{category} ohne Schlagwörter"
+            top: "Angesagte Themen in %{category} ohne Schlagwörter"
+            new: "Neue Themen in %{category} ohne Schlagwörter"
+            unread: "Ungelesene Themen in %{category} ohne Schlagwörter"
+            unseen: "Ungesehene Themen in %{category} ohne Schlagwörter"
+            hot: "Heiße Themen in %{category} ohne Schlagwörter"
+            posted: "Themen in %{category} ohne Schlagwörter, zu denen du beigetragen hast"
+            bookmarks: "Themen in %{category} ohne Schlagwörter, die du mit einem Lesezeichen versehen hast"
+            default: "%{filter} Themen in %{category} ohne Schlagwörter"
         categories: "Alle Kategorien"
-        filter_labels:
-          latest: "Aktuelle"
-          top: "Angesagte"
-          new: "Neue"
-          unread: "Ungelesene"
-          hot: "Heiße"
-          unseen: "Ungesehene"
   admin_js:
     type_to_filter: "Zum Filtern hier eingeben …"
     settings: "Einstellungen"
@@ -5166,7 +5200,7 @@ de:
           header_description: "Komponenten sind kleinere Anpassungen, die zu Themes hinzugefügt werden können, um bestimmte Stilelemente deines Forumsdesigns zu verändern"
           keywords: "Theme|Komponente|Erweiterung"
         themes_and_components:
-          title: "Themes und Komponenten"
+          title: "Themes & Komponenten"
           header_description: "Gestalte deine Discourse-Website mit Themes und Komponenten ganz nach deinen Bedürfnissen"
           keywords: "Theme|Komponente|Erweiterung|Anpassen"
         site_admin:
@@ -5915,8 +5949,6 @@ de:
           more_options:
             title: "Mehr Optionen"
         themes_and_components:
-          title: "Themes und Komponenten"
-          description: "Gestalte deine Discourse-Website mit Themes und Komponenten ganz nach deinen Bedürfnissen."
           breadcrumb_title: "Anpassen"
           install: "Installieren"
           themes:

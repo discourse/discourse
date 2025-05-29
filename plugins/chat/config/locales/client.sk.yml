@@ -162,7 +162,7 @@ sk:
       in_reply_to: "V odpovedi na"
       heading: "Chat"
       join: "Pridať sa"
-      last_visit: "posledná návševa"
+      last_visit: "posledná návšteva"
       mention_warning:
         invitations_sent:
           one: "Pozvánka bola odoslaná"

@@ -4438,6 +4438,10 @@ zh_TW:
         forum:
           label: 論壇
       back_to_forum: "返回論壇"
+      filter_links: "篩選連結..."
+      clear_filter: "清除篩選"
+      no_results:
+        title: "沒有結果"
       collapse_all_sections: "折疊所有區段"
       expand_all_sections: "展開所有區段"
       search: "搜索"
@@ -4546,14 +4550,9 @@ zh_TW:
     safari_15_warning: "您的瀏覽器與這個社群站不相容，要持續互動的話，請升級您的瀏覽器或是 <a href='%{url}'>瞭解更多</a>。"
     discovery:
       headings:
+        multi_tag:
+          default: "主題標籤 %{tags}"
         categories: "所有分類"
-        filter_labels:
-          latest: "最新版本"
-          top: "精選"
-          new: "新使用者"
-          unread: "未讀"
-          hot: "熱門"
-          unseen: "未讀"
   admin_js:
     type_to_filter: "篩選類型…"
     settings: "設定"
@@ -4771,8 +4770,6 @@ zh_TW:
           title: "元件"
           header_description: "元件是較小的客製化設定，可以新增至佈景主題，以改變論壇設計風格的特定元素。"
           keywords: "主題 | 元件 | 擴充套件"
-        themes_and_components:
-          title: "主題與組件"
         site_texts:
           title: "網站文字"
           header_description: "自定義 Discourse 中使用的任何文本，以匹配社區的聲音和語調"
@@ -5446,7 +5443,6 @@ zh_TW:
           more_options:
             title: "更多選項"
         themes_and_components:
-          title: "主題與組件"
           breadcrumb_title: "客製化"
           install: "安裝"
           themes:

@@ -487,7 +487,7 @@ pt_BR:
       one: "Veja %{count} novo tópico"
       other: "Veja %{count} novos tópicos"
     preview: "pré-visualizar"
-    cancel: "cancelar"
+    cancel: "Cancelar"
     deleting: "Excluindo…"
     save: "Salvar alterações"
     saving: "Salvando…"
@@ -4695,6 +4695,9 @@ pt_BR:
         forum:
           label: Fórum
       back_to_forum: "Voltar para o Fórum"
+      clear_filter: "Limpar filtro"
+      no_results:
+        title: "Nenhum resultado"
       collapse_all_sections: "Recolher todas as seções"
       expand_all_sections: "Expandir todas as seções"
       search: "Pesquisar"
@@ -4806,14 +4809,9 @@ pt_BR:
     powered_by_discourse: "Com tecnologia Discourse"
     discovery:
       headings:
+        multi_tag:
+          default: "Tópicos etiquetados com %{tags}"
         categories: "Todas as categorias"
-        filter_labels:
-          latest: "Últimos"
-          top: "Melhores"
-          new: "Novo"
-          unread: "Não lidas"
-          hot: "Em alta"
-          unseen: "Não vistos"
   admin_js:
     type_to_filter: "Digite para filtrar..."
     settings: "Configurações"

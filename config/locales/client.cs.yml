@@ -600,7 +600,7 @@ cs:
       many: "Zobrazit %{count} nových témat"
       other: "Zobrazit %{count} nových témat"
     preview: "ukázka"
-    cancel: "zrušit"
+    cancel: "Zrušit"
     deleting: "Mazání…"
     save: "Uložit změny"
     saving: "Ukládání…"
@@ -689,6 +689,7 @@ cs:
         required: "Než budete moci položky revidovat, musíte si je nárokovat."
         claimed_by_you: "Tuto položku jste si nárokovali a můžete ji zkontrolovat."
         claimed_by_other: "Tuto položku může revidovat pouze <b>%{username}</b>."
+        automatically_claimed_by: "Tuto položku aktuálně reviduje <b>%{username}</b>."
       claim:
         title: "nárokovat toto téma"
       unclaim:
@@ -727,9 +728,17 @@ cs:
         name: "Jméno"
         fields: "Pole"
         reject_reason: "Důvod"
+        scrubbed_by: "Záznam očistil/a"
         scrubbed_reason: "Reason"
+        scrubbed_at: "Očištěno"
+        scrubbed_reject_reason: "Důvod odmítnutí"
         scrub_record:
+          button: Očistit záznam
+          confirm_title: Odstranění osobních údajů
+          confirm_body: "Jste si JISTI, že chcete tento záznam ve frontě pro revizí očistit? Všechny osobní údaje (např. uživatelské jméno, e-mail, IP adresa) budou z tohoto záznamu trvale odstraněny."
+          reason_title: "Je vyžadován důvod pro očištění tohoto záznamu."
           reason_placeholder: "Důvod..."
+          confirm_button: "Potvrdit odstranění"
           cancel_button: "Zrušit"
       user_percentage:
         summary:
@@ -1696,6 +1705,8 @@ cs:
         choose: "Vyber si heslo"
         verify_identity: "Chcete-li pokračovat, ověřte prosím svoji totožnost."
         title: "Obnovení hesla"
+        remove: "Odebrat heslo"
+        remove_detail: "Váš účet již nebude přístupný pomocí hesla, dokud jej neobnovíte."
       second_factor_backup:
         title: "Dvoufaktorové záložní kódy"
         regenerate: "Vytvořit znovu"
@@ -2226,6 +2237,7 @@ cs:
         title: "Registrační IP adresa"
       avatar:
         title: "Profilový obrázek"
+        header_title: "Oznámení a účet"
         name_and_description: "%{name} - %{description}"
         edit: "Upravit profilový obrázek"
       title:
@@ -2264,6 +2276,7 @@ cs:
     user_tips:
       button: "Rozumím!"
       skip: "Přeskočit tipy"
+      dont_show_again: "Příště nezobrazovat"
       first_notification:
         title: "Vaše první upozornění!"
         content: "Oznámení se používají k tomu, abyste byli informováni o tom, co se děje v komunitě."
@@ -2305,6 +2318,7 @@ cs:
     multi_select:
       no_results: "Žádné výsledky"
       search: "Vyhledat..."
+      label: "Vyberte možnosti"
     form_kit:
       reset: obnovit výchozí
       optional: volitelné
@@ -2578,6 +2592,10 @@ cs:
         name: "Google"
         title: "Přihlásit se přes Google"
         sr_title: "Přihlásit se přes Google"
+      twitter:
+        name: "X"
+        title: "Přihlásit se pomocí X"
+        sr_title: "Přihlásit se pomocí X"
       instagram:
         name: "Instagram"
         title: "Přihlásit se přes Instagram"
@@ -2666,6 +2684,8 @@ cs:
         few: "%{count} témata v této kategorii"
         many: "%{count} témat v této kategorii"
         other: "%{count} témat v této kategorii"
+    timezone_input:
+      ambiguous_ist: "Časový pásmo IST je nejednoznačné, vyberte prosím konkrétní časové pásmo (např. Asie/Kalkata)"
     select_kit:
       delete_item: "Smazat %{name}"
       filter_by: "Filtrovat podle: %{name}"
@@ -2749,6 +2769,12 @@ cs:
       esc: "esc"
       esc_label: "zavřít zprávu"
       ok_proceed: "Ok, pokračovat"
+      translations:
+        title: "Překlad příspěvku"
+        select: "Vybrat překlad"
+        save: "Uložit překlad"
+        original_content: "Původní obsah příspěvku"
+        placeholder: "Zde zadejte překlad příspěvku..."
       group_mentioned_limit:
         one: "<b>Varování!</b> Zmínili jste <a href='%{group_link}'>%{group}</a>, ale protože má tato skupina více členů než je administrátorem nastavený limit maximálního počtu %{count} uživatele, který může být informován, nebude informován nikdo."
         few: "<b>Varování!</b> Zmínili jste <a href='%{group_link}'>%{group}</a>, ale protože má tato skupina více členů než je administrátorem nastavený limit maximálního počtu %{count} uživatelů, kteří mohou být informováni, nebude informován nikdo."
@@ -2837,6 +2863,8 @@ cs:
       uploading: "Nahrávání…"
       show_preview: "zobrazit náhled"
       hide_preview: "skrýt náhled"
+      switch_to_markdown: "Přepnout na standardní Markdown editor (%{keyboardShortcut})"
+      switch_to_rich_text: "Přepnout na nový textový editor (%{keyboardShortcut})"
       quote_post_title: "Citovat celý příspěvek"
       bold_label: "B"
       bold_title: "Tučně"
@@ -3122,6 +3150,7 @@ cs:
       in_messages_tooltip: "přepnout na hledání běžných témat"
       in_topics_posts: "ve všech tématech a příspěvcích"
       enter_hint: "nebo stiskněte Enter"
+      mobile_enter_hint: "nebo klepněte na Hledat"
       in_posts_by: "v příspěvcích od %{username}"
       recent: "Nedávná vyhledávání"
       clear_recent: "Vymazat poslední hledání"
@@ -3210,6 +3239,7 @@ cs:
           aria_label: filtrovat podle maximálního počtu zobrazení
         additional_options:
           label: "Filtrovat podle počtu příspěvků a zobrazení tématu"
+    hamburger_menu: "Navigační nabídka"
     new_item: "nové"
     go_back: "jít zpět"
     not_logged_in_user: "stránka uživatele s přehledem o aktuální činnosti a nastavení"
@@ -3544,6 +3574,11 @@ cs:
           false { nebo si <a href="{basePath}/latest">prohlédněte nejnovější témata</a>}
           other {}
         }
+      reply_count_link:
+        one: "%{count} odpověď, přejít na první příspěvek"
+        few: "%{count} odpovědi, přejít na první příspěvek"
+        many: "%{count} odpovědí, přejít na první příspěvek"
+        other: "%{count} odpovědí, přejít na první příspěvek"
       created_at: "Vytvořeno: %{date}"
       bumped_at: "Poslední: %{date}"
       browse_all_categories_latest: "<a href='%{basePath}/categories'>Projděte všechny kategorie</a> nebo <a href='%{basePath}/latest'>zobrazte nejnovější témata</a>."
@@ -4025,9 +4060,12 @@ cs:
       badge_granted_tooltip: "%{username} získal/a za tento příspěvek odznak '%{badge_name}'!"
       localizations:
         table:
+          locale: "Jazyk"
           actions: "Akce"
           edit: "Upravit"
           delete: "Smazat"
+        add: "Přidat nový překlad"
+        success: "Překlady byly úspěšně aktualizovány"
       errors:
         create: "Bohužel nastala chyba při vytváření příspěvku. Prosím zkuste to znovu."
         edit: "Bohužel nastala chyba při editaci příspěvku. Prosím zkuste to znovu."
@@ -4242,6 +4280,7 @@ cs:
       share:
         title: "Sdílet příspěvek #%{post_number}"
         instructions: "Sdílet odkaz na tento příspěvek:"
+      original_language: "Tento příspěvek byl původně napsán v %{language}"
     category:
       none: "(bez kategorie)"
       all: "Všechny kategorie"
@@ -4255,10 +4294,14 @@ cs:
       settings: "Nastavení"
       topic_template: "Šablona"
       tags: "Štítky"
+      localizations: "Lokalizace"
       localization:
+        locale: "Jazyk"
         name: "Jméno"
         description: "Popis"
+        add: "Přidat lokalizaci"
         remove: "Smazat"
+        hint: "Pro tuto kategorii momentálně nejsou k dispozici žádné lokalizace. Klikněte níže na tlačítko „Přidat překlad“ a začněte přidávat lokalizace."
       tags_allowed_tags: "Omezit tyto štítky na tuto kategorii:"
       tags_allowed_tag_groups: "Omezit tuto kategorii pouze na tyto skupiny štítků:"
       tags_placeholder: "(Volitelné) seznam dovolených štítků"
@@ -4281,17 +4324,21 @@ cs:
       creation_error: Během vytváření nové kategorie nastala chyba.
       save_error: Během ukládání kategorie nastala chyba.
       name: "Název kategorie"
+      untitled: "Kategorie bez názvu"
       description: "Popis"
       logo: "Logo kategorie"
       logo_dark: "Obrázek loga kategorie (tmavý režim)"
       logo_description: "Doporučený poměr stran 1:1 s minimální velikostí 200 pixelů. Pokud ponecháte prázdné, nezobrazí se žádný obrázek."
       background_image: "Obrázek na pozadí této kategorie"
       background_image_dark: "Obrázek pozadí kategorie (tmavý)"
+      style: "Styly"
       background_color: "Barva"
       styles:
+        type: "Styl"
         icon: "Ikona"
         emoji: "Smajlíky :)"
         options:
+          square: "Čtverec"
           icon: "Ikona"
           emoji: "Emoji"
       color_used: "Používaná barva"
@@ -5237,6 +5284,10 @@ cs:
         forum:
           label: Fórum
       back_to_forum: "Zpět na fórum"
+      filter_links: "Filtrovat odkazy..."
+      clear_filter: "Vymazat filtr"
+      no_results:
+        title: "Žádné výsledky"
       collapse_all_sections: "Sbalit všechny sekce"
       expand_all_sections: "Rozbalit všechny sekce"
       search: "Vyhledat"
@@ -5356,14 +5407,9 @@ cs:
     powered_by_discourse: "Powered by Discourse"
     discovery:
       headings:
+        multi_tag:
+          default: "Témata označená %{tags}"
         categories: "Všechny kategorie"
-        filter_labels:
-          latest: "Nejnovější"
-          top: "Nejlepší"
-          new: "Nový"
-          unread: "Nepřečtené"
-          hot: "Žhavé"
-          unseen: "Neshlédnutá"
   admin_js:
     type_to_filter: "Text pro filtrování..."
     settings: "Nastavení"

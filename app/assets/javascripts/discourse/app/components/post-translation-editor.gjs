@@ -13,7 +13,21 @@ export default class PostTranslationEditor extends Component {
   @service siteSettings;
 
   get availableLocales() {
-    return JSON.parse(this.siteSettings.available_locales);
+    const allAvailableLocales = JSON.parse(this.siteSettings.available_locales);
+    const supportedLocales =
+      this.siteSettings.experimental_content_localization_supported_locales.split(
+        "|"
+      );
+
+    if (!supportedLocales.includes(this.siteSettings.default_locale)) {
+      supportedLocales.push(this.siteSettings.default_locale);
+    }
+
+    const filtered = allAvailableLocales.filter((locale) => {
+      return supportedLocales.includes(locale.value);
+    });
+
+    return filtered;
   }
 
   findCurrentLocalization() {

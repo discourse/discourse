@@ -96,7 +96,7 @@ class PostSerializer < BasicPostSerializer
              :mentioned_users,
              :post_url,
              :has_post_localizations,
-             :post_localizations,
+             :post_localizations_count,
              :locale,
              :is_localized,
              :language
@@ -658,12 +658,16 @@ class PostSerializer < BasicPostSerializer
     object.post_localizations.any?
   end
 
-  def post_localizations
-    ActiveModel::ArraySerializer.new(
-      object.post_localizations,
-      each_serializer: PostLocalizationSerializer,
-      root: false,
-    ).as_json
+  def post_localizations_count
+    object.post_localizations.count
+  end
+
+  def include_has_post_localizations?
+    object&.user&.guardian&.can_localize_content?
+  end
+
+  def include_post_localizations_count?
+    object&.user&.guardian&.can_localize_content?
   end
 
   def raw

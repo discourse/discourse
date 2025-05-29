@@ -304,7 +304,7 @@ class Stylesheet::Manager
         stylesheets = []
 
         if is_theme_target
-          scss_checker = ScssChecker.new(target, @theme_ids)
+          scss_checker = ScssChecker.new(target.to_s.delete_suffix("_rtl"), @theme_ids)
           themes = load_themes(@theme_ids)
           themes.each do |theme|
             theme_id = theme&.id

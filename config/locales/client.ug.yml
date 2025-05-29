@@ -2428,6 +2428,8 @@ ug:
       topic_count:
         one: "بۇ سەھىپىدە %{count} تېما بار"
         other: "بۇ سەھىپىدە %{count} تېما بار"
+    timezone_input:
+      ambiguous_ist: "ھىندىستان ئۆلچەملىك ۋاقتى مۈجمەل، ئېنىق بىر ۋاقىت رايونىنى تاللاڭ (مەسىلەن: Asia/Kolkata)"
     select_kit:
       delete_item: "%{name} نى ئۆچۈر"
       filter_by: "سۈزگۈچى: %{name}"
@@ -4768,6 +4770,11 @@ ug:
         forum:
           label: مۇنبەر
       back_to_forum: "مۇنبەرگە قايت"
+      filter_links: "سۈزگۈچ ئۇلانمىسى…"
+      clear_filter: "سۈزگۈچنى تازىلا"
+      no_results:
+        title: "نەتىجە يوق"
+        description_admin_search: "«%{filter}» غا ماس كېلىدىغان ھېچنېمە تاپالمىدۇق."
       collapse_all_sections: "بارلىق بۆلەكلەرنى يىغ"
       expand_all_sections: "بارلىق بۆلەكلەرنى ياي"
       search: "ئىزدە"
@@ -4881,42 +4888,69 @@ ug:
     discovery:
       headings:
         all:
-          default: "بارلىق %{filter} تېما"
+          latest: "بارلىق ئاخىرقى تېما"
+          top: "بارلىق قىزغىن تېما"
+          new: "بارلىق يېڭى تېما"
+          unread: "بارلىق ئوقۇلمىغان تېما"
+          unseen: "بارلىق كۆرمىگەن تېما"
+          hot: "بارلىق قىزغىن تېما"
           posted: "سىز يوللىغان بارلىق تېما"
           bookmarks: "سىز خەتكۈچكە قوشقان بارلىق تېما"
+          default: "بارلىق %{filter} تېما"
         category:
-          default: "%{category} دىكى %{filter} تېما"
+          latest: "%{category} دىكى ئاخىرقى تېما"
+          top: "%{category} دىكى قىزغىن تېما"
+          new: "%{category} دىكى يېڭى تېما"
+          unread: "%{category} دىكى ئوقۇلمىغان تېما"
+          unseen: "%{category} دىكى كۆرۈلمىگەن تېما"
+          hot: "%{category} دىكى قىزىق تېما"
           posted: "سىز %{category} غا يوللىغان تېما"
           bookmarks: "سىز %{category} دا خەتكۈچكە قوشقان تېما"
-        no_tags:
-          all_default: "بەلگىسىز بارلىق تېما"
-          category_default: "%{category} دىكى %{filter} بەلگىسىز تېما"
-          all:
-            posted: "سىز يوللىغان خەتكۈچسىز بارلىق تېما"
-            bookmarks: "سىز خەتكۈچكە قوشقان خەتكۈچسىز بارلىق تېما"
-          category:
-            posted: "سىز %{category} غا يوللىغان بەلگىسىز تېما"
-            bookmarks: "سىز %{category} دا خەتكۈچكە قوشقان بەلگىسىز تېما"
+          default: "%{category} دىكى %{filter} تېما"
         single_tag:
-          default: "%{tag} بەلگە قوشۇلغان %{filter} تېما"
-          posted: "سىز يوللىغان %{tag} بەلگە قوشۇلغان تېما"
+          latest: "%{tag} بەلگە سېلىنغان ئاخىرقى تېما"
+          top: "%{tag} بەلگە سېلىنغان قىزغىن تېما"
+          new: "%{tag} بەلگە سېلىنغان يېڭى تېما"
+          unread: "%{tag} بەلگە سېلىنغان ئوقۇلمىغان تېما"
+          unseen: "%{tag} بەلگە سېلىنغان كۆرۈلمىگەن تېما"
+          hot: "%{tag} بەلگە سېلىنغان قىزىق تېما"
+          posted: "سىز يوللىغان %{tag} بەلگە سېلىنغان تېما"
           bookmarks: "سىز خەتكۈچكە قوشقان %{tag} بەلگە قوشۇلغان تېما"
+          default: "%{tag} بەلگە قوشۇلغان %{filter} تېما"
         multi_tag:
-          default: "%{tags} بەلگە قوشۇلغان %{filter} تېما"
-          posted: "سىز يوللىغان %{tags} بەلگە قوشۇلغان تېما"
-          bookmarks: "سىز خەتكۈچكە قوشقان %{tags} بەلگە قوشۇلغان تېما"
+          default: "%{tags} بەلگە سېلىنغان تېما"
         category_tag:
-          default: "%{category} دىكى %{tag} بەلگە قوشۇلغان %{filter} تېما"
+          latest: "%{category} دىكى %{tag} بەلگە سېلىنغان ئاخىرقى يازما"
+          top: "%{category} دىكى %{tag} بەلگە سېلىنغان قىزغىن تېما"
+          new: "%{category} دىكى %{tag} بەلگە سېلىنغان يېڭى تېما"
+          unread: "%{category} دىكى %{tag} بەلگە سېلىنغان ئوقۇلمىغان تېما"
+          unseen: "%{category} دىكى %{tag} بەلگە سېلىنغان كۆرۈلمىگەن تېما"
+          hot: "%{category} دىكى %{tag} بەلگە سېلىنغان قىزىق تېما"
           posted: "سىز %{category}غا يوللىغان %{tag} بەلگە قوشۇلغان تېما"
           bookmarks: "سىز %{category} دا خەتكۈچكە قوشقان %{tag} بەلگە قوشۇلغان تېما"
+          default: "%{category} دىكى %{tag} بەلگە سېلىنغان %{filter} تېما"
+        no_tags:
+          all:
+            latest: "بەلگىسىز ئاخىرقى تېما"
+            top: "بەلگىسىز قىزىق تېما"
+            new: "بەلگىسىز يېڭى تېما"
+            unread: "بەلگىسىز ئوقۇلمىغان تېما"
+            unseen: "بەلگىسىز كۆرۈلمىگەن تېما"
+            hot: "بەلگىسىز قىزىق تېما"
+            posted: "سىز يوللىغان بەلگىسىز تېما"
+            bookmarks: "سىز خەتكۈچكە قوشقان بەلگىسىز تېما"
+            default: "بەلگىسىز تېما"
+          category:
+            latest: "%{category} دىكى ئاخىرقى بەلگىسىز تېما"
+            top: "%{category} دىكى بەلگىسىز قىزىق تېما"
+            new: "%{category} دىكى بەلگىسىز يېڭى تېما"
+            unread: "%{category} دىكى بەلگىسىز ئوقۇلمىغان تېما"
+            unseen: "%{category} دىكى بەلگىسىز كۆرۈلمىگەن تېما"
+            hot: "%{category} دىكى بەلگىسىز قىزىق تېما"
+            posted: "سىز %{category} غا يوللىغان بەلگىسىز تېما"
+            bookmarks: "سىز %{category} دا خەتكۈچكە قوشقان بەلگىسىز تېما"
+            default: "%{category} دىكى %{filter} بەلگىسىز تېما"
         categories: "ھەممە سەھىپە"
-        filter_labels:
-          latest: "ئاخىرقى"
-          top: "قىزغىن"
-          new: "يېڭى"
-          unread: "ئوقۇلمىغان"
-          hot: "قىزىق"
-          unseen: "كۆرۈلمىگەن"
   admin_js:
     type_to_filter: "كىرگۈزۈلسە سۈزىدۇ…"
     settings: "تەڭشەكلەر"
@@ -5927,8 +5961,6 @@ ug:
           more_options:
             title: "تېخىمۇ كۆپ تاللانما"
         themes_and_components:
-          title: "ئۆرنەك ۋە بۆلەك"
-          description: "ئېھتىياجىڭىزغا ماس كېلىدىغان تېما ۋە بۆلەك بىلەن Discourse تور بېكىتىڭىزنى خاسلاشتۇرۇڭ."
           breadcrumb_title: "ئىختىيارى"
           install: "ئورنات"
           themes:
