@@ -209,13 +209,13 @@ module("Integration | Component | ColorPaletteEditor", function (hooks) {
     const lightChanges = [];
     const darkChanges = [];
 
-    const onLightColorChange = (name, value) => {
-      lightChanges.push([name, value]);
-      colors.find((color) => color.name === name).hex = value;
+    const onLightColorChange = (color, value) => {
+      lightChanges.push([color.name, value]);
+      color.hex = value;
     };
-    const onDarkColorChange = (name, value) => {
-      darkChanges.push([name, value]);
-      colors.find((color) => color.name === name).dark_hex = value;
+    const onDarkColorChange = (color, value) => {
+      darkChanges.push([color.name, value]);
+      color.dark_hex = value;
     };
 
     await render(
@@ -409,13 +409,13 @@ module("Integration | Component | ColorPaletteEditor", function (hooks) {
     const lightChanges = [];
     const darkChanges = [];
 
-    const onLightColorChange = (name, value) => {
-      lightChanges.push([name, value]);
-      colors.find((color) => color.name === name).hex = value;
+    const onLightColorChange = (color, value) => {
+      lightChanges.push([color.name, value]);
+      color.hex = value;
     };
-    const onDarkColorChange = (name, value) => {
-      darkChanges.push([name, value]);
-      colors.find((color) => color.name === name).dark_hex = value;
+    const onDarkColorChange = (color, value) => {
+      darkChanges.push([color.name, value]);
+      color.dark_hex = value;
     };
 
     await render(

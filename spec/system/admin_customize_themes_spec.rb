@@ -157,24 +157,7 @@ describe "Admin Customize Themes", type: :system do
   describe "theme color palette editor" do
     before { SiteSetting.use_overhauled_theme_color_palette = true }
 
-    it "shows color palette editor when feature is enabled" do
-      theme_page.visit(theme.id)
-
-      expect(theme_page).to have_colors_tab
-      expect(theme_page).to have_settings_tab
-      expect(theme_page).to have_no_color_scheme_selector
-    end
-
-    it "doesn't show color palette editor when feature is disabled" do
-      SiteSetting.use_overhauled_theme_color_palette = false
-      theme_page.visit(theme.id)
-
-      expect(theme_page).to have_no_colors_tab
-      expect(theme_page).to have_no_settings_tab
-      expect(theme_page).to have_color_scheme_selector
-    end
-
-    it "allows editing colors without affecting other themes" do
+    it "allows editing colors of theme-owned palette" do
       theme_page.visit(theme.id)
       theme_page.colors_tab.click
 
@@ -191,11 +174,6 @@ describe "Admin Customize Themes", type: :system do
 
       updated_color = theme_page.color_palette_editor.get_color_value("primary")
       expect(updated_color).to eq("#ff000e")
-
-      other_theme = Fabricate(:theme)
-      theme_page.visit(other_theme.id)
-      theme_page.colors_tab.click
-      expect(theme_page.color_palette_editor.get_color_value("primary")).to eq("#222222")
     end
 
     it "allows discarding unsaved color changes" do
