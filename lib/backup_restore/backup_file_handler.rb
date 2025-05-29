@@ -19,11 +19,16 @@ module BackupRestore
       create_tmp_directory
       @archive_path = File.join(@tmp_directory, @filename)
 
-      copy_archive_to_tmp_directory
+      if @filename.start_with?("http://", "https://")
+        download_archive_to_tmp_directory
+      else
+        copy_archive_to_tmp_directory
+      end
+
       decompress_archive
       extract_db_dump
 
-      [@tmp_directory, @db_dump_path]
+      [@filename, @tmp_directory, @db_dump_path]
     end
 
     def clean_up
@@ -46,6 +51,29 @@ module BackupRestore
     def ensure_directory_exists(directory)
       log "Making sure #{directory} exists..."
       FileUtils.mkdir_p(directory)
+    end
+
+    def download_archive_to_tmp_directory
+      log "Downloading archive from URL to tmp directory..."
+
+      url = @filename
+      @filename = File.basename(URI.parse(url).path)
+      @archive_path = File.join(@tmp_directory, @filename)
+
+      tmpfile =
+        FileHelper.download(
+          url,
+          max_file_size: Float::INFINITY,
+          tmp_file_name: @filename,
+          follow_redirect: true,
+          skip_rate_limit: true,
+          validate_uri: false,
+          verbose: true,
+        )
+
+      Discourse::Utils.execute_command("cp", tmpfile.path, @archive_path)
+    ensure
+      tmpfile&.unlink
     end
 
     def copy_archive_to_tmp_directory

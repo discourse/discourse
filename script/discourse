@@ -140,6 +140,31 @@ class DiscourseCLI < Thor
     end
   end
 
+  desc "backup_url", "Get the URL of a backup file"
+  def backup_url(filename = nil)
+    load_rails
+
+    store = BackupRestore::BackupStore.create
+
+    if filename
+      file = store.file(filename, include_download_source: true)
+    end
+
+    if !file
+      discourse = File.exist?("/usr/local/bin/discourse") ? "discourse" : "./script/discourse"
+      puts "You must provide a valid filename. Did you mean one of the following?\n\n"
+      store.files.each { |f| puts "#{discourse} backup_url #{f.filename}" }
+      return
+    end
+
+    if store.remote?
+      puts file.source
+    else
+      puts "TODO: not implemented"
+      exit(1)
+    end
+  end
+
   desc "export", "Backup a Discourse forum"
   option :s3_uploads,
          type: :boolean,
