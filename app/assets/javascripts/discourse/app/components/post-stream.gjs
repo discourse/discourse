@@ -30,6 +30,7 @@ const POST_MODEL = Symbol("POST");
 const RESIZE_DEBOUNCE_MS = 100;
 const SCROLL_BATCH_INTERVAL_MS = 10;
 const SLACK_FACTOR = 5;
+const UNCLOAKED_STYLE = htmlSafe("");
 
 // change this value to true to debug the eyeline position
 const DEBUG_EYELINE = true;
@@ -207,8 +208,8 @@ export default class PostStream extends Component {
     const height = this.#cloakedPostsHeight[post.id];
 
     return height && (post.post_number < above || post.post_number > below)
-      ? { height }
-      : null;
+      ? { active: true, style: htmlSafe("height: " + height + "px;") }
+      : { active: false, style: UNCLOAKED_STYLE };
   }
 
   @bind
@@ -543,6 +544,7 @@ export default class PostStream extends Component {
   }
 
   #updateCloakActiveBoundaries({ above, below }) {
+    console.log("active boundaries", above, below);
     this.cloakAbove = above;
     this.cloakBelow = below;
   }
@@ -638,12 +640,9 @@ export default class PostStream extends Component {
             }}
               <PostComponent
                 id={{concat "post_" post.post_number}}
-                class={{if cloakingData "post-stream--cloaked"}}
-                style={{if
-                  cloakingData
-                  (htmlSafe (concat "height:" cloakingData.height "px"))
-                }}
-                @cloaked={{cloakingData}}
+                class={{if cloakingData.active "post-stream--cloaked"}}
+                style={{cloakingData.style}}
+                @cloaked={{cloakingData.active}}
                 @post={{post}}
                 @prevPost={{previousPost}}
                 @nextPost={{nextPost}}
