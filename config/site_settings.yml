@@ -4015,3 +4015,7 @@ experimental:
     allow_any: false
     choices: "LocaleSiteSetting.values"
     area: "localization"
+  experimental_anon_language_switcher:
+    default: false
+    client: true
+    validator: "LanguageSwitcherSettingValidator"
