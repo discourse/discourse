@@ -29,6 +29,7 @@ export default class GlimmerSiteHeader extends Component {
   @service currentUser;
   @service site;
   @service header;
+  @service capabilities;
 
   pxClosed;
   headerElement;
@@ -53,14 +54,11 @@ export default class GlimmerSiteHeader extends Component {
   willDestroy() {
     super.willDestroy(...arguments);
     this.appEvents.off("user-menu:rendered", this, this.animateMenu);
-
-    if (this.dropDownHeaderEnabled) {
-      this.appEvents.off(
-        "sidebar-hamburger-dropdown:rendered",
-        this,
-        this.animateMenu
-      );
-    }
+    this.appEvents.off(
+      "sidebar-hamburger-dropdown:rendered",
+      this,
+      this.animateMenu
+    );
 
     this._itsatrap?.destroy();
     this._itsatrap = null;
@@ -71,11 +69,12 @@ export default class GlimmerSiteHeader extends Component {
   }
 
   get dropDownHeaderEnabled() {
-    return !this.sidebarEnabled || this.site.narrowDesktopView;
+    return !this.args.sidebarEnabled || this.slideInMode;
   }
 
   get slideInMode() {
-    return this.site.mobileView || this.site.narrowDesktopView;
+    // Use slide-in mode when viewport is smaller than medium
+    return !this.capabilities.viewport.md;
   }
 
   get leftMenuClass() {
@@ -171,13 +170,11 @@ export default class GlimmerSiteHeader extends Component {
   @action
   setupHeader() {
     this.appEvents.on("user-menu:rendered", this, this.animateMenu);
-    if (this.dropDownHeaderEnabled) {
-      this.appEvents.on(
-        "sidebar-hamburger-dropdown:rendered",
-        this,
-        this.animateMenu
-      );
-    }
+    this.appEvents.on(
+      "sidebar-hamburger-dropdown:rendered",
+      this,
+      this.animateMenu
+    );
 
     this._headerWrap = document.querySelector(".d-header-wrap");
     this._mainOutletWrapper = document.querySelector("#main-outlet-wrapper");
@@ -442,6 +439,8 @@ export default class GlimmerSiteHeader extends Component {
         @animateMenu={{this.animateMenu}}
         @topicInfo={{this.header.topicInfo}}
         @topicInfoVisible={{this.header.topicInfoVisible}}
+        @dropDownHeaderEnabled={{this.dropDownHeaderEnabled}}
+        @slideInMode={{this.slideInMode}}
       />
     </div>
   </template>

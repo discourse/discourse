@@ -27,7 +27,7 @@ acceptance("Sidebar - Narrow Desktop", function (needs) {
 
     document.body.style.width = "767px";
 
-    await waitFor(".btn-sidebar-toggle.narrow-desktop", {
+    await waitFor(".btn-sidebar-toggle", {
       timeout: 5000,
     });
     await click(".btn-sidebar-toggle");
@@ -54,7 +54,7 @@ acceptance("Sidebar - Narrow Desktop", function (needs) {
 
     document.body.style.width = "767px";
 
-    await waitFor(".btn-sidebar-toggle.narrow-desktop", {
+    await waitFor(".btn-sidebar-toggle", {
       timeout: 5000,
     });
     await click(".btn-sidebar-toggle");

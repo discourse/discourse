@@ -19,6 +19,7 @@ export default class Contents extends Component {
   @service router;
   @service navigationMenu;
   @service search;
+  @service capabilities;
 
   get sidebarIcon() {
     if (this.navigationMenu.isDesktopDropdownMode) {
@@ -42,8 +43,7 @@ export default class Contents extends Component {
 
   get showHeaderSearch() {
     if (
-      this.site.mobileView ||
-      this.args.narrowDesktop ||
+      this.capabilities.viewport.md ||
       this.router.currentURL?.match(
         /\/(signup|login|invites|activate-account)/
       ) ||
