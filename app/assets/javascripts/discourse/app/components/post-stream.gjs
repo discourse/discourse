@@ -637,6 +637,7 @@ export default class PostStream extends Component {
               as |PostComponent cloakingData|
             }}
               <PostComponent
+                id={{concat "post_" post.post_number}}
                 class={{if cloakingData "post-stream--cloaked"}}
                 style={{if
                   cloakingData
