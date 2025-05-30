@@ -104,7 +104,7 @@ module Migrations::Database::Schema
 
     def nullable_for(column, config)
       modified_column = config.dig(:columns, :modify)&.find { |col| col[:name] == column.name }
-      return modified_column[:nullable] unless modified_column&.dig(:nullable).nil?
+      return modified_column[:nullable] if modified_column&.key?(:nullable)
 
       global_nullable = @global.modified_nullable(column.name)
       return global_nullable unless global_nullable.nil?
