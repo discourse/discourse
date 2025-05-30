@@ -247,8 +247,7 @@ export default class FormKitSiteSettingWrapper extends Component {
       {{#if form.dirtyCount}}
         <form.Actions
           class="site-settings-form__floating-actions admin-site-settings__changes-banner"
-          {{didInsert this.setupResizeObserver}}
-          {{willDestroy this.teardownResizeObserver}}
+          @floating={{true}}
         >
           {{#if form.dirtyCount}}
             You have
