@@ -51,6 +51,9 @@ export default class SearchMenu extends Component {
   @tracked menuPanelOpen = false;
 
   searchInputId = this.args.searchInputId ?? "search-term";
+
+  @tracked isPMInboxCleared = false;
+
   _debouncer = null;
   _activeSearch = null;
 
@@ -113,7 +116,10 @@ export default class SearchMenu extends Component {
   }
 
   get inPMInboxContext() {
-    return this.search.searchContext?.type === "private_messages";
+    return (
+      !this.isPMInboxCleared &&
+      this.search.searchContext?.type === "private_messages"
+    );
   }
 
   @action
@@ -218,7 +224,7 @@ export default class SearchMenu extends Component {
 
   @action
   clearPMInboxContext() {
-    this.search.searchContext = null;
+    this.isPMInboxCleared = true;
   }
 
   @action
