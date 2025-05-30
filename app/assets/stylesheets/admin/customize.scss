@@ -74,6 +74,12 @@
   .d-page-header {
     margin-bottom: 1em;
   }
+
+  // add bottom margin so the unsaved changes banner does not cover the last
+  // color on short screens
+  .color-palette-editor {
+    margin-bottom: 4em;
+  }
 }
 
 .admin-customize.admin-permalinks {
