@@ -72,46 +72,22 @@ export default class PostStream extends Component {
   constructor() {
     super(...arguments);
 
-    // initialize the cloaking offset area
     this.#updateCloakOffset();
-
-    const opts = {
-      passive: true,
-    };
-
-    // track the window height to update the cloaking area
-    window.addEventListener("resize", this.onWindowResize, opts);
-    window.addEventListener("scroll", this.onScroll, opts);
-    window.addEventListener("touchmove", this.onScroll, opts);
-
-    // restore scroll position on browsers with aggressive BFCaches (like Safari)
-    window.onpageshow = function (event) {
-      if (event.persisted) {
-        DiscourseURL.routeTo(this.location.pathname);
-      }
-    };
-
-    if (DEBUG_EYELINE) {
-      this.#eyelineDebugElement = document.createElement("div");
-      this.#eyelineDebugElement.classList.add("post-stream__bottom-eyeline");
-      document.body.prepend(this.#eyelineDebugElement);
-    }
+    this.#setupEventListeners();
+    this.#setupEyelineDebugElement();
   }
 
   willDestroy() {
     super.willDestroy(...arguments);
 
-    window.removeEventListener("resize", this.onWindowResize);
-    window.removeEventListener("scroll", this.onScroll);
-    window.removeEventListener("touchmove", this.onScroll);
+    // remove the event listeners
+    this.#setupEventListeners(false);
+    // remove the eyeline debug element
+    this.#setupEyelineDebugElement(false);
 
     // disconnect the intersection observers
     this.#viewportObserver?.disconnect();
     this.#cloakingObserver?.disconnect();
-
-    if (DEBUG_EYELINE) {
-      this.#eyelineDebugElement.remove();
-    }
   }
 
   get gapsBefore() {
@@ -485,6 +461,44 @@ export default class PostStream extends Component {
 
     if (DEBUG_EYELINE) {
       this.#updateEyelineDebugElementPosition(eyelineOffset);
+    }
+  }
+
+  #setupEventListeners(addListeners = true) {
+    if (!addListeners) {
+      window.removeEventListener("resize", this.onWindowResize);
+      window.removeEventListener("scroll", this.onScroll);
+      window.removeEventListener("touchmove", this.onScroll);
+
+      return;
+    }
+
+    const opts = {
+      passive: true,
+    };
+
+    window.addEventListener("resize", this.onWindowResize, opts);
+    window.addEventListener("scroll", this.onScroll, opts);
+    window.addEventListener("touchmove", this.onScroll, opts);
+
+    window.onpageshow = function (event) {
+      if (event.persisted) {
+        DiscourseURL.routeTo(this.location.pathname);
+      }
+    };
+  }
+
+  #setupEyelineDebugElement(addElement = true) {
+    if (DEBUG_EYELINE) {
+      if (!addElement) {
+        this.#eyelineDebugElement.remove();
+
+        return;
+      }
+
+      this.#eyelineDebugElement = document.createElement("div");
+      this.#eyelineDebugElement.classList.add("post-stream__bottom-eyeline");
+      document.body.prepend(this.#eyelineDebugElement);
     }
   }
 
