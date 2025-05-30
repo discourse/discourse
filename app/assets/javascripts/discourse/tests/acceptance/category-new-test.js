@@ -136,28 +136,16 @@ acceptance("Category text color", function (needs) {
   test("Category text color is set based on contrast", async function (assert) {
     await visit("/new-category");
 
-    let previewTextColor = document.querySelectorAll(
-      ".edit-text-color .hex-input"
-    )[0].value;
-
-    assert.strictEqual(
-      previewTextColor,
-      CATEGORY_TEXT_COLORS[0],
-      "has the default text color"
-    );
+    assert
+      .dom(".edit-text-color .hex-input")
+      .hasValue(CATEGORY_TEXT_COLORS[0], "has the default text color");
 
     await fillIn("input.category-name", "testing");
     await fillIn(".category-color-editor .hex-input", "EEEEEE");
 
-    previewTextColor = document.querySelectorAll(
-      ".edit-text-color .hex-input"
-    )[0].value;
-
-    assert.strictEqual(
-      previewTextColor,
-      CATEGORY_TEXT_COLORS[1],
-      "sets the contrast text color"
-    );
+    assert
+      .dom(".edit-text-color .hex-input")
+      .hasValue(CATEGORY_TEXT_COLORS[1], "sets the contrast text color");
   });
 });
 
