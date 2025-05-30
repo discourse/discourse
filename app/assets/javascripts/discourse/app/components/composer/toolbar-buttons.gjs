@@ -24,7 +24,7 @@ export default class ComposerToolbarButtons extends Component {
   <template>
     {{#each @data.groups key="group" as |group|}}
       {{#each group.buttons key="id" as |button|}}
-        {{#if (button.condition this.args.data.context)}}
+        {{#if (button.condition @data.context)}}
           {{#if button.href}}
             <a
               href={{button.href}}
