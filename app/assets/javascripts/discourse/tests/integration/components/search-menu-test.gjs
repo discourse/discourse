@@ -139,4 +139,30 @@ module("Integration | Component | search-menu", function (hooks) {
       .dom(".search-context")
       .doesNotExist("PM context button disappears when clear btn is pressed");
   });
+
+  test("PM inbox context can be restored after being cleared", async function (assert) {
+    const searchService = this.owner.lookup("service:search");
+
+    searchService.searchContext = { type: "private_messages" };
+    searchService.inTopicContext = false;
+
+    await render(<template><SearchMenu @location="test" /></template>);
+
+    assert.dom(".search-context").exists("PM context button appears initially");
+
+    await click(".search-context");
+    assert
+      .dom(".search-context")
+      .doesNotExist("PM context button disappears when cleared");
+
+    await click("#search-term");
+
+    await click(".search-menu-assistant-item .search-item-slug");
+
+    assert
+      .dom(".search-context")
+      .exists(
+        "PM context button reappears after selecting 'in:messages' suggestion"
+      );
+  });
 });

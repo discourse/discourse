@@ -203,6 +203,9 @@ export default class SearchMenu extends Component {
     if (opts.setTopicContext) {
       this.search.inTopicContext = true;
     }
+    if (opts.setPMInboxContext) {
+      this.isPMInboxCleared = false;
+    }
     this.search.activeGlobalSearchTerm = term;
     this.triggerSearch();
   }
