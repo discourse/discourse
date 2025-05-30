@@ -6,7 +6,9 @@
   box-shadow:
     0 0 0 1px var(--primary-300),
     0 0 0 $thickness var(--primary-100);
-  border-radius: calc(var(--d-border-radius) - ($thickness / 2)); // Makes the outer drop shadow radius equal to --d-border-radius
+
+  // Makes the outer drop shadow radius equal to --d-border-radius
+  border-radius: calc(var(--d-border-radius) - ($thickness / 2));
 }
 
 a.loading-onebox {
