@@ -1,14 +1,15 @@
 import RouteTemplate from "ember-route-template";
 import { i18n } from "discourse-i18n";
+import FormKitSiteSettingWrapper from "admin/components/form-kit-site-setting-wrapper";
 import SiteSetting from "admin/components/site-setting";
 
 export default RouteTemplate(
   <template>
     {{#if @controller.filteredContent}}
       <section class="form-horizontal settings">
-        {{#each @controller.filteredContent as |setting|}}
-          <SiteSetting @setting={{setting}} />
-        {{/each}}
+
+        <FormKitSiteSettingWrapper @settings={{@controller.filteredContent}} />
+
         {{#if @controller.category.hasMore}}
           <p class="warning">{{i18n
               "admin.site_settings.more_site_setting_results"

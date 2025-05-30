@@ -34,6 +34,20 @@
   border: 1px solid var(--primary-300);
   border-radius: var(--d-border-radius);
   box-shadow: var(--shadow-card);
+  z-index: z("base");
+  animation: menu-appear 0.2s ease-in-out;
+
+  @keyframes menu-appear {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 
   @include viewport.until(sm) {
     flex-direction: column;
