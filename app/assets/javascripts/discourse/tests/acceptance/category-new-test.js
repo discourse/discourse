@@ -1,6 +1,7 @@
 import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
+import { CATEGORY_TEXT_COLORS } from "discourse/lib/constants";
 import { cloneJSON } from "discourse/lib/object";
 import DiscourseURL from "discourse/lib/url";
 import { fixturesByUrl } from "discourse/tests/helpers/create-pretender";
@@ -141,7 +142,7 @@ acceptance("Category text color", function (needs) {
 
     assert.strictEqual(
       previewTextColor,
-      "FFFFFF",
+      CATEGORY_TEXT_COLORS[0],
       "has the default text color"
     );
 
@@ -154,7 +155,7 @@ acceptance("Category text color", function (needs) {
 
     assert.strictEqual(
       previewTextColor,
-      "000000",
+      CATEGORY_TEXT_COLORS[1],
       "sets the contrast text color"
     );
   });
