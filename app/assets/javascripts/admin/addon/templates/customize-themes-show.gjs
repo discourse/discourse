@@ -169,7 +169,7 @@ export default RouteTemplate(
           </div>
         {{/unless}}
 
-        <div class="metadata control-unit">
+        <div class="metadata control-unit remote-theme-metadata">
           {{#if @controller.model.remote_theme}}
             {{#if @controller.model.remote_theme.remote_url}}
               {{#if @controller.sourceIsHttp}}
@@ -221,28 +221,26 @@ export default RouteTemplate(
                   }}</span>
                 {{@controller.model.remote_theme.theme_version}}</span>{{/if}}
 
-            <div class="control-unit">
-              {{#if @controller.model.remote_theme.is_git}}
-                <div class="alert alert-info">
-                  {{htmlSafe
-                    (i18n
-                      "admin.customize.theme.remote_theme_edits"
-                      repoURL=@controller.remoteThemeLink
-                    )
-                  }}
-                </div>
+            {{#if @controller.model.remote_theme.is_git}}
+              <div class="alert alert-info remote-theme-edits">
+                {{htmlSafe
+                  (i18n
+                    "admin.customize.theme.remote_theme_edits"
+                    repoURL=@controller.remoteThemeLink
+                  )
+                }}
+              </div>
 
-                {{#if @controller.showRemoteError}}
-                  <div class="error-message">
-                    {{icon "triangle-exclamation"}}
-                    {{i18n "admin.customize.theme.repo_unreachable"}}
-                  </div>
-                  <div class="raw-error">
-                    <code>{{@controller.model.remoteError}}</code>
-                  </div>
-                {{/if}}
+              {{#if @controller.showRemoteError}}
+                <div class="error-message">
+                  {{icon "triangle-exclamation"}}
+                  {{i18n "admin.customize.theme.repo_unreachable"}}
+                </div>
+                <div class="raw-error">
+                  <code>{{@controller.model.remoteError}}</code>
+                </div>
               {{/if}}
-            </div>
+            {{/if}}
           {{/if}}
         </div>
 
