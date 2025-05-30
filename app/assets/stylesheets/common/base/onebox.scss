@@ -1,5 +1,16 @@
 @use "lib/viewport";
 
+@mixin onebox-shadow($thickness) {
+  border: 0;
+  margin-inline: $thickness;
+  box-shadow:
+    0 0 0 1px var(--primary-300),
+    0 0 0 $thickness var(--primary-100);
+
+  // Makes the outer drop shadow radius equal to --d-border-radius
+  border-radius: calc(var(--d-border-radius) - ($thickness / 2));
+}
+
 a.loading-onebox {
   &::before {
     content: "";
@@ -101,12 +112,14 @@ a.loading-onebox {
 }
 
 aside.onebox {
-  border: 5px solid var(--primary-low);
-  margin: 1em 0;
+  @include onebox-shadow(4px);
   padding: 1em;
   font-size: var(--font-0);
   background: var(--secondary);
-  border-radius: var(--d-border-radius);
+
+  &:first-child {
+    margin-top: 4px;
+  }
 
   header {
     align-items: center;
@@ -316,6 +329,10 @@ aside.onebox {
       }
     }
   }
+}
+
+.chat-drawer-container .chat-message aside.onebox {
+  @include onebox-shadow(3px);
 }
 
 @mixin gdocs-logo($type) {
