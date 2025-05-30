@@ -55,7 +55,9 @@ export default class ChangesBanner extends Component {
       {{didInsert this.setupResizeObserver}}
       {{willDestroy this.teardownResizeObserver}}
     >
-      <span>{{htmlSafe @bannerLabel}}</span>
+      <span class="admin-changes-banner__main-label">{{htmlSafe
+          @bannerLabel
+        }}</span>
       <div class="controls">
         <DButton
           class="btn-secondary btn-small"

@@ -27,9 +27,9 @@ export default class AdminCustomizeThemesShowColorsController extends Controller
   onLightColorChange(color, value) {
     color.hex = value;
     if (color.hex !== color.originalHex) {
-      this.pendingLightColors.add(name);
+      this.pendingLightColors.add(color.name);
     } else {
-      this.pendingLightColors.delete(name);
+      this.pendingLightColors.delete(color.name);
     }
     this.pendingChangesCount =
       this.pendingLightColors.size + this.pendingDarkColors.size;
@@ -39,9 +39,9 @@ export default class AdminCustomizeThemesShowColorsController extends Controller
   onDarkColorChange(color, value) {
     color.dark_hex = value;
     if (color.dark_hex !== color.originalDarkHex) {
-      this.pendingDarkColors.add(name);
+      this.pendingDarkColors.add(color.name);
     } else {
-      this.pendingDarkColors.delete(name);
+      this.pendingDarkColors.delete(color.name);
     }
     this.pendingChangesCount =
       this.pendingLightColors.size + this.pendingDarkColors.size;

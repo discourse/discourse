@@ -210,6 +210,30 @@ describe "Admin Customize Themes", type: :system do
       expect(updated_dark_color).to eq("#000fff")
     end
 
+    it "shows count of unsaved colors" do
+      theme_page.visit(theme.id)
+      theme_page.colors_tab.click
+
+      theme_page.color_palette_editor.change_color("primary", "#eeff80")
+
+      expect(theme_page.changes_banner).to have_label(
+        I18n.t("admin_js.admin.customize.theme.unsaved_colors", count: 1),
+      )
+
+      theme_page.color_palette_editor.switch_to_dark_tab
+
+      theme_page.color_palette_editor.change_color("primary", "#ff80ee")
+
+      expect(theme_page.changes_banner).to have_label(
+        I18n.t("admin_js.admin.customize.theme.unsaved_colors", count: 2),
+      )
+
+      theme_page.color_palette_editor.change_color("secondary", "#ee30ab")
+      expect(theme_page.changes_banner).to have_label(
+        I18n.t("admin_js.admin.customize.theme.unsaved_colors", count: 3),
+      )
+    end
+
     it "doesn't show colors tab or DPageHeader for components" do
       component = Fabricate(:theme, component: true)
       theme_page.visit(component.id)
