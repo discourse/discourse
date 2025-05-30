@@ -10,14 +10,16 @@ export default class FKSection extends Component {
     }
 
     const resizer = () => {
-      const container = document.getElementById("main-container");
+      const container = document.getElementsByClassName(
+        this.args.floatContainerClass
+      )[0];
 
       if (!container) {
         return;
       }
 
       const { width } = container.getBoundingClientRect();
-      element.style.width = `${width}px`;
+      element.style.width = `calc(${width}px - var(--space-3)*2)`;
     };
 
     resizer();

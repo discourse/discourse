@@ -2,8 +2,6 @@ import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { concat, fn } from "@ember/helper";
 import { action } from "@ember/object";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { eq } from "truth-helpers";
@@ -19,31 +17,6 @@ class PrimaryActions extends Component {
 
   get cannotRevert() {
     return this.args.field.value === this.args.setting.default;
-  }
-
-  @action
-  setupResizeObserver(element) {
-    console.log(element);
-
-    const container = document.getElementById("main-container");
-    this._resizer = () => this.positionBanner(container, element);
-
-    this._resizer();
-
-    this._resizeObserver = window.addEventListener("resize", this._resizer);
-  }
-
-  @action
-  teardownResizeObserver() {
-    window.removeEventListener("resize", this._resizer);
-  }
-
-  positionBanner(container, element) {
-    if (container) {
-      const { width } = container.getBoundingClientRect();
-
-      element.style.width = `${width}px`;
-    }
   }
 
   @action
@@ -248,14 +221,17 @@ export default class FormKitSiteSettingWrapper extends Component {
         <form.Actions
           class="site-settings-form__floating-actions admin-site-settings__changes-banner"
           @floating={{true}}
+          @floatContainerClass={{"admin-detail"}}
         >
           {{#if form.dirtyCount}}
             You have
             {{form.dirtyCount}}
             unsaved change(s)
           {{/if}}
-          <form.Reset @translatedLabel="Discard change" />
-          <form.Submit @translatedLabel="Save change" />
+          <div class="site-settings-form__floating-buttons">
+            <form.Reset @translatedLabel="Discard change" />
+            <form.Submit @translatedLabel="Save change" />
+          </div>
         </form.Actions>
 
       {{/if}}
