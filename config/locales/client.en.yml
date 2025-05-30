@@ -6404,7 +6404,7 @@ en:
           copy_of: "Copy of %{name}"
           copy_created: 'A new copy of "%{name}" has been created'
           illegal_character_in_color: "Colors consist of hexadecimal characters only"
-          delete_confirm: "Delete this color palette?"
+          delete_confirm: "Are you sure you want to delete this color palette?"
       plugins:
         title: "Plugins"
         name: "Name"
@@ -6785,7 +6785,7 @@ en:
           about: "Modify the colors used by your themes. Create a new color palette to start."
           new_name: "New color palette"
           copy_name_prefix: "Copy of"
-          delete_confirm: "Delete this color palette?"
+          delete_confirm: "Are you sure you want to delete this color palette?"
           undo: "Undo"
           undo_title: "Undo your changes to this color since the last time it was saved."
           revert: "Revert"

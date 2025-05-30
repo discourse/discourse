@@ -44,8 +44,8 @@ export default class AdminPermalinksIndexController extends Controller {
 
   @action
   destroyRecord(permalink) {
-    this.dialog.yesNoConfirm({
-      message: i18n("admin.permalink.delete_confirm"),
+    this.dialog.deleteConfirm({
+      title: i18n("admin.permalink.delete_confirm"),
       didConfirm: async () => {
         try {
           await this.store.destroyRecord("permalink", permalink);
