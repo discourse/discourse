@@ -134,6 +134,7 @@ import {
   addSaveableUserField,
   addSaveableUserOptionField,
 } from "discourse/models/user";
+import { preventCloaking } from "discourse/modifiers/post-stream-scroll-tracker";
 import { setNewCategoryDefaultColors } from "discourse/routes/new-category";
 import { setNotificationsLimit } from "discourse/routes/user-notifications";
 import { addComposerSaveErrorCallback } from "discourse/services/composer";
@@ -1189,7 +1190,9 @@ class PluginApi {
    * ```
    **/
   preventCloak(postId) {
-    preventCloak(postId);
+    // TODO (glimmer-post-stream) remove the call to the widget version of preventCloak below
+    preventCloak(postId); // widgets
+    preventCloaking(postId); // glimmer-post-stream
   }
 
   /**
