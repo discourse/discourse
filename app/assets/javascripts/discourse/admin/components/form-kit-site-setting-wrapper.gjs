@@ -81,34 +81,6 @@ class PrimaryActions extends Component {
   </template>
 }
 
-class SecondaryActions extends Component {
-  @action
-  async discardChanges() {
-    await this.args.field.rollback();
-  }
-
-  @action
-  async save(event) {
-    await this.args.form.submit(event, this.args.field);
-  }
-
-  <template>
-    {{#unless @field.isPristine}}
-      <@actions.Button
-        @icon="check"
-        @disabled={{@field.isPristine}}
-        @action={{this.save}}
-        @forwardEvent={{true}}
-      />
-      <@actions.Button
-        @icon="xmark"
-        @disabled={{@field.isPristine}}
-        @action={{this.discardChanges}}
-      />
-    {{/unless}}
-  </template>
-}
-
 export default class FormKitSiteSettingWrapper extends Component {
   @action
   settingTitle(setting) {
@@ -141,17 +113,45 @@ export default class FormKitSiteSettingWrapper extends Component {
     await SiteSetting.bulkUpdate(params);
   }
 
+  @action
+  fieldFormat(settingType) {
+    switch (settingType) {
+      case "integer":
+        return "medium";
+      default:
+        return "full";
+    }
+  }
+
   <template>
-    <Form @onSubmit={{this.save}} @data={{this.formData}} as |form|>
+    <Form
+      @onSubmit={{this.save}}
+      @data={{this.formData}}
+      class="form-kit-settings-wrapper"
+      as |form|
+    >
       {{#each @settings as |setting|}}
         <form.Field
           @name={{setting.setting}}
           @title={{this.settingTitle setting}}
           @description={{htmlSafe setting.description}}
           @emphasis={{setting.overridden}}
+          @format={{this.fieldFormat setting.type}}
         >
           <:body as |field|>
-            {{#if (eq setting.type "string")}}
+            {{#if (eq setting.type "integer")}}
+              <field.Input @type="number">
+                <:primary-actions as |actions|>
+                  <PrimaryActions
+                    @form={{form}}
+                    @field={{field}}
+                    @actions={{actions}}
+                    @setting={{setting}}
+                    @save={{this.save}}
+                  />
+                </:primary-actions>
+              </field.Input>
+            {{else if (eq setting.type "string")}}
               <field.Input>
                 <:primary-actions as |actions|>
                   <PrimaryActions
@@ -162,15 +162,6 @@ export default class FormKitSiteSettingWrapper extends Component {
                     @save={{this.save}}
                   />
                 </:primary-actions>
-                <:secondary-actions as |actions|>
-                  <SecondaryActions
-                    @form={{form}}
-                    @field={{field}}
-                    @actions={{actions}}
-                    @setting={{setting}}
-                    @save={{this.save}}
-                  />
-                </:secondary-actions>
               </field.Input>
             {{else if (eq setting.type "upload")}}
               <field.Image @type="site_setting">
@@ -180,12 +171,23 @@ export default class FormKitSiteSettingWrapper extends Component {
               </field.Image>
             {{else if (eq setting.type "bool")}}
               <field.Checkbox>
-                {{htmlSafe setting.description}}
+                <:body>
+                  {{htmlSafe setting.description}}
+                </:body>
+
+                <:primary-actions as |actions|>
+                  <PrimaryActions
+                    @form={{form}}
+                    @field={{field}}
+                    @actions={{actions}}
+                    @setting={{setting}}
+                    @save={{this.save}}
+                  />
+                </:primary-actions>
               </field.Checkbox>
             {{else if (eq setting.type "enum")}}
               <field.Select>
                 <:body as |select|>
-                  {{log select}}
                   {{#each setting.valid_values as |item|}}
                     <select.Option @value={{item.value}}>
                       {{item.name}}
@@ -202,15 +204,6 @@ export default class FormKitSiteSettingWrapper extends Component {
                     @save={{this.save}}
                   />
                 </:primary-actions>
-                <:secondary-actions as |actions|>
-                  <SecondaryActions
-                    @form={{form}}
-                    @field={{field}}
-                    @actions={{actions}}
-                    @setting={{setting}}
-                    @save={{this.save}}
-                  />
-                </:secondary-actions>
               </field.Select>
             {{else if (eq setting.type "group")}}
               <field.Custom>

@@ -26,18 +26,6 @@
     &-title {
       font-weight: 500;
     }
-
-    &--small {
-      width: var(--form-kit-small-input);
-    }
-
-    &--medium {
-      width: var(--form-kit-medium-input);
-    }
-
-    &--large {
-      width: var(--form-kit-large-input);
-    }
   }
 
   &__control-checkbox-content {
@@ -48,5 +36,15 @@
 
   &__control-checkbox-description {
     @include default-description;
+  }
+}
+
+.form-kit__field-checkbox {
+  .form-kit__container-content {
+    &.--small,
+    &.--medium,
+    &.--large {
+      width: 100% !important;
+    }
   }
 }

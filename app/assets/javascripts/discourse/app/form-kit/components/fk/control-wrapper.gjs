@@ -34,14 +34,6 @@ export default class FKControlWrapper extends Component {
     return (this.args.errors ?? {})[this.args.field.name];
   }
 
-  get titleFormat() {
-    return this.args.field.titleFormat || this.args.field.format;
-  }
-
-  get descriptionFormat() {
-    return this.args.field.descriptionFormat || this.args.field.format;
-  }
-
   normalizeName(name) {
     return name.replace(/\./g, "-");
   }
@@ -64,48 +56,37 @@ export default class FKControlWrapper extends Component {
       {{didInsert (fn @registerField @field.name @field)}}
       {{willDestroy (fn @unregisterField @field.name)}}
     >
-      {{#unless (eq @field.type "checkbox")}}
-        {{#if @field.showTitle}}
-          <FKLabel
-            class={{concatClass
-              "form-kit__container-title"
-              (if this.titleFormat (concat "--" this.titleFormat))
-            }}
-            @fieldId={{@field.id}}
-          >
-            <span>{{@field.title}}</span>
+      {{#if @field.showTitle}}
+        <FKLabel class="form-kit__container-title" @fieldId={{@field.id}}>
+          <span>{{@field.title}}</span>
 
-            <FKRequired @field={{@field}} />
-            <FKTooltip @field={{@field}} />
+          <FKRequired @field={{@field}} />
+          <FKTooltip @field={{@field}} />
 
-            {{#let
-              (hash
-                Button=(component DButton class="form-kit__button btn-flat")
-                Menu=(component DMenu class="form-kit__menu")
-              )
-              as |actions|
-            }}
+          {{#let
+            (hash
+              Button=(component DButton class="form-kit__button btn-flat")
+              Menu=(component DMenu class="form-kit__menu")
+            )
+            as |actions|
+          }}
 
-              <div class="form-kit__container-primary-actions">
-                {{yield actions to="primary-actions"}}
-              </div>
+            <div class="form-kit__container-primary-actions">
+              {{yield actions to="primary-actions"}}
+            </div>
 
-              <div class="form-kit__container-secondary-actions">
-                {{yield actions to="secondary-actions"}}
-              </div>
-            {{/let}}
-          </FKLabel>
-        {{/if}}
+            <div class="form-kit__container-secondary-actions">
+              {{yield actions to="secondary-actions"}}
+            </div>
+          {{/let}}
+        </FKLabel>
+      {{/if}}
 
-        {{#if @field.description}}
-          <FKText
-            class={{concatClass
-              "form-kit__container-description"
-              (if this.descriptionFormat (concat "--" this.descriptionFormat))
-            }}
-          >{{@field.description}}</FKText>
-        {{/if}}
-      {{/unless}}
+      {{#if @field.description}}
+        <FKText
+          class="form-kit__container-description"
+        >{{@field.description}}</FKText>
+      {{/if}}
 
       <div
         class={{concatClass
