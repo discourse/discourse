@@ -3,6 +3,7 @@ import { hash } from "@ember/helper";
 import { alias } from "@ember/object/computed";
 import { htmlSafe } from "@ember/template";
 import { classNames } from "@ember-decorators/component";
+import PostLanguageSelector from "discourse/components/post-language-selector";
 import discourseComputed from "discourse/lib/decorators";
 import escape from "discourse/lib/escape";
 import { iconHTML } from "discourse/lib/icon-library";
@@ -17,6 +18,7 @@ import {
 } from "discourse/models/composer";
 import { i18n } from "discourse-i18n";
 import ComposerActions from "select-kit/components/composer-actions";
+import Composer from "discourse/models/composer";
 
 const TITLES = {
   [PRIVATE_MESSAGE]: "topic.private_message",
@@ -62,6 +64,19 @@ export default class ComposerActionTitle extends Component {
         );
       }
     }
+  }
+
+  get showPostLanguageSelector() {
+    console.log(this.model);
+    // TODO more refinement needed here
+    if (
+      this.model.action === Composer.CREATE_TOPIC ||
+      this.model.action === Composer.EDIT ||
+      this.model.action === Composer.REPLY
+    ) {
+      return true;
+    }
+    return false;
   }
 
   _formatEditUserPost(userAvatar, userLink, postLink, originalUser) {
@@ -114,5 +129,9 @@ export default class ComposerActionTitle extends Component {
     <span class="action-title" role="heading" aria-level="1">
       {{this.actionTitle}}
     </span>
+
+    {{#if this.showPostLanguageSelector}}
+      <PostLanguageSelector @composerModel={{this.model}} />
+    {{/if}}
   </template>
 }

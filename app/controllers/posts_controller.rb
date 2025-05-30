@@ -853,6 +853,7 @@ class PostsController < ApplicationController
       visible
       draft_key
       composer_version
+      locale
     ]
 
     Post.plugin_permitted_create_params.each do |key, value|
