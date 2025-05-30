@@ -42,13 +42,12 @@ const CUSTOM_TYPES = [
   "named_list",
   "file_size_restriction",
   "file_types_list",
-  "font_list"
+  "font_list",
 ];
 
 export default class SiteSettingComponent extends Component {
   @service modal;
   @service router;
-  @service site;
   @service dialog;
   @service siteSettingChangeTracker;
 
@@ -59,15 +58,6 @@ export default class SiteSettingComponent extends Component {
   // Classic component attributes
   classNameBindings = [":row", ":setting", "overridden", "typeClass"];
   attributeBindings = ["setting.setting:data-setting"];
-
-  _handleKeydown = async (event) => {
-    if (
-      event.key === "Enter" &&
-      event.target.classList.contains("input-setting-string")
-    ) {
-      await this.save();
-    }
-  };
 
   constructor() {
     super(...arguments);
@@ -82,6 +72,16 @@ export default class SiteSettingComponent extends Component {
   willDestroyElement() {
     super.willDestroyElement(...arguments);
     this.element.removeEventListener("keydown", this._handleKeydown);
+  }
+
+  @action
+  async _handleKeydown(event) {
+    if (
+      event.key === "Enter" &&
+      event.target.classList.contains("input-setting-string")
+    ) {
+      await this.save();
+    }
   }
 
   get resolvedComponent() {
@@ -199,12 +199,12 @@ export default class SiteSettingComponent extends Component {
               },
               value: this.buffered.get("value"),
               settingName: setting.setting,
-              jsonSchema: setting.json_schema
-            }
+              jsonSchema: setting.json_schema,
+            },
           });
         },
         label: "admin.site_settings.json_schema.edit",
-        icon: "pencil"
+        icon: "pencil",
       };
     } else if (setting.schema) {
       return {
@@ -212,7 +212,7 @@ export default class SiteSettingComponent extends Component {
           this.router.transitionTo("admin.schema", setting.setting);
         },
         label: "admin.site_settings.json_schema.edit",
-        icon: "pencil"
+        icon: "pencil",
       };
     } else if (setting.objects_schema) {
       return {
@@ -223,7 +223,7 @@ export default class SiteSettingComponent extends Component {
           );
         },
         label: "admin.customize.theme.edit_objects_theme_setting",
-        icon: "pencil"
+        icon: "pencil",
       };
     }
     return null;
@@ -268,7 +268,7 @@ export default class SiteSettingComponent extends Component {
 
       if (this.setting.requiresReload) {
         this.siteSettingChangeTracker.refreshPage({
-          [this.setting.setting]: this.setting.value
+          [this.setting.setting]: this.setting.value,
         });
       }
     } catch (e) {
@@ -320,19 +320,15 @@ export default class SiteSettingComponent extends Component {
   setDefaultValues() {
     this.buffered.set(
       "value",
-      this.bufferedValues
-        .concat(this.defaultValues)
-        .uniq()
-        .join("|")
+      this.bufferedValues.concat(this.defaultValues).uniq().join("|")
     );
     this.setting.validationMessage = null;
-    return false;
   }
 
   _save() {
     const setting = this.buffered;
     return SiteSetting.update(setting.get("setting"), setting.get("value"), {
-      updateExistingUsers: this.setting.updateExistingUsers
+      updateExistingUsers: this.setting.updateExistingUsers,
     });
   }
 
