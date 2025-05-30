@@ -131,7 +131,10 @@ export default class ComposerActionTitle extends Component {
     </span>
 
     {{#if this.showPostLanguageSelector}}
-      <PostLanguageSelector @composerModel={{this.model}} />
+      <PostLanguageSelector
+        @composerModel={{this.model}}
+        @selectedLanguage={{this.model.locale}}
+      />
     {{/if}}
   </template>
 }

@@ -209,6 +209,7 @@ export default class Composer extends RestModel {
   @tracked post;
   @tracked reply;
   @tracked whisper;
+  @tracked locale = this.post?.locale || this.siteSettings.default_locale;
 
   unlistTopic = false;
   noBump = false;

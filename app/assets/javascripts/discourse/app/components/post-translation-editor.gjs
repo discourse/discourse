@@ -11,7 +11,6 @@ import DropdownSelectBox from "select-kit/components/dropdown-select-box";
 export default class PostTranslationEditor extends Component {
   @service composer;
   @service siteSettings;
-  @service postLocalization;
 
   findCurrentLocalization() {
     return this.composer.model.post.post_localizations.find(
@@ -42,7 +41,7 @@ export default class PostTranslationEditor extends Component {
         @nameProperty="name"
         @valueProperty="value"
         @value={{this.composer.selectedTranslationLocale}}
-        @content={{this.postLocalization.availableLocales}}
+        @content={{this.siteSettings.available_content_localization_locales}}
         @onChange={{this.updateSelectedLocale}}
         @options={{hash
           icon="globe"
