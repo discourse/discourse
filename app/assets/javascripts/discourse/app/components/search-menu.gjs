@@ -218,7 +218,7 @@ export default class SearchMenu extends Component {
 
   @action
   clearPMInboxContext() {
-    this.inPMInboxContext = false;
+    this.search.searchContext = null;
   }
 
   @action

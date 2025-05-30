@@ -133,13 +133,10 @@ module("Integration | Component | search-menu", function (hooks) {
         "PM context button appears when searchContext.type changes to private_messages"
       );
 
-    searchService.searchContext = null;
-    await settled();
+    await click(".search-context");
 
     assert
       .dom(".search-context")
-      .doesNotExist(
-        "PM context button disappears when searchContext changes back to null"
-      );
+      .doesNotExist("PM context button disappears when clear btn is pressed");
   });
 });
