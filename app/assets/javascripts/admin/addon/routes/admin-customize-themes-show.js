@@ -17,4 +17,11 @@ export default class AdminCustomizeThemesShowRoute extends Route {
       this.router.replaceWith("adminCustomizeThemes.index");
     }
   }
+
+  setupController(controller) {
+    super.setupController(...arguments);
+
+    const parentController = this.controllerFor("adminCustomizeThemes");
+    controller.set("allThemes", parentController.get("model"));
+  }
 }

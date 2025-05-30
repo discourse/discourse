@@ -4,7 +4,6 @@ import {
   empty,
   filterBy,
   mapBy,
-  match,
   notEmpty,
   readOnly,
 } from "@ember/object/computed";
@@ -48,7 +47,6 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
   @filterBy("model.theme_fields", "target", "extra_js") extraFiles;
   @notEmpty("settings") hasSettings;
   @notEmpty("translations") hasTranslations;
-  @match("model.remote_theme.remote_url", /^http(s)?:\/\//) sourceIsHttp;
   @readOnly("model.settings") settings;
 
   @discourseComputed("model.component", "model.remote_theme")
@@ -174,15 +172,6 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
     return errorMessage && !updating;
   }
 
-  @discourseComputed(
-    "model.remote_theme.remote_url",
-    "model.remote_theme.local_version",
-    "model.remote_theme.commits_behind"
-  )
-  finishInstall(remoteUrl, localVersion, commitsBehind) {
-    return remoteUrl && !localVersion && !commitsBehind;
-  }
-
   editedFieldsForTarget(target) {
     return this.get("model.editedFields").filter(
       (field) => field.target === target
@@ -237,16 +226,6 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
       "common",
       "scss"
     );
-  }
-
-  @discourseComputed(
-    "model.remote_theme.remote_url",
-    "model.remote_theme.branch"
-  )
-  remoteThemeLink(remoteThemeUrl, remoteThemeBranch) {
-    return remoteThemeBranch
-      ? `${remoteThemeUrl.replace(/\.git$/, "")}/tree/${remoteThemeBranch}`
-      : remoteThemeUrl;
   }
 
   @discourseComputed("model.user.id", "model.default")
@@ -333,24 +312,6 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
       schemeId === null ? null : parseInt(schemeId, 10)
     );
     this.model.saveChanges("color_scheme_id");
-  }
-
-  @action
-  startEditingName() {
-    this.set("oldName", this.get("model.name"));
-    this.set("editingName", true);
-  }
-
-  @action
-  cancelEditingName() {
-    this.set("model.name", this.oldName);
-    this.set("editingName", false);
-  }
-
-  @action
-  finishedEditingName() {
-    this.model.saveChanges("name");
-    this.set("editingName", false);
   }
 
   @action
