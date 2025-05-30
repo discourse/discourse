@@ -1208,6 +1208,13 @@ RSpec.describe ListController do
       expect(response.status).to eq(200)
     end
 
+    it "redirects to the canonical slug without altering query parameters" do
+      # Simulate a request with just the category ID in the path, and a query param that matches the ID
+      get "/c/#{category.id}.json?page=#{category.id}"
+      expect(response.status).to eq(301)
+      expect(response).to redirect_to("/c/#{category.slug}/#{category.id}.json?page=#{category.id}")
+    end
+
     it "redirects to URL with correct case slug" do
       category.update!(slug: "hello")
 
