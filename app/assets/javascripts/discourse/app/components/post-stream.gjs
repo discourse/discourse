@@ -516,8 +516,12 @@ export default class PostStream extends Component {
       below = Math.max(postNumber, below);
     }
 
-    this.cloakAbove = above;
-    this.cloakBelow = below;
+    // requesting an animation frame to update the cloaking boundaries prevents Chrome from logging
+    // [Violation] 'setTimeout' handler took <N>ms when scrolling fast
+    requestAnimationFrame(() => {
+      this.cloakAbove = above;
+      this.cloakBelow = below;
+    });
   }
 
   #updateCloakOffset() {
