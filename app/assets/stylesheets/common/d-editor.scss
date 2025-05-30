@@ -317,10 +317,10 @@
   flex-direction: row;
   flex-wrap: wrap;
   align-items: center;
-  margin-top: 0.25rem;
+  margin-top: var(--space-1);
 
   .composer-toggle-switch {
-    padding: 0 0.5rem;
+    padding: 0 var(--space-2);
   }
 
   .btn:focus-visible {
