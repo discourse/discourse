@@ -8,9 +8,16 @@ class CopyAddGroupsToAboutComponentSettings < ActiveRecord::Migration[7.2]
     "show_initial_members" => "about_page_extra_groups_initial_members",
   }
 
+  DATA_TYPE_MAPPING = {
+    "about_groups" => 20,
+    "order_additional_groups" => 7,
+    "show_group_description" => 5,
+    "show_initial_members" => 3,
+  }
+
   def up
     theme_settings = execute(<<~SQL).to_a
-      SELECT DISTINCT ON (name) name, value
+      SELECT DISTINCT ON (name) name, value, updated_at
       FROM theme_settings
       WHERE theme_id IN (
         SELECT id
@@ -23,15 +30,24 @@ class CopyAddGroupsToAboutComponentSettings < ActiveRecord::Migration[7.2]
 
     return if theme_settings.blank?
 
+    inserts = []
+
     theme_settings.each do |theme_setting|
       site_setting = MAPPING[theme_setting["name"]]
 
       next if !site_setting
 
-      SiteSetting.set(MAPPING[theme_setting["name"]], theme_setting["value"])
+      inserts << "('#{MAPPING[theme_setting["name"]]}', #{DATA_TYPE_MAPPING[theme_setting["name"]]}, '#{theme_setting["value"]}', NOW(), NOW())"
     end
 
-    SiteSetting.set("show_additional_about_groups", true)
+    inserts << "('show_add_additional_about_groups', 5, 't', NOW(), NOW())"
+
+    DB.exec(<<~SQL)
+      INSERT INTO site_settings(name, data_type, value, created_at, updated_at)
+      VALUES
+      #{inserts.join(", ")}
+      ON CONFLICT(name) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at
+    SQL
   end
 
   def down
