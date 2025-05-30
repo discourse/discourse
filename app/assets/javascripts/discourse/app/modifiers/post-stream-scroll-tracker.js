@@ -42,6 +42,15 @@ export default class PostStreamScrollTracker {
   #viewportObserver;
   #wrapperElement;
 
+  #registerBottomBoundary = modifier((element) => {
+    this.#bottomBoundaryElement = element;
+
+    // clean-up
+    return () => {
+      this.#bottomBoundaryElement = null;
+    };
+  });
+
   #registerPost = modifier((element, [post]) => {
     element[POST_MODEL] = post;
 
@@ -108,36 +117,6 @@ export default class PostStreamScrollTracker {
     }
   );
 
-  #registerBottomBoundary = modifier((element) => {
-    this.#bottomBoundaryElement = element;
-
-    // clean-up
-    return () => {
-      this.#bottomBoundaryElement = null;
-    };
-  });
-
-  #resetViewportObservers() {
-    this.#cloakingObserver?.disconnect();
-    this.#viewportObserver?.disconnect();
-
-    const headerMargin = this.#headerOffset * -1;
-
-    this.#cloakingObserver = this.#initializeObserver(this.trackCloakedPosts, {
-      rootMargin: `${this.#cloakOffset}px 0px`,
-      threshold: [0, 1],
-    });
-    this.#viewportObserver = this.#initializeObserver(this.trackVisiblePosts, {
-      rootMargin: `${headerMargin}px 0px 0px 0px`,
-      threshold: [0, 1],
-    });
-
-    for (const element of this.#observedPostNodes) {
-      this.#cloakingObserver.observe(element);
-      this.#viewportObserver.observe(element);
-    }
-  }
-
   destroy() {
     // disconnect the intersection observers
     this.#viewportObserver?.disconnect();
@@ -145,6 +124,22 @@ export default class PostStreamScrollTracker {
 
     // clear DOM references
     this.#observedPostNodes.clear();
+  }
+
+  get postsOnScreen() {
+    return this.#postsOnScreen;
+  }
+
+  get registerBottomBoundary() {
+    return this.#registerBottomBoundary;
+  }
+
+  get registerPost() {
+    return this.#registerPost;
+  }
+
+  get setup() {
+    return this.#setup;
   }
 
   @bind
@@ -158,51 +153,6 @@ export default class PostStreamScrollTracker {
     return height && (post.post_number < above || post.post_number > below)
       ? { active: true, style: htmlSafe("height: " + height + "px;") }
       : { active: false };
-  }
-
-  get registerPost() {
-    return this.#registerPost;
-  }
-
-  get postsOnScreen() {
-    return this.#postsOnScreen;
-  }
-
-  get registerBottomBoundary() {
-    return this.#registerBottomBoundary;
-  }
-
-  get setup() {
-    return this.#setup;
-  }
-
-  #scrollTriggered() {
-    const eyelineOffset = this.#calculateEyelineViewportOffset();
-
-    discourseDebounce(
-      this,
-      this.#findPostMatchingEyeline,
-      eyelineOffset,
-      SCROLL_BATCH_INTERVAL_MS
-    );
-
-    if (DEBUG_EYELINE) {
-      this.#updateEyelineDebugElementPosition(eyelineOffset);
-    }
-  }
-
-  #setupEyelineDebugElement(addElement = true) {
-    if (DEBUG_EYELINE) {
-      if (!addElement) {
-        this.#eyelineDebugElement.remove();
-
-        return;
-      }
-
-      this.#eyelineDebugElement = document.createElement("div");
-      this.#eyelineDebugElement.classList.add("post-stream__bottom-eyeline");
-      document.body.prepend(this.#eyelineDebugElement);
-    }
   }
 
   @bind
@@ -311,6 +261,122 @@ export default class PostStreamScrollTracker {
     return topBoundary + progress * (bottomBoundary - topBoundary);
   }
 
+  #currentPostWasChanged(event) {
+    this.#currentPostChanged(event);
+  }
+
+  #currentPostWasScrolled({ element, ...event }) {
+    if (element !== this.#currentPostElement) {
+      return;
+    }
+
+    this.#currentPostScrolled(event);
+  }
+
+  #findPostMatchingEyeline(eyeLineOffset) {
+    let target, percentScrolled;
+    for (const { element } of Object.values(this.#postsOnScreen)) {
+      const { top, bottom } = element.getBoundingClientRect();
+
+      if (eyeLineOffset >= top && eyeLineOffset <= bottom) {
+        target = element;
+        percentScrolled = (eyeLineOffset - top) / (bottom - top);
+        break;
+      }
+    }
+
+    if (target) {
+      this.#updateCurrentPost(target);
+      this.#currentPostWasScrolled({
+        element: target,
+        percent: percentScrolled,
+      });
+    }
+  }
+
+  #initializeObserver(callback, { rootMargin, threshold }) {
+    return new IntersectionObserver(
+      (entries) => {
+        entries.forEach(callback);
+      },
+      { threshold, rootMargin, root: document }
+    );
+  }
+
+  #resetViewportObservers() {
+    this.#cloakingObserver?.disconnect();
+    this.#viewportObserver?.disconnect();
+
+    const headerMargin = this.#headerOffset * -1;
+
+    this.#cloakingObserver = this.#initializeObserver(this.trackCloakedPosts, {
+      rootMargin: `${this.#cloakOffset}px 0px`,
+      threshold: [0, 1],
+    });
+    this.#viewportObserver = this.#initializeObserver(this.trackVisiblePosts, {
+      rootMargin: `${headerMargin}px 0px 0px 0px`,
+      threshold: [0, 1],
+    });
+
+    for (const element of this.#observedPostNodes) {
+      this.#cloakingObserver.observe(element);
+      this.#viewportObserver.observe(element);
+    }
+  }
+
+  #setupEventListeners(addListeners = true) {
+    if (!addListeners) {
+      window.removeEventListener("resize", this.onWindowResize);
+      window.removeEventListener("scroll", this.onScroll);
+      window.removeEventListener("touchmove", this.onScroll);
+
+      return;
+    }
+
+    const opts = {
+      passive: true,
+    };
+
+    window.addEventListener("resize", this.onWindowResize, opts);
+    window.addEventListener("scroll", this.onScroll, opts);
+    window.addEventListener("touchmove", this.onScroll, opts);
+
+    window.onpageshow = function (event) {
+      if (event.persisted) {
+        DiscourseURL.routeTo(this.location.pathname);
+      }
+    };
+  }
+
+  #setupEyelineDebugElement(addElement = true) {
+    if (DEBUG_EYELINE) {
+      if (!addElement) {
+        this.#eyelineDebugElement.remove();
+
+        return;
+      }
+
+      this.#eyelineDebugElement = document.createElement("div");
+      this.#eyelineDebugElement.classList.add("post-stream__bottom-eyeline");
+      document.body.prepend(this.#eyelineDebugElement);
+    }
+  }
+
+  #scrollTriggered() {
+    const eyelineOffset = this.#calculateEyelineViewportOffset();
+
+    discourseDebounce(
+      this,
+      this.#findPostMatchingEyeline,
+      eyelineOffset,
+      SCROLL_BATCH_INTERVAL_MS
+    );
+
+    if (DEBUG_EYELINE) {
+      this.#updateEyelineDebugElementPosition(eyelineOffset);
+    }
+  }
+
   #updateCloakBoundaries() {
     const uncloackedPostNumbers = Array.from(this.#uncloakedPostNumbers);
 
@@ -371,72 +437,6 @@ export default class PostStreamScrollTracker {
     if (this.#updateCloakOffset()) {
       this.#resetViewportObservers();
     }
-  }
-
-  #setupEventListeners(addListeners = true) {
-    if (!addListeners) {
-      window.removeEventListener("resize", this.onWindowResize);
-      window.removeEventListener("scroll", this.onScroll);
-      window.removeEventListener("touchmove", this.onScroll);
-
-      return;
-    }
-
-    const opts = {
-      passive: true,
-    };
-
-    window.addEventListener("resize", this.onWindowResize, opts);
-    window.addEventListener("scroll", this.onScroll, opts);
-    window.addEventListener("touchmove", this.onScroll, opts);
-
-    window.onpageshow = function (event) {
-      if (event.persisted) {
-        DiscourseURL.routeTo(this.location.pathname);
-      }
-    };
-  }
-
-  #initializeObserver(callback, { rootMargin, threshold }) {
-    return new IntersectionObserver(
-      (entries) => {
-        entries.forEach(callback);
-      },
-      { threshold, rootMargin, root: document }
-    );
-  }
-
-  #findPostMatchingEyeline(eyeLineOffset) {
-    let target, percentScrolled;
-    for (const { element } of Object.values(this.#postsOnScreen)) {
-      const { top, bottom } = element.getBoundingClientRect();
-
-      if (eyeLineOffset >= top && eyeLineOffset <= bottom) {
-        target = element;
-        percentScrolled = (eyeLineOffset - top) / (bottom - top);
-        break;
-      }
-    }
-
-    if (target) {
-      this.#updateCurrentPost(target);
-      this.#currentPostWasScrolled({
-        element: target,
-        percent: percentScrolled,
-      });
-    }
-  }
-
-  #currentPostWasChanged(event) {
-    this.#currentPostChanged(event);
-  }
-
-  #currentPostWasScrolled({ element, ...event }) {
-    if (element !== this.#currentPostElement) {
-      return;
-    }
-
-    this.#currentPostScrolled(event);
   }
 
   #updateEyelineDebugElementPosition(viewportOffset) {
