@@ -15,6 +15,9 @@ module Migrations::Importer
       sql = "COPY #{table_name} (#{quoted_column_name_list}) FROM STDIN"
 
       rows.each_slice(COPY_BATCH_SIZE) do |sliced_rows|
+        inserted_rows = []
+        skipped_rows = []
+
         # TODO Maybe add error handling and check if all rows fail to insert, or only
         # some of them fail. Currently, if a single row fails to insert, then an exception
         # will stop the whole import. Which seems fine because ideally the import script
@@ -23,14 +26,20 @@ module Migrations::Importer
         @connection.transaction do
           @connection.copy_data(sql, @encoder) do
             sliced_rows.each do |row|
-              data = column_names.map { |c| row[c] }
+              if row[:skip]
+                skipped_rows << row[:data]
+                next
+              end
+
+              data = column_names.map { |c| row[:data][c] }
               @connection.put_copy_data(data)
+              inserted_rows << row[:data]
             end
           end
 
           # give the caller a chance to do some work when a batch has been committed,
           # for example, to store ID mappings
-          yield sliced_rows
+          yield inserted_rows, skipped_rows
         end
       end
 
