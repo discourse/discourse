@@ -32,7 +32,7 @@ const SCROLL_BATCH_INTERVAL_MS = 10;
 const SLACK_FACTOR = 1;
 
 // change this value to true to debug the eyeline position
-const DEBUG_EYELINE = true;
+const DEBUG_EYELINE = false;
 
 let cloakingEnabled = true;
 const cloakingPrevented = new TrackedSet();
