@@ -44,8 +44,6 @@ export default class SearchMenu extends Component {
   @service appEvents;
 
   @tracked loading = false;
-  @tracked
-  inPMInboxContext = this.search.searchContext?.type === "private_messages";
   @tracked typeFilter = DEFAULT_TYPE_FILTER;
   @tracked suggestionKeyword = false;
   @tracked suggestionResults = [];
@@ -112,6 +110,10 @@ export default class SearchMenu extends Component {
     }
 
     return false;
+  }
+
+  get inPMInboxContext() {
+    return this.search.searchContext?.type === "private_messages";
   }
 
   @action

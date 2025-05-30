@@ -1,4 +1,10 @@
-import { click, fillIn, render, triggerKeyEvent } from "@ember/test-helpers";
+import {
+  click,
+  fillIn,
+  render,
+  settled,
+  triggerKeyEvent,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import SearchMenu, {
   DEFAULT_TYPE_FILTER,
@@ -105,5 +111,35 @@ module("Integration | Component | search-menu", function (hooks) {
     assert
       .dom("#search-term.search-term__input")
       .exists("input defaults to id of search-term");
+  });
+
+  test("search-context state changes updates the UI", async function (assert) {
+    const searchService = this.owner.lookup("service:search");
+
+    searchService.searchContext = null;
+    searchService.inTopicContext = false;
+    await render(<template><SearchMenu @location="test" /></template>);
+
+    assert
+      .dom(".search-context")
+      .doesNotExist("no search context button when searchContext is null");
+
+    searchService.searchContext = { type: "private_messages" };
+    await settled();
+
+    assert
+      .dom(".search-context")
+      .exists(
+        "PM context button appears when searchContext.type changes to private_messages"
+      );
+
+    searchService.searchContext = null;
+    await settled();
+
+    assert
+      .dom(".search-context")
+      .doesNotExist(
+        "PM context button disappears when searchContext changes back to null"
+      );
   });
 });
