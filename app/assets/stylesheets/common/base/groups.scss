@@ -46,7 +46,7 @@
     cursor: pointer;
     border: 1px solid var(--primary-low);
     color: var(--primary);
-    border-radius: var(--d-button-border-radius);
+    border-radius: var(--d-border-radius);
 
     .discourse-no-touch & {
       &:hover {
