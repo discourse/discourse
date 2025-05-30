@@ -59,16 +59,16 @@ module(
 
       const detailsCss = ".d-editor-input details";
       const summaryCss = `${detailsCss} summary`;
-      assert.dom(`${detailsCss} p`).isNotVisible();
+      assert.dom(detailsCss).doesNotHaveAttribute("open");
 
-      await click(`${summaryCss}`);
-      assert.dom(`${detailsCss}`).hasAttribute("open");
+      await click(summaryCss);
+      assert.dom(detailsCss).hasAttribute("open");
 
       // click elsewhere first to avoid a double-click being detected
       await click(`${detailsCss} p`);
-      await click(`${summaryCss}`);
+      await click(summaryCss);
 
-      assert.dom(`${detailsCss}`).doesNotHaveAttribute("open");
+      assert.dom(detailsCss).doesNotHaveAttribute("open");
     });
   }
 );
