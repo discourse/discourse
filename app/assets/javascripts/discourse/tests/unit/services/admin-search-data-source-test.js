@@ -142,8 +142,8 @@ module("Unit | Service | AdminSearchDataSource", function (hooks) {
       {
         description: "first page",
         icon: "house",
-        keywords: "exact setting",
-        label: "Page about exact setting",
+        keywords: "exact settings",
+        label: "Page about whatever",
         type: "page",
         url: "/admin",
       },
@@ -152,14 +152,14 @@ module("Unit | Service | AdminSearchDataSource", function (hooks) {
       {
         description: "first setting",
         icon: "house",
-        keywords: "exact setting",
+        keywords: "exact settings",
         label: "exact setting",
         type: "setting",
         url: "/admin",
       },
     ];
-    let results = this.subject.search("exact setting");
-    assert.deepEqual(results[0].label, "Page about exact setting");
+    let results = this.subject.search("exact      setting");
+    assert.deepEqual(results[0].label, "Page about whatever");
   });
 });
 

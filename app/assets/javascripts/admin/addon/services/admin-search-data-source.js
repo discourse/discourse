@@ -17,7 +17,9 @@ const MAX_TYPE_RESULT_COUNT_HIGH = 50;
 
 const SEARCH_SCORES = {
   labelStart: 20,
+  labelPartial: 15,
   exactKeyword: 10,
+  partialKeyword: 7,
   fallback: 5,
   pageBonusScore: 20,
 };
@@ -268,7 +270,9 @@ export default class AdminSearchDataSource extends Service {
     }
 
     let filteredResults = [];
-    const escapedFilterRegExp = escapeRegExp(filter.toLowerCase());
+    const escapedFilterRegExp = escapeRegExp(
+      filter.toLowerCase().trim().replace(/\s+/g, " ")
+    );
 
     // Pointless to render heaps of settings if the filter is quite low.
     const perTypeLimit =
@@ -277,9 +281,15 @@ export default class AdminSearchDataSource extends Service {
         : MAX_TYPE_RESULT_COUNT_HIGH;
 
     const labelStartRegex = new RegExp(`^${escapedFilterRegExp}`, "i");
+    const labelPartialRegex = new RegExp(`\\b${escapedFilterRegExp}`, "i");
     const exactKeywordRegexes = escapedFilterRegExp
       .split(" ")
+      .filter((keyword) => keyword.length > 3)
       .map((keyword) => new RegExp(`(${keyword})\\b`, "i"));
+    const partialKeywordRegexes = escapedFilterRegExp
+      .split(" ")
+      .filter((keyword) => keyword.length > 3)
+      .map((keyword) => new RegExp(`\\b${keyword}`, "i"));
     const fallbackRegex = new RegExp(`${escapedFilterRegExp}`, "i");
 
     ADMIN_SEARCH_RESULT_TYPES.forEach((type) => {
@@ -289,16 +299,27 @@ export default class AdminSearchDataSource extends Service {
 
         if (dataSourceItem.label.match(labelStartRegex)) {
           dataSourceItem.score += SEARCH_SCORES.labelStart;
+        } else if (dataSourceItem.label.match(labelPartialRegex)) {
+          dataSourceItem.score += SEARCH_SCORES.labelPartial;
         }
         if (
+          exactKeywordRegexes.length > 0 &&
           exactKeywordRegexes.every((regex) => {
-            return dataSourceItem.label.match(regex);
+            return dataSourceItem.keywords.match(regex);
           })
         ) {
           dataSourceItem.score = dataSourceItem.score +=
             SEARCH_SCORES.exactKeyword;
+        } else if (
+          partialKeywordRegexes.length > 0 &&
+          partialKeywordRegexes.every((regex) => {
+            return dataSourceItem.keywords.match(regex);
+          })
+        ) {
+          dataSourceItem.score = dataSourceItem.score +=
+            SEARCH_SCORES.partialKeyword;
         }
-        if (dataSourceItem.keywords.match(fallbackRegex)) {
+        if (filter.length > 3 && dataSourceItem.keywords.match(fallbackRegex)) {
           dataSourceItem.score += SEARCH_SCORES.fallback;
         }
 

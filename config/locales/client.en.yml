@@ -5373,6 +5373,7 @@ en:
 
         logo:
           title: "Logo"
+          header_description: "Configure the logos and icons used throughout your site"
           form:
             saved: "Logo settings are saved."
             logo:
@@ -5437,6 +5438,7 @@ en:
               help_text: "recommended size is at least 280 x 150 pixels. Don't use an SVG image."
         fonts:
           title: "Fonts"
+          header_description: "Configure the fonts used throughout your site, including base font, heading font, and default text size"
           form:
             more_fonts: "More fonts"
             fewer_fonts: "Fewer fonts"
