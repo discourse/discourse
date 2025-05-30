@@ -29,7 +29,7 @@ const DAY_MS = 1000 * 60 * 60 * 24;
 const POST_MODEL = Symbol("POST");
 const RESIZE_DEBOUNCE_MS = 100;
 const SCROLL_BATCH_INTERVAL_MS = 10;
-const SLACK_FACTOR = 5;
+const SLACK_FACTOR = 1;
 const UNCLOAKED_STYLE = htmlSafe("");
 
 // change this value to true to debug the eyeline position
