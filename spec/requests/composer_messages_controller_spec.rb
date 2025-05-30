@@ -22,12 +22,11 @@ RSpec.describe ComposerMessagesController do
       end
 
       it "delegates args to the finder" do
-        user.user_stat.update!(post_count: 10)
-
         get "/composer_messages.json", params: args
         expect(response.status).to eq(200)
+
         json = response.parsed_body
-        expect(json["composer_messages"].first["id"]).to eq("reviving_old")
+        expect(json["composer_messages"].first["id"]).to eq("education")
       end
     end
   end
