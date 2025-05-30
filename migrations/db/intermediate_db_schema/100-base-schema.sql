@@ -2,6 +2,30 @@
 -- update the "config/intermediate_db.yml" configuration file and then run
 -- `bin/cli schema generate` to regenerate this file.
 
+CREATE TABLE badges
+(
+    original_id         NUMERIC  NOT NULL PRIMARY KEY,
+    allow_title         BOOLEAN,
+    auto_revoke         BOOLEAN,
+    badge_grouping_id   NUMERIC,
+    badge_type_id       NUMERIC  NOT NULL,
+    created_at          DATETIME NOT NULL,
+    description         TEXT,
+    enabled             BOOLEAN,
+    existing_id         TEXT,
+    icon                TEXT,
+    image_upload_id     TEXT,
+    listable            BOOLEAN,
+    long_description    TEXT,
+    multiple_grant      BOOLEAN,
+    name                TEXT     NOT NULL,
+    "query"             TEXT,
+    show_in_post_header BOOLEAN,
+    show_posts          BOOLEAN,
+    target_posts        BOOLEAN,
+    "trigger"           INTEGER
+);
+
 CREATE TABLE user_emails
 (
     email      TEXT     NOT NULL PRIMARY KEY,
