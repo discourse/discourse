@@ -561,7 +561,7 @@ export default class PostStream extends Component {
   <template>
     <ConditionalLoadingSpinner @condition={{@postStream.loadingAbove}} />
     <div
-      class="post-stream glimmer-post-stream"
+      class="post-stream"
       {{didInsert this.setWrapperElement}}
       {{didInsert
         this.updateIntersectionObservers
