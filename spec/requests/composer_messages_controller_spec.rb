@@ -23,7 +23,6 @@ RSpec.describe ComposerMessagesController do
 
       it "delegates args to the finder" do
         user.user_stat.update!(post_count: 10)
-        SiteSetting.disable_avatar_education_message = true
 
         get "/composer_messages.json", params: args
         expect(response.status).to eq(200)
