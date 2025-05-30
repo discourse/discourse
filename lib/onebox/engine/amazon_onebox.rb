@@ -217,7 +217,7 @@ module Onebox
             published: "#{published}#{", " if published && !price&.empty?}",
           }
         else
-          title = og.title || CGI.unescapeHTML(raw.css("title").inner_text)
+          title = CGI.unescapeHTML(og.title || raw.css("title").inner_text)
           result = { link: url, title: title, image: og.image || image, price: price }
 
           result[:by_info] = raw.at("#by-line")
