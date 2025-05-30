@@ -252,7 +252,6 @@
   right: 0;
   width: 320px;
   padding: 0;
-  border-top-right-radius: 0;
 
   .panel-body-bottom {
     flex: 0;
@@ -264,7 +263,6 @@
     padding: 0;
     overflow-y: auto;
     overscroll-behavior: contain;
-    margin-inline: calc(var(--user-menu-border-width) * -1);
   }
 
   .tabs-list {
@@ -308,8 +306,6 @@
       .discourse-no-touch & {
         &:hover {
           background-color: var(--d-hover);
-          border-left: var(--user-menu-border-width) solid var(--primary-low);
-          padding-left: calc(0.875em - var(--user-menu-border-width));
         }
       }
     }
