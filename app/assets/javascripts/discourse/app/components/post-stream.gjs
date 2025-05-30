@@ -336,7 +336,6 @@ export default class PostStream extends Component {
     discourseDebounce(
       this,
       this.#updateScreenTracking,
-      this.#postsOnScreen,
       SCROLL_BATCH_INTERVAL_MS
     );
 
@@ -506,8 +505,6 @@ export default class PostStream extends Component {
     }
   }
 
-  #updateCloakActiveBoundaries({ above, below }) {
-    console.log("active boundaries", above, below);
   #updateCloakActiveBoundaries() {
     const uncloackedPostNumbers = Array.from(this.#uncloakedPostNumbers);
 
@@ -518,6 +515,7 @@ export default class PostStream extends Component {
       above = Math.min(postNumber, above);
       below = Math.max(postNumber, below);
     }
+
     this.cloakAbove = above;
     this.cloakBelow = below;
   }
@@ -541,11 +539,11 @@ export default class PostStream extends Component {
     }
   }
 
-  #updateScreenTracking(postsOnScreen) {
+  #updateScreenTracking() {
     const onScreenPostsNumbers = [];
     const readPostNumbers = [];
 
-    Object.values(postsOnScreen).forEach(({ post }) => {
+    Object.values(this.#postsOnScreen).forEach(({ post }) => {
       onScreenPostsNumbers.push(post.post_number);
 
       if (post.read) {
