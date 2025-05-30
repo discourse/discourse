@@ -32,8 +32,8 @@ importers:
         specifier: ^7.27.1
         version: 7.27.1(@babel/core@7.27.3)
       '@discourse/lint-configs':
-        specifier: ^2.20.0
-        version: 2.20.0(ember-template-lint@7.7.0(@babel/core@7.27.3))(eslint@9.27.0)(postcss@8.5.4)(prettier@3.5.3)(stylelint@16.19.1(typescript@5.6.3))
+        specifier: ^2.21.0
+        version: 2.21.0(ember-template-lint@7.7.0(@babel/core@7.27.3))(eslint@9.27.0)(postcss@8.5.4)(prettier@3.5.3)(stylelint@16.19.1(typescript@5.6.3))
       '@discourse/moment-timezone-names-translations':
         specifier: ^1.0.0
         version: 1.0.0
@@ -1748,8 +1748,8 @@ packages:
   '@discourse/itsatrap@2.0.10':
     resolution: {integrity: sha512-Jn1gdiyHMGUsmUfLFf4Q7VnTAv0l7NePbegU6pKhKHEmbzV3FosGxq30fTOYgVyTS1bxqGjlA6LvQttJpv3ROw==}
 
-  '@discourse/lint-configs@2.20.0':
-    resolution: {integrity: sha512-1pbwuV7rGKD38UGp51fbt6wAUDgAJ2AYOdICEYsJvp2Kmfs+uxhyPzXQMLceiXg2j9O8f0MDWhTdzGxIVRWPvw==}
+  '@discourse/lint-configs@2.21.0':
+    resolution: {integrity: sha512-QqW6Kr2Kk32AujDj4+esgY3IY/qk9ffJb9ChrHzb/cHbAqUaEEoDKoy/zBQhNC3QrVLLvRCmL9E77gOSrTohJg==}
     peerDependencies:
       ember-template-lint: 7.7.0
       eslint: 9.27.0
@@ -4552,8 +4552,8 @@ packages:
   error@7.2.1:
     resolution: {integrity: sha512-fo9HBvWnx3NGUKMvMwB/CBCMMrfEJgbDTVDEkPygA3Bdd3lM1OyCd+rbQ8BwnpF6GdVeOLDNmyL4N5Bg80ZvdA==}
 
-  es-abstract@1.23.10:
-    resolution: {integrity: sha512-MtUbM072wlJNyeYAe0mhzrD+M6DIJa96CZAOBBrhDbgKnB4MApIKefcyAB1eOdYn8cUNZgvwBvEzdoAYsxgEIw==}
+  es-abstract@1.24.0:
+    resolution: {integrity: sha512-WSzPgsdLtTcQwm4CROfS5ju2Wa1QQcVeT37jFjYzdFz1r9ahadC8B8/a4qxJxM+09F18iumCdRmlr96ZYkQvEg==}
     engines: {node: '>= 0.4'}
 
   es-define-property@1.0.1:
@@ -5705,6 +5705,10 @@ packages:
   is-negated-glob@1.0.0:
     resolution: {integrity: sha512-czXVVn/QEmgvej1f50BZ648vUI+em0xqMq2Sn+QncCLN4zj1UAxlT+kw/6ggQTOaZPd1HqKQGEqbpQVtJucWug==}
     engines: {node: '>=0.10.0'}
+
+  is-negative-zero@2.0.3:
+    resolution: {integrity: sha512-5KoIu2Ngpyek75jXodFvnafB6DJgr3u8uuK0LEZJjrU19DrMD3EVERaR8sjz8CCGgpZvxPl9SuE1GMVPFHx1mw==}
+    engines: {node: '>= 0.4'}
 
   is-network-error@1.1.0:
     resolution: {integrity: sha512-tUdRRAnhT+OtCZR/LxZelH/C7QtjtFrTu5tXCA8pl55eTUElUHT+GPYV8MBMBvea/j+NxQqVt3LbWMRir7Gx9g==}
@@ -7931,6 +7935,10 @@ packages:
     resolution: {integrity: sha512-RwNA9Z/7PrK06rYLIzFMlaF+l73iwpzsqRIFgbMLbTcLD6cOao82TaWefPXQvB2fOC4AjuYSEndS7N/mTCbkdQ==}
     engines: {node: '>= 0.8'}
 
+  stop-iteration-iterator@1.1.0:
+    resolution: {integrity: sha512-eLoXW/DHyl62zxY4SCaIgnRhuMr6ri4juEYARS8E6sCEqzKpOiE521Ucofdx+KnDZl5xmvGYaaKCk5FEOxJCoQ==}
+    engines: {node: '>= 0.4'}
+
   stream-shift@1.0.1:
     resolution: {integrity: sha512-AiisoFqQ0vbGcZgQPY1cdP2I76glaVA/RauYR4G4thNFgkTqr90yXTo4LYX60Jl+sIlPNHHdGSwo01AvbKUSVQ==}
 
@@ -9659,7 +9667,7 @@ snapshots:
 
   '@discourse/itsatrap@2.0.10': {}
 
-  '@discourse/lint-configs@2.20.0(ember-template-lint@7.7.0(@babel/core@7.27.3))(eslint@9.27.0)(postcss@8.5.4)(prettier@3.5.3)(stylelint@16.19.1(typescript@5.6.3))':
+  '@discourse/lint-configs@2.21.0(ember-template-lint@7.7.0(@babel/core@7.27.3))(eslint@9.27.0)(postcss@8.5.4)(prettier@3.5.3)(stylelint@16.19.1(typescript@5.6.3))':
     dependencies:
       '@babel/core': 7.27.3(supports-color@8.1.1)
       '@babel/eslint-parser': 7.27.1(@babel/core@7.27.3)(eslint@9.27.0)
@@ -11287,7 +11295,7 @@ snapshots:
     dependencies:
       call-bind: 1.0.8
       define-properties: 1.2.1
-      es-abstract: 1.23.10
+      es-abstract: 1.24.0
       es-object-atoms: 1.1.1
       get-intrinsic: 1.3.0
       is-string: 1.1.1
@@ -11301,7 +11309,7 @@ snapshots:
       call-bind: 1.0.8
       call-bound: 1.0.4
       define-properties: 1.2.1
-      es-abstract: 1.23.10
+      es-abstract: 1.24.0
       es-errors: 1.3.0
       es-object-atoms: 1.1.1
       es-shim-unscopables: 1.1.0
@@ -11310,14 +11318,14 @@ snapshots:
     dependencies:
       call-bind: 1.0.8
       define-properties: 1.2.1
-      es-abstract: 1.23.10
+      es-abstract: 1.24.0
       es-shim-unscopables: 1.1.0
 
   array.prototype.flatmap@1.3.3:
     dependencies:
       call-bind: 1.0.8
       define-properties: 1.2.1
-      es-abstract: 1.23.10
+      es-abstract: 1.24.0
       es-shim-unscopables: 1.1.0
 
   arraybuffer.prototype.slice@1.0.4:
@@ -11325,7 +11333,7 @@ snapshots:
       array-buffer-byte-length: 1.0.2
       call-bind: 1.0.8
       define-properties: 1.2.1
-      es-abstract: 1.23.10
+      es-abstract: 1.24.0
       es-errors: 1.3.0
       get-intrinsic: 1.3.0
       is-array-buffer: 3.0.5
@@ -13478,7 +13486,7 @@ snapshots:
     dependencies:
       string-template: 0.2.1
 
-  es-abstract@1.23.10:
+  es-abstract@1.24.0:
     dependencies:
       array-buffer-byte-length: 1.0.2
       arraybuffer.prototype.slice: 1.0.4
@@ -13507,7 +13515,9 @@ snapshots:
       is-array-buffer: 3.0.5
       is-callable: 1.2.7
       is-data-view: 1.0.2
+      is-negative-zero: 2.0.3
       is-regex: 1.2.1
+      is-set: 2.0.3
       is-shared-array-buffer: 1.0.4
       is-string: 1.1.1
       is-typed-array: 1.1.15
@@ -13522,6 +13532,7 @@ snapshots:
       safe-push-apply: 1.0.0
       safe-regex-test: 1.1.0
       set-proto: 1.0.0
+      stop-iteration-iterator: 1.1.0
       string.prototype.trim: 1.2.10
       string.prototype.trimend: 1.0.9
       string.prototype.trimstart: 1.0.8
@@ -15011,6 +15022,8 @@ snapshots:
 
   is-negated-glob@1.0.0: {}
 
+  is-negative-zero@2.0.3: {}
+
   is-network-error@1.1.0: {}
 
   is-number-object@1.1.1:
@@ -16063,14 +16076,14 @@ snapshots:
     dependencies:
       call-bind: 1.0.8
       define-properties: 1.2.1
-      es-abstract: 1.23.10
+      es-abstract: 1.24.0
       es-object-atoms: 1.1.1
 
   object.groupby@1.0.3:
     dependencies:
       call-bind: 1.0.8
       define-properties: 1.2.1
-      es-abstract: 1.23.10
+      es-abstract: 1.24.0
 
   object.pick@1.3.0:
     dependencies:
@@ -16738,7 +16751,7 @@ snapshots:
     dependencies:
       call-bind: 1.0.8
       define-properties: 1.2.1
-      es-abstract: 1.23.10
+      es-abstract: 1.24.0
       es-errors: 1.3.0
       es-object-atoms: 1.1.1
       get-intrinsic: 1.3.0
@@ -17404,6 +17417,11 @@ snapshots:
 
   statuses@2.0.1: {}
 
+  stop-iteration-iterator@1.1.0:
+    dependencies:
+      es-errors: 1.3.0
+      internal-slot: 1.1.0
+
   stream-shift@1.0.1: {}
 
   streamx@2.22.0:
@@ -17437,7 +17455,7 @@ snapshots:
       call-bind: 1.0.8
       call-bound: 1.0.4
       define-properties: 1.2.1
-      es-abstract: 1.23.10
+      es-abstract: 1.24.0
       es-errors: 1.3.0
       es-object-atoms: 1.1.1
       get-intrinsic: 1.3.0
@@ -17454,7 +17472,7 @@ snapshots:
       call-bound: 1.0.4
       define-data-property: 1.1.4
       define-properties: 1.2.1
-      es-abstract: 1.23.10
+      es-abstract: 1.24.0
       es-object-atoms: 1.1.1
       has-property-descriptors: 1.0.2
 
