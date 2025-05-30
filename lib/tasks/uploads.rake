@@ -530,7 +530,7 @@ def sync_s3_acls(async: true, concurrency: 10)
     puts ""
     puts "-" * 30
     puts "Uploads marked as secure will get a private ACL, and uploads marked as not secure will get a public ACL."
-    puts "Upload ACLs will be updated in Sidekiq jobs in batches of 100 at a time, check Sidekiq queues for SyncAclsForUploads for progress."
+    puts "Upload ACLs will be updated in Sidekiq jobs in batches of 100 at a time, check Sidekiq queues for SyncAccessControlForUploads for progress."
     Upload.select(:id).find_in_batches(batch_size: 100) { |uploads| adjust_acls(uploads.map(&:id)) }
     puts "", "Upload ACL sync complete!"
   else
@@ -544,7 +544,7 @@ def sync_s3_acls(async: true, concurrency: 10)
           Concurrent::Future.execute(executor:) do
             RailsMultisite::ConnectionManagement.with_connection(current_db) do
               begin
-                Discourse.store.update_upload_ACL(upload)
+                Discourse.store.update_upload_access_control(upload)
               rescue => error
                 errors << "Error updating ACL for upload #{upload.url}: #{error.message}"
               end
@@ -719,7 +719,7 @@ def adjust_acls(upload_ids_to_adjust_acl_for)
   end
 
   upload_ids_to_adjust_acl_for.each_slice(100) do |upload_ids|
-    Jobs.enqueue(:sync_acls_for_uploads, upload_ids: upload_ids)
+    Jobs.enqueue(:sync_access_control_for_uploads, upload_ids: upload_ids)
   end
 
   puts "ACL batching complete. Keep an eye on the Sidekiq queue for progress." if jobs_to_create > 1

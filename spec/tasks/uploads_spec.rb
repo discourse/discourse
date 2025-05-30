@@ -161,7 +161,11 @@ RSpec.describe "tasks/uploads" do
           end
 
           it "does not attempt to update the acl" do
-            FileStore::S3Store.any_instance.expects(:update_upload_ACL).with(upload_2).never
+            FileStore::S3Store
+              .any_instance
+              .expects(:update_upload_access_control)
+              .with(upload_2)
+              .never
             invoke_task
           end
         end
@@ -246,9 +250,9 @@ RSpec.describe "tasks/uploads" do
       )
     end
 
-    it "updates the affected ACLs via the SyncAclsForUploads job" do
+    it "updates the affected ACLs via the SyncAccessControlForUploads job" do
       invoke_task
-      expect(Jobs::SyncAclsForUploads.jobs.last["args"][0]["upload_ids"]).to match_array(
+      expect(Jobs::SyncAccessControlForUploads.jobs.last["args"][0]["upload_ids"]).to match_array(
         [upload_1.id, upload_2.id, upload_3.id, upload_4.id, upload_6.id],
       )
     end

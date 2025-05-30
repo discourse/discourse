@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Jobs::SyncAclsForUploads do
+RSpec.describe Jobs::SyncAccessControlForUploads do
   let(:upload1) { Fabricate(:upload) }
   let(:upload2) { Fabricate(:upload) }
   let(:upload3) { Fabricate(:secure_upload) }
@@ -21,15 +21,15 @@ RSpec.describe Jobs::SyncAclsForUploads do
       stub_s3_store
     end
 
-    it "runs update_upload_ACL for each upload" do
-      Discourse.store.expects(:update_upload_ACL).times(3)
+    it "runs update_upload_access_control for each upload" do
+      Discourse.store.expects(:update_upload_access_control).times(3)
       run_job
     end
 
     it "handles updates throwing an exception" do
       Discourse
         .store
-        .expects(:update_upload_ACL)
+        .expects(:update_upload_access_control)
         .raises(StandardError)
         .then
         .returns(true, true)

@@ -103,17 +103,25 @@ RSpec.describe UploadRecovery do
         tombstone_copy.expects(:key).returns(tombstone_key)
 
         Discourse.store.s3_helper.expects(:list).with("original").returns([])
+
         Discourse
           .store
           .s3_helper
           .expects(:list)
           .with("#{FileStore::S3Store::TOMBSTONE_PREFIX}original")
           .returns([tombstone_copy])
+
         Discourse
           .store
           .s3_helper
           .expects(:copy)
-          .with(tombstone_key, original_key, options: { acl: "public-read" })
+          .with(
+            tombstone_key,
+            original_key,
+            options: {
+              acl: FileStore::S3Store::CANNED_ACL_PUBLIC_READ,
+            },
+          )
 
         FileHelper.expects(:download).returns(file_from_fixtures("smallest.png"))
         stub_request(:get, upload.url).to_return(body: file_from_fixtures("smallest.png"))
@@ -133,17 +141,25 @@ RSpec.describe UploadRecovery do
           tombstone_copy.expects(:key).returns(tombstone_key)
 
           Discourse.store.s3_helper.expects(:list).with("original").returns([])
+
           Discourse
             .store
             .s3_helper
             .expects(:list)
             .with("#{FileStore::S3Store::TOMBSTONE_PREFIX}original")
             .returns([tombstone_copy])
+
           Discourse
             .store
             .s3_helper
             .expects(:copy)
-            .with(tombstone_key, original_key, options: { acl: "public-read" })
+            .with(
+              tombstone_key,
+              original_key,
+              options: {
+                acl: FileStore::S3Store::CANNED_ACL_PUBLIC_READ,
+              },
+            )
 
           expect do upload_recovery.recover end.to_not change {
             [post.reload.uploads.count, Upload.count]
@@ -172,7 +188,13 @@ RSpec.describe UploadRecovery do
             .store
             .s3_helper
             .expects(:copy)
-            .with(tombstone_key, original_key, options: { acl: "public-read" })
+            .with(
+              tombstone_key,
+              original_key,
+              options: {
+                acl: FileStore::S3Store::CANNED_ACL_PUBLIC_READ,
+              },
+            )
 
           expect do upload_recovery.recover end.to_not change {
             [post.reload.uploads.count, Upload.count]

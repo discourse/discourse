@@ -244,15 +244,21 @@ class S3Helper
     s3_bucket.objects(options)
   end
 
-  def tag_file(key, tags)
-    tag_array = []
-    tags.each { |k, v| tag_array << { key: k.to_s, value: v.to_s } }
+  def upsert_tag(key, tag_key:, tag_value:)
+    tags = s3_resource.client.get_object_tagging(bucket: @s3_bucket_name, key:).tag_set
+    tag_index = tags.find_index { |tag| tag[:key].to_s == tag_key.to_s }
+
+    if tag_index
+      tags[tag_index][:value] = tag_value.to_s
+    else
+      tags << { key: tag_key.to_s, value: tag_value.to_s }
+    end
 
     s3_resource.client.put_object_tagging(
       bucket: @s3_bucket_name,
       key: key,
       tagging: {
-        tag_set: tag_array,
+        tag_set: tags,
       },
     )
   end
@@ -300,15 +306,17 @@ class S3Helper
     s3_client.abort_multipart_upload(bucket: s3_bucket_name, key: key, upload_id: upload_id)
   end
 
-  def create_multipart(key, content_type, metadata: {})
+  def create_multipart(key, content_type, metadata: {}, acl:, tagging: nil)
     response =
       s3_client.create_multipart_upload(
-        acl: SiteSetting.s3_use_acls ? "private" : nil,
+        acl:,
+        tagging:,
         bucket: s3_bucket_name,
         key: key,
         content_type: content_type,
         metadata: metadata,
       )
+
     { upload_id: response.upload_id, key: key }
   end
 
