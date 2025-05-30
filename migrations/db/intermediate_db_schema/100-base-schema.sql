@@ -5,7 +5,7 @@
 CREATE TABLE user_emails
 (
     email      TEXT     NOT NULL PRIMARY KEY,
-    created_at DATETIME NOT NULL,
+    created_at DATETIME,
     "primary"  BOOLEAN,
     user_id    NUMERIC  NOT NULL
 );
@@ -80,7 +80,7 @@ CREATE TABLE users
     approved                  BOOLEAN,
     approved_at               DATETIME,
     approved_by_id            NUMERIC,
-    created_at                DATETIME  NOT NULL,
+    created_at                DATETIME,
     date_of_birth             DATE,
     first_seen_at             DATETIME,
     flair_group_id            NUMERIC,

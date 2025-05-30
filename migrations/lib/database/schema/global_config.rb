@@ -27,6 +27,12 @@ module Migrations::Database::Schema
       end
     end
 
+    def modified_nullable(column_name)
+      if (modified_column = find_modified_column(column_name))
+        modified_column[:nullable]
+      end
+    end
+
     private
 
     def find_modified_column(column_name)

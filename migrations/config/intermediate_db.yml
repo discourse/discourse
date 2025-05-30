@@ -41,6 +41,8 @@ schema:
         - name: "id"
           datatype: numeric
           rename_to: "original_id"
+        - name: "created_at"
+          nullable: true
         - name_regex: ".*upload.*_id$"
           datatype: text
         - name_regex: ".*_id$"

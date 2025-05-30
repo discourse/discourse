@@ -83,12 +83,26 @@
                         },
                         "datatype": {
                           "$ref": "#/$defs/datatypes"
+                        },
+                        "nullable": {
+                          "type": "boolean"
                         }
                       },
                       "additionalProperties": false,
                       "required": [
-                        "name",
-                        "datatype"
+                        "name"
+                      ],
+                      "anyOf": [
+                        {
+                          "required": [
+                            "datatype"
+                          ]
+                        },
+                        {
+                          "required": [
+                            "nullable"
+                          ]
+                        }
                       ]
                     }
                   },
@@ -191,6 +205,9 @@
                       },
                       "rename_to": {
                         "type": "string"
+                      },
+                      "nullable": {
+                        "type": "boolean"
                       }
                     },
                     "additionalProperties": false,
@@ -203,6 +220,11 @@
                       {
                         "required": [
                           "rename_to"
+                        ]
+                      },
+                      {
+                        "required": [
+                          "nullable"
                         ]
                       }
                     ],
