@@ -9,7 +9,10 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import categoryBadge from "discourse/helpers/category-badge";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import lazyHash from "discourse/helpers/lazy-hash";
-import { CATEGORY_STYLE_TYPES } from "discourse/lib/constants";
+import {
+  CATEGORY_STYLE_TYPES,
+  CATEGORY_TEXT_COLORS,
+} from "discourse/lib/constants";
 import getURL from "discourse/lib/get-url";
 import Category from "discourse/models/category";
 import { i18n } from "discourse-i18n";
@@ -22,7 +25,6 @@ export default class EditCategoryGeneral extends Component {
   @service site;
   @service siteSettings;
 
-  textColors = ["FFFFFF", "000000"];
   uncategorizedSiteSettingLink = getURL(
     "/admin/site_settings/category/all_results?filter=allow_uncategorized_topics"
   );
@@ -127,13 +129,13 @@ export default class EditCategoryGeneral extends Component {
     const color = newColor.replace("#", "");
 
     if (field.name === "color") {
-      const whiteColorDiff = this.colorDifference(color, this.textColors[0]);
-      const blackColorDiff = this.colorDifference(color, this.textColors[1]);
-      const colorIndex = whiteColorDiff > blackColorDiff ? 0 : 1;
+      const whiteDiff = this.colorDifference(color, CATEGORY_TEXT_COLORS[0]);
+      const blackDiff = this.colorDifference(color, CATEGORY_TEXT_COLORS[1]);
+      const colorIndex = whiteDiff > blackDiff ? 0 : 1;
 
       this.args.form.setProperties({
         color,
-        text_color: this.textColors[colorIndex],
+        text_color: CATEGORY_TEXT_COLORS[colorIndex],
       });
     } else {
       field.set(color);
@@ -351,7 +353,7 @@ export default class EditCategoryGeneral extends Component {
                   @onChangeColor={{fn this.updateColor field}}
                 />
                 <ColorPicker
-                  @colors={{this.textColors}}
+                  @colors={{CATEGORY_TEXT_COLORS}}
                   @value={{readonly field.value}}
                   @ariaLabel={{i18n "category.predefined_colors"}}
                   @onSelectColor={{fn this.updateColor field}}
