@@ -44,6 +44,7 @@ export default class SearchMenu extends Component {
   @service appEvents;
 
   @tracked loading = false;
+  @tracked isPMInboxCleared = false;
   @tracked typeFilter = DEFAULT_TYPE_FILTER;
   @tracked suggestionKeyword = false;
   @tracked suggestionResults = [];
@@ -51,8 +52,6 @@ export default class SearchMenu extends Component {
   @tracked menuPanelOpen = false;
 
   searchInputId = this.args.searchInputId ?? "search-term";
-
-  @tracked isPMInboxCleared = false;
 
   _debouncer = null;
   _activeSearch = null;
