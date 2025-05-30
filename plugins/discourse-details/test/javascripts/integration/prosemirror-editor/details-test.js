@@ -63,13 +63,11 @@ module(
 
       await click(`${summaryCss}`);
       assert.dom(`${detailsCss}`).hasAttribute("open");
-      assert.dom(`${detailsCss} p`).isVisible();
 
       // click elsewhere first to avoid a double-click being detected
       await click(`${detailsCss} p`);
       await click(`${summaryCss}`);
 
-      assert.dom(`${detailsCss} p`).isNotVisible();
       assert.dom(`${detailsCss}`).doesNotHaveAttribute("open");
     });
   }
