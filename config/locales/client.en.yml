@@ -4988,7 +4988,7 @@ en:
           save: "Save"
           delete: "Delete"
           delete_confirm: "Are you sure you want to delete this section?"
-          delete_public_confirm: "This section is <strong>visible to everyone</strong>, are you sure you want to delete it?"
+          delete_public_confirm: "This section is visible to everyone, are you sure you want to delete it?"
           update_public_confirm: "Changes will be <strong>visible to everyone</strong> on this site. Are you sure?"
           mark_as_private_confirm: "This section is <strong>visible to everyone</strong>. After the update, it will be <strong>visible only to you</strong>. Are you sure?"
           reset_confirm: "Are you sure you want to reset this section to default?"
