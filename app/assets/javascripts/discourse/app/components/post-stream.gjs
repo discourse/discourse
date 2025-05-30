@@ -169,6 +169,15 @@ export default class PostStream extends Component {
     return result;
   }
 
+  get shouldShowFilteredNotice() {
+    return (
+      this.args.streamFilters &&
+      Object.keys(this.args.streamFilters).length &&
+      (Object.keys(this.gapsBefore).length > 0 ||
+        Object.keys(this.gapsAfter).length > 0)
+    );
+  }
+
   isPlaceholder(post) {
     return post instanceof Placeholder;
   }
@@ -184,15 +193,6 @@ export default class PostStream extends Component {
     return Math.floor((time2 - time1) / DAY_MS);
   }
 
-  get shouldShowFilteredNotice() {
-    return (
-      this.args.streamFilters &&
-      Object.keys(this.args.streamFilters).length &&
-      (Object.keys(this.gapsBefore).length > 0 ||
-        Object.keys(this.gapsAfter).length > 0)
-    );
-  }
-
   @bind
   getCloakingData(post, { above, below }) {
     if (!cloakingEnabled || !post || cloakingPrevented.has(post.id)) {
@@ -204,21 +204,6 @@ export default class PostStream extends Component {
     return height && (post.post_number < above || post.post_number > below)
       ? { active: true, style: htmlSafe("height: " + height + "px;") }
       : { active: false };
-  }
-
-  @bind
-  onScroll() {
-    discourseDebounce(this, this.#scrollTriggered, SCROLL_BATCH_INTERVAL_MS);
-  }
-
-  @bind
-  onWindowResize(event) {
-    discourseDebounce(
-      this,
-      this.#windowResizeTriggered,
-      event,
-      RESIZE_DEBOUNCE_MS
-    );
   }
 
   @bind
@@ -244,31 +229,6 @@ export default class PostStream extends Component {
   @bind
   setBottomBoundaryElement(element) {
     this.#bottomBoundaryElement = element;
-  }
-
-  @bind
-  unregisterPostNode(element) {
-    delete element[POST_MODEL];
-
-    if (this.#observedPostNodes.has(element)) {
-      this.#observedPostNodes.delete(element);
-      this.#cloakingObserver?.unobserve(element);
-      this.#viewportObserver?.unobserve(element);
-    }
-  }
-
-  @bind
-  #debugUpdateBottomEyelinePosition(viewportOffset) {
-    if (this.#bottomEyelineDebugElement) {
-      Object.assign(this.#bottomEyelineDebugElement.style, {
-        position: "fixed",
-        top: `${viewportOffset}px`,
-        width: "100%",
-        border: "1px solid red",
-        opacity: 1,
-        zIndex: 999999,
-      });
-    }
   }
 
   @bind
@@ -364,6 +324,17 @@ export default class PostStream extends Component {
     }
   }
 
+  @bind
+  unregisterPostNode(element) {
+    delete element[POST_MODEL];
+
+    if (this.#observedPostNodes.has(element)) {
+      this.#observedPostNodes.delete(element);
+      this.#cloakingObserver?.unobserve(element);
+      this.#viewportObserver?.unobserve(element);
+    }
+  }
+
   @action
   loadMoreAbove(post) {
     this.args.topVisibleChanged({
@@ -407,6 +378,21 @@ export default class PostStream extends Component {
   @action
   loadMoreBelow(post) {
     this.args.bottomVisibleChanged({ post });
+  }
+
+  @action
+  onScroll() {
+    discourseDebounce(this, this.#scrollTriggered, SCROLL_BATCH_INTERVAL_MS);
+  }
+
+  @action
+  onWindowResize(event) {
+    discourseDebounce(
+      this,
+      this.#windowResizeTriggered,
+      event,
+      RESIZE_DEBOUNCE_MS
+    );
   }
 
   #calculateBottomEyelineViewportOffset() {
@@ -457,6 +443,20 @@ export default class PostStream extends Component {
     }
 
     this.args.currentPostScrolled(event);
+  }
+
+  @bind
+  #debugUpdateBottomEyelinePosition(viewportOffset) {
+    if (this.#bottomEyelineDebugElement) {
+      Object.assign(this.#bottomEyelineDebugElement.style, {
+        position: "fixed",
+        top: `${viewportOffset}px`,
+        width: "100%",
+        border: "1px solid red",
+        opacity: 1,
+        zIndex: 999999,
+      });
+    }
   }
 
   #findPostMatchingBottomEyeline(eyeLineOffset) {
