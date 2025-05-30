@@ -112,6 +112,7 @@ export default class TopicController extends Controller {
     this.appEvents.on("post:show-revision", this, "_showRevision");
     this.appEvents.on("post:created", this, () => {
       this._removeDeleteOnOwnerReplyBookmarks();
+      // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
       this.appEvents.trigger("post-stream:refresh", { force: true });
     });
   }
@@ -162,6 +163,7 @@ export default class TopicController extends Controller {
     return mobileView && postsCount > 3;
   }
 
+  // TODO (glimmer-post-stream) this method is not used in the Glimmer Post Stream
   @discourseComputed(
     "model.postStream.posts",
     "model.postStream.postsWithPlaceholders"
@@ -170,6 +172,7 @@ export default class TopicController extends Controller {
     return this.capabilities.isAndroid ? posts : postsWithPlaceholders;
   }
 
+  // TODO (glimmer-post-stream) is this still used?
   @discourseComputed("model.postStream.loadingFilter")
   androidLoading(loading) {
     return this.capabilities.isAndroid && loading;
@@ -304,6 +307,7 @@ export default class TopicController extends Controller {
   }
 
   _forceRefreshPostStream() {
+    // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
     this.appEvents.trigger("post-stream:refresh", { force: true });
   }
 
@@ -550,7 +554,7 @@ export default class TopicController extends Controller {
     }
 
     if (firstLoadedPost && firstLoadedPost === post) {
-      postStream.prependMore().then(() => refresh());
+      postStream.prependMore().then(() => refresh?.());
     }
   }
 
@@ -567,9 +571,9 @@ export default class TopicController extends Controller {
       lastLoadedPost === post &&
       postStream.get("canAppendMore")
     ) {
-      postStream.appendMore().then(() => refresh());
+      postStream.appendMore().then(() => refresh?.());
       // show loading stuff
-      refresh();
+      refresh?.();
     }
   }
 
@@ -742,7 +746,9 @@ export default class TopicController extends Controller {
     }
 
     const user = this.currentUser;
-    const refresh = () => this.appEvents.trigger("post-stream:refresh");
+    const refresh = () =>
+      // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
+      this.appEvents.trigger("post-stream:refresh");
     const hasReplies = post.get("reply_count") > 0;
     const loadedPosts = this.get("model.postStream.posts");
 
@@ -913,6 +919,7 @@ export default class TopicController extends Controller {
           return;
         }
         changedIds.forEach((id) =>
+          // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
           this.appEvents.trigger("post-stream:refresh", { id })
         );
       });
@@ -1740,6 +1747,7 @@ export default class TopicController extends Controller {
   onMessage(data) {
     const topic = this.model;
     const refresh = (args) =>
+      // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
       this.appEvents.trigger("post-stream:refresh", args);
 
     if (isPresent(data.notification_level_change)) {
@@ -1890,6 +1898,7 @@ export default class TopicController extends Controller {
       postStream.get("posts").forEach((post) => {
         if (!post.read && postNumbers.includes(post.post_number)) {
           post.set("read", true);
+          // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
           this.appEvents.trigger("post-stream:refresh", { id: post.get("id") });
         }
       });

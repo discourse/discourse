@@ -22,7 +22,7 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
       test("Should not send 'original_text' when posting a new reply", async function (assert) {
         await visit("/t/internationalization-localization/280");
-        await click(".topic-post:nth-of-type(1) button.reply");
+        await click(".topic-post[data-post-number='1'] button.reply");
         await fillIn(
           ".d-editor-input",
           "hello world hello world hello world hello world hello world"
@@ -32,8 +32,10 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
       test("Should send 'original_text' when editing a reply", async function (assert) {
         await visit("/t/internationalization-localization/280");
-        await click(".topic-post:nth-of-type(1) button.show-more-actions");
-        await click(".topic-post:nth-of-type(1) button.edit");
+        await click(
+          ".topic-post[data-post-number='1'] button.show-more-actions"
+        );
+        await click(".topic-post[data-post-number='1'] button.edit");
         await fillIn(
           ".d-editor-input",
           "hello world hello world hello world hello world hello world"

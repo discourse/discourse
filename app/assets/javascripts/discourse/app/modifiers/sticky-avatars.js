@@ -10,8 +10,10 @@ import { bind } from "discourse/lib/decorators";
 import { headerOffset } from "discourse/lib/offset-calculator";
 
 const STICKY_CLASS = "sticky-avatar";
-const TOPIC_POST_SELECTOR = ".post-stream .topic-post";
+const TOPIC_POST_SELECTOR = ".widget-post-stream .topic-post";
 
+// TODO (glimmer-post-stream) remove this modifier.
+//  The Glimmer post stream applies the `sticky-avatar` class to all posts
 export default class StickyAvatars extends Modifier {
   @service site;
   @service appEvents;

@@ -13,7 +13,8 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
       test("fullscreen table wrapper appears on post with large table", async function (assert) {
         await visit("/t/54081");
-        const postWithLargeTable = ".post-stream .topic-post:first-child";
+        const postWithLargeTable =
+          ".post-stream .topic-post[data-post-number='1']";
         assert
           .dom(`${postWithLargeTable} .fullscreen-table-wrapper`)
           .exists("The wrapper is present on the post with the large table");

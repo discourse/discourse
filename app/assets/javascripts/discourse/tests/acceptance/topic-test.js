@@ -87,7 +87,7 @@ import { i18n } from "discourse-i18n";
 
       test("Share Modal", async function (assert) {
         await visit("/t/internationalization-localization/280");
-        await click(".topic-post:first-child button.share");
+        await click(".topic-post[data-post-number='1'] button.share");
 
         assert.dom(".share-topic-modal").exists("shows the share modal");
       });
@@ -95,7 +95,7 @@ import { i18n } from "discourse-i18n";
       test("Copy Link Button", async function (assert) {
         await visit("/t/internationalization-localization/280");
         await click(
-          ".topic-post:first-child button.post-action-menu__copy-link"
+          ".topic-post[data-post-number='1'] button.post-action-menu__copy-link"
         );
 
         assert
@@ -142,8 +142,12 @@ import { i18n } from "discourse-i18n";
 
         assert.dom("a.wiki").doesNotExist("does not show the wiki icon");
 
-        await click(".topic-post:nth-of-type(1) button.show-more-actions");
-        await click(".topic-post:nth-of-type(1) button.show-post-admin-menu");
+        await click(
+          ".topic-post[data-post-number='1'] button.show-more-actions"
+        );
+        await click(
+          ".topic-post[data-post-number='1'] button.show-post-admin-menu"
+        );
         await click(".btn.wiki");
 
         assert.dom("button.wiki").exists("shows the wiki icon");
@@ -220,8 +224,10 @@ import { i18n } from "discourse-i18n";
       test("Deleting a topic", async function (assert) {
         this.siteSettings.min_topic_views_for_delete_confirm = 10000;
         await visit("/t/internationalization-localization/280");
-        await click(".topic-post:nth-of-type(1) button.show-more-actions");
-        await click(".topic-post:nth-of-type(1) button.delete");
+        await click(
+          ".topic-post[data-post-number='1'] button.show-more-actions"
+        );
+        await click(".topic-post[data-post-number='1'] button.delete");
         await click(".toggle-admin-menu");
         assert.dom(".topic-admin-recover").exists("shows the recover button");
       });
@@ -229,8 +235,10 @@ import { i18n } from "discourse-i18n";
       test("Deleting a popular topic displays confirmation modal", async function (assert) {
         this.siteSettings.min_topic_views_for_delete_confirm = 10;
         await visit("/t/internationalization-localization/280");
-        await click(".topic-post:nth-of-type(1) button.show-more-actions");
-        await click(".topic-post:nth-of-type(1) button.delete");
+        await click(
+          ".topic-post[data-post-number='1'] button.show-more-actions"
+        );
+        await click(".topic-post[data-post-number='1'] button.delete");
         assert
           .dom(".delete-topic-confirm-modal")
           .exists("shows the delete confirmation modal");
@@ -239,7 +247,7 @@ import { i18n } from "discourse-i18n";
         assert
           .dom(".delete-topic-confirm-modal")
           .doesNotExist("hides the delete confirmation modal");
-        await click(".topic-post:nth-of-type(1) button.delete");
+        await click(".topic-post[data-post-number='1'] button.delete");
         await click(".delete-topic-confirm-modal .btn-danger");
         await click(".toggle-admin-menu");
         assert.dom(".topic-admin-recover").exists("shows the recover button");

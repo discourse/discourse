@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
-import { concat } from "@ember/helper";
 import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import PostCookedHtml from "discourse/components/post/cooked-html";
@@ -128,7 +127,7 @@ export default class PostSmallAction extends Component {
 
   <template>
     <article
-      id={{concat "post_" @post.post_number}}
+      ...attributes
       class={{concatClass
         "small-action"
         "onscreen-post"
