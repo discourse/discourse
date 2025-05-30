@@ -8,24 +8,23 @@ import icon from "discourse/helpers/d-icon";
 import ToolbarPopupMenuOptions from "select-kit/components/toolbar-popup-menu-options";
 
 export default class ComposerToolbarButtons extends Component {
-  firstButton = this.args.data.groups.mapBy("buttons").flat().firstObject;
-
-  @action
-  applyCondition(button) {
-    return button.condition === undefined
-      ? true
-      : button.condition(this.args.data);
-  }
-
   @action
   tabIndex(button) {
     return button === this.firstButton ? 0 : button.tabindex;
   }
 
+  get firstButton() {
+    return (
+      this.args.isFirst &&
+      this.args.data.groups.find((group) => group.buttons?.length > 0)
+        ?.buttons[0]
+    );
+  }
+
   <template>
     {{#each @data.groups key="group" as |group|}}
       {{#each group.buttons key="id" as |button|}}
-        {{#if (this.applyCondition button)}}
+        {{#if (button.condition this.args.data.context)}}
           {{#if button.href}}
             <a
               href={{button.href}}

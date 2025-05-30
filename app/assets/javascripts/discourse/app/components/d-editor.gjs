@@ -11,6 +11,7 @@ import { observes, on as onEvent } from "@ember-decorators/object";
 import { emojiSearch, isSkinTonableEmoji } from "pretty-text/emoji";
 import { translations } from "pretty-text/emoji/data";
 import { Promise } from "rsvp";
+import { not } from "truth-helpers";
 import TextareaEditor from "discourse/components/composer/textarea-editor";
 import ToggleSwitch from "discourse/components/composer/toggle-switch";
 import ToolbarButtons from "discourse/components/composer/toolbar-buttons";
@@ -618,6 +619,11 @@ export default class DEditor extends Component {
   }
 
   @action
+  resetToolbar() {
+    this.replacedToolbarInstance = null;
+  }
+
+  @action
   onChange(event) {
     this.set("value", event?.target?.value);
     this.change?.(event);
@@ -720,11 +726,10 @@ export default class DEditor extends Component {
           {{#if this.replacedToolbarInstance}}
             <div class="d-editor-button-bar --replaced-toolbar" role="toolbar">
               <DButton
-                @action={{fn this.replaceToolbar null}}
+                @action={{this.resetToolbar}}
                 @icon="angle-left"
                 @preventFocus={{true}}
                 @onKeyDown={{this.rovingButtonBar}}
-                @tabindex="-1"
                 class="btn-flat d-editor-button-bar__back"
               />
               <ToolbarButtons
@@ -747,6 +752,7 @@ export default class DEditor extends Component {
               <ToolbarButtons
                 @data={{this.toolbar}}
                 @rovingButtonBar={{this.rovingButtonBar}}
+                @isFirst={{not this.siteSettings.rich_editor}}
               />
             </div>
           {{/if}}

@@ -44,7 +44,7 @@ export class ToolbarBase {
       trimLeading: buttonAttrs.trimLeading,
       popupMenu: buttonAttrs.popupMenu,
       preventFocus: buttonAttrs.preventFocus || false,
-      condition: buttonAttrs.condition,
+      condition: buttonAttrs.condition || (() => true),
       sendAction: buttonAttrs.sendAction,
       shortcutAction: buttonAttrs.shortcutAction, // (optional) custom shortcut action
       hideShortcutInTitle: buttonAttrs.hideShortcutInTitle || false, // (optional) hide shortcut in title
