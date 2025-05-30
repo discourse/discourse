@@ -80,6 +80,10 @@
   .color-palette-editor {
     margin-bottom: 4em;
   }
+
+  .alert.remote-theme-edits {
+    margin-top: var(--space-2);
+  }
 }
 
 .admin-customize.admin-permalinks {
@@ -232,6 +236,10 @@
           width: auto;
           margin-left: auto;
         }
+      }
+
+      &.remote-theme-metadata {
+        margin-bottom: 0;
       }
     }
 
