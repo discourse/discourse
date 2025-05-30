@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
@@ -15,10 +16,11 @@ export default class ApplicationController extends Controller {
   @service header;
   @service sidebarState;
 
+  @tracked showSidebarIfEnabled = !this.keyValueStore.getItem(HIDE_SIDEBAR_KEY);
+
   queryParams = [{ navigationMenuQueryParamOverride: "navigation_menu" }];
   showTop = true;
 
-  showSidebar = this.calculateShowSidebar();
   sidebarDisabledRouteOverride = false;
   navigationMenuQueryParamOverride = null;
   showSiteHeader = true;
@@ -81,16 +83,16 @@ export default class ApplicationController extends Controller {
       return false;
     }
 
+    // No sidebar for smaller viewports
+    if (!this.capabilities.viewport.md) {
+      return false;
+    }
+
     if (this.navigationMenuQueryParamOverride === "sidebar") {
       return true;
     }
 
     if (this.navigationMenuQueryParamOverride === "header_dropdown") {
-      return false;
-    }
-
-    // Always return dropdown on mobile
-    if (this.site.mobileView) {
       return false;
     }
 
@@ -102,12 +104,8 @@ export default class ApplicationController extends Controller {
     return this.siteSettings.navigation_menu === "sidebar";
   }
 
-  calculateShowSidebar() {
-    return (
-      this.canDisplaySidebar &&
-      !this.keyValueStore.getItem(HIDE_SIDEBAR_KEY) &&
-      !this.site.narrowDesktopView
-    );
+  get showSidebar() {
+    return this.sidebarEnabled && this.showSidebarIfEnabled;
   }
 
   @action
@@ -117,14 +115,12 @@ export default class ApplicationController extends Controller {
 
     discourseDebounce(this, this._mainOutletAnimate, 250);
 
-    this.toggleProperty("showSidebar");
+    this.showSidebarIfEnabled = !this.showSidebarIfEnabled;
 
-    if (this.site.desktopView) {
-      if (this.showSidebar) {
-        this.keyValueStore.removeItem(HIDE_SIDEBAR_KEY);
-      } else {
-        this.keyValueStore.setItem(HIDE_SIDEBAR_KEY, "true");
-      }
+    if (this.showSidebarIfEnabled) {
+      this.keyValueStore.removeItem(HIDE_SIDEBAR_KEY);
+    } else {
+      this.keyValueStore.setItem(HIDE_SIDEBAR_KEY, "true");
     }
   }
 

@@ -17,6 +17,7 @@ export default class SidebarHamburgerDropdown extends Component {
   @service site;
   @service siteSettings;
   @service sidebarState;
+  @service capabilities;
 
   @action
   triggerRenderedAppEvent() {
@@ -34,7 +35,7 @@ export default class SidebarHamburgerDropdown extends Component {
   }
 
   get collapsableSections() {
-    if (this.site.mobileView || this.site.narrowDesktopView) {
+    if (!this.capabilities.viewport.md) {
       return true;
     } else {
       return this.args.collapsableSections;

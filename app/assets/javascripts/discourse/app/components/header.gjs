@@ -226,10 +226,10 @@ export default class GlimmerHeader extends Component {
       return this.toggleHamburger();
     }
 
-    if (this.args.sidebarEnabled && !this.site.narrowDesktopView) {
-      this.toggleSidebar();
-    } else {
+    if (this.args.dropDownHeaderEnabled) {
       this.toggleHamburger();
+    } else {
+      this.toggleSidebar();
     }
   }
 
@@ -262,7 +262,6 @@ export default class GlimmerHeader extends Component {
           @showSidebar={{@showSidebar}}
           @topicInfo={{@topicInfo}}
           @topicInfoVisible={{@topicInfoVisible}}
-          @narrowDesktop={{this.site.narrowDesktopView}}
         >
           <span class="header-buttons">
             {{#each (headerButtons.resolve) as |entry|}}
@@ -288,7 +287,6 @@ export default class GlimmerHeader extends Component {
               @toggleNavigationMenu={{this.toggleNavigationMenu}}
               @toggleUserMenu={{this.toggleUserMenu}}
               @topicInfoVisible={{@topicInfoVisible}}
-              @narrowDesktop={{this.site.narrowDesktopView}}
               @searchButtonId={{SEARCH_BUTTON_ID}}
             />
           {{/if}}
@@ -298,6 +296,7 @@ export default class GlimmerHeader extends Component {
               @closeSearchMenu={{this.toggleSearchMenu}}
               {{this.handleFocus}}
               @searchInputId="icon-search-input"
+              @slideInMode={{@slideInMode}}
             />
           {{else if this.header.hamburgerVisible}}
             <HamburgerDropdownWrapper
@@ -314,7 +313,7 @@ export default class GlimmerHeader extends Component {
 
           {{#if
             (and
-              (or this.site.mobileView this.site.narrowDesktopView)
+              this.args.slideInMode
               (or this.header.hamburgerVisible this.header.userVisible)
             )
           }}
