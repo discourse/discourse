@@ -30,7 +30,6 @@ const POST_MODEL = Symbol("POST");
 const RESIZE_DEBOUNCE_MS = 100;
 const SCROLL_BATCH_INTERVAL_MS = 10;
 const SLACK_FACTOR = 1;
-const UNCLOAKED_STYLE = htmlSafe("");
 
 // change this value to true to debug the eyeline position
 const DEBUG_EYELINE = true;
@@ -204,7 +203,7 @@ export default class PostStream extends Component {
 
     return height && (post.post_number < above || post.post_number > below)
       ? { active: true, style: htmlSafe("height: " + height + "px;") }
-      : { active: false, style: UNCLOAKED_STYLE };
+      : { active: false };
   }
 
   @bind
