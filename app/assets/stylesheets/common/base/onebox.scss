@@ -1,6 +1,6 @@
 @use "lib/viewport";
 
-@mixin onebox($thickness) {
+@mixin onebox-shadow($thickness) {
   border: 0;
   margin-inline: $thickness;
   box-shadow:
@@ -110,7 +110,7 @@ a.loading-onebox {
 }
 
 aside.onebox {
-  @include onebox(4px);
+  @include onebox-shadow(4px);
   padding: 1em;
   font-size: var(--font-0);
   background: var(--secondary);
@@ -330,7 +330,7 @@ aside.onebox {
 }
 
 .chat-drawer-container .chat-message aside.onebox {
-  @include onebox(3px);
+  @include onebox-shadow(3px);
 }
 
 @mixin gdocs-logo($type) {
