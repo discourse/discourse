@@ -422,7 +422,10 @@ class ListController < ApplicationController
     end
     real_slug = @category.full_slug("/")
     if CGI.unescape(current_slug) != CGI.unescape(real_slug)
-      url = CGI.unescape(request.fullpath).gsub(current_slug, real_slug)
+      path = CGI.unescape(request.path)
+      query = request.query_string
+      new_path = path.gsub(current_slug, real_slug)
+      url = query.present? ? "#{new_path}?#{query}" : new_path
       if ActionController::Base.config.relative_url_root
         url = url.sub(ActionController::Base.config.relative_url_root, "")
       end
