@@ -250,6 +250,7 @@ Discourse::Application.routes.draw do
           get "translations/:locale" => "themes#get_translations"
           put "setting" => "themes#update_single_setting"
           get "objects_setting_metadata/:setting_name" => "themes#objects_setting_metadata"
+          put "change-colors" => "themes#change_colors"
         end
 
         collection do
@@ -270,6 +271,7 @@ Discourse::Application.routes.draw do
         get "components/:id" => "themes#index"
         get "components/:id/:target/:field_name/edit" => "themes#index"
         get "themes/:id/export" => "themes#export"
+        get "themes/:id/colors" => "themes#index"
         get "themes/:id/schema/:setting_name" => "themes#schema"
         get "components/:id/schema/:setting_name" => "themes#schema"
 

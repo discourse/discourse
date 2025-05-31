@@ -70,6 +70,7 @@ export default function () {
           function () {
             this.route("show", { path: "/:theme_id" }, function () {
               this.route("schema", { path: "schema/:setting_name" });
+              this.route("colors");
             });
             this.route("edit", { path: "/:theme_id/:target/:field_name/edit" });
           }

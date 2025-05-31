@@ -2,7 +2,79 @@
 
 module PageObjects
   module Pages
-    class AdminCustomizeThemes < PageObjects::Pages::Base
+    class AdminCustomizeThemes < PageObjects::Pages::AdminBase
+      def visit(id)
+        page.visit("/admin/customize/themes/#{id}")
+      end
+
+      def has_colors_tab?
+        header.has_tab?("colors")
+      end
+
+      def has_colors_tab_active?
+        header.has_active_tab?("colors")
+      end
+
+      def has_no_colors_tab?
+        header.has_no_tab?("colors")
+      end
+
+      def colors_tab
+        header.tab("colors")
+      end
+
+      def has_settings_tab?
+        header.has_tab?("settings")
+      end
+
+      def has_no_settings_tab?
+        header.has_no_tab?("settings")
+      end
+
+      def settings_tab
+        header.tab("settings")
+      end
+
+      def changes_banner
+        PageObjects::Components::AdminChangesBanner.new
+      end
+
+      def has_color_scheme_selector?
+        page.has_css?(".theme-settings__color-scheme")
+      end
+
+      def has_no_color_scheme_selector?
+        page.has_no_css?(".theme-settings__color-scheme")
+      end
+
+      def color_palette_editor
+        PageObjects::Components::ColorPaletteEditor.new(page.find(".color-palette-editor"))
+      end
+
+      def palette_editor_save_button
+        page.find(".admin-theme__save-palette-changes")
+      end
+
+      def has_palette_editor_save_button?
+        page.has_css?(".admin-theme__save-palette-changes")
+      end
+
+      def has_no_palette_editor_save_button?
+        page.has_no_css?(".admin-theme__save-palette-changes")
+      end
+
+      def palette_editor_discard_button
+        page.find(".admin-theme__discard-palette-changes")
+      end
+
+      def has_palette_editor_discard_button?
+        page.has_css?(".admin-theme__discard-palette-changes")
+      end
+
+      def has_no_palette_editor_discard_button?
+        page.has_no_css?(".admin-theme__discard-palette-changes")
+      end
+
       def has_inactive_themes?
         has_css?(".inactive-indicator")
       end

@@ -7,8 +7,16 @@ module PageObjects
         expect(page.all("#{tabs_container_selector} a").map(&:text)).to eq(names)
       end
 
+      def has_tab?(tab_name)
+        has_css?(tab_selector(tab_name))
+      end
+
+      def has_no_tab?(tab_name)
+        has_no_css?(tab_selector(tab_name))
+      end
+
       def has_active_tab?(tab_name)
-        find("#{tab_selector(tab_name)} .active")
+        has_css?("#{tab_selector(tab_name)} .active")
       end
 
       def tab(tab_name)

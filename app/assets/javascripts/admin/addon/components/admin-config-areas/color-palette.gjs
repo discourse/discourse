@@ -55,15 +55,13 @@ export default class AdminConfigAreasColorPalette extends Component {
   }
 
   @action
-  onLightColorChange(name, value) {
-    const color = this.data.colors.find((c) => c.name === name);
+  onLightColorChange(color, value) {
     color.hex = value;
     this.hasChangedColors = true;
   }
 
   @action
-  onDarkColorChange(name, value) {
-    const color = this.data.colors.find((c) => c.name === name);
+  onDarkColorChange(color, value) {
     color.dark_hex = value;
     this.hasChangedColors = true;
   }
