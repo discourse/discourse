@@ -122,7 +122,6 @@ export default class EditCategoryTabsController extends Controller {
     }
 
     this.model.setProperties(transientData);
-    this.setTextColor(this.model.color);
 
     this.set("saving", true);
 
@@ -187,16 +186,5 @@ export default class EditCategoryTabsController extends Controller {
   @action
   goBack() {
     DiscourseURL.routeTo(this.model.url);
-  }
-
-  @action
-  setTextColor(backgroundColor) {
-    const r = parseInt(backgroundColor.substr(0, 2), 16);
-    const g = parseInt(backgroundColor.substr(2, 2), 16);
-    const b = parseInt(backgroundColor.substr(4, 2), 16);
-    const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-    const color = brightness >= 128 ? this.textColors[0] : this.textColors[1];
-
-    this.model.set("text_color", color);
   }
 }
