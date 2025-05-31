@@ -1,0 +1,13 @@
+module Migrations
+  module Enum[V]
+    def keys: -> Array[Symbol]
+
+    def values: -> Array[V]
+
+    def valid?: (V) -> bool
+
+    def key_for: (V) -> Symbol?
+
+    def value_for: (Symbol) -> V
+  end
+end

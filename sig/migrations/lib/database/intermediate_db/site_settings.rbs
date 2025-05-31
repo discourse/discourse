@@ -1,0 +1,5 @@
+module Migrations::Database::IntermediateDB
+  module SiteSettings
+    def self.create: (name: string, value: string, action: :update | :merge) -> void
+  end
+end

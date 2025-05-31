@@ -1,0 +1,9 @@
+module Migrations::Database::IntermediateDB
+  module SiteSettingAction
+    extend ::Migrations::Enum[Symbol]
+
+    def update: -> :update
+
+    def append: -> :append
+  end
+end

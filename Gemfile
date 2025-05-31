@@ -148,6 +148,7 @@ group :test, :development do
   gem "annotate"
 
   gem "syntax_tree"
+  gem "syntax_tree-rbs", github: "stainless-api/syntax_tree-rbs", branch: "main"
 
   gem "rspec-multi-mock"
 end
