@@ -367,8 +367,6 @@ export default class ComposerService extends Service {
       return "composer.create_whisper";
     } else if (privateMessage && modelAction === Composer.REPLY) {
       return "composer.create_pm";
-    } else if (modelAction === Composer.ADD_TRANSLATION) {
-      return "composer.translations.save";
     }
 
     return SAVE_LABELS[modelAction];

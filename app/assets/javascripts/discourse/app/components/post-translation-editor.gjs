@@ -12,24 +12,6 @@ export default class PostTranslationEditor extends Component {
   @service composer;
   @service siteSettings;
 
-  get availableLocales() {
-    const allAvailableLocales = JSON.parse(this.siteSettings.available_locales);
-    const supportedLocales =
-      this.siteSettings.experimental_content_localization_supported_locales.split(
-        "|"
-      );
-
-    if (!supportedLocales.includes(this.siteSettings.default_locale)) {
-      supportedLocales.push(this.siteSettings.default_locale);
-    }
-
-    const filtered = allAvailableLocales.filter((locale) => {
-      return supportedLocales.includes(locale.value);
-    });
-
-    return filtered;
-  }
-
   findCurrentLocalization() {
     return this.composer.model.post.post_localizations.find(
       (localization) =>
@@ -59,7 +41,7 @@ export default class PostTranslationEditor extends Component {
         @nameProperty="name"
         @valueProperty="value"
         @value={{this.composer.selectedTranslationLocale}}
-        @content={{this.availableLocales}}
+        @content={{this.siteSettings.available_content_localization_locales}}
         @onChange={{this.updateSelectedLocale}}
         @options={{hash
           icon="globe"
