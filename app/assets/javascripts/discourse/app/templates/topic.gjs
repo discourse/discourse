@@ -235,22 +235,8 @@ export default RouteTemplate(
                     class="fancy-title"
                   >
                     {{htmlSafe @controller.model.fancyTitle}}
+                    {{icon "pencil"}}
                   </a>
-                {{/if}}
-
-                {{#if @controller.model.details.can_edit}}
-                  <a
-                    href
-                    {{on "click" @controller.editTopic}}
-                    class={{concatClass
-                      "edit-topic"
-                      "btn"
-                      "btn-flat"
-                      "no-text"
-                      (if @controller.capabilities.touch "btn-transparent")
-                    }}
-                    title={{i18n "edit_topic"}}
-                  >{{icon "pencil"}}</a>
                 {{/if}}
 
                 <PluginOutlet
@@ -268,7 +254,6 @@ export default RouteTemplate(
                   class="topic-category"
                 />
               </PluginOutlet>
-
             {{/if}}
           </TopicTitle>
 

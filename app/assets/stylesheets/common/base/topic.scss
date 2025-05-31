@@ -191,20 +191,24 @@
       width: 100%;
     }
 
-    html.discourse-no-touch & {
-      .edit-topic {
-        opacity: 0;
-        transition: opacity 0.15s linear;
-        background: none;
+    .fancy-title {
+      .d-icon-pencil {
+        font-size: var(--font-down-3);
       }
+    }
 
-      &:hover {
-        .edit-topic {
-          opacity: 1;
+    html.discourse-no-touch & {
+      .fancy-title {
+        .d-icon-pencil {
+          opacity: 0;
+          transition: opacity 0.15s linear;
+          background: none;
+        }
 
-          &:hover {
-            background: var(--d-post-control-background--hover);
-            color: var(--d-post-control-text-color--hover);
+        &:hover,
+        &:focus {
+          .d-icon-pencil {
+            opacity: 1;
           }
         }
       }
