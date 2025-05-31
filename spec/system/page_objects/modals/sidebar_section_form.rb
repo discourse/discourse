@@ -29,7 +29,7 @@ module PageObjects
       end
 
       def confirm_delete
-        find(".dialog-container .btn-primary").click
+        find(".dialog-container .btn-danger").click
         closed?
       end
 

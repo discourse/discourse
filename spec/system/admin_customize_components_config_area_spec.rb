@@ -217,7 +217,7 @@ describe "Admin Customize Themes Config Area Page", type: :system do
       config_area.component(disabled_component.id).more_actions_menu.expand
       config_area.component(disabled_component.id).delete_button.click
 
-      dialog.click_yes
+      dialog.click_danger
 
       expect(toasts).to have_success(
         I18n.t(

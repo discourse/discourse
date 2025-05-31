@@ -118,7 +118,7 @@ module PageObjects
       end
 
       def confirm_delete
-        find(".dialog-footer .btn-primary").click
+        find(".dialog-footer .btn-danger").click
       end
 
       private

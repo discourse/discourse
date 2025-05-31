@@ -53,8 +53,8 @@ export default class AdminEmojis extends Service {
 
   @action
   destroyEmoji(emoji) {
-    this.dialog.yesNoConfirm({
-      message: i18n("admin.emoji.delete_confirm", {
+    this.dialog.deleteConfirm({
+      title: i18n("admin.emoji.delete_confirm", {
         name: emoji.get("name"),
       }),
       didConfirm: () => this.#destroyEmoji(emoji),

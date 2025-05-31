@@ -30,8 +30,8 @@ export default class FormTemplateRowItem extends Component {
 
   @action
   deleteTemplate() {
-    return this.dialog.yesNoConfirm({
-      message: i18n("admin.form_templates.delete_confirm", {
+    return this.dialog.deleteConfirm({
+      title: i18n("admin.form_templates.delete_confirm", {
         template_name: this.args.template.name,
       }),
       didConfirm: () => {

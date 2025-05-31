@@ -160,8 +160,8 @@ export default class EditCategoryTabsController extends Controller {
   @action
   deleteCategory() {
     this.set("deleting", true);
-    this.dialog.yesNoConfirm({
-      message: i18n("category.delete_confirm"),
+    this.dialog.deleteConfirm({
+      title: i18n("category.delete_confirm"),
       didConfirm: () => {
         this.model
           .destroy()
