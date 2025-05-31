@@ -235,7 +235,10 @@ export default RouteTemplate(
                     class="fancy-title"
                   >
                     {{htmlSafe @controller.model.fancyTitle}}
-                    {{icon "pencil"}}
+
+                    {{#if @controller.model.details.can_edit}}
+                      {{icon "pencil"}}
+                    {{/if}}
                   </a>
                 {{/if}}
 
