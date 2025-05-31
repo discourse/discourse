@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe UserExportSerializer do
-  subject(:serializer) { UserExportSerializer.new(user_export, root: false) }
+  subject(:serializer) { UserExportSerializer.new(user_export, scope: PlaceholderGuardian.new, root: false) }
 
   fab!(:user_export) do
     user = Fabricate(:user)

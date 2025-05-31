@@ -20,7 +20,7 @@ RSpec.describe UserBookmarkListSerializer do
     def run_serializer
       bookmark_list = UserBookmarkList.new(user: user, guardian: Guardian.new(user))
       bookmark_list.load
-      UserBookmarkListSerializer.new(bookmark_list)
+      UserBookmarkListSerializer.new(bookmark_list, scope: PlaceholderGuardian.new)
     end
 
     it "chooses the correct class of serializer for all the bookmarkable types" do

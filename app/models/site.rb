@@ -112,6 +112,7 @@ class Site
         ActiveModel::ArraySerializer.new(
           categories,
           each_serializer: SiteCategorySerializer,
+          scope: PlaceholderGuardian.new,
         ).as_json
       end
   end

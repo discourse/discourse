@@ -39,7 +39,7 @@ describe "StalledWiki" do
     end
 
     it "supports manual triggering" do
-      DiscourseAutomation::AutomationSerializer.new(automation, root: "automation").as_json
+      DiscourseAutomation::AutomationSerializer.new(automation, scope: PlaceholderGuardian.new, root: "automation").as_json
     end
 
     context "when the post has been revised recently" do

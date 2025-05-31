@@ -830,7 +830,7 @@ class Group < ActiveRecord::Base
     if self.categories.count < PUBLISH_CATEGORIES_LIMIT
       MessageBus.publish(
         "/categories",
-        { categories: ActiveModel::ArraySerializer.new(self.categories).as_json },
+        { categories: ActiveModel::ArraySerializer.new(self.categories, scope: PlaceholderGuardian.new).as_json },
         user_ids: [user.id],
       )
     else

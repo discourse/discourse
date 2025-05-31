@@ -188,7 +188,7 @@ RSpec.describe TagGroupsController do
     before { sign_in(admin) }
 
     it "should delete the tag group and log the deletion" do
-      previous_value = TagGroupSerializer.new(tag_group).to_json(root: false)
+      previous_value = TagGroupSerializer.new(tag_group, scope: PlaceholderGuardian.new).to_json(root: false)
 
       delete "/tag_groups/#{tag_group.id}.json"
 
@@ -216,7 +216,7 @@ RSpec.describe TagGroupsController do
     before { sign_in(admin) }
 
     it "should update the tag group and log the modification" do
-      previous_value = TagGroupSerializer.new(tag_group).to_json(root: false)
+      previous_value = TagGroupSerializer.new(tag_group, scope: PlaceholderGuardian.new).to_json(root: false)
 
       put "/tag_groups/#{tag_group.id}.json",
           params: {

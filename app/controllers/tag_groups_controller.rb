@@ -13,6 +13,7 @@ class TagGroupsController < ApplicationController
       ActiveModel::ArraySerializer.new(
         tag_groups,
         each_serializer: TagGroupSerializer,
+        scope: PlaceholderGuardian.new,
         root: "tag_groups",
       )
     respond_to do |format|
@@ -25,7 +26,7 @@ class TagGroupsController < ApplicationController
   end
 
   def show
-    serializer = TagGroupSerializer.new(@tag_group)
+    serializer = TagGroupSerializer.new(@tag_group, scope: PlaceholderGuardian.new)
     respond_to do |format|
       format.html do
         store_preloaded "tagGroup", MultiJson.dump(serializer)
@@ -41,6 +42,7 @@ class TagGroupsController < ApplicationController
       ActiveModel::ArraySerializer.new(
         tag_groups,
         each_serializer: TagGroupSerializer,
+        scope: PlaceholderGuardian.new,
         root: "tag_groups",
       )
     store_preloaded "tagGroup", MultiJson.dump(serializer)
@@ -53,7 +55,7 @@ class TagGroupsController < ApplicationController
     if @tag_group.save
       StaffActionLogger.new(current_user).log_tag_group_create(
         @tag_group.name,
-        TagGroupSerializer.new(@tag_group).to_json(root: false),
+        TagGroupSerializer.new(@tag_group, scope: PlaceholderGuardian.new).to_json(root: false),
       )
       render_serialized(@tag_group, TagGroupSerializer)
     else
@@ -63,10 +65,10 @@ class TagGroupsController < ApplicationController
 
   def update
     guardian.ensure_can_admin_tag_groups!
-    old_data = TagGroupSerializer.new(@tag_group).to_json(root: false)
+    old_data = TagGroupSerializer.new(@tag_group, scope: PlaceholderGuardian.new).to_json(root: false)
     json_result(@tag_group, serializer: TagGroupSerializer) do |tag_group|
       @tag_group.update(tag_groups_params)
-      new_data = TagGroupSerializer.new(@tag_group).to_json(root: false)
+      new_data = TagGroupSerializer.new(@tag_group, scope: PlaceholderGuardian.new).to_json(root: false)
       StaffActionLogger.new(current_user).log_tag_group_change(@tag_group.name, old_data, new_data)
     end
   end
@@ -75,7 +77,7 @@ class TagGroupsController < ApplicationController
     guardian.ensure_can_admin_tag_groups!
     StaffActionLogger.new(current_user).log_tag_group_destroy(
       @tag_group.name,
-      TagGroupSerializer.new(@tag_group).to_json(root: false),
+      TagGroupSerializer.new(@tag_group, scope: PlaceholderGuardian.new).to_json(root: false),
     )
     @tag_group.destroy
     render json: success_json

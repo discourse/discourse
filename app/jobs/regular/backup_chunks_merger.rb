@@ -32,7 +32,7 @@ module Jobs
       # push an updated list to the clients
       store = BackupRestore::BackupStore.create
       data =
-        ActiveModel::ArraySerializer.new(store.files, each_serializer: BackupFileSerializer).as_json
+        ActiveModel::ArraySerializer.new(store.files, each_serializer: BackupFileSerializer, scope: PlaceholderGuardian.new).as_json
       MessageBus.publish("/admin/backups", data, group_ids: [Group::AUTO_GROUPS[:staff]])
     end
   end

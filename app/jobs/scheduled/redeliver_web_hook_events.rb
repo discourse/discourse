@@ -56,7 +56,7 @@ module Jobs
         "/web_hook_events/#{web_hook.id}",
         {
           type: type,
-          web_hook_event: AdminWebHookEventSerializer.new(web_hook_event, root: false).as_json,
+          web_hook_event: AdminWebHookEventSerializer.new(web_hook_event, scope: PlaceholderGuardian.new, root: false).as_json,
         },
       )
     end

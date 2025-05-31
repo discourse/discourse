@@ -4,7 +4,7 @@ RSpec.describe EmojiSerializer do
   fab!(:custom_emoji) { CustomEmoji.create!(name: "trout", upload: Fabricate(:upload)) }
 
   describe "#url" do
-    subject(:serializer) { described_class.new(emoji, root: false) }
+    subject(:serializer) { described_class.new(emoji, scope: PlaceholderGuardian.new, root: false) }
 
     fab!(:emoji) { Emoji.load_custom.first }
 
@@ -28,7 +28,7 @@ RSpec.describe EmojiSerializer do
     it "doesn't raise an error with a missing upload and a CDN" do
       emoji = Emoji.load_custom.first
       set_cdn_url("https://cdn.com")
-      result = described_class.new(Emoji.load_custom.first, root: false).as_json
+      result = described_class.new(Emoji.load_custom.first, scope: PlaceholderGuardian.new, root: false).as_json
       expect(result[:url]).to be_blank
     end
 
@@ -40,7 +40,7 @@ RSpec.describe EmojiSerializer do
       SiteSetting.s3_access_key_id = "s3_access_key_id"
       SiteSetting.s3_secret_access_key = "s3_secret_access_key"
       SiteSetting.s3_cdn_url = "https://example.com"
-      result = described_class.new(Emoji.load_custom.first, root: false).as_json
+      result = described_class.new(Emoji.load_custom.first, scope: PlaceholderGuardian.new, root: false).as_json
 
       expect(result[:url]).to be_blank
     end

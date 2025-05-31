@@ -12,7 +12,7 @@ RSpec.describe UserStatusMixin do
     before { SiteSetting.enable_user_status = false }
 
     it "doesn't include status" do
-      serializer = DummySerializer.new(user, root: false, include_status: true)
+      serializer = DummySerializer.new(user, scope: PlaceholderGuardian.new, root: false, include_status: true)
       json = serializer.as_json
       expect(json[:status]).to be_nil
     end
@@ -22,20 +22,20 @@ RSpec.describe UserStatusMixin do
     before { SiteSetting.enable_user_status = true }
 
     it "doesn't include status by default" do
-      serializer = DummySerializer.new(user, root: false)
+      serializer = DummySerializer.new(user, scope: PlaceholderGuardian.new, root: false)
       json = serializer.as_json
       expect(json[:status]).to be_nil
     end
 
     it "includes status when include_status option is passed" do
-      serializer = DummySerializer.new(user, root: false, include_status: true)
+      serializer = DummySerializer.new(user, scope: PlaceholderGuardian.new, root: false, include_status: true)
       json = serializer.as_json
       expect(json[:status]).to be_present
     end
 
     it "doesn't include status if user hid profile and presence" do
       user.user_option.hide_profile = true
-      serializer = DummySerializer.new(user, root: false, include_status: true)
+      serializer = DummySerializer.new(user, scope: PlaceholderGuardian.new, root: false, include_status: true)
       json = serializer.as_json
       expect(json[:status]).to be_nil
     end

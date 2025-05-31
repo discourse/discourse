@@ -30,7 +30,7 @@ class PresenceController < ApplicationController
     names.each do |name|
       channel = PresenceChannel.new(name)
       if channel.can_view?(user_id: current_user&.id, group_ids: user_group_ids)
-        result[name] = PresenceChannelStateSerializer.new(channel.state, root: nil)
+        result[name] = PresenceChannelStateSerializer.new(channel.state, scope: PlaceholderGuardian.new, root: nil)
       else
         result[name] = nil
       end

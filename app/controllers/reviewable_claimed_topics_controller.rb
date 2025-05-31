@@ -45,7 +45,7 @@ class ReviewableClaimedTopicsController < ApplicationController
     if claimed_by.present?
       data = {
         topic_id: topic.id,
-        user: BasicUserSerializer.new(claimed_by, root: false).as_json,
+        user: BasicUserSerializer.new(claimed_by, scope: PlaceholderGuardian.new, root: false).as_json,
         automatic:,
       }
     else

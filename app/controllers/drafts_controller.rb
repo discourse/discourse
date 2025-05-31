@@ -120,7 +120,7 @@ class DraftsController < ApplicationController
           end
 
           if conflict
-            conflict_user = BasicUserSerializer.new(post.last_editor, root: false)
+            conflict_user = BasicUserSerializer.new(post.last_editor, scope: PlaceholderGuardian.new, root: false)
             json.merge!(conflict_user:)
           end
         end

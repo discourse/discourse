@@ -14,6 +14,7 @@ class PostLocalizationsController < ApplicationController
                ActiveModel::ArraySerializer.new(
                  localizations,
                  each_serializer: PostLocalizationSerializer,
+                 scope: PlaceholderGuardian.new,
                  root: false,
                ).as_json,
              status: :ok

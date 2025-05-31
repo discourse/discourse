@@ -5,7 +5,7 @@ describe BasicTopicSerializer do
 
   describe "#fancy_title" do
     it "returns the fancy title" do
-      json = BasicTopicSerializer.new(topic).as_json
+      json = BasicTopicSerializer.new(topic, scope: PlaceholderGuardian.new).as_json
 
       expect(json[:basic_topic][:fancy_title]).to eq(topic.title)
     end
@@ -16,7 +16,7 @@ describe BasicTopicSerializer do
       I18n.locale = "ja"
       topic.update!(locale: "en")
 
-      json = BasicTopicSerializer.new(topic).as_json
+      json = BasicTopicSerializer.new(topic, scope: PlaceholderGuardian.new).as_json
 
       expect(json[:basic_topic][:fancy_title]).to eq("X")
     end

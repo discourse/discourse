@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe CategoryUploadSerializer do
-  subject(:serializer) { described_class.new(upload, root: false) }
+  subject(:serializer) { described_class.new(upload, scope: PlaceholderGuardian.new, root: false) }
 
   fab!(:upload)
 

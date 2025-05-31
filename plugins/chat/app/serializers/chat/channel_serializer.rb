@@ -61,7 +61,7 @@ module Chat
     def chatable
       case object.chatable_type
       when "Category"
-        BasicCategorySerializer.new(object.chatable, root: false).as_json
+        BasicCategorySerializer.new(object.chatable, scope: scope, root: false).as_json
       when "DirectMessage"
         Chat::DirectMessageSerializer.new(object.chatable, scope: scope, root: false).as_json
       when "Site"

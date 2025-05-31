@@ -2,7 +2,7 @@
 
 RSpec.describe FoundUserSerializer do
   fab!(:user)
-  let(:serializer) { described_class.new(user, root: false) }
+  let(:serializer) { described_class.new(user, scope: PlaceholderGuardian.new, root: false) }
 
   describe "#id" do
     it "returns user id" do
@@ -36,13 +36,13 @@ RSpec.describe FoundUserSerializer do
       before { SiteSetting.enable_user_status = true }
 
       it "doesn't add user status by default" do
-        serializer = FoundUserSerializer.new(user, root: false)
+        serializer = FoundUserSerializer.new(user, scope: PlaceholderGuardian.new, root: false)
         json = serializer.as_json
         expect(json.keys).not_to include :status
       end
 
       context "when including user status" do
-        let(:serializer) { FoundUserSerializer.new(user, root: false, include_status: true) }
+        let(:serializer) { FoundUserSerializer.new(user, scope: PlaceholderGuardian.new, root: false, include_status: true) }
 
         it "adds user status when enabled" do
           json = serializer.as_json
@@ -73,7 +73,7 @@ RSpec.describe FoundUserSerializer do
 
     context "when status is disabled in site settings" do
       before { SiteSetting.enable_user_status = false }
-      let(:serializer) { FoundUserSerializer.new(user, root: false, include_status: true) }
+      let(:serializer) { FoundUserSerializer.new(user, scope: PlaceholderGuardian.new, root: false, include_status: true) }
 
       it "doesn't add user status" do
         json = serializer.as_json

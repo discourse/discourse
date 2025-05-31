@@ -36,6 +36,7 @@ class ThemeSerializer < BasicThemeSerializer
     ActiveModel::ArraySerializer.new(
       object.theme_fields,
       each_serializer: ThemeFieldSerializer,
+      scope: scope,
       include_value: include_theme_field_values?,
     ).as_json
   end

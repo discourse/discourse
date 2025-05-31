@@ -6,7 +6,7 @@ RSpec.describe NewPostResultSerializer do
     result.message = "hello :)"
     result.route_to = "/cool-route"
 
-    serializer = described_class.new(result)
+    serializer = described_class.new(result, scope: PlaceholderGuardian.new)
     expect(serializer.success).to eq(true)
     expect(serializer.message).to eq("hello :)")
     expect(serializer.route_to).to eq("/cool-route")

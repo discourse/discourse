@@ -24,7 +24,7 @@ RSpec.describe ThemeObjectsSettingMetadataSerializer do
     it "should return a hash of the settings property descriptions" do
       objects_setting_locale
 
-      payload = described_class.new(theme_setting[:objects_setting], root: false).as_json
+      payload = described_class.new(theme_setting[:objects_setting], scope: PlaceholderGuardian.new, root: false).as_json
 
       expect(payload[:property_descriptions]).to eq(
         {
