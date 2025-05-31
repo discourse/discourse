@@ -541,7 +541,7 @@ class FinalDestination
   end
 
   def safe_session(uri)
-    FinalDestination::HTTP.start(
+    Net::HTTP.start(
       uri.host,
       uri.port,
       use_ssl: (uri.scheme == "https"),
