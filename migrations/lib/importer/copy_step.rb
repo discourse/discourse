@@ -91,14 +91,18 @@ module Migrations::Importer
     end
 
     def fetch_rows
+      skip_row_marker = ::Migrations::Importer::DiscourseDB::SKIP_ROW_MARKER
+
       Enumerator.new do |enumerator|
         query, parameters = self.class.rows_query
+
         @intermediate_db.query(query, *parameters) do |row|
           if (transformed_row = transform_row(row))
-            enumerator << { data: transformed_row, skip: false }
+            enumerator << transformed_row
             @stats.reset
           else
-            enumerator << { data: row, skip: true }
+            row[skip_row_marker] = true
+            enumerator << row
             @stats.reset(skip_count: 1)
           end
 

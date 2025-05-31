@@ -3,6 +3,7 @@
 module Migrations::Importer
   class DiscourseDB
     COPY_BATCH_SIZE = 1_000
+    SKIP_ROW_MARKER = :"$skip"
 
     def initialize
       @encoder = PG::TextEncoder::CopyRow.new
@@ -14,10 +15,12 @@ module Migrations::Importer
       quoted_column_name_list = column_names.map { |c| quote_identifier(c) }.join(",")
       sql = "COPY #{table_name} (#{quoted_column_name_list}) FROM STDIN"
 
-      rows.each_slice(COPY_BATCH_SIZE) do |sliced_rows|
-        inserted_rows = []
-        skipped_rows = []
+      inserted_rows = []
+      skipped_rows = []
+      column_count = column_names.size
+      data = Array.new(column_count)
 
+      rows.each_slice(COPY_BATCH_SIZE) do |sliced_rows|
         # TODO Maybe add error handling and check if all rows fail to insert, or only
         # some of them fail. Currently, if a single row fails to insert, then an exception
         # will stop the whole import. Which seems fine because ideally the import script
@@ -26,20 +29,28 @@ module Migrations::Importer
         @connection.transaction do
           @connection.copy_data(sql, @encoder) do
             sliced_rows.each do |row|
-              if row[:skip]
-                skipped_rows << row[:data]
+              if row[SKIP_ROW_MARKER]
+                skipped_rows << row
                 next
               end
 
-              data = column_names.map { |c| row[:data][c] }
+              i = 0
+              while i < column_count
+                data[i] = row[column_names[i]]
+                i += 1
+              end
+
               @connection.put_copy_data(data)
-              inserted_rows << row[:data]
+              inserted_rows << row
             end
           end
 
           # give the caller a chance to do some work when a batch has been committed,
           # for example, to store ID mappings
           yield inserted_rows, skipped_rows
+
+          inserted_rows.clear
+          skipped_rows.clear
         end
       end
 
