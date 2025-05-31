@@ -11,10 +11,7 @@ RSpec.describe ComposerMessagesFinder do
     it "calls all the message finders" do
       finder.expects(:check_education_message).once
       finder.expects(:check_new_user_many_replies).once
-      finder.expects(:check_avatar_notification).once
-      finder.expects(:check_sequential_replies).once
       finder.expects(:check_dominating_topic).once
-      finder.expects(:check_reviving_old_topic).once
       finder.expects(:check_get_a_room).once
       finder.find
     end
@@ -98,146 +95,6 @@ RSpec.describe ComposerMessagesFinder do
     end
   end
 
-  describe ".check_avatar_notification" do
-    let(:finder) { ComposerMessagesFinder.new(user, composer_action: "createTopic") }
-    fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
-
-    context "with success" do
-      let!(:message) { finder.check_avatar_notification }
-
-      it "returns an avatar upgrade message" do
-        expect(message).to be_present
-      end
-
-      it "creates a notified_about_avatar log" do
-        expect(UserHistory.exists_for_user?(user, :notified_about_avatar)).to eq(true)
-      end
-    end
-
-    it "doesn't return notifications for new users" do
-      user.trust_level = TrustLevel[0]
-      expect(finder.check_avatar_notification).to be_blank
-    end
-
-    it "doesn't return notifications for users who have custom avatars" do
-      user.uploaded_avatar_id = 1
-      expect(finder.check_avatar_notification).to be_blank
-    end
-
-    it "doesn't notify users who have been notified already" do
-      UserHistory.create!(
-        action: UserHistory.actions[:notified_about_avatar],
-        target_user_id: user.id,
-      )
-      expect(finder.check_avatar_notification).to be_blank
-    end
-
-    it "doesn't notify users if 'disable_avatar_education_message' setting is enabled" do
-      SiteSetting.disable_avatar_education_message = true
-      expect(finder.check_avatar_notification).to be_blank
-    end
-
-    it "doesn't notify users if 'discourse_connect_overrides_avatar' setting is enabled" do
-      SiteSetting.discourse_connect_overrides_avatar = true
-      expect(finder.check_avatar_notification).to be_blank
-    end
-
-    it "doesn't notify users if 'allow_uploaded_avatars' setting is disabled" do
-      user.change_trust_level!(TrustLevel[3])
-
-      SiteSetting.uploaded_avatars_allowed_groups = ""
-      expect(finder.check_avatar_notification).to be_blank
-
-      SiteSetting.uploaded_avatars_allowed_groups = "13"
-      expect(finder.check_avatar_notification).to be_present
-    end
-  end
-
-  describe ".check_sequential_replies" do
-    fab!(:user)
-    fab!(:topic)
-
-    before do
-      SiteSetting.educate_until_posts = 10
-      user.stubs(:post_count).returns(11)
-
-      freeze_time(5.minutes.ago) do
-        Fabricate(:post, topic: topic, user: user)
-        Fabricate(:post, topic: topic, user: user)
-        Fabricate(:post, topic: topic, user: user, post_type: Post.types[:small_action])
-      end
-
-      SiteSetting.sequential_replies_threshold = 2
-    end
-
-    it "does not give a message for new topics" do
-      finder = ComposerMessagesFinder.new(user, composer_action: "createTopic")
-      expect(finder.check_sequential_replies).to be_blank
-    end
-
-    it "does not give a message without a topic id" do
-      expect(
-        ComposerMessagesFinder.new(user, composer_action: "reply").check_sequential_replies,
-      ).to be_blank
-    end
-
-    context "with reply" do
-      let(:finder) do
-        ComposerMessagesFinder.new(user, composer_action: "reply", topic_id: topic.id)
-      end
-
-      it "does not give a message to users who are still in the 'education' phase" do
-        user.stubs(:post_count).returns(9)
-        expect(finder.check_sequential_replies).to be_blank
-      end
-
-      it "doesn't notify a user it has already notified about sequential replies" do
-        UserHistory.create!(
-          action: UserHistory.actions[:notified_about_sequential_replies],
-          target_user_id: user.id,
-          topic_id: topic.id,
-        )
-        expect(finder.check_sequential_replies).to be_blank
-      end
-
-      it "will notify you if it hasn't in the current topic" do
-        UserHistory.create!(
-          action: UserHistory.actions[:notified_about_sequential_replies],
-          target_user_id: user.id,
-          topic_id: topic.id + 1,
-        )
-        expect(finder.check_sequential_replies).to be_present
-      end
-
-      it "doesn't notify a user who has less than the `sequential_replies_threshold` threshold posts" do
-        SiteSetting.sequential_replies_threshold = 5
-        expect(finder.check_sequential_replies).to be_blank
-      end
-
-      it "doesn't notify a user if another user posted" do
-        Fabricate(:post, topic: topic, user: Fabricate(:user))
-        expect(finder.check_sequential_replies).to be_blank
-      end
-
-      it "doesn't notify in a message" do
-        Topic.any_instance.expects(:private_message?).returns(true)
-        expect(finder.check_sequential_replies).to be_blank
-      end
-
-      context "with success" do
-        let!(:message) { finder.check_sequential_replies }
-
-        it "returns a message" do
-          expect(message).to be_present
-        end
-
-        it "creates a notified_about_sequential_replies log" do
-          expect(UserHistory.exists_for_user?(user, :notified_about_sequential_replies)).to eq(true)
-        end
-      end
-    end
-  end
-
   describe ".check_dominating_topic" do
     fab!(:user)
     fab!(:topic)
@@ -251,8 +108,6 @@ RSpec.describe ComposerMessagesFinder do
       Fabricate(:post, topic: topic, user: user)
       Fabricate(:post, topic: topic, user: user)
       Fabricate(:post, topic: topic, user: Fabricate(:user))
-
-      SiteSetting.sequential_replies_threshold = 2
     end
 
     it "does not give a message for new topics" do
@@ -581,75 +436,6 @@ RSpec.describe ComposerMessagesFinder do
     end
   end
 
-  describe ".check_reviving_old_topic" do
-    fab!(:user)
-    fab!(:topic)
-
-    it "does not give a message without a topic id" do
-      expect(
-        described_class.new(user, composer_action: "createTopic").check_reviving_old_topic,
-      ).to be_blank
-      expect(
-        described_class.new(user, composer_action: "reply").check_reviving_old_topic,
-      ).to be_blank
-    end
-
-    context "with a reply" do
-      context "when warn_reviving_old_topic_age is 180 days" do
-        before { SiteSetting.warn_reviving_old_topic_age = 180 }
-
-        it "does not notify if last post is recent" do
-          topic = Fabricate(:topic, last_posted_at: 1.hour.ago)
-          expect(
-            described_class.new(
-              user,
-              composer_action: "reply",
-              topic_id: topic.id,
-            ).check_reviving_old_topic,
-          ).to be_blank
-        end
-
-        it "notifies if last post is old" do
-          topic = Fabricate(:topic, last_posted_at: 181.days.ago)
-          message =
-            described_class.new(
-              user,
-              composer_action: "reply",
-              topic_id: topic.id,
-            ).check_reviving_old_topic
-          expect(message).not_to be_blank
-          expect(message[:body]).to match(/6 months ago/)
-        end
-      end
-
-      context "when warn_reviving_old_topic_age is 0" do
-        before { SiteSetting.warn_reviving_old_topic_age = 0 }
-
-        it "does not notify if last post is new" do
-          topic = Fabricate(:topic, last_posted_at: 1.hour.ago)
-          expect(
-            described_class.new(
-              user,
-              composer_action: "reply",
-              topic_id: topic.id,
-            ).check_reviving_old_topic,
-          ).to be_blank
-        end
-
-        it "does not notify if last post is old" do
-          topic = Fabricate(:topic, last_posted_at: 365.days.ago)
-          expect(
-            described_class.new(
-              user,
-              composer_action: "reply",
-              topic_id: topic.id,
-            ).check_reviving_old_topic,
-          ).to be_blank
-        end
-      end
-    end
-  end
-
   context "when editing a post" do
     fab!(:user)
     fab!(:topic) { Fabricate(:post).topic }
@@ -660,10 +446,7 @@ RSpec.describe ComposerMessagesFinder do
 
     let(:edit_post_finder) { ComposerMessagesFinder.new(user, composer_action: "edit") }
 
-    before do
-      SiteSetting.disable_avatar_education_message = true
-      SiteSetting.educate_until_posts = 2
-    end
+    before { SiteSetting.educate_until_posts = 2 }
 
     it "returns nothing even if it normally would" do
       expect(edit_post_finder.find).to eq(nil)

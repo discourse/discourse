@@ -74,83 +74,6 @@ class ComposerMessagesFinder
     }
   end
 
-  # Should a user be contacted to update their avatar?
-  def check_avatar_notification
-    # A user has to be basic at least to be considered for an avatar notification
-    return unless @user.has_trust_level?(TrustLevel[1])
-
-    # We don't notify users who have avatars or who have been notified already.
-    if @user.uploaded_avatar_id || UserHistory.exists_for_user?(@user, :notified_about_avatar)
-      return
-    end
-
-    # Do not notify user if any of the following is true:
-    # - "disable avatar education message" is enabled
-    # - "sso overrides avatar" is enabled
-    # - "allow uploaded avatars" is disabled
-    if SiteSetting.disable_avatar_education_message ||
-         SiteSetting.discourse_connect_overrides_avatar ||
-         !@user.in_any_groups?(SiteSetting.uploaded_avatars_allowed_groups_map)
-      return
-    end
-
-    # If we got this far, log that we've nagged them about the avatar
-    UserHistory.create!(
-      action: UserHistory.actions[:notified_about_avatar],
-      target_user_id: @user.id,
-    )
-
-    # Return the message
-    {
-      id: "avatar",
-      templateName: "education",
-      body:
-        PrettyText.cook(
-          I18n.t(
-            "education.avatar",
-            profile_path: "/u/#{@user.username_lower}/preferences/account#profile-picture",
-          ),
-        ),
-    }
-  end
-
-  # Is a user replying too much in succession?
-  def check_sequential_replies
-    return unless educate_reply?(:notified_about_sequential_replies)
-
-    # Count the posts made by this user in the last day
-    recent_posts_user_ids =
-      Post
-        .where(topic_id: @details[:topic_id])
-        .where("created_at > ?", 1.day.ago)
-        .where(post_type: Post.types[:regular])
-        .order("created_at desc")
-        .limit(SiteSetting.sequential_replies_threshold)
-        .pluck(:user_id)
-
-    # Did we get back as many posts as we asked for, and are they all by the current user?
-    if recent_posts_user_ids.size != SiteSetting.sequential_replies_threshold ||
-         recent_posts_user_ids.detect { |u| u != @user.id }
-      return
-    end
-
-    # If we got this far, log that we've nagged them about the sequential replies
-    UserHistory.create!(
-      action: UserHistory.actions[:notified_about_sequential_replies],
-      target_user_id: @user.id,
-      topic_id: @details[:topic_id],
-    )
-
-    {
-      id: "sequential_replies",
-      templateName: "education",
-      wait_for_typing: true,
-      extraClass: "education-message",
-      hide_if_whisper: true,
-      body: PrettyText.cook(I18n.t("education.sequential_replies")),
-    }
-  end
-
   def check_dominating_topic
     return unless educate_reply?(:notified_about_dominating_topic)
 
@@ -251,33 +174,6 @@ class ComposerMessagesFinder
       wait_for_typing: false,
       extraClass: "urgent",
       body: PrettyText.cook(I18n.t("education.dont_feed_the_trolls")),
-    }
-  end
-
-  def check_reviving_old_topic
-    return unless replying?
-    if @topic.nil? || SiteSetting.warn_reviving_old_topic_age < 1 || @topic.last_posted_at.nil? ||
-         @topic.last_posted_at > SiteSetting.warn_reviving_old_topic_age.days.ago
-      return
-    end
-
-    {
-      id: "reviving_old",
-      templateName: "education",
-      wait_for_typing: false,
-      extraClass: "education-message",
-      body:
-        PrettyText.cook(
-          I18n.t(
-            "education.reviving_old_topic",
-            time_ago:
-              AgeWords.time_ago_in_words(
-                @topic.last_posted_at,
-                false,
-                scope: :"datetime.distance_in_words_verbose",
-              ),
-          ),
-        ),
     }
   end
 
