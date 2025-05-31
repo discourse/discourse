@@ -191,6 +191,29 @@
       width: 100%;
     }
 
+    .fancy-title {
+      .d-icon-pencil {
+        font-size: var(--font-down-3);
+      }
+    }
+
+    html.discourse-no-touch & {
+      .fancy-title {
+        .d-icon-pencil {
+          opacity: 0;
+          transition: opacity 0.15s linear;
+          background: none;
+        }
+
+        &:hover,
+        &:focus {
+          .d-icon-pencil {
+            opacity: 1;
+          }
+        }
+      }
+    }
+
     @include viewport.until(sm) {
       .topic-category {
         margin-top: 0.25em;
@@ -215,8 +238,8 @@
     }
   }
 
-  a.edit-topic .d-icon {
-    font-size: 0.8em;
+  a.edit-topic {
+    font-size: 1rem;
   }
 
   .edit-topic-title {

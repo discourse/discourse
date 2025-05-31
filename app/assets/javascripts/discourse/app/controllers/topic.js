@@ -70,6 +70,7 @@ export default class TopicController extends Controller {
   @service siteSettings;
   @service site;
   @service appEvents;
+  @service capabilities;
 
   @tracked model;
 
@@ -364,6 +365,10 @@ export default class TopicController extends Controller {
     event?.preventDefault();
     if (this.get("model.details.can_edit")) {
       this.set("editingTopic", true);
+
+      schedule("afterRender", () => {
+        document.querySelector("#edit-title")?.focus();
+      });
     }
   }
 
