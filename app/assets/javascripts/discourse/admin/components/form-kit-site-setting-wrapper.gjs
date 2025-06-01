@@ -1,15 +1,19 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
-import { concat, fn } from "@ember/helper";
+import { concat, fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import { eq } from "truth-helpers";
+import { eq, not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import Form from "discourse/components/form";
 import { humanizedSettingName } from "discourse/lib/site-settings-utils";
+import FontList from "admin/components/site-settings/font-list";
 import GroupList from "admin/components/site-settings/group-list";
+import HostList from "admin/components/site-settings/host-list";
+import ValueList from "admin/components/value-list";
 import SiteSetting from "admin/models/site-setting";
+import CategoryChooser from "select-kit/components/category-chooser";
 
 class PrimaryActions extends Component {
   @service toasts;
@@ -117,10 +121,21 @@ export default class FormKitSiteSettingWrapper extends Component {
   fieldFormat(settingType) {
     switch (settingType) {
       case "integer":
+      case "float":
         return "medium";
       default:
         return "full";
     }
+  }
+
+  @action
+  setValueList(set, delimiter, value) {
+    set(value.join(delimiter));
+  }
+
+  @action
+  setCategory(set, category) {
+    set(category?.id);
   }
 
   <template>
@@ -131,6 +146,7 @@ export default class FormKitSiteSettingWrapper extends Component {
       as |form|
     >
       {{#each @settings as |setting|}}
+        {{setting.type}}
         <form.Field
           @name={{setting.setting}}
           @title={{this.settingTitle setting}}
@@ -140,6 +156,18 @@ export default class FormKitSiteSettingWrapper extends Component {
         >
           <:body as |field|>
             {{#if (eq setting.type "integer")}}
+              <field.Input @type="number">
+                <:primary-actions as |actions|>
+                  <PrimaryActions
+                    @form={{form}}
+                    @field={{field}}
+                    @actions={{actions}}
+                    @setting={{setting}}
+                    @save={{this.save}}
+                  />
+                </:primary-actions>
+              </field.Input>
+            {{else if (eq setting.type "float")}}
               <field.Input @type="number">
                 <:primary-actions as |actions|>
                   <PrimaryActions
@@ -205,13 +233,78 @@ export default class FormKitSiteSettingWrapper extends Component {
                   />
                 </:primary-actions>
               </field.Select>
+            {{else if (eq setting.type "category")}}
+              <field.Custom>
+                <:body>
+                  <CategoryChooser
+                    @value={{readonly field.value}}
+                    @onChangeCategory={{fn this.setCategory field.set}}
+                    @options={{hash
+                      allowUncategorized=true
+                      none=(eq @setting.default "")
+                    }}
+                  />
+                </:body>
+
+                <:primary-actions as |actions|>
+                  <PrimaryActions
+                    @form={{form}}
+                    @field={{field}}
+                    @actions={{actions}}
+                    @setting={{setting}}
+                    @save={{this.save}}
+                  />
+                </:primary-actions>
+              </field.Custom>
             {{else if (eq setting.type "group")}}
               <field.Custom>
-                {{field.value}}
                 <GroupList @onChange={{field.set}} @value={{field.value}} />
               </field.Custom>
+            {{else if (eq setting.type "host_list")}}
+              <field.Custom>
+                <HostList
+                  @setting={{setting}}
+                  @onChangeCallback={{field.set}}
+                  @value={{field.value}}
+                  @allowAny={{not (eq setting.anyValue false)}}
+                />
+              </field.Custom>
+            {{else if (eq setting.type "group_list")}}
+              <field.Custom>
+                <GroupList @onChange={{field.set}} @value={{field.value}} />
+              </field.Custom>
+            {{else if (eq setting.type "list")}}
+              <field.Custom>
+                <:body>
+                  {{#if (eq setting.list_type "font")}}
+                    <FontList
+                      @setting={{setting}}
+                      @value={{field.value}}
+                      @changeValueCallback={{field.set}}
+                    />
+                  {{else}}
+                    <ValueList
+                      @values={{field.value}}
+                      @onChange={{fn this.setValueList field.set "|"}}
+                      @inputDelimiter="|"
+                      @choices={{setting.choices}}
+                    />
+                  {{/if}}
+                </:body>
+
+                <:primary-actions as |actions|>
+                  <PrimaryActions
+                    @form={{form}}
+                    @field={{field}}
+                    @actions={{actions}}
+                    @setting={{setting}}
+                    @save={{this.save}}
+                  />
+                </:primary-actions>
+              </field.Custom>
             {{else}}
-              {{setting.type}}
+              {{log setting.type setting.setting}}
+
             {{/if}}
           </:body>
         </form.Field>

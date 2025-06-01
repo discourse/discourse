@@ -19,7 +19,13 @@ export default class HostList extends Component {
       return;
     }
 
-    this.set("value", value.join(this.tokenSeparator));
+    value = value.join(this.tokenSeparator);
+
+    if (this.onChangeCallback) {
+      this.onChangeCallback(value);
+    } else {
+      this.set("value", value);
+    }
   }
 
   <template>
