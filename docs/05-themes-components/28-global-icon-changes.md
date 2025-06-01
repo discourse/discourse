@@ -108,7 +108,7 @@ const REPLACEMENTS = {
 };
 ```
 
-Ref: [discourse/icon-library.js at main · discourse/discourse (github.com)](https://github.com/discourse/discourse/blob/main/app/assets/javascripts/discourse-common/addon/lib/icon-library.js)
+Ref: [discourse/icon-library.js at main · discourse/discourse (github.com)](https://github.com/discourse/discourse/blob/main/app/assets/javascripts/discourse/app/lib/icon-library.js)
 [/details]
 
 ---
