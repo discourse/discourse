@@ -128,11 +128,14 @@ export default class PostSmallAction extends Component {
   <template>
     <article
       ...attributes
-      class={{concatClass
-        "small-action"
-        "onscreen-post"
-        (if @post.deleted "deleted")
-        this.additionalClasses
+      class={{unless
+        @cloaked
+        (concatClass
+          "small-action"
+          "onscreen-post"
+          (if @post.deleted "deleted")
+          this.additionalClasses
+        )
       }}
       aria-label={{i18n
         "share.post"
@@ -140,62 +143,65 @@ export default class PostSmallAction extends Component {
         username=@post.username
       }}
       role="region"
+      data-post-number={{@post.post_number}}
     >
-      <div class="topic-avatar">
-        {{icon this.icon}}
-      </div>
-      <div class="small-action-desc">
-        <div class="small-action-contents">
-          <UserAvatar
-            @ariaHidden={{false}}
-            @size="small"
-            @user={{@post.user}}
-          />
-          {{#if this.CustomComponent}}
-            <this.CustomComponent
-              @code={{this.code}}
-              @post={{this.post}}
-              @createdAt={{this.createdAt}}
-              @path={{this.path}}
-              @username={{this.username}}
-            />
-          {{else}}
-            <p>{{htmlSafe this.description}}</p>
-          {{/if}}
+      {{#unless @cloaked}}
+        <div class="topic-avatar">
+          {{icon this.icon}}
         </div>
-        <div class="small-action-buttons">
-          {{#if @post.canRecover}}
-            <DButton
-              class="btn-flat small-action-recover"
-              @icon="arrow-rotate-left"
-              @action={{@recoverPost}}
-              @title="post.controls.undelete"
+        <div class="small-action-desc">
+          <div class="small-action-contents">
+            <UserAvatar
+              @ariaHidden={{false}}
+              @size="small"
+              @user={{@post.user}}
             />
-          {{else if @post.can_edit}}
-            <DButton
-              class="btn-flat small-action-edit"
-              @icon="pencil"
-              @action={{@editPost}}
-              @title="post.controls.edit"
-            />
-          {{/if}}
-          {{#if @post.canDelete}}
-            <DButton
-              class="btn-flat btn-danger small-action-delete"
-              @icon="trash-can"
-              @action={{@deletePost}}
-              @title="post.controls.delete"
-            />
-          {{/if}}
+            {{#if this.CustomComponent}}
+              <this.CustomComponent
+                @code={{this.code}}
+                @post={{this.post}}
+                @createdAt={{this.createdAt}}
+                @path={{this.path}}
+                @username={{this.username}}
+              />
+            {{else}}
+              <p>{{htmlSafe this.description}}</p>
+            {{/if}}
+          </div>
+          <div class="small-action-buttons">
+            {{#if @post.canRecover}}
+              <DButton
+                class="btn-flat small-action-recover"
+                @icon="arrow-rotate-left"
+                @action={{@recoverPost}}
+                @title="post.controls.undelete"
+              />
+            {{else if @post.can_edit}}
+              <DButton
+                class="btn-flat small-action-edit"
+                @icon="pencil"
+                @action={{@editPost}}
+                @title="post.controls.edit"
+              />
+            {{/if}}
+            {{#if @post.canDelete}}
+              <DButton
+                class="btn-flat btn-danger small-action-delete"
+                @icon="trash-can"
+                @action={{@deletePost}}
+                @title="post.controls.delete"
+              />
+            {{/if}}
+          </div>
+          {{#unless this.CustomComponent}}
+            {{#if @post.cooked}}
+              <div class="small-action-custom-message">
+                <PostCookedHtml @post={{@post}} />
+              </div>
+            {{/if}}
+          {{/unless}}
         </div>
-        {{#unless this.CustomComponent}}
-          {{#if @post.cooked}}
-            <div class="small-action-custom-message">
-              <PostCookedHtml @post={{@post}} />
-            </div>
-          {{/if}}
-        {{/unless}}
-      </div>
+      {{/unless}}
     </article>
   </template>
 }
