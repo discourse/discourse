@@ -418,8 +418,8 @@ importers:
         specifier: ^4.1.0
         version: 4.1.0(@embroider/core@3.5.5(@glint/template@1.4.1-unstable.34c4510))(webpack@5.99.9(@swc/core@1.11.29)(esbuild@0.25.5))
       '@floating-ui/dom':
-        specifier: ^1.7.0
-        version: 1.7.0
+        specifier: ^1.7.1
+        version: 1.7.1
       '@glimmer/component':
         specifier: ^1.1.2
         version: 1.1.2(@babel/core@7.27.4)
@@ -770,8 +770,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0(@glint/template@1.4.1-unstable.34c4510)(ember-source@5.12.0(patch_hash=xx7mvsb7nmshqkkqhmf45r3hse)(@glimmer/component@1.1.2(@babel/core@7.27.4))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5)(webpack@5.99.9(@swc/core@1.11.29)(esbuild@0.25.5)))
       '@floating-ui/dom':
-        specifier: ^1.7.0
-        version: 1.7.0
+        specifier: ^1.7.1
+        version: 1.7.1
       ember-auto-import:
         specifier: ^2.10.0
         version: 2.10.0(@glint/template@1.4.1-unstable.34c4510)(webpack@5.99.9(@swc/core@1.11.29)(esbuild@0.25.5))
@@ -2084,11 +2084,11 @@ packages:
     resolution: {integrity: sha512-U9wpuSrJC93jZBxx/Qq2wPjCuYISBueyVUGK7qqdmj7r/nxaxwW8AQDCLeRO7wZnjj94sh3p246cAYjUKuqgfg==}
     engines: {node: '>=18.0.0', npm: '>=9.0.0'}
 
-  '@floating-ui/core@1.7.0':
-    resolution: {integrity: sha512-FRdBLykrPPA6P76GGGqlex/e7fbe0F1ykgxHYNXQsH/iTEtjMj/f9bpY5oQqbjt5VgZvgz/uKXbGuROijh3VLA==}
+  '@floating-ui/core@1.7.1':
+    resolution: {integrity: sha512-azI0DrjMMfIug/ExbBaeDVJXcY0a7EPvPjb2xAJPa4HeimBX+Z18HK8QQR3jb6356SnDDdxx+hinMLcJEDdOjw==}
 
-  '@floating-ui/dom@1.7.0':
-    resolution: {integrity: sha512-lGTor4VlXcesUMh1cupTUTDoCxMb0V6bm3CnxHzQcw8Eaf1jQbgQX4i02fYgT0vJ82tb5MZ4CZk1LRGkktJCzg==}
+  '@floating-ui/dom@1.7.1':
+    resolution: {integrity: sha512-cwsmW/zyw5ltYTUeeYJ60CnQuPqmGwuGVhG9w0PRaRKkAyi38BT5CKrpIbb+jtahSwUl04cWzSx9ZOIxeS6RsQ==}
 
   '@floating-ui/utils@0.2.9':
     resolution: {integrity: sha512-MDWhGtE+eHw5JW7lq4qhc5yRLS11ERl1c7Z6Xd0a58DozHES6EnNNwUWbMiG4J9Cgj053Bhk8zvlhFYKVhULwg==}
@@ -10126,13 +10126,13 @@ snapshots:
 
   '@faker-js/faker@9.8.0': {}
 
-  '@floating-ui/core@1.7.0':
+  '@floating-ui/core@1.7.1':
     dependencies:
       '@floating-ui/utils': 0.2.9
 
-  '@floating-ui/dom@1.7.0':
+  '@floating-ui/dom@1.7.1':
     dependencies:
-      '@floating-ui/core': 1.7.0
+      '@floating-ui/core': 1.7.1
       '@floating-ui/utils': 0.2.9
 
   '@floating-ui/utils@0.2.9': {}
