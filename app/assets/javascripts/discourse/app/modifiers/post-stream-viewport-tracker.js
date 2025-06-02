@@ -6,7 +6,7 @@ import { bind } from "discourse/lib/decorators";
 import DiscourseURL from "discourse/lib/url";
 
 /**
- * PostStreamScrollTracker
+ * PostStreamViewportTracker
  * -----------------------
  *
  * This class implements a performance optimization system for the post stream by
@@ -72,7 +72,7 @@ export function preventCloaking(postId) {
   cloakingPrevented.add(postId);
 }
 
-export default class PostStreamScrollTracker {
+export default class PostStreamViewportTracker {
   /**
    * Reference to the bottom boundary element used for eyeline calculations
    * @type {HTMLElement}

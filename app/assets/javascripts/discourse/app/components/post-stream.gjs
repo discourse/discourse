@@ -11,7 +11,7 @@ import PostFilteredNotice from "discourse/components/post/filtered-notice";
 import { bind } from "discourse/lib/decorators";
 import offsetCalculator from "discourse/lib/offset-calculator";
 import { Placeholder } from "discourse/lib/posts-with-placeholders";
-import PostStreamScrollTracker from "discourse/modifiers/post-stream-scroll-tracker";
+import PostStreamViewportTracker from "discourse/modifiers/post-stream-viewport-tracker";
 import Post from "./post";
 import PostGap from "./post/gap";
 import PostPlaceholder from "./post/placeholder";
@@ -33,19 +33,19 @@ export default class PostStream extends Component {
   @tracked cloakAbove;
   @tracked cloakBelow;
 
-  scrollTracker;
+  viewportTracker;
 
   constructor() {
     super(...arguments);
 
-    this.scrollTracker = new PostStreamScrollTracker();
+    this.viewportTracker = new PostStreamViewportTracker();
   }
 
   willDestroy() {
     super.willDestroy(...arguments);
 
     // clear pending references in the observer
-    this.scrollTracker.destroy();
+    this.viewportTracker.destroy();
   }
 
   get gapsBefore() {
@@ -148,7 +148,7 @@ export default class PostStream extends Component {
       post,
       refresh: () => {
         const refreshedElem =
-          this.scrollTracker.postsOnScreen[post.post_number]?.element;
+          this.viewportTracker.postsOnScreen[post.post_number]?.element;
 
         if (!refreshedElem) {
           return;
@@ -202,7 +202,7 @@ export default class PostStream extends Component {
     <ConditionalLoadingSpinner @condition={{@postStream.loadingAbove}} />
     <div
       class="post-stream"
-      {{this.scrollTracker.setup
+      {{this.viewportTracker.setup
         currentPostChanged=@currentPostChanged
         currentPostScrolled=@currentPostScrolled
         headerOffset=this.header.headerOffset
@@ -240,7 +240,7 @@ export default class PostStream extends Component {
 
             {{#let
               (if post.isSmallAction PostSmallAction Post)
-              (this.scrollTracker.getCloakingData
+              (this.viewportTracker.getCloakingData
                 post above=this.cloakAbove below=this.cloakBelow
               )
               as |PostComponent cloakingData|
@@ -289,7 +289,7 @@ export default class PostStream extends Component {
                 @unhidePost={{fn @unhidePost post}}
                 @unlockPost={{fn @unlockPost post}}
                 @updateTopicPageQueryParams={{@updateTopicPageQueryParams}}
-                {{this.scrollTracker.registerPost post}}
+                {{this.viewportTracker.registerPost post}}
               />
             {{/let}}
 
@@ -316,7 +316,7 @@ export default class PostStream extends Component {
         {{else}}
           <div
             class="post-stream__bottom-boundary"
-            {{this.scrollTracker.registerBottomBoundary}}
+            {{this.viewportTracker.registerBottomBoundary}}
           ></div>
         {{/if}}
       {{/unless}}

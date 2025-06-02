@@ -134,7 +134,7 @@ import {
   addSaveableUserField,
   addSaveableUserOptionField,
 } from "discourse/models/user";
-import { preventCloaking } from "discourse/modifiers/post-stream-scroll-tracker";
+import { preventCloaking } from "discourse/modifiers/post-stream-viewport-tracker";
 import { setNewCategoryDefaultColors } from "discourse/routes/new-category";
 import { setNotificationsLimit } from "discourse/routes/user-notifications";
 import { addComposerSaveErrorCallback } from "discourse/services/composer";
