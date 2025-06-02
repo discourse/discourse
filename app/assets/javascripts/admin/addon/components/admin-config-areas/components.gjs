@@ -376,8 +376,8 @@ class ComponentRow extends Component {
 
   @action
   delete() {
-    return this.dialog.yesNoConfirm({
-      message: i18n(
+    return this.dialog.deleteConfirm({
+      title: i18n(
         "admin.config_areas.themes_and_components.components.delete_confirm",
         { name: this.args.component.name }
       ),
