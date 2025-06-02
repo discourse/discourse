@@ -142,7 +142,7 @@ RSpec.describe "Dismissing New", type: :system do
       expect(topic_list).to have_no_topics
     end
 
-    it "displays confirmation modal with preselected options" do
+    it "displays confirmation modal with replies preselected" do
       sign_in(user)
 
       visit("/new?subset=replies")
@@ -160,7 +160,7 @@ RSpec.describe "Dismissing New", type: :system do
       expect(topic_list).to have_no_topics
     end
 
-    it "displays confirmation modal with preselected options" do
+    it "displays confirmation modal with topics preselected" do
       sign_in(user)
 
       visit("/new?subset=topics")
