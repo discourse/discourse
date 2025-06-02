@@ -6715,6 +6715,7 @@ en:
           unsaved_colors:
             one: "You have %{count} unsaved color"
             other: "You have %{count} unsaved colors"
+          unsaved_colors_leave_route_confirmation: "You haven't saved your color palette changes yet. Are you sure you want to leave?"
           save_colors: "Save colors"
           discard_colors: "Discard"
           scss:

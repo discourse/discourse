@@ -6,6 +6,7 @@ describe "Admin Customize Themes", type: :system do
   fab!(:admin) { Fabricate(:admin, locale: "en") }
 
   let(:theme_page) { PageObjects::Pages::AdminCustomizeThemes.new }
+  let(:dialog) { PageObjects::Components::Dialog.new }
 
   before { sign_in(admin) }
 
@@ -240,6 +241,33 @@ describe "Admin Customize Themes", type: :system do
       expect(theme_page.header).to be_hidden
 
       expect(theme_page).to have_no_color_scheme_selector
+    end
+
+    it "shows a confirmation dialog when leaving the page with unsaved changes" do
+      theme_page.visit(theme.id)
+      theme_page.colors_tab.click
+
+      theme_page.color_palette_editor.change_color("primary", "#eeff80")
+
+      expect(theme_page.changes_banner).to be_visible
+
+      find("#site-logo").click
+
+      expect(dialog).to be_open
+      expect(page).to have_content(
+        I18n.t("admin_js.admin.customize.theme.unsaved_colors_leave_route_confirmation"),
+      )
+
+      dialog.click_no
+
+      expect(dialog).to be_closed
+      expect(page).to have_current_path("/admin/customize/themes/#{theme.id}/colors")
+
+      find("#site-logo").click
+      expect(dialog).to be_open
+
+      dialog.click_yes
+      expect(page).to have_current_path("/")
     end
   end
 end

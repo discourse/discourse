@@ -1,9 +1,12 @@
 import { action } from "@ember/object";
 import Route from "@ember/routing/route";
+import { service } from "@ember/service";
 import { scrollTop } from "discourse/lib/scroll-top";
 import { i18n } from "discourse-i18n";
 
 export default class AdminCustomizeThemesShowIndexRoute extends Route {
+  @service dialog;
+
   async model() {
     return this.modelFor("adminCustomizeThemesShow");
   }
