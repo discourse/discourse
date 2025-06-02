@@ -1514,7 +1514,8 @@ export default class ComposerService extends Service {
       isWarning: false,
       hasTargetGroups: opts.hasGroups,
       warningsDisabled: opts.warningsDisabled,
-      locale: opts.locale,
+      locale:
+        opts?.locale || opts?.post?.locale || this.siteSettings.default_locale,
     });
 
     if (!this.model.targetRecipients) {
