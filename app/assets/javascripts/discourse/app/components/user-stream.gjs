@@ -80,8 +80,8 @@ export default class UserStreamComponent extends Component {
 
   @action
   removeDraft(draft) {
-    this.dialog.yesNoConfirm({
-      message: i18n("drafts.remove_confirmation"),
+    this.dialog.deleteConfirm({
+      title: i18n("drafts.remove_confirmation"),
       didConfirm: async () => {
         try {
           await Draft.clear(draft.draft_key, draft.sequence);

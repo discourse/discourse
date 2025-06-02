@@ -49,8 +49,8 @@ export default class AdminConfigAreasUserFieldsList extends Component {
 
   @action
   destroyField(field) {
-    this.dialog.yesNoConfirm({
-      message: i18n("admin.user_fields.delete_confirm"),
+    this.dialog.deleteConfirm({
+      title: i18n("admin.user_fields.delete_confirm"),
       didConfirm: () => {
         this.#deleteField(field);
       },
