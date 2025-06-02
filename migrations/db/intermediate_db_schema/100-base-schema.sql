@@ -80,7 +80,7 @@ CREATE TABLE users
     approved                  BOOLEAN,
     approved_at               DATETIME,
     approved_by_id            NUMERIC,
-    created_at                DATETIME,
+    created_at                DATETIME  NOT NULL,
     date_of_birth             DATE,
     first_seen_at             DATETIME,
     flair_group_id            NUMERIC,
