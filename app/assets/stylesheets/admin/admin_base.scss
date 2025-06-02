@@ -4,16 +4,6 @@
 
 $mobile-breakpoint: 700px;
 
-:root {
-  --space-0: 0.125rem; // 2px
-  --space-1: 0.25rem; // 4px
-  --space-2: calc(0.25rem * 2);
-  --space-3: calc(0.25rem * 3);
-  --space-4: calc(0.25rem * 4);
-  --space-5: calc(0.25rem * 5);
-  --space-6: calc(0.25rem * 6);
-}
-
 // Common admin styles
 .admin-main-nav {
   display: inline-flex;

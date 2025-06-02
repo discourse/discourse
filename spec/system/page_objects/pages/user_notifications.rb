@@ -12,10 +12,6 @@ module PageObjects
         PageObjects::Components::SelectKit.new(".notifications-filter")
       end
 
-      def find_notification(notification)
-        find(".notification a[href='#{notification.url}']")
-      end
-
       def set_filter_value(value)
         filter_dropdown.select_row_by_value(value)
       end

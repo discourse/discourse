@@ -64,10 +64,12 @@ RSpec.describe FormTemplatesController do
       end
 
       context "when using tag groups in a form template" do
+        fab!(:admin)
         fab!(:tag1) { Fabricate(:tag, description: "Tag 1 custom Translation") }
         fab!(:tag2) { Fabricate(:tag, description: "Tag 2 custom Translation") }
         fab!(:tag3) { Fabricate(:tag) }
         fab!(:tag4) { Fabricate(:tag) }
+        fab!(:tag_synonym) { Fabricate(:tag, name: "discourse") }
 
         fab!(:tag_group1) { Fabricate(:tag_group, name: "tag_group1", tags: [tag1, tag3]) }
         fab!(:tag_group2) { Fabricate(:tag_group, name: "tag_group2", tags: [tag2, tag4]) }
@@ -100,6 +102,13 @@ RSpec.describe FormTemplatesController do
           )
         end
 
+        before do
+          sign_in(admin)
+          #Creates the synonym
+          post "/tag/#{tag1.name}/synonyms.json", params: { synonyms: [tag_synonym.name] }
+          sign_in(user)
+        end
+
         it "should return a single template with the correct data" do
           get "/form-templates/#{tag_groups_form_template.id}.json"
           expect(response.status).to eq(200)
@@ -121,6 +130,10 @@ RSpec.describe FormTemplatesController do
           expect(parsed_template[1]["attributes"]["tag_choices"]).to eq(
             { tag2.name => tag2.description },
           )
+
+          # It excludes synonyms
+          expect(parsed_template[0]["choices"].count).to eq(2)
+
           expect(parsed_template[0]["choices"]).to eq([tag1.name, tag3.name])
           expect(parsed_template[1]["choices"]).to eq([tag2.name, tag4.name])
         end
