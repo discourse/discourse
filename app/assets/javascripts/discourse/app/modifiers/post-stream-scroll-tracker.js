@@ -44,7 +44,7 @@ const SCROLL_BATCH_INTERVAL_MS = 10;
 const SLACK_FACTOR = 1;
 
 // Set to true to visualize the eyeline position with a red line
-const DEBUG_EYELINE = true;
+const DEBUG_EYELINE = false;
 
 // Global flag to enable/disable the cloaking mechanism
 let cloakingEnabled = true;
