@@ -32,7 +32,6 @@ export default class PostStream extends Component {
 
   @tracked cloakAbove;
   @tracked cloakBelow;
-  @tracked cloakOffset;
 
   scrollTracker;
 
