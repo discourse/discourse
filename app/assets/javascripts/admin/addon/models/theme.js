@@ -186,7 +186,7 @@ class Theme extends RestModel {
   }
 
   async changeColors() {
-    const payload = [];
+    const colors = [];
 
     for (const color of this.colorPalette.colors) {
       const colorPayload = {
@@ -195,12 +195,12 @@ class Theme extends RestModel {
         dark_hex: color.dark_hex,
       };
 
-      payload.push(colorPayload);
+      colors.push(colorPayload);
     }
 
     const paletteData = await ajax(`/admin/themes/${this.id}/change-colors`, {
       type: "PUT",
-      data: JSON.stringify({ colors: payload }),
+      data: JSON.stringify({ colors }),
       contentType: "application/json",
     });
     this.owned_color_palette = paletteData;

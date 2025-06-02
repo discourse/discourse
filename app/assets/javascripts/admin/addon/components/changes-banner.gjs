@@ -22,11 +22,6 @@ export default class ChangesBanner extends Component {
   }
 
   @action
-  discard() {
-    this.args.discard();
-  }
-
-  @action
   setupResizeObserver(element) {
     const container = document.getElementById("main-container");
     this._resizer = () => this.positionBanner(container, element);
@@ -61,7 +56,7 @@ export default class ChangesBanner extends Component {
       <div class="controls">
         <DButton
           class="btn-secondary btn-small"
-          @action={{this.discard}}
+          @action={{@discard}}
           @disabled={{this.isSaving}}
           @translatedLabel={{@discardLabel}}
         />
