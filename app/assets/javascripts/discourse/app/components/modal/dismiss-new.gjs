@@ -107,22 +107,18 @@ export default class DismissNew extends Component {
     >
       <:body>
         <p>
-          {{#if this.showDismissNewTopics}}
-            <PreferenceCheckbox
-              @labelKey={{this.dismissNewTopicsLabel}}
-              @labelCount={{this.countNewTopics}}
-              @checked={{this.dismissTopics}}
-              class="dismiss-topics"
-            />
-          {{/if}}
-          {{#if this.showDismissNewReplies}}
-            <PreferenceCheckbox
-              @labelKey={{this.dismissNewRepliesLabel}}
-              @labelCount={{this.countNewReplies}}
-              @checked={{this.dismissPosts}}
-              class="dismiss-posts"
-            />
-          {{/if}}
+          <PreferenceCheckbox
+            @labelKey={{this.dismissNewTopicsLabel}}
+            @labelCount={{this.countNewTopics}}
+            @checked={{this.dismissTopics}}
+            class="dismiss-topics"
+          />
+          <PreferenceCheckbox
+            @labelKey={{this.dismissNewRepliesLabel}}
+            @labelCount={{this.countNewReplies}}
+            @checked={{this.dismissPosts}}
+            class="dismiss-posts"
+          />
           <PreferenceCheckbox
             @labelKey="topics.bulk.dismiss_new_modal.untrack"
             @checked={{this.untrack}}
