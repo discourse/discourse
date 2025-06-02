@@ -1,6 +1,5 @@
 import { LinkTo } from "@ember/routing";
 import RouteTemplate from "ember-route-template";
-import { not, or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import DPageHeader from "discourse/components/d-page-header";
 import NavItem from "discourse/components/nav-item";
@@ -17,31 +16,24 @@ import { i18n } from "discourse-i18n";
 export default RouteTemplate(
   <template>
     <div class="show-current-style">
-      {{#if
-        (or
-          @controller.model.component
-          (not @controller.siteSettings.use_overhauled_theme_color_palette)
-        )
-      }}
-        <div class="back-to-themes-and-components">
-          <LinkTo
-            @route={{if
+      <div class="back-to-themes-and-components">
+        <LinkTo
+          @route={{if
+            @controller.model.component
+            "adminConfig.customize.components"
+            "adminConfig.customize.themes"
+          }}
+        >
+          {{icon "angle-left"}}
+          {{i18n
+            (if
               @controller.model.component
-              "adminConfig.customize.components"
-              "adminConfig.customize.themes"
-            }}
-          >
-            {{icon "angle-left"}}
-            {{i18n
-              (if
-                @controller.model.component
-                "admin.config_areas.themes_and_components.components.back"
-                "admin.config_areas.themes_and_components.themes.back"
-              )
-            }}
-          </LinkTo>
-        </div>
-      {{/if}}
+              "admin.config_areas.themes_and_components.components.back"
+              "admin.config_areas.themes_and_components.themes.back"
+            )
+          }}
+        </LinkTo>
+      </div>
 
       <span>
         <PluginOutlet
