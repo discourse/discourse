@@ -48,7 +48,7 @@ module Migrations::Database::IntermediateDB
       approved: nil,
       approved_at: nil,
       approved_by_id: nil,
-      created_at: nil,
+      created_at:,
       date_of_birth: nil,
       first_seen_at: nil,
       flair_group_id: nil,

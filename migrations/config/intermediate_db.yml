@@ -19,6 +19,9 @@ schema:
       primary_key_column_names: [ "user_id" ]
     users:
       columns:
+        modify:
+          - name: "created_at"
+            nullable: false
         add:
           - name: "original_username"
             datatype: text
