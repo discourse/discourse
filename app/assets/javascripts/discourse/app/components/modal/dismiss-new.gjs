@@ -6,9 +6,6 @@ import DModal from "discourse/components/d-modal";
 import PreferenceCheckbox from "discourse/components/preference-checkbox";
 import { i18n } from "discourse-i18n";
 
-const REPLIES_SUBSET = "replies";
-const TOPICS_SUBSET = "topics";
-
 export default class DismissNew extends Component {
   @tracked untrack = false;
   @tracked dismissTopics = true;
