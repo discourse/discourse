@@ -54,7 +54,7 @@
     "prosemirror-schema-list": "^1.5.1",
     "prosemirror-state": "^1.4.3",
     "prosemirror-transform": "^1.10.4",
-    "prosemirror-view": "^1.39.3"
+    "prosemirror-view": "^1.40.0"
   },
   "devDependencies": {
     "@babel/core": "^7.27.4",
