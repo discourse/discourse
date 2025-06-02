@@ -113,8 +113,8 @@ importers:
         specifier: 3.5.3
         version: 3.5.3
       puppeteer-core:
-        specifier: ^24.9.0
-        version: 24.9.0
+        specifier: ^24.10.0
+        version: 24.10.0
       squoosh:
         specifier: https://codeload.github.com/discourse/squoosh/tar.gz/dc9649d
         version: https://codeload.github.com/discourse/squoosh/tar.gz/dc9649d
@@ -2684,6 +2684,9 @@ packages:
   '@types/node@22.15.21':
     resolution: {integrity: sha512-EV/37Td6c+MgKAbkcLG6vqZ2zEYHD7bvSrzqqs2RIhbA6w3x+Dqz8MZM3sP6kGTeLrdoOgKZe+Xja7tUB2DNkQ==}
 
+  '@types/node@22.15.29':
+    resolution: {integrity: sha512-LNdjOkUDlU1RZb8e1kOIUpN1qQUlzGkEtbVNo53vbrwDg5om6oduhm4SiUaPW5ASTXhAiP0jInWG8Qx9fVlOeQ==}
+
   '@types/qs@6.9.18':
     resolution: {integrity: sha512-kK7dgTYDyGqS+e2Q4aK9X3D7q234CIZ1Bv0q/7Z5IwRDoADNU81xXJK/YVyLbLTZCoIwUoDoffFeF+p/eIklAA==}
 
@@ -4195,8 +4198,8 @@ packages:
     resolution: {integrity: sha512-qE3Veg1YXzGHQhlA6jzebZN2qVf6NX+A7m7qlhCGG30dJixrAQhYOsJjsnBjJkCSmuOPpCk30145fr8FV0bzog==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
 
-  devtools-protocol@0.0.1439962:
-    resolution: {integrity: sha512-jJF48UdryzKiWhJ1bLKr7BFWUQCEIT5uCNbDLqkQJBtkFxYzILJH44WN0PDKMIlGDN7Utb8vyUY85C3w4R/t2g==}
+  devtools-protocol@0.0.1452169:
+    resolution: {integrity: sha512-FOFDVMGrAUNp0dDKsAU1TorWJUx2JOU1k9xdgBKKJF3IBh/Uhl2yswG5r3TEAOrCiGY2QRp1e6LVDQrCsTKO4g==}
 
   diff@7.0.0:
     resolution: {integrity: sha512-PJWHUb1RFevKCwaFA9RlG5tCd+FO5iRh9A8HEtkmBH2Li03iJriB6m6JIN4rGz3K3JLawI7/veA1xzRKP6ISBw==}
@@ -7297,8 +7300,8 @@ packages:
     resolution: {integrity: sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==}
     engines: {node: '>=6'}
 
-  puppeteer-core@24.9.0:
-    resolution: {integrity: sha512-HFdCeH/wx6QPz8EncafbCqJBqaCG1ENW75xg3cLFMRUoqZDgByT6HSueiumetT2uClZxwqj0qS4qMVZwLHRHHw==}
+  puppeteer-core@24.10.0:
+    resolution: {integrity: sha512-xX0QJRc8t19iAwRDsAOR38Q/Zx/W6WVzJCEhKCAwp2XMsaWqfNtQ+rBfQW9PlF+Op24d7c8Zlgq9YNmbnA7hdQ==}
     engines: {node: '>=18'}
 
   qs@6.13.0:
@@ -8132,8 +8135,8 @@ packages:
     resolution: {integrity: sha512-Re10+NauLTMCudc7T5WLFLAwDhQ0JWdrMK+9B2M8zR5hRExKmsRDCBA7/aV/pNJFltmBFO5BAMlQFi/vq3nKOg==}
     engines: {node: '>=6'}
 
-  tar-fs@3.0.8:
-    resolution: {integrity: sha512-ZoROL70jptorGAlgAYiLoBLItEKw/fUxg9BSYK/dF/GAGYFJOJJJMvjPAKDJraCXFwadD456FCuvLWgfhMsPwg==}
+  tar-fs@3.0.9:
+    resolution: {integrity: sha512-XF4w9Xp+ZQgifKakjZYmFdkLoSWd34VGKcsTCwlNWM7QG3ZbaxnTsaBwnjFZqHRf/rROxaR8rXnbtwdvaDI+lA==}
 
   tar-stream@3.1.7:
     resolution: {integrity: sha512-qJj60CXt7IU1Ffyc3NJMjh6EkuCFej46zUqJ4J7pqYlThyd9bO0XBTmcOIhSzZJVWfsLks0+nle/j538YAW9RQ==}
@@ -8839,6 +8842,9 @@ packages:
   yoctocolors-cjs@2.1.2:
     resolution: {integrity: sha512-cYVsTjKl8b+FrnidjibDWskAv7UKOfcwaVZdp/it9n1s9fU3IkgDbhdIRKCW4JDsAlECJY0ytoVPT3sK6kideA==}
     engines: {node: '>=18'}
+
+  zod@3.25.48:
+    resolution: {integrity: sha512-0X1mz8FtgEIvaxGjdIImYpZEaZMrund9pGXm3M6vM7Reba0e2eI71KPjSCGXBfwKDPwPoywf6waUKc3/tFvX2Q==}
 
   zod@3.25.7:
     resolution: {integrity: sha512-YGdT1cVRmKkOg6Sq7vY7IkxdphySKnXhaUmFI4r4FcuFVNgpCb9tZfNwXbT6BPjD5oz0nubFsoo9pIqKrDcCvg==}
@@ -10693,7 +10699,7 @@ snapshots:
       progress: 2.0.3
       proxy-agent: 6.5.0
       semver: 7.7.2
-      tar-fs: 3.0.8
+      tar-fs: 3.0.9
       yargs: 17.7.2
     transitivePeerDependencies:
       - bare-buffer
@@ -10924,6 +10930,11 @@ snapshots:
     dependencies:
       undici-types: 6.21.0
 
+  '@types/node@22.15.29':
+    dependencies:
+      undici-types: 6.21.0
+    optional: true
+
   '@types/qs@6.9.18': {}
 
   '@types/qunit@2.19.12': {}
@@ -10966,7 +10977,7 @@ snapshots:
 
   '@types/yauzl@2.10.3':
     dependencies:
-      '@types/node': 22.15.21
+      '@types/node': 22.15.29
     optional: true
 
   '@uppy/aws-s3@4.1.0(@uppy/core@4.2.2)':
@@ -12199,11 +12210,11 @@ snapshots:
 
   chrome-trace-event@1.0.4: {}
 
-  chromium-bidi@5.1.0(devtools-protocol@0.0.1439962):
+  chromium-bidi@5.1.0(devtools-protocol@0.0.1452169):
     dependencies:
-      devtools-protocol: 0.0.1439962
+      devtools-protocol: 0.0.1452169
       mitt: 3.0.1
-      zod: 3.25.7
+      zod: 3.25.48
 
   ci-info@4.2.0: {}
 
@@ -12629,7 +12640,7 @@ snapshots:
 
   detect-newline@4.0.1: {}
 
-  devtools-protocol@0.0.1439962: {}
+  devtools-protocol@0.0.1452169: {}
 
   diff@7.0.0: {}
 
@@ -16639,12 +16650,12 @@ snapshots:
 
   punycode@2.3.1: {}
 
-  puppeteer-core@24.9.0:
+  puppeteer-core@24.10.0:
     dependencies:
       '@puppeteer/browsers': 2.10.5
-      chromium-bidi: 5.1.0(devtools-protocol@0.0.1439962)
+      chromium-bidi: 5.1.0(devtools-protocol@0.0.1452169)
       debug: 4.4.1(supports-color@8.1.1)
-      devtools-protocol: 0.0.1439962
+      devtools-protocol: 0.0.1452169
       typed-query-selector: 2.12.0
       ws: 8.18.2
     transitivePeerDependencies:
@@ -17682,7 +17693,7 @@ snapshots:
 
   tapable@2.2.2: {}
 
-  tar-fs@3.0.8:
+  tar-fs@3.0.9:
     dependencies:
       pump: 3.0.2
       tar-stream: 3.1.7
@@ -18531,5 +18542,7 @@ snapshots:
   yocto-queue@1.2.1: {}
 
   yoctocolors-cjs@2.1.2: {}
+
+  zod@3.25.48: {}
 
   zod@3.25.7: {}
