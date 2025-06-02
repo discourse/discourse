@@ -364,7 +364,7 @@ GEM
     optimist (3.2.1)
     ostruct (0.6.1)
     parallel (1.27.0)
-    parallel_tests (5.2.0)
+    parallel_tests (5.3.0)
       parallel
     parser (3.3.8.0)
       ast (~> 2.4.1)
@@ -981,7 +981,7 @@ CHECKSUMS
   optimist (3.2.1) sha256=8cf8a0fd69f3aa24ab48885d3a666717c27bc3d9edd6e976e18b9d771e72e34e
   ostruct (0.6.1) sha256=09a3fb7ecc1fa4039f25418cc05ae9c82bd520472c5c6a6f515f03e4988cb817
   parallel (1.27.0) sha256=4ac151e1806b755fb4e2dc2332cbf0e54f2e24ba821ff2d3dcf86bf6dc4ae130
-  parallel_tests (5.2.0) sha256=26c4c333207e361a1e8b9f12831f353e4018fdca7292c4c330c10fea5fc2f08f
+  parallel_tests (5.3.0) sha256=af1af58044dd69987c5af199fcace01166a6238a11f36ce88ec173d1505a04ef
   parser (3.3.8.0) sha256=2476364142b307fa5a1b1ece44f260728be23858a9c71078e956131a75453c45
   pg (1.5.9) sha256=761efbdf73b66516f0c26fcbe6515dc7500c3f0aa1a1b853feae245433c64fdc
   playwright-ruby-client (1.52.0) sha256=4a413f4176fcd794251909780d6b50a9b2791e59160cdc893dac1409459e9c84
