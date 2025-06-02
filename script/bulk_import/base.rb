@@ -1243,7 +1243,10 @@ class BulkImport::Base
 
     group[:created_at] ||= NOW
     group[:updated_at] ||= group[:created_at]
-    group[:assignable_level] ||= Group::ALIAS_LEVELS[:nobody] if @assign_plugin_enabled
+    # Default assignable_level if not provided by the source data.
+    # The 'assignable_level' attribute itself is only included in the import
+    # if the DiscourseAssign plugin is active (see GROUP_COLUMNS).
+    group[:assignable_level] ||= Group::ALIAS_LEVELS[:nobody]
     group
   end
 

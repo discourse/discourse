@@ -476,7 +476,7 @@ class BulkImport::Generic < BulkImport::Base
         mentionable_level: row["mentionable_level"],
         messageable_level: row["messageable_level"],
       }
-      group_data[:assignable_level] = row["assignable_level"] if defined?(::DiscourseAssign)
+      group_data[:assignable_level] = row["assignable_level"]
       group_data
     end
 
