@@ -165,7 +165,7 @@ RSpec.describe "Dismissing New", type: :system do
 
       visit("/new?subset=topics")
 
-      expect(topic_list).to have_topic(post1.topic)
+      expect(topic_list).to have_topic(new_topic)
 
       topic_list_controls.dismiss_new
 
