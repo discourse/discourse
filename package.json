@@ -6,7 +6,7 @@
   "license": "GPL-2.0-only",
   "devDependencies": {
     "@babel/plugin-proposal-decorators": "^7.27.1",
-    "@discourse/lint-configs": "^2.19.1",
+    "@discourse/lint-configs": "^2.21.0",
     "@discourse/moment-timezone-names-translations": "^1.0.0",
     "@fortawesome/fontawesome-free": "6.7.2",
     "@glint/core": "1.4.1-unstable.34c4510",
@@ -21,7 +21,7 @@
     "chrome-remote-interface": "^0.33.3",
     "concurrently": "^9.1.2",
     "ember-template-lint": "7.7.0",
-    "esbuild": "^0.25.4",
+    "esbuild": "^0.25.5",
     "eslint": "9.27.0",
     "jsdoc": "^4.0.4",
     "lefthook": "^1.11.13",
@@ -36,7 +36,7 @@
     "puppeteer-core": "^24.9.0",
     "squoosh": "https://codeload.github.com/discourse/squoosh/tar.gz/dc9649d",
     "stylelint": "16.19.1",
-    "terser": "^5.39.2",
+    "terser": "^5.40.0",
     "typescript": "5.6.x"
   },
   "scripts": {

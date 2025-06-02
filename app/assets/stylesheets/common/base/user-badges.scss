@@ -135,6 +135,7 @@
   background-color: var(--primary-very-low);
   border: 1px solid var(--primary-low);
   position: relative;
+  border-radius: var(--d-border-radius);
 
   .check-display {
     position: absolute;

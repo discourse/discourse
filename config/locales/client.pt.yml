@@ -385,7 +385,7 @@ pt:
       one: "Ver %{count} tópico novo"
       other: "Ver %{count} tópicos novos"
     preview: "pré-visualizar"
-    cancel: "cancelar"
+    cancel: "Cancelar"
     deleting: "Apagando..."
     save: "Guardar alterações"
     saving: "Guardando..."
@@ -3608,13 +3608,9 @@ pt:
     powered_by_discourse: "Alimentado pelo Discourse"
     discovery:
       headings:
+        multi_tag:
+          default: "Tópicos etiquetados %{tags}"
         categories: "Todas as categorias"
-        filter_labels:
-          latest: "Recente"
-          top: "Os Melhores"
-          new: "Novo"
-          unread: "Não Lido"
-          unseen: "Por ler"
   admin_js:
     settings: "Configurações"
     admin:

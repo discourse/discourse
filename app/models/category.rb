@@ -18,6 +18,7 @@ class Category < ActiveRecord::Base
   include HasDestroyedWebHook
 
   SLUG_REF_SEPARATOR = ":"
+  DEFAULT_TEXT_COLORS = %w[FFFFFF 000000]
 
   belongs_to :topic
   belongs_to :topic_only_relative_url,
@@ -1388,6 +1389,7 @@ end
 #  style_type                                :integer          default("square"), not null
 #  emoji                                     :string
 #  icon                                      :string
+#  locale                                    :string(20)
 #
 # Indexes
 #

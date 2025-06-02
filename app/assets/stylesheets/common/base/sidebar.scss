@@ -3,6 +3,7 @@
 :root {
   --d-sidebar-width: #{$d-sidebar-width};
   --d-sidebar-row-horizontal-padding: 1rem;
+  --d-sidebar-vertical-gap: 0.125rem;
 
   // ems so height is variable along with font size
   --d-sidebar-row-height: 2.2em;
@@ -426,6 +427,7 @@
     box-sizing: border-box;
     margin-top: 0.5em;
     margin-bottom: 0.5em;
+    border-radius: var(--d-input-border-radius);
   }
 
   &__icon.btn.btn-transparent {

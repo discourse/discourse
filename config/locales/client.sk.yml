@@ -600,7 +600,7 @@ sk:
       many: "Pozrieť %{count} nových tém."
       other: "Pozrieť %{count} nových tém."
     preview: "náhľad"
-    cancel: "zrušiť"
+    cancel: "Zrušiť"
     deleting: "Odstraňujem…"
     save: "Uložiť zmeny"
     saving: "Ukladanie…"
@@ -2686,6 +2686,8 @@ sk:
         few: "%{count} tém v tejto kategórii"
         many: "%{count} tém v tejto kategórii"
         other: "%{count} témy v tejto kategórii"
+    timezone_input:
+      ambiguous_ist: "IST je nejednoznačné, vyberte konkrétne časové pásmo (napr.: Ázia/Kolkata)"
     select_kit:
       delete_item: "Zmazaných %{name}"
       filter_by: "Filtrovanie podľa: %{name}"
@@ -3312,7 +3314,7 @@ sk:
         user_requires_approval: "%{username} vyžaduje schválenie"
         default_item: "revidovateľná položka #%{reviewable_id}"
     topics:
-      new_messages_marker: "posledná návševa"
+      new_messages_marker: "posledná návšteva"
       bulk:
         confirm: "Potvrďte"
         select_all: "Vyber všetko"
@@ -5274,6 +5276,11 @@ sk:
         forum:
           label: fórum
       back_to_forum: "Späť na fórum"
+      filter_links: "Filtrovanie odkazov..."
+      clear_filter: "Vymazať filter"
+      no_results:
+        title: "Žiadne výsledky"
+        description_admin_search: "Nenašli sme nič zodpovedajúce výrazu „%{filter}“."
       collapse_all_sections: "Zbaliť všetky sekcie"
       expand_all_sections: "Rozbaľte všetky sekcie"
       search: "Hľadať"
@@ -5395,42 +5402,68 @@ sk:
     discovery:
       headings:
         all:
-          default: "Všetky témy %{filter}"
+          latest: "Všetky najnovšie témy"
+          top: "Všetky najobľúbenejšie témy"
+          new: "Všetky nové témy"
+          unread: "Všetky neprečítané témy"
+          unseen: "Všetky nevidené témy"
+          hot: "Všetky horúce témy"
           posted: "Všetky témy, ktoré ste zverejnili v"
           bookmarks: "Všetky témy, ktoré ste si pridali do záložiek"
+          default: "Všetky témy %{filter}"
         category:
-          default: "%{filter} tém v %{category}"
+          latest: "Najnovšie témy v %{category}"
+          top: "Top témy na %{category}"
+          new: "Nové témy v %{category}"
+          unread: "Neprečítané témy v %{category}"
+          unseen: "Nezobrazené témy v %{category}"
+          hot: "Horúce témy v %{category}"
           posted: "Témy v %{category} , v ktorých ste uverejnili príspevok"
           bookmarks: "Témy na %{category} , ktoré ste si pridali do záložiek"
-        no_tags:
-          all_default: "Všetky témy bez značiek"
-          category_default: "%{filter} tém v %{category} bez značiek"
-          all:
-            posted: "Všetky témy bez značiek, ktoré ste zverejnili"
-            bookmarks: "Všetky témy bez značiek, ktoré ste si pridali do záložiek"
-          category:
-            posted: "Témy v %{category} bez štítkov, ktoré ste uverejnili"
-            bookmarks: "Témy v %{category} bez značiek, ktoré ste si pridali medzi záložky"
+          default: "%{filter} tém v %{category}"
         single_tag:
-          default: "%{filter} témy označené %{tag}"
-          posted: "Témy označené %{tag} , v ktorých ste uverejnili príspevok"
+          latest: "Najnovšie témy označené %{tag}"
+          top: "Top témy označené %{tag}"
+          new: "Nové témy označené %{tag}"
+          unread: "Neprečítané témy označené %{tag}"
+          unseen: "Nezobrazené témy označené %{tag}"
+          hot: "Horúce témy označené %{tag}"
+          posted: "Témy označené %{tag} , ktoré ste zverejnili"
           bookmarks: "Témy označené %{tag} , ktoré ste si pridali do záložiek"
+          default: "%{filter} tém označených %{tag}"
         multi_tag:
-          default: "%{filter} témy označené %{tags}"
-          posted: "Témy označené %{tags} , v ktorých ste uverejnili príspevok"
-          bookmarks: "Témy označené %{tags} , ktoré ste si pridali do záložiek"
+          default: "Témy označené %{tags}"
         category_tag:
-          default: "%{filter} témy v %{category} označené tagom %{tag}"
+          latest: "Najnovšie témy v %{category} označené %{tag}"
+          top: "Najčastejšie témy v %{category} označené %{tag}"
+          new: "Nové témy na %{category} označené %{tag}"
+          unread: "Neprečítané témy v %{category} označené %{tag}"
+          unseen: "Nezobrazené témy v %{category} označené %{tag}"
+          hot: "Horúce témy v %{category} označené %{tag}"
           posted: "Témy v %{category} označené %{tag} , v ktorých ste uverejnili"
           bookmarks: "Témy v %{category} označené %{tag} , ktoré ste si pridali medzi záložky"
+          default: "%{filter} tém v %{category} označených %{tag}"
+        no_tags:
+          all:
+            latest: "Najnovšie témy bez tagov"
+            top: "Top témy bez značiek"
+            new: "Nové témy bez značiek"
+            unread: "Neprečítané témy bez značiek"
+            unseen: "Nevidené témy bez značiek"
+            hot: "Horúce témy bez značiek"
+            posted: "Témy bez značiek, ktoré ste zverejnili"
+            bookmarks: "Témy bez záložiek, ktoré ste si pridali"
+            default: "Témy bez značiek"
+          category:
+            latest: "Najnovšie témy v %{category} bez značiek"
+            top: "Top témy v %{category} bez značiek"
+            new: "Nové témy v %{category} bez značiek"
+            unread: "Neprečítané témy v %{category} bez značiek"
+            unseen: "Nevidené témy na stránke %{category} bez značiek"
+            hot: "Horúce témy v %{category} bez značiek"
+            posted: "Témy v %{category} bez značiek, ktoré ste zverejnili"
+            default: "%{filter} tém v %{category} bez značiek"
         categories: "Všetky kategórie"
-        filter_labels:
-          latest: "Najnovšie"
-          top: "Najlepšie"
-          new: "Nový"
-          unread: "Neprečítané"
-          hot: "Horúce"
-          unseen: "Nevidené"
   admin_js:
     type_to_filter: "Filtrovať..."
     settings: "Nastavenia"
@@ -5694,7 +5727,7 @@ sk:
           header_description: "Komponenty sú menšie úpravy, ktoré možno pridať do tém s cieľom zmeniť konkrétne prvky štýlu dizajnu fóra"
           keywords: "téma|komponent|rozšírenie"
         themes_and_components:
-          title: "Témy a komponenty"
+          title: "a"
           header_description: "Prispôsobte si svoju stránku Discourse pomocou tém a komponentov podľa svojich potrieb"
           keywords: "téma|komponent|rozšírenie|prispôsobiť"
         site_admin:
@@ -6475,8 +6508,6 @@ sk:
           more_options:
             title: "Ďalšie možnosti"
         themes_and_components:
-          title: "Témy a komponenty"
-          description: "Prispôsobte si svoju stránku Discourse pomocou tém a komponentov podľa svojich potrieb."
           breadcrumb_title: "Upraviť"
           install: "Inštalácia"
           themes:

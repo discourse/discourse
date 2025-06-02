@@ -315,16 +315,6 @@ zh_TW:
   education:
     until_posts:
       other: "%{count} 篇貼文"
-    "new-reply": |
-      歡迎來到 %{site_name} &mdash; — **感謝你的參與！**
-
-      - 務必尊重所有社群成員。
-
-      - 您的回應是否改善了討論？
-
-      - 歡迎有建設性的評論，但論述時請針對*觀點*，而別針對個人。
-
-      [請查看我們的社群守則](%{base_path}/guidelines)以進一步了解。此訊息面板只會在您發表 %{education_posts_text} 時顯示。
     avatar: |
       ### 來個大頭貼吧！
 
@@ -342,12 +332,6 @@ zh_TW:
       你可以編輯你先前的回應訊息，選擇字句後點選 <b>引用</b> 來回應。
 
       對於大家而言，閱讀包含較多回覆的少量貼文，會比閱讀多篇瑣碎貼文更為輕鬆。
-    too_many_replies: |
-      ### 你的回應數量已經達到本主題的回覆上限
-
-      非常抱歉，新使用者有只能回覆同一話題 %{newuser_max_replies_per_topic} 次的臨時限制。
-
-      除了繼續回覆外，請考慮修改你先前的回應，或參與其他話題。
     reviving_old_topic: |
       ### 重新開啟這個話題？
 
@@ -1313,7 +1297,6 @@ zh_TW:
     min_title_similar_length: "開始檢查相似主題的貼文標題的最少長度。"
     category_colors: "設定分類顏色的十六進制色彩值列表。"
     dark_mode_none: "無"
-    max_similar_results: "當使用者撰寫新主題時，顯示多少類似主題給使用者。比較根據標題和內容進行。"
     title_prettify: "防止常見標題裡的錯別字和錯誤，包括全部大寫，首字小寫，多個！和？，結尾多餘的. 等等。"
     topic_views_heat_low: "多少次瀏覽後，該視圖將稍稍高亮。"
     topic_views_heat_medium: "多少次瀏覽後，該視圖將明顯高亮。"

@@ -445,30 +445,8 @@ id:
   education:
     until_posts:
       other: "%{count} post"
-    "new-topic": |
-      Selamat datang di %{site_name} &mdash; **terima kasih telah memulai percakapan baru!**
-
-      - Apakah judul terdengar menarik jika Anda membacanya keras-keras? Apakah ini ringkasan yang bagus?
-
-      - Siapa yang akan tertarik dengan ini? Mengapa itu penting? Tanggapan seperti apa yang Anda inginkan?
-
-      - Sertakan kata-kata yang umum digunakan dalam topik Anda sehingga orang lain dapat *menemukan* itu. Untuk mengelompokkan topik Anda dengan topik terkait, pilih kategori (atau tag).
-
-      Untuk lebih lanjut, [lihat pedoman komunitas kami](%{base_path}/guidelines). Panel ini hanya akan muncul untuk %{education_posts_text} pertama Anda.
-    "new-reply": |
-      Selamat datang di %{site_name} &mdash; **terima kasih telah berkontribusi!**
-
-      - Berbaik hatilah kepada sesama anggota komunitas.
-
-      - Apakah balasan Anda meningkatkan percakapan?
-
-      - Kritik konstruktif diperbolehkan, tetapi kritik *ide*, bukan orang.
-
-      Untuk lebih lanjut, [lihat pedoman komunitas kami](%{base_path}/guidelines). Panel ini hanya akan muncul untuk %{education_posts_text} pertama Anda.
-    dominating_topic: Anda telah memposting banyak hal dalam topik ini! Pertimbangkan untuk memberikan kesempatan kepada orang lain untuk membalas di sini dan juga mendiskusikan berbagai hal satu sama lain.
     get_a_room:
       other: Anda telah membalas ke @%{reply_username} %{count} kali, tahukah Anda bahwa Anda dapat mengirimkan pesan pribadi kepada mereka?
-    dont_feed_the_trolls: Posting ini telah ditandai untuk mendapat perhatian moderator. Apakah Anda yakin ingin membalasnya? Balasan ke konten negatif cenderung mendorong lebih banyak perilaku negatif.
   activerecord:
     attributes:
       category:

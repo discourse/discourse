@@ -485,7 +485,7 @@ es:
       one: "Ver %{count} tema nuevo"
       other: "Ver %{count} temas nuevos"
     preview: "vista previa"
-    cancel: "cancelar"
+    cancel: "Cancelar"
     deleting: "Eliminando…"
     save: "Guardar cambios"
     saving: "Guardando…"
@@ -4665,6 +4665,9 @@ es:
         forum:
           label: Foro
       back_to_forum: "Volver al Foro"
+      clear_filter: "Limpiar filtro"
+      no_results:
+        title: "No hay resultados"
       collapse_all_sections: "Contraer todas las secciones"
       expand_all_sections: "Expandir todas las secciones"
       search: "Buscar"
@@ -4775,14 +4778,9 @@ es:
     powered_by_discourse: "Desarrollado por Discourse"
     discovery:
       headings:
+        multi_tag:
+          default: "Temas con la etiqueta %{tags}"
         categories: "Todas las categorías"
-        filter_labels:
-          latest: "Recientes"
-          top: "Destacados"
-          new: "Nuevo"
-          unread: "Sin leer"
-          hot: "Caliente"
-          unseen: "No vistos"
   admin_js:
     type_to_filter: "Escribe para filtrar…"
     settings: "Ajustes"

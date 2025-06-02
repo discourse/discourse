@@ -35,7 +35,7 @@
   flex-direction: column;
   background-color: var(--secondary);
   position: relative;
-  border: 1px solid var(--primary-400);
+  border: var(--d-input-border);
   border-radius: var(--d-input-border-radius);
   min-height: 0;
 
@@ -141,7 +141,7 @@
   }
 
   .d-editor-textarea-wrapper {
-    border: 1px solid var(--primary-low);
+    border: var(--d-input-border);
   }
 
   .d-editor-preview-wrapper {
@@ -160,12 +160,6 @@
       padding: 0;
     }
   }
-}
-
-.user-preferences .bio-composer,
-.group-form-bio {
-  padding: 10px;
-  border: 1px solid var(--primary-low);
 }
 
 .d-editor-preview img {
@@ -322,7 +316,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(2.35em, 1fr));
   align-items: center;
-  border-bottom: 1px solid var(--primary-low);
+  border-bottom: var(--d-input-border);
   min-height: 2.42rem;
   width: 100%;
   box-sizing: border-box;
@@ -384,7 +378,7 @@
   overflow: auto;
   background: var(--primary-very-low);
   padding: 1rem;
-  border: 1px solid var(--primary-400);
+  border: var(--d-input-border);
   margin-bottom: 0;
   height: 100%;
 }
@@ -411,7 +405,7 @@
   .d-editor-preview .d-editor-translation-preview-wrapper {
     --translation-preview-padding: 1rem;
     box-sizing: border-box;
-    border: 1px dashed var(--primary-300);
+    border: var(--d-input-border);
     border-radius: var(--d-border-radius);
     padding: var(--translation-preview-padding);
     position: relative;

@@ -19,6 +19,7 @@
     box-sizing: border-box;
     height: 42px;
     padding: 0 var(--space-2);
+    border-radius: var(--d-input-border-radius);
 
     &:focus,
     &:focus-within {

@@ -122,10 +122,14 @@ export default class AssistantItem extends Component {
       return;
     }
 
+    const inPMInboxContext =
+      this.search.searchContext?.type === "private_messages";
     this.args.searchTermChanged(updatedTerm, {
       searchTopics,
       ...(inTopicContext &&
         !this.args.searchAllTopics && { setTopicContext: true }),
+      ...(!this.args.searchAllTopics &&
+        inPMInboxContext && { setPMInboxContext: true }),
     });
     this.search.focusSearchInput();
   }

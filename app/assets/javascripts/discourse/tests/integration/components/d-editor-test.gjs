@@ -12,6 +12,7 @@ import {
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import DEditor from "discourse/components/d-editor";
+import { ToolbarBase } from "discourse/lib/composer/toolbar";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setCaretPosition } from "discourse/lib/utilities";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -1315,39 +1316,51 @@ third line`
     }
   })();
 
-  test("toolbar replacement", async function (assert) {
+  test("toolbar instance replacement", async function (assert) {
     const self = this;
-    this.set("value", "hello world");
 
-    await render(
-      <template>
-        <DEditor @value={{self.value}} @composerEvents={{true}} />
-      </template>
-    );
+    const customToolbar = new ToolbarBase({
+      siteSettings: this.siteSettings,
+      capabilities: this.capabilities,
+      showLink: true,
+    });
+    customToolbar.addButton({
+      id: "custom-toolbar-button",
+      icon: "plus",
+      title: "Custom Toolbar Button",
+    });
+
+    withPluginApi((api) => {
+      api.onToolbarCreate((toolbar) => {
+        toolbar.addButton({
+          id: "replace-toolbar",
+          icon: "xmark",
+          group: "extras",
+          action: () => {
+            toolbar.context.replaceToolbar(customToolbar);
+          },
+          condition: () => true,
+        });
+      });
+    });
+
+    this.value = "hello";
+
+    await render(<template><DEditor @value={{self.value}} /></template>);
 
     assert.dom(".d-editor-button-bar").exists();
     assert.dom(".d-editor-button-bar.--replaced-toolbar").doesNotExist();
 
-    const CustomButton = <template>
-      <button data-custom>Custom Button</button>
-    </template>;
-
-    this.container
-      .lookup("service:app-events")
-      .trigger("composer:replace-toolbar", { component: CustomButton });
-
-    await waitUntil(
-      () => find(".d-editor-button-bar.--replaced-toolbar") !== null
-    );
-
-    assert.dom(".d-editor-replaced-toolbar button").exists();
+    await click("button.replace-toolbar");
 
     assert
-      .dom(".d-editor-replaced-toolbar button[data-custom]")
-      .hasText("Custom Button");
+      .dom(
+        ".d-editor-button-bar.--replaced-toolbar button.custom-toolbar-button"
+      )
+      .exists("It should show the custom toolbar button");
 
     // Back button
-    await click(".d-editor-replaced-toolbar .btn-flat");
+    await click(".d-editor-button-bar__back");
 
     assert.dom(".d-editor-button-bar").exists();
     assert.dom(".d-editor-button-bar.--replaced-toolbar").doesNotExist();

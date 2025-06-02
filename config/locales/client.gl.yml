@@ -331,7 +331,7 @@ gl:
       one: "Ver %{count} tema novo"
       other: "Ver %{count} temas novos"
     preview: "visualizar"
-    cancel: "cancelar"
+    cancel: "Cancelar"
     save: "Gardar cambios"
     saved: "Gardado!"
     upload: "Cargar"
@@ -3408,12 +3408,9 @@ gl:
         about: "Verbo de"
     discovery:
       headings:
+        multi_tag:
+          default: "Temas etiquetados %{tags}"
         categories: "Todas as categorías"
-        filter_labels:
-          latest: "Últimos"
-          top: "Destacados"
-          new: "Novo"
-          unread: "Pendentes de lectura"
   admin_js:
     settings: "Configuración"
     admin:

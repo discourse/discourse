@@ -428,26 +428,6 @@ da:
     until_posts:
       one: "%{count} indlæg"
       other: "%{count} indlæg"
-    "new-topic": |
-      Velkommen til %{site_name} &mdash; **Tak fordi du starter en ny samtale!**
-
-      - Lyder titlen interessant hvis du læser den højt? Er det et godt resumé?
-      - Hvem ville være interesseret i dette? Hvorfor er det vigtigt? Hvilken type svar ønsker du?
-      - Inkludér relevante ord i dit emne så andre kan *finde* det. For at gruppere dit emne med relaterede emner, så vælg en kategori (eller et mærke).
-
-      For mere info, [se vores retningslinjer](%{base_path}/guidelines). Dette panel vil kun blive vist for dit første %{education_posts_text}.
-    "new-reply": |
-      Velkommen til %{site_name} &mdash; **tak for at du deltager i samtalen!**
-
-      Husk venligst mens du skriver dit svar:
-
-      - Forbedrer dit svar samtalen på en eller anden måde?
-
-      - Behandl dine meddebattører med den samme respekt, som du ønsker at blive behandlet med.
-
-      - Det er godt med kritik, men husk at kritisere *ideer*, ikke personer.
-
-      For flere tips, [se vores retningslinier](%{base_path}/guidelines). Denne boks dukker kun op for dine første %{education_posts_text}.
     avatar: |
       ### Hvad med et billede til din konto?
 
@@ -464,13 +444,6 @@ da:
       Du kan redigere dit forrige svar for at tilføje et citat ved at markere teksten og vælge <b>citér svar</b>-knappen som dukker op.
 
       Det er nemmere for alle at læse emner som har færre detaljerede svar i stedet for mange mindre, individuelle svar.
-    dominating_topic: Du har skrevet meget i dette emne! Overvej at give andre mulighed for at svare her og også diskutere tingene med hinanden.
-    too_many_replies: |
-      ### Du kan ikke skrive flere indlæg i dette emne
-
-      Beklager, men nye brugere er begrænset til %{newuser_max_replies_per_topic} svar inden for samme emne.
-
-      I stedet for at tilføje endnu et svar, bør du overveje at redigere et af dine eksisterende svar eller at besøge andre emner.
   activerecord:
     attributes:
       category:
@@ -1513,7 +1486,6 @@ da:
     min_title_similar_length: "Minimumslængden af en titel før den vil blive kontrolleret for lignende emner."
     category_colors: "En liste med hexadecimal farveværdier som er tilladte for kategorier."
     dark_mode_none: "Ingen"
-    max_similar_results: "Hvor mange lignende emner der skal vises over editoren når du opretter et nyt emne. Sammenligning er baseret på titel og indhold."
     max_image_megapixels: "Maksimalt antal megapixel tilladt for et billede. Billeder med et højere antal megapixel vil blive afvist."
     title_prettify: "Undgå hyppige tastefejl i titlen, inklusive overforbrug af store bogstaver, første bogstav med småt, gentagne ! og ?, ekstra . i slutningen, etc."
     topic_post_like_heat_low: "Når forholdet imellem 'synes godt om' og indlæg overstiger dette tal, bliver antal indlæg let fremhævet."

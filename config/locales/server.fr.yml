@@ -611,26 +611,6 @@ fr:
     until_posts:
       one: "%{count} message"
       other: "%{count} messages"
-    "new-topic": |
-      Bienvenue sur %{site_name}. **Merci de débuter une nouvelle conversation !**
-
-      - Le titre vous semble-t-il intéressant lorsque vous le lisez à haute voix ? Est-ce une bonne synthèse de votre message ?
-
-      - Qui pourrait être intéressé par cette conversation ? Pourquoi est-elle importante ? Quel genre de réponses attendez-vous ?
-
-      - Incluez des mots fréquents dans votre sujet pour que les utilisateurs puissent le *retrouver*. Pour le regrouper avec des sujets liés, sélectionnez une catégorie (ou une étiquette).
-
-      Pour obtenir plus d'informations, [consultez les lignes directrives de la communauté](%{base_path}/guidelines). Ce message apparaîtra uniquement pour vos premiers %{education_posts_text}.
-    "new-reply": |
-      Bienvenue sur %{site_name}. **Merci de contribuer !**
-
-      - Faites preuve de bienveillance à l'égard des membres de la communauté.
-
-      - Votre réponse améliore-t-elle la discussion ?
-
-      - Les critiques constructives sont les bienvenues, mais critiquez les *idées*, pas les individus.
-
-      Pour obtenir plus d'informations, [consultez les lignes directrices de la communauté](%{base_path}/guidelines). Ce message apparaîtra uniquement pour vos premiers %{education_posts_text}.
     avatar: |
       ### Avez-vous pensé à une photo de profil ?
 
@@ -647,17 +627,9 @@ fr:
       Vous pouvez modifier votre dernière réponse et ajouter une citation en sélectionnant le texte à citer et en cliquant sur le bouton <b>Citer</b>.
 
       Il est plus facile de lire des discussions comprenant des réponses approfondies plutôt que de nombreuses réponses individuelles brèves.
-    dominating_topic: Vous avez beaucoup publié dans ce sujet ! Envisagez de donner aux autres l'occasion de répondre et de discuter entre eux également.
     get_a_room:
       one: Vous avez répondu une fois à @%{reply_username}, saviez-vous que vous pouvez lui envoyer un message privé à la place ?
       other: Vous avez répondu %{count} fois à @%{reply_username}, saviez-vous que vous pouvez lui envoyer des messages privés à la place ?
-    dont_feed_the_trolls: Ce message a déjà été signalé à l'attention du modérateur. Voulez-vous vraiment y répondre ? Les réponses à un contenu négatif ont tendance à encourager un comportement plus négatif.
-    too_many_replies: |
-      ### Vous avez atteint le nombre maximal de réponses dans ce sujet
-
-      Nous sommes désolés, les nouveaux membres sont limités temporairement à %{newuser_max_replies_per_topic} réponses dans un même sujet.
-
-      Plutôt que d'ajouter une nouvelle réponse, vous pouvez modifier vos messages précédents ou visiter d'autres sujets.
     reviving_old_topic: |
       ### Relancer ce sujet ?
 
@@ -2078,7 +2050,6 @@ fr:
     authorized_extensions: "Une liste des extensions de fichiers autorisées pour le téléversement"
     authorized_extensions_for_staff: "Une liste des extensions de fichiers autorisées au téléversement pour les responsables en plus de la liste définie dans les paramètres du site « authorized_extensions »."
     theme_authorized_extensions: "Une liste des extensions de fichiers autorisées pour les téléversements de thèmes"
-    max_similar_results: "Combien de sujets similaires sont affichés lors de la création d'un nouveau sujet. La comparaison se base sur le titre et le contenu."
     max_image_megapixels: "Nombre maximal autorisé de mégapixels pour une image. Les images avec un nombre plus élevé seront rejetées."
     title_prettify: "Corriger les coquilles les plus communes dans les titres (intégralité du titre en majuscule, première lettre en minuscule, de multiples « ! » et « ? », un « . » inutile à la fin, etc.)"
     title_remove_extraneous_space: "Supprimer les espaces devant les signes de ponctuation de fin."
@@ -2667,11 +2638,6 @@ fr:
     errors: "%{errors}"
     not_available: "Indisponible. Essayer %{suggestion} ?"
     something_already_taken: "Un problème est survenu. Votre nom d'utilisateur ou votre adresse e-mail est peut-être déjà enregistré(e). Essayez le lien d'oubli du mot de passe."
-    omniauth_error:
-      generic: "Nous sommes désolés, une erreur s'est produite lors de l'autorisation de votre compte. Veuillez réessayer."
-      csrf_detected: "L'autorisation a expiré ou vous avez changé de navigateur. Veuillez réessayer."
-      request_error: "Une erreur s'est produite lors du démarrage de l'autorisation. Veuillez réessayer."
-      invalid_iat: "Impossible de vérifier le jeton d'autorisation en raison de différences d'horloge du serveur. Veuillez réessayer."
     omniauth_error_unknown: "Un problème est survenu lors de votre connexion. Veuillez réessayer."
     omniauth_confirm_title: "Connectez-vous à l'aide de %{provider}"
     omniauth_confirm_button: "Continuer"

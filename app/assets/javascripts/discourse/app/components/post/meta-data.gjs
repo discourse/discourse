@@ -10,7 +10,6 @@ import PostMetaDataPosterName from "./meta-data/poster-name";
 import PostMetaDataReadIndicator from "./meta-data/read-indicator";
 import PostMetaDataReplyToTab from "./meta-data/reply-to-tab";
 import PostMetaDataSelectPost from "./meta-data/select-post";
-import PostMetaDataTranslationIndicator from "./meta-data/translation-indicator";
 import PostMetaDataWhisperIndicator from "./meta-data/whisper-indicator";
 
 export default class PostMetaData extends Component {
@@ -28,13 +27,6 @@ export default class PostMetaData extends Component {
     return PostMetaDataReplyToTab.shouldRender(this.args, null, getOwner(this));
   }
 
-  get shouldDisplayTranslationIndicator() {
-    return (
-      this.currentUser?.can_debug_localizations &&
-      this.args.post?.has_post_localizations
-    );
-  }
-
   get shouldDisplayLanguage() {
     return this.args.post.is_localized && this.args.post.language;
   }
@@ -46,10 +38,6 @@ export default class PostMetaData extends Component {
       {{/if}}
 
       <div class="post-infos">
-        {{#if this.shouldDisplayTranslationIndicator}}
-          <PostMetaDataTranslationIndicator @post={{@post}} />
-        {{/if}}
-
         {{#if @post.isWhisper}}
           <PostMetaDataWhisperIndicator @post={{@post}} />
         {{/if}}

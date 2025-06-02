@@ -597,7 +597,7 @@ ru:
       many: "Посмотреть %{count} новых тем"
       other: "Посмотреть %{count} новой темы"
     preview: "предпросмотр"
-    cancel: "отмена"
+    cancel: "Нет"
     deleting: "Удаление…"
     save: "Сохранить изменения"
     saving: "Сохранение…"
@@ -5171,6 +5171,9 @@ ru:
         forum:
           label: Форум
       back_to_forum: "Вернуться на форум"
+      clear_filter: "Очистить фильтр"
+      no_results:
+        title: "Нет результатов"
       collapse_all_sections: "Свернуть все разделы"
       expand_all_sections: "Развернуть все разделы"
       search: "Найти"
@@ -5289,14 +5292,9 @@ ru:
     powered_by_discourse: "На платформе Discourse"
     discovery:
       headings:
+        multi_tag:
+          default: "Темы, отмеченные тегом %{tags}"
         categories: "Все категории"
-        filter_labels:
-          latest: "Последняя версия"
-          top: "Обсуждаемые"
-          new: "Новое"
-          unread: "Непрочитанные"
-          hot: "Горячие"
-          unseen: "Непросмотренные"
   admin_js:
     type_to_filter: "Фильтрация настроек…"
     settings: "Настройки"

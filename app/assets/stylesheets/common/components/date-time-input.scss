@@ -1,12 +1,10 @@
 .d-date-time-input {
   display: flex;
-  border: 1px solid var(--primary-medium);
   box-sizing: border-box;
   position: relative;
 
   .date-picker {
     max-width: unset;
-    border-color: transparent;
   }
 
   .d-date-time-input {

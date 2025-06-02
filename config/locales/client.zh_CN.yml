@@ -4486,6 +4486,11 @@ zh_CN:
         forum:
           label: 论坛
       back_to_forum: "返回论坛"
+      filter_links: "筛选链接..."
+      clear_filter: "清除筛选器"
+      no_results:
+        title: "没有结果"
+        description_admin_search: "我们找不到任何与“%{filter}”匹配的内容。"
       collapse_all_sections: "收起所有版块"
       expand_all_sections: "展开所有版块"
       search: "搜索"
@@ -4595,42 +4600,50 @@ zh_CN:
     discovery:
       headings:
         all:
-          default: "所有 %{filter} 话题"
+          latest: "所有最新话题"
+          top: "所有热门话题"
+          new: "所有新话题"
+          unread: "所有未读话题"
+          unseen: "所有未见话题"
           posted: "您发过帖子的所有话题"
           bookmarks: "您已添加书签的所有话题"
+          default: "所有 %{filter} 话题"
         category:
-          default: "%{category}中的%{filter}话题"
+          latest: "%{category}中的最新话题"
+          new: "%{category}中的新话题"
+          unread: "%{category}中的未读话题"
+          unseen: "%{category}中的未见话题"
           posted: "%{category} 中您发布过帖子的话题"
           bookmarks: "%{category} 中您已添加书签的话题"
-        no_tags:
-          all_default: "所有无标签话题"
-          category_default: "%{category}中的%{filter}无标签话题"
-          all:
-            posted: "您发过帖子的所有无标签话题"
-            bookmarks: "您已添加书签的所有无标签话题"
-          category:
-            posted: "%{category} 中您发布过帖子的无标签话题"
-            bookmarks: "%{category} 中您已添加书签的无标签话题"
+          default: "%{category}中的%{filter}话题"
         single_tag:
-          default: "%{filter} 话题标签为 %{tag}"
-          posted: "已在您发表的内容中，标记为 %{tag} 的主题"
           bookmarks: "已在您添加的书签中，标记为 %{tag} 的主题"
+          default: "%{filter} 主题已标记 %{tag}"
         multi_tag:
-          default: "%{filter} 主题标签为 %{tags}"
-          posted: "已在您发表的内容中，标记为 %{tags} 的主题"
-          bookmarks: "已在您添加的书签中，标记为 %{tags} 的主题"
+          default: "使用%{tags}标记的话题"
         category_tag:
-          default: "%{filter} 话题在 %{category} 中标记为 %{tag}"
           posted: "您已在 %{category} 中发布过带有 %{tag} 标签的主题"
           bookmarks: "您已收藏了 %{category} 中标记为 %{tag} 的主题"
+          default: "%{filter} 个话题位于 %{category} 中，标签为 %{tag}"
+        no_tags:
+          all:
+            latest: "最新的无标签话题"
+            new: "新的无标签话题"
+            unread: "未读的无标签话题"
+            unseen: "未见的无标签话题"
+            posted: "您发过帖子的无标签话题"
+            bookmarks: "您已添加书签的无标签话题"
+            default: "没有标签的话题"
+          category:
+            latest: "%{category} 中的最新无标签话题"
+            top: "%{category} 中的热门无标签话题"
+            new: "%{category} 中的新无标签话题"
+            unread: "%{category} 中的未读无标签话题"
+            unseen: "%{category} 中的未见无标签话题"
+            posted: "%{category} 中您发布过帖子的无标签话题"
+            bookmarks: "%{category} 中您已添加书签的无标签话题"
+            default: "%{category}中的%{filter}无标签话题"
         categories: "所有类别"
-        filter_labels:
-          latest: "最新"
-          top: "排行榜"
-          new: "新"
-          unread: "未读"
-          hot: "热议"
-          unseen: "未读"
   admin_js:
     type_to_filter: "输入以筛选…"
     settings: "设置"
@@ -5568,6 +5581,8 @@ zh_CN:
             description: "在“关于”页面上显示的额外群组。"
             groups: "群组"
             order: "排序"
+            initial_members: "展开成员"
+            initial_members_description: "添加“查看更多”按钮之前要显示的群组成员数量。"
             show_description: "包括描述"
           optional: "（可选）"
           update: "更新"
@@ -5622,8 +5637,6 @@ zh_CN:
           more_options:
             title: "更多选项"
         themes_and_components:
-          title: "主题和组件"
-          description: "使用符合你需求的主题和组件个性化你的 Discourse 网站。"
           breadcrumb_title: "自定义"
           install: "安装"
           themes:

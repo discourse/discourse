@@ -1442,8 +1442,10 @@ export default class ComposerService extends Service {
           }
         }
 
-        await this.cancelComposer(opts);
-        await this.open(opts);
+        const retry = await this.cancelComposer(opts);
+        if (retry) {
+          await this.open(opts);
+        }
         return;
       }
 
@@ -1627,7 +1629,7 @@ export default class ComposerService extends Service {
                 })
                 .finally(() => {
                   this.appEvents.trigger("composer:cancelled");
-                  resolve();
+                  resolve(true);
                 });
             },
             onSaveDraft: () => {
@@ -1635,8 +1637,9 @@ export default class ComposerService extends Service {
               this.model.clearState();
               this.close();
               this.appEvents.trigger("composer:cancelled");
-              return resolve();
+              return resolve(true);
             },
+            onKeepEditing: () => resolve(false),
           },
         });
       } else {

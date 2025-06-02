@@ -1,6 +1,5 @@
 import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
-import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
@@ -12,8 +11,10 @@ import curryComponent from "ember-curry-component";
 import { emojiSearch, isSkinTonableEmoji } from "pretty-text/emoji";
 import { translations } from "pretty-text/emoji/data";
 import { Promise } from "rsvp";
+import { not } from "truth-helpers";
 import TextareaEditor from "discourse/components/composer/textarea-editor";
 import ToggleSwitch from "discourse/components/composer/toggle-switch";
+import ToolbarButtons from "discourse/components/composer/toolbar-buttons";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import DEditorPreview from "discourse/components/d-editor-preview";
@@ -42,7 +43,6 @@ import {
   renderUserStatusHtml,
 } from "discourse/lib/user-status-on-autocomplete";
 import { i18n } from "discourse-i18n";
-import ToolbarPopupMenuOptions from "select-kit/components/toolbar-popup-menu-options";
 
 let _createCallbacks = [];
 
@@ -69,7 +69,7 @@ export default class DEditor extends Component {
   @tracked editorComponent;
   /** @type {TextManipulation} */
   @tracked textManipulation;
-  @tracked replacedToolbarComponent;
+  @tracked replacedToolbarInstance;
 
   @tracked preview;
 
@@ -173,7 +173,7 @@ export default class DEditor extends Component {
   @discourseComputed()
   toolbar() {
     const toolbar = new Toolbar(
-      this.getProperties("site", "siteSettings", "showLink", "capabilities")
+      this.getProperties("siteSettings", "showLink", "capabilities")
     );
     toolbar.context = this;
 
@@ -181,11 +181,6 @@ export default class DEditor extends Component {
 
     if (this.extraButtons) {
       this.extraButtons(toolbar);
-    }
-
-    const firstButton = toolbar.groups.mapBy("buttons").flat().firstObject;
-    if (firstButton) {
-      firstButton.tabindex = 0;
     }
 
     return toolbar;
@@ -619,8 +614,13 @@ export default class DEditor extends Component {
   }
 
   @action
+  replaceToolbar(toolbarInstance) {
+    this.replacedToolbarInstance = toolbarInstance;
+  }
+
+  @action
   resetToolbar() {
-    this.replacedToolbarComponent = null;
+    this.replacedToolbarInstance = null;
   }
 
   @action
@@ -737,19 +737,19 @@ export default class DEditor extends Component {
             {{if this.isEditorFocused 'in-focus'}}"
         >
 
-          {{#if this.replacedToolbarComponent}}
+          {{#if this.replacedToolbarInstance}}
             <div class="d-editor-button-bar --replaced-toolbar" role="toolbar">
-              <div class="d-editor-replaced-toolbar">
-                <DButton
-                  @action={{this.resetToolbar}}
-                  @icon="angle-left"
-                  @preventFocus={{true}}
-                  @onKeyDown={{this.rovingButtonBar}}
-                  @tabindex="-1"
-                  class="btn-flat"
-                />
-                {{this.replacedToolbarComponent}}
-              </div>
+              <DButton
+                @action={{this.resetToolbar}}
+                @icon="angle-left"
+                @preventFocus={{true}}
+                @onKeyDown={{this.rovingButtonBar}}
+                class="btn-flat d-editor-button-bar__back"
+              />
+              <ToolbarButtons
+                @data={{this.replacedToolbarInstance}}
+                @rovingButtonBar={{this.rovingButtonBar}}
+              />
             </div>
           {{else}}
             <div class="d-editor-button-bar" role="toolbar">
@@ -759,37 +759,15 @@ export default class DEditor extends Component {
                   @disabled={{@disableSubmit}}
                   @state={{this.isRichEditorEnabled}}
                   {{on "click" this.toggleRichEditor}}
+                  {{on "keydown" this.rovingButtonBar}}
                 />
               {{/if}}
 
-              {{#each this.toolbar.groups as |group|}}
-                {{#each group.buttons as |b|}}
-                  {{#if (b.condition this)}}
-                    {{#if b.popupMenu}}
-                      <ToolbarPopupMenuOptions
-                        @content={{this.popupMenuOptions}}
-                        @onChange={{this.onPopupMenuAction}}
-                        @onOpen={{fn b.action b}}
-                        @tabindex={{-1}}
-                        @onKeydown={{this.rovingButtonBar}}
-                        @options={{hash icon=b.icon focusAfterOnChange=false}}
-                        class={{b.className}}
-                      />
-                    {{else}}
-                      <DButton
-                        @action={{fn b.action b}}
-                        @translatedTitle={{b.title}}
-                        @label={{b.label}}
-                        @icon={{b.icon}}
-                        @preventFocus={{b.preventFocus}}
-                        @onKeyDown={{this.rovingButtonBar}}
-                        tabindex={{b.tabindex}}
-                        class={{b.className}}
-                      />
-                    {{/if}}
-                  {{/if}}
-                {{/each}}
-              {{/each}}
+              <ToolbarButtons
+                @data={{this.toolbar}}
+                @rovingButtonBar={{this.rovingButtonBar}}
+                @isFirst={{not this.siteSettings.rich_editor}}
+              />
             </div>
           {{/if}}
 
@@ -808,6 +786,7 @@ export default class DEditor extends Component {
             @categoryId={{@categoryId}}
             @topicId={{@topicId}}
             @id={{this.textAreaId}}
+            @replaceToolbar={{this.replaceToolbar}}
           />
           <PopupInputTip @validation={{this.validation}} />
           <PluginOutlet

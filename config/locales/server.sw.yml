@@ -251,12 +251,6 @@ sw:
       Unaweza kuhariri machapisho yaliyopita kuongeza nukulu kwa kufanya yafuatayo, bainisha nakala na chagua kitufe cha <b>nukulu jibu</b>kitakachotokea.
 
       Ni rahisi kwa watu wote kusoma mada ambazo zina majibu machache ukilinganisha na majibu madogo, mafupi na ya kibinafsi.
-    too_many_replies: |
-      ### Umefika kiwango cha juu cha kujibu kwenye mada hii
-
-      Tunaomba radhi, lakini watumiaji wapya wana vizuizi vya mda mfupi vya majibu %{newuser_max_replies_per_topic} kwenye mada moja.
-
-      Badala ya kuongeza jibu lingine, unaweza kuhariri majibu uliyochapisha, au kutembelea mada zingine.
     reviving_old_topic: |
       ### Rudisha mada hii?
 

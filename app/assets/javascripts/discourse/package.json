@@ -27,7 +27,7 @@
     "@messageformat/runtime": "^3.0.1",
     "ace-builds": "^1.41.0",
     "decorator-transforms": "^2.3.0",
-    "diff": "^8.0.1",
+    "diff": "^8.0.2",
     "discourse-widget-hbs": "workspace:1.0.0",
     "ember-curry-component": "^0.3.0",
     "ember-resolver": "^13.1.1",
@@ -57,8 +57,8 @@
     "prosemirror-view": "^1.39.3"
   },
   "devDependencies": {
-    "@babel/core": "^7.27.1",
-    "@babel/standalone": "^7.27.2",
+    "@babel/core": "^7.27.4",
+    "@babel/standalone": "^7.27.4",
     "@colors/colors": "^1.6.0",
     "@discourse/itsatrap": "^2.0.10",
     "@ember-compat/tracked-built-ins": "^0.9.1",
@@ -135,7 +135,7 @@
     "select-kit": "workspace:1.0.0",
     "sinon": "^20.0.0",
     "source-map": "^0.7.4",
-    "terser": "^5.39.2",
+    "terser": "^5.40.0",
     "testem": "^3.16.0",
     "truth-helpers": "workspace:1.0.0",
     "util": "^0.12.5",

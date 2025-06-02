@@ -404,26 +404,6 @@ gl:
     until_posts:
       one: "%{count} publicación"
       other: "%{count} publicacións"
-    "new-topic": |
-      Dámoslle a benvida a %{site_name} &mdash; , **grazas por comezar unha nova conversa!**
-
-      - Soa ben o seu título, se o le en voz alta? Resume ben o contido?
-
-      - A quen lle interesaría ler isto? Por que é importante? Que tipo de respostas busca?
-
-      - Inclúa palabras de uso frecuente no seu tema para facilitar que poida ser *atopado*. Para agrupalo con outros temas relacionados, seleccione unha categoría (ou etiqueta).
-
-      Para saber máis, [visite as normas da nosa comunidade](%{base_path}/guidelines). Este panel só lle aparecerá na primeira conversa %{education_posts_text}.
-    "new-reply": |
-      Dámoslle a benvida a %{site_name} &mdash; **grazas por contribuír!**
-
-      - Sexa amábel cos outros membros da comunidade.
-
-      - A súa resposta mellora a conversa?
-
-      - A crítica construtiva é benvida pero critique as *ideas*, non as persoas.
-
-      Para saber máis, [consulte as nosas normas da comunidade] (%{base_path}/guidelines). Este panel só lle aparecerá nas súas primeiras conversas %{education_posts_text}.
     avatar: |
       ### E se lle engade unha imaxe á súa conta?
 
@@ -440,12 +420,6 @@ gl:
       Pode editar a súa resposta e engadir unha cita seleccionando o texto e premendo no botón <b>citar resposta</b> que aparece.
 
       É máis sinxelo para a comunidade ler temas con menos respostas, pero con máis contido, que moitas respostas pequenas e individuais.
-    too_many_replies: |
-      ### Alcanzou o límite de respostas para este tema.
-
-      Sentímolo, mais os novos usuarios teñen temporalmente un límite de %{newuser_max_replies_per_topic} respostas no mesmo tema.
-
-      No canto de engadir unha outra resposta, pense na posibilidade de editar algunhas das anteriores ou visitar outros temas.
     reviving_old_topic: |
       ### Quere revivir este tema?
 
@@ -1555,7 +1529,6 @@ gl:
     min_title_similar_length: "A lonxitude mínima dun título antes de se comprobar para temas similares."
     category_colors: "Unha listaxe de valores hexadecimais das cores permitidas para as categorías."
     dark_mode_none: "Ningún"
-    max_similar_results: "Número de temas similares que se mostran na parte superior do editor cando se está a redactar un novo tema. A comparación baséase no título e mais no corpo da mensaxe."
     max_image_megapixels: "Número máximo de megapíxeles permitidos para unha imaxe. Aquelas cun número superior serán rexeitadas."
     title_prettify: "Previr erros frecuentes no título, incluídos os títulos escritos con todo en maiúsculas, coa primeira letra en minúscula, con múltiples signos ! ou ?, punto final etc."
     title_remove_extraneous_space: "Retirar os espazos en branco diante da puntuación final."
@@ -1966,11 +1939,6 @@ gl:
     errors: "%{errors}"
     not_available: "Non dispoñíbel. Tentar %{suggestion}?"
     something_already_taken: "Algo foi mal, quizais o nome de usuario ou o correo electrónico xa están rexistrados. Probe coa ligazón de Esquecín o contrasinal."
-    omniauth_error:
-      generic: "Sentímolo, produciuse un erro ao autorizar a súa conta. Ténteo de novo."
-      csrf_detected: "Esgotouse o tempo de autorización ou cambiou de navegador. Ténteo de novo."
-      request_error: "Produciuse un erro ao comezar coa autorización. Ténteo de novo."
-      invalid_iat: "Non se puido verificar o token de autorización por mor de diferenzas no horario do servidor. Ténteo de novo."
     omniauth_error_unknown: "Produciuse un erro ao procesar o seu rexistro. Ténteo de novo, por favor."
     omniauth_confirm_title: "Iniciar sesión usando %{provider}"
     omniauth_confirm_button: "Continuar"

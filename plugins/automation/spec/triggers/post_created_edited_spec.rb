@@ -669,6 +669,35 @@ describe "PostCreatedEdited" do
 
         expect(list.length).to eq(0)
       end
+
+      it "doesn't fire the trigger when post has emojis but no regular images" do
+        list =
+          capture_contexts do
+            PostCreator.create(
+              user,
+              raw:
+                "This is regular text with an emoji but no non-emoji images :face_savoring_food:",
+              topic_id: topic.id,
+            )
+          end
+
+        expect(list.length).to eq(0)
+      end
+
+      it "doesn't fire the trigger when post has an avatar in a quote but no regular images" do
+        original_post =
+          PostCreator.create(user, raw: "This is regular text with no images", topic_id: topic.id)
+        quote_post_text = <<~QUOTE_POST
+            [quote=\"#{user.username}}, post:#{original_post.post_number}, topic:#{original_post.topic_id}\"]
+              regular text
+            [/quote]
+            This is a regular text post with a regular text quote, no image (but an avatar image in the quote)
+          QUOTE_POST
+        list =
+          capture_contexts { PostCreator.create(user, raw: quote_post_text, topic_id: topic.id) }
+
+        expect(list.length).to eq(0)
+      end
     end
 
     context "with links filter" do
