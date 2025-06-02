@@ -1381,6 +1381,7 @@ export default class ComposerService extends Service {
       this.set("hijackPreview", opts.hijackPreview);
     }
 
+    // TODO: fix this not working anymore? need to use `opts.locale` instead?
     if (opts.selectedTranslationLocale) {
       this.selectedTranslationLocale = opts.selectedTranslationLocale;
     }
@@ -1512,6 +1513,7 @@ export default class ComposerService extends Service {
       isWarning: false,
       hasTargetGroups: opts.hasGroups,
       warningsDisabled: opts.warningsDisabled,
+      locale: opts.locale,
     });
 
     if (!this.model.targetRecipients) {
