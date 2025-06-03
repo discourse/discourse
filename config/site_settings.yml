@@ -4021,4 +4021,5 @@ experimental:
     validator: "LanguageSwitcherSettingValidator"
   reviewable_ui_refresh:
     client: true
-    default: false
+    type: group_list
+    default: "1"
