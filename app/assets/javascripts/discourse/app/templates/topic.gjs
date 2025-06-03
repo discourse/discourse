@@ -117,7 +117,7 @@ export default RouteTemplate(
                       @id="edit-title"
                       @value={{@controller.buffered.title}}
                       @maxlength={{@controller.siteSettings.max_topic_title_length}}
-                      @autofocus="true"
+                      @autofocus={{true}}
                     />
                   </PluginOutlet>
                 </div>
