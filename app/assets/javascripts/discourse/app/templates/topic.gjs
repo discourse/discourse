@@ -42,6 +42,7 @@ import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import htmlSafe from "discourse/helpers/html-safe";
 import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
+import autoFocus from "discourse/modifiers/auto-focus";
 import stickyAvatars from "discourse/modifiers/sticky-avatars";
 import { i18n } from "discourse-i18n";
 import CategoryChooser from "select-kit/components/category-chooser";
@@ -118,6 +119,7 @@ export default RouteTemplate(
                       @value={{@controller.buffered.title}}
                       @maxlength={{@controller.siteSettings.max_topic_title_length}}
                       @autofocus={{true}}
+                      {{autoFocus}}
                     />
                   </PluginOutlet>
                 </div>
