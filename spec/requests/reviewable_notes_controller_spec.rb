@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Reviewable Notes" do
+RSpec.describe ReviewableNotesController do
   fab!(:admin)
   fab!(:moderator)
   fab!(:user)
