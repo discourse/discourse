@@ -495,6 +495,7 @@ export default RouteTemplate(
                         @controller
                         @controller.queryParams
                       }}
+                      @topic={{@controller.model}}
                     />
                   {{/unless}}
                 </div>
