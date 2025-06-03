@@ -60,6 +60,8 @@ fi:
   inline_oneboxer:
     topic_page_title_post_number: "%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} käyttäjältä %{username}"
+    too_many_urls: "Yhdessä pyynnössä ei voi olla yli 10 URL-osoitetta yhden laatikon sisällä."
+    concurrency_not_allowed: "Samanaikaiset inline-oneboxing-pyynnöt eivät ole sallittuja. Lähetä yksi pyyntö kerrallaan."
   components:
     enabled_filter: "Käytössä"
     disabled_filter: "Pois käytöstä"
@@ -1631,6 +1633,7 @@ fi:
     delete_old_hidden_posts: "Poista automaattisesti kaikki yli 30 päivää piilotettuna olleet viestit."
     default_locale: "Tämän Discourse-ympäristön oletuskieli. Voit korvata järjestelmän luomien alueiden ja ketjujen tekstejä kohteessa <a href='%{base_path}/admin/customize/site_texts' target='_blank'>Mukauta / Tekstit</a>."
     allow_user_locale: "Salli käyttäjien vaihtaa käyttöliittymän kieli omista asetuksista"
+    set_locale_from_accept_language_header: "Aseta käyttöliittymän kieli anonyymeille käyttäjille verkkoselaimen kieliotsikkotiedoista"
     set_locale_from_cookie: "Mahdollistaa anonyymin käyttäjän kielialueen asettamisen locale-selainevästeen kautta"
     set_locale_from_param: "Mahdollistaa anonyymin käyttäjän kielialueen asettamisen lang-URL-parametrilla, esim. ?lang=fi"
     support_mixed_text_direction: "Salli vasemmalta-oikealle- ja oikealta-vasemmalle-kirjoitusta käytettävän sekaisin"
@@ -2452,6 +2455,7 @@ fi:
     share_quote_visibility: "Milloin lainauksen jakamispainikkeet näytetään: ei koskaan, vain anonyymeille käyttäjille tai kaikille käyttäjille. "
     create_revision_on_bulk_topic_moves: "Luo revisio ensimmäisille viesteille, kun ketjut siirretään uuteen alueeseen joukkona."
     allow_changing_staged_user_tracking: "Salli ylläpitäjäkäyttäjän muuttaa esikäyttäjän alue- ja tunnisteilmoitusasetuksia."
+    use_email_for_username_and_name_suggestions: "Käytä sähköpostiosoitteiden alkuosaa käyttäjätunnus- ja nimiehdotuksia varten. Varoitus: Tämä voi helpottaa pahantekijöitä saamaan selville jäsentesi sähköpostiosoitteet (koska monet ihmiset käyttävät yleisiä sähköpostipalveluntarjoajia, kuten `gmail.com`)."
     use_name_for_username_suggestions: "Käytä käyttäjän koko nimeä käyttäjätunnusten ehdottamiseen."
     suggest_weekends_in_date_pickers: "Sisällytä viikonloput (lauantai ja sunnuntai) päivämäärävalitsimen ehdotuksiin (poista tämä käytöstä, jos käytät Discoursea vain arkipäivisin maanantaista perjantaihin)."
     show_bottom_topic_map: "Näyttää ketjukartan ketjun alaosassa, kun siinä on vähintään 10 vastausta."

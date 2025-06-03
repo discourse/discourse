@@ -4105,6 +4105,7 @@ ro:
           description: "Paletele de culori definesc culorile de bază utilizate în interfața site-ului tău, în timp ce temele pot oferi stil, machete și componente suplimentare – ambele pot lucra împreună pentru a crea aspectul și impresia unică a site-ului tău și ambele pot fi puse la dispoziție utilizatorilor pentru a-și selecta preferințele."
           new_name: "Paletă nouă de culori"
           copy_name_prefix: "Copie a"
+          delete_confirm: "Ștergi această paletă de culori?"
           undo: "Anulează acțiunea"
           undo_title: "Revino asupra schimbărilor aduse acestei culori, de ultima oară când a fost salvată și până acum."
           revert: "Revenire la starea inițială"
