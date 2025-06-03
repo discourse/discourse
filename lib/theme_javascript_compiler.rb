@@ -101,18 +101,6 @@ class ThemeJavascriptCompiler
     tree.each_pair { |filename, content| @output_tree << [filename, content] }
   end
 
-  def append_ember_template(name, hbs_template)
-    # TODO
-  end
-
-  def append_raw_script(filename, script)
-    #todo
-  end
-
-  def append_module(script, name, extension, include_variables: true)
-    #todo
-  end
-
   def append_js_error(filename, message)
     message = "[THEME #{@theme_id} '#{@theme_name}'] Compile error: #{message}"
     append_raw_script filename, "console.error(#{message.to_json});"

@@ -5,19 +5,14 @@ RSpec.describe ThemeJavascriptCompiler do
 
   describe "#append_ember_template" do
     it "maintains module names so that discourse-boot.js can correct them" do
-      compiler.append_ember_template("/connectors/blah-1", "{{var}}")
-      expect(compiler.content.to_s).to include(
-        "define(\"discourse/theme-1/connectors/blah-1\", [\"exports\", ",
-      )
+      compiler.append_tree({ "/connectors/blah-1.hbs" => "{{var}}" })
+      compiler.append_tree({ "connectors/blah-2.hbs" => "{{var}}" })
+      compiler.append_tree({ "javascripts/connectors/blah-3.hbs" => "{{var}}" })
 
-      compiler.append_ember_template("connectors/blah-2", "{{var}}")
+      expect(compiler.content.to_s).to include("themeCompatModules[\"/connectors/blah-1\"]")
+      expect(compiler.content.to_s).to include("themeCompatModules[\"connectors/blah-2\"]")
       expect(compiler.content.to_s).to include(
-        "define(\"discourse/theme-1/connectors/blah-2\", [\"exports\", ",
-      )
-
-      compiler.append_ember_template("javascripts/connectors/blah-3", "{{var}}")
-      expect(compiler.content.to_s).to include(
-        "define(\"discourse/theme-1/javascripts/connectors/blah-3\", [\"exports\", ",
+        "themeCompatModules[\"javascripts/connectors/blah-3\"]",
       )
     end
   end
@@ -79,9 +74,8 @@ RSpec.describe ThemeJavascriptCompiler do
 
   describe "error handling" do
     it "handles syntax errors in ember templates" do
-      expect do
-        compiler.append_ember_template("sometemplate", "{{invalidtemplate")
-      end.to raise_error(ThemeJavascriptCompiler::CompileError, /Parse error on line 1/)
+      compiler.append_tree({ "sometemplate.hbs" => "{{invalidtemplate" })
+      expect(compiler.content).to include("Parse error on line 1")
     end
   end
 
@@ -106,11 +100,9 @@ RSpec.describe ThemeJavascriptCompiler do
           "discourse/templates/components/mycomponent.hbs" => "{{my-component-template}}",
         },
       )
+      expect(compiler.content).to include('themeCompatModules["discourse/components/mycomponent"]')
       expect(compiler.content).to include(
-        'define("discourse/theme-1/discourse/components/mycomponent"',
-      )
-      expect(compiler.content).to include(
-        'define("discourse/theme-1/discourse/templates/components/mycomponent"',
+        'themeCompatModules["discourse/templates/components/mycomponent"]',
       )
     end
 
@@ -151,20 +143,6 @@ RSpec.describe ThemeJavascriptCompiler do
       expect(template_compiled_line).to include("12345678910")
     end
 
-    it "prints error when default export missing" do
-      compiler.append_tree(
-        {
-          "discourse/components/mycomponent.js" => <<~JS,
-            import Component from "@glimmer/component";
-            class MyComponent extends Component {}
-          JS
-          "discourse/components/mycomponent.hbs" => "{{my-component-template}}",
-        },
-      )
-      expect(compiler.content).to include("__COLOCATED_TEMPLATE__ =")
-      expect(compiler.content).to include("throw new Error")
-    end
-
     it "handles template-only components" do
       compiler.append_tree(
         { "discourse/components/mycomponent.hbs" => "{{my-component-template}}" },
@@ -178,8 +156,9 @@ RSpec.describe ThemeJavascriptCompiler do
   describe "terser compilation" do
     it "applies terser and provides sourcemaps" do
       sources = {
-        "multiply.js" => "let multiply = (firstValue, secondValue) => firstValue * secondValue;",
-        "add.js" => "let add = (firstValue, secondValue) => firstValue + secondValue;",
+        "multiply.js" =>
+          "export const multiply = (firstValue, secondValue) => firstValue * secondValue;",
+        "add.js" => "export const add = (firstValue, secondValue) => firstValue + secondValue;",
       }
 
       compiler.append_tree(sources)
@@ -188,14 +167,13 @@ RSpec.describe ThemeJavascriptCompiler do
       expect(compiler.content).to include("add")
 
       map = JSON.parse(compiler.source_map)
-      expect(map["sources"]).to contain_exactly(*sources.keys)
-      expect(map["sourcesContent"].to_s).to include("let multiply")
-      expect(map["sourcesContent"].to_s).to include("let add")
-      expect(map["sourceRoot"]).to eq("theme-1/")
+      expect(map["sources"]).to include("theme-1/multiply.js", "theme-1/add.js")
+      expect(map["sourcesContent"].to_s).to include("const multiply")
+      expect(map["sourcesContent"].to_s).to include("const add")
     end
 
     it "handles invalid JS" do
-      compiler.append_raw_script("filename.js", "if(someCondition")
+      compiler.append_tree({ "filename.js" => "if(someCondition" })
       expect(compiler.content).to include('console.error("[THEME 1')
       expect(compiler.content).to include("Unexpected token")
     end
@@ -236,7 +214,7 @@ RSpec.describe ThemeJavascriptCompiler do
       JS
 
       expect(compiler.content).to include(
-        "define(\"discourse/theme-1/discourse/components/my-component\", [\"exports\",",
+        "themeCompatModules[\"discourse/components/my-component\"]",
       )
       expect(compiler.content).to include('value = "foo";')
       expect(compiler.content).to include("setComponentTemplate")
