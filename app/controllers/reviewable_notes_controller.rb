@@ -37,8 +37,4 @@ class ReviewableNotesController < ApplicationController
   def note_params
     params.require(:reviewable_note).permit(:content)
   end
-
-  def ensure_staff
-    raise Discourse::InvalidAccess unless current_user&.staff?
-  end
 end
