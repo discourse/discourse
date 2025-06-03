@@ -6,6 +6,7 @@ import { service } from "@ember/service";
 import { buildWaiter } from "@ember/test-waiters";
 import { modifier } from "ember-modifier";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
+import concatClass from "discourse/helpers/concat-class";
 import { bind } from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
 import loadAce from "discourse/lib/load-ace-editor";
@@ -169,6 +170,14 @@ export default class AceEditor extends Component {
     return this.args.mode || "css";
   }
 
+  get cssClasses() {
+    let cssClasses = ["ace"];
+    if (this.args.resizable) {
+      cssClasses.push("ace_editor--resizable");
+    }
+    return cssClasses.join(" ");
+  }
+
   @bind
   editorIdChanged() {
     if (this.autofocus) {
@@ -265,7 +274,7 @@ export default class AceEditor extends Component {
           {{didUpdate this.modeChanged @mode}}
           {{didUpdate this.placeholderChanged @placeholder}}
           {{didUpdate this.changeDisabledState @disabled}}
-          class="ace"
+          class={{concatClass this.cssClasses}}
           ...attributes
         >
         </div>
