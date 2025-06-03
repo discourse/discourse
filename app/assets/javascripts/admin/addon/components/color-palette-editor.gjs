@@ -3,6 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
@@ -60,7 +61,14 @@ const Picker = class extends Component {
 
   @action
   onTextChange(event) {
-    const color = event.target.value;
+    let color = event.target.value;
+
+    if (!this.isValidHex(color)) {
+      event.preventDefault();
+      return;
+    }
+
+    color = this.ensureSixDigitsHex(color);
     if (this.args.showDark) {
       this.args.onDarkChange(color);
     } else {
@@ -70,7 +78,34 @@ const Picker = class extends Component {
 
   @action
   onTextKeypress(event) {
-    const color = event.target.value + event.key;
+    const currentValue = event.target.value;
+
+    if (event.keyCode === 13) {
+      event.preventDefault();
+
+      if (currentValue.length !== 6 && currentValue.length !== 3) {
+        this.toasts.error({
+          data: {
+            message: i18n(
+              "admin.config_areas.color_palettes.invalid_color_length"
+            ),
+          },
+        });
+        return;
+      }
+
+      const nextPosition = this.args.position + 1;
+      if (nextPosition < this.args.totalColors) {
+        this.args.editorElement
+          .querySelector(
+            `.color-palette-editor__text-input[data-position="${nextPosition}"]`
+          )
+          .focus();
+      }
+      return;
+    }
+
+    const color = currentValue + event.key;
 
     if (color && !color.match(/^[0-9A-Fa-f]+$/)) {
       event.preventDefault();
@@ -81,6 +116,25 @@ const Picker = class extends Component {
           ),
         },
       });
+    }
+  }
+
+  @action
+  onTextPaste(event) {
+    const content = (event.clipboardData || window.clipboardData).getData(
+      "text"
+    );
+
+    if (!this.isValidHex(content)) {
+      event.preventDefault();
+      this.toasts.error({
+        data: {
+          message: i18n(
+            "admin.config_areas.color_palettes.invalid_color_length"
+          ),
+        },
+      });
+      return;
     }
   }
 
@@ -118,9 +172,14 @@ const Picker = class extends Component {
     return hex;
   }
 
+  isValidHex(hex) {
+    return !!hex?.match(/^[0-9A-Fa-f]{3,6}$/);
+  }
+
   <template>
     <input
       class="color-palette-editor__input"
+      data-position={{@position}}
       type="color"
       value={{this.activeValue}}
       {{on "input" this.onInput}}
@@ -130,11 +189,13 @@ const Picker = class extends Component {
       {{icon "hashtag" class="color-palette-editor__icon"}}
       <input
         class="color-palette-editor__text-input"
+        data-position={{@position}}
         type="text"
         maxlength="6"
         value={{this.displayedColor}}
         {{on "keypress" this.onTextKeypress}}
         {{on "change" this.onTextChange}}
+        {{on "paste" this.onTextPaste}}
       />
     </div>
   </template>
@@ -142,6 +203,7 @@ const Picker = class extends Component {
 
 export default class ColorPaletteEditor extends Component {
   @tracked selectedMode;
+  editorElement;
 
   get currentMode() {
     return this.selectedMode ?? this.args.initialMode ?? LIGHT;
@@ -178,8 +240,13 @@ export default class ColorPaletteEditor extends Component {
     }
   }
 
+  @action
+  editorInserted(element) {
+    this.editorElement = element;
+  }
+
   <template>
-    <div class="color-palette-editor">
+    <div class="color-palette-editor" {{didInsert this.editorInserted}}>
       <div class="nav-pills color-palette-editor__nav-pills">
         <NavTab
           @active={{this.lightModeActive}}
@@ -197,7 +264,7 @@ export default class ColorPaletteEditor extends Component {
         />
       </div>
       <div class="color-palette-editor__colors-list">
-        {{#each @colors as |color|}}
+        {{#each @colors as |color index|}}
           <div
             data-color-name={{color.name}}
             class="color-palette-editor__colors-item"
@@ -220,6 +287,9 @@ export default class ColorPaletteEditor extends Component {
               <div class="color-palette-editor__picker">
                 <Picker
                   @color={{color}}
+                  @position={{index}}
+                  @totalColors={{@colors.length}}
+                  @editorElement={{this.editorElement}}
                   @showDark={{this.darkModeActive}}
                   @onLightChange={{fn @onLightColorChange color}}
                   @onDarkChange={{fn @onDarkColorChange color}}

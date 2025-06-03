@@ -6408,7 +6408,8 @@ en:
           unsaved_changes: "You have unsaved changes"
           copy_of: "Copy of %{name}"
           copy_created: 'A new copy of "%{name}" has been created'
-          illegal_character_in_color: "Colors consist of hexadecimal characters only"
+          illegal_character_in_color: "Color must consist of hexadecimal characters only"
+          invalid_color_length: "Color must in the format #rrggbb or #rgb"
           delete_confirm: "Are you sure you want to delete this color palette?"
       plugins:
         title: "Plugins"
