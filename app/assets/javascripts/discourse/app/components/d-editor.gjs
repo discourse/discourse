@@ -136,7 +136,7 @@ export default class DEditor extends Component {
         } else {
           button.action(button);
         }
-        return false;
+        return true;
       };
     });
 
@@ -147,7 +147,7 @@ export default class DEditor extends Component {
             `${PLATFORM_KEY_MODIFIER}+${popupButton.shortcut}`.toLowerCase();
           keymap[shortcut] = () => {
             this.onPopupMenuAction(popupButton, this.newToolbarEvent());
-            return false;
+            return true;
           };
         }
       });
