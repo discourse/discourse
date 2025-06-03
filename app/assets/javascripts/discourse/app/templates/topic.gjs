@@ -37,7 +37,6 @@ import TopicTimerInfo from "discourse/components/topic-timer-info";
 import TopicTitle from "discourse/components/topic-title";
 import ageWithTooltip from "discourse/helpers/age-with-tooltip";
 import bodyClass from "discourse/helpers/body-class";
-import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import htmlSafe from "discourse/helpers/html-safe";
@@ -233,7 +232,9 @@ export default RouteTemplate(
                     }}
                     class="fancy-title"
                   >
-                    {{htmlSafe @controller.model.fancyTitle}}
+                    <span class="topic-title">{{htmlSafe
+                        @controller.model.fancyTitle
+                      }}</span>
 
                     {{#if @controller.model.details.can_edit}}
                       {{icon "pencil" class="edit-topic"}}
