@@ -33,6 +33,7 @@ class Reviewable < ActiveRecord::Base
 
   has_many :reviewable_histories, dependent: :destroy
   has_many :reviewable_scores, -> { order(created_at: :desc) }, dependent: :destroy
+  has_many :reviewable_notes, -> { order(created_at: :asc) }, dependent: :destroy
 
   enum :status, { pending: 0, approved: 1, rejected: 2, ignored: 3, deleted: 4 }
 
