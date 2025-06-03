@@ -105,7 +105,10 @@ export default class ProsemirrorTextManipulation {
       return;
     }
 
-    const text = head + i18n(`composer.${exampleKey}`) + tail;
+    const text =
+      head +
+      (sel.value?.length ? sel.value : i18n(`composer.${exampleKey}`)) +
+      tail;
     const doc = this.convertFromMarkdown(text);
 
     this.view.dispatch(
