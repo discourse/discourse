@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe ReviewableNoteSerializer do
-  let(:admin) { Fabricate(:admin) }
-  let(:moderator) { Fabricate(:moderator) }
-  let(:user) { Fabricate(:user) }
-  let(:reviewable) { Fabricate(:reviewable_flagged_post) }
-  let(:note) do
+  fab!(:admin)
+  fab!(:moderator)
+  fab!(:user)
+  fab!(:reviewable) { Fabricate(:reviewable_flagged_post) }
+  fab!(:note) do
     Fabricate(:reviewable_note, reviewable: reviewable, user: admin, content: "Test note content")
   end
 
@@ -14,7 +14,7 @@ RSpec.describe ReviewableNoteSerializer do
   end
 
   describe "serialization" do
-    let(:json) { serialized_note(note) }
+    fab!(:json) { serialized_note(note) }
 
     it "includes basic attributes" do
       expect(json[:id]).to eq(note.id)
@@ -46,7 +46,7 @@ RSpec.describe ReviewableNoteSerializer do
 
   describe "user serialization" do
     context "when note author is admin" do
-      let(:json) { serialized_note(note) }
+      fab!(:json) { serialized_note(note) }
 
       it "includes admin user information" do
         expect(json[:user][:id]).to eq(admin.id)
@@ -57,8 +57,8 @@ RSpec.describe ReviewableNoteSerializer do
     end
 
     context "when note author is moderator" do
-      let(:moderator_note) { Fabricate(:reviewable_note, reviewable: reviewable, user: moderator) }
-      let(:json) { serialized_note(moderator_note) }
+      fab!(:moderator_note) { Fabricate(:reviewable_note, reviewable: reviewable, user: moderator) }
+      fab!(:json) { serialized_note(moderator_note) }
 
       it "includes moderator user information" do
         expect(json[:user][:id]).to eq(moderator.id)
@@ -81,7 +81,7 @@ RSpec.describe ReviewableNoteSerializer do
 
   describe "content handling" do
     context "with HTML content" do
-      let(:html_note) do
+      fab!(:html_note) do
         Fabricate(
           :reviewable_note,
           reviewable: reviewable,
@@ -97,7 +97,7 @@ RSpec.describe ReviewableNoteSerializer do
     end
 
     context "with multiline content" do
-      let(:multiline_note) do
+      fab!(:multiline_note) do
         Fabricate(
           :reviewable_note,
           reviewable: reviewable,
@@ -113,7 +113,7 @@ RSpec.describe ReviewableNoteSerializer do
     end
 
     context "with Unicode content" do
-      let(:unicode_note) do
+      fab!(:unicode_note) do
         Fabricate(
           :reviewable_note,
           reviewable: reviewable,
@@ -129,8 +129,8 @@ RSpec.describe ReviewableNoteSerializer do
     end
 
     context "with maximum length content" do
-      let(:max_content) { "a" * ReviewableNote::MAX_CONTENT_LENGTH }
-      let(:max_note) do
+      fab!(:max_content) { "a" * ReviewableNote::MAX_CONTENT_LENGTH }
+      fab!(:max_note) do
         Fabricate(:reviewable_note, reviewable: reviewable, user: admin, content: max_content)
       end
 
@@ -144,7 +144,7 @@ RSpec.describe ReviewableNoteSerializer do
 
   describe "permissions and scope" do
     context "when viewed by admin" do
-      let(:json) { serialized_note(note, admin) }
+      fab!(:json) { serialized_note(note, admin) }
 
       it "serializes all information" do
         expect(json[:id]).to be_present
@@ -156,7 +156,7 @@ RSpec.describe ReviewableNoteSerializer do
     end
 
     context "when viewed by moderator" do
-      let(:json) { serialized_note(note, moderator) }
+      fab!(:json) { serialized_note(note, moderator) }
 
       it "serializes all information for moderators" do
         expect(json[:id]).to be_present
@@ -168,7 +168,7 @@ RSpec.describe ReviewableNoteSerializer do
     end
 
     context "when viewed by regular user" do
-      let(:json) { serialized_note(note, user) }
+      fab!(:json) { serialized_note(note, user) }
 
       it "still serializes information (controller handles permissions)" do
         # The serializer itself doesn't restrict access - that's handled at the controller level
@@ -180,7 +180,7 @@ RSpec.describe ReviewableNoteSerializer do
   end
 
   describe "BasicUserSerializer integration" do
-    let(:json) { serialized_note(note) }
+    fab!(:json) { serialized_note(note) }
 
     it "uses BasicUserSerializer for user information" do
       user_fields = json[:user].keys

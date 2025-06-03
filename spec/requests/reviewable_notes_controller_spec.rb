@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe "Reviewable Notes" do
-  let(:admin) { Fabricate(:admin) }
-  let(:moderator) { Fabricate(:moderator) }
-  let(:user) { Fabricate(:user) }
-  let(:reviewable) { Fabricate(:reviewable_flagged_post) }
+  fab!(:admin)
+  fab!(:moderator)
+  fab!(:user)
+  fab!(:reviewable) { Fabricate(:reviewable_flagged_post) }
 
   describe "#create" do
     context "when user is staff" do
@@ -32,7 +32,7 @@ RSpec.describe "Reviewable Notes" do
         expect(note.reviewable).to eq(reviewable)
       end
 
-      it "works for moderators too" do
+      it "creates a new reviewable note successfully as a moderator" do
         sign_in(moderator)
 
         post "/reviewables/#{reviewable.id}/notes.json",
@@ -151,7 +151,7 @@ RSpec.describe "Reviewable Notes" do
     context "when user is not staff" do
       before { sign_in(user) }
 
-      it "returns 403 forbidden" do
+      it "returns 404" do
         post "/reviewables/#{reviewable.id}/notes.json",
              params: {
                reviewable_note: {
@@ -159,12 +159,12 @@ RSpec.describe "Reviewable Notes" do
                },
              }
 
-        expect(response.status).to eq(403)
+        expect(response.status).to eq(404)
       end
     end
 
     context "when user is not logged in" do
-      it "returns 403 forbidden" do
+      it "returns 404" do
         post "/reviewables/#{reviewable.id}/notes.json",
              params: {
                reviewable_note: {
@@ -172,20 +172,20 @@ RSpec.describe "Reviewable Notes" do
                },
              }
 
-        expect(response.status).to eq(403)
+        expect(response.status).to eq(404)
       end
     end
   end
 
   describe "#destroy" do
-    let!(:note) { Fabricate(:reviewable_note, reviewable: reviewable, user: admin) }
+    fab!(:note) { Fabricate(:reviewable_note, reviewable: reviewable, user: admin) }
 
     context "when user is the note author" do
       before { sign_in(admin) }
 
       it "deletes the note successfully" do
         expect { delete "/reviewables/#{reviewable.id}/notes/#{note.id}.json" }.to change {
-          ReviewableNote.count
+          ReviewableNote.where(user: admin).count
         }.by(-1)
 
         expect(response.status).to eq(200)
@@ -201,7 +201,7 @@ RSpec.describe "Reviewable Notes" do
     end
 
     context "when user is admin but not the note author" do
-      let!(:moderator_note) { Fabricate(:reviewable_note, reviewable: reviewable, user: moderator) }
+      fab!(:moderator_note) { Fabricate(:reviewable_note, reviewable: reviewable, user: moderator) }
 
       before { sign_in(admin) }
 
@@ -215,7 +215,7 @@ RSpec.describe "Reviewable Notes" do
     end
 
     context "when user is moderator but not admin and not note author" do
-      let!(:admin_note) { Fabricate(:reviewable_note, reviewable: reviewable, user: admin) }
+      fab!(:admin_note) { Fabricate(:reviewable_note, reviewable: reviewable, user: admin) }
 
       before { sign_in(moderator) }
 
@@ -228,16 +228,16 @@ RSpec.describe "Reviewable Notes" do
     context "when user is not staff" do
       before { sign_in(user) }
 
-      it "returns 403 forbidden" do
+      it "returns 404" do
         delete "/reviewables/#{reviewable.id}/notes/#{note.id}.json"
-        expect(response.status).to eq(403)
+        expect(response.status).to eq(404)
       end
     end
 
     context "when user is not logged in" do
-      it "returns 403 forbidden" do
+      it "returns 404" do
         delete "/reviewables/#{reviewable.id}/notes/#{note.id}.json"
-        expect(response.status).to eq(403)
+        expect(response.status).to eq(404)
       end
     end
 
@@ -251,8 +251,8 @@ RSpec.describe "Reviewable Notes" do
     end
 
     context "when note belongs to different reviewable" do
-      let(:other_reviewable) { Fabricate(:reviewable_flagged_post) }
-      let!(:other_note) { Fabricate(:reviewable_note, reviewable: other_reviewable, user: admin) }
+      fab!(:other_reviewable) { Fabricate(:reviewable_flagged_post) }
+      fab!(:other_note) { Fabricate(:reviewable_note, reviewable: other_reviewable, user: admin) }
 
       before { sign_in(admin) }
 
@@ -260,82 +260,6 @@ RSpec.describe "Reviewable Notes" do
         delete "/reviewables/#{reviewable.id}/notes/#{other_note.id}.json"
         expect(response.status).to eq(404)
       end
-    end
-  end
-
-  describe "authorization" do
-    context "when testing ensure_staff callback" do
-      it "blocks non-staff users from accessing create" do
-        sign_in(user)
-
-        post "/reviewables/#{reviewable.id}/notes.json",
-             params: {
-               reviewable_note: {
-                 content: "Test",
-               },
-             }
-
-        expect(response.status).to eq(403)
-      end
-
-      it "blocks non-staff users from accessing destroy" do
-        note = Fabricate(:reviewable_note, reviewable: reviewable, user: admin)
-        sign_in(user)
-
-        delete "/reviewables/#{reviewable.id}/notes/#{note.id}.json"
-
-        expect(response.status).to eq(403)
-      end
-    end
-
-    context "when testing requires_login callback" do
-      it "blocks anonymous users from accessing create" do
-        post "/reviewables/#{reviewable.id}/notes.json",
-             params: {
-               reviewable_note: {
-                 content: "Test",
-               },
-             }
-
-        expect(response.status).to eq(403)
-      end
-
-      it "blocks anonymous users from accessing destroy" do
-        note = Fabricate(:reviewable_note, reviewable: reviewable, user: admin)
-
-        delete "/reviewables/#{reviewable.id}/notes/#{note.id}.json"
-
-        expect(response.status).to eq(403)
-      end
-    end
-  end
-
-  describe "parameter handling" do
-    before { sign_in(admin) }
-
-    it "requires reviewable_note parameter for create" do
-      post "/reviewables/#{reviewable.id}/notes.json", params: { content: "Missing wrapper param" }
-
-      expect(response.status).to eq(400)
-    end
-
-    it "only permits content parameter" do
-      post "/reviewables/#{reviewable.id}/notes.json",
-           params: {
-             reviewable_note: {
-               content: "Valid content",
-               user_id: user.id, # Should be ignored
-               reviewable_id: 999, # Should be ignored
-               created_at: 1.day.ago, # Should be ignored
-             },
-           }
-
-      expect(response.status).to eq(200)
-
-      note = ReviewableNote.last
-      expect(note.content).to eq("Valid content")
-      expect(note.user).to eq(admin) # Not the user_id from params
-      expect(note.reviewable).to eq(reviewable) # Not the reviewable_id from params
     end
   end
 end

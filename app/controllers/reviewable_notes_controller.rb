@@ -22,7 +22,7 @@ class ReviewableNotesController < ApplicationController
     # Only allow the author or admin to delete notes
     raise Discourse::InvalidAccess unless note.user == current_user || current_user.admin?
 
-    note.destroy
+    note.destroy!
     render json: success_json
   end
 
