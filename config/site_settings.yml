@@ -3564,6 +3564,7 @@ uncategorized:
   enable_welcome_banner:
     client: true
     default: true
+    area: "interface"
 
 user_preferences:
   default_email_digest_frequency:
