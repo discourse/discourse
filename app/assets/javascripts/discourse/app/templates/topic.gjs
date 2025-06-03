@@ -232,9 +232,7 @@ export default RouteTemplate(
                     }}
                     class="fancy-title"
                   >
-                    <span class="topic-title">{{htmlSafe
-                        @controller.model.fancyTitle
-                      }}</span>
+                    {{htmlSafe @controller.model.fancyTitle}}
 
                     {{#if @controller.model.details.can_edit}}
                       {{icon "pencil" class="edit-topic"}}
