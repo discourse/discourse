@@ -113,11 +113,7 @@ export default class ProsemirrorTextManipulation {
       text = i18n(`composer.${exampleKey}`);
     } else {
       const selectedFragment = state.doc.slice(from, to).content;
-      const temporaryDoc = state.schema.nodes.doc.create(
-        null,
-        selectedFragment
-      );
-      text = this.convertToMarkdown(temporaryDoc);
+      text = this.convertToMarkdown(selectedFragment);
     }
 
     const doc = this.convertFromMarkdown(head + text + tail);
