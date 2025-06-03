@@ -406,6 +406,7 @@ export default class AdminBadgesShow extends Component {
               @name="query"
               @title={{i18n "admin.badges.query"}}
               @disabled={{this.readOnly}}
+              @format="full"
               as |field|
             >
               <field.Code @lang="sql" />
