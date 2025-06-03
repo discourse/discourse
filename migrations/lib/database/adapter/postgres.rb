@@ -59,6 +59,12 @@ module Migrations::Database::Adapter
       @connection.escape_string(str)
     end
 
+    def encode_array(array)
+      @array_encoder ||= PG::TextEncoder::Array.new
+
+      @array_encoder.encode(array)
+    end
+
     private
 
     def configure_connection
