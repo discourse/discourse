@@ -623,31 +623,25 @@ de:
     until_posts:
       one: "%{count} Beitrag"
       other: "%{count} Beiträge"
-    avatar: |
-      ### Wie wärs mit einem Bild für dein Konto?
+    "new-topic": |
+      Danke für deinen Beitrag zu %{site_name}!
 
-      Du hast schon ein paar Themen und Antworten geschrieben, aber dein Profilbild ist noch nicht so einzigartig wie du – es ist nur ein Buchstabe.
+      Bevor du deinen Beitrag veröffentlichst, wähle bitte eine Kategorie oder ein Schlagwort aus, um dieses Thema mit verwandten Diskussionen zu gruppieren, sodass es für andere leicht zu finden ist.
 
-      Hast du schon darüber nachgedacht, **[dein Benutzerprofil zu besuchen](%{profile_path})** und ein Bild hochzuladen, das dich repräsentiert?
+      Weitere Tipps und Ratschläge für die Teilnahme an unserer Community findest du in unseren [Community-Richtlinien](%{base_path}/guidelines).
+    "new-reply": |
+      Danke für deinen Beitrag zu %{site_name}!
 
-      Es ist einfacher, Diskussionen zu folgen und in Unterhaltungen interessante Personen zu finden, wenn jeder ein einzigartiges Profilbild hat!
-    sequential_replies: |
-      ### Denke darüber nach, auf mehrere Beiträge gleichzeitig zu antworten
+      Denk dran, wir sind alle echte Menschen. Bitte sei freundlich zu den anderen Community-Mitgliedern.
 
-      Statt mehrere aufeinanderfolgende Antworten zu einem Thema zu schreiben, denke bitte darüber nach, eine einzige Antwort zu schreiben, die Zitate mehrerer vorheriger Beiträge oder mehrere Erwähnungen von Benutzernamen mit @ enthält.
-
-      Du kannst deine letzte Antwort bearbeiten, um ein Zitat hinzuzufügen, indem du den Text auswählst und auf die erscheinende Schaltfläche <b>Zitat</b> klickst.
-
-      Es ist für alle einfacher, Themen zu lesen, die wenige umfassende Antworten statt viele kleine und einzelne Antworten haben.
+      Weitere Tipps und Ratschläge für die Teilnahme an unserer Community findest du in unseren [Community-Richtlinien](%{base_path}/guidelines).
+    dominating_topic: Du hast schon viele Beiträge in diesem Thema veröffentlicht! Gib auch anderen die Möglichkeit, sich zu beteiligen.
     get_a_room:
       one: Du hast @%{reply_username} einmal geantwortet. Wusstest du, dass du der Person stattdessen eine persönliche Nachricht schicken kannst?
       other: Du hast @%{reply_username} %{count} Mal geantwortet. Wusstest du, dass du der Person stattdessen eine persönliche Nachricht schicken kannst?
-    reviving_old_topic: |
-      ### Thema neu beleben?
-
-      Die letzte Antwort in diesem Thema war **%{time_ago}**. Deine Antwort wird das Thema wieder an den Anfang der Liste schieben und jeden benachrichtigen, der sich zuvor an der Unterhaltung beteiligt hat.
-
-      Bist du dir sicher, dass du diese alte Unterhaltung fortsetzen möchtest?
+    dont_feed_the_trolls: Dieser Beitrag wurde bereits für die Moderation gemeldet. Antworten auf negative Inhalte ermutigen eher zu noch mehr negativem Verhalten. Möchtest du trotzdem fortfahren?
+    too_many_replies: |
+      Neue Benutzer sind vorübergehend auf %{newuser_max_replies_per_topic} Antworten im selben Thema beschränkt. Bitte besuche auch andere Themen, um die Community kennenzulernen.
   activerecord:
     attributes:
       category:
@@ -2240,12 +2234,10 @@ de:
     max_notifications_per_user: "Maximale Anzahl an Benachrichtigungen pro Benutzer. Wenn diese Zahl überschritten wird, werden alte Benachrichtigungen gelöscht. Wird wöchentlich erzwungen. Zum Deaktivieren auf 0 setzen"
     allowed_user_website_domains: "Benutzer-Websites werden mit diesen Domains abgeglichen. Mehrere Domains können durch senkrechte Striche („|“) getrennt angegeben werden."
     allow_profile_backgrounds: "Benutzern erlauben, Profilhintergründe hochzuladen."
-    sequential_replies_threshold: "Anzahl an aufeinanderfolgenden Beiträgen, die ein Benutzer in einem Thema schreiben kann, bevor er eine entsprechende Benachrichtigung diesbezüglich erhält."
     get_a_room_threshold: "Anzahl an Beiträgen, die ein Benutzer im selben Thema an dieselbe Person schreiben kann, bevor er gewarnt wird."
     dont_feed_the_trolls_threshold: "Anzahl der Meldungen von anderen Benutzern, bevor verwarnt wird."
     enable_mobile_theme: "Mobilgeräte verwenden eine mobile Darstellung mit der Möglichkeit, zur vollständigen Website zu wechseln. Deaktiviere diese Option, wenn du ein eigenes Fully-Responsive-Stylesheet verwenden möchtest."
     dominating_topic_minimum_percent: "Anteil der Beiträge eines Themas in Prozent, die ein einzelner Benutzer verfassen darf, bevor dieser Benutzer darauf hingewiesen wird, dass er dieses Thema dominiert."
-    disable_avatar_education_message: "Deaktiviert den Hinweis für Benutzer, dass sie ihren Avatar ändern können."
     pm_warn_user_last_seen_months_ago: "Benutzer beim Erstellen einer neuen PN warnen, wenn der Empfänger seit mehr als n Monaten nicht gesehen wurde."
     suppress_uncategorized_badge: "Zeige kein Abzeichen für nicht kategorisierte Themen in der Themenliste."
     header_dropdown_category_count: "Wie viele Kategorien im Header-Drop-down-Menü angezeigt werden können."
@@ -2278,7 +2270,6 @@ de:
     show_time_gap_days: "Wenn zwei Beiträge so viele Tage auseinanderliegen, dann wird die Zeitspanne im Thema angezeigt."
     short_progress_text_threshold: "Sobald die Anzahl an Beiträgen in einem Thema diese Nummer übersteigt, zeigt der Fortschrittsbalken nur noch die aktuelle Beitragsnummer. Dieser Wert sollte angepasst werden, falls die Breite des Fortschrittsbalkens verändert wird."
     default_code_lang: "Standardmäßige Syntaxhervorhebung für Programmiersprachen, die auf Markdown-Codeblöcke angewendet wird (auto, text, ruby, python usw.). Dieser Wert muss auch in der Website-Einstellung `highlighted languages` enthalten sein."
-    warn_reviving_old_topic_age: "Wenn jemand beginnt, auf ein Thema zu antworten, dessen letzte Antwort älter als diese Anzahl an Tagen ist, wird eine Warnung angezeigt. Zum Deaktivieren auf 0 setzen."
     autohighlight_all_code: "Wende die Syntaxhervorhebung auf HTML-&lt;code&gt;-Blöcke an, auch wenn keine Sprache angegeben ist. Um Markdown-Codeblöcke zu konfigurieren, verwende die Einstellung „default code lang“."
     highlighted_languages: "Enthaltene Regeln zur Syntaxhervorhebung. (Achtung: Zu viele Sprachen können die Leistung beeinträchtigen.) Siehe <a href='https://highlightjs.org/demo/' target='_blank'>https://highlightjs.org/demo</a> für eine Demo"
     show_copy_button_on_codeblocks: "Eine Schaltfläche zu Codeblöcken hinzufügen, um den Inhalt des Blocks in die Zwischenablage des Benutzers zu kopieren."
@@ -2467,8 +2458,9 @@ de:
     experimental_content_localization: "Zeigt lokalisierte Inhalte basierend auf den Spracheinstellungen der Benutzer an. Diese Inhalte können Kategorien, Schlagwörter, Beiträge und Themen umfassen. Diese Funktion wird derzeit intensiv entwickelt."
     rich_editor: "Aktiviere den Rich-Text-Editor, damit alle Benutzer zwischen dem aktuellen Markdown-Modus und dem neuen Rich-Text-Editor für intuitiveres und benutzerfreundlicheres Verfassen wechseln können. Der Rich-Text-Editor befindet sich in der Entwicklung, daher werden noch nicht alle Funktionen unterstützt — <a href='https://meta.discourse.org/t/test-our-new-composer/352347' target='_blank'>siehe Meta für weitere Details</a>."
     experimental_content_localization_allowed_groups: 'Gruppen, die lokalisierte Inhalte aktualisieren dürfen. Erfordert, dass die „experimental content localization“ aktiviert ist.'
-    experimental_content_localization_supported_locales: "Liste der unterstützten Gebietsschemas für die Aktualisierung der lokalisierten Inhalte"
+    experimental_content_localization_supported_locales: "Liste der unterstützten Gebietsschemata, in die Benutzerinhalte übersetzt werden können. Um wirksam zu werden, muss `experimental_content_localization` aktiviert sein."
     viewport_based_mobile_mode: "EXPERIMENTELL: Deaktiviere die User-Agent-basierten Mobil-/Desktop-Modi und verwende stattdessen die Viewport-Breite."
+    experimental_anon_language_switcher: "Aktiviere den experimentellen Sprachumschalter. Auf diese Weise können Besucher deiner Seite, die nicht angemeldet sind, zwischen übersetzten Versionen der Discourse-Oberfläche und von Benutzern erstellten Inhalten in Themen wechseln."
     errors:
       invalid_css_color: "Ungültige Farbe. Gib einen Farbnamen oder einen Hexadezimalwert ein."
       invalid_email: "Ungültige E-Mail-Adresse."
@@ -2538,6 +2530,7 @@ de:
       delete_rejected_email_after_days: "Diese Einstellung kann nicht niedriger als die Einstellung delete_email_logs_after_days oder höher als %{max} gesetzt werden"
       invalid_uncategorized_category_setting: 'Die Kategorie „Nicht kategorisiert“ kann nicht ausgewählt werden, wenn „Nicht kategorisierte Themen zulassen“ nicht aktiviert ist.'
       invalid_search_ranking_weights: "Der Wert für die Websiteeinstellung search_ranking_weights ist ungültig. Beispiel: „{0.1,0.2,0.3,1.0}“. Beachte, dass der Maximalwert für jede Gewichtung 1.0 beträgt."
+      experimental_anon_language_switcher_requirements: "Für den experimentellen Sprachumschalter muss die Seiteneinstellung `set locale from cookie` aktiviert sein und `automatic translation target languages` muss mindestens eine Sprache enthalten."
     keywords:
       clean_up_inactive_users_after_days: "deaktiviert|inaktiv|nicht aktiviert"
       navigation_menu: "Seitenleiste|Kopfzeilen-Drop-down"

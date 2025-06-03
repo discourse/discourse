@@ -334,14 +334,6 @@ ro:
       one: "o postare"
       few: "%{count} postări"
       other: "%{count} de postări"
-    avatar: |
-      ### Ce zici de o poză atașată contului tău?
-
-      Ai adăugat câteva comentarii și subiecte, dar poza ta de profil nu este unică, cum ești tu - este doar o literă.
-
-      Ai luat în considerare să **[îți actualizezi profilul](%{profile_path})** cu o imagine care te reprezintă?
-
-      Este mai ușor să urmărești o discuție și să găsești oameni interesanți într-o conversație atunci când fiecare are o imagine unică!
   activerecord:
     attributes:
       category:
@@ -1208,11 +1200,9 @@ ro:
     hide_user_profiles_from_public: "Dezactivează cardurile, profilurile și „cartea de telefon” pentru utilizatorii anonimi."
     allow_users_to_hide_profile: "Permite utilizatorilor să-şi ascundă profilul şi prezenţa"
     allow_profile_backgrounds: "Permite utilizatorilor să încarce fundaluri de profil."
-    sequential_replies_threshold: "Numărul de postări succesive pe care un utilizator trebuie sa le facă într-un subiect înainte să i se reamintească că a postat un număr excesiv de postări succesive."
     get_a_room_threshold: "Numărul de postări pe care un utilizator poate să le facă la adresa aceleiași persoane înainte de a primi un avertisment."
     enable_mobile_theme: "Dispozitivele mobile folosesc o temă cu abilitatea de a schimba la întregul site. Dezactivează pentru a folosi o foiae de stil personalizată ce este total responsivă."
     dominating_topic_minimum_percent: "Ce procent din postările unui subiect trebuie să scrie un utilizator înainte de i se aminti că domină excesiv subiectul."
-    disable_avatar_education_message: "Dezactivează mesajul educațional pentru schimbarea avatarului."
     suppress_uncategorized_badge: "Nu arăta ecusonul pentru subiectele fără categorie în lista de subiecte."
     permalink_normalizations: "Aplică următorul regex înainte de a detecta permalink-urile, de exemplu: /(topic.*)\\?.*/\\1 va elimina șirurile de interogare din căile subiectelor. Formatul este regex+șir folosește \\1 etc.pentru a capturarea secvențelor"
     disable_system_edit_notifications: "Deactivează editarea notificărilo de către utilizator atunci când setarea 'download_remote_images_to_local' este activată."
@@ -1226,7 +1216,6 @@ ro:
     show_time_gap_days: "Dacă două postări sunt create la acest număr de zile distantă una de alta, afișează decalajul în subiect."
     short_progress_text_threshold: "După ce numărul de postări într-un subiect devine mai mare decât acest număr, bara de progres va afișa doar numărul postării curente. Dacă schiimbi lățimea barei de progres, va trebui să schimbi această valoare."
     default_code_lang: "Evidențierea implicită a sintaxei limbajului de programare aplicată blocurilor de cod markdown (auto, text, ruby, python etc.). Această valoare trebuie să fie prezentă și în setarea `limbaje evidențiate` a site-ului."
-    warn_reviving_old_topic_age: "Când cineva răspunde la un subiect unde ultimul răspuns e mai vechi decât atâtea zile, va fi afișată o avertizare. Dezactivează prin alegerea cifrei 0."
     autohighlight_all_code: "Aplică evidențierea sintaxei la blocurile de tip &lt;code&gt; HTML, chiar dacă nu au specificat un limbaj. Pentru a configura blocurile de cod scrise în markdown, folosește setarea „limbaj de programare implicit”."
     highlighted_languages: "Reguli de evidențiere a sintaxei incluse. (Atenție: includerea prea multor limbi poate afecta performanța) consultă: <a href='https://highlightjs.org/demo/' target='_blank'>https://highlightjs.org/demo</a> pentru o demonstrație"
     embed_unlisted: "Subiectele încorporate vor fi nelistate până când un utilizator răspunde."
@@ -1287,6 +1276,9 @@ ro:
     about_page_extra_groups_show_description: "Dacă se includ descrierile grupurilor pe pagina „Despre”."
     about_page_extra_groups_order: "Ordonarea grupurilor suplimentare pe pagina „Despre”."
     experimental_content_localization_allowed_groups: 'Grupuri cărora li se permite să actualizeze conținutul localizat. Necesită ca „localizarea experimentală a conținutului” să fie activată.'
+    experimental_content_localization_supported_locales: "Lista localelor acceptate în care conținutul utilizatorului poate fi tradus. Necesită ca `experimental_content_localization` să fie activat pentru a avea efect."
+    viewport_based_mobile_mode: "EXPERIMENTAL: Dezactivează modurile mobil/desktop bazate pe agent utilizator și folosește, în schimb, lățimea spațiului vizibil."
+    experimental_anon_language_switcher: "Activează comutatorul experimental de limbă. Acest lucru va permite vizitatorilor site-ului care nu sunt autentificați să comute între versiunile traduse Discourse și conținutul la care au contribuit utilizatorii în subiecte."
     errors:
       invalid_email: "Adresă de email invalidă."
       invalid_username: "Nu există nici un utilizator cu acest nume de utilizator."

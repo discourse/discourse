@@ -2674,6 +2674,8 @@ he:
         two: "%{count} נושאים בקטגוריה הזו"
         many: "%{count} נושאים בקטגוריה הזו"
         other: "%{count} נושאים בקטגוריה הזו"
+    timezone_input:
+      ambiguous_ist: "IST אינו חד־משמעי, נא לבחור אזור זמן מסוים (למשל: אסיה/קולקטה)"
     select_kit:
       delete_item: "למחוק את %{name}"
       filter_by: "סינון לפי: %{name}"
@@ -4049,6 +4051,14 @@ he:
           edit: "עריכה"
           delete: "מחיקה"
         add: "הוספת תרגום חדש"
+        view:
+          one: "הצגת שפה מתורגמת"
+          two: "הצגת שתי שפות מתורגמות"
+          many: "הצגת %{count} שפות מתורגמות"
+          other: "הצגת %{count} שפות מתורגמות"
+        modal:
+          title: "תרגומים לפוסט"
+          confirm_delete: "למחוק את התרגומים ל־‚%{languageCode}’?"
         success: "התרגומים עודכנו בהצלחה"
       errors:
         create: "אירעה שגיאה ביצירת הפוסט שלך. נא לנסות שוב, עמך הסליחה."
@@ -4317,6 +4327,7 @@ he:
       background_image_dark: "תמונת רקע כהה לקטגוריה"
       style: "סגנונות"
       background_color: "צבע"
+      foreground_color: "צבע הטקסט"
       styles:
         type: "סגנון"
         icon: "סמל"
@@ -5132,7 +5143,7 @@ he:
           save: "שמירה"
           delete: "מחיקה"
           delete_confirm: "למחוק את המקטע הזה?"
-          delete_public_confirm: "סעיף זה <strong>גלוי לכולם</strong>, למחוק אותו?"
+          delete_public_confirm: "סעיף זה גלוי לכולם, למחוק אותו?"
           update_public_confirm: "השינויים יהיו <strong>גלויים לכולם</strong> באתר הזה. להמשיך?"
           mark_as_private_confirm: "הסעיף הזה <strong>גלוי לכולם</strong>. לאחר העדכון, הוא יהיה <strong>גלוי רק לך</strong>. להמשיך?"
           reset_confirm: "לאפס את המקטע הזה לברירת המחדל?"
@@ -5439,6 +5450,14 @@ he:
             bookmarks: "נושאים ללא תיוג שהוספת לסימניות"
             default: "נושאים ללא תיוג"
           category:
+            latest: "נושאים עדכניים ב%{category} בלי תגיות"
+            top: "נושאים מובילים ב%{category} בלי תגיות"
+            new: "נושאים חדשים ב%{category} בלי תגיות"
+            unread: "נושאים שלא נקראו ב%{category} בלי תגיות"
+            unseen: "נושאים שלא נצפו ב%{category} בלי תגיות"
+            hot: "נושאים חמים ב%{category} בלי תגיות"
+            posted: "נושאים ב%{category} ללא תיוג שפרסמת בהם"
+            bookmarks: "נושאים ב%{category} ללא תיוג שהוספת לסימניות"
             default: "%{filter} נושאים ב%{category} בלי תגיות"
         categories: "כל הקטגוריות"
   admin_js:
@@ -5507,6 +5526,7 @@ he:
           header_description: "הגדרה איך משתמשים נכנסים ועוברים אימות, סודות ומפתחות, ספקי OAuth2 ועוד"
         logo:
           title: "לוגו"
+          header_description: "הגדרת הלוגואים והסמלים בהם נעשה שימוש ברחבי האתר שלך"
           form:
             saved: "הגדרות הלוגו נשמרות."
             logo:
@@ -5570,6 +5590,7 @@ he:
               help_text: "הגודל המומלץ הוא ‎280 × 150 פיקסלים לפחות. לא להשתמש בתמונת SVG."
         fonts:
           title: "גופנים"
+          header_description: "הגדרת הגופנים ברחבי האתר שלך, כולל הגופן הבסיסי, גופן הכותרת וגודל הטקסט כברירת מחדל"
           form:
             more_fonts: "גופנים נוספים"
             fewer_fonts: "פחות גופנים"
@@ -5583,6 +5604,11 @@ he:
               description: "את הגודל הזה יוכלו המשתמשים להתאים לעצמם באופן פרטני בהתאם להעדפותיהם."
           backfill_modal:
             title: "להחיל את הגדרות ברירת המחדל החדשות על הטקסט?"
+            description:
+              one: "עדכנת את גודל הכתב כברירת מחדל. להחיל את השינוי הזה על משתמש קיים?"
+              two: "עדכנת את גודל הכתב כברירת מחדל. להחיל את השינויים הזה על שני משתמשים קיימים?"
+              many: "עדכנת את גודל הכתב כברירת מחדל. להחיל את השינויים הזה על %{count} משתמשים קיימים?"
+              other: "עדכנת את גודל הכתב כברירת מחדל. להחיל את השינויים הזה על %{count} משתמשים קיימים?"
             modal_yes: "כן"
             modal_no: "לא, להחיל רק מעתה ואילך"
         navigation:
@@ -6551,7 +6577,6 @@ he:
           copy_of: "עותק של %{name}"
           copy_created: 'נוצר עותק חדש של „%{name}”'
           illegal_character_in_color: "הצבעים מורכבים מתווים הקסדצימליים בלבד"
-          delete_confirm: "למחוק לוח צבעים זה?"
       plugins:
         title: "תוספים"
         name: "שם"
@@ -6914,57 +6939,60 @@ he:
           about: "שינוי הצבעים המכהנים בערכות העיצוב שלך. עליך ליצור לוח צבעים כדי להתחיל."
           new_name: "לוח צבעים חדש"
           copy_name_prefix: "העתק של"
-          delete_confirm: "למחוק לוח צבעים זה?"
           undo: "לבטל פעולה"
           undo_title: "ביטול השינויים לצבע זה מאז הפעם שעברה שהוא נשמר."
           revert: "להחזיר"
           revert_title: "לאפס את הצבע הזה ללוח הצבעים כברירת מחדל של Discourse."
           primary:
             name: "ראשי"
-            description: "רוב הטקסט, הייקונים והמסגרות."
+            description: "טקסט ראשי וסמלים"
           primary-medium:
             name: "עיקרי-בינוני"
+            description: "טקסט מושבת או מושתק"
           primary-low-mid:
             name: "עיקרי-נמוך-בינוני"
+            description: "מסגרות גוונים חלופיים עדינים"
           secondary:
             name: "משני"
-            description: "צבע הרקע העיקי, וצבע הטקסט של חלק מהכפתורים."
+            description: "רקע ראשי וטקסט כלשהו על כפתור"
           tertiary:
             name: "שלישוני"
-            description: "קישורים, כפתורים, עדכונים וצבע מבטא."
+            description: "צבע חלופי (קישורים, כפתורים, עיטורים)"
           quaternary:
             name: "רבעוני"
-            description: "לשימוש בערכות עיצוב כרשות"
           header_background:
             name: "רקע כותרת"
-            description: "צבע הרקע של כותרת האתר."
+            description: "רקע כותרת"
           header_primary:
             name: "כותר עיקרי"
-            description: "טקסט ואייקונים בכותרת האתר."
+            description: "טקסט כותרת וסמלים"
           highlight:
             name: "הדגשה"
-            description: "צבע הרקע של אלמנטים מודגשים בעמוד, כמו פוסטים ונושאים."
+            description: "פוסטים או נושאים מודגשים"
           highlight-high:
             name: "מודגש-גבוה"
+            description: "הדגשה חזקה"
           highlight-medium:
             name: "מודגש-בינוני"
+            description: "הדגשה בינונית"
           highlight-low:
             name: "מודגש-נמוך"
+            description: "הדגשה עדינה"
           danger:
             name: "זהירות"
-            description: "צבע הדגשה של פעולות כמו מחיקת פוסטים ונושאים."
+            description: "שגיאות ופעולות מחיקה"
           success:
             name: "הצלחה"
-            description: "משמש כדי לסמן פעולה מוצלחת."
+            description: "פעולות מוצלחות"
           love:
             name: "חבב"
-            description: "צבע הרקע של הכפתור \"חבב\""
+            description: "כפתור לייק"
           selected:
             name: "נבחרים"
-            description: "צבע הרקע של רכיבים כגון פריטי רשימות כשהם נבחרים/פעילים."
+            description: "פריטים פעילים או נבחרים"
           hover:
             name: "ריחוף"
-            description: "צבע הרקע של רכיבים כגון פריטי רשימות כשעוברים מעליהם עם העכבר או שהמיקוד עובר אליהם מהמקלדת."
+            description: "ריחוף או מיקוד על רקע"
           editor:
             light: "בהיר"
             dark: "כהה"

@@ -5025,7 +5025,6 @@ te:
           delete: "తొలగించు"
           colors:
             title: "రంగులు"
-          delete_confirm: "ఈ రంగుల పాలెట్‌ను తొలగించాలా?"
       plugins:
         title: "చొప్పింతలు"
         name: "పేరు"
@@ -5325,35 +5324,28 @@ te:
           title: "రంగులు"
           about: "మీ థీమ్‌లు ఉపయోగించే రంగులను సవరించండి. ప్రారంభించడానికి కొత్త రంగుల పాలెట్‌ను సృష్టించండి."
           copy_name_prefix: "దీనికి నకలు"
-          delete_confirm: "ఈ రంగుల పాలెట్‌ను తొలగించాలా?"
           undo: "రద్దు చేయండి"
           undo_title: "చివరిసారి సేవ్ చేయబడినప్పటి నుండి ఈ రంగుకు మీ మార్పులను రద్దు చేయండి."
           revert: "తిద్దు"
           revert_title: "ఈ రంగును డిస్కోర్స్ డిఫాల్ట్ కలర్ పాలెట్‌కి రీసెట్ చేయండి."
           primary:
             name: "ప్రాథమిక"
-            description: "పాఠ్యం, చిహ్నాలు మరియు సరిహద్దులు."
           primary-medium:
             name: "primary-medium"
           primary-low-mid:
             name: "primary-low-mid"
           secondary:
             name: "ద్వితీయ"
-            description: "ప్రధాన వెనుతలం రంగు మరియు కొన్ని మీటల పాఠ్యం రంగు."
           tertiary:
             name: "తృతీయ"
-            description: "లింక్‌లు, కొన్ని బటన్‌లు, నోటిఫికేషన్‌లు మరియు యాస రంగు."
           quaternary:
             name: "చతుర్థీ"
           header_background:
             name: "హెడరు వెనుతలం"
-            description: "సైటు హెడరు వెనుతలం రంగు."
           header_primary:
             name: "హెడరు ప్రాథమిక"
-            description: "సైటు హెడరు పాఠ్యం మరియు చిహ్నాలు"
           highlight:
             name: "హైలైట్"
-            description: "పోస్ట్‌లు మరియు విషయాలు వంటి పేజీలో హైలైట్ చేసిన విషయాల నేపథ్య రంగు."
           highlight-high:
             name: "highlight-high"
           highlight-medium:
@@ -5362,19 +5354,14 @@ te:
             name: "highlight-low"
           danger:
             name: "ప్రమాదం"
-            description: "పోస్ట్‌లు మరియు విషయాలను తొలగించడం వంటి చర్యల కోసం రంగును హైలైట్ చేయండి."
           success:
             name: "విజయం"
-            description: "ఒక చర్య విజయవంతమైందని చూపడానికి వాడబడేది"
           love:
             name: "ప్రేమ"
-            description: "ఇష్ఠ బటను రంగు."
           selected:
             name: "ఎంపిక చేయబడినవి"
-            description: "జాబితా-అంశాలు ఎంచుకున్నప్పుడు/సక్రియంగా ఉన్నప్పుడు మూలకాల యొక్క నేపథ్య-రంగు."
           hover:
             name: "హోవర్"
-            description: "లిస్ట్-ఐటెమ్‌లు వాటిపై హోవర్ చేసినప్పుడు లేదా కీబోర్డ్ ఫోకస్‌ని కలిగి ఉన్నప్పుడు వాటి నేపథ్య-రంగు."
           editor:
             light: "లేత"
             dark: "డార్క్"

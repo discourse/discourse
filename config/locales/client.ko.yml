@@ -4212,7 +4212,6 @@ ko:
           delete: "삭제하기"
           colors:
             title: "색상"
-          delete_confirm: "이 색상 표를 삭제 하시겠습니까?"
       plugins:
         title: "플러그인"
         name: "이름"
@@ -4471,35 +4470,28 @@ ko:
           title: "색상"
           about: "테마에 사용되는 색상을 수정합니다. 시작하려면 새 색상 팔레트를 생성하세요."
           copy_name_prefix: "다음의 사본"
-          delete_confirm: "이 색상 팔레트를 삭제할까요?"
           undo: "실행 취소"
           undo_title: "마지막 저장 이후 색상 변경사항을 실행 취소합니다."
           revert: "되돌리기"
           revert_title: "이 색상을 Discourse의 디폴트 색상 팔레트로 리셋합니다."
           primary:
             name: "1차"
-            description: "대부분의 텍스트, 아이콘 및 테두리"
           primary-medium:
             name: "primary-medium"
           primary-low-mid:
             name: "primary-low-mid"
           secondary:
             name: "2차"
-            description: "메인 배경 색상, 일부 버튼의 텍스트 색상"
           tertiary:
             name: "3차"
-            description: "링크, 일부 버튼, 알림 및 강조 색상"
           quaternary:
             name: "4차"
           header_background:
             name: "헤더 배경 색상"
-            description: "사이트 헤더의 배경 색상입니다."
           header_primary:
             name: "헤더 기본"
-            description: "사이트 헤더의 텍스트와 아이콘입니다."
           highlight:
             name: "하이라이트"
-            description: "게시물이나 주제와 같은 페이지 내 하이라이트된 요소의 배경 색상입니다."
           highlight-high:
             name: "highlight-high"
           highlight-medium:
@@ -4508,13 +4500,10 @@ ko:
             name: "highlight-low"
           danger:
             name: "위험"
-            description: "게시물 및 주제 삭제와 같은 작업의 하이라이트 색상입니다."
           success:
             name: "성공"
-            description: "작업이 성공했음을 나타내는 데 사용됩니다."
           love:
             name: "하트"
-            description: "좋아요 버튼 색입니다."
           selected:
             name: "선택됨"
           editor:

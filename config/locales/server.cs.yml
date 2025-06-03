@@ -677,33 +677,11 @@ cs:
       few: "%{count} příspěvky"
       many: "%{count} příspěvků"
       other: "%{count} příspěvků"
-    avatar: |
-      ### Nechcete si nastavit svůj profilový obrázek?
-
-      Přidali jste několik témat a příspěvků, ale Váš profilový obrázek není tak jedinečný jako Vy - je to len písmeno.
-
-      Zvažovali jste **[navštívit svůj uživatelský profil]()** a nahrát v něm obrázek, který vás vystihuje?
-
-      Je jednodušší sledovat diskusi a nalézt v konverzaci zajímavé lidi, když má každý jedinečný profilový obrázek!
-    sequential_replies: |
-      ### Zvažte odpověď na několik příspěvků najednou
-
-      Místo několika odpovědí na téma za sebou prosím zvažte jednu odpověď, která obsahuje citace z předchozích příspěvků nebo odkazy @name.
-
-      Svou předchozí odpověď můžete upravit a přidat citát tak, že v původním příspěvku zvýrazníte text a vyberete zobrazené tlačítko <b>Citovat</b> .
-
-      Pro každého je snazší číst témata, která mají menší množství podrobných odpovědí oproti spoustě malých, jednotlivých odpovědí.
     get_a_room:
       one: Již jste jednou odpověděli uživateli @%{reply_username}, věděli jste, že jim místo toho můžete poslat soukromou zprávu?
       few: Již jste %{count}x odpověděli uživateli @%{reply_username}, věděli jste, že jim místo toho můžete poslat soukromou zprávu?
       many: Již jste %{count}x odpověděli uživateli @%{reply_username}, věděli jste, že jim místo toho můžete poslat soukromou zprávu?
       other: Již jste %{count}x odpověděli uživateli @%{reply_username}, věděli jste, že jim místo toho můžete poslat soukromou zprávu?
-    reviving_old_topic: |
-      ### Oživit toto téma?
-
-      Poslední odpověď na toto téma byla **%{time_ago}**. Vaše odpověď pošťouchne téma na začátek seznamu a upozorní každého, kdo se dříve účastnil konverzace.
-
-      Opravdu chcete pokračovat v této staré konverzaci?
   activerecord:
     attributes:
       category:

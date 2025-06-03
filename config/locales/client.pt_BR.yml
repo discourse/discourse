@@ -4579,7 +4579,7 @@ pt_BR:
           save: "Salvar"
           delete: "Excluir"
           delete_confirm: "Tem certeza de que deseja excluir essa seção?"
-          delete_public_confirm: "Esta seção é <strong>visível para todos(as)</strong>, deseja mesmo excluir?"
+          delete_public_confirm: "Esta seção é visível para todos(as), deseja mesmo excluir?"
           update_public_confirm: "As alterações estarão <strong>visíveis para todos(as)</strong> no site. Prosseguir?"
           mark_as_private_confirm: "Esta seção está <strong>visível para todos(as)</strong>. Após a atualização, estará <strong>visível apenas para você</strong>. Prosseguir?"
           reset_confirm: "Tem certeza de que deseja redefinir esta seção para o padrão?"
@@ -5777,7 +5777,6 @@ pt_BR:
             toggle_description: "A paleta de cores pode ser selecionado pelos(as) usuários(as)"
           colors:
             title: "Cores"
-          delete_confirm: "Excluir esta paleta de cores?"
       plugins:
         title: "Plugins"
         name: "Nome"
@@ -6139,36 +6138,28 @@ pt_BR:
           about: "Altere as cores usadas nos seus temas. Crie um novo esquema de cores para começar."
           new_name: "Nova paleta de cores"
           copy_name_prefix: "Copiar de"
-          delete_confirm: "Excluir esta paleta de cores?"
           undo: "Desfazer"
           undo_title: "Desfaça suas alterações nesta cor desde a última vez que foi salva."
           revert: "Reverter"
           revert_title: "Redefina esta cor na paleta de cores padrão do Discourse."
           primary:
             name: "primário(a)"
-            description: "Maioria dos textos, ícones e bordas."
           primary-medium:
             name: "primária, média"
           primary-low-mid:
             name: "primária, baixa, intermediária"
           secondary:
             name: "secundário(a)"
-            description: "As cores de fundo principais e do texto de alguns botões."
           tertiary:
             name: "terciário(a)"
-            description: "Links, alguns botões, notificações e cor realçada."
           quaternary:
             name: "quaternário(a)"
-            description: "Para uso opcional nos temas."
           header_background:
             name: "fundo do cabeçalho"
-            description: "Cor de fundo do cabeçalho do site."
           header_primary:
             name: "cabeçalho primário"
-            description: "Texto e ícones no cabeçalho do site."
           highlight:
             name: "destaque"
-            description: "A cor de fundo dos elementos em destaque na página, como postagens e tópicos."
           highlight-high:
             name: "destaque, alta"
           highlight-medium:
@@ -6177,19 +6168,14 @@ pt_BR:
             name: "destaque, baixa"
           danger:
             name: "perigo"
-            description: "Cor de destaque para ações como remover postagens e tópicos."
           success:
             name: "sucesso"
-            description: "Usadas para indicar que a ação foi bem-sucedida."
           love:
             name: "adorar"
-            description: "A cor do botão curtir."
           selected:
             name: "selecionado(a)"
-            description: "A cor de fundo de elementos como os itens da lista quando estão seleccionados/activos."
           hover:
             name: "focalizar"
-            description: "A cor de fundo de elementos como os itens da lista quando passa o mouse ou têm o foco do teclado."
           editor:
             light: "Claro"
             dark: "Escuro"
