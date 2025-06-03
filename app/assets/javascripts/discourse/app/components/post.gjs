@@ -22,6 +22,7 @@ import PostMetaDataReplyToTab from "discourse/components/post/meta-data/reply-to
 import PostNotice from "discourse/components/post/notice";
 import TopicMap from "discourse/components/topic-map";
 import concatClass from "discourse/helpers/concat-class";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { isTesting } from "discourse/lib/environment";
 import getURL, { getAbsoluteURL } from "discourse/lib/get-url";
 import postActionFeedback from "discourse/lib/post-action-feedback";
