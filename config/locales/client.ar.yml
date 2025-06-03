@@ -5510,7 +5510,7 @@ ar:
           save: "حفظ"
           delete: "حذف"
           delete_confirm: "هل تريد بالتأكيد حذف هذا القسم؟"
-          delete_public_confirm: "هذا القسم <strong>مرئي للجميع</strong>، هل تريد بالتأكيد حذفه؟"
+          delete_public_confirm: "هذا القسم مرئي للجميع، هل تريد بالتأكيد حذفه؟"
           update_public_confirm: "ستكون التغييرات <strong>مرئية للجميع</strong> على هذا الموقع. هل أنت متأكد؟"
           mark_as_private_confirm: "هذا القسم <strong>مرئي للجميع</strong>. وبعد التحديث، سيكون <strong>مرئيًا لك فقط</strong>. هل أنت متأكد؟"
           reset_confirm: "هل تريد بالتأكيد إعادة تعيين هذا القسم إلى الإعداد الافتراضي؟"
@@ -6732,7 +6732,6 @@ ar:
           colors:
             title: "الألوان"
           save_changes: "احفظ التغييرات"
-          delete_confirm: "هل تريد حذف لوحة الألوان هذه؟"
       plugins:
         title: "الإضافات"
         name: "الاسم"
@@ -7106,36 +7105,28 @@ ar:
           about: "عدِّل الألوان التي تستخدمها سماتك. أنشئ لوحة ألوان جديدة للبدء."
           new_name: "لوحة ألوان جديدة"
           copy_name_prefix: "نسخة من"
-          delete_confirm: "هل تريد حذف لوحة الألوان هذه؟"
           undo: "تراجع"
           undo_title: "يمكنك التراجع عن التغييرات التي أجريتها على هذا اللون منذ آخر مرة تم حفظه."
           revert: "عودة"
           revert_title: "إعادة تعيين هذا اللون إلى لوحة ألوان Discourse الافتراضية"
           primary:
             name: "الأساسي"
-            description: "أغلب النصوص، والأيقونات، والحدود."
           primary-medium:
             name: "أساسي متوسط"
           primary-low-mid:
             name: "أساسي تحت المتوسط"
           secondary:
             name: "الثانوي"
-            description: "لون الخلفية الأساسي، ولون نصوص بعض الأزرار."
           tertiary:
             name: "الثالث"
-            description: "الروابط، وبعض الأزرار، والإشعارات، ولون التمييز."
           quaternary:
             name: "الرابع"
-            description: "للاستخدام الاختياري في السمات."
           header_background:
             name: "خلفية الرأس"
-            description: "لون خلفية رأس الموقع."
           header_primary:
             name: "اللون الأساسي للرأس"
-            description: "النصوص والأيقونات في رأس الموقع."
           highlight:
             name: "التمييز"
-            description: "لون خلفية العناصر المميَّزة في الصفحة، كالمنشورات والموضوعات."
           highlight-high:
             name: "تمييز قوي"
           highlight-medium:
@@ -7144,19 +7135,14 @@ ar:
             name: "تمييز طفيف"
           danger:
             name: "الخطر"
-            description: "لون تمييز الإجراءات مثل حذف المنشورات والموضوعات."
           success:
             name: "تم بنجاح"
-            description: "يتم استخدامه لإظهار نجاح عملية ما."
           love:
             name: "الإعجاب"
-            description: "لون زر تسجيل الإعجاب."
           selected:
             name: "محدَّد"
-            description: "لون الخلفية لعناصر مثل عناصر القائمة عند تحديدها أو عندما تكون نشطة."
           hover:
             name: "التمرير فوق العناصر"
-            description: "لون الخلفية لعناصر مثل عناصر القائمة عند التمرير فوقها أو تحديد التركيز على لوحة المفاتيح لها."
           editor:
             light: "فاتح"
             dark: "داكن"

@@ -4224,6 +4224,7 @@ en:
       background_image_dark: "Dark Category Background Image"
       style: "Styles"
       background_color: "Color"
+      foreground_color: "Text color"
       styles:
         type: "Style"
         icon: "Icon"
@@ -5023,7 +5024,7 @@ en:
           save: "Save"
           delete: "Delete"
           delete_confirm: "Are you sure you want to delete this section?"
-          delete_public_confirm: "This section is <strong>visible to everyone</strong>, are you sure you want to delete it?"
+          delete_public_confirm: "This section is visible to everyone, are you sure you want to delete it?"
           update_public_confirm: "Changes will be <strong>visible to everyone</strong> on this site. Are you sure?"
           mark_as_private_confirm: "This section is <strong>visible to everyone</strong>. After the update, it will be <strong>visible only to you</strong>. Are you sure?"
           reset_confirm: "Are you sure you want to reset this section to default?"
@@ -6441,7 +6442,7 @@ en:
           copy_of: "Copy of %{name}"
           copy_created: 'A new copy of "%{name}" has been created'
           illegal_character_in_color: "Colors consist of hexadecimal characters only"
-          delete_confirm: "Delete this color palette?"
+          delete_confirm: "Are you sure you want to delete this color palette?"
       plugins:
         title: "Plugins"
         name: "Name"
@@ -6822,7 +6823,7 @@ en:
           about: "Modify the colors used by your themes. Create a new color palette to start."
           new_name: "New color palette"
           copy_name_prefix: "Copy of"
-          delete_confirm: "Delete this color palette?"
+          delete_confirm: "Are you sure you want to delete this color palette?"
           undo: "Undo"
           undo_title: "Undo your changes to this color since the last time it was saved."
           revert: "Revert"

@@ -216,8 +216,8 @@ export default class AdminBadgesShow extends Component {
       return this.router.transitionTo("adminBadges.index");
     }
 
-    return this.dialog.yesNoConfirm({
-      message: i18n("admin.badges.delete_confirm"),
+    return this.dialog.deleteConfirm({
+      title: i18n("admin.badges.delete_confirm"),
       didConfirm: async () => {
         try {
           await this.formApi.reset();
@@ -406,6 +406,7 @@ export default class AdminBadgesShow extends Component {
               @name="query"
               @title={{i18n "admin.badges.query"}}
               @disabled={{this.readOnly}}
+              @format="full"
               as |field|
             >
               <field.Code @lang="sql" />

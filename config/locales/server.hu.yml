@@ -622,31 +622,9 @@ hu:
     until_posts:
       one: "%{count} bejegyzés"
       other: "%{count} bejegyzés"
-    avatar: |
-      ### Mit szólnál egy képhez a fiókodhoz?
-
-      Már írtál néhány témát és választ, de a profilképed nem olyan egyedi, mint te vagy - csak egy betű.
-
-      Gondoltál már arra, hogy **[látogasd meg a profilod](%{profile_path})** és tölts fel egy olyan képet, amely reprezentál téged?
-
-      Könnyebb követni a beszélgetéseket és megtalálni az érdekes embereket a beszélgetésekben, ha mindenkinek egyedi profilképe van!
-    sequential_replies: |
-      ### Fontolja meg, hogy egyszerre több hozzászólásra válaszoljon
-
-      Ahelyett, hogy több választ adna egy témára egymás után, fontolja meg, hogy egyetlen választ adjon, amely idézeteket tartalmaz korábbi hozzászólásokból vagy @névre való hivatkozást.
-
-      Korábbi válaszát úgy szerkesztheti idézet hozzáadásához, hogy kiemeli a szöveget, és kiválasztja a megjelenő <b>quote reply</b> gombot.
-
-      Mindenki számára könnyebb elolvasni azokat a témákat, amelyekben kevesebb mélyreható válasz van, mint a sok apró, egyedi válasz.
     get_a_room:
       one: 'Egyszer már válaszoltál neki: @%{reply_username} , tudtad, hogy küldhetsz neki személyes üzenetet is?'
       other: 'Már válaszoltál neki: @%{reply_username} , %{count} alkalommal , tudtad, hogy küldhetsz neki személyes üzenetet is?'
-    reviving_old_topic: |
-      ### Biztosan fel akarod éleszteni ezt a témát?
-
-      A témára az utolsó válasz **%{time_ago}** volt. Ha válaszolsz, a téma a lista tetejére kerül, és értesítünk róla mindenkit, aki korábban részt vett a beszélgetésben.
-
-      Biztosan ezt a régi beszélgetést szeretnéd folytatni?
   activerecord:
     attributes:
       category:
@@ -2239,12 +2217,10 @@ hu:
     max_notifications_per_user: "Az értesítések maximális száma felhasználónként, ha ezt a számot túllépi, a régi értesítések törlődnek. Heti rendszerességgel végrehajtva. A letiltáshoz állítsa 0-ra"
     allowed_user_website_domains: "A felhasználói webhelyet ezeken a domaineken ellenőrizzük. Függőleges vonallal elválasztva."
     allow_profile_backgrounds: "Engedélyezze a felhasználóknak profilhátterek feltöltését."
-    sequential_replies_threshold: "Azon bejegyzések száma, amelyeket a felhasználónak egymás után el kell írnia egy témában, mielőtt emlékeztetőt kapna a túl sok egymást követő válaszról."
     get_a_room_threshold: "Azon bejegyzések száma, amelyeket a felhasználónak ugyanabban a témában ugyanannak a személynek kell közzétennie, mielőtt figyelmeztetést kapna."
     dont_feed_the_trolls_threshold: "A többi felhasználótól kapott jelzések száma a figyelmeztetés előtt."
     enable_mobile_theme: "A mobileszközök mobilbarát témát használnak, és a teljes webhelyre válthatnak. Tiltsa le ezt, ha olyan egyéni stíluslapot szeretne használni, amely teljesen reszponzív."
     dominating_topic_minimum_percent: "Egy felhasználónak hány százaléknyi bejegyzést kell tennie egy témában, mielőtt figyelmeztetést kap a téma túlzott dominanciájáról."
-    disable_avatar_education_message: "Oktatási üzenet kikapcsolása avatárváltáskor."
     pm_warn_user_last_seen_months_ago: "Új PÜ létrehozásakor figyelmeztesse a felhasználókat, ha a célcímzett több mint n hónapja nem volt elérhető."
     suppress_uncategorized_badge: "Ne jelenítse meg a kategorizálatlan témák jelvényét a témalistákban."
     header_dropdown_category_count: "Hány kategória jeleníthető meg a fejléc legördülő menüjében."
@@ -2277,7 +2253,6 @@ hu:
     show_time_gap_days: "Ha két bejegyzés ennyi nap eltéréssel készül, jelenítse meg az időbeli eltérést a témában."
     short_progress_text_threshold: "Miután egy témában a bejegyzések száma meghaladja ezt a számot, a folyamatjelző sáv csak az aktuális bejegyzés számát mutatja. Ha módosítja a folyamatjelző sáv szélességét, előfordulhat, hogy módosítania kell ezt az értéket."
     default_code_lang: "Alapértelmezett programozási nyelvi szintaxiskiemelés, amely a markdown kódblokkokra alkalmazandó (auto, text, ruby, python stb.). Ennek az értéknek szerepelnie kell a `kiemelt nyelvek` oldal beállításban is."
-    warn_reviving_old_topic_age: "Amikor valaki egy olyan témára kezd válaszolni, ahol az utolsó válasz ennél több napnál régebbi, figyelmeztetés jelenik meg. Letiltása 0-ra állítva."
     autohighlight_all_code: "Alkalmazzon szintaktikai kiemelést a HTML-alapú &lt;code&gt; blokkokra, még akkor is, ha nem adtak meg nyelvet. A lejegyzett kódblokkok konfigurálásához használja az „alapértelmezett kódnyelv” beállítást."
     highlighted_languages: "Tartalmazza a szintaxis kiemelési szabályokat. (Figyelem: túl sok nyelv használata befolyásolhatja a teljesítményt) lásd: <a href='https://highlightjs.org/demo/' target='_blank'>https://highlightjs.org/demo</a> a bemutatóért"
     show_copy_button_on_codeblocks: "Adjon hozzá egy gombot a kódblokkokhoz, hogy a blokk tartalmát a felhasználó vágólapjára másolja."

@@ -7,7 +7,7 @@
   "license": "GPL-2.0-only",
   "keywords": [],
   "dependencies": {
-    "@babel/standalone": "^7.27.3",
+    "@babel/standalone": "^7.27.5",
     "@csstools/postcss-light-dark-function": "^2.0.9",
     "autoprefixer": "^10.4.21",
     "babel-plugin-ember-template-compilation": "^2.4.1",

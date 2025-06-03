@@ -4163,7 +4163,6 @@ ur:
           delete: "مٹائیں"
           colors:
             title: "رنگ"
-          delete_confirm: "اِس رنگ کی تختی کومٹائیں؟"
       plugins:
         title: "پلَگ اِنز"
         name: "نام"
@@ -4417,35 +4416,28 @@ ur:
           title: "رنگ"
           about: "اپنی تِھیمز کے استعمال کردہ رنگوں میں ترمیم کریں۔ شروع کرنے کے لئے ایک نئی پیلیٹ بنائیں۔"
           copy_name_prefix: "نقل از"
-          delete_confirm: "اِس رنگ کی تختی کومٹائیں؟"
           undo: "کالعدم کریں"
           undo_title: "اِس رنگ کو آخری دفعہ محفوظ کیے جانے کے وقت سے لے کر اَب تک کی اپنی تمام تبدیلیوں کو کالعدم کریں۔"
           revert: "رِیوَرٹ"
           revert_title: "اِس رنگ کو ڈِسکَورس کی پہلے سے طے شدہ رنگ پیلیٹ کے مطابق رِی سَیٹ کریں۔"
           primary:
             name: "بنیادی"
-            description: "زیادہ تر ٹَیکسٹ، آئیکنز اور بارڈرز"
           primary-medium:
             name: "پرائمری میڈیم"
           primary-low-mid:
             name: "بنیادی-کم-وسط"
           secondary:
             name: "ثانوی"
-            description: "مَین پسِ منظر کا رنگ، اور کچھ بٹنوں کے ٹَیکسٹ کا رنگ۔"
           tertiary:
             name: "ترتییک"
-            description: "لنکس، چند بٹن، اطلاعات، اور اَیکسنٹ رنگ۔"
           quaternary:
             name: "چوتھے درجہ کے"
           header_background:
             name: "ہیڈر کا پسِ منظر"
-            description: "سائٹ کے ہیڈر کے پسِ منظر کا رنگ۔"
           header_primary:
             name: "ہیڈر بنیادی"
-            description: "سائٹ کے ہیڈر میں ٹَیکسٹ اور آئیکنز۔"
           highlight:
             name: "اجاگر کریں"
-            description: "اُجاگر کیے گئے عناصر، جیسے کہ پوسٹس اور ٹاپک، کے پسِ منظر کا رنگ."
           highlight-high:
             name: "ہائی لائٹ-اعلیٰ"
           highlight-medium:
@@ -4454,13 +4446,10 @@ ur:
             name: "ہائی لائٹ-کم"
           danger:
             name: "خطرہ"
-            description: "اِعمال، جیسے کہ پوسٹس اور ٹاپکس کو حذف کرنا، کو نمایاں کرنے کا رنگ۔"
           success:
             name: "کامیابی"
-            description: "ایک کارروائی کے کامیاب ہونے کی نشاندہی کیلئے استعمال کیا جاتا ہے۔"
           love:
             name: "محبت"
-            description: "لائیک بٹن کا رنگ۔"
           selected:
             name: "منتخب کیا ہوا"
           editor:

@@ -124,7 +124,7 @@
       }
     }
 
-    .results {
+    .search-menu-container .results {
       @include float-down;
       box-sizing: border-box;
       border-radius: var(--d-border-radius);
@@ -133,9 +133,14 @@
       left: 0;
       top: 100%;
       right: 0;
+      padding-top: 0;
 
       @include viewport.until(sm) {
         width: 100%;
+      }
+
+      .search-random-quick-tip {
+        padding-top: 0.75rem;
       }
 
       ul,
@@ -144,7 +149,7 @@
         margin: 0;
       }
 
-      .d-icon-magnifying-glass {
+      .search-icon-wrapper {
         display: none;
       }
     }

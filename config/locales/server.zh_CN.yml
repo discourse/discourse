@@ -576,30 +576,8 @@ zh_CN:
   education:
     until_posts:
       other: "%{count} 个帖子"
-    avatar: |
-      ### 想更改您的头像吗？
-
-      您已经发布了几个话题和回复，但您的个人资料照片并不像您自己一样独一无二，它仅仅是一个字母。
-
-      您想过**[访问您的用户个人资料](%{profile_path})**并上传一张代表您自己的照片吗？
-
-      如果每个人都有自己独特的头像，会让人更加容易参与讨论和发现有趣的人！
-    sequential_replies: |
-      ### 考虑一次回复多个帖子
-
-      与其对某个话题连续回复多次，不如只回复一次，并包括对之前的帖子的引用或者用户名引用。
-
-      您可以突出显示文本并选择出现的<b>引用回复</b>按钮，对您之前的回复进行编辑以添加引用。
-
-      这样，每个人都可以更轻松地阅读具有少量嵌套回复的话题，而不是查看大量的个别回复。
     get_a_room:
       other: 您已回复 @%{reply_username} %{count} 次，您知道您可以向他们发送个人消息吗？
-    reviving_old_topic: |
-      ### 复活此话题？
-
-      此话题的最后回复是 **%{time_ago}**。您的回复将让话题重新出现在列表的顶部并通知所有原先参与过讨论的人。
-
-      确定要继续这个久远的对话吗？
   activerecord:
     attributes:
       category:
@@ -2164,12 +2142,10 @@ zh_CN:
     max_notifications_per_user: "每个用户的最大通知数量，如果超过此数值，旧通知将被删除。每周强制执行。设置为 0 将禁用"
     allowed_user_website_domains: "用户网站将针对这些网域进行验证。| 分隔列表。"
     allow_profile_backgrounds: "允许用户上传个人资料背景。"
-    sequential_replies_threshold: "在被提醒太多连续回复之前，用户必须在话题中连续发布的帖子数。"
     get_a_room_threshold: "在被警告之前，用户必须在同一话题中向同一个人发布的帖子数。"
     dont_feed_the_trolls_threshold: "被警告前来自其他用户的举报数量。"
     enable_mobile_theme: "移动设备使用适合移动设备的主题，并且可以切换到完整网站。如果您想使用完全自适应的自定义样式表，请禁用此选项。"
     dominating_topic_minimum_percent: "在被提醒过度主导某个话题之前，用户必须在某个话题中发布的帖子所占的百分比。"
-    disable_avatar_education_message: "禁用更改头像的教育消息。"
     pm_warn_user_last_seen_months_ago: "在创建新的私信时，如果目标接收者已经超过 n 个月前无活动，则警告用户。"
     suppress_uncategorized_badge: "不在话题列表中显示未分类话题的徽章。"
     header_dropdown_category_count: "标题下拉菜单中可以显示的类别数量。"
@@ -2202,7 +2178,6 @@ zh_CN:
     show_time_gap_days: "如果两个帖子间隔此天数，在话题中显示时间间隔。"
     short_progress_text_threshold: "当一个话题的帖子数量超过此数值后，进度条将只显示当前帖子数量。如果更改进度条的宽度，则可能需要更改此值。"
     default_code_lang: "应用于 Markdown 代码块（auto、text、ruby、python 等）的默认编程语言语法高亮显示。此值还必须存在于 `highlighted languages` 网站设置中。"
-    warn_reviving_old_topic_age: "当有人开始回复上次回复时间超过此天数的话题时，将显示警告。设置为 0 将禁用。"
     autohighlight_all_code: "向使用 HTML 编写的 &lt;code&gt; 块应用语法高亮显示，即使这些代码块未指定语言。要配置使用 Markdown 编写的代码块，请使用 'default code lang' 设置。"
     highlighted_languages: "包括语法高亮显示规则。（警告：包含过多语言可能会影响性能）请参阅 <a href='https://highlightjs.org/demo/' target='_blank'>https://highlightjs.org/demo</a> 获取演示"
     show_copy_button_on_codeblocks: "向代码块添加一个按钮，以将块内容复制到用户的剪贴板。"

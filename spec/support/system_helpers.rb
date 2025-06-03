@@ -66,7 +66,6 @@ module SystemHelpers
     SiteSetting.force_hostname = Capybara.server_host
     SiteSetting.port = Capybara.server_port
     SiteSetting.external_system_avatars_enabled = false
-    SiteSetting.disable_avatar_education_message = true
     SiteSetting.enable_user_tips = false
     SiteSetting.splash_screen = false
     SiteSetting.allowed_internal_hosts =
@@ -176,14 +175,24 @@ module SystemHelpers
   end
 
   def fake_scroll_down_long(selector_to_make_tall = "#main-outlet")
-    # Trick to give a huge vertical space to scroll
-    page.execute_script(
-      "document.querySelector('#{selector_to_make_tall}').style.height = '10000px'",
-    )
+    find(selector_to_make_tall)
+    execute_script(<<~JS)
+      (function() {
+        const el = document.querySelector("#{selector_to_make_tall}");
+        if (!el) {
+          throw new Error("Element '#{selector_to_make_tall}' not found");
+        }
+        el.style.minHeight = "10000px";
 
-    sleep 0.1 # most resilient solution for now
-
-    page.scroll_to(0, 1000)
+        const sentinel = document.createElement("div");
+        sentinel.id = "scroll-sentinel";
+        sentinel.style.width = "1px";
+        sentinel.style.height = "1px";
+        document.body.appendChild(sentinel);
+      })();
+    JS
+    find("#scroll-sentinel")
+    execute_script('document.getElementById("scroll-sentinel").scrollIntoView()')
   end
 
   def setup_or_skip_s3_system_test(enable_secure_uploads: false, enable_direct_s3_uploads: true)

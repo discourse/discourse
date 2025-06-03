@@ -54,11 +54,11 @@
     "prosemirror-schema-list": "^1.5.1",
     "prosemirror-state": "^1.4.3",
     "prosemirror-transform": "^1.10.4",
-    "prosemirror-view": "^1.39.3"
+    "prosemirror-view": "^1.40.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.27.3",
-    "@babel/standalone": "^7.27.3",
+    "@babel/core": "^7.27.4",
+    "@babel/standalone": "^7.27.5",
     "@colors/colors": "^1.6.0",
     "@discourse/itsatrap": "^2.0.10",
     "@ember-compat/tracked-built-ins": "^0.9.1",
@@ -73,7 +73,7 @@
     "@embroider/macros": "^1.16.12",
     "@embroider/router": "^2.1.8",
     "@embroider/webpack": "^4.1.0",
-    "@floating-ui/dom": "^1.7.0",
+    "@floating-ui/dom": "^1.7.1",
     "@glimmer/component": "^1.1.2",
     "@glimmer/tracking": "^1.1.2",
     "@popperjs/core": "^2.11.8",

@@ -3380,7 +3380,7 @@ hu:
         help: "A téma nyomtatóbarát változatának megnyitása"
       flag_topic:
         title: "Megjelölés"
-        help: "privátként jelezze ezt a témát, vagy küldjön személyes üzenetet róla"
+        help: "Téma megjelölése, vagy privát üzenet küldése"
         success_message: "Sikeresen megjelölte ezt a témát."
       make_public:
         title: "Átalakítás nyilvános témává"
@@ -3668,7 +3668,7 @@ hu:
         edit_action: "Szerkesztés"
         edit_anonymous: "Sajnos be kell jelentkeznie, hogy szerkeszthesse ezt a bejegyzést."
         flag_action: "Jelölés"
-        flag: "privátként jelezze ezt a bejegyzést, vagy küldjön személyes üzenetet róla"
+        flag: "Bejegyzés megjelölése, vagy privát üzenet küldése"
         anonymous_flag: "email küldése egy stábtagnak, hogy jelölje meg ezt a bejegyzést"
         delete_action: "Bejegyzés törlése"
         delete: "bejegyzés törlése"
@@ -3677,7 +3677,7 @@ hu:
         share_action: "Megosztás"
         share: "bejegyzés hivatkozásának megosztása"
         copy_action: "Link másolása"
-        copy_title: "másolja a bejegyzés linkjét a vágólapra"
+        copy_title: "Bejegyzés linkjének vágólapra másolása"
         link_copied: "Link másolva!"
         more: "Több"
         delete_replies:
@@ -4629,7 +4629,7 @@ hu:
           save: "Mentés"
           delete: "Törlés"
           delete_confirm: "Biztos törlöd ezt a szakaszt?"
-          delete_public_confirm: "Ez a rész <strong>mindenki számára látható</strong>. Biztosan törli?"
+          delete_public_confirm: "Ez a rész mindenki számára látható. Biztosan törli?"
           update_public_confirm: "A változások <strong>mindenki számára</strong> láthatók lesznek ezen az oldalon. biztos vagy ebben?"
           mark_as_private_confirm: "Ez a rész <strong>mindenki számára látható</strong>. A frissítés után <strong>csak az Ön számára lesz látható</strong>. Biztos vagy ebben?"
           reset_confirm: "Biztos visszaállítod ezt a szakaszt alapértelmezettre?"
@@ -5928,7 +5928,6 @@ hu:
           copy_of: "%{name} másolata"
           copy_created: '%{name} Új példánya létrehozva'
           illegal_character_in_color: "A színek csak hexadecimális karakterekből állnak."
-          delete_confirm: "Törli ezt a színpalettát?"
       plugins:
         title: "Bővítmények"
         name: "Név"
@@ -6302,36 +6301,28 @@ hu:
           about: "Módosítsa a témák által használt színeket. Kezdésként hozzon létre egy új színpalettát."
           new_name: "Új színpaletta"
           copy_name_prefix: "másolata"
-          delete_confirm: "Törli ezt a színpalettát?"
           undo: "Visszavonás"
           undo_title: "A szín legutóbbi mentése óta végrehajtott módosítások visszavonása."
           revert: "Visszaállítás"
           revert_title: "A szín visszaállítása a Discouse alapértelmezett színpalettájának megfelelőre."
           primary:
             name: "Elsődleges"
-            description: "valamenyi szövegek,ikonok és szegélyek"
           primary-medium:
             name: "elsődleges-közepes"
           primary-low-mid:
             name: "elsődleges-alacsony-közép"
           secondary:
             name: "Másodlagos"
-            description: "A fő háttérszín és néhány gomb szövegszíne."
           tertiary:
             name: "harmadlagos"
-            description: "Hivatkozások, néhány gomb, értesítések és kiemelő színek."
           quaternary:
             name: "negyedrendű"
-            description: "A témákhoz opcionálisan használható."
           header_background:
             name: "Fejléc háttere"
-            description: "Az oldal fejlécének háttérszíne."
           header_primary:
             name: "fejléc elsődleges"
-            description: "Az oldal fejlécében lévő szöveg és ikonok."
           highlight:
             name: "kiemelés"
-            description: "Az oldalon kiemelt elemek, például bejegyzések és témák háttérszíne."
           highlight-high:
             name: "kiemelés-magas"
           highlight-medium:
@@ -6340,19 +6331,14 @@ hu:
             name: "kiemelés-alacsony"
           danger:
             name: "veszély"
-            description: "Emelje ki a színt az olyan műveletekhez, mint a bejegyzések és témák törlése."
           success:
             name: "siker"
-            description: "A művelet sikerességének jelzésére szolgál."
           love:
             name: "szerelem"
-            description: "A kedvelés gomb színe."
           selected:
             name: "kiválasztott"
-            description: "Az elemek, például a listaelemek háttérszíne, ha ki vannak jelölve/aktívak."
           hover:
             name: "hover"
-            description: "Háttérszín elemek, például a listaelemek háttérszíne, ha rájuk viszed az egérmutatót, vagy ha a billentyűzet fókuszában van."
           editor:
             light: "Világos"
             dark: "Sötét"

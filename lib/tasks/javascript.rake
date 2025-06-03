@@ -168,6 +168,8 @@ task "javascript:update_constants" => :environment do
 
     export const CATEGORY_STYLE_TYPES = #{Category.style_types.to_json};
 
+    export const CATEGORY_TEXT_COLORS = #{Category::DEFAULT_TEXT_COLORS};
+
     export const AUTO_GROUPS = #{auto_groups.to_json};
 
     export const GROUP_SMTP_SSL_MODES = #{Group.smtp_ssl_modes.to_json};

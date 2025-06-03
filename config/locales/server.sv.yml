@@ -497,28 +497,6 @@ sv:
     until_posts:
       one: "%{count} inlägg"
       other: "%{count} inlägg"
-    avatar: |
-      ### Hur vore det med en bild för ditt konto?
-
-      Du har gjort inlägg i ett par ämnen och svarat, men din profilbild är inte lika unik som dig – den är bara en bokstav.
-
-      Har du övervägt att **[gå till din användarprofil](%{profile_path})** och ladda upp en bild som representerar dig?
-
-      Det är enklare att följa diskussioner och hitta intressanta människor i samtal när alla har en unik profilbild!
-    sequential_replies: |
-      ### Överväg att svara på flera inlägg på en och samma gång
-
-      Istället för flera svar i följd till ett ämne, kan du överväga ett enda svar som innehåller citat från tidigare inlägg eller @namn-referenser.
-
-      Du kan redigera ditt tidigare svar och lägga till ett citat genom att markera text och välja knappen <b>citera</b> som dyker upp.
-
-      Det blir lättare för alla att läsa ämnen som har färre in-på-djupet-svar istället för flera små, individuella svar.
-    reviving_old_topic: |
-      ### Återuppliva detta ämne?
-
-      Senaste svaret i detta ämne skedde **%{time_ago}**. Ditt svar kommer att lyfta upp ämnet till toppen av listan och avisera alla tidigare involverade i ämnet.
-
-      Är du säker på att du vill fortsätta detta gamla samtal?
   activerecord:
     attributes:
       category:
@@ -1958,12 +1936,10 @@ sv:
     max_notifications_per_user: "Maximalt antal aviseringar per användare. Om detta värde överskrids kommer äldre aviseringar att raderas. Verkställs veckovis. Sätt till 0 för att inaktivera."
     allowed_user_website_domains: "Användarens webbplats kommer att verifieras mot dessa domäner. Avgränsad textfil."
     allow_profile_backgrounds: "Tillåt användare att ladda upp profilbakgrunder."
-    sequential_replies_threshold: "Antal inlägg en användare måste ha skrivit i rad i ett ämne innan användaren blir påmind om för många svar i sekvens."
     get_a_room_threshold: "Antalet inlägg en användare kan göra till samma person inom samma ämne innan det ges en varning."
     dont_feed_the_trolls_threshold: "Antal flaggor från andra användare innan du varnas."
     enable_mobile_theme: "Mobila enheter använder ett mobilvänligt tema, med möjligheten att byta till standardsidan. Inaktivera detta om du vill använda en anpassad stilmall som är helt responsiv."
     dominating_topic_minimum_percent: "Procentandel av antalet inlägg som en användare måste skriva i ett ämne innan de påminns om att de är för dominerande."
-    disable_avatar_education_message: "Inaktivera hjälpmeddelande för byte av avatar."
     pm_warn_user_last_seen_months_ago: "När du skapar ett nytt PM varnas användare om det är mer än n månader sedan målmottagaren sågs till."
     suppress_uncategorized_badge: "Visa inte utmärkelsen för okategoriserade ämnen i ämneslistan."
     header_dropdown_category_count: "Hur många kategorier kan visas i rubrikens rullgardinsmeny."
@@ -1989,7 +1965,6 @@ sv:
     show_time_gap_days: "Om två inlägg är gjorda med så här många dagar emellan, visa tidsskillnaden i ämnet."
     short_progress_text_threshold: "Efter att antalet inlägg i ett ämne överstiger den här siffran kommer förloppsmätaren endast att visa nuvarande antal inlägg. Om du ändrar förloppsmätarens bredd så kanske du behöver ändra det här värdet."
     default_code_lang: "Standardprogrammeringsspråkets syntaxmarkering tillämpas på markdown-kodblock (auto, text, ruby, python etc). Detta värde måste också finnas i webbplatsinställningen `highlighted languages`."
-    warn_reviving_old_topic_age: "En varning visas när någon börjar skriva ett svar på ett ämne och senaste inlägget är äldre än så här många dagar. Ange 0 för att inaktivera."
     autohighlight_all_code: "Tillämpa syntaxmarkering på HTML-författade &lt;code&gt; block, även om de inte angav något språk. För att konfigurera markdown-författade kodblock, använd inställningen 'default code lang'."
     show_copy_button_on_codeblocks: "Lägg till en knapp till kodblock för att kopiera blockinnehållet till användarens urklipp."
     embed_any_origin: "Tillåt inbäddbart innehåll oavsett ursprung. Detta krävs för mobilappar med statisk HTML."

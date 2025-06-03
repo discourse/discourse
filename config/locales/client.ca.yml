@@ -3442,7 +3442,6 @@ ca:
           delete: "Suprimeix"
           colors:
             title: "Colors"
-          delete_confirm: "Voleu suprimir aquesta paleta de colors?"
       plugins:
         title: "Connectors"
         name: "Nom"
@@ -3667,40 +3666,30 @@ ca:
           title: "Colors"
           about: "Modifiqueu els colors utilitzats per les vostres aparences. Creeu una nova paleta de colors per a començar."
           copy_name_prefix: "Còpia de"
-          delete_confirm: "Voleu suprimir aquesta paleta de colors?"
           undo: "Desfés"
           undo_title: "Desfà els canvis a aquest color des de la darrera vegada que va ser desat."
           revert: "Reverteix"
           revert_title: "Restableix aquest color a la paleta de colors predeterminada de Discourse."
           primary:
             name: "primari"
-            description: "La majoria de text, icones i vores."
           secondary:
             name: "secundari"
-            description: "El color de fons principal i el color de text d'alguns botons."
           tertiary:
             name: "terciari"
-            description: "Enllaços, alguns botons, alertes i color de ressaltament."
           quaternary:
             name: "quaternari"
           header_background:
             name: "color de fons de la capçalera"
-            description: "Color de fons de la capçalera del lloc web."
           header_primary:
             name: "capçalera primària"
-            description: "Text i icones en la capçalera del lloc web."
           highlight:
             name: "destaca"
-            description: "El color de fons dels elements destacats en la pàgina, com ara publicacions i temes."
           danger:
             name: "perill"
-            description: "Color destacat per a accions com ara suprimir publicacions i temes."
           success:
             name: "èxit"
-            description: "Emprat per a indicar que una acció ha estat reeixida."
           love:
             name: "amor"
-            description: "El color del botó M'agrada"
           selected:
             name: "seleccionat"
           editor:

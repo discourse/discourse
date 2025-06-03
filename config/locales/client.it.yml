@@ -4549,7 +4549,7 @@ it:
           save: "Salva"
           delete: "Elimina"
           delete_confirm: "Vuoi davvero eliminare questa sezione?"
-          delete_public_confirm: "Questa sezione è <strong>visibile a chiunque</strong>. Vuoi davvero eliminarla?"
+          delete_public_confirm: "Questa sezione è visibile a chiunque. Vuoi davvero eliminarla?"
           update_public_confirm: "Le modifiche saranno <strong>visibili a chiunque</strong> sul sito. Vuoi procedere?"
           mark_as_private_confirm: "Questa sezione è <strong>visibile a chiunque</strong>. Dopo l'aggiornamento, sarà <strong>visibile solo a te</strong>. Intendi procedere?"
           reset_confirm: "Vuoi davvero ripristinare questa sezione ai valori predefiniti?"
@@ -5671,7 +5671,6 @@ it:
             toggle_description: "Lo schema di colori può essere selezionato dagli utenti"
           colors:
             title: "Colori"
-          delete_confirm: "Eliminare questa tavolozza dei colori?"
       plugins:
         title: "Plugin"
         name: "Nome"
@@ -6015,36 +6014,28 @@ it:
           about: "Modifica i colori usati dal tuo tema. Crea una nuova tavolozza dei colori per iniziare."
           new_name: "Nuovo schema di colori"
           copy_name_prefix: "Copia di"
-          delete_confirm: "Eliminare questa tavolozza dei colori?"
           undo: "Annulla"
           undo_title: "Annulla le modifiche effettuate a questo colore dall'ultimo salvataggio."
           revert: "Ripristina"
           revert_title: "Reimposta questo colore alla tavolozza dei colori predefiniti di Discourse."
           primary:
             name: "primario"
-            description: "Per la maggior parte del testo, icone e bordi."
           primary-medium:
             name: "primary-medium"
           primary-low-mid:
             name: "primary-low-mid"
           secondary:
             name: "secondario"
-            description: "Il colore di sfondo principale e il colore del testo di alcuni pulsanti"
           tertiary:
             name: "terziario"
-            description: "Colore dei collegamenti, alcuni pulsanti, notifiche e colore in primo piano."
           quaternary:
             name: "quaternario"
-            description: "Per uso facoltativo nei temi."
           header_background:
             name: "sfondo intestazione"
-            description: "Colore di sfondo dell'intestazione del sito."
           header_primary:
             name: "intestazione primaria"
-            description: "Testo e icone dell'intestazione del sito."
           highlight:
             name: "in evidenza"
-            description: "Il colore di sfondo degli elementi evidenziati nella pagina, come messaggi e argomenti."
           highlight-high:
             name: "highlight-high"
           highlight-medium:
@@ -6053,19 +6044,14 @@ it:
             name: "highlight-low"
           danger:
             name: "pericolo"
-            description: "Colore per evidenzare azioni come la cancellazione di messaggi e argomenti."
           success:
             name: "successo"
-            description: "Utilizzato per indicare che un'azione è stata completata con successo."
           love:
             name: "Mi piace"
-            description: "Il colore del pulsante \"Mi piace\"."
           selected:
             name: "selezionato"
-            description: "Il colore di sfondo di elementi come voci di elenco quando sono selezionati/attivi."
           hover:
             name: "passaggio mouse"
-            description: "Il colore di sfondo di elementi come voci di elenco quando viene passato il mouse su di essi o vengono selezionati da tastiera."
           editor:
             light: "Chiaro"
             dark: "Scuro"
