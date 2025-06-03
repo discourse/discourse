@@ -739,7 +739,7 @@ export default class ReviewableItem extends Component {
                   {{icon "book"}}
                 </span>
                 <a
-                  href="{{this.siteSettings.moderation_guide_url}}"
+                  href={{this.siteSettings.moderation_guide_url}}
                   class="review-resources__link"
                 >
                   {{i18n "review.help.moderation_guide"}}
@@ -750,7 +750,7 @@ export default class ReviewableItem extends Component {
                   {{icon "book"}}
                 </span>
                 <a
-                  href="{{this.siteSettings.flag_priorities_url}}"
+                  href={{this.siteSettings.flag_priorities_url}}
                   class="review-resources__link"
                 >
                   {{i18n "review.help.flag_priorities"}}
@@ -761,7 +761,7 @@ export default class ReviewableItem extends Component {
                   {{icon "book"}}
                 </span>
                 <a
-                  href="{{this.siteSettings.spam_detection_url}}"
+                  href={{this.siteSettings.spam_detection_url}}
                   class="review-resources__link"
                 >
                   {{i18n "review.help.spam_detection"}}
