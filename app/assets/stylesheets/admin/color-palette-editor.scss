@@ -30,8 +30,7 @@
   }
 
   &__color-name {
-    color: var(--primary-medium);
-    font-size: var(--font-down-1);
+    font-size: var(--font-down-1-rem);
   }
 
   &__color-controls {
@@ -42,9 +41,6 @@
     display: flex;
     align-items: center;
     gap: var(--space-2);
-    padding: var(--space-2);
-    border: 1px solid var(--primary-low);
-    border-radius: var(--d-input-border-radius);
 
     &:focus-within {
       border-color: var(--tertiary);
@@ -71,9 +67,9 @@
   }
 
   input[type="color"] {
-    width: 23px;
-    height: 23px;
-    border-radius: 100px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
   }
 
   input[type="text"] {
