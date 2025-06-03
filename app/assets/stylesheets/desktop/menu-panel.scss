@@ -1,4 +1,6 @@
 .menu-panel {
+  border: 1px solid var(--primary-200);
+
   &.user-menu.revamped {
     width: unset;
   }

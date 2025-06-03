@@ -127,7 +127,7 @@
   --shadow-modal: 0 8px 60px rgba(0, 0, 0, #{$shadow-opacity-modal});
   --shadow-composer: 0 -1px 40px rgba(0, 0, 0, #{$shadow-opacity-composer});
   --shadow-card: 0 4px 14px rgba(0, 0, 0, #{$shadow-opacity-card});
-  --shadow-dropdown: 0 2px 12px 0 rgba(0, 0, 0, #{$shadow-opacity-dropdown});
+  --shadow-dropdown: 0 4px 6px -1px #0000001a, 0 2px 4px -2px #0000001a;
   --shadow-menu-panel: var(--shadow-dropdown);
   --shadow-header: 0 0 0 1px var(--primary-low);
   --shadow-footer-nav: 0 0 2px 0 rgba(0, 0, 0, #{$shadow-opacity-footer-nav});
