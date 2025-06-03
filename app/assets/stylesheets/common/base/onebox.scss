@@ -1,7 +1,6 @@
 @use "lib/viewport";
 
 @mixin onebox-shadow($thickness) {
-  margin-top: $thickness;
   border: 0;
   margin-inline: $thickness;
   box-shadow:
@@ -114,6 +113,7 @@ a.loading-onebox {
 
 aside.onebox {
   @include onebox-shadow(4px);
+  margin-top: 4px;
   margin-bottom: 1em;
   padding: 1em;
   font-size: var(--font-0);
