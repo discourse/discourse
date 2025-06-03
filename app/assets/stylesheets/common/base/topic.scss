@@ -191,6 +191,29 @@
       width: 100%;
     }
 
+    .fancy-title {
+      .d-icon-pencil {
+        font-size: var(--font-down-3);
+      }
+    }
+
+    html.discourse-no-touch & {
+      .fancy-title {
+        .edit-topic {
+          opacity: 0;
+          transition: opacity 0.15s linear;
+          background: none;
+        }
+
+        &:hover,
+        &:focus {
+          .edit-topic {
+            opacity: 1;
+          }
+        }
+      }
+    }
+
     @include viewport.until(sm) {
       .topic-category {
         margin-top: 0.25em;
