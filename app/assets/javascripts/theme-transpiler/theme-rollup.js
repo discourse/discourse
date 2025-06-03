@@ -223,10 +223,8 @@ const __COLOCATED_TEMPLATE__ = template;
             },
           ],
           // TODO: Ember this fallback
-          // TODO: template colocation
           // TODO: widgetHbs (remove from d-calendar)
           // TODO: sourcemaps
-          // TODO: connectors
           // TODO: should babel presetEnv be on output?
         ],
         presets: [
@@ -295,9 +293,19 @@ const __COLOCATED_TEMPLATE__ = template;
 
   resultPromise
     .then((bundle) => {
-      return bundle.generate({ format: "es", sourcemap: true });
+      return bundle.generate({
+        format: "es",
+        sourcemap: "hidden",
+        sourcemapPathTransform: (relativeSourcePath) =>
+          `theme-${opts.themeId}/${relativeSourcePath}`,
+      });
     })
-    .then(({ output }) => (lastRollupResult = output))
+    .then(({ output }) => {
+      lastRollupResult = {
+        code: output[0].code,
+        map: JSON.stringify(output[0].map),
+      };
+    })
     .catch((error) => {
       console.error(error);
       lastRollupError = error;

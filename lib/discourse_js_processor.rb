@@ -156,7 +156,7 @@ class DiscourseJsProcessor
     end
 
     def rollup(tree, opts)
-      self.class.v8_call("rollup", tree, opts, fetch_result_call: "getRollupResult")[0]
+      self.class.v8_call("rollup", tree, opts, fetch_result_call: "getRollupResult")
     end
 
     def post_css(css:, map:, source_map_file:)
