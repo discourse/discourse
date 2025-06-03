@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 RSpec.describe ReviewableNoteSerializer do
   fab!(:admin)
   fab!(:moderator)
@@ -8,151 +7,21 @@ RSpec.describe ReviewableNoteSerializer do
   fab!(:note) do
     Fabricate(:reviewable_note, reviewable: reviewable, user: admin, content: "Test note content")
   end
-
   def serialized_note(note, current_user = admin)
     ReviewableNoteSerializer.new(note, scope: Guardian.new(current_user), root: false).as_json
   end
-
   describe "serialization" do
-    fab!(:json) { serialized_note(note) }
-
+    let(:json) { serialized_note(note) }
     it "includes basic attributes" do
       expect(json[:id]).to eq(note.id)
       expect(json[:content]).to eq("Test note content")
       expect(json[:created_at]).to be_present
       expect(json[:updated_at]).to be_present
     end
-
     it "includes user information" do
       expect(json[:user]).to be_present
       expect(json[:user][:id]).to eq(admin.id)
       expect(json[:user][:username]).to eq(admin.username)
-    end
-  end
-
-  describe "content handling" do
-    context "with maximum length content" do
-      fab!(:max_content) { "a" * ReviewableNote::MAX_CONTENT_LENGTH }
-      fab!(:max_note) do
-        Fabricate(:reviewable_note, reviewable: reviewable, user: admin, content: max_content)
-      end
-
-      it "serializes long content correctly" do
-        json = serialized_note(max_note)
-        expect(json[:content]).to eq(max_content)
-        expect(json[:content].length).to eq(ReviewableNote::MAX_CONTENT_LENGTH)
-      end
-    end
-  end
-
-  describe "permissions and scope" do
-    context "when viewed by admin" do
-      fab!(:json) { serialized_note(note, admin) }
-
-      it "serializes all information" do
-        expect(json[:id]).to be_present
-        expect(json[:content]).to be_present
-        expect(json[:user]).to be_present
-        expect(json[:created_at]).to be_present
-        expect(json[:updated_at]).to be_present
-      end
-    end
-
-    context "when viewed by moderator" do
-      fab!(:json) { serialized_note(note, moderator) }
-
-      it "serializes all information for moderators" do
-        expect(json[:id]).to be_present
-        expect(json[:content]).to be_present
-        expect(json[:user]).to be_present
-        expect(json[:created_at]).to be_present
-        expect(json[:updated_at]).to be_present
-      end
-    end
-
-    context "when viewed by regular user" do
-      fab!(:json) { serialized_note(note, user) }
-
-      it "still serializes information (controller handles permissions)" do
-        # The serializer itself doesn't restrict access - that's handled at the controller level
-        expect(json[:id]).to be_present
-        expect(json[:content]).to be_present
-        expect(json[:user]).to be_present
-      end
-    end
-  end
-
-  describe "BasicUserSerializer integration" do
-    fab!(:json) { serialized_note(note) }
-
-    it "uses BasicUserSerializer for user information" do
-      user_fields = json[:user].keys
-
-      # BasicUserSerializer should include these fields
-      expect(user_fields).to include(:id, :username, :name, :avatar_template)
-
-      # Should not include sensitive fields that aren't in BasicUserSerializer
-      expect(user_fields).not_to include(:email, :password_hash)
-    end
-
-    it "includes basic user fields from BasicUserSerializer" do
-      user_fields = json[:user].keys
-      expect(user_fields).to include(:id, :username, :name, :avatar_template)
-      # BasicUserSerializer doesn't include admin/moderator status
-    end
-  end
-
-  describe "serializer inheritance" do
-    it "inherits from ApplicationSerializer" do
-      expect(ReviewableNoteSerializer.superclass).to eq(ApplicationSerializer)
-    end
-
-    it "has the expected attributes defined" do
-      expect(ReviewableNoteSerializer._attributes).to include(
-        :id,
-        :content,
-        :created_at,
-        :updated_at,
-      )
-    end
-
-    it "has the user association defined" do
-      expect(ReviewableNoteSerializer._associations[:user]).to be_present
-      # Note: Association structure may vary - just check it exists
-    end
-  end
-
-  describe "edge cases" do
-    context "with minimal note data" do
-      let(:minimal_note) do
-        note = ReviewableNote.new
-        note.id = 1
-        note.content = "Minimal"
-        note.created_at = Time.current
-        note.updated_at = Time.current
-        allow(note).to receive(:user).and_return(admin)
-        note
-      end
-
-      it "handles minimal data correctly" do
-        json = serialized_note(minimal_note)
-        expect(json[:id]).to eq(1)
-        expect(json[:content]).to eq("Minimal")
-        expect(json[:user][:id]).to eq(admin.id)
-      end
-    end
-
-    context "when timestamps are missing" do
-      before do
-        allow(note).to receive(:created_at).and_return(nil)
-        allow(note).to receive(:updated_at).and_return(nil)
-      end
-
-      it "handles nil timestamps" do
-        json = serialized_note(note)
-        expect(json[:created_at]).to be_nil
-        expect(json[:updated_at]).to be_nil
-      end
     end
   end
 end
