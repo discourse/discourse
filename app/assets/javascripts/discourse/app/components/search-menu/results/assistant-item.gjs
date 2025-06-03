@@ -144,7 +144,7 @@ export default class AssistantItem extends Component {
       data-usage={{@usage}}
     >
       <a class={{concatClass @typeClass "search-link"}} href={{this.href}}>
-        <span aria-label={{i18n "search.title"}}>
+        <span class="search-icon-wrapper" aria-label={{i18n "search.title"}}>
           {{icon (or @icon "magnifying-glass")}}
         </span>
         <span class="search-item-wrapper">
