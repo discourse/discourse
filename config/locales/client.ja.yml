@@ -4302,7 +4302,7 @@ ja:
           save: "保存"
           delete: "削除"
           delete_confirm: "このセクションを削除してもよろしいですか？"
-          delete_public_confirm: "このセクションは<strong>全員に表示</strong>されます。削除してもよろしいですか？"
+          delete_public_confirm: "このセクションは全員に表示されます。削除してもよろしいですか？"
           update_public_confirm: "変更はこのサイトの<strong>全員に表示</strong>されます。よろしいですか？"
           mark_as_private_confirm: "このセクションは<strong>全員に表示</strong>されます。更新後は<strong>あなたにだけ表示</strong>されます。よろしいですか？"
           reset_confirm: "このセクションをデフォルトにリセットしてもよろしいですか？"
@@ -5392,7 +5392,6 @@ ja:
             toggle_description: "ユーザーが色パレットを選択できる"
           colors:
             title: "色"
-          delete_confirm: "この色パレットを削除しますか？"
       plugins:
         title: "プラグイン"
         name: "名前"
@@ -5729,36 +5728,28 @@ ja:
           about: "テーマで使用する色を変更します。まず新しい色パレットを作成します。"
           new_name: "新しい色パレット"
           copy_name_prefix: "コピー元:"
-          delete_confirm: "この色パレットを削除しますか？"
           undo: "元に戻す"
           undo_title: "変更を元に戻して、前回保存された色にします。"
           revert: "戻す"
           revert_title: "この色を Discourse のデフォルトの色パレットにリセットします。"
           primary:
             name: "プライマリー"
-            description: "ほとんどのテキスト、アイコン、ボーダー。"
           primary-medium:
             name: "primary-medium"
           primary-low-mid:
             name: "primary-low-mid"
           secondary:
             name: "セカンダリー"
-            description: "メインの背景色とボタンのテキスト色。"
           tertiary:
             name: "ターシャリー"
-            description: "リンク、一部のボタン、通知、およびアクセントカラー。"
           quaternary:
             name: "クォータナリー"
-            description: "テーマでオプションとして使用します。"
           header_background:
             name: "ヘッダー背景"
-            description: "サイトのヘッダー背景色。"
           header_primary:
             name: "ヘッダーのプライマリー"
-            description: "サイトのヘッダーのテキストとアイコン。"
           highlight:
             name: "ハイライト"
-            description: "投稿やトピックなど、ページのハイライトされた要素の背景色。"
           highlight-high:
             name: "highlight-high"
           highlight-medium:
@@ -5767,19 +5758,14 @@ ja:
             name: "highlight-low"
           danger:
             name: "危険"
-            description: "投稿やトピックの削除といった操作の強調色。"
           success:
             name: "成功"
-            description: "操作が成功したことを示すために使用します。"
           love:
             name: "ラブ"
-            description: "「いいね！」ボタンの色。"
           selected:
             name: "選択済み"
-            description: "リスト項目などの要素が選択/アクティブの場合の背景色。"
           hover:
             name: "ホバー"
-            description: "リスト項目などの要素がホバーされているかキーボードフォーカスにある場合の背景色。"
           editor:
             light: "ライト"
             dark: "ダーク"

@@ -1944,6 +1944,8 @@ ro:
         one: "+%{count} subcategorie"
         few: "+%{count} subcategorii"
         other: "+%{count} de subcategorii"
+    timezone_input:
+      ambiguous_ist: "IST este ambiguu, te rugăm să selectezi un fus orar specific (de exemplu: Asia/Kolkata)"
     select_kit:
       delete_item: "Șterge %{name}"
       no_content: Nu s-au găsit potriviri
@@ -2707,6 +2709,13 @@ ro:
           edit: "Editează"
           delete: "Șterge"
         add: "Adaugă traducere nouă"
+        view:
+          one: "Vezi o locală tradusă"
+          few: "Vezi %{count} locale traduse"
+          other: "Vezi %{count} de locale traduse"
+        modal:
+          title: "Traduceri pentru postare"
+          confirm_delete: "Sigur vrei să ștergi traducerile pentru „%{languageCode}”?"
         success: "Traducerile au fost actualizate cu succes"
       errors:
         create: "Ne pare rău, a apărut o eroare la creerea postării. Te rugăm să încerci iar."
@@ -2882,6 +2891,7 @@ ro:
       background_image: "Imaginea de fundal a categoriei"
       style: "Stiluri"
       background_color: "Culoare"
+      foreground_color: "Culoare text"
       styles:
         type: "Stil"
         icon: "Icon"
@@ -3395,6 +3405,7 @@ ro:
           add: "Adaugă secțiune personalizată"
           save: "Salvează"
           delete: "Șterge"
+          delete_public_confirm: "Această secțiune este vizibilă pentru toată lumea, sigur vrei să o ștergi?"
           links:
             add: "Adaugă altă legătură"
             reset: "Resetare la valorile implicite"
@@ -3605,6 +3616,7 @@ ro:
           header_description: "Configurează modul în care utilizatorii se conectează și se autentifică, secretele și cheile, furnizorii OAuth2 și multe altele"
         logo:
           title: "Logo"
+          header_description: "Configurează logourile și iconurile utilizate pe întregul tău site"
           form:
             saved: "Setările logoului sunt salvate."
             logo:
@@ -3630,6 +3642,7 @@ ro:
               help_text: "Dimensiunea recomandată este de 512 x 512 pixeli."
         fonts:
           title: "Fonturi"
+          header_description: "Configurează fonturile utilizate pe întregul tău site, inclusiv fontul de bază, fontul pentru titlu și dimensiunea implicită a textului"
           form:
             more_fonts: "Mai multe fonturi"
             saved: "Setările fontului sunt salvate."
@@ -4257,7 +4270,7 @@ ro:
           save_changes: "Salvează modificări"
           unsaved_changes: "Ai modificări nesalvate"
           illegal_character_in_color: "Culorile constau numai din caractere hexazecimale"
-          delete_confirm: "Ștergi această paletă de culori?"
+          delete_confirm: "Sigur vrei să ștergi această paletă de culori?"
       plugins:
         title: "Plugin-uri"
         name: "Nume"
@@ -4465,33 +4478,30 @@ ro:
           long_title: "Paletă de culori"
           new_name: "Paletă nouă de culori"
           copy_name_prefix: "Copie a"
+          delete_confirm: "Sigur vrei să ștergi această paletă de culori?"
           undo: "Anulează acțiunea"
           undo_title: "Revino asupra schimbărilor aduse acestei culori, de ultima oară când a fost salvată și până acum."
           revert: "Revenire la starea inițială"
           primary:
             name: "primar"
-            description: "Majoritatea textului, iconițe și margini."
+            description: "Text și iconuri principale"
           primary-medium:
             name: "primar-mediu"
           primary-low-mid:
             name: "primar-mic-mediu"
+            description: "Chenare și accente subtile"
           secondary:
             name: "secundar"
-            description: "Culoarea principală de fundal și culoarea textului anumitor butoane."
           tertiary:
             name: "terțiar"
-            description: "Legături, câteva butoane, notificări, și culoare de accent."
           quaternary:
             name: "cuaternar"
           header_background:
             name: "fundalul header-ului"
-            description: "Culoarea de fundal a header-ului din site."
           header_primary:
             name: "header-ul primar"
-            description: "Textul și inconițele din header-ul site-ului."
           highlight:
             name: "punere în evidență"
-            description: "Culoarea de fundal a elementelor puse în evidență din pagină, cum ar fi postări și discuții."
           highlight-high:
             name: "evidențiază-puternic"
           highlight-medium:
@@ -4500,13 +4510,10 @@ ro:
             name: "evidențiază-puternic"
           danger:
             name: "Pericol"
-            description: "Evidențiază culoarea pentru acțiuni de tipul ștergerii postărilor și al subiectelor."
           success:
             name: "succes"
-            description: "Arată că acțiunea s-a terminat cu succes."
           love:
             name: "apreciere"
-            description: "Culoarea butonului de apreciere."
           selected:
             name: "selectat"
           editor:

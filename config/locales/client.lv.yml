@@ -3324,8 +3324,6 @@ lv:
             name: "primārais"
           success:
             name: "veiksmīgi"
-          love:
-            description: "Atzinības pogas krāsa."
         email_style:
           html: "HTML"
           css: "CSS"

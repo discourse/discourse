@@ -5025,7 +5025,6 @@ sv:
           delete: "Radera"
           colors:
             title: "Färger"
-          delete_confirm: "Radera den här färgpaletten?"
       plugins:
         title: "Tillägg"
         name: "Namn"
@@ -5326,35 +5325,28 @@ sv:
           title: "Färger"
           about: "Modifiera färgerna som används av ditt tema. Lägg till en ny färgpalett för att börja."
           copy_name_prefix: "Kopia av"
-          delete_confirm: "Radera den här färgpaletten?"
           undo: "Ångra"
           undo_title: "Återställ ändringarna för den här färgen till den senast sparade versionen."
           revert: "Återställ"
           revert_title: "Återställ den här färgen till Discourse-standardfärgspaletten."
           primary:
             name: "primär"
-            description: "Det mesta av texten, ikoner och ramar."
           primary-medium:
             name: "primär-mellan"
           primary-low-mid:
             name: "primär-låg-mitten"
           secondary:
             name: "sekundär"
-            description: "Den huvudsakliga bakgrundsfärgen, och textfärgen på vissa knappar."
           tertiary:
             name: "tertiär"
-            description: "Länkar, några knappar, aviseringar och accentfärg."
           quaternary:
             name: "kvartär"
           header_background:
             name: "bakgrund för sidhuvud"
-            description: "Bakgrundsfärg för sidans sidhuvud. "
           header_primary:
             name: "sidhuvud primär"
-            description: "Text och ikoner i sidans sidhuvud."
           highlight:
             name: "markera"
-            description: "Bakgrundsfärgen på markerade element på sidan, som inlägg och ämnen."
           highlight-high:
             name: "markerad-hög"
           highlight-medium:
@@ -5363,19 +5355,14 @@ sv:
             name: "markerad-låg"
           danger:
             name: "fara"
-            description: "Markeringsfärg när man tar bort inlägg eller ämnen."
           success:
             name: "lyckades"
-            description: "Används för att indikera att en åtgärd lyckades."
           love:
             name: "älska"
-            description: "Gillaknappens färg."
           selected:
             name: "markerad"
-            description: "Bakgrundsfärgen för element som listobjekt när de är markerade/aktiva."
           hover:
             name: "hovra"
-            description: "Bakgrundsfärgen för element som listobjekt när de hovras eller har tangentbordsfokus."
           editor:
             light: "Ljust"
             dark: "Mörkt"
