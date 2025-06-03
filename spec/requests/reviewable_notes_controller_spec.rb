@@ -62,6 +62,24 @@ RSpec.describe "Reviewable Notes" do
         expect(json["errors"]).to include("Content can't be blank")
       end
 
+      it "returns validation errors for content that's too long" do
+        long_content = "a" * (ReviewableNote::MAX_CONTENT_LENGTH + 1)
+
+        post "/reviewables/#{reviewable.id}/notes.json",
+             params: {
+               reviewable_note: {
+                 content: long_content,
+               },
+             }
+
+        expect(response.status).to eq(422)
+
+        json = response.parsed_body
+        expect(json["errors"]).to include(
+          "Content is too long (maximum is #{ReviewableNote::MAX_CONTENT_LENGTH} characters)",
+        )
+      end
+
       it "trims whitespace from content" do
         post "/reviewables/#{reviewable.id}/notes.json",
              params: {

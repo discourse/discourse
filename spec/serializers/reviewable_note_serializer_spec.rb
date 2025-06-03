@@ -127,6 +127,19 @@ RSpec.describe ReviewableNoteSerializer do
         expect(json[:content]).to eq("Unicode test 🎉 café naïve résumé")
       end
     end
+
+    context "with maximum length content" do
+      let(:max_content) { "a" * ReviewableNote::MAX_CONTENT_LENGTH }
+      let(:max_note) do
+        Fabricate(:reviewable_note, reviewable: reviewable, user: admin, content: max_content)
+      end
+
+      it "serializes long content correctly" do
+        json = serialized_note(max_note)
+        expect(json[:content]).to eq(max_content)
+        expect(json[:content].length).to eq(ReviewableNote::MAX_CONTENT_LENGTH)
+      end
+    end
   end
 
   describe "permissions and scope" do

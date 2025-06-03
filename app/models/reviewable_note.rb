@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
 class ReviewableNote < ActiveRecord::Base
+  MAX_CONTENT_LENGTH = 2000
+
   belongs_to :reviewable
   belongs_to :user
 
-  validates :content, presence: true
+  validates :content, presence: true, length: { minimum: 1, maximum: MAX_CONTENT_LENGTH }
   validates :reviewable_id, presence: true
   validates :user_id, presence: true
 

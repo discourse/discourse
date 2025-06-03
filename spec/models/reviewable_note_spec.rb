@@ -15,6 +15,11 @@ RSpec.describe ReviewableNote do
     subject { build(:reviewable_note, reviewable: reviewable, user: admin) }
 
     it { is_expected.to validate_presence_of(:content) }
+    it do
+      is_expected.to validate_length_of(:content).is_at_least(1).is_at_most(
+        ReviewableNote::MAX_CONTENT_LENGTH,
+      )
+    end
     it { is_expected.to validate_presence_of(:reviewable_id) }
     it { is_expected.to validate_presence_of(:user_id) }
 
@@ -29,6 +34,23 @@ RSpec.describe ReviewableNote do
         note = build(:reviewable_note, content: "   ", reviewable: reviewable, user: admin)
         expect(note).not_to be_valid
         expect(note.errors[:content]).to include("can't be blank")
+      end
+    end
+
+    context "when content is too long" do
+      it "is invalid with content over #{ReviewableNote::MAX_CONTENT_LENGTH} characters" do
+        long_content = "a" * (ReviewableNote::MAX_CONTENT_LENGTH + 1)
+        note = build(:reviewable_note, content: long_content, reviewable: reviewable, user: admin)
+        expect(note).not_to be_valid
+        expect(note.errors[:content]).to include(
+          "is too long (maximum is #{ReviewableNote::MAX_CONTENT_LENGTH} characters)",
+        )
+      end
+
+      it "is valid with content at exactly #{ReviewableNote::MAX_CONTENT_LENGTH} characters" do
+        max_content = "a" * ReviewableNote::MAX_CONTENT_LENGTH
+        note = build(:reviewable_note, content: max_content, reviewable: reviewable, user: admin)
+        expect(note).to be_valid
       end
     end
   end
