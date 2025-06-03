@@ -467,7 +467,7 @@ module("Unit | Library | local-date-builder", function () {
             {
               current: true,
               formatted:
-                'Sunday, March 22, 2020 <br /><svg class=\'fa d-icon d-icon-clock svg-icon svg-string\' xmlns="http://www.w3.org/2000/svg"><use href="#clock" /></svg> 12:00 AM → 1:30 AM',
+                'Sunday, March 22, 2020 <br /><svg class=\'fa d-icon d-icon-clock svg-icon svg-string\' aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><use href="#clock" /></svg> 12:00 AM → 1:30 AM',
               timezone: "Paris",
             },
           ],
@@ -499,7 +499,7 @@ module("Unit | Library | local-date-builder", function () {
             {
               current: true,
               formatted:
-                'Sunday, March 22, 2020 <br /><svg class=\'fa d-icon d-icon-clock svg-icon svg-string\' xmlns="http://www.w3.org/2000/svg"><use href="#clock" /></svg> 11:34 AM',
+                'Sunday, March 22, 2020 <br /><svg class=\'fa d-icon d-icon-clock svg-icon svg-string\' aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><use href="#clock" /></svg> 11:34 AM',
               timezone: "Paris",
             },
           ],
@@ -555,22 +555,22 @@ module("Unit | Library | local-date-builder", function () {
             {
               current: true,
               formatted:
-                'Tuesday, April 7, 2020 <br /><svg class=\'fa d-icon d-icon-clock svg-icon svg-string\' xmlns="http://www.w3.org/2000/svg"><use href="#clock" /></svg> 2:54 PM',
+                'Tuesday, April 7, 2020 <br /><svg class=\'fa d-icon d-icon-clock svg-icon svg-string\' aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><use href="#clock" /></svg> 2:54 PM',
               timezone: "Paris",
             },
             {
               formatted:
-                'Tuesday, April 7, 2020 <br /><svg class=\'fa d-icon d-icon-clock svg-icon svg-string\' xmlns="http://www.w3.org/2000/svg"><use href="#clock" /></svg> 1:54 PM',
+                'Tuesday, April 7, 2020 <br /><svg class=\'fa d-icon d-icon-clock svg-icon svg-string\' aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><use href="#clock" /></svg> 1:54 PM',
               timezone: "London",
             },
             {
               formatted:
-                'Tuesday, April 7, 2020 <br /><svg class=\'fa d-icon d-icon-clock svg-icon svg-string\' xmlns="http://www.w3.org/2000/svg"><use href="#clock" /></svg> 1:54 PM',
+                'Tuesday, April 7, 2020 <br /><svg class=\'fa d-icon d-icon-clock svg-icon svg-string\' aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><use href="#clock" /></svg> 1:54 PM',
               timezone: "Lagos",
             },
             {
               formatted:
-                'Tuesday, April 7, 2020 <br /><svg class=\'fa d-icon d-icon-clock svg-icon svg-string\' xmlns="http://www.w3.org/2000/svg"><use href="#clock" /></svg> 10:54 PM',
+                'Tuesday, April 7, 2020 <br /><svg class=\'fa d-icon d-icon-clock svg-icon svg-string\' aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><use href="#clock" /></svg> 10:54 PM',
               timezone: "Sydney",
             },
           ],
@@ -590,12 +590,12 @@ module("Unit | Library | local-date-builder", function () {
             {
               current: true,
               formatted:
-                'Wednesday, May 13, 2020 <br /><svg class=\'fa d-icon d-icon-clock svg-icon svg-string\' xmlns="http://www.w3.org/2000/svg"><use href="#clock" /></svg> 11:00 AM',
+                'Wednesday, May 13, 2020 <br /><svg class=\'fa d-icon d-icon-clock svg-icon svg-string\' aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><use href="#clock" /></svg> 11:00 AM',
               timezone: "Los Angeles",
             },
             {
               formatted:
-                'Wednesday, May 13, 2020 <br /><svg class=\'fa d-icon d-icon-clock svg-icon svg-string\' xmlns="http://www.w3.org/2000/svg"><use href="#clock" /></svg> 6:00 PM',
+                'Wednesday, May 13, 2020 <br /><svg class=\'fa d-icon d-icon-clock svg-icon svg-string\' aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><use href="#clock" /></svg> 6:00 PM',
               timezone: "UTC",
             },
           ],
