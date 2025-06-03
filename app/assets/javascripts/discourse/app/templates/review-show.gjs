@@ -3,7 +3,6 @@ import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
 import RouteTemplate from "ember-route-template";
-import { and } from "truth-helpers";
 import ReviewableItem from "discourse/components/reviewable-item";
 import ReviewableItemRefresh from "discourse/components/reviewable-refresh/item";
 
@@ -12,6 +11,11 @@ export default RouteTemplate(
     @service currentUser;
     @service site;
 
+    /**
+     * Checks if a refreshed reviewable component exists for the current reviewable type.
+     *
+     * @returns {boolean} True if the refreshed component exists, false otherwise
+     */
     get refreshedReviewableComponentExists() {
       const owner = getOwner(this);
       const dasherized = dasherize(
@@ -21,6 +25,11 @@ export default RouteTemplate(
       return owner.hasRegistration(`component:${dasherized}`);
     }
 
+    /**
+     * Determines if the current user can use the refreshed reviewable UI.
+     *
+     * @returns {boolean} True if the current user can access the refreshed UI, false otherwise
+     */
     get canUseRefreshUI() {
       if (!this.currentUser) {
         return false;
@@ -45,8 +54,17 @@ export default RouteTemplate(
       );
     }
 
+    /**
+     * Determines whether to use the refreshed reviewable UI component.
+     *
+     * @returns {boolean} True if both conditions are met: user has permission and component exists
+     */
+    get shouldUseRefreshUI() {
+      return this.canUseRefreshUI && this.refreshedReviewableComponentExists;
+    }
+
     <template>
-      {{#if (and this.canUseRefreshUI this.refreshedReviewableComponentExists)}}
+      {{#if this.shouldUseRefreshUI}}
         <ReviewableItemRefresh @reviewable={{@controller.reviewable}} />
       {{else}}
         <ReviewableItem @reviewable={{@controller.reviewable}} />
