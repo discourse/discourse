@@ -571,8 +571,10 @@ export default class TopicController extends Controller {
       lastLoadedPost === post &&
       postStream.get("canAppendMore")
     ) {
+      // TODO (glimmer-post-stream) the Glimmer Post stream doesn't pass a refresh function
       postStream.appendMore().then(() => refresh?.());
       // show loading stuff
+       // TODO (glimmer-post-stream) the Glimmer Post stream doesn't pass a refresh function
       refresh?.();
     }
   }

@@ -286,8 +286,7 @@ export default createWidget("post-stream", {
             new RenderGlimmer(
               this,
               "div.time-gap.small-action",
-              hbs`
-                  <Post::TimeGap @daysSince={{@data.daysSince}} />`,
+              hbs`<Post::TimeGap @daysSince={{@data.daysSince}} />`,
               { daysSince }
             )
           );

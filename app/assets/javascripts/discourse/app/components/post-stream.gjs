@@ -33,13 +33,7 @@ export default class PostStream extends Component {
   @tracked cloakAbove;
   @tracked cloakBelow;
 
-  viewportTracker;
-
-  constructor() {
-    super(...arguments);
-
-    this.viewportTracker = new PostStreamViewportTracker();
-  }
+  viewportTracker = new PostStreamViewportTracker();
 
   willDestroy() {
     super.willDestroy(...arguments);
@@ -216,7 +210,7 @@ export default class PostStream extends Component {
 
       {{#each this.postTuples key="post.id" as |tuple index|}}
         {{#let
-          (get tuple "post") (get tuple "previousPost") (get tuple "nextPost")
+          tuple.post tuple.previousPost tuple.nextPost
           as |post previousPost nextPost|
         }}
           {{#if (this.isPlaceholder post)}}
