@@ -1,3 +1,11 @@
 .ace_editor--resizable {
   resize: vertical;
 }
+
+.ace-wrapper .grippie {
+  background: var(--primary-low);
+
+  &::before {
+    border-top: 3px double var(--primary-medium);
+  }
+}
