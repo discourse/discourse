@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class ReviewableNotesController < ApplicationController
-  requires_login
-  before_action :ensure_staff
   before_action :find_reviewable
 
   def create

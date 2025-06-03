@@ -527,7 +527,10 @@ Discourse::Application.routes.draw do
     resources :reviewable_claimed_topics, only: %i[create destroy]
 
     resources :reviewables, only: [] do
-      resources :reviewable_notes, only: %i[create destroy], path: "notes"
+      resources :reviewable_notes,
+                only: %i[create destroy],
+                path: "notes",
+                constraints: StaffConstraint.new
     end
 
     get "session/sso" => "session#sso"
