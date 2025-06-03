@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe ThemeJavascriptCompiler do
-  let(:compiler) { ThemeJavascriptCompiler.new(1, "marks") }
+  let(:compiler) { ThemeJavascriptCompiler.new(1, "marks", {}) }
 
   describe "#append_ember_template" do
     it "maintains module names so that discourse-boot.js can correct them" do
@@ -214,8 +214,8 @@ RSpec.describe ThemeJavascriptCompiler do
           "discourse/components/my-component.hbs" => "{{value}}",
         },
       )
-      expect(compiler.raw_content).to include("ember-this-fallback")
-      expect(compiler.raw_content).to include(
+      expect(compiler.content).to include("ember-this-fallback")
+      expect(compiler.content).to include(
         "The `value` property path was used in the `discourse/components/my-component.hbs` template without using `this`. This fallback behavior has been deprecated, all properties must be looked up on `this` when used in the template: {{this.value}}",
       )
     end

@@ -6,6 +6,7 @@ import HTMLBarsInlinePrecompile from "babel-plugin-ember-template-compilation";
 import DecoratorTransforms from "decorator-transforms";
 import colocatedBabelPlugin from "ember-cli-htmlbars/lib/colocated-babel-plugin";
 import { precompile } from "ember-source/dist/ember-template-compiler";
+import EmberThisFallback from "ember-this-fallback";
 import MagicString from "magic-string";
 import { dirname, join } from "path";
 import { minify as terserMinify } from "terser";
@@ -14,6 +15,11 @@ import AddThemeGlobals from "./add-theme-globals";
 import BabelReplaceImports from "./babel-replace-imports";
 import { Preprocessor } from "./content-tag";
 import rollupVirtualImports from "./rollup-virtual-imports";
+
+const thisFallbackPlugin = EmberThisFallback._buildPlugin({
+  enableLogging: false,
+  isTheme: true,
+}).plugin;
 
 const preprocessor = new Preprocessor();
 
@@ -220,12 +226,11 @@ const __COLOCATED_TEMPLATE__ = template;
                 "ember-cli-htmlbars-inline-precompile",
                 "htmlbars-inline-precompile",
               ],
+              transforms: [thisFallbackPlugin],
             },
           ],
-          // TODO: Ember this fallback
           // TODO: widgetHbs (remove from d-calendar)
-          // TODO: sourcemaps
-          // TODO: should babel presetEnv be on output?
+          // TODO: themem ast transforms
         ],
         presets: [
           [

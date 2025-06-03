@@ -79,9 +79,9 @@ class ThemeJavascriptCompiler
     @source_map
   end
 
-  def raw_content
-    @output_tree.map { |filename, source| source }.join("")
-  end
+  # def raw_content
+  #   @output_tree.map { |filename, source| source }.join("")
+  # end
 
   def has_content?
     @output_tree.present?
@@ -95,61 +95,6 @@ class ThemeJavascriptCompiler
       else
         filename
       end
-    end
-
-    # Some themes are colocating connector JS under `/connectors`. Move template to /templates to avoid module name clash
-    tree.transform_keys! do |filename|
-      match = COLOCATED_CONNECTOR_REGEX.match(filename)
-      next filename if !match
-
-      is_template = match[:extension] == "hbs"
-      is_in_templates_directory = match[:prefix].split("/").last == "templates"
-
-      if is_template && !is_in_templates_directory
-        "#{match[:prefix]}templates/connectors/#{match[:outlet]}/#{match[:name]}.#{match[:extension]}"
-      elsif !is_template && is_in_templates_directory
-        "#{match[:prefix].chomp("templates/")}connectors/#{match[:outlet]}/#{match[:name]}.#{match[:extension]}"
-      else
-        filename
-      end
-    end
-
-    # Handle colocated components
-    tree.dup.each_pair do |filename, content|
-      is_component_template =
-        filename.end_with?(".hbs") &&
-          filename.start_with?("discourse/components/", "admin/components/")
-      next if !is_component_template
-      template_contents = content
-
-      hbs_invocation_options = { moduleName: filename, parseOptions: { srcName: filename } }
-      hbs_invocation = "hbs(#{template_contents.to_json}, #{hbs_invocation_options.to_json})"
-
-      prefix = <<~JS
-        import { hbs } from 'ember-cli-htmlbars';
-        const __COLOCATED_TEMPLATE__ = #{hbs_invocation};
-      JS
-
-      js_filename = filename.sub(/\.hbs\z/, ".js")
-      js_contents = tree[js_filename] # May be nil for template-only component
-      if js_contents && !js_contents.include?("export default")
-        message =
-          "#{filename} does not contain a `default export`. Did you forget to export the component class?"
-        js_contents += "throw new Error(#{message.to_json});"
-      end
-
-      if js_contents.nil?
-        # No backing class, use template-only
-        js_contents = <<~JS
-          import templateOnly from '@ember/component/template-only';
-          export default templateOnly();
-        JS
-      end
-
-      js_contents = prefix + js_contents
-
-      tree[js_filename] = js_contents
-      tree.delete(filename)
     end
 
     # Transpile and write to output
