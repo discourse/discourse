@@ -1,6 +1,7 @@
 @use "lib/viewport";
 
 @mixin onebox-shadow($thickness) {
+  margin-top: $thickness;
   border: 0;
   margin-inline: $thickness;
   box-shadow:
