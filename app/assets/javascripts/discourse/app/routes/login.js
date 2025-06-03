@@ -11,6 +11,10 @@ export default class LoginRoute extends DiscourseRoute {
   @service login;
 
   beforeModel(transition) {
+    const lastAuthResult = JSON.parse(
+      document.getElementById("data-authentication")?.dataset.authenticationData
+    );
+
     if (transition.from) {
       this.internalReferrer = this.router.urlFor(transition.from.name);
     }
@@ -28,7 +32,11 @@ export default class LoginRoute extends DiscourseRoute {
       this.login.isOnlyOneExternalLoginMethod &&
       this.siteSettings.full_page_login
     ) {
-      this.login.singleExternalLogin();
+      if (lastAuthResult["authenticated"] === true) {
+        // debugger;
+
+        this.login.singleExternalLogin();
+      }
     } else if (
       !this.siteSettings.full_page_login ||
       this.siteSettings.enable_discourse_connect

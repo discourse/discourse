@@ -14,6 +14,8 @@ const AuthErrors = [
   "awaiting_activation",
   "admin_not_allowed_from_ip_address",
   "not_allowed_from_ip_address",
+  "failed",
+  "failed_reason",
 ];
 
 const beforeAuthCompleteCallbacks = [];
