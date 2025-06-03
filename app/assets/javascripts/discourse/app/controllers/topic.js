@@ -574,7 +574,7 @@ export default class TopicController extends Controller {
       // TODO (glimmer-post-stream) the Glimmer Post stream doesn't pass a refresh function
       postStream.appendMore().then(() => refresh?.());
       // show loading stuff
-       // TODO (glimmer-post-stream) the Glimmer Post stream doesn't pass a refresh function
+      // TODO (glimmer-post-stream) the Glimmer Post stream doesn't pass a refresh function
       refresh?.();
     }
   }
