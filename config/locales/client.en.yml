@@ -810,7 +810,7 @@ en:
       queued_user: "Queued user"
       posted_in: "Posted in"
       flagged_user: "Flagged user"
-      user: "User"
+      review_user: "User"
       need_help: "Need help?"
       copy_link: "Copy link"
       view_source: "View source"

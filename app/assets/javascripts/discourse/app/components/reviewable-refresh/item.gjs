@@ -585,7 +585,9 @@ export default class ReviewableItem extends Component {
           <div class="review-item__flag-summary">
             <div class="review-item__header">
               <div class="review-item__label-badges">
-                <span class="review-item__flag-label">{{i18n "review.flagged_as"}}</span>
+                <span class="review-item__flag-label">{{i18n
+                    "review.flagged_as"
+                  }}</span>
 
                 <div class="review-item__flag-badges">
                   {{#each this.scoreSummary as |score|}}
@@ -666,7 +668,9 @@ export default class ReviewableItem extends Component {
           {{#unless this.reviewable.last_performing_username}}
             {{#if this.canPerform}}
               <div class="review-item__moderator-actions">
-                <h3 class="review-item__aside-title">{{i18n "review.moderator_actions"}}</h3>
+                <h3 class="review-item__aside-title">{{i18n
+                    "review.moderator_actions"
+                  }}</h3>
                 {{#if this.editing}}
                   <DButton
                     @disabled={{this.disabled}}
@@ -726,13 +730,18 @@ export default class ReviewableItem extends Component {
           </div>
 
           <div class="review-item__resources">
-            <h3 class="review-item__aside-title">{{i18n "review.need_help"}}</h3>
+            <h3 class="review-item__aside-title">{{i18n
+                "review.need_help"
+              }}</h3>
             <ul class="review-resources__list">
               <li class="review-resources__item">
                 <span class="review-resources__icon">
                   {{icon "book"}}
                 </span>
-                <a href="{{this.siteSettings.moderation_guide_url}}" class="review-resources__link">
+                <a
+                  href="{{this.siteSettings.moderation_guide_url}}"
+                  class="review-resources__link"
+                >
                   {{i18n "review.help.moderation_guide"}}
                 </a>
               </li>
@@ -740,7 +749,10 @@ export default class ReviewableItem extends Component {
                 <span class="review-resources__icon">
                   {{icon "book"}}
                 </span>
-                <a href="{{this.siteSettings.flag_priorities_url}}" class="review-resources__link">
+                <a
+                  href="{{this.siteSettings.flag_priorities_url}}"
+                  class="review-resources__link"
+                >
                   {{i18n "review.help.flag_priorities"}}
                 </a>
               </li>
@@ -748,7 +760,10 @@ export default class ReviewableItem extends Component {
                 <span class="review-resources__icon">
                   {{icon "book"}}
                 </span>
-                <a href="{{this.siteSettings.spam_detection_url}}" class="review-resources__link">
+                <a
+                  href="{{this.siteSettings.spam_detection_url}}"
+                  class="review-resources__link"
+                >
                   {{i18n "review.help.spam_detection"}}
                 </a>
               </li>

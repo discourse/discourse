@@ -52,7 +52,7 @@ export default class ReviewablePost extends Component {
   }
 
   get userLabel() {
-    return this.args.userLabel || i18n("review.user");
+    return this.args.userLabel || i18n("review.review_user");
   }
 
   get pluginOutletName() {

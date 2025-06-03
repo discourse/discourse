@@ -69,7 +69,9 @@ export default class ReviewableQueuedPost extends Component {
 
   <template>
     <div class="review-item__meta-content">
-      <div class="review-item__meta-label">{{i18n "review.new_topic_label"}}</div>
+      <div class="review-item__meta-label">{{i18n
+          "review.new_topic_label"
+        }}</div>
 
       <div class="review-item__meta-topic-title">
         <ReviewableTopicLink @reviewable={{@reviewable}} @tagName="">
