@@ -105,7 +105,7 @@ export default class ProsemirrorTextManipulation {
       return;
     }
 
-    const { state } = this.view; // your EditorView instance
+    const { state } = this.view;
     const { from, to, empty } = state.selection;
 
     let text;
