@@ -39,6 +39,7 @@ const ACRONYMS = new Set([
   "tl4",
   "tld",
   "txt",
+  "ui",
   "url",
   "ux",
 ]);

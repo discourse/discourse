@@ -498,7 +498,6 @@ Discourse::Application.routes.draw do
       collection { post "forgot_password" }
     end
 
-    get "single-review" => "review#show", :constraints => { format: :html }
     get "review" => "reviewables#index" # For ember app
     get "review/:reviewable_id" => "reviewables#show", :constraints => { reviewable_id: /\d+/ }
     get "review/:reviewable_id/explain" => "reviewables#explain",

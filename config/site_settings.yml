@@ -4019,3 +4019,6 @@ experimental:
     default: false
     client: true
     validator: "LanguageSwitcherSettingValidator"
+  reviewable_ui_refresh:
+    client: true
+    default: false

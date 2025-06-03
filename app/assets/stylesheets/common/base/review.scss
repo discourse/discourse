@@ -171,7 +171,8 @@
     color: var(--d-review-reason-inappropriate-text);
   }
 
-  &.--other {
+  &.--other,
+  &.--needs_approval {
     background-color: var(--d-review-reason-other-bg);
     color: var(--d-review-reason-other-text);
   }
