@@ -3,6 +3,9 @@
 describe "Admin Customize Themes Config Area Page", type: :system do
   fab!(:admin)
   fab!(:theme) { Theme.where(component: false).first }
+  fab!(:theme_child_theme) do
+    Fabricate(:theme, name: "Child theme", component: true, enabled: true, parent_themes: [theme])
+  end
   fab!(:theme_2) { Fabricate(:theme, name: "Second theme") }
 
   let(:config_area) { PageObjects::Pages::AdminCustomizeThemesConfigArea.new }
@@ -66,9 +69,12 @@ describe "Admin Customize Themes Config Area Page", type: :system do
 
   it "has new look when edit theme is visited directly and can go back to themes" do
     visit("/admin/customize/themes/#{theme.id}")
-    expect(page).to have_css(".back-to-themes-and-components")
-    expect(admin_customize_themes_page).to have_back_button_to_themes_page
+
     admin_customize_themes_page.click_back_to_themes
+
     expect(page).to have_current_path("/admin/config/customize/themes")
+    expect(page).to have_content(
+      I18n.t("admin_js.admin.config_areas.themes_and_components.themes.title"),
+    )
   end
 end

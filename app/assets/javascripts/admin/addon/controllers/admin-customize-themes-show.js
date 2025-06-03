@@ -108,7 +108,7 @@ export default class AdminCustomizeThemesShowController extends Controller {
     });
   }
 
-  @discourseComputed("model.parentThemes.[]")
+  @discourseComputed("model.childThemesNames.[]")
   relativesSelectorSettingsForTheme() {
     return SiteSetting.create({
       list_type: "compact",
