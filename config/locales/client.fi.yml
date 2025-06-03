@@ -4183,6 +4183,7 @@ fi:
       content_load_error: '<a href="%url%">Sisällön</a> lataaminen ei onnistunut.'
       image_load_error: '<a href="%url%">Kuvan</a> lataaminen ei onnistunut.'
     cannot_render_video: Tätä videota ei voida toistaa, koska selaimesi ei tue tarvittavaa koodekkia.
+    invalid_video_url: Tätä videota ei voi toistaa, koska URL on virheellinen tai ei käytettävissä.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
       shortcut_key_delimiter_plus: "+"
@@ -4809,6 +4810,9 @@ fi:
         legal:
           title: "Oikeudelliset tiedot"
           header_description: "Määritä oikeudelliset asetukset, kuten käyttöehdot, tietosuojakäytäntö, yhteystiedot ja EU-kohtaiset huomioitavat asiat"
+        localization:
+          title: "Lokalisointi"
+          header_description: "Määritä yhteisösi käyttöliittymän kieli ja muut lokalisointivaihtoehdot jäsenillesi"
         login_and_authentication:
           title: "Kirjautuminen ja todennus"
           header_description: "Määritä käyttäjien kirjautumis- ja todennustavat, salatunnukset ja avaimet, OAuth2-palveluntarjoajat ja muuta"
@@ -5338,6 +5342,9 @@ fi:
           group_permissions: "Ryhmien oikeudet"
           users: "Käyttäjät"
           groups: "Ryhmät"
+          localization:
+            title: "Lokalisointi"
+            keywords: "maa-asetus|kieli|aikavyöhyke|unicode|ltr"
           user_fields: "Käyttäjäkentät"
           watched_words: "Tarkkaillut sanat"
           legal: "Oikeudelliset tiedot"

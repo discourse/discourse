@@ -3336,7 +3336,7 @@ hu:
         help: "A téma nyomtatóbarát változatának megnyitása"
       flag_topic:
         title: "Megjelölés"
-        help: "privátként jelezze ezt a témát, vagy küldjön személyes üzenetet róla"
+        help: "Téma megjelölése, vagy privát üzenet küldése"
         success_message: "Sikeresen megjelölte ezt a témát."
       make_public:
         title: "Átalakítás nyilvános témává"
@@ -3618,7 +3618,7 @@ hu:
         edit_action: "Szerkesztés"
         edit_anonymous: "Sajnos be kell jelentkeznie, hogy szerkeszthesse ezt a bejegyzést."
         flag_action: "Jelölés"
-        flag: "privátként jelezze ezt a bejegyzést, vagy küldjön személyes üzenetet róla"
+        flag: "Bejegyzés megjelölése, vagy privát üzenet küldése"
         anonymous_flag: "email küldése egy stábtagnak, hogy jelölje meg ezt a bejegyzést"
         delete_action: "Bejegyzés törlése"
         delete: "bejegyzés törlése"
@@ -3627,7 +3627,7 @@ hu:
         share_action: "Megosztás"
         share: "bejegyzés hivatkozásának megosztása"
         copy_action: "Link másolása"
-        copy_title: "másolja a bejegyzés linkjét a vágólapra"
+        copy_title: "Bejegyzés linkjének vágólapra másolása"
         link_copied: "Link másolva!"
         more: "Több"
         delete_replies:
