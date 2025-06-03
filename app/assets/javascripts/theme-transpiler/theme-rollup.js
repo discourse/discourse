@@ -93,6 +93,11 @@ globalThis.rollup = function (modules, opts) {
           console.log(Object.keys(modules));
 
           if (source.startsWith(".")) {
+            if (!context) {
+              throw new Error(
+                `Unable to resolve relative import '${source}' without a context`
+              );
+            }
             source = join(dirname(context), source);
           }
 
@@ -124,7 +129,7 @@ globalThis.rollup = function (modules, opts) {
           if (source.endsWith(".js")) {
             let hbs;
             try {
-              hbs = await this.resolve(source.replace(/.js$/, ".hbs"));
+              hbs = await this.resolve(source.replace(/.js$/, ".hbs"), context);
             } catch (error) {
               if (!error.message.includes("Cannot access the file system")) {
                 throw error;
@@ -133,7 +138,7 @@ globalThis.rollup = function (modules, opts) {
 
             let js;
             try {
-              js = await this.resolve(source);
+              js = await this.resolve(source, context);
             } catch (error) {
               if (!error.message.includes("Cannot access the file system")) {
                 throw error;
@@ -170,7 +175,7 @@ globalThis.rollup = function (modules, opts) {
             if (id.endsWith(".js")) {
               let hbs;
               try {
-                hbs = await this.resolve(id.replace(/.js$/, ".hbs"));
+                hbs = await this.resolve(id.replace(/.js$/, ".hbs"), id);
               } catch (error) {
                 if (!error.message.includes("Cannot access the file system")) {
                   throw error;
