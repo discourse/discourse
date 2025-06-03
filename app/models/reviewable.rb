@@ -429,13 +429,16 @@ class Reviewable < ActiveRecord::Base
 
     if preload
       result =
-        result.includes(
-          { created_by: :user_stat },
-          :topic,
-          :target,
-          :target_created_by,
-          :reviewable_histories,
-        ).includes(reviewable_scores: { user: :user_stat, meta_topic: :posts })
+        result
+          .includes(
+            { created_by: :user_stat },
+            :topic,
+            :target,
+            :target_created_by,
+            :reviewable_histories,
+          )
+          .includes(reviewable_scores: { user: :user_stat, meta_topic: :posts })
+          .includes(reviewable_notes: { user: :user_stat })
     end
     return result if user.admin?
 
