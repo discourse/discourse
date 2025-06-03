@@ -33,7 +33,7 @@
     "pikaday": "1.8.2",
     "playwright": "1.52.0",
     "prettier": "3.5.3",
-    "puppeteer-core": "^24.9.0",
+    "puppeteer-core": "^24.10.0",
     "squoosh": "https://codeload.github.com/discourse/squoosh/tar.gz/dc9649d",
     "stylelint": "16.19.1",
     "terser": "^5.40.0",
