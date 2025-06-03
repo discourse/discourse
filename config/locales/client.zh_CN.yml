@@ -2280,6 +2280,8 @@ zh_CN:
         other: "+%{count} 个子类别"
       topic_count:
         other: "此类别下有 %{count} 个话题"
+    timezone_input:
+      ambiguous_ist: "IST 不明确，请选择特定时区（例如：亚洲/加尔各答）"
     select_kit:
       delete_item: "删除 %{name}"
       filter_by: "筛选条件：%{name}"
@@ -4376,7 +4378,7 @@ zh_CN:
           save: "保存"
           delete: "删除"
           delete_confirm: "确定要删除此版块吗？"
-          delete_public_confirm: "此版块<strong>对所有人可见</strong>，确定要将其删除吗？"
+          delete_public_confirm: "此版块对所有人可见，确定要将其删除吗？"
           update_public_confirm: "更改将<strong>对此网站上的所有人可见</strong>。确定吗？"
           mark_as_private_confirm: "此版块<strong>对所有人可见</strong>。更新后，它将<strong>仅对您可见</strong>。确定吗？"
           reset_confirm: "确定要将此版块重置为默认值吗？"
@@ -5708,7 +5710,6 @@ zh_CN:
           copy_of: "%{name}的副本"
           copy_created: '已创建“%{name}”的新副本'
           illegal_character_in_color: "颜色只应包含十六进制字符"
-          delete_confirm: "删除此调色板？"
       plugins:
         title: "插件"
         name: "名称"
@@ -6075,36 +6076,30 @@ zh_CN:
           about: "修改您的主题使用的颜色。创建一个新的调色板以开始。"
           new_name: "新调色板"
           copy_name_prefix: "副本 -"
-          delete_confirm: "删除此调色板？"
           undo: "撤消"
           undo_title: "撤消自上次保存以来对此颜色所做的变更。"
           revert: "还原"
           revert_title: "将此颜色重置为 Discourse 的默认调色板。"
           primary:
             name: "主要"
-            description: "大多数文本、图标和边框。"
+            description: "主要文本和图标"
           primary-medium:
             name: "主要-中"
+            description: "禁用或免打扰文本"
           primary-low-mid:
             name: "主要-低-中"
           secondary:
             name: "次要"
-            description: "主背景颜色和一些按钮的文本颜色。"
           tertiary:
             name: "第三"
-            description: "链接、一些按钮、通知和主题色。"
           quaternary:
             name: "第四"
-            description: "可以在主题中选择使用。"
           header_background:
             name: "页眉背景"
-            description: "网站标头的背景色。"
           header_primary:
             name: "页眉主要"
-            description: "网站标头的文本和图标。"
           highlight:
             name: "突出显示"
-            description: "页面上突出显示元素的背景色，例如帖子和话题。"
           highlight-high:
             name: "突出显示-高"
           highlight-medium:
@@ -6113,19 +6108,14 @@ zh_CN:
             name: "突出显示-低"
           danger:
             name: "危险"
-            description: "突出显示删除帖子和话题等操作的颜色。"
           success:
             name: "成功"
-            description: "用于指示操作成功。"
           love:
             name: "爱"
-            description: "点赞按钮的颜色。"
           selected:
             name: "已选择"
-            description: "元素（例如列表条目）在被选择/有效时的背景色。"
           hover:
             name: "悬停"
-            description: "元素（例如列表条目）在鼠标悬停或具有键盘焦点时的背景色。"
           editor:
             light: "亮"
             dark: "深色"

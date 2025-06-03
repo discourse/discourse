@@ -2589,8 +2589,6 @@ id:
           revert: "Dibalik"
           primary:
             name: "utama"
-          quaternary:
-            description: "Untuk penggunaan opsional dalam tema."
           selected:
             name: "dipilih"
         email_style:

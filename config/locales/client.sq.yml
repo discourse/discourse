@@ -4413,33 +4413,24 @@ sq:
           revert: "Rikthe"
           primary:
             name: "parësor"
-            description: "Shumica e tekstit, ikonave dhe bordurave. "
           secondary:
             name: "dytësor"
-            description: "Ngjyra kryesore e sfondit, dhe teksti i ca butonave. "
           tertiary:
             name: "tretësore"
-            description: "Linket, ca butona, njoftimet dhe ngjyrat për theks."
           quaternary:
             name: "katërsore"
           header_background:
             name: "sfondi i ballinës"
-            description: "Ngjyra në sfond të ballinës."
           header_primary:
             name: "primarja e ballinës"
-            description: "Teksti dhe ikonat në ballinë të faqes. "
           highlight:
             name: "theksi"
-            description: "Sfondi i elementëve të zgjedhur në faqe, si postimet dhe temat."
           danger:
             name: "rrezik"
-            description: "Ngjyra e theksit për veprimet si fshirjen e postimeve apo temave."
           success:
             name: "sukses"
-            description: "Përdoret për të treguar një veprim të kryer me sukses."
           love:
             name: "zemra"
-            description: "Ngjyra e butonit të pëlqimeve."
         email_style:
           html: "HTML"
           css: "CSS"

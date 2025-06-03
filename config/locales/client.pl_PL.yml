@@ -5115,7 +5115,7 @@ pl_PL:
           save: "Zapisz"
           delete: "Usuń"
           delete_confirm: "Czy na pewno chcesz usunąć tę sekcję?"
-          delete_public_confirm: "Ta sekcja jest <strong>widoczna dla wszystkich</strong>, czy na pewno chcesz ją usunąć?"
+          delete_public_confirm: "Ta sekcja jest widoczna dla wszystkich, czy na pewno chcesz ją usunąć?"
           update_public_confirm: "Zmiany będą <strong>widoczne dla wszystkich</strong> na tej stronie. Czy na pewno?"
           mark_as_private_confirm: "Ta sekcja jest <strong>widoczna dla wszystkich</strong>. Po aktualizacji będzie to <strong>widoczne tylko dla Ciebie</strong>. Czy na pewno?"
           reset_confirm: "Czy na pewno chcesz przywrócić tę sekcję do ustawień domyślnych?"
@@ -6440,7 +6440,6 @@ pl_PL:
           copy_of: "Kopia %{name}"
           copy_created: 'Utworzona została nowa kopia "%{name}".'
           illegal_character_in_color: "Kolory składają się wyłącznie ze znaków szesnastkowych"
-          delete_confirm: "Usunąć tę paletę kolorów?"
       plugins:
         title: "Wtyczki"
         name: "Nazwa"
@@ -6820,36 +6819,28 @@ pl_PL:
           about: "Zmodyfikuj kolory używane w swoich motywach. Utwórz nową paletę kolorów, aby rozpocząć."
           new_name: "Nowa paleta kolorów"
           copy_name_prefix: "Kopia"
-          delete_confirm: "Usunąć tę paletę kolorów?"
           undo: "Cofnij"
           undo_title: "Cofnij zmiany tego koloru od ostatniego zapisu"
           revert: "Przywróć"
           revert_title: "Zresetuj ten kolor do domyślnej wartości palety Discourse."
           primary:
             name: "podstawowy"
-            description: "Większość tekstu, ikon oraz krawędzi."
           primary-medium:
             name: "podstawowy-średni"
           primary-low-mid:
             name: "podstawowy-niski-średni"
           secondary:
             name: "drugorzędny"
-            description: "Główny kolor tła oraz kolor tekstu niektórych przycisków."
           tertiary:
             name: "trzeciorzędny"
-            description: "Linki, niektóre przyciski, powiadomienia oraz kolor używany w różnych akcentach."
           quaternary:
             name: "czwartorzędny"
-            description: "Do opcjonalnego wykorzystania w motywach."
           header_background:
             name: "tło nagłówka"
-            description: "Kolor tła nagłówka witryny."
           header_primary:
             name: "podstawowy nagłówka"
-            description: "Tekst oraz ikony w nagłówku witryny."
           highlight:
             name: "zaznacz"
-            description: "Kolor tła podświetlonych/zaznaczonych elementów na stronie, takich jak wpisy i tematy."
           highlight-high:
             name: "highlight-high"
           highlight-medium:
@@ -6858,19 +6849,14 @@ pl_PL:
             name: "highlight-low"
           danger:
             name: "niebezpieczeństwo"
-            description: "Kolor podświetlenia dla akcji takich jak usuwanie wpisów i tematów."
           success:
             name: "sukces"
-            description: "Używany do oznaczania operacji zakończonych sukcesem."
           love:
             name: "polubienie"
-            description: "Kolor przycisku polubień"
           selected:
             name: "zaznaczone"
-            description: "Kolor tła elementów, takich jak elementy listy, gdy są zaznaczone/aktywne."
           hover:
             name: "najechanie"
-            description: "Kolor tła elementów, takich jak elementy listy, gdy są one najechane kursorem lub mają fokus klawiatury."
           editor:
             light: "Jasny"
             dark: "Ciemny"

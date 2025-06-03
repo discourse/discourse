@@ -4221,7 +4221,6 @@ vi:
           delete: "Xóa"
           colors:
             title: "Màu sắc"
-          delete_confirm: "Xóa bảng màu này?"
       plugins:
         title: "Plugin"
         name: "Tên"
@@ -4489,40 +4488,30 @@ vi:
           title: "Màu sắc"
           about: "Sửa đổi màu sắc mà chủ đề của bạn sử dụng. Tạo một bảng màu mới để bắt đầu."
           copy_name_prefix: "Bản sao của"
-          delete_confirm: "Xóa bảng màu này?"
           undo: "Hoàn tác"
           undo_title: "Hoàn tác thay đổi của bạn vơ"
           revert: "Phục hồi"
           revert_title: "Đặt lại màu này thành bảng màu mặc định của Discourse."
           primary:
             name: "chính"
-            description: "Hầu hết chữ, biểu tượng, và viền."
           secondary:
             name: "cấp hai"
-            description: "Màu nền, và màu chữ của một vài nút."
           tertiary:
             name: "cấp ba"
-            description: "Liên kết, một và nút, thông báo, và màu nhấn."
           quaternary:
             name: "chia bốn"
           header_background:
             name: "nền header"
-            description: "Màu nền header của trang."
           header_primary:
             name: "header chính"
-            description: "Chữ và icon trong header của website."
           highlight:
             name: "highlight"
-            description: "Màu nền của các thành phần được đánh dấu trên trang, như là bài viết và chủ đề."
           danger:
             name: "nguy hiểm"
-            description: "Màu đánh dấu cho thao tác xóa bài viết và chủ đề."
           success:
             name: "thành công"
-            description: "Sử dụng để chỉ một thao tác đã thành công."
           love:
             name: "đáng yêu"
-            description: "Màu của nút like"
           selected:
             name: "đã chọn"
         robots:

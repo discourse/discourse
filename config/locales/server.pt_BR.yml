@@ -616,31 +616,9 @@ pt_BR:
     until_posts:
       one: "%{count} postagem"
       other: "%{count} postagens"
-    avatar: |
-      ### Que tal usar uma imagem para a sua conta?
-
-      Você tem postado alguns tópicos e respostas, mas sua foto de perfil não é tão especial quanto você, é apenas uma letra.
-
-      Já pensou em **[visitar seu perfil de usuário(a)](%{profile_path})** e enviar uma foto que representa você?
-
-      É mais fácil manter discussões e encontrar pessoas interessantes durante as conversas quando todos têm uma foto de perfil única!
-    sequential_replies: |
-      ### Considere responder a várias postagens de uma só vez
-
-      Em vez de responder a um tópico várias vezes em sequência, considere fazer uma única resposta que inclua citações de postagens anteriores ou referencie alguém usando @name.
-
-      Você pode editar sua resposta anterior para adicionar uma citação selecionando um texto e clicando no botão <b>responder citação</b> que aparecerá.
-
-      Fica mais fácil para todos(as) lerem tópicos com poucas respostas e muitas informações em vez de muitas respostas individuais e curtas.
     get_a_room:
       one: Você respondeu a %{reply_username} vez, sabia que poderia ter enviado uma mensagem pessoal em vez de fazer isso?
       other: Você respondeu a %{reply_username} %{count} vezes, sabia que poderia ter enviado uma mensagem pessoal em vez de fazer isso?
-    reviving_old_topic: |
-      ### Reviver este tópico?
-
-      A última resposta para esse tópico foi **%{time_ago}**. Sua resposta promoverá o tópico para o topo da sua lista e notificará qualquer pessoa que estava envolvida na conversa.
-
-      Tem certeza de que deseja continuar esta conversa antiga?
   activerecord:
     attributes:
       category:
@@ -2232,12 +2210,10 @@ pt_BR:
     max_notifications_per_user: "Quantidade máxima de notificações por usuário(a). Se esse número for excedido, as notificações antigas serão excluídas. Aplicado semanalmente."
     allowed_user_website_domains: "O site do(a) usuário(a) será verificado em comparação a estes domínios. Lista delimitada por barras."
     allow_profile_backgrounds: "Permita que os(as) usuários(as) enviem planos de fundo do perfil."
-    sequential_replies_threshold: "Quantidade de postagens que um(a) usuário(a) precisa fazer em uma linha de um tópico antes de ser lembrado(a) de muitas respostas em sequência."
     get_a_room_threshold: "Quantidade de postagens que um(a) usuário(a) precisa fazer para a mesma pessoa no mesmo tópico antes de ser avisado(a)."
     dont_feed_the_trolls_threshold: "Número de sinalizadores de outros(as) usuários(as) antes de serem avisados(as)."
     enable_mobile_theme: "Os dispositivos móveis usam um tema compatível com dispositivos móveis, com a possibilidade de mudar para o site completo. Desative isso se quiser usar um estilo personalizado totalmente responsivo."
     dominating_topic_minimum_percent: "Percentual de postagens que um(a) usuário(a) precisa fazer em um tópico antes de ser relembrado(a) de ser excessivamente dominante em um tópico."
-    disable_avatar_education_message: "Desative mensagem de instrução para mudar de avatar."
     pm_warn_user_last_seen_months_ago: "Ao criar uma nova PM, avise aos usuários quando o destinatário de destino não foi visto há mais de n meses."
     suppress_uncategorized_badge: "Não exiba o emblema para assuntos não categorizados em listas de tópicos."
     header_dropdown_category_count: "Quantidade de categorias que podem ser exibidas no menu suspenso do cabeçalho."
@@ -2270,7 +2246,6 @@ pt_BR:
     show_time_gap_days: "Se duas postagens forem feitas com tantos dias de intervalo, mostre o intervalo de tempo no tópico."
     short_progress_text_threshold: "Após a quantidade de mensagens em um tópico ultrapassar este número, a barra de progresso exibirá apenas o número da postagem atual. Se você alterar a largura da barra de progresso, talvez seja necessário alterar este valor."
     default_code_lang: "Realce de sintaxe em linguagem de programação padrão aplicado a blocos de código de Markdown (auto, text, ruby, python etc.). Esse valor também deve estar presente na configuração do site \"linguagens realçadas\"."
-    warn_reviving_old_topic_age: "Quando alguém começa a responder a um tópico anterior a esta quantidade de dias, um aviso será exibido. Desative ao definir como 0."
     autohighlight_all_code: "Aplique o realce de sintaxe em blocos &lt;code&gt; criados em HTML, mesmo se o idioma não tiver sido especificado. Para configurar blocos de código criados em HTML, use a configuração \"default code lang\"."
     highlighted_languages: "Regras de destaque de sintaxe incluídas. (Atenção: incluir muitos idiomas pode afetar o desempenho) consulte: <a href='https://highlightjs.org/demo/' target='_blank'>https://highlightjs.org/demo</a> para ver uma demonstração"
     show_copy_button_on_codeblocks: "Adicione um botão ao Codeblocks para copiar conteúdo do bloco para a área de transferência do(a) usuário(a)."
