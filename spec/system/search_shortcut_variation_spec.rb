@@ -78,7 +78,7 @@ describe "Search | Shortcuts for variations of search input", type: :system do
           fake_scroll_down_long
         end
 
-        it "displays and focuses search icon search when / is pressed and hides it when Escape is pressed" do
+        it "debug", trace: true do
           expect(welcome_banner).to be_invisible
           page.send_keys("/")
           expect(search_page).to have_search_menu
