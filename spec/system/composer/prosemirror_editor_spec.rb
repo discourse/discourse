@@ -806,5 +806,41 @@ describe "Composer - ProseMirror editor", type: :system do
 
       expect(rich).to have_no_css(".only-emoji")
     end
+
+    it "preserves formatting marks when replacing text with emojis using :code: pattern" do
+      open_composer_and_toggle_rich_editor
+
+      composer.type_content("**bold :smile:**")
+
+      expect(rich).to have_css("strong img.emoji")
+      expect(rich).to have_css("strong", text: "bold")
+
+      composer.toggle_rich_editor
+      expect(composer).to have_value("**bold :smile:**")
+    end
+
+    it "preserves formatting marks when replacing text with emojis using text shortcuts" do
+      open_composer_and_toggle_rich_editor
+
+      composer.type_content("*italics :) *")
+
+      expect(rich).to have_css("em img.emoji")
+      expect(rich).to have_css("em", text: "italics")
+
+      composer.toggle_rich_editor
+      expect(composer).to have_value("*italics :slight_smile:* ")
+    end
+
+    it "preserves link marks when replacing text with emojis" do
+      open_composer_and_toggle_rich_editor
+
+      composer.type_content("[link text :heart:](https://example.com)")
+
+      expect(rich).to have_css("a img.emoji")
+      expect(rich).to have_css("a", text: "link text")
+
+      composer.toggle_rich_editor
+      expect(composer).to have_value("[link text :heart:](https://example.com)")
+    end
   end
 end
