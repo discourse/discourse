@@ -373,8 +373,8 @@ importers:
         specifier: ^7.27.4
         version: 7.27.4(supports-color@8.1.1)
       '@babel/standalone':
-        specifier: ^7.27.4
-        version: 7.27.4
+        specifier: ^7.27.5
+        version: 7.27.5
       '@colors/colors':
         specifier: ^1.6.0
         version: 1.6.0
@@ -1019,8 +1019,8 @@ importers:
   app/assets/javascripts/theme-transpiler:
     dependencies:
       '@babel/standalone':
-        specifier: ^7.27.4
-        version: 7.27.4
+        specifier: ^7.27.5
+        version: 7.27.5
       '@csstools/postcss-light-dark-function':
         specifier: ^2.0.9
         version: 2.0.9(postcss@8.5.4)
@@ -1651,8 +1651,8 @@ packages:
     resolution: {integrity: sha512-1x3D2xEk2fRo3PAhwQwu5UubzgiVWSXTBfWpVd2Mx2AzRqJuDJCsgaDVZ7HB5iGzDW1Hl1sWN2mFyKjmR9uAog==}
     engines: {node: '>=6.9.0'}
 
-  '@babel/standalone@7.27.4':
-    resolution: {integrity: sha512-vFUF+yFDDyR3+ZUOvYeLMLb6Vl1l6LCvp61/0kMzRyB3Z6ljPz5rxbmsFVBZcm6Mvu9QyaZuJQIXYZ/DA20MfQ==}
+  '@babel/standalone@7.27.5':
+    resolution: {integrity: sha512-AvoXdFyKqvcxS0pMMs4dNl3hOYUkhTCF4P7aEwLXN1ED5ekxxjVWeFtr4ZVUGO0Y7u5d5H3nOyO8Y0CS/EBXPA==}
     engines: {node: '>=6.9.0'}
 
   '@babel/template@7.27.2':
@@ -9576,7 +9576,7 @@ snapshots:
 
   '@babel/runtime@7.27.1': {}
 
-  '@babel/standalone@7.27.4': {}
+  '@babel/standalone@7.27.5': {}
 
   '@babel/template@7.27.2':
     dependencies:
