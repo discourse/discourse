@@ -202,6 +202,7 @@ export default class PostStream extends Component {
         headerOffset=this.header.headerOffset
         screenTrack=this.screenTrack
         setCloakingBoundaries=this.setCloakingBoundaries
+        topicId=@topic.id
       }}
     >
       {{#if (and (not @postStream.loadingAbove) @postStream.canPrependMore)}}
@@ -310,7 +311,7 @@ export default class PostStream extends Component {
         {{else}}
           <div
             class="post-stream__bottom-boundary"
-            {{this.viewportTracker.registerBottomBoundary}}
+            {{this.viewportTracker.registerBottomBoundary topicId=@topic.id}}
           ></div>
         {{/if}}
       {{/unless}}

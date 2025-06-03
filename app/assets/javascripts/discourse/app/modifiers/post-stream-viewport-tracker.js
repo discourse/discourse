@@ -177,10 +177,16 @@ export default class PostStreamViewportTracker {
    *
    * @type {Modifier}
    * @param {HTMLElement} element - The element to register as the bottom boundary
+   * @param {Array} _ - Modifier positional params (unused)
+   * @param {Object} trackedArgs - Additional tracked arguments that trigger cleanup when changed
    * @returns {Function} Cleanup function that removes the reference when the element is destroyed
    */
-  #registerBottomBoundary = modifier((element) => {
+  #registerBottomBoundary = modifier((element, _, trackedArgs) => {
     this.#bottomBoundaryElement = element;
+
+    // Consume the remaining properties to track them and run the cleanup functions when their values change
+    // https://github.com/emberjs/ember.js/issues/19277
+    trackedArgs && Object.values(trackedArgs);
 
     // clean-up
     return () => {
@@ -224,13 +230,15 @@ export default class PostStreamViewportTracker {
    *
    * @type {Modifier}
    * @param {HTMLElement} element - The wrapper element containing all posts
-   * @param {Object} options - Configuration options
+   * @param {Array} _ - Modifier positional params (unused)
+   * @param {Object} options - Named arguments for the modifier
    * @param {Function} options.currentPostChanged - Callback when current post changes
    * @param {Function} options.currentPostScrolled - Callback when scroll position within current post changes
    * @param {number} options.headerOffset - Offset from top of viewport for site header
    * @param {Object} options.screenTrack - Screen tracking service
    * @param {Function} options.setCloakingBoundaries - Callback to update cloaking boundaries
-   * @returns {Function} Cleanup function that removes observers and event listeners
+   * @param {Object} options.trackedArgs - Additional tracked arguments that trigger cleanup when changed
+   * @returns {Function} Cleanup function that removes observers, event listeners and clears state
    */
   #setup = modifier(
     (
@@ -242,6 +250,7 @@ export default class PostStreamViewportTracker {
         headerOffset,
         screenTrack,
         setCloakingBoundaries,
+        ...trackedArgs
       }
     ) => {
       this.#wrapperElement = element;
@@ -265,8 +274,13 @@ export default class PostStreamViewportTracker {
         this.#scrollTriggered();
       });
 
-      // clean-up
+      // consume the remaining properties to track them and run the cleanup functions when their values change
+      // https://github.com/emberjs/ember.js/issues/19277
+      trackedArgs && Object.values(trackedArgs);
+
+      // cleanup
       return () => {
+        // clear observers
         this.#cloakingObserver?.disconnect();
         this.#viewportObserver?.disconnect();
 
@@ -274,6 +288,14 @@ export default class PostStreamViewportTracker {
         this.#setupEventListeners(false);
         // remove the eyeline debug element
         this.#setupEyelineDebugElement(false);
+
+        // clear collections
+        this.#cloakedPostsHeight = {};
+        this.#postsOnScreen = {};
+        this.#uncloakedPostNumbers.clear();
+
+        // clear instance properties
+        this.#currentPostElement = null;
       };
     }
   );
