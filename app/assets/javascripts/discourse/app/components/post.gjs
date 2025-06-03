@@ -364,7 +364,7 @@ export default class Post extends Component {
     >
       {{#unless @cloaked}}
         {{#let
-          (hash
+          (lazyHash
             post=@post
             actions=(hash
               updateTopicPageQueryParams=@updateTopicPageQueryParams
