@@ -33,6 +33,7 @@ class Reviewable < ActiveRecord::Base
 
   has_many :reviewable_histories, dependent: :destroy
   has_many :reviewable_scores, -> { order(created_at: :desc) }, dependent: :destroy
+  has_many :reviewable_notes, -> { order(created_at: :asc) }, dependent: :destroy
 
   enum :status, { pending: 0, approved: 1, rejected: 2, ignored: 3, deleted: 4 }
 
@@ -428,13 +429,16 @@ class Reviewable < ActiveRecord::Base
 
     if preload
       result =
-        result.includes(
-          { created_by: :user_stat },
-          :topic,
-          :target,
-          :target_created_by,
-          :reviewable_histories,
-        ).includes(reviewable_scores: { user: :user_stat, meta_topic: :posts })
+        result
+          .includes(
+            { created_by: :user_stat },
+            :topic,
+            :target,
+            :target_created_by,
+            :reviewable_histories,
+          )
+          .includes(reviewable_scores: { user: :user_stat, meta_topic: :posts })
+          .includes(reviewable_notes: { user: :user_stat })
     end
     return result if user.admin?
 
