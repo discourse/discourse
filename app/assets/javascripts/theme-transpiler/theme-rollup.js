@@ -10,6 +10,7 @@ import EmberThisFallback from "ember-this-fallback";
 import MagicString from "magic-string";
 import { dirname, join } from "path";
 import { minify as terserMinify } from "terser";
+import { WidgetHbsCompiler } from "discourse-widget-hbs/lib/widget-hbs-compiler";
 import { browsers } from "../discourse/config/targets";
 import AddThemeGlobals from "./add-theme-globals";
 import BabelReplaceImports from "./babel-replace-imports";
@@ -24,6 +25,7 @@ const thisFallbackPlugin = EmberThisFallback._buildPlugin({
 const preprocessor = new Preprocessor();
 
 import BindingsWasm from "./node_modules/@rollup/browser/dist/bindings_wasm_bg.wasm";
+import buildEmberTemplateManipulatorPlugin from "./theme-hbs-ast-transforms";
 
 const oldInstantiate = WebAssembly.instantiate;
 WebAssembly.instantiate = async function (bytes, bindings) {
@@ -215,8 +217,8 @@ const __COLOCATED_TEMPLATE__ = template;
         plugins: [
           [DecoratorTransforms, { runEarly: true }],
           AddThemeGlobals,
-          // "@embroider/addon-dev/template-colocation-plugin",
           colocatedBabelPlugin,
+          WidgetHbsCompiler,
           [
             HTMLBarsInlinePrecompile,
             {
@@ -226,11 +228,12 @@ const __COLOCATED_TEMPLATE__ = template;
                 "ember-cli-htmlbars-inline-precompile",
                 "htmlbars-inline-precompile",
               ],
-              transforms: [thisFallbackPlugin],
+              transforms: [
+                thisFallbackPlugin,
+                buildEmberTemplateManipulatorPlugin(opts.themeId),
+              ],
             },
           ],
-          // TODO: widgetHbs (remove from d-calendar)
-          // TODO: themem ast transforms
         ],
         presets: [
           [

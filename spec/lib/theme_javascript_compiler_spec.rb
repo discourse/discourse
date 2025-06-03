@@ -6,17 +6,17 @@ RSpec.describe ThemeJavascriptCompiler do
   describe "#append_ember_template" do
     it "maintains module names so that discourse-boot.js can correct them" do
       compiler.append_ember_template("/connectors/blah-1", "{{var}}")
-      expect(compiler.raw_content.to_s).to include(
+      expect(compiler.content.to_s).to include(
         "define(\"discourse/theme-1/connectors/blah-1\", [\"exports\", ",
       )
 
       compiler.append_ember_template("connectors/blah-2", "{{var}}")
-      expect(compiler.raw_content.to_s).to include(
+      expect(compiler.content.to_s).to include(
         "define(\"discourse/theme-1/connectors/blah-2\", [\"exports\", ",
       )
 
       compiler.append_ember_template("javascripts/connectors/blah-3", "{{var}}")
-      expect(compiler.raw_content.to_s).to include(
+      expect(compiler.content.to_s).to include(
         "define(\"discourse/theme-1/javascripts/connectors/blah-3\", [\"exports\", ",
       )
     end
@@ -32,8 +32,8 @@ RSpec.describe ThemeJavascriptCompiler do
           "connectors/outlet/blah-1.js" => "console.log('test')",
         },
       )
-      expect(compiler.raw_content.to_s).to include("discourse/theme-1/connectors/outlet/blah-1")
-      expect(compiler.raw_content.to_s).to include(
+      expect(compiler.content.to_s).to include("discourse/theme-1/connectors/outlet/blah-1")
+      expect(compiler.content.to_s).to include(
         "discourse/theme-1/templates/connectors/outlet/blah-1",
       )
       expect(JSON.parse(compiler.source_map)["sources"]).to contain_exactly(
@@ -49,8 +49,8 @@ RSpec.describe ThemeJavascriptCompiler do
           "templates/connectors/outlet/blah-1.js" => "console.log('test')",
         },
       )
-      expect(compiler.raw_content.to_s).to include("discourse/theme-1/connectors/outlet/blah-1")
-      expect(compiler.raw_content.to_s).to include(
+      expect(compiler.content.to_s).to include("discourse/theme-1/connectors/outlet/blah-1")
+      expect(compiler.content.to_s).to include(
         "discourse/theme-1/templates/connectors/outlet/blah-1",
       )
       expect(JSON.parse(compiler.source_map)["sources"]).to contain_exactly(
@@ -66,8 +66,8 @@ RSpec.describe ThemeJavascriptCompiler do
           "connectors/outlet/blah-1.js" => "console.log('test')",
         },
       )
-      expect(compiler.raw_content.to_s).to include("discourse/theme-1/connectors/outlet/blah-1")
-      expect(compiler.raw_content.to_s).to include(
+      expect(compiler.content.to_s).to include("discourse/theme-1/connectors/outlet/blah-1")
+      expect(compiler.content.to_s).to include(
         "discourse/theme-1/templates/connectors/outlet/blah-1",
       )
       expect(JSON.parse(compiler.source_map)["sources"]).to contain_exactly(
@@ -124,8 +124,8 @@ RSpec.describe ThemeJavascriptCompiler do
           "discourse/components/mycomponent.hbs" => "{{my-component-template}}",
         },
       )
-      expect(compiler.raw_content).to include("__COLOCATED_TEMPLATE__ =")
-      expect(compiler.raw_content).to include("setComponentTemplate")
+      expect(compiler.content).to include("__COLOCATED_TEMPLATE__ =")
+      expect(compiler.content).to include("setComponentTemplate")
     end
 
     it "handles colocated admin components" do
@@ -138,8 +138,8 @@ RSpec.describe ThemeJavascriptCompiler do
           "admin/components/mycomponent.hbs" => "{{my-component-template}}",
         },
       )
-      expect(compiler.raw_content).to include("__COLOCATED_TEMPLATE__ =")
-      expect(compiler.raw_content).to include("setComponentTemplate")
+      expect(compiler.content).to include("__COLOCATED_TEMPLATE__ =")
+      expect(compiler.content).to include("setComponentTemplate")
     end
 
     it "applies theme AST transforms to colocated components" do
@@ -147,7 +147,7 @@ RSpec.describe ThemeJavascriptCompiler do
       compiler.append_tree(
         { "discourse/components/mycomponent.hbs" => '{{theme-i18n "my_translation_key"}}' },
       )
-      template_compiled_line = compiler.raw_content.lines.find { |l| l.include?('"block":') }
+      template_compiled_line = compiler.content.lines.find { |l| l.include?('"block":') }
       expect(template_compiled_line).to include("12345678910")
     end
 
@@ -161,17 +161,17 @@ RSpec.describe ThemeJavascriptCompiler do
           "discourse/components/mycomponent.hbs" => "{{my-component-template}}",
         },
       )
-      expect(compiler.raw_content).to include("__COLOCATED_TEMPLATE__ =")
-      expect(compiler.raw_content).to include("throw new Error")
+      expect(compiler.content).to include("__COLOCATED_TEMPLATE__ =")
+      expect(compiler.content).to include("throw new Error")
     end
 
     it "handles template-only components" do
       compiler.append_tree(
         { "discourse/components/mycomponent.hbs" => "{{my-component-template}}" },
       )
-      expect(compiler.raw_content).to include("__COLOCATED_TEMPLATE__ =")
-      expect(compiler.raw_content).to include("setComponentTemplate")
-      expect(compiler.raw_content).to include("@ember/component/template-only")
+      expect(compiler.content).to include("__COLOCATED_TEMPLATE__ =")
+      expect(compiler.content).to include("setComponentTemplate")
+      expect(compiler.content).to include("@ember/component/template-only")
     end
   end
 
@@ -235,12 +235,12 @@ RSpec.describe ThemeJavascriptCompiler do
         }
       JS
 
-      expect(compiler.raw_content).to include(
+      expect(compiler.content).to include(
         "define(\"discourse/theme-1/discourse/components/my-component\", [\"exports\",",
       )
-      expect(compiler.raw_content).to include('value = "foo";')
-      expect(compiler.raw_content).to include("setComponentTemplate")
-      expect(compiler.raw_content).to include("createTemplateFactory")
+      expect(compiler.content).to include('value = "foo";')
+      expect(compiler.content).to include("setComponentTemplate")
+      expect(compiler.content).to include("createTemplateFactory")
     end
   end
 
@@ -253,8 +253,8 @@ RSpec.describe ThemeJavascriptCompiler do
         }
       JS
 
-      expect(compiler.raw_content).to include('value = "foo";')
-      expect(compiler.raw_content).to include('complexValue = (() => this.value + "bar")();')
+      expect(compiler.content).to include('value = "foo";')
+      expect(compiler.content).to include('complexValue = (() => this.value + "bar")();')
     end
   end
 end

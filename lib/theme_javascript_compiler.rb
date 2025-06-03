@@ -18,7 +18,7 @@ class ThemeJavascriptCompiler
     @@terser_disabled = false
   end
 
-  def initialize(theme_id, theme_name, settings, minify: true)
+  def initialize(theme_id, theme_name, settings = {}, minify: true)
     @theme_id = theme_id
     @output_tree = []
     @theme_name = theme_name
