@@ -270,7 +270,9 @@ export default class ColorPaletteEditor extends Component {
             class="color-palette-editor__colors-item"
           >
             <div class="color-palette-editor__color-info">
-              <div class="color-palette-editor__color-description form-kit__container-title">
+              <div
+                class="color-palette-editor__color-description form-kit__container-title"
+              >
                 {{#if color.description}}
                   {{color.description}}
                 {{else}}
