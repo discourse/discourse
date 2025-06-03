@@ -39,10 +39,7 @@
       width: calc(var(--toggle-switch-height) - 0.125rem);
       height: calc(var(--toggle-switch-height) - 0.25rem);
       top: 0.125rem;
-      transition:
-        left 0.25s,
-        right 0.25s,
-        transform 0.25s;
+      transition: transform 0.2s ease-out;
       border-radius: 0.25em;
       box-shadow: 0 1px 2px 1px rgb(var(--tertiary-rgb), 0.2);
 
@@ -69,7 +66,6 @@
     justify-content: center;
     position: absolute;
     opacity: 0;
-    transition: opacity 0.25s ease;
     height: 100%;
     width: calc(var(--toggle-switch-height) - 0.125rem);
 
