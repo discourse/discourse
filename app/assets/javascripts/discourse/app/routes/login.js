@@ -28,7 +28,14 @@ export default class LoginRoute extends DiscourseRoute {
       this.login.isOnlyOneExternalLoginMethod &&
       this.siteSettings.full_page_login
     ) {
-      this.login.singleExternalLogin();
+      if (
+        JSON.parse(
+          document.getElementById("data-authentication")?.dataset
+            .authenticationData
+        )["authenticated"]
+      ) {
+        this.login.singleExternalLogin();
+      }
     } else if (
       !this.siteSettings.full_page_login ||
       this.siteSettings.enable_discourse_connect
