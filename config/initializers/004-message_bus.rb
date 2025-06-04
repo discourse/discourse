@@ -30,7 +30,7 @@ def setup_message_bus_env(env)
     cors_origin = Discourse.base_url_no_prefix
 
     if GlobalSetting.enable_cors && SiteSetting.cors_origins.present?
-      allowed_origins = SiteSetting.cors_origins.split("|")
+      allowed_origins = SiteSetting.cors_origins_map
       cors_origin = env["HTTP_ORIGIN"] if allowed_origins.include?(env["HTTP_ORIGIN"])
     end
 
