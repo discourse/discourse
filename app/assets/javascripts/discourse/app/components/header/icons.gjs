@@ -37,6 +37,7 @@ export default class Icons extends Component {
   @service header;
   @service search;
   @service interfaceColor;
+  @service capabilities;
 
   get showHamburger() {
     // NOTE: In this scenario, we are forcing the sidebar on admin users,
@@ -59,10 +60,9 @@ export default class Icons extends Component {
     }
 
     return (
-      this.site.mobileView ||
+      !this.capabilities.viewport.md ||
       this.search.searchExperience === "search_icon" ||
-      this.args.topicInfoVisible ||
-      this.args.narrowDesktop
+      this.args.topicInfoVisible
     );
   }
 
