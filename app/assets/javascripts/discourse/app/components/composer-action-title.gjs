@@ -1,6 +1,7 @@
 import Component from "@ember/component";
 import { hash } from "@ember/helper";
 import { alias } from "@ember/object/computed";
+import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { classNames } from "@ember-decorators/component";
 import PostLanguageSelector from "discourse/components/post-language-selector";
@@ -18,7 +19,6 @@ import {
 } from "discourse/models/composer";
 import { i18n } from "discourse-i18n";
 import ComposerActions from "select-kit/components/composer-actions";
-import Composer from "discourse/models/composer";
 
 const TITLES = {
   [PRIVATE_MESSAGE]: "topic.private_message",
@@ -30,6 +30,9 @@ const TITLES = {
 
 @classNames("composer-action-title")
 export default class ComposerActionTitle extends Component {
+  @service currentUser;
+  @service siteSettings;
+
   @alias("model.replyOptions") options;
   @alias("model.action") action;
 
@@ -67,15 +70,16 @@ export default class ComposerActionTitle extends Component {
   }
 
   get showPostLanguageSelector() {
-    console.log(this.model);
-    // TODO more refinement needed here
+    const allowedActions = [CREATE_TOPIC, EDIT, REPLY];
     if (
-      this.model.action === Composer.CREATE_TOPIC ||
-      this.model.action === Composer.EDIT ||
-      this.model.action === Composer.REPLY
+      this.currentUser &&
+      this.siteSettings.experimental_content_localization &&
+      this.currentUser.can_localize_content &&
+      allowedActions.includes(this.model.action)
     ) {
       return true;
     }
+
     return false;
   }
 
