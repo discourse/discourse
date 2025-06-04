@@ -851,7 +851,7 @@ describe "Composer - ProseMirror editor", type: :system do
       composer.type_content("[Example](https://example.com)")
       composer.send_keys(:left, :left, :left)
 
-      expect(page).to have_css(".composer-link-toolbar")
+      expect(page).to have_css("[data-identifier='composer-link-toolbar']")
       expect(page).to have_css("button.composer-link-toolbar__edit")
       expect(page).to have_css("button.composer-link-toolbar__copy")
       expect(page).to have_css("a.composer-link-toolbar__visit")
@@ -913,7 +913,7 @@ describe "Composer - ProseMirror editor", type: :system do
 
       composer.type_content("<https://example.com>")
 
-      expect(page).to have_css(".composer-link-toolbar")
+      expect(page).to have_css("[data-identifier='composer-link-toolbar']")
       expect(page).to have_no_css("button.composer-link-toolbar__unlink")
     end
 
@@ -922,7 +922,7 @@ describe "Composer - ProseMirror editor", type: :system do
 
       composer.type_content("https://example.com")
 
-      expect(page).to have_css(".composer-link-toolbar")
+      expect(page).to have_css("[data-identifier='composer-link-toolbar']")
       expect(page).to have_no_css("button.composer-link-toolbar__unlink")
     end
 
@@ -932,7 +932,6 @@ describe "Composer - ProseMirror editor", type: :system do
       composer.type_content("[Example](https://example.com)")
 
       expect(page).to have_css("a.composer-link-toolbar__visit")
-      expect(page).to have_css(".composer-link-toolbar__divider")
 
       expect(find("a.composer-link-toolbar__visit")["href"]).to eq("https://example.com/")
     end
@@ -942,7 +941,7 @@ describe "Composer - ProseMirror editor", type: :system do
 
       composer.type_content("[Example](not-a-url)")
 
-      expect(page).to have_css(".composer-link-toolbar")
+      expect(page).to have_css("[data-identifier='composer-link-toolbar']")
       expect(page).to have_no_css("a.composer-link-toolbar__visit")
       expect(page).to have_no_css(".composer-link-toolbar__divider")
     end
@@ -954,11 +953,11 @@ describe "Composer - ProseMirror editor", type: :system do
 
       composer.send_keys(:left)
 
-      expect(page).to have_css(".composer-link-toolbar")
+      expect(page).to have_css("[data-identifier='composer-link-toolbar']")
 
       composer.send_keys(:right)
 
-      expect(page).to have_no_css(".composer-link-toolbar")
+      expect(page).to have_no_css("[data-identifier='composer-link-toolbar']")
     end
 
     it "preserves emojis when editing a link via toolbar" do

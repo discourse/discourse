@@ -198,7 +198,6 @@
 .fk-d-menu[data-identifier="composer-link-toolbar"] {
   z-index: z("composer", "dropdown") + 1;
   animation: fade-in ease 0.25s 1 forwards;
-  transition: left 0.1s ease-in-out;
 
   .fk-d-menu__inner-content {
     overflow: visible;

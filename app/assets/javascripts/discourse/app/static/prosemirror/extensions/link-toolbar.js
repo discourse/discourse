@@ -1,3 +1,4 @@
+import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import ToolbarButtons from "discourse/components/composer/toolbar-buttons";
 import InsertHyperlink from "discourse/components/modal/insert-hyperlink";
 import { ToolbarBase } from "discourse/lib/composer/toolbar";
@@ -125,13 +126,8 @@ const extension = {
               head: view.state.selection.head,
             };
 
-            let shouldUpdateMenu =
-              menuInstance?.expanded &&
-              linkState?.range?.from === attrs.range?.from &&
-              linkState?.range?.to === attrs.range?.to;
-
             if (!linkToolbar) {
-              linkState = attrs;
+              linkState = new TrackedObject(attrs);
 
               const handlers = {
                 editLink: () => {
@@ -216,10 +212,8 @@ const extension = {
                   }
                 },
 
-                canVisitLink: () => {
-                  return utils
-                    ? !!utils.getLinkify().matchAtStart(linkState.href)
-                    : false;
+                canVisit: () => {
+                  return !!utils.getLinkify().matchAtStart(linkState.href);
                 },
 
                 getHref: () => linkState.href,
@@ -237,7 +231,7 @@ const extension = {
                 return rovingButtonBar(event);
               };
             } else {
-              linkState = attrs;
+              Object.assign(linkState, attrs);
             }
 
             if (getContext().capabilities.viewport.sm) {
@@ -252,7 +246,7 @@ const extension = {
                   return {};
                 }
 
-                const { left, top } = view.coordsAtPos(attrs.head);
+                const { left, top } = view.coordsAtPos(linkState.head);
                 return {
                   left,
                   top: top + MENU_OFFSET,
@@ -262,7 +256,7 @@ const extension = {
               };
 
               if (menuInstance) {
-                if (shouldUpdateMenu) {
+                if (menuInstance.expanded) {
                   menuInstance.trigger = trigger;
                   updatePosition(
                     menuInstance.trigger,
