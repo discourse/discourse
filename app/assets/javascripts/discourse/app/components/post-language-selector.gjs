@@ -32,7 +32,6 @@ export default class PostLanguageSelector extends Component {
     >
       <:content>
         <DropdownMenu as |dropdown|>
-          {{log @composerModel}}
           {{#each
             this.siteSettings.available_content_localization_locales
             as |locale|
