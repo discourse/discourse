@@ -23,8 +23,7 @@ export default class LoginRoute extends DiscourseRoute {
       if (
         this.login.isOnlyOneExternalLoginMethod &&
         this.siteSettings.auth_immediately &&
-        !document.getElementById("data-authentication")?.dataset
-          .authenticationData
+        !lastAuthResult
       ) {
         this.login.singleExternalLogin();
       }
@@ -32,7 +31,7 @@ export default class LoginRoute extends DiscourseRoute {
       this.login.isOnlyOneExternalLoginMethod &&
       this.siteSettings.full_page_login
     ) {
-      if (lastAuthResult["authenticated"] === true) {
+      if (lastAuthResult["authenticated"]) {
         // debugger;
 
         this.login.singleExternalLogin();
