@@ -9,7 +9,10 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import categoryBadge from "discourse/helpers/category-badge";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import lazyHash from "discourse/helpers/lazy-hash";
-import { CATEGORY_STYLE_TYPES } from "discourse/lib/constants";
+import {
+  CATEGORY_STYLE_TYPES,
+  CATEGORY_TEXT_COLORS,
+} from "discourse/lib/constants";
 import getURL from "discourse/lib/get-url";
 import Category from "discourse/models/category";
 import { i18n } from "discourse-i18n";
@@ -80,10 +83,10 @@ export default class EditCategoryGeneral extends Component {
     const category = this.args.category;
 
     const previewCategory = Category.create({
+      id: category.id,
       name: transientData.name || i18n("category.untitled"),
       color: transientData.color,
-      id: category.id,
-      text_color: category.text_color,
+      text_color: transientData.text_color,
       parent_category_id: parseInt(category.get("parent_category_id"), 10),
       read_restricted: category.get("read_restricted"),
     });
@@ -123,7 +126,37 @@ export default class EditCategoryGeneral extends Component {
 
   @action
   updateColor(field, newColor) {
-    field.set(newColor.replace("#", ""));
+    const color = newColor.replace("#", "");
+
+    if (field.name === "color") {
+      const whiteDiff = this.colorDifference(color, CATEGORY_TEXT_COLORS[0]);
+      const blackDiff = this.colorDifference(color, CATEGORY_TEXT_COLORS[1]);
+      const colorIndex = whiteDiff > blackDiff ? 0 : 1;
+
+      this.args.form.setProperties({
+        color,
+        text_color: CATEGORY_TEXT_COLORS[colorIndex],
+      });
+    } else {
+      field.set(color);
+    }
+  }
+
+  @action
+  colorDifference(color1, color2) {
+    const r1 = parseInt(color1.substr(0, 2), 16);
+    const g1 = parseInt(color1.substr(2, 2), 16);
+    const b1 = parseInt(color1.substr(4, 2), 16);
+
+    const r2 = parseInt(color2.substr(0, 2), 16);
+    const g2 = parseInt(color2.substr(2, 2), 16);
+    const b2 = parseInt(color2.substr(4, 2), 16);
+
+    const rDiff = Math.max(r1, r2) - Math.min(r1, r2);
+    const gDiff = Math.max(g1, g2) - Math.min(g1, g2);
+    const bDiff = Math.max(b1, b2) - Math.min(b1, b2);
+
+    return rDiff + gDiff + bDiff;
   }
 
   get categoryDescription() {
@@ -296,6 +329,31 @@ export default class EditCategoryGeneral extends Component {
                 <ColorPicker
                   @colors={{this.backgroundColors}}
                   @usedColors={{this.usedBackgroundColors}}
+                  @value={{readonly field.value}}
+                  @ariaLabel={{i18n "category.predefined_colors"}}
+                  @onSelectColor={{fn this.updateColor field}}
+                />
+              </div>
+            </div>
+          </field.Custom>
+        </@form.Field>
+
+        <@form.Field
+          @name="text_color"
+          @title={{i18n "category.foreground_color"}}
+          @format="full"
+          as |field|
+        >
+          <field.Custom>
+            <div class="category-color-editor">
+              <div class="colorpicker-wrapper edit-text-color">
+                <ColorInput
+                  @hexValue={{readonly field.value}}
+                  @ariaLabelledby="foreground-color-label"
+                  @onChangeColor={{fn this.updateColor field}}
+                />
+                <ColorPicker
+                  @colors={{CATEGORY_TEXT_COLORS}}
                   @value={{readonly field.value}}
                   @ariaLabel={{i18n "category.predefined_colors"}}
                   @onSelectColor={{fn this.updateColor field}}

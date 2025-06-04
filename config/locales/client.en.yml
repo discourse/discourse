@@ -4189,6 +4189,7 @@ en:
       background_image_dark: "Dark Category Background Image"
       style: "Styles"
       background_color: "Color"
+      foreground_color: "Text color"
       styles:
         type: "Style"
         icon: "Icon"
@@ -4988,7 +4989,7 @@ en:
           save: "Save"
           delete: "Delete"
           delete_confirm: "Are you sure you want to delete this section?"
-          delete_public_confirm: "This section is <strong>visible to everyone</strong>, are you sure you want to delete it?"
+          delete_public_confirm: "This section is visible to everyone, are you sure you want to delete it?"
           update_public_confirm: "Changes will be <strong>visible to everyone</strong> on this site. Are you sure?"
           mark_as_private_confirm: "This section is <strong>visible to everyone</strong>. After the update, it will be <strong>visible only to you</strong>. Are you sure?"
           reset_confirm: "Are you sure you want to reset this section to default?"
@@ -5373,6 +5374,7 @@ en:
 
         logo:
           title: "Logo"
+          header_description: "Configure the logos and icons used throughout your site"
           form:
             saved: "Logo settings are saved."
             logo:
@@ -5437,6 +5439,7 @@ en:
               help_text: "recommended size is at least 280 x 150 pixels. Don't use an SVG image."
         fonts:
           title: "Fonts"
+          header_description: "Configure the fonts used throughout your site, including base font, heading font, and default text size"
           form:
             more_fonts: "More fonts"
             fewer_fonts: "Fewer fonts"
@@ -6404,7 +6407,7 @@ en:
           copy_of: "Copy of %{name}"
           copy_created: 'A new copy of "%{name}" has been created'
           illegal_character_in_color: "Colors consist of hexadecimal characters only"
-          delete_confirm: "Delete this color palette?"
+          delete_confirm: "Are you sure you want to delete this color palette?"
       plugins:
         title: "Plugins"
         name: "Name"
@@ -6785,62 +6788,62 @@ en:
           about: "Modify the colors used by your themes. Create a new color palette to start."
           new_name: "New color palette"
           copy_name_prefix: "Copy of"
-          delete_confirm: "Delete this color palette?"
+          delete_confirm: "Are you sure you want to delete this color palette?"
           undo: "Undo"
           undo_title: "Undo your changes to this color since the last time it was saved."
           revert: "Revert"
           revert_title: "Reset this color to Discourse's default color palette."
           primary:
             name: "primary"
-            description: "Most text, icons, and borders."
+            description: "Main text and icons"
           primary-medium:
             name: "primary-medium"
-            description: ""
+            description: "Disabled or muted text"
           primary-low-mid:
             name: "primary-low-mid"
-            description: ""
+            description: "Borders and subtle accents"
           secondary:
             name: "secondary"
-            description: "The main background color, and text color of some buttons."
+            description: "Main background and some button text"
           tertiary:
             name: "tertiary"
-            description: "Links, some buttons, notifications, and accent color."
+            description: "Accent color (links, buttons, badges)"
           quaternary:
             name: "quaternary"
-            description: "For optional use in themes."
+            description: "Optional theme accent"
           header_background:
             name: "header background"
-            description: "Background color of the site's header."
+            description: "Header background"
           header_primary:
             name: "header primary"
-            description: "Text and icons in the site's header."
+            description: "Header text and icons"
           highlight:
             name: "highlight"
-            description: "The background color of highlighted elements on the page, such as posts and topics."
+            description: "Highlighted posts or topics"
           highlight-high:
             name: "highlight-high"
-            description: ""
+            description: "Strong highlight"
           highlight-medium:
             name: "highlight-medium"
-            description: ""
+            description: "Medium highlight"
           highlight-low:
             name: "highlight-low"
-            description: ""
+            description: "Subtle highlight"
           danger:
             name: "danger"
-            description: "Highlight color for actions like deleting posts and topics."
+            description: "Errors and delete actions"
           success:
             name: "success"
-            description: "Used to indicate an action was successful."
+            description: "Successful actions"
           love:
             name: "love"
-            description: "The like button's color."
+            description: "Like button"
           selected:
             name: "selected"
-            description: "The background-color of elements such as list-items when they are selected/active."
+            description: "Active or selected items"
           hover:
             name: "hover"
-            description: "The background-color of elements such as list-items when they are hovered on or have keyboard focus."
+            description: "Hover or focus background"
           editor:
             light: "Light"
             dark: "Dark"

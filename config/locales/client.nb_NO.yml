@@ -5037,33 +5037,24 @@ nb_NO:
           revert: "Reverser"
           primary:
             name: "primær"
-            description: "Det meste av tekst, ikoner og kanter."
           secondary:
             name: "sekundær"
-            description: "Primær bakgrunnsfarge og tekstfarge på noen knapper"
           tertiary:
             name: "tertiær"
-            description: "Lenker, noen knapper, varsler og effektfarge"
           quaternary:
             name: "kvartær"
           header_background:
             name: "hodebakgrunn"
-            description: "Bakgrunnsfarge i nettstedets hode"
           header_primary:
             name: "primærhode"
-            description: "Tekst og ikoner i nettstedets hode."
           highlight:
             name: "utheving"
-            description: "Bakgrunnsfargen på uthevede elementer på siden, slik som innlegg og emner."
           danger:
             name: "fare"
-            description: "Uthevingsfarge for handlinger som sletting av innlegg og emner."
           success:
             name: "suksess"
-            description: "Brukt til å indikere hvorvidt en handling var vellykket."
           love:
             name: "liker"
-            description: "Fargen til Liker-knappen."
           selected:
             name: "valgt"
           editor:

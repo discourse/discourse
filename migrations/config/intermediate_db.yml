@@ -19,6 +19,9 @@ schema:
       primary_key_column_names: [ "user_id" ]
     users:
       columns:
+        modify:
+          - name: "created_at"
+            nullable: false
         add:
           - name: "original_username"
             datatype: text
@@ -41,6 +44,8 @@ schema:
         - name: "id"
           datatype: numeric
           rename_to: "original_id"
+        - name: "created_at"
+          nullable: true
         - name_regex: ".*upload.*_id$"
           datatype: text
         - name_regex: ".*_id$"

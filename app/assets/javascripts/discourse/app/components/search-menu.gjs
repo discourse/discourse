@@ -44,8 +44,7 @@ export default class SearchMenu extends Component {
   @service appEvents;
 
   @tracked loading = false;
-  @tracked
-  inPMInboxContext = this.search.searchContext?.type === "private_messages";
+  @tracked isPMInboxCleared = false;
   @tracked typeFilter = DEFAULT_TYPE_FILTER;
   @tracked suggestionKeyword = false;
   @tracked suggestionResults = [];
@@ -53,6 +52,7 @@ export default class SearchMenu extends Component {
   @tracked menuPanelOpen = false;
 
   searchInputId = this.args.searchInputId ?? "search-term";
+
   _debouncer = null;
   _activeSearch = null;
 
@@ -112,6 +112,13 @@ export default class SearchMenu extends Component {
     }
 
     return false;
+  }
+
+  get inPMInboxContext() {
+    return (
+      !this.isPMInboxCleared &&
+      this.search.searchContext?.type === "private_messages"
+    );
   }
 
   @action
@@ -196,6 +203,9 @@ export default class SearchMenu extends Component {
     if (opts.setTopicContext) {
       this.search.inTopicContext = true;
     }
+    if (opts.setPMInboxContext) {
+      this.isPMInboxCleared = false;
+    }
     this.search.activeGlobalSearchTerm = term;
     this.triggerSearch();
   }
@@ -216,7 +226,7 @@ export default class SearchMenu extends Component {
 
   @action
   clearPMInboxContext() {
-    this.inPMInboxContext = false;
+    this.isPMInboxCleared = true;
   }
 
   @action

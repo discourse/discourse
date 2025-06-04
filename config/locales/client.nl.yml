@@ -4549,7 +4549,7 @@ nl:
           save: "Opslaan"
           delete: "Verwijderen"
           delete_confirm: "Weet je zeker dat je deze sectie wilt verwijderen?"
-          delete_public_confirm: "Deze sectie is <strong>zichtbaar voor iedereen</strong>, weet je zeker dat je het wilt verwijderen?"
+          delete_public_confirm: "Deze sectie is zichtbaar voor iedereen, weet je zeker dat je het wilt verwijderen?"
           update_public_confirm: "Wijzigingen zijn <strong>zichtbaar voor iedereen</strong> op deze site. Weet je het zeker?"
           mark_as_private_confirm: "Deze sectie is <strong>zichtbaar voor iedereen</strong>. Na de update is de sectie <strong>alleen zichtbaar voor jou</strong>. Weet je het zeker?"
           reset_confirm: "Weet je zeker dat je deze sectie wilt herstellen naar de standaardinstellingen?"
@@ -5667,7 +5667,6 @@ nl:
             toggle_description: "Kleurenpalet kan door gebruikers worden geselecteerd"
           colors:
             title: "Kleuren"
-          delete_confirm: "Dit kleurenpalet verwijderen?"
       plugins:
         title: "Plug-ins"
         name: "Naam"
@@ -6011,36 +6010,28 @@ nl:
           about: "De door je thema's gebruikte paletten aanpassen. Maak een nieuw palet om te beginnen."
           new_name: "Nieuw kleurenpalet"
           copy_name_prefix: "Kopie van"
-          delete_confirm: "Dit kleurenpalet verwijderen?"
           undo: "Ongedaan maken"
           undo_title: "Je wijzigingen aan deze kleur sinds de laatste keer dat deze is opgeslagen ongedaan maken."
           revert: "Herstellen"
           revert_title: "Deze kleur herstellen naar het standaardkleurenpalet van Discourse."
           primary:
             name: "primair"
-            description: "Meeste tekst, pictogrammen en randen."
           primary-medium:
             name: "primair-gemiddeld"
           primary-low-mid:
             name: "primair-laag-mid"
           secondary:
             name: "secundair"
-            description: "De hoofdachtergrondkleur, en tekstkleur van sommige knoppen."
           tertiary:
             name: "tertiair"
-            description: "Links, sommige knoppen, meldingen en accentkleur."
           quaternary:
             name: "quaternair"
-            description: "Voor optioneel gebruik in thema's."
           header_background:
             name: "koptekstachtergrond"
-            description: "Achtergrondkleur van de koptekst van de website."
           header_primary:
             name: "eerste koptekst"
-            description: "Tekst en pictogrammen in de koptekst van de website."
           highlight:
             name: "markeren"
-            description: "De achtergrondkleur van gemarkeerde elementen op de pagina, zoals berichten en topics."
           highlight-high:
             name: "markeren-hoog"
           highlight-medium:
@@ -6049,19 +6040,14 @@ nl:
             name: "markeren-laag"
           danger:
             name: "gevaar"
-            description: "Markeringskleur voor acties zoals het verwijderen van berichten en topics."
           success:
             name: "succes"
-            description: "Gebruikt om aan te geven dat een actie is gelukt."
           love:
             name: "liefde"
-            description: "De kleur van de likeknop."
           selected:
             name: "geselecteerd"
-            description: "De achtergrondkleur van elementen zoals lijstitems wanneer ze geselecteerd/actief zijn."
           hover:
             name: "zweven"
-            description: "De achtergrondkleur van elementen zoals lijstitems als de muisaanwijzer erop wordt geplaatst of als ze de toetsenbordfocus hebben."
           editor:
             light: "Licht"
             dark: "Donker"

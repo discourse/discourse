@@ -927,7 +927,10 @@ export default class ComposerEditor extends Component {
       icon: "gear",
       title: "composer.options",
       sendAction: this.onExpandPopupMenuOptions.bind(this),
-      popupMenu: true,
+      popupMenu: {
+        options: () => this.composer.popupMenuOptions,
+        action: this.composer.onPopupMenuAction,
+      },
     });
   }
 

@@ -11,6 +11,7 @@ import {
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import DEditor from "discourse/components/d-editor";
+import { ToolbarBase } from "discourse/lib/composer/toolbar";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setCaretPosition } from "discourse/lib/utilities";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -1313,6 +1314,56 @@ third line`
       });
     }
   })();
+
+  test("toolbar instance replacement", async function (assert) {
+    const self = this;
+
+    const customToolbar = new ToolbarBase({
+      siteSettings: this.siteSettings,
+      capabilities: this.capabilities,
+      showLink: true,
+    });
+    customToolbar.addButton({
+      id: "custom-toolbar-button",
+      icon: "plus",
+      title: "Custom Toolbar Button",
+    });
+
+    withPluginApi((api) => {
+      api.onToolbarCreate((toolbar) => {
+        toolbar.addButton({
+          id: "replace-toolbar",
+          icon: "xmark",
+          group: "extras",
+          action: () => {
+            toolbar.context.replaceToolbar(customToolbar);
+          },
+          condition: () => true,
+        });
+      });
+    });
+
+    this.value = "hello";
+
+    await render(<template><DEditor @value={{self.value}} /></template>);
+
+    assert.dom(".d-editor-button-bar").exists();
+    assert.dom(".d-editor-button-bar.--replaced-toolbar").doesNotExist();
+
+    await click("button.replace-toolbar");
+
+    assert
+      .dom(
+        ".d-editor-button-bar.--replaced-toolbar button.custom-toolbar-button"
+      )
+      .exists("It should show the custom toolbar button");
+
+    // Back button
+    await click(".d-editor-button-bar__back");
+
+    assert.dom(".d-editor-button-bar").exists();
+    assert.dom(".d-editor-button-bar.--replaced-toolbar").doesNotExist();
+  });
 });
 
 module("Integration | Component | d-editor | rich editor", function (hooks) {

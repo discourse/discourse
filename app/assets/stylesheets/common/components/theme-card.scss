@@ -5,7 +5,7 @@
 
 .themes-cards-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 1em;
   align-items: stretch;
 }
@@ -95,6 +95,8 @@
     align-items: center;
     justify-content: center;
     border-bottom: 1px solid var(--primary-low);
+    border-top-left-radius: var(--d-border-radius);
+    border-top-right-radius: var(--d-border-radius);
 
     svg {
       width: 100%;
@@ -108,7 +110,6 @@
     height: 100%;
     object-fit: cover;
     object-position: top left;
-    border-radius: calc(var(--d-border-radius) + 1px);
   }
 
   .ember-checkbox {
@@ -121,7 +122,8 @@
   }
 
   &__content {
-    padding: 1rem;
+    padding-inline: 1rem;
+    padding-top: 1rem;
     display: flex;
     flex-direction: column;
     flex-grow: 1;
@@ -160,10 +162,9 @@
   }
 
   &__footer {
-    margin-top: auto;
     flex-direction: column;
-    padding: 1rem;
-    gap: 0.75rem;
+    padding-inline: 1rem;
+    padding-bottom: 1rem;
   }
 
   &__controls {
@@ -182,7 +183,7 @@
     flex-wrap: wrap;
     gap: 0.5rem;
     align-items: flex-start;
-    min-height: 3rem;
+    min-height: 2rem;
   }
 
   &__badge {
@@ -243,6 +244,10 @@
   height: 100%;
   display: flex;
   flex-direction: column;
+
+  &:hover {
+    border-color: var(--tertiary-medium);
+  }
 
   .admin-config-area-card__content {
     margin: 0;

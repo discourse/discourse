@@ -4132,7 +4132,6 @@ lt:
           delete: "Pašalinti"
           colors:
             title: "Spalvos"
-          delete_confirm: "Ištrinti šią spalvų paletę?"
       plugins:
         title: "Plugins"
         name: "Vardas"
@@ -4368,42 +4367,32 @@ lt:
           title: "Spalvos"
           about: "Pakeiskite temų naudojamas spalvas. Norėdami pradėti, sukurkite naują spalvų paletę."
           copy_name_prefix: "Kopija"
-          delete_confirm: "Ištrinti šią spalvų paletę?"
           undo: "Anuliuoti"
           undo_title: "Anuliuoti šios spalvos pakeitimus į paskutinį kartą išsaugotus."
           revert: "Grąžinti"
           revert_title: "Iš naujo nustatykite šią spalvą į numatytąją „Discourse“ spalvų paletę."
           primary:
             name: "pirminė"
-            description: "Pagrindnis tekstas, ikonos ir rėmeliai."
           secondary:
             name: "antrinė"
-            description: "Pagrindinio fono spalva, kaikurių mygtukų teksto spalva."
           tertiary:
             name: "tretinė"
-            description: "Nuorodos, keli mygtukai, pranešimai ir akcento spalva"
           quaternary:
             name: "ketvirtinė"
           header_background:
             name: "Višutinės juostos fonas"
-            description: "Višutinės juostos fono spalva"
           header_primary:
             name: "pirminė viršutinė juosta"
-            description: "Viršutinės juostos tekstas ir ikonos"
           highlight:
             name: "paryškinti"
-            description: "Paryškintų elementų (tokių, kaip įrašai ar temos) fono spalva"
           highlight-low:
             name: "paryškinti-žemas"
           danger:
             name: "pavojinga"
-            description: "Paryškinta spalva tokiems veiksmams, kaip trinant įrašus ir temas."
           success:
             name: "sėkminga"
-            description: "Naudojama kai veiksmai įvykdomi sėkmingai."
           love:
             name: "patinka"
-            description: "Mygtuko \"Patinka\" spalva."
           selected:
             name: "pasirinktas"
           editor:

@@ -611,24 +611,9 @@ tr_TR:
     until_posts:
       one: "%{count} gönderi"
       other: "%{count} gönderi"
-    avatar: |
-      ### Hesabınız için bir resme ne dersiniz?
-
-      Birkaç konu ve yanıt gönderdiniz, ancak profil resminiz sizin kadar eşsiz değil, sadece bir harf.
-
-      [Kullanıcı profilinizi ziyaret edip](%{profile_path})** sizi yansıtan bir resim yüklemeyi düşündünüz mü?
-
-      Herkesin eşsiz bir profil resmi olduğunda, tartışmaları takip etmek ve konuşmalarda ilginç insanlar bulmak daha kolay!
-    sequential_replies: "### Aynı anda birkaç gönderiye yanıt vermeyi düşünün\n \nBunun yerine lütfen önceki gönderilerden alıntılar veya @name referansları içeren tek bir yanıt vermeyi düşünün.\n\n\nMetni vurgulayıp görünen <b>yanıtı alıntıla</b> düğmesini seçerek alıntı eklemek üzere önceki yanıtınızı düzenleyebilirsiniz.\n\nÇok sayıda küçük ve bireysel yanıt yerine daha az sayıda derinlemesine yanıt içeren konuları okumak herkes için daha kolay olur.\n"
     get_a_room:
       one: '%{reply_username} adlı kullanıcıya kez yanıt verdiniz, bunun yerine ona bir kişisel mesaj gönderebileceğinizi biliyor muydunuz?'
       other: '%{reply_username} adlı kullanıcıya %{count} kez yanıt verdiniz, bunun yerine ona bir kişisel mesaj gönderebileceğinizi biliyor muydunuz?'
-    reviving_old_topic: |
-      ### Bu konu yeniden canlandırılsın mı?
-
-      Bu konuya en son **%{time_ago}** yanıt verildi. Yanıtınız konuyu listenin en üstüne çıkaracak ve daha önce konuşmaya dahil olan herkes bilgilendirilecek.
-
-      Bu eski konuşmaya devam etmek istediğinizden emin misiniz?
   activerecord:
     attributes:
       category:
@@ -2212,12 +2197,10 @@ tr_TR:
     max_notifications_per_user: "Kullanıcı başına maksimum bildirim miktarı, bu sayı aşılırsa eski bildirimler silinir. Haftalık olarak uygulanır. Devre dışı bırakmak için 0 olarak ayarlayın"
     allowed_user_website_domains: "Kullanıcı web sitesi bu alan adlarına göre doğrulanır. Boruyla ayrılmış liste."
     allow_profile_backgrounds: "Kullanıcıların profil arka planları yüklemesine izin verin."
-    sequential_replies_threshold: "Bir kullanıcının çok fazla ardışık yanıt hakkında hatırlatılmadan önce bir konuda arka arkaya yapması gereken gönderi sayısı."
     get_a_room_threshold: "Bir kullanıcının uyarılmadan önce aynı konuda aynı kişiye yapması gereken gönderi sayısı."
     dont_feed_the_trolls_threshold: "Uyarılmadan önce diğer kullanıcılardan gelen bayrak sayısı."
     enable_mobile_theme: "Mobil cihazlar, sitenin tamamına geçebilme özelliğine sahip mobil uyumlu bir tema kullanır. Tamamen duyarlı özel bir stil sayfası kullanmak istiyorsanız bunu devre dışı bırakın."
     dominating_topic_minimum_percent: "Bir kullanıcının bir konuda aşırı baskınlık kurduğu hatırlatılmadan önce bir konuda yüzde kaç gönderi yapması gerektiği."
-    disable_avatar_education_message: "Avatarı değiştirmek için eğitim mesajını devre dışı bırakın."
     pm_warn_user_last_seen_months_ago: "Yeni bir kişisel mesaj oluştururken, hedef alıcı n aydan daha uzun bir süre önce görülmediğinde kullanıcıları uyarın."
     suppress_uncategorized_badge: "Konu listelerinde kategorize edilmemiş konular için rozet göstermeyin."
     header_dropdown_category_count: "Başlık açılır menüsünde kaç kategori görüntülenebileceği."
@@ -2248,7 +2231,6 @@ tr_TR:
     show_time_gap_days: "Bu kadar gün arayla iki gönderi yapılmışsa aradaki zaman farkını konu içinde gösterin."
     short_progress_text_threshold: "Bir konudaki gönderi sayısı bu sayının üzerine çıktıktan sonra, ilerleme çubuğu yalnızca geçerli gönderi sayısını gösterecektir. İlerleme çubuğunun genişliğini değiştirirseniz bu değeri değiştirmeniz gerekebilir."
     default_code_lang: "Markdown kod bloklarına (otomatik, metin, ruby, python vb.) uygulanan varsayılan programlama dili sözdizimi vurgulaması. Bu değer aynı zamanda \"vurgulanan diller\" site ayarında da bulunmalıdır."
-    warn_reviving_old_topic_age: "Biri son yanıtın şu kadar günden daha eski olduğu bir konuya yanıt vermeye başladığında, bir uyarı görüntülenir. 0'a ayarlayarak devre dışı bırakın."
     autohighlight_all_code: "Bir dil belirtmemiş olsalar bile, HTML ile yazılmış &lt;code&gt; bloklarına sözdizimi vurgulaması uygulayın. Markdown ile yazılmış kod bloklarını yapılandırmak için 'default code lang' ayarını kullanın."
     highlighted_languages: "Söz dizimi vurgulama kuralları dâhil edildi. (Uyarı: çok fazla dil eklemek, performansı etkileyebilir) Demo için bkz: <a href='https://highlightjs.org/demo/' target='_blank'>https://highlightjs.org/demo</a>"
     show_copy_button_on_codeblocks: "Blok içeriğini kullanıcının panosuna kopyalamak için codeblocks'a bir düğme ekleyin."

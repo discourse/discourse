@@ -1924,15 +1924,12 @@ be:
             name: "троесны"
           header_background:
             name: "фон загалоўка"
-          header_primary:
-            description: "Тэкст і абразкі ў загалоўку сайта."
           highlight:
             name: "асвятленне"
           success:
             name: "поспех"
           love:
             name: "каханне"
-            description: "Колер кнопкі \"Падабаецца\"."
           editor:
             light: "святло"
             dark: "цёмна"

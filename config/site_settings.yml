@@ -1372,9 +1372,6 @@ posting:
     client: true
     default: "auto"
     area: "posts_and_topics"
-  warn_reviving_old_topic_age:
-    default: 180
-    area: "posts_and_topics"
   autohighlight_all_code:
     client: true
     default: false
@@ -3283,9 +3280,6 @@ uncategorized:
   educate_until_posts:
     default: 2
     area: "users"
-  sequential_replies_threshold:
-    default: 2
-    area: "stats_and_thresholds"
   get_a_room_threshold:
     default: 3
     area: "stats_and_thresholds"
@@ -3295,9 +3289,6 @@ uncategorized:
   dominating_topic_minimum_percent:
     default: 40
     area: "stats_and_thresholds"
-  disable_avatar_education_message:
-    default: false
-    area: "users"
   pm_warn_user_last_seen_months_ago:
     default: 24
     area: "users"
@@ -3564,6 +3555,7 @@ uncategorized:
   enable_welcome_banner:
     client: true
     default: true
+    area: "interface"
 
 user_preferences:
   default_email_digest_frequency:
@@ -4015,3 +4007,7 @@ experimental:
     allow_any: false
     choices: "LocaleSiteSetting.values"
     area: "localization"
+  experimental_anon_language_switcher:
+    default: false
+    client: true
+    validator: "LanguageSwitcherSettingValidator"

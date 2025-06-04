@@ -197,7 +197,7 @@ class ThemeField < ActiveRecord::Base
 
             initialize() {
               deprecated(
-                "Adding JS code using <script type='text/x-handlebars'> is deprecated. Move this code to a dedicated JavaScript file.",
+                "Adding JS code using <script type='text/discourse-plugin'> is deprecated. Move this code to a dedicated JavaScript file.",
                 {
                   id: "discourse.script-tag-discourse-plugin",
                   url: "https://meta.discourse.org/t/366482",

@@ -13,6 +13,7 @@ RSpec.describe Reviewable, type: :model do
 
     it { is_expected.to have_many(:reviewable_scores).dependent(:destroy) }
     it { is_expected.to have_many(:reviewable_histories).dependent(:destroy) }
+    it { is_expected.to have_many(:reviewable_notes).dependent(:destroy) }
 
     it "can create a reviewable object" do
       expect(reviewable).to be_present

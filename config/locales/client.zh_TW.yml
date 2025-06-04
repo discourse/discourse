@@ -4331,7 +4331,7 @@ zh_TW:
           save: "保存"
           delete: "刪除"
           delete_confirm: "您確定要刪除此部分嗎？"
-          delete_public_confirm: "此部分 <strong>對所有人可見</strong>，您確定要刪除它嗎？"
+          delete_public_confirm: "此部分 對所有人可見，您確定要刪除它嗎？"
           update_public_confirm: "更改將 <strong>對本網站上的每個人</strong> 可見。你確定嗎？"
           mark_as_private_confirm: "此部分 <strong>對所有人</strong>可見。更新後， <strong>將是僅對您可見的</strong>。你確定嗎？"
           reset_confirm: "您確定要將此部分重置為默認值嗎？"
@@ -5487,7 +5487,6 @@ zh_TW:
             toggle_description: "調色盤可由使用者選擇"
           colors:
             title: "顏色"
-          delete_confirm: "刪除此調色盤？"
       plugins:
         title: "外掛"
         name: "名稱"
@@ -5844,36 +5843,28 @@ zh_TW:
           about: "修改您的佈景主題所使用的顏色，建立一個新調色盤以開始。"
           new_name: "新的調色盤"
           copy_name_prefix: "複製於"
-          delete_confirm: "刪除此調色盤？"
           undo: "復原"
           undo_title: "復原你前次對此顏色所做的修改"
           revert: "恢復"
           revert_title: "將此顏色重置為Discourse的預設調色。"
           primary:
             name: "一級"
-            description: "大部分的文字、圖示和邊框"
           primary-medium:
             name: "主要-中"
           primary-low-mid:
             name: "主要-低-中"
           secondary:
             name: "二級"
-            description: "主要的背景顏色和一些按鈕上的文字顏色"
           tertiary:
             name: "三級"
-            description: "連結、一些按鈕、通知和強調顏色"
           quaternary:
             name: "四級"
-            description: "可在主題中選擇使用。"
           header_background:
             name: "標頭背景"
-            description: "網站標頭的背景顏色"
           header_primary:
             name: "標頭主要區域"
-            description: "網站標頭的文字和圖示"
           highlight:
             name: "重點"
-            description: "頁面上重點元素的背景顏色，例如貼文和話題"
           highlight-high:
             name: "重點-高"
           highlight-medium:
@@ -5882,19 +5873,14 @@ zh_TW:
             name: "重點-低"
           danger:
             name: "危險"
-            description: "重要動作例如刪除貼文和話題的重點顏色"
           success:
             name: "成功"
-            description: "用來表示一項動作已順利完成"
           love:
             name: "愛"
-            description: "按讚按鈕的顏色"
           selected:
             name: "已選取"
-            description: "元素（例如清單項目）被選取/作用中時的背景顏色。"
           hover:
             name: "元素（例如清單項目）被選取或作用中時的背景顏色。"
-            description: "元素（例如清單項目）被懸停或鍵盤焦點時的背景顏色。"
           editor:
             light: "輕亮"
             dark: "黑暗"

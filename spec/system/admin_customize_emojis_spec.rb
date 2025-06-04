@@ -21,7 +21,7 @@ describe "Admin Customize Emoji Page", type: :system do
   it "can delete a custom emoji" do
     emojis_page.visit_page
     emojis_page.delete_emoji("joffrey_facepalm")
-    dialog.click_yes
+    dialog.click_danger
     expect(emojis_page).to have_no_emoji_listed("joffrey_facepalm")
   end
 

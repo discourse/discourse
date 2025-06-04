@@ -398,8 +398,8 @@ export default class AdminCustomizeThemesShowController extends Controller {
 
   @action
   removeUpload(upload) {
-    return this.dialog.yesNoConfirm({
-      message: i18n("admin.customize.theme.delete_upload_confirm"),
+    return this.dialog.deleteConfirm({
+      title: i18n("admin.customize.theme.delete_upload_confirm"),
       didConfirm: () => this.model.removeField(upload),
     });
   }
@@ -411,8 +411,8 @@ export default class AdminCustomizeThemesShowController extends Controller {
 
   @action
   destroyTheme() {
-    return this.dialog.yesNoConfirm({
-      message: i18n("admin.customize.delete_confirm", {
+    return this.dialog.deleteConfirm({
+      title: i18n("admin.customize.delete_confirm", {
         theme_name: this.get("model.name"),
       }),
       didConfirm: () => {

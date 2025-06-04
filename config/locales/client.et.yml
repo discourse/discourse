@@ -3078,7 +3078,6 @@ et:
           delete: "Kustuta"
           colors:
             title: "Värvid"
-          delete_confirm: "Kas kustutada see vävripalett?"
       plugins:
         title: "Plugin"
         name: "Nimi"
@@ -3231,39 +3230,29 @@ et:
         colors:
           title: "Värvid"
           copy_name_prefix: "Koopia sellest"
-          delete_confirm: "Kas kustutada see vävripalett?"
           undo: "Ennista"
           undo_title: "Ennista selle värvistiku muudatused alates viimasest salvestamisest."
           revert: "Võta tagasi"
           primary:
             name: "primaarne"
-            description: "Enamik tekste, ikoone ja ääri."
           secondary:
             name: "teise astme"
-            description: "Peamine taustavärv ja teksti värv mõnedel nuppudel."
           tertiary:
             name: "kolmanda astme"
-            description: "Viited, mõned nupud, teavitused ja rõhuvärv."
           quaternary:
             name: "neljanda astme"
           header_background:
             name: "päise taust"
-            description: "Saidi päise taustavärv."
           header_primary:
             name: "päise primaarne"
-            description: "Tekst ja ikoonid saidi päises."
           highlight:
             name: "esiletõst"
-            description: "Taustavärv esiletõstetud elementidel lehel, nagu postitused ja teemad."
           danger:
             name: "oht"
-            description: "Esiletõstetud tegevuste värv nagu postituste ja teemade kustutamine."
           success:
             name: "edu"
-            description: "Näitab, et tegevus oli edukas."
           love:
             name: "armastus"
-            description: "Meeldimise nupu värvus."
           selected:
             name: "valitud"
           editor:
