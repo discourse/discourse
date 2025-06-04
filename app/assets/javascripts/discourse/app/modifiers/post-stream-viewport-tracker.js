@@ -23,7 +23,7 @@ import DiscourseURL from "discourse/lib/url";
  *
  * The system also tracks the current post being viewed using an "eyeline" - a
  * calculated position in the viewport that determines which post is considered current
- * and the percentage of the current that is scrolled.
+ * and the percentage of the current post that is scrolled.
  */
 
 // Debounce time for resize events in milliseconds
@@ -148,6 +148,7 @@ export default class PostStreamViewportTracker {
 
   /**
    * Map of post numbers to their post models and DOM elements that are currently on screen
+   * Used to track which posts are visible in the viewport for eyeline calculations and screen tracking
    * @type {Object<number, {post: Object, element: HTMLElement}>}
    */
   #postsOnScreen = {};
@@ -434,7 +435,8 @@ export default class PostStreamViewportTracker {
 
   /**
    * Intersection observer callback for tracking which posts are visible in the viewport
-   * Updates the postsOnScreen map and triggers screen tracking updates
+   * Updates the postsOnScreen map, triggers screen tracking updates, and calls the scroll handler
+   * to update the current post and eyeline position
    *
    * @param {IntersectionObserverEntry} entry - The intersection observer entry
    */
@@ -711,13 +713,13 @@ export default class PostStreamViewportTracker {
    * and notifies the parent component
    */
   #updateCloakBoundaries() {
-    const uncloackedPostNumbers = Array.from(this.#uncloakedPostNumbers);
+    const uncloakedPostNumbers = Array.from(this.#uncloakedPostNumbers);
 
-    let above = uncloackedPostNumbers[0] || 0;
+    let above = uncloakedPostNumbers[0] || 0;
     let below = above;
 
-    for (let i = 1; i < uncloackedPostNumbers.length; i++) {
-      const postNumber = uncloackedPostNumbers[i];
+    for (let i = 1; i < uncloakedPostNumbers.length; i++) {
+      const postNumber = uncloakedPostNumbers[i];
       above = Math.min(postNumber, above);
       below = Math.max(postNumber, below);
     }
