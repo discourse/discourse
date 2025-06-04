@@ -39,6 +39,8 @@ const NavTab = <template>
 const Picker = class extends Component {
   @service toasts;
 
+  @tracked invalid = false;
+
   @action
   onInput(event) {
     const color = event.target.value.replace("#", "");
@@ -65,8 +67,17 @@ const Picker = class extends Component {
 
     if (!this.isValidHex(color)) {
       event.preventDefault();
+      this.invalid = true;
+      this.toasts.error({
+        data: {
+          message: i18n(
+            "admin.config_areas.color_palettes.invalid_color_length"
+          ),
+        },
+      });
       return;
     }
+    this.invalid = false;
 
     color = this.ensureSixDigitsHex(color);
     if (this.args.showDark) {
@@ -84,6 +95,7 @@ const Picker = class extends Component {
       event.preventDefault();
 
       if (currentValue.length !== 6 && currentValue.length !== 3) {
+        this.invalid = true;
         this.toasts.error({
           data: {
             message: i18n(
@@ -93,6 +105,7 @@ const Picker = class extends Component {
         });
         return;
       }
+      this.invalid = false;
 
       const nextPosition = this.args.position + 1;
       if (nextPosition < this.args.totalColors) {
@@ -109,6 +122,7 @@ const Picker = class extends Component {
 
     if (color && !color.match(/^[0-9A-Fa-f]+$/)) {
       event.preventDefault();
+      this.invalid = true;
       this.toasts.error({
         data: {
           message: i18n(
@@ -116,6 +130,8 @@ const Picker = class extends Component {
           ),
         },
       });
+    } else {
+      this.invalid = false;
     }
   }
 
@@ -173,30 +189,38 @@ const Picker = class extends Component {
   }
 
   isValidHex(hex) {
-    return !!hex?.match(/^[0-9A-Fa-f]{3,6}$/);
+    return !!hex?.match(/^([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/);
   }
 
   <template>
-    <input
-      class="color-palette-editor__input"
-      data-position={{@position}}
-      type="color"
-      value={{this.activeValue}}
-      {{on "input" this.onInput}}
-      {{on "change" this.onChange}}
-    />
-    <div class="color-palette-editor__input-wrapper">
-      {{icon "hashtag" class="color-palette-editor__icon"}}
+    <div
+      class={{concatClass
+        "color-palette-editor__picker"
+        "form-kit__control-input"
+        (if this.invalid "--invalid")
+      }}
+    >
       <input
-        class="color-palette-editor__text-input"
+        class="color-palette-editor__input"
         data-position={{@position}}
-        type="text"
-        maxlength="6"
-        value={{this.displayedColor}}
-        {{on "keypress" this.onTextKeypress}}
-        {{on "change" this.onTextChange}}
-        {{on "paste" this.onTextPaste}}
+        type="color"
+        value={{this.activeValue}}
+        {{on "input" this.onInput}}
+        {{on "change" this.onChange}}
       />
+      <div class="color-palette-editor__input-wrapper">
+        {{icon "hashtag" class="color-palette-editor__icon"}}
+        <input
+          class="color-palette-editor__text-input"
+          data-position={{@position}}
+          type="text"
+          maxlength="6"
+          value={{this.displayedColor}}
+          {{on "keypress" this.onTextKeypress}}
+          {{on "change" this.onTextChange}}
+          {{on "paste" this.onTextPaste}}
+        />
+      </div>
     </div>
   </template>
 };
@@ -286,17 +310,15 @@ export default class ColorPaletteEditor extends Component {
               {{/if}}
             </div>
             <div class="color-palette-editor__color-controls">
-              <div class="color-palette-editor__picker form-kit__control-input">
-                <Picker
-                  @color={{color}}
-                  @position={{index}}
-                  @totalColors={{@colors.length}}
-                  @editorElement={{this.editorElement}}
-                  @showDark={{this.darkModeActive}}
-                  @onLightChange={{fn @onLightColorChange color}}
-                  @onDarkChange={{fn @onDarkColorChange color}}
-                />
-              </div>
+              <Picker
+                @color={{color}}
+                @position={{index}}
+                @totalColors={{@colors.length}}
+                @editorElement={{this.editorElement}}
+                @showDark={{this.darkModeActive}}
+                @onLightChange={{fn @onLightColorChange color}}
+                @onDarkChange={{fn @onDarkColorChange color}}
+              />
               {{#unless @hideRevertButton}}
                 <DButton
                   class={{concatClass

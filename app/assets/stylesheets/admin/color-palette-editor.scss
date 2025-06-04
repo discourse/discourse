@@ -47,6 +47,12 @@
       outline: 2px solid var(--tertiary);
       outline-offset: -2px;
     }
+
+    &.--invalid {
+      border-color: var(--danger);
+      outline: 2px solid var(--danger);
+      outline-offset: -2px;
+    }
   }
 
   &__input-wrapper {
