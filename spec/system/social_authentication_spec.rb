@@ -6,7 +6,11 @@ shared_context "with omniauth setup" do
   let(:login_form) { PageObjects::Pages::Login.new }
   let(:signup_form) { PageObjects::Pages::Signup.new }
 
-  before { OmniAuth.config.test_mode = true }
+  before do
+    OmniAuth.config.test_mode = true
+    SiteSetting.auth_skip_create_confirm = false
+    SiteSetting.full_name_requirement = "optional_at_signup"
+  end
 end
 
 shared_examples "social authentication scenarios" do
@@ -269,17 +273,33 @@ shared_examples "social authentication scenarios" do
     end
 
     context "when skipping the signup form" do
-      before do
-        SiteSetting.enable_google_oauth2_logins = true
-        SiteSetting.auth_skip_create_confirm = true
-      end
+      before { SiteSetting.auth_skip_create_confirm = true }
       after { reset_omniauth_config(:google_oauth2) }
 
-      it "creates the account directly" do
+      it "works with Google" do
+        SiteSetting.enable_google_oauth2_logins = true
         mock_google_auth
         visit("/")
 
         signup_form.open.click_social_button("google_oauth2")
+        expect(page).to have_css(".header-dropdown-toggle.current-user")
+      end
+
+      it "works with Github" do
+        SiteSetting.enable_github_logins = true
+        mock_github_auth
+        visit("/")
+
+        signup_form.open.click_social_button("github")
+        expect(page).to have_css(".header-dropdown-toggle.current-user")
+      end
+
+      it "works with Discord" do
+        SiteSetting.enable_discord_logins = true
+        mock_discord_auth
+        visit("/")
+
+        signup_form.open.click_social_button("discord")
         expect(page).to have_css(".header-dropdown-toggle.current-user")
       end
     end
@@ -502,13 +522,11 @@ shared_examples "social authentication scenarios" do
 end
 
 describe "Social authentication", type: :system do
-  before { SiteSetting.full_name_requirement = "optional_at_signup" }
-
-  context "when fullpage desktop" do
+  context "when desktop" do
     include_examples "social authentication scenarios"
   end
 
-  context "when fullpage mobile", mobile: true do
+  context "when mobile", mobile: true do
     include_examples "social authentication scenarios"
   end
 end
