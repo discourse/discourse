@@ -64,9 +64,9 @@ export default class ProsemirrorEditor extends Component {
   @service session;
   @service dialog;
   @service menu;
-  @service site;
-  @service appEvents;
   @service capabilities;
+  @service modal;
+  @service toasts;
 
   schema = createSchema(this.extensions, this.args.includeDefault);
   view;
@@ -77,7 +77,11 @@ export default class ProsemirrorEditor extends Component {
 
   get pluginParams() {
     return {
-      utils: { ...utils, convertFromMarkdown: this.convertFromMarkdown },
+      utils: {
+        ...utils,
+        convertFromMarkdown: this.convertFromMarkdown,
+        convertToMarkdown: this.convertToMarkdown,
+      },
       schema: this.schema,
       pmState: ProsemirrorState,
       pmModel: ProsemirrorModel,
@@ -91,9 +95,10 @@ export default class ProsemirrorEditor extends Component {
         categoryId: this.args.categoryId,
         session: this.session,
         menu: this.menu,
-        site: this.site,
-        appEvents: this.appEvents,
         capabilities: this.capabilities,
+        modal: this.modal,
+        toasts: this.toasts,
+        replaceToolbar: this.args.replaceToolbar,
       }),
     };
   }
@@ -201,7 +206,7 @@ export default class ProsemirrorEditor extends Component {
       schema: this.schema,
       view: this.view,
       convertFromMarkdown: this.convertFromMarkdown,
-      convertToMarkdown: this.serializer.convert.bind(this.serializer),
+      convertToMarkdown: this.convertToMarkdown,
     });
 
     this.#destructor = this.args.onSetup?.(this.textManipulation);
@@ -236,6 +241,11 @@ export default class ProsemirrorEditor extends Component {
       false
     );
     this.view.updateState(this.view.state.apply(tr));
+  }
+
+  @bind
+  convertToMarkdown(doc) {
+    return this.serializer.convert(doc);
   }
 
   @action

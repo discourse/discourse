@@ -152,7 +152,7 @@ export function getMarkRange($pos, type, attrs = {}) {
   let { index } = start;
   while (
     index > 0 &&
-    findMarkOfType($pos.parent.child(index - 1).marks, type, attrs)
+    findMarkOfType($pos.parent.child(index - 1).marks, type, mark.attrs)
   ) {
     index--;
     from -= $pos.parent.child(index).nodeSize;
@@ -162,7 +162,7 @@ export function getMarkRange($pos, type, attrs = {}) {
   index = start.index + 1;
   while (
     index < $pos.parent.childCount &&
-    findMarkOfType($pos.parent.child(index).marks, type, attrs)
+    findMarkOfType($pos.parent.child(index).marks, type, mark.attrs)
   ) {
     to += $pos.parent.child(index).nodeSize;
     index++;

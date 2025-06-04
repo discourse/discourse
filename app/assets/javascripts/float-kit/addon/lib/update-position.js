@@ -2,6 +2,7 @@ import {
   arrow,
   computePosition,
   flip,
+  hide,
   inline,
   offset,
   shift,
@@ -19,7 +20,7 @@ const centerOffset = offset(({ rects }) => {
 export async function updatePosition(trigger, content, options) {
   let padding = 0;
   if (!isTesting()) {
-    padding = options.padding || {
+    padding = options.padding ?? {
       top: headerOffset(),
       left: 10,
       right: 10,
@@ -30,6 +31,7 @@ export async function updatePosition(trigger, content, options) {
   const flipOptions = {
     fallbackPlacements: options.fallbackPlacements ?? FLOAT_UI_PLACEMENTS,
     padding,
+    boundary: options.boundary,
   };
 
   const middleware = [];
@@ -62,6 +64,8 @@ export async function updatePosition(trigger, content, options) {
     middleware.push(arrow({ element: arrowElement }));
   }
 
+  middleware.push(hide({ padding }));
+
   content.dataset.strategy = options.strategy || "absolute";
 
   const { x, y, placement, middlewareData } = await computePosition(
@@ -84,9 +88,11 @@ export async function updatePosition(trigger, content, options) {
     });
   } else {
     content.dataset.placement = placement;
+
     Object.assign(content.style, {
       left: `${x}px`,
       top: `${y}px`,
+      visibility: middlewareData.hide?.referenceHidden ? "hidden" : "visible",
     });
 
     if (middlewareData.arrow && arrowElement) {

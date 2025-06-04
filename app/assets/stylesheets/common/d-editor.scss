@@ -355,23 +355,30 @@
   .select-kit-header-wrapper {
     justify-content: center;
   }
-}
 
-.d-editor-replaced-toolbar {
-  display: flex;
-  animation: float-left ease 0.2s 1 forwards;
+  &.--replaced-toolbar {
+    display: flex;
+    animation: float-left ease 0.2s 1 forwards;
 
-  @keyframes float-left {
-    0% {
-      opacity: 0;
-      transform: translateX(10px);
-    }
+    @keyframes float-left {
+      0% {
+        opacity: 0;
+        transform: translateX(10px);
+      }
 
-    100% {
-      opacity: 1;
-      transform: translateX(0);
+      100% {
+        opacity: 1;
+        transform: translateX(0);
+      }
     }
   }
+}
+
+.toolbar-separator {
+  width: 1px;
+  background-color: var(--primary-low);
+  margin: var(--space-2) var(--space-1);
+  height: calc(100% - var(--space-4));
 }
 
 .d-editor #form-template-form {

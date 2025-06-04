@@ -29,6 +29,7 @@ export default class DMenuInstance extends FloatKitInstance {
    * @property {Object} options - Options object that configures the menu behavior and display.
    */
   @tracked options;
+  @tracked portalOutletElement;
 
   @tracked _trigger;
 
@@ -37,10 +38,8 @@ export default class DMenuInstance extends FloatKitInstance {
 
     setOwner(this, owner);
     this.options = { ...MENU.options, ...options };
-  }
-
-  get portalOutletElement() {
-    return document.getElementById("d-menu-portals");
+    this.portalOutletElement =
+      options.portalOutletElement || document.getElementById("d-menu-portals");
   }
 
   get trigger() {

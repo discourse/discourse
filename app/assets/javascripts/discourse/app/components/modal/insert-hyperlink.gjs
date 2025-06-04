@@ -177,7 +177,11 @@ export default class InsertHyperlink extends Component {
       {{on "keydown" this.keyDown}}
       {{on "mousedown" this.mouseDown}}
       @closeModal={{@closeModal}}
-      @title={{i18n "composer.link_dialog_title"}}
+      @title={{i18n
+        (if
+          @model.editing "composer.link_edit_title" "composer.link_dialog_title"
+        )
+      }}
       @bodyClass="insert-link"
       class="insert-hyperlink-modal"
     >
@@ -234,7 +238,11 @@ export default class InsertHyperlink extends Component {
       <:footer>
         <DButton
           @action={{this.ok}}
-          @label="composer.modal_ok"
+          @label={{(if
+            @model.editing
+            "composer.link_edit_action"
+            "composer.link_dialog_action"
+          )}}
           type="submit"
           class="btn-primary"
         />
@@ -242,7 +250,7 @@ export default class InsertHyperlink extends Component {
         <DButton
           @action={{@closeModal}}
           @label="composer.cancel"
-          class="btn-danger"
+          @class="btn-transparent"
         />
       </:footer>
     </DModal>

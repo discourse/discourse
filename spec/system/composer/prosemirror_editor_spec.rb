@@ -828,7 +828,8 @@ describe "Composer - ProseMirror editor", type: :system do
       composer.type_content("[Example](https://example.com)")
       composer.send_keys(:left, :left, :left)
 
-      find("button.composer-link-toolbar__edit").click
+      # Use Tab to navigate to the toolbar and Enter to activate edit
+      composer.send_keys(:tab, :enter)
 
       expect(page).to have_css(".insert-hyperlink-modal")
 
@@ -922,6 +923,59 @@ describe "Composer - ProseMirror editor", type: :system do
       composer.send_keys(:right)
 
       expect(page).to have_no_css(".composer-link-toolbar")
+    end
+
+    it "preserves emojis when editing a link via toolbar" do
+      open_composer_and_toggle_rich_editor
+
+      composer.type_content("[Party :tada: Time](https://example.com)")
+      composer.send_keys(:left, :left, :left)
+
+      # Use Tab to navigate to the toolbar and Enter to activate edit
+      composer.send_keys(:tab, :enter)
+
+      expect(page).to have_css(".insert-hyperlink-modal")
+
+      expect(find(".d-modal__body input.link-text").value).to eq("Party :tada: Time")
+      expect(find(".d-modal__body input.link-url").value).to eq("https://example.com")
+
+      find(".d-modal__body input.link-text").set("Updated :tada: Party")
+      find(".d-modal__body input.link-url").set("https://updated-party.com")
+      find(".d-modal__footer .btn-primary").click
+
+      expect(rich).to have_css("a[href='https://updated-party.com']")
+      expect(rich).to have_css("a img[title=':tada:'], a img[alt=':tada:']")
+
+      composer.toggle_rich_editor
+      expect(composer).to have_value("[Updated :tada: Party](https://updated-party.com)")
+    end
+
+    it "preserves bold and italic formatting when editing a link via toolbar" do
+      open_composer_and_toggle_rich_editor
+
+      composer.type_content("[**Bold** and *italic* text](https://example.com)")
+      composer.send_keys(:left, :left, :left)
+
+      # Use Tab to navigate to the toolbar and Enter to activate edit
+      composer.send_keys(:tab, :enter)
+
+      expect(page).to have_css(".insert-hyperlink-modal")
+
+      expect(find(".d-modal__body input.link-text").value).to eq("**Bold** and *italic* text")
+      expect(find(".d-modal__body input.link-url").value).to eq("https://example.com")
+
+      find(".d-modal__body input.link-text").set("Updated **bold** and *italic* content")
+      find(".d-modal__body input.link-url").set("https://updated-example.com")
+      find(".d-modal__footer .btn-primary").click
+
+      expect(rich).to have_css("a[href='https://updated-example.com']")
+      expect(rich).to have_css("strong a", text: "bold")
+      expect(rich).to have_css("em a", text: "italic")
+
+      composer.toggle_rich_editor
+      expect(composer).to have_value(
+        "[Updated **bold** and *italic* content](https://updated-example.com)",
+      )
     end
   end
 end

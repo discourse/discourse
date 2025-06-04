@@ -3,8 +3,6 @@ import {
   getChangedRanges,
   markInputRule,
 } from "discourse/static/prosemirror/lib/plugin-utils";
-import { updatePosition } from "float-kit/lib/update-position";
-import ComposerLinkToolbar from "../components/composer-link-toolbar";
 
 const REPLACE_STEPS = [ReplaceStep, ReplaceAroundStep];
 
@@ -129,8 +127,8 @@ const extension = {
       }
     ),
   ],
-  plugins: ({ pmState: { Plugin }, utils, getContext, schema }) => {
-    const plugin = new Plugin({
+  plugins: ({ pmState: { Plugin }, utils }) => {
+    return new Plugin({
       props: {
         // Auto-linkify plain-text pasted URLs over a selection
         clipboardTextParser(text, $context, plain, view) {
@@ -305,159 +303,7 @@ const extension = {
 
         return tr;
       },
-
-      state: {
-        init() {
-          return null;
-        },
-        apply(tr) {
-          const range = utils.getMarkRange(
-            tr.selection.$head,
-            schema.marks.link
-          );
-
-          if (!range) {
-            return null;
-          }
-
-          // if not empty, the selection should contain a link
-          if (
-            !tr.selection.empty &&
-            !tr.doc.rangeHasMark(
-              tr.selection.from,
-              tr.selection.to,
-              schema.marks.link
-            )
-          ) {
-            return null;
-          }
-
-          return {
-            ...range.mark.attrs,
-            text: tr.doc.textBetween(range.from, range.to),
-            head: tr.selection.head,
-          };
-        },
-      },
-      view() {
-        let menuInstance;
-        let toolbarReplaced = false;
-
-        return {
-          update(view) {
-            const attrs = plugin.getState(view.state);
-
-            if (!attrs) {
-              if (menuInstance) {
-                menuInstance.destroy();
-                menuInstance = null;
-              }
-
-              if (toolbarReplaced) {
-                getContext().appEvents.trigger("composer:reset-toolbar");
-                toolbarReplaced = false;
-              }
-
-              return;
-            }
-
-            const data = {
-              ...attrs,
-              unlink: () => {
-                let range = view.state.selection;
-
-                if (range.empty) {
-                  range = utils.getMarkRange(
-                    view.state.doc.resolve(attrs.head),
-                    view.state.schema.marks.link
-                  );
-                }
-
-                if (range) {
-                  view.dispatch(view.state.tr.removeMark(range.from, range.to));
-                }
-              },
-              save: ({ text, href }) => {
-                const { state, dispatch } = view;
-
-                const mark = state.schema.marks.link.create({ href });
-
-                let range = view.state.selection;
-
-                if (range.empty) {
-                  range = utils.getMarkRange(
-                    view.state.doc.resolve(attrs.head),
-                    view.state.schema.marks.link
-                  );
-                }
-
-                const tr = state.tr.replaceRangeWith(
-                  range.from,
-                  range.to,
-                  state.schema.text(text, [mark]),
-                  false
-                );
-
-                dispatch(tr);
-                view.focus();
-              },
-            };
-
-            if (!getContext().capabilities.viewport.sm) {
-              getContext().appEvents.trigger("composer:replace-toolbar", {
-                component: ComposerLinkToolbar,
-                data,
-              });
-              toolbarReplaced = true;
-            } else {
-              const { left, top } = view.coordsAtPos(attrs.head);
-              const topMargin = 12;
-              const coords = {
-                left,
-                top: top + topMargin,
-                width: 0,
-                height: 0,
-              };
-
-              const trigger = { getBoundingClientRect: () => coords };
-
-              if (
-                menuInstance &&
-                menuInstance.expanded &&
-                menuInstance.options.data.href === attrs.href &&
-                menuInstance.options.data.text === attrs.text
-              ) {
-                menuInstance.trigger = trigger;
-
-                Object.assign(menuInstance.options.data, data);
-
-                // setup transition animation before updating position
-                // not set via css to avoid affecting initial positioning
-                menuInstance.content.style.transition =
-                  "left 0.1s linear, top 0.1s linear";
-
-                updatePosition(menuInstance.trigger, menuInstance.content, {});
-                return;
-              }
-
-              getContext()
-                .menu.show(trigger, {
-                  identifier: "composer-link-toolbar",
-                  component: ComposerLinkToolbar,
-                  placement: "bottom",
-                  placements: ["bottom-start", "bottom-end"],
-                  data,
-                })
-                .then((instance) => {
-                  menuInstance = instance;
-                });
-            }
-          },
-        };
-      },
     });
-
-    return plugin;
   },
 };
 

@@ -1,7 +1,8 @@
 import Component from "@glimmer/component";
 import { fn, hash } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { eq } from "truth-helpers";
+import { eq, or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
@@ -13,9 +14,15 @@ export default class ComposerToolbarButtons extends Component {
     return button === this.firstButton ? 0 : button.tabindex;
   }
 
+  @action
+  getHref(button) {
+    return typeof button.href === "function" ? button.href() : button.href;
+  }
+
   get firstButton() {
+    const { isFirst = true } = this.args;
     return (
-      this.args.isFirst &&
+      isFirst &&
       this.args.data.groups.find((group) => group.buttons?.length > 0)
         ?.buttons[0]
     );
@@ -27,12 +34,13 @@ export default class ComposerToolbarButtons extends Component {
         {{#if (button.condition @data.context)}}
           {{#if button.href}}
             <a
-              href={{button.href}}
+              href={{this.getHref button}}
               target="_blank"
               rel="noopener noreferrer"
               class={{concatClass "btn no-text btn-icon" button.className}}
               title={{button.title}}
               tabindex={{this.tabIndex button}}
+              {{on "keydown" (or @rovingButtonBar @data.rovingButtonBar)}}
             >
               {{icon button.icon}}
             </a>
@@ -42,7 +50,7 @@ export default class ComposerToolbarButtons extends Component {
               @onChange={{button.popupMenu.action}}
               @onOpen={{fn button.action button}}
               @tabindex={{this.tabIndex button}}
-              @onKeydown={{@rovingButtonBar}}
+              @onKeydown={{or @rovingButtonBar @data.rovingButtonBar}}
               @options={{hash icon=button.icon focusAfterOnChange=false}}
               class={{button.className}}
             />
@@ -55,7 +63,7 @@ export default class ComposerToolbarButtons extends Component {
               @label={{button.label}}
               @icon={{button.icon}}
               @preventFocus={{button.preventFocus}}
-              @onKeyDown={{@rovingButtonBar}}
+              @onKeyDown={{or @rovingButtonBar @data.rovingButtonBar}}
               tabindex={{this.tabIndex button}}
               class={{button.className}}
             />
