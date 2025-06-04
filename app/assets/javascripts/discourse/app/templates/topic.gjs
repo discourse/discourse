@@ -495,6 +495,7 @@ export default RouteTemplate(
                       @showPagePublish={{routeAction "showPagePublish"}}
                       @filteringRepliesToPostNumber={{@controller.replies_to_post_number}}
                       @updateTopicPageQueryParams={{@controller.updateTopicPageQueryParams}}
+                      @postSelected={{@controller.postSelected}}
                       @topicPageQueryParams={{getProperties
                         @controller
                         @controller.queryParams

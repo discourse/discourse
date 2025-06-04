@@ -268,7 +268,7 @@ export default class PostStream extends Component {
                 @replyToPost={{fn @replyToPost post}}
                 @selectBelow={{fn @selectBelow post}}
                 @selectReplies={{fn @selectReplies post}}
-                @selected={{@selected}}
+                @selected={{if @multiSelect (@postSelected post)}}
                 @showFlags={{fn @showFlags post}}
                 @showHistory={{fn @showHistory post}}
                 @showInvite={{fn @showInvite post}}

@@ -32,6 +32,7 @@ import { deepMerge } from "discourse/lib/object";
 import { buildQuote } from "discourse/lib/quote";
 import QuoteState from "discourse/lib/quote-state";
 import { extractLinkMeta } from "discourse/lib/render-topic-featured-link";
+import { trackedArray } from "discourse/lib/tracked-tools";
 import DiscourseURL, { userPath } from "discourse/lib/url";
 import { escapeExpression } from "discourse/lib/utilities";
 import Bookmark, { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
@@ -73,6 +74,10 @@ export default class TopicController extends Controller {
 
   @tracked model;
 
+  @tracked multiSelect = false;
+  @tracked hasScrolled = null;
+  @trackedArray selectedPostIds = [];
+
   queryParams = ["filter", "username_filters", "replies_to_post_number"];
 
   @and("canEditTopicFeaturedLink", "buffered.featured_link")
@@ -86,14 +91,11 @@ export default class TopicController extends Controller {
   @or("model.postStream.loadedAllPosts", "model.postStream.loadingLastPost")
   loadedAllPosts;
 
-  multiSelect = false;
-  selectedPostIds = [];
   editingTopic = false;
   enteredAt = null;
   enteredIndex = null;
   retrying = false;
   userTriggeredProgress = null;
-  hasScrolled = null;
   username_filters = null;
   replies_to_post_number = null;
   filter = null;
@@ -313,10 +315,12 @@ export default class TopicController extends Controller {
 
   _updateSelectedPostIds(postIds) {
     const smallActionsPostIds = this._smallActionPostIds();
-    this.selectedPostIds.pushObjects(
-      postIds.filter((postId) => !smallActionsPostIds.has(postId))
+    this.selectedPostIds = Array.from(
+      new Set([
+        ...this.selectedPostIds,
+        ...postIds.filter((postId) => !smallActionsPostIds.has(postId)),
+      ])
     );
-    this.set("selectedPostIds", [...new Set(this.selectedPostIds)]);
     this._forceRefreshPostStream();
   }
 
@@ -394,18 +398,18 @@ export default class TopicController extends Controller {
   selectAll(event) {
     event?.preventDefault();
     const smallActionsPostIds = this._smallActionPostIds();
-    this.set("selectedPostIds", [
+    this.selectedPostIds = [
       ...this.get("model.postStream.stream").filter(
         (postId) => !smallActionsPostIds.has(postId)
       ),
-    ]);
+    ];
     this._forceRefreshPostStream();
   }
 
   @action
   deselectAll(event) {
     event?.preventDefault();
-    this.set("selectedPostIds", []);
+    this.selectedPostIds = [];
     this._forceRefreshPostStream();
   }
 
@@ -1005,8 +1009,9 @@ export default class TopicController extends Controller {
   selectReplies(post) {
     ajax(`/posts/${post.id}/reply-ids.json`).then((replies) => {
       const replyIds = replies.map((r) => r.id);
-      const postIds = [...this.selectedPostIds, post.id, ...replyIds];
-      this.set("selectedPostIds", [...new Set(postIds)]);
+      this.selectedPostIds = [
+        ...new Set([...this.selectedPostIds, post.id, ...replyIds]),
+      ];
       this._forceRefreshPostStream();
     });
   }
@@ -1059,7 +1064,7 @@ export default class TopicController extends Controller {
 
   @action
   changePostOwner(post) {
-    this.set("selectedPostIds", [post.id]);
+    this.selectedPostIds = [post.id];
     this.send("changeOwner");
   }
 
@@ -1075,7 +1080,7 @@ export default class TopicController extends Controller {
 
   @action
   grantBadge(post) {
-    this.set("selectedPostIds", [post.id]);
+    this.selectedPostIds = [post.id];
     this.send("showGrantBadgeModal");
   }
 
@@ -1628,9 +1633,10 @@ export default class TopicController extends Controller {
 
   @observes("multiSelect")
   _multiSelectChanged() {
-    this.set("selectedPostIds", []);
+    this.selectedPostIds = [];
   }
 
+  @bind
   postSelected(post) {
     return this.selectedAllPost || this.selectedPostIds.includes(post.id);
   }
