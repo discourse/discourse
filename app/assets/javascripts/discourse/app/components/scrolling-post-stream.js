@@ -57,7 +57,7 @@ export default class ScrollingPostStream extends MountWidget {
       "streamFilters",
       "lastReadPostNumber",
       "highestPostNumber",
-      "topicPageQueryParams" // TODO (glimmer-post-stream): add tests for this stuff
+      "topicPageQueryParams"
     );
   }
 

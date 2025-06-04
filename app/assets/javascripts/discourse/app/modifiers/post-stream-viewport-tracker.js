@@ -654,6 +654,7 @@ export default class PostStreamViewportTracker {
     window.addEventListener("resize", this.onWindowResize, opts);
     window.addEventListener("scroll", this.onScroll, opts);
 
+    // restore scroll position on browsers with aggressive BFCaches (like Safari)
     window.onpageshow = function (event) {
       if (event.persisted) {
         DiscourseURL.routeTo(this.location.pathname);
