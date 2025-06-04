@@ -4,7 +4,11 @@ class ColorSchemeColorSerializer < ApplicationSerializer
   attributes :name, :hex, :default_hex, :is_advanced, :dark_hex, :default_dark_hex
 
   def hex
-    object.hex # otherwise something crazy is returned
+    object.hex
+  end
+
+  def dark_hex
+    object.dark_hex || object.hex
   end
 
   def default_hex

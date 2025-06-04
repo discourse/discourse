@@ -6408,7 +6408,8 @@ en:
           unsaved_changes: "You have unsaved changes"
           copy_of: "Copy of %{name}"
           copy_created: 'A new copy of "%{name}" has been created'
-          illegal_character_in_color: "Colors consist of hexadecimal characters only"
+          illegal_character_in_color: "Color must consist of hexadecimal characters only"
+          invalid_color_length: "Color must in the format #rrggbb or #rgb"
           delete_confirm: "Are you sure you want to delete this color palette?"
       plugins:
         title: "Plugins"
@@ -6710,6 +6711,15 @@ en:
           remote_theme_edits: "If you want to edit this theme, you must <a href='%{repoURL}' target='_blank'>submit a change on its repository</a>"
           repo_unreachable: "Couldn't contact the Git repository of this theme. Error message:"
           imported_from_archive: "This theme was imported from a .zip file"
+          settings: "Settings"
+          colors: "Colors"
+          unsaved_colors:
+            one: "You have %{count} unsaved color"
+            other: "You have %{count} unsaved colors"
+          unsaved_colors_leave_route_confirmation: "You haven't saved your color palette changes yet. Are you sure you want to leave?"
+          save_colors: "Save colors"
+          discard_colors: "Discard"
+          colors_title: "Colors"
           scss:
             text: "CSS"
             title: "Custom CSS rules with support for SCSS syntax"

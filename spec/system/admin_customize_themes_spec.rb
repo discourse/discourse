@@ -5,7 +5,8 @@ describe "Admin Customize Themes", type: :system do
   fab!(:theme) { Fabricate(:theme, name: "Cool theme 1") }
   fab!(:admin) { Fabricate(:admin, locale: "en") }
 
-  let(:admin_customize_themes_page) { PageObjects::Pages::AdminCustomizeThemes.new }
+  let(:theme_page) { PageObjects::Pages::AdminCustomizeThemes.new }
+  let(:dialog) { PageObjects::Components::Dialog.new }
 
   before { sign_in(admin) }
 
@@ -148,9 +149,125 @@ describe "Admin Customize Themes", type: :system do
   context "when visting a component's page" do
     fab!(:component) { Fabricate(:theme, component: true, name: "Cool component 493") }
 
-    xit "has a link to the components page" do
+    it "has a link to the components page" do
       visit("/admin/customize/themes/#{component.id}")
-      expect(admin_customize_themes_page).to have_back_button_to_components_page
+      expect(theme_page).to have_back_button_to_components_page
+    end
+  end
+
+  describe "theme color palette editor" do
+    before { SiteSetting.use_overhauled_theme_color_palette = true }
+
+    it "allows editing colors of theme-owned palette" do
+      theme_page.visit(theme.id)
+      theme_page.colors_tab.click
+
+      expect(theme_page).to have_current_path("/admin/customize/themes/#{theme.id}/colors")
+
+      original_hex = theme_page.color_palette_editor.get_color_value("primary")
+      theme_page.color_palette_editor.change_color("primary", "#ff000e")
+
+      expect(theme_page.changes_banner).to be_visible
+      theme_page.changes_banner.click_save
+
+      page.refresh
+      expect(theme_page).to have_colors_tab_active
+
+      updated_color = theme_page.color_palette_editor.get_color_value("primary")
+      expect(updated_color).to eq("#ff000e")
+    end
+
+    it "allows discarding unsaved color changes" do
+      theme_page.visit(theme.id)
+      theme_page.colors_tab.click
+
+      original_hex = theme_page.color_palette_editor.get_color_value("primary")
+
+      theme_page.color_palette_editor.change_color("primary", "#10ff00")
+
+      theme_page.changes_banner.click_discard
+
+      expect(theme_page.changes_banner).to be_hidden
+
+      updated_color = theme_page.color_palette_editor.get_color_value("primary")
+      expect(updated_color).to eq(original_hex)
+    end
+
+    it "allows editing dark mode colors" do
+      theme_page.visit(theme.id)
+      theme_page.colors_tab.click
+
+      theme_page.color_palette_editor.switch_to_dark_tab
+
+      original_dark_hex = theme_page.color_palette_editor.get_color_value("primary")
+      theme_page.color_palette_editor.change_color("primary", "#000fff")
+
+      theme_page.changes_banner.click_save
+
+      page.refresh
+      theme_page.color_palette_editor.switch_to_dark_tab
+
+      updated_dark_color = theme_page.color_palette_editor.get_color_value("primary")
+      expect(updated_dark_color).to eq("#000fff")
+    end
+
+    it "shows count of unsaved colors" do
+      theme_page.visit(theme.id)
+      theme_page.colors_tab.click
+
+      theme_page.color_palette_editor.change_color("primary", "#eeff80")
+
+      expect(theme_page.changes_banner).to have_label(
+        I18n.t("admin_js.admin.customize.theme.unsaved_colors", count: 1),
+      )
+
+      theme_page.color_palette_editor.switch_to_dark_tab
+
+      theme_page.color_palette_editor.change_color("primary", "#ff80ee")
+
+      expect(theme_page.changes_banner).to have_label(
+        I18n.t("admin_js.admin.customize.theme.unsaved_colors", count: 2),
+      )
+
+      theme_page.color_palette_editor.change_color("secondary", "#ee30ab")
+      expect(theme_page.changes_banner).to have_label(
+        I18n.t("admin_js.admin.customize.theme.unsaved_colors", count: 3),
+      )
+    end
+
+    it "doesn't show colors tab or DPageHeader for components" do
+      component = Fabricate(:theme, component: true)
+      theme_page.visit(component.id)
+      expect(theme_page.header).to be_hidden
+
+      expect(theme_page).to have_no_color_scheme_selector
+    end
+
+    it "shows a confirmation dialog when leaving the page with unsaved changes" do
+      theme_page.visit(theme.id)
+      theme_page.colors_tab.click
+
+      theme_page.color_palette_editor.change_color("primary", "#eeff80")
+
+      expect(theme_page.changes_banner).to be_visible
+
+      find("#site-logo").click
+
+      expect(dialog).to be_open
+      expect(page).to have_content(
+        I18n.t("admin_js.admin.customize.theme.unsaved_colors_leave_route_confirmation"),
+      )
+
+      dialog.click_no
+
+      expect(dialog).to be_closed
+      expect(page).to have_current_path("/admin/customize/themes/#{theme.id}/colors")
+
+      find("#site-logo").click
+      expect(dialog).to be_open
+
+      dialog.click_yes
+      expect(page).to have_current_path("/")
     end
   end
 end
