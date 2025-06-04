@@ -135,11 +135,9 @@ const extension = {
 
               const handlers = {
                 editLink: () => {
-                  const linkData = linkState;
-
                   const tempTr = view.state.tr.removeMark(
-                    linkData.range.from,
-                    linkData.range.to,
+                    linkState.range.from,
+                    linkState.range.to,
                     view.state.schema.marks.link
                   );
 
@@ -148,8 +146,10 @@ const extension = {
                       null,
                       view.state.schema.nodes.paragraph.create(
                         null,
-                        tempTr.doc.slice(linkData.range.from, linkData.range.to)
-                          .content
+                        tempTr.doc.slice(
+                          linkState.range.from,
+                          linkState.range.to
+                        ).content
                       )
                     )
                   );
@@ -158,11 +158,11 @@ const extension = {
                     model: {
                       editing: true,
                       linkText: currentLinkText,
-                      linkUrl: linkData.href,
+                      linkUrl: linkState.href,
                       toolbarEvent: {
                         addText: (text) => {
                           const { content } = utils.convertFromMarkdown(text);
-                          const range = linkData.range;
+                          const range = linkState.range;
 
                           if (content.firstChild?.content.size > 0) {
                             const { state, dispatch } = view;
@@ -282,6 +282,7 @@ const extension = {
                   component: ToolbarButtons,
                   placement: "bottom",
                   padding: 0,
+                  hide: true,
                   boundary: view.dom.parentElement,
                   fallbackPlacements: [
                     "bottom-end",

@@ -64,7 +64,9 @@ export async function updatePosition(trigger, content, options) {
     middleware.push(arrow({ element: arrowElement }));
   }
 
-  middleware.push(hide({ padding }));
+  if (options.hide) {
+    middleware.push(hide({ padding }));
+  }
 
   content.dataset.strategy = options.strategy || "absolute";
 
