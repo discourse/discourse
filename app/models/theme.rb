@@ -1052,11 +1052,11 @@ class Theme < ActiveRecord::Base
         copy.destroy!
         self.reload.owned_color_palette
       else
-        palette.colors.each do |color|
-          copy_color = color.dup
-          copy_color.color_scheme_id = copy.id
-          copy_color.save!
-        end
+        ColorSchemeColor.insert_all(
+          palette.colors.map do |color|
+            { color_scheme_id: copy.id, name: color.name, hex: color.hex, dark_hex: color.dark_hex }
+          end,
+        )
         copy.reload
       end
     end
