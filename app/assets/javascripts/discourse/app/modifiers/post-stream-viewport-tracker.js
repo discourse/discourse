@@ -49,9 +49,6 @@ const DEBUG_EYELINE = false;
 // Global flag to enable/disable the cloaking mechanism
 let cloakingEnabled = true;
 
-// Set of post IDs that should never be cloaked
-const cloakingPrevented = new Set();
-
 /**
  * Globally disables the cloaking mechanism for all posts
  *
@@ -61,6 +58,10 @@ export function disableCloaking() {
   cloakingEnabled = false;
 }
 
+// Dictionary containing the set of post IDs that should never be cloaked.
+// The topicId is used to clear the set when the topic changes.
+const cloakingPrevented = { topicId: null, posts: new Set() };
+
 /**
  * Prevents a specific post from being cloaked
  * Useful for posts that need to remain visible regardless of scroll position because removing
@@ -68,8 +69,12 @@ export function disableCloaking() {
  *
  * @param {number} postId - The ID of the post to prevent from cloaking
  */
-export function preventCloaking(postId) {
-  cloakingPrevented.add(postId);
+export function preventCloaking(postId, prevent = true) {
+  if (prevent) {
+    cloakingPrevented.posts.add(postId);
+  } else {
+    cloakingPrevented.posts.delete(postId);
+  }
 }
 
 export default class PostStreamViewportTracker {
@@ -250,6 +255,7 @@ export default class PostStreamViewportTracker {
         headerOffset,
         screenTrack,
         setCloakingBoundaries,
+        topicId,
         ...trackedArgs
       }
     ) => {
@@ -269,14 +275,20 @@ export default class PostStreamViewportTracker {
       // eyeline
       this.#setupEyelineDebugElement();
 
-      schedule("afterRender", () => {
-        // forces updates performed when the scroll is triggered
-        this.#scrollTriggered();
-      });
+      // clear the list of posts with cloaking prevented when the topic changes
+      if (cloakingPrevented.topicId !== topicId) {
+        cloakingPrevented.topicId = topicId;
+        cloakingPrevented.posts.clear();
+      }
 
       // consume the remaining properties to track them and run the cleanup functions when their values change
       // https://github.com/emberjs/ember.js/issues/19277
       trackedArgs && Object.values(trackedArgs);
+
+      schedule("afterRender", () => {
+        // forces updates performed when the scroll is triggered
+        this.#scrollTriggered();
+      });
 
       // cleanup
       return () => {
@@ -311,6 +323,10 @@ export default class PostStreamViewportTracker {
 
     // clear DOM references
     this.#observedPostElements.clear();
+
+    // clear the set of posts with cloaking prevented
+    cloakingPrevented.topicId = null;
+    cloakingPrevented.posts.clear();
   }
 
   /**
@@ -358,7 +374,7 @@ export default class PostStreamViewportTracker {
    */
   @bind
   getCloakingData(post, { above, below }) {
-    if (!cloakingEnabled || !post || cloakingPrevented.has(post.id)) {
+    if (!cloakingEnabled || !post || cloakingPrevented.posts.has(post.id)) {
       return { active: false };
     }
 
