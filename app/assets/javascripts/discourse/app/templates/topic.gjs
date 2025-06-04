@@ -44,7 +44,6 @@ import htmlSafe from "discourse/helpers/html-safe";
 import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
 import autoFocus from "discourse/modifiers/auto-focus";
-import stickyAvatars from "discourse/modifiers/sticky-avatars";
 import { i18n } from "discourse-i18n";
 import CategoryChooser from "select-kit/components/category-chooser";
 import MiniTagChooser from "select-kit/components/mini-tag-chooser";
@@ -58,9 +57,6 @@ export default RouteTemplate(
     {{/let}}
 
     <DiscourseTopic
-      {{! TODO (glimmer-post-stream) remove the modifier below.
-         The Glimmer Post Stream applies the sticky-avatar class to all posts }}
-      {{stickyAvatars}}
       @multiSelect={{@controller.multiSelect}}
       @enteredAt={{@controller.enteredAt}}
       @topic={{@controller.model}}
