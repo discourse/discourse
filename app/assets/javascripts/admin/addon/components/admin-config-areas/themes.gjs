@@ -3,8 +3,8 @@ import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isPresent } from "@ember/utils";
+import DPageSubheader from "discourse/components/d-page-subheader";
 import { i18n } from "discourse-i18n";
-import InstallThemeCard from "admin/components/admin-config-area-cards/install-theme-card";
 import InstallThemeModal from "admin/components/modal/install-theme";
 import ThemesGrid from "admin/components/themes-grid";
 import { THEMES } from "admin/models/theme";
@@ -82,12 +82,23 @@ export default class AdminConfigAreasThemes extends Component {
   }
 
   <template>
+    <DPageSubheader
+      @titleLabel={{i18n
+        "admin.config_areas.themes_and_components.themes.title"
+      }}
+      @descriptionLabel={{i18n
+        "admin.config_areas.themes_and_components.themes.description"
+      }}
+    >
+      <:actions as |actions|>
+        <actions.Primary
+          @label="admin.config_areas.themes_and_components.themes.install"
+          @action={{this.installModal}}
+        />
+      </:actions>
+    </DPageSubheader>
     <div class="admin-detail">
-      <ThemesGrid @themes={{@themes}}>
-        <:specialCard>
-          <InstallThemeCard @openModal={{this.installModal}} />
-        </:specialCard>
-      </ThemesGrid>
+      <ThemesGrid @themes={{@themes}} />
     </div>
   </template>
 }
