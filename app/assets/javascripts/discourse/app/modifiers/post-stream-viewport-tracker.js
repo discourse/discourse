@@ -641,7 +641,6 @@ export default class PostStreamViewportTracker {
     if (!addListeners) {
       window.removeEventListener("resize", this.onWindowResize);
       window.removeEventListener("scroll", this.onScroll);
-      window.removeEventListener("touchmove", this.onScroll);
 
       window.onpageshow = null;
 
@@ -654,7 +653,6 @@ export default class PostStreamViewportTracker {
 
     window.addEventListener("resize", this.onWindowResize, opts);
     window.addEventListener("scroll", this.onScroll, opts);
-    window.addEventListener("touchmove", this.onScroll, opts);
 
     window.onpageshow = function (event) {
       if (event.persisted) {
