@@ -238,11 +238,11 @@ export default class InsertHyperlink extends Component {
       <:footer>
         <DButton
           @action={{this.ok}}
-          @label={{(if
+          @label={{if
             @model.editing
             "composer.link_edit_action"
             "composer.link_dialog_action"
-          )}}
+          }}
           type="submit"
           class="btn-primary"
         />
@@ -250,7 +250,7 @@ export default class InsertHyperlink extends Component {
         <DButton
           @action={{@closeModal}}
           @label="composer.cancel"
-          @class="btn-transparent"
+          class="btn-transparent"
         />
       </:footer>
     </DModal>

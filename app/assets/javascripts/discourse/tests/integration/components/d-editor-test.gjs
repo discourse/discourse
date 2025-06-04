@@ -8,7 +8,6 @@ import {
   settled,
   triggerEvent,
   triggerKeyEvent,
-  waitUntil,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import DEditor from "discourse/components/d-editor";

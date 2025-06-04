@@ -50,6 +50,7 @@ const AUTOCOMPLETE_KEY_DOWN_SUPPRESS = ["Enter", "Tab"];
  * @property {string} [class] The class to be added to the ProseMirror contentEditable editor
  * @property {boolean} [includeDefault] If default node and mark spec/parse/serialize/inputRules definitions from ProseMirror should be included
  * @property {import("discourse/lib/composer/rich-editor-extensions").RichEditorExtension[]} [extensions] A list of extensions to be used with the editor INSTEAD of the ones registered through the API
+ * @property {(toolbar: import("discourse/lib/composer/toolbar").ToolbarBase) => void} [replaceToolbar] A function that replaces the default toolbar in a container with a custom/temporary one
  */
 
 /**
