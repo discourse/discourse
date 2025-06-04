@@ -665,7 +665,7 @@ login:
     regex: "^[a-zA-Z0-9_=\\.]+$"
     secret: true
   auth_skip_create_confirm:
-    default: false
+    default: true
     client: true
   auth_immediately:
     default: true
