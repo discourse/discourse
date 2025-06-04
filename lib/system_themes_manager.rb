@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class CoreThemesManager
+class SystemThemesManager
   CORE_THEMES = { "foundation" => -1, "horizon" => -2 }
   def self.sync!
     CORE_THEMES.keys.each { |theme_name| sync_theme!(theme_name) }

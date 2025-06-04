@@ -36,4 +36,4 @@ if !Theme.exists?
   end
 end
 
-CoreThemesManager.sync!
+SystemThemesManager.sync!

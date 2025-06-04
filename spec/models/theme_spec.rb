@@ -1762,5 +1762,14 @@ HTML
       expect(theme.find_or_create_owned_color_palette.id).to eq(palette.id)
       expect(theme.owned_color_palette).to eq(palette)
     end
+
+    it "returns system true for Horizon and Foundation themes" do
+      horizon_theme = Theme.where(name: "Horizon").first
+      foundation_theme = Theme.where(name: "Foundation").first
+
+      expect(horizon_theme.system?).to be true
+      expect(foundation_theme.system?).to be true
+      expect(theme.system?).to be false
+    end
   end
 end

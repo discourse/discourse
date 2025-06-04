@@ -10,7 +10,7 @@ Rails.application.config.after_initialize do |config|
         theme_name = filepath.gsub("#{Rails.root}/themes/", "").split("/").first
 
         Rails.logger.info "Theme folder changed. Syncing..."
-        CoreThemesManager.sync_theme!(theme_name)
+        SystemThemesManager.sync_theme!(theme_name)
       end
     listener.start
   end
