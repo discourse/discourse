@@ -26,9 +26,6 @@ import DiscourseURL from "discourse/lib/url";
  * and the percentage of the current that is scrolled.
  */
 
-// Symbol used as key to attach a post model reference to DOM elements
-const POST_MODEL = Symbol("POST");
-
 // Debounce time for resize events in milliseconds
 const RESIZE_DEBOUNCE_MS = 100;
 
@@ -76,6 +73,15 @@ export function preventCloaking(postId, prevent = true) {
     cloakingPrevented.posts.delete(postId);
   }
 }
+
+/**
+ * A WeakMap storing post models for DOM elements.
+ * Maps elements in the post stream to their corresponding post.
+ * Uses WeakMap to avoid memory leaks when elements are removed.
+ *
+ * @type {WeakMap<HTMLElement, Object>}
+ */
+const elementsToPost = new WeakMap();
 
 export default class PostStreamViewportTracker {
   /**
@@ -209,7 +215,7 @@ export default class PostStreamViewportTracker {
    * @returns {Function} Cleanup function that removes observers when the element is destroyed
    */
   #registerPost = modifier((element, [post]) => {
-    element[POST_MODEL] = post;
+    elementsToPost.set(element, post);
 
     if (!this.#observedPostElements.has(element)) {
       this.#observedPostElements.add(element);
@@ -219,7 +225,7 @@ export default class PostStreamViewportTracker {
 
     // clean-up
     return () => {
-      delete element[POST_MODEL];
+      elementsToPost.delete(element);
 
       if (this.#observedPostElements.has(element)) {
         this.#observedPostElements.delete(element);
@@ -394,7 +400,7 @@ export default class PostStreamViewportTracker {
   @bind
   trackCloakedPosts(entry) {
     const { target, isIntersecting } = entry;
-    const post = target[POST_MODEL];
+    const post = elementsToPost.get(target);
 
     if (!post) {
       return;
@@ -435,7 +441,7 @@ export default class PostStreamViewportTracker {
   @bind
   trackVisiblePosts(entry) {
     const { target, isIntersecting } = entry;
-    const post = target[POST_MODEL];
+    const post = elementsToPost.get(target);
 
     if (isIntersecting) {
       // entered the viewport
@@ -747,8 +753,9 @@ export default class PostStreamViewportTracker {
       return;
     }
 
-    const currentPost = this.#currentPostElement?.[POST_MODEL];
-    const newPost = newElement?.[POST_MODEL];
+    const currentPost =
+      this.#currentPostElement && elementsToPost.get(this.#currentPostElement);
+    const newPost = newElement && elementsToPost.get(newElement);
 
     this.#currentPostElement = newElement;
 
