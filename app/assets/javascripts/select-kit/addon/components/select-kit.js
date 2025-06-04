@@ -631,6 +631,7 @@ export default class SelectKit extends Component {
     }
 
     if (this.actions) {
+      console.log(this.actions, privateAction);
       const componentAction = get(this.actions, actionName);
       if (boundaryAction && componentAction) {
         boundaryAction = componentAction.call(this, ...params);
@@ -638,9 +639,12 @@ export default class SelectKit extends Component {
     }
 
     const theAction = get(this, actionName);
+
     if (boundaryAction && theAction) {
       boundaryAction = theAction.call(this, ...params);
     }
+
+    console.log(boundaryAction);
 
     return boundaryAction;
   }

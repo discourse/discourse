@@ -223,7 +223,9 @@ export default class CategoryChooser extends ComboBoxComponent {
   }
 
   _onChange(value) {
-    this._boundaryActionHandler("onChangeCategory", Category.findById(value));
-    return true;
+    if (this.onChangeCategory) {
+      this.onChangeCategory(Category.findById(value));
+      return true;
+    }
   }
 }

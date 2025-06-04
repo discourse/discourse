@@ -5,6 +5,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
+import { TrackedMap } from "@ember-compat/tracked-built-ins";
 import curryComponent from "ember-curry-component";
 import DButton from "discourse/components/d-button";
 import FKAlert from "discourse/form-kit/components/fk/alert";
@@ -15,6 +16,7 @@ import FKControlConditionalContent from "discourse/form-kit/components/fk/contro
 import FKErrorsSummary from "discourse/form-kit/components/fk/errors-summary";
 import FKField from "discourse/form-kit/components/fk/field";
 import FKFieldset from "discourse/form-kit/components/fk/fieldset";
+import FKHeader from "discourse/form-kit/components/fk/header";
 import FKInputGroup from "discourse/form-kit/components/fk/input-group";
 import FKObject from "discourse/form-kit/components/fk/object";
 import Row from "discourse/form-kit/components/fk/row";
@@ -32,7 +34,7 @@ class FKForm extends Component {
 
   @tracked isSubmitting = false;
 
-  fields = new Map();
+  fields = new TrackedMap();
 
   formData = new FKFormData(this.args.data ?? {});
 
@@ -97,6 +99,14 @@ class FKForm extends Component {
     }
 
     return validateOn;
+  }
+
+  get dirtyCount() {
+    const paths = new Set();
+    this.formData.patches.forEach((patch) => {
+      paths.add(patch.path[0]);
+    });
+    return paths.size;
   }
 
   @action
@@ -195,7 +205,7 @@ class FKForm extends Component {
   }
 
   @action
-  async onSubmit(event) {
+  async onSubmit(event, field) {
     event?.preventDefault();
 
     if (this.isSubmitting) {
@@ -205,12 +215,18 @@ class FKForm extends Component {
     try {
       this.isSubmitting = true;
 
-      await this.validate(this.fields.values());
+      await this.validate(field ? [field] : this.fields.values());
 
       if (this.formData.isValid) {
-        this.formData.save();
+        this.formData.save(field?.name);
 
-        await this.args.onSubmit?.(this.formData.draftData);
+        if (field) {
+          await this.args.onSubmit?.({
+            [field.name]: this.formData.get(field.name),
+          });
+        } else {
+          await this.args.onSubmit?.(this.formData.draftData);
+        }
       }
     } finally {
       this.isSubmitting = false;
@@ -278,6 +294,7 @@ class FKForm extends Component {
 
       {{yield
         (hash
+          Header=FKHeader
           Row=Row
           Section=FKSection
           Fieldset=FKFieldset
@@ -293,6 +310,7 @@ class FKForm extends Component {
             class="btn-primary form-kit__button"
             type="submit"
             isLoading=this.isSubmitting
+            label=@label
           )
           Reset=(component
             DButton
@@ -300,8 +318,20 @@ class FKForm extends Component {
             forwardEvent=true
             class="form-kit__button"
             label="form_kit.reset"
+            disabled=true
           )
-          Field=(this.componentFor FKField)
+          Field=(component
+            FKField
+            errors=this.formData.errors
+            data=this.formData
+            patches=this.formData.patches
+            addError=this.addError
+            registerField=this.registerField
+            unregisterField=this.unregisterField
+            triggerRevalidationFor=this.triggerRevalidationFor
+            remove=this.remove
+            set=this.set
+          )
           Collection=(this.componentFor FKCollection)
           Object=(this.componentFor FKObject)
           InputGroup=(this.componentFor FKInputGroup)
@@ -309,6 +339,8 @@ class FKForm extends Component {
           set=this.set
           setProperties=this.setProperties
           addItemToCollection=this.addItemToCollection
+          dirtyCount=this.dirtyCount
+          submit=this.onSubmit
         )
         this.formData.draftData
       }}
@@ -321,6 +353,7 @@ const Form = <template>
     <FKForm
       @data={{data}}
       @onSubmit={{@onSubmit}}
+      @submitOn={{@submitOn}}
       @validate={{@validate}}
       @validateOn={{@validateOn}}
       @onRegisterApi={{@onRegisterApi}}
@@ -329,7 +362,11 @@ const Form = <template>
       ...attributes
       as |components draftData|
     >
-      {{yield components draftData}}
+      {{#if (has-block "body")}}
+        {{yield components draftData to="body"}}
+      {{else}}
+        {{yield components draftData}}
+      {{/if}}
     </FKForm>
   {{/each}}
 </template>;

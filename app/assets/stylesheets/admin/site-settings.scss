@@ -34,6 +34,9 @@
   border: 1px solid var(--primary-300);
   border-radius: var(--d-border-radius);
   box-shadow: var(--shadow-card);
+  z-index: z("base");
+
+  @include float-up;
 
   @include viewport.until(sm) {
     flex-direction: column;

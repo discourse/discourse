@@ -1,8 +1,7 @@
 @use "lib/viewport";
 
 .form-kit__control-icon {
-  width: 100% !important;
-  min-width: var(--form-kit-small-input);
+  width: 5rem !important;
 
   .formatted-selection {
     display: none !important;
@@ -17,12 +16,21 @@
     color: var(--primary);
   }
 
+  .select-kit-header-wrapper {
+    justify-content: center;
+  }
+
   .select-kit-header {
     padding-inline: 0.65em !important;
-    height: 2em;
+    height: 5rem !important;
+    width: 5rem;
 
-    @include viewport.until(sm) {
-      height: 2.25em;
+    .caret-icon {
+      display: none;
+    }
+
+    .d-icon:not(.caret-icon) {
+      font-size: var(--font-up-3-rem);
     }
 
     &:hover:not(:disabled) {
