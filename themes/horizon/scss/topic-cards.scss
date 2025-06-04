@@ -629,9 +629,12 @@ body.user-messages-page {
       display: none;
     }
 
+    .main-link .link-top-line {
+      grid-area: title;
+    }
+
     &.visited .main-link .link-top-line {
       font-weight: normal;
-      grid-area: title;
     }
 
     td.topic-activity-data {

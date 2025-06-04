@@ -127,6 +127,36 @@
   }
 }
 
+.rtl .experimental-screen {
+  &__top-left {
+    right: var(--left-distance);
+    left: unset;
+  }
+
+  &__top-right {
+    transform: rotate(-90deg) !important;
+    right: calc(var(--right-distance) - var(--d-border-radius-large));
+    left: unset;
+  }
+
+  &__bottom-left {
+    transform: rotate(90deg);
+    right: var(--left-distance);
+    left: unset;
+  }
+
+  &__bottom-right {
+    transform: rotate(180deg);
+    left: unset;
+    right: calc(var(--right-distance) - var(--d-border-radius-large));
+  }
+
+  &__bottom-bar {
+    right: var(--left-distance);
+    left: unset;
+  }
+}
+
 @media screen and (min-width: 768px) {
   .with-topic-progress {
     bottom: calc(
