@@ -3594,7 +3594,6 @@ bs_BA:
           delete: "Delete"
           colors:
             title: "Colors"
-          delete_confirm: "Izbrisati ovu paletu boja?"
       plugins:
         title: "Pluginovi"
         name: "Ime"
@@ -3814,40 +3813,30 @@ bs_BA:
           title: "Colors"
           about: "Izmijenite boje koje koriste vaše teme. Kreirajte novu paletu boja za početak."
           copy_name_prefix: "Copy of"
-          delete_confirm: "Izbrisati ovu paletu boja?"
           undo: "Vrati nazad"
           undo_title: "Undo your changes to this color since the last time it was saved."
           revert: "Vrati nazad"
           revert_title: "Vrati boju na standardnu boju Discourse palete."
           primary:
             name: "primary"
-            description: "Most text, icons, and borders."
           secondary:
             name: "secondary"
-            description: "The main background color, and text color of some buttons."
           tertiary:
             name: "tertiary"
-            description: "Links, some buttons, notifications, and accent color."
           quaternary:
             name: "quaternary"
           header_background:
             name: "header background"
-            description: "Background color of the site's header."
           header_primary:
             name: "header primary"
-            description: "Text and icons in the site's header."
           highlight:
             name: "highlight"
-            description: "The background color of highlighted elements on the page, such as posts and topics."
           danger:
             name: "danger"
-            description: "Highlight color for actions like deleting posts and topics."
           success:
             name: "success"
-            description: "Used to indicate an action was successful."
           love:
             name: "love"
-            description: "The like button's color."
           selected:
             name: "označeno"
         robots:

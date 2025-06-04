@@ -416,6 +416,8 @@ hr:
       trust_level_2: "razina_povjerenja_2"
       trust_level_3: "razina_povjerenja_3"
       trust_level_4: "razina_povjerenja_4"
+    default_descriptions:
+      moderators: "Odgovorni za odgovaranje na oznake, moderiranje rasprava i pomoć članovima s njihovim računima"
   education:
     until_posts:
       one: "%{count} objava"

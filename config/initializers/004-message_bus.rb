@@ -27,8 +27,15 @@ def setup_message_bus_env(env)
 
   host = RailsMultisite::ConnectionManagement.host(env)
   RailsMultisite::ConnectionManagement.with_hostname(host) do
+    cors_origin = Discourse.base_url_no_prefix
+
+    if GlobalSetting.enable_cors && SiteSetting.cors_origins.present?
+      allowed_origins = SiteSetting.cors_origins_map
+      cors_origin = env["HTTP_ORIGIN"] if allowed_origins.include?(env["HTTP_ORIGIN"])
+    end
+
     extra_headers = {
-      "Access-Control-Allow-Origin" => Discourse.base_url_no_prefix,
+      "Access-Control-Allow-Origin" => cors_origin,
       "Access-Control-Allow-Methods" => "GET, POST",
       "Access-Control-Allow-Headers" =>
         "X-SILENCE-LOGGER, X-Shared-Session-Key, Dont-Chunk, Discourse-Present, Discourse-Deferred-Track-View",

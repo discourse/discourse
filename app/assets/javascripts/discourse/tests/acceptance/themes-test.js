@@ -166,7 +166,7 @@ acceptance("Theme", function (needs) {
   test("can force install themes", async function (assert) {
     await visit("/admin/config/customize/themes");
 
-    await click(".theme-install-card .btn-primary");
+    await click(".d-page-subheader__actions .btn-primary");
     await click(".install-theme-items #remote");
     await fillIn(
       ".install-theme-content .repo input",

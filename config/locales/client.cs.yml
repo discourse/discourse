@@ -5156,7 +5156,7 @@ cs:
           save: "Uložit"
           delete: "Smazat"
           delete_confirm: "Opravdu chcete odstranit tuto sekci?"
-          delete_public_confirm: "Tato sekce je <strong>viditelná pro všechny</strong>, opravdu ji chcete smazat?"
+          delete_public_confirm: "Tato sekce je viditelná pro všechny, opravdu ji chcete smazat?"
           update_public_confirm: "Změny budou <strong>viditelné pro všechny</strong> na tomto webu. Jsi si jisti?"
           mark_as_private_confirm: "Tato sekce je <strong>viditelná pro všechny</strong>. Po aktualizaci bude <strong>viditelné pouze pro vás</strong>. Jsi si jisti?"
           reset_confirm: "Opravdu chcete obnovit výchozí nastavení této sekce?"
@@ -6363,7 +6363,6 @@ cs:
             toggle_description: "Uživatelé si mohou tuto paletu vybrat"
           colors:
             title: "Barvy"
-          delete_confirm: "Odstranit tuto paletu barev?"
       plugins:
         title: "Pluginy"
         name: "Název"
@@ -6723,36 +6722,28 @@ cs:
           about: "Upravte barvy používané motivy. Pro začátek vytvořte novou paletu barev."
           new_name: "Nová paleta barev"
           copy_name_prefix: "Kopie"
-          delete_confirm: "Odstranit tuto paletu barev?"
           undo: "Zpět"
           undo_title: "Vrať svoje změny této barvy od doby kdy byla posledně uložena."
           revert: "Vrátit"
           revert_title: "Resetovat tuto barvu na výchozí barevnou paletu Discourse."
           primary:
             name: "primární"
-            description: "Většina textu, ikon a okrajů."
           primary-medium:
             name: "primární-střední"
           primary-low-mid:
             name: "primární-nízká-střední"
           secondary:
             name: "sekundární"
-            description: "Hlavní barva pozadí, a barva textu některých tlačítek."
           tertiary:
             name: "terciární"
-            description: "Odkazy, některá tlačítka, upozornění, a barvy zdůraznění"
           quaternary:
             name: "kvarciální"
-            description: "Pro volitelné použití v motivech."
           header_background:
             name: "pozadí hlavičky"
-            description: "Barva pozadí záhlaví stránky."
           header_primary:
             name: "primární záhlaví"
-            description: "Text a ikony v záhlaví stránky."
           highlight:
             name: "zvýraznit"
-            description: "Barva pozadí zvýrazněných prvků stránky, například příspěvků a témat."
           highlight-high:
             name: "zvýraznění-vysoké"
           highlight-medium:
@@ -6761,19 +6752,14 @@ cs:
             name: "zvýraznění-nízké"
           danger:
             name: "nebezpečí"
-            description: "Barva zvýraznění pro akce jako mazání příspěvků a témat."
           success:
             name: "úspěch"
-            description: "Používá se pro indikaci úspěšné akce."
           love:
             name: "láska"
-            description: "Barva tlačítka \"Líbí se\"."
           selected:
             name: "vybrané"
-            description: "Barva pozadí prvků, jako jsou položky seznamu, když jsou vybrány/aktivní."
           hover:
             name: "přejetí-myší"
-            description: "Barva pozadí prvků, jako jsou položky seznamu, když na ně najedete myší nebo když jsou vybrány klávesnicí."
           editor:
             light: "Světlý režim"
             dark: "Tmavý režim"

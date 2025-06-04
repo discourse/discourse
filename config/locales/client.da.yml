@@ -4747,7 +4747,6 @@ da:
           colors:
             title: "Farver"
           save_changes: "Gem ændringer"
-          delete_confirm: "Slet denne farvepalet?"
       plugins:
         title: "Udvidelser"
         name: "Navn"
@@ -5037,35 +5036,28 @@ da:
           about: "Rediger de farver, der bruges af dine temaer. Opret en ny farvepalet for at starte."
           new_name: "Ny farvepalet"
           copy_name_prefix: "Kopi af"
-          delete_confirm: "Slet denne farvepalet?"
           undo: "Fortryd"
           undo_title: "Fortryd dine ændringer til denne farve, siden sidste gang den blev gemt."
           revert: "Gendan"
           revert_title: "Nulstil denne farve til Discourses standard farvepalet."
           primary:
             name: "Primær"
-            description: "De fleste tekster, iconer og kanter."
           primary-medium:
             name: "primær-medium"
           primary-low-mid:
             name: "primær-lav-mid"
           secondary:
             name: "sekundær"
-            description: "Hoved baggrunds farven og tekst farven på enkelte knapper."
           tertiary:
             name: "tredie"
-            description: "Links, nogle knapper, notifikationer og accent farver."
           quaternary:
             name: "fjerde"
           header_background:
             name: "titel baggrund"
-            description: "Baggrunds farve på sitets titel."
           header_primary:
             name: "titel primær"
-            description: "Tekst og iconer i sitets titel."
           highlight:
             name: "fremhæv"
-            description: "Baggrundsfarven på fremhævede elementer på siden, såsom emner og indlæg."
           highlight-high:
             name: "fremhæv-høj"
           highlight-medium:
@@ -5074,13 +5066,10 @@ da:
             name: "fremhæv-lav"
           danger:
             name: "fare"
-            description: "Fremhævet farve på handlinger såsom sletning af indlæg og emner."
           success:
             name: "succes"
-            description: "Bruges til at indikere at en handling gik godt."
           love:
             name: "kærlighed"
-            description: "Like knappens farve."
           selected:
             name: "valgte"
           editor:

@@ -4600,7 +4600,7 @@ tr_TR:
           save: "Kaydet"
           delete: "Sil"
           delete_confirm: "Bu bölümü silmek istediğinizden emin misiniz?"
-          delete_public_confirm: "Bu bölüm <strong>herkes tarafından görülebilir</strong>, silmek istediğinizden emin misiniz?"
+          delete_public_confirm: "Bu bölüm herkes tarafından görülebilir, silmek istediğinizden emin misiniz?"
           update_public_confirm: "Değişiklikler bu sitedeki <strong>herkes tarafından görülebilir</strong>. Emin misiniz?"
           mark_as_private_confirm: "Bu bölüm <strong>herkes tarafından görülebilir</strong>. Güncellemeden sonra <strong>yalnızca size görünür</strong>olacak. Emin misiniz?"
           reset_confirm: "Bu bölümü varsayılana sıfırlamak istediğinizden emin misiniz?"
@@ -5769,7 +5769,6 @@ tr_TR:
             toggle_description: "Renk paleti, kullanıcılar tarafından seçilebilir"
           colors:
             title: "Renkler"
-          delete_confirm: "Bu renk paleti silinsin mi?"
       plugins:
         title: "Eklentiler"
         name: "Ad"
@@ -6113,36 +6112,28 @@ tr_TR:
           about: "Temalarınız tarafından kullanılan renkleri değiştirin. Başlamak için yeni bir renk paleti oluşturun."
           new_name: "Yeni renk paleti"
           copy_name_prefix: "Şunun kopyası:"
-          delete_confirm: "Bu renk paleti silinsin mi?"
           undo: "Geri Al"
           undo_title: "Bu rengin son kaydedilmesinden bu yana yaptığınız değişiklikleri geri alın."
           revert: "Eski Haline Getir"
           revert_title: "Bu rengi Discourse'un varsayılan renk paletine sıfırlayın."
           primary:
             name: "birincil"
-            description: "Çoğu metin, simge ve kenarlık."
           primary-medium:
             name: "birincil-orta"
           primary-low-mid:
             name: "birincil-düşük-orta"
           secondary:
             name: "ikincil"
-            description: "Ana arka plan rengi ve bazı düğmelerin metin rengi."
           tertiary:
             name: "üçüncül"
-            description: "Bağlantılar, bazı düğmeler, bildirimler ve vurgu rengi."
           quaternary:
             name: "dördüncül"
-            description: "Temalarda isteğe bağlı kullanım için."
           header_background:
             name: "başlık arka planı"
-            description: "Site başlığının arka plan rengi."
           header_primary:
             name: "başlık birincil"
-            description: "Site başlığındaki metin ve simgeler."
           highlight:
             name: "vurgula"
-            description: "Gönderiler ve konular gibi sayfada vurgulanan ögelerin arka plan rengi."
           highlight-high:
             name: "vurgula-yüksek"
           highlight-medium:
@@ -6151,19 +6142,14 @@ tr_TR:
             name: "vurgula-düşük"
           danger:
             name: "tehlike"
-            description: "Gönderileri ve konuları silmek gibi eylemler için rengi vurgulayın."
           success:
             name: "başarılı"
-            description: "Bir eylemin başarılı olduğunu belirtmek için kullanılır."
           love:
             name: "sevgi"
-            description: "Beğen düğmesinin rengi."
           selected:
             name: "seçili"
-            description: "Liste ögeleri gibi ögelerin seçildiklerinde/etkin olduklarında arka plan rengi."
           hover:
             name: "üzerine gelin"
-            description: "Liste ögeleri gibi ögelerin üzerine gelindiğinde veya klavye odağına sahip olduklarında arka plan rengi."
           editor:
             light: "Açık"
             dark: "Koyu"

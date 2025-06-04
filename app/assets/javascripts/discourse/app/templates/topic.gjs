@@ -42,6 +42,7 @@ import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import htmlSafe from "discourse/helpers/html-safe";
 import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
+import autoFocus from "discourse/modifiers/auto-focus";
 import stickyAvatars from "discourse/modifiers/sticky-avatars";
 import { i18n } from "discourse-i18n";
 import CategoryChooser from "select-kit/components/category-chooser";
@@ -117,7 +118,8 @@ export default RouteTemplate(
                       @id="edit-title"
                       @value={{@controller.buffered.title}}
                       @maxlength={{@controller.siteSettings.max_topic_title_length}}
-                      @autofocus="true"
+                      @autofocus={{true}}
+                      {{autoFocus}}
                     />
                   </PluginOutlet>
                 </div>
@@ -222,20 +224,22 @@ export default RouteTemplate(
                   <TopicStatus @topic={{@controller.model}} />
                   <a
                     href={{@controller.model.url}}
-                    {{on "click" @controller.jumpTop}}
+                    {{on
+                      "click"
+                      (if
+                        @controller.model.details.can_edit
+                        @controller.editTopic
+                        @controller.jumpTop
+                      )
+                    }}
                     class="fancy-title"
                   >
                     {{htmlSafe @controller.model.fancyTitle}}
-                  </a>
-                {{/if}}
 
-                {{#if @controller.model.details.can_edit}}
-                  <a
-                    href
-                    {{on "click" @controller.editTopic}}
-                    class="edit-topic"
-                    title={{i18n "edit_topic"}}
-                  >{{icon "pencil"}}</a>
+                    {{#if @controller.model.details.can_edit}}
+                      {{icon "pencil" class="edit-topic"}}
+                    {{/if}}
+                  </a>
                 {{/if}}
 
                 <PluginOutlet

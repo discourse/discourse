@@ -2983,33 +2983,24 @@ sr:
           revert: "Vrati nazad"
           primary:
             name: "primarna"
-            description: "Većina teksta, ikonica i granica."
           secondary:
             name: "sekundarna"
-            description: "Glavna pozadinska boja, i boja teksta na nekim dugmićima."
           tertiary:
             name: "tercijarna"
-            description: "Linkovi, neki dugmići, obaveštenja i boja naglaska."
           quaternary:
             name: "kvartarna"
           header_background:
             name: "Pozadina headera"
-            description: "Pozadinska boja headera stranice."
           header_primary:
             name: "header primarna"
-            description: "Tekst i ikonice u headeru."
           highlight:
             name: "naglasak"
-            description: "Pozadinska boja naglašenih elemenata na stranici, kao što su poruke i teme."
           danger:
             name: "opasnost"
-            description: "Boja naglaska za akcije kao što su brisanje teme ili poruka."
           success:
             name: "uspešno"
-            description: "Koristi se da pokaže da je neka akcija bila uspešna."
           love:
             name: "lajk"
-            description: "Boja dugmeta za lajk"
         email_style:
           css: "CSS"
       email:

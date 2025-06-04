@@ -117,7 +117,6 @@ gem "digest", require: false
 group :test do
   gem "capybara", require: false
   gem "webmock", require: false
-  gem "fakeweb", require: false
   gem "simplecov", require: false
   gem "test-prof"
   gem "rails-dom-testing", require: false
@@ -154,7 +153,7 @@ end
 
 group :development do
   gem "ruby-prof", require: false, platform: :mri
-  gem "bullet", "<= 8.0.3", require: !!ENV["BULLET"]
+  gem "bullet", require: !!ENV["BULLET"]
   gem "better_errors", platform: :mri, require: !!ENV["BETTER_ERRORS"]
   gem "binding_of_caller"
   gem "yaml-lint"
