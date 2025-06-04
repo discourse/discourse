@@ -82,7 +82,7 @@ class RemoteTheme < ActiveRecord::Base
     )
   end
 
-  def self.import_theme_from_directory(directory, theme_id:)
+  def self.import_theme_from_directory(directory, theme_id: nil)
     update_theme(
       ThemeStore::DirectoryImporter.new(directory),
       update_components: "none",

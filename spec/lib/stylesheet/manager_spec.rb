@@ -999,7 +999,7 @@ RSpec.describe Stylesheet::Manager do
       Stylesheet::Manager.precompile_theme_css
 
       results = StylesheetCache.pluck(:target)
-      expect(results.size).to eq(44) # 10 core targets + theme rtl/ltr + 32 color schemes (light and dark mode per scheme)
+      expect(results.size).to eq(58) # 10 core targets + theme rtl/ltr + 32 color schemes (light and dark mode per scheme) + 14 Foundation
 
       expect(results).to include("color_definitions_#{scheme1.name}_#{scheme1.id}_#{user_theme.id}")
       expect(results).to include(

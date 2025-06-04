@@ -208,7 +208,7 @@ export default RouteTemplate(
           <DButton
             @action={{@controller.editTheme}}
             @label="admin.customize.theme.edit_css_html"
-            class="btn-default edit"
+            class="btn-default edit edit-code"
           />
         </div>
       {{/unless}}
@@ -247,7 +247,7 @@ export default RouteTemplate(
             @action={{@controller.addUploadModal}}
             @icon="plus"
             @label="admin.customize.theme.add"
-            class="btn-default"
+            class="btn-default upload"
           />
         </div>
       {{/unless}}
@@ -390,7 +390,7 @@ export default RouteTemplate(
           @action={{@controller.destroyTheme}}
           @label="admin.customize.delete"
           @icon="trash-can"
-          class="btn-danger"
+          class="btn-danger delete"
         />
       {{/unless}}
     </div>

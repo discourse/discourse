@@ -2,7 +2,7 @@
 
 describe "Admin Customize Themes Config Area Page", type: :system do
   fab!(:admin)
-  fab!(:theme) { Theme.where(component: false).first }
+  fab!(:theme) { Theme.where(component: false, name: "Default").first }
   fab!(:theme_child_theme) do
     Fabricate(:theme, name: "Child theme", component: true, enabled: true, parent_themes: [theme])
   end

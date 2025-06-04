@@ -65,14 +65,14 @@ describe "Admin Customize Themes", type: :system do
 
   it "cannot edit js, upload files or delete system themes" do
     visit("/admin/customize/themes/#{theme.id}")
-    expect(page).to have_css(".title .edit")
+    expect(page).to have_css(".title button")
     expect(page).to have_css(".edit-code")
     expect(page).to have_css("button.upload")
     expect(page).to have_css(".delete")
 
     theme.update!(id: -10)
     visit("/admin/customize/themes/#{theme.id}")
-    expect(page).not_to have_css(".title .edit")
+    expect(page).not_to have_css(".title button")
     expect(page).not_to have_css(".edit-code")
     expect(page).not_to have_css("button.upload")
     expect(page).not_to have_css(".delete")

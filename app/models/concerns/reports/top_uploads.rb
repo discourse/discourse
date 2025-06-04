@@ -64,6 +64,7 @@ module Reports::TopUploads
       )
       builder.where("up.created_at >= :start_date", start_date: report.start_date)
       builder.where("up.created_at < :end_date", end_date: report.end_date)
+      builder.where("username != '#{Discourse.system_user.username}'")
 
       if extension_filter
         builder.where("up.extension = :extension", extension: extension_filter.sub(/\A\./, ""))
