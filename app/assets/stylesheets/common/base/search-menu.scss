@@ -84,7 +84,10 @@
   }
 
   .menu-panel {
-    padding: 0; // overrule generic menu panels to achieve full width hover effect
+    padding: 0; // overrule generic menu panels to achieve full width hover
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius);
+    max-height: calc(100vh - var(--header-offset));
 
     @include viewport.from(sm) {
       // alignment adjustment for search menu panel (within topic) on desktop to align with results
@@ -135,7 +138,6 @@
     display: flex;
     flex-direction: column;
     border-radius: var(--d-border-radius);
-    padding-top: 0.75rem;
 
     .heading {
       padding: 0.5em 0 0 1rem;
@@ -166,6 +168,7 @@
 
   .search-link {
     padding: var(--search-result-element-padding);
+    font-size: var(--font-down-1);
 
     &.category,
     &.user,
@@ -285,7 +288,6 @@
           word-break: break-word;
           hyphens: auto;
           color: var(--primary-high);
-          font-size: var(--font-down-1);
         }
       }
     }
@@ -416,14 +418,14 @@
 }
 
 .search-random-quick-tip {
-  padding: 0 1rem 0.75rem;
-  font-size: var(--font-down-2);
+  padding: var(--search-result-element-padding);
+  font-size: var(--font-down-1);
   color: var(--primary-medium);
 
   .tip-label {
     background-color: rgb(var(--tertiary-rgb), 0.1);
     margin-right: 0.25em;
-    padding: 2px 4px;
+    padding: 0 4px;
     display: inline-block;
     border: none;
 
@@ -461,4 +463,5 @@
 
 .no-results {
   padding: var(--search-result-element-padding);
+  font-size: var(--font-down-1);
 }

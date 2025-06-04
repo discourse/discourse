@@ -96,13 +96,6 @@
             z-index: 2;
           }
 
-          .search-menu-panel {
-            padding: 0;
-            border: 1px solid var(--primary-low);
-            border-radius: var(--d-border-radius);
-            max-height: calc(100vh - var(--header-offset));
-          }
-
           .search-input {
             display: flex;
             padding: 0 0 0 2em;
