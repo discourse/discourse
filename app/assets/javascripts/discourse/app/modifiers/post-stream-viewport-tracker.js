@@ -418,10 +418,7 @@ export default class PostStreamViewportTracker {
       this.#uncloakedPostNumbers.delete(postNumber);
 
       // saves the current post height to prevent jumps while scrolling with existing cloaked posts
-      let height = target.clientHeight;
-      const style = window.getComputedStyle(target);
-      height +=
-        parseFloat(style.borderTopWidth) + parseFloat(style.borderBottomWidth);
+      const height = target.offsetHeight;
       this.#cloakedPostsHeight[post.id] = height;
     }
 
