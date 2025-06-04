@@ -5,12 +5,11 @@ import { i18n } from "discourse-i18n";
 
 export default class AdminCustomizeThemesShowColorsRoute extends DiscourseRoute {
   @service dialog;
-  @service colorPaletteChangeTracker;
 
   @action
   willTransition(transition) {
     if (
-      this.colorPaletteChangeTracker.dirtyColorsCount > 0 &&
+      this.controller.colorPaletteChangeTracker.dirtyColorsCount > 0 &&
       transition.intent.name !== "adminCustomizeThemes.show.index"
     ) {
       transition.abort();
@@ -19,7 +18,7 @@ export default class AdminCustomizeThemesShowColorsRoute extends DiscourseRoute 
           "admin.customize.theme.unsaved_colors_leave_route_confirmation"
         ),
         didConfirm: () => {
-          this.colorPaletteChangeTracker.clear();
+          this.controller.colorPaletteChangeTracker.clear();
           transition.retry();
         },
       });

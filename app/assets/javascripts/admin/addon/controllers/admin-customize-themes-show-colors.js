@@ -1,8 +1,8 @@
 import { tracked } from "@glimmer/tracking";
-import Service from "@ember/service";
+import Controller from "@ember/controller";
 import { TrackedSet } from "@ember-compat/tracked-built-ins";
 
-export default class ColorPaletteChangeTracker extends Service {
+class ChangeTracker {
   @tracked dirtyLightColors = new TrackedSet();
   @tracked dirtyDarkColors = new TrackedSet();
 
@@ -30,4 +30,8 @@ export default class ColorPaletteChangeTracker extends Service {
   get dirtyColorsCount() {
     return this.dirtyLightColors.size + this.dirtyDarkColors.size;
   }
+}
+
+export default class AdminCustomizeThemesShowColorsController extends Controller {
+  colorPaletteChangeTracker = new ChangeTracker();
 }
