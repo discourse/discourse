@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import { next } from "@ember/runloop";
-import { TrackedSet } from "@ember-compat/tracked-built-ins";
+import { TrackedArray, TrackedSet } from "@ember-compat/tracked-built-ins";
 
 /**
  * Define a tracked property on an object without needing to use the @tracked decorator.
@@ -175,4 +175,66 @@ export class DeferredTrackedSet {
   clear() {
     next(() => this.#set.clear());
   }
+}
+
+/**
+ * @decorator
+ *
+ * Same as @tracked, but initializes the value as a TrackedArray.
+ *
+ * @param {Object} target - The target object
+ * @param {string|Symbol} key - The property key
+ * @param {Object} desc - The property descriptor
+ * @throws {Error} If value is not an array, TrackedArray, or null
+ *
+ * @returns {Object} Modified property descriptor that wraps arrays in TrackedArray
+ *
+ * @example
+ * class TodoList {
+ *   @trackedArray todos = ['Buy milk', 'Walk dog'];
+ *
+ *   addTodo(text) {
+ *     // Automatically wrapped in TrackedArray
+ *     this.todos = [...this.todos, text];
+ *   }
+ * }
+ */
+export function trackedArray(target, key, desc) {
+  if (desc.initializer) {
+    const initialValue = desc.initializer();
+
+    if (initialValue instanceof TrackedArray) {
+      desc.initializer = () => initialValue;
+    } else if (Array.isArray(initialValue)) {
+      desc.initializer = () => new TrackedArray(initialValue);
+    } else if (initialValue === null) {
+      desc.initializer = () => null;
+    } else {
+      throw new Error(
+        `Expected an array or TrackedArray, got ${typeof initialValue}`
+      );
+    }
+  }
+
+  const { get, set } = tracked(target, key, desc);
+
+  return {
+    get() {
+      return get.call(this);
+    },
+
+    set(value) {
+      if (value instanceof TrackedArray) {
+        set.call(this, value);
+      } else if (Array.isArray(value)) {
+        set.call(this, new TrackedArray(value));
+      } else if (value === null) {
+        set.call(this, null);
+      } else {
+        throw new Error(
+          `Expected an array or TrackedArray, got ${typeof value}`
+        );
+      }
+    },
+  };
 }
