@@ -6339,9 +6339,11 @@ en:
           install: "Install"
           themes:
             title: "Themes"
+            description: "Site-wide themes that change the overall look and feel of your site for all users."
             themes_intro: "Install a new theme to get started, or create your own from scratch using these resources."
             new_theme: "New theme"
             back: "Back to themes"
+            install: "Install"
           components:
             title: "Components"
             description: "Customizations that change surface elements of your forum design, or add extra front-end features"
