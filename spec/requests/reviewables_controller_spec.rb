@@ -383,6 +383,51 @@ RSpec.describe ReviewablesController do
         expect(json["reviewables"]).to be_present
         expect(json["reviewables"].size).to eq(1)
       end
+
+      context "with reviewable notes" do
+        fab!(:moderator)
+        fab!(:reviewable)
+
+        it "doesn't cause N+1 queries when notes are added" do
+          # post sign-in warmup
+          get "/review.json"
+
+          post "/reviewables/#{reviewable.id}/notes.json",
+               params: {
+                 reviewable_note: {
+                   content: "This is a test note",
+                 },
+               }
+
+          initial_sql_queries =
+            track_sql_queries do
+              get "/review.json"
+              expect(response.status).to eq(200)
+            end
+
+          sign_in(moderator)
+
+          post "/reviewables/#{reviewable.id}/notes.json",
+               params: {
+                 reviewable_note: {
+                   content: "This is another test note",
+                 },
+               }
+
+          sign_in(admin)
+
+          # second post sign-in warmup
+          get "/review.json"
+
+          new_sql_queries =
+            track_sql_queries do
+              get "/review.json"
+              expect(response.status).to eq(200)
+            end
+
+          expect(new_sql_queries.count).to eq(initial_sql_queries.count)
+        end
+      end
     end
 
     describe "#user_menu_list" do

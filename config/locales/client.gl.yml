@@ -3903,7 +3903,6 @@ gl:
           delete: "Eliminar"
           colors:
             title: "Cores"
-          delete_confirm: "Eliminar esta paleta de cores?"
       plugins:
         title: "Complementos"
         name: "Nome"
@@ -4159,35 +4158,28 @@ gl:
           title: "Cores"
           about: "Modifica as cores usadas nos temas. Crea unha nova paleta de cores para comezar."
           copy_name_prefix: "Copiar de"
-          delete_confirm: "Eliminar esta paleta de cores?"
           undo: "Desfacer"
           undo_title: "Desfai os teus cambio nesta cor desde a última vez que a gardaches."
           revert: "Reverter"
           revert_title: "Restabelece esta cor na paleta de cores predeterminada de Discourse."
           primary:
             name: "primario"
-            description: "Principalmente texto, iconas e bordos."
           primary-medium:
             name: "primario-medio"
           primary-low-mid:
             name: "primario-baixo-medio"
           secondary:
             name: "secundario"
-            description: "Cor principal do fondo e cor do texto dalgúns botóns."
           tertiary:
             name: "terciario"
-            description: "Ligazóns, algúns botóns, notificacións e cor de realce."
           quaternary:
             name: "cuaternario"
           header_background:
             name: "fondo da cabeceira"
-            description: "Cor do fondo na cabeceira do sitio."
           header_primary:
             name: "cabeceira primaria"
-            description: "Texto e iconas na cabeceira do sitio."
           highlight:
             name: "realce"
-            description: "Cor do fondo dos elementos realzados da páxina, como publicacións e temas."
           highlight-high:
             name: "realzado-alto"
           highlight-medium:
@@ -4196,13 +4188,10 @@ gl:
             name: "realzado-baixo"
           danger:
             name: "perigo"
-            description: "Cor de realce para accións como eliminar publicacións e temas."
           success:
             name: "correcto"
-            description: "Usado para indicar que unha acción se realizou correctamente."
           love:
             name: "amor"
-            description: "Cor do botón gústame."
           selected:
             name: "seleccionado"
           editor:

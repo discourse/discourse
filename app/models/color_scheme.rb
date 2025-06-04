@@ -312,12 +312,11 @@ class ColorScheme < ActiveRecord::Base
   after_destroy :dump_caches
   belongs_to :theme
 
-  has_one :theme_color_scheme
+  has_one :theme_color_scheme, dependent: :destroy
   has_one :owning_theme, class_name: "Theme", through: :theme_color_scheme, source: :theme
 
-  default_scope do
-    where("color_schemes.id NOT IN (SELECT color_scheme_id FROM theme_color_schemes)")
-  end
+  scope :without_theme_owned_palettes,
+        -> { where("color_schemes.id NOT IN (SELECT color_scheme_id FROM theme_color_schemes)") }
 
   validates_associated :color_scheme_colors
 

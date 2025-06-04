@@ -169,8 +169,22 @@ fi:
 
           Vannomme [sivistyneen yhteisökäyttäytymisen](%{base_uri}/guidelines) nimeen kaikissa tilanteissa.
       onebox:
+        instructions: |-
+          Seuraavaksi voitko jakaa yhden näistä linkeistä minun kanssani? Vastaa **linkillä itse rivillä**, ja se laajenee automaattisesti sisältääksesi näppärän yhteenvedon.
+
+          Voit kopioida minkä tahansa linkin napauttamalla ja pitämällä mobiilia pohjassa tai napsauttamalla hiiren oikealla osoitinta:
+
+          [https://en.wikipedia.org/wiki/Inherently_funny_word](https://en. ikipedia.org/wiki/Inherently_funny_word)
+          [https://en.wikipedia.org/wiki/Death_by_coconut](https://en.wikipedia.org/wiki/Death_by_coconut)
+          [https://en.wikipedia.org/wiki/Calculator_spelling](https://en.wikipedia.org/wiki/Calculator_spelling)
         reply: |-
           Siistiä! Suurin osa <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> linkeistä käyttäytyy samoin. Muista, että sen tulee olla _yksin omalla rivillään_; mitään ei saa olla rivillä ennen sitä tai sen jälkeen.
+        not_found: |-
+          Anteeksi, en löytänyt linkkiä vastauksestasi! :cry:
+
+          Voitko kokeilla lisätä seuraavan linkin omalle rivilleen seuraavaan vastaukseesi?
+
+          [https://en.wikipedia.org/wiki/Exotic_Shorthair](https://en.wikipedia.org/wiki/Exotic_Shorthair)
       images:
         instructions: |-
           Tämä on kuva yksisarvisesta:

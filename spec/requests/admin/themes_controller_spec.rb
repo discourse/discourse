@@ -1504,4 +1504,83 @@ RSpec.describe Admin::ThemesController do
       expect(response.status).to eq(200)
     end
   end
+
+  describe "#change_colors" do
+    fab!(:theme)
+
+    before { sign_in(admin) }
+
+    context "with valid parameters" do
+      it "creates a theme-owned color palette if one doesn't exist" do
+        expect(theme.owned_color_palette).to be_nil
+
+        put "/admin/themes/#{theme.id}/change-colors.json",
+            params: {
+              colors: [{ name: "primary", hex: "ff0000", dark_hex: "0000ff" }],
+            }
+
+        expect(response.status).to eq(200)
+
+        theme.reload
+        expect(theme.owned_color_palette.id).to eq(response.parsed_body["id"])
+
+        color = theme.owned_color_palette.colors.find_by(name: "primary")
+        expect(color.hex).to eq("ff0000")
+        expect(color.dark_hex).to eq("0000ff")
+      end
+
+      it "updates an existing theme-owned color palette" do
+        palette = theme.find_or_create_owned_color_palette
+        primary_color = palette.colors.find_by(name: "primary")
+        secondary_color = palette.colors.find_by(name: "secondary")
+
+        original_secondary_hex = secondary_color.hex
+        original_secondary_dark_hex = secondary_color.dark_hex
+
+        put "/admin/themes/#{theme.id}/change-colors.json",
+            params: {
+              colors: [{ name: "primary", hex: "aabbcc", dark_hex: "ccddee" }],
+            }
+
+        expect(response.status).to eq(200)
+
+        primary_color.reload
+        secondary_color.reload
+
+        expect(primary_color.hex).to eq("aabbcc")
+        expect(primary_color.dark_hex).to eq("ccddee")
+
+        expect(secondary_color.hex).to eq(original_secondary_hex)
+        expect(secondary_color.dark_hex).to eq(original_secondary_dark_hex)
+      end
+
+      it "returns the updated palette in the response" do
+        put "/admin/themes/#{theme.id}/change-colors.json",
+            params: {
+              colors: [{ name: "primary", hex: "abcdef", dark_hex: "fedcba" }],
+            }
+
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+
+        expect(json["colors"]).to be_present
+        primary_color = json["colors"].find { |c| c["name"] == "primary" }
+        expect(primary_color["hex"]).to eq("abcdef")
+        expect(primary_color["dark_hex"]).to eq("fedcba")
+      end
+    end
+
+    context "with invalid parameters" do
+      it "returns 404 for non-existent theme" do
+        max_id = (Theme.maximum(:id) || 0) + 1
+
+        put "/admin/themes/#{max_id}/change-colors.json",
+            params: {
+              colors: [{ name: "primary", hex: "ff0000", dark_hex: "0000ff" }],
+            }
+
+        expect(response.status).to eq(404)
+      end
+    end
+  end
 end

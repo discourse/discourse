@@ -40,7 +40,7 @@
 
     .search-menu-panel & {
       @include viewport.from(sm) {
-        padding: 0.75em 1rem 0.25em;
+        padding: 0.75rem 1rem 0;
       }
     }
   }
@@ -135,6 +135,7 @@
     display: flex;
     flex-direction: column;
     border-radius: var(--d-border-radius);
+    padding-top: 0.75rem;
 
     .heading {
       padding: 0.5em 0 0 1rem;
@@ -415,13 +416,9 @@
 }
 
 .search-random-quick-tip {
-  padding: max(0.75rem, 0.75em) 1rem;
+  padding: 0 1rem 0.75rem;
   font-size: var(--font-down-2);
   color: var(--primary-medium);
-
-  .search-menu-panel & {
-    padding: 0.5rem 1rem max(0.75rem, 0.75em);
-  }
 
   .tip-label {
     background-color: rgb(var(--tertiary-rgb), 0.1);

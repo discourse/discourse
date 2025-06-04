@@ -3871,33 +3871,24 @@ bg:
           revert: "Върни"
           primary:
             name: "главен"
-            description: "Повече от текстовете, икони и граници "
           secondary:
             name: "второстепенен"
-            description: "Основен цвят на фона и цвят на някой бутони."
           tertiary:
             name: "трети"
-            description: "Връзки, някои бутони, известия и цветове за акцентиране."
           quaternary:
             name: "четвърти"
           header_background:
             name: "Фон на хедъра"
-            description: "Цвят на фона на хедъра на сайта."
           header_primary:
             name: "главен хедър"
-            description: "Текстове и икони в хедъра на сайта."
           highlight:
             name: "подчертаване"
-            description: "Фонов цвят на подчертани елементи на страницата, като публикации и теми."
           danger:
             name: "опасност"
-            description: "Цвят за подчертаване на действия, като изтриване на темата."
           success:
             name: "успех"
-            description: "Използва се за индикация при успешно действие."
           love:
             name: "любов"
-            description: "Цвят на бутона харесвам. "
           selected:
             name: "избрани"
         email_style:

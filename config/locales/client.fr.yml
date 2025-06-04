@@ -4551,7 +4551,7 @@ fr:
           save: "Enregistrer"
           delete: "Supprimer"
           delete_confirm: "Voulez-vous vraiment supprimer cette section ?"
-          delete_public_confirm: "Cette section est <strong>visible par tout le monde</strong>, voulez-vous vraiment la supprimer ?"
+          delete_public_confirm: "Cette section est visible par tout le monde, voulez-vous vraiment la supprimer ?"
           update_public_confirm: "Les modifications seront visibles par <strong>tous les utilisateurs de</strong> sur ce site. voulez-vous continuer ?"
           mark_as_private_confirm: "Cette section est <strong>visible par tous les utilisateurs</strong>. Après la mise à jour, elle <strong>ne sera visible que par vous</strong>. Voulez-vous continuer ?"
           reset_confirm: "Voulez-vous vraiment réinitialiser cette section par défaut ?"
@@ -5671,7 +5671,6 @@ fr:
             toggle_description: "La palette de couleurs peut être sélectionnée par les utilisateurs"
           colors:
             title: "Couleurs"
-          delete_confirm: "Supprimer cette palette de couleurs ?"
       plugins:
         title: "Extensions"
         name: "Nom"
@@ -6015,36 +6014,28 @@ fr:
           about: "Modifiez les couleurs utilisées par vos thèmes. Créez une nouvelle palette de couleurs pour commencer."
           new_name: "Nouvelle palette de couleurs"
           copy_name_prefix: "Copie de"
-          delete_confirm: "Supprimer cette palette de couleurs ?"
           undo: "Annuler"
           undo_title: "Annuler les modifications que vous avez apportées à cette couleur depuis son dernier enregistrement."
           revert: "Rétablir"
           revert_title: "Rétablir la couleur de la palette par défaut de Discourse."
           primary:
             name: "primaire"
-            description: "La plupart des textes, icônes et bordures."
           primary-medium:
             name: "primary-medium"
           primary-low-mid:
             name: "primary-low-mid"
           secondary:
             name: "secondaire"
-            description: "Les couleurs principales du fond et du texte de certains boutons."
           tertiary:
             name: "tertiaire"
-            description: "Liens, boutons, notifications et couleurs d'accentuation."
           quaternary:
             name: "quaternaire"
-            description: "Pour une utilisation facultative dans les thèmes."
           header_background:
             name: "arrière-plan de l'en-tête"
-            description: "Couleur d'arrière-plan de l'en-tête du site."
           header_primary:
             name: "en-tête principal"
-            description: "Textes et icônes dans l'en-tête du site."
           highlight:
             name: "accentuation"
-            description: "La couleur de fond des éléments mis en surbrillance sur la page, comme les messages et sujets."
           highlight-high:
             name: "highlight-high"
           highlight-medium:
@@ -6053,19 +6044,14 @@ fr:
             name: "highlight-low"
           danger:
             name: "danger"
-            description: "Couleur de mise en valeur pour les actions comme la suppression de messages et de sujets."
           success:
             name: "succès"
-            description: "Utilisée pour indiquer qu'une action a réussi."
           love:
             name: "aimer"
-            description: "La couleur du bouton « J'aime »."
           selected:
             name: "sélectionné"
-            description: "La couleur d'arrière-plan des éléments tels que list-items lorsqu'ils sont sélectionnés/actifs."
           hover:
             name: "survol"
-            description: "La couleur d'arrière-plan des éléments tels que list-items lorsqu'ils sont survolés ou lorsque le curseur du clavier est à leur niveau."
           editor:
             light: "Clair"
             dark: "Sombre"

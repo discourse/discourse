@@ -119,3 +119,34 @@ summary::-webkit-details-marker {
     }
   }
 }
+
+.ProseMirror {
+  // No hover effect when editing - the hover is only on the caret
+  details {
+    &:not([open]) {
+      &:hover,
+      &:focus,
+      &:focus-within {
+        background-color: var(--primary-very-low);
+      }
+    }
+  }
+
+  summary {
+    // Important for Firefox so clicking on summary allows proper caret positioning
+    pointer-events: none;
+
+    &:hover {
+      &::before {
+        background: var(--primary-low);
+      }
+    }
+
+    &::before {
+      pointer-events: auto;
+      padding: var(--space-1) var(--space-2);
+      margin-left: calc(-1 * var(--space-2));
+      border-radius: var(--d-border-radius);
+    }
+  }
+}

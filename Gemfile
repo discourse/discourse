@@ -154,7 +154,7 @@ end
 
 group :development do
   gem "ruby-prof", require: false, platform: :mri
-  gem "bullet", "<= 8.0.3", require: !!ENV["BULLET"]
+  gem "bullet", require: !!ENV["BULLET"]
   gem "better_errors", platform: :mri, require: !!ENV["BETTER_ERRORS"]
   gem "binding_of_caller"
   gem "yaml-lint"

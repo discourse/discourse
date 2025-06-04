@@ -183,6 +183,7 @@ schema:
         - "remote_themes"
         - "reviewable_claimed_topics"
         - "reviewable_histories"
+        - "reviewable_notes"
         - "reviewable_scores"
         - "reviewables"
         - "scheduler_stats"

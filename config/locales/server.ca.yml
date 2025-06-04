@@ -335,28 +335,6 @@ ca:
     until_posts:
       one: "%{count} publicació"
       other: "%{count} publicacions"
-    avatar: |
-      ### Què us sembla si poseu una fotografia per al vostre compte?
-
-      Heu escrit uns quants temes i respostes, però encara no teniu una fotografia de perfil que us identifiqui. De moment, només és una lletra.
-
-      ¿Heu considerat **[visitar el vostre perfil d'usuari](%{profile_path})** i pujar una fotografia que us representi?
-
-      És més fàcil seguir discussions i trobar gent interessant en converses quan tothom té una fotografia de perfil diferent!
-    sequential_replies: |
-      ### Considereu respondre a diverses publicacions d'una tirada
-
-      En comptes d'escriure unes quantes respostes a un sol tema, considereu escriure una sola resposta que citi diverses publicacions prèvies o faci mencions via @nom.
-
-      Podeu editar la vostra darrera resposta per a afegir una citació. Per a fer-ho, seleccioneu text i premeu el botó de <b>cita resposta</b> que apareixerà.
-
-      És més fàcil seguir un tema quan té poques respostes en profunditat que no pas moltes respostes curtes i individuals.
-    reviving_old_topic: |
-      ### Voleu revifar aquest tema?
-
-      La darrera resposta a aquest tema va ser **%{time_ago}**. La vostra resposta elevarà el tema al capdamunt de la llista i es notificarà a tothom prèviament implicat en la conversa.
-
-      Esteu segur que voleu reprendre aquesta conversa antiga?
   activerecord:
     attributes:
       category:
@@ -1483,11 +1461,9 @@ ca:
     user_selected_primary_groups: "Permet als usuaris configurar el seu propi grup principal"
     allowed_user_website_domains: "El lloc web de l'usuari serà verificat contra aquests dominis. Llista delimitada amb barres verticals."
     allow_profile_backgrounds: "Permet que els usuaris carreguin fons de perfil."
-    sequential_replies_threshold: "Nombre de publicacions seguides que un usuari ha de fer en un tema abans de ser advertit de fer massa respostes seqüencials."
     get_a_room_threshold: "Nombre de publicacions que un usuari ha de fer al mateix usuari en el mateix tema abans de ser advertit."
     enable_mobile_theme: "Els dispositius mòbils fan servir una aparença compatible amb els mòbils, amb la possibilitat de passar a la versió normal. Desactiveu-ho si voleu fer servir un full d'estils personalitzat totalment responsiu. "
     dominating_topic_minimum_percent: "Quin percentatge de publicacions ha de fer un usuari en un tema abans de ser advertit sobre ús abusiu."
-    disable_avatar_education_message: "Inhabilita el missatge informatiu per a canviar d'avatar."
     suppress_uncategorized_badge: "No mostris la insígnia per a temes sense categoria en les llistes de temes."
     header_dropdown_category_count: "Quantes categories es poden mostrar en el menú desplegable de la capçalera."
     permalink_normalizations: "Aplica la següent expressió regular abans de cercar enllaços permanents coincidents. Per exemple: /(topic.*)\\?.*/\\1 eliminarà les cadenes de consulta de les rutes dels temes. El format és regex+string; utilitzeu \\1 \\2...  per a accedir a captures."
@@ -1503,7 +1479,6 @@ ca:
     display_name_on_posts: "Mostra el nom complet de l'usuari en les seves publicacions a més del seu @nomdusuari."
     show_time_gap_days: "Si es fan dues publicacions amb aquesta diferència de dies, mostra la diferència de temps en el tema."
     short_progress_text_threshold: "Després que el nombre de publicacions en un tema superi aquesta xifra, la barra de progrés només mostrarà el nombre actual de publicacions. Si voleu canviar l'amplada de la barra de progrés, cal modificar aquest valor."
-    warn_reviving_old_topic_age: "Es mostra un avís quan algú comença una resposta a un tema on la darrera resposta té més dies que els indicats. Per a inhabilitar-ho, deixeu-ho a 0."
     embed_any_origin: "Permet el contingut incrustable independentment de l’origen. Això és necessari per a aplicacions mòbils amb HTML estàtic."
     embed_support_markdown: "Admet el format de Markdown per a les publicacions incrustades."
     allowed_embed_selectors: "Llista separada per comes d'elements CSS permesos en les incrustacions."

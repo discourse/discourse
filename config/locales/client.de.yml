@@ -3643,6 +3643,12 @@ de:
           edit: "Bearbeiten"
           delete: "Löschen"
         add: "Neue Übersetzung hinzufügen"
+        view:
+          one: "%{count} übersetzte Sprachversion anzeigen"
+          other: "%{count} übersetzte Sprachversion anzeigen"
+        modal:
+          title: "Übersetzungen für Beitrag"
+          confirm_delete: "Bist du sicher, dass du die Übersetzungen für '%{languageCode}' löschen willst?"
         success: "Die Übersetzungen wurden erfolgreich aktualisiert"
       errors:
         create: "Entschuldige, es gab einen Fehler beim Anlegen des Beitrags. Bitte versuche es noch einmal."
@@ -3891,6 +3897,7 @@ de:
       background_image_dark: "Dunkles Kategorie-Hintergrundbild"
       style: "Stile"
       background_color: "Farbe"
+      foreground_color: "Textfarbe"
       styles:
         type: "Stil"
         icon: "Symbol"
@@ -4642,7 +4649,7 @@ de:
           save: "Speichern"
           delete: "Löschen"
           delete_confirm: "Bist du sicher, dass du diesen Abschnitt löschen willst?"
-          delete_public_confirm: "Dieser Abschnitt ist <strong>für alle sichtbar</strong>. Bist du sicher, dass du ihn löschen willst?"
+          delete_public_confirm: "Dieser Abschnitt ist für alle sichtbar. Bist du sicher, dass du ihn löschen willst?"
           update_public_confirm: "Die Änderungen werden <strong>für alle auf dieser Website sichtbar</strong> sein. Bist du sicher?"
           mark_as_private_confirm: "Dieser Abschnitt ist <strong>für alle sichtbar</strong>. Nach dem Update wird er <strong>nur noch für dich sichtbar</strong> sein. Bist du sicher?"
           reset_confirm: "Bist du sicher, dass du diesen Abschnitt auf die Standardeinstellungen zurücksetzen willst?"
@@ -5005,6 +5012,7 @@ de:
           header_description: "Konfiguriere, wie sich Benutzer anmelden und authentifizieren, Geheimnisse und Schlüssel, OAuth2-Anbieter und mehr"
         logo:
           title: "Logo"
+          header_description: "Konfiguriere die Logos und Symbole, die auf deiner Website verwendet werden"
           form:
             saved: "Logoeinstellungen werden gespeichert."
             logo:
@@ -5069,6 +5077,7 @@ de:
               help_text: "Die empfohlene Größe beträgt mindestens 280 x 150 Pixel. Verwende kein SVG-Bild."
         fonts:
           title: "Schriftarten"
+          header_description: "Konfiguriere die auf deiner Website verwendeten Schriftarten, einschließlich der Basisschrift, der Schriftart für Überschriften und der Standardtextgröße"
           form:
             more_fonts: "Weitere Schriftarten"
             fewer_fonts: "Weniger Schriftarten"
@@ -6021,7 +6030,7 @@ de:
           copy_of: "Kopie von %{name}"
           copy_created: 'Es wurde eine neue Kopie von "%{name}" erstellt.'
           illegal_character_in_color: "Farben bestehen nur aus Hexadezimalzeichen"
-          delete_confirm: "Diese Farbpalette löschen?"
+          delete_confirm: "Bist du sicher, dass du diese Farbpalette löschen willst?"
       plugins:
         title: "Plug-ins"
         name: "Name"
@@ -6395,57 +6404,62 @@ de:
           about: "Bearbeite die Farben, die von deinem Theme verwendet werden. Beginne mit dem Erstellen einer neuen Farbpalette."
           new_name: "Neue Farbpalette"
           copy_name_prefix: "Kopie von"
-          delete_confirm: "Diese Farbpalette löschen?"
+          delete_confirm: "Bist du sicher, dass du diese Farbpalette löschen willst?"
           undo: "Rückgängig machen"
           undo_title: "Die seit dem letzten Speichern an dieser Farbe vorgenommenen Änderungen rückgängig machen."
           revert: "Verwerfen"
           revert_title: "Diese Farbe auf den Standardwert aus der Farbpalette zurücksetzen."
           primary:
             name: "erste"
-            description: "Die meisten Texte, Bilder und Ränder."
+            description: "Haupttext und Symbole"
           primary-medium:
             name: "erste (mittel)"
+            description: "Deaktivierter oder stummer Text"
           primary-low-mid:
             name: "erste (niedrig/mittel)"
+            description: "Umrandungen und dezente Akzente"
           secondary:
             name: "zweite"
-            description: "Die Haupthintergrundfarbe und Textfarbe einiger Schaltflächen."
+            description: "Haupthintergrund und einige Schaltflächentexte"
           tertiary:
             name: "dritte"
-            description: "Links, einige Schaltflächen, Benachrichtigungen und Akzentfarben."
+            description: "Akzentfarbe (Links, Schaltflächen, Abzeichen)"
           quaternary:
             name: "vierte"
-            description: "Zur optionalen Verwendung in Themes."
+            description: "Optionaler Theme-Akzent"
           header_background:
             name: "Kopfzeile (Hintergrund)"
-            description: "Hintergrundfarbe des Kopfbereichs der Website."
+            description: "Hintergrund der Kopfzeile"
           header_primary:
             name: "Kopfzeile (erste)"
-            description: "Text und Symbole im Kopfbereich der Website."
+            description: "Text und Symbole in der Kopfzeile"
           highlight:
             name: "hervorheben"
-            description: "Die Hintergrundfarbe von hervorgehobenen Elementen auf der Seite, z. B. Beiträge und Themen."
+            description: "Hervorgehobene Beiträge oder Themen"
           highlight-high:
             name: "hervorheben (hoch)"
+            description: "Starke Hervorhebung"
           highlight-medium:
             name: "hervorheben (mittel)"
+            description: "Mittlere Hervorhebung"
           highlight-low:
             name: "hervorheben (niedrig)"
+            description: "Dezente Hervorhebung"
           danger:
             name: "Gefahr"
-            description: "Hervorhebungsfarbe für Aktionen wie Löschen von Beiträgen und Themen."
+            description: "Fehler und Löschaktionen"
           success:
             name: "Erfolg"
-            description: "Zeigt an, dass eine Aktion erfolgreich war."
+            description: "Erfolgreiche Aktionen"
           love:
             name: "Liebe"
-            description: "Die Farbe der „Gefällt mir“-Schaltfläche."
+            description: "„Gefällt mir“-Schaltfläche"
           selected:
             name: "ausgewählt"
-            description: "Die Hintergrundfarbe von Elementen wie Listeneinträgen, wenn sie ausgewählt/aktiv sind."
+            description: "Aktive oder ausgewählte Elemente"
           hover:
             name: "unter Mauszeiger"
-            description: "Die Hintergrundfarbe von Elementen wie Listeneinträgen, wenn sie sich unter dem Mauszeiger befinden oder den Tastaturfokus haben."
+            description: "Hintergrund von Elementen, die sich unterm Mauszeiger befinden oder fokussiert werden"
           editor:
             light: "Hell"
             dark: "Dunkel"

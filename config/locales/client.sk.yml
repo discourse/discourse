@@ -4059,6 +4059,14 @@ sk:
           edit: "Upraviť"
           delete: "Odstrániť"
         add: "Pridať nový preklad"
+        view:
+          one: "Zobraziť %{count} preloženú lokalitu"
+          few: "Zobraziť %{count} preložené lokality"
+          many: "Zobraziť %{count} preložené lokality"
+          other: "Zobraziť %{count} preložené lokality"
+        modal:
+          title: "Preklady pre príspevok"
+          confirm_delete: "Ste si istí, že chcete odstrániť preklady pre '%{languageCode}'?"
         success: "Preklady boli úspešne aktualizované"
       errors:
         create: "Ľutujeme, pri vytváraní príspevku nastala chyba. Prosím, skúste znovu."
@@ -4327,6 +4335,7 @@ sk:
       background_image_dark: "Obrázok na pozadí tmavej kategórie"
       style: "Štýly"
       background_color: "Farba"
+      foreground_color: "Farba textu"
       styles:
         type: "Štýl"
         icon: "Ikona"
@@ -5148,7 +5157,7 @@ sk:
           save: "Uložiť"
           delete: "Odstrániť"
           delete_confirm: "Naozaj chcete odstrániť túto sekciu?"
-          delete_public_confirm: "Táto sekcia je <strong>viditeľná pre všetkých</strong>, naozaj ju chcete odstrániť?"
+          delete_public_confirm: "Táto sekcia je viditeľná pre všetkých, naozaj ju chcete odstrániť?"
           update_public_confirm: "Zmeny budú <strong>viditeľné pre všetkých</strong> na tejto stránke. Si si istý?"
           mark_as_private_confirm: "Táto časť je <strong>viditeľná pre všetkých</strong>. Po aktualizácii bude <strong>viditeľná len pre vás</strong>. Ste si istí?"
           reset_confirm: "Ste si istí, že chcete obnoviť túto sekciu na predvolenú hodnotu?"
@@ -5462,6 +5471,7 @@ sk:
             unseen: "Nevidené témy na stránke %{category} bez značiek"
             hot: "Horúce témy v %{category} bez značiek"
             posted: "Témy v %{category} bez značiek, ktoré ste zverejnili"
+            bookmarks: "Témy na stránke %{category} bez záložiek, ktoré ste si pridali"
             default: "%{filter} tém v %{category} bez značiek"
         categories: "Všetky kategórie"
   admin_js:
@@ -5530,6 +5540,7 @@ sk:
           header_description: "Nakonfigurujte spôsob prihlasovania a overovania používateľov, tajomstvá a kľúče, poskytovateľov OAuth2 a ďalšie"
         logo:
           title: "Logo"
+          header_description: "Nakonfigurujte logá a ikony používané na celej vašej stránke"
           form:
             saved: "Nastavenia loga sú uložené."
             logo:
@@ -5594,6 +5605,7 @@ sk:
               help_text: "odporúčaná veľkosť je aspoň 280 x 150 pixelov. Nepoužívajte obrázok SVG."
         fonts:
           title: "Fonty"
+          header_description: "Nakonfigurujte písma používané na celej stránke vrátane základného písma, písma nadpisu a predvolenej veľkosti textu"
           form:
             more_fonts: "Viac fontov"
             fewer_fonts: "Menej fontov"
@@ -6582,7 +6594,7 @@ sk:
           copy_of: "Kópia %{name}"
           copy_created: 'Bola vytvorená nová kópia "%{name}"'
           illegal_character_in_color: "Farby pozostávajú len z hexadecimálnych znakov"
-          delete_confirm: "Odstrániť túto paletu farieb?"
+          delete_confirm: "Naozaj chcete odstrániť túto farebnú paletu?"
       plugins:
         title: "Pluginy"
         name: "Meno"
@@ -6970,57 +6982,62 @@ sk:
           about: "Upravte farby používané v témach. Na začiatok vytvorte novú paletu farieb."
           new_name: "Nová paleta farieb"
           copy_name_prefix: "Kópia"
-          delete_confirm: "Odstrániť túto paletu farieb?"
+          delete_confirm: "Naozaj chcete odstrániť túto farebnú paletu?"
           undo: "Späť"
           undo_title: "Zrušiť zmeny farby a vrátiť sa k predchádzajucej uloženej verzii. "
           revert: "Vrátiť zmeny"
           revert_title: "Obnovenie tejto farby na predvolenú farebnú paletu Discourse."
           primary:
             name: "primárny"
-            description: "Väčšina textov, ikony, a okraje."
+            description: "Hlavný text a ikony"
           primary-medium:
             name: "primárne-stredné"
+            description: "Vypnutý alebo stlmený text"
           primary-low-mid:
             name: "primárne-nízke-stredné"
+            description: "Ohraničenia a jemné akcenty"
           secondary:
             name: "sekundárny"
-            description: "Hlavná farba pozadia a farba textu niektorých ovládacích prvkov."
+            description: "Hlavné pozadie a niektoré texty tlačidiel"
           tertiary:
             name: "terciárny"
-            description: "Odkazy, nejaké tlačidlá, upozornenia a zvýrazňovacie farby."
+            description: "Farba akcentu (odkazy, tlačidlá, odznaky)"
           quaternary:
             name: "štvrťročne"
-            description: "Na voliteľné použitie v témach."
+            description: "Voliteľný prízvuk témy"
           header_background:
             name: "pozadie hlavičky"
-            description: "Farba pozadia hlavičky stránky."
+            description: "Pozadie hlavičky"
           header_primary:
             name: "hlavné záhlavie"
-            description: "Texty a ikony v záhlaví stránky."
+            description: "Text záhlavia a ikony"
           highlight:
             name: "zvýraznenie"
-            description: "Farba pozadia zvýrazneného prvku na stránke, napríklad príspevku alebo témy."
+            description: "Zvýraznené príspevky alebo témy"
           highlight-high:
             name: "zvýraznenie-vysoké"
+            description: "Silné zvýraznenie"
           highlight-medium:
             name: "zvýraznenie-stredné"
+            description: "Stredné zvýraznenie"
           highlight-low:
             name: "zvýraznenie-nízke"
+            description: "Jemné zvýraznenie"
           danger:
             name: "nebezpečenstvo"
-            description: "Zvýrazňovacia farba pre akcie ako napríklad mazanie príspevkov a tém."
+            description: "Chyby a akcie vymazania"
           success:
             name: "úspech"
-            description: "Použitá pre úspešne vykonané akcie."
+            description: "Úspešné akcie"
           love:
             name: "obľúbené"
-            description: "Farba tlačidla \"Páči sa\""
+            description: "Tlačidlo \"Páči sa mi to"
           selected:
             name: "vybraté"
-            description: "Farba pozadia prvkov, ako sú napríklad položky zoznamu, keď sú vybraté/aktívne."
+            description: "Aktívne alebo vybrané položky"
           hover:
             name: "hover"
-            description: "Farba pozadia prvkov, ako sú napríklad položky zoznamu, keď na ne umiestnite kurzor myši alebo je na ne aktívna klávesnica."
+            description: "Pozadie pri prechádzaní alebo zaostrení"
           editor:
             light: "Svetlá"
             dark: "Tmavá"
