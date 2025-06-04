@@ -227,28 +227,6 @@ sl:
       two: "%{count} prispevka"
       few: "%{count} prispevki"
       other: "%{count} prispevkov"
-    avatar: |
-      ### Dodaj sliko svojemu profilu?
-
-      Objavili ste že nekaj tem in odgovorov, ampak vaša profilna slika še vedno ni tako unikatna kot ste vi - je samo črka.
-
-      Ste razmišljali, da bi **[obiskali svoj uporabniški profil](%{profile_path})** in bi naložili sliko, ki vas bolje predstavlja?
-
-      Veliko lažje je spremljati pogovore in najti zanimive osebe v debatah, ko imajo vsi udeleženci edinstveno profilno sliko!
-    sequential_replies: |
-      ### Odgovorite na več prispevkov naenkrat
-
-      Namesto ločenih odgovorov na posamezne prispevke, lahko objavite samo en odgovor, ki vključuje citate iz prejšnih prispevkov ali omembo @ime uporabnika.
-
-      Vašem prejšnem odgovoru lahko dodate citat tako da označite besedilo in izberete gumb <b>Citiraj</b>, ki se bo pojavil nad označenim besedilom.
-
-      Lažje je slediti razpravi, kjer je manj bolj poglobljenih prispevkov, kot pa tam kjer je več manjših, ločenih prispevkov.
-    reviving_old_topic: |
-      ### Oživi to temo?
-
-      Zadnji odgovor na to temo je bil **%{time_ago}**. Vaš odgovor bo izpostavil to temo na vrh seznama in bo samodejno obvestil vse, ki so bili prej vpleteni v razpravo.
-
-      Ali ste prepričani da hočete nadaljevati to staro razpravo?
   activerecord:
     attributes:
       category:

@@ -55,15 +55,13 @@ export default class AdminConfigAreasColorPalette extends Component {
   }
 
   @action
-  onLightColorChange(name, value) {
-    const color = this.data.colors.find((c) => c.name === name);
+  onLightColorChange(color, value) {
     color.hex = value;
     this.hasChangedColors = true;
   }
 
   @action
-  onDarkColorChange(name, value) {
-    const color = this.data.colors.find((c) => c.name === name);
+  onDarkColorChange(color, value) {
     color.dark_hex = value;
     this.hasChangedColors = true;
   }
@@ -148,8 +146,8 @@ export default class AdminConfigAreasColorPalette extends Component {
 
   @action
   async delete() {
-    return this.dialog.yesNoConfirm({
-      message: i18n("admin.config_areas.color_palettes.delete_confirm"),
+    return this.dialog.deleteConfirm({
+      title: i18n("admin.config_areas.color_palettes.delete_confirm"),
       didConfirm: async () => {
         await this.args.colorPalette.destroy();
         await this.router.replaceWith("adminConfig.colorPalettes");

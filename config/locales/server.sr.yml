@@ -407,12 +407,9 @@ sr:
     digest_min_excerpt_length: "Minimalna dužina isečka poruke u email rezimeu, u karakterima."
     email_link_color: "Boja linkova u HTML email porukama. Unesite ime boje ('blue') ili heksadecimalnu vrednost ('#0000FF'). "
     hide_user_profiles_from_public: "Onemogući korisničke kartice, profile i direktorijume za anonimne korisnike."
-    sequential_replies_threshold: "Broj poruka koje korisnik može zaredom da pošalje pre upozoravanja o prevelikom broju uzastopnih odgovora."
-    disable_avatar_education_message: "Onemogući edukativne poruke za izmenu avatara."
     read_time_word_count: "Broj reči po minutu za računanje procenjenog vremena čitanja"
     display_name_on_posts: "Prikaži puno ime korisnika na njihovim porukama kao dodatak na @korisnicko_ime"
     show_time_gap_days: "Ako su dve poruke poslate sa ovoliko dana razmaka, prikaži vremensku razliku u temi."
-    warn_reviving_old_topic_age: "Kada neko krene da odgovara na temu u kojoj je poslednji odgovor stariji od ovoliko dana, biće prikazano upozorenje. Onemogućite postavljanjem vrednosti 0. "
     embed_username_required: "Korisničko ime je obavezno za kreiranje teme."
     bootstrap_mode_min_users: 'Minimalni broj korisnika potreban za onemogućavanje režima pokretanja i uklanjanje dugmeta Početak rada (podesite na 0 da biste onemogućili, može potrajati do 24 sata). Pogledajte <a target="_blank" href="https://meta.discourse.org/t/-/322876">temu o režimu pokretanja na Meta-u</a> za detalje.'
     auto_close_messages_post_count: "Maksimalan broj dozvoljenih poruka pre nego se tema automatski zatvori (0 da se isključi)"

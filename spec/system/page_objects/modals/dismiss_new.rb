@@ -11,6 +11,14 @@ module PageObjects
         find(".dismiss-posts label").has_checked_field?
       end
 
+      def has_dismiss_topics_unchecked?
+        find(".dismiss-topics label").has_no_checked_field?
+      end
+
+      def has_dismiss_posts_unchecked?
+        find(".dismiss-posts label").has_no_checked_field?
+      end
+
       def has_untrack_unchecked?
         find(".untrack label").has_no_checked_field?
       end

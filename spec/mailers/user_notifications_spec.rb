@@ -735,6 +735,61 @@ RSpec.describe UserNotifications do
         end
       end
 
+      context "when several users are mentioned in the same email" do
+        fab!(:user1) { Fabricate(:user, name: "Cool User1 Name") }
+        fab!(:user2) { Fabricate(:user) }
+        fab!(:user3) { Fabricate(:user, name: "Cool User2 Name") }
+
+        let(:response) do
+          Fabricate(
+            :basic_reply,
+            topic: post.topic,
+            user: response_by_user,
+            raw:
+              "@#{user.username} @#{user1.username} @#{user2.username} @#{user3.username} response to post",
+          )
+        end
+        let(:notification) { Fabricate(:mentioned_notification, user: user, post: response) }
+
+        it "generates a correct email" do
+          user2.name = nil
+          user2.save
+
+          mail =
+            UserNotifications.user_mentioned(
+              user,
+              post: response,
+              notification_type: notification.notification_type,
+              notification_data_hash: notification.data_hash,
+            )
+
+          # from should include full user name
+          expect(mail[:from].display_names).to eql(["John Doe via Discourse"])
+
+          # subject should include category name
+          expect(mail.subject).to match(/India/)
+
+          mail_html = mail.html_part.body.to_s
+
+          expect(mail_html.scan(/@#{user.name}/).count).to eq(1)
+          expect(mail_html.scan(/@#{user1.name}/).count).to eq(1)
+          # Make sure it can handle users without usernames in the same email
+          expect(mail_html.scan(/@#{user2.username}/).count).to eq(1)
+          expect(mail_html.scan(/@#{user3.name}/).count).to eq(1)
+
+          expect(mail_html.scan(/Visit Topic/).count).to eq(1)
+
+          expect(mail_html.scan(/to respond/).count).to eq(1)
+
+          # 1 unsubscribe
+          expect(mail_html.scan(/To unsubscribe/).count).to eq(1)
+
+          # side effect, topic user is updated with post number
+          tu = TopicUser.get(post.topic_id, user)
+          expect(tu.last_emailed_post_number).to eq(response.post_number)
+        end
+      end
+
       context "when user doesn't have a name" do
         it "generates a correct email" do
           user.name = nil

@@ -2,7 +2,7 @@
 
 module PageObjects
   module Components
-    class AdminSiteSettingBulkBanner < Base
+    class AdminChangesBanner < Base
       def visible?
         has_css?(selector)
       end
@@ -19,10 +19,18 @@ module PageObjects
         element.find(".btn-primary").click
       end
 
+      def click_discard
+        element.find(".btn-secondary").click
+      end
+
+      def has_label?(label)
+        element.has_css?(".admin-changes-banner__main-label", text: label)
+      end
+
       private
 
       def selector
-        ".admin-site-settings__changes-banner"
+        ".admin-changes-banner"
       end
     end
   end

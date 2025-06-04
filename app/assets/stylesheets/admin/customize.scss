@@ -70,6 +70,20 @@
     background-color: var(--primary-very-low);
     padding: 5px;
   }
+
+  .d-page-header {
+    margin-bottom: 1em;
+  }
+
+  // add bottom margin so the unsaved changes banner does not cover the last
+  // color on short screens
+  .color-palette-editor {
+    margin-bottom: 4em;
+  }
+
+  .alert.remote-theme-edits {
+    margin-top: var(--space-2);
+  }
 }
 
 .admin-customize.admin-permalinks {
@@ -139,7 +153,7 @@
     vertical-align: top;
 
     .title {
-      font-size: var(--font-up-4);
+      font-size: var(--font-up-1);
       font-weight: bold;
       margin-bottom: 0.25em;
       display: flex;
@@ -222,6 +236,10 @@
           width: auto;
           margin-left: auto;
         }
+      }
+
+      &.remote-theme-metadata {
+        margin-bottom: 0;
       }
     }
 

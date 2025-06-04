@@ -428,22 +428,6 @@ da:
     until_posts:
       one: "%{count} indlæg"
       other: "%{count} indlæg"
-    avatar: |
-      ### Hvad med et billede til din konto?
-
-      Du har oprettet et par emner og svar, men dit profilbillede er ikke så unik som du er -- det er bare et bogstav.
-
-      Har du overvejet at **[gå til din brugerprofil](%{profile_path})** og overføre et billede, der repræsenterer dig?
-
-      Det er lettere at følge diskussioner og finde interessante mennesker i samtaler, hvor alle har et unikt profilbillede!
-    sequential_replies: |
-      ### Overvej at svare på flere indlæg på én gang
-
-      I stedet for at lave mange svar på stribe til et emne, bør du overveje at lave et enkelt svar, som indeholder citater fra tidligere indlæg eller @navn-referencer til tidligere indlæg.
-
-      Du kan redigere dit forrige svar for at tilføje et citat ved at markere teksten og vælge <b>citér svar</b>-knappen som dukker op.
-
-      Det er nemmere for alle at læse emner som har færre detaljerede svar i stedet for mange mindre, individuelle svar.
   activerecord:
     attributes:
       category:
@@ -1549,7 +1533,6 @@ da:
     user_selected_primary_groups: "Tillad brugere at indstille deres egen primære gruppe"
     allow_profile_backgrounds: "Tillad brugere at uploade en profil baggrund."
     enable_mobile_theme: "Mobile enheder bruger et mobilvenligt tema, med mulighed for at skifte til det fulde site. Deaktivér dette hvis du ønsker at anvende et brugerdefineret stylesheet som er fuldstændigt responsivt."
-    disable_avatar_education_message: "Deaktivér hjælpetekst for at skifte sin avatar."
     suppress_uncategorized_badge: "Vis ikke emblemet for ikke-kategoriserede emner i emnelister."
     topic_page_title_includes_category: "Emneside <a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>titelmærke</a> inkluderer kategorienavnet."
     short_progress_text_threshold: "Når antallet af indlæg overstiger dette tal viser statuslinjen kun det aktuelle indlægsnummer. Hvis du ændrer bredden af statuslinjen kan det være nødvendigt at opdatere denne værdi."

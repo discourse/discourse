@@ -4549,7 +4549,7 @@ es:
           save: "Guardar"
           delete: "Eliminar"
           delete_confirm: "¿Seguro que quieres eliminar esta sección?"
-          delete_public_confirm: "Esta sección es <strong>visible para todos</strong>, ¿seguro que quieres eliminarla?"
+          delete_public_confirm: "Esta sección es visible para todos, ¿seguro que quieres eliminarla?"
           update_public_confirm: "Los cambios serán <strong>visibles para todos</strong> en este sitio. ¿Continuar?"
           mark_as_private_confirm: "Esta sección es <strong>visible para todos</strong>. Después de la actualización, será <strong>visible solo para ti</strong>. ¿Continuar?"
           reset_confirm: "¿Seguro que quieres restablecer esta sección a los valores predeterminados?"
@@ -5668,7 +5668,6 @@ es:
             toggle_description: "Los usuarios pueden seleccionar la paleta de colores"
           colors:
             title: "Colores"
-          delete_confirm: "¿Eliminar esta paleta de color?"
       plugins:
         title: "Plugins"
         name: "Nombre"
@@ -6012,36 +6011,28 @@ es:
           about: "Modifica los colores utilizados en tus temas. Crea una nueva paleta de color para empezar."
           new_name: "Nueva paleta de colores"
           copy_name_prefix: "Copia de"
-          delete_confirm: "¿Eliminar esta paleta de color?"
           undo: "Deshacer"
           undo_title: "Deshacer los cambios realizados a este color desde la última vez que se guardó."
           revert: "Revertir"
           revert_title: "Restablecer este color a la paleta de color por defecto de Discourse."
           primary:
             name: "principal"
-            description: "La mayoría del texto, iconos y bordes."
           primary-medium:
             name: "primary-medium"
           primary-low-mid:
             name: "primary-low-mid"
           secondary:
             name: "secundario"
-            description: "El color de fondo principal y el color de texto de algunos botones."
           tertiary:
             name: "terciario"
-            description: "Enlaces, algunos botones, notificaciones y color de énfasis."
           quaternary:
             name: "cuaternario"
-            description: "Para uso opcional en temas."
           header_background:
             name: "fondo del encabezado"
-            description: "Color de fondo del encabezado del sitio."
           header_primary:
             name: "encabezado principal"
-            description: "Texto e iconos en el encabezado del sitio."
           highlight:
             name: "resaltado"
-            description: "El color de fondo de los elementos resaltados en la página, como temas o publicaciones."
           highlight-high:
             name: "highlight-high"
           highlight-medium:
@@ -6050,19 +6041,14 @@ es:
             name: "highlight-low"
           danger:
             name: "peligro"
-            description: "Color del resaltado para acciones como eliminar temas o publicaciones."
           success:
             name: "éxito"
-            description: "Para indicar que una acción se realizó con éxito."
           love:
             name: "me encanta"
-            description: "El color del botón de me gusta"
           selected:
             name: "seleccionado"
-            description: "El color de fondo de elementos como los elementos de lista cuando están seleccionados/activos."
           hover:
             name: "pasar el ratón por encima"
-            description: "El color de fondo de elementos como los elementos de lista cuando se pasa el ratón sobre ellos o tienen el foco del teclado."
           editor:
             light: "Claro"
             dark: "Oscuro"

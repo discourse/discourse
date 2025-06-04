@@ -15,9 +15,9 @@ acceptance("User Drafts", function (needs) {
       .doesNotExist("Draft doesn't show expand button");
 
     await click(".user-stream-item:first-child .remove-draft");
-    assert.dom(".dialog-body").exists();
+    assert.dom(".dialog-header").exists();
 
-    await click(".dialog-footer .btn-primary");
+    await click(".dialog-footer .btn-danger");
     assert
       .dom(".user-stream-item")
       .exists({ count: 2 }, "draft removed, list length diminished by one");
