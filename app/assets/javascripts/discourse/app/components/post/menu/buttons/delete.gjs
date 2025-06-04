@@ -112,7 +112,7 @@ export default class PostMenuDeleteButton extends Component {
   }
 
   get disabled() {
-    return !this.activeAction;
+    return !this.activeAction || this.args.post.isDeleting || this.args.post.isRecovering;
   }
 
   get #activeMode() {
