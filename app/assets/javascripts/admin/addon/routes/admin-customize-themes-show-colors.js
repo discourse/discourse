@@ -1,9 +1,9 @@
 import { action } from "@ember/object";
-import Route from "@ember/routing/route";
 import { service } from "@ember/service";
+import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
 
-export default class AdminCustomizeThemesShowColorsRoute extends Route {
+export default class AdminCustomizeThemesShowColorsRoute extends DiscourseRoute {
   @service dialog;
   @service colorPaletteChangeTracker;
 
@@ -24,5 +24,9 @@ export default class AdminCustomizeThemesShowColorsRoute extends Route {
         },
       });
     }
+  }
+
+  titleToken() {
+    return i18n("admin.customize.theme.colors_title");
   }
 }

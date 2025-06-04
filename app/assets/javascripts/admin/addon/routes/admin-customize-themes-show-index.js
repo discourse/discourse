@@ -1,10 +1,10 @@
 import { action } from "@ember/object";
-import Route from "@ember/routing/route";
 import { service } from "@ember/service";
 import { scrollTop } from "discourse/lib/scroll-top";
+import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
 
-export default class AdminCustomizeThemesShowIndexRoute extends Route {
+export default class AdminCustomizeThemesShowIndexRoute extends DiscourseRoute {
   @service dialog;
 
   async model() {

@@ -1,7 +1,7 @@
-import Route from "@ember/routing/route";
 import { service } from "@ember/service";
+import DiscourseRoute from "discourse/routes/discourse";
 
-export default class AdminCustomizeThemesShowRoute extends Route {
+export default class AdminCustomizeThemesShowRoute extends DiscourseRoute {
   @service router;
 
   serialize(model) {
@@ -23,5 +23,10 @@ export default class AdminCustomizeThemesShowRoute extends Route {
 
     const parentController = this.controllerFor("adminCustomizeThemes");
     controller.set("allThemes", parentController.get("model"));
+  }
+
+  titleToken() {
+    const model = this.controller.model;
+    return model.name;
   }
 }

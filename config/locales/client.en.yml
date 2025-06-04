@@ -6719,6 +6719,7 @@ en:
           unsaved_colors_leave_route_confirmation: "You haven't saved your color palette changes yet. Are you sure you want to leave?"
           save_colors: "Save colors"
           discard_colors: "Discard"
+          colors_title: "Colors"
           scss:
             text: "CSS"
             title: "Custom CSS rules with support for SCSS syntax"
