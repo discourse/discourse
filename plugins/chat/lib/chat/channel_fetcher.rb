@@ -102,13 +102,12 @@ module Chat
           ],
         )
       channels = channels.includes(:chat_channel_archive) if options[:include_archives]
-
       channels =
         channels
           .with_categories
           .where(chatable_type: Chat::Channel.public_channel_chatable_types)
           .where("chat_channels.id IN (#{allowed_channel_ids})")
-
+      channels = channels.where("chat_channels.id IN (:ids)", ids: options[:ids]) if options[:ids]
       channels = channels.where(status: options[:status]) if options[:status].present?
 
       if options[:filter].present?
