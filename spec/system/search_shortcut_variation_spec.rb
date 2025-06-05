@@ -30,7 +30,12 @@ describe "Search | Shortcuts for variations of search input", type: :system do
           fake_scroll_down_long
         end
 
-        it "displays and focuses header search when / is pressed and hides it when Escape is pressed" do
+        # Test is flaky on CI even after reruns
+        #
+        #   1) Search | Shortcuts for variations of search input when search_experience is search_field when enable_welcome_banner is true when welcome banner is not in the viewport displays and focuses header search when / is pressed and hides it when Escape is pressed
+        #     Failure/Error: expect(page).to have_css("#header-search-input:focus")
+        #
+        xit "displays and focuses header search when / is pressed and hides it when Escape is pressed" do
           expect(welcome_banner).to be_invisible
           page.send_keys("/")
           expect(search_page).to have_search_menu
@@ -78,7 +83,12 @@ describe "Search | Shortcuts for variations of search input", type: :system do
           fake_scroll_down_long
         end
 
-        it "displays and focuses search icon search when / is pressed and hides it when Escape is pressed" do
+        # Test is flaky on CI even after reruns
+        #
+        # 1) Search | Shortcuts for variations of search input when search_experience is search_icon when enable_welcome_banner is true when welcome banner is not in the viewport displays and focuses search icon search when / is pressed and hides it when Escape is pressed
+        #   Failure/Error: expect(page).to have_css("#icon-search-input:focus")
+        #
+        xit "displays and focuses search icon search when / is pressed and hides it when Escape is pressed" do
           expect(welcome_banner).to be_invisible
           page.send_keys("/")
           expect(search_page).to have_search_menu
