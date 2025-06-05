@@ -6,6 +6,7 @@ import { iconHTML } from "discourse/lib/icon-library";
 import { postUrl } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 
+// TODO (glimmer-post-stream): investigate whether all this complex logic can be replaced with a proper Glimmer component
 export default function (element, context) {
   const { state } = context;
 
