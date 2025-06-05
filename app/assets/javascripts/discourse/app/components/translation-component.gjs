@@ -1,20 +1,17 @@
-import Component from "@ember/component";
+import Component from "@glimmer/component";
+import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 
 export default class TranslationComponent extends Component {
-  tagName = "span";
-  classNames = ["i18n-component-placeholder"];
-  attributeBindings = ["data-placeholder-name:name"];
-
-  didInsertElement() {
-    super.didInsertElement(...arguments);
-
+  @action
+  didInsert(element) {
     // Find the right location in the translation and move this component there
-    const container = this.element.closest(".i18n-container");
+    const container = element.closest(".i18n-container");
     if (!container) {
       return;
     }
 
-    const placeholderText = `<${this.name}>`;
+    const placeholderText = `<${this.args.name}>`;
 
     for (const node of container.childNodes) {
       if (node.nodeType !== Node.TEXT_NODE) {
@@ -29,7 +26,7 @@ export default class TranslationComponent extends Component {
           node.parentNode.insertBefore(beforeNode, node);
         }
 
-        node.parentNode.insertBefore(this.element, node);
+        node.parentNode.insertBefore(element, node);
 
         if (after) {
           const afterNode = document.createTextNode(after);
@@ -41,4 +38,14 @@ export default class TranslationComponent extends Component {
       }
     }
   }
+
+  <template>
+    <span
+      class="i18n-component-placeholder"
+      data-placeholder-name={{@name}}
+      {{didInsert this.didInsert}}
+    >
+      {{yield}}
+    </span>
+  </template>
 }
