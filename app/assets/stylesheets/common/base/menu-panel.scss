@@ -301,13 +301,17 @@
         }
       }
 
-      &.active {
-        background-color: var(--d-selected);
+      &.active .d-icon {
+        box-shadow: 0 0 0 0.5rem var(--primary-200);
+        background-color: var(--primary-200);
+        border-radius: calc(var(--d-border-radius) - (0.25rem / 2));
       }
 
       .discourse-no-touch & {
-        &:hover {
-          background-color: var(--d-hover);
+        &:hover .d-icon {
+          box-shadow: 0 0 0 0.5rem var(--primary-200);
+          background-color: var(--primary-200);
+          border-radius: calc(var(--d-border-radius) - (0.25rem / 2));
         }
       }
     }
