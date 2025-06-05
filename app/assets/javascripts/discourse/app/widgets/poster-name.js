@@ -107,7 +107,7 @@ export default createWidget("poster-name", {
   },
 
   additionalClasses(attrs) {
-    return applyValueTransformer("poster-name-additional-classes", [], {
+    return applyValueTransformer("poster-name-class", [], {
       user: attrs.user,
     });
   },

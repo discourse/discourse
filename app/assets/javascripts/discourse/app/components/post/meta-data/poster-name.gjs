@@ -83,7 +83,7 @@ export default class PostMetaDataPosterName extends Component {
   }
 
   get additionalClasses() {
-    return applyValueTransformer("poster-name-additional-classes", [], {
+    return applyValueTransformer("poster-name-class", [], {
       user: this.user,
     });
   }

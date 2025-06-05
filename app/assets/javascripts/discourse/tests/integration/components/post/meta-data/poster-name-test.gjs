@@ -195,7 +195,7 @@ module(
       });
       withPluginApi((api) => {
         api.registerValueTransformer(
-          "poster-name-additional-classes",
+          "poster-name-class",
           ({ value, context }) => {
             if (context.user.username === "eviltrout") {
               value.push(...["custom-class", "another-class"]);
