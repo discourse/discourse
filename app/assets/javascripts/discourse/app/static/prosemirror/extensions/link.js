@@ -127,8 +127,8 @@ const extension = {
       }
     ),
   ],
-  plugins: ({ pmState: { Plugin }, utils }) => {
-    return new Plugin({
+  plugins: ({ pmState: { Plugin }, utils }) =>
+    new Plugin({
       props: {
         // Auto-linkify plain-text pasted URLs over a selection
         clipboardTextParser(text, $context, plain, view) {
@@ -303,8 +303,7 @@ const extension = {
 
         return tr;
       },
-    });
-  },
+    }),
 };
 
 function addLinkMark(view, text, utils) {

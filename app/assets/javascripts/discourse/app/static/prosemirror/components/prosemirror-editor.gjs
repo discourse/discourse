@@ -179,7 +179,7 @@ export default class ProsemirrorEditor extends Component {
 
         if (tr.docChanged && tr.getMeta("addToHistory") !== false) {
           // If this gets expensive, we can debounce it
-          const value = this.serializer.convert(this.view.state.doc);
+          const value = this.convertToMarkdown(this.view.state.doc);
           this.#lastSerialized = value;
           this.args.change?.({ target: { value } });
         }

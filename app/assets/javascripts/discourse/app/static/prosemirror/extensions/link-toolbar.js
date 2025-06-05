@@ -246,13 +246,13 @@ const extension = {
                   return {};
                 }
 
+                if (linkState.head > view.state.doc.content.size) {
+                  return { left: 0, top: 0, width: 0, height: 0 };
+                }
+
                 const { left, top } = view.coordsAtPos(linkState.head);
-                return {
-                  left,
-                  top: top + MENU_OFFSET,
-                  width: 0,
-                  height: 0,
-                };
+
+                return { left, top: top + MENU_OFFSET, width: 0, height: 0 };
               };
 
               if (menuInstance) {
