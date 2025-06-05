@@ -60,32 +60,11 @@ const extension = {
     },
   },
 
-  plugins({ pmState: { Plugin, PluginKey }, pmView: { DecorationSet } }) {
+  plugins({ pmState: { Plugin, PluginKey } }) {
     const plugin = new PluginKey("mention");
 
     return new Plugin({
       key: plugin,
-      state: {
-        init() {
-          return DecorationSet.empty;
-        },
-        apply(tr, set) {
-          const meta = tr.getMeta(plugin);
-
-          if (meta?.removeDecorations) {
-            set = set.remove(meta.removeDecorations);
-          }
-
-          return set.map(tr.mapping, tr.doc);
-        },
-      },
-
-      props: {
-        decorations(state) {
-          return this.getState(state);
-        },
-      },
-
       view() {
         return {
           update(view) {
@@ -141,15 +120,12 @@ const extension = {
                   for (const item of mentionList) {
                     const { name, start, end } = item;
                     const isValid = await validateMention(name);
-                    let nodeData;
 
-                    if (isValid) {
-                      nodeData = view.state.schema.nodes.mention.create({
-                        name,
-                      });
-                    } else {
-                      nodeData = view.state.schema.text(`@${name}`);
-                    }
+                    const nodeData = isValid
+                      ? view.state.schema.nodes.mention.create({
+                          name,
+                        })
+                      : view.state.schema.text(`@${name}`);
 
                     view.dispatch(tr.replaceWith(start, end, nodeData));
                   }
