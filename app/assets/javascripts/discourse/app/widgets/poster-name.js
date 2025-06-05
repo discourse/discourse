@@ -130,7 +130,7 @@ export default createWidget("poster-name", {
       classNames.push("new-user");
     }
     if (attrs.user_id < 0) {
-      classNames.push("ai-bot-name");
+      classNames.push("ai-bot");
     }
 
     const primaryGroupName = attrs.primary_group_name;
