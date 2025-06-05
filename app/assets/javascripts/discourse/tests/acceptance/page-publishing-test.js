@@ -33,8 +33,12 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
       test("can publish a page via modal", async function (assert) {
         await visit("/t/internationalization-localization/280");
-        await click(".topic-post:nth-of-type(1) button.show-more-actions");
-        await click(".topic-post:nth-of-type(1) button.show-post-admin-menu");
+        await click(
+          ".topic-post[data-post-number='1'] button.show-more-actions"
+        );
+        await click(
+          ".topic-post[data-post-number='1'] button.show-post-admin-menu"
+        );
         await click(".publish-page");
 
         await fillIn(".publish-slug", "bad-slug");
