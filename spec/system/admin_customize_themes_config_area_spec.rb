@@ -2,7 +2,8 @@
 
 describe "Admin Customize Themes Config Area Page", type: :system do
   fab!(:admin)
-  fab!(:theme) { Theme.where(component: false, name: "Default").first }
+  fab!(:theme)
+  fab!(:foundation_theme) { Theme.where(component: false, name: "Foundation").first }
   fab!(:theme_child_theme) do
     Fabricate(:theme, name: "Child theme", component: true, enabled: true, parent_themes: [theme])
   end
@@ -37,11 +38,11 @@ describe "Admin Customize Themes Config Area Page", type: :system do
 
   it "allows to mark theme as active" do
     config_area.visit
-    expect(config_area).to have_badge(theme, "--active")
+    expect(config_area).to have_badge(foundation_theme, "--active")
     expect(config_area).to have_no_badge(theme_2, "--active")
     config_area.mark_as_active(theme_2)
     expect(config_area).to have_badge(theme_2, "--active")
-    expect(config_area).to have_no_badge(theme, "--active")
+    expect(config_area).to have_no_badge(foundation_theme, "--active")
   end
 
   it "allows to make theme selectable by users" do
