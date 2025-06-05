@@ -129,6 +129,9 @@ export default createWidget("poster-name", {
     if (attrs.new_user) {
       classNames.push("new-user");
     }
+    if (attrs.user_id < 0) {
+      classNames.push("ai-bot-name");
+    }
 
     const primaryGroupName = attrs.primary_group_name;
     if (primaryGroupName && primaryGroupName.length) {
