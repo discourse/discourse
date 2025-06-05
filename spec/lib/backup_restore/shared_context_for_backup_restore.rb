@@ -88,8 +88,8 @@ RSpec.shared_context "with shared backup restore context" do
           root_tmp_directory: root_directory,
           location: location,
         )
-      tmp_directory, db_dump_path = file_handler.decompress
-
+      filename, tmp_directory, db_dump_path = file_handler.decompress
+      expect(filename).to eq(backup_filename)
       expected_tmp_path = File.join(root_directory, "tmp/restores", current_db, "2019-12-24-143148")
       expect(tmp_directory).to eq(expected_tmp_path)
       expect(db_dump_path).to eq(File.join(expected_tmp_path, expected_dump_filename))
