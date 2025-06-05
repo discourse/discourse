@@ -401,19 +401,20 @@ GEM
     puma (6.6.0)
       nio4r (~> 2.0)
     racc (1.8.1)
-    rack (2.2.13)
+    rack (3.1.16)
     rack-mini-profiler (3.3.1)
       rack (>= 1.2.0)
-    rack-protection (3.2.0)
+    rack-protection (4.1.1)
       base64 (>= 0.1.0)
-      rack (~> 2.2, >= 2.2.4)
-    rack-session (1.0.2)
-      rack (< 3)
+      logger (>= 1.6.0)
+      rack (>= 3.0.0, < 4)
+    rack-session (2.1.1)
+      base64 (>= 0.1.0)
+      rack (>= 3.0.0)
     rack-test (2.2.0)
       rack (>= 1.3)
-    rackup (1.0.1)
-      rack (< 3)
-      webrick
+    rackup (2.2.1)
+      rack (>= 3)
     rails-dom-testing (2.3.0)
       activesupport (>= 5.0.0)
       minitest
@@ -636,7 +637,6 @@ GEM
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
-    webrick (1.9.1)
     xpath (3.2.0)
       nokogiri (~> 1.8)
     yaml-lint (0.1.2)
@@ -996,12 +996,12 @@ CHECKSUMS
   public_suffix (6.0.2) sha256=bfa7cd5108066f8c9602e0d6d4114999a5df5839a63149d3e8b0f9c1d3558394
   puma (6.6.0) sha256=f25c06873eb3d5de5f0a4ebc783acc81a4ccfe580c760cfe323497798018ad87
   racc (1.8.1) sha256=4a7f6929691dbec8b5209a0b373bc2614882b55fc5d2e447a21aaa691303d62f
-  rack (2.2.13) sha256=ccee101719696a5da12ee9da6fb3b1d20cb329939e089e0e458be6e93667f0fb
+  rack (3.1.16) sha256=efb5606c351efc56b85b10c3493055d0d35209d23f44792ec4e1183eb0234635
   rack-mini-profiler (3.3.1) sha256=2bf0de7d5795f54581e453b248e42cc50e8d0529efac73828653a9ad2407a801
-  rack-protection (3.2.0) sha256=3c74ba7fc59066453d61af9bcba5b6fe7a9b3dab6f445418d3b391d5ea8efbff
-  rack-session (1.0.2) sha256=a02115e5420b4de036839b9811e3f7967d73446a554b42aa45106af335851d76
+  rack-protection (4.1.1) sha256=51a254a5d574a7f0ca4f0672025ce2a5ef7c8c3bd09c431349d683e825d7d16a
+  rack-session (2.1.1) sha256=0b6dc07dea7e4b583f58a48e8b806d4c9f1c6c9214ebc202ec94562cbea2e4e9
   rack-test (2.2.0) sha256=005a36692c306ac0b4a9350355ee080fd09ddef1148a5f8b2ac636c720f5c463
-  rackup (1.0.1) sha256=ba86604a28989fe1043bff20d819b360944ca08156406812dca6742b24b3c249
+  rackup (2.2.1) sha256=f737191fd5c5b348b7f0a4412a3b86383f88c43e13b8217b63d4c8d90b9e798d
   rails-dom-testing (2.3.0) sha256=8acc7953a7b911ca44588bf08737bc16719f431a1cc3091a292bca7317925c1d
   rails-html-sanitizer (1.6.2) sha256=35fce2ca8242da8775c83b6ba9c1bcaad6751d9eb73c1abaa8403475ab89a560
   rails_failover (2.2.0) sha256=42f716eff762e9effecc38add352953472024affb50ef60346eabb11487d7c5f
@@ -1099,7 +1099,6 @@ CHECKSUMS
   version_gem (1.1.8) sha256=a964767ecbe36551b9ff2e59099548c27569f2f7f94bdb09f609d76393a8e008
   web-push (3.0.1) sha256=5b4dd2f2bba3bd8951da6416492fe920a6f203d14d3080f943c5d01c0cc4b18d
   webmock (3.25.1) sha256=ab9d5d9353bcbe6322c83e1c60a7103988efc7b67cd72ffb9012629c3d396323
-  webrick (1.9.1) sha256=b42d3c94f166f3fb73d87e9b359def9b5836c426fc8beacf38f2184a21b2a989
   xpath (3.2.0) sha256=6dfda79d91bb3b949b947ecc5919f042ef2f399b904013eb3ef6d20dd3a4082e
   yaml-lint (0.1.2) sha256=e3960b171766ae187338a169815e99fe10fcb0d9c22b1c539e8d57e114324c8a
   yard (0.9.37) sha256=a6e910399e78e613f80ba9add9ba7c394b1a935f083cccbef82903a3d2a26992
