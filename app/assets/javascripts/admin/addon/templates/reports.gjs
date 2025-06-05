@@ -15,7 +15,7 @@ export default RouteTemplate(
       <:breadcrumbs>
         <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
         <DBreadcrumbsItem
-          @path="/admin.config.reports"
+          @path="/admin/reports"
           @label={{i18n "admin.config.reports.title"}}
         />
       </:breadcrumbs>
