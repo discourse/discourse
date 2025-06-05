@@ -106,6 +106,12 @@ export default createWidget("poster-name", {
     );
   },
 
+  additionalClasses(attrs) {
+    return applyValueTransformer("poster-name-additional-classes", [], {
+      user: attrs.user,
+    });
+  },
+
   html(attrs) {
     const username = attrs.username;
     const name = attrs.name;
@@ -130,8 +136,7 @@ export default createWidget("poster-name", {
     if (attrs.new_user) {
       classNames.push("new-user");
     }
-
-    applyValueTransformer("poster-name-class-names", classNames, attrs);
+    classNames.push(...this.additionalClasses(attrs));
 
     const primaryGroupName = attrs.primary_group_name;
     if (primaryGroupName && primaryGroupName.length) {

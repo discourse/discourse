@@ -82,6 +82,12 @@ export default class PostMetaDataPosterName extends Component {
     );
   }
 
+  get additionalClasses() {
+    return applyValueTransformer("poster-name-additional-classes", [], {
+      user: this.user,
+    });
+  }
+
   @bind
   refreshUserStatus() {
     this.#stopTrackingUserStatus();
@@ -139,6 +145,7 @@ export default class PostMetaDataPosterName extends Component {
               @post.primary_group_name
               (concat "group--" @post.primary_group_name)
             )
+            this.additionalClasses
           }}
         >
           {{! use the position argument to choose between the first and second name if needed}}
