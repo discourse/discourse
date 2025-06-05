@@ -159,7 +159,8 @@ class DiscourseCLI < Thor
     puts file.source
   end
 
-  desc "import_backup_url", "Download a backup file and stores it current backup store"
+  desc "import_backup_url",
+       "Downloads a backup file from a URL and stores it in the current backup store"
   def import_backup_url(url = nil)
     load_rails
 
