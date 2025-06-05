@@ -305,6 +305,9 @@ importers:
       highlight.js:
         specifier: 11.11.1
         version: 11.11.1
+      highlightjs-line-numbers.js:
+        specifier: ^2.9.0
+        version: 2.9.0
       immer:
         specifier: ^10.1.1
         version: 10.1.1
@@ -5401,6 +5404,9 @@ packages:
   highlight.js@11.11.1:
     resolution: {integrity: sha512-Xwwo44whKBVCYoliBQwaPvtd/2tYFkRQtXDWj1nackaV2JPXx3L0+Jvd8/qCJ2p+ML0/XVkJ2q+Mr+UVdpJK5w==}
     engines: {node: '>=12.0.0'}
+
+  highlightjs-line-numbers.js@2.9.0:
+    resolution: {integrity: sha512-hMYK5VU+Qi0HmkkdZxamV71ALu9Hq2icQk2WP8OX5q7IPMilSv47ILlJu+fBvxAQdhjW6wONnSQeypsbeRM7WQ==}
 
   homedir-polyfill@1.0.3:
     resolution: {integrity: sha512-eSmmWE5bZTK2Nou4g0AI3zZ9rswp7GRKoKXS1BLUkvPviOqs4YTN1djQIqrXy9k5gEtdLPy86JjRwsNM9tnDcA==}
@@ -14705,6 +14711,8 @@ snapshots:
       rsvp: 3.2.1
 
   highlight.js@11.11.1: {}
+
+  highlightjs-line-numbers.js@2.9.0: {}
 
   homedir-polyfill@1.0.3:
     dependencies:

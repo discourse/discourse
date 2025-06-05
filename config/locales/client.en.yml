@@ -487,8 +487,8 @@ en:
 
     copy_codeblock:
       copied: "copied!"
-      copy: "copy code to clipboard"
-      fullscreen: "show code in full screen"
+      copy: "copy"
+      fullscreen: "expand"
       view_code: "View code"
 
     drafts:

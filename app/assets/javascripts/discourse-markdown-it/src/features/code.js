@@ -25,17 +25,38 @@ function extractTokenInfo(info, md) {
   const extractedData = { tag, attributes: {} };
 
   if (matches[2]?.length) {
-    md.utils
-      .unescapeAll(matches[2].replace(ASCII_REGEX, ""))
-      .split(",")
-      .forEach((potentialPair) => {
-        const [key, value] = potentialPair.trim().split(/\s+/g)[0].split("=");
+    // unescape and remove non‐ASCII
+    const attrString = md.utils.unescapeAll(
+      matches[2].replace(ASCII_REGEX, "")
+    );
 
-        // invalid pairs would get caught here and not used, eg `foo=`
-        if (key && value) {
-          extractedData.attributes[key] = value;
-        }
-      });
+    // split on commas not inside quotes
+    const parts = attrString.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/);
+
+    parts.forEach((part) => {
+      part = part.trim();
+      if (!part) {
+        return;
+      }
+
+      // split on first '='
+      const idx = part.indexOf("=");
+      if (idx === -1) {
+        return;
+      }
+
+      const key = part.slice(0, idx).trim();
+      let value = part.slice(idx + 1).trim();
+
+      // if value is wrapped in quotes, strip them
+      if (value.startsWith('"') && value.endsWith('"')) {
+        value = value.slice(1, -1);
+      }
+
+      if (key && value) {
+        extractedData.attributes[key] = value;
+      }
+    });
   }
 
   return extractedData;

@@ -137,27 +137,6 @@ nav.post-controls {
   }
 }
 
-pre.codeblock-buttons {
-  .copy-cmd:not(.action-complete),
-  .fullscreen-cmd:not(.action-complete) {
-    opacity: 0;
-    transition: 0.2s;
-    visibility: hidden;
-  }
-}
-
-pre.codeblock-buttons:hover {
-  .copy-cmd,
-  .fullscreen-cmd {
-    opacity: 0.7;
-    visibility: visible;
-
-    &:hover {
-      opacity: 1;
-    }
-  }
-}
-
 .embedded-posts {
   border: 1px solid var(--primary-low);
 
