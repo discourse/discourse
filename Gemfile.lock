@@ -88,7 +88,7 @@ GEM
     bootsnap (1.18.6)
       msgpack (~> 1.2)
     builder (3.3.0)
-    bullet (8.0.3)
+    bullet (8.0.7)
       activesupport (>= 3.0.0)
       uniform_notifier (~> 1.11)
     byebug (12.0.0)
@@ -152,7 +152,6 @@ GEM
     fabrication (3.0.0)
     faker (3.5.1)
       i18n (>= 1.8.11, < 2)
-    fakeweb (1.3.0)
     faraday (2.13.1)
       faraday-net_http (>= 2.0, < 3.5)
       json
@@ -673,7 +672,7 @@ DEPENDENCIES
   better_errors
   binding_of_caller
   bootsnap
-  bullet (<= 8.0.3)
+  bullet
   byebug
   capybara
   capybara-playwright-driver
@@ -699,7 +698,6 @@ DEPENDENCIES
   extralite-bundle
   fabrication
   faker
-  fakeweb
   faraday
   faraday-retry
   fast_blank
@@ -830,7 +828,7 @@ CHECKSUMS
   binding_of_caller (1.0.1) sha256=2b2902abff4246ddcfbc4da9b69bc4a019e22aeb300c2ff6289a173d4b90b29a
   bootsnap (1.18.6) sha256=0ae2393c1e911e38be0f24e9173e7be570c3650128251bf06240046f84a07d00
   builder (3.3.0) sha256=497918d2f9dca528fdca4b88d84e4ef4387256d984b8154e9d5d3fe5a9c8835f
-  bullet (8.0.3) sha256=60e41446500a7e59272b3c2398cded214deec3662e883009de5bf30028a0642c
+  bullet (8.0.7) sha256=7d20550e81b38940e82c6166f483ab330df3cd5ef4eafc9e787934805ee379f1
   byebug (12.0.0) sha256=d4a150d291cca40b66ec9ca31f754e93fed8aa266a17335f71bb0afa7fca1a1e
   capybara (3.40.0) sha256=42dba720578ea1ca65fd7a41d163dd368502c191804558f6e0f71b391054aeef
   capybara-playwright-driver (0.5.6) sha256=ef461ab97f9fca7df4ecdd10bb1b076d9246f804e89fc3ae127cf1677d855e26
@@ -870,7 +868,6 @@ CHECKSUMS
   extralite-bundle (2.12) sha256=9c9912b7ab592e7064089ee608cf86ab9edd81d20065acb87d1f4fed06052987
   fabrication (3.0.0) sha256=a6a0bfad9071348ad3cb1701df788524b888c0cdd044b988893e7509f7463be3
   faker (3.5.1) sha256=1ad1fbea279d882f486059c23fe3ddb816ccd1d7052c05a45014b4450d859bfc
-  fakeweb (1.3.0) sha256=1ec996be13020a00b3464560c09180b424477c698f59f82edf2b99b16cfa09a8
   faraday (2.13.1) sha256=cc531eb5467e7d74d4517630fa96f1a7003647cbf20a9a3e067d098941217b75
   faraday-net_http (3.4.0) sha256=a1f1e4cd6a2cf21599c8221595e27582d9936819977bbd4089a601f24c64e54a
   faraday-retry (2.3.1) sha256=4004faa21f41fc5360d359bc79889fc58fb7fae0ce93bfb737a784ac76805c03

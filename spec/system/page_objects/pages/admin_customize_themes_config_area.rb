@@ -11,8 +11,8 @@ module PageObjects
         find(".theme-card.#{theme.name.parameterize}")
       end
 
-      def install_card
-        find(".theme-install-card")
+      def subheader
+        find(".d-page-subheader")
       end
 
       def open_theme_menu(theme)
