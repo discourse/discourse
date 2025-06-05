@@ -178,42 +178,49 @@ export class DeferredTrackedSet {
 }
 
 /**
- * @decorator
+ * Converts a value to TrackedArray if needed and validates the type
  *
+ * @param {*} value - Value to convert
+ * @returns {TrackedArray|null} Converted value
+ * @throws {Error} If value is not an array, TrackedArray, or null
+ */
+function ensureTrackedArray(value) {
+  if (value === null) {
+    return null;
+  }
+
+  if (value instanceof TrackedArray) {
+    return value;
+  }
+
+  if (Array.isArray(value)) {
+    return new TrackedArray(value);
+  }
+
+  throw new Error(`Expected an array or TrackedArray, got ${typeof value}`);
+}
+
+/**
+ * @decorator
  * Same as @tracked, but initializes the value as a TrackedArray.
  *
  * @param {Object} target - The target object
  * @param {string|Symbol} key - The property key
  * @param {Object} desc - The property descriptor
- * @throws {Error} If value is not an array, TrackedArray, or null
- *
  * @returns {Object} Modified property descriptor that wraps arrays in TrackedArray
  *
  * @example
  * class TodoList {
  *   @trackedArray todos = ['Buy milk', 'Walk dog'];
- *
- *   addTodo(text) {
- *     // Automatically wrapped in TrackedArray
- *     this.todos = [...this.todos, text];
- *   }
  * }
  */
 export function trackedArray(target, key, desc) {
   if (desc.initializer) {
-    const initialValue = desc.initializer();
-
-    if (initialValue instanceof TrackedArray) {
-      desc.initializer = () => initialValue;
-    } else if (Array.isArray(initialValue)) {
-      desc.initializer = () => new TrackedArray(initialValue);
-    } else if (initialValue === null) {
-      desc.initializer = () => null;
-    } else {
-      throw new Error(
-        `Expected an array or TrackedArray, got ${typeof initialValue}`
-      );
-    }
+    const originalInitializer = desc.initializer;
+    desc.initializer = function () {
+      const initialValue = originalInitializer.apply(this);
+      return ensureTrackedArray(initialValue);
+    };
   }
 
   const { get, set } = tracked(target, key, desc);
@@ -222,19 +229,8 @@ export function trackedArray(target, key, desc) {
     get() {
       return get.call(this);
     },
-
     set(value) {
-      if (value instanceof TrackedArray) {
-        set.call(this, value);
-      } else if (Array.isArray(value)) {
-        set.call(this, new TrackedArray(value));
-      } else if (value === null) {
-        set.call(this, null);
-      } else {
-        throw new Error(
-          `Expected an array or TrackedArray, got ${typeof value}`
-        );
-      }
+      set.call(this, ensureTrackedArray(value));
     },
   };
 }
