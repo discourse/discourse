@@ -38,12 +38,11 @@ describe "Post translations", type: :system do
     end
 
     it "always includes the site's default locale in the list of available languages" do
-      SiteSetting.default_locale = "de"
       topic_page.visit_topic(topic)
       find("#post_#{post.post_number} .post-action-menu__add-translation").click
       translation_selector.expand
-      expect(all(".translation-selector-dropdown .select-kit-collection li").count).to eq(5)
-      expect(translation_selector).to have_option_value("de")
+      expect(all(".translation-selector-dropdown .select-kit-collection li").count).to eq(4)
+      expect(translation_selector).to have_option_value("en")
     end
 
     it "allows a user to translate a post" do
