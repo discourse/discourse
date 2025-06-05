@@ -1,7 +1,6 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import Translation from "discourse/components/translation";
-import TranslationComponent from "discourse/components/translation-component";
 import UserLink from "discourse/components/user-link";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import I18n from "discourse-i18n";
@@ -36,25 +35,19 @@ module("Integration | Component | Translation", function (hooks) {
     await render(
       <template>
         <Translation @scope="hello">
-          <TranslationComponent @name="user">
-            <UserLink @username="pento">pento</UserLink>
-          </TranslationComponent>
+          <:placeholders as |items|>
+            <Translation.Placeholder @target={{items.user}}>
+              <UserLink @username="pento">pento</UserLink>
+            </Translation.Placeholder>
+          </:placeholders>
         </Translation>
       </template>
     );
 
-    assert.dom("span.i18n-container").exists();
-    assert.dom("span.i18n-container").hasText("Bonjour, pento");
+    assert.dom().hasText("Bonjour, pento");
+    assert.dom("a[data-user-card='pento']").exists();
     assert
-      .dom(
-        "span.i18n-container span.i18n-component-placeholder a[data-user-card='pento']"
-      )
-      .exists();
-
-    assert
-      .dom(
-        "span.i18n-container span.i18n-component-placeholder a[data-user-card='pento']"
-      )
+      .dom("a[data-user-card='pento']")
       .hasAttribute("aria-label", "Profil de pento");
   });
 });
