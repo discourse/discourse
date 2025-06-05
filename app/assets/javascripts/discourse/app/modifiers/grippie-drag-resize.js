@@ -9,8 +9,11 @@ const DRAG_EVENTS = ["touchmove", "mousemove"];
 const END_DRAG_EVENTS = ["touchend", "mouseup"];
 const THROTTLE_RATE = 20;
 
-function mouseYPos(e) {
-  return e.clientY || (e.touches && e.touches[0] && e.touches[0].clientY);
+function mouseYPos(event) {
+  return (
+    event.clientY ||
+    (event.touches && event.touches[0] && event.touches[0].clientY)
+  );
 }
 
 export default class GrippieDragResize extends Modifier {

@@ -101,5 +101,9 @@ module("Integration | Component | AceEditor", function (hooks) {
     assert
       .dom(".ace-wrapper .ace_editor--resizable")
       .exists("it has the resizable class");
+
+    assert
+      .dom(".ace-wrapper .grippie")
+      .exists("it renders the grippie element for dragging vertically");
   });
 });
