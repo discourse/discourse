@@ -141,24 +141,17 @@ const extension = {
                   for (const item of mentionList) {
                     const { name, start, end } = item;
                     const isValid = await validateMention(name);
+                    let nodeData;
 
                     if (isValid) {
-                      tr.replaceWith(
-                        start,
-                        end,
-                        view.state.schema.nodes.mention.create({
-                          name,
-                        })
-                      );
+                      nodeData = view.state.schema.nodes.mention.create({
+                        name,
+                      });
                     } else {
-                      tr.replaceWith(
-                        start,
-                        end,
-                        view.state.schema.text(`@${name}`)
-                      );
+                      nodeData = view.state.schema.text(`@${name}`);
                     }
 
-                    view.dispatch(tr);
+                    view.dispatch(tr.replaceWith(start, end, nodeData));
                   }
                 };
 
