@@ -71,7 +71,7 @@ module BackupRestore
           verbose: true,
         )
 
-      Discourse::Utils.execute_command("cp", tmpfile.path, @archive_path)
+      Discourse::Utils.execute_command("mv", tmpfile.path, @archive_path)
     ensure
       tmpfile&.unlink
     end

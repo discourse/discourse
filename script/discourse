@@ -191,7 +191,7 @@ class DiscourseCLI < Thor
     else
       puts "Saving backup file to local store..."
       Discourse::Utils.execute_command(
-        "cp",
+        "mv",
         tmpfile.path,
         File.join(BackupRestore::LocalBackupStore.base_directory, filename),
       )
