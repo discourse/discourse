@@ -1,9 +1,9 @@
 import { mentionRegex } from "pretty-text/mentions";
 import User from "discourse/models/user";
 import { isBoundary } from "discourse/static/prosemirror/lib/markdown-it";
-import { getChangedRanges } from "discourse/static/prosemirror/lib/plugin-utils";
 
-const invalidUsernames = new Set();
+const validMentions = new Set();
+const invalidMentions = new Set();
 
 /** @type {RichEditorExtension} */
 const extension = {
@@ -60,85 +60,23 @@ const extension = {
     },
   },
 
-  plugins({
-    pmState: { Plugin, PluginKey },
-    pmView: { Decoration, DecorationSet },
-  }) {
+  plugins({ pmState: { Plugin, PluginKey }, pmView: { DecorationSet } }) {
     const plugin = new PluginKey("mention");
 
-    function findMentionsInNode(node, pos) {
-      if (!node.isText) {
-        return [];
-      }
-
-      const decorations = [];
-      const text = node.text;
-      let match;
-
-      const regex = new RegExp(
-        `(^|\\W)(${mentionRegex().source})(?=\\s|$)`,
-        "g"
-      );
-
-      while ((match = regex.exec(text)) !== null) {
-        const name = match[2].slice(1);
-        const start = pos + match.index + match[1].length;
-        const end = start + match[2].length;
-
-        if (invalidUsernames.has(name)) {
-          continue;
-        }
-
-        // Create the decoration to mark where we'll replace with a mention
-        // The decoration will be replaced completely during the validation process
-        decorations.push(
-          Decoration.inline(start, end, {
-            class: "mention-loading",
-            nodeName: "span",
-            "data-name": name,
-          })
-        );
-      }
-
-      return decorations;
-    }
-
-    const mentionPlugin = new Plugin({
+    return new Plugin({
       key: plugin,
       state: {
         init() {
           return DecorationSet.empty;
         },
-        apply(tr, set, oldState, newState) {
+        apply(tr, set) {
           const meta = tr.getMeta(plugin);
 
           if (meta?.removeDecorations) {
             set = set.remove(meta.removeDecorations);
           }
 
-          set = set.map(tr.mapping, tr.doc);
-
-          if (!isBoundary(tr.doc.textContent.slice(-1), 0)) {
-            return set;
-          }
-
-          const changedRanges = getChangedRanges(tr);
-
-          changedRanges.forEach(({ new: { from, to } }) => {
-            const decorations = [];
-
-            newState.doc.nodesBetween(from, to, (node, pos) => {
-              const newDecorations = findMentionsInNode(node, pos);
-              decorations.push(...newDecorations);
-              return true;
-            });
-
-            if (decorations.length > 0) {
-              set = set.add(newState.doc, decorations);
-            }
-          });
-
-          return set;
+          return set.map(tr.mapping, tr.doc);
         },
       },
 
@@ -151,137 +89,134 @@ const extension = {
       view() {
         return {
           update(view) {
-            const decorations = plugin.getState(view.state);
+            if (!view._existingMentionsValidated) {
+              this.processExistingMentions(view);
+              view._existingMentionsValidated = true;
+            }
 
-            let pendingDecorations = [];
-            let removeDecorations = [];
-            let pendingChanges = [];
+            this.processNewMentions(view);
+          },
+          processExistingMentions(view) {
+            const nodeList = [];
 
-            function traverseDecorationSet(decorSet) {
-              if (decorSet.local) {
-                decorSet.local.forEach((decoration) => {
-                  if (decoration.type?.attrs?.class === "mention-loading") {
-                    pendingDecorations.push(decoration);
-                  }
-                });
+            view.state.doc.descendants((node, pos) => {
+              if (node.type.name === "mention") {
+                nodeList.push({ node, pos });
               }
+            });
 
-              // Check children (recursively)
-              // DecorationSet children are structured as [start, end, child, start, end, child, ...]
-              if (decorSet.children) {
-                for (let i = 2; i < decorSet.children.length; i += 3) {
-                  if (decorSet.children[i]) {
-                    traverseDecorationSet(decorSet.children[i]);
-                  }
+            // process in reverse to avoid issues with position shifts
+            nodeList.sort((a, b) => b.pos - a.pos);
+
+            const invalidateMentions = async () => {
+              for (const item of nodeList) {
+                const { node, pos } = item;
+                const name = node.attrs.name;
+                const isValid = await validateMention(name);
+
+                if (!isValid) {
+                  view.dispatch(
+                    view.state.tr
+                      .delete(pos, pos + node.nodeSize)
+                      .insertText(`@${name}`, pos)
+                  );
                 }
-              }
-            }
-
-            traverseDecorationSet(decorations);
-
-            if (view._processingMentions) {
-              return;
-            }
-
-            if (pendingDecorations.length === 0) {
-              return;
-            }
-
-            view._processingMentions = true;
-
-            const processMentions = async () => {
-              try {
-                for (const decoration of pendingDecorations) {
-                  const from = decoration.from + 1;
-                  const to = decoration.to + 1;
-                  const text = view.state.doc.textBetween(from, to);
-
-                  if (!text) {
-                    removeDecorations.push(decoration);
-                    continue;
-                  }
-
-                  const username = decoration.type?.attrs?.["data-name"];
-
-                  if (!username || invalidUsernames.has(username)) {
-                    removeDecorations.push(decoration);
-                    continue;
-                  }
-
-                  try {
-                    const isValid = await validateMention(username);
-
-                    // creates a mention node directly at the decoration position
-                    // completely replaces the span.mention-loading element
-                    if (isValid) {
-                      pendingChanges.push({
-                        type: "replace",
-                        from,
-                        to,
-                        node: view.state.schema.nodes.mention.create({
-                          name: username,
-                        }),
-                      });
-                    } else {
-                      // replaces invalid mentions with plain text
-                      pendingChanges.push({
-                        type: "replace",
-                        from,
-                        to,
-                        node: view.state.schema.text(text),
-                      });
-                    }
-                  } catch (error) {
-                    // eslint-disable-next-line no-console
-                    console.warn("[mention] Error validating mention:", error);
-                  } finally {
-                    removeDecorations.push(decoration);
-                  }
-                }
-
-                const tr = view.state.tr;
-
-                if (pendingChanges.length) {
-                  pendingChanges.forEach((change) => {
-                    if (change.type === "replace") {
-                      tr.replaceWith(change.from, change.to, change.node);
-                    }
-                  });
-                }
-
-                if (removeDecorations.length) {
-                  tr.setMeta(plugin, { removeDecorations });
-                  removeDecorations = [];
-                }
-
-                view.dispatch(tr);
-              } finally {
-                view._processingMentions = false;
               }
             };
 
-            processMentions();
+            invalidateMentions();
+          },
+          processNewMentions(view) {
+            const tr = view.state.tr;
+
+            if (!isBoundary(tr.doc.textContent.slice(-1), 0)) {
+              return;
+            }
+
+            view.state.doc.descendants((node, pos) => {
+              if (node.type.name === "text") {
+                const mentionList = getMentionsFromTextNode(node, pos);
+
+                const processMentions = async () => {
+                  for (const item of mentionList) {
+                    const { name, start, end } = item;
+                    const isValid = await validateMention(name);
+
+                    if (isValid) {
+                      tr.replaceWith(
+                        start,
+                        end,
+                        view.state.schema.nodes.mention.create({
+                          name,
+                        })
+                      );
+                    } else {
+                      tr.replaceWith(
+                        start,
+                        end,
+                        view.state.schema.text(`@${name}`)
+                      );
+                    }
+
+                    view.dispatch(tr);
+                  }
+                };
+
+                processMentions();
+              }
+            });
           },
         };
       },
     });
-
-    return mentionPlugin;
   },
 };
 
+function getMentionsFromTextNode(node, pos) {
+  const text = node.text;
+  let match;
+
+  const regex = new RegExp(`(^|\\W)(${mentionRegex().source})(?=\\s|$)`, "g");
+  let mentionList = [];
+
+  while ((match = regex.exec(text)) !== null) {
+    const name = match[2].slice(1);
+
+    if (invalidMentions.has(name) || validMentions.has(name)) {
+      continue;
+    }
+
+    const start = pos + match.index + match[1].length;
+    const end = start + match[2].length;
+
+    mentionList.push({ name, start, end });
+  }
+
+  return mentionList;
+}
+
 async function validateMention(name) {
-  if (!name || name.length < 1 || invalidUsernames.has(name)) {
+  if (!name || invalidMentions.has(name)) {
     return false;
   }
 
+  if (validMentions.has(name)) {
+    return true;
+  }
+
   try {
-    return !!(await User.findByUsername(name));
+    const valid = !!(await User.findByUsername(name));
+
+    if (valid) {
+      validMentions.add(name);
+    }
+
+    return valid;
   } catch (error) {
     // eslint-disable-next-line no-console
     console.warn("Validation failed for", name, error);
+    invalidMentions.add(name);
 
-    invalidUsernames.add(name);
     return false;
   }
 }

@@ -807,4 +807,22 @@ describe "Composer - ProseMirror editor", type: :system do
       expect(rich).to have_no_css(".only-emoji")
     end
   end
+
+  describe "mention validations" do
+    it "validates mentions in the ProseMirror editor" do
+      open_composer_and_toggle_rich_editor
+
+      composer.type_content("Hey @#{user.username} ")
+
+      expect(rich).to have_css("a.mention", text: user.username)
+
+      composer.type_content("and @invalid_user - how are you?")
+
+      expect(rich).to have_no_css("a.mention", text: "@invalid_user")
+
+      composer.toggle_rich_editor
+
+      expect(composer).to have_value("Hey @#{user.username} and @invalid_user - how are you?")
+    end
+  end
 end
