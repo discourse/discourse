@@ -140,8 +140,8 @@ class DiscourseCLI < Thor
     end
   end
 
-  desc "export_backup", "Get the URL of a backup file"
-  def export_backup(filename = nil)
+  desc "backup_url", "Get the URL of a backup file"
+  def backup_url(filename = nil)
     load_rails
 
     store = BackupRestore::BackupStore.create
@@ -152,15 +152,15 @@ class DiscourseCLI < Thor
     if !file
       discourse = File.exist?("/usr/local/bin/discourse") ? "discourse" : "./script/discourse"
       puts "You must provide a valid filename. Did you mean one of the following?\n\n"
-      store.files.each { |f| puts "#{discourse} export_backup #{f.filename}" }
+      store.files.each { |f| puts "#{discourse} backup_url #{f.filename}" }
       return
     end
 
     puts file.source
   end
 
-  desc "import_backup", "Download a backup file and stores it current backup store"
-  def import_backup(url = nil)
+  desc "import_backup_url", "Download a backup file and stores it current backup store"
+  def import_backup_url(url = nil)
     load_rails
 
     store = BackupRestore::BackupStore.create
