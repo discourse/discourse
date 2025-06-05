@@ -843,14 +843,18 @@ RSpec.describe UsersController do
     end
 
     context "when using an encoded email that decodes to a valid email" do
-      it "accepts the registration" do
+      # + An 'encoded-word' MUST NOT appear in any portion of an 'addr-spec'.
+      #
+      # https://datatracker.ietf.org/doc/html/rfc2047
+      it "blocks the registration" do
         post_user(
           email:
             "=?utf-8?q?=6f=73=61=6d=61=2d=69=6e=2d=71=2d=65=6e=63=6f=64=69=6e=67?=@discourse.org",
         )
         expect(response.status).to eq(200)
-        expect(response.parsed_body["success"]).to eq(true)
-        expect(User.find_by(id: response.parsed_body["user_id"])).to be_present
+        expect(response.parsed_body["success"]).to eq(false)
+        expect(response.parsed_body["message"]).to eq("Primary email is invalid.")
+        expect(response.parsed_body["user_id"]).to be_blank
       end
     end
 
