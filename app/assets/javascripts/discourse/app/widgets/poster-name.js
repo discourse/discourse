@@ -3,6 +3,7 @@ import { h } from "virtual-dom";
 import getURL from "discourse/lib/get-url";
 import { iconNode } from "discourse/lib/icon-library";
 import { prioritizeNameInUx } from "discourse/lib/settings";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import { formatUsername } from "discourse/lib/utilities";
 import RenderGlimmer from "discourse/widgets/render-glimmer";
 import { applyDecorators, createWidget } from "discourse/widgets/widget";
@@ -129,9 +130,8 @@ export default createWidget("poster-name", {
     if (attrs.new_user) {
       classNames.push("new-user");
     }
-    if (attrs.user_id < 0) {
-      classNames.push("ai-bot");
-    }
+
+    applyValueTransformer("poster-name-class-names", classNames, attrs);
 
     const primaryGroupName = attrs.primary_group_name;
     if (primaryGroupName && primaryGroupName.length) {
