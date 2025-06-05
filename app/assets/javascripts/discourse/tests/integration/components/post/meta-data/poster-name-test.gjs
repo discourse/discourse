@@ -187,5 +187,27 @@ module(
         .dom("span.poster-icon.test-smile > a > .emoji[alt='smile']")
         .exists();
     });
+
+    test("poster name additional classes", async function (assert) {
+      this.post.username = "eviltrout";
+      this.post.user = this.store.createRecord("user", {
+        username: "eviltrout",
+      });
+      withPluginApi((api) => {
+        api.registerValueTransformer(
+          "poster-name-class",
+          ({ value, context }) => {
+            if (context.user.username === "eviltrout") {
+              value.push(...["custom-class", "another-class"]);
+            }
+            return value;
+          }
+        );
+      });
+
+      await renderComponent(this.post);
+      assert.dom("span.custom-class").exists();
+      assert.dom("span.another-class").exists();
+    });
   }
 );
