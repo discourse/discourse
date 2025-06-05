@@ -173,16 +173,7 @@ class DiscourseCLI < Thor
     end
 
     puts "Downloading backup file from #{url}..."
-    tmpfile =
-      FileHelper.download(
-        url,
-        max_file_size: Float::INFINITY,
-        tmp_file_name: filename,
-        follow_redirect: true,
-        skip_rate_limit: true,
-        validate_uri: false,
-        verbose: true,
-      )
+    tmpfile = BackupFile.download(url)
 
     if store.remote?
       puts "Uploading backup file to remote store..."

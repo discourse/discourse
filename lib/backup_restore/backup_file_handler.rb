@@ -17,9 +17,15 @@ module BackupRestore
 
     def decompress
       create_tmp_directory
-      @archive_path = File.join(@tmp_directory, @filename)
 
       if @filename.start_with?("http://", "https://")
+        @url = @filename
+        @filename = File.basename(URI.parse(@url).path)
+      end
+
+      @archive_path = File.join(@tmp_directory, @filename)
+
+      if @url.present?
         download_archive_to_tmp_directory
       else
         copy_archive_to_tmp_directory
@@ -55,22 +61,7 @@ module BackupRestore
 
     def download_archive_to_tmp_directory
       log "Downloading archive from URL to tmp directory..."
-
-      url = @filename
-      @filename = File.basename(URI.parse(url).path)
-      @archive_path = File.join(@tmp_directory, @filename)
-
-      tmpfile =
-        FileHelper.download(
-          url,
-          max_file_size: Float::INFINITY,
-          tmp_file_name: @filename,
-          follow_redirect: true,
-          skip_rate_limit: true,
-          validate_uri: false,
-          verbose: true,
-        )
-
+      tmpfile = BackupFile.download(@url)
       Discourse::Utils.execute_command("mv", tmpfile.path, @archive_path)
     ensure
       tmpfile&.unlink
