@@ -1000,9 +1000,9 @@ export default class TopicController extends Controller {
   @action
   togglePostSelection(post) {
     const selected = this.selectedPostIds;
-    const postIndex = selected.indexOf(post.id);
-
-    postIndex > -1 ? selected.splice(postIndex, 1) : selected.push(post.id);
+    selected.includes(post.id)
+      ? selected.removeObject(post.id)
+      : selected.addObject(post.id);
   }
 
   @action
