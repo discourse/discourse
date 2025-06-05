@@ -65,6 +65,7 @@ RSpec.shared_context "with shared backup restore context" do
 
   def expect_decompress_and_clean_up_to_work(
     backup_filename:,
+    url: nil,
     expected_dump_filename: "dump.sql",
     require_metadata_file:,
     require_uploads:,
@@ -74,16 +75,23 @@ RSpec.shared_context "with shared backup restore context" do
     freeze_time(DateTime.parse("2019-12-24 14:31:48"))
 
     source_file = File.join(Rails.root, "spec/fixtures/backups", backup_filename)
-    target_directory = BackupRestore::LocalBackupStore.base_directory
-    target_file = File.join(target_directory, backup_filename)
-    FileUtils.copy_file(source_file, target_file)
+    if url
+      stub_request(:get, "https://example.com/backups/backup_since_v1.6.tar.gz").to_return(
+        body: File.new(source_file),
+        status: 200,
+      )
+    else
+      target_directory = BackupRestore::LocalBackupStore.base_directory
+      target_file = File.join(target_directory, backup_filename)
+      FileUtils.copy_file(source_file, target_file)
+    end
 
     Dir.mktmpdir do |root_directory|
       current_db = RailsMultisite::ConnectionManagement.current_db
       file_handler =
         BackupRestore::BackupFileHandler.new(
           logger,
-          backup_filename,
+          url || backup_filename,
           current_db,
           root_tmp_directory: root_directory,
           location: location,
@@ -118,14 +126,16 @@ RSpec.shared_context "with shared backup restore context" do
       expect(Dir.exist?(tmp_directory)).to eq(false)
     end
   ensure
-    FileUtils.rm(target_file)
+    if !url
+      FileUtils.rm(target_file)
 
-    # We don't want to delete the directory unless it is empty, otherwise this could be annoying
-    # when tests run for the "default" database in a development environment.
-    begin
-      FileUtils.rmdir(target_directory)
-    rescue StandardError
-      nil
+      # We don't want to delete the directory unless it is empty, otherwise this could be annoying
+      # when tests run for the "default" database in a development environment.
+      begin
+        FileUtils.rmdir(target_directory)
+      rescue StandardError
+        nil
+      end
     end
   end
 end
