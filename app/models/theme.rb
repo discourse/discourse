@@ -7,6 +7,7 @@ class Theme < ActiveRecord::Base
   include GlobalPath
 
   BASE_COMPILER_VERSION = 91
+  CORE_THEMES = { "foundation" => -1, "horizon" => -2 }
 
   class SettingsMigrationError < StandardError
   end
