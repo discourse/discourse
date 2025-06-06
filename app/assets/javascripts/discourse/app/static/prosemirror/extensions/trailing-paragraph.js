@@ -10,12 +10,20 @@ const extension = {
           return;
         }
 
-        return state.tr
+        // console.log(
+        //   "Before appending trailing paragraph",
+        //   state.doc.toString()
+        // );
+
+        const res = state.tr
           .setMeta("addToHistory", false)
           .insert(
             state.doc.content.size,
             state.schema.nodes.paragraph.create()
           );
+
+        // console.log("Resulting transaction", res);
+        return res;
       },
       state: {
         init(_, state) {

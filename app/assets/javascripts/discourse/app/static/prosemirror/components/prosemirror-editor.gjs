@@ -162,7 +162,13 @@ export default class ProsemirrorEditor extends Component {
       editable: () => this.args.disabled !== true,
       dispatchTransaction: (tr) => {
         this.view.updateState(this.view.state.apply(tr));
-
+        // console.log(
+        //   "Document size went from",
+        //   tr.before.content.size,
+        //   "to",
+        //   tr.doc.content.size
+        // );
+        // console.log("PM editor: tr", tr, tr.before, tr.doc);
         if (tr.docChanged && tr.getMeta("addToHistory") !== false) {
           // If this gets expensive, we can debounce it
           const value = this.serializer.convert(this.view.state.doc);
