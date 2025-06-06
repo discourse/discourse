@@ -5,4 +5,5 @@ const Presence = <template>
     <TopicPresenceDisplay @topic={{@outletArgs.model}} />
   </div>
 </template>;
+
 export default Presence;

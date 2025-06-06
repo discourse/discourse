@@ -150,7 +150,7 @@
 
   &__backdrop {
     height: 100%;
-    background: rgba(0, 0, 0, 0.75);
+    background: rgb(0, 0, 0, 0.75);
     bottom: 0;
     top: 0;
     left: 0;
@@ -161,7 +161,7 @@
     display: flex;
     position: sticky;
     top: -1px; // to avoid an ugly sub 1px gap on retina
-    background: rgba(var(--secondary-rgb), 0.95);
+    background: rgb(var(--secondary-rgb), 0.95);
     z-index: 2;
   }
 
@@ -204,7 +204,7 @@
       .d-icon {
         visibility: visible;
         color: white;
-        filter: drop-shadow(0.5px 1.5px 0 rgba(0, 0, 0, 0.3));
+        filter: drop-shadow(0.5px 1.5px 0 rgb(0, 0, 0, 0.3));
       }
     }
 

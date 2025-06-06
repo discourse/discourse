@@ -476,6 +476,44 @@ RSpec.describe Admin::ThemesController do
 
         expect(theme_json["remote_theme"]["remote_version"]).to eq("7")
       end
+
+      it "does not result in N+1 queries" do
+        # warmup
+        get "/admin/themes.json"
+        expect(response.status).to eq(200)
+
+        theme = Fabricate(:theme, color_scheme: Fabricate(:color_scheme))
+        Fabricate(
+          :theme_field,
+          target_id: Theme.targets[:translations],
+          theme: theme,
+          name: "en",
+          value:
+            "en:\n  theme_metadata:\n    description: \"A simple, beautiful theme that improves the out of the box experience for Discourse sites.\"\n  topic_pinned: \"Pinned\"\n  topic_hot: \"Hot\"\n  user_replied: \"replied\"\n  user_posted: \"posted\"\n  user_updated: \"updated\"\n",
+        )
+        first_request_queries =
+          track_sql_queries do
+            get "/admin/themes.json"
+            expect(response.status).to eq(200)
+          end
+
+        theme_2 = Fabricate(:theme, color_scheme: Fabricate(:color_scheme))
+        Fabricate(
+          :theme_field,
+          target_id: Theme.targets[:translations],
+          theme: theme_2,
+          name: "en",
+          value:
+            "en:\n  theme_metadata:\n    description: \"A simple, beautiful theme that improves the out of the box experience for Discourse sites.\"\n  topic_pinned: \"Pinned\"\n  topic_hot: \"Hot\"\n  user_replied: \"replied\"\n  user_posted: \"posted\"\n  user_updated: \"updated\"\n",
+        )
+        second_request_queries =
+          track_sql_queries do
+            get "/admin/themes.json"
+            expect(response.status).to eq(200)
+          end
+
+        expect(first_request_queries.count).to eq(second_request_queries.count)
+      end
     end
 
     it "allows themes and components to be edited" do
@@ -1464,6 +1502,85 @@ RSpec.describe Admin::ThemesController do
       get "/admin/customize/components/#{theme_component.id}/schema/some_setting_name"
 
       expect(response.status).to eq(200)
+    end
+  end
+
+  describe "#change_colors" do
+    fab!(:theme)
+
+    before { sign_in(admin) }
+
+    context "with valid parameters" do
+      it "creates a theme-owned color palette if one doesn't exist" do
+        expect(theme.owned_color_palette).to be_nil
+
+        put "/admin/themes/#{theme.id}/change-colors.json",
+            params: {
+              colors: [{ name: "primary", hex: "ff0000", dark_hex: "0000ff" }],
+            }
+
+        expect(response.status).to eq(200)
+
+        theme.reload
+        expect(theme.owned_color_palette.id).to eq(response.parsed_body["id"])
+
+        color = theme.owned_color_palette.colors.find_by(name: "primary")
+        expect(color.hex).to eq("ff0000")
+        expect(color.dark_hex).to eq("0000ff")
+      end
+
+      it "updates an existing theme-owned color palette" do
+        palette = theme.find_or_create_owned_color_palette
+        primary_color = palette.colors.find_by(name: "primary")
+        secondary_color = palette.colors.find_by(name: "secondary")
+
+        original_secondary_hex = secondary_color.hex
+        original_secondary_dark_hex = secondary_color.dark_hex
+
+        put "/admin/themes/#{theme.id}/change-colors.json",
+            params: {
+              colors: [{ name: "primary", hex: "aabbcc", dark_hex: "ccddee" }],
+            }
+
+        expect(response.status).to eq(200)
+
+        primary_color.reload
+        secondary_color.reload
+
+        expect(primary_color.hex).to eq("aabbcc")
+        expect(primary_color.dark_hex).to eq("ccddee")
+
+        expect(secondary_color.hex).to eq(original_secondary_hex)
+        expect(secondary_color.dark_hex).to eq(original_secondary_dark_hex)
+      end
+
+      it "returns the updated palette in the response" do
+        put "/admin/themes/#{theme.id}/change-colors.json",
+            params: {
+              colors: [{ name: "primary", hex: "abcdef", dark_hex: "fedcba" }],
+            }
+
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+
+        expect(json["colors"]).to be_present
+        primary_color = json["colors"].find { |c| c["name"] == "primary" }
+        expect(primary_color["hex"]).to eq("abcdef")
+        expect(primary_color["dark_hex"]).to eq("fedcba")
+      end
+    end
+
+    context "with invalid parameters" do
+      it "returns 404 for non-existent theme" do
+        max_id = (Theme.maximum(:id) || 0) + 1
+
+        put "/admin/themes/#{max_id}/change-colors.json",
+            params: {
+              colors: [{ name: "primary", hex: "ff0000", dark_hex: "0000ff" }],
+            }
+
+        expect(response.status).to eq(404)
+      end
     end
   end
 end

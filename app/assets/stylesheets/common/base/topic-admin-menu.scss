@@ -67,10 +67,10 @@
     }
 
     &[disabled] {
-      text-shadow: 0 1px 0 rgba(var(--primary-rgb), 0.2);
+      text-shadow: 0 1px 0 rgb(var(--primary-rgb), 0.2);
 
       @include linear-gradient(var(--tertiary), var(--tertiary-hover));
-      box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.33);
+      box-shadow: inset 0 1px 0 rgb(0, 0, 0, 0.33);
     }
   }
 }

@@ -5,4 +5,5 @@ const Presence = <template>
     <ComposerPresenceDisplay @model={{@outletArgs.model}} />
   </div>
 </template>;
+
 export default Presence;

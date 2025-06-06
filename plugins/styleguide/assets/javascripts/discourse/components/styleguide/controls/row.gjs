@@ -8,4 +8,5 @@ const Row = <template>
     </td>
   </tr>
 </template>;
+
 export default Row;

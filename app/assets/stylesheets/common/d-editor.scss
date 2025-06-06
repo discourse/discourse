@@ -35,7 +35,7 @@
   flex-direction: column;
   background-color: var(--secondary);
   position: relative;
-  border: 1px solid var(--primary-400);
+  border: var(--d-input-border);
   border-radius: var(--d-input-border-radius);
   min-height: 0;
 
@@ -141,7 +141,7 @@
   }
 
   .d-editor-textarea-wrapper {
-    border: 1px solid var(--primary-low);
+    border: var(--d-input-border);
   }
 
   .d-editor-preview-wrapper {
@@ -160,12 +160,6 @@
       padding: 0;
     }
   }
-}
-
-.user-preferences .bio-composer,
-.group-form-bio {
-  padding: 10px;
-  border: 1px solid var(--primary-low);
 }
 
 .d-editor-preview img {
@@ -322,17 +316,17 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(2.35em, 1fr));
   align-items: center;
-  border-bottom: 1px solid var(--primary-low);
+  border-bottom: var(--d-input-border);
   width: 100%;
   box-sizing: border-box;
   flex-shrink: 0;
 
-  @include breakpoint(tablet) {
+  @include viewport.until(md) {
     // occupy available space on narrower screens
     grid-template-columns: repeat(auto-fit, minmax(2em, 1fr));
   }
 
-  @include breakpoint(mobile-medium) {
+  @include viewport.until(sm) {
     font-size: var(--font-down-1);
   }
 
@@ -366,7 +360,52 @@
   overflow: auto;
   background: var(--primary-very-low);
   padding: 1rem;
-  border: 1px solid var(--primary-400);
+  border: var(--d-input-border);
   margin-bottom: 0;
   height: 100%;
+}
+
+#reply-control.composer-action-add_translation {
+  .topic-title-translator {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+
+    input {
+      width: 48.5vw;
+    }
+  }
+
+  .translation-selector-dropdown {
+    margin-bottom: 0.5rem;
+
+    .select-kit-body {
+      max-height: 300px;
+    }
+  }
+
+  .d-editor-preview .d-editor-translation-preview-wrapper {
+    --translation-preview-padding: 1rem;
+    box-sizing: border-box;
+    border: var(--d-input-border);
+    border-radius: var(--d-border-radius);
+    padding: var(--translation-preview-padding);
+    position: relative;
+    height: 100%;
+    padding-top: calc(var(--translation-preview-padding) * 2);
+
+    &__header {
+      position: absolute;
+      display: inline-flex;
+      align-items: center;
+      height: 1.5rem;
+      top: 0;
+      left: 0;
+      background: var(--primary-very-low);
+      padding: 0.45rem var(--translation-preview-padding);
+      border-radius: var(--d-border-radius);
+      font-size: var(--font-down-1-rem);
+      color: var(--primary-high);
+    }
+  }
 }

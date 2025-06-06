@@ -1,5 +1,4 @@
 import { Input } from "@ember/component";
-import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { htmlSafe } from "@ember/template";
 import RouteTemplate from "ember-route-template";
@@ -21,6 +20,7 @@ import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import hideApplicationHeaderButtons from "discourse/helpers/hide-application-header-buttons";
 import hideApplicationSidebar from "discourse/helpers/hide-application-sidebar";
+import lazyHash from "discourse/helpers/lazy-hash";
 import loadingSpinner from "discourse/helpers/loading-spinner";
 import routeAction from "discourse/helpers/route-action";
 import valueEntered from "discourse/helpers/value-entered";
@@ -56,16 +56,18 @@ export default RouteTemplate(
               @controller.authOptions.auth_provider
             }}
           >
-            <SignupProgressBar @step="signup" />
-            <WelcomeHeader
-              id="create-account-title"
-              @header={{i18n "create_account.header_title"}}
-            >
-              <PluginOutlet
-                @name="create-account-header-bottom"
-                @outletArgs={{hash showLogin=(routeAction "showLogin")}}
-              />
-            </WelcomeHeader>
+            {{#unless @controller.skipConfirmation}}
+              <SignupProgressBar @step={{@controller.progressBarStep}} />
+              <WelcomeHeader
+                id="create-account-title"
+                @header={{i18n "create_account.header_title"}}
+              >
+                <PluginOutlet
+                  @name="create-account-header-bottom"
+                  @outletArgs={{lazyHash showLogin=(routeAction "showLogin")}}
+                />
+              </WelcomeHeader>
+            {{/unless}}
             {{#if @controller.showCreateForm}}
               <form id="login-form">
                 {{#if @controller.associateHtml}}
@@ -156,7 +158,7 @@ export default RouteTemplate(
 
                 <PluginOutlet
                   @name="create-account-before-password"
-                  @outletArgs={{hash
+                  @outletArgs={{lazyHash
                     accountName=@controller.accountName
                     accountUsername=@controller.accountUsername
                     accountPassword=@controller.accountPassword
@@ -250,7 +252,7 @@ export default RouteTemplate(
 
                 <PluginOutlet
                   @name="create-account-after-password"
-                  @outletArgs={{hash
+                  @outletArgs={{lazyHash
                     accountName=@controller.accountName
                     accountUsername=@controller.accountUsername
                     accountPassword=@controller.accountPassword
@@ -291,7 +293,7 @@ export default RouteTemplate(
 
                 <PluginOutlet
                   @name="create-account-after-user-fields"
-                  @outletArgs={{hash
+                  @outletArgs={{lazyHash
                     accountName=@controller.accountName
                     accountUsername=@controller.accountUsername
                     accountPassword=@controller.accountPassword
@@ -316,10 +318,12 @@ export default RouteTemplate(
             {{/if}}
           </div>
 
-          {{#if @controller.hasAtLeastOneLoginButton}}
+          {{#if @controller.showRightSide}}
             {{#if @controller.site.mobileView}}
-              <div class="login-or-separator"><span>
-                  {{i18n "login.or"}}</span></div>{{/if}}
+              <div class="login-or-separator">
+                <span>{{i18n "login.or"}}</span>
+              </div>
+            {{/if}}
             <div class="login-right-side">
               <LoginButtons
                 @externalLogin={{@controller.externalLogin}}

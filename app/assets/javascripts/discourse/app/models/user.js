@@ -585,8 +585,7 @@ export default class User extends RestModel.extend(Evented) {
   }
 
   changePassword() {
-    return ajax("/session/forgot_password", {
-      dataType: "json",
+    return ajax("/session/forgot_password.json", {
       data: { login: this.email || this.username },
       type: "POST",
     });

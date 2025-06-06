@@ -4,4 +4,5 @@ const ColorExample = <template>
     <div class="color-name">var(--{{@color}})</div>
   </section>
 </template>;
+
 export default ColorExample;

@@ -92,7 +92,9 @@ module SvgSprite
         discourse-sidebar
         discourse-sparkles
         discourse-table
+        discourse-text
         discourse-threads
+        discourse-add-translation
         download
         earth-americas
         ellipsis
@@ -155,6 +157,7 @@ module SvgSprite
         flask
         folder
         folder-open
+        font
         forward
         forward-fast
         forward-step

@@ -28,4 +28,5 @@ const FooterMessage0 = <template>
     />
   </StyleguideExample>
 </template>;
+
 export default FooterMessage0;

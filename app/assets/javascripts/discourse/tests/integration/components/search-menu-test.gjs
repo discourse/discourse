@@ -1,4 +1,10 @@
-import { click, fillIn, render, triggerKeyEvent } from "@ember/test-helpers";
+import {
+  click,
+  fillIn,
+  render,
+  settled,
+  triggerKeyEvent,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import SearchMenu, {
   DEFAULT_TYPE_FILTER,
@@ -77,9 +83,10 @@ module("Integration | Component | search-menu", function (hooks) {
   test("clicking outside results hides and blurs input", async function (assert) {
     await render(
       <template>
-        <div id="click-me">
-          <SearchMenu @location="test" @searchInputId="icon-search-input" />
-        </div>
+        <div id="click-me"><SearchMenu
+            @location="test"
+            @searchInputId="icon-search-input"
+          /></div>
       </template>
     );
     await click("#icon-search-input");
@@ -104,5 +111,58 @@ module("Integration | Component | search-menu", function (hooks) {
     assert
       .dom("#search-term.search-term__input")
       .exists("input defaults to id of search-term");
+  });
+
+  test("search-context state changes updates the UI", async function (assert) {
+    const searchService = this.owner.lookup("service:search");
+
+    searchService.searchContext = null;
+    searchService.inTopicContext = false;
+    await render(<template><SearchMenu @location="test" /></template>);
+
+    assert
+      .dom(".search-context")
+      .doesNotExist("no search context button when searchContext is null");
+
+    searchService.searchContext = { type: "private_messages" };
+    await settled();
+
+    assert
+      .dom(".search-context")
+      .exists(
+        "PM context button appears when searchContext.type changes to private_messages"
+      );
+
+    await click(".search-context");
+
+    assert
+      .dom(".search-context")
+      .doesNotExist("PM context button disappears when clear btn is pressed");
+  });
+
+  test("PM inbox context can be restored after being cleared", async function (assert) {
+    const searchService = this.owner.lookup("service:search");
+
+    searchService.searchContext = { type: "private_messages" };
+    searchService.inTopicContext = false;
+
+    await render(<template><SearchMenu @location="test" /></template>);
+
+    assert.dom(".search-context").exists("PM context button appears initially");
+
+    await click(".search-context");
+    assert
+      .dom(".search-context")
+      .doesNotExist("PM context button disappears when cleared");
+
+    await click("#search-term");
+
+    await click(".search-menu-assistant-item .search-item-slug");
+
+    assert
+      .dom(".search-context")
+      .exists(
+        "PM context button reappears after selecting 'in:messages' suggestion"
+      );
   });
 });

@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 #main-outlet > .regular {
   background: var(--d-content-background);
 }
@@ -735,6 +737,10 @@ aside.quote {
   opacity: 0.4;
 }
 
+.fk-d-menu[data-identifier="post-text-selection-toolbar"] {
+  @include user-select(none);
+}
+
 .quote-button {
   flex-direction: column;
 
@@ -783,7 +789,7 @@ aside.quote {
   }
 
   .insert-quote + .quote-sharing {
-    border-left: 1px solid rgba(255, 255, 255, 0.3);
+    border-left: 1px solid rgb(255, 255, 255, 0.3);
   }
 
   .btn-flat {
@@ -1421,7 +1427,7 @@ span.mention {
   padding: 3em 5em 2em
     calc(var(--topic-avatar-width) + var(--topic-body-width-padding));
 
-  @include breakpoint(mobile-extra-large) {
+  @include viewport.until(sm) {
     padding: 1.5em 1.5em 0.25em;
   }
 
@@ -1460,7 +1466,7 @@ span.mention {
         }
       }
 
-      @include breakpoint(mobile-extra-large) {
+      @include viewport.until(sm) {
         &.btn-primary {
           margin-right: 100%;
         }
@@ -1589,7 +1595,7 @@ iframe {
     > .d-icon {
       padding: 0.5em;
       margin: 0.5em;
-      background-color: rgba(var(--always-black-rgb), 0.25);
+      background-color: rgb(var(--always-black-rgb), 0.25);
       color: var(--secondary-or-primary);
       cursor: pointer;
       display: none;
@@ -1680,8 +1686,8 @@ html.discourse-no-touch .fullscreen-table-wrapper:hover {
   &.--has-overflow,
   &.--editable {
     box-shadow:
-      0 2px 5px 0 rgba(var(--always-black-rgb), 0.1),
-      0 2px 10px 0 rgba(var(--always-black-rgb), 0.1);
+      0 2px 5px 0 rgb(var(--always-black-rgb), 0.1),
+      0 2px 10px 0 rgb(var(--always-black-rgb), 0.1);
   }
 }
 

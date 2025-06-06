@@ -611,52 +611,9 @@ tr_TR:
     until_posts:
       one: "%{count} gönderi"
       other: "%{count} gönderi"
-    "new-topic": |
-      %{site_name}'a hoş geldiniz &mdash; **yeni bir konuşma başlattığınız için teşekkür ederiz!**
-
-      - Yüksek sesle okuduğunuzda başlık ilgi çekici geliyor mu? İyi bir özet mi?
-
-      - Bununla kim ilgilenir? Neden önemli? Ne gibi yanıtlar almak istiyorsunuz?
-
-      - Başkalarının da kolayca *bulabilmesi* için konunuza sık kullanılan kelimeler ekleyin. Konunuzun benzer konularla gruplanması için bir kategori (ya da etiket) seçin.
-
-      Daha fazlası için [topluluk kılavuzumuza bakın](%{base_path}/guidelines). Bu panel sadece ilk %{education_posts_text} için görünür.
-    "new-reply": |
-      %{site_name}'a hoş geldiniz &mdash; **katkıda bulunduğunuz için teşekkür ederiz!**
-
-      - Topluluğun diğer üyelerine karşı kibar olun.
-
-      - Yanıtınız konuşmayı iyileştiriyor mu?
-
-      - Yapıcı eleştiri her zaman kabul edilir ama *fikirleri* eleştirin, kişileri değil.
-
-      Daha fazlası için [topluluk kılavuzumuza bakın](%{base_path}/guidelines). Bu panel sadece ilk %{education_posts_text} için görünür.
-    avatar: |
-      ### Hesabınız için bir resme ne dersiniz?
-
-      Birkaç konu ve yanıt gönderdiniz, ancak profil resminiz sizin kadar eşsiz değil, sadece bir harf.
-
-      [Kullanıcı profilinizi ziyaret edip](%{profile_path})** sizi yansıtan bir resim yüklemeyi düşündünüz mü?
-
-      Herkesin eşsiz bir profil resmi olduğunda, tartışmaları takip etmek ve konuşmalarda ilginç insanlar bulmak daha kolay!
-    sequential_replies: "### Aynı anda birkaç gönderiye yanıt vermeyi düşünün\n \nBunun yerine lütfen önceki gönderilerden alıntılar veya @name referansları içeren tek bir yanıt vermeyi düşünün.\n\n\nMetni vurgulayıp görünen <b>yanıtı alıntıla</b> düğmesini seçerek alıntı eklemek üzere önceki yanıtınızı düzenleyebilirsiniz.\n\nÇok sayıda küçük ve bireysel yanıt yerine daha az sayıda derinlemesine yanıt içeren konuları okumak herkes için daha kolay olur.\n"
-    dominating_topic: Bu konuya çok şey gönderdiniz! Başkalarına da burada yanıt verme ve birbirleriyle tartışma fırsatı vermeyi düşünün.
     get_a_room:
       one: '%{reply_username} adlı kullanıcıya kez yanıt verdiniz, bunun yerine ona bir kişisel mesaj gönderebileceğinizi biliyor muydunuz?'
       other: '%{reply_username} adlı kullanıcıya %{count} kez yanıt verdiniz, bunun yerine ona bir kişisel mesaj gönderebileceğinizi biliyor muydunuz?'
-    dont_feed_the_trolls: Bu gönderiye, moderatörün dikkatine sunulmak üzere zaten bayrak eklenmiş. Yanıt vermek istediğinize emin misiniz? Olumsuz içeriğe verilen yanıtlar, daha olumsuz davranışları teşvik etme eğilimindedir.
-    too_many_replies: |
-      ### Bu konu için yanıt limitine ulaştınız
-
-      Üzgünüz, ancak yeni kullanıcılar geçici olarak aynı konuya %{newuser_max_replies_per_topic} yanıt verebilir.
-
-      Başka bir yanıt eklemek yerine lütfen önceki yanıtlarınızı düzenlemeyi veya diğer konuları ziyaret etmeyi düşünün.
-    reviving_old_topic: |
-      ### Bu konu yeniden canlandırılsın mı?
-
-      Bu konuya en son **%{time_ago}** yanıt verildi. Yanıtınız konuyu listenin en üstüne çıkaracak ve daha önce konuşmaya dahil olan herkes bilgilendirilecek.
-
-      Bu eski konuşmaya devam etmek istediğinizden emin misiniz?
   activerecord:
     attributes:
       category:
@@ -2071,7 +2028,6 @@ tr_TR:
     authorized_extensions: "Yüklenmesine izin verilen dosya uzantılarının listesi"
     authorized_extensions_for_staff: "Personel kullanıcılar için \"authorized_extensions\" site ayarında tanımlanan listeye ek olarak yüklemeye izin verilen dosya uzantılarının bir listesi."
     theme_authorized_extensions: "Tema yüklemeleri için izin verilen dosya uzantılarının listesi"
-    max_similar_results: "Yeni bir konu oluştururken editörün üzerinde kaç benzer konu gösterileceği. Karşılaştırma başlık ve gövdeye dayalı olarak yapılır."
     max_image_megapixels: "Bir görüntü için izin verilen maksimum megapiksel sayısı. Daha yüksek megapiksel sayısına sahip görüntüler reddedilir."
     title_prettify: "Tümü büyük harf, küçük harf ilk karakter, birden fazla ! ve ?, sonda fazladan . vb. dahil olmak üzere yaygın başlık yazım yanlışlarını ve hatalarını önleyin."
     title_remove_extraneous_space: "Son noktalama işaretlerinin önündeki boşlukları kaldırın."
@@ -2241,12 +2197,10 @@ tr_TR:
     max_notifications_per_user: "Kullanıcı başına maksimum bildirim miktarı, bu sayı aşılırsa eski bildirimler silinir. Haftalık olarak uygulanır. Devre dışı bırakmak için 0 olarak ayarlayın"
     allowed_user_website_domains: "Kullanıcı web sitesi bu alan adlarına göre doğrulanır. Boruyla ayrılmış liste."
     allow_profile_backgrounds: "Kullanıcıların profil arka planları yüklemesine izin verin."
-    sequential_replies_threshold: "Bir kullanıcının çok fazla ardışık yanıt hakkında hatırlatılmadan önce bir konuda arka arkaya yapması gereken gönderi sayısı."
     get_a_room_threshold: "Bir kullanıcının uyarılmadan önce aynı konuda aynı kişiye yapması gereken gönderi sayısı."
     dont_feed_the_trolls_threshold: "Uyarılmadan önce diğer kullanıcılardan gelen bayrak sayısı."
     enable_mobile_theme: "Mobil cihazlar, sitenin tamamına geçebilme özelliğine sahip mobil uyumlu bir tema kullanır. Tamamen duyarlı özel bir stil sayfası kullanmak istiyorsanız bunu devre dışı bırakın."
     dominating_topic_minimum_percent: "Bir kullanıcının bir konuda aşırı baskınlık kurduğu hatırlatılmadan önce bir konuda yüzde kaç gönderi yapması gerektiği."
-    disable_avatar_education_message: "Avatarı değiştirmek için eğitim mesajını devre dışı bırakın."
     pm_warn_user_last_seen_months_ago: "Yeni bir kişisel mesaj oluştururken, hedef alıcı n aydan daha uzun bir süre önce görülmediğinde kullanıcıları uyarın."
     suppress_uncategorized_badge: "Konu listelerinde kategorize edilmemiş konular için rozet göstermeyin."
     header_dropdown_category_count: "Başlık açılır menüsünde kaç kategori görüntülenebileceği."
@@ -2277,7 +2231,6 @@ tr_TR:
     show_time_gap_days: "Bu kadar gün arayla iki gönderi yapılmışsa aradaki zaman farkını konu içinde gösterin."
     short_progress_text_threshold: "Bir konudaki gönderi sayısı bu sayının üzerine çıktıktan sonra, ilerleme çubuğu yalnızca geçerli gönderi sayısını gösterecektir. İlerleme çubuğunun genişliğini değiştirirseniz bu değeri değiştirmeniz gerekebilir."
     default_code_lang: "Markdown kod bloklarına (otomatik, metin, ruby, python vb.) uygulanan varsayılan programlama dili sözdizimi vurgulaması. Bu değer aynı zamanda \"vurgulanan diller\" site ayarında da bulunmalıdır."
-    warn_reviving_old_topic_age: "Biri son yanıtın şu kadar günden daha eski olduğu bir konuya yanıt vermeye başladığında, bir uyarı görüntülenir. 0'a ayarlayarak devre dışı bırakın."
     autohighlight_all_code: "Bir dil belirtmemiş olsalar bile, HTML ile yazılmış &lt;code&gt; bloklarına sözdizimi vurgulaması uygulayın. Markdown ile yazılmış kod bloklarını yapılandırmak için 'default code lang' ayarını kullanın."
     highlighted_languages: "Söz dizimi vurgulama kuralları dâhil edildi. (Uyarı: çok fazla dil eklemek, performansı etkileyebilir) Demo için bkz: <a href='https://highlightjs.org/demo/' target='_blank'>https://highlightjs.org/demo</a>"
     show_copy_button_on_codeblocks: "Blok içeriğini kullanıcının panosuna kopyalamak için codeblocks'a bir düğme ekleyin."
@@ -2661,11 +2614,6 @@ tr_TR:
     errors: "%{errors}"
     not_available: "Kullanılamıyor. Şunu deneyin: %{suggestion}"
     something_already_taken: "Bir şeyler yanlış gitti, belki de kullanıcı adı veya e-posta zaten kayıtlıdır. Şifremi unuttum bağlantısını deneyin."
-    omniauth_error:
-      generic: "Üzgünüz, hesabınızı yetkilendirirken bir hata oluştu. Lütfen tekrar deneyin."
-      csrf_detected: "Yetkilendirme zaman aşımına uğradı veya tarayıcı değiştirdiniz. Lütfen tekrar deneyin."
-      request_error: "Yetkilendirme başlatılırken bir hata oluştu. Lütfen tekrar deneyin."
-      invalid_iat: "Sunucu saati farklılıkları nedeniyle yetkilendirme belirteci doğrulanamıyor. Lütfen tekrar deneyin."
     omniauth_error_unknown: "Girişiniz işlenirken bir sorun oluştu, lütfen tekrar deneyin."
     omniauth_confirm_title: "%{provider} kullanarak giriş yapın"
     omniauth_confirm_button: "Devam et"
@@ -4059,8 +4007,6 @@ tr_TR:
   offline:
     title: "Uygulama yüklenemiyor"
     offline_page_message: "Görünüşe göre çevrimdışısınız! Lütfen ağ bağlantınızı kontrol edip tekrar deneyin."
-  login_required:
-    welcome_message: "# [%{title} forumuna hoş geldiniz](#welcome)"
   upload:
     edit_reason: "görüntülerin yerel kopyaları indirildi"
     unauthorized: "Üzgünüz, yüklemeye çalıştığınız dosyaya izin verilmiyor (izin verilen uzantılar: %{authorized_extensions})."
@@ -4086,7 +4032,6 @@ tr_TR:
     images:
       too_large: "Üzgünüz, yüklemeye çalıştığınız resim çok büyük (maksimum boyut %{max_size_kb} KB), lütfen yeniden boyutlandırın ve tekrar deneyin."
       too_large_humanized: "Üzgünüz, yüklemeye çalıştığınız görüntü çok büyük (maksimum boyut %{max_size}), lütfen yeniden boyutlandırın ve tekrar deneyin."
-      larger_than_x_megapixels: "Üzgünüz, yüklemeye çalıştığınız görüntü çok büyük (maksimum boyut %{max_image_megapixels} megapiksel), lütfen yeniden boyutlandırın ve tekrar deneyin."
       size_not_found: "Üzgünüz, ancak görüntünün boyutunu belirleyemedik. Belki de görüntünüz bozuktur?"
     placeholders:
       too_large: "(%{max_size_kb} KB'den büyük görüntü)"

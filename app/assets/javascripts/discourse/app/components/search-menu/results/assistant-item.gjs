@@ -23,7 +23,6 @@ export function resetItemSelectCallbacks() {
 
 export default class AssistantItem extends Component {
   @service search;
-  @service site;
   @service appEvents;
 
   icon = this.args.icon || "magnifying-glass";
@@ -123,10 +122,14 @@ export default class AssistantItem extends Component {
       return;
     }
 
+    const inPMInboxContext =
+      this.search.searchContext?.type === "private_messages";
     this.args.searchTermChanged(updatedTerm, {
       searchTopics,
       ...(inTopicContext &&
         !this.args.searchAllTopics && { setTopicContext: true }),
+      ...(!this.args.searchAllTopics &&
+        inPMInboxContext && { setPMInboxContext: true }),
     });
     this.search.focusSearchInput();
   }
@@ -135,65 +138,67 @@ export default class AssistantItem extends Component {
     {{! template-lint-disable no-pointer-down-event-binding }}
     {{! template-lint-disable no-invalid-interactive }}
     <li
-      ...attributes
       class={{concatClass @typeClass "search-menu-assistant-item"}}
       {{on "keydown" this.onKeydown}}
       {{on "click" this.onClick}}
       data-usage={{@usage}}
     >
-      <a class="search-link" href={{this.href}}>
-        <span aria-label={{i18n "search.title"}}>
+      <a class={{concatClass @typeClass "search-link"}} href={{this.href}}>
+        <span class="search-icon-wrapper" aria-label={{i18n "search.title"}}>
           {{icon (or @icon "magnifying-glass")}}
         </span>
-
-        {{#if this.prefix}}
-          <span class="search-item-prefix">
-            {{this.prefix}}
-          </span>
-        {{/if}}
-
-        {{#if @withInLabel}}
-          <span class="label-suffix">{{i18n "search.in"}}</span>
-        {{/if}}
-
-        {{#if @category}}
-          <Category @result={{@category}} />
-          {{#if (and @tag @isIntersection)}}
-            <span class="search-item-tag">
-              {{icon "tag"}}{{@tag}}
+        <span class="search-item-wrapper">
+          {{#if this.prefix}}
+            <span class="search-item-prefix">
+              {{this.prefix}}
             </span>
           {{/if}}
-        {{else if @tag}}
-          {{#if (and @isIntersection @additionalTags.length)}}
-            <span class="search-item-tag">{{this.tagsSlug}}</span>
-          {{else}}
-            <span class="search-item-tag">
-              <Tag @result={{@tag}} />
+
+          {{#if @withInLabel}}
+            <span class="label-suffix">{{i18n "search.in"}}</span>
+          {{/if}}
+
+          {{#if @category}}
+            <Category @result={{@category}} />
+            {{#if (and @tag @isIntersection)}}
+              <span class="search-item-tag">
+                {{icon "tag"}}{{@tag}}
+              </span>
+            {{/if}}
+          {{else if @tag}}
+            {{#if (and @isIntersection @additionalTags.length)}}
+              <span class="search-item-tag">{{this.tagsSlug}}</span>
+            {{else}}
+              <span class="search-item-tag">
+                <Tag @result={{@tag}} />
+              </span>
+            {{/if}}
+          {{else if @user}}
+            <span class="search-item-user">
+              <User @result={{@user}} />
             </span>
           {{/if}}
-        {{else if @user}}
-          <span class="search-item-user">
-            <User @result={{@user}} />
-          </span>
-        {{/if}}
 
-        <span class="search-item-slug">
-          {{#if @suffix}}
-            <span class="label-suffix">{{@suffix}}</span>
+          {{#if (or @label @suffix)}}
+            <span class="search-item-slug">
+              {{#if @suffix}}
+                <span class="label-suffix">{{@suffix}}</span>
+              {{/if}}
+              {{@label}}
+            </span>
           {{/if}}
-          {{@label}}
+          {{#if @extraHint}}
+            <span class="extra-hint">
+              {{i18n
+                (if
+                  this.site.mobileView
+                  "search.mobile_enter_hint"
+                  "search.enter_hint"
+                )
+              }}
+            </span>
+          {{/if}}
         </span>
-        {{#if @extraHint}}
-          <span class="extra-hint">
-            {{i18n
-              (if
-                this.site.mobileView
-                "search.mobile_enter_hint"
-                "search.enter_hint"
-              )
-            }}
-          </span>
-        {{/if}}
       </a>
     </li>
   </template>

@@ -611,59 +611,9 @@ nl:
     until_posts:
       one: "%{count} bericht"
       other: "%{count} berichten"
-    "new-topic": |
-      Welkom op %{site_name} &mdash; **bedankt voor het starten van een nieuw gesprek! **
-
-      - Klinkt de titel interessant als je hem hardop voorleest? Is het een goede samenvatting?
-
-      - Wie zou hierin geïnteresseerd zijn? Waarom is het belangrijk? Wat voor reacties wil je?
-
-      - Voeg veelgebruikte woorden toe aan je topic, zodat anderen het kunnen vinden*. Selecteer een categorie (of tag) om je topic te groeperen met gerelateerde topics.
-
-      Voor meer informatie, [zie onze communityrichtlijnen](%{base_path}/guidelines). Dit venster wordt alleen weergegeven alleen voor je eerste %{education_posts_text}.
-    "new-reply": |
-      Welkom op %{site_name} &mdash; **bedankt voor je bijdrage!**
-
-      - Wees aardig voor de andere communityleden.
-
-      - Verbetert je antwoord het gesprek?
-
-      - Opbouwende kritiek is welkom, maar bekritiseer *ideeën*, niet mensen.
-
-      Voor meer informatie, [zie onze communityrichtlijnen](%{base_path}/guidelines). Dit venster wordt alleen weergegeven voor je eerste %{education_posts_text}.
-    avatar: |
-      ### Wat dacht je van een afbeelding voor je account?
-
-      Je hebt enkele topics en antwoorden geplaatst, maar je profielafbeelding is niet zo uniek als jijzelf, het is maar een letter.
-
-      Heb je overwogen **[je gebruikersprofiel te bezoeken](%{profile_path})** en een afbeelding te uploaden die jou weerspiegelt?
-
-      Het volgen van discussies en vinden van interessante mensen in conversaties is makkelijker wanneer iedereen een unieke profielafbeelding heeft!
-    sequential_replies: |
-      ### Overweeg meerdere berichten tegelijk te beantwoorden
-
-      Overweeg één antwoord dat citaten uit eerdere berichten of @naam-verwijzingen bevat in plaats van verschillende antwoorden achter elkaar te plaatsen in een topic.
-
-      Je kunt je eerdere antwoord bewerken om een citaat toe te voegen door tekst te markeren en de knop <b>Bericht citeren</b> die verschijnt te selecteren.
-
-      Het is voor iedereen makkelijker om topics te lezen die minder, maar uitgebreidere antwoorden bevatten dan met veel kleine, individuele antwoorden.
-    dominating_topic: Je hebt veel geplaatst in dit topic! Overweeg om anderen de kans te geven om hier te reageren en ook met elkaar te overleggen.
     get_a_room:
       one: Je hebt één keer geantwoord op @%{reply_username}. Wist je dat je diegene in plaats daarvan een persoonlijk bericht kunt sturen?
       other: Je hebt %{count} keer geantwoord op @%{reply_username}. Wist je dat je diegene in plaats daarvan een persoonlijk bericht kunt sturen?
-    dont_feed_the_trolls: Dit bericht is al gemarkeerd voor aandacht van de moderator. Weet je zeker dat je erop wilt antwoorden? Antwoorden op negatieve content hebben de neiging om meer negatief gedrag aan te moedigen.
-    too_many_replies: |
-      ### Je hebt de antwoordlimiet voor dit topic bereikt
-
-      Sorry, nieuwe gebruikers hebben een tijdelijke beperking van %{newuser_max_replies_per_topic} antwoorden in hetzelfde topic.
-
-      Overweeg je eerdere antwoorden te bewerken of andere topics te bezoeken in plaats van nog een antwoord toe te voegen.
-    reviving_old_topic: |
-      ### Dit topic nieuw leven inblazen?
-
-      Het laatste antwoord op dit topic was **%{time_ago}**. Je antwoord zal het topic naar de bovenkant van de bijbehorende lijst verplaatsen en iedereen die eerder bij de conversatie was betrokken op de hoogte brengen.
-
-      Weet je zeker dat je deze oude conversatie wilt voortzetten?
   activerecord:
     attributes:
       category:
@@ -2078,7 +2028,6 @@ nl:
     authorized_extensions: "Een lijst van bestandsextensies die kunnen worden geüpload"
     authorized_extensions_for_staff: "Een lijst van toegestane bestandsextensies voor uploaden voor medewerkers, naast de lijst gedefinieerd in de website-instelling 'authorized_extensions'."
     theme_authorized_extensions: "Een lijst van bestandsextensies die zijn toegestaan voor thema-uploads"
-    max_similar_results: "Hoeveel vergelijkbare topics om boven de editor te weergeven bij het opstellen van een nieuw topic. Vergelijking is gebaseerd op titel en inhoud."
     max_image_megapixels: "Maximale aantal toegestane megapixels voor een afbeelding. Afbeeldingen met een groter aantal megapixels worden geweigerd."
     title_prettify: "Veelvoorkomende fouten in titels voorkomen, waaronder alles in hoofdletters, eerste woord zonder hoofdletter, meerdere ! en ?, een extra . aan het eind, etc."
     title_remove_extraneous_space: "Voorloopspaties voor de eindinterpunctie verwijderen."
@@ -2248,12 +2197,10 @@ nl:
     max_notifications_per_user: "Maximale aantal meldingen per gebruiker. Als dit aantal wordt overschreden, worden oude meldingen verwijderd. Wekelijks afgedwongen. Stel dit in op 0 om uit te schakelen."
     allowed_user_website_domains: "Website van gebruiker wordt op deze domeinen gecontroleerd. Lijst gescheiden door pijpsymbolen."
     allow_profile_backgrounds: "Gebruikers mogen profielachtergronden uploaden."
-    sequential_replies_threshold: "Aantal berichten dat een gebruiker achter elkaar in één topic moet plaatsen voordat deze aan te veel opeenvolgende antwoorden wordt herinnerd."
     get_a_room_threshold: "Aantal berichten dat een gebruiker aan dezelfde persoon in hetzelfde topic moet richten voordat deze wordt gewaarschuwd."
     dont_feed_the_trolls_threshold: "Aantal markeringen van andere gebruikers voordat er wordt gewaarschuwd."
     enable_mobile_theme: "Mobiele apparaten gebruiken een mobielvriendelijk thema, met de mogelijkheid om naar de volledige website over te schakelen. Schakel dit uit als je een eigen stylesheet wilt gebruiken dat volledig responsief is."
     dominating_topic_minimum_percent: "Het percentage berichten dat een gebruiker in een topic moet maken voordat deze aan het te veel domineren van een topic wordt herinnerd."
-    disable_avatar_education_message: "Educatieve boodschap voor het wijzigen van avatar uitschakelen."
     pm_warn_user_last_seen_months_ago: "Waarschuw gebruikers bij het maken van een nieuw PB wanneer de doelontvanger meer dan n maanden niet is gezien."
     suppress_uncategorized_badge: "De badge voor ongecategoriseerde topics niet in topiclijsten weergeven."
     header_dropdown_category_count: "Het aantal categorieën dat in het header-vervolgkeuzemenu kan worden weergegeven."
@@ -2284,7 +2231,6 @@ nl:
     show_time_gap_days: "Als twee berichten dit aantal dagen na elkaar zijn gemaakt, een tijdsgat in het topic weergeven."
     short_progress_text_threshold: "Als het aantal berichten in een topic hoger is dan dit getal, geeft de voortgangsbalk alleen het nummer van het huidige bericht weer. Als je de breedte van de voortgangsbalk wijzigt, moet je deze waarde mogelijk ook te wijzigen."
     default_code_lang: "Standaard syntaxmarkering van programmeertaal toegepast op markdowncodeblokken (automatisch, tekst, Ruby, Python enz.). Deze waarde moet ook aanwezig zijn in de website-instelling 'gemarkeerde talen'."
-    warn_reviving_old_topic_age: "Wanneer iemand begint te antwoorden op een topic waarin het laatste antwoord ouder is dan dit aantal dagen, wordt een waarschuwing weergegeven. Schakel uit door dit op 0 te zetten."
     autohighlight_all_code: "Pas syntaxmarkering toe op in HTML geschreven &lt;code&gt;-blokken, ook als ze geen taal specificeren. Om in markdown geschreven codeblokken te configureren, gebruik je de instelling 'default code lang'."
     highlighted_languages: "Opgenomen regels voor syntaxismarkering. (Waarschuwing: het opnemen van te veel talen kan prestaties beïnvloeden); bekijk <a href='https://highlightjs.org/demo/' target='_blank'>https://highlightjs.org/demo</a> voor een demo."
     show_copy_button_on_codeblocks: "Voeg een knop toe aan codeblokken om de inhoud van het blok naar het klembord van de gebruiker te kopiëren."
@@ -2667,11 +2613,6 @@ nl:
     errors: "%{errors}"
     not_available: "Niet beschikbaar. %{suggestion} proberen?"
     something_already_taken: "Er is iets misgegaan; mogelijk is de gebruikersnaam of het e-mailadres al geregistreerd. Probeer de link 'Wachtwoord vergeten'."
-    omniauth_error:
-      generic: "Sorry, er is een fout opgetreden bij het autoriseren van je account. Probeer het opnieuw."
-      csrf_detected: "Time-out bij autorisatie, of je bent van browser gewisseld. Probeer het opnieuw."
-      request_error: "Er is een fout opgetreden bij het begin van de autorisatie. Probeer het opnieuw."
-      invalid_iat: "Kan autorisatietoken niet verifiëren vanwege verschillen met de serverklok. Probeer het opnieuw."
     omniauth_error_unknown: "Er is iets misgegaan bij het verwerken van je aanmelding. Probeer het opnieuw."
     omniauth_confirm_title: "Aanmelden via %{provider}"
     omniauth_confirm_button: "Doorgaan"
@@ -4106,8 +4047,6 @@ nl:
   offline:
     title: "Kan app niet laden"
     offline_page_message: "Het lijkt erop dat je offline bent! Controleer je netwerkverbinding en probeer het opnieuw."
-  login_required:
-    welcome_message: "# [Welkom bij %{title}](#welcome)"
   upload:
     edit_reason: "lokale kopieën van afbeeldingen gedownload"
     unauthorized: "Sorry, het bestand dat je probeert te uploaden is niet toegestaan (toegestane extensies: %{authorized_extensions})."
@@ -4133,7 +4072,6 @@ nl:
     images:
       too_large: "Sorry, de afbeelding die je probeert te uploaden is te groot (maximale grootte is %{max_size_kb} KB). Verklein de afbeelding en probeer het opnieuw."
       too_large_humanized: "Sorry, de afbeelding die je probeert te uploaden is te groot (maximale grootte is %{max_size}). Verklein de afbeelding en probeer het opnieuw."
-      larger_than_x_megapixels: "Sorry, de afbeelding die je probeert te uploaden is te groot (maximale afmeting is %{max_image_megapixels} megapixels). Verklein de afbeelding en probeer het opnieuw."
       size_not_found: "Het is niet gelukt de afmetingen van de afbeelding te bepalen. Misschien is het bestand corrupt?"
     placeholders:
       too_large: "(afbeelding groter dan %{max_size_kb} KB)"

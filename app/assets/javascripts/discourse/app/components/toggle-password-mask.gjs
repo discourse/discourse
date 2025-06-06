@@ -12,4 +12,5 @@ const TogglePasswordMask = <template>
     class="btn-transparent toggle-password-mask"
   />
 </template>;
+
 export default TogglePasswordMask;

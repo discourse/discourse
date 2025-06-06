@@ -91,9 +91,7 @@ export default class SearchTerm extends Component {
       if (!e.target.value) {
         // only clear context if we're not in the middle of a search
         if (this.searchCleared) {
-          if (this.search.inTopicContext) {
-            this.search.inTopicContext = false;
-          }
+          this.args.clearTopicContext();
           this.args.clearPMInboxContext();
           this.focus(e.target);
         }
@@ -114,7 +112,6 @@ export default class SearchTerm extends Component {
 
   <template>
     <input
-      ...attributes
       id={{@inputId}}
       class="search-term__input"
       type="search"

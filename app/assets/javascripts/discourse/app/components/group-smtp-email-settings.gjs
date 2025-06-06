@@ -92,7 +92,7 @@ export default class GroupSmtpEmailSettings extends Component {
         });
 
         this.toasts.success({
-          duration: 3000,
+          duration: "short",
           data: { message: i18n("groups.manage.email.smtp_settings_valid") },
         });
       })

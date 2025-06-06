@@ -12,6 +12,9 @@ RSpec.describe SiteSettings::HiddenProvider do
       hidden_provider.add_hidden(:secret_setting)
       hidden_provider.add_hidden(:internal_thing)
       expect(hidden_provider.all).to contain_exactly(:secret_setting, :internal_thing)
+
+      hidden_provider.remove_hidden(:secret_setting)
+      expect(hidden_provider.all).to contain_exactly(:internal_thing)
     end
 
     it "can return results from modifiers" do

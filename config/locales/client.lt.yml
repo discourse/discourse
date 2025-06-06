@@ -428,7 +428,7 @@ lt:
       many: "Pamatyk %{count} naujų temų"
       other: "Pamatyk %{count} naujas temas"
     preview: "Peržiūrėti"
-    cancel: "atšaukti"
+    cancel: "Atšaukti"
     save: "Išsaugoti pakeitimus"
     saved: "Išsaugota!"
     upload: "Įkelti"
@@ -1631,7 +1631,6 @@ lt:
         title: "Registracijos IP adresas"
       avatar:
         title: "Profilio nuotrauka"
-        header_title: "Profilis, žinutės, žymės ir nustatymai"
         name_and_description: "%{name} - %{description}"
         edit: "Redaguoti profilio nuotrauką"
       title:
@@ -2260,7 +2259,6 @@ lt:
           aria_label: filtruoti pagal daugiausia peržiūrų
         additional_options:
           label: "Filtruoti pagal įrašų skaičių ir temos peržiūras"
-    hamburger_menu: "meniu"
     new_item: "Nauja"
     go_back: "grįžti atgal"
     not_logged_in_user: "Vartotojo puslapis su veiksmų ir nustatymų aprašymu"
@@ -2773,6 +2771,11 @@ lt:
         other: "%{count} žmonėms patinka šis įrašas."
       in_reply_to: "Įkelti pirminį įrašą"
       view_all_posts: "Peržiūrėti visus įrašus"
+      localizations:
+        table:
+          actions: "Veiksmai"
+          edit: "Redaguoti"
+          delete: "Pašalinti"
       errors:
         create: "Atsiprašome, įvyko klaida kuriant įrašą. Prašome pamėginti dar kartą."
         edit: "Atsiprašome, įvyko klaida redaguojant įrašą. Prašome pamėginti dar kartą."
@@ -3649,13 +3652,9 @@ lt:
         about: "Apie"
     discovery:
       headings:
+        multi_tag:
+          default: "Temos pažymėtos %{tags}"
         categories: "Visos kategorijos"
-        filter_labels:
-          latest: "Naujausia"
-          top: "Populiarios"
-          new: "Nauji"
-          unread: "Neperskaitytos"
-          unseen: "Nematytas"
   admin_js:
     type_to_filter: "Įveskite filtrą…"
     settings: "Nustatymai"
@@ -3697,17 +3696,16 @@ lt:
           title: "Failai"
         legal:
           title: "Naudojimosi taisyklės"
-        logo_and_fonts:
-          logo:
-            form:
-              mobile: "Mobilus"
-              email: "El. paštas"
-          fonts:
-            form:
-              heading_font:
-                title: "Antraštės šriftas"
-            backfill_modal:
-              modal_yes: "Taip"
+        logo:
+          form:
+            mobile: "Mobilus"
+            email: "El. paštas"
+        fonts:
+          form:
+            heading_font:
+              title: "Antraštės šriftas"
+          backfill_modal:
+            modal_yes: "Taip"
         navigation:
           title: "Navigacija"
         notifications:
@@ -4082,6 +4080,8 @@ lt:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
           company_name: "Vardas"
+          extra_groups:
+            groups: "Grupės"
           optional: "(pasoronktinai)"
           update: "Atnaujinti"
           saved: "išsaugota!"
@@ -4129,6 +4129,7 @@ lt:
           delete: "Pašalinti"
         color_palettes:
           palette_name: "Vardas"
+          delete: "Pašalinti"
           colors:
             title: "Spalvos"
       plugins:
@@ -4353,12 +4354,12 @@ lt:
           all_filter: "Visos"
           active_filter: "Aktyvūs"
           inactive_filter: "Neaktyvus"
-          schema:
-            fields:
-              required: "*privalomi"
-              number:
-                too_small: "turi būti didesnis arba lygus %{count}"
-                too_large: "turi būti mažesnis arba lygus %{count}"
+        schema:
+          fields:
+            required: "*privalomi"
+            number:
+              too_small: "turi būti didesnis arba lygus %{count}"
+              too_large: "turi būti mažesnis arba lygus %{count}"
         colors:
           select_base:
             title: "Pasirinkite pagrindinę spalvų paletę"
@@ -4366,42 +4367,32 @@ lt:
           title: "Spalvos"
           about: "Pakeiskite temų naudojamas spalvas. Norėdami pradėti, sukurkite naują spalvų paletę."
           copy_name_prefix: "Kopija"
-          delete_confirm: "Ištrinti šią spalvų paletę?"
           undo: "Anuliuoti"
           undo_title: "Anuliuoti šios spalvos pakeitimus į paskutinį kartą išsaugotus."
           revert: "Grąžinti"
           revert_title: "Iš naujo nustatykite šią spalvą į numatytąją „Discourse“ spalvų paletę."
           primary:
             name: "pirminė"
-            description: "Pagrindnis tekstas, ikonos ir rėmeliai."
           secondary:
             name: "antrinė"
-            description: "Pagrindinio fono spalva, kaikurių mygtukų teksto spalva."
           tertiary:
             name: "tretinė"
-            description: "Nuorodos, keli mygtukai, pranešimai ir akcento spalva"
           quaternary:
             name: "ketvirtinė"
           header_background:
             name: "Višutinės juostos fonas"
-            description: "Višutinės juostos fono spalva"
           header_primary:
             name: "pirminė viršutinė juosta"
-            description: "Viršutinės juostos tekstas ir ikonos"
           highlight:
             name: "paryškinti"
-            description: "Paryškintų elementų (tokių, kaip įrašai ar temos) fono spalva"
           highlight-low:
             name: "paryškinti-žemas"
           danger:
             name: "pavojinga"
-            description: "Paryškinta spalva tokiems veiksmams, kaip trinant įrašus ir temas."
           success:
             name: "sėkminga"
-            description: "Naudojama kai veiksmai įvykdomi sėkmingai."
           love:
             name: "patinka"
-            description: "Mygtuko \"Patinka\" spalva."
           selected:
             name: "pasirinktas"
           editor:

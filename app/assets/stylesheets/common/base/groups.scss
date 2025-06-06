@@ -46,10 +46,10 @@
     cursor: pointer;
     border: 1px solid var(--primary-low);
     color: var(--primary);
+    border-radius: var(--d-border-radius);
 
     .discourse-no-touch & {
       &:hover {
-        box-shadow: var(--shadow-card);
         border-color: var(--primary-low-mid-or-secondary-high);
       }
     }
@@ -184,7 +184,7 @@
   font-size: var(--font-down-2);
   padding: 0.2em 1em;
   background-color: var(--primary-low);
-  border-radius: var(--d-button-border-radius);
+  border-radius: var(--d-border-radius);
 
   .fk-d-tooltip__trigger-container {
     align-items: center;

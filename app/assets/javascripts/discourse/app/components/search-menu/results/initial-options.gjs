@@ -1,12 +1,12 @@
 import Component from "@glimmer/component";
-import { hash } from "@ember/helper";
 import { service } from "@ember/service";
-import { and, not, or } from "truth-helpers";
+import { and, or } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import { MODIFIER_REGEXP } from "discourse/components/search-menu";
 import AssistantItem from "discourse/components/search-menu/results/assistant-item";
 import RandomQuickTip from "discourse/components/search-menu/results/random-quick-tip";
 import RecentSearches from "discourse/components/search-menu/results/recent-searches";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
 import Assistant from "./assistant";
 
@@ -44,10 +44,6 @@ export default class InitialOptions extends Component {
         this.setAttributesForSearchContextType(this.search.searchContext.type);
       }
     }
-  }
-
-  get hideForEmptyMobileSearch() {
-    return this.args.inHeaderMobileView && !this.search.activeGlobalSearchTerm;
   }
 
   get termMatchesContextTypeKeyword() {
@@ -152,13 +148,10 @@ export default class InitialOptions extends Component {
   }
 
   <template>
-    <ul
-      class="search-menu-initial-options"
-      data-test-selector="search-menu-initial-options"
-    >
+    <ul class="search-menu-initial-options">
       <PluginOutlet
         @name="search-menu-initial-options"
-        @outletArgs={{hash
+        @outletArgs={{lazyHash
           termMatchesContextTypeKeyword=this.termMatchesContextTypeKeyword
           contextTypeComponent=this.contextTypeComponent
           slug=this.slug
@@ -178,7 +171,6 @@ export default class InitialOptions extends Component {
             @closeSearchMenu={{@closeSearchMenu}}
             @searchTermChanged={{@searchTermChanged}}
             @suggestionKeyword={{this.contextTypeKeyword}}
-            data-test-assistant-item="search-with-modifier"
           />
         {{else}}
           {{#if
@@ -192,31 +184,26 @@ export default class InitialOptions extends Component {
                 @extraHint={{true}}
                 @searchTermChanged={{@searchTermChanged}}
                 @suggestionKeyword={{this.contextTypeKeyword}}
-                data-test-assistant-item="search-in-topics-posts"
               />
             {{/if}}
 
             {{#if this.search.searchContext}}
-              {{#unless this.hideForEmptyMobileSearch}}
-                <this.contextTypeComponent
-                  @slug={{this.slug}}
-                  @suggestionKeyword={{this.contextTypeKeyword}}
-                  @results={{this.initialResults}}
-                  @withInLabel={{this.withInLabel}}
-                  @suffix={{this.suffix}}
-                  @label={{this.label}}
-                  @closeSearchMenu={{@closeSearchMenu}}
-                  @searchTermChanged={{@searchTermChanged}}
-                  data-test-context-item="context-type"
-                />
-              {{/unless}}
+              <this.contextTypeComponent
+                @slug={{this.slug}}
+                @suggestionKeyword={{this.contextTypeKeyword}}
+                @results={{this.initialResults}}
+                @withInLabel={{this.withInLabel}}
+                @suffix={{this.suffix}}
+                @label={{this.label}}
+                @closeSearchMenu={{@closeSearchMenu}}
+                @searchTermChanged={{@searchTermChanged}}
+              />
 
               {{#if
                 (and
                   this.currentUser
                   this.siteSettings.log_search_queries
                   this.displayInitialOptions
-                  (not @inHeaderMobileView)
                 )
               }}
                 <RecentSearches
@@ -225,7 +212,7 @@ export default class InitialOptions extends Component {
                 />
               {{/if}}
             {{/if}}
-          {{else if (not @inHeaderMobileView)}}
+          {{else}}
             <RandomQuickTip
               @searchInputId={{@searchInputId}}
               @searchTermChanged={{@searchTermChanged}}

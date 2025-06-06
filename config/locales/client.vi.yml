@@ -357,7 +357,7 @@ vi:
     topic_count_new:
       other: "Xem %{count} chủ đề mới"
     preview: "xem trước"
-    cancel: "hủy"
+    cancel: "Huỷ"
     deleting: "Đang xóa…"
     save: "Lưu thay đổi"
     saving: "Đang lưu…"
@@ -1560,7 +1560,6 @@ vi:
         title: "Địa chỉ IP đăng ký"
       avatar:
         title: "Ảnh đại diện"
-        header_title: "hồ sơ cá nhân, tin nhắn, đánh dấu và sở thích"
         name_and_description: "%{name} - %{description}"
         edit: "Chỉnh sửa ảnh đại diện"
       title:
@@ -2772,6 +2771,11 @@ vi:
         other: "Xem %{count} câu trả lời cho"
       in_reply_to: "Tải bài đăng gốc"
       view_all_posts: "Xem tất cả các bài viết"
+      localizations:
+        table:
+          actions: "Hành động"
+          edit: "Sửa"
+          delete: "Xóa"
       errors:
         create: "Xin lỗi, có lỗi xảy ra khi tạo bài viết của bạn. Vui lòng thử lại."
         edit: "Xin lỗi, có lỗi xảy ra khi sửa bài viết của bạn. Vui lòng thử lại."
@@ -3662,12 +3666,6 @@ vi:
     discovery:
       headings:
         categories: "Tất cả danh mục"
-        filter_labels:
-          latest: "Mới nhất"
-          top: "Top"
-          new: "Mới"
-          unread: "Chưa đọc"
-          unseen: "Không nhìn thấy"
   admin_js:
     type_to_filter: "Gõ vào bộ lọc…"
     settings: "Cài đặt"
@@ -3711,14 +3709,13 @@ vi:
           title: "Tập tin"
         legal:
           title: "Legal"
-        logo_and_fonts:
-          logo:
-            form:
-              mobile: "Điện thoại"
-              email: "Email"
-          fonts:
-            backfill_modal:
-              modal_yes: "Đồng ý"
+        logo:
+          form:
+            mobile: "Điện thoại"
+            email: "Email"
+        fonts:
+          backfill_modal:
+            modal_yes: "Đồng ý"
         navigation:
           title: "Điều hướng"
         notifications:
@@ -4171,6 +4168,8 @@ vi:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
           company_name: "Tên"
+          extra_groups:
+            groups: "Nhóm"
           optional: "(tùy chọn)"
           update: "Cập nhật"
           saved: "đã lưu"
@@ -4218,6 +4217,8 @@ vi:
           delete: "Xóa"
         color_palettes:
           palette_name: "Tên"
+          duplicate: "Nhân bản"
+          delete: "Xóa"
           colors:
             title: "Màu sắc"
       plugins:
@@ -4471,15 +4472,15 @@ vi:
           all_filter: "All"
           active_filter: "Kích hoạt"
           inactive_filter: "Không hoạt động"
-          schema:
-            fields:
-              required: "*bắt buộc"
-              string:
-                too_short:
-                  other: "phải ít nhất %{count} ký tự"
-              number:
-                too_small: "phải lớn hơn hoặc bằng %{count}"
-                too_large: "phải nhỏ hơn hoặc bằng %{count}"
+        schema:
+          fields:
+            required: "*bắt buộc"
+            string:
+              too_short:
+                other: "phải ít nhất %{count} ký tự"
+            number:
+              too_small: "phải lớn hơn hoặc bằng %{count}"
+              too_large: "phải nhỏ hơn hoặc bằng %{count}"
         colors:
           select_base:
             title: "Chọn bảng màu cơ bản"
@@ -4487,40 +4488,30 @@ vi:
           title: "Màu sắc"
           about: "Sửa đổi màu sắc mà chủ đề của bạn sử dụng. Tạo một bảng màu mới để bắt đầu."
           copy_name_prefix: "Bản sao của"
-          delete_confirm: "Xóa bảng màu này?"
           undo: "Hoàn tác"
           undo_title: "Hoàn tác thay đổi của bạn vơ"
           revert: "Phục hồi"
           revert_title: "Đặt lại màu này thành bảng màu mặc định của Discourse."
           primary:
             name: "chính"
-            description: "Hầu hết chữ, biểu tượng, và viền."
           secondary:
             name: "cấp hai"
-            description: "Màu nền, và màu chữ của một vài nút."
           tertiary:
             name: "cấp ba"
-            description: "Liên kết, một và nút, thông báo, và màu nhấn."
           quaternary:
             name: "chia bốn"
           header_background:
             name: "nền header"
-            description: "Màu nền header của trang."
           header_primary:
             name: "header chính"
-            description: "Chữ và icon trong header của website."
           highlight:
             name: "highlight"
-            description: "Màu nền của các thành phần được đánh dấu trên trang, như là bài viết và chủ đề."
           danger:
             name: "nguy hiểm"
-            description: "Màu đánh dấu cho thao tác xóa bài viết và chủ đề."
           success:
             name: "thành công"
-            description: "Sử dụng để chỉ một thao tác đã thành công."
           love:
             name: "đáng yêu"
-            description: "Màu của nút like"
           selected:
             name: "đã chọn"
         robots:

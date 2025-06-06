@@ -1134,7 +1134,6 @@ th:
         title: "ไอพีที่ลงทะเบียน"
       avatar:
         title: "รูปโปรไฟล์"
-        header_title: "โปรไฟล์ ข้อความ บุ๊กมาร์ก และการตั้งค่า"
       title:
         title: "ชื่อเรื่อง"
         none: "(ไม่มี)"
@@ -1954,6 +1953,11 @@ th:
       has_likes_title_only_you: "คุณถูกใจโพสต์นี้"
       has_likes_title_you:
         other: "คุณและคนอื่นอีก %{count}คนถูกใจโพสต์นี้"
+      localizations:
+        table:
+          actions: "การกระทำ"
+          edit: "แก้ไข"
+          delete: "ลบ"
       errors:
         create: "ขออภัย เกิดความผิดพลาดขณะกำลังสร้างโพสต์ของคุณ กรุณาลองใหม่อีกครั้ง"
         edit: "ขออภัย เกิดความผิดพลาดขณะกำลังแก้ไขโพสต์ของคุณ กรุณาลองใหม่อีกครั้ง"
@@ -2533,11 +2537,6 @@ th:
     discovery:
       headings:
         categories: "หมวดหมู่ทั้งหมด"
-        filter_labels:
-          latest: "ล่าสุด"
-          top: "บน"
-          new: "ใหม่"
-          unread: "ยังไม่อ่าน"
   admin_js:
     settings: "การตั้งค่า"
     admin:
@@ -2567,14 +2566,13 @@ th:
           title: "ไฟล์"
         legal:
           title: "กฎ"
-        logo_and_fonts:
-          logo:
-            form:
-              mobile: "โทรศัพท์"
-              email: "อีเมล"
-          fonts:
-            backfill_modal:
-              modal_yes: "ใช่"
+        logo:
+          form:
+            mobile: "โทรศัพท์"
+            email: "อีเมล"
+        fonts:
+          backfill_modal:
+            modal_yes: "ใช่"
         navigation:
           title: "การนำทาง"
         notifications:
@@ -2793,6 +2791,8 @@ th:
       config_areas:
         about:
           company_name: "ชื่อ"
+          extra_groups:
+            groups: "กลุ่ม"
           optional: "(ทางเลือก)"
           update: "อัปเดต"
           saved: "บันทึกแล้ว!"
@@ -2838,6 +2838,7 @@ th:
           delete: "ลบ"
         color_palettes:
           palette_name: "ชื่อ"
+          delete: "ลบ"
           colors:
             title: "สี"
       plugins:
@@ -2939,9 +2940,9 @@ th:
           all_filter: "ทั้งหมด"
           active_filter: "ใช้งานอยู่"
           inactive_filter: "ไม่ใช้งาน"
-          schema:
-            fields:
-              required: "*ต้องการ"
+        schema:
+          fields:
+            required: "*ต้องการ"
         colors:
           title: "สี"
           undo: "เลิกทำ"

@@ -26,11 +26,7 @@ export default class BulkUserDeleteConfirmation extends Component {
   blockIpAndEmail = false;
 
   logsListener = modifierFn(() => {
-    this.messageBus.subscribe(
-      BULK_DELETE_CHANNEL,
-      this.onDeleteProgress,
-      this.args.model.lastBulkDeleteMessageBusId
-    );
+    this.messageBus.subscribe(BULK_DELETE_CHANNEL, this.onDeleteProgress);
 
     return () => {
       this.messageBus.unsubscribe(BULK_DELETE_CHANNEL, this.onDeleteProgress);

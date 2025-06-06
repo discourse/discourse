@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe "Local Dates" do
-  before { freeze_time DateTime.parse("2018-11-10 12:00") }
+  before do
+    SiteSetting.discourse_local_dates_email_format = "YYYY-MM-DDTHH:mm:ss[Z] z"
+    freeze_time DateTime.parse("2018-11-10 12:00")
+  end
 
   it "should work without timezone" do
     post = Fabricate(:post, raw: <<~MD)

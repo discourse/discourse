@@ -73,8 +73,8 @@ $breakpoints: (
 
 @mixin darken-background($background-color, $amt) {
   $overlay: dark-light-choose(
-    rgba(var(--primary-rgb), $amt),
-    rgba(var(--secondary-rgb), $amt)
+    rgb(var(--primary-rgb), $amt),
+    rgb(var(--secondary-rgb), $amt)
   );
   background-image: linear-gradient(to bottom, $overlay 100%, $overlay 100%);
 }
@@ -287,6 +287,15 @@ $hpad: 0.65em;
     right: 0;
     height: var(--d-nav-underline-height);
     background: var(--d-nav-color--active);
+  }
+}
+
+@mixin nav-hover() {
+  color: var(--d-nav-color--hover);
+  background: var(--d-nav-bg-color--hover);
+
+  .d-icon {
+    color: var(--d-nav-color--active);
   }
 }
 

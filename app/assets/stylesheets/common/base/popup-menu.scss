@@ -12,7 +12,7 @@
     list-style: none;
 
     li {
-      border-bottom: 1px solid rgba(var(--primary-low-rgb), 0.5);
+      border-bottom: 1px solid rgb(var(--primary-low-rgb), 0.5);
 
       &:last-child {
         border: none;

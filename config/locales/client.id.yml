@@ -366,7 +366,7 @@ id:
     topic_count_new:
       other: "Lihat %{count} topik baru"
     preview: "pratinjau"
-    cancel: "batal"
+    cancel: "Batal"
     deleting: "Menghapus…"
     save: "Simpan Perubahan"
     saving: "Menyimpan…"
@@ -1904,6 +1904,11 @@ id:
       has_replies:
         other: "%{count} Balasan"
       has_replies_count: "%{count}"
+      localizations:
+        table:
+          actions: "Aksi"
+          edit: "Ubah"
+          delete: "Hapus"
       errors:
         upload: "Maaf, terjadi kesalahan saat mengunggah %{file_name}. Silakan coba lagi."
         backup_too_large: "Maaf, file cadangan terlalu besar."
@@ -2292,11 +2297,6 @@ id:
     discovery:
       headings:
         categories: "Semua kategori"
-        filter_labels:
-          latest: "Terbaru"
-          new: "New"
-          unread: "Belum dibaca"
-          unseen: "Tak terlihat"
   admin_js:
     settings: "Pengaturan"
     admin:
@@ -2313,13 +2313,12 @@ id:
         email:
           title: "Surel"
       config:
-        logo_and_fonts:
-          logo:
-            form:
-              email: "Surel"
-          fonts:
-            backfill_modal:
-              modal_yes: "Ya"
+        logo:
+          form:
+            email: "Surel"
+        fonts:
+          backfill_modal:
+            modal_yes: "Ya"
         navigation:
           title: "Navigasi"
         notifications:
@@ -2470,6 +2469,8 @@ id:
           community_name: "Nama komunitas"
           contact_url_placeholder: "https://johnny-smith.com/contact"
           company_name: "Nama"
+          extra_groups:
+            groups: "Grup"
           optional: "(opsional)"
           toasts:
             general_settings_saved: "Pengaturan umum disimpan"
@@ -2510,6 +2511,7 @@ id:
           delete: "Hapus"
         color_palettes:
           palette_name: "Nama"
+          delete: "Hapus"
           colors:
             title: "Warna"
       plugins:
@@ -2576,19 +2578,17 @@ id:
           empty: "Tidak ada item"
           all_filter: "Semua"
           active_filter: "Aktif"
-          schema:
-            fields:
-              number:
-                too_small: "harus sama dengan atau lebih besar dari %{count}"
-                too_large: "harus sama dengan atau kurang dari %{count}"
+        schema:
+          fields:
+            number:
+              too_small: "harus sama dengan atau lebih besar dari %{count}"
+              too_large: "harus sama dengan atau kurang dari %{count}"
         colors:
           title: "Warna"
           undo: "Batalkan perintah"
           revert: "Dibalik"
           primary:
             name: "utama"
-          quaternary:
-            description: "Untuk penggunaan opsional dalam tema."
           selected:
             name: "dipilih"
         email_style:

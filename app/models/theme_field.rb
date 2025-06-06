@@ -121,102 +121,9 @@ class ThemeField < ActiveRecord::Base
     javascript_cache || build_javascript_cache
 
     errors << I18n.t("themes.errors.optimized_link") if contains_optimized_link?(html)
+    
+    # todo: restore script tag support
 
-    # js_compiler = ThemeJavascriptCompiler.new(theme_id, self.theme.name)
-
-    # doc = Nokogiri::HTML5.fragment(html)
-
-    # doc
-    #   .css('script[type="text/x-handlebars"]')
-    #   .each do |node|
-    #     name = node["name"] || node["data-template-name"] || "broken"
-    #     is_raw = name =~ /\.(raw|hbr)\z/
-    #     hbs_template = node.inner_html
-
-    #     begin
-    #       if is_raw
-    #         js_compiler.append_js_error(
-    #           "discourse/templates/#{name}",
-    #           "Raw templates are no longer supported",
-    #         )
-    #       else
-    #         js_compiler.append_ember_template(
-    #           "discourse/templates/#{name.delete_prefix("/")}",
-    #           hbs_template,
-    #         )
-    #       end
-    #     rescue ThemeJavascriptCompiler::CompileError => ex
-    #       js_compiler.append_js_error("discourse/templates/#{name}", ex.message)
-    #       errors << ex.message
-    #     end
-
-    #     node.remove
-    #   end
-
-    # doc
-    #   .css('script[type="text/discourse-plugin"]')
-    #   .each_with_index do |node, index|
-    #     version = node["version"]
-    #     next if version.blank?
-
-    #     initializer_name =
-    #       "theme-field" + "-#{self.id}" + "-#{Theme.targets[self.target_id]}" +
-    #         "-#{ThemeField.types[self.type_id]}" + "-script-#{index + 1}"
-    #     begin
-    #       js = <<~JS
-    #       import { withPluginApi } from "discourse/lib/plugin-api";
-
-    #       export default {
-    #         name: #{initializer_name.inspect},
-    #         after: "inject-objects",
-
-    #         initialize() {
-    #           withPluginApi(#{version.inspect}, (api) => {
-    #             #{node.inner_html}
-    #           });
-    #         }
-    #       };
-    #     JS
-
-    #       js_compiler.append_module(
-    #         js,
-    #         "discourse/initializers/#{initializer_name}",
-    #         "js",
-    #         include_variables: true,
-    #       )
-    #     rescue ThemeJavascriptCompiler::CompileError => ex
-    #       js_compiler.append_js_error("discourse/initializers/#{initializer_name}", ex.message)
-    #       errors << ex.message
-    #     end
-
-    #     node.remove
-    #   end
-
-    # doc
-    #   .css("script")
-    #   .each_with_index do |node, index|
-    #     if inline_javascript?(node)
-    #       js_compiler.append_raw_script(
-    #         "_html/#{Theme.targets[self.target_id]}/#{name}_#{index + 1}.js",
-    #         node.inner_html,
-    #       )
-    #       node.remove
-    #     else
-    #       node["nonce"] = CSP_NONCE_PLACEHOLDER
-    #     end
-    #   end
-
-    # settings_hash = theme.build_settings_hash
-    # if js_compiler.has_content? && settings_hash.present?
-    #   js_compiler.prepend_settings(settings_hash)
-    # end
-    # javascript_cache.content = js_compiler.content
-    # javascript_cache.source_map = js_compiler.source_map
-    # javascript_cache.save!
-
-    # doc.add_child(<<~HTML.html_safe) if javascript_cache.content.present?
-    #   <script defer src='#{javascript_cache.url}' data-theme-id='#{theme_id}' nonce="#{CSP_NONCE_PLACEHOLDER}"></script>
-    # HTML
     [html, errors&.join("\n")]
   end
 
@@ -503,7 +410,7 @@ class ThemeField < ActiveRecord::Base
     css, _source_map =
       begin
         compile_scss(prepended_scss)
-      rescue SassC::SyntaxError => e
+      rescue SassC::SyntaxError, DiscourseJsProcessor::TranspileError => e
         # We don't want to raise a blocking error here
         # admin theme editor or discourse_theme CLI will show it nonetheless
         Rails.logger.error "SCSS compilation error: #{e.message}"
@@ -523,7 +430,7 @@ class ThemeField < ActiveRecord::Base
       else
         self.error = nil unless error.nil?
       end
-    rescue SassC::SyntaxError, SassC::NotRenderedError => e
+    rescue SassC::SyntaxError, SassC::NotRenderedError, DiscourseJsProcessor::TranspileError => e
       self.error = e.message unless self.destroyed?
     end
     self.compiler_version = Theme.compiler_version

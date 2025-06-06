@@ -20,6 +20,8 @@ class Theme < ActiveRecord::Base
 
   belongs_to :user
   belongs_to :color_scheme
+  alias_method :color_palette, :color_scheme
+
   has_many :theme_fields, dependent: :destroy, validate: false
   has_many :theme_settings, dependent: :destroy
   has_many :theme_translation_overrides, dependent: :destroy
@@ -51,6 +53,8 @@ class Theme < ActiveRecord::Base
           class_name: "ColorScheme",
           through: :theme_color_scheme,
           source: :color_scheme
+  alias_method :owned_color_palette, :owned_color_scheme
+  alias_method :owned_color_palette=, :owned_color_scheme=
 
   has_many :locale_fields,
            -> { filter_locale_fields(I18n.fallbacks[I18n.locale]) },
@@ -84,11 +88,10 @@ class Theme < ActiveRecord::Base
   scope :include_relations,
         -> do
           include_basic_relations.includes(
-            :child_themes,
             :theme_settings,
             :settings_field,
-            :color_scheme,
             theme_fields: %i[upload theme_settings_migration],
+            child_themes: %i[color_scheme locale_fields theme_translation_overrides],
           )
         end
 
@@ -99,7 +102,9 @@ class Theme < ActiveRecord::Base
             :user,
             :locale_fields,
             :theme_translation_overrides,
-            parent_themes: %i[locale_fields theme_translation_overrides],
+            color_scheme: %i[theme color_scheme_colors],
+            owned_color_scheme: %i[theme color_scheme_colors],
+            parent_themes: %i[color_scheme locale_fields theme_translation_overrides],
           )
         end
 
@@ -353,6 +358,12 @@ class Theme < ActiveRecord::Base
     theme_fields.each do |field|
       field.errors.full_messages.each { |message| errors.add(:base, message) } unless field.valid?
     end
+  end
+
+  def screenshot_url
+    theme_fields
+      .find { |field| field.type_id == ThemeField.types[:theme_screenshot_upload_var] }
+      &.upload_url
   end
 
   def switch_to_component!
@@ -650,15 +661,16 @@ class Theme < ActiveRecord::Base
     end
   end
 
-  def internal_translations
-    @internal_translations ||= translations(internal: true)
+  def internal_translations(preloaded_locale_fields: nil)
+    @internal_translations ||=
+      translations(internal: true, preloaded_locale_fields: preloaded_locale_fields)
   end
 
-  def translations(internal: false)
+  def translations(internal: false, preloaded_locale_fields: nil)
     fallbacks = I18n.fallbacks[I18n.locale]
     begin
       data =
-        locale_fields.first&.translation_data(
+        (preloaded_locale_fields&.first || locale_fields.first)&.translation_data(
           with_overrides: false,
           internal: internal,
           fallback_fields: locale_fields,
@@ -1012,6 +1024,40 @@ class Theme < ActiveRecord::Base
 
   def user_selectable_count
     UserOption.where(theme_ids: [id]).count
+  end
+
+  def find_or_create_owned_color_palette
+    Theme.transaction do
+      next self.owned_color_palette if self.owned_color_palette
+
+      palette = self.color_palette || ColorScheme.base
+
+      copy = palette.dup
+      copy.theme_id = self.id
+      copy.base_scheme_id = nil
+      copy.user_selectable = false
+      copy.via_wizard = false
+      copy.save!
+
+      result =
+        ThemeColorScheme.insert_all(
+          [{ theme_id: self.id, color_scheme_id: copy.id }],
+          unique_by: :index_theme_color_schemes_on_theme_id,
+        )
+
+      if result.rows.size == 0
+        # race condition, a palette has already been associated with this theme
+        copy.destroy!
+        self.reload.owned_color_palette
+      else
+        ColorSchemeColor.insert_all(
+          palette.colors.map do |color|
+            { color_scheme_id: copy.id, name: color.name, hex: color.hex, dark_hex: color.dark_hex }
+          end,
+        )
+        copy.reload
+      end
+    end
   end
 
   private

@@ -21,8 +21,17 @@ describe "User preferences | Security", type: :system do
   shared_examples "security keys" do
     it "adds a 2FA security key and logs in with it" do
       with_virtual_authenticator do
-        user_preferences_security_page.visit(user)
-        user_preferences_security_page.visit_second_factor(user, password)
+        confirm_session_modal =
+          user_preferences_security_page
+            .visit(user)
+            .click_manage_2fa_authentication
+            .click_forgot_password
+
+        expect(confirm_session_modal).to have_forgot_password_email_sent
+
+        confirm_session_modal.submit_password(password)
+
+        expect(page).to have_current_path("/u/#{user.username}/preferences/second-factor")
 
         find(".security-key .new-security-key").click
         expect(user_preferences_security_page).to have_css("input#security-key-name")

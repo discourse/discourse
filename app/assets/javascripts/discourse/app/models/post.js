@@ -179,6 +179,7 @@ export default class Post extends RestModel {
   @trackedPostProperty expandedExcerpt;
   @trackedPostProperty group_moderator;
   @trackedPostProperty hidden;
+  @trackedPostProperty id;
   @trackedPostProperty is_auto_generated;
   @trackedPostProperty last_wiki_edit;
   @trackedPostProperty likeAction;
@@ -195,6 +196,7 @@ export default class Post extends RestModel {
   @trackedPostProperty reply_count;
   @trackedPostProperty reply_to_user;
   @trackedPostProperty staff;
+  @trackedPostProperty staged;
   @trackedPostProperty title_is_group;
   @trackedPostProperty trust_level;
   @trackedPostProperty updated_at;
@@ -209,6 +211,8 @@ export default class Post extends RestModel {
   @trackedPostProperty wiki;
   @trackedPostProperty yours;
   @trackedPostProperty user_custom_fields;
+  @trackedPostProperty has_post_localizations;
+  @trackedPostProperty post_localizations;
 
   @alias("can_edit") canEdit; // for compatibility with existing code
   @equal("trust_level", 0) new_user;
@@ -640,6 +644,7 @@ export default class Post extends RestModel {
       target: "post",
       targetId: this.id,
     });
+    // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
     this.appEvents.trigger("post-stream:refresh", { id: this.id });
   }
 

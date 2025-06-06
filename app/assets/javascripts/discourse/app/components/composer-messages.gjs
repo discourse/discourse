@@ -315,6 +315,10 @@ export default class ComposerMessages extends Component {
 
   @action
   popup(message) {
+    if (this.messages.length) {
+      return;
+    }
+
     if (!this.messagesByTemplate[message.templateName]) {
       this.messages.pushObject(message);
       this.set("messageCount", this.messages.length);

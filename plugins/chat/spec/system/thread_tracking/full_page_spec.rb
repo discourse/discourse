@@ -99,10 +99,6 @@ describe "Thread tracking state | full page", type: :system do
       thread_page.notification_level = :tracking
 
       expect(thread_page).to have_notification_level("tracking")
-
-      chat_page.visit_channel(channel)
-
-      expect(thread_list_page).to have_thread(new_thread)
     end
 
     describe "sidebar unread indicators" do

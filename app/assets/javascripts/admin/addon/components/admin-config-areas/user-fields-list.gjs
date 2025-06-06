@@ -49,8 +49,8 @@ export default class AdminConfigAreasUserFieldsList extends Component {
 
   @action
   destroyField(field) {
-    this.dialog.yesNoConfirm({
-      message: i18n("admin.user_fields.delete_confirm"),
+    this.dialog.deleteConfirm({
+      title: i18n("admin.user_fields.delete_confirm"),
       didConfirm: () => {
         this.#deleteField(field);
       },
@@ -62,7 +62,7 @@ export default class AdminConfigAreasUserFieldsList extends Component {
       await field.destroyRecord();
       this.fields.removeObject(field);
       this.toasts.success({
-        duration: 3000,
+        duration: "short",
         data: {
           message: i18n("admin.config_areas.user_fields.delete_successful"),
         },

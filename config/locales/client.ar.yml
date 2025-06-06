@@ -1477,7 +1477,6 @@ ar:
       said: "%{username}:"
       profile: "الملف الشخصي"
       profile_possessive: "الملف الشخصي لـ %{username}"
-      account_possessive: "حساب %{name}"
       mute: "كتم"
       edit: "تعديل التفضيلات"
       download_archive:
@@ -2425,7 +2424,6 @@ ar:
         title: "عنوان IP للتسجيل"
       avatar:
         title: "صورة الملف الشخصي"
-        header_title: "الملف الشخصي والرسائل والإشارات المرجعية والتفضيلات"
         name_and_description: "%{name} - %{description}"
         edit: "تعديل صورة الملف الشخصي"
       title:
@@ -3452,7 +3450,6 @@ ar:
           aria_label: التصفية حسب أقصى عدد من المشاهدات
         additional_options:
           label: "التصفية حسب عدد المنشورات وعدد مشاهدات الموضوع"
-    hamburger_menu: "القائمة"
     new_item: "جديد"
     go_back: "الرجوع"
     not_logged_in_user: "صفحة المستخدم مع ملخص عن نشاطه الحالي وتفضيلاته"
@@ -4359,6 +4356,11 @@ ar:
       in_reply_to: "تحميل المنشور الرئيسي"
       view_all_posts: "عرض جميع المنشورات"
       badge_granted_tooltip: "حصل %{username} على شارة \"%{badge_name}\" لهذا المنشور!"
+      localizations:
+        table:
+          actions: "الإجراءات"
+          edit: "تعديل"
+          delete: "حذف"
       errors:
         create: "عذرًا، حدث خطأ في أثناء إنشاء منشورك. يُرجى إعادة المحاولة."
         edit: "عذرا، حدث خطأ في أثناء تعديل منشورك. يُرجى إعادة المحاولة."
@@ -5059,7 +5061,6 @@ ar:
         today: "اليوم"
     custom_homepage:
       admin_message: 'لقد قامت إحدى السمات الخاصة بك بتفعيل المعدِّل "custom_homepage"، لكنه لا ينتج أي شيء في الموصِّل [custom-homepage]. (هذه الرسالة تظهر لمسؤولي الموقع فقط.)'
-    browser_update: 'عذرًا، <a href="https://www.discourse.org/faq/#browser">متصفحك غير مدعوم</a>. يُرجى <a href="https://browsehappy.com">التبديل إلى متصفح مدعوم</a> لعرض المحتوى الغني، وتسجيل الدخول والرد.'
     permission_types:
       full: "الإنشاء/الرد/العرض"
       create_post: "الرد/العرض"
@@ -5509,7 +5510,7 @@ ar:
           save: "حفظ"
           delete: "حذف"
           delete_confirm: "هل تريد بالتأكيد حذف هذا القسم؟"
-          delete_public_confirm: "هذا القسم <strong>مرئي للجميع</strong>، هل تريد بالتأكيد حذفه؟"
+          delete_public_confirm: "هذا القسم مرئي للجميع، هل تريد بالتأكيد حذفه؟"
           update_public_confirm: "ستكون التغييرات <strong>مرئية للجميع</strong> على هذا الموقع. هل أنت متأكد؟"
           mark_as_private_confirm: "هذا القسم <strong>مرئي للجميع</strong>. وبعد التحديث، سيكون <strong>مرئيًا لك فقط</strong>. هل أنت متأكد؟"
           reset_confirm: "هل تريد بالتأكيد إعادة تعيين هذا القسم إلى الإعداد الافتراضي؟"
@@ -5649,6 +5650,9 @@ ar:
         forum:
           label: المنتدى
       back_to_forum: "العودة إلى المنتدى"
+      clear_filter: "مسح الفلتر"
+      no_results:
+        title: "لا توجد نتائج"
       collapse_all_sections: "طي جميع الأقسام"
       expand_all_sections: "توسيع جميع الأقسام"
       search: "البحث"
@@ -5776,14 +5780,9 @@ ar:
     safari_15_warning: "سيُصبح متصفّحك غير متوافق مع هذا المجتمع قريبًا. للاستمرار في المشاركة هنا، يُرجى ترقية متصفّحك أو <a href='%{url}'>الاطّلاع على المزيد</a>."
     discovery:
       headings:
+        multi_tag:
+          default: "الموضوعات التي تم وضع وسم عليها %{tags}"
         categories: "كل الفئات"
-        filter_labels:
-          latest: "الحديثة"
-          top: "الأكثر نشاطًا"
-          new: "الجديدة"
-          unread: "غير المقروءة"
-          hot: "ساخن"
-          unseen: "غير مقروءة"
   admin_js:
     type_to_filter: "اكتب للتصفية…"
     settings: "الإعدادات"
@@ -5843,24 +5842,23 @@ ar:
         login_and_authentication:
           title: "تسجيل الدخول والمصادقة"
           header_description: "تكوين كيفية تسجيل دخول المستخدمين ومصادقتهم، والعبارات السرية، والمفاتيح، ومقِّدمي OAuth2، وغير ذلك"
-        logo_and_fonts:
-          logo:
-            title: "الشعار"
-            form:
-              saved: "حُفظت إعدادات الشعار."
-              logo:
-                title: "الشعار الرئيسي"
-              mobile: "الجوَّال"
-              email: "البريد الإلكتروني"
-              manifest_screenshots:
-                description: "لقطات شاشة تعرض ميزات المثيل ووظيفته على صفحة رسالة التثبيت الخاصة به. يجب أن تكون جميع الصور من تحميلات محلية وبالأبعاد نفسها."
-          fonts:
-            title: "الخطوط"
-            form:
-              heading_font:
-                title: "خط العنوان"
-            backfill_modal:
-              modal_yes: "نعم"
+        logo:
+          title: "الشعار"
+          form:
+            saved: "حُفظت إعدادات الشعار."
+            logo:
+              title: "الشعار الرئيسي"
+            mobile: "الجوَّال"
+            email: "البريد الإلكتروني"
+            manifest_screenshots:
+              description: "لقطات شاشة تعرض ميزات المثيل ووظيفته على صفحة رسالة التثبيت الخاصة به. يجب أن تكون جميع الصور من تحميلات محلية وبالأبعاد نفسها."
+        fonts:
+          title: "الخطوط"
+          form:
+            heading_font:
+              title: "خط العنوان"
+          backfill_modal:
+            modal_yes: "نعم"
         navigation:
           title: "التنقل"
           header_description: "تكوين روابط التنقل وعناصر القائمة لموقعك. يتضمَّن ذلك الموقع وسلوك قائمة التنقل الرئيسية، والروابط السريعة في أعلى الصفحة الرئيسية، والشريط الجانبي للمسؤول"
@@ -6636,6 +6634,8 @@ ar:
           city_for_disputes_placeholder: "المدينة"
           city_for_disputes_help: |
             حدِّد المدينة لحل النزاعات القانونية المتعلقة بهذا المنتدى.
+          extra_groups:
+            groups: "مجموعتان"
           optional: "(اختياري)"
           update: "تحديث"
           toasts:
@@ -6724,6 +6724,8 @@ ar:
           save_successful: "تم حفظ حقل المستخدم."
         color_palettes:
           palette_name: "الاسم"
+          duplicate: "تكرار"
+          delete: "حذف"
           color_options:
             toggle: "قابلة للاختيار من قِبل المستخدم"
             toggle_description: "يمكن تحديد لوحة الألوان من قِبل المستخدمين"
@@ -7053,46 +7055,46 @@ ar:
           active_filter: "نشطة"
           inactive_filter: "غير نشطة"
           updates_available_filter: "تتوفَّر تحديثات"
-          schema:
-            title: "تعديل إعداد %{name}"
-            back_button: "العودة إلى %{name}"
-            fields:
-              required: "*مطلوب"
-              groups:
-                at_least:
-                  zero: "مطلوب %{count} مجموعة على الأقل"
-                  one: "مطلوب مجموعة واحدة (%{count}) على الأقل"
-                  two: "مطلوب مجموعتان (%{count}) على الأقل"
-                  few: "مطلوب %{count} مجموعات على الأقل"
-                  many: "مطلوب %{count} مجموعة على الأقل"
-                  other: "مطلوب %{count} مجموعة على الأقل"
-              categories:
-                at_least:
-                  zero: "مطلوب %{count} فئة على الأقل"
-                  one: "مطلوب فئة واحدة (%{count})"
-                  two: "مطلوب فئتان (%{count})"
-                  few: "مطلوب %{count} فئات على الأقل"
-                  many: "مطلوب %{count} فئة على الأقل"
-                  other: "مطلوب %{count} فئة على الأقل"
-              tags:
-                at_least:
-                  zero: "مطلوب %{count} وسم على الأقل"
-                  one: "مطلوب وسم واحد (%{count}) على الأقل"
-                  two: "مطلوب وسمان (%{count}) على الأقل"
-                  few: "مطلوب %{count} وسوم على الأقل"
-                  many: "مطلوب %{count} وسمًا على الأقل"
-                  other: "مطلوب %{count} وسم على الأقل"
-              string:
-                too_short:
-                  zero: "يجب ألا يقل عن %{count} حرف"
-                  one: "يجب ألا يقل عن حرف واحد (%{count})"
-                  two: "يجب ألا يقل عن حرفَين (%{count})"
-                  few: "يجب ألا يقل عن %{count} أحرف"
-                  many: "يجب ألا يقل عن %{count} حرفًا"
-                  other: "يجب ألا يقل عن %{count} حرف"
-              number:
-                too_small: "يجب أن تكون القيمة أكبر من أو تساوي %{count}"
-                too_large: "يجب أن تكون القيمة أقل من أو تساوي %{count}"
+        schema:
+          title: "تعديل إعداد %{name}"
+          back_button: "العودة إلى %{name}"
+          fields:
+            required: "*مطلوب"
+            groups:
+              at_least:
+                zero: "مطلوب %{count} مجموعات على الأقل"
+                one: "مطلوب مجموعة واحدة (%{count}) على الأقل"
+                two: "مطلوب مجموعتان (%{count}) على الأقل"
+                few: "مطلوب %{count} مجموعات على الأقل"
+                many: "مطلوب %{count} مجموعات على الأقل"
+                other: "مطلوب %{count} مجموعات على الأقل"
+            categories:
+              at_least:
+                zero: "مطلوب %{count} فئات على الأقل"
+                one: "مطلوب فئة واحدة (%{count})"
+                two: "مطلوب فئتان (%{count})"
+                few: "مطلوب %{count} فئات على الأقل"
+                many: "مطلوب %{count} فئات على الأقل"
+                other: "مطلوب %{count} فئات على الأقل"
+            tags:
+              at_least:
+                zero: "مطلوب %{count} وسمًا على الأقل"
+                one: "مطلوب وسم واحد (%{count}) على الأقل"
+                two: "مطلوب وسمان (%{count}) على الأقل"
+                few: "مطلوب %{count} وسوم على الأقل"
+                many: "مطلوب %{count} وسمًا على الأقل"
+                other: "مطلوب %{count} وسمًا على الأقل"
+            string:
+              too_short:
+                zero: "يجب ألا يقل عن %{count} حرفًا"
+                one: "يجب ألا يقل عن حرف واحد (%{count})"
+                two: "يجب ألا يقل عن حرفَين (%{count})"
+                few: "يجب ألا يقل عن %{count} أحرف"
+                many: "يجب ألا يقل عن %{count} حرفًا"
+                other: "يجب ألا يقل عن %{count} حرفًا"
+            number:
+              too_small: "يجب أن تكون القيمة أكبر من أو تساوي %{count}"
+              too_large: "يجب أن تكون القيمة أقل من أو تساوي %{count}"
         colors:
           select_base:
             title: "تحديد لوحة الألوان الأساسية"
@@ -7103,36 +7105,28 @@ ar:
           about: "عدِّل الألوان التي تستخدمها سماتك. أنشئ لوحة ألوان جديدة للبدء."
           new_name: "لوحة ألوان جديدة"
           copy_name_prefix: "نسخة من"
-          delete_confirm: "هل تريد حذف لوحة الألوان هذه؟"
           undo: "تراجع"
           undo_title: "يمكنك التراجع عن التغييرات التي أجريتها على هذا اللون منذ آخر مرة تم حفظه."
           revert: "عودة"
           revert_title: "إعادة تعيين هذا اللون إلى لوحة ألوان Discourse الافتراضية"
           primary:
             name: "الأساسي"
-            description: "أغلب النصوص، والأيقونات، والحدود."
           primary-medium:
             name: "أساسي متوسط"
           primary-low-mid:
             name: "أساسي تحت المتوسط"
           secondary:
             name: "الثانوي"
-            description: "لون الخلفية الأساسي، ولون نصوص بعض الأزرار."
           tertiary:
             name: "الثالث"
-            description: "الروابط، وبعض الأزرار، والإشعارات، ولون التمييز."
           quaternary:
             name: "الرابع"
-            description: "للاستخدام الاختياري في السمات."
           header_background:
             name: "خلفية الرأس"
-            description: "لون خلفية رأس الموقع."
           header_primary:
             name: "اللون الأساسي للرأس"
-            description: "النصوص والأيقونات في رأس الموقع."
           highlight:
             name: "التمييز"
-            description: "لون خلفية العناصر المميَّزة في الصفحة، كالمنشورات والموضوعات."
           highlight-high:
             name: "تمييز قوي"
           highlight-medium:
@@ -7141,19 +7135,14 @@ ar:
             name: "تمييز طفيف"
           danger:
             name: "الخطر"
-            description: "لون تمييز الإجراءات مثل حذف المنشورات والموضوعات."
           success:
             name: "تم بنجاح"
-            description: "يتم استخدامه لإظهار نجاح عملية ما."
           love:
             name: "الإعجاب"
-            description: "لون زر تسجيل الإعجاب."
           selected:
             name: "محدَّد"
-            description: "لون الخلفية لعناصر مثل عناصر القائمة عند تحديدها أو عندما تكون نشطة."
           hover:
             name: "التمرير فوق العناصر"
-            description: "لون الخلفية لعناصر مثل عناصر القائمة عند التمرير فوقها أو تحديد التركيز على لوحة المفاتيح لها."
           editor:
             light: "فاتح"
             dark: "داكن"

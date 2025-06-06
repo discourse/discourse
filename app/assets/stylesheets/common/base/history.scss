@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 // styles that apply to the popup that appears when you show the edit history of a post
 .modal.history-modal {
   .d-modal__footer {
@@ -20,11 +22,11 @@
     overflow: auto;
     border-bottom: 3px solid var(--primary-low);
 
-    @include breakpoint(tablet) {
+    @include viewport.until(md) {
       padding-bottom: 0;
     }
 
-    @include breakpoint(mobile-large) {
+    @include viewport.until(sm) {
       padding-bottom: 0.5em;
     }
   }
@@ -43,7 +45,7 @@
       border: none;
     }
 
-    @include breakpoint(tablet) {
+    @include viewport.until(md) {
       width: 100%;
       margin-top: 0.5em;
 
@@ -148,7 +150,7 @@
       margin: 0;
     }
 
-    @include breakpoint(tablet) {
+    @include viewport.until(md) {
       width: 100%;
       justify-content: space-between;
     }
@@ -207,7 +209,7 @@
       }
     }
 
-    @include breakpoint(tablet) {
+    @include viewport.until(md) {
       width: 100%;
       flex: 1 1 100%;
 

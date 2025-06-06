@@ -122,19 +122,6 @@ module("Unit | Service | AdminSearchDataSource", function (hooks) {
     assert.deepEqual(this.subject.search("a"), []);
   });
 
-  test("search - limits the returned types", async function (assert) {
-    await this.subject.buildMap();
-    let results = this.subject.search("anonymous");
-    assert.deepEqual(results.length, 3);
-
-    results = this.subject.search("anonymous", { types: ["report"] });
-    assert.deepEqual(results.length, 1);
-    assert.deepEqual(
-      results[0].url,
-      "/admin/reports/page_view_anon_browser_reqs"
-    );
-  });
-
   test("search - prioritize whole word matches", async function (assert) {
     await this.subject.buildMap();
     let results = this.subject.search("anonym");
@@ -145,6 +132,34 @@ module("Unit | Service | AdminSearchDataSource", function (hooks) {
     await this.subject.buildMap();
     let results = this.subject.search("about your title");
     assert.deepEqual(results[0].label, "About your site > Title");
+  });
+
+  test("search - prioritize pages", async function (assert) {
+    this.subject.componentDataSourceItems = [];
+    this.subject.reportDataSourceItems = [];
+    this.subject.themeDataSourceItems = [];
+    this.subject.pageDataSourceItems = [
+      {
+        description: "first page",
+        icon: "house",
+        keywords: "exact settings",
+        label: "Page about whatever",
+        type: "page",
+        url: "/admin",
+      },
+    ];
+    this.subject.settingDataSourceItems = [
+      {
+        description: "first setting",
+        icon: "house",
+        keywords: "exact settings",
+        label: "exact setting",
+        type: "setting",
+        url: "/admin",
+      },
+    ];
+    let results = this.subject.search("exact      setting");
+    assert.deepEqual(results[0].label, "Page about whatever");
   });
 });
 

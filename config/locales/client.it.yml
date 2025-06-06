@@ -485,7 +485,7 @@ it:
       one: "Vedi %{count} nuovo argomento"
       other: "Vedi %{count} nuovi argomenti"
     preview: "anteprima"
-    cancel: "annulla"
+    cancel: "Annulla"
     deleting: "Eliminazione…"
     save: "Salva Modifiche"
     saving: "Salvataggio…"
@@ -1159,7 +1159,6 @@ it:
       said: "%{username}:"
       profile: "Profilo"
       profile_possessive: "Profilo di %{username}"
-      account_possessive: "Account di %{name}"
       mute: "Silenzia"
       edit: "Modifica opzioni"
       download_archive:
@@ -1991,7 +1990,6 @@ it:
         title: "Indirizzo IP di Registrazione"
       avatar:
         title: "Immagine Profilo"
-        header_title: "profilo, messaggi, segnalibri e preferenze"
         name_and_description: "%{name} - %{description}"
         edit: "Modifica immagine profilo"
       title:
@@ -2858,7 +2856,6 @@ it:
           aria_label: filtra per visualizzazioni massime
         additional_options:
           label: "Filtra per numero di messaggi e visualizzazioni dell'argomento"
-    hamburger_menu: "menu"
     new_item: "nuovo"
     go_back: "indietro"
     not_logged_in_user: "pagina utente con riepilogo delle attività correnti e delle impostazioni"
@@ -3565,6 +3562,11 @@ it:
       in_reply_to: "Carica messaggio padre"
       view_all_posts: "Visualizza tutti i messaggi"
       badge_granted_tooltip: "%{username} ha ottenuto il distintivo \"%{badge_name}\" per questo messaggio!"
+      localizations:
+        table:
+          actions: "Azioni"
+          edit: "Modifica"
+          delete: "Cancella"
       errors:
         create: "Spiacenti, si è verificato un errore nel creare il tuo messaggio. Prova di nuovo."
         edit: "Spiacenti, si è verificato un errore nel modificare il tuo messaggio. Prova di nuovo."
@@ -4162,7 +4164,6 @@ it:
         today: "Oggi"
     custom_homepage:
       admin_message: 'Uno dei tuoi argomenti ha abilitato il modificatore "custom_homepage", ma non invia alcun risultato al connettore [custom-homepage]. (Messaggio visibile solo agli amministratori del sito)'
-    browser_update: 'Purtroppo, <a href="https://www.discourse.org/faq/#browser">il tuo browser non è supportato</a>. Per visualizzare i contenuti multimediali, <a href="https://browsehappy.com">passa a un browser supportato</a>, accedi e rispondi.'
     permission_types:
       full: "Crea / Rispondi / Visualizza"
       create_post: "Rispondi / Visualizza"
@@ -4548,7 +4549,7 @@ it:
           save: "Salva"
           delete: "Elimina"
           delete_confirm: "Vuoi davvero eliminare questa sezione?"
-          delete_public_confirm: "Questa sezione è <strong>visibile a chiunque</strong>. Vuoi davvero eliminarla?"
+          delete_public_confirm: "Questa sezione è visibile a chiunque. Vuoi davvero eliminarla?"
           update_public_confirm: "Le modifiche saranno <strong>visibili a chiunque</strong> sul sito. Vuoi procedere?"
           mark_as_private_confirm: "Questa sezione è <strong>visibile a chiunque</strong>. Dopo l'aggiornamento, sarà <strong>visibile solo a te</strong>. Intendi procedere?"
           reset_confirm: "Vuoi davvero ripristinare questa sezione ai valori predefiniti?"
@@ -4664,6 +4665,9 @@ it:
         forum:
           label: Forum
       back_to_forum: "Torna al forum"
+      clear_filter: "Cancella il filtro"
+      no_results:
+        title: "Nessun risultato"
       collapse_all_sections: "Comprimi tutte le sezioni"
       expand_all_sections: "Espandi tutte le sezioni"
       search: "Cerca"
@@ -4774,14 +4778,9 @@ it:
     powered_by_discourse: "Con tecnologia Discourse"
     discovery:
       headings:
+        multi_tag:
+          default: "Argomenti etichettati %{tags}"
         categories: "Tutte le categorie"
-        filter_labels:
-          latest: "Più recenti"
-          top: "Popolari"
-          new: "Nuovo"
-          unread: "Non letti"
-          hot: "Novità"
-          unseen: "Non visualizzati"
   admin_js:
     type_to_filter: "Digita per filtrare…"
     settings: "Impostazioni"
@@ -4843,24 +4842,23 @@ it:
         login_and_authentication:
           title: "Accesso e autenticazione"
           header_description: "Configura le modalità di accesso e autenticazione degli utenti, segreti e chiavi, fornitori OAuth2 e altro ancora"
-        logo_and_fonts:
-          logo:
-            form:
-              logo:
-                title: "Logo primario"
-              mobile: "Mobile"
-              email: "Email"
-              manifest_screenshots:
-                description: "Schermate che mostrano le caratteristiche e le funzionalità nella pagina di installazione. Tutte le immagini devono essere caricate in locale e delle stesse dimensioni."
-              opengraph_image:
-                description: "Immagine opengraph predefinita, utilizzata quando la pagina non ha altre immagini adatte. Se lasciato vuoto, verrà usato large_icon."
-          fonts:
-            title: "Caratteri"
-            form:
-              heading_font:
-                title: "Carattere dell'intestazione"
-            backfill_modal:
-              modal_yes: "Sì"
+        logo:
+          form:
+            logo:
+              title: "Logo primario"
+            mobile: "Mobile"
+            email: "Email"
+            manifest_screenshots:
+              description: "Schermate che mostrano le caratteristiche e le funzionalità nella pagina di installazione. Tutte le immagini devono essere caricate in locale e delle stesse dimensioni."
+            opengraph_image:
+              description: "Immagine opengraph predefinita, utilizzata quando la pagina non ha altre immagini adatte. Se lasciato vuoto, verrà usato large_icon."
+        fonts:
+          title: "Caratteri"
+          form:
+            heading_font:
+              title: "Carattere dell'intestazione"
+          backfill_modal:
+            modal_yes: "Sì"
         navigation:
           title: "Navigazione"
           header_description: "Configura i link di navigazione e le voci di menu per il tuo sito. Ciò include la posizione e il comportamento del menu di navigazione principale, i link rapidi in cima alla home page, nonché la barra laterale di amministrazione"
@@ -5576,6 +5574,8 @@ it:
           city_for_disputes_placeholder: "Città"
           city_for_disputes_help: |
             Specifica la città in cui risolvere le controversie legali relative a questo forum.
+          extra_groups:
+            groups: "Gruppi"
           optional: "(opzionale)"
           update: "Aggiorna"
           toasts:
@@ -5664,6 +5664,8 @@ it:
           save_successful: "Campo utente salvato."
         color_palettes:
           palette_name: "Nome"
+          duplicate: "Duplica"
+          delete: "Elimina"
           color_options:
             toggle: "Selezionabile dall'utente"
             toggle_description: "Lo schema di colori può essere selezionato dagli utenti"
@@ -5978,30 +5980,30 @@ it:
           active_filter: "Attivi"
           inactive_filter: "Non attivi"
           updates_available_filter: "Aggiornamenti disponibili"
-          schema:
-            title: "Modifica l'impostazione %{name}"
-            back_button: "Torna a %{name}"
-            fields:
-              required: "*obbligatorio"
-              groups:
-                at_least:
-                  one: "è richiesto almeno %{count} gruppo"
-                  other: "sono richiesti almeno %{count} gruppi"
-              categories:
-                at_least:
-                  one: "è richiesta almeno %{count} categoria"
-                  other: "sono richieste almeno %{count} categorie"
-              tags:
-                at_least:
-                  one: "è richiesta almeno %{count} etichetta"
-                  other: "sono richieste almeno %{count} etichette"
-              string:
-                too_short:
-                  one: "deve essere almeno di %{count} carattere"
-                  other: "deve essere almeno di %{count} caratteri"
-              number:
-                too_small: "deve essere maggiore o uguale a %{count}"
-                too_large: "deve essere minore o uguale a %{count}"
+        schema:
+          title: "Modifica l'impostazione %{name}"
+          back_button: "Torna a %{name}"
+          fields:
+            required: "*obbligatorio"
+            groups:
+              at_least:
+                one: "è richiesto almeno %{count} gruppo"
+                other: "sono richiesti almeno %{count} gruppi"
+            categories:
+              at_least:
+                one: "è richiesta almeno %{count} categoria"
+                other: "sono richieste almeno %{count} categorie"
+            tags:
+              at_least:
+                one: "è richiesta almeno %{count} etichetta"
+                other: "sono richieste almeno %{count} etichette"
+            string:
+              too_short:
+                one: "deve essere almeno di %{count} carattere"
+                other: "deve essere almeno di %{count} caratteri"
+            number:
+              too_small: "deve essere maggiore o uguale a %{count}"
+              too_large: "deve essere minore o uguale a %{count}"
         colors:
           select_base:
             title: "Seleziona la tavolozza dei colori di base"
@@ -6012,36 +6014,28 @@ it:
           about: "Modifica i colori usati dal tuo tema. Crea una nuova tavolozza dei colori per iniziare."
           new_name: "Nuovo schema di colori"
           copy_name_prefix: "Copia di"
-          delete_confirm: "Eliminare questa tavolozza dei colori?"
           undo: "Annulla"
           undo_title: "Annulla le modifiche effettuate a questo colore dall'ultimo salvataggio."
           revert: "Ripristina"
           revert_title: "Reimposta questo colore alla tavolozza dei colori predefiniti di Discourse."
           primary:
             name: "primario"
-            description: "Per la maggior parte del testo, icone e bordi."
           primary-medium:
             name: "primary-medium"
           primary-low-mid:
             name: "primary-low-mid"
           secondary:
             name: "secondario"
-            description: "Il colore di sfondo principale e il colore del testo di alcuni pulsanti"
           tertiary:
             name: "terziario"
-            description: "Colore dei collegamenti, alcuni pulsanti, notifiche e colore in primo piano."
           quaternary:
             name: "quaternario"
-            description: "Per uso facoltativo nei temi."
           header_background:
             name: "sfondo intestazione"
-            description: "Colore di sfondo dell'intestazione del sito."
           header_primary:
             name: "intestazione primaria"
-            description: "Testo e icone dell'intestazione del sito."
           highlight:
             name: "in evidenza"
-            description: "Il colore di sfondo degli elementi evidenziati nella pagina, come messaggi e argomenti."
           highlight-high:
             name: "highlight-high"
           highlight-medium:
@@ -6050,19 +6044,14 @@ it:
             name: "highlight-low"
           danger:
             name: "pericolo"
-            description: "Colore per evidenzare azioni come la cancellazione di messaggi e argomenti."
           success:
             name: "successo"
-            description: "Utilizzato per indicare che un'azione è stata completata con successo."
           love:
             name: "Mi piace"
-            description: "Il colore del pulsante \"Mi piace\"."
           selected:
             name: "selezionato"
-            description: "Il colore di sfondo di elementi come voci di elenco quando sono selezionati/attivi."
           hover:
             name: "passaggio mouse"
-            description: "Il colore di sfondo di elementi come voci di elenco quando viene passato il mouse su di essi o vengono selezionati da tastiera."
           editor:
             light: "Chiaro"
             dark: "Scuro"

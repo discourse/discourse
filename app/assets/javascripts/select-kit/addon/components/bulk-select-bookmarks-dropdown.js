@@ -68,7 +68,7 @@ export default class BulkSelectBookmarksDropdown extends DropdownSelectBoxCompon
                 this.router.refresh();
                 this.bulkSelectHelper.clear();
                 this.toasts.success({
-                  duration: 3000,
+                  duration: "short",
                   data: { message: i18n("bookmarks.bulk.reminders_cleared") },
                 });
               })
@@ -92,7 +92,7 @@ export default class BulkSelectBookmarksDropdown extends DropdownSelectBoxCompon
                 this.router.refresh();
                 this.bulkSelectHelper.clear();
                 this.toasts.success({
-                  duration: 3000,
+                  duration: "short",
                   data: { message: i18n("bookmarks.bulk.delete_completed") },
                 });
               })

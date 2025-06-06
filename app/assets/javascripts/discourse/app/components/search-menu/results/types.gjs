@@ -5,6 +5,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { or } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { logSearchLinkClick } from "discourse/lib/search";
 import DiscourseURL from "discourse/lib/url";
@@ -76,18 +77,17 @@ export default class Types extends Component {
       <div class={{resultType.componentName}}>
         <PluginOutlet
           @name="search-menu-results-type-top"
-          @outletArgs={{hash resultType=resultType}}
+          @outletArgs={{lazyHash resultType=resultType}}
         />
         <ul
           class="list"
           aria-label={{concat (i18n "search.results") " " resultType.type}}
         >
-          {{#each resultType.results as |result index|}}
+          {{#each resultType.results as |result|}}
             {{! template-lint-disable no-pointer-down-event-binding }}
             {{! template-lint-disable no-invalid-interactive }}
             <li
               class="item"
-              data-test-type-item="search-result-{{resultType.type}}-{{index}}"
               {{on
                 "keydown"
                 (fn this.onKeydown (hash resultType=resultType result=result))

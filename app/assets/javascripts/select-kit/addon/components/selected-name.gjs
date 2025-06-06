@@ -8,10 +8,11 @@ import { and } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import icon from "discourse/helpers/d-icon";
 import { makeArray } from "discourse/lib/helpers";
-import UtilsMixin from "select-kit/mixins/utils";
+import selectKitPropUtils from "select-kit/lib/select-kit-prop-utils";
 
 @tagName("")
-export default class SelectedName extends Component.extend(UtilsMixin) {
+@selectKitPropUtils
+export default class SelectedName extends Component {
   name = null;
   value = null;
   headerTitle = null;

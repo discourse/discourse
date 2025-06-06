@@ -5,13 +5,20 @@
   --topic-body-width: #{$topic-body-width};
   --topic-body-width-padding: #{$topic-body-width-padding};
   --topic-avatar-width: #{$topic-avatar-width};
-  --d-border-radius: 2px;
-  --d-border-radius-large: 2px;
+  --d-border-radius: 4px;
+  --d-border-radius-large: calc(var(--d-border-radius) * 2);
   --d-nav-pill-border-radius: var(--d-border-radius);
-  --d-button-border-radius: 2px;
-  --d-input-border-radius: 2px;
+  --d-button-border-radius: var(--d-border-radius);
+  --d-input-border-radius: var(--d-border-radius);
   --d-content-background: initial;
   --d-button-transition: none;
+  --space-0: 0.125rem; // 2px
+  --space-1: 0.25rem; // 4px
+  --space-2: calc(0.25rem * 2);
+  --space-3: calc(0.25rem * 3);
+  --space-4: calc(0.25rem * 4);
+  --space-5: calc(0.25rem * 5);
+  --space-6: calc(0.25rem * 6);
 }
 
 // --------------------------------------------------
@@ -93,7 +100,7 @@ dd {
 .d-editor-preview {
   ul,
   ol {
-    padding-left: 1.25em;
+    padding-inline-start: 1.25em;
   }
 }
 

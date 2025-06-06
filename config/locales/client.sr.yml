@@ -538,7 +538,7 @@ sr:
       few: "Pogledajte %{count} nove teme"
       other: "Pogledajte %{count} novih tema"
     preview: "prikaži"
-    cancel: "otkaži"
+    cancel: "Odustani"
     deleting: "Brisanje…"
     save: "Sačuvaj izmene"
     saving: "Snimanje…"
@@ -2109,6 +2109,11 @@ sr:
       sr_collapse_replies: "Spusti ugrađene odgovore"
       expand_collapse: "proširi/skupi"
       unread: "Poruka je nepročitana"
+      localizations:
+        table:
+          actions: "Akcije"
+          edit: "Izmeni"
+          delete: "Obriši"
       errors:
         create: "Žao nam je, dogodila se greška pri otvaranju tvoje poruke. Molimo pokušajte ponovo."
         edit: "Žao nam je, dogodila se greška pri izmenjivanju tvoje poruke. Molimo pokušajte ponovo."
@@ -2612,11 +2617,6 @@ sr:
     discovery:
       headings:
         categories: "Sve kategorije"
-        filter_labels:
-          latest: "Poslednje"
-          top: "Top"
-          new: "Nova"
-          unread: "Nepročitano"
   admin_js:
     settings: "Podešavanja"
     admin:
@@ -2644,13 +2644,12 @@ sr:
           title: "Datoteke"
         legal:
           title: "Legalno"
-        logo_and_fonts:
-          logo:
-            form:
-              email: "Email"
-          fonts:
-            backfill_modal:
-              modal_yes: "Da"
+        logo:
+          form:
+            email: "Email"
+        fonts:
+          backfill_modal:
+            modal_yes: "Da"
         navigation:
           title: "Navigacija"
         notifications:
@@ -2835,6 +2834,8 @@ sr:
       config_areas:
         about:
           company_name: "Ime foruma"
+          extra_groups:
+            groups: "Grupe"
           optional: "(opciono)"
           saved: "sačuvano!"
         flags:
@@ -2872,6 +2873,7 @@ sr:
           delete: "Obriši"
         color_palettes:
           palette_name: "Ime foruma"
+          delete: "Obriši"
           colors:
             title: "Boje"
       plugins:
@@ -2970,9 +2972,9 @@ sr:
             text: "Footer"
           all_filter: "sve"
           active_filter: "Aktivno"
-          schema:
-            fields:
-              required: "*potrebno"
+        schema:
+          fields:
+            required: "*potrebno"
         colors:
           title: "Boje"
           copy_name_prefix: "Kopija od"
@@ -2981,33 +2983,24 @@ sr:
           revert: "Vrati nazad"
           primary:
             name: "primarna"
-            description: "Većina teksta, ikonica i granica."
           secondary:
             name: "sekundarna"
-            description: "Glavna pozadinska boja, i boja teksta na nekim dugmićima."
           tertiary:
             name: "tercijarna"
-            description: "Linkovi, neki dugmići, obaveštenja i boja naglaska."
           quaternary:
             name: "kvartarna"
           header_background:
             name: "Pozadina headera"
-            description: "Pozadinska boja headera stranice."
           header_primary:
             name: "header primarna"
-            description: "Tekst i ikonice u headeru."
           highlight:
             name: "naglasak"
-            description: "Pozadinska boja naglašenih elemenata na stranici, kao što su poruke i teme."
           danger:
             name: "opasnost"
-            description: "Boja naglaska za akcije kao što su brisanje teme ili poruka."
           success:
             name: "uspešno"
-            description: "Koristi se da pokaže da je neka akcija bila uspešna."
           love:
             name: "lajk"
-            description: "Boja dugmeta za lajk"
         email_style:
           css: "CSS"
       email:

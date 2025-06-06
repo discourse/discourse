@@ -17,4 +17,5 @@ const TopicFooterButtonsOrganism = <template>
     </div>
   </StyleguideExample>
 </template>;
+
 export default TopicFooterButtonsOrganism;

@@ -142,6 +142,42 @@ RSpec.describe "Dismissing New", type: :system do
       expect(topic_list).to have_no_topics
     end
 
+    it "displays confirmation modal with replies preselected" do
+      sign_in(user)
+
+      visit("/new?subset=replies")
+
+      expect(topic_list).to have_topic(post1.topic)
+
+      topic_list_controls.dismiss_new
+
+      expect(dismiss_new_modal).to have_dismiss_topics_unchecked
+      expect(dismiss_new_modal).to have_dismiss_posts_checked
+      expect(dismiss_new_modal).to have_untrack_unchecked
+
+      dismiss_new_modal.click_dismiss
+
+      expect(topic_list).to have_no_topics
+    end
+
+    it "displays confirmation modal with topics preselected" do
+      sign_in(user)
+
+      visit("/new?subset=topics")
+
+      expect(topic_list).to have_topic(new_topic)
+
+      topic_list_controls.dismiss_new
+
+      expect(dismiss_new_modal).to have_dismiss_topics_checked
+      expect(dismiss_new_modal).to have_dismiss_posts_unchecked
+      expect(dismiss_new_modal).to have_untrack_unchecked
+
+      dismiss_new_modal.click_dismiss
+
+      expect(topic_list).to have_no_topics
+    end
+
     context "with a tagged topic" do
       fab!(:tag)
       fab!(:tagged_topic) { Fabricate(:topic, tags: [tag]) }

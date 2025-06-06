@@ -11,7 +11,6 @@ zh_CN:
     models:
       fields:
         required_field: 必须在 `%{target}:%{target_name}` 上填写字段 `%{name}`。
-        invalid_field: 字段的组件 `%{component}` 在 `%{target}:%{target_name}` 上不可用。
         invalid_metadata: '`%{field}` 的数据无效或组件 `%{component}` 未知。'
     triggerables:
       errors:

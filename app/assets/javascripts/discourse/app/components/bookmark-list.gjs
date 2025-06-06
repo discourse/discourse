@@ -1,5 +1,4 @@
 import Component from "@ember/component";
-import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
@@ -23,6 +22,7 @@ import icon from "discourse/helpers/d-icon";
 import discourseTags from "discourse/helpers/discourse-tags";
 import formatDate from "discourse/helpers/format-date";
 import htmlSafe from "discourse/helpers/html-safe";
+import lazyHash from "discourse/helpers/lazy-hash";
 import topicLink from "discourse/helpers/topic-link";
 import { ajax } from "discourse/lib/ajax";
 import { BookmarkFormData } from "discourse/lib/bookmark-form-data";
@@ -294,7 +294,7 @@ export default class BookmarkList extends Component {
                 <td class="main-link topic-list-data">
                   <PluginOutlet
                     @name="bookmark-list-before-link"
-                    @outletArgs={{hash bookmark=bookmark}}
+                    @outletArgs={{lazyHash bookmark=bookmark}}
                   />
 
                   <span class="link-top-line">

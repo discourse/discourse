@@ -138,8 +138,7 @@ RSpec.describe "React to message", type: :system do
         it "adds a reaction" do
           sign_in(current_user)
           chat.visit_channel(category_channel_1)
-          channel.expand_message_actions_mobile(message_1)
-          find(".main-actions [data-emoji-name=\"+1\"]").click
+          channel.emoji(message_1, "+1")
 
           expect(channel.message_reactions_list(message_1)).to have_css("[data-emoji-name=\"+1\"]")
         end

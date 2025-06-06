@@ -6,4 +6,5 @@ const TopicTimerInfo0 = <template>
     <TopicTimerInfo @statusType="reminder" @executeAt={{@dummy.soon}} />
   </StyleguideExample>
 </template>;
+
 export default TopicTimerInfo0;

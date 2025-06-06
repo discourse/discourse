@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .admin-reports,
 .dashboard-next {
   &.admin-contents {
@@ -30,8 +32,8 @@
       height: 100%;
       background: linear-gradient(
         to left,
-        rgba(var(--secondary-rgb), 1),
-        rgba(var(--secondary-rgb), 0)
+        rgb(var(--secondary-rgb), 1),
+        rgb(var(--secondary-rgb), 0)
       );
     }
 
@@ -43,13 +45,13 @@
       height: 100%;
       background: linear-gradient(
         to right,
-        rgba(var(--secondary-rgb), 0),
-        rgba(var(--secondary-rgb), 1)
+        rgb(var(--secondary-rgb), 0),
+        rgb(var(--secondary-rgb), 1)
       );
     }
 
     .navigation-link {
-      @include breakpoint("mobile-extra-large") {
+      @include viewport.until(sm) {
         padding: 0.4em;
         font-size: var(--font-down-1);
       }
@@ -57,7 +59,7 @@
       .emoji {
         margin-right: 0.5em;
 
-        @include breakpoint("mobile-extra-large") {
+        @include viewport.until(sm) {
           width: 1.3em;
           height: 1.3em;
           margin-right: 0;
@@ -75,7 +77,7 @@
     display: flex;
     justify-content: space-between;
 
-    @include breakpoint(medium) {
+    @include viewport.until(lg) {
       flex-direction: column;
     }
 
@@ -91,7 +93,7 @@
         margin-right: 0.5em;
       }
 
-      @include breakpoint(medium) {
+      @include viewport.until(lg) {
         min-width: 100%;
 
         &:last-child {
@@ -104,7 +106,7 @@
       }
     }
 
-    @include breakpoint(medium) {
+    @include viewport.until(lg) {
       .section-column:last-child,
       .section-column:first-child {
         margin: 0;
@@ -197,7 +199,7 @@
       }
     }
 
-    @include breakpoint(medium) {
+    @include viewport.until(lg) {
       .admin-report {
         grid-column: span 12;
       }
@@ -411,7 +413,7 @@
 .activity-metrics {
   margin-bottom: 2em;
 
-  @include breakpoint("mobile-extra-large") {
+  @include viewport.until(sm) {
     .counters-list {
       font-size: var(--font-down-1);
     }
@@ -652,7 +654,7 @@
     padding-right: 20px;
     min-width: 250px;
 
-    @include breakpoint(medium) {
+    @include viewport.until(lg) {
       max-width: unset;
     }
 
@@ -806,12 +808,12 @@
     margin-left: auto;
     color: var(--primary-low-mid);
 
-    @include breakpoint("mobile-extra-large") {
+    @include viewport.until(sm) {
       font-size: var(--font-down-1);
     }
   }
 
-  @include breakpoint("mobile-extra-large") {
+  @include viewport.until(sm) {
     h3 {
       margin-right: 0.5em;
     }

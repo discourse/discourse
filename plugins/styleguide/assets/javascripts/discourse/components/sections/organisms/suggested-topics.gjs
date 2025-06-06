@@ -6,4 +6,5 @@ const SuggestedTopics0 = <template>
     <SuggestedTopics @topic={{@dummy.topic}} />
   </StyleguideExample>
 </template>;
+
 export default SuggestedTopics0;

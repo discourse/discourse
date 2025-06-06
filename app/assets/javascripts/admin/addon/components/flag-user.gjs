@@ -1,9 +1,8 @@
 import Component from "@ember/component";
 import { array } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
+import ageWithTooltip from "discourse/helpers/age-with-tooltip";
 import avatar from "discourse/helpers/avatar";
-import formatAge from "discourse/helpers/format-age";
-import rawDate from "discourse/helpers/raw-date";
 
 export default class FlagUser extends Component {
   <template>
@@ -24,8 +23,8 @@ export default class FlagUser extends Component {
           >
             {{this.user.username}}
           </LinkTo>
-          <div title={{rawDate this.date}} class="flag-user-date">
-            {{formatAge this.date}}
+          <div class="flag-user-date">
+            {{ageWithTooltip this.date}}
           </div>
         </div>
         <div class="flag-user-extra">

@@ -374,6 +374,77 @@ describe "About page", type: :system do
     end
   end
 
+  describe "extra groups" do
+    let!(:extra_groups) do
+      [
+        Fabricate(:group, name: "bananas", created_at: 1.day.ago),
+        Fabricate(:group, name: "apples", created_at: 3.days.ago),
+        Fabricate(:group, name: "oranges", created_at: 2.days.ago),
+      ]
+    end
+    let(:order) { "alphabetically" }
+
+    before do
+      SiteSetting.about_banner_image = nil
+      SiteSetting.about_page_extra_groups = extra_groups_setting
+      SiteSetting.about_page_extra_groups_order = order
+
+      extra_groups.each { |extra_group| extra_group.users << Fabricate(:user) }
+    end
+
+    context "when extra groups are configured" do
+      let(:extra_groups_setting) { extra_groups.map(&:id).join("|") }
+
+      context "when groups are set to order alphabetically" do
+        let(:order) { "alphabetically" }
+
+        it "shows the extra groups in alphabetical order" do
+          sign_in(admin)
+
+          about_page.visit
+
+          expect(about_page).to have_css(".about__apples + .about__bananas + .about__oranges")
+        end
+      end
+
+      context "when groups are set to order by creation" do
+        let(:order) { "order of creation" }
+
+        it "shows the extra groups in order of creation" do
+          sign_in(admin)
+
+          about_page.visit
+
+          expect(about_page).to have_css(".about__bananas + .about__apples + .about__oranges")
+        end
+      end
+
+      context "when groups are set to order by setting selection" do
+        let(:order) { "order of theme setting" }
+
+        it "shows the extra groups in order of selection" do
+          sign_in(admin)
+
+          about_page.visit
+
+          expect(about_page).to have_css(".about__bananas + .about__apples + .about__oranges")
+        end
+      end
+    end
+
+    context "when no extra groups are configured" do
+      let(:extra_groups_setting) { "" }
+
+      it "shows no extra groups" do
+        sign_in(admin)
+
+        about_page.visit
+
+        expect(about_page).to have_no_extra_groups
+      end
+    end
+  end
+
   describe "the edit link" do
     it "appears for admins" do
       sign_in(admin)

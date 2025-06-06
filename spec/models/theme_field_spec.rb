@@ -162,6 +162,14 @@ HTML
     theme.save!
     expect(field.reload.error).to include('Error: expected "}"')
 
+    theme.set_field(target: :common, name: :scss, value: <<~SCSS)
+      body {
+        color: unquote("https://example.com/this-is-a-mistake");
+      }
+    SCSS
+    theme.save!
+    expect(field.reload.error).to include("Missed semicolon")
+
     theme.set_field(target: :common, name: :scss, value: "@import 'missingfile';")
     theme.save!
     expect(field.reload.error).to include("Error: Can't find stylesheet to import.")

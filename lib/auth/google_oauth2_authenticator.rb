@@ -10,6 +10,10 @@ class Auth::GoogleOAuth2Authenticator < Auth::ManagedAuthenticator
     "google_oauth2"
   end
 
+  def display_name
+    "Google"
+  end
+
   def enabled?
     SiteSetting.enable_google_oauth2_logins
   end
