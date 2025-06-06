@@ -6,7 +6,7 @@ require "json_schemer"
 class Theme < ActiveRecord::Base
   include GlobalPath
 
-  BASE_COMPILER_VERSION = 88
+  BASE_COMPILER_VERSION = 117
 
   class SettingsMigrationError < StandardError
   end
@@ -189,11 +189,8 @@ class Theme < ActiveRecord::Base
         .to_h
 
     if all_extra_js.present?
-      js_compiler = ThemeJavascriptCompiler.new(id, name)
+      js_compiler = ThemeJavascriptCompiler.new(id, name, build_settings_hash)
       js_compiler.append_tree(all_extra_js)
-      settings_hash = build_settings_hash
-
-      js_compiler.prepend_settings(settings_hash) if settings_hash.present?
 
       javascript_cache || build_javascript_cache
       javascript_cache.update!(content: js_compiler.content, source_map: js_compiler.source_map)
@@ -514,7 +511,8 @@ class Theme < ActiveRecord::Base
             .compact
 
         caches.map { |c| <<~HTML.html_safe }.join("\n")
-          <script defer src="#{c.url}" data-theme-id="#{c.theme_id}" nonce="#{ThemeField::CSP_NONCE_PLACEHOLDER}"></script>
+          <link rel="modulepreload" href="#{c.url}" data-theme-id="#{c.theme_id}" />
+          
         HTML
       end
     when :translations
