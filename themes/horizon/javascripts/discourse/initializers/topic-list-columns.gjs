@@ -1,6 +1,7 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 import TopicActivityColumn from "../components/card/topic-activity-column";
 import TopicCategoryColumn from "../components/card/topic-category-column";
+import TopicCreatorColumn from "../components/card/topic-creator-column";
 import TopicLikesColumn from "../components/card/topic-likes-column";
 import TopicRepliesColumn from "../components/card/topic-replies-column";
 import TopicStatusColumn from "../components/card/topic-status-column";
@@ -30,6 +31,12 @@ const TopicLikesReplies = <template>
   </td>
 </template>;
 
+const TopicCreator = <template>
+  <td class="topic-creator-data">
+    <TopicCreatorColumn @topic={{@topic}} />
+  </td>
+</template>;
+
 export default {
   name: "topic-list-customizations",
 
@@ -50,6 +57,10 @@ export default {
 
           columns.add("topic-likes-replies", {
             item: TopicLikesReplies,
+            after: "topic-author-avatar",
+          });
+          columns.add("topic-creator", {
+            item: TopicCreator,
             after: "topic-author-avatar",
           });
           columns.delete("views");

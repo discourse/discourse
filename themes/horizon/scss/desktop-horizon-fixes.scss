@@ -1,8 +1,8 @@
 // Fixing bulk select (only needed for desktop)
 .bulk-select-enabled {
-  .topic-list-header .topic-list-data.default {
-    position: sticky;
-    top: 10em;
+  .topic-list-header {
+    position: relative;
+    top: 0;
   }
 
   .topic-author-avatar-data {
@@ -47,19 +47,19 @@
     }
   }
 
+  // bulk select
   .bulk-select-topics {
     position: absolute;
-    right: -1em;
+    right: 0;
     background: var(--secondary);
     border-radius: 0 0 0 var(--d-border-radius);
-    padding: 1em;
-
-    @media screen and (max-width: 1048px) {
-      right: 0;
-    }
+    display: flex;
+    gap: 0.5rem;
+    margin: 0.5rem;
 
     button {
       white-space: nowrap;
+      margin: 0;
     }
   }
 }

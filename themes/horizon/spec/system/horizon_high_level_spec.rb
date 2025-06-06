@@ -39,6 +39,7 @@ describe "Horizon theme | High level", type: :system do
         "topic-status-data",
         "topic-category-data",
         "topic-likes-replies-data",
+        "topic-creator-data",
         "topic-activity-data",
       ],
     )

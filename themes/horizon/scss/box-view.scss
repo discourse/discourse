@@ -40,7 +40,6 @@
   margin: 0;
   padding: 0;
   position: relative;
-  container: content-width / inline-size;
 
   @include breakpoint(medium) {
     display: none;

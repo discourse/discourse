@@ -6,14 +6,6 @@
   }
 }
 
-.container.posts .topic-navigation:not(.with-topic-progress) {
-  // super fragile because new sticky topic title doesn't have a calculated value (= 53px with this font and size but…)
-  top: calc(
-    var(--header-offset, 60px) + 53px + calc(var(--spacing-block-l) * 2)
-  );
-  z-index: 300;
-}
-
 .timeline-container .topic-timeline {
   min-width: unset; // why we have this?
 
