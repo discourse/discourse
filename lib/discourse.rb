@@ -1197,12 +1197,8 @@ module Discourse
     ENV["RAILS_ENV"] == "test" && ENV["TEST_ENV_NUMBER"]
   end
 
-  CDN_REQUEST_METHODS = %w[GET HEAD OPTIONS]
-
   def self.apply_cdn_headers(headers)
     headers["Access-Control-Allow-Origin"] = "*"
-    headers["Access-Control-Allow-Methods"] = CDN_REQUEST_METHODS.join(", ")
-    headers
   end
 
   def self.allow_dev_populate?
