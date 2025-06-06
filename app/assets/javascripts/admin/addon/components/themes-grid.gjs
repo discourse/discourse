@@ -28,6 +28,12 @@ export default class ThemesGrid extends Component {
       } else if (b.get("default")) {
         return 1;
       }
+      if (a.id < 0) {
+        return a.id;
+      }
+      if (b.id < 0) {
+        return -b.id;
+      }
     });
   }
 

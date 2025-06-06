@@ -1012,7 +1012,7 @@ Discourse::Application.routes.draw do
         :constraints => {
           hostname: /[\w\.-]+/,
           version: /\h{40}/,
-          theme_id: /([0-9]+)?/,
+          theme_id: /(-?[0-9]+)?/,
           format: :js,
         }
     get "svg-sprite/search/:keyword" => "svg_sprite#search",

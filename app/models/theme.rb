@@ -7,6 +7,7 @@ class Theme < ActiveRecord::Base
   include GlobalPath
 
   BASE_COMPILER_VERSION = 88
+  CORE_THEMES = { "foundation" => -1, "horizon" => -2 }
 
   class SettingsMigrationError < StandardError
   end
@@ -107,6 +108,8 @@ class Theme < ActiveRecord::Base
             parent_themes: %i[color_scheme locale_fields theme_translation_overrides],
           )
         end
+
+  scope :not_system, -> { where("id > 0") }
 
   delegate :remote_url, to: :remote_theme, private: true, allow_nil: true
 
@@ -335,6 +338,10 @@ class Theme < ActiveRecord::Base
 
   def default?
     SiteSetting.default_theme_id == id
+  end
+
+  def system?
+    id < 0
   end
 
   def supported?

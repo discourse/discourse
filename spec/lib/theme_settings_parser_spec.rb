@@ -17,7 +17,7 @@ RSpec.describe ThemeSettingsParser do
 
     def load_settings
       yaml = File.read("#{Rails.root}/spec/fixtures/theme_settings/valid_settings.yaml")
-      field = ThemeField.create!(theme_id: 1, target_id: 3, name: "yaml", value: yaml)
+      field = ThemeField.create!(theme_id: -1, target_id: 3, name: "yaml", value: yaml)
 
       ThemeSettingsParser
         .new(field)

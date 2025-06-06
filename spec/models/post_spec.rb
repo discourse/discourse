@@ -1754,10 +1754,10 @@ RSpec.describe Post do
       post.link_post_uploads
 
       post.trash!
-      expect(UploadReference.count).to eq(7)
+      expect(UploadReference.where(target_type: "Post").count).to eq(7)
 
       post.destroy!
-      expect(UploadReference.count).to eq(0)
+      expect(UploadReference.where(target_type: "Post").count).to eq(0)
     end
 
     describe "#link_post_uploads" do

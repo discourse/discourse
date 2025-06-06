@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
 # we can not guess what to do if customization already started, so skip it
-if !Theme.exists?
+initial_setup = !Theme.exists?
+
+SystemThemesManager.sync!
+if initial_setup
   STDERR.puts "> Seeding theme and color schemes"
 
   color_schemes = [
@@ -25,6 +28,7 @@ if !Theme.exists?
   end
 
   name = I18n.t("color_schemes.default_theme_name")
+
   default_theme = Theme.create!(name: name, user_id: Discourse::SYSTEM_USER_ID)
   default_theme.set_default!
 

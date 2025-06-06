@@ -4,6 +4,14 @@ require "base64"
 
 class Admin::ThemesController < Admin::AdminController
   MAX_REMOTE_LENGTH = 10_000
+  ALLOW_EDIT_SYSTEM_FIELDS = %w[
+    child_theme_ids
+    color_scheme_id
+    default
+    locale
+    translations
+    user_selectable
+  ]
 
   skip_before_action :check_xhr, only: %i[show preview export]
   before_action :ensure_admin
@@ -222,6 +230,10 @@ class Admin::ThemesController < Admin::AdminController
     disables_component = [false, "false"].include?(theme_params[:enabled])
     enables_component = [true, "true"].include?(theme_params[:enabled])
 
+    if @theme.system? && (theme_params.keys - ALLOW_EDIT_SYSTEM_FIELDS).present?
+      raise Discourse::InvalidAccess.new
+    end
+
     %i[name color_scheme_id user_selectable enabled auto_update].each do |field|
       @theme.public_send("#{field}=", theme_params[field]) if theme_params.key?(field)
     end
@@ -277,6 +289,7 @@ class Admin::ThemesController < Admin::AdminController
   def destroy
     @theme = Theme.find_by(id: params[:id])
     raise Discourse::InvalidParameters.new(:id) unless @theme
+    raise Discourse::InvalidAccess.new if @theme.system?
 
     StaffActionLogger.new(current_user).log_theme_destroy(@theme)
     @theme.destroy
@@ -287,6 +300,7 @@ class Admin::ThemesController < Admin::AdminController
   def bulk_destroy
     themes = Theme.where(id: params[:theme_ids])
     raise Discourse::InvalidParameters.new(:id) if themes.blank?
+    raise Discourse::InvalidAccess.new(:id) if themes.any? { |theme| theme.system? }
 
     ActiveRecord::Base.transaction do
       themes.each { |theme| StaffActionLogger.new(current_user).log_theme_destroy(theme) }

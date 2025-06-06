@@ -82,11 +82,12 @@ class RemoteTheme < ActiveRecord::Base
     )
   end
 
-  # This is only used in the development and test environment and is currently not supported for other environments
-  if Rails.env.test? || Rails.env.development?
-    def self.import_theme_from_directory(directory)
-      update_theme(ThemeStore::DirectoryImporter.new(directory), update_components: "none")
-    end
+  def self.import_theme_from_directory(directory, theme_id: nil)
+    update_theme(
+      ThemeStore::DirectoryImporter.new(directory),
+      update_components: "none",
+      theme_id: theme_id,
+    )
   end
 
   def self.update_theme(
@@ -103,7 +104,13 @@ class RemoteTheme < ActiveRecord::Base
 
     existing = true
     if theme.blank?
-      theme = Theme.new(user_id: user&.id || -1, name: theme_info["name"], auto_update: false)
+      theme =
+        Theme.new(
+          id: theme_id,
+          user_id: user&.id || -1,
+          name: theme_info["name"],
+          auto_update: false,
+        )
       existing = false
     end
 
