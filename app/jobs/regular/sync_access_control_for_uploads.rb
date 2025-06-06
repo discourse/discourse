@@ -1,10 +1,9 @@
 # frozen_string_literal: true
 
 module Jobs
-  # Sometimes we need to update a _lot_ of ACLs on S3 (such as when secure uploads
-  # is enabled), and since it takes ~1s per upload to update the ACL, this is
-  # best spread out over many jobs instead of having to do the whole thing serially.
-  class SyncAclsForUploads < ::Jobs::Base
+  # Sometimes we need to update the access control metadata for a _lot_ of objects on S3 (such as when secure uploads
+  # is enabled), this is best spread out over many jobs instead of having to do the whole thing serially.
+  class SyncAccessControlForUploads < ::Jobs::Base
     sidekiq_options queue: "low"
 
     def execute(args)
@@ -17,7 +16,7 @@ module Jobs
         .find_in_batches do |uploads|
           uploads.each do |upload|
             begin
-              Discourse.store.update_upload_ACL(upload)
+              Discourse.store.update_upload_access_control(upload)
             rescue => err
               Discourse.warn_exception(
                 err,

@@ -286,4 +286,98 @@ RSpec.describe "S3Helper" do
       end
     end
   end
+
+  describe "#create_multipart" do
+    it "creates a multipart upload with the right ACL parameters when `acl` kwarg is set" do
+      s3_helper = S3Helper.new("some-bucket", "", client: client)
+
+      s3_helper.create_multipart(
+        "test_file.tar.gz",
+        "application/gzip",
+        metadata: {
+        },
+        acl: FileStore::S3Store::CANNED_ACL_PUBLIC_READ,
+      )
+
+      create_multipart_upload_request =
+        client.api_requests.find do |api_request|
+          api_request[:operation_name] == :create_multipart_upload
+        end
+
+      expect(create_multipart_upload_request[:context].params[:acl]).to eq(
+        FileStore::S3Store::CANNED_ACL_PUBLIC_READ,
+      )
+    end
+
+    it "creates a multipart upload without ACL parameters when only the `tagging` kwarg is set" do
+      s3_helper = S3Helper.new("some-bucket", "", client: client)
+
+      s3_helper.create_multipart(
+        "test_file.tar.gz",
+        "application/gzip",
+        metadata: {
+        },
+        acl: nil,
+        tagging: "some:tag",
+      )
+
+      create_multipart_upload_request =
+        client.api_requests.find do |api_request|
+          api_request[:operation_name] == :create_multipart_upload
+        end
+
+      expect(create_multipart_upload_request[:context].params[:acl]).to be_nil
+      expect(create_multipart_upload_request[:context].params[:tagging]).to eq("some:tag")
+    end
+  end
+
+  describe "#upsert_tag" do
+    it "correctly updates an existing tag" do
+      s3_helper = S3Helper.new("some-bucket", "", client: client)
+
+      s3_helper.s3_client.stub_responses(
+        :get_object_tagging,
+        Aws::S3::Types::GetObjectTaggingOutput.new(
+          { tag_set: [{ key: "tag1", value: "value1" }, { key: "tag2", value: "value2" }] },
+        ),
+      )
+
+      s3_helper.upsert_tag("some/key", tag_key: "tag1", tag_value: "newvalue")
+
+      put_object_tagging_request =
+        s3_helper.s3_client.api_requests.find do |api_request|
+          api_request[:operation_name] == :put_object_tagging
+        end
+
+      expect(put_object_tagging_request[:context].params[:tagging][:tag_set]).to eq(
+        [{ key: "tag1", value: "newvalue" }, { key: "tag2", value: "value2" }],
+      )
+    end
+
+    it "correctly adds a new tag" do
+      s3_helper = S3Helper.new("some-bucket", "", client: client)
+
+      s3_helper.s3_client.stub_responses(
+        :get_object_tagging,
+        Aws::S3::Types::GetObjectTaggingOutput.new(
+          { tag_set: [{ key: "tag1", value: "value1" }, { key: "tag2", value: "value2" }] },
+        ),
+      )
+
+      s3_helper.upsert_tag("some/key", tag_key: "mytag", tag_value: "myvalue")
+
+      put_object_tagging_request =
+        s3_helper.s3_client.api_requests.find do |api_request|
+          api_request[:operation_name] == :put_object_tagging
+        end
+
+      expect(put_object_tagging_request[:context].params[:tagging][:tag_set]).to eq(
+        [
+          { key: "tag1", value: "value1" },
+          { key: "tag2", value: "value2" },
+          { key: "mytag", value: "myvalue" },
+        ],
+      )
+    end
+  end
 end
