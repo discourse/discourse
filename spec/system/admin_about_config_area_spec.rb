@@ -10,11 +10,7 @@ describe "Admin About Config Area Page", type: :system do
   let!(:extra_group_2) { Fabricate(:group, name: "extra2") }
   let!(:extra_group_3) { Fabricate(:group, name: "extra3") }
 
-  before do
-    SiteSetting.show_additional_about_groups = true
-
-    sign_in(admin)
-  end
+  before { sign_in(admin) }
 
   context "when all fields have existing values" do
     before do
