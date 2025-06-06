@@ -36,7 +36,7 @@ export default class WelcomeBanner extends Component {
   handleKeyboardShortcut = modifier(() => {
     const cb = (appEvent) => {
       if (
-        (appEvent.type === "search" || appEvent.type === "page-search") &&
+        appEvent.type === "search" &&
         this.search.welcomeBannerSearchInViewport
       ) {
         this.search.focusSearchInput();

@@ -227,6 +227,7 @@ RSpec.describe "Glimmer Header", type: :system do
 
     it "displays current user when logged in and login required" do
       SiteSetting.login_required = true
+      SiteSetting.enable_welcome_banner = false
       sign_in(current_user)
 
       visit "/"

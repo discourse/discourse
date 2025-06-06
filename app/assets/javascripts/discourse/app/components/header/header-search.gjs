@@ -17,7 +17,7 @@ export default class HeaderSearch extends Component {
 
   handleKeyboardShortcut = modifier(() => {
     const cb = (appEvent) => {
-      if (appEvent.type === "search" || appEvent.type === "page-search") {
+      if (appEvent.type === "search") {
         this.search.focusSearchInput();
         appEvent.event.preventDefault();
       }
