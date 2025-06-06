@@ -60,10 +60,6 @@ export default class AdminConfigAreasAbout extends Component {
     };
   }
 
-  get showExtraGroups() {
-    return this.siteSettings.show_additional_about_groups === true;
-  }
-
   @action
   setSavingStatus(status) {
     this.saving = status;
@@ -116,22 +112,20 @@ export default class AdminConfigAreasAbout extends Component {
             />
           </:content>
         </AdminConfigAreaCard>
-        {{#if this.showExtraGroups}}
-          <AdminConfigAreaCard
-            @heading="admin.config_areas.about.extra_groups.heading"
-            @description="admin.config_areas.about.extra_groups.description"
-            @collapsable={{true}}
-            class="admin-config-area-about__extra-groups-section"
-          >
-            <:content>
-              <AdminConfigAreasAboutExtraGroups
-                @extraGroups={{this.extraGroups}}
-                @setGlobalSavingStatus={{this.setSavingStatus}}
-                @globalSavingStatus={{this.saving}}
-              />
-            </:content>
-          </AdminConfigAreaCard>
-        {{/if}}
+        <AdminConfigAreaCard
+          @heading="admin.config_areas.about.extra_groups.heading"
+          @description="admin.config_areas.about.extra_groups.description"
+          @collapsable={{true}}
+          class="admin-config-area-about__extra-groups-section"
+        >
+          <:content>
+            <AdminConfigAreasAboutExtraGroups
+              @extraGroups={{this.extraGroups}}
+              @setGlobalSavingStatus={{this.setSavingStatus}}
+              @globalSavingStatus={{this.saving}}
+            />
+          </:content>
+        </AdminConfigAreaCard>
       </div>
     </div>
   </template>

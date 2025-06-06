@@ -386,7 +386,6 @@ describe "About page", type: :system do
 
     before do
       SiteSetting.about_banner_image = nil
-      SiteSetting.show_additional_about_groups = true
       SiteSetting.about_page_extra_groups = extra_groups_setting
       SiteSetting.about_page_extra_groups_order = order
 
