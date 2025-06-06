@@ -2,12 +2,13 @@ import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { concat, fn, get, hash } from "@ember/helper";
 import { action } from "@ember/object";
-import { schedule } from "@ember/runloop";
+import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
-import { and, not } from "truth-helpers";
+import { and, eq, not } from "truth-helpers";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import LoadMore from "discourse/components/load-more";
 import PostFilteredNotice from "discourse/components/post/filtered-notice";
+import concatClass from "discourse/helpers/concat-class";
 import { bind } from "discourse/lib/decorators";
 import offsetCalculator from "discourse/lib/offset-calculator";
 import { Placeholder } from "discourse/lib/posts-with-placeholders";
@@ -32,12 +33,21 @@ export default class PostStream extends Component {
 
   @tracked cloakAbove;
   @tracked cloakBelow;
+  @tracked keyboardSelectedPostNumber;
 
   viewportTracker = new PostStreamViewportTracker();
+
+  constructor() {
+    super(...arguments);
+
+    this.#setupEventListeners();
+  }
 
   willDestroy() {
     super.willDestroy(...arguments);
 
+    // clear event listeners
+    this.#setupEventListeners(false);
     // clear pending references in the observer
     this.viewportTracker.destroy();
   }
@@ -192,6 +202,34 @@ export default class PostStream extends Component {
     });
   }
 
+  @action
+  updateKeyboardSelectedPostNumber({ selectedArticle: element }) {
+    next(() => {
+      this.keyboardSelectedPostNumber = parseInt(
+        element.dataset.postNumber,
+        10
+      );
+    });
+  }
+
+  #setupEventListeners(addListeners = true) {
+    if (!addListeners) {
+      this.appEvents.off(
+        "keyboard:move-selection",
+        this,
+        this.updateKeyboardSelectedPostNumber
+      );
+
+      return;
+    }
+
+    this.appEvents.on(
+      "keyboard:move-selection",
+      this,
+      this.updateKeyboardSelectedPostNumber
+    );
+  }
+
   <template>
     <ConditionalLoadingSpinner @condition={{@postStream.loadingAbove}} />
     <div
@@ -242,7 +280,13 @@ export default class PostStream extends Component {
             }}
               <PostComponent
                 id={{concat "post_" post.post_number}}
-                class={{if cloakingData.active "post-stream--cloaked"}}
+                class={{concatClass
+                  (if cloakingData.active "post-stream--cloaked")
+                  (if
+                    (eq this.keyboardSelectedPostNumber post.post_number)
+                    "selected"
+                  )
+                }}
                 style={{cloakingData.style}}
                 @cloaked={{cloakingData.active}}
                 @post={{post}}
