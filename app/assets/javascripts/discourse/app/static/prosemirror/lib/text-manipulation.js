@@ -145,9 +145,10 @@ export default class ProsemirrorTextManipulation {
     const tr = this.view.state.tr.replaceSelection(
       new Slice(doc.content, 0, 0)
     );
-    if (!tr.selection.$from.nodeAfter) {
-      tr.setSelection(new TextSelection(tr.doc.resolve(tr.selection.from + 1)));
-    }
+    console.log("insertBlock tr: ", tr);
+    // if (!tr.selection.$from.nodeAfter) {
+    //   tr.setSelection(new TextSelection(tr.doc.resolve(tr.selection.from + 1)));
+    // }
     this.view.dispatch(tr);
 
     this.focus();

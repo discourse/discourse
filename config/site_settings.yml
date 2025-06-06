@@ -3987,7 +3987,7 @@ experimental:
     client: true
   rich_editor:
     client: true
-    default: false
+    default: true
   experimental_content_localization:
     client: true
     default: false

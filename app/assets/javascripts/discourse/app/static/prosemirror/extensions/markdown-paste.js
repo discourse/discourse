@@ -7,10 +7,18 @@ const extension = {
   }) {
     return new Plugin({
       props: {
-        clipboardTextParser(text) {
-          const { content } = convertFromMarkdown(text);
+        clipboardTextParser(text, $context, plain, view) {
+          const content = convertFromMarkdown(text);
+          console.log(
+            "text: ",
+            text,
+            "convertedFromMD: ",
+            content,
+            "fragment: ",
+            Fragment.from(content.content)
+          );
 
-          return Slice.maxOpen(Fragment.from(content));
+          return Slice.maxOpen(Fragment.from(content.content));
         },
       },
     });

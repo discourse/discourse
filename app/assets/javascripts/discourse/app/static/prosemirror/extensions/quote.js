@@ -96,6 +96,8 @@ const extension = {
       const quoteValue = node.attrs.username
         ? `="${node.attrs.username}${postNumber}${topicId}"`
         : "";
+      console.log("node", node, "\n", quoteValue);
+      debugger;
 
       state.write(`[quote${quoteValue}]\n`);
       state.renderContent(node);
