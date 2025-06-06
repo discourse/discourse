@@ -1,5 +1,6 @@
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
 import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import escape from "discourse/lib/escape";
 import highlightHTML from "discourse/lib/highlight-html";
 import { iconHTML } from "discourse/lib/icon-library";
@@ -72,7 +73,8 @@ function _updateQuoteElements(aside, desc, context) {
   if (
     topicNumber &&
     postNumber &&
-    topicNumber === data.post.topic_id?.toString()
+    topicNumber === data.post.topic_id?.toString() &&
+    data.post.topic
   ) {
     const topicId = data.post.topic_id;
     const slug = data.post.topic.slug;
@@ -117,8 +119,13 @@ function _updateQuoteElements(aside, desc, context) {
 }
 
 async function _toggleQuote(aside, context) {
-  const { createDetachedElement, data, renderNestedPostCookedHtml, state } =
-    context;
+  const {
+    createDetachedElement,
+    data,
+    renderNestedPostCookedHtml,
+    state,
+    owner,
+  } = context;
 
   if (state.expanding) {
     return;
@@ -155,12 +162,21 @@ async function _toggleQuote(aside, context) {
     const postId = parseInt(aside.dataset.post, 10);
 
     try {
-      const quotedPost = await ajax(`/posts/by_number/${topicId}/${postId}`);
-
       const post = data.post;
+      const quotedPost = owner
+        .lookup("service:store")
+        .createRecord(
+          "post",
+          await ajax(`/posts/by_number/${topicId}/${postId}`)
+        );
+
+      if (quotedPost.topic_id === post?.topic_id) {
+        quotedPost.topic = post.topic;
+      }
+
       const quotedPosts = post.quoted || {};
       quotedPosts[quotedPost.id] = quotedPost;
-      post.set("quoted", quotedPosts);
+      post.quoted = quotedPosts;
 
       const div = createDetachedElement("div");
       div.classList.add("expanded-quote");
@@ -177,9 +193,11 @@ async function _toggleQuote(aside, context) {
       blockQuote.innerHTML = "";
       blockQuote.appendChild(div);
     } catch (e) {
-      if ([403, 404].includes(e.jqXHR.status)) {
+      if (e.jqXHR && [403, 404].includes(e.jqXHR.status)) {
         const icon = iconHTML(e.jqXHR.status === 403 ? "lock" : "trash-can");
         blockQuote.innerHTML = `<div class='expanded-quote icon-only'>${icon}</div>`;
+      } else {
+        popupAjaxError(e);
       }
     }
   } else {
