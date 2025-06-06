@@ -957,11 +957,11 @@ acceptance("Sidebar - Plugin API", function (needs) {
             moreLinks = [
               new (class extends BaseCustomSidebarSectionLink {
                 name = "more-link-1";
-                route = "discovery.categories";
-                title = "Categories";
-                text = "Categories";
+                route = "discovery.top";
+                title = "Top Topics";
+                text = "Top Topics";
                 prefixType = "icon";
-                prefixValue = "list";
+                prefixValue = "trophy";
               })(),
               new (class extends BaseCustomSidebarSectionLink {
                 name = "more-link-2";
@@ -1006,7 +1006,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
 
     const moreLinks = [
       ...document.querySelectorAll(
-        ".sidebar-section[data-section-name='test-section-with-more'] .more-section-link"
+        ".sidebar-section[data-section-name='test-section-with-more'] .dropdown-menu__item"
       ),
     ];
 
@@ -1018,7 +1018,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
 
     assert
       .dom(moreLinks[0])
-      .hasText("Categories", "displays first more link with correct text");
+      .hasText("Top Topics", "displays first more link with correct text");
 
     assert
       .dom(moreLinks[1])
@@ -1109,7 +1109,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
 
     const moreLinks = [
       ...document.querySelectorAll(
-        ".sidebar-section[data-section-name='test-extensible-section'] .more-section-link"
+        ".sidebar-section[data-section-name='test-extensible-section'] .dropdown-menu__item"
       ),
     ];
 
@@ -1207,9 +1207,9 @@ acceptance("Sidebar - Plugin API - Anonymous", function (needs) {
             moreLinks = [
               new (class extends BaseCustomSidebarSectionLink {
                 name = "more-categories";
-                route = "discovery.categories";
-                title = "Categories";
-                text = "Categories";
+                route = "badges";
+                title = "Badges";
+                text = "Badges";
                 prefixType = "icon";
                 prefixValue = "list";
               })(),
@@ -1239,9 +1239,9 @@ acceptance("Sidebar - Plugin API - Anonymous", function (needs) {
 
     assert
       .dom(
-        ".sidebar-section[data-section-name='test-anonymous-more'] .more-section-link"
+        ".sidebar-section[data-section-name='test-anonymous-more'] .dropdown-menu__item"
       )
-      .hasText("Categories", "displays more link for anonymous user");
+      .hasText("Badges", "displays more link for anonymous user");
   });
 
   test("Custom more button text and icon", async function (assert) {
@@ -1264,9 +1264,9 @@ acceptance("Sidebar - Plugin API - Anonymous", function (needs) {
             moreLinks = [
               new (class extends BaseCustomSidebarSectionLink {
                 name = "more-categories";
-                route = "discovery.categories";
-                title = "Categories";
-                text = "Categories";
+                route = "badges";
+                title = "Badges";
+                text = "Badges";
               })(),
             ];
 
@@ -1317,9 +1317,9 @@ acceptance("Sidebar - Plugin API - Anonymous", function (needs) {
             moreLinks = [
               new (class extends BaseCustomSidebarSectionLink {
                 name = "more-categories";
-                route = "discovery.categories";
-                title = "Categories";
-                text = "Categories";
+                route = "badges";
+                title = "Badges";
+                text = "Badges";
               })(),
             ];
           };
@@ -1356,9 +1356,9 @@ acceptance("Sidebar - Plugin API - Anonymous", function (needs) {
             moreLinks = [
               new (class extends BaseCustomSidebarSectionLink {
                 name = "more-categories";
-                route = "discovery.categories";
-                title = "Categories";
-                text = "Categories";
+                route = "badges";
+                title = "Badges";
+                text = "Badges";
               })(),
             ];
 
@@ -1405,9 +1405,9 @@ acceptance("Sidebar - Plugin API - Anonymous", function (needs) {
             moreLinks = [
               new (class extends BaseCustomSidebarSectionLink {
                 name = "more-categories";
-                route = "discovery.categories";
-                title = "Categories";
-                text = "Categories";
+                route = "badges";
+                title = "Badges";
+                text = "Badges";
               })(),
             ];
 
@@ -1448,15 +1448,23 @@ acceptance("Sidebar - Plugin API - Anonymous", function (needs) {
             moreLinks = [
               new (class extends BaseCustomSidebarSectionLink {
                 name = "more-categories";
-                route = "discovery.categories";
-                title = "Categories";
-                text = "Categories";
+                route = "badges";
+                title = "Badges";
+                text = "Badges";
               })(),
             ];
 
-            moreSectionButtonAction = () => {};
-            moreSectionButtonText = "Settings";
-            moreSectionButtonIcon = "cog";
+            get moreSectionButtonAction() {
+              return () => {};
+            }
+
+            get moreSectionButtonText() {
+              return "Settings";
+            }
+
+            get moreSectionButtonIcon() {
+              return "cog";
+            }
 
             get moreSectionText() {
               return "More Options";
@@ -1490,7 +1498,7 @@ acceptance("Sidebar - Plugin API - Anonymous", function (needs) {
 
     assert
       .dom(
-        ".sidebar-section[data-section-name='test-complex-more'] .more-section-link"
+        ".sidebar-section[data-section-name='test-complex-more'] .dropdown-menu__item"
       )
       .exists("displays more links in dropdown");
 
