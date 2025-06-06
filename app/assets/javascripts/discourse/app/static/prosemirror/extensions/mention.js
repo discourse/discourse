@@ -20,8 +20,7 @@ const extension = {
           tag: "a.mention",
           preserveWhitespace: "full",
           getAttrs: (dom) => {
-            const name = dom.getAttribute("data-name");
-            return { name };
+            return { name: dom.getAttribute("data-name") };
           },
         },
       ],
