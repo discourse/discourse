@@ -29,8 +29,8 @@ if initial_setup
 
   name = I18n.t("color_schemes.default_theme_name")
 
-  foundation_theme = Theme.find(Theme::CORE_THEMES["foundation"])
-  foundation_theme.set_default!
+  default_theme = Theme.create!(name: name, user_id: Discourse::SYSTEM_USER_ID)
+  default_theme.set_default!
 
   if SiteSetting.default_dark_mode_color_scheme_id ==
        SiteSetting.defaults[:default_dark_mode_color_scheme_id]

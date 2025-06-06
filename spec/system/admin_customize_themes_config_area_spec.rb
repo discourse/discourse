@@ -3,6 +3,7 @@
 describe "Admin Customize Themes Config Area Page", type: :system do
   fab!(:admin)
   fab!(:theme)
+  fab!(:default_theme) { Theme.where(component: false, name: "Default").first }
   fab!(:foundation_theme) { Theme.where(component: false, name: "Foundation").first }
   fab!(:theme_child_theme) do
     Fabricate(:theme, name: "Child theme", component: true, enabled: true, parent_themes: [theme])
@@ -13,7 +14,10 @@ describe "Admin Customize Themes Config Area Page", type: :system do
   let(:install_modal) { PageObjects::Modals::InstallTheme.new }
   let(:admin_customize_themes_page) { PageObjects::Pages::AdminCustomizeThemes.new }
 
-  before { sign_in(admin) }
+  before do
+    SiteSetting.experimental_system_themes = true
+    sign_in(admin)
+  end
 
   it "has an install button in the subheader" do
     config_area.visit
@@ -38,7 +42,7 @@ describe "Admin Customize Themes Config Area Page", type: :system do
 
   it "allows to mark theme as active" do
     config_area.visit
-    expect(config_area).to have_badge(foundation_theme, "--active")
+    expect(config_area).to have_badge(default_theme, "--active")
     expect(config_area).to have_no_badge(theme_2, "--active")
     config_area.mark_as_active(theme_2)
     expect(config_area).to have_badge(theme_2, "--active")
