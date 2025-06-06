@@ -984,13 +984,13 @@ acceptance("Sidebar - Plugin API", function (needs) {
 
     assert
       .dom(
-        ".sidebar-section[data-section-name='test-section-with-more'] .sidebar-section-link"
+        ".sidebar-section[data-section-name='test-section-with-more'] a.sidebar-section-link"
       )
       .exists({ count: 1 }, "displays main section link");
 
     assert
       .dom(
-        ".sidebar-section[data-section-name='test-section-with-more'] .sidebar-section-link"
+        ".sidebar-section[data-section-name='test-section-with-more'] a.sidebar-section-link"
       )
       .hasText("Main Link", "displays main link with correct text");
 
@@ -1160,13 +1160,13 @@ acceptance("Sidebar - Plugin API", function (needs) {
 
     assert
       .dom(
-        ".sidebar-section[data-section-name='test-button-only-section'] .sidebar-section-link-button"
+        ".sidebar-section[data-section-name='test-button-only-section'] .--link-button"
       )
       .exists("displays more section button when no more links");
 
     assert
       .dom(
-        ".sidebar-section[data-section-name='test-button-only-section'] .sidebar-section-link-button"
+        ".sidebar-section[data-section-name='test-button-only-section'] .--link-button"
       )
       .hasText("Settings", "displays button with correct text");
 
@@ -1504,7 +1504,7 @@ acceptance("Sidebar - Plugin API - Anonymous", function (needs) {
 
     assert
       .dom(
-        ".sidebar-section[data-section-name='test-complex-more'] .sidebar-section-link-button"
+        ".sidebar-section[data-section-name='test-complex-more'] .--link-button"
       )
       .hasText("Settings", "displays more section button");
   });
