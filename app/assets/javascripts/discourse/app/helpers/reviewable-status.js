@@ -65,6 +65,28 @@ function dataFor(status, type) {
   }
 }
 
+/**
+ * Returns a safe HTML string for a reviewable item status, given its status and type
+ *
+ * @param {number} status - The status of the reviewable item
+ * @param {string} type - The type of the reviewable item
+ * @returns {string} HTML for the reviewable item status
+ */
+export function newReviewableStatus(status, type) {
+  let data = dataFor(status, type);
+  if (!data) {
+    return;
+  }
+
+  const html = `
+    <div class="review-item__status --${data.cssClass || data.name}">
+      ${i18n("review.statuses." + data.name + ".title")}
+    </div>
+  `;
+
+  return htmlSafe(html);
+}
+
 export function htmlStatus(status, type) {
   let data = dataFor(status, type);
   if (!data) {
@@ -81,6 +103,7 @@ export function htmlStatus(status, type) {
   `;
 }
 
+// TODO (reviewable-refresh): Replace with newReviewableStatus
 export default function (status, type) {
   return htmlSafe(htmlStatus(status, type));
 }

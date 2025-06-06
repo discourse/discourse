@@ -4007,3 +4007,7 @@ experimental:
     default: false
     client: true
     validator: "LanguageSwitcherSettingValidator"
+  reviewable_ui_refresh:
+    client: true
+    type: group_list
+    default: "1"
