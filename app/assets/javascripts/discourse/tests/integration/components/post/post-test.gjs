@@ -668,7 +668,7 @@ module("Integration | Component | Post", function (hooks) {
     this.post.created_at = new Date();
     this.post.notice = {
       type: "returning_user",
-      lastPostedAt: twoDaysAgo,
+      last_posted_at: twoDaysAgo,
     };
 
     await renderComponent(this.post);

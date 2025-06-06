@@ -16,7 +16,7 @@ module("Integration | Helper | d-icon", function (hooks) {
     assert
       .dom(".test")
       .hasHtml(
-        '<svg class="fa d-icon d-icon-bars svg-icon svg-string" xmlns="http://www.w3.org/2000/svg"><use href="#bars"></use></svg>'
+        '<svg class="fa d-icon d-icon-bars svg-icon svg-string" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><use href="#bars"></use></svg>'
       );
   });
 
@@ -30,7 +30,7 @@ module("Integration | Helper | d-icon", function (hooks) {
     assert
       .dom(".test")
       .hasHtml(
-        '<svg class="fa d-icon d-icon-d-watching svg-icon svg-string" xmlns="http://www.w3.org/2000/svg"><use href="#discourse-bell-exclamation"></use></svg>'
+        '<svg class="fa d-icon d-icon-d-watching svg-icon svg-string" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><use href="#discourse-bell-exclamation"></use></svg>'
       );
   });
 });

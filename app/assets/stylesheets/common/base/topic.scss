@@ -37,7 +37,7 @@
       grid-area: timeline;
       align-self: start;
       position: sticky;
-      top: calc(var(--header-offset, 60px) + 2em);
+      top: calc(var(--header-offset, 60px) + 1.5em);
       margin-left: 1em;
       z-index: z("timeline");
 
