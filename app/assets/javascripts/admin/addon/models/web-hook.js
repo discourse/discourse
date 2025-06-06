@@ -113,7 +113,7 @@ export default class WebHook extends RestModel {
     return {
       payload_url: this.payload_url,
       content_type: this.content_type,
-      secret: this.secret,
+      secret: this.secret ?? "",
       wildcard_web_hook: this.wildcard_web_hook,
       verify_certificate: this.verify_certificate,
       active: this.active,

@@ -42,7 +42,7 @@ export default class AdminConfigAreasWebhookForm extends Component {
     return {
       payload_url: this.webhook.payload_url,
       content_type: this.webhook.content_type,
-      secret: this.webhook.secret === "" ? null : this.webhook.secret,
+      secret: this.webhook.secret,
       categories: this.webhook.categories,
       group_names: this.webhook.group_names,
       tag_names: this.webhook.tag_names,
