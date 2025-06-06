@@ -14,6 +14,7 @@ import Composer from "discourse/models/composer";
 import { capabilities } from "discourse/services/capabilities";
 
 let disabledBindings = [];
+
 export function disableDefaultKeyboardShortcuts(bindings) {
   disabledBindings = disabledBindings.concat(bindings);
 }
@@ -23,6 +24,7 @@ export function clearDisabledDefaultKeyboardBindings() {
 }
 
 let extraKeyboardShortcutsHelp = {};
+
 function addExtraKeyboardShortcutHelp(help) {
   const category = help.category;
   if (extraKeyboardShortcutsHelp[category]) {
@@ -776,6 +778,11 @@ export default {
       }
     }
 
+    this.appEvents.trigger("keyboard:move-selection", {
+      articles,
+      selectedArticle: article,
+    });
+
     for (const a of articles) {
       a.classList.remove("selected");
       a.removeAttribute("tabindex");
@@ -783,11 +790,6 @@ export default {
     article.classList.add("selected");
     article.setAttribute("tabindex", "0");
     article.focus();
-
-    this.appEvents.trigger("keyboard:move-selection", {
-      articles,
-      selectedArticle: article,
-    });
 
     const articleTop = domUtils.offset(article).top,
       articleTopPosition = articleTop - headerOffset();
@@ -850,7 +852,7 @@ export default {
     let categoriesTopicsList;
     if (document.querySelector(".posts-wrapper")) {
       return document.querySelectorAll(
-        ".posts-wrapper .topic-post, .topic-list tbody tr"
+        ".posts-wrapper .topic-post, .posts-wrapper .post-stream--cloaked, .topic-list tbody tr"
       );
     } else if (document.querySelector(".topic-list")) {
       return document.querySelectorAll(".topic-list .topic-list-item");
