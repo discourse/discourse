@@ -104,6 +104,7 @@ import {
 import Sharing from "discourse/lib/sharing";
 import { addAdminSidebarSectionLink } from "discourse/lib/sidebar/admin-sidebar";
 import { addSectionLink as addCustomCommunitySectionLink } from "discourse/lib/sidebar/custom-community-section-links";
+import { addCustomSectionMoreLink } from "discourse/lib/sidebar/custom-section-more-links";
 import {
   addSidebarPanel,
   addSidebarSection,
@@ -3040,12 +3041,87 @@ class PluginApi {
    *         })()
    *       ];
    *     }
+   *
+   *     get moreLinks() {
+   *       return [
+   *         new (class extends BaseCustomSidebarSectionLink {
+   *           get name() {
+   *             return "browse-all";
+   *           }
+   *           get route() {
+   *             return "chat.browse";
+   *           }
+   *           get title() {
+   *             return I18n.t("chat.browse.title");
+   *           }
+   *           get text() {
+   *             return I18n.t("chat.browse.title");
+   *           }
+   *           get prefixType() {
+   *             return "icon";
+   *           }
+   *           get prefixValue() {
+   *             return "list";
+   *           }
+   *         })()
+   *       ];
+   *     }
+   *
+   *     get moreSectionButtonAction() {
+   *       return () => {
+   *         // Action for the custom button in more section
+   *         this.router.transitionTo('chat.settings');
+   *       };
+   *     }
+   *
+   *     get moreSectionButtonText() {
+   *       return I18n.t("chat.settings.title");
+   *     }
+   *
+   *     get moreSectionButtonIcon() {
+   *       return "cog";
+   *     }
+   *
+   *     get moreSectionText() {
+   *       return "Show All"; // Custom text for "More..." dropdown (defaults to "More...")
+   *     }
+   *
+   *     get moreSectionIcon() {
+   *       return "plus"; // Custom icon for "More..." dropdown (defaults to "ellipsis-vertical")
+   *     }
    *   }
    * })
    * ```
    */
   addSidebarSection(func, panelKey = "main") {
     addSidebarSection(func, panelKey);
+  }
+
+  /**
+   * Add a link to the "More..." dropdown section of a custom sidebar section.
+   * This works similarly to `addCommunitySectionLink` but for custom sections.
+   *
+   * ```
+   * api.addCustomSectionMoreLink("my-section", {
+   *   name: "my-custom-link",
+   *   route: "my.route",
+   *   title: I18n.t("my.title"),
+   *   text: I18n.t("my.text"),
+   *   icon: "star"
+   * });
+   * ```
+   *
+   * @param {string} sectionName - The name of the custom section to add the link to
+   * @param {Object|Function} linkArg - Link configuration object or callback function
+   * @param {string} linkArg.name - The name of the link
+   * @param {string} linkArg.route - The Ember route name
+   * @param {string} linkArg.title - The title attribute for the link
+   * @param {string} linkArg.text - The text to display for the link
+   * @param {string} [linkArg.icon] - The FontAwesome icon to display
+   * @param {string} [linkArg.href] - The href attribute for the link (alternative to route)
+   */
+  addCustomSectionMoreLink(sectionName, linkArg) {
+    addCustomSectionMoreLink(sectionName, linkArg);
   }
 
   /**

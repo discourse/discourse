@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
@@ -90,6 +90,7 @@ export default class SidebarMoreSectionLinks extends Component {
         @inline={{true}}
         @identifier="sidebar-more-section"
         @triggerComponent={{MoreSectionTrigger}}
+        @data={{hash moreText=@moreText moreIcon=@moreIcon}}
       >
 
         <:content as |menu|>

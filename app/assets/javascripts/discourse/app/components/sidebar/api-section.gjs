@@ -1,8 +1,16 @@
+import Component from "@glimmer/component";
+import { service } from "@ember/service";
 import { and, eq, not } from "truth-helpers";
+import MoreSectionLink from "./more-section-link";
+import MoreSectionLinks from "./more-section-links";
 import Section from "./section";
 import SectionLink from "./section-link";
+import SectionLinkButton from "./section-link-button";
 
-const SidebarApiSection = <template>
+export default class SidebarApiSection extends Component {
+  @service navigationMenu;
+
+  <template>
   {{#if @section.filtered}}
     <Section
       @sectionName={{@section.name}}
@@ -62,8 +70,39 @@ const SidebarApiSection = <template>
           }}
         />
       {{/each}}
+
+      {{#if @section.moreLinks}}
+        {{#if this.navigationMenu.isDesktopDropdownMode}}
+          {{#each @section.moreLinks as |sectionLink|}}
+            <MoreSectionLink @sectionLink={{sectionLink}} />
+          {{/each}}
+
+          {{#if @section.moreSectionButtonAction}}
+            <SectionLinkButton
+              @action={{@section.moreSectionButtonAction}}
+              @icon={{@section.moreSectionButtonIcon}}
+              @text={{@section.moreSectionButtonText}}
+            />
+          {{/if}}
+        {{else}}
+          <MoreSectionLinks
+            @sectionLinks={{@section.moreLinks}}
+            @moreText={{@section.moreSectionText}}
+            @moreIcon={{@section.moreSectionIcon}}
+            @moreButtonAction={{@section.moreSectionButtonAction}}
+            @moreButtonText={{@section.moreSectionButtonText}}
+            @moreButtonIcon={{@section.moreSectionButtonIcon}}
+            @toggleNavigationMenu={{@toggleNavigationMenu}}
+          />
+        {{/if}}
+      {{else if @section.moreSectionButtonAction}}
+        <SectionLinkButton
+          @action={{@section.moreSectionButtonAction}}
+          @icon={{@section.moreSectionButtonIcon}}
+          @text={{@section.moreSectionButtonText}}
+        />
+      {{/if}}
     </Section>
   {{/if}}
-</template>;
-
-export default SidebarApiSection;
+  </template>
+}

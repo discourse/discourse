@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { click, settled, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { PLUGIN_API_VERSION, withPluginApi } from "discourse/lib/plugin-api";
+import { resetCustomSectionMoreLinks } from "discourse/lib/sidebar/custom-section-more-links";
 import {
   resetCustomCategoryLockIcon,
   resetCustomCategorySectionLinkPrefix,
@@ -28,6 +29,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
     linkDidInsert = undefined;
     linkDestroy = undefined;
     sectionDestroy = undefined;
+    resetCustomSectionMoreLinks();
   });
 
   test("Multiple header actions and links", async function (assert) {
@@ -931,5 +933,571 @@ acceptance("Sidebar - Plugin API", function (needs) {
       searchLinkOffsetTop < sidebarScrollTop + sidebarHeight,
       "the link is into view"
     );
+  });
+
+  test("Section with more links dropdown", async function (assert) {
+    withPluginApi(PLUGIN_API_VERSION, (api) => {
+      api.addSidebarSection(
+        (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
+          return class extends BaseCustomSidebarSection {
+            name = "test-section-with-more";
+            text = "Section with More";
+
+            links = [
+              new (class extends BaseCustomSidebarSectionLink {
+                name = "main-link";
+                route = "discovery.latest";
+                title = "Main Link";
+                text = "Main Link";
+                prefixType = "icon";
+                prefixValue = "star";
+              })(),
+            ];
+
+            moreLinks = [
+              new (class extends BaseCustomSidebarSectionLink {
+                name = "more-link-1";
+                route = "discovery.categories";
+                title = "Categories";
+                text = "Categories";
+                prefixType = "icon";
+                prefixValue = "list";
+              })(),
+              new (class extends BaseCustomSidebarSectionLink {
+                name = "more-link-2";
+                href = "https://example.com";
+                title = "External Link";
+                text = "External Link";
+                prefixType = "icon";
+                prefixValue = "external-link-alt";
+              })(),
+            ];
+
+            moreSectionButtonText = "Customize";
+            moreSectionButtonIcon = "cog";
+          };
+        }
+      );
+    });
+
+    await visit("/");
+
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='test-section-with-more'] .sidebar-section-link"
+      )
+      .exists({ count: 1 }, "displays main section link");
+
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='test-section-with-more'] .sidebar-section-link"
+      )
+      .hasText("Main Link", "displays main link with correct text");
+
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='test-section-with-more'] .sidebar-more-section-links-details-summary"
+      )
+      .exists("displays more section trigger");
+
+    await click(
+      ".sidebar-section[data-section-name='test-section-with-more'] .sidebar-more-section-links-details-summary"
+    );
+
+    const moreLinks = [
+      ...document.querySelectorAll(
+        ".sidebar-section[data-section-name='test-section-with-more'] .more-section-link"
+      ),
+    ];
+
+    assert.strictEqual(
+      moreLinks.length,
+      2,
+      "displays correct number of more links"
+    );
+
+    assert
+      .dom(moreLinks[0])
+      .hasText("Categories", "displays first more link with correct text");
+
+    assert
+      .dom(moreLinks[1])
+      .hasText("External Link", "displays second more link with correct text");
+
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='test-section-with-more'] .sidebar-section-link-button[data-name='customize']"
+      )
+      .exists("displays custom more section button");
+
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='test-section-with-more'] .sidebar-section-link-button[data-name='customize']"
+      )
+      .hasText("Customize", "displays custom button with correct text");
+  });
+
+  test("Adding more links to existing section via API", async function (assert) {
+    withPluginApi(PLUGIN_API_VERSION, (api) => {
+      api.addSidebarSection(
+        (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
+          return class extends BaseCustomSidebarSection {
+            name = "test-extensible-section";
+            text = "Extensible Section";
+
+            links = [
+              new (class extends BaseCustomSidebarSectionLink {
+                name = "main-link";
+                route = "discovery.latest";
+                title = "Main Link";
+                text = "Main Link";
+              })(),
+            ];
+          };
+        }
+      );
+
+      // Add more links via API
+      api.addCustomSectionMoreLink("test-extensible-section", {
+        name: "api-more-link-1",
+        route: "discovery.top",
+        title: "Top Topics",
+        text: "Top Topics",
+        icon: "trophy",
+      });
+
+      api.addCustomSectionMoreLink("test-extensible-section", {
+        name: "api-more-link-2",
+        href: "https://meta.discourse.org",
+        title: "Meta Discourse",
+        text: "Meta Discourse",
+        icon: "external-link-alt",
+      });
+
+      api.addCustomSectionMoreLink(
+        "test-extensible-section",
+        (BaseCustomSidebarSectionLink) => {
+          return class extends BaseCustomSidebarSectionLink {
+            name = "callback-more-link";
+            route = "badges";
+            title = "Badges";
+            text = "Badges";
+            prefixType = "icon";
+            prefixValue = "certificate";
+          };
+        }
+      );
+    });
+
+    await visit("/");
+
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='test-extensible-section'] .sidebar-section-link"
+      )
+      .exists({ count: 1 }, "displays main section link");
+
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='test-extensible-section'] .sidebar-more-section-links-details-summary"
+      )
+      .exists("displays more section trigger");
+
+    await click(
+      ".sidebar-section[data-section-name='test-extensible-section'] .sidebar-more-section-links-details-summary"
+    );
+
+    const moreLinks = [
+      ...document.querySelectorAll(
+        ".sidebar-section[data-section-name='test-extensible-section'] .more-section-link"
+      ),
+    ];
+
+    assert.strictEqual(
+      moreLinks.length,
+      3,
+      "displays all API-added more links"
+    );
+
+    assert
+      .dom(moreLinks[0])
+      .hasText("Top Topics", "displays first API more link");
+
+    assert
+      .dom(moreLinks[1])
+      .hasText("Meta Discourse", "displays second API more link");
+
+    assert
+      .dom(moreLinks[2])
+      .hasText("Badges", "displays callback-based more link");
+  });
+
+  test("Section with only more button action (no more links)", async function (assert) {
+    withPluginApi(PLUGIN_API_VERSION, (api) => {
+      api.addSidebarSection(
+        (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
+          return class extends BaseCustomSidebarSection {
+            name = "test-button-only-section";
+            text = "Button Only Section";
+
+            links = [
+              new (class extends BaseCustomSidebarSectionLink {
+                name = "main-link";
+                route = "discovery.latest";
+                title = "Main Link";
+                text = "Main Link";
+              })(),
+            ];
+
+            moreSectionButtonText = "Settings";
+            moreSectionButtonIcon = "gear";
+          };
+        }
+      );
+    });
+
+    await visit("/");
+
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='test-button-only-section'] .sidebar-section-link-button"
+      )
+      .exists("displays more section button when no more links");
+
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='test-button-only-section'] .sidebar-section-link-button"
+      )
+      .hasText("Settings", "displays button with correct text");
+
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='test-button-only-section'] .sidebar-more-section-links-details-summary"
+      )
+      .doesNotExist("does not display more dropdown when only button action");
+  });
+});
+
+acceptance("Sidebar - Plugin API - Anonymous", function (needs) {
+  needs.settings({
+    navigation_menu: "sidebar",
+  });
+
+  needs.hooks.afterEach(function () {
+    resetCustomSectionMoreLinks();
+  });
+
+  test("More links work for anonymous users", async function (assert) {
+    withPluginApi(PLUGIN_API_VERSION, (api) => {
+      api.addSidebarSection(
+        (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
+          return class extends BaseCustomSidebarSection {
+            name = "test-anonymous-more";
+            text = "Anonymous More Section";
+
+            links = [
+              new (class extends BaseCustomSidebarSectionLink {
+                name = "main-link";
+                route = "discovery.latest";
+                title = "Latest";
+                text = "Latest";
+              })(),
+            ];
+
+            moreLinks = [
+              new (class extends BaseCustomSidebarSectionLink {
+                name = "more-categories";
+                route = "discovery.categories";
+                title = "Categories";
+                text = "Categories";
+                prefixType = "icon";
+                prefixValue = "list";
+              })(),
+            ];
+          };
+        }
+      );
+    });
+
+    await visit("/");
+
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='test-anonymous-more'] .sidebar-section-header-text"
+      )
+      .hasText("Anonymous More Section", "displays section for anonymous user");
+
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='test-anonymous-more'] .sidebar-more-section-links-details-summary"
+      )
+      .exists("displays more dropdown for anonymous user");
+
+    await click(
+      ".sidebar-section[data-section-name='test-anonymous-more'] .sidebar-more-section-links-details-summary"
+    );
+
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='test-anonymous-more'] .more-section-link"
+      )
+      .hasText("Categories", "displays more link for anonymous user");
+  });
+
+  test("Custom more button text and icon", async function (assert) {
+    withPluginApi(PLUGIN_API_VERSION, (api) => {
+      api.addSidebarSection(
+        (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
+          return class extends BaseCustomSidebarSection {
+            name = "test-custom-more";
+            text = "Custom More Section";
+
+            links = [
+              new (class extends BaseCustomSidebarSectionLink {
+                name = "main-link";
+                route = "discovery.latest";
+                title = "Latest";
+                text = "Latest";
+              })(),
+            ];
+
+            moreLinks = [
+              new (class extends BaseCustomSidebarSectionLink {
+                name = "more-categories";
+                route = "discovery.categories";
+                title = "Categories";
+                text = "Categories";
+              })(),
+            ];
+
+            get moreSectionText() {
+              return "Show All";
+            }
+
+            get moreSectionIcon() {
+              return "plus";
+            }
+          };
+        }
+      );
+    });
+
+    await visit("/");
+
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='test-custom-more'] .sidebar-more-section-links-details-summary .sidebar-section-link-content-text"
+      )
+      .hasText("Show All", "displays custom more button text");
+
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='test-custom-more'] .sidebar-more-section-links-details-summary .d-icon-plus"
+      )
+      .exists("displays custom more button icon");
+  });
+
+  test("Default more button text and icon when none provided", async function (assert) {
+    withPluginApi(PLUGIN_API_VERSION, (api) => {
+      api.addSidebarSection(
+        (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
+          return class extends BaseCustomSidebarSection {
+            name = "test-default-more";
+            text = "Default More Section";
+
+            links = [
+              new (class extends BaseCustomSidebarSectionLink {
+                name = "main-link";
+                route = "discovery.latest";
+                title = "Latest";
+                text = "Latest";
+              })(),
+            ];
+
+            moreLinks = [
+              new (class extends BaseCustomSidebarSectionLink {
+                name = "more-categories";
+                route = "discovery.categories";
+                title = "Categories";
+                text = "Categories";
+              })(),
+            ];
+          };
+        }
+      );
+    });
+
+    await visit("/");
+
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='test-default-more'] .sidebar-more-section-links-details-summary .d-icon-ellipsis-vertical"
+      )
+      .exists("displays default more button icon");
+  });
+
+  test("Custom more button text only (default icon)", async function (assert) {
+    withPluginApi(PLUGIN_API_VERSION, (api) => {
+      api.addSidebarSection(
+        (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
+          return class extends BaseCustomSidebarSection {
+            name = "test-custom-text-only";
+            text = "Custom Text Only Section";
+
+            links = [
+              new (class extends BaseCustomSidebarSectionLink {
+                name = "main-link";
+                route = "discovery.latest";
+                title = "Latest";
+                text = "Latest";
+              })(),
+            ];
+
+            moreLinks = [
+              new (class extends BaseCustomSidebarSectionLink {
+                name = "more-categories";
+                route = "discovery.categories";
+                title = "Categories";
+                text = "Categories";
+              })(),
+            ];
+
+            get moreSectionText() {
+              return "View More";
+            }
+          };
+        }
+      );
+    });
+
+    await visit("/");
+
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='test-custom-text-only'] .sidebar-more-section-links-details-summary .sidebar-section-link-content-text"
+      )
+      .hasText("View More", "displays custom more button text");
+
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='test-custom-text-only'] .sidebar-more-section-links-details-summary .d-icon-ellipsis-vertical"
+      )
+      .exists("displays default more button icon when only text customized");
+  });
+
+  test("Custom more button icon only (default text)", async function (assert) {
+    withPluginApi(PLUGIN_API_VERSION, (api) => {
+      api.addSidebarSection(
+        (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
+          return class extends BaseCustomSidebarSection {
+            name = "test-custom-icon-only";
+            text = "Custom Icon Only Section";
+
+            links = [
+              new (class extends BaseCustomSidebarSectionLink {
+                name = "main-link";
+                route = "discovery.latest";
+                title = "Latest";
+                text = "Latest";
+              })(),
+            ];
+
+            moreLinks = [
+              new (class extends BaseCustomSidebarSectionLink {
+                name = "more-categories";
+                route = "discovery.categories";
+                title = "Categories";
+                text = "Categories";
+              })(),
+            ];
+
+            get moreSectionIcon() {
+              return "chevron-down";
+            }
+          };
+        }
+      );
+    });
+
+    await visit("/");
+
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='test-custom-icon-only'] .sidebar-more-section-links-details-summary .d-icon-chevron-down"
+      )
+      .exists("displays custom more button icon");
+  });
+
+  test("Custom more button with complex scenarios", async function (assert) {
+    withPluginApi(PLUGIN_API_VERSION, (api) => {
+      api.addSidebarSection(
+        (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
+          return class extends BaseCustomSidebarSection {
+            name = "test-complex-more";
+            text = "Complex More Section";
+
+            links = [
+              new (class extends BaseCustomSidebarSectionLink {
+                name = "main-link";
+                route = "discovery.latest";
+                title = "Latest";
+                text = "Latest";
+              })(),
+            ];
+
+            moreLinks = [
+              new (class extends BaseCustomSidebarSectionLink {
+                name = "more-categories";
+                route = "discovery.categories";
+                title = "Categories";
+                text = "Categories";
+              })(),
+            ];
+
+            moreSectionButtonAction = () => {};
+            moreSectionButtonText = "Settings";
+            moreSectionButtonIcon = "cog";
+
+            get moreSectionText() {
+              return "More Options";
+            }
+
+            get moreSectionIcon() {
+              return "bars";
+            }
+          };
+        }
+      );
+    });
+
+    await visit("/");
+
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='test-complex-more'] .sidebar-more-section-links-details-summary .sidebar-section-link-content-text"
+      )
+      .hasText("More Options", "displays custom more dropdown text");
+
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='test-complex-more'] .sidebar-more-section-links-details-summary .d-icon-bars"
+      )
+      .exists("displays custom more dropdown icon");
+
+    await click(
+      ".sidebar-section[data-section-name='test-complex-more'] .sidebar-more-section-links-details-summary"
+    );
+
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='test-complex-more'] .more-section-link"
+      )
+      .exists("displays more links in dropdown");
+
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='test-complex-more'] .sidebar-section-link-button"
+      )
+      .hasText("Settings", "displays more section button");
   });
 });
