@@ -32,7 +32,7 @@
 
   // positions are relative to the .d-header .panel div
   top: 100%; // directly underneath .panel
-  right: -10px; // 10px to the right of .panel - adjust as needed
+  right: 0;
   max-height: calc(100dvh - var(--header-offset) - 1em);
   border-radius: var(--d-border-radius-large);
 }
@@ -275,7 +275,7 @@
       display: flex;
       position: relative;
       border-radius: 0;
-      padding: 0.875em 1em 0.875em 0.875em;
+      padding: 0.75em 1em 0.75em 0.75em;
 
       @media screen and (height <= 400px) {
         // helps with 400% zoom level
@@ -304,7 +304,19 @@
       &.active .d-icon {
         box-shadow: 0 0 0 0.5rem var(--primary-200);
         background-color: var(--primary-200);
-        border-radius: calc(var(--d-border-radius) - (0.25rem / 2));
+        border-radius: calc(var(--d-border-radius) * 0.5);
+      }
+
+      &:focus-visible,
+      &:active:not(:hover, :focus) {
+        background-color: transparent;
+        background-image: none;
+
+        .d-icon {
+          box-shadow: 0 0 0 0.5rem var(--primary-200);
+          background-color: var(--primary-200);
+          border-radius: calc(var(--d-border-radius) * 0.5);
+        }
       }
 
       .discourse-no-touch & {
@@ -317,10 +329,6 @@
     }
   }
 
-  .bottom-tabs {
-    border-top: var(--user-menu-border-width) solid var(--primary-low);
-  }
-
   .panel-body-contents {
     display: flex;
     flex-direction: row-reverse;
@@ -330,7 +338,6 @@
     width: 320px;
     justify-content: space-between;
     box-sizing: border-box;
-    border-right: var(--user-menu-border-width) solid var(--primary-low);
     min-width: 0; // makes sure menu tabs don't go off screen
   }
 
@@ -472,9 +479,11 @@
 
   ul {
     display: flex;
-    flex-flow: column wrap;
+    flex-direction: column;
     overflow: hidden;
     max-height: 100%;
+    gap: 0.125rem;
+    padding: 0.25rem;
   }
 
   li {
@@ -483,7 +492,7 @@
 
     &.unread,
     &.pending {
-      background-color: var(--tertiary-low);
+      background-color: var(--primary-100);
     }
 
     &:hover {
@@ -555,8 +564,8 @@
         overflow: hidden; // clears the text from wrapping below icons
         overflow-wrap: anywhere;
 
-        // Truncate items with more than 2 lines.
-        @include line-clamp(2);
+        // Truncate items with more than 1 lines.
+        @include line-clamp(1);
       }
     }
 
@@ -570,6 +579,7 @@
     padding: 0;
     align-self: flex-start;
     width: 100%;
+    border-radius: var(--d-border-radius);
 
     .d-icon {
       padding-top: 0.2em;
