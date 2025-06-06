@@ -8,7 +8,6 @@ require "git_utils"
 
 module Discourse
   DB_POST_MIGRATE_PATH = "db/post_migrate"
-  REQUESTED_HOSTNAME = "REQUESTED_HOSTNAME"
   MAX_METADATA_FILE_SIZE = 64.kilobytes
 
   class Utils
@@ -1199,16 +1198,6 @@ module Discourse
   end
 
   CDN_REQUEST_METHODS = %w[GET HEAD OPTIONS]
-
-  def self.is_cdn_request?(env, request_method)
-    return if CDN_REQUEST_METHODS.exclude?(request_method)
-
-    cdn_hostnames = GlobalSetting.cdn_hostnames
-    return if cdn_hostnames.blank?
-
-    requested_hostname = env[REQUESTED_HOSTNAME] || env[Rack::HTTP_HOST]
-    cdn_hostnames.include?(requested_hostname)
-  end
 
   def self.apply_cdn_headers(headers)
     headers["Access-Control-Allow-Origin"] = "*"
