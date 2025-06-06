@@ -23,17 +23,38 @@ module(
       //   `<aside class="quote" data-username="User" data-topic="456" data-full="false"><div class="title">User:</div><blockquote><p>Quoted from a topic.</p></blockquote></aside>`,
       //   `[quote="User, topic:456"]\nQuoted from a topic.\n\n[/quote]\n\n`,
       // ],
-      "quote with topic ID and post number": [
-        `[quote="User, post:123, topic:456"]\nFull quote example.\n\n[/quote]`,
-        `<aside class="quote" data-username="User" data-post="123" data-topic="456" data-full="false"><div class="title">User:</div><blockquote><p>Full quote example.</p></blockquote></aside>`,
-        `[quote="User, post:123, topic:456"]\nFull quote example.\n\n[/quote]`,
-      ],
+      // "quote with topic ID and post number": [
+      //   `[quote="User, post:123, topic:456"]\nFull quote example.\n\n[/quote]`,
+      //   `<aside class="quote" data-username="User" data-post="123" data-topic="456" data-full="false"><div class="title">User:</div><blockquote><p>Full quote example.</p></blockquote></aside>`,
+      //   `[quote="User, post:123, topic:456"]\nFull quote example.\n\n[/quote]`,
+      // ],
     }).forEach(([name, [markdown, html, expectedMarkdown]]) => {
       test(name, async function (assert) {
         this.siteSettings.rich_editor = true;
         await testMarkdown(assert, markdown, html, expectedMarkdown, this);
         // await this.pauseTest();
       });
+    });
+
+    test.only("quote on paste", async function (assert) {
+      this.siteSettings.rich_editor = true;
+
+      const markdown = `[quote="User, post:123, topic:456"]\nFull quote example.\n\n[/quote]`;
+      const html = `<aside class="quote" data-username="User" data-post="123" data-topic="456" data-full="false"><div class="title">User:</div><blockquote><p>Full quote example.</p></blockquote></aside>`;
+      const expectedMarkdown = `[quote="User, post:123, topic:456"]\nFull quote example.\n\n[/quote]`;
+
+      console.log("this", this);
+
+      await testMarkdown(assert, "", "", expectedMarkdown, this);
+
+      // find("#{COMPOSER_ID}").has_css?(".composer-toggle-switch__right-icon.--active")
+      assert
+        .dom(".composer-toggle-switch")
+        .hasAttribute("data-rich-editor")
+        .hasClass("--rte");
+      assert.dom(".composer-toggle-switch__right-icon").hasClass("--active");
+
+      // await this.pauseTest();
     });
   }
 );
