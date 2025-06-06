@@ -973,8 +973,13 @@ acceptance("Sidebar - Plugin API", function (needs) {
               })(),
             ];
 
-            moreSectionButtonText = "Customize";
-            moreSectionButtonIcon = "cog";
+            get moreSectionText() {
+              return "Customize";
+            }
+
+            get moreSectionIcon() {
+              return "cog";
+            }
           };
         }
       );
@@ -1026,13 +1031,13 @@ acceptance("Sidebar - Plugin API", function (needs) {
 
     assert
       .dom(
-        ".sidebar-section[data-section-name='test-section-with-more'] .sidebar-more-section-trigger"
+        ".sidebar-section[data-section-name='test-section-with-more'] .--link-button"
       )
       .exists("displays custom more section button");
 
     assert
       .dom(
-        ".sidebar-section[data-section-name='test-section-with-more'] .sidebar-more-section-trigger"
+        ".sidebar-section[data-section-name='test-section-with-more'] .--link-button"
       )
       .hasText("Customize", "displays custom button with correct text");
   });
@@ -1458,7 +1463,7 @@ acceptance("Sidebar - Plugin API - Anonymous", function (needs) {
       .exists("displays more links in dropdown");
 
     assert
-      .dom(".dropdown-menu__item .--link-button")
+      .dom(".dropdown-menu__item button.--link-button")
       .hasText("Settings", "displays more section button");
   });
 });
