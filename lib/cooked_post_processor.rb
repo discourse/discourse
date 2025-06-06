@@ -43,6 +43,7 @@ class CookedPostProcessor
       remove_full_quote_on_direct_reply if new_post
       post_process_oneboxes
       post_process_images
+      post_process_videos
       add_blocked_hotlinked_media_placeholders
       post_process_quotes
       optimize_urls
@@ -348,7 +349,7 @@ class CookedPostProcessor
 
     %w[src].each do |selector|
       @doc
-        .css("img[#{selector}]")
+        .css("img[#{selector}], video[#{selector}]")
         .each do |img|
           custom_emoji = img["class"]&.include?("emoji-custom") && Emoji.custom?(img["title"])
           img[selector] = UrlHelper.cook_url(
@@ -390,6 +391,108 @@ class CookedPostProcessor
     extract_images.each do |img|
       still_an_image = process_hotlinked_image(img)
       convert_to_link!(img) if still_an_image
+    end
+  end
+
+  def post_process_videos
+    puts "!!!!!!!!! Post Processing videos"
+    changes_made = false
+
+    begin
+      @doc
+        .css("video")
+        .each do |video|
+          src = video["src"]
+          next if src.blank?
+
+          # Look for optimized video
+          upload = Upload.get_from_url(src)
+          Rails.logger.info("Processing video element - src: #{src}")
+          Rails.logger.info("Found upload: #{upload&.id}")
+          if upload && optimized_video = OptimizedVideo.find_by(upload_id: upload.id)
+            Rails.logger.info(
+              "Found optimized video: #{optimized_video.id} with URL: #{optimized_video.url}",
+            )
+            # Only update if the URL is different
+            if video["src"] != optimized_video.url
+              Rails.logger.info(
+                "URL is different, updating from #{video["src"]} to #{optimized_video.url}",
+              )
+              video["data-original-video-src"] = video["src"] unless video[
+                "data-original-video-src"
+              ]
+              video["src"] = optimized_video.url
+              changes_made = true
+              Rails.logger.info("Set changes_made to true for video element")
+            else
+              Rails.logger.info("URL is the same, no update needed")
+            end
+            # Ensure we maintain reference to original upload
+            @post.link_post_uploads(fragments: @doc)
+          else
+            Rails.logger.info("No optimized video found for upload: #{upload&.id}")
+          end
+        end
+
+      # Handle video placeholders
+      @doc
+        .css(".video-placeholder-container")
+        .each do |container|
+          src = container["data-video-src"]
+          next if src.blank?
+
+          # Look for optimized video
+          upload = Upload.get_from_url(src)
+          Rails.logger.info("Processing video placeholder - src: #{src}")
+          Rails.logger.info("Found upload: #{upload&.id}")
+          if upload && optimized_video = OptimizedVideo.find_by(upload_id: upload.id)
+            Rails.logger.info(
+              "Found optimized video: #{optimized_video.id} with URL: #{optimized_video.url}",
+            )
+            # Only update if the URL is different
+            if container["data-video-src"] != optimized_video.url
+              Rails.logger.info(
+                "URL is different, updating from #{container["data-video-src"]} to #{optimized_video.url}",
+              )
+              container["data-original-video-src"] = container["data-video-src"] unless container[
+                "data-original-video-src"
+              ]
+              container["data-video-src"] = optimized_video.url
+              changes_made = true
+              Rails.logger.info("Set changes_made to true for video placeholder")
+            else
+              Rails.logger.info("URL is the same, no update needed")
+            end
+            # Ensure we maintain reference to original upload
+            @post.link_post_uploads(fragments: @doc)
+          else
+            Rails.logger.info("No optimized video found for upload: #{upload&.id}")
+          end
+        end
+
+      # Log the final HTML to verify changes
+      Rails.logger.info("Final HTML after video processing: #{@doc.to_html}")
+      Rails.logger.info("changes_made flag is: #{changes_made}")
+
+      # Update the post's cooked content if changes were made
+      if changes_made
+        Rails.logger.info("Updating post cooked content due to video changes")
+        new_cooked = @doc.to_html
+        Rails.logger.info("New cooked content: #{new_cooked}")
+        @post.cooked = new_cooked
+        if @post.save
+          Rails.logger.info("Post updated with new cooked content")
+          Rails.logger.info("Post cooked content after save: #{@post.cooked}")
+        else
+          Rails.logger.error("Failed to save post: #{@post.errors.full_messages.join(", ")}")
+        end
+      else
+        Rails.logger.info("No changes made to video URLs")
+      end
+    rescue => e
+      Rails.logger.error("Error in post_process_videos: #{e.message}")
+      Rails.logger.error(e.backtrace.join("\n"))
+      raise
     end
   end
 
