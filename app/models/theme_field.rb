@@ -342,7 +342,7 @@ class ThemeField < ActiveRecord::Base
 
     doc = ""
     doc = <<~HTML.html_safe if javascript_cache.content.present?
-          <script defer src="#{javascript_cache.url}" data-theme-id="#{theme_id}" nonce="#{ThemeField::CSP_NONCE_PLACEHOLDER}"></script>
+          <script type="module" src="#{javascript_cache.url}" data-theme-id="#{theme_id}" nonce="#{ThemeField::CSP_NONCE_PLACEHOLDER}"></script>
         HTML
     [doc, errors&.join("\n")]
   rescue ThemeTranslationParser::InvalidYaml => e
