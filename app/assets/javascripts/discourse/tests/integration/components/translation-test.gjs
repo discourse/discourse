@@ -1,5 +1,7 @@
+import { array } from "@ember/helper";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import { eq } from "truth-helpers";
 import Translation from "discourse/components/translation";
 import UserLink from "discourse/components/user-link";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -17,7 +19,7 @@ module("Integration | Component | Translation", function (hooks) {
     I18n.translations = {
       fr: {
         js: {
-          hello: "Bonjour, <user>",
+          hello: "Bonjour, %{username}",
           user: {
             profile_possessive: "Profil de %{username}",
           },
@@ -34,11 +36,11 @@ module("Integration | Component | Translation", function (hooks) {
   test("component", async function (assert) {
     await render(
       <template>
-        <Translation @scope="hello">
-          <:placeholders as |items|>
-            <Translation.Placeholder @target={{items.user}}>
+        <Translation @scope="hello" @placeholders={{array "username"}}>
+          <:placeholders as |item|>
+            {{#if (eq item "username")}}
               <UserLink @username="pento">pento</UserLink>
-            </Translation.Placeholder>
+            {{/if}}
           </:placeholders>
         </Translation>
       </template>
