@@ -1,13 +1,12 @@
 import Component from "@glimmer/component";
-import { or } from "truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class ChatChannelMetadata extends Component {
   get lastMessageFormattedDate() {
     const { createdAt, id } = this.args.channel.lastMessage || {};
 
-    if (id === null) {
-      return null;
+    if (!id) {
+      return "–";
     } else {
       const lastMessageDate = this.showThreadUnreadDate
         ? this.args.channel.lastUnreadThreadDate
@@ -33,7 +32,7 @@ export default class ChatChannelMetadata extends Component {
     <div class="chat-channel__metadata">
       {{#if @channel.lastMessage}}
         <div class="chat-channel__metadata-date">
-          {{or this.lastMessageFormattedDate "–"}}
+          {{this.lastMessageFormattedDate}}
         </div>
       {{/if}}
     </div>
