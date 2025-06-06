@@ -323,16 +323,18 @@ class ThemeField < ActiveRecord::Base
     data = translation_data
 
     js = <<~JS
-      /* Translation data for theme #{self.theme_id} (#{self.name})*/
-      const data = #{data.to_json};
+      (function(){
+        /* Translation data for theme #{self.theme_id} (#{self.name})*/
+        const data = #{data.to_json};
 
-      for (let lang in data){
-        let cursor = I18n.translations;
-        for (let key of [lang, "js", "theme_translations"]){
-          cursor = cursor[key] ??= {};
+        for (let lang in data){
+          let cursor = I18n.translations;
+          for (let key of [lang, "js", "theme_translations"]){
+            cursor = cursor[key] ??= {};
+          }
+          cursor[#{self.theme_id}] = data[lang];
         }
-        cursor[#{self.theme_id}] = data[lang];
-      }
+      })()
     JS
 
     javascript_cache.content = js
