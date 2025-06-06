@@ -64,7 +64,7 @@ module Jobs
       end
 
       new_sha1 = SecureRandom.hex(20)
-      output_path = "original/1X/#{new_sha1}"
+      output_path = "optimized/videos/#{new_sha1}"
 
       # Extract the path from the URL
       # The URL format is: //bucket.s3.dualstack.region.amazonaws.com/path/to/file
