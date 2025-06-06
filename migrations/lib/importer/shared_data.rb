@@ -13,11 +13,23 @@ module Migrations::Importer
     def load_mapping(sql)
       rows = @discourse_db.query_array(sql)
 
-      if rows.first && rows.first.size > 2
-        rows.to_h { |key, *values| [key, *values] }
-      else
-        rows.to_h
-      end
+      # While rows is an enumerator, it's not fully compliant, it does not
+      # rewind on #first, #peek, #any?, etc.
+      # So we need to hold on to first_row for use later
+      first_row = rows.first
+
+      return {} if first_row.nil?
+
+      has_multiple_values = first_row.size > 2
+      result =
+        if has_multiple_values
+          rows.to_h { |key, *values| [key, values] }
+        else
+          rows.to_h
+        end
+
+      result[first_row[0]] = has_multiple_values ? first_row[1..] : first_row[1]
+      result
     end
 
     def load(type)
