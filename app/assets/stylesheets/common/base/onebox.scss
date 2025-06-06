@@ -113,11 +113,14 @@ a.loading-onebox {
 
 aside.onebox {
   @include onebox-shadow(4px);
-  margin-top: 4px;
   margin-bottom: 1em;
   padding: 1em;
   font-size: var(--font-0);
   background: var(--secondary);
+
+  &:first-child {
+    margin-top: 4px;
+  }
 
   header {
     align-items: center;
