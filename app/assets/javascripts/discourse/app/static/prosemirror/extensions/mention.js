@@ -38,6 +38,8 @@ const extension = {
     mention: {
       block: "mention",
       getAttrs: (token, tokens, i) => ({
+        // this is not ideal, but working around the mention_open/close structure
+        // a text is expected just after the mention_open token
         name: tokens.splice(i + 1, 1)[0].content.slice(1),
       }),
     },
