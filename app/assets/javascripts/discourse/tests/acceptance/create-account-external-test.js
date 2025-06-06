@@ -25,7 +25,8 @@ acceptance("Create Account - external auth", function (needs) {
     document.getElementById("data-authentication").remove();
   });
 
-  test("when skip is disabled (default)", async function (assert) {
+  test("when skip is disabled", async function (assert) {
+    this.siteSettings.auth_skip_create_confirm = false;
     await visit("/");
 
     assert.dom(".signup-fullpage").exists("it shows the signup page");
@@ -37,8 +38,7 @@ acceptance("Create Account - external auth", function (needs) {
       .doesNotExist("it does not show the associate link");
   });
 
-  test("when skip is enabled", async function (assert) {
-    this.siteSettings.auth_skip_create_confirm = true;
+  test("when skip is enabled (default)", async function (assert) {
     await visit("/");
 
     assert.dom(".signup-fullpage").exists("it shows the signup page");
@@ -58,6 +58,7 @@ acceptance("Create account - with associate link", function (needs) {
   });
 
   test("displays associate link when allowed", async function (assert) {
+    this.siteSettings.auth_skip_create_confirm = false;
     await visit("/");
 
     assert.dom(".signup-fullpage").exists("it shows the signup page");
