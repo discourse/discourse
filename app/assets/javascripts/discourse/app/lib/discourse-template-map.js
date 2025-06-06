@@ -1,3 +1,5 @@
+import { isTesting } from "discourse/lib/environment";
+
 const pluginRegex =
   /^discourse\/plugins\/([^\/]+)\/(?:discourse\/templates\/)?(.*)$/;
 const themeRegex =
@@ -31,6 +33,8 @@ class DiscourseTemplateMap {
    * will be generated using `Object.keys(requirejs.entries)`.
    */
   setModuleNames(moduleNames) {
+    this.templates.clear();
+
     const coreTemplates = new Map();
     const pluginTemplates = new Map();
     const themeTemplates = new Map();
@@ -58,10 +62,14 @@ class DiscourseTemplateMap {
     ]) {
       for (const [path, originalPath] of templateMap) {
         if (this.templates.has(path)) {
-          // eslint-disable-next-line no-console
-          console.error(
-            `Duplicate templates found for '${path}': '${originalPath}' clashes with '${this.templates.get(path)}'`
-          );
+          const msg = `Duplicate templates found for '${path}': '${originalPath}' clashes with '${this.templates.get(path)}'`;
+
+          if (isTesting()) {
+            throw new Error(msg);
+          } else {
+            // eslint-disable-next-line no-console
+            console.error(msg);
+          }
         } else {
           this.templates.set(path, originalPath);
         }
