@@ -13,6 +13,15 @@ RSpec.describe BackupRestore::BackupFileHandler do
     )
   end
 
+  it "works with URLs" do
+    expect_decompress_and_clean_up_to_work(
+      backup_filename: "backup_since_v1.6.tar.gz",
+      url: "https://example.com/backups/backup_since_v1.6.tar.gz",
+      require_metadata_file: false,
+      require_uploads: true,
+    )
+  end
+
   it "works with SQL only backup file" do
     expect_decompress_and_clean_up_to_work(
       backup_filename: "sql_only_backup.sql.gz",
