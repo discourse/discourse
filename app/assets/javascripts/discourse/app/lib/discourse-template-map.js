@@ -1,14 +1,9 @@
-import deprecated from "./deprecated";
+import { isTesting } from "discourse/lib/environment";
 
-const pluginRegex = /^discourse\/plugins\/([^\/]+)\/(.*)$/;
-const themeRegex = /^discourse\/theme-([^\/]+)\/(.*)$/;
-
-function appendToCache(cache, key, value) {
-  let cachedValue = cache.get(key);
-  cachedValue ??= [];
-  cachedValue.push(value);
-  cache.set(key, cachedValue);
-}
+const pluginRegex =
+  /^discourse\/plugins\/([^\/]+)\/(?:discourse\/templates\/)?(.*)$/;
+const themeRegex =
+  /^discourse\/theme-([^\/]+)\/(?:discourse\/templates\/)?(.*)$/;
 
 const NAMESPACES = ["discourse/", "admin/"];
 
@@ -25,53 +20,65 @@ function isTemplate(moduleName) {
   return moduleName.includes("/templates/");
 }
 
+function buildPrioritizedMaps(moduleNames) {
+  const coreTemplates = new Map();
+  const pluginTemplates = new Map();
+  const themeTemplates = new Map();
+
+  for (const moduleName of moduleNames) {
+    if (isInRecognisedNamespace(moduleName) && isTemplate(moduleName)) {
+      let pluginMatch, themeMatch;
+      if ((pluginMatch = moduleName.match(pluginRegex))) {
+        pluginTemplates.set(pluginMatch[2], moduleName);
+      } else if ((themeMatch = moduleName.match(themeRegex))) {
+        themeTemplates.set(themeMatch[2], moduleName);
+      } else {
+        coreTemplates.set(
+          moduleName.replace(/^discourse\/templates\//, ""),
+          moduleName
+        );
+      }
+    }
+  }
+
+  return [coreTemplates, pluginTemplates, themeTemplates];
+}
+
 /**
  * This class provides takes set of core/plugin/theme modules, finds the template modules,
  * and makes an efficient lookup table for the resolver to use. It takes care of sourcing
- * component/route templates from themes/plugins, and also handles template overrides.
+ * component/route templates from themes/plugins, and also warns about clashes
  */
 class DiscourseTemplateMap {
-  coreTemplates = new Map();
-  pluginTemplates = new Map();
-  themeTemplates = new Map();
-  prioritizedCaches = [
-    this.themeTemplates,
-    this.pluginTemplates,
-    this.coreTemplates,
-  ];
+  templates = new Map();
 
   /**
    * Reset the TemplateMap to use the supplied module names. It is expected that the list
    * will be generated using `Object.keys(requirejs.entries)`.
    */
   setModuleNames(moduleNames) {
-    this.coreTemplates.clear();
-    this.pluginTemplates.clear();
-    this.themeTemplates.clear();
-    for (const moduleName of moduleNames) {
-      if (isInRecognisedNamespace(moduleName) && isTemplate(moduleName)) {
-        this.#add(moduleName);
+    this.templates.clear();
+
+    for (const templateMap of buildPrioritizedMaps(moduleNames)) {
+      for (const [path, moduleName] of templateMap) {
+        this.#add(path, moduleName);
       }
     }
   }
 
-  #add(originalPath) {
-    let path = originalPath;
+  #add(path, moduleName) {
+    if (this.templates.has(path)) {
+      const msg = `Duplicate templates found for '${path}': '${moduleName}' clashes with '${this.templates.get(path)}'`;
 
-    let pluginMatch, themeMatch, cache;
-    if ((pluginMatch = path.match(pluginRegex))) {
-      path = pluginMatch[2];
-      cache = this.pluginTemplates;
-    } else if ((themeMatch = path.match(themeRegex))) {
-      path = themeMatch[2];
-      cache = this.themeTemplates;
+      if (isTesting()) {
+        throw new Error(msg);
+      } else {
+        // eslint-disable-next-line no-console
+        console.error(msg);
+      }
     } else {
-      cache = this.coreTemplates;
+      this.templates.set(path, moduleName);
     }
-
-    path = path.replace(/^discourse\/templates\//, "");
-
-    appendToCache(cache, path, originalPath);
   }
 
   /**
@@ -79,41 +86,7 @@ class DiscourseTemplateMap {
    * theme/plugin namespaces and overrides.
    */
   resolve(name) {
-    const [themeMatch, pluginMatch, coreMatch] = this.prioritizedCaches.map(
-      (cache) => {
-        const val = cache.get(name);
-        if (val) {
-          return val[val.length - 1];
-        }
-      }
-    );
-
-    if ((themeMatch || pluginMatch) && coreMatch) {
-      deprecated(
-        `[${
-          themeMatch || pluginMatch
-        }] Overriding templates is deprecated, and will soon be disabled. Use plugin outlets, CSS, or other customization APIs instead.`,
-        {
-          id: "discourse.resolver-template-overrides",
-          url: "https://meta.discourse.org/t/247487",
-        }
-      );
-    }
-
-    return themeMatch || pluginMatch || coreMatch;
-  }
-
-  /**
-   * List all available template keys, after theme/plugin namespaces have
-   * been stripped.
-   */
-  keys() {
-    const uniqueKeys = new Set([
-      ...this.coreTemplates.keys(),
-      ...this.pluginTemplates.keys(),
-      ...this.themeTemplates.keys(),
-    ]);
-    return [...uniqueKeys];
+    return this.templates.get(name);
   }
 }
 
