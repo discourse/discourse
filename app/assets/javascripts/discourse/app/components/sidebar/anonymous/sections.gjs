@@ -20,7 +20,9 @@ export default class SidebarAnonymousSections extends Component {
         <TagsSection @collapsable={{@collapsableSections}} />
       {{/if}}
 
-      <ApiSections @collapsable={{@collapsableSections}} />
+      {{#unless @hideApiSections}}
+        <ApiSections @collapsable={{@collapsableSections}} />
+      {{/unless}}
     </div>
   </template>
 }
