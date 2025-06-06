@@ -140,18 +140,22 @@ export default class DEditor extends Component {
       };
     });
 
-    if (this.popupMenuOptions && this.onPopupMenuAction) {
-      this.popupMenuOptions.forEach((popupButton) => {
-        if (popupButton.shortcut && popupButton.condition) {
-          const shortcut =
-            `${PLATFORM_KEY_MODIFIER}+${popupButton.shortcut}`.toLowerCase();
-          keymap[shortcut] = () => {
-            this.onPopupMenuAction(popupButton, this.newToolbarEvent());
-            return false;
-          };
-        }
-      });
-    }
+    this.popupMenuOptions?.forEach((popupButton) => {
+      if (popupButton.shortcut && popupButton.condition) {
+        const shortcut =
+          `${PLATFORM_KEY_MODIFIER}+${popupButton.shortcut}`.toLowerCase();
+        keymap[shortcut] = () => {
+          this.onPopupMenuAction(
+            {
+              ...popupButton,
+              action: popupButton.shortcutAction ?? popupButton.action,
+            },
+            this.newToolbarEvent()
+          );
+          return false;
+        };
+      }
+    });
 
     keymap["tab"] = () => this.textManipulation.indentSelection("right");
     keymap["shift+tab"] = () => this.textManipulation.indentSelection("left");
