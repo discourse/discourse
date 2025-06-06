@@ -9,9 +9,18 @@ module(
     setupRenderingTest(hooks);
 
     hooks.beforeEach(function () {
-      pretender.get("/u/john.json", () => {
-        return response(404);
-      });
+      pretender.get("/composer/mentions", () =>
+        response({
+          users: ["eviltrout", "john"],
+          user_reasons: {},
+          groups: {
+            support: { user_count: 1 },
+            unmentionable: { user_count: 5 },
+          },
+          group_reasons: { unmentionable: "not_mentionable" },
+          max_users_notified_per_group_mention: 100,
+        })
+      );
     });
 
     const testCases = {
@@ -30,10 +39,20 @@ module(
         '<h2>Hello</h2><p><a class="mention" data-name="eviltrout" contenteditable="false" draggable="true">@eviltrout</a></p>',
         "## Hello\n\n@eviltrout",
       ],
+      "group mention": [
+        "Maybe @support can help",
+        '<p>Maybe <a class="mention" data-name="support" contenteditable="false" draggable="true">@support</a> can help</p>',
+        "Maybe @support can help",
+      ],
+      "group and user mention": [
+        "Hey @john, I think @support can help here",
+        '<p>Hey <a class="mention" data-name="john" contenteditable="false" draggable="true">@john</a>, I think <a class="mention" data-name="support" contenteditable="false" draggable="true">@support</a> can help here</p>',
+        "Hey @john, I think @support can help here",
+      ],
       "invalid mention": [
-        "Hello @john, how are you?",
-        "<p>Hello @john, how are you?</p>",
-        "Hello @john, how are you?",
+        "Hello @invalid, how are you?",
+        "<p>Hello @invalid, how are you?</p>",
+        "Hello @invalid, how are you?",
       ],
     };
 

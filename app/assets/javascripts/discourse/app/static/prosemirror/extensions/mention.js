@@ -1,9 +1,10 @@
 import { mentionRegex } from "pretty-text/mentions";
-import User from "discourse/models/user";
+import { ajax } from "discourse/lib/ajax";
 import { isBoundary } from "discourse/static/prosemirror/lib/markdown-it";
 
 const validMentions = new Set();
 const invalidMentions = new Set();
+const pendingMentions = new Set();
 
 /** @type {RichEditorExtension} */
 const extension = {
@@ -81,17 +82,24 @@ const extension = {
             view.state.doc.descendants((node, pos) => {
               if (node.type.name === "mention") {
                 nodeList.push({ node, pos });
+                pendingMentions.add(node.attrs.name);
               }
             });
+
+            if (!nodeList.length) {
+              return;
+            }
 
             // process in reverse to avoid issues with position shifts
             nodeList.sort((a, b) => b.pos - a.pos);
 
             const invalidateMentions = async () => {
+              await fetchMentions([...pendingMentions]);
+
               for (const item of nodeList) {
                 const { node, pos } = item;
                 const name = node.attrs.name;
-                const isValid = await validateMention(name);
+                const isValid = validMentions.has(name);
 
                 if (!isValid) {
                   view.dispatch(
@@ -116,18 +124,28 @@ const extension = {
               if (node.type.name === "text") {
                 const mentionList = getMentionsFromTextNode(node, pos);
 
+                if (!mentionList.length) {
+                  return;
+                }
+
                 const processMentions = async () => {
+                  await fetchMentions([...pendingMentions]);
+
                   for (const item of mentionList) {
                     const { name, start, end } = item;
-                    const isValid = await validateMention(name);
+                    const isValid = validMentions.has(name);
 
-                    const nodeData = isValid
-                      ? view.state.schema.nodes.mention.create({
-                          name,
-                        })
-                      : view.state.schema.text(`@${name}`);
-
-                    view.dispatch(tr.replaceWith(start, end, nodeData));
+                    if (isValid) {
+                      view.dispatch(
+                        tr.replaceWith(
+                          start,
+                          end,
+                          view.state.schema.nodes.mention.create({
+                            name,
+                          })
+                        )
+                      );
+                    }
                   }
                 };
 
@@ -142,17 +160,17 @@ const extension = {
 };
 
 function getMentionsFromTextNode(node, pos) {
-  const text = node.text;
-  let match;
-
   const regex = new RegExp(`(^|\\W)(${mentionRegex().source})(?=\\s|$)`, "g");
   let mentionList = [];
+  let match;
 
-  while ((match = regex.exec(text)) !== null) {
+  while ((match = regex.exec(node.text)) !== null) {
     const name = match[2].slice(1);
 
     if (invalidMentions.has(name) || validMentions.has(name)) {
       continue;
+    } else if (!pendingMentions.has(name)) {
+      pendingMentions.add(name);
     }
 
     const start = pos + match.index + match[1].length;
@@ -164,30 +182,28 @@ function getMentionsFromTextNode(node, pos) {
   return mentionList;
 }
 
-async function validateMention(name) {
-  if (!name || invalidMentions.has(name)) {
-    return false;
+async function fetchMentions(names) {
+  pendingMentions.clear();
+
+  names = names.filter(
+    (name) => !validMentions.has(name) && !invalidMentions.has(name)
+  );
+
+  if (names.length === 0) {
+    return;
   }
 
-  if (validMentions.has(name)) {
-    return true;
-  }
+  const response = await ajax("/composer/mentions", {
+    data: { names },
+  });
 
-  try {
-    const valid = !!(await User.findByUsername(name));
-
-    if (valid) {
+  names.forEach((name) => {
+    if (response.users.includes(name) || response.groups[name]) {
       validMentions.add(name);
+    } else {
+      invalidMentions.add(name);
     }
-
-    return valid;
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.warn("Validation failed for", name, error);
-    invalidMentions.add(name);
-
-    return false;
-  }
+  });
 }
 
 export default extension;
