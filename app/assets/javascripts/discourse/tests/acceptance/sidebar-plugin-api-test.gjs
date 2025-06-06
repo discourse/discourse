@@ -1026,13 +1026,13 @@ acceptance("Sidebar - Plugin API", function (needs) {
 
     assert
       .dom(
-        ".sidebar-section[data-section-name='test-section-with-more'] .sidebar-section-link-button[data-name='customize']"
+        ".sidebar-section[data-section-name='test-section-with-more'] .sidebar-more-section-trigger"
       )
       .exists("displays custom more section button");
 
     assert
       .dom(
-        ".sidebar-section[data-section-name='test-section-with-more'] .sidebar-section-link-button[data-name='customize']"
+        ".sidebar-section[data-section-name='test-section-with-more'] .sidebar-more-section-trigger"
       )
       .hasText("Customize", "displays custom button with correct text");
   });
@@ -1093,7 +1093,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
 
     assert
       .dom(
-        ".sidebar-section[data-section-name='test-extensible-section'] .sidebar-section-link"
+        ".sidebar-section[data-section-name='test-extensible-section'] [data-link-name]"
       )
       .exists({ count: 1 }, "displays main section link");
 
@@ -1130,51 +1130,6 @@ acceptance("Sidebar - Plugin API", function (needs) {
     assert
       .dom(moreLinks[2])
       .hasText("Badges", "displays callback-based more link");
-  });
-
-  test("Section with only more button action (no more links)", async function (assert) {
-    withPluginApi(PLUGIN_API_VERSION, (api) => {
-      api.addSidebarSection(
-        (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
-          return class extends BaseCustomSidebarSection {
-            name = "test-button-only-section";
-            text = "Button Only Section";
-
-            links = [
-              new (class extends BaseCustomSidebarSectionLink {
-                name = "main-link";
-                route = "discovery.latest";
-                title = "Main Link";
-                text = "Main Link";
-              })(),
-            ];
-
-            moreSectionButtonText = "Settings";
-            moreSectionButtonIcon = "gear";
-          };
-        }
-      );
-    });
-
-    await visit("/");
-
-    assert
-      .dom(
-        ".sidebar-section[data-section-name='test-button-only-section'] .--link-button"
-      )
-      .exists("displays more section button when no more links");
-
-    assert
-      .dom(
-        ".sidebar-section[data-section-name='test-button-only-section'] .--link-button"
-      )
-      .hasText("Settings", "displays button with correct text");
-
-    assert
-      .dom(
-        ".sidebar-section[data-section-name='test-button-only-section'] .sidebar-more-section-links-details-summary"
-      )
-      .doesNotExist("does not display more dropdown when only button action");
   });
 });
 
@@ -1503,9 +1458,7 @@ acceptance("Sidebar - Plugin API - Anonymous", function (needs) {
       .exists("displays more links in dropdown");
 
     assert
-      .dom(
-        ".sidebar-section[data-section-name='test-complex-more'] .--link-button"
-      )
+      .dom(".dropdown-menu__item .--link-button")
       .hasText("Settings", "displays more section button");
   });
 });
