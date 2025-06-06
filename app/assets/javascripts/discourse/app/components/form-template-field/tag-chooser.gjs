@@ -20,7 +20,7 @@ export default class TagChooserField extends Component {
       display: this.args.attributes.tag_choices[choice]
         ? this.args.attributes.tag_choices[choice]
         : choice.replace(/-/g, " ").toUpperCase(),
-    }));
+    })).sort((a, b) => a.display.localeCompare(b.display));
   }
 
   get filteredSelectedValues() {
