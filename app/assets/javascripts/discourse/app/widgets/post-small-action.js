@@ -2,6 +2,7 @@ import { computed } from "@ember/object";
 import { htmlSafe } from "@ember/template";
 import { h } from "virtual-dom";
 import {
+  customGroupActionCodes,
   GROUP_ACTION_CODES,
   ICONS,
 } from "discourse/components/post/small-action";
@@ -24,7 +25,10 @@ export function actionDescriptionHtml(actionCode, createdAt, username, path) {
 
   let who = "";
   if (username) {
-    if (GROUP_ACTION_CODES.includes(actionCode)) {
+    if (
+      GROUP_ACTION_CODES.includes(actionCode) ||
+      customGroupActionCodes.includes(actionCode)
+    ) {
       who = `<a class="mention-group" href="/g/${username}">@${username}</a>`;
     } else {
       who = `<a class="mention" href="${userPath(username)}">@${username}</a>`;
