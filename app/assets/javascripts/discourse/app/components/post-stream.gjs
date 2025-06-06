@@ -119,8 +119,8 @@ export default class PostStream extends Component {
   }
 
   daysBetween(post1, post2) {
-    const time1 = post1 ? new Date(post1.createdAt).getTime() : null;
-    const time2 = post2 ? new Date(post2.createdAt).getTime() : null;
+    const time1 = post1 ? new Date(post1.created_at).getTime() : null;
+    const time2 = post2 ? new Date(post2.created_at).getTime() : null;
 
     if (!time1 || !time2) {
       return null;
