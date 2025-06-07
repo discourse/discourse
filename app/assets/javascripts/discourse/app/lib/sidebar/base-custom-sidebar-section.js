@@ -32,6 +32,36 @@ export default class BaseCustomSidebarSection {
   get links() {}
 
   /**
+   * @returns {BaseCustomSidebarSectionLink[]} Links for the "More..." dropdown section
+   */
+  get moreLinks() {}
+
+  /**
+   * @returns {string} Text for the "More..." dropdown toggle (defaults to "More...")
+   */
+  get moreSectionText() {}
+
+  /**
+   * @returns {string} Icon for the "More..." dropdown toggle (defaults to "chevron-down")
+   */
+  get moreSectionIcon() {}
+
+  /**
+   * @returns {Function} Action for the "More..." section button
+   */
+  get moreSectionButtonAction() {}
+
+  /**
+   * @returns {string} Text for the "More..." section button
+   */
+  get moreSectionButtonText() {}
+
+  /**
+   * @returns {string} Icon for the "More..." section button
+   */
+  get moreSectionButtonIcon() {}
+
+  /**
    * @returns {Boolean} Whether or not to show the entire section including heading.
    */
   get displaySection() {
