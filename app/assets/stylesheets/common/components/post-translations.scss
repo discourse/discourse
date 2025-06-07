@@ -9,3 +9,15 @@
     color: var(--quaternary);
   }
 }
+
+.post-language-selector-content {
+  z-index: z("composer", "dropdown");
+}
+
+.post-language-selector-trigger {
+  margin-left: 1rem;
+
+  .d-button-label {
+    text-transform: uppercase;
+  }
+}

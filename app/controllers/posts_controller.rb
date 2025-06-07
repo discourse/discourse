@@ -244,7 +244,11 @@ class PostsController < ApplicationController
 
     guardian.ensure_can_edit!(post)
 
-    changes = { raw: params[:post][:raw], edit_reason: params[:post][:edit_reason] }
+    changes = {
+      raw: params[:post][:raw],
+      edit_reason: params[:post][:edit_reason],
+      locale: params[:post][:locale],
+    }
 
     Post.plugin_permitted_update_params.keys.each { |param| changes[param] = params[:post][param] }
 
@@ -853,6 +857,7 @@ class PostsController < ApplicationController
       visible
       draft_key
       composer_version
+      locale
     ]
 
     Post.plugin_permitted_create_params.each do |key, value|
