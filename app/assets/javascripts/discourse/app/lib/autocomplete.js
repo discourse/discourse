@@ -10,10 +10,10 @@ import { TextareaAutocompleteHandler } from "discourse/lib/textarea-text-manipul
 import Site from "discourse/models/site";
 
 /**
-  This is a jQuery plugin to support autocompleting values in our text fields.
+ This is a jQuery plugin to support autocompleting values in our text fields.
 
-  @module $.fn.autocomplete
-**/
+ @module $.fn.autocomplete
+ **/
 
 export const SKIP = "skip";
 export const CANCELLED_STATUS = "__CANCELLED";
@@ -51,6 +51,7 @@ export default function (options) {
   if (this.length === 0) {
     return;
   }
+  throw new Error("foo error");
 
   if (options === "destroy" || options.updateData) {
     cancel(_inputTimeout);
@@ -178,7 +179,7 @@ export default function (options) {
 
     const divs = transformed.map((itm) => {
       let d = $(
-        `<div class='item'><span>${itm}<a class='remove' href>${iconHTML(
+        `<div class="item"><span>${itm}<a class="remove" href>${iconHTML(
           "xmark"
         )}</a></span></div>`
       );
