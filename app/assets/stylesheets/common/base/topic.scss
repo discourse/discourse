@@ -5,6 +5,12 @@ body.text-selection-inactive * {
   @include user-select(none);
 }
 
+html:not(.ios-device) body.text-selection-inactive {
+  [data-identifier="post-text-selection-toolbar"] {
+    pointer-events: none;
+  }
+}
+
 .post-text-selection-active,
 .post-text-selection-active * {
   @include user-select(text !important);

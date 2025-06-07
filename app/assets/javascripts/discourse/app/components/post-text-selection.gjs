@@ -51,7 +51,6 @@ export default class PostTextSelection extends Component {
   @service menu;
 
   @tracked textSelectionInactive = false;
-  @tracked isSelecting = false;
   @tracked preventClose = applyValueTransformer(
     "post-text-selection-prevent-close",
     false
@@ -66,19 +65,39 @@ export default class PostTextSelection extends Component {
   });
 
   documentListeners = modifier(() => {
-    const { isAndroid } = this.capabilities;
-    const endEvent = isAndroid ? "pointercancel" : "mouseup";
-
+    // start of text selection
     document.addEventListener("pointerdown", this.pointerdown, {
       passive: true,
     });
-    document.addEventListener(endEvent, this.mouseup, { passive: true });
+
+    // any selection change
     document.addEventListener("selectionchange", this.onSelectionChanged);
+
+    const { touch, isAndroid } = this.capabilities;
+    if (touch) {
+      if (isAndroid) {
+        // fires when user finishes adjusting text seleciton on android
+        // ios has no such event
+        document.addEventListener("contextmenu", this.contextmenu, {
+          passive: true,
+        });
+      }
+    } else {
+      // end of text selection on desktop
+      document.addEventListener("mouseup", this.mouseup, { passive: true });
+    }
 
     return () => {
       document.removeEventListener("pointerdown", this.pointerdown);
-      document.removeEventListener(endEvent, this.mouseup);
       document.removeEventListener("selectionchange", this.onSelectionChanged);
+
+      if (touch) {
+        if (isAndroid) {
+          document.removeEventListener("contextmenu", this.contextmenu);
+        }
+      } else {
+        document.removeEventListener("mouseup", this.mouseup);
+      }
     };
   });
 
@@ -113,10 +132,6 @@ export default class PostTextSelection extends Component {
   }
 
   async selectionChanged(options = {}) {
-    if (this.isSelecting) {
-      return;
-    }
-
     const _selectedText = selectedText();
 
     const selection = window.getSelection();
@@ -265,6 +280,8 @@ export default class PostTextSelection extends Component {
 
   @bind
   onSelectionChanged() {
+    this.hideToolbar();
+
     const selection = window.getSelection();
     if (selection.rangeCount) {
       // ensure we lock on the post where the selection started
@@ -278,13 +295,15 @@ export default class PostTextSelection extends Component {
       }
     }
 
-    this.hideToolbar();
+    const { isIOS, isWinphone, isAndroid } = this.capabilities;
 
-    if (this.isSelecting) {
+    // note iOS doesn’t have any event to know we released cursor after a selection
+    if (!isIOS && this.isPointerDown) {
+      // if the user is still holding the pointer down, we don't want to do anything
+      // this is to avoid showing the toolbar when the user is just selecting text
       return;
     }
 
-    const { isIOS, isWinphone, isAndroid } = this.capabilities;
     const wait = isIOS || isWinphone || isAndroid ? INPUT_DELAY : 25;
     this.selectionChangeHandler = discourseDebounce(
       this,
@@ -295,16 +314,21 @@ export default class PostTextSelection extends Component {
 
   @bind
   pointerdown() {
+    this.isPointerDown = true;
+    this.hideToolbar();
     this._cleanUserSelectState();
+  }
 
-    this.isSelecting = true;
+  @bind
+  contextmenu() {
+    this.isPointerDown = false;
+    this._cleanUserSelectState();
   }
 
   @bind
   mouseup() {
+    this.isPointerDown = false;
     this._cleanUserSelectState();
-
-    this.isSelecting = false;
     this.onSelectionChanged();
   }
 
