@@ -4,7 +4,7 @@ RSpec.describe PosterSerializer do
   let(:poster) { Fabricate(:user, admin: false, moderator: false) }
 
   it "serializes the correct attributes" do
-    expect(PosterSerializer.new(poster).attributes.keys).to contain_exactly(
+    expect(PosterSerializer.new(poster, scope: PlaceholderGuardian.new).attributes.keys).to contain_exactly(
       :trust_level,
       :avatar_template,
       :id,
@@ -24,7 +24,7 @@ RSpec.describe PosterSerializer do
       )
     groupie = Fabricate(:user, flair_group: group)
 
-    expect(PosterSerializer.new(groupie).attributes.keys).to contain_exactly(
+    expect(PosterSerializer.new(groupie, scope: PlaceholderGuardian.new).attributes.keys).to contain_exactly(
       :trust_level,
       :avatar_template,
       :id,

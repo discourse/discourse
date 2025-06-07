@@ -69,7 +69,7 @@ class AdminUserActionSerializer < ApplicationSerializer
   end
 
   def deleted_by
-    BasicUserSerializer.new(object.deleted_by, root: false).as_json
+    BasicUserSerializer.new(object.deleted_by, scope: scope, root: false).as_json
   end
 
   def include_deleted_by?

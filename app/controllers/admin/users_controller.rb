@@ -129,7 +129,7 @@ class Admin::UsersController < Admin::StaffController
             full_suspend_reason: full_reason,
             suspended_till: user.suspended_till,
             suspended_at: user.suspended_at,
-            suspended_by: BasicUserSerializer.new(current_user, root: false).as_json,
+            suspended_by: BasicUserSerializer.new(current_user, scope: PlaceholderGuardian.new, root: false).as_json,
           },
         )
       end
@@ -327,6 +327,7 @@ class Admin::UsersController < Admin::StaffController
             silenced_by:
               BasicUserSerializer.new(
                 current_user,
+                scope: PlaceholderGuardian.new,
                 root: false,
                 include_silence_reason: true,
               ).as_json,
@@ -390,7 +391,7 @@ class Admin::UsersController < Admin::StaffController
         else
           render json: {
                    deleted: false,
-                   user: AdminDetailedUserSerializer.new(user, root: false).as_json,
+                   user: AdminDetailedUserSerializer.new(user, scope: PlaceholderGuardian.new, root: false).as_json,
                  }
         end
       rescue UserDestroyer::PostsExistError
@@ -510,7 +511,7 @@ class Admin::UsersController < Admin::StaffController
       render json: success_json.merge(username: user.username)
     else
       render json:
-               failed_json.merge(user: AdminDetailedUserSerializer.new(user, root: false).as_json)
+               failed_json.merge(user: AdminDetailedUserSerializer.new(user, scope: PlaceholderGuardian.new, root: false).as_json)
     end
   end
 

@@ -111,7 +111,7 @@ module DiscourseAutomation
 
     def render_serialized_automation(automation)
       serializer =
-        DiscourseAutomation::AutomationSerializer.new(automation, root: "automation").as_json
+        DiscourseAutomation::AutomationSerializer.new(automation, scope: PlaceholderGuardian.new, root: "automation").as_json
       render_json_dump(serializer)
     end
   end

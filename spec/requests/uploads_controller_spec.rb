@@ -1547,7 +1547,7 @@ RSpec.describe UploadsController do
 
         expect(response.status).to eq(200)
         result = response.parsed_body
-        expect(result[:upload]).to eq(JSON.parse(UploadSerializer.new(upload).to_json)[:upload])
+        expect(result[:upload]).to eq(JSON.parse(UploadSerializer.new(upload, scope: PlaceholderGuardian.new).to_json)[:upload])
       end
 
       describe "rate limiting" do

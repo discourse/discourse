@@ -16,7 +16,7 @@ RSpec.describe ThemeIndexSerializer do
     )
   end
 
-  let(:serializer) { ThemeIndexSerializer.new(theme, root: false) }
+  let(:serializer) { ThemeIndexSerializer.new(theme, scope: PlaceholderGuardian.new, root: false) }
   let(:json) { serializer.as_json }
 
   it "includes basic theme attributes" do
@@ -36,7 +36,7 @@ RSpec.describe ThemeIndexSerializer do
     theme.color_scheme = Fabricate(:color_scheme)
     theme.save!
 
-    new_json = ThemeIndexSerializer.new(theme, root: false).as_json
+    new_json = ThemeIndexSerializer.new(theme, scope: PlaceholderGuardian.new, root: false).as_json
     expect(new_json[:color_scheme][:id]).to eq(theme.color_scheme.id)
   end
 
@@ -46,7 +46,7 @@ RSpec.describe ThemeIndexSerializer do
     remote_theme = RemoteTheme.create!(remote_url: "https://github.com/discourse/sample-theme")
     theme.update!(remote_theme_id: remote_theme.id)
 
-    new_json = ThemeIndexSerializer.new(theme, root: false).as_json
+    new_json = ThemeIndexSerializer.new(theme, scope: PlaceholderGuardian.new, root: false).as_json
     expect(new_json[:remote_theme][:id]).to eq(remote_theme.id)
   end
 end

@@ -2280,6 +2280,7 @@ class UsersController < ApplicationController
       ActiveModel::ArraySerializer.new(
         users,
         each_serializer: FoundUserSerializer,
+        scope: PlaceholderGuardian.new,
         include_status: true,
       )
     { users: serializer.as_json }

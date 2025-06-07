@@ -44,7 +44,7 @@ module Chat
         .map(&:user)
         .compact
         .sort_by(&:id)
-        .map { |user| BasicUserSerializer.new(user, root: false, include_status: true) }
+        .map { |user| BasicUserSerializer.new(user, scope: scope, root: false, include_status: true) }
         .as_json
     end
 
@@ -54,7 +54,7 @@ module Chat
 
     def user
       user = object.user || Chat::NullUser.new
-      MessageUserSerializer.new(user, root: false, include_status: true).as_json
+      MessageUserSerializer.new(user, scope: scope, root: false, include_status: true).as_json
     end
 
     def excerpt
@@ -75,7 +75,7 @@ module Chat
             emoji: emoji,
             count: reactions.count,
             users:
-              ActiveModel::ArraySerializer.new(users, each_serializer: BasicUserSerializer).as_json,
+              ActiveModel::ArraySerializer.new(users, each_serializer: BasicUserSerializer, scope: scope).as_json,
             reacted: users_reactions.include?(emoji),
           }
         end

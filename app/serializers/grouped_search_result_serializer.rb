@@ -39,6 +39,7 @@ class GroupedSearchResultSerializer < ApplicationSerializer
       extra[:categories] = ActiveModel::ArraySerializer.new(
         object.extra_categories,
         each_serializer: BasicCategorySerializer,
+        scope: scope,
       )
     end
 

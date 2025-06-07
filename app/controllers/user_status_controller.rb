@@ -6,7 +6,7 @@ class UserStatusController < ApplicationController
   def get
     ensure_feature_enabled
     respond_to do |format|
-      format.json { render json: UserStatusSerializer.new(current_user.user_status, root: false) }
+      format.json { render json: UserStatusSerializer.new(current_user.user_status, scope: PlaceholderGuardian.new, root: false) }
     end
   end
 

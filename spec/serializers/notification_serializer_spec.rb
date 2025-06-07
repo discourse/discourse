@@ -4,7 +4,7 @@ RSpec.describe NotificationSerializer do
   describe "#as_json" do
     fab!(:user)
     let(:notification) { Fabricate(:notification, user: user) }
-    let(:serializer) { NotificationSerializer.new(notification) }
+    let(:serializer) { NotificationSerializer.new(notification, scope: PlaceholderGuardian.new) }
     let(:json) { serializer.as_json }
 
     it "returns the user_id" do
@@ -23,7 +23,7 @@ RSpec.describe NotificationSerializer do
       user
     end
     let(:notification) { Fabricate(:notification, user: user) }
-    let(:serializer) { NotificationSerializer.new(notification) }
+    let(:serializer) { NotificationSerializer.new(notification, scope: PlaceholderGuardian.new) }
     let(:json) { serializer.as_json }
 
     it "should include the external_id" do

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe BasicReviewableQueuedPostSerializer do
-  subject(:serializer) { described_class.new(reviewable, root: false).as_json }
+  subject(:serializer) { described_class.new(reviewable, scope: PlaceholderGuardian.new, root: false).as_json }
 
   fab!(:topic) { Fabricate(:topic, title: "safe title <a> existing topic") }
   fab!(:reviewable) do
