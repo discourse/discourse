@@ -317,6 +317,7 @@
   grid-template-columns: repeat(auto-fill, minmax(2.35em, 1fr));
   align-items: center;
   border-bottom: var(--d-input-border);
+  min-height: 2.42rem;
   width: 100%;
   box-sizing: border-box;
   flex-shrink: 0;
@@ -354,6 +355,30 @@
   .select-kit-header-wrapper {
     justify-content: center;
   }
+
+  &.--replaced-toolbar {
+    display: flex;
+    animation: float-left ease 0.2s 1 forwards;
+
+    @keyframes float-left {
+      0% {
+        opacity: 0;
+        transform: translateX(10px);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+  }
+}
+
+.toolbar-separator {
+  width: 1px;
+  background-color: var(--primary-low);
+  margin: var(--space-2) var(--space-1);
+  height: calc(100% - var(--space-4));
 }
 
 .d-editor #form-template-form {

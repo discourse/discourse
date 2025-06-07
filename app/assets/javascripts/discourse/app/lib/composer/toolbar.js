@@ -12,7 +12,7 @@ const DEFAULT_GROUP = "main";
 export class ToolbarBase {
   constructor(opts = {}) {
     this.shortcuts = {};
-    this.context = null;
+    this.context = {};
     this.groups = [{ group: DEFAULT_GROUP, buttons: [] }];
     this.siteSettings = opts.siteSettings || {};
     this.capabilities = opts.capabilities || {};
@@ -75,13 +75,13 @@ export class ToolbarBase {
     }
   }
 
-  addSeparator(group = DEFAULT_GROUP) {
+  addSeparator({ group = DEFAULT_GROUP, condition }) {
     const g = this.groups.findBy("group", group);
     if (!g) {
       throw new Error(`Couldn't find toolbar group ${group}`);
     }
 
-    g.buttons.push({ type: "separator" });
+    g.buttons.push({ type: "separator", condition: condition || (() => true) });
   }
 }
 
