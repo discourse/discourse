@@ -120,7 +120,7 @@ body.grid-layout {
         grid-column: 1 / span var(--sidebar-span);
 
         .sidebar-sections {
-          padding-inline: 0;
+          padding-inline: 0 0.65em;
         }
       }
 
