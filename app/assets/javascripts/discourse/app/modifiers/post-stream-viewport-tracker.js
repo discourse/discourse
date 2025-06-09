@@ -1,4 +1,4 @@
-import { schedule } from "@ember/runloop";
+import { cancel, schedule } from "@ember/runloop";
 import { htmlSafe } from "@ember/template";
 import { modifier } from "ember-modifier";
 import discourseDebounce from "discourse/lib/debounce";
@@ -152,6 +152,13 @@ export default class PostStreamViewportTracker {
    * @type {Object<number, {post: Object, element: HTMLElement}>}
    */
   #postsOnScreen = {};
+
+  /**
+   * Map to store scheduled/debounced timers for various tracker functions
+   * Used to track and cancel pending timers when the component is destroyed
+   * @type {Map<Function, number>}
+   */
+  #scheduledTimers = new Map();
 
   /**
    * Reference to the screen track service for tracking post visibility
@@ -324,6 +331,11 @@ export default class PostStreamViewportTracker {
    * Disconnects intersection observers and clears DOM references
    */
   destroy() {
+    // cancel scheduled timers
+    for (const timer of this.#scheduledTimers.values()) {
+      cancel(timer);
+    }
+
     // disconnect the intersection observers
     this.#viewportObserver?.disconnect();
     this.#cloakingObserver?.disconnect();
@@ -422,10 +434,13 @@ export default class PostStreamViewportTracker {
     }
 
     // update the cloaking boundaries
-    discourseDebounce(
-      this,
+    this.#scheduledTimers.set(
       this.#updateCloakBoundaries,
-      SCROLL_BATCH_INTERVAL_MS
+      discourseDebounce(
+        this,
+        this.#updateCloakBoundaries,
+        SCROLL_BATCH_INTERVAL_MS
+      )
     );
   }
 
@@ -450,10 +465,13 @@ export default class PostStreamViewportTracker {
     }
 
     // update the screen tracking information
-    discourseDebounce(
-      this,
+    this.#scheduledTimers.set(
       this.#updateScreenTracking,
-      SCROLL_BATCH_INTERVAL_MS
+      discourseDebounce(
+        this,
+        this.#updateScreenTracking,
+        SCROLL_BATCH_INTERVAL_MS
+      )
     );
 
     // forces updates performed when the scroll is triggered
@@ -466,7 +484,10 @@ export default class PostStreamViewportTracker {
    */
   @bind
   onScroll() {
-    discourseDebounce(this, this.#scrollTriggered, SCROLL_BATCH_INTERVAL_MS);
+    this.#scheduledTimers.set(
+      this.#scrollTriggered,
+      discourseDebounce(this, this.#scrollTriggered, SCROLL_BATCH_INTERVAL_MS)
+    );
   }
 
   /**
@@ -477,11 +498,14 @@ export default class PostStreamViewportTracker {
    */
   @bind
   onWindowResize(event) {
-    discourseDebounce(
-      this,
+    this.#scheduledTimers.set(
       this.#windowResizeTriggered,
-      event,
-      RESIZE_DEBOUNCE_MS
+      discourseDebounce(
+        this,
+        this.#windowResizeTriggered,
+        event,
+        RESIZE_DEBOUNCE_MS
+      )
     );
   }
 
@@ -690,11 +714,14 @@ export default class PostStreamViewportTracker {
   #scrollTriggered() {
     const eyelineOffset = this.#calculateEyelineViewportOffset();
 
-    discourseDebounce(
-      this,
+    this.#scheduledTimers.set(
       this.#findPostMatchingEyeline,
-      eyelineOffset,
-      SCROLL_BATCH_INTERVAL_MS
+      discourseDebounce(
+        this,
+        this.#findPostMatchingEyeline,
+        eyelineOffset,
+        SCROLL_BATCH_INTERVAL_MS
+      )
     );
 
     if (DEBUG_EYELINE) {
