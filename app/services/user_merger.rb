@@ -10,7 +10,8 @@ class UserMerger
   end
 
   def merge!
-    update_username
+    updating_usernames = Benchmark.measure { update_username }
+    puts "time updating usernames: #{updating_usernames.real.round(2)} "
 
     moving_posts = Benchmark.measure { move_posts }
     puts "time moving posts: #{moving_posts.real.round(2)} "
