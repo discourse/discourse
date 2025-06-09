@@ -322,18 +322,16 @@ class ThemeField < ActiveRecord::Base
     data = translation_data
 
     js = <<~JS
-      (function(){
-        /* Translation data for theme #{self.theme_id} (#{self.name})*/
-        const data = #{data.to_json};
+      /* Translation data for theme #{self.theme_id} (#{self.name})*/
+      const data = #{data.to_json};
 
-        for (let lang in data){
-          let cursor = I18n.translations;
-          for (let key of [lang, "js", "theme_translations"]){
-            cursor = cursor[key] ??= {};
-          }
-          cursor[#{self.theme_id}] = data[lang];
+      for (let lang in data){
+        let cursor = I18n.translations;
+        for (let key of [lang, "js", "theme_translations"]){
+          cursor = cursor[key] ??= {};
         }
-      })()
+        cursor[#{self.theme_id}] = data[lang];
+      }
     JS
 
     javascript_cache.content = js
@@ -342,7 +340,7 @@ class ThemeField < ActiveRecord::Base
 
     doc = ""
     doc = <<~HTML.html_safe if javascript_cache.content.present?
-          <script defer src="#{javascript_cache.url}" data-theme-id="#{theme_id}" nonce="#{ThemeField::CSP_NONCE_PLACEHOLDER}"></script>
+          <script type="module" src="#{javascript_cache.url}" data-theme-id="#{theme_id}" nonce="#{ThemeField::CSP_NONCE_PLACEHOLDER}"></script>
         HTML
     [doc, errors&.join("\n")]
   rescue ThemeTranslationParser::InvalidYaml => e
