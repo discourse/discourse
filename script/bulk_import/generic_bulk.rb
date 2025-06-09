@@ -478,7 +478,7 @@ class BulkImport::Generic < BulkImport::Base
         members_visibility_level: row["members_visibility_level"],
         mentionable_level: row["mentionable_level"],
         messageable_level: row["messageable_level"],
-        assignable_level: row["assignable_level"]
+        assignable_level: row["assignable_level"],
       }
     end
 
