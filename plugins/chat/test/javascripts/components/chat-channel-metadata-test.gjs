@@ -8,6 +8,22 @@ import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 module("Discourse Chat | Component | chat-channel-metadata", function (hooks) {
   setupRenderingTest(hooks);
 
+  test("displays created at placeholder for empty chat", async function (assert) {
+    const self = this;
+    this.channel = new ChatFabricators(getOwner(this)).directMessageChannel();
+    this.channel.lastMessage = new ChatFabricators(getOwner(this)).message({
+      channel: this.channel,
+      created_at: Date.now(),
+      id: null,
+    });
+
+    await render(
+      <template><ChatChannelMetadata @channel={{self.channel}} /></template>
+    );
+
+    assert.dom(".chat-channel__metadata-date").hasText("–");
+  });
+
   test("displays last message created at", async function (assert) {
     const self = this;
 
