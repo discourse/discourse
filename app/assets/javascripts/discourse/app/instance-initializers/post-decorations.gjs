@@ -14,18 +14,81 @@ import { parseAsync } from "discourse/lib/text";
 import { setTextDirections } from "discourse/lib/text-direction";
 import { tokenRange } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
+import HighlightedCode from "admin/components/highlighted-code";
+
+const HighlightedCodeWrapper = <template>
+  <HighlightedCode
+    @code={{@data.code}}
+    @highlightedLines={{@data.lines}}
+    @numbers={{@data.numbers}}
+    @path={{@data.path}}
+    @lang={{@data.lang}}
+    @showCopy={{true}}
+    @showFullscreen={{true}}
+  />
+</template>;
 
 export default {
   initialize(owner) {
     withPluginApi("0.1", (api) => {
       const siteSettings = owner.lookup("service:site-settings");
-      const session = owner.lookup("service:session");
       const site = owner.lookup("service:site");
       const capabilities = owner.lookup("service:capabilities");
       const modal = owner.lookup("service:modal");
       // will eventually just be called lightbox
-      api.decorateCookedElement((elem) => {
-        return highlightSyntax(elem, siteSettings, session);
+      api.decorateCookedElement((elem, helper) => {
+        if (!elem) {
+          return;
+        }
+
+        const selector = siteSettings.autohighlight_all_code
+          ? "pre[data-code-wrap]"
+          : "pre[data-code-wrap]";
+
+        const codeblocks = elem.querySelectorAll(selector);
+
+        if (!codeblocks.length) {
+          return;
+        }
+
+        codeblocks.forEach((e) => {
+          // Large code blocks can cause crashes or slowdowns
+          if (e.innerHTML.length > 30000) {
+            return;
+          }
+
+          let lang;
+          for (const className of e.classList) {
+            const m = className.match(/^lang(?:uage)?-(.+)$/);
+            if (m) {
+              lang = m[1];
+              break;
+            }
+          }
+
+          if (lang === "auto" && e.innerHTML.length > 1000) {
+            return;
+          }
+
+          const code = e.textContent;
+
+          e.innerHTML = "";
+
+          const div = document.createElement("div");
+          div.classList.add("highlighted-code__wrapper");
+
+          e.insertAdjacentElement("afterend", div);
+
+          helper.renderGlimmer(div, HighlightedCodeWrapper, {
+            code,
+            lines: e.dataset.codeLines,
+            numbers: e.dataset.codeNumbers,
+            path: e.dataset.codePath,
+            lang: e.dataset.codeWrap,
+          });
+
+          e.remove();
+        });
       });
 
       api.decorateCookedElement((elem) => {

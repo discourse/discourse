@@ -1020,40 +1020,6 @@ pre {
   }
 }
 
-.codeblock-buttons {
-  display: block;
-  position: relative;
-  overflow: visible;
-
-  .codeblock-button-wrapper {
-    position: absolute;
-    display: flex;
-  }
-
-  .copy-cmd,
-  .fullscreen-cmd {
-    @include unselectable;
-    top: 0;
-    min-height: 0;
-    font-size: var(--font-down-2);
-    opacity: 0.7;
-    cursor: pointer;
-
-    &.action-complete {
-      cursor: auto;
-
-      .d-icon {
-        color: var(--tertiary);
-      }
-    }
-
-    .d-icon {
-      pointer-events: none;
-      margin-right: 0;
-    }
-  }
-}
-
 kbd {
   align-items: center;
   border: 1px solid var(--primary-low-mid);
