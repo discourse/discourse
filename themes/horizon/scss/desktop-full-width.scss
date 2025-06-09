@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 // Full width layout. Ported from the Discourse Full Width theme component here
 // https://meta.discourse.org/t/discourse-full-width-component/292496, which we
 // intend to move into core over time.
@@ -23,7 +25,7 @@ $sidebar-width: 17em;
   body:not(.has-sidebar-page) & {
     max-width: unset;
 
-    @include breakpoint("mobile-extra-large") {
+    @include viewport.until(sm) {
       max-width: 25vw;
     }
   }
@@ -103,7 +105,7 @@ $sidebar-width: 17em;
         grid-area: extra-info;
         white-space: nowrap;
 
-        @include breakpoint("tablet") {
+        @include viewport.until(md) {
           display: none;
         }
       }
@@ -127,7 +129,7 @@ $sidebar-width: 17em;
         // at narrower widths, when 1fr = 0
         // we can center without matching the sidebar's width
         // which allows the title to take up the remaining width
-        @media screen and (max-width: 1400px) {
+        @media screen and (width <= 1400px) {
           grid-template-columns:
             calc(var(--d-sidebar-width) - 11px)
             1fr
@@ -136,7 +138,7 @@ $sidebar-width: 17em;
             auto;
         }
 
-        @media screen and (max-width: 1000px) {
+        @media screen and (width <= 1000px) {
           gap: 0.5em;
         }
 
@@ -189,11 +191,11 @@ $sidebar-width: 17em;
 .header-search--enabled .floating-search-input-wrapper {
   grid-area: extra-info;
 
-  @include breakpoint(tablet) {
+  @include viewport.until(md) {
     grid-area: rspace;
   }
 
-  @include breakpoint(mobile-extra-large) {
+  @include viewport.until(sm) {
     display: none;
   }
 }
@@ -208,7 +210,7 @@ body.has-sidebar-page {
     padding: 0;
   }
 
-  @media screen and (min-width: calc($reply-area-max-width + ($sidebar-width * 2))) {
+  @media screen and (width >= calc($reply-area-max-width + ($sidebar-width * 2))) {
     #reply-control.show-preview {
       margin-left: auto;
       margin-right: auto;
@@ -219,7 +221,7 @@ body.has-sidebar-page {
     }
   }
 
-  @media screen and (max-width: calc($reply-area-max-width + ($sidebar-width * 2))) and (min-width: calc($reply-area-max-width + calc($sidebar-width / 2))) {
+  @media screen and (width <= calc($reply-area-max-width + ($sidebar-width * 2))) and (width >= calc($reply-area-max-width + calc($sidebar-width / 2))) {
     #reply-control.show-preview:not(.fullscreen) {
       margin-left: $sidebar-width;
       width: auto;
@@ -265,7 +267,7 @@ body.sidebar-animate {
 }
 
 // provides some extra space for login buttons
-@media screen and (min-width: 1400px) {
+@media screen and (width >= 1400px) {
   .anon {
     .d-header .panel {
       grid-column-start: -4;

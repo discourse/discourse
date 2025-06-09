@@ -2,7 +2,7 @@
 
 .sidebar-wrapper,
 .sidebar-hamburger-dropdown {
-  @include breakpoint(medium) {
+  @include viewport.until(lg) {
     background: var(--secondary);
 
     .sidebar-footer-wrapper {
@@ -38,11 +38,11 @@
 }
 
 .sidebar-section-wrapper {
-  @include breakpoint(extra-large, $rule: min-width) {
+  @include viewport.from(xl) {
     padding-block: 0.45em;
   }
 
-  @include breakpoint(mobile-extra-large) {
+  @include viewport.until(sm) {
     .hamburger-panel .revamped & {
       margin-bottom: var(--spacing-block-m);
     }
@@ -57,7 +57,7 @@
     display: flex;
     flex-direction: column;
 
-    @include breakpoint(extra-large, $rule: min-width) {
+    @include viewport.from(xl) {
       gap: var(--spacing-block-xs);
     }
   }

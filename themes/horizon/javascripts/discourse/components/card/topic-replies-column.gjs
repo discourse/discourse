@@ -1,5 +1,5 @@
+import { gt } from "truth-helpers";
 import icon from "discourse/helpers/d-icon";
-import gt from "truth-helpers/helpers/gt";
 
 const TopicRepliesColumn = <template>
   {{#if (gt @topic.replyCount 1)}}

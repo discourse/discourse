@@ -71,7 +71,7 @@ input[type="color"]:focus,
   background-color: var(--background-color);
 }
 
-@include breakpoint(mobile-extra-large) {
+@include viewport.until(sm) {
   // pinned topic excerpts are hidden on small screens too
   .fk-d-menu__trigger.topic-list-layout-trigger {
     display: none;

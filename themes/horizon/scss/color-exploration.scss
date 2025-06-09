@@ -6,7 +6,7 @@
   --d-sidebar-header-icon-color: var(--d-sidebar-link-color);
   --d-sidebar-active-suffix-color: var(--d-sidebar-suffix-color);
   --d-sidebar-background: var(--background-color);
-  --d-sidebar-footer-fade: rgba(var(--tertiary-50-rgb), 1);
+  --d-sidebar-footer-fade: rgb(var(--tertiary-50-rgb), 1);
   --d-sidebar-prefix-background: var(--d-selected);
   --d-sidebar-active-prefix-background: light-dark(
     oklch(from var(--d-selected) calc(l * 0.85) c h),

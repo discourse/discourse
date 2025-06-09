@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .post-stream {
   .contents {
     font-size: var(--font-up-1);
@@ -13,7 +15,7 @@
     border-left: 1px solid var(--accent-color);
 
     .timeline-scroller {
-      @include breakpoint("medium", $rule: min-width) {
+      @include viewport.from(lg) {
         margin-left: -4.5px;
         background: var(--d-content-background);
         height: 40px !important; // height is coming from element style have no other choice
@@ -28,7 +30,7 @@
     .timeline-handle {
       background-color: var(--accent-color);
 
-      @include breakpoint("medium", $rule: min-width) {
+      @include viewport.from(lg) {
         width: 8px;
         border-radius: 10px;
         height: calc(100% - 6px);
@@ -39,7 +41,7 @@
 
 // should probably get rid of this extra specificity class in core?
 .timeline-container.timeline-fullscreen {
-  @include breakpoint("medium", $rule: max-width) {
+  @include viewport.until(lg) {
     .topic-timeline
       .timeline-scrollarea
       .timeline-scroller
@@ -52,7 +54,7 @@
 .container.posts {
   grid-template-columns: auto 8em;
 
-  @media screen and (max-width: 924px) {
+  @media screen and (width <= 924px) {
     grid-template-columns: auto auto;
   }
 

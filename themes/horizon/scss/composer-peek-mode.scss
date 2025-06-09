@@ -2,7 +2,7 @@
   display: none;
 }
 
-@media screen and (min-width: 1300px) {
+@media screen and (width >= 1300px) {
   html:not(.fullscreen-composer) {
     .peek-mode-toggle svg {
       transform: scaleX(-1);

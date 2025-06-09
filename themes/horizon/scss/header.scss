@@ -1,8 +1,10 @@
+@use "lib/viewport";
+
 .d-header {
   box-shadow: none;
   background: var(--background-color);
 
-  @include breakpoint(extra-large, $rule: min-width) {
+  @include viewport.from(xl) {
     padding-bottom: var(--main-grid-gap);
   }
 }

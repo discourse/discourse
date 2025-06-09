@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .welcome-banner {
   &__wrap {
     display: grid;
@@ -9,11 +11,11 @@
     padding: 1.5em 0 2.5em;
     margin-bottom: 0;
 
-    @media screen and (max-width: 768px) {
+    @media screen and (width <= 768px) {
       padding: 1em;
     }
 
-    @include breakpoint("mobile-extra-large") {
+    @include viewport.until(sm) {
       display: block;
       padding: 0.5em;
       margin-top: 0;
@@ -25,22 +27,22 @@
       width: 100%;
       align-self: center;
 
-      @media screen and (max-width: 1028px) {
+      @media screen and (width <= 1028px) {
         grid-row: 2/-1;
         grid-column: 1/-1;
       }
 
-      @media screen and (max-width: 768px) {
+      @media screen and (width <= 768px) {
         grid-column: 2/-1;
         grid-row: 1/-1;
       }
 
-      @media screen and (max-width: 600px) {
+      @media screen and (width <= 600px) {
         grid-row: 2/-1;
         grid-column: 1/-1;
       }
 
-      @include breakpoint("mobile-extra-large") {
+      @include viewport.until(sm) {
         display: none;
       }
     }
@@ -54,7 +56,7 @@
   .search-menu-container .search-input {
     background: var(--d-content-background);
     border: 1px solid var(--search-color);
-    box-shadow: 0 4px 10px rgba(52, 6, 121, 15%);
+    box-shadow: 0 4px 10px rgb(52, 6, 121, 15%);
   }
 
   .search-menu .search-input:focus-within,
@@ -86,7 +88,7 @@
     font-weight: 400;
     color: var(--search-color);
 
-    @media screen and (max-width: 1028px) {
+    @media screen and (width <= 1028px) {
       font-size: var(--font-up-4);
       grid-column: 1/-1;
       grid-row: 1;
@@ -94,21 +96,21 @@
       margin-bottom: 0.5em;
     }
 
-    @media screen and (max-width: 768px) {
+    @media screen and (width <= 768px) {
       text-align: left;
       grid-column: 1/2;
       grid-row: 1/-1;
       font-size: var(--font-up-3);
     }
 
-    @media screen and (max-width: 600px) {
+    @media screen and (width <= 600px) {
       grid-column: 1/-1;
       grid-row: 1;
       text-align: center;
       margin-bottom: 0.5em;
     }
 
-    @include breakpoint("mobile-extra-large") {
+    @include viewport.until(sm) {
       font-size: var(--font-up-2);
     }
   }

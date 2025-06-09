@@ -6,9 +6,7 @@
   "learn_more": "https://meta.discourse.org/t/installing-a-theme-or-theme-component/63682",
   "theme_version": "0.0.1",
   "modifiers": {
-    "svg_icons": [
-      "fire"
-    ],
+    "svg_icons": ["fire"],
     "serialize_topic_is_hot": true
   },
   "color_schemes": {

@@ -18,12 +18,12 @@
   flex-direction: column;
   gap: 1.25em;
 
-  @include breakpoint(medium) {
+  @include viewport.until(lg) {
     gap: 0.5em;
     padding: 0 0.5em;
   }
 
-  @include breakpoint(mobile-extra-large) {
+  @include viewport.until(sm) {
     gap: 0;
     padding: 0;
   }
@@ -154,7 +154,7 @@
       oklch(from var(--category-badge-color) 45% calc(c * 0.5) h)
     );
 
-    @include breakpoint(tablet) {
+    @include viewport.until(md) {
       padding: 0.25em 0.5rem;
       font-size: var(--font-down-2);
     }
@@ -376,7 +376,7 @@
     ". . . . . . dropdown"
     "avatar update metadata metadata metadata . category";
 
-  @include breakpoint(mobile-extra-large) {
+  @include viewport.until(sm) {
     grid-template-columns: min-content min-content auto min-content min-content min-content min-content;
     grid-template-areas:
       " . . . . . . dropdown"
@@ -390,7 +390,7 @@
   &.has-metadata {
     grid-template-columns: 20px min-content min-content auto min-content min-content min-content;
 
-    @include breakpoint(mobile-extra-large) {
+    @include viewport.until(sm) {
       grid-template-areas:
         ". . . . . . . dropdown"
         "update update metadata metadata metadata metadata category category";
@@ -410,11 +410,11 @@
       "excerpt excerpt excerpt ."
       "excerpt excerpt excerpt category";
 
-    @include breakpoint(extra-large, $rule: min-width) {
+    @include viewport.from(xl) {
       grid-template-columns: 20px min-content auto min-content;
     }
 
-    @include breakpoint(mobile-extra-large) {
+    @include viewport.until(sm) {
       grid-template-columns: auto min-content;
       grid-template-areas:
         ".  dropdown"
@@ -434,7 +434,7 @@
         "excerpt excerpt excerpt . "
         "excerpt excerpt excerpt category";
 
-      @include breakpoint(mobile-extra-large) {
+      @include viewport.until(sm) {
         grid-template-columns: auto min-content;
         grid-template-areas:
           " . dropdown"
@@ -544,7 +544,7 @@
     ". . . . . status dropdown"
     "activity . . . . likes-replies category";
 
-  @include breakpoint(mobile-extra-large) {
+  @include viewport.until(sm) {
     grid-template-columns: 20px min-content min-content auto min-content min-content min-content 36px;
     grid-template-areas:
       "category category . . . . status dropdown"

@@ -1,5 +1,7 @@
+@use "lib/viewport";
+
 // temp separate file to avoid merge hell… to be distributed later
-@include breakpoint(medium) {
+@include viewport.until(lg) {
   html,
   .d-header {
     background-color: var(--d-content-background);
@@ -8,19 +10,19 @@
 
 #main-outlet-wrapper {
   *[class*="navigation-"] & {
-    @include breakpoint(mobile-extra-large) {
+    @include viewport.until(sm) {
       padding: 0;
     }
   }
 }
 
 #main-outlet {
-  @include breakpoint(mobile-extra-large) {
+  @include viewport.until(sm) {
     padding-top: var(--spacing-block-sm);
   }
 
   .list-controls {
-    @include breakpoint(mobile-extra-large) {
+    @include viewport.until(sm) {
       padding-inline: var(
         --spacing-inline-m
       ) !important; // override will be fixed when the whole chat page shenanigans is resolved
@@ -29,7 +31,7 @@
     }
 
     .navigation-container {
-      @include breakpoint(mobile-extra-large) {
+      @include viewport.until(sm) {
         gap: var(--spacing-inline-s);
 
         // don't know why we even hide this crucial navigation on mobile
@@ -77,13 +79,13 @@
       #navigation-bar,
       .navigation-controls,
       .category-breadcrumb {
-        @include breakpoint(mobile-extra-large) {
+        @include viewport.until(sm) {
           margin-bottom: 0;
         }
       }
 
       .navigation-controls {
-        @include breakpoint(mobile-extra-large) {
+        @include viewport.until(sm) {
           gap: var(--spacing-inline-s);
         }
       }
@@ -91,12 +93,12 @@
   }
 
   .list-container {
-    @include breakpoint(mobile-extra-large) {
+    @include viewport.until(sm) {
       padding-inline: 0 !important;
     }
 
     .topic-list-body {
-      @include breakpoint(mobile-extra-large) {
+      @include viewport.until(sm) {
         border-top: 0;
         padding-top: 0;
       }
@@ -104,7 +106,7 @@
   }
 
   #topic-title {
-    @include breakpoint(mobile-extra-large) {
+    @include viewport.until(sm) {
       padding-inline: var(--spacing-inline-s) !important;
 
       .title-wrapper {
@@ -158,7 +160,7 @@
   }
 
   .container.posts {
-    @include breakpoint(mobile-extra-large) {
+    @include viewport.until(sm) {
       padding-inline: var(--spacing-inline-xs) !important;
 
       .main-avatar .avatar {
@@ -197,7 +199,7 @@
   }
 
   #topic-footer-buttons {
-    @include breakpoint(mobile-extra-large) {
+    @include viewport.until(sm) {
       padding-inline: var(--spacing-inline-xs) !important;
     }
   }

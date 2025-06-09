@@ -1,4 +1,6 @@
-@media screen and (min-width: 1300px) {
+@use "lib/viewport";
+
+@media screen and (width >= 1300px) {
   #main-outlet {
     border-top-right-radius: var(--d-border-radius-large);
     border-top-left-radius: var(--d-border-radius-large);
@@ -20,7 +22,7 @@
 .has-full-page-chat .chat-replying-indicator-container {
   margin-bottom: var(--main-grid-gap);
 
-  @include breakpoint(medium) {
+  @include viewport.until(lg) {
     margin-bottom: 0;
   }
 }
@@ -28,7 +30,7 @@
 .has-full-page-chat .chat-selection-management {
   margin-bottom: var(--main-grid-gap);
 
-  @include breakpoint(medium) {
+  @include viewport.until(lg) {
     margin-bottom: 0;
   }
 }
@@ -41,15 +43,15 @@
   padding: 0;
   position: relative;
 
-  @include breakpoint(medium) {
+  @include viewport.until(lg) {
     display: none;
   }
 
-  @media screen and (max-width: 488px) {
+  @media screen and (width <= 488px) {
     display: none;
   }
 
-  @include breakpoint(tablet) {
+  @include viewport.until(md) {
     display: none;
   }
 
@@ -92,7 +94,7 @@
     bottom: var(--main-grid-gap);
     left: var(--left-distance);
 
-    @media screen and (max-width: 768px) {
+    @media screen and (width <= 768px) {
       bottom: calc(var(--d-border-radius-large) * 2);
     }
   }
@@ -102,7 +104,7 @@
     bottom: var(--main-grid-gap);
     left: calc(var(--right-distance) - var(--d-border-radius-large));
 
-    @media screen and (max-width: 768px) {
+    @media screen and (width <= 768px) {
       bottom: calc(var(--d-border-radius-large) * 2);
     }
   }
@@ -116,7 +118,7 @@
     left: var(--left-distance);
     height: var(--main-grid-gap);
 
-    @media screen and (max-width: 768px) {
+    @media screen and (width <= 768px) {
       height: calc(var(--d-border-radius-large) * 2);
     }
 
@@ -156,7 +158,7 @@
   }
 }
 
-@media screen and (min-width: 768px) {
+@media screen and (width >= 768px) {
   .with-topic-progress {
     bottom: calc(
       env(safe-area-inset-bottom) + var(--composer-height, 0px) +
@@ -165,7 +167,7 @@
   }
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (width <= 768px) {
   .with-topic-progress {
     bottom: calc(
       env(safe-area-inset-bottom) + var(--composer-height, 0px) +
@@ -174,7 +176,7 @@
   }
 }
 
-@media screen and (max-width: 400px) {
+@media screen and (width <= 400px) {
   .with-topic-progress {
     bottom: calc(env(safe-area-inset-bottom) + var(--composer-height, 0px));
   }

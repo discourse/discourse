@@ -13,7 +13,7 @@
     grid-area: bulk-select;
     margin-left: -0.5em;
 
-    @media screen and (max-width: 576px) {
+    @media screen and (width <= 576px) {
       margin-top: 0;
 
       label {
