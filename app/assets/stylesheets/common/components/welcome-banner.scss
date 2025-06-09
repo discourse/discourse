@@ -14,7 +14,6 @@
 }
 
 .welcome-banner {
-  margin-bottom: 1em;
   border-radius: var(--d-border-radius-large);
 
   &__wrap {
@@ -74,7 +73,7 @@
       }
 
       @include viewport.until(sm) {
-        font-size: var(--font-up-2);
+        font-size: var(--font-up-1);
       }
     }
 
