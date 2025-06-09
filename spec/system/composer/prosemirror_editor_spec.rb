@@ -6,8 +6,6 @@ describe "Composer - ProseMirror editor", type: :system do
 
   let(:cdp) { PageObjects::CDP.new }
   let(:composer) { PageObjects::Components::Composer.new }
-  let(:discard_draft_modal) { PageObjects::Modals::DiscardDraft.new }
-  let(:drafts_dropdown) { PageObjects::Components::DraftsMenu.new }
   let(:rich) { composer.rich_editor }
 
   before do
@@ -843,6 +841,7 @@ describe "Composer - ProseMirror editor", type: :system do
       page.visit("/t/#{topic.id}")
 
       expect(composer).to be_opened
+
       composer.toggle_rich_editor
 
       expect(composer).to have_css("a.mention", text: user.username)
