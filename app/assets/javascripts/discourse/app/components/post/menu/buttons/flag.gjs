@@ -6,7 +6,6 @@ import concatClass from "discourse/helpers/concat-class";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
 
-
 export default class PostMenuFlagButton extends Component {
   static shouldRender(args, helper) {
     const { post } = args;
