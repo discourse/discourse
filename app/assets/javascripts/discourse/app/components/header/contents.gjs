@@ -1,8 +1,4 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
-import { action } from "@ember/object";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { throttle } from "@ember/runloop";
 import { service } from "@ember/service";
 import bodyClass from "discourse/helpers/body-class";
 import { applyValueTransformer } from "discourse/lib/transformer";
@@ -17,40 +13,7 @@ export default class Contents extends Component {
   @service router;
   @service navigationMenu;
   @service search;
-
-  @tracked viewportWidth;
-
-  willDestroy() {
-    super.willDestroy(...arguments);
-    if (this.siteSettings.grid_layout) {
-      this.destroyListener();
-    }
-  }
-
-  @action
-  updateWidth() {
-    this.viewportWidth = window.innerWidth;
-  }
-
-  @action
-  setupListener() {
-    if (!this.siteSettings.grid_layout) {
-      return;
-    }
-
-    this.viewportWidth = window.innerWidth;
-
-    this.resizeHandler = () => {
-      throttle(this, this.updateWidth, 100);
-    };
-
-    window.addEventListener("resize", this.resizeHandler);
-  }
-
-  @action
-  destroyListener() {
-    window.removeEventListener("rssize", this.resizeHandler);
-  }
+  @service capabilities;
 
   get sidebarIcon() {
     if (this.navigationMenu.isDesktopDropdownMode) {
@@ -62,7 +25,7 @@ export default class Contents extends Component {
 
   get minimized() {
     const minimizeForGrid =
-      this.siteSettings.grid_layout && this.viewportWidth <= 1600;
+      this.siteSettings.grid_layout && !this.capabilities.viewport["2xl"];
 
     const shouldMinimize =
       this.args.topicInfoVisible && !this.args.showSidebar && minimizeForGrid;
@@ -99,10 +62,7 @@ export default class Contents extends Component {
     <div class="contents">
       {{#if this.siteSettings.grid_layout}}
         {{bodyClass "grid-layout"}}
-        <div
-          class="d-header__contents-primary"
-          {{didInsert this.setupListener}}
-        >
+        <div class="d-header__contents-primary">
           <ContentsPrimary
             @topicInfo={{@topicInfo}}
             @topicInfoVisible={{@topicInfoVisible}}

@@ -1,38 +1,48 @@
+@use "lib/viewport";
+
 body.grid-layout {
   --d-max-width: 100vw;
   --grid-columns: 24;
   --grid-max-width: calc(var(--d-max-width) / var(--grid-columns));
   --column-gap: 1;
-  --sidebar-span: 5;
+  --sidebar-span: 6;
   --main-col-start-no-sidebar: 1;
   --main-col-end-no-sidebar: -1;
   --main-col-start-sidebar: calc(var(--sidebar-span) + var(--column-gap) + 1);
   --main-col-end-sidebar: -1;
+  --d-sidebar-section-link-prefix-margin-right: 0.5em;
+  --d-sidebar-row-horizontal-padding: 0.5em;
 
-  @media screen and (width < 1100px) {
-    --sidebar-span: 6;
+  @include viewport.from(xl) {
+    --sidebar-span: 5;
+    --main-col-start-no-sidebar: 3;
+    --main-col-end-no-sidebar: -3;
+    --main-col-start-sidebar: 7;
+    --main-col-end-sidebar: -2;
   }
 
-  @media screen and (width > 1300px) {
+  @include viewport.from(2xl) {
     --sidebar-span: 4;
-    --main-col-start-no-sidebar: 4;
-    --main-col-end-no-sidebar: -4;
-    --main-col-end-sidebar: -3;
-    --main-col-start-sidebar: calc(var(--sidebar-span) + var(--column-gap) + 2);
-  }
-
-  @media screen and (width > 1600px) {
-    --sidebar-span: 3;
+    --main-col-start-sidebar: 6;
     --main-col-end-sidebar: -6;
     --main-col-start-no-sidebar: 6;
     --main-col-end-no-sidebar: -6;
   }
 
   @media screen and (width > 2000px) {
+    --sidebar-span: 3;
+    --main-col-start-sidebar: 7;
     --main-col-end-sidebar: -7;
     --main-col-start-no-sidebar: 7;
     --main-col-end-no-sidebar: -7;
-    --main-col-start-sidebar: calc(var(--sidebar-span) + var(--column-gap) + 3);
+  }
+
+  @media (width >= 2800px) {
+    --sidebar-span: 2;
+    --main-col-start-sidebar: 8;
+    --main-col-end-sidebar: -8;
+    --main-col-start-no-sidebar: 8;
+    --main-col-end-no-sidebar: -8;
   }
 
   .discourse-root {
@@ -62,7 +72,7 @@ body.grid-layout {
   // below 768px, the header uses flex
   // at 768px and above, the header uses grid
   .d-header .wrap {
-    @media screen and (width > 767px) {
+    @include viewport.from(md) {
       height: auto;
       min-height: 0;
     }
@@ -70,7 +80,7 @@ body.grid-layout {
     .contents {
       grid-column: 1 / -1;
 
-      @media screen and (width > 767px) {
+      @include viewport.from(md) {
         display: grid;
         grid-template-columns: subgrid;
       }
@@ -82,7 +92,7 @@ body.grid-layout {
     margin-right: 0.5em;
     flex: 0 1 auto;
 
-    @media screen and (width > 767px) {
+    @include viewport.from(md) {
       grid-column: 1 / span var(--sidebar-span);
     }
   }
@@ -92,7 +102,7 @@ body.grid-layout {
     margin-left: auto;
     flex: 1 1 auto;
 
-    @media screen and (width > 767px) {
+    @include viewport.from(md) {
       grid-column-start: var(--main-col-start-sidebar);
       grid-column-end: -1;
       margin-left: 0;
@@ -134,7 +144,7 @@ body.grid-layout {
       &:has(.extra-info-wrapper) .wrap .contents {
         display: flex;
 
-        @media screen and (width > 1300px) {
+        @include viewport.from(xl) {
           display: grid;
           grid-template-columns: subgrid;
 
@@ -147,8 +157,8 @@ body.grid-layout {
           }
         }
 
-        // above 1600px we reserve space for the sidebar
-        @media screen and (width > 1600px) {
+        // above 2xl we reserve space for the sidebar
+        @include viewport.from(2xl) {
           .d-header__contents-primary {
             grid-column: 1 / span var(--sidebar-span);
           }
@@ -156,7 +166,7 @@ body.grid-layout {
       }
     }
 
-    @media screen and (width < 1300px) {
+    @include viewport.until(xl) {
       .sidebar-wrapper {
         // get out of the way
         height: 0;
