@@ -1,6 +1,6 @@
-import { hash } from "@ember/helper";
 import { and } from "truth-helpers";
 import deprecatedOutletArgument from "discourse/helpers/deprecated-outlet-argument";
+import lazyHash from "discourse/helpers/lazy-hash";
 import BootstrapModeNotice from "../bootstrap-mode-notice";
 import PluginOutlet from "../plugin-outlet";
 import HeaderSearch from "./header-search";
@@ -22,11 +22,11 @@ const ContentsSecondary = <template>
   <div class="before-header-panel-outlet">
     <PluginOutlet
       @name="before-header-panel"
-      @outletArgs={{hash
+      @outletArgs={{lazyHash
         topicInfo=@topicInfo
         topicInfoVisible=@topicInfoVisible
       }}
-      @deprecatedArgs={{hash
+      @deprecatedArgs={{lazyHash
         topic=(deprecatedOutletArgument
           value=@headerTopic
           message="The argument 'topic' is deprecated on the outlet 'before-header-panel', use 'topicInfo' or 'topicInfoVisible' instead"
@@ -42,11 +42,11 @@ const ContentsSecondary = <template>
   <div class="after-header-panel-outlet">
     <PluginOutlet
       @name="after-header-panel"
-      @outletArgs={{hash
+      @outletArgs={{lazyHash
         topicInfo=@topicInfo
         topicInfoVisible=@topicInfoVisible
       }}
-      @deprecatedArgs={{hash
+      @deprecatedArgs={{lazyHash
         topic=(deprecatedOutletArgument
           value=@headerTopic
           message="The argument 'topic' is deprecated on the outlet 'after-header-panel', use 'topicInfo' or 'topicInfoVisible' instead"
@@ -60,8 +60,11 @@ const ContentsSecondary = <template>
   </div>
   <PluginOutlet
     @name="header-contents__after"
-    @outletArgs={{hash topicInfo=@topicInfo topicInfoVisible=@topicInfoVisible}}
-    @deprecatedArgs={{hash
+    @outletArgs={{lazyHash
+      topicInfo=@topicInfo
+      topicInfoVisible=@topicInfoVisible
+    }}
+    @deprecatedArgs={{lazyHash
       topic=(deprecatedOutletArgument
         value=@headerTopic
         message="The argument 'topic' is deprecated on the outlet 'header-contents__after', use 'topicInfo' or 'topicInfoVisible' instead"

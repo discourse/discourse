@@ -1,5 +1,5 @@
-import { hash } from "@ember/helper";
 import deprecatedOutletArgument from "discourse/helpers/deprecated-outlet-argument";
+import lazyHash from "discourse/helpers/lazy-hash";
 import PluginOutlet from "../plugin-outlet";
 import HomeLogo from "./home-logo";
 import SidebarToggle from "./sidebar-toggle";
@@ -7,8 +7,11 @@ import SidebarToggle from "./sidebar-toggle";
 const ContentsPrimary = <template>
   <PluginOutlet
     @name="header-contents__before"
-    @outletArgs={{hash topicInfo=@topicInfo topicInfoVisible=@topicInfoVisible}}
-    @deprecatedArgs={{hash
+    @outletArgs={{lazyHash
+      topicInfo=@topicInfo
+      topicInfoVisible=@topicInfoVisible
+    }}
+    @deprecatedArgs={{lazyHash
       topic=(deprecatedOutletArgument
         value=@headerTopic
         message="The argument 'topic' is deprecated on the outlet 'header-contents__before', use 'topicInfo' or 'topicInfoVisible' instead"
