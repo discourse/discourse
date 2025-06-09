@@ -1,5 +1,5 @@
 .powered-by-discourse {
-  grid-area: below-content;
+  grid-column: var(--main-col-start-sidebar) / var(--main-col-end-sidebar);
   justify-self: start;
   font-size: var(--font-down-1);
   letter-spacing: 0.2px; // extra spacing makes small text easier to read
