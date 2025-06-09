@@ -29,6 +29,7 @@ export const CRITICAL_DEPRECATIONS = [
   "discourse.post-stream.trigger-new-post",
   "discourse.plugin-outlet-classic-args-clash",
   "discourse.decorate-plugin-outlet",
+  "component-template-resolving",
 ];
 
 if (DEBUG) {
