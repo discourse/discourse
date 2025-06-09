@@ -693,9 +693,7 @@ class ApplicationController < ActionController::Base
   end
 
   def apply_cdn_headers
-    if Discourse.is_cdn_request?(request.env, request.method)
-      Discourse.apply_cdn_headers(response.headers)
-    end
+    Discourse.apply_cdn_headers(response.headers)
   end
 
   def self.requires_login(arg = {})
