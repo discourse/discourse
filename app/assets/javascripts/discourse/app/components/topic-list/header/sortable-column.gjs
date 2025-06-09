@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
@@ -8,6 +7,7 @@ import NewListHeaderControls from "discourse/components/topic-list/new-list-head
 import TopicBulkSelectDropdown from "discourse/components/topic-list/topic-bulk-select-dropdown";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
 
 export default class SortableColumn extends Component {
@@ -141,7 +141,7 @@ export default class SortableColumn extends Component {
 
       <PluginOutlet
         @name="topic-list-heading-bottom"
-        @outletArgs={{hash name=@name bulkSelectEnabled=@bulkSelectEnabled}}
+        @outletArgs={{lazyHash name=@name bulkSelectEnabled=@bulkSelectEnabled}}
       />
     </th>
   </template>

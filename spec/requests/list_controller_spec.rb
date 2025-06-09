@@ -356,6 +356,20 @@ RSpec.describe ListController do
         expect(response.parsed_body["topic_list"]["categories"]).to eq(nil)
       end
     end
+
+    context "when login required" do
+      before do
+        SiteSetting.login_required = true
+        SiteSetting.bootstrap_mode_enabled = false
+        SiteSetting.has_login_hint = false
+      end
+
+      it "returns nothing from topic list on homepage for login required" do
+        get "/"
+        expect(response.status).to eq(200)
+        expect(response.body).not_to include(topic.title)
+      end
+    end
   end
 
   describe "categories and X" do
@@ -1192,6 +1206,13 @@ RSpec.describe ListController do
 
       get "/c/#{category.slug}/#{subcategory.slug}/#{subsubcategory.slug}/#{subsubcategory.id}"
       expect(response.status).to eq(200)
+    end
+
+    it "redirects to the canonical slug without altering query parameters" do
+      # Simulate a request with just the category ID in the path, and a query param that matches the ID
+      get "/c/#{category.id}.json?page=#{category.id}"
+      expect(response.status).to eq(301)
+      expect(response).to redirect_to("/c/#{category.slug}/#{category.id}.json?page=#{category.id}")
     end
 
     it "redirects to URL with correct case slug" do

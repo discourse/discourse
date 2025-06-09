@@ -75,35 +75,34 @@ module Migrations::Importer
     def copy_data
       table_name = self.class.table_name || self.class.name&.demodulize&.underscore
       column_names = self.class.column_names || @discourse_db.column_names(table_name)
-      skipped_rows = []
 
       if self.class.store_mapped_ids?
         @last_id = @discourse_db.last_id_of(table_name)
         @mapping_type = find_mapping_type(table_name)
       end
 
-      @discourse_db.copy_data(table_name, column_names, fetch_rows(skipped_rows)) do |inserted_rows|
-        after_commit_of_inserted_rows(inserted_rows)
-
-        if skipped_rows.any?
-          after_commit_of_skipped_rows(skipped_rows)
-          skipped_rows.clear
-        end
+      @discourse_db.copy_data(table_name, column_names, fetch_rows) do |inserted_rows, skipped_rows|
+        after_commit_of_inserted_rows(inserted_rows) if inserted_rows.any?
+        after_commit_of_skipped_rows(skipped_rows) if skipped_rows.any?
       end
 
       @discourse_db.fix_last_id_of(table_name) if self.class.store_mapped_ids?
       @intermediate_db.commit_transaction
     end
 
-    def fetch_rows(skipped_rows)
+    def fetch_rows
+      skip_row_marker = ::Migrations::Importer::DiscourseDB::SKIP_ROW_MARKER
+
       Enumerator.new do |enumerator|
         query, parameters = self.class.rows_query
+
         @intermediate_db.query(query, *parameters) do |row|
           if (transformed_row = transform_row(row))
             enumerator << transformed_row
             @stats.reset
           else
-            skipped_rows << row
+            row[skip_row_marker] = true
+            enumerator << row
             @stats.reset(skip_count: 1)
           end
 

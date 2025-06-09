@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
-import { concat, hash } from "@ember/helper";
+import { concat } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { eq } from "truth-helpers";
@@ -9,6 +9,7 @@ import ConditionalLoadingSection from "discourse/components/conditional-loading-
 import Form from "discourse/components/form";
 import GroupSelector from "discourse/components/group-selector";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
 import WebhookEventChooser from "admin/components/webhook-event-chooser";
@@ -260,7 +261,7 @@ export default class AdminConfigAreasWebhookForm extends Component {
                 <PluginOutlet
                   @name="web-hook-fields"
                   @connectorTagName="div"
-                  @outletArgs={{hash model=this.webhook}}
+                  @outletArgs={{lazyHash model=this.webhook}}
                 />
 
                 <form.Field

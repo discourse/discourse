@@ -2,7 +2,6 @@ import { isEmpty } from "@ember/utils";
 import getURL from "discourse/lib/get-url";
 import { userPath } from "discourse/lib/url";
 import Badge from "discourse/models/badge";
-import { i18n } from "discourse-i18n";
 
 const _additionalAttributes = new Set();
 
@@ -92,6 +91,9 @@ export function transformBasicPost(post) {
     canPublishPage: false,
     trustLevel: post.trust_level,
     userSuspended: post.user_suspended,
+    locale: post.locale,
+    is_localized: post.is_localized,
+    language: post.language,
   };
 
   _additionalAttributes.forEach((a) => (postAtts[a] = post[a]));
@@ -197,18 +199,12 @@ export default function transformPost(
         return a.actionType.name_key !== "like" && a.acted;
       })
       .map((a) => {
-        const action = a.actionType.name_key;
-
         return {
           id: a.id,
           postId: post.id,
-          action,
+          action: a.actionType.name_key,
           canUndo: a.can_undo,
-          description: i18n(`post.actions.by_you.${action}`, {
-            defaultValue: i18n(`post.actions.by_you.custom`, {
-              custom: a.actionType.name,
-            }),
-          }),
+          description: a.actionType.translatedDescription,
         };
       });
   }

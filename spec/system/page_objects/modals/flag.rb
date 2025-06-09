@@ -30,7 +30,7 @@ module PageObjects
       end
 
       def has_choices?(*choices)
-        body.all(".flag-action-type-details strong").map(&:text) == choices
+        expect(body.all(".flag-action-type-details strong").map(&:text)).to eq(choices)
       end
     end
   end

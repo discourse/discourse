@@ -6,7 +6,7 @@ module Stylesheet
   class Importer
     include GlobalPath
 
-    THEME_TARGETS = %w[embedded_theme mobile_theme desktop_theme]
+    THEME_TARGETS = %w[embedded_theme common_theme mobile_theme desktop_theme]
 
     def self.plugin_assets
       @plugin_assets ||= {}
@@ -206,12 +206,18 @@ module Stylesheet
     def theme_import(target)
       return "" if !@theme_id
 
-      attr = target == :embedded_theme ? :embedded_scss : :scss
+      name = :scss
+
+      if target == :embedded_theme
+        name = :embedded_scss
+        target = :common
+      end
+
       target = target.to_s.gsub("_theme", "").to_sym
 
       contents = +""
 
-      fields = theme.list_baked_fields(target, attr)
+      fields = theme.list_baked_fields(target, name)
       fields.map do |field|
         contents << "@import \"theme-entrypoint/#{field.scss_entrypoint_name}\";\n"
       end

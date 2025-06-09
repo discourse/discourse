@@ -1,9 +1,12 @@
 import { htmlSafe } from "@ember/template";
+import deprecated from "discourse/lib/deprecated";
 import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
-import { registerRawHelper } from "discourse/lib/helpers";
 
-registerRawHelper("format-age", formatAge);
 export default function formatAge(dt) {
-  dt = new Date(dt);
-  return htmlSafe(autoUpdatingRelativeAge(dt));
+  deprecated(`formatAge helper is deprecated. Use ageWithTooltip instead.`, {
+    since: "3.5.0.beta5-dev",
+    id: "discourse.format-age",
+  });
+
+  return htmlSafe(autoUpdatingRelativeAge(new Date(dt)));
 }

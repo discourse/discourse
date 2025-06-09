@@ -55,18 +55,19 @@ module PageObjects
       def visit(user)
         url = "/u/#{user.username_lower}/invited/pending"
         page.visit(url)
+        has_css?(".user-content.--loaded")
       end
 
       def invite_button
-        find("#user-content .invite-button")
+        find(".user-content .invite-button")
       end
 
       def invites_list
-        all("#user-content .user-invite-list tbody tr").map { |row| Invite.new(row) }
+        all(".user-content .user-invite-list tbody tr").map { |row| Invite.new(row) }
       end
 
       def latest_invite
-        Invite.new(find("#user-content .user-invite-list tbody tr:first-of-type"))
+        Invite.new(find(".user-content .user-invite-list tbody tr:first-of-type"))
       end
     end
   end

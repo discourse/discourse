@@ -6,6 +6,7 @@ import { iconHTML } from "discourse/lib/icon-library";
 import { postUrl } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 
+// TODO (glimmer-post-stream): investigate whether all this complex logic can be replaced with a proper Glimmer component
 export default function (element, context) {
   const { state } = context;
 
@@ -116,7 +117,7 @@ function _updateQuoteElements(aside, desc, context) {
 }
 
 async function _toggleQuote(aside, context) {
-  const { createDetachedElement, data, renderNestedCookedContent, state } =
+  const { createDetachedElement, data, renderNestedPostCookedHtml, state } =
     context;
 
   if (state.expanding) {
@@ -154,19 +155,20 @@ async function _toggleQuote(aside, context) {
     const postId = parseInt(aside.dataset.post, 10);
 
     try {
-      const result = await ajax(`/posts/by_number/${topicId}/${postId}`);
+      const quotedPost = await ajax(`/posts/by_number/${topicId}/${postId}`);
 
       const post = data.post;
       const quotedPosts = post.quoted || {};
-      quotedPosts[result.id] = result;
+      quotedPosts[quotedPost.id] = quotedPost;
       post.set("quoted", quotedPosts);
 
       const div = createDetachedElement("div");
       div.classList.add("expanded-quote");
-      div.dataset.postId = result.id;
+      div.dataset.postId = quotedPost.id;
 
       // inception
-      renderNestedCookedContent(div, result.cooked, (element) =>
+      renderNestedPostCookedHtml(div, quotedPost, (element) =>
+        // to highlight the quoted text inside the original post content
         highlightHTML(element, originalText, {
           matchCase: true,
         })

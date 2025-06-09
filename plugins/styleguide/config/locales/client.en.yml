@@ -26,6 +26,8 @@ en:
           title: "Date/Time inputs"
         menus:
           title: "Menus"
+        multi_select:
+          title: "Multi select"
         toasts:
           title: "Toasts"
         font_scale:

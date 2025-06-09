@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 // Common styles for "/user" section
 // These styles are also used for "/groups" — test those pages if making significant changes
 .user-content-wrapper {
@@ -195,7 +197,7 @@
     }
 
     .details {
-      background: rgba(var(--secondary-rgb), 0.8);
+      background: rgb(var(--secondary-rgb), 0.8);
       border-bottom: 1px solid var(--primary-low);
 
       .groups {
@@ -249,7 +251,7 @@
     &.collapsed-info {
       .details {
         margin-top: 0;
-        background: rgba(var(--secondary-rgb), 0.8);
+        background: rgb(var(--secondary-rgb), 0.8);
 
         .bio {
           display: none;
@@ -639,7 +641,7 @@
     }
 
     .select-kit.multi-select {
-      @include breakpoint(mobile-extra-large) {
+      @include viewport.until(sm) {
         width: 100%;
       }
     }
@@ -691,8 +693,33 @@
   }
 
   .pref-associated-accounts table {
+    width: 100%;
+
     td {
       padding: 8px;
+
+      &.associated-account__icon {
+        font-size: 1.5em;
+        padding-right: 0;
+        text-align: center;
+
+        &.discord .d-icon {
+          color: var(--discord);
+        }
+      }
+
+      &.associated-account__actions {
+        text-align: right;
+      }
+    }
+
+    .associated-account__name {
+      font-size: var(--font-up-1);
+    }
+
+    .associated-account__description {
+      word-break: break-all;
+      color: var(--primary-medium);
     }
   }
 

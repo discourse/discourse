@@ -1,3 +1,16 @@
+@use "lib/viewport";
+
+@mixin onebox-shadow($thickness) {
+  border: 0;
+  margin-inline: $thickness;
+  box-shadow:
+    0 0 0 1px var(--primary-300),
+    0 0 0 $thickness var(--primary-100);
+
+  // Makes the outer drop shadow radius equal to --d-border-radius
+  border-radius: calc(var(--d-border-radius) - ($thickness / 2));
+}
+
 a.loading-onebox {
   &::before {
     content: "";
@@ -99,8 +112,9 @@ a.loading-onebox {
 }
 
 aside.onebox {
-  border: 5px solid var(--primary-low);
-  margin: 1em 0;
+  @include onebox-shadow(4px);
+  margin-top: 4px;
+  margin-bottom: 1em;
   padding: 1em;
   font-size: var(--font-0);
   background: var(--secondary);
@@ -247,7 +261,7 @@ aside.onebox {
         float: none;
       }
 
-      @include breakpoint(mobile-extra-large) {
+      @include viewport.until(sm) {
         // Prevent twitter embeds from being taller than the mobile viewport
         iframe {
           max-height: 70vh;
@@ -313,6 +327,10 @@ aside.onebox {
       }
     }
   }
+}
+
+.chat-drawer-container .chat-message aside.onebox {
+  @include onebox-shadow(3px);
 }
 
 @mixin gdocs-logo($type) {
@@ -444,7 +462,7 @@ pre.onebox code ol.lines li {
 
 pre.onebox code ol.lines li.selected {
   background-color: var(--highlight-bg);
-  border-left-color: rgba(var(--primary-rgb), 0.2);
+  border-left-color: rgb(var(--primary-rgb), 0.2);
 }
 
 .onebox-warning-message {
@@ -472,7 +490,7 @@ pre.onebox code ol.lines li.selected {
     grid-template-columns: 2.5em minmax(0, 1fr);
     gap: 0.25em 0.75em;
 
-    @include breakpoint(mobile-extra-large) {
+    @include viewport.until(sm) {
       gap: 0.25em 0.5em;
       grid-template-columns: 1.5em minmax(0, 1fr);
       grid-template-areas:
@@ -768,7 +786,7 @@ aside.onebox.twitterstatus .onebox-body {
     z-index: z("base");
     font-size: var(--font-down-1);
     color: #fff;
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: rgb(0, 0, 0, 0.6);
 
     @include ellipsis;
     max-width: 100%;
@@ -1031,7 +1049,7 @@ aside.onebox.mixcloud-preview {
   background-color: black;
 
   .video-placeholder-overlay {
-    background-color: rgba(0, 0, 0, 0.25);
+    background-color: rgb(0, 0, 0, 0.25);
     padding: 1rem;
     position: absolute;
     left: 50%;
@@ -1042,7 +1060,7 @@ aside.onebox.mixcloud-preview {
       border-radius: var(--d-border-radius);
       color: #fff;
       display: flex;
-      filter: drop-shadow(3px 3px 2px rgba(0, 0, 0, 0.25));
+      filter: drop-shadow(3px 3px 2px rgb(0, 0, 0, 0.25));
       height: 2.3rem;
       transition: transform 0.15s;
       width: 2.3rem;
@@ -1054,7 +1072,7 @@ aside.onebox.mixcloud-preview {
 
     .spinner {
       border-color: #fff;
-      border-right-color: rgba(0, 0, 0, 0);
+      border-right-color: rgb(0, 0, 0, 0);
       margin: 0;
     }
   }

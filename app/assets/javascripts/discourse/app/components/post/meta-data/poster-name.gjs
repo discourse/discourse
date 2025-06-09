@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { concat, hash } from "@ember/helper";
+import { concat } from "@ember/helper";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import { and, or } from "truth-helpers";
@@ -10,6 +10,7 @@ import UserLink from "discourse/components/user-link";
 import UserStatusMessage from "discourse/components/user-status-message";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
+import lazyHash from "discourse/helpers/lazy-hash";
 import userPrioritizedName from "discourse/helpers/user-prioritized-name";
 import { bind } from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
@@ -81,6 +82,12 @@ export default class PostMetaDataPosterName extends Component {
     );
   }
 
+  get additionalClasses() {
+    return applyValueTransformer("poster-name-class", [], {
+      user: this.user,
+    });
+  }
+
   @bind
   refreshUserStatus() {
     this.#stopTrackingUserStatus();
@@ -123,7 +130,7 @@ export default class PostMetaDataPosterName extends Component {
     >
       <PluginOutlet
         @name="post-meta-data-poster-name"
-        @outletArgs={{hash post=@post}}
+        @outletArgs={{lazyHash post=@post}}
       >
         <span
           class={{concatClass
@@ -138,12 +145,13 @@ export default class PostMetaDataPosterName extends Component {
               @post.primary_group_name
               (concat "group--" @post.primary_group_name)
             )
+            this.additionalClasses
           }}
         >
           {{! use the position argument to choose between the first and second name if needed}}
           <PluginOutlet
             @name="post-meta-data-poster-name-user-link"
-            @outletArgs={{hash position="first" name=this.name post=@post}}
+            @outletArgs={{lazyHash position="first" name=this.name post=@post}}
           >
             <UserLink @user={{@post}}>
               {{this.name}}
@@ -167,7 +175,11 @@ export default class PostMetaDataPosterName extends Component {
               {{! use the position argument to choose between the first and second name if needed}}
               <PluginOutlet
                 @name="post-meta-data-poster-name-user-link"
-                @outletArgs={{hash position="second" name=this.name post=@post}}
+                @outletArgs={{lazyHash
+                  position="second"
+                  name=this.name
+                  post=@post
+                }}
               >
                 <UserLink @user={{@post}}>
                   {{#if this.nameFirst}}

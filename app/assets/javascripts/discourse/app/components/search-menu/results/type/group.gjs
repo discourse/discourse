@@ -24,4 +24,5 @@ const Group = <template>
     </div>
   </div>
 </template>;
+
 export default Group;

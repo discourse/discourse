@@ -15,6 +15,15 @@ const MIN_FILTER_LENGTH = 2;
 const MAX_TYPE_RESULT_COUNT_LOW = 15;
 const MAX_TYPE_RESULT_COUNT_HIGH = 50;
 
+const SEARCH_SCORES = {
+  labelStart: 20,
+  labelPartial: 15,
+  exactKeyword: 10,
+  partialKeyword: 7,
+  fallback: 5,
+  pageBonusScore: 20,
+};
+
 function labelOrText(obj, fallback = "") {
   return obj.text || (obj.label ? i18n(obj.label) : fallback);
 }
@@ -255,15 +264,15 @@ export default class AdminSearchDataSource extends Service {
     this._mapCached = true;
   }
 
-  search(filter, opts = {}) {
+  search(filter) {
     if (filter.length < MIN_FILTER_LENGTH) {
       return [];
     }
 
-    opts.types = opts.types || ADMIN_SEARCH_RESULT_TYPES;
-
-    const filteredResults = [];
-    const escapedFilterRegExp = escapeRegExp(filter.toLowerCase());
+    let filteredResults = [];
+    const escapedFilterRegExp = escapeRegExp(
+      filter.toLowerCase().trim().replace(/\s+/g, " ")
+    );
 
     // Pointless to render heaps of settings if the filter is quite low.
     const perTypeLimit =
@@ -271,22 +280,62 @@ export default class AdminSearchDataSource extends Service {
         ? MAX_TYPE_RESULT_COUNT_LOW
         : MAX_TYPE_RESULT_COUNT_HIGH;
 
-    opts.types.forEach((type) => {
-      let typeItemCount = 0;
+    const labelStartRegex = new RegExp(`^${escapedFilterRegExp}`, "i");
+    const labelPartialRegex = new RegExp(`\\b${escapedFilterRegExp}`, "i");
+    const exactKeywordRegexes = escapedFilterRegExp
+      .split(" ")
+      .filter((keyword) => keyword.length > 3)
+      .map((keyword) => new RegExp(`(${keyword})\\b`, "i"));
+    const partialKeywordRegexes = escapedFilterRegExp
+      .split(" ")
+      .filter((keyword) => keyword.length > 3)
+      .map((keyword) => new RegExp(`\\b${keyword}`, "i"));
+    const fallbackRegex = new RegExp(`${escapedFilterRegExp}`, "i");
+
+    ADMIN_SEARCH_RESULT_TYPES.forEach((type) => {
+      const typeResults = [];
       this[`${type}DataSourceItems`].forEach((dataSourceItem) => {
-        // TODO (martin) There is likely a much better way of doing this matching
-        // that will support fuzzy searches, for now let's go with the most basic thing.
+        dataSourceItem.score = 0;
+
+        if (dataSourceItem.label.match(labelStartRegex)) {
+          dataSourceItem.score += SEARCH_SCORES.labelStart;
+        } else if (dataSourceItem.label.match(labelPartialRegex)) {
+          dataSourceItem.score += SEARCH_SCORES.labelPartial;
+        }
         if (
-          dataSourceItem.keywords.match(escapedFilterRegExp) &&
-          typeItemCount <= perTypeLimit
+          exactKeywordRegexes.length > 0 &&
+          exactKeywordRegexes.every((regex) => {
+            return dataSourceItem.keywords.match(regex);
+          })
         ) {
-          filteredResults.push(dataSourceItem);
-          typeItemCount++;
+          dataSourceItem.score = dataSourceItem.score +=
+            SEARCH_SCORES.exactKeyword;
+        } else if (
+          partialKeywordRegexes.length > 0 &&
+          partialKeywordRegexes.every((regex) => {
+            return dataSourceItem.keywords.match(regex);
+          })
+        ) {
+          dataSourceItem.score = dataSourceItem.score +=
+            SEARCH_SCORES.partialKeyword;
+        }
+        if (filter.length > 3 && dataSourceItem.keywords.match(fallbackRegex)) {
+          dataSourceItem.score += SEARCH_SCORES.fallback;
+        }
+
+        if (dataSourceItem.score > 0) {
+          if (type === "page") {
+            dataSourceItem.score += SEARCH_SCORES.pageBonusScore;
+          }
+
+          typeResults.push(dataSourceItem);
         }
       });
+      filteredResults = filteredResults.concat(
+        typeResults.sort((a, b) => b.score - a.score).slice(0, perTypeLimit)
+      );
     });
-
-    return filteredResults;
+    return filteredResults.sort((a, b) => b.score - a.score);
   }
 
   #addPageLink(navMapSection, link, parentLabel = "") {

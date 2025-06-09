@@ -6,6 +6,7 @@ import { service } from "@ember/service";
 import { or } from "truth-helpers";
 import DeferredRender from "discourse/components/deferred-render";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import lazyHash from "discourse/helpers/lazy-hash";
 import ApiPanels from "./api-panels";
 import Footer from "./footer";
 import Sections from "./sections";
@@ -54,7 +55,12 @@ export default class SidebarHamburgerDropdown extends Component {
                 class="sidebar-hamburger-dropdown"
                 {{didInsert this.focusFirstLink}}
               >
-                <PluginOutlet @name="before-sidebar-sections" />
+                <PluginOutlet
+                  @name="before-sidebar-sections"
+                  @outletArgs={{lazyHash
+                    toggleNavigationMenu=@toggleNavigationMenu
+                  }}
+                />
                 {{#if
                   (or this.sidebarState.showMainPanel @forceMainSidebarPanel)
                 }}

@@ -19,6 +19,7 @@
     flex-direction: column;
     pointer-events: auto;
     box-sizing: border-box;
+    border-radius: var(--d-border-radius);
     margin: 0 auto;
     background-color: var(--secondary);
     box-shadow: var(--shadow-modal);

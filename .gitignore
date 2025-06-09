@@ -53,7 +53,7 @@
 
 /spec/fixtures/plugins/my_plugin/auto_generated
 
-/vendor/bundle/*
+/vendor/bundle
 /vendor/data/GeoLite2-City.mmdb
 /vendor/data/GeoLite2-ASN.mmdb
 
@@ -79,6 +79,7 @@ yarn-error.log
 
 # Auto-generated plugin JS assets
 /app/assets/javascripts/plugins/*
+/app/assets/generated
 
 # Generated API documentation files
 openapi/*

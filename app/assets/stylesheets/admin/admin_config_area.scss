@@ -1,9 +1,8 @@
 .admin-config-area-card {
-  padding: 20px 5px 20px 20px;
+  padding: var(--space-4);
   border: 1px solid var(--primary-low);
-  border-radius: 2px;
+  border-radius: var(--d-border-radius);
   background-color: var(--secondary);
-  margin-bottom: 1em;
 
   &__label-optional {
     color: var(--primary-medium);
@@ -76,6 +75,9 @@
 
   &__primary-content {
     flex: 0 1 70%;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
 
     @media (max-width: $mobile-breakpoint) {
       flex: 0 1 auto;
@@ -117,6 +119,7 @@
 .admin-empty-list {
   padding: 1em;
   border: 1px solid var(--primary-low);
+  border-radius: var(--d-border-radius);
 
   &__cta-button {
     display: flex;
@@ -164,10 +167,15 @@
 .admin-logo-form {
   .form-kit__section {
     .form-kit__container {
-      padding-left: 1em;
-      width: calc(100% - 1em) !important;
-      border-left: 1px solid var(--primary-low);
+      padding: 1em;
+      width: calc(100% - 2em) !important;
+      border: 1px solid var(--primary-low);
     }
+  }
+
+  #control-logo_dark .image-uploader.has-image .uploaded-image-preview {
+    background-color: #333;
+    background-clip: border-box;
   }
 
   .form-kit__field-toggle .form-kit__container-content.--full {

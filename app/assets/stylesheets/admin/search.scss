@@ -9,7 +9,6 @@
 .admin-search {
   &__input-container {
     display: flex;
-    margin-bottom: var(--space-1);
   }
 
   &__input-group {
@@ -20,6 +19,7 @@
     box-sizing: border-box;
     height: 42px;
     padding: 0 var(--space-2);
+    border-radius: var(--d-input-border-radius);
 
     &:focus,
     &:focus-within {
@@ -44,61 +44,9 @@
   }
 }
 
-// Fitler
-.admin-search__filters {
-  display: flex;
-  align-items: center;
-  gap: var(--space-1);
-  flex-wrap: wrap;
-}
-
-.admin-search__filter {
-  &-item {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    padding: var(--space-1) var(--space-2);
-    background-color: var(--primary-low);
-    color: var(--primary-medium);
-    border-radius: var(--d-border-radius);
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.2s;
-
-    &:hover,
-    &:focus {
-      color: var(--primary-low-mid);
-    }
-
-    &:focus {
-      outline: auto;
-    }
-
-    &.is-active {
-      background-color: var(--tertiary);
-      color: var(--secondary);
-
-      .d-icon {
-        color: var(--tertiary-low);
-      }
-
-      &:focus {
-        outline: auto;
-      }
-    }
-
-    &:not(.is-active) {
-      .d-icon {
-        color: var(--primary-low-mid);
-      }
-    }
-  }
-}
-
 // Results
 .admin-search__result {
   border-top: 1px solid var(--primary-low);
-  padding: var(--space-3) var(--space-2);
   display: block;
 
   &:first-child {
@@ -110,7 +58,7 @@
   }
 
   &:hover {
-    background-color: var(--tertiary-very-low);
+    background-color: var(--d-hover);
   }
 
   &-name {
@@ -137,17 +85,42 @@
     margin-top: var(--space-1);
   }
 
-  a {
+  &-link {
+    box-sizing: border-box;
     display: inline-block;
     width: 100%;
-    pointer-events: auto;
+    padding: var(--space-3) var(--space-4);
 
-    &:focus {
-      outline: auto;
+    &:focus-visible {
+      outline: none;
     }
+  }
+
+  &:focus-within {
+    background: var(--d-hover);
   }
 }
 
 .admin-search-modal {
   --modal-max-width: 700px;
+
+  .admin-search__no-results,
+  .admin-search__input-container {
+    padding-inline: var(--space-4);
+  }
+
+  .admin-search__no-results {
+    margin-bottom: 0;
+  }
+
+  .admin-search__input-container {
+    position: sticky;
+    top: 0;
+    background: var(--secondary);
+    z-index: z("modal", "content"); // above title icons
+
+    &.--has-results {
+      padding-bottom: var(--space-4);
+    }
+  }
 }

@@ -28,10 +28,11 @@ export default class AdminFlagItem extends Component {
   }
 
   get canEdit() {
-    return (
-      !Object.values(SYSTEM_FLAG_IDS).includes(this.args.flag.id) &&
-      !this.args.flag.is_used
-    );
+    return !Object.values(SYSTEM_FLAG_IDS).includes(this.args.flag.id);
+  }
+
+  get canDelete() {
+    return this.canEdit && !this.args.flag.is_used;
   }
 
   get editTitle() {
@@ -41,9 +42,9 @@ export default class AdminFlagItem extends Component {
   }
 
   get deleteTitle() {
-    return this.canEdit
-      ? "admin.config_areas.flags.form.edit_flag"
-      : "admin.config_areas.flags.form.non_editable";
+    return this.canDelete
+      ? "admin.config_areas.flags.form.delete_flag"
+      : "admin.config_areas.flags.form.non_deletable";
   }
 
   @action
@@ -191,7 +192,7 @@ export default class AdminFlagItem extends Component {
                       @icon="trash-can"
                       class="btn-transparent btn-danger admin-flag-item__delete"
                       @action={{this.delete}}
-                      @disabled={{not this.canEdit}}
+                      @disabled={{not this.canDelete}}
                       @title={{this.deleteTitle}}
                     />
                   </dropdown.item>

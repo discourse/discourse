@@ -209,6 +209,7 @@ export default class User extends RestModel.extend(Evented) {
 
   @tracked do_not_disturb_until;
   @tracked status;
+  @tracked dismissed_banner_key;
 
   @userOption("mailing_list_mode") mailing_list_mode;
   @userOption("external_links_in_new_tab") external_links_in_new_tab;
@@ -584,8 +585,7 @@ export default class User extends RestModel.extend(Evented) {
   }
 
   changePassword() {
-    return ajax("/session/forgot_password", {
-      dataType: "json",
+    return ajax("/session/forgot_password.json", {
       data: { login: this.email || this.username },
       type: "POST",
     });

@@ -33,7 +33,7 @@
 }
 
 .dialog-overlay {
-  background: rgba(var(--always-black-rgb), 0.65);
+  background: rgb(var(--always-black-rgb), 0.65);
   animation: fade-in 250ms both;
 
   @media (prefers-reduced-motion) {

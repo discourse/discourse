@@ -67,6 +67,8 @@ class Post < ActiveRecord::Base
 
   has_many :user_actions, foreign_key: :target_post_id
 
+  has_many :post_localizations, dependent: :destroy
+
   belongs_to :image_upload, class_name: "Upload"
 
   has_many :post_hotlinked_media, dependent: :destroy, class_name: "PostHotlinkedMedia"
@@ -851,6 +853,7 @@ class Post < ActiveRecord::Base
 
     edit_reason = I18n.t("change_owner.post_revision_text", locale: SiteSetting.default_locale)
 
+    old_user = user
     revise(
       actor,
       { raw: self.raw, user_id: new_user.id, edit_reason: edit_reason },
@@ -859,7 +862,10 @@ class Post < ActiveRecord::Base
       skip_validations: true,
     )
 
-    topic.update_columns(last_post_user_id: new_user.id) if post_number == topic.highest_post_number
+    result = topic.update_columns(last_post_user_id: new_user.id) if post_number ==
+      topic.highest_post_number
+    DiscourseEvent.trigger(:post_owner_changed, self, old_user, new_user)
+    result
   end
 
   before_create { PostCreator.before_create_tasks(self) }
@@ -1317,6 +1323,18 @@ class Post < ActiveRecord::Base
     PrettyText.extract_mentions(Nokogiri::HTML5.fragment(cooked))
   end
 
+  def has_localization?(locale = I18n.locale)
+    post_localizations.exists?(locale: locale.to_s.sub("-", "_"))
+  end
+
+  def in_user_locale?
+    locale == I18n.locale.to_s
+  end
+
+  def get_localization(locale = I18n.locale)
+    post_localizations.find_by(locale: locale.to_s.sub("-", "_"))
+  end
+
   private
 
   def parse_quote_into_arguments(quote)
@@ -1398,6 +1416,7 @@ end
 #  locked_by_id            :integer
 #  image_upload_id         :bigint
 #  outbound_message_id     :string
+#  locale                  :string(20)
 #
 # Indexes
 #

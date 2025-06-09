@@ -18,6 +18,7 @@ class Category < ActiveRecord::Base
   include HasDestroyedWebHook
 
   SLUG_REF_SEPARATOR = ":"
+  DEFAULT_TEXT_COLORS = %w[FFFFFF 000000]
 
   belongs_to :topic
   belongs_to :topic_only_relative_url,
@@ -36,6 +37,7 @@ class Category < ActiveRecord::Base
   has_many :category_users
   has_many :category_featured_topics
   has_many :featured_topics, through: :category_featured_topics, source: :topic
+  has_many :category_localizations, dependent: :destroy
 
   has_many :category_groups, dependent: :destroy
   has_many :category_moderation_groups, dependent: :destroy
@@ -61,6 +63,7 @@ class Category < ActiveRecord::Base
   has_and_belongs_to_many :web_hooks
 
   accepts_nested_attributes_for :category_setting, update_only: true
+  accepts_nested_attributes_for :category_localizations, allow_destroy: true
 
   validates :user_id, presence: true
 
@@ -1386,6 +1389,7 @@ end
 #  style_type                                :integer          default("square"), not null
 #  emoji                                     :string
 #  icon                                      :string
+#  locale                                    :string(20)
 #
 # Indexes
 #

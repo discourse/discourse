@@ -605,6 +605,11 @@ zh_CN:
       draft_channel_screen:
         header: "新消息"
         cancel: "取消"
+      quick_reaction_type:
+        title: "一键聊天回应"
+        options:
+          frequent: "最常用的聊天回应"
+          custom: "自定义回应"
     notifications:
       chat_invitation: "邀请您加入聊天频道"
       chat_invitation_html: "<span>%{username}</span><span> 邀请您加入一个聊天频道</span>"

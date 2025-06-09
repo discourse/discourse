@@ -3,6 +3,7 @@ import { hbs } from "ember-cli-htmlbars";
 import { Promise } from "rsvp";
 import { h } from "virtual-dom";
 import ShareTopicModal from "discourse/components/modal/share-topic";
+import PostMetaDataLanguage from "discourse/components/post/meta-data/language";
 import { dateNode } from "discourse/helpers/node";
 import autoGroupFlairForUser from "discourse/lib/avatar-flair";
 import { avatarUrl, translateSize } from "discourse/lib/avatar-utils";
@@ -374,6 +375,10 @@ createWidget("post-meta-data", {
       postInfo.push(this.attach("reply-to-tab", attrs));
     }
 
+    if (attrs.language && attrs.is_localized) {
+      postInfo.push(this.attach("post-language", attrs));
+    }
+
     postInfo.push(this.attach("post-date", attrs));
 
     postInfo.push(
@@ -444,6 +449,19 @@ createWidget("post-date", {
       .show(ShareTopicModal, {
         model: { category: topic.category, topic, post },
       });
+  },
+});
+
+// glimmer-post-stream: has glimmer version
+createWidget("post-language", {
+  tagName: "div.post-info.post-language",
+
+  html(attrs) {
+    return [
+      new RenderGlimmer(this, "div", PostMetaDataLanguage, {
+        language: attrs.language,
+      }),
+    ];
   },
 });
 
@@ -1073,9 +1091,11 @@ export default createWidget("post", {
   shadowTree: true,
 
   buildAttributes(attrs) {
-    return attrs.height
+    const heightStyle = attrs.height
       ? { style: `min-height: ${attrs.height}px` }
       : undefined;
+
+    return { "data-post-number": attrs.post_number, ...heightStyle };
   },
 
   buildId(attrs) {
@@ -1088,6 +1108,9 @@ export default createWidget("post", {
     }
     const classNames = ["topic-post", "clearfix"];
 
+    if (!attrs.mobileView) {
+      classNames.push("sticky-avatar");
+    }
     if (attrs.id === -1 || attrs.isSaving || attrs.staged) {
       classNames.push("staged");
     }
@@ -1219,6 +1242,7 @@ registerWidgetShim(
       @toggleReplies={{@toggleReplies}}
       @toggleReplyAbove={{@data.toggleReplyAbove}}
       @toggleWiki={{@data.toggleWiki}}
+      @topicPageQueryParams={{@data.topicPageQueryParams}}
       @unhidePost={{@data.unhidePost}}
       @unlockPost={{@data.unlockPost}}
       @updateTopicPageQueryParams={{@data.updateTopicPageQueryParams}}

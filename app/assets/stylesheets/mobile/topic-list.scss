@@ -1,6 +1,10 @@
 // --------------------------------------------------
 // Topic lists
 // --------------------------------------------------
+.list-container .full-width {
+  margin-left: 0;
+}
+
 .topic-list {
   &-body {
     border-width: 1px;
@@ -44,7 +48,6 @@
   .main-link {
     line-height: var(--line-height-medium);
     position: relative;
-    z-index: z("base") + 1; // Intentionally overlapping category to create bigger tap target
     font-size: var(--font-up-1);
 
     a.title {

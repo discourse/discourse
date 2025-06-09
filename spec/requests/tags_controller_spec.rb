@@ -432,6 +432,13 @@ RSpec.describe TagsController do
       expect(response.redirect_url).to match(%r{/tag/#{tag.name}/l/top.json\?period=daily})
     end
 
+    it "is not creating infinite redirect loop when tag is a synonym of itself" do
+      tag.update!(target_tag_id: tag.id)
+
+      get "/tag/#{tag.name}/l/top.json?period=daily"
+      expect(response.status).to eq(200)
+    end
+
     it "does not show staff-only tags" do
       _tag_group = Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: ["test"])
 

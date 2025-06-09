@@ -1182,7 +1182,6 @@ de:
       said: "%{username}:"
       profile: "Profil"
       profile_possessive: "Profil von %{username}"
-      account_possessive: "Konto von %{name}"
       mute: "Stummschalten"
       edit: "Einstellungen bearbeiten"
       download_archive:
@@ -1516,6 +1515,8 @@ de:
         choose: "Wähle ein Passwort"
         verify_identity: "Um fortzufahren, bestätige bitte deine Identität."
         title: "Passwort zurücksetzen"
+        remove: "Passwort entfernen"
+        remove_detail: "Dein Konto wird nicht mehr mit einem Passwort zugänglich sein, es sei denn, du setzt es zurück."
       second_factor_backup:
         title: "Wiederherstellungscodes für Zwei-Faktor-Authentifizierung"
         regenerate: "Erneuern"
@@ -2014,7 +2015,7 @@ de:
         title: "IP-Adresse bei Registrierung"
       avatar:
         title: "Profilbild"
-        header_title: "Profil, Nachrichten, Lesezeichen und Einstellungen"
+        header_title: "Benachrichtigungen und Konto"
         name_and_description: "%{name} – %{description}"
         edit: "Profilbild bearbeiten"
       title:
@@ -2053,6 +2054,7 @@ de:
     user_tips:
       button: "Verstanden!"
       skip: "Tipps überspringen"
+      dont_show_again: "Nicht erneut anzeigen"
       first_notification:
         title: "Deine erste Benachrichtigung!"
         content: "Benachrichtigungen dienen dazu, dich auf dem Laufenden zu halten, was in der Community passiert."
@@ -2091,6 +2093,10 @@ de:
     modal:
       close: "schließen"
       dismiss_error: "Fehler ignorieren"
+    multi_select:
+      no_results: "Keine Ergebnisse"
+      search: "Suchen …"
+      label: "Wähle Optionen aus"
     form_kit:
       reset: Zurücksetzen
       optional: optional
@@ -2329,9 +2335,9 @@ de:
         title: "Mit Google anmelden"
         sr_title: "Mit Google anmelden"
       twitter:
-        name: "Twitter"
-        title: "Mit Twitter anmelden"
-        sr_title: "Mit Twitter anmelden"
+        name: "X"
+        title: "Mit X anmelden"
+        sr_title: "Mit X anmelden"
       instagram:
         name: "Instagram"
         title: "Mit Instagram anmelden"
@@ -2416,6 +2422,8 @@ de:
       topic_count:
         one: "%{count} Thema in dieser Kategorie"
         other: "%{count} Themen in dieser Kategorie"
+    timezone_input:
+      ambiguous_ist: "IST ist zweideutig, bitte wähle eine bestimmte Zeitzone (z.B. Asien/Kolkata)"
     select_kit:
       delete_item: "%{name} löschen"
       filter_by: "Filtern nach: %{name}"
@@ -2493,6 +2501,12 @@ de:
       esc: "esc"
       esc_label: "Nachricht verwerfen"
       ok_proceed: "Ok, weiter"
+      translations:
+        title: "Beitrag übersetzen"
+        select: "Übersetzung auswählen"
+        save: "Übersetzung speichern"
+        original_content: "Inhalt des Originalbeitrags"
+        placeholder: "Übersetzung für den Beitrag hier eingeben..."
       group_mentioned_limit:
         one: "<b>Warnung!</b> Du erwähnst <a href='%{group_link}'>%{group}</a>, jedoch übersteigt die Mitgliederzahl der Gruppe das vom Administrator konfigurierte Erwähnungslimit von %{count} Benutzer. Deshalb wird niemand benachrichtigt."
         other: "<b>Warnung!</b> Du erwähnst <a href='%{group_link}'>%{group}</a>, jedoch übersteigt die Mitgliederzahl der Gruppe das vom Administrator konfigurierte Erwähnungslimit von %{count} Benutzern. Deshalb wird niemand benachrichtigt."
@@ -2563,8 +2577,8 @@ de:
       uploading: "Wird hochgeladen …"
       show_preview: "Vorschau zeigen"
       hide_preview: "Vorschau ausblenden"
-      switch_to_markdown: "Zum Standard Markdown-Editor wechseln"
-      switch_to_rich_text: "Wechsel zum neuen Rich-Text-Editor"
+      switch_to_markdown: "Zum Standard-Markdown-Editor wechseln (%{keyboardShortcut})"
+      switch_to_rich_text: "Zum Rich-Text-Editor wechseln (%{keyboardShortcut})"
       quote_post_title: "Ganzen Beitrag zitieren"
       bold_label: "F"
       bold_title: "Fett gedruckt"
@@ -2820,9 +2834,8 @@ de:
       in_messages_tooltip: "zur Suche nach regulären Themen wechseln"
       in_topics_posts: "in allen Themen und Beiträgen"
       enter_hint: "oder drücke die Eingabetaste"
+      mobile_enter_hint: "oder tippe auf Suchen"
       in_posts_by: "in Beiträgen von %{username}"
-      browser_tip: "%{modifier} + f"
-      browser_tip_description: "noch mal, um die native Browsersuche zu verwenden"
       recent: "Letzte Suchanfragen"
       clear_recent: "Letzte Suchanfragen löschen"
       experience:
@@ -2910,7 +2923,7 @@ de:
           aria_label: nach maximaler Anzahl von Aufrufen filtern
         additional_options:
           label: "Nach Beitragsanzahl und Themenaufrufen filtern"
-    hamburger_menu: "Menü"
+    hamburger_menu: "Navigationsmenü"
     new_item: "neu"
     go_back: "zurückgehen"
     not_logged_in_user: "Benutzerseite mit einer Zusammenfassung der Benutzeraktivitäten und Einstellungen"
@@ -3191,6 +3204,9 @@ de:
           false { Oder <a href="{basePath}/latest">sieh dir die aktuellen Themen an</a>}
           other {}
         }
+      reply_count_link:
+        one: "%{count} Antwort, zum ersten Beitrag springen"
+        other: "%{count} Antworten, zum ersten Beitrag springen"
       created_at: "Erstellt: %{date}"
       bumped_at: "Letztes: %{date}"
       browse_all_categories_latest: "<a href='%{basePath}/categories'>Durchstöbere alle Kategorien</a> oder <a href='%{basePath}/latest'>sieh dir die aktuellen Themen an</a>."
@@ -3620,6 +3636,20 @@ de:
       in_reply_to: "Übergeordneten Beitrag laden"
       view_all_posts: "Alle Beiträge anzeigen"
       badge_granted_tooltip: "%{username} hat für diesen Beitrag das Abzeichen „%{badge_name}“ erhalten!"
+      localizations:
+        table:
+          locale: "Gebietsschema"
+          actions: "Aktionen"
+          edit: "Bearbeiten"
+          delete: "Löschen"
+        add: "Neue Übersetzung hinzufügen"
+        view:
+          one: "%{count} übersetzte Sprachversion anzeigen"
+          other: "%{count} übersetzte Sprachversion anzeigen"
+        modal:
+          title: "Übersetzungen für Beitrag"
+          confirm_delete: "Bist du sicher, dass du die Übersetzungen für '%{languageCode}' löschen willst?"
+        success: "Die Übersetzungen wurden erfolgreich aktualisiert"
       errors:
         create: "Entschuldige, es gab einen Fehler beim Anlegen des Beitrags. Bitte versuche es noch einmal."
         edit: "Entschuldige, es gab einen Fehler beim Bearbeiten des Beitrags. Bitte versuche es noch einmal."
@@ -3814,6 +3844,7 @@ de:
       share:
         title: "Beitrag #%{post_number} teilen"
         instructions: "Link zu diesem Beitrag teilen:"
+      original_language: "Dieser Beitrag wurde ursprünglich in %{language} geschrieben"
     category:
       none: "(keine Kategorie)"
       all: "Alle Kategorien"
@@ -3827,6 +3858,14 @@ de:
       settings: "Einstellungen"
       topic_template: "Vorlage"
       tags: "Schlagwörter"
+      localizations: "Lokalisierungen"
+      localization:
+        locale: "Gebietsschema"
+        name: "Name"
+        description: "Beschreibung"
+        add: "Neues Gebietsschema hinzufügen"
+        remove: "Entfernen"
+        hint: "Derzeit gibt es keine Lokalisierungen für diese Kategorie. Klicke unten auf \"Neues Gebietsschema hinzufügen\", um mit dem Hinzufügen von Lokalisierungen zu beginnen."
       tags_allowed_tags: "Schlagwörter auf diese Kategorie einschränken:"
       tags_allowed_tag_groups: "Schlagwortgruppen auf diese Kategorie einschränken:"
       tags_placeholder: "(Optional) Liste erlaubter Schlagwörter"
@@ -3858,6 +3897,7 @@ de:
       background_image_dark: "Dunkles Kategorie-Hintergrundbild"
       style: "Stile"
       background_color: "Farbe"
+      foreground_color: "Textfarbe"
       styles:
         type: "Stil"
         icon: "Symbol"
@@ -4219,7 +4259,7 @@ de:
         today: "Heute"
     custom_homepage:
       admin_message: 'Eines deiner Themes hat den Modifikator "custom_homepage" aktiviert, aber es gibt nichts im [custom-homepage]-Connector aus. (Diese Meldung wird nur für Website-Administratoren angezeigt.)'
-    browser_update: 'Leider wird <a href="https://www.discourse.org/faq/#browser">dein Browser nicht unterstützt</a>. Bitte <a href="https://browsehappy.com">wechsle zu einem unterstützten Browser</a>, um die Inhalte in vollem Umfang zu sehen, dich anzumelden und zu antworten.'
+    browser_update: 'Leider wird <a href="https://discourse.org/about#browser">dein Browser nicht unterstützt</a>. Bitte <a href="https://browsehappy.com">wechsle zu einem unterstützten Browser</a>, um die Inhalte in vollem Umfang zu sehen, dich anzumelden und zu antworten.'
     permission_types:
       full: "Erstellen/Antworten/Ansehen"
       create_post: "Antworten/Ansehen"
@@ -4245,6 +4285,7 @@ de:
       shortcut_delimiter_newline: "%{shortcut1}<br>%{shortcut2}"
       title: "Tastenkombinationen"
       short_title: "Tastenkombinationen"
+      search_ctrl_f_tip: "Um das gesamte Forum zu durchsuchen, drücke <kbd>/</kbd>"
       jump_to:
         title: "Springe zu"
         home: "%{shortcut} Startseite"
@@ -4608,7 +4649,7 @@ de:
           save: "Speichern"
           delete: "Löschen"
           delete_confirm: "Bist du sicher, dass du diesen Abschnitt löschen willst?"
-          delete_public_confirm: "Dieser Abschnitt ist <strong>für alle sichtbar</strong>. Bist du sicher, dass du ihn löschen willst?"
+          delete_public_confirm: "Dieser Abschnitt ist für alle sichtbar. Bist du sicher, dass du ihn löschen willst?"
           update_public_confirm: "Die Änderungen werden <strong>für alle auf dieser Website sichtbar</strong> sein. Bist du sicher?"
           mark_as_private_confirm: "Dieser Abschnitt ist <strong>für alle sichtbar</strong>. Nach dem Update wird er <strong>nur noch für dich sichtbar</strong> sein. Bist du sicher?"
           reset_confirm: "Bist du sicher, dass du diesen Abschnitt auf die Standardeinstellungen zurücksetzen willst?"
@@ -4724,15 +4765,14 @@ de:
         forum:
           label: Forum
       back_to_forum: "Zurück zum Forum"
-      collapse_all_sections: "Alle Abschnitte einklappen"
-      expand_all_sections: "Alle Abschnitte erweitern"
-      filter: "Filter …"
       filter_links: "Links filtern..."
       clear_filter: "Filter löschen"
       no_results:
         title: "Keine Ergebnisse"
-        description: 'Wir konnten nichts finden, das zu „%{filter}“ passt.<br><br>Wolltest du die <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">Website-Einstellungen</a> oder die <a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">Administrator-Benutzerliste</a> durchsuchen?'
-        description_admin_search: 'Wir konnten nichts finden, was mit ''%{filter}'' übereinstimmt.<br><br>Versuche, <a class="sidebar-additional-filter-admin-search" href="%{admin_search_url}">die gesamte Administratoroberfläche zu durchsuchen</a>.'
+        description_admin_search: "Wir konnten nichts finden, das zu '%{filter}' passt."
+      collapse_all_sections: "Alle Abschnitte einklappen"
+      expand_all_sections: "Alle Abschnitte erweitern"
+      search: "Suche"
       footer:
         interface_color_selector:
           light: "Hell"
@@ -4840,6 +4880,72 @@ de:
           save: "Speichern als …"
     powered_by_discourse: "Bereitgestellt von Discourse"
     safari_15_warning: "Dein Browser wird bald nicht mehr mit dieser Community kompatibel sein. Um weiterhin hier teilzunehmen, aktualisiere bitte deinen Browser oder <a href='%{url}'>erfahre mehr</a>."
+    discovery:
+      headings:
+        all:
+          latest: "Alle aktuellen Themen"
+          top: "Alle angesagten Themen"
+          new: "Alle neuen Themen"
+          unread: "Alle ungelesenen Themen"
+          unseen: "Alle ungesehenen Themen"
+          hot: "Alle heißen Themen"
+          posted: "Alle Themen, zu denen du beigetragen hast"
+          bookmarks: "Alle Themen, die du mit einem Lesezeichen versehen hast."
+          default: "%{filter} Themen"
+        category:
+          latest: "Aktuelle Themen in %{category}"
+          top: "Top-Themen in %{category}"
+          new: "Neue Themen in %{category}"
+          unread: "Ungelesene Themen in %{category}"
+          unseen: "Ungesehene Themen in %{category}"
+          hot: "Heiße Themen in %{category}"
+          posted: "Themen in %{category}, zu denen du beigetragen hast"
+          bookmarks: "Themen in %{category}, die du mit einem Lesezeichen versehen hast"
+          default: "%{filter} Themen in %{category}"
+        single_tag:
+          latest: "Aktuelle Themen mit dem Schlagwort %{tag}"
+          top: "Angesagte Themen mit dem Schlagwort %{tag}"
+          new: "Neue Themen mit dem Schlagwort %{tag}"
+          unread: "Ungelesene Themen mit dem Schlagwort %{tag}"
+          unseen: "Ungesehene Themen mit dem Schlagwort %{tag}"
+          hot: "Heiße Themen mit dem Schlagwort %{tag}"
+          posted: "Themen mit dem Schlagwort %{tag}, zu denen du beigetragen hast"
+          bookmarks: "Themen mit dem Schlagwort %{tag}, die du mit einem Lesezeichen versehen hast"
+          default: "%{filter} Themen mit dem Schlagwort %{tag}"
+        multi_tag:
+          default: "Themen mit den Schlagwörtern %{tags}"
+        category_tag:
+          latest: "Aktuelle Themen in %{category} mit dem Schlagwort %{tag}"
+          top: "Angesagte Themen in %{category} mit dem Schlagwort %{tag}"
+          new: "Neue Themen in %{category} mit dem Schlagwort %{tag}"
+          unread: "Ungelesene Themen in %{category} mit dem Schlagwort %{tag}"
+          unseen: "Ungesehene Themen in %{category} mit dem Schlagwort %{tag}"
+          hot: "Heiße Themen in %{category} mit dem Schlagwort %{tag}"
+          posted: "Themen in %{category} mit den Schlagwörtern %{tag}, zu denen du beigetragen hast"
+          bookmarks: "Themen in %{category} mit den Schlagwörtern %{tag}, die du mit einem Lesezeichen versehen hast"
+          default: "%{filter} Themen in %{category} mit dem Schlagwort %{tag}"
+        no_tags:
+          all:
+            latest: "Aktuelle Themen ohne Schlagwörter"
+            top: "Angesagte Themen ohne Schlagwörter"
+            new: "Neue Themen ohne Schlagwörter"
+            unread: "Ungelesene Themen ohne Schlagwörter"
+            unseen: "Ungesehene Themen ohne Schlagwörter"
+            hot: "Heiße Themen ohne Schlagwörter"
+            posted: "Themen ohne Schlagwörter, zu denen du beigetragen hast"
+            bookmarks: "Themen ohne Schlagwörter, die du mit einem Lesezeichen versehen hast"
+            default: "Themen ohne Schlagwörter"
+          category:
+            latest: "Aktuelle Themen in %{category} ohne Schlagwörter"
+            top: "Angesagte Themen in %{category} ohne Schlagwörter"
+            new: "Neue Themen in %{category} ohne Schlagwörter"
+            unread: "Ungelesene Themen in %{category} ohne Schlagwörter"
+            unseen: "Ungesehene Themen in %{category} ohne Schlagwörter"
+            hot: "Heiße Themen in %{category} ohne Schlagwörter"
+            posted: "Themen in %{category} ohne Schlagwörter, zu denen du beigetragen hast"
+            bookmarks: "Themen in %{category} ohne Schlagwörter, die du mit einem Lesezeichen versehen hast"
+            default: "%{filter} Themen in %{category} ohne Schlagwörter"
+        categories: "Alle Kategorien"
   admin_js:
     type_to_filter: "Zum Filtern hier eingeben …"
     settings: "Einstellungen"
@@ -4891,9 +4997,6 @@ de:
           title: "Moderation"
           header_description: "Das Meldesystem in Discourse hilft dir und deinem Moderatorenteam, Inhalte und Benutzerverhalten zu verwalten, damit deine Community respektvoll agiert und sich positiv entwickelt. Die Standardeinstellungen sind für die meisten Communitys geeignet und müssen nicht geändert werden. Wenn deine Website jedoch besondere Anforderungen hat, kannst du Meldungsgründe, die du nicht brauchst, deaktivieren und deine eigenen Meldungsgründe hinzufügen."
           keywords: "melden|Meldung|Überprüfen|Spam|illegal"
-        font_style:
-          title: "Schriftart"
-          header_description: "Passe die von deinen Themes verwendeten Schriftstile an"
         files:
           title: "Dateien"
           header_description: "Einstellungen, die Dateigrößen und -typen, Avatargrößen und -quellen, Dateispeicherung, Bildqualität und -kompression und mehr steuern"
@@ -4908,74 +5011,91 @@ de:
           title: "Anmeldung und Authentifizierung"
           header_description: "Konfiguriere, wie sich Benutzer anmelden und authentifizieren, Geheimnisse und Schlüssel, OAuth2-Anbieter und mehr"
         logo:
-          title: "Website-Logo"
-          header_description: "Passe die Variationen deines Website-Logos an"
-        branding:
-          title: "Branding"
-          logo:
-            title: "Logo"
-            form:
-              saved: "Logoeinstellungen werden gespeichert."
-              logo:
-                title: "Hauptlogo"
-                description: "Erscheint in der oberen Navigation der Website sowie oben in den E-Mail-Benachrichtigungen der Website."
-                help_text: "Die empfohlene Größe ist 600 x 80 Pixel."
-              logo_dark:
-                required: "Ein anderes Logo für den dunklen Modus verwenden?"
-                title: "Hauptlogo dunkel"
-                help_text: "Die empfohlene Größe ist 600 x 80 Pixel."
-              large_icon:
-                title: "Quadratisches Symbol"
-                description: "Eine quadratische Version des Logos erscheint oben in der Verwaltung und ist auch das Logo für den mobilen Startbildschirm der App."
-                help_text: "Die empfohlene Größe ist 512 x 512 Pixel."
-              square_icon_dark:
-                required: "Ein anderes quadratisches Symbol für den dunklen Modus verwenden?"
-                title: "Quadratisches Symbol dunkel"
-                help_text: "Die empfohlene Größe ist 512 x 512 Pixel."
-              favicon:
-                title: "Favicon"
-                description: "Das Logo erscheint als Symbol in der Browser-Registerkarte und in den Browser-Favoriten/Lesezeichen."
-              logo_small:
-                title: "Kleines Logo"
-                description: "Das kleine Logobild oben links auf deiner Seite, das du beim Herunterscrollen siehst. Wenn du es leer lässt, wird ein Home-Symbol angezeigt."
-                help_text: "Die empfohlene Größe ist 120 x 120 Pixel."
-              logo_small_dark:
-                required: "Ein anderes kleines Logo für den dunklen Modus verwenden?"
-                title: "Kleines Logo dunkel"
-                help_text: "Die empfohlene Größe ist 120 x 120 Pixel."
-              mobile: "Mobil"
-              email: "E-Mail"
-              social_media: "Soziale Medien"
-              mobile_logo:
-                title: "Logo für Mobilgeräte"
-                description: "Das Logo, das auf der mobilen Version deiner Website verwendet wird. Wenn du es leer lässt, wird das Bild aus der Einstellung \"Logo\" verwendet."
-                help_text: "Verwende ein breites rechteckiges Bild mit einer Höhe von 120 und einem Seitenverhältnis von mehr als 3:1."
-              mobile_logo_dark:
-                required: "Ein anderes Logo für Mobilgeräte im dunklen Modus verwenden?"
-                title: "Logo für Mobilgeräte dunkel"
-                help_text: "Verwende ein breites rechteckiges Bild mit einer Höhe von 120 und einem Seitenverhältnis von mehr als 3:1."
-              manifest_icon:
-                title: "Manifest-Symbol"
-                description: "Bild, das als Logo/Splash-Bild auf Android verwendet wird. Wenn es leer gelassen wird, wird large_icon verwendet."
-                help_text: "Die empfohlene Größe ist 512 x 512 Pixel."
-              manifest_screenshots:
-                title: "Manifest-Screenshots"
-                description: "Screenshots, die die Merkmale und Funktionen deiner Instanz auf der Seite mit der Installationsaufforderung zeigen. Alle Bilder sollten lokal hochgeladen werden und die gleichen Abmessungen haben."
-              apple_touch_icon:
-                title: "Apple Touch Symbol"
-                description: "Dieses Symbol wird für Apple Touch-Geräte verwendet. Wenn es leer bleibt, wird large_icon verwendet."
-                help_text: "Die empfohlene Größe ist 180 x 180 Pixel. Ein transparenter Hintergrund wird nicht empfohlen."
-              digest_logo:
-                title: "Digest-Logo"
-                description: "Das alternative Logobild, das oben in der E-Mail-Zusammenfassung deiner Website verwendet wird. Wenn du nichts angibst, wird das Bild aus der Einstellung \"Logo\" verwendet."
-                help_text: "Verwende ein breites Rechteckbild. Verwende kein SVG-Bild."
-              opengraph_image:
-                title: "OpenGraph Bild"
-                description: "Standard-Opengraph-Bild, das verwendet wird, wenn die Seite kein anderes geeignetes Bild hat. Wenn es leer gelassen wird, wird large_icon verwendet."
-              x_summary_large_image:
-                title: "X Zusammenfassung großes Bild"
-                description: "X Karte \"Zusammenfassung großes Bild\". Wenn diese Option leer gelassen wird, werden die regulären Metadaten der Karte aus dem OpenGraph_image generiert, sofern es sich nicht ebenfalls um ein .svg handelt."
-                help_text: "Die empfohlene Größe beträgt mindestens 280 x 150 Pixel. Verwende kein SVG-Bild."
+          title: "Logo"
+          header_description: "Konfiguriere die Logos und Symbole, die auf deiner Website verwendet werden"
+          form:
+            saved: "Logoeinstellungen werden gespeichert."
+            logo:
+              title: "Hauptlogo"
+              description: "Erscheint in der oberen Navigation der Website sowie oben in den E-Mail-Benachrichtigungen der Website."
+              help_text: "Die empfohlene Größe ist 600 x 80 Pixel."
+            logo_dark:
+              required: "Ein anderes Logo für den dunklen Modus verwenden?"
+              title: "Hauptlogo dunkel"
+              help_text: "Die empfohlene Größe ist 600 x 80 Pixel."
+            large_icon:
+              title: "Quadratisches Symbol"
+              description: "Eine quadratische Version des Logos erscheint oben in der Verwaltung und ist auch das Logo für den mobilen Startbildschirm der App."
+              help_text: "Die empfohlene Größe ist 512 x 512 Pixel."
+            square_icon_dark:
+              required: "Ein anderes quadratisches Symbol für den dunklen Modus verwenden?"
+              title: "Quadratisches Symbol dunkel"
+              help_text: "Die empfohlene Größe ist 512 x 512 Pixel."
+            favicon:
+              title: "Favicon"
+              description: "Das Logo erscheint als Symbol in der Browser-Registerkarte und in den Browser-Favoriten/Lesezeichen."
+            logo_small:
+              title: "Kleines Logo"
+              description: "Das kleine Logobild oben links auf deiner Seite, das du beim Herunterscrollen siehst. Wenn du es leer lässt, wird ein Home-Symbol angezeigt."
+              help_text: "Die empfohlene Größe ist 120 x 120 Pixel."
+            logo_small_dark:
+              required: "Ein anderes kleines Logo für den dunklen Modus verwenden?"
+              title: "Kleines Logo dunkel"
+              help_text: "Die empfohlene Größe ist 120 x 120 Pixel."
+            mobile: "Mobil"
+            email: "E-Mail"
+            social_media: "Soziale Medien"
+            mobile_logo:
+              title: "Logo für Mobilgeräte"
+              description: "Das Logo, das auf der mobilen Version deiner Website verwendet wird. Wenn du es leer lässt, wird das Bild aus der Einstellung \"Logo\" verwendet."
+              help_text: "Verwende ein breites rechteckiges Bild mit einer Höhe von 120 und einem Seitenverhältnis von mehr als 3:1."
+            mobile_logo_dark:
+              required: "Ein anderes Logo für Mobilgeräte im dunklen Modus verwenden?"
+              title: "Logo für Mobilgeräte dunkel"
+              help_text: "Verwende ein breites rechteckiges Bild mit einer Höhe von 120 und einem Seitenverhältnis von mehr als 3:1."
+            manifest_icon:
+              title: "Manifest-Symbol"
+              description: "Bild, das als Logo/Splash-Bild auf Android verwendet wird. Wenn es leer gelassen wird, wird large_icon verwendet."
+              help_text: "Die empfohlene Größe ist 512 x 512 Pixel."
+            manifest_screenshots:
+              title: "Manifest-Screenshots"
+              description: "Screenshots, die die Merkmale und Funktionen deiner Instanz auf der Seite mit der Installationsaufforderung zeigen. Alle Bilder sollten lokal hochgeladen werden und die gleichen Abmessungen haben."
+            apple_touch_icon:
+              title: "Apple Touch Symbol"
+              description: "Dieses Symbol wird für Apple Touch-Geräte verwendet. Wenn es leer bleibt, wird large_icon verwendet."
+              help_text: "Die empfohlene Größe ist 180 x 180 Pixel. Ein transparenter Hintergrund wird nicht empfohlen."
+            digest_logo:
+              title: "Digest-Logo"
+              description: "Das alternative Logobild, das oben in der E-Mail-Zusammenfassung deiner Website verwendet wird. Wenn du nichts angibst, wird das Bild aus der Einstellung \"Logo\" verwendet."
+              help_text: "Verwende ein breites Rechteckbild. Verwende kein SVG-Bild."
+            opengraph_image:
+              title: "OpenGraph Bild"
+              description: "Standard-Opengraph-Bild, das verwendet wird, wenn die Seite kein anderes geeignetes Bild hat. Wenn es leer gelassen wird, wird large_icon verwendet."
+            x_summary_large_image:
+              title: "X Zusammenfassung großes Bild"
+              description: "X Karte \"Zusammenfassung großes Bild\". Wenn diese Option leer gelassen wird, werden die regulären Metadaten der Karte aus dem OpenGraph_image generiert, sofern es sich nicht ebenfalls um ein .svg handelt."
+              help_text: "Die empfohlene Größe beträgt mindestens 280 x 150 Pixel. Verwende kein SVG-Bild."
+        fonts:
+          title: "Schriftarten"
+          header_description: "Konfiguriere die auf deiner Website verwendeten Schriftarten, einschließlich der Basisschrift, der Schriftart für Überschriften und der Standardtextgröße"
+          form:
+            more_fonts: "Weitere Schriftarten"
+            fewer_fonts: "Weniger Schriftarten"
+            saved: "Schriftarteinstellungen werden gespeichert."
+            base_font:
+              title: "Basisschriftart"
+            heading_font:
+              title: "Überschrift-Schriftart"
+            default_text_size:
+              title: "Standardschriftgröße"
+              description: "Diese Größe kann später von jedem Benutzer nach seinen Vorlieben angepasst werden."
+          backfill_modal:
+            title: "Neue Standardschrifteinstellungen anwenden?"
+            description:
+              one: "Du hast die Standardschriftgröße aktualisiert. Möchtest du diese Änderung auf %{count} bestehenden Benutzer anwenden?"
+              other: "Du hast die Standardschriftgröße aktualisiert. Möchtest du diese Änderung auf %{count} bestehende Benutzer anwenden?"
+            modal_yes: "Ja"
+            modal_no: "Nein, die Änderung soll sich nur zukünftig auswirken"
         navigation:
           title: "Navigation"
           header_description: "Konfiguriere die Navigationslinks und Menüpunkte für deine Website. Dazu gehören die Position und das Verhalten des Hauptnavigationsmenüs, die Quicklinks oben auf der Homepage und die Administrator-Seitenleiste."
@@ -4985,9 +5105,6 @@ de:
         onebox:
           title: "Onebox"
           header_description: "Konfiguriere, wie Onebox-Vorschauen für deine Website erstellt und angezeigt werden"
-        other:
-          title: "Sonstiges"
-          header_description: "Einstellungen, die in keine andere Kategorie passen"
         rate_limits:
           title: "Ratenbegrenzungen"
           header_description: "Konfiguriere, wie oft Benutzer bestimmte Aktionen ausführen können, z. B. das Erstellen von Themen, das Senden von Nachrichten und das Posten von Antworten"
@@ -4996,7 +5113,7 @@ de:
           header_description: "Konfiguriere Sucheinstellungen einschließlich Protokollierung und Tokenisierung für chinesische und japanische Sprachen"
         search_everything:
           title: "Suche"
-          header_description: "Hier findest du alles in der Administratoroberfläche. Du kannst die Ergebnisse unten filtern, und deine Einstellungen werden gespeichert."
+          header_description: "Finde hier alles in der Administratoroberfläche. Du kannst die Ergebnisse unten filtern und deine Einstellungen werden gespeichert. Um diese Suche von überall in der Administratoroberfläche zu öffnen drücke %{shortcutHTML}."
         security:
           title: "Sicherheit"
           header_description: "Konfiguriere die Sicherheitseinstellungen, einschließlich Zwei-Faktor-Authentifizierung, Moderatorenrechte und Sicherheitsrichtlinien für Inhalte"
@@ -5038,12 +5155,40 @@ de:
         reports:
           title: "Berichte"
           header_description: "Berichte sind ein leistungsfähiges Instrument, das dir hilft zu verstehen, was auf deiner Website passiert. Sie können dir helfen, Trends zu erkennen, Probleme aufzudecken und Entscheidungen auf der Grundlage von Daten zu treffen."
+          sub_pages:
+            settings:
+              title: "Dashboard-Einstellungen"
         badges:
           title: "Abzeichen"
           header_description: "Abzeichen belohnen Benutzer für ihre Aktivitäten, Beiträge und Leistungen, um positives Verhalten sowie Engagement in der Community anzuerkennen, zu bestätigen und zu fördern"
+        analytics:
+          title: "Analyse & SEO"
+          header_description: "Verbessere die Sichtbarkeit deiner Website für Suchmaschinen und konfiguriere, wie du die Besucher deiner Website verfolgst"
+          keywords: "Suche|Google|Sitemap|Analytik|Analytics"
+        interface:
+          title: "Oberfläche & Layout"
+          header_description: "Passe Details des allgemeinen Layouts und der Benutzeroberfläche deiner Website an"
+          keywords: "splash"
+        content:
+          title: "Inhalt"
+          header_description: "Konfiguriere, wie deine Themen und Beiträge verwaltet werden, und passe das Erlebnis der Inhaltserstellung für deine Mitglieder an."
+          keywords: "Themen|Beiträge|Kategorien|Schlagwörter"
+          sub_pages:
+            categories_and_tags:
+              title: "Kategorien & Schlagwörter"
+            sharing:
+              title: "Teilen"
+            posts_and_topics:
+              title: "Beiträge und Themen"
+            stats_and_thresholds:
+              title: "Statistiken & Schwellenwerte"
         permalinks:
           title: "Permalinks"
           header_description: "Weiterleitungen für URLs, die dem Forum nicht bekannt sind"
+        user_defaults:
+          title: "Standardwerte für Benutzer"
+          header_description: "Lege Standardwerte für Einstellungen fest, die sich auf deine Benutzer auswirken, und konfiguriere ihr Onboarding-Erlebnis"
+          keywords: "Benutzer|Onboarding|Neu|Benutzereinstellungen"
         user_fields:
           title: "Benutzerfelder"
           header_description: "Erstelle benutzerdefinierte Benutzerfelder, um zusätzliche Details über deine Community-Mitglieder zu sammeln. Du kannst festlegen, welche Informationen bei der Registrierung erforderlich sind, was in den Profilen angezeigt wird und was die Benutzer aktualisieren können."
@@ -5064,17 +5209,24 @@ de:
           header_description: "Komponenten sind kleinere Anpassungen, die zu Themes hinzugefügt werden können, um bestimmte Stilelemente deines Forumsdesigns zu verändern"
           keywords: "Theme|Komponente|Erweiterung"
         themes_and_components:
-          title: "Themes und Komponenten"
+          title: "Themes & Komponenten"
           header_description: "Gestalte deine Discourse-Website mit Themes und Komponenten ganz nach deinen Bedürfnissen"
           keywords: "Theme|Komponente|Erweiterung|Anpassen"
+        site_admin:
+          title: "Website-Administration"
+          header_description: "Konfiguriere verschiedene Einstellungen für die Verwaltung deiner Website"
+          keywords: "Entdecken|Bootstrap|Starthilfe|Apps"
         site_texts:
           title: "Website-Texte"
           header_description: "Passe jeden in Discourse verwendeten Text an den Stil und Ton deiner Community an"
         email:
-          title: "Server und Protokolle"
-          header_description: "Du kannst die Vorlagen zum Erstellen von E-Mails anpassen, eine Vorschau der versendeten E-Mails anzeigen und die E-Mail-Protokolle einsehen"
-          keywords: "E-Mail|SMTP|Mailgun|Sendgrid|Gesendet|Übersprungen|Zurückgewiesen|Empfangen|Abgelehnt|E-Mail-Protokolle|Vorschau-Zusammenfassung"
+          title: "E-Mail-Einstellungen"
+          header_description: "Konfiguriere die Einstellungen für E-Mails, die an deine Mitglieder gesendet werden"
+          keywords: "Zusammenfassung|Abbestellen|Abmelden|E-Mail|smtp|mailgun|sendgrid|Vorschau der Zusammenfassung anzeigen"
           sub_pages:
+            server_settings:
+              title: "Servereinstellungen"
+              header_description: "Konfiguriere die Einstellungen für E-Mails, die an deine Mitglieder gesendet werden"
             preview_summary:
               title: "Vorschau der Zusammenfassung anzeigen"
               header_description: "Vorschau des Inhalts der E-Mail-Zusammenfassungen, die an inaktive Benutzer gesendet werden"
@@ -5084,6 +5236,11 @@ de:
             templates:
               title: "Vorlagen"
               header_description: "Passe die Vorlagen für die Erstellung von E-Mails an"
+        email_logs:
+          title: "E-Mail-Protokolle"
+          header_description: "Sieh dir die Protokolle der von deiner Website gesendeten E-Mails an"
+          keywords: "Gesendet|Übersprungen|Unzustellbar|Empfangen|Abgelehnt|E-Mail-Protokolle"
+          sub_pages:
             sent:
               title: "Gesendet"
               header_description: "Sieh dir ein Protokoll der gesendeten E-Mails an"
@@ -5136,7 +5293,12 @@ de:
       search:
         modal_title: "Durchsuche alles im Adminbereich"
         title: "Suche"
-        instructions: "Tippe, um nach Seiten, Einstellungen, Berichten, Themes, Komponenten und mehr zu suchen."
+        instructions: "Durchsuche alles im Adminbereich..."
+        full_page_link: "Wechsle zur Ganzseitensuche"
+        no_results: 'Wir konnten nichts finden, das zu „%{filter}“ passt.'
+        result_count:
+          one: '%{count} Ergebnis für „%{filter}“'
+          other: '%{count} Ergebnisse für „%{filter}“'
         result_types:
           page:
             one: "Seite"
@@ -5735,12 +5897,21 @@ de:
           city_for_disputes_placeholder: "Stadt"
           city_for_disputes_help: |
             Gib die Stadt für die Beilegung von Rechtsstreitigkeiten im Zusammenhang mit diesem Forum an.
+          extra_groups:
+            heading: "Gruppenauflistung"
+            description: "Zusätzliche Gruppen, die auf der Seite „Über uns“ angezeigt werden."
+            groups: "Gruppen"
+            order: "Sortierreihenfolge"
+            initial_members: "Direkt sichtbare Mitglieder"
+            initial_members_description: "Anzahl der Gruppenmitglieder, die angezeigt werden sollen, bevor eine Schaltfläche „Mehr anzeigen“ hinzugefügt wird."
+            show_description: "Beschreibung einschließen"
           optional: "(optional)"
           update: "Aktualisieren"
           toasts:
             general_settings_saved: "Allgemeine Einstellungen gespeichert"
             contact_information_saved: "Kontaktinformationen gespeichert"
             your_organization_saved: "Deine Organisation wurde gespeichert"
+            extra_groups_saved: "Gruppenliste gespeichert"
           saved: "gespeichert!"
         flags:
           edit_header: "Meldungsgrund bearbeiten"
@@ -5765,7 +5936,8 @@ de:
             post: "Beiträgen"
             chat_message: "Chat-Nachrichten"
             enabled: "Aktiviere diesen benutzerdefinierten Meldungsgrund nach dem Speichern"
-            alert: "Sobald ein benutzerdefinierter Meldungsgrund verwendet wurde, kann er nur deaktiviert, aber nicht bearbeitet oder gelöscht werden."
+            create_warning: "Sobald ein benutzerdefinierter Meldungsgrund verwendet wurde, kann er nur deaktiviert oder bearbeitet, aber nicht gelöscht werden."
+            edit_warning: "Die Bearbeitung des Namens und der Beschreibung eines Meldungsgrunds kann zu Dateninkonsistenzen führen. Sobald ein benutzerdefinierter Meldungsgrund verwendet wurde, kann er nur deaktiviert oder bearbeitet, aber nicht gelöscht werden."
             edit_flag: "Meldungsgrund bearbeiten"
             non_editable: "Du kannst diesen Meldungsgrund nicht bearbeiten, weil er vom System erstellt oder bereits im Überprüfungssystem verwendet wurde. Du kannst ihn aber immer noch deaktivieren."
             delete_flag: "Meldungsgrund löschen"
@@ -5786,8 +5958,6 @@ de:
           more_options:
             title: "Mehr Optionen"
         themes_and_components:
-          title: "Themes und Komponenten"
-          description: "Gestalte deine Discourse-Website mit Themes und Komponenten ganz nach deinen Bedürfnissen."
           breadcrumb_title: "Anpassen"
           install: "Installieren"
           themes:
@@ -5797,9 +5967,44 @@ de:
             back: "Zurück zu Themes"
           components:
             title: "Komponenten"
+            description: "Anpassungen, die Oberflächenelemente deines Forumsdesigns verändern oder zusätzliche Frontend-Funktionen hinzufügen"
             components_intro: "Installiere eine neue Komponente, um loszulegen, oder erstelle deine eigene mit Hilfe dieser Ressourcen von Grund auf."
             new_component: "Neue Komponente"
             back: "Zurück zu Komponenten"
+            install: "Installieren"
+            name: "Name"
+            used_on: "Verwendet von"
+            enabled: "Aktiviert?"
+            by_author: "Von %{name}"
+            learn_more: "Mehr erfahren"
+            edit: "Bearbeiten"
+            parent_themes_two: "%{name1} und %{name2}"
+            parent_themes_three: "%{name1}, %{name2} und %{name3}"
+            parent_themes_more_than_three:
+              one: "%{name1}, %{name2}, %{name3} und %{count} mehr"
+              other: "%{name1}, %{name2}, %{name3} und %{count} mehr"
+            add_to_theme: "Zum Theme hinzufügen"
+            preview: "Vorschau"
+            update: "Aktualisieren auf neueste Version"
+            check_update: "Nach Aktualisierungen suchen"
+            update_available: "Update verfügbar!"
+            export: "Exportieren"
+            convert: "Umwandeln"
+            delete: "Löschen"
+            filter_by: "Filtern nach"
+            filter_by_all: "Gesamt"
+            filter_by_used: "Verwendet"
+            filter_by_unused: "Nicht verwendet"
+            filter_by_updates_available: "Updates verfügbar"
+            search_components: "Gib einen Komponentennamen ein"
+            new_update_for_component: "Neues Update verfügbar für %{name}!"
+            component_up_to_date: '„%{name}“ ist aktuell.'
+            updated_successfully: '„%{name}“ wurde erfolgreich aktualisiert.'
+            delete_confirm: 'Möchtest du wirklich „%{name}“ löschen?'
+            deleted_successfully: '„%{name}“ wurde erfolgreich gelöscht.'
+            no_components: "Keine Komponenten installiert."
+            no_components_found: "Keine Komponenten passen zu deinen Filtern."
+            badge_unused: "Nicht verwendet"
         user_fields:
           field: "Feld"
           type: "Art"
@@ -5812,19 +6017,20 @@ de:
           save_successful: "Benutzerfeld gespeichert."
         color_palettes:
           palette_name: "Name"
+          duplicate: "Duplizieren"
+          delete: "Löschen"
           color_options:
             title: "Farboptionen"
             toggle: "Vom Benutzer wählbar"
             toggle_description: "Farbpalette kann von Benutzern ausgewählt werden"
           colors:
             title: "Farben"
-          fonts_and_logos_hint: "Willst du deine Schriftarten und Logos aktualisieren?"
-          go_to_branding: "Gehe zu Branding"
           save_changes: "Änderungen speichern"
           unsaved_changes: "Du hast ungespeicherte Änderungen"
           copy_of: "Kopie von %{name}"
           copy_created: 'Es wurde eine neue Kopie von "%{name}" erstellt.'
           illegal_character_in_color: "Farben bestehen nur aus Hexadezimalzeichen"
+          delete_confirm: "Bist du sicher, dass du diese Farbpalette löschen willst?"
       plugins:
         title: "Plug-ins"
         name: "Name"
@@ -5996,10 +6202,15 @@ de:
           extra_files_upload: "Theme exportieren, um diese Dateien anzuzeigen."
           extra_files_remote: "Theme exportieren oder das Git-Repository überprüfen, um diese Dateien anzuzeigen."
           preview: "Vorschau"
+          default: "Aktiv"
           settings_editor: "Einstellungseditor"
           show_advanced: "Erweiterte anzeigen"
           is_default: "Theme ist standardmäßig aktiviert"
           user_selectable: "Theme kann von Benutzern ausgewählt werden"
+          user_selectable_badge_label: "Vom Benutzer wählbar"
+          user_selectable_button_label: "Erlaube den Benutzern es auszuwählen"
+          user_selectable_unavailable_button_label: "Für Benutzer nicht verfügbar machen"
+          broken_badge_label: "Defektes Theme"
           color_scheme_user_selectable: "Farbpalette kann von Benutzern ausgewählt werden"
           auto_update: "Automatisch aktualisieren, wenn Discourse aktualisiert wird"
           color_scheme: "Farbpalette"
@@ -6017,9 +6228,10 @@ de:
           convert_theme_alert_generic: "Bist du sicher, dass du dieses Theme in eine Komponente umwandeln möchtest?"
           convert_theme_tooltip: "Wandle dieses Theme in eine Komponente um"
           inactive_themes: "Inaktive Themes:"
-          set_default_theme: "Standard festlegen"
-          default_theme: "Standard-Theme"
+          set_default_theme: "Als aktiv festlegen"
+          default_theme: "Aktives Theme"
           set_default_success: "Standard-Theme auf %{theme} festgelegt"
+          setting_was_saved: "Theme-Einstellung wurde gespeichert"
           install_success: "%{theme} erfolgreich installiert!"
           inactive_components: "Nicht verwendete Komponenten:"
           selected:
@@ -6031,6 +6243,7 @@ de:
           disabled_component_tooltip: "Diese Komponente wurde deaktiviert"
           default_theme_tooltip: "Dieses Theme ist das Standardtheme der Website."
           updates_available_tooltip: "Updates sind verfügbar für dieses Theme"
+          update_available: "Muss aktualisiert werden"
           and_x_more:
             one: "und %{count} mehr."
             other: "und %{count} mehr."
@@ -6157,30 +6370,30 @@ de:
           active_filter: "Aktiv"
           inactive_filter: "Inaktiv"
           updates_available_filter: "Updates verfügbar"
-          schema:
-            title: "Einstellung „%{name}“ bearbeiten"
-            back_button: "Zurück zu %{name}"
-            fields:
-              required: "*erforderlich"
-              groups:
-                at_least:
-                  one: "mindestens %{count} Gruppe ist erforderlich"
-                  other: "mindestens %{count} Gruppen sind erforderlich"
-              categories:
-                at_least:
-                  one: "mindestens %{count} Kategorie ist erforderlich"
-                  other: "mindestens %{count} Kategorien sind erforderlich"
-              tags:
-                at_least:
-                  one: "mindestens %{count} Schlagwort ist erforderlich"
-                  other: "mindestens %{count} Schlagwörter sind erforderlich"
-              string:
-                too_short:
-                  one: "muss mindestens %{count} Zeichen lang sein"
-                  other: "muss mindestens %{count} Zeichen lang sein"
-              number:
-                too_small: "muss größer oder gleich %{count} sein"
-                too_large: "muss weniger oder gleich %{count} sein"
+        schema:
+          title: "Einstellung „%{name}“ bearbeiten"
+          back_button: "Zurück zu %{name}"
+          fields:
+            required: "*erforderlich"
+            groups:
+              at_least:
+                one: "mindestens %{count} Gruppe ist erforderlich"
+                other: "mindestens %{count} Gruppen sind erforderlich"
+            categories:
+              at_least:
+                one: "mindestens %{count} Kategorie ist erforderlich"
+                other: "mindestens %{count} Kategorien sind erforderlich"
+            tags:
+              at_least:
+                one: "mindestens %{count} Schlagwort ist erforderlich"
+                other: "mindestens %{count} Schlagwörter sind erforderlich"
+            string:
+              too_short:
+                one: "muss mindestens %{count} Zeichen lang sein"
+                other: "muss mindestens %{count} Zeichen lang sein"
+            number:
+              too_small: "muss größer oder gleich %{count} sein"
+              too_large: "muss weniger oder gleich %{count} sein"
         colors:
           select_base:
             title: "Wähle Basis-Farbpalette"
@@ -6191,57 +6404,62 @@ de:
           about: "Bearbeite die Farben, die von deinem Theme verwendet werden. Beginne mit dem Erstellen einer neuen Farbpalette."
           new_name: "Neue Farbpalette"
           copy_name_prefix: "Kopie von"
-          delete_confirm: "Diese Farbpalette löschen?"
+          delete_confirm: "Bist du sicher, dass du diese Farbpalette löschen willst?"
           undo: "Rückgängig machen"
           undo_title: "Die seit dem letzten Speichern an dieser Farbe vorgenommenen Änderungen rückgängig machen."
           revert: "Verwerfen"
           revert_title: "Diese Farbe auf den Standardwert aus der Farbpalette zurücksetzen."
           primary:
             name: "erste"
-            description: "Die meisten Texte, Bilder und Ränder."
+            description: "Haupttext und Symbole"
           primary-medium:
             name: "erste (mittel)"
+            description: "Deaktivierter oder stummer Text"
           primary-low-mid:
             name: "erste (niedrig/mittel)"
+            description: "Umrandungen und dezente Akzente"
           secondary:
             name: "zweite"
-            description: "Die Haupthintergrundfarbe und Textfarbe einiger Schaltflächen."
+            description: "Haupthintergrund und einige Schaltflächentexte"
           tertiary:
             name: "dritte"
-            description: "Links, einige Schaltflächen, Benachrichtigungen und Akzentfarben."
+            description: "Akzentfarbe (Links, Schaltflächen, Abzeichen)"
           quaternary:
             name: "vierte"
-            description: "Zur optionalen Verwendung in Themes."
+            description: "Optionaler Theme-Akzent"
           header_background:
             name: "Kopfzeile (Hintergrund)"
-            description: "Hintergrundfarbe des Kopfbereichs der Website."
+            description: "Hintergrund der Kopfzeile"
           header_primary:
             name: "Kopfzeile (erste)"
-            description: "Text und Symbole im Kopfbereich der Website."
+            description: "Text und Symbole in der Kopfzeile"
           highlight:
             name: "hervorheben"
-            description: "Die Hintergrundfarbe von hervorgehobenen Elementen auf der Seite, z. B. Beiträge und Themen."
+            description: "Hervorgehobene Beiträge oder Themen"
           highlight-high:
             name: "hervorheben (hoch)"
+            description: "Starke Hervorhebung"
           highlight-medium:
             name: "hervorheben (mittel)"
+            description: "Mittlere Hervorhebung"
           highlight-low:
             name: "hervorheben (niedrig)"
+            description: "Dezente Hervorhebung"
           danger:
             name: "Gefahr"
-            description: "Hervorhebungsfarbe für Aktionen wie Löschen von Beiträgen und Themen."
+            description: "Fehler und Löschaktionen"
           success:
             name: "Erfolg"
-            description: "Zeigt an, dass eine Aktion erfolgreich war."
+            description: "Erfolgreiche Aktionen"
           love:
             name: "Liebe"
-            description: "Die Farbe der „Gefällt mir“-Schaltfläche."
+            description: "„Gefällt mir“-Schaltfläche"
           selected:
             name: "ausgewählt"
-            description: "Die Hintergrundfarbe von Elementen wie Listeneinträgen, wenn sie ausgewählt/aktiv sind."
+            description: "Aktive oder ausgewählte Elemente"
           hover:
             name: "unter Mauszeiger"
-            description: "Die Hintergrundfarbe von Elementen wie Listeneinträgen, wenn sie sich unter dem Mauszeiger befinden oder den Tastaturfokus haben."
+            description: "Hintergrund von Elementen, die sich unterm Mauszeiger befinden oder fokussiert werden"
           editor:
             light: "Hell"
             dark: "Dunkel"
@@ -6633,6 +6851,7 @@ de:
           dropdown: "Drop-down-Liste"
           upload: "Eine Datei hochladen"
           multiselect: "Mehrfachauswahl"
+          tagchooser: "Schlagwortgruppen-Auswahl"
         validations_modal:
           button_title: "Validierungen"
           modal_title: "Validierungsoptionen"
@@ -6678,6 +6897,8 @@ de:
           toggle_form_template: "Formularvorlage aktiviert"
           select_template: "Formularvorlagen auswählen"
           select_template_help: "Formularvorlagen hinzufügen/bearbeiten"
+        errors:
+          multiple_tags_not_allowed: 'Du kannst nicht mehr Schlagwörter aus "%{tag_name}" auswählen. Um Probleme zu vermeiden, verwende die Formularvorlage'
       impersonate:
         title: "Nutzersicht"
         help: "Benutze dieses Werkzeug, um zur Fehlersuche in die Rolle eines anderen Benutzers zu schlüpfen. Du musst dich abmelden, wenn du fertig bist."
@@ -7102,11 +7323,15 @@ de:
       site_settings:
         title: "Website-Einstellungen"
         description: "Konfiguriere die Einstellungen für deine Discourse-Website, um ihr Aussehen, ihre Funktionalität und ihre Benutzererfahrung anzupassen."
-        discard: "Änderungen verwerfen"
-        save: "Alle Änderungen speichern"
+        discard:
+          one: "Änderung verwerfen"
+          other: "Änderungen verwerfen"
+        save:
+          one: "Änderung speichern"
+          other: "Alle Änderungen speichern"
         dirty_banner:
-          one: "Du hast <em>%{count}</em> nicht gespeicherte Änderung"
-          other: "Du hast <em>%{count}</em> nicht gespeicherte Änderungen"
+          one: "Du hast <b>%{count}</b> nicht gespeicherte Änderung"
+          other: "Du hast <b>%{count}</b> nicht gespeicherte Änderungen"
         emoji_list:
           invalid_input: "Emoji-Liste sollte nur gültige Emoji-Namen enthalten, z. B.: „hugs“"
           add_emoji_button:

@@ -1,8 +1,8 @@
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import { scrollTop } from "discourse/lib/scroll-top";
 import { defaultHomepage } from "discourse/lib/utilities";
-import { scrollTop } from "discourse/mixins/scroll-top";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
 import { getUserChatSeparateSidebarMode } from "discourse/plugins/chat/discourse/lib/get-user-chat-separate-sidebar-mode";
@@ -73,8 +73,8 @@ export default class ChatRoute extends DiscourseRoute {
     this.chat.updatePresence();
 
     schedule("afterRender", () => {
-      document.body.classList.add("has-full-page-chat");
-      document.documentElement.classList.add("has-full-page-chat");
+      document.body.classList.add("has-full-page-chat", "has-chat");
+      document.documentElement.classList.add("has-full-page-chat", "has-chat");
       scrollTop();
     });
   }
@@ -98,8 +98,11 @@ export default class ChatRoute extends DiscourseRoute {
     this.chat.updatePresence();
 
     schedule("afterRender", () => {
-      document.body.classList.remove("has-full-page-chat");
-      document.documentElement.classList.remove("has-full-page-chat");
+      document.body.classList.remove("has-full-page-chat", "has-chat");
+      document.documentElement.classList.remove(
+        "has-full-page-chat",
+        "has-chat"
+      );
     });
   }
 }

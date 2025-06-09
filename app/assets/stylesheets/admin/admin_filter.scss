@@ -1,10 +1,12 @@
+@use "lib/viewport";
+
 .d-admin-filter {
   background-color: var(--primary-very-low);
   padding: var(--space-2);
   display: flex;
   gap: var(--space-2);
 
-  @include breakpoint("tablet") {
+  @include viewport.until(md) {
     flex-direction: column;
   }
 }

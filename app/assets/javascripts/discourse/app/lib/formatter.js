@@ -155,9 +155,9 @@ export function duration(distance, ageOpts) {
   const distanceInMinutes = dividedDistance < 1 ? 1 : dividedDistance;
 
   const t = function (key, opts) {
-    const format = (ageOpts && ageOpts.format) || "tiny";
+    const format = ageOpts?.format || "tiny";
     const result = i18n("dates." + format + "." + key, opts);
-    return ageOpts && ageOpts.addAgo ? wrapAgo(result) : result;
+    return ageOpts?.addAgo ? wrapAgo(result) : result;
   };
 
   let formatted;
@@ -223,7 +223,7 @@ function relativeAgeTiny(date, ageOpts) {
   let formatted;
   const t = function (key, opts) {
     const result = i18n("dates." + format + "." + key, opts);
-    return ageOpts && ageOpts.addAgo ? wrapAgo(result) : result;
+    return ageOpts?.addAgo ? wrapAgo(result) : result;
   };
 
   // This file is in lib but it's used as a helper
@@ -374,7 +374,8 @@ export function relativeAge(date, options) {
   return "UNKNOWN FORMAT";
 }
 
-export function number(val) {
+export function number(val, options) {
+  options = options || {};
   let formattedNumber;
 
   val = Math.round(parseFloat(val));
@@ -382,17 +383,36 @@ export function number(val) {
     val = 0;
   }
 
+  const shouldAppendPlus =
+    typeof options?.maxDisplay === "number" &&
+    options.maxDisplay > 0 &&
+    val > 0 &&
+    val > options.maxDisplay;
+
+  if (shouldAppendPlus) {
+    val = options.maxDisplay;
+  }
+
+  let output;
+
   if (val > 999999) {
     formattedNumber = I18n.toNumber(val / 1000000, { precision: 1 });
-    return i18n("number.short.millions", { number: formattedNumber });
+    output = i18n("number.short.millions", { number: formattedNumber });
   } else if (val > 99999) {
     formattedNumber = I18n.toNumber(Math.floor(val / 1000), { precision: 0 });
-    return i18n("number.short.thousands", { number: formattedNumber });
+    output = i18n("number.short.thousands", { number: formattedNumber });
   } else if (val > 999) {
     formattedNumber = I18n.toNumber(val / 1000, { precision: 1 });
-    return i18n("number.short.thousands", { number: formattedNumber });
+    output = i18n("number.short.thousands", { number: formattedNumber });
+  } else {
+    output = val.toString();
   }
-  return val.toString();
+
+  if (shouldAppendPlus) {
+    output += "+";
+  }
+
+  return output;
 }
 
 export function ensureJSON(json) {

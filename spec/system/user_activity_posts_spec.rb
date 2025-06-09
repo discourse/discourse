@@ -6,12 +6,12 @@ describe "User activity posts", type: :system do
 
   fab!(:topic1) do
     Fabricate(:topic, title: "Title with &amp; characters and emoji :wave:").tap do |t|
-      Fabricate.times(2, :post, topic: t, user: user).each { |p| UserActionManager.post_created(p) }
+      Fabricate.times(2, :post, topic: t, user:).each { |p| UserActionManager.post_created(p) }
     end
   end
   fab!(:topic2) do
     Fabricate(:topic).tap do |t|
-      Fabricate.times(2, :post, topic: t, user: user).each { |p| UserActionManager.post_created(p) }
+      Fabricate.times(2, :post, topic: t, user:).each { |p| UserActionManager.post_created(p) }
     end
   end
 
@@ -20,7 +20,7 @@ describe "User activity posts", type: :system do
 
     expect(page).to have_css(".stream-topic-title .title", count: 2)
 
-    title_element = find(".stream-topic-title .title a[href*='/#{topic1.id}']")
+    title_element = find(".stream-topic-title .title a[href*='/#{topic1.id}/']")
     expect(title_element).to have_text("Title with &amp; characters and emoji")
     expect(title_element).to have_css("img.emoji[title='wave']")
   end

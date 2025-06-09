@@ -10,6 +10,7 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import ReviewableItem from "discourse/components/reviewable-item";
 import icon from "discourse/helpers/d-icon";
 import htmlSafe from "discourse/helpers/html-safe";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
 import CategoryChooser from "select-kit/components/category-chooser";
 import ComboBox from "select-kit/components/combo-box";
@@ -63,10 +64,7 @@ export default RouteTemplate(
     <div class="reviewable-container">
       <div class="reviewable-list">
         {{#if @controller.reviewables}}
-          <LoadMore
-            @selector=".reviewable-item"
-            @action={{@controller.loadMore}}
-          >
+          <LoadMore @action={{@controller.loadMore}}>
             <div class="reviewables">
               {{#each @controller.reviewables as |r|}}
                 <ReviewableItem
@@ -104,7 +102,7 @@ export default RouteTemplate(
             <PluginOutlet
               @name="above-review-filters"
               @connectorTagName="div"
-              @outletArgs={{hash
+              @outletArgs={{lazyHash
                 model=@controller.model
                 additionalFilters=@controller.additionalFilters
               }}

@@ -2,7 +2,7 @@
 
 class FormTemplateYamlValidator < ActiveModel::Validator
   RESERVED_KEYWORDS = %w[title body category category_id tags]
-  ALLOWED_TYPES = %w[checkbox dropdown input multi-select textarea upload]
+  ALLOWED_TYPES = %w[checkbox dropdown input multi-select textarea upload tag-chooser]
   HTML_SANITIZATION_OPTIONS = {
     elements: ["a"],
     attributes: {

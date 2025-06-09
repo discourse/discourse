@@ -477,7 +477,7 @@ hy:
       one: "Տեսնել %{count} նոր թեման"
       other: "Դիտել %{count} նոր թեմաները"
     preview: "նախադիտում"
-    cancel: "չեղարկել"
+    cancel: "Չեղարկել"
     deleting: "Ջնջվում է…"
     save: "Պահպանել Փոփոխությունները"
     saving: "Պահպանվում է…"
@@ -1138,7 +1138,6 @@ hy:
       said: "%{username} ՝"
       profile: "Պրոֆիլ"
       profile_possessive: "%{username}-ի պրոֆիլը"
-      account_possessive: "%{name}-ի հաշիվը"
       mute: "Խլացնել"
       edit: "Խմբագրել Նախընտրությունները"
       download_archive:
@@ -1910,7 +1909,6 @@ hy:
         title: "Գրանցման IP Հասցեն"
       avatar:
         title: "Պրոֆիլի Նկար"
-        header_title: "պրոֆիլ, հաղորդագրություններ, էջանշաններ և նախընտրություններ"
       title:
         title: "Վերնագիր"
         none: "(ոչ մի)"
@@ -1971,6 +1969,8 @@ hy:
     modal:
       close: "փակել"
       dismiss_error: "Չեղարկել սխալը"
+    multi_select:
+      search: "Որոնել…"
     form_kit:
       reset: Զրոյացնել
       optional: ընտրովի
@@ -2123,10 +2123,6 @@ hy:
         name: "Google"
         title: "Մուտք Google-ով"
         sr_title: "Մուտք Google-ով"
-      twitter:
-        name: "Twitter"
-        title: "Մուտք Twitter-ով"
-        sr_title: "Մուտք Twitter-ով"
       instagram:
         name: "Instagram"
       facebook:
@@ -3005,6 +3001,11 @@ hy:
       sr_post_like_count_button:
         one: "%{count} անձ հավանել է այս հրապարակումը."
         other: "%{count} մարդ հավանել է այս գրառումը."
+      localizations:
+        table:
+          actions: "Գործողություններ"
+          edit: "Խմբագրել"
+          delete: "Ջնջել"
       errors:
         create: "Ներողություն, Ձեր գրառումը ստեղծելիս տեղի է ունեցել սխալ: Խնդրում ենք կրկին փորձել:"
         edit: "Ներողություն, Ձեր գրառումը խմբագրելիս տեղի է ունեցել սխալ: Խնդրում ենք կրկին փորձել:"
@@ -3152,6 +3153,10 @@ hy:
       general: "Ընդհանուր"
       settings: "Կարգավորումներ"
       tags: "Պիտակներ"
+      localization:
+        name: "Անուն"
+        description: "Նկարագրությունը"
+        remove: "Հեռացնել"
       tags_allowed_tags: "Սահմանափակել այս պիտակները՝ այս կատեգորիայում."
       tags_allowed_tag_groups: "Սահմանափակել այս պիտակների խմբերը այս կատեգորիայում."
       tags_placeholder: "(Ընտրովի) թույլատրված պիտակների ցանկը"
@@ -3785,6 +3790,7 @@ hy:
               content: "Վերանայում"
             invite:
               content: "Հրավիրել"
+      search: "Որոնում"
       footer:
         interface_color_selector:
           light: "Բաց"
@@ -3809,6 +3815,11 @@ hy:
       spreadsheet:
         show: "Ցուցադրել"
         about: "Մասին"
+    discovery:
+      headings:
+        multi_tag:
+          default: "%{tags} թեգով թեմաներ "
+        categories: "Բոլոր կատեգորիաները"
   admin_js:
     settings: "Կարգավորումներ"
     admin:
@@ -3849,20 +3860,19 @@ hy:
           title: "Ֆայլեր"
         legal:
           title: "Օրինական"
-        branding:
-          title: "Բրենդինգ"
-          logo:
-            form:
-              mobile: "Հեռախոսային"
-              email: "Էլ. փոստ"
+        logo:
+          form:
+            mobile: "Հեռախոսային"
+            email: "Էլ. փոստ"
+        fonts:
+          backfill_modal:
+            modal_yes: "Այո"
         navigation:
           title: "Նավիգացիա"
         notifications:
           title: "Ծանուցումներ"
         onebox:
           title: "Onebox"
-        other:
-          title: "Այլ"
         search_everything:
           title: "Որոնում"
         security:
@@ -3898,6 +3908,8 @@ hy:
           sub_pages:
             templates:
               title: "Ձևանմուշներ"
+        email_logs:
+          sub_pages:
             sent:
               title: "Ուղարկված"
             skipped:
@@ -4218,6 +4230,8 @@ hy:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
           company_name: "Անուն"
+          extra_groups:
+            groups: "Խմբեր"
           optional: "(ընտրովի)"
           saved: "պահված է!"
         flags:
@@ -4251,6 +4265,18 @@ hy:
             title: "Թեմաներ"
           components:
             title: "Բաղադրիչներ"
+            install: "Տեղադրել"
+            name: "Անուն"
+            enabled: "Միացվա՞ծ է:"
+            by_author: "%{name}-Ի կողմԻց"
+            learn_more: "Իմանալ ավելին"
+            edit: "Խմբագրել"
+            preview: "Նախադիտում"
+            export: "Արտահանել"
+            convert: "Փոխակերպել"
+            delete: "Ջնջել"
+            filter_by_all: "Բոլորը"
+            delete_confirm: 'Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել <<%{name}>> :'
         user_fields:
           type: "Տիպը"
           more_options:
@@ -4258,6 +4284,7 @@ hy:
           delete: "Ջնջել"
         color_palettes:
           palette_name: "Անուն"
+          delete: "Ջնջել"
           colors:
             title: "Գույներ"
       plugins:
@@ -4388,6 +4415,7 @@ hy:
           extra_files_upload: "Արտահանեք թեման՝ այս ֆայլերը դիտելու համար:"
           extra_files_remote: "Արտահանեք թեման կամ բացեք համապատասխան git պահոցը՝ այս ֆայլերը դիտելու համար:"
           preview: "Նախադիտում"
+          default: "Ակտիվ"
           is_default: "Թեման լռելյայն միացված է"
           user_selectable: "Թեման կարող է ընտրվել օգտատերերի կողմից"
           color_scheme: "Գունապնակ"
@@ -4457,8 +4485,6 @@ hy:
             error: "Այս թեման ավտոմատ կերպով անջատվել է, քանի որ այն համատեղելի չէ Discourse-ի այս տարբերակի հետ:"
             minimum: "Պահանջում է Discourse-ի %{version} կամ ավելի բարձր տարբերակ:"
             maximum: "Պահանջում է Discourse-ի %{version} կամ ավելի ցածր տարբերակ:"
-          update_to_latest: "Թարմացնել Վերջինով"
-          check_for_updates: "Ստուգել Թարմացումները"
           up_to_date: "Թեման ամենաթարմ տարբերակում է, վերջին անգամ ստուգվել է՝ "
           add: "Ավելացնել"
           theme_settings: "Թեմայի Կարգավորումները"
@@ -4482,12 +4508,16 @@ hy:
           all_filter: "Բոլորը"
           active_filter: "Ակտիվ"
           inactive_filter: "Ոչ ակտիվ"
-          schema:
-            fields:
-              required: "*պարտադիր"
-              number:
-                too_small: "պետք է լինի մեծ կամ հավասար %{count} -ի"
-                too_large: "Պետք է լինի փոքր կամ հավասար %{count} -ի"
+        schema:
+          fields:
+            required: "*պարտադիր"
+            string:
+              too_short:
+                one: "պետք է լինի առնվազն %{count} նիշ"
+                other: "պետք է լինի առնվազն %{count} սիմվոլ"
+            number:
+              too_small: "պետք է լինի մեծ կամ հավասար %{count} -ի"
+              too_large: "Պետք է լինի փոքր կամ հավասար %{count} -ի"
         colors:
           select_base:
             title: "Ընտրել հիմնական գունապնակը"
@@ -4495,40 +4525,30 @@ hy:
           title: "Գույներ"
           about: "Փոփոխեք Ձեր թեմաների կողմից օգտագործված գույները: Ստեղծեք նոր գունապնակ՝ մեկնարկի համար:"
           copy_name_prefix: "Կրկնօրինակ՝ "
-          delete_confirm: "Ջնջե՞լ այս գունապնակը:"
           undo: "Ետարկել"
           undo_title: "Ետարկել այս գույնի Ձեր փոփոխությունները՝ սկսած դրա վերջին պահպանման պահից:"
           revert: "Հետադարձել"
           revert_title: "Վերահաստատել այս գույնը Discourse-ի լռելյայն գունապնակում:"
           primary:
             name: "հիմնական"
-            description: "Հիմնականում տեքստ, պատկերակներ, և սահմաններ:"
           secondary:
             name: "երկրորդական"
-            description: "Հիմնական ֆոնի գույն, և որոշ կոճակների տեքստի գույն:"
           tertiary:
             name: "երրորդային"
-            description: "Հղումներ, որոշ կոճակներ, ծանուցումներ և շեշտային գույն:"
           quaternary:
             name: "չորրորդային"
           header_background:
             name: "վերնամասի ֆոն"
-            description: "Կայքի վերնամասի ֆոնի գույնը:"
           header_primary:
             name: "առաջնային վերնամաս"
-            description: "Վերնամասի տեքստ և պատկերակներ"
           highlight:
             name: "ընդգծում"
-            description: "Էջի վրա ընդգծված տարրերի, օրինակ՝ գրառումների և թեմաների ֆոնի գույնը:"
           danger:
             name: "վտանգ"
-            description: "Ընդգծման գույնը այնպիսի գործողությունների համար, ինչպիսիք են՝ գրառումների կամ թեմաների ջնջելը"
           success:
             name: "հաջողություն"
-            description: "Օգտագործվում է նշելու համար, որ գործողությունը հաջող էր:"
           love:
             name: "սեր"
-            description: "Հավանման կոճակի գույնը:"
           selected:
             name: "ընտրված"
           editor:

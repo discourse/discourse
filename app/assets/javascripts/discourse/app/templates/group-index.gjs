@@ -1,5 +1,5 @@
 import { Input } from "@ember/component";
-import { fn, hash } from "@ember/helper";
+import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import RouteTemplate from "ember-route-template";
 import { or } from "truth-helpers";
@@ -13,9 +13,10 @@ import ResponsiveTable from "discourse/components/responsive-table";
 import TableHeaderToggle from "discourse/components/table-header-toggle";
 import TextField from "discourse/components/text-field";
 import UserInfo from "discourse/components/user-info";
-import boundDate from "discourse/helpers/bound-date";
+import ageWithTooltip from "discourse/helpers/age-with-tooltip";
 import icon from "discourse/helpers/d-icon";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
+import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
 import { i18n } from "discourse-i18n";
 
@@ -97,14 +98,11 @@ export default RouteTemplate(
       </div>
 
       {{#if @controller.hasMembers}}
-        <LoadMore
-          @selector=".directory-table .directory-table__cell"
-          @action={{@controller.loadMore}}
-        >
+        <LoadMore @action={{@controller.loadMore}}>
           <ResponsiveTable
             @className="group-members
           {{if @controller.isBulk 'sticky-header' ''}}
-          {{if @controller.canManageGroup 'group-members--can-manage' ''}}"
+            {{if @controller.canManageGroup 'group-members--can-manage' ''}}"
           >
             <:header>
               <TableHeaderToggle
@@ -126,7 +124,7 @@ export default RouteTemplate(
 
               <PluginOutlet
                 @name="group-index-table-header-after-username"
-                @outletArgs={{hash
+                @outletArgs={{lazyHash
                   group=@controller.model
                   asc=@controller.asc
                   order=@controller.order
@@ -216,7 +214,7 @@ export default RouteTemplate(
 
                   <PluginOutlet
                     @name="group-index-table-row-after-username"
-                    @outletArgs={{hash member=m}}
+                    @outletArgs={{lazyHash member=m}}
                   />
 
                   <div
@@ -226,7 +224,7 @@ export default RouteTemplate(
                       <span>{{i18n "groups.member_added"}}</span>
                     </span>
                     <span class="directory-table__value">
-                      {{boundDate m.added_at}}
+                      {{ageWithTooltip m.added_at format="medium"}}
                     </span>
                   </div>
                   <div
@@ -242,7 +240,7 @@ export default RouteTemplate(
                       </span>
                     {{/if}}
                     <span class="directory-table__value">
-                      {{boundDate m.last_posted_at}}
+                      {{ageWithTooltip m.last_posted_at format="medium"}}
                     </span>
                   </div>
                   <div
@@ -258,7 +256,7 @@ export default RouteTemplate(
                       </span>
                     {{/if}}
                     <span class="directory-table__value">
-                      {{boundDate m.last_seen_at}}
+                      {{ageWithTooltip m.last_seen_at format="medium"}}
                     </span>
                   </div>
                   {{#if @controller.canManageGroup}}

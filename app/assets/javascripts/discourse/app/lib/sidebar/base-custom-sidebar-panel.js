@@ -50,18 +50,15 @@ export default class BaseCustomSidebarPanel {
     return false;
   }
 
-  /**
-   * @returns {boolean} Controls whether the filter is shown
-   */
-  get filterable() {
-    return false;
-  }
-
   get expandActiveSection() {
     return false;
   }
 
-  get scrollActiveLinkIntoView() {
+  /**
+   * @returns {boolean} Controls whether the filter is shown.
+   * Filter allows to remove sidebar links which does not match the filter phrase.
+   */
+  get filterable() {
     return false;
   }
 
@@ -74,6 +71,25 @@ export default class BaseCustomSidebarPanel {
   // eslint-disable-next-line no-unused-vars
   filterNoResultsDescription(filter) {
     return null;
+  }
+
+  /**
+   * @returns {boolean} Controls whether the search is shown.
+   * Displays modal on click allowing searching for admin pages, site settings, themes, components and reports.
+   */
+  get searchable() {
+    return false;
+  }
+
+  /**
+   * @returns {Function} Action when search input is clicked.
+   */
+  onSearchClick() {
+    return null;
+  }
+
+  get scrollActiveLinkIntoView() {
+    return false;
   }
 
   #notImplemented() {

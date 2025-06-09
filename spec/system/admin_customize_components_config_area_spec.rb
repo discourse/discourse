@@ -57,7 +57,10 @@ describe "Admin Customize Themes Config Area Page", type: :system do
         component: true,
         enabled: false,
         remote_theme:
-          RemoteTheme.create!(remote_url: "https://github.com/discourse/tc-2", commits_behind: 4),
+          RemoteTheme.create!(
+            remote_url: "https://github.com/discourse/discourse-kanban-theme.git",
+            commits_behind: 4,
+          ),
       )
     end
 
@@ -79,24 +82,20 @@ describe "Admin Customize Themes Config Area Page", type: :system do
 
     it "can filter components by status" do
       config_area.visit
+      config_area.status_selector.select("used")
 
-      config_area.status_selector.select("active")
-      expect(config_area).to be_loading
-      expect(config_area.components_shown).to contain_exactly(
-        enabled_component.id,
-        remote_component.id,
-      )
+      expect(config_area).to have_exact_components(enabled_component.id, remote_component.id)
 
-      config_area.status_selector.select("inactive")
-      expect(config_area).to be_loading
-      expect(config_area.components_shown).to contain_exactly(
+      config_area.status_selector.select("unused")
+
+      expect(config_area).to have_exact_components(
         disabled_component.id,
         remote_component_with_update.id,
       )
 
       config_area.status_selector.select("updates_available")
-      expect(config_area).to be_loading
-      expect(config_area.components_shown).to contain_exactly(remote_component_with_update.id)
+
+      expect(config_area).to have_exact_components(remote_component_with_update.id)
     end
 
     it "can filter components by name" do
@@ -104,11 +103,7 @@ describe "Admin Customize Themes Config Area Page", type: :system do
 
       config_area.name_filter_input.fill_in(with: "glo")
 
-      expect(config_area).to be_loading
-      expect(config_area.components_shown).to contain_exactly(
-        enabled_component.id,
-        disabled_component.id,
-      )
+      expect(config_area).to have_exact_components(enabled_component.id, disabled_component.id)
     end
 
     it "keeps the filters shown when there are no components matching the filters" do
@@ -140,6 +135,9 @@ describe "Admin Customize Themes Config Area Page", type: :system do
       expect(config_area.component(remote_component.id)).to have_author("CDCK Inc.")
       expect(config_area.component(remote_component.id)).to have_description(
         "Description of my remote component",
+      )
+      expect(config_area.component(remote_component_with_update.id)).to have_description(
+        "Display and organize topics using a Kanban board interface.",
       )
       expect(config_area.component(remote_component.id)).to be_not_pending_update
 
@@ -219,7 +217,7 @@ describe "Admin Customize Themes Config Area Page", type: :system do
       config_area.component(disabled_component.id).more_actions_menu.expand
       config_area.component(disabled_component.id).delete_button.click
 
-      dialog.click_yes
+      dialog.click_danger
 
       expect(toasts).to have_success(
         I18n.t(
@@ -321,6 +319,24 @@ describe "Admin Customize Themes Config Area Page", type: :system do
           config_area.component(remote_component_with_update.id),
         ).to have_check_for_updates_button
         expect(config_area.component(remote_component_with_update.id)).to be_not_pending_update
+      end
+    end
+
+    it "loads more components when scrolling to the bottom" do
+      Fabricate.times(4, :theme, component: true)
+
+      stub_const(Admin::Config::CustomizeController, "PAGE_SIZE", 4) do
+        resize_window(height: 800) do
+          config_area.visit
+
+          expect(config_area).to have_exactly_n_components(4)
+
+          page.execute_script("window.scrollTo(0, document.body.scrollHeight)")
+
+          expect(config_area).to have_component(enabled_component.id)
+
+          expect(config_area).to have_exactly_n_components(8)
+        end
       end
     end
   end

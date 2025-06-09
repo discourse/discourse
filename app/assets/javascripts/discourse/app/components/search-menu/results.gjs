@@ -1,16 +1,14 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { hash } from "@ember/helper";
-import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { and, not } from "truth-helpers";
 import ConditionalLoadingSection from "discourse/components/conditional-loading-section";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import BrowserSearchTip from "discourse/components/search-menu/browser-search-tip";
 import Assistant from "discourse/components/search-menu/results/assistant";
 import InitialOptions from "discourse/components/search-menu/results/initial-options";
 import MoreLink from "discourse/components/search-menu/results/more-link";
 import Types from "discourse/components/search-menu/results/types";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
 import CategoryViewComponent from "./results/type/category";
 import GroupViewComponent from "./results/type/group";
@@ -60,20 +58,17 @@ export default class Results extends Component {
     return this.search.results.grouped_search_result?.search_log_id;
   }
 
-  @action
-  updateSearchTopics(value) {
-    this.searchTopics = value;
+  get inTopicContext() {
+    return this.search.inTopicContext && !this.args.searchTopics;
   }
 
   <template>
-    {{#if (and this.search.inTopicContext (not @searchTopics))}}
-      <BrowserSearchTip />
-    {{else}}
+    {{#unless this.inTopicContext}}
       <ConditionalLoadingSection @isLoading={{this.loading}}>
         <div class="results">
           <PluginOutlet
             @name="search-menu-results-top"
-            @outletArgs={{hash
+            @outletArgs={{lazyHash
               closeSearchMenu=@closeSearchMenu
               searchTerm=this.search.activeGlobalSearchTerm
               inTopicContext=this.search.inTopicContext
@@ -139,12 +134,12 @@ export default class Results extends Component {
             {{/if}}
             <PluginOutlet
               @name="search-menu-with-results-bottom"
-              @outletArgs={{hash resultTypes=this.resultTypesWithComponent}}
+              @outletArgs={{lazyHash resultTypes=this.resultTypesWithComponent}}
             />
           {{/if}}
           <PluginOutlet
             @name="search-menu-results-bottom"
-            @outletArgs={{hash
+            @outletArgs={{lazyHash
               inTopicContext=this.search.inTopicContext
               searchTermChanged=@searchTermChanged
               searchTopics=@searchTopics
@@ -153,6 +148,6 @@ export default class Results extends Component {
           />
         </div>
       </ConditionalLoadingSection>
-    {{/if}}
+    {{/unless}}
   </template>
 }

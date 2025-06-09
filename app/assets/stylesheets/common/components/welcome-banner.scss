@@ -1,3 +1,4 @@
+@use "lib/viewport";
 @import "common/foundation/mixins";
 
 .display-welcome-banner {
@@ -13,26 +14,22 @@
 }
 
 .welcome-banner {
-  position: relative;
-  z-index: 1;
-  margin-bottom: 1em;
   border-radius: var(--d-border-radius-large);
-
-  &__search-menu {
-    .menu-panel-results .menu-panel.search-menu-panel {
-      position: unset;
-      padding: 0;
-    }
-  }
 
   &__wrap {
     box-sizing: border-box;
     position: relative;
     padding: 1.5em 0 3em;
 
-    @include breakpoint(tablet) {
+    @include viewport.until(md) {
       padding: 1em 8px 1.25em;
       margin-top: 0.5em;
+    }
+
+    @include viewport.until(sm) {
+      display: block;
+      padding: 0.5em;
+      margin-top: 0;
     }
 
     > div {
@@ -44,18 +41,18 @@
       display: flex;
       position: relative;
 
+      @include viewport.until(sm) {
+        display: none;
+      }
+
       .search-menu-container {
         width: 100%;
         min-width: 0;
       }
     }
 
-    .d-icon-search {
+    .d-icon-magnifying-glass {
       margin: 0;
-    }
-
-    .browser-search-tip {
-      display: none;
     }
 
     .search-input {
@@ -65,16 +62,22 @@
       }
     }
 
-    h1 {
+    .welcome-banner__title {
       font-size: var(--font-up-6);
       line-height: $line-height-medium;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
 
-      @include breakpoint(tablet) {
+      @include viewport.until(md) {
         font-size: var(--font-up-4);
+      }
+
+      @include viewport.until(sm) {
+        font-size: var(--font-up-1);
       }
     }
 
-    h1,
+    .welcome-banner__title,
     p {
       text-align: center;
     }
@@ -86,7 +89,9 @@
       color: var(--primary-medium);
       height: 100%;
       position: absolute;
-      left: 0;
+      left: calc(
+        1rem - 0.65em
+      ); // to align with result panel, minus padding of search icon btn
 
       .rtl & {
         right: 0;
@@ -105,11 +110,11 @@
       }
 
       + .search-menu-container .search-input {
-        padding-left: 1.75em;
+        padding-left: 2em;
 
         .rtl & {
           padding-left: unset;
-          padding-right: 1.75em;
+          padding-right: 2em;
         }
       }
 
@@ -118,21 +123,23 @@
       }
     }
 
-    .results {
+    .search-menu-container .results {
+      @include float-down;
       box-sizing: border-box;
+      border-radius: var(--d-border-radius);
       background: var(--secondary);
-      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
-      position: absolute;
       z-index: 9;
-      margin-left: auto;
-      margin-right: auto;
       left: 0;
-      top: 2.75em;
+      top: 100%;
       right: 0;
-      padding: 0.5em;
+      padding-top: 0;
 
-      @include breakpoint(mobile-extra-large) {
+      @include viewport.until(sm) {
         width: 100%;
+      }
+
+      .search-random-quick-tip {
+        padding-top: 0.75rem;
       }
 
       ul,
@@ -141,7 +148,7 @@
         margin: 0;
       }
 
-      .d-icon-search {
+      .search-icon-wrapper {
         display: none;
       }
     }
@@ -153,6 +160,11 @@
     span.keyword {
       color: var(--primary);
     }
+  }
+
+  .search-menu-panel {
+    // hacky but best guestimate we can do: full height of the viewport minus the header, minus the welcome banner spacing,  minus font-size:6 title
+    max-height: calc(100vh - var(--header-offset) - -3em - 4em);
   }
 }
 

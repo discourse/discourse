@@ -72,12 +72,12 @@ class CurrentUserSerializer < BasicUserSerializer
              :sidebar_category_ids,
              :sidebar_sections,
              :new_new_view_enabled?,
-             :use_experimental_admin_search,
              :can_view_raw_email,
              :login_method,
              :has_unseen_features,
              :can_see_emails,
-             :use_glimmer_post_stream_mode_auto_mode
+             :use_glimmer_post_stream_mode_auto_mode,
+             :can_localize_content?
 
   delegate :user_stat, to: :object, private: true
   delegate :any_posts, :draft_count, :pending_posts_count, :read_faq?, to: :user_stat
@@ -132,10 +132,6 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def can_send_private_messages
     scope.can_send_private_messages?
-  end
-
-  def use_experimental_admin_search
-    object.staff? && object.in_any_groups?(SiteSetting.experimental_admin_search_enabled_groups_map)
   end
 
   def has_unseen_features
@@ -328,5 +324,13 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def include_use_glimmer_post_stream_mode_auto_mode?
     scope.user.in_any_groups?(SiteSetting.glimmer_post_stream_mode_auto_groups_map)
+  end
+
+  def can_localize_content?
+    scope.can_localize_content?
+  end
+
+  def include_can_localize_content?
+    SiteSetting.experimental_content_localization
   end
 end

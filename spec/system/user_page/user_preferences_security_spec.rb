@@ -20,34 +20,44 @@ describe "User preferences | Security", type: :system do
 
   shared_examples "security keys" do
     it "adds a 2FA security key and logs in with it" do
-      options = ::Selenium::WebDriver::VirtualAuthenticatorOptions.new
-      authenticator = page.driver.browser.add_virtual_authenticator(options)
+      with_virtual_authenticator do
+        confirm_session_modal =
+          user_preferences_security_page
+            .visit(user)
+            .click_manage_2fa_authentication
+            .click_forgot_password
 
-      user_preferences_security_page.visit(user)
-      user_preferences_security_page.visit_second_factor(user, password)
+        expect(confirm_session_modal).to have_forgot_password_email_sent
 
-      find(".security-key .new-security-key").click
-      expect(user_preferences_security_page).to have_css("input#security-key-name")
+        confirm_session_modal.submit_password(password)
 
-      find(".d-modal__body input#security-key-name").fill_in(with: "First Key")
-      find(".add-security-key").click
+        expect(page).to have_current_path("/u/#{user.username}/preferences/second-factor")
 
-      expect(user_preferences_security_page).to have_css(".security-key .second-factor-item")
+        find(".security-key .new-security-key").click
+        expect(user_preferences_security_page).to have_css("input#security-key-name")
 
-      user_menu.sign_out
+        find(".d-modal__body input#security-key-name").fill_in(with: "First Key")
+        find(".add-security-key").click
 
-      # login flow
-      find(".d-header .login-button").click
-      find("input#login-account-name").fill_in(with: user.username)
-      find("input#login-account-password").fill_in(with: password)
+        expect(user_preferences_security_page).to have_css(".security-key .second-factor-item")
 
-      find("#login-button.btn-primary").click
-      find("#security-key .btn-primary").click
+        user_menu.sign_out
 
-      expect(page).to have_css(".header-dropdown-toggle.current-user")
-    ensure
-      # clear authenticator (otherwise it will interfere with other tests)
-      authenticator&.remove!
+        # puts <<~STRING
+        # public_key_base64 = \"#{user.second_factor_security_keys.first.public_key}\"
+        # private_key_string = \"#{authenticator.credentials.first.private_key}\"
+        # STRING
+
+        # login flow
+        find(".d-header .login-button").click
+        find("input#login-account-name").fill_in(with: user.username)
+        find("input#login-account-password").fill_in(with: password)
+
+        find("#login-button.btn-primary").click
+        find("#security-key .btn-primary").click
+
+        expect(page).to have_css(".header-dropdown-toggle.current-user")
+      end
     end
   end
 
@@ -55,65 +65,55 @@ describe "User preferences | Security", type: :system do
     before { SiteSetting.enable_passkeys = true }
 
     it "adds a passkey, removes user password, logs in with passkey" do
-      options =
-        ::Selenium::WebDriver::VirtualAuthenticatorOptions.new(
-          user_verification: true,
-          user_verified: true,
-          resident_key: true,
-        )
-      authenticator = page.driver.browser.add_virtual_authenticator(options)
+      with_virtual_authenticator(
+        hasUserVerification: true,
+        hasResidentKey: true,
+        isUserVerified: true,
+      ) do
+        add_cookie(name: "destination_url", value: "/new")
 
-      page.driver.browser.manage.add_cookie(
-        domain: Discourse.current_hostname,
-        name: "destination_url",
-        value: "/new",
-        path: "/",
-      )
+        user_preferences_security_page.visit(user)
 
-      user_preferences_security_page.visit(user)
+        find(".pref-passkeys__add .btn").click
+        expect(user_preferences_security_page).to have_css("input#password")
 
-      find(".pref-passkeys__add .btn").click
-      expect(user_preferences_security_page).to have_css("input#password")
+        find(".dialog-body input#password").fill_in(with: password)
+        find(".confirm-session .btn-primary").click
 
-      find(".dialog-body input#password").fill_in(with: password)
-      find(".confirm-session .btn-primary").click
+        expect(user_preferences_security_page).to have_css(".rename-passkey__form")
 
-      expect(user_preferences_security_page).to have_css(".rename-passkey__form")
+        find(".dialog-close").click
 
-      find(".dialog-close").click
+        expect(user_preferences_security_page).to have_css(".pref-passkeys__rows .row")
 
-      expect(user_preferences_security_page).to have_css(".pref-passkeys__rows .row")
+        select_kit = PageObjects::Components::SelectKit.new(".passkey-options-dropdown")
+        select_kit.expand
+        select_kit.select_row_by_name("Delete")
 
-      select_kit = PageObjects::Components::SelectKit.new(".passkey-options-dropdown")
-      select_kit.expand
-      select_kit.select_row_by_name("Delete")
+        # confirm deletion screen shown without requiring session confirmation
+        # since this was already done when adding the passkey
+        expect(user_preferences_security_page).to have_css(".dialog-footer .btn-danger")
 
-      # confirm deletion screen shown without requiring session confirmation
-      # since this was already done when adding the passkey
-      expect(user_preferences_security_page).to have_css(".dialog-footer .btn-danger")
+        # close the dialog (don't delete the key, we need it to login in the next step)
+        find(".dialog-close").click
 
-      # close the dialog (don't delete the key, we need it to login in the next step)
-      find(".dialog-close").click
+        find("#remove-password-link").click
+        # already confirmed session for the passkey, so this will go straight for the confirmation dialog
+        find(".dialog-footer .btn-danger").click
+        expect(user_preferences_security_page).to have_no_css("#remove-password-link")
 
-      find("#remove-password-button").click
-      # already confirmed session for the passkey, so this will go straight for the confirmation dialog
-      find(".dialog-footer .btn-danger").click
-      expect(user_preferences_security_page).to have_no_css("#remove-password-button")
+        user_menu.sign_out
 
-      user_menu.sign_out
+        # login with the key we just created
+        # this triggers the conditional UI for passkeys
+        # which uses the virtual authenticator
+        find(".d-header .login-button").click
 
-      # login with the key we just created
-      # this triggers the conditional UI for passkeys
-      # which uses the virtual authenticator
-      find(".d-header .login-button").click
+        expect(page).to have_css(".header-dropdown-toggle.current-user")
 
-      expect(page).to have_css(".header-dropdown-toggle.current-user")
-
-      # ensures that we are redirected to the destination_url cookie
-      expect(page.driver.current_url).to include("/new")
-    ensure
-      # clear authenticator (otherwise it will interfere with other tests)
-      authenticator&.remove!
+        # ensures that we are redirected to the destination_url cookie
+        expect(page.driver.current_url).to include("/new")
+      end
     end
   end
 

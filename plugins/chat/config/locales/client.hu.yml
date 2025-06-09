@@ -590,6 +590,11 @@ hu:
       draft_channel_screen:
         header: "Új üzenet"
         cancel: "Visszavon"
+      quick_reaction_type:
+        title: "Csevegési reakciók egy kattintással"
+        options:
+          frequent: "Leggyakrabban használt chatreakciók"
+          custom: "Egyéni reakciók"
     notifications:
       chat_invitation: "meghívta Önt, hogy csatlakozzon egy csevegőcsatornához"
       chat_invitation_html: "<span>%{username}</span> <span>meghvta Önt, hogy csatlakozzon egy csevegőcsatornához</span>"

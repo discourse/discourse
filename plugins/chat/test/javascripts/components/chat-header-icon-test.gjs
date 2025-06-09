@@ -1,6 +1,7 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
+import { forceMobile } from "discourse/lib/mobile";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
 import Icon from "discourse/plugins/chat/discourse/components/chat/header/icon";
@@ -42,7 +43,7 @@ module("Discourse Chat | Component | chat-header-icon", function (hooks) {
   });
 
   test("mobile", async function (assert) {
-    this.site.mobileView = true;
+    forceMobile();
 
     await render(<template><Icon /></template>);
 

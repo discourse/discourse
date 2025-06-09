@@ -6,7 +6,6 @@ const extension = {
       attrs: { open: { default: true } },
       content: "summary block+",
       group: "block",
-      draggable: true,
       selectable: true,
       defining: true,
       isolating: true,
@@ -69,15 +68,18 @@ const extension = {
   plugins: {
     props: {
       handleClickOn(view, pos, node, nodePos) {
-        if (node.type.name === "summary") {
-          const details = view.state.doc.nodeAt(nodePos - 1);
-          view.dispatch(
-            view.state.tr.setNodeMarkup(nodePos - 1, null, {
-              open: !details.attrs.open,
-            })
-          );
-          return true;
+        // if the click position in the document is not the first within the summary node
+        if (pos > nodePos + 1 || node.type.name !== "summary") {
+          return false;
         }
+
+        const details = view.state.doc.nodeAt(nodePos - 1);
+        view.dispatch(
+          view.state.tr.setNodeMarkup(nodePos - 1, null, {
+            open: !details.attrs.open,
+          })
+        );
+        return true;
       },
     },
   },

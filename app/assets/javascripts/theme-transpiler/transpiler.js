@@ -1,38 +1,17 @@
 // This is executed in mini_racer to provide the JS logic for lib/discourse_js_processor.rb
 
-/* global rails */
-
-const CONSOLE_PREFIX = "[DiscourseJsProcessor] ";
-globalThis.window = {};
-globalThis.console = {
-  log(...args) {
-    rails.logger.info(CONSOLE_PREFIX + args.join(" "));
-  },
-  warn(...args) {
-    rails.logger.warn(CONSOLE_PREFIX + args.join(" "));
-  },
-  error(...args) {
-    rails.logger.error(CONSOLE_PREFIX + args.join(" "));
-  },
-};
-
+import "./shims";
+import "./postcss";
 import { transform as babelTransform } from "@babel/standalone";
 import HTMLBarsInlinePrecompile from "babel-plugin-ember-template-compilation";
-import { Preprocessor } from "content-tag";
 import DecoratorTransforms from "decorator-transforms";
 import colocatedBabelPlugin from "ember-cli-htmlbars/lib/colocated-babel-plugin";
 import { precompile } from "ember-source/dist/ember-template-compiler";
 import EmberThisFallback from "ember-this-fallback";
-import Handlebars from "handlebars";
-// A sub-dependency of content-tag (getrandom) needs `getRandomValues`
-// so we polyfill it
-import getRandomValues from "polyfill-crypto.getrandomvalues";
 import { minify as terserMinify } from "terser";
-import RawHandlebars from "discourse/lib/raw-handlebars";
 import { WidgetHbsCompiler } from "discourse-widget-hbs/lib/widget-hbs-compiler";
-globalThis.crypto = { getRandomValues };
-import "./postcss";
 import { browsers } from "../discourse/config/targets";
+import { Preprocessor } from "./content-tag";
 
 const thisFallbackPlugin = EmberThisFallback._buildPlugin({
   enableLogging: false,
@@ -101,31 +80,6 @@ function buildTemplateCompilerBabelPlugins({ extension, themeId }) {
     ],
   ];
 }
-
-function buildThemeRawHbsTemplateManipulatorPlugin(themeId) {
-  return function (ast) {
-    ["SubExpression", "MustacheStatement"].forEach((pass) => {
-      const visitor = new Handlebars.Visitor();
-      visitor.mutating = true;
-      visitor[pass] = (node) => manipulateAstNodeForTheme(node, themeId);
-      visitor.accept(ast);
-    });
-  };
-}
-
-globalThis.compileRawTemplate = function (source, themeId) {
-  try {
-    const plugins = [];
-    if (themeId) {
-      plugins.push(buildThemeRawHbsTemplateManipulatorPlugin(themeId));
-    }
-    return RawHandlebars.precompile(source, false, { plugins }).toString();
-  } catch (error) {
-    // Workaround for https://github.com/rubyjs/mini_racer/issues/262
-    error.message = JSON.stringify(error.message);
-    throw error;
-  }
-};
 
 globalThis.transpile = function (source, options = {}) {
   const { moduleId, filename, extension, skipModule, themeId } = options;

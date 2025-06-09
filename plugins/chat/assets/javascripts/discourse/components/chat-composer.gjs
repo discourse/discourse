@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn, hash } from "@ember/helper";
+import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
@@ -24,12 +24,14 @@ import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
 import InsertHyperlink from "discourse/components/modal/insert-hyperlink";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import concatClass from "discourse/helpers/concat-class";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { SKIP } from "discourse/lib/autocomplete";
 import renderEmojiAutocomplete from "discourse/lib/autocomplete/emoji";
 import userAutocomplete from "discourse/lib/autocomplete/user";
 import { setupHashtagAutocomplete } from "discourse/lib/hashtag-autocomplete";
 import loadEmojiSearchAliases from "discourse/lib/load-emoji-search-aliases";
 import { cloneJSON } from "discourse/lib/object";
+import optionalService from "discourse/lib/optional-service";
 import { emojiUrlFor } from "discourse/lib/text";
 import userSearch from "discourse/lib/user-search";
 import {
@@ -57,7 +59,6 @@ export default class ChatComposer extends Component {
   @service siteSettings;
   @service store;
   @service chat;
-  @service composerPresenceManager;
   @service chatComposerWarningsTracker;
   @service appEvents;
   @service emojiStore;
@@ -66,6 +67,8 @@ export default class ChatComposer extends Component {
   @service chatDraftsManager;
   @service modal;
   @service menu;
+
+  @optionalService composerPresenceManager;
 
   @tracked isFocused = false;
   @tracked inProgressUploadsCount = 0;
@@ -312,7 +315,7 @@ export default class ChatComposer extends Component {
       return;
     }
 
-    this.composerPresenceManager.notifyState(
+    this.composerPresenceManager?.notifyState(
       this.presenceChannelName,
       !this.draft.editing && this.hasContent,
       CHAT_PRESENCE_KEEP_ALIVE
@@ -761,7 +764,7 @@ export default class ChatComposer extends Component {
 
             <PluginOutlet
               @name="chat-composer-inline-buttons"
-              @outletArgs={{hash composer=this channel=@channel}}
+              @outletArgs={{lazyHash composer=this channel=@channel}}
             />
 
             {{#if this.site.desktopView}}

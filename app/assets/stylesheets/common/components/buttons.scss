@@ -22,8 +22,8 @@
   background-color: $bg-color;
   background-image: linear-gradient(
     to bottom,
-    rgba(0, 0, 0, 0),
-    rgba(0, 0, 0, 0)
+    rgb(0, 0, 0, 0),
+    rgb(0, 0, 0, 0)
   );
   border-radius: var(--d-button-border-radius);
   transition: var(--d-button-transition);
@@ -182,6 +182,16 @@
     $icon-color: var(--danger-low),
     $hover-bg-color: var(--danger-hover),
     $hover-icon-color: var(--danger-low)
+  );
+}
+
+.btn-success {
+  @include btn(
+    $text-color: var(--secondary),
+    $bg-color: var(--success),
+    $icon-color: var(--success-low),
+    $hover-bg-color: var(--success-hover),
+    $hover-icon-color: var(--success-low)
   );
 }
 

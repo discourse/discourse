@@ -1,7 +1,7 @@
 # encoding: utf-8
 # frozen_string_literal: true
 
-RSpec.describe Topic do
+describe Topic do
   let(:now) { Time.zone.local(2013, 11, 20, 8, 0) }
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:user1) { Fabricate(:user, refresh_auto_groups: true) }
@@ -1645,12 +1645,10 @@ RSpec.describe Topic do
     end
   end
 
-  describe "banner" do
+  describe "banners" do
     fab!(:topic)
     fab!(:user) { topic.user }
-    let(:banner) { { html: "<p>BANNER</p>", url: topic.url, key: topic.id } }
-
-    before { topic.stubs(:banner).returns(banner) }
+    fab!(:first_post) { Fabricate(:post, topic: topic, user: topic.user, cooked: "<p>BANNER</p>") }
 
     describe "make_banner!" do
       it "changes the topic archetype to 'banner'" do
@@ -1707,6 +1705,22 @@ RSpec.describe Topic do
 
           expect(topic.archetype).to eq(Archetype.default)
         end
+      end
+    end
+
+    describe "#banner" do
+      it "returns the banner hash" do
+        expect(topic.banner).to include(html: "<p>BANNER</p>", key: topic.id, url: topic.url)
+      end
+
+      it "returns a localized banner" do
+        SiteSetting.experimental_content_localization = true
+
+        first_post.update!(locale: "en")
+        I18n.locale = :ja
+        Fabricate(:post_localization, post: first_post, locale: :ja, cooked: "<p>バナー</p>")
+
+        expect(topic.banner(Guardian.new(user))).to include(html: "<p>バナー</p>")
       end
     end
   end
@@ -2604,7 +2618,7 @@ RSpec.describe Topic do
     end
   end
 
-  describe "#secure_category?" do
+  describe "#read_restricted_category?" do
     let(:category) { Category.new }
 
     it "is true if the category is secure" do
@@ -3587,6 +3601,45 @@ RSpec.describe Topic do
       context "when no more than two people have access" do
         it { is_expected.not_to be_a_group_pm }
       end
+    end
+  end
+
+  describe "#has_localization?" do
+    it "returns true if the topic has localization" do
+      topic = Fabricate(:topic)
+      Fabricate(:topic_localization, topic: topic, locale: "zh_CN")
+
+      expect(topic.has_localization?(:zh_CN)).to eq(true)
+      expect(topic.has_localization?(:"zh_CN")).to eq(true)
+      expect(topic.has_localization?("zh-CN")).to eq(true)
+
+      expect(topic.has_localization?("z")).to eq(false)
+    end
+  end
+
+  describe "#get_localization" do
+    it "returns the localization with the specified locale" do
+      I18n.locale = "ja"
+      topic = Fabricate(:topic)
+      zh_localization = Fabricate(:topic_localization, topic: topic, locale: "zh_CN")
+      ja_localization = Fabricate(:topic_localization, topic: topic, locale: "ja")
+
+      expect(topic.get_localization(:zh_CN)).to eq(zh_localization)
+      expect(topic.get_localization("zh-CN")).to eq(zh_localization)
+      expect(topic.get_localization("xx")).to eq(nil)
+      expect(topic.get_localization).to eq(ja_localization)
+    end
+  end
+
+  describe "#in_user_locale?" do
+    it "returns true if the topic has localization in the user's locale" do
+      I18n.locale = "ja"
+      topic = Fabricate(:topic, locale: "ja")
+
+      expect(topic.in_user_locale?).to eq(true)
+
+      topic.update!(locale: "es")
+      expect(topic.in_user_locale?).to eq(false)
     end
   end
 end

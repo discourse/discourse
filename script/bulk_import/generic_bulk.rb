@@ -196,6 +196,19 @@ class BulkImport::Generic < BulkImport::Base
     end
 
     rows.close
+
+    return if ENV["SKIP_MIGRATED_SITE_FLAG_UPDATE"]
+
+    # Bypassing SiteSetting.set_and_log if migrated_site is present and not enabled, enable it
+    # We don't need to have the plugin enabled
+    migrated_site_flag_enabled = DB.exec(<<~SQL) > 0
+      UPDATE site_settings
+         SET value = 't'
+       WHERE name = 'migrated_site'
+         AND value <> 't'
+    SQL
+
+    SiteSetting.refresh! if migrated_site_flag_enabled
   end
 
   def import_categories
@@ -326,7 +339,7 @@ class BulkImport::Generic < BulkImport::Base
     puts "", "Importing category permissions..."
 
     permissions = query(<<~SQL)
-      SELECT c.id AS category_id, 
+      SELECT c.id AS category_id,
             p.value -> 'group_id' AS group_id,
             p.value -> 'existing_group_id' AS existing_group_id,
             p.value -> 'permission_type' AS permission_type
@@ -1378,6 +1391,27 @@ class BulkImport::Generic < BulkImport::Base
                                                         liked = excluded.liked
     SQL
 
+    DB.exec(<<~SQL, notification_level: NotificationLevels.topic_levels[:watching])
+      WITH
+        latest_posts AS (
+                          SELECT p.topic_id, MAX(p.post_number) AS number
+                            FROM posts p
+                          WHERE p.deleted_at IS NULL
+                            AND NOT p.hidden
+                            AND p.user_id > 0
+                          GROUP BY p.topic_id
+                        )
+      UPDATE topic_users tu
+        SET last_read_post_number = latest_posts.number
+      FROM latest_posts
+           JOIN topics t ON t.id = latest_posts.topic_id
+      WHERE tu.topic_id = latest_posts.topic_id
+        AND tu.notification_level = :notification_level
+        AND tu.last_read_post_number IS NULL
+        AND t.deleted_at IS NULL
+        AND t.visible
+    SQL
+
     puts "  Updated topic users in #{(Time.now - start_time).to_i} seconds."
   end
 
@@ -2089,7 +2123,12 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def import_answers
-    puts "", "Importing solutions into post custom fields..."
+    unless defined?(::DiscourseSolved)
+      puts "  Skipping import of solved topics"
+      return
+    end
+
+    puts "", "Importing solutions into discourse_solved_solved_topics..."
 
     solutions = query(<<~SQL)
       SELECT *
@@ -2097,47 +2136,26 @@ class BulkImport::Generic < BulkImport::Base
        ORDER BY topic_id
     SQL
 
-    field_name = "is_accepted_answer"
-    value = "true"
-    existing_fields = PostCustomField.where(name: field_name).pluck(:post_id).to_set
+    existing_solved_topics = DiscourseSolved::SolvedTopic.pluck(:topic_id).to_set
 
-    create_post_custom_fields(solutions) do |row|
-      next unless (post_id = post_id_from_imported_id(row["post_id"]))
-      next unless existing_fields.add?(post_id)
-
-      {
-        post_id: post_id,
-        name: field_name,
-        value: value,
-        created_at: to_datetime(row["created_at"]),
-      }
-    end
-
-    puts "", "Importing solutions into topic custom fields..."
-
-    solutions.reset
-
-    field_name = "accepted_answer_post_id"
-    existing_fields = TopicCustomField.where(name: field_name).pluck(:topic_id).to_set
-
-    create_topic_custom_fields(solutions) do |row|
+    create_solved_topic(solutions) do |row|
       post_id = post_id_from_imported_id(row["post_id"])
       topic_id = topic_id_from_imported_id(row["topic_id"])
+      accepter_user_id = user_id_from_imported_id(row["acting_user_id"])
 
       next unless post_id && topic_id
-      next unless existing_fields.add?(topic_id)
+      next unless existing_solved_topics.add?(topic_id)
 
       {
         topic_id: topic_id,
-        name: field_name,
-        value: post_id.to_s,
+        answer_post_id: post_id,
+        accepter_user_id: accepter_user_id,
         created_at: to_datetime(row["created_at"]),
       }
     end
 
     puts "", "Importing solutions into user actions..."
 
-    existing_fields = nil
     solutions.reset
 
     action_type = UserAction::SOLVED
@@ -3075,9 +3093,9 @@ class BulkImport::Generic < BulkImport::Base
     puts "", "Importing reactions..."
 
     reactions = query(<<~SQL)
-      SELECT r.*, 
-            COALESCE((SELECT COUNT(*) 
-                      FROM discourse_reactions_reaction_users ru 
+      SELECT r.*,
+            COALESCE((SELECT COUNT(*)
+                      FROM discourse_reactions_reaction_users ru
                       WHERE ru.reaction_id = r.id), 0) as count
       FROM discourse_reactions_reactions r
       ORDER BY r.post_id, r.reaction_value

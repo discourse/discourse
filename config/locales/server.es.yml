@@ -611,59 +611,9 @@ es:
     until_posts:
       one: "%{count} publicación"
       other: "%{count} publicaciones"
-    "new-topic": |
-      Te damos la bienvenida a %{site_name}. **¡Gracias por empezar un nuevo tema!**
-
-      - ¿Suena el título interesante si lo lees en alto? ¿Es un buen resumen del contenido?
-
-      - ¿A quién le podría interesar? ¿Por qué importa? ¿Qué tipo de respuestas buscas?
-
-      - Incluye palabras comúnmente utilizadas en tu tema para que los demás puedan **encontrarlo**. Para agrupar el tema con otros relacionados, selecciona una categoría (o etiqueta).
-
-      Para más información [consulta nuestra guía](%{base_path}/guidelines). Este panel solo aparecerá para tus primeras %{education_posts_text}.
-    "new-reply": |
-      Te damos la bienvenida a %{site_name}. **¡Gracias por contribuir!**
-
-      - Sé amable con las demás personas de la comunidad.
-
-      - ¿Aporta tu respuesta a la conversación?
-
-      - Las críticas constructivas son bienvenidas, pero recuerda criticar las *ideas*, y no a las personas.
-
-      Para más información [consulta nuestra guía](%{base_path}/guidelines). Este panel solo aparecerá para tus primeras %{education_posts_text}.
-    avatar: |
-      ### ¿Qué tal si eliges una imagen para tu cuenta?
-
-      Has publicado algunos temas y respuestas, pero tu imagen de perfil no es tan única como lo eres tú, es solo una letra.
-
-      ¿Has considerado **[visitar tu perfil](%{profile_path})** y subir una imagen que te represente?
-
-      Es más fácil seguir debates y encontrar personas interesantes en las conversaciones cuando todo el mundo tiene una imagen de perfil única.
-    sequential_replies: |
-      ### Considera la posibilidad de responder a varias publicaciones a la vez
-
-      En vez de publicar varias respuestas seguidas en un tema, considera incluir en una sola respuesta varias citas de las publicaciones previas o @menciones a otras personas.
-
-      Puedes editar tu anterior respuesta para añadir una cita. Para ello, selecciona el texto que quieras citar y pulsa el botón <b>citar respuesta</b> que aparecerá.
-
-      Es más fácil leer temas que tengan menos respuestas (aunque más profundas), que tener que leer muchas respuestas individuales.
-    dominating_topic: '¡Has publicado mucho en este tema! Considera la posibilidad de dar a los demás la oportunidad de responder aquí y debatir también entre ellos.'
     get_a_room:
       one: Has respondido a @%{reply_username} una vez, ¿sabías que podrías enviarle un mensaje privado en su lugar?
       other: Has respondido a @%{reply_username} %{count} veces, ¿sabías que también puedes enviarle un mensaje rivado directamente?
-    dont_feed_the_trolls: Este mensaje ya ha sido marcado para llamar la atención del moderador. ¿Seguro que deseas responder a él? Las respuestas a contenido negativo tienden a fomentar un comportamiento más negativo.
-    too_many_replies: |
-      ### Has llegado al límite de respuestas en este tema
-
-      Lo sentimos, los nuevos usuarios tienen temporalmente un límite de %{newuser_max_replies_per_topic} respuestas en el mismo tema.
-
-      En vez de añadir otra respuesta, puedes editar tus respuestas anteriores o visitar otros temas.
-    reviving_old_topic: |
-      ### ¿Revivir este tema?
-
-      La última respuesta a este tema fue **%{time_ago}**. Tu publicación reactivará el tema, subiéndolo a la parte superior de la lista y notificando a aquellas personas involucradas en su momento.
-
-      ¿Seguro que quieres continuar esta conversación antigua?
   activerecord:
     attributes:
       category:
@@ -1772,7 +1722,6 @@ es:
     pending_users_reminder_delay_minutes: "Notificar a los moderadores si hay usuarios nuevos que hayan estado esperando aprobación durante más de esta cantidad de minutos. Usa -1 para desactivar estas notificaciones."
     persistent_sessions: "Los usuarios permanecerán con la sesión abierta aunque cierren su navegador"
     maximum_session_age: "El usuario permanecerá con su sesión iniciada n horas desde su última visita"
-    full_page_login: "Mostrar los formularios de inicio de sesión y registro en una página completa (si no está marcada, los usuarios verán los formularios en una ventana modal). "
     show_signup_form_email_instructions: Mostrar las instrucciones de correo electrónico en el formulario de registro.
     show_signup_form_username_instructions: Mostrar las instrucciones del nombre de usuario en el formulario de registro.
     show_signup_form_full_name_instructions: Mostrar las instrucciones con el nombre completo en el formulario de registro.
@@ -2079,7 +2028,6 @@ es:
     authorized_extensions: "Una lista de extensiones de archivo permitidas para subir"
     authorized_extensions_for_staff: "Una lista de extensiones de archivo permitidas para subir para los usuarios del personal, además de la lista definida en la configuración del sitio «authorized_extensions»."
     theme_authorized_extensions: "Una lista de las extensiones de archivo permitidas para subir temas"
-    max_similar_results: "Cantidad de temas similares que se muestran encima del editor cuando se está creando un nuevo tema. La comparación se basa en el título y el cuerpo del tema."
     max_image_megapixels: "Número máximo de megapíxeles permitidos para una imagen. Las imágenes con un numero de megapíxeles mayor que este se rechazarán."
     title_prettify: "Prevenir errores comunes en el título, incluidos los títulos escritos todo mayúsculas, con la primera letra en minúscula, con múltiples signos ! o ?, . adicional al final, etc."
     title_remove_extraneous_space: "Eliminar los espacios en blanco delante de la puntuación final."
@@ -2249,12 +2197,10 @@ es:
     max_notifications_per_user: "Cantidad máxima de notificaciones por usuario. Si se supera este número, las notificaciones antiguas se eliminarán. Aplicado semanalmente. Establece el valor en 0 para desactivar."
     allowed_user_website_domains: "El sitio web del usuario deberá ser uno de estos dominios. Lista delimitada por barras verticales."
     allow_profile_backgrounds: "Permitir a los usuarios subir fondos de perfil."
-    sequential_replies_threshold: "Número de mensajes seguidos que un usuario tiene que publicar antes de que se le recuerde que son demasiadas respuestas consecutivas."
     get_a_room_threshold: "Número de publicaciones que un usuario deber hacer a la misma persona en un mismo tema para recibir una advertencia."
     dont_feed_the_trolls_threshold: "Número de denuncias de otros usuarios antes de ser advertido."
     enable_mobile_theme: "Los dispositivos móviles utilizan un tema adaptado, con la habilidad de cambiar al estilo de sitio completo. Desactiva esta opción si quieres utilizar una plantilla personalizada que sea completamente adaptable."
     dominating_topic_minimum_percent: "Porcentaje de publicaciones que un usuario debe hacer en un mismo tema antes de que se le muestre un recordatorio acerca de dominar en demasía un tema."
-    disable_avatar_education_message: "Desactivar mensaje educacional para que los usuarios cambien su foto de perfil."
     pm_warn_user_last_seen_months_ago: "Al crear un nuevo PM, advierte a los usuarios cuando el destinatario no se haya visto hace más de n meses."
     suppress_uncategorized_badge: "No mostrar la etiqueta de los temas sin categoría en la lista de temas."
     header_dropdown_category_count: "Cantidad de categorías que se pueden mostrar en el menú desplegable del encabezado."
@@ -2285,7 +2231,6 @@ es:
     show_time_gap_days: "Si entre dos publicaciones han pasado este número de días, mostrar el lapso de tiempo en el tema."
     short_progress_text_threshold: "Después de que el número de publicaciones en un tema alcance esta cifra, la barra de progreso solo mostrará el número de publicaciones actual. Si cambias la anchura de la barra de progreso, deberías revisar este valor."
     default_code_lang: "Resaltado de sintaxis del lenguaje de programación por defecto aplicado a los bloques de código markdown (auto, text, ruby, python, etc.). Este valor también debe estar presente en la configuración del sitio «lenguajes resaltados»."
-    warn_reviving_old_topic_age: "Cuando alguien publica en un tema cuya última respuesta fue hace más tiempo que este número de días, se le mostrará un aviso para desalentar el hecho de revivir una antigua discusión. Establece el valor en 0 para desactivar."
     autohighlight_all_code: "Aplicar el resaltado de sintaxis a los bloques de &lt;código&lt; escritos en HTML, aunque no hayan especificado un lenguaje. Para configurar los bloques de código creados con markdown, utiliza la opción «lenguaje de código por defecto»."
     highlighted_languages: "Incluye reglas de resaltado sintáctico. (Advertencia: incluir demasiados idiomas puede afectar al rendimiento) ver: <a href='https://highlightjs.org/demo/' target='_blank'>https://highlightjs.org/demo</a> para ver una demostración"
     show_copy_button_on_codeblocks: "Añadir un botón para copiar el contenido de los bloques de código al portapapeles."
@@ -2454,10 +2399,6 @@ es:
     default_navigation_menu_categories: "Las categorías seleccionadas se mostrarán por defecto en la sección Categorías del Menú de navegación."
     default_navigation_menu_tags: "Las etiquetas seleccionadas se mostrarán por defecto en la sección Etiquetas del Menú de navegación."
     experimental_new_new_view_groups: 'Activa una nueva lista de temas que combine los no leídos y los nuevos y haz que el enlace «Todo» de la barra lateral enlace a ella.'
-    glimmer_topic_list_mode: "Controla si se utiliza la nueva implementación de la lista de temas 'glimmer'. 'auto' se activará automáticamente cuando todos tus temas y plugins estén listos. Consulta <a href='https://meta.discourse.org/t/343404'>el tema de Meta</a> para más información."
-    glimmer_post_menu_mode: "Controla si se utiliza la nueva implementación del menú de la publicación 'glimmer'. 'auto' se activará automáticamente cuando todos tus temas y plugins estén listos. Esta implementación está en desarrollo activo y no está pensada para su uso en producción. No desarrolles temas/plugins con ella hasta que la implementación esté finalizada y anunciada."
-    glimmer_post_menu_groups: "Activa la nueva implementación del menú de la publicación «glimmer» en modo «auto» para los grupos de usuarios especificados. Esta implementación está en desarrollo activo y no está pensada para su uso en producción. No desarrolles temas/plugins para ella hasta que la implementación esté finalizada y anunciada."
-    glimmer_post_stream_mode_auto_groups: "Activa la nueva implementación del menú de la publicación «glimmer» en modo «auto» para los grupos de usuarios especificados. Esta implementación está en desarrollo activo y no está pensada para su uso en producción. No desarrolles temas/plugins para ella hasta que la implementación esté finalizada y anunciada."
     experimental_form_templates: "Activa la característica de plantillas de formulario. Gestiona las plantillas en <a href='%{base_path}/admin/customize/form-templates'>Personalizar / Plantillas</a>."
     lazy_load_categories_groups: "Carga lenta de la información de categoría solo para los usuarios de estos grupos. Esto mejora el rendimiento en sitios con muchas categorías."
     page_loading_indicator: "Configura el indicador de carga que aparece durante la navegación por las páginas dentro de Discourse. «Spinner» es un indicador de página completa. «Slider» muestra una barra estrecha en la parte superior de la pantalla."
@@ -2672,11 +2613,6 @@ es:
     errors: "%{errors}"
     not_available: "No disponible. ¿Quieres probar con %{suggestion}?"
     something_already_taken: "Algo ha salido mal, quizá el nombre de usuario o el correo electrónico ya han sido registrados. Prueba con el enlace de olvidé mi contraseña."
-    omniauth_error:
-      generic: "Lo sentimos, se produjo un error al autorizar tu cuenta. Inténtalo de nuevo."
-      csrf_detected: "Se agotó el tiempo de autorización o cambiaste de navegador. Inténtalo de nuevo."
-      request_error: "Ha ocurrido un error al empezar la autorización. Inténtalo de nuevo."
-      invalid_iat: "No se pudo verificar el token de autorización debido a diferencias en el horario del servidor. Inténtalo de nuevo."
     omniauth_error_unknown: "Ha ocurrido un error al procesar tu inicio de sesión. Inténtalo de nuevo."
     omniauth_confirm_title: "Inicia sesión a través de %{provider}"
     omniauth_confirm_button: "Continuar"
@@ -4108,8 +4044,6 @@ es:
   offline:
     title: "Se se puede cargar la app"
     offline_page_message: "¡Parece que no estás conectado! Revisa tu conexión a internet e inténtalo de nuevo."
-  login_required:
-    welcome_message: "# [Te damos la bienvenida a %{title}](#welcome)"
   upload:
     edit_reason: "copias locales de imágenes descargadas"
     unauthorized: "Lo sentimos, el archivo que estás intentando subir no está permitido (extensiones autorizadas: %{authorized_extensions})."
@@ -4135,7 +4069,6 @@ es:
     images:
       too_large: "Lo sentimos, la imagen que estás intentando subir es demasiado grande (el tamaño máximo es %{max_size_kb}%KB). Modifica sus dimensiones e inténtalo de nuevo."
       too_large_humanized: "Lo sentimos, la imagen que estás intentando subir es demasiado grande (el tamaño máximo es %{max_size}). Reduce su tamaño e inténtalo de nuevo."
-      larger_than_x_megapixels: "Lo sentimos, la imagen que estás intentando cargar es demasiado grande (la dimensión máxima es %{max_image_megapixels} megapíxeles), cambia su tamaño e inténtalo de nuevo."
       size_not_found: "Lo sentimos, no hemos podido determinar el tamaño de la imagen. ¿Quizás el archivo está corrupto?"
     placeholders:
       too_large: "(imagen más grande que %{max_size_kb}KB)"

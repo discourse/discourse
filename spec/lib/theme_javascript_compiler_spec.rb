@@ -3,23 +3,6 @@
 RSpec.describe ThemeJavascriptCompiler do
   let(:compiler) { ThemeJavascriptCompiler.new(1, "marks") }
 
-  describe "#append_raw_template" do
-    it "uses the correct template paths" do
-      template = "<h1>hello</h1>"
-      name = "/path/to/templates1"
-      compiler.append_raw_template("#{name}.raw", template)
-      expect(compiler.raw_content.to_s).to include("addRawTemplate)(\"#{name}\"")
-
-      name = "/path/to/templates2"
-      compiler.append_raw_template("#{name}.hbr", template)
-      expect(compiler.raw_content.to_s).to include("addRawTemplate)(\"#{name}\"")
-
-      name = "/path/to/templates3"
-      compiler.append_raw_template("#{name}.hbs", template)
-      expect(compiler.raw_content.to_s).to include("addRawTemplate)(\"#{name}.hbs\"")
-    end
-  end
-
   describe "#append_ember_template" do
     it "maintains module names so that discourse-boot.js can correct them" do
       compiler.append_ember_template("/connectors/blah-1", "{{var}}")
@@ -95,12 +78,6 @@ RSpec.describe ThemeJavascriptCompiler do
   end
 
   describe "error handling" do
-    it "handles syntax errors in raw templates" do
-      expect do
-        compiler.append_raw_template("sometemplate.hbr", "{{invalidtemplate")
-      end.to raise_error(ThemeJavascriptCompiler::CompileError, /Parse error on line 1/)
-    end
-
     it "handles syntax errors in ember templates" do
       expect do
         compiler.append_ember_template("sometemplate", "{{invalidtemplate")

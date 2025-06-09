@@ -1,7 +1,9 @@
 import { ReplaceAroundStep, ReplaceStep } from "prosemirror-transform";
-import { getChangedRanges } from "discourse/static/prosemirror/lib/plugin-utils";
+import {
+  getChangedRanges,
+  markInputRule,
+} from "discourse/static/prosemirror/lib/plugin-utils";
 
-const AUTO_LINKS = ["autolink", "linkify"];
 const REPLACE_STEPS = [ReplaceStep, ReplaceAroundStep];
 
 /** @type {RichEditorExtension} */
@@ -14,7 +16,7 @@ const extension = {
         // same value from the markdown-it token
         // null for [link](...), "autolink" for <...>, and "linkify" for plain URLs
         markup: { default: null },
-        attachment: { default: null },
+        attachment: { default: false },
         "data-orig-href": { default: null },
       },
       inclusive: false,
@@ -27,6 +29,7 @@ const extension = {
               title: dom.getAttribute("title"),
               attachment: dom.classList.contains("attachment"),
               "data-orig-href": dom.getAttribute("data-orig-href"),
+              markup: dom.getAttribute("data-markup"),
             };
           },
         },
@@ -38,7 +41,8 @@ const extension = {
             href: node.attrs.href,
             title: node.attrs.title,
             class: node.attrs.attachment ? "attachment" : undefined,
-            "data-orig-href": node.attrs["data-orig-href"],
+            "data-orig-href": node.attrs["data-orig-href"] || undefined,
+            "data-markup": node.attrs.markup || undefined,
           },
           0,
         ];
@@ -49,18 +53,16 @@ const extension = {
     link: {
       mark: "link",
       getAttrs(tok, tokens, i) {
-        const attachment = tokens[i + 1].content.endsWith("|attachment");
+        const nextContent = tokens[i + 1].content;
+        const attachment = nextContent.endsWith("|attachment");
         if (attachment) {
-          tokens[i + 1].content = tokens[i + 1].content.replace(
-            /\|attachment$/,
-            ""
-          );
+          tokens[i + 1].content = nextContent.slice(0, -11);
         }
 
         return {
           href: tok.attrGet("href"),
           title: tok.attrGet("title") || null,
-          markup: tok.markup,
+          markup: tok.markup || null,
           attachment,
           "data-orig-href": tok.attrGet("data-orig-href"),
         };
@@ -70,10 +72,8 @@ const extension = {
   serializeMark: {
     // override mark serializer to support "|attachment"
     link: {
-      open(state, mark, parent, index) {
-        state.linkMarkup =
-          mark.attrs.markup ??
-          (isPlainURL(mark, parent, index) ? "autolink" : null);
+      open(state, mark) {
+        state.linkMarkup = mark.attrs.markup;
 
         if (state.linkMarkup === "autolink") {
           return "<";
@@ -86,7 +86,7 @@ const extension = {
         return "[";
       },
       close(state, mark) {
-        let { linkMarkup } = state;
+        const { linkMarkup } = state;
         state.linkMarkup = undefined;
 
         if (linkMarkup === "autolink") {
@@ -110,63 +110,69 @@ const extension = {
       mixable: true,
     },
   },
-  inputRules: ({ schema, utils }) =>
-    utils.markInputRule(
+  inputRules: ({ schema }) => [
+    markInputRule(
       /\[([^\]]+)]\(([^)\s]+)(?:\s+[“"']([^“"']+)[”"'])?\)$/,
       schema.marks.link,
       (match) => {
         return { href: match[2], title: match[3] };
       }
     ),
-  plugins: ({ pmState: { Plugin }, utils }) => [
+    markInputRule(
+      // AUTOLINK_RE from https://github.com/markdown-it/markdown-it/blob/master/lib/rules_inline/autolink.mjs
+      /<([a-zA-Z][a-zA-Z0-9+.-]{1,31}:[^<>\x00-\x20]*)>$/,
+      schema.marks.link,
+      (match) => {
+        return { href: match[1], markup: "autolink" };
+      }
+    ),
+  ],
+  plugins: ({ pmState: { Plugin }, utils }) =>
     new Plugin({
       props: {
-        // Auto-linkify plain-text pasted URLs
+        // Auto-linkify plain-text pasted URLs over a selection
         clipboardTextParser(text, $context, plain, view) {
           if (view.state.selection.empty || !utils.getLinkify().test(text)) {
             return;
           }
 
-          return addLinkMark(view, text);
+          return addLinkMark(view, text, utils);
         },
+        // Auto-linkify pasted rich content with a single text node that is a URL over a selection
+        transformPasted(slice, view) {
+          if (view.state.selection.empty) {
+            return slice;
+          }
 
-        // Auto-linkify rich content with a single text node that is a URL
-        transformPasted(paste, view) {
           let node = null;
 
-          if (paste.content.childCount === 1) {
-            if (paste.content.firstChild.isText) {
-              node = paste.content.firstChild;
+          if (slice.content.childCount === 1) {
+            if (slice.content.firstChild.isText) {
+              node = slice.content.firstChild;
             } else if (
-              paste.content.firstChild.type.name === "paragraph" &&
-              paste.content.firstChild.childCount === 1 &&
-              paste.content.firstChild.firstChild.isText
+              slice.content.firstChild.type.name === "paragraph" &&
+              slice.content.firstChild.childCount === 1 &&
+              slice.content.firstChild.firstChild.isText
             ) {
-              node = paste.content.firstChild.firstChild;
+              node = slice.content.firstChild.firstChild;
             }
           }
 
           if (
             !node?.text ||
-            node?.marks.some((mark) => mark.type.name === "link")
+            node?.marks.some(
+              (mark) => mark.type.name === "link" || mark.type.name === "code"
+            ) ||
+            !utils.getLinkify().test(node.text)
           ) {
-            return paste;
+            return slice;
           }
 
-          const matches = utils.getLinkify().match(node.text);
-          const isFullMatch =
-            matches && matches.length === 1 && matches[0].raw === node.text;
-
-          if (!isFullMatch) {
-            return paste;
-          }
-
-          return addLinkMark(view, node.text);
+          return addLinkMark(view, node.text, utils);
         },
       },
-    }),
-    // plugin for auto-linking during typing
-    new Plugin({
+
+      // Automatically adds and removes link marks when typing
       appendTransaction(transactions, prevState, state) {
         const transaction = prevState.tr;
         transactions
@@ -189,13 +195,18 @@ const extension = {
             from = Math.max(from - 1, 0);
             to = Math.min(to + 1, state.doc.nodeSize - 2);
           }
+
+          // stores the nodes visited ahead, skipping a node if already seen in nodeAfter
+          const visited = new Set();
           state.doc.nodesBetween(from, to, (node, pos) => {
             if (
+              visited.has(node) ||
               !node.isText ||
               node.marks.some(
                 (mark) =>
-                  mark.type.name === "link" &&
-                  !AUTO_LINKS.includes(mark.attrs.markup)
+                  (mark.type.name === "link" &&
+                    mark.attrs.markup !== "linkify") ||
+                  mark.type.name === "code"
               )
             ) {
               return true;
@@ -222,6 +233,7 @@ const extension = {
 
             const nodeBefore = state.doc.nodeAt(pos - 1);
             let textBefore = "";
+
             if (
               wordStart === 0 &&
               nodeBefore?.isText &&
@@ -229,11 +241,9 @@ const extension = {
                 nodeBefore.text[nodeBefore.text.length - 1]
               ) &&
               !utils.isWhiteSpace(text[0]) &&
-              nodeBefore.marks.length === 1 &&
-              nodeBefore.marks.some(
+              !nodeBefore.marks.some(
                 (mark) =>
-                  mark.type.name === "link" &&
-                  AUTO_LINKS.includes(mark.attrs.markup)
+                  mark.type.name === "link" && mark.attrs.markup !== "linkify"
               )
             ) {
               textBefore = nodeBefore.text;
@@ -249,11 +259,11 @@ const extension = {
               nodeAfter.marks.length === 1 &&
               nodeAfter.marks.some(
                 (mark) =>
-                  mark.type.name === "link" &&
-                  AUTO_LINKS.includes(mark.attrs.markup)
+                  mark.type.name === "link" && mark.attrs.markup === "linkify"
               )
             ) {
               textAfter = nodeAfter.text;
+              visited.add(nodeAfter);
             }
 
             const fullText = textBefore + textSlice + textAfter;
@@ -266,10 +276,19 @@ const extension = {
               state.schema.marks.link
             );
 
+            if (!utils.getLinkify().test(fullText)) {
+              return;
+            }
+
             utils
               .getLinkify()
               .match(fullText)
               ?.forEach((match) => {
+                // ignore if the match is just after a `
+                if (fullText[match.index - 1] === "`") {
+                  return;
+                }
+
                 tr.addMark(
                   startPos + match.index,
                   startPos + match.index + match.raw.length,
@@ -285,35 +304,23 @@ const extension = {
         return tr;
       },
     }),
-  ],
 };
 
-function addLinkMark(view, href) {
-  const { from, to } = view.state.selection;
-  const linkMark = view.state.schema.marks.link.create({ href });
+function addLinkMark(view, text, utils) {
+  const matches = utils.getLinkify().match(text);
+  const isFullMatch = matches?.length === 1 && matches[0].raw === text;
 
+  if (!isFullMatch) {
+    return;
+  }
+
+  const { from, to } = view.state.selection;
   const tr = view.state.tr;
-  tr.addMark(from, to, linkMark);
+
+  // used only when replacing the selection, so no markup: linkify
+  tr.addMark(from, to, view.state.schema.marks.link.create({ href: text }));
 
   return tr.doc.slice(from, to);
-}
-
-function isPlainURL(link, parent, index) {
-  if (link.attrs.title || !/^\w+:/.test(link.attrs.href)) {
-    return false;
-  }
-  let content = parent.child(index);
-  if (
-    !content.isText ||
-    content.text !== link.attrs.href ||
-    content.marks[content.marks.length - 1] !== link
-  ) {
-    return false;
-  }
-  return (
-    index === parent.childCount - 1 ||
-    !link.isInSet(parent.child(index + 1).marks)
-  );
 }
 
 export default extension;

@@ -146,7 +146,7 @@ RSpec.describe DiscourseAutomation::Stat do
     context "with block form" do
       it "measures the execution time and records it" do
         # Mock Process.clock_gettime to return controlled values
-        allow(Process).to receive(:clock_gettime).and_return(10, 10.75)
+        allow(Process).to receive(:clock_gettime).and_return(10.0, 10.75)
 
         result = DiscourseAutomation::Stat.log(automation_id) { "test result" }
 
@@ -158,6 +158,23 @@ RSpec.describe DiscourseAutomation::Stat do
         expect(stat.min_run_time).to eq(0.75)
         expect(stat.max_run_time).to eq(0.75)
         expect(stat.total_runs).to eq(1)
+      end
+
+      context "when an error occurs" do
+        it "yields the correct error and records it" do
+          allow(Process).to receive(:clock_gettime).and_return(10.0, 10.75)
+
+          expect { DiscourseAutomation::Stat.log(automation_id) { raise } }.to raise_error(
+            RuntimeError,
+          )
+
+          stat = DiscourseAutomation::Stat.find_by(automation_id: automation_id)
+          expect(stat.total_time).to eq(0.75)
+          expect(stat.average_run_time).to eq(0.75)
+          expect(stat.min_run_time).to eq(0.75)
+          expect(stat.max_run_time).to eq(0.75)
+          expect(stat.total_runs).to eq(1)
+        end
       end
     end
 

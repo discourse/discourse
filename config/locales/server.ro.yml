@@ -132,6 +132,7 @@ ro:
     messages:
       invalid_boolean: "Valoare logică invalidă."
       taken: "nu este disponibil"
+      reserved: "Numele grupului %{name} este rezervat, alege un alt nume."
       accepted: trebuie acceptat
       blank: nu poate fi gol
       present: trebuie să fie gol
@@ -333,24 +334,6 @@ ro:
       one: "o postare"
       few: "%{count} postări"
       other: "%{count} de postări"
-    "new-topic": |
-      Bine ai venit la %{site_name} &mdash; **mulțumim pentru începerea unei noi conversații! *
-
-      - Titlul sună interesant dacă îl citești cu voce tare? Este un rezumat bun?
-
-      - Cine ar fi interesat de acest lucru? De ce contează? Ce fel de răspunsuri vrei?
-
-      - Include cuvinte folosite în mod obișnuit în subiectul tău astfel încât ceilalți să le poată *găsi*. Pentru a grupa subiectul cu subiecte conexe, selectaţi o categorie (sau etichetă).
-
-      Pentru mai multe, [a se vedea instrucțiuni ale comunității](%{base_path}/orientări). Acest panou va apărea numai pentru prima ta %{education_posts_text}.
-    avatar: |
-      ### Ce zici de o poză atașată contului tău?
-
-      Ai adăugat câteva comentarii și subiecte, dar poza ta de profil nu este unică, cum ești tu - este doar o literă.
-
-      Ai luat în considerare să **[îți actualizezi profilul](%{profile_path})** cu o imagine care te reprezintă?
-
-      Este mai ușor să urmărești o discuție și să găsești oameni interesanți într-o conversație atunci când fiecare are o imagine unică!
   activerecord:
     attributes:
       category:
@@ -1133,7 +1116,6 @@ ro:
     authorized_extensions: "O listă de extensii de fișiere permise pentru încărcare"
     authorized_extensions_for_staff: "O listă de extensii de fișiere permise pentru încărcare pentru utilizatori din echipă, în plus față de lista definită în setarea `authorized_extensions` a site-ului."
     theme_authorized_extensions: "O listă de extensii de fișiere permise pentru încărcarea temelor"
-    max_similar_results: "Câte subiecte similare vor fi afișate deasupra editorului atunci când se compune un subiect nou. Comparația se face după titlu și pe conținut."
     title_prettify: "Repară greșelile comune și erorile, incluzând toate majuscule, literă mică pentru primul caracter, multiple ! și ?, extra . la sfârșit, etc."
     topic_views_heat_low: "După acest număr de vizualizări, câmpul vizualizări este ușor evidențiat."
     topic_views_heat_medium: "După acest număr de vizualizări, câmpul vizualizări este moderat evidențiat."
@@ -1218,11 +1200,9 @@ ro:
     hide_user_profiles_from_public: "Dezactivează cardurile, profilurile și „cartea de telefon” pentru utilizatorii anonimi."
     allow_users_to_hide_profile: "Permite utilizatorilor să-şi ascundă profilul şi prezenţa"
     allow_profile_backgrounds: "Permite utilizatorilor să încarce fundaluri de profil."
-    sequential_replies_threshold: "Numărul de postări succesive pe care un utilizator trebuie sa le facă într-un subiect înainte să i se reamintească că a postat un număr excesiv de postări succesive."
     get_a_room_threshold: "Numărul de postări pe care un utilizator poate să le facă la adresa aceleiași persoane înainte de a primi un avertisment."
     enable_mobile_theme: "Dispozitivele mobile folosesc o temă cu abilitatea de a schimba la întregul site. Dezactivează pentru a folosi o foiae de stil personalizată ce este total responsivă."
     dominating_topic_minimum_percent: "Ce procent din postările unui subiect trebuie să scrie un utilizator înainte de i se aminti că domină excesiv subiectul."
-    disable_avatar_education_message: "Dezactivează mesajul educațional pentru schimbarea avatarului."
     suppress_uncategorized_badge: "Nu arăta ecusonul pentru subiectele fără categorie în lista de subiecte."
     permalink_normalizations: "Aplică următorul regex înainte de a detecta permalink-urile, de exemplu: /(topic.*)\\?.*/\\1 va elimina șirurile de interogare din căile subiectelor. Formatul este regex+șir folosește \\1 etc.pentru a capturarea secvențelor"
     disable_system_edit_notifications: "Deactivează editarea notificărilo de către utilizator atunci când setarea 'download_remote_images_to_local' este activată."
@@ -1236,7 +1216,6 @@ ro:
     show_time_gap_days: "Dacă două postări sunt create la acest număr de zile distantă una de alta, afișează decalajul în subiect."
     short_progress_text_threshold: "După ce numărul de postări într-un subiect devine mai mare decât acest număr, bara de progres va afișa doar numărul postării curente. Dacă schiimbi lățimea barei de progres, va trebui să schimbi această valoare."
     default_code_lang: "Evidențierea implicită a sintaxei limbajului de programare aplicată blocurilor de cod markdown (auto, text, ruby, python etc.). Această valoare trebuie să fie prezentă și în setarea `limbaje evidențiate` a site-ului."
-    warn_reviving_old_topic_age: "Când cineva răspunde la un subiect unde ultimul răspuns e mai vechi decât atâtea zile, va fi afișată o avertizare. Dezactivează prin alegerea cifrei 0."
     autohighlight_all_code: "Aplică evidențierea sintaxei la blocurile de tip &lt;code&gt; HTML, chiar dacă nu au specificat un limbaj. Pentru a configura blocurile de cod scrise în markdown, folosește setarea „limbaj de programare implicit”."
     highlighted_languages: "Reguli de evidențiere a sintaxei incluse. (Atenție: includerea prea multor limbi poate afecta performanța) consultă: <a href='https://highlightjs.org/demo/' target='_blank'>https://highlightjs.org/demo</a> pentru o demonstrație"
     embed_unlisted: "Subiectele încorporate vor fi nelistate până când un utilizator răspunde."
@@ -1290,7 +1269,16 @@ ro:
     enable_welcome_banner: "Afișează un banner pe paginile principale ale subiectelor pentru a ura bun venit membri și a le permite să caute conținut în site"
     experimental_new_new_view_groups: 'Activează o nouă listă de subiecte care combină subiectele necitite și cele noi și fă ca legătura „Toate” din bara laterală să ducă spre aceasta.'
     experimental_form_templates: "Activează caracteristica șabloane de formulare. Gestionează șabloanele la <a href='%{base_path}/admin/customize/form-templates'>Personalizare/șabloane</a>."
+    show_preview_for_form_templates: "Activează funcționalitatea de previzualizare pentru șabloanele de formulare"
     show_user_menu_avatars: "Arată avatare utilizator în meniul utilizatorului"
+    about_page_extra_groups: "Grupuri de afișat pe pagina despre sub moderatori."
+    about_page_extra_groups_initial_members: "Numărul de membri pentru a extinde fiecare grup pe pagina „Despre”."
+    about_page_extra_groups_show_description: "Dacă se includ descrierile grupurilor pe pagina „Despre”."
+    about_page_extra_groups_order: "Ordonarea grupurilor suplimentare pe pagina „Despre”."
+    experimental_content_localization_allowed_groups: 'Grupuri cărora li se permite să actualizeze conținutul localizat. Necesită ca „localizarea experimentală a conținutului” să fie activată.'
+    experimental_content_localization_supported_locales: "Lista localelor acceptate în care conținutul utilizatorului poate fi tradus. Necesită ca `experimental_content_localization` să fie activat pentru a avea efect."
+    viewport_based_mobile_mode: "EXPERIMENTAL: Dezactivează modurile mobil/desktop bazate pe agent utilizator și folosește, în schimb, lățimea spațiului vizibil."
+    experimental_anon_language_switcher: "Activează comutatorul experimental de limbă. Acest lucru va permite vizitatorilor site-ului care nu sunt autentificați să comute între versiunile traduse Discourse și conținutul la care au contribuit utilizatorii în subiecte."
     errors:
       invalid_email: "Adresă de email invalidă."
       invalid_username: "Nu există nici un utilizator cu acest nume de utilizator."
@@ -1302,6 +1290,7 @@ ro:
       must_include_latest: "Meniul de sus trebuie să includă tab-ul \"recente\"."
       invalid_string: "Valoare invalidă."
       invalid_string_min_max: "Trebuie să aibă între %{min} și %{max} caractere."
+      invalid_object: "Obiect nevalid."
       invalid_reply_by_email_address: "Valoarea trebuie să conțină '%{reply_key}' și să fie diferită de emailul de notificare."
       invalid_alternative_reply_by_email_addresses: "Toate valorile trebuie să conțină '%{reply_key}' și să fie diferite de emailul de notificare."
       pop3_polling_host_is_empty: "Trebuie să setezi „numele serverului de POP3” înainte să poți activa retragerea de emailuri prin POP3"
@@ -1434,6 +1423,7 @@ ro:
       not_allowed: "nu este permis din partea acelui furnizor de servicii email. Te rugăm folosește altă adresă email."
       blocked: "nu este permis."
       revoked: "No se vor trimite emailuri către '%{email}' până la data de %{date}."
+    cannot_remove_all_auth: "Trebuie să ai cel puțin un cont asociat, o cheie de acces sau o parolă setată."
   unsubscribe_mailer:
     subject_template: "Confirmă că nu mai vrei să primești actualizări pe email de la %{site_title}"
   invite_password_instructions:
@@ -1858,6 +1848,8 @@ ro:
     see_more: "Mai multe"
     search_title: "Caută în site"
     search_button: "Caută"
+  login_required:
+    welcome_message: "# Bine ai venit pe %{title}"
   upload:
     edit_reason: "copii locale ale imaginilor descărcate"
     unauthorized: "Ne pare rău, fișierul pe care-l încerci să-l încarci nu este autorizat (extensii autorizate: %{authorized_extensions})."
@@ -1868,7 +1860,7 @@ ro:
       too_large: "Ne pare rău, dar fișierul pe care încerci să îl încarci este prea mare (mărimea maximă este de %{max_size_kb}KB)."
     images:
       too_large: "Ne pare rău, dar imaginea pe care încerci să o încarci este prea mare (mărimea maximă este de %{max_size_kb}KB), te rugăm să o redimensionezi și apoi să încerci din nou."
-      larger_than_x_megapixels: "Ne pare rău, imaginea pe care încerci să o încarci este prea mare (dimensiunea maximă este %{max_image_megapixels} megapixeli), te rugăm să o redimensionezi și să încerci din nou."
+      larger_than_x_megapixels: "Scuze, imaginea cu numele de fișier %{original_filename} este prea mare (dimensiunea maximă este de %{max_image_megapixels} megapixeli), te rugăm să o redimensionezi și să încerci din nou."
       size_not_found: "Ne pare rău, nu am putut determina mărimea imaginii. Poate este coruptă?"
   avatar:
     missing: "Ne pare rău, dar nu putem găsi avatarul asociat cu această adresă de email. Ai putea să îl încarci din nou?"
@@ -2139,6 +2131,8 @@ ro:
             choices:
               latest:
                 label: "Ultima"
+      branding:
+        title: "Logo site"
       corporate:
         fields:
           contact_url:
@@ -2162,6 +2156,12 @@ ro:
   staff_action_logs:
     json_too_long: "Valorile nu au fost înregistrate pentru că depășesc limitele lungimii coloanei"
     unknown: "necunoscută"
+    api_post_delete: "Șters prin API"
+    reminder_deleted: "Înlocuit de un nou memento"
+    user_associated_posts_deleted: "Utilizatorul a fost distrus"
+    imap_email_deleted: "Emailul a fost șters de pe serverul IMAP"
+    imap_email_marked_as_spam: "Emailul a fost mutat în spam pe serverul IMAP"
+    auto_deleted_hidden_posts: "Postări ascunse distruse automat"
   reviewables:
     priorities:
       low: "Scăzut"
@@ -2248,9 +2248,14 @@ ro:
         complete: "Postarea a fost respinsă și păstrată ștearsă."
       approve_and_restore:
         complete: "Postare a fost aprobată și restaurată."
+      approve_and_unhide:
+        title: "Aprobă și reafișează postarea"
+        complete: "Postare aprobată și afișată"
       delete_user:
         complete: "Utilizatorul a fost șters."
   fallback_username: "utilizator"
+  content_localization:
+    not_allowed: "Nu ai voie să localizezi acest conținut."
   activemodel:
     errors:
       <<: *errors

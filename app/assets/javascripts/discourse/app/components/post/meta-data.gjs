@@ -1,8 +1,10 @@
 import Component from "@glimmer/component";
 import { getOwner } from "@ember/owner";
+import { service } from "@ember/service";
 import PostMetaDataDate from "./meta-data/date";
 import PostMetaDataEditsIndicator from "./meta-data/edits-indicator";
 import PostMetaDataEmailIndicator from "./meta-data/email-indicator";
+import PostMetaDataLanguage from "./meta-data/language";
 import PostMetaDataLockedIndicator from "./meta-data/locked-indicator";
 import PostMetaDataPosterName from "./meta-data/poster-name";
 import PostMetaDataReadIndicator from "./meta-data/read-indicator";
@@ -11,6 +13,8 @@ import PostMetaDataSelectPost from "./meta-data/select-post";
 import PostMetaDataWhisperIndicator from "./meta-data/whisper-indicator";
 
 export default class PostMetaData extends Component {
+  @service currentUser;
+
   get displayPosterName() {
     return this.args.displayPosterName ?? true;
   }
@@ -21,6 +25,10 @@ export default class PostMetaData extends Component {
 
   get shouldDisplayReplyToTab() {
     return PostMetaDataReplyToTab.shouldRender(this.args, null, getOwner(this));
+  }
+
+  get shouldDisplayLanguage() {
+    return this.args.post.is_localized && this.args.post.language;
   }
 
   <template>
@@ -71,6 +79,10 @@ export default class PostMetaData extends Component {
             @repliesAbove={{@repliesAbove}}
             @toggleReplyAbove={{@toggleReplyAbove}}
           />
+        {{/if}}
+
+        {{#if this.shouldDisplayLanguage}}
+          <PostMetaDataLanguage @post={{@post}} />
         {{/if}}
 
         <PostMetaDataDate @post={{@post}} />

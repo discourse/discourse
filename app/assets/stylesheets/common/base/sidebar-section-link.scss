@@ -22,8 +22,9 @@
     align-items: center;
     color: var(--d-sidebar-link-color);
     transition: background-color 0.25s;
+    border-radius: var(--d-border-radius);
 
-    &:focus,
+    &:focus-visible,
     &:hover {
       background: var(--d-sidebar-highlight-background);
       color: var(--d-sidebar-highlight-color);
@@ -127,6 +128,11 @@
         }
       }
     }
+  }
+
+  &.dropdown-menu__item .sidebar-section-link,
+  .dropdown-menu__item .sidebar-section-link {
+    border-radius: 0;
   }
 
   .--link-button {

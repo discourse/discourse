@@ -15,7 +15,7 @@ export default class Contents extends Component {
   @service siteSettings;
   @service header;
   @service router;
-  @service sidebarState;
+  @service navigationMenu;
   @service search;
 
   @tracked viewportWidth;
@@ -53,7 +53,7 @@ export default class Contents extends Component {
   }
 
   get sidebarIcon() {
-    if (this.sidebarState.adminSidebarAllowedWithLegacyNavigationMenu) {
+    if (this.navigationMenu.isDesktopDropdownMode) {
       return "discourse-sidebar";
     }
 
@@ -77,15 +77,22 @@ export default class Contents extends Component {
   get showHeaderSearch() {
     if (
       this.site.mobileView ||
-      this.router.currentURL?.match(/\/(signup|login)/)
+      this.args.narrowDesktop ||
+      this.router.currentURL?.match(
+        /\/(signup|login|invites|activate-account)/
+      ) ||
+      this.search.welcomeBannerSearchInViewport
     ) {
       return false;
     }
 
-    return (
+    if (
       this.search.searchExperience === "search_field" &&
-      !this.args.topicInfoVisible
-    );
+      !this.args.topicInfoVisible &&
+      !this.search.welcomeBannerSearchInViewport
+    ) {
+      return true;
+    }
   }
 
   <template>

@@ -15,6 +15,7 @@ import TopicViewsChart from "discourse/components/topic-map/topic-views-chart";
 import avatar from "discourse/helpers/bound-avatar-template";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
+import lazyHash from "discourse/helpers/lazy-hash";
 import number from "discourse/helpers/number";
 import { ajax } from "discourse/lib/ajax";
 import { emojiUnescape } from "discourse/lib/text";
@@ -22,6 +23,7 @@ import { i18n } from "discourse-i18n";
 import DMenu from "float-kit/components/d-menu";
 
 const TRUNCATED_LINKS_LIMIT = 5;
+const LINKS_THRESHOLD = 50;
 const MIN_POST_READ_TIME_MINUTES = 4;
 const MIN_READ_TIME_MINUTES = 3;
 const MIN_LIKES_COUNT = 5;
@@ -297,7 +299,7 @@ export default class TopicMapSummary extends Component {
             <ConditionalLoadingSpinner @condition={{this.loading}}>
               <PluginOutlet
                 @name="most-liked-replies"
-                @outletArgs={{hash posts=this.top3LikedPosts}}
+                @outletArgs={{lazyHash posts=this.top3LikedPosts}}
               >
                 <ul>
                   {{#each this.top3LikedPosts as |post|}}
@@ -339,7 +341,7 @@ export default class TopicMapSummary extends Component {
           @inline={{true}}
         >
           <:trigger>
-            {{number this.linksCount noTitle="true"}}
+            {{number this.linksCount maxDisplay=LINKS_THRESHOLD noTitle="true"}}
             <span class="topic-map__stat-label">
               {{i18n "links_lowercase" count=this.linksCount}}
             </span>
@@ -407,6 +409,10 @@ export default class TopicMapSummary extends Component {
           @userFilters={{@postStream.userFilters}}
         />
       {{/if}}
+      <PluginOutlet
+        @name="topic-map-participants-after"
+        @outletArgs={{lazyHash topic=@topic}}
+      />
       <div class="topic-map__buttons">
         {{#if this.readTimeMinutes}}
           <div class="estimated-read-time">

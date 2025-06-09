@@ -34,7 +34,7 @@ module DiscourseAutomation
 
           original_post_only = automation.trigger_field("original_post_only")
           if original_post_only["value"]
-            next if topic.posts_count > 1
+            next if post.post_number != 1
           end
 
           first_post_only = automation.trigger_field("first_post_only")
@@ -102,11 +102,14 @@ module DiscourseAutomation
             cooked = post.cooked
             # note the only 100% correct way is to lean on an actual HTML parser
             # however triggers may pop up during the post creation process, we can not afford a full parse
-            next if post_features.include?("with_images") && !cooked.match?(/<img[^>]+>/i)
-            next if post_features.include?("with_links") && !cooked.match?(/<a[^>]+>/i)
-            next if post_features.include?("with_code") && !cooked.match?(/<pre[^>]+>/i)
+            if post_features.include?("with_images") &&
+                 !cooked.match?(/<img(?![^>]*class=["'](emoji|avatar))[^>]*>/i)
+              next
+            end
+            next if post_features.include?("with_links") && !cooked.match?(/<a\s+[^>]*>/i)
+            next if post_features.include?("with_code") && !cooked.match?(/<pre[^>]*>/i)
             if post_features.include?("with_uploads") &&
-                 !cooked.match?(/<a[^>]+class=["']attachment[^>]+>/i)
+                 !cooked.match?(/<a\s+[^>]*class=["']attachment[^>]*>/i)
               next
             end
           end

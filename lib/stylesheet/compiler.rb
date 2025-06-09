@@ -54,6 +54,15 @@ module Stylesheet
       load_paths = [ASSET_ROOT]
       load_paths += options[:load_paths] if options[:load_paths]
 
+      silence_deprecations = %w[color-functions import global-builtin]
+      fatal_deprecations = []
+
+      if options[:strict_deprecations]
+        fatal_deprecations << "mixed-decls"
+      else
+        silence_deprecations << "mixed-decls"
+      end
+
       engine =
         SassC::Engine.new(
           stylesheet,
@@ -62,7 +71,8 @@ module Stylesheet
           source_map_file: source_map_file,
           source_map_contents: true,
           load_paths: load_paths,
-          silence_deprecations: %w[color-functions import global-builtin],
+          silence_deprecations:,
+          fatal_deprecations:,
           quiet: ENV["QUIET_SASS_DEPRECATIONS"] == "1",
         )
 

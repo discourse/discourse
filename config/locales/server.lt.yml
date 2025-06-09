@@ -357,46 +357,6 @@ lt:
       few: "%{count} pranešimai"
       many: "%{count} pranešimų"
       other: "%{count} pranešimų"
-    "new-topic": |
-      Sveiki atvykę į %{site_name} &mdash; **ačiū, kad pradėjote naują pokalbį!**
-
-      - Ar pavadinimas skamba įdomiai, jei jį skaitote garsiai? Ar tai gera santrauka?
-
-      - Kam tai būtų įdomu? Kodėl tai svarbu? Kokių atsakymų norite?
-
-      - Į savo temą įtraukite dažniausiai naudojamus žodžius, kad kiti galėtų ją *rasti*. Norėdami sugrupuoti temą su susijusiomis temomis, pasirinkite kategoriją (arba žymą).
-
-      Daugiau [žr. Mūsų bendruomenės gaires] (%{base_path}/gairės). Šis skydelis bus rodomas tik pirmiesiems %{education_posts_text}.
-    "new-reply": |
-      Sveiki atvykę į %{site_name} &mdash; **ačiū, kad prisijungėte!**
-
-      – Būkite malonūs bendruomenės nariams.
-
-      – Ar jūsų atsakymas pagerina pokalbį?
-
-      – Konstruktyvi kritika yra sveikintina, tačiau kritikuokite *idėjas*, o ne žmones.
-
-      Norėdami sužinoti daugiau, [žr. mūsų bendruomenės gaires](%{base_path}/gairės). Šis skydelis bus rodomas tik pirmiesiems %{education_posts_text}.
-    avatar: |
-      ### O kaip jūsų paskyros nuotrauka?
-
-      Paskelbėte keletą temų ir atsakymų, tačiau jūsų profilio nuotrauka nėra tokia unikali kaip jūs - tai tik laiškas.
-
-      Ar pagalvojote ** [apsilankyti savo vartotojo profilyje] (%{profile_path}) ** ir įkelti nuotrauką, vaizduojančią jus?
-
-      Lengviau sekti diskusijas ir susirasti įdomių žmonių pokalbiuose, kai kiekvienas turi unikalią profilio nuotrauką!
-    too_many_replies: |
-      ### Jūs pasiekėte šios temos atsakymo limitą
-
-      Atsiprašome, tačiau naujiems vartotojams laikinai galioja tik %{newuser_max_replies_per_topic} atsakymai toje pačioje temoje.
-
-      Vietoj to, kad pridėtumėte kitą atsakymą, apsvarstykite galimybę redaguoti ankstesnius atsakymus arba apsilankyti kitose temose.
-    reviving_old_topic: |
-      ### Atgaivinti šią temą?
-
-      Paskutinis atsakymas į šią temą buvo **%{time_ago}**. Jūsų atsakymas temą pakels į jos sąrašo viršų ir praneš visiems anksčiau dalyvavusiems pokalbyje.
-
-      Ar tikrai norite tęsti šį seną pokalbį?
   activerecord:
     attributes:
       category:
@@ -1361,7 +1321,6 @@ lt:
     newuser_max_mentions_per_post: "Didžiausias @name pranešimų skaičius, kurį naujas vartotojas gali naudoti įraše."
     newuser_max_replies_per_topic: "Maksimalus atsakymų skaičius, kurį naujas vartotojas gali pateikti vienoje temoje, kol kas nors į juos atsakys."
     dark_mode_none: "Nieko"
-    max_similar_results: "Kiek panašių temų rodyti virš redaktoriaus kuriant naują temą. Palyginimas pagrįstas pavadinimu ir tekstu."
     max_image_megapixels: "Didžiausias leistinas vaizdo megapikselių skaičius. Vaizdai su didesniu megapikselių skaičiumi bus atmesti."
     topic_views_heat_medium: "Po tiek peržiūrų rodinių laukas vidutiniškai paryškinamas."
     topic_views_heat_high: "Po šio daugybės peržiūrų, peržiūros laukas yra stipriai paryškintas."
@@ -1394,7 +1353,6 @@ lt:
     hide_suspension_reasons: "Nerodyti sustabdymo priežasčių viešai naudotojų profiliuose."
     user_selected_primary_groups: "Leiskite vartotojams nustatyti savo pagrindinę grupę"
     max_notifications_per_user: "Maksimalus vieno vartotojo pranešimų skaičius, jei šis skaičius viršijamas, senieji pranešimai bus ištrinti. Taikoma kas savaitę. Norėdami išjungti, nustatykite 0"
-    disable_avatar_education_message: "Išjungti švietimo pranešimą keičiant avataras."
     header_dropdown_category_count: "Kiek kategorijų gali būti rodoma antraštės išskleidžiamajame meniu."
     automatically_unpin_topics: "Automatiškai atsegti temas, kai vartotojas pasiekia apačią."
     read_time_word_count: "Žodžių skaičius per minutę apskaičiuojant numatomą skaitymo laiką."
@@ -1512,8 +1470,6 @@ lt:
     admin_not_allowed_from_ip_address: "Tu negali prisijungti kaip administratorius iš šio IP adreso."
     errors: "%{errors}"
     not_available: "Negalimas. Gal pabandykite %{suggestion}?"
-    omniauth_error:
-      invalid_iat: "Nepavyko patvirtinti prieigos rakto dėl serverio laikrodžio skirtumų. Prašau, pabandykite dar kartą."
     omniauth_error_unknown: "Apdorojant jūsų prisijungimo duomenis įvyko klaida. Bandykite dar kartą."
     omniauth_confirm_title: "Prisijunkite naudodami %{provider}"
     omniauth_confirm_button: "Tęsti"

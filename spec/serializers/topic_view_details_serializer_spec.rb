@@ -30,7 +30,9 @@ RSpec.describe TopicViewDetailsSerializer do
 
   describe "#can_permanently_delete" do
     let(:post) do
-      Fabricate(:post).tap { |post| PostDestroyer.new(Discourse.system_user, post).destroy }
+      Fabricate(:post).tap do |post|
+        PostDestroyer.new(Discourse.system_user, post, context: "Automated testing").destroy
+      end
     end
 
     before { SiteSetting.can_permanently_delete = true }

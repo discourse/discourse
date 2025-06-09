@@ -1,47 +1,4 @@
-// Topic list navigation & controls
-.list-controls {
-  background: var(--d-content-background);
-
-  .combo-box .combo-box-header {
-    background: var(--secondary);
-    color: var(--primary);
-    border: 1px solid var(--primary-medium);
-    font-size: var(--font-0);
-    height: 100%;
-
-    &:focus {
-      border-color: var(--tertiary);
-    }
-  }
-
-  .select-kit {
-    .select-kit-collection {
-      max-height: 40vh;
-    }
-  }
-}
-
-.navigation-container {
-  width: 100%;
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.category-breadcrumb {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--nav-space) 0; // used if the breadcrumb dropdowns wrap
-  list-style: none;
-  padding: 0;
-  margin: 0 0 var(--nav-space) 0;
-
-  > li {
-    // only target the top-level li, not dropdowns
-    display: flex;
-    margin-right: 0.5em;
-    margin-bottom: 0;
-  }
-}
+@use "lib/viewport";
 
 #navigation-bar {
   display: flex;
@@ -70,7 +27,7 @@
     height: 100%;
   }
 
-  @include breakpoint(mobile-large) {
+  @include viewport.until(sm) {
     .edit-category {
       .d-button-label {
         display: none;
@@ -89,11 +46,11 @@
 
 .category-heading {
   max-width: 100%;
+  font-size: var(--font-up-3);
 
   p {
     margin-top: 0;
     line-height: var(--line-height-large);
-    font-size: var(--font-up-3);
   }
 }
 
@@ -240,7 +197,7 @@
   }
 
   .topic-list-data {
-    line-height: var(--line-height-large);
+    line-height: var(--line-height-medium);
     text-align: left;
     vertical-align: middle;
   }
@@ -289,7 +246,9 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 0.5em;
+    margin-top: 0.3125em;
+    gap: 0 0.5em;
+    line-height: var(--line-height-large);
 
     a.discourse-tag.box {
       padding-top: 0;
@@ -474,4 +433,9 @@ div.education {
   white-space: nowrap;
   align-self: center;
   line-height: var(--line-height-medium);
+}
+
+#topic-list-heading {
+  line-height: var(--line-height-medium);
+  margin-bottom: 0.5em;
 }

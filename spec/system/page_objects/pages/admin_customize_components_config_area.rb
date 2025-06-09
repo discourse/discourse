@@ -119,16 +119,16 @@ module PageObjects
         page.visit("/admin/config/customize/components")
       end
 
-      def loading?
-        has_css?(".loading-container.visible")
-      end
-
       def component(id)
         ComponentRow.new(".admin-config-components__component-row[data-component-id=\"#{id}\"]")
       end
 
       def has_no_component?(id)
         has_no_css?(".admin-config-components__component-row[data-component-id=\"#{id}\"]")
+      end
+
+      def has_component?(id)
+        has_css?(".admin-config-components__component-row[data-component-id=\"#{id}\"]")
       end
 
       def status_selector
@@ -143,7 +143,17 @@ module PageObjects
         has_no_css?(".admin-config-components__component-row")
       end
 
+      def has_exact_components?(*ids)
+        ids.all? { |id| has_component?(id) } && has_exactly_n_components?(ids.size)
+      end
+
+      def has_exactly_n_components?(count)
+        has_css?(".admin-config-components__component-row", count:)
+      end
+
       def components_shown
+        expect(page).to have_css(".admin-config-components__component-row")
+
         all(".admin-config-components__component-row").map { |node| node["data-component-id"].to_i }
       end
 

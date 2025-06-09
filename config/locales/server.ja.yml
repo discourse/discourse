@@ -565,58 +565,8 @@ ja:
   education:
     until_posts:
       other: "投稿 %{count} 件"
-    "new-topic": |
-      %{site_name} へようこそ &mdash; **新しい会話を開始していただきありがとうございます！**
-
-      - タイトルを声を出して読み上げたとき、興味深いと感じられますか？要約はわかりやすいですか？
-
-      - どのようなユーザーが興味を持ちますか？なぜ重要ですか？どのような回答を求めていますか？
-
-      - 一般的に使用されている言葉をトピックに含めると、ほかのユーザーが*検索*しやすくなります。トピックを関連トピックとグループ化するには、カテゴリ (またはタグ) を選択してください。
-
-      詳細については、[コミュニティーガイドラインをご覧ください](%{base_path}/guidelines)。このパネルは最初の%{education_posts_text}にのみ表示されます。
-    "new-reply": |
-      %{site_name} へようこそ &mdash; **貢献していただきありがとうございます！**
-
-      - 他のコミュニティーメンバーに親切に接してください。
-
-      ‐ あなたの返信によって会話が改善されますか？
-
-      ‐ 建設的な批判は歓迎されますが、ユーザーではなく*アイデア*を批判してください。
-
-      詳細は、[コミュニティーガイドラインをご覧ください](%{base_path}/guidelines)。このパネルは最初の%{education_posts_text}にのみ表示されます。
-    avatar: |
-      ### アカウントに写真はいかがですか？
-
-      トピックと返信をいくつか投稿していますが、プロファイル写真が単なる文字になっています。
-
-      **[ユーザープロファイルにアクセス](%{profile_path})**して、あなたを表す写真をアップロードしませんか？
-
-      全員が特有のプロファイル写真を設定していれば、会話のディスカッションをフォローしやすく、面白い人たちを見つけやすくなります！
-    sequential_replies: |
-      ### 複数の投稿にまとめて返信しましょう
-
-      複数の返信をトピックに続けて投稿するのではなく、1 つの返信に前の投稿の引用や @name 参照を含めて投稿することができます。
-
-      前の返信を編集する際に、テキストをハイライトして<b>引用して返信</b>ボタンを選択すると、返信に引用を追加することができます。
-
-      短い個別の返信を多数読むよりも、詳細な返信を数件読む方が、トピックをフォローしやすくなります。
-    dominating_topic: このトピックにたくさん投稿されましたね！ここに返信して互いに話し合うチャンスを他の人にも与えることを検討してください。
     get_a_room:
       other: '@%{reply_username} に %{count} 回返信しましたが、個人メッセージを送信できることをご存知ですか？'
-    dont_feed_the_trolls: この投稿は、モデレーターの注意が必要としてすでに通報されています。返信してもよろしいですか？否定的なコンテンツへの返信は、さらに否定的な行動を助長する傾向があります。
-    too_many_replies: |
-      ### このトピックへの返信数の制限に達しました
-
-      新しいユーザーの同じトピックへの返信は、一時的に %{newuser_max_replies_per_topic} 件に制限されています。
-
-      返信を追加する代わりに、前の返信を編集するかほかのトピックにアクセスしてください。
-    reviving_old_topic: |
-      ### このトピックを復活させませんか？
-
-      このトピックの最後の返信は **%{time_ago}**でした。あなたの返信によってこのトピックをリストのトップにバンプすれば、会話に以前参加していたユーザーに通知されます。
-
-      この古い会話を続けてもよろしいですか？
   activerecord:
     attributes:
       category:
@@ -1695,7 +1645,6 @@ ja:
     pending_users_reminder_delay_minutes: "モデレーターに新しいユーザーがこの時間以上承認待ちであることを通知します。-1 に設定すると、通知は無効になります。"
     persistent_sessions: "ユーザーはブラウザが閉じられてもログインのままになる"
     maximum_session_age: "ユーザーは最後の訪問から n 時間以内はログインしたままになる"
-    full_page_login: "ログインフォームと登録フォームをフルページで表示します (オフの場合、フォームはモーダルで表示されます)。"
     show_signup_form_email_instructions: 登録フォームにメールアドレスの指示を表示します。
     show_signup_form_username_instructions: 登録フォームにユーザー名の指示を表示します。
     show_signup_form_full_name_instructions: 登録フォームにフルネームの指示を表示します。
@@ -2000,7 +1949,6 @@ ja:
     authorized_extensions: "アップロードに使用できるファイル拡張子のリスト"
     authorized_extensions_for_staff: "`authorized_extensions` サイト設定で定義されたリストに加えて、スタッフユーザーがアップロードできるファイル拡張子のリスト。"
     theme_authorized_extensions: "テーマのアップロードに使用できるファイル拡張子のリスト"
-    max_similar_results: "新規トピックを作成中に、エディターの上に表示する類似トピックの数。タイトルと本文に基づいて比較されます。"
     max_image_megapixels: "画像に許可されるメガピクセルの最大数。これより大きいメガピクセルの画像は拒否されます。"
     title_prettify: "一般的なタイトルのスペルミスやエラー (すべて大文字、先頭の小文字、複数の！や？の使用、文末の重複するピリオドなど) を防止します。"
     title_remove_extraneous_space: "句読点の前にある先頭の空白を削除する。"
@@ -2170,12 +2118,10 @@ ja:
     max_notifications_per_user: "ユーザー当たりの通知の最大数。この数を超えると、古い通知は削除されます。毎週適用されます。0 に設定すると無効になります"
     allowed_user_website_domains: "ユーザーのウェブサイトはこれらのドメインに対して検証されます。パイプ区切りのリスト。"
     allow_profile_backgrounds: "ユーザーにプロファイル背景のアップロードを許可します。"
-    sequential_replies_threshold: "連続返信が多すぎることを通知されるまでに、ユーザーがトピックで連続して作成できる投稿数。"
     get_a_room_threshold: "警告を受けるまでに、ユーザーが同じトピックの同じ人物に行える投稿数。"
     dont_feed_the_trolls_threshold: "警告を受けるまでの他のユーザーからの通報数。"
     enable_mobile_theme: "モバイルデバイスにモバイル対応のテーマを使用します (デスクトップサイトに切り替え可能)。完全にレスポンシブなカスタムスタイルシートを使用する場合はこの設定を無効にしてください。"
     dominating_topic_minimum_percent: "ユーザーがトピックを過度に占領していることを通知する、トピック内のユーザーの投稿率。"
-    disable_avatar_education_message: "アバターを変更するためのチュートリアルメッセージを無効にする。"
     pm_warn_user_last_seen_months_ago: "新しい PM を作成するときに、対象の受信者 n か月以上もアクセスしていないことをユーザーに警告します。"
     suppress_uncategorized_badge: "トピックリストに未分類のトピックのバッジを表示しない"
     header_dropdown_category_count: "ヘッダードロップダウンメニューに表示できるカテゴリ数。"
@@ -2206,7 +2152,6 @@ ja:
     show_time_gap_days: "2 つの投稿の作成日の間が指定された日数以上の場合、トピックに時間の差を表示します。"
     short_progress_text_threshold: "トピック内の投稿数が指定された数字を超えると、プログレスバーに現在の投稿番号のみを表示します。プログレスバーの幅を変更すると、この値を変更する必要がある場合があります。"
     default_code_lang: "Markdown コードブロックに適用されるデフォルトのプログラミング言語構文ハイライト (auto、text、ruby、python など)。この値は、`highlighted languages` サイト設定にも含まれている必要があります。"
-    warn_reviving_old_topic_age: "最後の返信が指定された日数より古いトピックに返信し始めると、警告を表示します。0 に設定すると無効になります。"
     autohighlight_all_code: "HTMLで作成された &lt;code&gt; ブロックに言語が指定されていない場合でも構文ハイライトを適用します。Markdown で作成されたコードブロックを構成するには、'デフォルトのコード言語' 設定を使用してください。"
     highlighted_languages: "構文ハイライトルールが含まれる。(警告: 多くの言語を含めすぎると、パフォーマンスに影響を与える可能性があります) デモは、<a href='https://highlightjs.org/demo/' target='_blank'>https://highlightjs.org/demo</a> をご覧ください。"
     show_copy_button_on_codeblocks: "コードブロックに、ブロックのコンテンツをユーザーのクリップボードにコピーするボタンを追加します。"
@@ -2375,10 +2320,6 @@ ja:
     default_navigation_menu_categories: "選択されたカテゴリは、デフォルトでナビゲーションメニューのカテゴリセクションに表示されます。"
     default_navigation_menu_tags: "選択されたタグは、デフォルトでナビゲーションメニューのタグセクションに表示されます。"
     experimental_new_new_view_groups: '未読のトピックと新規トピックを合わせた新しいトピックリストを有効にし、サイドバーの「すべて」リンクをそのリストにリンクする。'
-    glimmer_topic_list_mode: "新しい 'glimmer' トピックリストの実装が使用されるかどうかを制御します。'auto' の場合、すべてのテーマとプラグインの準備が整うと自動的に有効になります。詳細は、<a href='https://meta.discourse.org/t/343404'>メタトピック</a>をご覧ください。"
-    glimmer_post_menu_mode: "新しい 'glimmer' 投稿メニューの実装が使用されるかどうかを制御する。'auto' はすべてのテーマとプラグインの準備ができると自動的に有効化します。この実装は活動的に開発中であり、本番環境での使用を意図したものではありません。実装が完成してリリースされるまで、これに対するテーマ/プラグインを開発しないでください。"
-    glimmer_post_menu_groups: "特定のユーザーグループに対し、新しい 'glimmer' 投稿リストの実装を 'auto' モードで有効にする。この実装は開発中であり、本番環境での使用を意図したものではありません。実装が完成してリリースされるまで、これに対するテーマ/プラグインを開発しないでください。"
-    glimmer_post_stream_mode_auto_groups: "特定のユーザーグループに対し、新しい 'glimmer' 投稿リストの実装を 'auto' モードで有効にする。この実装は開発中であり、本番環境での使用を意図したものではありません。実装が完成してリリースされるまで、これに対するテーマ/プラグインを開発しないでください。"
     experimental_form_templates: "フォームのテンプレート機能を有効にします。テンプレートは <a href='%{base_path}/admin/customize/form-templates'>Customize / Templates</a> で管理できます。"
     lazy_load_categories_groups: "これらのグループのユーザーに対してのみ、カテゴリ情報を遅延読み込みする。これにより、カテゴリ数の多いサイトのパフォーマンスが改善されます。"
     page_loading_indicator: "Discourse 内のページナビゲーション中に表示される読み込みインジケーターを構成します。「スピナー」はページ全体のインジケーターです。「スライダー」は画面上部に細いバーを表示します。"
@@ -2571,11 +2512,6 @@ ja:
     errors: "%{errors}"
     not_available: "利用できません。%{suggestion}を試しますか？"
     something_already_taken: "エラーが発生しました。ユーザー名またはメールアドレスがすでに登録されている可能性があります。パスワードリセットを行ってください。"
-    omniauth_error:
-      generic: "アカウントを認証中にエラーが発生しました。もう一度お試しください。"
-      csrf_detected: "認証がタイムアウトしたか、ブラウザを切り替えました。もう一度お試しください。"
-      request_error: "認証を開始中にエラーが発生しました。もう一度お試しください。"
-      invalid_iat: "サーバークロックの差により認証トークンを検証できません。もう一度お試しください。"
     omniauth_error_unknown: "ログインを処理中に問題が発生しました。もう一度お試しください。"
     omniauth_confirm_title: "%{provider} を使用してログイン"
     omniauth_confirm_button: "続行"
@@ -3981,8 +3917,6 @@ ja:
   offline:
     title: "アプリを読み込めません"
     offline_page_message: "オフラインになっているようです！ネットワーク接続を確認して、もう一度お試しください。"
-  login_required:
-    welcome_message: "# [%{title}へようこそ](#welcome)"
   upload:
     edit_reason: "ダウンロードされた画像のコピー"
     unauthorized: "アップロードしようとしているファイルは許可されていません (許可されている拡張子: %{authorized_extensions})。"
@@ -4008,7 +3942,6 @@ ja:
     images:
       too_large: "アップロードしようとしている画像が大きすぎます (最大サイズは %{max_size_kb} KB です)。サイズを変更してもう一度お試しください。"
       too_large_humanized: "アップロードしようとしている画像が大きすぎます (最大サイズは %{max_size} です)。サイズを変更してもう一度お試しください。"
-      larger_than_x_megapixels: "アップロードしようとしている画像が大きすぎます (最大サイズは %{max_image_megapixels} メガピクセルです)。サイズを変更してもう一度お試しください。"
       size_not_found: "画像のサイズを判定できませんでした。画像が破損している可能性があります。"
     placeholders:
       too_large: "(%{max_size_kb}KB を超える画像)"

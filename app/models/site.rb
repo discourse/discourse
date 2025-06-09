@@ -54,7 +54,7 @@ class Site
   end
 
   def self.categories_cache_key
-    "site_categories_#{Discourse.git_version}"
+    "site_categories_#{I18n.locale}_#{Discourse.git_version}"
   end
 
   def self.clear_cache
@@ -73,24 +73,35 @@ class Site
         categories =
           begin
             query =
-              Category
-                .includes(
-                  :uploaded_logo,
-                  :uploaded_logo_dark,
-                  :uploaded_background,
-                  :uploaded_background_dark,
-                  :tags,
-                  :tag_groups,
-                  :form_templates,
-                  category_required_tag_groups: :tag_group,
-                )
-                .joins("LEFT JOIN topics t on t.id = categories.topic_id")
-                .select("categories.*, t.slug topic_slug")
-                .order(:position)
+              Category.includes(
+                :uploaded_logo,
+                :uploaded_logo_dark,
+                :uploaded_background,
+                :uploaded_background_dark,
+                :tags,
+                :tag_groups,
+                :form_templates,
+                category_required_tag_groups: :tag_group,
+              ).joins("LEFT JOIN topics t on t.id = categories.topic_id")
 
+            if SiteSetting.experimental_content_localization
+              locale = I18n.locale.to_s
+              query =
+                query.joins(
+                  "LEFT JOIN category_localizations cl ON cl.category_id = categories.id AND cl.locale = '#{ActiveRecord::Base.connection.quote_string(locale)}'",
+                ).select(
+                  "categories.*,
+                      t.slug topic_slug,
+                      COALESCE(cl.name, categories.name) AS name,
+                      COALESCE(cl.description, categories.description) AS description",
+                )
+            else
+              query = query.select("categories.*, t.slug topic_slug")
+            end
+
+            query = query.order(:position)
             query =
               DiscoursePluginRegistry.apply_modifier(:site_all_categories_cache_query, query, self)
-
             query.to_a
           end
 
@@ -221,12 +232,23 @@ class Site
     end
 
     seq = nil
+    use_localized_anon_cache = SiteSetting.experimental_content_localization && guardian.anonymous?
+
+    locale = I18n.locale
+    cache_key = "site_json"
+    seq_key = "site_json_seq"
+    version_key = "site_json_version"
+
+    if use_localized_anon_cache
+      cache_key += "_#{locale}"
+      seq_key += "_#{locale}"
+      version_key += "_#{locale}"
+    end
 
     if guardian.anonymous?
       seq = MessageBus.last_id("/site_json")
-
       cached_json, cached_seq, cached_version =
-        Discourse.redis.mget("site_json", "site_json_seq", "site_json_version")
+        Discourse.redis.mget(cache_key, seq_key, version_key)
 
       if cached_json && seq == cached_seq.to_i && Discourse.git_version == cached_version
         return cached_json
@@ -238,9 +260,9 @@ class Site
 
     if guardian.anonymous?
       Discourse.redis.multi do |transaction|
-        transaction.setex "site_json", 1800, json
-        transaction.set "site_json_seq", seq
-        transaction.set "site_json_version", Discourse.git_version
+        transaction.setex cache_key, 1800, json
+        transaction.set seq_key, seq
+        transaction.set version_key, Discourse.git_version
       end
     end
 

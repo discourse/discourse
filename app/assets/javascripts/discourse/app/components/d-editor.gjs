@@ -1,6 +1,5 @@
 import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
-import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
@@ -11,16 +10,17 @@ import { observes, on as onEvent } from "@ember-decorators/object";
 import { emojiSearch, isSkinTonableEmoji } from "pretty-text/emoji";
 import { translations } from "pretty-text/emoji/data";
 import { Promise } from "rsvp";
+import { not } from "truth-helpers";
 import TextareaEditor from "discourse/components/composer/textarea-editor";
 import ToggleSwitch from "discourse/components/composer/toggle-switch";
+import ToolbarButtons from "discourse/components/composer/toolbar-buttons";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
-import DecoratedHtml from "discourse/components/decorated-html";
+import DEditorPreview from "discourse/components/d-editor-preview";
 import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
 import InsertHyperlink from "discourse/components/modal/insert-hyperlink";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PopupInputTip from "discourse/components/popup-input-tip";
-import htmlSafe from "discourse/helpers/html-safe";
 import { SKIP } from "discourse/lib/autocomplete";
 import renderEmojiAutocomplete from "discourse/lib/autocomplete/emoji";
 import userAutocomplete from "discourse/lib/autocomplete/user";
@@ -31,7 +31,6 @@ import deprecated from "discourse/lib/deprecated";
 import { isTesting } from "discourse/lib/environment";
 import { getRegister } from "discourse/lib/get-owner";
 import { hashtagAutocompleteOptions } from "discourse/lib/hashtag-autocomplete";
-import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
 import loadEmojiSearchAliases from "discourse/lib/load-emoji-search-aliases";
 import loadRichEditor from "discourse/lib/load-rich-editor";
@@ -43,7 +42,6 @@ import {
   renderUserStatusHtml,
 } from "discourse/lib/user-status-on-autocomplete";
 import { i18n } from "discourse-i18n";
-import ToolbarPopupMenuOptions from "select-kit/components/toolbar-popup-menu-options";
 
 let _createCallbacks = [];
 
@@ -70,6 +68,7 @@ export default class DEditor extends Component {
   @tracked editorComponent;
   /** @type {TextManipulation} */
   @tracked textManipulation;
+  @tracked replacedToolbarInstance;
 
   @tracked preview;
 
@@ -156,40 +155,11 @@ export default class DEditor extends Component {
 
     keymap["tab"] = () => this.textManipulation.indentSelection("right");
     keymap["shift+tab"] = () => this.textManipulation.indentSelection("left");
+    if (this.siteSettings.rich_editor) {
+      keymap["ctrl+m"] = () => this.toggleRichEditor();
+    }
 
     return keymap;
-  }
-
-  @action
-  handlePreviewClick(event) {
-    if (!event.target.closest(".d-editor-preview")) {
-      return;
-    }
-
-    if (wantsNewWindow(event)) {
-      return;
-    }
-
-    if (event.target.tagName === "A") {
-      if (event.target.classList.contains("mention")) {
-        this.appEvents.trigger(
-          "d-editor:preview-click-user-card",
-          event.target,
-          event
-        );
-      }
-
-      if (event.target.classList.contains("mention-group")) {
-        this.appEvents.trigger(
-          "d-editor:preview-click-group-card",
-          event.target,
-          event
-        );
-      }
-
-      event.preventDefault();
-      return false;
-    }
   }
 
   @onEvent("willDestroyElement")
@@ -202,7 +172,7 @@ export default class DEditor extends Component {
   @discourseComputed()
   toolbar() {
     const toolbar = new Toolbar(
-      this.getProperties("site", "siteSettings", "showLink", "capabilities")
+      this.getProperties("siteSettings", "showLink", "capabilities")
     );
     toolbar.context = this;
 
@@ -210,11 +180,6 @@ export default class DEditor extends Component {
 
     if (this.extraButtons) {
       this.extraButtons(toolbar);
-    }
-
-    const firstButton = toolbar.groups.mapBy("buttons").flat().firstObject;
-    if (firstButton) {
-      firstButton.tabindex = 0;
     }
 
     return toolbar;
@@ -449,7 +414,7 @@ export default class DEditor extends Component {
           topicId: this.topicId,
           categoryId: this.categoryId,
           includeGroups: true,
-          prioritizedUserId: this.replyingToUser?.id,
+          prioritizedUserId: this.replyingToUserId,
         }).then((result) => {
           initUserStatusHtml(getOwner(this), result.users);
           return result;
@@ -648,6 +613,16 @@ export default class DEditor extends Component {
   }
 
   @action
+  replaceToolbar(toolbarInstance) {
+    this.replacedToolbarInstance = toolbarInstance;
+  }
+
+  @action
+  resetToolbar() {
+    this.replacedToolbarInstance = null;
+  }
+
+  @action
   onChange(event) {
     this.set("value", event?.target?.value);
     this.change?.(event);
@@ -746,45 +721,40 @@ export default class DEditor extends Component {
             {{if this.disabled 'disabled'}}
             {{if this.isEditorFocused 'in-focus'}}"
         >
-          <div class="d-editor-button-bar" role="toolbar">
-            {{#if this.siteSettings.rich_editor}}
-              <ToggleSwitch
-                @preventFocus={{true}}
-                @disabled={{@disableSubmit}}
-                @state={{this.isRichEditorEnabled}}
-                {{on "click" this.toggleRichEditor}}
-              />
-            {{/if}}
 
-            {{#each this.toolbar.groups as |group|}}
-              {{#each group.buttons as |b|}}
-                {{#if (b.condition this)}}
-                  {{#if b.popupMenu}}
-                    <ToolbarPopupMenuOptions
-                      @content={{this.popupMenuOptions}}
-                      @onChange={{this.onPopupMenuAction}}
-                      @onOpen={{action b.action b}}
-                      @tabindex={{-1}}
-                      @onKeydown={{this.rovingButtonBar}}
-                      @options={{hash icon=b.icon focusAfterOnChange=false}}
-                      class={{b.className}}
-                    />
-                  {{else}}
-                    <DButton
-                      @action={{fn (action b.action) b}}
-                      @translatedTitle={{b.title}}
-                      @label={{b.label}}
-                      @icon={{b.icon}}
-                      @preventFocus={{b.preventFocus}}
-                      @onKeyDown={{this.rovingButtonBar}}
-                      tabindex={{b.tabindex}}
-                      class={{b.className}}
-                    />
-                  {{/if}}
-                {{/if}}
-              {{/each}}
-            {{/each}}
-          </div>
+          {{#if this.replacedToolbarInstance}}
+            <div class="d-editor-button-bar --replaced-toolbar" role="toolbar">
+              <DButton
+                @action={{this.resetToolbar}}
+                @icon="angle-left"
+                @preventFocus={{true}}
+                @onKeyDown={{this.rovingButtonBar}}
+                class="btn-flat d-editor-button-bar__back"
+              />
+              <ToolbarButtons
+                @data={{this.replacedToolbarInstance}}
+                @rovingButtonBar={{this.rovingButtonBar}}
+              />
+            </div>
+          {{else}}
+            <div class="d-editor-button-bar" role="toolbar">
+              {{#if this.siteSettings.rich_editor}}
+                <ToggleSwitch
+                  @preventFocus={{true}}
+                  @disabled={{@disableSubmit}}
+                  @state={{this.isRichEditorEnabled}}
+                  {{on "click" this.toggleRichEditor}}
+                  {{on "keydown" this.rovingButtonBar}}
+                />
+              {{/if}}
+
+              <ToolbarButtons
+                @data={{this.toolbar}}
+                @rovingButtonBar={{this.rovingButtonBar}}
+                @isFirst={{not this.siteSettings.rich_editor}}
+              />
+            </div>
+          {{/if}}
 
           <ConditionalLoadingSpinner @condition={{this.loading}} />
           <this.editorComponent
@@ -801,6 +771,7 @@ export default class DEditor extends Component {
             @categoryId={{@categoryId}}
             @topicId={{@topicId}}
             @id={{this.textAreaId}}
+            @replaceToolbar={{this.replaceToolbar}}
           />
           <PopupInputTip @validation={{this.validation}} />
           <PluginOutlet
@@ -810,26 +781,12 @@ export default class DEditor extends Component {
           />
         </div>
       </div>
-
-      {{! template-lint-disable no-invalid-interactive }}
-      <div
-        class="d-editor-preview-wrapper
-          {{if this.forcePreview 'force-preview'}}"
-        {{on "click" this.handlePreviewClick}}
-      >
-        <DecoratedHtml
-          @className="d-editor-preview"
-          @html={{htmlSafe this.preview}}
-          @decorate={{this.previewUpdated}}
-        />
-        <span class="d-editor-plugin">
-          <PluginOutlet
-            @name="editor-preview"
-            @connectorTagName="div"
-            @outletArgs={{this.outletArgs}}
-          />
-        </span>
-      </div>
+      <DEditorPreview
+        @preview={{if @hijackPreview @hijackPreview this.preview}}
+        @forcePreview={{this.forcePreview}}
+        @onPreviewUpdated={{this.previewUpdated}}
+        @outletArgs={{this.outletArgs}}
+      />
     </div>
   </template>
 }

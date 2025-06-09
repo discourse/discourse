@@ -479,7 +479,7 @@ sq:
       one: "Shikoni %{count} temë të re"
       other: "Shikoni %{count} tema të reja"
     preview: "shiko"
-    cancel: "anulo"
+    cancel: "Anulo"
     deleting: "Po fshihet…"
     save: "Ruaj ndryshimet"
     saving: "Po ruhet..."
@@ -1150,7 +1150,6 @@ sq:
       said: "%{username}:"
       profile: "Profili"
       profile_possessive: "Profili i %{username}"
-      account_possessive: "Llogaria e %{name}"
       mute: "Hesht"
       edit: "Ndryshoni preferencat"
       download_archive:
@@ -1979,7 +1978,6 @@ sq:
         title: "Adresa IP e regjistrimit"
       avatar:
         title: "Foto e profilit"
-        header_title: "profili, mesazhet, të preferuarat dhe preferencat"
         name_and_description: "%{name} - %{description}"
         edit: "Redaktoni foton e profilit"
       title:
@@ -2056,6 +2054,8 @@ sq:
     modal:
       close: "mbylle"
       dismiss_error: "Hiqni gabimin"
+    multi_select:
+      search: "Kërkoni…"
     form_kit:
       reset: Rivendosni
       optional: opsionale
@@ -2296,10 +2296,6 @@ sq:
         name: "Google"
         title: "Identifikohu me Google"
         sr_title: "Identifikohu me Google"
-      twitter:
-        name: "Twitter"
-        title: "Identifikohu me Twitter"
-        sr_title: "Identifikohu me Twitter"
       instagram:
         name: "Instagram"
         title: "Identifikohu me Instagram"
@@ -2767,8 +2763,6 @@ sq:
       in_topics_posts: "në të gjitha temat dhe postimet"
       enter_hint: "ose shtypni Enter"
       in_posts_by: "në postimet nga %{username}"
-      browser_tip: "%{modifier} + f"
-      browser_tip_description: "përsëri për të përdorur kërkimin e shfletuesit"
       recent: "Kërkimet e fundit"
       clear_recent: "Pastro kërkimet e fundit"
       type:
@@ -2853,7 +2847,6 @@ sq:
           aria_label: Filtro sipas shikimeve maksimale
         additional_options:
           label: "Filtro sipas numrit të postimeve dhe shikimeve të temës"
-    hamburger_menu: "menu"
     new_item: "e re"
     go_back: "kthehu mbrapa"
     not_logged_in_user: "faqja e përdoruesit me një përmbledhje të aktivitetit dhe preferencave"
@@ -3427,6 +3420,11 @@ sq:
       sr_post_like_count_button:
         one: "%{count} person pëlqeu këtë postim."
         other: "%{count} vetë pëlqyen këtë postim."
+      localizations:
+        table:
+          actions: "Veprimet"
+          edit: "Redaktoni"
+          delete: "Fshij"
       errors:
         create: "Na vjen keq, por ndodhi një gabim gjatë hapjes së temës. Provojeni përsëri."
         edit: "Na vjen keq, ndodhi një gabim gjatë redaktimit të temës. Provojeni përsëri."
@@ -3513,6 +3511,10 @@ sq:
       general: "Karakteristika të përgjithshme"
       settings: "Rregullimet"
       tags: "Etiketat"
+      localization:
+        name: "Emri"
+        description: "Përshkrimi"
+        remove: "Hiq"
       tags_placeholder: "(Opsionale) lista e etiketave të lejuara"
       tag_groups_placeholder: "(Opsionale) lista e grupeve të etiketave"
       required_tag_group:
@@ -3959,6 +3961,7 @@ sq:
               title_drafts: "Draftet e mia të papostuara"
             invite:
               content: "Fto"
+      search: "Kërko"
     form_templates:
       upload_field:
         upload: "Ngarko"
@@ -3976,6 +3979,9 @@ sq:
       spreadsheet:
         show: "Shfaq"
         about: "Rreth"
+    discovery:
+      headings:
+        categories: "Të gjitha kategoritë"
   admin_js:
     settings: "Rregullimet"
     admin:
@@ -4005,19 +4011,19 @@ sq:
           title: "Skedarë"
         legal:
           title: "Legale"
-        branding:
-          logo:
-            form:
-              mobile: "Mobile"
-              email: "Email"
+        logo:
+          form:
+            mobile: "Mobile"
+            email: "Email"
+        fonts:
+          backfill_modal:
+            modal_yes: "Po"
         navigation:
           title: "Shfletimi"
         notifications:
           title: "Njoftimet"
         onebox:
           title: "Onebox"
-        other:
-          title: "Të tjerë"
         search_everything:
           title: "Kërko"
         security:
@@ -4049,6 +4055,8 @@ sq:
           sub_pages:
             templates:
               title: "Shabllonet"
+        email_logs:
+          sub_pages:
             sent:
               title: "Dërguar"
             skipped:
@@ -4228,6 +4236,8 @@ sq:
         about:
           your_organization: "Organizata juaj"
           company_name: "Emri"
+          extra_groups:
+            groups: "Grupet"
           saved: "u ruajt!"
         flags:
           description: "Përshkrimi"
@@ -4252,11 +4262,22 @@ sq:
             title: "Më shumë mundësi"
         themes_and_components:
           breadcrumb_title: "Personalizo"
+          components:
+            name: "Emri"
+            enabled: "Aktivizuar?"
+            by_author: "Nga %{name}"
+            learn_more: "Mësoni më shumë"
+            edit: "Redaktoni"
+            preview: "Parashikimi"
+            export: "Eksporto"
+            delete: "Fshij"
+            filter_by_all: "Të Gjithë"
         user_fields:
           type: "Lloji"
           delete: "Fshij"
         color_palettes:
           palette_name: "Emri"
+          delete: "Fshij"
           colors:
             title: "Ngjyrat"
       plugins:
@@ -4356,6 +4377,7 @@ sq:
           edit: "Redakto"
           mobile: "Mobile"
           preview: "Parashikimi"
+          default: "Aktiv"
           cancel: "Anulo"
           upload: "Ngarko"
           installed: "Instaluar"
@@ -4373,12 +4395,16 @@ sq:
             text: "CSS e ngjitur"
           all_filter: "Të Gjithë"
           active_filter: "Aktiv"
-          schema:
-            fields:
-              required: "*e nevojshme"
-              number:
-                too_small: "must be greater than or equal to %{count}"
-                too_large: "must be less than or equal to %{count}"
+        schema:
+          fields:
+            required: "*e nevojshme"
+            string:
+              too_short:
+                one: "duhet të jetë të paktën %{count} karakter"
+                other: "must be at least %{count} characters"
+            number:
+              too_small: "must be greater than or equal to %{count}"
+              too_large: "must be less than or equal to %{count}"
         colors:
           title: "Ngjyrat"
           copy_name_prefix: "Kopje e"
@@ -4387,33 +4413,24 @@ sq:
           revert: "Rikthe"
           primary:
             name: "parësor"
-            description: "Shumica e tekstit, ikonave dhe bordurave. "
           secondary:
             name: "dytësor"
-            description: "Ngjyra kryesore e sfondit, dhe teksti i ca butonave. "
           tertiary:
             name: "tretësore"
-            description: "Linket, ca butona, njoftimet dhe ngjyrat për theks."
           quaternary:
             name: "katërsore"
           header_background:
             name: "sfondi i ballinës"
-            description: "Ngjyra në sfond të ballinës."
           header_primary:
             name: "primarja e ballinës"
-            description: "Teksti dhe ikonat në ballinë të faqes. "
           highlight:
             name: "theksi"
-            description: "Sfondi i elementëve të zgjedhur në faqe, si postimet dhe temat."
           danger:
             name: "rrezik"
-            description: "Ngjyra e theksit për veprimet si fshirjen e postimeve apo temave."
           success:
             name: "sukses"
-            description: "Përdoret për të treguar një veprim të kryer me sukses."
           love:
             name: "zemra"
-            description: "Ngjyra e butonit të pëlqimeve."
         email_style:
           html: "HTML"
           css: "CSS"

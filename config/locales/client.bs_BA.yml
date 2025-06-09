@@ -352,7 +352,7 @@ bs_BA:
       few: "Pogledaj %{count} nove teme"
       other: "Pogledaj %{count} novih tema"
     preview: "predprikaz"
-    cancel: "otkaži"
+    cancel: "Odustani"
     save: "Spremiti promjene"
     saved: "Spremljeno!"
     upload: "Učitaj"
@@ -1410,7 +1410,6 @@ bs_BA:
         title: "IP Adresa prilikom registracije"
       avatar:
         title: "Profilna slika"
-        header_title: "profil, poruke, zabilješke i postavke"
       title:
         title: "Naslov"
         none: "(ništa)"
@@ -1578,8 +1577,6 @@ bs_BA:
       not_approved: "Vaš korisnički račun nije još uvijek odobren od strane administratora. Dobiti ćete email kada dobijete mogućnost da se ulogirate."
       google_oauth2:
         name: "Google"
-      twitter:
-        name: "Twitter"
       instagram:
         name: "Instagram"
       facebook:
@@ -2362,6 +2359,11 @@ bs_BA:
         one: "Objava se sviđa %{count} osobi."
         few: "%{count} se sviđa objava."
         other: "%{count} se sviđa objava."
+      localizations:
+        table:
+          actions: "Akcije"
+          edit: "Edit"
+          delete: "Delete"
       errors:
         create: "Sorry, there was an error creating your post. Please try again."
         edit: "Sorry, there was an error editing your post. Please try again."
@@ -2501,6 +2503,10 @@ bs_BA:
       general: "General"
       settings: "Postavke"
       tags: "Oznake"
+      localization:
+        name: "Ime"
+        description: "Opis"
+        remove: "Ukloni"
       tags_allowed_tags: "Ograničite ove oznake na ovu kategoriju:"
       tags_allowed_tag_groups: "Ograničite ove grupe oznaka na ovu kategoriju:"
       tags_placeholder: "(Opcionalno) lista dozvoljenih oznaka"
@@ -3112,7 +3118,7 @@ bs_BA:
               content: "Pregled"
             invite:
               content: "Invite"
-      filter: "Filter..."
+      search: "Pretraži"
     until: "Sve do:"
     form_templates:
       upload_field:
@@ -3133,6 +3139,9 @@ bs_BA:
       spreadsheet:
         show: "Show"
         about: "O nama"
+    discovery:
+      headings:
+        categories: "Sve kategorije"
   admin_js:
     settings: "Postavke"
     admin:
@@ -3173,20 +3182,19 @@ bs_BA:
           title: "Files"
         legal:
           title: "Legal"
-        branding:
-          title: "Branding"
-          logo:
-            form:
-              mobile: "Mobilno"
-              email: "Email"
+        logo:
+          form:
+            mobile: "Mobilno"
+            email: "Email"
+        fonts:
+          backfill_modal:
+            modal_yes: "Da"
         navigation:
           title: "Navigacija"
         notifications:
           title: "Obavijest"
         onebox:
           title: "Onebox"
-        other:
-          title: "Other"
         search_everything:
           title: "Pretraži"
         security:
@@ -3224,6 +3232,8 @@ bs_BA:
               header_description: "Prikaži sadržaj sažetih poruka pošte poslanih neaktivnim korisnicima"
             templates:
               title: "Predlošci"
+        email_logs:
+          sub_pages:
             sent:
               title: "Poslano"
             skipped:
@@ -3533,6 +3543,8 @@ bs_BA:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
           company_name: "Ime"
+          extra_groups:
+            groups: "Groups"
           optional: "(opciono)"
           saved: "sačuvano!"
         flags:
@@ -3562,11 +3574,24 @@ bs_BA:
             title: "Teme"
           components:
             title: "Komponenti"
+            install: "Instaliraj"
+            name: "Ime"
+            enabled: "Omogućen?"
+            by_author: "Od %{name}"
+            learn_more: "Saznaj više"
+            edit: "Edit"
+            preview: "Pregled"
+            export: "Izvoz"
+            convert: "Pretvoriti"
+            delete: "Delete"
+            filter_by_all: "All"
+            delete_confirm: 'Jeste li sigurni da želite izbrisati "%{name}"?'
         user_fields:
           type: "Tip"
           delete: "Delete"
         color_palettes:
           palette_name: "Ime"
+          delete: "Delete"
           colors:
             title: "Colors"
       plugins:
@@ -3696,6 +3721,7 @@ bs_BA:
           desktop: "Desktop"
           mobile: "Mobilno"
           preview: "Pregled"
+          default: "Active"
           is_default: "Tema je podrazumevano omogućena"
           user_selectable: "Tema može odabrati korisnik"
           color_scheme: "Paleta boja"
@@ -3754,8 +3780,6 @@ bs_BA:
             error: "Ova tema je automatski onemogućena jer nije kompatibilna sa ovom verzijom Diskursa."
             minimum: "Potrebna je diskursna verzija %{version} ili iznad."
             maximum: "Potrebna je diskursna verzija %{version} ili ispod."
-          update_to_latest: "Ažuriraj na zadnje"
-          check_for_updates: "Potražite ažuriranja"
           up_to_date: "Tema je ažurna, posljednja provjerena:"
           add: "Dodaj"
           theme_settings: "Postavke teme"
@@ -3779,9 +3803,9 @@ bs_BA:
           all_filter: "All"
           active_filter: "Active"
           inactive_filter: "Neaktivan"
-          schema:
-            fields:
-              required: "*required"
+        schema:
+          fields:
+            required: "*required"
         colors:
           select_base:
             title: "Odaberite osnovnu paletu boja"
@@ -3789,40 +3813,30 @@ bs_BA:
           title: "Colors"
           about: "Izmijenite boje koje koriste vaše teme. Kreirajte novu paletu boja za početak."
           copy_name_prefix: "Copy of"
-          delete_confirm: "Izbrisati ovu paletu boja?"
           undo: "Vrati nazad"
           undo_title: "Undo your changes to this color since the last time it was saved."
           revert: "Vrati nazad"
           revert_title: "Vrati boju na standardnu boju Discourse palete."
           primary:
             name: "primary"
-            description: "Most text, icons, and borders."
           secondary:
             name: "secondary"
-            description: "The main background color, and text color of some buttons."
           tertiary:
             name: "tertiary"
-            description: "Links, some buttons, notifications, and accent color."
           quaternary:
             name: "quaternary"
           header_background:
             name: "header background"
-            description: "Background color of the site's header."
           header_primary:
             name: "header primary"
-            description: "Text and icons in the site's header."
           highlight:
             name: "highlight"
-            description: "The background color of highlighted elements on the page, such as posts and topics."
           danger:
             name: "danger"
-            description: "Highlight color for actions like deleting posts and topics."
           success:
             name: "success"
-            description: "Used to indicate an action was successful."
           love:
             name: "love"
-            description: "The like button's color."
           selected:
             name: "označeno"
         robots:

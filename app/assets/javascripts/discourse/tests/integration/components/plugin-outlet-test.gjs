@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
+import ClassicComponent from "@ember/component";
 import templateOnly from "@ember/component/template-only";
-import { hash } from "@ember/helper";
 import { getOwner } from "@ember/owner";
 import { click, find, render, settled } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
@@ -8,6 +9,7 @@ import { module, test } from "qunit";
 import sinon from "sinon";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import deprecatedOutletArgument from "discourse/helpers/deprecated-outlet-argument";
+import lazyHash from "discourse/helpers/lazy-hash";
 import deprecated, {
   withSilencedDeprecations,
   withSilencedDeprecationsAsync,
@@ -175,7 +177,7 @@ module("Integration | Component | plugin-outlet", function (hooks) {
         this.template = hbs`
           <PluginOutlet
             @name="outlet-with-default"
-            @outletArgs={{hash
+            @outletArgs={{lazyHash
               shouldDisplay=this.shouldDisplay
               yieldCore=this.yieldCore
               enableClashingConnector=this.enableClashingConnector
@@ -272,7 +274,7 @@ module("Integration | Component | plugin-outlet", function (hooks) {
         await render(hbs`
           <PluginOutlet
             @name="outlet-with-default"
-            @outletArgs={{hash shouldDisplay=true}}
+            @outletArgs={{lazyHash shouldDisplay=true}}
           >
             <span class="result">Core implementation</span>
           </PluginOutlet>
@@ -301,7 +303,7 @@ module("Integration | Component | plugin-outlet", function (hooks) {
         await render(hbs`
           <PluginOutlet
             @name="outlet-with-default"
-            @outletArgs={{hash shouldDisplay=true}}
+            @outletArgs={{lazyHash shouldDisplay=true}}
           >
             <span class="result">Core implementation</span>
           </PluginOutlet>
@@ -327,7 +329,7 @@ module("Integration | Component | plugin-outlet", function (hooks) {
         await render(hbs`
           <PluginOutlet
             @name="outlet-with-default"
-            @outletArgs={{hash shouldDisplay=true}}
+            @outletArgs={{lazyHash shouldDisplay=true}}
           >
             <span class="result">Core implementation</span>
           </PluginOutlet>
@@ -355,7 +357,7 @@ module("Integration | Component | plugin-outlet", function (hooks) {
         await render(hbs`
           <PluginOutlet
             @name="outlet-with-default"
-            @outletArgs={{hash shouldDisplay=true}}
+            @outletArgs={{lazyHash shouldDisplay=true}}
           >
             <span class="result">Core implementation</span>
           </PluginOutlet>
@@ -389,7 +391,7 @@ module("Integration | Component | plugin-outlet", function (hooks) {
     await render(hbs`
       <PluginOutlet
         @name="test-name"
-        @outletArgs={{hash shouldDisplay=this.shouldDisplay}}
+        @outletArgs={{lazyHash shouldDisplay=this.shouldDisplay}}
       />
     `);
     assert
@@ -428,7 +430,7 @@ module("Integration | Component | plugin-outlet", function (hooks) {
     await render(hbs`
       <PluginOutlet
         @name="test-name"
-        @outletArgs={{hash shouldDisplay=this.shouldDisplay}}
+        @outletArgs={{lazyHash shouldDisplay=this.shouldDisplay}}
       />
     `);
 
@@ -463,7 +465,7 @@ module("Integration | Component | plugin-outlet", function (hooks) {
         <template>
           <PluginOutlet
             @name="test-name"
-            @deprecatedArgs={{hash
+            @deprecatedArgs={{lazyHash
               shouldDisplay=(deprecatedOutletArgument value=true)
             }}
           />
@@ -491,7 +493,7 @@ module("Integration | Component | plugin-outlet", function (hooks) {
         <template>
           <PluginOutlet
             @name="test-name"
-            @deprecatedArgs={{hash
+            @deprecatedArgs={{lazyHash
               shouldDisplay=(deprecatedOutletArgument
                 value=true
                 message="The 'shouldDisplay' is deprecated on this test"
@@ -554,7 +556,7 @@ module("Integration | Component | plugin-outlet", function (hooks) {
         <template>
           <PluginOutlet
             @name="test-name"
-            @deprecatedArgs={{hash
+            @deprecatedArgs={{lazyHash
               shouldDisplay=(deprecatedOutletArgument
                 value=deprecatedData.display
                 silence="discourse.deprecation-that-should-not-be-logged"
@@ -595,8 +597,8 @@ module("Integration | Component | plugin-outlet", function (hooks) {
         <template>
           <PluginOutlet
             @name="test-name"
-            @outletArgs={{hash shouldDisplay=true}}
-            @deprecatedArgs={{hash
+            @outletArgs={{lazyHash shouldDisplay=true}}
+            @deprecatedArgs={{lazyHash
               argNotUsed=(deprecatedOutletArgument value=true)
             }}
           />
@@ -631,7 +633,7 @@ module(
 
     test("uses classic PluginConnector by default", async function (assert) {
       await render(hbs`
-        <PluginOutlet @name="test-name" @outletArgs={{hash hello="world"}} />
+        <PluginOutlet @name="test-name" @outletArgs={{lazyHash hello="world"}} />
       `);
 
       assert.dom(".outletArgHelloValue").hasText("world");
@@ -642,7 +644,7 @@ module(
       await render(hbs`
         <PluginOutlet
           @name="test-name"
-          @outletArgs={{hash hello="world"}}
+          @outletArgs={{lazyHash hello="world"}}
           @defaultGlimmer={{true}}
         />
       `);
@@ -671,7 +673,7 @@ module(
       await render(hbs`
         <PluginOutlet
           @name="test-name"
-          @outletArgs={{hash hello="world" someBoolean=this.someBoolean}}
+          @outletArgs={{lazyHash hello="world" someBoolean=this.someBoolean}}
         />
       `);
 
@@ -702,7 +704,7 @@ module(
             <template>
               <PluginOutlet
                 @name="test-name"
-                @outletArgs={{hash hello="world"}}
+                @outletArgs={{lazyHash hello="world"}}
                 @defaultGlimmer={{true}}
               />
             </template>
@@ -733,7 +735,7 @@ module(
       await render(hbs`
         <PluginOutlet
           @name="test-name"
-          @outletArgs={{hash hello="world" someBoolean=this.someBoolean}}
+          @outletArgs={{lazyHash hello="world" someBoolean=this.someBoolean}}
         />
       `);
 
@@ -761,7 +763,7 @@ module(
       await render(hbs`
         <PluginOutlet
           @name="test-name"
-          @outletArgs={{hash hello="world" someBoolean=this.someBoolean}}
+          @outletArgs={{lazyHash hello="world" someBoolean=this.someBoolean}}
         />
       `);
 
@@ -787,7 +789,7 @@ module(
 
       test("using classic PluginConnector by default", async function (assert) {
         await render(hbs`
-        <PluginOutlet @name="test-name" @deprecatedArgs={{hash hello=(deprecated-outlet-argument value="world")}} />
+        <PluginOutlet @name="test-name" @deprecatedArgs={{lazyHash hello=(deprecated-outlet-argument value="world")}} />
       `);
 
         // deprecated argument still works
@@ -817,7 +819,7 @@ module(
         await render(hbs`
         <PluginOutlet
           @name="test-name"
-          @deprecatedArgs={{hash hello=(deprecated-outlet-argument value="world")}}
+          @deprecatedArgs={{lazyHash hello=(deprecated-outlet-argument value="world")}}
           @defaultGlimmer={{true}}
         />
       `);
@@ -857,7 +859,7 @@ module(
         });
 
         await render(hbs`
-        <PluginOutlet @name="test-name" @deprecatedArgs={{hash hello=(deprecated-outlet-argument value="world")}} />
+        <PluginOutlet @name="test-name" @deprecatedArgs={{lazyHash hello=(deprecated-outlet-argument value="world")}} />
       `);
 
         // deprecated argument still works
@@ -894,7 +896,7 @@ module(
         );
 
         await render(hbs`
-        <PluginOutlet @name="test-name" @deprecatedArgs={{hash hello=(deprecated-outlet-argument value="world")}} />
+        <PluginOutlet @name="test-name" @deprecatedArgs={{lazyHash hello=(deprecated-outlet-argument value="world")}} />
       `);
 
         // deprecated argument still works
@@ -927,7 +929,7 @@ module(
         );
 
         await render(hbs`
-        <PluginOutlet @name="test-name" @deprecatedArgs={{hash hello=(deprecated-outlet-argument value="world")}} />
+        <PluginOutlet @name="test-name" @deprecatedArgs={{lazyHash hello=(deprecated-outlet-argument value="world")}} />
       `);
 
         // deprecated argument still works
@@ -949,7 +951,7 @@ module(
 
       test("unused arguments", async function (assert) {
         await render(hbs`
-          <PluginOutlet @name="test-name" @outletArgs={{hash hello="world"}} @deprecatedArgs={{hash argNotUsed=(deprecated-outlet-argument value="not used")}} />
+          <PluginOutlet @name="test-name" @outletArgs={{lazyHash hello="world"}} @deprecatedArgs={{lazyHash argNotUsed=(deprecated-outlet-argument value="not used")}} />
         `);
 
         // deprecated argument still works
@@ -1026,21 +1028,6 @@ module(
   }
 );
 
-module("Integration | Component | plugin-outlet | tagName", function (hooks) {
-  setupRenderingTest(hooks);
-
-  test("supports the `@tagName` argument", async function (assert) {
-    await withSilencedDeprecationsAsync(
-      "discourse.plugin-outlet-tag-name",
-      async () =>
-        await render(
-          <template><PluginOutlet @name="test-name" @tagName="div" /></template>
-        )
-    );
-    assert.dom("div").exists();
-  });
-});
-
 module(
   "Integration | Component | plugin-outlet | legacy extraConnectorClass",
   function (hooks) {
@@ -1068,6 +1055,179 @@ module(
     test("links up template with extra connector class", async function (assert) {
       await render(hbs`<PluginOutlet @name="test-name" />`);
       assert.dom(".legacy-test").hasText("Hello world from legacy");
+    });
+  }
+);
+
+module(
+  "Integration | Component | plugin-outlet | argument currying",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    test("makes arguments available at top level", async function (assert) {
+      extraConnectorComponent(
+        "test-name",
+        <template>
+          <span class="glimmer-test">{{@arg1}} from glimmer</span>
+        </template>
+      );
+
+      await render(
+        <template>
+          <PluginOutlet
+            @name="test-name"
+            @outletArgs={{lazyHash arg1="Hello world"}}
+          />
+        </template>
+      );
+      assert.dom(".glimmer-test").hasText("Hello world from glimmer");
+    });
+
+    test("doesn't completely rerender when arguments change", async function (assert) {
+      const events = [];
+
+      extraConnectorComponent(
+        "test-name",
+        class extends Component {
+          constructor() {
+            super(...arguments);
+            events.push("constructor");
+          }
+
+          willDestroy() {
+            super.willDestroy(...arguments);
+            events.push("willDestroy");
+          }
+
+          <template>
+            <span class="glimmer-test">{{@arg1}} from glimmer</span>
+          </template>
+        }
+      );
+
+      const testState = new (class {
+        @tracked hello = "Hello world";
+      })();
+
+      await render(
+        <template>
+          <PluginOutlet
+            @name="test-name"
+            @outletArgs={{lazyHash arg1=testState.hello}}
+          />
+        </template>
+      );
+      assert.dom(".glimmer-test").hasText("Hello world from glimmer");
+      assert.deepEqual(events, ["constructor"], "constructor called once");
+
+      testState.hello = "changed";
+      await settled();
+      assert.dom(".glimmer-test").hasText("changed from glimmer");
+      assert.deepEqual(events, ["constructor"], "constructor not called again");
+    });
+
+    test("makes arguments available at top level in classic components", async function (assert) {
+      extraConnectorComponent(
+        "test-name",
+        class extends ClassicComponent {
+          <template>
+            <span class="classic-test">{{this.arg1}} from classic</span>
+          </template>
+        }
+      );
+
+      await render(
+        <template>
+          <PluginOutlet
+            @name="test-name"
+            @outletArgs={{lazyHash arg1="Hello world"}}
+          />
+        </template>
+      );
+      assert.dom(".classic-test").hasText("Hello world from classic");
+    });
+
+    test("guards against name clashes in classic components", async function (assert) {
+      extraConnectorComponent(
+        "test-name",
+        class extends ClassicComponent {
+          get arg1() {
+            return "overridden";
+          }
+
+          <template>
+            <span class="classic-test">{{this.arg1}} from classic</span>
+          </template>
+        }
+      );
+
+      await withSilencedDeprecationsAsync(
+        "discourse.plugin-outlet-classic-args-clash",
+        async () => {
+          await render(
+            <template>
+              <PluginOutlet
+                @name="test-name"
+                @outletArgs={{lazyHash arg1="Hello world"}}
+              />
+            </template>
+          );
+        }
+      );
+      assert.dom(".classic-test").hasText("overridden from classic");
+    });
+  }
+);
+
+module(
+  "Integration | Component | plugin-outlet | whitespace",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    test("no whitespace for unused outlet", async function (assert) {
+      await render(
+        <template>
+          <div class="test-wrapper"><PluginOutlet @name="test-name" /></div>
+        </template>
+      );
+      assert.dom(".test-wrapper").hasText(/^$/, "no whitespace"); // using regex to avoid hasText builtin strip
+    });
+
+    test("no whitespace for used outlet", async function (assert) {
+      extraConnectorComponent("test-name", <template></template>);
+
+      await render(
+        <template>
+          <div class="test-wrapper"><PluginOutlet @name="test-name" /></div>
+        </template>
+      );
+      assert.dom(".test-wrapper").hasText(/^$/, "no whitespace"); // using regex to avoid hasText builtin strip
+    });
+
+    test("no whitespace for unused wrapper outlet", async function (assert) {
+      await render(
+        <template>
+          <div class="test-wrapper"><PluginOutlet
+              @name="test-name"
+            >foo</PluginOutlet></div>
+        </template>
+      );
+      assert.dom(".test-wrapper").hasText(/^foo$/, "no whitespace"); // using regex to avoid hasText builtin strip
+    });
+
+    test("no whitespace for used wrapper outlet", async function (assert) {
+      extraConnectorComponent(
+        "test-name",
+        <template>{{! template-lint-disable no-yield-only }}{{yield}}</template>
+      );
+      await render(
+        <template>
+          <div class="test-wrapper"><PluginOutlet
+              @name="test-name"
+            >foo</PluginOutlet></div>
+        </template>
+      );
+      assert.dom(".test-wrapper").hasText(/^foo$/, "no whitespace"); // using regex to avoid hasText builtin strip
     });
   }
 );

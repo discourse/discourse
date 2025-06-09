@@ -1,5 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import EmberObject, { computed, get } from "@ember/object";
+import { dependentKeyCompat } from "@ember/object/compat";
 import { alias, sort } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
@@ -8,6 +9,7 @@ import discourseComputed from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
+import Mobile from "discourse/lib/mobile";
 import PreloadStore from "discourse/lib/preload-store";
 import singleton from "discourse/lib/singleton";
 import Archetype from "discourse/models/archetype";
@@ -81,6 +83,7 @@ export default class Site extends RestModel {
 
   @service siteSettings;
   @service currentUser;
+  @service capabilities;
 
   @tracked categories;
 
@@ -89,13 +92,31 @@ export default class Site extends RestModel {
   @sort("categories", "topicCountDesc") categoriesByCount;
 
   #glimmerPostStreamEnabled;
-  #glimmerTopicDecision;
 
   init() {
     super.init(...arguments);
 
     this.topicCountDesc = ["topic_count:desc"];
     this.categories = this.categories || [];
+  }
+
+  @dependentKeyCompat
+  get desktopView() {
+    return !this.mobileView;
+  }
+
+  @dependentKeyCompat
+  get mobileView() {
+    if (this.siteSettings.viewport_based_mobile_mode) {
+      return !this.capabilities.viewport.sm;
+    } else {
+      return Mobile.mobileView;
+    }
+  }
+
+  @dependentKeyCompat
+  get isMobileDevice() {
+    return this.mobileView;
   }
 
   get useGlimmerPostStream() {
@@ -159,51 +180,6 @@ export default class Site extends RestModel {
     this.#glimmerPostStreamEnabled = enabled;
 
     return enabled;
-  }
-
-  get useGlimmerTopicList() {
-    if (this.#glimmerTopicDecision !== undefined) {
-      // Caches the decision after the first call, and avoids re-printing the same message
-      return this.#glimmerTopicDecision;
-    }
-
-    let decision;
-
-    const { needsHbrTopicList } = require("discourse/lib/raw-templates");
-
-    /* eslint-disable no-console */
-    const settingValue = this.siteSettings.glimmer_topic_list_mode;
-    if (settingValue === "enabled") {
-      if (needsHbrTopicList()) {
-        console.log(
-          "⚠️  Using the new 'glimmer' topic list, even though some themes/plugins are not ready"
-        );
-      } else {
-        console.log("✅  Using the new 'glimmer' topic list");
-      }
-
-      decision = true;
-    } else if (settingValue === "disabled") {
-      decision = false;
-    } else {
-      // auto
-      if (needsHbrTopicList()) {
-        console.log(
-          "⚠️  Detected themes/plugins which are incompatible with the new 'glimmer' topic-list. Falling back to old implementation."
-        );
-        decision = false;
-      } else {
-        if (!isTesting() && !isRailsTesting()) {
-          console.log("✅  Using the new 'glimmer' topic list");
-        }
-        decision = true;
-      }
-    }
-    /* eslint-enable no-console */
-
-    this.#glimmerTopicDecision = decision;
-
-    return decision;
   }
 
   @computed("categories.[]")

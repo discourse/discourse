@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { hash } from "@ember/helper";
 import EmberObject, { action, computed } from "@ember/object";
@@ -11,12 +12,16 @@ import $ from "jquery";
 import { resolveAllShortUrls } from "pretty-text/upload-short-url";
 import { gt } from "truth-helpers";
 import DEditor from "discourse/components/d-editor";
+import DEditorPreview from "discourse/components/d-editor-preview";
 import Wrapper from "discourse/components/form-template-field/wrapper";
 import PickFilesButton from "discourse/components/pick-files-button";
+import PostTranslationEditor from "discourse/components/post-translation-editor";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import { tinyAvatar } from "discourse/lib/avatar-utils";
 import { setupComposerPosition } from "discourse/lib/composer/composer-position";
 import discourseComputed, { bind, debounce } from "discourse/lib/decorators";
+import prepareFormTemplateData from "discourse/lib/form-template-validation";
 import {
   fetchUnseenHashtagsInContext,
   linkSeenHashtagsInContext,
@@ -28,6 +33,8 @@ import {
   linkSeenMentions,
 } from "discourse/lib/link-mentions";
 import { loadOneboxes } from "discourse/lib/load-oneboxes";
+import { generateCookFunction } from "discourse/lib/text";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import {
   authorizesOneOrMoreImageExtensions,
   IMAGE_MARKDOWN_REGEX,
@@ -92,6 +99,10 @@ const DEBOUNCE_JIT_MS = 2000;
 @classNameBindings("composer.showToolbar:toolbar-visible", ":wmd-controls")
 export default class ComposerEditor extends Component {
   @service composer;
+  @service siteSettings;
+  @service currentUser;
+
+  @tracked preview;
 
   composerEventPrefix = "composer";
   shouldBuildScrollMap = true;
@@ -120,17 +131,23 @@ export default class ComposerEditor extends Component {
 
   @discourseComputed("composer.model.requiredCategoryMissing")
   replyPlaceholder(requiredCategoryMissing) {
-    if (requiredCategoryMissing) {
-      return "composer.reply_placeholder_choose_category";
-    } else {
+    let placeholder = "composer.reply_placeholder_choose_category";
+
+    if (!requiredCategoryMissing) {
       const key = authorizesOneOrMoreImageExtensions(
         this.currentUser.staff,
         this.siteSettings
       )
         ? "reply_placeholder"
         : "reply_placeholder_no_images";
-      return `composer.${key}`;
+      placeholder = `composer.${key}`;
     }
+
+    return applyValueTransformer(
+      "composer-editor-reply-placeholder",
+      placeholder,
+      { model: this.composer }
+    );
   }
 
   @discourseComputed
@@ -910,7 +927,10 @@ export default class ComposerEditor extends Component {
       icon: "gear",
       title: "composer.options",
       sendAction: this.onExpandPopupMenuOptions.bind(this),
-      popupMenu: true,
+      popupMenu: {
+        options: () => this.composer.popupMenuOptions,
+        action: this.composer.onPopupMenuAction,
+      },
     });
   }
 
@@ -941,6 +961,40 @@ export default class ComposerEditor extends Component {
     this._selectedFormTemplateId = value;
   }
 
+  get showTranslationEditor() {
+    if (
+      !this.siteSettings.experimental_content_localization ||
+      !this.currentUser.can_localize_content
+    ) {
+      return false;
+    }
+
+    if (this.composer.model?.action === Composer.ADD_TRANSLATION) {
+      return true;
+    }
+
+    return false;
+  }
+
+  @action
+  async updateFormPreview() {
+    const formTemplateData = prepareFormTemplateData(
+      document.querySelector("#form-template-form"),
+      this.composer.selectedFormTemplate,
+      false
+    );
+
+    this.preview = await this.cachedCookAsync(
+      formTemplateData,
+      this.markdownOptions
+    );
+  }
+
+  async cachedCookAsync(text, options) {
+    this._cachedCookFunction ||= await generateCookFunction(options || {});
+    return await this._cachedCookFunction(text);
+  }
+
   @action
   updateSelectedFormTemplateId(formTemplateId) {
     this.selectedFormTemplateId = formTemplateId;
@@ -963,29 +1017,38 @@ export default class ComposerEditor extends Component {
   <template>
     {{#if this.showFormTemplateForm}}
       <div class="d-editor">
-        <div class="d-editor-container">
-          <div class="d-editor-textarea-column">
-            {{yield}}
+        <div class="d-editor-textarea-column">
+          {{yield}}
 
-            {{#if (gt this.composer.formTemplateIds.length 1)}}
-              <FormTemplateChooser
-                @filteredIds={{this.composer.formTemplateIds}}
-                @value={{this.selectedFormTemplateId}}
-                @onChange={{this.updateSelectedFormTemplateId}}
-                @options={{hash maximum=1}}
-                class="composer-select-form-template"
-              />
-            {{/if}}
-            <form id="form-template-form">
-              <Wrapper
-                @id={{this.selectedFormTemplateId}}
-                @initialValues={{this.composer.formTemplateInitialValues}}
-                @onSelectFormTemplate={{this.composer.onSelectFormTemplate}}
-              />
-            </form>
-          </div>
+          {{#if (gt this.composer.formTemplateIds.length 1)}}
+            <FormTemplateChooser
+              @filteredIds={{this.composer.formTemplateIds}}
+              @value={{this.selectedFormTemplateId}}
+              @onChange={{this.updateSelectedFormTemplateId}}
+              @options={{hash maximum=1}}
+              class="composer-select-form-template"
+            />
+          {{/if}}
+          <form id="form-template-form">
+            <Wrapper
+              @id={{this.selectedFormTemplateId}}
+              @initialValues={{this.composer.formTemplateInitialValues}}
+              @onSelectFormTemplate={{this.composer.onSelectFormTemplate}}
+              @onChange={{this.updateFormPreview}}
+            />
+          </form>
         </div>
+        {{#if this.siteSettings.show_preview_for_form_templates}}
+          <DEditorPreview
+            @preview={{this.preview}}
+            @forcePreview={{this.forcePreview}}
+            @onPreviewUpdated={{this.previewUpdated}}
+            @outletArgs={{this.outletArgs}}
+          />
+        {{/if}}
       </div>
+    {{else if this.showTranslationEditor}}
+      <PostTranslationEditor @setupEditor={{this.setupEditor}} />
     {{else}}
       <DEditor
         @value={{this.composer.model.reply}}
@@ -1002,10 +1065,13 @@ export default class ComposerEditor extends Component {
         @onPopupMenuAction={{this.composer.onPopupMenuAction}}
         @popupMenuOptions={{this.composer.popupMenuOptions}}
         @disabled={{this.composer.disableTextarea}}
-        @outletArgs={{hash composer=this.composer.model editorType="composer"}}
+        @outletArgs={{lazyHash
+          composer=this.composer.model
+          editorType="composer"
+        }}
         @topicId={{this.composer.model.topic.id}}
         @categoryId={{this.composer.model.category.id}}
-        @replyingToUser={{this.composer.replyingToUser}}
+        @replyingToUserId={{this.composer.replyingToUserId}}
         @onSetup={{this.setupEditor}}
         @disableSubmit={{this.composer.disableSubmit}}
       >

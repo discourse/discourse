@@ -1,4 +1,5 @@
 import { Input } from "@ember/component";
+import { on } from "@ember/modifier";
 import { htmlSafe } from "@ember/template";
 import icon from "discourse/helpers/d-icon";
 
@@ -30,7 +31,9 @@ const Input0 = <template>
       minlength={{@validations.minimum}}
       maxlength={{@validations.maximum}}
       disabled={{@attributes.disabled}}
+      {{on "input" @onChange}}
     />
   </div>
 </template>;
+
 export default Input0;

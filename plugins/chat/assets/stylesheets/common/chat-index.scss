@@ -10,14 +10,14 @@
     transform 0.25s ease,
     box-shadow 0.25s ease;
   z-index: z("usercard");
-  box-shadow: 0 5px 5px -1px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 5px 5px -1px rgb(0, 0, 0, 0.25);
 
   .d-icon {
     color: var(--primary-very-low);
   }
 
   &:active {
-    box-shadow: 0 0 5px -1px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 0 5px -1px rgb(0, 0, 0, 0.25);
     transform: scale(0.9);
   }
 

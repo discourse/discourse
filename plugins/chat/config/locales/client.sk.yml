@@ -162,7 +162,7 @@ sk:
       in_reply_to: "V odpovedi na"
       heading: "Chat"
       join: "Pridať sa"
-      last_visit: "posledná návševa"
+      last_visit: "posledná návšteva"
       mention_warning:
         invitations_sent:
           one: "Pozvánka bola odoslaná"
@@ -713,6 +713,11 @@ sk:
       draft_channel_screen:
         header: "Nová správa"
         cancel: "Zrušiť"
+      quick_reaction_type:
+        title: "Reakcie na chat jedným kliknutím"
+        options:
+          frequent: "Najčastejšie používané reakcie v chate"
+          custom: "Vlastné reakcie"
     notifications:
       chat_invitation: "vás pozval do chatového kanála"
       chat_invitation_html: "<span>%{username}</span> <span>vás pozvali, aby ste sa pripojili ku kanálu četu</span>"

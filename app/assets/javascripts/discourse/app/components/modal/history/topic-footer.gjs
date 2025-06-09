@@ -95,4 +95,5 @@ const TopicFooter = <template>
     {{/if}}
   </div>
 </template>;
+
 export default TopicFooter;

@@ -131,11 +131,16 @@ const extension = {
       handler: (state, match, start, end) => {
         if (emojiExists(match[2])) {
           const emojiStart = start + match[1].length;
-          return state.tr.replaceWith(
-            emojiStart,
-            end,
-            state.schema.nodes.emoji.create({ code: match[2] })
-          );
+          const emojiNode = state.schema.nodes.emoji.create({ code: match[2] });
+          const tr = state.tr.replaceWith(emojiStart, end, emojiNode);
+
+          state.doc
+            .resolve(emojiStart)
+            .marks()
+            .forEach((mark) => {
+              tr.addMark(emojiStart, emojiStart + 1, mark);
+            });
+          return tr;
         }
       },
       options: { undoable: false },
@@ -148,13 +153,20 @@ const extension = {
       ),
       handler: (state, match, start, end) => {
         const emojiStart = start + match[1].length;
-        return state.tr
-          .replaceWith(
-            emojiStart,
-            end,
-            state.schema.nodes.emoji.create({ code: translations[match[2]] })
-          )
+        const emojiNode = state.schema.nodes.emoji.create({
+          code: translations[match[2]],
+        });
+        const tr = state.tr
+          .replaceWith(emojiStart, end, emojiNode)
           .insertText(" ");
+
+        state.doc
+          .resolve(emojiStart)
+          .marks()
+          .forEach((mark) => {
+            tr.addMark(emojiStart, emojiStart + 2, mark);
+          });
+        return tr;
       },
     },
   ],
@@ -170,6 +182,7 @@ const extension = {
 
   serializeNode: {
     emoji(state, node) {
+      state.flushClose();
       if (!isBoundary(state.out, state.out.length - 1)) {
         state.write(" ");
       }

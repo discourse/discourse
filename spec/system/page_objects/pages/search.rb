@@ -4,7 +4,10 @@ module PageObjects
   module Pages
     class Search < PageObjects::Pages::Base
       def type_in_search(input)
-        find("input.full-page-search").send_keys(input)
+        filter = find("input.full-page-search")
+        filter.click
+        filter.send_keys(:end)
+        filter.send_keys(input)
         self
       end
 
@@ -32,6 +35,11 @@ module PageObjects
 
       def click_search_button
         find(".search-cta").click
+      end
+
+      def expand_dropdown
+        click_search_icon if !has_css?(".search-menu .search-menu-panel", wait: 0)
+        self
       end
 
       def click_search_icon

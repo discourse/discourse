@@ -1,3 +1,4 @@
+import { on } from "@ember/modifier";
 import { htmlSafe } from "@ember/template";
 import { eq } from "truth-helpers";
 import icon from "discourse/helpers/d-icon";
@@ -23,6 +24,7 @@ const Dropdown = <template>
       name={{@id}}
       class="form-template-field__dropdown"
       required={{if @validations.required "required" ""}}
+      {{on "input" @onChange}}
     >
       {{#if @attributes.none_label}}
         <option
@@ -42,4 +44,5 @@ const Dropdown = <template>
     </select>
   </div>
 </template>;
+
 export default Dropdown;

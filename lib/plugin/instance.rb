@@ -103,6 +103,11 @@ class Plugin::Instance
     @idx = 0
   end
 
+  # Keys can only be lowercase letters
+  # Example usage:
+  #   plugin.register_anonymous_cache_key :onlylowercase do
+  #     @request.cookies["cookie_name"].present? ? "1" : "0"
+  #   end
   def register_anonymous_cache_key(key, &block)
     key_method = "key_#{key}"
     add_to_class(Middleware::AnonymousCache::Helper, key_method, &block)
@@ -809,9 +814,6 @@ class Plugin::Instance
 
     seed_data.each { |key, value| DiscoursePluginRegistry.register_seed_data(key, value) }
 
-    # Allow plugins to `register_asset` for images under /assets
-    Rails.configuration.assets.paths << File.dirname(path) + "/assets"
-
     # Automatically include rake tasks
     Rake.add_rakelib(File.dirname(path) + "/lib/tasks")
 
@@ -834,6 +836,7 @@ class Plugin::Instance
     end
 
     write_extra_js!
+    ensure_images_symlink!
   end
 
   def auth_provider(opts)
@@ -1368,28 +1371,15 @@ class Plugin::Instance
   protected
 
   def self.js_path
-    File.expand_path "#{Rails.root}/app/assets/javascripts/plugins"
-  end
-
-  def legacy_asset_paths
-    [
-      "#{Plugin::Instance.js_path}/#{directory_name}.js.erb",
-      "#{Plugin::Instance.js_path}/#{directory_name}_extra.js.erb",
-    ]
+    File.expand_path "#{Rails.root}/app/assets/generated"
   end
 
   def extra_js_file_path
-    @extra_js_file_path ||= "#{Plugin::Instance.js_path}/#{directory_name}_extra.js"
+    @extra_js_file_path ||=
+      "#{Plugin::Instance.js_path}/#{directory_name}/plugins/#{directory_name}_extra.js"
   end
 
   def write_extra_js!
-    # No longer used, but we want to make sure the files are no longer present
-    # so they don't accidently get compiled by Sprockets.
-    legacy_asset_paths.each do |path|
-      File.delete(path)
-    rescue Errno::ENOENT
-    end
-
     contents = javascript_includes.map { |js| File.read(js) }
 
     if contents.present?
@@ -1398,6 +1388,21 @@ class Plugin::Instance
     else
       begin
         File.delete(extra_js_file_path)
+      rescue Errno::ENOENT
+      end
+    end
+  end
+
+  def ensure_images_symlink!
+    link_from = "#{Rails.root}/app/assets/generated/#{directory_name}/images"
+    link_target = "#{directory}/assets/images"
+
+    if Dir.exist? link_target
+      ensure_directory(link_from)
+      Discourse::Utils.atomic_ln_s(link_target, link_from)
+    else
+      begin
+        File.delete(link_from)
       rescue Errno::ENOENT
       end
     end
@@ -1424,7 +1429,6 @@ class Plugin::Instance
         ""
       opts[:server_locale_file] = Dir["#{root_path}/config/locales/server*.#{locale}.yml"].first ||
         ""
-      opts[:js_locale_file] = File.join(root_path, "assets/locales/#{locale}.js.erb")
 
       locale_chain = opts[:fallbackLocale] ? [locale, opts[:fallbackLocale]] : [locale]
       lib_locale_path = File.join(root_path, "lib/javascripts/locale")
@@ -1442,7 +1446,6 @@ class Plugin::Instance
 
       if valid_locale?(opts)
         DiscoursePluginRegistry.register_locale(locale, opts)
-        Rails.configuration.assets.precompile << "locales/#{locale}.js"
       else
         msg = "Invalid locale! #{opts.inspect}"
         # The logger isn't always present during boot / parsing locales from plugins
@@ -1517,8 +1520,7 @@ class Plugin::Instance
 
   def valid_locale?(custom_locale)
     File.exist?(custom_locale[:client_locale_file]) &&
-      File.exist?(custom_locale[:server_locale_file]) &&
-      File.exist?(custom_locale[:js_locale_file]) && custom_locale[:moment_js]
+      File.exist?(custom_locale[:server_locale_file]) && custom_locale[:moment_js]
   end
 
   def find_locale_file(locale_chain, path)

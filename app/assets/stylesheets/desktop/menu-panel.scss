@@ -10,6 +10,10 @@
   }
 }
 
+.user-menu.revamped.menu-panel.drop-down {
+  @include float-down;
+}
+
 // Sidebar-hamburger hybrid
 .hamburger-panel .revamped {
   --d-sidebar-highlight-background: var(--d-hover);
@@ -85,7 +89,7 @@
         background: linear-gradient(
           to bottom,
           transparent,
-          rgba(var(--secondary-rgb), 1)
+          rgb(var(--secondary-rgb), 1)
         );
       }
     }

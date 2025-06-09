@@ -13,6 +13,7 @@ import FeaturedTopic from "discourse/components/topic-list/featured-topic";
 import borderColor from "discourse/helpers/border-color";
 import categoryColorVariable from "discourse/helpers/category-color-variable";
 import dirSpan from "discourse/helpers/dir-span";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
 
 export default class ParentCategoryRow extends CategoryListItem {
@@ -20,13 +21,13 @@ export default class ParentCategoryRow extends CategoryListItem {
     {{#unless this.isHidden}}
       <PluginOutlet
         @name="category-list-above-each-category"
-        @outletArgs={{hash category=this.category}}
+        @outletArgs={{lazyHash category=this.category}}
       />
 
       {{#if this.site.mobileView}}
         <PluginOutlet
           @name="category-list-before-category-mobile"
-          @outletArgs={{hash
+          @outletArgs={{lazyHash
             category=this.category
             listType=this.listType
             isMuted=this.isMuted
@@ -46,7 +47,7 @@ export default class ParentCategoryRow extends CategoryListItem {
                 </th>
                 <PluginOutlet
                   @name="category-list-after-title-mobile-section"
-                  @outletArgs={{hash category=this.category}}
+                  @outletArgs={{lazyHash category=this.category}}
                 />
               </tr>
               {{#if this.category.description_excerpt}}
@@ -121,7 +122,10 @@ export default class ParentCategoryRow extends CategoryListItem {
 
           <PluginOutlet
             @name="category-list-before-category-section"
-            @outletArgs={{hash category=this.category listType=this.listType}}
+            @outletArgs={{lazyHash
+              category=this.category
+              listType=this.listType
+            }}
           />
 
           <td
@@ -132,7 +136,7 @@ export default class ParentCategoryRow extends CategoryListItem {
             <PluginOutlet
               @name="below-category-title-link"
               @connectorTagName="div"
-              @outletArgs={{hash category=this.category}}
+              @outletArgs={{lazyHash category=this.category}}
             />
 
             {{#if this.category.description_excerpt}}
@@ -185,12 +189,12 @@ export default class ParentCategoryRow extends CategoryListItem {
 
           <PluginOutlet
             @name="category-list-before-topics-section"
-            @outletArgs={{hash category=this.category}}
+            @outletArgs={{lazyHash category=this.category}}
           />
 
           <PluginOutlet
             @name="category-list-topics-wrapper"
-            @outletArgs={{hash category=this.category}}
+            @outletArgs={{lazyHash category=this.category}}
           >
             <td class="topics">
               <div title={{this.category.statTitle}}>{{htmlSafe
@@ -208,12 +212,12 @@ export default class ParentCategoryRow extends CategoryListItem {
 
           <PluginOutlet
             @name="category-list-after-topics-section"
-            @outletArgs={{hash category=this.category}}
+            @outletArgs={{lazyHash category=this.category}}
           />
 
           <PluginOutlet
             @name="category-list-latest-wrapper"
-            @outletArgs={{hash
+            @outletArgs={{lazyHash
               category=this.category
               showTopics=this.showTopics
             }}
@@ -222,16 +226,12 @@ export default class ParentCategoryRow extends CategoryListItem {
               {{#if this.showTopics}}
                 <td class="latest">
                   {{#each this.category.featuredTopics as |t|}}
-                    {{#if this.site.useGlimmerTopicList}}
-                      <FeaturedTopic @topic={{t}} />
-                    {{else}}
-                      <FeaturedTopic @topic={{t}} />
-                    {{/if}}
+                    <FeaturedTopic @topic={{t}} />
                   {{/each}}
                 </td>
                 <PluginOutlet
                   @name="category-list-after-latest-section"
-                  @outletArgs={{hash category=this.category}}
+                  @outletArgs={{lazyHash category=this.category}}
                 />
               {{/if}}
             {{/unless}}

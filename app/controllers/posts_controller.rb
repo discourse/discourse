@@ -424,6 +424,7 @@ class PostsController < ApplicationController
         ).destroy
       end
     end
+    DiscourseEvent.trigger(:posts_destroyed, posts, current_user)
 
     render body: nil
   end

@@ -7,6 +7,7 @@ import { service } from "@ember/service";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import icon from "discourse/helpers/d-icon";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
 import SiteSetting from "admin/models/site-setting";
@@ -82,7 +83,7 @@ export default class AdminPluginsListItem extends Component {
           <PluginOutlet
             @name="admin-plugin-list-name-badge-after"
             @connectorTagName="span"
-            @outletArgs={{hash plugin=@plugin}}
+            @outletArgs={{lazyHash plugin=@plugin}}
           />
         </div>
         <div class="d-admin-row__overview-author admin-plugins-list__author">
@@ -109,7 +110,7 @@ export default class AdminPluginsListItem extends Component {
         <div class="plugin-version">
           <PluginOutlet
             @name="admin-plugin-list-item-version"
-            @outletArgs={{hash plugin=@plugin}}
+            @outletArgs={{lazyHash plugin=@plugin}}
           >
             {{@plugin.version}}<br />
             <PluginCommitHash @plugin={{@plugin}} />
@@ -122,7 +123,7 @@ export default class AdminPluginsListItem extends Component {
         </div>
         <PluginOutlet
           @name="admin-plugin-list-item-enabled"
-          @outletArgs={{hash plugin=@plugin}}
+          @outletArgs={{lazyHash plugin=@plugin}}
         >
           {{#if @plugin.enabledSetting}}
             <DToggleSwitch
@@ -137,7 +138,7 @@ export default class AdminPluginsListItem extends Component {
       <td class="d-admin-row__controls admin-plugins-list__settings">
         <PluginOutlet
           @name="admin-plugin-list-item-settings"
-          @outletArgs={{hash plugin=@plugin}}
+          @outletArgs={{lazyHash plugin=@plugin}}
         >
           {{#if this.showPluginSettingsButton}}
             {{#if @plugin.useNewShowRoute}}

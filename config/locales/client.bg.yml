@@ -383,7 +383,7 @@ bg:
       one: "Вижте %{count} нова тема"
       other: "Вижте %{count} нови теми"
     preview: "преглед"
-    cancel: "прекрати"
+    cancel: "Прекрати"
     deleting: "Изтриване…"
     save: "Запазете промените"
     saving: "Запазване…"
@@ -1699,7 +1699,6 @@ bg:
         title: "IP адрес при регистрацията."
       avatar:
         title: "Аватар"
-        header_title: "профил, съобщения, отметки и предпочитания"
         name_and_description: "%{name} - %{description}"
         edit: "Редактиране на профилната снимка"
       title:
@@ -1934,10 +1933,6 @@ bg:
         name: "Google"
         title: "Влезте с Google"
         sr_title: "Влезте с Google"
-      twitter:
-        name: "Twitter"
-        title: "Влезте с Twitter"
-        sr_title: "Влезте с Twitter"
       instagram:
         name: "Instagram"
         title: "Влезте с Instagram"
@@ -2803,6 +2798,11 @@ bg:
         other: "Преглед на %{count} отговора на"
       in_reply_to: "Заредете родителска публикация"
       view_all_posts: "Вижте всички публикации"
+      localizations:
+        table:
+          actions: "Действия"
+          edit: "Редактирай"
+          delete: "Изтрий"
       errors:
         create: "При създаването на Вашата публикация се получи грешка. Моля, опитайте отново."
         edit: "Съжаляваме, възникна грешка при редактирането на публикацията. Моля, опитайте отново. "
@@ -2927,6 +2927,10 @@ bg:
       settings: "Настройки"
       topic_template: "Шаблон"
       tags: "Етикети"
+      localization:
+        name: "Име"
+        description: "Описание"
+        remove: "Премахване"
       tags_placeholder: "(По желание) списък на позволените етикети"
       required_tag_group:
         delete: "Изтрий"
@@ -3410,6 +3414,7 @@ bg:
               content: "Преглед"
             invite:
               content: "Покана"
+      search: "Търсене"
     form_template_chooser:
       select_template: "Изберете шаблони за формуляри"
     form_templates:
@@ -3432,6 +3437,9 @@ bg:
       spreadsheet:
         show: "Покажи"
         about: "Относно"
+    discovery:
+      headings:
+        categories: "Всички категории"
   admin_js:
     settings: "Настройки"
     admin:
@@ -3461,19 +3469,19 @@ bg:
           title: "Файлове"
         legal:
           title: "Правни"
-        branding:
-          logo:
-            form:
-              mobile: "Мобилен"
-              email: "Имейл "
+        logo:
+          form:
+            mobile: "Мобилен"
+            email: "Имейл "
+        fonts:
+          backfill_modal:
+            modal_yes: "Да"
         navigation:
           title: "Навигация"
         notifications:
           title: "Известия"
         onebox:
           title: "Onebox"
-        other:
-          title: "Други"
         search_everything:
           title: "Търсене"
         security:
@@ -3503,6 +3511,8 @@ bg:
               header_description: "Преглед на съдържанието на имейлите, изпратени до неактивните потребители"
             templates:
               title: "Шаблони"
+        email_logs:
+          sub_pages:
             sent:
               title: "Изпрати"
             skipped:
@@ -3678,6 +3688,8 @@ bg:
       config_areas:
         about:
           company_name: "Име"
+          extra_groups:
+            groups: "Групи"
           optional: "(по избор)"
           update: "Актуализация"
           saved: "запазено!"
@@ -3702,11 +3714,22 @@ bg:
           delete: "Изтрий"
         themes_and_components:
           breadcrumb_title: "Персонализация"
+          components:
+            name: "Име"
+            enabled: "Да е включен?"
+            by_author: "От %{name}"
+            learn_more: "Научете повече"
+            edit: "Редактирай"
+            preview: "Преглед"
+            export: "Експорт "
+            delete: "Изтрий"
+            filter_by_all: "Всички"
         user_fields:
           type: "Тип"
           delete: "Изтрий"
         color_palettes:
           palette_name: "Име"
+          delete: "Изтрий"
           colors:
             title: "Цветове"
       plugins:
@@ -3814,6 +3837,7 @@ bg:
           edit: "Редактирай"
           mobile: "Мобилен"
           preview: "Преглед"
+          default: "Активни"
           cancel: "Прекрати"
           collapse: Намали
           upload: "Качване"
@@ -3833,12 +3857,12 @@ bg:
             text: "ембеднато CSS"
           all_filter: "Всички"
           active_filter: "Активни"
-          schema:
-            fields:
-              required: "*задъжителни"
-              number:
-                too_small: "трябва да бъде по-голямо или равно на %{count}"
-                too_large: "трябва да бъде по-малко или равно на %{count}"
+        schema:
+          fields:
+            required: "*задъжителни"
+            number:
+              too_small: "трябва да бъде по-голямо или равно на %{count}"
+              too_large: "трябва да бъде по-малко или равно на %{count}"
         colors:
           title: "Цветове"
           copy_name_prefix: "Копие на"
@@ -3847,33 +3871,24 @@ bg:
           revert: "Върни"
           primary:
             name: "главен"
-            description: "Повече от текстовете, икони и граници "
           secondary:
             name: "второстепенен"
-            description: "Основен цвят на фона и цвят на някой бутони."
           tertiary:
             name: "трети"
-            description: "Връзки, някои бутони, известия и цветове за акцентиране."
           quaternary:
             name: "четвърти"
           header_background:
             name: "Фон на хедъра"
-            description: "Цвят на фона на хедъра на сайта."
           header_primary:
             name: "главен хедър"
-            description: "Текстове и икони в хедъра на сайта."
           highlight:
             name: "подчертаване"
-            description: "Фонов цвят на подчертани елементи на страницата, като публикации и теми."
           danger:
             name: "опасност"
-            description: "Цвят за подчертаване на действия, като изтриване на темата."
           success:
             name: "успех"
-            description: "Използва се за индикация при успешно действие."
           love:
             name: "любов"
-            description: "Цвят на бутона харесвам. "
           selected:
             name: "избрани"
         email_style:

@@ -7,8 +7,10 @@ require "discourse_tagging"
 
 RSpec.describe DiscourseTagging do
   fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
+  fab!(:moderator) { Fabricate(:moderator, refresh_auto_groups: true) }
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   let(:admin_guardian) { Guardian.new(admin) }
+  let(:moderator_guardian) { Guardian.new(moderator) }
   let(:guardian) { Guardian.new(user) }
 
   fab!(:tag1) { Fabricate(:tag, name: "fun") }
@@ -959,6 +961,36 @@ RSpec.describe DiscourseTagging do
         expect(tag_changed_event[:params].second[:old_tag_names]).to eq(old_tag_names)
         expect(tag_changed_event[:params].second[:new_tag_names]).to eq(["alpha"])
         expect(tag_changed_event[:params].second[:user]).to eq(admin_guardian.user)
+      end
+
+      context "with admin-only tags" do
+        let(:tag_group) do
+          Fabricate(
+            :tag_group,
+            name: "Admin Announcements",
+            permissions: {
+              "admins" => 1,
+            },
+            tag_names: ["announcements"],
+          )
+        end
+
+        before { create_admin_only_tags(["announcements"]) }
+
+        it "admins can use admin-only tags" do
+          valid = DiscourseTagging.tag_topic_by_names(topic, admin_guardian, ["announcements"])
+          expect(valid).to eq(true)
+          expect(topic.errors[:base]).to be_empty
+          expect(topic.tags.pluck(:name)).to contain_exactly("announcements")
+        end
+
+        it "moderators can't use admin-only tags" do
+          valid = DiscourseTagging.tag_topic_by_names(topic, moderator_guardian, ["announcements"])
+          expect(valid).to eq(false)
+          expect(topic.errors[:base]&.first).to eq(
+            I18n.t("tags.restricted_tag_disallowed", tag: "announcements"),
+          )
+        end
       end
 
       context "with non-staff users in tag group groups" do

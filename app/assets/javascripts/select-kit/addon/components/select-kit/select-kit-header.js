@@ -6,7 +6,8 @@ import {
   classNames,
 } from "@ember-decorators/component";
 import { makeArray } from "discourse/lib/helpers";
-import UtilsMixin from "select-kit/mixins/utils";
+import { isValidInput } from "select-kit/lib/input-utils";
+import selectKitPropUtils from "select-kit/lib/select-kit-prop-utils";
 
 @classNames("select-kit-header")
 @classNameBindings("isFocused")
@@ -18,7 +19,8 @@ import UtilsMixin from "select-kit/mixins/utils";
   "buttonTitle:title",
   "selectKit.options.autofocus:autofocus"
 )
-export default class SelectKitHeader extends Component.extend(UtilsMixin) {
+@selectKitPropUtils
+export default class SelectKitHeader extends Component {
   selectKit = null;
   role = "listbox";
   tabindex = 0;
@@ -163,7 +165,7 @@ export default class SelectKitHeader extends Component.extend(UtilsMixin) {
       if (this.selectKit.isExpanded) {
         this._focusFilterInput();
       } else {
-        if (this.isValidInput(event.key)) {
+        if (isValidInput(event.key)) {
           this.selectKit.set("filter", event.key);
           this.selectKit.open(event);
           event.preventDefault();

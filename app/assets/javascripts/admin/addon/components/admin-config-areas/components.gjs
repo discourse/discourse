@@ -11,12 +11,14 @@ import DSelect from "discourse/components/d-select";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import FilterInput from "discourse/components/filter-input";
+import LoadMore from "discourse/components/load-more";
 import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { extractErrorInfo } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import getURL from "discourse/lib/get-url";
+import { descriptionForRemoteUrl } from "discourse/lib/popular-themes";
 import { i18n } from "discourse-i18n";
 import AdminConfigAreaEmptyList from "admin/components/admin-config-area-empty-list";
 import InstallComponentModal from "admin/components/modal/install-theme";
@@ -29,14 +31,13 @@ const STATUS_FILTER_OPTIONS = [
     label: "admin.config_areas.themes_and_components.components.filter_by_all",
   },
   {
-    value: "active",
-    label:
-      "admin.config_areas.themes_and_components.components.filter_by_active",
+    value: "used",
+    label: "admin.config_areas.themes_and_components.components.filter_by_used",
   },
   {
-    value: "inactive",
+    value: "unused",
     label:
-      "admin.config_areas.themes_and_components.components.filter_by_inactive",
+      "admin.config_areas.themes_and_components.components.filter_by_unused",
   },
   {
     value: "updates_available",
@@ -55,6 +56,10 @@ export default class AdminConfigAreasComponents extends Component {
   @tracked nameFilter;
   @tracked statusFilter;
   @tracked hasComponents = false;
+  @tracked loadingMore = false;
+
+  page = 0;
+  hasMore = false;
 
   constructor() {
     super(...arguments);
@@ -92,7 +97,7 @@ export default class AdminConfigAreasComponents extends Component {
           theme: component.name,
         }),
       },
-      duration: 2000,
+      duration: "short",
     });
     this.load();
   }
@@ -101,31 +106,58 @@ export default class AdminConfigAreasComponents extends Component {
   onNameFilterChange(event) {
     this.loading = true;
     this.nameFilter = event.target.value;
+    this.page = 0;
     discourseDebounce(this, this.load, INPUT_DELAY);
   }
 
   @action
   onStatusFilterChange(value) {
+    this.loading = true;
     this.statusFilter = value;
+    this.page = 0;
     this.load();
   }
 
   @action
-  async load() {
-    this.loading = true;
-
+  async load({ append = false } = {}) {
     try {
       const data = await ajax("/admin/config/customize/components", {
-        data: { name: this.nameFilter, status: this.statusFilter },
+        data: {
+          name: this.nameFilter,
+          status: this.statusFilter,
+          page: this.page,
+        },
       });
 
-      this.components = data.components;
+      if (append) {
+        this.components = [...this.components, ...data.components];
+      } else {
+        this.components = data.components;
+      }
+      this.hasMore = data.has_more;
 
       if (!this.hasComponents && !this.nameFilter && !this.statusFilter) {
         this.hasComponents = !!data.components.length;
       }
     } finally {
       this.loading = false;
+    }
+  }
+
+  @action
+  async loadMore() {
+    if (this.loadingMore) {
+      return;
+    }
+
+    if (this.hasMore) {
+      this.page += 1;
+      this.loadingMore = true;
+      try {
+        await this.load({ append: true });
+      } finally {
+        this.loadingMore = false;
+      }
     }
   }
 
@@ -140,7 +172,6 @@ export default class AdminConfigAreasComponents extends Component {
     >
       <:actions as |actions|>
         <actions.Primary
-          disabled={{this.loading}}
           @label="admin.config_areas.themes_and_components.components.install"
           @action={{this.installModal}}
         />
@@ -182,25 +213,28 @@ export default class AdminConfigAreasComponents extends Component {
       {{/if}}
       <ConditionalLoadingSpinner @condition={{this.loading}}>
         {{#if this.components.length}}
-          <table class="d-admin-table component-list">
-            <thead>
-              <th>{{i18n
-                  "admin.config_areas.themes_and_components.components.name"
-                }}</th>
-              <th>{{i18n
-                  "admin.config_areas.themes_and_components.components.used_on"
-                }}</th>
-              <th>{{i18n
-                  "admin.config_areas.themes_and_components.components.enabled"
-                }}</th>
-              <th></th>
-            </thead>
-            <tbody>
-              {{#each this.components as |comp|}}
-                <ComponentRow @component={{comp}} @refresh={{this.load}} />
-              {{/each}}
-            </tbody>
-          </table>
+          <LoadMore @action={{this.loadMore}}>
+            <table class="d-admin-table component-list">
+              <thead>
+                <th>{{i18n
+                    "admin.config_areas.themes_and_components.components.name"
+                  }}</th>
+                <th>{{i18n
+                    "admin.config_areas.themes_and_components.components.used_on"
+                  }}</th>
+                <th>{{i18n
+                    "admin.config_areas.themes_and_components.components.enabled"
+                  }}</th>
+                <th></th>
+              </thead>
+              <tbody>
+                {{#each this.components as |comp|}}
+                  <ComponentRow @component={{comp}} @refresh={{this.load}} />
+                {{/each}}
+              </tbody>
+            </table>
+            <ConditionalLoadingSpinner @condition={{this.loadingMore}} />
+          </LoadMore>
         {{else}}
           {{#if this.hasComponents}}
             {{i18n
@@ -265,6 +299,14 @@ class ComponentRow extends Component {
     }
   }
 
+  get description() {
+    const remoteUrl = this.args.component.remote_theme?.remote_url;
+    return (
+      this.args.component.description ??
+      (remoteUrl && descriptionForRemoteUrl(remoteUrl))
+    );
+  }
+
   @action
   async toggleEnabled() {
     this.disableToggle = true;
@@ -285,7 +327,7 @@ class ComponentRow extends Component {
       if (data.theme.remote_theme.commits_behind > 0) {
         this.hasUpdates = true;
         this.toasts.default({
-          duration: 5000,
+          duration: "long",
           data: {
             message: i18n(
               "admin.config_areas.themes_and_components.components.new_update_for_component",
@@ -296,7 +338,7 @@ class ComponentRow extends Component {
       } else {
         this.hasUpdates = false;
         this.toasts.default({
-          duration: 5000,
+          duration: "long",
           data: {
             message: i18n(
               "admin.config_areas.themes_and_components.components.component_up_to_date",
@@ -318,7 +360,7 @@ class ComponentRow extends Component {
       await this.save({ remote_update: true });
       this.hasUpdates = false;
       this.toasts.success({
-        duration: 5000,
+        duration: "long",
         data: {
           message: i18n(
             "admin.config_areas.themes_and_components.components.updated_successfully",
@@ -333,8 +375,8 @@ class ComponentRow extends Component {
 
   @action
   delete() {
-    return this.dialog.yesNoConfirm({
-      message: i18n(
+    return this.dialog.deleteConfirm({
+      title: i18n(
         "admin.config_areas.themes_and_components.components.delete_confirm",
         { name: this.args.component.name }
       ),
@@ -344,7 +386,7 @@ class ComponentRow extends Component {
             type: "DELETE",
           });
           this.toasts.success({
-            duration: 5000,
+            duration: "long",
             data: {
               message: i18n(
                 "admin.config_areas.themes_and_components.components.deleted_successfully",
@@ -355,7 +397,7 @@ class ComponentRow extends Component {
           this.args.refresh();
         } catch (error) {
           this.toasts.error({
-            duration: 5000,
+            duration: "long",
             data: {
               message: extractErrorInfo(error),
             },
@@ -375,7 +417,7 @@ class ComponentRow extends Component {
       });
     } catch (error) {
       this.toasts.error({
-        duration: 5000,
+        duration: "long",
         data: {
           message: extractErrorInfo(error),
         },
@@ -402,11 +444,11 @@ class ComponentRow extends Component {
               (hash name=@component.remote_theme.authors)
             }}</div>
         {{/if}}
-        {{#if @component.description}}
+        {{#if this.description}}
           <div
             class="d-admin-row__overview-about admin-config-components__description"
           >
-            {{@component.description}}
+            {{this.description}}
             {{#if @component.remote_theme.about_url}}
               <a href={{@component.remote_theme.about_url}}>{{i18n
                   "admin.config_areas.themes_and_components.components.learn_more"
@@ -438,7 +480,7 @@ class ComponentRow extends Component {
               <div class="status-label-indicator"></div>
               <div class="status-label-text">
                 {{i18n
-                  "admin.config_areas.themes_and_components.components.badge_inactive"
+                  "admin.config_areas.themes_and_components.components.badge_unused"
                 }}
               </div>
             </div>

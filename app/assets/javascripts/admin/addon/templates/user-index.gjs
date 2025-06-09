@@ -11,6 +11,7 @@ import formatDate from "discourse/helpers/format-date";
 import formatDuration from "discourse/helpers/format-duration";
 import htmlSafe from "discourse/helpers/html-safe";
 import i18nYesNo from "discourse/helpers/i18n-yes-no";
+import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
 import { i18n } from "discourse-i18n";
 import AdminEditableField from "admin/components/admin-editable-field";
@@ -56,7 +57,7 @@ export default RouteTemplate(
         {{/if}}
         <PluginOutlet
           @name="admin-user-controls-after"
-          @outletArgs={{hash model=@controller.model}}
+          @outletArgs={{lazyHash model=@controller.model}}
         />
       </div>
 
@@ -80,7 +81,7 @@ export default RouteTemplate(
 
       <PluginOutlet
         @name="admin-user-below-names"
-        @outletArgs={{hash user=@controller.model}}
+        @outletArgs={{lazyHash user=@controller.model}}
       />
 
       {{#if @controller.canCheckEmails}}
@@ -319,7 +320,7 @@ export default RouteTemplate(
       <PluginOutlet
         @name="admin-user-details"
         @connectorTagName="div"
-        @outletArgs={{hash model=@controller.model}}
+        @outletArgs={{lazyHash model=@controller.model}}
       />
     </span>
 
@@ -940,7 +941,7 @@ export default RouteTemplate(
       <PluginOutlet
         @name="after-user-details"
         @connectorTagName="div"
-        @outletArgs={{hash model=@controller.model}}
+        @outletArgs={{lazyHash model=@controller.model}}
       />
     </span>
 

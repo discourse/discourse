@@ -5,4 +5,5 @@ const Post = <template>
   {{i18n "search.post_format" @result}}
   <Blurb @result={{@result}} />
 </template>;
+
 export default Post;

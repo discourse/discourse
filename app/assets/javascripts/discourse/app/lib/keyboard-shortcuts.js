@@ -14,6 +14,7 @@ import Composer from "discourse/models/composer";
 import { capabilities } from "discourse/services/capabilities";
 
 let disabledBindings = [];
+
 export function disableDefaultKeyboardShortcuts(bindings) {
   disabledBindings = disabledBindings.concat(bindings);
 }
@@ -23,6 +24,7 @@ export function clearDisabledDefaultKeyboardBindings() {
 }
 
 let extraKeyboardShortcutsHelp = {};
+
 function addExtraKeyboardShortcutHelp(help) {
   const category = help.category;
   if (extraKeyboardShortcutsHelp[category]) {
@@ -50,8 +52,6 @@ const DEFAULT_BINDINGS = {
   "!": { postAction: "showFlags" },
   "#": { handler: "goToPost", anonymous: true },
   "/": { handler: "toggleSearch", anonymous: true },
-  "meta+/": { handler: "filterSidebar", anonymous: true },
-  [`${PLATFORM_KEY_MODIFIER}+/`]: { handler: "filterSidebar", anonymous: true },
   "ctrl+alt+f": { handler: "toggleSearch", anonymous: true, global: true },
   "=": { handler: "toggleHamburgerMenu", anonymous: true },
   "?": { handler: "showHelpModal", anonymous: true },
@@ -60,8 +60,6 @@ const DEFAULT_BINDINGS = {
   b: { handler: "toggleBookmark" },
   c: { handler: "createTopic" },
   "shift+c": { handler: "focusComposer" },
-  "ctrl+f": { handler: "showPageSearch", anonymous: true },
-  "command+f": { handler: "showPageSearch", anonymous: true },
   "command+left": { handler: "webviewKeyboardBack", anonymous: true },
   "command+[": { handler: "webviewKeyboardBack", anonymous: true },
   "command+right": { handler: "webviewKeyboardForward", anonymous: true },
@@ -450,15 +448,6 @@ export default {
     this._changeSection(-1);
   },
 
-  showPageSearch(event) {
-    run(() => {
-      this.appEvents.trigger("header:keyboard-trigger", {
-        type: "page-search",
-        event,
-      });
-    });
-  },
-
   printTopic(event) {
     run(() => {
       if (document.querySelector(".container.posts")) {
@@ -495,18 +484,6 @@ export default {
       event.stopPropagation();
     }
     composer.focusComposer(event);
-  },
-
-  filterSidebar() {
-    const filterInput = document.querySelector(".sidebar-filter__input");
-
-    if (filterInput) {
-      this._scrollTo(0);
-
-      if (!this.currentUser.use_experimental_admin_search) {
-        filterInput.focus();
-      }
-    }
   },
 
   fullscreenComposer() {
@@ -629,6 +606,7 @@ export default {
 
         const result = actionMethod.call(topicController, post);
         if (result && result.then) {
+          // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
           this.appEvents.trigger("post-stream:refresh", { id: selectedPostId });
         }
       }
@@ -791,6 +769,11 @@ export default {
       }
     }
 
+    this.appEvents.trigger("keyboard:move-selection", {
+      articles,
+      selectedArticle: article,
+    });
+
     for (const a of articles) {
       a.classList.remove("selected");
       a.removeAttribute("tabindex");
@@ -798,11 +781,6 @@ export default {
     article.classList.add("selected");
     article.setAttribute("tabindex", "0");
     article.focus();
-
-    this.appEvents.trigger("keyboard:move-selection", {
-      articles,
-      selectedArticle: article,
-    });
 
     const articleTop = domUtils.offset(article).top,
       articleTopPosition = articleTop - headerOffset();
@@ -865,7 +843,7 @@ export default {
     let categoriesTopicsList;
     if (document.querySelector(".posts-wrapper")) {
       return document.querySelectorAll(
-        ".posts-wrapper .topic-post, .topic-list tbody tr"
+        ".posts-wrapper .topic-post, .posts-wrapper .post-stream--cloaked, .topic-list tbody tr"
       );
     } else if (document.querySelector(".topic-list")) {
       return document.querySelectorAll(".topic-list .topic-list-item");

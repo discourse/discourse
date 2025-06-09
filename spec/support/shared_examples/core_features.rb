@@ -10,16 +10,16 @@ RSpec.shared_examples_for "having working core features" do |skip_examples: []|
 
   if skip_examples.exclude?(:login)
     describe "Login" do
-      let(:login_form) { PageObjects::Modals::Login.new }
+      let(:login_form) { PageObjects::Pages::Login.new }
 
       before { EmailToken.confirm(Fabricate(:email_token, user: active_user).token) }
 
       it "logs in" do
         visit("/")
-        login_form
-          .open
-          .fill(username: active_user.username, password: "secure_password")
-          .click_login
+        login_form.open
+        login_form.fill_username(active_user.username)
+        login_form.fill_password("secure_password")
+        login_form.click_login
         expect(page).to have_css(".current-user", visible: true)
       end
 

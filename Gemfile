@@ -15,13 +15,10 @@ gem "activemodel", "~> 7.2.0"
 gem "activerecord", "~> 7.2.0"
 gem "activesupport", "~> 7.2.0"
 gem "railties", "~> 7.2.0"
-gem "sprockets-rails"
+
+gem "propshaft"
 
 gem "json"
-
-# TODO: At the moment Discourse does not work with Sprockets 4, we would need to correct internals
-# We intend to drop sprockets rather than upgrade to 4.x
-gem "sprockets", "~> 3.7.3"
 
 # this will eventually be added to rails,
 # allows us to precompile all our templates in the unicorn master
@@ -117,22 +114,14 @@ gem "net-imap", require: false
 gem "net-pop", require: false
 gem "digest", require: false
 
-# Gems used only for assets and not required in production environments by default.
-# Allow everywhere for now cause we are allowing asset debugging in production
-group :assets do
-  gem "uglifier"
-end
-
 group :test do
   gem "capybara", require: false
   gem "webmock", require: false
-  gem "fakeweb", require: false
   gem "simplecov", require: false
-  gem "selenium-webdriver", "~> 4.14", require: false
-  gem "selenium-devtools", require: false
   gem "test-prof"
   gem "rails-dom-testing", require: false
   gem "minio_runner", require: false
+  gem "capybara-playwright-driver"
 end
 
 group :test, :development do

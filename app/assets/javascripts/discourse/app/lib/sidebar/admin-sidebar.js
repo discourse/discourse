@@ -1,6 +1,5 @@
 import { cached } from "@glimmer/tracking";
 import { warn } from "@ember/debug";
-import { htmlSafe } from "@ember/template";
 import { configNavForPlugin } from "discourse/lib/admin-plugin-config-nav";
 import { adminRouteValid } from "discourse/lib/admin-utilities";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
@@ -410,40 +409,31 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
     });
   }
 
-  get filterable() {
-    return true;
-  }
-
-  filterNoResultsDescription(filter) {
+  get searchable() {
     const currentUser = getOwnerWithFallback(this).lookup(
       "service:current-user"
     );
+    return currentUser.admin;
+  }
 
+  get filterable() {
+    const currentUser = getOwnerWithFallback(this).lookup(
+      "service:current-user"
+    );
+    return !currentUser.admin && currentUser.moderator;
+  }
+
+  filterNoResultsDescription(filter) {
     const escapedFilter = escapeExpression(filter);
 
-    const params = {
+    i18n("sidebar.no_results.description_admin_search", {
       filter: escapedFilter,
-      settings_filter_url: getURL(
-        `/admin/site_settings/category/all_results?filter=${encodeURIComponent(
-          filter
-        )}`
-      ),
-      user_list_filter_url: getURL(
-        `/admin/users/list/active?username=${encodeURIComponent(filter)}`
-      ),
-    };
+    });
+  }
 
-    if (currentUser?.use_experimental_admin_search) {
-      return htmlSafe(
-        i18n("sidebar.no_results.description_admin_search", {
-          filter: escapedFilter,
-          admin_search_url: getURL(
-            `/admin/search?filter=${encodeURIComponent(filter)}`
-          ),
-        })
-      );
-    }
-
-    return htmlSafe(i18n("sidebar.no_results.description", params));
+  get onSearchClick() {
+    getOwnerWithFallback(this)
+      .lookup("service:modal")
+      .show(this.adminSidebarStateManager.modals.adminSearch);
   }
 }

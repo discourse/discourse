@@ -6,6 +6,7 @@ import { htmlSafe } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import concatClass from "discourse/helpers/concat-class";
 import discourseComputed from "discourse/lib/decorators";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import { MAX_MESSAGE_LENGTH } from "discourse/models/post-action-type";
 import { i18n } from "discourse-i18n";
 
@@ -15,6 +16,12 @@ export default class FlagActionType extends Component {
   @and("flag.isIllegal", "selected") showConfirmation;
   @equal("flag.name_key", "notify_user") isNotifyUser;
 
+  get flagDescription() {
+    return applyValueTransformer("flag-description", this.description, {
+      nameKey: this.flag.name_key,
+    });
+  }
+
   @discourseComputed("flag.name_key")
   wrapperClassNames(nameKey) {
     return `flag-action-type ${nameKey}`;
@@ -22,9 +29,13 @@ export default class FlagActionType extends Component {
 
   @discourseComputed("flag.name_key")
   customPlaceholder(nameKey) {
-    return i18n("flagging.custom_placeholder_" + nameKey, {
-      defaultValue: i18n("flagging.custom_placeholder_notify_moderators"),
-    });
+    return applyValueTransformer(
+      "flag-custom-placeholder",
+      i18n("flagging.custom_placeholder_" + nameKey, {
+        defaultValue: i18n("flagging.custom_placeholder_notify_moderators"),
+      }),
+      { nameKey }
+    );
   }
 
   @discourseComputed("flag.name", "flag.name_key", "username")
@@ -32,9 +43,13 @@ export default class FlagActionType extends Component {
     if (["notify_user", "notify_moderators"].includes(nameKey)) {
       return name.replace(/{{username}}|%{username}/, username);
     } else {
-      return i18n("flagging.formatted_name." + nameKey, {
-        defaultValue: name,
-      });
+      return applyValueTransformer(
+        "flag-formatted-name",
+        i18n("flagging.formatted_name." + nameKey, {
+          defaultValue: name,
+        }),
+        { nameKey }
+      );
     }
   }
 
@@ -84,9 +99,7 @@ export default class FlagActionType extends Component {
             />
 
             <div class="flag-action-type-details">
-              <span class="description">{{htmlSafe
-                  this.flag.description
-                }}</span>
+              <span class="description">{{htmlSafe this.flagDescription}}</span>
               {{#if this.showMessageInput}}
                 <Textarea
                   name="message"
@@ -122,8 +135,8 @@ export default class FlagActionType extends Component {
               name="post_action_type_index"
             />
             <div class="flag-action-type-details">
-              <strong>{{this.formattedName}}</strong>
-              <div class="description">{{htmlSafe this.description}}</div>
+              <strong class="flag-name">{{this.formattedName}}</strong>
+              <div class="description">{{htmlSafe this.flagDescription}}</div>
               {{#if this.showMessageInput}}
                 <Textarea
                   name="message"

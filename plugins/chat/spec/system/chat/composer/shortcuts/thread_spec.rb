@@ -11,6 +11,7 @@ RSpec.describe "Chat | composer | shortcuts | thread", type: :system do
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:thread_page) { PageObjects::Pages::ChatThread.new }
   let(:side_panel_page) { PageObjects::Pages::ChatSidePanel.new }
+  let(:cdp) { PageObjects::CDP.new }
 
   before do
     chat_system_bootstrap
@@ -47,13 +48,13 @@ RSpec.describe "Chat | composer | shortcuts | thread", type: :system do
     context "when last message is staged" do
       it "does not edit a message" do
         chat_page.visit_thread(thread_1)
-        page.driver.browser.network_conditions = { offline: true }
-        thread_page.send_message
-        thread_page.composer.edit_last_message_shortcut
 
-        expect(thread_page.composer.message_details).to have_no_message
-      ensure
-        page.driver.browser.network_conditions = { offline: false }
+        cdp.with_network_disconnected do
+          thread_page.send_message
+          thread_page.composer.edit_last_message_shortcut
+
+          expect(thread_page.composer.message_details).to have_no_message
+        end
       end
     end
 

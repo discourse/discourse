@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { concat, get, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
@@ -7,7 +6,7 @@ import { and } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import icon from "discourse/helpers/d-icon";
 import element from "discourse/helpers/element";
-import TopicStatusIcons from "discourse/helpers/topic-status-icons";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
 
 export default class TopicStatus extends Component {
@@ -108,22 +107,10 @@ export default class TopicStatus extends Component {
           class="topic-status"
         >{{icon "far-eye-slash"}}</span>
       {{~/if~}}
-
-      {{~#if this.site.useGlimmerTopicList~}}
-        <PluginOutlet
-          @name="after-topic-status"
-          @outletArgs={{hash topic=@topic context=@context}}
-        />
-      {{~else~}}
-        {{~#each TopicStatusIcons.entries as |entry|~}}
-          {{~#if (get @topic entry.attribute)~}}
-            <span
-              title={{i18n (concat "topic_statuses." entry.titleKey ".help")}}
-              class="topic-status"
-            >{{icon entry.iconName}}</span>
-          {{~/if~}}
-        {{~/each~}}
-      {{~/if~}}
+      <PluginOutlet
+        @name="after-topic-status"
+        @outletArgs={{lazyHash topic=@topic context=@context}}
+      />
       {{~! no whitespace ~}}
     </this.wrapperElement>
     {{~! no whitespace ~}}

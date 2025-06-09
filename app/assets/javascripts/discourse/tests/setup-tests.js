@@ -1,6 +1,7 @@
 /* eslint-disable simple-import-sort/imports */
 import Application from "../app";
 import "./loader-shims";
+import "discourse/static/markdown-it";
 /* eslint-enable simple-import-sort/imports */
 
 import { getOwner } from "@ember/owner";
@@ -16,7 +17,10 @@ import QUnit from "qunit";
 import sinon from "sinon";
 import PreloadStore from "discourse/lib/preload-store";
 import { resetSettings as resetThemeSettings } from "discourse/lib/theme-settings-store";
-import { ScrollingDOMMethods } from "discourse/mixins/scrolling";
+import {
+  disableLoadMoreObserver,
+  enableLoadMoreObserver,
+} from "discourse/components/load-more";
 import Session from "discourse/models/session";
 import User from "discourse/models/user";
 import { resetCategoryCache } from "discourse/models/category";
@@ -39,7 +43,8 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import { configureRaiseOnDeprecation } from "discourse/tests/helpers/raise-on-deprecation";
 import { resetSettings } from "discourse/tests/helpers/site-settings";
-import { disableCloaking } from "discourse/widgets/post-stream";
+import { disableCloaking } from "discourse/modifiers/post-stream-viewport-tracker";
+import { disableCloaking as disableWidgetCloaking } from "discourse/widgets/post-stream";
 import deprecated from "discourse/lib/deprecated";
 import { setDefaultOwner } from "discourse/lib/get-owner";
 import { setupS3CDN, setupURL } from "discourse/lib/get-url";
@@ -201,6 +206,7 @@ function writeSummaryLine(message) {
 
 export default function setupTests(config) {
   disableCloaking();
+  disableWidgetCloaking();
 
   setupDeprecationCounter(QUnit);
 
@@ -304,13 +310,12 @@ export default function setupTests(config) {
 
     resetCategoryCache();
 
-    sinon.stub(ScrollingDOMMethods, "bindOnScroll");
-    sinon.stub(ScrollingDOMMethods, "unbindOnScroll");
-
     // Access the container that's set up in createApplication
     const scrollManager = app.__container__.lookup("service:scroll-manager");
     sinon.stub(scrollManager, "bindScrolling");
     sinon.stub(scrollManager, "unbindScrolling");
+
+    disableLoadMoreObserver();
   });
 
   QUnit.testDone(function () {
@@ -336,6 +341,7 @@ export default function setupTests(config) {
 
     MessageBus.unsubscribe("*");
     localStorage.clear();
+    enableLoadMoreObserver();
   });
 
   if (getUrlParameter("qunit_disable_auto_start") === "1") {

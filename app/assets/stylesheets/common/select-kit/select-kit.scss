@@ -37,7 +37,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      border-radius: 0;
+      border-radius: var(--d-border-radius);
       border: 1px solid var(--primary-low);
       box-shadow: var(--shadow-dropdown);
       background: var(--secondary);
@@ -241,6 +241,12 @@
 
     &.is-selected.is-highlighted {
       background: var(--d-hover);
+    }
+
+    .discourse-tag,
+    .discourse-tag:visited,
+    .discourse-tag:hover {
+      color: var(--primary-high);
     }
 
     &.create-color-row {

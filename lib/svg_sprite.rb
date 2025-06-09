@@ -1,6 +1,4 @@
 # frozen_string_literal: true
-require_relative "deprecated_icon_handler"
-
 module SvgSprite
   SVG_ICONS =
     Set.new(
@@ -93,7 +91,10 @@ module SvgSprite
         discourse-other-tab
         discourse-sidebar
         discourse-sparkles
+        discourse-table
+        discourse-text
         discourse-threads
+        discourse-add-translation
         download
         earth-americas
         ellipsis
@@ -156,6 +157,7 @@ module SvgSprite
         flask
         folder
         folder-open
+        font
         forward
         forward-fast
         forward-step
@@ -250,6 +252,7 @@ module SvgSprite
         up-right-from-square
         upload
         user
+        user-check
         user-gear
         user-group
         user-pen
@@ -263,8 +266,6 @@ module SvgSprite
         xmark
       ],
     )
-
-  CORE_SVG_SPRITES = Dir.glob("#{Rails.root}/vendor/assets/svg-icons/**/*.svg")
 
   THEME_SPRITE_VAR_NAME = "icons-sprite"
 
@@ -293,9 +294,13 @@ module SvgSprite
       .to_h
   end
 
+  def self.core_svgs_files
+    @svg_files ||= Dir.glob("#{Rails.root}/vendor/assets/svg-icons/**/*.svg")
+  end
+
   def self.core_svgs
     @core_svgs ||=
-      CORE_SVG_SPRITES.reduce({}) do |symbols, path|
+      core_svgs_files.reduce({}) do |symbols, path|
         symbols.merge!(symbols_for(File.basename(path, ".svg"), File.read(path), strict: true))
       end
   end
@@ -386,7 +391,7 @@ module SvgSprite
         .merge(theme_icons(theme_id))
         .merge(custom_icons(theme_id))
         .delete_if { |i| i.blank? || i.include?("/") }
-        .map! { |i| process(i.dup) }
+        .map!(&:strip)
         .merge(SVG_ICONS)
         .sort
     end
@@ -432,9 +437,7 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
   end
 
   def self.search(searched_icon)
-    searched_icon = process(searched_icon.dup)
-
-    svgs_for(SiteSetting.default_theme_id)[searched_icon] || false
+    svgs_for(SiteSetting.default_theme_id)[searched_icon.strip] || false
   end
 
   def self.icon_picker_search(keyword, only_available = false)
@@ -525,10 +528,6 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
   def self.custom_icons(theme_id)
     # Automatically register icons in sprites added via themes or plugins
     custom_svgs(theme_id).keys
-  end
-
-  def self.process(icon_name)
-    DeprecatedIconHandler.convert_icon(icon_name.strip)
   end
 
   def self.get_set_cache(key, &block)

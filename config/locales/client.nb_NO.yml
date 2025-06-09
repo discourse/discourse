@@ -458,7 +458,7 @@ nb_NO:
       one: "Se %{count} nytt emne"
       other: "Se %{count} nye emner"
     preview: "forhåndsvisning"
-    cancel: "avbryt"
+    cancel: "Avbryt"
     deleting: "forhåndsvisning"
     save: "Lagre endringer"
     saving: "Lagrer…"
@@ -1115,7 +1115,6 @@ nb_NO:
       said: "%{username}:"
       profile: "Profil"
       profile_possessive: "%{username}s profil"
-      account_possessive: "%{name}s konto"
       mute: "Ignorer"
       edit: "Rediger innstillinger"
       download_archive:
@@ -1909,7 +1908,6 @@ nb_NO:
         title: "Registreringens IP-adresse."
       avatar:
         title: "Profilbilde"
-        header_title: "Profil, meldinger, bokmerker og innstillinger"
         name_and_description: "%{name} - %{description}"
         edit: "Rediger profilbilde"
       title:
@@ -1980,6 +1978,8 @@ nb_NO:
     modal:
       close: "lukk"
       dismiss_error: "Avvis feil"
+    multi_select:
+      search: "Søk…"
     form_kit:
       reset: Tilbakestill
       optional: valgfritt
@@ -2212,10 +2212,6 @@ nb_NO:
         name: "Google"
         title: "Logg inn med Google"
         sr_title: "Logg inn med Google"
-      twitter:
-        name: "Twitter"
-        title: "Logg inn med Twitter"
-        sr_title: "Logg inn med Twitter"
       instagram:
         name: "Instagram"
         title: "Logg inn med Instagram"
@@ -2680,8 +2676,6 @@ nb_NO:
       in_topics_posts: "i alle emner og innlegg"
       enter_hint: "eller trykk Enter"
       in_posts_by: "i innlegg av %{username}"
-      browser_tip: "%{modifier} + f"
-      browser_tip_description: "igjen for å bruke innebygd nettlesersøk"
       recent: "Nylige søk"
       clear_recent: "Fjern nylige søk"
       type:
@@ -2766,7 +2760,6 @@ nb_NO:
           aria_label: filtrer etter maksimal antall visninger
         additional_options:
           label: "Filtrer etter antall innlegg og emnevisninger"
-    hamburger_menu: "meny"
     new_item: "ny"
     go_back: "gå tilbake"
     not_logged_in_user: "brukerside med oppsummering av nåværende aktivtet og innstillinger"
@@ -3458,6 +3451,11 @@ nb_NO:
         other: "Viser %{count} svar til"
       in_reply_to: "Last inn overordnet innlegg"
       view_all_posts: "Vis alle innlegg"
+      localizations:
+        table:
+          actions: "Handlinger"
+          edit: "Endre"
+          delete: "Slett"
       errors:
         create: "Beklager, det oppstod en feil ved å publisere ditt innlegg. Prøv igjen."
         edit: "Det oppstod en feil ved redigeringen av ditt innlegg. Prøv igjen."
@@ -3657,6 +3655,10 @@ nb_NO:
       settings: "Innstillinger"
       topic_template: "Mal"
       tags: "Stikkord"
+      localization:
+        name: "Navn"
+        description: "Beskrivelse"
+        remove: "Fjern"
       tags_allowed_tags: "Begrens disse stikkordene til denne kategorien:"
       tags_allowed_tag_groups: "Begrens disse stikkordgruppene til denne kategorien:"
       tags_placeholder: "(Valgfritt) liste over tillatte stikkord"
@@ -4339,7 +4341,7 @@ nb_NO:
               content: "Gjennomgang"
             invite:
               content: "Inviter"
-      filter: "Filtrer..."
+      search: "Søk"
       footer:
         interface_color_selector:
           light: "Lys"
@@ -4365,6 +4367,9 @@ nb_NO:
       spreadsheet:
         show: "Vis"
         about: "Om"
+    discovery:
+      headings:
+        categories: "Alle kategorier"
   admin_js:
     type_to_filter: "Skriv for å filtrere…"
     settings: "Instillinger"
@@ -4406,19 +4411,19 @@ nb_NO:
           title: "Filer"
         legal:
           title: "Juridisk"
-        branding:
-          logo:
-            form:
-              mobile: "Mobil"
-              email: "E-post"
+        logo:
+          form:
+            mobile: "Mobil"
+            email: "E-post"
+        fonts:
+          backfill_modal:
+            modal_yes: "Ja"
         navigation:
           title: "Navigasjon"
         notifications:
           title: "Varsler"
         onebox:
           title: "Onebox"
-        other:
-          title: "Annet"
         search_everything:
           title: "Søk"
         security:
@@ -4456,6 +4461,8 @@ nb_NO:
               header_description: "Forhåndsvis innholde i oppsummerings-e-postene som sendes til inaktive brukere"
             templates:
               title: "Maler"
+        email_logs:
+          sub_pages:
             sent:
               title: "Sendt"
             skipped:
@@ -4753,6 +4760,8 @@ nb_NO:
       config_areas:
         about:
           company_name: "Navn"
+          extra_groups:
+            groups: "Grupper"
           optional: "(valgfritt)"
           update: "Oppdater"
           saved: "lagret!"
@@ -4787,6 +4796,18 @@ nb_NO:
             title: "Drakter"
           components:
             title: "Komponenter"
+            install: "Installer"
+            name: "Navn"
+            enabled: "Aktivert?"
+            by_author: "Av %{name}"
+            learn_more: "Finn ut mer"
+            edit: "Endre"
+            preview: "Forhåndsvis"
+            export: "Eksporter"
+            convert: "Konverter"
+            delete: "Slett"
+            filter_by_all: "Alle"
+            delete_confirm: 'Er du sikker på at du vil slette "%{name}?'
         user_fields:
           type: "Type"
           more_options:
@@ -4794,6 +4815,7 @@ nb_NO:
           delete: "Slett"
         color_palettes:
           palette_name: "Navn"
+          delete: "Slett"
           colors:
             title: "Farger"
       plugins:
@@ -4927,6 +4949,7 @@ nb_NO:
           extra_files_upload: "Eksporter tema for å vise disse filene."
           extra_files_remote: "Eksporter temaet eller sjekk git-repository for å vise disse filene."
           preview: "Forhåndsvis"
+          default: "Aktiv"
           is_default: "Drakt påskrudd som forvalg"
           user_selectable: "Drakten kan velges av brukerne"
           auto_update: "Automatisk oppdatering når Discourse er oppdatert"
@@ -4978,8 +5001,6 @@ nb_NO:
           enable: "Aktiver"
           disable: "Deaktiver"
           disabled: "Denne komponenten har blitt deaktivert."
-          update_to_latest: "Oppdater til seneste"
-          check_for_updates: "Se etter oppdateringer"
           up_to_date: "Drakten er oppdatert, sist sjekket:"
           add: "Legg til"
           theme_settings: "Draktinnstillinger"
@@ -4998,12 +5019,16 @@ nb_NO:
           all_filter: "Alle"
           active_filter: "Aktiv"
           inactive_filter: "Inaktiv"
-          schema:
-            fields:
-              required: "*påkrevd"
-              number:
-                too_small: "må være lik eller større enn %{count}"
-                too_large: "må være lik eller mindre enn %{count}"
+        schema:
+          fields:
+            required: "*påkrevd"
+            string:
+              too_short:
+                one: "må være minst %{count} tegn"
+                other: "må være minst %{count} tegn"
+            number:
+              too_small: "må være lik eller større enn %{count}"
+              too_large: "må være lik eller mindre enn %{count}"
         colors:
           title: "Farger"
           copy_name_prefix: "Kopi av"
@@ -5012,33 +5037,24 @@ nb_NO:
           revert: "Reverser"
           primary:
             name: "primær"
-            description: "Det meste av tekst, ikoner og kanter."
           secondary:
             name: "sekundær"
-            description: "Primær bakgrunnsfarge og tekstfarge på noen knapper"
           tertiary:
             name: "tertiær"
-            description: "Lenker, noen knapper, varsler og effektfarge"
           quaternary:
             name: "kvartær"
           header_background:
             name: "hodebakgrunn"
-            description: "Bakgrunnsfarge i nettstedets hode"
           header_primary:
             name: "primærhode"
-            description: "Tekst og ikoner i nettstedets hode."
           highlight:
             name: "utheving"
-            description: "Bakgrunnsfargen på uthevede elementer på siden, slik som innlegg og emner."
           danger:
             name: "fare"
-            description: "Uthevingsfarge for handlinger som sletting av innlegg og emner."
           success:
             name: "suksess"
-            description: "Brukt til å indikere hvorvidt en handling var vellykket."
           love:
             name: "liker"
-            description: "Fargen til Liker-knappen."
           selected:
             name: "valgt"
           editor:

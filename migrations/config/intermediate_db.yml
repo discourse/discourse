@@ -19,6 +19,9 @@ schema:
       primary_key_column_names: [ "user_id" ]
     users:
       columns:
+        modify:
+          - name: "created_at"
+            nullable: false
         add:
           - name: "original_username"
             datatype: text
@@ -41,6 +44,8 @@ schema:
         - name: "id"
           datatype: numeric
           rename_to: "original_id"
+        - name: "created_at"
+          nullable: true
         - name_regex: ".*upload.*_id$"
           datatype: text
         - name_regex: ".*_id$"
@@ -71,6 +76,7 @@ schema:
         - "category_featured_topics"
         - "category_form_templates"
         - "category_groups"
+        - "category_localizations"
         - "category_moderation_groups"
         - "category_required_tag_groups"
         - "category_search_data"
@@ -161,6 +167,7 @@ schema:
         - "post_custom_fields"
         - "post_details"
         - "post_hotlinked_media"
+        - "post_localizations"
         - "post_replies"
         - "post_reply_keys"
         - "post_revisions"
@@ -176,6 +183,7 @@ schema:
         - "remote_themes"
         - "reviewable_claimed_topics"
         - "reviewable_histories"
+        - "reviewable_notes"
         - "reviewable_scores"
         - "reviewables"
         - "scheduler_stats"
@@ -221,6 +229,7 @@ schema:
         - "topic_invites"
         - "topic_link_clicks"
         - "topic_links"
+        - "topic_localizations"
         - "topic_search_data"
         - "topic_tags"
         - "topic_thumbnails"

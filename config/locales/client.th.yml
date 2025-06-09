@@ -1134,7 +1134,6 @@ th:
         title: "ไอพีที่ลงทะเบียน"
       avatar:
         title: "รูปโปรไฟล์"
-        header_title: "โปรไฟล์ ข้อความ บุ๊กมาร์ก และการตั้งค่า"
       title:
         title: "ชื่อเรื่อง"
         none: "(ไม่มี)"
@@ -1280,8 +1279,6 @@ th:
       not_approved: "บัญชีของคุณยังไม่ได้รับการยืนยัน คุณจะได้รับการแจ้งเตือนทางอีเมลเมื่อคุณสามารถเข้าสู่ระบบได้"
       google_oauth2:
         name: "กูเกิล"
-      twitter:
-        name: "ทวิตเตอร์"
       instagram:
         name: "อินสตาแกรม"
       facebook:
@@ -1956,6 +1953,11 @@ th:
       has_likes_title_only_you: "คุณถูกใจโพสต์นี้"
       has_likes_title_you:
         other: "คุณและคนอื่นอีก %{count}คนถูกใจโพสต์นี้"
+      localizations:
+        table:
+          actions: "การกระทำ"
+          edit: "แก้ไข"
+          delete: "ลบ"
       errors:
         create: "ขออภัย เกิดความผิดพลาดขณะกำลังสร้างโพสต์ของคุณ กรุณาลองใหม่อีกครั้ง"
         edit: "ขออภัย เกิดความผิดพลาดขณะกำลังแก้ไขโพสต์ของคุณ กรุณาลองใหม่อีกครั้ง"
@@ -2057,6 +2059,10 @@ th:
       general: "ทั่วไป"
       settings: "การตั้งค่า"
       tags: "แท็ก"
+      localization:
+        name: "ชื่อ"
+        description: "รายละเอียด"
+        remove: "ลบ"
       allow_global_tags_label: "อนุญาตแท็กอื่นด้วย"
       required_tag_group:
         delete: "ลบ"
@@ -2506,6 +2512,7 @@ th:
               content: "รีวิว"
             invite:
               content: "เชิญ"
+      search: "ค้นหา"
     until: "จนถึง:"
     form_templates:
       upload_field:
@@ -2527,6 +2534,9 @@ th:
       spreadsheet:
         show: "แสดง"
         about: "เกี่ยวกับ"
+    discovery:
+      headings:
+        categories: "หมวดหมู่ทั้งหมด"
   admin_js:
     settings: "การตั้งค่า"
     admin:
@@ -2556,17 +2566,17 @@ th:
           title: "ไฟล์"
         legal:
           title: "กฎ"
-        branding:
-          logo:
-            form:
-              mobile: "โทรศัพท์"
-              email: "อีเมล"
+        logo:
+          form:
+            mobile: "โทรศัพท์"
+            email: "อีเมล"
+        fonts:
+          backfill_modal:
+            modal_yes: "ใช่"
         navigation:
           title: "การนำทาง"
         notifications:
           title: "การแจ้งเตือน"
-        other:
-          title: "อื่นๆ"
         search_everything:
           title: "ค้นหา"
         security:
@@ -2593,6 +2603,8 @@ th:
           sub_pages:
             templates:
               title: "รูปแบบ"
+        email_logs:
+          sub_pages:
             sent:
               title: "ส่ง"
             skipped:
@@ -2779,6 +2791,8 @@ th:
       config_areas:
         about:
           company_name: "ชื่อ"
+          extra_groups:
+            groups: "กลุ่ม"
           optional: "(ทางเลือก)"
           update: "อัปเดต"
           saved: "บันทึกแล้ว!"
@@ -2807,11 +2821,24 @@ th:
           install: "ติดตั้ง"
           themes:
             title: "ธีม"
+          components:
+            install: "ติดตั้ง"
+            name: "ชื่อ"
+            enabled: "เปิดใช้"
+            by_author: "โดย %{name}"
+            learn_more: "เรียนรู้เพิ่มเติม"
+            edit: "แก้ไข"
+            preview: "แสดงตัวอย่าง"
+            export: "ส่งออก"
+            delete: "ลบ"
+            filter_by_all: "ทั้งหมด"
+            delete_confirm: 'คุณแน่ใจหรือว่าต้องการลบ "%{name}"'
         user_fields:
           type: "ชนิด"
           delete: "ลบ"
         color_palettes:
           palette_name: "ชื่อ"
+          delete: "ลบ"
           colors:
             title: "สี"
       plugins:
@@ -2880,6 +2907,7 @@ th:
           edit: "แก้ไข"
           mobile: "โทรศัพท์"
           preview: "แสดงตัวอย่าง"
+          default: "ใช้งานอยู่"
           add_all_themes: "เพิ่มธีมทั้งหมด"
           inactive_themes: "ธีมที่ไม่ได้ใช้งาน:"
           cancel: "ยกเลิก"
@@ -2912,9 +2940,9 @@ th:
           all_filter: "ทั้งหมด"
           active_filter: "ใช้งานอยู่"
           inactive_filter: "ไม่ใช้งาน"
-          schema:
-            fields:
-              required: "*ต้องการ"
+        schema:
+          fields:
+            required: "*ต้องการ"
         colors:
           title: "สี"
           undo: "เลิกทำ"

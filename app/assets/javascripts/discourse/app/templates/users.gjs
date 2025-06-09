@@ -11,6 +11,7 @@ import basePath from "discourse/helpers/base-path";
 import bodyClass from "discourse/helpers/body-class";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import htmlSafe from "discourse/helpers/html-safe";
+import lazyHash from "discourse/helpers/lazy-hash";
 import withEventValue from "discourse/helpers/with-event-value";
 import { i18n } from "discourse-i18n";
 import ComboBox from "select-kit/components/combo-box";
@@ -24,17 +25,14 @@ export default RouteTemplate(
 
     {{bodyClass "users-page"}}
     <section>
-      <LoadMore
-        @selector=".directory-table .directory-table__cell"
-        @action={{@controller.loadMore}}
-      >
+      <LoadMore @action={{@controller.loadMore}}>
         <div class="container">
           <div class="users-directory directory">
             <span>
               <PluginOutlet
                 @name="users-top"
                 @connectorTagName="div"
-                @outletArgs={{hash model=@controller.model}}
+                @outletArgs={{lazyHash model=@controller.model}}
               />
             </span>
             <div class="directory-controls">
@@ -87,7 +85,7 @@ export default RouteTemplate(
                 {{/if}}
                 <PluginOutlet
                   @name="users-directory-controls"
-                  @outletArgs={{hash model=@controller.model}}
+                  @outletArgs={{lazyHash model=@controller.model}}
                 />
               </div>
             </div>

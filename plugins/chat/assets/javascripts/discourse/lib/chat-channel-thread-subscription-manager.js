@@ -20,7 +20,7 @@ export default class ChatChannelThreadSubscriptionManager {
     this.messageBus.subscribe(
       this.messageBusChannel,
       this.onMessage,
-      this.thread.channelMessageBusLastId
+      this.thread.threadMessageBusLastId
     );
   }
 

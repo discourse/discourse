@@ -2,8 +2,10 @@ import { fn, get, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { LinkTo } from "@ember/routing";
 import RouteTemplate from "ember-route-template";
+import { or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import EmailDropdown from "discourse/components/email-dropdown";
+import GoogleIcon from "discourse/components/google-icon";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import SaveControls from "discourse/components/save-controls";
 import TextField from "discourse/components/text-field";
@@ -12,6 +14,7 @@ import UsernamePreference from "discourse/components/username-preference";
 import boundAvatar from "discourse/helpers/bound-avatar";
 import icon from "discourse/helpers/d-icon";
 import dasherize from "discourse/helpers/dasherize";
+import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
 import { i18n } from "discourse-i18n";
 import ComboBox from "select-kit/components/combo-box";
@@ -148,7 +151,7 @@ export default RouteTemplate(
             "user.associated_accounts.title"
           }}</label>
         {{#if @controller.associatedAccountsLoaded}}
-          <table>
+          <table class="associated-accounts">
             <tbody>
               {{#each @controller.authProviders as |authProvider|}}
                 {{#if authProvider.account}}
@@ -156,9 +159,22 @@ export default RouteTemplate(
                     class="{{dasherize authProvider.method.name}}
                       account-connected"
                   >
-                    <td>{{authProvider.method.prettyName}}</td>
-                    <td>{{authProvider.account.description}}</td>
+                    <td class="associated-account__icon">
+                      {{#if authProvider.method.isGoogle}}
+                        <GoogleIcon />
+                      {{else}}
+                        {{icon (or authProvider.method.icon "user")}}
+                      {{/if}}
+                    </td>
                     <td>
+                      <div class="associated-account__name">
+                        {{authProvider.method.prettyName}}
+                      </div>
+                      <div class="associated-account__description">
+                        {{authProvider.account.description}}
+                      </div>
+                    </td>
+                    <td class="associated-account__actions">
                       {{#if authProvider.method.can_revoke}}
                         <DButton
                           @action={{fn
@@ -178,8 +194,25 @@ export default RouteTemplate(
                   </tr>
                 {{else}}
                   <tr class={{dasherize authProvider.method.name}}>
-                    <td>{{authProvider.method.prettyName}}</td>
-                    <td colspan="2">
+                    <td
+                      class="associated-account__icon
+                        {{dasherize authProvider.method.name}}"
+                    >
+                      {{#if authProvider.method.isGoogle}}
+                        <GoogleIcon />
+                      {{else}}
+                        {{icon (or authProvider.method.icon "user")}}
+                      {{/if}}
+                    </td>
+                    <td>
+                      <div class="associated-account__name">
+                        {{authProvider.method.prettyName}}
+                      </div>
+                      <div class="associated-account__description">
+                        {{authProvider.account.description}}
+                      </div>
+                    </td>
+                    <td class="associated-account__actions">
                       {{#if authProvider.method.can_connect}}
                         <DButton
                           @action={{fn
@@ -189,7 +222,7 @@ export default RouteTemplate(
                           @label="user.associated_accounts.connect"
                           @icon="plug"
                           @disabled={{@controller.disableConnectButtons}}
-                          class="btn-default"
+                          class="btn-primary"
                         />
                       {{else}}
                         {{i18n "user.associated_accounts.not_connected"}}
@@ -333,7 +366,7 @@ export default RouteTemplate(
       <PluginOutlet
         @name="user-preferences-account"
         @connectorTagName="div"
-        @outletArgs={{hash model=@controller.model save=@controller.save}}
+        @outletArgs={{lazyHash model=@controller.model save=@controller.save}}
       />
     </span>
 
@@ -343,7 +376,7 @@ export default RouteTemplate(
       <PluginOutlet
         @name="user-custom-controls"
         @connectorTagName="div"
-        @outletArgs={{hash model=@controller.model}}
+        @outletArgs={{lazyHash model=@controller.model}}
       />
     </span>
 

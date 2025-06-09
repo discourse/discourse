@@ -7,12 +7,17 @@ module DiscourseAutomation
     def self.log(automation_id, run_time = nil)
       if block_given? && run_time.nil?
         start_time = Process.clock_gettime(Process::CLOCK_MONOTONIC)
-        result = yield
-        run_time = Process.clock_gettime(Process::CLOCK_MONOTONIC) - start_time
-        result
+        begin
+          result = yield
+          run_time = Process.clock_gettime(Process::CLOCK_MONOTONIC) - start_time
+          result
+        rescue => e
+          run_time = Process.clock_gettime(Process::CLOCK_MONOTONIC) - start_time
+          raise e
+        end
       end
     ensure
-      update_stats(automation_id, run_time)
+      update_stats(automation_id, run_time || 0)
     end
 
     def self.fetch_period_summaries

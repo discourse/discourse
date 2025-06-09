@@ -48,4 +48,5 @@ const CreateInviteBulk = <template>
     </DModal>
   </CreateInviteUploader>
 </template>;
+
 export default CreateInviteBulk;

@@ -49,8 +49,8 @@
     &::before {
       background: linear-gradient(
         to bottom,
-        rgba(var(--primary-very-low-rgb), 0),
-        rgba(var(--primary-very-low-rgb), 1)
+        rgb(var(--primary-very-low-rgb), 0),
+        rgb(var(--primary-very-low-rgb), 1)
       );
     }
   }

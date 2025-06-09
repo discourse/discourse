@@ -81,6 +81,54 @@ describe "Composer Form Templates", type: :system do
             required: true"),
     )
   end
+
+  fab!(:form_template_7) do
+    Fabricate(
+      :form_template,
+      name: "Preview Test",
+      template:
+        %Q(
+        - type: checkbox
+          id: 1
+          attributes:
+            label: "checkbox"
+        - type: input
+          id: 2
+          attributes:
+            label: "input"
+            placeholder: "Enter placeholder here"
+        - type: textarea
+          id: 3
+          attributes:
+            label: "textarea"
+            placeholder: "Enter placeholder here"
+        - type: dropdown
+          id: 4
+          choices:
+            - "Option 1"
+            - "Option 2"
+            - "Option 3"
+          attributes:
+            none_label: "Select an item"
+            label: "dropdown"
+        - type: upload
+          id: 5
+          attributes:
+            file_types: ".jpg, .png, .gif"
+            allow_multiple: false
+            label: "upload"
+        - type: multi-select
+          id: 6
+          choices:
+            - "Option 4"
+            - "Option 5"
+            - "Option 6"
+          attributes:
+            none_label: "Select an item"
+            label: "multi-select"
+          ),
+    )
+  end
   fab!(:category_with_template_1) do
     Fabricate(
       :category,
@@ -97,6 +145,15 @@ describe "Composer Form Templates", type: :system do
       slug: "features",
       topic_count: 3,
       form_template_ids: [form_template_2.id],
+    )
+  end
+  fab!(:category_with_template_7) do
+    Fabricate(
+      :category,
+      name: "Preview Test",
+      slug: "preview_test",
+      topic_count: 2,
+      form_template_ids: [form_template_7.id],
     )
   end
   fab!(:category_with_multiple_templates_1) do
@@ -260,10 +317,18 @@ describe "Composer Form Templates", type: :system do
   end
 
   it "hides the preview when a category with a form template is selected" do
+    SiteSetting.show_preview_for_form_templates = false
     category_page.visit(category_with_template_1)
     category_page.new_topic_button.click
     expect(composer).to have_no_composer_preview
     expect(composer).to have_no_composer_preview_toggle
+  end
+
+  it "shows the preview when a category with a form template is selected" do
+    category_page.visit(category_with_template_1)
+    category_page.new_topic_button.click
+    expect(composer).to have_composer_preview
+    expect(composer).to have_composer_preview_toggle
   end
 
   it "shows the correct template when switching categories" do
@@ -431,5 +496,110 @@ describe "Composer Form Templates", type: :system do
     expect(composer).to have_form_template_field("upload")
     expect(composer).to have_form_template_field_label("Prescription")
     expect(composer).to have_form_template_field_description("Upload your prescription")
+  end
+
+  it "shows preview of the form correctly for all input types" do
+    topic_title = "A topic about Batman"
+    category_page.visit(category_with_template_7)
+    category_page.new_topic_button.click
+    composer.fill_title(topic_title)
+    composer.fill_form_template_field("input", "Peter Parker")
+
+    expect(find(".d-editor-preview")).to have_content("Peter Parker")
+
+    find(:select, "4").find(:option, "Option 2").select_option
+    find(:select, "4").find(:option, "Option 1").select_option
+
+    expect(find(".d-editor-preview")).to have_content("Option 1")
+
+    find(:select, "6").find(:option, "Option 4").select_option
+
+    expect(find(".d-editor-preview")).to have_content("Option 4")
+
+    message = "This is a test message!"
+    find("textarea").fill_in(with: message)
+
+    expect(find(".d-editor-preview")).to have_content(message)
+
+    attach_file("5-uploader", "#{Rails.root}/spec/fixtures/images/logo.png", make_visible: true)
+    expect(find(".d-editor-preview")).to have_css("img")
+  end
+
+  context "when using tagchooser" do
+    fab!(:tag1) { Fabricate(:tag, description: "Tag 1 custom Translation") }
+    fab!(:tag2) { Fabricate(:tag, description: "Tag 2 custom Translation") }
+    fab!(:tag3) { Fabricate(:tag) }
+    fab!(:tag4) { Fabricate(:tag) }
+
+    fab!(:tag_group1) { Fabricate(:tag_group, name: "tag_group1", tags: [tag1, tag3]) }
+    fab!(:tag_group2) { Fabricate(:tag_group, name: "tag_group2", tags: [tag2, tag4]) }
+
+    fab!(:tag_groups_form_template) do
+      Fabricate(
+        :form_template,
+        name: "TagGroups",
+        template:
+          %Q(
+            - type: tag-chooser
+              id: 1
+              attributes:
+                label: "Full name"
+                description: "What is your full name?"
+                multiple: true
+              tag_group: "tag_group1"  # Replace with actual value if needed
+              validations:
+                required: false
+
+            - type: tag-chooser
+              id: 2
+              attributes:
+                label: "Prescription"
+                description: "Upload your prescription"
+                multiple: false
+              tag_group: "tag_group2"
+              validations:
+                required: true),
+      )
+    end
+
+    fab!(:category_with_tagchooser_template) do
+      Fabricate(
+        :category,
+        name: "tagtest",
+        slug: "tagtest",
+        topic_count: 2,
+        form_template_ids: [tag_groups_form_template.id],
+      )
+    end
+
+    it "shows the correct tag group descriptions" do
+      category_page.visit(category_with_tagchooser_template)
+      category_page.new_topic_button.click
+
+      expect(find("[name='1']")).to have_content("#{tag3.name.upcase}")
+      expect(find("[name='2']")).to have_content("#{tag4.name.upcase}")
+
+      find(:select, "1").find(:option, tag1.description).select_option
+      find(:select, "2").find(:option, tag2.description).select_option
+
+      expect(page).to have_select("1", selected: tag1.description)
+      expect(page).to have_select("2", selected: tag2.description)
+
+      mini_tag_chooser = PageObjects::Components::SelectKit.new(".mini-tag-chooser")
+      expect(mini_tag_chooser).to have_selected_name("#{tag1.name},#{tag2.name}")
+    end
+
+    it "updates form when selecting tags in the composer" do
+      category_page.visit(category_with_tagchooser_template)
+      category_page.new_topic_button.click
+      mini_tag_chooser = PageObjects::Components::SelectKit.new(".mini-tag-chooser")
+      mini_tag_chooser.select_row_by_name(tag1.name)
+
+      expect(page).to have_select("1", selected: tag1.description)
+
+      mini_tag_chooser.unselect_by_name(tag1.name)
+
+      expect(mini_tag_chooser).to have_no_selection
+    end
   end
 end

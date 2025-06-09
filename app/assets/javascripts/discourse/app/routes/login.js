@@ -24,15 +24,9 @@ export default class LoginRoute extends DiscourseRoute {
       ) {
         this.login.singleExternalLogin();
       }
-    } else if (
-      this.login.isOnlyOneExternalLoginMethod &&
-      this.siteSettings.full_page_login
-    ) {
+    } else if (this.login.isOnlyOneExternalLoginMethod) {
       this.login.singleExternalLogin();
-    } else if (
-      !this.siteSettings.full_page_login ||
-      this.siteSettings.enable_discourse_connect
-    ) {
+    } else if (this.siteSettings.enable_discourse_connect) {
       this.router
         .replaceWith(`/${defaultHomepage()}`)
         .followRedirects()
@@ -62,10 +56,6 @@ export default class LoginRoute extends DiscourseRoute {
         "referrerTopicUrl",
         this.internalReferrer || document.referrer
       );
-    }
-
-    if (this.siteSettings.login_required) {
-      controller.set("showLogin", false);
     }
 
     if (this.login.isOnlyOneExternalLoginMethod) {

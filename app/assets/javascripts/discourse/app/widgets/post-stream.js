@@ -1,9 +1,7 @@
-import { getOwner } from "@ember/owner";
 import { hbs } from "ember-cli-htmlbars";
 import $ from "jquery";
 import { h } from "virtual-dom";
 import { addWidgetCleanCallback } from "discourse/components/mount-widget";
-import PostPlaceholder from "discourse/components/post/placeholder";
 import discourseDebounce from "discourse/lib/debounce";
 import { registerDeprecationHandler } from "discourse/lib/deprecated";
 import { iconNode } from "discourse/lib/icon-library";
@@ -15,6 +13,12 @@ import { avatarFor } from "discourse/widgets/post";
 import RenderGlimmer from "discourse/widgets/render-glimmer";
 import { createWidget } from "discourse/widgets/widget";
 import { i18n } from "discourse-i18n";
+
+export const POST_STREAM_DEPRECATION_OPTIONS = {
+  since: "v3.5.0.beta1-dev",
+  id: "discourse.post-stream-widget-overrides",
+  // url: "", // TODO (glimmer-post-stream) uncomment when the topic is created on meta
+};
 
 export let havePostStreamWidgetExtensions = null;
 
@@ -210,11 +214,9 @@ createWidget("filter-show-all", {
 });
 
 export default createWidget("post-stream", {
-  tagName: "div.post-stream",
+  tagName: "div.post-stream.widget-post-stream",
 
   html(attrs) {
-    getOwner(this).lookup("service:site").useGlimmerPostStream;
-
     const posts = attrs.posts || [];
     const postArray = posts.toArray();
     const postArrayLength = postArray.length;
@@ -232,13 +234,7 @@ export default createWidget("post-stream", {
       const post = postArray[i];
 
       if (post instanceof Placeholder) {
-        this.site.useGlimmerPostStream
-          ? new RenderGlimmer(
-              this,
-              "div.post-placeholder-shim",
-              PostPlaceholder
-            )
-          : result.push(this.attach("post-placeholder"));
+        result.push(this.attach("post-placeholder"));
         continue;
       }
 
@@ -272,26 +268,11 @@ export default createWidget("post-stream", {
       const beforeGap = before[post.id];
       if (beforeGap) {
         result.push(
-          this.site.useGlimmerPostStream
-            ? new RenderGlimmer(
-                this,
-                "div.post-gap-shim",
-                hbs`<Post::Gap @post={{@data.post}} @gap={{@data.gap}} @fillGap={{@data.fillGap}} />`,
-                {
-                  post,
-                  gap: beforeGap,
-                  fillGap: () =>
-                    this.sendWidgetAction("fillGapBefore", {
-                      post,
-                      gap: beforeGap,
-                    }),
-                }
-              )
-            : this.attach(
-                "post-gap",
-                { pos: "before", postId: post.id, gap: beforeGap },
-                { model: post }
-              )
+          this.attach(
+            "post-gap",
+            { pos: "before", postId: post.id, gap: beforeGap },
+            { model: post }
+          )
         );
       }
 
@@ -319,115 +300,22 @@ export default createWidget("post-stream", {
 
       if (transformed.isSmallAction) {
         result.push(
-          this.site.useGlimmerPostStream
-            ? new RenderGlimmer(
-                this,
-                "div.post-small-action-shim",
-                hbs`<Post::SmallAction @post={{@data.post}}
-                       @deletePost={{@data.deletePost}}
-                       @editPost={{@data.editPost}}
-                       @recoverPost={{@data.recoverPost}} />`,
-                {
-                  post,
-                  deletePost: () => this.sendWidgetAction("deletePost", post),
-                  editPost: () => this.sendWidgetAction("editPost", post),
-                  recoverPost: () => this.sendWidgetAction("recoverPost", post),
-                }
-              )
-            : this.attach("post-small-action", transformed, { model: post })
+          this.attach("post-small-action", transformed, { model: post })
         );
       } else {
-        if (this.site.useGlimmerPostStream) {
-          let multiSelect, selected;
-          if (post.canManage || post.canSplitMergeTopic) {
-            multiSelect = attrs.multiSelect;
-
-            if (multiSelect) {
-              selected = attrs.selectedQuery(post);
-            }
-          }
-
-          result.push(
-            this.attach("glimmer-post", {
-              post,
-              prevPost,
-              nextPost,
-              canCreatePost: attrs.canCreatePost, //ok
-              cancelFilter: (nearestPost) =>
-                this.sendWidgetAction("cancelFilter", nearestPost),
-              changeNotice: () => this.sendWidgetAction("changeNotice", post),
-              changePostOwner: () =>
-                this.sendWidgetAction("changePostOwner", post),
-              deletePost: () => this.sendWidgetAction("deletePost", post),
-              editPost: () => this.sendWidgetAction("editPost", post),
-              expandHidden: () => this.sendWidgetAction("expandHidden", post),
-              filteringRepliesToPostNumber: attrs.filteringRepliesToPostNumber,
-              grantBadge: () => this.sendWidgetAction("grantBadge", post),
-              lockPost: () => this.sendWidgetAction("lockPost", post),
-              multiSelect,
-              permanentlyDeletePost: () =>
-                this.sendWidgetAction("permanentlyDeletePost", post),
-              rebakePost: () => this.sendWidgetAction("rebakePost", post),
-              recoverPost: () => this.sendWidgetAction("recoverPost", post),
-              removeAllowedGroup: () =>
-                this.sendWidgetAction("removeAllowedGroup", post),
-              removeAllowedUser: () =>
-                this.sendWidgetAction("removeAllowedUser", post),
-              replyToPost: () => this.sendWidgetAction("replyToPost", post),
-              selectBelow: () => this.sendWidgetAction("selectBelow", post),
-              selectReplies: () => this.sendWidgetAction("selectReplies", post),
-              selected,
-              showFlags: () => this.sendWidgetAction("showFlags", post),
-              showHistory: () => this.sendWidgetAction("showHistory", post),
-              showInvite: () => this.sendWidgetAction("showInvite", post),
-              showLogin: () => this.sendWidgetAction("showLogin", post),
-              showPagePublish: () =>
-                this.sendWidgetAction("showPagePublish", post),
-              showRawEmail: () => this.sendWidgetAction("showRawEmail", post),
-              showReadIndicator: attrs.showReadIndicator,
-              togglePostSelection: () =>
-                this.sendWidgetAction("togglePostSelection", post),
-              togglePostType: () =>
-                this.sendWidgetAction("togglePostType", post),
-              toggleReplyAbove: () =>
-                this.sendWidgetAction("toggleReplyAbove", post),
-              toggleWiki: () => this.sendWidgetAction("toggleWiki", post),
-              unhidePost: () => this.sendWidgetAction("unhidePost", post),
-              unlockPost: () => this.sendWidgetAction("unlockPost", post),
-              updateTopicPageQueryParams: () =>
-                this.sendWidgetAction("updateTopicPageQueryParams"),
-            })
-          );
-        } else {
-          transformed.showReadIndicator = attrs.showReadIndicator;
-          result.push(this.attach("post", transformed, { model: post }));
-        }
+        transformed.showReadIndicator = attrs.showReadIndicator;
+        result.push(this.attach("post", transformed, { model: post }));
       }
 
       // Post gap - after
       const afterGap = after[post.id];
       if (afterGap) {
         result.push(
-          this.site.useGlimmerPostStream
-            ? new RenderGlimmer(
-                this,
-                "div.post-gap-shim",
-                hbs`<Post::Gap @post={{@data.post}} @gap={{@data.gap}} @fillGap={{@data.fillGap}} />`,
-                {
-                  post,
-                  gap: afterGap,
-                  fillGap: () =>
-                    this.sendWidgetAction("fillGapAfter", {
-                      post,
-                      gap: afterGap,
-                    }),
-                }
-              )
-            : this.attach(
-                "post-gap",
-                { pos: "after", postId: post.id, gap: afterGap },
-                { model: post }
-              )
+          this.attach(
+            "post-gap",
+            { pos: "after", postId: post.id, gap: afterGap },
+            { model: post }
+          )
         );
       }
 
@@ -437,18 +325,9 @@ export default createWidget("post-stream", {
         attrs.lastReadPostNumber === post.post_number
       ) {
         result.push(
-          this.site.useGlimmerPostStream
-            ? new RenderGlimmer(
-                this,
-                "div.post-visited-line-shim",
-                hbs`<Post::VisitedLine @post={{@data.post}} />`,
-                {
-                  post,
-                }
-              )
-            : this.attach("topic-post-visited-line", {
-                post_number: post.post_number,
-              })
+          this.attach("topic-post-visited-line", {
+            post_number: post.post_number,
+          })
         );
       }
 
@@ -461,26 +340,11 @@ export default createWidget("post-stream", {
       (Object.keys(before).length > 0 || Object.keys(after).length > 0)
     ) {
       result.push(
-        this.site.useGlimmerPostStream
-          ? new RenderGlimmer(
-              this,
-              "div.post-filtered-notice-shim",
-              hbs`<Post::FilteredNotice @posts={{@data.posts}}
-                     @cancelFilter={{@data.cancelFilter}}
-                     @streamFilters={{@data.streamFilters}}
-                     @filteredPostsCount={{@data.filteredPostsCount}} />`,
-              {
-                posts: postArray,
-                streamFilters: attrs.streamFilters,
-                filteredPostsCount: attrs.filteredPostsCount,
-                cancelFilter: () => this.sendWidgetAction("cancelFilter"),
-              }
-            )
-          : this.attach("posts-filtered-notice", {
-              posts: postArray,
-              streamFilters: attrs.streamFilters,
-              filteredPostsCount: attrs.filteredPostsCount,
-            })
+        this.attach("posts-filtered-notice", {
+          posts: postArray,
+          streamFilters: attrs.streamFilters,
+          filteredPostsCount: attrs.filteredPostsCount,
+        })
       );
     }
 

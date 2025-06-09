@@ -15,6 +15,7 @@ import {
   cannotPostAgain,
   durationTextFromSeconds,
 } from "discourse/helpers/slow-mode";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import { customPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu-options";
 import discourseDebounce from "discourse/lib/debounce";
 import discourseComputed from "discourse/lib/decorators";
@@ -45,6 +46,8 @@ import Composer, {
   SAVE_LABELS,
 } from "discourse/models/composer";
 import Draft from "discourse/models/draft";
+import PostLocalization from "discourse/models/post-localization";
+import TopicLocalization from "discourse/models/topic-localization";
 import { i18n } from "discourse-i18n";
 
 async function loadDraft(store, opts = {}) {
@@ -100,13 +103,15 @@ export default class ComposerService extends Service {
   @service site;
   @service siteSettings;
   @service store;
+  @service toasts;
 
   @tracked
   showPreview = this.site.mobileView
     ? false
     : (this.keyValueStore.get("composer.showPreview") || "true") === "true";
 
-  @tracked allowPreview = true;
+  @tracked allowPreview = false;
+  @tracked selectedTranslationLocale = null;
   checkedMessages = false;
   messageCount = null;
   showEditReason = false;
@@ -195,15 +200,20 @@ export default class ComposerService extends Service {
     );
   }
 
-  get replyingToUser() {
+  get replyingToUserId() {
     if (this.get("model.editingPost")) {
       const user = this.get("model.post.reply_to_user");
       if (user) {
-        return user;
+        return user.id;
       }
     }
 
-    return this.get("model.post.user");
+    const user = this.get("model.post.user");
+    if (user) {
+      return user.id;
+    }
+
+    return this.get("model.topic.user_id");
   }
 
   get formTemplateInitialValues() {
@@ -357,6 +367,8 @@ export default class ComposerService extends Service {
       return "composer.create_whisper";
     } else if (privateMessage && modelAction === Composer.REPLY) {
       return "composer.create_pm";
+    } else if (modelAction === Composer.ADD_TRANSLATION) {
+      return "composer.translations.save";
     }
 
     return SAVE_LABELS[modelAction];
@@ -834,13 +846,7 @@ export default class ComposerService extends Service {
 
     const composer = this.model;
 
-    if (
-      isEmpty(composer?.reply) &&
-      isEmpty(composer?.title) &&
-      !this.hasFormTemplate
-    ) {
-      this.close();
-    } else if (composer?.viewOpenOrFullscreen) {
+    if (composer?.viewOpenOrFullscreen) {
       this.shrink();
     } else {
       await this.cancelComposer();
@@ -1031,6 +1037,10 @@ export default class ComposerService extends Service {
       return;
     }
 
+    if (this.model.action === Composer.ADD_TRANSLATION) {
+      return this.saveTranslation();
+    }
+
     // Clear the warning state if we're not showing the checkbox anymore
     if (!this.showWarning) {
       this.set("model.isWarning", false);
@@ -1182,6 +1192,7 @@ export default class ComposerService extends Service {
 
           return this.destroyDraft().then(() => {
             this.close();
+            // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
             this.appEvents.trigger("post-stream:refresh");
             return result;
           });
@@ -1189,6 +1200,7 @@ export default class ComposerService extends Service {
 
         if (this.get("model.editingPost")) {
           this.appEvents.trigger("composer:edited-post");
+          // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
           this.appEvents.trigger("post-stream:refresh", {
             id: parseInt(result.responseJson.id, 10),
           });
@@ -1196,6 +1208,7 @@ export default class ComposerService extends Service {
             this.appEvents.trigger("header:update-topic", composer.topic);
           }
         } else {
+          // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
           this.appEvents.trigger("post-stream:refresh");
         }
 
@@ -1262,12 +1275,51 @@ export default class ComposerService extends Service {
       staged = composer.get("stagedPost");
     }
 
+    // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
     this.appEvents.trigger("post-stream:posted", staged);
 
     this.messageBus.pause();
     promise.finally(() => this.messageBus.resume());
 
     return promise;
+  }
+
+  async saveTranslation() {
+    this.set("model.loading", true);
+
+    this.set("lastValidatedAt", Date.now());
+    this.appEvents.trigger("composer-service:last-validated-at-updated", {
+      model: this.model,
+    });
+
+    try {
+      await PostLocalization.createOrUpdate(
+        this.model.post.id,
+        this.selectedTranslationLocale,
+        this.model.reply
+      );
+
+      if (this.model.post.firstPost) {
+        await TopicLocalization.createOrUpdate(
+          this.model.post.topic_id,
+          this.selectedTranslationLocale,
+          this.model.title
+        );
+      }
+
+      this.close();
+      this.toasts.success({
+        duration: "short",
+        data: {
+          message: i18n("post.localizations.success"),
+        },
+      });
+      this.selectedTranslationLocale = null;
+    } catch (e) {
+      popupAjaxError(e);
+    } finally {
+      this.set("model.loading", false);
+    }
   }
 
   @action
@@ -1288,7 +1340,7 @@ export default class ComposerService extends Service {
 
    @method open
    @param {Object} opts Options for creating a post
-   @param {String} opts.action The action we're performing: edit, reply, createTopic, createSharedDraft, privateMessage
+   @param {String} opts.action The action we're performing: edit, reply, createTopic, createSharedDraft, privateMessage, addTranslation
    @param {String} opts.draftKey
    @param {Post} [opts.post] The post we're replying to
    @param {Topic} [opts.topic] The topic we're replying to
@@ -1301,6 +1353,8 @@ export default class ComposerService extends Service {
    @param {String} [opts.draftSequence]
    @param {Boolean} [opts.skipJumpOnSave] Option to skip navigating to the post when saved in this composer session
    @param {Boolean} [opts.skipFormTemplate] Option to skip the form template even if configured for the category
+   @param {String} [opts.hijackPreview] Option to hijack the preview with custom content
+   @param {String} [opts.selectedTranslationLocale] The locale to use for the translation
    **/
   async open(opts = {}) {
     if (!opts.draftKey) {
@@ -1328,6 +1382,14 @@ export default class ComposerService extends Service {
     this.set("skipJumpOnSave", !!opts.skipJumpOnSave);
 
     this.set("skipFormTemplate", !!opts.skipFormTemplate);
+
+    if (opts.hijackPreview) {
+      this.set("hijackPreview", opts.hijackPreview);
+    }
+
+    if (opts.selectedTranslationLocale) {
+      this.selectedTranslationLocale = opts.selectedTranslationLocale;
+    }
 
     // Scope the categories drop down to the category we opened the composer with.
     if (opts.categoryId && !opts.disableScopedCategory) {
@@ -1384,8 +1446,10 @@ export default class ComposerService extends Service {
           }
         }
 
-        await this.cancelComposer(opts);
-        await this.open(opts);
+        const retry = await this.cancelComposer(opts);
+        if (retry) {
+          await this.open(opts);
+        }
         return;
       }
 
@@ -1569,7 +1633,7 @@ export default class ComposerService extends Service {
                 })
                 .finally(() => {
                   this.appEvents.trigger("composer:cancelled");
-                  resolve();
+                  resolve(true);
                 });
             },
             onSaveDraft: () => {
@@ -1577,8 +1641,9 @@ export default class ComposerService extends Service {
               this.model.clearState();
               this.close();
               this.appEvents.trigger("composer:cancelled");
-              return resolve();
+              return resolve(true);
             },
+            onKeepEditing: () => resolve(false),
           },
         });
       } else {
@@ -1607,15 +1672,7 @@ export default class ComposerService extends Service {
   }
 
   shrink() {
-    if (
-      this.get("model.replyDirty") ||
-      (this.get("model.canEditTitle") && this.get("model.titleDirty")) ||
-      this.hasFormTemplate
-    ) {
-      this.collapse();
-    } else {
-      this.close();
-    }
+    this.collapse();
   }
 
   _saveDraft() {

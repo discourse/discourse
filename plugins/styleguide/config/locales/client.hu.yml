@@ -30,6 +30,8 @@ hu:
           title: "Dátum/idő bemenetek"
         menus:
           title: "Menük"
+        multi_select:
+          title: "Több kijelölése"
         toasts:
           title: "Köszöntők"
         font_scale:

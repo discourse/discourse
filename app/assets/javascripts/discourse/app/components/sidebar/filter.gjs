@@ -3,7 +3,6 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
-import { translateModKey } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 
 export default class Filter extends Component {
@@ -30,48 +29,9 @@ export default class Filter extends Component {
   }
 
   @action
-  handleEscape(event) {
-    if (event.key === "Escape") {
-      event.stopPropagation();
-
-      if (this.sidebarState.filter.length > 0) {
-        this.sidebarState.filter = "";
-      } else {
-        event.target.blur();
-      }
-    }
-  }
-
-  @action
   clearFilter() {
     this.sidebarState.clearFilter();
     document.querySelector(".sidebar-filter__input").focus();
-  }
-
-  get showShortcutCombo() {
-    // Very specific to admin pages, but we don't hook this shortcut
-    // anywhere else, so it's not right to show it in other places.
-    if (!this.router.currentRouteName.startsWith("admin")) {
-      return false;
-    }
-    return (
-      !this.displayClearFilter &&
-      !this.currentUser?.use_experimental_admin_search
-    );
-  }
-
-  get sidebarShortcutCombo() {
-    return `${translateModKey("Meta")}+/`;
-  }
-
-  get filterPlaceholder() {
-    if (
-      this.currentUser?.staff &&
-      this.currentUser?.use_experimental_admin_search
-    ) {
-      return i18n("sidebar.filter_links");
-    }
-    return i18n("sidebar.filter");
   }
 
   <template>
@@ -80,18 +40,12 @@ export default class Filter extends Component {
         <div class="sidebar-filter__input-container">
           <input
             {{on "input" this.setFilter}}
-            {{on "keydown" this.handleEscape}}
             value={{this.sidebarState.filter}}
-            placeholder={{this.filterPlaceholder}}
+            placeholder={{i18n "sidebar.filter_links"}}
             type="text"
             enterkeyhint="done"
             class="sidebar-filter__input"
           />
-          {{#if this.showShortcutCombo}}
-            <span
-              class="sidebar-filter__shortcut-hint"
-            >{{this.sidebarShortcutCombo}}</span>
-          {{/if}}
 
           {{#if this.displayClearFilter}}
             <DButton

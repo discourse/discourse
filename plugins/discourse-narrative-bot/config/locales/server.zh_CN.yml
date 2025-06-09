@@ -168,8 +168,22 @@ zh_CN:
 
           - 我们始终相信[文明社区行为](%{base_uri}/guidelines)。
       onebox:
+        instructions: |-
+          接下来，你能与我分享其中一个链接吗？请回复 **一个单独成行的链接**，它将自动展开并包含一个别致的摘要。
+
+          要复制任何链接，请在移动设备上点击并按住，或在桌面设备上点击右键：
+
+          [https://en.wikipedia.org/wiki/Inherently_funny_word](https://en.wikipedia.org/wiki/Inherently_funny_word)
+          [https://en.wikipedia.org/wiki/Death_by_coconut](https://en.wikipedia.org/wiki/Death_by_coconut)
+          [https://en.wikipedia.org/wiki/Calculator_spelling](https://en.wikipedia.org/wiki/Calculator_spelling)
         reply: |-
           酷！这将适用于大多数 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> 链接。请记住，它必须**独占一行**，前后都没内容。
+        not_found: |-
+          抱歉，我在您的回复中找不到链接！ :cry:
+
+          您能否尝试在下一次回复中单独一行添加以下链接？
+
+          [https://en.wikipedia.org/wiki/Exotic_Shorthair](https://en.wikipedia.org/wiki/Exotic_Shorthair)
       images:
         instructions: |-
           这是一张独角兽图片：

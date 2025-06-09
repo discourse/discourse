@@ -8,22 +8,23 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import UserNav from "discourse/components/user-nav";
 import UserProfileAvatar from "discourse/components/user-profile-avatar";
 import UserStatusMessage from "discourse/components/user-status-message";
-import boundDate from "discourse/helpers/bound-date";
 import icon from "discourse/helpers/d-icon";
 import formatUsername from "discourse/helpers/format-username";
 import htmlSafe from "discourse/helpers/html-safe";
+import lazyHash from "discourse/helpers/lazy-hash";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import routeAction from "discourse/helpers/route-action";
 import userStatus from "discourse/helpers/user-status";
 import { i18n } from "discourse-i18n";
 import UserNotificationsDropdown from "select-kit/components/user-notifications-dropdown";
+import CollapsedInfo from "./user/collapsed-info";
 
 export default RouteTemplate(
   <template>
     <PluginOutlet
       @name="above-user-profile"
       @connectorTagName="div"
-      @outletArgs={{hash model=@controller.model}}
+      @outletArgs={{lazyHash model=@controller.model}}
     />
     <div
       class="container
@@ -159,11 +160,12 @@ export default RouteTemplate(
             <div class="primary">
               <PluginOutlet
                 @name="before-user-profile-avatar"
-                @outletArgs={{hash model=@controller.model}}
+                @outletArgs={{lazyHash model=@controller.model}}
               />
               <UserProfileAvatar @user={{@controller.model}} @tagName="" />
               <div class="primary-textual">
                 <div class="user-profile-names">
+
                   <div
                     class="{{if @controller.nameFirst 'full-name' 'username'}}
                       user-profile-names__primary"
@@ -201,7 +203,7 @@ export default RouteTemplate(
                     <PluginOutlet
                       @name="user-post-names"
                       @connectorTagName="div"
-                      @outletArgs={{hash model=@controller.model}}
+                      @outletArgs={{lazyHash model=@controller.model}}
                     />
                   </span>
                 </div>
@@ -254,10 +256,24 @@ export default RouteTemplate(
                     <PluginOutlet
                       @name="user-location-and-website"
                       @connectorTagName="div"
-                      @outletArgs={{hash model=@controller.model}}
+                      @outletArgs={{lazyHash model=@controller.model}}
                     />
                   </span>
                 </div>
+
+                <PluginOutlet
+                  @name="before-user-profile-bio"
+                  @connectorTagName="div"
+                  @outletArgs={{lazyHash
+                    model=@controller.model
+                    publicUserFields=@controller.publicUserFields
+                    collapsedInfo=@controller.collapsedInfo
+                    hasTrustLevel=@controller.hasTrustLevel
+                    canCheckEmails=@controller.canCheckEmails
+                    canDeleteUser=@controller.canDeleteUser
+                    adminDelete=@controller.adminDelete
+                  }}
+                />
 
                 <div class="bio">
                   {{#if @controller.model.suspended}}
@@ -290,6 +306,7 @@ export default RouteTemplate(
                 {{#if @controller.publicUserFields}}
                   <div class="public-user-fields">
                     {{#each @controller.publicUserFields as |uf|}}
+
                       {{#if uf.value}}
                         <div
                           class="public-user-field {{uf.field.dasherized_name}}"
@@ -322,7 +339,7 @@ export default RouteTemplate(
                       <PluginOutlet
                         @name="user-profile-public-fields"
                         @connectorTagName="div"
-                        @outletArgs={{hash
+                        @outletArgs={{lazyHash
                           publicUserFields=@controller.publicUserFields
                           model=@controller.model
                         }}
@@ -335,7 +352,7 @@ export default RouteTemplate(
                   <PluginOutlet
                     @name="user-profile-primary"
                     @connectorTagName="div"
-                    @outletArgs={{hash model=@controller.model}}
+                    @outletArgs={{lazyHash model=@controller.model}}
                   />
                 </span>
               </div>
@@ -378,7 +395,7 @@ export default RouteTemplate(
                   <PluginOutlet
                     @name="user-profile-controls"
                     @connectorTagName="li"
-                    @outletArgs={{hash model=@controller.model}}
+                    @outletArgs={{lazyHash model=@controller.model}}
                   />
 
                   {{#if @controller.canExpandProfile}}
@@ -404,114 +421,14 @@ export default RouteTemplate(
                 </ul>
               </section>
             </div>
-            <PluginOutlet
-              @name="user-profile-above-collapsed-info"
-              @outletArgs={{hash
-                model=@controller.model
-                collapsedInfo=@controller.collapsedInfo
-              }}
+            <CollapsedInfo
+              @model={{@controller.model}}
+              @collapsedInfo={{@controller.collapsedInfo}}
+              @hasTrustLevel={{@controller.hasTrustLevel}}
+              @canCheckEmails={{@controller.canCheckEmails}}
+              @canDeleteUser={{@controller.canDeleteUser}}
+              @adminDelete={{@controller.adminDelete}}
             />
-            {{#unless @controller.collapsedInfo}}
-              <div class="secondary" id="collapsed-info-panel">
-                <dl>
-                  {{#if @controller.model.created_at}}
-                    <div><dt class="created-at">{{i18n "user.created"}}</dt><dd
-                        class="created-at"
-                      >{{boundDate @controller.model.created_at}}</dd></div>
-                  {{/if}}
-                  {{#if @controller.model.last_posted_at}}
-                    <div><dt class="last-posted-at">{{i18n
-                          "user.last_posted"
-                        }}</dt><dd class="last-posted-at">{{boundDate
-                          @controller.model.last_posted_at
-                        }}</dd></div>
-                  {{/if}}
-                  {{#if @controller.model.last_seen_at}}
-                    <div><dt class="last-seen-at">{{i18n
-                          "user.last_seen"
-                        }}</dt><dd class="last-seen-at">{{boundDate
-                          @controller.model.last_seen_at
-                        }}</dd></div>
-                  {{/if}}
-                  {{#if @controller.model.profile_view_count}}
-                    <div><dt class="profile-view-count">{{i18n "views"}}</dt><dd
-                        class="profile-view-count"
-                      >{{@controller.model.profile_view_count}}</dd></div>
-                  {{/if}}
-                  {{#if @controller.model.invited_by}}
-                    <div><dt class="invited-by">{{i18n
-                          "user.invited_by"
-                        }}</dt><dd class="invited-by"><LinkTo
-                          @route="user"
-                          @model={{@controller.model.invited_by}}
-                        >{{@controller.model.invited_by.username}}</LinkTo></dd></div>
-                  {{/if}}
-                  {{#if @controller.hasTrustLevel}}
-                    <div><dt class="trust-level">{{i18n
-                          "user.trust_level"
-                        }}</dt><dd
-                        class="trust-level"
-                      >{{@controller.model.trustLevel.name}}</dd></div>
-                  {{/if}}
-                  {{#if @controller.canCheckEmails}}
-                    <div><dt class="email">{{i18n "user.email.title"}}</dt>
-                      <dd class="email" title={{@controller.model.email}}>
-                        {{#if @controller.model.email}}
-                          {{@controller.model.email}}
-                        {{else}}
-                          <DButton
-                            @action={{fn
-                              (routeAction "checkEmail")
-                              @controller.model
-                            }}
-                            @icon="envelope"
-                            @label="admin.users.check_email.text"
-                            class="btn-primary"
-                          />
-                        {{/if}}
-                      </dd>
-                    </div>
-                  {{/if}}
-                  {{#if @controller.model.displayGroups}}
-                    <div><dt class="groups">{{i18n
-                          "groups.title"
-                          count=@controller.model.displayGroups.length
-                        }}</dt>
-                      <dd class="groups">
-                        {{#each @controller.model.displayGroups as |group|}}
-                          <span><LinkTo
-                              @route="group"
-                              @model={{group.name}}
-                              class="group-link"
-                            >{{group.name}}</LinkTo></span>
-                        {{/each}}
-
-                        <LinkTo
-                          @route="groups"
-                          @query={{hash username=@controller.model.username}}
-                        >
-                          ...
-                        </LinkTo>
-                      </dd>
-                    </div>
-                  {{/if}}
-
-                  {{#if @controller.canDeleteUser}}
-                    <div class="pull-right"><DButton
-                        @action={{@controller.adminDelete}}
-                        @icon="triangle-exclamation"
-                        @label="user.admin_delete"
-                        class="btn-danger btn-delete-user"
-                      /></div>
-                  {{/if}}
-
-                  <PluginOutlet
-                    @name="user-profile-secondary"
-                    @outletArgs={{hash model=@controller.model}}
-                  />
-                </dl>
-              </div>
-            {{/unless}}
           </div>
         </section>
 

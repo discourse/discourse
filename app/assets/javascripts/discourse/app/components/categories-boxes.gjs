@@ -1,5 +1,4 @@
 import Component from "@ember/component";
-import { hash } from "@ember/helper";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { classNameBindings, tagName } from "@ember-decorators/component";
@@ -9,8 +8,10 @@ import CategoryTitleLink from "discourse/components/category-title-link";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import borderColor from "discourse/helpers/border-color";
 import categoryColorVariable from "discourse/helpers/category-color-variable";
-import categoryLink from "discourse/helpers/category-link";
-import icon from "discourse/helpers/d-icon";
+import categoryLink, {
+  categoryBadgeHTML,
+} from "discourse/helpers/category-link";
+import lazyHash from "discourse/helpers/lazy-hash";
 import discourseComputed from "discourse/lib/decorators";
 
 @tagName("section")
@@ -20,8 +21,6 @@ import discourseComputed from "discourse/lib/decorators";
   "hasSubcategories:with-subcategories"
 )
 export default class CategoriesBoxes extends Component {
-  lockIcon = "lock";
-
   @discourseComputed("categories.[].uploaded_logo.url")
   anyLogos() {
     return this.categories.any((c) => !isEmpty(c.get("uploaded_logo.url")));
@@ -32,15 +31,24 @@ export default class CategoriesBoxes extends Component {
     return this.categories.any((c) => !isEmpty(c.get("subcategories")));
   }
 
+  categoryName(category) {
+    return htmlSafe(
+      categoryBadgeHTML(category, {
+        allowUncategorized: true,
+        link: false,
+      })
+    );
+  }
+
   <template>
     <PluginOutlet
       @name="categories-boxes-wrapper"
-      @outletArgs={{hash categories=this.categories}}
+      @outletArgs={{lazyHash categories=this.categories}}
     >
       {{#each this.categories as |c|}}
         <PluginOutlet
           @name="category-box-before-each-box"
-          @outletArgs={{hash category=c}}
+          @outletArgs={{lazyHash category=c}}
         />
 
         <div
@@ -65,10 +73,7 @@ export default class CategoriesBoxes extends Component {
                 <a class="parent-box-link" href={{c.url}}>
                   <h3>
                     <CategoryTitleBefore @category={{c}} />
-                    {{#if c.read_restricted}}
-                      {{icon this.lockIcon}}
-                    {{/if}}
-                    {{c.displayName}}
+                    {{this.categoryName c}}
                   </h3>
                 </a>
               </div>
@@ -139,21 +144,21 @@ export default class CategoriesBoxes extends Component {
 
             <PluginOutlet
               @name="category-box-below-each-category"
-              @outletArgs={{hash category=c}}
+              @outletArgs={{lazyHash category=c}}
             />
           </div>
         </div>
 
         <PluginOutlet
           @name="category-box-after-each-box"
-          @outletArgs={{hash category=c}}
+          @outletArgs={{lazyHash category=c}}
         />
       {{/each}}
     </PluginOutlet>
 
     <PluginOutlet
       @name="category-boxes-after-boxes"
-      @outletArgs={{hash category=this.c}}
+      @outletArgs={{lazyHash category=this.c}}
     />
   </template>
 }

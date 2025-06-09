@@ -1,4 +1,5 @@
 import { Input } from "@ember/component";
+import { on } from "@ember/modifier";
 import { htmlSafe } from "@ember/template";
 import icon from "discourse/helpers/d-icon";
 
@@ -11,6 +12,7 @@ const Checkbox = <template>
         @checked={{@value}}
         @type="checkbox"
         required={{if @validations.required "required" ""}}
+        {{on "input" @onChange}}
       />
       {{@attributes.label}}
       {{#if @validations.required}}
@@ -25,4 +27,5 @@ const Checkbox = <template>
     {{/if}}
   </div>
 </template>;
+
 export default Checkbox;

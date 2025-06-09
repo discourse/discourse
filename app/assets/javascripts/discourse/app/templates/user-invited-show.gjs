@@ -8,6 +8,7 @@ import LoadMore from "discourse/components/load-more";
 import TextField from "discourse/components/text-field";
 import avatar from "discourse/helpers/avatar";
 import bodyClass from "discourse/helpers/body-class";
+import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import formatDate from "discourse/helpers/format-date";
 import formatDuration from "discourse/helpers/format-duration";
@@ -22,14 +23,17 @@ export default RouteTemplate(
     {{#if @controller.canInviteToForum}}
       <LoadMore
         @id="user-content"
-        @selector=".user-invite-list tr"
         @action={{@controller.loadMore}}
-        class="user-content"
+        class={{concatClass
+          "user-content"
+          (if @controller.hasLoadedInitialInvites "--loaded")
+        }}
       >
         <section class="user-additional-controls">
           {{#if @controller.showSearch}}
             <div class="user-invite-search">
-              <form><TextField
+              <form>
+                <TextField
                   @value={{@controller.searchTerm}}
                   @placeholderKey="user.invited.search"
                 /></form>

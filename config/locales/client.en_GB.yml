@@ -89,6 +89,8 @@ en_GB:
         revert_to_regular: "Remove Staff Colour"
         delete_topic_error: "An error occurred whilst deleting this topic"
     category:
+      localization:
+        description: "Description"
       description: "Description"
       background_color: "Colour"
       color_placeholder: "Any web colour"
@@ -169,21 +171,8 @@ en_GB:
             title: "Select base colour palette"
           title: "Colours"
           about: "Modify the colours used by your themes. Create a new colour palette to start."
-          delete_confirm: "Delete this colour palette?"
           undo_title: "Undo your changes to this colour since the last time it was saved."
           revert_title: "Reset this colour to Discourse's default colour palette."
-          secondary:
-            description: "The main background colour, and text colour of some buttons."
-          tertiary:
-            description: "Links, some buttons, notifications, and accent colour."
-          header_background:
-            description: "Background colour of the site's header."
-          highlight:
-            description: "The background colour of highlighted elements on the page, such as posts and topics."
-          danger:
-            description: "Highlight colour for actions like deleting posts and topics."
-          love:
-            description: "The like button's colour."
         email_style:
           instructions: "Customise the template in which all html emails are rendered, and style using CSS."
       logs:

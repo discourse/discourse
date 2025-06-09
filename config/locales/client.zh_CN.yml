@@ -554,10 +554,15 @@ zh_CN:
         name: "姓名"
         fields: "字段"
         reject_reason: "原因"
+        scrubbed_by: "记录清除"
         scrubbed_reason: "原因"
+        scrubbed_at: "擦除于"
+        scrubbed_reject_reason: "用户被拒绝的原因"
         scrub_record:
+          button: 擦除记录
           confirm_title: 删除个人数据
           confirm_body: "你确定要删除此审核队列记录吗？所有个人信息（如用户名、电子邮件、IP 地址）都将从该记录中永久删除。"
+          reason_title: "必须提供擦除此记录的原因。"
           reason_placeholder: "原因..."
           confirm_button: "确认删除"
           cancel_button: "取消"
@@ -1096,7 +1101,6 @@ zh_CN:
       said: "%{username}："
       profile: "个人资料"
       profile_possessive: "%{username} 的个人资料"
-      account_possessive: "%{name} 的帐户"
       mute: "免打扰"
       edit: "编辑偏好设置"
       download_archive:
@@ -1414,6 +1418,8 @@ zh_CN:
         choose: "选择一个密码"
         verify_identity: "要继续，请验证您的身份。"
         title: "密码重置"
+        remove: "删除密码"
+        remove_detail: "除非您重置密码，否则您将无法再使用密码访问您的帐户。"
       second_factor_backup:
         title: "双重备份代码"
         regenerate: "重新生成"
@@ -1896,7 +1902,7 @@ zh_CN:
         title: "注册 IP 地址"
       avatar:
         title: "个人资料照片"
-        header_title: "个人资料、消息、书签和偏好设置"
+        header_title: "通知和帐户"
         name_and_description: "%{name} - %{description}"
         edit: "编辑个人资料照片"
       title:
@@ -1935,6 +1941,7 @@ zh_CN:
     user_tips:
       button: "知道了！"
       skip: "跳过提示"
+      dont_show_again: "不再显示"
       first_notification:
         title: "您的第一个通知！"
         content: "通知用于让您了解社区中发生的最新情况。"
@@ -1973,6 +1980,10 @@ zh_CN:
     modal:
       close: "关闭"
       dismiss_error: "忽略错误"
+    multi_select:
+      no_results: "没有结果"
+      search: "搜索…"
+      label: "选择选项"
     form_kit:
       reset: 重置
       optional: 可选
@@ -2184,9 +2195,9 @@ zh_CN:
         title: "使用 Google 登录"
         sr_title: "使用 Google 登录"
       twitter:
-        name: "Twitter"
-        title: "使用 Twitter 登录"
-        sr_title: "使用 Twitter 登录"
+        name: "X"
+        title: "使用 X 登录"
+        sr_title: "使用 X 登录"
       instagram:
         name: "Instagram"
         title: "使用 Instagram 登录"
@@ -2269,6 +2280,8 @@ zh_CN:
         other: "+%{count} 个子类别"
       topic_count:
         other: "此类别下有 %{count} 个话题"
+    timezone_input:
+      ambiguous_ist: "IST 不明确，请选择特定时区（例如：亚洲/加尔各答）"
     select_kit:
       delete_item: "删除 %{name}"
       filter_by: "筛选条件：%{name}"
@@ -2343,6 +2356,12 @@ zh_CN:
       esc: "esc"
       esc_label: "忽略消息"
       ok_proceed: "好的，继续"
+      translations:
+        title: "正在翻译帖子"
+        select: "选择翻译"
+        save: "保存翻译"
+        original_content: "原始帖子内容"
+        placeholder: "在此输入帖子的翻译..."
       group_mentioned_limit:
         other: "<b>警告</b>！您提及了 <a href='%{group_link}'> %{group} </a>，但是此群组的成员数量超过了管理员配置的 %{count} 个用户的最大可提及数量限制。没有人会收到通知。"
       group_mentioned:
@@ -2404,8 +2423,8 @@ zh_CN:
       uploading: "正在上传…"
       show_preview: "显示预览"
       hide_preview: "隐藏预览"
-      switch_to_markdown: "切换到标准 Markdown 编辑器"
-      switch_to_rich_text: "切换到新的富文本编辑器"
+      switch_to_markdown: "切换到标准 Markdown 编辑器 (%{keyboardShortcut})"
+      switch_to_rich_text: "切换到新的富文本编辑器（%{keyboardShortcut}）"
       quote_post_title: "引用整个帖子"
       bold_label: "B"
       bold_title: "粗体"
@@ -2646,9 +2665,8 @@ zh_CN:
       in_messages_tooltip: "切换为搜索常规话题"
       in_topics_posts: "在所有话题和帖子中"
       enter_hint: "或按 Enter"
+      mobile_enter_hint: "或点击搜索"
       in_posts_by: "在 %{username} 的帖子中"
-      browser_tip: "%{modifier} + f"
-      browser_tip_description: "再次使用原生浏览器搜索"
       recent: "最近的搜索"
       clear_recent: "清除最近的搜索"
       experience:
@@ -2736,7 +2754,7 @@ zh_CN:
           aria_label: 按最大浏览量筛选
         additional_options:
           label: "按帖子数量和话题浏览量筛选"
-    hamburger_menu: "菜单"
+    hamburger_menu: "导航菜单"
     new_item: "新"
     go_back: "返回"
     not_logged_in_user: "包含当前活动和偏好设置总结的用户页面"
@@ -2990,6 +3008,8 @@ zh_CN:
           false {或<a href="{basePath}/latest">查看最新话题</a>}
           other {}
         }
+      reply_count_link:
+        other: "%{count} 条回复，跳转到第一个帖子"
       created_at: "创建日期：%{date}"
       bumped_at: "最新：%{date}"
       browse_all_categories_latest: "<a href='%{basePath}/categories'>浏览所有类别</a>或<a href='%{basePath}/latest'>查看最新话题</a>。"
@@ -3394,6 +3414,14 @@ zh_CN:
       in_reply_to: "加载父帖子"
       view_all_posts: "查看所有帖子"
       badge_granted_tooltip: "%{username} 因此帖子赢得了 '%{badge_name}' 徽章！"
+      localizations:
+        table:
+          locale: "区域设置"
+          actions: "操作"
+          edit: "编辑"
+          delete: "删除"
+        add: "添加新翻译"
+        success: "翻译已成功更新"
       errors:
         create: "抱歉，创建您的帖子时出错。请重试。"
         edit: "抱歉，编辑您的帖子时出错。请重试。"
@@ -3578,6 +3606,7 @@ zh_CN:
       share:
         title: "分享帖子 #%{post_number}"
         instructions: "分享此帖子的链接："
+      original_language: "这篇文章最初是用 %{language} 写的"
     category:
       none: "（无类别）"
       all: "所有类别"
@@ -3591,6 +3620,14 @@ zh_CN:
       settings: "设置"
       topic_template: "模板"
       tags: "标签"
+      localizations: "本地化"
+      localization:
+        locale: "区域设置"
+        name: "名称"
+        description: "描述"
+        add: "添加新的区域设置"
+        remove: "移除"
+        hint: "此类别目前没有本地化。点击下面的“添加新的本地化”开始添加本地化。"
       tags_allowed_tags: "将这些标签限制在此类别："
       tags_allowed_tag_groups: "将这些标签组限制在此类别："
       tags_placeholder: "（可选）允许的标签列表"
@@ -3613,17 +3650,21 @@ zh_CN:
       creation_error: 创建类别时出错。
       save_error: 保存类别时出错。
       name: "类别名称"
+      untitled: "无标题类别"
       description: "描述"
       logo: "类别徽标图片"
       logo_dark: "深色模式类别徽标图片"
       logo_description: "建议宽高比为 1:1，最小尺寸为 200px。如果留空，将不会显示图片。"
       background_image: "类别背景图片"
       background_image_dark: "深色类别背景图片"
+      style: "样式"
       background_color: "颜色"
       styles:
+        type: "样式"
         icon: "图标"
         emoji: "表情符号"
         options:
+          square: "方形"
           icon: "图标"
           emoji: "表情符号"
       color_used: "使用的颜色"
@@ -3941,7 +3982,7 @@ zh_CN:
           other: "%{categoryName} (%{count})"
         help: "%{categoryName}类别中的最新话题"
       top:
-        title: "热门"
+        title: "排行榜"
         help: "过去一年、一个月、一周或一天中最活跃的话题"
         all:
           title: "所有时间"
@@ -3963,7 +4004,7 @@ zh_CN:
         today: "今天"
     custom_homepage:
       admin_message: '您的一个主题已启用“custom_homepage”修改器，但在 [custom-homepage] 连接器中没有输出任何内容。（此消息只显示给网站管理员。）'
-    browser_update: '很抱歉，<a href="https://www.discourse.org/faq/#browser">您的浏览器不受支持</a>。请<a href="https://browsehappy.com">切换到支持的浏览器</a>查看富内容、登录和回复。'
+    browser_update: '很抱歉，<a href="https://discourse.org/about#browser">您的浏览器不受支持</a>。请<a href="https://browsehappy.com">切换到支持的浏览器</a>查看富内容、登录和回复。'
     permission_types:
       full: "创建/回复/查看"
       create_post: "回复/查看"
@@ -3989,6 +4030,7 @@ zh_CN:
       shortcut_delimiter_newline: "%{shortcut1}<br>%{shortcut2}"
       title: "键盘快捷键"
       short_title: "快捷键"
+      search_ctrl_f_tip: "要搜索整个论坛，请按 <kbd>/</kbd>"
       jump_to:
         title: "跳到"
         home: "%{shortcut} 首页"
@@ -3996,7 +4038,7 @@ zh_CN:
         new: "%{shortcut} 新"
         unread: "%{shortcut} 未读"
         categories: "%{shortcut} 类别"
-        top: "%{shortcut} 热门"
+        top: "%{shortcut} 排行榜"
         bookmarks: "%{shortcut} 书签"
         profile: "%{shortcut} 个人资料"
         messages: "%{shortcut} 消息"
@@ -4336,7 +4378,7 @@ zh_CN:
           save: "保存"
           delete: "删除"
           delete_confirm: "确定要删除此版块吗？"
-          delete_public_confirm: "此版块<strong>对所有人可见</strong>，确定要将其删除吗？"
+          delete_public_confirm: "此版块对所有人可见，确定要将其删除吗？"
           update_public_confirm: "更改将<strong>对此网站上的所有人可见</strong>。确定吗？"
           mark_as_private_confirm: "此版块<strong>对所有人可见</strong>。更新后，它将<strong>仅对您可见</strong>。确定吗？"
           reset_confirm: "确定要将此版块重置为默认值吗？"
@@ -4446,15 +4488,14 @@ zh_CN:
         forum:
           label: 论坛
       back_to_forum: "返回论坛"
-      collapse_all_sections: "收起所有版块"
-      expand_all_sections: "展开所有版块"
-      filter: "筛选…"
       filter_links: "筛选链接..."
       clear_filter: "清除筛选器"
       no_results:
         title: "没有结果"
-        description: '我们找不到与“%{filter}”匹配的任何内容。<br><br>您是否要<a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">搜索网站设置</a>或<a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">管理用户列表</a>？'
-        description_admin_search: '我们找不到与“%{filter}”匹配的任何内容。<br><br>尝试 <a class="sidebar-additional-filter-admin-search" href="%{admin_search_url}">搜索整个管理界面</a>。'
+        description_admin_search: "我们找不到任何与“%{filter}”匹配的内容。"
+      collapse_all_sections: "收起所有版块"
+      expand_all_sections: "展开所有版块"
+      search: "搜索"
       footer:
         interface_color_selector:
           light: "亮"
@@ -4557,6 +4598,54 @@ zh_CN:
           paste: "粘贴…"
           save: "另存为…"
     powered_by_discourse: "由 Discourse 提供技术支持"
+    safari_15_warning: "您的浏览器很快将与此社区不兼容。若要继续参与此社区，请升级您的浏览器或 <a href='%{url}'>了解更多信息</a>。"
+    discovery:
+      headings:
+        all:
+          latest: "所有最新话题"
+          top: "所有热门话题"
+          new: "所有新话题"
+          unread: "所有未读话题"
+          unseen: "所有未见话题"
+          posted: "您发过帖子的所有话题"
+          bookmarks: "您已添加书签的所有话题"
+          default: "所有 %{filter} 话题"
+        category:
+          latest: "%{category}中的最新话题"
+          new: "%{category}中的新话题"
+          unread: "%{category}中的未读话题"
+          unseen: "%{category}中的未见话题"
+          posted: "%{category} 中您发布过帖子的话题"
+          bookmarks: "%{category} 中您已添加书签的话题"
+          default: "%{category}中的%{filter}话题"
+        single_tag:
+          bookmarks: "已在您添加的书签中，标记为 %{tag} 的主题"
+          default: "%{filter} 主题已标记 %{tag}"
+        multi_tag:
+          default: "使用%{tags}标记的话题"
+        category_tag:
+          posted: "您已在 %{category} 中发布过带有 %{tag} 标签的主题"
+          bookmarks: "您已收藏了 %{category} 中标记为 %{tag} 的主题"
+          default: "%{filter} 个话题位于 %{category} 中，标签为 %{tag}"
+        no_tags:
+          all:
+            latest: "最新的无标签话题"
+            new: "新的无标签话题"
+            unread: "未读的无标签话题"
+            unseen: "未见的无标签话题"
+            posted: "您发过帖子的无标签话题"
+            bookmarks: "您已添加书签的无标签话题"
+            default: "没有标签的话题"
+          category:
+            latest: "%{category} 中的最新无标签话题"
+            top: "%{category} 中的热门无标签话题"
+            new: "%{category} 中的新无标签话题"
+            unread: "%{category} 中的未读无标签话题"
+            unseen: "%{category} 中的未见无标签话题"
+            posted: "%{category} 中您发布过帖子的无标签话题"
+            bookmarks: "%{category} 中您已添加书签的无标签话题"
+            default: "%{category}中的%{filter}无标签话题"
+        categories: "所有类别"
   admin_js:
     type_to_filter: "输入以筛选…"
     settings: "设置"
@@ -4608,9 +4697,6 @@ zh_CN:
           title: "审核"
           header_description: "Discourse 中的举报系统可帮助您和您的版主团队管理内容和用户行为，使您的社区保持尊重和健康。默认设置适用于大多数社区，您无需更改它们。但是，如果您的网站有特殊要求，您可以禁用不需要的举报并添加您自己的自定义举报。"
           keywords: "标记|评论|垃圾|非法"
-        font_style:
-          title: "字体样式"
-          header_description: "自定义您的主题使用的字体样式"
         files:
           title: "文件"
           header_description: "控制文件大小与类型限制、头像大小与来源、文件存储、图片质量和压缩等的设置"
@@ -4625,74 +4711,88 @@ zh_CN:
           title: "登录与身份验证"
           header_description: "配置用户登录与身份验证方式、秘密与密钥、OAuth2 提供商等。"
         logo:
-          title: "网站徽标"
-          header_description: "自定义您的网站徽标的变体"
-        branding:
-          title: "品牌化"
-          logo:
-            title: "徽标"
-            form:
-              saved: "徽标设置已保存。"
-              logo:
-                title: "主要徽标"
-                description: "显示在网站顶部导航以及网站电子邮件通知的顶部。"
-                help_text: "建议尺寸为 600 x 80 像素。"
-              logo_dark:
-                required: "为暗色模式下使用不同的徽标？"
-                title: "深色主徽标"
-                help_text: "建议尺寸为 600 x 80 像素。"
-              large_icon:
-                title: "方形图标"
-                description: "徽标图像的方形版本出现在管理的顶部，也是移动主屏幕应用程序的徽标。"
-                help_text: "建议尺寸为 512 x 512 像素。"
-              square_icon_dark:
-                required: "为暗色模式使用不同的方形图标？"
-                title: "深色方形图标"
-                help_text: "建议尺寸为 512 x 512 像素。"
-              favicon:
-                title: "网站图标"
-                description: "徽标将作为图标出现在浏览器选项卡和浏览器收藏夹/书签中。"
-              logo_small:
-                title: "小徽标"
-                description: "您的网站左上角的小徽标图像，向下滚动时可见。如果留空，将显示主页字形。"
-                help_text: "建议尺寸为 120 x 120 像素。"
-              logo_small_dark:
-                required: "为暗色模式使用不同的小徽标？"
-                title: "深色小徽标"
-                help_text: "建议尺寸为 120 x 120 像素。"
-              mobile: "移动"
-              email: "电子邮件"
-              social_media: "社交媒体"
-              mobile_logo:
-                title: "移动徽标"
-                description: "您网站的移动版本上使用的徽标。如果留空，则将使用“徽标”设置中的图像。"
-                help_text: "使用高度为 120 且长宽比大于 3:1 的宽矩形图像。"
-              mobile_logo_dark:
-                required: "为暗色模式使用不同的移动徽标？"
-                title: "深色移动徽标"
-                help_text: "使用高度为 120 且长宽比大于 3:1 的宽矩形图像。"
-              manifest_icon:
-                title: "清单图标"
-                description: "用作安卓（Android）上的徽标/启动图像的图像。如果留空，将使用 large_icon。"
-                help_text: "建议尺寸为 512 x 512 像素。"
-              manifest_screenshots:
-                title: "清单截图"
-                description: "在安装提示页面上展示您的实例特色和功能的屏幕截图。所有图片均应为本地上传且尺寸相同。"
-              apple_touch_icon:
-                title: "苹果（Apple）触摸图标"
-                description: "用于苹果（Apple）触摸设备的图标。如果留空，将使用 large_icon。"
-                help_text: "建议尺寸为 180 x 180 像素。不建议使用透明背景。"
-              digest_logo:
-                title: "摘要徽标"
-                description: "您网站的电子邮件摘要顶部使用的备用徽标图像。如果留空，则将使用“徽标”设置中的图像。"
-                help_text: "使用宽矩形图像。不要使用 SVG 图像。"
-              opengraph_image:
-                title: "OpenGraph 图像"
-                description: "默认 opengraph 图像，当页面没有其他合适的图像时使用。如果留空，将使用 large_icon。"
-              x_summary_large_image:
-                title: "X 摘要大图"
-                description: "X 卡“摘要大图”。如果留空，则使用 OpenGraph_image 生成常规卡片元数据，只要它不是 .svg。"
-                help_text: "建议尺寸至少为 280 x 150 像素。不要使用 SVG 图像。"
+          title: "徽标"
+          form:
+            saved: "徽标设置已保存。"
+            logo:
+              title: "主要徽标"
+              description: "显示在网站顶部导航以及网站电子邮件通知的顶部。"
+              help_text: "建议尺寸为 600 x 80 像素。"
+            logo_dark:
+              required: "为暗色模式下使用不同的徽标？"
+              title: "深色主徽标"
+              help_text: "建议尺寸为 600 x 80 像素。"
+            large_icon:
+              title: "方形图标"
+              description: "徽标图像的方形版本出现在管理的顶部，也是移动主屏幕应用程序的徽标。"
+              help_text: "建议尺寸为 512 x 512 像素。"
+            square_icon_dark:
+              required: "为暗色模式使用不同的方形图标？"
+              title: "深色方形图标"
+              help_text: "建议尺寸为 512 x 512 像素。"
+            favicon:
+              title: "网站图标"
+              description: "徽标将作为图标出现在浏览器选项卡和浏览器收藏夹/书签中。"
+            logo_small:
+              title: "小徽标"
+              description: "您的网站左上角的小徽标图像，向下滚动时可见。如果留空，将显示主页字形。"
+              help_text: "建议尺寸为 120 x 120 像素。"
+            logo_small_dark:
+              required: "为暗色模式使用不同的小徽标？"
+              title: "深色小徽标"
+              help_text: "建议尺寸为 120 x 120 像素。"
+            mobile: "移动"
+            email: "电子邮件"
+            social_media: "社交媒体"
+            mobile_logo:
+              title: "移动徽标"
+              description: "您网站的移动版本上使用的徽标。如果留空，则将使用“徽标”设置中的图像。"
+              help_text: "使用高度为 120 且长宽比大于 3:1 的宽矩形图像。"
+            mobile_logo_dark:
+              required: "为暗色模式使用不同的移动徽标？"
+              title: "深色移动徽标"
+              help_text: "使用高度为 120 且长宽比大于 3:1 的宽矩形图像。"
+            manifest_icon:
+              title: "清单图标"
+              description: "用作安卓（Android）上的徽标/启动图像的图像。如果留空，将使用 large_icon。"
+              help_text: "建议尺寸为 512 x 512 像素。"
+            manifest_screenshots:
+              title: "清单截图"
+              description: "在安装提示页面上展示您的实例特色和功能的屏幕截图。所有图片均应为本地上传且尺寸相同。"
+            apple_touch_icon:
+              title: "苹果（Apple）触摸图标"
+              description: "用于苹果（Apple）触摸设备的图标。如果留空，将使用 large_icon。"
+              help_text: "建议尺寸为 180 x 180 像素。不建议使用透明背景。"
+            digest_logo:
+              title: "摘要徽标"
+              description: "您网站的电子邮件摘要顶部使用的备用徽标图像。如果留空，则将使用“徽标”设置中的图像。"
+              help_text: "使用宽矩形图像。不要使用 SVG 图像。"
+            opengraph_image:
+              title: "OpenGraph 图像"
+              description: "默认 opengraph 图像，当页面没有其他合适的图像时使用。如果留空，将使用 large_icon。"
+            x_summary_large_image:
+              title: "X 摘要大图"
+              description: "X 卡“摘要大图”。如果留空，则使用 OpenGraph_image 生成常规卡片元数据，只要它不是 .svg。"
+              help_text: "建议尺寸至少为 280 x 150 像素。不要使用 SVG 图像。"
+        fonts:
+          title: "字体"
+          form:
+            more_fonts: "更多字体"
+            fewer_fonts: "更少的字体"
+            saved: "字体设置已保存。"
+            base_font:
+              title: "基本字体"
+            heading_font:
+              title: "标题字体"
+            default_text_size:
+              title: "默认文本大小"
+              description: "随后，每个用户都可以根据自己的喜好调整这一尺寸。"
+          backfill_modal:
+            title: "应用新的默认文本设置？"
+            description:
+              other: "您已经更新了默认文字大小。您想将此更改应用于 %{count} 现有用户吗？"
+            modal_yes: "是"
+            modal_no: "否，只适用于未来"
         navigation:
           title: "导航"
           header_description: "配置网站的导航链接与菜单项。这包括主导航菜单、首页顶部快速链接以及管理边栏的位置和行为"
@@ -4702,9 +4802,6 @@ zh_CN:
         onebox:
           title: "Onebox"
           header_description: "配置如何为您的网站生成和显示 Onebox 预览"
-        other:
-          title: "其他"
-          header_description: "不属于任何其他类别的设置"
         rate_limits:
           title: "速率限值"
           header_description: "配置用户执行特定操作（例如创建话题、发送消息和发布回复）的频率"
@@ -4713,7 +4810,7 @@ zh_CN:
           header_description: "配置中文和日语搜索设置，包括日志记录和词例化"
         search_everything:
           title: "搜索"
-          header_description: "在管理界面中查找任何内容。您可以过滤下面的结果，您的偏好将被记住。"
+          header_description: "在管理界面中查找任何内容。您可以过滤下面的结果，您的首选项将被记住。要在管理界面的任何地方打开此搜索，请按 %{shortcutHTML}。"
         security:
           title: "安全性"
           header_description: "配置安全设置，包括双重身份验证、版主权限和内容安全策略"
@@ -4753,14 +4850,42 @@ zh_CN:
               title: "日志"
               header_description: "查看和管理备份、恢复和上传日志"
         reports:
-          title: "举报"
+          title: "报告"
           header_description: "报告是帮助您了解网站上所发生事情的有力工具。它们可以帮助您了解趋势、发现问题并根据数据做出决策。"
+          sub_pages:
+            settings:
+              title: "仪表板设置"
         badges:
           title: "徽章"
           header_description: "徽章奖励用户的活动、贡献和成就，以表彰、认可和鼓励用户在社区中的积极行为和参与。"
+        analytics:
+          title: "分析与SEO"
+          header_description: "提高网站在搜索引擎中的可见度，配置网站访客跟踪方式"
+          keywords: "search|google|sitemap"
+        interface:
+          title: "界面与布局"
+          header_description: "自定义网站总体布局和用户界面"
+          keywords: "斜杠"
+        content:
+          title: "内容"
+          header_description: "配置主题和帖子的管理方式，为您的成员自定义内容创作体验"
+          keywords: "话题|帖子|类别|标签"
+          sub_pages:
+            categories_and_tags:
+              title: "类别 & 标签"
+            sharing:
+              title: "分享"
+            posts_and_topics:
+              title: "帖子和话题"
+            stats_and_thresholds:
+              title: "统计数据 & 阈值"
         permalinks:
           title: "永久链接"
           header_description: "重定向以请求论坛未知的 URL"
+        user_defaults:
+          title: "用户默认设置"
+          header_description: "为您的用户配置设置默认值，配置他们的入门体验"
+          keywords: "用户|初次使用|新用户"
         user_fields:
           title: "用户字段"
           header_description: "创建自定义用户字段以收集有关社区成员的额外详细信息。您可以选择在注册时需要哪些信息、个人资料上显示哪些内容以及用户可以更新哪些信息。"
@@ -4784,14 +4909,21 @@ zh_CN:
           title: "主题和组件"
           header_description: "使用符合你需求的主题和组件个性化你的 Discourse 网站"
           keywords: "主题|组件|扩展|自定义"
+        site_admin:
+          title: "站点管理员"
+          header_description: "配置与站点管理相关的各种设置"
+          keywords: "发现|引导|应用程序"
         site_texts:
           title: "网站文本"
           header_description: "自定义 Discourse 中使用的任何文本，以匹配您社区的声音和语气"
         email:
-          title: "服务器设置和日志"
-          header_description: "自定义用于创建电子邮件的模板，预览将发送的摘要电子邮件，以及查看电子邮件日志"
-          keywords: "电子邮件|smtp|mailgun|sendgrid|已发送|已跳过|已退回|已收到|已拒绝|电子邮件日志|预览摘要"
+          title: "电子邮件设置"
+          header_description: "配置发送给成员的电子邮件的设置"
+          keywords: "摘要|取消订阅|电子邮件|smtp|mailgun|sendgrid|预览摘要"
           sub_pages:
+            server_settings:
+              title: "服务器设置"
+              header_description: "配置发送给成员的电子邮件的设置"
             preview_summary:
               title: "预览摘要"
               header_description: "预览发送给非活动用户的摘要电子邮件的内容"
@@ -4801,6 +4933,11 @@ zh_CN:
             templates:
               title: "模板"
               header_description: "自定义用于创建电子邮件的模板"
+        email_logs:
+          title: "电子邮件日志"
+          header_description: "查看从您的站点发送的电子邮件的日志"
+          keywords: "已发送|已跳过|已退回|已接收|已拒绝|电子邮件日志"
+          sub_pages:
             sent:
               title: "已发送"
               header_description: "查看已发送电子邮件的日志"
@@ -4814,7 +4951,7 @@ zh_CN:
               title: "已收到"
               header_description: "查看已收到的电子邮件日志"
             rejected:
-              title: "遭拒"
+              title: "已拒绝"
               header_description: "查看被拒绝的电子邮件日志"
         email_appearance:
           title: "外观"
@@ -4851,9 +4988,13 @@ zh_CN:
           title: "嵌入"
           header_description: "Discourse 能够使用创建 IFRAME 的 Javascript API 在远程网站中嵌入话题的评论"
       search:
-        modal_title: "搜索管理员页面中的任何内容"
+        modal_title: "在管理员页面中搜索所有内容"
         title: "搜索"
-        instructions: "键入以搜索页面、设置、报告、主题、组件等等..."
+        instructions: "在管理员页面中搜索所有内容..."
+        full_page_link: "切换到全页搜索"
+        no_results: '我们找不到任何与 "%{filter}" 匹配的内容。'
+        result_count:
+          other: '%{count} 个搜索 “%{filter}” 的结果'
         result_types:
           page:
             other: "页面"
@@ -5437,12 +5578,21 @@ zh_CN:
           city_for_disputes_placeholder: "城市"
           city_for_disputes_help: |
             指定解决与本论坛相关的法律纠纷的城市。
+          extra_groups:
+            heading: "群组列表"
+            description: "在“关于”页面上显示的额外群组。"
+            groups: "群组"
+            order: "排序"
+            initial_members: "展开成员"
+            initial_members_description: "添加“查看更多”按钮之前要显示的群组成员数量。"
+            show_description: "包括描述"
           optional: "（可选）"
           update: "更新"
           toasts:
             general_settings_saved: "常规设置已保存"
             contact_information_saved: "联系信息已保存"
             your_organization_saved: "您的组织已保存"
+            extra_groups_saved: "群组列表已保存"
           saved: "已保存！"
         flags:
           edit_header: "编辑举报"
@@ -5467,7 +5617,8 @@ zh_CN:
             post: "帖子"
             chat_message: "聊天消息"
             enabled: "保存后启用此自定义举报"
-            alert: "自定义举报一旦使用，只能将其禁用，而无法编辑或删除。"
+            create_warning: "自定义举报一旦使用，只能禁用或编辑，而无法删除。"
+            edit_warning: "编辑举报的名称和描述可能会导致数据不一致。自定义举报一旦使用，就只能禁用或编辑，而不能删除。"
             edit_flag: "编辑举报"
             non_editable: "您无法编辑此举报，因为它是系统举报或已在审核系统中使用，但您仍然可以将其禁用。"
             delete_flag: "删除举报"
@@ -5488,8 +5639,6 @@ zh_CN:
           more_options:
             title: "更多选项"
         themes_and_components:
-          title: "主题和组件"
-          description: "使用符合你需求的主题和组件个性化你的 Discourse 网站。"
           breadcrumb_title: "自定义"
           install: "安装"
           themes:
@@ -5499,9 +5648,43 @@ zh_CN:
             back: "返回主题"
           components:
             title: "组件"
+            description: "自定义更改论坛设计的表面元素，或添加额外的前端功能"
             components_intro: "安装新组件以开始，或使用这些资源从头开始创建自己的主题。"
             new_component: "新组件"
             back: "返回组件"
+            install: "安装"
+            name: "名称"
+            used_on: "用于"
+            enabled: "已启用？"
+            by_author: "作者 %{name}"
+            learn_more: "了解详情"
+            edit: "编辑"
+            parent_themes_two: "%{name1} 和 %{name2}"
+            parent_themes_three: "%{name1}、 %{name2} 和 %{name3}"
+            parent_themes_more_than_three:
+              other: "%{name1}、 %{name2}、 %{name3} 和更多 %{count} 个"
+            add_to_theme: "添加到主题"
+            preview: "预览"
+            update: "更新到最新"
+            check_update: "检查更新"
+            update_available: "有可用更新!"
+            export: "导出"
+            convert: "转换"
+            delete: "删除"
+            filter_by: "筛选依据"
+            filter_by_all: "所有"
+            filter_by_used: "已使用"
+            filter_by_unused: "未使用"
+            filter_by_updates_available: "有可用更新"
+            search_components: "输入组件名"
+            new_update_for_component: "%{name} 有新的更新可用！"
+            component_up_to_date: '“%{name}” 已是最新。'
+            updated_successfully: '“%{name}” 已成功更新。'
+            delete_confirm: '确定要删除“%{name}”吗？'
+            deleted_successfully: '“%{name}” 已成功删除。'
+            no_components: "未安装任何组件。"
+            no_components_found: "没有符合您筛选条件的组件。"
+            badge_unused: "未使用"
         user_fields:
           field: "字段"
           type: "类型"
@@ -5514,18 +5697,19 @@ zh_CN:
           save_successful: "用户字段已保存。"
         color_palettes:
           palette_name: "名称"
+          duplicate: "复制"
+          delete: "删除"
           color_options:
             title: "颜色选项"
             toggle: "用户可选"
             toggle_description: "用户可以选择调色板"
           colors:
             title: "颜色"
-          fonts_and_logos_hint: "想要更新您的字体和徽标吗？"
-          go_to_branding: "转到品牌"
           save_changes: "保存更改"
           unsaved_changes: "您有未保存的更改"
           copy_of: "%{name}的副本"
           copy_created: '已创建“%{name}”的新副本'
+          illegal_character_in_color: "颜色只应包含十六进制字符"
       plugins:
         title: "插件"
         name: "名称"
@@ -5697,10 +5881,15 @@ zh_CN:
           extra_files_upload: "导出主题以查看这些文件。"
           extra_files_remote: "导出主题或检查 git 仓库以查看这些文件。"
           preview: "预览"
+          default: "有效"
           settings_editor: "设置编辑器"
           show_advanced: "显示高级"
           is_default: "主题默认启用"
           user_selectable: "用户可以选择主题"
+          user_selectable_badge_label: "用户可选"
+          user_selectable_button_label: "允许用户选择"
+          user_selectable_unavailable_button_label: "使用户不可用"
+          broken_badge_label: "损坏的主题"
           color_scheme_user_selectable: "用户可以选择调色板"
           auto_update: "当 Discourse 更新时自动更新"
           color_scheme: "调色板"
@@ -5718,9 +5907,10 @@ zh_CN:
           convert_theme_alert_generic: "确定要将此主题转换为组件吗？"
           convert_theme_tooltip: "将此主题转换为组件"
           inactive_themes: "停用主题："
-          set_default_theme: "设为默认"
-          default_theme: "默认主题"
+          set_default_theme: "设置为活跃"
+          default_theme: "活跃主题"
           set_default_success: "默认主题设置为 %{theme}"
+          setting_was_saved: "主题设置已保存"
           install_success: "%{theme} 安装成功！"
           inactive_components: "未使用的组件："
           selected:
@@ -5731,6 +5921,7 @@ zh_CN:
           disabled_component_tooltip: "此组件已被禁用"
           default_theme_tooltip: "此主题是网站的默认主题"
           updates_available_tooltip: "此主题有可用更新"
+          update_available: "需要更新"
           and_x_more:
             other: "和其他 %{count} 个。"
           collapse: 收起
@@ -5855,26 +6046,26 @@ zh_CN:
           active_filter: "有效"
           inactive_filter: "停用"
           updates_available_filter: "有可用更新"
-          schema:
-            title: "编辑 %{name} 设置"
-            back_button: "返回 %{name}"
-            fields:
-              required: "*必选"
-              groups:
-                at_least:
-                  other: "至少需要 %{count} 个群组"
-              categories:
-                at_least:
-                  other: "至少需要 %{count} 个类别"
-              tags:
-                at_least:
-                  other: "至少需要 %{count} 个标签"
-              string:
-                too_short:
-                  other: "必须至少为 %{count} 个字符"
-              number:
-                too_small: "必须大于或等于 %{count}"
-                too_large: "必须小于或等于 %{count}"
+        schema:
+          title: "编辑 %{name} 设置"
+          back_button: "返回 %{name}"
+          fields:
+            required: "*必选"
+            groups:
+              at_least:
+                other: "至少需要 %{count} 个群组"
+            categories:
+              at_least:
+                other: "至少需要 %{count} 个类别"
+            tags:
+              at_least:
+                other: "至少需要 %{count} 个标签"
+            string:
+              too_short:
+                other: "必须至少为 %{count} 个字符"
+            number:
+              too_small: "必须大于或等于 %{count}"
+              too_large: "必须小于或等于 %{count}"
         colors:
           select_base:
             title: "选择基础调色板"
@@ -5885,36 +6076,30 @@ zh_CN:
           about: "修改您的主题使用的颜色。创建一个新的调色板以开始。"
           new_name: "新调色板"
           copy_name_prefix: "副本 -"
-          delete_confirm: "删除此调色板？"
           undo: "撤消"
           undo_title: "撤消自上次保存以来对此颜色所做的变更。"
           revert: "还原"
           revert_title: "将此颜色重置为 Discourse 的默认调色板。"
           primary:
             name: "主要"
-            description: "大多数文本、图标和边框。"
+            description: "主要文本和图标"
           primary-medium:
             name: "主要-中"
+            description: "禁用或免打扰文本"
           primary-low-mid:
             name: "主要-低-中"
           secondary:
             name: "次要"
-            description: "主背景颜色和一些按钮的文本颜色。"
           tertiary:
             name: "第三"
-            description: "链接、一些按钮、通知和主题色。"
           quaternary:
             name: "第四"
-            description: "可以在主题中选择使用。"
           header_background:
             name: "页眉背景"
-            description: "网站标头的背景色。"
           header_primary:
             name: "页眉主要"
-            description: "网站标头的文本和图标。"
           highlight:
             name: "突出显示"
-            description: "页面上突出显示元素的背景色，例如帖子和话题。"
           highlight-high:
             name: "突出显示-高"
           highlight-medium:
@@ -5923,19 +6108,14 @@ zh_CN:
             name: "突出显示-低"
           danger:
             name: "危险"
-            description: "突出显示删除帖子和话题等操作的颜色。"
           success:
             name: "成功"
-            description: "用于指示操作成功。"
           love:
             name: "爱"
-            description: "点赞按钮的颜色。"
           selected:
             name: "已选择"
-            description: "元素（例如列表条目）在被选择/有效时的背景色。"
           hover:
             name: "悬停"
-            description: "元素（例如列表条目）在鼠标悬停或具有键盘焦点时的背景色。"
           editor:
             light: "亮"
             dark: "深色"
@@ -6326,6 +6506,7 @@ zh_CN:
           dropdown: "下拉菜单"
           upload: "上传文件"
           multiselect: "多选"
+          tagchooser: "标签组选择器"
         validations_modal:
           button_title: "验证"
           modal_title: "验证选项"
@@ -6371,6 +6552,8 @@ zh_CN:
           toggle_form_template: "表单模板已启用"
           select_template: "选择表单模板"
           select_template_help: "添加/编辑表单模板"
+        errors:
+          multiple_tags_not_allowed: '您不能从 "%{tag_name}" 中选择更多标签。为避免出现问题，请使用表单模板'
       impersonate:
         title: "模拟"
         help: "使用此工具模拟用户帐户以进行调试。完成后，您必须退出。"
@@ -6785,10 +6968,12 @@ zh_CN:
       site_settings:
         title: "网站设置"
         description: "配置您的 Discourse 网站的设置以自定义其外观、功能和用户体验。"
-        discard: "放弃更改"
-        save: "保存所有更改"
+        discard:
+          other: "放弃更改"
+        save:
+          other: "保存所有更改"
         dirty_banner:
-          other: "你有 <em>%{count}</em> 个未保存的更改"
+          other: "你有 <b>%{count}</b> 个未保存的更改"
         emoji_list:
           invalid_input: "表情符号列表只能包含有效的表情符号名称，例如 hugs"
           add_emoji_button:

@@ -8,7 +8,6 @@ require "git_utils"
 
 module Discourse
   DB_POST_MIGRATE_PATH = "db/post_migrate"
-  REQUESTED_HOSTNAME = "REQUESTED_HOSTNAME"
   MAX_METADATA_FILE_SIZE = 64.kilobytes
 
   class Utils
@@ -466,7 +465,18 @@ module Discourse
   def self.assets_digest
     @assets_digest ||=
       begin
-        digest = Digest::MD5.hexdigest(ActionView::Base.assets_manifest.assets.values.sort.join)
+        digest =
+          Digest::MD5.hexdigest(
+            Rails
+              .application
+              .assets
+              .load_path
+              .assets
+              .map(&:digested_path)
+              .map(&:to_s)
+              .sort
+              .join("|"),
+          )
 
         channel = "/global/asset-version"
         message = MessageBus.last_message(channel)
@@ -512,7 +522,7 @@ module Discourse
   end
 
   def self.enabled_authenticators
-    authenticators.select { |authenticator| authenticator.enabled? }
+    authenticators.select(&:enabled?)
   end
 
   def self.cache
@@ -1187,22 +1197,8 @@ module Discourse
     ENV["RAILS_ENV"] == "test" && ENV["TEST_ENV_NUMBER"]
   end
 
-  CDN_REQUEST_METHODS = %w[GET HEAD OPTIONS]
-
-  def self.is_cdn_request?(env, request_method)
-    return if CDN_REQUEST_METHODS.exclude?(request_method)
-
-    cdn_hostnames = GlobalSetting.cdn_hostnames
-    return if cdn_hostnames.blank?
-
-    requested_hostname = env[REQUESTED_HOSTNAME] || env[Rack::HTTP_HOST]
-    cdn_hostnames.include?(requested_hostname)
-  end
-
   def self.apply_cdn_headers(headers)
     headers["Access-Control-Allow-Origin"] = "*"
-    headers["Access-Control-Allow-Methods"] = CDN_REQUEST_METHODS.join(", ")
-    headers
   end
 
   def self.allow_dev_populate?

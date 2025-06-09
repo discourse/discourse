@@ -1,4 +1,3 @@
-import Handlebars from "handlebars";
 import $ from "jquery";
 import * as AvatarUtils from "discourse/lib/avatar-utils";
 import deprecated from "discourse/lib/deprecated";
@@ -39,11 +38,6 @@ export function splitString(str, separator = ",") {
 export function escapeExpression(string) {
   if (!string) {
     return "";
-  }
-
-  // don't escape SafeStrings, since they're already safe
-  if (string instanceof Handlebars.SafeString) {
-    return string.toString();
   }
 
   return escape(string);
@@ -441,17 +435,9 @@ export function prefersReducedMotion() {
 }
 
 export function postRNWebviewMessage(prop, value) {
-  if (window.ReactNativeWebView === undefined) {
-    return;
+  if (window.ReactNativeWebView !== undefined) {
+    window.ReactNativeWebView.postMessage(JSON.stringify({ [prop]: value }));
   }
-
-  if (prop === "headerBg" && !value.startsWith("rgb(")) {
-    // eslint-disable-next-line no-console
-    console.warn("Skipping unsupported headerBg value:", value);
-    return;
-  }
-
-  window.ReactNativeWebView.postMessage(JSON.stringify({ [prop]: value }));
 }
 
 function pickMarker(text) {
@@ -504,6 +490,7 @@ export function translateModKey(string) {
       .replace("shift", "\u21E7")
       .replace("meta", "\u2318")
       .replace("alt", "\u2325")
+      .replace("ctrl", "\u2303")
       .replace(/\+/g, "");
   } else {
     string = string
@@ -798,4 +785,8 @@ export function isPrimaryTab() {
       resolve(true);
     }
   });
+}
+
+export function optionalRequire(path, name = "default") {
+  return require.has(path) && require(path)[name];
 }

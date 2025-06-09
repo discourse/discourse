@@ -1,4 +1,3 @@
-import { hash } from "@ember/helper";
 import RouteTemplate from "ember-route-template";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
@@ -9,6 +8,7 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import bodyClass from "discourse/helpers/body-class";
 import icon from "discourse/helpers/d-icon";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
 
 export default RouteTemplate(
@@ -80,7 +80,7 @@ export default RouteTemplate(
         <PluginOutlet
           @name="user-notifications-bottom"
           @connectorTagName="li"
-          @outletArgs={{hash model=@controller.model}}
+          @outletArgs={{lazyHash model=@controller.model}}
         />
 
       </HorizontalOverflowNav>
@@ -101,7 +101,6 @@ export default RouteTemplate(
 
     <section class="user-content" id="user-content">
       <LoadMore
-        @selector=".user-stream .notification"
         @action={{@controller.loadMore}}
         class="notification-history user-stream"
       >

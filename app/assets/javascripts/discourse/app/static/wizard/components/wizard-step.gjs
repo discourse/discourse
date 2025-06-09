@@ -11,7 +11,7 @@ import emoji from "discourse/helpers/emoji";
 import { i18n } from "discourse-i18n";
 import WizardField from "./wizard-field";
 
-const READY_STEP_INDEX = 5;
+const READY_STEP_INDEX = 3;
 
 export default class WizardStepComponent extends Component {
   @tracked saving = false;
@@ -67,10 +67,6 @@ export default class WizardStepComponent extends Component {
     const ready = this.wizard.findStep("ready");
     const isReady = ready && this.step.index > ready.index;
     return isReady && !this.isFinalStep;
-  }
-
-  get showConfigureMore() {
-    return this.id === "ready";
   }
 
   get showJumpInButton() {
@@ -283,15 +279,6 @@ export default class WizardStepComponent extends Component {
                 class="wizard-container__button finish"
               >
                 {{i18n "wizard.finish"}}
-              </button>
-            {{else if this.showConfigureMore}}
-              <button
-                {{on "click" this.nextStep}}
-                disabled={{this.saving}}
-                type="button"
-                class="wizard-container__button configure-more"
-              >
-                {{i18n "wizard.configure_more"}}
               </button>
             {{/if}}
 

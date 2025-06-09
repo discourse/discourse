@@ -91,14 +91,18 @@
     }
   }
 
-  p[data-placeholder]::before {
-    pointer-events: none;
-    position: absolute;
-    padding-top: 2px;
-    padding-right: 0.5rem;
-    content: attr(data-placeholder);
-    color: var(--primary-400);
-    line-height: 1.1;
+  p[data-placeholder] {
+    overflow: hidden;
+
+    &::before {
+      pointer-events: none;
+      position: absolute;
+      padding-top: 2px;
+      padding-right: 0.5rem;
+      content: attr(data-placeholder);
+      color: var(--primary-400);
+      line-height: 1.1;
+    }
   }
 
   del {
@@ -128,11 +132,6 @@
     // but overriding just for the editor for now
     display: inline;
     padding-top: 0.2rem;
-  }
-
-  .composing-whisper & {
-    font-style: italic;
-    color: var(--primary-medium);
   }
 
   .onebox-wrapper {
@@ -198,7 +197,6 @@
 
 // stylelint-disable-next-line no-duplicate-selectors
 .ProseMirror {
-  position: relative;
   word-wrap: break-word;
   white-space: break-spaces;
 }
@@ -227,6 +225,7 @@
 
 .ProseMirror-selectednode {
   outline: 2px solid #8cf;
+  border-radius: var(--d-border-radius);
 }
 
 /* Make sure li selections wrap around markers */
@@ -259,7 +258,7 @@ li.ProseMirror-selectednode::after {
 .ProseMirror-gapcursor {
   display: none;
   pointer-events: none;
-  position: absolute;
+  position: sticky;
 }
 
 .ProseMirror-gapcursor::after {

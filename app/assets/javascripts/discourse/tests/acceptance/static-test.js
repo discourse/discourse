@@ -41,44 +41,21 @@ acceptance("Static pages", function () {
     assert.dom(".body-page").exists("The content is present");
   });
 
-  test("Login redirect", async function (assert) {
-    this.siteSettings.full_page_login = false;
-    await visit("/login");
-
-    assert.strictEqual(
-      currentRouteName(),
-      "discovery.latest",
-      "it redirects to /latest"
-    );
-  });
-
   test("Login-required page", async function (assert) {
     this.siteSettings.login_required = true;
-    await visit("/login");
+    await visit("/");
 
-    assert.strictEqual(currentRouteName(), "login");
+    assert.strictEqual(currentRouteName(), "discovery.login-required");
     assert.dom(".body-page").exists("The content is present");
     assert.dom(".sign-up-button").exists();
     assert.dom(".login-button").exists();
   });
 
-  test("Signup redirect", async function (assert) {
-    this.siteSettings.full_page_login = false;
-    await visit("/signup");
-
-    assert.strictEqual(
-      currentRouteName(),
-      "discovery.latest",
-      "it redirects to /latest"
-    );
-  });
-
-  test("Signup redirect with login_required", async function (assert) {
-    this.siteSettings.full_page_login = false;
+  test("Login-required - Login Route", async function (assert) {
     this.siteSettings.login_required = true;
-    await visit("/signup");
+    await visit("/login");
 
     assert.strictEqual(currentRouteName(), "login");
-    assert.dom(".body-page").exists("The content is present");
+    assert.dom(".login-fullpage").exists("The login full page form is shown");
   });
 });

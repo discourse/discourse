@@ -410,7 +410,7 @@ sv:
       one: "Visa %{count} nytt ämne"
       other: "Visa %{count} nya ämnen"
     preview: "förhandsgranska"
-    cancel: "avbryt"
+    cancel: "Avbryt"
     deleting: "Raderar…"
     save: "Spara ändringar"
     saving: "Sparar…"
@@ -1063,7 +1063,6 @@ sv:
       said: "%{username}:"
       profile: "Profil"
       profile_possessive: "%{username}:s profil"
-      account_possessive: "%{name}:s konto"
       mute: "Tysta"
       edit: "Redigera inställningar"
       download_archive:
@@ -1789,7 +1788,6 @@ sv:
         title: "IP-adress vid registrering"
       avatar:
         title: "Profilbild"
-        header_title: "profil, meddelanden, bokmärken och inställningar"
         name_and_description: "%{name} - %{description}"
         edit: "Redigera profilbild"
       title:
@@ -1858,6 +1856,8 @@ sv:
     modal:
       close: "stäng"
       dismiss_error: "Avfärda fel"
+    multi_select:
+      search: "Sök…"
     form_kit:
       reset: Återställ
       optional: valfritt
@@ -2042,10 +2042,6 @@ sv:
         name: "Google"
         title: "Logga in med Google"
         sr_title: "Logga in med Google"
-      twitter:
-        name: "Twitter"
-        title: "Logga in med Twitter"
-        sr_title: "Logga in med Twitter"
       instagram:
         name: "Instagram"
         title: "Logga in med Instagram"
@@ -2494,8 +2490,6 @@ sv:
       in_topics_posts: "i alla ämnen och inlägg"
       enter_hint: "eller tryck Enter"
       in_posts_by: "i inlägg av %{username}"
-      browser_tip: "%{modifier} + f"
-      browser_tip_description: "igen för att använda inbyggd webbläsarsökning"
       recent: "Senaste sökningar"
       clear_recent: "Rensa senaste sökningar"
       type:
@@ -2579,7 +2573,6 @@ sv:
           aria_label: filtrera efter största antal visningar
         additional_options:
           label: "Filtrera efter inläggsantal och ämnesvisningar"
-    hamburger_menu: "meny"
     new_item: "ny"
     go_back: "gå tillbaka"
     not_logged_in_user: "användarsida med sammanställning av aktuell aktivitet och inställningar"
@@ -3249,6 +3242,11 @@ sv:
         other: "Visar %{count} svar på"
       in_reply_to: "Ladda överordnat inlägg"
       view_all_posts: "Visa alla inlägg"
+      localizations:
+        table:
+          actions: "Åtgärder"
+          edit: "Redigera"
+          delete: "Ta bort"
       errors:
         create: "Tyvärr uppstod det ett fel under skapandet av ditt inlägg. Vi ber dig försöka igen."
         edit: "Tyvärr uppstod det ett fel under ändringen av ditt inlägg. Vi ber dig försöka igen."
@@ -3448,6 +3446,10 @@ sv:
       settings: "Inställningar"
       topic_template: "Mall"
       tags: "Taggar"
+      localization:
+        name: "Namn"
+        description: "Beskrivning"
+        remove: "Ta bort"
       tags_allowed_tags: "Begränsa dessa taggar till följande kategori:"
       tags_allowed_tag_groups: "Begränsa dessa tagg-grupper till denna kategori:"
       tags_placeholder: "(Valfri) lista över tillåtna taggar"
@@ -3795,7 +3797,6 @@ sv:
         this_month: "Månad"
         this_week: "Vecka"
         today: "Idag"
-    browser_update: 'Tyvärr stöds inte <a href="https://www.discourse.org/faq/#browser">din webbläsare</a>. Vänligen <a href="https://browsehappy.com">byt till en webbläsare som stöds</a> för att se innehåll, logga in och svara.'
     permission_types:
       full: "Skapa / svara / se"
       create_post: "Svara / se"
@@ -4266,7 +4267,7 @@ sv:
         forum:
           label: Forum
       back_to_forum: "Tillbaka till forumet"
-      filter: "Filter..."
+      search: "Sök"
       footer:
         interface_color_selector:
           light: "Ljust"
@@ -4371,6 +4372,11 @@ sv:
           copy: "Kopiera..."
           paste: "Klistra in..."
           save: "Spara som..."
+    discovery:
+      headings:
+        multi_tag:
+          default: "Ämnen taggade med %{tags}"
+        categories: "Alla kategorier"
   admin_js:
     type_to_filter: "Skriv för att filtrera…"
     settings: "Inställningar"
@@ -4417,25 +4423,26 @@ sv:
         legal:
           title: "Juridik"
         logo:
-          title: "Webbplatsens logotyp"
-        branding:
-          title: "Varumärke"
-          logo:
-            form:
-              logo:
-                title: "Primär logotyp"
-              mobile: "Mobil"
-              email: "E-postadress"
-              manifest_screenshots:
-                description: "Skärmdumpar som visar dina instansfunktioner och funktionaliteten på dess installationsfrågesida. Alla bilder ska vara lokala uppladdningar, med samma dimensioner."
+          form:
+            logo:
+              title: "Primär logotyp"
+            mobile: "Mobil"
+            email: "E-postadress"
+            manifest_screenshots:
+              description: "Skärmdumpar som visar dina instansfunktioner och funktionaliteten på dess installationsfrågesida. Alla bilder ska vara lokala uppladdningar, med samma dimensioner."
+        fonts:
+          title: "Typsnitt"
+          form:
+            heading_font:
+              title: "Typsnitt för rubrik"
+          backfill_modal:
+            modal_yes: "Ja"
         navigation:
           title: "Navigering"
         notifications:
           title: "Aviseringar"
         onebox:
           title: "Onebox"
-        other:
-          title: "Övrigt"
         search_everything:
           title: "Sök"
         security:
@@ -4474,6 +4481,8 @@ sv:
               header_description: "Förhandsgranska innehållet i sammanfattningen som skickas via e-post till inaktiva användare"
             templates:
               title: "Mallar"
+        email_logs:
+          sub_pages:
             sent:
               title: "Skickade"
             skipped:
@@ -4958,6 +4967,8 @@ sv:
           company_name_placeholder: "Acme Organization"
           governing_law: "Gällande lag"
           city_for_disputes: "Domstol vid tvister"
+          extra_groups:
+            groups: "Grupper"
           optional: "(valfri)"
           update: "Uppdatera"
           saved: "sparat!"
@@ -4989,11 +5000,29 @@ sv:
             title: "Teman"
           components:
             title: "Komponenter"
+            install: "Installera"
+            name: "Namn"
+            enabled: "Aktiverad?"
+            by_author: "Av %{name}"
+            learn_more: "Läs mer"
+            edit: "Redigera"
+            preview: "Förhandsgranska"
+            export: "Exportera"
+            convert: "Konvertera"
+            delete: "Radera"
+            filter_by: "Filtrera efter"
+            filter_by_all: "Alla"
+            filter_by_used: "Använt"
+            filter_by_unused: "Oanvänt"
+            delete_confirm: 'Är du säker på att du vill radera "%{name}"?'
+            badge_unused: "Oanvänt"
         user_fields:
           type: "Typ"
           delete: "Radera"
         color_palettes:
           palette_name: "Namn"
+          duplicate: "Duplicera"
+          delete: "Radera"
           colors:
             title: "Färger"
       plugins:
@@ -5154,6 +5183,7 @@ sv:
           extra_files_upload: "Exportera temat för att visa dessa filer."
           extra_files_remote: "Exportera temat eller kontrollera gitförvaringen för att visa dessa filer."
           preview: "Förhandsgranska"
+          default: "Aktiv"
           settings_editor: "Inställningar för redigerare"
           is_default: "Temat är aktiverat som standard"
           user_selectable: "Temat kan väljas av användare"
@@ -5238,8 +5268,6 @@ sv:
             error: "Det här temat har automatiskt inaktiverats på grund av att det inte är kompatibelt med den här versionen av Discourse."
             minimum: "Kräver Discourse version %{version} eller högre."
             maximum: "Kräver Discourse version %{version} eller lägre."
-          update_to_latest: "Uppdatera till senaste"
-          check_for_updates: "Sök efter uppdateringar"
           updating: "Uppdaterar…"
           up_to_date: "Temat är uppdaterat, senaste kontroll:"
           has_overwritten_history: "Nuvarande temaversion finns inte längre eftersom Git-historiken har skrivits över av en tvingad push."
@@ -5284,12 +5312,12 @@ sv:
           active_filter: "Aktiv"
           inactive_filter: "Inaktiv"
           updates_available_filter: "Uppdateringar tillgängliga"
-          schema:
-            fields:
-              required: "*krävs"
-              number:
-                too_small: "måste vara större eller lika med %{count}"
-                too_large: "måste vara mindre eller lika med %{count}"
+        schema:
+          fields:
+            required: "*krävs"
+            number:
+              too_small: "måste vara större eller lika med %{count}"
+              too_large: "måste vara mindre eller lika med %{count}"
         colors:
           select_base:
             title: "Välj grundfärgspalett"
@@ -5297,35 +5325,28 @@ sv:
           title: "Färger"
           about: "Modifiera färgerna som används av ditt tema. Lägg till en ny färgpalett för att börja."
           copy_name_prefix: "Kopia av"
-          delete_confirm: "Radera den här färgpaletten?"
           undo: "Ångra"
           undo_title: "Återställ ändringarna för den här färgen till den senast sparade versionen."
           revert: "Återställ"
           revert_title: "Återställ den här färgen till Discourse-standardfärgspaletten."
           primary:
             name: "primär"
-            description: "Det mesta av texten, ikoner och ramar."
           primary-medium:
             name: "primär-mellan"
           primary-low-mid:
             name: "primär-låg-mitten"
           secondary:
             name: "sekundär"
-            description: "Den huvudsakliga bakgrundsfärgen, och textfärgen på vissa knappar."
           tertiary:
             name: "tertiär"
-            description: "Länkar, några knappar, aviseringar och accentfärg."
           quaternary:
             name: "kvartär"
           header_background:
             name: "bakgrund för sidhuvud"
-            description: "Bakgrundsfärg för sidans sidhuvud. "
           header_primary:
             name: "sidhuvud primär"
-            description: "Text och ikoner i sidans sidhuvud."
           highlight:
             name: "markera"
-            description: "Bakgrundsfärgen på markerade element på sidan, som inlägg och ämnen."
           highlight-high:
             name: "markerad-hög"
           highlight-medium:
@@ -5334,19 +5355,14 @@ sv:
             name: "markerad-låg"
           danger:
             name: "fara"
-            description: "Markeringsfärg när man tar bort inlägg eller ämnen."
           success:
             name: "lyckades"
-            description: "Används för att indikera att en åtgärd lyckades."
           love:
             name: "älska"
-            description: "Gillaknappens färg."
           selected:
             name: "markerad"
-            description: "Bakgrundsfärgen för element som listobjekt när de är markerade/aktiva."
           hover:
             name: "hovra"
-            description: "Bakgrundsfärgen för element som listobjekt när de hovras eller har tangentbordsfokus."
           editor:
             light: "Ljust"
             dark: "Mörkt"

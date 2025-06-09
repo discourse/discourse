@@ -1,5 +1,6 @@
 import { array, concat, fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
+import { getProperties } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import RouteTemplate from "ember-route-template";
 import { and, eq } from "truth-helpers";
@@ -13,6 +14,7 @@ import DiscourseBanner from "discourse/components/discourse-banner";
 import DiscourseTopic from "discourse/components/discourse-topic";
 import MoreTopics from "discourse/components/more-topics";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import PostStream from "discourse/components/post-stream";
 import PostTextSelection from "discourse/components/post-text-selection";
 import PrivateMessageGlyph from "discourse/components/private-message-glyph";
 import ReviewableCreatedBy from "discourse/components/reviewable-created-by";
@@ -26,6 +28,7 @@ import TextField from "discourse/components/text-field";
 import TopicAdminMenu from "discourse/components/topic-admin-menu";
 import TopicCategory from "discourse/components/topic-category";
 import TopicFooterButtons from "discourse/components/topic-footer-buttons";
+import TopicLocalizedContentToggle from "discourse/components/topic-localized-content-toggle";
 import TopicMap from "discourse/components/topic-map/index";
 import TopicNavigation from "discourse/components/topic-navigation";
 import TopicProgress from "discourse/components/topic-progress";
@@ -38,8 +41,9 @@ import bodyClass from "discourse/helpers/body-class";
 import icon from "discourse/helpers/d-icon";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import htmlSafe from "discourse/helpers/html-safe";
+import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
-import stickyAvatars from "discourse/modifiers/sticky-avatars";
+import autoFocus from "discourse/modifiers/auto-focus";
 import { i18n } from "discourse-i18n";
 import CategoryChooser from "select-kit/components/category-chooser";
 import MiniTagChooser from "select-kit/components/mini-tag-chooser";
@@ -53,7 +57,6 @@ export default RouteTemplate(
     {{/let}}
 
     <DiscourseTopic
-      {{stickyAvatars}}
       @multiSelect={{@controller.multiSelect}}
       @enteredAt={{@controller.enteredAt}}
       @topic={{@controller.model}}
@@ -82,7 +85,7 @@ export default RouteTemplate(
         <PluginOutlet
           @name="topic-above-post-stream"
           @connectorTagName="div"
-          @outletArgs={{hash
+          @outletArgs={{lazyHash
             model=@controller.model
             editFirstPost=@controller.editFirstPost
           }}
@@ -105,7 +108,7 @@ export default RouteTemplate(
                 <div class="edit-title__wrapper">
                   <PluginOutlet
                     @name="edit-topic-title"
-                    @outletArgs={{hash
+                    @outletArgs={{lazyHash
                       model=@controller.model
                       buffered=@controller.buffered
                     }}
@@ -114,7 +117,8 @@ export default RouteTemplate(
                       @id="edit-title"
                       @value={{@controller.buffered.title}}
                       @maxlength={{@controller.siteSettings.max_topic_title_length}}
-                      @autofocus="true"
+                      @autofocus={{true}}
+                      {{autoFocus}}
                     />
                   </PluginOutlet>
                 </div>
@@ -123,7 +127,7 @@ export default RouteTemplate(
                   <div class="edit-category__wrapper">
                     <PluginOutlet
                       @name="edit-topic-category"
-                      @outletArgs={{hash
+                      @outletArgs={{lazyHash
                         model=@controller.model
                         buffered=@controller.buffered
                       }}
@@ -141,7 +145,7 @@ export default RouteTemplate(
                   <div class="edit-tags__wrapper">
                     <PluginOutlet
                       @name="edit-topic-tags"
-                      @outletArgs={{hash
+                      @outletArgs={{lazyHash
                         model=@controller.model
                         buffered=@controller.buffered
                       }}
@@ -164,7 +168,7 @@ export default RouteTemplate(
                 <PluginOutlet
                   @name="edit-topic"
                   @connectorTagName="div"
-                  @outletArgs={{hash
+                  @outletArgs={{lazyHash
                     model=@controller.model
                     buffered=@controller.buffered
                   }}
@@ -219,31 +223,33 @@ export default RouteTemplate(
                   <TopicStatus @topic={{@controller.model}} />
                   <a
                     href={{@controller.model.url}}
-                    {{on "click" @controller.jumpTop}}
+                    {{on
+                      "click"
+                      (if
+                        @controller.model.details.can_edit
+                        @controller.editTopic
+                        @controller.jumpTop
+                      )
+                    }}
                     class="fancy-title"
                   >
                     {{htmlSafe @controller.model.fancyTitle}}
-                  </a>
-                {{/if}}
 
-                {{#if @controller.model.details.can_edit}}
-                  <a
-                    href
-                    {{on "click" @controller.editTopic}}
-                    class="edit-topic"
-                    title={{i18n "edit_topic"}}
-                  >{{icon "pencil"}}</a>
+                    {{#if @controller.model.details.can_edit}}
+                      {{icon "pencil" class="edit-topic"}}
+                    {{/if}}
+                  </a>
                 {{/if}}
 
                 <PluginOutlet
                   @name="topic-title-suffix"
-                  @outletArgs={{hash model=@controller.model}}
+                  @outletArgs={{lazyHash model=@controller.model}}
                 />
               </h1>
 
               <PluginOutlet
                 @name="topic-category-wrapper"
-                @outletArgs={{hash topic=@controller.model}}
+                @outletArgs={{lazyHash topic=@controller.model}}
               >
                 <TopicCategory
                   @topic={{@controller.model}}
@@ -331,12 +337,17 @@ export default RouteTemplate(
             <PluginOutlet
               @name="topic-navigation"
               @connectorTagName="div"
-              @outletArgs={{hash
+              @outletArgs={{lazyHash
                 topic=@controller.model
                 renderTimeline=info.renderTimeline
                 topicProgressExpanded=info.topicProgressExpanded
               }}
             />
+
+            {{#if @controller.model.has_localized_content}}
+              <TopicLocalizedContentToggle @topic={{@controller.model}} />
+            {{/if}}
+
             {{#if info.renderTimeline}}
               <TopicTimeline
                 @info={{info}}
@@ -378,7 +389,7 @@ export default RouteTemplate(
                   <PluginOutlet
                     @name="before-topic-progress"
                     @connectorTagName="div"
-                    @outletArgs={{hash
+                    @outletArgs={{lazyHash
                       model=@controller.model
                       jumpToPost=@controller.jumpToPost
                     }}
@@ -408,7 +419,7 @@ export default RouteTemplate(
             <PluginOutlet
               @name="topic-navigation-bottom"
               @connectorTagName="div"
-              @outletArgs={{hash model=@controller.model}}
+              @outletArgs={{lazyHash model=@controller.model}}
             />
           </TopicNavigation>
 
@@ -419,76 +430,152 @@ export default RouteTemplate(
               data-topic-id={{@controller.model.id}}
             >
 
-              <div class="posts-wrapper">
-                <ConditionalLoadingSpinner
-                  @condition={{@controller.model.postStream.loadingAbove}}
-                />
+              {{#if @controller.site.useGlimmerPostStream}}
+                <div class="posts-wrapper">
+                  <span>
+                    <PluginOutlet
+                      @name="topic-above-posts"
+                      @connectorTagName="div"
+                      @outletArgs={{lazyHash model=@controller.model}}
+                    />
+                  </span>
 
-                <span>
-                  <PluginOutlet
-                    @name="topic-above-posts"
-                    @connectorTagName="div"
-                    @outletArgs={{hash model=@controller.model}}
+                  {{#unless @controller.model.postStream.loadingFilter}}
+                    <PostStream
+                      @postStream={{@controller.model.postStream}}
+                      @posts={{@controller.postsToRender}}
+                      @canCreatePost={{@controller.model.details.can_create_post}}
+                      @multiSelect={{@controller.multiSelect}}
+                      @selectedPostsCount={{@controller.selectedPostsCount}}
+                      @filteredPostsCount={{@controller.model.postStream.filteredPostsCount}}
+                      @selectedQuery={{@controller.selectedQuery}}
+                      @gaps={{@controller.model.postStream.gaps}}
+                      @showReadIndicator={{@controller.model.show_read_indicator}}
+                      @streamFilters={{@controller.model.postStream.streamFilters}}
+                      @lastReadPostNumber={{@controller.userLastReadPostNumber}}
+                      @highestPostNumber={{@controller.highestPostNumber}}
+                      @showFlags={{@controller.showPostFlags}}
+                      @editPost={{@controller.editPost}}
+                      @showHistory={{routeAction "showHistory"}}
+                      @showLogin={{routeAction "showLogin"}}
+                      @showRawEmail={{routeAction "showRawEmail"}}
+                      @deletePost={{@controller.deletePost}}
+                      @permanentlyDeletePost={{@controller.permanentlyDeletePost}}
+                      @recoverPost={{@controller.recoverPost}}
+                      @expandHidden={{@controller.expandHidden}}
+                      @toggleBookmark={{@controller.toggleBookmark}}
+                      @togglePostType={{@controller.togglePostType}}
+                      @rebakePost={{@controller.rebakePost}}
+                      @changePostOwner={{@controller.changePostOwner}}
+                      @grantBadge={{@controller.grantBadge}}
+                      @changeNotice={{@controller.changeNotice}}
+                      @lockPost={{@controller.lockPost}}
+                      @unlockPost={{@controller.unlockPost}}
+                      @unhidePost={{@controller.unhidePost}}
+                      @replyToPost={{@controller.replyToPost}}
+                      @toggleWiki={{@controller.toggleWiki}}
+                      @showTopReplies={{@controller.showTopReplies}}
+                      @cancelFilter={{@controller.cancelFilter}}
+                      @removeAllowedUser={{@controller.removeAllowedUser}}
+                      @removeAllowedGroup={{@controller.removeAllowedGroup}}
+                      @topVisibleChanged={{@controller.topVisibleChanged}}
+                      @currentPostChanged={{@controller.currentPostChanged}}
+                      @currentPostScrolled={{@controller.currentPostScrolled}}
+                      @bottomVisibleChanged={{@controller.bottomVisibleChanged}}
+                      @togglePostSelection={{@controller.togglePostSelection}}
+                      @selectReplies={{@controller.selectReplies}}
+                      @selectBelow={{@controller.selectBelow}}
+                      @fillGapBefore={{@controller.fillGapBefore}}
+                      @fillGapAfter={{@controller.fillGapAfter}}
+                      @showInvite={{routeAction "showInvite"}}
+                      @showPagePublish={{routeAction "showPagePublish"}}
+                      @filteringRepliesToPostNumber={{@controller.replies_to_post_number}}
+                      @updateTopicPageQueryParams={{@controller.updateTopicPageQueryParams}}
+                      @postSelected={{@controller.postSelected}}
+                      @topicPageQueryParams={{getProperties
+                        @controller
+                        @controller.queryParams
+                      }}
+                      @topic={{@controller.model}}
+                    />
+                  {{/unless}}
+                </div>
+              {{else}}
+                <div class="posts-wrapper">
+                  <ConditionalLoadingSpinner
+                    @condition={{@controller.model.postStream.loadingAbove}}
                   />
-                </span>
 
-                {{#unless @controller.model.postStream.loadingFilter}}
-                  <ScrollingPostStream
-                    @posts={{@controller.postsToRender}}
-                    @canCreatePost={{@controller.model.details.can_create_post}}
-                    @multiSelect={{@controller.multiSelect}}
-                    @selectedPostsCount={{@controller.selectedPostsCount}}
-                    @filteredPostsCount={{@controller.model.postStream.filteredPostsCount}}
-                    @selectedQuery={{@controller.selectedQuery}}
-                    @gaps={{@controller.model.postStream.gaps}}
-                    @showReadIndicator={{@controller.model.show_read_indicator}}
-                    @streamFilters={{@controller.model.postStream.streamFilters}}
-                    @lastReadPostNumber={{@controller.userLastReadPostNumber}}
-                    @highestPostNumber={{@controller.highestPostNumber}}
-                    @showFlags={{@controller.showPostFlags}}
-                    @editPost={{@controller.editPost}}
-                    @showHistory={{routeAction "showHistory"}}
-                    @showLogin={{routeAction "showLogin"}}
-                    @showRawEmail={{routeAction "showRawEmail"}}
-                    @deletePost={{@controller.deletePost}}
-                    @permanentlyDeletePost={{@controller.permanentlyDeletePost}}
-                    @recoverPost={{@controller.recoverPost}}
-                    @expandHidden={{@controller.expandHidden}}
-                    @toggleBookmark={{@controller.toggleBookmark}}
-                    @togglePostType={{@controller.togglePostType}}
-                    @rebakePost={{@controller.rebakePost}}
-                    @changePostOwner={{@controller.changePostOwner}}
-                    @grantBadge={{@controller.grantBadge}}
-                    @changeNotice={{@controller.changeNotice}}
-                    @lockPost={{@controller.lockPost}}
-                    @unlockPost={{@controller.unlockPost}}
-                    @unhidePost={{@controller.unhidePost}}
-                    @replyToPost={{@controller.replyToPost}}
-                    @toggleWiki={{@controller.toggleWiki}}
-                    @showTopReplies={{@controller.showTopReplies}}
-                    @cancelFilter={{@controller.cancelFilter}}
-                    @removeAllowedUser={{@controller.removeAllowedUser}}
-                    @removeAllowedGroup={{@controller.removeAllowedGroup}}
-                    @topVisibleChanged={{@controller.topVisibleChanged}}
-                    @currentPostChanged={{@controller.currentPostChanged}}
-                    @currentPostScrolled={{@controller.currentPostScrolled}}
-                    @bottomVisibleChanged={{@controller.bottomVisibleChanged}}
-                    @togglePostSelection={{@controller.togglePostSelection}}
-                    @selectReplies={{@controller.selectReplies}}
-                    @selectBelow={{@controller.selectBelow}}
-                    @fillGapBefore={{@controller.fillGapBefore}}
-                    @fillGapAfter={{@controller.fillGapAfter}}
-                    @showInvite={{routeAction "showInvite"}}
-                    @showPagePublish={{routeAction "showPagePublish"}}
-                    @filteringRepliesToPostNumber={{@controller.replies_to_post_number}}
-                    @updateTopicPageQueryParams={{@controller.updateTopicPageQueryParams}}
+                  <span>
+                    <PluginOutlet
+                      @name="topic-above-posts"
+                      @connectorTagName="div"
+                      @outletArgs={{lazyHash model=@controller.model}}
+                    />
+                  </span>
+
+                  {{#unless @controller.model.postStream.loadingFilter}}
+                    <ScrollingPostStream
+                      @posts={{@controller.postsToRender}}
+                      @canCreatePost={{@controller.model.details.can_create_post}}
+                      @multiSelect={{@controller.multiSelect}}
+                      @selectedPostsCount={{@controller.selectedPostsCount}}
+                      @filteredPostsCount={{@controller.model.postStream.filteredPostsCount}}
+                      @selectedQuery={{@controller.selectedQuery}}
+                      @gaps={{@controller.model.postStream.gaps}}
+                      @showReadIndicator={{@controller.model.show_read_indicator}}
+                      @streamFilters={{@controller.model.postStream.streamFilters}}
+                      @lastReadPostNumber={{@controller.userLastReadPostNumber}}
+                      @highestPostNumber={{@controller.highestPostNumber}}
+                      @showFlags={{@controller.showPostFlags}}
+                      @editPost={{@controller.editPost}}
+                      @showHistory={{routeAction "showHistory"}}
+                      @showLogin={{routeAction "showLogin"}}
+                      @showRawEmail={{routeAction "showRawEmail"}}
+                      @deletePost={{@controller.deletePost}}
+                      @permanentlyDeletePost={{@controller.permanentlyDeletePost}}
+                      @recoverPost={{@controller.recoverPost}}
+                      @expandHidden={{@controller.expandHidden}}
+                      @toggleBookmark={{@controller.toggleBookmark}}
+                      @togglePostType={{@controller.togglePostType}}
+                      @rebakePost={{@controller.rebakePost}}
+                      @changePostOwner={{@controller.changePostOwner}}
+                      @grantBadge={{@controller.grantBadge}}
+                      @changeNotice={{@controller.changeNotice}}
+                      @lockPost={{@controller.lockPost}}
+                      @unlockPost={{@controller.unlockPost}}
+                      @unhidePost={{@controller.unhidePost}}
+                      @replyToPost={{@controller.replyToPost}}
+                      @toggleWiki={{@controller.toggleWiki}}
+                      @showTopReplies={{@controller.showTopReplies}}
+                      @cancelFilter={{@controller.cancelFilter}}
+                      @removeAllowedUser={{@controller.removeAllowedUser}}
+                      @removeAllowedGroup={{@controller.removeAllowedGroup}}
+                      @topVisibleChanged={{@controller.topVisibleChanged}}
+                      @currentPostChanged={{@controller.currentPostChanged}}
+                      @currentPostScrolled={{@controller.currentPostScrolled}}
+                      @bottomVisibleChanged={{@controller.bottomVisibleChanged}}
+                      @togglePostSelection={{@controller.togglePostSelection}}
+                      @selectReplies={{@controller.selectReplies}}
+                      @selectBelow={{@controller.selectBelow}}
+                      @fillGapBefore={{@controller.fillGapBefore}}
+                      @fillGapAfter={{@controller.fillGapAfter}}
+                      @showInvite={{routeAction "showInvite"}}
+                      @showPagePublish={{routeAction "showPagePublish"}}
+                      @filteringRepliesToPostNumber={{@controller.replies_to_post_number}}
+                      @updateTopicPageQueryParams={{@controller.updateTopicPageQueryParams}}
+                      @topicPageQueryParams={{getProperties
+                        @controller
+                        @controller.queryParams
+                      }}
+                    />
+                  {{/unless}}
+
+                  <ConditionalLoadingSpinner
+                    @condition={{@controller.model.postStream.loadingBelow}}
                   />
-                {{/unless}}
-
-                <ConditionalLoadingSpinner
-                  @condition={{@controller.model.postStream.loadingBelow}}
-                />
-              </div>
+                </div>
+              {{/if}}
               <div id="topic-bottom"></div>
 
               <ConditionalLoadingSpinner
@@ -527,7 +614,7 @@ export default RouteTemplate(
                           <div class="reviewable-actions">
                             <PluginOutlet
                               @name="topic-additional-reviewable-actions"
-                              @outletArgs={{hash pending=pending}}
+                              @outletArgs={{lazyHash pending=pending}}
                             />
                             <DButton
                               @label="review.delete"
@@ -616,7 +703,7 @@ export default RouteTemplate(
               <PluginOutlet
                 @name="topic-area-bottom"
                 @connectorTagName="div"
-                @outletArgs={{hash model=@controller.model}}
+                @outletArgs={{lazyHash model=@controller.model}}
               />
             </section>
           </div>
@@ -632,7 +719,7 @@ export default RouteTemplate(
                 <PluginOutlet
                   @name="topic-above-footer-buttons"
                   @connectorTagName="div"
-                  @outletArgs={{hash model=@controller.model}}
+                  @outletArgs={{lazyHash model=@controller.model}}
                 />
               </span>
 
@@ -671,14 +758,14 @@ export default RouteTemplate(
             <PluginOutlet
               @name="topic-above-suggested"
               @connectorTagName="div"
-              @outletArgs={{hash model=@controller.model}}
+              @outletArgs={{lazyHash model=@controller.model}}
             />
           </span>
 
           <MoreTopics @topic={{@controller.model}} />
           <PluginOutlet
             @name="topic-below-suggested"
-            @outletArgs={{hash model=@controller.model}}
+            @outletArgs={{lazyHash model=@controller.model}}
           />
         {{/if}}
       {{else}}

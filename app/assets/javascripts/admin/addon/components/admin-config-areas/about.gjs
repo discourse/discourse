@@ -1,12 +1,16 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import AdminConfigAreaCard from "admin/components/admin-config-area-card";
 import AdminConfigAreasAboutContactInformation from "admin/components/admin-config-area-cards/about/contact-information";
+import AdminConfigAreasAboutExtraGroups from "admin/components/admin-config-area-cards/about/extra-groups";
 import AdminConfigAreasAboutGeneralSettings from "admin/components/admin-config-area-cards/about/general-settings";
 import AdminConfigAreasAboutYourOrganization from "admin/components/admin-config-area-cards/about/your-organization";
 
 export default class AdminConfigAreasAbout extends Component {
+  @service siteSettings;
+
   @tracked saving = false;
 
   get generalSettings() {
@@ -36,6 +40,23 @@ export default class AdminConfigAreasAbout extends Component {
       companyName: this.#lookupSettingFromData("company_name"),
       governingLaw: this.#lookupSettingFromData("governing_law"),
       cityForDisputes: this.#lookupSettingFromData("city_for_disputes"),
+    };
+  }
+
+  get extraGroups() {
+    return {
+      aboutPageExtraGroups: this.#lookupSettingFromData(
+        "about_page_extra_groups"
+      ),
+      aboutPageExtraGroupsInitialMembers: this.#lookupSettingFromData(
+        "about_page_extra_groups_initial_members"
+      ),
+      aboutPageExtraGroupsOrder: this.#lookupSettingFromData(
+        "about_page_extra_groups_order"
+      ),
+      aboutPageExtraGroupsShowDescription: this.#lookupSettingFromData(
+        "about_page_extra_groups_show_description"
+      ),
     };
   }
 
@@ -86,6 +107,20 @@ export default class AdminConfigAreasAbout extends Component {
           <:content>
             <AdminConfigAreasAboutYourOrganization
               @yourOrganization={{this.yourOrganization}}
+              @setGlobalSavingStatus={{this.setSavingStatus}}
+              @globalSavingStatus={{this.saving}}
+            />
+          </:content>
+        </AdminConfigAreaCard>
+        <AdminConfigAreaCard
+          @heading="admin.config_areas.about.extra_groups.heading"
+          @description="admin.config_areas.about.extra_groups.description"
+          @collapsable={{true}}
+          class="admin-config-area-about__extra-groups-section"
+        >
+          <:content>
+            <AdminConfigAreasAboutExtraGroups
+              @extraGroups={{this.extraGroups}}
               @setGlobalSavingStatus={{this.setSavingStatus}}
               @globalSavingStatus={{this.saving}}
             />

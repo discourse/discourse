@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { htmlSafe } from "@ember/template";
 import icon from "discourse/helpers/d-icon";
@@ -34,6 +35,7 @@ export default class FormTemplateFieldMultiSelect extends Component {
         required={{if @validations.required "required" ""}}
         multiple="multiple"
         class="form-template-field__multi-select"
+        {{on "input" @onChange}}
       >
         {{#if @attributes.none_label}}
           <option

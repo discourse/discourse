@@ -11,6 +11,7 @@ export default RouteTemplate(
     <Layout
       @model={{@controller.model}}
       @createTopicDisabled={{@controller.createTopicDisabled}}
+      @toggleTagInfo={{@controller.toggleTagInfo}}
     >
       <:navigation>
         <Navigation

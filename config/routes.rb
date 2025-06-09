@@ -102,6 +102,7 @@ Discourse::Application.routes.draw do
     namespace :admin, constraints: StaffConstraint.new do
       get "" => "admin#index"
       get "search" => "search#index"
+      get "schema/:setting_name" => "admin#index"
 
       get "plugins" => "plugins#index"
       get "plugins/:plugin_id" => "plugins#show"
@@ -175,6 +176,7 @@ Discourse::Application.routes.draw do
           :as => :user_show
       get "users/:id/:username/badges" => "users#show"
       get "users/:id/:username/tl3_requirements" => "users#show"
+      get "users/settings" => "site_settings#index"
 
       post "users/sync_sso" => "users#sync_sso", :constraints => AdminConstraint.new
 
@@ -248,6 +250,7 @@ Discourse::Application.routes.draw do
           get "translations/:locale" => "themes#get_translations"
           put "setting" => "themes#update_single_setting"
           get "objects_setting_metadata/:setting_name" => "themes#objects_setting_metadata"
+          put "change-colors" => "themes#change_colors"
         end
 
         collection do
@@ -268,6 +271,7 @@ Discourse::Application.routes.draw do
         get "components/:id" => "themes#index"
         get "components/:id/:target/:field_name/edit" => "themes#index"
         get "themes/:id/export" => "themes#export"
+        get "themes/:id/colors" => "themes#index"
         get "themes/:id/schema/:setting_name" => "themes#schema"
         get "components/:id/schema/:setting_name" => "themes#schema"
 
@@ -395,11 +399,19 @@ Discourse::Application.routes.draw do
         end
       end
 
+      resources :groups, only: %i[index], constants: AdminConstraint.new do
+        collection { get "settings" => "site_settings#index" }
+      end
+
       get "search/all" => "search#index"
 
       namespace :config, constraints: StaffConstraint.new do
         resources :site_settings, only: %i[index]
         get "analytics-and-seo" => "site_settings#index"
+        get "content" => "site_settings#index"
+        get "content/sharing" => "site_settings#index"
+        get "content/posts-and-topics" => "site_settings#index"
+        get "content/stats-and-thresholds" => "site_settings#index"
         get "developer" => "site_settings#index"
         get "files" => "site_settings#index"
         get "interface" => "site_settings#index"
@@ -410,7 +422,6 @@ Discourse::Application.routes.draw do
         get "notifications" => "site_settings#index"
         get "rate-limits" => "site_settings#index"
         get "onebox" => "site_settings#index"
-        get "other" => "site_settings#index"
         get "search" => "site_settings#index"
         get "security" => "site_settings#index"
         get "site-admin" => "site_settings#index"
@@ -420,10 +431,12 @@ Discourse::Application.routes.draw do
         get "experimental" => "site_settings#index"
         get "trust-levels" => "site_settings#index"
         get "group-permissions" => "site_settings#index"
-        get "branding" => "branding#index"
-        put "branding/logo" => "branding#logo"
-        put "branding/fonts" => "branding#fonts"
+        get "/logo" => "logo#index"
+        get "/fonts" => "fonts#index"
+        put "/logo" => "logo#update"
+        put "/fonts" => "fonts#update"
         get "colors/:id" => "color_palettes#show"
+        get "colors" => "color_palettes#index"
 
         resources :flags, only: %i[index new create update destroy] do
           put "toggle"
@@ -515,6 +528,13 @@ Discourse::Application.routes.draw do
 
     resources :reviewable_claimed_topics, only: %i[create destroy]
 
+    resources :reviewables, only: [] do
+      resources :reviewable_notes,
+                only: %i[create destroy],
+                path: "notes",
+                constraints: StaffConstraint.new
+    end
+
     get "session/sso" => "session#sso"
     get "session/sso_login" => "session#sso_login"
     get "session/sso_provider" => "session#sso_provider"
@@ -540,6 +560,7 @@ Discourse::Application.routes.draw do
     post "login" => "static#enter"
 
     get "login" => "static#show", :id => "login"
+    get "login-required" => "static#show", :id => "login"
     get "login-preferences" => "static#show", :id => "login"
     get "signup" => "static#show", :id => "signup"
     get "password-reset" => "static#show", :id => "password_reset"
@@ -1136,18 +1157,9 @@ Discourse::Application.routes.draw do
 
     %w[groups g].each do |root_path|
       resources :groups,
-                only: %i[index show new edit update],
+                only: %i[index new edit update],
                 id: RouteFormat.username,
                 path: root_path do
-        get "posts.rss" => "groups#posts_feed", :format => :rss
-        get "mentions.rss" => "groups#mentions_feed", :format => :rss
-
-        get "members"
-        get "posts"
-        get "mentions"
-        get "mentionable"
-        get "messageable"
-        get "logs" => "groups#histories"
         post "test_email_settings"
 
         collection do
@@ -1157,34 +1169,50 @@ Discourse::Application.routes.draw do
         end
 
         member do
-          %w[
-            activity
-            activity/:filter
-            requests
-            messages
-            messages/inbox
-            messages/archive
-            manage
-            manage/profile
-            manage/members
-            manage/membership
-            manage/interaction
-            manage/email
-            manage/categories
-            manage/tags
-            manage/logs
-          ].each { |path| get path => "groups#show" }
-
-          get "permissions" => "groups#permissions"
-          put "members" => "groups#add_members"
           put "owners" => "groups#add_owners"
           put "join" => "groups#join"
           delete "members" => "groups#remove_member"
           delete "leave" => "groups#leave"
-          post "request_membership" => "groups#request_membership"
           put "handle_membership_request" => "groups#handle_membership_request"
-          post "notifications" => "groups#set_notifications"
+          put "members" => "groups#add_members"
         end
+      end
+
+      get "#{root_path}/by-id/:id" => "groups#show"
+
+      scope path: "#{root_path}/:name", constraints: { name: RouteFormat.username } do
+        get "/" => "groups#show"
+        get "activity" => "groups#show"
+        get "activity/:filter" => "groups#show"
+        get "requests" => "groups#show"
+        get "messages" => "groups#show"
+        get "messages/inbox" => "groups#show"
+        get "messages/archive" => "groups#show"
+        get "manage" => "groups#show"
+        get "manage/profile" => "groups#show"
+        get "manage/members" => "groups#show"
+        get "manage/membership" => "groups#show"
+        get "manage/interaction" => "groups#show"
+        get "manage/email" => "groups#show"
+        get "manage/categories" => "groups#show"
+        get "manage/tags" => "groups#show"
+        get "manage/logs" => "groups#show"
+        get "permissions" => "groups#permissions"
+
+        post "request_membership" => "groups#request_membership"
+
+        post "notifications" => "groups#set_notifications",
+             :as => :"#{root_path}_group_set_notifications"
+
+        get "posts.rss" => "groups#posts_feed", :format => :rss
+        get "mentions.rss" => "groups#mentions_feed", :format => :rss
+
+        get "members" => "groups#members"
+        get "posts" => "groups#posts"
+        get "mentions" => "groups#mentions"
+        get "mentionable" => "groups#mentionable"
+        get "messageable" => "groups#messageable"
+        get "logs" => "groups#histories"
       end
     end
 
@@ -1219,6 +1247,13 @@ Discourse::Application.routes.draw do
         put "merge_posts"
       end
     end
+
+    get "/post_localizations/:id" => "post_localizations#show"
+    post "/post_localizations/create_or_update", to: "post_localizations#create_or_update"
+    delete "/post_localizations/destroy", to: "post_localizations#destroy"
+
+    post "topic_localizations/create_or_update", to: "topic_localizations#create_or_update"
+    delete "topic_localizations/destroy", to: "topic_localizations#destroy"
 
     resources :bookmarks, only: %i[create destroy update] do
       put "toggle_pin"
@@ -1569,14 +1604,6 @@ Discourse::Application.routes.draw do
     resources :drafts, only: %i[index create show destroy]
 
     get "/service-worker.js" => "static#service_worker_asset", :format => :js
-    if service_worker_asset = Rails.application.assets_manifest.assets["service-worker.js"]
-      # https://developers.google.com/web/fundamentals/codelabs/debugging-service-workers/
-      # Normally the browser will wait until a user closes all tabs that contain the
-      # current site before updating to a new Service Worker.
-      # Support the old Service Worker path to avoid routing error filling up the
-      # logs.
-      get service_worker_asset => "static#service_worker_asset", :format => :js
-    end
 
     get "cdn_asset/:site/*path" => "static#cdn_asset",
         :format => false,
@@ -1692,11 +1719,13 @@ Discourse::Application.routes.draw do
          constraints: HomePageConstraint.new("finish_installation"),
          as: "installation_redirect"
 
-    root to: "custom_homepage#index",
+    root to: "home_page#custom",
          constraints: HomePageConstraint.new("custom"),
-         as: "custom_index"
+         as: "home_page_custom"
 
-    get "/custom" => "custom_homepage#index"
+    root to: "home_page#blank", constraints: HomePageConstraint.new("blank"), as: "home_page_blank"
+
+    get "/custom" => "home_page#custom"
 
     get "/user-api-key/new" => "user_api_keys#new"
     post "/user-api-key" => "user_api_keys#create"
@@ -1746,8 +1775,6 @@ Discourse::Application.routes.draw do
 
     post "/pageview" => "pageview#index"
 
-    get "*url", to: "permalinks#show", constraints: PermalinkConstraint.new
-
     get "/form-templates/:id" => "form_templates#show"
     get "/form-templates" => "form_templates#index"
 
@@ -1759,5 +1786,8 @@ Discourse::Application.routes.draw do
       get "/test_net_http_timeouts" => "test_requests#test_net_http_timeouts"
       get "/test_net_http_headers" => "test_requests#test_net_http_headers"
     end
+
+    # This catch-all route should always be last
+    get "*url", to: "permalinks#show", constraints: PermalinkConstraint.new
   end
 end

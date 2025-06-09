@@ -10,18 +10,20 @@ import CountI18n from "discourse/components/count-i18n";
 import DiscourseLinkedText from "discourse/components/discourse-linked-text";
 import DiscoveryTopicsList from "discourse/components/discovery-topics-list";
 import FooterMessage from "discourse/components/footer-message";
+import LoadMore from "discourse/components/load-more";
 import NewListHeaderControlsWrapper from "discourse/components/new-list-header-controls-wrapper";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TopPeriodButtons from "discourse/components/top-period-buttons";
 import TopicDismissButtons from "discourse/components/topic-dismiss-buttons";
-import TopicList from "discourse/components/topic-list";
 import List from "discourse/components/topic-list/list";
 import basePath from "discourse/helpers/base-path";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import htmlSafe from "discourse/helpers/html-safe";
+import lazyHash from "discourse/helpers/lazy-hash";
 import loadingSpinner from "discourse/helpers/loading-spinner";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { filterTypeForMode } from "discourse/lib/filter-mode";
+import { applyBehaviorTransformer } from "discourse/lib/transformer";
 import { userPath } from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
 import PeriodChooser from "select-kit/components/period-chooser";
@@ -29,6 +31,7 @@ import PeriodChooser from "select-kit/components/period-chooser";
 export default class DiscoveryTopics extends Component {
   @service router;
   @service composer;
+  @service documentTitle;
   @service modal;
   @service currentUser;
   @service topicTrackingState;
@@ -199,6 +202,37 @@ export default class DiscoveryTopics extends Component {
     return this.args.tag || this.args.category;
   }
 
+  @action
+  loadMore() {
+    applyBehaviorTransformer(
+      "discovery-topic-list-load-more",
+      () => {
+        this.documentTitle.updateContextCount(0);
+        return this.args.model
+          .loadMore()
+          .then(({ moreTopicsUrl, newTopics } = {}) => {
+            if (
+              newTopics &&
+              newTopics.length &&
+              this.bulkSelectHelper?.bulkSelectEnabled
+            ) {
+              this.bulkSelectHelper.addTopics(newTopics);
+            }
+
+            // If after loading more topics and there's another page of topics,
+            // we continue loading when there's still space in the viewport for more topics
+            if (
+              moreTopicsUrl &&
+              window.innerHeight >= document.documentElement.scrollHeight
+            ) {
+              this.loadMore();
+            }
+          });
+      },
+      { model: this.args.model }
+    );
+  }
+
   <template>
     {{#if @model.canLoadMore}}
       {{hideApplicationFooter}}
@@ -209,27 +243,15 @@ export default class DiscoveryTopics extends Component {
     {{/if}}
 
     {{#if @model.sharedDrafts}}
-      {{#if this.site.useGlimmerTopicList}}
-        <List
-          @listTitle="shared_drafts.title"
-          @top={{this.top}}
-          @hideCategory="true"
-          @category={{@category}}
-          @topics={{@model.sharedDrafts}}
-          @discoveryList={{true}}
-          class="shared-drafts"
-        />
-      {{else}}
-        <TopicList
-          @listTitle="shared_drafts.title"
-          @top={{this.top}}
-          @hideCategory="true"
-          @category={{@category}}
-          @topics={{@model.sharedDrafts}}
-          @discoveryList={{true}}
-          class="shared-drafts"
-        />
-      {{/if}}
+      <List
+        @listTitle="shared_drafts.title"
+        @top={{this.top}}
+        @hideCategory="true"
+        @category={{@category}}
+        @topics={{@model.sharedDrafts}}
+        @discoveryList={{true}}
+        class="shared-drafts"
+      />
     {{/if}}
 
     <DiscoveryTopicsList
@@ -285,69 +307,43 @@ export default class DiscoveryTopics extends Component {
         <PluginOutlet
           @name="before-topic-list"
           @connectorTagName="div"
-          @outletArgs={{hash category=@category tag=@tag}}
+          @outletArgs={{lazyHash category=@category tag=@tag}}
         />
       </span>
 
       {{#if this.hasTopics}}
-        {{#if this.site.useGlimmerTopicList}}
-          <List
-            @highlightLastVisited={{true}}
-            @top={{this.top}}
-            @hot={{this.hot}}
-            @showTopicPostBadges={{this.showTopicPostBadges}}
-            @showPosters={{true}}
-            @canBulkSelect={{@canBulkSelect}}
-            @bulkSelectHelper={{@bulkSelectHelper}}
-            @changeSort={{@changeSort}}
-            @hideCategory={{@model.hideCategory}}
-            @order={{this.order}}
-            @ascending={{this.ascending}}
-            @expandGloballyPinned={{this.expandGloballyPinned}}
-            @expandAllPinned={{this.expandAllPinned}}
-            @category={{@category}}
-            @topics={{@model.topics}}
-            @discoveryList={{true}}
-            @focusLastVisitedTopic={{true}}
-            @showTopicsAndRepliesToggle={{this.showTopicsAndRepliesToggle}}
-            @newListSubset={{@model.params.subset}}
-            @changeNewListSubset={{@changeNewListSubset}}
-            @newRepliesCount={{this.newRepliesCount}}
-            @newTopicsCount={{this.newTopicsCount}}
-          />
-        {{else}}
-          <TopicList
-            @highlightLastVisited={{true}}
-            @top={{this.top}}
-            @hot={{this.hot}}
-            @showTopicPostBadges={{this.showTopicPostBadges}}
-            @showPosters={{true}}
-            @canBulkSelect={{@canBulkSelect}}
-            @bulkSelectHelper={{@bulkSelectHelper}}
-            @changeSort={{@changeSort}}
-            @hideCategory={{@model.hideCategory}}
-            @order={{this.order}}
-            @ascending={{this.ascending}}
-            @expandGloballyPinned={{this.expandGloballyPinned}}
-            @expandAllPinned={{this.expandAllPinned}}
-            @category={{@category}}
-            @topics={{@model.topics}}
-            @discoveryList={{true}}
-            @focusLastVisitedTopic={{true}}
-            @showTopicsAndRepliesToggle={{this.showTopicsAndRepliesToggle}}
-            @newListSubset={{@model.params.subset}}
-            @changeNewListSubset={{@changeNewListSubset}}
-            @newRepliesCount={{this.newRepliesCount}}
-            @newTopicsCount={{this.newTopicsCount}}
-          />
-        {{/if}}
+        <List
+          @highlightLastVisited={{true}}
+          @top={{this.top}}
+          @hot={{this.hot}}
+          @showTopicPostBadges={{this.showTopicPostBadges}}
+          @showPosters={{true}}
+          @canBulkSelect={{@canBulkSelect}}
+          @bulkSelectHelper={{@bulkSelectHelper}}
+          @changeSort={{@changeSort}}
+          @hideCategory={{@model.hideCategory}}
+          @order={{this.order}}
+          @ascending={{this.ascending}}
+          @expandGloballyPinned={{this.expandGloballyPinned}}
+          @expandAllPinned={{this.expandAllPinned}}
+          @category={{@category}}
+          @topics={{@model.topics}}
+          @discoveryList={{true}}
+          @focusLastVisitedTopic={{true}}
+          @showTopicsAndRepliesToggle={{this.showTopicsAndRepliesToggle}}
+          @newListSubset={{@model.params.subset}}
+          @changeNewListSubset={{@changeNewListSubset}}
+          @newRepliesCount={{this.newRepliesCount}}
+          @newTopicsCount={{this.newTopicsCount}}
+        />
+        <LoadMore @action={{this.loadMore}} />
       {{/if}}
 
       <span class="after-topic-list-plugin-outlet-wrapper">
         <PluginOutlet
           @name="after-topic-list"
           @connectorTagName="div"
-          @outletArgs={{hash
+          @outletArgs={{lazyHash
             category=@category
             tag=@tag
             loadingMore=@model.loadingMore
@@ -362,7 +358,7 @@ export default class DiscoveryTopics extends Component {
       {{#if this.allLoaded}}
         <PluginOutlet
           @name="topic-list-bottom"
-          @outletArgs={{hash
+          @outletArgs={{lazyHash
             category=@category
             tag=@tag
             allLoaded=this.allLoaded

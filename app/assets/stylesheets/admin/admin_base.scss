@@ -1,16 +1,8 @@
+@use "lib/viewport";
+
 // Styles for /admin section
 
 $mobile-breakpoint: 700px;
-
-:root {
-  --space-0: 0.125rem; // 2px
-  --space-1: 0.25rem; // 4px
-  --space-2: calc(0.25rem * 2);
-  --space-3: calc(0.25rem * 3);
-  --space-4: calc(0.25rem * 4);
-  --space-5: calc(0.25rem * 5);
-  --space-6: calc(0.25rem * 6);
-}
 
 // Common admin styles
 .admin-main-nav {
@@ -21,7 +13,7 @@ $mobile-breakpoint: 700px;
   height: 100%;
   background: var(--d-content-background);
 
-  @include breakpoint(tablet) {
+  @include viewport.until(md) {
     width: calc(100% + 10px);
     margin-left: -10px;
     padding: 0 0 0 10px;
@@ -34,7 +26,7 @@ $mobile-breakpoint: 700px;
     flex: 1 0 auto;
     margin-top: 0;
 
-    @include breakpoint(tablet) {
+    @include viewport.until(md) {
       white-space: nowrap;
       flex-wrap: nowrap;
       overflow-x: scroll;
@@ -57,7 +49,7 @@ $mobile-breakpoint: 700px;
     }
   }
 
-  @include breakpoint(tablet) {
+  @include viewport.until(md) {
     // Fade-out for horizontal scroll nav
     &::before {
       content: "";
@@ -67,8 +59,8 @@ $mobile-breakpoint: 700px;
       height: 100%;
       background: linear-gradient(
         to right,
-        rgba(var(--secondary-rgb), 1),
-        rgba(var(--secondary-rgb), 0)
+        rgb(var(--secondary-rgb), 1),
+        rgb(var(--secondary-rgb), 0)
       );
     }
 
@@ -80,8 +72,8 @@ $mobile-breakpoint: 700px;
       height: 100%;
       background: linear-gradient(
         to right,
-        rgba(var(--secondary-rgb), 0),
-        rgba(var(--secondary-rgb), 1)
+        rgb(var(--secondary-rgb), 0),
+        rgb(var(--secondary-rgb), 1)
       );
     }
   }
@@ -292,7 +284,7 @@ $mobile-breakpoint: 700px;
       font-weight: normal;
       font-size: var(--font-0);
 
-      @include breakpoint(mobile-extra-large) {
+      @include viewport.until(sm) {
         word-wrap: break-word;
       }
     }
@@ -311,7 +303,7 @@ $mobile-breakpoint: 700px;
       position: relative;
       color: var(--primary-medium);
 
-      @include breakpoint(mobile-extra-large) {
+      @include viewport.until(sm) {
         word-wrap: break-word;
         max-width: 80vw;
         margin-right: 3em;
@@ -326,8 +318,8 @@ $mobile-breakpoint: 700px;
         height: $gradientHeight;
         background: linear-gradient(
           to top,
-          rgba(var(--secondary-rgb), 1),
-          rgba(var(--secondary-rgb), 0.15)
+          rgb(var(--secondary-rgb), 1),
+          rgb(var(--secondary-rgb), 0.15)
         );
       }
     }
@@ -350,7 +342,7 @@ $mobile-breakpoint: 700px;
       margin-bottom: 1em;
     }
 
-    @include breakpoint(mobile-extra-large) {
+    @include viewport.until(sm) {
       .title {
         word-wrap: break-word;
       }
@@ -665,7 +657,7 @@ $mobile-breakpoint: 700px;
     padding: 0;
     height: 100%;
 
-    @include breakpoint(tablet) {
+    @include viewport.until(md) {
       width: calc(100% + 10px);
       padding-left: 10px;
       margin-left: -10px;
@@ -681,8 +673,8 @@ $mobile-breakpoint: 700px;
       height: calc(100% - 5px);
       background: linear-gradient(
         to right,
-        rgba(var(--primary-low-rgb), 1),
-        rgba(var(--primary-low-rgb), 0)
+        rgb(var(--primary-low-rgb), 1),
+        rgb(var(--primary-low-rgb), 0)
       );
     }
 
@@ -694,8 +686,8 @@ $mobile-breakpoint: 700px;
       height: calc(100% - 5px);
       background: linear-gradient(
         to right,
-        rgba(var(--primary-low-rgb), 0),
-        rgba(var(--primary-low-rgb), 1)
+        rgb(var(--primary-low-rgb), 0),
+        rgb(var(--primary-low-rgb), 1)
       );
     }
   }
@@ -708,7 +700,7 @@ $mobile-breakpoint: 700px;
     white-space: nowrap;
     overflow-x: auto;
 
-    @include breakpoint(tablet) {
+    @include viewport.until(md) {
       margin-left: -10px;
       overflow-x: scroll;
     }
@@ -740,12 +732,12 @@ $mobile-breakpoint: 700px;
       }
     }
 
-    @include breakpoint(mobile-extra-large) {
+    @include viewport.until(sm) {
       margin: 0 -10px;
     }
 
     input {
-      @include breakpoint(tablet) {
+      @include viewport.until(md) {
         max-width: 150px;
       }
     }
@@ -1273,8 +1265,8 @@ a.inline-editable-field {
 @import "admin/admin_section_landing_page";
 @import "admin/admin_intro";
 @import "admin/mini_profiler";
-@import "admin/schema_theme_setting_editor";
-@import "admin/customize_themes_show_schema";
+@import "admin/schema_setting_editor";
+@import "admin/customize_show_schema";
 @import "admin/admin_bulk_users_delete_modal";
 @import "admin/color-palette-editor";
 @import "admin/admin_config_color_palettes";

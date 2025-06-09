@@ -1,4 +1,5 @@
 import { Textarea } from "@ember/component";
+import { on } from "@ember/modifier";
 import { htmlSafe } from "@ember/template";
 import icon from "discourse/helpers/d-icon";
 
@@ -28,7 +29,9 @@ const Textarea0 = <template>
       minlength={{@validations.minimum}}
       maxlength={{@validations.maximum}}
       required={{if @validations.required "required" ""}}
+      {{on "input" @onChange}}
     />
   </div>
 </template>;
+
 export default Textarea0;

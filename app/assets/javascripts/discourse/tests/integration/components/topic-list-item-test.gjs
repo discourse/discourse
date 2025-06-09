@@ -1,8 +1,7 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import TopicListItem from "discourse/components/topic-list/item";
 import TopicList from "discourse/components/topic-list/list";
-import HbrTopicListItem from "discourse/components/topic-list-item";
+import BulkSelectHelper from "discourse/lib/bulk-select-helper";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
@@ -11,21 +10,21 @@ module("Integration | Component | topic-list-item", function (hooks) {
 
   test("checkbox is rendered checked if topic is in selected array", async function (assert) {
     const store = this.owner.lookup("service:store");
-    const topic = store.createRecord("topic", { id: 24234 });
-    const topic2 = store.createRecord("topic", { id: 24235 });
-    const selected = [topic];
+    const topics = [
+      store.createRecord("topic", { id: 24234 }),
+      store.createRecord("topic", { id: 24235 }),
+    ];
+
+    const bulkSelectHelper = new BulkSelectHelper(this);
+    bulkSelectHelper.toggleBulkSelect();
+    bulkSelectHelper.selected.push(topics[0]);
 
     await render(
       <template>
-        <HbrTopicListItem
-          @topic={{topic}}
-          @bulkSelectEnabled={{true}}
-          @selected={{selected}}
-        />
-        <HbrTopicListItem
-          @topic={{topic2}}
-          @bulkSelectEnabled={{true}}
-          @selected={{selected}}
+        <TopicList
+          @topics={{topics}}
+          @bulkSelectHelper={{bulkSelectHelper}}
+          @canBulkSelect={{true}}
         />
       </template>
     );
@@ -49,14 +48,12 @@ module("Integration | Component | topic-list-item", function (hooks) {
     });
 
     const store = this.owner.lookup("service:store");
-    const topic = store.createRecord("topic", { id: 1234, foo: true });
-    const topic2 = store.createRecord("topic", { id: 1235, foo: false });
-    await render(
-      <template>
-        <TopicListItem @topic={{topic}} />
-        <TopicListItem @topic={{topic2}} />
-      </template>
-    );
+    const topics = [
+      store.createRecord("topic", { id: 1234, foo: true }),
+      store.createRecord("topic", { id: 1235, foo: false }),
+    ];
+
+    await render(<template><TopicList @topics={{topics}} /></template>);
 
     assert.dom(".topic-list-item[data-topic-id='1234']").hasClass("bar");
     assert

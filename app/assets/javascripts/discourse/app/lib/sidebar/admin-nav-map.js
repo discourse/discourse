@@ -21,16 +21,8 @@ export const ADMIN_NAV_MAP = [
         moderator: true,
       },
       {
-        name: "admin_search",
-        route: "adminSearch",
-        label: "admin.config.search_everything.title",
-        description: "admin.config.search_everything.header_description",
-        icon: "magnifying-glass",
-        moderator: true,
-      },
-      {
         name: "admin_groups",
-        route: "groups",
+        route: "adminGroups",
         label: "admin.config.groups.title",
         description: "admin.config.groups.header_description",
         icon: "user-group",
@@ -55,40 +47,26 @@ export const ADMIN_NAV_MAP = [
     ],
   },
   {
-    name: "account",
-    label: "admin.config_sections.account.title",
-    links: [
-      {
-        name: "admin_backups",
-        route: "admin.backups",
-        label: "admin.config.backups.title",
-        description: "admin.config.backups.header_description",
-        icon: "box-archive",
-        settings_category: "backups",
-        multi_tabbed: true,
-        links: [
-          {
-            name: "admin_backups_logs",
-            route: "admin.backups.logs",
-            label: "admin.config.backups.sub_pages.logs.title",
-            description:
-              "admin.config.backups.sub_pages.logs.header_description",
-          },
-        ],
-      },
-    ],
-  },
-  {
     name: "reports",
     label: "admin.config_sections.reports.title",
     links: [
       {
         name: "admin_all_reports",
-        route: "adminReports.index",
+        route: "adminReports",
         label: "admin.config.reports.title",
         description: "admin.config.reports.header_description",
         icon: "chart-bar",
         moderator: true,
+        links: [
+          {
+            name: "admin_reports_settings",
+            route: "adminReports.dashboardSettings",
+            label: "settings",
+            description: "admin.config.reports.header_description",
+            icon: "gear",
+            settings_area: "reports",
+          },
+        ],
       },
     ],
   },
@@ -103,6 +81,16 @@ export const ADMIN_NAV_MAP = [
         description: "admin.config.about.header_description",
         icon: "gear",
         settings_area: "about",
+      },
+      {
+        name: "admin_content",
+        route: "adminConfig.content",
+        label: "admin.config.content.title",
+        description: "admin.config.content.header_description",
+        keywords: "admin.config.content.keywords",
+        icon: "pencil",
+        settings_area: "categories_and_tags",
+        multi_tabbed: true,
       },
       {
         name: "admin_badges",
@@ -230,12 +218,18 @@ export const ADMIN_NAV_MAP = [
     label: "admin.config_sections.appearance.title",
     links: [
       {
-        name: "admin_branding",
-        route: "adminConfig.branding",
-        label: "admin.config.branding.title",
-        description: "admin.config.branding.header_description",
+        name: "admin_logo",
+        route: "adminConfig.logo",
+        label: "admin.config.logo.title",
+        description: "admin.config.logo.header_description",
         icon: "fab-discourse",
-        settings_category: "branding",
+      },
+      {
+        name: "admin_fonts",
+        route: "adminConfig.fonts",
+        label: "admin.config.fonts.title",
+        description: "admin.config.fonts.header_description",
+        icon: "font",
       },
       {
         name: "admin_color_palettes",
@@ -273,9 +267,7 @@ export const ADMIN_NAV_MAP = [
       },
       {
         name: "admin_themes_and_components",
-        route: "adminCustomizeThemes",
-        routeModels: ["themes"],
-        currentWhen: "adminCustomizeThemes",
+        route: "adminConfig.customize.themes",
         label: "admin.config.themes_and_components.title",
         description: "admin.config.themes_and_components.header_description",
         icon: "paintbrush",
@@ -300,7 +292,7 @@ export const ADMIN_NAV_MAP = [
         label: "admin.config.email.title",
         description: "admin.config.email.header_description",
         keywords: "admin.config.email.keywords",
-        icon: "far-envelope",
+        icon: "gear",
         links: [
           {
             name: "admin_email_preview_summary",
@@ -330,7 +322,7 @@ export const ADMIN_NAV_MAP = [
         route: "adminCustomizeEmailStyle",
         label: "admin.config.email_appearance.title",
         description: "admin.config.email_appearance.header_description",
-        icon: "envelope",
+        icon: "palette",
       },
       {
         name: "admin_email_logs",
@@ -461,6 +453,24 @@ export const ADMIN_NAV_MAP = [
     label: "admin.config_sections.advanced.title",
     links: [
       {
+        name: "admin_backups",
+        route: "admin.backups",
+        label: "admin.config.backups.title",
+        description: "admin.config.backups.header_description",
+        icon: "box-archive",
+        settings_category: "backups",
+        multi_tabbed: true,
+        links: [
+          {
+            name: "admin_backups_logs",
+            route: "admin.backups.logs",
+            label: "admin.config.backups.sub_pages.logs.title",
+            description:
+              "admin.config.backups.sub_pages.logs.header_description",
+          },
+        ],
+      },
+      {
         name: "admin_api_keys",
         route: "adminApiKeys",
         icon: "key",
@@ -501,14 +511,6 @@ export const ADMIN_NAV_MAP = [
         settings_category: "rate_limits",
       },
       {
-        name: "admin_user_api",
-        route: "adminConfig.user-api.settings",
-        label: "admin.config.user_api.title",
-        description: "admin.config.user_api.header_description",
-        icon: "shuffle",
-        settings_category: "user_api",
-      },
-      {
         name: "admin_onebox",
         route: "adminConfig.onebox.settings",
         label: "admin.config.onebox.title",
@@ -523,15 +525,6 @@ export const ADMIN_NAV_MAP = [
         description: "admin.config.files.header_description",
         icon: "file",
         settings_category: "files",
-      },
-      {
-        name: "admin_other_options",
-        route: "adminConfig.other.settings",
-        label: "admin.config.other.title",
-        description: "admin.config.other.header_description",
-        icon: "discourse-other-tab",
-
-        settings_category: "uncategorized",
       },
       {
         name: "admin_search",

@@ -162,6 +162,14 @@ HTML
     theme.save!
     expect(field.reload.error).to include('Error: expected "}"')
 
+    theme.set_field(target: :common, name: :scss, value: <<~SCSS)
+      body {
+        color: unquote("https://example.com/this-is-a-mistake");
+      }
+    SCSS
+    theme.save!
+    expect(field.reload.error).to include("Missed semicolon")
+
     theme.set_field(target: :common, name: :scss, value: "@import 'missingfile';")
     theme.save!
     expect(field.reload.error).to include("Error: Can't find stylesheet to import.")
@@ -226,12 +234,6 @@ HTML
         name: "discourse/templates/discovery.hbs",
         value: "{{hello-world}}",
       )
-    raw_hbs_field =
-      theme.set_field(
-        target: :extra_js,
-        name: "discourse/templates/discovery.hbr",
-        value: "{{hello-world}}",
-      )
     hbr_field =
       theme.set_field(
         target: :extra_js,
@@ -255,7 +257,6 @@ HTML
     expect(theme.javascript_cache.content).to include(
       "define(\"discourse/theme-#{theme.id}/discourse/templates/discovery\", [\"exports\", ",
     )
-    expect(theme.javascript_cache.content).to include('addRawTemplate)("discovery"')
     expect(theme.javascript_cache.content).to include(
       "define(\"discourse/theme-#{theme.id}/discourse/controllers/discovery\"",
     )
@@ -265,6 +266,9 @@ HTML
     expect(theme.javascript_cache.content).to include("const settings =")
     expect(theme.javascript_cache.content).to include(
       "[THEME #{theme.id} '#{theme.name}'] Compile error: unknown file extension 'blah' (discourse/controllers/discovery.blah)",
+    )
+    expect(theme.javascript_cache.content).to include(
+      "[THEME #{theme.id} '#{theme.name}'] Compile error: unknown file extension 'hbr' (discourse/templates/other_discovery.hbr)",
     )
 
     # Check sourcemap
@@ -281,11 +285,10 @@ HTML
       "discourse/controllers/discovery.blah",
       "discourse/controllers/discovery.js",
       "discourse/templates/discovery.js",
-      "raw-templates/discovery.js",
-      "raw-templates/other_discovery.js",
+      "discourse/templates/other_discovery.hbr",
     )
     expect(map["sourceRoot"]).to eq("theme-#{theme.id}/")
-    expect(map["sourcesContent"].length).to eq(6)
+    expect(map["sourcesContent"].length).to eq(5)
   end
 
   def create_upload_theme_field!(name)
@@ -609,7 +612,7 @@ HTML
       it "is generated correctly" do
         fr1.ensure_baked!
         expect(fr1.value_baked).to include(
-          "<script defer src=\"#{fr1.javascript_cache.url}\" data-theme-id=\"#{fr1.theme_id}\" nonce=\"#{ThemeField::CSP_NONCE_PLACEHOLDER}\"></script>",
+          "<script type=\"module\" src=\"#{fr1.javascript_cache.url}\" data-theme-id=\"#{fr1.theme_id}\" nonce=\"#{ThemeField::CSP_NONCE_PLACEHOLDER}\"></script>",
         )
         expect(fr1.javascript_cache.content).to include("bonjourworld")
         expect(fr1.javascript_cache.content).to include("helloworld")

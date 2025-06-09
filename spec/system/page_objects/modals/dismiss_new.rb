@@ -11,6 +11,14 @@ module PageObjects
         find(".dismiss-posts label").has_checked_field?
       end
 
+      def has_dismiss_topics_unchecked?
+        find(".dismiss-topics label").has_no_checked_field?
+      end
+
+      def has_dismiss_posts_unchecked?
+        find(".dismiss-posts label").has_no_checked_field?
+      end
+
       def has_untrack_unchecked?
         find(".untrack label").has_no_checked_field?
       end
@@ -18,6 +26,10 @@ module PageObjects
       def click_dismiss
         click_button("dismiss-read-confirm")
         self
+      end
+
+      def closed?
+        page.has_no_css?(".d-modal")
       end
     end
   end

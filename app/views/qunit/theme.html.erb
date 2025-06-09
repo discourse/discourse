@@ -10,7 +10,7 @@
       <%= preload_script "test-support" %>
       <%= preload_script "discourse" %>
       <%= preload_script "test" %>
-      <%= preload_script "locales/#{I18n.locale}" %>
+      <%= preload_script_url ExtraLocalesController.url("main") %>
       <%= preload_script_url ExtraLocalesController.url("mf") %>
       <%= preload_script "admin" %>
       <%- Discourse.find_plugin_js_assets(include_disabled: true).each do |file| %>
@@ -31,6 +31,7 @@
         <%= File.read("#{Rails.root}/app/assets/javascripts/discourse/node_modules/qunit/qunit/qunit.css").html_safe %>
       </style>
 
+      <%= discourse_stylesheet_link_tag(:common, theme_id: nil) %>
       <%= discourse_stylesheet_link_tag(:desktop, theme_id: nil) %>
     <%- else %>
       <style>

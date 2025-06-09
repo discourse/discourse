@@ -17,7 +17,6 @@ export const CRITICAL_DEPRECATIONS = [
   "discourse.bootbox",
   "discourse.add-header-panel",
   "discourse.header-widget-overrides",
-  "discourse.plugin-outlet-tag-name",
   "discourse.add-flag-property",
   "discourse.breadcrumbs.childCategories",
   "discourse.breadcrumbs.firstCategory",
@@ -28,11 +27,9 @@ export const CRITICAL_DEPRECATIONS = [
   "discourse.qunit.acceptance-function",
   "discourse.qunit.global-exists",
   "discourse.post-stream.trigger-new-post",
-  "discourse.hbr-topic-list-overrides",
-  "discourse.mobile-templates",
-  "discourse.mobile-view",
-  "discourse.mobile-templates",
-  "discourse.component-template-overrides",
+  "discourse.plugin-outlet-classic-args-clash",
+  "discourse.decorate-plugin-outlet",
+  "component-template-resolving",
 ];
 
 if (DEBUG) {

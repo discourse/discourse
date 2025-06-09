@@ -590,6 +590,11 @@ fi:
       draft_channel_screen:
         header: "Uusi viesti"
         cancel: "Peruuta"
+      quick_reaction_type:
+        title: "Yhden klikkauksen keskustelureaktiot"
+        options:
+          frequent: "Useimmin käytetyt chat-reaktiot"
+          custom: "Mukautetut reaktiot"
     notifications:
       chat_invitation: "kutsui sinut liittymään chat-kanavalle"
       chat_invitation_html: "<span>%{username}</span> <span>kutsui sinut liittymään chat-kanavalle</span>"

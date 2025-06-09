@@ -1414,6 +1414,8 @@ RSpec.describe Post do
 
   describe "#set_owner" do
     fab!(:post)
+    fab!(:admin)
+    fab!(:new_user) { Fabricate(:user) }
 
     it "will change owner of a post correctly" do
       post.set_owner(coding_horror, Discourse.system_user)
@@ -1441,6 +1443,35 @@ RSpec.describe Post do
         I18n.with_locale(SiteSetting.default_locale) { I18n.t("change_owner.post_revision_text") }
 
       expect(post.edit_reason).to eq(expected_reason)
+    end
+
+    it "triggers a post_owner_changed event" do
+      original_user = post.user
+
+      events = DiscourseEvent.track_events { post.set_owner(new_user, admin) }
+
+      change_event = events.find { |e| e[:event_name] == :post_owner_changed }
+
+      expect(change_event).to be_present
+      expect(change_event[:params][0]).to eq(post)
+      expect(change_event[:params][1]).to eq(original_user)
+      expect(change_event[:params][2]).to eq(new_user)
+      expect(post.reload.user).to eq(new_user)
+    end
+
+    it "doesn't trigger an event when user remains the same" do
+      same_user = post.user
+
+      events = DiscourseEvent.track_events { post.set_owner(same_user, admin) }
+
+      change_event = events.find { |e| e[:event_name] == :post_owner_changed }
+
+      expect(change_event).to be_nil
+    end
+
+    it "returns true when ownership changes successfully" do
+      result = post.set_owner(new_user, admin)
+      expect(result).to eq(true)
     end
   end
 
@@ -1902,9 +1933,13 @@ RSpec.describe Post do
           create_post(topic_id: topic.id, post_type: Post.types[:whisper])
         end
 
-      updates_topic_updated_at { PostDestroyer.new(Discourse.system_user, post).destroy }
+      updates_topic_updated_at do
+        PostDestroyer.new(Discourse.system_user, post, context: "Automated testing").destroy
+      end
 
-      updates_topic_updated_at { PostDestroyer.new(Discourse.system_user, post).recover }
+      updates_topic_updated_at do
+        PostDestroyer.new(Discourse.system_user, post, context: "Automated testing").recover
+      end
     end
   end
 
@@ -2323,6 +2358,45 @@ RSpec.describe Post do
       expect(
         Post.public_posts_count_per_day(10.days.ago, 5.days.ago, nil, false, [group.id]),
       ).to eq(6.days.ago.to_date => 1, 7.days.ago.to_date => 1)
+    end
+  end
+
+  describe "#has_localization?" do
+    it "returns true if the post has localization" do
+      post = Fabricate(:post)
+      Fabricate(:post_localization, post: post, locale: "zh_CN")
+
+      expect(post.has_localization?(:zh_CN)).to eq(true)
+      expect(post.has_localization?(:"zh_CN")).to eq(true)
+      expect(post.has_localization?("zh-CN")).to eq(true)
+
+      expect(post.has_localization?("z")).to eq(false)
+    end
+  end
+
+  describe "#get_localization" do
+    it "returns the localization with the specified locale" do
+      I18n.locale = "ja"
+      post = Fabricate(:post)
+      zh_localization = Fabricate(:post_localization, post: post, locale: "zh_CN")
+      ja_localization = Fabricate(:post_localization, post: post, locale: "ja")
+
+      expect(post.get_localization(:zh_CN)).to eq(zh_localization)
+      expect(post.get_localization("zh-CN")).to eq(zh_localization)
+      expect(post.get_localization("xx")).to eq(nil)
+      expect(post.get_localization).to eq(ja_localization)
+    end
+  end
+
+  describe "#in_user_locale?" do
+    it "returns true if the post has localization in the user's locale" do
+      I18n.locale = "ja"
+      post = Fabricate(:post, locale: "ja")
+
+      expect(post.in_user_locale?).to eq(true)
+
+      post.update!(locale: "es")
+      expect(post.in_user_locale?).to eq(false)
     end
   end
 end

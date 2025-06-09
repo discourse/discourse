@@ -56,7 +56,8 @@ export default class ScrollingPostStream extends MountWidget {
       "showReadIndicator",
       "streamFilters",
       "lastReadPostNumber",
-      "highestPostNumber"
+      "highestPostNumber",
+      "topicPageQueryParams"
     );
   }
 

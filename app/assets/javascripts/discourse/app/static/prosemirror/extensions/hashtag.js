@@ -7,8 +7,6 @@ const extension = {
       attrs: { name: {} },
       inline: true,
       group: "inline",
-      content: "text*",
-      atom: true,
       draggable: true,
       selectable: false,
       parseDOM: [
@@ -53,7 +51,9 @@ const extension = {
     span_open(state, token, tokens, i) {
       if (token.attrGet("class") === "hashtag-raw") {
         state.openNode(state.schema.nodes.hashtag, {
-          name: tokens[i + 1].content.slice(1),
+          // this is not ideal, but working around the span_open/close structure
+          // a text is expected just after the span_open token
+          name: tokens.splice(i + 1, 1)[0].content.slice(1),
         });
         return true;
       }
@@ -68,6 +68,7 @@ const extension = {
 
   serializeNode: {
     hashtag(state, node, parent, index) {
+      state.flushClose();
       if (!isBoundary(state.out, state.out.length - 1)) {
         state.write(" ");
       }

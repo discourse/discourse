@@ -134,6 +134,7 @@ import {
   addSaveableUserField,
   addSaveableUserOptionField,
 } from "discourse/models/user";
+import { preventCloaking } from "discourse/modifiers/post-stream-viewport-tracker";
 import { setNewCategoryDefaultColors } from "discourse/routes/new-category";
 import { setNotificationsLimit } from "discourse/routes/user-notifications";
 import { addComposerSaveErrorCallback } from "discourse/services/composer";
@@ -145,6 +146,7 @@ import {
 } from "discourse/widgets/post-small-action";
 import {
   addPostTransformCallback,
+  POST_STREAM_DEPRECATION_OPTIONS,
   preventCloak,
 } from "discourse/widgets/post-stream";
 import { disableNameSuppression } from "discourse/widgets/poster-name";
@@ -157,7 +159,7 @@ import {
 } from "discourse/widgets/widget";
 import { addImageWrapperButton } from "discourse-markdown-it/features/image-controls";
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
-import { modifySelectKit } from "select-kit/mixins/plugin-api";
+import { modifySelectKit } from "select-kit/lib/plugin-api";
 
 const DEPRECATED_POST_STREAM_WIDGETS = [
   "actions-summary",
@@ -193,17 +195,7 @@ const DEPRECATED_POST_STREAM_WIDGETS = [
   "topic-post-visited-line",
 ];
 
-const POST_STREAM_DEPRECATION_OPTIONS = {
-  since: "v3.5.0.beta1-dev",
-  id: "discourse.post-stream-widget-overrides",
-  // url: "", // TODO (glimmer-post-stream) uncomment when the topic is created on meta
-};
-
-export const RAW_TOPIC_LIST_DEPRECATION_OPTIONS = {
-  since: "v3.4.0.beta4-dev",
-  id: "discourse.hbr-topic-list-overrides",
-  url: "https://meta.discourse.org/t/343404",
-};
+const blockedModifications = ["component:topic-list"];
 
 const appliedModificationIds = new WeakMap();
 
@@ -295,7 +287,11 @@ class PluginApi {
       return;
     }
 
-    const klass = this.container.factoryFor(normalized);
+    let klass;
+    if (!blockedModifications.includes(normalized)) {
+      klass = this.container.factoryFor(normalized);
+    }
+
     if (!klass) {
       if (!opts.ignoreMissing) {
         // eslint-disable-next-line no-console
@@ -328,17 +324,6 @@ class PluginApi {
    * ```
    **/
   modifyClass(resolverName, changes, opts) {
-    if (
-      resolverName === "component:topic-list" ||
-      resolverName === "component:topic-list-item" ||
-      resolverName === "raw-view:topic-status"
-    ) {
-      deprecated(
-        `Modifying '${resolverName}' with 'modifyClass' is deprecated. Use the value transformer 'topic-list-columns' and other new topic-list plugin APIs instead.`,
-        RAW_TOPIC_LIST_DEPRECATION_OPTIONS
-      );
-    }
-
     const klass = this._resolveClass(resolverName, opts);
     if (!klass) {
       return;
@@ -376,17 +361,6 @@ class PluginApi {
    * ```
    **/
   modifyClassStatic(resolverName, changes, opts) {
-    if (
-      resolverName === "component:topic-list" ||
-      resolverName === "component:topic-list-item" ||
-      resolverName === "raw-view:topic-status"
-    ) {
-      deprecated(
-        `Modifying '${resolverName}' with 'modifyClass' is deprecated. Use the value transformer 'topic-list-columns' and other new topic-list plugin APIs instead.`,
-        RAW_TOPIC_LIST_DEPRECATION_OPTIONS
-      );
-    }
-
     const klass = this._resolveClass(resolverName, opts);
     if (!klass) {
       return;
@@ -889,6 +863,11 @@ class PluginApi {
   }
 
   /**
+   * @deprecated
+   *
+   * This function is now an alias to `api.addTrackedPostProperties`.
+   * Use that function instead.
+   *
    * Add more attributes to the Post's `attrs` object passed through to widgets.
    * You'll need to do this if you've added attributes to the serializer for a
    * Post and want to use them when you're rendering.
@@ -902,7 +881,15 @@ class PluginApi {
    *
    **/
   includePostAttributes(...attributes) {
-    includeAttributes(...attributes);
+    // TODO (glimmer-post-stream): we can keep this function as an alias to addTrackedPostProperties but it is useful to
+    //   deprecate it for now to get warnings for code that is incompatible with the Glimmer Post Stream because if an
+    //   extension is using it, then it is very likely that there is other code that is incompatible
+    deprecated(
+      "`api.includePostAttributes` has been deprecated. Use `api.addTrackedPostProperties` instead.",
+      POST_STREAM_DEPRECATION_OPTIONS
+    );
+
+    this.addTrackedPostProperties(...attributes);
   }
 
   /**
@@ -1193,17 +1180,26 @@ class PluginApi {
   }
 
   /**
-   * Prevents an element in the post stream from being cloaked.
-   * This is useful if you are using a plugin such as youtube
-   * and don't want the video removed once it has begun
-   * playing.
+   * Prevents a specific post from being cloaked during scroll.
    *
+   * This is useful, for example, for posts that apply customizations that hold state which
+   * would be lost if the nodes were removed from the DOM, e.g., a playing video.
+   *
+   * Note that the set of prevented posts is reset whenever the topic being displayed changes.
+   *
+   * @param {number} postId - The ID of the post to prevent from cloaking
+   * @param {boolean} prevent - Whether to prevent (true) or allow (false) cloaking
+   *
+   * @example
    * ```javascript
-   * api.preventCloak(1234);
+   * api.preventCloak(1234); // Prevent post 1234 from being cloaked
+   * api.preventCloak(1234, false); // Allow post 1234 to be cloaked again
    * ```
    **/
-  preventCloak(postId) {
-    preventCloak(postId);
+  preventCloak(postId, prevent = true) {
+    // TODO (glimmer-post-stream) remove the call to the widget version of preventCloak below
+    preventCloak(postId); // widgets
+    preventCloaking(postId, prevent); // glimmer-post-stream
   }
 
   /**

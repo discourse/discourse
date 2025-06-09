@@ -1,25 +1,88 @@
 import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { hash } from "@ember/helper";
+import { action } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
-import { readOnly } from "@ember/object/computed";
 import { getOwner } from "@ember/owner";
 import { LinkTo } from "@ember/routing";
+import { service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
+import { isNone } from "@ember/utils";
 import DButton from "discourse/components/d-button";
+import JsonSchemaEditorModal from "discourse/components/modal/json-schema-editor";
 import icon from "discourse/helpers/d-icon";
+import { deepEqual } from "discourse/lib/object";
+import { humanizedSettingName } from "discourse/lib/site-settings-utils";
+import { splitString } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 import SettingValidationMessage from "admin/components/setting-validation-message";
 import Description from "admin/components/site-settings/description";
-import SettingComponent from "admin/mixins/setting-component";
 import SiteSetting from "admin/models/site-setting";
 
-export default class SiteSettingComponent extends Component.extend(
-  SettingComponent
-) {
+const CUSTOM_TYPES = [
+  "bool",
+  "integer",
+  "enum",
+  "list",
+  "url_list",
+  "host_list",
+  "category_list",
+  "value_list",
+  "category",
+  "uploaded_image_list",
+  "compact_list",
+  "secret_list",
+  "upload",
+  "group_list",
+  "tag_list",
+  "tag_group_list",
+  "color",
+  "simple_list",
+  "emoji_list",
+  "named_list",
+  "file_size_restriction",
+  "file_types_list",
+  "font_list",
+];
+
+export default class SiteSettingComponent extends Component {
+  @service modal;
+  @service router;
+  @service dialog;
+  @service siteSettingChangeTracker;
+
   @tracked setting = null;
+  @tracked isSecret = null;
   updateExistingUsers = null;
 
-  @readOnly("setting.staffLogFilter") staffLogFilter;
+  // Classic component attributes
+  classNameBindings = [":row", ":setting", "overridden", "typeClass"];
+  attributeBindings = ["setting.setting:data-setting"];
+
+  constructor() {
+    super(...arguments);
+    this.isSecret = this.setting?.secret;
+  }
+
+  didInsertElement() {
+    super.didInsertElement(...arguments);
+    this.element.addEventListener("keydown", this._handleKeydown);
+  }
+
+  willDestroyElement() {
+    super.willDestroyElement(...arguments);
+    this.element.removeEventListener("keydown", this._handleKeydown);
+  }
+
+  @action
+  async _handleKeydown(event) {
+    if (
+      event.key === "Enter" &&
+      event.target.classList.contains("input-setting-string")
+    ) {
+      await this.save();
+    }
+  }
 
   get resolvedComponent() {
     return getOwner(this).resolveRegistration(
@@ -30,6 +93,236 @@ export default class SiteSettingComponent extends Component.extend(
   @dependentKeyCompat
   get buffered() {
     return this.setting.buffered;
+  }
+
+  get componentName() {
+    return `site-settings/${this.typeClass}`;
+  }
+
+  get overridden() {
+    return this.setting.default !== this.buffered.get("value");
+  }
+
+  get displayDescription() {
+    return this.componentType !== "bool";
+  }
+
+  get dirty() {
+    let bufferVal = this.buffered.get("value");
+    let settingVal = this.setting?.value;
+
+    if (isNone(bufferVal)) {
+      bufferVal = "";
+    }
+
+    if (isNone(settingVal)) {
+      settingVal = "";
+    }
+
+    const dirty = !deepEqual(bufferVal, settingVal);
+
+    if (dirty) {
+      this.siteSettingChangeTracker.add(this.setting);
+    } else {
+      this.siteSettingChangeTracker.remove(this.setting);
+    }
+
+    return dirty;
+  }
+
+  get preview() {
+    const setting = this.setting;
+    const value = this.buffered.get("value");
+    const preview = setting.preview;
+    if (preview) {
+      const escapedValue = preview.replace(/\{\{value\}\}/g, value);
+      return htmlSafe(`<div class="preview">${escapedValue}</div>`);
+    }
+    return null;
+  }
+
+  get typeClass() {
+    const componentType = this.componentType;
+    return componentType.replace(/\_/g, "-");
+  }
+
+  get settingName() {
+    return humanizedSettingName(this.setting.setting, this.setting.label);
+  }
+
+  get componentType() {
+    const type = this.type;
+    return CUSTOM_TYPES.includes(type) ? type : "string";
+  }
+
+  get type() {
+    const setting = this.setting;
+    if (setting.type === "list" && setting.list_type) {
+      return `${setting.list_type}_list`;
+    }
+    return setting.type;
+  }
+
+  get allowAny() {
+    const anyValue = this.setting?.anyValue;
+    return anyValue !== false;
+  }
+
+  get bufferedValues() {
+    const value = this.buffered.get("value");
+    return splitString(value, "|");
+  }
+
+  get defaultValues() {
+    const value = this.setting?.defaultValues;
+    return splitString(value, "|");
+  }
+
+  get defaultIsAvailable() {
+    const defaultValues = this.defaultValues;
+    const bufferedValues = this.bufferedValues;
+    return (
+      defaultValues.length > 0 &&
+      !defaultValues.every((value) => bufferedValues.includes(value))
+    );
+  }
+
+  get settingEditButton() {
+    const setting = this.setting;
+    if (setting.json_schema) {
+      return {
+        action: () => {
+          this.modal.show(JsonSchemaEditorModal, {
+            model: {
+              updateValue: (value) => {
+                this.buffered.set("value", value);
+              },
+              value: this.buffered.get("value"),
+              settingName: setting.setting,
+              jsonSchema: setting.json_schema,
+            },
+          });
+        },
+        label: "admin.site_settings.json_schema.edit",
+        icon: "pencil",
+      };
+    } else if (setting.schema) {
+      return {
+        action: () => {
+          this.router.transitionTo("admin.schema", setting.setting);
+        },
+        label: "admin.site_settings.json_schema.edit",
+        icon: "pencil",
+      };
+    } else if (setting.objects_schema) {
+      return {
+        action: () => {
+          this.router.transitionTo(
+            "adminCustomizeThemes.show.schema",
+            setting.setting
+          );
+        },
+        label: "admin.customize.theme.edit_objects_theme_setting",
+        icon: "pencil",
+      };
+    }
+    return null;
+  }
+
+  get disableControls() {
+    return !!this.setting.isSaving;
+  }
+
+  get staffLogFilter() {
+    return this.setting.staffLogFilter;
+  }
+
+  @action
+  async update() {
+    if (this.setting.requiresConfirmation) {
+      const confirm = await this.siteSettingChangeTracker.confirmChanges(
+        this.setting
+      );
+
+      if (!confirm) {
+        return;
+      }
+    }
+
+    if (this.setting.affectsExistingUsers) {
+      await this.siteSettingChangeTracker.configureBackfill(this.setting);
+    }
+
+    await this.save();
+  }
+
+  @action
+  async save() {
+    try {
+      this.setting.isSaving = true;
+
+      await this._save();
+
+      this.setting.validationMessage = null;
+      this.buffered.applyChanges();
+
+      if (this.setting.requiresReload) {
+        this.siteSettingChangeTracker.refreshPage({
+          [this.setting.setting]: this.setting.value,
+        });
+      }
+    } catch (e) {
+      const json = e.jqXHR?.responseJSON;
+      if (json?.errors) {
+        let errorString = json.errors[0];
+
+        if (json.html_message) {
+          errorString = htmlSafe(errorString);
+        }
+
+        this.setting.validationMessage = errorString;
+      } else {
+        this.setting.validationMessage = i18n("generic_error");
+      }
+    } finally {
+      this.setting.isSaving = false;
+    }
+  }
+
+  @action
+  changeValueCallback(value) {
+    this.buffered.set("value", value);
+  }
+
+  @action
+  setValidationMessage(message) {
+    this.setting.validationMessage = message;
+  }
+
+  @action
+  cancel() {
+    this.buffered.discardChanges();
+    this.setting.validationMessage = null;
+  }
+
+  @action
+  resetDefault() {
+    this.buffered.set("value", this.setting.default);
+    this.setting.validationMessage = null;
+  }
+
+  @action
+  toggleSecret() {
+    this.isSecret = !this.isSecret;
+  }
+
+  @action
+  setDefaultValues() {
+    this.buffered.set(
+      "value",
+      this.bufferedValues.concat(this.defaultValues).uniq().join("|")
+    );
+    this.setting.validationMessage = null;
   }
 
   _save() {

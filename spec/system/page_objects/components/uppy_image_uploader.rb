@@ -8,11 +8,11 @@ module PageObjects
       end
 
       def select_image(path)
-        attach_file(path) { @element.find("label.btn-default").click }
+        attach_file(path) { @element.find("label.btn").click }
       end
 
       def select_image_with_keyboard(path)
-        label = @element.find("label.btn-default")
+        label = @element.find("label.btn")
         label.send_keys(:enter)
         attach_file(path) { label.click }
       end

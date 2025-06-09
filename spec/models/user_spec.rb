@@ -2476,6 +2476,22 @@ RSpec.describe User do
     end
   end
 
+  describe "#silenced_till" do
+    context "when the user is an anonymous shadow" do
+      let(:main) { Fabricate(:user, silenced_till: 1.day.from_now) }
+      let(:anon) { Fabricate(:anonymous) }
+
+      before do
+        SiteSetting.allow_anonymous_mode = true
+        anon.anonymous_user_master.update(master_user_id: main.id)
+      end
+
+      it "delegates the value from the main user record" do
+        expect(anon.silenced_till).to be_within(1.second).of(main.silenced_till)
+      end
+    end
+  end
+
   describe "silenced?" do
     it "is not silenced by default" do
       expect(Fabricate(:user)).not_to be_silenced

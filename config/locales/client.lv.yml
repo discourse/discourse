@@ -320,7 +320,7 @@ lv:
       new_topic: "Jaunas tēmas melnraksts"
       new_private_message: "Jauns personīgā ziņojuma melnraksts"
     preview: "priekšskatījums"
-    cancel: "atcelt"
+    cancel: "Atcelt"
     save: "Saglabāt izmaiņas"
     saved: "Saglabāts!"
     upload: "Augšuplādēt"
@@ -1417,7 +1417,6 @@ lv:
         title: "Reģistrēšanās IP adrese"
       avatar:
         title: "Profila attēls"
-        header_title: "profils, ziņas, grāmatzīmes un iestatījumi"
         name_and_description: "%{name} - %{description}"
         edit: "Rediģēt profila attēlu"
       title:
@@ -1598,8 +1597,6 @@ lv:
       not_approved: "Jūsu konts vēl nav apstiprināts. Jums tiks paziņots e-pastā, kad varēsiet pieslēgties."
       google_oauth2:
         name: "Google"
-      twitter:
-        name: "Twitter"
       instagram:
         name: "Instagram"
       facebook:
@@ -2239,6 +2236,11 @@ lv:
         zero: "%{count} cilvēkiem patika šis ieraksts."
         one: "%{count} cilvēkam patika šis ieraksts."
         other: "%{count} cilvēkiem patika šis ieraksts."
+      localizations:
+        table:
+          actions: "Darbības"
+          edit: "Rediģēt"
+          delete: "Dzēst"
       errors:
         create: "Atvainojiet, izveidojot jūsu ierakstu, notika kļūda. Lūdzu, mēģiniet vēlreiz."
         edit: "Atvainojiet, rediģējot jūsu ierakstu, notika kļūda. Lūdzu, mēģiniet vēlreiz."
@@ -2329,6 +2331,10 @@ lv:
       general: "Vispārīgi"
       settings: "Iestatījumi"
       tags: "Tagi"
+      localization:
+        name: "Vārds"
+        description: "Apraksts"
+        remove: "Atcelt"
       tags_placeholder: "(Pēc izvēles) atļauto tagu saraksts"
       tag_groups_placeholder: "(Pēc izvēles) atļauto tagu grupu saraksts"
       required_tag_group:
@@ -2820,7 +2826,7 @@ lv:
               content: "Pārskats"
             invite:
               content: "Ielūgt"
-      filter: "Filtri..."
+      search: "Meklēt"
     form_templates:
       upload_field:
         upload: "Augšupielādēt"
@@ -2841,6 +2847,9 @@ lv:
       spreadsheet:
         show: "Parādīt"
         about: "Par"
+    discovery:
+      headings:
+        categories: "Visas sadaļas"
   admin_js:
     settings: "Iestatījumi"
     admin:
@@ -2870,19 +2879,19 @@ lv:
           title: "Faili"
         legal:
           title: "Jurid."
-        branding:
-          logo:
-            form:
-              mobile: "Mobilais"
-              email: "E-pasts"
+        logo:
+          form:
+            mobile: "Mobilais"
+            email: "E-pasts"
+        fonts:
+          backfill_modal:
+            modal_yes: "Jā"
         navigation:
           title: "Pārvietošanās"
         notifications:
           title: "Paziņojumi"
         onebox:
           title: "Onebox"
-        other:
-          title: "Citi"
         search_everything:
           title: "Meklēt"
         security:
@@ -2916,6 +2925,8 @@ lv:
               header_description: "Pārskatīt saturu e-pastam kas tiks sūtīts neaktīviem lietotājiem"
             templates:
               title: "Veidnes"
+        email_logs:
+          sub_pages:
             sent:
               title: "Nosūtne"
             skipped:
@@ -3127,6 +3138,8 @@ lv:
       config_areas:
         about:
           company_name: "Vārds"
+          extra_groups:
+            groups: "Grupas"
           optional: "(pēc izvēles)"
           saved: "saglabāts!"
         flags:
@@ -3152,11 +3165,21 @@ lv:
           breadcrumb_title: "Pielāgot"
           themes:
             title: "Dizaini"
+          components:
+            name: "Vārds"
+            enabled: "Ieslēgts?"
+            learn_more: "Uzzināt vairāk"
+            edit: "Rediģēt"
+            preview: "Priekšskatījums"
+            export: "Eksportēt"
+            delete: "Dzēst"
+            filter_by_all: "Viss"
         user_fields:
           type: "Tips"
           delete: "Dzēst"
         color_palettes:
           palette_name: "Vārds"
+          delete: "Dzēst"
           colors:
             title: "Krāsas"
       plugins:
@@ -3261,6 +3284,7 @@ lv:
           desktop: "Personālais dators"
           mobile: "Mobilais"
           preview: "Priekšskatījums"
+          default: "Aktīvi"
           is_default: "Šis ir noklusējuma dizains"
           user_selectable: "Šo dizainu var izvēlēties lietotāji"
           color_scheme_select: "Izvēlieties krāsas, kuras lietos šis dizains"
@@ -3282,8 +3306,6 @@ lv:
           version: "Versija:"
           enable: "Ieslēgt"
           disable: "Atslēgt"
-          update_to_latest: "Atjaunināt uz pēdējo"
-          check_for_updates: "Pārbaudīt, vai nav atjauninājumi"
           up_to_date: "Dizains ir pilnībā atjaunināts, pēdējā parbaude:"
           add: "Pievienot"
           scss:
@@ -3291,9 +3313,9 @@ lv:
           all_filter: "Viss"
           active_filter: "Aktīvi"
           inactive_filter: "Neaktīvs"
-          schema:
-            fields:
-              required: "*nepieciešams"
+        schema:
+          fields:
+            required: "*nepieciešams"
         colors:
           title: "Krāsas"
           undo: "Atsaukt"
@@ -3302,8 +3324,6 @@ lv:
             name: "primārais"
           success:
             name: "veiksmīgi"
-          love:
-            description: "Atzinības pogas krāsa."
         email_style:
           html: "HTML"
           css: "CSS"

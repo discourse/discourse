@@ -487,7 +487,7 @@ pt_BR:
       one: "Veja %{count} novo tópico"
       other: "Veja %{count} novos tópicos"
     preview: "pré-visualizar"
-    cancel: "cancelar"
+    cancel: "Cancelar"
     deleting: "Excluindo…"
     save: "Salvar alterações"
     saving: "Salvando…"
@@ -1171,7 +1171,6 @@ pt_BR:
       said: "%{username}:"
       profile: "Perfil"
       profile_possessive: "Perfil de %{username}"
-      account_possessive: "Conta de %{name}"
       mute: "Silenciar"
       edit: "Editar preferências"
       download_archive:
@@ -2003,7 +2002,6 @@ pt_BR:
         title: "Endereço IP do cadastro"
       avatar:
         title: "Imagem do perfil"
-        header_title: "perfil, mensagens, favoritos e preferências"
         name_and_description: "%{name} - %{description}"
         edit: "Editar imagem do perfil"
       title:
@@ -2080,6 +2078,9 @@ pt_BR:
     modal:
       close: "fechar"
       dismiss_error: "Descartar erro"
+    multi_select:
+      no_results: "Nenhum resultado"
+      search: "Pesquisar…"
     form_kit:
       reset: Redefinir
       optional: opcional
@@ -2315,10 +2316,6 @@ pt_BR:
         name: "Google"
         title: "Conectar com o Google"
         sr_title: "Conectar com o Google"
-      twitter:
-        name: "Twitter"
-        title: "Conectar com o Twitter"
-        sr_title: "Conectar com o Twitter"
       instagram:
         name: "Instagram"
         title: "Entrar com o Instagram"
@@ -2796,8 +2793,6 @@ pt_BR:
       in_topics_posts: "em todos os tópicos e postagens"
       enter_hint: "ou pressione Enter"
       in_posts_by: "em postagens por %{username}"
-      browser_tip: "%{modifier} + f"
-      browser_tip_description: "usar novamente pesquisa de navegador"
       recent: "Pesquisas recentes"
       clear_recent: "Remover pesquisas recentes"
       experience:
@@ -2884,7 +2879,6 @@ pt_BR:
           aria_label: filtrar por visualizações máximas
         additional_options:
           label: "Filtrar por contagem de postagens e visualizações de tópico"
-    hamburger_menu: "menu"
     new_item: "novo"
     go_back: "voltar"
     not_logged_in_user: "página do(a) usuário(a) com resumo de atividades e preferências atuais"
@@ -3591,6 +3585,11 @@ pt_BR:
       in_reply_to: "Carregar postagem pai"
       view_all_posts: "visualizar todas as postagens"
       badge_granted_tooltip: "%{username} recebeu o emblema '%{badge_name} para esta postagem!"
+      localizations:
+        table:
+          actions: "Ações"
+          edit: "Editar"
+          delete: "Excluir"
       errors:
         create: "Desculpe, houve um erro ao criar sua postagem. Tente outra vez."
         edit: "Desculpe, houve um erro ao editar sua postagem. Tente outra vez."
@@ -3798,6 +3797,10 @@ pt_BR:
       settings: "Configurações"
       topic_template: "Modelo"
       tags: "Etiquetas"
+      localization:
+        name: "Nome"
+        description: "Descrição"
+        remove: "Remover"
       tags_allowed_tags: "Restringir estas etiquetas a esta categoria:"
       tags_allowed_tag_groups: "Restringir estes grupos de etiquetas a esta categoria:"
       tags_placeholder: "(Opcional) lista de etiquetas permitidas"
@@ -3820,14 +3823,17 @@ pt_BR:
       creation_error: Houve um erro durante a criação da categoria.
       save_error: Houve um erro ao salvar a categoria.
       name: "Nome da categoria"
+      untitled: "Categoria sem título"
       description: "Descrição"
       logo: "Imagem do logotipo da categoria"
       logo_dark: "Imagem do logotipo da categoria Modo Escuro"
       logo_description: "Proporção de aspecto recomendada 1:1 com tamanho mínimo de 200px. Se deixado em branco, nenhuma imagem será exibida."
       background_image: "Imagem de fundo da categoria"
       background_image_dark: "Imagem escura de fundo da categoria"
+      style: "Estilos"
       background_color: "Cor"
       styles:
+        type: "Estilo"
         icon: "Ícone"
         emoji: "Emoji"
         options:
@@ -4186,7 +4192,6 @@ pt_BR:
         today: "Hoje"
     custom_homepage:
       admin_message: 'Um dos seus temas ativou o modificador "custom_homepage" sem gerar nada no conector [custom-homepage]. (Esta mensagem é exibida apenas para administradores(as) do site.)'
-    browser_update: 'Infelizmente, <a href="https://www.discourse.org/faq/#browser">seu navegador não é compatível</a>. <a href="https://browsehappy.com">Use um navegador compatível</a> para visualizar um conteúdo interessante, entrar com a conta e responder.'
     permission_types:
       full: "Criar/Responder/Ver"
       create_post: "Responder/Ver"
@@ -4574,7 +4579,7 @@ pt_BR:
           save: "Salvar"
           delete: "Excluir"
           delete_confirm: "Tem certeza de que deseja excluir essa seção?"
-          delete_public_confirm: "Esta seção é <strong>visível para todos(as)</strong>, deseja mesmo excluir?"
+          delete_public_confirm: "Esta seção é visível para todos(as), deseja mesmo excluir?"
           update_public_confirm: "As alterações estarão <strong>visíveis para todos(as)</strong> no site. Prosseguir?"
           mark_as_private_confirm: "Esta seção está <strong>visível para todos(as)</strong>. Após a atualização, estará <strong>visível apenas para você</strong>. Prosseguir?"
           reset_confirm: "Tem certeza de que deseja redefinir esta seção para o padrão?"
@@ -4690,14 +4695,12 @@ pt_BR:
         forum:
           label: Fórum
       back_to_forum: "Voltar para o Fórum"
-      collapse_all_sections: "Recolher todas as seções"
-      expand_all_sections: "Expandir todas as seções"
-      filter: "Filtro..."
       clear_filter: "Limpar filtro"
       no_results:
         title: "Nenhum resultado"
-        description: 'Não foi possível encontrar nenhum "%{filter}" correspondente.<br><br>Você queria <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">procurar as configurações do site</a> ou a <a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">lista de usuários(as) administradores(as)?</a>'
-        description_admin_search: 'Não conseguimos encontrar nada correspondente a ''%{filter}''.<br><br>Tente <a class="sidebar-additional-filter-admin-search" href="%{admin_search_url}">pesquisar em toda a interface de administração</a>.'
+      collapse_all_sections: "Recolher todas as seções"
+      expand_all_sections: "Expandir todas as seções"
+      search: "Pesquisar"
       footer:
         interface_color_selector:
           light: "Claro"
@@ -4804,6 +4807,11 @@ pt_BR:
           paste: "Colar..."
           save: "Salvar como..."
     powered_by_discourse: "Com tecnologia Discourse"
+    discovery:
+      headings:
+        multi_tag:
+          default: "Tópicos etiquetados com %{tags}"
+        categories: "Todas as categorias"
   admin_js:
     type_to_filter: "Digite para filtrar..."
     settings: "Configurações"
@@ -4855,9 +4863,6 @@ pt_BR:
           title: "Moderação"
           header_description: "O sistema de sinalização do Discourse ajuda o(a) usuário(a) e sua equipe de moderadores(as) a gerenciar conteúdo e comportamento do(a) usuário(a), promovendo um ambiente saudável e respeitoso na comunidade. As definições padrão são apropriadas para a maior parte das comunidades e não precisarão ser alteradas. Contudo, caso seu site tenha algum requisito específico, você pode desativar os sinalizadores desnecessários e adicionar os seus."
           keywords: "denunciar|revisar|spam|ilegal"
-        font_style:
-          title: "Estilo de fonte"
-          header_description: "Personalize os estilos de fonte usados pelos seus temas"
         files:
           title: "Arquivos"
           header_description: "Configurações para controlar limites de tipo e tamanho de arquivo, origens e tamanhos de avatar, armazenamento de arquivo, compactação e qualidade de imagem etc."
@@ -4872,62 +4877,64 @@ pt_BR:
           title: "Acesso e autenticação"
           header_description: "Configure o acesso e autenticação de usuários(as), chaves e segredos, provedores OAuth2 e muito mais"
         logo:
-          title: "Logotipo do site"
-          header_description: "Personalize as variações do logotipo do seu site"
-        branding:
-          title: "Identidade visual"
-          logo:
-            title: "Logotipo"
-            form:
-              saved: "As configurações do logotipo foram salvas."
-              logo:
-                title: "Logotipo principal"
-                description: "Aparece na navegação superior do site, bem como no topo das notificações de e-mail do site."
-                help_text: "O tamanho recomendado é 600 x 80 pixels."
-              logo_dark:
-                help_text: "O tamanho recomendado é 600 x 80 pixels."
-              large_icon:
-                title: "Ícone quadrado"
-                description: "Uma versão quadrada da imagem do logotipo aparece na parte superior da administração e também é o logotipo do aplicativo na tela inicial do celular."
-                help_text: "O tamanho recomendado é 512 x 512 pixels."
-              square_icon_dark:
-                required: "Usar um ícone quadrado diferente para o modo escuro?"
-                help_text: "O tamanho recomendado é 512 x 512 pixels."
-              favicon:
-                title: "Favicon"
-                description: "O logotipo aparecerá como ícone na aba do navegador e nos favoritos/marcadores do navegador."
-              logo_small:
-                title: "Logotipo pequeno"
-                description: "A pequena imagem do logotipo no canto superior à esquerda do site, exibida ao rolar para baixo. Se for deixada em branco, um glifo da página inicial será exibido."
-                help_text: "O tamanho recomendado é 120 x 120 pixels."
-              logo_small_dark:
-                required: "Usar um logotipo pequeno diferente para o modo escuro?"
-                help_text: "O tamanho recomendado é 120 x 120 pixels."
-              mobile: "Móvel"
-              email: "E-mail"
-              social_media: "Redes sociais"
-              mobile_logo:
-                title: "Logotipo móvel"
-                description: "O logotipo usado na versão mobile do seu site. Se deixado em branco, a imagem da configuração \"logo\" será usada."
-                help_text: "Use uma imagem retangular larga com altura de 120 e proporção maior que 3:1."
-              mobile_logo_dark:
-                required: "Usar um logotipo móvel diferente para o modo escuro?"
-                help_text: "Use uma imagem retangular larga com altura de 120 e proporção maior que 3:1."
-              manifest_icon:
-                description: "Imagem usada como logotipo/imagem inicial no Android. Se deixado em branco, large_icon será usado."
-                help_text: "O tamanho recomendado é 512 x 512 pixels."
-              manifest_screenshots:
-                description: "Capturas de tela que mostram os recursos e funcionalidades da sua instância na sua página de alerta de instalação. Todas as imagens devem ser envios locais e devem ter as mesmas dimensões."
-              apple_touch_icon:
-                description: "Ícone usado para dispositivos Apple touch. Se deixado em branco, large_icon será usado."
-                help_text: "O tamanho recomendado é 180 x 180 pixels. Um fundo transparente não é recomendado."
-              digest_logo:
-                description: "A imagem do logotipo alternativo usada na parte superior do resumo de e-mail do seu site. Se for deixada em branco, a imagem da configuração \"logotipo\" será usada."
-                help_text: "Usar uma imagem retangular larga. Não usar uma imagem SVG."
-              opengraph_image:
-                description: "Imagem opengraph padrão, usada quando a página não tiver outra imagem adequada. Se for deixada em branco, large_icon será usado."
-              x_summary_large_image:
-                help_text: "o tamanho recomendado é de pelo menos 280 x 150 pixels. Não use uma imagem SVG."
+          title: "Logotipo"
+          form:
+            saved: "As configurações do logotipo foram salvas."
+            logo:
+              title: "Logotipo principal"
+              description: "Aparece na navegação superior do site, bem como no topo das notificações de e-mail do site."
+              help_text: "O tamanho recomendado é 600 x 80 pixels."
+            logo_dark:
+              help_text: "O tamanho recomendado é 600 x 80 pixels."
+            large_icon:
+              title: "Ícone quadrado"
+              description: "Uma versão quadrada da imagem do logotipo aparece na parte superior da administração e também é o logotipo do aplicativo na tela inicial do celular."
+              help_text: "O tamanho recomendado é 512 x 512 pixels."
+            square_icon_dark:
+              required: "Usar um ícone quadrado diferente para o modo escuro?"
+              help_text: "O tamanho recomendado é 512 x 512 pixels."
+            favicon:
+              title: "Favicon"
+              description: "O logotipo aparecerá como ícone na aba do navegador e nos favoritos/marcadores do navegador."
+            logo_small:
+              title: "Logotipo pequeno"
+              description: "A pequena imagem do logotipo no canto superior à esquerda do site, exibida ao rolar para baixo. Se for deixada em branco, um glifo da página inicial será exibido."
+              help_text: "O tamanho recomendado é 120 x 120 pixels."
+            logo_small_dark:
+              required: "Usar um logotipo pequeno diferente para o modo escuro?"
+              help_text: "O tamanho recomendado é 120 x 120 pixels."
+            mobile: "Móvel"
+            email: "E-mail"
+            social_media: "Redes sociais"
+            mobile_logo:
+              title: "Logotipo móvel"
+              description: "O logotipo usado na versão mobile do seu site. Se deixado em branco, a imagem da configuração \"logo\" será usada."
+              help_text: "Use uma imagem retangular larga com altura de 120 e proporção maior que 3:1."
+            mobile_logo_dark:
+              required: "Usar um logotipo móvel diferente para o modo escuro?"
+              help_text: "Use uma imagem retangular larga com altura de 120 e proporção maior que 3:1."
+            manifest_icon:
+              description: "Imagem usada como logotipo/imagem inicial no Android. Se deixado em branco, large_icon será usado."
+              help_text: "O tamanho recomendado é 512 x 512 pixels."
+            manifest_screenshots:
+              description: "Capturas de tela que mostram os recursos e funcionalidades da sua instância na sua página de alerta de instalação. Todas as imagens devem ser envios locais e devem ter as mesmas dimensões."
+            apple_touch_icon:
+              description: "Ícone usado para dispositivos Apple touch. Se deixado em branco, large_icon será usado."
+              help_text: "O tamanho recomendado é 180 x 180 pixels. Um fundo transparente não é recomendado."
+            digest_logo:
+              description: "A imagem do logotipo alternativo usada na parte superior do resumo de e-mail do seu site. Se for deixada em branco, a imagem da configuração \"logotipo\" será usada."
+              help_text: "Usar uma imagem retangular larga. Não usar uma imagem SVG."
+            opengraph_image:
+              description: "Imagem opengraph padrão, usada quando a página não tiver outra imagem adequada. Se for deixada em branco, large_icon será usado."
+            x_summary_large_image:
+              help_text: "o tamanho recomendado é de pelo menos 280 x 150 pixels. Não use uma imagem SVG."
+        fonts:
+          title: "Fontes"
+          form:
+            heading_font:
+              title: "Fonte do cabeçalho"
+          backfill_modal:
+            modal_yes: "Sim"
         navigation:
           title: "Navegação"
           header_description: "Configure itens de menu e links de navegação para seu site, inclusive a localização e comportamento do menu de navegação principal, links rápidos no topo da página inicial e a barra lateral da administração"
@@ -4937,9 +4944,6 @@ pt_BR:
         onebox:
           title: "Onebox"
           header_description: "Configure a pré-visualização, geração e exibição do Onebox para seu site"
-        other:
-          title: "Outras"
-          header_description: "Configurações que não pertencem a outras categorias"
         rate_limits:
           title: "Limites de frequência"
           header_description: "Configure a frequência com a qual os(as) usuários(as) podem realizar certas ações, como criar tópicos, enviar mensagens e postar respostas"
@@ -4948,7 +4952,6 @@ pt_BR:
           header_description: "Configure definições de pesquisa, inclusive registro e tokenização para chinês e japonês"
         search_everything:
           title: "Pesquisar"
-          header_description: "Encontre qualquer coisa na interface de administração aqui. Você pode filtrar os resultados abaixo, e suas preferências serão lembradas."
         security:
           title: "Segurança"
           header_description: "Configurar definições de segurança, inclusive autenticação de dois fatores, privilégios de moderador(a) e políticas de segurança de conteúdo"
@@ -4993,6 +4996,10 @@ pt_BR:
         badges:
           title: "Emblemas"
           header_description: "Os(as) usuários(as) recebem emblemas como recompensa por suas atividades, contribuições e realizações. Isso é uma forma de reconhecer, validar e incentivar comportamentos positivos e o envolvimento na comunidade"
+        content:
+          sub_pages:
+            posts_and_topics:
+              title: "Postagens no tópico"
         permalinks:
           title: "Links permanentes"
           header_description: "Redirecionamentos para aplicar nas URLs que não são conhecidas pelo fórum"
@@ -5018,9 +5025,6 @@ pt_BR:
           title: "Textos do site"
           header_description: "Personalize qualquer texto usado no Discourse para corresponder à voz e ao tom da sua comunidade"
         email:
-          title: "Registros e configurações do servidor"
-          header_description: "Personalize os modelos usados para criar e-mails, pré-visualize e-mails de resumo que serão enviados e visualize logs de e-mail"
-          keywords: "e-mail|smtp|mailgun|sendgrid|enviado|ignorado|retornado|recebido|recusado|registros de e-mail|resumo de pré-visualização"
           sub_pages:
             preview_summary:
               title: "Pré-visualizar resumo"
@@ -5031,6 +5035,8 @@ pt_BR:
             templates:
               title: "Modelos"
               header_description: "Personalizar os modelos usados para criar e-mails"
+        email_logs:
+          sub_pages:
             sent:
               title: "Enviado(a)"
               header_description: "Ver um log de e-mails que foram enviados"
@@ -5079,7 +5085,6 @@ pt_BR:
           header_description: "Com o Discourse, você pode incorporar os componentes de um tópico em um site remoto através de uma API de java que cria um IFRAME"
       search:
         title: "Pesquisar"
-        instructions: "Digite para pesquisar páginas, configurações, relatórios, temas, componentes e mais..."
         result_types:
           page:
             one: "Página"
@@ -5675,6 +5680,8 @@ pt_BR:
           city_for_disputes_placeholder: "Cidade"
           city_for_disputes_help: |
             Especifique a cidade para a solução de disputas legais relacionadas a este fórum.
+          extra_groups:
+            groups: "Grupos"
           optional: "(opcional)"
           update: "Atualizar"
           toasts:
@@ -5705,7 +5712,6 @@ pt_BR:
             post: "postagens"
             chat_message: "mensagens de chat"
             enabled: "Ativar este sinalizador personalizado após salvar"
-            alert: "Após ser utilizado, o sinalizador personalizado poderá ser desativado, mas não ser editado nem excluído."
             edit_flag: "Editar sinalizador"
             non_editable: "Você não pode editar este sinalizador porque é um sinalizador de sistema ou já foi utilizado no sistema de revisão. Mas ainda pode desativar."
             delete_flag: "Excluir sinalizador"
@@ -5734,6 +5740,24 @@ pt_BR:
             new_theme: "Novo tema"
           components:
             title: "Componentes"
+            install: "Instalar"
+            name: "Nome"
+            enabled: "Ativado(a)?"
+            by_author: "De %{name}"
+            learn_more: "Saiba mais"
+            edit: "Editar"
+            parent_themes_two: "%{name1} e %{name2}"
+            preview: "Pré-visualizar"
+            check_update: "Verificar atualizações"
+            export: "Exportar"
+            convert: "Converter"
+            delete: "Excluir"
+            filter_by: "Filtrar por"
+            filter_by_all: "Tudo"
+            filter_by_used: "Usado(a)"
+            filter_by_unused: "Não usado(a)"
+            delete_confirm: 'Você tem certeza de que deseja excluir "%{name}"?'
+            badge_unused: "Não usado(a)"
         user_fields:
           field: "Campo"
           type: "Tipo"
@@ -5746,6 +5770,8 @@ pt_BR:
           save_successful: "Campo de usuário(a) salvo."
         color_palettes:
           palette_name: "Nome"
+          duplicate: "Duplicado"
+          delete: "Excluir"
           color_options:
             toggle: "Selecionável por usuário(a)"
             toggle_description: "A paleta de cores pode ser selecionado pelos(as) usuários(as)"
@@ -5921,9 +5947,11 @@ pt_BR:
           extra_files_upload: "Exporte o tema para visualizar estes arquivos."
           extra_files_remote: "Exporte o tema ou verifique o repositório git para visualizar estes arquivos."
           preview: "Pré-visualização"
+          default: "Ativo(a)"
           settings_editor: "Editor de configurações"
           is_default: "O tema está ativado por padrão"
           user_selectable: "O tema pode ser selecionado pelos(as) usuários(as)"
+          user_selectable_badge_label: "Selecionável por usuário(a)"
           color_scheme_user_selectable: "A paleta de cores pode ser selecionado pelos(as) usuários(as)"
           auto_update: "Atualizar automaticamente quando o Discourse for atualizado"
           color_scheme: "Paleta de cores"
@@ -5941,8 +5969,6 @@ pt_BR:
           convert_theme_alert_generic: "Tem certeza de que quer converter este tema em um componente?"
           convert_theme_tooltip: "Converter este tema em componente"
           inactive_themes: "Temas inativos:"
-          set_default_theme: "Definir padrão"
-          default_theme: "Tema padrão"
           set_default_success: "Tema padrão definido como %{theme}"
           install_success: "Tema %{theme} instalado!"
           inactive_components: "Componentes não usados"
@@ -6015,7 +6041,6 @@ pt_BR:
             error: "Este tema foi desativado automaticamente porque não é compatível com esta versão do Discourse."
             minimum: "Requer versão do Discourse %{version} ou mais recente."
             maximum: "Requer versão do Discourse %{version} ou menos recente."
-          update_to_latest: "Atualize para o mais recente"
           check_for_updates: "Verificar atualizações"
           updating: "Atualizando…"
           update_success: "Atualização de %{theme} concluída"
@@ -6079,30 +6104,30 @@ pt_BR:
           active_filter: "Ativo(a)"
           inactive_filter: "Inativo(a)"
           updates_available_filter: "Atualizações disponíveis"
-          schema:
-            title: "Editar %{name} configuração"
-            back_button: "Voltar para %{name}"
-            fields:
-              required: "*necessário(a)"
-              groups:
-                at_least:
-                  one: "Requer pelo menos %{count} grupo"
-                  other: "Requer pelo menos %{count} grupos"
-              categories:
-                at_least:
-                  one: "Requer pelo menos %{count} categoria"
-                  other: "Requer pelo menos %{count} categorias"
-              tags:
-                at_least:
-                  one: "Requer pelo menos %{count} etiqueta"
-                  other: "Requer pelo menos %{count} etiquetas"
-              string:
-                too_short:
-                  one: "deve ter no mínimo %{count} caractere"
-                  other: "deve ter no mínimo %{count} caracteres"
-              number:
-                too_small: "deve ser maior ou igual a %{count}"
-                too_large: "deve ser menor ou igual a %{count}"
+        schema:
+          title: "Editar %{name} configuração"
+          back_button: "Voltar para %{name}"
+          fields:
+            required: "*necessário(a)"
+            groups:
+              at_least:
+                one: "Requer pelo menos %{count} grupo"
+                other: "Requer pelo menos %{count} grupos"
+            categories:
+              at_least:
+                one: "Requer pelo menos %{count} categoria"
+                other: "Requer pelo menos %{count} categorias"
+            tags:
+              at_least:
+                one: "Requer pelo menos %{count} etiqueta"
+                other: "Requer pelo menos %{count} etiquetas"
+            string:
+              too_short:
+                one: "deve ter no mínimo %{count} caractere"
+                other: "deve ter no mínimo %{count} caracteres"
+            number:
+              too_small: "deve ser maior ou igual a %{count}"
+              too_large: "deve ser menor ou igual a %{count}"
         colors:
           select_base:
             title: "Selecionar paleta de cores básicas"
@@ -6113,36 +6138,28 @@ pt_BR:
           about: "Altere as cores usadas nos seus temas. Crie um novo esquema de cores para começar."
           new_name: "Nova paleta de cores"
           copy_name_prefix: "Copiar de"
-          delete_confirm: "Excluir esta paleta de cores?"
           undo: "Desfazer"
           undo_title: "Desfaça suas alterações nesta cor desde a última vez que foi salva."
           revert: "Reverter"
           revert_title: "Redefina esta cor na paleta de cores padrão do Discourse."
           primary:
             name: "primário(a)"
-            description: "Maioria dos textos, ícones e bordas."
           primary-medium:
             name: "primária, média"
           primary-low-mid:
             name: "primária, baixa, intermediária"
           secondary:
             name: "secundário(a)"
-            description: "As cores de fundo principais e do texto de alguns botões."
           tertiary:
             name: "terciário(a)"
-            description: "Links, alguns botões, notificações e cor realçada."
           quaternary:
             name: "quaternário(a)"
-            description: "Para uso opcional nos temas."
           header_background:
             name: "fundo do cabeçalho"
-            description: "Cor de fundo do cabeçalho do site."
           header_primary:
             name: "cabeçalho primário"
-            description: "Texto e ícones no cabeçalho do site."
           highlight:
             name: "destaque"
-            description: "A cor de fundo dos elementos em destaque na página, como postagens e tópicos."
           highlight-high:
             name: "destaque, alta"
           highlight-medium:
@@ -6151,19 +6168,14 @@ pt_BR:
             name: "destaque, baixa"
           danger:
             name: "perigo"
-            description: "Cor de destaque para ações como remover postagens e tópicos."
           success:
             name: "sucesso"
-            description: "Usadas para indicar que a ação foi bem-sucedida."
           love:
             name: "adorar"
-            description: "A cor do botão curtir."
           selected:
             name: "selecionado(a)"
-            description: "A cor de fundo de elementos como os itens da lista quando estão seleccionados/activos."
           hover:
             name: "focalizar"
-            description: "A cor de fundo de elementos como os itens da lista quando passa o mouse ou têm o foco do teclado."
           editor:
             light: "Claro"
             dark: "Escuro"

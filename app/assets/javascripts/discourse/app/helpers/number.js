@@ -1,10 +1,7 @@
 import { htmlSafe } from "@ember/template";
 import { number as numberFormatter } from "discourse/lib/formatter";
-import { registerRawHelper } from "discourse/lib/helpers";
 import { escapeExpression } from "discourse/lib/utilities";
 import I18n, { i18n } from "discourse-i18n";
-
-registerRawHelper("number", number);
 
 export default function number(orig, params = {}) {
   orig = Math.round(parseFloat(orig));
@@ -29,7 +26,7 @@ export default function number(orig, params = {}) {
   let addTitle = params.noTitle ? false : true;
 
   // Round off the thousands to one decimal place
-  const n = numberFormatter(orig);
+  const n = numberFormatter(orig, { maxDisplay: params.maxDisplay });
   if (n.toString() !== title.toString() && addTitle) {
     result += " title='" + escapeExpression(title) + "'";
   }

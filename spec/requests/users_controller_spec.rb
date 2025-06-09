@@ -237,7 +237,8 @@ RSpec.describe UsersController do
       end
 
       it "fails without a secure session" do
-        put "/u/#{user.username}/remove-password.json" #
+        user.update!(created_at: Time.zone.now - 8.minutes)
+        put "/u/#{user.username}/remove-password.json"
         expect(response.status).to eq(403)
       end
 
@@ -246,9 +247,15 @@ RSpec.describe UsersController do
         put "/u/#{user.username}/remove-password.json"
         expect(response.status).to eq(200)
       end
+
+      it "succeeds with a newly-created user" do
+        user.update!(created_at: Time.zone.now - 1.minute)
+        put "/u/#{user.username}/remove-password.json"
+        expect(response.status).to eq(200)
+      end
     end
 
-    context "when logged in and has associated accout" do
+    context "when logged in and has associated account" do
       let(:plugin_auth_provider) do
         authenticator_class =
           Class.new(Auth::ManagedAuthenticator) do
@@ -273,6 +280,7 @@ RSpec.describe UsersController do
       end
 
       it "fails without a secure session" do
+        user.update!(created_at: Time.zone.now - 8.minutes)
         put "/u/#{user.username}/remove-password.json" #
         expect(response.status).to eq(403)
       end
@@ -835,14 +843,18 @@ RSpec.describe UsersController do
     end
 
     context "when using an encoded email that decodes to a valid email" do
-      it "accepts the registration" do
+      # + An 'encoded-word' MUST NOT appear in any portion of an 'addr-spec'.
+      #
+      # https://datatracker.ietf.org/doc/html/rfc2047
+      it "blocks the registration" do
         post_user(
           email:
             "=?utf-8?q?=6f=73=61=6d=61=2d=69=6e=2d=71=2d=65=6e=63=6f=64=69=6e=67?=@discourse.org",
         )
         expect(response.status).to eq(200)
-        expect(response.parsed_body["success"]).to eq(true)
-        expect(User.find_by(id: response.parsed_body["user_id"])).to be_present
+        expect(response.parsed_body["success"]).to eq(false)
+        expect(response.parsed_body["message"]).to eq("Primary email is invalid.")
+        expect(response.parsed_body["user_id"]).to be_blank
       end
     end
 
@@ -942,10 +954,16 @@ RSpec.describe UsersController do
           provider
         end
 
-        before { DiscoursePluginRegistry.register_auth_provider(plugin_auth_provider) }
+        before do
+          DiscoursePluginRegistry.register_auth_provider(plugin_auth_provider)
+          # Tell UserAuthenticator our user authenticated previously.
+          allow(UserAuthenticator).to receive(:new).and_wrap_original do |original_method, user|
+            authenticated_session = { authentication: { email: "foo" } }
+            original_method.call(user, authenticated_session)
+          end
+        end
 
         after { DiscoursePluginRegistry.reset! }
-
         it "creates User record" do
           params = {
             username: "foobar",
@@ -6780,14 +6798,28 @@ RSpec.describe UsersController do
         SiteSetting.enable_discourse_connect = false
       end
 
-      context "when the session is unconfirmed" do
-        it "returns unconfirmed session response" do
-          post "/u/second_factors.json"
+      it "returns unconfirmed session response when user was created more than N minutes ago" do
+        user1.created_at = Time.zone.now - 10.minutes
+        user1.save!(validate: false)
 
-          expect(response.status).to eq(200)
-          response_body = response.parsed_body
-          expect(response_body["unconfirmed_session"]).to eq(true)
-        end
+        post "/u/second_factors.json"
+
+        expect(response.status).to eq(200)
+        response_body = response.parsed_body
+        expect(response_body["unconfirmed_session"]).to eq(true)
+      end
+
+      it "returns empty list for a recently created user" do
+        user1.created_at = Time.zone.now - 1.minutes
+        user1.save!(validate: false)
+
+        post "/u/second_factors.json"
+
+        expect(response.status).to eq(200)
+        response_body = response.parsed_body
+
+        expect(response_body["unconfirmed_session"]).to eq(nil)
+        expect(response_body["security_keys"]).to eq([])
       end
 
       context "when the session is confirmed" do

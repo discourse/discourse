@@ -13,6 +13,7 @@ import TopicAdminMenu from "discourse/components/topic-admin-menu";
 import UserTip from "discourse/components/user-tip";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
+import lazyHash from "discourse/helpers/lazy-hash";
 import discourseComputed from "discourse/lib/decorators";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import { getTopicFooterButtons } from "discourse/lib/register-topic-footer-button";
@@ -23,6 +24,10 @@ import DropdownSelectBox from "select-kit/components/dropdown-select-box";
 import PinnedButton from "select-kit/components/pinned-button";
 import TopicNotificationsButton from "select-kit/components/topic-notifications-button";
 import DMenu from "float-kit/components/d-menu";
+
+function bind(fn, context) {
+  return fn.bind(context);
+}
 
 @attributeBindings("role")
 export default class TopicFooterButtons extends Component {
@@ -151,7 +156,7 @@ export default class TopicFooterButtons extends Component {
               @id={{concat "topic-footer-dropdown-" actionable.id}}
               @value={{actionable.value}}
               @content={{actionable.content}}
-              @onChange={{action actionable.action}}
+              @onChange={{bind actionable.action this}}
               @options={{hash
                 icon=actionable.icon
                 none=actionable.noneItem
@@ -232,7 +237,7 @@ export default class TopicFooterButtons extends Component {
 
       <PluginOutlet
         @name="topic-footer-main-buttons-before-create"
-        @outletArgs={{hash topic=this.topic}}
+        @outletArgs={{lazyHash topic=this.topic}}
         @connectorTagName="span"
       />
 
@@ -248,7 +253,7 @@ export default class TopicFooterButtons extends Component {
 
       <PluginOutlet
         @name="after-topic-footer-main-buttons"
-        @outletArgs={{hash topic=this.topic}}
+        @outletArgs={{lazyHash topic=this.topic}}
         @connectorTagName="span"
       />
     </div>
@@ -281,7 +286,7 @@ export default class TopicFooterButtons extends Component {
 
     <PluginOutlet
       @name="after-topic-footer-buttons"
-      @outletArgs={{hash topic=this.topic}}
+      @outletArgs={{lazyHash topic=this.topic}}
       @connectorTagName="span"
     />
   </template>
