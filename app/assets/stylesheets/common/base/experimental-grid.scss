@@ -173,4 +173,12 @@ body.grid-layout {
       }
     }
   }
+
+  .d-header #site-text-logo {
+    font-size: clamp(var(--font-0), 2.5vw, var(--font-up-2));
+    white-space: wrap;
+    line-height: var(--line-height-small);
+
+    @include line-clamp(2);
+  }
 }
