@@ -7,61 +7,38 @@ module Jobs
     sidekiq_options queue: "low"
 
     def execute(args)
+      return unless SiteSetting.mediaconvert_enabled
+      return if SiteSetting.mediaconvert_role_arn.blank?
       return if args[:upload_id].blank?
 
       upload = Upload.find_by(id: args[:upload_id])
       return if upload.blank?
 
-      # Check if this file has already been converted
-      return if upload.original_filename.end_with?("_converted.mp4")
+      return if OptimizedVideo.exists?(upload_id: upload.id)
+      return if upload.url.blank?
 
-      # Wait for upload to be complete in S3
-      retry_count = args[:retry_count].to_i
-      if upload.url.blank?
-        if retry_count < 5 # Try up to 5 times with exponential backoff
-          wait_time = (2**retry_count) * 5 # 5, 10, 20, 40, 80 seconds
-          Jobs.enqueue_in(
-            wait_time.seconds,
-            :convert_video,
-            upload_id: upload.id,
-            retry_count: retry_count + 1,
+      # For some reason the endpoint is not visible in the aws console UI so we need to get it from the API
+      if SiteSetting.mediaconvert_endpoint.blank?
+        client =
+          Aws::MediaConvert::Client.new(
+            region: SiteSetting.s3_region,
+            credentials:
+              Aws::Credentials.new(SiteSetting.s3_access_key_id, SiteSetting.s3_secret_access_key),
           )
-          return
-        else
-          raise "Upload URL is still blank after 5 retries"
-        end
+
+        resp = client.describe_endpoints
+        SiteSetting.mediaconvert_endpoint = resp.endpoints[0].url
       end
 
-      # Validate upload URL
-      if upload.url.blank?
-        # Try to reload the upload to see if it's a stale record
-        upload.reload
-        raise "Upload URL is blank for upload #{upload.id}" if upload.url.blank?
-      end
-
-      # Create MediaConvert client
-      client =
-        Aws::MediaConvert::Client.new(
-          region: SiteSetting.s3_region,
-          credentials:
-            Aws::Credentials.new(SiteSetting.s3_access_key_id, SiteSetting.s3_secret_access_key),
-        )
-
-      resp = client.describe_endpoints
-      endpoint = resp.endpoints[0].url
+      return if SiteSetting.mediaconvert_endpoint.blank?
 
       mediaconvert_client =
         Aws::MediaConvert::Client.new(
           region: SiteSetting.s3_region,
           credentials:
             Aws::Credentials.new(SiteSetting.s3_access_key_id, SiteSetting.s3_secret_access_key),
-          endpoint: endpoint,
+          endpoint: SiteSetting.mediaconvert_endpoint,
         )
-
-      mediaconvert_role_arn = ENV["DISCOURSE_MEDIACONVERT_ROLE_ARN"]
-      unless mediaconvert_role_arn
-        raise "DISCOURSE_MEDIACONVERT_ROLE_ARN environment variable is not set"
-      end
 
       new_sha1 = SecureRandom.hex(20)
       output_path = "optimized/videos/#{new_sha1}"
@@ -76,7 +53,10 @@ module Jobs
 
       # Verify the domain contains our bucket
       unless domain&.include?(SiteSetting.s3_upload_bucket)
-        raise "Upload URL domain does not contain expected bucket name: #{SiteSetting.s3_upload_bucket}. URL: #{upload.url.inspect}"
+        raise Discourse::InvalidParameters.new(
+                :upload_url,
+                "Upload URL domain does not contain expected bucket name: #{SiteSetting.s3_upload_bucket}",
+              )
       end
 
       input_path = "s3://#{SiteSetting.s3_upload_bucket}/#{path}"
@@ -142,7 +122,7 @@ module Jobs
         # Create the MediaConvert job
         response =
           mediaconvert_client.create_job(
-            role: mediaconvert_role_arn,
+            role: SiteSetting.mediaconvert_role_arn,
             settings: settings,
             status_update_interval: "SECONDS_10",
             user_metadata: {
