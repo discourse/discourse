@@ -391,6 +391,7 @@ class Admin::ThemesController < Admin::AdminController
   def change_colors
     theme = Theme.find_by(id: params[:id], component: false)
     raise Discourse::NotFound if !theme
+    raise Discourse::InvalidAccess if theme.system?
 
     palette = theme.find_or_create_owned_color_palette
 

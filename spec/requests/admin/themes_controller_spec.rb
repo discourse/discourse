@@ -1631,5 +1631,18 @@ RSpec.describe Admin::ThemesController do
         expect(response.status).to eq(404)
       end
     end
+
+    context "when system theme" do
+      before { theme.update(id: -10) }
+
+      it "returns invalid access" do
+        put "/admin/themes/#{theme.id}/change-colors.json",
+            params: {
+              colors: [{ name: "primary", hex: "ff0000", dark_hex: "0000ff" }],
+            }
+
+        expect(response.status).to eq(403)
+      end
+    end
   end
 end

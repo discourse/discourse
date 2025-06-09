@@ -205,6 +205,7 @@ const Picker = class extends Component {
         data-position={{@position}}
         type="color"
         value={{this.activeValue}}
+        disabled={{@system}}
         {{on "input" this.onInput}}
         {{on "change" this.onChange}}
       />
@@ -215,6 +216,7 @@ const Picker = class extends Component {
           data-position={{@position}}
           type="text"
           maxlength="6"
+          disabled={{@system}}
           value={{this.displayedColor}}
           {{on "keypress" this.onTextKeypress}}
           {{on "change" this.onTextChange}}
@@ -318,6 +320,7 @@ export default class ColorPaletteEditor extends Component {
                 @showDark={{this.darkModeActive}}
                 @onLightChange={{fn @onLightColorChange color}}
                 @onDarkChange={{fn @onDarkColorChange color}}
+                @system={{@system}}
               />
               {{#unless @hideRevertButton}}
                 <DButton
