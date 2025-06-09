@@ -25,7 +25,10 @@ export default RouteTemplate(
 
     {{bodyClass "users-page"}}
     <section>
-      <LoadMore @action={{@controller.loadMore}}>
+      <LoadMore
+        @action={{@controller.loadMore}}
+        @enabled={{@controller.model.canLoadMore}}
+      >
         <div class="container">
           <div class="users-directory directory">
             <span>

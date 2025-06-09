@@ -1,0 +1,10 @@
+.load-more-sentinel {
+  height: 0;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  pointer-events: none;
+  user-select: none;
+  visibility: hidden;
+  position: relative;
+}
