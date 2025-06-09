@@ -36,19 +36,19 @@
       <%= preload_script file %>
     <%- end %>
 
-    <%= preload_script_url ExtraLocalesController.url("main"), type_module: true %>
-    <%= preload_script_url ExtraLocalesController.url("mf"), type_module: true %>
+    <%= preload_script_url ExtraLocalesController.url("main") %>
+    <%= preload_script_url ExtraLocalesController.url("mf") %>
     <%- if ExtraLocalesController.client_overrides_exist? %>
-      <%= preload_script_url ExtraLocalesController.url("overrides"), type_module: true %>
+      <%= preload_script_url ExtraLocalesController.url("overrides") %>
     <%- end %>
 
     <%- if staff? %>
-      <%= preload_script_url ExtraLocalesController.url("admin"), type_module: true %>
+      <%= preload_script_url ExtraLocalesController.url("admin") %>
       <%= preload_script "admin" %>
     <%- end %>
 
     <%- if admin? %>
-      <%= preload_script_url ExtraLocalesController.url("wizard"), type_module: true %>
+      <%= preload_script_url ExtraLocalesController.url("wizard") %>
     <%- end %>
 
     <%- unless customization_disabled? %>
