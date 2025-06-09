@@ -122,8 +122,8 @@ importers:
         specifier: 16.19.1
         version: 16.19.1(typescript@5.6.3)
       terser:
-        specifier: ^5.41.0
-        version: 5.41.0
+        specifier: ^5.42.0
+        version: 5.42.0
       typescript:
         specifier: 5.6.x
         version: 5.6.3
@@ -604,8 +604,8 @@ importers:
         specifier: ^0.7.4
         version: 0.7.4
       terser:
-        specifier: ^5.41.0
-        version: 5.41.0
+        specifier: ^5.42.0
+        version: 5.42.0
       testem:
         specifier: ^3.16.0
         version: 3.16.0(handlebars@4.7.8)(underscore@1.13.7)
@@ -1076,8 +1076,8 @@ importers:
         specifier: ^1.2.1
         version: 1.2.1
       terser:
-        specifier: ^5.41.0
-        version: 5.41.0
+        specifier: ^5.42.0
+        version: 5.42.0
 
   app/assets/javascripts/truth-helpers:
     dependencies:
@@ -2867,6 +2867,11 @@ packages:
 
   acorn@8.14.1:
     resolution: {integrity: sha512-OvQ/2pUDKmgfCg++xsTX1wGxfTaszcHVcTctW4UJB4hibJx2HXxxO5UmVgyjMa+ZDsiaf5wWLXYpRWMmBI0QHg==}
+    engines: {node: '>=0.4.0'}
+    hasBin: true
+
+  acorn@8.15.0:
+    resolution: {integrity: sha512-NZyJarBfL7nWwIq+FDL6Zp/yHEhePMNnnJ0y3qfieCrmNvYct8uvtiV41UvlSe6apAfk0fY1FbWx+NwfmpvtTg==}
     engines: {node: '>=0.4.0'}
     hasBin: true
 
@@ -8168,8 +8173,8 @@ packages:
       uglify-js:
         optional: true
 
-  terser@5.41.0:
-    resolution: {integrity: sha512-H406eLPXpZbAX14+B8psIuvIr8+3c+2hkuYzpMkoE0ij+NdsVATbA78vb8neA/eqrj7rywa2pIkdmWRsXW6wmw==}
+  terser@5.42.0:
+    resolution: {integrity: sha512-UYCvU9YQW2f/Vwl+P0GfhxJxbUGLwd+5QrrGgLajzWAtC/23AX0vcise32kkP7Eu0Wu9VlzzHAXkLObgjQfFlQ==}
     engines: {node: '>=10'}
     hasBin: true
 
@@ -9997,7 +10002,7 @@ snapshots:
       source-map-url: 0.4.1
       style-loader: 2.0.0(webpack@5.99.9(@swc/core@1.11.31)(esbuild@0.25.5))
       supports-color: 8.1.1
-      terser: 5.41.0
+      terser: 5.42.0
       thread-loader: 3.0.4(webpack@5.99.9(@swc/core@1.11.31)(esbuild@0.25.5))
       webpack: 5.99.9(@swc/core@1.11.31)(esbuild@0.25.5)
     transitivePeerDependencies:
@@ -11166,11 +11171,13 @@ snapshots:
 
   ace-builds@1.42.0: {}
 
-  acorn-jsx@5.3.2(acorn@8.14.1):
+  acorn-jsx@5.3.2(acorn@8.15.0):
     dependencies:
-      acorn: 8.14.1
+      acorn: 8.15.0
 
   acorn@8.14.1: {}
+
+  acorn@8.15.0: {}
 
   agent-base@7.1.3: {}
 
@@ -12009,7 +12016,7 @@ snapshots:
       lodash.defaultsdeep: 4.6.1
       matcher-collection: 2.0.1
       symlink-or-copy: 1.3.1
-      terser: 5.41.0
+      terser: 5.42.0
       walk-sync: 2.2.0
       workerpool: 6.5.1
     transitivePeerDependencies:
@@ -13776,8 +13783,8 @@ snapshots:
 
   espree@10.3.0:
     dependencies:
-      acorn: 8.14.1
-      acorn-jsx: 5.3.2(acorn@8.14.1)
+      acorn: 8.15.0
+      acorn-jsx: 5.3.2(acorn@8.15.0)
       eslint-visitor-keys: 4.2.0
 
   esprima@3.0.0: {}
@@ -17724,16 +17731,16 @@ snapshots:
       jest-worker: 27.5.1
       schema-utils: 4.3.2
       serialize-javascript: 6.0.2
-      terser: 5.41.0
+      terser: 5.42.0
       webpack: 5.99.9(@swc/core@1.11.31)(esbuild@0.25.5)
     optionalDependencies:
       '@swc/core': 1.11.31
       esbuild: 0.25.5
 
-  terser@5.41.0:
+  terser@5.42.0:
     dependencies:
       '@jridgewell/source-map': 0.3.6
-      acorn: 8.14.1
+      acorn: 8.15.0
       commander: 2.20.3
       source-map-support: 0.5.21
 
