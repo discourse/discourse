@@ -380,6 +380,7 @@ RSpec.describe Email::MessageBuilder do
           post_id: 4567,
           show_tags_in_subject: "foo bar baz",
           show_category_in_subject: "random",
+          username: "elbarto",
         }.merge(additional_opts),
       )
     end
@@ -404,6 +405,10 @@ RSpec.describe Email::MessageBuilder do
 
     it "passes through the topic category" do
       expect(message_with_header_args.header_args["X-Discourse-Category"]).to eq("random")
+    end
+
+    it "passes through the username" do
+      expect(message_with_header_args.header_args["X-Discourse-Sender"]).to eq("elbarto")
     end
 
     context "when allow_reply_by_email is enabled " do
