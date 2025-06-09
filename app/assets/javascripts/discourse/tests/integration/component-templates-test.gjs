@@ -8,7 +8,6 @@ import { registerTemporaryModule } from "../helpers/temporary-module-helper";
 module("Integration | Initializers | plugin-component-templates", function () {
   module("template-only component definition behaviour", function (hooks) {
     hooks.beforeEach(() => {
-      console.log("REGISTER");
       registerTemporaryModule(
         `discourse/plugins/some-plugin-name/discourse/templates/components/plugin-template-only-definition`,
         hbs`classic component`
