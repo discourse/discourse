@@ -151,14 +151,14 @@ module ApplicationHelper
       .html_safe
   end
 
-  def preload_script_url(url, entrypoint: nil, type_module: false)
+  def preload_script_url(url, entrypoint: nil)
     entrypoint_attribute = entrypoint ? "data-discourse-entrypoint=\"#{entrypoint}\"" : ""
     nonce_attribute = "nonce=\"#{csp_nonce_placeholder}\""
 
     add_resource_preload_list(url, "script")
 
     <<~HTML.html_safe
-      <script #{type_module ? 'type="module"' : "defer"} src="#{url}" #{entrypoint_attribute} #{nonce_attribute}></script>
+      <script defer src="#{url}" #{entrypoint_attribute} #{nonce_attribute}></script>
     HTML
   end
 
