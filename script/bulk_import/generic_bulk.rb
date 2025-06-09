@@ -221,17 +221,18 @@ class BulkImport::Generic < BulkImport::Base
           RECURSIVE
           tree AS (
                     SELECT c.id, c.parent_category_id, c.name, c.description, c.color, c.text_color,
-                           c.slug, c.existing_id, c.position, c.logo_upload_id, 0 AS level
+                           c.slug, c.existing_id, c.position, c.logo_upload_id, 0 AS level, c.show_subcategory_list, c.subcategory_list_style
                       FROM categories c
                      WHERE c.parent_category_id IS NULL
                      UNION ALL
                     SELECT c.id, c.parent_category_id, c.name, c.description, c.color, c.text_color,
-                           c.slug, c.existing_id, c.position, c.logo_upload_id, tree.level + 1 AS level
+                           c.slug, c.existing_id, c.position, c.logo_upload_id, tree.level + 1 AS level,
+                           c.show_subcategory_list, c.subcategory_list_style
                       FROM categories c,
                            tree
                      WHERE c.parent_category_id = tree.id
                   )
-      SELECT id, parent_category_id, name, description, color, text_color, slug, existing_id, logo_upload_id,
+      SELECT id, parent_category_id, name, description, color, text_color, slug, existing_id, logo_upload_id, show_subcategory_list, subcategory_list_style,
              COALESCE(position,
                       ROW_NUMBER() OVER (PARTITION BY parent_category_id ORDER BY parent_category_id NULLS FIRST, name)) AS position
         FROM tree
@@ -251,6 +252,8 @@ class BulkImport::Generic < BulkImport::Base
         slug: row["slug"],
         uploaded_logo_id:
           row["logo_upload_id"] ? upload_id_from_original_id(row["logo_upload_id"]) : nil,
+        show_subcategory_list: row["show_subcategory_list"],
+        subcategory_list_style: row["subcategory_list_style"],
       }
     end
 
@@ -464,7 +467,7 @@ class BulkImport::Generic < BulkImport::Base
     create_groups(groups) do |row|
       next if group_id_from_imported_id(row["id"]).present?
 
-      group_data = {
+      {
         imported_id: row["id"],
         name: row["name"],
         full_name: row["full_name"],
@@ -475,9 +478,8 @@ class BulkImport::Generic < BulkImport::Base
         members_visibility_level: row["members_visibility_level"],
         mentionable_level: row["mentionable_level"],
         messageable_level: row["messageable_level"],
+        assignable_level: row["assignable_level"]
       }
-      group_data[:assignable_level] = row["assignable_level"]
-      group_data
     end
 
     groups.close
@@ -636,9 +638,7 @@ class BulkImport::Generic < BulkImport::Base
         email_level: row["email_level"],
         email_messages_level: row["email_messages_level"],
         email_digests: row["email_digests"],
-        hide_profile_and_presence: false,
-        hide_profile: false,
-        hide_presence: false,
+        hide_profile_and_presence: row["hide_profile_and_presence"],
       }
     end
 
@@ -2040,7 +2040,7 @@ class BulkImport::Generic < BulkImport::Base
 
       if intermediate_group_ids.any?
         intermediate_group_ids.each do |intermediate_group_id|
-          intermediate_group_id = intermediate_group_id.to_i if intermediate_group_id.is_a?(String)
+          intermediate_group_id = intermediate_group_id.to_i
           discourse_tag_group_id = @tag_group_mapping[intermediate_group_id]
 
           if discourse_tag_group_id

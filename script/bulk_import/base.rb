@@ -76,7 +76,6 @@ class BulkImport::Base
     @html_entities = HTMLEntities.new
     @encoding = CHARSET_MAP[charset]
     @bbcode_to_md = true if use_bbcode_to_md?
-    @assign_plugin_enabled = defined?(::DiscourseAssign)
 
     @markdown =
       Redcarpet::Markdown.new(
@@ -653,6 +652,8 @@ class BulkImport::Base
     uploaded_logo_id
     created_at
     updated_at
+    show_subcategory_list
+    subcategory_list_style
   ]
 
   CATEGORY_CUSTOM_FIELD_COLUMNS = %i[category_id name value created_at updated_at]
@@ -1391,6 +1392,7 @@ class BulkImport::Base
     notification_level_when_replying: SiteSetting.default_other_notification_level_when_replying,
     like_notification_frequency: SiteSetting.default_other_like_notification_frequency,
     skip_new_user_tips: SiteSetting.default_other_skip_new_user_tips,
+    hide_profile_and_presence: false,
     hide_profile: SiteSetting.default_hide_profile,
     hide_presence: SiteSetting.default_hide_presence,
     sidebar_link_to_filtered_list: SiteSetting.default_sidebar_link_to_filtered_list,
@@ -1398,6 +1400,11 @@ class BulkImport::Base
   }
 
   def process_user_option(user_option)
+    if user_option.key?(:hide_profile_and_presence)
+      hide_profile_and_presence = user_option[:hide_profile_and_presence]
+      user_option[:hide_profile] = user_option[:hide_presence] = hide_profile_and_presence
+    end
+
     USER_OPTION_DEFAULTS.each { |key, value| user_option[key] = value if user_option[key].nil? }
     user_option
   end
