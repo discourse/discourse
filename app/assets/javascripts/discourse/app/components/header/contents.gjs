@@ -97,7 +97,6 @@ export default class Contents extends Component {
 
   <template>
     <div class="contents">
-
       {{#if this.siteSettings.grid_layout}}
         {{bodyClass "grid-layout"}}
         <div
