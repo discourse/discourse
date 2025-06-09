@@ -2269,6 +2269,13 @@ files:
     default: true
     client: true
     hidden: true
+  mediaconvert_enabled:
+    default: false
+  mediaconvert_role_arn:
+    default: ""
+  mediaconvert_endpoint:
+    default: ""
+    hidden: true
 
 trust:
   default_trust_level:
