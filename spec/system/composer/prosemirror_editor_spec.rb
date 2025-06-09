@@ -6,6 +6,8 @@ describe "Composer - ProseMirror editor", type: :system do
 
   let(:cdp) { PageObjects::CDP.new }
   let(:composer) { PageObjects::Components::Composer.new }
+  let(:discard_draft_modal) { PageObjects::Modals::DiscardDraft.new }
+  let(:drafts_dropdown) { PageObjects::Components::DraftsMenu.new }
   let(:rich) { composer.rich_editor }
 
   before do
@@ -808,8 +810,20 @@ describe "Composer - ProseMirror editor", type: :system do
     end
   end
 
-  describe "mention validations" do
-    it "validates mentions in the ProseMirror editor" do
+  describe "with mentions" do
+    fab!(:post)
+    fab!(:topic) { post.topic }
+
+    before do
+      Draft.set(
+        user,
+        topic.draft_key,
+        0,
+        { reply: "hey @#{user.username} and @unknown - how are you?" }.to_json,
+      )
+    end
+
+    it "validates manually typed mentions" do
       open_composer_and_toggle_rich_editor
 
       composer.type_content("Hey @#{user.username} ")
@@ -823,6 +837,16 @@ describe "Composer - ProseMirror editor", type: :system do
       composer.toggle_rich_editor
 
       expect(composer).to have_value("Hey @#{user.username} and @invalid_user - how are you?")
+    end
+
+    it "validates mentions in drafts" do
+      page.visit("/t/#{topic.id}")
+
+      expect(composer).to be_opened
+      composer.toggle_rich_editor
+
+      expect(composer).to have_css("a.mention", text: user.username)
+      expect(composer).to have_no_css("a.mention", text: "@unknown")
     end
   end
 end

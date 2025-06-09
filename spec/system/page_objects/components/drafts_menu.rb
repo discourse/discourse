@@ -48,6 +48,11 @@ module PageObjects
       def other_drafts_count
         find(MENU_SELECTOR + "-content .view-all-drafts span:first-child")["data-other-drafts"].to_i
       end
+
+      def select_draft(num)
+        find(MENU_SELECTOR + "-content .topic-drafts-item:nth-child(#{num})").click
+        self
+      end
     end
   end
 end
