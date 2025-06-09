@@ -15,7 +15,7 @@ const ContentsSecondary = <template>
     </div>
   {{/if}}
 
-  {{#if this.showHeaderSearch}}
+  {{#if @showHeaderSearch}}
     <HeaderSearch />
   {{/if}}
 

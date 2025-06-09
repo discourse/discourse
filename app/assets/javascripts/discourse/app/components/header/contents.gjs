@@ -59,7 +59,7 @@ export default class Contents extends Component {
   }
 
   <template>
-    <div class="contents">
+    <div class="contents {{if this.args.topicInfoVisible '--title-docked'}}">
       {{#if this.siteSettings.grid_layout}}
         {{bodyClass "grid-layout"}}
         <div class="d-header__contents-primary">
@@ -83,6 +83,7 @@ export default class Contents extends Component {
             @bootstrapEnabled={{this.siteSettings.bootstrap_mode_enabled}}
             @isStaff={{this.currentUser.staff}}
             @desktopView={{this.site.desktopView}}
+            @showHeaderSearch={{this.showHeaderSearch}}
           >
             {{yield}}
           </ContentsSecondary>
