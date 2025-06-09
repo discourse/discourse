@@ -2734,6 +2734,7 @@ en:
     experimental_content_localization_supported_locales: "List of supported locales that user content can be translated to. Requires `experimental_content_localization` to be enabled to take effect."
     viewport_based_mobile_mode: "EXPERIMENTAL: Disable the user-agent-based mobile/desktop modes and use viewport width instead."
     experimental_anon_language_switcher: "Enable experimental language switcher. This will allow site visitors who are not logged in to switch between translated versions of Discourse and user-contributed content in topics."
+    experimental_grid_layout: "Enable experimental CSS grid layout for the application. This will make the site full-width"
     errors:
       invalid_css_color: "Invalid color. Enter a color name or hex value."
       invalid_email: "Invalid email address."

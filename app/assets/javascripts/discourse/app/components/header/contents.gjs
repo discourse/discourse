@@ -25,7 +25,8 @@ export default class Contents extends Component {
 
   get minimized() {
     const minimizeForGrid =
-      this.siteSettings.grid_layout && !this.capabilities.viewport["2xl"];
+      this.siteSettings.experimental_grid_layout &&
+      !this.capabilities.viewport["2xl"];
 
     const shouldMinimize =
       this.args.topicInfoVisible && !this.args.showSidebar && minimizeForGrid;
@@ -60,7 +61,7 @@ export default class Contents extends Component {
 
   <template>
     <div class="contents {{if this.args.topicInfoVisible '--title-docked'}}">
-      {{#if this.siteSettings.grid_layout}}
+      {{#if this.siteSettings.experimental_grid_layout}}
         {{bodyClass "grid-layout"}}
         <div class="d-header__contents-primary">
           <ContentsPrimary

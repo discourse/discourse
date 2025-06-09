@@ -4007,7 +4007,7 @@ experimental:
     default: false
     client: true
     validator: "LanguageSwitcherSettingValidator"
-  grid_layout:
+  experimental_grid_layout:
     client: true
     default: true
-    hidden: true
+    hidden: false

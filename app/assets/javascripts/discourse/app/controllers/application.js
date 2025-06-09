@@ -42,7 +42,7 @@ export default class ApplicationController extends Controller {
   }
 
   get hideMobileWrapper() {
-    return this.siteSettings.grid_layout && this.site.mobileView;
+    return this.siteSettings.experimental_grid_layout && this.site.mobileView;
   }
 
   @discourseComputed
