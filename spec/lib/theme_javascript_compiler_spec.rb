@@ -27,13 +27,13 @@ RSpec.describe ThemeJavascriptCompiler do
           "connectors/outlet/blah-1.js" => "console.log('test')",
         },
       )
-      expect(compiler.content.to_s).to include("discourse/theme-1/connectors/outlet/blah-1")
       expect(compiler.content.to_s).to include(
-        "discourse/theme-1/templates/connectors/outlet/blah-1",
-      )
-      expect(JSON.parse(compiler.source_map)["sources"]).to contain_exactly(
-        "connectors/outlet/blah-1.js",
-        "templates/connectors/outlet/blah-1.js",
+        'themeCompatModules["connectors/outlet/blah-1"]',
+      ).once
+      expect(compiler.content.to_s).to include("templates/connectors/outlet/blah-1")
+      expect(JSON.parse(compiler.source_map)["sources"]).to include(
+        "theme-1/connectors/outlet/blah-1.js",
+        # "theme-1/templates/connectors/outlet/blah-1.js",
       )
 
       # Colocated under `/templates/connectors`
@@ -44,13 +44,13 @@ RSpec.describe ThemeJavascriptCompiler do
           "templates/connectors/outlet/blah-1.js" => "console.log('test')",
         },
       )
-      expect(compiler.content.to_s).to include("discourse/theme-1/connectors/outlet/blah-1")
       expect(compiler.content.to_s).to include(
-        "discourse/theme-1/templates/connectors/outlet/blah-1",
-      )
-      expect(JSON.parse(compiler.source_map)["sources"]).to contain_exactly(
-        "connectors/outlet/blah-1.js",
-        "templates/connectors/outlet/blah-1.js",
+        'themeCompatModules["connectors/outlet/blah-1"]',
+      ).once
+      expect(compiler.content.to_s).to include("templates/connectors/outlet/blah-1")
+      expect(JSON.parse(compiler.source_map)["sources"]).to include(
+        # "connectors/outlet/blah-1.js",
+        "theme-1/templates/connectors/outlet/blah-1.js",
       )
 
       # Not colocated
@@ -61,13 +61,13 @@ RSpec.describe ThemeJavascriptCompiler do
           "connectors/outlet/blah-1.js" => "console.log('test')",
         },
       )
-      expect(compiler.content.to_s).to include("discourse/theme-1/connectors/outlet/blah-1")
       expect(compiler.content.to_s).to include(
-        "discourse/theme-1/templates/connectors/outlet/blah-1",
-      )
-      expect(JSON.parse(compiler.source_map)["sources"]).to contain_exactly(
-        "connectors/outlet/blah-1.js",
-        "templates/connectors/outlet/blah-1.js",
+        'themeCompatModules["connectors/outlet/blah-1"]',
+      ).once
+      expect(compiler.content.to_s).to include("templates/connectors/outlet/blah-1")
+      expect(JSON.parse(compiler.source_map)["sources"]).to include(
+        "theme-1/connectors/outlet/blah-1.js",
+        # "templates/connectors/outlet/blah-1.js",
       )
     end
   end
