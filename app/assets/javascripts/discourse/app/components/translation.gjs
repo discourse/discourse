@@ -13,10 +13,10 @@ import { i18n } from "discourse-i18n";
  *   @placeholders={{array "username"}}
  *   @options={{hash shortdate=shortDate}}
  * >
- *   <:placeholders as |placeholder|>
- *     <placeholder @name="username">
+ *   <:placeholders as |Placeholder|>
+ *     <Placeholder @name="username">
  *       <UserLink @user={{user}}>{{user.username}}</UserLink>
- *     </placeholder>
+ *     </Placeholder>
  *   </:placeholders>
  * </Translation>
  **/

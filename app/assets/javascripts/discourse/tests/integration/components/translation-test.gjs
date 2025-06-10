@@ -36,10 +36,10 @@ module("Integration | Component | Translation", function (hooks) {
     await render(
       <template>
         <Translation @scope="hello" @placeholders={{array "username"}}>
-          <:placeholders as |placeholder|>
-            <placeholder @name="username">
+          <:placeholders as |Placeholder|>
+            <Placeholder @name="username">
               <UserLink @username="pento">pento</UserLink>
-            </placeholder>
+            </Placeholder>
           </:placeholders>
         </Translation>
       </template>
