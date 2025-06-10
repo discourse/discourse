@@ -22,8 +22,21 @@ RSpec.describe Themes::GetTranslations do
   let(:params) { { id: theme.id, locale: locale } }
 
   describe described_class::Contract, type: :model do
+    subject(:contract) { described_class.new(params) }
+
     it { is_expected.to validate_presence_of :id }
     it { is_expected.to validate_presence_of :locale }
+
+    context "when locale is invalid" do
+      let(:locale) { "invalid_locale" }
+
+      it "should be invalid" do
+        contract.validate
+        expect(contract.errors.full_messages).to include(
+          I18n.t("errors.messages.invalid_locale", invalid_locale: locale),
+        )
+      end
+    end
   end
 
   describe "#call" do
@@ -52,12 +65,6 @@ RSpec.describe Themes::GetTranslations do
       before { theme.destroy! }
 
       it { is_expected.to fail_to_find_a_model(:theme) }
-    end
-
-    context "when locale is invalid" do
-      let(:params) { { id: theme.id, locale: "invalid_locale" } }
-
-      it { is_expected.to fail_a_policy(:validate_locale) }
     end
   end
 end

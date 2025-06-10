@@ -49,6 +49,8 @@ class Themes::Create
     attribute :component, :boolean, default: false
     attribute :theme_fields, :array
     attribute :default, :boolean, default: false
+
+    validates :theme_fields, length: { minimum: 0, maximum: 100 }
   end
 
   policy :ensure_remote_themes_are_not_allowlisted
@@ -77,7 +79,6 @@ class Themes::Create
     theme.set_default! if params.default
   end
 
-  # TODO (martin): Might need to be an Action, it is used in other theme related things too.
   def log_theme_change(theme:, guardian:)
     StaffActionLogger.new(guardian.user).log_theme_change(nil, theme)
   end

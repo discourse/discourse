@@ -615,7 +615,7 @@ RSpec.describe Admin::ThemesController do
         global_setting :allowed_theme_repos, "  https://magic.com/repo.git, https://x.com/git"
       end
 
-      it "prevents theme creation with 403 error" do
+      it "prevents theme creation with 404 error" do
         expect do
           post "/admin/themes.json", params: { theme: { name: "my test name" } }
         end.not_to change { Theme.count }

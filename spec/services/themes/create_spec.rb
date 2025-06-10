@@ -68,7 +68,7 @@ RSpec.describe Themes::Create do
 
       it "sets the theme as default" do
         expect(result).to be_a_success
-        expect(result.theme.default?).to eq(true)
+        expect(result.theme).to be_default
         expect(SiteSetting.default_theme_id).to eq(result.theme.id)
       end
 
@@ -78,7 +78,7 @@ RSpec.describe Themes::Create do
         expect(existing_default.default?).to eq(true)
 
         expect(result).to be_a_success
-        expect(result.theme.default?).to eq(true)
+        expect(result.theme).to be_default
         expect(existing_default.reload.default?).to eq(false)
         expect(SiteSetting.default_theme_id).to eq(result.theme.id)
       end
@@ -129,7 +129,7 @@ RSpec.describe Themes::Create do
 
       it "creates a component" do
         expect(result).to be_a_success
-        expect(result.theme.component).to be_truthy
+        expect(result.theme).to be_a_component
       end
     end
 

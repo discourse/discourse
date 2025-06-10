@@ -22,7 +22,7 @@ class Themes::BulkDestroy
 
   params do
     attribute :theme_ids, :array
-    validates :theme_ids, presence: true
+    validates :theme_ids, presence: true, length: { minimum: 1, maximum: 50 }
   end
 
   model :themes
