@@ -8,10 +8,27 @@ export default {
 
     let i = 1;
     for (const moduleFilename of Object.keys(tree)) {
-      const moduleName = moduleFilename.replace(/\.[^\.]+(\.es6)?$/, "");
+      if (moduleFilename.match(/(^|\/)connectors\//)) {
+        let moduleName = moduleFilename.replace(/\.es6?$/, "");
 
-      output += `import * as Mod${i} from "${moduleName}";\n`;
-      output += `themeCompatModules["${moduleName}"] = Mod${i};\n`;
+        const isTemplate = moduleName.endsWith(".hbs");
+        const isInTemplatesDirectory = moduleName.match(/(^|\/)templates\//);
+
+        moduleName = moduleName.replace(/\.[^\.]+$/, "");
+
+        if (isTemplate && !isInTemplatesDirectory) {
+          moduleName = `templates/${moduleName}`;
+        } else if (!isTemplate && isInTemplatesDirectory) {
+          moduleName = moduleName.replace(/^templates\//, "");
+        }
+        output += `import * as Mod${i} from "${moduleFilename}";\n`;
+        output += `themeCompatModules["${moduleName}"] = Mod${i};\n`;
+      } else {
+        const moduleName = moduleFilename.replace(/\.[^\.]+(\.es6)?$/, "");
+        output += `import * as Mod${i} from "${moduleName}";\n`;
+        output += `themeCompatModules["${moduleName}"] = Mod${i};\n`;
+      }
+
       i += 1;
     }
 
