@@ -950,6 +950,10 @@ aside.quote {
   flex: 0 0 auto;
   margin-right: 0.5em;
 
+  .btn {
+    padding: revert;
+  }
+
   &.post-date {
     margin-right: 0;
   }
@@ -988,6 +992,7 @@ aside.quote {
       }
 
       .d-icon {
+        margin-right: 0;
         order: 1;
         color: var(--primary-med-or-secondary-med);
       }
