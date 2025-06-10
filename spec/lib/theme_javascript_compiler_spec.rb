@@ -24,13 +24,14 @@ RSpec.describe ThemeJavascriptCompiler do
       compiler.append_tree(
         {
           "connectors/outlet/blah-1.hbs" => "{{var}}",
-          "connectors/outlet/blah-1.js" => "console.log('test')",
+          "connectors/outlet/blah-1.js" => "export default {};",
         },
       )
       expect(compiler.content.to_s).to include(
         'themeCompatModules["connectors/outlet/blah-1"]',
       ).once
       expect(compiler.content.to_s).to include("templates/connectors/outlet/blah-1")
+      expect(compiler.content.to_s).not_to include("setComponentTemplate")
       expect(JSON.parse(compiler.source_map)["sources"]).to include(
         "theme-1/connectors/outlet/blah-1.js",
         # "theme-1/templates/connectors/outlet/blah-1.js",
@@ -41,13 +42,14 @@ RSpec.describe ThemeJavascriptCompiler do
       compiler.append_tree(
         {
           "templates/connectors/outlet/blah-1.hbs" => "{{var}}",
-          "templates/connectors/outlet/blah-1.js" => "console.log('test')",
+          "templates/connectors/outlet/blah-1.js" => "export default {};",
         },
       )
       expect(compiler.content.to_s).to include(
         'themeCompatModules["connectors/outlet/blah-1"]',
       ).once
       expect(compiler.content.to_s).to include("templates/connectors/outlet/blah-1")
+      expect(compiler.content.to_s).not_to include("setComponentTemplate")
       expect(JSON.parse(compiler.source_map)["sources"]).to include(
         # "connectors/outlet/blah-1.js",
         "theme-1/templates/connectors/outlet/blah-1.js",
@@ -58,13 +60,14 @@ RSpec.describe ThemeJavascriptCompiler do
       compiler.append_tree(
         {
           "templates/connectors/outlet/blah-1.hbs" => "{{var}}",
-          "connectors/outlet/blah-1.js" => "console.log('test')",
+          "connectors/outlet/blah-1.js" => "export default {};",
         },
       )
       expect(compiler.content.to_s).to include(
         'themeCompatModules["connectors/outlet/blah-1"]',
       ).once
       expect(compiler.content.to_s).to include("templates/connectors/outlet/blah-1")
+      expect(compiler.content.to_s).not_to include("setComponentTemplate")
       expect(JSON.parse(compiler.source_map)["sources"]).to include(
         "theme-1/connectors/outlet/blah-1.js",
         # "templates/connectors/outlet/blah-1.js",
