@@ -5,7 +5,7 @@ body.grid-layout {
   --grid-columns: 24;
   --grid-max-width: calc(var(--d-max-width) / var(--grid-columns));
   --column-gap: 1;
-  --sidebar-span: 6;
+  --sidebar-span: 5;
   --main-col-start-no-sidebar: 1;
   --main-col-end-no-sidebar: -1;
   --main-col-start-sidebar: calc(var(--sidebar-span) + var(--column-gap) + 1);
@@ -14,16 +14,14 @@ body.grid-layout {
   --d-sidebar-row-horizontal-padding: 0.5em;
 
   @include viewport.from(xl) {
-    --sidebar-span: 5;
-    --main-col-start-no-sidebar: 3;
-    --main-col-end-no-sidebar: -3;
-    --main-col-start-sidebar: 7;
+    --sidebar-span: 4;
+    --main-col-start-no-sidebar: 4;
+    --main-col-end-no-sidebar: -4;
+    --main-col-start-sidebar: 6;
     --main-col-end-sidebar: -2;
   }
 
   @include viewport.from(2xl) {
-    --sidebar-span: 4;
-    --main-col-start-sidebar: 6;
     --main-col-end-sidebar: -6;
     --main-col-start-no-sidebar: 6;
     --main-col-end-no-sidebar: -6;
@@ -175,7 +173,7 @@ body.grid-layout {
   }
 
   .d-header #site-text-logo {
-    font-size: clamp(var(--font-0), 2.5vw, var(--font-up-2));
+    font-size: clamp(var(--font-down-1), 2.5vw, var(--font-up-1));
     white-space: wrap;
     line-height: var(--line-height-small);
 

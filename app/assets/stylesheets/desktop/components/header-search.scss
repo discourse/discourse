@@ -151,4 +151,21 @@
       color: var(--primary-high);
     }
   }
+
+  &.grid-layout {
+    .floating-search-input-wrapper {
+      justify-content: end;
+    }
+
+    &.header-search--enabled,
+    &.search-header--visible {
+      .floating-search-input {
+        max-width: 25em;
+      }
+
+      .search-banner-inner.wrap .search-menu {
+        width: 100%;
+      }
+    }
+  }
 }

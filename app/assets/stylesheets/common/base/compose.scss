@@ -1301,6 +1301,21 @@ body:not(.has-sidebar-page) {
       margin-inline: unset;
     }
   }
+
+  &.grid-layout {
+    #reply-control:not(.fullscreen).hide-preview {
+      @media screen and (width >= 1110px) {
+        // override
+        margin-left: 0.67em;
+      }
+
+      @include viewport.from(xl) {
+        margin-left: calc(
+          (100vw / 24) * (var(--main-col-start-no-sidebar) - 1)
+        );
+      }
+    }
+  }
 }
 
 body.has-sidebar-page {
@@ -1324,6 +1339,28 @@ body.has-sidebar-page {
     @media screen and (width <= 1000px) {
       --layout-gap: 1em;
       margin-left: calc(var(--d-sidebar-width) + var(--layout-gap));
+    }
+  }
+
+  &.grid-layout {
+    #reply-control:not(.fullscreen).hide-preview {
+      @media screen and (width < 925px) {
+        width: auto;
+        margin-right: 0.5em;
+        margin-left: calc((100vw / 24) * (var(--main-col-start-sidebar) - 1));
+      }
+
+      @media screen and (width >= 925px) {
+        width: auto;
+        margin-right: calc((100vw / 24) * 3);
+        margin-left: calc((100vw / 24) * (var(--main-col-start-sidebar) - 1));
+      }
+
+      @media screen and (width >= 1390px) {
+        margin-left: calc((100vw / 24) * (var(--main-col-start-sidebar) - 1));
+        margin-right: auto;
+        left: 0;
+      }
     }
   }
 }
