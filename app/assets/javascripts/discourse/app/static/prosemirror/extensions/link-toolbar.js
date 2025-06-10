@@ -1,4 +1,5 @@
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
+import { TextSelection } from "prosemirror-state";
 import ToolbarButtons from "discourse/components/composer/toolbar-buttons";
 import InsertHyperlink from "discourse/components/modal/insert-hyperlink";
 import { ToolbarBase } from "discourse/lib/composer/toolbar";
@@ -57,16 +58,19 @@ class LinkToolbar extends ToolbarBase {
 }
 
 class LinkToolbarPluginView {
-  #menuInstance = null;
+  #menuInstance;
   #toolbarReplaced = false;
-  #linkToolbar = null;
-  #linkState = null;
+  #linkToolbar;
+  #linkState;
 
-  constructor({ view, utils, getContext, TextSelection }) {
-    this.view = view;
-    this.utils = utils;
-    this.getContext = getContext;
-    this.TextSelection = TextSelection;
+  #view;
+
+  #utils;
+  #getContext;
+
+  constructor({ utils, getContext }) {
+    this.#utils = utils;
+    this.#getContext = getContext;
   }
 
   /**
@@ -75,9 +79,9 @@ class LinkToolbarPluginView {
    * @param {import("prosemirror-view").EditorView} view
    */
   update(view) {
-    this.view = view;
+    this.#view = view;
 
-    const markRange = this.utils.getMarkRange(
+    const markRange = this.#utils.getMarkRange(
       view.state.selection.$head,
       view.state.schema.marks.link
     );
@@ -96,7 +100,7 @@ class LinkToolbarPluginView {
     this.#menuInstance = null;
 
     if (this.#toolbarReplaced) {
-      this.getContext().replaceToolbar(null);
+      this.#getContext().replaceToolbar(null);
       this.#toolbarReplaced = false;
     }
   }
@@ -105,12 +109,21 @@ class LinkToolbarPluginView {
     const attrs = {
       ...markRange.mark.attrs,
       range: markRange,
-      head: this.view.state.selection.head,
+      head: this.#view.state.selection.head,
     };
 
     if (!this.#linkToolbar) {
       this.#linkState = new TrackedObject(attrs);
-      this.#linkToolbar = new LinkToolbar(this.#getToolbarHandlers());
+
+      this.#linkToolbar = new LinkToolbar({
+        editLink: () => this.#openLinkEditor(),
+        copyLink: () => this.#copyLink(),
+        unlinkText: () => this.#unlinkText(),
+        canVisit: () => this.#canVisit(),
+        getHref: () => this.#linkState.href,
+        canUnlink: () => this.#canUnlink(),
+      });
+
       this.#linkToolbar.rovingButtonBar = this.#rovingButtonBar.bind(this);
     } else {
       Object.assign(this.#linkState, attrs);
@@ -120,51 +133,40 @@ class LinkToolbarPluginView {
   #rovingButtonBar(event) {
     if (event.key === "Tab") {
       event.preventDefault();
-      this.view.focus();
+      this.#view.focus();
       return false;
     }
     return rovingButtonBar(event);
   }
 
   #displayToolbar() {
-    if (this.getContext().capabilities.viewport.sm) {
+    if (this.#getContext().capabilities.viewport.sm) {
       this.#showMobileToolbar();
     } else {
-      this.getContext().replaceToolbar(this.#linkToolbar);
+      this.#getContext().replaceToolbar(this.#linkToolbar);
       this.#toolbarReplaced = true;
     }
   }
 
-  #getToolbarHandlers() {
-    return {
-      editLink: () => this.#openLinkEditor(),
-      copyLink: () => this.#copyLink(),
-      unlinkText: () => this.#unlinkText(),
-      canVisit: () => this.#canVisit(),
-      getHref: () => this.#linkState.href,
-      canUnlink: () => this.#canUnlink(),
-    };
-  }
-
   #openLinkEditor() {
     const { range } = this.#linkState;
-    const tempTr = this.view.state.tr.removeMark(
+    const tempTr = this.#view.state.tr.removeMark(
       range.from,
       range.to,
-      this.view.state.schema.marks.link
+      this.#view.state.schema.marks.link
     );
 
-    const currentLinkText = this.utils.convertToMarkdown(
-      this.view.state.schema.topNodeType.create(
+    const currentLinkText = this.#utils.convertToMarkdown(
+      this.#view.state.schema.topNodeType.create(
         null,
-        this.view.state.schema.nodes.paragraph.create(
+        this.#view.state.schema.nodes.paragraph.create(
           null,
           tempTr.doc.slice(range.from, range.to).content
         )
       )
     );
 
-    this.getContext().modal.show(InsertHyperlink, {
+    this.#getContext().modal.show(InsertHyperlink, {
       model: {
         editing: true,
         linkText: currentLinkText,
@@ -177,11 +179,11 @@ class LinkToolbarPluginView {
   }
 
   #replaceText(text) {
-    const { content } = this.utils.convertFromMarkdown(text);
+    const { content } = this.#utils.convertFromMarkdown(text);
     const { range } = this.#linkState;
 
     if (content.firstChild?.content.size > 0) {
-      const { state, dispatch } = this.view;
+      const { state, dispatch } = this.#view;
       const tr = state.tr.replaceWith(
         range.from,
         range.to,
@@ -189,19 +191,19 @@ class LinkToolbarPluginView {
       );
 
       const newPos = Math.min(
-        this.view.state.selection.from,
+        this.#view.state.selection.from,
         range.from + content.firstChild.content.size
       );
       const resolvedPos = tr.doc.resolve(newPos);
-      tr.setSelection(new this.TextSelection(resolvedPos, resolvedPos));
+      tr.setSelection(new TextSelection(resolvedPos, resolvedPos));
       dispatch(tr);
-      this.view.focus();
+      this.#view.focus();
     }
   }
 
   async #copyLink() {
     await clipboardCopy(this.#linkState.href);
-    this.getContext().toasts.success({
+    this.#getContext().toasts.success({
       duration: "short",
       data: {
         message: i18n("composer.link_toolbar.link_copied"),
@@ -210,21 +212,21 @@ class LinkToolbarPluginView {
   }
 
   #unlinkText() {
-    const range = this.view.state.selection.empty
+    const range = this.#view.state.selection.empty
       ? this.#linkState.range
-      : this.view.state.selection;
+      : this.#view.state.selection;
 
     if (range) {
-      const { state, dispatch } = this.view;
+      const { state, dispatch } = this.#view;
       dispatch(
         state.tr.removeMark(range.from, range.to, state.schema.marks.link)
       );
-      this.view.focus();
+      this.#view.focus();
     }
   }
 
   #canVisit() {
-    return !!this.utils.getLinkify().matchAtStart(this.#linkState.href);
+    return !!this.#utils.getLinkify().matchAtStart(this.#linkState.href);
   }
 
   #canUnlink() {
@@ -232,7 +234,7 @@ class LinkToolbarPluginView {
   }
 
   #showMobileToolbar() {
-    const element = this.view.domAtPos(this.#linkState.head).node;
+    const element = this.#view.domAtPos(this.#linkState.head).node;
     const trigger =
       element.nodeType === Node.TEXT_NODE ? element.parentElement : element;
 
@@ -249,15 +251,15 @@ class LinkToolbarPluginView {
     }
 
     this.#menuInstance?.destroy();
-    this.getContext()
+    this.#getContext()
       .menu.show(trigger, {
-        portalOutletElement: this.view.dom.parentElement,
+        portalOutletElement: this.#view.dom.parentElement,
         identifier: "composer-link-toolbar",
         component: ToolbarButtons,
         placement: "bottom",
         padding: 0,
         hide: true,
-        boundary: this.view.dom.parentElement,
+        boundary: this.#view.dom.parentElement,
         fallbackPlacements: [
           "bottom-end",
           "bottom-start",
@@ -266,7 +268,7 @@ class LinkToolbarPluginView {
           "top-start",
         ],
         closeOnClickOutside: false,
-        onClose: () => this.view.focus(),
+        onClose: () => this.#view.focus(),
         data: this.#linkToolbar,
       })
       .then((instance) => {
@@ -275,15 +277,15 @@ class LinkToolbarPluginView {
   }
 
   #getTriggerClientRect() {
-    const { docView } = this.view;
+    const { docView } = this.#view;
     const { head } = this.#linkState;
-    const { doc } = this.view.state;
+    const { doc } = this.#view.state;
 
     if (!docView || head > doc.content.size) {
       return { left: 0, top: 0, width: 0, height: 0 };
     }
 
-    const { left, top } = this.view.coordsAtPos(head);
+    const { left, top } = this.#view.coordsAtPos(head);
     return { left, top: top + MENU_OFFSET, width: 0, height: 0 };
   }
 
@@ -299,7 +301,7 @@ class LinkToolbarPluginView {
 
 /** @type {RichEditorExtension} */
 const extension = {
-  plugins: ({ pmState: { Plugin, TextSelection }, utils, getContext }) => {
+  plugins: ({ pmState: { Plugin }, utils, getContext }) => {
     return new Plugin({
       props: {
         handleKeyDown(view, event) {
@@ -337,12 +339,10 @@ const extension = {
         },
       },
 
-      view(view) {
+      view() {
         return new LinkToolbarPluginView({
-          view,
           utils,
           getContext,
-          TextSelection,
         });
       },
     });
