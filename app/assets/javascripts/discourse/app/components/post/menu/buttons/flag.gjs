@@ -7,15 +7,15 @@ import { applyValueTransformer } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
 
 export default class PostMenuFlagButton extends Component {
-
   static shouldRender(args, helper) {
     const { post } = args;
     const { reviewable_id, canFlag, hidden } = post;
 
-    let show = reviewable_id ||
-    (canFlag && !hidden) ||
-    (helper.siteSettings.allow_all_users_to_flag_illegal_content &&
-      !helper.currentUser);
+    let show =
+      reviewable_id ||
+      (canFlag && !hidden) ||
+      (helper.siteSettings.allow_all_users_to_flag_illegal_content &&
+        !helper.currentUser);
 
     // Allow plugins to modify this decision
     return applyValueTransformer(
@@ -27,20 +27,18 @@ export default class PostMenuFlagButton extends Component {
 
   get dynamicFlagButtonClass() {
     // Provide an empty string as the default class, and pass post and component instance as context
-    return applyValueTransformer(
-      "flag-button-dynamic-class",
-      "",
-      { post: this.args.post, componentContext: this }
-    );
+    return applyValueTransformer("flag-button-dynamic-class", "", {
+      post: this.args.post,
+      componentContext: this,
+    });
   }
 
   get isFlagButtonDisabled() {
     // Default to false (enabled), allow plugin to override
-    return applyValueTransformer(
-      "flag-button-disabled-state",
-      false,
-      { post: this.args.post, componentContext: this }
-    );
+    return applyValueTransformer("flag-button-disabled-state", false, {
+      post: this.args.post,
+      componentContext: this,
+    });
   }
 
   get title() {
@@ -69,7 +67,10 @@ export default class PostMenuFlagButton extends Component {
         </DButton>
       {{/if}}
       <DButton
-        class={{concatClass "post-action-menu__flag create-flag" this.dynamicFlagButtonClass}}
+        class={{concatClass
+          "post-action-menu__flag create-flag"
+          this.dynamicFlagButtonClass
+        }}
         ...attributes
         @action={{@buttonActions.showFlags}}
         @icon="flag"

@@ -12,11 +12,10 @@ import { i18n } from "discourse-i18n";
 export default class PostMenuLikeButton extends Component {
   static shouldRender(args) {
     const show = args.post.showLike || args.post.likeCount > 0;
-    return applyValueTransformer(
-      "like-button-render-decision",
-      show,
-      { post: args.post, componentContext: this }
-    );
+    return applyValueTransformer("like-button-render-decision", show, {
+      post: args.post,
+      componentContext: this,
+    });
   }
 
   @service currentUser;
