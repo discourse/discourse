@@ -191,4 +191,130 @@ RSpec.describe DiscourseJsProcessor do
       expect(map["sourcesContent"]).to contain_exactly(*sources.values)
     end
   end
+
+  describe "Transpiler#rollup" do
+    it "can rollup code" do
+      sources = { "discourse/initializers/hello.gjs" => <<~JS }
+          someDecorator = () => {}
+          export default class MyClass {
+            @someDecorator
+            myMethod() {
+              console.log('hello world');
+            }
+            <template>
+              <div>template content</div>
+            </template>
+          }
+        JS
+
+      result = DiscourseJsProcessor::Transpiler.new.rollup(sources, {})
+
+      code = result["code"]
+      expect(code).to include('"hello world"')
+      expect(code).to include("dt7948") # Decorator transform
+
+      expect(result["map"]).not_to be_nil
+    end
+
+    it "supports decorators and class properties without error" do
+      script = <<~JS.chomp
+        export default class MyClass {
+          classProperty = 1;
+          #privateProperty = 1;
+          #privateMethod() {
+            console.log("hello world");
+          }
+          @decorated
+          myMethod(){
+          }
+        }
+      JS
+
+      result =
+        DiscourseJsProcessor::Transpiler.new.rollup(
+          { "discourse/initializers/foo.js" => script },
+          {},
+        )
+      expect(result["code"]).to include("(()=>dt7948.n")
+    end
+
+    it "can use themePrefix in a template" do
+      script = <<~JS.chomp
+        themePrefix();
+        export default class Foo {
+          <template>{{themePrefix "bar"}}</template>
+        }
+      JS
+
+      result =
+        DiscourseJsProcessor::Transpiler.new.rollup(
+          { "discourse/initializers/foo.gjs" => script },
+          { themeId: 22 },
+        )
+      expect(result["code"]).to include(
+        'window.moduleBroker.lookup("discourse/lib/theme-settings-store")',
+      )
+    end
+
+    it "can use themePrefix not in a template" do
+      script = <<~JS.chomp
+        export default function foo() {
+          return themePrefix("bar");
+        }
+      JS
+
+      result =
+        DiscourseJsProcessor::Transpiler.new.rollup(
+          { "discourse/initializers/foo.js" => script },
+          { themeId: 22 },
+        )
+      expect(result["code"]).to include(
+        'window.moduleBroker.lookup("discourse/lib/theme-settings-store")',
+      )
+    end
+  end
+
+  it "can compile hbs" do
+    template = <<~HBS.chomp
+      {{log "hello world"}}
+    HBS
+
+    result =
+      DiscourseJsProcessor::Transpiler.new.rollup(
+        { "discourse/connectors/outlet-name/foo.hbs" => template },
+        { themeId: 22 },
+      )
+    expect(result["code"]).to include("createTemplateFactory")
+  end
+
+  it "handles colocation" do
+    js = <<~JS.chomp
+      import Component from "@glimmer/component";
+      export default class MyComponent extends Component {}
+    JS
+
+    template = <<~HBS.chomp
+      {{log "hello world"}}
+    HBS
+
+    onlyTemplate = <<~HBS.chomp
+      {{log "hello galaxy"}}
+    HBS
+
+    result =
+      DiscourseJsProcessor::Transpiler.new.rollup(
+        {
+          "discourse/components/foo.js" => js,
+          "discourse/components/foo.hbs" => template,
+          "discourse/components/bar.hbs" => onlyTemplate,
+        },
+        { themeId: 22 },
+      )
+
+    expect(result["code"]).to include("setComponentTemplate")
+    expect(result["code"]).to include(
+      "bar = setComponentTemplate(__COLOCATED_TEMPLATE__, templateOnly());",
+    )
+    puts result["code"]
+  end
 end
