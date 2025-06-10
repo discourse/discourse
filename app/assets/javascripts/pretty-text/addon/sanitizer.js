@@ -133,7 +133,11 @@ export function sanitize(text, allowLister) {
             name === "src" &&
             !value.match(/\/\.+\//) &&
             allowedIframes.some((i) => {
-              return value.toLowerCase().startsWith((i || "").toLowerCase());
+              const regex = i
+                // escape regex, keeping *
+                .replace(/[.+?^${}()|[\]\\]/g, "\\$&")
+                .replace(/\*/g, "[^/]+");
+              return new RegExp(`^${regex}.*$`, "i").test(value);
             }))
         ) {
           return attr(name, value);

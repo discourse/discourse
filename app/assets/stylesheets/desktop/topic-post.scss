@@ -524,7 +524,7 @@ video {
 .topic-avatar {
   border-top: 1px solid var(--primary-low);
   padding-top: 15px;
-  width: $topic-avatar-width;
+  width: var(--topic-avatar-width);
   float: left;
   z-index: z("base") + 1;
   height: 100%;
@@ -537,9 +537,11 @@ video {
 
 .topic-area > .loading-container {
   // loader needs to be same width as posts
+  // the extra 1px is to account for the left transparent border set to
+  // .topic_post in `keyboard_shortcuts.scss`
   width: calc(
     var(--topic-body-width) + var(--topic-avatar-width) +
-      (var(--topic-body-width-padding) * 2)
+      (var(--topic-body-width-padding) * 2) + 1px
   );
   max-width: 100%;
 }

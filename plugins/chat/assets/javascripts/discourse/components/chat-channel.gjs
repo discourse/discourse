@@ -559,7 +559,7 @@ export default class ChatChannel extends Component {
     message.manager = this.args.channel.messagesManager;
     this.resetComposerMessage();
 
-    if (!this.capabilities.isIOS && !this.messagesLoader.canLoadMoreFuture) {
+    if (!this.messagesLoader.canLoadMoreFuture) {
       this.scrollToLatestMessage();
     }
 
@@ -572,9 +572,7 @@ export default class ChatChannel extends Component {
         ...extractCurrentTopicInfo(this),
       });
 
-      if (!this.capabilities.isIOS) {
-        this.scrollToLatestMessage();
-      }
+      this.scrollToLatestMessage();
     } catch (error) {
       this._onSendError(message.id, error);
     } finally {

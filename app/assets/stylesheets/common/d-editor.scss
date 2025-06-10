@@ -313,22 +313,14 @@
 
 // d-editor bar button sizing
 .d-editor-button-bar {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(2.35em, 1fr));
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
   align-items: center;
-  border-bottom: var(--d-input-border);
-  min-height: 2.42rem;
-  width: 100%;
-  box-sizing: border-box;
-  flex-shrink: 0;
+  margin-top: 0.25rem;
 
-  @include viewport.until(md) {
-    // occupy available space on narrower screens
-    grid-template-columns: repeat(auto-fit, minmax(2em, 1fr));
-  }
-
-  @include viewport.until(sm) {
-    font-size: var(--font-down-1);
+  .composer-toggle-switch {
+    padding: 0 0.5rem;
   }
 
   .btn:focus-visible {
@@ -347,7 +339,11 @@
 
     .discourse-no-touch & {
       &:hover {
-        color: var(--primary-low);
+        background-color: var(--primary-low);
+
+        .d-icon {
+          color: var(--primary-medium);
+        }
       }
     }
   }
@@ -357,7 +353,6 @@
   }
 
   &.--replaced-toolbar {
-    display: flex;
     animation: float-left ease 0.2s 1 forwards;
 
     @keyframes float-left {
@@ -372,13 +367,6 @@
       }
     }
   }
-}
-
-.toolbar-separator {
-  width: 1px;
-  background-color: var(--primary-low);
-  margin: var(--space-2) var(--space-1);
-  height: calc(100% - var(--space-4));
 }
 
 .d-editor #form-template-form {
