@@ -290,9 +290,9 @@ export default class AceEditor extends Component {
             {{grippieDragResize
               ".ace_editor--resizable"
               "bottom"
-              this.onResizeDragStart
+              null
               this.onResizeDrag
-              this.onResizeDragEnd
+              null
             }}
           ></div>
         {{/if}}

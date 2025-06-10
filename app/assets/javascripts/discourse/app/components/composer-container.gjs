@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { Input } from "@ember/component";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
-import { schedule } from "@ember/runloop";
+import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
 import { and, or } from "truth-helpers";
 import ComposerActionTitle from "discourse/components/composer-action-title";
@@ -39,6 +39,11 @@ export default class ComposerContainer extends Component {
   @service appEvents;
   @service keyValueStore;
 
+  willDestroy() {
+    super.willDestroy(...arguments);
+    cancel(this.composerResizeDebounceHandler);
+  }
+
   @bind
   onResizeDragStart() {
     this.appEvents.trigger("composer:resize-started");
@@ -66,16 +71,14 @@ export default class ComposerContainer extends Component {
   }
 
   _triggerComposerResized() {
-    schedule("afterRender", () => {
-      discourseDebounce(this, this.composerResized, 300);
-    });
+    this.composerResizeDebounceHandler = discourseDebounce(
+      this,
+      this.composerResized,
+      300
+    );
   }
 
   composerResized() {
-    if (this.isDestroying || this.isDestroyed) {
-      return;
-    }
-
     this.appEvents.trigger("composer:resized");
   }
 

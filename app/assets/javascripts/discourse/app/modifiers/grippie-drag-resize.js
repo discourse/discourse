@@ -1,5 +1,5 @@
 import { registerDestructor } from "@ember/destroyable";
-import { throttle } from "@ember/runloop";
+import { cancel, throttle } from "@ember/runloop";
 import { service } from "@ember/service";
 import Modifier from "ember-modifier";
 import { headerOffset } from "discourse/lib/offset-calculator";
@@ -24,29 +24,13 @@ export default class GrippieDragResize extends Modifier {
     registerDestructor(this, (instance) => instance.cleanup());
   }
 
-  startDragHandler(
-    resizableElement,
-    grippiePosition,
-    onDragStart,
-    onThrottledDrag,
-    onDragEnd,
-    event
-  ) {
+  startDragHandler(event) {
     event.preventDefault();
 
-    this.origResizableElement = resizableElement.offsetHeight;
+    this.originalResizableElementHeight = this.resizableElement.offsetHeight;
     this.lastMousePos = mouseYPos(event);
-    this._throttledPeformDragHandler = this.throttledPerformDrag.bind(
-      this,
-      resizableElement,
-      grippiePosition,
-      onThrottledDrag
-    );
-    this._endDragHandler = this.endDragHandler.bind(
-      this,
-      resizableElement,
-      onDragEnd
-    );
+    this._throttledPeformDragHandler = this.throttledPerformDrag.bind(this);
+    this._endDragHandler = this.endDragHandler.bind(this);
 
     DRAG_EVENTS.forEach((dragEvent) => {
       document.addEventListener(dragEvent, this._throttledPeformDragHandler, {
@@ -58,11 +42,11 @@ export default class GrippieDragResize extends Modifier {
       document.addEventListener(endDragEvent, this._endDragHandler);
     });
 
-    onDragStart?.();
+    this.onDragStart?.();
   }
 
-  endDragHandler(resizableElement, onDragEnd) {
-    onDragEnd?.();
+  endDragHandler() {
+    this.onDragEnd?.();
 
     DRAG_EVENTS.forEach((dragEvent) => {
       document.removeEventListener(
@@ -78,24 +62,19 @@ export default class GrippieDragResize extends Modifier {
       document.removeEventListener(endDragEvent, this._endDragHandler);
     });
 
-    resizableElement.classList.remove("clear-transitions");
-    resizableElement.focus();
+    this.resizableElement.classList.remove("clear-transitions");
+    this.resizableElement.focus();
   }
 
-  throttledPerformDrag(
-    resizableElement,
-    grippiePosition,
-    onThrottledDrag,
-    event
-  ) {
+  throttledPerformDrag(event) {
     event.preventDefault();
-    throttle(
+    this.throttledDragHandler = throttle(
       this,
       () =>
         this.performDragHandler(
-          resizableElement,
-          grippiePosition,
-          onThrottledDrag
+          this.resizableElement,
+          this.grippiePosition,
+          this.onThrottledDrag
         ),
       event,
       THROTTLE_RATE
@@ -108,19 +87,27 @@ export default class GrippieDragResize extends Modifier {
 
     let size;
     if (grippiePosition === "top") {
-      size = this.origResizableElement + (this.lastMousePos - currentMousePos);
+      size =
+        this.originalResizableElementHeight +
+        (this.lastMousePos - currentMousePos);
     } else {
-      size = this.origResizableElement - (this.lastMousePos - currentMousePos);
+      size =
+        this.originalResizableElementHeight -
+        (this.lastMousePos - currentMousePos);
     }
+
     const maxHeight = this.capabilities.isTablet
       ? window.innerHeight
       : window.innerHeight - headerOffset();
+
     size = Math.min(size, maxHeight);
+
     const elementMinHeight = getComputedStyle(resizableElement).minHeight;
     const minHeight = parseInt(
       elementMinHeight === "auto" ? 250 : elementMinHeight,
       10
     );
+
     size = Math.max(minHeight, size);
 
     onThrottledDrag?.(size);
@@ -138,15 +125,12 @@ export default class GrippieDragResize extends Modifier {
   ) {
     this.element = element;
     this.resizableElement = document.querySelector(resizableElementSelector);
+    this.grippiePosition = grippiePosition;
+    this.onDragStart = onDragStart;
+    this.onThrottledDrag = onThrottledDrag;
+    this.onDragEnd = onDragEnd;
 
-    this._startDragHandler = this.startDragHandler.bind(
-      this,
-      this.resizableElement,
-      grippiePosition,
-      onDragStart,
-      onThrottledDrag,
-      onDragEnd
-    );
+    this._startDragHandler = this.startDragHandler.bind(this);
 
     START_DRAG_EVENTS.forEach((startDragEvent) => {
       element.addEventListener(startDragEvent, this._startDragHandler, {
@@ -156,6 +140,8 @@ export default class GrippieDragResize extends Modifier {
   }
 
   cleanup() {
+    cancel(this.throttledDragHandler);
+
     if (this._startDragHandler) {
       START_DRAG_EVENTS.forEach((startDragEvent) => {
         this.element.removeEventListener(
