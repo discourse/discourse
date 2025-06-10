@@ -135,6 +135,13 @@ globalThis.rollup = function (modules, opts) {
       {
         name: "discourse-colocation",
         async resolveId(source, context) {
+          if (
+            source.startsWith("discourse/components/") ||
+            source.startsWith("admin/components/")
+          ) {
+            return;
+          }
+
           if (source.endsWith(".js")) {
             let hbs;
             try {
@@ -181,6 +188,13 @@ globalThis.rollup = function (modules, opts) {
         transform: {
           // order: "pre",
           async handler(input, id) {
+            if (
+              !id.startsWith("discourse/components/") &&
+              !id.startsWith("admin/components/")
+            ) {
+              return;
+            }
+
             if (id.endsWith(".js")) {
               let hbs;
               try {
