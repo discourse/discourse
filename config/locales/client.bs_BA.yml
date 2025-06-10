@@ -3572,6 +3572,7 @@ bs_BA:
           install: "Instaliraj"
           themes:
             title: "Teme"
+            install: "Instaliraj"
           components:
             title: "Komponenti"
             install: "Instaliraj"
@@ -3792,6 +3793,10 @@ bs_BA:
             other: "Tema je %{count} iza sebe!"
           compare_commits: "(Pogledajte nove unose)"
           repo_unreachable: "Nije moguće kontaktirati Git repozitorij ove teme. Poruka o grešci:"
+          settings: "Postavke"
+          colors: "Colors"
+          discard_colors: "Odbaci"
+          colors_title: "Colors"
           scss:
             text: "Stylesheet"
           after_header:

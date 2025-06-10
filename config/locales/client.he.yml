@@ -6510,6 +6510,7 @@ he:
             themes_intro: "יש להתקין ערכת עיצוב חדשה כדי להתחיל או ליצור אחת משלך מאפס באמצעות המשאבים האלה."
             new_theme: "ערכת עיצוב חדשה"
             back: "חזרה לערכות עיצוב"
+            install: "התקנה"
           components:
             title: "רכיבים"
             description: "התאמות שמשנות רכיבים גלויים של עיצוב הפורום שלך, או מוסיפות תכונות חזית נוספות"
@@ -6576,7 +6577,6 @@ he:
           unsaved_changes: "יש שינויים שלא נשמרו"
           copy_of: "עותק של %{name}"
           copy_created: 'נוצר עותק חדש של „%{name}”'
-          illegal_character_in_color: "הצבעים מורכבים מתווים הקסדצימליים בלבד"
       plugins:
         title: "תוספים"
         name: "שם"
@@ -6877,6 +6877,10 @@ he:
           remote_theme_edits: "אם מעניין אותך לערוך את ערכת העיצוב הזאת, עליך <a href='%{repoURL}' target='_blank'>להגיש שינוי במאגר שלה</a>"
           repo_unreachable: "לא ניתן ליצור קשר עם מאגר ה־git של ערכת העיצוב הזו. הודעת השגיאה:"
           imported_from_archive: "ערכת עיצוב זו ייובאה מקובץ ‎.zip"
+          settings: "הגדרות"
+          colors: "צבעים"
+          discard_colors: "להשליך"
+          colors_title: "צבעים"
           scss:
             text: "CSS"
             title: "כללי CSS מותאמים אישית עם תמיכה בתחביר SCSS"
