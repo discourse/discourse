@@ -354,6 +354,15 @@
       margin-left: -0.35em;
       z-index: z("base") + 2; // above timeline-handle
 
+      body.grid-layout & {
+        display: flex;
+        flex-direction: row-reverse;
+        align-items: center;
+        gap: 0.5em;
+        right: -1.25em;
+        margin-left: 0;
+      }
+
       .progress {
         font-size: 0.8em;
         color: var(--tertiary);
