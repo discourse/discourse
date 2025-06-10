@@ -1890,10 +1890,17 @@ hr:
           title: "Veza pozivnice"
           success: "Pozivnica uspješno napravljena"
           error: "Došlo je do pogreške generiranja linka za pozivnicu"
+        cannot_invite_to_forum: "Žao nam je, nemate dopuštenje za stvaranje pozivnica. Obratite se administratoru kako biste dobili dopuštenje za slanje pozivnica."
         invite:
+          new_title: "Pozovite članove"
           edit_title: "Uredi pozivnicu"
           expires_in_time: "Istječe za %{time}"
           expired_at_time: "Isteklo u %{time}"
+          create_link_to_invite: "Izradite poveznicu koja se može dijeliti kako biste odmah omogućili pristup ovoj stranici."
+          copy_link_and_share_it: "Kopirajte donju poveznicu i podijelite je kako biste odmah omogućili pristup ovoj stranici."
+          copy_link: "Kopiraj poveznicu"
+          link_copied: "Poveznica kopirana!"
+          share_link: "Podijelite poveznicu"
           link_validity_MF: |
             Link vrijedi za { user_count, plural,
                 one {# korisnika}
@@ -1914,11 +1921,14 @@ hr:
           max_redemptions_allowed: "Max korisnika"
           add_to_groups: "Dodaj u grupe"
           invite_to_topic: "Dođite do teme"
+          expires_at: "Istječe"
           expires_after: "Istječe nakon"
+          custom_message: "Prilagođena poruka"
           send_invite_email: "Spremi i pošalji e-mail"
           send_invite_email_instructions: "Ograničite pozivnicu na e-poštu za slanje e-pošte s pozivnicom"
           update_invite: "Ažuriraj"
           cancel: "Odustani"
+          create_link: "Kreirajte poveznicu"
         bulk_invite:
           none: "Nema pozivnica za prikaz na ovoj stranici."
           text: "Skupna pozivnica"

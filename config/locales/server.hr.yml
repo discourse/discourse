@@ -726,6 +726,8 @@ hr:
       email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Pošaljite poruku @%{username}"
+      description: "Želim razgovarati s tom osobom izravno i osobno o njihovoj objavi."
+      short_description: "Želim razgovarati s tom osobom izravno i osobno o njihovoj objavi."
       email_title: 'Vaša objava u "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
