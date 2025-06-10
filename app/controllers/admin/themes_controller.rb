@@ -191,26 +191,16 @@ class Admin::ThemesController < Admin::AdminController
   end
 
   def create
-    ban_in_allowlist_mode!
-
-    @theme =
-      Theme.new(
-        name: theme_params[:name],
-        user_id: theme_user.id,
-        user_selectable: theme_params[:user_selectable] || false,
-        color_scheme_id: theme_params[:color_scheme_id],
-        component: [true, "true"].include?(theme_params[:component]),
-      )
-    set_fields
-
-    respond_to do |format|
-      if @theme.save
-        update_default_theme
-        log_theme_change(nil, @theme)
-        format.json { render json: serialize_data(@theme, ThemeSerializer), status: :created }
-      else
-        format.json { render json: @theme.errors, status: :unprocessable_entity }
+    Themes::Create.call(
+      params: theme_params.to_unsafe_h.merge(user_id: theme_user.id),
+      guardian:,
+    ) do
+      on_failed_contract do |contract|
+        render json: failed_json.merge(errors: contract.errors.full_messages), status: 400
       end
+      on_failed_policy(:ensure_remote_themes_are_not_allowlisted) { raise Discourse::InvalidAccess }
+      on_success { |theme:| render json: serialize_data(theme, ThemeSerializer), status: :created }
+      on_model_errors { |theme:| render json: theme.errors, status: :unprocessable_entity }
     end
   end
 
@@ -275,25 +265,23 @@ class Admin::ThemesController < Admin::AdminController
   end
 
   def destroy
-    @theme = Theme.find_by(id: params[:id])
-    raise Discourse::InvalidParameters.new(:id) unless @theme
-
-    StaffActionLogger.new(current_user).log_theme_destroy(@theme)
-    @theme.destroy
-
-    respond_to { |format| format.json { head :no_content } }
+    Themes::Destroy.call(service_params) do
+      on_failed_contract do |contract|
+        render json: failed_json.merge(errors: contract.errors.full_messages), status: 400
+      end
+      on_model_not_found(:theme) { raise Discourse::NotFound }
+      on_success { render json: {}, status: :no_content }
+    end
   end
 
   def bulk_destroy
-    themes = Theme.where(id: params[:theme_ids])
-    raise Discourse::InvalidParameters.new(:id) if themes.blank?
-
-    ActiveRecord::Base.transaction do
-      themes.each { |theme| StaffActionLogger.new(current_user).log_theme_destroy(theme) }
-      themes.destroy_all
+    Themes::BulkDestroy.call(service_params) do
+      on_failed_contract do |contract|
+        render json: failed_json.merge(errors: contract.errors.full_messages), status: 400
+      end
+      on_model_not_found(:themes) { raise Discourse::NotFound }
+      on_success { render json: {}, status: :no_content }
     end
-
-    respond_to { |format| format.json { head :no_content } }
   end
 
   def show
@@ -319,22 +307,14 @@ class Admin::ThemesController < Admin::AdminController
   end
 
   def get_translations
-    params.require(:locale)
-    if I18n.available_locales.exclude?(params[:locale].to_sym)
-      raise Discourse::InvalidParameters.new(:locale)
-    end
-
-    I18n.locale = params[:locale]
-
-    @theme = Theme.find_by(id: params[:id])
-    raise Discourse::InvalidParameters.new(:id) unless @theme
-
-    translations =
-      @theme.translations.map do |translation|
-        { key: translation.key, value: translation.value, default: translation.default }
+    Themes::GetTranslations.call(service_params) do
+      on_failed_contract do |contract|
+        render json: failed_json.merge(errors: contract.errors.full_messages), status: 400
       end
-
-    render json: { translations: translations }, status: :ok
+      on_failed_policy(:validate_locale) { raise Discourse::InvalidParameters.new(:locale) }
+      on_model_not_found(:theme) { raise Discourse::NotFound }
+      on_success { |translations:| render(json: success_json.merge(translations:)) }
+    end
   end
 
   def update_single_setting
@@ -400,7 +380,7 @@ class Admin::ThemesController < Admin::AdminController
   def update_default_theme
     if theme_params.key?(:default)
       is_default = theme_params[:default].to_s == "true"
-      if @theme.id == SiteSetting.default_theme_id && !is_default
+      if @theme.default? && !is_default
         Theme.clear_default!
       elsif is_default
         @theme.set_default!
