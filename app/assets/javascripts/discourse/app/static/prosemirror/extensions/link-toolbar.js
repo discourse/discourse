@@ -56,6 +56,247 @@ class LinkToolbar extends ToolbarBase {
   }
 }
 
+class LinkToolbarPluginView {
+  #menuInstance = null;
+  #toolbarReplaced = false;
+  #linkToolbar = null;
+  #linkState = null;
+
+  constructor({ view, utils, getContext, TextSelection }) {
+    this.view = view;
+    this.utils = utils;
+    this.getContext = getContext;
+    this.TextSelection = TextSelection;
+  }
+
+  /**
+   * ProseMirror view update handler
+   *
+   * @param {import("prosemirror-view").EditorView} view
+   */
+  update(view) {
+    this.view = view;
+
+    const markRange = this.utils.getMarkRange(
+      view.state.selection.$head,
+      view.state.schema.marks.link
+    );
+
+    if (!markRange) {
+      this.#resetToolbar();
+      return;
+    }
+
+    this.#updateLinkState(markRange);
+    this.#displayToolbar();
+  }
+
+  #resetToolbar() {
+    this.#menuInstance?.destroy();
+    this.#menuInstance = null;
+
+    if (this.#toolbarReplaced) {
+      this.getContext().replaceToolbar(null);
+      this.#toolbarReplaced = false;
+    }
+  }
+
+  #updateLinkState(markRange) {
+    const attrs = {
+      ...markRange.mark.attrs,
+      range: markRange,
+      head: this.view.state.selection.head,
+    };
+
+    if (!this.#linkToolbar) {
+      this.#linkState = new TrackedObject(attrs);
+      this.#linkToolbar = new LinkToolbar(this.#getToolbarHandlers());
+      this.#linkToolbar.rovingButtonBar = this.#rovingButtonBar.bind(this);
+    } else {
+      Object.assign(this.#linkState, attrs);
+    }
+  }
+
+  #rovingButtonBar(event) {
+    if (event.key === "Tab") {
+      event.preventDefault();
+      this.view.focus();
+      return false;
+    }
+    return rovingButtonBar(event);
+  }
+
+  #displayToolbar() {
+    if (this.getContext().capabilities.viewport.sm) {
+      this.#showMobileToolbar();
+    } else {
+      this.getContext().replaceToolbar(this.#linkToolbar);
+      this.#toolbarReplaced = true;
+    }
+  }
+
+  #getToolbarHandlers() {
+    return {
+      editLink: () => this.#openLinkEditor(),
+      copyLink: () => this.#copyLink(),
+      unlinkText: () => this.#unlinkText(),
+      canVisit: () => this.#canVisit(),
+      getHref: () => this.#linkState.href,
+      canUnlink: () => this.#canUnlink(),
+    };
+  }
+
+  #openLinkEditor() {
+    const { range } = this.#linkState;
+    const tempTr = this.view.state.tr.removeMark(
+      range.from,
+      range.to,
+      this.view.state.schema.marks.link
+    );
+
+    const currentLinkText = this.utils.convertToMarkdown(
+      this.view.state.schema.topNodeType.create(
+        null,
+        this.view.state.schema.nodes.paragraph.create(
+          null,
+          tempTr.doc.slice(range.from, range.to).content
+        )
+      )
+    );
+
+    this.getContext().modal.show(InsertHyperlink, {
+      model: {
+        editing: true,
+        linkText: currentLinkText,
+        linkUrl: this.#linkState.href,
+        toolbarEvent: {
+          addText: (text) => this.#replaceText(text),
+        },
+      },
+    });
+  }
+
+  #replaceText(text) {
+    const { content } = this.utils.convertFromMarkdown(text);
+    const { range } = this.#linkState;
+
+    if (content.firstChild?.content.size > 0) {
+      const { state, dispatch } = this.view;
+      const tr = state.tr.replaceWith(
+        range.from,
+        range.to,
+        content.firstChild.content
+      );
+
+      const newPos = Math.min(
+        this.view.state.selection.from,
+        range.from + content.firstChild.content.size
+      );
+      const resolvedPos = tr.doc.resolve(newPos);
+      tr.setSelection(new this.TextSelection(resolvedPos, resolvedPos));
+      dispatch(tr);
+      this.view.focus();
+    }
+  }
+
+  async #copyLink() {
+    await clipboardCopy(this.#linkState.href);
+    this.getContext().toasts.success({
+      duration: "short",
+      data: {
+        message: i18n("composer.link_toolbar.link_copied"),
+      },
+    });
+  }
+
+  #unlinkText() {
+    const range = this.view.state.selection.empty
+      ? this.#linkState.range
+      : this.view.state.selection;
+
+    if (range) {
+      const { state, dispatch } = this.view;
+      dispatch(
+        state.tr.removeMark(range.from, range.to, state.schema.marks.link)
+      );
+      this.view.focus();
+    }
+  }
+
+  #canVisit() {
+    return !!this.utils.getLinkify().matchAtStart(this.#linkState.href);
+  }
+
+  #canUnlink() {
+    return !AUTO_LINKS.includes(this.#linkState.markup);
+  }
+
+  #showMobileToolbar() {
+    const element = this.view.domAtPos(this.#linkState.head).node;
+    const trigger =
+      element.nodeType === Node.TEXT_NODE ? element.parentElement : element;
+
+    trigger.getBoundingClientRect = () => this.#getTriggerClientRect();
+
+    if (this.#menuInstance?.expanded) {
+      this.#menuInstance.trigger = trigger;
+      updatePosition(
+        this.#menuInstance.trigger,
+        this.#menuInstance.content,
+        {}
+      );
+      return;
+    }
+
+    this.#menuInstance?.destroy();
+    this.getContext()
+      .menu.show(trigger, {
+        portalOutletElement: this.view.dom.parentElement,
+        identifier: "composer-link-toolbar",
+        component: ToolbarButtons,
+        placement: "bottom",
+        padding: 0,
+        hide: true,
+        boundary: this.view.dom.parentElement,
+        fallbackPlacements: [
+          "bottom-end",
+          "bottom-start",
+          "top",
+          "top-end",
+          "top-start",
+        ],
+        closeOnClickOutside: false,
+        onClose: () => this.view.focus(),
+        data: this.#linkToolbar,
+      })
+      .then((instance) => {
+        this.#menuInstance = instance;
+      });
+  }
+
+  #getTriggerClientRect() {
+    const { docView } = this.view;
+    const { head } = this.#linkState;
+    const { doc } = this.view.state;
+
+    if (!docView || head > doc.content.size) {
+      return { left: 0, top: 0, width: 0, height: 0 };
+    }
+
+    const { left, top } = this.view.coordsAtPos(head);
+    return { left, top: top + MENU_OFFSET, width: 0, height: 0 };
+  }
+
+  /**
+   * ProseMirror view destroy handler
+   */
+  destroy() {
+    this.#menuInstance?.destroy();
+    this.#menuInstance = null;
+    this.#linkToolbar = null;
+  }
+}
+
 /** @type {RichEditorExtension} */
 const extension = {
   plugins: ({ pmState: { Plugin, TextSelection }, utils, getContext }) => {
@@ -96,216 +337,13 @@ const extension = {
         },
       },
 
-      view() {
-        let menuInstance;
-        let toolbarReplaced = false;
-        let linkToolbar;
-        let linkState;
-
-        return {
-          update(view) {
-            const markRange = utils.getMarkRange(
-              view.state.selection.$head,
-              view.state.schema.marks.link
-            );
-
-            if (!markRange) {
-              menuInstance?.destroy();
-              menuInstance = null;
-
-              if (toolbarReplaced) {
-                getContext().replaceToolbar(null);
-                toolbarReplaced = false;
-              }
-              return;
-            }
-
-            const attrs = {
-              ...markRange.mark.attrs,
-              range: markRange,
-              head: view.state.selection.head,
-            };
-
-            if (!linkToolbar) {
-              linkState = new TrackedObject(attrs);
-
-              const handlers = {
-                editLink: () => {
-                  const tempTr = view.state.tr.removeMark(
-                    linkState.range.from,
-                    linkState.range.to,
-                    view.state.schema.marks.link
-                  );
-
-                  const currentLinkText = utils.convertToMarkdown(
-                    view.state.schema.topNodeType.create(
-                      null,
-                      view.state.schema.nodes.paragraph.create(
-                        null,
-                        tempTr.doc.slice(
-                          linkState.range.from,
-                          linkState.range.to
-                        ).content
-                      )
-                    )
-                  );
-
-                  getContext().modal.show(InsertHyperlink, {
-                    model: {
-                      editing: true,
-                      linkText: currentLinkText,
-                      linkUrl: linkState.href,
-                      toolbarEvent: {
-                        addText: (text) => {
-                          const { content } = utils.convertFromMarkdown(text);
-                          const range = linkState.range;
-
-                          if (content.firstChild?.content.size > 0) {
-                            const { state, dispatch } = view;
-                            const tr = state.tr.replaceWith(
-                              range.from,
-                              range.to,
-                              content.firstChild.content
-                            );
-
-                            const newPos = Math.min(
-                              view.state.selection.from,
-                              range.from + content.firstChild.content.size
-                            );
-                            const resolvedPos = tr.doc.resolve(newPos);
-                            tr.setSelection(
-                              new TextSelection(resolvedPos, resolvedPos)
-                            );
-                            dispatch(tr);
-                            view.focus();
-                          }
-                        },
-                      },
-                    },
-                  });
-                },
-
-                copyLink: async () => {
-                  await clipboardCopy(linkState.href);
-                  getContext().toasts.success({
-                    duration: "short",
-                    data: {
-                      message: i18n("composer.link_toolbar.link_copied"),
-                    },
-                  });
-                },
-
-                unlinkText: () => {
-                  const range = view.state.selection.empty
-                    ? linkState.range
-                    : view.state.selection;
-                  if (range) {
-                    const { state, dispatch } = view;
-                    dispatch(
-                      state.tr.removeMark(
-                        range.from,
-                        range.to,
-                        state.schema.marks.link
-                      )
-                    );
-                    view.focus();
-                  }
-                },
-
-                canVisit: () => {
-                  return !!utils.getLinkify().matchAtStart(linkState.href);
-                },
-
-                getHref: () => linkState.href,
-
-                canUnlink: () => !AUTO_LINKS.includes(linkState.markup),
-              };
-
-              linkToolbar = new LinkToolbar(handlers);
-              linkToolbar.rovingButtonBar = (event) => {
-                if (event.key === "Tab") {
-                  event.preventDefault();
-                  view.focus();
-                  return false;
-                }
-                return rovingButtonBar(event);
-              };
-            } else {
-              Object.assign(linkState, attrs);
-            }
-
-            if (getContext().capabilities.viewport.sm) {
-              const element = view.domAtPos(attrs.head).node;
-              const trigger =
-                element.nodeType === Node.TEXT_NODE
-                  ? element.parentElement
-                  : element;
-
-              trigger.getBoundingClientRect = () => {
-                if (!view.docView) {
-                  return {};
-                }
-
-                if (linkState.head > view.state.doc.content.size) {
-                  return { left: 0, top: 0, width: 0, height: 0 };
-                }
-
-                const { left, top } = view.coordsAtPos(linkState.head);
-
-                return { left, top: top + MENU_OFFSET, width: 0, height: 0 };
-              };
-
-              if (menuInstance) {
-                if (menuInstance.expanded) {
-                  menuInstance.trigger = trigger;
-                  updatePosition(
-                    menuInstance.trigger,
-                    menuInstance.content,
-                    {}
-                  );
-                  return;
-                } else {
-                  menuInstance.destroy();
-                }
-              }
-
-              getContext()
-                .menu.show(trigger, {
-                  portalOutletElement: view.dom.parentElement,
-                  identifier: "composer-link-toolbar",
-                  component: ToolbarButtons,
-                  placement: "bottom",
-                  padding: 0,
-                  hide: true,
-                  boundary: view.dom.parentElement,
-                  fallbackPlacements: [
-                    "bottom-end",
-                    "bottom-start",
-                    "top",
-                    "top-end",
-                    "top-start",
-                  ],
-                  closeOnClickOutside: false,
-                  onClose: () => {
-                    view.focus();
-                  },
-                  data: linkToolbar,
-                })
-                .then((instance) => {
-                  menuInstance = instance;
-                });
-            } else {
-              getContext().replaceToolbar(linkToolbar);
-              toolbarReplaced = true;
-            }
-          },
-
-          destroy() {
-            menuInstance?.destroy();
-            menuInstance = null;
-            linkToolbar = null;
-          },
-        };
+      view(view) {
+        return new LinkToolbarPluginView({
+          view,
+          utils,
+          getContext,
+          TextSelection,
+        });
       },
     });
   },

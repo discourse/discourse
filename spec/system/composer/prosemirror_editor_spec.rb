@@ -886,6 +886,8 @@ describe "Composer - ProseMirror editor", type: :system do
   end
 
   describe "link toolbar" do
+    let(:insert_hyperlink_modal) { PageObjects::Modals::InsertHyperlink.new }
+
     it "shows link toolbar when cursor is on a link" do
       open_composer_and_toggle_rich_editor
 
@@ -908,14 +910,14 @@ describe "Composer - ProseMirror editor", type: :system do
       # Use Tab to navigate to the toolbar and Enter to activate edit
       composer.send_keys(:tab, :enter)
 
-      expect(page).to have_css(".insert-hyperlink-modal")
+      expect(insert_hyperlink_modal).to be_open
 
-      expect(find(".d-modal__body input.link-text").value).to eq("Example")
-      expect(find(".d-modal__body input.link-url").value).to eq("https://example.com")
+      expect(insert_hyperlink_modal.link_text_value).to eq("Example")
+      expect(insert_hyperlink_modal.link_url_value).to eq("https://example.com")
 
-      find(".d-modal__body input.link-text").set("Updated Example")
-      find(".d-modal__body input.link-url").set("https://updated-example.com")
-      find(".d-modal__footer .btn-primary").click
+      insert_hyperlink_modal.fill_in_link_text("Updated Example")
+      insert_hyperlink_modal.fill_in_link_url("https://updated-example.com")
+      insert_hyperlink_modal.click_primary_button
 
       expect(rich).to have_css("a[href='https://updated-example.com']", text: "Updated Example")
 
@@ -1010,14 +1012,14 @@ describe "Composer - ProseMirror editor", type: :system do
       # Use Tab to navigate to the toolbar and Enter to activate edit
       composer.send_keys(:tab, :enter)
 
-      expect(page).to have_css(".insert-hyperlink-modal")
+      expect(insert_hyperlink_modal).to be_open
 
-      expect(find(".d-modal__body input.link-text").value).to eq("Party :tada: Time")
-      expect(find(".d-modal__body input.link-url").value).to eq("https://example.com")
+      expect(insert_hyperlink_modal.link_text_value).to eq("Party :tada: Time")
+      expect(insert_hyperlink_modal.link_url_value).to eq("https://example.com")
 
-      find(".d-modal__body input.link-text").set("Updated :tada: Party")
-      find(".d-modal__body input.link-url").set("https://updated-party.com")
-      find(".d-modal__footer .btn-primary").click
+      insert_hyperlink_modal.fill_in_link_text("Updated :tada: Party")
+      insert_hyperlink_modal.fill_in_link_url("https://updated-party.com")
+      insert_hyperlink_modal.click_primary_button
 
       expect(rich).to have_css("a[href='https://updated-party.com']")
       expect(rich).to have_css("a img[title=':tada:'], a img[alt=':tada:']")
@@ -1035,14 +1037,14 @@ describe "Composer - ProseMirror editor", type: :system do
       # Use Tab to navigate to the toolbar and Enter to activate edit
       composer.send_keys(:tab, :enter)
 
-      expect(page).to have_css(".insert-hyperlink-modal")
+      expect(insert_hyperlink_modal).to be_open
 
-      expect(find(".d-modal__body input.link-text").value).to eq("**Bold** and *italic* text")
-      expect(find(".d-modal__body input.link-url").value).to eq("https://example.com")
+      expect(insert_hyperlink_modal.link_text_value).to eq("**Bold** and *italic* text")
+      expect(insert_hyperlink_modal.link_url_value).to eq("https://example.com")
 
-      find(".d-modal__body input.link-text").set("Updated **bold** and *italic* content")
-      find(".d-modal__body input.link-url").set("https://updated-example.com")
-      find(".d-modal__footer .btn-primary").click
+      insert_hyperlink_modal.fill_in_link_text("Updated **bold** and *italic* content")
+      insert_hyperlink_modal.fill_in_link_url("https://updated-example.com")
+      insert_hyperlink_modal.click_primary_button
 
       expect(rich).to have_css("a[href='https://updated-example.com']")
       expect(rich).to have_css("strong a", text: "bold")

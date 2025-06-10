@@ -28,6 +28,10 @@ export default class ComposerToolbarButtons extends Component {
     );
   }
 
+  get rovingButtonBar() {
+    return this.args.rovingButtonBar || this.args.data.rovingButtonBar;
+  }
+
   <template>
     {{#each @data.groups key="group" as |group|}}
       {{#each group.buttons key="id" as |button|}}
@@ -40,7 +44,7 @@ export default class ComposerToolbarButtons extends Component {
               class={{concatClass "btn no-text btn-icon" button.className}}
               title={{button.title}}
               tabindex={{this.tabIndex button}}
-              {{on "keydown" (or @rovingButtonBar @data.rovingButtonBar)}}
+              {{on "keydown" this.rovingButtonBar}}
             >
               {{icon button.icon}}
             </a>
@@ -50,7 +54,7 @@ export default class ComposerToolbarButtons extends Component {
               @onChange={{button.popupMenu.action}}
               @onOpen={{fn button.action button}}
               @tabindex={{this.tabIndex button}}
-              @onKeydown={{or @rovingButtonBar @data.rovingButtonBar}}
+              @onKeydown={{this.rovingButtonBar}}
               @options={{hash icon=button.icon focusAfterOnChange=false}}
               class={{button.className}}
             />
@@ -63,7 +67,7 @@ export default class ComposerToolbarButtons extends Component {
               @label={{button.label}}
               @icon={{button.icon}}
               @preventFocus={{button.preventFocus}}
-              @onKeyDown={{or @rovingButtonBar @data.rovingButtonBar}}
+              @onKeyDown={{this.rovingButtonBar}}
               tabindex={{this.tabIndex button}}
               class={{button.className}}
             />
