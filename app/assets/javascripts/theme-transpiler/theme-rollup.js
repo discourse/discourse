@@ -65,7 +65,7 @@ globalThis.rollup = function (modules, opts) {
           }
 
           for (const ext of ["", ".js", ".gjs", ".hbs"]) {
-            console.log(ext);
+            // console.log(ext);
             let resolved;
             try {
               resolved = await this.resolve(
@@ -78,10 +78,10 @@ globalThis.rollup = function (modules, opts) {
               if (!error.message.includes("Cannot access the file system")) {
                 throw error;
               }
-              console.log("caught");
+              // console.log("caught");
             }
-            console.log(`finished resolve, ${source}${ext}, `);
-            console.log(JSON.stringify(resolved));
+            // console.log(`finished resolve, ${source}${ext}, `);
+            // console.log(JSON.stringify(resolved));
             if (resolved) {
               return resolved;
             }
@@ -97,8 +97,8 @@ globalThis.rollup = function (modules, opts) {
             return source;
           }
 
-          console.log(source);
-          console.log(Object.keys(modules));
+          // console.log(source);
+          // console.log(Object.keys(modules));
 
           if (source.startsWith(".")) {
             if (!context) {
