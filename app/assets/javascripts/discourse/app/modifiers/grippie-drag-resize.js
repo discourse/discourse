@@ -16,6 +16,22 @@ function mouseYPos(event) {
   );
 }
 
+/**
+ * This modifier allows a target element to be resized vertically
+ * by dragging an element, referred to as a "grippie", positioned
+ * at the top or bottom of the target element.
+ *
+ * For example, a code editor or a composer like this:
+ *
+ * -------------------------------------
+ * |                                   |
+ * |                                   | <- resizableElement
+ * |                                   |
+ * |                                   |
+ * ------------------------------------
+ * |             =======               | <- grippie
+ * ------------------------------------
+ */
 export default class GrippieDragResize extends Modifier {
   @service capabilities;
 
@@ -26,6 +42,12 @@ export default class GrippieDragResize extends Modifier {
 
   startDragHandler(event) {
     event.preventDefault();
+
+    // Only allow left-click dragging
+    // c.f. https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/button#value
+    if (event.button !== 0) {
+      return;
+    }
 
     this.originalResizableElementHeight = this.resizableElement.offsetHeight;
     this.lastMousePos = mouseYPos(event);
@@ -113,6 +135,17 @@ export default class GrippieDragResize extends Modifier {
     onThrottledDrag?.(size);
   }
 
+  /*
+   * @param {HTMLElement} element - The element to which the modifier is applied, the grippie.
+   * @param {string} resizableElementSelector - A CSS selector to find the resizable element,
+   *   should be something like a code editor or composer textarea.
+   * @param {string} grippiePosition - The position of the grippie relative to
+   *   resizableElementSelector, either "top" or "bottom".
+   * @param {Function} [onDragStart] - Callback function to be called when dragging starts.
+   * @param {Function} [onThrottledDrag] - Callback function to be called during throttled
+   *   drag events while moving the mouse.
+   * @param {Function} [onDragEnd] - Callback function to be called when dragging ends.
+   */
   modify(
     element,
     [
