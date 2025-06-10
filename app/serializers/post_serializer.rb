@@ -99,7 +99,8 @@ class PostSerializer < BasicPostSerializer
              :post_localizations_count,
              :locale,
              :is_localized,
-             :language
+             :language,
+             :localization_outdated
 
   def initialize(object, opts)
     super(object, opts)
@@ -696,6 +697,14 @@ class PostSerializer < BasicPostSerializer
 
   def include_language?
     SiteSetting.experimental_content_localization && object.locale.present?
+  end
+
+  def localization_outdated
+    object.has_localization? && object.get_localization.post_version != object.version
+  end
+
+  def include_localization_outdated
+    include_is_localized? && is_localized
   end
 
   private
