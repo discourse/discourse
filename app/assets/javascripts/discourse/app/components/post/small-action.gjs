@@ -14,7 +14,7 @@ import { i18n } from "discourse-i18n";
 
 // TODO (glimmer-post-stream) remove the export after removing the legacy widget code
 export const GROUP_ACTION_CODES = ["invited_group", "removed_group"];
-const customGroupActionCodes = [];
+export const customGroupActionCodes = [];
 
 export const ICONS = {
   "closed.enabled": "lock",

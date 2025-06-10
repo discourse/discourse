@@ -6,7 +6,7 @@ require "json_schemer"
 class Theme < ActiveRecord::Base
   include GlobalPath
 
-  BASE_COMPILER_VERSION = 117
+  BASE_COMPILER_VERSION = 118
 
   class SettingsMigrationError < StandardError
   end
@@ -512,7 +512,7 @@ class Theme < ActiveRecord::Base
 
         caches.map { |c| <<~HTML.html_safe }.join("\n")
           <link rel="modulepreload" href="#{c.url}" data-theme-id="#{c.theme_id}" />
-          
+
         HTML
       end
     when :translations

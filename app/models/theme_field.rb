@@ -121,7 +121,7 @@ class ThemeField < ActiveRecord::Base
     javascript_cache || build_javascript_cache
 
     errors << I18n.t("themes.errors.optimized_link") if contains_optimized_link?(html)
-    
+
     # todo: restore script tag support
 
     [html, errors&.join("\n")]
@@ -193,33 +193,33 @@ class ThemeField < ActiveRecord::Base
   def process_translation
     errors = []
     javascript_cache || build_javascript_cache
-    begin
-      data = translation_data
 
-      js = <<~JS
-        /* Translation data for theme #{self.theme_id} (#{self.name})*/
-        const data = #{data.to_json};
+    data = translation_data
 
-        for (let lang in data){
-          let cursor = I18n.translations;
-          for (let key of [lang, "js", "theme_translations"]){
-            cursor = cursor[key] = cursor[key] || {};
-          }
-          cursor[#{self.theme_id}] = data[lang];
+    js = <<~JS
+      /* Translation data for theme #{self.theme_id} (#{self.name})*/
+      const data = #{data.to_json};
+
+      for (let lang in data){
+        let cursor = I18n.translations;
+        for (let key of [lang, "js", "theme_translations"]){
+          cursor = cursor[key] ??= {};
         }
-      JS
-    rescue ThemeTranslationParser::InvalidYaml => e
-      errors << e.message
-    end
+        cursor[#{self.theme_id}] = data[lang];
+      }
+    JS
 
     javascript_cache.content = js
     javascript_cache.source_map = nil
     javascript_cache.save!
+
     doc = ""
     doc = <<~HTML.html_safe if javascript_cache.content.present?
           <script type="module" src="#{javascript_cache.url}" data-theme-id="#{theme_id}" nonce="#{ThemeField::CSP_NONCE_PLACEHOLDER}"></script>
         HTML
     [doc, errors&.join("\n")]
+  rescue ThemeTranslationParser::InvalidYaml => e
+    ["", e.message]
   end
 
   def validate_yaml!
