@@ -17,7 +17,8 @@ describe "Composer using review_media", type: :system do
     topic_page.visit_topic_and_open_composer(topic)
     topic_page.fill_in_composer(" this one has an emoji: :mask: ")
 
-    within(".d-editor-preview") { expect(page).to have_css(".emoji") }
+    expect(page).to have_css(".d-editor-preview .emoji")
+
     topic_page.send_reply
 
     expect(topic_page).to have_post_number(2)
@@ -31,7 +32,7 @@ describe "Composer using review_media", type: :system do
       composer.click_toolbar_button("upload")
     end
 
-    within(".d-editor-preview") { expect(page).to have_css("img") }
+    expect(page).to have_css(".d-editor-preview img")
 
     topic_page.send_reply
 

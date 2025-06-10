@@ -477,7 +477,7 @@ hy:
       one: "Տեսնել %{count} նոր թեման"
       other: "Դիտել %{count} նոր թեմաները"
     preview: "նախադիտում"
-    cancel: "չեղարկել"
+    cancel: "Չեղարկել"
     deleting: "Ջնջվում է…"
     save: "Պահպանել Փոփոխությունները"
     saving: "Պահպանվում է…"
@@ -1138,7 +1138,6 @@ hy:
       said: "%{username} ՝"
       profile: "Պրոֆիլ"
       profile_possessive: "%{username}-ի պրոֆիլը"
-      account_possessive: "%{name}-ի հաշիվը"
       mute: "Խլացնել"
       edit: "Խմբագրել Նախընտրությունները"
       download_archive:
@@ -1910,7 +1909,6 @@ hy:
         title: "Գրանցման IP Հասցեն"
       avatar:
         title: "Պրոֆիլի Նկար"
-        header_title: "պրոֆիլ, հաղորդագրություններ, էջանշաններ և նախընտրություններ"
       title:
         title: "Վերնագիր"
         none: "(ոչ մի)"
@@ -3003,6 +3001,11 @@ hy:
       sr_post_like_count_button:
         one: "%{count} անձ հավանել է այս հրապարակումը."
         other: "%{count} մարդ հավանել է այս գրառումը."
+      localizations:
+        table:
+          actions: "Գործողություններ"
+          edit: "Խմբագրել"
+          delete: "Ջնջել"
       errors:
         create: "Ներողություն, Ձեր գրառումը ստեղծելիս տեղի է ունեցել սխալ: Խնդրում ենք կրկին փորձել:"
         edit: "Ներողություն, Ձեր գրառումը խմբագրելիս տեղի է ունեցել սխալ: Խնդրում ենք կրկին փորձել:"
@@ -3814,14 +3817,9 @@ hy:
         about: "Մասին"
     discovery:
       headings:
+        multi_tag:
+          default: "%{tags} թեգով թեմաներ "
         categories: "Բոլոր կատեգորիաները"
-        filter_labels:
-          latest: "Վերջինը"
-          top: "Ամենահայտնի"
-          new: "Նոր"
-          unread: "Չկարդացած"
-          hot: "Թոփ"
-          unseen: "Չդիտված"
   admin_js:
     settings: "Կարգավորումներ"
     admin:
@@ -3862,14 +3860,13 @@ hy:
           title: "Ֆայլեր"
         legal:
           title: "Օրինական"
-        logo_and_fonts:
-          logo:
-            form:
-              mobile: "Հեռախոսային"
-              email: "Էլ. փոստ"
-          fonts:
-            backfill_modal:
-              modal_yes: "Այո"
+        logo:
+          form:
+            mobile: "Հեռախոսային"
+            email: "Էլ. փոստ"
+        fonts:
+          backfill_modal:
+            modal_yes: "Այո"
         navigation:
           title: "Նավիգացիա"
         notifications:
@@ -4233,6 +4230,8 @@ hy:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
           company_name: "Անուն"
+          extra_groups:
+            groups: "Խմբեր"
           optional: "(ընտրովի)"
           saved: "պահված է!"
         flags:
@@ -4285,6 +4284,7 @@ hy:
           delete: "Ջնջել"
         color_palettes:
           palette_name: "Անուն"
+          delete: "Ջնջել"
           colors:
             title: "Գույներ"
       plugins:
@@ -4508,12 +4508,16 @@ hy:
           all_filter: "Բոլորը"
           active_filter: "Ակտիվ"
           inactive_filter: "Ոչ ակտիվ"
-          schema:
-            fields:
-              required: "*պարտադիր"
-              number:
-                too_small: "պետք է լինի մեծ կամ հավասար %{count} -ի"
-                too_large: "Պետք է լինի փոքր կամ հավասար %{count} -ի"
+        schema:
+          fields:
+            required: "*պարտադիր"
+            string:
+              too_short:
+                one: "պետք է լինի առնվազն %{count} նիշ"
+                other: "պետք է լինի առնվազն %{count} սիմվոլ"
+            number:
+              too_small: "պետք է լինի մեծ կամ հավասար %{count} -ի"
+              too_large: "Պետք է լինի փոքր կամ հավասար %{count} -ի"
         colors:
           select_base:
             title: "Ընտրել հիմնական գունապնակը"
@@ -4521,40 +4525,30 @@ hy:
           title: "Գույներ"
           about: "Փոփոխեք Ձեր թեմաների կողմից օգտագործված գույները: Ստեղծեք նոր գունապնակ՝ մեկնարկի համար:"
           copy_name_prefix: "Կրկնօրինակ՝ "
-          delete_confirm: "Ջնջե՞լ այս գունապնակը:"
           undo: "Ետարկել"
           undo_title: "Ետարկել այս գույնի Ձեր փոփոխությունները՝ սկսած դրա վերջին պահպանման պահից:"
           revert: "Հետադարձել"
           revert_title: "Վերահաստատել այս գույնը Discourse-ի լռելյայն գունապնակում:"
           primary:
             name: "հիմնական"
-            description: "Հիմնականում տեքստ, պատկերակներ, և սահմաններ:"
           secondary:
             name: "երկրորդական"
-            description: "Հիմնական ֆոնի գույն, և որոշ կոճակների տեքստի գույն:"
           tertiary:
             name: "երրորդային"
-            description: "Հղումներ, որոշ կոճակներ, ծանուցումներ և շեշտային գույն:"
           quaternary:
             name: "չորրորդային"
           header_background:
             name: "վերնամասի ֆոն"
-            description: "Կայքի վերնամասի ֆոնի գույնը:"
           header_primary:
             name: "առաջնային վերնամաս"
-            description: "Վերնամասի տեքստ և պատկերակներ"
           highlight:
             name: "ընդգծում"
-            description: "Էջի վրա ընդգծված տարրերի, օրինակ՝ գրառումների և թեմաների ֆոնի գույնը:"
           danger:
             name: "վտանգ"
-            description: "Ընդգծման գույնը այնպիսի գործողությունների համար, ինչպիսիք են՝ գրառումների կամ թեմաների ջնջելը"
           success:
             name: "հաջողություն"
-            description: "Օգտագործվում է նշելու համար, որ գործողությունը հաջող էր:"
           love:
             name: "սեր"
-            description: "Հավանման կոճակի գույնը:"
           selected:
             name: "ընտրված"
           editor:

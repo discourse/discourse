@@ -3,16 +3,16 @@
 module PageObjects
   module Pages
     class AdminCustomizeThemesConfigArea < PageObjects::Pages::Base
-      def visit
-        page.visit("/admin/config/customize")
+      def visit(query_params = {})
+        page.visit("/admin/config/customize?#{query_params.to_query}")
       end
 
       def find_theme_card(theme)
         find(".theme-card.#{theme.name.parameterize}")
       end
 
-      def install_card
-        find(".theme-install-card")
+      def subheader
+        find(".d-page-subheader")
       end
 
       def open_theme_menu(theme)

@@ -275,7 +275,7 @@ class Emoji
           # special cased as we prefer to keep these as symbols
           next if name == "registered"
           next if name == "copyright"
-          next if name == "tm"
+          next if name == "trade_mark"
           next if name == "left_right_arrow"
 
           code = replacement_code(e["code"])

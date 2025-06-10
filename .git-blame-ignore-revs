@@ -2,6 +2,9 @@
 # To prevent these commits to show in git blame
 # git config blame.ignoreRevsFile .git-blame-ignore-revs
 
+# moved comments to the bottom, they are way less intrusive there
+ca2dee52db594eeedc1642457abb29b8a18f5996
+
 # DEV: introduces prettier for es6 files
 03a7d532cf8f09b12573b21ef013c21100d52728
 

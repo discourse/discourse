@@ -6,4 +6,5 @@ const InfoHeader = <template>
     <p class="desc">{{i18n "admin.form_templates.help"}}</p>
   </div>
 </template>;
+
 export default InfoHeader;

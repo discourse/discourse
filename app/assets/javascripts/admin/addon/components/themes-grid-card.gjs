@@ -81,7 +81,7 @@ export default class ThemeCard extends Component {
           theme: this.args.theme.name,
         }),
       },
-      duration: 2000,
+      duration: "short",
     });
   }
 
@@ -102,7 +102,7 @@ export default class ThemeCard extends Component {
       data: {
         message: i18n("admin.customize.theme.setting_was_saved"),
       },
-      duration: 2000,
+      duration: "short",
     });
   }
 
@@ -122,7 +122,7 @@ export default class ThemeCard extends Component {
               theme: this.args.theme.name,
             }),
           },
-          duration: 2000,
+          duration: "short",
         });
       })
       .catch(popupAjaxError)
@@ -223,7 +223,7 @@ export default class ThemeCard extends Component {
                       <dropdown.item>
                         <DButton
                           @action={{this.updateTheme}}
-                          @icon="download"
+                          @icon="cloud-arrow-down"
                           class="theme-card__button update"
                           @preventFocus={{true}}
                           @translatedLabel={{i18n

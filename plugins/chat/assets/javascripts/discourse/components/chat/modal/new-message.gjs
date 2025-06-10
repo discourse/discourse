@@ -17,7 +17,7 @@ export default class ChatModalNewMessage extends Component {
     {{#if this.shouldRender}}
       <DModal
         @closeModal={{@closeModal}}
-        class="chat-modal-new-message"
+        class="chat-modal-new-message --quick-palette"
         @title="chat.new_message_modal.title"
         @inline={{@inline}}
         @hideHeader={{true}}

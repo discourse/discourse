@@ -622,50 +622,9 @@ hu:
     until_posts:
       one: "%{count} bejegyzés"
       other: "%{count} bejegyzés"
-    "new-topic": |
-      Üdvözlünk a %{site_name} oldalon! **Köszönjük, hogy új beszélgetést indítaszl!**
-
-      - Érdekesnek tűnik a cím, ha hangosan felolvasod? Jó az összefoglaló?
-
-      - Kit érdekelne ez? Miért számít? Milyen válaszokat szeretnél kapni?
-
-      - Helyezz el a témában gyakran használt, releváns szavakat, hogy mások megtalálhassák. Ha a témát csoportosítani szeretnéd a kapcsolódó témákkal, válassz ki egy kategóriát (vagy címkét).
-
-      További információért lásd [közösségi irányelveinket](%{base_path}/guidelines). Ez a panel csak az első %{education_posts_text} alkalommal jelenik meg.
-    "new-reply": "Üdvözlöm a %{site_name} &mdash; oldalán- **köszönjük a hozzájárulást**\n\n- Legyen kedves a közösség többi tagjához!\n\n- A válasza javítja a beszélgetést?\n\n- Az építő kritikáknak mindig örülünk, de vigyázzon, hogy a *felvetést* kritizálja, ne a hozzászólót. \n\nA szabályzatunkat megtalálja ide kattintva: [közösségi irányelvek](%{base_path}/guidelines). Ez a panel csak az első %{education_posts_text} megírásakor fog megjelenni, utána magától eltűnik.\n"
-    avatar: |
-      ### Mit szólnál egy képhez a fiókodhoz?
-
-      Már írtál néhány témát és választ, de a profilképed nem olyan egyedi, mint te vagy - csak egy betű.
-
-      Gondoltál már arra, hogy **[látogasd meg a profilod](%{profile_path})** és tölts fel egy olyan képet, amely reprezentál téged?
-
-      Könnyebb követni a beszélgetéseket és megtalálni az érdekes embereket a beszélgetésekben, ha mindenkinek egyedi profilképe van!
-    sequential_replies: |
-      ### Fontolja meg, hogy egyszerre több hozzászólásra válaszoljon
-
-      Ahelyett, hogy több választ adna egy témára egymás után, fontolja meg, hogy egyetlen választ adjon, amely idézeteket tartalmaz korábbi hozzászólásokból vagy @névre való hivatkozást.
-
-      Korábbi válaszát úgy szerkesztheti idézet hozzáadásához, hogy kiemeli a szöveget, és kiválasztja a megjelenő <b>quote reply</b> gombot.
-
-      Mindenki számára könnyebb elolvasni azokat a témákat, amelyekben kevesebb mélyreható válasz van, mint a sok apró, egyedi válasz.
-    dominating_topic: Sokat írt ebben a témában! Fontolja meg, hogy lehetőséget ad másoknak arra, hogy itt válaszoljanak, és megbeszéljék egymással a dolgokat.
     get_a_room:
       one: 'Egyszer már válaszoltál neki: @%{reply_username} , tudtad, hogy küldhetsz neki személyes üzenetet is?'
       other: 'Már válaszoltál neki: @%{reply_username} , %{count} alkalommal , tudtad, hogy küldhetsz neki személyes üzenetet is?'
-    dont_feed_the_trolls: Ezt a bejegyzést már megjelölték moderátor figyelmébe. Biztos, hogy válaszolni akarsz rá? A negatív tartalomra adott válaszok inkább negatív viselkedésre ösztönöznek.
-    too_many_replies: |
-      ### Elérted a válaszkorlátot ebben a témában
-
-      Sajnáljuk, de az új felhasználók ideiglenesen %{newuser_max_replies_per_topic} válaszra korlátozódnak ugyanabban a témában.
-
-      Új válasz hozzáadása helyett fontold meg korábbi válaszaid szerkesztését vagy más témák felkeresését.
-    reviving_old_topic: |
-      ### Biztosan fel akarod éleszteni ezt a témát?
-
-      A témára az utolsó válasz **%{time_ago}** volt. Ha válaszolsz, a téma a lista tetejére kerül, és értesítünk róla mindenkit, aki korábban részt vett a beszélgetésben.
-
-      Biztosan ezt a régi beszélgetést szeretnéd folytatni?
   activerecord:
     attributes:
       category:
@@ -2087,7 +2046,6 @@ hu:
     authorized_extensions: "A feltölthető fájlkiterjesztések listája"
     authorized_extensions_for_staff: "A stábtagok számára feltölthető fájlkiterjesztések listája az \"authorized_extensions\" webhelybeállításban meghatározott listán kívül."
     theme_authorized_extensions: "A témafeltöltéseknél engedélyezett fájlkiterjesztések listája"
-    max_similar_results: "Hány hasonló témát mutasson a szerkesztő felett új téma összeállításakor. Az összehasonlítás a címen és a tartalmon alapul."
     max_image_megapixels: "Egy képhez megengedett maximális megapixelszám. A nagyobb megapixelszámú képeket a rendszer elutasítja."
     title_prettify: "Megakadályozza a gyakori címhibákat és elírásokat, beleértve a csupa nagybetűs írást, a kisbetűs kezdést, a többszörös ! és ? jeleket, a felesleges pontot a végén, stb."
     title_remove_extraneous_space: "Szóközök eltávolítása a záró írásjel előtt."
@@ -2259,12 +2217,10 @@ hu:
     max_notifications_per_user: "Az értesítések maximális száma felhasználónként, ha ezt a számot túllépi, a régi értesítések törlődnek. Heti rendszerességgel végrehajtva. A letiltáshoz állítsa 0-ra"
     allowed_user_website_domains: "A felhasználói webhelyet ezeken a domaineken ellenőrizzük. Függőleges vonallal elválasztva."
     allow_profile_backgrounds: "Engedélyezze a felhasználóknak profilhátterek feltöltését."
-    sequential_replies_threshold: "Azon bejegyzések száma, amelyeket a felhasználónak egymás után el kell írnia egy témában, mielőtt emlékeztetőt kapna a túl sok egymást követő válaszról."
     get_a_room_threshold: "Azon bejegyzések száma, amelyeket a felhasználónak ugyanabban a témában ugyanannak a személynek kell közzétennie, mielőtt figyelmeztetést kapna."
     dont_feed_the_trolls_threshold: "A többi felhasználótól kapott jelzések száma a figyelmeztetés előtt."
     enable_mobile_theme: "A mobileszközök mobilbarát témát használnak, és a teljes webhelyre válthatnak. Tiltsa le ezt, ha olyan egyéni stíluslapot szeretne használni, amely teljesen reszponzív."
     dominating_topic_minimum_percent: "Egy felhasználónak hány százaléknyi bejegyzést kell tennie egy témában, mielőtt figyelmeztetést kap a téma túlzott dominanciájáról."
-    disable_avatar_education_message: "Oktatási üzenet kikapcsolása avatárváltáskor."
     pm_warn_user_last_seen_months_ago: "Új PÜ létrehozásakor figyelmeztesse a felhasználókat, ha a célcímzett több mint n hónapja nem volt elérhető."
     suppress_uncategorized_badge: "Ne jelenítse meg a kategorizálatlan témák jelvényét a témalistákban."
     header_dropdown_category_count: "Hány kategória jeleníthető meg a fejléc legördülő menüjében."
@@ -2297,7 +2253,6 @@ hu:
     show_time_gap_days: "Ha két bejegyzés ennyi nap eltéréssel készül, jelenítse meg az időbeli eltérést a témában."
     short_progress_text_threshold: "Miután egy témában a bejegyzések száma meghaladja ezt a számot, a folyamatjelző sáv csak az aktuális bejegyzés számát mutatja. Ha módosítja a folyamatjelző sáv szélességét, előfordulhat, hogy módosítania kell ezt az értéket."
     default_code_lang: "Alapértelmezett programozási nyelvi szintaxiskiemelés, amely a markdown kódblokkokra alkalmazandó (auto, text, ruby, python stb.). Ennek az értéknek szerepelnie kell a `kiemelt nyelvek` oldal beállításban is."
-    warn_reviving_old_topic_age: "Amikor valaki egy olyan témára kezd válaszolni, ahol az utolsó válasz ennél több napnál régebbi, figyelmeztetés jelenik meg. Letiltása 0-ra állítva."
     autohighlight_all_code: "Alkalmazzon szintaktikai kiemelést a HTML-alapú &lt;code&gt; blokkokra, még akkor is, ha nem adtak meg nyelvet. A lejegyzett kódblokkok konfigurálásához használja az „alapértelmezett kódnyelv” beállítást."
     highlighted_languages: "Tartalmazza a szintaxis kiemelési szabályokat. (Figyelem: túl sok nyelv használata befolyásolhatja a teljesítményt) lásd: <a href='https://highlightjs.org/demo/' target='_blank'>https://highlightjs.org/demo</a> a bemutatóért"
     show_copy_button_on_codeblocks: "Adjon hozzá egy gombot a kódblokkokhoz, hogy a blokk tartalmát a felhasználó vágólapjára másolja."
@@ -2476,6 +2431,8 @@ hu:
     adobe_analytics_tags_url: "Adobe Analytics címkék URL-je (`https://assets.adobedtm.com/...`)"
     view_raw_email_allowed_groups: "Csoportok, amelyek megtekinthetik egy bejegyzés nyers e-mail tartalmát, ha azt bejövő e-mailből hozták létre. Ez magában foglalja az e-mail fejléceket és egyéb technikai információkat."
     experimental_content_localization: "Lokalizált tartalmakat jelenít meg a felhasználók számára a nyelvi beállításaik alapján. Ilyen tartalom lehetnek a kategóriák, címkék, bejegyzések és témák. Ezt a funkciót jelenleg nagy erőkkel fejlesztjük."
+    rich_editor: "Engedélyezze a szerkesztőt, hogy minden felhasználó válthasson a jelenlegi Markdown mód és az új szövegszerkesztő között az intuitívabb és felhasználóbarátabb szerkesztés érdekében. A szövegszerkesztő aktív fejlesztés alatt áll, így még nem minden funkció támogatott - <a href='https://meta.discourse.org/t/test-our-new-composer/352347' target='_blank'>további részletekért lásd a Meta oldalon</a>."
+    experimental_content_localization_allowed_groups: 'Lokalizált tartalom frissítésére jogosult csoportok. A "kísérleti tartalom lokalizáció" engedélyezése szükséges.'
     errors:
       invalid_css_color: "Érvénytelen szín. Adjon meg egy színnevet vagy hexaértéket."
       invalid_email: "Érvénytelen e-mail cím."
@@ -2685,11 +2642,6 @@ hu:
     errors: "%{errors}"
     not_available: "Nem elérhető. Esetleg %{suggestion}?"
     something_already_taken: "Valami hiba történt, lehet hogy a felhasználónév vagy az e-mail cím már regisztrálva van. Próbálja meg az elfelejtett jelszó hivatkozást."
-    omniauth_error:
-      generic: "Elnézést, hiba történt a fiók engedélyezése során. Kérjük, próbálja meg újra."
-      csrf_detected: "Az engedélyezés időtúllépése lejárt, vagy böngészőt váltott. Kérjük, próbálja újra."
-      request_error: "Hiba történt az engedélyezés elindításakor. Kérjük, próbálja újra."
-      invalid_iat: "Kiszolgálói óra eltérések miatt nem sikerült ellenőrizni az engedélyezési tokent. Kérjük, próbálja meg újra."
     omniauth_error_unknown: "Hiba történt a bejelentkezési adatok feldolgozásakor. Kérjük, próbálja újra."
     omniauth_confirm_title: "Jelentkezzen be a %{provider} használatával"
     omniauth_confirm_button: "Folytatás"
@@ -4088,8 +4040,6 @@ hu:
   offline:
     title: "Nem lehet betölteni az alkalmazást"
     offline_page_message: "Úgy tűnik, offline vagy! Kérjük, ellenőrizze a hálózati kapcsolatot, és próbálja újra."
-  login_required:
-    welcome_message: "# [Üdvözöljük a(z) %{title} oldalon](#welcome)"
   upload:
     edit_reason: "letöltött képek helyi másolatai"
     unauthorized: "Sajnos a feltölteni kívánt fájl nem engedélyezett (engedélyezett kiterjesztések: %{authorized_extensions})."
@@ -4115,7 +4065,6 @@ hu:
     images:
       too_large: "Sajnáljuk, a feltölteni kívánt kép túl nagy (a maximális méret %{max_size_kb}KB), kérjük, méretezze át, és próbálja újra."
       too_large_humanized: "Sajnáljuk, a feltölteni kívánt kép túl nagy (a maximális méret %{max_size}), kérjük, méretezze át, és próbálja újra."
-      larger_than_x_megapixels: "Sajnáljuk, a feltölteni kívánt kép túl nagy (a maximális méret %{max_image_megapixels} megapixel), kérjük, méretezze át, és próbálja újra."
       size_not_found: "Sajnáljuk, de nem tudtuk megállapítani a kép méretét. Lehet, hogy a kép sérült?"
     placeholders:
       too_large: "(a kép nagyobb, mint %{max_size_kb}KB)"
@@ -5034,6 +4983,12 @@ hu:
       restored: Visszaállított
     bulk_user_delete: "tömeges törlési művelettel törölve"
     cli_bulk_post_delete: "Tömegesen törölve a rake feladatból"
+    api_post_delete: "API-n keresztül törölve"
+    reminder_deleted: "Új emlékeztetővel helyettesítve"
+    user_associated_posts_deleted: "A felhasználó megsemmisült"
+    imap_email_deleted: "Az e-mail törölve lett az IMAP-kiszolgálóról."
+    imap_email_marked_as_spam: "Az e-mail átkerült a spam mappába az IMAP szerveren."
+    auto_deleted_hidden_posts: "Automatikusan megsemmisített rejtett bejegyzések"
   reviewables:
     already_handled: "Köszönjük, de már átnéztük ezt a bejegyzést, és úgy döntöttünk, hogy nem kell újra megjelölni."
     already_handled_and_user_not_exist: "Köszönjük, de valaki már felülvizsgálta, és ez a felhasználó már nem létezik."

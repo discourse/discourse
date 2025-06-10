@@ -15,6 +15,7 @@ import TopicViewsChart from "discourse/components/topic-map/topic-views-chart";
 import avatar from "discourse/helpers/bound-avatar-template";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
+import lazyHash from "discourse/helpers/lazy-hash";
 import number from "discourse/helpers/number";
 import { ajax } from "discourse/lib/ajax";
 import { emojiUnescape } from "discourse/lib/text";
@@ -298,7 +299,7 @@ export default class TopicMapSummary extends Component {
             <ConditionalLoadingSpinner @condition={{this.loading}}>
               <PluginOutlet
                 @name="most-liked-replies"
-                @outletArgs={{hash posts=this.top3LikedPosts}}
+                @outletArgs={{lazyHash posts=this.top3LikedPosts}}
               >
                 <ul>
                   {{#each this.top3LikedPosts as |post|}}
@@ -408,6 +409,10 @@ export default class TopicMapSummary extends Component {
           @userFilters={{@postStream.userFilters}}
         />
       {{/if}}
+      <PluginOutlet
+        @name="topic-map-participants-after"
+        @outletArgs={{lazyHash topic=@topic}}
+      />
       <div class="topic-map__buttons">
         {{#if this.readTimeMinutes}}
           <div class="estimated-read-time">

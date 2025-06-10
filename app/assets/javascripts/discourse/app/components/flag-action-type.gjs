@@ -135,7 +135,7 @@ export default class FlagActionType extends Component {
               name="post_action_type_index"
             />
             <div class="flag-action-type-details">
-              <strong>{{this.formattedName}}</strong>
+              <strong class="flag-name">{{this.formattedName}}</strong>
               <div class="description">{{htmlSafe this.flagDescription}}</div>
               {{#if this.showMessageInput}}
                 <Textarea

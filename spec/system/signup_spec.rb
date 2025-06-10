@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-shared_examples "signup scenarios" do |signup_page_object, login_page_object|
-  let(:signup_form) { signup_page_object }
-  let(:login_form) { login_page_object }
+shared_examples "signup scenarios" do
+  let(:signup_form) { PageObjects::Pages::Signup.new }
+  let(:login_form) { PageObjects::Pages::Login.new }
   let(:invite_form) { PageObjects::Pages::InviteForm.new }
   let(:activate_account) { PageObjects::Pages::ActivateAccount.new }
   let(:invite) { Fabricate(:invite) }
@@ -46,6 +46,35 @@ shared_examples "signup scenarios" do |signup_page_object, login_page_object|
 
       expect(page).to have_current_path("/")
       expect(page).to have_css(".header-dropdown-toggle.current-user")
+    end
+
+    it "can access 2FA preferences screen after signing up and activating account" do
+      signup_form
+        .open
+        .fill_email(invite.email)
+        .fill_username("john")
+        .fill_password("supersecurepassword")
+      expect(signup_form).to have_valid_fields
+
+      signup_form.click_create_account
+      expect(page).to have_current_path("/u/account-created")
+
+      mail = ActionMailer::Base.deliveries.first
+      expect(mail.to).to contain_exactly(invite.email)
+      activation_link = mail.body.to_s[%r{/u/activate-account/\S+}]
+
+      visit activation_link
+
+      activate_account.click_activate_account
+      activate_account.click_continue
+
+      expect(page).to have_css(".header-dropdown-toggle.current-user")
+
+      visit "/u/john/preferences/security"
+
+      find(".btn-second-factor").click
+
+      expect(page).to have_css(".user-preferences.second-factor")
     end
 
     it "redirects to the topic the user was invited to after activating account" do
@@ -350,14 +379,10 @@ end
 
 describe "Signup", type: :system do
   context "when desktop" do
-    include_examples "signup scenarios",
-                     PageObjects::Pages::Signup.new,
-                     PageObjects::Pages::Login.new
+    include_examples "signup scenarios"
   end
 
   context "when mobile", mobile: true do
-    include_examples "signup scenarios",
-                     PageObjects::Pages::Signup.new,
-                     PageObjects::Pages::Login.new
+    include_examples "signup scenarios"
   end
 end

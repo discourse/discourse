@@ -124,9 +124,9 @@
       transform: translateX(-100%);
       background: linear-gradient(
         90deg,
-        rgba(var(--chat-skeleton-animation-rgb), 0) 0,
-        rgba(var(--chat-skeleton-animation-rgb), 0.3) 50%,
-        rgba(var(--chat-skeleton-animation-rgb), 0.5) 100%
+        rgb(var(--chat-skeleton-animation-rgb), 0) 0,
+        rgb(var(--chat-skeleton-animation-rgb), 0.3) 50%,
+        rgb(var(--chat-skeleton-animation-rgb), 0.5) 100%
       );
       content: "";
 

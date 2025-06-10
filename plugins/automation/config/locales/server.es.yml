@@ -11,7 +11,6 @@ es:
     models:
       fields:
         required_field: El campo «%{name}» debe rellenarse en «%{target}:%{target_name}».
-        invalid_field: El componente del campo «%{component}» no es utilizable en «%{target}:%{target_name}».
         invalid_metadata: Los datos de «%{field}» no son válidos o el componente «%{component}» es desconocido.
     triggerables:
       errors:

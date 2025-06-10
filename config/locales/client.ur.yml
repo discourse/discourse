@@ -1575,7 +1575,6 @@ ur:
         title: "رجسٹریشن IP ایڈریس"
       avatar:
         title: "پروفائل تصویر"
-        header_title: "پروفائل، پیغامات، بک مارکس اور ترجیحات"
         name_and_description: "%{name} - %{description}"
         edit: "پروفائل تصویر میں ترمیم کریں"
       title:
@@ -2219,7 +2218,6 @@ ur:
           aria_label: زیادہ سے زیادہ آراء سے فلٹر
         additional_options:
           label: "پوسٹ کی گنتی اور موضوع کے ملاحظات کے لحاظ سے فلٹر"
-    hamburger_menu: "مینیو"
     new_item: "نیا"
     go_back: "واپس جائیں"
     not_logged_in_user: "موجودہ سرگرمی کے خلاصہ اور ترجیحات کے ساتھ صفحہِ صارف"
@@ -2748,6 +2746,11 @@ ur:
         other: "%{count} جوابات دیکھیں"
       in_reply_to: "پیرنٹ پوسٹ لوڈ کریں۔"
       view_all_posts: "تمام پوسٹس دیکھیں"
+      localizations:
+        table:
+          actions: "عمل"
+          edit: "ترمیم کریں"
+          delete: "مٹائیں"
       errors:
         create: "معذرت، آپ کی پوسٹ بنانے میں ایک خرابی کا سامنا کرنا پڑا۔ براہ مہربانی دوبارہ کوشش کریں۔"
         edit: "معذرت، آپ کی پوسٹ ترمیم کرنے میں ایک خرابی کا سامنا کرنا پڑا۔ براہ مہربانی دوبارہ کوشش کریں۔"
@@ -3648,13 +3651,9 @@ ur:
         about: "بارے میں"
     discovery:
       headings:
+        multi_tag:
+          default: "ٹاپکس %{tags} کے ساتھ ٹَیگ کردہ"
         categories: "تمام زُمرَہ جات"
-        filter_labels:
-          latest: "تازہ ترین"
-          top: "سب سے اوپر"
-          new: "نئی"
-          unread: "بغیر پڑھے"
-          unseen: "ان دیکھا"
   admin_js:
     type_to_filter: "کو فلٹر کرنے کے لیے ٹائپ کریں…"
     settings: "ترتیبات"
@@ -3696,16 +3695,15 @@ ur:
           title: "فائلیں"
         legal:
           title: "قانونی"
-        logo_and_fonts:
-          logo:
-            form:
-              mobile: "موبائل"
-              email: "اِیمیل"
-              manifest_screenshots:
-                description: "اسکرین شاٹس جو اس کے انسٹال پرامپٹ صفحہ پر آپ کی مثال کی خصوصیات اور فعالیت کو ظاہر کرتے ہیں۔ تمام تصاویر مقامی اپ لوڈز اور ایک جیسی ہونی چاہئیں۔"
-          fonts:
-            backfill_modal:
-              modal_yes: "جی ہاں"
+        logo:
+          form:
+            mobile: "موبائل"
+            email: "اِیمیل"
+            manifest_screenshots:
+              description: "اسکرین شاٹس جو اس کے انسٹال پرامپٹ صفحہ پر آپ کی مثال کی خصوصیات اور فعالیت کو ظاہر کرتے ہیں۔ تمام تصاویر مقامی اپ لوڈز اور ایک جیسی ہونی چاہئیں۔"
+        fonts:
+          backfill_modal:
+            modal_yes: "جی ہاں"
         navigation:
           title: "نیویگیشن"
         notifications:
@@ -4112,6 +4110,8 @@ ur:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
           company_name: "نام"
+          extra_groups:
+            groups: "گروپس"
           optional: "(اختیاری)"
           update: "اپ ڈیٹ"
           saved: "محفوظ کر لیا گیا!"
@@ -4159,6 +4159,8 @@ ur:
           delete: "مٹائیں"
         color_palettes:
           palette_name: "نام"
+          duplicate: "نقل"
+          delete: "مٹائیں"
           colors:
             title: "رنگ"
       plugins:
@@ -4401,12 +4403,12 @@ ur:
           all_filter: "تمام"
           active_filter: "فعال"
           inactive_filter: "غیر فعال"
-          schema:
-            fields:
-              required: "*درکار"
-              number:
-                too_small: "%{count}سے بڑا یا اس کے برابر ہونا چاہیے"
-                too_large: "%{count}سے کم یا اس کے برابر ہونا چاہیے"
+        schema:
+          fields:
+            required: "*درکار"
+            number:
+              too_small: "%{count}سے بڑا یا اس کے برابر ہونا چاہیے"
+              too_large: "%{count}سے کم یا اس کے برابر ہونا چاہیے"
         colors:
           select_base:
             title: "بَیس رنگ پیلیٹ منتخب کریں"
@@ -4414,35 +4416,28 @@ ur:
           title: "رنگ"
           about: "اپنی تِھیمز کے استعمال کردہ رنگوں میں ترمیم کریں۔ شروع کرنے کے لئے ایک نئی پیلیٹ بنائیں۔"
           copy_name_prefix: "نقل از"
-          delete_confirm: "اِس رنگ کی تختی کومٹائیں؟"
           undo: "کالعدم کریں"
           undo_title: "اِس رنگ کو آخری دفعہ محفوظ کیے جانے کے وقت سے لے کر اَب تک کی اپنی تمام تبدیلیوں کو کالعدم کریں۔"
           revert: "رِیوَرٹ"
           revert_title: "اِس رنگ کو ڈِسکَورس کی پہلے سے طے شدہ رنگ پیلیٹ کے مطابق رِی سَیٹ کریں۔"
           primary:
             name: "بنیادی"
-            description: "زیادہ تر ٹَیکسٹ، آئیکنز اور بارڈرز"
           primary-medium:
             name: "پرائمری میڈیم"
           primary-low-mid:
             name: "بنیادی-کم-وسط"
           secondary:
             name: "ثانوی"
-            description: "مَین پسِ منظر کا رنگ، اور کچھ بٹنوں کے ٹَیکسٹ کا رنگ۔"
           tertiary:
             name: "ترتییک"
-            description: "لنکس، چند بٹن، اطلاعات، اور اَیکسنٹ رنگ۔"
           quaternary:
             name: "چوتھے درجہ کے"
           header_background:
             name: "ہیڈر کا پسِ منظر"
-            description: "سائٹ کے ہیڈر کے پسِ منظر کا رنگ۔"
           header_primary:
             name: "ہیڈر بنیادی"
-            description: "سائٹ کے ہیڈر میں ٹَیکسٹ اور آئیکنز۔"
           highlight:
             name: "اجاگر کریں"
-            description: "اُجاگر کیے گئے عناصر، جیسے کہ پوسٹس اور ٹاپک، کے پسِ منظر کا رنگ."
           highlight-high:
             name: "ہائی لائٹ-اعلیٰ"
           highlight-medium:
@@ -4451,13 +4446,10 @@ ur:
             name: "ہائی لائٹ-کم"
           danger:
             name: "خطرہ"
-            description: "اِعمال، جیسے کہ پوسٹس اور ٹاپکس کو حذف کرنا، کو نمایاں کرنے کا رنگ۔"
           success:
             name: "کامیابی"
-            description: "ایک کارروائی کے کامیاب ہونے کی نشاندہی کیلئے استعمال کیا جاتا ہے۔"
           love:
             name: "محبت"
-            description: "لائیک بٹن کا رنگ۔"
           selected:
             name: "منتخب کیا ہوا"
           editor:

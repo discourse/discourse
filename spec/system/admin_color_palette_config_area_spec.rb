@@ -146,7 +146,7 @@ describe "Admin Color Palette Config Area Page", type: :system do
 
     config_area.delete_button.click
 
-    dialog.click_yes
+    dialog.click_danger
 
     expect(page).to have_current_path("/admin/config/colors")
 

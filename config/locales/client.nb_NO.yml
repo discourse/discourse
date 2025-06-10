@@ -458,7 +458,7 @@ nb_NO:
       one: "Se %{count} nytt emne"
       other: "Se %{count} nye emner"
     preview: "forhåndsvisning"
-    cancel: "avbryt"
+    cancel: "Avbryt"
     deleting: "forhåndsvisning"
     save: "Lagre endringer"
     saving: "Lagrer…"
@@ -1115,7 +1115,6 @@ nb_NO:
       said: "%{username}:"
       profile: "Profil"
       profile_possessive: "%{username}s profil"
-      account_possessive: "%{name}s konto"
       mute: "Ignorer"
       edit: "Rediger innstillinger"
       download_archive:
@@ -1909,7 +1908,6 @@ nb_NO:
         title: "Registreringens IP-adresse."
       avatar:
         title: "Profilbilde"
-        header_title: "Profil, meldinger, bokmerker og innstillinger"
         name_and_description: "%{name} - %{description}"
         edit: "Rediger profilbilde"
       title:
@@ -2762,7 +2760,6 @@ nb_NO:
           aria_label: filtrer etter maksimal antall visninger
         additional_options:
           label: "Filtrer etter antall innlegg og emnevisninger"
-    hamburger_menu: "meny"
     new_item: "ny"
     go_back: "gå tilbake"
     not_logged_in_user: "brukerside med oppsummering av nåværende aktivtet og innstillinger"
@@ -3454,6 +3451,11 @@ nb_NO:
         other: "Viser %{count} svar til"
       in_reply_to: "Last inn overordnet innlegg"
       view_all_posts: "Vis alle innlegg"
+      localizations:
+        table:
+          actions: "Handlinger"
+          edit: "Endre"
+          delete: "Slett"
       errors:
         create: "Beklager, det oppstod en feil ved å publisere ditt innlegg. Prøv igjen."
         edit: "Det oppstod en feil ved redigeringen av ditt innlegg. Prøv igjen."
@@ -4368,12 +4370,6 @@ nb_NO:
     discovery:
       headings:
         categories: "Alle kategorier"
-        filter_labels:
-          latest: "Siste"
-          top: "Aktive"
-          new: "Ny"
-          unread: "Uleste"
-          unseen: "Usette"
   admin_js:
     type_to_filter: "Skriv for å filtrere…"
     settings: "Instillinger"
@@ -4415,14 +4411,13 @@ nb_NO:
           title: "Filer"
         legal:
           title: "Juridisk"
-        logo_and_fonts:
-          logo:
-            form:
-              mobile: "Mobil"
-              email: "E-post"
-          fonts:
-            backfill_modal:
-              modal_yes: "Ja"
+        logo:
+          form:
+            mobile: "Mobil"
+            email: "E-post"
+        fonts:
+          backfill_modal:
+            modal_yes: "Ja"
         navigation:
           title: "Navigasjon"
         notifications:
@@ -4765,6 +4760,8 @@ nb_NO:
       config_areas:
         about:
           company_name: "Navn"
+          extra_groups:
+            groups: "Grupper"
           optional: "(valgfritt)"
           update: "Oppdater"
           saved: "lagret!"
@@ -4818,6 +4815,7 @@ nb_NO:
           delete: "Slett"
         color_palettes:
           palette_name: "Navn"
+          delete: "Slett"
           colors:
             title: "Farger"
       plugins:
@@ -5021,12 +5019,16 @@ nb_NO:
           all_filter: "Alle"
           active_filter: "Aktiv"
           inactive_filter: "Inaktiv"
-          schema:
-            fields:
-              required: "*påkrevd"
-              number:
-                too_small: "må være lik eller større enn %{count}"
-                too_large: "må være lik eller mindre enn %{count}"
+        schema:
+          fields:
+            required: "*påkrevd"
+            string:
+              too_short:
+                one: "må være minst %{count} tegn"
+                other: "må være minst %{count} tegn"
+            number:
+              too_small: "må være lik eller større enn %{count}"
+              too_large: "må være lik eller mindre enn %{count}"
         colors:
           title: "Farger"
           copy_name_prefix: "Kopi av"
@@ -5035,33 +5037,24 @@ nb_NO:
           revert: "Reverser"
           primary:
             name: "primær"
-            description: "Det meste av tekst, ikoner og kanter."
           secondary:
             name: "sekundær"
-            description: "Primær bakgrunnsfarge og tekstfarge på noen knapper"
           tertiary:
             name: "tertiær"
-            description: "Lenker, noen knapper, varsler og effektfarge"
           quaternary:
             name: "kvartær"
           header_background:
             name: "hodebakgrunn"
-            description: "Bakgrunnsfarge i nettstedets hode"
           header_primary:
             name: "primærhode"
-            description: "Tekst og ikoner i nettstedets hode."
           highlight:
             name: "utheving"
-            description: "Bakgrunnsfargen på uthevede elementer på siden, slik som innlegg og emner."
           danger:
             name: "fare"
-            description: "Uthevingsfarge for handlinger som sletting av innlegg og emner."
           success:
             name: "suksess"
-            description: "Brukt til å indikere hvorvidt en handling var vellykket."
           love:
             name: "liker"
-            description: "Fargen til Liker-knappen."
           selected:
             name: "valgt"
           editor:

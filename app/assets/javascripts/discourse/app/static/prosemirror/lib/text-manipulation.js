@@ -105,8 +105,18 @@ export default class ProsemirrorTextManipulation {
       return;
     }
 
-    const text = head + i18n(`composer.${exampleKey}`) + tail;
-    const doc = this.convertFromMarkdown(text);
+    const { state } = this.view;
+    const { from, to, empty } = state.selection;
+
+    let text;
+    if (empty) {
+      text = i18n(`composer.${exampleKey}`);
+    } else {
+      const selectedFragment = state.doc.slice(from, to).content;
+      text = this.convertToMarkdown(selectedFragment);
+    }
+
+    const doc = this.convertFromMarkdown(head + text + tail);
 
     this.view.dispatch(
       this.view.state.tr.replaceWith(sel.start, sel.end, doc.content.firstChild)

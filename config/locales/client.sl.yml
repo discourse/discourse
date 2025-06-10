@@ -424,7 +424,7 @@ sl:
       few: "Poglej %{count} nove teme"
       other: "Poglej %{count} novih tem"
     preview: "predogled"
-    cancel: "prekliči"
+    cancel: "Prekliči"
     deleting: "Brišem..."
     save: "Shrani spremembe"
     saving: "Shranjujem..."
@@ -1638,7 +1638,6 @@ sl:
         title: "Registracijski IP naslov"
       avatar:
         title: "Slika profila"
-        header_title: "profil, zasebna sporočila, zaznamki in nastavitve"
         name_and_description: "%{name} - %{description}"
       title:
         title: "Naziv"
@@ -2804,6 +2803,11 @@ sl:
         few: "Oglejte si to objavo in njene %{count} odgovore"
         other: "Oglejte si to objavo in njenih %{count} odgovorov"
       view_all_posts: "Ogled vseh objav"
+      localizations:
+        table:
+          actions: "Akcije"
+          edit: "Uredi"
+          delete: "Izbriši"
       errors:
         create: "Oprostite, pri ustvarjanju vašega prispevka je prišlo do napake. Poskusite ponovno."
         edit: "Oprostite, pri ustvarjanju vašega prispevka je prišlo do napake. Poskusite ponovno."
@@ -3706,11 +3710,6 @@ sl:
     discovery:
       headings:
         categories: "Vse kategorije"
-        filter_labels:
-          latest: "Najnovejše"
-          top: "Najboljše"
-          new: "Nova"
-          unread: "Neprebrane"
   admin_js:
     settings: "Nastavitve"
     admin:
@@ -3751,14 +3750,13 @@ sl:
           title: "Datoteke"
         legal:
           title: "Pravno"
-        logo_and_fonts:
-          logo:
-            form:
-              mobile: "Mobilno"
-              email: "E-naslov"
-          fonts:
-            backfill_modal:
-              modal_yes: "Ja"
+        logo:
+          form:
+            mobile: "Mobilno"
+            email: "E-naslov"
+        fonts:
+          backfill_modal:
+            modal_yes: "Ja"
         navigation:
           title: "Navigacija"
         notifications:
@@ -4070,6 +4068,8 @@ sl:
       config_areas:
         about:
           company_name: "Ime"
+          extra_groups:
+            groups: "Skupine"
           optional: "(neobvezno)"
           saved: "shranjeno!"
         flags:
@@ -4111,6 +4111,7 @@ sl:
           delete: "Izbriši"
         color_palettes:
           palette_name: "Ime"
+          delete: "Izbriši"
           colors:
             title: "Barve"
       plugins:
@@ -4225,11 +4226,11 @@ sl:
           all_filter: "Vse"
           active_filter: "Aktivni"
           inactive_filter: "Nedejaven"
-          schema:
-            fields:
-              required: "*zahtevano"
-              number:
-                too_large: "mora biti manj ali enako kot %{count}"
+        schema:
+          fields:
+            required: "*zahtevano"
+            number:
+              too_large: "mora biti manj ali enako kot %{count}"
         colors:
           title: "Barve"
           copy_name_prefix: "Kopija od"

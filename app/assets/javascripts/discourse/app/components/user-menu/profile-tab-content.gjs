@@ -5,10 +5,10 @@ import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import DoNotDisturbModal from "discourse/components/modal/do-not-disturb";
 import UserStatusModal from "discourse/components/modal/user-status";
+import ageWithTooltip from "discourse/helpers/age-with-tooltip";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import emoji from "discourse/helpers/emoji";
-import formatAge from "discourse/helpers/format-age";
 import routeAction from "discourse/helpers/route-action";
 import { ajax } from "discourse/lib/ajax";
 import DoNotDisturb from "discourse/lib/do-not-disturb";
@@ -129,7 +129,7 @@ export default class UserMenuProfileTabContent extends Component {
               <span class="item-label">
                 {{this.currentUser.status.description}}
                 {{#if this.currentUser.status.ends_at}}
-                  {{formatAge this.currentUser.status.ends_at}}
+                  {{ageWithTooltip this.currentUser.status.ends_at}}
                 {{/if}}
               </span>
             {{else}}
@@ -179,7 +179,7 @@ export default class UserMenuProfileTabContent extends Component {
             {{#if this.isInDoNotDisturb}}
               <span>{{i18n "pause_notifications.label"}}</span>
               {{#if this.showDoNotDisturbEndDate}}
-                {{formatAge this.doNotDisturbDateTime}}
+                {{ageWithTooltip this.doNotDisturbDateTime}}
               {{/if}}
             {{else}}
               {{i18n "pause_notifications.label"}}

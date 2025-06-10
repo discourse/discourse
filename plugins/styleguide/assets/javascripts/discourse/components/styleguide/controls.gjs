@@ -5,4 +5,5 @@ const Controls = <template>
     </tbody>
   </table>
 </template>;
+
 export default Controls;

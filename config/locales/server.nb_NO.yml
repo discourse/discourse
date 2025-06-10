@@ -294,34 +294,6 @@ nb_NO:
     until_posts:
       one: "%{count} innlegg"
       other: "%{count} innlegg"
-    avatar: |
-      ### Hva med et bilde på kontoen din?
-
-      Du har skrevet et par emner og svar, men profilbildet ditt er ikke like unikt som du er - akkurat nå er det bare en bokstav.
-
-      Har du vurdert å **[besøke brukerprofilen din](%{profile_path})** for å laste opp et bilde som kan representere deg?
-
-      Det er lettere å følge diskusjoner og å finne interessante personer i en samtale om alle har et unikt profilbilde!
-    sequential_replies: |
-      ### Vurder å svare på flere innlegg samtidig
-
-      I stedet for å legge inn flere svar på rad i et emne, anbefaler vi at du skriver et innlegg som kombinerer flere sitater fra tidligere innlegg eller @navn referanser.
-
-      Du kan redigere det forrige svaret ditt om du ønsker å legge til et sitat ved å merke teksten som skal siteres og velge <b>Sitat</b> knappen som spretter opp.
-
-      Det er lettere for alle å lese emner som har færre og mer dyptgående innlegg enn et stort antall små, individuelle svar.
-    too_many_replies: |
-      ### Du har nådd grensen for svar i dette emnet
-
-      Vi beklager, men nye brukere er midlertidig begrenset til å skrive %{newuser_max_replies_per_topic} svar per emne.
-
-      I stedet for å legge til et nytt svar, vurder om du kan redigere et tidligere svar, eller besøk et annet emne i mellomtiden.
-    reviving_old_topic: |
-      ### Gjennopplive dette emnet?
-
-      Det siste svaret i dette emnet ble skrevet for **%{time_ago}**. Svaret ditt vil flytte emnet til toppen av listen og varsle alle som tidligere deltok i samtalen.
-
-      Er du sikker på at du ønsker å fortsette denne gamle samtalen?
   activerecord:
     attributes:
       category:

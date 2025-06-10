@@ -3,6 +3,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { eq } from "truth-helpers";
 import InterfaceColorSelector from "discourse/components/interface-color-selector";
+import LanguageSwitcher from "discourse/components/language-switcher";
 import DAG from "discourse/lib/dag";
 import getURL from "discourse/lib/get-url";
 import Dropdown from "./dropdown";
@@ -17,6 +18,7 @@ function resetHeaderIcons() {
   headerIcons.add("hamburger", undefined, { after: "search" });
   headerIcons.add("user-menu", undefined, { after: "hamburger" });
   headerIcons.add("interface-color-selector", undefined, { before: "search" });
+  headerIcons.add("language-switcher", undefined, { before: "search" });
 }
 
 export function headerIconsDAG() {
@@ -58,9 +60,18 @@ export default class Icons extends Component {
 
     return (
       this.site.mobileView ||
-      this.search.searchExperience === "search_icon" ||
+      (this.search.searchExperience === "search_icon" &&
+        !this.search.welcomeBannerSearchInViewport) ||
       this.args.topicInfoVisible ||
       this.args.narrowDesktop
+    );
+  }
+
+  get showLanguageSwitcher() {
+    return (
+      !this.currentUser &&
+      this.siteSettings.experimental_anon_language_switcher &&
+      this.siteSettings.experimental_content_localization_supported_locales
     );
   }
 
@@ -112,6 +123,10 @@ export default class Icons extends Component {
             <li class="header-dropdown-toggle header-color-scheme-toggle">
               <InterfaceColorSelector />
             </li>
+          {{/if}}
+        {{else if (eq entry.key "language-switcher")}}
+          {{#if this.showLanguageSwitcher}}
+            <LanguageSwitcher />
           {{/if}}
         {{else if entry.value}}
           <entry.value />

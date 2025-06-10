@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 $blob-bg: absolute-image-url("/branded-background.svg");
 $blob-mobile-bg: absolute-image-url("/branded-background-mobile.svg");
 
@@ -28,7 +30,7 @@ body.wizard {
     max-width: 100%;
   }
 
-  @include breakpoint("mobile-extra-large") {
+  @include viewport.until(sm) {
     background: $blob-mobile-bg;
     background-size: cover;
     background-repeat: no-repeat;
@@ -54,7 +56,7 @@ body.wizard {
     height: 70px;
     width: auto;
 
-    @include breakpoint("mobile-extra-large") {
+    @include viewport.until(sm) {
       height: 50px;
     }
 
@@ -77,14 +79,14 @@ body.wizard {
   position: relative;
   z-index: 11;
   background-color: var(--secondary);
-  box-shadow: 0 4px 19px 6px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 19px 6px rgb(0, 0, 0, 0.05);
   box-sizing: border-box;
   margin: 1em auto;
   border: 1px solid var(--primary-low);
   border-radius: 8px;
   padding: 2em;
 
-  @include breakpoint("large") {
+  @include viewport.until(lg) {
     padding: 2em 1.5em;
   }
 
@@ -94,23 +96,14 @@ body.wizard {
     min-width: 35%;
     width: 100%;
 
-    @include breakpoint("large") {
+    @include viewport.until(lg) {
       max-width: 95%;
     }
 
     .wizard-container__button:not(.wizard-container__button-upload) {
-      @include breakpoint("mobile-extra-large") {
+      @include viewport.until(sm) {
         width: 100%;
         margin: 0 0 0.5em;
-      }
-    }
-
-    &.styling {
-      max-width: 100%;
-      width: auto;
-
-      @include breakpoint("mobile-extra-large") {
-        width: 95%;
       }
     }
   }
@@ -130,34 +123,8 @@ body.wizard {
     font-size: var(--font-up-2);
     flex: 1 0 40%;
 
-    @include breakpoint("tablet") {
+    @include viewport.until(md) {
       font-size: var(--font-up-2);
-    }
-  }
-
-  &__step.branding .wizard-container__field {
-    @include breakpoint("mobile-extra-large") {
-      max-width: 100%;
-    }
-  }
-
-  &__step.branding .wizard-container__preview {
-    background-color: var(--primary-very-low);
-    border-radius: 0.5em;
-    padding: 1em;
-    margin-bottom: 1em;
-  }
-
-  &__step.branding .wizard-container__preview canvas {
-    @include breakpoint("mobile-extra-large") {
-      max-width: 100%;
-      height: auto !important;
-    }
-  }
-
-  &__step.styling .wizard-container__field.styling-preview-field {
-    label {
-      display: none;
     }
   }
 
@@ -181,19 +148,6 @@ body.wizard {
 
   &__field label {
     display: block;
-  }
-
-  &__field.text-governing-law,
-  &__field.text-city-for-disputes {
-    @media only screen and (width <= 568px) {
-      display: none;
-    }
-  }
-
-  &__field.dropdown-field.dropdown-homepage-style {
-    .wizard-container__dropdown {
-      height: auto;
-    }
   }
 
   &__step-form {
@@ -229,58 +183,6 @@ body.wizard {
     }
   }
 
-  .preview-nav {
-    display: flex;
-    justify-content: flex-end;
-    position: relative;
-    padding-right: 10px;
-
-    .preview-nav-button {
-      text-align: center;
-      padding: 10px 15px;
-      cursor: pointer;
-      margin-left: 10px;
-      font-size: 14px;
-      font-weight: bold;
-      color: var(--primary-high);
-
-      &.active {
-        background: var(--secondary);
-        border-bottom-left-radius: 10px;
-        border-bottom-right-radius: 10px;
-        color: var(--tertiary);
-        border-top: none;
-      }
-    }
-  }
-
-  .previews {
-    position: relative;
-    height: 320px;
-    width: 628px;
-    overflow: hidden;
-    background: var(--secondary);
-    border-radius: 10px;
-    cursor: grab;
-    user-select: none;
-
-    &.dragging {
-      cursor: grabbing;
-    }
-
-    .topic-preview {
-      position: absolute;
-      left: 0;
-      top: 0;
-    }
-
-    .homepage-preview {
-      position: absolute;
-      left: calc(100% + 25px);
-      top: 0;
-    }
-  }
-
   &__step-header {
     text-align: center;
     margin-bottom: 3em;
@@ -298,7 +200,7 @@ body.wizard {
     line-height: var(--line-height-medium);
     margin: 0 0 0.5em 0;
 
-    @include breakpoint("medium") {
+    @include viewport.until(lg) {
       font-size: var(--font-up-5);
     }
   }
@@ -314,13 +216,9 @@ body.wizard {
     min-height: 37em;
     margin-bottom: 2em;
 
-    @include breakpoint("mobile-extra-large") {
+    @include viewport.until(sm) {
       min-height: 30em;
     }
-  }
-
-  &__step.branding .wizard-container__description {
-    font-size: var(--font-0);
   }
 
   &__buttons-left {
@@ -329,7 +227,7 @@ body.wizard {
     gap: 1em;
     align-items: center;
 
-    @include breakpoint("mobile-extra-large") {
+    @include viewport.until(sm) {
       order: 2;
     }
   }
@@ -339,7 +237,7 @@ body.wizard {
     align-items: center;
     font-weight: bold;
 
-    @include breakpoint("mobile-extra-large") {
+    @include viewport.until(sm) {
       margin-right: 0;
       flex-direction: column;
     }
@@ -408,7 +306,7 @@ body.wizard {
     background-color: var(--tertiary);
     color: var(--secondary);
 
-    @include breakpoint("mobile-extra-large") {
+    @include viewport.until(sm) {
       order: 1;
       margin-left: 0;
     }
@@ -436,7 +334,7 @@ body.wizard {
   &__button.finish {
     color: var(--tertiary);
 
-    @include breakpoint("mobile-extra-large") {
+    @include viewport.until(sm) {
       order: 2;
     }
   }
@@ -455,7 +353,7 @@ body.wizard {
     min-width: 70px;
     margin-left: 1em;
 
-    @include breakpoint("mobile-extra-large") {
+    @include viewport.until(sm) {
       order: 1;
       margin-left: 0;
     }
@@ -512,7 +410,7 @@ body.wizard {
     justify-content: space-between;
     align-items: center;
 
-    @include breakpoint("mobile-extra-large") {
+    @include viewport.until(sm) {
       flex-direction: column;
       justify-content: center;
       align-items: stretch;
@@ -522,10 +420,6 @@ body.wizard {
   &__label {
     font-weight: bold;
     font-size: var(--font-up-1);
-  }
-
-  &__step.styling .wizard-container__label {
-    font-size: var(--font-0);
   }
 
   &__label.required {
@@ -575,28 +469,6 @@ body.wizard {
 
   &__dropdown .select-kit-header:not(.btn) {
     border-radius: 4px;
-  }
-
-  &__dropdown.color-palettes .select-kit-row.color-palettes-row .name {
-    flex: 0 0 30%;
-  }
-
-  &__dropdown.color-palettes .select-kit-row.color-palettes-row .palettes {
-    flex: 1 1 70%;
-    overflow: hidden;
-  }
-
-  &__dropdown.homepage-style-selector {
-    .select-kit-row {
-      .name {
-        font-weight: bold;
-      }
-
-      .desc {
-        display: block;
-        margin-top: 0.1em;
-      }
-    }
   }
 
   &__field.checkbox-field .wizard-container__label {
@@ -660,7 +532,7 @@ body.wizard {
     .wizard-container__label:hover
     .wizard-container__checkbox-slider::before {
     background: var(--secondary);
-    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 0 0 1px rgb(0, 0, 0, 0.15);
   }
 
   &__checkbox:checked + .wizard-container__checkbox-slider {
@@ -695,7 +567,7 @@ body.wizard {
     display: flex;
     gap: 1em;
 
-    @include breakpoint(mobile-extra-large) {
+    @include viewport.until(sm) {
       flex-direction: column;
     }
   }
@@ -740,10 +612,6 @@ body.wizard {
 
   label .svg-icon {
     top: 2px;
-  }
-
-  .wizard-container__image-upload canvas {
-    border: 1px solid rgba(0, 0, 0, 0.2);
   }
 
   .finish-installation {

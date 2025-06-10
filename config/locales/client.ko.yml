@@ -1627,7 +1627,6 @@ ko:
         title: "등록 IP 주소"
       avatar:
         title: "프로필 사진"
-        header_title: "프로필, 메시지, 북마크 및 환경설정"
         name_and_description: "%{name} - %{description}"
         edit: "프로필 사진 변경"
       title:
@@ -2274,7 +2273,6 @@ ko:
           aria_label: 최대 조회수로 필터링
         additional_options:
           label: "게시물 수 및 주제 조회수로 필터링"
-    hamburger_menu: "메뉴"
     new_item: "신규"
     go_back: "뒤로 가기"
     not_logged_in_user: "현재 활동 및 환경설정에 대한 요약이 포함된 사용자 페이지"
@@ -2796,6 +2794,11 @@ ko:
         other: "다음의 댓글 %{count}개 보기"
       in_reply_to: "상위 게시물 로드"
       view_all_posts: "모든 게시물 보기"
+      localizations:
+        table:
+          actions: "작업"
+          edit: "편집"
+          delete: "삭제"
       errors:
         create: "게시물을 생성하는 중에 오류가 발생했습니다. 다시 시도하세요."
         edit: "게시물을 편집하는 중에 오류가 발생했습니다. 다시 시도하세요."
@@ -3278,7 +3281,6 @@ ko:
         this_month: "월"
         this_week: "주"
         today: "오늘"
-    browser_update: '<a href="https://www.discourse.org/faq/#browser">브라우저 버전이 너무 낮아 이 사이트에서 작동하지 않습니다</a>. <a href="https://browsehappy.com">브라우저를 업그레이드</a>하여 서식 있는 콘텐츠를 표시하고 로그인하여 댓글도 달아보세요.'
     permission_types:
       full: "생성 / 댓글 / 보기"
       create_post: "댓글 / 보기"
@@ -3650,6 +3652,8 @@ ko:
             invite:
               content: "초대"
               title: "새로운 멤버 초대"
+      no_results:
+        title: "결과 없음"
       search: "검색"
       footer:
         interface_color_selector:
@@ -3680,13 +3684,9 @@ ko:
         about: "소개"
     discovery:
       headings:
+        multi_tag:
+          default: "토픽에%{tags}태그가 달렸습니다"
         categories: "모든 카테고리"
-        filter_labels:
-          latest: "최신"
-          top: "인기글"
-          new: "신규"
-          unread: "읽지 않음"
-          unseen: "읽지 않음"
   admin_js:
     type_to_filter: "필터 입력..."
     settings: "설정"
@@ -3728,22 +3728,21 @@ ko:
           title: "파일"
         legal:
           title: "법률조항"
-        logo_and_fonts:
-          logo:
-            form:
-              mobile: "모바일"
-              email: "이메일"
-              manifest_screenshots:
-                description: "설치 프롬프트 페이지에서 인스턴스 기능을 보여주는 스크린 샷입니다. 모든 이미지는 로컬 업로드여야 하며 크기가 동일해야 합니다."
-              opengraph_image:
-                description: "페이지에 다른 적합한 이미지가 없을 때 사용되는 기본 오픈 그래프 이미지. 비워두면 large_icon이 사용됩니다."
-          fonts:
-            title: "글꼴"
-            form:
-              heading_font:
-                title: "제목 글꼴"
-            backfill_modal:
-              modal_yes: "예"
+        logo:
+          form:
+            mobile: "모바일"
+            email: "이메일"
+            manifest_screenshots:
+              description: "설치 프롬프트 페이지에서 인스턴스 기능을 보여주는 스크린 샷입니다. 모든 이미지는 로컬 업로드여야 하며 크기가 동일해야 합니다."
+            opengraph_image:
+              description: "페이지에 다른 적합한 이미지가 없을 때 사용되는 기본 오픈 그래프 이미지. 비워두면 large_icon이 사용됩니다."
+        fonts:
+          title: "글꼴"
+          form:
+            heading_font:
+              title: "제목 글꼴"
+          backfill_modal:
+            modal_yes: "예"
         navigation:
           title: "내비게이션"
         notifications:
@@ -4161,6 +4160,8 @@ ko:
           contact_url_placeholder: "https://johnny-smith.com/contact"
           your_organization: "조직"
           company_name: "그룹명"
+          extra_groups:
+            groups: "그룹"
           optional: "(선택 사항)"
           update: "업데이트"
           saved: "저장되었습니다!"
@@ -4208,6 +4209,7 @@ ko:
           delete: "삭제하기"
         color_palettes:
           palette_name: "그룹명"
+          delete: "삭제하기"
           colors:
             title: "색상"
       plugins:
@@ -4452,15 +4454,15 @@ ko:
           all_filter: "전체"
           active_filter: "활성화 사용자"
           inactive_filter: "비활성화"
-          schema:
-            fields:
-              required: "*필수"
-              string:
-                too_short:
-                  other: "최소 %{count}자 이상이어야 합니다."
-              number:
-                too_small: "%{count}보다 크거나 같아야 함"
-                too_large: "%{count}보다 작거나 같아야 함"
+        schema:
+          fields:
+            required: "*필수"
+            string:
+              too_short:
+                other: "최소 %{count}자 이상이어야 합니다."
+            number:
+              too_small: "%{count}보다 크거나 같아야 함"
+              too_large: "%{count}보다 작거나 같아야 함"
         colors:
           select_base:
             title: "베이스 색상 팔레트 선택"
@@ -4468,35 +4470,28 @@ ko:
           title: "색상"
           about: "테마에 사용되는 색상을 수정합니다. 시작하려면 새 색상 팔레트를 생성하세요."
           copy_name_prefix: "다음의 사본"
-          delete_confirm: "이 색상 팔레트를 삭제할까요?"
           undo: "실행 취소"
           undo_title: "마지막 저장 이후 색상 변경사항을 실행 취소합니다."
           revert: "되돌리기"
           revert_title: "이 색상을 Discourse의 디폴트 색상 팔레트로 리셋합니다."
           primary:
             name: "1차"
-            description: "대부분의 텍스트, 아이콘 및 테두리"
           primary-medium:
             name: "primary-medium"
           primary-low-mid:
             name: "primary-low-mid"
           secondary:
             name: "2차"
-            description: "메인 배경 색상, 일부 버튼의 텍스트 색상"
           tertiary:
             name: "3차"
-            description: "링크, 일부 버튼, 알림 및 강조 색상"
           quaternary:
             name: "4차"
           header_background:
             name: "헤더 배경 색상"
-            description: "사이트 헤더의 배경 색상입니다."
           header_primary:
             name: "헤더 기본"
-            description: "사이트 헤더의 텍스트와 아이콘입니다."
           highlight:
             name: "하이라이트"
-            description: "게시물이나 주제와 같은 페이지 내 하이라이트된 요소의 배경 색상입니다."
           highlight-high:
             name: "highlight-high"
           highlight-medium:
@@ -4505,13 +4500,10 @@ ko:
             name: "highlight-low"
           danger:
             name: "위험"
-            description: "게시물 및 주제 삭제와 같은 작업의 하이라이트 색상입니다."
           success:
             name: "성공"
-            description: "작업이 성공했음을 나타내는 데 사용됩니다."
           love:
             name: "하트"
-            description: "좋아요 버튼 색입니다."
           selected:
             name: "선택됨"
           editor:

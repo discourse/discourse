@@ -23,4 +23,5 @@ const GroupDelete = <template>
     {{i18n "admin.groups.delete_warning"}}
   </p>
 </template>;
+
 export default GroupDelete;

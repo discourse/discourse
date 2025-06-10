@@ -388,26 +388,6 @@ vi:
   education:
     until_posts:
       other: "%{count} bài đăng"
-    "new-topic": |
-      Chào mừng bạn đến với %{site_name} &mdash; **cảm ơn vì đã bắt đầu một cuộc trò chuyện mới! **
-
-      - Tiêu đề có nghe thú vị nếu bạn đọc to không? Đó có phải là một bản tóm tắt hay không?
-
-      - Ai sẽ quan tâm đến điều này? Tại sao nó lại quan trọng? Bạn muốn loại phản hồi nào?
-
-      - Bao gồm các từ thường được sử dụng trong chủ đề của bạn để những người khác có thể *tìm thấy* nó. Để nhóm chủ đề của bạn với các chủ đề liên quan, hãy chọn một dang mục (hoặc thẻ).
-
-      Để biết thêm, [xem hướng dẫn cộng đồng của chúng tôi](%{base_path}/guidelines). Bảng điều khiển này sẽ chỉ xuất hiện cho %{education_posts_text} đầu tiên của bạn.
-    "new-reply": |
-      Chào mừng bạn đến với %{site_name} &mdash; **cảm ơn bạn đã đóng góp!**
-
-      - Hãy tử tế với các thành viên trong cộng đồng của bạn.
-
-      - Câu trả lời của bạn có cải thiện cuộc trò chuyện không?
-
-      - Phê bình mang tính xây dựng được hoan nghênh, nhưng chỉ trích *ý tưởng*, không phải con người.
-
-      Để biết thêm, [xem nguyên tắc cộng đồng của chúng tôi](%{base_path}/guidelines). Bảng điều khiển này sẽ chỉ xuất hiện cho %{education_posts_text} đầu tiên của bạn.
   activerecord:
     attributes:
       category:
@@ -1203,7 +1183,6 @@ vi:
     min_title_similar_length: "Chiều dài tối thiểu của tiêu đề trước khi kiểm tra trùng chủ đề."
     category_colors: "Danh sách mã màu hexa cho phép cho danh mục."
     dark_mode_none: "Không có gì"
-    max_similar_results: "Số lượng chủ đề tương tự hiển thị phía trên bộ soạn thảo khi soạn chủ đề mới, so sánh dựa trên tiêu đề và nội dung."
     title_prettify: "Ngăn chặn lỗi chính tả và sai sót phổ biến trong tiêu đề, bao gồm tất cả là chữ hoa, ký tự đầu tiên là chữ thường, sử dụng quá nhiều ! và ?, thêm . ở cuối..."
     automatic_topic_heat_values: 'Tự động cập nhật cài đặt "lượt xem chủ đề nổi bật" và "lượt thích chủ đề nổi bật" dựa trên hoạt động của trang web.'
     topic_views_heat_low: "Sau bao nhiêu lượt xem thì số lượt xem sẽ nổi bật một chút."
@@ -1276,11 +1255,9 @@ vi:
     clean_up_inactive_users_after_days: "Số ngày trước khi người dùng không hoạt động (mức độ tin cậy 0 không có bất kỳ bài đăng nào) bị xóa. Để tắt tính năng dọn dẹp, hãy đặt thành 0."
     clean_up_unused_staged_users_after_days: "Số ngày trước khi người dùng theo giai đoạn không sử dụng (không có bất kỳ bài đăng nào) bị xóa. Để tắt tính năng dọn dẹp, hãy đặt thành 0."
     allow_profile_backgrounds: "Cho phép người dùng tải lên ảnh nền"
-    sequential_replies_threshold: "Số bài viết một thành viên có thể gửi liên tiếp trong một chủ đề trước khi được nhắc nhở về hành vi trả lời liên tục quá nhiều."
     get_a_room_threshold: "Số lượng bài viết mà người dùng phải thực hiện với cùng một người trong cùng một chủ đề trước khi bị cảnh báo."
     enable_mobile_theme: "Thiết bị di động có thể sử dụng giao diện riêng, với khả năng chuyển sang chế độ xem đầy đủ. Tắt thiết lập này nếu bạn muốn sử dụng một style tùy biến hỗ trợ responsive."
     dominating_topic_minimum_percent: "Số phần trăm bài viết mà một thành viên có thể gửi trong một chủ đề trước khi được nhắc nhở về hành vi muốn tạo ưu thế trong chủ đề."
-    disable_avatar_education_message: "Tắt thông điệp hướng dẫn khi đổi avatar."
     suppress_uncategorized_badge: "Không hiển thị huy hiệu cho các chủ đề chưa phân loại trong danh sách chủ đề"
     permalink_normalizations: "Áp dụng regex sau trước khi khớp với permalink, ví dụ: /(topic.*)\\?.*/\\1 sẽ loại bỏ các chuỗi truy vấn từ đường dẫn chủ đề. Định dạng regex+string với \\1 ... để giữ truy cập"
     disable_system_edit_notifications: "Vô hiệu hoá thông báo chỉnh sửa bởi người dùng hệ thống khi 'download_remote_images_to_local' đang hoạt động."
@@ -1292,7 +1269,6 @@ vi:
     display_name_on_posts: "Hiển thị tên đầy đủ của thành viên trên bài viết của họ và khi gõ @username."
     show_time_gap_days: "Nếu hai bài viết được thực hiện cách nhau nhiều ngày, hiển thị thời gian cách nhau đó trong chủ đề."
     short_progress_text_threshold: "Sau khi số bài đăng của một chủ đề vượt qua giới hạn này, thanh tiến trình sẽ chỉ hiện số thứ tự của bài đăng hiện tại. Nếu bạn thay đổi chiều rộng của thanh tiến trình, bạn có thể cần thay đổi giá trị này"
-    warn_reviving_old_topic_age: "Khi ai đó trả lời chủ đề mà lần trả lời cuối cùng cũ hơn số ngày được thiết lập ở đây, hiển thị một cảnh báo. Vô hiệu hóa bằng cách đặt là 0."
     embed_post_limit: "Số lượng tối đa bài viết được nhúng."
     embed_username_required: "Tên tài khoản để tạo chủ đề là bắt buộc."
     slug_generation_method: "Chọn phương thức tạo slug. 'encoded' sẽ tạo ra phần trăm chuỗi mã hóa. 'none' sẽ tắt slug."
@@ -1427,11 +1403,6 @@ vi:
     errors: "%{errors}"
     not_available: "Không có sẵn. Thử %{suggestion}?"
     something_already_taken: "Có lỗi xảy ra, tên đăng nhập hoặc email đã được đăng ký. Thử sử dụng chức năng quên mật khẩu."
-    omniauth_error:
-      generic: "Xin lỗi, đã xảy ra lỗi khi ủy quyền tài khoản của bạn. Vui lòng thử lại."
-      csrf_detected: "Đã hết thời gian ủy quyền hoặc bạn đã chuyển đổi trình duyệt. Vui lòng thử lại."
-      request_error: "Đã xảy ra lỗi khi bắt đầu ủy quyền. Vui lòng thử lại."
-      invalid_iat: "Không thể xác minh mã thông báo ủy quyền do sự khác biệt về đồng hồ máy chủ. Vui lòng thử lại."
     omniauth_error_unknown: "Đã xảy ra lỗi khi xử lý thông tin đăng nhập của bạn, vui lòng thử lại."
     omniauth_confirm_title: "Đăng nhập bằng %{provider}"
     omniauth_confirm_button: "Tiếp tục"
@@ -1890,8 +1861,6 @@ vi:
     see_more: "Thêm"
     search_title: "Tìm trang này"
     search_button: "Tìm kiếm"
-  login_required:
-    welcome_message: "# [Chào mừng đến với %{title}] (#welcome)"
   upload:
     edit_reason: "tải về một bản sao của hình ảnh."
     unauthorized: "Xin lỗi, tập tin của bạn tải lên không được cho phép (định dạng cho phép: %{authorized_extensions})."

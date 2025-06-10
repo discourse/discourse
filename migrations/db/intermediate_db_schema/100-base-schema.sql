@@ -5,7 +5,7 @@
 CREATE TABLE user_emails
 (
     email      TEXT     NOT NULL PRIMARY KEY,
-    created_at DATETIME NOT NULL,
+    created_at DATETIME,
     "primary"  BOOLEAN,
     user_id    NUMERIC  NOT NULL
 );

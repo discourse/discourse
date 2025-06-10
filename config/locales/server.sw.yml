@@ -235,34 +235,6 @@ sw:
     until_posts:
       one: "%{count} chapisho"
       other: "%{count} machapisho"
-    avatar: |2
-       ### Unaonaje ukiongeza picha kwenye akaunti yako?
-
-      Umechapisha mada na majibu machache, lakini picha ya umbo lako sio ya kipekee kama wewe - ni herufi tu.
-
-      Je umefikiria kuhusu **[kutembelea umbo lako la mtumiaji](%{profile_path})** na kupakia picha inayokuwakilisha wewe?
-
-      Ni rahisi na kufuatilia majadiliano na kuona watu wengi kwenye maongezi kama kila mtu anapicha ya kipekee ya umbo!
-    sequential_replies: |
-      ### Kujibu machapisho mengi kwa wakati mmoja
-
-      Badala ya kujibu mada kwa mara kadhaa kwa wakati mmoja, unaweza kutuma jibu moja lenye nukulu kutoka kwenye machapisho yaliyopita au @kumbukumbu la jina.
-
-      Unaweza kuhariri machapisho yaliyopita kuongeza nukulu kwa kufanya yafuatayo, bainisha nakala na chagua kitufe cha <b>nukulu jibu</b>kitakachotokea.
-
-      Ni rahisi kwa watu wote kusoma mada ambazo zina majibu machache ukilinganisha na majibu madogo, mafupi na ya kibinafsi.
-    too_many_replies: |
-      ### Umefika kiwango cha juu cha kujibu kwenye mada hii
-
-      Tunaomba radhi, lakini watumiaji wapya wana vizuizi vya mda mfupi vya majibu %{newuser_max_replies_per_topic} kwenye mada moja.
-
-      Badala ya kuongeza jibu lingine, unaweza kuhariri majibu uliyochapisha, au kutembelea mada zingine.
-    reviving_old_topic: |
-      ### Rudisha mada hii?
-
-      Jibu la mwisho la mada hii lilikuwa **%{time_ago}**. Jibu lako litafanya mada ipande orodha na mtu yoyote aliyehusika kwenye maongezi.
-
-      Una uhakika unataka kuendelea na maongezi ya mda?
   activerecord:
     attributes:
       category:
@@ -906,7 +878,6 @@ sw:
     digest_other_topics: "Kiwango cha juu cha mada maarufu kuonyeshwa ndani ya 'Mada na kategoria mpya ' kwenye muhtasari wa barua pepe."
     suppress_digest_email_after_days: "Husuru muhtasari wa barua pepe kwa watumiaji ambao hawajaonekana kwenye tovuti zaidi ya siku (n)"
     digest_suppress_categories: "Husuru kategoria hizi kutokea kwenye muhtasari wa barua pepe."
-    sequential_replies_threshold: "Namba ya machapisho mtumiaji anaruhusiwa kuandika kabla ya kukumbushwa kuwa ameandika majibu mengi yanayofuatana."
     get_a_room_threshold: "Namba ya machapisho mtumiaji anaruhusiwa kuandika kwa mtu mmoja kwenye mada moja kabla ya kupata onyo."
     dominating_topic_minimum_percent: "Namba ya machapisho mtumiaji anaruhusiwa kuandika kwenye mada kabla ya kukumbushwa kuwa anamiliki mada sana."
     auto_handle_queued_age: "Shughulikia rekodi zinazosubirishwa baada ya siku hizi. Bendera zitapuuzwa . Machapisho kwenye foleni na watumiaji watakataliwa. Weka namba 0 kusitisha hiki kipengele."

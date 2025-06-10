@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { hash } from "@ember/helper";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { and } from "truth-helpers";
@@ -9,6 +8,7 @@ import Blurb from "discourse/components/search-menu/results/blurb";
 import TopicStatus from "discourse/components/topic-status";
 import categoryLink from "discourse/helpers/category-link";
 import discourseTags from "discourse/helpers/discourse-tags";
+import lazyHash from "discourse/helpers/lazy-hash";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 
 export default class Results extends Component {
@@ -39,7 +39,7 @@ export default class Results extends Component {
           {{/if}}
           <PluginOutlet
             @name="search-menu-results-topic-title-suffix"
-            @outletArgs={{hash topic=@result.topic}}
+            @outletArgs={{lazyHash topic=@result.topic}}
           />
         </span>
       </span>

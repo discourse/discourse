@@ -3,8 +3,8 @@ async function fileToDrawable(file, isIOS) {
     return await createImageBitmap(file);
   } else {
     // iOS has performance issues with createImageBitmap on large images
-    // this workaround borrowed from https://github.com/Donaldcwl/browser-image-compression/blob/master/lib/utils.js
-    const dataUrl = await getDataUrlFromFile(file);
+    // this workaround partially borrowed from https://github.com/Donaldcwl/browser-image-compression/blob/master/lib/utils.js
+    const dataUrl = URL.createObjectURL(file);
     return await loadImage(dataUrl);
   }
 }
@@ -87,20 +87,17 @@ export async function fileToImageData(file, isIOS) {
   return imageData;
 }
 
-function getDataUrlFromFile(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = (e) => reject(e);
-    reader.readAsDataURL(file);
-  });
-}
-
 function loadImage(src) {
   return new Promise((resolve, reject) => {
     const img = new Image();
-    img.onload = () => resolve(img);
-    img.onerror = (e) => reject(e);
+    img.onload = () => {
+      URL.revokeObjectURL(src);
+      resolve(img);
+    };
+    img.onerror = (e) => {
+      URL.revokeObjectURL(src);
+      reject(e);
+    };
     img.src = src;
   });
 }

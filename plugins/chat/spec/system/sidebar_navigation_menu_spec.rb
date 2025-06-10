@@ -6,6 +6,8 @@ RSpec.describe "Sidebar navigation menu", type: :system do
 
   fab!(:current_user) { Fabricate(:user) }
 
+  let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
+
   before do
     SiteSetting.navigation_menu = "sidebar"
     chat_system_bootstrap
@@ -184,6 +186,23 @@ RSpec.describe "Sidebar navigation menu", type: :system do
         expect(sidebar_page.dms_section.find(".channel-#{dm_channel_1.id}")["title"]).to eq(
           "Chat with &lt;script&gt;alert(&#x27;hello&#x27;)&lt;/script&gt;",
         )
+      end
+    end
+
+    context "as admin" do
+      fab!(:admin)
+      fab!(:channel_1) { Fabricate(:chat_channel) }
+      before { sign_in admin }
+
+      it "has back to forum button which leads to forum homepage" do
+        visit("/chat/c/#{channel_1.slug}/#{channel_1.id}")
+        page.find("li[data-list-item-name='everything'] a").click
+
+        visit("/admin")
+
+        sidebar.click_back_to_forum
+
+        expect(page).to have_current_path("/")
       end
     end
   end

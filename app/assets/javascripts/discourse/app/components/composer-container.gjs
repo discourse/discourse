@@ -23,6 +23,7 @@ import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import htmlClass from "discourse/helpers/html-class";
 import htmlSafe from "discourse/helpers/html-safe";
+import lazyHash from "discourse/helpers/lazy-hash";
 import loadingSpinner from "discourse/helpers/loading-spinner";
 import { i18n } from "discourse-i18n";
 import CategoryChooser from "select-kit/components/category-chooser";
@@ -80,7 +81,7 @@ export default class ComposerContainer extends Component {
               <PluginOutlet
                 @name="composer-open"
                 @connectorTagName="div"
-                @outletArgs={{hash model=this.composer.model}}
+                @outletArgs={{lazyHash model=this.composer.model}}
               />
             </span>
 
@@ -94,7 +95,7 @@ export default class ComposerContainer extends Component {
 
                   <PluginOutlet
                     @name="composer-action-after"
-                    @outletArgs={{hash model=this.composer.model}}
+                    @outletArgs={{lazyHash model=this.composer.model}}
                   />
 
                   {{#if this.site.desktopView}}
@@ -128,7 +129,7 @@ export default class ComposerContainer extends Component {
 
               <PluginOutlet
                 @name="before-composer-controls"
-                @outletArgs={{hash model=this.composer.model}}
+                @outletArgs={{lazyHash model=this.composer.model}}
               />
 
               <ComposerToggles
@@ -145,7 +146,7 @@ export default class ComposerContainer extends Component {
               <div class="composer-fields">
                 <PluginOutlet
                   @name="before-composer-fields"
-                  @outletArgs={{hash model=this.composer.model}}
+                  @outletArgs={{lazyHash model=this.composer.model}}
                 />
                 {{#unless this.composer.model.viewFullscreen}}
                   {{#if this.composer.model.canEditTitle}}
@@ -196,7 +197,9 @@ export default class ComposerContainer extends Component {
                           />
                           <PluginOutlet
                             @name="after-composer-category-input"
-                            @outletArgs={{hash composer=this.composer.model}}
+                            @outletArgs={{lazyHash
+                              composer=this.composer.model
+                            }}
                           />
                           <PopupInputTip
                             @validation={{this.composer.categoryValidation}}
@@ -217,7 +220,9 @@ export default class ComposerContainer extends Component {
                           />
                           <PluginOutlet
                             @name="after-composer-tag-input"
-                            @outletArgs={{hash composer=this.composer.model}}
+                            @outletArgs={{lazyHash
+                              composer=this.composer.model
+                            }}
                           />
                           <PopupInputTip
                             @validation={{this.composer.tagValidation}}
@@ -227,7 +232,7 @@ export default class ComposerContainer extends Component {
 
                       <PluginOutlet
                         @name="after-title-and-category"
-                        @outletArgs={{hash
+                        @outletArgs={{lazyHash
                           model=this.composer.model
                           tagValidation=this.composer.tagValidation
                           canEditTags=this.composer.canEditTags
@@ -241,7 +246,7 @@ export default class ComposerContainer extends Component {
                     <PluginOutlet
                       @name="composer-fields"
                       @connectorTagName="div"
-                      @outletArgs={{hash
+                      @outletArgs={{lazyHash
                         model=this.composer.model
                         showPreview=this.composer.isPreviewVisible
                       }}
@@ -254,7 +259,7 @@ export default class ComposerContainer extends Component {
             <span>
               <PluginOutlet
                 @name="composer-after-composer-editor"
-                @outletArgs={{hash model=this.composer.model}}
+                @outletArgs={{lazyHash model=this.composer.model}}
               />
             </span>
 
@@ -263,7 +268,7 @@ export default class ComposerContainer extends Component {
                 <PluginOutlet
                   @name="composer-fields-below"
                   @connectorTagName="div"
-                  @outletArgs={{hash model=this.composer.model}}
+                  @outletArgs={{lazyHash model=this.composer.model}}
                 />
               </span>
 
@@ -304,7 +309,7 @@ export default class ComposerContainer extends Component {
                 <span>
                   <PluginOutlet
                     @name="composer-after-save-or-cancel"
-                    @outletArgs={{hash model=this.composer.model}}
+                    @outletArgs={{lazyHash model=this.composer.model}}
                   />
                 </span>
               </div>
@@ -313,7 +318,7 @@ export default class ComposerContainer extends Component {
                 <span>
                   <PluginOutlet
                     @name="composer-mobile-buttons-bottom"
-                    @outletArgs={{hash model=this.composer.model}}
+                    @outletArgs={{lazyHash model=this.composer.model}}
                   />
                 </span>
 

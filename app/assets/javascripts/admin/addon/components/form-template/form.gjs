@@ -99,8 +99,8 @@ export default class FormTemplateForm extends Component {
 
   @action
   onDelete() {
-    return this.dialog.yesNoConfirm({
-      message: i18n("admin.form_templates.delete_confirm"),
+    return this.dialog.deleteConfirm({
+      title: i18n("admin.form_templates.delete_confirm"),
       didConfirm: () => {
         FormTemplate.deleteTemplate(this.args.model.id)
           .then(() => {

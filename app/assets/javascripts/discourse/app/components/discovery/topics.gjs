@@ -20,6 +20,7 @@ import List from "discourse/components/topic-list/list";
 import basePath from "discourse/helpers/base-path";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import htmlSafe from "discourse/helpers/html-safe";
+import lazyHash from "discourse/helpers/lazy-hash";
 import loadingSpinner from "discourse/helpers/loading-spinner";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { filterTypeForMode } from "discourse/lib/filter-mode";
@@ -303,7 +304,7 @@ export default class DiscoveryTopics extends Component {
         <PluginOutlet
           @name="before-topic-list"
           @connectorTagName="div"
-          @outletArgs={{hash category=@category tag=@tag}}
+          @outletArgs={{lazyHash category=@category tag=@tag}}
         />
       </span>
 
@@ -339,7 +340,7 @@ export default class DiscoveryTopics extends Component {
         <PluginOutlet
           @name="after-topic-list"
           @connectorTagName="div"
-          @outletArgs={{hash
+          @outletArgs={{lazyHash
             category=@category
             tag=@tag
             loadingMore=@model.loadingMore
@@ -354,7 +355,7 @@ export default class DiscoveryTopics extends Component {
       {{#if this.allLoaded}}
         <PluginOutlet
           @name="topic-list-bottom"
-          @outletArgs={{hash
+          @outletArgs={{lazyHash
             category=@category
             tag=@tag
             allLoaded=this.allLoaded

@@ -6,6 +6,10 @@ Rails.application.config.middleware.use Middleware::OmniauthBypassMiddleware
 OmniAuth.config.logger = Rails.logger
 OmniAuth.config.silence_get_warning = true
 
+# uncomment this line to force the redirect to /auth/failure in development mode
+# (by default, omniauth raises an exception in development mode)
+# OmniAuth.config.failure_raise_out_environments = []
+
 OmniAuth.config.request_validation_phase = nil # We handle CSRF checks in before_request_phase
 OmniAuth.config.before_request_phase do |env|
   request = ActionDispatch::Request.new(env)
@@ -48,3 +52,5 @@ OmniAuth.config.on_failure do |env|
 
   OmniAuth::FailureEndpoint.call(env)
 end
+
+OmniAuth.config.full_host = Proc.new { Discourse.base_url_no_prefix }

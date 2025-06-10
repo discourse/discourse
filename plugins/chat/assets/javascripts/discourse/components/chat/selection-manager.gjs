@@ -145,7 +145,7 @@ export default class ChatSelectionManager extends Component {
         await clipboardCopyAsync(this.generateQuote);
 
         this.toasts.success({
-          duration: 3000,
+          duration: "short",
           data: {
             message: i18n("chat.quote.copy_success"),
           },

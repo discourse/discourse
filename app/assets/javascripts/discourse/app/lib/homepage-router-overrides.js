@@ -21,7 +21,7 @@ export default function applyRouterHomepageOverrides(router) {
   }
 }
 
-const homepageRewriteParam = "_discourse_homepage_rewrite";
+export const homepageRewriteParam = "_discourse_homepage_rewrite";
 
 /**
  * Returns a magic URL which `discovery-index` will redirect to.
@@ -35,6 +35,7 @@ function rewriteIfNeeded(url, transition) {
   const intentUrl = transition?.intent?.url;
   if (
     intentUrl?.startsWith(homepageDestination()) ||
+    intentUrl?.startsWith("/login-required") ||
     (transition?.intent.name === `discovery.${defaultHomepage()}` &&
       transition?.intent.queryParams[homepageRewriteParam])
   ) {

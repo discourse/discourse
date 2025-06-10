@@ -507,8 +507,8 @@ export default class SidebarSectionForm extends Component {
 
   @action
   delete() {
-    return this.dialog.yesNoConfirm({
-      message: this.model.section.public
+    return this.dialog.deleteConfirm({
+      title: this.model.section.public
         ? i18n("sidebar.sections.custom.delete_public_confirm")
         : i18n("sidebar.sections.custom.delete_confirm"),
       didConfirm: () => {

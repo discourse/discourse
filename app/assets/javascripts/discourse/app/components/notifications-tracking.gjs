@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { fn, hash } from "@ember/helper";
+import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
@@ -7,6 +7,7 @@ import DropdownMenu from "discourse/components/dropdown-menu";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { allLevels, buttonDetails } from "discourse/lib/notification-levels";
 import { i18n } from "discourse-i18n";
 import DMenu from "float-kit/components/d-menu";
@@ -145,7 +146,7 @@ export default class NotificationsTracking extends Component {
                 <div class="notifications-tracking-btn__icons">
                   <PluginOutlet
                     @name="notifications-tracking-icons"
-                    @outletArgs={{hash
+                    @outletArgs={{lazyHash
                       selectedLevelId=@levelId
                       level=level
                       topic=@topic

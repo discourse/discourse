@@ -863,7 +863,7 @@ class UsersController < ApplicationController
 
     raise Discourse::NotFound if !user || !user.user_password
     raise Discourse::ReadOnly if staff_writes_only_mode? && !user.staff?
-    raise Discourse::InvalidAccess if !secure_session_confirmed?
+    raise Discourse::InvalidAccess if !session_is_trusted?
 
     user.remove_password
 
@@ -1564,7 +1564,7 @@ class UsersController < ApplicationController
   end
 
   def trusted_session
-    render json: secure_session_confirmed? || user_just_created ? success_json : failed_json
+    render json: session_is_trusted? ? success_json : failed_json
   end
 
   def list_second_factors
@@ -1572,7 +1572,7 @@ class UsersController < ApplicationController
       raise Discourse::NotFound
     end
 
-    if secure_session_confirmed?
+    if session_is_trusted?
       totp_second_factors =
         current_user
           .totps
@@ -1805,7 +1805,7 @@ class UsersController < ApplicationController
     end
 
     raise Discourse::InvalidAccess.new if !current_user
-    raise Discourse::InvalidAccess.new unless user_just_created || secure_session_confirmed?
+    raise Discourse::InvalidAccess.new unless session_is_trusted?
   end
 
   def revoke_account
@@ -2261,6 +2261,10 @@ class UsersController < ApplicationController
 
   def secure_session_confirmed?
     secure_session["confirmed-session-#{current_user.id}"] == "true"
+  end
+
+  def session_is_trusted?
+    secure_session_confirmed? || user_just_created
   end
 
   def summary_cache_key(user)

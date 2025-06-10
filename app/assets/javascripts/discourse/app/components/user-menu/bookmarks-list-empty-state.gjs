@@ -14,4 +14,5 @@ const BookmarksListEmptyState = <template>
     </div>
   </div>
 </template>;
+
 export default BookmarksListEmptyState;

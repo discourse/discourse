@@ -1,6 +1,7 @@
-import { fn, hash } from "@ember/helper";
+import { fn } from "@ember/helper";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import icon from "discourse/helpers/d-icon";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
 import CategorySelector from "select-kit/components/category-selector";
 
@@ -108,7 +109,7 @@ const Categories = <template>
     <PluginOutlet
       @name="user-preferences-categories"
       @connectorTagName="div"
-      @outletArgs={{hash model=@model save=@save}}
+      @outletArgs={{lazyHash model=@model save=@save}}
     />
   </span>
 
@@ -118,8 +119,9 @@ const Categories = <template>
     <PluginOutlet
       @name="user-custom-controls"
       @connectorTagName="div"
-      @outletArgs={{hash model=@model}}
+      @outletArgs={{lazyHash model=@model}}
     />
   </span>
 </template>;
+
 export default Categories;

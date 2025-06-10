@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .admin-config.components {
   .admin-config-components {
     &__filters {
@@ -13,7 +15,7 @@
     }
 
     &__parent-themes-list {
-      @include breakpoint("tablet") {
+      @include viewport.until(md) {
         text-align: right;
         max-width: 60%;
       }

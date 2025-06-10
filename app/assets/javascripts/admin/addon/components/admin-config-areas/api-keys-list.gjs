@@ -30,4 +30,5 @@ const ApiKeysList = <template>
     {{/if}}
   </div>
 </template>;
+
 export default ApiKeysList;

@@ -51,6 +51,11 @@ module("Integration | Component | emoji-picker-content", function (hooks) {
     assert
       .dom(".emoji-picker__diversity-trigger img[title='clap:t6']")
       .exists("it changes the current scale to t6");
+    assert
+      .dom(
+        `.emoji-picker__section-btn img[src="/images/emoji/twitter/raised_hands/6.png?v=${v}"]`
+      )
+      .exists("it applies the tone to the section selector");
   });
 
   test("When requesting section", async function (assert) {
