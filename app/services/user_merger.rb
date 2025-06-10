@@ -16,7 +16,8 @@ class UserMerger
     moving_posts = Benchmark.measure { move_posts }
     puts "time moving posts: #{moving_posts.real.round(2)} "
 
-    update_user_ids
+    user_ids_up = Benchmark.measure { update_user_ids }
+    puts "update user ids: #{user_ids_up.real.round(2)} "
 
     mdl = Benchmark.measure { merge_given_daily_likes }
     puts "time merging given daily likes: #{mdl.real.round(2)} "

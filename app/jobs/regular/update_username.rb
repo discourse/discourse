@@ -34,10 +34,17 @@ module Jobs
       @cooked_mention_user_path_regex =
         %r{\A/u(?:sers)?/#{UrlHelper.encode_component(cooked_username)}\z}i
 
-      update_posts
-      update_revisions
-      update_notifications
-      update_post_custom_fields
+      up = Benchmark.measure { update_posts }
+      puts "Inside updateUsername - time updating posts: #{up.real.round(2)} "
+
+      ur = Benchmark.measure { update_revisions }
+      puts "Inside updateUsername - time updating revisions: #{ur.real.round(2)} "
+
+      un = Benchmark.measure { update_notifications }
+      puts "Inside updateUsername - time updating notifications: #{un.real.round(2)} "
+
+      upcf = Benchmark.measure { update_post_custom_fields }
+      puts "Inside updateUsername - time updating post custom fields: #{upcf.real.round(2)} "
 
       DiscourseEvent.trigger(:username_changed, @old_username, @new_username)
       DiscourseEvent.trigger(:user_updated, user)
