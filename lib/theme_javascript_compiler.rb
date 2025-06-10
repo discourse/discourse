@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 
 class ThemeJavascriptCompiler
-  COLOCATED_CONNECTOR_REGEX =
-    %r{\A(?<prefix>.*/?)connectors/(?<outlet>[^/]+)/(?<name>[^/\.]+)\.(?<extension>.+)\z}
-
   class CompileError < StandardError
   end
 
