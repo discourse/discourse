@@ -9,6 +9,7 @@ module Jobs
     sidekiq_options queue: "low", concurrency: 5
 
     def execute(args)
+      return unless SiteSetting.mediaconvert_enabled
       upload_id = args[:upload_id]
       job_id = args[:job_id]
       new_sha1 = args[:new_sha1]
@@ -22,22 +23,29 @@ module Jobs
       return unless upload
 
       begin
-        client =
-          Aws::MediaConvert::Client.new(
-            region: SiteSetting.s3_region,
-            credentials:
-              Aws::Credentials.new(SiteSetting.s3_access_key_id, SiteSetting.s3_secret_access_key),
-          )
+        if SiteSetting.mediaconvert_endpoint.blank?
+          client =
+            Aws::MediaConvert::Client.new(
+              region: SiteSetting.s3_region,
+              credentials:
+                Aws::Credentials.new(
+                  SiteSetting.s3_access_key_id,
+                  SiteSetting.s3_secret_access_key,
+                ),
+            )
 
-        resp = client.describe_endpoints
-        endpoint = resp.endpoints[0].url
+          resp = client.describe_endpoints
+          SiteSetting.mediaconvert_endpoint = resp.endpoints[0].url
+        end
+
+        return if SiteSetting.mediaconvert_endpoint.blank?
 
         mediaconvert_client =
           Aws::MediaConvert::Client.new(
             region: SiteSetting.s3_region,
             credentials:
               Aws::Credentials.new(SiteSetting.s3_access_key_id, SiteSetting.s3_secret_access_key),
-            endpoint: endpoint,
+            endpoint: SiteSetting.mediaconvert_endpoint,
           )
 
         # Get job status
@@ -49,43 +57,19 @@ module Jobs
           s3_store = FileStore::S3Store.new
 
           begin
-            # Try both the expected path and the path with .mp4 suffix
-            paths_to_try = [
-              "#{output_path}.mp4", # MediaConvert adds .mp4
-              output_path, # Try without extension as fallback
-            ]
-
-            object = nil
-            actual_path = nil
-
-            paths_to_try.each do |path|
-              temp_object = s3_store.object_from_path(path)
-              if temp_object.exists?
-                object = temp_object
-                actual_path = path
-                break
-              end
-            end
+            # MediaConvert always adds .mp4 to the output path
+            path = "#{output_path}.mp4"
+            object = s3_store.object_from_path(path)
 
             if object&.exists?
               begin
-                Rails.logger.info("Found converted video in S3 at path: #{actual_path}")
-                Rails.logger.info("Object size: #{object.size}, SHA1: #{new_sha1}")
-
                 # Set ACL to public-read for the optimized video, matching the pattern used for optimized images
-                if SiteSetting.s3_use_acls
-                  object.acl.put(acl: "public-read")
-                  Rails.logger.info("Set ACL to public-read for video at path: #{actual_path}")
-                end
+                object.acl.put(acl: "public-read") if SiteSetting.s3_use_acls
 
                 # Create new filename for the converted video
                 new_filename = original_filename.sub(/\.[^.]+$/, "_converted.mp4")
-                Rails.logger.info("!!!!!!!!!! New filename: #{new_filename}")
 
                 # Create a new optimized video record
-                Rails.logger.info(
-                  "Attempting to create OptimizedVideo record for upload_id: #{upload.id}",
-                )
                 optimized_video =
                   OptimizedVideo.create_for(
                     upload,
@@ -94,24 +78,13 @@ module Jobs
                     filesize: object.size,
                     sha1: new_sha1,
                     url:
-                      "//#{s3_store.s3_bucket}.s3.dualstack.#{SiteSetting.s3_region}.amazonaws.com/#{actual_path}",
+                      "//#{s3_store.s3_bucket}.s3.dualstack.#{SiteSetting.s3_region}.amazonaws.com/#{path}",
                     extension: "mp4",
                   )
 
                 if optimized_video
-                  Rails.logger.info(
-                    "Successfully created OptimizedVideo record with ID: #{optimized_video.id}",
-                  )
-                  Rails.logger.info("OptimizedVideo URL: #{optimized_video.url}")
-                  Rails.logger.info("OptimizedVideo SHA1: #{optimized_video.sha1}")
-
-                  # Get posts that reference this upload
                   video_refs = UploadReference.where(upload_id: upload.id)
-                  Rails.logger.info("Found #{video_refs.count} posts referencing this video")
-
-                  # Get the target IDs before updating
                   target_ids = video_refs.pluck(:target_id, :target_type)
-                  Rails.logger.info("Found #{target_ids.count} target posts to update")
 
                   # Just rebake the posts - the CookedPostProcessor will handle the URL updates
                   Post
@@ -125,7 +98,7 @@ module Jobs
                   Rails.logger.error("Upload ID: #{upload.id}")
                   Rails.logger.error("SHA1: #{new_sha1}")
                   Rails.logger.error(
-                    "URL: //#{s3_store.s3_bucket}.s3.dualstack.#{SiteSetting.s3_region}.amazonaws.com/#{actual_path}",
+                    "URL: //#{s3_store.s3_bucket}.s3.dualstack.#{SiteSetting.s3_region}.amazonaws.com/#{path}",
                   )
                   raise "Failed to create optimized video record"
                 end
@@ -135,9 +108,8 @@ module Jobs
                 raise
               end
             else
-              Rails.logger.error("File not found in S3: #{output_path}")
-              Rails.logger.error("Tried paths: #{paths_to_try.join(", ")}")
-              raise "File not found in S3: #{output_path}"
+              Rails.logger.error("File not found in S3: #{path}")
+              raise "File not found in S3: #{path}"
             end
           rescue Aws::S3::Errors::ServiceError => e
             Rails.logger.error("Error getting S3 object info: #{e.message}")
