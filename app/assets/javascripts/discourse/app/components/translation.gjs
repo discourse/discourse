@@ -1,7 +1,9 @@
 import Component from "@glimmer/component";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
-import { eq } from "truth-helpers";
+import curryComponent from "ember-curry-component";
+import TranslationPlaceholder from "discourse/components/translation-placeholder";
 import uniqueId from "discourse/helpers/unique-id";
+import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import I18n, { i18n, PLACEHOLDER } from "discourse-i18n";
 
 /**
@@ -77,11 +79,11 @@ export default class Translation extends Component {
   }
 
   placeholderElement(placeholder) {
-    return <template>
-      {{#if (eq placeholder @name)}}
-        {{yield}}
-      {{/if}}
-    </template>;
+    return curryComponent(
+      TranslationPlaceholder,
+      { placeholder },
+      getOwnerWithFallback(this)
+    );
   }
 
   <template>
