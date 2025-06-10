@@ -17,7 +17,10 @@ export default {
         moduleName = moduleName.replace(/\.[^\.]+$/, "");
 
         if (isTemplate && !isInTemplatesDirectory) {
-          moduleName = `templates/${moduleName}`;
+          moduleName = moduleName.replace(
+            /(^|\/)connectors\//,
+            "$1templates/connectors/"
+          );
         } else if (!isTemplate && isInTemplatesDirectory) {
           moduleName = moduleName.replace(/^templates\//, "");
         }
