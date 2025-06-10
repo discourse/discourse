@@ -12,6 +12,7 @@ import { i18n } from "discourse-i18n";
 import InlineEditCheckbox from "admin/components/inline-edit-checkbox";
 import ThemeSettingEditor from "admin/components/theme-setting-editor";
 import ThemeSettingRelativesSelector from "admin/components/theme-setting-relatives-selector";
+import ThemeSiteSettingEditor from "admin/components/theme-site-setting-editor";
 import ThemeTranslation from "admin/components/theme-translation";
 import ColorPalettes from "select-kit/components/color-palettes";
 import ComboBox from "select-kit/components/combo-box";
@@ -267,6 +268,26 @@ export default RouteTemplate(
             {{/each}}
           </ul>
         </details>
+      </div>
+    {{/if}}
+
+    {{#if @controller.hasThemeableSiteSettings}}
+      <div class="control-unit">
+        <div class="mini-title">{{i18n
+            "admin.customize.theme.theme_site_settings"
+          }}</div>
+        <p><i>{{i18n
+              "admin.customize.theme.overriden_site_settings_explanation"
+            }}</i></p>
+        <section class="form-horizontal theme settings control-unit">
+          {{#each @controller.themeSiteSettings as |setting|}}
+            <ThemeSiteSettingEditor
+              @setting={{setting}}
+              @model={{@controller.model}}
+              class="theme-site-setting control-unit"
+            />
+          {{/each}}
+        </section>
       </div>
     {{/if}}
 
