@@ -18,6 +18,10 @@ import { i18n } from "discourse-i18n";
 const clickOutside = () => triggerEvent("header.d-header", "pointerdown");
 
 acceptance("Search - Anonymous", function (needs) {
+  needs.settings({
+    enable_welcome_banner: false,
+  });
+
   needs.pretender((server, helper) => {
     server.get("/search/query", (request) => {
       if (request.queryParams.type_filter === DEFAULT_TYPE_FILTER) {
@@ -401,6 +405,7 @@ acceptance("Search - Authenticated", function (needs) {
   needs.settings({
     log_search_queries: true,
     allow_uncategorized_topics: true,
+    enable_welcome_banner: false,
   });
 
   needs.pretender((server, helper) => {
@@ -713,7 +718,7 @@ acceptance("Search - Authenticated", function (needs) {
 
 acceptance("Search - with tagging enabled", function (needs) {
   needs.user();
-  needs.settings({ tagging_enabled: true });
+  needs.settings({ tagging_enabled: true, enable_welcome_banner: false });
   needs.pretender((server, helper) => {
     server.get("/search/query", (request) => {
       if (request.queryParams.type_filter === DEFAULT_TYPE_FILTER) {
@@ -884,6 +889,7 @@ acceptance("Search - with tagging enabled", function (needs) {
 
 acceptance("Search - assistant", function (needs) {
   needs.user();
+  needs.settings({ tagging_enabled: true, enable_welcome_banner: false });
   needs.pretender((server, helper) => {
     server.get("/t/2179.json", () => {
       return helper.response({});

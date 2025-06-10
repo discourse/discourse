@@ -52,3 +52,5 @@ OmniAuth.config.on_failure do |env|
 
   OmniAuth::FailureEndpoint.call(env)
 end
+
+OmniAuth.config.full_host = Proc.new { Discourse.base_url_no_prefix }

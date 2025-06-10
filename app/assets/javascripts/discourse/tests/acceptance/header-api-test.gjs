@@ -7,7 +7,11 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 // TODO: Consolidate these tests into a single acceptance test once the Glimmer
 // header is the default.
 
-acceptance("Header API - anonymous", function () {
+acceptance("Header API - anonymous", function (needs) {
+  needs.settings({
+    enable_welcome_banner: false,
+  });
+
   test("can add buttons to the header", async function (assert) {
     withPluginApi("1.29.0", (api) => {
       api.headerButtons.add(

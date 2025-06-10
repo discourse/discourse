@@ -233,10 +233,7 @@ export default class AboutPage extends Component {
   }
 
   get showExtraGroups() {
-    return (
-      this.siteSettings.show_additional_about_groups === true &&
-      !isBlank(this.siteSettings.about_page_extra_groups)
-    );
+    return !isBlank(this.siteSettings.about_page_extra_groups);
   }
 
   <template>

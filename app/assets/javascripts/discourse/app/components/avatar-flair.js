@@ -1,6 +1,7 @@
 import { observes } from "@ember-decorators/object";
 import MountWidget from "discourse/components/mount-widget";
 
+// TODO (glimmer-post-stream): this component needs to be converted to Glimmer
 export default class AvatarFlair extends MountWidget {
   widget = "avatar-flair";
 
