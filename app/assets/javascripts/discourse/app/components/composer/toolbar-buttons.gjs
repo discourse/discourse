@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { eq, or } from "truth-helpers";
+import { eq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
