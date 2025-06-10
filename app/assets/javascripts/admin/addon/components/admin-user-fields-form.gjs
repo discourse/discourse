@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
-import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { schedule } from "@ember/runloop";
@@ -8,6 +7,7 @@ import { service } from "@ember/service";
 import { eq, or } from "truth-helpers";
 import Form from "discourse/components/form";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
 import ValueList from "admin/components/value-list";
@@ -85,7 +85,7 @@ export default class AdminUserFieldsForm extends Component {
 
       this.router.transitionTo("adminUserFields.index");
       this.toasts.success({
-        duration: 3000,
+        duration: "short",
         data: {
           message: i18n("admin.config_areas.user_fields.save_successful"),
         },
@@ -250,7 +250,7 @@ export default class AdminUserFieldsForm extends Component {
 
       <PluginOutlet
         @name="after-admin-user-fields"
-        @outletArgs={{hash userField=@userField form=form}}
+        @outletArgs={{lazyHash userField=@userField form=form}}
       />
 
       <form.Actions>

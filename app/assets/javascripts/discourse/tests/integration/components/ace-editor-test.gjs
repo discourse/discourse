@@ -3,7 +3,7 @@ import { module, test } from "qunit";
 import AceEditor from "discourse/components/ace-editor";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
-module("Integration | Component | ace-editor", function (hooks) {
+module("Integration | Component | AceEditor", function (hooks) {
   setupRenderingTest(hooks);
 
   test("css editor", async function (assert) {
@@ -83,5 +83,23 @@ module("Integration | Component | ace-editor", function (hooks) {
     assert
       .dom(".ace-wrapper")
       .hasAttribute("data-disabled", "true", "it has a data-disabled attr");
+  });
+
+  test("resizable editor", async function (assert) {
+    await render(
+      <template>
+        <AceEditor
+          @mode="sql"
+          @content="SELECT * FROM users"
+          style="width: 300px; height: 200px"
+          @resizable={{true}}
+        />
+      </template>
+    );
+
+    assert.dom(".ace_editor").exists("it renders the ace editor");
+    assert
+      .dom(".ace-wrapper .ace_editor--resizable")
+      .exists("it has the resizable class");
   });
 });

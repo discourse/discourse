@@ -23,6 +23,7 @@ import icon from "discourse/helpers/d-icon";
 import formatDate from "discourse/helpers/format-date";
 import formatDuration from "discourse/helpers/format-duration";
 import formatUsername from "discourse/helpers/format-username";
+import lazyHash from "discourse/helpers/lazy-hash";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import userStatus from "discourse/helpers/user-status";
 import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
@@ -337,7 +338,7 @@ export default class UserCardContents extends CardContentsBase {
     {{#if this.visible}}
       <PluginOutlet
         @name="before-user-card-content"
-        @outletArgs={{hash user=this.user}}
+        @outletArgs={{lazyHash user=this.user}}
       />
       <div class="card-content">
         {{#if this.loading}}
@@ -365,7 +366,7 @@ export default class UserCardContents extends CardContentsBase {
           <div class="card-row first-row">
             <PluginOutlet
               @name="user-card-main-info"
-              @outletArgs={{hash
+              @outletArgs={{lazyHash
                 user=this.user
                 post=this.post
                 contentHidden=this.contentHidden
@@ -393,7 +394,7 @@ export default class UserCardContents extends CardContentsBase {
                   <PluginOutlet
                     @name="user-card-avatar-flair"
                     @connectorTagName="div"
-                    @outletArgs={{hash user=this.user}}
+                    @outletArgs={{lazyHash user=this.user}}
                   />
                 </div>
               </div>
@@ -436,7 +437,7 @@ export default class UserCardContents extends CardContentsBase {
                 <PluginOutlet
                   @name="user-card-after-username"
                   @connectorTagName="div"
-                  @outletArgs={{hash
+                  @outletArgs={{lazyHash
                     user=this.user
                     showUser=this.handleShowUser
                   }}
@@ -473,7 +474,7 @@ export default class UserCardContents extends CardContentsBase {
                   <PluginOutlet
                     @name="user-card-post-names"
                     @connectorTagName="div"
-                    @outletArgs={{hash user=this.user}}
+                    @outletArgs={{lazyHash user=this.user}}
                   />
                 </div>
               </div>
@@ -492,7 +493,7 @@ export default class UserCardContents extends CardContentsBase {
               <PluginOutlet
                 @name="user-card-below-message-button"
                 @connectorTagName="li"
-                @outletArgs={{hash user=this.user close=this.close}}
+                @outletArgs={{lazyHash user=this.user close=this.close}}
               />
               {{#if this.showFilter}}
                 <li>
@@ -526,13 +527,13 @@ export default class UserCardContents extends CardContentsBase {
               <PluginOutlet
                 @name="user-card-additional-buttons"
                 @connectorTagName="li"
-                @outletArgs={{hash user=this.user close=this.close}}
+                @outletArgs={{lazyHash user=this.user close=this.close}}
               />
             </ul>
             <PluginOutlet
               @name="user-card-additional-controls"
               @connectorTagName="div"
-              @outletArgs={{hash user=this.user close=this.close}}
+              @outletArgs={{lazyHash user=this.user close=this.close}}
             />
           </div>
 
@@ -643,7 +644,7 @@ export default class UserCardContents extends CardContentsBase {
                   <PluginOutlet
                     @name="user-card-location-and-website"
                     @connectorTagName="div"
-                    @outletArgs={{hash user=this.user}}
+                    @outletArgs={{lazyHash user=this.user}}
                   />
                 </span>
               </div>
@@ -699,14 +700,14 @@ export default class UserCardContents extends CardContentsBase {
                 <PluginOutlet
                   @name="user-card-metadata"
                   @connectorTagName="div"
-                  @outletArgs={{hash user=this.user}}
+                  @outletArgs={{lazyHash user=this.user}}
                 />
               </div>
             {{/unless}}
             <PluginOutlet
               @name="user-card-after-metadata"
               @connectorTagName="div"
-              @outletArgs={{hash user=this.user}}
+              @outletArgs={{lazyHash user=this.user}}
             />
           </div>
 
@@ -747,14 +748,14 @@ export default class UserCardContents extends CardContentsBase {
           <PluginOutlet
             @name="user-card-before-badges"
             @connectorTagName="div"
-            @outletArgs={{hash user=this.user}}
+            @outletArgs={{lazyHash user=this.user}}
           />
 
           {{#if this.showBadges}}
             <div class="card-row">
               <PluginOutlet
                 @name="user-card-badges"
-                @outletArgs={{hash user=this.user post=this.post}}
+                @outletArgs={{lazyHash user=this.user post=this.post}}
               >
                 {{#if this.user.featured_user_badges}}
                   <div class="badge-section">

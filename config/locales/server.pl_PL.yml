@@ -716,62 +716,11 @@ pl_PL:
       few: "%{count} wpisy"
       many: "%{count} wpisów"
       other: "%{count} wpisów"
-    "new-topic": |
-      Witaj na %{site_name} &mdash; **dziękujemy za rozpoczęcie nowej dyskusji!**
-
-      - Czy tytuł brzmi interesująco, gdy przeczytasz go na głos? Czy jest dobrym podsumowaniem treści?
-
-      - Kto będzie tym zainteresowany? Dlaczego temat jest istotny? Jakiego rodzaju odpowiedzi oczekujesz?
-
-      - Postaraj się umieścić słowa kluczowe w tytule, dzięki czemu inni będą mogli łatwo *wyszukać* temat. Przypisz go do kategorii (lub tagu) o pokrewnej tematyce.
-
-      Aby dowiedzieć się więcej, [zobacz przewodnik społeczności](%{base_path}/guidelines). Ten panel pojawi się tylko przy pierwszym %{education_posts_text}.
-    "new-reply": |
-      Witaj na %{site_name} &mdash; **dziękujemy za zaangażowanie!**
-
-      - Czy twoja odpowiedź wnosi coś pozytywnego do dyskusji?
-
-      - Zachowuj się przyjaźnie w stosunku do innych.
-
-      - Konstruktywna krytyka jest mile widziana, ale krytykujemy *pomysły*, a nie ludzi.
-
-      Więcej informacji znajdziesz [w przewodniku społeczności](%{base_path}/guidelines).
-      Ten panel pojawi się tylko przy pisaniu pierwszych %{education_posts_text}.
-    avatar: |
-      ### Co powiesz na dodanie awatara?
-
-      Opublikowałeś/łaś parę tematów i odpowiedzi, lecz Twoje zdjęcie profilowe nie jest tak unikalne jak Ty – To tylko litera.
-
-      Czy rozważyłeś/łaś **[odwiedzenie swojego profilu](%{profile_path})** i dodanie zdjęcia które Cię reprezentuje?
-
-      Łatwiej jest prowadzić dyskusję i znaleźć interesujące osoby podczas rozmowy kiedy każdy ma wyjątkowe zdjęcie profilowe!
-    sequential_replies: |
-      ### Pomyśl o odpowiadaniu na kilka wpisów jednocześnie
-
-      Zamiast kilku kolejnych odpowiedzi do tematu, pomyśl o pojedynczej odpowiedzi, która zawierałaby cytaty z wcześniejszych wpisów lub wzmianki przez @nazwa.
-
-      Możesz edytować swoje wcześniejsze odpowiedzi, aby dodać cytat, poprzez podświetlenie tekstu i wybranie przycisku <b>cytuj odpowiedź</b> który się pojawi.
-
-      Każdemu łatwiej będzie przeczytać temat, który ma kilka pogłębionych odpowiedzi, zamiast wielu niewielkich, indywidualnych.
-    dominating_topic: Dużo pisałeś w tym temacie! Zastanów się, czy nie dać innym możliwości odpowiadania tutaj i dyskutowania ze sobą.
     get_a_room:
       one: Odpowiedziałeś na @%{reply_username} raz. Czy wiesz, że możesz zamiast tego wysłać wiadomość osobistą?
       few: Odpowiedziałeś na @%{reply_username} %{count} razy. Czy wiesz, że możesz zamiast tego wysłać wiadomość osobistą?
       many: Odpowiedziałeś na @%{reply_username} %{count} razy. Czy wiesz, że możesz zamiast tego wysłać wiadomość osobistą?
       other: Odpowiedziałeś na @%{reply_username} %{count} razy. Czy wiesz, że możesz zamiast tego wysłać wiadomość osobistą?
-    dont_feed_the_trolls: Ten post został już oznaczony jako wymagający uwagi moderatora. Czy na pewno chcesz na niego odpowiedzieć? Odpowiedzi na negatywne treści zachęcają do jeszcze bardziej negatywnych zachowań.
-    too_many_replies: |
-      ### Osiągnąłeś/łaś limit odpowiedzi w tym temacie
-
-      Przepraszamy, ale nowi użytkownicy są obecnie ograniczeni do %{newuser_max_replies_per_topic} odpowiedzi w tym samym temacie.
-
-      Zamiast dodawać kolejną odpowiedź, rozważ edycję swoich poprzednich odpowiedzi lub odwiedzenie innych tematów.
-    reviving_old_topic: |
-      ### Ożywić ten temat?
-
-      Ostatnia odpowiedź w tym temacie pochodzi sprzed %{time_ago} dni. Twoja odpowiedź przesunie temat na górę listy i spowoduje powiadomienie wszystkich wcześniej uczestniczących w rozmowie.
-
-      Czy na pewno chcesz kontynuować tę starą rozmowę?
   activerecord:
     attributes:
       category:
@@ -2249,7 +2198,6 @@ pl_PL:
     authorized_extensions: "Lista rozszerzeń plików dozwolonych do przesłania"
     authorized_extensions_for_staff: "Lista rozszerzeń plików, które można przesyłać dla użytkowników personelu, oprócz listy zdefiniowanej w ustawieniu witryny `authorized_extensions`."
     theme_authorized_extensions: "Lista rozszerzeń plików dozwolonych przy przesyłaniu motywów"
-    max_similar_results: "Liczba podobnych tematów, jaka zostanie wyświetlona nad oknem edytora podczas tworzenia nowego tematu. Tematy są porównywane na podstawie tytułów i treści."
     max_image_megapixels: "Maksymalna liczba megapikseli dozwolona dla obrazu. Obrazy o większej liczbie megapikseli zostaną odrzucone."
     title_prettify: "Zapobiegaj typowym literówkom i błędom w tytułach, takimi jak cały tekst wielkimi literami, rozpoczęcie małą literą, wiele ! i ?, dodatkowa . na końcu, itp."
     title_remove_extraneous_space: "Usuń wiodące białe znaki przed interpunkcją końcową."
@@ -2421,12 +2369,10 @@ pl_PL:
     max_notifications_per_user: "Maksymalna liczba powiadomień na użytkownika, jeśli ta liczba zostanie przekroczona, stare powiadomienia zostaną usunięte. Egzekwowane co tydzień. Ustaw na 0, aby wyłączyć"
     allowed_user_website_domains: "Witryna użytkownika zostanie zweryfikowana pod kątem tych domen. Lista rozdzielana znakiem pionowej kreski (|)."
     allow_profile_backgrounds: "Zezwól użytkownikom na przesyłanie obrazu tła dla profilu."
-    sequential_replies_threshold: "Liczba wpisów dodanych przez użytkownika jeden pod drugim w jednym temacie, po której zostanie on upomniany."
     get_a_room_threshold: "Liczba wpisów dodanych przez użytkownika w odpowiedzi na wpisy tej samej osoby w jednym temacie, po której zostanie on ostrzeżony."
     dont_feed_the_trolls_threshold: "Liczba flag od innych użytkowników przed otrzymaniem ostrzeżenia."
     enable_mobile_theme: "Urządzenia mobilne używają dedykowanego mobilnego szablonu. Wyłącz to, jeśli chcesz użyć własnego, pojedynczego i responsywnego szablonu stylów. "
     dominating_topic_minimum_percent: "Odsetek (%) wpisów dodanych przez użytkownika w jednym temacie, po którym otrzyma on upomnienie, że nadmiernie go dominuje."
-    disable_avatar_education_message: "Wyłącz wiadomość edukacyjną dla zmiany avataru."
     pm_warn_user_last_seen_months_ago: "Podczas tworzenia nowej PW ostrzegaj użytkowników, jeśli odbiorca docelowy nie był widziany dłużej niż n miesięcy temu."
     suppress_uncategorized_badge: "Nie pokazuj etykiety z nazwą kategorii Inne na listach tematów."
     header_dropdown_category_count: "Ile kategorii można wyświetlić w rozwijanym menu nagłówka."
@@ -2459,7 +2405,6 @@ pl_PL:
     show_time_gap_days: "Jeśli dwa wpisy zostały dodane w dużej przerwie, wyświetl okres w temacie."
     short_progress_text_threshold: "Po tym jak liczba wpisów w tym temacie przekroczy ten numer, ten pasek postępu pokaże tylko bieżącą liczbę wpisów. Jeśli zmienisz szerokość paska postępu, możliwe, że będziesz musiał zmienić tą wartość."
     default_code_lang: "Domyślne podświetlanie składni języka programowania zastosowane do bloków kodu markdown (auto, text, ruby, python itp.). Ta wartość musi być również obecna w ustawieniach strony `highlighted languages`."
-    warn_reviving_old_topic_age: "Kiedy ktoś rozpoczyna udziela odpowiedzi na dany temat, w którym ostatnia odpowiedź jest starsza niż tak wiele dni, wyświetlone zostanie ostrzeżenie. Wyłącz tą ustawienia ustawiając 0."
     autohighlight_all_code: "Zastosuj podświetlanie składni do bloków &lt;code&gt; utworzonych w HTML, nawet jeśli nie określono w nich języka. Aby skonfigurować bloki kodu markdown, użyj ustawienia 'default code lang'."
     highlighted_languages: "Zawiera reguły podświetlania składni. (Ostrzeżenie: uwzględnienie zbyt wielu języków może wpłynąć na wydajność) zobacz: <a href='https://highlightjs.org/demo/' target='_blank'>https://highlightjs.org/demo</a> dla demonstracji"
     show_copy_button_on_codeblocks: "Dodaj przycisk do bloków kodu, aby skopiować zawartość bloku do schowka użytkownika."
@@ -2891,11 +2836,6 @@ pl_PL:
     errors: "%{errors}"
     not_available: "Niedostępny. Może spróbuj %{suggestion}?"
     something_already_taken: "Coś poszło źle. Możliwe, że ta nazwa użytkownika lub email są już zarejestrowane. Spróbuj użyć procedury przypominania hasła."
-    omniauth_error:
-      generic: "Przepraszamy, wystąpił błąd podczas autoryzacji Twojego konta. Proszę spróbować ponownie."
-      csrf_detected: "Upłynął limit czasu autoryzacji lub nastąpiła zmiana przeglądarki. Proszę spróbować ponownie."
-      request_error: "Wystąpił błąd podczas rozpoczynania autoryzacji. Proszę spróbować ponownie."
-      invalid_iat: "Nie można zweryfikować tokenu autoryzacji z powodu różnic w zegarze serwera. Proszę spróbować ponownie."
     omniauth_error_unknown: "Coś poszło nie tak podczas przetwarzania logowania, spróbuj ponownie."
     omniauth_confirm_title: "Zaloguj się za pomocą %{provider}"
     omniauth_confirm_button: "Kontynuuj"
@@ -4360,8 +4300,6 @@ pl_PL:
   offline:
     title: "Nie można załadować aplikacji"
     offline_page_message: "Wygląda na to, że jesteś offline! Sprawdź połączenie sieciowe i spróbuj ponownie."
-  login_required:
-    welcome_message: "# [Witamy na %{title}](#welcome)"
   upload:
     edit_reason: "lokalne kopie pobranych obrazów"
     unauthorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
@@ -4387,7 +4325,6 @@ pl_PL:
     images:
       too_large: "Przepraszamy, obraz, który próbujesz przesłać jest zbyt duży (maksymalny rozmiar to %{max_size_kb}KB), proszę zmienić rozmiar i spróbować ponownie."
       too_large_humanized: "Przepraszamy, obraz, który próbujesz przesłać jest za duży (maksymalny rozmiar to %{max_size}), zmień jego rozmiar i spróbuj ponownie."
-      larger_than_x_megapixels: "Przepraszamy, obraz, który próbujesz przesłać, jest zbyt duży (maksymalny rozmiar to %{max_image_megapixels} megapikseli), zmień jego rozmiar i spróbuj ponownie."
       size_not_found: "Przepraszamy, ale nie udało się ustalić rozmiaru obrazu. Może twój obraz jest uszkodzony?"
     placeholders:
       too_large: "(obraz większy niż %{max_size_kb}KB)"

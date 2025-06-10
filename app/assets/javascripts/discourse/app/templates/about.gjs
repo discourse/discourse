@@ -1,16 +1,16 @@
-import { hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
 import RouteTemplate from "ember-route-template";
 import AboutPage from "discourse/components/about-page";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import bodyClass from "discourse/helpers/body-class";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
 
 export default RouteTemplate(
   <template>
     <PluginOutlet
       @name="about-wrapper"
-      @outletArgs={{hash
+      @outletArgs={{lazyHash
         model=@controller.model
         contactInfo=@controller.contactInfo
         faqOverridden=@controller.faqOverridden

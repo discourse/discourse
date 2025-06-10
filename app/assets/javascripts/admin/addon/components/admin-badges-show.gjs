@@ -8,6 +8,7 @@ import Form from "discourse/components/form";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import icon from "discourse/helpers/d-icon";
 import iconOrImage from "discourse/helpers/icon-or-image";
+import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -215,8 +216,8 @@ export default class AdminBadgesShow extends Component {
       return this.router.transitionTo("adminBadges.index");
     }
 
-    return this.dialog.yesNoConfirm({
-      message: i18n("admin.badges.delete_confirm"),
+    return this.dialog.deleteConfirm({
+      title: i18n("admin.badges.delete_confirm"),
       didConfirm: async () => {
         try {
           await this.formApi.reset();
@@ -405,6 +406,7 @@ export default class AdminBadgesShow extends Component {
               @name="query"
               @title={{i18n "admin.badges.query"}}
               @disabled={{this.readOnly}}
+              @format="full"
               as |field|
             >
               <field.Code @lang="sql" />
@@ -555,7 +557,7 @@ export default class AdminBadgesShow extends Component {
 
         <PluginOutlet
           @name="admin-above-badge-buttons"
-          @outletArgs={{hash badge=this.buffered form=form}}
+          @outletArgs={{lazyHash badge=this.buffered form=form}}
         />
 
         <form.Actions>

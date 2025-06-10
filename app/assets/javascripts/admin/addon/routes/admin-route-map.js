@@ -70,6 +70,7 @@ export default function () {
           function () {
             this.route("show", { path: "/:theme_id" }, function () {
               this.route("schema", { path: "schema/:setting_name" });
+              this.route("colors");
             });
             this.route("edit", { path: "/:theme_id/:target/:field_name/edit" });
           }
@@ -362,7 +363,8 @@ export default function () {
         this.route("developer", function () {
           this.route("settings", { path: "/" });
         });
-        this.route("logo-and-fonts");
+        this.route("logo");
+        this.route("fonts");
         this.route("navigation", function () {
           this.route("settings", { path: "/" });
         });
@@ -393,7 +395,7 @@ export default function () {
         );
       }
     );
-
+    this.route("schema", { path: "schema/:setting_name" });
     this.route(
       "adminPlugins",
       { path: "/plugins", resetNamespace: true },

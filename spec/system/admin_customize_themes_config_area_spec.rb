@@ -3,6 +3,9 @@
 describe "Admin Customize Themes Config Area Page", type: :system do
   fab!(:admin)
   fab!(:theme) { Theme.where(component: false).first }
+  fab!(:theme_child_theme) do
+    Fabricate(:theme, name: "Child theme", component: true, enabled: true, parent_themes: [theme])
+  end
   fab!(:theme_2) { Fabricate(:theme, name: "Second theme") }
 
   let(:config_area) { PageObjects::Pages::AdminCustomizeThemesConfigArea.new }
@@ -11,16 +14,25 @@ describe "Admin Customize Themes Config Area Page", type: :system do
 
   before { sign_in(admin) }
 
-  it "has a special card for installing new themes" do
+  it "has an install button in the subheader" do
     config_area.visit
 
-    expect(config_area.install_card).to have_text(
-      I18n.t("admin_js.admin.config_areas.themes_and_components.themes.new_theme"),
-    )
-
-    config_area.install_card.find(".btn-primary").click
+    config_area.subheader.find(".btn-primary").click
     expect(install_modal).to be_open
     expect(install_modal.popular_options.first).to have_text("Air")
+  end
+
+  it "opens an install modal when coming from the install theme button on Meta" do
+    config_area.visit(
+      { "repoName" => "discourse-air", "repoUrl" => "https://github.com/discourse/discourse-air" },
+    )
+
+    expect(install_modal).to be_open
+    expect(install_modal).to have_content("github.com/discourse/discourse-air")
+
+    install_modal.close
+
+    expect(page).to have_current_path("/admin/config/customize/themes")
   end
 
   it "allows to mark theme as active" do
@@ -49,5 +61,16 @@ describe "Admin Customize Themes Config Area Page", type: :system do
     admin_customize_themes_page.click_delete
     admin_customize_themes_page.confirm_delete
     expect(page).to have_current_path("/admin/config/customize/themes")
+  end
+
+  it "has new look when edit theme is visited directly and can go back to themes" do
+    visit("/admin/customize/themes/#{theme.id}")
+
+    admin_customize_themes_page.click_back_to_themes
+
+    expect(page).to have_current_path("/admin/config/customize/themes")
+    expect(page).to have_content(
+      I18n.t("admin_js.admin.config_areas.themes_and_components.themes.title"),
+    )
   end
 end

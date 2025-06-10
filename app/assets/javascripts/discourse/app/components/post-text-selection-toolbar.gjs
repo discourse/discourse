@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn, hash } from "@ember/helper";
+import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
@@ -10,6 +10,7 @@ import FastEdit from "discourse/components/fast-edit";
 import FastEditModal from "discourse/components/modal/fast-edit";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import concatClass from "discourse/helpers/concat-class";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import { getAbsoluteURL } from "discourse/lib/get-url";
 import Sharing from "discourse/lib/sharing";
@@ -211,7 +212,7 @@ export default class PostTextSelectionToolbar extends Component {
         <PluginOutlet
           @name="post-text-buttons"
           @defaultGlimmer={{true}}
-          @outletArgs={{hash data=@data post=this.post}}
+          @outletArgs={{lazyHash data=@data post=this.post}}
         >
           {{#if this.embedQuoteButton}}
             <DButton
@@ -246,7 +247,7 @@ export default class PostTextSelectionToolbar extends Component {
           <PluginOutlet
             @name="quote-share-buttons-before"
             @connectorTagName="span"
-            @outletArgs={{hash data=@data}}
+            @outletArgs={{lazyHash data=@data}}
           />
 
           {{#if this.quoteSharingEnabled}}
@@ -272,7 +273,7 @@ export default class PostTextSelectionToolbar extends Component {
                 <PluginOutlet
                   @name="quote-share-buttons-after"
                   @connectorTagName="span"
-                  @outletArgs={{hash data=@data}}
+                  @outletArgs={{lazyHash data=@data}}
                 />
               </span>
             </span>

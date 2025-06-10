@@ -1,6 +1,7 @@
 import { hash } from "@ember/helper";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import icon from "discourse/helpers/d-icon";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
 import TagChooser from "select-kit/components/tag-chooser";
 
@@ -72,13 +73,14 @@ const Tags = <template>
     <PluginOutlet
       @name="user-preferences-tags"
       @connectorTagName="div"
-      @outletArgs={{hash model=@model save=@save}}
+      @outletArgs={{lazyHash model=@model save=@save}}
     />
     <PluginOutlet
       @name="user-custom-controls"
       @connectorTagName="div"
-      @outletArgs={{hash model=@model}}
+      @outletArgs={{lazyHash model=@model}}
     />
   {{/if}}
 </template>;
+
 export default Tags;

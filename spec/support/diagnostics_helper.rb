@@ -7,6 +7,7 @@ module MessageBus::DiagnosticsHelper
       m = MessageBus::Message.new(-1, id, channel, data)
       m.user_ids = opts[:user_ids] if opts
       m.group_ids = opts[:group_ids] if opts
+      m.client_ids = opts[:client_ids] if opts
       @tracking << m
     end
     id

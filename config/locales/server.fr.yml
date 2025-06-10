@@ -611,59 +611,9 @@ fr:
     until_posts:
       one: "%{count} message"
       other: "%{count} messages"
-    "new-topic": |
-      Bienvenue sur %{site_name}. **Merci de débuter une nouvelle conversation !**
-
-      - Le titre vous semble-t-il intéressant lorsque vous le lisez à haute voix ? Est-ce une bonne synthèse de votre message ?
-
-      - Qui pourrait être intéressé par cette conversation ? Pourquoi est-elle importante ? Quel genre de réponses attendez-vous ?
-
-      - Incluez des mots fréquents dans votre sujet pour que les utilisateurs puissent le *retrouver*. Pour le regrouper avec des sujets liés, sélectionnez une catégorie (ou une étiquette).
-
-      Pour obtenir plus d'informations, [consultez les lignes directrives de la communauté](%{base_path}/guidelines). Ce message apparaîtra uniquement pour vos premiers %{education_posts_text}.
-    "new-reply": |
-      Bienvenue sur %{site_name}. **Merci de contribuer !**
-
-      - Faites preuve de bienveillance à l'égard des membres de la communauté.
-
-      - Votre réponse améliore-t-elle la discussion ?
-
-      - Les critiques constructives sont les bienvenues, mais critiquez les *idées*, pas les individus.
-
-      Pour obtenir plus d'informations, [consultez les lignes directrices de la communauté](%{base_path}/guidelines). Ce message apparaîtra uniquement pour vos premiers %{education_posts_text}.
-    avatar: |
-      ### Avez-vous pensé à une photo de profil ?
-
-      Vous avez publié quelques sujets et réponses, mais votre photo de profil n'est pas unique comme vous, ce n'est qu'une lettre.
-
-      Avez-vous pensé à **[visiter votre profil utilisateur](%{profile_path})** et ajouter une photo qui vous représente ?
-
-      Il est plus facile de suivre les discussions et de rencontrer des personnes intéressantes dans les conversations lorsque tout le monde a une photo de profil unique !
-    sequential_replies: |
-      ### Pensez à répondre à plusieurs messages en même temps
-
-      Plutôt que d'écrire plusieurs messages consécutifs dans un même sujet, pensez à écrire une seule réponse contenant des citations ou des mentions faisant référence à des messages précédents.
-
-      Vous pouvez modifier votre dernière réponse et ajouter une citation en sélectionnant le texte à citer et en cliquant sur le bouton <b>Citer</b>.
-
-      Il est plus facile de lire des discussions comprenant des réponses approfondies plutôt que de nombreuses réponses individuelles brèves.
-    dominating_topic: Vous avez beaucoup publié dans ce sujet ! Envisagez de donner aux autres l'occasion de répondre et de discuter entre eux également.
     get_a_room:
       one: Vous avez répondu une fois à @%{reply_username}, saviez-vous que vous pouvez lui envoyer un message privé à la place ?
       other: Vous avez répondu %{count} fois à @%{reply_username}, saviez-vous que vous pouvez lui envoyer des messages privés à la place ?
-    dont_feed_the_trolls: Ce message a déjà été signalé à l'attention du modérateur. Voulez-vous vraiment y répondre ? Les réponses à un contenu négatif ont tendance à encourager un comportement plus négatif.
-    too_many_replies: |
-      ### Vous avez atteint le nombre maximal de réponses dans ce sujet
-
-      Nous sommes désolés, les nouveaux membres sont limités temporairement à %{newuser_max_replies_per_topic} réponses dans un même sujet.
-
-      Plutôt que d'ajouter une nouvelle réponse, vous pouvez modifier vos messages précédents ou visiter d'autres sujets.
-    reviving_old_topic: |
-      ### Relancer ce sujet ?
-
-      La dernière réponse à ce sujet remonte à **%{time_ago}**. Votre réponse remettra ce sujet en tête de liste et provoquera l'envoi d'une notification à tous les intervenants qui y ont pris part auparavant.
-
-      Voulez-vous vraiment continuer cette ancienne conversation ?
   activerecord:
     attributes:
       category:
@@ -2078,7 +2028,6 @@ fr:
     authorized_extensions: "Une liste des extensions de fichiers autorisées pour le téléversement"
     authorized_extensions_for_staff: "Une liste des extensions de fichiers autorisées au téléversement pour les responsables en plus de la liste définie dans les paramètres du site « authorized_extensions »."
     theme_authorized_extensions: "Une liste des extensions de fichiers autorisées pour les téléversements de thèmes"
-    max_similar_results: "Combien de sujets similaires sont affichés lors de la création d'un nouveau sujet. La comparaison se base sur le titre et le contenu."
     max_image_megapixels: "Nombre maximal autorisé de mégapixels pour une image. Les images avec un nombre plus élevé seront rejetées."
     title_prettify: "Corriger les coquilles les plus communes dans les titres (intégralité du titre en majuscule, première lettre en minuscule, de multiples « ! » et « ? », un « . » inutile à la fin, etc.)"
     title_remove_extraneous_space: "Supprimer les espaces devant les signes de ponctuation de fin."
@@ -2248,12 +2197,10 @@ fr:
     max_notifications_per_user: "Volume maximal de notifications par utilisateur. Si ce seuil est dépassé, les notifications les plus anciennes seront supprimées. Applicable chaque semaine. La valeur 0 permet de désactiver cette fonction."
     allowed_user_website_domains: "Le site Web de l'utilisateur sera vérifié par rapport à ces domaines. Liste délimitée par des barres verticales."
     allow_profile_backgrounds: "Autoriser les utilisateurs à envoyer des arrière-plans de profil."
-    sequential_replies_threshold: "Nombre de messages consécutifs qu'un utilisateur peut publier dans un sujet avant d'être averti d'avoir publié trop de réponses consécutives."
     get_a_room_threshold: "Nombre de messages qu'un utilisateur doit envoyer à la même personne dans un même sujet avant de recevoir un avertissement."
     dont_feed_the_trolls_threshold: "Nombre de signalements émis par d'autres utilisateurs avant d'être avertis."
     enable_mobile_theme: "Les appareils mobiles utilisent un thème adapté aux mobiles, avec la possibilité de passer à la totalité du site. Désactivez cette option si vous voulez utiliser une feuille de style personnalisée qui répond à tous les types de client."
     dominating_topic_minimum_percent: "Quel pourcentage de messages un utilisateur doit publier dans un sujet avant d'être averti et invité à laisser la communauté répondre."
-    disable_avatar_education_message: "Désactiver le message incitant à changer l'avatar."
     pm_warn_user_last_seen_months_ago: "Lors de la création d'un nouveau message direct, avertissez les utilisateurs lorsque le destinataire cible n'a pas été vu il y a plus de n mois."
     suppress_uncategorized_badge: "Ne pas afficher le badge pour les sujets sans catégorie dans les listes de sujets."
     header_dropdown_category_count: "Nombre de catégories qui peuvent être affichées dans le menu déroulant de l'en-tête."
@@ -2284,7 +2231,6 @@ fr:
     show_time_gap_days: "Si deux messages sont publiés avec ce nombre de jours d'écart, afficher cette durée dans le sujet."
     short_progress_text_threshold: "Si le nombre de messages dans un sujet dépasse cette valeur, la barre de progression affichera uniquement le nombre de messages actuel. Si vous modifiez la largeur de la barre de progression, vous devrez peut-être modifier cette valeur."
     default_code_lang: "Coloration syntaxique par défaut du langage de programmation appliquée aux blocs de code markdown (auto, text, ruby, python, etc.). Cette valeur doit également être présente dans le paramètre de site « highlighted languages »."
-    warn_reviving_old_topic_age: "Lorsque quelqu'un commence à répondre à un sujet dont la dernière réponse remonte à plusieurs jours, un avertissement sera affiché. Désactivez la fonctionnalité en indiquant 0."
     autohighlight_all_code: "Appliquez la coloration syntaxique aux blocs &lt;code&gt; créés en HTML, même s'ils ne spécifient pas de langue. Pour configurer des blocs de code créés par Markdown, utilisez le paramètre « default code lang »."
     highlighted_languages: "Règles de surlignage de la syntaxe incluses. (Attention : inclure trop de langues peut avoir un impact sur les performances). Consultez <a href='https://highlightjs.org/demo/' target='_blank'>https://highlightjs.org/demo</a> pour obtenir une démonstration"
     show_copy_button_on_codeblocks: "Afficher un bouton dans les blocs de mise en forme de type « code » permettant de copier le contenu du bloc vers le presse-papier de l'utilisateur."
@@ -2667,11 +2613,6 @@ fr:
     errors: "%{errors}"
     not_available: "Indisponible. Essayer %{suggestion} ?"
     something_already_taken: "Un problème est survenu. Votre nom d'utilisateur ou votre adresse e-mail est peut-être déjà enregistré(e). Essayez le lien d'oubli du mot de passe."
-    omniauth_error:
-      generic: "Nous sommes désolés, une erreur s'est produite lors de l'autorisation de votre compte. Veuillez réessayer."
-      csrf_detected: "L'autorisation a expiré ou vous avez changé de navigateur. Veuillez réessayer."
-      request_error: "Une erreur s'est produite lors du démarrage de l'autorisation. Veuillez réessayer."
-      invalid_iat: "Impossible de vérifier le jeton d'autorisation en raison de différences d'horloge du serveur. Veuillez réessayer."
     omniauth_error_unknown: "Un problème est survenu lors de votre connexion. Veuillez réessayer."
     omniauth_confirm_title: "Connectez-vous à l'aide de %{provider}"
     omniauth_confirm_button: "Continuer"
@@ -4113,8 +4054,6 @@ fr:
   offline:
     title: "Impossible de charger l'application"
     offline_page_message: "Il semble que vous n'êtes pas connecté(e) à Internet ! Veuillez vérifier votre connexion réseau et réessayez."
-  login_required:
-    welcome_message: "# [Bienvenue sur %{title}](#bienvenue)"
   upload:
     edit_reason: "téléchargement de copies locales des images distantes"
     unauthorized: "Nous sommes désolés, le fichier que vous essayez d'envoyer n'est pas autorisé (extensions autorisées : %{authorized_extensions})."
@@ -4140,7 +4079,6 @@ fr:
     images:
       too_large: "Nous sommes désolés, l'image que vous essayez d'envoyer est trop grande (la taille maximale autorisée est de %{max_size_kb} Ko). Veuillez la redimensionner puis réessayez."
       too_large_humanized: "Nous sommes désolés, l'image que vous essayez d'envoyer est trop grande (la taille maximale autorisée est de %{max_size}). Veuillez la redimensionner, puis réessayez."
-      larger_than_x_megapixels: "Nous sommes désolés, l'image que vous essayez d'envoyer est trop grande (la dimension maximale est de %{max_image_megapixels} mégapixels). Veuillez la redimensionner, puis réessayez."
       size_not_found: "Nous sommes désolés, mais nous n'avons pas pu déterminer la taille de votre image. Peut-être est-elle corrompue ?"
     placeholders:
       too_large: "(image plus grande que %{max_size_kb} Ko)"

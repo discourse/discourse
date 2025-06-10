@@ -32,7 +32,6 @@ export default class AdminUsersListShowController extends Controller {
   refreshing = false;
   listFilter = null;
   lastSelected = null;
-  lastBulkDeleteMessageBusId = null;
 
   @computedI18n("search_hint") searchHint;
 
@@ -115,12 +114,8 @@ export default class AdminUsersListShowController extends Controller {
       page,
     })
       .then((result) => {
-        this.lastBulkDeleteMessageBusId =
-          result.meta?.message_bus_last_ids?.bulk_delete;
-
-        this._results[page] = result.users;
-
-        if (result.users.length === 0) {
+        this._results[page] = result;
+        if (result.length === 0) {
           this._canLoadMore = false;
         }
       })
@@ -219,7 +214,6 @@ export default class AdminUsersListShowController extends Controller {
   openBulkDeleteConfirmation() {
     this.modal.show(BulkUserDeleteConfirmation, {
       model: {
-        lastBulkDeleteMessageBusId: this.lastBulkDeleteMessageBusId,
         userIds: Array.from(this.bulkSelectedUserIdsSet),
         afterBulkDelete: this.afterBulkDelete,
       },
@@ -237,7 +231,7 @@ export default class AdminUsersListShowController extends Controller {
 
   #showBulkSelectionLimitToast(event) {
     this.toasts.error({
-      duration: 3000,
+      duration: "short",
       data: {
         message: i18n("admin.users.bulk_actions.too_many_selected_users", {
           count: MAX_BULK_SELECT_LIMIT,

@@ -22,6 +22,8 @@ module Migrations::CLI
       write_db_schema(config, header, schema)
       write_db_models(config, header, schema)
 
+      validate_schema(db)
+
       puts "Done"
     end
 
@@ -81,6 +83,19 @@ module Migrations::CLI
       end
 
       YAML.load_file(config_path, symbolize_names: true)
+    end
+
+    def validate_schema(type)
+      Tempfile.create do |tempfile|
+        begin
+          ::Migrations::Database.migrate(
+            tempfile,
+            migrations_path: ::Migrations::Database.schema_path(type),
+          )
+        rescue Extralite::SQLError => e
+          print_error("Invalid schema: #{e.message}")
+        end
+      end
     end
 
     def print_error(message)

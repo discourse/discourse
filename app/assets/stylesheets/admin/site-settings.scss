@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .admin-controls.admin-site-settings-filter-controls
   .controls
   .admin-site-settings-filter-controls__input {
@@ -20,18 +22,21 @@
   }
 }
 
-.admin-site-settings__changes-banner {
+.admin-changes-banner {
   box-sizing: border-box;
   display: flex;
   justify-content: space-between;
   align-items: center;
   position: fixed;
-  bottom: 0;
-  padding: var(--space-6) var(--space-3);
+  bottom: var(--space-3);
+  padding: var(--space-3);
   background-color: var(--secondary);
-  border-top: 2px solid var(--tertiary);
+  border: 1px solid var(--primary-300);
+  border-radius: var(--d-border-radius);
+  box-shadow: var(--shadow-card);
+  z-index: 1;
 
-  @include breakpoint("mobile-extra-large") {
+  @include viewport.until(sm) {
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
@@ -41,10 +46,6 @@
   .controls {
     display: flex;
     gap: var(--space-3);
-
-    @include breakpoint("mobile-extra-large") {
-      flex-direction: column;
-    }
   }
 
   em {

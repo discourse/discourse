@@ -16,4 +16,5 @@ const CharCounter = <template>
     </span>
   </div>
 </template>;
+
 export default CharCounter;

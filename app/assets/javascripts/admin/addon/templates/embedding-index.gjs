@@ -1,7 +1,7 @@
-import { hash } from "@ember/helper";
 import RouteTemplate from "ember-route-template";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import htmlSafe from "discourse/helpers/html-safe";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
 import AdminConfigAreaCard from "admin/components/admin-config-area-card";
 import AdminConfigAreaEmptyList from "admin/components/admin-config-area-empty-list";
@@ -60,7 +60,7 @@ export default RouteTemplate(
 
     <PluginOutlet
       @name="after-embeddable-hosts-table"
-      @outletArgs={{hash embedding=@controller.embedding}}
+      @outletArgs={{lazyHash embedding=@controller.embedding}}
     />
   </template>
 );

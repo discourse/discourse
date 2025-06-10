@@ -189,7 +189,7 @@ be:
       label: "Чарнавікі"
       remove: "выдаліць"
     preview: "папярэдні прагляд"
-    cancel: "адмена"
+    cancel: "адмяніць"
     save: "Захаваць змены"
     saved: "Захавана!"
     upload: "Загрузіць"
@@ -1139,6 +1139,11 @@ be:
       quote_edit: "Рэдагаваць"
       quote_share: "Падзяліцца тэмай"
       edit_reason: "прычына: "
+      localizations:
+        table:
+          actions: "Дзеянні"
+          edit: "Рэдагаваць"
+          delete: "Выдаліць"
       errors:
         upload_not_authorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
       controls:
@@ -1518,11 +1523,6 @@ be:
     discovery:
       headings:
         categories: "Усе катэгорыі"
-        filter_labels:
-          latest: "апошняя"
-          top: "Топ тэмаў"
-          new: "Новыя"
-          unread: "Непрачытаныя"
   admin_js:
     settings: "Налады"
     admin:
@@ -1557,16 +1557,15 @@ be:
           title: "файлы"
         legal:
           title: "Legal"
-        logo_and_fonts:
-          logo:
-            form:
-              mobile: "Мабільны"
-              email: "Электронная пошта"
-              opengraph_image:
-                description: "Па змаўчанні адкрытага графіка малюнка выкарыстоўваецца, калі старонка не мае іншае падыходнае малюнка. Калі пакінуць пустым, то будзе выкарыстоўвацца вялікі значок."
-          fonts:
-            backfill_modal:
-              modal_yes: "ды"
+        logo:
+          form:
+            mobile: "Мабільны"
+            email: "Электронная пошта"
+            opengraph_image:
+              description: "Па змаўчанні адкрытага графіка малюнка выкарыстоўваецца, калі старонка не мае іншае падыходнае малюнка. Калі пакінуць пустым, то будзе выкарыстоўвацца вялікі значок."
+        fonts:
+          backfill_modal:
+            modal_yes: "ды"
         navigation:
           title: "рух"
         notifications:
@@ -1779,6 +1778,8 @@ be:
       config_areas:
         about:
           company_name: "імя"
+          extra_groups:
+            groups: "групы"
           saved: "захавана!"
         flags:
           description: "Апісанне"
@@ -1812,6 +1813,7 @@ be:
           delete: "выдаляць"
         color_palettes:
           palette_name: "імя"
+          delete: "выдаляць"
           colors:
             title: "<......"
       plugins:
@@ -1903,11 +1905,11 @@ be:
           add: "Дадаць"
           all_filter: "Усё"
           active_filter: "актыўныя"
-          schema:
-            fields:
-              required: "*абавязковыя"
-              number:
-                too_large: "павінен быць менш або роўны %{count}"
+        schema:
+          fields:
+            required: "*абавязковыя"
+            number:
+              too_large: "павінен быць менш або роўны %{count}"
         colors:
           title: "<......"
           copy_name_prefix: "капіяваць з"
@@ -1922,15 +1924,12 @@ be:
             name: "троесны"
           header_background:
             name: "фон загалоўка"
-          header_primary:
-            description: "Тэкст і абразкі ў загалоўку сайта."
           highlight:
             name: "асвятленне"
           success:
             name: "поспех"
           love:
             name: "каханне"
-            description: "Колер кнопкі \"Падабаецца\"."
           editor:
             light: "святло"
             dark: "цёмна"

@@ -21,4 +21,5 @@ const MessagesListEmptyState = <template>
     </div>
   </div>
 </template>;
+
 export default MessagesListEmptyState;

@@ -106,6 +106,8 @@ export default class CodeblockButtons {
     codeBlocks.forEach((codeBlock) => {
       const wrapperEl = document.createElement("div");
       wrapperEl.classList.add("codeblock-button-wrapper");
+
+      codeBlock.parentElement.classList.add("codeblock-buttons");
       codeBlock.before(wrapperEl);
 
       if (this.showCopy) {
@@ -131,8 +133,6 @@ export default class CodeblockButtons {
         fullscreenButton.innerHTML = iconHTML("discourse-expand");
         wrapperEl.appendChild(fullscreenButton);
       }
-
-      codeBlock.parentElement.classList.add("codeblock-buttons");
     });
   }
 

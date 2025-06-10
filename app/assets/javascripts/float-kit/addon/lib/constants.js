@@ -84,7 +84,7 @@ import DDefaultToast from "float-kit/components/d-default-toast";
 export const TOAST = {
   options: {
     autoClose: true,
-    duration: 3000,
+    duration: "short",
     component: DDefaultToast,
     showProgressBar: false,
     views: ["desktop", "mobile"],

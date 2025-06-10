@@ -2,6 +2,7 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { getOwner, setOwner } from "@ember/owner";
 import { service } from "@ember/service";
+import { isSkinTonableEmoji } from "pretty-text/emoji";
 import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
 import BookmarkModal from "discourse/components/modal/bookmark";
 import FlagModal from "discourse/components/modal/flag";
@@ -11,6 +12,7 @@ import { bind } from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import { clipboardCopy } from "discourse/lib/utilities";
 import Bookmark from "discourse/models/bookmark";
+import { DEFAULT_DIVERSITY } from "discourse/services/emoji-store";
 import { i18n } from "discourse-i18n";
 import { MESSAGE_CONTEXT_THREAD } from "discourse/plugins/chat/discourse/components/chat-message";
 import ChatMessageFlag from "discourse/plugins/chat/discourse/lib/chat-message-flag";
@@ -70,8 +72,18 @@ export default class ChatemojiReactions {
 
     const frequentReactions = this.emojiStore.favoritesForContext("chat");
 
-    const defaultReactions =
-      this.siteSettings.default_emoji_reactions.split("|");
+    const defaultReactions = this.siteSettings.default_emoji_reactions
+      .split("|")
+      .map((emoji) => {
+        if (
+          this.emojiStore.diversity !== DEFAULT_DIVERSITY &&
+          isSkinTonableEmoji(emoji)
+        ) {
+          return `${emoji}:t${this.emojiStore.diversity}`;
+        }
+
+        return emoji;
+      });
 
     const allReactionsInOrder = userQuickReactionsCustom
       .concat(frequentReactions)
@@ -263,7 +275,7 @@ export default class ChatemojiReactions {
   copyText() {
     clipboardCopy(this.message.message);
     this.toasts.success({
-      duration: 3000,
+      duration: "short",
       data: { message: i18n("chat.text_copied") },
     });
   }
@@ -283,7 +295,7 @@ export default class ChatemojiReactions {
     url = url.indexOf("/") === 0 ? protocol + "//" + host + url : url;
     clipboardCopy(url);
     this.toasts.success({
-      duration: 1500,
+      duration: "short",
       data: { message: i18n("chat.link_copied") },
     });
   }

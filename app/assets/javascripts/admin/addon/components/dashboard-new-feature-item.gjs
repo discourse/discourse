@@ -24,7 +24,7 @@ export default class DiscourseNewFeatureItem extends Component {
   async toggleExperiment() {
     if (this.toggleExperimentDisabled) {
       this.toasts.error({
-        duration: 3000,
+        duration: "short",
         data: {
           message: i18n(
             "admin.dashboard.new_features.experiment_toggled_too_fast"
@@ -47,7 +47,7 @@ export default class DiscourseNewFeatureItem extends Component {
         },
       });
       this.toasts.success({
-        duration: 3000,
+        duration: "short",
         data: {
           message: this.experimentEnabled
             ? i18n("admin.dashboard.new_features.experiment_enabled")

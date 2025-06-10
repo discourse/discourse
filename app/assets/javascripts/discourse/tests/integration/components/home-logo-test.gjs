@@ -2,6 +2,7 @@ import { getOwner } from "@ember/owner";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import HomeLogo from "discourse/components/header/home-logo";
+import { forceMobile } from "discourse/lib/mobile";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
@@ -67,7 +68,7 @@ module("Integration | Component | home-logo", function (hooks) {
   test("mobile logo", async function (assert) {
     this.siteSettings.site_mobile_logo_url = mobileLogo;
     this.siteSettings.site_logo_small_url = smallLogo;
-    this.site.mobileView = true;
+    forceMobile();
 
     await render(<template><HomeLogo /></template>);
     assert.dom("img#site-logo.logo-mobile").exists({ count: 1 });
@@ -76,7 +77,7 @@ module("Integration | Component | home-logo", function (hooks) {
 
   test("mobile without logo", async function (assert) {
     this.siteSettings.site_logo_url = bigLogo;
-    this.site.mobileView = true;
+    forceMobile();
 
     await render(<template><HomeLogo /></template>);
     assert.dom("img#site-logo.logo-big").exists({ count: 1 });
@@ -109,7 +110,7 @@ module("Integration | Component | home-logo", function (hooks) {
     this.siteSettings.site_mobile_logo_dark_url = darkLogo;
     this.session.set("darkModeAvailable", true);
 
-    this.site.mobileView = true;
+    forceMobile();
 
     await render(<template><HomeLogo /></template>);
 

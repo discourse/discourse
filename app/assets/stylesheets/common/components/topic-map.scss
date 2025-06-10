@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .topic-map.--op {
   // topic map under OP
   border-top: 1px solid var(--primary-low);
@@ -42,7 +44,7 @@ body:not(.archetype-private_message) {
   padding-block: 0.5em;
   overflow-anchor: none;
 
-  @include breakpoint(mobile-large) {
+  @include viewport.until(sm) {
     font-size: var(--font-down-1);
   }
 
@@ -100,13 +102,13 @@ body:not(.archetype-private_message) {
       gap: 0.75em;
 
       &.--single-stat {
-        button {
+        .fk-d-menu__trigger {
           flex-direction: row;
           gap: 0.25em;
 
           span {
             font-size: var(--font-0);
-            color: var(--primary-700) !important;
+            color: var(--primary-700);
             min-width: unset;
             overflow: visible;
           }

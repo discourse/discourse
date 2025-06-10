@@ -20,7 +20,7 @@ details {
     aside.quote .title,
     blockquote,
     code {
-      background-color: rgba(var(--primary-rgb), 0.05);
+      background-color: rgb(var(--primary-rgb), 0.05);
     }
   }
 }
@@ -29,11 +29,6 @@ details.details__boxed {
   summary {
     font-weight: bold;
   }
-}
-
-details > *,
-details .lightbox-wrapper {
-  display: none;
 }
 
 details,
@@ -58,19 +53,9 @@ summary::before {
   margin-right: 0.25em;
 }
 
-details[open] > *,
-details[open] .lightbox-wrapper {
-  display: block;
-}
-
 details[open] > summary::before,
 details.open > summary::before {
   content: "\25BC";
-}
-
-details[open] > summary:first-of-type ~ *,
-details.open > summary:first-of-type ~ * {
-  display: block;
 }
 
 /* hide native indicator */
@@ -131,6 +116,37 @@ summary::-webkit-details-marker {
         color: var(--primary);
         cursor: pointer;
       }
+    }
+  }
+}
+
+.ProseMirror {
+  // No hover effect when editing - the hover is only on the caret
+  details {
+    &:not([open]) {
+      &:hover,
+      &:focus,
+      &:focus-within {
+        background-color: var(--primary-very-low);
+      }
+    }
+  }
+
+  summary {
+    // Important for Firefox so clicking on summary allows proper caret positioning
+    pointer-events: none;
+
+    &:hover {
+      &::before {
+        background: var(--primary-low);
+      }
+    }
+
+    &::before {
+      pointer-events: auto;
+      padding: var(--space-1) var(--space-2);
+      margin-left: calc(-1 * var(--space-2));
+      border-radius: var(--d-border-radius);
     }
   }
 }

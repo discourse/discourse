@@ -10,4 +10,5 @@ const ComposerFullscreenPrompt = <template>
     {{htmlSafe (i18n "composer.exit_fullscreen_prompt")}}
   </div>
 </template>;
+
 export default ComposerFullscreenPrompt;

@@ -1,8 +1,10 @@
+import { tracked } from "@glimmer/tracking";
 import { get } from "@ember/object";
 import { and, equal, not, or } from "@ember/object/computed";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
+import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import discourseComputed from "discourse/lib/decorators";
@@ -36,21 +38,22 @@ export default class PostStream extends RestModel {
   @service currentUser;
   @service store;
 
-  posts = null;
-  stream = null;
-  userFilters = null;
-  loaded = null;
-  loadingAbove = null;
-  loadingBelow = null;
-  loadingFilter = null;
-  loadingNearPost = null;
-  stagingPost = null;
-  postsWithPlaceholders = null;
-  timelineLookup = null;
-  filterRepliesToPostNumber = null;
-  filterUpwardsPostID = null;
-  filter = null;
-  lastId = null;
+  @tracked filter;
+  @tracked filterRepliesToPostNumber;
+  @tracked filterUpwardsPostID;
+  @tracked gaps;
+  @tracked lastId;
+  @tracked loaded;
+  @tracked loadingAbove;
+  @tracked loadingBelow;
+  @tracked loadingFilter;
+  @tracked loadingNearPost;
+  @tracked postsWithPlaceholders;
+  @tracked stagingPost;
+  @tracked stream;
+  @tracked timelineLookup;
+  @tracked userFilters;
+  @tracked posts;
 
   @or("loadingAbove", "loadingBelow", "loadingFilter", "stagingPost") loading;
   @not("loading") notLoading;
@@ -281,6 +284,7 @@ export default class PostStream extends RestModel {
         ? element.getBoundingClientRect().top
         : null;
 
+      // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
       this.appEvents.trigger("post-stream:refresh");
 
       DiscourseURL.jumpToPost(postNumber, {
@@ -301,6 +305,7 @@ export default class PostStream extends RestModel {
       post_id: postID,
     });
     return this.refresh({ refreshInPlace: true }).then(() => {
+      // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
       this.appEvents.trigger("post-stream:refresh");
 
       if (this.posts && this.posts.length > 1) {
@@ -435,6 +440,7 @@ export default class PostStream extends RestModel {
   }
 
   gapExpanded() {
+    // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
     this.appEvents.trigger("post-stream:refresh");
 
     // resets the reply count in posts-filtered-notice
@@ -1050,6 +1056,11 @@ export default class PostStream extends RestModel {
       delete postStreamData.posts;
 
       // Update our attributes
+      const trackedGaps = {
+        before: new TrackedObject(postStreamData.gaps?.before || {}),
+        after: new TrackedObject(postStreamData.gaps?.after || {}),
+      };
+      postStreamData.gaps = trackedGaps;
       this.setProperties(postStreamData);
     }
   }
@@ -1264,6 +1275,7 @@ export default class PostStream extends RestModel {
     post.user = this.store.createRecord("user", {
       id: post.user_id,
       username: post.username,
+      avatar_template: post.avatar_template,
     });
 
     if (post.user_status) {

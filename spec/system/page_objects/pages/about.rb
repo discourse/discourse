@@ -38,6 +38,18 @@ module PageObjects
         element.has_text?(I18n.t("js.about.moderator_count", count:, formatted_number:))
       end
 
+      def has_group_with_name?(name)
+        has_css?(".about__#{name.downcase} h3", text: name)
+      end
+
+      def has_no_group_with_name?(name)
+        has_no_css?(".about__#{name.downcase} h3", text: name)
+      end
+
+      def has_no_extra_groups?
+        has_no_css?("--custom-group")
+      end
+
       def has_site_created_less_than_1_month_ago?
         site_age_stat_element.has_text?(I18n.t("js.about.site_age.less_than_one_month"))
       end

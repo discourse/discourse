@@ -123,6 +123,7 @@ class ThemeField < ActiveRecord::Base
     errors << I18n.t("themes.errors.optimized_link") if contains_optimized_link?(html)
 
     js_compiler = ThemeJavascriptCompiler.new(theme_id, self.theme.name)
+    deprecated_template_names = []
 
     doc = Nokogiri::HTML5.fragment(html)
 
@@ -144,6 +145,7 @@ class ThemeField < ActiveRecord::Base
               "discourse/templates/#{name.delete_prefix("/")}",
               hbs_template,
             )
+            deprecated_template_names << name
           end
         rescue ThemeJavascriptCompiler::CompileError => ex
           js_compiler.append_js_error("discourse/templates/#{name}", ex.message)
@@ -152,6 +154,28 @@ class ThemeField < ActiveRecord::Base
 
         node.remove
       end
+
+    if deprecated_template_names.present?
+      js = <<~JS
+        import deprecated from "discourse/lib/deprecated";
+
+        export default {
+          initialize(){
+            const names = #{deprecated_template_names.to_json};
+            names.forEach((name) => {
+              deprecated(
+                `[${name}] adding templates to a theme using <script type='text/x-handlebars'> is deprecated. Move to dedicated .hbs or .gjs files.`,
+                {
+                  id: "discourse.script-tag-hbs",
+                  url: "https://meta.discourse.org/t/366482",
+                }
+              )
+            });
+          }
+        }
+      JS
+      js_compiler.append_module(js, "discourse/initializers/script-tag-hbs-deprecations", "js")
+    end
 
     doc
       .css('script[type="text/discourse-plugin"]')
@@ -165,12 +189,20 @@ class ThemeField < ActiveRecord::Base
         begin
           js = <<~JS
           import { withPluginApi } from "discourse/lib/plugin-api";
+          import deprecated from "discourse/lib/deprecated";
 
           export default {
             name: #{initializer_name.inspect},
             after: "inject-objects",
 
             initialize() {
+              deprecated(
+                "Adding JS code using <script type='text/discourse-plugin'> is deprecated. Move this code to a dedicated JavaScript file.",
+                {
+                  id: "discourse.script-tag-discourse-plugin",
+                  url: "https://meta.discourse.org/t/366482",
+                }
+              )
               withPluginApi(#{version.inspect}, (api) => {
                 #{node.inner_html}
               });
@@ -286,46 +318,33 @@ class ThemeField < ActiveRecord::Base
   def process_translation
     errors = []
     javascript_cache || build_javascript_cache
-    js_compiler = ThemeJavascriptCompiler.new(theme_id, self.theme.name)
-    begin
-      data = translation_data
 
-      js = <<~JS
-        export default {
-          name: "theme-#{theme_id}-translations",
-          initialize() {
-            /* Translation data for theme #{self.theme_id} (#{self.name})*/
-            const data = #{data.to_json};
+    data = translation_data
 
-            for (let lang in data){
-              let cursor = I18n.translations;
-              for (let key of [lang, "js", "theme_translations"]){
-                cursor = cursor[key] = cursor[key] || {};
-              }
-              cursor[#{self.theme_id}] = data[lang];
-            }
-          }
-        };
-      JS
+    js = <<~JS
+      /* Translation data for theme #{self.theme_id} (#{self.name})*/
+      const data = #{data.to_json};
 
-      js_compiler.append_module(
-        js,
-        "discourse/pre-initializers/theme-#{theme_id}-translations",
-        "js",
-        include_variables: false,
-      )
-    rescue ThemeTranslationParser::InvalidYaml => e
-      errors << e.message
-    end
+      for (let lang in data){
+        let cursor = I18n.translations;
+        for (let key of [lang, "js", "theme_translations"]){
+          cursor = cursor[key] ??= {};
+        }
+        cursor[#{self.theme_id}] = data[lang];
+      }
+    JS
 
-    javascript_cache.content = js_compiler.content
-    javascript_cache.source_map = js_compiler.source_map
+    javascript_cache.content = js
+    javascript_cache.source_map = nil
     javascript_cache.save!
+
     doc = ""
     doc = <<~HTML.html_safe if javascript_cache.content.present?
-          <script defer src="#{javascript_cache.url}" data-theme-id="#{theme_id}" nonce="#{ThemeField::CSP_NONCE_PLACEHOLDER}"></script>
+          <script type="module" src="#{javascript_cache.url}" data-theme-id="#{theme_id}" nonce="#{ThemeField::CSP_NONCE_PLACEHOLDER}"></script>
         HTML
     [doc, errors&.join("\n")]
+  rescue ThemeTranslationParser::InvalidYaml => e
+    ["", e.message]
   end
 
   def validate_yaml!
@@ -516,7 +535,7 @@ class ThemeField < ActiveRecord::Base
     css, _source_map =
       begin
         compile_scss(prepended_scss)
-      rescue SassC::SyntaxError => e
+      rescue SassC::SyntaxError, DiscourseJsProcessor::TranspileError => e
         # We don't want to raise a blocking error here
         # admin theme editor or discourse_theme CLI will show it nonetheless
         Rails.logger.error "SCSS compilation error: #{e.message}"
@@ -536,7 +555,7 @@ class ThemeField < ActiveRecord::Base
       else
         self.error = nil unless error.nil?
       end
-    rescue SassC::SyntaxError, SassC::NotRenderedError => e
+    rescue SassC::SyntaxError, SassC::NotRenderedError, DiscourseJsProcessor::TranspileError => e
       self.error = e.message unless self.destroyed?
     end
     self.compiler_version = Theme.compiler_version

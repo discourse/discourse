@@ -34,4 +34,5 @@ const NavigationStacked = <template>
     </section>
   </StyleguideExample>
 </template>;
+
 export default NavigationStacked;

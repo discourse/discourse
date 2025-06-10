@@ -37,4 +37,5 @@ const Component = <template>
     {{/if}}
   </div>
 </template>;
+
 export default Component;

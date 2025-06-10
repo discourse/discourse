@@ -54,10 +54,7 @@ module PageObjects
       end
 
       def fill_content(content)
-        page.driver.with_playwright_page do |pw_page|
-          pw_page.locator("#{COMPOSER_ID} .d-editor .d-editor-input").press_sequentially(content)
-        end
-
+        find("#{COMPOSER_ID} .d-editor .d-editor-input").fill_in(with: content)
         self
       end
 
@@ -277,11 +274,7 @@ module PageObjects
       end
 
       def select_all
-        execute_script(<<~JS, text)
-          const composer = document.querySelector("#{COMPOSER_ID} .d-editor-input");
-          composer.focus();
-          composer.setSelectionRange(0, composer.value.length);
-        JS
+        find(COMPOSER_INPUT_SELECTOR).send_keys([PLATFORM_KEY_MODIFIER, "a"])
       end
 
       def select_range(start_index, length)

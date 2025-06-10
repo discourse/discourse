@@ -29,4 +29,5 @@ const Icons = <template>
     <StyleguideIcons />
   </StyleguideExample>
 </template>;
+
 export default Icons;

@@ -27,16 +27,20 @@ module Migrations::Database::Adapter
       end
     end
 
-    def query_first(sql)
+    def query_first_row(sql)
       @connection.exec(sql).first
     end
 
-    def query_value(sql, column)
-      query_first(sql)[column]
+    def query_value(sql, column = nil)
+      if (row = query_first_row(sql))
+        column ? row[column.to_sym] : row.values.first
+      else
+        nil
+      end
     end
 
     def count(sql)
-      query_first(sql).values.first.to_i
+      query_value(sql).to_i
     end
 
     def close

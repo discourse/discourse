@@ -16,6 +16,7 @@ import DEditorPreview from "discourse/components/d-editor-preview";
 import Wrapper from "discourse/components/form-template-field/wrapper";
 import PickFilesButton from "discourse/components/pick-files-button";
 import PostTranslationEditor from "discourse/components/post-translation-editor";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import { tinyAvatar } from "discourse/lib/avatar-utils";
 import { setupComposerPosition } from "discourse/lib/composer/composer-position";
@@ -33,6 +34,7 @@ import {
 } from "discourse/lib/link-mentions";
 import { loadOneboxes } from "discourse/lib/load-oneboxes";
 import { generateCookFunction } from "discourse/lib/text";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import {
   authorizesOneOrMoreImageExtensions,
   IMAGE_MARKDOWN_REGEX,
@@ -129,17 +131,23 @@ export default class ComposerEditor extends Component {
 
   @discourseComputed("composer.model.requiredCategoryMissing")
   replyPlaceholder(requiredCategoryMissing) {
-    if (requiredCategoryMissing) {
-      return "composer.reply_placeholder_choose_category";
-    } else {
+    let placeholder = "composer.reply_placeholder_choose_category";
+
+    if (!requiredCategoryMissing) {
       const key = authorizesOneOrMoreImageExtensions(
         this.currentUser.staff,
         this.siteSettings
       )
         ? "reply_placeholder"
         : "reply_placeholder_no_images";
-      return `composer.${key}`;
+      placeholder = `composer.${key}`;
     }
+
+    return applyValueTransformer(
+      "composer-editor-reply-placeholder",
+      placeholder,
+      { model: this.composer }
+    );
   }
 
   @discourseComputed
@@ -919,7 +927,10 @@ export default class ComposerEditor extends Component {
       icon: "gear",
       title: "composer.options",
       sendAction: this.onExpandPopupMenuOptions.bind(this),
-      popupMenu: true,
+      popupMenu: {
+        options: () => this.composer.popupMenuOptions,
+        action: this.composer.onPopupMenuAction,
+      },
     });
   }
 
@@ -1054,7 +1065,10 @@ export default class ComposerEditor extends Component {
         @onPopupMenuAction={{this.composer.onPopupMenuAction}}
         @popupMenuOptions={{this.composer.popupMenuOptions}}
         @disabled={{this.composer.disableTextarea}}
-        @outletArgs={{hash composer=this.composer.model editorType="composer"}}
+        @outletArgs={{lazyHash
+          composer=this.composer.model
+          editorType="composer"
+        }}
         @topicId={{this.composer.model.topic.id}}
         @categoryId={{this.composer.model.category.id}}
         @replyingToUserId={{this.composer.replyingToUserId}}

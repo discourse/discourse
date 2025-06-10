@@ -1,10 +1,13 @@
+import { tracked } from "@glimmer/tracking";
 import { get } from "@ember/object";
 import { gt, or } from "@ember/object/computed";
 import { isBlank, isEmpty } from "@ember/utils";
+import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse/lib/decorators";
 import RestModel from "discourse/models/rest";
 import { i18n } from "discourse-i18n";
+import ColorScheme from "admin/models/color-scheme";
 import ThemeSettings from "admin/models/theme-settings";
 import ThemeSiteSettings from "admin/models/theme-site-settings";
 
@@ -31,8 +34,16 @@ class Theme extends RestModel {
       );
     }
 
+    const palette =
+      json.owned_color_palette || json.color_scheme || json.base_palette;
+    if (palette) {
+      json.colorPalette = ColorScheme.create(palette);
+    }
+
     return json;
   }
+
+  @tracked colorPalette;
 
   @or("default", "user_selectable") isActive;
   @gt("remote_theme.commits_behind", 0) isPendingUpdates;
@@ -179,6 +190,34 @@ class Theme extends RestModel {
     let key = this.getKey({ target, name });
     let field = themeFields[key];
     return field ? field.error : "";
+  }
+
+  async changeColors() {
+    const colors = [];
+
+    for (const color of this.colorPalette.colors) {
+      const colorPayload = {
+        name: color.name,
+        hex: color.hex,
+        dark_hex: color.dark_hex,
+      };
+
+      colors.push(colorPayload);
+    }
+
+    const paletteData = await ajax(`/admin/themes/${this.id}/change-colors`, {
+      type: "PUT",
+      data: JSON.stringify({ colors }),
+      contentType: "application/json",
+    });
+    this.owned_color_palette = paletteData;
+    this.colorPalette = ColorScheme.create(paletteData);
+  }
+
+  discardColorChanges() {
+    for (const color of this.colorPalette.colors) {
+      color.discardColorChange();
+    }
   }
 
   getField(target, name) {

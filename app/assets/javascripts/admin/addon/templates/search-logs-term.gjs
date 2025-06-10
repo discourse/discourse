@@ -4,10 +4,10 @@ import RouteTemplate from "ember-route-template";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import HighlightSearch from "discourse/components/highlight-search";
 import TopicStatus from "discourse/components/topic-status";
+import ageWithTooltip from "discourse/helpers/age-with-tooltip";
 import avatar from "discourse/helpers/avatar";
 import categoryLink from "discourse/helpers/category-link";
 import discourseTag from "discourse/helpers/discourse-tag";
-import formatAge from "discourse/helpers/format-age";
 import htmlSafe from "discourse/helpers/html-safe";
 import { i18n } from "discourse-i18n";
 import Chart from "admin/components/chart";
@@ -83,7 +83,7 @@ export default RouteTemplate(
 
               <div class="blurb container">
                 <span class="date">
-                  {{formatAge result.created_at}}
+                  {{ageWithTooltip result.created_at}}
                   {{#if result.blurb}}
                     -
                   {{/if}}

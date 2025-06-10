@@ -134,6 +134,7 @@ import {
   addSaveableUserField,
   addSaveableUserOptionField,
 } from "discourse/models/user";
+import { preventCloaking } from "discourse/modifiers/post-stream-viewport-tracker";
 import { setNewCategoryDefaultColors } from "discourse/routes/new-category";
 import { setNotificationsLimit } from "discourse/routes/user-notifications";
 import { addComposerSaveErrorCallback } from "discourse/services/composer";
@@ -1179,17 +1180,26 @@ class PluginApi {
   }
 
   /**
-   * Prevents an element in the post stream from being cloaked.
-   * This is useful if you are using a plugin such as youtube
-   * and don't want the video removed once it has begun
-   * playing.
+   * Prevents a specific post from being cloaked during scroll.
    *
+   * This is useful, for example, for posts that apply customizations that hold state which
+   * would be lost if the nodes were removed from the DOM, e.g., a playing video.
+   *
+   * Note that the set of prevented posts is reset whenever the topic being displayed changes.
+   *
+   * @param {number} postId - The ID of the post to prevent from cloaking
+   * @param {boolean} prevent - Whether to prevent (true) or allow (false) cloaking
+   *
+   * @example
    * ```javascript
-   * api.preventCloak(1234);
+   * api.preventCloak(1234); // Prevent post 1234 from being cloaked
+   * api.preventCloak(1234, false); // Allow post 1234 to be cloaked again
    * ```
    **/
-  preventCloak(postId) {
-    preventCloak(postId);
+  preventCloak(postId, prevent = true) {
+    // TODO (glimmer-post-stream) remove the call to the widget version of preventCloak below
+    preventCloak(postId); // widgets
+    preventCloaking(postId, prevent); // glimmer-post-stream
   }
 
   /**

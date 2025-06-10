@@ -507,10 +507,6 @@ task "uploads:analyze", %i[cache_path limit] => :environment do |_, args|
   puts "Duration: #{Time.zone.now - now} seconds"
 end
 
-task "uploads:fix_incorrect_extensions" => :environment do
-  UploadFixer.fix_all_extensions
-end
-
 task "uploads:recover_from_tombstone" => :environment do
   Rake::Task["uploads:recover"].invoke
 end

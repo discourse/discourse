@@ -1,5 +1,4 @@
 import Component, { Input } from "@ember/component";
-import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { readOnly } from "@ember/object/computed";
 import { getOwner } from "@ember/owner";
@@ -10,6 +9,7 @@ import DModal from "discourse/components/d-modal";
 import CreateInvite from "discourse/components/modal/create-invite";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import ShareSource from "discourse/components/share-source";
+import lazyHash from "discourse/helpers/lazy-hash";
 import discourseComputed, { afterRender } from "discourse/lib/decorators";
 import { longDateNoYear } from "discourse/lib/formatter";
 import { getAbsoluteURL } from "discourse/lib/get-url";
@@ -191,7 +191,7 @@ export default class ShareTopicModal extends Component {
             {{/if}}
             <PluginOutlet
               @name="share-topic-sources"
-              @outletArgs={{hash topic=this.topic post=this.post}}
+              @outletArgs={{lazyHash topic=this.topic post=this.post}}
             />
           </div>
         </div>

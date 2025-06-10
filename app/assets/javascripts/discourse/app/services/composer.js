@@ -846,13 +846,7 @@ export default class ComposerService extends Service {
 
     const composer = this.model;
 
-    if (
-      isEmpty(composer?.reply) &&
-      isEmpty(composer?.title) &&
-      !this.hasFormTemplate
-    ) {
-      this.close();
-    } else if (composer?.viewOpenOrFullscreen) {
+    if (composer?.viewOpenOrFullscreen) {
       this.shrink();
     } else {
       await this.cancelComposer();
@@ -1198,6 +1192,7 @@ export default class ComposerService extends Service {
 
           return this.destroyDraft().then(() => {
             this.close();
+            // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
             this.appEvents.trigger("post-stream:refresh");
             return result;
           });
@@ -1205,6 +1200,7 @@ export default class ComposerService extends Service {
 
         if (this.get("model.editingPost")) {
           this.appEvents.trigger("composer:edited-post");
+          // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
           this.appEvents.trigger("post-stream:refresh", {
             id: parseInt(result.responseJson.id, 10),
           });
@@ -1212,6 +1208,7 @@ export default class ComposerService extends Service {
             this.appEvents.trigger("header:update-topic", composer.topic);
           }
         } else {
+          // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
           this.appEvents.trigger("post-stream:refresh");
         }
 
@@ -1278,6 +1275,7 @@ export default class ComposerService extends Service {
       staged = composer.get("stagedPost");
     }
 
+    // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
     this.appEvents.trigger("post-stream:posted", staged);
 
     this.messageBus.pause();
@@ -1311,7 +1309,7 @@ export default class ComposerService extends Service {
 
       this.close();
       this.toasts.success({
-        duration: 3000,
+        duration: "short",
         data: {
           message: i18n("post.localizations.success"),
         },
@@ -1448,8 +1446,10 @@ export default class ComposerService extends Service {
           }
         }
 
-        await this.cancelComposer(opts);
-        await this.open(opts);
+        const retry = await this.cancelComposer(opts);
+        if (retry) {
+          await this.open(opts);
+        }
         return;
       }
 
@@ -1633,7 +1633,7 @@ export default class ComposerService extends Service {
                 })
                 .finally(() => {
                   this.appEvents.trigger("composer:cancelled");
-                  resolve();
+                  resolve(true);
                 });
             },
             onSaveDraft: () => {
@@ -1641,8 +1641,9 @@ export default class ComposerService extends Service {
               this.model.clearState();
               this.close();
               this.appEvents.trigger("composer:cancelled");
-              return resolve();
+              return resolve(true);
             },
+            onKeepEditing: () => resolve(false),
           },
         });
       } else {
@@ -1671,15 +1672,7 @@ export default class ComposerService extends Service {
   }
 
   shrink() {
-    if (
-      this.get("model.replyDirty") ||
-      (this.get("model.canEditTitle") && this.get("model.titleDirty")) ||
-      this.hasFormTemplate
-    ) {
-      this.collapse();
-    } else {
-      this.close();
-    }
+    this.collapse();
   }
 
   _saveDraft() {

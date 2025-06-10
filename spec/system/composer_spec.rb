@@ -35,7 +35,7 @@ describe "Composer", type: :system do
 
       op_post.reply
       expect(composer).to be_opened
-      composer.fill_content("@")
+      composer.type_content("@")
 
       expect(composer.mention_menu_autocomplete_username_list).to eq(
         [op.username, second_reply_user.username], # must be first the topic owner
@@ -47,7 +47,7 @@ describe "Composer", type: :system do
 
       second_reply_post.reply
       expect(composer).to be_opened
-      composer.fill_content("@")
+      composer.type_content("@")
 
       expect(composer.mention_menu_autocomplete_username_list).to eq(
         [second_reply_user.username, topic_user.username], # must be first the reply user
@@ -66,7 +66,7 @@ describe "Composer", type: :system do
 
       expect(composer).to be_opened
 
-      composer.fill_content(" @")
+      composer.type_content(" @")
 
       expect(composer.mention_menu_autocomplete_username_list).to eq(
         [second_reply_user.username, user.username, topic_user.username],

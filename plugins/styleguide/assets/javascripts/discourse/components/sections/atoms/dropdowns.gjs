@@ -175,4 +175,5 @@ const Dropdowns = <template>
     <IconPicker @name="icon" />
   </StyleguideExample>
 </template>;
+
 export default Dropdowns;

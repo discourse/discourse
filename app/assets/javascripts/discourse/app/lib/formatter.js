@@ -155,9 +155,9 @@ export function duration(distance, ageOpts) {
   const distanceInMinutes = dividedDistance < 1 ? 1 : dividedDistance;
 
   const t = function (key, opts) {
-    const format = (ageOpts && ageOpts.format) || "tiny";
+    const format = ageOpts?.format || "tiny";
     const result = i18n("dates." + format + "." + key, opts);
-    return ageOpts && ageOpts.addAgo ? wrapAgo(result) : result;
+    return ageOpts?.addAgo ? wrapAgo(result) : result;
   };
 
   let formatted;
@@ -223,7 +223,7 @@ function relativeAgeTiny(date, ageOpts) {
   let formatted;
   const t = function (key, opts) {
     const result = i18n("dates." + format + "." + key, opts);
-    return ageOpts && ageOpts.addAgo ? wrapAgo(result) : result;
+    return ageOpts?.addAgo ? wrapAgo(result) : result;
   };
 
   // This file is in lib but it's used as a helper

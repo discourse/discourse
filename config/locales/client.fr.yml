@@ -487,7 +487,7 @@ fr:
       one: "Voir %{count} nouveau sujet"
       other: "Voir %{count} nouveaux sujets"
     preview: "prévisualiser"
-    cancel: "annuler"
+    cancel: "Annuler"
     deleting: "Suppression…"
     save: "Enregistrer les modifications"
     saving: "Enregistrement…"
@@ -1161,7 +1161,6 @@ fr:
       said: "%{username} :"
       profile: "Profil"
       profile_possessive: "Profil de %{username}"
-      account_possessive: "Compte de %{name}"
       mute: "Mettre en sourdine"
       edit: "Modifier les préférences"
       download_archive:
@@ -1993,7 +1992,6 @@ fr:
         title: "Adresse IP d'enregistrement"
       avatar:
         title: "Image de profil"
-        header_title: "profil, messages, signets et préférences"
         name_and_description: "%{name} - %{description}"
         edit: "Modifier l'image de profil"
       title:
@@ -2860,7 +2858,6 @@ fr:
           aria_label: filtrer par nombre de vues maximal
         additional_options:
           label: "Filtrer par nombre de messages et vues par sujet"
-    hamburger_menu: "menu"
     new_item: "nouveau"
     go_back: "retour"
     not_logged_in_user: "page utilisateur avec un résumé de l'activité et les préférences"
@@ -3567,6 +3564,11 @@ fr:
       in_reply_to: "Charger le message parent"
       view_all_posts: "Afficher tous les messages"
       badge_granted_tooltip: "%{username} a obtenu le badge « %{badge_name} » pour cette publication !"
+      localizations:
+        table:
+          actions: "Actions"
+          edit: "Modifier"
+          delete: "Supprimer"
       errors:
         create: "Nous sommes désolés, une erreur est survenue lors de la création de votre message. Veuillez réessayer."
         edit: "Nous sommes désolés, une erreur est survenue lors de la modification de votre message. Veuillez réessayer."
@@ -4164,7 +4166,6 @@ fr:
         today: "Aujourd'hui"
     custom_homepage:
       admin_message: 'L''un de vos thèmes a activé le modificateur « custom_homepage », mais il n''affiche rien dans le connecteur [custom-homepage]. (Ce message s''adresse uniquement aux administrateurs du site.)'
-    browser_update: 'Malheureusement, <a href="https://www.discourse.org/faq/#browser">votre navigateur n''est pas pris en charge</a>. Merci de <a href="https://browsehappy.com">mettre à jour votre navigateur</a> pour afficher le contenu enrichi, vous connecter et répondre.'
     permission_types:
       full: "Créer/Répondre/Voir"
       create_post: "Répondre/Voir"
@@ -4550,7 +4551,7 @@ fr:
           save: "Enregistrer"
           delete: "Supprimer"
           delete_confirm: "Voulez-vous vraiment supprimer cette section ?"
-          delete_public_confirm: "Cette section est <strong>visible par tout le monde</strong>, voulez-vous vraiment la supprimer ?"
+          delete_public_confirm: "Cette section est visible par tout le monde, voulez-vous vraiment la supprimer ?"
           update_public_confirm: "Les modifications seront visibles par <strong>tous les utilisateurs de</strong> sur ce site. voulez-vous continuer ?"
           mark_as_private_confirm: "Cette section est <strong>visible par tous les utilisateurs</strong>. Après la mise à jour, elle <strong>ne sera visible que par vous</strong>. Voulez-vous continuer ?"
           reset_confirm: "Voulez-vous vraiment réinitialiser cette section par défaut ?"
@@ -4666,6 +4667,9 @@ fr:
         forum:
           label: Forum
       back_to_forum: "Retour au forum"
+      clear_filter: "Effacer le filtre"
+      no_results:
+        title: "Aucun résultat"
       collapse_all_sections: "Réduire toutes les sections"
       expand_all_sections: "Développer toutes les sections"
       search: "Recherche"
@@ -4776,14 +4780,9 @@ fr:
     powered_by_discourse: "Alimenté par Discourse"
     discovery:
       headings:
+        multi_tag:
+          default: "Sujets avec l'étiquette %{tags}"
         categories: "Toutes les catégories"
-        filter_labels:
-          latest: "Récents"
-          top: "Top"
-          new: "Nouveaux"
-          unread: "Non lus"
-          hot: "Populaires"
-          unseen: "Non lus"
   admin_js:
     type_to_filter: "Commencez votre saisie pour filtrer…"
     settings: "Paramètres"
@@ -4843,24 +4842,23 @@ fr:
         login_and_authentication:
           title: "Connexion et authentification"
           header_description: "Configurez la manière dont les utilisateurs se connectent et s'authentifient, les secrets et les clés, les fournisseurs OAuth2, etc."
-        logo_and_fonts:
-          logo:
-            form:
-              logo:
-                title: "Logo principal"
-              mobile: "Mobile"
-              email: "E-mail"
-              manifest_screenshots:
-                description: "Captures d'écran qui mettent en valeur les atouts et les fonctionnalités de votre instance du logiciel. Ces images doivent toutes être enregistrées localement sur le serveur et posséder des dimensions identiques."
-              opengraph_image:
-                description: "Image opengraph par défaut, utilisée lorsque la page n'a pas d'autre image appropriée. Si vous laissez ce champ vide, « large_icon » sera utilisée."
-          fonts:
-            title: "Polices"
-            form:
-              heading_font:
-                title: "Police de titre"
-            backfill_modal:
-              modal_yes: "Oui"
+        logo:
+          form:
+            logo:
+              title: "Logo principal"
+            mobile: "Mobile"
+            email: "E-mail"
+            manifest_screenshots:
+              description: "Captures d'écran qui mettent en valeur les atouts et les fonctionnalités de votre instance du logiciel. Ces images doivent toutes être enregistrées localement sur le serveur et posséder des dimensions identiques."
+            opengraph_image:
+              description: "Image opengraph par défaut, utilisée lorsque la page n'a pas d'autre image appropriée. Si vous laissez ce champ vide, « large_icon » sera utilisée."
+        fonts:
+          title: "Polices"
+          form:
+            heading_font:
+              title: "Police de titre"
+          backfill_modal:
+            modal_yes: "Oui"
         navigation:
           title: "Navigation"
           header_description: "Configurez les liens de navigation et les éléments de menu de votre site. Cela inclut l'emplacement et le comportement du menu de navigation principal, les liens rapides en haut de la page d'accueil, ainsi que la barre latérale d'administration"
@@ -5576,6 +5574,8 @@ fr:
           city_for_disputes_placeholder: "Ville"
           city_for_disputes_help: |
             Précisez la ville où résoudre les litiges juridiques liés à ce forum.
+          extra_groups:
+            groups: "Groupes"
           optional: "(facultatif)"
           update: "Mettre à jour"
           toasts:
@@ -5664,6 +5664,8 @@ fr:
           save_successful: "Champ utilisateur enregistré."
         color_palettes:
           palette_name: "Nom"
+          duplicate: "Dupliquer"
+          delete: "Supprimer"
           color_options:
             toggle: "Sélectionnable par l'utilisateur"
             toggle_description: "La palette de couleurs peut être sélectionnée par les utilisateurs"
@@ -5978,30 +5980,30 @@ fr:
           active_filter: "Actif"
           inactive_filter: "Inactif"
           updates_available_filter: "Mises à jour disponibles"
-          schema:
-            title: "Modifier le paramètre %{name}"
-            back_button: "Retour à %{name}"
-            fields:
-              required: "*requis"
-              groups:
-                at_least:
-                  one: "au moins %{count} groupe est requis"
-                  other: "au moins %{count} groupes sont requis"
-              categories:
-                at_least:
-                  one: "au moins %{count} catégorie est requise"
-                  other: "au moins %{count} catégories sont requises"
-              tags:
-                at_least:
-                  one: "au moins %{count} étiquette est requise"
-                  other: "au moins %{count} étiquettes sont requises"
-              string:
-                too_short:
-                  one: "doit contenir au moins %{count} caractère"
-                  other: "doit contenir au moins %{count} caractères"
-              number:
-                too_small: "doit être supérieur ou égal à %{count}"
-                too_large: "doit être inférieur ou égal à %{count}"
+        schema:
+          title: "Modifier le paramètre %{name}"
+          back_button: "Retour à %{name}"
+          fields:
+            required: "*requis"
+            groups:
+              at_least:
+                one: "au moins %{count} groupe est requis"
+                other: "au moins %{count} groupes sont requis"
+            categories:
+              at_least:
+                one: "au moins %{count} catégorie est requise"
+                other: "au moins %{count} catégories sont requises"
+            tags:
+              at_least:
+                one: "au moins %{count} étiquette est requise"
+                other: "au moins %{count} étiquettes sont requises"
+            string:
+              too_short:
+                one: "doit contenir au moins %{count} caractère"
+                other: "doit contenir au moins %{count} caractères"
+            number:
+              too_small: "doit être supérieur ou égal à %{count}"
+              too_large: "doit être inférieur ou égal à %{count}"
         colors:
           select_base:
             title: "Sélectionner la palette de couleurs de base"
@@ -6012,36 +6014,28 @@ fr:
           about: "Modifiez les couleurs utilisées par vos thèmes. Créez une nouvelle palette de couleurs pour commencer."
           new_name: "Nouvelle palette de couleurs"
           copy_name_prefix: "Copie de"
-          delete_confirm: "Supprimer cette palette de couleurs ?"
           undo: "Annuler"
           undo_title: "Annuler les modifications que vous avez apportées à cette couleur depuis son dernier enregistrement."
           revert: "Rétablir"
           revert_title: "Rétablir la couleur de la palette par défaut de Discourse."
           primary:
             name: "primaire"
-            description: "La plupart des textes, icônes et bordures."
           primary-medium:
             name: "primary-medium"
           primary-low-mid:
             name: "primary-low-mid"
           secondary:
             name: "secondaire"
-            description: "Les couleurs principales du fond et du texte de certains boutons."
           tertiary:
             name: "tertiaire"
-            description: "Liens, boutons, notifications et couleurs d'accentuation."
           quaternary:
             name: "quaternaire"
-            description: "Pour une utilisation facultative dans les thèmes."
           header_background:
             name: "arrière-plan de l'en-tête"
-            description: "Couleur d'arrière-plan de l'en-tête du site."
           header_primary:
             name: "en-tête principal"
-            description: "Textes et icônes dans l'en-tête du site."
           highlight:
             name: "accentuation"
-            description: "La couleur de fond des éléments mis en surbrillance sur la page, comme les messages et sujets."
           highlight-high:
             name: "highlight-high"
           highlight-medium:
@@ -6050,19 +6044,14 @@ fr:
             name: "highlight-low"
           danger:
             name: "danger"
-            description: "Couleur de mise en valeur pour les actions comme la suppression de messages et de sujets."
           success:
             name: "succès"
-            description: "Utilisée pour indiquer qu'une action a réussi."
           love:
             name: "aimer"
-            description: "La couleur du bouton « J'aime »."
           selected:
             name: "sélectionné"
-            description: "La couleur d'arrière-plan des éléments tels que list-items lorsqu'ils sont sélectionnés/actifs."
           hover:
             name: "survol"
-            description: "La couleur d'arrière-plan des éléments tels que list-items lorsqu'ils sont survolés ou lorsque le curseur du clavier est à leur niveau."
           editor:
             light: "Clair"
             dark: "Sombre"

@@ -162,6 +162,14 @@ HTML
     theme.save!
     expect(field.reload.error).to include('Error: expected "}"')
 
+    theme.set_field(target: :common, name: :scss, value: <<~SCSS)
+      body {
+        color: unquote("https://example.com/this-is-a-mistake");
+      }
+    SCSS
+    theme.save!
+    expect(field.reload.error).to include("Missed semicolon")
+
     theme.set_field(target: :common, name: :scss, value: "@import 'missingfile';")
     theme.save!
     expect(field.reload.error).to include("Error: Can't find stylesheet to import.")
@@ -604,7 +612,7 @@ HTML
       it "is generated correctly" do
         fr1.ensure_baked!
         expect(fr1.value_baked).to include(
-          "<script defer src=\"#{fr1.javascript_cache.url}\" data-theme-id=\"#{fr1.theme_id}\" nonce=\"#{ThemeField::CSP_NONCE_PLACEHOLDER}\"></script>",
+          "<script type=\"module\" src=\"#{fr1.javascript_cache.url}\" data-theme-id=\"#{fr1.theme_id}\" nonce=\"#{ThemeField::CSP_NONCE_PLACEHOLDER}\"></script>",
         )
         expect(fr1.javascript_cache.content).to include("bonjourworld")
         expect(fr1.javascript_cache.content).to include("helloworld")

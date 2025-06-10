@@ -23,7 +23,7 @@ import {
   applyContentPluginApiCallbacks,
   applyOnChangePluginApiCallbacks,
 } from "select-kit/lib/plugin-api";
-import UtilsMixin from "select-kit/mixins/utils";
+import selectKitPropUtils from "select-kit/lib/select-kit-prop-utils";
 
 export const MAIN_COLLECTION = "MAIN_COLLECTION";
 export const ERRORS_COLLECTION = "ERRORS_COLLECTION";
@@ -135,7 +135,8 @@ function protoProp(prototype, key, descriptor) {
   formName: null,
 })
 @pluginApiIdentifiers(["select-kit"])
-export default class SelectKit extends Component.extend(UtilsMixin) {
+@selectKitPropUtils
+export default class SelectKit extends Component {
   @service appEvents;
 
   singleSelect = false;

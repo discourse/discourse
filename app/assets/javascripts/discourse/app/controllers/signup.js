@@ -165,9 +165,13 @@ export default class SignupPageController extends Controller {
     return authOptions && !canEditUsername;
   }
 
-  @discourseComputed("authOptions", "authOptions.can_edit_name")
-  nameDisabled(authOptions, canEditName) {
-    return authOptions && !canEditName;
+  @discourseComputed(
+    "authOptions",
+    "authOptions.can_edit_name",
+    "authOptions.name"
+  )
+  nameDisabled(authOptions, canEditName, name) {
+    return authOptions && !canEditName && name && name.length > 0;
   }
 
   @discourseComputed
@@ -376,6 +380,16 @@ export default class SignupPageController extends Controller {
   @discourseComputed
   hasAtLeastOneLoginButton() {
     return findAll().length > 0;
+  }
+
+  @discourseComputed("authOptions", "hasAtLeastOneLoginButton")
+  showRightSide(authOptions, hasAtLeastOneLoginButton) {
+    return !authOptions && hasAtLeastOneLoginButton;
+  }
+
+  @discourseComputed("authOptions")
+  progressBarStep(authOptions) {
+    return authOptions ? "activate" : "signup";
   }
 
   fetchConfirmationValue() {

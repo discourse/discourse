@@ -119,7 +119,7 @@ describe "Admin Badges Page", type: :system do
       expect(badges_page).to have_saved_form
       badges_page.form.field("name").fill_in("another name")
       badges_page.delete_badge
-      dialog.click_yes
+      dialog.click_danger
 
       expect(page).to have_current_path("/admin/badges")
     end

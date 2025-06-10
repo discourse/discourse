@@ -8,6 +8,7 @@ import { and } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
 import EmptyChannelsList from "discourse/plugins/chat/discourse/components/empty-channels-list";
 import ChatChannelRow from "./chat-channel-row";
@@ -119,7 +120,7 @@ export default class ChannelsListPublic extends Component {
     <PluginOutlet
       @name="below-public-chat-channels"
       @tagName=""
-      @outletArgs={{hash inSidebar=this.inSidebar}}
+      @outletArgs={{lazyHash inSidebar=this.inSidebar}}
     />
   </template>
 }

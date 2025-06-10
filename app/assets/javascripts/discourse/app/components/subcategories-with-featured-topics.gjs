@@ -1,9 +1,9 @@
 import Component from "@ember/component";
-import { hash } from "@ember/helper";
 import { htmlSafe } from "@ember/template";
 import CategoryTitleLink from "discourse/components/category-title-link";
 import ParentCategoryRow from "discourse/components/parent-category-row";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
 
 export default class SubcategoriesWithFeaturedTopics extends Component {
@@ -12,7 +12,7 @@ export default class SubcategoriesWithFeaturedTopics extends Component {
       {{#if this.site.mobileView}}
         <PluginOutlet
           @name="mobile-subcategories-with-featured-topics-list"
-          @outletArgs={{hash category=category}}
+          @outletArgs={{lazyHash category=category}}
         >
           <div class="category-list subcategory-list with-topics">
             <div class="parent-category">
@@ -40,7 +40,7 @@ export default class SubcategoriesWithFeaturedTopics extends Component {
       {{else}}
         <PluginOutlet
           @name="subcategories-with-featured-topics-list"
-          @outletArgs={{hash category=category}}
+          @outletArgs={{lazyHash category=category}}
         >
           <table class="category-list subcategory-list with-topics">
             <thead>

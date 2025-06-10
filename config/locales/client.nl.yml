@@ -485,7 +485,7 @@ nl:
       one: "%{count} nieuw topic weergeven"
       other: "%{count} nieuwe topics weergeven"
     preview: "voorbeeld"
-    cancel: "annuleren"
+    cancel: "Annuleren"
     deleting: "Verwijderen…"
     save: "Wijzigingen opslaan"
     saving: "Opslaan…"
@@ -1159,7 +1159,6 @@ nl:
       said: "%{username}:"
       profile: "Profiel"
       profile_possessive: "Profiel van %{username}"
-      account_possessive: "Account van %{name}"
       mute: "Dempen"
       edit: "Voorkeuren bewerken"
       download_archive:
@@ -1991,7 +1990,6 @@ nl:
         title: "IP-adres bij registratie"
       avatar:
         title: "Profielafbeelding"
-        header_title: "profiel, berichten, bladwijzers en voorkeuren"
         name_and_description: "%{name} - %{description}"
         edit: "Profielafbeelding bewerken"
       title:
@@ -2858,7 +2856,6 @@ nl:
           aria_label: filteren op maximumaantal weergaven
         additional_options:
           label: "Filteren op aantal berichten en topicweergaven"
-    hamburger_menu: "menu"
     new_item: "nieuw"
     go_back: "terug"
     not_logged_in_user: "gebruikerspagina met samenvatting van huidige activiteit en voorkeuren"
@@ -3565,6 +3562,11 @@ nl:
       in_reply_to: "Bovenliggend bericht laden"
       view_all_posts: "Alle berichten weergeven"
       badge_granted_tooltip: "%{username} heeft de badge '%{badge_name}' verdiend voor dit bericht!"
+      localizations:
+        table:
+          actions: "Acties"
+          edit: "Bewerken"
+          delete: "Verwijderen"
       errors:
         create: "Sorry, er is een fout opgetreden bij het plaatsen van je bericht. Probeer het opnieuw."
         edit: "Sorry, er is een fout opgetreden bij het bewerken van je bericht. Probeer het opnieuw."
@@ -4162,7 +4164,6 @@ nl:
         today: "Vandaag"
     custom_homepage:
       admin_message: 'Een van je thema''s heeft de modificator "custom_homepage" ingeschakeld, maar voert niets uit naar de connector [custom-homepage]. (Deze melding wordt alleen weergegeven voor sitebeheerders.)'
-    browser_update: '<a href="https://www.discourse.org/faq/#browser">Je browser wordt niet ondersteund</a> helaas. <a href="https://browsehappy.com">Schakel over naar een ondersteunde browser</a> om rijke inhoud te bekijken, je aan te melden en te antwoorden.'
     permission_types:
       full: "Maken / Antwoorden / Weergeven"
       create_post: "Antwoorden / Weergeven"
@@ -4548,7 +4549,7 @@ nl:
           save: "Opslaan"
           delete: "Verwijderen"
           delete_confirm: "Weet je zeker dat je deze sectie wilt verwijderen?"
-          delete_public_confirm: "Deze sectie is <strong>zichtbaar voor iedereen</strong>, weet je zeker dat je het wilt verwijderen?"
+          delete_public_confirm: "Deze sectie is zichtbaar voor iedereen, weet je zeker dat je het wilt verwijderen?"
           update_public_confirm: "Wijzigingen zijn <strong>zichtbaar voor iedereen</strong> op deze site. Weet je het zeker?"
           mark_as_private_confirm: "Deze sectie is <strong>zichtbaar voor iedereen</strong>. Na de update is de sectie <strong>alleen zichtbaar voor jou</strong>. Weet je het zeker?"
           reset_confirm: "Weet je zeker dat je deze sectie wilt herstellen naar de standaardinstellingen?"
@@ -4664,6 +4665,9 @@ nl:
         forum:
           label: Forum
       back_to_forum: "Terug naar forum"
+      clear_filter: "Filter wissen"
+      no_results:
+        title: "Geen resultaten"
       collapse_all_sections: "Alle secties samenvouwen"
       expand_all_sections: "Alle secties uitvouwen"
       search: "Zoeken"
@@ -4774,14 +4778,9 @@ nl:
     powered_by_discourse: "Mogelijk gemaakt door Discourse"
     discovery:
       headings:
+        multi_tag:
+          default: "Topics met de tag %{tags}"
         categories: "Alle categorieën"
-        filter_labels:
-          latest: "Nieuwste"
-          top: "Top"
-          new: "Nieuw"
-          unread: "Ongelezen"
-          hot: "Veelgelezen"
-          unseen: "Ongezien"
   admin_js:
     type_to_filter: "Typ om te filteren…"
     settings: "Instellingen"
@@ -4841,22 +4840,21 @@ nl:
         login_and_authentication:
           title: "Aanmelden en verificatie"
           header_description: "Configureer hoe gebruikers zich aanmelden en verifiëren, geheimen en sleutels, OAuth2-providers en meer"
-        logo_and_fonts:
-          logo:
-            form:
-              logo:
-                title: "Primair logo"
-              mobile: "Mobiel"
-              email: "E-mail"
-              manifest_screenshots:
-                description: "Schermafbeeldingen die de eigenschappen en functies van je instantie tonen op de installatiepromptpagina. Alle afbeeldingen moeten lokale uploads zijn en dezelfde afmetingen hebben."
-          fonts:
-            title: "Lettertypen"
-            form:
-              heading_font:
-                title: "Lettertype kop"
-            backfill_modal:
-              modal_yes: "Ja"
+        logo:
+          form:
+            logo:
+              title: "Primair logo"
+            mobile: "Mobiel"
+            email: "E-mail"
+            manifest_screenshots:
+              description: "Schermafbeeldingen die de eigenschappen en functies van je instantie tonen op de installatiepromptpagina. Alle afbeeldingen moeten lokale uploads zijn en dezelfde afmetingen hebben."
+        fonts:
+          title: "Lettertypen"
+          form:
+            heading_font:
+              title: "Lettertype kop"
+          backfill_modal:
+            modal_yes: "Ja"
         navigation:
           title: "Navigatie"
           header_description: "Configureer de navigatielinks en menuopties voor je site. Dit omvat de locatie en het gedrag van het primaire navigatiemenu, de snelle links bovenaan de startpagina en de zijbalk voor beheer"
@@ -5572,6 +5570,8 @@ nl:
           city_for_disputes_placeholder: "Plaats"
           city_for_disputes_help: |
             Geef de plaats op waar juridische geschillen met betrekking tot dit forum worden afgehandeld.
+          extra_groups:
+            groups: "Groepen"
           optional: "(optioneel)"
           update: "Bijwerken"
           toasts:
@@ -5660,6 +5660,8 @@ nl:
           save_successful: "Gebruikersveld opgeslagen."
         color_palettes:
           palette_name: "Naam"
+          duplicate: "Dupliceren"
+          delete: "Verwijderen"
           color_options:
             toggle: "Door gebruiker te selecteren"
             toggle_description: "Kleurenpalet kan door gebruikers worden geselecteerd"
@@ -5974,30 +5976,30 @@ nl:
           active_filter: "Actief"
           inactive_filter: "Inactief"
           updates_available_filter: "Updates beschikbaar"
-          schema:
-            title: "Instelling %{name} bewerken"
-            back_button: "Terug naar %{name}"
-            fields:
-              required: "*vereist"
-              groups:
-                at_least:
-                  one: "minimaal %{count} groep is vereist"
-                  other: "minimaal %{count} groepen zijn vereist"
-              categories:
-                at_least:
-                  one: "minimaal %{count} categorie is vereist"
-                  other: "minimaal %{count} categorieën zijn vereist"
-              tags:
-                at_least:
-                  one: "minimaal %{count} tag is vereist"
-                  other: "minimaal %{count} tags zijn vereist"
-              string:
-                too_short:
-                  one: "moet minimaal %{count} teken lang zijn"
-                  other: "moet minimaal %{count} tekens lang zijn"
-              number:
-                too_small: "moet groter dan of gelijk aan %{count} zijn"
-                too_large: "moet kleiner dan of gelijk aan %{count} zijn"
+        schema:
+          title: "Instelling %{name} bewerken"
+          back_button: "Terug naar %{name}"
+          fields:
+            required: "*vereist"
+            groups:
+              at_least:
+                one: "minimaal %{count} groep is vereist"
+                other: "minimaal %{count} groepen zijn vereist"
+            categories:
+              at_least:
+                one: "minimaal %{count} categorie is vereist"
+                other: "minimaal %{count} categorieën zijn vereist"
+            tags:
+              at_least:
+                one: "minimaal %{count} tag is vereist"
+                other: "minimaal %{count} tags zijn vereist"
+            string:
+              too_short:
+                one: "moet minimaal %{count} teken lang zijn"
+                other: "moet minimaal %{count} tekens lang zijn"
+            number:
+              too_small: "moet groter dan of gelijk aan %{count} zijn"
+              too_large: "moet kleiner dan of gelijk aan %{count} zijn"
         colors:
           select_base:
             title: "Basiskleurenpalet selecteren"
@@ -6008,36 +6010,28 @@ nl:
           about: "De door je thema's gebruikte paletten aanpassen. Maak een nieuw palet om te beginnen."
           new_name: "Nieuw kleurenpalet"
           copy_name_prefix: "Kopie van"
-          delete_confirm: "Dit kleurenpalet verwijderen?"
           undo: "Ongedaan maken"
           undo_title: "Je wijzigingen aan deze kleur sinds de laatste keer dat deze is opgeslagen ongedaan maken."
           revert: "Herstellen"
           revert_title: "Deze kleur herstellen naar het standaardkleurenpalet van Discourse."
           primary:
             name: "primair"
-            description: "Meeste tekst, pictogrammen en randen."
           primary-medium:
             name: "primair-gemiddeld"
           primary-low-mid:
             name: "primair-laag-mid"
           secondary:
             name: "secundair"
-            description: "De hoofdachtergrondkleur, en tekstkleur van sommige knoppen."
           tertiary:
             name: "tertiair"
-            description: "Links, sommige knoppen, meldingen en accentkleur."
           quaternary:
             name: "quaternair"
-            description: "Voor optioneel gebruik in thema's."
           header_background:
             name: "koptekstachtergrond"
-            description: "Achtergrondkleur van de koptekst van de website."
           header_primary:
             name: "eerste koptekst"
-            description: "Tekst en pictogrammen in de koptekst van de website."
           highlight:
             name: "markeren"
-            description: "De achtergrondkleur van gemarkeerde elementen op de pagina, zoals berichten en topics."
           highlight-high:
             name: "markeren-hoog"
           highlight-medium:
@@ -6046,19 +6040,14 @@ nl:
             name: "markeren-laag"
           danger:
             name: "gevaar"
-            description: "Markeringskleur voor acties zoals het verwijderen van berichten en topics."
           success:
             name: "succes"
-            description: "Gebruikt om aan te geven dat een actie is gelukt."
           love:
             name: "liefde"
-            description: "De kleur van de likeknop."
           selected:
             name: "geselecteerd"
-            description: "De achtergrondkleur van elementen zoals lijstitems wanneer ze geselecteerd/actief zijn."
           hover:
             name: "zweven"
-            description: "De achtergrondkleur van elementen zoals lijstitems als de muisaanwijzer erop wordt geplaatst of als ze de toetsenbordfocus hebben."
           editor:
             light: "Licht"
             dark: "Donker"

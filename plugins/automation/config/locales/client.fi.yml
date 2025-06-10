@@ -13,12 +13,16 @@ fi:
             delete_automation: poista automaatio
     discourse_automation:
       title: Automaatio
+      table_title: Automaatiot
+      create: Lisää automaatio
+      update: Päivitä automaatio
       back: Takaisin
       edit: Muokkaa
       select_script: Valitse skripti
       select_trigger: Valitse triggeri
       confirm_automation_reset: Tämä toiminto nollaa skripti- ja triggeriasetukset, uusi tila tallennetaan. Haluatko jatkaa?
       confirm_automation_trigger: Tämä toiminto käynnistää automaation, haluatko jatkaa?
+      no_automation_yet: Automaatioita ei ole tällä hetkellä määritetty.
       filter_placeholder: Suodata nimen tai kuvauksen mukaan...
       edit_automation:
         trigger_section:
@@ -163,8 +167,22 @@ fi:
               description: Valinnainen, käynnistyy vain, jos viestillä on jokin näistä tunnisteista
             restricted_categories:
               label: Luokat
+              description: Valinnainen, käynnistyy vain, jos viestin aihe on näissä kategorioissa
+            exclude_subcategories:
+              label: Jätä pois alakategoriat
+              description: Valinnainen, laukaisee vain, jos viestin aihe on täsmälleen yllä mainituissa kategorioissa
+            restricted_archetype:
+              label: Aiheen Tyyppi
+              description: Valinnainen, salli laukaista vain aiheita tai henkilökohtaisia viestejä
+            restricted_groups:
+              label: Rajoitetut ryhmät
+              description: Valinnainen, käynnistyy vain, jos viestin käyttäjä kuuluu johonkin näistä ryhmistä
             restricted_inbox_groups:
+              label: Rajoitetut postilaatikot
               description: Valinnainen, käynnistyy vain, jos viestin ketju on henkilökohtainen viesti jossakin ryhmän postilaatikoista
+            excluded_groups:
+              label: Poisjätetyt ryhmät
+              description: Valinnainen, Ohita laukaisin, jos julkaisun käyttäjä kuuluu johonkin näistä ryhmistä
             ignore_automated:
               label: Ohita automaattiset
               description: Ohita triggeri, jos lähettäjällä on sähköpostiosoite, joka ei ota vastaan vastauksia, tai se on automatisoidusta lähteestä. Koskee vain sähköpostitse luotuja viestejä.
@@ -177,8 +195,14 @@ fi:
             skip_via_email:
               label: "Ohita sähköpostitse"
               description: "Ohita triggeri, jos viesti on luotu sähköpostitse"
+            post_features:
+              label: Viestin ominaisuudet
+              description: "Valinnainen, rajoita laukaisu vain viesteihin, joissa on nämä ominaisuudet"
           created: Luotu
           edited: Muokattu
+          topics: Kaikki aiheet
+          personal_messages: Henkilökohtaiset viestit
+          public_topics: Julkiset aiheet (pois lukien kaikki suojatut luokat)
           with_images: Kuvat
           with_links: Linkit
           with_code: Koodi
@@ -383,6 +407,7 @@ fi:
               label: Yksityisviestit
             sender:
               label: Yksityisviestien lähettäjä
+              description: "Varmista, että lähettäjällä on oikeat oikeudet lähettää yksityisviestejä vastaanottajalle"
         close_topic:
           fields:
             topic:
@@ -406,6 +431,11 @@ fi:
           name:
             label: Triggeri
         automation:
+          runs_today: "%{count} tänään"
+          runs_this_week: "%{count} tällä viikolla"
+          runs_this_month: "%{count} tässä kuussa"
+          runs:
+            label: Ajot
           name:
             label: Nimi
           trigger:
@@ -424,5 +454,7 @@ fi:
             label: Paikkamerkit
           last_updated_at:
             label: Viimeisin päivitys
+          last_run:
+            label: Viimeinen ajo
           last_updated_by:
             label: Päivittänyt
