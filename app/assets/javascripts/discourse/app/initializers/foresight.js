@@ -9,10 +9,10 @@ export default {
       positionHistorySize: 8,
       trajectoryPredictionTime: 80,
       defaultHitSlop: 10,
-      debug: true,
+      debug: false,
       debuggerSettings: {
-        isControlPanelDefaultMinimized: false,
-        showNameTags: true,
+        isControlPanelDefaultMinimized: true,
+        showNameTags: false,
       },
       enableTabPrediction: true,
       tabOffset: 3,
