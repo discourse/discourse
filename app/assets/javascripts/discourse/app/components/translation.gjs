@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { eq } from "truth-helpers";
 import uniqueId from "discourse/helpers/unique-id";
-import { i18n } from "discourse-i18n";
+import I18n, { i18n, PLACEHOLDER } from "discourse-i18n";
 
 /**
  * Provides the ability to interpolate both strings and components into translatable strings. For example:
@@ -10,7 +10,6 @@ import { i18n } from "discourse-i18n";
  * // "some.translation.key" = "Welcome, %{username}! The date is %{shortdate}!"
  * <Translation
  *   @scope="some.translation.key"
- *   @placeholders={{array "username"}}
  *   @options={{hash shortdate=shortDate}}
  * >
  *   <:placeholders as |Placeholder|>
@@ -26,9 +25,19 @@ export default class Translation extends Component {
 
   get textAndPlaceholders() {
     const optionsArg = this.args.options || {};
-    const placeholdersArg = this.args.placeholders || [];
 
-    placeholdersArg.forEach((placeholderKey) => {
+    // Find all of the placeholders in the string we're looking at.
+    const placeholderMatches = I18n.findTranslation(
+      this.args.scope,
+      optionsArg
+    ).match(PLACEHOLDER);
+
+    // We only need to replace the placeholders that aren't being handled by those passed in @options.
+    const placeholders = placeholderMatches
+      .map((placeholder) => placeholder.replace(PLACEHOLDER, "$1"))
+      .filter((placeholder) => !Object.keys(optionsArg).includes(placeholder));
+
+    placeholders.forEach((placeholderKey) => {
       this.placeholderKeys[placeholderKey] =
         `__PLACEHOLDER__${placeholderKey}__${uniqueId()}__`;
       this.placeholderElements[placeholderKey] = document.createElement("span");

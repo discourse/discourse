@@ -1,4 +1,3 @@
-import { array } from "@ember/helper";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import Translation from "discourse/components/translation";
@@ -35,7 +34,7 @@ module("Integration | Component | Translation", function (hooks) {
   test("component", async function (assert) {
     await render(
       <template>
-        <Translation @scope="hello" @placeholders={{array "username"}}>
+        <Translation @scope="hello">
           <:placeholders as |Placeholder|>
             <Placeholder @name="username">
               <UserLink @username="pento">pento</UserLink>

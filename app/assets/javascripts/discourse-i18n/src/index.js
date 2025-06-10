@@ -7,7 +7,7 @@ if (window.I18n) {
 import * as Cardinals from "make-plural/cardinals";
 
 // The placeholder format. Accepts `{{placeholder}}` and `%{placeholder}`.
-const PLACEHOLDER = /(?:\{\{|%\{)(.*?)(?:\}\}?)/gm;
+export const PLACEHOLDER = /(?:\{\{|%\{)(.*?)(?:\}\}?)/gm;
 const SEPARATOR = ".";
 
 export class I18n {
