@@ -3209,6 +3209,9 @@ et:
           disable: "Keela"
           add: "Lisa"
           theme_settings: "Teema seaded"
+          settings: "Seaded"
+          colors: "Värvid"
+          colors_title: "Värvid"
           scss:
             text: "CSS"
           after_header:

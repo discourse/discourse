@@ -5628,6 +5628,7 @@ nl:
             title: "Thema's"
             themes_intro: "Installeer een nieuw thema om te beginnen of maak je eigen thema met behulp van deze bronnen."
             new_theme: "Nieuw thema"
+            install: "Installeren"
           components:
             title: "Onderdelen"
             install: "Installeren"
@@ -5948,6 +5949,10 @@ nl:
           remote_theme_edits: "Als je dit thema wilt bewerken, moet je <a href='%{repoURL}' target='_blank'>een wijziging indienen in de repository</a>"
           repo_unreachable: "Kon geen contact krijgen met de Git-repository van dit thema. Foutbericht:"
           imported_from_archive: "Dit thema is vanuit een .zip-bestand geïmporteerd"
+          settings: "Instellingen"
+          colors: "Kleuren"
+          discard_colors: "Weggooien"
+          colors_title: "Kleuren"
           scss:
             text: "CSS"
           after_header:

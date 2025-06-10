@@ -4209,6 +4209,7 @@ ro:
             title: "Teme"
             themes_intro: "Instalează o temă nouă pentru a începe sau creează una proprie de la zero folosind aceste resurse."
             new_theme: "Temă nouă"
+            install: "Instalează"
           components:
             title: "Componente"
             description: "Personalizări care modifică elemente de suprafață ale designului forumului tău sau adaugă funcții frontale suplimentare"
@@ -4269,7 +4270,6 @@ ro:
             title: "Culori"
           save_changes: "Salvează modificări"
           unsaved_changes: "Ai modificări nesalvate"
-          illegal_character_in_color: "Culorile constau numai din caractere hexazecimale"
           delete_confirm: "Sigur vrei să ștergi această paletă de culori?"
       plugins:
         title: "Plugin-uri"
@@ -4431,6 +4431,11 @@ ro:
           up_to_date: "Tema este actuală, ultima verificare:"
           add: "Adaugă"
           edit_objects_theme_setting: "Editor de setări ale obiectelor"
+          settings: "Setări"
+          colors: "Culori"
+          save_colors: "Salvează culori"
+          discard_colors: "Renunță"
+          colors_title: "Culori"
           scss:
             text: "CSS"
           after_header:

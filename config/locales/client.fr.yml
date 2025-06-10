@@ -5632,6 +5632,7 @@ fr:
             title: "Thèmes"
             themes_intro: "Installez un nouveau thème pour commencer ou créez le vôtre à partir de zéro en utilisant ces ressources."
             new_theme: "Nouveau thème"
+            install: "Installer"
           components:
             title: "Composants"
             install: "Installer"
@@ -5952,6 +5953,10 @@ fr:
           remote_theme_edits: "Pour modifier ce thème, vous devrez <a href='%{repoURL}' target='_blank'>proposer des changements dans son dépôt de développement</a>"
           repo_unreachable: "Le dépôt Git de ce thème est inaccessible. Message d'erreur :"
           imported_from_archive: "Ce thème a été importé depuis un fichier .zip"
+          settings: "Paramètres"
+          colors: "Couleurs"
+          discard_colors: "Abandonner"
+          colors_title: "Couleurs"
           scss:
             text: "CSS"
           after_header:

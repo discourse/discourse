@@ -2966,6 +2966,10 @@ sr:
           enable: "Omogući"
           disable: "Onemogući"
           add: "Dodaj"
+          settings: "Podešavanje"
+          colors: "Boje"
+          discard_colors: "Odbaci"
+          colors_title: "Boje"
           scss:
             text: "CSS"
           footer:
