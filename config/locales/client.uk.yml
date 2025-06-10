@@ -1527,7 +1527,7 @@ uk:
       theme: "Стиль"
       save_to_change_theme: 'Тему буде оновлено після натискання "%{save_text}"'
       home: "Типова головна сторінка"
-      staged: "Попередньо"
+      staged: "Тимчасові"
       staff_counters:
         flags_given:
           one: '<span class="%{className}">%{count}</span> корисний прапор'

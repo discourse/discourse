@@ -418,6 +418,9 @@ pt:
         toggle: "alterna para a seleção em massa de marcadores"
         select_all: "Selecionar Tudo"
         clear_all: "Limpar Tudo"
+        selected_count:
+          one: "%{count} selecionado"
+          other: "%{count} selecionados"
       reminders:
         today_with_time: "hoje às %{time}"
         tomorrow_with_time: "amanhã às %{time}"
@@ -1565,6 +1568,12 @@ pt:
         save: "Guardar"
         title: "Senhas de acesso"
         short_description: "As senhas de acesso são substituições de palavras-passe que validam a sua identidade biometricamente (por exemplo, toque, FaceID) ou através de um PIN/palavra-passe do dispositivo."
+        added_date: "Adicionado em %{date}"
+        last_used_date: "Último uso %{date}"
+        never_used: "Nunca usado"
+        not_allowed_error: "O processo de registo da senha expirou, foi cancelado ou não é permitido."
+        already_added_error: "Já registou esta senha. Não precisa de a registar novamente."
+        confirm_button: "ou utilize uma senha"
       change_about:
         title: "Modificar Sobre Mim"
         error: "Ocorreu um erro ao modificar este valor."
@@ -1583,7 +1592,19 @@ pt:
         success: "Enviámos um email para esse endereço. Por favor siga as instruções de confirmação."
         success_via_admin: "Enviámos um e-mail para esse endereço. O utilizador terá de seguir as instruções de confirmação no e-mail.."
         success_staff: "Nós enviámos uma mensagem para o seu endereço atual. Por favor, siga as instruções de confirmação."
+        back_to_preferences: "Voltar às preferências"
         confirm_success: "O seu email foi atualizado."
+        confirm: "Confirmar"
+        authorizing_new:
+          description: "Por favor, confirme que gostaria que o seu endereço de e-mail fosse alterado para:"
+          description_add: "Por favor, confirme que gostaria de adicionar um endereço de e-mail alternativo:"
+        authorizing_old:
+          title: "Verificar endereço de e-mail antigo"
+          description: "Verifique o seu endereço de e-mail antigo para continuar a alterar o seu e-mail:"
+          description_add: "Verifique o seu endereço de e-mail existente para continuar a adicionar um endereço alternativo:"
+          old_email: "E-mail antigo: %{email}"
+          new_email: "Novo e-mail: %{email}"
+          confirm_success: "Enviámos um e-mail para o seu novo endereço de e-mail para confirmar a alteração!"
       change_avatar:
         title: "Alterar a sua imagem de perfil"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, com base em"
@@ -1596,6 +1617,7 @@ pt:
         upload_title: "Carregar a sua foto"
         image_is_not_a_square: "Alerta: cortámos a sua imagem; o comprimento e a altura não eram iguais."
         logo_small: "Logotipo pequeno do site. Usado por padrão."
+        use_custom: "Ou carregue um avatar personalizado:"
       change_profile_background:
         title: "Cabeçalho do Perfil"
         instructions: "Os cabeçalhos do perfil serão centrados e com uma largura padrão de 1110px."
@@ -1612,6 +1634,7 @@ pt:
         primary_label: "primária"
         unconfirmed_label: "não confirmado"
         resend_label: "reenviar e-mail de confirmação"
+        resending_label: "a enviar..."
         resent_label: "e-mail enviado"
         update_email: "Alterar Email"
         set_primary: "Definir E-mail Principal"
@@ -1638,16 +1661,19 @@ pt:
         not_connected: "(não associado)"
         confirm_modal_title: "Conectar Conta de %{provider}"
         confirm_description:
+          disconnect: "A sua conta %{provider} existente '%{account_description}' será desligada."
           account_specific: "Sua conta de %{provider} '%{account_description}' será usada para autenticação."
           generic: "Sua conta de %{provider} '' será usada para autenticação."
       activate_account:
         action: "Clique aqui para ativar a sua conta"
         already_done: "Pedimos desculpa, esta hiperligação de confirmação já não está válida. Talvez a sua conta já esteja ativa?"
         please_continue: "A sua nova conta foi confirmada; será redirecionado para a página principal."
+        continue_button: "Terminar!"
         welcome_to: "Bem-vindo a %{site_name}!"
         approval_required: "Um moderador tem que aprovar a sua conta antes de poder aceder a este fórum. Irá receber um email quando a sua conta for aprovada!"
       name:
         title: "Nome"
+        title_optional: "Nome (opcional)"
         instructions: "O seu nOme cOmpletO (OpciOnal)"
         instructions_required: "O seu nome completo"
         required: "Por favor introduza um nome"
@@ -1655,12 +1681,14 @@ pt:
         ok: "O seu nome parece adequado"
       username:
         title: "Nome de Utilizador"
+        instructions: "Único, sem espaços, curto"
         short_instructions: "As pessoas podem mencioná-lo como %{username}"
         available: "O seu nome de utilizador está disponível"
         not_available: "Não está disponível. Tente %{suggestion}?"
         not_available_no_suggestion: "Indisponível"
         too_short: "O seu nome de utilizador é muito curto"
         too_long: "O seu nome de utilizador é muito longo"
+        checking: "Verificar a disponibilidade do nome de utilizador…"
         prefilled: "O e-mail corresponde com este nome de utilizador registado"
         required: "Por favor introduza um nome de utilizador"
         edit: "Editar nome de usuário"
@@ -1678,6 +1706,7 @@ pt:
         instructions: "O registo da conta requer um código de convite"
       auth_tokens:
         title: "Dispositivos Recentemente Utilizados"
+        short_description: "Esta é uma lista de dispositivos que entraram recentemente na sua conta."
         details: "Detalhes"
         log_out_all: "Sair de todas as contas"
         not_you: "Não é a sua conta?"
@@ -1698,6 +1727,7 @@ pt:
       location: "Localização"
       website: "Site da Web"
       email_settings: "E-mail"
+      hide_profile: "Ocultar o meu perfil público"
       enable_physical_keyboard: "Ativar suporte para teclado físico no iPad"
       text_size:
         title: "Tamanho do Texto"
@@ -1710,6 +1740,8 @@ pt:
         title: "O título da página em segundo plano exibe a contagem de:"
         notifications: "Novas notificações"
         contextual: "Conteúdo da nova página"
+      bookmark_after_notification:
+        title: "Após o envio de uma notificação de lembrete de marcador:"
       like_notification_frequency:
         title: "Notificar quando alguém gostar"
         always: "Sempre"
@@ -1730,9 +1762,11 @@ pt:
         every_month: "cada mês"
         every_six_months: "a cada seis meses"
       email_level:
+        title: "Envie-me um e-mail quando for citado, respondido, o meu @nomedeutilizador for mencionado ou quando houver nova atividade nas minhas categorias, etiquetas ou tópicos monitorizados"
         always: "sempre"
         only_when_away: "só quando não estiver online"
         never: "nunca"
+      email_messages_level: "Envie-me um e-mail quando receber uma mensagem pessoal"
       include_tl0_in_digests: "Incluir o conteúdo dos novos utilizadores nas mensagens de resumo"
       email_in_reply_to: "Incluir um excerto de resposta para publicar nas mensgaens"
       other_settings: "Outros"
@@ -1757,6 +1791,12 @@ pt:
         after_4_minutes: "depois de 4 minutos"
         after_5_minutes: "depois de 5 minutos"
         after_10_minutes: "depois de 10 minutos"
+      notification_level_when_replying:
+        label: "Ao publicar"
+        watch_topic: "Ver tópico"
+        track_topic: "Acompanhar o tópico"
+        do_nothing: "Não faça nada"
+      topics_unread_when_closed: "Considera os tópicos não lidos quando são fechados"
       invited:
         title: "Convites"
         pending_tab: "Pendente"
@@ -1777,6 +1817,7 @@ pt:
         reinvite: "Reenviar Email"
         reinvited: "Convite reenviado"
         removed: "Removido"
+        search: "digite para pesquisar convites…"
         user: "Utilizador Convidado"
         none: "Sem convites para exibir."
         truncated:
@@ -1807,19 +1848,48 @@ pt:
           title: "Link de Convite"
           success: "Hiperligação do convite gerada com sucesso!"
           error: "Ocorreu um erro ao gerar o Link de Convite"
+        cannot_invite_to_forum: "Lamentamos, não tem permissão para criar convites. Contacte um administrador para lhe conceder permissão para convites."
         invite:
+          new_title: "Convidar membros"
+          edit_title: "Editar convite"
           expires_in_time: "Expira em %{time}"
           expired_at_time: "Expirou em %{time}"
+          create_link_to_invite: "Cria uma ligação que possa ser partilhada para conceder instantaneamente acesso a este site."
+          copy_link_and_share_it: "Copie a ligação abaixo e partilhe para conceder acesso instantâneo a este site."
           copy_link: "Copiar link"
+          link_copied: "Ligação copiada!"
+          share_link: "Partilhar ligação"
+          link_validity_MF: |
+            O link é válido até { user_count, plural,
+                one {# user}
+              other {# users}
+            } e expira em { duration_days, plural,
+                one {# day}
+              other {# days}
+            }.
+          edit_link_options: "Edite as opções de ligação ou envie por e-mail."
           show_advanced: "Mostrar Opções Avançadas"
           hide_advanced: "Ocultar Opções Avançadas"
           restrict: "Restringir a"
+          restrict_email: "Restringir ao e-mail"
+          restrict_domain: "Restringir ao domínio"
+          email_or_domain_placeholder: "name@example.com ou example.com"
           max_redemptions_allowed: "Máximo de utilizações"
           add_to_groups: "Adicionar aos grupos"
+          invite_to_topic: "Chegar ao tópico"
+          expires_at: "Expira em"
           expires_after: "Expira após"
+          custom_message: "Mensagem personalizada"
+          custom_message_placeholder: "Acrescente uma nota pessoal ao seu convite"
           send_invite_email: "Guardar e Enviar E-mail"
+          send_invite_email_instructions: "Restringir convites para e-mail aos e-mails de convite"
           update_invite: "Atualização"
+          update_invite_and_send_email: "Atualizar e enviar e-mail"
           cancel: "Cancelar"
+          create_link: "Criar ligação"
+          create_link_and_send_email: "Criar ligação e enviar e-mail"
+          invite_saved_without_sending_email: "Convite guardado. Copie o link abaixo e partilhe para conceder acesso instantâneo a este sítio."
+          invite_saved_with_sending_email: "O e-mail de convite foi enviado. Também pode copiar a ligação abaixo e partilhá-lo para conceder acesso instantâneo a este sítio."
         bulk_invite:
           none: "Sem convites para exibir nesta página."
           text: "Convite em massa"
@@ -1827,17 +1897,35 @@ pt:
             <p>Convide uma lista de usuários para fazer sua comunidade funcionar rapidamente. Prepare um <a href="https://en.wikipedia.org/wiki/Comma-separated_values" target="_blank">arquivo CSV</a> contendo pelo menos uma linha por endereço de e-mail dos usuários que você deseja convidar. As seguintes informações separadas por vírgulas podem ser fornecidas se você quiser adicionar pessoas a grupos ou enviá-las para um tópico específico na primeira vez que elas entrarem.</p>
             <pre>john@smith.com,first_group_name;second_group_name,topic_id</pre>
             <p>A cada endereço de e-mail em seu arquivo CSV carregado será enviado um convite e você poderá administrar depois.</p>
+          progress: "Carregado %{progress}%…"
           success: "Arquivo enviado com sucesso. Você será notificado via mensagem quando o processo estiver completo."
           error: "Desculpe, o ficheiro deverá estar no formato CSV."
       confirm_access:
         title: "Confirmar acesso"
+        incorrect_password: "A senha introduzida está incorreta."
+        incorrect_passkey: "Esta senha está incorreta."
+        logged_in_as: "Está ligado como: "
+        forgot_password: "Esqueceu-se da sua senha?"
+        password_reset_email_sent: "Envia um e-mail de redefinição da palavra-passe."
+        cannot_send_password_reset_email: "Não foi possível enviar o e-mail de redefinição da senha."
+        instructions: "Por favor, confirme a sua identidade para completar esta ação."
+        fine_print: "Pedimos que confirme a sua identidade, pois esta é uma ação potencialmente sensível. Após a autenticação, só será solicitado a autenticar-se novamente após algumas horas de inatividade."
       password:
         title: "Palavra-passe"
+        too_short:
+          one: "A sua senha é muito curta (o mínimo é %{count} caracteres)."
+          other: "A sua senha é muito curta (o mínimo é %{count} caracteres)."
         common: "Essa palavra-passe é muito comum."
         same_as_username: "A sua palavra-passe é a mesma que o seu nome de utilizador."
+        same_as_name: "A sua senha é a mesma que o seu nome."
         same_as_email: "A sua palavra-passe é a mesma que o seu e-mail."
         ok: "A sua palavra-passe parece estar bem."
+        instructions:
+          one: "Pelo menos %{count} caracteres"
+          other: "Pelo menos %{count} carateres"
         required: "Por favor, digite uma senha"
+        confirm: "Confirmar"
+        incorrect_password: "A senha introduzida está incorreta."
       summary:
         title: "Resumo"
         stats: "Estatísticas"
@@ -1899,8 +1987,11 @@ pt:
       title:
         title: "Título"
         none: "(nenhum)"
+        instructions: "aparece depois do seu nome de utilizador"
       flair:
+        title: "Etiqueta"
         none: "(nenhum)"
+        instructions: "ícone apresentado ao lado da sua fotografia de perfil"
       status:
         title: "Status customizado"
         not_set: "Não definido"
@@ -1914,24 +2005,36 @@ pt:
         sent_by: "Enviado por"
         private_message: "mensagem"
         the_topic: "o tópico"
+      card: "Cartão de utilizador"
+      profile_link: "%{username}, visite o perfil"
     user_status:
       save: "Guardar"
       set_custom_status: "Definir status customizado"
       what_are_you_doing: "O que está fazendo?"
       pause_notifications: "Pausar notificações"
       remove_status: "Remover status"
+    presence_toggle:
+      online: "Online"
+      offline: "Offline"
+      title: "Alterna as caraterísticas de presença"
     user_tips:
       button: "Entendi!"
+      skip: "Ignorar dicas"
       first_notification:
         title: "Sua primeira notificação!"
+        content: "As notificações são utilizadas para te manteres atualizado sobre o que está a acontecer na comunidade."
       topic_timeline:
         title: "Linha do tempo do tópico"
+        content: "Percorre rapidamente tópicos longos utilizando a linha cronológica de tópicos."
       post_menu:
         title: "Menu de publicação"
+        content: "Vê de que outra forma podes interagir com o post clicando nos três pontos!"
       topic_notification_levels:
         title: "Agora você está acompanhando este tópico"
+        content: "Procura este sino para ajustares as tuas preferências de notificação para tópicos específicos ou categorias inteiras."
       suggested_topics:
         title: "Coninue lendo!"
+        content: "Aqui estão alguns tópicos que pensamos que poderás gostar de ler a seguir."
     loading: "A carregar..."
     errors:
       prev_page: "enquanto tenta carregar"
@@ -1958,9 +2061,24 @@ pt:
     form_kit:
       reset: Repor
       optional: opcional
+      errors_summary_title: "Este formulário contém erros:"
+      dirty_form: "Não submeteste as tuas alterações! Tens a certeza de que queres sair?"
       errors:
         required: "Necessário"
+        invalid_url: "Deve ser um URL válido"
+        not_an_integer: "Deve ser um número inteiro"
+        not_accepted: "Deve ser aceite"
+        not_a_number: "Deve ser um número"
+        too_high: "Deve ser no máximo %{count}"
+        too_low: "Deve ser, no mínimo, %{count}"
+        too_long:
+          one: "Deve ter no máximo %{count} carácter"
+          other: "Deve ter no máximo %{count} caracteres"
+        too_short:
+          one: "Deve ter pelo menos %{count} carácter"
+          other: "Deve ter pelo menos %{count} caracteres"
     close: "Fechar"
+    assets_changed_confirm: "Este site acabou de receber uma atualização de software. Obtém a versão mais recente agora?"
     logout: "A sua sessão foi encerrada."
     refresh: "Atualizar"
     home: "Início"
@@ -1968,6 +2086,10 @@ pt:
       enabled: "Este site está no modo só de leitura. Por favor, continue a navegar, mas responder, gostar e outras ações estão de momento desativadas."
       login_disabled: "Enquanto o site se encontrar no modo só de leitura, a opção de iniciar a sessão está desativada."
       logout_disabled: "Enquanto o site se encontrar no modo só de leitura, a opção de terminar a sessão está desativada."
+    staff_writes_only_mode:
+      enabled: "Este sítio está em modo de acesso reservado aos funcionários. Continua a navegar, mas as respostas, os gostos e outras acções estão limitados apenas aos membros da equipa."
+    learn_more: "Saber mais"
+    learn_more_with_link: "<a href='%{url}' target='_blank'>Mais informações em…</a>"
     mute: Silenciar
     unmute: Desativar silêncio
     last_post: Publicado
@@ -1982,15 +2104,35 @@ pt:
       other: respostas
     signup_cta:
       sign_up: "Inscrever-se"
+      hide_session: "Talvez mais tarde"
       hide_forever: "não, obrigado"
       hidden_for_session: "OK, perguntaremos a você amanhã. Você sempre pode usar 'Efetuar Login' para criar uma conta, também."
       intro: "Olá! Parece que está a gostar da conversa, mas ainda não tem uma conta."
+      value_prop: "Estás cansado de percorrer as mesmas mensagens? Ao criares uma conta, voltarás sempre ao ponto onde paraste. Com uma conta, também podes ser notificado de novas respostas, guardar favoritos e utilizar os gostos para agradecer aos outros. Todos nós podemos trabalhar juntos para tornar esta comunidade fantástica. :heart:"
+    offline_indicator:
+      no_internet: "Não tens ligação à Internet."
+      refresh_page: "Actualiza a página"
     summary:
+      in_progress: "Resumir um tópico utilizando a IA"
+      summarized_on: "Resumido com IA em %{date}"
+      model_used: "AI utilizada: %{model}"
+      outdated: "O resumo está desatualizado"
+      outdated_posts:
+        one: "(%{count} publicação em falta)"
+        other: "(%{count} publicações em falta)"
+      enabled_description: "Estás a ver as respostas principais este tópico: as mensagens mais interessantes determinadas pela comunidade."
+      description:
+        one: "Há <b>%{count}</b> resposta."
+        other: "Existem <b>%{count}</b> respostas."
       buttons:
+        hide: "Ocultar resumo"
         generate: "Resumir"
         regenerate: "Regenerar"
+      enable: "Mostrar respostas principais"
       disable: "Mostrar Todas As Publicações"
+      short_label: "Principais respostas"
       show_all_label: "Mostrar tudo"
+      short_title: "Mostrar as principais respostas deste tópico: as publicações mais interessantes determinadas pela comunidade"
     deleted_filter:
       enabled_description: "Este tópico contém respostas eliminadas, que foram ocultadas."
       disabled_description: "As publicações eliminadas no tópico são exibidas."
@@ -1998,11 +2140,15 @@ pt:
       disable: "Mostrar Publicações Eliminadas"
     private_message_info:
       title: "Mensagem"
+      invite: "Convida outras pessoas…"
+      edit: "Adiciona ou remove…"
+      remove: "Remover…"
       add: "Adicionar…"
       leave_message: "Quer mesmo deixar esta mensagem?"
       remove_allowed_user: "Deseja mesmo remover %{name} desta mensagem?"
       remove_allowed_group: "Deseja mesmo remover %{name} desta mensagem?"
       leave: "Sair"
+      remove_group: "Remover grupo"
       remove_user: "Remover utilizador"
     email: "E-mail"
     username: "Nome de utilizador"
@@ -2016,14 +2162,21 @@ pt:
       disclaimer: "Ao registar-se, concorda com a <a href='%{privacy_link}' target='blank'>política de privacidade</a> e os <a href='%{tos_link}' target='blank'>termos do serviço</a>."
       title: "Inscrever-se"
       failed: "Ocorreu algo de errado, este e-mail já pode estar registado. Tente utilizar a hiperligação \"Esqueci-me da Palavra-passe\"."
+      associate: "Já tens uma conta? <a href='%{associate_link}'>Inicia sessão</a> para associar a tua conta %{provider} ."
+      activation_title: "Ativar a tua conta"
+      already_have_account: "Já tens uma conta?"
+      no_account_yet: "Não tens uma conta?"
       progress_bar:
         signup: "Inscrever-se"
+        activate: "Ativar"
         approve: "Aprovar"
         login: "Iniciar Sessão"
     forgot_password:
       title: "Repor Palavra-Passe"
       action: "Eu esqueci-me da minha palavra-passe"
       invite: "Insira o seu nome de utilizador ou o endereço de e-mail, e nós iremos enviar-lhe uma mensagem para repor a sua palavra-passe."
+      invite_no_username: "Introduz o teu endereço de e-mail e enviar-te-emos um e-mail de redefinição da senha."
+      email-username: "E-mail ou nome de utilizador"
       reset: "Repor Palavra-passe"
       complete_username: "Se uma conta corresponder ao nome de utilizador <b>%{username}</b>, deverá receber em pouco tempo uma mensagem com as instruções para repor a sua palavra-passe."
       complete_email: "Se uma conta corresponder com<b>%{email}</b>, deverá receber em pouco tempo uma mensagem com as instruções para repor a sua palavra-passe."
@@ -2053,26 +2206,36 @@ pt:
       username: "Utilizador"
       password: "Palavra-passe"
       show_password: "Mostrar"
+      hide_password: "Ocultar"
+      show_password_title: "Mostra a senha"
+      hide_password_title: "Esconde a senha"
       second_factor_title: "Autenticação em Dois Passos"
       second_factor_description: "Por favor introduza um código de autenticação a partir da sua aplicação:"
       second_factor_backup: "Faça login usando um código de backup"
       second_factor_backup_title: "Backup de Dois Fatores"
       second_factor_backup_description: "Por favor introduza um dos seus códigos de reserva:"
       second_factor: "Efetue login usando o aplicativo Authenticator"
+      security_key_description: "Quando tiveres a tua senha física ou um dispositivo móvel compatível preparado, prime o botão Autenticar com a senha abaixo."
       security_key_alternative: "Tente de outra forma"
       security_key_authenticate: "Autenticar com Chave de Segurança"
       security_key_not_allowed_error: "O processo de autenticação da chave de segurança atingiu o tempo limite ou foi cancelado."
       security_key_no_matching_credential_error: "Nenhuma credencial correspondente foi encontrada na chave de segurança fornecida."
       security_key_support_missing_error: "Seu dispositivo ou navegador atual não suporta o uso de chaves de segurança. Use um método diferente."
+      security_key_invalid_response_error: "O processo de autenticação da senha falhou devido a uma resposta inválida."
+      passkey_security_error: "Ocorreu um erro de segurança: %{message}"
       email_placeholder: "Email / Nome de Usuário"
       caps_lock_warning: "Caps Lock está ligada"
       error: "Erro desconhecido"
       cookies_error: "Seu navegador parece ter cookies desativados. Talvez você não consiga fazer login sem ativá-los primeiro."
       rate_limit: "Por favor, aguarde antes de tentar iniciar a sessão novamente."
+      password_expired: "A tua senha expirou. Por favor, repõe <a href='%{reset_url}'>a tua palavra-passe</a>."
       blank_username: "Por favor, insira o seu e-mail ou nome de utilizador."
       blank_username_or_password: "Por favor, insira o seu e-mail ou nome de utilizador, e a palavra-passe."
       reset_password: "Repor Palavra-passe"
+      logging_in: "Iniciar sessão…"
+      previous_sign_up: "Já tens uma conta?"
       or: "Ou"
+      authenticating: "Autenticando…"
       awaiting_activation: "A sua conta está a aguardar ativação. Utilize a hiperligação \"Esqueci-me da Palavra-passe\" para pedir uma nova mensagem de ativação."
       awaiting_approval: "A sua conta ainda não foi aprovada por um membro da equipa. Nós Iremos enviar uma mensagem quando esta for aprovada."
       requires_invite: "Desculpe, o acesso a este fórum é apenas através de convite."
@@ -2093,6 +2256,8 @@ pt:
       not_approved: "A sua conta ainda não foi aprovada. Será notificado por mensagem quando estiver pronto para iniciar a sessão."
       google_oauth2:
         name: "Google"
+        title: "Inicia sessão com o Google"
+        sr_title: "Inicia sessão com o Google"
       twitter:
         name: "Twitter"
         title: "Cadastrar-se com o Twitter"
@@ -2113,10 +2278,19 @@ pt:
         name: "Discord"
         title: "Iniciar sessão com o Discord"
         sr_title: "Iniciar sessão com o Discord"
+      linkedin_oidc:
+        name: "LinkedIn"
+        title: "Inicia sessão com o LinkedIn"
+        sr_title: "Inicia sessão com o LinkedIn"
+      passkey:
+        name: "Inicia sessão com uma senha"
       second_factor_toggle:
         totp: "Use um aplicativo de autenticação"
         backup_code: "Use um código de backup"
         security_key: "Em vez disso, usar uma chave de segurança"
+      no_login_methods:
+        title: "Sem métodos de início de sessão"
+        description: "Não estão configurados métodos de início de sessão. Os administradores podem visitar <a href='%{adminLoginPath}' target='_blank'>%{adminLoginPath}</a> para reconfigurar o sítio."
     invites:
       accept_title: "Convite"
       welcome_to: "Bem-vindo a %{site_name}!"
@@ -2140,12 +2314,15 @@ pt:
       categories_only: "Apenas Categorias"
       categories_with_featured_topics: "Categorias com Tópicos Destacados"
       categories_and_latest_topics: "Categorias e Tópicos Recentes"
+      categories_and_latest_topics_created_date: "Categorias e Tópicos mais recentes (ordena por data de criação do tópico)"
       categories_and_top_topics: "Categorias e Melhores Tópicos"
       categories_boxes: "Caixas com Subcategorias"
       categories_boxes_with_topics: "Caixas com Tópicos em Destaque"
+      subcategories_with_featured_topics: "Subcategorias com tópicos em destaque"
     full_name_requirement:
       required_at_signup: "Necessário"
       optional_at_signup: "Opcional"
+      hidden_at_signup: "Opcional, oculto na inscrição"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -2189,6 +2366,10 @@ pt:
     date_time_picker:
       from: De
       to: Para
+    file_size_input:
+      error:
+        size_too_large: "%{provided_file_size} é superior ao valor máximo permitido %{max_file_size}"
+        size_too_small: "%{provided_file_size} é menor do que o mínimo permitido %{min_file_size}"
     emoji_picker:
       filter_placeholder: Pesquisar por emoji
       smileys_&_emotion: Smileys e Emojis
@@ -2227,11 +2408,15 @@ pt:
       insert_table: "Inserir tabela"
       posting_not_on_topic: "A que tópico quer responder?"
       saved_local_draft_tip: "guardado localmente"
+      similar_topics: "O teu tópico é semelhante a…"
       drafts_offline: "rascunhos off-line"
       edit_conflict: "editar conflito"
       esc: "esc"
       esc_label: "descartar mensagem"
       ok_proceed: "Ok, continuar"
+      group_mentioned_limit:
+        one: "<b>Atenção!</b> Referiu <a href='%{group_link}'>%{group}</a>, no entanto este grupo tem mais membros do que o limite de menções configurado pelo administrador de %{count} utilizadores. Ninguém será notificado."
+        other: "<b>Atenção!</b> Referiu <a href='%{group_link}'>%{group}</a>, no entanto este grupo tem mais membros do que o limite de menções configurado pelo administrador de %{count} utilizadores. Ninguém será notificado."
       cannot_see_mention:
         category: "Mencionou %{username}, mas este utilizador não será notificado porque não têm acesso a esta categoria. Terá de o adicionar a um grupo que tenha acesso a esta categoria."
         muted_topic: "Mencionou @%{username}, mas não será possível notifica-lo pois o utilizador silenciou este tópico."
