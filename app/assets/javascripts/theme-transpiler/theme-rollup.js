@@ -9,7 +9,7 @@ import { precompile } from "ember-source/dist/ember-template-compiler";
 import EmberThisFallback from "ember-this-fallback";
 import MagicString from "magic-string";
 import { dirname, join } from "path";
-import { minify as terserMinify } from "terser";
+// import { minify as terserMinify } from "terser";
 import { WidgetHbsCompiler } from "discourse-widget-hbs/lib/widget-hbs-compiler";
 import { browsers } from "../discourse/config/targets";
 import AddThemeGlobals from "./add-theme-globals";
@@ -52,13 +52,14 @@ globalThis.rollup = function (modules, opts) {
     input: "virtual:main",
     logLevel: "info",
     onLog(level, message) {
+      // eslint-disable-next-line no-console
       console.log(level, message);
     },
     plugins: [
       {
         name: "discourse-extensionsearch",
         async resolveId(source, context) {
-          console.log(`Running extensionsearch ${source}`);
+          // console.log(`Running extensionsearch ${source}`);
 
           if (source.match(/\.(js|gjs|hbs)$/)) {
             return null;
@@ -315,6 +316,7 @@ const __COLOCATED_TEMPLATE__ = template;
       };
     })
     .catch((error) => {
+      // eslint-disable-next-line no-console
       console.error(error);
       lastRollupError = error;
     });
