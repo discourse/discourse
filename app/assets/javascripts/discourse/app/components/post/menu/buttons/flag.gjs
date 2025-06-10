@@ -7,20 +7,15 @@ import { applyValueTransformer } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
 
 export default class PostMenuFlagButton extends Component {
+
   static shouldRender(args, helper) {
     const { post } = args;
     const { reviewable_id, canFlag, hidden } = post;
-    const siteSettings = helper.siteSettings;
-    const currentUser = helper.currentUser;
 
-    let show = false;
-    if (siteSettings && currentUser) { // Ensure services are available
-      if (reviewable_id && siteSettings.reviewable_claiming_enabled) {
-        show = true;
-      } else if (canFlag && !hidden) {
-        show = true;
-      }
-    }
+    let show = reviewable_id ||
+    (canFlag && !hidden) ||
+    (helper.siteSettings.allow_all_users_to_flag_illegal_content &&
+      !helper.currentUser);
 
     // Allow plugins to modify this decision
     return applyValueTransformer(
