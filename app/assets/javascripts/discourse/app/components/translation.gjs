@@ -1,8 +1,25 @@
 import Component from "@glimmer/component";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
+import { eq } from "truth-helpers";
 import uniqueId from "discourse/helpers/unique-id";
 import { i18n } from "discourse-i18n";
 
+/**
+ * Provides the ability to interpolate both strings and components into translatable strings. For example:
+ *
+ * // "some.translation.key" = "Welcome, %{username}! The date is %{shortdate}!"
+ * <Translation
+ *   @scope="some.translation.key"
+ *   @placeholders={{array "username"}}
+ *   @options={{hash shortdate=shortDate}}
+ * >
+ *   <:placeholders as |placeholder|>
+ *     <placeholder @name="username">
+ *       <UserLink @user={{user}}>{{user.username}}</UserLink>
+ *     </placeholder>
+ *   </:placeholders>
+ * </Translation>
+ **/
 export default class Translation extends Component {
   placeholderKeys = new TrackedObject();
   placeholderElements = {};
@@ -50,6 +67,14 @@ export default class Translation extends Component {
     return parts;
   }
 
+  placeholderElement(placeholder) {
+    return <template>
+      {{#if (eq placeholder @name)}}
+        {{yield}}
+      {{/if}}
+    </template>;
+  }
+
   <template>
     {{#each this.textAndPlaceholders as |segment|}}
       {{segment}}
@@ -57,7 +82,7 @@ export default class Translation extends Component {
 
     {{#each-in this.placeholderElements as |placeholderKey placeholderElement|}}
       {{#in-element placeholderElement}}
-        {{yield placeholderKey to="placeholders"}}
+        {{yield (this.placeholderElement placeholderKey) to="placeholders"}}
       {{/in-element}}
     {{/each-in}}
   </template>

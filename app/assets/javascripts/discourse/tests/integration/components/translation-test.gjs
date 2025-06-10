@@ -1,7 +1,6 @@
 import { array } from "@ember/helper";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import { eq } from "truth-helpers";
 import Translation from "discourse/components/translation";
 import UserLink from "discourse/components/user-link";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -37,10 +36,10 @@ module("Integration | Component | Translation", function (hooks) {
     await render(
       <template>
         <Translation @scope="hello" @placeholders={{array "username"}}>
-          <:placeholders as |item|>
-            {{#if (eq item "username")}}
+          <:placeholders as |placeholder|>
+            <placeholder @name="username">
               <UserLink @username="pento">pento</UserLink>
-            {{/if}}
+            </placeholder>
           </:placeholders>
         </Translation>
       </template>
