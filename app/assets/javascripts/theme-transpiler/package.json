@@ -7,7 +7,7 @@
   "license": "GPL-2.0-only",
   "keywords": [],
   "dependencies": {
-    "@babel/standalone": "^7.27.5",
+    "@babel/standalone": "^7.27.6",
     "@csstools/postcss-light-dark-function": "^2.0.9",
     "autoprefixer": "^10.4.21",
     "babel-plugin-ember-template-compilation": "^2.4.1",
@@ -26,7 +26,7 @@
     "postcss-js": "^4.0.1",
     "postcss-media-minmax": "^5.0.0",
     "source-map-js": "^1.2.1",
-    "terser": "^5.40.0"
+    "terser": "^5.42.0"
   },
   "engines": {
     "node": ">= 18",

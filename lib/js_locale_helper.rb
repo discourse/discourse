@@ -319,7 +319,15 @@ module JsLocaleHelper
 
   def self.moment_locale(locale, timezone_names: false)
     _, filename = find_moment_locale([locale], timezone_names: timezone_names)
-    filename && File.exist?(filename) ? File.read(filename) << "\n" : ""
+    if filename && File.exist?(filename)
+      <<~JS
+        (function(){
+        #{File.read(filename)}
+        }).apply(globalThis);
+      JS
+    else
+      ""
+    end
   end
 
   def self.remove_message_formats!(translations, locale)
