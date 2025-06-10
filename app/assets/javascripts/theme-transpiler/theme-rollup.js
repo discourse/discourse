@@ -17,9 +17,6 @@ import BabelReplaceImports from "./babel-replace-imports";
 import { Preprocessor } from "./content-tag";
 import rollupVirtualImports from "./rollup-virtual-imports";
 
-const COLOCATED_CONNECTOR_REGEX =
-  /^(?<prefix>.*\/?)connectors\/(?<outlet>[^/]+)\/(?<name>[^/\.]+)\.(?<extension>.+)$/;
-
 const thisFallbackPlugin = EmberThisFallback._buildPlugin({
   enableLogging: false,
   isTheme: true,
@@ -283,28 +280,6 @@ const __COLOCATED_TEMPLATE__ = template;
               map,
             };
           },
-        },
-      },
-      {
-        name: "discourse-prefix-connector-template-paths",
-        resolveId(id, context) {
-          if (id.endsWith(".hbs") && id.startsWith("discourse/connectors/")) {
-            return id.replace(
-              "discourse/connectors",
-              "discourse/templates/connectors"
-            );
-          }
-        },
-        load(id) {
-          if (id.startsWith("discourse/templates/connectors")) {
-            return modules[
-              id.replace(
-                "discourse/templates/connectors",
-                "discourse/connectors"
-              )
-            ];
-          }
-          return null;
         },
       },
       // {
