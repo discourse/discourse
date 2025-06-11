@@ -345,11 +345,7 @@ class UserMerger
 
     update_user_id(:group_users, conditions: "x.group_id = y.group_id")
 
-    in_mail =
-      Benchmark.measure do
-        IncomingEmail.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
-      end
-    puts "time updating incoming email: #{in_mail.real.round(2)}"
+    IncomingEmail.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
 
     in_link =
       Benchmark.measure do
@@ -365,29 +361,17 @@ class UserMerger
       end
     puts "time updating incoming link current user: #{in_link_curr.real.round(2)}"
 
-    in_user =
-      Benchmark.measure do
-        InvitedUser.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
-      end
-    puts "time updating invited user: #{in_user.real.round(2)}"
+    InvitedUser.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
 
-    invie =
-      Benchmark.measure do
-        Invite
-          .with_deleted
-          .where(invited_by_id: @source_user.id)
-          .update_all(invited_by_id: @target_user.id)
-      end
-    puts "time updating invite: #{invie.real.round(2)}"
+    Invite
+      .with_deleted
+      .where(invited_by_id: @source_user.id)
+      .update_all(invited_by_id: @target_user.id)
 
-    in_del =
-      Benchmark.measure do
-        Invite
-          .with_deleted
-          .where(deleted_by_id: @source_user.id)
-          .update_all(deleted_by_id: @target_user.id)
-      end
-    puts "time updating invite with delete: #{in_del.real.round(2)}"
+    Invite
+      .with_deleted
+      .where(deleted_by_id: @source_user.id)
+      .update_all(deleted_by_id: @target_user.id)
 
     update_user_id(:muted_users, conditions: "x.muted_user_id = y.muted_user_id")
     update_user_id(
@@ -436,21 +420,36 @@ class UserMerger
           .with_deleted
           .where(deleted_by_id: @source_user.id)
           .update_all(deleted_by_id: @target_user.id)
+      end
+
+    puts "=> time updating posts - deleted by: #{posts_with.real.round(2)}"
+    posts_with =
+      Benchmark.measure do
         Post
           .with_deleted
           .where(last_editor_id: @source_user.id)
           .update_all(last_editor_id: @target_user.id)
+      end
+
+    puts "=> time updating posts - last editor: #{posts_with.real.round(2)}"
+    posts_with =
+      Benchmark.measure do
         Post
           .with_deleted
           .where(locked_by_id: @source_user.id)
           .update_all(locked_by_id: @target_user.id)
+      end
+
+    puts "=> time updating posts - locked by: #{posts_with.real.round(2)}"
+    posts_with =
+      Benchmark.measure do
         Post
           .with_deleted
           .where(reply_to_user_id: @source_user.id)
           .update_all(reply_to_user_id: @target_user.id)
       end
 
-    puts "=> time updating posts: #{posts_with.real.round(2)}"
+    puts "=> time updating posts - reply to: #{posts_with.real.round(2)}"
 
     Reviewable.where(created_by_id: @source_user.id).update_all(created_by_id: @target_user.id)
     ReviewableHistory.where(created_by_id: @source_user.id).update_all(
