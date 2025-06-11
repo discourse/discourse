@@ -666,6 +666,12 @@ import { i18n } from "discourse-i18n";
             topicFixtures["/t/280/1.json"].post_stream.posts[2]
           )
         );
+        server.get("/posts/by_number/280/5", () =>
+          helper.response(
+            200,
+            topicFixtures["/t/280/1.json"].post_stream.posts[4]
+          )
+        );
       });
 
       test("The quoted content is toggled correclty", async function (assert) {
@@ -711,6 +717,98 @@ import { i18n } from "discourse-i18n";
           )
           .hasAttribute("aria-expanded", "false");
       });
+
+      // TODO (glimmer-post-stream): this test only works with the Glimmer Post Stream.
+      //  When the removing the legacy code we should remove the `if` and run it unconditionally.
+      if (postStreamMode === "enabled") {
+        test("Nesting quoted content works", async function (assert) {
+          await visit("/t/internationalization-localization/280");
+
+          // outer quote
+          assert
+            .dom(
+              "#post_7 .cooked .quote[data-topic='280'][data-post='5'] > .title .quote-controls .quote-toggle"
+            )
+            .hasAttribute("aria-expanded", "false");
+
+          assert
+            .dom("#post_7 .quote[data-topic='280'][data-post='5']")
+            .includesText("The problem I see here")
+            .doesNotIncludeText("So you could replace that lookup table");
+
+          await click(
+            "#post_7 .cooked .quote[data-topic='280'][data-post='5'] > .title .quote-controls .quote-toggle"
+          );
+
+          assert
+            .dom(
+              "#post_7 .cooked .quote[data-topic='280'][data-post='5'] > .title .quote-controls .quote-toggle"
+            )
+            .hasAttribute("aria-expanded", "true");
+          assert
+            .dom("#post_7 .quote[data-topic='280'][data-post='5']")
+            .includesText("The problem I see here")
+            .includesText("So you could replace that lookup table");
+
+          // nested quote
+          assert
+            .dom(
+              "#post_7 .cooked .quote[data-topic='280'][data-post='5'] .quote[data-topic='280'][data-post='3'] .quote-controls .quote-toggle"
+            )
+            .hasAttribute("aria-expanded", "false");
+          assert
+            .dom(
+              "#post_7 .quote[data-topic='280'][data-post='5'] .quote[data-topic='280'][data-post='3']"
+            )
+            .includesText(
+              'So you could replace that lookup table with the "de" one to get German.'
+            )
+            .doesNotIncludeText(
+              "Yep, all strings are going through a lookup table.*"
+            );
+
+          await click(
+            "#post_7 .cooked .quote[data-topic='280'][data-post='5'] .quote[data-topic='280'][data-post='3'] .quote-controls .quote-toggle"
+          );
+
+          assert
+            .dom(
+              "#post_7 .cooked .quote[data-topic='280'][data-post='5'] .quote[data-topic='280'][data-post='3'] .quote-controls .quote-toggle"
+            )
+            .hasAttribute("aria-expanded", "true");
+          assert
+            .dom(
+              "#post_7 .quote[data-topic='280'][data-post='5'] .quote[data-topic='280'][data-post='3']"
+            )
+            .includesText(
+              'So you could replace that lookup table with the "de" one to get German.'
+            )
+            .includesText(
+              "Yep, all strings are going through a lookup table.*"
+            );
+
+          await click(
+            "#post_7 .cooked .quote[data-topic='280'][data-post='5'] .quote[data-topic='280'][data-post='3'] .quote-controls .quote-toggle"
+          );
+
+          assert
+            .dom(
+              "#post_7 .cooked .quote[data-topic='280'][data-post='5'] .quote[data-topic='280'][data-post='3'] .quote-controls .quote-toggle"
+            )
+            .hasAttribute("aria-expanded", "false");
+
+          // outer quote
+          await click(
+            "#post_7 .cooked .quote[data-topic='280'][data-post='5'] .quote-controls .quote-toggle"
+          );
+
+          assert
+            .dom(
+              "#post_7 .cooked .quote[data-topic='280'][data-post='5'] .quote-controls .quote-toggle"
+            )
+            .hasAttribute("aria-expanded", "false");
+        });
+      }
     }
   );
 
