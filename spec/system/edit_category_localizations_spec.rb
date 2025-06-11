@@ -20,16 +20,7 @@ describe "Edit Category Localizations", type: :system do
   end
 
   context "when content localization setting is enabled" do
-    before do
-      SiteSetting.default_locale = "en"
-      SiteSetting.experimental_content_localization = true
-      SiteSetting.experimental_content_localization_supported_locales = "es|fr"
-      SiteSetting.experimental_content_localization_allowed_groups = Group::AUTO_GROUPS[:everyone]
-
-      if SiteSetting.client_settings.exclude?(:available_content_localization_locales)
-        SiteSetting.client_settings << :available_content_localization_locales
-      end
-    end
+    before { SiteSetting.experimental_content_localization = true }
 
     it "should show the localization tab" do
       category_page.visit_settings(category)

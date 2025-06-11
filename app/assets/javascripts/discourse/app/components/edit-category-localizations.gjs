@@ -10,7 +10,7 @@ export default class EditCategoryLocalizations extends buildCategoryPanel(
   @service siteSettings;
 
   get availableLocales() {
-    return this.siteSettings.available_content_localization_locales;
+    return JSON.parse(this.siteSettings.available_locales);
   }
 
   <template>
