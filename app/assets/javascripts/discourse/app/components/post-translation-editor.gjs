@@ -29,6 +29,15 @@ export default class PostTranslationEditor extends Component {
     }
   }
 
+  get availableContentLocalizationLocales() {
+    const originalPostLocale =
+      this.composer.model?.post?.locale || this.siteSettings.default_locale;
+
+    return this.siteSettings.available_content_localization_locales.filter(
+      (locale) => locale.value !== originalPostLocale
+    );
+  }
+
   @action
   handleInput(event) {
     this.composer.model.set("reply", event.target.value);
@@ -63,7 +72,7 @@ export default class PostTranslationEditor extends Component {
         @nameProperty="name"
         @valueProperty="value"
         @value={{this.composer.selectedTranslationLocale}}
-        @content={{this.siteSettings.available_content_localization_locales}}
+        @content={{this.availableContentLocalizationLocales}}
         @onChange={{this.updateSelectedLocale}}
         @options={{hash
           icon="globe"
