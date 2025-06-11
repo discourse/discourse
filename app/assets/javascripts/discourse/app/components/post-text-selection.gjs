@@ -5,13 +5,11 @@ import { cancel, debounce } from "@ember/runloop";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import PostTextSelectionToolbar from "discourse/components/post-text-selection-toolbar";
-import bodyClass from "discourse/helpers/body-class";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import escapeRegExp from "discourse/lib/escape-regexp";
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
-import discourseLater from "discourse/lib/later";
 import toMarkdown from "discourse/lib/to-markdown";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import {
@@ -51,7 +49,6 @@ export default class PostTextSelection extends Component {
   @service siteSettings;
   @service menu;
 
-  @tracked hasPostTextSelection = false;
   @tracked selectTextMode = false;
   @tracked preventClose = applyValueTransformer(
     "post-text-selection-prevent-close",
@@ -67,24 +64,17 @@ export default class PostTextSelection extends Component {
   });
 
   documentListeners = modifier(() => {
-    document.addEventListener("selectionchange", this.onSelectionChanged);
     document.addEventListener("pointerup", this.pointerup, { passive: true });
+    document.addEventListener("selectionchange", this.selectionchange);
     // fires when user finishes adjusting text selection on android
     document.addEventListener("contextmenu", this.contextmenu, {
       passive: true,
     });
-    document.addEventListener("touchend", this.touchend, {
-      passive: true,
-    });
 
     return () => {
-      document.removeEventListener("selectionchange", this.onSelectionChanged);
       document.removeEventListener("pointerup", this.pointerup);
+      document.removeEventListener("selectionchange", this.selectionchange);
       document.removeEventListener("contextmenu", this.contextmenu);
-      document.removeEventListener("touchend", this.touchend);
-
-      this._cleanUserSelectState();
-      this.hasPostTextSelection = false;
     };
   });
 
@@ -115,7 +105,6 @@ export default class PostTextSelection extends Component {
     if (this.preventClose) {
       return;
     }
-    this.args.quoteState.clear();
     await this.menuInstance?.close();
   }
 
@@ -245,25 +234,55 @@ export default class PostTextSelection extends Component {
   }
 
   @bind
-  async onSelectionChanged(options) {
+  contextmenu() {
+    this.handleSelection();
+    this.enablePointerEventsOnMenu();
+  }
+
+  @bind
+  selectionchange() {
+    this.disablePointerEventsOnMenu();
+  }
+
+  @bind
+  pointerup() {
+    this.handleSelection();
+    this.enablePointerEventsOnMenu();
+  }
+
+  enablePointerEventsOnMenu() {
+    document
+      .querySelector("[data-identifier='post-text-selection-toolbar']")
+      ?.classList.remove("-disable-pointer-events");
+  }
+
+  disablePointerEventsOnMenu() {
+    // on android there's no reliable way to know when user has finished text selection
+    // so we use contextmenu which will be fired while holding the selection even if
+    // the user didn't release the pointer yet, as a result menu will be shown
+    // while selecting and we want to be sure it's not interfering
+    document
+      .querySelector("[data-identifier='post-text-selection-toolbar']")
+      ?.classList.add("-disable-pointer-events");
+  }
+
+  @bind
+  handleSelection(options = {}) {
     const selection = window.getSelection();
     if (selection.rangeCount) {
       const range = selection.getRangeAt(0);
+      if (range.collapsed) {
+        return;
+      }
+
       const parent =
         range.commonAncestorContainer.nodeType === Node.TEXT_NODE
           ? range.commonAncestorContainer.parentNode
           : range.commonAncestorContainer;
-
       const cooked = parent.closest(".cooked");
       if (cooked) {
         const article = cooked.closest(".boxed, .reply");
         const postId = article.dataset.postId;
-
-        if (!options.force) {
-          this.selectTextMode = true;
-          this.hasPostTextSelection = true;
-        }
-
         const { isIOS, isWinphone, isAndroid } = this.capabilities;
         const wait = isIOS || isWinphone || isAndroid ? INPUT_DELAY : 25;
         this.selectionChangeHandler = discourseDebounce(
@@ -275,29 +294,10 @@ export default class PostTextSelection extends Component {
           wait
         );
       } else {
+        this.hideToolbar();
         cancel(this.selectionChangeHandler);
-        await this.hideToolbar();
       }
     }
-  }
-
-  @bind
-  touchend() {
-    // ensures touchend is processed after selectionchange
-    // this is especially needed on iOS
-    this.touchEndLaterHandler = discourseLater(() => {
-      this._cleanUserSelectState();
-    }, 50);
-  }
-
-  @bind
-  contextmenu() {
-    this._cleanUserSelectState();
-  }
-
-  @bind
-  pointerup() {
-    this._cleanUserSelectState();
   }
 
   get post() {
@@ -325,10 +325,9 @@ export default class PostTextSelection extends Component {
   @action
   handleTopicScroll() {
     if (this.site.mobileView) {
-      this._cleanUserSelectState();
       this.debouncedSelectionChanged = debounce(
         this,
-        this.onSelectionChanged,
+        this.handleSelection,
         { force: true },
         250,
         false
@@ -347,53 +346,7 @@ export default class PostTextSelection extends Component {
     return await this.args.buildQuoteMarkdown();
   }
 
-  _cleanUserSelectState() {
-    document
-      .querySelector(".allow-post-text-selection")
-      ?.classList.remove("allow-post-text-selection");
-
-    this.selectTextMode = false;
-
-    const selection = window.getSelection();
-    if (selection.rangeCount) {
-      const range = selection.getRangeAt(0);
-      const selectionStart = getElement(range.startContainer);
-      const cooked = selectionStart.closest(".cooked");
-      this.hasPostTextSelection = !!cooked;
-    } else {
-      this.hasPostTextSelection = false;
-    }
-  }
-
   <template>
-    {{! styles are inline to ensure browser has to parse them only when necessary}}
-    {{#if this.selectTextMode}}
-      {{bodyClass "-select-post-text-mode"}}
-
-      {{! template-lint-disable no-forbidden-elements }}
-      <style>
-        body.-select-post-text-mode {
-          [data-identifier="post-text-selection-toolbar"] {
-            display: none;
-          }
-        }
-      </style>
-    {{/if}}
-
-    {{#if this.hasPostTextSelection}}
-      {{bodyClass "-has-post-text-selection"}}
-
-      {{! template-lint-disable no-forbidden-elements }}
-      <style>
-        body.-has-post-text-selection {
-          .d-header-wrap * {
-            user-select: none;
-            -webkit-user-select: none;
-          }
-        }
-      </style>
-    {{/if}}
-
     <div
       {{this.documentListeners}}
       {{this.appEventsListeners}}
