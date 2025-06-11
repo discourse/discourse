@@ -1,10 +1,10 @@
 import { hash } from "@ember/helper";
-import { render } from "@ember/test-helpers";
+import { render, resetOnerror, setupOnerror } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import Translation from "discourse/components/translation";
 import UserLink from "discourse/components/user-link";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import I18n from "discourse-i18n";
+import I18n, { I18nMissingInterpolationArgument } from "discourse-i18n";
 
 module("Integration | Component | Translation", function (hooks) {
   setupRenderingTest(hooks);
@@ -58,13 +58,27 @@ module("Integration | Component | Translation", function (hooks) {
       .hasAttribute("aria-label", "Profil de pento");
   });
 
-  test("renders simple translation without placeholders", async function (assert) {
+  test("throws an error on simple translation without placeholders", async function (assert) {
+    setupOnerror((error) => {
+      assert.strictEqual(
+        error.message,
+        "The <Translation> component shouldn't be used for strings that don't insert components. Use `i18n()` instead."
+      );
+    });
+
     await render(<template><Translation @scope="simple_text" /></template>);
 
-    assert.dom().hasText("Simple text without placeholders");
+    resetOnerror();
   });
 
   test("renders translation with string options only", async function (assert) {
+    setupOnerror((error) => {
+      assert.strictEqual(
+        error.message,
+        "The <Translation> component shouldn't be used for strings that don't insert components. Use `i18n()` instead."
+      );
+    });
+
     await render(
       <template>
         <Translation
@@ -74,7 +88,7 @@ module("Integration | Component | Translation", function (hooks) {
       </template>
     );
 
-    assert.dom().hasText("Hello John, welcome to Discourse!");
+    resetOnerror();
   });
 
   test("renders translation with both string options and component placeholders", async function (assert) {
@@ -119,7 +133,6 @@ module("Integration | Component | Translation", function (hooks) {
   });
 
   test("handles missing translation key gracefully", async function (assert) {
-    // Add a fallback translation for missing keys
     await render(<template><Translation @scope="nonexistent_key" /></template>);
 
     // When a translation key is missing, i18n returns the key itself
@@ -127,6 +140,14 @@ module("Integration | Component | Translation", function (hooks) {
   });
 
   test("handles placeholder not provided in template", async function (assert) {
+    setupOnerror((error) => {
+      assert.true(error instanceof I18nMissingInterpolationArgument);
+      assert.strictEqual(
+        error.message,
+        "hello: [missing %{username} placeholder]"
+      );
+    });
+
     // Translation has %{username} placeholder but no placeholder component is provided
     await render(
       <template>
@@ -136,6 +157,8 @@ module("Integration | Component | Translation", function (hooks) {
         </Translation>
       </template>
     );
+
+    resetOnerror();
 
     // Should render the placeholder string since no component was provided
     assert.dom().includesText("Bonjour, [missing %{username} placeholder]");

@@ -5,7 +5,8 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import curryComponent from "ember-curry-component";
 import TranslationPlaceholder from "discourse/components/translation-placeholder";
 import uniqueId from "discourse/helpers/unique-id";
-import I18n, { i18n } from "discourse-i18n";
+import { isProduction } from "discourse/lib/environment";
+import I18n, { i18n, I18nMissingInterpolationArgument } from "discourse-i18n";
 
 /**
  * Provides the ability to interpolate both strings and components into translatable strings.
@@ -99,9 +100,19 @@ export default class Translation extends Component {
       ...optionsArg,
     });
 
+    if (text === I18n.missingTranslation(this.args.scope)) {
+      return [text];
+    }
+
     // Bail early if there were no placeholders we need to handle.
     if (this._placeholderAppearance.size === 0) {
-      return [text];
+      if (isProduction()) {
+        return [text];
+      } else {
+        throw new Error(
+          "The <Translation> component shouldn't be used for strings that don't insert components. Use `i18n()` instead."
+        );
+      }
     }
 
     const parts = [];
@@ -166,12 +177,21 @@ export default class Translation extends Component {
    */
   @action
   checkPlaceholders() {
+    let missing = [];
     for (const [name, element] of this._placeholderElements) {
       if (!this._renderedPlaceholders.includes(name)) {
-        element.innerText = `[missing ${this._placeholderAppearance.get(
+        const message = `[missing ${this._placeholderAppearance.get(
           name
         )} placeholder]`;
+        element.innerText = message;
+        missing.push(message);
       }
+    }
+
+    if (!isProduction() && missing.length > 0) {
+      throw new I18nMissingInterpolationArgument(
+        `${this.args.scope}: ${missing.join(", ")}`
+      );
     }
   }
 
