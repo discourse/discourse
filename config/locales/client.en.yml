@@ -4136,6 +4136,7 @@ en:
         instructions: "Share a link to this post:"
 
       original_language: "This post was originally written in %{language}"
+      original_language_and_outdated: "This post was originally written in %{language}. Translation may be outdated"
 
     category:
       none: "(no category)"
