@@ -2,7 +2,7 @@
 
 RSpec.describe SystemThemesManager do
   it "is idempotent" do
-    Theme.destroy_all
+    Theme.delete_all
     expect { SystemThemesManager.sync! }.to change { Theme.count }.by(2)
     expect { SystemThemesManager.sync! }.not_to change { Theme.count }
   end

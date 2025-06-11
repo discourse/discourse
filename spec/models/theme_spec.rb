@@ -441,7 +441,7 @@ HTML
   end
 
   it "correctly caches theme ids" do
-    Theme.where.not(id: theme.id).destroy_all
+    Theme.where.not(id: theme.id).delete_all
 
     theme2 = Fabricate(:theme)
 
@@ -469,7 +469,7 @@ HTML
   end
 
   it "correctly caches enabled_theme_and_component_ids" do
-    Theme.destroy_all
+    Theme.delete_all
 
     theme2 = Fabricate(:theme)
 
@@ -510,7 +510,7 @@ HTML
   end
 
   it "correctly caches user_themes template" do
-    Theme.destroy_all
+    Theme.delete_all
 
     json = Site.json_for(guardian)
     user_themes = JSON.parse(json)["user_themes"]
@@ -546,7 +546,7 @@ HTML
   end
 
   it "clears color scheme cache correctly" do
-    Theme.destroy_all
+    Theme.delete_all
 
     cs =
       Fabricate(
@@ -606,7 +606,7 @@ HTML
   end
 
   it "includes theme_uploads in settings" do
-    Theme.where.not(id: theme.id).destroy_all
+    Theme.where.not(id: theme.id).delete_all
 
     upload = UploadCreator.new(file_from_fixtures("logo.png"), "logo.png").create_for(-1)
     theme.set_field(type: :theme_upload_var, target: :common, name: "bob", upload_id: upload.id)
@@ -618,7 +618,7 @@ HTML
   end
 
   it "does not break on missing uploads in settings" do
-    Theme.where.not(id: theme.id).destroy_all
+    Theme.where.not(id: theme.id).delete_all
 
     upload = UploadCreator.new(file_from_fixtures("logo.png"), "logo.png").create_for(-1)
     theme.set_field(type: :theme_upload_var, target: :common, name: "bob", upload_id: upload.id)
@@ -633,7 +633,7 @@ HTML
 
   it "uses CDN url for theme_uploads in settings" do
     set_cdn_url("http://cdn.localhost")
-    Theme.where.not(id: theme.id).destroy_all
+    Theme.where.not(id: theme.id).delete_all
 
     upload = UploadCreator.new(file_from_fixtures("logo.png"), "logo.png").create_for(-1)
     theme.set_field(type: :theme_upload_var, target: :common, name: "bob", upload_id: upload.id)
@@ -646,7 +646,7 @@ HTML
 
   it "uses CDN url for settings of type upload" do
     set_cdn_url("http://cdn.localhost")
-    Theme.where.not(id: theme.id).destroy_all
+    Theme.where.not(id: theme.id).delete_all
 
     upload = UploadCreator.new(file_from_fixtures("logo.png"), "logo.png").create_for(-1)
     theme.set_field(target: :settings, name: "yaml", value: <<~YAML)
