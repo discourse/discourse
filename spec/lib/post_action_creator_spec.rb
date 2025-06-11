@@ -196,6 +196,31 @@ RSpec.describe PostActionCreator do
       end
     end
 
+    describe "non-human user being flagged" do
+      fab!(:system_post) { Fabricate(:post, user: Discourse.system_user) }
+
+      it "doesn't create reviewable" do
+        result = PostActionCreator.create(user, system_post, :inappropriate)
+        expect(result.success?).to eq(true)
+
+        expect(result.reviewable).to be_blank
+      end
+
+      it "applies modifier and can allow flagging for non-human users" do
+        plugin = Plugin::Instance.new
+        modifier = :post_action_creator_block_reviewable_for_bot
+        proc = Proc.new { false }
+        DiscoursePluginRegistry.register_modifier(plugin, modifier, &proc)
+
+        result = PostActionCreator.create(user, system_post, :inappropriate)
+        expect(result.success?).to eq(true)
+
+        expect(result.reviewable).to be_present
+      ensure
+        DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &proc)
+      end
+    end
+
     context "with existing reviewable" do
       let!(:reviewable) do
         PostActionCreator.create(
