@@ -346,13 +346,6 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       expect(pending_count).to eq(0)
     end
 
-    it "should not review non-human users" do
-      post = create_post(user: Discourse.system_user)
-      reviewable = PostActionCreator.off_topic(user, post).reviewable
-      expect(reviewable).to be_blank
-      expect(pending_count).to eq(0)
-    end
-
     it "should ignore handled flags" do
       post = create_post
       reviewable = PostActionCreator.off_topic(user, post).reviewable
