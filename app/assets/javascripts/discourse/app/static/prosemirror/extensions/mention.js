@@ -5,16 +5,12 @@ import { isBoundary } from "discourse/static/prosemirror/lib/markdown-it";
 const VALID_MENTIONS = new Set();
 const INVALID_MENTIONS = new Set();
 const PENDING_MENTIONS = new Set();
-const MENTION_REGEXP = new RegExp(
-  `(^|\\W)(${mentionRegex().source})(?=\\s|$)`,
-  "g"
-);
 
 /** @type {RichEditorExtension} */
 const extension = {
   nodeSpec: {
     mention: {
-      attrs: { name: {} },
+      attrs: { name: {}, valid: { default: true } },
       inline: true,
       group: "inline",
       draggable: true,
@@ -24,18 +20,44 @@ const extension = {
           tag: "a.mention",
           preserveWhitespace: "full",
           getAttrs: (dom) => {
-            return { name: dom.getAttribute("data-name") };
+            return {
+              name: dom.getAttribute("data-name"),
+              valid: dom.getAttribute("data-valid"),
+            };
           },
         },
       ],
       toDOM: (node) => {
         return [
           "a",
-          { class: "mention", "data-name": node.attrs.name },
+          {
+            class: "mention",
+            "data-name": node.attrs.name,
+            "data-valid": node.attrs.valid,
+          },
           `@${node.attrs.name}`,
         ];
       },
     },
+  },
+
+  inputRules: {
+    // TODO(renato): pass unicodeUsernames?
+    match: new RegExp(`(^|\\W)(${mentionRegex().source}) $`),
+    handler: (state, match, start, end) => {
+      const { $from } = state.selection;
+      if ($from.nodeBefore?.type === state.schema.nodes.mention) {
+        return null;
+      }
+      const mentionStart = start + match[1].length;
+      const name = match[2].slice(1);
+
+      return state.tr.replaceWith(mentionStart, end, [
+        state.schema.nodes.mention.create({ name }),
+        state.schema.text(" "),
+      ]);
+    },
+    options: { undoable: false },
   },
 
   parse: {
@@ -67,28 +89,34 @@ const extension = {
   },
 
   plugins({ pmState: { Plugin, PluginKey } }) {
-    const plugin = new PluginKey("mention");
+    const key = new PluginKey("mention");
 
     return new Plugin({
-      key: plugin,
+      key,
       view() {
         return {
           update(view) {
-            if (!view._existingMentionsValidated) {
-              this.processExistingMentions(view);
-              view._existingMentionsValidated = true;
-            }
-
-            this.processNewMentions(view);
+            this.processMentionNodes(view);
           },
-          processExistingMentions(view) {
+          processMentionNodes(view) {
             const nodeList = [];
 
             view.state.doc.descendants((node, pos) => {
-              if (node.type.name === "mention") {
-                nodeList.push({ node, pos });
-                PENDING_MENTIONS.add(node.attrs.name);
+              if (node.type.name !== "mention") {
+                return;
               }
+
+              const name = node.attrs.name;
+
+              if (
+                VALID_MENTIONS.has(name) ||
+                INVALID_MENTIONS.has(name) ||
+                PENDING_MENTIONS.has(name)
+              ) {
+                return;
+              }
+              PENDING_MENTIONS.add(name);
+              nodeList.push({ node, pos });
             });
 
             if (!nodeList.length) {
@@ -110,85 +138,21 @@ const extension = {
                 }
 
                 view.dispatch(
-                  view.state.tr
-                    .delete(pos, pos + node.nodeSize)
-                    .insertText(`@${name}`, pos)
+                  view.state.tr.setNodeMarkup(pos, null, {
+                    ...node.attrs,
+                    valid: false,
+                  })
                 );
               }
             };
 
             invalidateMentions();
           },
-          processNewMentions(view) {
-            const tr = view.state.tr;
-
-            if (!isBoundary(tr.doc.textContent.slice(-1), 0)) {
-              return;
-            }
-
-            view.state.doc.descendants((node, pos) => {
-              if (node.type.name !== "text") {
-                return;
-              }
-
-              const mentionList = getMentionsFromTextNode(node, pos);
-
-              if (!mentionList.length) {
-                return;
-              }
-
-              const processMentions = async () => {
-                await fetchMentions([...PENDING_MENTIONS]);
-
-                for (const item of mentionList) {
-                  const { name, start, end } = item;
-
-                  if (!VALID_MENTIONS.has(name)) {
-                    continue;
-                  }
-
-                  view.dispatch(
-                    tr.replaceWith(
-                      start,
-                      end,
-                      view.state.schema.nodes.mention.create({
-                        name,
-                      })
-                    )
-                  );
-                }
-              };
-
-              processMentions();
-            });
-          },
         };
       },
     });
   },
 };
-
-function getMentionsFromTextNode(node, pos) {
-  let mentionList = [];
-  let match;
-
-  while ((match = MENTION_REGEXP.exec(node.text)) !== null) {
-    const name = match[2].slice(1);
-
-    if (VALID_MENTIONS.has(name) || INVALID_MENTIONS.has(name)) {
-      continue;
-    } else if (!PENDING_MENTIONS.has(name)) {
-      PENDING_MENTIONS.add(name);
-    }
-
-    const start = pos + match.index + match[1].length;
-    const end = start + match[2].length;
-
-    mentionList.push({ name, start, end });
-  }
-
-  return mentionList;
-}
 
 async function fetchMentions(names) {
   PENDING_MENTIONS.clear();
