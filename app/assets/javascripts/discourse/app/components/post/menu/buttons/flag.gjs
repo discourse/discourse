@@ -17,23 +17,16 @@ export default class PostMenuFlagButton extends Component {
       (helper.siteSettings.allow_all_users_to_flag_illegal_content &&
         !helper.currentUser);
 
-    // Allow plugins to modify this decision
-    return applyValueTransformer(
-      "flag-button-render-decision",
-      show,
-      { post } // Pass post and component instance as context
-    );
+    return applyValueTransformer("flag-button-render-decision", show, { post });
   }
 
   get dynamicFlagButtonClass() {
-    // Provide an empty string as the default class, and pass post and component instance as context
     return applyValueTransformer("flag-button-dynamic-class", "", {
       post: this.args.post,
     });
   }
 
   get isFlagButtonDisabled() {
-    // Default to false (enabled), allow plugin to override
     return applyValueTransformer("flag-button-disabled-state", false, {
       post: this.args.post,
     });
