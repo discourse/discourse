@@ -392,42 +392,22 @@ class UserMerger
             "x.targets_topic = y.targets_topic",
           ],
         )
-      end
-    puts "time updating post actions: #{post_act.real.round(2)}"
 
-    post_act1 =
-      Benchmark.measure do
         PostAction.where(deleted_by_id: @source_user.id).update_all(deleted_by_id: @target_user.id)
-      end
-    puts "time updating post actions deleted by: #{post_act1.real.round(2)}"
-    post_act2 =
-      Benchmark.measure do
+
         PostAction.where(deferred_by_id: @source_user.id).update_all(
           deferred_by_id: @target_user.id,
         )
-      end
-    puts "time updating post actions deferred by: #{post_act2.real.round(2)}"
-    post_act3 =
-      Benchmark.measure do
         PostAction.where(agreed_by_id: @source_user.id).update_all(agreed_by_id: @target_user.id)
-      end
-    puts "time updating post actions agreed by: #{post_act3.real.round(2)}"
-    post_act4 =
-      Benchmark.measure do
+
         PostAction.where(disagreed_by_id: @source_user.id).update_all(
           disagreed_by_id: @target_user.id,
         )
       end
-    puts "time updating post actions disagreed by: #{post_act4.real.round(2)}"
+    puts "=> time updating post actions: #{post_act.real.round(2)}"
 
-    puts "===="
-    post_revis =
-      Benchmark.measure do
-        PostRevision.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
-      end
-    puts "time updating post revisions: #{post_revis.real.round(2)}"
+    PostRevision.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
 
-    puts "===="
     posts_with =
       Benchmark.measure do
         Post
@@ -448,7 +428,7 @@ class UserMerger
           .update_all(reply_to_user_id: @target_user.id)
       end
 
-    puts "time updating posts: #{posts_with.real.round(2)}"
+    puts "=> time updating posts: #{posts_with.real.round(2)}"
 
     Reviewable.where(created_by_id: @source_user.id).update_all(created_by_id: @target_user.id)
     ReviewableHistory.where(created_by_id: @source_user.id).update_all(
@@ -461,38 +441,43 @@ class UserMerger
 
     Theme.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
 
-    update_user_id(:topic_allowed_users, conditions: "x.topic_id = y.topic_id")
+    topics_with =
+      Benchmark.measure do
+        update_user_id(:topic_allowed_users, conditions: "x.topic_id = y.topic_id")
 
-    TopicEmbed
-      .with_deleted
-      .where(deleted_by_id: @source_user.id)
-      .update_all(deleted_by_id: @target_user.id)
+        TopicEmbed
+          .with_deleted
+          .where(deleted_by_id: @source_user.id)
+          .update_all(deleted_by_id: @target_user.id)
 
-    TopicLink.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
-    TopicLinkClick.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
+        TopicLink.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
+        TopicLinkClick.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
 
-    TopicTimer
-      .with_deleted
-      .where(deleted_by_id: @source_user.id)
-      .update_all(deleted_by_id: @target_user.id)
+        TopicTimer
+          .with_deleted
+          .where(deleted_by_id: @source_user.id)
+          .update_all(deleted_by_id: @target_user.id)
 
-    update_user_id(
-      :topic_timers,
-      conditions: [
-        "x.status_type = y.status_type",
-        "x.topic_id = y.topic_id",
-        "y.deleted_at IS NULL",
-      ],
-    )
+        update_user_id(
+          :topic_timers,
+          conditions: [
+            "x.status_type = y.status_type",
+            "x.topic_id = y.topic_id",
+            "y.deleted_at IS NULL",
+          ],
+        )
 
-    update_user_id(:topic_users, conditions: "x.topic_id = y.topic_id")
+        update_user_id(:topic_users, conditions: "x.topic_id = y.topic_id")
 
-    update_user_id(:topic_views, conditions: "x.topic_id = y.topic_id")
+        update_user_id(:topic_views, conditions: "x.topic_id = y.topic_id")
 
-    Topic
-      .with_deleted
-      .where(deleted_by_id: @source_user.id)
-      .update_all(deleted_by_id: @target_user.id)
+        Topic
+          .with_deleted
+          .where(deleted_by_id: @source_user.id)
+          .update_all(deleted_by_id: @target_user.id)
+      end
+
+    puts "=> time updating topics: #{topics_with.real.round(2)}"
 
     UnsubscribeKey.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
 
@@ -500,26 +485,31 @@ class UserMerger
 
     update_user_id(:user_archived_messages, conditions: "x.topic_id = y.topic_id")
 
-    update_user_id(
-      :user_actions,
-      user_id_column_name: "user_id",
-      conditions: [
-        "x.action_type = y.action_type",
-        "x.target_topic_id IS NOT DISTINCT FROM y.target_topic_id",
-        "x.target_post_id IS NOT DISTINCT FROM y.target_post_id",
-        "(x.acting_user_id IN (:source_user_id, :target_user_id) OR x.acting_user_id IS NOT DISTINCT FROM y.acting_user_id)",
-      ],
-    )
-    update_user_id(
-      :user_actions,
-      user_id_column_name: "acting_user_id",
-      conditions: [
-        "x.action_type = y.action_type",
-        "x.user_id = y.user_id",
-        "x.target_topic_id IS NOT DISTINCT FROM y.target_topic_id",
-        "x.target_post_id IS NOT DISTINCT FROM y.target_post_id",
-      ],
-    )
+    user_actions_to_update =
+      Benchmark.measure do
+        update_user_id(
+          :user_actions,
+          user_id_column_name: "user_id",
+          conditions: [
+            "x.action_type = y.action_type",
+            "x.target_topic_id IS NOT DISTINCT FROM y.target_topic_id",
+            "x.target_post_id IS NOT DISTINCT FROM y.target_post_id",
+            "(x.acting_user_id IN (:source_user_id, :target_user_id) OR x.acting_user_id IS NOT DISTINCT FROM y.acting_user_id)",
+          ],
+        )
+        update_user_id(
+          :user_actions,
+          user_id_column_name: "acting_user_id",
+          conditions: [
+            "x.action_type = y.action_type",
+            "x.user_id = y.user_id",
+            "x.target_topic_id IS NOT DISTINCT FROM y.target_topic_id",
+            "x.target_post_id IS NOT DISTINCT FROM y.target_post_id",
+          ],
+        )
+      end
+
+    puts "=> time updating user actions: #{user_actions_to_update.real.round(2)}"
 
     update_user_id(
       :user_badges,
@@ -542,10 +532,24 @@ class UserMerger
       )
     end
 
-    UserExport.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
+    export =
+      Benchmark.measure do
+        UserExport.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
+      end
 
-    UserHistory.where(target_user_id: @source_user.id).update_all(target_user_id: @target_user.id)
-    UserHistory.where(acting_user_id: @source_user.id).update_all(acting_user_id: @target_user.id)
+    puts "=> time updating user export: #{export.real.round(2)}"
+
+    history =
+      Benchmark.measure do
+        UserHistory.where(target_user_id: @source_user.id).update_all(
+          target_user_id: @target_user.id,
+        )
+        UserHistory.where(acting_user_id: @source_user.id).update_all(
+          acting_user_id: @target_user.id,
+        )
+      end
+
+    puts "=> time updating user history: #{history.real.round(2)}"
 
     UserProfileView.where(user_profile_id: @source_user.id).update_all(
       user_profile_id: @target_user.id,
