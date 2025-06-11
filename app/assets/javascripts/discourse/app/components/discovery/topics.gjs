@@ -4,18 +4,18 @@ import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { or } from "truth-helpers";
+import { not, or } from "truth-helpers";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import CountI18n from "discourse/components/count-i18n";
 import DiscourseLinkedText from "discourse/components/discourse-linked-text";
 import DiscoveryTopicsList from "discourse/components/discovery-topics-list";
+import EmptyTopicFilterEducation from "discourse/components/empty-topic-filter-education";
 import FooterMessage from "discourse/components/footer-message";
 import LoadMore from "discourse/components/load-more";
 import NewListHeaderControlsWrapper from "discourse/components/new-list-header-controls-wrapper";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TopPeriodButtons from "discourse/components/top-period-buttons";
 import TopicDismissButtons from "discourse/components/topic-dismiss-buttons";
-import TopicFilterEducation from "discourse/components/topic-filter-education";
 import List from "discourse/components/topic-list/list";
 import basePath from "discourse/helpers/base-path";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
@@ -73,6 +73,10 @@ export default class DiscoveryTopics extends Component {
 
   get new() {
     return filterTypeForMode(this.args.model.filter) === "new";
+  }
+
+  get unread() {
+    return filterTypeForMode(this.args.model.filter) === "unread";
   }
 
   // Show newly inserted topics
@@ -149,7 +153,7 @@ export default class DiscoveryTopics extends Component {
     } else {
       const split = (this.args.model.get("filter") || "").split("/");
       if (topicsLength === 0) {
-        // We have a different custom display for the new + unread filter education.
+        // We have a different custom display for the empty new + unread filter education.
         if (split[0] === "new" || split[0] === "unread") {
           return;
         }
@@ -165,17 +169,15 @@ export default class DiscoveryTopics extends Component {
     }
   }
 
-  get showFooterEducation() {
+  get showEmptyFilterEducationInFooter() {
     const topicsLength = this.args.model.get("topics.length");
 
     if (!this.allLoaded || topicsLength > 0 || !this.currentUser) {
-      return;
+      return false;
     }
 
     const segments = (this.args.model.get("filter") || "").split("/");
-
-    let tab = segments[segments.length - 1];
-
+    const tab = segments[segments.length - 1];
     if (tab === "new" || tab === "unread") {
       return true;
     }
@@ -255,7 +257,10 @@ export default class DiscoveryTopics extends Component {
       @model={{@model}}
       @incomingCount={{this.topicTrackingState.incomingCount}}
       @bulkSelectHelper={{@bulkSelectHelper}}
-      @class={{if this.showFooterEducation "--no-topics-education"}}
+      @class={{if
+        this.showEmptyFilterEducationInFooter
+        "--show-empty-topics-education"
+      }}
     >
       {{#if this.top}}
         <div class="top-lists">
@@ -373,7 +378,7 @@ export default class DiscoveryTopics extends Component {
           />
 
           <FooterMessage @message={{this.footerMessage}}>
-            <:message>
+            <:messageDetails>
               {{#if @tag}}
                 {{htmlSafe
                   (i18n "topic.browse_all_tags_or_latest" basePath=(basePath))
@@ -399,22 +404,22 @@ export default class DiscoveryTopics extends Component {
                   @period={{@period}}
                   @action={{@changePeriod}}
                 />
-              {{else}}
+              {{else if (not (or this.new this.unread))}}
                 {{htmlSafe
                   (i18n
                     "topic.browse_all_categories_latest" basePath=(basePath)
                   )
                 }}
               {{/if}}
-            </:message>
-            <:education>
-              {{#if this.showFooterEducation}}
-                <TopicFilterEducation
+            </:messageDetails>
+            <:afterMessage>
+              {{#if this.showEmptyFilterEducationInFooter}}
+                <EmptyTopicFilterEducation
                   @newFilter={{this.new}}
                   @unreadFilter={{this.unread}}
                 />
               {{/if}}
-            </:education>
+            </:afterMessage>
           </FooterMessage>
         </PluginOutlet>
       {{/if}}

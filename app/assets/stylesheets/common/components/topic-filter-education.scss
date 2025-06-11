@@ -1,4 +1,27 @@
-.topic-filter-education {
+@use "lib/viewport";
+
+.empty-topic-filter-education {
   margin: 0 auto;
   width: 75%;
+  text-align: center;
+
+  &__preferences-hint {
+    margin-top: 2rem;
+  }
+
+  &__image {
+    margin-top: 6rem;
+
+    svg {
+      width: 200px;
+    }
+
+    @include viewport.until(sm) {
+      margin-top: 2rem;
+    }
+  }
+
+  &__cta {
+    margin-top: 2rem;
+  }
 }
