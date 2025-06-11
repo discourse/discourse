@@ -5,7 +5,9 @@ import { cancel, debounce } from "@ember/runloop";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import PostTextSelectionToolbar from "discourse/components/post-text-selection-toolbar";
+import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
+import { INPUT_DELAY } from "discourse/lib/environment";
 import escapeRegExp from "discourse/lib/escape-regexp";
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
 import toMarkdown from "discourse/lib/to-markdown";
@@ -106,12 +108,14 @@ export default class PostTextSelection extends Component {
     await this.menuInstance?.close();
   }
 
-  async displayToolbar(options = {}, cooked, postId) {
+  async selectionChanged(options = {}, cooked, postId) {
     const _selectedText = selectedText();
-    const selection = window.getSelection();
 
-    // this state can happen when clicking fast on the same word
-    if (!selectedRange()) {
+    const selection = window.getSelection();
+    if (selection.isCollapsed || _selectedText === "") {
+      if (!this.menuInstance?.expanded) {
+        this.args.quoteState.clear();
+      }
       return;
     }
 
@@ -267,7 +271,7 @@ export default class PostTextSelection extends Component {
     const selection = window.getSelection();
     if (selection.rangeCount) {
       const range = selection.getRangeAt(0);
-      if (range.collapsed || selectedText() === "") {
+      if (range.collapsed) {
         this.args.quoteState.clear();
         return;
       }
@@ -280,7 +284,16 @@ export default class PostTextSelection extends Component {
       if (cooked) {
         const article = cooked.closest(".boxed, .reply");
         const postId = article.dataset.postId;
-        this.displayToolbar(options, cooked, postId);
+        const { isIOS, isWinphone, isAndroid } = this.capabilities;
+        const wait = isIOS || isWinphone || isAndroid ? INPUT_DELAY : 25;
+        this.selectionChangeHandler = discourseDebounce(
+          this,
+          this.selectionChanged,
+          options,
+          cooked,
+          postId,
+          wait
+        );
       } else {
         this.args.quoteState.clear();
         this.hideToolbar();
