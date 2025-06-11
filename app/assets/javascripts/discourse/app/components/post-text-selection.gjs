@@ -370,6 +370,7 @@ export default class PostTextSelection extends Component {
     {{#if this.selectTextMode}}
       {{bodyClass "-select-post-text-mode"}}
 
+      {{! template-lint-disable no-forbidden-elements }}
       <style>
         body.-select-post-text-mode {
           [data-identifier="post-text-selection-toolbar"] {
@@ -382,6 +383,7 @@ export default class PostTextSelection extends Component {
     {{#if this.hasPostTextSelection}}
       {{bodyClass "-has-post-text-selection"}}
 
+      {{! template-lint-disable no-forbidden-elements }}
       <style>
         body.-has-post-text-selection {
           .d-header-wrap * {
