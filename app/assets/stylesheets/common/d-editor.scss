@@ -420,5 +420,14 @@
       font-size: var(--font-down-1-rem);
       color: var(--primary-high);
     }
+
+    &__original-locale {
+      margin-left: 0.5rem;
+      text-transform: uppercase;
+      font-size: var(--font-down-2);
+      background: var(--tertiary-low);
+      padding: 0.25rem 0.5rem;
+      border-radius: var(--d-border-radius);
+    }
   }
 }

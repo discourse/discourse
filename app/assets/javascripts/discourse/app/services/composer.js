@@ -367,8 +367,6 @@ export default class ComposerService extends Service {
       return "composer.create_whisper";
     } else if (privateMessage && modelAction === Composer.REPLY) {
       return "composer.create_pm";
-    } else if (modelAction === Composer.ADD_TRANSLATION) {
-      return "composer.translations.save";
     }
 
     return SAVE_LABELS[modelAction];
@@ -1476,6 +1474,7 @@ export default class ComposerService extends Service {
       action: CREATE_TOPIC,
       draftKey: this.topicDraftKey,
       draftSequence: 0,
+      locale: this.siteSettings.default_locale,
     });
   }
 
@@ -1518,6 +1517,8 @@ export default class ComposerService extends Service {
       isWarning: false,
       hasTargetGroups: opts.hasGroups,
       warningsDisabled: opts.warningsDisabled,
+      locale:
+        opts?.locale || opts?.post?.locale || this.siteSettings.default_locale,
     });
 
     if (!this.model.targetRecipients) {
