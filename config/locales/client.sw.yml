@@ -2861,6 +2861,9 @@ sw:
           add: "Ongeza"
           theme_settings: "Mipangilio ya Mandhari"
           no_settings: "Mandhari hii haina mipangilio."
+          settings: "Mipangilio"
+          colors: "Rangi"
+          colors_title: "Rangi"
           scss:
             text: "CSS"
           after_header:

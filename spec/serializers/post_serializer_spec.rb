@@ -808,6 +808,32 @@ RSpec.describe PostSerializer do
     end
   end
 
+  describe "#localization_outdated?" do
+    let(:serializer) { serialized_post }
+    let(:json) { serializer.as_json }
+
+    it "is excluded when experimental_content_localization is disabled" do
+      SiteSetting.experimental_content_localization = false
+      expect(json[:localization_outdated]).to eq(nil)
+    end
+
+    it "is true when the post is localized and the localization is outdated" do
+      SiteSetting.experimental_content_localization = true
+      post.update!(locale: "ja", version: 3)
+      Fabricate(:post_localization, post:, locale: "en", post_version: 2)
+
+      expect(json[:localization_outdated]).to eq(true)
+    end
+
+    it "is false when the post is localized and the localization is not outdated" do
+      SiteSetting.experimental_content_localization = true
+      post.update!(locale: "ja", version: 10)
+      Fabricate(:post_localization, post:, locale: "en", post_version: 10)
+
+      expect(json[:localization_outdated]).to eq(false)
+    end
+  end
+
   def serialized_post(u = nil)
     s = PostSerializer.new(post, scope: Guardian.new(u), root: false)
     s.add_raw = true

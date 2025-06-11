@@ -154,6 +154,8 @@ en_GB:
           long_title: "Amend colours, CSS and HTML contents of your site"
           color_scheme: "Colour Palette"
           color_scheme_select: "Select colours to be used by theme"
+          colors: "Colours"
+          colors_title: "Colours"
           color_definitions:
             text: "Colour Definitions"
             title: "Enter custom colour definitions (advanced users only)"

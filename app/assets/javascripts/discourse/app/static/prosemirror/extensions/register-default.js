@@ -9,6 +9,7 @@ import htmlBlock from "./html-block";
 import htmlInline from "./html-inline";
 import image from "./image";
 import link from "./link";
+import linkToolbar from "./link-toolbar";
 import markdownPaste from "./markdown-paste";
 import mention from "./mention";
 import onebox from "./onebox";
@@ -32,6 +33,7 @@ const defaultExtensions = [
   onebox,
   code,
   link,
+  linkToolbar,
   heading,
   codeBlock,
   quote,

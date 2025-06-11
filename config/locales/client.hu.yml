@@ -2011,6 +2011,7 @@ hu:
         title: "Regisztrációkor használt IP-cím"
       avatar:
         title: "Profilkép"
+        header_title: "Értesítések és fiók"
         name_and_description: "%{name} – %{description}"
         edit: "Profilkép szerkesztése"
       title:
@@ -2417,6 +2418,8 @@ hu:
       topic_count:
         one: "%{count} téma van ebben a kategóriában"
         other: "%{count} téma van ebben a kategóriában"
+    timezone_input:
+      ambiguous_ist: "Az IST nem egyértelmű, kérjük, válasszon egy konkrét időzónát (pl.: Ázsia/Kolkata)"
     select_kit:
       delete_item: "%{name} törlése"
       filter_by: "Szűrő: %{name}"
@@ -2494,6 +2497,12 @@ hu:
       esc: "Esc"
       esc_label: "üzenet elvetése"
       ok_proceed: "Rendben, tovább"
+      translations:
+        title: "Bejegyzés fordítása"
+        select: "Fordítás kiválasztása"
+        save: "Fordítás mentése"
+        original_content: "Eredeti bejegyzés tartalma"
+        placeholder: "Bejegyzés fordításának helye..."
       group_mentioned_limit:
         one: "<b>Figyelem!</b>Megemlítette a(z) <a href='%{group_link}'>%{group}</a> csoportot, azonban ennek a csoportnak több mint %{count} tagja van, amely több, mint a rendszergazda által beállított megemlítési korlát. Senki nem lesz értesítve."
         other: "<b>Figyelem!</b>Megemlítette a(z) <a href='%{group_link}'>%{group}</a> csoportot, azonban ennek a csoportnak több mint %{count} tagja van, amely több, mint a rendszergazda által beállított megemlítési korlát. Senki nem lesz értesítve."
@@ -2821,6 +2830,7 @@ hu:
       in_messages_tooltip: "váltás a szokásos témák keresésére"
       in_topics_posts: "az összes témában és bejegyzésben"
       enter_hint: "vagy nyomjon Entert"
+      mobile_enter_hint: "vagy koppintson a keresésre"
       in_posts_by: "%{username} bejegyzéseiben"
       recent: "Legutóbbi keresések"
       clear_recent: "Legutóbbi keresések törlése"
@@ -2909,6 +2919,7 @@ hu:
           aria_label: szűrés a megtekintések legnagyobb száma szerint
         additional_options:
           label: "Szűrés hozzászólásszám és témamegtekintés szerint"
+    hamburger_menu: "Navigációs menü"
     new_item: "új"
     go_back: "visszalépés"
     not_logged_in_user: "felhasználói oldal a jelenlegi tevékenységek és beállítások összesítésével"
@@ -3627,6 +3638,14 @@ hu:
           actions: "Műveletek"
           edit: "Szerkesztés"
           delete: "Törlés"
+        add: "Új fordítás hozzáadása"
+        view:
+          one: "%{count} fordítás megtekintése"
+          other: "%{count} fordítás megtekintése"
+        modal:
+          title: "Fordítás a bejegyzéshez"
+          confirm_delete: "Biztos, hogy törölni akarja a '%{languageCode}' fordításokat?"
+        success: "A fordítások sikeresen frissültek"
       errors:
         create: "Sajnos hiba történt a bejegyzése létrehozása során. Próbálja újra."
         edit: "Sajnos hiba történt a bejegyzése szerkesztése során. Próbálja újra."
@@ -3821,6 +3840,7 @@ hu:
       share:
         title: "Megosztás #%{post_number}"
         instructions: "Bejegyzés hivatkozásának megosztása:"
+      original_language: "Ez a bejegyzés eredetileg %{language} nyelven íródott"
     category:
       none: "(nincs kategória)"
       all: "Minden kategória"
@@ -3873,6 +3893,7 @@ hu:
       background_image_dark: "Sötét kategória háttérképe"
       style: "Stílusok"
       background_color: "Szín"
+      foreground_color: "Szöveg színe"
       styles:
         type: "Stílus"
         icon: "Ikon"
@@ -4240,6 +4261,7 @@ hu:
         today: "Utolsó 24 óra"
     custom_homepage:
       admin_message: 'Az egyik téma engedélyezte a "custom_homepage" módosítót, de nem ad ki semmit a [custom-homepage] csatlakozóban. (Ez az üzenet csak az oldal adminisztrátorainak jelenik meg.)'
+    browser_update: 'Sajnos <a href="https://discourse.org/about#browser">a böngésződ nem támogatott</a>. Kérlek, <a href="https://browsehappy.com">válts támogatott böngészőre</a> a tartalmak megtekintéséhez, a bejelentkezéshez és a válaszadáshoz.'
     permission_types:
       full: "Létrehozás / Válaszolás / Megtekintés"
       create_post: "Válaszolás / Megtekintés"
@@ -4749,6 +4771,7 @@ hu:
       clear_filter: "Szűrő kiürítése"
       no_results:
         title: "Nincs eredmény"
+        description_admin_search: "Nem találtunk semmi ennek megfelelőt '%{filter}'"
       collapse_all_sections: "Minden szakasz összezárása"
       expand_all_sections: "Minden szakasz kibontása"
       search: "Keresés"
@@ -4862,9 +4885,68 @@ hu:
     discovery:
       headings:
         all:
+          latest: "Minden legújabb téma"
+          top: "Minden fontos téma"
+          new: "Minden új téma"
+          unread: "Minden olvasatlan téma"
+          unseen: "Összes nem megtekintett téma"
+          hot: "Minden népszerű téma"
+          posted: "Az összes téma, amelyben hozzászóltál"
+          bookmarks: "Minden könyvjelzővel megjelölt téma"
           default: "Minden %{filter} téma"
+        category:
+          latest: "%{category} kategória legújabb témái"
+          top: "%{category} kategória fontos témái"
+          new: "%{category} kategória új témái"
+          unread: "%{category} kategória olvasatlan témái"
+          unseen: "%{category} kategória nem megtekintett témái"
+          hot: "%{category} kategória népszerű témái"
+          posted: "Témák a %{category} kategóriában, amelyekben eddig posztoltál"
+          bookmarks: "Témák a %{category} kategóriában, amelyeket könyvjelzővel megjelöltél"
+          default: "%{filter} Témák a %{category} kategóriában"
+        single_tag:
+          latest: "Legfrissebb témák a(z) %{tag} címkével"
+          top: "Legnépszerűbb témák a(z) %{tag} címkével"
+          new: "Új témák a(z) %{tag} címkével"
+          unread: "Olvasatlan témák a(z) %{tag} címkével"
+          unseen: "Nem látott témák a(z) %{tag} címkével"
+          hot: "Népszerű témák a(z) %{tag} címkével"
+          posted: "Témák a(z) %{tag} címkével, amelyekhez hozzászóltál"
+          bookmarks: "Témák a(z) %{tag} címkével, amelyeket könyjelzőhöz adtál"
+          default: "%{filter} témák amik %{tag} címkével vannak megjelölve"
         multi_tag:
           default: "Témák a(z) %{tags} címkével"
+        category_tag:
+          latest: "Legfrissebb témák a(z) %{category} kategóriában, %{tag} címkével"
+          top: "Legnépszerűbb témák a(z) %{category} kategóriában, %{tag} címkével"
+          new: "Új témák a(z) %{category} kategóriában, %{tag} címkével"
+          unread: "Olvasatlan témák a(z) %{category} kategóriában, %{tag} címkével"
+          unseen: "Nem látott témák a(z) %{category} kategóriában, %{tag} címkével"
+          hot: "Legnépszerűbb témák a(z) %{category} kategóriában, %{tag} címkével"
+          posted: "A(z) %{category} kategóriában található %{tag} címkéjű témák, amelyekhez hozzászóltál"
+          bookmarks: "A(z) %{category} kategóriában található %{tag} címkéjű témák, amelyeket könyjelzőhöz adtál"
+          default: "%{filter} témák a(z) %{category} kategóriában, %{tag} címkével"
+        no_tags:
+          all:
+            latest: "Legújabb témák címkék nélkül"
+            top: "Legnépszerűbb témák címkék nélkül"
+            new: "Új témák címkék nélkül"
+            unread: "Olvasatlan témák címkék nélkül"
+            unseen: "Nem látott témák címkék nélkül"
+            hot: "Népszerű témák címkék nélkül"
+            posted: "Címkék nélküli témák, amelyekben bejegyzést tettél közzé"
+            bookmarks: "Címkék nélküli, könyvjelzővel megjelölt témák"
+            default: "Címkék nélküli témák"
+          category:
+            latest: "%{category} kategória legújabb témái, címkék nélkül"
+            top: "%{category} kategória legnépszerűbb témái, címkék nélkül"
+            new: "%{category} kategória új témái, címkék nélkül"
+            unread: "%{category} kategória olvasatlan témái, címkék nélkül"
+            unseen: "%{category} kategória nem látott témái, címkék nélkül"
+            hot: "%{category} kategória népszerű témái, címkék nélkül"
+            posted: "%{category} kategória legújabb, címke nélküli témái, amelyekben hozzászóltál"
+            bookmarks: "%{category} kategória címke nélküli témái, amelyeket könyvjelzőhöz adtál"
+            default: "%{filter} témák a(z) %{category} kategóriában címkék nélkül"
         categories: "Minden kategória"
   admin_js:
     type_to_filter: "Írj ide a szűréshez.."
@@ -4932,6 +5014,7 @@ hu:
           header_description: "Konfigurálja a felhasználók bejelentkezési és hitelesítési módját, a titkokat és kulcsokat, az OAuth2-szolgáltatókat stb"
         logo:
           title: "Logó"
+          header_description: "A webhelyen használt logók és ikonok testreszabása"
           form:
             saved: "A logó beállításai mentésre kerülnek."
             logo:
@@ -4973,15 +5056,18 @@ hu:
               title: "Sötét mobillogó"
               help_text: "Használjon széles, téglalap alakú, 120 magasságú és 3:1-nél nagyobb képarányú képet."
             manifest_icon:
+              title: "Manifeszt ikon"
               description: "Az Androidon logóként/splash képként használt kép. Ha üresen hagyja, a large_icon lesz használatban."
               help_text: "Az ajánlott méret 512 x 512 pixel."
             manifest_screenshots:
+              title: "Manifeszt képernyőképek"
               description: "Képernyőképek, amelyek bemutatják az Ön példányának jellemzőit és funkcionalitását a telepítés oldalon. Minden képnek helyi feltöltésűnek kell lennie és azonos méretűnek."
             apple_touch_icon:
               title: "Apple touch ikon"
               description: "Apple érintőképernyős eszközökhöz használt ikon. Ha üresen hagyja, a large_icon lesz használatban."
               help_text: "Az ajánlott méret 180 x 180 pixel. Az átlátszó háttér nem ajánlott."
             digest_logo:
+              title: "Összefoglaló logó"
               description: "A webhelye e-mailes összefoglalójának tetején használt alternatív logókép. Ha üresen hagyja, akkor a „logó” beállításból származó kép kerül felhasználásra."
               help_text: "Használjon széles téglalap alakú képet. Ne használjon SVG-képet."
             opengraph_image:
@@ -4993,8 +5079,10 @@ hu:
               help_text: "az ajánlott méret legalább 280 x 150 pixel. Ne használjon SVG-képet."
         fonts:
           title: "Betűtípusok"
+          header_description: "Konfigurálja a webhelyén használt betűtípusokat, beleértve az alapbetűtípust, a címsor betűtípusát és az alapértelmezett szövegméretet."
           form:
             more_fonts: "További betűtípusok"
+            fewer_fonts: "Kevesebb betűtípus"
             saved: "A betűtípus beállítások mentésre kerültek"
             base_font:
               title: "Alap betűtípus"
@@ -5122,6 +5210,7 @@ hu:
           header_description: "Az összetevők kisebb testreszabások, amelyek hozzáadhatók a témákhoz, hogy megváltoztassák a fórum kialakításának stílusát"
           keywords: "téma|összetevő|bővítmény"
         themes_and_components:
+          title: "Témák és összetevők"
           header_description: "Személyre szabhatja Discourse oldalát az igényeinek megfelelő témákkal és összetevőkkel"
           keywords: "téma|összetevő|kiterjesztés|testreszabás"
         site_admin:
@@ -5203,7 +5292,14 @@ hu:
           title: "Beágyazás"
           header_description: "A Discourse képes beágyazni egy téma hozzászólásait egy távoli webhelyre egy Javascript API segítségével, amely létrehoz egy IFRAME-t."
       search:
+        modal_title: "Keresés adminban"
         title: "Keresés"
+        instructions: "Keresés adminban..."
+        full_page_link: "Váltás teljes oldalas keresésre"
+        no_results: 'Nem találtunk semmit, ami megfelelne a(z) "%{filter}" kifejezésnek.'
+        result_count:
+          one: '%{count} eredmény a(z) „%{filter}” kifejezésre'
+          other: '%{count} találat a(z) „%{filter}” kifejezésre'
         result_types:
           page:
             one: "Oldal"
@@ -5803,13 +5899,20 @@ hu:
           city_for_disputes_help: |
             Adja meg a várost a fórummal kapcsolatos jogi viták rendezésére.
           extra_groups:
+            heading: "Csoportos felsorolás"
+            description: "További csoportok megjelenítése a Névjegy oldalon."
             groups: "Csoportok"
+            order: "Rendezési sorrend"
+            initial_members: "Bővített tagok"
+            initial_members_description: "A Továbbiak megtekintése gomb hozzáadása előtt megjelenítendő csoporttagok száma."
+            show_description: "Leírás hozzáadása"
           optional: "(nem kötelező)"
           update: "Frissítés"
           toasts:
             general_settings_saved: "Általános beállítások mentve"
             contact_information_saved: "Elérhetőség mentve"
             your_organization_saved: "Szervezet mentve"
+            extra_groups_saved: "Csoportos listázás mentve"
           saved: "mentve!"
         flags:
           edit_header: "Megjelölés szerkesztése"
@@ -5860,9 +5963,11 @@ hu:
           install: "Telepítés"
           themes:
             title: "Témák"
+            description: "Webhelyszintű témák, amelyek megváltoztatják a webhely általános megjelenését és hangulatát minden felhasználó számára."
             themes_intro: "A kezdéshez telepítsen új témát, vagy hozzon létre saját témát a semmiből ezen erőforrások segítségével."
             new_theme: "Új téma"
             back: "Vissza a témákhoz"
+            install: "Telepítés"
           components:
             title: "Összetevők"
             description: "Testreszabások, amelyek megváltoztatják a fórum kialakításának felületi elemeit, vagy további front-end szolgáltatásokat adnak hozzá"
@@ -5927,7 +6032,9 @@ hu:
           unsaved_changes: "Nem mentett módosításai vannak"
           copy_of: "%{name} másolata"
           copy_created: '%{name} Új példánya létrehozva'
-          illegal_character_in_color: "A színek csak hexadecimális karakterekből állnak."
+          illegal_character_in_color: "A szín csak hexadecimális karakterekből állhat"
+          invalid_color_length: "A színnek #rrggbb vagy #rgb formátumúnak kell lennie."
+          delete_confirm: "Biztosan törölni szeretné ezt a színpalettát?"
       plugins:
         title: "Bővítmények"
         name: "Név"
@@ -6222,6 +6329,15 @@ hu:
           remote_theme_edits: "Ha szerkeszteni szeretné ezt a témát, <a href='%{repoURL}' target='_blank'>módosítást kell küldenie a tárolójába</a>"
           repo_unreachable: "Nem sikerült kapcsolatba lépni a téma Git tárolójával. Hiba üzenet:"
           imported_from_archive: "Ez a téma egy .zip fájlból lett importálva"
+          settings: "Beállítások"
+          colors: "Színek"
+          unsaved_colors:
+            one: "%{count} mentetlen szín van"
+            other: "%{count} mentetlen szín van"
+          unsaved_colors_leave_route_confirmation: "Még nem mentette a színpaletta módosításait. Biztosan kilép?"
+          save_colors: "Színek mentése"
+          discard_colors: "Elvetés"
+          colors_title: "Színek"
           scss:
             text: "CSS"
             title: "Egyéni CSS-szabályok SCSS-szintaxis támogatásával"
@@ -6301,44 +6417,62 @@ hu:
           about: "Módosítsa a témák által használt színeket. Kezdésként hozzon létre egy új színpalettát."
           new_name: "Új színpaletta"
           copy_name_prefix: "másolata"
+          delete_confirm: "Biztosan törölni szeretné ezt a színpalettát?"
           undo: "Visszavonás"
           undo_title: "A szín legutóbbi mentése óta végrehajtott módosítások visszavonása."
           revert: "Visszaállítás"
           revert_title: "A szín visszaállítása a Discouse alapértelmezett színpalettájának megfelelőre."
           primary:
             name: "Elsődleges"
+            description: "Fő szöveg és ikonok"
           primary-medium:
             name: "elsődleges-közepes"
+            description: "Letiltott vagy némított szöveg"
           primary-low-mid:
             name: "elsődleges-alacsony-közép"
+            description: "Szegélyek és finom díszítések"
           secondary:
             name: "Másodlagos"
+            description: "Fő háttér és néhány gombszöveg"
           tertiary:
             name: "harmadlagos"
+            description: "Kiemelő szín (linkek, gombok, jelvények)"
           quaternary:
             name: "negyedrendű"
+            description: "Opcionális témakiegészítő"
           header_background:
             name: "Fejléc háttere"
+            description: "Fejléc háttere"
           header_primary:
             name: "fejléc elsődleges"
+            description: "Fejléc szövege és ikonjai"
           highlight:
             name: "kiemelés"
+            description: "Kiemelt bejegyzések vagy témák"
           highlight-high:
             name: "kiemelés-magas"
+            description: "Erős kiemelés"
           highlight-medium:
             name: "kiemelés-közepes"
+            description: "Közepes kiemelés"
           highlight-low:
             name: "kiemelés-alacsony"
+            description: "Finom kiemelés"
           danger:
             name: "veszély"
+            description: "Hibák és törlési műveletek"
           success:
             name: "siker"
+            description: "Sikeres intézkedések"
           love:
             name: "szerelem"
+            description: "Tetszik gomb"
           selected:
             name: "kiválasztott"
+            description: "Aktív vagy kiválasztott elemek"
           hover:
             name: "hover"
+            description: "Hover vagy focus háttér"
           editor:
             light: "Világos"
             dark: "Sötét"

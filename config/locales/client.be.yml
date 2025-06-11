@@ -1903,6 +1903,9 @@ be:
           enable: "Уключыць"
           disable: "Адключыць"
           add: "Дадаць"
+          settings: "Налады"
+          colors: "<......"
+          colors_title: "<......"
           all_filter: "Усё"
           active_filter: "актыўныя"
         schema:

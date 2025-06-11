@@ -4140,6 +4140,7 @@ ur:
           install: "انسٹال"
           themes:
             title: "تِھیمز"
+            install: "انسٹال"
           components:
             title: "اجزاء"
             install: "انسٹال"
@@ -4378,6 +4379,10 @@ ur:
           remote_theme_edits: "اگر آپ اس تھیم میں ترمیم کرنا چاہتے ہیں، تو آپ کو <a href='%{repoURL}' target='_blank'>اس کے ریپوزٹری پرتبدیلی درج کروانا ہوگی</a>"
           repo_unreachable: "اِس تِھیم کی گِٹ رِیپَوزِٹَری سے رابطہ نہیں کیا جا سکا۔ تکنیکی خرابی کا پیغام:"
           imported_from_archive: "یہ تھیم زپ فائل سے درآمد کی گئی تھی۔"
+          settings: "ترتیبات"
+          colors: "رنگ"
+          discard_colors: "منسوخ"
+          colors_title: "رنگ"
           scss:
             text: "CSS"
           after_header:

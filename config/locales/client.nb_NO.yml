@@ -4794,6 +4794,7 @@ nb_NO:
           install: "Installer"
           themes:
             title: "Drakter"
+            install: "Installer"
           components:
             title: "Komponenter"
             install: "Installer"
@@ -5008,6 +5009,10 @@ nb_NO:
           commits_behind:
             one: "Drakten er én utgave foreldet!"
             other: "Drakten er %{count} utgaver foreldet!"
+          settings: "Innstillinger"
+          colors: "Farger"
+          discard_colors: "Forkast"
+          colors_title: "Farger"
           scss:
             text: "CSS"
           after_header:

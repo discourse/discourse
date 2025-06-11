@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
@@ -10,6 +11,7 @@ import concatClass from "discourse/helpers/concat-class";
 import { bind } from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
 import loadAce from "discourse/lib/load-ace-editor";
+import grippieDragResize from "discourse/modifiers/grippie-drag-resize";
 import { i18n } from "discourse-i18n";
 
 const WAITER = buildWaiter("ace-editor");
@@ -264,6 +266,11 @@ export default class AceEditor extends Component {
     }
   }
 
+  @bind
+  onResizeDrag(size) {
+    this.editor.container.style.height = `${size}px`;
+  }
+
   <template>
     <div class="ace-wrapper">
       <ConditionalLoadingSpinner @condition={{this.isLoading}} @size="small">
@@ -278,6 +285,16 @@ export default class AceEditor extends Component {
           ...attributes
         >
         </div>
+        {{#if @resizable}}
+          <div
+            class="grippie"
+            {{grippieDragResize
+              ".ace_editor--resizable"
+              "bottom"
+              (hash onThrottledDrag=this.onResizeDrag)
+            }}
+          ></div>
+        {{/if}}
       </ConditionalLoadingSpinner>
     </div>
   </template>

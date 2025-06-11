@@ -5961,9 +5961,11 @@ fi:
           install: "Asenna"
           themes:
             title: "Teemat"
+            description: "Sivuston laajuiset teemat, jotka muuttavat sivustosi yleistä ulkoasua ja tunnelmaa kaikille käyttäjille."
             themes_intro: "Aloita asentamalla uusi teema tai luo oma alusta alkaen näiden resurssien avulla."
             new_theme: "Uusi teema"
             back: "Takaisin teemoihin"
+            install: "Asenna"
           components:
             title: "Komponentit"
             description: "Mukautukset, jotka muuttavat foorumisuunnittelun pintaelementtejä tai lisäävät käyttöliittymäominaisuuksia"
@@ -6028,7 +6030,8 @@ fi:
           unsaved_changes: "Sinulla on tallentamattomia muutoksia"
           copy_of: "Kopio %{name}"
           copy_created: 'Uusi kopio "%{name}" on luotu'
-          illegal_character_in_color: "Värit koostuvat vain heksadesimaaleista merkeistä"
+          illegal_character_in_color: "Väri saa koostua vain heksadesimaalimerkeistä"
+          invalid_color_length: "Värin on oltava muodossa #rrggbb tai #rgb"
           delete_confirm: "Haluatko varmasti poistaa tämän väripaletin?"
       plugins:
         title: "Lisäosat"
@@ -6324,6 +6327,15 @@ fi:
           remote_theme_edits: "Jos haluat muokata tätä teemaa, sinun on <a href='%{repoURL}' target='_blank'>lähetettävä muutos sen tietovarastoon</a>"
           repo_unreachable: "Teeman Git-tietovarastoon yhdistäminen epäonnistui. Virheviesti:"
           imported_from_archive: "Tämä teema tuotiin .zip-tiedostosta"
+          settings: "Asetukset"
+          colors: "Värit"
+          unsaved_colors:
+            one: "Sinulla on %{count} tallentamaton väri"
+            other: "Sinulla on %{count} tallentamattomia värejä"
+          unsaved_colors_leave_route_confirmation: "Et ole vielä tallentanut väripaletin muutoksia. Oletko varma, että haluat lähteä?"
+          save_colors: "Tallenna värit"
+          discard_colors: "Hylkää"
+          colors_title: "Värit"
           scss:
             text: "CSS"
             title: "Mukautetut CSS-säännöt, jotka tukevat SCSS-syntaksia"

@@ -18,7 +18,8 @@
 .topic-list tr.selected,
 .topic-list-item.selected,
 .featured-topic.selected,
-.topic-post.selected,
+.topic-post,
+.post-stream--cloaked,
 .latest-topic-list-item.selected,
 .search-results .fps-result.selected {
   &:focus-visible {

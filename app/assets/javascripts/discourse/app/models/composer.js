@@ -1119,6 +1119,7 @@ export default class Composer extends RestModel {
 
     const cooked = this.getCookedHtml();
     post.setProperties({ cooked, staged: true });
+    // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
     this.appEvents.trigger("post-stream:refresh", { id: post.id });
 
     return promise
@@ -1131,6 +1132,7 @@ export default class Composer extends RestModel {
       .catch(rollback)
       .finally(() => {
         post.set("staged", false);
+        // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
         this.appEvents.trigger("post-stream:refresh", { id: post.id });
       });
   }
