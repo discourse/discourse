@@ -399,29 +399,6 @@ class CookedPostProcessor
 
     begin
       @doc
-        .css("video")
-        .each do |video|
-          src = video["src"]
-          next if src.blank?
-
-          # Look for optimized video
-          upload = Upload.get_from_url(src)
-          if upload && optimized_video = OptimizedVideo.find_by(upload_id: upload.id)
-            # Only update if the URL is different
-            if video["src"] != optimized_video.url
-              video["data-original-video-src"] = video["src"] unless video[
-                "data-original-video-src"
-              ]
-              video["src"] = optimized_video.url
-              changes_made = true
-            end
-            # Ensure we maintain reference to original upload
-            @post.link_post_uploads(fragments: @doc)
-          end
-        end
-
-      # Handle video placeholders
-      @doc
         .css(".video-placeholder-container")
         .each do |container|
           src = container["data-video-src"]
