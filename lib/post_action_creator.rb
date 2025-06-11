@@ -385,15 +385,16 @@ class PostActionCreator
   def create_reviewable(result)
     return unless flagging_post?
 
-    # Return early if the reviewable is being created for a user with a negative user_id. Plugin apply_modifier
-    # can remove this early return for special cases.
-    block_reviewable_creation_for_nonhuman =
-      DiscoursePluginRegistry.apply_modifier(
-        :post_action_creator_block_reviewable_for_bot,
-        @post.user_id.to_i < 0,
-        @post,
-      )
-    return if block_reviewable_creation_for_nonhuman
+    # Return early if the reviewable is being created for a user with a negative user_id.
+    # Plugin apply_modifier can remove this early return for special cases.
+    is_non_human_creator = @post.user_id.to_i < 0
+    if DiscoursePluginRegistry.apply_modifier(
+         :post_action_creator_block_reviewable_for_bot,
+         is_non_human_creator,
+         @post,
+       )
+      return
+    end
 
     result.reviewable =
       ReviewableFlaggedPost.needs_review!(
