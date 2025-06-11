@@ -18,14 +18,8 @@ acceptance("New Topics - New new view enabled", function (needs) {
 
   test("visiting new page when there are no new topics", async function (assert) {
     await visit("/new");
-
-    const text = new DOMParser().parseFromString(
-      i18n("topics.none.educate.new_new", {
-        userPrefsUrl: "/u/eviltrout/preferences/tracking",
-      }),
-      "text/html"
-    ).documentElement.textContent;
-
-    assert.dom(".topic-list-bottom .education").hasText(text);
+    assert
+      .dom(".topic-list-bottom .empty-topic-filter-education__text")
+      .hasText(i18n("topics.none.education.new_new"));
   });
 });
