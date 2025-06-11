@@ -199,6 +199,7 @@ export default class Post extends RestModel {
   @trackedPostProperty staff;
   @trackedPostProperty staged;
   @trackedPostProperty title_is_group;
+  @trackedPostProperty topic;
   @trackedPostProperty topic_id;
   @trackedPostProperty trust_level;
   @trackedPostProperty updated_at;
@@ -607,6 +608,10 @@ export default class Post extends RestModel {
           skip =
             value.username === oldValue.username ||
             get(value, "username") === get(oldValue, "username");
+        } else if (key === "topic" && !value && oldValue) {
+          // if `topic` is already set in the new instance we don't want to overwrite it with null, because the old
+          // instance wasn't fully initialized yet.
+          skip = true;
         }
 
         if (!skip) {
