@@ -327,77 +327,82 @@ class UserMerger
                            user_ids: [@acting_user.id]
     end
 
-    categr =
-      Benchmark.measure do
-        Category.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
-      end
-    puts "time updating categories: #{categr.real.round(2)}"
+    Category.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
 
-    part_1 =
-      Benchmark.measure do
-        update_user_id(:category_users, conditions: ["x.category_id = y.category_id"])
+    update_user_id(:category_users, conditions: ["x.category_id = y.category_id"])
 
-        update_user_id(:developers)
+    update_user_id(:developers)
 
-        update_user_id(:draft_sequences, conditions: "x.draft_key = y.draft_key")
-        update_user_id(:drafts, conditions: "x.draft_key = y.draft_key")
+    update_user_id(:draft_sequences, conditions: "x.draft_key = y.draft_key")
+    update_user_id(:drafts, conditions: "x.draft_key = y.draft_key")
 
-        update_user_id(:dismissed_topic_users, conditions: "x.topic_id = y.topic_id")
-      end
-    puts "time updating part 1 - conditions: #{part_1.real.round(2)}"
+    update_user_id(:dismissed_topic_users, conditions: "x.topic_id = y.topic_id")
 
-    part_2 =
-      Benchmark.measure do
-        EmailLog.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
+    EmailLog.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
 
-        GroupHistory.where(acting_user_id: @source_user.id).update_all(
-          acting_user_id: @target_user.id,
-        )
-        GroupHistory.where(target_user_id: @source_user.id).update_all(
-          target_user_id: @target_user.id,
-        )
+    GroupHistory.where(acting_user_id: @source_user.id).update_all(acting_user_id: @target_user.id)
+    GroupHistory.where(target_user_id: @source_user.id).update_all(target_user_id: @target_user.id)
 
-        update_user_id(:group_users, conditions: "x.group_id = y.group_id")
-      end
-    puts "time updating part 2 - group history: #{part_2.real.round(2)}"
+    update_user_id(:group_users, conditions: "x.group_id = y.group_id")
 
-    part_3 =
+    in_mail =
       Benchmark.measure do
         IncomingEmail.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
+      end
+    puts "time updating incoming email: #{in_mail.real.round(2)}"
 
+    in_link =
+      Benchmark.measure do
         IncomingLink.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
+      end
+    puts "time updating incoming link: #{in_link.real.round(2)}"
+
+    in_link_curr =
+      Benchmark.measure do
         IncomingLink.where(current_user_id: @source_user.id).update_all(
           current_user_id: @target_user.id,
         )
+      end
+    puts "time updating incoming link current user: #{in_link_curr.real.round(2)}"
 
+    in_user =
+      Benchmark.measure do
         InvitedUser.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
+      end
+    puts "time updating invited user: #{in_user.real.round(2)}"
+
+    invie =
+      Benchmark.measure do
         Invite
           .with_deleted
           .where(invited_by_id: @source_user.id)
           .update_all(invited_by_id: @target_user.id)
+      end
+    puts "time updating invite: #{invie.real.round(2)}"
+
+    in_del =
+      Benchmark.measure do
         Invite
           .with_deleted
           .where(deleted_by_id: @source_user.id)
           .update_all(deleted_by_id: @target_user.id)
       end
-    puts "time updating part 3 - invites: #{part_3.real.round(2)}"
-    part_4 =
-      Benchmark.measure do
-        update_user_id(:muted_users, conditions: "x.muted_user_id = y.muted_user_id")
-        update_user_id(
-          :muted_users,
-          user_id_column_name: "muted_user_id",
-          conditions: "x.user_id = y.user_id",
-        )
+    puts "time updating invite with delete: #{in_del.real.round(2)}"
 
-        update_user_id(:ignored_users, conditions: "x.ignored_user_id = y.ignored_user_id")
-        update_user_id(
-          :ignored_users,
-          user_id_column_name: "ignored_user_id",
-          conditions: "x.user_id = y.user_id",
-        )
-      end
-    puts "time updating part 4 - muted and ignored users: #{part_4.real.round(2)}"
+    update_user_id(:muted_users, conditions: "x.muted_user_id = y.muted_user_id")
+    update_user_id(
+      :muted_users,
+      user_id_column_name: "muted_user_id",
+      conditions: "x.user_id = y.user_id",
+    )
+
+    update_user_id(:ignored_users, conditions: "x.ignored_user_id = y.ignored_user_id")
+    update_user_id(
+      :ignored_users,
+      user_id_column_name: "ignored_user_id",
+      conditions: "x.user_id = y.user_id",
+    )
+
     Notification.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
 
     post_act =
