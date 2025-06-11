@@ -192,15 +192,12 @@ export default class Post extends RestModel {
   @trackedPostProperty post_number;
   @trackedPostProperty post_type;
   @trackedPostProperty primary_group_name;
-  @trackedPostProperty quoted;
   @trackedPostProperty read;
   @trackedPostProperty reply_count;
   @trackedPostProperty reply_to_user;
   @trackedPostProperty staff;
   @trackedPostProperty staged;
   @trackedPostProperty title_is_group;
-  @trackedPostProperty topic_id;
-  @trackedPostProperty topic;
   @trackedPostProperty trust_level;
   @trackedPostProperty updated_at;
   @trackedPostProperty user;

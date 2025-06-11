@@ -6,7 +6,6 @@ import { htmlSafe } from "@ember/template";
 import curryComponent from "ember-curry-component";
 import DecoratedHtml from "discourse/components/decorated-html";
 import { bind } from "discourse/lib/decorators";
-import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { makeArray } from "discourse/lib/helpers";
 import decorateLinkCounts from "discourse/lib/post-cooked-html-decorators/link-counts";
 import decorateMentions from "discourse/lib/post-cooked-html-decorators/mentions";
@@ -48,62 +47,48 @@ export default class PostCookedHtml extends Component {
 
     [...POST_COOKED_DECORATORS, ...this.extraDecorators].forEach(
       (decorator) => {
-        try {
-          if (!this.#decoratorState.has(decorator)) {
-            this.#decoratorState.set(decorator, {});
-          }
+        if (!this.#decoratorState.has(decorator)) {
+          this.#decoratorState.set(decorator, {});
+        }
 
-          const owner = getOwner(this);
-          const decorationCleanup = decorator(element, {
-            data: {
-              post: this.args.post,
-              cooked: this.cooked,
+        const owner = getOwner(this);
+        const decorationCleanup = decorator(element, {
+          data: {
+            post: this.args.post,
+            cooked: this.cooked,
+            highlightTerm: this.highlightTerm,
+            isIgnored: this.isIgnored,
+            ignoredUsers: this.ignoredUsers,
+          },
+          createDetachedElement: this.#createDetachedElement,
+          currentUser: this.currentUser,
+          helper,
+          renderNestedPostCookedHtml: (
+            nestedElement,
+            nestedPost,
+            extraDecorators
+          ) => {
+            const nestedArguments = {
+              post: nestedPost,
+              streamElement: false,
               highlightTerm: this.highlightTerm,
-              isIgnored: this.isIgnored,
-              ignoredUsers: this.ignoredUsers,
-            },
-            createDetachedElement: this.#createDetachedElement,
-            currentUser: this.currentUser,
-            helper,
-            renderNestedPostCookedHtml: (
+              extraDecorators: [
+                ...this.extraDecorators,
+                ...makeArray(extraDecorators),
+              ],
+            };
+
+            helper.renderGlimmer(
               nestedElement,
-              nestedPost,
-              extraDecorators,
-              extraArguments
-            ) => {
-              const nestedArguments = {
-                ...extraArguments,
-                post: nestedPost,
-                streamElement: false,
-                highlightTerm: this.highlightTerm,
-                extraDecorators: [
-                  ...this.extraDecorators,
-                  ...makeArray(extraDecorators),
-                ],
-              };
+              curryComponent(PostCookedHtml, nestedArguments, owner)
+            );
+          },
+          owner,
+          state: this.#decoratorState.get(decorator),
+        });
 
-              helper.renderGlimmer(
-                nestedElement,
-                curryComponent(PostCookedHtml, nestedArguments, owner)
-              );
-            },
-            owner,
-            state: this.#decoratorState.get(decorator),
-          });
-
-          if (typeof decorationCleanup === "function") {
-            this.#pendingDecoratorCleanup.push(decorationCleanup);
-          }
-        } catch (e) {
-          if (isRailsTesting() || isTesting()) {
-            throw e;
-          } else {
-            // in case one of the decorators throws an error we want to surface it to the console but prevent
-            // the application from crashing
-
-            // eslint-disable-next-line no-console
-            console.error(e);
-          }
+        if (typeof decorationCleanup === "function") {
+          this.#pendingDecoratorCleanup.push(decorationCleanup);
         }
       }
     );
