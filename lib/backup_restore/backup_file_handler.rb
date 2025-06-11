@@ -46,6 +46,18 @@ module BackupRestore
       log "Something went wrong while removing the following tmp directory: #{@tmp_directory}", ex
     end
 
+    def self.download(url)
+      FileHelper.download(
+        url,
+        max_file_size: Float::INFINITY,
+        tmp_file_name: File.basename(URI.parse(url).path),
+        follow_redirect: true,
+        skip_rate_limit: true,
+        validate_uri: false,
+        verbose: true,
+      )
+    end
+
     protected
 
     def create_tmp_directory
@@ -61,7 +73,7 @@ module BackupRestore
 
     def download_archive_to_tmp_directory
       log "Downloading archive from URL to tmp directory..."
-      tmpfile = BackupFile.download(@url)
+      tmpfile = self.class.download(@url)
       Discourse::Utils.execute_command("mv", tmpfile.path, @archive_path)
     ensure
       tmpfile&.unlink

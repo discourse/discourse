@@ -174,7 +174,7 @@ class DiscourseCLI < Thor
     end
 
     puts "Downloading backup file from #{url}..."
-    tmpfile = BackupFile.download(url)
+    tmpfile = BackupRestore::BackupFileHandler.download(url)
 
     if store.remote?
       puts "Uploading backup file to remote store..."
