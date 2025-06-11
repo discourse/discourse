@@ -387,10 +387,10 @@ class PostActionCreator
 
     # Return early if the reviewable is being created for a user with a negative user_id.
     # Plugin apply_modifier can remove this early return for special cases.
-    is_non_human_creator = @post.user_id.to_i < 0
+    is_bot_post = @post.user_id.to_i < 0
     if DiscoursePluginRegistry.apply_modifier(
          :post_action_creator_block_reviewable_for_bot,
-         is_non_human_creator,
+         is_bot_post,
          @post,
        )
       return
