@@ -21,7 +21,7 @@ export default class PostMenuFlagButton extends Component {
     return applyValueTransformer(
       "flag-button-render-decision",
       show,
-      { post, componentContext: helper } // Pass post and component instance as context
+      { post } // Pass post and component instance as context
     );
   }
 
@@ -29,7 +29,6 @@ export default class PostMenuFlagButton extends Component {
     // Provide an empty string as the default class, and pass post and component instance as context
     return applyValueTransformer("flag-button-dynamic-class", "", {
       post: this.args.post,
-      componentContext: this,
     });
   }
 
@@ -37,7 +36,6 @@ export default class PostMenuFlagButton extends Component {
     // Default to false (enabled), allow plugin to override
     return applyValueTransformer("flag-button-disabled-state", false, {
       post: this.args.post,
-      componentContext: this,
     });
   }
 
