@@ -35,7 +35,7 @@ export default class TranslationPlaceholder extends Component {
   <template>
     {{#if (eq @placeholder @name)}}
       {{yield}}
-      <span {{didInsert this.markAsRendered}}></span>
+      <span {{didInsert this.markAsRendered}} />
     {{/if}}
   </template>
 }

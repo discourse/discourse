@@ -84,8 +84,10 @@ export default class Translation extends Component {
     );
 
     this._placeholderAppearance.forEach((_, placeholderName) => {
-      this._placeholderKeys[placeholderName] =
-        `__PLACEHOLDER__${placeholderName}__${uniqueId()}__`;
+      this._placeholderKeys.set(
+        placeholderName,
+        `__PLACEHOLDER__${placeholderName}__${uniqueId()}__`
+      );
       this._placeholderElements.set(
         placeholderName,
         document.createElement("span")
@@ -93,7 +95,7 @@ export default class Translation extends Component {
     });
 
     const text = i18n(this.args.scope, {
-      ...this._placeholderKeys,
+      ...Object.fromEntries(this._placeholderKeys),
       ...optionsArg,
     });
 
@@ -186,6 +188,6 @@ export default class Translation extends Component {
         {{yield (this.placeholderElement placeholderKey) to="placeholders"}}
       {{/in-element}}
     {{/each-in}}
-    <span {{didInsert this.checkPlaceholders}}></span>
+    <span {{didInsert this.checkPlaceholders}} />
   </template>
 }

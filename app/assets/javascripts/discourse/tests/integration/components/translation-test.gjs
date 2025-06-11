@@ -69,7 +69,7 @@ module("Integration | Component | Translation", function (hooks) {
       <template>
         <Translation
           @scope="with_options"
-          @options={{(hash name="John" site="Discourse")}}
+          @options={{hash name="John" site="Discourse"}}
         />
       </template>
     );
@@ -80,7 +80,7 @@ module("Integration | Component | Translation", function (hooks) {
   test("renders translation with both string options and component placeholders", async function (assert) {
     await render(
       <template>
-        <Translation @scope="mixed_placeholders" @options={{(hash count=5)}}>
+        <Translation @scope="mixed_placeholders" @options={{hash count=5}}>
           <:placeholders as |Placeholder|>
             <Placeholder @name="username">
               <UserLink @username="alice">alice</UserLink>
@@ -99,7 +99,7 @@ module("Integration | Component | Translation", function (hooks) {
       <template>
         <Translation
           @scope="multiple_placeholders"
-          @options={{(hash time="2:30 PM")}}
+          @options={{hash time="2:30 PM"}}
         >
           <:placeholders as |Placeholder|>
             <Placeholder @name="user">
