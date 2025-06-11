@@ -19,10 +19,6 @@ RSpec.describe "Anonymous user language switcher", type: :system do
     SiteSetting.experimental_content_localization = true
     SiteSetting.allow_user_locale = true
     SiteSetting.set_locale_from_cookie = true
-
-    if SiteSetting.client_settings.exclude?(:available_content_localization_locales)
-      SiteSetting.client_settings << :available_content_localization_locales
-    end
   end
 
   it "only shows the language switcher based on what is in target languages" do

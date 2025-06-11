@@ -28,7 +28,7 @@ export default class PostTranslationsModal extends Component {
 
   get originalPostContent() {
     const originalLocale =
-      this.args.model.post.locale || this.siteSettings.default_locale;
+      this.args.model.post?.locale || this.siteSettings.default_locale;
 
     return `<div class='d-editor-translation-preview-wrapper'>
          <span class='d-editor-translation-preview-wrapper__header'>
