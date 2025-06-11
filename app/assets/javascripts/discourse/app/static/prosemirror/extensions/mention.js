@@ -4,7 +4,6 @@ import { isBoundary } from "discourse/static/prosemirror/lib/markdown-it";
 
 const VALID_MENTIONS = new Set();
 const INVALID_MENTIONS = new Set();
-const PENDING_MENTIONS = new Set();
 
 /** @type {RichEditorExtension} */
 const extension = {
@@ -99,7 +98,14 @@ const extension = {
             this.processMentionNodes(view);
           },
           processMentionNodes(view) {
-            const nodeList = [];
+            const mentionNames = [];
+            const mentionNodes = [];
+
+            if (this._processingMentionNodes) {
+              return;
+            }
+
+            this._processingMentionNodes = true;
 
             view.state.doc.descendants((node, pos) => {
               if (node.type.name !== "mention") {
@@ -107,31 +113,18 @@ const extension = {
               }
 
               const name = node.attrs.name;
-
-              if (
-                VALID_MENTIONS.has(name) ||
-                INVALID_MENTIONS.has(name) ||
-                PENDING_MENTIONS.has(name)
-              ) {
-                return;
-              }
-              PENDING_MENTIONS.add(name);
-              nodeList.push({ node, pos });
+              mentionNames.push(name);
+              mentionNodes.push({ name, node, pos });
             });
 
-            if (!nodeList.length) {
-              return;
-            }
-
             // process in reverse to avoid issues with position shifts
-            nodeList.sort((a, b) => b.pos - a.pos);
+            mentionNodes.sort((a, b) => b.pos - a.pos);
 
             const invalidateMentions = async () => {
-              await fetchMentions([...PENDING_MENTIONS]);
+              await fetchMentions(mentionNames);
 
-              for (const item of nodeList) {
-                const { node, pos } = item;
-                const name = node.attrs.name;
+              for (const mentionNode of mentionNodes) {
+                const { name, node, pos } = mentionNode;
 
                 if (VALID_MENTIONS.has(name)) {
                   continue;
@@ -146,7 +139,9 @@ const extension = {
               }
             };
 
-            invalidateMentions();
+            invalidateMentions().then(() => {
+              this._processingMentionNodes = false;
+            });
           },
         };
       },
@@ -155,13 +150,11 @@ const extension = {
 };
 
 async function fetchMentions(names) {
-  PENDING_MENTIONS.clear();
+  names.filter((name) => {
+    return !VALID_MENTIONS.has(name) && !INVALID_MENTIONS.has(name);
+  });
 
-  names = names.filter(
-    (name) => !VALID_MENTIONS.has(name) && !INVALID_MENTIONS.has(name)
-  );
-
-  if (names.length === 0) {
+  if (!names.length) {
     return;
   }
 
