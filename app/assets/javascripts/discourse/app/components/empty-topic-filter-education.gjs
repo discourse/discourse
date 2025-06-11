@@ -24,7 +24,6 @@ export default class EmptyTopicFilterEducation extends Component {
   <template>
     <div class="empty-topic-filter-education">
 
-      <!-- SVG IMAGE START -->
       <div class="empty-topic-filter-education__image">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -305,7 +304,6 @@ export default class EmptyTopicFilterEducation extends Component {
           </g>
         </svg>
       </div>
-      <!-- SVG IMAGE END -->
 
       <div class="empty-topic-filter-education__text">
         <p>{{this.educationText}}</p>
