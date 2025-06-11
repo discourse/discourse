@@ -351,6 +351,22 @@
   .select-kit-header-wrapper {
     justify-content: center;
   }
+
+  &.--replaced-toolbar {
+    animation: float-left ease 0.2s 1 forwards;
+
+    @keyframes float-left {
+      0% {
+        opacity: 0;
+        transform: translateX(10px);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+  }
 }
 
 .d-editor #form-template-form {
