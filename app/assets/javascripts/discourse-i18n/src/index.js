@@ -240,10 +240,11 @@ export class I18n {
       }
 
       let regex = new RegExp(
-        placeholder.replace(/\{/gm, "\\{").replace(/\}/gm, "\\}")
+        placeholder.replace(/\{/gm, "\\{").replace(/\}/gm, "\\}"),
+        "gi"
       );
 
-      message = message.replace(regex, value);
+      message = message.replaceAll(regex, value);
     }
 
     return message;
