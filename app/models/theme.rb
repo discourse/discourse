@@ -8,6 +8,15 @@ class Theme < ActiveRecord::Base
 
   BASE_COMPILER_VERSION = 91
   CORE_THEMES = { "foundation" => -1, "horizon" => -2 }
+  EDITABLE_SYSTEM_FIELDS = %w[
+    child_theme_ids
+    color_scheme_id
+    default
+    locale
+    translations
+    user_selectable
+    updated_at
+  ]
 
   class SettingsMigrationError < StandardError
   end
@@ -83,6 +92,8 @@ class Theme < ActiveRecord::Base
   validate :validate_theme_fields
 
   after_create :update_child_components
+  before_update :check_before_update_system_theme, if: :system?
+  before_destroy :raise_invalid_access, if: :system?
 
   scope :user_selectable, -> { where("user_selectable OR id = ?", SiteSetting.default_theme_id) }
 
@@ -181,6 +192,15 @@ class Theme < ActiveRecord::Base
         child_themes << theme
       end
     end
+  end
+
+  def check_before_update_system_theme
+    return if (changes.keys - EDITABLE_SYSTEM_FIELDS).empty?
+    raise_invalid_access
+  end
+
+  def raise_invalid_access
+    raise Discourse::InvalidAccess
   end
 
   def update_javascript_cache!

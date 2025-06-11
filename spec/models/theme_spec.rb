@@ -6,6 +6,8 @@ RSpec.describe Theme do
 
   let(:guardian) { Guardian.new(user) }
   let(:child) { Fabricate(:theme, user: user, component: true) }
+  let(:horizon_theme) { Theme.find(Theme::CORE_THEMES["horizon"]) }
+  let(:foundation_theme) { Theme.find(Theme::CORE_THEMES["foundation"]) }
 
   before { ThemeJavascriptCompiler.disable_terser! }
 
@@ -1764,12 +1766,23 @@ HTML
     end
 
     it "returns system true for Horizon and Foundation themes" do
-      horizon_theme = Theme.where(name: "Horizon").first
-      foundation_theme = Theme.where(name: "Foundation").first
-
       expect(horizon_theme.system?).to be true
       expect(foundation_theme.system?).to be true
       expect(theme.system?).to be false
+    end
+
+    it "checks if fields can be updated for system themes" do
+      horizon_theme.update!(user_selectable: true)
+      expect(horizon_theme.user_selectable).to be true
+      expect { horizon_theme.update!(name: "edited system name") }.to raise_error(
+        Discourse::InvalidAccess,
+      )
+      expect { theme.update!(name: "edited name") }.not_to raise_error
+    end
+
+    it "does not allow system themes to be deleted" do
+      expect { horizon_theme.destroy! }.to raise_error(Discourse::InvalidAccess)
+      expect { theme.destroy! }.not_to raise_error
     end
   end
 end

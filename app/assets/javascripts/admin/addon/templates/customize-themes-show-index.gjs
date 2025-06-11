@@ -213,44 +213,42 @@ export default RouteTemplate(
         </div>
       {{/unless}}
 
-      {{#unless @controller.model.system}}
-        <div class="control-unit">
-          <div class="mini-title">{{i18n "admin.customize.theme.uploads"}}</div>
-          {{#if @controller.model.uploads}}
-            <ul class="removable-list">
-              {{#each @controller.model.uploads as |upload|}}
-                <li>
-                  {{! template-lint-disable no-unnecessary-curly-strings }}
-                  {{! workaround for https://github.com/typed-ember/glint/issues/840 }}
-                  <span class="col">{{"$"}}{{upload.name}}:
-                    <a
-                      href={{upload.url}}
-                      rel="noopener noreferrer"
-                      target="_blank"
-                    >{{upload.filename}}</a></span>
-                  <span class="col">
-                    <DButton
-                      @action={{fn @controller.removeUpload upload}}
-                      @icon="xmark"
-                      class="second btn-default btn-default cancel-edit"
-                    />
-                  </span>
-                </li>
-              {{/each}}
-            </ul>
-          {{else}}
-            <div class="description">{{i18n
-                "admin.customize.theme.no_uploads"
-              }}</div>
-          {{/if}}
-          <DButton
-            @action={{@controller.addUploadModal}}
-            @icon="plus"
-            @label="admin.customize.theme.add"
-            class="btn-default upload"
-          />
-        </div>
-      {{/unless}}
+      <div class="control-unit">
+        <div class="mini-title">{{i18n "admin.customize.theme.uploads"}}</div>
+        {{#if @controller.model.uploads}}
+          <ul class="removable-list">
+            {{#each @controller.model.uploads as |upload|}}
+              <li>
+                {{! template-lint-disable no-unnecessary-curly-strings }}
+                {{! workaround for https://github.com/typed-ember/glint/issues/840 }}
+                <span class="col">{{"$"}}{{upload.name}}:
+                  <a
+                    href={{upload.url}}
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >{{upload.filename}}</a></span>
+                <span class="col">
+                  <DButton
+                    @action={{fn @controller.removeUpload upload}}
+                    @icon="xmark"
+                    class="second btn-default btn-default cancel-edit"
+                  />
+                </span>
+              </li>
+            {{/each}}
+          </ul>
+        {{else}}
+          <div class="description">{{i18n
+              "admin.customize.theme.no_uploads"
+            }}</div>
+        {{/if}}
+        <DButton
+          @action={{@controller.addUploadModal}}
+          @icon="plus"
+          @label="admin.customize.theme.add"
+          class="btn-default upload"
+        />
+      </div>
     {{/unless}}
 
     {{#if @controller.extraFiles.length}}

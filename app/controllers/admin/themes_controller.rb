@@ -4,14 +4,6 @@ require "base64"
 
 class Admin::ThemesController < Admin::AdminController
   MAX_REMOTE_LENGTH = 10_000
-  ALLOW_EDIT_SYSTEM_FIELDS = %w[
-    child_theme_ids
-    color_scheme_id
-    default
-    locale
-    translations
-    user_selectable
-  ]
 
   skip_before_action :check_xhr, only: %i[show preview export]
   before_action :ensure_admin
@@ -230,7 +222,7 @@ class Admin::ThemesController < Admin::AdminController
     disables_component = [false, "false"].include?(theme_params[:enabled])
     enables_component = [true, "true"].include?(theme_params[:enabled])
 
-    if @theme.system? && (theme_params.keys - ALLOW_EDIT_SYSTEM_FIELDS).present?
+    if @theme.system? && (theme_params.keys - Theme::EDITABLE_SYSTEM_FIELDS).present?
       raise Discourse::InvalidAccess.new
     end
 
@@ -287,9 +279,9 @@ class Admin::ThemesController < Admin::AdminController
   end
 
   def destroy
+    raise Discourse::InvalidAccess if params[:id].to_i.negative?
     @theme = Theme.find_by(id: params[:id])
     raise Discourse::InvalidParameters.new(:id) unless @theme
-    raise Discourse::InvalidAccess.new if @theme.system?
 
     StaffActionLogger.new(current_user).log_theme_destroy(@theme)
     @theme.destroy
@@ -298,9 +290,9 @@ class Admin::ThemesController < Admin::AdminController
   end
 
   def bulk_destroy
+    params[:theme_ids] = params[:theme_ids].filter { |id| id.to_i.positive? }
     themes = Theme.where(id: params[:theme_ids])
     raise Discourse::InvalidParameters.new(:id) if themes.blank?
-    raise Discourse::InvalidAccess.new(:id) if themes.any? { |theme| theme.system? }
 
     ActiveRecord::Base.transaction do
       themes.each { |theme| StaffActionLogger.new(current_user).log_theme_destroy(theme) }
@@ -389,9 +381,9 @@ class Admin::ThemesController < Admin::AdminController
   end
 
   def change_colors
+    raise Discourse::InvalidAccess if params[:id].to_i.negative?
     theme = Theme.find_by(id: params[:id], component: false)
     raise Discourse::NotFound if !theme
-    raise Discourse::InvalidAccess if theme.system?
 
     palette = theme.find_or_create_owned_color_palette
 

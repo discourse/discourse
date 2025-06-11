@@ -433,7 +433,7 @@ RSpec.describe Admin::ThemesController do
 
       it "correctly returns themes" do
         ColorScheme.destroy_all
-        Theme.destroy_all
+        Theme.not_system.destroy_all
 
         theme = Fabricate(:theme)
         theme.set_field(target: :common, name: :scss, value: ".body{color: black;}")
@@ -624,7 +624,7 @@ RSpec.describe Admin::ThemesController do
       end
 
       it "can set system theme as default" do
-        theme.update!(id: -10)
+        theme.update_columns(id: -10)
         SiteSetting.default_theme_id = -1
 
         put "/admin/themes/#{theme.id}.json", params: { id: theme.id, theme: { default: true } }
@@ -700,7 +700,7 @@ RSpec.describe Admin::ThemesController do
       end
 
       it "only allows to update certain fields for system themes" do
-        theme.update(id: -10)
+        theme.update_columns(id: -10)
         child_theme = Fabricate(:theme, component: true)
         put "/admin/themes/#{theme.id}.json",
             params: {
@@ -1422,10 +1422,10 @@ RSpec.describe Admin::ThemesController do
     end
 
     it "does not destroy if any theme is system" do
-      theme.update!(id: -10)
+      theme.update_columns(id: -10)
       expect do
         delete "/admin/themes/bulk_destroy.json", params: { theme_ids: theme_ids }
-      end.not_to change { Theme.count }
+      end.to change { Theme.count }.by(-1)
     end
 
     it "logs the theme destroy action for each theme" do
@@ -1633,7 +1633,7 @@ RSpec.describe Admin::ThemesController do
     end
 
     context "when system theme" do
-      before { theme.update(id: -10) }
+      before { theme.update_columns(id: -10) }
 
       it "returns invalid access" do
         put "/admin/themes/#{theme.id}/change-colors.json",
