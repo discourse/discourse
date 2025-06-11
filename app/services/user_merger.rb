@@ -420,21 +420,35 @@ class UserMerger
       end
     puts "time updating post actions disagreed by: #{post_act4.real.round(2)}"
 
-    PostRevision.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
+    puts "===="
+    post_revis =
+      Benchmark.measure do
+        PostRevision.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
+      end
+    puts "time updating post revisions: #{post_revis.real.round(2)}"
 
-    Post
-      .with_deleted
-      .where(deleted_by_id: @source_user.id)
-      .update_all(deleted_by_id: @target_user.id)
-    Post
-      .with_deleted
-      .where(last_editor_id: @source_user.id)
-      .update_all(last_editor_id: @target_user.id)
-    Post.with_deleted.where(locked_by_id: @source_user.id).update_all(locked_by_id: @target_user.id)
-    Post
-      .with_deleted
-      .where(reply_to_user_id: @source_user.id)
-      .update_all(reply_to_user_id: @target_user.id)
+    puts "===="
+    posts_with =
+      Benchmark.measure do
+        Post
+          .with_deleted
+          .where(deleted_by_id: @source_user.id)
+          .update_all(deleted_by_id: @target_user.id)
+        Post
+          .with_deleted
+          .where(last_editor_id: @source_user.id)
+          .update_all(last_editor_id: @target_user.id)
+        Post
+          .with_deleted
+          .where(locked_by_id: @source_user.id)
+          .update_all(locked_by_id: @target_user.id)
+        Post
+          .with_deleted
+          .where(reply_to_user_id: @source_user.id)
+          .update_all(reply_to_user_id: @target_user.id)
+      end
+
+    puts "time updating posts: #{posts_with.real.round(2)}"
 
     Reviewable.where(created_by_id: @source_user.id).update_all(created_by_id: @target_user.id)
     ReviewableHistory.where(created_by_id: @source_user.id).update_all(
