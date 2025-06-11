@@ -362,10 +362,10 @@ export default class Post extends Component {
         )
       }}
       data-post-number={{@post.post_number}}
-      {{! This is not ideal, but the post-stream component sets the `id` for the children to ensure
-          all cloaked items can be referenced. Since the post component is wrapped in a `div` and sets
-          the same `id` below in the `article` tag, we need to override the `id` and only set it
-          in the `div` when the post is cloaked }}
+      {{! The post component is wrapped in a `div` and sets the same `id` below in the `article` tag,
+          we need to only set it in the `div` when the post is cloaked.
+          This is not ideal, but the post-stream component sets the `id` for the children to ensure
+          all cloaked items can be referenced and we need to override it }}
       id={{if @cloaked (concat "post_" @post.post_number)}}
     >
       {{#unless @cloaked}}
