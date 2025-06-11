@@ -384,7 +384,6 @@ class PostActionCreator
 
   def create_reviewable(result)
     return unless flagging_post?
-    return if @post.user_id.to_i < 0
 
     result.reviewable =
       ReviewableFlaggedPost.needs_review!(
