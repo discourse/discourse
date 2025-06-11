@@ -343,7 +343,11 @@ class UserMerger
         update_user_id(:drafts, conditions: "x.draft_key = y.draft_key")
 
         update_user_id(:dismissed_topic_users, conditions: "x.topic_id = y.topic_id")
+      end
+    puts "time updating part 1 - conditions: #{part_1.real.round(2)}"
 
+    part_2 =
+      Benchmark.measure do
         EmailLog.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
 
         GroupHistory.where(acting_user_id: @source_user.id).update_all(
@@ -354,7 +358,11 @@ class UserMerger
         )
 
         update_user_id(:group_users, conditions: "x.group_id = y.group_id")
+      end
+    puts "time updating part 2 - group history: #{part_2.real.round(2)}"
 
+    part_3 =
+      Benchmark.measure do
         IncomingEmail.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
 
         IncomingLink.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
@@ -371,7 +379,10 @@ class UserMerger
           .with_deleted
           .where(deleted_by_id: @source_user.id)
           .update_all(deleted_by_id: @target_user.id)
-
+      end
+    puts "time updating part 3 - invites: #{part_3.real.round(2)}"
+    part_4 =
+      Benchmark.measure do
         update_user_id(:muted_users, conditions: "x.muted_user_id = y.muted_user_id")
         update_user_id(
           :muted_users,
@@ -385,10 +396,9 @@ class UserMerger
           user_id_column_name: "ignored_user_id",
           conditions: "x.user_id = y.user_id",
         )
-
-        Notification.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
       end
-    puts "time updating part 1: #{part_1.real.round(2)}"
+    puts "time updating part 4 - muted and ignored users: #{part_4.real.round(2)}"
+    Notification.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
 
     post_act =
       Benchmark.measure do
@@ -437,21 +447,16 @@ class UserMerger
 
     puts "=> time updating posts: #{posts_with.real.round(2)}"
 
-    part_2 =
-      Benchmark.measure do
-        Reviewable.where(created_by_id: @source_user.id).update_all(created_by_id: @target_user.id)
-        ReviewableHistory.where(created_by_id: @source_user.id).update_all(
-          created_by_id: @target_user.id,
-        )
+    Reviewable.where(created_by_id: @source_user.id).update_all(created_by_id: @target_user.id)
+    ReviewableHistory.where(created_by_id: @source_user.id).update_all(
+      created_by_id: @target_user.id,
+    )
 
-        SearchLog.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
+    SearchLog.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
 
-        update_user_id(:tag_users, conditions: "x.tag_id = y.tag_id")
+    update_user_id(:tag_users, conditions: "x.tag_id = y.tag_id")
 
-        Theme.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
-      end
-
-    puts "=> time updating part 2: #{part_2.real.round(2)}"
+    Theme.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
 
     topics_with =
       Benchmark.measure do
@@ -491,15 +496,11 @@ class UserMerger
 
     puts "=> time updating topics: #{topics_with.real.round(2)}"
 
-    part_3 =
-      Benchmark.measure do
-        UnsubscribeKey.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
+    UnsubscribeKey.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
 
-        Upload.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
+    Upload.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
 
-        update_user_id(:user_archived_messages, conditions: "x.topic_id = y.topic_id")
-      end
-    puts "=> time updating part_3: #{part_3.real.round(2)}"
+    update_user_id(:user_archived_messages, conditions: "x.topic_id = y.topic_id")
 
     user_actions_to_update =
       Benchmark.measure do
@@ -527,63 +528,41 @@ class UserMerger
 
     puts "=> time updating user actions: #{user_actions_to_update.real.round(2)}"
 
-    part_4 =
-      Benchmark.measure do
-        update_user_id(
-          :user_badges,
-          conditions: [
-            "x.badge_id = y.badge_id",
-            "x.seq = y.seq",
-            "x.post_id IS NOT DISTINCT FROM y.post_id",
-          ],
-        )
+    update_user_id(
+      :user_badges,
+      conditions: [
+        "x.badge_id = y.badge_id",
+        "x.seq = y.seq",
+        "x.post_id IS NOT DISTINCT FROM y.post_id",
+      ],
+    )
 
-        UserBadge.where(granted_by_id: @source_user.id).update_all(granted_by_id: @target_user.id)
+    UserBadge.where(granted_by_id: @source_user.id).update_all(granted_by_id: @target_user.id)
 
-        update_user_id(:user_custom_fields, conditions: "x.name = y.name")
+    update_user_id(:user_custom_fields, conditions: "x.name = y.name")
 
-        if @target_user.human?
-          update_user_id(
-            :user_emails,
-            conditions: "x.email = y.email OR y.primary = false",
-            updates: '"primary" = false',
-          )
-        end
-      end
-    puts "=> time updating user part 4: #{part_4.real.round(2)}"
+    if @target_user.human?
+      update_user_id(
+        :user_emails,
+        conditions: "x.email = y.email OR y.primary = false",
+        updates: '"primary" = false',
+      )
+    end
 
-    export =
-      Benchmark.measure do
-        UserExport.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
-      end
+    UserExport.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
 
-    puts "=> time updating user export: #{export.real.round(2)}"
+    UserHistory.where(target_user_id: @source_user.id).update_all(target_user_id: @target_user.id)
+    UserHistory.where(acting_user_id: @source_user.id).update_all(acting_user_id: @target_user.id)
 
-    history =
-      Benchmark.measure do
-        UserHistory.where(target_user_id: @source_user.id).update_all(
-          target_user_id: @target_user.id,
-        )
-        UserHistory.where(acting_user_id: @source_user.id).update_all(
-          acting_user_id: @target_user.id,
-        )
-      end
+    UserProfileView.where(user_profile_id: @source_user.id).update_all(
+      user_profile_id: @target_user.id,
+    )
+    UserProfileView.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
 
-    puts "=> time updating user history: #{history.real.round(2)}"
+    UserWarning.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
+    UserWarning.where(created_by_id: @source_user.id).update_all(created_by_id: @target_user.id)
 
-    part_5 =
-      Benchmark.measure do
-        UserProfileView.where(user_profile_id: @source_user.id).update_all(
-          user_profile_id: @target_user.id,
-        )
-        UserProfileView.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
-
-        UserWarning.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
-        UserWarning.where(created_by_id: @source_user.id).update_all(created_by_id: @target_user.id)
-
-        User.where(approved_by_id: @source_user.id).update_all(approved_by_id: @target_user.id)
-      end
-    puts "=> time updating part 5: #{part_5.real.round(2)}"
+    User.where(approved_by_id: @source_user.id).update_all(approved_by_id: @target_user.id)
   end
 
   def delete_source_user
