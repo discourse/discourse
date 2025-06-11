@@ -703,7 +703,7 @@ class PostSerializer < BasicPostSerializer
     object.has_localization? && object.get_localization.post_version != object.version
   end
 
-  def include_localization_outdated
+  def include_localization_outdated?
     include_is_localized? && is_localized
   end
 
