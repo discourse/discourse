@@ -108,7 +108,7 @@ const extension = {
             this._processingMentionNodes = true;
 
             view.state.doc.descendants((node, pos) => {
-              if (node.type.name !== "mention") {
+              if (node.type.name !== "mention" || node.attrs.valid === false) {
                 return;
               }
 
