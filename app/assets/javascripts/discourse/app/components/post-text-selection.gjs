@@ -272,6 +272,7 @@ export default class PostTextSelection extends Component {
     if (selection.rangeCount) {
       const range = selection.getRangeAt(0);
       if (range.collapsed) {
+        this.args.quoteState.clear();
         return;
       }
 
@@ -294,6 +295,7 @@ export default class PostTextSelection extends Component {
           wait
         );
       } else {
+        this.args.quoteState.clear();
         this.hideToolbar();
         cancel(this.selectionChangeHandler);
       }
