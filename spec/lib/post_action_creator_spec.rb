@@ -206,7 +206,7 @@ RSpec.describe PostActionCreator do
         expect(result.reviewable).to be_blank
       end
 
-      it "applies modifier and can allow flagging for non-human users" do
+      it "applies modifier and can allow reviewable creation for non-human users" do
         plugin = Plugin::Instance.new
         modifier = :post_action_creator_block_reviewable_for_bot
         proc = Proc.new { false }
