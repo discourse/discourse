@@ -323,13 +323,8 @@ blockquote {
   margin-right: 0;
 }
 
-.d-header-wrap * {
-  @include user-select(none);
-}
-
 // most importantly for android to prevent the quote menu to interfere with the text selection
-[data-identifier="post-text-selection-toolbar"].-disable-pointer-events,
-[data-identifier="post-text-selection-toolbar"].-disable-pointer-events * {
+.post-text-selection-toolbar-content.-disable-pointer-events {
   pointer-events: none;
 }
 

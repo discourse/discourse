@@ -252,7 +252,7 @@ export default class PostTextSelection extends Component {
 
   enablePointerEventsOnMenu() {
     document
-      .querySelector("[data-identifier='post-text-selection-toolbar']")
+      .querySelector(".post-text-selection-toolbar-content")
       ?.classList.remove("-disable-pointer-events");
   }
 
@@ -262,7 +262,7 @@ export default class PostTextSelection extends Component {
     // the user didn't release the pointer yet, as a result menu will be shown
     // while selecting and we want to be sure it's not interfering
     document
-      .querySelector("[data-identifier='post-text-selection-toolbar']")
+      .querySelector(".post-text-selection-toolbar-content")
       ?.classList.add("-disable-pointer-events");
   }
 
