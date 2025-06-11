@@ -10,48 +10,24 @@ class UserMerger
   end
 
   def merge!
+    puts "-------- username updates ------"
     updating_usernames = Benchmark.measure { update_username }
-    puts "time updating usernames: #{updating_usernames.real.round(2)} "
+    puts "time updating usernames: #{updating_usernames.real.round(2)}"
 
-    moving_posts = Benchmark.measure { move_posts }
-    puts "time moving posts: #{moving_posts.real.round(2)} "
-
+    puts "-------- user id updates -------"
+    move_posts
     user_ids_up = Benchmark.measure { update_user_ids }
-    puts "update user ids: #{user_ids_up.real.round(2)} "
-
-    mdl = Benchmark.measure { merge_given_daily_likes }
-    puts "time merging given daily likes: #{mdl.real.round(2)} "
-
-    mpt = Benchmark.measure { merge_post_timings }
-    puts "time merging post timings: #{mpt.real.round(2)} "
-
-    muv = Benchmark.measure { merge_user_visits }
-
-    puts "time merging user visits: #{muv.real.round(2)} "
-
-    uss = Benchmark.measure { update_site_settings }
-
-    puts "time updating site settings: #{uss.real.round(2)} "
-
-    muat = Benchmark.measure { merge_user_attributes }
-    puts "time merging user attributes: #{muat.real.round(2)} "
-
-    muaa = Benchmark.measure { merge_user_associated_accounts }
-    puts "time merging user assocaited accounts: #{muaa.real.round(2)} "
-
-    merging_users =
-      Benchmark.measure { DiscourseEvent.trigger(:merging_users, @source_user, @target_user) }
-    puts "time merging users (trigger): #{merging_users.real.round(2)} "
-
-    uustats = Benchmark.measure { update_user_stats }
-    puts "update user stats: #{uustats.real.round(2)} "
-
-    dsource = Benchmark.measure { delete_source_user }
-    puts "delete source user: #{dsource.real.round(2)} "
-
-    log = Benchmark.measure { log_merge }
-    puts "log merge: #{log.real.round(2)} "
-
+    puts "time updating user ids: #{user_ids_up.real.round(2)}"
+    merge_given_daily_likes
+    merge_post_timings
+    merge_user_visits
+    update_site_settings
+    merge_user_attributes
+    merge_user_associated_accounts
+    DiscourseEvent.trigger(:merging_users, @source_user, @target_user)
+    update_user_stats
+    delete_source_user
+    log_merge
     @target_user.reload
   end
 
@@ -351,7 +327,11 @@ class UserMerger
                            user_ids: [@acting_user.id]
     end
 
-    Category.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
+    categr =
+      Benchmark.measure do
+        Category.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
+      end
+    puts "time updating categories: #{categr.real.round(2)}"
 
     update_user_id(:category_users, conditions: ["x.category_id = y.category_id"])
 
@@ -402,19 +382,43 @@ class UserMerger
 
     Notification.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
 
-    update_user_id(
-      :post_actions,
-      conditions: [
-        "x.post_id = y.post_id",
-        "x.post_action_type_id = y.post_action_type_id",
-        "x.targets_topic = y.targets_topic",
-      ],
-    )
+    post_act =
+      Benchmark.measure do
+        update_user_id(
+          :post_actions,
+          conditions: [
+            "x.post_id = y.post_id",
+            "x.post_action_type_id = y.post_action_type_id",
+            "x.targets_topic = y.targets_topic",
+          ],
+        )
+      end
+    puts "time updating post actions: #{post_act.real.round(2)}"
 
-    PostAction.where(deleted_by_id: @source_user.id).update_all(deleted_by_id: @target_user.id)
-    PostAction.where(deferred_by_id: @source_user.id).update_all(deferred_by_id: @target_user.id)
-    PostAction.where(agreed_by_id: @source_user.id).update_all(agreed_by_id: @target_user.id)
-    PostAction.where(disagreed_by_id: @source_user.id).update_all(disagreed_by_id: @target_user.id)
+    post_act1 =
+      Benchmark.measure do
+        PostAction.where(deleted_by_id: @source_user.id).update_all(deleted_by_id: @target_user.id)
+      end
+    puts "time updating post actions deleted by: #{post_act1.real.round(2)}"
+    post_act2 =
+      Benchmark.measure do
+        PostAction.where(deferred_by_id: @source_user.id).update_all(
+          deferred_by_id: @target_user.id,
+        )
+      end
+    puts "time updating post actions deferred by: #{post_act2.real.round(2)}"
+    post_act3 =
+      Benchmark.measure do
+        PostAction.where(agreed_by_id: @source_user.id).update_all(agreed_by_id: @target_user.id)
+      end
+    puts "time updating post actions agreed by: #{post_act3.real.round(2)}"
+    post_act4 =
+      Benchmark.measure do
+        PostAction.where(disagreed_by_id: @source_user.id).update_all(
+          disagreed_by_id: @target_user.id,
+        )
+      end
+    puts "time updating post actions disagreed by: #{post_act4.real.round(2)}"
 
     PostRevision.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
 
