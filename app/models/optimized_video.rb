@@ -25,15 +25,4 @@ class OptimizedVideo < ActiveRecord::Base
       nil
     end
   end
-
-  # def destroy
-  #   OptimizedVideo.transaction do
-  #     Discourse.store.remove_optimized_video(self) if self.upload
-  #     super
-  #   end
-  # end
-
-  # def local?
-  #   !(url =~ %r{\A(https?:)?//})
-  # end
 end
