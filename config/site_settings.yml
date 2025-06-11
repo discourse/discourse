@@ -2276,6 +2276,9 @@ files:
   mediaconvert_endpoint:
     default: ""
     hidden: true
+  video_conversion_service:
+    default: "aws_mediaconvert"
+    hidden: true
 
 trust:
   default_trust_level:
