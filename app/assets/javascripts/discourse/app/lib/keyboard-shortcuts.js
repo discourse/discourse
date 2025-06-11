@@ -448,15 +448,6 @@ export default {
     this._changeSection(-1);
   },
 
-  showPageSearch(event) {
-    run(() => {
-      this.appEvents.trigger("header:keyboard-trigger", {
-        type: "page-search",
-        event,
-      });
-    });
-  },
-
   printTopic(event) {
     run(() => {
       if (document.querySelector(".container.posts")) {

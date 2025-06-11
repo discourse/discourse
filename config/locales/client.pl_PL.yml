@@ -2236,6 +2236,7 @@ pl_PL:
         title: "Adres IP rejestracji"
       avatar:
         title: "Awatar"
+        header_title: "Powiadomienia i konto"
         name_and_description: "%{name} - %{description}"
         edit: "Edytuj zdjęcie profilowe"
       title:
@@ -2755,6 +2756,11 @@ pl_PL:
       esc: "esc"
       esc_label: "odrzuć wiadomość"
       ok_proceed: "Ok, kontynuuj."
+      translations:
+        title: "Tłumaczenie postu"
+        select: "Wybierz tłumaczenie"
+        save: "Zapisz tłumaczenie"
+        original_content: "Oryginalna treść posta"
       group_mentioned_limit:
         one: "<b>Ostrzeżenie!</b> Wspomniałeś/łaś o <a href='%{group_link}'>%{group}</a> , jednak ta grupa ma więcej członków niż skonfigurowany przez administratora limit wzmianek dla użytkowników %{count}. Nikt nie zostanie powiadomiony."
         few: "<b>Ostrzeżenie!</b> Wspomniałeś/łaś o <a href='%{group_link}'>%{group}</a> , jednak ta grupa ma więcej członków niż skonfigurowany przez administratora limit wzmianek dla użytkowników %{count}. Nikt nie zostanie powiadomiony."
@@ -3218,6 +3224,7 @@ pl_PL:
           aria_label: filtrować według maksymalnych wyświetleń
         additional_options:
           label: "Filtruj według liczby postów i wyświetleń tematu"
+    hamburger_menu: "Menu nawigacyjne"
     new_item: "nowy"
     go_back: "wróć"
     not_logged_in_user: "strona użytkownika z podsumowaniem bieżących działań i ustawień"
@@ -4037,6 +4044,9 @@ pl_PL:
           actions: "Akcje"
           edit: "Edytuj"
           delete: "Usuń"
+        add: "Dodaj nowe tłumaczenie"
+        modal:
+          title: "Tłumaczenia dla postu"
       errors:
         create: "Przepraszamy, podczas tworzenia twojego wpisu wystąpił błąd. Spróbuj ponownie."
         edit: "Przepraszamy, podczas edytowania twojego wpisu wystąpił błąd. Spróbuj ponownie."
@@ -5369,7 +5379,16 @@ pl_PL:
     discovery:
       headings:
         all:
+          latest: "Wszystkie najnowsze tematy"
+          new: "Wszystkie nowe tematy"
+          unread: "Wszystkie nieprzeczytane tematy"
+          unseen: "Wszystkie nieprzeczytane tematy"
+          hot: "Wszystkie gorące tematy"
+          posted: "Wszystkie tematy, w których pisałeś"
+          bookmarks: "Wszystkie tematy, które dodałeś do zakładek"
           default: "Wszystkie tematy %{filter}"
+        category:
+          latest: "Najnowsze tematy w %{category}"
         multi_tag:
           default: "Tematy otagowane %{tags}"
         categories: "Wszystkie kategorie"
@@ -6387,6 +6406,7 @@ pl_PL:
             themes_intro: "Zainstaluj nowy motyw, aby rozpocząć, lub stwórz własny od podstaw, korzystając z tych zasobów."
             new_theme: "Nowy motyw"
             back: "Powrót do motywów"
+            install: "Zainstaluj"
           components:
             title: "Komponenty"
             components_intro: "Zainstaluj nowy komponent, aby rozpocząć, lub stwórz własny od podstaw, korzystając z tych zasobów."
@@ -6400,6 +6420,7 @@ pl_PL:
             edit: "Edytuj"
             parent_themes_two: "%{name1} i %{name2}"
             preview: "Podgląd"
+            update: "Zaktualizuj do najnowszej"
             check_update: "Sprawdź aktualizacje"
             export: "Eksport"
             convert: "Konwertuj"
@@ -6439,7 +6460,6 @@ pl_PL:
           unsaved_changes: "Masz niezapisane zmiany"
           copy_of: "Kopia %{name}"
           copy_created: 'Utworzona została nowa kopia "%{name}".'
-          illegal_character_in_color: "Kolory składają się wyłącznie ze znaków szesnastkowych"
       plugins:
         title: "Wtyczki"
         name: "Nazwa"
@@ -6711,6 +6731,7 @@ pl_PL:
             error: "Ten motyw został automatycznie wyłączony, ponieważ nie jest kompatybilny z tą wersją Discourse."
             minimum: "Wymaga wersji %{version} Discourse'a lub wyższej."
             maximum: "Wymaga wersji %{version} Discourse'a lub niższej."
+          update_to_latest: "Zaktualizuj do najnowszej"
           check_for_updates: "Sprawdź aktualizacje"
           updating: "Aktualizowanie…"
           update_success: "Aktualizacja motywu %{theme} zakończona"
@@ -6732,6 +6753,10 @@ pl_PL:
           remote_theme_edits: "Jeśli chcesz edytować ten motyw, musisz <a href='%{repoURL}' target='_blank'>przesłać zmianę w jego repozytorium</a>"
           repo_unreachable: "Nie można skontaktować się z repozytorium Git tego motywu. Komunikat o błędzie:"
           imported_from_archive: "Motyw został zaimportowany z pliku .zip"
+          settings: "Ustawienia"
+          colors: "Kolory"
+          discard_colors: "Odrzuć"
+          colors_title: "Kolory"
           scss:
             text: "CSS"
             title: "Niestandardowe reguły CSS z obsługą składni SCSS"

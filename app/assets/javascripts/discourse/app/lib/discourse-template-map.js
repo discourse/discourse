@@ -20,6 +20,13 @@ function isTemplate(moduleName) {
   return moduleName.includes("/templates/");
 }
 
+function appendToCache(cache, key, value) {
+  let cachedValue = cache.get(key);
+  cachedValue ??= [];
+  cachedValue.push(value);
+  cache.set(key, cachedValue);
+}
+
 function buildPrioritizedMaps(moduleNames) {
   const coreTemplates = new Map();
   const pluginTemplates = new Map();
@@ -29,11 +36,12 @@ function buildPrioritizedMaps(moduleNames) {
     if (isInRecognisedNamespace(moduleName) && isTemplate(moduleName)) {
       let pluginMatch, themeMatch;
       if ((pluginMatch = moduleName.match(pluginRegex))) {
-        pluginTemplates.set(pluginMatch[2], moduleName);
+        appendToCache(pluginTemplates, pluginMatch[2], moduleName);
       } else if ((themeMatch = moduleName.match(themeRegex))) {
-        themeTemplates.set(themeMatch[2], moduleName);
+        appendToCache(themeTemplates, themeMatch[2], moduleName);
       } else {
-        coreTemplates.set(
+        appendToCache(
+          coreTemplates,
           moduleName.replace(/^discourse\/templates\//, ""),
           moduleName
         );
@@ -60,8 +68,10 @@ class DiscourseTemplateMap {
     this.templates.clear();
 
     for (const templateMap of buildPrioritizedMaps(moduleNames)) {
-      for (const [path, moduleName] of templateMap) {
-        this.#add(path, moduleName);
+      for (const [path, modulesForPath] of templateMap) {
+        for (const moduleForPath of modulesForPath) {
+          this.#add(path, moduleForPath);
+        }
       }
     }
   }

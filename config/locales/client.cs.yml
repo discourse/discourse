@@ -6324,6 +6324,7 @@ cs:
             title: "Motivy"
             themes_intro: "Chcete-li začít, nainstalujte si nový motiv, nebo si pomocí těchto zdrojů vytvořte vlastní od začátku."
             new_theme: "Nový motiv"
+            install: "Instalovat"
           components:
             title: "Komponenty"
             install: "Instalovat"
@@ -6650,6 +6651,10 @@ cs:
           remote_theme_edits: "Pokud chcete tento motiv upravit, musíte <a href='%{repoURL}' target='_blank'>odeslat změnu do jeho repozitáře</a>"
           repo_unreachable: "Nelze kontaktovat Git repozitář tohoto motivu. Chybová zpráva:"
           imported_from_archive: "Tento motiv byl importován ze souboru .zip"
+          settings: "Nastavení"
+          colors: "Barvy"
+          discard_colors: "Zahodit"
+          colors_title: "Barvy"
           scss:
             text: "CSS"
           after_header:

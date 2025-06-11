@@ -9,12 +9,15 @@ class ExtraLocalesController < ApplicationController
                      :redirect_to_profile_if_required,
                      :verify_authenticity_token
 
+  before_action :is_asset_path, :apply_cdn_headers
+
   OVERRIDES_BUNDLE = "overrides"
   SHA1_HASH_LENGTH = 40
   MAIN_BUNDLE = "main"
   MF_BUNDLE = "mf"
   ADMIN_BUNDLE = "admin"
   WIZARD_BUNDLE = "wizard"
+  CACHE_VERSION = 2
 
   SITE_SPECIFIC_BUNDLES = [OVERRIDES_BUNDLE, MF_BUNDLE]
   SHARED_BUNDLES = [MAIN_BUNDLE, ADMIN_BUNDLE, WIZARD_BUNDLE]
@@ -88,7 +91,7 @@ class ExtraLocalesController < ApplicationController
     end
 
     def digest_for_content(js)
-      Digest::SHA1.hexdigest(js)
+      Digest::SHA1.hexdigest("#{CACHE_VERSION}|#{js}")
     end
   end
 
