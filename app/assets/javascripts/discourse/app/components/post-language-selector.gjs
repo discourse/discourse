@@ -4,21 +4,15 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
-import cookie from "discourse/lib/cookie";
 import DMenu from "float-kit/components/d-menu";
 
-export default class LanguageSwitcher extends Component {
-  @service site;
+export default class PostLanguageSelector extends Component {
   @service siteSettings;
-  @service router;
 
   @action
-  async changeLocale(locale) {
-    cookie("locale", locale, { path: "/" });
+  selectPostLanguage(locale) {
+    this.args.composerModel.locale = locale;
     this.dMenu.close();
-    // we need a hard refresh here for the locale to take effect
-    // window.location.reload();
-    this.router.refresh();
   }
 
   @action
@@ -28,25 +22,28 @@ export default class LanguageSwitcher extends Component {
 
   <template>
     <DMenu
-      @identifier="language-switcher"
-      title="Language switcher"
-      @icon="language"
-      class="btn-flat btn-icon icon"
+      @identifier="post-language-selector"
+      @title="Post Language"
+      @icon="globe"
+      @label={{@selectedLanguage}}
+      @modalForMobile={{true}}
       @onRegisterApi={{this.onRegisterApi}}
+      @class="btn-transparent btn-small post-language-selector"
     >
       <:content>
         <DropdownMenu as |dropdown|>
           {{#each
             this.siteSettings.available_content_localization_locales
-            as |option|
+            as |locale|
           }}
             <dropdown.item
-              class="locale-options"
-              data-menu-option-id={{option.value}}
+              class="locale=options"
+              data-menu-option-id={{locale.value}}
             >
               <DButton
-                @translatedLabel={{option.name}}
-                @action={{fn this.changeLocale option.value}}
+                @translatedLabel={{locale.name}}
+                @title={{locale.value}}
+                @action={{fn this.selectPostLanguage locale.value}}
               />
             </dropdown.item>
           {{/each}}

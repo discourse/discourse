@@ -13,15 +13,19 @@ describe "Post translations", type: :system do
 
   before do
     sign_in(user)
-    SiteSetting.experimental_content_localization_supported_locales = "en|fr|es|pt_BR"
+    SiteSetting.default_locale = "en"
+    SiteSetting.experimental_content_localization_supported_locales = "fr|es|pt_BR"
     SiteSetting.experimental_content_localization = true
     SiteSetting.experimental_content_localization_allowed_groups = Group::AUTO_GROUPS[:everyone]
+    if SiteSetting.client_settings.exclude?(:available_content_localization_locales)
+      SiteSetting.client_settings << :available_content_localization_locales
+    end
     SiteSetting.post_menu =
       "read|like|copyLink|flag|edit|bookmark|delete|admin|reply|addTranslation"
   end
 
   context "when a post does not have translations" do
-    it "should only show the languages listed in the site setting" do
+    it "should only show the languages listed in the site setting and the default locale" do
       topic_page.visit_topic(topic)
       find("#post_#{post.post_number} .post-action-menu__add-translation").click
       translation_selector.expand
@@ -34,12 +38,11 @@ describe "Post translations", type: :system do
     end
 
     it "always includes the site's default locale in the list of available languages" do
-      SiteSetting.default_locale = "de"
       topic_page.visit_topic(topic)
       find("#post_#{post.post_number} .post-action-menu__add-translation").click
       translation_selector.expand
-      expect(all(".translation-selector-dropdown .select-kit-collection li").count).to eq(5)
-      expect(translation_selector).to have_option_value("de")
+      expect(all(".translation-selector-dropdown .select-kit-collection li").count).to eq(4)
+      expect(translation_selector).to have_option_value("en")
     end
 
     it "allows a user to translate a post" do
