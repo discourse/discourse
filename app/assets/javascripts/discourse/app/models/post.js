@@ -200,7 +200,6 @@ export default class Post extends RestModel {
   @trackedPostProperty staged;
   @trackedPostProperty title_is_group;
   @trackedPostProperty topic_id;
-  @trackedPostProperty topic;
   @trackedPostProperty trust_level;
   @trackedPostProperty updated_at;
   @trackedPostProperty user;
