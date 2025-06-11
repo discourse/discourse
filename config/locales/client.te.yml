@@ -4998,6 +4998,7 @@ te:
           install: "ఇన్‌స్టాల్ చేయండి"
           themes:
             title: "థీమ్స్"
+            install: "ఇన్‌స్టాల్ చేయండి"
           components:
             title: "భాగాలు"
             install: "ఇన్‌స్టాల్ చేయండి"
@@ -5283,6 +5284,10 @@ te:
           remote_theme_edits: "మీరు ఈ థీమ్‌ను సవరించాలనుకుంటే, మీరు తప్పనిసరిగా <a href='%{repoURL}' target='_blank'>దాని రిపోజిటరీలో మార్పును సమర్పించాలి</a>"
           repo_unreachable: "ఈ థీమ్ యొక్క Git రిపోజిటరీని సంప్రదించలేకపోయింది. లోపం సందేశం:"
           imported_from_archive: "ఈ థీమ్ .zip ఫైల్ నుండి దిగుమతి చేయబడింది"
+          settings: "అమరికలు"
+          colors: "రంగులు"
+          discard_colors: "విస్మరించండి"
+          colors_title: "రంగులు"
           scss:
             text: "సీయస్ యస్"
           after_header:

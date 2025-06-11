@@ -126,4 +126,33 @@ module("Integration | Component | Post | PostLinks", function (hooks) {
     assert.dom(".post-links a.track-link").exists({ count: 7 });
     assert.dom(".expand-links").doesNotExist("there is no expand button");
   });
+
+  test("data-clicks", async function (assert) {
+    this.post.link_counts = [
+      {
+        title: "Link 1",
+        url: "/t/1",
+        internal: true,
+        reflection: true,
+        clicks: 2,
+      },
+      {
+        title: "Link 2",
+        url: "/t/2",
+        internal: true,
+        reflection: true,
+        clicks: 0,
+      },
+    ];
+
+    await renderComponent(this.post);
+
+    assert
+      .dom(".post-links a.track-link[href='/t/1']")
+      .hasAttribute("data-clicks", "2", "Link 1 has the correct click count");
+
+    assert
+      .dom(".post-links a.track-link[href='/t/2']")
+      .doesNotHaveAttribute("data-clicks");
+  });
 });

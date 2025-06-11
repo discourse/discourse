@@ -6524,9 +6524,11 @@ sk:
           install: "Inštalácia"
           themes:
             title: "Témy"
+            description: "Témy pre celú stránku, ktoré menia celkový vzhľad a dojem z vašej stránky pre všetkých používateľov."
             themes_intro: "Na začiatok si nainštalujte novú tému alebo si vytvorte vlastnú od začiatku pomocou týchto zdrojov."
             new_theme: "Nová téma"
             back: "Späť na témy"
+            install: "Inštalácia"
           components:
             title: "Komponenty"
             description: "Prispôsobenia, ktoré menia povrchové prvky dizajnu vášho fóra alebo pridávajú ďalšie funkcie front-endu"
@@ -6593,7 +6595,8 @@ sk:
           unsaved_changes: "Máte neuložené zmeny"
           copy_of: "Kópia %{name}"
           copy_created: 'Bola vytvorená nová kópia "%{name}"'
-          illegal_character_in_color: "Farby pozostávajú len z hexadecimálnych znakov"
+          illegal_character_in_color: "Farba musí pozostávať len z hexadecimálnych znakov"
+          invalid_color_length: "Farba musí byť vo formáte #rrggbb alebo #rgb"
           delete_confirm: "Naozaj chcete odstrániť túto farebnú paletu?"
       plugins:
         title: "Pluginy"
@@ -6895,6 +6898,17 @@ sk:
           remote_theme_edits: "Ak chcete upraviť túto tému, musíte <a href='%{repoURL}' target='_blank'>odoslať zmenu v jej úložisku</a>"
           repo_unreachable: "Nepodarilo sa kontaktovať Git repozitár tohto motívu. Chybová správa:"
           imported_from_archive: "Táto téma bola importovaná zo súboru .zip"
+          settings: "Nastavenia"
+          colors: "Farby"
+          unsaved_colors:
+            one: "Máte %{count} neuloženú faribu"
+            few: "Máte %{count} neuložených farieb"
+            many: "Máte %{count} neuložených farieb"
+            other: "Máte %{count} neuložené farby"
+          unsaved_colors_leave_route_confirmation: "Zatiaľ ste neuložili zmeny farebnej palety. Naozaj chcete odísť?"
+          save_colors: "Uložiť farby"
+          discard_colors: "Zahodiť"
+          colors_title: "Farby"
           scss:
             text: "CSS"
             title: "Vlastné pravidlá CSS s podporou syntaxe SCSS"
