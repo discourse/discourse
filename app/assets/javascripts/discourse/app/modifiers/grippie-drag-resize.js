@@ -141,27 +141,19 @@ export default class GrippieDragResize extends Modifier {
    *   should be something like a code editor or composer textarea.
    * @param {string} grippiePosition - The position of the grippie relative to
    *   resizableElementSelector, either "top" or "bottom".
-   * @param {Function} [onDragStart] - Callback function to be called when dragging starts.
-   * @param {Function} [onThrottledDrag] - Callback function to be called during throttled
+   * @param {Object} [callbacks] - An object containing optional callback functions.
+   * * onDragStart - Callback function to be called when dragging starts.
+   * * onThrottledDrag - Callback function to be called during throttled
    *   drag events while moving the mouse.
-   * @param {Function} [onDragEnd] - Callback function to be called when dragging ends.
+   * * onDragEnd - Callback function to be called when dragging ends.
    */
-  modify(
-    element,
-    [
-      resizableElementSelector,
-      grippiePosition,
-      onDragStart,
-      onThrottledDrag,
-      onDragEnd,
-    ]
-  ) {
+  modify(element, [resizableElementSelector, grippiePosition, callbacks]) {
     this.element = element;
     this.resizableElement = document.querySelector(resizableElementSelector);
     this.grippiePosition = grippiePosition;
-    this.onDragStart = onDragStart;
-    this.onThrottledDrag = onThrottledDrag;
-    this.onDragEnd = onDragEnd;
+    this.onDragStart = callbacks.onDragStart;
+    this.onThrottledDrag = callbacks.onThrottledDrag;
+    this.onDragEnd = callbacks.onDragEnd;
 
     this._startDragHandler = this.startDragHandler.bind(this);
 

@@ -96,9 +96,11 @@ export default class ComposerContainer extends Component {
         {{grippieDragResize
           "#reply-control"
           "top"
-          this.onResizeDragStart
-          this.onResizeDrag
-          this.onResizeDragEnd
+          (hash
+            onResizeStart=this.onResizeDragStart
+            onThrottledDrag=this.onResizeDrag
+            onResizeEnd=this.onResizeDragEnd
+          )
         }}
       ></div>
       {{#if this.composer.visible}}

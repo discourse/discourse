@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
@@ -290,9 +291,7 @@ export default class AceEditor extends Component {
             {{grippieDragResize
               ".ace_editor--resizable"
               "bottom"
-              null
-              this.onResizeDrag
-              null
+              (hash onThrottledDrag=this.onResizeDrag)
             }}
           ></div>
         {{/if}}
