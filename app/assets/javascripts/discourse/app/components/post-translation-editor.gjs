@@ -5,8 +5,6 @@ import { service } from "@ember/service";
 import DEditor from "discourse/components/d-editor";
 import TextField from "discourse/components/text-field";
 import lazyHash from "discourse/helpers/lazy-hash";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import PostLocalization from "discourse/models/post-localization";
 import { i18n } from "discourse-i18n";
 import DropdownSelectBox from "select-kit/components/dropdown-select-box";
 
@@ -14,19 +12,29 @@ export default class PostTranslationEditor extends Component {
   @service composer;
   @service siteSettings;
 
-  async findCurrentLocalization() {
-    try {
-      const { post_localizations } = await PostLocalization.find(
-        this.composer.model.post.id
+  get availableLocales() {
+    const allAvailableLocales = JSON.parse(this.siteSettings.available_locales);
+    const supportedLocales =
+      this.siteSettings.experimental_content_localization_supported_locales.split(
+        "|"
       );
 
-      return post_localizations.find(
-        (localization) =>
-          localization.locale === this.composer.selectedTranslationLocale
-      );
-    } catch (error) {
-      popupAjaxError(error);
+    if (!supportedLocales.includes(this.siteSettings.default_locale)) {
+      supportedLocales.push(this.siteSettings.default_locale);
     }
+
+    const filtered = allAvailableLocales.filter((locale) => {
+      return supportedLocales.includes(locale.value);
+    });
+
+    return filtered;
+  }
+
+  findCurrentLocalization() {
+    return this.composer.model.post.post_localizations.find(
+      (localization) =>
+        localization.locale === this.composer.selectedTranslationLocale
+    );
   }
 
   @action
@@ -35,25 +43,13 @@ export default class PostTranslationEditor extends Component {
   }
 
   @action
-  async updateSelectedLocale(locale) {
+  updateSelectedLocale(locale) {
     this.composer.selectedTranslationLocale = locale;
 
-    const currentLocalization = await this.findCurrentLocalization();
+    const currentLocalization = this.findCurrentLocalization();
 
     if (currentLocalization) {
       this.composer.model.set("reply", currentLocalization.raw);
-
-      if (currentLocalization?.topic_localization) {
-        this.composer.model.set(
-          "title",
-          currentLocalization.topic_localization.title
-        );
-      }
-    } else {
-      this.composer.model.setProperties({
-        reply: "",
-        title: "",
-      });
     }
   }
 
@@ -63,7 +59,7 @@ export default class PostTranslationEditor extends Component {
         @nameProperty="name"
         @valueProperty="value"
         @value={{this.composer.selectedTranslationLocale}}
-        @content={{this.siteSettings.available_content_localization_locales}}
+        @content={{this.availableLocales}}
         @onChange={{this.updateSelectedLocale}}
         @options={{hash
           icon="globe"

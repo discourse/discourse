@@ -40,7 +40,7 @@ class PostRevisor
     end
   end
 
-  POST_TRACKED_FIELDS = %w[raw cooked edit_reason user_id wiki post_type locale]
+  POST_TRACKED_FIELDS = %w[raw cooked edit_reason user_id wiki post_type]
 
   attr_reader :category_changed, :post_revision
 

@@ -555,7 +555,6 @@ class PostCreator
       via_email
       raw_email
       action_code
-      locale
     ].each { |a| post.public_send("#{a}=", @opts[a]) if @opts[a].present? }
 
     post.extract_quoted_post_numbers
