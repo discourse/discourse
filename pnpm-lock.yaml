@@ -32,8 +32,8 @@ importers:
         specifier: ^7.27.1
         version: 7.27.1(@babel/core@7.27.4)
       '@discourse/lint-configs':
-        specifier: ^2.21.0
-        version: 2.21.0(ember-template-lint@7.7.0(@babel/core@7.27.4))(eslint@9.27.0)(postcss@8.5.4)(prettier@3.5.3)(stylelint@16.19.1(typescript@5.6.3))
+        specifier: ^2.22.0
+        version: 2.22.0(ember-template-lint@7.7.0(@babel/core@7.27.4))(eslint@9.27.0)(postcss@8.5.4)(prettier@3.5.3)(stylelint@16.19.1(typescript@5.6.3))
       '@discourse/moment-timezone-names-translations':
         specifier: ^1.0.0
         version: 1.0.0
@@ -1748,8 +1748,8 @@ packages:
   '@discourse/itsatrap@2.0.10':
     resolution: {integrity: sha512-Jn1gdiyHMGUsmUfLFf4Q7VnTAv0l7NePbegU6pKhKHEmbzV3FosGxq30fTOYgVyTS1bxqGjlA6LvQttJpv3ROw==}
 
-  '@discourse/lint-configs@2.21.0':
-    resolution: {integrity: sha512-QqW6Kr2Kk32AujDj4+esgY3IY/qk9ffJb9ChrHzb/cHbAqUaEEoDKoy/zBQhNC3QrVLLvRCmL9E77gOSrTohJg==}
+  '@discourse/lint-configs@2.22.0':
+    resolution: {integrity: sha512-nf4dTdFNkfsz18Fi9ZKwd8Yx+srqJ+Zu2lEqHZcq482CahTEqmbC7AI4yYzJmbJU5wBSra1HrQN5W10JaEDkHA==}
     peerDependencies:
       ember-template-lint: 7.7.0
       eslint: 9.27.0
@@ -3010,8 +3010,8 @@ packages:
   array-flatten@1.1.1:
     resolution: {integrity: sha512-PCVAQswWemu6UdxsDFFX/+gVeYqKAod3D3UVm91jHwynguOwAvYPhx8nNlM++NqRcK6CxxpUafjmhIdKiHibqg==}
 
-  array-includes@3.1.8:
-    resolution: {integrity: sha512-itaWrbYbqpGXkGhZPGUulwnhVf5Hpy1xiCFsGqyIGglbBxmG5vSjxQen3/WGOjPpNEv1RtBLKxbmVXm8HpJStQ==}
+  array-includes@3.1.9:
+    resolution: {integrity: sha512-FmeCCAenzH0KH381SPT5FZmiA/TmpndpcaShhfgEN9eCVjnFBqq3l1xrI42y8+PPLI6hypzou4GXw00WHmPBLQ==}
     engines: {node: '>= 0.4'}
 
   array-union@2.1.0:
@@ -9667,7 +9667,7 @@ snapshots:
 
   '@discourse/itsatrap@2.0.10': {}
 
-  '@discourse/lint-configs@2.21.0(ember-template-lint@7.7.0(@babel/core@7.27.4))(eslint@9.27.0)(postcss@8.5.4)(prettier@3.5.3)(stylelint@16.19.1(typescript@5.6.3))':
+  '@discourse/lint-configs@2.22.0(ember-template-lint@7.7.0(@babel/core@7.27.4))(eslint@9.27.0)(postcss@8.5.4)(prettier@3.5.3)(stylelint@16.19.1(typescript@5.6.3))':
     dependencies:
       '@babel/core': 7.27.4(supports-color@8.1.1)
       '@babel/eslint-parser': 7.27.1(@babel/core@7.27.4)(eslint@9.27.0)
@@ -11291,14 +11291,16 @@ snapshots:
 
   array-flatten@1.1.1: {}
 
-  array-includes@3.1.8:
+  array-includes@3.1.9:
     dependencies:
       call-bind: 1.0.8
+      call-bound: 1.0.4
       define-properties: 1.2.1
       es-abstract: 1.24.0
       es-object-atoms: 1.1.1
       get-intrinsic: 1.3.0
       is-string: 1.1.1
+      math-intrinsics: 1.1.0
 
   array-union@2.1.0: {}
 
@@ -13667,7 +13669,7 @@ snapshots:
   eslint-plugin-import@2.31.0(eslint@9.27.0):
     dependencies:
       '@rtsao/scc': 1.1.0
-      array-includes: 3.1.8
+      array-includes: 3.1.9
       array.prototype.findlastindex: 1.2.6
       array.prototype.flat: 1.3.3
       array.prototype.flatmap: 1.3.3
