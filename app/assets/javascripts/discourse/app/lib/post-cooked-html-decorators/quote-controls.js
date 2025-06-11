@@ -171,7 +171,7 @@ async function _toggleQuote(aside, context) {
         );
 
       if (quotedPost.topic_id === post?.topic_id) {
-        quotedPost.topic = post.topic;
+        quotedPost.set("topic", post.topic);
       }
 
       const quotedPosts = post.quoted || {};
