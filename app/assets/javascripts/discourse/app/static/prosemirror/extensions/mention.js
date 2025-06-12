@@ -150,7 +150,10 @@ const extension = {
 };
 
 async function fetchMentions(names) {
-  names = names.uniq().filter((name) => !VALID_MENTIONS.has(name));
+  // only fetch new mentions that are not already validated
+  names = names.uniq().filter((name) => {
+    return !VALID_MENTIONS.has(name) && !INVALID_MENTIONS.has(name);
+  });
 
   if (!names.length) {
     return;
