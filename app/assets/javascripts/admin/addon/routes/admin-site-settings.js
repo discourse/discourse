@@ -11,12 +11,18 @@ export default class AdminSiteSettingsRoute extends DiscourseRoute {
     filter: { replace: true },
   };
 
+  _siteSettings = null;
+
   titleToken() {
     return i18n("admin.config.site_settings.title");
   }
 
   async model() {
-    return await SiteSetting.findAll();
+    if (!this._siteSettings) {
+      this._siteSettings = await SiteSetting.findAll();
+    }
+
+    return this._siteSettings;
   }
 
   afterModel(siteSettings) {
@@ -42,10 +48,8 @@ export default class AdminSiteSettingsRoute extends DiscourseRoute {
   }
 
   @action
-  refreshAll() {
-    SiteSetting.findAll().then((settings) => {
-      this.controllerFor("adminSiteSettings").set("model", settings);
-    });
+  async refreshAll() {
+    this._siteSettings = await SiteSetting.findAll();
   }
 
   resetController(controller, isExiting) {
