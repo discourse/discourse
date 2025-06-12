@@ -877,6 +877,30 @@ export default class TopicController extends Controller {
 
     const topic = this.model;
 
+    if (post?.is_localized) {
+      return this.dialog.alert({
+        message: i18n("post.localizations.edit_warning.message", {
+          language: post.language,
+        }),
+        buttons: [
+          {
+            label: i18n("post.localizations.edit_warning.action_original"),
+            class: "btn-primary",
+            action: () => {
+              // console.log("edit original");
+            },
+          },
+          {
+            label: i18n("post.localizations.edit_warning.action_translation"),
+            class: "",
+            action: () => {
+              // console.log("edit translation");
+            },
+          },
+        ],
+      });
+    }
+
     let editingSharedDraft = false;
     let draftsCategoryId = this.get("site.shared_drafts_category_id");
     if (draftsCategoryId && draftsCategoryId === topic.get("category.id")) {

@@ -3938,6 +3938,10 @@ en:
         success: "Translations have been updated successfully"
         post_language_selector:
           none: "None"
+        edit_warning:
+          message: "This is a translated post. Do you want to edit the original post in %{language}, so your changes propagate to every translation or edit this specific translation?"
+          action_original: "Edit original post"
+          action_translation: "Edit this translation"
 
       errors:
         create: "Sorry, there was an error creating your post. Please try again."
