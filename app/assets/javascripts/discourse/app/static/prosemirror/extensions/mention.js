@@ -4,7 +4,6 @@ import { isBoundary } from "discourse/static/prosemirror/lib/markdown-it";
 
 const VALID_MENTIONS = new Set();
 const INVALID_MENTIONS = new Set();
-const MIN_MENTION_LENGTH = 3;
 
 /** @type {RichEditorExtension} */
 const extension = {
@@ -151,9 +150,7 @@ const extension = {
 };
 
 async function fetchMentions(names) {
-  names.uniq().filter((name) => {
-    return !VALID_MENTIONS.has(name) && name.length >= MIN_MENTION_LENGTH;
-  });
+  names.uniq().filter((name) => !VALID_MENTIONS.has(name));
 
   if (!names.length) {
     return;
