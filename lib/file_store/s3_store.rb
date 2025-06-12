@@ -116,7 +116,8 @@ module FileStore
         path, etag = s3_helper.upload(file, path, options)
       end
 
-      if opts[:upload_id] && FileHelper.is_supported_video?(opts[:filename])
+      if opts[:upload_id] && FileHelper.is_supported_video?(opts[:filename]) &&
+           SiteSetting.video_conversion_enabled
         Jobs.enqueue(:convert_video, upload_id: opts[:upload_id])
       end
 
