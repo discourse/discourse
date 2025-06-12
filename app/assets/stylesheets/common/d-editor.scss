@@ -369,6 +369,12 @@
   }
 }
 
+.toolbar-separator {
+  width: 1px;
+  background-color: var(--primary-low);
+  margin: 0.5rem 0.25rem;
+}
+
 .d-editor #form-template-form {
   overflow: auto;
   background: var(--primary-very-low);
