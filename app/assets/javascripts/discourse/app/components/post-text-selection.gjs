@@ -106,7 +106,6 @@ export default class PostTextSelection extends Component {
     await this.menuInstance?.close();
   }
 
-  @bind
   async selectionChanged(options = {}, cooked, postId) {
     const _selectedText = selectedText();
 
@@ -241,7 +240,6 @@ export default class PostTextSelection extends Component {
   @bind
   selectionchange() {
     this.disablePointerEventsOnMenu();
-    this.handleSelection();
   }
 
   @bind
@@ -261,7 +259,6 @@ export default class PostTextSelection extends Component {
     // so we use contextmenu which will be fired while holding the selection even if
     // the user didn't release the pointer yet, as a result menu will be shown
     // while selecting and we want to be sure it's not interfering
-    // note that firefox mobile doesn't support contextmenu, so it doesn’t work there
     document
       .querySelector(".post-text-selection-toolbar-content")
       ?.classList.add("-disable-pointer-events");
@@ -285,9 +282,8 @@ export default class PostTextSelection extends Component {
       if (cooked) {
         const article = cooked.closest(".boxed, .reply");
         const postId = article.dataset.postId;
-        const { isIOS, isWinphone, isAndroid, isFirefox } = this.capabilities;
-        const wait =
-          isIOS || isWinphone || isAndroid || isFirefox ? INPUT_DELAY : 25;
+        const { isIOS, isWinphone, isAndroid } = this.capabilities;
+        const wait = isIOS || isWinphone || isAndroid ? INPUT_DELAY : 25;
         this.selectionChangeHandler = discourseDebounce(
           this,
           this.selectionChanged,
@@ -322,14 +318,8 @@ export default class PostTextSelection extends Component {
   // on Mobile, shows the bar at the end of the selection
   @cached
   get shouldRenderUnder() {
-    const { isIOS, isAndroid, isOpera, isFirefox, touch } = this.capabilities;
-    return (
-      this.site.isMobileDevice ||
-      isIOS ||
-      isAndroid ||
-      isOpera ||
-      (touch && isFirefox)
-    );
+    const { isIOS, isAndroid, isOpera } = this.capabilities;
+    return this.site.isMobileDevice || isIOS || isAndroid || isOpera;
   }
 
   @action
