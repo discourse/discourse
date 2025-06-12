@@ -35,10 +35,7 @@ export default class DInlineFloat extends Component {
         <DFloatBody
           @instance={{@instance}}
           @trapTab={{@trapTab}}
-          @mainClass={{concatClass
-            @mainClass
-            (concat @instance.options.identifier "-content")
-          }}
+          @mainClass={{@mainClass}}
           @innerClass={{@innerClass}}
           @role={{@role}}
           @portalOutletElement={{@instance.portalOutletElement}}
