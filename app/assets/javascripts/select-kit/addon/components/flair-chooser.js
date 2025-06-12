@@ -5,10 +5,11 @@ import {
   pluginApiIdentifiers,
   selectKitOptions,
 } from "select-kit/components/select-kit";
+import SelectedFlair from "./selected-flair";
 
 @classNames("flair-chooser")
 @selectKitOptions({
-  selectedNameComponent: "selected-flair",
+  selectedNameComponent: SelectedFlair,
 })
 @pluginApiIdentifiers(["flair-chooser"])
 export default class FlairChooser extends ComboBoxComponent {

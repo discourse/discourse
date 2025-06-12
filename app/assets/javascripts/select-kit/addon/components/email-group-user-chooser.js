@@ -4,11 +4,12 @@ import {
   selectKitOptions,
 } from "select-kit/components/select-kit";
 import UserChooserComponent from "select-kit/components/user-chooser";
+import EmailGroupUserChooserFilter from "./email-group-user-chooser-filter";
 
 @classNames("email-group-user-chooser")
 @classNameBindings("selectKit.options.fullWidthWrap:full-width-wrap")
 @selectKitOptions({
-  filterComponent: "email-group-user-chooser-filter",
+  filterComponent: EmailGroupUserChooserFilter,
   fullWidthWrap: false,
   autoWrap: false,
 })

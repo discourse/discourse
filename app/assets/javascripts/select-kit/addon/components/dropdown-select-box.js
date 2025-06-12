@@ -1,5 +1,6 @@
 import { classNames } from "@ember-decorators/component";
 import SingleSelectComponent from "select-kit/components/single-select";
+import DropdownSelectBoxHeader from "./dropdown-select-box/dropdown-select-box-header";
 import { pluginApiIdentifiers, selectKitOptions } from "./select-kit";
 
 @classNames("dropdown-select-box")
@@ -7,7 +8,7 @@ import { pluginApiIdentifiers, selectKitOptions } from "./select-kit";
   autoFilterable: false,
   filterable: false,
   showFullTitle: true,
-  headerComponent: "dropdown-select-box/dropdown-select-box-header",
+  headerComponent: DropdownSelectBoxHeader,
   caretUpIcon: "caret-up",
   caretDownIcon: "caret-down",
   showCaret: false,

@@ -12,10 +12,11 @@ import SelectKitComponent, {
 } from "select-kit/components/select-kit";
 import SelectKitBody from "select-kit/components/select-kit/select-kit-body";
 import { isNumeric } from "select-kit/lib/input-utils";
+import SingleSelectHeader from "./select-kit/single-select-header";
 
 @classNames("single-select")
 @selectKitOptions({
-  headerComponent: "select-kit/single-select-header",
+  headerComponent: SingleSelectHeader,
 })
 @pluginApiIdentifiers(["single-select"])
 export default class SingleSelect extends SelectKitComponent {

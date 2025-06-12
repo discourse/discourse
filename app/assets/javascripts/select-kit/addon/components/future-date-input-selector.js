@@ -7,14 +7,14 @@ import {
   pluginApiIdentifiers,
   selectKitOptions,
 } from "select-kit/components/select-kit";
+import FutureDateInputSelectorHeader from "./future-date-input-selector/future-date-input-selector-header";
 
 export const FORMAT = "YYYY-MM-DD HH:mmZ";
 
 @classNames("future-date-input-selector")
 @selectKitOptions({
   autoInsertNoneItem: false,
-  headerComponent:
-    "future-date-input-selector/future-date-input-selector-header",
+  headerComponent: FutureDateInputSelectorHeader,
 })
 @pluginApiIdentifiers("future-date-input-selector")
 export default class FutureDateInputSelector extends ComboBoxComponent {

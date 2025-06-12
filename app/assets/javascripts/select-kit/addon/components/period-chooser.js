@@ -4,6 +4,7 @@ import { classNameBindings, classNames } from "@ember-decorators/component";
 import { i18n } from "discourse-i18n";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
 import { selectKitOptions } from "select-kit/components/select-kit";
+import PeriodChooserHeader from "./period-chooser/period-chooser-header";
 
 @classNames("period-chooser")
 @classNameBindings("showPeriods::hidden")
@@ -12,7 +13,7 @@ import { selectKitOptions } from "select-kit/components/select-kit";
   autoFilterable: false,
   fullDay: "fullDay",
   customStyle: true,
-  headerComponent: "period-chooser/period-chooser-header",
+  headerComponent: PeriodChooserHeader,
   headerAriaLabel: i18n("period_chooser.aria_label"),
 })
 export default class PeriodChooser extends DropdownSelectBoxComponent {
