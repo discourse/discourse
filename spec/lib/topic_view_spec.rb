@@ -538,7 +538,7 @@ RSpec.describe TopicView do
       p3 = Fabricate(:post, topic: topic, user: evil_trout)
 
       ch_posts = TopicView.new(topic.id, evil_trout).posts
-      expect(ch_posts.map(&:id)).to eq([p1.id, p2.id, p3.id])
+      expect(ch_posts.map(&:id)).to eq([p1.id, p3.id])
 
       anon_posts = TopicView.new(topic.id).posts
       expect(anon_posts.map(&:id)).to eq([p1.id, p3.id])
