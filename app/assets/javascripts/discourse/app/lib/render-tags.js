@@ -25,15 +25,16 @@ export function clearTagsHtmlCallbacks() {
 }
 
 export default function (topic, params) {
-  let tags = topic.tags;
+  let tags = topic?.tags || params?.tags;
   let buffer = "";
   let tagsForUser = null;
   let tagName;
-  const isPrivateMessage = topic.get("isPrivateMessage");
+
+  const isPrivateMessage = topic?.get?.("isPrivateMessage");
 
   if (params) {
     if (params.mode === "list") {
-      tags = topic.get("visibleListTags");
+      tags = topic?.get?.("visibleListTags");
     }
     if (params.tagsForUser) {
       tagsForUser = params.tagsForUser;
@@ -57,7 +58,8 @@ export default function (topic, params) {
   };
 
   const callbackResults = [];
-  if (callbacks) {
+
+  if (callbacks && topic) {
     callbacks.forEach((c) => {
       const html = c(topic, params);
       if (html) {
@@ -85,7 +87,7 @@ export default function (topic, params) {
         }
 
         buffer += renderTag(tag, {
-          description: topic.tags_descriptions && topic.tags_descriptions[tag],
+          description: topic?.tags_descriptions?.[tag],
           isPrivateMessage,
           tagsForUser,
           tagName,
