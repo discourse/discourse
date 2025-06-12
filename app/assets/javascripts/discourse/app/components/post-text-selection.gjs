@@ -262,6 +262,13 @@ export default class PostTextSelection extends Component {
       return;
     }
 
+    const menu = document.querySelector(
+      '.fk-d-menu[data-identifier="post-text-selection-toolbar"]'
+    );
+    if (menu) {
+      menu.style.pointerEvents = "none";
+    }
+
     const { isIOS, isWinphone, isAndroid } = this.capabilities;
     const wait = isIOS || isWinphone || isAndroid ? INPUT_DELAY : 25;
     this.selectionChangeHandler = discourseDebounce(
