@@ -204,6 +204,30 @@ RSpec.describe FileStore::S3Store do
           )
         end
       end
+
+      # context "when video conversion is enabled and the file is a supported video" do
+      #   it "enqueues a convert_video job" do
+      #     SiteSetting.video_conversion_enabled = true
+      #     video_file = file_from_fixtures("small.mp4", "media")
+      #     upload = Fabricate.build(
+      #       :upload,
+      #       original_filename: "small.mp4",
+      #       extension: "mp4",
+      #       id: 42
+      #     )
+
+      #     allow(FileHelper).to receive(:is_supported_video?)
+      #       .with("small.mp4")
+      #       .and_return(true)
+      #     allow(store.s3_helper).to receive(:upload)
+      #       .and_return(["some/path.mp4", "\"etag\""])
+
+      #     expect(Jobs).to receive(:enqueue)
+      #       .with(:convert_video, upload_id: upload.id)
+
+      #     store.store_upload(video_file, upload)
+      #   end
+      # end
     end
 
     describe "#store_optimized_image" do
