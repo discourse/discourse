@@ -15,8 +15,8 @@ export default class AdminSiteSettingsRoute extends DiscourseRoute {
     return i18n("admin.config.site_settings.title");
   }
 
-  model() {
-    return SiteSetting.findAll();
+  async model() {
+    return await SiteSetting.findAll();
   }
 
   afterModel(siteSettings) {
