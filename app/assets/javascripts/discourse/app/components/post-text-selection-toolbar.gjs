@@ -30,6 +30,7 @@ export function fixQuotes(str) {
 export default class PostTextSelectionToolbar extends Component {
   @service currentUser;
   @service modal;
+  @service dialog;
   @service site;
   @service siteSettings;
   @service appEvents;
@@ -122,6 +123,30 @@ export default class PostTextSelectionToolbar extends Component {
 
   @action
   async toggleFastEdit() {
+    if (this.post?.is_localized) {
+      return this.dialog.alert({
+        message: i18n("post.localizations.edit_warning.message", {
+          language: this.post.language,
+        }),
+        buttons: [
+          {
+            label: i18n("post.localizations.edit_warning.action_original"),
+            class: "btn-primary",
+            action: () => {
+              console.log("edit original");
+            },
+          },
+          {
+            label: i18n("post.localizations.edit_warning.action_translation"),
+            class: "",
+            action: () => {
+              console.log("edit translation");
+            },
+          },
+        ],
+      });
+    }
+
     if (this.args.data.supportsFastEdit) {
       if (this.site.desktopView) {
         this.isFastEditing = !this.isFastEditing;
