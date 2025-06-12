@@ -150,7 +150,7 @@ const extension = {
 };
 
 async function fetchMentions(names) {
-  names.uniq().filter((name) => !VALID_MENTIONS.has(name));
+  names = names.uniq().filter((name) => !VALID_MENTIONS.has(name));
 
   if (!names.length) {
     return;
