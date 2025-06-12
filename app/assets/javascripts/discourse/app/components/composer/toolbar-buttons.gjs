@@ -19,6 +19,16 @@ export default class ComposerToolbarButtons extends Component {
     return typeof button.href === "function" ? button.href() : button.href;
   }
 
+  @action
+  getLabel(button) {
+    return typeof button.label === "function" ? button.label() : button.label;
+  }
+
+  @action
+  getIcon(button) {
+    return typeof button.icon === "function" ? button.icon() : button.icon;
+  }
+
   get firstButton() {
     const { isFirst = true } = this.args;
     return (
@@ -46,7 +56,14 @@ export default class ComposerToolbarButtons extends Component {
               tabindex={{this.tabIndex button}}
               {{on "keydown" this.rovingButtonBar}}
             >
-              {{icon button.icon}}
+              {{#if (this.getLabel button)}}
+                <span title={{this.getLabel button}}>
+                  {{this.getLabel button}}
+                </span>
+              {{/if}}
+              {{#if (this.getIcon button)}}
+                {{icon (this.getIcon button)}}
+              {{/if}}
             </a>
           {{else if button.popupMenu}}
             <ToolbarPopupMenuOptions
@@ -55,7 +72,10 @@ export default class ComposerToolbarButtons extends Component {
               @onOpen={{fn button.action button}}
               @tabindex={{this.tabIndex button}}
               @onKeydown={{this.rovingButtonBar}}
-              @options={{hash icon=button.icon focusAfterOnChange=false}}
+              @options={{hash
+                icon=(this.getIcon button)
+                focusAfterOnChange=false
+              }}
               class={{button.className}}
             />
           {{else if (eq button.type "separator")}}
@@ -64,8 +84,8 @@ export default class ComposerToolbarButtons extends Component {
             <DButton
               @action={{fn button.action button}}
               @translatedTitle={{button.title}}
-              @label={{button.label}}
-              @icon={{button.icon}}
+              @label={{this.getLabel button}}
+              @icon={{this.getIcon button}}
               @preventFocus={{button.preventFocus}}
               @onKeyDown={{this.rovingButtonBar}}
               tabindex={{this.tabIndex button}}
