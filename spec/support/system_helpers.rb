@@ -162,8 +162,6 @@ module SystemHelpers
       range.setEnd(node, arguments[1] + arguments[2]);
       selection.removeAllRanges();
       selection.addRange(range);
-      const event = new PointerEvent("pointerup");
-      document.dispatchEvent(event);
     JS
 
     page.execute_script(js, selector, start, offset)
