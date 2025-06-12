@@ -96,7 +96,6 @@ export default class PostTextSelection extends Component {
     super.willDestroy(...arguments);
 
     cancel(this.debouncedSelectionChanged);
-    cancel(this.touchEndLaterHandler);
     this.menuInstance?.close();
   }
 
