@@ -16,7 +16,7 @@ describe "Post stream", type: :system do
 
         before { sign_in(admin) }
 
-        it "can reply to a post and edit the reply", tracing: true do
+        it "can reply to a post and edit the reply", trace: true do
           page.visit "/t/#{op.topic.id}"
 
           # posting the reply works
