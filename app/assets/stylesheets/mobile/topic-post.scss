@@ -323,6 +323,11 @@ blockquote {
   margin-right: 0;
 }
 
+// most importantly for android to prevent the quote menu to interfere with the text selection
+.post-text-selection-toolbar-content.-disable-pointer-events {
+  pointer-events: none;
+}
+
 pre.codeblock-buttons code {
   padding-right: 2.75em;
 }

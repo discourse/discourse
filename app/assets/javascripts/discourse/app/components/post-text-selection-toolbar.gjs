@@ -201,6 +201,8 @@ export default class PostTextSelectionToolbar extends Component {
     <div
       {{on "mousedown" this.trapEvents}}
       {{on "mouseup" this.trapEvents}}
+      {{on "pointerup" this.trapEvents}}
+      {{on "pointerdown" this.trapEvents}}
       class={{concatClass
         "quote-button"
         "visible"

@@ -49,7 +49,6 @@ export default class PostTextSelection extends Component {
   @service siteSettings;
   @service menu;
 
-  @tracked isSelecting = false;
   @tracked preventClose = applyValueTransformer(
     "post-text-selection-prevent-close",
     false
@@ -64,14 +63,17 @@ export default class PostTextSelection extends Component {
   });
 
   documentListeners = modifier(() => {
-    document.addEventListener("mousedown", this.mousedown, { passive: true });
-    document.addEventListener("mouseup", this.mouseup, { passive: true });
-    document.addEventListener("selectionchange", this.onSelectionChanged);
+    document.addEventListener("pointerup", this.pointerup, { passive: true });
+    document.addEventListener("selectionchange", this.selectionchange);
+    // fires when user finishes adjusting text selection on android
+    document.addEventListener("contextmenu", this.contextmenu, {
+      passive: true,
+    });
 
     return () => {
-      document.removeEventListener("mousedown", this.mousedown);
-      document.removeEventListener("mouseup", this.mouseup);
-      document.removeEventListener("selectionchange", this.onSelectionChanged);
+      document.removeEventListener("pointerup", this.pointerup);
+      document.removeEventListener("selectionchange", this.selectionchange);
+      document.removeEventListener("contextmenu", this.contextmenu);
     };
   });
 
@@ -101,15 +103,10 @@ export default class PostTextSelection extends Component {
     if (this.preventClose) {
       return;
     }
-    this.args.quoteState.clear();
     await this.menuInstance?.close();
   }
 
-  async selectionChanged(options = {}) {
-    if (this.isSelecting) {
-      return;
-    }
-
+  async selectionChanged(options = {}, cooked, postId) {
     const _selectedText = selectedText();
 
     const selection = window.getSelection();
@@ -134,29 +131,6 @@ export default class PostTextSelection extends Component {
 
     this.prevSelectedText = _selectedText;
 
-    // ensure we selected content inside 1 post *only*
-    let postId;
-    for (let r = 0; r < selection.rangeCount; r++) {
-      const range = selection.getRangeAt(r);
-      const selectionStart = getElement(range.startContainer);
-      const ancestor = getElement(range.commonAncestorContainer);
-
-      if (!selectionStart.closest(".cooked")) {
-        return await this.hideToolbar();
-      }
-
-      postId ||= ancestor.closest(".boxed, .reply")?.dataset?.postId;
-
-      if (!ancestor.closest(".contents") || !postId) {
-        return await this.hideToolbar();
-      }
-    }
-
-    const _selectedElement = getElement(selectedNode());
-    const cooked =
-      _selectedElement.querySelector(".cooked") ||
-      _selectedElement.closest(".cooked");
-
     // computing markdown takes a lot of time on long posts
     // this code attempts to compute it only when we can't fast track
     let opts = {
@@ -166,6 +140,7 @@ export default class PostTextSelection extends Component {
           : _selectedText === toMarkdown(cooked.innerHTML),
     };
 
+    const _selectedElement = getElement(selectedNode());
     for (
       let element = _selectedElement;
       element && element.tagName !== "ARTICLE";
@@ -185,7 +160,6 @@ export default class PostTextSelection extends Component {
     let supportsFastEdit = this.canEditPost;
 
     const start = getElement(selection.getRangeAt(0).startContainer);
-
     if (!start || start.closest(CSS_TO_DISABLE_FAST_EDIT)) {
       supportsFastEdit = false;
     }
@@ -220,7 +194,8 @@ export default class PostTextSelection extends Component {
         //   so we need more space
         // - the end of the selection is not in viewport, in this case our menu will be shown at the top
         //   of the screen, so we need more space to avoid overlapping with the native menu
-        offset = 70;
+        const { isAndroid } = this.capabilities;
+        offset = isAndroid ? 90 : 70;
       }
     }
 
@@ -257,29 +232,72 @@ export default class PostTextSelection extends Component {
   }
 
   @bind
-  onSelectionChanged() {
-    if (this.isSelecting) {
-      return;
+  contextmenu() {
+    this.handleSelection();
+    this.enablePointerEventsOnMenu();
+  }
+
+  @bind
+  selectionchange() {
+    this.disablePointerEventsOnMenu();
+  }
+
+  @bind
+  pointerup() {
+    this.handleSelection();
+    this.enablePointerEventsOnMenu();
+  }
+
+  enablePointerEventsOnMenu() {
+    document
+      .querySelector(".post-text-selection-toolbar-content")
+      ?.classList.remove("-disable-pointer-events");
+  }
+
+  disablePointerEventsOnMenu() {
+    // on android there's no reliable way to know when user has finished text selection
+    // so we use contextmenu which will be fired while holding the selection even if
+    // the user didn't release the pointer yet, as a result menu will be shown
+    // while selecting and we want to be sure it's not interfering
+    document
+      .querySelector(".post-text-selection-toolbar-content")
+      ?.classList.add("-disable-pointer-events");
+  }
+
+  @bind
+  handleSelection(options = {}) {
+    const selection = window.getSelection();
+    if (selection.rangeCount) {
+      const range = selection.getRangeAt(0);
+      if (range.collapsed) {
+        this.args.quoteState.clear();
+        return;
+      }
+
+      const parent =
+        range.commonAncestorContainer.nodeType === Node.TEXT_NODE
+          ? range.commonAncestorContainer.parentNode
+          : range.commonAncestorContainer;
+      const cooked = parent.closest(".cooked");
+      if (cooked) {
+        const article = cooked.closest(".boxed, .reply");
+        const postId = article.dataset.postId;
+        const { isIOS, isWinphone, isAndroid } = this.capabilities;
+        const wait = isIOS || isWinphone || isAndroid ? INPUT_DELAY : 25;
+        this.selectionChangeHandler = discourseDebounce(
+          this,
+          this.selectionChanged,
+          options,
+          cooked,
+          postId,
+          wait
+        );
+      } else {
+        this.args.quoteState.clear();
+        this.hideToolbar();
+        cancel(this.selectionChangeHandler);
+      }
     }
-
-    const { isIOS, isWinphone, isAndroid } = this.capabilities;
-    const wait = isIOS || isWinphone || isAndroid ? INPUT_DELAY : 25;
-    this.selectionChangeHandler = discourseDebounce(
-      this,
-      this.selectionChanged,
-      wait
-    );
-  }
-
-  @bind
-  mousedown() {
-    this.isSelecting = true;
-  }
-
-  @bind
-  mouseup() {
-    this.isSelecting = false;
-    this.onSelectionChanged();
   }
 
   get post() {
@@ -309,7 +327,7 @@ export default class PostTextSelection extends Component {
     if (this.site.mobileView) {
       this.debouncedSelectionChanged = debounce(
         this,
-        this.selectionChanged,
+        this.handleSelection,
         { force: true },
         250,
         false
