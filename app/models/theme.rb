@@ -8,7 +8,7 @@ class Theme < ActiveRecord::Base
 
   BASE_COMPILER_VERSION = 91
   CORE_THEMES = { "foundation" => -1 }
-  EDITABLE_SYSTEM_FIELDS = %w[
+  EDITABLE_SYSTEM_ATTRIBUTES = %w[
     child_theme_ids
     color_scheme_id
     default
@@ -92,8 +92,8 @@ class Theme < ActiveRecord::Base
   validate :validate_theme_fields
 
   after_create :update_child_components
-  before_update :check_before_update_system_theme, if: :system?
-  before_destroy :raise_invalid_access, if: :system?
+  before_update :check_editable_attributes, if: :system?
+  before_destroy :raise_invalid_parameters, if: :system?
 
   scope :user_selectable, -> { where("user_selectable OR id = ?", SiteSetting.default_theme_id) }
 
@@ -192,15 +192,6 @@ class Theme < ActiveRecord::Base
         child_themes << theme
       end
     end
-  end
-
-  def check_before_update_system_theme
-    return if (changes.keys - EDITABLE_SYSTEM_FIELDS).empty?
-    raise_invalid_access
-  end
-
-  def raise_invalid_access
-    raise Discourse::InvalidAccess
   end
 
   def update_javascript_cache!
@@ -1117,6 +1108,15 @@ class Theme < ActiveRecord::Base
           .order("created_at DESC")
           .first
     end
+  end
+
+  def check_editable_attributes
+    return if (changes.keys - EDITABLE_SYSTEM_ATTRIBUTES).empty?
+    raise_invalid_parameters
+  end
+
+  def raise_invalid_parameters
+    raise Discourse::InvalidParameters
   end
 end
 

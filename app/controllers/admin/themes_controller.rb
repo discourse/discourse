@@ -222,7 +222,7 @@ class Admin::ThemesController < Admin::AdminController
     disables_component = [false, "false"].include?(theme_params[:enabled])
     enables_component = [true, "true"].include?(theme_params[:enabled])
 
-    if @theme.system? && (theme_params.keys - Theme::EDITABLE_SYSTEM_FIELDS).present?
+    if @theme.system? && (theme_params.keys - Theme::EDITABLE_SYSTEM_ATTRIBUTES).present?
       raise Discourse::InvalidAccess.new
     end
 

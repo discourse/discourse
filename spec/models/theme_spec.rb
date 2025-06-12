@@ -1773,13 +1773,13 @@ HTML
       foundation_theme.update!(user_selectable: true)
       expect(foundation_theme.user_selectable).to be true
       expect { foundation_theme.update!(name: "edited system name") }.to raise_error(
-        Discourse::InvalidAccess,
+        Discourse::InvalidParameters,
       )
       expect { theme.update!(name: "edited name") }.not_to raise_error
     end
 
     it "does not allow system themes to be deleted" do
-      expect { foundation_theme.destroy! }.to raise_error(Discourse::InvalidAccess)
+      expect { foundation_theme.destroy! }.to raise_error(Discourse::InvalidParameters)
       expect { theme.destroy! }.not_to raise_error
     end
   end
