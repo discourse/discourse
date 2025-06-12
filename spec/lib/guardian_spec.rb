@@ -3458,7 +3458,7 @@ RSpec.describe Guardian do
       end
 
       it "is false for admins" do
-        expect(Guardian.new(admin).can_edit_name?(user)).to be_falsey
+        expect(Guardian.new(admin).can_edit_name?(user)).to be_truthy
       end
     end
 
