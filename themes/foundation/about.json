@@ -1,7 +1,7 @@
 {
   "name": "Foundation",
   "authors": "Discourse",
-  "theme_version": "0.0.1",
+  "theme_version": "1.0.0",
   "minimum_discourse_version": null,
   "maximum_discourse_version": null,
   "assets": {},

@@ -1763,24 +1763,26 @@ HTML
       expect(theme.find_or_create_owned_color_palette.id).to eq(palette.id)
       expect(theme.owned_color_palette).to eq(palette)
     end
+  end
 
+  it "checks if fields can be updated for system themes" do
+    foundation_theme.update!(user_selectable: true)
+    expect(foundation_theme.user_selectable).to be true
+    expect { foundation_theme.update!(name: "edited system name") }.to raise_error(
+      Discourse::InvalidParameters,
+    )
+    expect { theme.update!(name: "edited name") }.not_to raise_error
+  end
+
+  it "does not allow system themes to be deleted" do
+    expect { foundation_theme.destroy! }.to raise_error(Discourse::InvalidParameters)
+    expect { theme.destroy! }.not_to raise_error
+  end
+
+  describe "#system?" do
     it "returns system true for Horizon and Foundation themes" do
       expect(foundation_theme.system?).to be true
       expect(theme.system?).to be false
-    end
-
-    it "checks if fields can be updated for system themes" do
-      foundation_theme.update!(user_selectable: true)
-      expect(foundation_theme.user_selectable).to be true
-      expect { foundation_theme.update!(name: "edited system name") }.to raise_error(
-        Discourse::InvalidParameters,
-      )
-      expect { theme.update!(name: "edited name") }.not_to raise_error
-    end
-
-    it "does not allow system themes to be deleted" do
-      expect { foundation_theme.destroy! }.to raise_error(Discourse::InvalidParameters)
-      expect { theme.destroy! }.not_to raise_error
     end
   end
 end
