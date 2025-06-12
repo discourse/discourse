@@ -310,8 +310,6 @@ export default class EmptyTopicFilterEducation extends Component {
       </div>
 
       <div class="empty-topic-filter-education__cta">
-        <p>{{i18n "topics.none.education.cta"}}</p>
-
         <DButton
           @route="discovery.latest"
           @label="topic.browse_latest_topics"
