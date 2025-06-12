@@ -221,18 +221,18 @@ class BulkImport::Generic < BulkImport::Base
           RECURSIVE
           tree AS (
                     SELECT c.id, c.parent_category_id, c.name, c.description, c.color, c.text_color,
-                           c.slug, c.existing_id, c.position, c.logo_upload_id, 0 AS level, c.show_subcategory_list, c.subcategory_list_style
+                           c.slug, c.existing_id, c.position, c.logo_upload_id, 0 AS level, c.show_subcategory_list, c.subcategory_list_style, c.minimum_required_tags
                       FROM categories c
                      WHERE c.parent_category_id IS NULL
                      UNION ALL
                     SELECT c.id, c.parent_category_id, c.name, c.description, c.color, c.text_color,
                            c.slug, c.existing_id, c.position, c.logo_upload_id, tree.level + 1 AS level,
-                           c.show_subcategory_list, c.subcategory_list_style
+                           c.show_subcategory_list, c.subcategory_list_style, c.minimum_required_tags
                       FROM categories c,
                            tree
                      WHERE c.parent_category_id = tree.id
                   )
-      SELECT id, parent_category_id, name, description, color, text_color, slug, existing_id, logo_upload_id, show_subcategory_list, subcategory_list_style,
+      SELECT id, parent_category_id, name, description, color, text_color, slug, existing_id, logo_upload_id, show_subcategory_list, subcategory_list_style, minimum_required_tags,
              COALESCE(position,
                       ROW_NUMBER() OVER (PARTITION BY parent_category_id ORDER BY parent_category_id NULLS FIRST, name)) AS position
         FROM tree
@@ -254,6 +254,7 @@ class BulkImport::Generic < BulkImport::Base
           row["logo_upload_id"] ? upload_id_from_original_id(row["logo_upload_id"]) : nil,
         show_subcategory_list: row["show_subcategory_list"],
         subcategory_list_style: row["subcategory_list_style"],
+        minimum_required_tags: row["minimum_required_tags"],
       }
     end
 

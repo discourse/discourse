@@ -654,6 +654,7 @@ class BulkImport::Base
     updated_at
     show_subcategory_list
     subcategory_list_style
+    minimum_required_tags
   ]
 
   CATEGORY_CUSTOM_FIELD_COLUMNS = %i[category_id name value created_at updated_at]
@@ -1480,6 +1481,7 @@ class BulkImport::Base
       category[:position] = @highest_category_position += 1
     end
 
+    category[:minimum_required_tags] ||= 0
     category
   end
 
