@@ -29,6 +29,12 @@
         background: var(--danger-low);
       }
     }
+
+    &.--clear-reminder {
+      .d-icon {
+        color: var(--primary-low-mid);
+      }
+    }
   }
 
   .bookmark-menu__row-title {
