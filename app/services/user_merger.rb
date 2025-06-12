@@ -399,20 +399,42 @@ class UserMerger
             "x.targets_topic = y.targets_topic",
           ],
         )
+      end
+    puts "=> time updating post actions: #{post_act.real.round(2)}"
 
+    post_act1 =
+      Benchmark.measure do
         PostAction.where(deleted_by_id: @source_user.id).update_all(deleted_by_id: @target_user.id)
+      end
+    puts "=> time updating post actions - deleted by id: #{post_act1.real.round(2)}"
 
+    post_act2 =
+      Benchmark.measure do
         PostAction.where(deferred_by_id: @source_user.id).update_all(
           deferred_by_id: @target_user.id,
         )
-        PostAction.where(agreed_by_id: @source_user.id).update_all(agreed_by_id: @target_user.id)
+      end
+    puts "=> time updating post actions - deferred by id: #{post_act2.real.round(2)}"
 
+    post_act3 =
+      Benchmark.measure do
+        PostAction.where(agreed_by_id: @source_user.id).update_all(agreed_by_id: @target_user.id)
+      end
+    puts "=> time updating post actions - agreed by id: #{post_act3.real.round(2)}"
+
+    post_act4 =
+      Benchmark.measure do
         PostAction.where(disagreed_by_id: @source_user.id).update_all(
           disagreed_by_id: @target_user.id,
         )
+      end
+    puts "=> time updating post actions - disagreed by id: #{post_act4.real.round(2)}"
+
+    post_act5 =
+      Benchmark.measure do
         PostRevision.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
       end
-    puts "=> time updating post actions + post revisions: #{post_act.real.round(2)}"
+    puts "=> time updating post revision: #{post_act5.real.round(2)}"
 
     posts_with =
       Benchmark.measure do
