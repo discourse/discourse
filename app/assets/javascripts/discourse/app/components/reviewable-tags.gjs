@@ -4,7 +4,7 @@ import discourseTags from "discourse/helpers/discourse-tags";
 
 export default class ReviewableTags extends Component {
   <template>
-    {{#if this.tags}}
+    {{#if @tags}}
       <div class="list-tags">
         {{discourseTags (or @topic null) tags=@tags}}
       </div>
