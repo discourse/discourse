@@ -122,6 +122,12 @@ export function selectedText() {
         ? range.commonAncestorContainer
         : range.commonAncestorContainer.parentElement;
 
+    // ensure we never quote text in the post menu area
+    const postMenuArea = ancestor.querySelector(".post-menu-area");
+    if (postMenuArea) {
+      range.setEndBefore(postMenuArea);
+    }
+
     const oneboxTest = ancestor.closest("aside.onebox[data-onebox-src]");
     const codeBlockTest = ancestor.closest("pre");
     if (codeBlockTest) {
