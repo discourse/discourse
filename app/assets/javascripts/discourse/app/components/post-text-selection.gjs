@@ -138,10 +138,13 @@ export default class PostTextSelection extends Component {
     let postId;
     for (let r = 0; r < selection.rangeCount; r++) {
       const range = selection.getRangeAt(r);
-      const selectionStart = getElement(range.startContainer);
-      const ancestor = getElement(range.commonAncestorContainer);
 
-      if (!selectionStart.closest(".cooked")) {
+      const ancestor =
+        range.commonAncestorContainer.nodeType === Node.TEXT_NODE
+          ? range.commonAncestorContainer.parentNode
+          : range.commonAncestorContainer;
+
+      if (!ancestor.closest(".cooked")) {
         return await this.hideToolbar();
       }
 
@@ -262,15 +265,14 @@ export default class PostTextSelection extends Component {
       return;
     }
 
-    const menu = document.querySelector(
-      '.fk-d-menu[data-identifier="post-text-selection-toolbar"]'
-    );
+    const menu = document.querySelector(".post-text-selection-toolbar-content");
     if (menu) {
       menu.style.pointerEvents = "none";
     }
 
-    const { isIOS, isWinphone, isAndroid } = this.capabilities;
-    const wait = isIOS || isWinphone || isAndroid ? INPUT_DELAY : 25;
+    const { isIOS, isWinphone, isAndroid, isFirefox } = this.capabilities;
+    const wait =
+      isIOS || isWinphone || isAndroid || isFirefox ? INPUT_DELAY : 25;
     this.selectionChangeHandler = discourseDebounce(
       this,
       this.selectionChanged,
