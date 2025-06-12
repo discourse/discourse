@@ -13,7 +13,7 @@ export default class PostMenuLikeButton extends Component {
   static shouldRender(args) {
     const show = args.post.showLike || args.post.likeCount > 0;
     return applyValueTransformer("like-button-render-decision", show, {
-      post: args.post
+      post: args.post,
     });
   }
 
