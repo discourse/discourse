@@ -7,7 +7,7 @@ describe "Post stream", type: :system do
   %w[enabled disabled].each do |value|
     before { SiteSetting.glimmer_post_stream_mode = value }
 
-    context "when glimmer_post_stream_mode=#{value}" do
+    context "when glimmer_post_stream_mode=#{value}", tracing: true, video: true do
       context "when posting" do
         let(:composer) { PageObjects::Components::Composer.new }
         let(:topic) { Fabricate(:topic, user: user) }
