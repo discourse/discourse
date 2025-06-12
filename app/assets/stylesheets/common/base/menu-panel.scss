@@ -32,14 +32,16 @@
 
   // positions are relative to the .d-header .panel div
   top: 100%; // directly underneath .panel
-  right: -10px; // 10px to the right of .panel - adjust as needed
+  right: 0;
   max-height: calc(100dvh - var(--header-offset) - 1em);
   border-radius: var(--d-border-radius);
 }
 
 .menu-panel {
   --list-item-padding: 0.5em 1rem;
-  box-shadow: var(--shadow-dropdown);
+  box-shadow:
+    0 4px 6px -1px #0000001a,
+    0 2px 4px -2px #0000001a;
   background-color: var(--secondary);
   z-index: z("header");
   padding: 0.5em;
@@ -252,7 +254,6 @@
   right: 0;
   width: 320px;
   padding: 0;
-  border-top-right-radius: 0;
 
   .panel-body-bottom {
     flex: 0;
@@ -264,7 +265,6 @@
     padding: 0;
     overflow-y: auto;
     overscroll-behavior: contain;
-    margin-inline: calc(var(--user-menu-border-width) * -1);
   }
 
   .tabs-list {
@@ -275,7 +275,7 @@
       display: flex;
       position: relative;
       border-radius: 0;
-      padding: 0.875em 1em 0.875em 0.875em;
+      padding: 0.75em 1em 0.75em 0.75em;
 
       @media screen and (height <= 400px) {
         // helps with 400% zoom level
@@ -301,22 +301,32 @@
         }
       }
 
-      &.active {
-        background-color: var(--d-selected);
+      &.active .d-icon {
+        box-shadow: 0 0 0 0.5rem var(--primary-200);
+        background-color: var(--primary-200);
+        border-radius: calc(var(--d-border-radius) * 0.5);
+      }
+
+      &:focus-visible,
+      &:active:not(:hover, :focus) {
+        background-color: transparent;
+        background-image: none;
+
+        .d-icon {
+          box-shadow: 0 0 0 0.5rem var(--primary-200);
+          background-color: var(--primary-200);
+          border-radius: calc(var(--d-border-radius) * 0.5);
+        }
       }
 
       .discourse-no-touch & {
-        &:hover {
-          background-color: var(--d-hover);
-          border-left: var(--user-menu-border-width) solid var(--primary-low);
-          padding-left: calc(0.875em - var(--user-menu-border-width));
+        &:hover .d-icon {
+          box-shadow: 0 0 0 0.5rem var(--primary-200);
+          background-color: var(--primary-200);
+          border-radius: calc(var(--d-border-radius) * 0.5);
         }
       }
     }
-  }
-
-  .bottom-tabs {
-    border-top: var(--user-menu-border-width) solid var(--primary-low);
   }
 
   .panel-body-contents {
@@ -328,7 +338,6 @@
     width: 320px;
     justify-content: space-between;
     box-sizing: border-box;
-    border-right: var(--user-menu-border-width) solid var(--primary-low);
     min-width: 0; // makes sure menu tabs don't go off screen
   }
 
@@ -470,9 +479,11 @@
 
   ul {
     display: flex;
-    flex-flow: column wrap;
+    flex-direction: column;
     overflow: hidden;
     max-height: 100%;
+    gap: 0.125rem;
+    padding: 0.25rem;
   }
 
   li {
@@ -481,16 +492,16 @@
 
     &.unread,
     &.pending {
-      background-color: var(--tertiary-low);
+      background-color: var(--primary-100);
     }
 
     &:hover {
-      background-color: var(--d-hover);
+      background-color: var(--primary-200);
       outline: none;
     }
 
     &:focus-within {
-      background: var(--d-hover);
+      background: var(--primary-200);
 
       a {
         // we don't need the link focus because we're styling the parent
@@ -553,8 +564,8 @@
         overflow: hidden; // clears the text from wrapping below icons
         overflow-wrap: anywhere;
 
-        // Truncate items with more than 2 lines.
-        @include line-clamp(2);
+        // Truncate items with more than 1 lines.
+        @include line-clamp(1);
       }
     }
 
@@ -568,6 +579,7 @@
     padding: 0;
     align-self: flex-start;
     width: 100%;
+    border-radius: var(--d-border-radius);
 
     .d-icon {
       padding-top: 0.2em;
