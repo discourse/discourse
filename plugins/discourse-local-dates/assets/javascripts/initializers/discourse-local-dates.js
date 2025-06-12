@@ -162,25 +162,22 @@ function initializeDiscourseLocalDates(api) {
     });
   });
 
-  api.onToolbarCreate((toolbar) => {
-    toolbar.addButton({
-      title: "discourse_local_dates.title",
-      id: "local-dates",
-      group: "extras",
-      icon: "calendar-days",
-      perform: (event) =>
-        modal.show(LocalDatesCreateModal, {
-          model: { insertDate: (markup) => event.addText(markup) },
-        }),
-      shortcut: "Shift+.",
-      shortcutAction: (event) => {
-        const timezone = api.getCurrentUser().user_option.timezone;
-        const time = moment().format("HH:mm:ss");
-        const date = moment().format("YYYY-MM-DD");
+  api.addComposerToolbarPopupMenuOption({
+    name: "local-dates",
+    label: "discourse_local_dates.title",
+    icon: "far-clock",
+    action: (event) =>
+      modal.show(LocalDatesCreateModal, {
+        model: { insertDate: (markup) => event.addText(markup) },
+      }),
+    shortcut: "Shift+.",
+    shortcutAction: (event) => {
+      const timezone = api.getCurrentUser().user_option.timezone;
+      const time = moment().format("HH:mm:ss");
+      const date = moment().format("YYYY-MM-DD");
 
-        event.addText(`[date=${date} time=${time} timezone="${timezone}"]`);
-      },
-    });
+      event.addText(`[date=${date} time=${time} timezone="${timezone}"]`);
+    },
   });
 
   addTextDecorateCallback(

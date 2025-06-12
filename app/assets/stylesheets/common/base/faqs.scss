@@ -46,6 +46,10 @@
   display: flex;
 
   button {
-    margin-right: 0.75em;
+    margin-right: 1rem;
+
+    &:last-child {
+      margin-right: 0;
+    }
   }
 }

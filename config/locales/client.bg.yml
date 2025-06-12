@@ -3849,6 +3849,10 @@ bg:
           enable: "Позволи"
           disable: "Деактивиране"
           add: "Добави"
+          settings: "Настройки"
+          colors: "Цветове"
+          discard_colors: "Отхвърляне"
+          colors_title: "Цветове"
           scss:
             text: "CSS"
           footer:

@@ -591,9 +591,9 @@ fi:
         header: "Uusi viesti"
         cancel: "Peruuta"
       quick_reaction_type:
-        title: "Yhden klikkauksen keskustelureaktiot"
+        title: "Yhden napsautuksen chat-reaktiot"
         options:
-          frequent: "Useimmin käytetyt chat-reaktiot"
+          frequent: "Yleisimmin käytetyt chat-reaktiot"
           custom: "Mukautetut reaktiot"
     notifications:
       chat_invitation: "kutsui sinut liittymään chat-kanavalle"

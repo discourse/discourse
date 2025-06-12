@@ -5629,6 +5629,7 @@ es:
             title: "Tema"
             themes_intro: "Instala un tema nuevo para empezar, o crea el tuyo desde cero utilizando estos recursos."
             new_theme: "Nuevo tema"
+            install: "Instalar"
           components:
             title: "Componentes"
             install: "Instalar"
@@ -5949,6 +5950,10 @@ es:
           remote_theme_edits: "Si quieres editar este tema, deberás <a href='%{repoURL}' target='_blank'>proponer un cambio en su repositorio</a>"
           repo_unreachable: "No se ha podido contactar el repositorio Git de este tema. Mensaje de error:"
           imported_from_archive: "Este tema se importó desde un archivo .zip"
+          settings: "Ajustes"
+          colors: "Colores"
+          discard_colors: "Descartar"
+          colors_title: "Colores"
           scss:
             text: "CSS"
           after_header:

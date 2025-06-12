@@ -11,6 +11,24 @@ html.composer-open:not(.has-full-page-chat) {
   --composer-max-width--hide-preview: 740px;
 }
 
+.grippie {
+  cursor: row-resize;
+  padding: 0.25em 0;
+  background: var(--tertiary);
+
+  @media (pointer: coarse) {
+    padding: 0.35em 0;
+  }
+
+  &::before {
+    content: "";
+    display: block;
+    width: 1.5em;
+    margin: auto;
+    border-top: 3px double var(--tertiary-medium);
+  }
+}
+
 #reply-control {
   position: fixed;
   display: flex;
@@ -96,24 +114,6 @@ html.composer-open:not(.has-full-page-chat) {
 
     @include viewport.until(sm) {
       z-index: z("mobile-composer");
-    }
-
-    .grippie {
-      cursor: row-resize;
-      padding: 0.25em 0;
-      background: var(--tertiary);
-
-      @media (pointer: coarse) {
-        padding: 0.35em 0;
-      }
-
-      &::before {
-        content: "";
-        display: block;
-        width: 1.5em;
-        margin: auto;
-        border-top: 3px double var(--tertiary-medium);
-      }
     }
   }
 

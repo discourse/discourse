@@ -4998,6 +4998,7 @@ sv:
           install: "Installera"
           themes:
             title: "Teman"
+            install: "Installera"
           components:
             title: "Komponenter"
             install: "Installera"
@@ -5284,6 +5285,10 @@ sv:
           remote_theme_edits: "Om du vill redigera detta tema måste du <a href='%{repoURL}' target='_blank'>skicka in en ändring av dess lagringsplats</a>"
           repo_unreachable: "Kunde inte kontakta Git-lagringsplatsen för detta tema. Felmeddelande:"
           imported_from_archive: "Detta tema importerades från en .zip-fil"
+          settings: "Inställningar"
+          colors: "Färger"
+          discard_colors: "Förkasta"
+          colors_title: "Färger"
           scss:
             text: "CSS"
           after_header:

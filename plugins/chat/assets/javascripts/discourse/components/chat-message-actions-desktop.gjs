@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { concat, hash } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
@@ -107,6 +108,21 @@ export default class ChatMessageActionsDesktop extends Component {
     this.popper = null;
   }
 
+  @action
+  redirectScroll(event) {
+    event.preventDefault();
+
+    const targetElement = this.messageContainer.closest(
+      ".chat-messages-scroller"
+    );
+
+    if (!targetElement) {
+      return;
+    }
+
+    targetElement.scrollTop += event.deltaY;
+  }
+
   <template>
     {{#if (and this.site.desktopView this.chat.activeMessage.model.persisted)}}
       <div
@@ -118,6 +134,7 @@ export default class ChatMessageActionsDesktop extends Component {
           (concat "is-size-" this.size)
         }}
         data-id={{this.message.id}}
+        {{on "wheel" this.redirectScroll}}
       >
         <div
           class={{concatClass

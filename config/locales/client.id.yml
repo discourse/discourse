@@ -2576,6 +2576,10 @@ id:
           disable: "Nonaktifkan"
           add: "Menambahkan"
           empty: "Tidak ada item"
+          settings: "Pengaturan"
+          colors: "Warna"
+          discard_colors: "Batalkan"
+          colors_title: "Warna"
           all_filter: "Semua"
           active_filter: "Aktif"
         schema:

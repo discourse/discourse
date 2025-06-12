@@ -460,6 +460,7 @@ createWidget("post-language", {
     return [
       new RenderGlimmer(this, "div", PostMetaDataLanguage, {
         language: attrs.language,
+        localization_outdated: attrs.localization_outdated,
       }),
     ];
   },
