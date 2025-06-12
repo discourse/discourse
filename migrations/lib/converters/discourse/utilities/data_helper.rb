@@ -10,17 +10,22 @@ module Migrations::Converters::Discourse
       url = item[:"#{column_prefix}_url"]
       return if url.nil?
 
-      params = {
-        filename: item[:"#{column_prefix}_filename"],
-        type: "avatar", # TODO Enum
-        origin: item[:"#{column_prefix}_origin"],
-        user_id: item[:"#{column_prefix}_user_id"],
-      }
-
       if external_upload?(url)
-        ::Migrations::Database::IntermediateDB::Upload.create_for_url(url:, **params)
+        ::Migrations::Database::IntermediateDB::Upload.create_for_url(
+          url:,
+          filename: item[:"#{column_prefix}_filename"],
+          type: "avatar", # TODO Enum
+          origin: item[:"#{column_prefix}_origin"],
+          user_id: item[:"#{column_prefix}_user_id"],
+        )
       else
-        ::Migrations::Database::IntermediateDB::Upload.create_for_file(path: url, **params)
+        ::Migrations::Database::IntermediateDB::Upload.create_for_file(
+          path: url,
+          filename: item[:"#{column_prefix}_filename"],
+          type: "avatar", # TODO Enum
+          origin: item[:"#{column_prefix}_origin"],
+          user_id: item[:"#{column_prefix}_user_id"],
+        )
       end
     end
   end
