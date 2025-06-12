@@ -49,7 +49,6 @@ export default class PostTextSelection extends Component {
   @service siteSettings;
   @service menu;
 
-  @tracked selectTextMode = false;
   @tracked preventClose = applyValueTransformer(
     "post-text-selection-prevent-close",
     false
