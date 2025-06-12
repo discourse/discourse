@@ -23,16 +23,12 @@ class UserAuthToken::DestroyViaDiscourseId
 
       fail!("expired timestamp")
     end
-
-    true
   end
 
   def validate_discourse_id
     fail!("discourse id not enabled") unless SiteSetting.enable_discourse_id
     fail!("discourse_id_client_id missing") if SiteSetting.discourse_id_client_id.blank?
     fail!("discourse_id_client_secret missing") if SiteSetting.discourse_id_client_secret.blank?
-
-    true
   end
 
   def validate_signature(params:)
@@ -52,8 +48,6 @@ class UserAuthToken::DestroyViaDiscourseId
 
       fail!("signature invalid")
     end
-
-    true
   end
 
   def revoke_auth_tokens(params:)
