@@ -3936,6 +3936,8 @@ en:
           title: "Translations for post"
           confirm_delete: "Are you sure you want to delete translations for '%{languageCode}'?"
         success: "Translations have been updated successfully"
+        post_language_selector:
+          none: "None"
 
       errors:
         create: "Sorry, there was an error creating your post. Please try again."

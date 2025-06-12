@@ -151,7 +151,7 @@ describe "Post translations", type: :system do
   end
 
   context "when creating a new post in a different locale" do
-    it "should only show the languages listed in the site setting and default locale" do
+    it "should only show the languages listed in the site setting and default locale and a none value" do
       visit("/latest")
       page.find("#create-topic").click
       post_language_selector.expand
@@ -159,6 +159,9 @@ describe "Post translations", type: :system do
       expect(post_language_selector).to have_content("Français")
       expect(post_language_selector).to have_content("Español")
       expect(post_language_selector).to have_content("Português (BR)")
+      expect(post_language_selector).to have_content(
+        I18n.t("js.post.localizations.post_language_selector.none"),
+      )
     end
 
     it "should allow a user to create a post in a different locale" do
@@ -173,6 +176,34 @@ describe "Post translations", type: :system do
       try_until_success do
         updated_post = Topic.last.posts.first
         expect(updated_post.locale).to eq("fr")
+      end
+    end
+
+    context "when the user's default locale is different from the site default" do
+      before do
+        SiteSetting.allow_user_locale = true
+        admin.update!(locale: "fr")
+      end
+
+      it "should show the user's locale as the default in the post language switcher" do
+        visit("/latest")
+        page.find("#create-topic").click
+        expect(
+          page.has_css?("#{POST_LANGUAGE_SWITCHER_SELECTOR} .d-button-label", text: "FR"),
+        ).to be true
+      end
+    end
+
+    context "when the user's default locale is different from the site default but not an available language" do
+      before do
+        SiteSetting.allow_user_locale = true
+        admin.update!(locale: "de")
+      end
+
+      it "should make the selected language blank" do
+        visit("/latest")
+        page.find("#create-topic").click
+        expect(page.has_no_css?("#{POST_LANGUAGE_SWITCHER_SELECTOR} .d-button-label")).to be true
       end
     end
   end

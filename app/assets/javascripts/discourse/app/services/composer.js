@@ -1474,7 +1474,8 @@ export default class ComposerService extends Service {
       action: CREATE_TOPIC,
       draftKey: this.topicDraftKey,
       draftSequence: 0,
-      locale: this.siteSettings.default_locale,
+      locale:
+        this.currentUser.effective_locale || this.siteSettings.default_locale,
     });
   }
 
@@ -1517,8 +1518,7 @@ export default class ComposerService extends Service {
       isWarning: false,
       hasTargetGroups: opts.hasGroups,
       warningsDisabled: opts.warningsDisabled,
-      locale:
-        opts?.locale || opts?.post?.locale || this.siteSettings.default_locale,
+      locale: this._initialLocale(opts),
     });
 
     if (!this.model.targetRecipients) {
@@ -1810,6 +1810,32 @@ export default class ComposerService extends Service {
   clearLastValidatedAt() {
     this.set("lastValidatedAt", null);
     this.appEvents.trigger("composer-service:last-validated-at-cleared");
+  }
+
+  _initialLocale(opts) {
+    if (opts?.locale) {
+      return opts.locale;
+    }
+
+    if (opts?.post?.locale) {
+      return opts.post.locale;
+    }
+
+    if (this.currentUser?.effective_locale) {
+      if (
+        this.siteSettings.available_content_localization_locales.find(
+          (locale) => locale.value === this.currentUser?.effective_locale
+        )
+      ) {
+        return this.currentUser.effective_locale;
+      } else {
+        // If user's effective locale is not part of available locales,
+        // we leave it empty so that a locale value won't be attached to the post.
+        return "";
+      }
+    }
+
+    return this.siteSettings.default_locale;
   }
 }
 
