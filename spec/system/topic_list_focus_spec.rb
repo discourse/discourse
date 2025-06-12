@@ -2,6 +2,7 @@
 
 describe "Topic list focus", type: :system do
   fab!(:topics) { Fabricate.times(10, :post).map(&:topic) }
+  fab!(:admin)
 
   before_all do
     sidebar_url = Fabricate(:sidebar_url, name: "my topic link", value: "/t/#{topics[4].id}")
@@ -87,7 +88,7 @@ describe "Topic list focus", type: :system do
   end
 
   it "refocusses properly when there are multiple pages of topics" do
-    extra_topics = Fabricate.times(25, :post).map(&:topic)
+    Fabricate.times(25, :post).map(&:topic)
     oldest_topic = Fabricate(:post).topic
     oldest_topic.update(bumped_at: 1.day.ago)
 
@@ -106,5 +107,30 @@ describe "Topic list focus", type: :system do
     page.go_back
     expect(page).to have_css("body.navigation-topics")
     expect(focussed_topic_id).to eq(oldest_topic.id)
+  end
+
+  shared_examples "navigate to topic" do
+    it "navigates to topic using keyboard" do
+      sign_in(admin)
+      visit("/latest")
+
+      page.send_keys("J")
+
+      expect(page).to have_css(".topic-list-item.selected", count: 1)
+
+      page.send_keys(:enter)
+      expect(page).to have_css("body.archetype-regular")
+      expect(page).to have_css("#topic-title")
+    end
+  end
+
+  context "when experimental_prefetch_allowed_groups is enabled" do
+    before { SiteSetting.experimental_prefetch_allowed_groups = "1" }
+    include_examples "navigate to topic"
+  end
+
+  context "when experimental_prefetch_allowed_groups is disabled" do
+    before { SiteSetting.experimental_prefetch_allowed_groups = "" }
+    include_examples "navigate to topic"
   end
 end
