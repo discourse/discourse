@@ -121,6 +121,7 @@ class Theme < ActiveRecord::Base
         end
 
   scope :not_system, -> { where("id > 0") }
+  scope :system, -> { where("id < 0") }
 
   delegate :remote_url, to: :remote_theme, private: true, allow_nil: true
 
