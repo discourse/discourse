@@ -165,7 +165,7 @@ module VideoConversion
     private
 
     def valid_settings?
-      SiteSetting.mediaconvert_enabled && SiteSetting.mediaconvert_role_arn.present? &&
+      SiteSetting.video_conversion_enabled && SiteSetting.mediaconvert_role_arn.present? &&
         SiteSetting.mediaconvert_endpoint.present?
     end
 
