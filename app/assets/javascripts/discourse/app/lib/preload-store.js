@@ -4,6 +4,7 @@ import { Promise } from "rsvp";
 
 export default {
   data: new Map(),
+  MAX_TOPIC_ENTRIES: 50,
 
   store(key, value) {
     this.data.set(key, value);
@@ -46,6 +47,21 @@ export default {
 
   remove(key) {
     this.data.delete(key);
+  },
+
+  clearTopicsPastLimit() {
+    let topic_keys = [];
+    for (let key of this.data.keys()) {
+      if (key.startsWith("topic_")) {
+        topic_keys.push(key);
+      }
+    }
+
+    if (topic_keys.length > this.MAX_TOPIC_ENTRIES) {
+      for (let key of topic_keys) {
+        this.data.delete(key);
+      }
+    }
   },
 
   reset() {

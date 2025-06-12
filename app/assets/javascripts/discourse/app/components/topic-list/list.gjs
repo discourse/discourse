@@ -1,5 +1,8 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
+import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
 import { eq, or } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -33,6 +36,7 @@ import ItemViewsCell from "./item/views-cell";
 export default class TopicList extends Component {
   @service currentUser;
   @service topicTrackingState;
+  @service prefetch;
 
   @cached
   get columns() {
@@ -180,6 +184,16 @@ export default class TopicList extends Component {
     });
   }
 
+  @action
+  didInsertTopicList() {
+    this.prefetch.clearPrefetchedTopics();
+  }
+
+  @action
+  willDestroyTopicList() {
+    this.prefetch.clearPrefetchedTopics();
+  }
+
   <template>
     {{! template-lint-disable table-groups }}
     <table
@@ -188,6 +202,8 @@ export default class TopicList extends Component {
         (if this.bulkSelectEnabled "sticky-header bulk-select-enabled")
         this.additionalClasses
       }}
+      {{didInsert this.didInsertTopicList}}
+      {{willDestroy this.willDestroyTopicList}}
       aria-labelledby="topic-list-heading"
       ...attributes
     >

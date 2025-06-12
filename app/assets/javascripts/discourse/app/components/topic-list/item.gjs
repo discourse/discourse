@@ -6,7 +6,6 @@ import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { htmlSafe, isHTMLSafe } from "@ember/template";
 import { modifier } from "ember-modifier";
-import { ForesightManager } from "js.foresight";
 import { and, eq } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PostCountOrBadges from "discourse/components/topic-list/post-count-or-badges";
