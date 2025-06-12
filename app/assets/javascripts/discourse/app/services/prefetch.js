@@ -54,7 +54,7 @@ export default class PrefetchService extends Service {
     return true;
   }
 
-  async register(topicId, lastReadPostNumber) {
+  register(topicId, lastReadPostNumber) {
     if (!this.isEnabled) {
       return;
     }
@@ -66,23 +66,29 @@ export default class PrefetchService extends Service {
 
     ForesightManager.instance.register({
       element,
-      callback: async () => {
-        const data = {
-          forceLoad: true,
-          // TODO: We're not tracking the vist here because it is just preloading
-          // but we should track it properly if/when user loads the topic
-          track_visit: false,
-        };
-
-        const url = `/t/${topicId}`;
-        const jsonUrl =
-          (lastReadPostNumber ? `${url}/${lastReadPostNumber}` : url) + ".json";
-        const result = await ajax(jsonUrl, { data });
-
-        PreloadStore.store(`topic_${topicId}`, result);
-      },
+      callback: async () => this.fetch(topicId, lastReadPostNumber),
       unregisterOnCallback: true,
     });
+  }
+
+  async fetch(topicId, lastReadPostNumber) {
+    if (!this.isEnabled) {
+      return;
+    }
+
+    const data = {
+      forceLoad: true,
+      // TODO: We're not tracking the visit here because it is only a prefetch
+      // but we should track it once user clicks through
+      track_visit: false,
+    };
+
+    const url = `/t/${topicId}`;
+    const jsonUrl =
+      (lastReadPostNumber ? `${url}/${lastReadPostNumber}` : url) + ".json";
+
+    const result = await ajax(jsonUrl, { data });
+    PreloadStore.store(`topic_${topicId}`, result);
   }
 
   clearPrefetchedTopics() {

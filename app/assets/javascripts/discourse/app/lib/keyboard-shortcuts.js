@@ -95,16 +95,8 @@ const DEFAULT_BINDINGS = {
   "m r": { handler: "setTrackingToRegular" }, // mark topic as regular
   "m t": { handler: "setTrackingToTracking" }, // mark topic as tracking
   "m w": { handler: "setTrackingToWatching" }, // mark topic as watching
-  "o,enter": {
-    click: [
-      ".topic-list tr.selected a.title",
-      ".latest-topic-list .latest-topic-list-item.selected div.main-link a.title",
-      ".top-topic-list .latest-topic-list-item.selected div.main-link a.title",
-      ".latest .featured-topic.selected a.title",
-      ".search-results .fps-result.selected .search-link",
-    ].join(", "),
-    anonymous: true,
-  }, // open selected topic on latest or categories page
+  enter: { handler: "openSelectedTopic", anonymous: true },
+  o: { handler: "openSelectedTopic", anonymous: true },
   tab: { handler: "switchFocusCategoriesPage", anonymous: true },
   p: { handler: "showCurrentUser" },
   q: { handler: "quoteReply" },
@@ -159,6 +151,7 @@ export default {
     this.currentUser = owner.lookup("service:current-user");
     this.siteSettings = owner.lookup("service:site-settings");
     this.site = owner.lookup("service:site");
+    this.prefetchService = owner.lookup("service:prefetch");
 
     // Disable the shortcut if private messages are disabled
     if (!this.currentUser?.can_send_private_messages) {
@@ -615,6 +608,25 @@ export default {
     return false;
   },
 
+  openSelectedTopic(e) {
+    const selector = [
+      ".topic-list tr.selected a.title",
+      ".latest-topic-list .latest-topic-list-item.selected div.main-link a.title",
+      ".top-topic-list .latest-topic-list-item.selected div.main-link a.title",
+      ".latest .featured-topic.selected a.title",
+      ".search-results .fps-result.selected .search-link",
+    ].join(", ");
+
+    const selection = document.querySelector(selector);
+
+    if (!selection) {
+      return;
+    }
+
+    e.preventDefault();
+    discourseLater(() => selection.click(), 25);
+  },
+
   _bindToSelectedPost(action, binding) {
     this.keyTrapper.bind(binding, () => this.sendToSelectedPost(action));
   },
@@ -625,21 +637,8 @@ export default {
 
   _bindToClick(selector, binding) {
     binding = binding.split(",");
-    this.keyTrapper.bind(binding, function (e) {
+    this.keyTrapper.bind(binding, function () {
       const selection = document.querySelector(selector);
-
-      // Special case: We're binding to enter.
-      if (e && e.key === "Enter") {
-        // Binding to enter should only be effective when there is something
-        // to select.
-        if (!selection) {
-          return;
-        }
-
-        // If effective, prevent default.
-        e.preventDefault();
-      }
-
       selection?.click();
     });
   },
@@ -781,6 +780,18 @@ export default {
     article.classList.add("selected");
     article.setAttribute("tabindex", "0");
     article.focus();
+
+    if (article.classList.contains("topic-list-item")) {
+      this.prefetchService.fetch(
+        article.dataset.topicId,
+        article.dataset.lastReadPostNumber
+      );
+    }
+
+    this.appEvents.trigger("keyboard:move-selection", {
+      articles,
+      selectedArticle: article,
+    });
 
     const articleTop = domUtils.offset(article).top,
       articleTopPosition = articleTop - headerOffset();

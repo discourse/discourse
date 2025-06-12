@@ -239,6 +239,7 @@ export default class Item extends Component {
       {{on "keydown" this.keyDown}}
       {{on "click" this.click}}
       data-topic-id={{@topic.id}}
+      data-last-read-post-number={{@topic.last_read_post_number}}
       role={{this.role}}
       aria-level={{this.ariaLevel}}
       class={{concatClass
