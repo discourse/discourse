@@ -14,10 +14,15 @@ module Migrations::Converters::Discourse
 
     def items
       @source_db.query <<~SQL
-        SELECT *
-        FROM users
-        WHERE id >= 0
-        ORDER BY id
+        SELECT u.*,
+               up.url               AS avatar_url,
+               up.original_filename AS avatar_filename,
+               up.origin            AS avatar_origin,
+               up.user_id           AS avatar_user_id
+        FROM users u
+             LEFT JOIN uploads up ON u.uploaded_avatar_id = up.id
+        WHERE u.id >= 0
+        ORDER BY u.id
       SQL
     end
 
@@ -46,7 +51,7 @@ module Migrations::Converters::Discourse
         staged: item[:staged],
         title: item[:title],
         trust_level: item[:trust_level],
-        uploaded_avatar_id: item[:uploaded_avatar_id],
+        uploaded_avatar_id: DataHelper.create_upload(item, :avatar),
         username: item[:username],
         views: item[:views],
       )
