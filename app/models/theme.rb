@@ -7,7 +7,7 @@ class Theme < ActiveRecord::Base
   include GlobalPath
 
   BASE_COMPILER_VERSION = 91
-  CORE_THEMES = { "foundation" => -1, "horizon" => -2 }
+  CORE_THEMES = { "foundation" => -1 }
   EDITABLE_SYSTEM_FIELDS = %w[
     child_theme_ids
     color_scheme_id
@@ -243,10 +243,6 @@ class Theme < ActiveRecord::Base
 
   def self.foundation_theme
     Theme.find(CORE_THEMES["foundation"])
-  end
-
-  def self.horizon_theme
-    Theme.find(CORE_THEMES["horizon"])
   end
 
   def self.compiler_version
