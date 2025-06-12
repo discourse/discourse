@@ -1426,6 +1426,7 @@ RSpec.describe Admin::ThemesController do
       expect do
         delete "/admin/themes/bulk_destroy.json", params: { theme_ids: theme_ids }
       end.to change { Theme.count }.by(-1)
+      expect { theme_2.reload }.to raise_exception(ActiveRecord::RecordNotFound)
     end
 
     it "logs the theme destroy action for each theme" do

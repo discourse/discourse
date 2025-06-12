@@ -241,6 +241,14 @@ class Theme < ActiveRecord::Base
     Theme.expire_site_cache!
   end
 
+  def self.foundation_theme
+    Theme.find(CORE_THEMES["foundation"])
+  end
+
+  def self.horizon_theme
+    Theme.find(CORE_THEMES["horizon"])
+  end
+
   def self.compiler_version
     get_set_cache "compiler_version" do
       dependencies = [

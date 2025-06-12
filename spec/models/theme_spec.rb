@@ -6,8 +6,8 @@ RSpec.describe Theme do
 
   let(:guardian) { Guardian.new(user) }
   let(:child) { Fabricate(:theme, user: user, component: true) }
-  let(:horizon_theme) { Theme.find(Theme::CORE_THEMES["horizon"]) }
-  let(:foundation_theme) { Theme.find(Theme::CORE_THEMES["foundation"]) }
+  let(:horizon_theme) { Theme.horizon_theme }
+  let(:foundation_theme) { Theme.foundation_theme }
 
   before { ThemeJavascriptCompiler.disable_terser! }
 
