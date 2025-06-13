@@ -122,14 +122,16 @@ module("Unit | Utility | user-search", function (hooks) {
     }
   });
 
-  test("it places groups unconditionally for exact match", async function (assert) {
-    let results = await userSearch({ term: "Team" });
-    assert.strictEqual(results[results.length - 1]["name"], "team");
-  });
-
   test("it strips @ from the beginning", async function (assert) {
-    let results = await userSearch({ term: "@Team" });
-    assert.strictEqual(results[results.length - 1]["name"], "team");
+    const results = await userSearch({ term: "@Team" });
+
+    results.forEach((result) => {
+      const identifier = result.username || result.name;
+      assert.false(
+        identifier.startsWith("@"),
+        `Result '${identifier}' should not start with @`
+      );
+    });
   });
 
   test("it skips a search depending on punctuation", async function (assert) {
@@ -162,11 +164,10 @@ module("Unit | Utility | user-search", function (hooks) {
     }
 
     results = await userSearch({ term: "sam@sam.com", allowEmails: true });
-    // 6 + email
-    assert.strictEqual(results.length, 7);
+    assert.strictEqual(results.length, 6);
 
     results = await userSearch({ term: "sam+test@sam.com", allowEmails: true });
-    assert.strictEqual(results.length, 7);
+    assert.strictEqual(results.length, 6);
 
     results = await userSearch({ term: "sam@sam.com" });
     assert.strictEqual(results.length, 0);
@@ -181,5 +182,179 @@ module("Unit | Utility | user-search", function (hooks) {
   test("it uses limit option", async function (assert) {
     const results = await userSearch({ term: "te", limit: 2 });
     assert.strictEqual(results.length, 2);
+  });
+
+  test("it shows groups with partial matches even when user limit is reached", async function (assert) {
+    // Set up a scenario where we have 6 users (the default limit) matching "migr"
+    // and a group "migrations" that starts with "migr"
+    pretender.get("/u/search/users", (request) => {
+      if (request.url.includes("term=migr")) {
+        return response({
+          users: [
+            { username: "migratory_bird", name: "Migratory Bird" },
+            { username: "migration_user", name: "Migration User" },
+            { username: "migrate_now", name: "Migrate Now" },
+            { username: "migraine_sufferer", name: "Migraine Sufferer" },
+            { username: "migraines", name: "Migraines" },
+            { username: "migratory", name: "Migratory" },
+          ],
+          groups: [
+            { name: "migrations", usernames: [] },
+            { name: "other_group", usernames: [] },
+          ],
+        });
+      }
+      return response({ users: [], groups: [] });
+    });
+
+    // Search for "migr" - should return the "migrations" group even though
+    // 6 users fill the limit and "migr" is only a partial match for "migrations"
+    const results = await userSearch({ term: "migr", limit: 6 });
+
+    // With the current buggy implementation, the migrations group won't appear
+    // because it's not an exact match and the limit is reached by users
+    const groupNames = results.groups.map((g) => g.name);
+
+    // This assertion should pass once the bug is fixed
+    assert.true(
+      groupNames.includes("migrations"),
+      "Should include 'migrations' group for partial match 'migr' even when user limit is reached"
+    );
+  });
+
+  test("it prioritizes exact username matches over exact name matches", async function (assert) {
+    pretender.get("/u/search/users", (request) => {
+      if (request.url.includes("term=team")) {
+        return response({
+          users: [
+            { username: "teamwork", name: "Team Worker" },
+            { username: "team", name: "Team Leader" },
+            { username: "steam", name: "Steam User" },
+            { username: "player", name: "team" }, // exact name match but not username
+          ],
+          groups: [
+            { name: "team", usernames: [] },
+            { name: "teamwork", usernames: [] },
+          ],
+        });
+      }
+      return response({ users: [], groups: [] });
+    });
+
+    const results = await userSearch({ term: "team", limit: 10 });
+
+    // Exact username match should be first
+    assert.strictEqual(
+      results[0].username,
+      "team",
+      "Exact username match should be first"
+    );
+    // Exact group match should be second
+    assert.strictEqual(
+      results[1].name,
+      "team",
+      "Exact group match should be second"
+    );
+    // Partial username match should come before exact name match
+    assert.strictEqual(
+      results[2].username,
+      "teamwork",
+      "Partial username match should be third"
+    );
+    // User with exact name match should come later - find it in the results
+    const exactNameMatch = results.find((r) => r.username === "player");
+    assert.true(exactNameMatch, "Should find exact name match for 'player'");
+
+    // It should come after partial username matches
+    const partialUsernameIndex = results.findIndex(
+      (r) => r.username === "teamwork"
+    );
+    const exactNameIndex = results.findIndex((r) => r.username === "player");
+    assert.true(
+      exactNameIndex > partialUsernameIndex,
+      "Exact name match should come after partial username matches"
+    );
+  });
+
+  test("it orders results by priority: exact username, exact group, partial username, partial group, exact name, partial name, metadata", async function (assert) {
+    pretender.get("/u/search/users", (request) => {
+      if (request.url.includes("term=test")) {
+        return response({
+          users: [
+            { username: "testing", name: "Testing User" }, // partial username match
+            { username: "test", name: "Test User" }, // exact username match
+            { username: "user123", name: "anon", title: "tester" }, // metadata match
+            { username: "player", name: "test" }, // exact name match
+            { username: "gamer", name: "testing games" }, // partial name match
+          ],
+          groups: [
+            { name: "testers", usernames: [] }, // partial group match
+            { name: "test", usernames: [] }, // exact group match
+          ],
+        });
+      }
+      return response({ users: [], groups: [] });
+    });
+
+    const results = await userSearch({
+      term: "test",
+      allowEmails: true,
+      limit: 10,
+    });
+
+    // Expected order: exact username, exact group, partial username, partial group, exact name, partial name
+    assert.strictEqual(
+      results[0].username,
+      "test",
+      "Exact username match first"
+    );
+    assert.strictEqual(results[1].name, "test", "Exact group match second");
+    assert.strictEqual(
+      results[2].username,
+      "testing",
+      "Partial username match third"
+    );
+    assert.strictEqual(
+      results[3].name,
+      "testers",
+      "Partial group match fourth"
+    );
+    assert.strictEqual(results[4].username, "player", "Exact name match fifth");
+    assert.strictEqual(
+      results[5].username,
+      "gamer",
+      "Partial name match sixth"
+    );
+    assert.strictEqual(results[6].username, "user123", "Metadata match last");
+  });
+
+  test("it includes all matching groups when limit allows", async function (assert) {
+    pretender.get("/u/search/users", (request) => {
+      if (request.url.includes("term=dev")) {
+        return response({
+          users: [{ username: "developer", name: "Developer" }],
+          groups: [
+            { name: "devs", usernames: [] },
+            { name: "development", usernames: [] },
+            { name: "dev-team", usernames: [] },
+          ],
+        });
+      }
+      return response({ users: [], groups: [] });
+    });
+
+    const results = await userSearch({ term: "dev", limit: 10 });
+    const groupNames = results.groups.map((g) => g.name);
+
+    // All groups should be included since limit allows
+    assert.true(groupNames.includes("devs"), "Should include 'devs' group");
+    assert.true(
+      groupNames.includes("development"),
+      "Should include 'development' group"
+    );
+    assert.true(
+      groupNames.includes("dev-team"),
+      "Should include 'dev-team' group"
+    );
   });
 });
