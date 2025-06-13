@@ -9,7 +9,7 @@ import TopicInfo from "./topic/info";
 const ContentsSecondary = <template>
   {{#if @topicInfoVisible}}
     <TopicInfo @topicInfo={{@topicInfo}} />
-  {{else if (and @bootStrapEnabled @isStaff @desktopView)}}
+  {{else if (and @bootstrapEnabled @isStaff @desktopView)}}
     <div class="d-header-mode">
       <BootstrapModeNotice />
     </div>
