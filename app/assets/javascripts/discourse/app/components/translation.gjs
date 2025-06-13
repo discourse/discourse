@@ -21,7 +21,7 @@ import I18n, { i18n, I18nMissingInterpolationArgument } from "discourse-i18n";
  * ```gjs
  * // Translation key: "some.translation.key" = "Welcome, %{username}! The date is %{shortdate}!"
  * <Translation
- *   @scope="some.translation.key"
+ *   @key="some.translation.key"
  *   @options={{hash shortdate=shortDate}}
  * >
  *   <:placeholders as |Placeholder|>
@@ -32,7 +32,7 @@ import I18n, { i18n, I18nMissingInterpolationArgument } from "discourse-i18n";
  * </Translation>
  * ```
  *
- * @param {String} scope - The i18n translation key to use
+ * @param {String} key - The i18n translation key to use
  * @param {Object} [options] - Hash of options to pass to the i18n function for string interpolation
  */
 export default class Translation extends Component {
@@ -74,7 +74,7 @@ export default class Translation extends Component {
     const optionsArg = this.args.options || {};
 
     // Find all of the placeholders in the string we're looking at.
-    const message = I18n.findTranslationWithFallback(this.args.scope, {
+    const message = I18n.findTranslationWithFallback(this.args.key, {
       ...optionsArg,
     });
     this._placeholderAppearance = I18n.findPlaceholders(message);
@@ -95,12 +95,12 @@ export default class Translation extends Component {
       );
     });
 
-    const text = i18n(this.args.scope, {
+    const text = i18n(this.args.key, {
       ...Object.fromEntries(this._placeholderKeys),
       ...optionsArg,
     });
 
-    if (text === I18n.missingTranslation(this.args.scope)) {
+    if (text === I18n.missingTranslation(this.args.key)) {
       return [text];
     }
 
@@ -190,7 +190,7 @@ export default class Translation extends Component {
 
     if (!isProduction() && missing.length > 0) {
       throw new I18nMissingInterpolationArgument(
-        `${this.args.scope}: ${missing.join(", ")}`
+        `${this.args.key}: ${missing.join(", ")}`
       );
     }
   }

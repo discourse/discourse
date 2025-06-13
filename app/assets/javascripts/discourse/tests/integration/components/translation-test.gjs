@@ -41,7 +41,7 @@ module("Integration | Component | Translation", function (hooks) {
   test("renders translation with component placeholder", async function (assert) {
     await render(
       <template>
-        <Translation @scope="hello">
+        <Translation @key="hello">
           <:placeholders as |Placeholder|>
             <Placeholder @name="username">
               <UserLink @username="pento">pento</UserLink>
@@ -66,7 +66,7 @@ module("Integration | Component | Translation", function (hooks) {
       );
     });
 
-    await render(<template><Translation @scope="simple_text" /></template>);
+    await render(<template><Translation @key="simple_text" /></template>);
 
     resetOnerror();
   });
@@ -82,7 +82,7 @@ module("Integration | Component | Translation", function (hooks) {
     await render(
       <template>
         <Translation
-          @scope="with_options"
+          @key="with_options"
           @options={{hash name="John" site="Discourse"}}
         />
       </template>
@@ -94,7 +94,7 @@ module("Integration | Component | Translation", function (hooks) {
   test("renders translation with both string options and component placeholders", async function (assert) {
     await render(
       <template>
-        <Translation @scope="mixed_placeholders" @options={{hash count=5}}>
+        <Translation @key="mixed_placeholders" @options={{hash count=5}}>
           <:placeholders as |Placeholder|>
             <Placeholder @name="username">
               <UserLink @username="alice">alice</UserLink>
@@ -112,7 +112,7 @@ module("Integration | Component | Translation", function (hooks) {
     await render(
       <template>
         <Translation
-          @scope="multiple_placeholders"
+          @key="multiple_placeholders"
           @options={{hash time="2:30 PM"}}
         >
           <:placeholders as |Placeholder|>
@@ -133,7 +133,7 @@ module("Integration | Component | Translation", function (hooks) {
   });
 
   test("handles missing translation key gracefully", async function (assert) {
-    await render(<template><Translation @scope="nonexistent_key" /></template>);
+    await render(<template><Translation @key="nonexistent_key" /></template>);
 
     // When a translation key is missing, i18n returns the key itself
     assert.dom().hasText("[fr.nonexistent_key]");
@@ -151,7 +151,7 @@ module("Integration | Component | Translation", function (hooks) {
     // Translation has %{username} placeholder but no placeholder component is provided
     await render(
       <template>
-        <Translation @scope="hello">
+        <Translation @key="hello">
           <:placeholders>
           </:placeholders>
         </Translation>
