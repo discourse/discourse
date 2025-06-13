@@ -6,15 +6,16 @@ class Users::DiscourseIdController < ApplicationController
   def revoke
     RateLimiter.new(nil, "discourse_id_revoke_#{params[:identifier]}", 5, 1.minute).performed!
 
-    UserAuthToken::DestroyViaDiscourseId.call(
-      params: {
-        timestamp: params[:timestamp],
-        signature: params[:signature],
-        identifier: params[:identifier],
-      },
-    ) do
+    DiscourseId::Revoke.call(service_params) do |result|
       on_success { render json: { success: true } }
-      on_failure { render json: { error: "Invalid request" }, status: 400 }
+      on_failed_contract do |contract|
+        logger.warn(result.inspect_steps) if SiteSetting.discourse_id_verbose_logging
+        render json: { error: contract.errors.full_messages.join(", ") }, status: 400
+      end
+      on_failure do
+        logger.warn(result.inspect_steps) if SiteSetting.discourse_id_verbose_logging
+        render json: { error: "Invalid request" }, status: 400
+      end
     end
   end
 end

@@ -50,7 +50,7 @@ RSpec.describe Users::DiscourseIdController do
         post "/auth/discourse_id/revoke.json", params: { signature:, identifier:, timestamp: }
 
         expect(response.status).to eq(400)
-        expect(response.parsed_body["error"]).to eq("Invalid request")
+        expect(response.parsed_body["error"]).to match(/Signature is invalid/)
 
         post "/auth/discourse_id/revoke.json", params: { signature:, identifier:, timestamp: }
 
@@ -69,7 +69,7 @@ RSpec.describe Users::DiscourseIdController do
         post "/auth/discourse_id/revoke.json", params: { signature:, identifier:, timestamp: }
 
         expect(response.status).to eq(400)
-        expect(response.parsed_body["error"]).to eq("Invalid request")
+        expect(response.parsed_body["error"]).to match(/Timestamp is expired/)
       end
 
       it "returns 400 when user_id is not found" do
