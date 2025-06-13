@@ -2,6 +2,7 @@ import { render, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import ChatUpload from "discourse/plugins/chat/discourse/components/chat-upload";
+import { setOwner } from "@ember/application";
 
 const IMAGE_FIXTURE = {
   id: 290,
@@ -143,5 +144,58 @@ module("Discourse Chat | Component | chat-upload", function (hooks) {
     assert
       .dom("a.chat-other-upload")
       .hasAttribute("href", TXT_FIXTURE.url, "has the correct URL");
+  });
+
+  module("video source URL", function (hooks) {
+    let mockCapabilities;
+
+    hooks.beforeEach(function () {
+      mockCapabilities = {
+        isIOS: false,
+        isSafari: false,
+      };
+
+      // Override the capabilities service
+      this.owner.register("service:capabilities", mockCapabilities, {
+        instantiate: false,
+      });
+    });
+
+    test("adds timestamp parameter for iOS", async function (assert) {
+      const self = this;
+      this.set("upload", { ...VIDEO_FIXTURE, url: "https://example.com/video.mp4" });
+      mockCapabilities.isIOS = true;
+
+      await render(<template><ChatUpload @upload={{self.upload}} /></template>);
+
+      assert
+        .dom("video.chat-video-upload source")
+        .hasAttribute("src", "https://example.com/video.mp4#t=0.001", "adds timestamp for iOS");
+    });
+
+    test("adds timestamp parameter for Safari", async function (assert) {
+      const self = this;
+      this.set("upload", { ...VIDEO_FIXTURE, url: "https://example.com/video.mp4" });
+      mockCapabilities.isSafari = true;
+
+      await render(<template><ChatUpload @upload={{self.upload}} /></template>);
+
+      assert
+        .dom("video.chat-video-upload source")
+        .hasAttribute("src", "https://example.com/video.mp4#t=0.001", "adds timestamp for Safari");
+    });
+
+    test("does not add timestamp parameter for other browsers", async function (assert) {
+      const self = this;
+      this.set("upload", { ...VIDEO_FIXTURE, url: "https://example.com/video.mp4" });
+      mockCapabilities.isIOS = false;
+      mockCapabilities.isSafari = false;
+
+      await render(<template><ChatUpload @upload={{self.upload}} /></template>);
+
+      assert
+        .dom("video.chat-video-upload source")
+        .hasAttribute("src", "https://example.com/video.mp4", "does not add timestamp for other browsers");
+    });
   });
 });
