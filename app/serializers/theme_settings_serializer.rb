@@ -37,11 +37,10 @@ class ThemeSettingsSerializer < ApplicationSerializer
     resolved_description = locale_file_description || object.description
 
     if resolved_description
-      begin
-        I18n.interpolate(resolved_description, base_path: Discourse.base_path)
-      rescue I18n::MissingInterpolationArgument
-        resolved_description
+      catch(:exception) do
+        return I18n.interpolate(resolved_description, base_path: Discourse.base_path)
       end
+      resolved_description
     end
   end
 

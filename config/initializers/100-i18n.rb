@@ -9,6 +9,7 @@ require "i18n/backend/fallback_locale_list"
 Rails.application.reloader.to_prepare do
   I18n.backend = I18n::Backend::DiscourseI18n.new
   I18n.fallbacks = I18n::Backend::FallbackLocaleList.new
+  I18n.config.missing_interpolation_argument_handler = proc { throw(:exception) }
   I18n.reload!
   I18n.init_accelerator!(overrides_enabled: ENV["DISABLE_TRANSLATION_OVERRIDES"] != "1")
 
