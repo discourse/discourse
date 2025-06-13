@@ -1549,6 +1549,16 @@ RSpec.describe Post do
         post_2.user.user_stat.reload.post_count
       }.from(1).to(0)
     end
+
+    it "should change topic visible status to false if it is the first post" do
+      t = post.topic
+      expect(t.visible).to eq(true)
+
+      post.hide!(PostActionType.types[:off_topic])
+
+      t.reload
+      expect(t.visible).to eq(false)
+    end
   end
 
   describe "#unhide!" do
