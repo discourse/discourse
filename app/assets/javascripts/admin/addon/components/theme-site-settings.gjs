@@ -86,12 +86,13 @@ export default class ThemeSiteSettings extends Component {
             <thead>
               <tr>
                 <th>{{i18n "admin.theme_site_settings.setting"}}</th>
+                <th>{{i18n "admin.theme_site_settings.default_value"}}</th>
                 <th>{{i18n "admin.theme_site_settings.overridden_by"}}</th>
               </tr>
             </thead>
             <tbody>
               {{#each-in content as |settingName overrides|}}
-                <tr class="admin-theme-site-settings-row">
+                <tr class="admin-theme-site-settings-row d-admin-row__content">
                   <td class="admin-theme-site-settings-row__setting">
                     <p class="setting-label">{{humanizedSettingName
                         settingName
@@ -100,7 +101,10 @@ export default class ThemeSiteSettings extends Component {
                       class="setting-description"
                     >{{overrides.setting_description}}</div>
                   </td>
-                  <td>
+                  <td class="admin-theme-site-settings-row__default">
+                    {{overrides.setting_default}}
+                  </td>
+                  <td class="admin-theme-site-settings-row__overridden">
                     {{#each overrides.themes as |theme|}}
                       <DTooltip>
                         <:trigger>

@@ -16,6 +16,7 @@ class Admin::Config::ThemeSiteSettingsController < Admin::AdminController
           themes_with_site_setting_overrides[setting_name] = {
             setting_name: setting_name,
             setting_description: SiteSetting.description(setting_name),
+            setting_default: SiteSetting.defaults[setting_name].to_s,
             themes: [],
           }
         end

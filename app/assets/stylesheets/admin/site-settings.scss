@@ -56,6 +56,8 @@
 
 .admin-theme-site-settings-row {
   &__setting {
+    width: 40%;
+
     .setting-label {
       margin: 0;
     }
@@ -64,5 +66,13 @@
       color: var(--primary-medium);
       font-size: var(--font-down-1);
     }
+  }
+
+  &__default {
+    width: 10%;
+  }
+
+  &__overridden {
+    width: 50%;
   }
 }

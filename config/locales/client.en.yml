@@ -5675,6 +5675,7 @@ en:
       theme_site_settings:
         setting: "Setting"
         overridden_by: "Overridden by"
+        default_value: "Default"
         overridden_value: "Overridden value: %{value}"
         select_setting: "Select a site setting to see current theme values"
         add: "Go to theme site settings"
