@@ -7,7 +7,7 @@ class Theme < ActiveRecord::Base
   include GlobalPath
 
   BASE_COMPILER_VERSION = 91
-  CORE_THEMES = { "foundation" => -1, "horizon" => -2 }
+  CORE_THEMES = { "foundation" => -1 }
   EDITABLE_SYSTEM_ATTRIBUTES = %w[
     child_theme_ids
     color_scheme_id
@@ -231,6 +231,10 @@ class Theme < ActiveRecord::Base
     end
 
     Theme.expire_site_cache!
+  end
+
+  def self.foundation_theme
+    Theme.find(CORE_THEMES["foundation"])
   end
 
   def self.compiler_version
@@ -588,10 +592,6 @@ class Theme < ActiveRecord::Base
     fields.each(&:ensure_baked!)
     fields
   end
-
-  # def foundation_theme
-  # def horizon_theme
-  CORE_THEMES.each { |name, id| define_singleton_method("#{name}_theme") { Theme.find(id) } }
 
   def resolve_baked_field(target, name)
     list_baked_fields(target, name).map { |f| f.value_baked || f.value }.join("\n")
