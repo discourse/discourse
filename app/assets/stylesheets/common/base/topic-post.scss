@@ -737,6 +737,10 @@ aside.quote {
   opacity: 0.4;
 }
 
+.fk-d-menu[data-identifier="post-text-selection-toolbar"] {
+  @include user-select(none);
+}
+
 .quote-button {
   flex-direction: column;
 

@@ -12,8 +12,8 @@ RSpec.describe "Multisite s3 uploads", type: :multisite do
     Fabricate.build(
       :upload,
       sha1: upload_sha1,
-      id: 1,
       original_filename: original_filename,
+      id: Upload.maximum(:id) + 1,
       secure: secure,
     )
   end

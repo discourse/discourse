@@ -58,11 +58,13 @@ export default RouteTemplate(
           />
         {{else}}
           <span>{{@controller.model.name}}</span>
-          <DButton
-            @action={{@controller.startEditingName}}
-            @icon="pencil"
-            class="btn-small"
-          />
+          {{#unless @controller.model.system}}
+            <DButton
+              @action={{@controller.startEditingName}}
+              @icon="pencil"
+              class="btn-small"
+            />
+          {{/unless}}
         {{/if}}
       </div>
 

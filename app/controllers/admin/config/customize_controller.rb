@@ -11,6 +11,8 @@ class Admin::Config::CustomizeController < Admin::AdminController
         .where(component: false)
         .order(:name)
 
+    themes = themes.not_system if !SiteSetting.experimental_system_themes
+
     render json: { themes: serialize_data(themes, ThemeIndexSerializer) }
   end
 
