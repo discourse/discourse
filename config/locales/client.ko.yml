@@ -4190,6 +4190,7 @@ ko:
           install: "설치"
           themes:
             title: "테마"
+            install: "설치"
           components:
             title: "구성 요소"
             install: "설치"
@@ -4429,6 +4430,10 @@ ko:
           remote_theme_edits: "이 테마를 편집하려면 <a href='%{repoURL}' target='_blank'>저장소에 변경사항을 제출</a>해야 합니다."
           repo_unreachable: "이 테마의 Git 저장소에 접속할 수 없습니다. 오류 메시지:"
           imported_from_archive: "이 테마는 .zip 파일에서 임포트했습니다."
+          settings: "설정"
+          colors: "색상"
+          discard_colors: "포기"
+          colors_title: "색상"
           scss:
             text: "CSS"
           after_header:

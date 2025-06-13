@@ -50,6 +50,7 @@ const AUTOCOMPLETE_KEY_DOWN_SUPPRESS = ["Enter", "Tab"];
  * @property {string} [class] The class to be added to the ProseMirror contentEditable editor
  * @property {boolean} [includeDefault] If default node and mark spec/parse/serialize/inputRules definitions from ProseMirror should be included
  * @property {import("discourse/lib/composer/rich-editor-extensions").RichEditorExtension[]} [extensions] A list of extensions to be used with the editor INSTEAD of the ones registered through the API
+ * @property {(toolbar: import("discourse/lib/composer/toolbar").ToolbarBase) => void} [replaceToolbar] A function that replaces the default toolbar in a container with a custom/temporary one
  */
 
 /**
@@ -63,6 +64,10 @@ const AUTOCOMPLETE_KEY_DOWN_SUPPRESS = ["Enter", "Tab"];
 export default class ProsemirrorEditor extends Component {
   @service session;
   @service dialog;
+  @service menu;
+  @service capabilities;
+  @service modal;
+  @service toasts;
 
   schema = createSchema(this.extensions, this.args.includeDefault);
   view;
@@ -73,7 +78,11 @@ export default class ProsemirrorEditor extends Component {
 
   get pluginParams() {
     return {
-      utils: { ...utils, convertFromMarkdown: this.convertFromMarkdown },
+      utils: {
+        ...utils,
+        convertFromMarkdown: this.convertFromMarkdown,
+        convertToMarkdown: this.convertToMarkdown,
+      },
       schema: this.schema,
       pmState: ProsemirrorState,
       pmModel: ProsemirrorModel,
@@ -86,6 +95,11 @@ export default class ProsemirrorEditor extends Component {
         topicId: this.args.topicId,
         categoryId: this.args.categoryId,
         session: this.session,
+        menu: this.menu,
+        capabilities: this.capabilities,
+        modal: this.modal,
+        toasts: this.toasts,
+        replaceToolbar: this.args.replaceToolbar,
       }),
     };
   }
@@ -165,7 +179,7 @@ export default class ProsemirrorEditor extends Component {
 
         if (tr.docChanged && tr.getMeta("addToHistory") !== false) {
           // If this gets expensive, we can debounce it
-          const value = this.serializer.convert(this.view.state.doc);
+          const value = this.convertToMarkdown(this.view.state.doc);
           this.#lastSerialized = value;
           this.args.change?.({ target: { value } });
         }
@@ -193,7 +207,7 @@ export default class ProsemirrorEditor extends Component {
       schema: this.schema,
       view: this.view,
       convertFromMarkdown: this.convertFromMarkdown,
-      convertToMarkdown: this.serializer.convert.bind(this.serializer),
+      convertToMarkdown: this.convertToMarkdown,
     });
 
     this.#destructor = this.args.onSetup?.(this.textManipulation);
@@ -228,6 +242,11 @@ export default class ProsemirrorEditor extends Component {
       false
     );
     this.view.updateState(this.view.state.apply(tr));
+  }
+
+  @bind
+  convertToMarkdown(doc) {
+    return this.serializer.convert(doc);
   }
 
   @action

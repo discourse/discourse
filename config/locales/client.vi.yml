@@ -4198,6 +4198,7 @@ vi:
           install: "Cài đặt"
           themes:
             title: "Themes"
+            install: "Cài đặt"
           components:
             title: "Các thành phần"
             install: "Cài đặt"
@@ -4448,6 +4449,10 @@ vi:
           remote_theme_edits: "Nếu bạn muốn chỉnh sửa chủ đề này, bạn phải <a href='%{repoURL}' target='_blank'>gửi thay đổi trên kho lưu trữ của nó</a>"
           repo_unreachable: "Không thể liên hệ với kho Git chứa chủ đề này. Thông báo lỗi:"
           imported_from_archive: "Theme này đã được nhập từ tệp .zip"
+          settings: "Cài đặt"
+          colors: "Màu sắc"
+          discard_colors: "Hủy bỏ"
+          colors_title: "Màu sắc"
           scss:
             text: "CSS"
           after_header:

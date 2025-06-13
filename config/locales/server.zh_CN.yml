@@ -576,8 +576,17 @@ zh_CN:
   education:
     until_posts:
       other: "%{count} 个帖子"
+    "new-topic": |
+      感谢您对 %{site_name} 做出贡献！
+
+      发帖之前，请选择一个类别或标签，将此主题与相关讨论分组，以便其他人轻松找到它。
+
+      有关参与我们社区的更多提示和建议，[查看我们的社区准则](%{base_path}/guidelines)。
+    dominating_topic: 你在这个主题中发表了很多文章！请考虑让其他人也有机会参与进来。
     get_a_room:
       other: 您已回复 @%{reply_username} %{count} 次，您知道您可以向他们发送个人消息吗？
+    too_many_replies: |
+      新用户在同一主题下回复数量暂时限制为 %{newuser_max_replies_per_topic} 条。请考虑访问其他主题，以继续了解社区。
   activerecord:
     attributes:
       category:
@@ -1681,7 +1690,7 @@ zh_CN:
     blocked_ip_blocks: "Discourse 不应抓取的私有 IP 地址段列表"
     allowed_internal_hosts: "Discourse 可以安全抓取用于 Onebox 处理和其他目的的内部主机列表"
     allowed_onebox_iframes: "通过 Onebox 嵌入允许的 iframe src 网域列表 `*` 将允许所有默认的 Onebox 引擎。"
-    allowed_iframes: "Discourse 可以安全地允许在帖子中使用的 iframe src URL 前缀列表"
+    allowed_iframes: "Discourse 允许在帖子中安全使用的 iframe src URL 前缀列表。* 可用于匹配任意数量的非/字符。"
     allowed_crawler_user_agents: "应被允许访问网站的网络抓取工具的用户代理。警告！设置此项将禁止此处未列出的所有抓取工具！"
     blocked_crawler_user_agents: "用户代理字符串中不区分大小写的唯一字词，用于标识不应被允许访问网站的网抓取工具。如果定义了许可名单，则不适用。"
     slow_down_crawler_user_agents: '网络爬虫的用户代理应该按照“减慢爬虫速率”设置中的配置进行速率限制。每个值的长度必须至少为 3 个字符。'
@@ -2361,6 +2370,8 @@ zh_CN:
     experimental_content_localization: "根据用户的语言偏好为其显示本地化内容。这些内容可能包括类别、标签、帖子和主题。该功能正在紧张开发中。"
     rich_editor: "启用富文本编辑器，所有用户都可以在当前 Markdown 模式和新的富文本编辑器之间切换，从而实现更直观、更人性化的写作体验。富文本编辑器目前仍在积极开发中，因此并非所有功能都已支持 — <a href='https://meta.discourse.org/t/test-our-new-composer/352347' target='_blank'>请参阅 Meta 了解更多详情</a>。"
     experimental_content_localization_allowed_groups: '允许更新本地化内容的组。需要启用"实验性内容本地化"。'
+    viewport_based_mobile_mode: "实验：禁用基于 user-agent 的移动/桌面模式，改用视口宽度。"
+    experimental_anon_language_switcher: "启用实验性语言切换器。这将允许未登录的网站访问者在 Discourse 的翻译版本和用户贡献的主题内容之间切换。"
     errors:
       invalid_css_color: "颜色无效。输入颜色名称或十六进制值。"
       invalid_email: "无效的电子邮件地址。"

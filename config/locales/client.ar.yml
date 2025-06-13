@@ -6692,6 +6692,7 @@ ar:
             title: "الواجهة"
             themes_intro: "قم بتثبيت سمة جديدة للبدء، أو إنشاء سمة خاصة بك من الصفر باستخدام هذه الموارد."
             new_theme: "سمة جديدة"
+            install: "تثبيت"
           components:
             title: "المكوِّنات"
             install: "تثبيت"
@@ -7027,6 +7028,10 @@ ar:
           remote_theme_edits: "إذا كنت ترغب في تعديل هذه السمة0، يجب عليك <a href='%{repoURL}' target='_blank'>طلب تغيير في مستودعها</a>"
           repo_unreachable: "تعذَّر الاتصال بمستودع Git لهذه السمة. رسالة الخطأ:"
           imported_from_archive: "تم استيراد هذه السمة من ملف ‎.zip"
+          settings: "الإعدادات"
+          colors: "الألوان"
+          discard_colors: "تجاهل"
+          colors_title: "الألوان"
           scss:
             text: "CSS"
           after_header:

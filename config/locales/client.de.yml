@@ -5962,9 +5962,11 @@ de:
           install: "Installieren"
           themes:
             title: "Themes"
+            description: "Website-weite Themes, die das Gesamtbild deiner Website für alle Nutzer verändern."
             themes_intro: "Installiere ein neues Theme, um loszulegen, oder erstelle dein eigenes von Grund auf mit diesen Ressourcen."
             new_theme: "Neues Theme"
             back: "Zurück zu Themes"
+            install: "Installieren"
           components:
             title: "Komponenten"
             description: "Anpassungen, die Oberflächenelemente deines Forumsdesigns verändern oder zusätzliche Frontend-Funktionen hinzufügen"
@@ -6029,7 +6031,8 @@ de:
           unsaved_changes: "Du hast ungespeicherte Änderungen"
           copy_of: "Kopie von %{name}"
           copy_created: 'Es wurde eine neue Kopie von "%{name}" erstellt.'
-          illegal_character_in_color: "Farben bestehen nur aus Hexadezimalzeichen"
+          illegal_character_in_color: "Die Farbe darf nur aus Hexadezimalzeichen bestehen"
+          invalid_color_length: "Die Farbe muss das Format #rrggbb oder #rgb haben."
           delete_confirm: "Bist du sicher, dass du diese Farbpalette löschen willst?"
       plugins:
         title: "Plug-ins"
@@ -6325,6 +6328,15 @@ de:
           remote_theme_edits: "Wenn du dieses Theme bearbeiten möchtest, musst du <a href='%{repoURL}' target='_blank'>eine Änderung in seinem Repository einreichen</a>"
           repo_unreachable: "Das Git-Repository dieses Themes konnte nicht kontaktiert werden. Fehlermeldung:"
           imported_from_archive: "Dieses Theme wurde aus einer .zip-Datei importiert"
+          settings: "Einstellungen"
+          colors: "Farben"
+          unsaved_colors:
+            one: "Du hast %{count} nicht gespeicherte Farbe"
+            other: "Du hast %{count} nicht gespeicherte Farben"
+          unsaved_colors_leave_route_confirmation: "Du hast deine Änderungen an der Farbpalette noch nicht gespeichert. Bist du sicher, dass du gehen willst?"
+          save_colors: "Farben speichern"
+          discard_colors: "Verwerfen"
+          colors_title: "Farben"
           scss:
             text: "CSS"
             title: "Benutzerdefinierte CSS-Regeln mit Unterstützung für SCSS-Syntax"

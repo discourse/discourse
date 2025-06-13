@@ -8,7 +8,7 @@ module PageObjects
       end
 
       def post
-        find("#post_#{@post_number}")
+        find(post_id)
       end
 
       def reply
@@ -28,6 +28,10 @@ module PageObjects
         find("#embedded-posts__bottom--#{@post_number} .load-more-replies").click
       end
 
+      def has_cooked_content?(value)
+        post.find(".contents > .cooked").has_content?(value)
+      end
+
       def has_replies?(count: nil)
         find("#embedded-posts__bottom--#{@post_number}").has_css?(".reply", count:)
       end
@@ -40,6 +44,10 @@ module PageObjects
         find("#embedded-posts__bottom--#{@post_number}").has_no_css?(".load-more-replies")
       end
 
+      def visible?
+        has_css?(post_id)
+      end
+
       def show_parent_posts
         post.find(".reply-to-tab").click
       end
@@ -50,6 +58,12 @@ module PageObjects
 
       def has_no_parent_post_content?(content)
         find("#embedded-posts__top--#{@post_number}").has_no_content?(content)
+      end
+
+      private
+
+      def post_id
+        "#post_#{@post_number}"
       end
     end
   end

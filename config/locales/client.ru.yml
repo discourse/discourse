@@ -6166,6 +6166,7 @@ ru:
             title: "Темы"
             themes_intro: "Установите новую тему, чтобы начать, или создай свою с нуля, используя эти ресурсы."
             new_theme: "Новая тема"
+            install: "Установить"
           components:
             title: "Компоненты"
             install: "Установить"
@@ -6492,6 +6493,10 @@ ru:
           remote_theme_edits: "Чтобы отредактировать тему, необходимо <a href='%{repoURL}' target='_blank'>отправить внесённое изменение в её репозиторий</a>"
           repo_unreachable: "Не удалось связаться с git-репозиторием этой темы. Сообщение об ошибке:"
           imported_from_archive: "Эта тема была импортирована из zip-файла"
+          settings: "Настройки"
+          colors: "Цвета"
+          discard_colors: "Удалить"
+          colors_title: "Цвета"
           scss:
             text: "CSS"
           after_header:

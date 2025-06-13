@@ -1739,7 +1739,6 @@ fr:
     blocked_ip_blocks: "Une liste de blocs IP privés qui ne doivent jamais être indexés par Discourse"
     allowed_internal_hosts: "Une liste de domaines internes que Discourse peut indexer en sécurité pour les Onebox et autres"
     allowed_onebox_iframes: "Liste de domaines dans l'attribut « src » des iframes qui sont autorisés dans les prévisualisations Onebox. Le caractère « * » autorise tous les moteurs Onebox par défaut."
-    allowed_iframes: "Une liste de préfixes d'URL iframe src que Discourse peut autoriser en toute sécurité dans les publications"
     allowed_crawler_user_agents: "Les agents utilisateurs des robots d'indexation qui sont autorisés à accéder au site. ATTENTION : CE PARAMÈTRE BLOQUERA TOUS LES ROBOTS D'INDEXATION NON LISTÉS ICI !"
     blocked_crawler_user_agents: "Mot unique insensible à la casse dans la chaîne de caractères de l'agent utilisateur identifiant les robots d'indexation Web qui ne devraient pas être autorisés à accéder au site. Ne s'applique pas si la liste d'autorisations est définie."
     slow_down_crawler_user_agents: 'Agents utilisateurs des robots d''indexation Web dont le débit doit être limité, comme configuré dans le paramètre « slow down crawler rate ». Chaque valeur doit comporter au moins 3 caractères.'

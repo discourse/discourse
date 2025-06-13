@@ -34,7 +34,7 @@
   top: 100%; // directly underneath .panel
   right: -10px; // 10px to the right of .panel - adjust as needed
   max-height: calc(100dvh - var(--header-offset) - 1em);
-  border-radius: var(--d-border-radius-large);
+  border-radius: var(--d-border-radius);
 }
 
 .menu-panel {
@@ -681,7 +681,6 @@
     &.pending {
       .icon-avatar__icon-wrapper {
         background: var(--tertiary);
-        font-size: var(--font-down-1);
 
         .d-icon {
           color: var(--secondary);

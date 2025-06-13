@@ -5738,6 +5738,7 @@ pt_BR:
             title: "Temas"
             themes_intro: "Instale um novo tema para começar, ou crie um do zero usando estes recursos."
             new_theme: "Novo tema"
+            install: "Instalar"
           components:
             title: "Componentes"
             install: "Instalar"
@@ -6060,6 +6061,10 @@ pt_BR:
           remote_theme_edits: "Se você quiser editar este tema, é preciso <a href='%{repoURL}' target='_blank'>enviar uma alteração em seu repositório</a>"
           repo_unreachable: "Não foi possível acessar o repositório Git deste tema. Mensagem de erro:"
           imported_from_archive: "Este tema foi importado de um arquivo .zip"
+          settings: "Configurações"
+          colors: "Cores"
+          discard_colors: "Descartar"
+          colors_title: "Cores"
           scss:
             text: "CSS"
             title: "Regras CSS personalizadas com suporte para sintaxe SCSS"

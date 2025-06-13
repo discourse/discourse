@@ -5730,6 +5730,7 @@ tr_TR:
             title: "Temalar"
             themes_intro: "Başlamak için yeni bir tema yükleyin veya bu kaynakları kullanarak sıfırdan kendi temanızı oluşturun."
             new_theme: "Yeni tema"
+            install: "Yükle"
           components:
             title: "Bileşenler"
             install: "Yükle"
@@ -6050,6 +6051,10 @@ tr_TR:
           remote_theme_edits: "Bu temayı düzenlemek istiyorsanız <a href='%{repoURL}' target='_blank'>deposunda bir değişiklik göndermeniz gerekiyor</a>"
           repo_unreachable: "Bu temanın Git deposuyla bağlantı kurulamadı. Hata mesajı:"
           imported_from_archive: "Bu tema bir .zip dosyasından içe aktarıldı"
+          settings: "Ayarlar"
+          colors: "Renkler"
+          discard_colors: "Kapat"
+          colors_title: "Renkler"
           scss:
             text: "CSS"
           after_header:
