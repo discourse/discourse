@@ -3,14 +3,15 @@ import { tracked } from "@glimmer/tracking";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import curryComponent from "ember-curry-component";
 import DecoratedHtml from "discourse/components/decorated-html";
 import { bind } from "discourse/lib/decorators";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { makeArray } from "discourse/lib/helpers";
+import decorateQuoteControls from "discourse/lib/post-cooked-html-decorators/glimmer-quote-controls";
 import decorateLinkCounts from "discourse/lib/post-cooked-html-decorators/link-counts";
 import decorateMentions from "discourse/lib/post-cooked-html-decorators/mentions";
-import decorateQuoteControls from "discourse/lib/post-cooked-html-decorators/quote-controls";
 import decorateSearchHighlight from "discourse/lib/post-cooked-html-decorators/search-highlight";
 import decorateSelectionBarrier from "discourse/lib/post-cooked-html-decorators/selection-barrier";
 import { i18n } from "discourse-i18n";
@@ -30,8 +31,8 @@ export default class PostCookedHtml extends Component {
   @service currentUser;
 
   @tracked highlighted = false;
-  #decoratorState = new WeakMap();
   #pendingDecoratorCleanup = [];
+  #state = this.args.state || new TrackedObject();
 
   willDestroy() {
     super.willDestroy(...arguments);
@@ -49,8 +50,13 @@ export default class PostCookedHtml extends Component {
     [...POST_COOKED_DECORATORS, ...this.extraDecorators].forEach(
       (decorator) => {
         try {
-          if (!this.#decoratorState.has(decorator)) {
-            this.#decoratorState.set(decorator, {});
+          let decoratorState;
+
+          if (this.#state[decorator] !== undefined) {
+            decoratorState = this.#state[decorator];
+          } else {
+            decoratorState = new TrackedObject();
+            this.#state[decorator] = decoratorState;
           }
 
           const owner = getOwner(this);
@@ -65,6 +71,7 @@ export default class PostCookedHtml extends Component {
             createDetachedElement: this.#createDetachedElement,
             currentUser: this.currentUser,
             helper,
+            renderGlimmer: helper.renderGlimmer,
             renderNestedPostCookedHtml: (
               nestedElement,
               nestedPost,
@@ -74,6 +81,7 @@ export default class PostCookedHtml extends Component {
               const nestedArguments = {
                 ...extraArguments,
                 post: nestedPost,
+                state: decoratorState,
                 streamElement: false,
                 highlightTerm: this.highlightTerm,
                 extraDecorators: [
@@ -88,7 +96,7 @@ export default class PostCookedHtml extends Component {
               );
             },
             owner,
-            state: this.#decoratorState.get(decorator),
+            state: decoratorState,
           });
 
           if (typeof decorationCleanup === "function") {

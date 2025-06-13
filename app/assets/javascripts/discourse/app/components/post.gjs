@@ -5,7 +5,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
+import { TrackedArray, TrackedObject } from "@ember-compat/tracked-built-ins";
 import { TrackedAsyncData } from "ember-async-data";
 import { and, eq, not, or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
@@ -47,6 +47,8 @@ export default class Post extends Component {
   @tracked expandedFirstPost;
   @tracked repliesAbove;
   @tracked repliesBelow = new TrackedArray();
+
+  cookedState = new TrackedObject();
 
   get additionalClasses() {
     return applyValueTransformer("post-class", [], {
