@@ -118,9 +118,9 @@ class FakeS3
       :delete_object,
       ->(context) do
         log_operation(context)
-
         find_bucket(context.params)&.delete_object(context.params[:key])
         { delete_marker: true }
+
       end,
     )
 
@@ -167,6 +167,36 @@ class FakeS3
   end
 end
 
+class FakeS3Object
+  def initialize(bucket, key)
+    @bucket = bucket
+    @key = key
+  end
+
+  def delete(params = {})
+    @bucket.delete_object(@key)
+  end
+
+  def size
+    obj = @bucket.find_object(@key)
+    obj ? obj[:size] : 0
+  end
+
+  def copy_from(source_object, options = {})
+    # Copy the object data from the source object to this object in the fake bucket
+    source_data =
+      source_object.instance_variable_get(:@bucket).find_object(
+        source_object.instance_variable_get(:@key),
+      )
+    if source_data
+      # Duplicate the source data and assign to this key
+      @bucket.put_object(source_data.merge(key: @key))
+    end
+    # Return a stubbed response similar to AWS SDK
+    OpenStruct.new(copy_object_result: OpenStruct.new(etag: "fake-etag"))
+  end
+end
+
 class FakeS3Bucket
   attr_reader :name, :s3_helper
 
@@ -186,5 +216,9 @@ class FakeS3Bucket
 
   def find_object(key)
     @objects[key]
+  end
+
+  def object(key)
+    FakeS3Object.new(self, key)
   end
 end
