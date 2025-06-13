@@ -36,6 +36,13 @@ import I18n, { i18n, I18nMissingInterpolationArgument } from "discourse-i18n";
  */
 export default class Translation extends Component {
   /**
+   * Set to @options, or {} if that param wasn't passed.
+   *
+   * @type {Object}
+   **/
+  _optionsArgs;
+
+  /**
    * A map of placeholder keys to their unique identifiers.
    *
    * @type {Map<String, String>}
@@ -70,32 +77,16 @@ export default class Translation extends Component {
    * @returns {Array<String|HTMLElement>} Array of text segments and placeholder elements
    */
   get textAndPlaceholders() {
-    const optionsArg = this.args.options || {};
+    this._optionsArg = this.args.options || {};
 
     // Find all of the placeholders in the string we're looking at.
-    // Check "en", then the default locale, then the current locale, since
-    // some translations may not include all placeholders.
-    const checkLocales = ["en"];
-    if (I18n.defaultLocale !== "en") {
-      checkLocales.push(I18n.defaultLocale);
-    }
-    if (!checkLocales.includes(I18n.currentLocale())) {
-      checkLocales.push(I18n.currentLocale());
-    }
-
-    let message = "";
-    for (const locale of checkLocales) {
-      if (!message) {
-        message = I18n.findTranslationWithFallback(this.args.key, {
-          ...optionsArg,
-          locale,
-        });
-      }
-    }
+    const message = I18n.findTranslationWithFallback(this.args.key, {
+      ...this._optionsArg,
+    });
     this._placeholderAppearance = I18n.findPlaceholders(message);
 
     // We only need to keep the placeholders that aren't being handled by those passed in @options.
-    Object.keys(optionsArg).forEach((stringPlaceholder) =>
+    Object.keys(this._optionsArg).forEach((stringPlaceholder) =>
       this._placeholderAppearance.delete(stringPlaceholder)
     );
 
@@ -114,22 +105,12 @@ export default class Translation extends Component {
 
     const text = i18n(this.args.key, {
       ...Object.fromEntries(this._placeholderKeys),
-      ...optionsArg,
+      ...this._optionsArg,
     });
-
-    if (text === I18n.missingTranslation(this.args.key)) {
-      return [text];
-    }
 
     // Bail early if there were no placeholders we need to handle.
     if (this._placeholderAppearance.size === 0) {
-      if (isProduction()) {
-        return [text];
-      } else {
-        throw new Error(
-          "The <Translation> component shouldn't be used for translations that don't insert components. Use `i18n()` instead."
-        );
-      }
+      return [text];
     }
 
     const parts = [];
@@ -193,26 +174,51 @@ export default class Translation extends Component {
   }
 
   /**
-   * Checks for any placeholders that were expected but not provided in the template, then
-   * inserts a warning message where that placeholder was supposed to be.
+   * Checks for any mismatches between the placeholders expected, and those provided.
    */
   @action
   checkPlaceholders() {
     let missing = [];
     for (const [name, elements] of this._placeholderElements) {
       if (!this._renderedPlaceholders.includes(name)) {
-        const message = `[missing ${this._placeholderAppearance.get(
+        const value = `[missing ${this._placeholderAppearance.get(
           name
         )} placeholder]`;
-        elements.forEach((el) => (el.innerText = message));
-        missing.push(message);
+        elements.forEach((el) => (el.innerText = value));
+        missing.push(value);
       }
     }
 
-    if (!isProduction() && missing.length > 0) {
-      throw new I18nMissingInterpolationArgument(
-        `${this.args.key}: ${missing.join(", ")}`
+    if (missing.length > 0) {
+      this.log(
+        `Translation error for key '${this.args.key}': ${missing.join(", ")}`,
+        I18nMissingInterpolationArgument
       );
+    }
+
+    // Confirm that there's a real translation string for the given key.
+    const message = I18n.findTranslationWithFallback(this.args.key, {
+      ...this._optionsArg,
+    });
+    if (this._renderedPlaceholders.length === 0 && message) {
+      this.log(
+        "The <Translation> component shouldn't be used for translations that don't insert components. Use `i18n()` instead."
+      );
+    }
+  }
+
+  /**
+   * Throws errors in dev, or logs them to the browser console in production.
+   *
+   * @param {String} The error message.
+   * @param {Class} The type of Error class to throw.
+   **/
+  log(message, errorClass = Error) {
+    if (isProduction()) {
+      // eslint-disable-next-line no-console
+      console.error(message);
+    } else {
+      throw new errorClass(message);
     }
   }
 

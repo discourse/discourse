@@ -159,7 +159,7 @@ module("Integration | Component | Translation", function (hooks) {
       assert.true(error instanceof I18nMissingInterpolationArgument);
       assert.strictEqual(
         error.message,
-        "hello: [missing %{username} placeholder]"
+        "Translation error for key 'hello': [missing %{username} placeholder]"
       );
     });
 
