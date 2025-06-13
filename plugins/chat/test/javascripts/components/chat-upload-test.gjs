@@ -145,10 +145,10 @@ module("Discourse Chat | Component | chat-upload", function (hooks) {
       .hasAttribute("href", TXT_FIXTURE.url, "has the correct URL");
   });
 
-  module("video source URL", function (hooks) {
+  module("video source URL", function (nestedHooks) {
     let mockCapabilities;
 
-    hooks.beforeEach(function () {
+    nestedHooks.beforeEach(function () {
       mockCapabilities = {
         isIOS: false,
         isSafari: false,
