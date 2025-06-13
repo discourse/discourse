@@ -178,6 +178,13 @@ const Picker = class extends Component {
     }
   }
 
+  get disabledEditForSystemDescription() {
+    if (!this.args.system) {
+      return null;
+    }
+    return i18n("admin.config_areas.color_palettes.blocked_edit_for_system");
+  }
+
   ensureSixDigitsHex(hex) {
     if (hex.length === 3) {
       return hex
@@ -205,6 +212,8 @@ const Picker = class extends Component {
         data-position={{@position}}
         type="color"
         value={{this.activeValue}}
+        disabled={{@system}}
+        title={{this.disabledEditForSystemDescription}}
         {{on "input" this.onInput}}
         {{on "change" this.onChange}}
       />
@@ -215,6 +224,8 @@ const Picker = class extends Component {
           data-position={{@position}}
           type="text"
           maxlength="6"
+          disabled={{@system}}
+          title={{this.disabledEditForSystemDescription}}
           value={{this.displayedColor}}
           {{on "keypress" this.onTextKeypress}}
           {{on "change" this.onTextChange}}
@@ -318,6 +329,7 @@ export default class ColorPaletteEditor extends Component {
                 @showDark={{this.darkModeActive}}
                 @onLightChange={{fn @onLightColorChange color}}
                 @onDarkChange={{fn @onDarkColorChange color}}
+                @system={{@system}}
               />
               {{#unless @hideRevertButton}}
                 <DButton

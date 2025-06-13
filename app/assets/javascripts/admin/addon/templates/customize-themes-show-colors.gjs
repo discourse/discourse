@@ -60,6 +60,7 @@ export default RouteTemplate(
         @onLightColorChange={{this.onLightColorChange}}
         @onDarkColorChange={{this.onDarkColorChange}}
         @hideRevertButton={{true}}
+        @system={{@model.system}}
       />
       {{#if (gt @controller.colorPaletteChangeTracker.dirtyColorsCount 0)}}
         <ChangesBanner
