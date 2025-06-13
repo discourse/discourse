@@ -73,9 +73,25 @@ export default class Translation extends Component {
     const optionsArg = this.args.options || {};
 
     // Find all of the placeholders in the string we're looking at.
-    const message = I18n.findTranslationWithFallback(this.args.key, {
-      ...optionsArg,
-    });
+    // Check "en", then the default locale, then the current locale, since
+    // some translations may not include all placeholders.
+    const checkLocales = ["en"];
+    if (I18n.defaultLocale !== "en") {
+      checkLocales.push(I18n.defaultLocale);
+    }
+    if (!checkLocales.includes(I18n.currentLocale())) {
+      checkLocales.push(I18n.currentLocale());
+    }
+
+    let message = "";
+    for (const locale of checkLocales) {
+      if (!message) {
+        message = I18n.findTranslationWithFallback(this.args.key, {
+          ...optionsArg,
+          locale,
+        });
+      }
+    }
     this._placeholderAppearance = I18n.findPlaceholders(message);
 
     // We only need to keep the placeholders that aren't being handled by those passed in @options.
@@ -83,16 +99,18 @@ export default class Translation extends Component {
       this._placeholderAppearance.delete(stringPlaceholder)
     );
 
-    this._placeholderAppearance.forEach((_, placeholderName) => {
-      this._placeholderKeys.set(
-        placeholderName,
-        `__PLACEHOLDER__${placeholderName}__${uniqueId()}__`
-      );
-      this._placeholderElements.set(
-        placeholderName,
-        document.createElement("span")
-      );
-    });
+    this._placeholderAppearance.forEach(
+      (placeholderAppearances, placeholderName) => {
+        this._placeholderKeys.set(
+          placeholderName,
+          `__PLACEHOLDER__${placeholderName}__${uniqueId()}__`
+        );
+        this._placeholderElements.set(
+          placeholderName,
+          placeholderAppearances.map(() => document.createElement("span"))
+        );
+      }
+    );
 
     const text = i18n(this.args.key, {
       ...Object.fromEntries(this._placeholderKeys),
@@ -109,7 +127,7 @@ export default class Translation extends Component {
         return [text];
       } else {
         throw new Error(
-          "The <Translation> component shouldn't be used for strings that don't insert components. Use `i18n()` instead."
+          "The <Translation> component shouldn't be used for translations that don't insert components. Use `i18n()` instead."
         );
       }
     }
@@ -117,6 +135,7 @@ export default class Translation extends Component {
     const parts = [];
     let currentIndex = 0;
     const placeholderRegex = /__PLACEHOLDER__([^_]+)__[^_]+__/g;
+    const foundCount = [];
     let match;
 
     while ((match = placeholderRegex.exec(text)) !== null) {
@@ -128,7 +147,9 @@ export default class Translation extends Component {
       // Add the placeholder element, but only if the placeholder string we found matches
       // the uniqueId we generated earlier for that placeholder.
       if (this._placeholderKeys.get(match[1]) === match[0]) {
-        parts.push(this._placeholderElements.get(match[1]));
+        const elIdx = foundCount[match[1]] ?? 0;
+        parts.push(this._placeholderElements.get(match[1])[elIdx]);
+        foundCount[match[1]] = elIdx + 1;
       }
 
       currentIndex = match.index + match[0].length;
@@ -147,14 +168,15 @@ export default class Translation extends Component {
    * This allows the placeholder component to be passed to the template's named block
    * with the placeholder name already bound.
    *
-   * @param {String} placeholder - The name of the placeholder to create a component for
    * @returns {Component} A curried TranslationPlaceholder component with the placeholder name bound
    */
-  @action
-  placeholderElement(placeholder) {
+  get curriedPlaceholderComponent() {
     return curryComponent(
       TranslationPlaceholder,
-      { placeholder, markAsRendered: this.markAsRendered },
+      {
+        markAsRendered: this.markAsRendered,
+        elements: this._placeholderElements,
+      },
       getOwner(this)
     );
   }
@@ -177,12 +199,12 @@ export default class Translation extends Component {
   @action
   checkPlaceholders() {
     let missing = [];
-    for (const [name, element] of this._placeholderElements) {
+    for (const [name, elements] of this._placeholderElements) {
       if (!this._renderedPlaceholders.includes(name)) {
         const message = `[missing ${this._placeholderAppearance.get(
           name
         )} placeholder]`;
-        element.innerText = message;
+        elements.forEach((el) => (el.innerText = message));
         missing.push(message);
       }
     }
@@ -199,14 +221,7 @@ export default class Translation extends Component {
       {{segment}}
     {{/each}}
 
-    {{#each-in
-      this._placeholderElements
-      as |placeholderKey placeholderElement|
-    }}
-      {{#in-element placeholderElement}}
-        {{yield (this.placeholderElement placeholderKey)}}
-      {{/in-element}}
-    {{/each-in}}
+    {{yield this.curriedPlaceholderComponent}}
     <span {{didInsert this.checkPlaceholders}} />
   </template>
 }

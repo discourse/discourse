@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { eq } from "truth-helpers";
+import { get } from "@ember/helper";
 
 /**
  * Internally used by the Translation component to render placeholder
@@ -21,14 +21,25 @@ import { eq } from "truth-helpers";
  * @param {String} name - The name of the placeholder this content should fill
  */
 export default class TranslationPlaceholder extends Component {
+  /**
+   * Since {{get}} doesn't work with Maps, we need to convert the
+   * passed Map of elements to an Object.
+   *
+   * @type {Object}
+   **/
+  _elements;
+
   constructor() {
     super(...arguments);
-    this.args.markAsRendered(this.args.placeholder);
+    this.args.markAsRendered(this.args.name);
+    this._elements = Object.fromEntries(this.args.elements);
   }
 
   <template>
-    {{#if (eq @placeholder @name)}}
-      {{yield}}
-    {{/if}}
+    {{#each (get this._elements @name) as |element|}}
+      {{#in-element element}}
+        {{yield}}
+      {{/in-element}}
+    {{/each}}
   </template>
 }

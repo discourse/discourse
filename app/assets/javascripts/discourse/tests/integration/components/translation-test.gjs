@@ -25,6 +25,7 @@ module("Integration | Component | Translation", function (hooks) {
             "User %{user} commented on %{topic} at %{time}",
           mixed_placeholders:
             "Welcome %{username}! You have %{count} messages.",
+          repeated_placeholders: "Welcome %{username}! Hello %{username}!",
           user: {
             profile_possessive: "Profil de %{username}",
           },
@@ -56,11 +57,26 @@ module("Integration | Component | Translation", function (hooks) {
       .hasAttribute("aria-label", "Profil de pento");
   });
 
+  test("renders translation with repeated component placeholder", async function (assert) {
+    await render(
+      <template>
+        <Translation @key="repeated_placeholders" as |Placeholder|>
+          <Placeholder @name="username">
+            <UserLink @username="pento">pento</UserLink>
+          </Placeholder>
+        </Translation>
+      </template>
+    );
+
+    assert.dom().hasText("Welcome pento ! Hello pento !");
+    assert.dom("a[data-user-card='pento']").exists({ count: 2 });
+  });
+
   test("throws an error on simple translation without placeholders", async function (assert) {
     setupOnerror((error) => {
       assert.strictEqual(
         error.message,
-        "The <Translation> component shouldn't be used for strings that don't insert components. Use `i18n()` instead."
+        "The <Translation> component shouldn't be used for translations that don't insert components. Use `i18n()` instead."
       );
     });
 
@@ -73,7 +89,7 @@ module("Integration | Component | Translation", function (hooks) {
     setupOnerror((error) => {
       assert.strictEqual(
         error.message,
-        "The <Translation> component shouldn't be used for strings that don't insert components. Use `i18n()` instead."
+        "The <Translation> component shouldn't be used for translations that don't insert components. Use `i18n()` instead."
       );
     });
 

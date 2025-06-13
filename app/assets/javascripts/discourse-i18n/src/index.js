@@ -220,7 +220,7 @@ export class I18n {
       return message;
     }
 
-    for (const [name, placeholder] of placeholders) {
+    for (const [name, placeholderValues] of placeholders) {
       if (typeof options[name] === "string") {
         // The dollar sign (`$`) is a special replace pattern, and `$&` inserts
         // the matched string. Thus dollars signs need to be escaped with the
@@ -231,20 +231,21 @@ export class I18n {
         value = options[name];
       }
 
-      if (!this.isValidNode(options, name)) {
-        value = "[missing " + placeholder + " value]";
+      for (const placeholder of placeholderValues) {
+        if (!this.isValidNode(options, name)) {
+          value = "[missing " + placeholder + " value]";
 
-        if (this.testing) {
-          throw new I18nMissingInterpolationArgument(`${scope}: ${value}`);
+          if (this.testing) {
+            throw new I18nMissingInterpolationArgument(`${scope}: ${value}`);
+          }
         }
+
+        let regex = new RegExp(
+          placeholder.replace(/\{/gm, "\\{").replace(/\}/gm, "\\}")
+        );
+
+        message = message.replace(regex, value);
       }
-
-      let regex = new RegExp(
-        placeholder.replace(/\{/gm, "\\{").replace(/\}/gm, "\\}"),
-        "gi"
-      );
-
-      message = message.replaceAll(regex, value);
     }
 
     return message;
@@ -255,8 +256,9 @@ export class I18n {
    *
    * @param {String} message The translated string.
    *
-   * @returns {Map<String, String>} A Map keyed by the placeholder name, with the value set to
-   * how the placeholder appears in the string (eg, "foo" => "%{foo}").
+   * @returns {Map<String, Array<String>>} A Map keyed by the placeholder name, with the value set to
+   * how the placeholder appears in the string. If it appears multiple times, each instance will be
+   * recorded (eg, "foo" => ["%{foo}", "{{foo}}"]).
    */
   findPlaceholders(message) {
     if (!message) {
@@ -269,7 +271,9 @@ export class I18n {
 
     placeholders.forEach((placeholder) => {
       const name = placeholder.replace(PLACEHOLDER, "$1");
-      placeholderMap.set(name, placeholder);
+      const values = placeholderMap.get(name) ?? [];
+      values.push(placeholder);
+      placeholderMap.set(name, values);
     });
 
     return placeholderMap;
