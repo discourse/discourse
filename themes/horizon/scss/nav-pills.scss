@@ -1,0 +1,67 @@
+.list-controls {
+  position: sticky;
+  top: var(--header-offset);
+  background: var(--d-content-background);
+  z-index: z("base");
+  padding: 1.5rem 0 1rem 0;
+  max-width: unset;
+
+  .navigation-container {
+    gap: 1rem;
+
+    .category-breadcrumb {
+      order: 1;
+    }
+  }
+
+  .combo-box .combo-box-header {
+    // needs more specificity than just in the button file
+    background-color: var(--secondary);
+    border-radius: var(--d-border-radius);
+    border: 1px solid var(--primary-300);
+
+    &:hover {
+      border: 1px solid var(--accent-color);
+    }
+
+    &:focus-visible {
+      .discourse-no-touch & {
+        background: var(--secondary);
+        color: var(--accent-color);
+        box-shadow: 0 0 0 3px var(--button-box-shadow);
+
+        .d-icon {
+          color: var(--accent-color);
+        }
+      }
+    }
+  }
+
+  .select-kit.combo-box.category-drop.has-selection
+    .category-drop-header:hover {
+    border-color: transparent;
+  }
+}
+
+.select-kit.is-expanded .select-kit-body {
+  border-radius: var(--d-border-radius);
+  background-color: var(--d-content-background);
+}
+
+.nav-pills > li > a:hover,
+.nav-pills > li button:hover {
+  .discourse-no-touch & {
+    background: transparent;
+    color: var(--d-nav-color--hover);
+
+    &::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      height: var(--d-nav-underline-height);
+      background: var(--d-nav-color--hover);
+    }
+  }
+}

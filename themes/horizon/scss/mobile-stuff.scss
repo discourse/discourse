@@ -1,0 +1,243 @@
+@use "lib/viewport";
+
+// temp separate file to avoid merge hell… to be distributed later
+@include viewport.until(lg) {
+  html,
+  .d-header {
+    background-color: var(--d-content-background);
+  }
+}
+
+#main-outlet-wrapper {
+  *[class*="navigation-"] & {
+    @include viewport.until(sm) {
+      padding: 0;
+    }
+  }
+}
+
+#main-outlet {
+  @include viewport.until(sm) {
+    padding-top: var(--spacing-block-sm);
+  }
+
+  .list-controls {
+    @include viewport.until(sm) {
+      padding-inline: var(
+        --spacing-inline-m
+      ) !important; // override will be fixed when the whole chat page shenanigans is resolved
+      padding-block: var(--spacing-block-s);
+      border-bottom: 1px solid var(--primary-200);
+    }
+
+    .navigation-container {
+      @include viewport.until(sm) {
+        gap: var(--spacing-inline-s);
+
+        .category-breadcrumb.hidden,
+        .category-breadcrumb {
+          display: flex !important;
+          column-gap: var(--spacing-inline-m);
+          row-gap: var(--spacing-block-xs);
+          flex-basis: 100%;
+
+          li {
+            margin-right: 0;
+            margin-left: calc(
+              (var(--spacing-block-s) - 2px) * -1
+            ); // 2px is width of the outline
+          }
+
+          .select-kit-header-wrapper {
+            gap: 0.25em;
+          }
+
+          .select-kit-header {
+            background: var(--d-content-background);
+          }
+        }
+
+        .btn-default {
+          border: 0;
+          margin-right: 0;
+
+          .d-icon {
+            font-size: var(--font-up-1);
+          }
+        }
+
+        .fk-d-button-tooltip {
+          margin-right: 0;
+          margin-left: var(
+            --spacing-inline-xs
+          ); // pure visual correction for horizontal alignment
+
+          &:has(#create-topic) {
+            order: 1;
+          }
+        }
+      }
+
+      #navigation-bar,
+      .navigation-controls,
+      .category-breadcrumb {
+        @include viewport.until(sm) {
+          margin-bottom: 0;
+        }
+      }
+
+      .navigation-controls {
+        @include viewport.until(sm) {
+          gap: var(--spacing-inline-s);
+        }
+      }
+    }
+  }
+
+  .list-container {
+    @include viewport.until(sm) {
+      padding-inline: 0 !important;
+    }
+
+    .topic-list-body {
+      @include viewport.until(sm) {
+        border-top: 0;
+        padding-top: 0;
+      }
+    }
+  }
+
+  #topic-title {
+    @include viewport.until(sm) {
+      padding-inline: var(--spacing-inline-s) !important;
+
+      .title-wrapper {
+        gap: var(--spacing-block-s);
+      }
+
+      .topic-category {
+        order: -1;
+      }
+
+      // make mixin of this
+      .badge-category__wrapper {
+        font-size: var(--font-down-2-rem);
+        border-radius: var(--d-border-radius);
+        padding: var(--spacing-inline-xs) var(--spacing-inline-s);
+        background-color: light-dark(
+          oklch(from var(--category-badge-color) 97% calc(c * 0.3) h),
+          oklch(from var(--category-badge-color) 45% calc(c * 0.5) h)
+        );
+        border: 1px solid
+          light-dark(
+            oklch(from var(--category-badge-color) 97% calc(c * 0.3) h),
+            oklch(from var(--category-badge-color) 45% calc(c * 0.5) h)
+          );
+      }
+
+      .badge-category__name {
+        color: light-dark(
+          oklch(from var(--category-badge-color) 20% calc(c * 1) h),
+          oklch(from var(--category-badge-color) 100% calc(c * 0.9) h)
+        );
+      }
+
+      .discourse-tags {
+        gap: var(--spacing-inline-xs);
+
+        &__tag-separator {
+          display: none;
+        }
+      }
+
+      .discourse-tag {
+        font-size: var(--font-down-2-rem);
+        padding: var(--spacing-inline-xs) var(--spacing-inline-s);
+        gap: var(--spacing-inline-xs);
+        border-radius: var(--d-border-radius-large);
+        border: 1px solid var(--primary-low-mid);
+        background: var(--secondary);
+      }
+    }
+  }
+
+  .container.posts {
+    @include viewport.until(sm) {
+      padding-inline: var(--spacing-inline-xs) !important;
+
+      .main-avatar .avatar {
+        width: 40px;
+        height: 40px;
+      }
+
+      .topic-body {
+        .topic-meta-data {
+          .username {
+            font-size: var(--font-0-rem);
+          }
+        }
+
+        .contents {
+          padding-top: var(--spacing-block-m);
+        }
+      }
+
+      .small-action {
+        &-desc {
+          padding: var(--spacing-block-xs) 0;
+        }
+
+        // for core eventually, better way imo
+        .topic-avatar {
+          padding-top: 0;
+          align-items: center;
+
+          .d-icon {
+            font-size: var(--font-up-1);
+          }
+        }
+      }
+    }
+  }
+
+  #topic-footer-buttons {
+    @include viewport.until(sm) {
+      padding-inline: var(--spacing-inline-xs) !important;
+    }
+  }
+}
+
+// should be changed in core, should not be a primary btn
+// changing this into straight buttons to match the progress one, which doesn't work well with rounded corners
+#topic-progress-wrapper {
+  .progress-back-container {
+    margin-right: 0;
+    margin-bottom: var(--spacing-block-xs);
+
+    .btn-primary.progress-back {
+      border-radius: 0;
+      background: var(--secondary);
+      border: 1px solid var(--tertiary-low);
+      color: var(--accent-color);
+      padding: var(--spacing-inline-s) var(--spacing-inline-m);
+
+      .d-icon {
+        color: var(--accent-color);
+      }
+    }
+  }
+
+  .topic-admin-menu-trigger {
+    border-radius: 0;
+    background: var(--secondary);
+    border: 1px solid var(--tertiary-low);
+  }
+}
+
+.mobile-device #reply-control.show-preview .submit-panel {
+  background-color: var(--background-color);
+}
+
+.d-editor-preview-wrapper {
+  outline: 2px solid var(--background-color);
+}
