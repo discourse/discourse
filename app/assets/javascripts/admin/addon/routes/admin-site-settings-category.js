@@ -3,8 +3,10 @@ import DiscourseRoute from "discourse/routes/discourse";
 export default class AdminSiteSettingsCategoryRoute extends DiscourseRoute {
   model(params) {
     return (
-      this.modelFor("adminSiteSettings").findBy("nameKey", params.category_id)
-        ?.siteSettings || []
+      this.modelFor("adminSiteSettings").filteredSettings.findBy(
+        "nameKey",
+        params.category_id
+      )?.siteSettings || []
     );
   }
 

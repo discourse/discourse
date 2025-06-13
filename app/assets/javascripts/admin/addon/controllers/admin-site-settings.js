@@ -8,7 +8,8 @@ import { INPUT_DELAY } from "discourse/lib/environment";
 export default class AdminSiteSettingsController extends Controller {
   @service router;
 
-  @alias("model") visibleSiteSettings;
+  @alias("model.filteredSettings") visibleSiteSettings;
+  @alias("model.filtersApplied") filtersApplied;
 
   @debounce(INPUT_DELAY)
   filterContent(filterData) {

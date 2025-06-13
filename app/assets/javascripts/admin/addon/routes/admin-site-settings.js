@@ -30,7 +30,13 @@ export default class AdminSiteSettingsRoute extends DiscourseRoute {
       this._siteSettings = await SiteSetting.findAll();
     }
 
-    return this.filterSettings(params.filter, params.onlyOverridden);
+    return {
+      filteredSettings: this.filterSettings(
+        params.filter,
+        params.onlyOverridden
+      ),
+      filtersApplied: params.filter || params.onlyOverridden,
+    };
   }
 
   @action
