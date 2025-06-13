@@ -1354,12 +1354,14 @@ RSpec.describe TopicsFilter do
             old_topic = Fabricate(:topic, column => 2.days.ago)
             recent_topic = Fabricate(:topic, column => Time.zone.now)
 
-            expect(
+            results =
               TopicsFilter
                 .new(guardian: Guardian.new)
                 .filter_from_query_string("#{filter}-before:1")
-                .pluck(:id),
-            ).to contain_exactly(old_topic.id)
+                .where(id: [old_topic.id, recent_topic.id])
+                .pluck(:id)
+
+            expect(results).to contain_exactly(old_topic.id)
           end
         end
       end
