@@ -17,9 +17,11 @@ export default class PostTimeGap extends Component {
   }
 
   <template>
-    <div class="topic-avatar"></div>
-    <div class="small-action-desc timegap">
-      {{this.description}}
+    <div class="time-gap small-action">
+      <div class="topic-avatar"></div>
+      <div class="small-action-desc timegap">
+        {{this.description}}
+      </div>
     </div>
   </template>
 }

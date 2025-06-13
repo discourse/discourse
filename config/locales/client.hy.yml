@@ -4263,6 +4263,7 @@ hy:
           install: "Տեղադրել"
           themes:
             title: "Թեմաներ"
+            install: "Տեղադրել"
           components:
             title: "Բաղադրիչներ"
             install: "Տեղադրել"
@@ -4497,6 +4498,10 @@ hy:
           compare_commits: "(Տեսնել նոր commit-ները)"
           repo_unreachable: "Հնարավոր չէ կապ հաստատել այս թեմայի Git ռեպոզիտորիայի հետ: Սխալի հաղորդագրությունը՝ "
           imported_from_archive: "Այս թեման ներմուծվել է .zip ֆայլից"
+          settings: "Կարգավորումներ"
+          colors: "Գույներ"
+          discard_colors: "Ջնջել"
+          colors_title: "Գույներ"
           scss:
             text: "CSS"
           after_header:

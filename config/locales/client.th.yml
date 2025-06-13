@@ -2821,6 +2821,7 @@ th:
           install: "ติดตั้ง"
           themes:
             title: "ธีม"
+            install: "ติดตั้ง"
           components:
             install: "ติดตั้ง"
             name: "ชื่อ"
@@ -2931,6 +2932,9 @@ th:
           add: "เพิ่ม"
           theme_settings: "การตั้งค่าธีม"
           no_settings: "ธีมนี้ไม่มีการตั้งค่า"
+          settings: "การตั้งค่า"
+          colors: "สี"
+          colors_title: "สี"
           scss:
             text: "CSS"
           footer:

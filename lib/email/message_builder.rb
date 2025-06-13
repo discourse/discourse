@@ -269,7 +269,7 @@ module Email
       result["X-Discourse-Topic-Id"] = @opts[:topic_id].to_s if @opts[:topic_id]
       result["X-Discourse-Topic-Ids"] = @opts[:topic_ids].join(",") if @opts[:topic_ids].present?
 
-      # at this point these have been filtered by the recipient's guardian for visibility,
+      # At this point these have been filtered by the recipient's guardian for visibility,
       # see UserNotifications#send_notification_email
       result["X-Discourse-Tags"] = @template_args[:show_tags_in_subject] if @opts[
         :show_tags_in_subject
@@ -278,7 +278,11 @@ module Email
         :show_category_in_subject
       ]
 
-      # please, don't send us automatic responses...
+      # Mimics X-GitHub-Sender, which identifies the GitHub user that originated the message,
+      # useful to filter and prioritize mail.
+      result["X-Discourse-Sender"] = @opts[:username] if @opts[:username].present?
+
+      # Please, don't send us automatic responses...
       result["X-Auto-Response-Suppress"] = "All"
 
       if !allow_reply_by_email?

@@ -5354,6 +5354,7 @@ ja:
             title: "テーマ"
             themes_intro: "新しいテーマをインストールするか、これらのリソースを使用して独自のテーマを新規作成します。"
             new_theme: "新しいテーマ"
+            install: "インストール"
           components:
             title: "コンポーネント"
             install: "インストール"
@@ -5670,6 +5671,10 @@ ja:
           remote_theme_edits: "このテーマを編集する場合は、<a href='%{repoURL}' target='_blank'>そのリポジトリに変更を送信</a>する必要があります"
           repo_unreachable: "このテーマの Git リポジトリに接続できませんでした。エラーメッセージ:"
           imported_from_archive: "このテーマは .zip ファイルからインポートされました"
+          settings: "設定"
+          colors: "色"
+          discard_colors: "破棄"
+          colors_title: "色"
           scss:
             text: "CSS"
           after_header:

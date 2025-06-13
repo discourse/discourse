@@ -219,13 +219,17 @@ describe "Admin Users Page", type: :system do
 
     it "redirect to invites page" do
       admin_users_page.visit
+      admin_users_page.click_tab("settings")
       admin_users_page.click_send_invites
+
       expect(page).to have_current_path("/u/#{current_user.username}/invited/pending")
     end
 
     it "allows to export users" do
       admin_users_page.visit
+      admin_users_page.click_tab("settings")
       admin_users_page.click_export
+
       expect(page).to have_css(".dialog-body")
       expect(page).to have_content(I18n.t("admin_js.admin.export_csv.success"))
     end

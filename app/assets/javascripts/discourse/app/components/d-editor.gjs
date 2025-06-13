@@ -7,6 +7,7 @@ import { schedule, scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
 import { classNames } from "@ember-decorators/component";
 import { observes, on as onEvent } from "@ember-decorators/object";
+import curryComponent from "ember-curry-component";
 import { emojiSearch, isSkinTonableEmoji } from "pretty-text/emoji";
 import { translations } from "pretty-text/emoji/data";
 import { Promise } from "rsvp";
@@ -34,6 +35,7 @@ import { hashtagAutocompleteOptions } from "discourse/lib/hashtag-autocomplete";
 import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
 import loadEmojiSearchAliases from "discourse/lib/load-emoji-search-aliases";
 import loadRichEditor from "discourse/lib/load-rich-editor";
+import { rovingButtonBar } from "discourse/lib/roving-button-bar";
 import { emojiUrlFor, generateCookFunction } from "discourse/lib/text";
 import userSearch from "discourse/lib/user-search";
 import {
@@ -140,18 +142,22 @@ export default class DEditor extends Component {
       };
     });
 
-    if (this.popupMenuOptions && this.onPopupMenuAction) {
-      this.popupMenuOptions.forEach((popupButton) => {
-        if (popupButton.shortcut && popupButton.condition) {
-          const shortcut =
-            `${PLATFORM_KEY_MODIFIER}+${popupButton.shortcut}`.toLowerCase();
-          keymap[shortcut] = () => {
-            this.onPopupMenuAction(popupButton, this.newToolbarEvent());
-            return false;
-          };
-        }
-      });
-    }
+    this.popupMenuOptions?.forEach((popupButton) => {
+      if (popupButton.shortcut && popupButton.condition) {
+        const shortcut =
+          `${PLATFORM_KEY_MODIFIER}+${popupButton.shortcut}`.toLowerCase();
+        keymap[shortcut] = () => {
+          this.onPopupMenuAction(
+            {
+              ...popupButton,
+              action: popupButton.shortcutAction ?? popupButton.action,
+            },
+            this.newToolbarEvent()
+          );
+          return false;
+        };
+      }
+    });
 
     keymap["tab"] = () => this.textManipulation.indentSelection("right");
     keymap["shift+tab"] = () => this.textManipulation.indentSelection("left");
@@ -437,41 +443,7 @@ export default class DEditor extends Component {
 
   @action
   rovingButtonBar(event) {
-    let target = event.target;
-    let siblingFinder;
-    if (event.code === "ArrowRight") {
-      siblingFinder = "nextElementSibling";
-    } else if (event.code === "ArrowLeft") {
-      siblingFinder = "previousElementSibling";
-    } else {
-      return true;
-    }
-
-    while (
-      target.parentNode &&
-      !target.parentNode.classList.contains("d-editor-button-bar")
-    ) {
-      target = target.parentNode;
-    }
-
-    let focusable = target[siblingFinder];
-    if (focusable) {
-      while (
-        (focusable.tagName !== "BUTTON" &&
-          !focusable.classList.contains("select-kit")) ||
-        focusable.classList.contains("hidden")
-      ) {
-        focusable = focusable[siblingFinder];
-      }
-
-      if (focusable?.tagName === "DETAILS") {
-        focusable = focusable.querySelector("summary");
-      }
-
-      focusable?.focus();
-    }
-
-    return true;
+    return rovingButtonBar(event, "d-editor-button-bar");
   }
 
   /**
@@ -658,7 +630,21 @@ export default class DEditor extends Component {
         "indentSelection"
       );
 
+      const replaceToolbar = ({ component, data }) => {
+        this.replacedToolbarComponent = curryComponent(
+          component,
+          { data },
+          getOwner(this)
+        );
+      };
+
+      this.appEvents.on("composer:replace-toolbar", replaceToolbar);
+      this.appEvents.on("composer:reset-toolbar", this, "resetToolbar");
+
       return () => {
+        this.appEvents.off("composer:replace-toolbar", replaceToolbar);
+        this.appEvents.off("composer:reset-toolbar", this, "resetToolbar");
+
         this.appEvents.off(
           "composer:insert-block",
           textManipulation,
@@ -729,11 +715,12 @@ export default class DEditor extends Component {
                 @icon="angle-left"
                 @preventFocus={{true}}
                 @onKeyDown={{this.rovingButtonBar}}
-                class="btn-flat d-editor-button-bar__back"
+                class="d-editor-button-bar__back"
               />
               <ToolbarButtons
                 @data={{this.replacedToolbarInstance}}
                 @rovingButtonBar={{this.rovingButtonBar}}
+                @isFirst={{false}}
               />
             </div>
           {{else}}

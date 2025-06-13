@@ -4007,6 +4007,9 @@ experimental:
     default: false
     client: true
     validator: "LanguageSwitcherSettingValidator"
+  experimental_system_themes:
+    default: false
+    hidden: true
   experimental_grid_layout:
     client: true
     default: true

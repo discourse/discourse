@@ -4221,6 +4221,10 @@ sl:
           disable: "Onemogoči"
           add: "Dodaj"
           remote_theme_edits: "Če želite urediti to temo, morate <a href='%{repoURL}' target='_blank'>predlagati spremembo v njenem repozitoriju</a>"
+          settings: "Nastavitve"
+          colors: "Barve"
+          discard_colors: "Zavrzi"
+          colors_title: "Barve"
           scss:
             text: "CSS"
           all_filter: "Vse"

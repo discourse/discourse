@@ -127,6 +127,10 @@
     color: var(--primary);
   }
 
+  a:not([contenteditable="false"] a) {
+    cursor: inherit;
+  }
+
   kbd {
     // I believe this shouldn't be `inline-flex` in posts either (test with emojis before/after text to see why),
     // but overriding just for the editor for now
@@ -187,6 +191,37 @@
 
     100% {
       background-position: -200% 0;
+    }
+  }
+}
+
+.fk-d-menu[data-identifier="composer-link-toolbar"] {
+  z-index: z("composer", "dropdown") + 1;
+  animation: fade-in ease 0.25s 1 forwards;
+
+  .fk-d-menu__inner-content {
+    overflow: visible;
+  }
+
+  .btn {
+    background-color: var(--secondary);
+
+    .d-icon {
+      color: var(--primary-medium);
+    }
+
+    &:hover {
+      .d-icon {
+        color: var(--primary);
+      }
+    }
+
+    &:active {
+      background: var(--secondary);
+    }
+
+    &:focus-visible {
+      @include default-focus;
     }
   }
 }

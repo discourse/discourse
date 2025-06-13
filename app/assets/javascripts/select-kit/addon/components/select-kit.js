@@ -71,7 +71,11 @@ export function resolveComponent(context, component) {
   const owner = getOwner(context);
 
   if (typeof component === "string") {
-    return owner.resolveRegistration(`component:${component}`);
+    const result = owner.resolveRegistration(`component:${component}`);
+    if (!result) {
+      throw new Error(`Component not found: ${component}`);
+    }
+    return result;
   }
 
   return component;

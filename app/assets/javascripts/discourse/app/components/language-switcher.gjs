@@ -12,21 +12,6 @@ export default class LanguageSwitcher extends Component {
   @service siteSettings;
   @service router;
 
-  get localeOptions() {
-    const targetLanguages = (
-      this.siteSettings.experimental_content_localization_supported_locales ||
-      ""
-    ).split("|");
-    return JSON.parse(this.siteSettings.available_locales)
-      .filter(({ value }) => targetLanguages.includes(value))
-      .map(({ name, value }) => {
-        return {
-          label: name,
-          value,
-        };
-      });
-  }
-
   @action
   async changeLocale(locale) {
     cookie("locale", locale, { path: "/" });
@@ -51,13 +36,16 @@ export default class LanguageSwitcher extends Component {
     >
       <:content>
         <DropdownMenu as |dropdown|>
-          {{#each this.localeOptions as |option|}}
+          {{#each
+            this.siteSettings.available_content_localization_locales
+            as |option|
+          }}
             <dropdown.item
               class="locale-options"
               data-menu-option-id={{option.value}}
             >
               <DButton
-                @translatedLabel={{option.label}}
+                @translatedLabel={{option.name}}
                 @action={{fn this.changeLocale option.value}}
               />
             </dropdown.item>
