@@ -275,9 +275,10 @@ function organizeResults(r, options) {
   // Truncate to limit
   const results = prioritizedResults.slice(0, options.limit);
 
-  results.users = users;
-  results.emails = emails;
-  results.groups = groups;
+  // Only include users, emails, and groups that are actually in the results
+  results.users = results.filter((item) => item.isUser);
+  results.emails = results.filter((item) => item.isEmail);
+  results.groups = results.filter((item) => item.isGroup);
   return results;
 }
 
