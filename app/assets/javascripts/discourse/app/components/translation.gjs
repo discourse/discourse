@@ -23,12 +23,11 @@ import I18n, { i18n, I18nMissingInterpolationArgument } from "discourse-i18n";
  * <Translation
  *   @key="some.translation.key"
  *   @options={{hash shortdate=shortDate}}
+ *   as |Placeholder|
  * >
- *   <:placeholders as |Placeholder|>
- *     <Placeholder @name="username">
- *       <UserLink @user={{user}}>{{user.username}}</UserLink>
- *     </Placeholder>
- *   </:placeholders>
+ *   <Placeholder @name="username">
+ *     <UserLink @user={{user}}>{{user.username}}</UserLink>
+ *   </Placeholder>
  * </Translation>
  * ```
  *
@@ -205,7 +204,7 @@ export default class Translation extends Component {
       as |placeholderKey placeholderElement|
     }}
       {{#in-element placeholderElement}}
-        {{yield (this.placeholderElement placeholderKey) to="placeholders"}}
+        {{yield (this.placeholderElement placeholderKey)}}
       {{/in-element}}
     {{/each-in}}
     <span {{didInsert this.checkPlaceholders}} />

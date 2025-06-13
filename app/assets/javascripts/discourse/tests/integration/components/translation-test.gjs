@@ -41,12 +41,10 @@ module("Integration | Component | Translation", function (hooks) {
   test("renders translation with component placeholder", async function (assert) {
     await render(
       <template>
-        <Translation @key="hello">
-          <:placeholders as |Placeholder|>
-            <Placeholder @name="username">
-              <UserLink @username="pento">pento</UserLink>
-            </Placeholder>
-          </:placeholders>
+        <Translation @key="hello" as |Placeholder|>
+          <Placeholder @name="username">
+            <UserLink @username="pento">pento</UserLink>
+          </Placeholder>
         </Translation>
       </template>
     );
@@ -94,12 +92,14 @@ module("Integration | Component | Translation", function (hooks) {
   test("renders translation with both string options and component placeholders", async function (assert) {
     await render(
       <template>
-        <Translation @key="mixed_placeholders" @options={{hash count=5}}>
-          <:placeholders as |Placeholder|>
-            <Placeholder @name="username">
-              <UserLink @username="alice">alice</UserLink>
-            </Placeholder>
-          </:placeholders>
+        <Translation
+          @key="mixed_placeholders"
+          @options={{hash count=5}}
+          as |Placeholder|
+        >
+          <Placeholder @name="username">
+            <UserLink @username="alice">alice</UserLink>
+          </Placeholder>
         </Translation>
       </template>
     );
@@ -114,15 +114,14 @@ module("Integration | Component | Translation", function (hooks) {
         <Translation
           @key="multiple_placeholders"
           @options={{hash time="2:30 PM"}}
+          as |Placeholder|
         >
-          <:placeholders as |Placeholder|>
-            <Placeholder @name="user">
-              <UserLink @username="bob">bob</UserLink>
-            </Placeholder>
-            <Placeholder @name="topic">
-              <strong>Important Topic</strong>
-            </Placeholder>
-          </:placeholders>
+          <Placeholder @name="user">
+            <UserLink @username="bob">bob</UserLink>
+          </Placeholder>
+          <Placeholder @name="topic">
+            <strong>Important Topic</strong>
+          </Placeholder>
         </Translation>
       </template>
     );
@@ -149,14 +148,7 @@ module("Integration | Component | Translation", function (hooks) {
     });
 
     // Translation has %{username} placeholder but no placeholder component is provided
-    await render(
-      <template>
-        <Translation @key="hello">
-          <:placeholders>
-          </:placeholders>
-        </Translation>
-      </template>
-    );
+    await render(<template><Translation @key="hello" /></template>);
 
     resetOnerror();
 
