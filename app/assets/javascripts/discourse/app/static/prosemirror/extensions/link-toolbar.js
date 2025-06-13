@@ -142,7 +142,7 @@ class LinkToolbarPluginView {
 
   #displayToolbar() {
     if (this.#getContext().capabilities.viewport.sm) {
-      this.#showMobileToolbar();
+      this.#showFloatingToolbar();
     } else {
       this.#getContext().replaceToolbar(this.#linkToolbar);
       this.#toolbarReplaced = true;
@@ -234,7 +234,7 @@ class LinkToolbarPluginView {
     return !AUTO_LINKS.includes(this.#linkState.markup);
   }
 
-  #showMobileToolbar() {
+  #showFloatingToolbar() {
     const element = this.#view.domAtPos(this.#linkState.head).node;
     const trigger =
       element.nodeType === Node.TEXT_NODE ? element.parentElement : element;

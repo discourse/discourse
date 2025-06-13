@@ -230,7 +230,7 @@
 
   .composer-link-toolbar {
     &__visit {
-      span {
+      .toolbar-link__label {
         max-width: 12rem;
       }
     }
@@ -243,9 +243,8 @@
     align-items: center;
     gap: 0.5rem;
     min-width: 0;
-    flex-grow: 0;
 
-    span {
+    .toolbar-link__label {
       font-size: var(--font-down-1-rem);
       overflow: hidden;
       text-overflow: ellipsis;
