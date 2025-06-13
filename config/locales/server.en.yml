@@ -283,6 +283,7 @@ en:
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
     messages:
+      invalid_locale: "%{invalid_locale} is not a valid locale"
       too_long_validation:
         one: "is limited to %{count} character; you entered %{length}."
         other: "is limited to %{count} characters; you entered %{length}."
