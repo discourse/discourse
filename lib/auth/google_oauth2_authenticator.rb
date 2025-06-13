@@ -32,6 +32,9 @@ class Auth::GoogleOAuth2Authenticator < Auth::ManagedAuthenticator
           opts[:client_id] = SiteSetting.google_oauth2_client_id
           opts[:client_secret] = SiteSetting.google_oauth2_client_secret
 
+          # NOTE: uncomment when testing locally
+          # opts[:redirect_uri] = "http://localhost:4200/auth/google_oauth2/callback"
+
           if (google_oauth2_hd = SiteSetting.google_oauth2_hd).present?
             opts[:hd] = google_oauth2_hd
           end

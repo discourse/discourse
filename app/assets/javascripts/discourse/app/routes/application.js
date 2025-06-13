@@ -278,11 +278,12 @@ export default class ApplicationRoute extends DiscourseRoute {
 
   handleShowCreateAccount(createAccountProps) {
     if (this.siteSettings.enable_discourse_connect) {
-      const returnPath = encodeURIComponent(window.location.pathname);
+      const returnPath = cookie("destination_url")
+        ? getURL("/")
+        : encodeURIComponent(window.location.pathname);
       window.location = getURL("/session/sso?return_path=" + returnPath);
     } else {
       if (this.login.isOnlyOneExternalLoginMethod) {
-        // we will automatically redirect to the external auth service
         this.login.singleExternalLogin({ signup: true });
       } else {
         this.router.transitionTo("signup").then((signup) => {
