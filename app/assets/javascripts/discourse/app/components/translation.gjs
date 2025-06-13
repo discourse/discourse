@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import curryComponent from "ember-curry-component";
 import TranslationPlaceholder from "discourse/components/translation-placeholder";
 import uniqueId from "discourse/helpers/unique-id";
@@ -36,81 +35,52 @@ import I18n, { i18n, I18nMissingInterpolationArgument } from "discourse-i18n";
  */
 export default class Translation extends Component {
   /**
-   * Set to @options, or {} if that param wasn't passed.
+   * Processes the translation string and returns all of the rendering data.
    *
-   * @type {Object}
-   **/
-  _optionsArgs;
-
-  /**
-   * A map of placeholder keys to their unique identifiers.
-   *
-   * @type {Map<String, String>}
-   */
-  _placeholderKeys = new Map();
-
-  /**
-   * A map of placeholder keys to their corresponding DOM elements.
-   *
-   * @type {Map<String, HTMLElement>}
-   */
-  _placeholderElements = new Map();
-
-  /**
-   * A map of placeholder keys to their appearance in the translation string.
-   *
-   * @type {Map<String, String>}
-   */
-  _placeholderAppearance = new Map();
-
-  /**
-   * Tracks which placeholders have been rendered.
-   *
-   * @type {Array<String>}
-   */
-  _renderedPlaceholders = [];
-
-  /**
-   * Processes the translation string and returns an array of text segments and
-   * placeholder elements that can be rendered in the template.
-   *
-   * @returns {Array<String|HTMLElement>} Array of text segments and placeholder elements
+   * @returns {Object}
    */
   get textAndPlaceholders() {
-    this._optionsArg = this.args.options || {};
+    const optionsArg = this.args.options || {};
 
     // Find all of the placeholders in the string we're looking at.
     const message = I18n.findTranslationWithFallback(this.args.key, {
-      ...this._optionsArg,
+      ...optionsArg,
     });
-    this._placeholderAppearance = I18n.findPlaceholders(message);
+    const placeholderAppearance = I18n.findPlaceholders(message);
 
     // We only need to keep the placeholders that aren't being handled by those passed in @options.
-    Object.keys(this._optionsArg).forEach((stringPlaceholder) =>
-      this._placeholderAppearance.delete(stringPlaceholder)
+    Object.keys(optionsArg).forEach((stringPlaceholder) =>
+      placeholderAppearance.delete(stringPlaceholder)
     );
 
-    this._placeholderAppearance.forEach(
-      (placeholderAppearances, placeholderName) => {
-        this._placeholderKeys.set(
-          placeholderName,
-          `__PLACEHOLDER__${placeholderName}__${uniqueId()}__`
-        );
-        this._placeholderElements.set(
-          placeholderName,
-          placeholderAppearances.map(() => document.createElement("span"))
-        );
-      }
-    );
+    const placeholderKeys = new Map();
+    const placeholderElements = new Map();
+
+    placeholderAppearance.forEach((placeholderAppearances, placeholderName) => {
+      placeholderKeys.set(
+        placeholderName,
+        `__PLACEHOLDER__${placeholderName}__${uniqueId()}__`
+      );
+      placeholderElements.set(
+        placeholderName,
+        placeholderAppearances.map(() => document.createElement("span"))
+      );
+    });
 
     const text = i18n(this.args.key, {
-      ...Object.fromEntries(this._placeholderKeys),
-      ...this._optionsArg,
+      ...Object.fromEntries(placeholderKeys),
+      ...optionsArg,
     });
 
     // Bail early if there were no placeholders we need to handle.
-    if (this._placeholderAppearance.size === 0) {
-      return [text];
+    if (placeholderAppearance.size === 0) {
+      return {
+        appearance: placeholderAppearance,
+        elements: placeholderElements,
+        keys: placeholderKeys,
+        rendered: [],
+        parts: [text],
+      };
     }
 
     const parts = [];
@@ -127,9 +97,9 @@ export default class Translation extends Component {
 
       // Add the placeholder element, but only if the placeholder string we found matches
       // the uniqueId we generated earlier for that placeholder.
-      if (this._placeholderKeys.get(match[1]) === match[0]) {
+      if (placeholderKeys.get(match[1]) === match[0]) {
         const elIdx = foundCount[match[1]] ?? 0;
-        parts.push(this._placeholderElements.get(match[1])[elIdx]);
+        parts.push(placeholderElements.get(match[1])[elIdx]);
         foundCount[match[1]] = elIdx + 1;
       }
 
@@ -141,49 +111,46 @@ export default class Translation extends Component {
       parts.push(text.slice(currentIndex));
     }
 
-    return parts;
+    return {
+      appearance: placeholderAppearance,
+      elements: placeholderElements,
+      keys: placeholderKeys,
+      rendered: [],
+      parts,
+    };
   }
 
   /**
-   * Creates a curried TranslationPlaceholder component for a specific placeholder.
-   * This allows the placeholder component to be passed to the template's named block
-   * with the placeholder name already bound.
+   * Creates a curried TranslationPlaceholder component for all of the placeholders.
    *
-   * @returns {Component} A curried TranslationPlaceholder component with the placeholder name bound
+   * @param {Map<String, Array<HTMLElement>>} elements A map of the elements assigned to each placeholder.
+   * @param {Array<string>} rendered An array of the placeholders that have been
+   *
+   * @returns {Component} A curried TranslationPlaceholder component
    */
-  get curriedPlaceholderComponent() {
+  @action
+  curriedPlaceholderComponent(elements, rendered) {
     return curryComponent(
       TranslationPlaceholder,
       {
-        markAsRendered: this.markAsRendered,
-        elements: this._placeholderElements,
+        markAsRendered: (name) => rendered.push(name),
+        elements,
       },
       getOwner(this)
     );
   }
 
   /**
-   * Marks a placeholder as having been rendered with content.
-   * Called by the TranslationPlaceholder component when it renders.
-   *
-   * @param {String} name - The name of the placeholder that has been rendered
-   */
-  @action
-  markAsRendered(name) {
-    this._renderedPlaceholders.push(name);
-  }
-
-  /**
    * Checks for any mismatches between the placeholders expected, and those provided.
+   *
+   * @param {Object} info The rendering object returned by textAndPlaceholders().
    */
   @action
-  checkPlaceholders() {
+  checkPlaceholders(info) {
     let missing = [];
-    for (const [name, elements] of this._placeholderElements) {
-      if (!this._renderedPlaceholders.includes(name)) {
-        const value = `[missing ${this._placeholderAppearance.get(
-          name
-        )} placeholder]`;
+    for (const [name, elements] of info.elements) {
+      if (!info.rendered.includes(name)) {
+        const value = `[missing ${info.appearance.get(name)} placeholder]`;
         elements.forEach((el) => (el.innerText = value));
         missing.push(value);
       }
@@ -198,9 +165,9 @@ export default class Translation extends Component {
 
     // Confirm that there's a real translation string for the given key.
     const message = I18n.findTranslationWithFallback(this.args.key, {
-      ...this._optionsArg,
+      ...(this.args.options || {}),
     });
-    if (this._renderedPlaceholders.length === 0 && message) {
+    if ((info.appearance.size === 0 || info.rendered.length === 0) && message) {
       this.log(
         "The <Translation> component shouldn't be used for translations that don't insert components. Use `i18n()` instead."
       );
@@ -223,11 +190,13 @@ export default class Translation extends Component {
   }
 
   <template>
-    {{#each this.textAndPlaceholders as |segment|}}
-      {{segment}}
-    {{/each}}
+    {{#let this.textAndPlaceholders as |info|}}
+      {{#each info.parts as |part|}}
+        {{part}}
+      {{/each}}
 
-    {{yield this.curriedPlaceholderComponent}}
-    <span {{didInsert this.checkPlaceholders}} />
+      {{yield (this.curriedPlaceholderComponent info.elements info.rendered)}}
+      {{this.checkPlaceholders info}}
+    {{/let}}
   </template>
 }

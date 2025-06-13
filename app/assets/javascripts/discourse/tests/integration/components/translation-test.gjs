@@ -1,5 +1,11 @@
+import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
-import { render, resetOnerror, setupOnerror } from "@ember/test-helpers";
+import {
+  render,
+  resetOnerror,
+  settled,
+  setupOnerror,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import Translation from "discourse/components/translation";
 import UserLink from "discourse/components/user-link";
@@ -73,24 +79,33 @@ module("Integration | Component | Translation", function (hooks) {
   });
 
   test("throws an error on simple translation without placeholders", async function (assert) {
+    let errors = 0;
+
     setupOnerror((error) => {
       assert.strictEqual(
         error.message,
         "The <Translation> component shouldn't be used for translations that don't insert components. Use `i18n()` instead."
       );
+
+      errors++;
     });
 
     await render(<template><Translation @key="simple_text" /></template>);
 
+    assert.strictEqual(errors, 1);
     resetOnerror();
   });
 
   test("renders translation with string options only", async function (assert) {
+    let errors = 0;
+
     setupOnerror((error) => {
       assert.strictEqual(
         error.message,
         "The <Translation> component shouldn't be used for translations that don't insert components. Use `i18n()` instead."
       );
+
+      errors++;
     });
 
     await render(
@@ -102,6 +117,7 @@ module("Integration | Component | Translation", function (hooks) {
       </template>
     );
 
+    assert.strictEqual(errors, 1);
     resetOnerror();
   });
 
@@ -155,20 +171,65 @@ module("Integration | Component | Translation", function (hooks) {
   });
 
   test("handles placeholder not provided in template", async function (assert) {
+    let errors = 0;
     setupOnerror((error) => {
       assert.true(error instanceof I18nMissingInterpolationArgument);
       assert.strictEqual(
         error.message,
         "Translation error for key 'hello': [missing %{username} placeholder]"
       );
+
+      errors++;
     });
 
     // Translation has %{username} placeholder but no placeholder component is provided
     await render(<template><Translation @key="hello" /></template>);
 
+    assert.strictEqual(errors, 1);
     resetOnerror();
 
     // Should render the placeholder string since no component was provided
     assert.dom().includesText("Bonjour, [missing %{username} placeholder]");
+  });
+
+  test("correctly re-renders when args change", async function (assert) {
+    const state = new (class {
+      @tracked key = "hello";
+      @tracked options = {};
+    })();
+
+    await render(
+      <template>
+        <Translation
+          @key={{state.key}}
+          @options={{state.options}}
+          as |Placeholder|
+        >
+          <Placeholder @name="username">
+            <UserLink @username="pento">pento</UserLink>
+          </Placeholder>
+        </Translation>
+      </template>
+    );
+
+    assert.dom().hasText("Bonjour, pento");
+
+    let errors = 0;
+
+    setupOnerror((error) => {
+      assert.strictEqual(
+        error.message,
+        "The <Translation> component shouldn't be used for translations that don't insert components. Use `i18n()` instead."
+      );
+      errors++;
+    });
+
+    state.key = "simple_text";
+    await settled();
+
+    assert.dom().hasText("Simple text without placeholders");
+
+    assert.strictEqual(errors, 1);
+    resetOnerror();
   });
 });
