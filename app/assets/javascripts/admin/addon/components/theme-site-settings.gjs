@@ -36,6 +36,11 @@ export default class ThemeSiteSettings extends Component {
   }
 
   @action
+  isLastThemeSettingOverride(overrides, theme) {
+    return theme === overrides.themes.at(-1);
+  }
+
+  @action
   async loadThemeSiteSettings() {
     let url = "/admin/config/theme-site-settings.json";
     const response = await ajax(url, {
@@ -115,7 +120,7 @@ export default class ThemeSiteSettings extends Component {
                         </:content>
                       </DTooltip>
                       {{#unless
-                        (eq theme overrides.themes.lastObject)
+                        (this.isLastThemeSettingOverride overrides theme)
                       }},{{/unless}}
                     {{/each}}
                     {{#unless overrides.themes}}
