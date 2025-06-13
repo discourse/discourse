@@ -229,7 +229,8 @@ function organizeResults(r, options) {
 
   // 4. Partial group name matches (not already in exact matches)
   const partialGroupMatches = groups.filter(
-    (g) => !exactGroupSet.has(g.name) && lowerCaseIncludes(g.name, term)
+    (g) =>
+      !term || (!exactGroupSet.has(g.name) && lowerCaseIncludes(g.name, term))
   );
 
   // 5. Exact name matches (not already included via username)

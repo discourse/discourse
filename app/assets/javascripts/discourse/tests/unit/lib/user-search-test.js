@@ -262,8 +262,8 @@ module("Unit | Utility | user-search", function (hooks) {
       "Partial username match should be third"
     );
     // User with exact name match should come later - find it in the results
-    const exactNameMatch = results.find((r) => r.username === "player");
-    assert.true(exactNameMatch, "Should find exact name match for 'player'");
+    const hasExactNameMatch = results.some((r) => r.username === "player");
+    assert.true(hasExactNameMatch, "Should find exact name match for 'player'");
 
     // It should come after partial username matches
     const partialUsernameIndex = results.findIndex(
