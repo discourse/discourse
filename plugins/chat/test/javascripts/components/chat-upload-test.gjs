@@ -151,7 +151,6 @@ module("Discourse Chat | Component | chat-upload", function (hooks) {
     let mockCapabilities;
 
     class MockCapabilitiesService extends Service {
-      @tracked isIOS = false;
       @tracked isSafari = false;
     }
 
@@ -159,25 +158,6 @@ module("Discourse Chat | Component | chat-upload", function (hooks) {
       // Register and inject the mock service
       this.owner.register("service:capabilities", MockCapabilitiesService);
       mockCapabilities = this.owner.lookup("service:capabilities");
-    });
-
-    test("adds timestamp parameter for iOS", async function (assert) {
-      const self = this;
-      this.set("upload", {
-        ...VIDEO_FIXTURE,
-        url: "https://example.com/video.mp4",
-      });
-      mockCapabilities.isIOS = true;
-
-      await render(<template><ChatUpload @upload={{self.upload}} /></template>);
-
-      assert
-        .dom("video.chat-video-upload source")
-        .hasAttribute(
-          "src",
-          "https://example.com/video.mp4#t=0.001",
-          "adds timestamp for iOS"
-        );
     });
 
     test("adds timestamp parameter for Safari", async function (assert) {
@@ -205,7 +185,6 @@ module("Discourse Chat | Component | chat-upload", function (hooks) {
         ...VIDEO_FIXTURE,
         url: "https://example.com/video.mp4",
       });
-      mockCapabilities.isIOS = false;
       mockCapabilities.isSafari = false;
 
       await render(<template><ChatUpload @upload={{self.upload}} /></template>);
