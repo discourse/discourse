@@ -897,7 +897,7 @@ describe "Composer - ProseMirror editor", type: :system do
       expect(page).to have_css("[data-identifier='composer-link-toolbar']")
       expect(page).to have_css("button.composer-link-toolbar__edit")
       expect(page).to have_css("button.composer-link-toolbar__copy")
-      expect(page).to have_css("a.composer-link-toolbar__visit")
+      expect(page).to have_css("a.composer-link-toolbar__visit", text: "https://example.com")
     end
 
     it "allows editing a link via toolbar" do
@@ -958,6 +958,7 @@ describe "Composer - ProseMirror editor", type: :system do
 
       expect(page).to have_css("[data-identifier='composer-link-toolbar']")
       expect(page).to have_no_css("button.composer-link-toolbar__unlink")
+      expect(page).to have_css("a.composer-link-toolbar__visit", text: "")
     end
 
     it "doesn't show unlink button for auto-linkified URLs" do
@@ -967,6 +968,7 @@ describe "Composer - ProseMirror editor", type: :system do
 
       expect(page).to have_css("[data-identifier='composer-link-toolbar']")
       expect(page).to have_no_css("button.composer-link-toolbar__unlink")
+      expect(page).to have_css("a.composer-link-toolbar__visit", text: "")
     end
 
     it "shows visit button for valid URLs" do
@@ -974,9 +976,10 @@ describe "Composer - ProseMirror editor", type: :system do
 
       composer.type_content("[Example](https://example.com)")
 
-      expect(page).to have_css("a.composer-link-toolbar__visit")
-
-      expect(find("a.composer-link-toolbar__visit")["href"]).to eq("https://example.com/")
+      expect(page).to have_css(
+        "a.composer-link-toolbar__visit[href='https://example.com']",
+        text: "https://example.com",
+      )
     end
 
     it "doesn't show visit button for invalid URLs" do
@@ -997,6 +1000,7 @@ describe "Composer - ProseMirror editor", type: :system do
       composer.send_keys(:left)
 
       expect(page).to have_css("[data-identifier='composer-link-toolbar']")
+      expect(page).to have_css("a.composer-link-toolbar__visit", text: "https://example.com")
 
       composer.send_keys(:right)
 

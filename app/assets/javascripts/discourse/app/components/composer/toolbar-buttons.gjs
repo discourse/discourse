@@ -19,6 +19,16 @@ export default class ComposerToolbarButtons extends Component {
     return typeof button.href === "function" ? button.href() : button.href;
   }
 
+  @action
+  getLabel(button) {
+    return typeof button.label === "function" ? button.label() : button.label;
+  }
+
+  @action
+  getIcon(button) {
+    return typeof button.icon === "function" ? button.icon() : button.icon;
+  }
+
   get firstButton() {
     const { isFirst = true } = this.args;
     return (
@@ -36,41 +46,58 @@ export default class ComposerToolbarButtons extends Component {
     {{#each @data.groups key="group" as |group|}}
       {{#each group.buttons key="id" as |button|}}
         {{#if (button.condition @data.context)}}
-          {{#if button.href}}
-            <a
-              href={{this.getHref button}}
-              target="_blank"
-              rel="noopener noreferrer"
-              class={{concatClass "btn no-text btn-icon" button.className}}
-              title={{button.title}}
-              tabindex={{this.tabIndex button}}
-              {{on "keydown" this.rovingButtonBar}}
-            >
-              {{icon button.icon}}
-            </a>
-          {{else if button.popupMenu}}
-            <ToolbarPopupMenuOptions
-              @content={{(button.popupMenu.options)}}
-              @onChange={{button.popupMenu.action}}
-              @onOpen={{fn button.action button}}
-              @tabindex={{this.tabIndex button}}
-              @onKeydown={{this.rovingButtonBar}}
-              @options={{hash icon=button.icon focusAfterOnChange=false}}
-              class={{button.className}}
-            />
-          {{else if (eq button.type "separator")}}
+          {{#if (eq button.type "separator")}}
             <div class="toolbar-separator"></div>
           {{else}}
-            <DButton
-              @action={{fn button.action button}}
-              @translatedTitle={{button.title}}
-              @label={{button.label}}
-              @icon={{button.icon}}
-              @preventFocus={{button.preventFocus}}
-              @onKeyDown={{this.rovingButtonBar}}
-              tabindex={{this.tabIndex button}}
-              class={{button.className}}
-            />
+            {{#let
+              (this.getHref button) (this.getLabel button) (this.getIcon button)
+              as |href label buttonIcon|
+            }}
+              {{#if href}}
+                <a
+                  href={{href}}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class={{concatClass
+                    "btn no-text btn-icon toolbar-link"
+                    button.className
+                  }}
+                  title={{button.title}}
+                  tabindex={{this.tabIndex button}}
+                  {{on "keydown" this.rovingButtonBar}}
+                >
+                  {{#if label}}
+                    <span title={{label}} class="toolbar-link__label">
+                      {{label}}
+                    </span>
+                  {{/if}}
+                  {{#if buttonIcon}}
+                    {{icon buttonIcon}}
+                  {{/if}}
+                </a>
+              {{else if button.popupMenu}}
+                <ToolbarPopupMenuOptions
+                  @content={{(button.popupMenu.options)}}
+                  @onChange={{button.popupMenu.action}}
+                  @onOpen={{fn button.action button}}
+                  @tabindex={{this.tabIndex button}}
+                  @onKeydown={{this.rovingButtonBar}}
+                  @options={{hash icon=buttonIcon focusAfterOnChange=false}}
+                  class={{button.className}}
+                />
+              {{else}}
+                <DButton
+                  @action={{fn button.action button}}
+                  @translatedTitle={{button.title}}
+                  @label={{label}}
+                  @icon={{buttonIcon}}
+                  @preventFocus={{button.preventFocus}}
+                  @onKeyDown={{this.rovingButtonBar}}
+                  tabindex={{this.tabIndex button}}
+                  class={{button.className}}
+                />
+              {{/if}}
+            {{/let}}
           {{/if}}
         {{/if}}
       {{/each}}
