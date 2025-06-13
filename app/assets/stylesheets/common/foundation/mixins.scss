@@ -258,6 +258,11 @@ $hpad: 0.65em;
   text-wrap: nowrap;
   line-height: 1;
 
+  &[data-valid="false"] {
+    background: unset;
+    padding: 0;
+  }
+
   &.--bot {
     background: var(--success-low);
   }

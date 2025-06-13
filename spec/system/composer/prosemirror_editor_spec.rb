@@ -862,11 +862,11 @@ describe "Composer - ProseMirror editor", type: :system do
 
       composer.type_content("Hey @#{user.username} ")
 
-      expect(rich).to have_css("a.mention", text: user.username)
+      expect(rich).to have_css("a.mention[data-valid='true']", text: user.username)
 
       composer.type_content("and @invalid_user - how are you?")
 
-      expect(rich).to have_no_css("a.mention", text: "@invalid_user")
+      expect(rich).to have_css("a.mention[data-valid='false']", text: "@invalid_user")
 
       composer.toggle_rich_editor
 
@@ -880,8 +880,8 @@ describe "Composer - ProseMirror editor", type: :system do
 
       composer.toggle_rich_editor
 
-      expect(rich).to have_css("a.mention", text: user.username)
-      expect(rich).to have_no_css("a.mention", text: "@unknown")
+      expect(rich).to have_css("a.mention[data-valid='true']", text: user.username)
+      expect(rich).to have_css("a.mention[data-valid='false']", text: "@unknown")
     end
   end
 
