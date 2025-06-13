@@ -3,7 +3,7 @@ import { on } from "@ember/modifier";
 import { htmlSafe } from "@ember/template";
 import icon from "discourse/helpers/d-icon";
 
-const Textarea0 = <template>
+const FormTemplateFieldTextarea = <template>
   <div class="control-group form-template-field" data-field-type="textarea">
     {{#if @attributes.label}}
       <label class="form-template-field__label">
@@ -34,4 +34,4 @@ const Textarea0 = <template>
   </div>
 </template>;
 
-export default Textarea0;
+export default FormTemplateFieldTextarea;

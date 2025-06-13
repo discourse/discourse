@@ -3,7 +3,7 @@ import { on } from "@ember/modifier";
 import { htmlSafe } from "@ember/template";
 import icon from "discourse/helpers/d-icon";
 
-const Input0 = <template>
+const FormTemplateFieldInput = <template>
   <div class="control-group form-template-field" data-field-type="input">
     {{#if @attributes.label}}
       <label class="form-template-field__label">
@@ -36,4 +36,4 @@ const Input0 = <template>
   </div>
 </template>;
 
-export default Input0;
+export default FormTemplateFieldInput;

@@ -1,7 +1,7 @@
 import FooterMessage from "discourse/components/footer-message";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
 
-const FooterMessage0 = <template>
+const FooterMessageMolecule = <template>
   <StyleguideExample @title="<FooterMessage> - default">
     <FooterMessage
       @education={{@dummy.sentence}}
@@ -29,4 +29,4 @@ const FooterMessage0 = <template>
   </StyleguideExample>
 </template>;
 
-export default FooterMessage0;
+export default FooterMessageMolecule;
