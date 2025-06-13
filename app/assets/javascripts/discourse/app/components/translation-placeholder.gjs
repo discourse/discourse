@@ -1,6 +1,4 @@
 import Component from "@glimmer/component";
-import { action } from "@ember/object";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { eq } from "truth-helpers";
 
 /**
@@ -23,19 +21,14 @@ import { eq } from "truth-helpers";
  * @param {String} name - The name of the placeholder this content should fill
  */
 export default class TranslationPlaceholder extends Component {
-  /**
-   * Calls the parent component's markAsRendered function, to track that this
-   * placeholder has been rendered.
-   */
-  @action
-  markAsRendered() {
+  constructor() {
+    super(...arguments);
     this.args.markAsRendered(this.args.placeholder);
   }
 
   <template>
     {{#if (eq @placeholder @name)}}
       {{yield}}
-      <span {{didInsert this.markAsRendered}} />
     {{/if}}
   </template>
 }
