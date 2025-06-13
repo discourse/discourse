@@ -1,0 +1,17 @@
+{
+  "private": true,
+  "devDependencies": {
+    "@discourse/lint-configs": "2.25.0",
+    "ember-template-lint": "7.8.1",
+    "eslint": "9.28.0",
+    "prettier": "3.5.3",
+    "stylelint": "16.20.0"
+  },
+  "engines": {
+    "node": ">= 22",
+    "npm": "please-use-pnpm",
+    "yarn": "please-use-pnpm",
+    "pnpm": "9.x"
+  },
+  "packageManager": "pnpm@9.15.5"
+}

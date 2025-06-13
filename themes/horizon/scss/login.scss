@@ -1,0 +1,15 @@
+body.static-login {
+  #main-outlet-wrapper {
+    grid-template-areas:
+      "sidebar blank"
+      "sidebar content"
+      "sidebar below-content";
+    grid-template-rows: auto 1fr auto;
+  }
+
+  .login-welcome {
+    border-radius: none;
+    border: none;
+    box-shadow: none;
+  }
+}
