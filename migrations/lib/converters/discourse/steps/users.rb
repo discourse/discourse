@@ -4,6 +4,11 @@ module Migrations::Converters::Discourse
   class Users < ::Migrations::Converters::Base::ProgressStep
     attr_accessor :source_db
 
+    def execute
+      super
+      @upload_creator = UploadCreator.new(column_prefix: "avatar", upload_type: "avatar")
+    end
+
     def max_progress
       @source_db.count <<~SQL
         SELECT COUNT(*)
@@ -51,7 +56,7 @@ module Migrations::Converters::Discourse
         staged: item[:staged],
         title: item[:title],
         trust_level: item[:trust_level],
-        uploaded_avatar_id: DataHelper.create_upload(item, :avatar),
+        uploaded_avatar_id: @upload_creator.create_for(item),
         username: item[:username],
         views: item[:views],
       )
