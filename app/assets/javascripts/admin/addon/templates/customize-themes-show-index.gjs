@@ -185,30 +185,34 @@ export default RouteTemplate(
       </section>
     {{/if}}
 
-    {{#unless @controller.model.remote_theme.is_git}}
-      <div class="control-unit">
-        <div class="mini-title">{{i18n "admin.customize.theme.css_html"}}</div>
-        {{#if @controller.model.hasEditedFields}}
-          <div class="description">{{i18n
-              "admin.customize.theme.custom_sections"
+    {{#unless @controller.model.system}}
+      {{#unless @controller.model.remote_theme.is_git}}
+        <div class="control-unit">
+          <div class="mini-title">{{i18n
+              "admin.customize.theme.css_html"
             }}</div>
-          <ul>
-            {{#each @controller.editedFieldsFormatted as |field|}}
-              <li>{{field}}</li>
-            {{/each}}
-          </ul>
-        {{else}}
-          <div class="description">
-            {{i18n "admin.customize.theme.edit_css_html_help"}}
-          </div>
-        {{/if}}
+          {{#if @controller.model.hasEditedFields}}
+            <div class="description">{{i18n
+                "admin.customize.theme.custom_sections"
+              }}</div>
+            <ul>
+              {{#each @controller.editedFieldsFormatted as |field|}}
+                <li>{{field}}</li>
+              {{/each}}
+            </ul>
+          {{else}}
+            <div class="description">
+              {{i18n "admin.customize.theme.edit_css_html_help"}}
+            </div>
+          {{/if}}
 
-        <DButton
-          @action={{@controller.editTheme}}
-          @label="admin.customize.theme.edit_css_html"
-          class="btn-default edit"
-        />
-      </div>
+          <DButton
+            @action={{@controller.editTheme}}
+            @label="admin.customize.theme.edit_css_html"
+            class="btn-default edit edit-code"
+          />
+        </div>
+      {{/unless}}
 
       <div class="control-unit">
         <div class="mini-title">{{i18n "admin.customize.theme.uploads"}}</div>
@@ -243,7 +247,7 @@ export default RouteTemplate(
           @action={{@controller.addUploadModal}}
           @icon="plus"
           @label="admin.customize.theme.add"
-          class="btn-default"
+          class="btn-default upload"
         />
       </div>
     {{/unless}}
@@ -400,12 +404,14 @@ export default RouteTemplate(
           class="btn-default btn-normal"
         />
       {{/if}}
-      <DButton
-        @action={{@controller.destroyTheme}}
-        @label="admin.customize.delete"
-        @icon="trash-can"
-        class="btn-danger"
-      />
+      {{#unless @controller.model.system}}
+        <DButton
+          @action={{@controller.destroyTheme}}
+          @label="admin.customize.delete"
+          @icon="trash-can"
+          class="btn-danger delete"
+        />
+      {{/unless}}
     </div>
   </template>
 );

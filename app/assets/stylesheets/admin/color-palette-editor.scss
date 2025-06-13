@@ -88,6 +88,10 @@
     &:focus {
       outline: none;
     }
+
+    &:disabled {
+      background-color: var(--d-input-bg-color);
+    }
   }
 
   &__color-code {

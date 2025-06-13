@@ -14,7 +14,8 @@ class ThemeSerializer < BasicThemeSerializer
              :enabled?,
              :disabled_at,
              :theme_fields,
-             :screenshot_url
+             :screenshot_url,
+             :system
 
   has_one :color_scheme, serializer: ColorSchemeSerializer, embed: :object
   has_one :owned_color_palette, serializer: ColorSchemeSerializer, embed: :object
@@ -108,5 +109,9 @@ class ThemeSerializer < BasicThemeSerializer
 
   def include_disabled_by?
     include_disabled_at?
+  end
+
+  def system
+    object.system?
   end
 end

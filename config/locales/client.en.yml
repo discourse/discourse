@@ -6436,6 +6436,7 @@ en:
           copy_created: 'A new copy of "%{name}" has been created'
           illegal_character_in_color: "Color must consist of hexadecimal characters only"
           invalid_color_length: "Color must in the format #rrggbb or #rgb"
+          blocked_edit_for_system: "Color palette belonging to a system theme cannot be edited."
           delete_confirm: "Are you sure you want to delete this color palette?"
       plugins:
         title: "Plugins"
