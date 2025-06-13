@@ -1,3 +1,5 @@
+import { tracked } from "@glimmer/tracking";
+import Service from "@ember/service";
 import { render, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -148,16 +150,15 @@ module("Discourse Chat | Component | chat-upload", function (hooks) {
   module("video source URL", function (nestedHooks) {
     let mockCapabilities;
 
-    nestedHooks.beforeEach(function () {
-      mockCapabilities = {
-        isIOS: false,
-        isSafari: false,
-      };
+    class MockCapabilitiesService extends Service {
+      @tracked isIOS = false;
+      @tracked isSafari = false;
+    }
 
-      // Override the capabilities service
-      this.owner.register("service:capabilities", mockCapabilities, {
-        instantiate: false,
-      });
+    nestedHooks.beforeEach(function () {
+      // Register and inject the mock service
+      this.owner.register("service:capabilities", MockCapabilitiesService);
+      mockCapabilities = this.owner.lookup("service:capabilities");
     });
 
     test("adds timestamp parameter for iOS", async function (assert) {
