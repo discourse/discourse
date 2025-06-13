@@ -5,6 +5,7 @@ module SvgSprite
       %w[
         a
         address-book
+        address-card
         align-left
         anchor
         angle-down
@@ -120,6 +121,7 @@ module SvgSprite
         fab-x-twitter
         fab-wikipedia-w
         fab-windows
+        face-smile
         far-bell
         far-bell-slash
         far-calendar-plus
