@@ -1335,12 +1335,15 @@ RSpec.describe TopicsFilter do
       describe "when query string is `#{filter}-after:1`" do
         it "should only return topics with #{description} after 1 day ago" do
           freeze_time do
+            old_topic = Fabricate(:topic, column => 2.days.ago)
+            recent_topic = Fabricate(:topic, column => Time.zone.now)
+
             expect(
               TopicsFilter
                 .new(guardian: Guardian.new)
                 .filter_from_query_string("#{filter}-after:1")
                 .pluck(:id),
-            ).to contain_exactly(topic2.id)
+            ).to contain_exactly(recent_topic.id)
           end
         end
       end
@@ -1348,12 +1351,15 @@ RSpec.describe TopicsFilter do
       describe "when query string is `#{filter}-before:1`" do
         it "should only return topics with #{description} before 1 day ago" do
           freeze_time do
+            old_topic = Fabricate(:topic, column => 2.days.ago)
+            recent_topic = Fabricate(:topic, column => Time.zone.now)
+
             expect(
               TopicsFilter
                 .new(guardian: Guardian.new)
                 .filter_from_query_string("#{filter}-before:1")
                 .pluck(:id),
-            ).to contain_exactly(topic.id)
+            ).to contain_exactly(old_topic.id)
           end
         end
       end
@@ -1361,12 +1367,15 @@ RSpec.describe TopicsFilter do
       describe "when query string is `#{filter}-after:0`" do
         it "should only return topics with #{description} after today" do
           freeze_time do
+            old_topic = Fabricate(:topic, column => 2.days.ago)
+            recent_topic = Fabricate(:topic, column => Time.zone.now)
+
             expect(
               TopicsFilter
                 .new(guardian: Guardian.new)
                 .filter_from_query_string("#{filter}-after:0")
                 .pluck(:id),
-            ).to contain_exactly(topic.id, topic2.id)
+            ).to contain_exactly(recent_topic.id)
           end
         end
       end
