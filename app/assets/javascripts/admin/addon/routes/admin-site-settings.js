@@ -48,11 +48,6 @@ export default class AdminSiteSettingsRoute extends DiscourseRoute {
   }
 
   @action
-  async refreshAll() {
-    this._siteSettings = await SiteSetting.findAll();
-  }
-
-  @action
   filterSettings(filter, onlyOverridden) {
     const settingFilter = new SiteSettingFilter(this._siteSettings);
 
