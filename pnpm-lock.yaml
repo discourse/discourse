@@ -308,6 +308,9 @@ importers:
       immer:
         specifier: ^10.1.1
         version: 10.1.1
+      js.foresight:
+        specifier: ^2.1.2
+        version: 2.1.2
       jspreadsheet-ce:
         specifier: ^4.15.0
         version: 4.15.0
@@ -2591,6 +2594,14 @@ packages:
 
   '@swc/types@0.1.22':
     resolution: {integrity: sha512-D13mY/ZA4PPEFSy6acki9eBT/3WgjMoRqNcdpIvjaYLQ44Xk5BdaL7UkDxAh6Z9UOe7tCCp67BVmZCojYp9owg==}
+
+  '@thednp/position-observer@1.0.11':
+    resolution: {integrity: sha512-G9eNhO00/wz74f35cnsTAK255mzH/VyKoLd0g+Ku0GUCl7srPZA5Ynflw/OtWnXU0k6WxKDvcb0nJwRFGAMtMg==}
+    engines: {node: '>=16', pnpm: '>=8.6.0'}
+
+  '@thednp/shorty@2.0.11':
+    resolution: {integrity: sha512-D+rLHt1l7c608yCuzXYJ75aDNWeMVbor+m1HO/XibhiWRbCpD8r6TUv3ayJI+feVfCnBNfrH+p6LSDn9l99uBA==}
+    engines: {node: '>=16', pnpm: '>=8.6.0'}
 
   '@tootallnate/quickjs-emscripten@0.23.0':
     resolution: {integrity: sha512-C5Mc6rdnsaJDjO3UpGW/CQTHtCKaYlScZTly4JIu97Jxo/odCiH0ITnDXSJPTOrEKk/ycSZ0AOgTmkDtkOsvIA==}
@@ -5890,6 +5901,9 @@ packages:
     resolution: {integrity: sha512-wpxZs9NoxZaJESJGIZTyDEaYpl0FKSA+FB9aJiyemKhMwkxQg63h4T1KJgUGHpTqPDNRcmmYLugrRjJlBtWvRA==}
     hasBin: true
 
+  js.foresight@2.1.2:
+    resolution: {integrity: sha512-xsqRLE+p8W5piwqISVs3QmDA7yc6mLOxX7RY6R7x/DH32mpLWfz6nd1AKFQ1sBULndZK7nfx45GcY7Vs1IivuQ==}
+
   js2xmlparser@4.0.2:
     resolution: {integrity: sha512-6n4D8gLlLf1n5mNLQPRfViYzu9RATblzPEtm1SthMX1Pjao0r9YI9nw7ZIfRxQMERS87mcswrg+r/OYrPRX6jA==}
 
@@ -8119,6 +8133,9 @@ packages:
   sync-disk-cache@2.1.0:
     resolution: {integrity: sha512-vngT2JmkSapgq0z7uIoYtB9kWOOzMihAAYq/D3Pjm/ODOGMgS4r++B+OZ09U4hWR6EaOdy9eqQ7/8ygbH3wehA==}
     engines: {node: 8.* || >= 10.*}
+
+  tabbable@6.2.0:
+    resolution: {integrity: sha512-Cat63mxsVJlzYvN51JmVXIgNoUokrIaT2zLclCXjRd8boZ0004U4KCs/sToJ75C6sdlByWxpYnb5Boif1VSFew==}
 
   table@6.9.0:
     resolution: {integrity: sha512-9kY+CygyYM6j02t5YFHbNz2FN5QmYGv9zAjVp4lCDjlCw7amdckXlEt/bjMhUIfj4ThGRE4gCUH5+yGnNuPo5A==}
@@ -10818,6 +10835,12 @@ snapshots:
   '@swc/types@0.1.22':
     dependencies:
       '@swc/counter': 0.1.3
+
+  '@thednp/position-observer@1.0.11':
+    dependencies:
+      '@thednp/shorty': 2.0.11
+
+  '@thednp/shorty@2.0.11': {}
 
   '@tootallnate/quickjs-emscripten@0.23.0': {}
 
@@ -15183,6 +15206,11 @@ snapshots:
     dependencies:
       argparse: 2.0.1
 
+  js.foresight@2.1.2:
+    dependencies:
+      '@thednp/position-observer': 1.0.11
+      tabbable: 6.2.0
+
   js2xmlparser@4.0.2:
     dependencies:
       xmlcreate: 2.0.4
@@ -17667,6 +17695,8 @@ snapshots:
       username-sync: 1.0.3
     transitivePeerDependencies:
       - supports-color
+
+  tabbable@6.2.0: {}
 
   table@6.9.0:
     dependencies:

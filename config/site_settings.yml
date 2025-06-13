@@ -4007,3 +4007,8 @@ experimental:
     default: false
     client: true
     validator: "LanguageSwitcherSettingValidator"
+  experimental_prefetch_allowed_groups:
+    type: group_list
+    client: true
+    hidden: true
+    default: ""
