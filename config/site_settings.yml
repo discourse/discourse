@@ -4013,4 +4013,3 @@ experimental:
   experimental_grid_layout:
     client: true
     default: true
-    hidden: false
