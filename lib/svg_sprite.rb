@@ -121,7 +121,6 @@ module SvgSprite
         fab-x-twitter
         fab-wikipedia-w
         fab-windows
-        face-smile
         far-bell
         far-bell-slash
         far-calendar-plus
