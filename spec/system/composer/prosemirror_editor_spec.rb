@@ -398,10 +398,11 @@ describe "Composer - ProseMirror editor", type: :system do
       expect(rich).to have_css("em", text: "This is italic")
     end
 
-    xit "supports Ctrl + K to create a link" do
+    it "supports Ctrl + K to create a link" do
       open_composer_and_toggle_rich_editor
       page.send_keys([PLATFORM_KEY_MODIFIER, "k"])
-      page.send_keys("https://www.example.com\t")
+      page.send_keys("https://www.example.com")
+      page.send_keys(:tab)
       page.send_keys("This is a link")
       page.send_keys(:enter)
 
