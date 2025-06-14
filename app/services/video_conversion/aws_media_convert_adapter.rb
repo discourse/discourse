@@ -21,7 +21,6 @@ module VideoConversion
         # Verify the domain contains our bucket
         unless domain&.include?(SiteSetting.s3_upload_bucket)
           raise Discourse::InvalidParameters.new(
-                  :upload_url,
                   "Upload URL domain does not contain expected bucket name: #{SiteSetting.s3_upload_bucket}",
                 )
         end
