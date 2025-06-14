@@ -188,6 +188,11 @@ export default RouteTemplate(
                               href={{invite.topic.url}}
                             >{{icon "file"}} {{invite.topic.title}}</a></p>
                         {{/if}}
+                        {{#if invite.description}}
+                          <div class="invite-description">
+                            {{invite.description}}
+                          </div>
+                        {{/if}}
                       </td>
 
                       <td class="invite-updated-at">

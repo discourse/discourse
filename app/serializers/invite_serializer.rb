@@ -4,6 +4,7 @@ class InviteSerializer < ApplicationSerializer
   attributes :id,
              :invite_key,
              :link,
+             :description,
              :email,
              :domain,
              :emailed,
