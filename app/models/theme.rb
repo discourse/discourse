@@ -87,6 +87,7 @@ class Theme < ActiveRecord::Base
   has_many :migration_fields,
            -> { where(target_id: Theme.targets[:migrations]) },
            class_name: "ThemeField"
+  has_many :theme_site_settings
 
   validate :component_validations
   validate :validate_theme_fields
@@ -120,6 +121,7 @@ class Theme < ActiveRecord::Base
           )
         end
 
+  scope :not_components, -> { where(component: false) }
   scope :not_system, -> { where("id > 0") }
   scope :system, -> { where("id < 0") }
 
@@ -313,6 +315,15 @@ class Theme < ActiveRecord::Base
     ColorScheme.hex_cache.clear
     CSP::Extension.clear_theme_extensions_cache!
     SvgSprite.expire_cache
+  end
+
+  def self.expire_site_setting_cache!
+    Theme
+      .not_components
+      .pluck(:id)
+      .each do |theme_id|
+        Discourse.cache.delete(SiteSettingExtension.theme_site_settings_cache_key(theme_id))
+      end
   end
 
   def self.clear_default!
@@ -1048,7 +1059,12 @@ class Theme < ActiveRecord::Base
   end
 
   def user_selectable_count
-    UserOption.where(theme_ids: [id]).count
+    UserOption.where(theme_ids: [self.id]).count
+  end
+
+  def themeable_site_settings
+    return [] if self.component?
+    ThemeableSiteSettingHelper.new(theme_id: self.id).resolved_themeable_site_settings
   end
 
   def find_or_create_owned_color_palette
