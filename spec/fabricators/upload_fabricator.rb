@@ -61,6 +61,9 @@ Fabricator(:video_upload, from: :upload) do
   thumbnail_width nil
   thumbnail_height nil
   extension "mp4"
+  url do |attrs|
+    sequence(:url) { |n| Discourse.store.get_path_for("original", n + 1, attrs[:sha1], ".mp4") }
+  end
 end
 
 Fabricator(:secure_upload, from: :upload) do

@@ -162,6 +162,64 @@ RSpec.describe FileStore::S3Store do
           )
         end
       end
+
+      context "when video conversion is enabled" do
+        let(:video_file) { file_from_fixtures("small.mp4", "media") }
+        let(:video_upload) do
+          Fabricate.build(:upload, original_filename: "small.mp4", extension: "mp4", id: 42)
+        end
+
+        before do
+          SiteSetting.video_conversion_enabled = true
+          # Default stub that returns false for any argument
+          allow(FileHelper).to receive(:is_supported_video?).and_return(false)
+          # Override for the specific video file case
+          allow(FileHelper).to receive(:is_supported_video?).with("small.mp4").and_return(true)
+          allow(store.s3_helper).to receive(:upload).and_return(["some/path.mp4", "\"etag\""])
+          # Setup Jobs as a spy
+          allow(Jobs).to receive(:enqueue)
+        end
+
+        it "enqueues a convert_video job for supported video files" do
+          store.store_upload(video_file, video_upload)
+
+          expect(Jobs).to have_received(:enqueue).with(:convert_video, upload_id: video_upload.id)
+        end
+
+        it "does not enqueue a convert_video job for unsupported video files" do
+          allow(FileHelper).to receive(:is_supported_video?).with("small.mp4").and_return(false)
+
+          store.store_upload(video_file, video_upload)
+
+          expect(Jobs).not_to have_received(:enqueue).with(
+            :convert_video,
+            upload_id: video_upload.id,
+          )
+        end
+
+        it "does not enqueue a convert_video job when video conversion is disabled" do
+          SiteSetting.video_conversion_enabled = false
+
+          store.store_upload(video_file, video_upload)
+
+          expect(Jobs).not_to have_received(:enqueue).with(
+            :convert_video,
+            upload_id: video_upload.id,
+          )
+        end
+
+        it "does not enqueue a convert_video job for non-video files" do
+          non_video_upload =
+            Fabricate.build(:upload, original_filename: "image.png", extension: "png", id: 43)
+
+          store.store_upload(uploaded_file, non_video_upload)
+
+          expect(Jobs).not_to have_received(:enqueue).with(
+            :convert_video,
+            upload_id: non_video_upload.id,
+          )
+        end
+      end
     end
 
     describe "#store_optimized_image" do
@@ -286,6 +344,9 @@ RSpec.describe FileStore::S3Store do
 
         upload.update!(url: "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/#{upload_key}")
 
+        # Stub the S3 helper to use our fake bucket
+        store.s3_helper.stubs(:s3_bucket).returns(bucket)
+
         expect(bucket.find_object(upload_key)).to be_present
         expect(bucket.find_object(tombstone_key)).to be_nil
 
@@ -307,6 +368,9 @@ RSpec.describe FileStore::S3Store do
           upload.update!(
             url: "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/#{upload_key}",
           )
+
+          # Stub the S3 helper to use our fake bucket
+          store.s3_helper.stubs(:s3_bucket).returns(bucket)
 
           expect(bucket.find_object(upload_key)).to be_present
           expect(bucket.find_object(tombstone_key)).to be_nil
@@ -336,6 +400,9 @@ RSpec.describe FileStore::S3Store do
         bucket = prepare_fake_s3(upload_key, upload)
         store_fake_s3_object(optimized_key, optimized_image)
 
+        # Stub the S3 helper to use our fake bucket
+        store.s3_helper.stubs(:s3_bucket).returns(bucket)
+
         expect(bucket.find_object(upload_key)).to be_present
         expect(bucket.find_object(optimized_key)).to be_present
         expect(bucket.find_object(tombstone_key)).to be_nil
@@ -358,6 +425,9 @@ RSpec.describe FileStore::S3Store do
         it "removes the file from s3 with the right paths" do
           bucket = prepare_fake_s3(upload_key, upload)
           store_fake_s3_object(optimized_key, optimized_image)
+
+          # Stub the S3 helper to use our fake bucket
+          store.s3_helper.stubs(:s3_bucket).returns(bucket)
 
           expect(bucket.find_object(upload_key)).to be_present
           expect(bucket.find_object(optimized_key)).to be_present
