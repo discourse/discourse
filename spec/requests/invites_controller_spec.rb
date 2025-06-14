@@ -826,9 +826,14 @@ RSpec.describe InvitesController do
       end
 
       it "does not resend invite email when updating other fields" do
-        put "/invites/#{invite.id}", params: { custom_message: "new message" }
+        put "/invites/#{invite.id}",
+            params: {
+              custom_message: "new message",
+              description: "new description",
+            }
         expect(response.status).to eq(200)
         expect(invite.reload.custom_message).to eq("new message")
+        expect(invite.reload.description).to eq("new description")
         expect(Jobs::InviteEmail.jobs.size).to eq(0)
       end
 

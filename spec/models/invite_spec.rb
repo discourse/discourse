@@ -13,6 +13,7 @@ RSpec.describe Invite do
     it { is_expected.to validate_presence_of :invited_by_id }
     it { is_expected.to rate_limit }
     it { is_expected.to validate_length_of(:custom_message).is_at_most(1000) }
+    it { is_expected.to validate_length_of(:description).is_at_most(100) }
 
     it "allows invites with valid emails" do
       invite = Fabricate.build(:invite, email: "test@example.com", invited_by: user)

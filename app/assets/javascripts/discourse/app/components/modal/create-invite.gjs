@@ -77,6 +77,7 @@ export default class CreateInvite extends Component {
   @cached
   get data() {
     const data = {
+      description: this.invite.description ?? "",
       restrictTo: this.invite.emailOrDomain ?? "",
       maxRedemptions:
         this.invite.max_redemptions_allowed ?? this.defaultRedemptionsAllowed,
@@ -196,6 +197,7 @@ export default class CreateInvite extends Component {
   @action
   async onFormSubmit(data) {
     const submitData = {
+      description: data.description,
       emailOrDomain: data.restrictTo?.trim(),
       group_ids: data.inviteToGroups,
       topic_id: data.inviteToTopic,
@@ -331,6 +333,14 @@ export default class CreateInvite extends Component {
             @onRegisterApi={{this.registerApi}}
             as |form|
           >
+            <form.Field
+              @name="description"
+              @title={{i18n "user.invited.invite.description"}}
+              @format="large"
+              as |field|
+            >
+              <field.Input />
+            </form.Field>
             <form.Field
               @name="restrictTo"
               @title={{i18n "user.invited.invite.restrict"}}

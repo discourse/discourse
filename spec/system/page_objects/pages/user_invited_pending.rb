@@ -25,6 +25,10 @@ module PageObjects
           end
         end
 
+        def has_description?(text)
+          invite_type_col.has_css?(".invite-description", text:)
+        end
+
         def email_type?(email)
           invite_type_col.has_text?(email) && invite_type_col.has_css?(".d-icon-envelope")
         end

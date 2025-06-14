@@ -34,6 +34,7 @@ class Invite < ActiveRecord::Base
   validates :email, email: true, allow_blank: true, length: { maximum: 500 }
   validates :custom_message, length: { maximum: 1000 }
   validates :domain, length: { maximum: 500 }
+  validates :description, length: { maximum: 100 }
   validate :ensure_max_redemptions_allowed
   validate :valid_redemption_count
   validate :valid_domain, if: :will_save_change_to_domain?
@@ -177,7 +178,14 @@ class Invite < ActiveRecord::Base
       )
     else
       create_args =
-        opts.slice(:email, :domain, :moderator, :custom_message, :max_redemptions_allowed)
+        opts.slice(
+          :email,
+          :description,
+          :domain,
+          :moderator,
+          :custom_message,
+          :max_redemptions_allowed,
+        )
       create_args[:invited_by] = invited_by
       create_args[:email] = email
       create_args[:emailed_status] = emailed_status
@@ -382,6 +390,7 @@ end
 #  expires_at              :datetime         not null
 #  email_token             :string
 #  domain                  :string
+#  description             :string
 #
 # Indexes
 #
