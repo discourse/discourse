@@ -109,7 +109,7 @@ class TagGroupsController < ApplicationController
 
   def tag_groups_params
     tag_group = params.delete(:tag_group)
-    params.merge!(tag_group.permit!) if tag_group
+    params.merge!(tag_group.permit(:name, :one_per_topic, tag_names: [], parent_tag_name: [], permissions: {})) if tag_group
 
     result =
       params.permit(:id, :name, :one_per_topic, tag_names: [], parent_tag_name: [], permissions: {})
