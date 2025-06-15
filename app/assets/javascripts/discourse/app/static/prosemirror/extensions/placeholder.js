@@ -33,6 +33,7 @@ const extension = {
       props: {
         decorations(state) {
           const { $head } = state.selection;
+          // console.log("Placeholder ext selection:", state.selection);
 
           if (
             state.doc.childCount === 1 &&
