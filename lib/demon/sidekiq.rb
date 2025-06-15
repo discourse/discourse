@@ -135,7 +135,12 @@ class Demon::Sidekiq < ::Demon::Base
 
     # Sidekiq not as high priority as web, in this environment it is forked so a web is very
     # likely running
-    Discourse::Utils.execute_command("renice", "-n", "5", "-p", Process.pid.to_s)
+    begin
+      Discourse::Utils.execute_command("renice", "-n", "5", "-p", Process.pid.to_s)
+    rescue => error
+      # Ignore errors here because this isn't critical
+      log("Failed to renice Sidekiq process: #{error.message}", level: :warn)
+    end
 
     cli.parse(options)
     load Rails.root + "config/initializers/100-sidekiq.rb"
