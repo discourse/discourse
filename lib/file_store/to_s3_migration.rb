@@ -237,12 +237,11 @@ module FileStore
         end
 
         options = {
-          acl: SiteSetting.s3_use_acls ? "public-read" : nil,
           bucket: bucket,
           content_type: MiniMime.lookup_by_filename(name)&.content_type,
           content_md5: content_md5,
           key: key,
-        }
+        }.merge(FileStore::S3Store.default_s3_options(secure: false))
 
         if !FileHelper.is_supported_image?(name)
           upload = Upload.find_by(url: "/#{file}")
@@ -254,7 +253,10 @@ module FileStore
             )
           end
 
-          options[:acl] = "private" if upload&.secure
+          if upload&.secure
+            options[:acl] = FileStore::S3Store.acl_option_value(secure: true)
+            options[:tagging] = FileStore::S3Store.visibility_tagging_option_value(secure: true)
+          end
         elsif !FileHelper.is_svg?(name)
           upload = Upload.find_by(url: "/#{file}")
           options[:content_disposition] = ActionDispatch::Http::ContentDisposition.format(

@@ -39,7 +39,7 @@ module FileStore
           filename: upload.original_filename,
           content_type: content_type,
           cache_locally: true,
-          private_acl: upload.secure?,
+          private: upload.secure?,
         )
       url
     end
@@ -54,7 +54,7 @@ module FileStore
           filename: upload.original_filename,
           content_type: content_type,
           cache_locally: false,
-          private_acl: upload.secure?,
+          private: upload.secure?,
           move_existing: true,
           existing_external_upload_key: existing_external_upload_key,
         )
@@ -65,7 +65,7 @@ module FileStore
       optimized_image.url = nil
       path = get_path_for_optimized_image(optimized_image)
       url, optimized_image.etag =
-        store_file(file, path, content_type: content_type, private_acl: secure)
+        store_file(file, path, content_type: content_type, private: secure)
       url
     end
 
@@ -80,6 +80,7 @@ module FileStore
     #   - content_type
     #   - cache_locally
     #   - move_existing
+    #   - private
     #   - existing_external_upload_key
     def store_file(file, path, opts = {})
       path = path.dup
@@ -87,12 +88,12 @@ module FileStore
       filename = opts[:filename].presence || File.basename(path)
       # cache file locally when needed
       cache_file(file, File.basename(path)) if opts[:cache_locally]
+
       options = {
-        acl: SiteSetting.s3_use_acls ? (opts[:private_acl] ? "private" : "public-read") : nil,
         cache_control: "max-age=31556952, public, immutable",
         content_type:
           opts[:content_type].presence || MiniMime.lookup_by_filename(filename)&.content_type,
-      }
+      }.merge(default_s3_options(secure: opts[:private]))
 
       # Only add a "content disposition: attachment" header for svgs
       # see https://github.com/discourse/discourse/commit/31e31ef44973dc4daaee2f010d71588ea5873b53.
@@ -130,9 +131,8 @@ module FileStore
       s3_helper.remove(path, true)
     end
 
-    def copy_file(url, source, destination)
-      return unless has_been_uploaded?(url)
-      s3_helper.copy(source, destination)
+    def copy_file(source:, destination:, secure:)
+      s3_helper.copy(source, destination, options: default_s3_options(secure:))
     end
 
     def has_been_uploaded?(url)
@@ -254,14 +254,12 @@ module FileStore
       metadata: {}
     )
       key = temporary_upload_path(file_name)
+
       s3_helper.presigned_request(
         key,
         method: :put_object,
         expires_in: expires_in,
-        opts: {
-          metadata: metadata,
-          acl: SiteSetting.s3_use_acls ? "private" : nil,
-        },
+        opts: { metadata: metadata }.merge(default_s3_options(secure: true)),
       )
     end
 
@@ -311,21 +309,21 @@ module FileStore
       end
     end
 
-    def update_upload_ACL(upload)
+    def update_upload_access_control(upload)
       key = get_upload_key(upload)
-      update_ACL(key, upload.secure?)
+      update_access_control(key, upload.secure?)
 
       upload.optimized_images.each do |optimized_image|
-        update_optimized_image_acl(optimized_image, secure: upload.secure)
+        update_optimized_image_access_control(optimized_image, secure: upload.secure)
       end
 
       true
     end
 
-    def update_optimized_image_acl(optimized_image, secure: false)
+    def update_optimized_image_access_control(optimized_image, secure: false)
       optimized_image_key = get_path_for_optimized_image(optimized_image)
       optimized_image_key.prepend(File.join(upload_path, "/")) if Rails.configuration.multisite
-      update_ACL(optimized_image_key, secure)
+      update_access_control(optimized_image_key, secure)
     end
 
     def download_file(upload, destination_path)
@@ -359,7 +357,55 @@ module FileStore
 
     def create_multipart(file_name, content_type, metadata: {})
       key = temporary_upload_path(file_name)
-      s3_helper.create_multipart(key, content_type, metadata: metadata)
+      s3_helper.create_multipart(key, content_type, metadata:, **default_s3_options(secure: true))
+    end
+
+    # The following are canned ACLs defined by AWS S3 and not some generic value which we decide to use.
+    # https://docs.aws.amazon.com/AmazonS3/latest/userguide/acl-overview.html
+    CANNED_ACL_PUBLIC_READ = "public-read"
+    CANNED_ACL_PRIVATE = "private"
+
+    def self.acl_option_value(secure:)
+      return if !SiteSetting.s3_use_acls
+      secure ? CANNED_ACL_PRIVATE : CANNED_ACL_PUBLIC_READ
+    end
+
+    def acl_option_value(secure:)
+      self.class.acl_option_value(secure:)
+    end
+
+    def self.visibility_tagging_option_value(secure:, encode_form: true)
+      return if !SiteSetting.s3_enable_access_control_tags
+
+      key = SiteSetting.s3_access_control_tag_key
+      return if key.blank?
+
+      option_value = {
+        key =>
+          (
+            if secure
+              SiteSetting.s3_access_control_tag_private_value
+            else
+              SiteSetting.s3_access_control_tag_public_value
+            end
+          ),
+      }
+
+      encode_form ? URI.encode_www_form(option_value) : option_value
+    end
+
+    def self.default_s3_options(secure:)
+      options = { acl: acl_option_value(secure:) }
+
+      if tagging_option_value = visibility_tagging_option_value(secure:)
+        options[:tagging] = tagging_option_value
+      end
+
+      options
+    end
+
+    def default_s3_options(secure:)
+      self.class.default_s3_options(secure:)
     end
 
     private
@@ -391,14 +437,17 @@ module FileStore
       end
     end
 
-    def update_ACL(key, secure)
-      begin
-        object_from_path(key).acl.put(
-          acl: SiteSetting.s3_use_acls ? (secure ? "private" : "public-read") : nil,
-        )
-      rescue Aws::S3::Errors::NoSuchKey
-        Rails.logger.warn("Could not update ACL on upload with key: '#{key}'. Upload is missing.")
+    def update_access_control(key, secure)
+      object = object_from_path(key).acl.put(acl: acl_option_value(secure:))
+
+      if tagging_option_value =
+           self.class.visibility_tagging_option_value(secure:, encode_form: false)
+        s3_helper.upsert_tag(key, tagging_option_value)
       end
+    rescue Aws::S3::Errors::NoSuchKey
+      Rails.logger.warn(
+        "Could not update access control on upload with key: '#{key}'. Upload is missing.",
+      )
     end
 
     def list_missing(model, prefix)
