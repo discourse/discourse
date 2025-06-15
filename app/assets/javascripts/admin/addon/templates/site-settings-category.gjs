@@ -4,9 +4,9 @@ import SiteSetting from "admin/components/site-setting";
 
 export default RouteTemplate(
   <template>
-    {{#if @controller.filteredContent}}
+    {{#if @controller.filteredSiteSettings}}
       <section class="form-horizontal settings">
-        {{#each @controller.filteredContent as |setting|}}
+        {{#each @controller.filteredSiteSettings as |setting|}}
           <SiteSetting @setting={{setting}} />
         {{/each}}
         {{#if @controller.category.hasMore}}
