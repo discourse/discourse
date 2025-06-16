@@ -117,7 +117,12 @@ module Jobs
                                         ELSE NULL END
                         )
                     )) :: JSON
-        WHERE data ILIKE '%' || :old_username || '%'
+            WHERE (
+              data::jsonb ->> 'original_username' = :old_username OR
+              data::jsonb ->> 'display_username' = :old_username OR
+              data::jsonb ->> 'username' = :old_username OR
+              data::jsonb ->> 'username2' = :old_username
+            )
         AND created_at >= NOW() - INTERVAL '1 month'
       SQL
     end
