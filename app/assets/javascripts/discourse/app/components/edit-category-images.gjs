@@ -140,11 +140,9 @@ export default class EditCategoryImages extends buildCategoryPanel("images") {
       />
     </section>
 
-    <section>
-      <PluginOutlet
-        @name="category-custom-images"
-        @outletArgs={{lazyHash category=this.category}}
-      />
-    </section>
+    <PluginOutlet
+      @name="category-custom-images"
+      @outletArgs={{lazyHash category=this.category}}
+    />
   </template>
 }
