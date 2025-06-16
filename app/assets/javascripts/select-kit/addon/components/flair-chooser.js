@@ -5,6 +5,7 @@ import {
   pluginApiIdentifiers,
   selectKitOptions,
 } from "select-kit/components/select-kit";
+import FlairRow from "./flair-row";
 import SelectedFlair from "./selected-flair";
 
 @classNames("flair-chooser")
@@ -14,7 +15,7 @@ import SelectedFlair from "./selected-flair";
 @pluginApiIdentifiers(["flair-chooser"])
 export default class FlairChooser extends ComboBoxComponent {
   modifyComponentForRow() {
-    return "flair-row";
+    return FlairRow;
   }
 
   @computed("value", "content.[]", "selectKit.noneItem")

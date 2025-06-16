@@ -27,6 +27,7 @@ import selectKitPropUtils from "select-kit/lib/select-kit-prop-utils";
 import ErrorsCollection from "./select-kit/errors-collection";
 import SelectKitCollection from "./select-kit/select-kit-collection";
 import SelectKitFilter from "./select-kit/select-kit-filter";
+import SelectKitRow from "./select-kit/select-kit-row";
 import SelectedChoice from "./selected-choice";
 import SelectedName from "./selected-name";
 
@@ -250,7 +251,7 @@ export default class SelectKit extends Component {
 
   _modifyComponentForRowWrapper(collection, item) {
     let component = this.modifyComponentForRow(collection, item);
-    return component || "select-kit/select-kit-row";
+    return component || SelectKitRow;
   }
 
   modifyComponentForRow() {}

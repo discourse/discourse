@@ -5,6 +5,7 @@ import { i18n } from "discourse-i18n";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
 import { selectKitOptions } from "select-kit/components/select-kit";
 import PeriodChooserHeader from "./period-chooser/period-chooser-header";
+import PeriodChooserRow from "./period-chooser/period-chooser-row";
 
 @classNames("period-chooser")
 @classNameBindings("showPeriods::hidden")
@@ -25,7 +26,7 @@ export default class PeriodChooser extends DropdownSelectBoxComponent {
   showPeriods = true;
 
   modifyComponentForRow() {
-    return "period-chooser/period-chooser-row";
+    return PeriodChooserRow;
   }
 
   @action

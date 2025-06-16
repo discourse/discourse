@@ -8,6 +8,7 @@ import {
   selectKitOptions,
 } from "select-kit/components/select-kit";
 import FutureDateInputSelectorHeader from "./future-date-input-selector/future-date-input-selector-header";
+import FutureDateInputSelectorRow from "./future-date-input-selector/future-date-input-selector-row";
 
 export const FORMAT = "YYYY-MM-DD HH:mmZ";
 
@@ -28,7 +29,7 @@ export default class FutureDateInputSelector extends ComboBoxComponent {
   }
 
   modifyComponentForRow() {
-    return "future-date-input-selector/future-date-input-selector-row";
+    return FutureDateInputSelectorRow;
   }
 
   @action

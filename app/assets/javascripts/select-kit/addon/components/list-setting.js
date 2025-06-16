@@ -8,6 +8,7 @@ import {
   pluginApiIdentifiers,
   selectKitOptions,
 } from "select-kit/components/select-kit";
+import CreateColorRow from "./create-color-row";
 import SelectedChoice from "./selected-choice";
 import SelectedChoiceColor from "./selected-choice-color";
 
@@ -25,7 +26,7 @@ export default class ListSetting extends MultiSelectComponent {
 
   modifyComponentForRow(collection) {
     if (collection === MAIN_COLLECTION && this.settingName?.includes("color")) {
-      return "create-color-row";
+      return CreateColorRow;
     }
   }
 
