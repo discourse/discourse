@@ -26,9 +26,7 @@ export default class AdminSiteSettingsRoute extends DiscourseRoute {
   }
 
   async model(params) {
-    if (!this._siteSettings) {
-      this._siteSettings = await SiteSetting.findAll();
-    }
+    this._siteSettings ??= await SiteSetting.findAll();
 
     return {
       filteredSettings: this.filterSettings(
