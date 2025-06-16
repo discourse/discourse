@@ -247,32 +247,6 @@ RSpec.describe SiteSettings::Validations do
       end
     end
 
-    describe "#validate_s3_use_acls" do
-      context "when the new value is true" do
-        it "is ok" do
-          expect { validations.validate_s3_use_acls("t") }.not_to raise_error
-        end
-      end
-
-      context "when the new value is false" do
-        it "is ok" do
-          expect { validations.validate_s3_use_acls("f") }.not_to raise_error
-        end
-
-        context "if secure uploads is enabled" do
-          let(:error_message) { I18n.t("errors.site_settings.s3_use_acls_requirements") }
-          before { enable_secure_uploads }
-
-          it "is not ok" do
-            expect { validations.validate_s3_use_acls("f") }.to raise_error(
-              Discourse::InvalidParameters,
-              error_message,
-            )
-          end
-        end
-      end
-    end
-
     describe "#validate_secure_uploads" do
       let(:error_message) { I18n.t("errors.site_settings.secure_uploads_requirements") }
 
