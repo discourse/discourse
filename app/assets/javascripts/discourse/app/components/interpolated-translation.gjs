@@ -205,8 +205,6 @@ export default class InterpolatedTranslation extends Component {
  * @param {String} name - The name of the placeholder this content should fill
  */
 class Placeholder extends Component {
-  _elements;
-
   constructor() {
     super(...arguments);
     this.args.markAsRendered(this.args.name);
