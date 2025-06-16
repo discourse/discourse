@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { get } from "@ember/helper";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import curryComponent from "ember-curry-component";
@@ -12,14 +11,14 @@ import I18n, { i18n, I18nMissingInterpolationArgument } from "discourse-i18n";
  * This component allows for complex i18n scenarios where you need to embed interactive
  * components within translated text.
  *
- * If you don't require this functionality, use the standard i18n() function.
+ * If you don't require this specific functionality, use the standard i18n() function.
  *
- * @component Translation
+ * @component InterpolatedTranslation
  *
  * @template Usage example:
  * ```gjs
  * // Translation key: "some.translation.key" = "Welcome, %{username}! The date is %{shortdate}!"
- * <Translation
+ * <InterpolatedTranslation
  *   @key="some.translation.key"
  *   @options={{hash shortdate=shortDate}}
  *   as |Placeholder|
@@ -27,13 +26,28 @@ import I18n, { i18n, I18nMissingInterpolationArgument } from "discourse-i18n";
  *   <Placeholder @name="username">
  *     <UserLink @user={{user}}>{{user.username}}</UserLink>
  *   </Placeholder>
- * </Translation>
+ * </InterpolatedTranslation>
  * ```
  *
  * @param {String} key - The i18n translation key to use
  * @param {Object} [options] - Hash of options to pass to the i18n function for string interpolation
  */
-export default class Translation extends Component {
+export default class InterpolatedTranslation extends Component {
+  /**
+   * Throws errors in dev, or logs them to the browser console in production.
+   *
+   * @param {String} The error message.
+   * @param {Class} The type of Error class to throw.
+   **/
+  static log(message, errorClass = Error) {
+    if (isProduction()) {
+      // eslint-disable-next-line no-console
+      console.error(message);
+    } else {
+      throw new errorClass(message);
+    }
+  }
+
   /**
    * Processes the translation string and returns all of the rendering data.
    *
@@ -71,17 +85,6 @@ export default class Translation extends Component {
       ...Object.fromEntries(placeholderKeys),
       ...optionsArg,
     });
-
-    // Bail early if there were no placeholders we need to handle.
-    if (placeholderAppearance.size === 0) {
-      return {
-        appearance: placeholderAppearance,
-        elements: placeholderElements,
-        keys: placeholderKeys,
-        rendered: [],
-        parts: [text],
-      };
-    }
 
     const parts = [];
     let currentIndex = 0;
@@ -157,35 +160,10 @@ export default class Translation extends Component {
     }
 
     if (missing.length > 0) {
-      this.log(
+      InterpolatedTranslation.log(
         `Translation error for key '${this.args.key}': ${missing.join(", ")}`,
         I18nMissingInterpolationArgument
       );
-    }
-
-    // Confirm that there's a real translation string for the given key.
-    const message = I18n.findTranslationWithFallback(this.args.key, {
-      ...(this.args.options || {}),
-    });
-    if ((info.appearance.size === 0 || info.rendered.length === 0) && message) {
-      this.log(
-        "The <Translation> component shouldn't be used for translations that don't insert components. Use `i18n()` instead."
-      );
-    }
-  }
-
-  /**
-   * Throws errors in dev, or logs them to the browser console in production.
-   *
-   * @param {String} The error message.
-   * @param {Class} The type of Error class to throw.
-   **/
-  log(message, errorClass = Error) {
-    if (isProduction()) {
-      // eslint-disable-next-line no-console
-      console.error(message);
-    } else {
-      throw new errorClass(message);
     }
   }
 
@@ -198,6 +176,12 @@ export default class Translation extends Component {
       {{yield (this.curriedPlaceholderComponent info.elements info.rendered)}}
       {{this.checkPlaceholders info}}
     {{/let}}
+
+    {{#unless (has-block)}}
+      {{InterpolatedTranslation.log
+        "The <InterpolatedTranslation> component shouldn't be used for translations that don't insert components. Use `i18n()` instead."
+      }}
+    {{/unless}}
   </template>
 }
 
@@ -221,25 +205,36 @@ export default class Translation extends Component {
  * @param {String} name - The name of the placeholder this content should fill
  */
 class Placeholder extends Component {
-  /**
-   * Since {{get}} doesn't work with Maps, we need to convert the
-   * passed Map of elements to an Object.
-   *
-   * @type {Object}
-   **/
   _elements;
 
   constructor() {
     super(...arguments);
     this.args.markAsRendered(this.args.name);
-    this._elements = Object.fromEntries(this.args.elements);
+  }
+
+  /**
+   * Since {{get}} doesn't work with Maps, we need a helper to handle it.
+   *
+   * @param {Map<any,any>} map The map we're retrieving from.
+   * @param {any} key The key of the value we're retrieving.
+   *
+   * @returns {any|undefined} The value found, or undefined if there was no matching entry.
+   **/
+  getFromMap(map, key) {
+    return map.get(key);
   }
 
   <template>
-    {{#each (get this._elements @name) as |element|}}
+    {{#each (this.getFromMap @elements @name) as |element|}}
       {{#in-element element}}
         {{yield}}
       {{/in-element}}
     {{/each}}
+
+    {{#unless (has-block)}}
+      {{InterpolatedTranslation.log
+        "The <InterpolatedTranslation> component shouldn't be used for translations that don't insert components. Use `i18n()` instead."
+      }}
+    {{/unless}}
   </template>
 }

@@ -7,12 +7,12 @@ import {
   setupOnerror,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import Translation from "discourse/components/translation";
+import InterpolatedTranslation from "discourse/components/interpolated-translation";
 import UserLink from "discourse/components/user-link";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import I18n, { I18nMissingInterpolationArgument } from "discourse-i18n";
 
-module("Integration | Component | Translation", function (hooks) {
+module("Integration | Component | InterpolatedTranslation", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
@@ -48,11 +48,11 @@ module("Integration | Component | Translation", function (hooks) {
   test("renders translation with component placeholder", async function (assert) {
     await render(
       <template>
-        <Translation @key="hello" as |Placeholder|>
+        <InterpolatedTranslation @key="hello" as |Placeholder|>
           <Placeholder @name="username">
             <UserLink @username="pento">pento</UserLink>
           </Placeholder>
-        </Translation>
+        </InterpolatedTranslation>
       </template>
     );
 
@@ -66,11 +66,11 @@ module("Integration | Component | Translation", function (hooks) {
   test("renders translation with repeated component placeholder", async function (assert) {
     await render(
       <template>
-        <Translation @key="repeated_placeholders" as |Placeholder|>
+        <InterpolatedTranslation @key="repeated_placeholders" as |Placeholder|>
           <Placeholder @name="username">
             <UserLink @username="pento">pento</UserLink>
           </Placeholder>
-        </Translation>
+        </InterpolatedTranslation>
       </template>
     );
 
@@ -84,13 +84,15 @@ module("Integration | Component | Translation", function (hooks) {
     setupOnerror((error) => {
       assert.strictEqual(
         error.message,
-        "The <Translation> component shouldn't be used for translations that don't insert components. Use `i18n()` instead."
+        "The <InterpolatedTranslation> component shouldn't be used for translations that don't insert components. Use `i18n()` instead."
       );
 
       errors++;
     });
 
-    await render(<template><Translation @key="simple_text" /></template>);
+    await render(
+      <template><InterpolatedTranslation @key="simple_text" /></template>
+    );
 
     assert.strictEqual(errors, 1);
     resetOnerror();
@@ -102,7 +104,7 @@ module("Integration | Component | Translation", function (hooks) {
     setupOnerror((error) => {
       assert.strictEqual(
         error.message,
-        "The <Translation> component shouldn't be used for translations that don't insert components. Use `i18n()` instead."
+        "The <InterpolatedTranslation> component shouldn't be used for translations that don't insert components. Use `i18n()` instead."
       );
 
       errors++;
@@ -110,7 +112,7 @@ module("Integration | Component | Translation", function (hooks) {
 
     await render(
       <template>
-        <Translation
+        <InterpolatedTranslation
           @key="with_options"
           @options={{hash name="John" site="Discourse"}}
         />
@@ -124,7 +126,7 @@ module("Integration | Component | Translation", function (hooks) {
   test("renders translation with both string options and component placeholders", async function (assert) {
     await render(
       <template>
-        <Translation
+        <InterpolatedTranslation
           @key="mixed_placeholders"
           @options={{hash count=5}}
           as |Placeholder|
@@ -132,7 +134,7 @@ module("Integration | Component | Translation", function (hooks) {
           <Placeholder @name="username">
             <UserLink @username="alice">alice</UserLink>
           </Placeholder>
-        </Translation>
+        </InterpolatedTranslation>
       </template>
     );
 
@@ -143,7 +145,7 @@ module("Integration | Component | Translation", function (hooks) {
   test("renders translation with multiple component placeholders", async function (assert) {
     await render(
       <template>
-        <Translation
+        <InterpolatedTranslation
           @key="multiple_placeholders"
           @options={{hash time="2:30 PM"}}
           as |Placeholder|
@@ -154,7 +156,7 @@ module("Integration | Component | Translation", function (hooks) {
           <Placeholder @name="topic">
             <strong>Important Topic</strong>
           </Placeholder>
-        </Translation>
+        </InterpolatedTranslation>
       </template>
     );
 
@@ -164,10 +166,26 @@ module("Integration | Component | Translation", function (hooks) {
   });
 
   test("handles missing translation key gracefully", async function (assert) {
-    await render(<template><Translation @key="nonexistent_key" /></template>);
+    let errors = 0;
+
+    setupOnerror((error) => {
+      assert.strictEqual(
+        error.message,
+        "The <InterpolatedTranslation> component shouldn't be used for translations that don't insert components. Use `i18n()` instead."
+      );
+
+      errors++;
+    });
+
+    await render(
+      <template><InterpolatedTranslation @key="nonexistent_key" /></template>
+    );
 
     // When a translation key is missing, i18n returns the key itself
     assert.dom().hasText("[fr.nonexistent_key]");
+
+    assert.strictEqual(errors, 1);
+    resetOnerror();
   });
 
   test("handles placeholder not provided in template", async function (assert) {
@@ -183,13 +201,36 @@ module("Integration | Component | Translation", function (hooks) {
     });
 
     // Translation has %{username} placeholder but no placeholder component is provided
-    await render(<template><Translation @key="hello" /></template>);
+    await render(<template><InterpolatedTranslation @key="hello" /></template>);
 
     assert.strictEqual(errors, 1);
     resetOnerror();
 
     // Should render the placeholder string since no component was provided
     assert.dom().includesText("Bonjour, [missing %{username} placeholder]");
+  });
+
+  test("handles empty placeholder provided in template", async function (assert) {
+    let errors = 0;
+    setupOnerror((error) => {
+      assert.true(error instanceof Error);
+      assert.strictEqual(
+        error.message,
+        "The <InterpolatedTranslation> component shouldn't be used for translations that don't insert components. Use `i18n()` instead."
+      );
+
+      errors++;
+    });
+
+    await render(
+      <template>
+        <InterpolatedTranslation @key="hello" as |Placeholder|>
+          <Placeholder @name="username" /></InterpolatedTranslation>
+      </template>
+    );
+
+    assert.strictEqual(errors, 1);
+    resetOnerror();
   });
 
   test("correctly re-renders when args change", async function (assert) {
@@ -200,7 +241,7 @@ module("Integration | Component | Translation", function (hooks) {
 
     await render(
       <template>
-        <Translation
+        <InterpolatedTranslation
           @key={{state.key}}
           @options={{state.options}}
           as |Placeholder|
@@ -208,28 +249,17 @@ module("Integration | Component | Translation", function (hooks) {
           <Placeholder @name="username">
             <UserLink @username="pento">pento</UserLink>
           </Placeholder>
-        </Translation>
+        </InterpolatedTranslation>
       </template>
     );
 
     assert.dom().hasText("Bonjour, pento");
 
-    let errors = 0;
-
-    setupOnerror((error) => {
-      assert.strictEqual(
-        error.message,
-        "The <Translation> component shouldn't be used for translations that don't insert components. Use `i18n()` instead."
-      );
-      errors++;
-    });
-
-    state.key = "simple_text";
+    state.options = { username: "admin" };
     await settled();
 
-    assert.dom().hasText("Simple text without placeholders");
-
-    assert.strictEqual(errors, 1);
-    resetOnerror();
+    assert.dom().hasText("Bonjour, admin");
+    assert.dom("a[data-user-card='pento']").doesNotExist();
+    assert.dom("a[data-user-card='admin']").doesNotExist();
   });
 });
