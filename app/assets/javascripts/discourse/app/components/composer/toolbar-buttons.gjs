@@ -4,9 +4,10 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { eq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
+import ToolbarPopupMenuOptions from "discourse/components/toolbar-popup-menu";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
-import ToolbarPopupMenuOptions from "select-kit/components/toolbar-popup-menu-options";
+// import ToolbarPopupMenuOptions from "select-kit/components/toolbar-popup-menu-options";
 
 export default class ComposerToolbarButtons extends Component {
   @action
@@ -76,6 +77,8 @@ export default class ComposerToolbarButtons extends Component {
                   {{/if}}
                 </a>
               {{else if button.popupMenu}}
+
+                {{log button}}
                 <ToolbarPopupMenuOptions
                   @content={{(button.popupMenu.options)}}
                   @onChange={{button.popupMenu.action}}
@@ -84,6 +87,7 @@ export default class ComposerToolbarButtons extends Component {
                   @onKeydown={{this.rovingButtonBar}}
                   @options={{hash icon=buttonIcon focusAfterOnChange=false}}
                   class={{button.className}}
+                  @id={{button.id}}
                 />
               {{else}}
                 <DButton
