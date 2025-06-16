@@ -3421,6 +3421,11 @@ zh_CN:
           edit: "编辑"
           delete: "删除"
         add: "添加新翻译"
+        view:
+          other: "查看 %{count} 种已翻译的语言"
+        modal:
+          title: "帖子的翻译"
+          confirm_delete: "您确定要删除“%{languageCode}”的翻译吗？"
         success: "翻译已成功更新"
       errors:
         create: "抱歉，创建您的帖子时出错。请重试。"
@@ -3659,6 +3664,7 @@ zh_CN:
       background_image_dark: "深色类别背景图片"
       style: "样式"
       background_color: "颜色"
+      foreground_color: "文本颜色"
       styles:
         type: "样式"
         icon: "图标"
@@ -4607,6 +4613,7 @@ zh_CN:
           new: "所有新话题"
           unread: "所有未读话题"
           unseen: "所有未见话题"
+          hot: "所有热门话题"
           posted: "您发过帖子的所有话题"
           bookmarks: "您已添加书签的所有话题"
           default: "所有 %{filter} 话题"
@@ -4619,6 +4626,8 @@ zh_CN:
           bookmarks: "%{category} 中您已添加书签的话题"
           default: "%{category}中的%{filter}话题"
         single_tag:
+          latest: "%{tag} 中的最新话题"
+          new: "%{tag} 中的新话题"
           bookmarks: "已在您添加的书签中，标记为 %{tag} 的主题"
           default: "%{filter} 主题已标记 %{tag}"
         multi_tag:
@@ -4712,6 +4721,7 @@ zh_CN:
           header_description: "配置用户登录与身份验证方式、秘密与密钥、OAuth2 提供商等。"
         logo:
           title: "徽标"
+          header_description: "配置整个站点使用的徽标和图标"
           form:
             saved: "徽标设置已保存。"
             logo:
@@ -4776,6 +4786,7 @@ zh_CN:
               help_text: "建议尺寸至少为 280 x 150 像素。不要使用 SVG 图像。"
         fonts:
           title: "字体"
+          header_description: "配置整个站点使用的字体，包括基本字体、标题字体和默认文本大小"
           form:
             more_fonts: "更多字体"
             fewer_fonts: "更少的字体"
@@ -5646,6 +5657,7 @@ zh_CN:
             themes_intro: "安装新主题以开始，或使用这些资源从头开始创建自己的主题。"
             new_theme: "新主题"
             back: "返回主题"
+            install: "安装"
           components:
             title: "组件"
             description: "自定义更改论坛设计的表面元素，或添加额外的前端功能"
@@ -5709,7 +5721,9 @@ zh_CN:
           unsaved_changes: "您有未保存的更改"
           copy_of: "%{name}的副本"
           copy_created: '已创建“%{name}”的新副本'
-          illegal_character_in_color: "颜色只应包含十六进制字符"
+          illegal_character_in_color: "颜色必须只由十六进制字符组成"
+          invalid_color_length: "颜色必须为 #rrggbb 或 #rgb 格式"
+          delete_confirm: "确定要删除此调色板吗？"
       plugins:
         title: "插件"
         name: "名称"
@@ -6001,6 +6015,14 @@ zh_CN:
           remote_theme_edits: "如果您想要编辑此主题，您必须<a href='%{repoURL}' target='_blank'>在其仓库上提交变更</a>"
           repo_unreachable: "无法联系此主题的 Git 仓库。错误消息："
           imported_from_archive: "此主题是从一个 .zip 文件导入的"
+          settings: "设置"
+          colors: "颜色"
+          unsaved_colors:
+            other: "你有 %{count} 个未保存的颜色"
+          unsaved_colors_leave_route_confirmation: "你尚未保存调色板更改。确定要离开吗？"
+          save_colors: "保存颜色"
+          discard_colors: "舍弃"
+          colors_title: "颜色"
           scss:
             text: "CSS"
             title: "支持 SCSS 语法的自定义 CSS 规则"
@@ -6076,6 +6098,7 @@ zh_CN:
           about: "修改您的主题使用的颜色。创建一个新的调色板以开始。"
           new_name: "新调色板"
           copy_name_prefix: "副本 -"
+          delete_confirm: "确定要删除此调色板吗？"
           undo: "撤消"
           undo_title: "撤消自上次保存以来对此颜色所做的变更。"
           revert: "还原"
@@ -6092,30 +6115,43 @@ zh_CN:
             name: "次要"
           tertiary:
             name: "第三"
+            description: "强调色（链接、按钮、徽章）"
           quaternary:
             name: "第四"
+            description: "可选主题强调色"
           header_background:
             name: "页眉背景"
+            description: "页眉背景"
           header_primary:
             name: "页眉主要"
+            description: "页眉文本和图标"
           highlight:
             name: "突出显示"
+            description: "突出显示的帖子或话题"
           highlight-high:
             name: "突出显示-高"
+            description: "强突出显示"
           highlight-medium:
             name: "突出显示-中"
+            description: "中等突出显示"
           highlight-low:
             name: "突出显示-低"
+            description: "轻微突出显示"
           danger:
             name: "危险"
+            description: "错误和删除操作"
           success:
             name: "成功"
+            description: "成功的操作"
           love:
             name: "爱"
+            description: "点赞按钮"
           selected:
             name: "已选择"
+            description: "活跃或选定的项目"
           hover:
             name: "悬停"
+            description: "悬停或聚焦背景"
           editor:
             light: "亮"
             dark: "深色"

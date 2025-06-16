@@ -377,6 +377,13 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
         });
     }
 
+    if (siteSettings.use_overhauled_theme_color_palette) {
+      navMap
+        .find((section) => section.name === "appearance")
+        .links.find((link) => link.name === "admin_color_palettes").route =
+        "adminConfig.colorPalettes";
+    }
+
     navMap.forEach((section) =>
       section.links.forEach((link) => {
         if (link.keywords) {

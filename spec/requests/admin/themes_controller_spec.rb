@@ -433,7 +433,7 @@ RSpec.describe Admin::ThemesController do
 
       it "correctly returns themes" do
         ColorScheme.destroy_all
-        Theme.destroy_all
+        Theme.not_system.destroy_all
 
         theme = Fabricate(:theme)
         theme.set_field(target: :common, name: :scss, value: ".body{color: black;}")
@@ -623,6 +623,16 @@ RSpec.describe Admin::ThemesController do
         expect(SiteSetting.default_theme_id).to eq(theme.id)
       end
 
+      it "can set system theme as default" do
+        theme.update_columns(id: -10)
+        SiteSetting.default_theme_id = -1
+
+        put "/admin/themes/#{theme.id}.json", params: { id: theme.id, theme: { default: true } }
+
+        expect(response.status).to eq(200)
+        expect(SiteSetting.default_theme_id).to eq(theme.id)
+      end
+
       it "can unset default theme" do
         SiteSetting.default_theme_id = theme.id
 
@@ -687,6 +697,38 @@ RSpec.describe Admin::ThemesController do
         expect(json["theme"]["theme_fields"].length).to eq(2)
         expect(json["theme"]["child_themes"].length).to eq(1)
         expect(UserHistory.where(action: UserHistory.actions[:change_theme]).count).to eq(1)
+      end
+
+      it "only allows to update certain fields for system themes" do
+        theme.update_columns(id: -10)
+        child_theme = Fabricate(:theme, component: true)
+        put "/admin/themes/#{theme.id}.json",
+            params: {
+              theme: {
+                child_theme_ids: [child_theme.id],
+                color_scheme_id: 1,
+                user_selectable: true,
+              },
+            }
+        expect(response.status).to eq(200)
+        expect(theme.reload.user_selectable).to be true
+        expect(theme.child_theme_ids).to eq([child_theme.id])
+        expect(theme.color_scheme_id).to eq(1)
+
+        put "/admin/themes/#{theme.id}.json",
+            params: {
+              theme: {
+                child_theme_ids: [child_theme.id],
+                name: "my test name",
+                user_selectable: false,
+                theme_fields: [
+                  { name: "scss", target: "common", value: "" },
+                  { name: "scss", target: "desktop", value: "body{color: blue;}" },
+                ],
+              },
+            }
+        expect(response.status).to eq(403)
+        expect(theme.reload.user_selectable).to be true
       end
 
       it "prevents theme update when using ember css selectors" do
@@ -1379,6 +1421,14 @@ RSpec.describe Admin::ThemesController do
       end.to change { Theme.count }.by(-2)
     end
 
+    it "does not destroy if any theme is system" do
+      theme.update_columns(id: -10)
+      expect do
+        delete "/admin/themes/bulk_destroy.json", params: { theme_ids: theme_ids }
+      end.to change { Theme.count }.by(-1)
+      expect { theme_2.reload }.to raise_exception(ActiveRecord::RecordNotFound)
+    end
+
     it "logs the theme destroy action for each theme" do
       StaffActionLogger.any_instance.expects(:log_theme_destroy).twice
       delete "/admin/themes/bulk_destroy.json", params: { theme_ids: theme_ids }
@@ -1581,6 +1631,63 @@ RSpec.describe Admin::ThemesController do
 
         expect(response.status).to eq(404)
       end
+    end
+
+    context "when system theme" do
+      before { theme.update_columns(id: -10) }
+
+      it "returns invalid access" do
+        put "/admin/themes/#{theme.id}/change-colors.json",
+            params: {
+              colors: [{ name: "primary", hex: "ff0000", dark_hex: "0000ff" }],
+            }
+
+        expect(response.status).to eq(403)
+      end
+    end
+  end
+
+  describe "#show" do
+    let(:theme) { Fabricate(:theme) }
+
+    it "allows base_url in setting description" do
+      set_subfolder "/community"
+
+      theme.set_field(target: :settings, name: "yaml", value: <<~YAML)
+        my_setting:
+          default: true
+          description: This is a link to %{base_path}/example
+      YAML
+      theme.save!
+
+      sign_in admin
+
+      get "/admin/themes/#{theme.id}"
+      expect(response.status).to eq(200)
+
+      expect(response.parsed_body.dig("theme", "settings", 0, "description")).to eq(
+        "This is a link to /community/example",
+      )
+    end
+
+    it "skips interpolation for unknown variables" do
+      set_subfolder "/community"
+
+      theme.set_field(target: :settings, name: "yaml", value: <<~YAML)
+        my_setting:
+          default: true
+          description: Description %{some_mistake}
+      YAML
+      theme.save!
+
+      sign_in admin
+
+      get "/admin/themes/#{theme.id}"
+      expect(response.status).to eq(200)
+
+      expect(response.parsed_body.dig("theme", "settings", 0, "description")).to eq(
+        "Description %{some_mistake}",
+      )
     end
   end
 end

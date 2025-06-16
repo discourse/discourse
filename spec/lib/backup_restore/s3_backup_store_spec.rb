@@ -188,4 +188,100 @@ RSpec.describe BackupRestore::S3BackupStore do
   def file_prefix(db_name, multisite)
     multisite ? "\\/#{db_name}" : ""
   end
+
+  describe "#create_multipart" do
+    it "should set the ACL context when `s3_use_acls` site setting is enabled" do
+      SiteSetting.s3_use_acls = true
+      response = store.create_multipart("test_file.tar.gz", "application/gzip", metadata: {})
+
+      create_multipart_upload_request =
+        @s3_client.api_requests.find do |api_request|
+          api_request[:operation_name] == :create_multipart_upload
+        end
+
+      expect(create_multipart_upload_request[:context].params[:acl]).to eq(
+        FileStore::S3Store::CANNED_ACL_PRIVATE,
+      )
+    end
+
+    it "should not set the ACL context when `s3_use_acls` site setting is disabled" do
+      SiteSetting.s3_use_acls = false
+      store.create_multipart("test_file.tar.gz", "application/gzip", metadata: {})
+
+      create_multipart_upload_request =
+        @s3_client.api_requests.find do |api_request|
+          api_request[:operation_name] == :create_multipart_upload
+        end
+
+      expect(create_multipart_upload_request[:context].params[:acl]).to eq(nil)
+    end
+
+    it "should set the tagging context when `s3_enable_access_control_tags` site setting is enabled" do
+      SiteSetting.s3_enable_access_control_tags = true
+      store.create_multipart("test_file.tar.gz", "application/gzip", metadata: {})
+
+      create_multipart_upload_request =
+        @s3_client.api_requests.find do |api_request|
+          api_request[:operation_name] == :create_multipart_upload
+        end
+
+      expect(
+        URI.decode_www_form_component(create_multipart_upload_request[:context].params[:tagging]),
+      ).to eq(
+        "#{SiteSetting.s3_access_control_tag_key}=#{SiteSetting.s3_access_control_tag_private_value}",
+      )
+    end
+  end
+
+  describe "#move_existing_stored_upload" do
+    before { create_backups }
+    after { remove_backups }
+
+    it "should set the ACL context when `s3_use_acls` site setting is enabled" do
+      store.move_existing_stored_upload(
+        existing_external_upload_key: "default/b.tar.gz",
+        original_filename: "b.tar.gz",
+        content_type: "application/gzip",
+      )
+
+      copy_object_request =
+        @s3_client.api_requests.find { |api_request| api_request[:operation_name] == :copy_object }
+
+      expect(copy_object_request[:context].params[:acl]).to eq(
+        FileStore::S3Store::CANNED_ACL_PRIVATE,
+      )
+    end
+
+    it "should not set the ACL context when `s3_use_acls` site setting is disabled" do
+      SiteSetting.s3_use_acls = false
+
+      store.move_existing_stored_upload(
+        existing_external_upload_key: "default/b.tar.gz",
+        original_filename: "b.tar.gz",
+        content_type: "application/gzip",
+      )
+
+      copy_object_request =
+        @s3_client.api_requests.find { |api_request| api_request[:operation_name] == :copy_object }
+
+      expect(copy_object_request[:context].params[:acl]).to eq(nil)
+    end
+
+    it "should set the tagging context when `s3_enable_access_control_tags` site setting is enabled" do
+      SiteSetting.s3_enable_access_control_tags = true
+
+      store.move_existing_stored_upload(
+        existing_external_upload_key: "default/b.tar.gz",
+        original_filename: "b.tar.gz",
+        content_type: "application/gzip",
+      )
+
+      copy_object_request =
+        @s3_client.api_requests.find { |api_request| api_request[:operation_name] == :copy_object }
+
+      expect(URI.decode_www_form_component(copy_object_request[:context].params[:tagging])).to eq(
+        "#{SiteSetting.s3_access_control_tag_key}=#{SiteSetting.s3_access_control_tag_private_value}",
+      )
+    end
+  end
 end

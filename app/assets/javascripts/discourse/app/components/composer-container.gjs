@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { Input } from "@ember/component";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
+import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
 import { and, or } from "truth-helpers";
 import ComposerActionTitle from "discourse/components/composer-action-title";
@@ -25,6 +26,9 @@ import htmlClass from "discourse/helpers/html-class";
 import htmlSafe from "discourse/helpers/html-safe";
 import lazyHash from "discourse/helpers/lazy-hash";
 import loadingSpinner from "discourse/helpers/loading-spinner";
+import discourseDebounce from "discourse/lib/debounce";
+import { bind } from "discourse/lib/decorators";
+import grippieDragResize from "discourse/modifiers/grippie-drag-resize";
 import { i18n } from "discourse-i18n";
 import CategoryChooser from "select-kit/components/category-chooser";
 import MiniTagChooser from "select-kit/components/mini-tag-chooser";
@@ -32,6 +36,51 @@ import MiniTagChooser from "select-kit/components/mini-tag-chooser";
 export default class ComposerContainer extends Component {
   @service composer;
   @service site;
+  @service appEvents;
+  @service keyValueStore;
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    cancel(this.composerResizeDebounceHandler);
+  }
+
+  @bind
+  onResizeDragStart() {
+    this.appEvents.trigger("composer:resize-started");
+  }
+
+  @bind
+  onResizeDrag(size) {
+    this.appEvents.trigger("composer:div-resizing");
+    this.composer.set("composerHeight", `${size}px`);
+    this.keyValueStore.set({
+      key: "composerHeight",
+      value: this.composer.composerHeight,
+    });
+    document.documentElement.style.setProperty(
+      "--composer-height",
+      size ? `${size}px` : ""
+    );
+
+    this._triggerComposerResized();
+  }
+
+  @bind
+  onResizeDragEnd() {
+    this.appEvents.trigger("composer:resize-ended");
+  }
+
+  _triggerComposerResized() {
+    this.composerResizeDebounceHandler = discourseDebounce(
+      this,
+      this.composerResized,
+      300
+    );
+  }
+
+  composerResized() {
+    this.appEvents.trigger("composer:resized");
+  }
 
   <template>
     <ComposerBody
@@ -42,7 +91,18 @@ export default class ComposerContainer extends Component {
       @cancelled={{this.composer.cancelled}}
       @save={{this.composer.saveAction}}
     >
-      <div class="grippie"></div>
+      <div
+        class="grippie"
+        {{grippieDragResize
+          "#reply-control"
+          "top"
+          (hash
+            onResizeStart=this.onResizeDragStart
+            onThrottledDrag=this.onResizeDrag
+            onResizeEnd=this.onResizeDragEnd
+          )
+        }}
+      ></div>
       {{#if this.composer.visible}}
         {{htmlClass (if this.composer.isPreviewVisible "composer-has-preview")}}
 

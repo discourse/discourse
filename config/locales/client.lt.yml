@@ -4110,6 +4110,7 @@ lt:
           install: "diegti"
           themes:
             title: "Temos"
+            install: "diegti"
           components:
             title: "Komponentai"
             install: "diegti"
@@ -4341,6 +4342,10 @@ lt:
           compare_commits: "(Žr. naujus įsipareigojimus)"
           repo_unreachable: "Nepavyko susisiekti su šios temos „Git“ saugykla. Klaidos pranešimas:"
           imported_from_archive: "Ši tema buvo importuota iš .zip failo"
+          settings: "Nustatymai"
+          colors: "Spalvos"
+          discard_colors: "Išmesti"
+          colors_title: "Spalvos"
           scss:
             text: "CSS"
           after_header:

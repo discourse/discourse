@@ -242,7 +242,7 @@ fi:
           one: "[%{site_name}] Uusi viesti kanavalta %{channel}"
           other: "[%{site_name}] Uusia viestejä kanavalta %{channel}"
         watched_threads:
-          one: "[%{site_name}] Uusia viestejä keskusteluketjuissa %{channel} ja %{count} muissa"
+          one: "[%{site_name}] Uusia viestejä kanavalla %{channel} ja %{count} muualla"
           other: "[%{site_name}] Uusia viestejä kanavalla %{channel} ja %{count} muissa"
         chat_dm_1:
           one: "[%{site_name}] Uusi viesti käyttäjältä %{name}"

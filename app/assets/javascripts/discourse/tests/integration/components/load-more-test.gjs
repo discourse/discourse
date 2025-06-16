@@ -70,4 +70,33 @@ module("Integration | Component | load-more", function (hooks) {
       "loadMore action should be called once"
     );
   });
+
+  test("does not call loadMore action if intersection occurs and this is not enabled", async function (assert) {
+    let actionCalled = 0;
+    const performLoadMore = () => {
+      actionCalled++;
+    };
+
+    await render(
+      <template>
+        <LoadMore
+          @action={{performLoadMore}}
+          @root="#ember-testing"
+          @enabled={{false}}
+        >
+          <table class="numbers">
+            <tbody>
+              <tr />
+            </tbody>
+          </table>
+        </LoadMore>
+      </template>
+    );
+
+    assert.strictEqual(
+      actionCalled,
+      0,
+      "loadMore action should be called never"
+    );
+  });
 });

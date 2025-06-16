@@ -369,14 +369,17 @@ export default class UppyComposerUpload {
           getUploadMarkdown(upload)
         );
 
-        // Only remove in progress after async resolvers finish:
-        this.#removeInProgressUpload(file.id);
         cacheShortUploadUrl(upload.short_url, upload);
 
         new ComposerVideoThumbnailUppy(getOwner(this)).generateVideoThumbnail(
           file,
           upload.url,
+
+          // This callback is fired even if the thumbnail callnot be generated,
+          // e.g. if video_thumbnails_enabled is false or if the file is not a video.
           () => {
+            this.#removeInProgressUpload(file.id);
+
             this.placeholderHandler.success(file, markdown);
 
             this.appEvents.trigger(

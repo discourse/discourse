@@ -2046,6 +2046,24 @@ files:
     default: true
   s3_use_acls:
     default: true
+  s3_enable_access_control_tags:
+    default: false
+    hidden: true
+  s3_access_control_tag_key:
+    default: "discourse:acl"
+    hidden: true
+    min: 1
+    max: 128
+  s3_access_control_tag_public_value:
+    default: "public"
+    hidden: true
+    min: 1
+    max: 256
+  s3_access_control_tag_private_value:
+    default: "private"
+    hidden: true
+    min: 1
+    max: 256
   s3_presigned_get_url_expires_after_seconds:
     default: 300
     hidden: true
@@ -4011,3 +4029,6 @@ experimental:
     client: true
     type: group_list
     default: "1"
+  experimental_system_themes:
+    default: false
+    hidden: true

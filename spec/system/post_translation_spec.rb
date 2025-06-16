@@ -1,19 +1,25 @@
 # frozen_string_literal: true
 
 describe "Post translations", type: :system do
-  fab!(:user)
+  POST_LANGUAGE_SWITCHER_SELECTOR = "button[data-identifier='post-language-selector']"
+
+  fab!(:admin)
   fab!(:topic)
-  fab!(:post) { Fabricate(:post, topic: topic, user: user) }
+  fab!(:post) { Fabricate(:post, topic: topic, user: admin) }
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:composer) { PageObjects::Components::Composer.new }
   let(:translation_selector) do
     PageObjects::Components::SelectKit.new(".translation-selector-dropdown")
   end
+  let(:post_language_selector) do
+    PageObjects::Components::DMenu.new(POST_LANGUAGE_SWITCHER_SELECTOR)
+  end
   let(:view_translations_modal) { PageObjects::Modals::ViewTranslationsModal.new }
 
   before do
-    sign_in(user)
-    SiteSetting.experimental_content_localization_supported_locales = "en|fr|es|pt_BR"
+    sign_in(admin)
+    SiteSetting.default_locale = "en"
+    SiteSetting.experimental_content_localization_supported_locales = "fr|es|pt_BR"
     SiteSetting.experimental_content_localization = true
     SiteSetting.experimental_content_localization_allowed_groups = Group::AUTO_GROUPS[:everyone]
     SiteSetting.post_menu =
@@ -25,21 +31,11 @@ describe "Post translations", type: :system do
       topic_page.visit_topic(topic)
       find("#post_#{post.post_number} .post-action-menu__add-translation").click
       translation_selector.expand
-      expect(all(".translation-selector-dropdown .select-kit-collection li").count).to eq(4)
-      expect(translation_selector).to have_option_value("en")
+      expect(all(".translation-selector-dropdown .select-kit-collection li").count).to eq(3)
       expect(translation_selector).to have_option_value("fr")
       expect(translation_selector).to have_option_value("es")
       expect(translation_selector).to have_option_value("pt_BR")
       expect(translation_selector).to have_no_option_value("de")
-    end
-
-    it "always includes the site's default locale in the list of available languages" do
-      SiteSetting.default_locale = "de"
-      topic_page.visit_topic(topic)
-      find("#post_#{post.post_number} .post-action-menu__add-translation").click
-      translation_selector.expand
-      expect(all(".translation-selector-dropdown .select-kit-collection li").count).to eq(5)
-      expect(translation_selector).to have_option_value("de")
     end
 
     it "allows a user to translate a post" do
@@ -75,7 +71,7 @@ describe "Post translations", type: :system do
 
     it "allows a user to add a new translation" do
       topic_page.visit_topic(topic)
-      find("#post_#{post.post_number} .post-action-menu-edit-translations-trigger").click
+      find("#post_1 .post-action-menu-edit-translations-trigger").click
       find(".update-translations-menu__add .post-action-menu__add-translation").click
       expect(composer).to be_opened
       translation_selector.expand
@@ -150,6 +146,64 @@ describe "Post translations", type: :system do
 
       try_until_success do
         expect(PostLocalization.exists?(post_id: post.id, locale: "fr")).to be false
+      end
+    end
+  end
+
+  context "when creating a new post in a different locale" do
+    it "should only show the languages listed in the site setting and default locale and a none value" do
+      visit("/latest")
+      page.find("#create-topic").click
+      post_language_selector.expand
+      expect(post_language_selector).to have_content("English (US)") # default locale
+      expect(post_language_selector).to have_content("Français")
+      expect(post_language_selector).to have_content("Español")
+      expect(post_language_selector).to have_content("Português (BR)")
+      expect(post_language_selector).to have_content(
+        I18n.t("js.post.localizations.post_language_selector.none"),
+      )
+    end
+
+    it "should allow a user to create a post in a different locale" do
+      visit("/latest")
+      page.find("#create-topic").click
+      post_language_selector.expand
+      post_language_selector.option(".dropdown-menu__item[data-menu-option-id='fr']").click
+      composer.fill_title("Ceci est un sujet de test 1")
+      composer.fill_content("Bonjour le monde")
+      composer.submit
+
+      try_until_success do
+        updated_post = Topic.last.posts.first
+        expect(updated_post.locale).to eq("fr")
+      end
+    end
+
+    context "when the user's default locale is different from the site default" do
+      before do
+        SiteSetting.allow_user_locale = true
+        admin.update!(locale: "fr")
+      end
+
+      it "should show the user's locale as the default in the post language switcher" do
+        visit("/latest")
+        page.find("#create-topic").click
+        expect(
+          page.has_css?("#{POST_LANGUAGE_SWITCHER_SELECTOR} .d-button-label", text: "FR"),
+        ).to be true
+      end
+    end
+
+    context "when the user's default locale is different from the site default but not an available language" do
+      before do
+        SiteSetting.allow_user_locale = true
+        admin.update!(locale: "de")
+      end
+
+      it "should make the selected language blank" do
+        visit("/latest")
+        page.find("#create-topic").click
+        expect(page.has_no_css?("#{POST_LANGUAGE_SWITCHER_SELECTOR} .d-button-label")).to be true
       end
     end
   end
