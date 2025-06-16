@@ -18,7 +18,7 @@ RSpec.describe Themes::GetTranslations do
     end
   end
 
-  describe "#call" do
+  describe ".call" do
     subject(:result) { described_class.call(params:) }
 
     fab!(:theme)
@@ -41,29 +41,37 @@ RSpec.describe Themes::GetTranslations do
     let(:locale) { I18n.available_locales.first.to_s }
     let(:params) { { id: theme.id, locale: locale } }
 
-    it { is_expected.to run_successfully }
+    context "when data is invalid" do
+      let(:params) { {} }
 
-    it "returns the theme translations" do
-      expect(result.translations).to eq(
-        [
-          {
-            key: "skip_to_main_content",
-            value: "Skip to main contentzz",
-            default: "Skip to main contentzz",
-          },
-          {
-            key: "skip_user_nav",
-            value: "Skip to profile contentzz",
-            default: "Skip to profile contentzz",
-          },
-        ],
-      )
+      it { is_expected.to fail_a_contract }
     end
 
     context "when theme doesn't exist" do
       before { theme.destroy! }
 
       it { is_expected.to fail_to_find_a_model(:theme) }
+    end
+
+    context "when everything is ok" do
+      it { is_expected.to run_successfully }
+
+      it "returns the theme translations" do
+        expect(result.translations).to eq(
+          [
+            {
+              key: "skip_to_main_content",
+              value: "Skip to main contentzz",
+              default: "Skip to main contentzz",
+            },
+            {
+              key: "skip_user_nav",
+              value: "Skip to profile contentzz",
+              default: "Skip to profile contentzz",
+            },
+          ],
+        )
+      end
     end
   end
 end
