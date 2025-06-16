@@ -218,6 +218,25 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
     assert.dom(".fk-d-menu").doesNotExist();
   });
 
+  test("@component with top-level args", async function (assert) {
+    const innerComponent = <template>{{@message}}</template>;
+
+    await render(
+      <template>
+        <DMenu
+          @inline={{true}}
+          @label="test"
+          @component={{innerComponent}}
+          @data={{hash message="content"}}
+        />
+      </template>
+    );
+
+    await open();
+
+    assert.dom(".fk-d-menu").containsText("content");
+  });
+
   test("content aria-labelledby attribute", async function (assert) {
     await render(
       <template><DMenu @inline={{true}} @label="label" /></template>
