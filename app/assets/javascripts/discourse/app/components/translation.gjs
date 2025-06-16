@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
+import { get } from "@ember/helper";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import curryComponent from "ember-curry-component";
-import TranslationPlaceholder from "discourse/components/translation-placeholder";
 import uniqueId from "discourse/helpers/unique-id";
 import { isProduction } from "discourse/lib/environment";
 import I18n, { i18n, I18nMissingInterpolationArgument } from "discourse-i18n";
@@ -131,7 +131,7 @@ export default class Translation extends Component {
   @action
   curriedPlaceholderComponent(elements, rendered) {
     return curryComponent(
-      TranslationPlaceholder,
+      Placeholder,
       {
         markAsRendered: (name) => rendered.push(name),
         elements,
@@ -198,5 +198,48 @@ export default class Translation extends Component {
       {{yield (this.curriedPlaceholderComponent info.elements info.rendered)}}
       {{this.checkPlaceholders info}}
     {{/let}}
+  </template>
+}
+
+/**
+ * Internally used by the Translation component to render placeholder
+ * content. This component conditionally renders its content only when the
+ * placeholder name matches the expected placeholder key.
+ *
+ * This component is only used through the Translation component's yielded
+ * Placeholder component, rather than directly.
+ *
+ * @component Placeholder
+ *
+ * @template Usage example:
+ * ```gjs
+ * <Placeholder @name="username">
+ *   <UserLink @user={{user}}>{{user.username}}</UserLink>
+ * </Placeholder>
+ * ```
+ *
+ * @param {String} name - The name of the placeholder this content should fill
+ */
+class Placeholder extends Component {
+  /**
+   * Since {{get}} doesn't work with Maps, we need to convert the
+   * passed Map of elements to an Object.
+   *
+   * @type {Object}
+   **/
+  _elements;
+
+  constructor() {
+    super(...arguments);
+    this.args.markAsRendered(this.args.name);
+    this._elements = Object.fromEntries(this.args.elements);
+  }
+
+  <template>
+    {{#each (get this._elements @name) as |element|}}
+      {{#in-element element}}
+        {{yield}}
+      {{/in-element}}
+    {{/each}}
   </template>
 }
