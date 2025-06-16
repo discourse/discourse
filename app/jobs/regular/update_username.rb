@@ -118,6 +118,7 @@ module Jobs
                         )
                     )) :: JSON
         WHERE data ILIKE '%' || :old_username || '%'
+        AND created_at >= NOW() - INTERVAL '1 month'
       SQL
     end
 
