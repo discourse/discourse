@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import { gt } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import icon from "discourse/helpers/d-icon";
 import replaceEmoji from "discourse/helpers/replace-emoji";
@@ -51,7 +52,7 @@ export default class PostLinks extends Component {
             <li>
               <a
                 class="track-link inbound"
-                data-clicks={{link.clicks}}
+                data-clicks={{if (gt link.clicks 0) link.clicks}}
                 href={{link.url}}
               >
                 {{icon "link"}}

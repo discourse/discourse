@@ -23,10 +23,16 @@
 
     &:hover,
     &:focus {
-      background: var(--tertiary-very-low);
+      background: var(--d-hover);
 
       &.--remove {
         background: var(--danger-low);
+      }
+    }
+
+    &.--clear-reminder {
+      .d-icon {
+        color: var(--primary-low-mid);
       }
     }
   }

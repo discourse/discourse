@@ -4712,6 +4712,7 @@ da:
             title: "Temaer"
             new_theme: "Nyt tema"
             back: "Tilbage til temaer"
+            install: "Installér"
           components:
             title: "komponenter"
             new_component: "Ny komponent"
@@ -4989,6 +4990,10 @@ da:
           remote_theme_edits: "Hvis du vil redigere dette tema, skal du <a href='%{repoURL}' target='_blank'>indsende en ændring på dets arkiv (repository)</a>"
           repo_unreachable: "Kunne ikke kontakte Git-repository for dette tema. Fejl besked:"
           imported_from_archive: "Dette tema blev importeret fra en .zip-fil"
+          settings: "Indstillinger"
+          colors: "Farver"
+          discard_colors: "Kassér"
+          colors_title: "Farver"
           scss:
             text: "CSS"
           after_header:

@@ -212,6 +212,10 @@ class Admin::ThemesController < Admin::AdminController
     disables_component = [false, "false"].include?(theme_params[:enabled])
     enables_component = [true, "true"].include?(theme_params[:enabled])
 
+    if @theme.system? && (theme_params.keys - Theme::EDITABLE_SYSTEM_ATTRIBUTES).present?
+      raise Discourse::InvalidAccess.new
+    end
+
     %i[name color_scheme_id user_selectable enabled auto_update].each do |field|
       @theme.public_send("#{field}=", theme_params[field]) if theme_params.key?(field)
     end
@@ -355,6 +359,7 @@ class Admin::ThemesController < Admin::AdminController
   end
 
   def change_colors
+    raise Discourse::InvalidAccess if params[:id].to_i.negative?
     theme = Theme.find_by(id: params[:id], component: false)
     raise Discourse::NotFound if !theme
 

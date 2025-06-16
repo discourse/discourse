@@ -6,6 +6,7 @@ RSpec.describe Theme do
 
   let(:guardian) { Guardian.new(user) }
   let(:child) { Fabricate(:theme, user: user, component: true) }
+  let(:foundation_theme) { Theme.foundation_theme }
 
   before { ThemeJavascriptCompiler.disable_terser! }
 
@@ -439,7 +440,7 @@ HTML
   end
 
   it "correctly caches theme ids" do
-    Theme.where.not(id: theme.id).destroy_all
+    Theme.where.not(id: theme.id).delete_all
 
     theme2 = Fabricate(:theme)
 
@@ -467,7 +468,7 @@ HTML
   end
 
   it "correctly caches enabled_theme_and_component_ids" do
-    Theme.destroy_all
+    Theme.delete_all
 
     theme2 = Fabricate(:theme)
 
@@ -508,7 +509,7 @@ HTML
   end
 
   it "correctly caches user_themes template" do
-    Theme.destroy_all
+    Theme.delete_all
 
     json = Site.json_for(guardian)
     user_themes = JSON.parse(json)["user_themes"]
@@ -544,7 +545,7 @@ HTML
   end
 
   it "clears color scheme cache correctly" do
-    Theme.destroy_all
+    Theme.delete_all
 
     cs =
       Fabricate(
@@ -604,7 +605,7 @@ HTML
   end
 
   it "includes theme_uploads in settings" do
-    Theme.where.not(id: theme.id).destroy_all
+    Theme.where.not(id: theme.id).delete_all
 
     upload = UploadCreator.new(file_from_fixtures("logo.png"), "logo.png").create_for(-1)
     theme.set_field(type: :theme_upload_var, target: :common, name: "bob", upload_id: upload.id)
@@ -616,7 +617,7 @@ HTML
   end
 
   it "does not break on missing uploads in settings" do
-    Theme.where.not(id: theme.id).destroy_all
+    Theme.where.not(id: theme.id).delete_all
 
     upload = UploadCreator.new(file_from_fixtures("logo.png"), "logo.png").create_for(-1)
     theme.set_field(type: :theme_upload_var, target: :common, name: "bob", upload_id: upload.id)
@@ -631,7 +632,7 @@ HTML
 
   it "uses CDN url for theme_uploads in settings" do
     set_cdn_url("http://cdn.localhost")
-    Theme.where.not(id: theme.id).destroy_all
+    Theme.where.not(id: theme.id).delete_all
 
     upload = UploadCreator.new(file_from_fixtures("logo.png"), "logo.png").create_for(-1)
     theme.set_field(type: :theme_upload_var, target: :common, name: "bob", upload_id: upload.id)
@@ -644,7 +645,7 @@ HTML
 
   it "uses CDN url for settings of type upload" do
     set_cdn_url("http://cdn.localhost")
-    Theme.where.not(id: theme.id).destroy_all
+    Theme.where.not(id: theme.id).delete_all
 
     upload = UploadCreator.new(file_from_fixtures("logo.png"), "logo.png").create_for(-1)
     theme.set_field(target: :settings, name: "yaml", value: <<~YAML)
@@ -1761,6 +1762,27 @@ HTML
       expect(theme.owned_color_palette).to eq(nil)
       expect(theme.find_or_create_owned_color_palette.id).to eq(palette.id)
       expect(theme.owned_color_palette).to eq(palette)
+    end
+  end
+
+  it "checks if fields can be updated for system themes" do
+    foundation_theme.update!(user_selectable: true)
+    expect(foundation_theme.user_selectable).to be true
+    expect { foundation_theme.update!(name: "edited system name") }.to raise_error(
+      Discourse::InvalidParameters,
+    )
+    expect { theme.update!(name: "edited name") }.not_to raise_error
+  end
+
+  it "does not allow system themes to be deleted" do
+    expect { foundation_theme.destroy! }.to raise_error(Discourse::InvalidParameters)
+    expect { theme.destroy! }.not_to raise_error
+  end
+
+  describe "#system?" do
+    it "returns system true for Horizon and Foundation themes" do
+      expect(foundation_theme.system?).to be true
+      expect(theme.system?).to be false
     end
   end
 end

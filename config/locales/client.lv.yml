@@ -3308,6 +3308,10 @@ lv:
           disable: "Atslēgt"
           up_to_date: "Dizains ir pilnībā atjaunināts, pēdējā parbaude:"
           add: "Pievienot"
+          settings: "Iestatījumi"
+          colors: "Krāsas"
+          discard_colors: "Izmest"
+          colors_title: "Krāsas"
           scss:
             text: "CSS"
           all_filter: "Viss"

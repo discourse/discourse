@@ -431,9 +431,11 @@ en:
       bookmarked_success: "Bookmarked!"
       deleted_bookmark_success: "Bookmark deleted!"
       reminder_set_success: "Reminder set!"
+      reminder_clear_success: "Reminder cleared"
       created: "You've bookmarked this post. %{name}"
       created_generic: "You've bookmarked this. %{name}"
       create: "Create bookmark"
+      clear_reminder: "Clear reminder"
       edit: "Edit bookmark"
       not_bookmarked: "bookmark this post"
       remove_reminder_keep_bookmark: "Remove reminder and keep bookmark"
@@ -2794,7 +2796,10 @@ en:
       italic_text: "emphasized text"
       link_title: "Hyperlink"
       link_description: "enter link description here"
-      link_dialog_title: "Insert Hyperlink"
+      link_dialog_title: "Insert hyperlink"
+      link_dialog_action: "Insert"
+      link_edit_title: "Edit hyperlink"
+      link_edit_action: "Update"
       link_optional_text: "optional title"
       link_url_placeholder: "Paste a URL or type to search topics"
       blockquote_title: "Blockquote"
@@ -2871,6 +2876,13 @@ en:
       image_scale_button: "Scale image to %{percent}%"
       delete_image_button: Delete Image
       toggle_image_grid: Toggle image grid
+
+      link_toolbar:
+        edit: "Edit link"
+        copy: "Copy link"
+        remove: "Remove link"
+        visit: "Open link in external tab"
+        link_copied: "Link copied!"
 
     notifications:
       tooltip:
@@ -3926,6 +3938,8 @@ en:
           title: "Translations for post"
           confirm_delete: "Are you sure you want to delete translations for '%{languageCode}'?"
         success: "Translations have been updated successfully"
+        post_language_selector:
+          none: "None"
 
       errors:
         create: "Sorry, there was an error creating your post. Please try again."
@@ -4136,6 +4150,7 @@ en:
         instructions: "Share a link to this post:"
 
       original_language: "This post was originally written in %{language}"
+      original_language_and_outdated: "This post was originally written in %{language}. Translation may be outdated"
 
     category:
       none: "(no category)"
@@ -6410,6 +6425,7 @@ en:
           copy_created: 'A new copy of "%{name}" has been created'
           illegal_character_in_color: "Color must consist of hexadecimal characters only"
           invalid_color_length: "Color must in the format #rrggbb or #rgb"
+          blocked_edit_for_system: "Color palette belonging to a system theme cannot be edited."
           delete_confirm: "Are you sure you want to delete this color palette?"
       plugins:
         title: "Plugins"

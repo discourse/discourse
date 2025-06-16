@@ -3420,6 +3420,7 @@ ca:
           install: "Instal·la"
           themes:
             title: "Aparences"
+            install: "Instal·la"
           components:
             title: "Components"
             install: "Instal·la"
@@ -3642,6 +3643,10 @@ ca:
           compare_commits: "(Vegeu els commits nous)"
           repo_unreachable: "No s'ha pogut contactar amb el repositori git d'aquesta aparença. Missatge d'error:"
           imported_from_archive: "Aquesta aparença s'ha importat d'un fitxer .zip"
+          settings: "Configuració"
+          colors: "Colors"
+          discard_colors: "Descarta"
+          colors_title: "Colors"
           scss:
             text: "CSS"
           after_header:

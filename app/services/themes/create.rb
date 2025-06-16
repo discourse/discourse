@@ -32,8 +32,8 @@ class Themes::Create
   # @!method self.call(guardian:, params:)
   #   @param [Guardian] guardian
   #   @param [Hash] params
-  #   @option params [String] :name The name of the theme
-  #   @option params [Integer] :user_id The ID of the user creating the theme
+  #   @option params String :name The name of the theme
+  #   @option params Integer :user_id The ID of the user creating the theme
   #   @option params [Boolean] :user_selectable Whether the theme can be selected by users
   #   @option params [Integer] :color_scheme_id The ID of the color palette to use
   #   @option params [Boolean] :component Whether this is a theme component. These cannot be user_selectable or have a color_scheme_id
@@ -50,12 +50,15 @@ class Themes::Create
     attribute :theme_fields, :array
     attribute :default, :boolean, default: false
 
+    validates :name, presence: true
+    validates :user_id, presence: true
     validates :theme_fields, length: { minimum: 0, maximum: 100 }
   end
 
   policy :ensure_remote_themes_are_not_allowlisted
 
   transaction do
+    # TODO (martin) Fix this, can use on_model_not_found in controller and remove try
     try(Theme::InvalidFieldTargetError, Theme::InvalidFieldTypeError) do
       model :theme, :create_theme
     end

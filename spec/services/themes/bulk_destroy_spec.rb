@@ -5,29 +5,52 @@ RSpec.describe Themes::BulkDestroy do
   fab!(:theme_2) { Fabricate(:theme) }
   fab!(:admin)
 
-  subject(:result) { described_class.call(params:, **dependencies) }
+  describe described_class::Contract, type: :model do
+    it { is_expected.to validate_presence_of(:theme_ids) }
+    it { is_expected.to validate_length_of(:theme_ids).as_array.is_at_least(1).is_at_most(50) }
 
-  let(:params) { { theme_ids: [theme_1.id, theme_2.id] } }
-  let(:dependencies) { { guardian: admin.guardian } }
+    describe "theme_ids must be positive, negative IDs are system themes" do
+      it "is valid when all theme_ids are positive" do
+        contract = described_class.new(theme_ids: [1, 2, 3])
+        contract.validate
+        expect(contract.errors).to be_empty
+      end
 
-  it "destroys the themes" do
-    expect(result).to be_a_success
-    expect(Theme.find_by(id: theme_1.id)).to be_nil
-    expect(Theme.find_by(id: theme_2.id)).to be_nil
+      it "is invalid when any theme_id is zero or negative" do
+        contract = described_class.new(theme_ids: [1, 0, -3])
+        contract.validate
+        expect(contract.errors.full_messages).to include(
+          "Theme ids " + I18n.t("errors.messages.must_all_be_positive"),
+        )
+      end
+    end
   end
 
-  it "logs the theme destroys" do
-    expect_any_instance_of(StaffActionLogger).to receive(:log_theme_destroy).with(theme_1).once
-    expect_any_instance_of(StaffActionLogger).to receive(:log_theme_destroy).with(theme_2).once
-    expect(result).to be_a_success
-  end
+  describe ".call" do
+    subject(:result) { described_class.call(params:, **dependencies) }
 
-  context "for invalid theme ids" do
-    before do
-      theme_1.destroy!
-      theme_2.destroy!
+    let(:params) { { theme_ids: [theme_1.id, theme_2.id] } }
+    let(:dependencies) { { guardian: admin.guardian } }
+
+    it { is_expected.to run_successfully }
+
+    it "destroys the themes" do
+      expect { result }.to change { Theme.count }.by(-2)
     end
 
-    it { is_expected.to fail_to_find_a_model(:themes) }
+    it "logs the theme destroys" do
+      expect_any_instance_of(StaffActionLogger).to receive(:log_theme_destroy).with(theme_1).once
+      expect_any_instance_of(StaffActionLogger).to receive(:log_theme_destroy).with(theme_2).once
+      expect(result).to be_a_success
+    end
+
+    context "for invalid theme ids" do
+      before do
+        theme_1.destroy!
+        theme_2.destroy!
+      end
+
+      it { is_expected.to fail_to_find_a_model(:themes) }
+    end
   end
 end

@@ -140,6 +140,58 @@ class DiscourseCLI < Thor
     end
   end
 
+  desc "backup_url", "Get the URL of a backup file"
+  def backup_url(filename = nil)
+    load_rails
+
+    store = BackupRestore::BackupStore.create
+    raise "Backup URLs are only available for S3 backups" if !store.remote?
+
+    file = store.file(filename, include_download_source: true) if filename
+
+    if !file
+      discourse = File.exist?("/usr/local/bin/discourse") ? "discourse" : "./script/discourse"
+      puts "You must provide a valid filename. Did you mean one of the following?\n\n"
+      store.files.each { |f| puts "#{discourse} backup_url #{f.filename}" }
+      return
+    end
+
+    puts file.source
+  end
+
+  desc "import_backup_url",
+       "Downloads a backup file from a URL and stores it in the current backup store"
+  def import_backup_url(url = nil)
+    load_rails
+
+    store = BackupRestore::BackupStore.create
+    filename = File.basename(URI.parse(url).path)
+
+    file = store.file(filename)
+    if file
+      puts "Backup file already exists in the store"
+      return
+    end
+
+    puts "Downloading backup file from #{url}..."
+    tmpfile = BackupRestore::BackupFileHandler.download(url)
+
+    if store.remote?
+      puts "Uploading backup file to remote store..."
+      content_type = MiniMime.lookup_by_filename(filename).content_type
+      store.upload_file(filename, tmpfile.path, content_type)
+    else
+      puts "Saving backup file to local store..."
+      Discourse::Utils.execute_command(
+        "mv",
+        tmpfile.path,
+        File.join(BackupRestore::LocalBackupStore.base_directory, filename),
+      )
+    end
+  ensure
+    tmpfile&.unlink
+  end
+
   desc "export", "Backup a Discourse forum"
   option :s3_uploads,
          type: :boolean,

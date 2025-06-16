@@ -7,6 +7,16 @@ class Theme < ActiveRecord::Base
   include GlobalPath
 
   BASE_COMPILER_VERSION = 91
+  CORE_THEMES = { "foundation" => -1 }
+  EDITABLE_SYSTEM_ATTRIBUTES = %w[
+    child_theme_ids
+    color_scheme_id
+    default
+    locale
+    translations
+    user_selectable
+    updated_at
+  ]
 
   class SettingsMigrationError < StandardError
   end
@@ -88,6 +98,8 @@ class Theme < ActiveRecord::Base
   validate :validate_theme_fields
 
   after_create :update_child_components
+  before_update :check_editable_attributes, if: :system?
+  before_destroy :raise_invalid_parameters, if: :system?
 
   scope :user_selectable, -> { where("user_selectable OR id = ?", SiteSetting.default_theme_id) }
 
@@ -113,6 +125,9 @@ class Theme < ActiveRecord::Base
             parent_themes: %i[color_scheme locale_fields theme_translation_overrides],
           )
         end
+
+  scope :not_system, -> { where("id > 0") }
+  scope :system, -> { where("id < 0") }
 
   delegate :remote_url, to: :remote_theme, private: true, allow_nil: true
 
@@ -222,6 +237,10 @@ class Theme < ActiveRecord::Base
     end
 
     Theme.expire_site_cache!
+  end
+
+  def self.foundation_theme
+    Theme.find(CORE_THEMES["foundation"])
   end
 
   def self.compiler_version
@@ -341,6 +360,10 @@ class Theme < ActiveRecord::Base
 
   def default?
     SiteSetting.default_theme_id == id
+  end
+
+  def system?
+    id < 0
   end
 
   def supported?
@@ -1094,6 +1117,15 @@ class Theme < ActiveRecord::Base
           .order("created_at DESC")
           .first
     end
+  end
+
+  def check_editable_attributes
+    return if (changes.keys - EDITABLE_SYSTEM_ATTRIBUTES).empty?
+    raise_invalid_parameters
+  end
+
+  def raise_invalid_parameters
+    raise Discourse::InvalidParameters
   end
 end
 

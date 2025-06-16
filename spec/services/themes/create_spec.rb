@@ -1,48 +1,54 @@
 # frozen_string_literal: true
 
 RSpec.describe Themes::Create do
-  fab!(:user)
-  fab!(:admin)
-  fab!(:guardian) { admin.guardian }
-  fab!(:color_scheme)
-
-  subject(:result) { described_class.call(params:, **dependencies) }
-
-  let(:dependencies) { { guardian: } }
-
-  let(:theme_params) do
-    {
-      name: "My Cool Theme",
-      user_id: admin.id,
-      user_selectable: true,
-      color_scheme_id: color_scheme.id,
-      component: false,
-      theme_fields: [
-        {
-          name: "header",
-          target: "common",
-          value: "header content",
-          type_id: ThemeField.types[:html],
-        },
-      ],
-      default: false,
-    }
+  describe described_class::Contract, type: :model do
+    it { is_expected.to validate_presence_of(:name) }
+    it { is_expected.to validate_presence_of(:user_id) }
+    it { is_expected.to validate_length_of(:theme_fields).as_array.is_at_least(0).is_at_most(100) }
   end
 
-  let(:params) { theme_params }
-
   describe "#call" do
-    it { is_expected.to be_a_success }
+    fab!(:user)
+    fab!(:admin)
+    fab!(:guardian) { admin.guardian }
+    fab!(:color_scheme)
+
+    subject(:result) { described_class.call(params:, **dependencies) }
+
+    let(:dependencies) { { guardian: } }
+
+    let(:theme_params) do
+      {
+        name: "My Cool Theme",
+        user_id: admin.id,
+        user_selectable: true,
+        color_scheme_id: color_scheme.id,
+        component: false,
+        theme_fields: [
+          {
+            name: "header",
+            target: "common",
+            value: "header content",
+            type_id: ThemeField.types[:html],
+          },
+        ],
+        default: false,
+      }
+    end
+
+    let(:params) { theme_params }
+
+    it { is_expected.to run_successfully }
 
     it "creates a theme with the provided parameters" do
-      expect(result).to be_a_success
-      expect(result.theme.name).to eq("My Cool Theme")
-      expect(result.theme.user_id).to eq(admin.id)
-      expect(result.theme.user_selectable).to eq(true)
-      expect(result.theme.color_scheme_id).to eq(color_scheme.id)
-      expect(result.theme.component).to eq(false)
-      expect(result.theme.theme_fields.first.name).to eq("header")
-      expect(result.theme.theme_fields.first.value).to eq("header content")
+      expect(result.theme).to have_attributes(
+        name: "My Cool Theme",
+        user_id: admin.id,
+        user_selectable: true,
+        color_scheme_id: color_scheme.id,
+        component: false,
+        theme_fields: [have_attributes(name: "header", value: "header content")],
+      )
     end
 
     it "logs the theme change" do
@@ -72,15 +78,16 @@ RSpec.describe Themes::Create do
         expect(SiteSetting.default_theme_id).to eq(result.theme.id)
       end
 
-      it "clears the existing default theme" do
-        existing_default = Fabricate(:theme)
-        existing_default.set_default!
-        expect(existing_default.default?).to eq(true)
+      context "when there is an existing default theme" do
+        fab!(:existing_default) { Fabricate(:theme) }
 
-        expect(result).to be_a_success
-        expect(result.theme).to be_default
-        expect(existing_default.reload.default?).to eq(false)
-        expect(SiteSetting.default_theme_id).to eq(result.theme.id)
+        before { existing_default.set_default! }
+
+        it "clears the existing default theme" do
+          expect { result }.to change { existing_default.reload.default? }.to(false)
+          expect(result.theme).to be_default
+          expect(SiteSetting.default_theme_id).to eq(result.theme.id)
+        end
       end
     end
 

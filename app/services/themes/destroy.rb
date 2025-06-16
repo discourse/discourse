@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Destroys a theme and logs the staff action. Related records are destroyed
-# by ActiveRecord dependent: :destroy.
+# by ActiveRecord dependent: :destroy. Cannot be used to destroy system themes.
 #
 # @example
 #  Themes::Destroy.call(
@@ -17,12 +17,14 @@ class Themes::Destroy
   # @!method self.call(guardian:, params:)
   #   @param [Guardian] guardian
   #   @param [Hash] params
-  #   @option params [Integer] :id The ID of the theme to destroy
+  #   @option params [Integer] :id The ID of the theme to destroy, must be greater than 0.
   #   @return [Service::Base::Context]
 
   params do
     attribute :id, :integer
-    validates :id, presence: true
+
+    # Negative theme IDs are for system themes only, which cannot be destroyed.
+    validates :id, presence: true, numericality: { only_integer: true, greater_than: 0 }
   end
 
   model :theme
