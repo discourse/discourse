@@ -52,7 +52,7 @@ class Themes::Create
 
     validates :name, presence: true
     validates :user_id, presence: true
-    validates :theme_fields, length: { minimum: 0, maximum: 100 }
+    validates :theme_fields, length: { maximum: 100 }
   end
 
   policy :ensure_remote_themes_are_not_allowlisted

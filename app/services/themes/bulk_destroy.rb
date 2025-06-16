@@ -25,6 +25,8 @@ class Themes::BulkDestroy
     validates :theme_ids, presence: true, length: { minimum: 1, maximum: 50 }
     validate :theme_ids_must_be_positive
 
+    before_validation { self.theme_ids = theme_ids.map(&:to_i).uniq if theme_ids.present? }
+
     def theme_ids_must_be_positive
       return if theme_ids.blank?
 

@@ -1405,7 +1405,7 @@ RSpec.describe Admin::ThemesController do
         get "/admin/themes/#{theme.id}/translations/foo.json"
         expect(response.status).to eq(400)
         expect(response.parsed_body["errors"]).to include(
-          I18n.t("invalid_params", message: :locale),
+          I18n.t("errors.messages.invalid_locale", invalid_locale: "foo"),
         )
       end
     end
@@ -1442,19 +1442,24 @@ RSpec.describe Admin::ThemesController do
       expect do
         delete "/admin/themes/bulk_destroy.json", params: { theme_ids: theme_ids }
       end.to change { Theme.count }.by(-2)
+      expect(response.status).to eq(204)
     end
 
-    it "does not destroy if any theme is system" do
+    it "does not destroy any themes if any of them is a system theme" do
       theme.update_columns(id: -10)
       expect do
         delete "/admin/themes/bulk_destroy.json", params: { theme_ids: theme_ids }
-      end.to change { Theme.count }.by(-1)
-      expect { theme_2.reload }.to raise_exception(ActiveRecord::RecordNotFound)
+      end.not_to change { Theme.count }
+      expect(response.status).to eq(400)
+      expect(response.parsed_body["errors"]).to eq(
+        ["Theme ids " + I18n.t("errors.messages.must_all_be_positive")],
+      )
     end
 
     it "logs the theme destroy action for each theme" do
       StaffActionLogger.any_instance.expects(:log_theme_destroy).twice
       delete "/admin/themes/bulk_destroy.json", params: { theme_ids: theme_ids }
+      expect(response.status).to eq(204)
     end
   end
 
