@@ -12,6 +12,7 @@ import DModal from "discourse/components/d-modal";
 import Form from "discourse/components/form";
 import FutureDateInput from "discourse/components/future-date-input";
 import { extractError } from "discourse/lib/ajax-error";
+import { INVITE_DESCRIPTION_MAX_LENGTH } from "discourse/lib/constants";
 import { canNativeShare, nativeShare } from "discourse/lib/pwa-utils";
 import { sanitize } from "discourse/lib/text";
 import { applyValueTransformer } from "discourse/lib/transformer";
@@ -153,6 +154,10 @@ export default class CreateInvite extends Component {
     } finally {
       this.saving = false;
     }
+  }
+
+  get descriptionValidation() {
+    return `length:0,${INVITE_DESCRIPTION_MAX_LENGTH}`;
   }
 
   get maxRedemptionsAllowedLimit() {
@@ -337,6 +342,7 @@ export default class CreateInvite extends Component {
               @name="description"
               @title={{i18n "user.invited.invite.description"}}
               @format="large"
+              @validation={{this.descriptionValidation}}
               as |field|
             >
               <field.Input />
