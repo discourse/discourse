@@ -391,7 +391,7 @@ end
 #  expires_at              :datetime         not null
 #  email_token             :string
 #  domain                  :string
-#  description             :string
+#  description             :string(100)
 #
 # Indexes
 #
