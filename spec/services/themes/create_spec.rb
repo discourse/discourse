@@ -57,7 +57,7 @@ RSpec.describe Themes::Create do
         )
       end
 
-      it { is_expected.to fail_with_exception(Theme::InvalidFieldTargetError) }
+      it { is_expected.to fail_to_find_a_model(:theme) }
     end
 
     context "with invalid theme field type" do
@@ -74,7 +74,7 @@ RSpec.describe Themes::Create do
         )
       end
 
-      it { is_expected.to fail_with_exception(Theme::InvalidFieldTypeError) }
+      it { is_expected.to fail_to_find_a_model(:theme) }
     end
 
     context "with invalid component model parameters" do

@@ -58,10 +58,7 @@ class Themes::Create
   policy :ensure_remote_themes_are_not_allowlisted
 
   transaction do
-    # TODO (martin) Fix this, can use on_model_not_found in controller and remove try
-    try(Theme::InvalidFieldTargetError, Theme::InvalidFieldTypeError) do
-      model :theme, :create_theme
-    end
+    model :theme, :create_theme
     step :update_default_theme
     step :log_theme_change
   end

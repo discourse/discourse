@@ -635,7 +635,15 @@ class Theme < ActiveRecord::Base
 
     type_id ||=
       type ? ThemeField.types[type.to_sym] : ThemeField.guess_type(name: name, target: target)
-    raise InvalidFieldTypeError.new("Unknown type #{type} passed to set field") if type_id.blank?
+    if type_id.blank?
+      if type.present?
+        raise InvalidFieldTypeError.new("Unknown type #{type} passed to set field")
+      else
+        raise InvalidFieldTypeError.new(
+                "No type could be guessed for field #{name} for target #{target}",
+              )
+      end
+    end
 
     value ||= ""
 

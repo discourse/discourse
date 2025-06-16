@@ -579,6 +579,42 @@ RSpec.describe Admin::ThemesController do
         json = response.parsed_body
         expect(json["theme"]["default"]).to eq(true)
       end
+
+      context "when creating a theme field with an invalid target" do
+        it "errors" do
+          post "/admin/themes.json",
+               params: {
+                 theme: {
+                   name: "my test name",
+                   theme_fields: [name: "scss", target: "blah", value: "body{color: red;}"],
+                 },
+               }
+
+          expect(response.status).to eq(400)
+
+          json = response.parsed_body
+          expect(json["errors"]).to include("Unknown target blah passed to set field")
+        end
+      end
+
+      context "when creating a theme field with an invalid type" do
+        it "errors" do
+          post "/admin/themes.json",
+               params: {
+                 theme: {
+                   name: "my test name",
+                   theme_fields: [name: "blahblah", target: "common", value: "body{color: red;}"],
+                 },
+               }
+
+          expect(response.status).to eq(400)
+
+          json = response.parsed_body
+          expect(json["errors"]).to include(
+            "No type could be guessed for field blahblah for target common",
+          )
+        end
+      end
     end
 
     shared_examples "theme creation not allowed" do

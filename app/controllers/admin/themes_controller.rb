@@ -201,6 +201,14 @@ class Admin::ThemesController < Admin::AdminController
       end
       on_failed_policy(:ensure_remote_themes_are_not_allowlisted) { raise Discourse::InvalidAccess }
       on_model_errors { |theme:| render json: theme.errors, status: :unprocessable_entity }
+      on_model_not_found(:theme) do |result|
+        if result.exception.is_a?(Theme::InvalidFieldTypeError) ||
+             result.exception.is_a?(Theme::InvalidFieldTargetError)
+          return render json: failed_json.merge(errors: result.exception.message), status: 400
+        end
+
+        raise Discourse::NotFound
+      end
     end
   end
 
