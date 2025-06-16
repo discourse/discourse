@@ -34,7 +34,14 @@ class ThemeSettingsSerializer < ApplicationSerializer
     locale_file_description =
       object.theme.internal_translations.find { |t| t.key.match?(description_regexp) }&.value
 
-    locale_file_description || object.description
+    resolved_description = locale_file_description || object.description
+
+    if resolved_description
+      catch(:exception) do
+        return I18n.interpolate(resolved_description, base_path: Discourse.base_path)
+      end
+      resolved_description
+    end
   end
 
   def valid_values
