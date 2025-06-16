@@ -76,6 +76,15 @@ RSpec.describe ThemeScreenshotsHandler do
     end
   end
 
+  it "ignore max_image_size_kb site setting" do
+    SiteSetting.max_image_size_kb = 1
+
+    screenshots = ["screenshots/light.jpeg", "screenshots/some Absolutely silly $%&* name --.jpeg"]
+    write_temp_screenshots_for_importer(screenshots)
+    handler.parse_screenshots_as_theme_fields!(screenshots, importer)
+    expect { theme.save! }.not_to raise_error
+  end
+
   it "raises an error if the screenshot has invalid dimensions" do
     screenshots = ["screenshots/light.jpeg"]
     write_temp_screenshots_for_importer(screenshots)

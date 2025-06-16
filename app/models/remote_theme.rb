@@ -257,7 +257,7 @@ class RemoteTheme < ActiveRecord::Base
 
     theme_info["assets"]&.each do |name, relative_path|
       if path = importer.real_path(relative_path)
-        upload = RemoteTheme.create_upload(theme, path, relative_path)
+        upload = RemoteTheme.create_upload(theme: theme, path: path, relative_path: relative_path)
         if !upload.errors.empty?
           raise ImportError,
                 I18n.t(
@@ -477,7 +477,7 @@ class RemoteTheme < ActiveRecord::Base
     remote_url.present?
   end
 
-  def self.create_upload(theme, path, relative_path)
+  def self.create_upload(theme:, path:, relative_path:, skip_validations: false)
     new_path = "#{File.dirname(path)}/#{SecureRandom.hex}#{File.extname(path)}"
 
     # OptimizedImage has strict file name restrictions, so rename temporarily
@@ -487,6 +487,7 @@ class RemoteTheme < ActiveRecord::Base
       File.open(new_path),
       File.basename(relative_path),
       for_theme: true,
+      skip_validations: skip_validations,
     ).create_for(theme.user_id)
   end
 end
