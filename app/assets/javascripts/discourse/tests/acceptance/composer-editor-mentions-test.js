@@ -131,7 +131,7 @@ acceptance("Composer - editor mentions", function (needs) {
 
     assert.deepEqual(
       [...queryAll(".ac-user .username")].map((e) => e.innerText),
-      ["foo", "user_group", "user", "user2"]
+      ["foo", "user", "user2"]
     );
   });
 
