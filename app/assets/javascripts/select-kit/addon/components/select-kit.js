@@ -77,7 +77,7 @@ export function resolveComponent(context, component) {
 
   if (typeof component === "string") {
     deprecated(
-      "SelectKit components should be imported and passed by reference, instead of as a string",
+      `[${component}] SelectKit components should be imported and passed by reference, not as a string`,
       {
         id: "discourse.select-kit-resolved-components",
       }
