@@ -1,7 +1,7 @@
 import LatestTopicListItem from "discourse/components/topic-list/latest-topic-list-item";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
 
-const TopicListItem0 = <template>
+const TopicListItem = <template>
   <StyleguideExample @title="<TopicListItem>">
     <table class="topic-list">
       <tbody>
@@ -39,4 +39,4 @@ const TopicListItem0 = <template>
   </StyleguideExample>
 </template>;
 
-export default TopicListItem0;
+export default TopicListItem;
