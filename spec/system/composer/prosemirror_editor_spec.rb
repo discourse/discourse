@@ -848,6 +848,10 @@ describe "Composer - ProseMirror editor", type: :system do
   describe "with mentions" do
     fab!(:post)
     fab!(:topic) { post.topic }
+    fab!(:mixed_case_user) { Fabricate(:user, username: "TestUser_123") }
+    fab!(:mixed_case_group) do
+      Fabricate(:group, name: "TestGroup_ABC", mentionable_level: Group::ALIAS_LEVELS[:everyone])
+    end
 
     before do
       Draft.set(
@@ -883,6 +887,32 @@ describe "Composer - ProseMirror editor", type: :system do
 
       expect(rich).to have_css("a.mention[data-valid='true']", text: user.username)
       expect(rich).to have_css("a.mention[data-valid='false']", text: "@unknown")
+    end
+
+    it "validates mentions case-insensitively" do
+      open_composer_and_toggle_rich_editor
+
+      composer.type_content("Hey @testuser_123 and @TESTUSER_123 ")
+
+      expect(rich).to have_css("a.mention[data-valid='true']", text: "testuser_123")
+      expect(rich).to have_css("a.mention[data-valid='true']", text: "TESTUSER_123")
+
+      composer.type_content("and @InvalidUser ")
+
+      expect(rich).to have_css("a.mention[data-valid='false']", text: "@InvalidUser")
+    end
+
+    it "validates group mentions case-insensitively" do
+      open_composer_and_toggle_rich_editor
+
+      composer.type_content("Hey @testgroup_abc and @TESTGROUP_ABC ")
+
+      expect(rich).to have_css("a.mention[data-valid='true']", text: "testgroup_abc")
+      expect(rich).to have_css("a.mention[data-valid='true']", text: "TESTGROUP_ABC")
+
+      composer.type_content("and @InvalidGroup ")
+
+      expect(rich).to have_css("a.mention[data-valid='false']", text: "@InvalidGroup")
     end
   end
 

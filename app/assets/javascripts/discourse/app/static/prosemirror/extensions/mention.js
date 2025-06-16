@@ -163,8 +163,17 @@ async function fetchMentions(names) {
     data: { names },
   });
 
+  const lowerGroupNames = Object.keys(response.groups).map((groupName) =>
+    groupName.toLowerCase()
+  );
+
   names.forEach((name) => {
-    if (response.users.includes(name) || response.groups[name]) {
+    const lowerName = name.toLowerCase();
+
+    if (
+      response.users.includes(lowerName) ||
+      lowerGroupNames.includes(lowerName)
+    ) {
       VALID_MENTIONS.add(name);
     } else {
       INVALID_MENTIONS.add(name);
