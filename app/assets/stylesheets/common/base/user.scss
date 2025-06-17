@@ -1064,22 +1064,22 @@
     grid-column: 1 / span 2;
   }
 
-  table.user-invite-list {
-    .invite-type {
-      .d-icon {
-        color: var(--primary-medium);
-      }
-    }
+  // table.user-invite-list {
+  //   .invite-type {
+  //     .d-icon {
+  //       color: var(--primary-medium);
+  //     }
+  //   }
 
-    .invite-extra {
-      font-size: var(--font-down-1);
-      margin: 0.25em 0;
+  //   .invite-extra {
+  //     font-size: var(--font-down-1);
+  //     margin: 0.25em 0;
 
-      a {
-        color: var(--primary-medium);
-      }
-    }
-  }
+  //     a {
+  //       color: var(--primary-medium);
+  //     }
+  //   }
+  // }
 }
 
 .user-additional-controls {

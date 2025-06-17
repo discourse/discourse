@@ -275,54 +275,54 @@
     }
   }
 
-  table.user-invite-list {
-    thead {
-      display: none;
-    }
+  // table.user-invite-list {
+  //   thead {
+  //     display: none;
+  //   }
 
-    tr {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      padding: 0.25em;
-    }
+  //   tr {
+  //     display: grid;
+  //     grid-template-columns: repeat(4, 1fr);
+  //     padding: 0.25em;
+  //   }
 
-    .label {
-      display: block;
-      color: var(--primary-medium);
-      font-size: var(--font-down-1);
-      margin: 0.5em 0 0.15em 0;
-    }
+  //   .label {
+  //     display: block;
+  //     color: var(--primary-medium);
+  //     font-size: var(--font-down-1);
+  //     margin: 0.5em 0 0.15em 0;
+  //   }
 
-    td.invite-type {
-      grid-column-start: 1;
-      grid-column-end: -2;
-      order: 1;
-      vertical-align: middle;
-    }
+  //   td.invite-type {
+  //     grid-column-start: 1;
+  //     grid-column-end: -2;
+  //     order: 1;
+  //     vertical-align: middle;
+  //   }
 
-    td.invite-actions {
-      order: 2;
-      align-self: center;
-      text-align: right;
-      display: flex;
+  //   td.invite-actions {
+  //     order: 2;
+  //     align-self: center;
+  //     text-align: right;
+  //     display: flex;
 
-      button {
-        margin: 0.25em;
-      }
-    }
+  //     button {
+  //       margin: 0.25em;
+  //     }
+  //   }
 
-    td.invite-updated-at {
-      grid-column-start: 1;
-      grid-column-end: 3;
-      order: 3;
-    }
+  //   td.invite-updated-at {
+  //     grid-column-start: 1;
+  //     grid-column-end: 3;
+  //     order: 3;
+  //   }
 
-    td.invite-expires-at {
-      grid-column-start: 3;
-      grid-column-end: -1;
-      order: 4;
-    }
-  }
+  //   td.invite-expires-at {
+  //     grid-column-start: 3;
+  //     grid-column-end: -1;
+  //     order: 4;
+  //   }
+  // }
 
   .user-invite-none {
     margin-top: 1em;

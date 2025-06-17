@@ -15,6 +15,8 @@ import formatDuration from "discourse/helpers/format-duration";
 import number from "discourse/helpers/number";
 import rawDate from "discourse/helpers/raw-date";
 import { i18n } from "discourse-i18n";
+import DropdownMenu from "discourse/components/dropdown-menu";
+import DMenu from "float-kit/components/d-menu";
 
 export default RouteTemplate(
   <template>
@@ -97,7 +99,7 @@ export default RouteTemplate(
         <section>
           {{#if @controller.model.invites}}
             {{#if @controller.inviteRedeemed}}
-              <table class="table user-invite-list">
+              <table class="d-admin-table user-invite-list">
                 <thead>
                   <tr>
                     <th>{{i18n "user.invited.user"}}</th>
@@ -114,8 +116,8 @@ export default RouteTemplate(
                 </thead>
                 <tbody>
                   {{#each @controller.model.invites as |invite|}}
-                    <tr>
-                      <td>
+                    <tr class="d-admin-row__content">
+                      <td class="d-admin-row__overview">
                         <LinkTo @route="user" @model={{invite.user}}>{{avatar
                             invite.user
                             imageSize="tiny"
@@ -125,12 +127,14 @@ export default RouteTemplate(
                           @model={{invite.user}}
                         >{{invite.user.username}}</LinkTo>
                       </td>
-                      <td>{{formatDate invite.redeemed_at}}</td>
-                      {{#if @controller.model.can_see_invite_details}}
-                        <td>{{formatDate invite.user.last_seen_at}}</td>
-                        <td>{{number invite.user.topics_entered}}</td>
-                        <td>{{number invite.user.posts_read_count}}</td>
-                        <td>{{formatDuration invite.user.time_read}}</td>
+                      <td class="d-admin-row__detail">
+                        {{formatDate invite.redeemed_at}}
+                      </td>
+                      {{!-- {{#if @controller.model.can_see_invite_details}} --}}
+                        <td class="d-admin-row__detail">{{formatDate invite.user.last_seen_at}}</td>
+                        <td class="d-admin-row__detail">{{number invite.user.topics_entered}}</td>
+                        <td class="d-admin-row__detail">{{number invite.user.posts_read_count}}</td>
+                        <td class="d-admin-row__detail">{{formatDuration invite.user.time_read}}</td>
                         <td>
                           <span
                             title={{i18n "user.invited.days_visited"}}
@@ -140,14 +144,14 @@ export default RouteTemplate(
                             title={{i18n "user.invited.account_age_days"}}
                           >{{htmlSafe invite.user.days_since_created}}</span>
                         </td>
-                        <td>{{htmlSafe invite.invite_source}}</td>
-                      {{/if}}
+                        <td class="d-admin-row__detail">{{htmlSafe invite.invite_source}}</td>
+                      {{!-- {{/if}} --}}
                     </tr>
                   {{/each}}
                 </tbody>
               </table>
             {{else}}
-              <table class="table user-invite-list">
+              <table class="d-admin-table user-invite-list">
                 <thead>
                   <tr>
                     <th>{{i18n "user.invited.invited_via"}}</th>
@@ -214,23 +218,34 @@ export default RouteTemplate(
                       </td>
 
                       {{#if invite.can_delete_invite}}
-                        <td class="invite-actions">
-                          <DButton
-                            @icon="pencil"
-                            @action={{fn @controller.editInvite invite}}
-                            @title="user.invited.edit"
-                            class="btn-default"
-                          />
-                          <DButton
-                            @icon="trash-can"
-                            @action={{fn @controller.destroyInvite invite}}
-                            @title={{if
-                              invite.destroyed
-                              "user.invited.removed"
-                              "user.invited.remove"
-                            }}
-                            class="cancel"
-                          />
+                        <td class="d-admin-row__controls invite-actions">
+                          <div class="d-admin-row__controls-options">
+                            <DButton
+                              @label="admin.user_fields.edit"
+                              @action={{fn @controller.editInvite invite}}
+                              @title="user.invited.edit"
+                              class="btn-small"
+                            />
+                            <DMenu
+                              @identifier="invites-menu"
+                              @title={{i18n "admin.more_options"}}
+                              @icon="ellipsis-vertical"
+                              @onRegisterApi={{@controller.onRegisterApi}}
+                            >
+                              <:content>
+                                <DropdownMenu as |dropdown|>
+                                  <dropdown.item>
+                                    <DButton
+                                      @action={{fn @controller.destroyInvite invite}}
+                                      @icon="trash-can"
+                                      class="btn-transparent btn-danger"
+                                      @label={{if invite.destroyed "user.invited.removed" "user.invited.remove"}}
+                                    />
+                                  </dropdown.item>
+                                </DropdownMenu>
+                              </:content>
+                            </DMenu>
+                          </div>
                         </td>
                       {{/if}}
                     </tr>
