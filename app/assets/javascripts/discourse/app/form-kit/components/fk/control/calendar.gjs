@@ -34,7 +34,12 @@ export default class FKControlCalendar extends Component {
 
   @action
   setDate(date) {
-    const updatedDate = new Date(date);
+    let year, month, day;
+    [year, month, day] = date.split("-").map(Number);
+    // JS Date months are 0-based
+    month -= 1;
+
+    const updatedDate = new Date(year, month, day);
     const currentDate = this.args.field.value || new Date();
 
     updatedDate.setHours(
