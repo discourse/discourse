@@ -392,6 +392,7 @@ fa_IR:
       created: "شما این نوشته را نشانک کردید. %{name}"
       created_generic: "شما این را نشانک گذاری کرده‌اید. %{name}"
       create: "ایجاد نشانک"
+      clear_reminder: "پاک کردن یادآور"
       edit: "ویرایش نشانک"
       not_bookmarked: "این نوشته را نشانک بزنید"
       remove_reminder_keep_bookmark: "حذف یادآوری و نگه داشتن نشانک"
@@ -1887,6 +1888,7 @@ fa_IR:
           edit_link_options: "گزینه های پیوند را ویرایش کنید یا از طریق ایمیل ارسال کنید."
           show_advanced: "نمایش تنظیمات پیشرفته"
           hide_advanced: "پنهان کردن تنظیمات پیشرفته"
+          description: "توضیح"
           restrict: "محدود کردن به"
           restrict_email: "محدود کردن ایمیل"
           restrict_domain: "محدود کردن دامنه"
@@ -2547,7 +2549,8 @@ fa_IR:
       italic_text: "متن تاکید شده"
       link_title: "فرا‌پیوند"
       link_description: "توضیحات لینک را اینجا وارد کنید."
-      link_dialog_title: "افزودن پیوند"
+      link_dialog_action: "درج کردن"
+      link_edit_action: "به روز رسانی"
       link_optional_text: "عنوان اختیاری"
       link_url_placeholder: "یک نشانی وب را جایگذاری کنید یا برای جستجوی موضوعات تایپ کنید"
       blockquote_title: "نقل‌قول"
@@ -2618,6 +2621,9 @@ fa_IR:
       image_scale_button: "تغییر مقیاس تصویر به %{percent}%"
       delete_image_button: حذف تصویر
       toggle_image_grid: تغییر وضعیت شبکه تصویر
+      link_toolbar:
+        copy: "رونوشت پیوند"
+        link_copied: "لینک کپی شد!"
     notifications:
       tooltip:
         regular:
@@ -3589,6 +3595,8 @@ fa_IR:
           delete: "حذف"
         add: "افزودن ترجمه جدید"
         success: "ترجمه‌ها با موفقیت به‌روزرسانی شدند."
+        post_language_selector:
+          none: "هیچ کدام"
       errors:
         create: "متأسفیم، در ایجاد نوشته‌ی شما خطایی روی داد. لطفاً دوباره تلاش کنید."
         edit: "متأسفیم، در ویرایش نوشته‌ی شما خطایی روی داد. لطفاً دوباره تلاش کنید."
