@@ -143,7 +143,11 @@
     "webpack": "^5.99.9",
     "webpack-retry-chunk-load-plugin": "^3.1.1",
     "webpack-stats-plugin": "^1.1.3",
-    "xss": "^1.0.15"
+    "xss": "^1.0.15",
+    "@fullcalendar/core": "6.1.17",
+    "@fullcalendar/daygrid": "6.1.17",
+    "@fullcalendar/list": "6.1.17",
+    "@fullcalendar/timegrid": "6.1.17"
   },
   "engines": {
     "node": ">= 18",
