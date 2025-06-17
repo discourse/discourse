@@ -32,6 +32,10 @@ module PageObjects
         find_theme_card(theme).has_no_css?(".theme-card__badge.#{badge}")
       end
 
+      def has_themes?(names)
+        expect(all(".theme-card__title").map(&:text)).to eq(names)
+      end
+
       def toggle_selectable(theme)
         open_theme_menu(theme)
         find(".set-selectable").click
