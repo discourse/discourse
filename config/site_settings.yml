@@ -4026,5 +4026,10 @@ experimental:
     client: true
     validator: "LanguageSwitcherSettingValidator"
   experimental_system_themes:
-    default: false
+    type: list
+    default: ""
     hidden: true
+    allow_any: false
+    choices:
+      - "foundation"
+      - "horizon"
