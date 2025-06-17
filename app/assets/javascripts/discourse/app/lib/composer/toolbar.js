@@ -49,8 +49,9 @@ export class ToolbarBase {
       Object.getOwnPropertyDescriptors(buttonAttrs)
     );
 
-    createdButton.tabindex = buttonAttrs.tabindex || "-1";
-    createdButton.className = buttonAttrs.className || buttonAttrs.id;
+    createdButton.tabindex ||= "-1";
+    createdButton.className ||= buttonAttrs.id;
+    createdButton.condition ||= () => true;
 
     createdButton.action = () => {
       const toolbarEvent = this.context.newToolbarEvent?.(
@@ -69,8 +70,6 @@ export class ToolbarBase {
       );
     };
 
-    createdButton.condition = buttonAttrs.condition || (() => true);
-
     const title = i18n(buttonAttrs.title || `composer.${buttonAttrs.id}_title`);
     if (buttonAttrs.shortcut) {
       const shortcutTitle = `${translateModKey(
@@ -85,8 +84,6 @@ export class ToolbarBase {
       this.shortcuts[
         `${PLATFORM_KEY_MODIFIER}+${buttonAttrs.shortcut}`.toLowerCase()
       ] = createdButton;
-    } else {
-      createdButton.title = title;
     }
 
     if (buttonAttrs.unshift) {
