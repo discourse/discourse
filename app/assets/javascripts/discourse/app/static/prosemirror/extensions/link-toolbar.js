@@ -10,6 +10,7 @@ import { updatePosition } from "float-kit/lib/update-position";
 
 const AUTO_LINKS = ["autolink", "linkify"];
 const MENU_OFFSET = 12;
+const STRIP_PROTOCOLS = /^(mailto:|https:\/\/)/;
 
 class LinkToolbar extends ToolbarBase {
   constructor(opts = {}) {
@@ -61,18 +62,16 @@ class LinkToolbar extends ToolbarBase {
       },
       get translatedLabel() {
         if (opts.canUnlink()) {
-          let label = opts.getHref();
+          const label = opts.getHref();
 
           // strip base url from label
           const origin = window.location.origin;
           if (label.startsWith(origin)) {
-            label = label.replace(origin, "");
+            return label.replace(origin, "");
           }
 
           // strip protocol from label if mailto or https
-          label = label.replace(/^(mailto:|https:\/\/)/, "");
-
-          return label;
+          return label.replace(STRIP_PROTOCOLS, "");
         }
       },
       get disabled() {
