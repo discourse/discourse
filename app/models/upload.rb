@@ -494,14 +494,7 @@ class Upload < ActiveRecord::Base
     self.update(secure_params(mark_secure, reason, source))
 
     if secure_status_did_change && SiteSetting.s3_use_acls && Discourse.store.external?
-      begin
-        Discourse.store.update_upload_access_control(self)
-      rescue Aws::S3::Errors::NotImplemented => err
-        Discourse.warn_exception(
-          err,
-          message: "The file store object storage provider does not support setting ACLs",
-        )
-      end
+      Discourse.store.update_upload_access_control(self)
     end
 
     secure_status_did_change

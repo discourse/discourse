@@ -438,11 +438,22 @@ module FileStore
     end
 
     def update_access_control(key, secure)
-      object = object_from_path(key).acl.put(acl: acl_option_value(secure:))
+      begin
+        object = object_from_path(key).acl.put(acl: acl_option_value(secure:))
+      rescue Aws::S3::Errors::NotImplemented => err
+        Discourse.warn_exception(
+          err,
+          message: "The file store object storage provider does not support setting ACLs",
+        )
+      end
 
       if tagging_option_value =
            self.class.visibility_tagging_option_value(secure:, encode_form: false)
-        s3_helper.upsert_tag(key, tagging_option_value)
+        s3_helper.upsert_tag(
+          key,
+          tag_key: tagging_option_value.keys.first,
+          tag_value: tagging_option_value.values.first,
+        )
       end
     rescue Aws::S3::Errors::NoSuchKey
       Rails.logger.warn(

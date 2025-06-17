@@ -585,25 +585,43 @@ RSpec.describe FileStore::S3Store do
         end
 
         it "set the right tagging option for a public upload" do
-          s3_helper.expects(:upsert_tag).with(
-            upload.url,
-            FileStore::S3Store.visibility_tagging_option_value(secure: false, encode_form: false),
-          )
-
           upload.update!(secure: false)
 
           store.update_upload_access_control(upload)
+
+          tagging_request =
+            store.s3_helper.s3_client.api_requests.find do |api_request|
+              api_request[:operation_name] == :put_object_tagging
+            end
+
+          expect(tagging_request[:context].params[:tagging][:tag_set]).to eq(
+            [
+              {
+                key: SiteSetting.s3_access_control_tag_key,
+                value: SiteSetting.s3_access_control_tag_public_value,
+              },
+            ],
+          )
         end
 
         it "sets the right tagging option for a secure upload" do
-          s3_helper.expects(:upsert_tag).with(
-            upload.url,
-            FileStore::S3Store.visibility_tagging_option_value(secure: true, encode_form: false),
-          )
-
           upload.update!(secure: true)
 
           store.update_upload_access_control(upload)
+
+          tagging_request =
+            store.s3_helper.s3_client.api_requests.find do |api_request|
+              api_request[:operation_name] == :put_object_tagging
+            end
+
+          expect(tagging_request[:context].params[:tagging][:tag_set]).to eq(
+            [
+              {
+                key: SiteSetting.s3_access_control_tag_key,
+                value: SiteSetting.s3_access_control_tag_private_value,
+              },
+            ],
+          )
         end
       end
 
