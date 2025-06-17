@@ -17,7 +17,9 @@ import ReviseAndRejectPostReviewable from "discourse/components/modal/revise-and
 import ReviewableBundledAction from "discourse/components/reviewable-bundled-action";
 import ReviewableClaimedTopic from "discourse/components/reviewable-claimed-topic";
 import ReviewableCreatedBy from "discourse/components/reviewable-created-by";
+import ReviewableFlagReason from "discourse/components/reviewable-refresh/flag-reason";
 import ReviewableInsights from "discourse/components/reviewable-refresh/insights";
+import ReviewableTimeline from "discourse/components/reviewable-refresh/timeline";
 import icon from "discourse/helpers/d-icon";
 import { newReviewableStatus } from "discourse/helpers/reviewable-status";
 import { ajax } from "discourse/lib/ajax";
@@ -591,12 +593,7 @@ export default class ReviewableItem extends Component {
 
                 <div class="review-item__flag-badges">
                   {{#each this.scoreSummary as |score|}}
-                    <span class="review-item__flag-reason --{{score.type}}">
-                      <span class="review-item__flag-count --{{score.type}}">
-                        {{score.count}}
-                      </span>
-                      {{score.title}}
-                    </span>
+                    <ReviewableFlagReason @score={{score}} />
                   {{/each}}
                 </div>
               </div>
@@ -648,10 +645,7 @@ export default class ReviewableItem extends Component {
             {{#if (eq this.activeTab "insights")}}
               <ReviewableInsights @reviewable={{this.reviewable}} />
             {{else if (eq this.activeTab "timeline")}}
-              <div class="review-timeline">
-                {{! TODO: Add timeline and notes content }}
-                <p>{{i18n "review.timeline_placeholder"}}</p>
-              </div>
+              <ReviewableTimeline @reviewable={{this.reviewable}} />
             {{/if}}
           </div>
         </div>
