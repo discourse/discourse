@@ -43,17 +43,41 @@ class LinkToolbar extends ToolbarBase {
       action: opts.unlinkText,
     });
 
-    this.addSeparator({ condition: () => opts.canVisit() || opts.canUnlink() });
+    this.addSeparator({
+      condition: () => opts.canVisit() || opts.canUnlink(),
+    });
 
     this.addButton({
       id: "link-visit",
-      icon: () => (opts.canVisit() ? "up-right-from-square" : null),
+      get icon() {
+        return opts.canVisit() ? "up-right-from-square" : null;
+      },
       title: "composer.link_toolbar.visit",
       className: "composer-link-toolbar__visit",
       preventFocus: true,
       condition: () => opts.canVisit() || opts.canUnlink(),
-      href: () => (opts.canVisit() ? opts.getHref() : null),
-      label: () => (opts.canUnlink() ? opts.getHref() : null),
+      get href() {
+        return opts.canVisit() ? opts.getHref() : null;
+      },
+      get translatedLabel() {
+        if (opts.canUnlink()) {
+          let label = opts.getHref();
+
+          // strip base url from label
+          const origin = window.location.origin;
+          if (label.startsWith(origin)) {
+            label = label.replace(origin, "");
+          }
+
+          // strip protocol from label if mailto or https
+          label = label.replace(/^(mailto:|https:\/\/)/, "");
+
+          return label;
+        }
+      },
+      get disabled() {
+        return !opts.canVisit();
+      },
     });
   }
 }
