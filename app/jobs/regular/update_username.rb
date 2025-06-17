@@ -34,11 +34,8 @@ module Jobs
       @cooked_mention_user_path_regex =
         %r{\A/u(?:sers)?/#{UrlHelper.encode_component(cooked_username)}\z}i
 
-      up = Benchmark.measure { update_posts }
-      puts "Inside updateUsername - time updating posts: #{up.real.round(2)} "
-
-      ur = Benchmark.measure { update_revisions }
-      puts "Inside updateUsername - time updating revisions: #{ur.real.round(2)} "
+      update_posts
+      update_revisions
 
       un = Benchmark.measure { update_notifications }
       puts "Inside updateUsername - time updating notifications: #{un.real.round(2)} "
@@ -81,14 +78,24 @@ module Jobs
     end
 
     def update_revisions
-      PostRevision
-        .where("modifications SIMILAR TO ?", "%(raw|cooked)%@#{@old_username}%")
-        .find_each { |revision| update_revision(revision) }
+      pr1 =
+        Benchmark.measure do
+          PostRevision
+            .where("modifications SIMILAR TO ?", "%(raw|cooked)%@#{@old_username}%")
+            .find_each { |revision| update_revision(revision) }
+        end
 
-      PostRevision
-        .joins(quoted("post_revisions.post_id"))
-        .where("p.user_id = :user_id", user_id: @user_id)
-        .find_each { |revision| update_revision(revision) }
+      puts "Time updating revisions: #{pr1.real.round(2)} "
+
+      pr2 =
+        Benchmark.measure do
+          PostRevision
+            .joins(quoted("post_revisions.post_id"))
+            .where("p.user_id = :user_id", user_id: @user_id)
+            .find_each { |revision| update_revision(revision) }
+        end
+
+      puts "Time updating revisions: #{pr2.real.round(2)} "
     end
 
     def update_notifications
