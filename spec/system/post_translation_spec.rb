@@ -19,9 +19,9 @@ describe "Post translations", type: :system do
   before do
     sign_in(admin)
     SiteSetting.default_locale = "en"
-    SiteSetting.experimental_content_localization_supported_locales = "fr|es|pt_BR"
-    SiteSetting.experimental_content_localization = true
-    SiteSetting.experimental_content_localization_allowed_groups = Group::AUTO_GROUPS[:everyone]
+    SiteSetting.content_localization_supported_locales = "fr|es|pt_BR"
+    SiteSetting.content_localization_enabled = true
+    SiteSetting.content_localization_allowed_groups = Group::AUTO_GROUPS[:everyone]
     SiteSetting.post_menu =
       "read|like|copyLink|flag|edit|bookmark|delete|admin|reply|addTranslation"
   end

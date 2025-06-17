@@ -79,7 +79,7 @@ export default RouteTemplate(
             />
           {{/if}}
 
-          {{#if @controller.siteSettings.experimental_content_localization}}
+          {{#if @controller.siteSettings.content_localization_enabled}}
             <EditCategoryTab
               @panels={{@controller.panels}}
               @selectedTab={{@controller.selectedTab}}

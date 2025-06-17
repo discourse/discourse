@@ -41,7 +41,7 @@ RSpec.describe "Localized topic" do
   context "when the feature is enabled" do
     before do
       SiteSetting.allow_user_locale = true
-      SiteSetting.experimental_content_localization = true
+      SiteSetting.content_localization_enabled = true
     end
 
     it "shows the correct language based on the selected language and login status" do
