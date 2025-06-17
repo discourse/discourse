@@ -306,7 +306,7 @@ class S3Helper
     s3_client.abort_multipart_upload(bucket: s3_bucket_name, key: key, upload_id: upload_id)
   end
 
-  def create_multipart(key, content_type, metadata: {}, acl:, tagging: nil)
+  def create_multipart(key, content_type, metadata: {}, acl: nil, tagging: nil)
     response =
       s3_client.create_multipart_upload(
         acl:,

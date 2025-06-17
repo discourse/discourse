@@ -395,7 +395,11 @@ module FileStore
     end
 
     def self.default_s3_options(secure:)
-      options = { acl: acl_option_value(secure:) }
+      options = {}
+
+      if acl_value = acl_option_value(secure:)
+        options[:acl] = acl_value
+      end
 
       if tagging_option_value = visibility_tagging_option_value(secure:)
         options[:tagging] = tagging_option_value
@@ -438,13 +442,15 @@ module FileStore
     end
 
     def update_access_control(key, secure)
-      begin
-        object = object_from_path(key).acl.put(acl: acl_option_value(secure:))
-      rescue Aws::S3::Errors::NotImplemented => err
-        Discourse.warn_exception(
-          err,
-          message: "The file store object storage provider does not support setting ACLs",
-        )
+      if acl = self.class.acl_option_value(secure:)
+        begin
+          object = object_from_path(key).acl.put(acl:)
+        rescue Aws::S3::Errors::NotImplemented => err
+          Discourse.warn_exception(
+            err,
+            message: "The file store object storage provider does not support setting ACLs",
+          )
+        end
       end
 
       if tagging_option_value =
