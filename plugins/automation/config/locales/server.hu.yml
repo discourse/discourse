@@ -130,7 +130,7 @@ hu:
         title: Téma lezárása
         description: Lezárja a témát egy opcionális záró üzenettel
       append_last_edited_by:
-        title: Utoljára szerkesztette hozzáadása
+        title: Utolsó szerkesztő hozzáfűzése
         description: Hozzáadja a bejegyzés „utoljára szerkesztette” részleteit a főzött tartalom aljához.
         text: "Utoljára szerkesztette: @%{username} %{date_time}"
       append_last_checked_by:

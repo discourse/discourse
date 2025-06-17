@@ -135,7 +135,7 @@ el:
       to_placeholder: "μέχρι σήμερα"
     share:
       topic_html: 'Θέμα: <span class="topic-title">%{topicTitle}</span>'
-      post: "δημοσίευση #%{postNumber} από @%{username}"
+      post: "ανάρτηση #%{postNumber} από @%{username}"
       close: "κλείσιμο"
       twitter: "Κοινοποίηση στο X"
       facebook: "Μοιραστείτε στο Facebook"
@@ -155,6 +155,8 @@ el:
       removed_user: "Αφαίρεσε την ομάδα %{who} στις %{when}"
       removed_group: "Αφαίρεσε την ομάδα %{who} στις %{when}"
       autobumped: "Ωθήθηκε αυτόματα στις %{when}"
+      tags_changed: "Οι ετικέτες ενημερώθηκαν %{when}"
+      category_changed: "Η κατηγορία ενημερώθηκε %{when}"
       autoclosed:
         enabled: "Έκλεισε στις %{when}"
         disabled: "Άνοιξε στις %{when}"
@@ -183,15 +185,19 @@ el:
     emails_are_disabled: "Όλα τα εξερχόμενα emails έχουν απενεργοποιηθεί καθολικά από κάποιον διαχειριστή. Δε θα σταλεί καμία ειδοποίηση email."
     emails_are_disabled_non_staff: "Τα εξερχόμενα email έχουν απενεργοποιηθεί για χρήστες εκτός του προσωπικού."
     software_update_prompt:
+      message: "Ενημερώσαμε αυτόν τον ιστότοπο, <span>παρακαλούμε κάντε ανανέωση</span> για να συνεχιστεί η ομαλή λειτουργία."
       dismiss: "Απόρριψη"
     bootstrap_mode: "Ξεκινώντας"
     back_button: "Πίσω"
     themes:
       default_description: "Προεπιλογή"
+      error_caused_by: "Προκλήθηκε από '%{name}'. <a target='blank' href='%{path}'>Πατήστε εδώ</a> για να το ενημερώσετε, να αλλάξετε τις ρυθμίσεις ή να το απενεργοποιήσετε."
       only_admins: "(αυτό το μήνυμα εμφανίζεται μόνο στους διαχειριστές του ιστότοπου)"
     broken_plugin_alert: "Προκλήθηκε από το πρόσθετο '%{name}'"
+    broken_transformer_alert: "Παρουσιάστηκε σφάλμα. Ο ιστότοπός σας ενδέχεται να μην λειτουργεί σωστά."
     critical_deprecation:
       id: "(id:<em>%{id}</em>)"
+      linked_id: "(id:<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
       theme_source: "Ταυτοποιημένο θέμα: <a target='_blank' href='%{path}'>'%{name}'</a>."
       plugin_source: "Ταυτοποιημένο πρότυπο: '%{name}'"
     s3:
@@ -357,7 +363,7 @@ el:
       clear_bookmarks: "Καθαρισμός σελιδοδεικτών"
       help:
         bookmark: "Κάντε κλικ για να βάλετε σελιδοδείκτη σε αυτό το θέμα"
-        edit_bookmark: "Κάντε κλικ για να επεξεργαστείτε τον σελιδοδείκτη σε μια δημοσίευση σε αυτό το θέμα"
+        edit_bookmark: "Κάντε κλικ για να επεξεργαστείτε τον σελιδοδείκτη σε μια ανάρτηση σε αυτό το θέμα"
         edit_bookmark_for_topic: "Κάντε κλικ για να επεξεργαστείτε τον σελιδοδείκτη για αυτό το θέμα"
         unbookmark: "Πατήστε εδώ για να αφαιρεθούν όλοι οι σελιδοδείκτες από αυτό το θέμα."
         unbookmark_with_reminder: "Κάντε κλικ για να αφαιρέσετε όλους τους σελιδοδείκτες και τις υπενθυμίσεις σε αυτό το θέμα"
@@ -633,12 +639,16 @@ el:
           title: "Εγκρίθηκε "
         rejected:
           title: "Απορρίφθηκε"
+        deleted:
+          title: "Το θέμα ή η ανάρτηση διαγράφηκε"
         reviewed:
           title: "Όλα αναθεωρημένα"
         all:
           title: "Τα πάνΤα"
       context_question:
+        is_this_post: "Είναι αυτό το %{reviewable_type} %{reviewable_human_score_types};"
         delimiter: "ή"
+        something_else_wrong: "Υπάρχει κάποιο πρόβλημα με αυτό το %{reviewable_type};"
       types:
         reviewable_flagged_post:
           title: "Επισημασμένη ανάρτηση"
@@ -751,6 +761,7 @@ el:
         one: "%{count} χειριστής"
         other: "%{count} χρήστες"
       edit_columns:
+        title: "Επεξεργασία Στηλών Καταλόγου"
         save: "Αποθήκευση"
         reset_to_default: "Επαναφορά στο προεπιλεγμένο"
       group:
@@ -802,6 +813,7 @@ el:
           status: "%{old_emails} / %{total_emails} συγχρονισμένα emails μέσω IMAP."
           enable_smtp: "Ενεργοποίηση SMTP"
           enable_imap: "Ενεργοποίηση IMAP"
+          test_settings: "Δοκιμή ρυθμίσεων"
           save_settings: "Αποθήκευση Ρυθμίσεων"
           last_updated: "Τελευταία ενημέρωση:"
           last_updated_by: "από"
@@ -915,6 +927,7 @@ el:
         group_type: "Τύπος ομάδας"
         is_group_user: "Μέλος"
         is_group_owner: "Ιδιοκτήτης"
+        search_results: "Τα αποτελέσματα αναζήτησης θα εμφανιστούν παρακάτω."
       title:
         one: "Ομάδα"
         other: "Ομάδες"
@@ -934,9 +947,10 @@ el:
         status: "Κατάσταση"
         owner: "Ιδιοκτήτης"
         forbidden: "Δε σας επιτρέπεται να δείτε τα μέλη."
+        no_filter_matches: "Κανένα μέλος δεν ταιριάζει με αυτή την αναζήτηση."
       topics: "Θέματα"
       posts: "Αναρτήσεις"
-      aria_post_number: "%{title} - δημοσίευση #%{postNumber}"
+      aria_post_number: "%{title} - ανάρτηση #%{postNumber}"
       mentions: "Αναφορές"
       messages: "Μηνύματα"
       notification_level: "Προκαθορισμένο επίπεδο ειδοποιήσεων για μηνύματα ομάδων"
@@ -1063,6 +1077,7 @@ el:
     user_fields:
       none: "(διαλέξτε μία επιλογή)"
       required: 'Παρακαλώ εισαγάγετε μια τιμή για το "%{name}»'
+      required_checkbox: 'Το πεδίο "%{name}" είναι υποχρεωτικό'
       same_as_password: "Ο κωδικός σας δεν πρέπει να επαναλαμβάνεται σε άλλα πεδία"
       optional: (προεραιτικό)
     user:
@@ -1129,6 +1144,8 @@ el:
           warning: "Είστε βέβαιοι ότι θέλετε να καθαρίσετε το προτεινόμενο θέμα σας;"
       use_current_timezone: "Χρήση τρέχουσας ζώνης ώρας"
       profile_hidden: "Το δημόσιο προφίλ αυτού του χρήστη είναι κρυφό."
+      login_to_view_profile: "Πρέπει να συνδεθείτε για να δείτε τα προφίλ χρήστη"
+      inactive_user: "Αυτός ο χρήστης δεν είναι πλέον ενεργός."
       expand_profile: "Επέκταση"
       sr_expand_profile: "Ανάπτυξη λεπτομερειών προφίλ"
       collapse_profile: "Σύμπτυξη"
@@ -1659,8 +1676,12 @@ el:
         forgot_password: "Ξεχάσατε τον κωδικό σας;"
       password:
         title: "Κωδικός Πρόσβασης"
+        too_short:
+          one: "Ο κωδικός πρόσβασης σας είναι πολύ μικρός (το ελάχιστο είναι %{count} χαρακτήρας)."
+          other: "Ο κωδικός πρόσβασης σας είναι πολύ μικρός (το ελάχιστο είναι %{count} χαρακτήρες)."
         common: "Ο κωδικός πρόσβασης είναι πολύ κοινός."
         same_as_username: "Ο κωδικός πρόσβασης που έδωσες είναι ο ίδιος με το όνομα χρήστη."
+        same_as_name: "Ο κωδικός πρόσβασης σας είναι ίδιος με το όνομα σας."
         same_as_email: "Ο κωδικός πρόσβασής σου είναι ίδιος με τη διεύθυνση email σου."
         ok: "Ο κωδικός πρόσβασης φαίνεται καλός."
         instructions:
@@ -1668,6 +1689,7 @@ el:
           other: "Τουλάχιστον %{count} χαρακτήρες"
         required: "Παρακαλώ εισαγάγετε έναν κωδικό πρόσβασης"
         confirm: "Επιβεβαίωση"
+        incorrect_password: "Ο κωδικός πρόσβασης που εισήχθη είναι λανθασμένος."
       summary:
         title: "Περίληψη"
         stats: "Στατιστικά"
@@ -1746,6 +1768,7 @@ el:
         sent_by: "Στάλθηκε από"
         private_message: "μήνυμα"
         the_topic: "το θέμα"
+      card: "Κάρτα χρήστη"
       profile_link: "%{username}, επισκεφθείτε το προφίλ"
     user_status:
       save: "Αποθήκευση"
@@ -1756,6 +1779,7 @@ el:
     presence_toggle:
       online: "Σε σύνδεση"
       offline: "Εκτός σύνδεσης"
+      title: "Εναλλαγή χαρακτηριστικών παρουσίας"
     user_tips:
       button: "Το κατάλαβα!"
       skip: "Παράλειψη συμβουλών"
@@ -1765,7 +1789,7 @@ el:
       topic_timeline:
         title: "Χρονολόγιο θέματος"
       post_menu:
-        title: "Μενού δημοσίευσης"
+        title: "Μενού ανάρτησης"
       topic_notification_levels:
         title: "Τώρα παρακολουθείτε αυτό το θέμα"
       suggested_topics:
@@ -1965,8 +1989,10 @@ el:
       blank_username: "Παρακαλώ εισαγάγετε το email ή το όνομα χρήστη σας."
       blank_username_or_password: "Παρακαλώ δώσε την διεύθυνση email σου ή το όνομα χρήστη σου καθώς και τον κωδικό πρόσβασής σου."
       reset_password: "Επαναφορά Κωδικού Πρόσβασης"
+      logging_in: "Σύνδεση…"
       previous_sign_up: "Έχετε ήδη λογαριασμό;"
       or: "Ή"
+      authenticating: "Αυθεντικοποίηση…"
       awaiting_activation: "Ο λογαριασμός σας αναμένει ενεργοποίηση, χρησιμοποιήστε τον σύνδεσμο ξεχασμένου συνθηματικού για δημιουργία νέου email ενεργοποίησης."
       awaiting_approval: "Ο λογαριασμός σου δεν έχει εγκριθεί από κανέναν συνεργάτη ακόμη. Θα λάβεις ένα email όταν εγκριθεί."
       requires_invite: "Λυπούμαστε, αλλά η πρόσβαση σε αυτό το φόρουμ είναι δυνατή μόνο με πρόσκληση."
@@ -2008,9 +2034,15 @@ el:
         name: "Discord"
         title: "Σύνδεση με το Discord"
         sr_title: "Σύνδεση με το Discord"
+      linkedin_oidc:
+        name: "LinkedIn"
+        title: "Σύνδεση με LinkedIn"
+        sr_title: "Σύνδεση με LinkedIn"
       second_factor_toggle:
         totp: "Χρησιμοποιήστε αντ 'αυτού μια εφαρμογή ελέγχου ταυτότητας"
         backup_code: "Χρησιμοποιήστε αντ 'αυτού έναν εφεδρικό κωδικό"
+      no_login_methods:
+        title: "Δεν υπάρχουν μέθοδοι σύνδεσης"
     invites:
       accept_title: "Πρόσκληση"
       welcome_to: "Καλώς ήλθατε στην %{site_name}!"
@@ -2057,6 +2089,8 @@ el:
         other: "%{count} θέματα σε αυτήν την κατηγορία"
     select_kit:
       delete_item: "Διαγραφή %{name}"
+      filter_by: "Φιλτράρισμα κατά: %{name}"
+      select_to_filter: "Επιλέξτε μια τιμή για φιλτράρισμα"
       default_header_text: Επιλογή…
       no_content: Δεν βρέθηκαν αποτελέσματα
       results_count:
@@ -2106,6 +2140,7 @@ el:
       destination_category: "Κατηγορία προορισμού"
       publish: "Δημοσίευση κοινόχρηστου προσχεδίου"
       confirm_publish: "Είσαι βέβαιοι πως θέλετε να δημοσιεύσετε αυτό το προσχέδιο;"
+      publishing: "Δημοσίευση θέματος…"
     composer:
       emoji: "Emoji :)"
       more_emoji: "περισσότερα…"
@@ -2350,6 +2385,7 @@ el:
         votes_released: "Η ψηφοφορία κυκλοφόρησε"
     upload_selector:
       uploading: "Ανεβαίνει"
+      processing: "Επεξεργασία μεταφόρτωσης"
       select_file: "Επιλογή Αρχείου"
       default_image_alt_text: εικόνα
     search:
@@ -2463,6 +2499,7 @@ el:
           placeholder: ελάχιστο
         max_views:
           placeholder: μέγιστο
+    hamburger_menu: "μενού"
     new_item: "καινούριο"
     go_back: "επιστροφή"
     not_logged_in_user: "σελίδα λογαριασμού που περιέχει σύνοψη της τρέχουσας δραστηριότητας και τις προτιμήσεις"
@@ -2493,7 +2530,7 @@ el:
         queue: "Ουρά"
         deleted_user: "(διαγραμμένος χρήστης)"
         deleted_post: "(διαγραμμένη ανάρτηση)"
-        post_number_with_topic_title: "δημοσίευση #%{post_number} - %{title}"
+        post_number_with_topic_title: "ανάρτηση #%{post_number} - %{title}"
         new_post_in_topic: "νέα δημοσίευση στο %{title}"
     topics:
       new_messages_marker: "τελευταία επίσκεψη"
@@ -2603,7 +2640,7 @@ el:
         name: "Ενημέρωση Ειδοποιήσεων"
     topic:
       filter_to:
-        one: "%{count} δημοσίευση σε θέμα"
+        one: "%{count} ανάρτηση σε θέμα"
         other: "%{count} αναρτήσεις σε θέμα"
       create: "Νέο Θέμα"
       create_long: "Δημιουργία νέου θέματος"
@@ -3000,7 +3037,7 @@ el:
           other: "Έχεις επιλέξει <b>%{count}</b> αναρτήσεις."
     post_list:
       title: "Τελευταίες αναρτήσεις"
-      aria_post_number: "%{title} - δημοσίευση #%{postNumber}"
+      aria_post_number: "%{title} - ανάρτηση #%{postNumber}"
     post:
       confirm_delete: "Είστε βέβαιοι ότι θέλετε να διαγράψετε αυτήν την ανάρτηση;"
       quote_reply: "Παράθεση"
@@ -3035,11 +3072,11 @@ el:
       has_replies_count: "%{count}"
       unknown_user: "(άγνωστος/διαγραμμένος χρήστης)"
       has_likes_title:
-        one: "%{count} άτομο πάτησε \"μου αρέσει\" στη δημοσίευση"
+        one: "%{count} άτομο πάτησε \"Μου αρέσει\" στην ανάρτηση"
         other: "%{count} άτομα πάτησαν \"Μου αρέσει\" στην ανάρτηση"
       has_likes_title_only_you: "σου αρέσει αυτή η ανάρτηση"
       has_likes_title_you:
-        one: "εσύ και %{count} άλλο άτομο πάτησε \"Μου αρέσει\" στη δημοσίευση"
+        one: "εσύ και %{count} άλλο άτομο πάτησε \"Μου αρέσει\" στην ανάρτηση"
         other: "εσύ και %{count} ακόμα άτομα πατήσατε \"Μου αρέσει\" στην ανάρτηση"
       errors:
         create: "Λυπούμαστε, παρουσιάστηκε σφάλμα κατά την δημιουργία της ανάρτησης. Προσπάθησε πάλι."
@@ -3779,8 +3816,8 @@ el:
       no_read_topics_title: "Δεν έχεις διαβάσει κανένα θέμα ακόμα"
     no_group_messages_title: "Δε βρέθηκαν ομαδικά μηνύματα"
     topic_entrance:
-      jump_top_button_title: "Μετάβαση στην πρώτη δημοσίευση"
-      jump_bottom_button_title: "Μετάβαση στην τελευταία δημοσίευση"
+      jump_top_button_title: "Μετάβαση στην πρώτη ανάρτηση"
+      jump_bottom_button_title: "Μετάβαση στην τελευταία ανάρτηση"
     fullscreen_table:
       expand_btn: "Ανάπτυξη Πίνακα"
     sidebar:
@@ -3920,6 +3957,7 @@ el:
       collapse_all_sections: "Σύμπτυξη όλων των τμημάτων"
       expand_all_sections: "Ανάπτυξη όλων των τμημάτων"
       filter: "Φίλτρο..."
+      clear_filter: "Καθαρισμός φίλτρου"
       no_results:
         title: "Δεν υπάρχουν αποτελέσματα"
     welcome_topic_banner:
@@ -3971,10 +4009,14 @@ el:
           title: "Developer"
         experimental:
           title: "Πειραματικό"
+        font_style:
+          title: "Στυλ γραμματοσειράς"
         files:
           title: "Αρχεία"
         legal:
           title: "Νομικά"
+        logo:
+          title: "Λογότυπο ιστότοπου"
         navigation:
           title: "Πλοήγηση"
         notifications:
@@ -4257,27 +4299,40 @@ el:
         title: "Λογαριασμός"
         sidebar_link:
           backups: "Αντίγραφα ασφαλέιας"
+          whats_new:
+            title: "Τι νέο υπάρχει?"
       community:
         title: "Κοινότητα"
         sidebar_link:
+          about_your_site: "Σχετικά με τον ιστότοπο σας"
           badges: "Παράσημα"
           notifications: "Ειδοποιήσεις"
           permalinks: "Permalinks"
+          trust_levels: "Επίπεδα εμπιστοσύνης"
+          group_permissions: "Δικαιώματα ομάδας"
           users: "Χρήστες"
           groups: "Ομάδες"
+          localization:
+            title: "Τοπικοποίηση"
+          user_fields: "Πεδία χρήστη"
           legal: "Νομικά"
           moderation_flags:
             title: "Συντονισμός"
       appearance:
         title: "Εμφάνιση"
         sidebar_link:
+          font_style: "Στυλ γραμματοσειράς"
+          site_logo: "Λογότυπο ιστότοπου"
+          color_schemes: "Παλέτες χρωμάτων"
           emoji: "Emoji"
           navigation: "Πλοήγηση"
           themes: "Θέματα"
           components:
             title: "Συστατικά"
             keywords: "θέμα|επέκταση"
+          site_texts: "Κείμενα ιστότοπου"
       email_settings:
+        title: "Ρυθμίσεις ηλεκτρονικού ταχυδρομείου"
         sidebar_link:
           appearance: "Εμφάνιση"
       security:
@@ -4290,9 +4345,13 @@ el:
           title: "Λογαριασμός"
           backups:
             title: "Αντίγραφα ασφαλέιας"
+          whats_new:
+            title: "Τι νέο υπάρχει?"
       config_areas:
         about:
+          header: "Σχετικά με τον ιστότοπο σας"
           contact_url_placeholder: "https://johnny-smith.com/contact"
+          your_organization: "Ο οργανισμός σας"
           company_name: "Όνομα"
           optional: "(προεραιτικό)"
           update: "Ενημέρωση"
@@ -4321,6 +4380,7 @@ el:
           more_options:
             title: "Περισσότερες επιλογές"
         look_and_feel:
+          title: "Εμφάνιση και αίσθηση"
           themes:
             title: "Θέματα"
         user_fields:
@@ -4354,6 +4414,7 @@ el:
           other_options: "Άλλα"
           search: "Αναζήτηση"
           experimental: "Πειραματικό"
+          all_site_settings: "Όλες οι ρυθμίσεις ιστότοπου"
       backups:
         title: "Αντίγραφα ασφαλείας"
         menu:
@@ -4612,6 +4673,22 @@ el:
             back_button: "Πίσω σε %{name}"
             fields:
               required: "*απαιτείται"
+              groups:
+                at_least:
+                  one: "απαιτείται τουλάχιστον %{count} ομάδα"
+                  other: "απαιτούνται τουλάχιστον %{count} ομάδες"
+              categories:
+                at_least:
+                  one: "απαιτείται τουλάχιστον %{count} κατηγορία"
+                  other: "απαιτούνται τουλάχιστον %{count} κατηγορίες"
+              tags:
+                at_least:
+                  one: "απαιτείται τουλάχιστον %{count} ετικέτα"
+                  other: "απαιτούνται τουλάχιστον %{count} ετικέτες"
+              string:
+                too_short:
+                  one: "πρέπει να είναι τουλάχιστον %{count} χαρακτήρας"
+                  other: "πρέπει να είναι τουλάχιστον %{count} χαρακτήρες"
               number:
                 too_small: "πρέπει να είναι μεγαλύτερο ή ίσο με %{count}"
                 too_large: "πρέπει να είναι λιγότερο ή ίσο με %{count}"
