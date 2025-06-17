@@ -4018,6 +4018,11 @@ experimental:
   rich_editor:
     client: true
     default: false
+  experimental_prefetch_allowed_groups:
+    type: group_list
+    client: true
+    hidden: true
+    default: ""
   experimental_content_localization:
     client: true
     default: false
