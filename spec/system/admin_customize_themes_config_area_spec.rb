@@ -2,9 +2,9 @@
 
 describe "Admin Customize Themes Config Area Page", type: :system do
   fab!(:admin)
-  fab!(:theme)
+  fab!(:theme) { Fabricate(:theme, name: "First theme") }
   fab!(:default_theme) { Theme.where(component: false, name: "Default").first }
-  fab!(:foundation_theme) { Theme.where(component: false, name: "Foundation").first }
+  fab!(:foundation_theme) { Theme.foundation_theme }
   fab!(:theme_child_theme) do
     Fabricate(:theme, name: "Child theme", component: true, enabled: true, parent_themes: [theme])
   end
@@ -15,7 +15,7 @@ describe "Admin Customize Themes Config Area Page", type: :system do
   let(:admin_customize_themes_page) { PageObjects::Pages::AdminCustomizeThemes.new }
 
   before do
-    SiteSetting.experimental_system_themes = true
+    SiteSetting.experimental_system_themes = "foundation|horizon"
     sign_in(admin)
   end
 
@@ -78,5 +78,22 @@ describe "Admin Customize Themes Config Area Page", type: :system do
     expect(page).to have_content(
       I18n.t("admin_js.admin.config_areas.themes_and_components.themes.title"),
     )
+  end
+
+  it "allows to control system themes with experimental_system_themes setting" do
+    SiteSetting.experimental_system_themes = ""
+    config_area.visit
+    theme_names = page.all(".theme-card__title").map(&:text)
+    expect(theme_names).to eq(["Default", "First theme", "Second theme"])
+
+    SiteSetting.experimental_system_themes = "foundation"
+    config_area.visit
+    theme_names = page.all(".theme-card__title").map(&:text)
+    expect(theme_names).to eq(["Default", "Foundation", "First theme", "Second theme"])
+
+    SiteSetting.experimental_system_themes = "foundation|horizon"
+    config_area.visit
+    theme_names = page.all(".theme-card__title").map(&:text)
+    expect(theme_names).to eq(["Default", "Horizon", "Foundation", "First theme", "Second theme"])
   end
 end
