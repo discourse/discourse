@@ -1,0 +1,7 @@
+<script>
+  if (!CSS.supports("(color: hsl(from white h s l))")) {
+    window.unsupportedBrowser = true;
+    window.I18n.translations[I18n.locale].js.browser_update =
+      'The Horizon theme does not support your browser. Please update your browser, or <a href="?safe_mode=no_themes">switch to safe mode</a>.';
+  }
+</script>

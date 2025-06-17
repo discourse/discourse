@@ -1,0 +1,88 @@
+@use "lib/viewport";
+
+.full-page-chat.full-page-chat-sidebar-enabled {
+  border: none;
+}
+
+.c-navbar-container {
+  .full-page-chat & {
+    padding: 0 1.5em;
+  }
+  background-color: var(--d-content-background);
+}
+
+body.has-full-page-chat {
+  background-color: var(--background-color);
+}
+
+.chat-drawer-container {
+  .is-expanded & {
+    box-shadow: 0 0 0 2px var(--tertiary-medium);
+  }
+
+  .chat-drawer.is-expanded & {
+    border: none;
+  }
+
+  .c-navbar__title {
+    padding-left: 0.33em; // visual alignment for chat index, which does not havea a backarrow
+  }
+}
+
+.chat-drawer-outlet-container {
+  z-index: z("composer", "content");
+
+  .peek-mode-active & {
+    padding-bottom: 0;
+    left: unset;
+    right: var(--main-grid-gap);
+
+    &:has(.is-expanded) {
+      z-index: calc(z("composer", "dropdown") + 1);
+    }
+  }
+}
+
+.chat-drawer {
+  .peek-mode-active & {
+    max-width: 90vw;
+  }
+}
+
+.chat-drawer .channels-list-container .chat-channel-row {
+  margin-bottom: var(--spacing-block-xs);
+  font-size: var(--font-up-1);
+  border-bottom: none;
+
+  &:hover {
+    background-color: var(--d-sidebar-active-background);
+  }
+}
+
+.channel-title {
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: var(--font-down-1);
+}
+
+.chat-composer__wrapper {
+  background: var(--d-content-background);
+}
+
+.chat-message-actions .more-buttons .btn-icon-text {
+  &:hover {
+    background-color: var(--d-selected);
+    box-shadow: none;
+    color: var(--primary);
+  }
+}
+
+.chat-drawer-active.chat-drawer-expanded .chat-composer-dropdown__menu-content {
+  z-index: z("modal", "dialog");
+}
+
+.chat-replying-indicator-container {
+  @include viewport.from(sm) {
+    margin-left: calc(0.65em + 0.2rem);
+  }
+}
