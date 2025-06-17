@@ -84,6 +84,8 @@ export class ToolbarBase {
       this.shortcuts[
         `${PLATFORM_KEY_MODIFIER}+${buttonAttrs.shortcut}`.toLowerCase()
       ] = createdButton;
+    } else {
+      createdButton.title = title;
     }
 
     if (buttonAttrs.unshift) {
