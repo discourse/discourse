@@ -13,7 +13,6 @@ export default RouteTemplate(
     <PluginOutlet
       @name="exception-wrapper"
       @outletArgs={{lazyHash
-        controller=@controller
         thrown=this.thrown
         reason=this.reason
       }}
