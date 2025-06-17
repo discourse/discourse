@@ -77,7 +77,6 @@
   &__meta-label {
     white-space: nowrap;
     text-align: left;
-    min-width: 10ch;
   }
 
   &__flag-badges {
@@ -97,7 +96,23 @@
   }
 
   &__meta-content {
-    display: contents;
+    display: grid;
+    grid-template-columns: auto auto;
+    padding: var(--space-4);
+
+    .created-by {
+      display: flex;
+
+      .names {
+        display: inline-block;
+        font-weight: bold;
+        padding-left: var(--space-1);
+
+        span a {
+          color: var(--primary);
+        }
+      }
+    }
   }
 
   &__post {

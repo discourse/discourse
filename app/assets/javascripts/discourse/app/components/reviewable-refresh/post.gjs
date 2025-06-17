@@ -4,9 +4,8 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import ReviewableCreatedBy from "discourse/components/reviewable-created-by";
 import ReviewablePostEdits from "discourse/components/reviewable-post-edits";
-import ReviewablePostHeader from "discourse/components/reviewable-post-header";
+import ReviewableCreatedBy from "discourse/components/reviewable-refresh/created-by";
 import ReviewableTopicLink from "discourse/components/reviewable-refresh/topic-link";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { bind } from "discourse/lib/decorators";
@@ -67,9 +66,7 @@ export default class ReviewablePost extends Component {
         <ReviewableTopicLink @reviewable={{@reviewable}} @tagName="" />
         <ReviewablePostEdits @reviewable={{@reviewable}} @tagName="" />
       </div>
-    </div>
 
-    <div class="review-item__meta-content">
       <div class="review-item__meta-label">{{this.userLabel}}</div>
 
       <div class="review-item__meta-flagged-user">
@@ -79,14 +76,8 @@ export default class ReviewablePost extends Component {
 
     <div class="review-item__post">
       <div class="review-item__post-content">
-        <ReviewablePostHeader
-          @reviewable={{@reviewable}}
-          @createdBy={{@reviewable.target_created_by}}
-          @tagName=""
-        />
-
         <div
-          class="post-body {{if this.isCollapsed 'is-collapsed'}}"
+          class="post-body{{if this.isCollapsed ' is-collapsed'}}"
           {{didInsert this.calculatePostBodySize @reviewable}}
         >
           {{#if @reviewable.blank_post}}
