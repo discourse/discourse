@@ -81,7 +81,8 @@ module Jobs
       pr1 =
         Benchmark.measure do
           PostRevision
-            .where("modifications ~ ?", "%(raw|cooked)%@#{@old_username}%")
+            .where("modifications LIKE ?", "%@%")
+            .where("modifications SIMILAR TO ?", "%(raw|cooked)%@#{@old_username}%")
             .find_each { |revision| update_revision(revision) }
         end
 
@@ -94,8 +95,7 @@ module Jobs
             .where("p.user_id = :user_id", user_id: @user_id)
             .find_each { |revision| update_revision(revision) }
         end
-
-      puts "Time updating revisions: #{pr2.real.round(2)} "
+      puts "Time updating revisions: #{pr1.real.round(2)} "
     end
 
     def update_notifications
