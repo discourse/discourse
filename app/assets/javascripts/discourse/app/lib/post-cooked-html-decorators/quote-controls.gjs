@@ -45,11 +45,11 @@ export default function (element, context) {
             highlightTerm: data.highlightTerm,
             content,
             title,
+            fullQuote: aside.dataset.full === "true",
             expanded:
               state[`${quoteId}--expanded`] ??
               aside.dataset.expanded === "true",
             ignoredUsers: data.ignoredUsers,
-            parentElement: aside,
             post: data.post,
             quotedPostNotFound,
             quotedTopicId,
@@ -63,6 +63,7 @@ export default function (element, context) {
             },
             state,
             username,
+            wrapperElement: aside,
           },
           owner
         ),
