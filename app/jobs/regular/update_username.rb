@@ -81,7 +81,7 @@ module Jobs
       pr1 =
         Benchmark.measure do
           PostRevision
-            .where("modifications SIMILAR TO ?", "%(raw|cooked)%@#{@old_username}%")
+            .where("modifications ~ ?", "%(raw|cooked)%@#{@old_username}%")
             .find_each { |revision| update_revision(revision) }
         end
 
