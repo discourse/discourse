@@ -4,7 +4,7 @@ import PostQuotedContent from "discourse/components/post/quoted-content";
 
 // TODO (glimmer-post-stream): investigate whether all this complex logic can be replaced with a proper Glimmer component
 export default function (element, context) {
-  const { data, state, owner } = context;
+  const { data, cloakedState, owner } = context;
 
   const quotes = element.querySelectorAll("aside.quote");
   if (quotes.length === 0) {
@@ -34,7 +34,9 @@ export default function (element, context) {
         title = htmlSafe(title.innerHTML);
       }
 
-      const content = htmlSafe(aside.querySelector("blockquote")?.innerHTML);
+      const collapsedContent = htmlSafe(
+        aside.querySelector("blockquote")?.innerHTML
+      );
 
       context.helper.renderGlimmer(
         aside,
@@ -43,25 +45,16 @@ export default function (element, context) {
           {
             id: quoteId,
             highlightTerm: data.highlightTerm,
-            content,
+            collapsedContent,
             title,
             fullQuote: aside.dataset.full === "true",
-            expanded:
-              state[`${quoteId}--expanded`] ??
-              aside.dataset.expanded === "true",
+            expanded: aside.dataset.expanded === "true",
             ignoredUsers: data.ignoredUsers,
             post: data.post,
             quotedPostNotFound,
             quotedTopicId,
             quotedPostNumber,
-            quotedPost: state[`${quoteId}--post`],
-            onLoadQuotedPost: (post) => {
-              state[`${quoteId}--post`] = post;
-            },
-            onToggleExpanded: (value) => {
-              state[`${quoteId}--expanded`] = value;
-            },
-            state,
+            cloakedState,
             username,
             wrapperElement: aside,
           },

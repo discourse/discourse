@@ -5,7 +5,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
-import { eq, or } from "truth-helpers";
+import { eq, lt, or } from "truth-helpers";
 import AsyncContent from "discourse/components/async-content";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
@@ -19,8 +19,12 @@ import PostCookedHtml from "./cooked-html";
 export default class PostQuotedContent extends Component {
   @service store;
 
-  @tracked expanded = this.args.expanded ?? false;
-  #quotedPost = this.args.quotedPost;
+  @tracked
+  expanded =
+    this.args.cloakedState?.[`${this.args.quoteId}--expanded`] ??
+    this.args.expanded ??
+    false;
+  #quotedPost = this.args.cloakedState?.[`${this.args.quoteId}--post`];
   #wrapperElement;
 
   get isQuotedPostIgnored() {
@@ -76,7 +80,9 @@ export default class PostQuotedContent extends Component {
     }
 
     this.#quotedPost = post;
-    this.args.onLoadQuotedPost?.(post);
+    if (this.args.cloakedState) {
+      this.args.cloakedState[`${this.args.quoteId}--post`] = post;
+    }
 
     return post;
   }
@@ -98,7 +104,9 @@ export default class PostQuotedContent extends Component {
   @action
   toggleExpanded() {
     this.expanded = !this.expanded;
-    this.args.onToggleExpanded?.(this.expanded);
+    if (this.args.cloakedState) {
+      this.args.cloakedState[`${this.args.quoteId}--expanded`] = this.expanded;
+    }
   }
 
   get WrapperComponent() {
@@ -134,10 +142,14 @@ export default class PostQuotedContent extends Component {
           this.shouldDisplayToggleButton (modifier on "click" this.onClickTitle)
         )}}
       >
-        {{#if @quotedPostNotFound}}
-          {{@quotedUsername}}
+        {{#if (has-block "title")}}
+          {{yield to="title"}}
         {{else}}
-          {{@title}}
+          {{#if @quotedPostNotFound}}
+            {{@quotedUsername}}
+          {{else}}
+            {{@title}}
+          {{/if}}
         {{/if}}
         <div class="quote-controls">
           {{#if this.shouldDisplayToggleButton}}
@@ -154,7 +166,11 @@ export default class PostQuotedContent extends Component {
             <DButton
               class="btn-flat back"
               @href={{this.quotedPostUrl}}
-              @icon="arrow-up"
+              @icon={{if
+                (lt @post.post_number @quotedPostNumber)
+                "arrow-down"
+                "arrow-up"
+              }}
               @title="post.follow_quote"
             />
           {{/if}}
@@ -193,13 +209,13 @@ export default class PostQuotedContent extends Component {
                     @post={{expandedPost}}
                     @highlightTerm={{@highlightTerm}}
                     @streamElement={{false}}
-                    @state={{@state}}
+                    @cloakedState={{@cloakedState}}
                   />
                 </div>
               </:content>
             </AsyncContent>
           {{else}}
-            {{@content}}
+            {{@collapsedContent}}
           {{/if}}
         {{/unless}}
       </blockquote>
