@@ -9,7 +9,13 @@ FakeContext = Struct.new(:request_id)
 
 RSpec.describe VideoConversion::AwsMediaConvertAdapter do
   fab!(:user)
-  fab!(:upload) { Fabricate(:video_upload, user: user) }
+
+  before(:each) do
+    extensions = SiteSetting.authorized_extensions.split("|")
+    SiteSetting.authorized_extensions = (extensions | ["mp4"]).join("|")
+  end
+
+  let!(:upload) { Fabricate(:video_upload, user: user) }
   fab!(:post) { Fabricate(:post, user: user) }
   let(:options) { { quality: "high" } }
   let(:adapter) { described_class.new(upload, options) }
@@ -306,7 +312,6 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
 
       expect(s3_object).to have_received(:exists?)
       expect(s3_object).to have_received(:size)
-      expect(s3_object).to have_received(:acl)
       expect(OptimizedVideo).to have_received(:create_for).with(
         upload,
         "video_converted.mp4",
@@ -343,7 +348,8 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
     context "when an error occurs" do
       before do
         allow(s3_object).to receive(:exists?).and_return(true)
-        allow(s3_object).to receive(:acl).and_raise(StandardError.new("Test error"))
+        allow(s3_object).to receive(:size).and_return(1024)
+        allow(OptimizedVideo).to receive(:create_for).and_raise(StandardError.new("Test error"))
       end
 
       it "returns false and logs error" do
