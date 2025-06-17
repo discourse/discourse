@@ -4031,6 +4031,5 @@ experimental:
     hidden: true
     allow_any: false
     choices:
-      - ""
       - "foundation"
       - "horizon"
