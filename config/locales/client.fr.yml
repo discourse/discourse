@@ -399,6 +399,7 @@ fr:
       created: "Vous avez mis un signet à ce message. %{name}"
       created_generic: "Vous avez mis ceci en signet. %{name}"
       create: "Créer un signet"
+      clear_reminder: "Supprimer le rappel"
       edit: "Modifier le signet"
       not_bookmarked: "mettre un signet à ce message"
       remove_reminder_keep_bookmark: "Supprimer le rappel et conserver le signet"
@@ -1881,6 +1882,7 @@ fr:
           edit_link_options: "Modifiez les options du lien ou envoyez-le par e-mail."
           show_advanced: "Afficher les options avancées"
           hide_advanced: "Masquer les options avancées"
+          description: "Description"
           restrict: "Restreindre à"
           restrict_email: "Restreindre aux e-mails"
           restrict_domain: "Restreindre au domaine"
@@ -2530,7 +2532,8 @@ fr:
       italic_text: "texte en italique"
       link_title: "Lien"
       link_description: "saisir ici la description du lien"
-      link_dialog_title: "Insérer un lien"
+      link_dialog_action: "Insérer"
+      link_edit_action: "Mettre à jour"
       link_optional_text: "titre (facultatif)"
       link_url_placeholder: "Collez une adresse URL ou commencez votre saisie pour rechercher un sujet dans le forum"
       blockquote_title: "Citation"
@@ -2602,6 +2605,9 @@ fr:
       image_scale_button: "Mettre l'image à l'échelle de %{percent} %"
       delete_image_button: Supprimer l'image
       toggle_image_grid: Activer/désactiver la grille des images
+      link_toolbar:
+        copy: "Copier le lien"
+        link_copied: "Lien copié !"
     notifications:
       tooltip:
         regular:
@@ -3569,6 +3575,8 @@ fr:
           actions: "Actions"
           edit: "Modifier"
           delete: "Supprimer"
+        post_language_selector:
+          none: "Jamais"
       errors:
         create: "Nous sommes désolés, une erreur est survenue lors de la création de votre message. Veuillez réessayer."
         edit: "Nous sommes désolés, une erreur est survenue lors de la modification de votre message. Veuillez réessayer."

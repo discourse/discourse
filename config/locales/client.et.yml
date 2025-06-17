@@ -1161,6 +1161,7 @@ et:
         invite_link:
           success: "Kutse link edukalt genereeritud!"
         invite:
+          description: "Kirjeldus"
           cancel: "Tühista"
         bulk_invite:
           error: "Vabandust, fail peab olema CSV-vormingus."
@@ -1466,7 +1467,6 @@ et:
       italic_text: "esiletõstetud tekst"
       link_title: "Hüperlink"
       link_description: "sisesta viite kirjeldus siia"
-      link_dialog_title: "Lisa hüperlink"
       link_optional_text: "valikuline pealkiri"
       blockquote_title: "Tsitaat"
       blockquote_text: "Tsitaat"
@@ -2059,6 +2059,8 @@ et:
           actions: "Tegevused"
           edit: "Muuda"
           delete: "Kustuta"
+        post_language_selector:
+          none: "Pole"
       errors:
         create: "Vabandame, postituse loomisel tekkis viga. Palun proovi uuesti."
         edit: "Vabandame, postituse redigeerimisel tekkis viga. Palun proovi uuesti."

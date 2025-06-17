@@ -713,6 +713,11 @@ cs:
       draft_channel_screen:
         header: "Nová zpráva"
         cancel: "Zrušit"
+      quick_reaction_type:
+        title: "Reakce v chatu jedním kliknutím"
+        options:
+          frequent: "Nejčastěji používané reakce v chatu"
+          custom: "Vlastní reakce"
     notifications:
       chat_invitation: "vás pozval/a, abyste se připojili ke kanálu chatu"
       chat_invitation_html: "<span>%{username}</span> <span>vás pozval/a, abyste se připojili ke kanálu chatu</span>"

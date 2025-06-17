@@ -343,6 +343,7 @@ te:
       created: "మీరు ఈ పోస్ట్‌ను బుక్‌మార్క్ చేసారు. %{name}"
       created_generic: "మీరు దీన్ని బుక్‌మార్క్ చేసారు. %{name}"
       create: "బుక్‌మార్క్‌ని సృష్టించండి"
+      clear_reminder: "రిమైండర్‌ను క్లియర్ చేయండి"
       edit: "బుక్‌మార్క్‌ని సవరించండి"
       not_bookmarked: "ఈ పోస్ట్‌ను బుక్‌మార్క్ చేయండి"
       remove_reminder_keep_bookmark: "రిమైండర్‌ని తీసివేసి, బుక్‌మార్క్ ఉంచండి"
@@ -1684,6 +1685,7 @@ te:
           link_copied: "లింక్ కాపీ చేయబడింది!"
           show_advanced: "అధునాతన ఎంపికలను చూపించండి"
           hide_advanced: "అధునాతన ఎంపికలను దాచండి"
+          description: "వివరణ"
           restrict: "పరిమితం చేయండి"
           restrict_email: "ఇమెయిల్కు పరిమితం చేయండి"
           restrict_domain: "డొమైన్‌కు పరిమితం చేయండి"
@@ -2251,7 +2253,7 @@ te:
       italic_text: "వాలు వచనం"
       link_title: "హైపర్ లంకె"
       link_description: "లంకె వివరణ ఇక్కడ రాయండి"
-      link_dialog_title: "హైపర్ లంకె చొప్పించండి"
+      link_edit_action: "నవీకరించండి"
       link_optional_text: "ఐచ్చిక శీర్షిక"
       link_url_placeholder: "URLని అతికించండి లేదా విషయాలను శోధించడానికి టైప్ చేయండి"
       blockquote_title: "బ్లాక్ కోట్"
@@ -2320,6 +2322,8 @@ te:
         aria_label: చిత్రం కోసం ప్రత్యామ్నాయ వచనం
       delete_image_button: చిత్రాన్ని తొలగించండి
       toggle_image_grid: ఇమేజ్ గ్రిడ్‌ని టోగుల్ చేయండి
+      link_toolbar:
+        link_copied: "లింక్ కాపీ చేయబడింది!"
     notifications:
       tooltip:
         regular:
@@ -3249,6 +3253,8 @@ te:
           actions: "చర్యలు"
           edit: "సవరించండి"
           delete: "తొలగించండి"
+        post_language_selector:
+          none: "ఏదీ లేదు"
       errors:
         create: "క్షమించండి, మీ పోస్ట్‌ని సృష్టించడంలో లోపం ఏర్పడింది. దయచేసి మళ్లీ ప్రయత్నించండి."
         edit: "క్షమించండి, మీ పోస్ట్‌ని సవరించడంలో లోపం ఏర్పడింది. దయచేసి మళ్లీ ప్రయత్నించండి."

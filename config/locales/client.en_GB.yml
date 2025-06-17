@@ -64,6 +64,9 @@ en_GB:
       change_card_background:
         instructions: "Background images will be centred and have a default width of 590px."
       categories_settings: "Categories"
+      invited:
+        invite:
+          description: "Description"
       summary:
         title: "Summary"
     read_only_mode:
