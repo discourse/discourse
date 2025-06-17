@@ -237,12 +237,12 @@ hu:
               label: Figyelt kategóriák
               description: Csak akkor aktiválódik, ha a téma e kategóriák egyikébe tartozik
             watching_tags:
-              label: Figyelt címkék
+              label: Címkék figyelése
               description: Csak akkor aktiválódik, ha a témakör rendelkezik ezen címkék bármelyikével
             trigger_on:
               label: Trigger bekapcsolva
             trigger_with_pms:
-              label: Aktiválás PÜ-el
+              label: Aktiválás PÜ-vel
               description: Akkor is aktiválódik, ha a címkéket PÜ-ben módosították
         after_post_cook:
           fields:
@@ -320,7 +320,7 @@ hu:
           levels:
             warning: Figyelmeztetés
             info: Információ
-            success: Siker
+            success: Sikeres
             error: Hiba
         user_group_membership_through_badge:
           fields:
@@ -333,7 +333,7 @@ hu:
               label: Felhasználó címének és hangulatának frissítése
               description: Opcionális, Felhasználó címének és hangulatának frissítése
             remove_members_without_badge:
-              label: Távolítsa el a meglévő tagokat jelvény nélkül
+              label: Jelvény nélküli meglévő tagok eltávolítása
               description: 'Opcionális: Távolítsa el a meglévő csoporttagokat a megadott jelvény nélkül'
             badge:
               label: Jelvény
@@ -385,9 +385,9 @@ hu:
             receiver:
               label: PÜ fogadó
             sendable_pms:
-              label: PÜ-ek
+              label: PÜ-k
             sender:
-              label: PÜ feladó
+              label: PÜ feladója
         close_topic:
           fields:
             topic:
@@ -401,33 +401,33 @@ hu:
         add_user_to_group_through_custom_field:
           fields:
             custom_field_name:
-              label: "Felhasználó egyéni mező neve"
+              label: "Felhasználó egyéni mezőneve"
       unnamed_automation: "Névtelen automatizálás"
       models:
         script:
           name:
-            label: Szkript
+            label: Parancsfájl
         trigger:
           name:
-            label: Trigger
+            label: Aktiváló
         automation:
           name:
             label: Név
           trigger:
-            label: Trigger
+            label: Aktiváló
           script:
-            label: Szkript
+            label: Parancsfájl
           version:
             label: Verzió
           status:
             label: Állapot
           enabled:
-            label: Engedélyezed
+            label: Engedélyezve
           disabled:
-            label: Kikapcsolt
+            label: Letiltva
           placeholders:
             label: Helyőrzők
           last_updated_at:
             label: Utolsó frissítés
           last_updated_by:
-            label: Frissítette
+            label: 'Frissítette:'

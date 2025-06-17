@@ -1924,11 +1924,15 @@ hr:
           expires_at: "Istječe"
           expires_after: "Istječe nakon"
           custom_message: "Prilagođena poruka"
+          custom_message_placeholder: "Pozivnici dodajte osobnu bilješku"
           send_invite_email: "Spremi i pošalji e-mail"
           send_invite_email_instructions: "Ograničite pozivnicu na e-poštu za slanje e-pošte s pozivnicom"
           update_invite: "Ažuriraj"
+          update_invite_and_send_email: "Ažurirajte i pošaljite e-poštu"
           cancel: "Odustani"
           create_link: "Kreirajte poveznicu"
+          create_link_and_send_email: "Napravite poveznicu i pošaljite e-poštu"
+          invite_saved_without_sending_email: "Pozivnica je spremljena. Kopirajte donju poveznicu i podijelite je kako biste odmah omogućili pristup ovoj stranici."
         bulk_invite:
           none: "Nema pozivnica za prikaz na ovoj stranici."
           text: "Skupna pozivnica"
@@ -1951,10 +1955,18 @@ hr:
         fine_print: "Molimo vas da potvrdite svoj identitet jer je ovo potencijalno osjetljiva radnja. Jednom kad ste autenticirani, od vas će se tražiti ponovna autentikacija tek nakon nekoliko sati neaktivnosti."
       password:
         title: "Zaporka"
+        too_short:
+          one: "Vaša je lozinka prekratka (mora sadržavati najmanje %{count} znak)."
+          few: "Vaša je lozinka prekratka (mora sadržavati najmanje %{count} znakova)."
+          other: "Vaša je lozinka prekratka (mora sadržavati najmanje %{count} znakova)."
         common: "Ta je zaporka pre česta."
         same_as_username: "Vaša lozinka je ista kao korisničko ime."
         same_as_email: "Vaša lozinka jednaka je vašoj e-pošti."
         ok: "Vaša zaporka dobro izgleda."
+        instructions:
+          one: "Najmanje %{count} znak"
+          few: "Najmanje %{count} znaka"
+          other: "Najmanje %{count} znakova"
         required: "Molimo unesite lozinku"
         confirm: "Potvrdi"
         incorrect_password: "Unesena zaporka je netočna."
@@ -4370,6 +4382,7 @@ hr:
       dismiss: "Skloni"
     safe_mode:
       enabled: "Omogućen je siguran način rada, da biste izašli iz sigurnog načina rada, zatvorite ovaj prozor preglednika"
+    theme_preview_notice: "Trenutno pregledavate temu, zatvorite ovu karticu ili prozor preglednika da biste se vratili na uobičajenu konfiguraciju web stranice."
     image_removed: "(slika uklonjena)"
     pause_notifications:
       label: "Pauziraj obavijesti"

@@ -3712,7 +3712,7 @@ cs:
       flag_topic:
         title: "Nahlásit"
         help: "soukromě nahlásit toto téma nebo o něm poslat soukromou zprávu"
-        success_message: "Téma úspěšně nahlášeno."
+        success_message: "Úspěšně jste nahlásili toto téma."
       make_public:
         title: "Převést na veřejné téma"
         choose_category: "Vyberte kategorii pro veřejné téma:"
@@ -4120,13 +4120,13 @@ cs:
           sr_post_likers_list_description: "uživatelé, kterým se líbil tento příspěvek"
           sr_post_readers_list_description: "uživatelé, kteří si přečetli tento příspěvek"
         by_you:
-          off_topic: "Označili jste tento příspěvek jako mimo téma"
-          spam: "Označili jste tento příspěvek jako spam"
-          inappropriate: "Označili jste tento příspěvek jako nevhodný"
-          illegal: "Toto jste označili jako nezákonné"
+          off_topic: "Nahlásili jste tento příspěvek jako mimo téma"
+          spam: "Nahlásili jste tento příspěvek jako spam"
+          inappropriate: "Nahlásili jste tento příspěvek jako nevhodný"
+          illegal: "Nahlásili jste tento příspěvek jako nezákonný"
           notify_moderators: "Nahlásili jste tento příspěvek"
           notify_user: "Tomuto uživateli jste zaslali zprávu"
-          custom: "Toto téma jste označili jako %{custom}"
+          custom: "Nahlásili jste toto téma jako %{custom}"
       delete:
         confirm:
           one: "Opravdu chcete odstranit tento příspěvek?"
@@ -4988,7 +4988,7 @@ cs:
         newuser: "nový uživatel"
         basic: "základní uživatel"
         member: "člen"
-        regular: "pravidelný uživatel"
+        regular: "stálý člen"
         leader: "leader"
       detailed_name: "%{level}: %{name}"
     pick_files_button:
@@ -5177,7 +5177,7 @@ cs:
                 other: "%{count} konceptů"
             review:
               content: "Revize"
-              title: "Označené příspěvky a další položky ve frontě"
+              title: "Nahlášené příspěvky a další položky ve frontě"
               pending_count:
                 one: "%{count} čeká na vyřízení"
                 few: "%{count} čeká na vyřízení"
@@ -5541,7 +5541,7 @@ cs:
             visibility: Viditelnost
             visibility_levels:
               title: "Kdo vidí tuto skupinu?"
-              public: "Všichni"
+              public: "Kdokoliv"
               logged_on_users: "Přihlášení uživatelé"
               members: "Vlastníci skupiny, členové a moderátoři"
               staff: "Vlastníci skupin a moderátoři"
@@ -6801,8 +6801,8 @@ cs:
             title: "Vytvoří ban k přístupu do podsítě, pokud existují alespoň: 'min_ban_entries_for_roll_up' vstupy."
         search_logs:
           title: "Protokoly vyhledávání"
-          term: "Období"
-          searches: "Vyhledávání"
+          term: "Výraz"
+          searches: "Hledání"
           click_through_rate: "CTR"
           types:
             all_search_types: "Vyhledávat všechny typy"
@@ -7022,7 +7022,7 @@ cs:
           newuser: "Uživatelé s úrovní důvěry 0 (Nový uživatel)"
           basic: "Uživatelé s úrovní důvěry 1 (Základní uživatel)"
           member: "Uživatelé s úrovní důvěry 2 (Člen)"
-          regular: "Uživatelé s úrovní důvěry 3 (Pravidelný uživatel)"
+          regular: "Uživatelé s úrovní důvěry 3 (Stálý člen)"
           leader: "Uživatelé s úrovní důvěry 4 (Leader)"
           staff: "Redakce"
           admins: "Správci"
@@ -7738,7 +7738,7 @@ cs:
         roles:
           admin: "Administrátor"
           moderator: "Moderátor"
-          regular: "pravidelný uživatel"
+          regular: "stálý člen"
       homepage_choices:
         custom:
           label: "Přizpůsobené"

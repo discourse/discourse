@@ -81,6 +81,8 @@ el:
               label: Ομάδα
             restricted_groups:
               label: Ομάδες
+            ignore_group_members:
+              label: Αγνόηση μελών ομάδας
           created: Δημιουργήθηκε
         category_created_edited:
           fields:
