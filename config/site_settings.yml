@@ -1,6 +1,7 @@
 # Available options:
 #
-# default               - The default value of the setting. For upload site settings, use the id of the upload seeded in db/fixtures/010_uploads.rb.
+# default               - The default value of the setting. For upload site settings, use the id of the upload seeded
+#                         in db/fixtures/010_uploads.rb.
 # client                - Set to true if the javascript should have access to this setting's value.
 # refresh               - Set to true if clients should refresh when the setting is changed.
 # min                   - For a string setting, the minimum length. For an integer setting, the minimum value.
@@ -14,10 +15,12 @@
 # locale_default        - A hash which overrides according to `SiteSetting.default_locale`.
 #                         The key should be as the same as possible value of default_locale.
 # mandatory_values      - A list of mandatory values that must be included in the setting, these cannot be changed or removed
-#                      in the UI.
-# requires_confirmation - A string that indicates if the setting requires confirmation before it can be changed. Only valid
-#                         value here is "simple" which will display a confirmation dialog when the setting is changed.
-# themeable             - Set to true if themes and components can override this setting.
+#                         in the UI.
+# requires_confirmation - A string that indicates if the setting requires confirmation before it can be changed.
+#                         Only valid value here is "simple" which will display a confirmation dialog when the setting
+#                         is changed.
+# themeable             - Set to true if themes can override this site setting. Generally, only client side affecting settings
+#                         that change the UI should be themeable, and try limit to simple setting types like bool, list, integer, enum.
 #
 #
 # type: email                 - Must be a valid email address.

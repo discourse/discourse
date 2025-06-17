@@ -384,13 +384,6 @@ class Admin::ThemesController < Admin::AdminController
         end
       end
     end
-
-    # # TODO (martin)
-    # #
-    # # Logging the change
-    # # Updating site setting cache?
-    # # Messagebus to client to update client site settings
-    # render json: setting.as_json(only: %i[name value theme_id]), status: :ok
   end
 
   def schema

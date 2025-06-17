@@ -284,10 +284,8 @@ module SiteSettingExtension
         end
       end
       .reject do |setting_name, _|
-        # TODO (martin) Come back to this...for now exclude themeable settings
-        # from being shown in the all_settings list, and in the UI
-        #
-        # Maybe we can include this if a theme_id parameter is provided
+        # Do not show themeable site settings all_settings list or in the UI, they
+        # are managed separately via the ThemeSiteSetting model.
         themeable[setting_name]
       end
       .map do |s, v|
@@ -481,6 +479,12 @@ module SiteSettingExtension
     ensure_listen_for_changes
   end
 
+  def raise_invalid_setting_access(setting_name)
+    raise SiteSettingExtension::InvalidSettingAccess.new(
+            "#{setting_name} cannot be changed like this because it is a themeable setting. Instead, use the ThemeSiteSettingUpsert service to manage themeable site settings.",
+          )
+  end
+
   ##
   # Removes an override for a setting, reverting it to the default value.
   # This method is only called manually usually, more often than not
@@ -496,13 +500,7 @@ module SiteSettingExtension
   # @param name [Symbol] the name of the setting
   # @param val [Any] the value to set
   def remove_override!(name)
-    if themeable[name]
-      # TODO (martin) Need a better error message here when we have an interface
-      # for adding/removing themeable site setting values
-      raise SiteSettingExtension::InvalidSettingAccess.new(
-              "#{name} cannot be changed like this because it is a themeable setting. Instead, modify the ThemeSiteSetting record directly.",
-            )
-    end
+    raise_invalid_setting_access(name) if themeable[name]
 
     old_val = current[name]
     provider.destroy(name)
@@ -547,13 +545,7 @@ module SiteSettingExtension
   #
   # @see remove_override! for removing an override and reverting to default value
   def add_override!(name, val)
-    if themeable[name]
-      # TODO (martin) Need a better error message here when we have an interface
-      # for adding/removing themeable site setting values
-      raise SiteSettingExtension::InvalidSettingAccess.new(
-              "#{name} cannot be changed like this because it is a themeable setting. Instead, modify the ThemeSiteSetting record directly.",
-            )
-    end
+    raise_invalid_setting_access(name) if themeable[name]
 
     old_val = current[name]
     val, type = type_supervisor.to_db_value(name, val)
@@ -661,13 +653,7 @@ module SiteSettingExtension
 
   def set(name, value, options = nil)
     if has_setting?(name)
-      # TODO (martin) Need a better error message here when we have an interface
-      # for adding/removing themeable site setting values
-      if themeable[name]
-        raise SiteSettingExtension::InvalidSettingAccess.new(
-                "#{name} cannot be changed like this because it is a themeable setting. Instead, modify the ThemeSiteSetting record directly.",
-              )
-      end
+      raise_invalid_setting_access(name) if themeable[name]
 
       value = filter_value(name, value)
       if options
@@ -685,13 +671,7 @@ module SiteSettingExtension
 
   def set_and_log(name, value, user = Discourse.system_user, detailed_message = nil)
     if has_setting?(name)
-      # TODO (martin) Need a better error message here when we have an interface
-      # for adding/removing themeable site setting values
-      if themeable[name]
-        raise SiteSettingExtension::InvalidSettingAccess.new(
-                "#{name} cannot be changed like this because it is a themeable setting. Instead, modify the ThemeSiteSetting record directly.",
-              )
-      end
+      raise_invalid_setting_access(name) if themeable[name]
 
       prev_value = public_send(name)
       return if prev_value == value
@@ -883,13 +863,7 @@ module SiteSettingExtension
     end
 
     define_singleton_method "#{clean_name}=" do |val|
-      if themeable[clean_name]
-        # TODO (martin) Need a better error message here when we have an interface
-        # for adding/removing themeable site setting values
-        raise SiteSettingExtension::InvalidSettingAccess.new(
-                "#{clean_name} cannot be changed like this because it is a themeable setting. Instead, modify the ThemeSiteSetting record directly.",
-              )
-      end
+      raise_invalid_setting_access(clean_name) if themeable[clean_name]
 
       add_override!(name, val)
     end
@@ -941,8 +915,6 @@ module SiteSettingExtension
 
       categories[name] = opts[:category] || :uncategorized
 
-      # TODO (martin) We should only make a certain subset of types of settings themeable,
-      # maybe booleans, list, enum, string?
       themeable[name] = opts[:themeable] ? true : false
 
       if opts[:area]

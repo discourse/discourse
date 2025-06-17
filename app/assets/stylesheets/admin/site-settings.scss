@@ -56,8 +56,6 @@
 
 .admin-theme-site-settings-row {
   &__setting {
-    width: 40%;
-
     .setting-label {
       margin: 0;
     }
@@ -68,11 +66,17 @@
     }
   }
 
-  &__default {
-    width: 10%;
-  }
+  @include viewport.from(sm) {
+    &__setting {
+      width: 40%;
+    }
 
-  &__overridden {
-    width: 50%;
+    &__default {
+      width: 10%;
+    }
+
+    &__overridden {
+      width: 50%;
+    }
   }
 }

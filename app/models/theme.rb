@@ -87,7 +87,7 @@ class Theme < ActiveRecord::Base
   has_many :migration_fields,
            -> { where(target_id: Theme.targets[:migrations]) },
            class_name: "ThemeField"
-  has_many :theme_site_settings
+  has_many :theme_site_settings, dependent: :destroy
 
   validate :component_validations
   validate :validate_theme_fields

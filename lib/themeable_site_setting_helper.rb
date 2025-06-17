@@ -7,34 +7,6 @@ class ThemeableSiteSettingHelper
     @theme_id = theme_id
   end
 
-  # TODO (martin)
-  #
-  # What should the DB backing store here be? We are
-  # storing site settings essentially...so maybe we
-  # need a duplicate of the SiteSetting table?
-  #
-  # Need the following:
-  #
-  #   * name
-  #   * data_type
-  #   * value
-  #   * theme_id
-  #
-  # Also need to take into account the theme about.json
-  # overrides for the settings...
-  #
-  # Maybe need a new section in the about.json file like this:
-  #
-  # themeable_site_settings: {
-  #   enable_welcome_banner: true
-  # }
-  #
-  # The order needs to be something like:
-  #
-  # * Resolve db value for the theme
-  # * If there is no db value, then use the about.json value for the theme
-  # * If there is no db value or about.json value, then use the value from
-  #   the site setting
   def resolved_themeable_site_settings
     themeable_site_setting_names = SiteSetting.themeable.select { |setting_name, value| value }.keys
     db_values = settings_from_store(themeable_site_setting_names)

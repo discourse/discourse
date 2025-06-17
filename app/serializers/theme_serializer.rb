@@ -76,12 +76,6 @@ class ThemeSerializer < BasicThemeSerializer
     nil
   end
 
-  # TODO (martin)
-  #
-  # Not sure what attributes to send back here yet. We need the setting
-  # name, value, type, and all of the available choices if it's a choice
-  # based setting.
-  #
   # Components always return an empty array here
   def themeable_site_settings
     object.themeable_site_settings
