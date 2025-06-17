@@ -80,7 +80,7 @@ describe "Admin Customize Themes Config Area Page", type: :system do
     )
   end
 
-  it "allows to control system themes with experimental_system_themes setting" do
+  it "allows controlling visibility of system themes with experimental_system_themes setting" do
     SiteSetting.experimental_system_themes = ""
     config_area.visit
     theme_names = page.all(".theme-card__title").map(&:text)
