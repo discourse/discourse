@@ -2038,6 +2038,8 @@ en:
           show_advanced: "Show Advanced Options"
           hide_advanced: "Hide Advanced Options"
 
+          description: "Description"
+
           restrict: "Restrict to"
           restrict_email: "Restrict to email"
           restrict_domain: "Restrict to domain"

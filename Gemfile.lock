@@ -130,7 +130,7 @@ GEM
     diffy (3.4.4)
     digest (3.2.0)
     digest-xxhash (0.2.9)
-    discourse-emojis (1.0.39)
+    discourse-emojis (1.0.41)
     discourse-fonts (0.0.19)
     discourse-seed-fu (2.3.12)
       activerecord (>= 3.1)
@@ -156,7 +156,7 @@ GEM
       faraday-net_http (>= 2.0, < 3.5)
       json
       logger
-    faraday-net_http (3.4.0)
+    faraday-net_http (3.4.1)
       net-http (>= 0.5.0)
     faraday-retry (2.3.1)
       faraday (~> 2.0)
@@ -272,7 +272,7 @@ GEM
     mime-types (3.7.0)
       logger
       mime-types-data (~> 3.2025, >= 3.2025.0507)
-    mime-types-data (3.2025.0603)
+    mime-types-data (3.2025.0610)
     mini_mime (1.1.5)
     mini_racer (0.18.1)
       libv8-node (~> 23.6.1.0)
@@ -852,7 +852,7 @@ CHECKSUMS
   diffy (3.4.4) sha256=79384ab5ca82d0e115b2771f0961e27c164c456074bd2ec46b637ebf7b6e47e3
   digest (3.2.0) sha256=fa2e7092ec683f65d82fadde5ff4ca3b32e23ee0b19f1fc1a5e09993ad2d3991
   digest-xxhash (0.2.9) sha256=a989d8309c03c4136a4bea9981ec0a146a2750de7f3dfb7b5624a3038aa598d7
-  discourse-emojis (1.0.39) sha256=7c7ce56b7a97f7ca2b9b26ffb2c2bb6454d2bfbb45dd3b68d91dd1e90b8e9c04
+  discourse-emojis (1.0.41) sha256=b322e1de3849ae437152e267ab35101b57f27303ac7136af482962e48c63cc2a
   discourse-fonts (0.0.19) sha256=78d4ddd671615908303a675427039d8d787c935e6deae184c6e143c18c6e0033
   discourse-seed-fu (2.3.12) sha256=4f61d95c11ed54609046cd04eb3a51b531c5fa863fa86d1bea7d74264e5c75e4
   discourse_dev_assets (0.0.5) sha256=a09a801a210aa3f7247dd382dfd73b389d4bd02be86be675eca2d451f9898285
@@ -869,7 +869,7 @@ CHECKSUMS
   fabrication (3.0.0) sha256=a6a0bfad9071348ad3cb1701df788524b888c0cdd044b988893e7509f7463be3
   faker (3.5.1) sha256=1ad1fbea279d882f486059c23fe3ddb816ccd1d7052c05a45014b4450d859bfc
   faraday (2.13.1) sha256=cc531eb5467e7d74d4517630fa96f1a7003647cbf20a9a3e067d098941217b75
-  faraday-net_http (3.4.0) sha256=a1f1e4cd6a2cf21599c8221595e27582d9936819977bbd4089a601f24c64e54a
+  faraday-net_http (3.4.1) sha256=095757fae7872b94eac839c08a1a4b8d84fd91d6886cfbe75caa2143de64ab3b
   faraday-retry (2.3.1) sha256=4004faa21f41fc5360d359bc79889fc58fb7fae0ce93bfb737a784ac76805c03
   fast_blank (1.0.1) sha256=269fc30414fed4e6403bc4a49081e1ea539f8b9226e59276ed1efaefabaa17ea
   fastimage (2.3.1) sha256=23c629f1f3e7d61bcfcc06c25b3d2418bc6bf41d2e615dbf5132c0e3b63ecce9
@@ -935,7 +935,7 @@ CHECKSUMS
   messageformat-wrapper (1.1.0) sha256=ecea879626e412d1bc841c457dacfcbb1a62cf88ca83573e4ea34bb371f160bc
   method_source (1.1.0) sha256=181301c9c45b731b4769bc81e8860e72f9161ad7d66dd99103c9ab84f560f5c5
   mime-types (3.7.0) sha256=dcebf61c246f08e15a4de34e386ebe8233791e868564a470c3fe77c00eed5e56
-  mime-types-data (3.2025.0603) sha256=00a122cf046ef3867c428ed5e6d97e759027b0caa375da7fba33a9799c8a3037
+  mime-types-data (3.2025.0610) sha256=223b3fedf92848ea6a4a407e0977175a36a018fb94d48edaa454ff4298ad68c0
   mini_mime (1.1.5) sha256=8681b7e2e4215f2a159f9400b5816d85e9d8c6c6b491e96a12797e798f8bccef
   mini_racer (0.18.1) sha256=c6694c37672da05027fe0894215a94c18a2117bdbb4ba90d80d275e4b23b3413
   mini_scheduler (0.18.0) sha256=d2f084f38da8d76c5844a92f0d6bd01fc9982a8b5e6c7679b6cf44c82da33503

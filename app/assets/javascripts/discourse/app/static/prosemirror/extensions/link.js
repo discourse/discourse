@@ -130,6 +130,13 @@ const extension = {
   plugins: ({ pmState: { Plugin }, utils }) =>
     new Plugin({
       props: {
+        handleKeyDown(view, event) {
+          if (event.key === "k" && event.metaKey) {
+            // Avoids propagating this event to the chat global keydown handler
+            event.stopPropagation();
+            return false;
+          }
+        },
         // Auto-linkify plain-text pasted URLs over a selection
         clipboardTextParser(text, $context, plain, view) {
           if (view.state.selection.empty || !utils.getLinkify().test(text)) {

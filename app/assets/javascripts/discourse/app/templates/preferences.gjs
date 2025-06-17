@@ -18,7 +18,7 @@ export default RouteTemplate(
           @ariaCurrentContext="subNav"
           class="user-nav__preferences-account"
         >
-          {{icon "user"}}
+          {{icon "circle-user"}}
           <span>{{i18n "user.preferences_nav.account"}}</span>
         </DNavigationItem>
 
@@ -36,7 +36,7 @@ export default RouteTemplate(
           @ariaCurrentContext="subNav"
           class="user-nav__preferences-profile"
         >
-          {{icon "user"}}
+          {{icon "address-card"}}
           <span>{{i18n "user.preferences_nav.profile"}}</span>
         </DNavigationItem>
 

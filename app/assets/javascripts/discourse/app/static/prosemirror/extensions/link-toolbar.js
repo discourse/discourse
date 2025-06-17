@@ -43,16 +43,17 @@ class LinkToolbar extends ToolbarBase {
       action: opts.unlinkText,
     });
 
-    this.addSeparator({ condition: opts.canVisit });
+    this.addSeparator({ condition: () => opts.canVisit() || opts.canUnlink() });
 
     this.addButton({
       id: "link-visit",
-      icon: "up-right-from-square",
+      icon: () => (opts.canVisit() ? "up-right-from-square" : null),
       title: "composer.link_toolbar.visit",
-      className: "btn-flat composer-link-toolbar__visit",
+      className: "composer-link-toolbar__visit",
       preventFocus: true,
-      href: opts.getHref,
-      condition: opts.canVisit,
+      condition: () => opts.canVisit() || opts.canUnlink(),
+      href: () => (opts.canVisit() ? opts.getHref() : null),
+      label: () => (opts.canUnlink() ? opts.getHref() : null),
     });
   }
 }
@@ -141,7 +142,7 @@ class LinkToolbarPluginView {
 
   #displayToolbar() {
     if (this.#getContext().capabilities.viewport.sm) {
-      this.#showMobileToolbar();
+      this.#showFloatingToolbar();
     } else {
       this.#getContext().replaceToolbar(this.#linkToolbar);
       this.#toolbarReplaced = true;
@@ -233,7 +234,7 @@ class LinkToolbarPluginView {
     return !AUTO_LINKS.includes(this.#linkState.markup);
   }
 
-  #showMobileToolbar() {
+  #showFloatingToolbar() {
     const element = this.#view.domAtPos(this.#linkState.head).node;
     const trigger =
       element.nodeType === Node.TEXT_NODE ? element.parentElement : element;

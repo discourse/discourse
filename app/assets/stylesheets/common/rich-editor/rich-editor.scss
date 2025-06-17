@@ -205,12 +205,15 @@
 
   .btn {
     background-color: var(--secondary);
+    color: var(--primary-medium);
 
     .d-icon {
       color: var(--primary-medium);
     }
 
     &:hover {
+      color: var(--primary);
+
       .d-icon {
         color: var(--primary);
       }
@@ -222,6 +225,30 @@
 
     &:focus-visible {
       @include default-focus;
+    }
+  }
+
+  .composer-link-toolbar {
+    &__visit {
+      .toolbar-link__label {
+        max-width: 12rem;
+      }
+    }
+  }
+}
+
+.composer-link-toolbar {
+  &__visit {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 0;
+
+    .toolbar-link__label {
+      font-size: var(--font-down-1-rem);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
   }
 }
