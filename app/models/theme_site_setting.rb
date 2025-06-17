@@ -6,7 +6,7 @@
 # core based on the `themeable` designation on a site setting.
 #
 # Creation, updating, and deletion of theme site settings is done
-# via the `Themes::ThemeSiteSettingUpsert` service.
+# via the `Themes::ThemeSiteSettingManager` service.
 class ThemeSiteSetting < ActiveRecord::Base
   belongs_to :theme
 end

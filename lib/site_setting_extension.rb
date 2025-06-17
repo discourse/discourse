@@ -481,7 +481,7 @@ module SiteSettingExtension
 
   def raise_invalid_setting_access(setting_name)
     raise SiteSettingExtension::InvalidSettingAccess.new(
-            "#{setting_name} cannot be changed like this because it is a themeable setting. Instead, use the ThemeSiteSettingUpsert service to manage themeable site settings.",
+            "#{setting_name} cannot be changed like this because it is a themeable setting. Instead, use the ThemeSiteSettingManager service to manage themeable site settings.",
           )
   end
 
@@ -591,9 +591,9 @@ module SiteSettingExtension
   #   SiteSetting.change_themeable_site_setting(5, "enable_welcome_banner", false)
   #
   # @note Unlike regular site settings which use add_override!, themeable settings
-  #   should be changed via the ThemeSiteSettingUpsert service.
+  #   should be changed via the ThemeSiteSettingManager service.
   #
-  # @see ThemeSiteSettingUpsert service for the higher-level implementation that handles
+  # @see ThemeSiteSettingManager service for the higher-level implementation that handles
   #   database persistence and logging.
   def change_themeable_site_setting(theme_id, name, val)
     name = name.to_sym

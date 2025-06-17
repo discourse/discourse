@@ -368,7 +368,7 @@ class Admin::ThemesController < Admin::AdminController
   end
 
   def update_theme_site_setting
-    Themes::ThemeSiteSettingUpsert.call(
+    Themes::ThemeSiteSettingManager.call(
       params: {
         theme_id: params[:id],
         name: params[:name],

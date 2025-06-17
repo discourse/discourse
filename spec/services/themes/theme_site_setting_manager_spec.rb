@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Themes::ThemeSiteSettingUpsert do
+RSpec.describe Themes::ThemeSiteSettingManager do
   describe described_class::Contract, type: :model do
     it { is_expected.to validate_presence_of(:theme_id) }
     it { is_expected.to validate_presence_of(:name) }

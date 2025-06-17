@@ -1,6 +1,15 @@
 # frozen_string_literal: true
 
-class Themes::ThemeSiteSettingUpsert
+# Responsible for creating or updating theme site settings, and in the case
+# where the value is set to nil or is the same as the site setting default,
+# deleting the theme site setting override.
+#
+# Theme site settings are used to override specific site settings that are
+# marked as themeable in site_settings.yml. This allows themes to have a greater
+# control over the full site experience.
+#
+# Theme site settings have an identical schema to SiteSetting.
+class Themes::ThemeSiteSettingManager
   include Service::Base
 
   params do
@@ -100,7 +109,9 @@ class Themes::ThemeSiteSettingUpsert
         setting_record = existing_theme_site_setting
       end
     else
-      if !params.value.nil?
+      # Don't need to create a record if the value is nil or matches the
+      # site setting default
+      if !params.value.nil? && setting_ruby_value != SiteSetting.defaults[params.name]
         setting_record =
           theme.theme_site_settings.create!(
             name: params.name,
