@@ -16,7 +16,7 @@ module Migrations::Converters::Discourse
 
       if external_upload?(url_or_path)
         ::Migrations::Database::IntermediateDB::Upload.create_for_url(
-          url: url_or_path,
+          url: url_or_path.start_with?("//") ? "https:#{url_or_path}" : url_or_path,
           filename: item[@filename_column],
           type: @upload_type,
           origin: item[@origin_column],
