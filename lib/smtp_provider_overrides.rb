@@ -6,7 +6,7 @@ class SmtpProviderOverrides
   # need certain authentication methods. This may need to change when we start to
   # use XOAUTH2 for SMTP.
   def self.authentication_override(host)
-    return "login" if %w[smtp.office365.com smtp-mail.outlook.com].include?(host)
+    return "login" if %w[smtp.office365.com smtp-mail.outlook.com smtp.azurecomm.net].include?(host)
     GlobalSetting.smtp_authentication
   end
 end
