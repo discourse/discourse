@@ -26,3 +26,18 @@ class OptimizedVideo < ActiveRecord::Base
     end
   end
 end
+
+# == Schema Information
+#
+# Table name: optimized_videos
+#
+#  id         :bigint           not null, primary key
+#  sha1       :string
+#  extension  :string
+#  upload_id  :integer
+#  url        :string
+#  filesize   :integer
+#  etag       :string
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
