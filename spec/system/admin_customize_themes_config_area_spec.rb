@@ -47,6 +47,7 @@ describe "Admin Customize Themes Config Area Page", type: :system do
     config_area.mark_as_active(theme_2)
     expect(config_area).to have_badge(theme_2, "--active")
     expect(config_area).to have_no_badge(foundation_theme, "--active")
+    expect(find(".theme-card", match: :first).find(".theme-card__title")).to have_text(theme_2.name)
   end
 
   it "allows to make theme selectable by users" do
