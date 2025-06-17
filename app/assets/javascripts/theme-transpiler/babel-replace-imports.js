@@ -7,7 +7,11 @@ export default function (babel) {
     visitor: {
       ImportDeclaration(path) {
         const moduleName = path.node.source.value;
-        if (moduleName.startsWith(".") || rollupVirtualImports[moduleName]) {
+        if (
+          moduleName.startsWith(".") ||
+          rollupVirtualImports[moduleName] ||
+          moduleName.startsWith("discourse/theme-")
+        ) {
           return;
         }
 

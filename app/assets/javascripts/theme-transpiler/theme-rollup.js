@@ -13,6 +13,7 @@ import { dirname, join } from "path";
 import { WidgetHbsCompiler } from "discourse-widget-hbs/lib/widget-hbs-compiler";
 import { browsers } from "../discourse/config/targets";
 import AddThemeGlobals from "./add-theme-globals";
+import BabelCrossThemeImport from "./babel-cross-theme-import";
 import BabelReplaceImports from "./babel-replace-imports";
 import { Preprocessor } from "./content-tag";
 import rollupVirtualImports from "./rollup-virtual-imports";
@@ -224,7 +225,7 @@ const __COLOCATED_TEMPLATE__ = template;
       },
 
       getBabelOutputPlugin({
-        plugins: [BabelReplaceImports],
+        plugins: [BabelReplaceImports, BabelCrossThemeImport],
       }),
       babel({
         extensions: [".js", ".gjs", ".hbs"],

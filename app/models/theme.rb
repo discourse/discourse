@@ -512,7 +512,13 @@ class Theme < ActiveRecord::Base
 
         caches.map { |c| <<~HTML.html_safe }.join("\n")
           <link rel="modulepreload" href="#{c.url}" data-theme-id="#{c.theme_id}" />
-
+          <script type="importmap" nonce="#{ThemeField::CSP_NONCE_PLACEHOLDER}">
+            {
+              "imports": {
+                "discourse/theme-#{c.theme_id}": "#{c.url}"
+              }
+            }
+          </script>
         HTML
       end
     when :translations
