@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-require_relative "aws_mediaconvert_adapter"
 
 module VideoConversion
   class AdapterFactory
