@@ -128,8 +128,6 @@ module VideoConversion
       return false unless object&.exists?
 
       begin
-        object.acl.put(acl: "public-read") if SiteSetting.s3_use_acls
-
         optimized_video =
           create_optimized_video_record(
             output_path,
