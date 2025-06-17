@@ -95,6 +95,11 @@ module Jobs
       params = { user_id: @user_id, old_username: @old_username, new_username: @new_username }
 
       DB.exec(<<~SQL, params)
+        WITH recent_notifications AS (
+          SELECT *
+          FROM notifications
+          WHERE created_at >= NOW() - INTERVAL '1 month'
+        )
         UPDATE notifications
         SET data = (data :: JSONB ||
                     jsonb_strip_nulls(
@@ -117,13 +122,9 @@ module Jobs
                                         ELSE NULL END
                         )
                     )) :: JSON
-            WHERE (
-              data::jsonb ->> 'original_username' = :old_username OR
-              data::jsonb ->> 'display_username' = :old_username OR
-              data::jsonb ->> 'username' = :old_username OR
-              data::jsonb ->> 'username2' = :old_username
-            )
-        AND created_at >= NOW() - INTERVAL '1 month'
+        FROM recent_notifications
+        WHERE notifications.id = recent_notifications.id
+        AND recent_notifications.data ILIKE '%' || :old_username || '%'
       SQL
     end
 

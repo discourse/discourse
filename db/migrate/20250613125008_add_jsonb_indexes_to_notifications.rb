@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 class AddJsonbIndexesToNotifications < ActiveRecord::Migration[7.2]
   def up
-    execute <<-SQL
+    execute <<~SQL
       CREATE INDEX index_notifications_on_data_original_username
       ON notifications ((data :: JSONB ->> 'original_username'))
       WHERE (data :: JSONB ->> 'original_username') IS NOT NULL;
@@ -21,7 +21,7 @@ class AddJsonbIndexesToNotifications < ActiveRecord::Migration[7.2]
   end
 
   def down
-    execute <<-SQL
+    execute <<~SQL
       DROP INDEX index_notifications_on_data_original_username;
       DROP INDEX index_notifications_on_data_display_username;
       DROP INDEX index_notifications_on_data_username;
