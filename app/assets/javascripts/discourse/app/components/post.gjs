@@ -472,6 +472,7 @@ export default class Post extends Component {
                       <PostCookedHtml
                         @post={{@post}}
                         @highlightTerm={{@highlightTerm}}
+                        @state={{this.cookedState}}
                       />
                     </PluginOutlet>
 
