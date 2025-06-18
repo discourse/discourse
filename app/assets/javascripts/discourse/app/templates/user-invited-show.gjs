@@ -4,6 +4,7 @@ import { htmlSafe } from "@ember/template";
 import RouteTemplate from "ember-route-template";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
+import DropdownMenu from "discourse/components/dropdown-menu";
 import LoadMore from "discourse/components/load-more";
 import TextField from "discourse/components/text-field";
 import avatar from "discourse/helpers/avatar";
@@ -15,7 +16,6 @@ import formatDuration from "discourse/helpers/format-duration";
 import number from "discourse/helpers/number";
 import rawDate from "discourse/helpers/raw-date";
 import { i18n } from "discourse-i18n";
-import DropdownMenu from "discourse/components/dropdown-menu";
 import DMenu from "float-kit/components/d-menu";
 
 export default RouteTemplate(
