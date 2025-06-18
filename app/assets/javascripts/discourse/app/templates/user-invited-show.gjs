@@ -219,20 +219,19 @@ export default RouteTemplate(
 
                           <div class="invite-groups">
                           {{#each invite.groups as |g|}}
-                            <div class="invite-extra --group-item">
-                              <a href="/g/{{g.name}}">
-                                {{icon "users"}} {{g.name}}
+                            <span class="invite-extra">
+                              <a href="/g/{{g.name}}" class="group-item-link">{{icon "users"}} {{g.name}}
                               </a>
-                            </div>
+                            </span>
                           {{/each}}
                           </div>
 
                           {{#if invite.topic}}
-                            <div class="invite-extra">
+                            <span class="invite-extra">
                               <a href={{invite.topic.url}}>
                                 {{icon "file-lines"}} {{invite.topic.title}}
                               </a>
-                            </div>
+                            </span>
                           {{/if}}
                         </div>
                       </td>
