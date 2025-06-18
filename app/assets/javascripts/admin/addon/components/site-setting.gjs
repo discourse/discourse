@@ -319,9 +319,11 @@ export default class SiteSettingComponent extends Component {
     });
   }
 
-
   <template>
-    <div data-setting={{this.args.setting.setting}} class="row setting {{this.typeClass}} {{if this.overridden "overridden"}}">
+    <div
+      data-setting={{this.args.setting.setting}}
+      class="row setting {{this.typeClass}} {{if this.overridden 'overridden'}}"
+    >
       <div class="setting-label">
         <h3>
           {{this.settingName}}
@@ -369,7 +371,9 @@ export default class SiteSettingComponent extends Component {
             @changeValueCallback={{this.changeValueCallback}}
             @setValidationMessage={{this.setValidationMessage}}
           />
-          <SettingValidationMessage @message={{this.args.setting.validationMessage}} />
+          <SettingValidationMessage
+            @message={{this.args.setting.validationMessage}}
+          />
           {{#if this.displayDescription}}
             <Description @description={{this.args.setting.description}} />
           {{/if}}
