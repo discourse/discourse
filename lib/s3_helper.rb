@@ -245,6 +245,7 @@ class S3Helper
   end
 
   def upsert_tag(key, tag_key:, tag_value:)
+    key = get_path_for_s3_upload(key)
     tags = s3_resource.client.get_object_tagging(bucket: @s3_bucket_name, key:).tag_set
     tag_index = tags.find_index { |tag| tag[:key].to_s == tag_key.to_s }
 
