@@ -228,34 +228,33 @@
     }
   }
 
-  .composer-link-toolbar {
-    &__visit {
-      .d-button-label {
-        max-width: 12rem;
-      }
+  .composer-link-toolbar__visit {
+    .d-button-label {
+      max-width: 12rem;
     }
   }
 }
 
-.composer-link-toolbar {
-  &__visit {
-    min-width: 0;
-    align-items: center;
-    gap: 0.5rem;
+.composer-link-toolbar__visit {
+  min-width: 0;
+  align-items: center;
 
-    // visit link has a right-side icon
-    flex-direction: row-reverse;
+  // visit link has a right-side icon
+  flex-direction: row-reverse;
 
-    .d-icon {
-      // overrides the default from d-button.scss
-      margin-right: 0;
-    }
+  .d-icon {
+    // overrides the default from d-button.scss
+    margin-right: 0;
+  }
 
-    .d-button-label {
-      font-size: var(--font-down-1-rem);
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+  .d-button-label {
+    font-size: var(--font-down-1-rem);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    &:not(:disabled) {
+      margin-right: 0.5rem;
     }
   }
 }
