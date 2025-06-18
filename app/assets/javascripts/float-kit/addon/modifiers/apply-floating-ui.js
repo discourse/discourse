@@ -16,7 +16,9 @@ export default class FloatKitApplyFloatingUi extends Modifier {
     this.options = options ?? {};
 
     if (this.options.autoUpdate) {
-      this.cleanup = autoUpdate(trigger, element, this.update);
+      this.cleanup = autoUpdate(trigger, element, this.update, {
+        ancestorScroll: options.updateOnScroll,
+      });
     } else {
       this.update();
     }
