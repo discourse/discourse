@@ -5684,7 +5684,7 @@ en:
         overridden_value: "Overridden value: %{value}"
         select_setting: "Select a site setting to see current theme values"
         add: "Go to theme site settings"
-        help: "You are currently using the <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>%{currentTheme}</a> theme. Go to the <a href='%{basePath}/admin/customize/themes'>theme config page</a> to alter theme settings, or click on a linked theme in the table below to edit its settings."
+        help: "The theme you are currently using is <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>%{currentTheme}</a>. Go to the <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>theme config page</a> to alter theme site settings, or click on a linked theme in the table below to edit its settings."
 
       search:
         modal_title: "Search everything in admin"
@@ -6371,7 +6371,7 @@ en:
           install: "Install"
           themes:
             title: "Themes"
-            description: "Site-wide themes that change the overall look and feel of your site for all users."
+            description: "Site-wide themes that change the overall look and feel of your site for all users. Want to check which site settings your themes override? <a href=\"%{themeSiteSettingsUrl}\">View theme site settings</a>"
             themes_intro: "Install a new theme to get started, or create your own from scratch using these resources."
             new_theme: "New theme"
             back: "Back to themes"
