@@ -126,11 +126,11 @@ export default class PostQuotedContent extends Component {
       data-full={{@fullQuote}}
       {{didInsert this.setWrapperElement}}
     >
-      {{! this.WrapperComponent can be empty to render only the children while decorating cooked content.
-      that's why we're adding the class this way}}
-      {{#if this.isQuotedPostIgnored}}
+      {{! `this.WrapperComponent` can be empty to render only the children while decorating cooked content.
+          that's why we're adding the class this way}}
+      {{~#if this.isQuotedPostIgnored~}}
         {{elementClass "ignored-user" target=this.wrapperElement}}
-      {{/if}}
+      {{~/if~}}
       <div
         class="title"
         data-has-quote-controls={{or
@@ -142,43 +142,51 @@ export default class PostQuotedContent extends Component {
           this.shouldDisplayToggleButton (modifier on "click" this.onClickTitle)
         )}}
       >
-        {{#if (has-block "title")}}
-          {{yield to="title"}}
-        {{else}}
-          {{#if @quotedPostNotFound}}
-            {{@quotedUsername}}
-          {{else}}
-            {{@title}}
-          {{/if}}
-        {{/if}}
+        {{~#if (has-block "title")~}}
+          {{~yield to="title"~}}
+        {{~else~}}
+          {{~#if @quotedPostNotFound~}}
+            {{~@quotedUsername~}}
+          {{~else~}}
+            {{~@title~}}
+          {{~/if~}}
+        {{~/if~}}
         <div class="quote-controls">
-          {{#if this.shouldDisplayToggleButton}}
+          {{~#if this.shouldDisplayToggleButton~}}
             <DButton
               class="btn-flat quote-toggle"
               @action={{this.toggleExpanded}}
               @ariaControls={{@quoteId}}
               @ariaExpanded={{this.expanded}}
-              @icon={{if this.expanded "chevron-up" "chevron-down"}}
               @title="post.expand_collapse"
-            />
-          {{/if}}
-          {{#if this.shouldDisplayNavigateToPostButton}}
+            >
+              {{! rendering the icon in the block instead of using the parameter `@icon` prevents DButton from adding
+                  extra whitespace that will interfere with the text captured when quoting a quoted content }}
+              {{~icon (if this.expanded "chevron-up" "chevron-down")~}}
+            </DButton>
+          {{~/if~}}
+          {{~#if this.shouldDisplayNavigateToPostButton~}}
             <DButton
               class="btn-flat back"
               @href={{this.quotedPostUrl}}
-              @icon={{if
-                (lt @post.post_number @quotedPostNumber)
-                "arrow-down"
-                "arrow-up"
-              }}
               @title="post.follow_quote"
-            />
-          {{/if}}
+            >
+              {{! rendering the icon in the block instead of using the parameter `@icon` prevents DButton from adding
+                  extra whitespace that will interfere with the text captured when quoting a quoted content }}
+              {{~icon
+                (if
+                  (lt @post.post_number @quotedPostNumber)
+                  "arrow-down"
+                  "arrow-up"
+                )
+              ~}}
+            </DButton>
+          {{~/if~}}
         </div>
       </div>
       <blockquote id={{@id}}>
-        {{#unless this.isQuotedPostIgnored}}
-          {{#if this.expanded}}
+        {{~#unless this.isQuotedPostIgnored~}}
+          {{~#if this.expanded~}}
             <AsyncContent
               @asyncData={{this.loadQuotedPost}}
               @context={{hash
@@ -187,22 +195,6 @@ export default class PostQuotedContent extends Component {
                 cachedPost=@quotedPost
               }}
             >
-              <:error as |error AsyncContentInlineErrorMessage|>
-                {{#if (eq error.jqXHR.status 403)}}
-                  <div class="quote-error expanded-quote icon-only">
-                    {{icon "lock"}}
-                  </div>
-                {{else if (eq error.jqXHR.status 404)}}
-                  <div class="quote-error expanded-quote icon-only">
-                    {{icon "trash-can"}}
-                  </div>
-                {{else}}
-                  <div class="quote-error expanded-quote">
-                    <AsyncContentInlineErrorMessage />
-                  </div>
-                {{/if}}
-              </:error>
-
               <:content as |expandedPost|>
                 <div class="expanded-quote" data-post-id={{expandedPost.id}}>
                   <PostCookedHtml
@@ -213,11 +205,26 @@ export default class PostQuotedContent extends Component {
                   />
                 </div>
               </:content>
+              <:error as |error AsyncContentInlineErrorMessage|>
+                {{~#if (eq error.jqXHR.status 403)~}}
+                  <div class="quote-error expanded-quote icon-only">
+                    {{~icon "lock"~}}
+                  </div>
+                {{~else if (eq error.jqXHR.status 404)~}}
+                  <div class="quote-error expanded-quote icon-only">
+                    {{~icon "trash-can"~}}
+                  </div>
+                {{~else~}}
+                  <div class="quote-error expanded-quote">
+                    <AsyncContentInlineErrorMessage />
+                  </div>
+                {{~/if~}}
+              </:error>
             </AsyncContent>
-          {{else}}
-            {{@collapsedContent}}
-          {{/if}}
-        {{/unless}}
+          {{~else~}}
+            {{~@collapsedContent~}}
+          {{~/if~}}
+        {{~/unless~}}
       </blockquote>
     </this.WrapperComponent>
   </template>

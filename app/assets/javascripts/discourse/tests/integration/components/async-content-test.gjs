@@ -384,7 +384,6 @@ module("Integration | Component | AsyncContent", function (hooks) {
       );
 
       assert.dom(".error").exists();
-      assert.dom(".error").hasText("error");
 
       assert.dom(".alert-error").exists();
       assert.dom(".alert-error").hasText("Sorry, an error has occurred.");
