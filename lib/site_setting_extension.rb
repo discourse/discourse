@@ -445,7 +445,7 @@ module SiteSettingExtension
       end
       theme_site_setting_deletions.each { |theme_id, _| theme_site_settings.delete(theme_id) }
 
-      clear_cache!(expire_theme_site_setting_cache: true)
+      clear_cache!(expire_theme_site_setting_cache: ThemeSiteSetting.can_access_db?)
     end
   end
 

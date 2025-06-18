@@ -10,15 +10,18 @@
 class ThemeSiteSetting < ActiveRecord::Base
   belongs_to :theme
 
+  def self.can_access_db?
+    !GlobalSetting.skip_redis? && !GlobalSetting.skip_db? &&
+      ActiveRecord::Base.connection.table_exists?(self.table_name)
+  end
+
   # Lightweight override similar to what SiteSettings::DbProvider and
   # SiteSettings::LocalProcessProvider do.
   #
   # This is used to ensure that we don't try to load settings from Redis or
   # the database when they are not available.
   def self.all
-    return [] if GlobalSetting.skip_redis? || GlobalSetting.skip_db?
-    return [] if !ActiveRecord::Base.connection.table_exists?(self.table_name)
-
+    return [] if !can_access_db?
     super
   end
 end
