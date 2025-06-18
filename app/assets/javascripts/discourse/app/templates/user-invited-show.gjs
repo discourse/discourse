@@ -289,7 +289,7 @@ export default RouteTemplate(
                                         invite
                                       }}
                                       @icon="trash-can"
-                                      class="btn-transparent btn-danger"
+                                      class="btn-transparent btn-danger cancel"
                                       @label={{if
                                         invite.destroyed
                                         "user.invited.removed"
