@@ -32,8 +32,8 @@ export default class ValidationParser {
 
   parseDateString(input) {
     let [year, month, day] = input.split("-").map(Number);
-    // JS Date months are 0-based
     month -= 1;
+
     return new Date(year, month, day);
   }
 
