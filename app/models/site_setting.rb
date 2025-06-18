@@ -337,8 +337,8 @@ class SiteSetting < ActiveRecord::Base
 
   protected
 
-  def self.clear_cache!
-    super
+  def self.clear_cache!(expire_theme_site_setting_cache: false)
+    super(expire_theme_site_setting_cache:)
 
     @blocked_attachment_content_types_regex = nil
     @blocked_attachment_filenames_regex = nil
