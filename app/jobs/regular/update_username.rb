@@ -35,10 +35,10 @@ module Jobs
         %r{\A/u(?:sers)?/#{UrlHelper.encode_component(cooked_username)}\z}i
 
       up = Benchmark.measure { update_posts }
-      puts "Inside updateUsername - time updating posts: #{un.real.round(2)} "
+      puts "Inside updateUsername - time updating posts: #{up.real.round(2)} "
 
       ur = Benchmark.measure { update_revisions }
-      puts "Inside updateUsername - time updating revisions: #{un.real.round(2)} "
+      puts "Inside updateUsername - time updating revisions: #{ur.real.round(2)} "
 
       un = Benchmark.measure { update_notifications }
       puts "Inside updateUsername - time updating notifications: #{un.real.round(2)} "
