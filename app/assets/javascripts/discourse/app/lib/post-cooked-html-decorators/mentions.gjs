@@ -9,12 +9,7 @@ const CookedUserStatusMessage = <template>
 </template>;
 
 export default function (element, context) {
-  const {
-    data: { post },
-    cloakedState,
-    owner,
-    helper,
-  } = context;
+  const { post, cloakedState, owner, helper } = context;
 
   cloakedState.extractedMentions = _extractMentions(element, post);
 
