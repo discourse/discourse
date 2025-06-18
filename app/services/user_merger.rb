@@ -389,52 +389,23 @@ class UserMerger
 
     Notification.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
 
-    post_act =
-      Benchmark.measure do
-        update_user_id(
-          :post_actions,
-          conditions: [
-            "x.post_id = y.post_id",
-            "x.post_action_type_id = y.post_action_type_id",
-            "x.targets_topic = y.targets_topic",
-          ],
-        )
-      end
-    puts "=> time updating post actions: #{post_act.real.round(2)}"
+    update_user_id(
+      :post_actions,
+      conditions: [
+        "x.post_id = y.post_id",
+        "x.post_action_type_id = y.post_action_type_id",
+        "x.targets_topic = y.targets_topic",
+      ],
+    )
 
-    post_act1 =
-      Benchmark.measure do
-        PostAction.where(deleted_by_id: @source_user.id).update_all(deleted_by_id: @target_user.id)
-      end
-    puts "=> time updating post actions - deleted by id: #{post_act1.real.round(2)}"
+    PostAction.where(deleted_by_id: @source_user.id).update_all(deleted_by_id: @target_user.id)
 
-    post_act2 =
-      Benchmark.measure do
-        PostAction.where(deferred_by_id: @source_user.id).update_all(
-          deferred_by_id: @target_user.id,
-        )
-      end
-    puts "=> time updating post actions - deferred by id: #{post_act2.real.round(2)}"
+    PostAction.where(deferred_by_id: @source_user.id).update_all(deferred_by_id: @target_user.id)
+    PostAction.where(agreed_by_id: @source_user.id).update_all(agreed_by_id: @target_user.id)
 
-    post_act3 =
-      Benchmark.measure do
-        PostAction.where(agreed_by_id: @source_user.id).update_all(agreed_by_id: @target_user.id)
-      end
-    puts "=> time updating post actions - agreed by id: #{post_act3.real.round(2)}"
+    PostAction.where(disagreed_by_id: @source_user.id).update_all(disagreed_by_id: @target_user.id)
 
-    post_act4 =
-      Benchmark.measure do
-        PostAction.where(disagreed_by_id: @source_user.id).update_all(
-          disagreed_by_id: @target_user.id,
-        )
-      end
-    puts "=> time updating post actions - disagreed by id: #{post_act4.real.round(2)}"
-
-    post_act5 =
-      Benchmark.measure do
-        PostRevision.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
-      end
-    puts "=> time updating post revision: #{post_act5.real.round(2)}"
+    PostRevision.where(user_id: @source_user.id).update_all(user_id: @target_user.id)
 
     posts_with =
       Benchmark.measure do
@@ -444,34 +415,17 @@ class UserMerger
           .update_all(deleted_by_id: @target_user.id)
       end
 
-    puts "=> time updating posts - deleted by: #{posts_with.real.round(2)}"
-    posts_with =
-      Benchmark.measure do
-        Post
-          .with_deleted
-          .where(last_editor_id: @source_user.id)
-          .update_all(last_editor_id: @target_user.id)
-      end
+    Post
+      .with_deleted
+      .where(last_editor_id: @source_user.id)
+      .update_all(last_editor_id: @target_user.id)
 
-    puts "=> time updating posts - last editor: #{posts_with.real.round(2)}"
-    posts_with =
-      Benchmark.measure do
-        Post
-          .with_deleted
-          .where(locked_by_id: @source_user.id)
-          .update_all(locked_by_id: @target_user.id)
-      end
+    Post.with_deleted.where(locked_by_id: @source_user.id).update_all(locked_by_id: @target_user.id)
 
-    puts "=> time updating posts - locked by: #{posts_with.real.round(2)}"
-    posts_with =
-      Benchmark.measure do
-        Post
-          .with_deleted
-          .where(reply_to_user_id: @source_user.id)
-          .update_all(reply_to_user_id: @target_user.id)
-      end
-
-    puts "=> time updating posts - reply to: #{posts_with.real.round(2)}"
+    Post
+      .with_deleted
+      .where(reply_to_user_id: @source_user.id)
+      .update_all(reply_to_user_id: @target_user.id)
 
     Reviewable.where(created_by_id: @source_user.id).update_all(created_by_id: @target_user.id)
     ReviewableHistory.where(created_by_id: @source_user.id).update_all(
