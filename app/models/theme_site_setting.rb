@@ -9,6 +9,18 @@
 # via the `Themes::ThemeSiteSettingManager` service.
 class ThemeSiteSetting < ActiveRecord::Base
   belongs_to :theme
+
+  # Lightweight override similar to what SiteSettings::DbProvider and
+  # SiteSettings::LocalProcessProvider do.
+  #
+  # This is used to ensure that we don't try to load settings from Redis or
+  # the database when they are not available.
+  def self.all
+    return [] if GlobalSetting.skip_redis? || GlobalSetting.skip_db?
+    return [] if !ActiveRecord::Base.connection.table_exists?(self.table_name)
+
+    super
+  end
 end
 
 # == Schema Information

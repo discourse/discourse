@@ -985,14 +985,50 @@ RSpec.describe SiteSettingExtension do
   end
 
   describe "themeable settings" do
+    fab!(:theme_1) { Fabricate(:theme) }
+    fab!(:theme_2) { Fabricate(:theme) }
+    fab!(:tss_1) do
+      Fabricate(:theme_site_setting, name: "enable_welcome_banner", value: false, theme: theme_1)
+    end
+    fab!(:tss_2) do
+      Fabricate(
+        :theme_site_setting,
+        name: "search_experience",
+        value: "search_field",
+        theme: theme_2,
+      )
+    end
+
     it "returns true for settings that are themeable" do
-      expect(
-        SiteSetting.all_settings.find { |s| s[:setting] == :enable_welcome_banner }[:themeable],
-      ).to eq(true)
+      expect(SiteSetting.themeable[:enable_welcome_banner]).to eq(true)
     end
 
     it "returns false for settings that are not themeable" do
-      expect(SiteSetting.all_settings.find { |s| s[:setting] == :title }[:themeable]).to eq(false)
+      expect(SiteSetting.themeable[:title]).to eq(false)
+    end
+
+    it "caches the theme site setting values on a per theme basis" do
+      SiteSetting.refresh!
+      expect(SiteSetting.theme_site_settings[theme_1.id][:enable_welcome_banner]).to eq(false)
+      expect(SiteSetting.theme_site_settings[theme_2.id][:search_experience]).to eq("search_field")
+    end
+
+    it "overrides the site setting value with the theme site setting" do
+      SiteSetting.create!(
+        name: "enable_welcome_banner",
+        data_type: SiteSettings::TypeSupervisor.types[:bool],
+        value: "t",
+      )
+      SiteSetting.create!(
+        name: "search_experience",
+        data_type: SiteSettings::TypeSupervisor.types[:enum],
+        value: SiteSetting.type_supervisor.to_db_value(:search_experience, "search_icon"),
+      )
+      SiteSetting.refresh!
+      expect(SiteSetting.enable_welcome_banner(theme_id: theme_1.id)).to eq(false)
+      expect(SiteSetting.enable_welcome_banner(theme_id: theme_2.id)).to eq(true)
+      expect(SiteSetting.search_experience(theme_id: theme_1.id)).to eq("search_icon")
+      expect(SiteSetting.search_experience(theme_id: theme_2.id)).to eq("search_field")
     end
   end
 

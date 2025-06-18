@@ -1,4 +1,7 @@
 # frozen_string_literal: true
+require "pry"
+require "pry-byebug"
+require "pry-rails"
 
 module SiteSettingExtension
   include SiteSettings::DeprecatedSettings
@@ -617,7 +620,10 @@ module SiteSettingExtension
     MessageBus.publish(
       "/client_settings",
       name: name,
-      value: self.public_send(name, scoped_to),
+      # default_locale is a special case, it is not themeable and we define
+      # a custom getter for it, so we can just use the normal getter
+      value:
+        name.to_s == "default_locale" ? self.public_send(name) : self.public_send(name, scoped_to),
       scoped_to: scoped_to,
     )
   end
