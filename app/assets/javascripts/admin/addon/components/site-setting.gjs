@@ -321,7 +321,7 @@ export default class SiteSettingComponent extends Component {
 
   <template>
     <div
-      data-setting={{this.args.setting.setting}}
+      data-setting={{@setting.setting}}
       class="row setting {{this.typeClass}} {{if this.overridden 'overridden'}}"
     >
       <div class="setting-label">
@@ -345,7 +345,7 @@ export default class SiteSettingComponent extends Component {
           <DButton
             class="btn-link"
             @action={{this.setDefaultValues}}
-            @translatedLabel={{this.args.setting.setDefaultValuesLabel}}
+            @translatedLabel={{@setting.setDefaultValuesLabel}}
           />
         {{/if}}
       </div>
@@ -359,11 +359,11 @@ export default class SiteSettingComponent extends Component {
             class="setting-value-edit-button"
           />
 
-          <Description @description={{this.args.setting.description}} />
+          <Description @description={{@setting.description}} />
         {{else}}
           <this.resolvedComponent
             {{on "keydown" this._handleKeydown}}
-            @setting={{this.args.setting}}
+            @setting={{@setting}}
             @value={{this.buffered.value}}
             @preview={{this.preview}}
             @isSecret={{this.isSecret}}
@@ -372,10 +372,10 @@ export default class SiteSettingComponent extends Component {
             @setValidationMessage={{this.setValidationMessage}}
           />
           <SettingValidationMessage
-            @message={{this.args.setting.validationMessage}}
+            @message={{@setting.validationMessage}}
           />
           {{#if this.displayDescription}}
-            <Description @description={{this.args.setting.description}} />
+            <Description @description={{@setting.description}} />
           {{/if}}
         {{/if}}
       </div>
@@ -398,7 +398,7 @@ export default class SiteSettingComponent extends Component {
           />
         </div>
       {{else if this.overridden}}
-        {{#if this.args.setting.secret}}
+        {{#if @setting.secret}}
           <DButton
             @action={{this.toggleSecret}}
             @icon="far-eye-slash"
