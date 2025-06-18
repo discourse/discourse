@@ -603,8 +603,10 @@ class Plugin::Instance
   def discourse_owned?
     return false if commit_hash.blank?
     parsed_commit_url = UrlHelper.relaxed_parse(self.commit_url)
-    return false if parsed_commit_url.blank?
-    github_org = parsed_commit_url.path.split("/")[1]
+    Rails.logger.debug("Admin::PluginsController#index: commit_url=#{self.commit_url.inspect}, parsed_commit_url.path=#{parsed_commit_url&.path.inspect}")
+    return false if parsed_commit_url.blank? || parsed_commit_url.path.blank?
+    path = parsed_commit_url.path
+    github_org = path.split("/")[1]
     (github_org == "discourse" || github_org == "discourse-org") &&
       parsed_commit_url.host == "github.com"
   end
