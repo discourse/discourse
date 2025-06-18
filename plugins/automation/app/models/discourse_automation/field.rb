@@ -18,6 +18,8 @@ module DiscourseAutomation
 
       yield
 
+      automation.fields.reload
+
       automation&.triggerable&.on_update&.call(
         automation,
         automation.serialized_fields,
