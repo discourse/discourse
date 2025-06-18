@@ -261,7 +261,7 @@ GEM
       net-imap
       net-pop
       net-smtp
-    matrix (0.4.2)
+    matrix (0.4.3)
     maxminddb (0.1.22)
     memory_profiler (1.1.0)
     message_bus (4.4.1)
@@ -928,7 +928,7 @@ CHECKSUMS
   lru_redux (1.1.0) sha256=ee71d0ccab164c51de146c27b480a68b3631d5b4297b8ffe8eda1c72de87affb
   lz4-ruby (0.3.3) sha256=011be5ee230cfddc8308d4e2e0b05300c7bc755a887de799377ca6c5b6aede89
   mail (2.8.1) sha256=ec3b9fadcf2b3755c78785cb17bc9a0ca9ee9857108a64b6f5cfc9c0b5bfc9ad
-  matrix (0.4.2) sha256=71083ccbd67a14a43bfa78d3e4dc0f4b503b9cc18e5b4b1d686dc0f9ef7c4cc0
+  matrix (0.4.3) sha256=a0d5ab7ddcc1973ff690ab361b67f359acbb16958d1dc072b8b956a286564c5b
   maxminddb (0.1.22) sha256=50933be438fbed9dceabef4163eab41884bd8830d171fdb8f739bee769c4907e
   memory_profiler (1.1.0) sha256=79a17df7980a140c83c469785905409d3027ca614c42c086089d128b805aa8f8
   message_bus (4.4.1) sha256=719ec5c3167e6571030dee0f43eafa99dbf68ae67fca6fd63c265ff55c0c2adb
