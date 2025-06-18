@@ -238,7 +238,6 @@ export default RouteTemplate(
                               >
                                 {{icon "file-lines"}}
                                 {{invite.topic.title}}
-                                www.yo.com
                               </a>
                             </span>
                           {{/if}}
