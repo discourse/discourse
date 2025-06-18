@@ -13,7 +13,7 @@ module(
 
     let clock = null;
     hooks.beforeEach(() => {
-      clock = fakeTime("2025-05-03T08:00:00", "America/Chicago", true); // Monday morning
+      clock = fakeTime("2025-05-03T08:00:00", "America/Chicago", true);
     });
 
     hooks.afterEach(() => {
