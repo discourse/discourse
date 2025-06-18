@@ -286,7 +286,7 @@ describe DiscourseAutomation::AdminAutomationsController do
                   ],
                 },
               }
-        }.to change { automation.pending_automations.count }.by(0)
+        }.not_to change { automation.pending_automations.count }
 
         expect(automation.pending_automations.reload.last.execute_at).to be_within_one_minute_of(
           2.hours.from_now,
