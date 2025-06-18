@@ -20,14 +20,21 @@ export default class ValidationParser {
 
   dateBeforeOrEqualRule(input) {
     return {
-      date: new Date(input),
+      date: this.parseDateString(input),
     };
   }
 
   dateAfterOrEqualRule(input) {
     return {
-      date: new Date(input),
+      date: this.parseDateString(input),
     };
+  }
+
+  parseDateString(input) {
+    let [year, month, day] = input.split("-").map(Number);
+    // JS Date months are 0-based
+    month -= 1;
+    return new Date(year, month, day);
   }
 
   requiredRule(args = "") {

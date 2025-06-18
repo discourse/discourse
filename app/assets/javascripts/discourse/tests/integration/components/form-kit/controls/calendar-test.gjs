@@ -3,12 +3,22 @@ import { module, test } from "qunit";
 import Form from "discourse/components/form";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import formKit from "discourse/tests/helpers/form-kit-helper";
+import { fakeTime } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 
 module(
   "Integration | Component | FormKit | Controls | Calendar",
   function (hooks) {
     setupRenderingTest(hooks);
+
+    let clock = null;
+    hooks.beforeEach(() => {
+      clock = fakeTime("2025-05-03T08:00:00", "America/Chicago", true); // Monday morning
+    });
+
+    hooks.afterEach(() => {
+      clock.restore();
+    });
 
     test("default", async function (assert) {
       let data = { foo: null };
