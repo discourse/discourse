@@ -383,10 +383,6 @@
   }
 }
 
-.invite-description {
-  color: var(--primary-medium);
-}
-
 .public-user-fields {
   margin-top: 8px;
   margin-bottom: 8px;
@@ -1064,22 +1060,79 @@
     grid-column: 1 / span 2;
   }
 
-  // table.user-invite-list {
-  //   .invite-type {
-  //     .d-icon {
-  //       color: var(--primary-medium);
-  //     }
-  //   }
+  .d-admin-table.user-invite-list {
+    width: 100%;
+    margin-top: var(--space-4);
 
-  //   .invite-extra {
-  //     font-size: var(--font-down-1);
-  //     margin: 0.25em 0;
+    .d-admin-row__content {
+      td {
+        padding: var(--space-2);
+      }
 
-  //     a {
-  //       color: var(--primary-medium);
-  //     }
-  //   }
-  // }
+      .d-admin-row__controls {
+        width: 10%;
+      }
+
+      .d-admin-row__detail {
+        &.invite-updated-at {
+          width: 18%;
+
+          @include viewport.until(lg) {
+            width: auto;
+          }
+        }
+
+        &.invite-expires-at {
+          width: 20%;
+
+          @include viewport.until(lg) {
+            width: auto;
+          }
+        }
+      }
+
+      .invite-shortkey {
+        @include viewport.until(md) {
+          max-width: 70%;
+        }
+      }
+
+      .invite-description {
+        color: var(--primary-high);
+        margin-top: var(--space-1);
+      }
+
+      .invite-type {
+        .d-icon {
+          color: var(--primary-medium);
+          font-size: var(--font-down-1);
+          margin-right: var(--space-1);
+        }
+      }
+
+      .invite-details {
+        margin-left: var(--space-5);
+      }
+
+      .invite-groups {
+        display: flex;
+        gap: var(--space-2);
+      }
+
+      .invite-extra {
+        font-size: var(--font-down-1);
+        margin-top: var(--space-2);
+
+        a {
+          color: var(--primary-high);
+        }
+
+        .d-icon {
+          color: var(--primary-low-mid);
+        }
+      }
+    }
+  }
 }
 
 .user-additional-controls {

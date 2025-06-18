@@ -128,14 +128,40 @@ export default RouteTemplate(
                         >{{invite.user.username}}</LinkTo>
                       </td>
                       <td class="d-admin-row__detail">
+                        <div class="d-admin-row__mobile-label">
+                          {{i18n "user.invited.redeemed_at"}}
+                        </div>
                         {{formatDate invite.redeemed_at}}
                       </td>
-                      {{!-- {{#if @controller.model.can_see_invite_details}} --}}
-                        <td class="d-admin-row__detail">{{formatDate invite.user.last_seen_at}}</td>
-                        <td class="d-admin-row__detail">{{number invite.user.topics_entered}}</td>
-                        <td class="d-admin-row__detail">{{number invite.user.posts_read_count}}</td>
-                        <td class="d-admin-row__detail">{{formatDuration invite.user.time_read}}</td>
+                      {{#if @controller.model.can_see_invite_details}}
+                        <td class="d-admin-row__detail">
+                          <div class="d-admin-row__mobile-label">
+                            {{i18n "user.last_seen"}}
+                          </div>
+                          {{formatDate invite.user.last_seen_at}}
+                        </td>
+                        <td class="d-admin-row__detail">
+                          <div class="d-admin-row__mobile-label">
+                            {{i18n "user.invited.topics_entered"}}
+                          </div>
+                          {{number invite.user.topics_entered}}
+                        </td>
+                        <td class="d-admin-row__detail">
+                          <div class="d-admin-row__mobile-label">
+                            {{i18n "user.invited.posts_read_count"}}
+                          </div>
+                          {{number invite.user.posts_read_count}}
+                        </td>
+                        <td class="d-admin-row__detail">
+                          <div class="d-admin-row__mobile-label">
+                            {{i18n "user.invited.time_read"}}
+                          </div>
+                          {{formatDuration invite.user.time_read}}
+                        </td>
                         <td>
+                          <div class="d-admin-row__mobile-label">
+                            {{i18n "user.invited.days_visited"}}
+                          </div>
                           <span
                             title={{i18n "user.invited.days_visited"}}
                           >{{htmlSafe invite.user.days_visited}}</span>
@@ -144,8 +170,13 @@ export default RouteTemplate(
                             title={{i18n "user.invited.account_age_days"}}
                           >{{htmlSafe invite.user.days_since_created}}</span>
                         </td>
-                        <td class="d-admin-row__detail">{{htmlSafe invite.invite_source}}</td>
-                      {{!-- {{/if}} --}}
+                        <td class="d-admin-row__detail">
+                          <div class="d-admin-row__mobile-label">
+                            {{i18n "user.invited.invited_via"}}
+                          </div>
+                          {{htmlSafe invite.invite_source}}
+                        </td>
+                      {{/if}}
                     </tr>
                   {{/each}}
                 </tbody>
@@ -162,52 +193,63 @@ export default RouteTemplate(
                 </thead>
                 <tbody>
                   {{#each @controller.model.invites as |invite|}}
-                    <tr>
-                      <td class="invite-type">
-                        <div class="label">{{i18n
-                            "user.invited.invited_via"
-                          }}</div>
-                        {{#if invite.email}}
-                          {{icon "envelope"}}
-                          {{invite.email}}
-                        {{else}}
-                          {{icon "link"}}
-                          {{i18n
-                            "user.invited.invited_via_link"
-                            key=invite.shortKey
-                            count=invite.redemption_count
-                            max=invite.max_redemptions_allowed
-                          }}
-                        {{/if}}
+                    <tr class="d-admin-row__content">
+                      <td class="d-admin-row__overview invite-type">
+                        <div class="invite-shortkey">
+                          {{#if invite.email}}
+                            {{icon "envelope"}}
+                            {{invite.email}}
+                          {{else}}
+                            {{icon "link"}}
+                            {{i18n
+                              "user.invited.invited_via_link"
+                              key=invite.shortKey
+                              count=invite.redemption_count
+                              max=invite.max_redemptions_allowed
+                            }}
+                          {{/if}}
+                        </div>
 
-                        {{#each invite.groups as |g|}}
-                          <p class="invite-extra"><a href="/g/{{g.name}}">{{icon
-                                "users"
-                              }}
-                              {{g.name}}</a></p>
-                        {{/each}}
+                        <div class="invite-details">
+                          {{#if invite.description}}
+                            <div class="invite-description">
+                              {{invite.description}}
+                            </div>
+                          {{/if}}
 
-                        {{#if invite.topic}}
-                          <p class="invite-extra"><a
-                              href={{invite.topic.url}}
-                            >{{icon "file"}} {{invite.topic.title}}</a></p>
-                        {{/if}}
-                        {{#if invite.description}}
-                          <div class="invite-description">
-                            {{invite.description}}
+                          <div class="invite-groups">
+                          {{#each invite.groups as |g|}}
+                            <div class="invite-extra --group-item">
+                              <a href="/g/{{g.name}}">
+                                {{icon "users"}} {{g.name}}
+                              </a>
+                            </div>
+                          {{/each}}
                           </div>
-                        {{/if}}
+
+                          {{#if invite.topic}}
+                            <div class="invite-extra">
+                              <a href={{invite.topic.url}}>
+                                {{icon "file-lines"}} {{invite.topic.title}}
+                              </a>
+                            </div>
+                          {{/if}}
+                        </div>
                       </td>
 
-                      <td class="invite-updated-at">
-                        <div class="label">{{i18n "user.invited.sent"}}</div>
+                      <td class="d-admin-row__detail invite-updated-at">
+                        <div class="d-admin-row__mobile-label">
+                          {{i18n "user.invited.sent"}}
+                        </div>
                         {{formatDate invite.updated_at}}
                       </td>
 
-                      <td class="invite-expires-at">
-                        <div class="label">{{i18n
+                      <td class="d-admin-row__detail invite-expires-at">
+                        <div class="d-admin-row__mobile-label">
+                          {{i18n
                             "user.invited.expires_at"
-                          }}</div>
+                          }}
+                        </div>
                         {{#if @controller.inviteExpired}}
                           {{rawDate invite.expires_at}}
                         {{else if invite.expired}}
