@@ -174,6 +174,7 @@ export default class InsertHyperlink extends Component {
 
   @action
   search(value) {
+    this.formApi.set("linkUrl", value);
     this.#debounced = discourseDebounce(this, this.triggerSearch, value, 400);
   }
 
