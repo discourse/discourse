@@ -50,14 +50,7 @@ export default class PostCookedHtml extends Component {
     [...POST_COOKED_DECORATORS, ...this.extraDecorators].forEach(
       (decorator) => {
         try {
-          let decoratorState;
-
-          if (this.#cloakedState[decorator] !== undefined) {
-            decoratorState = this.#cloakedState[decorator];
-          } else {
-            decoratorState = new TrackedObject();
-            this.#cloakedState[decorator] = decoratorState;
-          }
+          const decoratorState = this.#cloakedState[decorator] ??= new TrackedObject();
 
           const owner = getOwner(this);
           const renderNestedPostCookedHtml = (

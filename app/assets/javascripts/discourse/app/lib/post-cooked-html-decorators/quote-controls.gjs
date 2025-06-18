@@ -2,7 +2,7 @@ import { htmlSafe } from "@ember/template";
 import curryComponent from "ember-curry-component";
 import PostQuotedContent from "discourse/components/post/quoted-content";
 
-export default function (element, context) {
+export default function quoteControls (element, context) {
   const { post, highlightTerm, ignoredUsers, cloakedState, owner } = context;
 
   const quotes = element.querySelectorAll("aside.quote");
