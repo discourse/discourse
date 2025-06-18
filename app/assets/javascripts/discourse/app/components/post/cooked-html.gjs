@@ -60,8 +60,31 @@ export default class PostCookedHtml extends Component {
           }
 
           const owner = getOwner(this);
+          const renderNestedPostCookedHtml = (
+            nestedElement,
+            nestedPost,
+            extraDecorators,
+            extraArguments
+          ) => {
+            const nestedArguments = {
+              ...extraArguments,
+              post: nestedPost,
+              cloakedState: decoratorState,
+              streamElement: false,
+              highlightTerm: this.highlightTerm,
+              extraDecorators: [
+                ...this.extraDecorators,
+                ...makeArray(extraDecorators),
+              ],
+            };
+
+            helper.renderGlimmer(
+              nestedElement,
+              curryComponent(PostCookedHtml, nestedArguments, owner)
+            );
+          };
+
           const decorationCleanup = decorator(element, {
-            cloakedState: decoratorState,
             data: {
               post: this.args.post,
               cooked: this.cooked,
@@ -69,35 +92,19 @@ export default class PostCookedHtml extends Component {
               isIgnored: this.isIgnored,
               ignoredUsers: this.ignoredUsers,
             },
+            cloakedState: decoratorState,
+            cooked: this.cooked,
             createDetachedElement: this.#createDetachedElement,
             currentUser: this.currentUser,
             extraDecorators: this.extraDecorators,
             helper,
+            highlightTerm: this.highlightTerm,
+            ignoredUsers: this.ignoredUsers,
+            isIgnored: this.isIgnored,
             owner,
+            post: this.args.post,
             renderGlimmer: helper.renderGlimmer,
-            renderNestedPostCookedHtml: (
-              nestedElement,
-              nestedPost,
-              extraDecorators,
-              extraArguments
-            ) => {
-              const nestedArguments = {
-                ...extraArguments,
-                post: nestedPost,
-                cloakedState: decoratorState,
-                streamElement: false,
-                highlightTerm: this.highlightTerm,
-                extraDecorators: [
-                  ...this.extraDecorators,
-                  ...makeArray(extraDecorators),
-                ],
-              };
-
-              helper.renderGlimmer(
-                nestedElement,
-                curryComponent(PostCookedHtml, nestedArguments, owner)
-              );
-            },
+            renderNestedPostCookedHtml,
           });
 
           if (typeof decorationCleanup === "function") {
