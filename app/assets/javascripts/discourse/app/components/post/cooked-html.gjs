@@ -61,6 +61,7 @@ export default class PostCookedHtml extends Component {
 
           const owner = getOwner(this);
           const decorationCleanup = decorator(element, {
+            cloakedState: decoratorState,
             data: {
               post: this.args.post,
               cooked: this.cooked,
@@ -70,7 +71,9 @@ export default class PostCookedHtml extends Component {
             },
             createDetachedElement: this.#createDetachedElement,
             currentUser: this.currentUser,
+            extraDecorators: this.extraDecorators,
             helper,
+            owner,
             renderGlimmer: helper.renderGlimmer,
             renderNestedPostCookedHtml: (
               nestedElement,
@@ -95,8 +98,6 @@ export default class PostCookedHtml extends Component {
                 curryComponent(PostCookedHtml, nestedArguments, owner)
               );
             },
-            owner,
-            cloakedState: decoratorState,
           });
 
           if (typeof decorationCleanup === "function") {

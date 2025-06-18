@@ -34,6 +34,10 @@ export default function (element, context) {
         title = htmlSafe(title.innerHTML);
       }
 
+      const originalText = aside
+        .querySelector("blockquote")
+        ?.textContent?.trim();
+
       const collapsedContent = htmlSafe(
         aside.querySelector("blockquote")?.innerHTML
       );
@@ -50,6 +54,7 @@ export default function (element, context) {
             fullQuote: aside.dataset.full === "true",
             expanded: aside.dataset.expanded === "true",
             ignoredUsers: data.ignoredUsers,
+            originalText,
             post: data.post,
             quotedPostNotFound,
             quotedTopicId,

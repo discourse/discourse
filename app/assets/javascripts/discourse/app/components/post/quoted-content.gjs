@@ -13,6 +13,8 @@ import icon from "discourse/helpers/d-icon";
 import element from "discourse/helpers/element";
 import elementClass from "discourse/helpers/element-class";
 import { ajax } from "discourse/lib/ajax";
+import { makeArray } from "discourse/lib/helpers";
+import highlightHTML from "discourse/lib/highlight-html";
 import { postUrl } from "discourse/lib/utilities";
 import PostCookedHtml from "./cooked-html";
 
@@ -24,8 +26,27 @@ export default class PostQuotedContent extends Component {
     this.args.cloakedState?.[`${this.args.quoteId}--expanded`] ??
     this.args.expanded ??
     false;
+
+  #highlightOriginalText = (cookedElement) => {
+    if (!this.expanded) {
+      return;
+    }
+
+    // to highlight the quoted text inside the original post content
+    highlightHTML(cookedElement, this.args.originalText, {
+      matchCase: true,
+    });
+  };
+
   #quotedPost = this.args.cloakedState?.[`${this.args.quoteId}--post`];
   #wrapperElement;
+
+  get extraDecorators() {
+    return [
+      ...makeArray(this.args.extraDecorators),
+      this.#highlightOriginalText,
+    ];
+  }
 
   get isQuotedPostIgnored() {
     return this.args.ignoredUsers?.includes(this.args.quotedUsername);
@@ -199,9 +220,10 @@ export default class PostQuotedContent extends Component {
                 <div class="expanded-quote" data-post-id={{expandedPost.id}}>
                   <PostCookedHtml
                     @post={{expandedPost}}
+                    @cloakedState={{@cloakedState}}
+                    @extraDecorators={{this.extraDecorators}}
                     @highlightTerm={{@highlightTerm}}
                     @streamElement={{false}}
-                    @cloakedState={{@cloakedState}}
                   />
                 </div>
               </:content>
