@@ -211,7 +211,7 @@
       color: var(--primary-medium);
     }
 
-    &:hover {
+    &:hover:not(:disabled) {
       color: var(--primary);
 
       .d-icon {
@@ -230,7 +230,7 @@
 
   .composer-link-toolbar {
     &__visit {
-      .toolbar-link__label {
+      .d-button-label {
         max-width: 12rem;
       }
     }
@@ -239,12 +239,19 @@
 
 .composer-link-toolbar {
   &__visit {
-    display: flex;
+    min-width: 0;
     align-items: center;
     gap: 0.5rem;
-    min-width: 0;
 
-    .toolbar-link__label {
+    // visit link has a right-side icon
+    flex-direction: row-reverse;
+
+    .d-icon {
+      // overrides the default from d-button.scss
+      margin-right: 0;
+    }
+
+    .d-button-label {
       font-size: var(--font-down-1-rem);
       overflow: hidden;
       text-overflow: ellipsis;

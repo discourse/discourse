@@ -2521,6 +2521,9 @@ en:
       to_continue: "Please Log In"
       preferences: "You need to be logged in to change your user preferences."
       not_approved: "Your account hasn't been approved yet. You will be notified by email when you are ready to log in."
+      discourse_id:
+        name: "Discourse ID"
+        title: "Log in with Discourse ID"
       google_oauth2:
         name: "Google"
         title: "Sign in with Google"
