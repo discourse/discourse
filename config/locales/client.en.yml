@@ -837,18 +837,19 @@ en:
       view_source: "View source"
       insights:
         title: "Insights"
-        ai_confidence: "AI Confidence"
-        spam_probability: "%{percentage}% spam probability"
         flag_volume: "Flag volume"
         flagged_by_users:
           one: "Flagged by %{count} unique user"
           other: "Flagged by %{count} unique users"
         similar_posts: "Similar past posts"
-        flagged_in_timeframe: "%{count} flagged in the past %{timeframe}"
-        mod_actions: "Mod actions"
-        past_actions: "Suspended (%{suspended}x), Silenced (%{silenced}x)"
+        flagged_in_timeframe: "%{count} flagged previously"
         user_activity: "User activity"
-        new_account_low_trust: "New account, low trust level"
+        activities:
+          new_account: "new account"
+          trust_level: "trust level: %{trustLevelName}"
+          posts:
+            one: "%{count} post"
+            other: "%{count} posts"
         solution_marked: "Solution marked"
         topic_has_solution: "This topic has a solution"
         visibility: "Visibility"
