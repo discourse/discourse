@@ -218,18 +218,27 @@ export default RouteTemplate(
                           {{/if}}
 
                           <div class="invite-groups">
-                          {{#each invite.groups as |g|}}
-                            <span class="invite-extra">
-                              <a href="/g/{{g.name}}" class="invite-extra-item-link">{{icon "users"}} {{g.name}}
-                              </a>
-                            </span>
-                          {{/each}}
+                            {{#each invite.groups as |g|}}
+                              <span class="invite-extra">
+                                <a
+                                  href="/g/{{g.name}}"
+                                  class="invite-extra-item-link"
+                                >{{icon "users"}}
+                                  {{g.name}}
+                                </a>
+                              </span>
+                            {{/each}}
                           </div>
 
                           {{#if invite.topic}}
                             <span class="invite-extra invite-topic">
-                              <a href={{invite.topic.url}} class="invite-extra-item-link">
-                                {{icon "file-lines"}} {{invite.topic.title}} www.yo.com
+                              <a
+                                href={{invite.topic.url}}
+                                class="invite-extra-item-link"
+                              >
+                                {{icon "file-lines"}}
+                                {{invite.topic.title}}
+                                www.yo.com
                               </a>
                             </span>
                           {{/if}}
@@ -245,9 +254,7 @@ export default RouteTemplate(
 
                       <td class="d-admin-row__detail invite-expires-at">
                         <div class="d-admin-row__mobile-label">
-                          {{i18n
-                            "user.invited.expires_at"
-                          }}
+                          {{i18n "user.invited.expires_at"}}
                         </div>
                         {{#if @controller.inviteExpired}}
                           {{rawDate invite.expires_at}}
@@ -277,10 +284,17 @@ export default RouteTemplate(
                                 <DropdownMenu as |dropdown|>
                                   <dropdown.item>
                                     <DButton
-                                      @action={{fn @controller.destroyInvite invite}}
+                                      @action={{fn
+                                        @controller.destroyInvite
+                                        invite
+                                      }}
                                       @icon="trash-can"
                                       class="btn-transparent btn-danger"
-                                      @label={{if invite.destroyed "user.invited.removed" "user.invited.remove"}}
+                                      @label={{if
+                                        invite.destroyed
+                                        "user.invited.removed"
+                                        "user.invited.remove"
+                                      }}
                                     />
                                   </dropdown.item>
                                 </DropdownMenu>
