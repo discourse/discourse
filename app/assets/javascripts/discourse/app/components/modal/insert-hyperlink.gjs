@@ -112,6 +112,13 @@ export default class InsertHyperlink extends Component {
           event.preventDefault();
           event.stopPropagation();
         }
+
+        // this would ideally be handled by nesting a submit button within the form tag
+        // but it's tricky with the current modal api
+        if (event.target.tagName === "INPUT") {
+          this.formApi.submit();
+        }
+
         break;
       case "Escape":
         // Esc should cancel dropdown first
@@ -215,6 +222,33 @@ export default class InsertHyperlink extends Component {
               />
             </form.Field>
 
+            {{#if this.searchLoading}}
+              {{loadingSpinner}}
+            {{/if}}
+
+            {{#if this.searchResults}}
+              <div class="internal-link-results">
+                {{#each this.searchResults as |result|}}
+                  <a
+                    {{on "click" this.linkClick}}
+                    href={{result.url}}
+                    data-title={{result.fancy_title}}
+                    class="search-link"
+                  >
+                    <TopicStatus @topic={{result}} @disableActions={{true}} />
+                    {{replaceEmoji result.title}}
+                    <div class="search-category">
+                      {{#if result.category.parentCategory}}
+                        {{categoryLink result.category.parentCategory}}
+                      {{/if}}
+                      {{categoryLink result.category hideParent=true}}
+                      {{discourseTags result}}
+                    </div>
+                  </a>
+                {{/each}}
+              </div>
+            {{/if}}
+
             <form.Field
               @name="linkText"
               @title={{i18n "composer.link_text_label"}}
@@ -227,33 +261,6 @@ export default class InsertHyperlink extends Component {
               />
             </form.Field>
           </Form>
-
-          {{#if this.searchLoading}}
-            {{loadingSpinner}}
-          {{/if}}
-
-          {{#if this.searchResults}}
-            <div class="internal-link-results">
-              {{#each this.searchResults as |result|}}
-                <a
-                  {{on "click" this.linkClick}}
-                  href={{result.url}}
-                  data-title={{result.fancy_title}}
-                  class="search-link"
-                >
-                  <TopicStatus @topic={{result}} @disableActions={{true}} />
-                  {{replaceEmoji result.title}}
-                  <div class="search-category">
-                    {{#if result.category.parentCategory}}
-                      {{categoryLink result.category.parentCategory}}
-                    {{/if}}
-                    {{categoryLink result.category hideParent=true}}
-                    {{discourseTags result}}
-                  </div>
-                </a>
-              {{/each}}
-            </div>
-          {{/if}}
         </div>
       </:body>
 
