@@ -220,16 +220,16 @@ export default RouteTemplate(
                           <div class="invite-groups">
                           {{#each invite.groups as |g|}}
                             <span class="invite-extra">
-                              <a href="/g/{{g.name}}" class="group-item-link">{{icon "users"}} {{g.name}}
+                              <a href="/g/{{g.name}}" class="invite-extra-item-link">{{icon "users"}} {{g.name}}
                               </a>
                             </span>
                           {{/each}}
                           </div>
 
                           {{#if invite.topic}}
-                            <span class="invite-extra">
-                              <a href={{invite.topic.url}}>
-                                {{icon "file-lines"}} {{invite.topic.title}}
+                            <span class="invite-extra invite-topic">
+                              <a href={{invite.topic.url}} class="invite-extra-item-link">
+                                {{icon "file-lines"}} {{invite.topic.title}} www.yo.com
                               </a>
                             </span>
                           {{/if}}

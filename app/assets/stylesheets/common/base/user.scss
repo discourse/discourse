@@ -1077,7 +1077,7 @@
         &.invite-updated-at {
           width: 18%;
 
-          @include viewport.until(lg) {
+          @include viewport.until(md) {
             width: auto;
           }
         }
@@ -1085,7 +1085,7 @@
         &.invite-expires-at {
           width: 20%;
 
-          @include viewport.until(lg) {
+          @include viewport.until(md) {
             width: auto;
           }
         }
@@ -1119,17 +1119,15 @@
         flex-wrap: wrap;
         gap: var(--space-2);
         row-gap: 0;
+        margin-top: var(--space-2);
+      }
 
-        .group-item-link {
-          display: inline-flex;
-          align-items: center;
-          color: var(--primary-high);
-        }
+      .invite-topic {
+        margin-top: var(--space-2);
       }
 
       .invite-extra {
         font-size: var(--font-down-1);
-        margin-top: var(--space-2);
 
         a {
           color: var(--primary-high);
@@ -1138,6 +1136,12 @@
         .d-icon {
           color: var(--primary-low-mid);
         }
+      }
+
+      .invite-extra-item-link {
+        display: inline-flex;
+        align-items: center;
+        color: var(--primary-high);
       }
     }
   }
