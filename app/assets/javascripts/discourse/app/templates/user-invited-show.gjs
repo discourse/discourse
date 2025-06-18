@@ -272,7 +272,7 @@ export default RouteTemplate(
                               @label="admin.user_fields.edit"
                               @action={{fn @controller.editInvite invite}}
                               @title="user.invited.edit"
-                              class="btn-small"
+                              class="btn-small edit-invite"
                             />
                             <DMenu
                               @identifier="invites-menu"
