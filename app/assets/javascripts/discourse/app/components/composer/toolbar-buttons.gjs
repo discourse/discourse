@@ -40,34 +40,24 @@ export default class ComposerToolbarButtons extends Component {
               @onKeydown={{this.rovingButtonBar}}
               @options={{hash icon=button.icon focusAfterOnChange=false}}
               class={{button.className}}
+              @id={{button.id}}
             />
-            {{else if button.popupMenu}}
-              <ToolbarPopupMenuOptions
-                @content={{(button.popupMenu.options)}}
-                @onChange={{button.popupMenu.action}}
-                @onOpen={{button.action}}
-                @tabindex={{this.tabIndex button}}
-                @onKeydown={{this.rovingButtonBar}}
-                @options={{hash icon=button.icon focusAfterOnChange=false}}
-                class={{button.className}}
-                @id={{button.id}}
-              />
-              {{else}}
-                <DButton
-                  @href={{button.href}}
-                  @action={{unless button.href button.action}}
-                  @translatedTitle={{button.title}}
-                  @label={{button.label}}
-                  @translatedLabel={{button.translatedLabel}}
-                  @disabled={{button.disabled}}
-                  @icon={{button.icon}}
-                  @preventFocus={{button.preventFocus}}
-                  @onKeyDown={{this.rovingButtonBar}}
-                  tabindex={{this.tabIndex button}}
-                  class={{concatClass "toolbar-link" button.className}}
-                  rel={{if button.href "noopener noreferrer"}}
-                  target={{if button.href "_blank"}}
-                />
+          {{else}}
+            <DButton
+              @href={{button.href}}
+              @action={{unless button.href button.action}}
+              @translatedTitle={{button.title}}
+              @label={{button.label}}
+              @translatedLabel={{button.translatedLabel}}
+              @disabled={{button.disabled}}
+              @icon={{button.icon}}
+              @preventFocus={{button.preventFocus}}
+              @onKeyDown={{this.rovingButtonBar}}
+              tabindex={{this.tabIndex button}}
+              class={{concatClass "toolbar-link" button.className}}
+              rel={{if button.href "noopener noreferrer"}}
+              target={{if button.href "_blank"}}
+            />
           {{/if}}
         {{/if}}
       {{/each}}
