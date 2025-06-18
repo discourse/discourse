@@ -81,12 +81,12 @@ module Jobs
       pr1 =
         Benchmark.measure do
           PostRevision
-            .where("modifications LIKE ?", "%@%")
-            .where("modifications SIMILAR TO ?", "%(raw|cooked)%@#{@old_username}%")
+            .joins("INNER JOIN temp_post_revisions ON post_revisions.id = temp_post_revisions.id")
+            .where("post_revisions.modifications SIMILAR TO ?", "%(raw|cooked)%@#{@old_username}%")
             .find_each { |revision| update_revision(revision) }
         end
 
-      puts "Time updating revisions: #{pr1.real.round(2)} "
+      puts "Time updating revisions 1: #{pr1.real.round(2)} "
 
       pr2 =
         Benchmark.measure do
@@ -95,7 +95,7 @@ module Jobs
             .where("p.user_id = :user_id", user_id: @user_id)
             .find_each { |revision| update_revision(revision) }
         end
-      puts "Time updating revisions: #{pr1.real.round(2)} "
+      puts "Time updating revisions 2 : #{pr2.real.round(2)} "
     end
 
     def update_notifications
