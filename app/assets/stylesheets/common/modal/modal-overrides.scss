@@ -21,12 +21,12 @@
 
       .internal-link-results {
         position: absolute;
-        top: 70%;
+        top: 4rem;
         padding: 5px 10px;
         box-shadow: var(--shadow-card);
         z-index: 5;
         background-color: var(--secondary);
-        max-height: 150px;
+        max-height: 10rem;
         width: 90%;
         overflow-y: auto;
 
