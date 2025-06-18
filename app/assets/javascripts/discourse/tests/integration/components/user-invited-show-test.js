@@ -10,10 +10,10 @@ acceptance("User invites", function (needs) {
 
     assert.dom("table.user-invite-list tbody tr").exists({ count: 3 });
     assert
-      .dom("table.user-invite-list tbody tr:nth-child(1) button.cancel")
+      .dom("table.user-invite-list tbody tr:nth-child(1) .btn-danger")
       .exists();
     assert
-      .dom("table.user-invite-list tbody tr:nth-child(2) button.cancel")
+      .dom("table.user-invite-list tbody tr:nth-child(2) .btn-danger")
       .doesNotExist();
   });
 });

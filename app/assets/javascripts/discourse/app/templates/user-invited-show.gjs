@@ -276,7 +276,7 @@ export default RouteTemplate(
                             />
                             <DMenu
                               @identifier="invites-menu"
-                              @title={{i18n "admin.more_options"}}
+                              @title={{i18n "more_options"}}
                               @icon="ellipsis-vertical"
                               @onRegisterApi={{@controller.onRegisterApi}}
                             >
@@ -289,7 +289,7 @@ export default RouteTemplate(
                                         invite
                                       }}
                                       @icon="trash-can"
-                                      class="btn-transparent btn-danger cancel"
+                                      class="btn-transparent btn-danger"
                                       @label={{if
                                         invite.destroyed
                                         "user.invited.removed"
