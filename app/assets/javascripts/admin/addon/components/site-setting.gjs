@@ -371,9 +371,7 @@ export default class SiteSettingComponent extends Component {
             @changeValueCallback={{this.changeValueCallback}}
             @setValidationMessage={{this.setValidationMessage}}
           />
-          <SettingValidationMessage
-            @message={{@setting.validationMessage}}
-          />
+          <SettingValidationMessage @message={{@setting.validationMessage}} />
           {{#if this.displayDescription}}
             <Description @description={{@setting.description}} />
           {{/if}}
