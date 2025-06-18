@@ -773,7 +773,15 @@ module SiteSettingExtension
     clean_name = name.to_s.sub("?", "").to_sym
 
     if type_supervisor.get_type(name) == :uploaded_image_list
-      define_singleton_method clean_name do
+      define_singleton_method clean_name do |scoped_to = nil|
+        if themeable[clean_name]
+          if scoped_to.nil? || !scoped_to.key?(:theme_id) || scoped_to[:theme_id].nil?
+            raise SiteSettingExtension::InvalidSettingAccess.new(
+                    "#{clean_name} requires a theme_id because it is themeable",
+                  )
+          end
+        end
+
         uploads_list = uploads[name]
         return uploads_list if uploads_list
 
@@ -789,7 +797,15 @@ module SiteSettingExtension
         uploads[name] = uploads_list if uploads_list
       end
     elsif type_supervisor.get_type(name) == :upload
-      define_singleton_method clean_name do
+      define_singleton_method clean_name do |scoped_to = nil|
+        if themeable[clean_name]
+          if scoped_to.nil? || !scoped_to.key?(:theme_id) || scoped_to[:theme_id].nil?
+            raise SiteSettingExtension::InvalidSettingAccess.new(
+                    "#{clean_name} requires a theme_id because it is themeable",
+                  )
+          end
+        end
+
         upload = uploads[name]
         return upload if upload
 
