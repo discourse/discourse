@@ -154,6 +154,28 @@ class DraftsController < ApplicationController
     render json: success_json
   end
 
+  def destroy_all
+    user =
+      if is_api?
+        if @guardian.is_admin?
+          fetch_user_from_params
+        else
+          raise Discourse::InvalidAccess
+        end
+      else
+        current_user
+      end
+
+    begin
+      Draft.where(user_id: user.id).destroy_all
+      UserStat.update_draft_count(user.id)
+    rescue StandardError => e
+      return render json: failed_json.merge(errors: e), status: 401
+    end
+
+    render json: success_json
+  end
+
   private
 
   def reached_max_drafts_per_user?(params)

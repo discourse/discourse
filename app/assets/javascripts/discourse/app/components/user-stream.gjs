@@ -3,6 +3,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
+import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PostActionDescription from "discourse/components/post-action-description";
 import PostList from "discourse/components/post-list";
@@ -32,11 +33,19 @@ export default class UserStreamComponent extends Component {
     }
   }
 
+  get isDraftsRoute() {
+    return this.router.currentRouteName === "userActivity.drafts";
+  }
+
+  get showRemoveAllDraftsButton() {
+    return this.isDraftsRoute && this.args.stream.content?.length > 1;
+  }
+
   get usernamePath() {
     // We want the draft_username for the drafts route,
     // in-case you are editing a post that was created by another user
     // the draft usernmae will show the post item to show the editing user
-    if (this.router.currentRouteName === "userActivity.drafts") {
+    if (this.isDraftsRoute) {
       return "draft_username";
     }
 
@@ -79,6 +88,21 @@ export default class UserStreamComponent extends Component {
   }
 
   @action
+  removeAllDrafts() {
+    this.dialog.deleteConfirm({
+      title: i18n("drafts.remove_all_confirmation"),
+      didConfirm: async () => {
+        try {
+          await Draft.clearAll();
+          this.args.stream.reset();
+        } catch (error) {
+          popupAjaxError(error);
+        }
+      },
+    });
+  }
+
+  @action
   removeDraft(draft) {
     this.dialog.deleteConfirm({
       title: i18n("drafts.remove_confirmation"),
@@ -117,6 +141,15 @@ export default class UserStreamComponent extends Component {
   }
 
   <template>
+    {{#if this.showRemoveAllDraftsButton}}
+      <DButton
+        class="remove-all-drafts"
+        @label="drafts.delete_all_label"
+        @icon="trash-can"
+        @action={{this.removeAllDrafts}}
+      />
+    {{/if}}
+
     <PostList
       @posts={{@stream.content}}
       @idPath="post_id"

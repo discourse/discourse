@@ -443,4 +443,105 @@ RSpec.describe DraftsController do
       end
     end
   end
+
+  describe "#destroy_all" do
+    before do
+      # Clear all drafts to start fresh for each test
+      Draft.delete_all
+    end
+
+    it "requires you to be logged in" do
+      delete "/drafts/destroy-all"
+      expect(response.status).to eq(403)
+    end
+
+    it "destroys all drafts for the user" do
+      user1 = Fabricate(:user)
+      sign_in(user1)
+
+      # Create drafts with unique keys
+      topic1 = Fabricate(:topic)
+      topic2 = Fabricate(:topic)
+
+      Draft.set(user1, Draft::NEW_TOPIC, 0, { reply: "draft 1" }.to_json)
+      Draft.set(user1, "topic_#{topic1.id}", 0, { reply: "draft 2" }.to_json)
+      Draft.set(user1, "topic_#{topic2.id}", 0, { reply: "draft 3" }.to_json)
+
+      expect(Draft.where(user_id: user1.id).count).to eq(3)
+
+      delete "/drafts/destroy-all"
+
+      expect(response.status).to eq(200)
+      expect(Draft.where(user_id: user1.id).count).to eq(0)
+    end
+
+    it "doesn't destroy drafts for other users" do
+      user1 = Fabricate(:user)
+      user2 = Fabricate(:user)
+
+      sign_in(user1)
+
+      # Create drafts for both users
+      topic1 = Fabricate(:topic)
+      topic2 = Fabricate(:topic)
+
+      Draft.set(user1, "topic_#{topic1.id}", 0, { reply: "user1 draft" }.to_json)
+      Draft.set(user2, "topic_#{topic2.id}", 0, { reply: "user2 draft" }.to_json)
+
+      delete "/drafts/destroy-all"
+
+      expect(response.status).to eq(200)
+      expect(Draft.where(user_id: user1.id).count).to eq(0)
+      expect(Draft.where(user_id: user2.id).count).to eq(1)
+    end
+
+    shared_examples "for all drafts of a passed user" do
+      it "deletes all drafts" do
+        api_key = Fabricate(:api_key).key
+
+        # Create topics for unique draft keys
+        topic1 = Fabricate(:topic)
+        topic2 = Fabricate(:topic)
+
+        # Create drafts for the recipient
+        Draft.set(recipient, "topic_#{topic1.id}", 0, { reply: "draft 1" }.to_json)
+        Draft.set(recipient, "topic_#{topic2.id}", 0, { reply: "draft 2" }.to_json)
+
+        delete "/drafts/destroy-all",
+               params: {
+                 username: recipient.username,
+               },
+               headers: {
+                 HTTP_API_USERNAME: caller.username,
+                 HTTP_API_KEY: api_key,
+               }
+
+        expect(response.status).to eq(response_code)
+
+        if drafts_deleted
+          expect(Draft.where(user_id: recipient.id).count).to eq(0)
+        else
+          expect(Draft.where(user_id: recipient.id).count).to eq(2)
+        end
+      end
+    end
+
+    describe "api called by admin" do
+      include_examples "for all drafts of a passed user" do
+        let(:caller) { Fabricate(:admin) }
+        let(:recipient) { Fabricate(:user) }
+        let(:response_code) { 200 }
+        let(:drafts_deleted) { true }
+      end
+    end
+
+    describe "api called by regular user" do
+      include_examples "for all drafts of a passed user" do
+        let(:caller) { Fabricate(:user) }
+        let(:recipient) { Fabricate(:user) }
+        let(:response_code) { 403 }
+        let(:drafts_deleted) { false }
+      end
+    end
+  end
 end

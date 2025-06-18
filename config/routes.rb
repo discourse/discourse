@@ -1602,7 +1602,9 @@ Discourse::Application.routes.draw do
 
     get "message-bus/poll" => "message_bus#poll"
 
-    resources :drafts, only: %i[index create show destroy]
+    resources :drafts, only: %i[index create show destroy] do
+      collection { delete "destroy-all" => "drafts#destroy_all" }
+    end
 
     get "/service-worker.js" => "static#service_worker_asset", :format => :js
 
