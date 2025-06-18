@@ -100,6 +100,8 @@ RSpec.describe SeedData::Categories do
     end
 
     it "adds emojis to seeded categories" do
+      Category.destroy_all
+
       create_category("uncategorized_category_id")
       expect(Category.last.emoji).to eq("card_file_box")
 
