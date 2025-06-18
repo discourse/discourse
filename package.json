@@ -36,7 +36,7 @@
     "puppeteer-core": "^24.10.1",
     "squoosh": "https://codeload.github.com/discourse/squoosh/tar.gz/dc9649d",
     "stylelint": "16.19.1",
-    "terser": "^5.42.0",
+    "terser": "^5.43.0",
     "typescript": "5.6.x"
   },
   "scripts": {
