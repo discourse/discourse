@@ -6,6 +6,7 @@ class Admin::Config::ThemeSiteSettingsController < Admin::AdminController
   end
 
   def index
+    # TODO (martin) Convert this to a Service::Base call
     respond_to do |format|
       format.json do
         themeable_site_settings = SiteSetting.themeable.select { |key, value| value }.keys

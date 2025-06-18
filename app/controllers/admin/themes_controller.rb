@@ -368,6 +368,7 @@ class Admin::ThemesController < Admin::AdminController
   end
 
   def update_theme_site_setting
+    # TODO (martin) Handle failure cases here
     Themes::ThemeSiteSettingManager.call(
       params: {
         theme_id: params[:id],

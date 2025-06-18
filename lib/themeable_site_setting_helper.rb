@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# TODO (martin) Clean up this class, possibly move to a service
 class ThemeableSiteSettingHelper
   attr_reader :theme_id
 

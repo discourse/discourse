@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# TODO (martin) Refactor this to follow updated spec patterns for services
 RSpec.describe Themes::ThemeSiteSettingManager do
   describe described_class::Contract, type: :model do
     it { is_expected.to validate_presence_of(:theme_id) }
