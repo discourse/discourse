@@ -1,7 +1,4 @@
 # frozen_string_literal: true
-require "pry"
-require "pry-byebug"
-require "pry-rails"
 
 module SiteSettingExtension
   include SiteSettings::DeprecatedSettings
@@ -448,7 +445,7 @@ module SiteSettingExtension
       end
       theme_site_setting_deletions.each { |theme_id, _| theme_site_settings.delete(theme_id) }
 
-      clear_cache!
+      clear_cache!(expire_theme_site_setting_cache: true)
     end
   end
 
@@ -510,8 +507,6 @@ module SiteSettingExtension
     current[name] = defaults.get(name, default_locale)
 
     return if current[name] == old_val
-
-    # TODO (martin) Hmm we don't handle client settings here, should we?
 
     clear_uploads_cache(name)
     clear_cache!
@@ -607,7 +602,7 @@ module SiteSettingExtension
 
     notify_clients!(name, theme_id: theme_id) if client_settings.include?(name)
 
-    clear_cache!
+    clear_cache!(expire_theme_site_setting_cache: true)
 
     DiscourseEvent.trigger(:theme_site_setting_changed, name, old_val, val)
   end
@@ -734,9 +729,9 @@ module SiteSettingExtension
 
   protected
 
-  def clear_cache!
+  def clear_cache!(expire_theme_site_setting_cache: false)
     Discourse.cache.delete(SiteSettingExtension.client_settings_cache_key)
-    Theme.expire_site_setting_cache!
+    Theme.expire_site_setting_cache! if expire_theme_site_setting_cache
     Site.clear_anon_cache!
   end
 
