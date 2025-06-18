@@ -197,6 +197,7 @@ class LinkToolbarPluginView {
         linkUrl: this.#linkState.href,
         toolbarEvent: {
           addText: (text) => this.#replaceText(text),
+          selected: { value: this.#linkState.href },
         },
       },
     });

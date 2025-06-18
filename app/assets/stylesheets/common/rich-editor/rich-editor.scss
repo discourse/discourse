@@ -252,10 +252,10 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
 
-    &:not(:disabled) {
-      margin-right: 0.5rem;
-    }
+  &:not(:disabled) .d-button-label {
+    margin-right: 0.5rem;
   }
 }
 
