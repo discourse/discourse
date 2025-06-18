@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe VideoConversion::BaseAdapter do
+  before(:each) do
+    extensions = SiteSetting.authorized_extensions.split("|")
+    SiteSetting.authorized_extensions = (extensions | ["mp4"]).join("|")
+  end
+
   let(:upload) { Fabricate(:video_upload) }
   let(:options) { { quality: "high" } }
   let(:adapter) { described_class.new(upload, options) }
