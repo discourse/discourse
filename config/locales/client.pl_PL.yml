@@ -487,6 +487,7 @@ pl_PL:
       created: "Dodano post do zakładek. %{name}"
       created_generic: "Dodałeś to do zakładek. %{name}"
       create: "Utwórz zakładkę"
+      clear_reminder: "Wyczyść przypomnienie"
       edit: "Edytuj zakładkę"
       not_bookmarked: "dodaj do zakładek"
       remove_reminder_keep_bookmark: "Usuń przypomnienie i zachowaj zakładkę"
@@ -2105,6 +2106,7 @@ pl_PL:
           edit_link_options: "Edytuj opcje linku lub wyślij e-mailem."
           show_advanced: "Pokaż ustawienia zaawansowane"
           hide_advanced: "Ukryj ustawienia zaawansowane"
+          description: "Opis"
           restrict: "Ogranicz do"
           restrict_email: "Ogranicz do e-maila"
           restrict_domain: "Ogranicz do domeny"
@@ -2860,7 +2862,8 @@ pl_PL:
       italic_text: "wyróżniony tekst"
       link_title: "Odnośnik"
       link_description: "wprowadź tutaj opis odnośnika"
-      link_dialog_title: "Wstaw odnośnik"
+      link_dialog_action: "Wstaw"
+      link_edit_action: "Aktualizuj"
       link_optional_text: "opcjonalny tytuł"
       link_url_placeholder: "Wklej adres URL lub wpisz, aby wyszukać tematy"
       blockquote_title: "Cytat blokowy"
@@ -2932,6 +2935,9 @@ pl_PL:
       image_scale_button: "Skaluj obraz do %{percent}%"
       delete_image_button: Usuń obraz
       toggle_image_grid: Przełącz siatkę obrazu
+      link_toolbar:
+        copy: "Skopiuj link"
+        link_copied: "Link skopiowany!"
     notifications:
       tooltip:
         regular:
@@ -4047,6 +4053,8 @@ pl_PL:
         add: "Dodaj nowe tłumaczenie"
         modal:
           title: "Tłumaczenia dla postu"
+        post_language_selector:
+          none: "Brak"
       errors:
         create: "Przepraszamy, podczas tworzenia twojego wpisu wystąpił błąd. Spróbuj ponownie."
         edit: "Przepraszamy, podczas edytowania twojego wpisu wystąpił błąd. Spróbuj ponownie."

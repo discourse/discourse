@@ -350,9 +350,11 @@ zh_CN:
       bookmarked_success: "已加入书签！"
       deleted_bookmark_success: "书签已删除！"
       reminder_set_success: "提醒已设置！"
+      reminder_clear_success: "提醒已清除"
       created: "您已将此帖子加入书签。%{name}"
       created_generic: "您已将此加入书签。%{name}"
       create: "创建书签"
+      clear_reminder: "清除提醒"
       edit: "编辑书签"
       not_bookmarked: "将此帖子加入书签"
       remove_reminder_keep_bookmark: "移除提醒并保留书签"
@@ -1801,6 +1803,7 @@ zh_CN:
           edit_link_options: "编辑链接选项或通过电子邮件发送。"
           show_advanced: "显示高级选项"
           hide_advanced: "隐藏高级选项"
+          description: "描述"
           restrict: "限制为"
           restrict_email: "仅限电子邮件"
           restrict_domain: "仅限网域"
@@ -2434,7 +2437,8 @@ zh_CN:
       italic_text: "强调文本"
       link_title: "超链接"
       link_description: "在此处输入链接描述"
-      link_dialog_title: "插入超链接"
+      link_dialog_action: "插入"
+      link_edit_action: "更新"
       link_optional_text: "可选标题"
       link_url_placeholder: "粘贴 URL 或键入以搜索话题"
       blockquote_title: "块引用"
@@ -2506,6 +2510,9 @@ zh_CN:
       image_scale_button: "将图片缩放至 %{percent}%"
       delete_image_button: 删除图片
       toggle_image_grid: 切换图片网格
+      link_toolbar:
+        copy: "复制链接"
+        link_copied: "链接已复制！"
     notifications:
       tooltip:
         regular:
@@ -3427,6 +3434,8 @@ zh_CN:
           title: "帖子的翻译"
           confirm_delete: "您确定要删除“%{languageCode}”的翻译吗？"
         success: "翻译已成功更新"
+        post_language_selector:
+          none: "无"
       errors:
         create: "抱歉，创建您的帖子时出错。请重试。"
         edit: "抱歉，编辑您的帖子时出错。请重试。"
@@ -5723,6 +5732,7 @@ zh_CN:
           copy_created: '已创建“%{name}”的新副本'
           illegal_character_in_color: "颜色必须只由十六进制字符组成"
           invalid_color_length: "颜色必须为 #rrggbb 或 #rgb 格式"
+          blocked_edit_for_system: "属于系统主题的调色板无法编辑。"
           delete_confirm: "确定要删除此调色板吗？"
       plugins:
         title: "插件"

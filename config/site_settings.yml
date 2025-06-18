@@ -592,6 +592,22 @@ login:
   enable_signup_cta:
     client: true
     default: true
+  enable_discourse_id:
+    default: false
+    hidden: true
+  discourse_id_client_id:
+    default: ""
+    hidden: true
+  discourse_id_client_secret:
+    default: ""
+    hidden: true
+    secret: true
+  discourse_id_verbose_logging:
+    default: false
+    hidden: true
+  discourse_id_provider_url:
+    default: ""
+    hidden: true
   enable_google_oauth2_logins:
     default: false
   google_oauth2_client_id: ""
@@ -4026,5 +4042,10 @@ experimental:
     client: true
     validator: "LanguageSwitcherSettingValidator"
   experimental_system_themes:
-    default: false
+    type: list
+    default: ""
     hidden: true
+    allow_any: false
+    choices:
+      - "foundation"
+      - "horizon"

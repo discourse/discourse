@@ -7,6 +7,7 @@ import {
   pluginApiIdentifiers,
   selectKitOptions,
 } from "select-kit/components/select-kit";
+import NotificationsButtonRow from "./notifications-button/notifications-button-row";
 
 @classNames("notifications-button")
 @selectKitOptions({
@@ -31,7 +32,7 @@ export default class NotificationsButton extends DropdownSelectBoxComponent {
         title: this.getTitle(content.key),
       });
     }
-    return "notifications-button/notifications-button-row";
+    return NotificationsButtonRow;
   }
 
   modifySelection(content) {

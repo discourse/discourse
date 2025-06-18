@@ -488,9 +488,11 @@ uk:
       bookmarked_success: "Додано до закладок!"
       deleted_bookmark_success: "Закладку видалено!"
       reminder_set_success: "Нагадування встановлено!"
+      reminder_clear_success: "Нагадування очищено"
       created: "Ви додали цей допис в закладки. %{name}"
       created_generic: "Ви створили закладку. %{name}"
       create: "Створити закладку"
+      clear_reminder: "Очистити нагадування"
       edit: "Редагувати закладку"
       not_bookmarked: "Додати цей допис до закладок"
       remove_reminder_keep_bookmark: "Вилучити нагадування, але зберегти закладку"
@@ -2110,6 +2112,7 @@ uk:
           edit_link_options: "Редагувати параметри посилання або надіслати електронною поштою."
           show_advanced: "Показати додаткові параметри"
           hide_advanced: "Сховати додаткові параметри"
+          description: "Опис"
           restrict: "Обмежити до"
           restrict_email: "Обмежитись електронною поштою"
           restrict_domain: "Обмежити доменом"
@@ -2869,6 +2872,9 @@ uk:
       link_title: "Гіперпосилання"
       link_description: "введіть опис посилання"
       link_dialog_title: "Вставити гіперпосилання"
+      link_dialog_action: "Вставити"
+      link_edit_title: "Редагувати гіперпосилання"
+      link_edit_action: "Оновити"
       link_optional_text: "необовʼязкова назва"
       link_url_placeholder: "Вставте URL або введіть для пошуку теми"
       blockquote_title: "Цитата"
@@ -2940,6 +2946,12 @@ uk:
       image_scale_button: "Масштабувати зображення до %{percent}%"
       delete_image_button: Видалити зображення
       toggle_image_grid: Перемкнути сітку зображень
+      link_toolbar:
+        edit: "Редагувати посилання"
+        copy: "Скопіювати посилання"
+        remove: "Видалити посилання"
+        visit: "Відкрити посилання у зовнішній вкладці"
+        link_copied: "Посилання скопійовано!"
     notifications:
       tooltip:
         regular:
@@ -4068,6 +4080,8 @@ uk:
           title: "Переклади для повідомлення"
           confirm_delete: "Ви впевнені, що хочете видалити переклади для '%{languageCode}'?"
         success: "Переклади були успішно оновлені"
+        post_language_selector:
+          none: "Немає"
       errors:
         create: "Вибачте, під час створення допису сталася помилка. Будь ласка, спробуйте ще раз."
         edit: "Вибачте, під час редагування вашого допису сталася помилка. Будь ласка, спробуйте ще раз."
@@ -4283,6 +4297,7 @@ uk:
         title: "Поділіться дописом #%{post_number}"
         instructions: "Поширити посилання на цей допис:"
       original_language: "Цей пост був спочатку написаний мовою %{language}"
+      original_language_and_outdated: "Цей пост був спочатку написаний мовою %{language}. Переклад може бути застарілим."
     category:
       none: "(без розділу)"
       all: "Всі розділи"
@@ -6591,6 +6606,7 @@ uk:
           copy_created: 'Створено нову копію "%{name}"'
           illegal_character_in_color: "Колір повинен складатися лише з шістнадцяткових символів"
           invalid_color_length: "Колір повинен бути у форматі #rrggbb або #rgb"
+          blocked_edit_for_system: "Палітру кольорів, що належить до системної теми, не можна редагувати."
           delete_confirm: "Ви дійсно бажаєте видалити цю палітру кольорів?"
       plugins:
         title: "Плагіни"

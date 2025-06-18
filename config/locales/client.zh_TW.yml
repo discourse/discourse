@@ -353,6 +353,7 @@ zh_TW:
       created: "你已將這篇文章加入書籤。 %{name}"
       created_generic: "您已將此加入書籤。 %{name}"
       create: "建立書籤"
+      clear_reminder: "清除提醒"
       edit: "編輯書籤"
       not_bookmarked: "將此貼文加入書籤"
       remove_reminder_keep_bookmark: "刪除提醒並保留書籤"
@@ -1787,6 +1788,7 @@ zh_TW:
           edit_link_options: "編輯連結選項或透過電子郵件傳送。"
           show_advanced: "顯示進階選項"
           hide_advanced: "隱藏進階選項"
+          description: "簡述"
           restrict: "限制為"
           restrict_email: "僅限電子郵件"
           restrict_domain: "僅限網域"
@@ -2401,7 +2403,8 @@ zh_TW:
       italic_text: "斜體字"
       link_title: "超連結"
       link_description: "在此輸入超連結的描述"
-      link_dialog_title: "插入超連結"
+      link_dialog_action: "插入"
+      link_edit_action: "更新"
       link_optional_text: "標題 (可選填)"
       link_url_placeholder: "貼上 URL 或輸入以搜尋主題"
       blockquote_title: "塊引用"
@@ -2473,6 +2476,9 @@ zh_TW:
       image_scale_button: "將影像縮放至 %{percent}%"
       delete_image_button: 刪除圖片
       toggle_image_grid: 切換影像網格
+      link_toolbar:
+        copy: "複製連結"
+        link_copied: "連結已複製！"
     notifications:
       tooltip:
         regular:
@@ -3382,6 +3388,8 @@ zh_TW:
           actions: "動作"
           edit: "編輯"
           delete: "刪除"
+        post_language_selector:
+          none: "無"
       errors:
         create: "抱歉，建立你的貼文時發生錯誤，請再試一次。"
         edit: "抱歉，編輯你的貼文時發生錯誤，請再試一次。"

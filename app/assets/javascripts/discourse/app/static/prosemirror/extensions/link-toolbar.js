@@ -10,6 +10,7 @@ import { updatePosition } from "float-kit/lib/update-position";
 
 const AUTO_LINKS = ["autolink", "linkify"];
 const MENU_OFFSET = 12;
+const STRIP_PROTOCOLS = /^(mailto:|https:\/\/)/;
 
 class LinkToolbar extends ToolbarBase {
   constructor(opts = {}) {
@@ -43,17 +44,39 @@ class LinkToolbar extends ToolbarBase {
       action: opts.unlinkText,
     });
 
-    this.addSeparator({ condition: () => opts.canVisit() || opts.canUnlink() });
+    this.addSeparator({
+      condition: () => opts.canVisit() || opts.canUnlink(),
+    });
 
     this.addButton({
       id: "link-visit",
-      icon: () => (opts.canVisit() ? "up-right-from-square" : null),
+      get icon() {
+        return opts.canVisit() ? "up-right-from-square" : null;
+      },
       title: "composer.link_toolbar.visit",
       className: "composer-link-toolbar__visit",
       preventFocus: true,
       condition: () => opts.canVisit() || opts.canUnlink(),
-      href: () => (opts.canVisit() ? opts.getHref() : null),
-      label: () => (opts.canUnlink() ? opts.getHref() : null),
+      get href() {
+        return opts.canVisit() ? opts.getHref() : null;
+      },
+      get translatedLabel() {
+        if (opts.canUnlink()) {
+          const label = opts.getHref();
+
+          // strip base url from label
+          const origin = window.location.origin;
+          if (label.startsWith(origin)) {
+            return label.replace(origin, "");
+          }
+
+          // strip protocol from label if mailto or https
+          return label.replace(STRIP_PROTOCOLS, "");
+        }
+      },
+      get disabled() {
+        return !opts.canVisit();
+      },
     });
   }
 }

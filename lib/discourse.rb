@@ -488,6 +488,10 @@ module Discourse
 
   BUILTIN_AUTH = [
     Auth::AuthProvider.new(
+      authenticator: Auth::DiscourseIdAuthenticator.new,
+      icon: "fab-discourse",
+    ),
+    Auth::AuthProvider.new(
       authenticator: Auth::FacebookAuthenticator.new,
       frame_width: 580,
       frame_height: 400,

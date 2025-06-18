@@ -1898,6 +1898,7 @@ pt:
           edit_link_options: "Edite as opções de ligação ou envie por e-mail."
           show_advanced: "Mostrar Opções Avançadas"
           hide_advanced: "Ocultar Opções Avançadas"
+          description: "Descrição"
           restrict: "Restringir a"
           restrict_email: "Restringir ao e-mail"
           restrict_domain: "Restringir ao domínio"
@@ -2514,7 +2515,8 @@ pt:
       italic_text: "texto em itálico"
       link_title: "Hiperligação"
       link_description: "insira aqui a descrição da hiperligação"
-      link_dialog_title: "Inserir Hiperligação"
+      link_dialog_action: "Inserir"
+      link_edit_action: "Atualização"
       link_optional_text: "título opcional"
       link_url_placeholder: "Cole um URL ou digite para pesquisar tópicos"
       blockquote_title: "Bloco de Citação"
@@ -2576,6 +2578,9 @@ pt:
       image_alt_text:
         aria_label: Texto alternativo para a imagem
       delete_image_button: Excluir Imagem
+      link_toolbar:
+        copy: "Copiar link"
+        link_copied: "Ligação copiada!"
     notifications:
       tooltip:
         regular:
@@ -3309,6 +3314,8 @@ pt:
           actions: "Ações"
           edit: "Editar"
           delete: "Eliminar"
+        post_language_selector:
+          none: "Nenhuma"
       errors:
         create: "Desculpe, ocorreu um erro ao criar a sua mensagem. Por favor, tente novamente."
         edit: "Desculpe, ocorreu um erro ao editar a sua mensagem. Por favor, tente novamente."

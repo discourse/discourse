@@ -318,6 +318,7 @@ ko:
       created: "이 게시물을 북마크했습니다. %{name}"
       created_generic: "%{name}을 북마크했습니다."
       create: "북마크 만들기"
+      clear_reminder: "미리 알림 지우기"
       edit: "북마크 편집"
       not_bookmarked: "이 게시물 북마크하기"
       remove_reminder_keep_bookmark: "미리 알림 제거 및 북마크 유지"
@@ -1553,6 +1554,7 @@ ko:
           share_link: "공유 링크"
           show_advanced: "고급 옵션 표시"
           hide_advanced: "고급 옵션 숨기기"
+          description: "내용"
           restrict: "다음으로 제한"
           restrict_email: "이메일로 제한"
           restrict_domain: "도메인으로 제한"
@@ -1992,7 +1994,8 @@ ko:
       italic_text: "기울이기 적용된 텍스트"
       link_title: "하이퍼링크"
       link_description: "여기에 링크 설명을 입력하세요"
-      link_dialog_title: "하이퍼링크 삽입"
+      link_dialog_action: "삽입"
+      link_edit_action: "업데이트"
       link_optional_text: "제목(선택사항)"
       link_url_placeholder: "주제를 검색하려면 URL을 붙여 넣거나 입력하세요"
       blockquote_title: "블록 따옴표"
@@ -2056,6 +2059,8 @@ ko:
       image_alt_text:
         aria_label: 이미지의 대체 텍스트
       delete_image_button: 이미지 삭제
+      link_toolbar:
+        copy: "링크 복사"
     notifications:
       tooltip:
         regular:
@@ -2799,6 +2804,8 @@ ko:
           actions: "작업"
           edit: "편집"
           delete: "삭제"
+        post_language_selector:
+          none: "없음"
       errors:
         create: "게시물을 생성하는 중에 오류가 발생했습니다. 다시 시도하세요."
         edit: "게시물을 편집하는 중에 오류가 발생했습니다. 다시 시도하세요."
