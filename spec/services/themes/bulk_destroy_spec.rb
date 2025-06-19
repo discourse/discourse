@@ -3,43 +3,12 @@
 RSpec.describe Themes::BulkDestroy do
   describe described_class::Contract, type: :model do
     it { is_expected.to validate_presence_of(:theme_ids) }
-
-    it "validates length of theme_ids" do
-      contract = described_class.new(theme_ids: [1, 2, 3])
-      contract.validate
-      expect(contract.errors).to be_empty
-
-      contract = described_class.new(theme_ids: (1..55).to_a)
-      contract.validate
-      expect(contract.errors.full_messages).to include(
-        "Theme ids " + I18n.t("errors.messages.too_long", count: 50),
+    it { is_expected.to allow_values([1], (1..50).to_a).for(:theme_ids) }
+    it { is_expected.not_to allow_values([], (1..51).to_a).for(:theme_ids) }
+    it do
+      is_expected.not_to allow_values([1, 0, -3]).for(:theme_ids).with_message(
+        /must all be positive/,
       )
-
-      contract = described_class.new(theme_ids: [])
-      contract.validate
-      expect(contract.errors.full_messages).to include(
-        "Theme ids " + I18n.t("errors.messages.too_short", count: 1),
-      )
-    end
-
-    describe "theme_ids must be positive, negative IDs are system themes" do
-      context "when all theme_ids are positive" do
-        it "is valid" do
-          contract = described_class.new(theme_ids: [1, 2, 3])
-          contract.validate
-          expect(contract.errors).to be_empty
-        end
-      end
-
-      context "when any theme_id is zero or negative" do
-        it "is invalid " do
-          contract = described_class.new(theme_ids: [1, 0, -3])
-          contract.validate
-          expect(contract.errors.full_messages).to include(
-            "Theme ids " + I18n.t("errors.messages.must_all_be_positive"),
-          )
-        end
-      end
     end
   end
 

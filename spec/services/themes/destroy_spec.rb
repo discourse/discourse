@@ -3,7 +3,8 @@
 RSpec.describe Themes::Destroy do
   describe described_class::Contract, type: :model do
     it { is_expected.to validate_presence_of(:id) }
-    it { is_expected.to validate_numericality_of(:id).is_greater_than(0).only_integer }
+    it { is_expected.to allow_values(1, "1", 42).for(:id) }
+    it { is_expected.not_to allow_values(-1, 0).for(:id) }
   end
 
   describe ".call" do
