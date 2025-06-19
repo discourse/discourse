@@ -2,6 +2,7 @@ import { array, fn, hash } from "@ember/helper";
 import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import Form from "discourse/components/form";
+import isElementInViewport from "discourse/lib/is-element-in-viewport";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import formKit from "discourse/tests/helpers/form-kit-helper";
 
@@ -330,5 +331,30 @@ module("Integration | Component | FormKit | Form", function (hooks) {
     await click(".test");
 
     assert.form().hasNoErrors("remove the errors associated with this field");
+  });
+
+  test("scroll to top on error", async function (assert) {
+    const validate = async (data, { addError }) => {
+      addError("bar", { title: "Foo", message: "error" });
+    };
+
+    await render(
+      <template>
+        <Form @data={{hash foo=1 bar=2}} @validate={{validate}} as |form|>
+          <form.Field @name="foo" @title="Foo" />
+          <div class="spacer" style="height: 1000px;"></div>
+          <form.Submit />
+        </Form>
+      </template>
+    );
+
+    document.querySelector(".form-kit__button").scrollIntoView();
+
+    await formKit().submit();
+
+    assert.strictEqual(
+      document.querySelector("#ember-testing-container").scrollTop,
+      0
+    );
   });
 });
