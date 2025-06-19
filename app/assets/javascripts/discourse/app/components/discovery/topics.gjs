@@ -9,7 +9,7 @@ import ConditionalLoadingSpinner from "discourse/components/conditional-loading-
 import CountI18n from "discourse/components/count-i18n";
 import DiscourseLinkedText from "discourse/components/discourse-linked-text";
 import DiscoveryTopicsList from "discourse/components/discovery-topics-list";
-import EmptyTopicFilterEducation from "discourse/components/empty-topic-filter-education";
+import EmptyTopic from "discourse/components/empty-topic";
 import FooterMessage from "discourse/components/footer-message";
 import LoadMore from "discourse/components/load-more";
 import NewListHeaderControlsWrapper from "discourse/components/new-list-header-controls-wrapper";
@@ -414,7 +414,7 @@ export default class DiscoveryTopics extends Component {
             </:messageDetails>
             <:afterMessage>
               {{#if this.showEmptyFilterEducationInFooter}}
-                <EmptyTopicFilterEducation
+                <EmptyTopic
                   @newFilter={{this.new}}
                   @unreadFilter={{this.unread}}
                 />
