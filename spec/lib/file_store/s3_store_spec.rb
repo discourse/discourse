@@ -191,7 +191,6 @@ RSpec.describe FileStore::S3Store do
             .expects(:put)
             .with(
               {
-                acl: nil,
                 cache_control: "max-age=31556952, public, immutable",
                 content_type: "application/pdf",
                 content_disposition: "inline; filename=\"small.pdf\"; filename*=UTF-8''small.pdf",
@@ -563,47 +562,86 @@ RSpec.describe FileStore::S3Store do
     describe ".update_upload_access_control" do
       let(:upload) { Fabricate(:upload, original_filename: "small.pdf", extension: "pdf") }
 
-      it "sets acl to public by default" do
-        s3_helper.expects(:s3_bucket).returns(s3_bucket)
-        expect_upload_access_control_update(upload, FileStore::S3Store::CANNED_ACL_PUBLIC_READ)
+      before { s3_helper.stub_client_responses! }
 
+      it "sets acl to public by default" do
         expect(store.update_upload_access_control(upload)).to be_truthy
+
+        put_object_acl_request =
+          store.s3_helper.s3_client.api_requests.find do |api_request|
+            api_request[:operation_name] == :put_object_acl
+          end
+
+        expect(put_object_acl_request[:context].params[:acl]).to eq(
+          FileStore::S3Store::CANNED_ACL_PUBLIC_READ,
+        )
       end
 
       it "sets acl to private when upload is marked secure" do
         upload.update!(secure: true)
-        s3_helper.expects(:s3_bucket).returns(s3_bucket)
-        expect_upload_access_control_update(upload, FileStore::S3Store::CANNED_ACL_PRIVATE)
 
         expect(store.update_upload_access_control(upload)).to be_truthy
+
+        put_object_acl_request =
+          store.s3_helper.s3_client.api_requests.find do |api_request|
+            api_request[:operation_name] == :put_object_acl
+          end
+
+        expect(put_object_acl_request[:context].params[:acl]).to eq(
+          FileStore::S3Store::CANNED_ACL_PRIVATE,
+        )
+      end
+
+      it "does not set acl when `s3_use_acls` site setting is disabled" do
+        SiteSetting.s3_use_acls = false
+
+        upload.update!(secure: true)
+
+        expect(store.update_upload_access_control(upload)).to be_truthy
+        expect(s3_helper.s3_client.api_requests).to be_empty
       end
 
       describe "when `s3_enable_access_control_tags` site setting is enabled" do
-        before do
-          SiteSetting.s3_enable_access_control_tags = true
-          s3_helper.stub_client_responses!
-        end
+        before { SiteSetting.s3_enable_access_control_tags = true }
 
         it "set the right tagging option for a public upload" do
-          s3_helper.expects(:upsert_tag).with(
-            upload.url,
-            FileStore::S3Store.visibility_tagging_option_value(secure: false, encode_form: false),
-          )
-
           upload.update!(secure: false)
 
           store.update_upload_access_control(upload)
+
+          tagging_request =
+            store.s3_helper.s3_client.api_requests.find do |api_request|
+              api_request[:operation_name] == :put_object_tagging
+            end
+
+          expect(tagging_request[:context].params[:tagging][:tag_set]).to eq(
+            [
+              {
+                key: SiteSetting.s3_access_control_tag_key,
+                value: SiteSetting.s3_access_control_tag_public_value,
+              },
+            ],
+          )
         end
 
         it "sets the right tagging option for a secure upload" do
-          s3_helper.expects(:upsert_tag).with(
-            upload.url,
-            FileStore::S3Store.visibility_tagging_option_value(secure: true, encode_form: false),
-          )
-
           upload.update!(secure: true)
 
           store.update_upload_access_control(upload)
+
+          tagging_request =
+            store.s3_helper.s3_client.api_requests.find do |api_request|
+              api_request[:operation_name] == :put_object_tagging
+            end
+
+          expect(tagging_request[:context].params[:tagging][:tag_set]).to eq(
+            [
+              {
+                key: SiteSetting.s3_access_control_tag_key,
+                value: SiteSetting.s3_access_control_tag_private_value,
+              },
+            ],
+          )
         end
       end
 

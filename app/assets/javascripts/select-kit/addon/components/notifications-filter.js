@@ -3,10 +3,11 @@ import { classNames } from "@ember-decorators/component";
 import { i18n } from "discourse-i18n";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
 import { selectKitOptions } from "select-kit/components/select-kit";
+import NotificationsFilterHeader from "./notifications-filter/notifications-filter-header";
 
 @classNames("notifications-filter")
 @selectKitOptions({
-  headerComponent: "notifications-filter/notifications-filter-header",
+  headerComponent: NotificationsFilterHeader,
 })
 export default class NotificationsFilter extends DropdownSelectBoxComponent {
   nameProperty = "label";

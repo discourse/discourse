@@ -1367,6 +1367,7 @@ id:
         invite:
           show_advanced: "Tampilkan Opsi Lanjutan"
           hide_advanced: "Sembunyikan Opsi Lanjutan"
+          description: "Deskripsi"
           cancel: "Batal"
         bulk_invite:
           error: "Maaf, file harus dalam format CSV"
@@ -1651,7 +1652,7 @@ id:
       italic_label: "I"
       italic_title: "Emphasis"
       link_title: "Hyperlink"
-      link_dialog_title: "Sisipkan Tautan"
+      link_dialog_action: "Masukkan"
       link_optional_text: "judul opsional"
       link_url_placeholder: "Tempel URL atau ketik untuk mencari topik"
       blockquote_title: "Blok Kutipan"
@@ -1909,6 +1910,8 @@ id:
           actions: "Aksi"
           edit: "Ubah"
           delete: "Hapus"
+        post_language_selector:
+          none: "Tidak ada"
       errors:
         upload: "Maaf, terjadi kesalahan saat mengunggah %{file_name}. Silakan coba lagi."
         backup_too_large: "Maaf, file cadangan terlalu besar."

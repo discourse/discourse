@@ -1,0 +1,90 @@
+@use "lib/viewport";
+
+.d-header {
+  box-shadow: none;
+  background: var(--background-color);
+
+  @include viewport.from(xl) {
+    padding-bottom: var(--main-grid-gap);
+  }
+}
+
+.user-menu .quick-access-panel,
+.user-notifications-list {
+  li {
+    &.pending,
+    &.unread {
+      background: var(--d-hover);
+
+      .discourse-no-touch & {
+        &:hover,
+        &:focus {
+          background: var(--d-selected);
+        }
+      }
+    }
+  }
+}
+
+.user-menu.revamped .tabs-list .btn.active {
+  background: var(--d-hover);
+}
+
+.discourse-no-touch .d-header-icons .icon:hover,
+.discourse-no-touch .d-header-icons .icon:focus,
+.header-sidebar-toggle button:focus:hover,
+.discourse-no-touch .header-sidebar-toggle button:hover {
+  background-color: transparent;
+}
+
+.discourse-no-touch .d-header-icons .icon:hover > .d-icon,
+.drop-down-mode .d-header-icons .active .icon > .d-icon,
+.drop-down-mode
+  .d-header-icons
+  .header-color-scheme-toggle
+  .-expanded
+  > .d-icon,
+.discourse-no-touch .header-sidebar-toggle button:hover .d-icon {
+  color: var(--header_primary-medium);
+}
+
+.discourse-no-touch .interface-color-selector-content {
+  border: none;
+  border-radius: var(--d-border-radius);
+
+  .btn {
+    border: none;
+
+    &:hover {
+      box-shadow: none;
+    }
+  }
+}
+
+.drop-down-mode .d-header-icons .active .icon,
+.drop-down-mode .d-header-icons .header-color-scheme-toggle .-expanded {
+  border-color: transparent;
+  background-color: transparent;
+}
+
+.badge-notification {
+  color: var(--accent-text-color);
+}
+
+body.login-page,
+body.signup-page,
+body.invite-page,
+body.password-reset-page,
+body.activate-account-page {
+  .d-header {
+    background: var(--background-color);
+  }
+}
+
+.header-dropdown-toggle.chat-header-icon .icon .chat-channel-unread-indicator {
+  border-color: var(--background-color);
+}
+
+.d-header-icons .badge-notification {
+  border-color: var(--background-color);
+}

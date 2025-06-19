@@ -398,6 +398,7 @@ it:
       created: "Hai aggiunto questo messaggio ai segnalibri %{name}"
       created_generic: "L'hai aggiunto ai segnalibri. %{name}"
       create: "Crea un segnalibro"
+      clear_reminder: "Cancella promemoria"
       edit: "Modifica segnalibro"
       not_bookmarked: "aggiungi messaggio ai segnalibri"
       remove_reminder_keep_bookmark: "Rimuovi il promemoria e mantieni il segnalibro"
@@ -1879,6 +1880,7 @@ it:
           edit_link_options: "Modifica le opzioni del link o invialo per e-mail."
           show_advanced: "Mostra Opzioni Avanzate"
           hide_advanced: "Nascondi opzioni avanzate"
+          description: "Descrizione"
           restrict: "Limita a"
           restrict_email: "Limita alle e-mail"
           restrict_domain: "Limita al dominio"
@@ -2528,7 +2530,8 @@ it:
       italic_text: "testo in corsivo"
       link_title: "Hyperlink"
       link_description: "inserisci qui la descrizione del collegamento"
-      link_dialog_title: "Inserisci il collegamento"
+      link_dialog_action: "Inserisci"
+      link_edit_action: "Aggiorna"
       link_optional_text: "titolo opzionale"
       link_url_placeholder: "Incolla un URL o digita per cercare argomenti"
       blockquote_title: "Citazione"
@@ -2600,6 +2603,9 @@ it:
       image_scale_button: "Ridimensiona l'immagine a %{percent}%"
       delete_image_button: Cancella immagine
       toggle_image_grid: Attiva/disattiva la griglia dell'immagine
+      link_toolbar:
+        copy: "Copia link"
+        link_copied: "Link copiato!"
     notifications:
       tooltip:
         regular:
@@ -3567,6 +3573,8 @@ it:
           actions: "Azioni"
           edit: "Modifica"
           delete: "Cancella"
+        post_language_selector:
+          none: "Nessuna"
       errors:
         create: "Spiacenti, si è verificato un errore nel creare il tuo messaggio. Prova di nuovo."
         edit: "Spiacenti, si è verificato un errore nel modificare il tuo messaggio. Prova di nuovo."

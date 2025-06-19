@@ -327,7 +327,6 @@ fa_IR:
       s3_backup_requires_s3_settings: "شما نمی توانید از S3 به عنوان مکان پشتیبان استفاده کنید مگر اینکه «%{setting_name}» را ارائه کرده باشید."
       s3_bucket_reused: "شما نمی توانید از یک مخزن برای \"s3_upload_bucket\" و \"s3_backup_bucket\" استفاده کنید. یک مخزن متفاوت انتخاب کنید یا برای هر مخزن از مسیر متفاوتی استفاده کنید."
       secure_uploads_requirements: "قبل از فعال کردن آپلودهای ایمن، آپلودهای S3 و ACLهای S3 باید فعال شوند."
-      s3_use_acls_requirements: "وقتی آپلودهای ایمن فعال هستند، باید S3 ACL را فعال کنید."
       share_quote_facebook_requirements: "برای فعال کردن اشتراک‌گذاری نقل قول برای فیس‌بوک، باید یک شناسه برنامه فیسبوک تنظیم کنید."
       second_factor_cannot_be_enforced_with_disabled_local_login: "اگر ورود به سیستم محلی غیرفعال باشد، نمی توانید 2FA را اعمال کنید."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "اگر DiscourseConnect فعال باشد، نمی توانید 2FA را اعمال کنید."

@@ -18,36 +18,56 @@ export class ToolbarBase {
     this.capabilities = opts.capabilities || {};
   }
 
+  /**
+   * @param {Object} buttonAttrs
+   * @param {string=} buttonAttrs.id
+   * @param {string=} buttonAttrs.group
+   * @param {string=} buttonAttrs.tabindex
+   * @param {string=} buttonAttrs.className
+   * @param {string=} buttonAttrs.label
+   * @param {string=} buttonAttrs.icon
+   * @param {string=} buttonAttrs.href
+   * @param {Function=} buttonAttrs.action
+   * @param {Function=} buttonAttrs.perform
+   * @param {boolean=} buttonAttrs.trimLeading
+   * @param {boolean=} buttonAttrs.popupMenu
+   * @param {boolean=} buttonAttrs.preventFocus
+   * @param {Function=} buttonAttrs.condition
+   * @param {Function=} buttonAttrs.sendAction
+   * @param {Function=} buttonAttrs.shortcutAction custom shortcut action
+   * @param {boolean=} buttonAttrs.hideShortcutInTitle hide shortcut in title
+   * @param {string=} buttonAttrs.title
+   * @param {string=} buttonAttrs.shortcut
+   * @param {boolean=} buttonAttrs.unshift
+   * @param {boolean=} buttonAttrs.disabled
+   */
   addButton(buttonAttrs) {
     const g = this.groups.findBy("group", buttonAttrs.group || DEFAULT_GROUP);
 
-    const createdButton = {
-      id: buttonAttrs.id,
-      tabindex: buttonAttrs.tabindex || "-1",
-      className: buttonAttrs.className || buttonAttrs.id,
-      label: buttonAttrs.label,
-      icon: buttonAttrs.icon,
-      href: buttonAttrs.href,
-      action: (button) => {
-        buttonAttrs.action
-          ? buttonAttrs.action(button)
-          : this.context.send("toolbarButton", button);
+    const createdButton = Object.defineProperties(
+      {},
+      Object.getOwnPropertyDescriptors(buttonAttrs)
+    );
 
-        // appEvents is only available on the main toolbar
-        // only custom plugins listen to this event
-        this.context.appEvents?.trigger(
-          "d-editor:toolbar-button-clicked",
-          button
-        );
-      },
-      perform: buttonAttrs.perform || function () {},
-      trimLeading: buttonAttrs.trimLeading,
-      popupMenu: buttonAttrs.popupMenu,
-      preventFocus: buttonAttrs.preventFocus || false,
-      condition: buttonAttrs.condition || (() => true),
-      sendAction: buttonAttrs.sendAction,
-      shortcutAction: buttonAttrs.shortcutAction, // (optional) custom shortcut action
-      hideShortcutInTitle: buttonAttrs.hideShortcutInTitle || false, // (optional) hide shortcut in title
+    createdButton.tabindex ||= "-1";
+    createdButton.className ||= buttonAttrs.id;
+    createdButton.condition ||= () => true;
+
+    createdButton.action = () => {
+      const toolbarEvent = this.context.newToolbarEvent?.(
+        buttonAttrs.trimLeading
+      );
+
+      const actionFn =
+        buttonAttrs.action ?? buttonAttrs.sendAction ?? buttonAttrs.perform;
+      actionFn?.(toolbarEvent);
+
+      // appEvents is only available on the main toolbar
+      // only custom plugins listen to this event
+      this.context.appEvents?.trigger(
+        "d-editor:toolbar-button-clicked",
+        createdButton
+      );
     };
 
     const title = i18n(buttonAttrs.title || `composer.${buttonAttrs.id}_title`);
