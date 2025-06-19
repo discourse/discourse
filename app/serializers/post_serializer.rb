@@ -680,7 +680,7 @@ class PostSerializer < BasicPostSerializer
   end
 
   def include_locale?
-    SiteSetting.experimental_content_localization
+    SiteSetting.content_localization_enabled
   end
 
   def is_localized
@@ -688,7 +688,7 @@ class PostSerializer < BasicPostSerializer
   end
 
   def include_is_localized?
-    SiteSetting.experimental_content_localization
+    SiteSetting.content_localization_enabled
   end
 
   def language
@@ -696,7 +696,7 @@ class PostSerializer < BasicPostSerializer
   end
 
   def include_language?
-    SiteSetting.experimental_content_localization && object.locale.present?
+    SiteSetting.content_localization_enabled && object.locale.present?
   end
 
   def localization_outdated

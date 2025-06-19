@@ -36,7 +36,7 @@ export default class PostMenuAddTranslationButton extends Component {
   get showTranslationButton() {
     return (
       this.currentUser &&
-      this.siteSettings.experimental_content_localization &&
+      this.siteSettings.content_localization_enabled &&
       this.currentUser.can_localize_content
     );
   }
@@ -60,7 +60,7 @@ export default class PostMenuAddTranslationButton extends Component {
   async addTranslation() {
     if (
       !this.currentUser ||
-      !this.siteSettings.experimental_content_localization ||
+      !this.siteSettings.content_localization_enabled ||
       !this.currentUser.can_localize_content
     ) {
       return;
