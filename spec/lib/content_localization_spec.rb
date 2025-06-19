@@ -24,7 +24,7 @@ describe ContentLocalization do
     fab!(:post)
 
     it "returns true when criteria met" do
-      SiteSetting.experimental_content_localization = true
+      SiteSetting.content_localization_enabled = true
       post.update!(locale: "ja")
       I18n.locale = "de"
       scope = create_scope
@@ -34,13 +34,13 @@ describe ContentLocalization do
 
     context "when criteria not met" do
       before do
-        SiteSetting.experimental_content_localization = true
+        SiteSetting.content_localization_enabled = true
         post.update!(locale: "ja")
         I18n.locale = "de"
       end
 
-      it "returns false when experimental_content_localization is false" do
-        SiteSetting.experimental_content_localization = false
+      it "returns false when content_localization_enabled is false" do
+        SiteSetting.content_localization_enabled = false
         scope = create_scope
 
         expect(ContentLocalization.show_translated_post?(post, scope)).to be false
@@ -79,7 +79,7 @@ describe ContentLocalization do
     fab!(:topic)
 
     it "returns true when criteria met" do
-      SiteSetting.experimental_content_localization = true
+      SiteSetting.content_localization_enabled = true
       topic.update!(locale: "ja")
       I18n.locale = "de"
       scope = create_scope
@@ -89,13 +89,13 @@ describe ContentLocalization do
 
     context "when criteria not met" do
       before do
-        SiteSetting.experimental_content_localization = true
+        SiteSetting.content_localization_enabled = true
         topic.update!(locale: "ja")
         I18n.locale = "de"
       end
 
-      it "returns false when experimental_content_localization is false" do
-        SiteSetting.experimental_content_localization = false
+      it "returns false when content_localization_enabled is false" do
+        SiteSetting.content_localization_enabled = false
         scope = create_scope
 
         expect(ContentLocalization.show_translated_topic?(topic, scope)).to be false
