@@ -668,7 +668,7 @@ class SessionController < ApplicationController
     redirect_url ||=
       if SiteSetting.login_required
         uses_sso = SiteSetting.enable_discourse_connect
-        has_one_auth = !SiteSetting.enable_local_logins && Discourse.enabled_authenticators.uniq?
+        has_one_auth = !SiteSetting.enable_local_logins && Discourse.enabled_authenticators.one?
         path("/login-required") if uses_sso || has_one_auth
       end
 
