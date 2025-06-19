@@ -7819,6 +7819,7 @@ en:
           basic: "Basic Setup"
           users: "Users"
           posting: "Posting"
+          content_localization: "Content Localization"
           email: "Email"
           files: "Files"
           trust: "Trust Levels"
