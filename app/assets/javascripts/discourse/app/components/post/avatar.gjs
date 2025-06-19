@@ -52,7 +52,7 @@ export default class PostAvatar extends Component {
                 @name="post-avatar-flair"
                 @outletArgs={{lazyHash user=this.user}}
               />
-            <div>
+            </div>
           {{/if}}
           {{#if @displayPosterName}}
             <div class="post-avatar-user-info"></div>
