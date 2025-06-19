@@ -102,6 +102,7 @@ class Theme < ActiveRecord::Base
         -> do
           include_basic_relations.includes(
             :theme_settings,
+            :theme_site_settings,
             :settings_field,
             theme_fields: %i[upload theme_settings_migration],
             child_themes: %i[color_scheme locale_fields theme_translation_overrides],
@@ -1063,9 +1064,7 @@ class Theme < ActiveRecord::Base
 
   def themeable_site_settings
     return [] if self.component?
-    Themes::ThemeSiteSettingResolver.call(params: { theme_id: self.id }) do
-      on_success { |resolved_theme_site_settings:| return resolved_theme_site_settings }
-    end
+    ThemeSiteSettingResolver.new(theme: self).resolved_theme_site_settings
   end
 
   def find_or_create_owned_color_palette

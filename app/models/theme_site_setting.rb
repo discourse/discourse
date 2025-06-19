@@ -24,6 +24,10 @@ class ThemeSiteSetting < ActiveRecord::Base
     return [] if !can_access_db?
     super
   end
+
+  def setting_rb_value
+    SiteSetting.type_supervisor.to_rb_value(self.name, self.value, self.data_type).to_s
+  end
 end
 
 # == Schema Information

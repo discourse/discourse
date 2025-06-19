@@ -174,6 +174,18 @@ module SiteSettingExtension
     ""
   end
 
+  def theme_site_setting_hash(setting)
+    setting_hash = {
+      setting:,
+      default: SiteSetting.defaults[setting].to_s,
+      description: SiteSetting.description(setting),
+    }.merge(type_supervisor.type_hash(setting))
+  end
+
+  def themeable_site_settings
+    themeable.select { |_, value| value }.keys
+  end
+
   def client_settings_json
     key = SiteSettingExtension.client_settings_cache_key
     json = Discourse.cache.fetch(key, expires_in: 30.minutes) { client_settings_json_uncached }
