@@ -27,6 +27,7 @@ export default class SignupPageController extends Controller {
   @service site;
   @service siteSettings;
   @service login;
+  @service appEvents;
 
   @tracked accountName;
   @tracked accountPassword;
@@ -465,12 +466,9 @@ export default class SignupPageController extends Controller {
     this.set("formSubmitted", true);
     return User.createAccount(attrs).then(
       (result) => {
-        if (this.isDestroying || this.isDestroyed) {
-          return;
-        }
-
         this.isDeveloper = false;
         if (result.success) {
+          this.appEvents.trigger("signup:user-created", result);
           // invalidate honeypot
           this._challengeExpiry = 1;
 
