@@ -663,8 +663,15 @@ class SessionController < ApplicationController
   end
 
   def destroy
-    redirect_url = params[:return_url].presence
-    redirect_url ||= SiteSetting.logout_redirect.presence
+    redirect_url = params[:return_url].presence || SiteSetting.logout_redirect.presence
+
+    redirect_url ||=
+      if SiteSetting.login_required
+        uses_sso = SiteSetting.enable_discourse_connect
+        has_one_auth = !SiteSetting.enable_local_logins && Discourse.enabled_authenticators.uniq?
+        path("/login-required") if uses_sso || has_one_auth
+      end
+
     redirect_url ||= path("/")
 
     data = {
