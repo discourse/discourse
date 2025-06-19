@@ -1,6 +1,5 @@
 import { getOwner } from "@ember/owner";
 import { render } from "@ember/test-helpers";
-import { pauseTest } from "ember-testing/lib/helpers/pause_test";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
