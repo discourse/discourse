@@ -1,4 +1,3 @@
-import { htmlSafe } from "@ember/template";
 import { ajax } from "discourse/lib/ajax";
 import { getHashtagTypeClasses } from "discourse/lib/hashtag-type-registry";
 import { isBoundary } from "discourse/static/prosemirror/lib/markdown-it";
@@ -156,12 +155,8 @@ const extension = {
                   })
                 );
 
-                if (!validHashtag) {
-                  continue;
-                }
-
                 const domNode = view.nodeDOM(pos);
-                if (!domNode) {
+                if (!validHashtag || !domNode) {
                   continue;
                 }
 
@@ -173,14 +168,6 @@ const extension = {
                 let hashtagIconHTML = hashtagTypeClass
                   .generateIconHTML(validHashtag)
                   .trim();
-
-                // channels need special handling to apply icon color via CSS
-                if (validHashtag.type === "channel") {
-                  const channelColor = htmlSafe(
-                    `color: #${validHashtag.colors[0]};`
-                  );
-                  hashtagIconHTML = `<span class="hashtag-channel-icon" style="${channelColor}">${hashtagIconHTML}</span>`;
-                }
 
                 domNode.innerHTML = `${hashtagIconHTML}${tagText}`;
               }
@@ -207,11 +194,11 @@ async function fetchHashtags(hashtags) {
     data: { slugs, order: ["category", "channel", "tag"] },
   });
 
-  const tags = Object.values(response || {})
+  const validTags = Object.values(response || {})
     .flat()
     .filter(Boolean);
 
-  tags.forEach((tag) => {
+  validTags.forEach((tag) => {
     if (tag.type === "channel") {
       tag.style_type = "icon";
     }
