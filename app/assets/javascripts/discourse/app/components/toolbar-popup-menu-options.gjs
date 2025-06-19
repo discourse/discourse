@@ -11,7 +11,7 @@ import { translateModKey } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 import DMenu from "float-kit/components/d-menu";
 
-export default class ToolbarPopupmenu extends Component {
+export default class ToolbarPopupmenuOptions extends Component {
   dMenu;
 
   @action
@@ -70,7 +70,6 @@ export default class ToolbarPopupmenu extends Component {
   }
 
   <template>
-    {{log @class}}
     <DMenu
       @identifier={{concat "toolbar-menu__" @class}}
       @groupIdentifier="toolbar-menu"
