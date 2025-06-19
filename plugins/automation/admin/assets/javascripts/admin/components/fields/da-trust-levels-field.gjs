@@ -25,7 +25,7 @@ export default class TrustLevelsField extends BaseField {
 
         <div class="controls">
           <MultiSelect
-            @value={{readonly @field.metadata.value}}
+            @value={{@field.metadata.value}}
             @content={{this.site.trustLevels}}
             @onChange={{this.onChangeTrustLevels}}
           />
