@@ -47,6 +47,12 @@ export default class PostAvatar extends Component {
               @user={{this.user}}
             />
             <UserAvatarFlair @user={{@post}} />
+            <div>
+              <PluginOutlet
+                @name="post-avatar-flair"
+                @outletArgs={{lazyHash user=this.user}}
+              />
+            <div>
           {{/if}}
           {{#if @displayPosterName}}
             <div class="post-avatar-user-info"></div>
