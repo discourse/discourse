@@ -122,6 +122,8 @@ class Theme < ActiveRecord::Base
 
   scope :not_system, -> { where("id > 0") }
   scope :system, -> { where("id < 0") }
+  scope :with_experimental_system_themes,
+        -> { where("id > 0 OR LOWER(name) IN (?)", SiteSetting.experimental_system_themes_map) }
 
   delegate :remote_url, to: :remote_theme, private: true, allow_nil: true
 
