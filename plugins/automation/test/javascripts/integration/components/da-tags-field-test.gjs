@@ -1,5 +1,6 @@
 import { getOwner } from "@ember/owner";
 import { render } from "@ember/test-helpers";
+import { pauseTest } from "ember-testing/lib/helpers/pause_test";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -33,5 +34,31 @@ module("Integration | Component | da-tags-field", function (hooks) {
     await selectKit().selectRowByValue("monkey");
 
     assert.deepEqual(this.field.metadata.value, ["monkey"]);
+  });
+
+  test("empty tags", async function (assert) {
+    const self = this;
+
+    this.field = new AutomationFabricators(getOwner(this)).field({
+      component: "tags",
+    });
+
+    await render(
+      <template>
+        <AutomationField
+          @automation={{self.automation}}
+          @field={{self.field}}
+        />
+      </template>
+    );
+
+    await selectKit().expand();
+    await selectKit().selectRowByValue("monkey");
+
+    assert.deepEqual(this.field.metadata.value, ["monkey"]);
+
+    await selectKit().deselectItemByName("monkey");
+
+    assert.deepEqual(this.field.metadata.value, undefined);
   });
 });
