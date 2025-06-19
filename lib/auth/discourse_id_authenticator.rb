@@ -33,6 +33,10 @@ class Auth::DiscourseIdAuthenticator < Auth::ManagedAuthenticator
     "Discourse ID"
   end
 
+  def provider_url
+    site
+  end
+
   def enabled?
     SiteSetting.enable_discourse_id && SiteSetting.discourse_id_client_id.present? &&
       SiteSetting.discourse_id_client_secret.present?

@@ -9,6 +9,10 @@ class Auth::TwitterAuthenticator < Auth::ManagedAuthenticator
     "X / Twitter"
   end
 
+  def provider_url
+    "https://x.com"
+  end
+
   def enabled?
     SiteSetting.enable_twitter_logins
   end
