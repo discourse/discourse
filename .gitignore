@@ -10,6 +10,11 @@
 /dump.rdb
 .DS_Store
 
+.claude/settings.local.json
+CLAUDE.md
+PRESENTATION.html
+PRESENTATION.md
+
 /config/discourse.conf
 /config/discourse.pill
 /config/multisite.yml
