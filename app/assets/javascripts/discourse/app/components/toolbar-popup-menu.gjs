@@ -11,7 +11,7 @@ import { translateModKey } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 import DMenu from "float-kit/components/d-menu";
 
-export default class ToolbarPopupmenuOptions extends Component {
+export default class ToolbarPopupmenu extends Component {
   dMenu;
 
   @action
@@ -36,9 +36,6 @@ export default class ToolbarPopupmenuOptions extends Component {
               PLATFORM_KEY_MODIFIER + "+" + content.shortcut
             )}</kbd>`
           );
-          // label += ` <kbd class="shortcut">${translateModKey(
-          //   PLATFORM_KEY_MODIFIER + "+" + content.shortcut
-          // )}</kbd>`;
         }
       }
 
@@ -73,8 +70,9 @@ export default class ToolbarPopupmenuOptions extends Component {
   }
 
   <template>
+    {{log @class}}
     <DMenu
-      @identifier={{concat "toolbar-menu__" @id}}
+      @identifier={{concat "toolbar-menu__" @class}}
       @groupIdentifier="toolbar-menu"
       @icon={{@icon}}
       @onRegisterApi={{this.onRegisterApi}}
@@ -85,7 +83,7 @@ export default class ToolbarPopupmenuOptions extends Component {
       @offset={{5}}
       @onKeydown={{@onKeydown}}
       tabindex="-1"
-      class={{concatClass @className}}
+      class={{concatClass @class}}
     >
       <:trigger>
         {{icon @options.icon}}

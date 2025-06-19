@@ -3,7 +3,7 @@ import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { eq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
-import ToolbarPopupMenuOptions from "discourse/components/toolbar-popup-menu";
+import ToolbarPopupMenu from "discourse/components/toolbar-popup-menu";
 import concatClass from "discourse/helpers/concat-class";
 
 export default class ComposerToolbarButtons extends Component {
@@ -32,15 +32,15 @@ export default class ComposerToolbarButtons extends Component {
           {{#if (eq button.type "separator")}}
             <div class="toolbar-separator"></div>
           {{else if button.popupMenu}}
-            <ToolbarPopupMenuOptions
+            {{log button}}
+            <ToolbarPopupMenu
               @content={{(button.popupMenu.options)}}
               @onChange={{button.popupMenu.action}}
               @onOpen={{button.action}}
               @tabindex={{this.tabIndex button}}
               @onKeydown={{this.rovingButtonBar}}
               @options={{hash icon=button.icon focusAfterOnChange=false}}
-              class={{button.className}}
-              @id={{button.id}}
+              @class={{button.className}}
             />
           {{else}}
             <DButton
