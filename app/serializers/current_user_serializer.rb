@@ -332,7 +332,7 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def include_can_localize_content?
-    SiteSetting.experimental_content_localization
+    SiteSetting.content_localization_enabled
   end
 
   def effective_locale
@@ -340,6 +340,6 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def include_effective_locale?
-    SiteSetting.experimental_content_localization
+    SiteSetting.content_localization_enabled
   end
 end

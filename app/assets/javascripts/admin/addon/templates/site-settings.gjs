@@ -46,7 +46,7 @@ export default RouteTemplate(
               title={{category.name}}
             >
               {{category.name}}
-              {{#if category.count}}
+              {{#if @controller.filtersApplied}}
                 <span class="count">({{category.count}})</span>
               {{/if}}
             </LinkTo>

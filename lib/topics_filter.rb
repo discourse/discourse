@@ -145,6 +145,11 @@ class TopicsFilter
         Time.zone.parse(
           "#{match_data[:year].to_i}-#{match_data[:month].to_i}-#{match_data[:day].to_i}",
         )
+      elsif value =~ /\A\d+\z/
+        # Handle integer as number of days ago (0 = today at midnight)
+        days = value.to_i
+        return nil if days < 0
+        days.days.ago.beginning_of_day
       end
     when "likes-min", "likes-max", "likes-op-min", "likes-op-max", "posts-min", "posts-max",
          "posters-min", "posters-max", "views-min", "views-max"

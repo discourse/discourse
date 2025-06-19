@@ -461,6 +461,7 @@ class BulkImport::Generic < BulkImport::Base
         row["name"] = nil
         row["registration_ip_address"] = nil
         row["date_of_birth"] = nil
+        row["title"] = nil
       end
 
       {
@@ -478,6 +479,7 @@ class BulkImport::Generic < BulkImport::Base
         suspended_till: suspended_till,
         registration_ip_address: row["registration_ip_address"],
         date_of_birth: to_date(row["date_of_birth"]),
+        title: row["title"],
       }
     end
 

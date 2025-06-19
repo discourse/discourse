@@ -30,6 +30,8 @@ cs:
           title: "Vstupy data/času"
         menus:
           title: "Menu"
+        multi_select:
+          title: "Vícenásobný výběr"
         toasts:
           title: "Přípitky"
         font_scale:

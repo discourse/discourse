@@ -30,7 +30,7 @@ RSpec.describe ThemeField do
 
   it "does not insert a script tag when there are no inline script" do
     theme_field =
-      ThemeField.create!(theme_id: 1, target_id: 0, name: "body_tag", value: "<div>new div</div>")
+      ThemeField.create!(theme_id: -1, target_id: 0, name: "body_tag", value: "<div>new div</div>")
     theme_field.ensure_baked!
     expect(theme_field.value_baked).to_not include("<script")
   end
@@ -79,10 +79,10 @@ RSpec.describe ThemeField do
       <script src="/external-script.js"></script>
     HTML
 
-    theme_field = ThemeField.create!(theme_id: 1, target_id: 0, name: "header", value: html)
+    theme_field = ThemeField.create!(theme_id: -1, target_id: 0, name: "header", value: html)
     theme_field.ensure_baked!
     expect(theme_field.value_baked).to include(
-      "<script defer=\"\" src=\"#{theme_field.javascript_cache.url}\" data-theme-id=\"1\" nonce=\"#{ThemeField::CSP_NONCE_PLACEHOLDER}\"></script>",
+      "<script defer=\"\" src=\"#{theme_field.javascript_cache.url}\" data-theme-id=\"-1\" nonce=\"#{ThemeField::CSP_NONCE_PLACEHOLDER}\"></script>",
     )
     expect(theme_field.value_baked).to include("external-script.js")
     expect(theme_field.value_baked).to include('<script type="text/template"')
@@ -103,7 +103,7 @@ RSpec.describe ThemeField do
       var b = 10
     JS
 
-    theme_field = ThemeField.create!(theme_id: 1, target_id: 0, name: "header", value: html)
+    theme_field = ThemeField.create!(theme_id: -1, target_id: 0, name: "header", value: html)
     theme_field.ensure_baked!
     expect(theme_field.javascript_cache.content).to include(extracted)
   end
@@ -115,13 +115,13 @@ RSpec.describe ThemeField do
 </script>
 HTML
 
-    field = ThemeField.create!(theme_id: 1, target_id: 0, name: "header", value: html)
+    field = ThemeField.create!(theme_id: -1, target_id: 0, name: "header", value: html)
     field.ensure_baked!
     expect(field.error).not_to eq(nil)
     expect(field.value_baked).to include(
-      "<script defer=\"\" src=\"#{field.javascript_cache.url}\" data-theme-id=\"1\" nonce=\"#{ThemeField::CSP_NONCE_PLACEHOLDER}\"></script>",
+      "<script defer=\"\" src=\"#{field.javascript_cache.url}\" data-theme-id=\"-1\" nonce=\"#{ThemeField::CSP_NONCE_PLACEHOLDER}\"></script>",
     )
-    expect(field.javascript_cache.content).to include("[THEME 1 'Default'] Compile error")
+    expect(field.javascript_cache.content).to include("[THEME -1 'Foundation'] Compile error")
 
     field.update!(value: "")
     field.ensure_baked!
@@ -136,17 +136,17 @@ HTML
 HTML
 
     ThemeField.create!(
-      theme_id: 1,
+      theme_id: -1,
       target_id: 3,
       name: "yaml",
       value: "string_setting: \"test text \\\" 123!\"",
     ).ensure_baked!
-    theme_field = ThemeField.create!(theme_id: 1, target_id: 0, name: "head_tag", value: html)
+    theme_field = ThemeField.create!(theme_id: -1, target_id: 0, name: "head_tag", value: html)
     theme_field.ensure_baked!
     javascript_cache = theme_field.javascript_cache
 
     expect(theme_field.value_baked).to include(
-      "<script defer=\"\" src=\"#{javascript_cache.url}\" data-theme-id=\"1\" nonce=\"#{ThemeField::CSP_NONCE_PLACEHOLDER}\"></script>",
+      "<script defer=\"\" src=\"#{javascript_cache.url}\" data-theme-id=\"-1\" nonce=\"#{ThemeField::CSP_NONCE_PLACEHOLDER}\"></script>",
     )
     expect(javascript_cache.content).to include("testing-div")
     expect(javascript_cache.content).to include("string_setting")
@@ -294,7 +294,7 @@ HTML
   def create_upload_theme_field!(name)
     ThemeField
       .create!(
-        theme_id: 1,
+        theme_id: -1,
         target_id: 0,
         value: "",
         type_id: ThemeField.types[:theme_upload_var],
@@ -315,7 +315,7 @@ HTML
   def create_yaml_field(value)
     field =
       ThemeField.create!(
-        theme_id: 1,
+        theme_id: -1,
         target_id: Theme.targets[:settings],
         name: "yaml",
         value: value,

@@ -54,11 +54,10 @@ class RobotsTxtController < ApplicationController
       deny_paths_googlebot + DISALLOWED_WITH_HEADER_PATHS.map { |p| Discourse.base_path + p }
     deny_all = ["#{Discourse.base_path}/"]
 
-    result = {
-      header:
-        "# See http://www.robotstxt.org/robotstxt.html for documentation on how to use the robots.txt file",
-      agents: [],
-    }
+    result = { header: <<~ROBOTS, agents: [] }
+              # See https://datatracker.ietf.org/doc/rfc9309 for documentation on how to use the robots.txt file
+              # Google uses the same format as the standard above. More info at https://developers.google.com/search/docs/crawling-indexing/robots/robots_txt
+              ROBOTS
 
     if SiteSetting.allowed_crawler_user_agents.present?
       SiteSetting

@@ -9,35 +9,50 @@ describe "Post stream", type: :system do
 
     context "when glimmer_post_stream_mode=#{value}" do
       context "when posting" do
-        let(:composer) { PageObjects::Components::Composer.new }
         let(:topic) { Fabricate(:topic, user: user) }
-        let(:op) { Fabricate(:post, topic: topic, user: user) }
-        let(:op_object) { PageObjects::Components::Post.new(op.post_number) }
+        let(:post) { Fabricate(:post, topic: topic, user: user) }
 
-        before { sign_in(admin) }
+        let(:topic_page) { PageObjects::Pages::Topic.new }
+        let(:composer) { PageObjects::Components::Composer.new }
+
+        before do
+          SiteSetting.post_menu_hidden_items = ""
+
+          sign_in(admin)
+        end
 
         it "can reply to a post and edit the reply" do
-          page.visit "/t/#{op.topic.id}"
-
-          # posting the reply works
-          op_object.reply
+          # Visit topic and initiate reply
+          topic_page.visit_topic(post.topic)
+          topic_page.click_post_action_button(post, :reply)
           expect(composer).to be_opened
+
+          # Create initial reply
           composer.type_content("This is a reply")
           composer.submit
+          expect(composer).to be_closed
 
-          reply_object = PageObjects::Components::Post.new(op.post_number + 1)
+          # Verify initial reply
+          reply = Post.last
+          expect(topic_page).to have_post_number(reply.post_number)
+          expect(topic_page).to have_post_content(
+            post_number: reply.post_number,
+            content: "This is a reply",
+          )
 
-          expect(reply_object).to be_visible
-          expect(reply_object).to have_cooked_content("This is a reply")
-
-          # editing the reply without reloading the post stream works
-          reply_object.edit
+          # Edit the reply
+          expect(topic_page).to have_post_action_button(reply, :edit)
+          topic_page.click_post_action_button(reply, :edit)
           expect(composer).to be_opened
           composer.type_content("This is an edited reply")
           composer.submit
 
-          expect(reply_object).to be_visible
-          expect(reply_object).to have_cooked_content("This is an edited reply")
+          # Verify edited reply
+          expect(topic_page).to have_post_action_button(reply, :edit)
+          expect(topic_page).to have_post_content(
+            post_number: reply.post_number,
+            content: "This is an edited reply",
+          )
         end
       end
     end

@@ -35,3 +35,5 @@ if !Theme.exists?
     SiteSetting.default_dark_mode_color_scheme_id = dark_scheme_id if dark_scheme_id.present?
   end
 end
+
+SystemThemesManager.sync!

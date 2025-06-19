@@ -59,8 +59,9 @@ class MetadataController < ApplicationController
         method: "GET",
         enctype: "application/x-www-form-urlencoded",
         params: {
-          title: "title",
           text: "body",
+          title: "title",
+          url: "title",
         },
       },
       shortcuts: [

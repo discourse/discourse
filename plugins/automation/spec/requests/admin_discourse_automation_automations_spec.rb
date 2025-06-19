@@ -245,6 +245,54 @@ describe DiscourseAutomation::AdminAutomationsController do
         expect(response.status).to eq(404)
       end
     end
+
+    context "when updating a point_in_time automation" do
+      fab!(:automation) do
+        Fabricate(:automation, trigger: DiscourseAutomation::Triggers::POINT_IN_TIME)
+      end
+
+      before do
+        sign_in(Fabricate(:admin))
+
+        automation.upsert_field!(
+          "execute_at",
+          "date_time",
+          { value: 1.hours.from_now },
+          target: "trigger",
+        )
+      end
+
+      it "updates the associated pending automation execute_at" do
+        expect(automation.pending_automations.count).to eq(1)
+        expect(automation.pending_automations.last.execute_at).to be_within_one_minute_of(
+          1.hours.from_now,
+        )
+
+        expect {
+          put "/admin/plugins/automation/automations/#{automation.id}.json",
+              params: {
+                automation: {
+                  script: automation.script,
+                  trigger: automation.trigger,
+                  fields: [
+                    {
+                      name: "execute_at",
+                      component: "date_time",
+                      target: "trigger",
+                      metadata: {
+                        value: 2.hours.from_now,
+                      },
+                    },
+                  ],
+                },
+              }
+        }.not_to change { automation.pending_automations.count }
+
+        expect(automation.pending_automations.reload.last.execute_at).to be_within_one_minute_of(
+          2.hours.from_now,
+        )
+      end
+    end
   end
 
   describe "#index" do

@@ -206,7 +206,7 @@ hu:
       only_admins: "(ez az üzenet csak a webhely rendszergazdáinak jelenik meg)"
     broken_decorator_alert: "Előfordulhat, hogy a bejegyzések nem jelennek meg megfelelően, mert a webhely egyik bejegyzéstartalmának dekorátora hibát dobott."
     broken_page_change_alert: "Egy onPageChange kezelő hibát jelzett. További információért nézze meg a böngésző fejlesztői eszközeit."
-    broken_plugin_alert: "A '%{name}' bővítmény okozta."
+    broken_plugin_alert: "A(z) „%{name}” bővítmény okozta."
     broken_transformer_alert: "Hiba történt. Előfordulhat, hogy webhelye nem működik megfelelően."
     critical_deprecation:
       notice: "<b>[Adminisztrátori megjegyzés]</b> Az egyik témája vagy bővítménye kompatibilitási frissítésre szorul a Discourse magjának közelgő változásai miatt."
@@ -399,6 +399,7 @@ hu:
       created: "Könyvjelzőzte ezt a bejegyzést. %{name}"
       created_generic: "Könyvjelzőzte ezt. %{name}"
       create: "Könyvjelző létrehozása"
+      clear_reminder: "Emlékeztető törlése"
       edit: "Könyvjelző szerkesztése"
       not_bookmarked: "bejegyzés könyvjelzőzése"
       remove_reminder_keep_bookmark: "Emlékeztető eltávolítása és könyvjelző megtartása"
@@ -616,7 +617,7 @@ hu:
         scrubbed_reject_reason: "A felhasználó elutasításának oka"
         scrub_record:
           confirm_title: Személyes adatok eltávolítása
-          reason_placeholder: "Ok..."
+          reason_placeholder: "Ok…"
           confirm_button: "Az eltávolítás megerősítése"
           cancel_button: "Mégse"
       user_percentage:
@@ -1465,25 +1466,25 @@ hu:
             true {
               { UNREAD, plural,
                    =0 {}
-                  one {Van <a href="{basePath}/u/{username}/messages/unread"># olvasatlan</a>}
-                other {Van <a href="{basePath}/u/{username}/messages/unread"># olvasatlan</a>}
+                  one {<a href="{basePath}/u/{username}/messages/unread"># olvasatlan</a>}
+                other {<a href="{basePath}/u/{username}/messages/unread"># olvasatlan</a>}
               }
               { NEW, plural,
                    =0 {}
-                  one { és <a href="{basePath}/u/{username}/messages/new"># új</a> üzenet maradt, vagy böngésszen más <a href="{basePath}/u/{username}/messages">személyes üzenetek között</a>}
-                other { és <a href="{basePath}/u/{username}/messages/new"># új</a> üzenet maradt, vagy böngésszen más <a href="{basePath}/u/{username}/messages">személyes üzenetek között</a>}
+                  one { és <a href="{basePath}/u/{username}/messages/new"># új</a> üzenet maradt, vagy tallózzon más <a href="{basePath}/u/{username}/messages">személyes üzenetek között</a>}
+                other { és <a href="{basePath}/u/{username}/messages/new"># új</a> üzenet maradt, vagy tallózzon más <a href="{basePath}/u/{username}/messages">személyes üzenetek között</a>}
               }
             }
             false {
               { UNREAD, plural,
                    =0 {}
-                  one { <a href="{basePath}/u/{username}/messages/unread"># olvasatlan</a> üzenet maradt, vagy böngésszen más <a href="{basePath}/u/{username}/messages">személyes üzenetek között</a>}
-                other { <a href="{basePath}/u/{username}/messages/unread"># olvasatlan</a> üzenet maradt, vagy böngésszen más <a href="{basePath}/u/{username}/messages">személyes üzenetek között</a>}
+                  one { <a href="{basePath}/u/{username}/messages/unread"># olvasatlan</a> üzenet maradt, vagy tallózzon más <a href="{basePath}/u/{username}/messages">személyes üzenetek között</a>}
+                other { <a href="{basePath}/u/{username}/messages/unread"># olvasatlan</a> üzenet maradt, vagy tallózzon más <a href="{basePath}/u/{username}/messages">személyes üzenetek között</a>}
               }
               { NEW, plural,
                    =0 {}
-                  one { <a href="{basePath}/u/{username}/messages/new"># új</a> üzenet maradt, vagy böngésszen más <a href="{basePath}/u/{username}/messages">személyes üzenetek között</a>}
-                other { <a href="{basePath}/u/{username}/messages/new"># új</a> üzenet maradt, vagy böngésszen más <a href="{basePath}/u/{username}/messages">személyes üzenetek között</a>}
+                  one { <a href="{basePath}/u/{username}/messages/new"># új</a> üzenet maradt, vagy tallózzon más <a href="{basePath}/u/{username}/messages">személyes üzenetek között</a>}
+                other { <a href="{basePath}/u/{username}/messages/new"># új</a> üzenet maradt, vagy tallózzon más <a href="{basePath}/u/{username}/messages">személyes üzenetek között</a>}
               }
             }
             other {}
@@ -1519,7 +1520,7 @@ hu:
         disable: "Letiltás"
         enable: "Biztonsági kódok létrehozása"
         enable_long: "Biztonsági kódok hozzáadása"
-        not_enabled: "Még nem hoztál létre biztonsági kódokat."
+        not_enabled: "Még nem hozott létre biztonsági kódokat."
         manage:
           one: "<strong>%{count}</strong> biztonsági kódja maradt."
           other: "<strong>%{count}</strong> biztonsági kódja maradt."
@@ -1557,7 +1558,7 @@ hu:
         disable: "Letiltás"
         disable_confirm: "Biztos, hogy ki akarja kapcsolni a kétfaktoros hitelesítést?"
         delete: "Törlés"
-        delete_confirm_header: "Ezek a token-alapú hitelesítők és fizikai biztonsági kulcsok törlődnek:"
+        delete_confirm_header: "Ezek a tokenalapú hitelesítők és fizikai biztonsági kulcsok törlődnek:"
         delete_confirm_instruction: "A megerősítéshez írja be <strong>%{confirm}</strong> az alábbi mezőbe."
         delete_single_confirm_title: "Hitelesítő törlése"
         delete_single_confirm_message: "%{name} törlése. Ez a művelet nem vonható vissza. Ha meggondolja magát, újra regisztrálnia kell ezt a hitelesítőt."
@@ -1588,11 +1589,11 @@ hu:
           edit_description: "Fizikai biztonsági kulcs neve"
           name_required_error: "Meg kell adnia a biztonsági kulcs nevét."
       passkeys:
-        rename_passkey: "Passkey átnevezése"
-        add_passkey: "Passkey hozzáadása"
-        confirm_delete_passkey: "Biztos hogy törlöd ezt a passkey-t?"
-        passkey_successfully_created: "Siker! Az új passkey létrehozva."
-        rename_passkey_instructions: "Válasszon egy olyan passkey-t, amely könnyen azonosítható az Ön számára, például használja a jelszókezelőjének nevét."
+        rename_passkey: "Jelkulcs átnevezése"
+        add_passkey: "Jelkulcs hozzáadása"
+        confirm_delete_passkey: "Biztos, hogy törli ezt a jelkulcsot?"
+        passkey_successfully_created: "Sikeres! Az új jelkulcs létrehozva."
+        rename_passkey_instructions: "Válasszon olyan jelkulcsot, amely könnyen azonosítható az Ön számára, például használja a jelszókezelője nevét."
         name:
           default: "Fő jelkulcs"
         save: "Mentés"
@@ -1700,7 +1701,7 @@ hu:
         please_continue: "Megerősítettük a fiókját, most visszairányítjuk a kezdőoldalra."
         continue_button: "Befejezés!"
         welcome_to: "Üdvözöljük a(z) %{site_name} oldalon."
-        approval_required: "Egy moderátornak manuálisan kell jóváhagynia az új fiókodat, mielőtt hozzáférhetnél ehhez a fórumhoz. Fogsz kapni egy e-mailt, amint jóváhagytuk a fiókodat!"
+        approval_required: "Egy moderátornak kézileg kell jóváhagynia az új fiókját, mielőtt hozzáférhetne ehhez a fórumhoz. Kapni fog egy e-mailt, amint a fiókja jóvá lett hagyva!"
       name:
         title: "Név"
         title_optional: "Név (nem kötelező)"
@@ -1886,20 +1887,21 @@ hu:
           expired_at_time: "Lejárt: %{time}"
           create_link_to_invite: "Hozzon létre egy linket, amelyet megoszthat, hogy azonnal hozzáférést biztosítson ehhez a webhelyhez."
           copy_link_and_share_it: "Másolja ki az alábbi linket, és ossza meg, hogy azonnal hozzáférést biztosítson ehhez az oldalhoz."
-          copy_link: "Link másolása"
-          link_copied: "Link másolva!"
-          share_link: "Link megosztása"
+          copy_link: "Hivatkozás másolása"
+          link_copied: "Hivatkozás másolva!"
+          share_link: "Hivatkozás megosztása"
           link_validity_MF: |
-            A link legfeljebb { user_count, plural,
+            A hivatkozás legfeljebb { user_count, plural,
                 one {# felhasználóra}
-              other {#}
+              other {# felhasználóra}
             } felhasználóra érvényes, és { duration_days, plural,
                 one {# napon belül lejár}
-              other {# nap}
+              other {# napon belül lejár}
             }.
-          edit_link_options: "Szerkessze a linkbeállításokat, vagy küldje el e-mailben."
+          edit_link_options: "Szerkessze a hivatkozásbeállításokat, vagy küldje el e-mailben."
           show_advanced: "Speciális beállítások megjelenítése"
           hide_advanced: "Speciális beállítások elrejtése"
+          description: "Leírás"
           restrict: "Korlátozás a következőkre:"
           restrict_email: "E-mail-címre korlátozás"
           restrict_domain: "Domainre korlátozás"
@@ -1907,7 +1909,7 @@ hu:
           max_redemptions_allowed: "Maximális használat"
           add_to_groups: "Hozzáadás csoportokhoz"
           invite_to_topic: "Érkezés a témához"
-          expires_at: "Lejárat időpontja"
+          expires_at: "Lejárat időpontja:"
           expires_after: "Ennyi idő múlva lejár:"
           custom_message: "Egyéni üzenet"
           custom_message_placeholder: "Személyes megjegyzés hozzáadása a meghívóhoz"
@@ -1933,12 +1935,12 @@ hu:
       confirm_access:
         title: "Hozzáférés megerősítése"
         incorrect_password: "A megadott jelszó helytelen."
-        incorrect_passkey: "A passkey helytelen."
+        incorrect_passkey: "A jelkulcs helytelen."
         logged_in_as: "Bejelentkezve mint: "
         forgot_password: "Elfelejtette a jelszavát?"
-        password_reset_email_sent: "Jelszó visszaállítási email elküldve."
-        cannot_send_password_reset_email: "Nem sikerült a jelszó visszaállítási emailt elküldeni."
-        instructions: "Kérjük, erősítse meg személyazonosságát a művelet elvégzéséhez."
+        password_reset_email_sent: "Jelszó-visszaállítási e-mail elküldve."
+        cannot_send_password_reset_email: "Nem sikerült elküldeni a jelszó-visszaállítási e-mailt."
+        instructions: "Erősítse meg személyazonosságát a művelet befejezéséhez."
         fine_print: "Arra kérjük, hogy erősítse meg személyazonosságát, mivel ez egy potenciálisan érzékeny művelet. A hitelesítést követően csak néhány óra inaktivitás után kérhetjük az újbóli hitelesítést."
       password:
         title: "Jelszó"
@@ -2050,7 +2052,7 @@ hu:
     user_tips:
       button: "Értem!"
       skip: "Tippek kihagyása"
-      dont_show_again: "Ne mutassa újra"
+      dont_show_again: "Ne jelenítse meg újra"
       first_notification:
         title: "Az első értesítése!"
         content: "Az értesítések arra szolgálnak, hogy naprakész legyen a közösségben zajló eseményekről."
@@ -2059,10 +2061,10 @@ hu:
         content: "A téma idővonalával gyorsan lapozhat a hosszú témák között."
       post_menu:
         title: "Bejegyzés menü"
-        content: "Nézd meg, hogyan tudsz még interakcióba lépni a bejegyzéssel, ha a három pontra kattintasz!"
+        content: "Nézze meg, hogyan tud még interakcióba lépni a bejegyzéssel, ha a három pontra kattint!"
       topic_notification_levels:
         title: "Követi ezt a témát"
-        content: "Keresd ezt a csengőt, hogy beállíthasd az értesítéseket bizonyos témákhoz vagy egész kategóriákhoz."
+        content: "Keresse a csengőt, hogy beállíthassa az értesítéseket az egyes témákhoz vagy egész kategóriákhoz."
       suggested_topics:
         title: "Olvasson tovább!"
         content: "Íme néhány téma, amelyet szerintünk szívesen elolvasna legközelebb."
@@ -2090,7 +2092,7 @@ hu:
       close: "bezárás"
       dismiss_error: "Hiba elvetése"
     multi_select:
-      no_results: "Nincs eredmény"
+      no_results: "Nincs találat"
       search: "Keresés…"
       label: "Válasszon egy lehetőséget"
     form_kit:
@@ -2183,9 +2185,9 @@ hu:
       no_internet: "Nincs internetkapcsolat."
       refresh_page: "Oldal frissítése"
     summary:
-      in_progress: "A téma összefoglalása mesterséges intelligencia segítségével"
-      summarized_on: "Összefoglalva M.I.-val: %{date}"
-      model_used: "Használt M.I.: %{model}"
+      in_progress: "A téma összefoglalása MI segítségével"
+      summarized_on: "MI-vel összefoglalva ekkor: %{date}"
+      model_used: "Használt MI: %{model}"
       outdated: "Az összefoglaló elavult"
       outdated_posts:
         one: "(%{count} bejegyzés hiányzik)"
@@ -2195,7 +2197,7 @@ hu:
         one: "<b>%{count}</b> válasz van."
         other: "<b>%{count}</b> válasz van."
       buttons:
-        hide: "Összegzés elrejtése"
+        hide: "Összefoglaló elrejtése"
         generate: "Összefoglalás"
         regenerate: "Újragenerálás"
       description_time_MF: |
@@ -2203,7 +2205,7 @@ hu:
       enable: "Legnépszerűbb válaszok megjelenítése"
       disable: "Összes bejegyzés megjelenítése"
       short_label: "Legnépszerűbb válaszok"
-      show_all_label: "Mutasd mindet"
+      show_all_label: "Összes megjelenítése"
       short_title: "A témában a legnépszerűbb válaszok megjelenítése: a közösség által meghatározott legérdekesebb bejegyzések"
     deleted_filter:
       enabled_description: "Ez a téma törölt bejegyzéseket is tartalmaz, melyek el lettek rejtve."
@@ -2248,7 +2250,7 @@ hu:
       action: "Elfelejtettem a jelszavamat"
       invite: "Adja meg a felhasználónevét vagy az e-mail-címét, és küldünk egy jelszó-visszaállító levelet."
       invite_no_username: "Adja meg az e-mail-címét, és küldünk egy jelszó-visszaállító levelet."
-      email-username: "E-mail vagy Felhasználónév"
+      email-username: "E-mail vagy felhasználónév"
       reset: "Jelszó visszaállítása"
       complete_username: "Amennyiben létezik fiók <b>%{username}</b> felhasználónévvel, hamarosan kapni fog egy levelet, amelyben megtalálhatja a jelszó visszaállításához szükséges további lépéseket."
       complete_email: "Amennyiben létezik fiók <b>%{email}</b> e-mail-címmel, hamarosan kapni fog egy levelet, amelyben megtalálhatja a jelszava visszaállításához szükséges további lépéseket."
@@ -2277,8 +2279,8 @@ hu:
       title: "Bejelentkezés"
       username: "Felhasználó"
       password: "Jelszó"
-      show_password: "Mutat"
-      hide_password: "Elrejt"
+      show_password: "Megjelenítés"
+      hide_password: "Elrejtés"
       show_password_title: "Jelszó megjelenítése"
       hide_password_title: "Jelszó elrejtése"
       second_factor_title: "Kétfaktoros hitelesítés"
@@ -2584,7 +2586,8 @@ hu:
       italic_text: "dőlt szöveg"
       link_title: "Hiperhivatkozás"
       link_description: "itt adja meg a hivatkozás leírását"
-      link_dialog_title: "Hiperhivatkozás beszúrása"
+      link_dialog_action: "Beszúrás"
+      link_edit_action: "Frissítés"
       link_optional_text: "megadható cím"
       link_url_placeholder: "Illesszen be egy URL-t, vagy gépeljen a témák kereséséhez"
       blockquote_title: "Idézetblokk"
@@ -2656,6 +2659,9 @@ hu:
       image_scale_button: "Kép méretezése %{percent}%-ra"
       delete_image_button: Kép törlése
       toggle_image_grid: Képrács be/ki
+      link_toolbar:
+        copy: "Link másolása"
+        link_copied: "Link másolva!"
     notifications:
       tooltip:
         regular:
@@ -3646,6 +3652,8 @@ hu:
           title: "Fordítás a bejegyzéshez"
           confirm_delete: "Biztos, hogy törölni akarja a '%{languageCode}' fordításokat?"
         success: "A fordítások sikeresen frissültek"
+        post_language_selector:
+          none: "Egyik sem"
       errors:
         create: "Sajnos hiba történt a bejegyzése létrehozása során. Próbálja újra."
         edit: "Sajnos hiba történt a bejegyzése szerkesztése során. Próbálja újra."

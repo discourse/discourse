@@ -153,27 +153,51 @@
     vertical-align: top;
 
     .title {
-      font-size: var(--font-up-1);
+      font-family: var(--heading-font-family);
+      font-size: var(--font-up-2-rem);
       font-weight: bold;
-      margin-bottom: 0.25em;
       display: flex;
       align-items: center;
 
-      span {
-        min-width: 0;
-        overflow-wrap: anywhere;
-      }
-
-      input {
+      .title-button {
         margin: 0;
+        padding: 0;
+        border-radius: 0;
+        border: none;
+        text-align: left;
+        font-weight: bold;
+        gap: var(--space-2);
+
+        &:hover {
+          color: inherit;
+
+          .d-icon-pencil {
+            display: block;
+            font-size: var(--font-down-2);
+          }
+        }
+
+        span {
+          margin-top: var(--space-2);
+          margin-bottom: var(--space-1);
+        }
       }
 
-      .btn {
-        margin-left: 0.5em;
+      .d-icon-pencil {
+        display: none;
       }
 
-      a {
-        font-size: var(--font-down-2);
+      .container-edit-title {
+        margin: 0;
+        width: 100%;
+
+        input {
+          font-size: var(--font-up-1-rem);
+        }
+
+        .btn-small {
+          font-size: var(--font-down-3);
+        }
       }
     }
 

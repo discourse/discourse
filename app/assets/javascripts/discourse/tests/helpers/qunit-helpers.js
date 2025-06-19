@@ -564,9 +564,6 @@ export async function selectText(selector, endOffset = null) {
 
   performSelection();
 
-  const event = new PointerEvent("pointerup");
-  document.dispatchEvent(event);
-
   await settled();
 }
 

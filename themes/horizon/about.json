@@ -1,0 +1,135 @@
+{
+  "name": "Horizon",
+  "authors": "Design Team",
+  "about_url": "https://meta.discourse.org/t/horizon-theme/360486",
+  "license_url": "https://github.com/discourse/horizon/blob/main/LICENSE",
+  "learn_more": "https://meta.discourse.org/t/installing-a-theme-or-theme-component/63682",
+  "theme_version": "0.0.1",
+  "modifiers": {
+    "svg_icons": ["fire"],
+    "serialize_topic_is_hot": true
+  },
+  "color_schemes": {
+    "Horizon": {
+      "primary": "1A1A1A",
+      "secondary": "ffffff",
+      "tertiary": "595bca",
+      "tertiary-med-or-tertiary": "595bca",
+      "selected": "d7dfff",
+      "header_background": "ffffff",
+      "header_primary": "1A1A1A",
+      "hover": "E1E8FF"
+    },
+    "Horizon Dark": {
+      "primary": "ffffff",
+      "secondary": "1A1A1A",
+      "tertiary": "595bca",
+      "tertiary-med-or-tertiary": "595bca",
+      "selected": "3b3e56",
+      "header_background": "1A1A1A",
+      "header_primary": "ffffff",
+      "hover": "333548"
+    },
+    "Royal": {
+      "primary": "1A1A1A",
+      "secondary": "ffffff",
+      "tertiary": "1F7BC1",
+      "tertiary-med-or-tertiary": "1F7BC1",
+      "selected": "c7e3ff",
+      "header_background": "ffffff",
+      "header_primary": "1A1A1A",
+      "hover": "D6EBFF"
+    },
+    "Royal Dark": {
+      "primary": "ffffff",
+      "secondary": "1A1A1A",
+      "tertiary": "1F7BC1",
+      "tertiary-med-or-tertiary": "1F7BC1",
+      "selected": "3a455f",
+      "header_background": "1A1A1A",
+      "header_primary": "ffffff",
+      "hover": "323B4E"
+    },
+    "Clover": {
+      "primary": "1A1A1A",
+      "secondary": "ffffff",
+      "tertiary": "39845B",
+      "tertiary-med-or-tertiary": "39845B",
+      "selected": "c6f1d5",
+      "header_background": "ffffff",
+      "header_primary": "1A1A1A",
+      "hover": "D5F5E0"
+    },
+    "Clover Dark": {
+      "primary": "ffffff",
+      "secondary": "1A1A1A",
+      "tertiary": "39845B",
+      "tertiary-med-or-tertiary": "39845B",
+      "selected": "47594e",
+      "header_background": "1A1A1A",
+      "header_primary": "ffffff",
+      "hover": "3C4A40"
+    },
+    "Lily": {
+      "primary": "1A1A1A",
+      "secondary": "ffffff",
+      "tertiary": "cc338c",
+      "tertiary-med-or-tertiary": "cc338c",
+      "selected": "ffc8ee",
+      "header_background": "ffffff",
+      "header_primary": "1A1A1A",
+      "hover": "FFD7F3"
+    },
+    "Lily Dark": {
+      "primary": "ffffff",
+      "secondary": "1A1A1A",
+      "tertiary": "cc338c",
+      "tertiary-med-or-tertiary": "cc338c",
+      "selected": "5f3e4e",
+      "header_background": "1A1A1A",
+      "header_primary": "ffffff",
+      "hover": "4E3640"
+    },
+    "Violet": {
+      "primary": "1A1A1A",
+      "secondary": "ffffff",
+      "tertiary": "9b15de",
+      "tertiary-med-or-tertiary": "9b15de",
+      "selected": "feccff",
+      "header_background": "ffffff",
+      "header_primary": "1A1A1A",
+      "hover": "FFD9FF"
+    },
+    "Violet Dark": {
+      "primary": "ffffff",
+      "secondary": "1A1A1A",
+      "tertiary": "9b15de",
+      "tertiary-med-or-tertiary": "9b15de",
+      "selected": "4c385c",
+      "header_background": "1A1A1A",
+      "header_primary": "ffffff",
+      "hover": "40314C"
+    },
+    "Marigold": {
+      "primary": "1A1A1A",
+      "secondary": "ffffff",
+      "tertiary": "d3881f",
+      "tertiary-med-or-tertiary": "d3881f",
+      "selected": "ffdcb2",
+      "header_background": "ffffff",
+      "header_primary": "1A1A1A",
+      "hover": "FFE6C6"
+    },
+    "Marigold Dark": {
+      "primary": "ffffff",
+      "secondary": "1A1A1A",
+      "tertiary": "d3881f",
+      "tertiary-med-or-tertiary": "d3881f",
+      "selected": "6c5b49",
+      "header_background": "1A1A1A",
+      "header_primary": "ffffff",
+      "hover": "584B3E"
+    }
+  },
+  "screenshots": ["screenshots/light.png", "screenshots/dark.png"]
+}

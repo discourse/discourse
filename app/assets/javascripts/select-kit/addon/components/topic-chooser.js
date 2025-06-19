@@ -6,6 +6,7 @@ import {
   pluginApiIdentifiers,
   selectKitOptions,
 } from "select-kit/components/select-kit";
+import TopicRow from "./topic-row";
 
 @classNames("topic-chooser")
 @selectKitOptions({
@@ -21,7 +22,7 @@ export default class TopicChooser extends ComboBoxComponent {
   titleProperty = "title";
 
   modifyComponentForRow() {
-    return "topic-row";
+    return TopicRow;
   }
 
   search(filter) {

@@ -1338,6 +1338,7 @@ bs_BA:
           success: "Link pozivnice je uspješno generisan!"
           error: "Došlo je do pogreške prilikom generiranja linka za pozivnicu"
         invite:
+          description: "Opis"
           cancel: "Odustani"
         bulk_invite:
           text: "Skupna pozivnica"
@@ -1708,7 +1709,7 @@ bs_BA:
       italic_text: "ukošen tekst"
       link_title: "Link"
       link_description: "ubaci opis linka"
-      link_dialog_title: "Unesi Link"
+      link_dialog_action: "Unesi"
       link_optional_text: "naslov neobavezan"
       blockquote_title: "Citiranje"
       blockquote_text: "Citiranje"
@@ -2364,6 +2365,8 @@ bs_BA:
           actions: "Akcije"
           edit: "Edit"
           delete: "Delete"
+        post_language_selector:
+          none: "Ništa"
       errors:
         create: "Sorry, there was an error creating your post. Please try again."
         edit: "Sorry, there was an error editing your post. Please try again."
