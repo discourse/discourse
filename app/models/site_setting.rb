@@ -118,9 +118,9 @@ class SiteSetting < ActiveRecord::Base
   client_settings << :available_content_localization_locales
 
   def self.available_content_localization_locales
-    return [] if !SiteSetting.experimental_content_localization?
+    return [] if !SiteSetting.content_localization_enabled?
 
-    supported_locales = SiteSetting.experimental_content_localization_supported_locales.split("|")
+    supported_locales = SiteSetting.content_localization_supported_locales.split("|")
     default_locale = SiteSetting.default_locale
     if default_locale.present? && !supported_locales.include?(default_locale)
       supported_locales << default_locale

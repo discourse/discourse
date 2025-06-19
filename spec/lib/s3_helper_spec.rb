@@ -333,7 +333,7 @@ RSpec.describe "S3Helper" do
 
   describe "#upsert_tag" do
     it "correctly updates an existing tag" do
-      s3_helper = S3Helper.new("some-bucket", "", client: client)
+      s3_helper = S3Helper.new("some-bucket/some-path", "", client: client)
 
       s3_helper.s3_client.stub_responses(
         :get_object_tagging,
@@ -344,10 +344,20 @@ RSpec.describe "S3Helper" do
 
       s3_helper.upsert_tag("some/key", tag_key: "tag1", tag_value: "newvalue")
 
+      get_object_tagging_request =
+        s3_helper.s3_client.api_requests.find do |api_request|
+          api_request[:operation_name] == :get_object_tagging
+        end
+
       put_object_tagging_request =
         s3_helper.s3_client.api_requests.find do |api_request|
           api_request[:operation_name] == :put_object_tagging
         end
+
+      expect(get_object_tagging_request[:context].params[:bucket]).to eq("some-bucket")
+      expect(get_object_tagging_request[:context].params[:key]).to eq("some-path/some/key")
+      expect(put_object_tagging_request[:context].params[:bucket]).to eq("some-bucket")
+      expect(put_object_tagging_request[:context].params[:key]).to eq("some-path/some/key")
 
       expect(put_object_tagging_request[:context].params[:tagging][:tag_set]).to eq(
         [{ key: "tag1", value: "newvalue" }, { key: "tag2", value: "value2" }],
@@ -355,7 +365,7 @@ RSpec.describe "S3Helper" do
     end
 
     it "correctly adds a new tag" do
-      s3_helper = S3Helper.new("some-bucket", "", client: client)
+      s3_helper = S3Helper.new("some-bucket/some-path", "", client: client)
 
       s3_helper.s3_client.stub_responses(
         :get_object_tagging,
@@ -366,10 +376,20 @@ RSpec.describe "S3Helper" do
 
       s3_helper.upsert_tag("some/key", tag_key: "mytag", tag_value: "myvalue")
 
+      get_object_tagging_request =
+        s3_helper.s3_client.api_requests.find do |api_request|
+          api_request[:operation_name] == :get_object_tagging
+        end
+
       put_object_tagging_request =
         s3_helper.s3_client.api_requests.find do |api_request|
           api_request[:operation_name] == :put_object_tagging
         end
+
+      expect(get_object_tagging_request[:context].params[:bucket]).to eq("some-bucket")
+      expect(get_object_tagging_request[:context].params[:key]).to eq("some-path/some/key")
+      expect(put_object_tagging_request[:context].params[:bucket]).to eq("some-bucket")
+      expect(put_object_tagging_request[:context].params[:key]).to eq("some-path/some/key")
 
       expect(put_object_tagging_request[:context].params[:tagging][:tag_set]).to eq(
         [

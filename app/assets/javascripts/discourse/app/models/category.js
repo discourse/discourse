@@ -782,7 +782,7 @@ export default class Category extends RestModel {
         style_type: this.style_type,
         emoji: this.emoji,
         icon: this.icon,
-        ...(this.siteSettings.experimental_content_localization && {
+        ...(this.siteSettings.content_localization_enabled && {
           category_localizations_attributes: this._buildUpdatedLocalizations(),
         }),
       }),
