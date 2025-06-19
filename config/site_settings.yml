@@ -4043,29 +4043,6 @@ experimental:
   rich_editor:
     client: true
     default: false
-  experimental_content_localization:
-    client: true
-    default: false
-    area: "localization"
-  experimental_content_localization_allowed_groups:
-    type: group_list
-    list_type: compact
-    allow_any: false
-    client: true
-    default: "1|2" # admin, moderator
-    area: "localization"
-  experimental_content_localization_supported_locales:
-    default: ""
-    type: list
-    client: true
-    list_type: named
-    allow_any: false
-    choices: "LocaleSiteSetting.values"
-    area: "localization"
-  experimental_anon_language_switcher:
-    default: false
-    client: true
-    validator: "LanguageSwitcherSettingValidator"
   reviewable_ui_refresh:
     client: true
     type: group_list
