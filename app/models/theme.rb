@@ -1063,7 +1063,9 @@ class Theme < ActiveRecord::Base
 
   def themeable_site_settings
     return [] if self.component?
-    ThemeableSiteSettingHelper.new(theme_id: self.id).resolved_themeable_site_settings
+    Themes::ThemeSiteSettingResolver.call(params: { theme_id: self.id }) do
+      on_success { |resolved_theme_site_settings:| return resolved_theme_site_settings }
+    end
   end
 
   def find_or_create_owned_color_palette

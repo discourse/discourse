@@ -368,7 +368,6 @@ class Admin::ThemesController < Admin::AdminController
   end
 
   def update_theme_site_setting
-    # TODO (martin) Handle failure cases here
     Themes::ThemeSiteSettingManager.call(
       params: {
         theme_id: params[:id],
@@ -384,6 +383,11 @@ class Admin::ThemesController < Admin::AdminController
           render json: success_json
         end
       end
+      on_failed_policy(:current_user_is_admin) { raise Discourse::InvalidAccess }
+      on_failed_policy(:ensure_setting_is_themeable) do
+        render_json_error(I18n.t("themes.setting_not_themeable", name: params[:name]), status: 400)
+      end
+      on_model_not_found(:theme) { raise Discourse::NotFound }
     end
   end
 
