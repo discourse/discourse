@@ -15,14 +15,12 @@ export default class TagChooserField extends Component {
   @service dialog;
 
   get formattedChoices() {
-    return this.args.choices
-      .map((choice) => ({
-        name: choice,
-        display: this.args.attributes.tag_choices[choice]
-          ? this.args.attributes.tag_choices[choice]
-          : choice.replace(/-/g, " ").toUpperCase(),
-      }))
-      .sort((a, b) => a.display.localeCompare(b.display));
+    return this.args.choices.map((choice) => ({
+      name: choice,
+      display: this.args.attributes.tag_choices[choice]
+        ? this.args.attributes.tag_choices[choice]
+        : choice.replace(/-/g, " ").toUpperCase(),
+    }));
   }
 
   get filteredSelectedValues() {
