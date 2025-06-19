@@ -2,9 +2,9 @@ import { array, fn, hash } from "@ember/helper";
 import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import Form from "discourse/components/form";
-import isElementInViewport from "discourse/lib/is-element-in-viewport";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import formKit from "discourse/tests/helpers/form-kit-helper";
+import { query } from "discourse/tests/helpers/qunit-helpers";
 
 module("Integration | Component | FormKit | Form", function (hooks) {
   setupRenderingTest(hooks);
@@ -340,15 +340,14 @@ module("Integration | Component | FormKit | Form", function (hooks) {
 
     await render(
       <template>
-        <Form @data={{hash foo=1 bar=2}} @validate={{validate}} as |form|>
-          <form.Field @name="foo" @title="Foo" />
-          <div class="spacer" style="height: 1000px;"></div>
+        <Form @validate={{validate}} as |form|>
+          <div style="height: 1000px;"></div>
           <form.Submit />
         </Form>
       </template>
     );
 
-    document.querySelector(".form-kit__button").scrollIntoView();
+    query(".form-kit__button").scrollIntoView();
 
     await formKit().submit();
 
