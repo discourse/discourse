@@ -57,6 +57,6 @@ module("Integration | Component | da-tags-field", function (hooks) {
 
     await selectKit().deselectItemByValue("monkey");
 
-    assert.deepEqual(this.field.metadata.value, undefined);
+    assert.strictEqual(this.field.metadata.value, undefined);
   });
 });
