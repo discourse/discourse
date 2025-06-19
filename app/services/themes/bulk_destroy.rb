@@ -23,16 +23,13 @@ class Themes::BulkDestroy
   params do
     attribute :theme_ids, :array
     validates :theme_ids, presence: true, length: { minimum: 1, maximum: 50 }
-    validate :theme_ids_must_be_positive
+    validate :theme_ids_must_be_positive, if: -> { theme_ids.present? }
 
     before_validation { self.theme_ids = theme_ids.map(&:to_i).uniq if theme_ids.present? }
 
     def theme_ids_must_be_positive
-      return if theme_ids.blank?
-
-      if theme_ids.any?(&:negative?)
-        errors.add(:theme_ids, I18n.t("errors.messages.must_all_be_positive"))
-      end
+      return if theme_ids.all?(&:positive?)
+      errors.add(:theme_ids, I18n.t("errors.messages.must_all_be_positive"))
     end
   end
 

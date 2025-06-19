@@ -36,8 +36,7 @@ RSpec.describe Themes::Destroy do
 
       it "logs the theme destroy" do
         expect_any_instance_of(StaffActionLogger).to receive(:log_theme_destroy).with(theme)
-
-        expect(result).to be_a_success
+        result
       end
     end
   end

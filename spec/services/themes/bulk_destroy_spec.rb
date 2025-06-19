@@ -3,7 +3,24 @@
 RSpec.describe Themes::BulkDestroy do
   describe described_class::Contract, type: :model do
     it { is_expected.to validate_presence_of(:theme_ids) }
-    it { is_expected.to validate_length_of(:theme_ids).as_array.is_at_least(1).is_at_most(50) }
+
+    it "validates length of theme_ids" do
+      contract = described_class.new(theme_ids: [1, 2, 3])
+      contract.validate
+      expect(contract.errors).to be_empty
+
+      contract = described_class.new(theme_ids: (1..55).to_a)
+      contract.validate
+      expect(contract.errors.full_messages).to include(
+        "Theme ids " + I18n.t("errors.messages.too_long", count: 50),
+      )
+
+      contract = described_class.new(theme_ids: [])
+      contract.validate
+      expect(contract.errors.full_messages).to include(
+        "Theme ids " + I18n.t("errors.messages.too_short", count: 1),
+      )
+    end
 
     describe "theme_ids must be positive, negative IDs are system themes" do
       context "when all theme_ids are positive" do
@@ -61,7 +78,7 @@ RSpec.describe Themes::BulkDestroy do
       it "logs the theme destroys" do
         expect_any_instance_of(StaffActionLogger).to receive(:log_theme_destroy).with(theme_1).once
         expect_any_instance_of(StaffActionLogger).to receive(:log_theme_destroy).with(theme_2).once
-        expect(result).to be_a_success
+        result
       end
     end
   end

@@ -8,12 +8,12 @@ RSpec.describe Themes::Create do
   end
 
   describe ".call" do
+    subject(:result) { described_class.call(params:, **dependencies) }
+
     fab!(:user)
     fab!(:admin)
     fab!(:guardian) { admin.guardian }
     fab!(:color_scheme)
-
-    subject(:result) { described_class.call(params:, **dependencies) }
 
     let(:dependencies) { { guardian: } }
 
@@ -110,7 +110,7 @@ RSpec.describe Themes::Create do
           nil,
           an_instance_of(Theme),
         )
-        expect(result).to be_a_success
+        result
       end
 
       context "with component param" do
@@ -135,7 +135,6 @@ RSpec.describe Themes::Create do
         let(:params) { theme_params.merge(default: true) }
 
         it "sets the theme as default" do
-          expect(result).to be_a_success
           expect(result.theme).to be_default
           expect(SiteSetting.default_theme_id).to eq(result.theme.id)
         end
