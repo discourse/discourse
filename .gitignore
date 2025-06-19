@@ -1,0 +1,94 @@
+/copyright
+/coverage
+/data
+/log
+/tmp
+
+/.bundle
+/.env
+/.procfile
+/dump.rdb
+.DS_Store
+
+/config/discourse.conf
+/config/discourse.pill
+/config/multisite.yml
+# `discourse_dev` gem
+/config/dev.yml
+
+/public/assets
+/public/backups
+/public/csv
+/public/fonts
+/public/plugins
+/public/tombstone
+/public/uploads
+/public/images/emoji
+
+# Ignore the default SQLite database and db dumps
+*.sql
+*.sql.gz
+!/spec/fixtures/**/*.sql
+/db/*.sqlite3
+/db/structure.sql
+/db/schema.rb
+/db/schema_cache.yml
+
+# Plugins except for the bundled ones
+/plugins/*
+!/plugins/discourse-details
+!/plugins/discourse-local-dates
+!/plugins/discourse-narrative-bot
+!/plugins/discourse-presence
+!/plugins/discourse-lazy-videos
+!/plugins/automation
+/plugins/automation/gems
+!/plugins/chat
+!/plugins/poll
+!/plugins/styleguide
+!/plugins/spoiler-alert
+!/plugins/checklist
+!/plugins/footnote
+/plugins/*/auto_generated
+
+/spec/fixtures/plugins/my_plugin/auto_generated
+
+/vendor/bundle
+/vendor/data/GeoLite2-City.mmdb
+/vendor/data/GeoLite2-ASN.mmdb
+
+# We provide a .sample but people can use newer versions if they want to
+.ruby-version
+.ruby-gemset
+.tool-versions
+
+# Likewise, there are sample files for VSCode config
+/.vscode/*
+!/.vscode/extensions.json
+!/.vscode/*.sample
+
+# Front-end
+dist
+node_modules
+yarn-error.log
+.pnpm-store
+
+# Linting artifacts
+.eslintcache
+/lint-progress
+
+# Auto-generated plugin JS assets
+/app/assets/javascripts/plugins/*
+/app/assets/generated
+
+# Generated API documentation files
+openapi/*
+
+# Cached License Data Files
+/.licenses
+
+# devenv.sh
+.devenv*
+
+# direnv.net
+.direnv
