@@ -1710,4 +1710,48 @@ RSpec.describe Admin::ThemesController do
       end
     end
   end
+
+  describe "#show" do
+    let(:theme) { Fabricate(:theme) }
+
+    it "allows base_url in setting description" do
+      set_subfolder "/community"
+
+      theme.set_field(target: :settings, name: "yaml", value: <<~YAML)
+        my_setting:
+          default: true
+          description: This is a link to %{base_path}/example
+      YAML
+      theme.save!
+
+      sign_in admin
+
+      get "/admin/themes/#{theme.id}"
+      expect(response.status).to eq(200)
+
+      expect(response.parsed_body.dig("theme", "settings", 0, "description")).to eq(
+        "This is a link to /community/example",
+      )
+    end
+
+    it "skips interpolation for unknown variables" do
+      set_subfolder "/community"
+
+      theme.set_field(target: :settings, name: "yaml", value: <<~YAML)
+        my_setting:
+          default: true
+          description: Description %{some_mistake}
+      YAML
+      theme.save!
+
+      sign_in admin
+
+      get "/admin/themes/#{theme.id}"
+      expect(response.status).to eq(200)
+
+      expect(response.parsed_body.dig("theme", "settings", 0, "description")).to eq(
+        "Description %{some_mistake}",
+      )
+    end
+  end
 end

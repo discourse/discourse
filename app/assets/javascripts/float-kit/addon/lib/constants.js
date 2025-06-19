@@ -38,6 +38,7 @@ export const TOOLTIP = {
     onClose: null,
     onShow: null,
     onRegisterApi: null,
+    updateOnScroll: true,
   },
   portalOutletId: "d-tooltip-portal-outlet",
 };
@@ -75,6 +76,7 @@ export const MENU = {
     triggerClass: null,
     contentClass: null,
     class: null,
+    updateOnScroll: true,
   },
   portalOutletId: "d-menu-portal-outlet",
 };

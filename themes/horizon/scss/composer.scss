@@ -1,0 +1,121 @@
+@use "lib/viewport";
+
+#reply-control
+  .select-kit.dropdown-select-box.composer-actions
+  .select-kit-header {
+  border: 1px solid var(--tertiary-700);
+  background: var(--secondary);
+
+  &:hover {
+    .d-icon {
+      color: var(--accent-color);
+    }
+  }
+}
+
+#reply-control.hide-preview:not(.draft) {
+  @include viewport.from(sm) {
+    background: var(--d-content-background);
+    border-top-right-radius: var(--d-border-radius);
+    border-top-left-radius: var(--d-border-radius);
+
+    .grippie {
+      background: var(--tertiary-low);
+      border-top-right-radius: var(--d-border-radius);
+      border-top-left-radius: var(--d-border-radius);
+    }
+
+    .user-selector,
+    .title-and-category {
+      padding: 0 var(--spacing-inline-m);
+      width: calc(100% - var(--spacing-inline-m) * 2);
+    }
+
+    .d-editor-button-bar {
+      padding: 3px var(--spacing-inline-m);
+      border: none;
+    }
+
+    .d-editor-input {
+      padding: var(--spacing-inline-m);
+    }
+
+    &:has(.in-focus) .grippie {
+      background: var(--tertiary);
+    }
+
+    .reply-area {
+      padding-inline: 0;
+    }
+
+    .reply-to,
+    .submit-panel {
+      padding-inline: var(--spacing-inline-sm);
+    }
+
+    .d-editor-textarea-wrapper {
+      border: 0;
+      border-bottom: 1px solid var(--primary-low);
+      border-radius: 0;
+
+      &.in-focus {
+        outline: 0;
+      }
+    }
+  }
+}
+
+.d-editor-button-bar {
+  .btn:hover,
+  .toolbar-popup-menu-options.is-expanded {
+    .discourse-no-touch & {
+      background: var(--tertiary-very-low);
+      color: var(--accent-color);
+
+      .d-icon {
+        color: inherit;
+      }
+
+      // to have parity with regular select-kit styling used elsewhere
+      .select-kit-row {
+        .d-icon {
+          color: var(--primary-high);
+        }
+
+        &:hover {
+          .d-icon {
+            color: var(--primary);
+          }
+        }
+      }
+    }
+  }
+
+  .toolbar-popup-menu-options.is-expanded {
+    border-radius: var(--d-border-radius);
+  }
+}
+
+.discourse-no-touch .translation-selector-dropdown {
+  .select-kit-header.btn-default {
+    background: var(--background-color);
+  }
+}
+
+#reply-control.composer-action-add_translation {
+  .d-editor-preview .d-editor-translation-preview-wrapper {
+    border-color: var(--d-sidebar-border-color);
+  }
+
+  .d-editor-preview .d-editor-translation-preview-wrapper__header {
+    top: 6.5rem;
+    padding: 0.25rem 0.75rem;
+    background: var(--background-color);
+    color: var(--accent-color);
+    border-radius: var(--d-border-radius-large);
+  }
+
+  .topic-title-translator input {
+    width: 47.25vw;
+  }
+}

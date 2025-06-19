@@ -490,6 +490,7 @@ ru:
       created: "Вы добавили это сообщение в закладки: «%{name}»"
       created_generic: "Добавлено в закладки: «%{name}»"
       create: "Создать закладку"
+      clear_reminder: "Удалить напоминание"
       edit: "Изменить закладку"
       not_bookmarked: "добавить сообщение в закладки"
       remove_reminder_keep_bookmark: "Удалить напоминание, но оставить закладку"
@@ -2083,6 +2084,7 @@ ru:
           edit_link_options: "Измените параметры ссылки или отправьте по электронной почте."
           show_advanced: "Показать дополнительные параметры"
           hide_advanced: "Скрыть дополнительные параметры"
+          description: "Описание"
           restrict: "Ограничить"
           restrict_email: "Ограничить по адресу электронной почты"
           restrict_domain: "Ограничить по домену"
@@ -2806,7 +2808,8 @@ ru:
       italic_text: "текст, выделенный курсивом"
       link_title: "Ссылка"
       link_description: "Введите описание ссылки"
-      link_dialog_title: "Вставить ссылку"
+      link_dialog_action: "Вставить"
+      link_edit_action: "Обновить"
       link_optional_text: "необязательный текст ссылки"
       link_url_placeholder: "Вставьте URL или введите текст для поиска темы"
       blockquote_title: "Цитата"
@@ -2878,6 +2881,9 @@ ru:
       image_scale_button: "Масштабировать изображение до %{percent}%"
       delete_image_button: Удалить изображение
       toggle_image_grid: Сетка изображений
+      link_toolbar:
+        copy: "Копировать ссылку"
+        link_copied: "Ссылка скопирована!"
     notifications:
       tooltip:
         regular:
@@ -3977,6 +3983,8 @@ ru:
           actions: "Темы"
           edit: "Отредактировать"
           delete: "Удалить"
+        post_language_selector:
+          none: "Нет"
       errors:
         create: "Не удалось создать сообщение из-за ошибки. Попробуйте ещё раз."
         edit: "Не удалось изменить сообщение. Попробуйте ещё раз."

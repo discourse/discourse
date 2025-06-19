@@ -1867,6 +1867,7 @@ sq:
           edit_link_options: "Redaktoni opsionet e lidhjes ose dërgoni me email."
           show_advanced: "Shfaqni opsionet e avancuara"
           hide_advanced: "Fshihni opsionet e avancuara"
+          description: "Përshkrimi"
           restrict: "Kufizoni në"
           restrict_email: "Kufizoni në email"
           restrict_domain: "Kufizoni në domein"
@@ -2519,7 +2520,7 @@ sq:
       italic_text: "tekst i theksuar"
       link_title: "Lidhje"
       link_description: "shkruaj përshkrimin e lidhjes këtu"
-      link_dialog_title: "Vendosni një lidhje"
+      link_edit_action: "Përditëso"
       link_optional_text: "titull fakultativ"
       link_url_placeholder: "Ngjitni një URL ose shkruani për të kërkuar tema"
       blockquote_title: "Citim"
@@ -2591,6 +2592,9 @@ sq:
       image_scale_button: "Shkallezoni imazhin në %{percent}%"
       delete_image_button: Fshini imazhin
       toggle_image_grid: Ndryshoni rrjetin e imazhit
+      link_toolbar:
+        copy: "Kopjoni lidhjen"
+        link_copied: "Lidhja u kopjua!"
     notifications:
       tooltip:
         regular:
@@ -3425,6 +3429,8 @@ sq:
           actions: "Veprimet"
           edit: "Redaktoni"
           delete: "Fshij"
+        post_language_selector:
+          none: "Asnjë"
       errors:
         create: "Na vjen keq, por ndodhi një gabim gjatë hapjes së temës. Provojeni përsëri."
         edit: "Na vjen keq, ndodhi një gabim gjatë redaktimit të temës. Provojeni përsëri."

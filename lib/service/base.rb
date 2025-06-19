@@ -183,6 +183,9 @@ module Service
 
     # @!visibility private
     class ModelStep < Step
+      class NotFound < StandardError
+      end
+
       attr_reader :optional
 
       def initialize(name, method_name = name, class_name: nil, optional: nil)
@@ -192,9 +195,7 @@ module Service
 
       def run_step
         context[name] = super
-        if !optional && (!context[name] || context[name].try(:empty?))
-          raise ArgumentError, "Model not found"
-        end
+        raise NotFound if !optional && (!context[name] || context[name].try(:empty?))
         if context[name].try(:invalid?)
           context[result_key].fail(invalid: true)
           context.fail!
@@ -202,7 +203,10 @@ module Service
       rescue Failure, DefaultValuesNotAllowed
         raise
       rescue => exception
-        context[result_key].fail(exception:, not_found: true)
+        context[result_key].fail(
+          not_found: true,
+          exception: (exception unless exception.is_a?(NotFound)),
+        )
         context.fail!
       end
     end

@@ -22,10 +22,11 @@ class DiscourseLogstashLogger < Logger
   #   The proc is called with a hash of log event data and can be modified in place.
   #
   # @return [Logger] A new logger instance with the specified log device and type.
-  def self.logger(logdev:, type:, customize_event: nil)
+  def self.logger(logdev:, type:, customize_event: nil, level: Logger::INFO)
     logger = self.new(logdev)
     logger.type = type
     logger.customize_event = customize_event if customize_event
+    logger.level = level
     logger
   end
 

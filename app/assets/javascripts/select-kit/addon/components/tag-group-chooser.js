@@ -8,6 +8,7 @@ import {
   pluginApiIdentifiers,
   selectKitOptions,
 } from "select-kit/components/select-kit";
+import TagChooserRow from "./tag-chooser-row";
 
 @classNames("tag-group-chooser", "tag-chooser")
 @selectKitOptions({
@@ -21,7 +22,7 @@ export default class TagGroupChooser extends MultiSelectComponent {
   @service tagUtils;
 
   modifyComponentForRow() {
-    return "tag-chooser-row";
+    return TagChooserRow;
   }
 
   @computed("tagGroups.[]")

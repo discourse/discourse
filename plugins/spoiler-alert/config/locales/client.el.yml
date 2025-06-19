@@ -5,3 +5,7 @@
 # https://translate.discourse.org/
 
 el:
+  js:
+    spoiler:
+      label:
+        show: "Εμφάνιση κρυφού περιεχομένου"

@@ -148,9 +148,13 @@ export default class ChatStateManager extends Service {
     return !!(
       !this.isFullPagePreferred ||
       (this.site.desktopView &&
-        (!this._store.getObject(PREFERRED_MODE_KEY) ||
+        (this.hasNoPreferredMode ||
           this._store.getObject(PREFERRED_MODE_KEY) === DRAWER_CHAT))
     );
+  }
+
+  get hasNoPreferredMode() {
+    return !this._store.getObject(PREFERRED_MODE_KEY);
   }
 
   get isFullPageActive() {

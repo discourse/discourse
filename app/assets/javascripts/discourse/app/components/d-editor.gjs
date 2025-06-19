@@ -493,20 +493,6 @@ export default class DEditor extends Component {
   }
 
   @action
-  toolbarButton(button) {
-    if (this.disabled) {
-      return;
-    }
-
-    const toolbarEvent = this.newToolbarEvent(button.trimLeading);
-    if (button.sendAction) {
-      return button.sendAction(toolbarEvent);
-    } else {
-      button.perform(toolbarEvent);
-    }
-  }
-
-  @action
   showLinkModal(toolbarEvent) {
     if (this.disabled) {
       return;

@@ -8,6 +8,8 @@ import {
   pluginApiIdentifiers,
   selectKitOptions,
 } from "select-kit/components/select-kit";
+import SelectKitRow from "./select-kit/select-kit-row";
+import TagChooserRow from "./tag-chooser-row";
 
 @classNames("tag-chooser")
 @attributeBindings("categoryId")
@@ -38,10 +40,10 @@ export default class TagChooser extends MultiSelectComponent {
 
   modifyComponentForRow(collection, item) {
     if (this.getValue(item) === this.selectKit.filter && !item.count) {
-      return "select-kit/select-kit-row";
+      return SelectKitRow;
     }
 
-    return "tag-chooser-row";
+    return TagChooserRow;
   }
 
   @computed("site.can_create_tag", "allowCreate")
