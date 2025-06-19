@@ -466,6 +466,10 @@ export default class SignupPageController extends Controller {
     this.set("formSubmitted", true);
     return User.createAccount(attrs).then(
       (result) => {
+        if (this.isDestroying || this.isDestroyed) {
+          return;
+        }
+
         this.isDeveloper = false;
         if (result.success) {
           this.appEvents.trigger("signup:user-created", result);
