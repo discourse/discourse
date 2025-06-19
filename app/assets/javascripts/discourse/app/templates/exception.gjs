@@ -12,10 +12,7 @@ export default RouteTemplate(
   <template>
     <PluginOutlet
       @name="exception-wrapper"
-      @outletArgs={{lazyHash
-        thrown=this.thrown
-        reason=this.reason
-      }}
+      @outletArgs={{lazyHash thrown=this.thrown reason=this.reason}}
     >
       <div class="container">
         {{#if (and @controller.errorHtml @controller.isForbidden)}}
