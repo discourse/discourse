@@ -7,6 +7,16 @@
 
   &__preferences-hint {
     margin-top: 2rem;
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+
+    @include viewport.until(sm) {
+      position: absolute;
+      bottom: 3rem;
+      margin-inline: auto;
+      margin-top: 0;
+      left: 0;
+    }
   }
 
   &__image {
@@ -14,10 +24,14 @@
 
     svg {
       width: 200px;
+
+      @include viewport.until(sm) {
+        width: 65vw;
+      }
     }
 
     @include viewport.until(sm) {
-      margin-top: 2rem;
+      margin-top: 10vh;
     }
   }
 
