@@ -2515,7 +2515,7 @@ RSpec.describe SessionController do
       expect(response.parsed_body["redirect_url"]).to eq("/")
     end
 
-    it "redirects to /login when SSO and login_required" do
+    it "redirects to / when SSO and login_required" do
       SiteSetting.discourse_connect_url = "https://example.com/sso"
       SiteSetting.enable_discourse_connect = true
 
@@ -2530,7 +2530,7 @@ RSpec.describe SessionController do
       delete "/session/#{user.username}.json", xhr: true
       expect(response.status).to eq(200)
       expect(response.parsed_body["error"]).not_to be_present
-      expect(response.parsed_body["redirect_url"]).to eq("/login")
+      expect(response.parsed_body["redirect_url"]).to eq("/")
     end
 
     it "allows plugins to manipulate redirect URL" do
