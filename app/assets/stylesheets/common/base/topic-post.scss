@@ -635,6 +635,10 @@ aside.quote {
     @include post-aside;
     @include unselectable;
 
+    &[data-can-toggle-quote] {
+      cursor: pointer;
+    }
+
     // blockquote is underneath this and has top margin
     .avatar {
       margin-right: 0.5em;
@@ -681,7 +685,8 @@ aside.quote {
     margin-left: 0.3em;
   }
 
-  .quote-toggle {
+  .quote-toggle,
+  .back {
     padding: 0;
   }
 }

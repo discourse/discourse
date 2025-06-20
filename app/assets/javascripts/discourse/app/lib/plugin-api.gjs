@@ -482,7 +482,7 @@ class PluginApi {
    *   initialize() {
    *     withPluginApi("1.33.0", (api) => {
    *       api.addValueTransformerName("my-unique-transformer-name");
-   *     }),
+   *     });
    *   },
    * };
    *

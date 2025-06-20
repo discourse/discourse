@@ -5,7 +5,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
+import { TrackedArray, TrackedMap } from "@ember-compat/tracked-built-ins";
 import { TrackedAsyncData } from "ember-async-data";
 import { and, eq, not, or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
@@ -47,6 +47,8 @@ export default class Post extends Component {
   @tracked expandedFirstPost;
   @tracked repliesAbove;
   @tracked repliesBelow = new TrackedArray();
+
+  decoratorState = new TrackedMap();
 
   get additionalClasses() {
     return applyValueTransformer("post-class", [], {
@@ -375,6 +377,7 @@ export default class Post extends Component {
             actions=(hash
               updateTopicPageQueryParams=@updateTopicPageQueryParams
             )
+            decoratorState=this.decoratorState
             topicPageQueryParams=@topicPageQueryParams
           )
           as |postOutletArgs|
@@ -470,6 +473,7 @@ export default class Post extends Component {
                       <PostCookedHtml
                         @post={{@post}}
                         @highlightTerm={{@highlightTerm}}
+                        @decoratorState={{this.decoratorState}}
                       />
                     </PluginOutlet>
 

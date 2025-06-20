@@ -22,6 +22,9 @@ const shortcuts = {
   td: <template>
     <td ...attributes>{{yield}}</td>
   </template>,
+  aside: <template>
+    <aside ...attributes>{{yield}}</aside>
+  </template>,
 };
 
 /**

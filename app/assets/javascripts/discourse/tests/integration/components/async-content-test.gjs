@@ -324,7 +324,7 @@ module("Integration | Component | AsyncContent", function (hooks) {
   });
 
   module("<:error>", function () {
-    test("it displays an inline error dialog when the block is not provided", async function (assert) {
+    test("it displays an inline error when the block is not provided", async function (assert) {
       const promise = Promise.reject("error");
 
       await render(
@@ -366,6 +366,27 @@ module("Integration | Component | AsyncContent", function (hooks) {
 
       assert.dom(".error").exists();
       assert.dom(".error").hasText("error");
+    });
+
+    test("it passes the inline error message as a component when the promise is rejected", async function (assert) {
+      const promise = Promise.reject("error");
+
+      await render(
+        <template>
+          <AsyncContent @asyncData={{promise}}>
+            <:error as |error AsyncContentInlineErrorMessage|>
+              <div class="error">
+                <AsyncContentInlineErrorMessage />
+              </div>
+            </:error>
+          </AsyncContent>
+        </template>
+      );
+
+      assert.dom(".error").exists();
+
+      assert.dom(".alert-error").exists();
+      assert.dom(".alert-error").hasText("Sorry, an error has occurred.");
     });
 
     test("it does not display the block when the promise is resolved", async function (assert) {

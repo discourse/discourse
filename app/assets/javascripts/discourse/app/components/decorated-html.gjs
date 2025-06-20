@@ -57,9 +57,15 @@ export default class DecoratedHtml extends Component {
     {{~this.decoratedContent~}}
 
     {{~#each this.renderGlimmerInfos as |info|~}}
-      {{~#in-element info.element insertBefore=null~}}
-        <info.component @data={{info.data}} />
-      {{~/in-element~}}
+      {{~#if info.append}}
+        {{~#in-element info.element insertBefore=null~}}
+          <info.component @data={{info.data}} />
+        {{~/in-element~}}
+      {{~else}}
+        {{~#in-element info.element~}}
+          <info.component @data={{info.data}} />
+        {{~/in-element~}}
+      {{~/if}}
     {{~/each~}}
   </template>
 }
@@ -75,7 +81,7 @@ class DecorateHtmlHelper {
     this.#context = context;
   }
 
-  renderGlimmer(targetElement, component, data) {
+  renderGlimmer(targetElement, component, data, opts = {}) {
     if (!(targetElement instanceof Element)) {
       deprecated(
         "Invalid `targetElement` passed to `helper.renderGlimmer` while using `api.decorateCookedElement` with the Glimmer Post Stream. `targetElement` must be a valid HTML element. This call has been ignored to prevent errors.",
@@ -98,6 +104,7 @@ class DecorateHtmlHelper {
       element: targetElement,
       component,
       data,
+      append: opts.append ?? true,
     };
     this.#renderGlimmerInfos.push(info);
   }
