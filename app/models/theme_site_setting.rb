@@ -39,9 +39,9 @@ class ThemeSiteSetting < ActiveRecord::Base
   #
   # This is used to ensure that we don't try to load settings from Redis or
   # the database when they are not available.
-  def self.all
+  def self.safe_all
     return [] if !can_access_db?
-    super
+    all
   end
 
   def setting_rb_value

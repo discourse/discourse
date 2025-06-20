@@ -62,7 +62,9 @@ RSpec.describe Themes::ThemeSiteSettingManager do
 
       it "should publish changes to clients for client site settings" do
         message = MessageBus.track_publish("/client_settings") { result }.first
-        expect(message.data).to eq({ name: :enable_welcome_banner, value: false })
+        expect(message.data).to eq(
+          { name: :enable_welcome_banner, scoped_to: { theme_id: theme.id }, value: false },
+        )
       end
 
       it "sends a DiscourseEvent for the change" do
@@ -108,7 +110,9 @@ RSpec.describe Themes::ThemeSiteSettingManager do
 
       it "should publish changes to clients for client site settings" do
         message = MessageBus.track_publish("/client_settings") { result }.first
-        expect(message.data).to eq({ name: :enable_welcome_banner, value: false })
+        expect(message.data).to eq(
+          { name: :enable_welcome_banner, scoped_to: { theme_id: theme.id }, value: false },
+        )
       end
 
       it "sends a DiscourseEvent for the change" do
@@ -156,7 +160,9 @@ RSpec.describe Themes::ThemeSiteSettingManager do
 
       it "should publish changes to clients for client site settings" do
         message = MessageBus.track_publish("/client_settings") { result }.first
-        expect(message.data).to eq({ name: :enable_welcome_banner, value: true })
+        expect(message.data).to eq(
+          { name: :enable_welcome_banner, scoped_to: { theme_id: theme.id }, value: true },
+        )
       end
 
       it "sends a DiscourseEvent for the change" do

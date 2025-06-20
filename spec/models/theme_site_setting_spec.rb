@@ -9,9 +9,9 @@ RSpec.describe ThemeSiteSetting do
     Fabricate(:theme_site_setting, theme: theme, name: "search_experience", value: "search_field")
   end
 
-  describe "#all" do
-    it "returns all theme site settings" do
-      expect(ThemeSiteSetting.all).to match_array([theme_site_setting_1, theme_site_setting_2])
+  describe ".safe_all" do
+    it "returns.safe_all theme site settings" do
+      expect(ThemeSiteSetting.safe_all).to match_array([theme_site_setting_1, theme_site_setting_2])
     end
 
     context "when skipping redis" do
@@ -19,7 +19,7 @@ RSpec.describe ThemeSiteSetting do
 
       it "returns []" do
         GlobalSetting.skip_redis = true
-        expect(ThemeSiteSetting.all).to eq([])
+        expect(ThemeSiteSetting.safe_all).to eq([])
       end
     end
 
@@ -28,7 +28,7 @@ RSpec.describe ThemeSiteSetting do
 
       it "returns []" do
         GlobalSetting.skip_db = true
-        expect(ThemeSiteSetting.all).to eq([])
+        expect(ThemeSiteSetting.safe_all).to eq([])
       end
     end
 
@@ -42,7 +42,7 @@ RSpec.describe ThemeSiteSetting do
       end
 
       it "returns []" do
-        expect(ThemeSiteSetting.all).to eq([])
+        expect(ThemeSiteSetting.safe_all).to eq([])
       end
     end
   end

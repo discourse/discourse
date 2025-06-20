@@ -440,7 +440,7 @@ module SiteSettingExtension
       uploads.clear
 
       new_theme_site_settings = {}
-      ThemeSiteSetting.all.each do |tss|
+      ThemeSiteSetting.safe_all.each do |tss|
         new_theme_site_settings[tss.theme_id] ||= {}
         new_theme_site_settings[tss.theme_id][tss.name.to_sym] = type_supervisor.to_rb_value(
           tss.name,
