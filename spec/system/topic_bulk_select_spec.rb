@@ -44,7 +44,7 @@ describe "Topic bulk select", type: :system do
 
       topic_bulk_actions_modal.click_dismiss_confirm
 
-      expect(page).to have_text(I18n.t("js.topics.none.unread"))
+      expect(page).to have_text(I18n.t("js.topics.none.education.unread"))
     end
   end
 
@@ -66,7 +66,7 @@ describe "Topic bulk select", type: :system do
 
       topic_bulk_actions_modal.click_dismiss_confirm
 
-      expect(page).to have_text(I18n.t("js.topics.none.new"))
+      expect(page).to have_text(I18n.t("js.topics.none.education.new"))
     end
   end
 
