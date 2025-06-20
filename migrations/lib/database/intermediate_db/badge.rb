@@ -40,7 +40,7 @@ module Migrations::Database::IntermediateDB
       auto_revoke: nil,
       badge_grouping_id: nil,
       badge_type_id:,
-      created_at:,
+      created_at: nil,
       description: nil,
       enabled: nil,
       existing_id: nil,
