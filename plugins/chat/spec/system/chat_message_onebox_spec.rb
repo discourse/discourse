@@ -58,7 +58,7 @@ RSpec.describe "Chat message onebox", type: :system do
       chat_page.visit_channel(channel_1)
       channel_page.send_message("test message - https://example.com")
 
-      expect(channel_page).to have_selector(".chat-cooked a[target='_blank']", text: "example.com")
+      expect(page).to have_selector(".chat-cooked a[target='_blank']", text: "example.com")
     end
   end
 end
