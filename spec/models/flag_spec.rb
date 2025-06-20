@@ -81,28 +81,22 @@ RSpec.describe Flag, type: :model do
   end
 
   describe ".used_flag_ids" do
-    fab!(:post_action) { Fabricate(:post_action, post_action_type_id: PostActionType.types[:like]) }
-    fab!(:post_action_2) do
-      Fabricate(:post_action, post_action_type_id: PostActionType.types[:like])
-    end
-    fab!(:post_action_3) do
-      Fabricate(:post_action, post_action_type_id: PostActionType.types[:off_topic])
-    end
+    fab!(:used_by_post_action_flag) { Fabricate(:flag) }
+    fab!(:used_by_reviewable_score_flag) { Fabricate(:flag) }
+    fab!(:unused_flag) { Fabricate(:flag) }
+
+    fab!(:post_action) { Fabricate(:post_action, post_action_type_id: used_by_post_action_flag.id) }
+
     fab!(:reviewable_score) do
-      Fabricate(:reviewable_score, reviewable_score_type: PostActionType.types[:off_topic])
-    end
-    fab!(:reviewable_score_2) do
-      Fabricate(:reviewable_score, reviewable_score_type: PostActionType.types[:illegal])
+      Fabricate(:reviewable_score, reviewable_score_type: used_by_reviewable_score_flag.id)
     end
 
-    it "returns an array of unique flag ids" do
-      expect(Flag.used_flag_ids).to eq(
-        [
-          PostActionType.types[:like],
-          PostActionType.types[:off_topic],
-          PostActionType.types[:illegal],
-        ],
-      )
+    it "returns the ids of flags that are associated to a `PostAction` or `ReviewableScore`" do
+      expect(
+        Flag.used_flag_ids(
+          [used_by_post_action_flag.id, used_by_reviewable_score_flag.id, unused_flag.id],
+        ),
+      ).to contain_exactly(used_by_post_action_flag.id, used_by_reviewable_score_flag.id)
     end
   end
 end
