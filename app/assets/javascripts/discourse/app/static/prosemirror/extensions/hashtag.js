@@ -100,7 +100,7 @@ const extension = {
       }
     },
   },
-  plugins({ pmState: { Plugin, PluginKey } }) {
+  plugins({ pmState: { Plugin, PluginKey }, getContext }) {
     const key = new PluginKey("hashtag");
 
     return new Plugin({
@@ -136,7 +136,7 @@ const extension = {
             hashtagNodes.sort((a, b) => b.pos - a.pos);
 
             const updateHashtags = async () => {
-              await fetchHashtags(hashtagNames);
+              await fetchHashtags(hashtagNames, getContext());
 
               for (const hashtagNode of hashtagNodes) {
                 const { name, node, pos } = hashtagNode;
@@ -181,7 +181,7 @@ const extension = {
   },
 };
 
-async function fetchHashtags(hashtags) {
+async function fetchHashtags(hashtags, context) {
   const slugs = hashtags.filter(
     (tag) => !VALID_HASHTAGS.has(tag) && !INVALID_HASHTAGS.has(tag)
   );
@@ -190,19 +190,14 @@ async function fetchHashtags(hashtags) {
     return;
   }
 
-  const response = await ajax("/hashtags", {
-    data: { slugs, order: ["category", "channel", "tag"] },
-  });
+  const order = context.site.hashtag_configurations["topic-composer"];
+  const response = await ajax("/hashtags", { data: { slugs, order } });
 
   const validTags = Object.values(response || {})
     .flat()
     .filter(Boolean);
 
   validTags.forEach((tag) => {
-    if (tag.type === "channel") {
-      tag.style_type = "icon";
-    }
-
     VALID_HASHTAGS.set(tag.slug.toLowerCase(), tag);
     hashtags.splice(hashtags.indexOf(tag.slug), 1);
   });
