@@ -163,8 +163,8 @@ export default class PostQuotedContent extends Component {
         (if @quotedPostNotFound "quote-post-not-found")
         (if this.isQuotedPostIgnored "ignored-user")
       }}
-      data-expanded={{this.expanded}}
-      data-full={{@fullQuote}}
+      data-expanded="{{this.expanded}}"
+      data-full="{{@fullQuote}}"
       data-post={{@quotedPostNumber}}
       data-topic={{@quotedTopicId}}
       data-username={{@quotedUsername}}
