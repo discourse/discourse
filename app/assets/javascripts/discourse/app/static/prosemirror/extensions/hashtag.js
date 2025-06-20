@@ -164,8 +164,7 @@ const extension = {
                 const tagText = validHashtag?.text || name;
                 const hashtagTypeClass =
                   getHashtagTypeClasses()[validHashtag?.type];
-
-                let hashtagIconHTML = hashtagTypeClass
+                const hashtagIconHTML = hashtagTypeClass
                   .generateIconHTML(validHashtag)
                   .trim();
 
@@ -198,8 +197,8 @@ async function fetchHashtags(hashtags, context) {
     .filter(Boolean);
 
   validTags.forEach((tag) => {
-    VALID_HASHTAGS.set(tag.slug.toLowerCase(), tag);
-    hashtags.splice(hashtags.indexOf(tag.slug), 1);
+    VALID_HASHTAGS.set(tag.ref, tag);
+    hashtags.splice(hashtags.indexOf(tag.ref), 1);
   });
 
   // mark remaining hashtags as invalid to avoid repeated requests
