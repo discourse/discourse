@@ -305,7 +305,7 @@ export default class EmptyTopicFilter extends Component {
         </svg>
       </div>
 
-      <div class="empty-topic-filter_text">
+      <div class="empty-topic-filter__text">
         <p>{{this.educationText}}</p>
       </div>
 

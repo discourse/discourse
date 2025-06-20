@@ -19,7 +19,7 @@ acceptance("New Topics - New new view enabled", function (needs) {
   test("visiting new page when there are no new topics", async function (assert) {
     await visit("/new");
     assert
-      .dom(".topic-list-bottom .empty-topic-filter-education__text")
+      .dom(".topic-list-bottom .empty-topic-filter__text")
       .hasText(i18n("topics.none.education.new_new"));
   });
 });
