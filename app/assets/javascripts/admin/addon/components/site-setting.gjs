@@ -137,8 +137,7 @@ export default class SiteSettingComponent extends Component {
   }
 
   get settingName() {
-    const setting = this.setting;
-    return humanizedSettingName(setting.setting, setting.label);
+    return humanizedSettingName(this.setting.setting, this.setting.label);
   }
 
   get componentType() {
