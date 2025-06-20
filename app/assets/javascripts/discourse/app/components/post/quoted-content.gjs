@@ -156,6 +156,7 @@ export default class PostQuotedContent extends Component {
   }
 
   <template>
+    {{! template-lint-disable no-unnecessary-concat }}
     <this.OptionalWrapperComponent
       ...attributes
       class={{concatClass
@@ -163,6 +164,7 @@ export default class PostQuotedContent extends Component {
         (if @quotedPostNotFound "quote-post-not-found")
         (if this.isQuotedPostIgnored "ignored-user")
       }}
+      {{! forced quotes in the data-attributes below to cast the boolean values to string }}
       data-expanded="{{this.expanded}}"
       data-full="{{@fullQuote}}"
       data-post={{@quotedPostNumber}}
