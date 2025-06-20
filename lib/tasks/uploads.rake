@@ -545,7 +545,7 @@ def sync_access_control(async: true, concurrency: 10)
           Concurrent::Future.execute(executor:) do
             RailsMultisite::ConnectionManagement.with_connection(current_db) do
               begin
-                Discourse.store.update_upload_access_control(upload)
+                Discourse.store.update_upload_access_control(upload, remove_existing_acl: true)
               rescue => error
                 errors << "Error updating access control for upload #{upload.url}: #{error.message}"
               end
