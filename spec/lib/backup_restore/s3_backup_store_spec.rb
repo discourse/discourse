@@ -81,6 +81,8 @@ RSpec.describe BackupRestore::S3BackupStore do
           size: context.params[:body].size,
           last_modified: Time.zone.now,
         }
+
+        { etag: "test-etag" }
       end,
     )
 
