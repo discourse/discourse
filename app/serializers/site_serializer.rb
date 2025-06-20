@@ -76,10 +76,15 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def user_color_schemes
-    cache_fragment("user_color_schemes") do
-      schemes = ColorScheme.includes(:color_scheme_colors).where("user_selectable").order(:name)
+    cache_key = "user_color_schemes"
+
+    if SiteSetting.use_overhauled_theme_color_palette
+      cache_key += "_no_theme_owned"
+    end
+
+    cache_fragment(cache_key) do
       ActiveModel::ArraySerializer.new(
-        schemes,
+        object.user_color_schemes,
         each_serializer: ColorSchemeSelectableSerializer,
       ).as_json
     end

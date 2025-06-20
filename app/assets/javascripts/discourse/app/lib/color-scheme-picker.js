@@ -94,8 +94,62 @@ export function loadColorSchemeStylesheet(
   );
 }
 
-const COLOR_SCHEME_COOKIE_NAME = "color_scheme_id";
-const DARK_SCHEME_COOKIE_NAME = "dark_scheme_id";
+export async function previewColorPalette(paletteId, themeId) {
+  const themeIdSegment = themeId ? `/${themeId}` : "";
+  const data = await ajax(
+    `/color-scheme-stylesheet/${paletteId}${themeIdSegment}.json`,
+    {
+      data: {
+        include_dark_scheme: true,
+      },
+    }
+  );
+
+  const lightPreviewId = "palette-preview-light";
+  const darkPreviewId = "palette-preview-dark";
+
+  document.getElementById(lightPreviewId)?.remove();
+  document.getElementById(darkPreviewId)?.remove();
+
+  let lightPreviewLink;
+  let darkPreviewLink;
+
+  if (data?.new_href) {
+    lightPreviewLink = document.createElement("LINK");
+    lightPreviewLink.id = lightPreviewId;
+    lightPreviewLink.rel = "stylesheet";
+    lightPreviewLink.href = data.new_href;
+  }
+
+  if (data?.new_dark_href) {
+    darkPreviewLink = document.createElement("LINK");
+    darkPreviewLink.id = darkPreviewId;
+    darkPreviewLink.rel = "stylesheet";
+    darkPreviewLink.href = data.new_dark_href;
+  }
+
+  const mainLightLink = document.querySelector("link.light-scheme");
+  const mainDarkLink = document.querySelector("link.dark-scheme");
+
+  if (lightPreviewLink && darkPreviewLink) {
+    lightPreviewLink.media = "(prefers-color-scheme: light)";
+    darkPreviewLink.media = "(prefers-color-scheme: dark)";
+  } else if (lightPreviewLink) {
+    lightPreviewLink.media = "all";
+  } else if (darkPreviewLink) {
+    darkPreviewLink.media = "all";
+  }
+
+  if (lightPreviewLink) {
+    document.body.appendChild(lightPreviewLink);
+  }
+  if (darkPreviewLink) {
+    document.body.appendChild(darkPreviewLink);
+  }
+}
+
+export const COLOR_SCHEME_COOKIE_NAME = "color_scheme_id";
+export const DARK_SCHEME_COOKIE_NAME = "dark_scheme_id";
 const COOKIE_EXPIRY_DAYS = 365;
 
 export function updateColorSchemeCookie(id, options = {}) {

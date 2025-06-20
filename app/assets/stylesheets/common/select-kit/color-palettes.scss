@@ -16,6 +16,17 @@
           }
         }
       }
+
+      .color-palettes-preview-row {
+        display: flex;
+        gap: 10em;
+        padding: 1em;
+        background: var(--secondary);
+
+        .name {
+          color: var(--primary);
+        }
+      }
     }
   }
 }

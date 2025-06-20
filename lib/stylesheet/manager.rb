@@ -356,7 +356,14 @@ class Stylesheet::Manager
 
     if !color_scheme
       return if !fallback_to_base
-      color_scheme = get_theme(theme_id)&.color_scheme || ColorScheme.base
+
+      if SiteSetting.use_overhauled_theme_color_palette
+        color_scheme = get_theme(theme_id)&.owned_color_palette
+      else
+        color_scheme = get_theme(theme_id)&.color_scheme
+      end
+
+      color_scheme ||= ColorScheme.base
     end
 
     target = COLOR_SCHEME_STYLESHEET.to_sym

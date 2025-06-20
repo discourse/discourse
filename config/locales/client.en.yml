@@ -1387,6 +1387,14 @@ en:
       theme_default_on_all_devices: "Make this the default theme on all my devices"
       color_scheme_default_on_all_devices: "Set default color palette on all my devices"
       color_scheme: "Color Palette"
+      colors: "Colors"
+      palette: "Palette"
+      interface_mode: "Mode"
+      choose_palette: "Choose"
+      modes:
+        light: "Light"
+        dark: "Dark"
+        auto: "Auto"
       color_schemes:
         default_description: "Theme default"
         disable_dark_scheme: "Same as regular"

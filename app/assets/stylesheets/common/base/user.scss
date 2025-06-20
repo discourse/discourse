@@ -740,6 +740,11 @@
     display: flex;
   }
 
+  .color-palette .controls {
+    display: flex;
+    gap: var(--space-3);
+  }
+
   .control-subgroup {
     + .controls {
       clear: both;

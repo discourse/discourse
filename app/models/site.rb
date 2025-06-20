@@ -209,6 +209,15 @@ class Site
     Discourse.enabled_auth_providers
   end
 
+  def user_color_schemes
+    schemes = ColorScheme.includes(:color_scheme_colors).where("user_selectable").without_theme_owned_palettes.order(:name)
+
+    if SiteSetting.use_overhauled_theme_color_palette
+      schemes = schemes.where(theme_id: nil)
+    end
+    schemes
+  end
+
   def self.json_for(guardian)
     if guardian.anonymous? && SiteSetting.login_required
       return(

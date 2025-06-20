@@ -6,10 +6,11 @@ import { pluginApiIdentifiers, selectKitOptions } from "./select-kit";
 @classNames("color-palettes")
 @selectKitOptions({
   translatedNone: i18n("admin.customize.theme.default_light_scheme"),
+  rowComponent: "color-palettes/color-palettes-row",
 })
 @pluginApiIdentifiers(["color-palettes"])
 export default class ColorPalettes extends ComboBoxComponent {
   modifyComponentForRow() {
-    return "color-palettes/color-palettes-row";
+    return this.selectKit.options.rowComponent;
   }
 }

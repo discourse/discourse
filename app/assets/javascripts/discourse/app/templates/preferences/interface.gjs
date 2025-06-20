@@ -1,4 +1,4 @@
-import { fn, hash } from "@ember/helper";
+import { array, fn, hash } from "@ember/helper";
 import RouteTemplate from "ember-route-template";
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -7,6 +7,8 @@ import SaveControls from "discourse/components/save-controls";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
 import ComboBox from "select-kit/components/combo-box";
+import ColorPalettes from "select-kit/components/color-palettes";
+import ColorPalettesPreviewRow from "select-kit/components/color-palettes/color-palettes-preview-row";
 
 export default RouteTemplate(
   <template>
@@ -45,65 +47,118 @@ export default RouteTemplate(
     {{/if}}
 
     {{#if @controller.showColorSchemeSelector}}
-      <fieldset
-        class="control-group color-scheme"
-        data-setting-name="user-color-scheme"
-      >
-        <legend class="control-label">{{i18n "user.color_scheme"}}</legend>
-        <div class="controls">
-          <div class="control-subgroup light-color-scheme">
-            {{#if @controller.showDarkColorSchemeSelector}}
-              <div class="instructions">{{i18n
-                  "user.color_schemes.regular"
-                }}</div>
-            {{/if}}
-            <div class="controls">
-              <ComboBox
-                @content={{@controller.userSelectableColorSchemes}}
-                @value={{@controller.selectedColorSchemeId}}
-                @onChange={{@controller.loadColorScheme}}
-                @options={{hash
-                  translatedNone=@controller.selectedColorSchemeNoneLabel
-                  autoInsertNoneItem=@controller.showColorSchemeNoneItem
-                }}
-              />
-            </div>
-          </div>
-          {{#if @controller.showDarkColorSchemeSelector}}
-            <div class="control-subgroup dark-color-scheme">
-              <div class="instructions">{{i18n "user.color_schemes.dark"}}</div>
+      {{#if @controller.siteSettings.use_overhauled_theme_color_palette}}
+        <fieldset
+          class="control-group color-palette"
+          data-setting-name="user-color-palette"
+        >
+          <legend class="control-label">{{i18n "user.colors"}}</legend>
+          <div class="controls">
+            <div class="control-subgroup color-palette">
+              <div class="instructions">{{i18n "user.palette"}}</div>
               <div class="controls">
-                <ComboBox
-                  @content={{@controller.userSelectableDarkColorSchemes}}
-                  @value={{@controller.selectedDarkColorSchemeId}}
-                  @onChange={{@controller.loadDarkColorScheme}}
+                <ColorPalettes
+                  @content={{@controller.userSelectableColorSchemes}}
+                  @value={{@controller.selectedColorPaletteId}}
+                  @onChange={{@controller.startColorPalettePreview}}
+                  @options={{hash
+                    translatedNone=@controller.selectedColorSchemeNoneLabel
+                    rowComponent=ColorPalettesPreviewRow
+                  }}
                 />
               </div>
             </div>
-          {{/if}}
-        </div>
-        {{#if @controller.previewingColorScheme}}
+            <div class="control-subgroup color-mode">
+              <div class="instructions">{{i18n "user.interface_mode"}}</div>
+              <div class="controls">
+                <ComboBox
+                  @content={{@controller.MODE_OPTIONS}}
+                  @value={{@controller.selectedInterfaceMode}}
+                  @onChange={{@controller.onSelectedInterfaceModeChange}}
+                />
+              </div>
+            </div>
+          </div>
           {{#if @controller.previewingColorScheme}}
-            <DButton
-              @action={{@controller.undoColorSchemePreview}}
-              @label="user.color_schemes.undo"
-              @icon="arrow-rotate-left"
-              class="btn-default btn-small undo-preview"
-            />
+            {{#if @controller.previewingColorScheme}}
+              <DButton
+                @action={{@controller.undoColorSchemePreview}}
+                @label="user.color_schemes.undo"
+                @icon="arrow-rotate-left"
+                class="btn-default btn-small undo-preview"
+              />
+            {{/if}}
+            <div class="controls color-scheme-checkbox">
+              <PreferenceCheckbox
+                @labelKey="user.color_scheme_default_on_all_devices"
+                @checked={{@controller.makeColorSchemeDefault}}
+              />
+            </div>
           {{/if}}
-          <div class="controls color-scheme-checkbox">
-            <PreferenceCheckbox
-              @labelKey="user.color_scheme_default_on_all_devices"
-              @checked={{@controller.makeColorSchemeDefault}}
-            />
+        </fieldset>
+      {{else}}
+        <fieldset
+          class="control-group color-scheme"
+          data-setting-name="user-color-scheme"
+        >
+          <legend class="control-label">{{i18n "user.color_scheme"}}</legend>
+          <div class="controls">
+            <div class="control-subgroup light-color-scheme">
+              {{#if @controller.showDarkColorSchemeSelector}}
+                <div class="instructions">{{i18n
+                    "user.color_schemes.regular"
+                  }}</div>
+              {{/if}}
+              <div class="controls">
+                <ComboBox
+                  @content={{@controller.userSelectableColorSchemes}}
+                  @value={{@controller.selectedColorSchemeId}}
+                  @onChange={{@controller.loadColorScheme}}
+                  @options={{hash
+                    translatedNone=@controller.selectedColorSchemeNoneLabel
+                    autoInsertNoneItem=@controller.showColorSchemeNoneItem
+                  }}
+                />
+              </div>
+            </div>
+            {{#if @controller.showDarkColorSchemeSelector}}
+              <div class="control-subgroup dark-color-scheme">
+                <div class="instructions">{{i18n
+                    "user.color_schemes.dark"
+                  }}</div>
+                <div class="controls">
+                  <ComboBox
+                    @content={{@controller.userSelectableDarkColorSchemes}}
+                    @value={{@controller.selectedDarkColorSchemeId}}
+                    @onChange={{@controller.loadDarkColorScheme}}
+                  />
+                </div>
+              </div>
+            {{/if}}
           </div>
-        {{/if}}
-        {{#if @controller.showDarkColorSchemeSelector}}
-          <div class="instructions">
-            {{i18n "user.color_schemes.dark_instructions"}}
-          </div>
-        {{/if}}
-      </fieldset>
+          {{#if @controller.previewingColorScheme}}
+            {{#if @controller.previewingColorScheme}}
+              <DButton
+                @action={{@controller.undoColorSchemePreview}}
+                @label="user.color_schemes.undo"
+                @icon="arrow-rotate-left"
+                class="btn-default btn-small undo-preview"
+              />
+            {{/if}}
+            <div class="controls color-scheme-checkbox">
+              <PreferenceCheckbox
+                @labelKey="user.color_scheme_default_on_all_devices"
+                @checked={{@controller.makeColorSchemeDefault}}
+              />
+            </div>
+          {{/if}}
+          {{#if @controller.showDarkColorSchemeSelector}}
+            <div class="instructions">
+              {{i18n "user.color_schemes.dark_instructions"}}
+            </div>
+          {{/if}}
+        </fieldset>
+      {{/if}}
     {{/if}}
 
     {{#if @controller.showDarkModeToggle}}

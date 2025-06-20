@@ -8,6 +8,9 @@ import {
   listColorSchemes,
   loadColorSchemeStylesheet,
   updateColorSchemeCookie,
+  COLOR_SCHEME_COOKIE_NAME,
+  DARK_SCHEME_COOKIE_NAME,
+  previewColorPalette,
 } from "discourse/lib/color-scheme-picker";
 import { propertyEqual } from "discourse/lib/computed";
 import discourseComputed from "discourse/lib/decorators";
@@ -19,6 +22,8 @@ import {
 import { setDefaultHomepage } from "discourse/lib/utilities";
 import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
 import { i18n } from "discourse-i18n";
+import cookie, { removeCookie } from "discourse/lib/cookie";
+import { tracked } from "@glimmer/tracking";
 
 // same as UserOption::HOMEPAGES
 const USER_HOMES = {
@@ -35,14 +40,38 @@ const USER_HOMES = {
 const TEXT_SIZES = ["smallest", "smaller", "normal", "larger", "largest"];
 const TITLE_COUNT_MODES = ["notifications", "contextual"];
 
+const AUTO_MODE = 1;
+const LIGHT_MODE = 2;
+const DARK_MODE = 3;
+
+const MODE_OPTIONS = [
+  {
+    name: i18n("user.modes.light"),
+    id: LIGHT_MODE,
+    icon: "sun",
+  },
+  {
+    name: i18n("user.modes.dark"),
+    id: DARK_MODE,
+    icon: "moon",
+  },
+  {
+    name: i18n("user.modes.auto"),
+    id: AUTO_MODE,
+    icon: "circle-half-stroke",
+  },
+];
+
 export default class InterfaceController extends Controller {
   @service session;
+  @service interfaceColor;
   @controller("preferences") preferencesController;
 
   currentThemeId = currentThemeId();
   previewingColorScheme = false;
   selectedDarkColorSchemeId = null;
   makeColorSchemeDefault = true;
+  MODE_OPTIONS = MODE_OPTIONS;
 
   @propertyEqual("model.id", "currentUser.id") canPreviewColorScheme;
   subpageTitle = i18n("user.preferences_nav.interface");
@@ -58,6 +87,36 @@ export default class InterfaceController extends Controller {
     this.set("selectedDarkColorSchemeId", this.session.userDarkSchemeId);
     this.set("selectedColorSchemeId", this.getSelectedColorSchemeId());
   }
+
+  @tracked selectedColorPaletteId = (() => {
+    const id = parseInt(
+      cookie("color_palette_id") || this.model.user_option.color_palette_id,
+      10
+    );
+
+    if (id) {
+      for (const palette of this.userSelectableColorSchemes || []) {
+        if (palette.id === id) {
+          return id;
+        }
+      }
+    }
+    return null;
+  })();
+
+  @tracked selectedInterfaceMode = (() => {
+    let localMode;
+
+    if (this.interfaceColor.lightModeForced) {
+      localMode = LIGHT_MODE;
+    } else if (this.interfaceColor.darkModeForced) {
+      localMode = DARK_MODE;
+    }
+
+    return (
+      localMode || this.model.user_option.interface_color_mode || AUTO_MODE
+    );
+  })();
 
   @discourseComputed("makeThemeDefault")
   saveAttrNames(makeThemeDefault) {
@@ -77,10 +136,14 @@ export default class InterfaceController extends Controller {
       "title_count_mode",
       "skip_new_user_tips",
       "seen_popups",
-      "color_scheme_id",
-      "dark_scheme_id",
       "bookmark_auto_delete_preference",
     ];
+
+    if (this.siteSettings.use_overhauled_theme_color_palette) {
+      attrs.push("color_palette_id");
+    } else {
+      attrs.push("color_scheme_id", "dark_scheme_id");
+    }
 
     if (makeThemeDefault) {
       attrs.push("theme_ids");
@@ -286,29 +349,36 @@ export default class InterfaceController extends Controller {
       this.set("model.user_option.text_size", this.textSize);
     }
 
-    if (!this.showColorSchemeSelector) {
-      this.set("model.user_option.color_scheme_id", null);
-    } else if (this.makeColorSchemeDefault) {
-      this.set("model.user_option.color_scheme_id", this.selectedColorSchemeId);
-    }
-
-    if (this.showDarkModeToggle) {
-      this.set(
-        "model.user_option.dark_scheme_id",
-        this.enableDarkMode ? null : -1
-      );
+    if (this.siteSettings.use_overhauled_theme_color_palette) {
+      // something here
     } else {
-      // if chosen dark scheme matches site dark scheme, no need to store
-      if (
-        this.defaultDarkSchemeId > 0 &&
-        this.selectedDarkColorSchemeId === this.defaultDarkSchemeId
-      ) {
-        this.set("model.user_option.dark_scheme_id", null);
-      } else {
+      if (!this.showColorSchemeSelector) {
+        this.set("model.user_option.color_scheme_id", null);
+      } else if (this.makeColorSchemeDefault) {
+        this.set(
+          "model.user_option.color_scheme_id",
+          this.selectedColorSchemeId
+        );
+      }
+
+      if (this.showDarkModeToggle) {
         this.set(
           "model.user_option.dark_scheme_id",
-          this.selectedDarkColorSchemeId
+          this.enableDarkMode ? null : -1
         );
+      } else {
+        // if chosen dark scheme matches site dark scheme, no need to store
+        if (
+          this.defaultDarkSchemeId > 0 &&
+          this.selectedDarkColorSchemeId === this.defaultDarkSchemeId
+        ) {
+          this.set("model.user_option.dark_scheme_id", null);
+        } else {
+          this.set(
+            "model.user_option.dark_scheme_id",
+            this.selectedDarkColorSchemeId
+          );
+        }
       }
     }
 
@@ -374,6 +444,24 @@ export default class InterfaceController extends Controller {
     // Force refresh when leaving this screen
     this.session.requiresRefresh = true;
     this.set("textSize", newSize);
+  }
+
+  @action
+  startColorPalettePreview(paletteId) {
+    this.selectedColorPaletteId = paletteId;
+    previewColorPalette(paletteId);
+  }
+
+  @action
+  onSelectedInterfaceModeChange(newMode) {
+    this.selectedInterfaceMode = newMode;
+    if (newMode === AUTO_MODE) {
+      this.interfaceColor.removeColorModeOverride();
+    } else if (newMode === LIGHT_MODE) {
+      this.interfaceColor.forceLightMode();
+    } else if (newMode === DARK_MODE) {
+      this.interfaceColor.forceDarkMode();
+    }
   }
 
   @action

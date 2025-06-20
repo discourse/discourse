@@ -431,7 +431,7 @@ module ApplicationHelper
   def application_logo_dark_url
     @application_logo_dark_url ||=
       begin
-        if dark_scheme_id != -1
+        if [-1, nil].exclude?(dark_scheme_id)
           if mobile_view? && SiteSetting.site_mobile_logo_dark_url != application_logo_url
             SiteSetting.site_mobile_logo_dark_url
           elsif !mobile_view? && SiteSetting.site_logo_dark_url != application_logo_url
@@ -569,8 +569,14 @@ module ApplicationHelper
   def scheme_id
     return @scheme_id if defined?(@scheme_id)
 
-    custom_user_scheme_id = cookies[:color_scheme_id] || current_user&.user_option&.color_scheme_id
+    if SiteSetting.use_overhauled_theme_color_palette
+      custom_user_scheme_id = cookies[:color_palette_id] || current_user&.user_option&.color_palette_id
+    else
+      custom_user_scheme_id = cookies[:color_scheme_id] || current_user&.user_option&.color_scheme_id
+    end
+
     if custom_user_scheme_id && ColorScheme.find_by_id(custom_user_scheme_id)
+      @scheme_id = custom_user_scheme_id
       return custom_user_scheme_id
     end
 
@@ -676,7 +682,7 @@ module ApplicationHelper
       fallback_to_base: true,
     )
 
-    if dark_scheme_id != -1
+    if [-1, nil].exclude?(dark_scheme_id)
       result << stylesheet_manager.color_scheme_stylesheet_preload_tag(
         dark_scheme_id,
         dark: SiteSetting.use_overhauled_theme_color_palette,
@@ -693,7 +699,7 @@ module ApplicationHelper
     add_resource_preload_list(light_href, "style")
 
     dark_href = nil
-    if dark_scheme_id != -1
+    if [-1, nil].exclude?(dark_scheme_id)
       dark_href =
         stylesheet_manager.color_scheme_stylesheet_link_tag_href(
           dark_scheme_id,
@@ -726,7 +732,7 @@ module ApplicationHelper
 
   def discourse_theme_color_meta_tags
     result = +""
-    if dark_scheme_id != -1
+    if [-1, nil].exclude?(dark_scheme_id)
       result << <<~HTML
         <meta name="theme-color" media="#{light_elements_media_query}" content="##{light_color_hex_for_name("header_background")}">
         <meta name="theme-color" media="#{dark_elements_media_query}" content="##{dark_color_hex_for_name("header_background")}">
@@ -741,7 +747,7 @@ module ApplicationHelper
 
   def discourse_color_scheme_meta_tag
     scheme =
-      if dark_scheme_id == -1
+      if [-1, nil].include?(dark_scheme_id)
         # no automatic client-side switching
         dark_color_scheme? ? "dark" : "light"
       else
@@ -765,7 +771,7 @@ module ApplicationHelper
 
   def forced_dark_mode?
     InterfaceColorSelectorSetting.enabled? && cookies[:forced_color_mode] == "dark" &&
-      dark_scheme_id != -1
+      [-1, nil].exclude?(dark_scheme_id)
   end
 
   def light_color_hex_for_name(name)
