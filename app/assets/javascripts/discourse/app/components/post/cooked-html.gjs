@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
+import { TrackedMap } from "@ember-compat/tracked-built-ins";
 import curryComponent from "ember-curry-component";
 import DecoratedHtml from "discourse/components/decorated-html";
 import { bind } from "discourse/lib/decorators";
@@ -32,7 +32,7 @@ export default class PostCookedHtml extends Component {
 
   @tracked highlighted = false;
   #pendingDecoratorCleanup = [];
-  #decoratorState = this.args.decoratorState || new TrackedObject();
+  #decoratorState = this.args.decoratorState || new TrackedMap();
 
   willDestroy() {
     super.willDestroy(...arguments);
@@ -50,8 +50,9 @@ export default class PostCookedHtml extends Component {
     [...POST_COOKED_DECORATORS, ...this.extraDecorators].forEach(
       (decorator) => {
         try {
-          const decoratorState = (this.#decoratorState[decorator] ??=
-            new TrackedObject());
+          const decoratorState = this.#decoratorState.has(decorator)
+            ? this.#decoratorState.get(decorator)
+            : new TrackedMap();
 
           const owner = getOwner(this);
           const renderNestedPostCookedHtml = (

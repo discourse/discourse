@@ -23,7 +23,7 @@ export default class PostQuotedContent extends Component {
 
   @tracked
   expanded =
-    this.args.decoratorState?.[`${this.args.quoteId}--expanded`] ??
+    this.args.decoratorState?.get(`${this.args.quoteId}--expanded`) ??
     this.args.expanded ??
     false;
 
@@ -38,7 +38,7 @@ export default class PostQuotedContent extends Component {
     });
   };
 
-  #quotedPost = this.args.decoratorState?.[`${this.args.quoteId}--post`];
+  #quotedPost = this.args.decoratorState?.get(`${this.args.quoteId}--post`);
   #wrapperElement;
 
   get extraDecorators() {
@@ -101,9 +101,7 @@ export default class PostQuotedContent extends Component {
     }
 
     this.#quotedPost = post;
-    if (this.args.decoratorState) {
-      this.args.decoratorState[`${this.args.quoteId}--post`] = post;
-    }
+    this.args.decoratorState?.set(`${this.args.quoteId}--post`, post);
 
     return post;
   }
@@ -125,10 +123,10 @@ export default class PostQuotedContent extends Component {
   @action
   toggleExpanded() {
     this.expanded = !this.expanded;
-    if (this.args.decoratorState) {
-      this.args.decoratorState[`${this.args.quoteId}--expanded`] =
-        this.expanded;
-    }
+    this.args.decoratorState?.set(
+      `${this.args.quoteId}--expanded`,
+      this.expanded
+    );
   }
 
   get WrapperComponent() {
