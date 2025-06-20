@@ -10,6 +10,25 @@
 class ThemeSiteSetting < ActiveRecord::Base
   belongs_to :theme
 
+  def self.themes_with_overridden_settings
+    sql = <<~SQL
+      SELECT theme.id AS theme_id, theme.name AS theme_name,
+        tss.name AS setting_name, tss.value, tss.data_type
+      FROM themes theme
+      INNER JOIN theme_site_settings tss ON theme.id = tss.theme_id
+      WHERE theme.component = false AND tss.name IN (:setting_names)
+      ORDER BY tss.name, theme.name
+    SQL
+
+    DB
+      .query(sql, setting_names: SiteSetting.themeable_site_settings)
+      .each do |row|
+        row.setting_name = row.setting_name.to_sym
+        row.value =
+          SiteSetting.type_supervisor.to_rb_value(row.setting_name, row.value, row.data_type)
+      end
+  end
+
   def self.can_access_db?
     !GlobalSetting.skip_redis? && !GlobalSetting.skip_db? &&
       ActiveRecord::Base.connection.table_exists?(self.table_name)

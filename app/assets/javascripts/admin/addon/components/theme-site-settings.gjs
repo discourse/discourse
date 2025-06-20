@@ -99,10 +99,10 @@ export default class ThemeSiteSettings extends Component {
                       }}</p>
                     <div
                       class="setting-description"
-                    >{{overrides.setting_description}}</div>
+                    >{{overrides.description}}</div>
                   </td>
                   <td class="admin-theme-site-settings-row__default">
-                    {{overrides.setting_default}}
+                    {{overrides.default}}
                   </td>
                   <td class="admin-theme-site-settings-row__overridden">
                     {{#each overrides.themes as |theme|}}

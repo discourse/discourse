@@ -174,7 +174,7 @@ module SiteSettingExtension
     ""
   end
 
-  def theme_site_setting_hash(setting)
+  def setting_metadata_hash(setting)
     setting_hash = {
       setting:,
       default: SiteSetting.defaults[setting].to_s,

@@ -38,7 +38,7 @@ class ThemeSiteSettingResolver
     SiteSetting
       .themeable_site_settings
       .each_with_object([]) do |setting, settings|
-        setting_hash = SiteSetting.theme_site_setting_hash(setting)
+        setting_hash = SiteSetting.setting_metadata_hash(setting)
 
         # If the setting has been saved in the DB, it means the theme has changed
         # it in about.json on import, or the admin has changed it manually later on.
