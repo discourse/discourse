@@ -11,38 +11,46 @@ module(
     hooks.beforeEach(function () {
       pretender.get("/hashtags", () =>
         response({
-          dev: [
+          tags: [
             {
               type: "tag",
-              slug: "dev",
+              ref: "dev",
               icon: "tag",
               id: 1,
             },
           ],
-          product: [
+          categories: [
             {
               type: "category",
+              ref: "product",
               style_type: "square",
-              slug: "product",
               id: 2,
             },
-          ],
-          coffee: [
             {
               type: "category",
+              ref: "coffee",
               emoji: "coffee",
               style_type: "emoji",
-              slug: "coffee",
               id: 3,
             },
-          ],
-          discuss: [
             {
               type: "category",
+              ref: "discuss",
               icon: "comment",
               style_type: "icon",
-              slug: "discuss",
               id: 4,
+            },
+          ],
+          channels: [
+            {
+              type: "channel",
+              text: "Product",
+              slug: "product",
+              colors: ["ff0000"],
+              ref: "product::channel",
+              icon: "comment",
+              style_type: "icon",
+              id: 5,
             },
           ],
         })
@@ -84,6 +92,11 @@ module(
         "Lets #discuss",
         '<p>Lets <a class="hashtag-cooked" data-name="discuss" data-processed="true" data-valid="true" contenteditable="false" draggable="true"><span class=\"hashtag-category-icon hashtag-color--category-4\"><svg class=\"fa d-icon d-icon-comment svg-icon svg-string\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><use href=\"#comment\"></use></svg></span>discuss</a></p>',
         "Lets #discuss",
+      ],
+      "hashtag with context": [
+        "Lets #product::channel",
+        '<p>Lets <a class="hashtag-cooked" data-name="product::channel" data-processed="true" data-valid="true" contenteditable="false" draggable="true"><span class=\"hashtag-channel-icon hashtag-color--category-5\"><svg class=\"fa d-icon d-icon-comment svg-icon svg-string\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><use href=\"#comment\"></use></svg></span>Product</a></p>',
+        "Lets #product::channel",
       ],
     };
 

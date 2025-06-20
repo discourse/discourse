@@ -163,7 +163,7 @@ const extension = {
                 // decorate valid hashtags based on their type
                 const tagText = validHashtag?.text || name;
                 const hashtagTypeClass =
-                  getHashtagTypeClasses()[validHashtag?.type];
+                  getHashtagTypeClasses()[validHashtag.type];
                 const hashtagIconHTML = hashtagTypeClass
                   .generateIconHTML(validHashtag)
                   .trim();
