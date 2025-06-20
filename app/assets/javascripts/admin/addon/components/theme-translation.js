@@ -1,23 +1,29 @@
-import { alias } from "@ember/object/computed";
 import { ajax } from "discourse/lib/ajax";
-import { url } from "discourse/lib/computed";
+import getURL from "discourse/lib/get-url";
 import SiteSettingComponent from "./site-setting";
 
 export default class ThemeTranslation extends SiteSettingComponent {
-  @alias("translation") setting;
-  @alias("translation.key") settingName;
-  @url("model.id", "/admin/themes/%@") updateUrl;
+  //@alias("args.translation") setting;
+  //@alias("args.translation.key") settingName;
 
   type = "string";
 
+  get setting() {
+    return this.args.translation;
+  }
+
+  get settingName() {
+    return this.args.translation.key;
+  }
+
   _save() {
     const translations = {
-      [this.get("translation.key")]: this.get("buffered.value"),
+      [this.args.translation.key]: this.buffered.get("value"),
     };
 
-    return ajax(this.updateUrl, {
+    return ajax(getURL(`/admin/themes/${this.args.model.id}`), {
       type: "PUT",
-      data: { theme: { translations, locale: this.get("model.locale") } },
+      data: { theme: { translations, locale: this.args.model.locale } },
     });
   }
 }

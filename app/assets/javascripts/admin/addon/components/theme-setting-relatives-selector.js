@@ -8,7 +8,8 @@ export default class ThemeSettingRelativesSelectorComponent extends SiteSettingC
   }
 
   convertNamesToIds() {
-    return this.get("buffered.value")
+    return this.buffered
+      .get("value")
       .split("|")
       .filter(Boolean)
       .map((themeName) => {
