@@ -3,8 +3,8 @@ import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
+import { modifier as modifierFn } from "ember-modifier";
 import { eq, lt, or } from "truth-helpers";
 import AsyncContent from "discourse/components/async-content";
 import DButton from "discourse/components/d-button";
@@ -23,9 +23,30 @@ export default class PostQuotedContent extends Component {
 
   @tracked
   expanded =
-    this.args.decoratorState?.get(`${this.args.id}--expanded`) ??
+    this.args.decoratorState?.get(this.stateExpandedId) ??
     this.args.expanded ??
     false;
+
+  ensureWrapperDataAttributes = modifierFn((_, [target], data) => {
+    const attributes = Object.entries(data);
+    if (!target || attributes.length === 0) {
+      return null;
+    }
+
+    const originalValues = {};
+
+    attributes.forEach(([key, value]) => {
+      originalValues[key] = target.dataset[key];
+      target.dataset[key] = value;
+    });
+
+    return () => {
+      // restore the original values
+      Object.entries(originalValues).forEach(([key, value]) => {
+        target.dataset[key] = value;
+      });
+    };
+  });
 
   #highlightOriginalText = (cookedElement) => {
     if (!this.expanded) {
@@ -38,8 +59,7 @@ export default class PostQuotedContent extends Component {
     });
   };
 
-  #quotedPost = this.args.decoratorState?.get(`${this.args.id}--post`);
-  #wrapperElement;
+  #quotedPost = this.args.decoratorState?.get(this.statePostId);
 
   get extraDecorators() {
     return [
@@ -76,8 +96,12 @@ export default class PostQuotedContent extends Component {
     return this.args.id && !this.args.fullQuote && !this.isQuotedPostIgnored;
   }
 
-  get wrapperElement() {
-    return this.args.wrapperElement ?? this.#wrapperElement;
+  get stateExpandedId() {
+    return `${this.args.id}--expanded`;
+  }
+
+  get statePostId() {
+    return `${this.args.id}--post`;
   }
 
   @action
@@ -101,7 +125,7 @@ export default class PostQuotedContent extends Component {
     }
 
     this.#quotedPost = post;
-    this.args.decoratorState?.set(`${this.args.id}--post`, post);
+    this.args.decoratorState?.set(this.statePostId, post);
 
     return post;
   }
@@ -116,38 +140,36 @@ export default class PostQuotedContent extends Component {
   }
 
   @action
-  setWrapperElement(wrapperElement) {
-    this.#wrapperElement = wrapperElement;
-  }
-
-  @action
   toggleExpanded() {
     this.expanded = !this.expanded;
-    this.args.decoratorState?.set(`${this.args.id}--expanded`, this.expanded);
+    this.args.decoratorState?.set(this.stateExpandedId, this.expanded);
   }
 
-  get WrapperComponent() {
+  get OptionalWrapperComponent() {
     return this.args.wrapperElement ? element("") : element("aside");
   }
 
   <template>
-    <this.WrapperComponent
+    <this.OptionalWrapperComponent
       ...attributes
       class={{concatClass
         "quote"
         (if @quotedPostNotFound "quote-post-not-found")
+        (if this.isQuotedPostIgnored "ignored-user")
       }}
-      data-username={{@quotedUsername}}
+      data-expanded="{{this.expanded}}"
+      data-full="{{@fullQuote}}"
       data-post={{@quotedPostNumber}}
       data-topic={{@quotedTopicId}}
-      data-full={{@fullQuote}}
-      {{didInsert this.setWrapperElement}}
+      data-username={{@quotedUsername}}
     >
-      {{! `this.WrapperComponent` can be empty to render only the children while decorating cooked content.
-          that's why we're adding the class this way}}
-      {{~#if this.isQuotedPostIgnored~}}
-        {{elementClass "ignored-user" target=this.wrapperElement}}
-      {{~/if~}}
+      {{! `this.OptionalWrapperComponent` can be empty to render only the children while decorating cooked content.
+          we need to handle the attributtes below in the existing wrapper received as @wrapperElement in this case }}
+      {{#if @wrapperElement}}
+        {{~#if this.isQuotedPostIgnored~}}
+          {{elementClass "ignored-user" target=@wrapperElement}}
+        {{~/if~}}
+      {{/if}}
       <div
         class="title"
         data-has-quote-controls={{or
@@ -158,6 +180,10 @@ export default class PostQuotedContent extends Component {
         {{(if
           this.shouldDisplayToggleButton (modifier on "click" this.onClickTitle)
         )}}
+        {{this.ensureWrapperDataAttributes
+          @wrapperElement
+          expanded=this.expanded
+        }}
       >
         {{~#if (has-block "title")~}}
           {{~yield to="title"~}}
@@ -244,6 +270,6 @@ export default class PostQuotedContent extends Component {
           {{~/if~}}
         {{~/unless~}}
       </blockquote>
-    </this.WrapperComponent>
+    </this.OptionalWrapperComponent>
   </template>
 }
