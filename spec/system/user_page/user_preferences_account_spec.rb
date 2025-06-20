@@ -68,28 +68,30 @@ describe "User preferences | Account", type: :system do
     end
 
     it "shows provider names without links when provider_url is not implemented" do
-      authenticator =
-        Class
-          .new(Auth::ManagedAuthenticator) do
-            def name
-              "test_no_url"
+      begin
+        authenticator =
+          Class
+            .new(Auth::ManagedAuthenticator) do
+              def name
+                "test_no_url"
+              end
+
+              def enabled?
+                true
+              end
             end
+            .new
 
-            def enabled?
-              true
-            end
-          end
-          .new
+        provider = Auth::AuthProvider.new(authenticator:, icon: "flash")
+        DiscoursePluginRegistry.register_auth_provider(provider)
 
-      provider = Auth::AuthProvider.new(authenticator:, icon: "flash")
-      DiscoursePluginRegistry.register_auth_provider(provider)
+        user_account_preferences_page.visit(user)
 
-      user_account_preferences_page.visit(user)
-
-      name = find(".pref-associated-accounts table tr.test-no-url .associated-account__name")
-      expect(name).not_to have_css("a")
-
-      DiscoursePluginRegistry.reset!
+        name = find(".pref-associated-accounts table tr.test-no-url .associated-account__name")
+        expect(name).not_to have_css("a")
+      ensure
+        DiscoursePluginRegistry.reset!
+      end
     end
   end
 end

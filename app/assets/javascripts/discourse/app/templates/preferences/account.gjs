@@ -169,7 +169,11 @@ export default RouteTemplate(
                     <td>
                       <div class="associated-account__name">
                         {{#if authProvider.method.provider_url}}
-                          <a href={{authProvider.method.provider_url}}>
+                          <a
+                            href={{authProvider.method.provider_url}}
+                            rel="noopener noreferrer"
+                            target="_blank"
+                          >
                             {{authProvider.method.prettyName}}
                           </a>
                         {{else}}
@@ -213,7 +217,11 @@ export default RouteTemplate(
                     <td>
                       <div class="associated-account__name">
                         {{#if authProvider.method.provider_url}}
-                          <a href={{authProvider.method.provider_url}}>
+                          <a
+                            href={{authProvider.method.provider_url}}
+                            rel="noopener noreferrer"
+                            target="_blank"
+                          >
                             {{authProvider.method.prettyName}}
                           </a>
                         {{else}}
