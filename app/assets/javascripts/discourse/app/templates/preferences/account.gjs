@@ -168,7 +168,17 @@ export default RouteTemplate(
                     </td>
                     <td>
                       <div class="associated-account__name">
-                        {{authProvider.method.prettyName}}
+                        {{#if authProvider.method.provider_url}}
+                          <a
+                            href={{authProvider.method.provider_url}}
+                            rel="noopener noreferrer"
+                            target="_blank"
+                          >
+                            {{authProvider.method.prettyName}}
+                          </a>
+                        {{else}}
+                          {{authProvider.method.prettyName}}
+                        {{/if}}
                       </div>
                       <div class="associated-account__description">
                         {{authProvider.account.description}}
@@ -206,7 +216,17 @@ export default RouteTemplate(
                     </td>
                     <td>
                       <div class="associated-account__name">
-                        {{authProvider.method.prettyName}}
+                        {{#if authProvider.method.provider_url}}
+                          <a
+                            href={{authProvider.method.provider_url}}
+                            rel="noopener noreferrer"
+                            target="_blank"
+                          >
+                            {{authProvider.method.prettyName}}
+                          </a>
+                        {{else}}
+                          {{authProvider.method.prettyName}}
+                        {{/if}}
                       </div>
                       <div class="associated-account__description">
                         {{authProvider.account.description}}
