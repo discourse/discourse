@@ -6,6 +6,7 @@ import Category from "discourse/models/category";
 import CategoryRow from "select-kit/components/category-row";
 import MultiSelectComponent from "select-kit/components/multi-select";
 import { pluginApiIdentifiers, selectKitOptions } from "./select-kit";
+import SelectedChoiceCategory from "./selected-choice-category";
 
 @classNames("category-selector")
 @selectKitOptions({
@@ -13,7 +14,7 @@ import { pluginApiIdentifiers, selectKitOptions } from "./select-kit";
   allowAny: false,
   allowUncategorized: true,
   displayCategoryDescription: false,
-  selectedChoiceComponent: "selected-choice-category",
+  selectedChoiceComponent: SelectedChoiceCategory,
 })
 @pluginApiIdentifiers(["category-selector"])
 export default class CategorySelector extends MultiSelectComponent {

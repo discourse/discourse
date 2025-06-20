@@ -477,6 +477,25 @@ RSpec.describe Admin::ThemesController do
         expect(theme_json["remote_theme"]["remote_version"]).to eq("7")
       end
 
+      it "filters experimental system themes" do
+        get "/admin/themes.json"
+        expect(response.status).to eq(200)
+        theme_names = response.parsed_body["themes"].map { |theme| theme[:name] }
+        color_scheme_names =
+          response.parsed_body["extras"]["color_schemes"].map { |scheme| scheme[:name] }
+        expect(theme_names).not_to include("Horizon")
+        expect(color_scheme_names).not_to include("Horizon")
+
+        SiteSetting.experimental_system_themes = "horizon"
+        get "/admin/themes.json"
+        expect(response.status).to eq(200)
+        theme_names = response.parsed_body["themes"].map { |t| t[:name] }
+        color_scheme_names =
+          response.parsed_body["extras"]["color_schemes"].map { |scheme| scheme[:name] }
+        expect(theme_names).to include("Horizon")
+        expect(color_scheme_names).to include("Horizon")
+      end
+
       it "does not result in N+1 queries" do
         # warmup
         get "/admin/themes.json"
@@ -1644,6 +1663,50 @@ RSpec.describe Admin::ThemesController do
 
         expect(response.status).to eq(403)
       end
+    end
+  end
+
+  describe "#show" do
+    let(:theme) { Fabricate(:theme) }
+
+    it "allows base_url in setting description" do
+      set_subfolder "/community"
+
+      theme.set_field(target: :settings, name: "yaml", value: <<~YAML)
+        my_setting:
+          default: true
+          description: This is a link to %{base_path}/example
+      YAML
+      theme.save!
+
+      sign_in admin
+
+      get "/admin/themes/#{theme.id}"
+      expect(response.status).to eq(200)
+
+      expect(response.parsed_body.dig("theme", "settings", 0, "description")).to eq(
+        "This is a link to /community/example",
+      )
+    end
+
+    it "skips interpolation for unknown variables" do
+      set_subfolder "/community"
+
+      theme.set_field(target: :settings, name: "yaml", value: <<~YAML)
+        my_setting:
+          default: true
+          description: Description %{some_mistake}
+      YAML
+      theme.save!
+
+      sign_in admin
+
+      get "/admin/themes/#{theme.id}"
+      expect(response.status).to eq(200)
+
+      expect(response.parsed_body.dig("theme", "settings", 0, "description")).to eq(
+        "Description %{some_mistake}",
+      )
     end
   end
 end

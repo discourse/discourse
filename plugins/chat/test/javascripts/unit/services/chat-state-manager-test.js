@@ -50,6 +50,18 @@ module(
       assert.true(this.subject.isDrawerPreferred);
     });
 
+    test("hasNoPreferredMode", async function (assert) {
+      assert.true(this.subject.hasNoPreferredMode);
+
+      this.subject.prefersFullPage();
+
+      assert.false(this.subject.hasNoPreferredMode);
+
+      this.subject.prefersDrawer();
+
+      assert.false(this.subject.hasNoPreferredMode);
+    });
+
     test("lastKnownChatURL", function (assert) {
       assert.strictEqual(this.subject.lastKnownChatURL, "/chat");
 

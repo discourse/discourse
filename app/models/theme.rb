@@ -7,7 +7,7 @@ class Theme < ActiveRecord::Base
   include GlobalPath
 
   BASE_COMPILER_VERSION = 91
-  CORE_THEMES = { "foundation" => -1 }
+  CORE_THEMES = { "foundation" => -1, "horizon" => -2 }
   EDITABLE_SYSTEM_ATTRIBUTES = %w[
     child_theme_ids
     color_scheme_id
@@ -122,6 +122,8 @@ class Theme < ActiveRecord::Base
 
   scope :not_system, -> { where("id > 0") }
   scope :system, -> { where("id < 0") }
+  scope :with_experimental_system_themes,
+        -> { where("id > 0 OR id IN (?)", Theme.experimental_system_theme_ids) }
 
   delegate :remote_url, to: :remote_theme, private: true, allow_nil: true
 
@@ -233,10 +235,6 @@ class Theme < ActiveRecord::Base
     Theme.expire_site_cache!
   end
 
-  def self.foundation_theme
-    Theme.find(CORE_THEMES["foundation"])
-  end
-
   def self.compiler_version
     get_set_cache "compiler_version" do
       dependencies = [
@@ -342,6 +340,12 @@ class Theme < ActiveRecord::Base
 
       all_ids - disabled_ids
     end
+  end
+
+  def self.experimental_system_theme_ids
+    Theme::CORE_THEMES
+      .select { |k, v| SiteSetting.experimental_system_themes_map.include?(k) }
+      .values
   end
 
   def set_default!
@@ -593,6 +597,9 @@ class Theme < ActiveRecord::Base
     fields
   end
 
+  # def foundation_theme
+  # def horizon_theme
+  CORE_THEMES.each { |name, id| define_singleton_method("#{name}_theme") { Theme.find(id) } }
   def resolve_baked_field(target, name)
     list_baked_fields(target, name).map { |f| f.value_baked || f.value }.join("\n")
   end

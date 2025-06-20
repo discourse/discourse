@@ -2521,6 +2521,9 @@ en:
       to_continue: "Please Log In"
       preferences: "You need to be logged in to change your user preferences."
       not_approved: "Your account hasn't been approved yet. You will be notified by email when you are ready to log in."
+      discourse_id:
+        name: "Discourse ID"
+        title: "Log in with Discourse ID"
       google_oauth2:
         name: "Google"
         title: "Sign in with Google"
@@ -2796,14 +2799,16 @@ en:
       italic_label: "I"
       italic_title: "Emphasis"
       italic_text: "emphasized text"
-      link_title: "Hyperlink"
+      link_title: "Link"
       link_description: "enter link description here"
-      link_dialog_title: "Insert hyperlink"
+      link_dialog_title: "Insert link"
       link_dialog_action: "Insert"
-      link_edit_title: "Edit hyperlink"
+      link_edit_title: "Edit link"
       link_edit_action: "Update"
-      link_optional_text: "optional title"
-      link_url_placeholder: "Paste a URL or type to search topics"
+      link_text_label: "Link text"
+      link_optional_text: "Text"
+      link_url_label: "Link or topic"
+      link_url_placeholder: "Paste link or search topics"
       blockquote_title: "Blockquote"
       blockquote_text: "Blockquote"
       code_title: "Preformatted text"
@@ -3302,10 +3307,12 @@ en:
         top: "There are no top topics."
         hot: "There are no hot topics."
         filter: "There are no topics."
-        educate:
-          new: '<p>Your new topics will appear here. By default, topics are considered new and will show a <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> indicator if they were created in the last 2 days.</p><p>Visit your <a href="%{userPrefsUrl}">preferences</a> to change this.</p>'
-          unread: '<p>Your unread topics appear here.</p><p>By default, topics are considered unread and will show unread counts <span class="badge unread-posts badge-notification">1</span> if you:</p><ul><li>Created the topic</li><li>Replied to the topic</li><li>Read the topic for more than 5 minutes</li></ul><p>Or if you have explicitly set the topic to Tracked or Watched via the 🔔 in each topic.</p><p>Visit your <a href="%{userPrefsUrl}">preferences</a> to change this.</p>'
-          new_new: '<p>Your new topics will appear here, and your unread topics will also be displayed. By default, topics are considered new and will show a <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> indicator if they were created in the last 2 days. Unread topics will show unread counts <span class="badge unread-posts badge-notification">1</span> if you: created the topic, replied to the topic, read the topic for more than 5 minutes, or if you have explicitly set the topic to Tracked or Watched via the 🔔 in each topic.</p><p>Visit your <a href="%{userPrefsUrl}">preferences</a> to change this.</p>'
+        education:
+          topic_tracking_preferences: "You can view and change your new topic tracking settings in <a href=\"%{basePath}/my/preferences/tracking\">your preferences</a>."
+          unread: "Nothing left unread...impressive!"
+          new_new: "Nothing new at the moment...check back soon!"
+          new: "Nothing new at the moment...check back soon!"
+
       bottom:
         latest: "There are no more latest topics."
         posted: "There are no more posted topics."
@@ -3461,6 +3468,7 @@ en:
       browse_all_categories_latest: "<a href='%{basePath}/categories'>Browse all categories</a> or <a href='%{basePath}/latest'>view latest topics</a>."
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Browse all categories</a>, <a href='%{basePath}/latest'>view latest topics</a> or see top:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Browse all tags</a> or <a href='%{basePath}/latest'>view latest topics</a>."
+      browse_latest_topics: "Browse latest topics"
 
       suggest_create_topic: Ready to <a href>start a new conversation?</a>
       jump_reply: "Jump to post's original location"
@@ -7814,6 +7822,7 @@ en:
           basic: "Basic Setup"
           users: "Users"
           posting: "Posting"
+          content_localization: "Content Localization"
           email: "Email"
           files: "Files"
           trust: "Trust Levels"

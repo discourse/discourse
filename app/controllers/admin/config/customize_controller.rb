@@ -8,10 +8,9 @@ class Admin::Config::CustomizeController < Admin::AdminController
       Theme
         .include_basic_relations
         .includes(:theme_fields, color_scheme: [:color_scheme_colors])
+        .with_experimental_system_themes
         .where(component: false)
         .order(:name)
-
-    themes = themes.not_system if !SiteSetting.experimental_system_themes
 
     render json: { themes: serialize_data(themes, ThemeIndexSerializer) }
   end

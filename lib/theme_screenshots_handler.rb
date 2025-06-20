@@ -60,7 +60,13 @@ class ThemeScreenshotsHandler
               )
       end
 
-      upload = RemoteTheme.create_upload(@theme, path, relative_path)
+      upload =
+        RemoteTheme.create_upload(
+          theme: @theme,
+          path: path,
+          relative_path: relative_path,
+          skip_validations: true,
+        )
       if !upload.errors.empty?
         raise ThemeScreenshotError,
               I18n.t(

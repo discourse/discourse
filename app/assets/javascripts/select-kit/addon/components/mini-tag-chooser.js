@@ -15,6 +15,8 @@ import {
   pluginApiIdentifiers,
   selectKitOptions,
 } from "select-kit/components/select-kit";
+import SelectKitRow from "./select-kit/select-kit-row";
+import TagRow from "./tag-row";
 
 @attributeBindings("selectKit.options.categoryId:category-id")
 @classNames("mini-tag-chooser")
@@ -45,10 +47,10 @@ export default class MiniTagChooser extends MultiSelectComponent {
 
   modifyComponentForRow(collection, item) {
     if (this.getValue(item) === this.selectKit.filter && !item.count) {
-      return "select-kit/select-kit-row";
+      return SelectKitRow;
     }
 
-    return "tag-row";
+    return TagRow;
   }
 
   modifyNoSelection() {

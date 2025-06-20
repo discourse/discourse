@@ -395,9 +395,11 @@ ro:
       also_set_reminder: "Setezi și un memento?"
       bookmarked_success: "Semn de carte adăugat!"
       deleted_bookmark_success: "Semn de carte șters!"
+      reminder_clear_success: "Memento șters"
       created: "Ai pus un semn de carte la acest articol. %{name}"
       created_generic: "Ai pus un semn de carte aici. %{name}"
       create: "Creează semn de carte"
+      clear_reminder: "Șterge memento"
       edit: "Editează semn de carte"
       not_bookmarked: "pune semn de carte la acest articol"
       remove_reminder_keep_bookmark: "Șterge mementoul și păstrează semnul de carte"
@@ -1607,6 +1609,7 @@ ro:
           edit_link_options: "Editează opțiunile de legătură sau trimite prin email."
           show_advanced: "Afișați opțiunile avansate"
           hide_advanced: "Ascundeți opțiunile avansate"
+          description: "Descriere"
           expires_at: "Expiră la"
           expires_after: "Expiră după"
           custom_message: "Mesaj personalizat"
@@ -2037,7 +2040,10 @@ ro:
       italic_text: "text italic"
       link_title: "Hyperlink"
       link_description: "adaugă aici descrierea link-ului"
-      link_dialog_title: "Introdu link"
+      link_dialog_title: "Inserează legătură"
+      link_dialog_action: "Introdu"
+      link_edit_title: "Editează legătură"
+      link_edit_action: "Actualizează"
       link_optional_text: "titlu opțional"
       link_url_placeholder: "Lipește un URL sau tastează pentru a căuta subiecte"
       blockquote_title: "Bloc citat"
@@ -2077,6 +2083,12 @@ ro:
       image_alt_text:
         title: "Adaugă descriere imagine"
       image_scale_button: "Scalează imaginea la %{percent}%"
+      link_toolbar:
+        edit: "Editează legătură"
+        copy: "Copiază legătură"
+        remove: "Elimină legătură"
+        visit: "Deschide legătură într-o filă externă"
+        link_copied: "Legătură copiată!"
     notifications:
       tooltip:
         message:
@@ -2717,6 +2729,8 @@ ro:
           title: "Traduceri pentru postare"
           confirm_delete: "Sigur vrei să ștergi traducerile pentru „%{languageCode}”?"
         success: "Traducerile au fost actualizate cu succes"
+        post_language_selector:
+          none: "Nimic"
       errors:
         create: "Ne pare rău, a apărut o eroare la creerea postării. Te rugăm să încerci iar."
         edit: "Ne pare rău, a apărut o eroare la editarea postării. Te rugăm să încerci iar."
@@ -2855,6 +2869,7 @@ ro:
         title: "Distribuie postarea #%{post_number}"
         instructions: "Distribuie un link către această postare:"
       original_language: "Această postare a fost scrisă inițial în %{language}"
+      original_language_and_outdated: "Această postare a fost scrisă inițial în %{language}. Traducerea ar putea fi învechită."
     category:
       none: "(nicio categorie)"
       all: "Toate categoriile"
@@ -4270,6 +4285,7 @@ ro:
             title: "Culori"
           save_changes: "Salvează modificări"
           unsaved_changes: "Ai modificări nesalvate"
+          blocked_edit_for_system: "Paleta de culori aparținând unei teme de sistem nu poate fi editată."
           delete_confirm: "Sigur vrei să ștergi această paletă de culori?"
       plugins:
         title: "Plugin-uri"

@@ -848,6 +848,10 @@ describe "Composer - ProseMirror editor", type: :system do
   describe "with mentions" do
     fab!(:post)
     fab!(:topic) { post.topic }
+    fab!(:mixed_case_user) { Fabricate(:user, username: "TestUser_123") }
+    fab!(:mixed_case_group) do
+      Fabricate(:group, name: "TestGroup_ABC", mentionable_level: Group::ALIAS_LEVELS[:everyone])
+    end
 
     before do
       Draft.set(
@@ -884,6 +888,32 @@ describe "Composer - ProseMirror editor", type: :system do
       expect(rich).to have_css("a.mention[data-valid='true']", text: user.username)
       expect(rich).to have_css("a.mention[data-valid='false']", text: "@unknown")
     end
+
+    it "validates mentions case-insensitively" do
+      open_composer_and_toggle_rich_editor
+
+      composer.type_content("Hey @testuser_123 and @TESTUSER_123 ")
+
+      expect(rich).to have_css("a.mention[data-valid='true']", text: "testuser_123")
+      expect(rich).to have_css("a.mention[data-valid='true']", text: "TESTUSER_123")
+
+      composer.type_content("and @InvalidUser ")
+
+      expect(rich).to have_css("a.mention[data-valid='false']", text: "@InvalidUser")
+    end
+
+    it "validates group mentions case-insensitively" do
+      open_composer_and_toggle_rich_editor
+
+      composer.type_content("Hey @testgroup_abc and @TESTGROUP_ABC ")
+
+      expect(rich).to have_css("a.mention[data-valid='true']", text: "testgroup_abc")
+      expect(rich).to have_css("a.mention[data-valid='true']", text: "TESTGROUP_ABC")
+
+      composer.type_content("and @InvalidGroup ")
+
+      expect(rich).to have_css("a.mention[data-valid='false']", text: "@InvalidGroup")
+    end
   end
 
   describe "link toolbar" do
@@ -898,7 +928,7 @@ describe "Composer - ProseMirror editor", type: :system do
       expect(page).to have_css("[data-identifier='composer-link-toolbar']")
       expect(page).to have_css("button.composer-link-toolbar__edit")
       expect(page).to have_css("button.composer-link-toolbar__copy")
-      expect(page).to have_css("a.composer-link-toolbar__visit", text: "https://example.com")
+      expect(page).to have_css("a.composer-link-toolbar__visit", text: "example.com")
     end
 
     it "allows editing a link via toolbar" do
@@ -979,7 +1009,22 @@ describe "Composer - ProseMirror editor", type: :system do
 
       expect(page).to have_css(
         "a.composer-link-toolbar__visit[href='https://example.com']",
-        text: "https://example.com",
+        text: "example.com",
+      )
+    end
+
+    it "strips base URL from internal links in toolbar display" do
+      open_composer_and_toggle_rich_editor
+
+      internal_link = "#{Discourse.base_url}/t/some-topic/123"
+
+      composer.type_content("[Internal Link](#{internal_link})")
+      composer.send_keys(:left, :left, :left)
+
+      expect(page).to have_css("[data-identifier='composer-link-toolbar']")
+      expect(page).to have_css(
+        "a.composer-link-toolbar__visit[href='#{internal_link}']",
+        text: "/t/some-topic/123",
       )
     end
 
@@ -1001,7 +1046,7 @@ describe "Composer - ProseMirror editor", type: :system do
       composer.send_keys(:left)
 
       expect(page).to have_css("[data-identifier='composer-link-toolbar']")
-      expect(page).to have_css("a.composer-link-toolbar__visit", text: "https://example.com")
+      expect(page).to have_css("a.composer-link-toolbar__visit", text: "example.com")
 
       composer.send_keys(:right)
 

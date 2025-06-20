@@ -337,6 +337,6 @@ class TopicViewSerializer < ApplicationSerializer
   end
 
   def include_has_localized_content?
-    SiteSetting.experimental_content_localization
+    SiteSetting.content_localization_enabled
   end
 end
