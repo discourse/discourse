@@ -23,7 +23,7 @@ export default class PostQuotedContent extends Component {
 
   @tracked
   expanded =
-    this.args.decoratorState?.get(`${this.args.quoteId}--expanded`) ??
+    this.args.decoratorState?.get(`${this.args.id}--expanded`) ??
     this.args.expanded ??
     false;
 
@@ -38,7 +38,7 @@ export default class PostQuotedContent extends Component {
     });
   };
 
-  #quotedPost = this.args.decoratorState?.get(`${this.args.quoteId}--post`);
+  #quotedPost = this.args.decoratorState?.get(`${this.args.id}--post`);
   #wrapperElement;
 
   get extraDecorators() {
@@ -101,7 +101,7 @@ export default class PostQuotedContent extends Component {
     }
 
     this.#quotedPost = post;
-    this.args.decoratorState?.set(`${this.args.quoteId}--post`, post);
+    this.args.decoratorState?.set(`${this.args.id}--post`, post);
 
     return post;
   }
@@ -123,10 +123,7 @@ export default class PostQuotedContent extends Component {
   @action
   toggleExpanded() {
     this.expanded = !this.expanded;
-    this.args.decoratorState?.set(
-      `${this.args.quoteId}--expanded`,
-      this.expanded
-    );
+    this.args.decoratorState?.set(`${this.args.id}--expanded`, this.expanded);
   }
 
   get WrapperComponent() {
@@ -176,7 +173,7 @@ export default class PostQuotedContent extends Component {
             <DButton
               class="btn-flat quote-toggle"
               @action={{this.toggleExpanded}}
-              @ariaControls={{@quoteId}}
+              @ariaControls={{@id}}
               @ariaExpanded={{this.expanded}}
               @title="post.expand_collapse"
             >
