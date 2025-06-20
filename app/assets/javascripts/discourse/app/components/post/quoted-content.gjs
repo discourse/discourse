@@ -170,9 +170,10 @@ export default class PostQuotedContent extends Component {
       data-username={{@quotedUsername}}
     >
       {{#if @wrapperElement}}
-        {{! Decorate the existing wrapper with dynamic classes }}
+        {{! `this.OptionalWrapperComponent` can be empty to render only the children while decorating cooked content.
+        we need to handle the attributtes below in the existing wrapper received as @wrapperElement in this case }}
         {{elementClass
-          (concatClass (if this.isQuotedPostIgnored "ignored-user"))
+          (if this.isQuotedPostIgnored "ignored-user")
           target=@wrapperElement
         }}
       {{/if}}
@@ -186,10 +187,14 @@ export default class PostQuotedContent extends Component {
         {{(if
           this.shouldDisplayToggleButton (modifier on "click" this.onClickTitle)
         )}}
-        {{this.applyWrapperDataAttributes
+        {{(if
           @wrapperElement
-          expanded=this.expanded
-        }}
+          (modifier
+            this.applyWrapperDataAttributes
+            @wrapperElement
+            expanded=this.expanded
+          )
+        )}}
       >
         {{~#if (has-block "title")~}}
           {{~yield to="title"~}}
