@@ -6,7 +6,7 @@ import htmlSafe from "discourse/helpers/html-safe";
 import { emojiUnescape } from "discourse/lib/text";
 import { i18n } from "discourse-i18n";
 
-export default class EmptyTopic extends Component {
+export default class EmptyTopicFilter extends Component {
   @service currentUser;
 
   get educationText() {
@@ -22,9 +22,9 @@ export default class EmptyTopic extends Component {
   }
 
   <template>
-    <div class="empty-topic">
+    <div class="empty-topic-filter">
 
-      <div class="empty-topic__image">
+      <div class="empty-topic-filter__image">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 285 248"
@@ -305,18 +305,18 @@ export default class EmptyTopic extends Component {
         </svg>
       </div>
 
-      <div class="empty-topic_text">
+      <div class="empty-topic-filter_text">
         <p>{{this.educationText}}</p>
       </div>
 
-      <div class="empty-topic__cta">
+      <div class="empty-topic-filter__cta">
         <DButton
           @route="discovery.latest"
           @label="topic.browse_latest_topics"
           class="btn-primary"
         />
 
-        <div class="empty-topic__preferences-hint">
+        <div class="empty-topic-filter__preferences-hint">
           {{htmlSafe (emojiUnescape ":bulb:")}}
           {{htmlSafe
             (i18n
