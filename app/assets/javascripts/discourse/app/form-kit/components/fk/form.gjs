@@ -4,6 +4,7 @@ import { array, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import curryComponent from "ember-curry-component";
 import DButton from "discourse/components/d-button";
@@ -22,7 +23,9 @@ import FKSection from "discourse/form-kit/components/fk/section";
 import FKSubmit from "discourse/form-kit/components/fk/submit";
 import { VALIDATION_TYPES } from "discourse/form-kit/lib/constants";
 import FKFormData from "discourse/form-kit/lib/fk-form-data";
+import { headerOffset } from "discourse/lib/offset-calculator";
 import { i18n } from "discourse-i18n";
+import { getScrollParent } from "float-kit/lib/get-scroll-parent";
 
 class FKForm extends Component {
   @service dialog;
@@ -134,6 +137,11 @@ class FKForm extends Component {
   }
 
   @action
+  registerFormElement(element) {
+    this.formElement = element;
+  }
+
+  @action
   async addItemToCollection(name, value = {}) {
     const current = this.formData.get(name) ?? [];
     this.formData.set(name, current.concat(value));
@@ -211,6 +219,11 @@ class FKForm extends Component {
         this.formData.save();
 
         await this.args.onSubmit?.(this.formData.draftData);
+      } else {
+        const elementPosition = this.formElement.getBoundingClientRect().top;
+        const scrollable = getScrollParent(this.formElement);
+        const top = elementPosition + scrollable.scrollY - headerOffset();
+        scrollable.scrollTo({ top });
       }
     } finally {
       this.isSubmitting = false;
@@ -273,6 +286,7 @@ class FKForm extends Component {
       ...attributes
       {{on "submit" this.onSubmit}}
       {{on "reset" this.onReset}}
+      {{didInsert this.registerFormElement}}
     >
       <FKErrorsSummary @errors={{this.formData.errors}} />
 
