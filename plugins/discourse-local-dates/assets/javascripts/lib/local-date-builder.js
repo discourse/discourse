@@ -16,7 +16,7 @@ export default class LocalDateBuilder {
     this.time = params.time;
     this.date = params.date;
     this.recurring = params.recurring;
-    this.sameLocalDayAsFrom = params.sameLocalDayAsFrom;
+    this.sameLocalDay = params.sameLocalDay;
     this.timezones = Array.from(
       new Set((params.timezones || []).filter(Boolean))
     );
@@ -27,6 +27,7 @@ export default class LocalDateBuilder {
     this.format = params.format || (this.time ? DATETIME_FORMAT : DATE_FORMAT);
     this.countdown = params.countdown;
     this.duration = params.duration;
+    this.range = params.range;
     this.localTimezone = localTimezone;
   }
 
@@ -234,7 +235,7 @@ export default class LocalDateBuilder {
           localDate.add(1, "day").datetime.endOf("day")
         );
 
-      if (this.sameLocalDayAsFrom) {
+      if (this.range !== "from" && this.sameLocalDay) {
         return this._timeOnlyFormat(localDate, displayedTimezone);
       }
 
@@ -242,7 +243,7 @@ export default class LocalDateBuilder {
         const date = localDate.datetimeWithZone(this.localTimezone);
 
         if (hasTime && date.hours() === 0 && date.minutes() === 0) {
-          return date.format("dddd");
+          return date.format(DAY_OF_THE_WEEK_FORMAT);
         }
 
         return date.calendar(
@@ -273,14 +274,9 @@ export default class LocalDateBuilder {
       time: "LT",
     });
 
-    if (time) {
-      return translated
-        .split("LT")
-        .map((w) => `[${w}]`)
-        .join("LT");
-    } else {
-      return `[${translated.replace(" LT", "")}]`;
-    }
+    return time
+      ? translated.replace(/^(\w+)/, "[$1]")
+      : `[${translated.replace(" LT", "")}]`;
   }
 
   _formatTimezone(timezone) {
