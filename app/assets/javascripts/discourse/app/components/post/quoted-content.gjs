@@ -5,7 +5,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { modifier as modifierFn } from "ember-modifier";
-import { eq, lt, or } from "truth-helpers";
+import { eq, or } from "truth-helpers";
 import AsyncContent from "discourse/components/async-content";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
@@ -27,39 +27,39 @@ export default class PostQuotedContent extends Component {
     this.args.expanded ??
     false;
 
-  ensureWrapperDataAttributes = modifierFn((_, [target], data) => {
+  applyWrapperDataAttributes = modifierFn((_, [target], data) => {
     const attributes = Object.entries(data);
     if (!target || attributes.length === 0) {
       return null;
     }
-
     const originalValues = {};
-
     attributes.forEach(([key, value]) => {
       originalValues[key] = target.dataset[key];
       target.dataset[key] = value;
     });
-
     return () => {
       // restore the original values
       Object.entries(originalValues).forEach(([key, value]) => {
-        target.dataset[key] = value;
+        if (value === undefined) {
+          delete target.dataset[key];
+        } else {
+          target.dataset[key] = value;
+        }
       });
     };
   });
+
+  #quotedPost = this.args.decoratorState?.get(this.statePostId);
 
   #highlightOriginalText = (cookedElement) => {
     if (!this.expanded) {
       return;
     }
-
     // to highlight the quoted text inside the original post content
     highlightHTML(cookedElement, this.args.originalText, {
       matchCase: true,
     });
   };
-
-  #quotedPost = this.args.decoratorState?.get(this.statePostId);
 
   get extraDecorators() {
     return [
@@ -72,20 +72,26 @@ export default class PostQuotedContent extends Component {
     return this.args.ignoredUsers?.includes(this.args.quotedUsername);
   }
 
+  get navigateToPostIcon() {
+    if (!this.args.post) {
+      return "arrow-down";
+    }
+    return this.args.post.post_number < this.args.quotedPostNumber
+      ? "arrow-down"
+      : "arrow-up";
+  }
+
   get quotedPostUrl() {
-    const topicId = this.args.quotedTopicId;
-
-    // only display the navigation button when the post belongs to the same topic
-    if (topicId !== this.args.post?.topic?.id) {
-      return;
+    const { quotedTopicId, post, quotedPostNumber } = this.args;
+    if (quotedTopicId !== post?.topic?.id) {
+      return null;
     }
 
-    const postNumber = this.args.quotedPostNumber;
-    const slug = this.args.post.topic.slug;
-
-    if (postNumber) {
-      return postUrl(slug, topicId, postNumber);
+    const slug = post?.topic?.slug;
+    if (quotedPostNumber && slug) {
+      return postUrl(slug, quotedTopicId, quotedPostNumber);
     }
+    return null;
   }
 
   get shouldDisplayNavigateToPostButton() {
@@ -104,6 +110,14 @@ export default class PostQuotedContent extends Component {
     return `${this.args.id}--post`;
   }
 
+  get toggleIcon() {
+    return this.expanded ? "chevron-up" : "chevron-down";
+  }
+
+  get OptionalWrapperComponent() {
+    return this.args.wrapperElement ? element("") : element("aside");
+  }
+
   @action
   async loadQuotedPost({ topicNumber, postNumber }) {
     if (
@@ -112,21 +126,18 @@ export default class PostQuotedContent extends Component {
     ) {
       return this.#quotedPost;
     }
-
+    const url = `/posts/by_number/${topicNumber}/${postNumber}`;
     const post = this.store.createRecord(
       "post",
-      await ajax(`/posts/by_number/${topicNumber}/${postNumber}`, {
+      await ajax(url, {
         ignoreUnsent: false,
       })
     );
-
     if (post.topic_id === this.args.post?.topic_id) {
       post.topic = this.args.post.topic;
     }
-
     this.#quotedPost = post;
     this.args.decoratorState?.set(this.statePostId, post);
-
     return post;
   }
 
@@ -135,7 +146,6 @@ export default class PostQuotedContent extends Component {
     if (event.target.closest("a") || event.target.closest(".quote-controls")) {
       return;
     }
-
     this.toggleExpanded();
   }
 
@@ -143,10 +153,6 @@ export default class PostQuotedContent extends Component {
   toggleExpanded() {
     this.expanded = !this.expanded;
     this.args.decoratorState?.set(this.stateExpandedId, this.expanded);
-  }
-
-  get OptionalWrapperComponent() {
-    return this.args.wrapperElement ? element("") : element("aside");
   }
 
   <template>
@@ -157,18 +163,18 @@ export default class PostQuotedContent extends Component {
         (if @quotedPostNotFound "quote-post-not-found")
         (if this.isQuotedPostIgnored "ignored-user")
       }}
-      data-expanded="{{this.expanded}}"
-      data-full="{{@fullQuote}}"
+      data-expanded={{this.expanded}}
+      data-full={{@fullQuote}}
       data-post={{@quotedPostNumber}}
       data-topic={{@quotedTopicId}}
       data-username={{@quotedUsername}}
     >
-      {{! `this.OptionalWrapperComponent` can be empty to render only the children while decorating cooked content.
-          we need to handle the attributtes below in the existing wrapper received as @wrapperElement in this case }}
       {{#if @wrapperElement}}
-        {{~#if this.isQuotedPostIgnored~}}
-          {{elementClass "ignored-user" target=@wrapperElement}}
-        {{~/if~}}
+        {{! Decorate the existing wrapper with dynamic classes }}
+        {{elementClass
+          (concatClass (if this.isQuotedPostIgnored "ignored-user"))
+          target=@wrapperElement
+        }}
       {{/if}}
       <div
         class="title"
@@ -180,7 +186,7 @@ export default class PostQuotedContent extends Component {
         {{(if
           this.shouldDisplayToggleButton (modifier on "click" this.onClickTitle)
         )}}
-        {{this.ensureWrapperDataAttributes
+        {{this.applyWrapperDataAttributes
           @wrapperElement
           expanded=this.expanded
         }}
@@ -205,7 +211,7 @@ export default class PostQuotedContent extends Component {
             >
               {{! rendering the icon in the block instead of using the parameter `@icon` prevents DButton from adding
                   extra whitespace that will interfere with the text captured when quoting a quoted content }}
-              {{~icon (if this.expanded "chevron-up" "chevron-down")~}}
+              {{~icon this.toggleIcon~}}
             </DButton>
           {{~/if~}}
           {{~#if this.shouldDisplayNavigateToPostButton~}}
@@ -216,13 +222,7 @@ export default class PostQuotedContent extends Component {
             >
               {{! rendering the icon in the block instead of using the parameter `@icon` prevents DButton from adding
                   extra whitespace that will interfere with the text captured when quoting a quoted content }}
-              {{~icon
-                (if
-                  (lt @post.post_number @quotedPostNumber)
-                  "arrow-down"
-                  "arrow-up"
-                )
-              ~}}
+              {{~icon this.navigateToPostIcon~}}
             </DButton>
           {{~/if~}}
         </div>
