@@ -1,10 +1,19 @@
+import { ajax } from "discourse/lib/ajax";
+import { getHashtagTypeClasses } from "discourse/lib/hashtag-type-registry";
 import { isBoundary } from "discourse/static/prosemirror/lib/markdown-it";
+
+const VALID_HASHTAGS = new Map();
+const INVALID_HASHTAGS = new Set();
 
 /** @type {RichEditorExtension} */
 const extension = {
   nodeSpec: {
     hashtag: {
-      attrs: { name: {} },
+      attrs: {
+        name: {},
+        processed: { default: false },
+        valid: { default: true },
+      },
       inline: true,
       group: "inline",
       draggable: true,
@@ -14,14 +23,23 @@ const extension = {
           tag: "a.hashtag-cooked",
           preserveWhitespace: "full",
           getAttrs: (dom) => {
-            return { name: dom.getAttribute("data-name") };
+            return {
+              name: dom.getAttribute("data-name"),
+              processed: dom.getAttribute("data-processed"),
+              valid: dom.getAttribute("data-valid"),
+            };
           },
         },
       ],
       toDOM: (node) => {
         return [
           "a",
-          { class: "hashtag-cooked", "data-name": node.attrs.name },
+          {
+            class: "hashtag-cooked",
+            "data-name": node.attrs.name,
+            "data-processed": node.attrs.processed,
+            "data-valid": node.attrs.valid,
+          },
           `#${node.attrs.name}`,
         ];
       },
@@ -82,6 +100,109 @@ const extension = {
       }
     },
   },
+  plugins({ pmState: { Plugin, PluginKey }, getContext }) {
+    const key = new PluginKey("hashtag");
+
+    return new Plugin({
+      key,
+      view() {
+        return {
+          update(view) {
+            this.processHashtags(view);
+          },
+          processHashtags(view) {
+            const hashtagNames = [];
+            const hashtagNodes = [];
+
+            view.state.doc.descendants((node, pos) => {
+              if (
+                node.type.name !== "hashtag" ||
+                node.attrs.processed ||
+                !node.attrs.valid
+              ) {
+                return;
+              }
+
+              const name = node.attrs.name;
+              hashtagNodes.push({ name, node, pos });
+              hashtagNames.push(name);
+            });
+
+            if (!hashtagNodes.length) {
+              return;
+            }
+
+            // process in reverse to avoid issues with position shifts
+            hashtagNodes.sort((a, b) => b.pos - a.pos);
+
+            const updateHashtags = async () => {
+              await fetchHashtags(hashtagNames, getContext());
+
+              for (const hashtagNode of hashtagNodes) {
+                const { name, node, pos } = hashtagNode;
+                const validHashtag = VALID_HASHTAGS.get(name.toLowerCase());
+
+                // check if node still exists at this position before updating
+                if (view.state.doc.nodeAt(pos)?.type !== node.type) {
+                  continue;
+                }
+
+                view.dispatch(
+                  view.state.tr.setNodeMarkup(pos, null, {
+                    ...node.attrs,
+                    processed: true,
+                    valid: !!validHashtag,
+                  })
+                );
+
+                const domNode = view.nodeDOM(pos);
+                if (!validHashtag || !domNode) {
+                  continue;
+                }
+
+                // decorate valid hashtags based on their type
+                const tagText = validHashtag?.text || name;
+                const hashtagTypeClass =
+                  getHashtagTypeClasses()[validHashtag.type];
+                const hashtagIconHTML = hashtagTypeClass
+                  .generateIconHTML(validHashtag)
+                  .trim();
+
+                domNode.innerHTML = `${hashtagIconHTML}${tagText}`;
+              }
+            };
+
+            updateHashtags();
+          },
+        };
+      },
+    });
+  },
 };
+
+async function fetchHashtags(hashtags, context) {
+  const slugs = hashtags.filter(
+    (tag) => !VALID_HASHTAGS.has(tag) && !INVALID_HASHTAGS.has(tag)
+  );
+
+  if (!slugs.length) {
+    return;
+  }
+
+  const order = context.site.hashtag_configurations["topic-composer"];
+  const response = await ajax("/hashtags", { data: { slugs, order } });
+
+  const validTags = Object.values(response || {})
+    .flat()
+    .filter(Boolean);
+
+  validTags.forEach((tag) => {
+    VALID_HASHTAGS.set(tag.ref, tag);
+    hashtags.splice(hashtags.indexOf(tag.ref), 1);
+  });
+
+  // mark remaining hashtags as invalid to avoid repeated requests
+  hashtags.forEach((tag) => INVALID_HASHTAGS.add(tag));
+}
 
 export default extension;
