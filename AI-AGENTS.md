@@ -22,7 +22,7 @@ These rules apply to ALL files being changed.
 
 ### JavaScript
 - Don't create empty backing classes for template tag only components, unless specifically asked to.
-- Use the FormKit library for creating forms and form inputs. FormKit is documented here: https://meta.discourse.org/t/discourse-toolkit-to-render-forms/326439
+- Use the FormKit library for creating forms and form inputs. FormKit is documented here: https://meta.discourse.org/t/discourse-toolkit-to-render-forms/326439 and defined in `app/assets/javascripts/discourse/app/form-kit`
 
 ### JavaScript Documentation
 - Always add JSDocs for classes, methods, and members, except for:
@@ -46,6 +46,8 @@ These rules apply to ALL files being changed.
 
 ### Ruby Test Rules
 - Use `fab!()` instead of `let()` wherever possible.
+- We use system tests in rails for UI integration testing, which is documented at https://dev.discourse.org/t/systematic-system-specs/82525, and examples are in `spec/system`
+- We use page objects in system specs, defined in `spec/system/page_objects`
 
 ### Command Reference
 
@@ -85,6 +87,16 @@ pnpm lint:prettier path/to/file
 pnpm lint:css path/to/file
 ```
 
+## Site Settings
+- Much of Discourse is configured by site settings. These are defined in `config/site_settings.yml` or `config/settings.yml` files.
+- Site Setting functionality is defined in `lib/site_setting_extension.rb`
+- Site settings are accessed with `SiteSetting.setting_name` in ruby and `siteSettings.setting_name` in JS, with the latter needing a `@service siteSettings` declaration in Ember components
+
+## Service objects
+- We have a service framework which is useful to extract business logic you usually find in controllers (validating parameters, fetching models, validating permissions, etc.). It’s not limited to controllers, though, and can be used anywhere.
+- This is documented at https://meta.discourse.org/t/using-service-objects-in-discourse/333641
+- Examples are found at `app/services` but ONLY for classes with include `Service::Base`
+
 ## Database & Performance
 
 ### ActiveRecord Best Practices
@@ -113,7 +125,8 @@ pnpm lint:css path/to/file
 - Never directly insert user content into `innerHTML` or similar DOM methods
 - Use `@html` argument carefully and only with pre-sanitized content
 
-### CSRF Protection
+- Always use Guardian classes for authorization checks, the Guardian class defined in lib/guardian.rb
+- There are other Guardian classes defined in lib/guardian
 - All state-changing requests must use POST/PUT/DELETE, never GET
 - Ensure CSRF tokens are included in AJAX requests
 - Use Rails' `protect_from_forgery` in controllers handling sensitive operations
@@ -125,7 +138,8 @@ pnpm lint:css path/to/file
 - Never trust client-side validation alone
 
 ### Authorization
-- Always use Guardian classes for authorization checks
+- Always use Guardian classes for authorization checks, the Guardian class defined in `lib/guardian.rb`
+- There are other Guardian classes defined in `lib/guardian`
 - Check permissions at both route and action levels
 - Implement proper scope limiting (users should only see their own data)
 - Use `can_see?` and `can_edit?` patterns consistently
