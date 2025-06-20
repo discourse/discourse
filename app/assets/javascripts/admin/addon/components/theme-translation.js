@@ -3,9 +3,6 @@ import getURL from "discourse/lib/get-url";
 import SiteSettingComponent from "./site-setting";
 
 export default class ThemeTranslation extends SiteSettingComponent {
-  //@alias("args.translation") setting;
-  //@alias("args.translation.key") settingName;
-
   type = "string";
 
   get setting() {
