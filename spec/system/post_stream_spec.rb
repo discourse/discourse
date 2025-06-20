@@ -85,5 +85,64 @@ describe "Post stream", type: :system do
       # we can check the first post to see if it's cloaked
       expect(post_stream).to have_css("> [data-post-number='1'].post-stream--cloaked")
     end
+
+    it "keeps the state of quoted posts after uncloaking them" do
+      first_post = posts[0]
+      second_post = posts[1]
+      second_post.raw =
+        "[quote=\"#{first_post.user.username}, post:1, topic:#{topic.id}\"]\nHello\n[/quote]\n#{first_post.raw}"
+
+      # Rebake the post to process the quote markup
+      second_post.rebake!
+
+      # Visit the topic page
+      visit "/t/#{topic.slug}/#{topic.id}/1"
+
+      post2_selector = "[data-post-number='2']"
+
+      # Find the post-stream container
+      post_stream = find(".post-stream")
+
+      # Verify the second post is initially visible (uncloaked)
+      expect(post_stream).to have_css(post2_selector)
+      expect(post_stream).to have_no_css("#{post2_selector}.post-stream--cloaked")
+
+      # Verify the quote starts collapsed
+      expect(post_stream).to have_css("#{post2_selector} aside.quote[data-expanded='false']")
+
+      # Find the blockquote and verify the initial state
+      blockquote = post_stream.find("#{post2_selector} aside.quote blockquote")
+      expect(blockquote).to have_content("Hello")
+      expect(blockquote).to have_no_content(first_post.raw)
+
+      # Expand the quote by clicking the toggle button
+      post_stream.find(
+        "#{post2_selector} aside.quote[data-expanded='false'] button.quote-toggle",
+      ).click
+      expect(post_stream).to have_css("#{post2_selector} aside.quote[data-expanded='true']")
+
+      # Verify the expanded quote shows full content
+      blockquote = post_stream.find("#{post2_selector} aside.quote blockquote")
+      expect(blockquote).to have_content(first_post.raw)
+
+      # Scroll to bottom to trigger post cloaking
+      send_keys(:end)
+
+      # Verify that the second post gets cloaked and the quote is removed
+      expect(post_stream).to have_css("#{post2_selector}.post-stream--cloaked")
+      expect(post_stream).to have_no_css("#{post2_selector} aside.quote")
+
+      # Scroll back to top
+      send_keys(:home)
+
+      # Verify that the second post becomes visible again
+      expect(post_stream).to have_css(post2_selector)
+      expect(post_stream).to have_no_css("#{post2_selector}.post-stream--cloaked")
+
+      # Verify that the quote maintains an expanded state after uncloaking
+      expect(post_stream).to have_css("#{post2_selector} aside.quote[data-expanded='true']")
+      blockquote = post_stream.find("#{post2_selector} aside.quote blockquote")
+      expect(blockquote).to have_content(first_post.raw)
+    end
   end
 end
