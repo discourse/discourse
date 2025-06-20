@@ -19,6 +19,18 @@ RSpec.describe Jobs::SendPushNotification do
       Jobs::SendPushNotification.new.execute(user_id: user, payload: payload)
     end
 
+    it "bypasses the online window when bypass_time_window is passed in" do
+      user.update!(last_seen_at: 2.minutes.ago)
+
+      PushNotificationPusher.expects(:push).with(user, payload)
+
+      Jobs::SendPushNotification.new.execute(
+        user_id: user,
+        bypass_time_window: true,
+        payload: payload,
+      )
+    end
+
     it "sends push notification when user is offline" do
       user.update!(last_seen_at: 20.minutes.ago)
 
