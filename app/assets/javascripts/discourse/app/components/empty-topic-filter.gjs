@@ -89,7 +89,7 @@ export default class EmptyTopicFilter extends Component {
                   <path
                     id="Rectangle 20"
                     d="M89.1055 41.8417L204.031 50.6123C204.308 50.6335 204.572 50.7377 204.787 50.9109L204.875 50.9895L221.594 67.0239C221.851 67.2697 222 67.604 222.015 67.9549L222.012 68.1055L212.218 212.007C212.166 212.763 211.511 213.333 210.755 213.28L77.7588 203.98C77.0043 203.927 76.4358 203.273 76.4886 202.518L87.6353 43.1124L87.652 42.9726C87.763 42.3314 88.3142 41.8553 88.9647 41.8387L89.1055 41.8417Z"
-                    fill="#fff"
+                    fill="var(--secondary)"
                     stroke="var(--tertiary-high)"
                     stroke-width="0.913181"
                   />
@@ -292,7 +292,7 @@ export default class EmptyTopicFilter extends Component {
                   height="73.0545"
                   rx="36.5272"
                   transform="rotate(21.1652 182.457 140.796)"
-                  fill="#fff"
+                  fill="var(--secondary)"
                 />
                 <path
                   id="icon_2"
