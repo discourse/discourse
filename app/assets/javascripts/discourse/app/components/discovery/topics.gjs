@@ -4,11 +4,12 @@ import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { or } from "truth-helpers";
+import { not, or } from "truth-helpers";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import CountI18n from "discourse/components/count-i18n";
 import DiscourseLinkedText from "discourse/components/discourse-linked-text";
 import DiscoveryTopicsList from "discourse/components/discovery-topics-list";
+import EmptyTopicFilter from "discourse/components/empty-topic-filter";
 import FooterMessage from "discourse/components/footer-message";
 import LoadMore from "discourse/components/load-more";
 import NewListHeaderControlsWrapper from "discourse/components/new-list-header-controls-wrapper";
@@ -24,7 +25,6 @@ import loadingSpinner from "discourse/helpers/loading-spinner";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { filterTypeForMode } from "discourse/lib/filter-mode";
 import { applyBehaviorTransformer } from "discourse/lib/transformer";
-import { userPath } from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
 import PeriodChooser from "select-kit/components/period-chooser";
 
@@ -73,6 +73,10 @@ export default class DiscoveryTopics extends Component {
 
   get new() {
     return filterTypeForMode(this.args.model.filter) === "new";
+  }
+
+  get unread() {
+    return filterTypeForMode(this.args.model.filter) === "unread";
   }
 
   // Show newly inserted topics
@@ -149,6 +153,11 @@ export default class DiscoveryTopics extends Component {
     } else {
       const split = (this.args.model.get("filter") || "").split("/");
       if (topicsLength === 0) {
+        // We have a different custom display for the empty new + unread filter education.
+        if (split[0] === "new" || split[0] === "unread") {
+          return;
+        }
+
         return i18n("topics.none." + split[0], {
           category: split[1],
         });
@@ -160,30 +169,20 @@ export default class DiscoveryTopics extends Component {
     }
   }
 
-  get footerEducation() {
+  get showEmptyFilterEducationInFooter() {
     const topicsLength = this.args.model.get("topics.length");
 
     if (!this.allLoaded || topicsLength > 0 || !this.currentUser) {
-      return;
+      return false;
     }
 
     const segments = (this.args.model.get("filter") || "").split("/");
-
-    let tab = segments[segments.length - 1];
-
-    if (tab !== "new" && tab !== "unread") {
-      return;
+    const tab = segments[segments.length - 1];
+    if (tab === "new" || tab === "unread") {
+      return true;
     }
 
-    if (tab === "new" && this.currentUser.new_new_view_enabled) {
-      tab = "new_new";
-    }
-
-    return i18n("topics.none.educate." + tab, {
-      userPrefsUrl: userPath(
-        `${this.currentUser.get("username_lower")}/preferences/tracking`
-      ),
-    });
+    return false;
   }
 
   get renderNewListHeaderControls() {
@@ -258,7 +257,10 @@ export default class DiscoveryTopics extends Component {
       @model={{@model}}
       @incomingCount={{this.topicTrackingState.incomingCount}}
       @bulkSelectHelper={{@bulkSelectHelper}}
-      @class={{if this.footerEducation "--no-topics-education"}}
+      @class={{if
+        this.showEmptyFilterEducationInFooter
+        "--show-empty-topics-education"
+      }}
     >
       {{#if this.top}}
         <div class="top-lists">
@@ -375,37 +377,49 @@ export default class DiscoveryTopics extends Component {
             @dismissRead={{@dismissRead}}
           />
 
-          <FooterMessage
-            @education={{this.footerEducation}}
-            @message={{this.footerMessage}}
-          >
-            {{#if @tag}}
-              {{htmlSafe
-                (i18n "topic.browse_all_tags_or_latest" basePath=(basePath))
-              }}
-            {{else if this.latest}}
-              {{#if @category.canCreateTopic}}
-                <DiscourseLinkedText
-                  @action={{fn
-                    this.composer.openNewTopic
-                    (hash category=@category)
-                  }}
-                  @text="topic.suggest_create_topic"
+          <FooterMessage @message={{this.footerMessage}}>
+            <:messageDetails>
+              {{#if @tag}}
+                {{htmlSafe
+                  (i18n "topic.browse_all_tags_or_latest" basePath=(basePath))
+                }}
+              {{else if this.latest}}
+                {{#if @category.canCreateTopic}}
+                  <DiscourseLinkedText
+                    @action={{fn
+                      this.composer.openNewTopic
+                      (hash category=@category)
+                    }}
+                    @text="topic.suggest_create_topic"
+                  />
+                {{/if}}
+              {{else if this.top}}
+                {{htmlSafe
+                  (i18n
+                    "topic.browse_all_categories_latest_or_top"
+                    basePath=(basePath)
+                  )
+                }}
+                <TopPeriodButtons
+                  @period={{@period}}
+                  @action={{@changePeriod}}
+                />
+              {{else if (not (or this.new this.unread))}}
+                {{htmlSafe
+                  (i18n
+                    "topic.browse_all_categories_latest" basePath=(basePath)
+                  )
+                }}
+              {{/if}}
+            </:messageDetails>
+            <:afterMessage>
+              {{#if this.showEmptyFilterEducationInFooter}}
+                <EmptyTopicFilter
+                  @newFilter={{this.new}}
+                  @unreadFilter={{this.unread}}
                 />
               {{/if}}
-            {{else if this.top}}
-              {{htmlSafe
-                (i18n
-                  "topic.browse_all_categories_latest_or_top"
-                  basePath=(basePath)
-                )
-              }}
-              <TopPeriodButtons @period={{@period}} @action={{@changePeriod}} />
-            {{else}}
-              {{htmlSafe
-                (i18n "topic.browse_all_categories_latest" basePath=(basePath))
-              }}
-            {{/if}}
+            </:afterMessage>
           </FooterMessage>
         </PluginOutlet>
       {{/if}}
