@@ -1550,7 +1550,7 @@ RSpec.describe Post do
       }.from(1).to(0)
     end
 
-    it "should change topic visible status to false if it is the first post" do
+    it "changes topic visible status to false if it is the first post" do
       t = post.topic
       expect(t.visible).to eq(true)
 
