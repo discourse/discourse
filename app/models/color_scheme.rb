@@ -321,8 +321,8 @@ class ColorScheme < ActiveRecord::Base
   scope :with_experimental_system_theme_palettes,
         -> do
           joins("LEFT JOIN themes on themes.id = color_schemes.theme_id").where(
-            "themes.id is NULL OR themes.id > 0 OR LOWER(themes.name) IN (?)",
-            SiteSetting.experimental_system_themes_map,
+            "themes.id is NULL OR themes.id > 0 OR themes.id IN (?)",
+            Theme.experimental_system_theme_ids,
           )
         end
 
