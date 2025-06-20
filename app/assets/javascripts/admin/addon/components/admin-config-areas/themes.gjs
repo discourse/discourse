@@ -4,6 +4,7 @@ import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isPresent } from "@ember/utils";
 import DPageSubheader from "discourse/components/d-page-subheader";
+import getURL from "discourse/helpers/get-url";
 import { i18n } from "discourse-i18n";
 import InstallThemeModal from "admin/components/modal/install-theme";
 import ThemesGrid from "admin/components/themes-grid";
@@ -88,6 +89,7 @@ export default class AdminConfigAreasThemes extends Component {
       }}
       @descriptionLabel={{i18n
         "admin.config_areas.themes_and_components.themes.description"
+        themeSiteSettingsUrl=(getURL "/admin/config/theme-site-settings")
       }}
     >
       <:actions as |actions|>
