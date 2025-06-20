@@ -2,8 +2,8 @@ import { htmlSafe } from "@ember/template";
 import curryComponent from "ember-curry-component";
 import PostQuotedContent from "discourse/components/post/quoted-content";
 
-export default function quoteControls (element, context) {
-  const { post, highlightTerm, ignoredUsers, cloakedState, owner } = context;
+export default function quoteControls(element, context) {
+  const { post, highlightTerm, ignoredUsers, decoratorState, owner } = context;
 
   const quotes = element.querySelectorAll("aside.quote");
   if (quotes.length === 0) {
@@ -43,7 +43,7 @@ export default function quoteControls (element, context) {
         curryComponent(
           PostQuotedContent,
           {
-            cloakedState,
+            decoratorState,
             collapsedContent,
             expanded: aside.dataset.expanded === "true",
             fullQuote: aside.dataset.full === "true",

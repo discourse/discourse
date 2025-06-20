@@ -9,21 +9,21 @@ const CookedUserStatusMessage = <template>
 </template>;
 
 export default function (element, context) {
-  const { post, cloakedState, owner, helper } = context;
+  const { post, decoratorState, owner, helper } = context;
 
-  cloakedState.extractedMentions = _extractMentions(element, post);
+  decoratorState.extractedMentions = _extractMentions(element, post);
 
   const userStatusService = owner.lookup("service:user-status");
 
   const _updateUserStatus = (updatedUser) => {
-    cloakedState.extractedMentions
+    decoratorState.extractedMentions
       .filter(({ user }) => updatedUser.id === user?.id)
       .forEach(({ mentions, user }) => {
         _renderUserStatusOnMentions(mentions, user, helper);
       });
   };
 
-  cloakedState.extractedMentions.forEach(({ mentions, user }) => {
+  decoratorState.extractedMentions.forEach(({ mentions, user }) => {
     if (userStatusService.isEnabled) {
       user.statusManager?.trackStatus?.();
       user.on?.("status-changed", element, _updateUserStatus);
@@ -43,13 +43,13 @@ export default function (element, context) {
   // cleanup code
   return () => {
     if (userStatusService.isEnabled) {
-      cloakedState.extractedMentions.forEach(({ user }) => {
+      decoratorState.extractedMentions.forEach(({ user }) => {
         user.statusManager?.stopTrackingStatus?.();
         user.off?.("status-changed", element, _updateUserStatus);
       });
     }
 
-    cloakedState.extractedMentions = [];
+    decoratorState.extractedMentions = [];
   };
 }
 

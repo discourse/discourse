@@ -32,7 +32,7 @@ export default class PostCookedHtml extends Component {
 
   @tracked highlighted = false;
   #pendingDecoratorCleanup = [];
-  #cloakedState = this.args.cloakedState || new TrackedObject();
+  #decoratorState = this.args.decoratorState || new TrackedObject();
 
   willDestroy() {
     super.willDestroy(...arguments);
@@ -50,7 +50,8 @@ export default class PostCookedHtml extends Component {
     [...POST_COOKED_DECORATORS, ...this.extraDecorators].forEach(
       (decorator) => {
         try {
-          const decoratorState = this.#cloakedState[decorator] ??= new TrackedObject();
+          const decoratorState = (this.#decoratorState[decorator] ??=
+            new TrackedObject());
 
           const owner = getOwner(this);
           const renderNestedPostCookedHtml = (
@@ -62,7 +63,7 @@ export default class PostCookedHtml extends Component {
             const nestedArguments = {
               ...extraArguments,
               post: nestedPost,
-              cloakedState: decoratorState,
+              decoratorState,
               streamElement: false,
               highlightTerm: this.highlightTerm,
               extraDecorators: [
@@ -85,7 +86,7 @@ export default class PostCookedHtml extends Component {
               isIgnored: this.isIgnored,
               ignoredUsers: this.ignoredUsers,
             },
-            cloakedState: decoratorState,
+            decoratorState,
             cooked: this.cooked,
             createDetachedElement: this.#createDetachedElement,
             currentUser: this.currentUser,

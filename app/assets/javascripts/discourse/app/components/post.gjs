@@ -48,7 +48,7 @@ export default class Post extends Component {
   @tracked repliesAbove;
   @tracked repliesBelow = new TrackedArray();
 
-  cloakedState = new TrackedObject();
+  decoratorState = new TrackedObject();
 
   get additionalClasses() {
     return applyValueTransformer("post-class", [], {
@@ -377,7 +377,7 @@ export default class Post extends Component {
             actions=(hash
               updateTopicPageQueryParams=@updateTopicPageQueryParams
             )
-            cloakedState=this.cloakedState
+            decoratorState=this.decoratorState
             topicPageQueryParams=@topicPageQueryParams
           )
           as |postOutletArgs|
@@ -473,7 +473,7 @@ export default class Post extends Component {
                       <PostCookedHtml
                         @post={{@post}}
                         @highlightTerm={{@highlightTerm}}
-                        @cloakedState={{this.cloakedState}}
+                        @decoratorState={{this.decoratorState}}
                       />
                     </PluginOutlet>
 
