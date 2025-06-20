@@ -4,6 +4,12 @@ module Migrations::Importer::Steps
   class Badges < ::Migrations::Importer::CopyStep
     DEFAULT_ICON = "certificate"
     DUPLICATE_SUFFIX = "_1"
+    VALID_TRIGGERS =
+      Badge::Trigger
+        .constants(false)
+        .filter_map { Badge::Trigger.const_get(_1) unless _1 == :DeprecatedPostProcessed }
+        .to_set
+        .freeze
 
     requires_mapping :ids_by_name, "SELECT name, id FROM badges"
     requires_set :existing_ids, "SELECT id FROM badges"
@@ -48,26 +54,24 @@ module Migrations::Importer::Steps
       FROM badges b
            LEFT JOIN mapped.ids mi ON b.original_id = mi.original_id AND mi.type = ?
       WHERE mi.original_id IS NULL
-      GROUP BY b.original_id
       ORDER BY b.ROWID
     SQL
 
     private
 
     def transform_row(row)
-      if row[:existing_id].present?
-        row[:id] = if row[:existing_id].match?(/\A\d+\z/)
-          id = row[:existing_id].to_i
-          id if @existing_ids.include?(id)
+      if (existing_id = row[:existing_id])
+        row[:id] = if existing_id.match?(/\A\d+\z/)
+          id = existing_id.to_i
+          @existing_ids.include?(id) ? id : nil
         else
-          @ids_by_name[row[:existing_id]]
+          @ids_by_name[existing_id]
         end
 
-        return nil if row[:id].present?
+        return nil if row[:id]
       end
 
-      badge_name = row[:name].dup
-      row[:name] = @existing_names.add?(badge_name) ? badge_name : deduplicate_name(badge_name)
+      row[:name] = ensure_unique_name(row[:name])
 
       row[:allow_title] ||= false
       row[:multiple_grant] ||= false
@@ -79,45 +83,85 @@ module Migrations::Importer::Steps
       row[:listable] = true if row[:listable].nil?
 
       row[:icon] = DEFAULT_ICON if row[:icon].blank?
-      row[:trigger] = Badge::Trigger::None unless valid_trigger?(row[:trigger])
-
-      # TODO: Update these if/when we add import steps for badge groupings and badge types
-      #       Current implementation expects the converter to set final values
-      row[:badge_grouping_id] = ensure_related_id(
-        row[:badge_grouping_id],
-        @existing_badge_grouping_ids,
-        BadgeGrouping::Other,
-      )
-      row[:badge_type_id] = ensure_related_id(
-        row[:badge_type_id],
-        @existing_badge_type_ids,
-        BadgeType::Silver,
-      )
-
-      # TODO: Probably validate the imported query, maybe in some other step
-      row[:query] = nil if !SiteSetting.enable_badge_sql? && row[:query].present?
+      row[:trigger] = ensure_valid_trigger(row)
+      row[:badge_grouping_id] = ensure_valid_badge_grouping_id(row)
+      row[:badge_type_id] = ensure_valid_badge_type_id(row)
+      row[:query] = ensure_valid_query(row)
 
       # TODO: Resolve and include image_upload_id once have an uploads step
 
       super
     end
 
-    def deduplicate_name(name)
+    def ensure_unique_name(name)
+      return name if @existing_names.add?(name)
+
+      name = name.dup
       new_name = name + DUPLICATE_SUFFIX
       new_name.next! until @existing_names.add?(new_name)
 
       new_name
     end
 
-    def ensure_related_id(value, allowed_set, default_value)
-      allowed_set.include?(value) ? value : default_value
+    def ensure_valid_trigger(row)
+      ensure_valid_value(
+        value: row[:trigger],
+        allowed_set: VALID_TRIGGERS,
+        default_value: Badge::Trigger::None,
+      ) do |invalid, default|
+        # TODO(selase): Adopt importer framework warning logging implementation once available
+        Rails.logger.warn "#{row[:name]}: Invalid badge trigger '#{invalid}', using default '#{default}'"
+      end
     end
 
-    def valid_trigger?(trigger)
-      return false if trigger.blank?
+    def ensure_valid_badge_grouping_id(row)
+      ensure_valid_value(
+        value: row[:badge_grouping_id],
+        allowed_set: @existing_badge_grouping_ids,
+        default_value: BadgeGrouping::Other,
+      )
+    end
 
-      Badge::Trigger.is_none?(trigger) || Badge::Trigger.uses_user_ids?(trigger) ||
-        Badge::Trigger.uses_post_ids?(trigger)
+    def ensure_valid_badge_type_id(row)
+      ensure_valid_value(
+        value: row[:badge_type_id],
+        allowed_set: @existing_badge_type_ids,
+        default_value: BadgeType::Silver,
+      )
+    end
+
+    def ensure_valid_value(value:, allowed_set:, default_value:)
+      return value if allowed_set.include?(value)
+
+      yield(value, default_value) if block_given?
+      default_value
+    end
+
+    def ensure_valid_query(row)
+      # TODO(selase):
+      #  Adopt importer framework warning logging  implementation once available
+      query = row[:query].presence
+
+      return nil unless query
+
+      name = row[:name]
+
+      unless SiteSetting.enable_badge_sql?
+        Rails.logger.warn "#{name}: Badge SQL is not enabled"
+        return nil
+      end
+
+      begin
+        BadgeGranter.contract_checks!(
+          query,
+          target_posts: row[:target_posts],
+          trigger: row[:trigger],
+        )
+        query
+      rescue StandardError => e
+        Rails.logger.warn "#{name}: Invalid badge query: #{e.message}"
+        nil
+      end
     end
   end
 end

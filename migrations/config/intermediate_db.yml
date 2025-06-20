@@ -11,7 +11,7 @@ schema:
       columns:
         add:
           - name: "existing_id"
-            datatype: "text"
+            datatype: "numeric"
         exclude:
           - "grant_count"
           - "system"
