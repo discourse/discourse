@@ -382,6 +382,13 @@
   height: 1.25rem;
 }
 
+.toolbar__button.--active {
+  .d-icon,
+  &.btn:hover .d-icon {
+    color: var(--tertiary);
+  }
+}
+
 .d-editor #form-template-form {
   overflow: auto;
   background: var(--primary-very-low);

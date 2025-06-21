@@ -25,6 +25,11 @@ export default class ComposerToolbarButtons extends Component {
     return this.args.rovingButtonBar || this.args.data.rovingButtonBar;
   }
 
+  @action
+  isButtonActive(button) {
+    return button.active?.({ state: this.args.data.state });
+  }
+
   <template>
     {{#each @data.groups key="group" as |group|}}
       {{#each group.buttons key="id" as |button|}}
@@ -53,7 +58,11 @@ export default class ComposerToolbarButtons extends Component {
               @preventFocus={{button.preventFocus}}
               @onKeyDown={{this.rovingButtonBar}}
               tabindex={{this.tabIndex button}}
-              class={{concatClass "toolbar-link" button.className}}
+              class={{concatClass
+                "toolbar__button"
+                button.className
+                (if (this.isButtonActive button) "--active")
+              }}
               rel={{if button.href "noopener noreferrer"}}
               target={{if button.href "_blank"}}
             />

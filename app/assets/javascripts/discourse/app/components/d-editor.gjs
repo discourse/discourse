@@ -91,6 +91,8 @@ export default class DEditor extends Component {
 
     this.register = getRegister(this);
 
+    this.setupToolbar();
+
     if (
       this.siteSettings.rich_editor &&
       this.keyValueStore.get("d-editor-prefers-rich-editor") === "true"
@@ -98,6 +100,19 @@ export default class DEditor extends Component {
       this.editorComponent = await loadRichEditor();
     } else {
       this.editorComponent = TextareaEditor;
+    }
+  }
+
+  setupToolbar() {
+    this.toolbar = new Toolbar(
+      this.getProperties("siteSettings", "showLink", "capabilities")
+    );
+    this.toolbar.context = this;
+
+    _createCallbacks.forEach((cb) => cb(this.toolbar));
+
+    if (this.extraButtons) {
+      this.extraButtons(this.toolbar);
     }
   }
 
@@ -175,20 +190,9 @@ export default class DEditor extends Component {
     this._cachedCookFunction = null;
   }
 
-  @discourseComputed()
-  toolbar() {
-    const toolbar = new Toolbar(
-      this.getProperties("siteSettings", "showLink", "capabilities")
-    );
-    toolbar.context = this;
-
-    _createCallbacks.forEach((cb) => cb(toolbar));
-
-    if (this.extraButtons) {
-      this.extraButtons(toolbar);
-    }
-
-    return toolbar;
+  @action
+  updateToolbarState(state) {
+    Object.assign(this.toolbar.state, state);
   }
 
   async cachedCookAsync(text, options) {
@@ -745,6 +749,7 @@ export default class DEditor extends Component {
             @topicId={{@topicId}}
             @id={{this.textAreaId}}
             @replaceToolbar={{this.replaceToolbar}}
+            @onStateUpdate={{this.updateToolbarState}}
           />
           <PopupInputTip @validation={{this.validation}} />
           <PluginOutlet
