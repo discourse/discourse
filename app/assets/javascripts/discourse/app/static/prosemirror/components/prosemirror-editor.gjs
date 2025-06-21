@@ -121,7 +121,7 @@ export default class ProsemirrorEditor extends Component {
         .split("+")
         .map((word) => replacements[word] ?? word)
         .join("-");
-      result[pmKey] = value;
+      result[pmKey] = () => !(value() ?? false);
     }
     return result;
   }

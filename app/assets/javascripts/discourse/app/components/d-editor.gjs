@@ -134,7 +134,9 @@ export default class DEditor extends Component {
 
         if (customAction) {
           const toolbarEvent = this.newToolbarEvent();
-          customAction(toolbarEvent);
+          if (!button.condition || button.condition(toolbarEvent)) {
+            customAction(toolbarEvent);
+          }
         } else {
           button.action(button);
         }

@@ -1584,6 +1584,62 @@ import { i18n } from "discourse-i18n";
         assert.dom(editor).hasValue(":smile: from keyboard");
       });
 
+      test("buttons with conditions only trigger shortcut actions when condition is true", async function (assert) {
+        withPluginApi("1.37.1", (api) => {
+          api.onToolbarCreate((toolbar) => {
+            toolbar.addButton({
+              id: "conditional-button",
+              group: "extras",
+              icon: "check",
+              shortcut: "ALT+C",
+              shortcutAction: (toolbarEvent) => {
+                toolbarEvent.addText("condition was true");
+              },
+              condition: () => false,
+            });
+          });
+        });
+
+        await visit("/t/internationalization-localization/280");
+        await click(".post-controls button.reply");
+
+        await triggerKeyEvent(".d-editor-input", "keydown", "C", {
+          altKey: true,
+          ...metaModifier,
+        });
+
+        assert
+          .dom(".d-editor-input")
+          .hasValue("", "shortcut should not trigger when condition is false");
+
+        withPluginApi("1.37.1", (api) => {
+          api.onToolbarCreate((toolbar) => {
+            toolbar.addButton({
+              id: "conditional-button",
+              group: "extras",
+              icon: "check",
+              shortcut: "ALT+C",
+              shortcutAction: (toolbarEvent) => {
+                toolbarEvent.addText("condition was true");
+              },
+              condition: () => true,
+            });
+          });
+        });
+
+        await triggerKeyEvent(".d-editor-input", "keydown", "C", {
+          altKey: true,
+          ...metaModifier,
+        });
+
+        assert
+          .dom(".d-editor-input")
+          .hasValue(
+            "condition was true",
+            "shortcut triggers when condition is true"
+          );
+      });
+
       test("buttons can be added conditionally", async function (assert) {
         withPluginApi("0", (api) => {
           api.addComposerToolbarPopupMenuOption({
