@@ -38,7 +38,7 @@ export default class BulkTopicActions extends Component {
   @tracked isSilent = false;
   @tracked closeNote = null;
 
-  notificationLevelId = null;
+  @tracked notificationLevelId = null;
 
   constructor() {
     super(...arguments);
@@ -327,6 +327,14 @@ export default class BulkTopicActions extends Component {
     return this.soleCategory && this.isTagAction;
   }
 
+  get disabledSubmit() {
+    if (this.isNotificationAction) {
+      return !this.notificationLevelId || this.loading;
+    }
+
+    return this.loading;
+  }
+
   @action
   onCategoryChange(categoryId) {
     this.categoryId = categoryId;
@@ -449,7 +457,7 @@ export default class BulkTopicActions extends Component {
         />
         <DButton
           @action={{this.performAction}}
-          @disabled={{this.loading}}
+          @disabled={{this.disabledSubmit}}
           @icon="check"
           @label="topics.bulk.confirm"
           id="bulk-topics-confirm"
