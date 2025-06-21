@@ -85,6 +85,10 @@ module Service
         return super if args.present?
         store[method_name]
       end
+
+      def respond_to_missing?(name, include_all)
+        store.key?(name) || super
+      end
     end
 
     # Internal module to define available steps as DSL

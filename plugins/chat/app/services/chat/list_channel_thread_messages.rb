@@ -42,6 +42,7 @@ module Chat
     model :membership, optional: true
     step :determine_target_message_id
     policy :target_message_exists
+    model :metadata, optional: true
     model :messages, optional: true
 
     private
@@ -82,28 +83,26 @@ module Chat
       target_message.user_id == guardian.user.id || guardian.is_staff?
     end
 
-    def fetch_messages(thread:, guardian:, params:)
-      messages_data =
-        ::Chat::MessagesQuery.call(
-          channel: thread.channel,
-          guardian: guardian,
-          target_message_id: context.target_message_id,
-          thread_id: thread.id,
-          page_size: params.page_size,
-          direction: params.direction,
-          target_date: params.target_date,
-          include_target_message_id:
-            params.fetch_from_first_message || params.fetch_from_last_message,
-        )
+    def fetch_metadata(thread:, guardian:, params:)
+      ::Chat::MessagesQuery.call(
+        guardian:,
+        channel: thread.channel,
+        target_message_id: context.target_message_id,
+        thread_id: thread.id,
+        page_size: params.page_size,
+        direction: params.direction,
+        target_date: params.target_date,
+        include_target_message_id:
+          params.fetch_from_first_message || params.fetch_from_last_message,
+      )
+    end
 
-      context[:can_load_more_past] = messages_data[:can_load_more_past]
-      context[:can_load_more_future] = messages_data[:can_load_more_future]
-
+    def fetch_messages(metadata:)
       [
-        messages_data[:messages],
-        messages_data[:past_messages]&.reverse,
-        messages_data[:target_message],
-        messages_data[:future_messages],
+        metadata[:messages],
+        metadata[:past_messages]&.reverse,
+        metadata[:target_message],
+        metadata[:future_messages],
       ].flatten.compact
     end
   end

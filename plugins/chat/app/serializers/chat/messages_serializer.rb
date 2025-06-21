@@ -4,6 +4,8 @@ module Chat
   class MessagesSerializer < ::ApplicationSerializer
     attributes :messages, :tracking, :meta
 
+    delegate :metadata, to: :object, private: true
+
     def initialize(object, opts)
       super(object, opts)
       @opts = opts
@@ -30,9 +32,9 @@ module Chat
 
     def meta
       {
-        target_message_id: object.target_message_id,
-        can_load_more_future: object.can_load_more_future,
-        can_load_more_past: object.can_load_more_past,
+        target_message_id: metadata[:target_message]&.id,
+        can_load_more_future: metadata[:can_load_more_future],
+        can_load_more_past: metadata[:can_load_more_past],
       }
     end
   end
