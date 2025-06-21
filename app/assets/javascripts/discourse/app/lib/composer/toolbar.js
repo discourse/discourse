@@ -1,7 +1,42 @@
+// @ts-check
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
 import { translateModKey } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
+
+/**
+ * @typedef ToolbarState
+ * @property {boolean} inBold
+ * @property {boolean} inItalic
+ * @property {boolean} inLink
+ * @property {boolean} inBulletList
+ * @property {boolean} inOrderedList
+ * @property {boolean} inCode
+ * @property {boolean} inCodeBlock
+ * @property {boolean} inBlockquote
+ */
+
+/**
+ * @typedef ToolbarButton
+ * @property {string} id
+ * @property {string} [group]
+ * @property {string} [tabindex]
+ * @property {string} [className]
+ * @property {string} [label]
+ * @property {string} [icon]
+ * @property {string} [href]
+ * @property {Function} action
+ * @property {Function} [perform]
+ * @property {Function} [sendAction]
+ * @property {boolean} [trimLeading]
+ * @property {boolean} [preventFocus]
+ * @property {Function} condition
+ * @property {boolean} [hideShortcutInTitle]
+ * @property {string} title
+ * @property {string} [shortcut]
+ * @property {boolean} [unshift]
+ * @property {Function} [active]
+ */
 
 function getButtonLabel(labelKey, defaultLabel) {
   // use the Font Awesome icon if the label matches the default
@@ -17,10 +52,11 @@ export class ToolbarBase {
     this.groups = [{ group: DEFAULT_GROUP, buttons: [] }];
     this.siteSettings = opts.siteSettings || {};
     this.capabilities = opts.capabilities || {};
+    /** @type {ToolbarState} */
     this.state = new TrackedObject({
-      hasBold: false,
-      hasItalic: false,
-      hasLink: false,
+      inBold: false,
+      inItalic: false,
+      inLink: false,
       inCode: false,
       inCodeBlock: false,
       inBlockquote: false,
@@ -54,11 +90,12 @@ export class ToolbarBase {
    * @param {Function=} buttonAttrs.active callback function that receives state and returns boolean
    */
   addButton(buttonAttrs) {
-    const g = this.groups.findBy("group", buttonAttrs.group || DEFAULT_GROUP);
+    const g = this.groups.find(
+      (group) => group.group === (buttonAttrs.group || DEFAULT_GROUP)
+    );
 
-    const createdButton = Object.defineProperties(
-      {},
-      Object.getOwnPropertyDescriptors(buttonAttrs)
+    const createdButton = /** @type {ToolbarButton} */ (
+      Object.defineProperties({}, Object.getOwnPropertyDescriptors(buttonAttrs))
     );
 
     createdButton.tabindex ||= "-1";
@@ -108,7 +145,7 @@ export class ToolbarBase {
   }
 
   addSeparator({ group = DEFAULT_GROUP, condition }) {
-    const g = this.groups.findBy("group", group);
+    const g = this.groups.find((item) => item.group === group);
     if (!g) {
       throw new Error(`Couldn't find toolbar group ${group}`);
     }
@@ -141,7 +178,7 @@ export default class Toolbar extends ToolbarBase {
       preventFocus: true,
       trimLeading: true,
       perform: (e) => e.applySurround("**", "**", "bold_text"),
-      active: ({ state }) => state.hasBold,
+      active: ({ state }) => state.inBold,
     });
 
     const italicLabel = getButtonLabel("composer.italic_label", "I");
@@ -155,7 +192,7 @@ export default class Toolbar extends ToolbarBase {
       preventFocus: true,
       trimLeading: true,
       perform: (e) => e.applySurround("*", "*", "italic_text"),
-      active: ({ state }) => state.hasItalic,
+      active: ({ state }) => state.inItalic,
     });
 
     if (opts.showLink) {
@@ -167,7 +204,7 @@ export default class Toolbar extends ToolbarBase {
         preventFocus: true,
         trimLeading: true,
         sendAction: (event) => this.context.send("showLinkModal", event),
-        active: ({ state }) => state.hasLink,
+        active: ({ state }) => state.inLink,
       });
     }
 

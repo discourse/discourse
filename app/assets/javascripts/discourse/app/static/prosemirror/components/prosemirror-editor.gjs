@@ -36,18 +36,6 @@ import TextManipulation from "../lib/text-manipulation";
 const AUTOCOMPLETE_KEY_DOWN_SUPPRESS = ["Enter", "Tab"];
 
 /**
- * @typedef ToolbarState
- * @property {boolean} hasBold
- * @property {boolean} hasItalic
- * @property {boolean} hasLink
- * @property {boolean} inBulletList
- * @property {boolean} inOrderedList
- * @property {boolean} inCode
- * @property {boolean} inCodeBlock
- * @property {boolean} inBlockquote
- */
-
-/**
  * @typedef ProsemirrorEditorArgs
  * @property {string} [value] The markdown content to be rendered in the editor
  * @property {string} [placeholder] The placeholder text to be displayed when the editor is empty
@@ -63,7 +51,7 @@ const AUTOCOMPLETE_KEY_DOWN_SUPPRESS = ["Enter", "Tab"];
  * @property {boolean} [includeDefault] If default node and mark spec/parse/serialize/inputRules definitions from ProseMirror should be included
  * @property {import("discourse/lib/composer/rich-editor-extensions").RichEditorExtension[]} [extensions] A list of extensions to be used with the editor INSTEAD of the ones registered through the API
  * @property {(toolbar: import("discourse/lib/composer/toolbar").ToolbarBase) => void} [replaceToolbar] A function that replaces the default toolbar in a container with a custom/temporary one
- * @property {(state: ToolbarState) => void} [onStateUpdate] A callback called to propagate a summary of the active state for the toolbar
+ * @property {(state: import("discourse/lib/composer/toolbar").ToolbarState) => void} [onStateUpdate] A callback called to propagate a summary of the active state for the toolbar
  */
 
 /**
@@ -287,9 +275,9 @@ export default class ProsemirrorEditor extends Component {
     const { state } = view;
 
     this.args.onStateUpdate({
-      hasBold: utils.hasMark(state, this.schema.marks.strong),
-      hasItalic: utils.hasMark(state, this.schema.marks.em),
-      hasLink: utils.hasMark(state, this.schema.marks.link),
+      inBold: utils.hasMark(state, this.schema.marks.strong),
+      inItalic: utils.hasMark(state, this.schema.marks.em),
+      inLink: utils.hasMark(state, this.schema.marks.link),
       inCode: utils.hasMark(state, this.schema.marks.code),
       inBulletList: utils.inNode(state, this.schema.nodes.bullet_list),
       inOrderedList: utils.inNode(state, this.schema.nodes.ordered_list),
