@@ -35,6 +35,15 @@ class Report
     page_view_logged_in_reqs
   ]
 
+  COLORS = {
+    turquoise: "#1EB8D1",
+    lime: "#9BC53D",
+    purple: "#721D8D",
+    magenta: "#E84A5F",
+    brown: "#8A6916",
+    yellow: "#FFCD56",
+  }
+
   include Reports::Bookmarks
   include Reports::ConsolidatedApiRequests
   include Reports::ConsolidatedPageViews
@@ -475,14 +484,7 @@ class Report
   end
 
   def colors
-    {
-      turquoise: "#1EB8D1",
-      lime: "#9BC53D",
-      purple: "#721D8D",
-      magenta: "#E84A5F",
-      brown: "#8A6916",
-      yellow: "#FFCD56",
-    }
+    COLORS
   end
 
   private
