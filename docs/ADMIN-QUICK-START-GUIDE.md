@@ -4,7 +4,7 @@
 
 Email is required for new account signups and notifications.
 
-→ Send a **[<kbd>test email</kbd>](%{base_url}7D/admin/email/server-settings)**.
+→ Send a **[<kbd>test email</kbd>](%{base_url}/admin/email/server-settings)**.
 
 → Email didn’t arrive? Read our guide on [email providers](https://github.com/discourse/discourse/blob/main/docs/INSTALL-email.md).
 
