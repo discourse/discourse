@@ -453,7 +453,7 @@ export default class SignupPageController extends Controller {
     const destinationUrl = this.authOptions?.destination_url;
 
     if (!isEmpty(destinationUrl)) {
-      cookie("destination_url", destinationUrl, { path: "/" });
+      cookie("destination_url", destinationUrl);
     }
 
     // Add the userFields to the data

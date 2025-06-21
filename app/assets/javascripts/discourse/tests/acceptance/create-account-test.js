@@ -115,7 +115,7 @@ acceptance("Create Account", function () {
   test("can sign in using a third-party auth", async function (assert) {
     sinon.stub(LoginMethod, "buildPostForm").callsFake((url) => {
       assert.step("buildPostForm");
-      assert.strictEqual(url, "/auth/facebook?signup=true");
+      assert.strictEqual(url, "/auth/facebook?signup=true&origin=%2Flatest");
     });
 
     await visit("/");
