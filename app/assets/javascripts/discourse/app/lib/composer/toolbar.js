@@ -1,3 +1,4 @@
+import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
 import { translateModKey } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
@@ -16,6 +17,16 @@ export class ToolbarBase {
     this.groups = [{ group: DEFAULT_GROUP, buttons: [] }];
     this.siteSettings = opts.siteSettings || {};
     this.capabilities = opts.capabilities || {};
+    this.state = new TrackedObject({
+      hasBold: false,
+      hasItalic: false,
+      hasLink: false,
+      inCode: false,
+      inCodeBlock: false,
+      inBlockquote: false,
+      inBulletList: false,
+      inOrderedList: false,
+    });
   }
 
   /**
@@ -40,6 +51,7 @@ export class ToolbarBase {
    * @param {string=} buttonAttrs.shortcut
    * @param {boolean=} buttonAttrs.unshift
    * @param {boolean=} buttonAttrs.disabled
+   * @param {Function=} buttonAttrs.active callback function that receives state and returns boolean
    */
   addButton(buttonAttrs) {
     const g = this.groups.findBy("group", buttonAttrs.group || DEFAULT_GROUP);
@@ -129,6 +141,7 @@ export default class Toolbar extends ToolbarBase {
       preventFocus: true,
       trimLeading: true,
       perform: (e) => e.applySurround("**", "**", "bold_text"),
+      active: ({ state }) => state.hasBold,
     });
 
     const italicLabel = getButtonLabel("composer.italic_label", "I");
@@ -142,6 +155,7 @@ export default class Toolbar extends ToolbarBase {
       preventFocus: true,
       trimLeading: true,
       perform: (e) => e.applySurround("*", "*", "italic_text"),
+      active: ({ state }) => state.hasItalic,
     });
 
     if (opts.showLink) {
@@ -153,6 +167,7 @@ export default class Toolbar extends ToolbarBase {
         preventFocus: true,
         trimLeading: true,
         sendAction: (event) => this.context.send("showLinkModal", event),
+        active: ({ state }) => state.hasLink,
       });
     }
 
@@ -167,6 +182,7 @@ export default class Toolbar extends ToolbarBase {
           applyEmptyLines: true,
           multiline: true,
         }),
+      active: ({ state }) => state.inBlockquote,
     });
 
     if (!this.capabilities.touch) {
@@ -178,6 +194,7 @@ export default class Toolbar extends ToolbarBase {
         preventFocus: true,
         trimLeading: true,
         perform: (e) => e.formatCode(),
+        active: ({ state }) => state.inCode || state.inCodeBlock,
       });
 
       this.addButton({
@@ -188,6 +205,7 @@ export default class Toolbar extends ToolbarBase {
         title: "composer.ulist_title",
         preventFocus: true,
         perform: (e) => e.applyList("* ", "list_item"),
+        active: ({ state }) => state.inBulletList,
       });
 
       this.addButton({
@@ -202,6 +220,7 @@ export default class Toolbar extends ToolbarBase {
             (i) => (!i ? "1. " : `${parseInt(i, 10) + 1}. `),
             "list_item"
           ),
+        active: ({ state }) => state.inOrderedList,
       });
     }
 
