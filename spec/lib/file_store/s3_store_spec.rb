@@ -435,9 +435,6 @@ RSpec.describe FileStore::S3Store do
 
         upload.update!(url: "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/#{upload_key}")
 
-        # Stub the S3 helper to use our fake bucket
-        store.s3_helper.stubs(:s3_bucket).returns(bucket)
-
         expect(bucket.find_object(upload_key)).to be_present
         expect(bucket.find_object(tombstone_key)).to be_nil
 
@@ -459,9 +456,6 @@ RSpec.describe FileStore::S3Store do
           upload.update!(
             url: "//s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/#{upload_key}",
           )
-
-          # Stub the S3 helper to use our fake bucket
-          store.s3_helper.stubs(:s3_bucket).returns(bucket)
 
           expect(bucket.find_object(upload_key)).to be_present
           expect(bucket.find_object(tombstone_key)).to be_nil
@@ -491,9 +485,6 @@ RSpec.describe FileStore::S3Store do
         bucket = prepare_fake_s3(upload_key, upload)
         store_fake_s3_object(optimized_key, optimized_image)
 
-        # Stub the S3 helper to use our fake bucket
-        store.s3_helper.stubs(:s3_bucket).returns(bucket)
-
         expect(bucket.find_object(upload_key)).to be_present
         expect(bucket.find_object(optimized_key)).to be_present
         expect(bucket.find_object(tombstone_key)).to be_nil
@@ -516,9 +507,6 @@ RSpec.describe FileStore::S3Store do
         it "removes the file from s3 with the right paths" do
           bucket = prepare_fake_s3(upload_key, upload)
           store_fake_s3_object(optimized_key, optimized_image)
-
-          # Stub the S3 helper to use our fake bucket
-          store.s3_helper.stubs(:s3_bucket).returns(bucket)
 
           expect(bucket.find_object(upload_key)).to be_present
           expect(bucket.find_object(optimized_key)).to be_present

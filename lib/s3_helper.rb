@@ -105,7 +105,7 @@ class S3Helper
   end
 
   def delete_object(key)
-    s3_bucket.object(key).delete({})
+    s3_bucket.object(key).delete
   rescue Aws::S3::Errors::NoSuchKey, Aws::S3::Errors::NotFound
   end
 
