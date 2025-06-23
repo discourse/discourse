@@ -12,7 +12,6 @@ import DButton from "discourse/components/d-button";
 import JsonSchemaEditorModal from "discourse/components/modal/json-schema-editor";
 import icon from "discourse/helpers/d-icon";
 import { deepEqual } from "discourse/lib/object";
-import { humanizedSettingName } from "discourse/lib/site-settings-utils";
 import { splitString } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 import SettingValidationMessage from "admin/components/setting-validation-message";
@@ -147,7 +146,7 @@ export default class SiteSettingComponent extends Component {
   }
 
   get settingName() {
-    return humanizedSettingName(this.setting.setting, this.setting.label);
+    return this.setting.humanized_name;
   }
 
   get componentType() {

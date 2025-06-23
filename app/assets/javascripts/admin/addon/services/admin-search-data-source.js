@@ -6,7 +6,6 @@ import escapeRegExp from "discourse/lib/escape-regexp";
 import getURL from "discourse/lib/get-url";
 import PreloadStore from "discourse/lib/preload-store";
 import { ADMIN_NAV_MAP } from "discourse/lib/sidebar/admin-nav-map";
-import { humanizedSettingName } from "discourse/lib/site-settings-utils";
 import I18n, { i18n } from "discourse-i18n";
 import { ADMIN_SEARCH_RESULT_TYPES } from "admin/lib/constants";
 
@@ -129,7 +128,7 @@ export class SettingLinkFormatter {
 
     const keywords = buildKeywords(
       this.setting.setting,
-      humanizedSettingName(this.setting.setting),
+      this.setting.humanized_name,
       this.setting.description,
       this.setting.keywords,
       rootLabel
@@ -167,7 +166,7 @@ export class SettingLinkFormatter {
 
     return [
       rootLabel,
-      `${rootLabel} ${SEPARATOR} ${humanizedSettingName(this.setting.setting)}`,
+      `${rootLabel} ${SEPARATOR} ${this.setting.humanized_name}`,
     ];
   }
 
