@@ -45,6 +45,7 @@ class FKForm extends Component {
     this.args.onRegisterApi?.({
       set: this.set,
       setProperties: this.setProperties,
+      get: this.get,
       submit: this.onSubmit,
       reset: this.onReset,
       addError: this.addError,
@@ -177,6 +178,17 @@ class FKForm extends Component {
     for (const [name, value] of Object.entries(object)) {
       await this.set(name, value);
     }
+  }
+
+  /**
+   * Retrieves the current value of a form field by name.
+   *
+   * @param {string} name - The name of the form field to retrieve.
+   * @returns {any} The current value of the field.
+   */
+  @action
+  get(name) {
+    return this.formData.get(name);
   }
 
   @action
