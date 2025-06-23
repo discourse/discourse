@@ -118,6 +118,7 @@ class FakeS3
       :delete_object,
       ->(context) do
         log_operation(context)
+
         find_bucket(context.params)&.delete_object(context.params[:key])
         { delete_marker: true }
       end,
