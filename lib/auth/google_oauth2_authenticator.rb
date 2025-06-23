@@ -14,6 +14,10 @@ class Auth::GoogleOAuth2Authenticator < Auth::ManagedAuthenticator
     "Google"
   end
 
+  def provider_url
+    "https://accounts.google.com"
+  end
+
   def enabled?
     SiteSetting.enable_google_oauth2_logins
   end

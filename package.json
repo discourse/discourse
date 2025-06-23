@@ -14,7 +14,7 @@
     "@glint/environment-ember-template-imports": "1.4.1-unstable.34c4510",
     "@glint/template": "1.4.1-unstable.34c4510",
     "@rdil/parallel-prettier": "^3.0.0",
-    "@swc/core": "^1.12.1",
+    "@swc/core": "^1.12.3",
     "chart.js": "3.5.1",
     "chartjs-plugin-datalabels": "2.2.0",
     "chrome-launcher": "^1.2.0",
@@ -36,7 +36,7 @@
     "puppeteer-core": "^24.10.2",
     "squoosh": "https://codeload.github.com/discourse/squoosh/tar.gz/dc9649d",
     "stylelint": "16.19.1",
-    "terser": "^5.43.0",
+    "terser": "^5.43.1",
     "typescript": "5.6.x"
   },
   "scripts": {

@@ -21,6 +21,12 @@ class Theme < ActiveRecord::Base
   class SettingsMigrationError < StandardError
   end
 
+  class InvalidFieldTargetError < StandardError
+  end
+
+  class InvalidFieldTypeError < StandardError
+  end
+
   attr_accessor :child_components
   attr_accessor :skip_child_components_update
 
@@ -125,6 +131,8 @@ class Theme < ActiveRecord::Base
   scope :not_components, -> { where(component: false) }
   scope :not_system, -> { where("id > 0") }
   scope :system, -> { where("id < 0") }
+  scope :with_experimental_system_themes,
+        -> { where("id > 0 OR id IN (?)", Theme.experimental_system_theme_ids) }
 
   delegate :remote_url, to: :remote_theme, private: true, allow_nil: true
 
@@ -350,6 +358,12 @@ class Theme < ActiveRecord::Base
 
       all_ids - disabled_ids
     end
+  end
+
+  def self.experimental_system_theme_ids
+    Theme::CORE_THEMES
+      .select { |k, v| SiteSetting.experimental_system_themes_map.include?(k) }
+      .values
   end
 
   def set_default!
@@ -634,11 +648,21 @@ class Theme < ActiveRecord::Base
     name = name.to_s
 
     target_id = Theme.targets[target.to_sym]
-    raise "Unknown target #{target} passed to set field" unless target_id
+    if target_id.blank?
+      raise InvalidFieldTargetError.new("Unknown target #{target} passed to set field")
+    end
 
     type_id ||=
       type ? ThemeField.types[type.to_sym] : ThemeField.guess_type(name: name, target: target)
-    raise "Unknown type #{type} passed to set field" unless type_id
+    if type_id.blank?
+      if type.present?
+        raise InvalidFieldTypeError.new("Unknown type #{type} passed to set field")
+      else
+        raise InvalidFieldTypeError.new(
+                "No type could be guessed for field #{name} for target #{target}",
+              )
+      end
+    end
 
     value ||= ""
 

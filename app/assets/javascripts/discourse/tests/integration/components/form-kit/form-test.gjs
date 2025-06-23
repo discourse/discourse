@@ -4,6 +4,7 @@ import { module, test } from "qunit";
 import Form from "discourse/components/form";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import formKit from "discourse/tests/helpers/form-kit-helper";
+import { query } from "discourse/tests/helpers/qunit-helpers";
 
 module("Integration | Component | FormKit | Form", function (hooks) {
   setupRenderingTest(hooks);
@@ -330,5 +331,29 @@ module("Integration | Component | FormKit | Form", function (hooks) {
     await click(".test");
 
     assert.form().hasNoErrors("remove the errors associated with this field");
+  });
+
+  test("scroll to top on error", async function (assert) {
+    const validate = async (data, { addError }) => {
+      addError("bar", { title: "Foo", message: "error" });
+    };
+
+    await render(
+      <template>
+        <Form @validate={{validate}} as |form|>
+          <div style="height: 1000px;"></div>
+          <form.Submit />
+        </Form>
+      </template>
+    );
+
+    query(".form-kit__button").scrollIntoView();
+
+    await formKit().submit();
+
+    assert.strictEqual(
+      document.querySelector("#ember-testing-container").scrollTop,
+      0
+    );
   });
 });

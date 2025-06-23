@@ -284,6 +284,7 @@ en:
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
     messages:
+      invalid_locale: "%{invalid_locale} is not a valid locale"
       too_long_validation:
         one: "is limited to %{count} character; you entered %{length}."
         other: "is limited to %{count} characters; you entered %{length}."
@@ -313,6 +314,7 @@ en:
       less_than_or_equal_to: must be less than or equal to %{count}
       not_a_number: is not a number
       not_an_integer: must be an integer
+      must_all_be_positive: must all be positive
       odd: must be odd
       record_invalid: ! "Validation failed: %{errors}"
       max_emojis: "can't have more than %{max_emojis_count} emoji"

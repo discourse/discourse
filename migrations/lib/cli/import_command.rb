@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "extralite"
-
 module Migrations::CLI
   class ImportCommand
     def initialize(options)

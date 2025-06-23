@@ -40,6 +40,8 @@ RSpec.describe BackupRestore::S3BackupStore do
         expect do @objects.delete_if { |obj| obj[:key] == context.params[:key] } end.to change {
           @objects
         }
+
+        { delete_marker: true }
       end,
     )
 
@@ -79,6 +81,8 @@ RSpec.describe BackupRestore::S3BackupStore do
           size: context.params[:body].size,
           last_modified: Time.zone.now,
         }
+
+        { etag: "test-etag" }
       end,
     )
 

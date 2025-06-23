@@ -36,9 +36,7 @@ describe "Horizon theme | High level", type: :system do
     expect(topic_item.all("td").map { |el| el["class"] }).to eq(
       [
         "main-link topic-list-data",
-        "topic-status-data",
         "topic-category-data",
-        "topic-likes-replies-data",
         "topic-creator-data",
         "topic-activity-data",
       ],
@@ -50,7 +48,7 @@ describe "Horizon theme | High level", type: :system do
 
     # Can change site colors from the sidebar palette, which are remembered
     # across page reloads.
-    marigold_palette = ColorScheme.find_by(name: "Marigold")
+    marigold_palette = theme.color_schemes.find_by(name: "Marigold")
     palette_selector.open_palette_menu
     palette_selector.click_palette_menu_item(marigold_palette.name)
     expect(palette_selector).to have_no_palette_menu
