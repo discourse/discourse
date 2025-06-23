@@ -14,6 +14,11 @@ import DMenu from "float-kit/components/d-menu";
 export default class ToolbarPopupmenuOptions extends Component {
   dMenu;
 
+  willDestroy() {
+    super.willDestroy();
+    this.dMenu?.destroy();
+  }
+
   @action
   async onSelect(option) {
     await this.dMenu?.close();
@@ -48,19 +53,14 @@ export default class ToolbarPopupmenuOptions extends Component {
           )})`;
         }
       }
-
-      let name = content.name;
-      if (!name && content.label) {
-        name = i18n(content.label);
-      }
+      title ||= label;
 
       return {
         icon: content.icon,
         label,
         title,
-        name,
+        name: content.name,
         action: content.action,
-        shortcutAction: content.shortcutAction,
       };
     }
   }
@@ -93,8 +93,10 @@ export default class ToolbarPopupmenuOptions extends Component {
             <dropdown.item>
               <DButton
                 @translatedLabel={{option.label}}
+                @translatedTitle={{option.title}}
                 @icon={{option.icon}}
                 @action={{fn this.onSelect option}}
+                data-name={{option.name}}
               />
             </dropdown.item>
           {{/each}}
