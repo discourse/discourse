@@ -15,6 +15,7 @@ export default {
         {
           label: "chat.incoming_webhooks.title",
           route: "adminPlugins.show.discourse-chat-incoming-webhooks",
+          description: "chat.incoming_webhooks.header_description",
         },
       ]);
 

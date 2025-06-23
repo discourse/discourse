@@ -554,6 +554,7 @@ en:
         select_emoji: "Choose Emoji"
         system: "system"
         title: "Incoming webhooks"
+        header_description: "Incoming webhooks can be used by external systems to post messages into a designated chat channel as a bot user"
         url: "URL"
         url_instructions: "This URL contains a secret value - keep it safe."
         username: "Username"
