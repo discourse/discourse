@@ -8,6 +8,7 @@ module Migrations::Importer
       @shared_data = SharedData.new(@discourse_db)
 
       attach_mappings_db(config[:mappings_db])
+      attach_uploads_db(config[:uploads_db])
     end
 
     def start
@@ -24,12 +25,16 @@ module Migrations::Importer
     private
 
     def attach_mappings_db(db_path)
-      # ::Migrations::Database.reset!(db_path)
-      ::Migrations::Database.migrate(
-        db_path,
-        migrations_path: ::Migrations::Database::MAPPINGS_DB_SCHEMA_PATH,
-      )
-      @intermediate_db.execute("ATTACH DATABASE ? AS mapped", db_path)
+      migrate_and_attach(db_path, ::Migrations::Database::MAPPINGS_DB_SCHEMA_PATH, "mapped")
+    end
+
+    def attach_uploads_db(db_path)
+      migrate_and_attach(db_path, ::Migrations::Database::UPLOADS_DB_SCHEMA_PATH, "files")
+    end
+
+    def migrate_and_attach(db_path, schema_path, alias_name)
+      ::Migrations::Database.migrate(db_path, migrations_path: schema_path)
+      @intermediate_db.execute("ATTACH DATABASE ? AS #{alias_name}", db_path)
     end
 
     def step_classes

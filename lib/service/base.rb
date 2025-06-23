@@ -196,7 +196,7 @@ module Service
       def run_step
         context[name] = super
         raise NotFound if !optional && (!context[name] || context[name].try(:empty?))
-        if context[name].try(:invalid?)
+        if context[name].try(:has_changes_to_save?) && context[name].try(:invalid?)
           context[result_key].fail(invalid: true)
           context.fail!
         end

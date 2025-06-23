@@ -30,7 +30,9 @@ export default class TopicStatusColumn extends Component {
     {{#if this.badge}}
       <span class="topic-status-card {{this.badge.className}}">{{icon
           this.badge.icon
-        }}<p class="topic-status-card__name">{{i18n (themePrefix this.badge.text)}}</p></span>
+        }}<p class="topic-status-card__name">{{i18n
+            (themePrefix this.badge.text)
+          }}</p></span>
     {{/if}}
   </template>
 }

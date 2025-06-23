@@ -27,7 +27,7 @@ export default class ChatMessageText extends Component {
         <DecoratedHtml
           @html={{htmlSafe @cooked}}
           @decorate={{@decorate}}
-          @className=" chat-cooked"
+          @className="chat-cooked"
         />
       {{/if}}
 

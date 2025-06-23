@@ -14,6 +14,7 @@ export default class FKSubmit extends Component {
       class="btn-primary form-kit__button"
       type="submit"
       @isLoading={{@isLoading}}
+      @disabled={{@disabled}}
       ...attributes
     />
   </template>
