@@ -41,10 +41,12 @@ module Migrations::Importer::Steps
         AND mup.original_id IS NULL
     SQL
 
-    rows_query <<~SQL, MappingType::UPLOADS
-      SELECT up.id, up.upload
+    rows_query <<~SQL, MappingType::USERS, MappingType::UPLOADS, Discourse::SYSTEM_USER_ID
+      SELECT up.id, up.upload, COALESCE(mu.discourse_id, ?3) AS user_id
       FROM files.uploads up
-           LEFT JOIN mapped.ids mup ON up.id = mup.original_id AND mup.type = ?
+           JOIN uploads xup ON up.id = xup.id
+           LEFT JOIN mapped.ids mu ON xup.user_id = mu.original_id AND mu.type = ?1
+           LEFT JOIN mapped.ids mup ON up.id = mup.original_id AND mup.type = ?2
       WHERE up.upload IS NOT NULL
         AND mup.original_id IS NULL
       ORDER BY up.ROWID
@@ -58,6 +60,7 @@ module Migrations::Importer::Steps
 
       upload[:original_id] = row[:id]
       upload.delete(:id)
+      upload[:user_id] = row[:user_id]
 
       super(upload)
     end
