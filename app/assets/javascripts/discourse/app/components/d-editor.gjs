@@ -161,7 +161,9 @@ export default class DEditor extends Component {
       }
     });
 
-    keymap["tab"] = () => this.textManipulation.indentSelection("right");
+    // indentSelection returns true if the selection was indented
+    // itsatrap expects the return value to be false to prevent default
+    keymap["tab"] = () => !this.textManipulation.indentSelection("right");
     keymap["shift+tab"] = () => this.textManipulation.indentSelection("left");
     if (this.siteSettings.rich_editor) {
       keymap["ctrl+m"] = () => this.toggleRichEditor();
