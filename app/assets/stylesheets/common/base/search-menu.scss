@@ -189,10 +189,14 @@
     }
 
     .search-item-tag {
-      display: flex;
-      align-items: center;
+      display: inline-flex;
+      align-items: baseline;
       gap: 0.25em;
       color: var(--primary-high);
+
+      .d-icon {
+        align-self: center;
+      }
     }
 
     // overrules for legacy css
