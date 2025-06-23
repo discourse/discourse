@@ -147,15 +147,30 @@ module("Integration | Component | FormKit | Form", function (hooks) {
     );
 
     await formApi.set("bar", 2);
+    assert.strictEqual(
+      formApi.get("bar"),
+      2,
+      "get() returns the current value"
+    );
     await formApi.submit();
 
     assert.dom(".bar").hasText("2");
 
     await formApi.set("bar", 1);
+    assert.strictEqual(
+      formApi.get("bar"),
+      1,
+      "get() returns the updated value"
+    );
     await formApi.reset();
     await formApi.submit();
 
     assert.dom(".bar").hasText("2");
+    assert.strictEqual(
+      formApi.get("bar"),
+      2,
+      "get() returns the correct value after reset"
+    );
 
     formApi.addError("bar", { title: "Bar", message: "error_foo" });
     // assert on the next tick
