@@ -337,7 +337,7 @@
     margin: 0;
     background-color: transparent;
     color: var(--primary-high);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-border-radius-small);
 
     .d-icon {
       color: currentcolor;
@@ -383,15 +383,17 @@
   height: 1.25rem;
 }
 
-.toolbar__button.--active {
-  background: var(--d-selected);
-
+.toolbar__button {
   @include viewport.from(sm) {
     padding: 0.3em 0.45em;
   }
 
-  &.btn:hover .d-icon {
-    color: var(--tertiary);
+  &.--active {
+    background: var(--d-selected);
+
+    &.btn:hover .d-icon {
+      color: var(--tertiary);
+    }
   }
 }
 
