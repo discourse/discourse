@@ -90,8 +90,8 @@ export class ToolbarBase {
    * @param {Function=} buttonAttrs.active callback function that receives state and returns boolean
    */
   addButton(buttonAttrs) {
-    const g = this.groups.find(
-      (group) => group.group === (buttonAttrs.group || DEFAULT_GROUP)
+    const group = this.groups.find(
+      (item) => item.group === (buttonAttrs.group || DEFAULT_GROUP)
     );
 
     const createdButton = /** @type {ToolbarButton} */ (
@@ -138,19 +138,23 @@ export class ToolbarBase {
     }
 
     if (buttonAttrs.unshift) {
-      g.buttons.unshift(createdButton);
+      group.buttons.unshift(createdButton);
     } else {
-      g.buttons.push(createdButton);
+      group.buttons.push(createdButton);
     }
   }
 
-  addSeparator({ group = DEFAULT_GROUP, condition }) {
-    const g = this.groups.find((item) => item.group === group);
-    if (!g) {
-      throw new Error(`Couldn't find toolbar group ${group}`);
+  addSeparator({ group: groupName = DEFAULT_GROUP, condition }) {
+    const group = this.groups.find((item) => item.group === groupName);
+
+    if (!group) {
+      throw new Error(`Couldn't find toolbar group ${groupName}`);
     }
 
-    g.buttons.push({ type: "separator", condition: condition || (() => true) });
+    group.buttons.push({
+      type: "separator",
+      condition: condition || (() => true),
+    });
   }
 }
 
