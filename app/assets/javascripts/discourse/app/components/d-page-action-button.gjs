@@ -31,6 +31,7 @@ export const PrimaryButton = <template>
   <DPageActionButton
     class="btn-primary"
     ...attributes
+    @icon={{@icon}}
     @action={{@action}}
     @route={{@route}}
     @routeModels={{@routeModels}}
@@ -46,6 +47,7 @@ export const DangerButton = <template>
     class="btn-danger"
     ...attributes
     @action={{@action}}
+    @icon={{@icon}}
     @route={{@route}}
     @routeModels={{@routeModels}}
     @label={{@label}}
@@ -59,6 +61,7 @@ export const DefaultButton = <template>
     class="btn-default"
     ...attributes
     @action={{@action}}
+    @icon={{@icon}}
     @route={{@route}}
     @routeModels={{@routeModels}}
     @label={{@label}}
@@ -102,6 +105,7 @@ export const DefaultActionListItem = <template>
     class="btn-default"
     ...attributes
     @action={{@action}}
+    @icon={{@icon}}
     @route={{@route}}
     @routeModels={{@routeModels}}
     @label={{@label}}
