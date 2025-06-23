@@ -317,7 +317,7 @@
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  gap: 2px;
+  gap: var(--space-0);
   align-items: center;
   margin: 0.25rem 0;
 
