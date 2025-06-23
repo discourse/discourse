@@ -386,6 +386,10 @@
 .toolbar__button.--active {
   background: var(--d-selected);
 
+  @include viewport.from(sm) {
+    padding: 0.3em 0.45em;
+  }
+
   &.btn:hover .d-icon {
     color: var(--tertiary);
   }
