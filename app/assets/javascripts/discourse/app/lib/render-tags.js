@@ -30,11 +30,11 @@ export default function (topic, params) {
   let tagsForUser = null;
   let tagName;
 
-  const isPrivateMessage = topic?.get?.("isPrivateMessage");
+  const isPrivateMessage = topic?.get("isPrivateMessage");
 
   if (params) {
     if (params.mode === "list") {
-      tags = topic?.get?.("visibleListTags");
+      tags = topic?.get("visibleListTags");
     }
     if (params.tagsForUser) {
       tagsForUser = params.tagsForUser;

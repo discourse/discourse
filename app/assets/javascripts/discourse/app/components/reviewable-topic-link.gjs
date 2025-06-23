@@ -26,7 +26,6 @@ export default class ReviewableTopicLink extends Component {
         <ReviewableTags
           @topic={{this.reviewable.topic}}
           @tags={{this.reviewable.topic_tags}}
-          @tagName=""
         />
       {{else if (has-block)}}
         {{yield}}
