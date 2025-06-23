@@ -6,7 +6,7 @@ describe "Horizon theme | User color palette selector", type: :system do
   let(:set_theme_as_default) { true }
   let!(:theme) do
     horizon_theme = upload_theme(set_theme_as_default: set_theme_as_default)
-    ColorScheme.where(theme_id: horizon_theme.id).update_all(user_selectable: true)
+    horizon_theme.color_schemes.update_all(user_selectable: true)
     horizon_theme
   end
   fab!(:current_user) { Fabricate(:user) }
@@ -16,8 +16,8 @@ describe "Horizon theme | User color palette selector", type: :system do
   let(:interface_color_selector) do
     PageObjects::Components::InterfaceColorSelector.new(".sidebar-footer-actions")
   end
-  let(:marigold_palette) { ColorScheme.find_by(name: "Marigold") }
-  let(:marigold_palette_dark) { ColorScheme.find_by(name: "Marigold Dark") }
+  let(:marigold_palette) { theme.color_schemes.find_by(name: "Marigold") }
+  let(:marigold_palette_dark) { theme.color_schemes.find_by(name: "Marigold Dark") }
 
   before { SiteSetting.interface_color_selector = "sidebar_footer" }
 
