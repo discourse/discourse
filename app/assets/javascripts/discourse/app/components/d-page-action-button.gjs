@@ -110,7 +110,6 @@ export const DefaultActionListItem = <template>
     @routeModels={{@routeModels}}
     @label={{@label}}
     @title={{@title}}
-    @icon={{@icon}}
     @isLoading={{@isLoading}}
   />
 </template>;
