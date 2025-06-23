@@ -359,7 +359,7 @@ RSpec.describe "S3Helper" do
       expect(put_object_tagging_request[:context].params[:bucket]).to eq("some-bucket")
       expect(put_object_tagging_request[:context].params[:key]).to eq("some-path/some/key")
 
-      expect(put_object_tagging_request[:context].params[:tagging][:tag_set]).to eq(
+      expect(put_object_tagging_request[:context].params[:tagging][:tag_set].map(&:to_h)).to eq(
         [{ key: "tag1", value: "newvalue" }, { key: "tag2", value: "value2" }],
       )
     end
@@ -391,7 +391,7 @@ RSpec.describe "S3Helper" do
       expect(put_object_tagging_request[:context].params[:bucket]).to eq("some-bucket")
       expect(put_object_tagging_request[:context].params[:key]).to eq("some-path/some/key")
 
-      expect(put_object_tagging_request[:context].params[:tagging][:tag_set]).to eq(
+      expect(put_object_tagging_request[:context].params[:tagging][:tag_set].map(&:to_h)).to eq(
         [
           { key: "tag1", value: "value1" },
           { key: "tag2", value: "value2" },

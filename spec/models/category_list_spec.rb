@@ -499,14 +499,14 @@ RSpec.describe CategoryList do
     end
   end
 
-  context "with experimental_content_localization enabled" do
+  context "with content_localization_enabled enabled" do
     fab!(:category) { Fabricate(:category, name: "Original Name", description: "Original Desc") }
     fab!(:category_localization) { Fabricate(:category_localization, category:, locale: "ja") }
 
     let(:locale) { "ja" }
 
     before do
-      SiteSetting.experimental_content_localization = true
+      SiteSetting.content_localization_enabled = true
       I18n.locale = locale
     end
 

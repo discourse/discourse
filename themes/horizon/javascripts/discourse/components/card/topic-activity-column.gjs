@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import formatDate from "discourse/helpers/format-date";
 
 export default class TopicActivityColumn extends Component {

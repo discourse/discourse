@@ -23,7 +23,7 @@ RSpec.describe BasicPostSerializer do
       end
 
       it "returns the localized cooked" do
-        SiteSetting.experimental_content_localization = true
+        SiteSetting.content_localization_enabled = true
         Fabricate(:post_localization, post: post, cooked: "X", locale: "ja")
         I18n.locale = "ja"
         post.update!(locale: "en")

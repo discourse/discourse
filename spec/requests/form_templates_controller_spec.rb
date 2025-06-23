@@ -65,13 +65,13 @@ RSpec.describe FormTemplatesController do
 
       context "when using tag groups in a form template" do
         fab!(:admin)
-        fab!(:tag1) { Fabricate(:tag, description: "Tag 1 custom Translation") }
-        fab!(:tag2) { Fabricate(:tag, description: "Tag 2 custom Translation") }
+        fab!(:tag1) { Fabricate(:tag, description: "A Tag 1 custom Translation") }
+        fab!(:tag2) { Fabricate(:tag, description: "A Tag 2 custom Translation") }
         fab!(:tag3) { Fabricate(:tag) }
         fab!(:tag4) { Fabricate(:tag) }
         fab!(:tag_synonym) { Fabricate(:tag, name: "discourse") }
 
-        fab!(:tag_group1) { Fabricate(:tag_group, name: "tag_group1", tags: [tag1, tag3]) }
+        fab!(:tag_group1) { Fabricate(:tag_group, name: "tag_group1", tags: [tag3, tag1]) }
         fab!(:tag_group2) { Fabricate(:tag_group, name: "tag_group2", tags: [tag2, tag4]) }
 
         fab!(:tag_groups_form_template) do
@@ -136,6 +136,20 @@ RSpec.describe FormTemplatesController do
 
           expect(parsed_template[0]["choices"]).to eq([tag1.name, tag3.name])
           expect(parsed_template[1]["choices"]).to eq([tag2.name, tag4.name])
+        end
+
+        it "should return a single template with the correct data in order" do
+          new_tag = Fabricate(:tag, description: "Custom Tag")
+          tag_group1.tags = [tag3, tag1, new_tag]
+          tag_group1.save
+
+          get "/form-templates/#{tag_groups_form_template.id}.json"
+          expect(response.status).to eq(200)
+          json = response.parsed_body
+
+          current_template = json["form_template"]
+          parsed_template = YAML.safe_load(current_template["template"])
+          expect(parsed_template[0]["choices"]).to eq([tag1.name, new_tag.name, tag3.name])
         end
       end
     end

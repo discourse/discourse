@@ -2,8 +2,6 @@
 .list-controls #create-topic,
 .notifications-button-footer .reason .text,
 .pinned-button .reason .text,
-.more-topics__browse-more,
-// footer-message might cause issues, not sure what possible stuff can be in there, but the general idea is to hide it bcs having an ugly H3 (what?) CTA at the bottom is just… ugly imo
-.footer-message {
+.more-topics__browse-more {
   display: none;
 }

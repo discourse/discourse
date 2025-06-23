@@ -70,8 +70,8 @@ export default class Icons extends Component {
   get showLanguageSwitcher() {
     return (
       !this.currentUser &&
-      this.siteSettings.experimental_anon_language_switcher &&
-      this.siteSettings.experimental_content_localization_supported_locales
+      this.siteSettings.content_localization_anon_language_switcher &&
+      this.siteSettings.content_localization_supported_locales
     );
   }
 

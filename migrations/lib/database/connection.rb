@@ -56,6 +56,8 @@ module Migrations::Database
       if (@statement_counter += 1) >= @transaction_batch_size
         commit_transaction
       end
+
+      nil
     end
 
     def query(sql, *parameters, &block)

@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
-RSpec.describe "Localized topic" do
+describe "Content Localization" do
   fab!(:japanese_user) { Fabricate(:user, locale: "ja") }
   fab!(:site_local_user) { Fabricate(:user, locale: "en") }
   fab!(:author) { Fabricate(:user) }
+
+  fab!(:jap_group) { Fabricate(:group).tap { |g| g.add(japanese_user) } }
 
   fab!(:topic) do
     Fabricate(:topic, title: "Life strategies from The Art of War", locale: "en", user: author)
@@ -28,6 +30,8 @@ RSpec.describe "Localized topic" do
 
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:topic_list) { PageObjects::Components::TopicList.new }
+  let(:composer) { PageObjects::Components::Composer.new }
+  let(:post_1_obj) { PageObjects::Components::Post.new(1) }
 
   before do
     Fabricate(:topic_localization, topic:, locale: "ja", fancy_title: "孫子兵法からの人生戦略")
@@ -38,10 +42,13 @@ RSpec.describe "Localized topic" do
     Fabricate(:post_localization, post: post_3, locale: "en", cooked: "A general is one who ..")
   end
 
-  context "when the feature is enabled" do
+  context "when the feature is enabled for English and Japanese" do
     before do
       SiteSetting.allow_user_locale = true
-      SiteSetting.experimental_content_localization = true
+      SiteSetting.content_localization_enabled = true
+      SiteSetting.content_localization_allowed_groups =
+        "#{Group::AUTO_GROUPS[:admins]}|#{jap_group.id}"
+      SiteSetting.content_localization_supported_locales = "en|ja"
     end
 
     it "shows the correct language based on the selected language and login status" do
@@ -64,6 +71,25 @@ RSpec.describe "Localized topic" do
 
       visit("/")
       topic_list.visit_topic_with_title("Life strategies from The Art of War")
+    end
+
+    it "allows users to set their post's locale when posting" do
+      sign_in(japanese_user)
+
+      visit("/")
+      topic_list.visit_topic_with_title("孫子兵法からの人生戦略")
+
+      topic_page.click_post_action_button(post_1, :reply)
+      expect(composer).to be_opened
+      expect(composer.locale.text.gsub(/\u200B/, "")).to be_blank
+
+      composer.set_locale("日本語")
+      composer.fill_content("新しい投稿の内容 をここに入力します。")
+      composer.create
+
+      sign_in(site_local_user)
+      topic_page.visit_topic(topic)
+      expect(post_1_obj).to have_css(".post-info.post-language")
     end
   end
 end
