@@ -134,7 +134,9 @@ export default class DEditor extends Component {
 
         if (customAction) {
           const toolbarEvent = this.newToolbarEvent();
-          customAction(toolbarEvent);
+          if (!button.condition || button.condition(toolbarEvent)) {
+            customAction(toolbarEvent);
+          }
         } else {
           button.action(button);
         }
@@ -159,8 +161,10 @@ export default class DEditor extends Component {
       }
     });
 
-    keymap["tab"] = () => this.textManipulation.indentSelection("right");
-    keymap["shift+tab"] = () => this.textManipulation.indentSelection("left");
+    // indentSelection returns true if the selection was indented
+    // itsatrap expects the return value to be false to prevent default
+    keymap["tab"] = () => !this.textManipulation.indentSelection("right");
+    keymap["shift+tab"] = () => !this.textManipulation.indentSelection("left");
     if (this.siteSettings.rich_editor) {
       keymap["ctrl+m"] = () => this.toggleRichEditor();
     }

@@ -10,7 +10,7 @@ export default class TagsField extends BaseField {
   @action
   onChangeTags(tags) {
     if (isBlank(tags)) {
-      tags = undefined; // avoids storing [] as value which can complicate logic in the backend
+      tags = undefined;
     }
 
     this.mutValue(tags);

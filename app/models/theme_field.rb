@@ -3,7 +3,8 @@
 class ThemeField < ActiveRecord::Base
   MIGRATION_NAME_PART_MAX_LENGTH = 150
 
-  # This string is not 'secret'. It's just randomized to avoid accidental clashes with genuine theme field content.
+  # This string is not 'secret'. It's just randomized to avoid accidental
+  # clashes with genuine theme field content.
   CSP_NONCE_PLACEHOLDER = "__CSP__NONCE__PLACEHOLDER__f72bff1b1768168a34ee092ce759f192__"
 
   belongs_to :upload

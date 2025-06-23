@@ -1584,6 +1584,62 @@ import { i18n } from "discourse-i18n";
         assert.dom(editor).hasValue(":smile: from keyboard");
       });
 
+      test("buttons with conditions should not trigger shortcut actions when condition is false", async function (assert) {
+        withPluginApi((api) => {
+          api.onToolbarCreate((toolbar) => {
+            toolbar.addButton({
+              id: "smile",
+              group: "extras",
+              icon: "far-face-smile",
+              shortcut: "ALT+S",
+              shortcutAction: (toolbarEvent) => {
+                toolbarEvent.addText(":smile: from keyboard");
+              },
+              condition: () => false,
+            });
+          });
+        });
+
+        await visit("/t/internationalization-localization/280");
+        await click(".post-controls button.reply");
+
+        const editor = find(".d-editor-input");
+        await triggerKeyEvent(".d-editor-input", "keydown", "S", {
+          altKey: true,
+          ...metaModifier,
+        });
+
+        assert.dom(editor).hasValue("");
+      });
+
+      test("buttons with conditions should trigger shortcut actions when condition is true", async function (assert) {
+        withPluginApi((api) => {
+          api.onToolbarCreate((toolbar) => {
+            toolbar.addButton({
+              id: "smile",
+              group: "extras",
+              icon: "far-face-smile",
+              shortcut: "ALT+S",
+              shortcutAction: (toolbarEvent) => {
+                toolbarEvent.addText(":smile: from keyboard");
+              },
+              condition: () => true,
+            });
+          });
+        });
+
+        await visit("/t/internationalization-localization/280");
+        await click(".post-controls button.reply");
+
+        const editor = find(".d-editor-input");
+        await triggerKeyEvent(".d-editor-input", "keydown", "S", {
+          altKey: true,
+          ...metaModifier,
+        });
+
+        assert.dom(editor).hasValue(":smile: from keyboard");
+      });
+
       test("buttons can be added conditionally", async function (assert) {
         withPluginApi("0", (api) => {
           api.addComposerToolbarPopupMenuOption({

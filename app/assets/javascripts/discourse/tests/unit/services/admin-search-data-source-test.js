@@ -117,6 +117,49 @@ module("Unit | Service | AdminSearchDataSource", function (hooks) {
     );
   });
 
+  test("buildMap - labels are correct for top-level, second-level, and third-level nav", async function (assert) {
+    await this.subject.buildMap();
+
+    const firstPage = this.subject.pageDataSourceItems.find(
+      (page) => page.url === "/admin"
+    );
+
+    assert.notStrictEqual(firstPage, undefined, "top-level page exists");
+    assert.strictEqual(
+      firstPage.label,
+      i18n("admin.dashboard.title"),
+      "top-level label is correct e.g. Dashboard"
+    );
+
+    const secondPage = this.subject.pageDataSourceItems.find(
+      (page) => page.url === "/admin/config/flags"
+    );
+
+    assert.notStrictEqual(secondPage, undefined, "second-level page exists");
+    assert.strictEqual(
+      secondPage.label,
+      i18n("admin.config_sections.community.title") +
+        " > " +
+        i18n("admin.config.flags.title"),
+      "second-level label is correct e.g. Community > Flags"
+    );
+
+    const thirdPage = this.subject.pageDataSourceItems.find(
+      (page) => page.url === "/admin/backups/logs"
+    );
+
+    assert.notStrictEqual(thirdPage, undefined, "third-level page exists");
+    assert.strictEqual(
+      thirdPage.label,
+      i18n("admin.config_sections.advanced.title") +
+        " > " +
+        i18n("admin.config.backups.title") +
+        " > " +
+        i18n("admin.config.backups.sub_pages.logs.title"),
+      "third-level label is correct e.g. Advanced > Backups > Logs"
+    );
+  });
+
   test("search - returns empty array if the search term is too small", async function (assert) {
     await this.subject.buildMap();
     assert.deepEqual(this.subject.search("a"), []);
@@ -219,7 +262,7 @@ module(
         this.router,
         navMapSection,
         link,
-        i18n("admin.config.backups.title")
+        i18n(navMapSection.label) + " > " + i18n("admin.config.backups.title")
       );
       assert.deepEqual(
         formatter.format().label,
@@ -228,7 +271,7 @@ module(
           i18n("admin.config.backups.title") +
           " > " +
           i18n(link.label),
-        "link uses the section label, parent label, and link label for sub-pages"
+        "link uses the parent label and link label for sub-pages, since the section label is already included in the parent label"
       );
 
       link = {

@@ -98,6 +98,10 @@ body:not(.has-full-page-chat, .wizard) {
   }
 }
 
+.welcome-banner {
+  display: none;
+}
+
 #list-area {
   .show-more.has-topics {
     @include viewport.from(lg) {
