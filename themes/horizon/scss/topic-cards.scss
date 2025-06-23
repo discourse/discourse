@@ -16,18 +16,55 @@
   }
 }
 
+.topic-list,
+.category-boxes .subcategories {
+  .badge-category__wrapper {
+    border-radius: var(--d-border-radius);
+    padding: 3px 6px;
+    background-color: light-dark(
+      oklch(from var(--category-badge-color) 97% calc(c * 0.3) h),
+      oklch(from var(--category-badge-color) 45% calc(c * 0.5) h)
+    );
+
+    @include viewport.until(md) {
+      padding: 2px 6px;
+      font-size: var(--font-down-2);
+    }
+
+    .badge-category__name {
+      color: light-dark(
+        oklch(from var(--category-badge-color) 20% calc(c * 1) h),
+        oklch(from var(--category-badge-color) 100% calc(c * 0.9) h)
+      );
+    }
+  }
+}
+
+// undo all the above for the few instances that arent styled like traditional badges
+.category-text-title {
+  .badge-category__wrapper {
+    border-radius: 0;
+    padding: 0;
+    background-color: transparent;
+
+    .badge-category__name {
+      color: var(--primary);
+    }
+  }
+}
+
 .topic-list-body {
   border: none;
   display: flex;
   flex-direction: column;
   gap: 1.25em;
 
-  @include breakpoint(medium) {
+  @include viewport.until(lg) {
     gap: 0.5em;
     padding: 0 0.5em;
   }
 
-  @include breakpoint(mobile-extra-large) {
+  @include viewport.until(sm) {
     gap: 0;
     padding: 0;
   }
@@ -90,6 +127,12 @@
       grid-template-areas:
         "bulk-select creator title title title status"
         "bulk-select category category activity likes-replies likes-replies";
+
+      @include viewport.until(sm) {
+        grid-template-areas:
+          "bulk-select creator title title title status"
+          "bulk-select . category likes-replies activity . ";
+      }
     }
 
     @include viewport.until(sm) {
@@ -97,14 +140,6 @@
       grid-template-areas:
         "bulk-select creator title title title status"
         "bulk-select . category activity activity . ";
-    }
-
-    &.has-replies {
-      @include viewport.until(sm) {
-        grid-template-areas:
-          "bulk-select creator title title title status"
-          "bulk-select . category likes-replies activity . ";
-      }
     }
   }
 
@@ -204,7 +239,7 @@
       oklch(from var(--category-badge-color) 45% calc(c * 0.5) h)
     );
 
-    @include breakpoint(tablet) {
+    @include viewport.until(md) {
       padding: 0.25em 0.5rem;
       font-size: var(--font-down-2);
     }
@@ -308,6 +343,7 @@
     align-items: center;
     padding: 0.2em 0.5rem;
     font-size: var(--font-down-2);
+
     @include viewport.from(lg) {
       font-size: var(--font-down-3);
     }
@@ -340,6 +376,7 @@
 
     svg {
       color: var(--status-color);
+
       @include viewport.from(lg) {
         font-size: var(--font-down-1);
       }
@@ -461,7 +498,6 @@
     .topic-status-data {
       display: none;
     }
-
     grid-template-areas:
       "creator title title title dropdown"
       ". category activity activity .";
@@ -529,6 +565,7 @@
       grid-template-areas:
         "creator title title title dropdown"
         "category category activity metadata . ";
+
       @include viewport.until(sm) {
         grid-template-areas:
           "metadata metadata metadata metadata dropdown"
@@ -631,6 +668,12 @@
   }
 }
 
+// bulk-select overrule for j/k nav
+.topic-list tr.selected td:first-of-type,
+.topic-list-item.selected td:first-of-type {
+  box-shadow: none;
+}
+
 // User Messages
 body.user-messages-page {
   .topic-list-body {
@@ -652,6 +695,10 @@ body.user-messages-page {
     grid-template-areas: "title activity" "posters .";
     grid-template-columns: auto auto;
     grid-template-rows: auto auto;
+
+    &.has-replies {
+      grid-template-areas: "title activity" "posters .";
+    }
 
     &:hover {
       .discourse-no-touch & {
