@@ -317,6 +317,7 @@
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  gap: 2px;
   align-items: center;
   margin: 0.25rem 0;
 
@@ -335,7 +336,7 @@
   .btn {
     margin: 0;
     background-color: transparent;
-    color: var(--primary-medium);
+    color: var(--primary-high);
     border-radius: var(--d-border-radius);
 
     .d-icon {
@@ -383,7 +384,8 @@
 }
 
 .toolbar__button.--active {
-  .d-icon,
+  background: var(--d-selected);
+
   &.btn:hover .d-icon {
     color: var(--tertiary);
   }
