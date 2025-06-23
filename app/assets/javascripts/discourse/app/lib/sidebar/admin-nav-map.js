@@ -272,6 +272,15 @@ export const ADMIN_NAV_MAP = [
         description: "admin.config.themes_and_components.header_description",
         icon: "paintbrush",
         keywords: "admin.config.themes_and_components.keywords",
+        links: [
+          {
+            name: "admin_theme_site_settings",
+            route: "adminConfig.theme-site-settings",
+            label: "admin.config.theme_site_settings.title",
+            description: "admin.config.theme_site_settings.header_description",
+            icon: "gear",
+          },
+        ],
       },
       {
         name: "admin_customize_site_texts",
