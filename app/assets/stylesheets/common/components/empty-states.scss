@@ -5,6 +5,10 @@
   width: 75%;
   text-align: center;
 
+  @include viewport.from(sm) {
+    padding-top: 7rem;
+  }
+
   &__preferences-hint {
     margin-top: 2rem;
     font-size: var(--font-down-1);
@@ -20,8 +24,6 @@
   }
 
   &__image {
-    margin-top: 6rem;
-
     svg {
       width: 200px;
 
@@ -31,7 +33,7 @@
     }
 
     @include viewport.until(sm) {
-      margin-top: 10vh;
+      margin-top: 8vh;
     }
   }
 
