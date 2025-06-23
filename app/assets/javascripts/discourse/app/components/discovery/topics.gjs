@@ -257,10 +257,6 @@ export default class DiscoveryTopics extends Component {
       @model={{@model}}
       @incomingCount={{this.topicTrackingState.incomingCount}}
       @bulkSelectHelper={{@bulkSelectHelper}}
-      @class={{if
-        this.showEmptyFilterEducationInFooter
-        "--show-empty-topics-education"
-      }}
     >
       {{#if this.top}}
         <div class="top-lists">
