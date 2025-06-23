@@ -4,7 +4,7 @@ module Migrations::Importer
   module MappingType
     USERS = 1
     BADGES = 2
-    UPLOADS = 10
     CATEGORIES = 3
+    UPLOADS = 10
   end
 end

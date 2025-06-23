@@ -11,6 +11,9 @@ module Migrations::Importer::Steps
     DEFAULT_TEXT_COLOR = "FFFFFF"
     MAX_NAME_LENGTH = 50
 
+    depends_on :users, :uploads
+    store_mapped_ids true
+
     requires_mapping :ids_by_name, "SELECT name, id FROM categories"
     requires_set :existing_ids, "SELECT id FROM categories"
     requires_set :category_names, <<~SQL
@@ -63,16 +66,15 @@ module Migrations::Importer::Steps
                    user_id
                  ]
 
-    store_mapped_ids true
-
     total_rows_query <<~SQL, MappingType::CATEGORIES
       SELECT COUNT(*)
       FROM categories c
-          LEFT JOIN mapped.ids mi ON c.original_id = mi.original_id AND mi.type = ?
-      WHERE mi.original_id IS NULL
+          LEFT JOIN mapped.ids mapped_category
+            ON c.original_id = mapped_category.original_id AND mapped_category.type = ?
+      WHERE mapped_category.original_id IS NULL
     SQL
 
-    rows_query <<~SQL, MappingType::CATEGORIES
+    rows_query <<~SQL, MappingType::CATEGORIES, MappingType::USERS, MappingType::UPLOADS
       WITH
           RECURSIVE
           tree AS (
@@ -91,18 +93,34 @@ module Migrations::Importer::Steps
                         PARTITION BY parent_category_id
                         ORDER BY parent_category_id NULLS FIRST, name
                         )
-                    ) AS position
+                    ) AS position,
+            mapped_user.discourse_id      AS mapped_user_id,
+            mapped_bg.discourse_id        AS mapped_uploaded_background_id,
+            mapped_bg_dark.discourse_id   AS mapped_uploaded_background_dark_id,
+            mapped_logo.discourse_id      AS mapped_uploaded_logo_id,
+            mapped_logo_dark.discourse_id AS mapped_uploaded_logo_dark_id
       FROM tree t
-           LEFT JOIN mapped.ids mi ON t.existing_id = mi.original_id AND mi.type = ?
-      WHERE mi.original_id IS NULL
+           LEFT JOIN mapped.ids mapped_category
+             ON t.original_id = mapped_category.original_id AND mapped_category.type = ?1
+           LEFT JOIN mapped.ids mapped_user
+              ON t.user_id = mapped_user.original_id AND mapped_user.type = ?2
+           LEFT JOIN mapped.ids mapped_bg
+             ON t.uploaded_background_id = mapped_bg.original_id AND mapped_bg.type = ?3
+           LEFT JOIN mapped.ids mapped_bg_dark
+             ON t.uploaded_background_dark_id = mapped_bg_dark.original_id AND mapped_bg_dark.type = ?3
+           LEFT JOIN mapped.ids mapped_logo
+             ON t.uploaded_logo_id = mapped_logo.original_id AND mapped_logo.type = ?3
+           LEFT JOIN mapped.ids mapped_logo_dark
+             ON t.uploaded_logo_dark_id = mapped_logo_dark.original_id AND mapped_logo_dark.type = ?3
+      WHERE mapped_category.original_id IS NULL
       ORDER BY t.level, position, t.original_id
     SQL
 
     private
 
     def transform_row(row)
-      if row[:existing_id].present?
-        row[:id] = resolve_existing_id(row[:existing_id])
+      if (existing_id = row[:existing_id])
+        row[:id] = resolve_existing_id(existing_id)
 
         return nil if row[:id].present?
       end
@@ -125,52 +143,48 @@ module Migrations::Importer::Steps
       row[:default_list_filter] ||= DEFAULT_LIST_FILTER
       row[:default_top_period] ||= DEFAULT_TOP_PERIOD
       row[:minimum_required_tags] ||= DEFAULT_MINIMUM_REQUIRED_TAGS
+      row[:parent_category_id] = resolve_existing_id(row[:parent_category_id])
 
-      if row[:parent_category_id].present?
-        row[:parent_category_id] = resolve_existing_id(row[:parent_category_id])
-      end
-
-      name, name_lower = deduplicate_name(row[:name], row[:parent_category_id])
-
-      row[:name] = name
-      row[:name_lower] = name_lower
-      row[:slug] ||= Slug.for(name_lower, "")
+      row[:name], row[:name_lower] = ensure_unique_name(row[:name], row[:parent_category_id])
+      row[:slug] ||= Slug.for(row[:name_lower], "")
 
       row[:style_type] ||= DEFAULT_STYLE_TYPE
       row[:subcategory_list_style] ||= DEFAULT_SUBCATEGORY_LIST_STYLE
       row[:text_color] ||= DEFAULT_TEXT_COLOR
+      row[:user_id] = row[:mapped_user_id] || Discourse::SYSTEM_USER_ID
 
-      # TODO: Copied as-is from existing importer. Shouldn't `user_id` be resolved here?
-      row[:user_id] ||= Discourse::SYSTEM_USER_ID
+      row[:uploaded_background_dark_id] = row[:mapped_uploaded_background_dark_id]
+      row[:uploaded_background_id] = row[:mapped_uploaded_background_id]
+      row[:uploaded_logo_dark_id] = row[:mapped_uploaded_logo_dark_id]
+      row[:uploaded_logo_id] = row[:mapped_uploaded_logo_id]
 
       # TODO:
       #   1. Explore feasibility of resolving and setting topic_id here
       #   2. User emails are currently not validated, should `email_in` be validated?
-      #   3. Resolve and set these once uploads step is available
-      #      - `uploaded_background_dark_id`
-      #      - `uploaded_background_id`
-      #      - `uploaded_logo_dark_id`
-      #      - `uploaded_logo_id`
-
       super
     end
 
     def resolve_existing_id(existing_id)
+      return if existing_id.blank?
+
       case existing_id
       when /\A\d+\z/
         id = existing_id.to_i
         id if @existing_ids.include?(id)
       when /_id\z/
-        SiteSetting.get(existing_id)
+        begin
+          SiteSetting.get(existing_id)
+        rescue StandardError => e
+          # TODO(selase): Adopt importer framework warning implementation once available
+          puts "    #{e.message}"
+          nil
+        end
       else
         @ids_by_name[existing_id]
       end
-    rescue StandardError => e
-      puts e.message
-      nil
     end
 
-    def deduplicate_name(original_name, parent_id)
+    def ensure_unique_name(original_name, parent_id)
       truncated_name = original_name[0...MAX_NAME_LENGTH].scrub.strip
       downcased_name = truncated_name.downcase
 

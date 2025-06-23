@@ -46,7 +46,7 @@ CREATE TABLE categories
     email_in                                  TEXT,
     email_in_allow_strangers                  BOOLEAN,
     emoji                                     TEXT,
-    existing_id                               TEXT,
+    existing_id                               NUMERIC,
     icon                                      TEXT,
     locale                                    TEXT,
     mailinglist_mirror                        BOOLEAN,

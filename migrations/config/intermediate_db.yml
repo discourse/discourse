@@ -23,7 +23,7 @@ schema:
           - name: "about_topic_title"
             datatype: text
           - name: "existing_id"
-            datatype: text
+            datatype: numeric
         exclude:
           - "contains_messages"
           - "latest_post_id"

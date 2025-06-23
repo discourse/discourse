@@ -9,12 +9,15 @@ module Migrations::Converters::Discourse
       general_category_id
     ].freeze
 
-    BACKGROUND = "uploaded_background"
-    BACKGROUND_DARK = "uploaded_background_dark"
-    LOGO = "uploaded_logo"
-    LOGO_DARK = "uploaded_logo_dark"
-
     attr_accessor :source_db
+
+    def execute
+      super
+      @background_upload_creator = UploadCreator.new(column_prefix: "background")
+      @background_dark_upload_creator = UploadCreator.new(column_prefix: "background_dark")
+      @logo_upload_creator = UploadCreator.new(column_prefix: "logo")
+      @logo_dark_upload_creator = UploadCreator.new(column_prefix: "logo_dark")
+    end
 
     def max_progress
       @source_db.count <<~SQL
@@ -23,58 +26,42 @@ module Migrations::Converters::Discourse
     end
 
     def items
-      map_seeded_categories = !!settings.dig(:categories, :map_seeded_categories)
-
       @source_db.query(
         <<~SQL,
-        WITH seeded_categories AS (
-                                    SELECT value::int as category_id, name as setting_name
-                                    FROM site_settings
-                                    WHERE name = ANY($2::text[])
-        )
         SELECT c.*,
-               CASE WHEN $1 THEN sc.setting_name END AS existing_id,
-               bg.id AS uploaded_background_id,
-               bg.url  AS uploaded_background_path,
-               bg.original_filename AS uploaded_background_filename,
-               bg.origin AS uploaded_background_origin,
-               bg.user_id AS uploaded_background_user_id,
-
-               bg_dark.id AS uploaded_background_dark_id,
-               bg_dark.url AS uploaded_background_dark_path,
-               bg_dark.original_filename AS uploaded_background_dark_filename,
-               bg_dark.origin AS uploaded_background_dark_origin,
-               bg_dark.user_id AS uploaded_background_dark_user_id,
-
-               logo.id AS uploaded_logo_id,
-               logo.url AS uploaded_logo_path,
-               logo.original_filename AS uploaded_logo_filename,
-               logo.origin AS uploaded_logo_origin,
-               logo.user_id AS uploaded_logo_user_id,
-
-               logo_dark.id AS uploaded_logo_dark_id,
-               logo_dark.url  AS uploaded_logo_dark_path,
-               logo_dark.original_filename AS uploaded_logo_dark_filename,
-               logo_dark.origin AS uploaded_logo_dark_origin,
-               logo_dark.user_id AS uploaded_logo_dark_user_id
+               ss.name AS existing_id,
+               bg.url                      AS background_url,
+               bg.original_filename        AS background_filename,
+               bg.origin                   AS background_origin,
+               bg.user_id                  AS background_user_id,
+               bg_dark.url                 AS background_dark_url,
+               bg_dark.original_filename   AS background_dark_filename,
+               bg_dark.origin              AS background_dark_origin,
+               bg_dark.user_id             AS background_dark_user_id,
+               logo.url                    AS logo_url,
+               logo.original_filename      AS logo_filename,
+               logo.origin                 AS logo_origin,
+               logo.user_id                AS logo_user_id,
+               logo_dark.url               AS logo_dark_url,
+               logo_dark.original_filename AS logo_dark_filename,
+               logo_dark.origin            AS logo_dark_origin,
+               logo_dark.user_id           AS logo_dark_user_id
         FROM categories c
-             LEFT JOIN seeded_categories sc ON c.id = sc.category_id
+             LEFT JOIN site_settings ss ON $1
+                                        AND c.id    = ss.value::int
+                                        AND ss.name = ANY($2::text[])
              LEFT JOIN uploads bg ON c.uploaded_background_id           = bg.id
              LEFT JOIN uploads bg_dark ON c.uploaded_background_dark_id = bg_dark.id
              LEFT JOIN uploads logo ON c.uploaded_logo_id               = logo.id
              LEFT JOIN uploads logo_dark ON c.uploaded_logo_dark_id     = logo_dark.id
+        ORDER BY c.id
       SQL
-        map_seeded_categories,
+        !!settings.dig(:categories, :map_seeded_categories),
         @source_db.encode_array(SEEDED_CATEGORY_SETTINGS),
       )
     end
 
     def process_item(item)
-      uploaded_background = create_upload(item, BACKGROUND)
-      uploaded_background_dark = create_upload(item, BACKGROUND_DARK)
-      uploaded_logo = create_upload(item, LOGO)
-      uploaded_logo_dark = create_upload(item, LOGO_DARK)
-
       IntermediateDB::Category.create(
         original_id: item[:id],
         about_topic_title: item[:about_topic_title],
@@ -115,34 +102,11 @@ module Migrations::Converters::Discourse
         topic_featured_link_allowed: item[:topic_featured_link_allowed],
         topic_id: item[:topic_id],
         topic_template: item[:topic_template],
-        uploaded_background_dark_id: uploaded_background_dark&.id,
-        uploaded_background_id: uploaded_background&.id,
-        uploaded_logo_dark_id: uploaded_logo_dark&.id,
-        uploaded_logo_id: uploaded_logo&.id,
+        uploaded_background_dark_id: @background_dark_upload_creator.create_for(item),
+        uploaded_background_id: @background_upload_creator.create_for(item),
+        uploaded_logo_dark_id: @logo_dark_upload_creator.create_for(item),
+        uploaded_logo_id: @logo_upload_creator.create_for(item),
         user_id: item[:user_id],
-      )
-    end
-
-    private
-
-    def create_upload(item, prefix)
-      @upload_key_cache ||= {}
-      keys =
-        @upload_key_cache[prefix] ||= {
-          id: "#{prefix}_id".to_sym,
-          path: "#{prefix}_path".to_sym,
-          filename: "#{prefix}_filename".to_sym,
-          origin: "#{prefix}_origin".to_sym,
-          user_id: "#{prefix}_user_id".to_sym,
-        }
-
-      return nil if item[keys[:id]].blank?
-
-      IntermediateDB::Upload.create_for_file(
-        path: item[keys[:path]],
-        filename: item[keys[:filename]],
-        origin: item[keys[:origin]],
-        user_id: item[keys[:user_id]],
       )
     end
   end
