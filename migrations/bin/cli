@@ -20,6 +20,7 @@ module Migrations
       end
 
       desc "import", "Import a file"
+      option :reset, type: :boolean, desc: "Reset MappingsDB before importing data"
       def import
         ::Migrations::CLI::ImportCommand.new(options).execute
       end
