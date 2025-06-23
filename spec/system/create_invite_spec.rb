@@ -97,6 +97,7 @@ describe "Creating Invites", type: :system do
       open_invite_modal
       display_advanced_options
 
+      create_invite_modal.form.field("description").fill_in("welcome")
       create_invite_modal.form.field("restrictTo").fill_in("discourse.org")
       create_invite_modal.form.field("maxRedemptions").fill_in("53")
       create_invite_modal.form.field("expiresAfterDays").select(90)
@@ -115,6 +116,7 @@ describe "Creating Invites", type: :system do
 
       expect(user_invited_pending_page.invites_list.size).to eq(1)
 
+      expect(user_invited_pending_page.latest_invite).to have_description("welcome")
       expect(user_invited_pending_page.latest_invite).to be_link_type(
         key: invite_key,
         redemption_count: 0,

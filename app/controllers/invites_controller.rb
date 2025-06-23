@@ -91,6 +91,7 @@ class InvitesController < ApplicationController
           Invite.generate(
             current_user,
             email: email,
+            description: params[:description],
             domain: params[:domain],
             skip_email: params[:skip_email],
             invited_by: current_user,
@@ -146,6 +147,7 @@ class InvitesController < ApplicationController
         Invite.generate(
           current_user,
           email: params[:email],
+          description: params[:description],
           domain: params[:domain],
           skip_email: params[:skip_email],
           invited_by: current_user,
@@ -286,7 +288,13 @@ class InvitesController < ApplicationController
 
       begin
         invite.update!(
-          params.permit(:email, :custom_message, :max_redemptions_allowed, :expires_at),
+          params.permit(
+            :email,
+            :description,
+            :custom_message,
+            :max_redemptions_allowed,
+            :expires_at,
+          ),
         )
       rescue ActiveRecord::RecordInvalid => e
         return render_json_error(e.record.errors.full_messages.first)

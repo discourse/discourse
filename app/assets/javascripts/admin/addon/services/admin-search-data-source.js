@@ -72,13 +72,12 @@ export class PageLinkFormatter {
 
     let label;
     if (this.parentLabel) {
-      label = sectionLabel;
-      if (sectionLabel) {
-        label += ` ${SEPARATOR} `;
-      }
-      label += `${this.parentLabel} ${SEPARATOR} ${linkLabel}`;
+      label = `${this.parentLabel} ${SEPARATOR} ${linkLabel}`;
     } else {
-      label = sectionLabel + (sectionLabel ? ` ${SEPARATOR} ` : "") + linkLabel;
+      label = sectionLabel;
+      if (sectionLabel !== linkLabel) {
+        label = label + (sectionLabel ? ` ${SEPARATOR} ` : "") + linkLabel;
+      }
     }
 
     let keywords = this.link.keywords
@@ -338,7 +337,7 @@ export default class AdminSearchDataSource extends Service {
     return filteredResults.sort((a, b) => b.score - a.score);
   }
 
-  #addPageLink(navMapSection, link, parentLabel = "") {
+  #addPageLink(navMapSection, link, parentLabel = null) {
     const formattedPageLink = new PageLinkFormatter(
       this.router,
       navMapSection,

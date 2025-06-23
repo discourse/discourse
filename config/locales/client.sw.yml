@@ -945,6 +945,7 @@ sw:
         invite_link:
           success: "Kiungo cha Mualiko kimetengenezwa kwa mafanikio!"
         invite:
+          description: "Elezo"
           cancel: "Ghairi"
         bulk_invite:
           error: "Samahani, faili hili inabidi liwe na umbizo faili la CSV"
@@ -1264,7 +1265,7 @@ sw:
       italic_text: "Maneno yaliyo tiliwa mkazo"
       link_title: "Kiungo-wavuti"
       link_description: "andika maelezo ya kiungo hapa"
-      link_dialog_title: "Ingiza kiungo-wavuti"
+      link_dialog_action: "Weka"
       link_optional_text: "kichwa cha habari kisichokuwa cha muhimu"
       blockquote_title: "Zuianukulu"
       blockquote_text: "Zuianukulu"
@@ -1801,6 +1802,8 @@ sw:
           actions: "Vitendo"
           edit: "Hariri"
           delete: "Futa"
+        post_language_selector:
+          none: "Hakuna"
       errors:
         create: "Samahani, hitilafu imetokea wakati wa kutengeneza chapisho lako. Tafadhali jaribu tena."
         edit: "Samahani, hitilafu imetokea wakati wa kuhariri chapisho lako. Tafadhali jaribu tena."

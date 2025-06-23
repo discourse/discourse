@@ -1714,7 +1714,7 @@ describe Topic do
       end
 
       it "returns a localized banner" do
-        SiteSetting.experimental_content_localization = true
+        SiteSetting.content_localization_enabled = true
 
         first_post.update!(locale: "en")
         I18n.locale = :ja

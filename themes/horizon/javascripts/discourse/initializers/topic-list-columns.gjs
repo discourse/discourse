@@ -2,7 +2,6 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import TopicActivityColumn from "../components/card/topic-activity-column";
 import TopicCategoryColumn from "../components/card/topic-category-column";
 import TopicCreatorColumn from "../components/card/topic-creator-column";
-import TopicLikesColumn from "../components/card/topic-likes-column";
 import TopicRepliesColumn from "../components/card/topic-replies-column";
 import TopicStatusColumn from "../components/card/topic-status-column";
 
@@ -24,9 +23,8 @@ const TopicCategory = <template>
   </td>
 </template>;
 
-const TopicLikesReplies = <template>
+const TopicReplies = <template>
   <td class="topic-likes-replies-data">
-    <TopicLikesColumn @topic={{@topic}} />
     <TopicRepliesColumn @topic={{@topic}} />
   </td>
 </template>;
@@ -56,7 +54,7 @@ export default {
           });
 
           columns.add("topic-likes-replies", {
-            item: TopicLikesReplies,
+            item: TopicReplies,
             after: "topic-author-avatar",
           });
           columns.add("topic-creator", {
@@ -86,6 +84,9 @@ export default {
             context.topic.pinned_globally
           ) {
             classes.push("--has-status-card");
+          }
+          if (context.topic.replyCount > 1) {
+            classes.push("has-replies");
           }
           return classes;
         }

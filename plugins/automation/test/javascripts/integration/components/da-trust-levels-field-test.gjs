@@ -35,4 +35,29 @@ module("Integration | Component | da-trust-levels-field", function (hooks) {
 
     assert.deepEqual(this.field.metadata.value, [1, 2]);
   });
+
+  test("empty", async function (assert) {
+    const self = this;
+
+    this.field = new AutomationFabricators(getOwner(this)).field({
+      component: "trust-levels",
+    });
+
+    await render(
+      <template>
+        <AutomationField
+          @automation={{self.automation}}
+          @field={{self.field}}
+        />
+      </template>
+    );
+    await selectKit().expand();
+    await selectKit().selectRowByValue(1);
+
+    assert.deepEqual(this.field.metadata.value, [1]);
+
+    await selectKit().deselectItemByValue(1);
+
+    assert.strictEqual(this.field.metadata.value, undefined);
+  });
 });

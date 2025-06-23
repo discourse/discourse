@@ -10,6 +10,7 @@ import { updatePosition } from "float-kit/lib/update-position";
 
 const AUTO_LINKS = ["autolink", "linkify"];
 const MENU_OFFSET = 12;
+const STRIP_PROTOCOLS = /^(mailto:|https:\/\/)/;
 
 class LinkToolbar extends ToolbarBase {
   constructor(opts = {}) {
@@ -43,16 +44,39 @@ class LinkToolbar extends ToolbarBase {
       action: opts.unlinkText,
     });
 
-    this.addSeparator({ condition: opts.canVisit });
+    this.addSeparator({
+      condition: () => opts.canVisit() || opts.canUnlink(),
+    });
 
     this.addButton({
       id: "link-visit",
-      icon: "up-right-from-square",
+      get icon() {
+        return opts.canVisit() ? "up-right-from-square" : null;
+      },
       title: "composer.link_toolbar.visit",
-      className: "btn-flat composer-link-toolbar__visit",
+      className: "composer-link-toolbar__visit",
       preventFocus: true,
-      href: opts.getHref,
-      condition: opts.canVisit,
+      condition: () => opts.canVisit() || opts.canUnlink(),
+      get href() {
+        return opts.canVisit() ? opts.getHref() : null;
+      },
+      get translatedLabel() {
+        if (opts.canUnlink()) {
+          const label = opts.getHref();
+
+          // strip base url from label
+          const origin = window.location.origin;
+          if (label.startsWith(origin)) {
+            return label.replace(origin, "");
+          }
+
+          // strip protocol from label if mailto or https
+          return label.replace(STRIP_PROTOCOLS, "");
+        }
+      },
+      get disabled() {
+        return !opts.canVisit();
+      },
     });
   }
 }
@@ -141,7 +165,7 @@ class LinkToolbarPluginView {
 
   #displayToolbar() {
     if (this.#getContext().capabilities.viewport.sm) {
-      this.#showMobileToolbar();
+      this.#showFloatingToolbar();
     } else {
       this.#getContext().replaceToolbar(this.#linkToolbar);
       this.#toolbarReplaced = true;
@@ -173,6 +197,7 @@ class LinkToolbarPluginView {
         linkUrl: this.#linkState.href,
         toolbarEvent: {
           addText: (text) => this.#replaceText(text),
+          selected: { value: this.#linkState.href },
         },
       },
     });
@@ -233,7 +258,7 @@ class LinkToolbarPluginView {
     return !AUTO_LINKS.includes(this.#linkState.markup);
   }
 
-  #showMobileToolbar() {
+  #showFloatingToolbar() {
     const element = this.#view.domAtPos(this.#linkState.head).node;
     const trigger =
       element.nodeType === Node.TEXT_NODE ? element.parentElement : element;

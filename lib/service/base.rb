@@ -85,6 +85,10 @@ module Service
         return super if args.present?
         store[method_name]
       end
+
+      def respond_to_missing?(name, include_all)
+        store.key?(name) || super
+      end
     end
 
     # Internal module to define available steps as DSL
@@ -183,6 +187,9 @@ module Service
 
     # @!visibility private
     class ModelStep < Step
+      class NotFound < StandardError
+      end
+
       attr_reader :optional
 
       def initialize(name, method_name = name, class_name: nil, optional: nil)
@@ -192,17 +199,18 @@ module Service
 
       def run_step
         context[name] = super
-        if !optional && (!context[name] || context[name].try(:empty?))
-          raise ArgumentError, "Model not found"
-        end
-        if context[name].try(:invalid?)
+        raise NotFound if !optional && (!context[name] || context[name].try(:empty?))
+        if context[name].try(:has_changes_to_save?) && context[name].try(:invalid?)
           context[result_key].fail(invalid: true)
           context.fail!
         end
       rescue Failure, DefaultValuesNotAllowed
         raise
       rescue => exception
-        context[result_key].fail(exception:, not_found: true)
+        context[result_key].fail(
+          not_found: true,
+          exception: (exception unless exception.is_a?(NotFound)),
+        )
         context.fail!
       end
     end

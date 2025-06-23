@@ -27,7 +27,7 @@ RSpec.describe "Multisite s3 uploads", type: :multisite do
       let(:store) { FileStore::S3Store.new(s3_helper) }
       let(:upload_opts) do
         {
-          acl: "public-read",
+          acl: FileStore::S3Store::CANNED_ACL_PUBLIC_READ,
           cache_control: "max-age=31556952, public, immutable",
           content_type: "image/png",
         }
@@ -260,7 +260,7 @@ RSpec.describe "Multisite s3 uploads", type: :multisite do
       end
     end
 
-    describe "#update_upload_ACL" do
+    describe "#update_upload_access_control" do
       it "updates correct file for default and second multisite db" do
         test_multisite_connection("default") do
           upload = build_upload(secure: true)
@@ -269,7 +269,7 @@ RSpec.describe "Multisite s3 uploads", type: :multisite do
           s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
           expect_upload_acl_update(upload, upload_path)
 
-          expect(store.update_upload_ACL(upload)).to be_truthy
+          expect(store.update_upload_access_control(upload)).to be_truthy
         end
 
         test_multisite_connection("second") do
@@ -280,7 +280,7 @@ RSpec.describe "Multisite s3 uploads", type: :multisite do
           s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
           expect_upload_acl_update(upload, upload_path)
 
-          expect(store.update_upload_ACL(upload)).to be_truthy
+          expect(store.update_upload_access_control(upload)).to be_truthy
         end
       end
 
@@ -294,7 +294,7 @@ RSpec.describe "Multisite s3 uploads", type: :multisite do
             expect_upload_acl_update(upload, upload_path)
             expect_optimized_image_acl_update(optimized_image, upload_path)
 
-            expect(store.update_upload_ACL(upload)).to be_truthy
+            expect(store.update_upload_access_control(upload)).to be_truthy
           end
 
           test_multisite_connection("second") do
@@ -305,7 +305,7 @@ RSpec.describe "Multisite s3 uploads", type: :multisite do
             expect_upload_acl_update(upload, upload_path)
             expect_optimized_image_acl_update(optimized_image, upload_path)
 
-            expect(store.update_upload_ACL(upload)).to be_truthy
+            expect(store.update_upload_access_control(upload)).to be_truthy
           end
         end
       end
@@ -316,14 +316,14 @@ RSpec.describe "Multisite s3 uploads", type: :multisite do
           .with("#{upload_path}/original/1X/#{upload.sha1}.#{upload.extension}")
           .returns(s3_object)
         s3_object.expects(:acl).returns(s3_object)
-        s3_object.expects(:put).with(acl: "private").returns(s3_object)
+        s3_object.expects(:put).with(acl: FileStore::S3Store::CANNED_ACL_PRIVATE).returns(s3_object)
       end
 
       def expect_optimized_image_acl_update(optimized_image, upload_path)
         path = Discourse.store.get_path_for_optimized_image(optimized_image)
         s3_bucket.expects(:object).with("#{upload_path}/#{path}").returns(s3_object)
         s3_object.expects(:acl).returns(s3_object)
-        s3_object.expects(:put).with(acl: "private").returns(s3_object)
+        s3_object.expects(:put).with(acl: FileStore::S3Store::CANNED_ACL_PRIVATE).returns(s3_object)
       end
     end
   end
@@ -383,11 +383,42 @@ RSpec.describe "Multisite s3 uploads", type: :multisite do
     context "for a bucket with no folder path" do
       before { SiteSetting.s3_upload_bucket = "s3-upload-bucket" }
 
-      it "returns a presigned url and headers with the correct params and the key for the temporary file" do
+      it "returns a presigned url and headers with the correct ACL param and the key for the temporary file" do
         url, signed_headers = store.signed_request_for_temporary_upload("test.png")
         key = store.s3_helper.path_from_url(url)
-        expect(signed_headers).to eq("x-amz-acl" => "private")
+
+        expect(signed_headers).to eq("x-amz-acl" => FileStore::S3Store::CANNED_ACL_PRIVATE)
         expect(url).to match(/Amz-Expires/)
+        expect(key).to match(
+          /temp\/uploads\/default\/test_[0-9]\/[a-zA-z0-9]{0,32}\/[a-zA-z0-9]{0,32}.png/,
+        )
+      end
+
+      it "returns a presigned url and headers with the correct ACL param and the key for the temporary file when `s3_use_acls` is disabled" do
+        SiteSetting.s3_use_acls = false
+        url, signed_headers = store.signed_request_for_temporary_upload("test.png")
+        key = store.s3_helper.path_from_url(url)
+
+        expect(signed_headers).to eq({})
+        expect(url).to match(/Amz-Expires/)
+
+        expect(key).to match(
+          /temp\/uploads\/default\/test_[0-9]\/[a-zA-z0-9]{0,32}\/[a-zA-z0-9]{0,32}.png/,
+        )
+      end
+
+      it "returns a presigned url and headers with the correct tagging params when ``s3_enable_access_control_tags` is enabled" do
+        SiteSetting.s3_enable_access_control_tags = true
+        url, signed_headers = store.signed_request_for_temporary_upload("test.png")
+        key = store.s3_helper.path_from_url(url)
+
+        expect(signed_headers).to eq(
+          "x-amz-acl" => FileStore::S3Store::CANNED_ACL_PRIVATE,
+          "x-amz-tagging" => FileStore::S3Store.visibility_tagging_option_value(secure: true),
+        )
+
+        expect(url).to match(/Amz-Expires/)
+
         expect(key).to match(
           /temp\/uploads\/default\/test_[0-9]\/[a-zA-z0-9]{0,32}\/[a-zA-z0-9]{0,32}.png/,
         )
@@ -401,7 +432,12 @@ RSpec.describe "Multisite s3 uploads", type: :multisite do
               "test-meta": "testing",
             },
           )
-        expect(signed_headers).to eq("x-amz-acl" => "private", "x-amz-meta-test-meta" => "testing")
+
+        expect(signed_headers).to eq(
+          "x-amz-acl" => FileStore::S3Store::CANNED_ACL_PRIVATE,
+          "x-amz-meta-test-meta" => "testing",
+        )
+
         expect(url).not_to include("&x-amz-meta-test-meta=testing")
       end
     end

@@ -114,7 +114,7 @@ export default {
 
   forceLinksToOpenNewTab(element) {
     const links = element.querySelectorAll(
-      ".chat-message-text a:not([target='_blank'])"
+      "a:not([target]), a[target]:not([target='_blank'])"
     );
     for (let linkIndex = 0; linkIndex < links.length; linkIndex++) {
       const link = links[linkIndex];

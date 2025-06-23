@@ -11,7 +11,11 @@ export default class UserMenuMessageItem extends UserMenuBaseItem {
   }
 
   get className() {
-    return "message";
+    let classNames = ["message"];
+
+    classNames.push(this.message.unread ? "unread" : "read");
+
+    return classNames.join(" ");
   }
 
   get linkHref() {

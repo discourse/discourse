@@ -1,6 +1,7 @@
 import { gte } from "@ember/object/computed";
 import { classNames } from "@ember-decorators/component";
 import SingleSelectComponent from "select-kit/components/single-select";
+import ComboBoxHeader from "./combo-box/combo-box-header";
 import { pluginApiIdentifiers, selectKitOptions } from "./select-kit";
 
 @classNames("combobox", "combo-box")
@@ -10,7 +11,7 @@ import { pluginApiIdentifiers, selectKitOptions } from "./select-kit";
   caretDownIcon: "caret-down",
   autoFilterable: "autoFilterable",
   clearable: false,
-  headerComponent: "combo-box/combo-box-header",
+  headerComponent: ComboBoxHeader,
   shouldDisplayIcon: false,
 })
 export default class ComboBox extends SingleSelectComponent {

@@ -14,6 +14,8 @@ import {
   pluginApiIdentifiers,
   selectKitOptions,
 } from "select-kit/components/select-kit";
+import TagDropHeader from "./tag-drop/tag-drop-header";
+import TagRow from "./tag-row";
 
 export const NO_TAG_ID = "no-tags";
 export const ALL_TAGS_ID = "all-tags";
@@ -30,7 +32,7 @@ const MORE_TAGS_COLLECTION = "MORE_TAGS_COLLECTION";
   caretUpIcon: "caret-down",
   fullWidthOnMobile: true,
   filterable: true,
-  headerComponent: "tag-drop/tag-drop-header",
+  headerComponent: TagDropHeader,
   autoInsertNoneItem: false,
 })
 @pluginApiIdentifiers("tag-drop")
@@ -96,7 +98,7 @@ export default class TagDrop extends ComboBoxComponent {
   }
 
   modifyComponentForRow() {
-    return "tag-row";
+    return TagRow;
   }
 
   @computed("tagId")

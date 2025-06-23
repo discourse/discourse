@@ -4,17 +4,12 @@ import { isBoundary } from "discourse/static/prosemirror/lib/markdown-it";
 
 const VALID_MENTIONS = new Set();
 const INVALID_MENTIONS = new Set();
-const PENDING_MENTIONS = new Set();
-const MENTION_REGEXP = new RegExp(
-  `(^|\\W)(${mentionRegex().source})(?=\\s|$)`,
-  "g"
-);
 
 /** @type {RichEditorExtension} */
 const extension = {
   nodeSpec: {
     mention: {
-      attrs: { name: {} },
+      attrs: { name: {}, valid: { default: true } },
       inline: true,
       group: "inline",
       draggable: true,
@@ -24,18 +19,44 @@ const extension = {
           tag: "a.mention",
           preserveWhitespace: "full",
           getAttrs: (dom) => {
-            return { name: dom.getAttribute("data-name") };
+            return {
+              name: dom.getAttribute("data-name"),
+              valid: dom.getAttribute("data-valid"),
+            };
           },
         },
       ],
       toDOM: (node) => {
         return [
           "a",
-          { class: "mention", "data-name": node.attrs.name },
+          {
+            class: "mention",
+            "data-name": node.attrs.name,
+            "data-valid": node.attrs.valid,
+          },
           `@${node.attrs.name}`,
         ];
       },
     },
+  },
+
+  inputRules: {
+    // TODO(renato): pass unicodeUsernames?
+    match: new RegExp(`(^|\\W)(${mentionRegex().source}) $`),
+    handler: (state, match, start, end) => {
+      const { $from } = state.selection;
+      if ($from.nodeBefore?.type === state.schema.nodes.mention) {
+        return null;
+      }
+      const mentionStart = start + match[1].length;
+      const name = match[2].slice(1);
+
+      return state.tr.replaceWith(mentionStart, end, [
+        state.schema.nodes.mention.create({ name }),
+        state.schema.text(" "),
+      ]);
+    },
+    options: { undoable: false },
   },
 
   parse: {
@@ -67,99 +88,59 @@ const extension = {
   },
 
   plugins({ pmState: { Plugin, PluginKey } }) {
-    const plugin = new PluginKey("mention");
+    const key = new PluginKey("mention");
 
     return new Plugin({
-      key: plugin,
+      key,
       view() {
         return {
           update(view) {
-            if (!view._existingMentionsValidated) {
-              this.processExistingMentions(view);
-              view._existingMentionsValidated = true;
-            }
-
-            this.processNewMentions(view);
+            this.processMentionNodes(view);
           },
-          processExistingMentions(view) {
-            const nodeList = [];
+          processMentionNodes(view) {
+            const mentionNames = [];
+            const mentionNodes = [];
 
-            view.state.doc.descendants((node, pos) => {
-              if (node.type.name === "mention") {
-                nodeList.push({ node, pos });
-                PENDING_MENTIONS.add(node.attrs.name);
-              }
-            });
-
-            if (!nodeList.length) {
+            if (this._processingMentionNodes) {
               return;
             }
 
+            this._processingMentionNodes = true;
+
+            view.state.doc.descendants((node, pos) => {
+              if (node.type.name !== "mention" || !node.attrs.valid) {
+                return;
+              }
+
+              const name = node.attrs.name;
+              mentionNames.push(name);
+              mentionNodes.push({ name, node, pos });
+            });
+
             // process in reverse to avoid issues with position shifts
-            nodeList.sort((a, b) => b.pos - a.pos);
+            mentionNodes.sort((a, b) => b.pos - a.pos);
 
             const invalidateMentions = async () => {
-              await fetchMentions([...PENDING_MENTIONS]);
+              await fetchMentions(mentionNames);
 
-              for (const item of nodeList) {
-                const { node, pos } = item;
-                const name = node.attrs.name;
+              for (const mentionNode of mentionNodes) {
+                const { name, node, pos } = mentionNode;
 
                 if (VALID_MENTIONS.has(name)) {
                   continue;
                 }
 
                 view.dispatch(
-                  view.state.tr
-                    .delete(pos, pos + node.nodeSize)
-                    .insertText(`@${name}`, pos)
+                  view.state.tr.setNodeMarkup(pos, null, {
+                    ...node.attrs,
+                    valid: false,
+                  })
                 );
               }
             };
 
-            invalidateMentions();
-          },
-          processNewMentions(view) {
-            const tr = view.state.tr;
-
-            if (!isBoundary(tr.doc.textContent.slice(-1), 0)) {
-              return;
-            }
-
-            view.state.doc.descendants((node, pos) => {
-              if (node.type.name !== "text") {
-                return;
-              }
-
-              const mentionList = getMentionsFromTextNode(node, pos);
-
-              if (!mentionList.length) {
-                return;
-              }
-
-              const processMentions = async () => {
-                await fetchMentions([...PENDING_MENTIONS]);
-
-                for (const item of mentionList) {
-                  const { name, start, end } = item;
-
-                  if (!VALID_MENTIONS.has(name)) {
-                    continue;
-                  }
-
-                  view.dispatch(
-                    tr.replaceWith(
-                      start,
-                      end,
-                      view.state.schema.nodes.mention.create({
-                        name,
-                      })
-                    )
-                  );
-                }
-              };
-
-              processMentions();
+            invalidateMentions().then(() => {
+              this._processingMentionNodes = false;
             });
           },
         };
@@ -168,36 +149,13 @@ const extension = {
   },
 };
 
-function getMentionsFromTextNode(node, pos) {
-  let mentionList = [];
-  let match;
-
-  while ((match = MENTION_REGEXP.exec(node.text)) !== null) {
-    const name = match[2].slice(1);
-
-    if (VALID_MENTIONS.has(name) || INVALID_MENTIONS.has(name)) {
-      continue;
-    } else if (!PENDING_MENTIONS.has(name)) {
-      PENDING_MENTIONS.add(name);
-    }
-
-    const start = pos + match.index + match[1].length;
-    const end = start + match[2].length;
-
-    mentionList.push({ name, start, end });
-  }
-
-  return mentionList;
-}
-
 async function fetchMentions(names) {
-  PENDING_MENTIONS.clear();
+  // only fetch new mentions that are not already validated
+  names = names.uniq().filter((name) => {
+    return !VALID_MENTIONS.has(name) && !INVALID_MENTIONS.has(name);
+  });
 
-  names = names.filter(
-    (name) => !VALID_MENTIONS.has(name) && !INVALID_MENTIONS.has(name)
-  );
-
-  if (names.length === 0) {
+  if (!names.length) {
     return;
   }
 
@@ -205,8 +163,17 @@ async function fetchMentions(names) {
     data: { names },
   });
 
+  const lowerGroupNames = Object.keys(response.groups).map((groupName) =>
+    groupName.toLowerCase()
+  );
+
   names.forEach((name) => {
-    if (response.users.includes(name) || response.groups[name]) {
+    const lowerName = name.toLowerCase();
+
+    if (
+      response.users.includes(lowerName) ||
+      lowerGroupNames.includes(lowerName)
+    ) {
       VALID_MENTIONS.add(name);
     } else {
       INVALID_MENTIONS.add(name);

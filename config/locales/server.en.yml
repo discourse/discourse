@@ -283,6 +283,7 @@ en:
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
     messages:
+      invalid_locale: "%{invalid_locale} is not a valid locale"
       too_long_validation:
         one: "is limited to %{count} character; you entered %{length}."
         other: "is limited to %{count} characters; you entered %{length}."
@@ -312,6 +313,7 @@ en:
       less_than_or_equal_to: must be less than or equal to %{count}
       not_a_number: is not a number
       not_an_integer: must be an integer
+      must_all_be_positive: must all be positive
       odd: must be odd
       record_invalid: ! "Validation failed: %{errors}"
       max_emojis: "can't have more than %{max_emojis_count} emoji"
@@ -357,7 +359,6 @@ en:
       s3_backup_requires_s3_settings: "You cannot use S3 as backup location unless you've provided the '%{setting_name}'."
       s3_bucket_reused: "You cannot use the same bucket for 's3_upload_bucket' and 's3_backup_bucket'. Choose a different bucket or use a different path for each bucket."
       secure_uploads_requirements: "S3 uploads and S3 ACLs must be enabled before enabling secure uploads."
-      s3_use_acls_requirements: "You must have S3 ACLs enabled when secure uploads are enabled."
       share_quote_facebook_requirements: "You must set a Facebook app id to enable quote sharing for Facebook."
       second_factor_cannot_be_enforced_with_disabled_local_login: "You cannot enforce 2FA if local logins are disabled."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "You cannot enforce 2FA if DiscourseConnect is enabled."
@@ -2029,7 +2030,7 @@ en:
     s3_endpoint: "The endpoint can be modified to backup to an S3 compatible service like DigitalOcean Spaces or Minio. WARNING: Leave blank if using AWS S3."
     s3_configure_tombstone_policy: "Enable automatic deletion policy for tombstone uploads. IMPORTANT: If disabled, no space will be reclaimed after uploads are deleted."
     s3_disable_cleanup: "Prevent removal of old backups from S3 when there are more backups than the maximum allowed."
-    s3_use_acls: "AWS recommends not using ACLs on S3 buckets; if you are following this advice, uncheck this option. This must be enabled if you are using secure uploads."
+    s3_use_acls: "AWS recommends not using ACLs on S3 buckets; only uncheck this option if intend to configure permissions policies on the configured `s3_upload_bucket` and `s3_backup_bucket`."
     enable_direct_s3_uploads: "Allows for direct multipart uploads to Amazon S3, see https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469 for more details."
     backup_time_of_day: "Time of day UTC when the backup should occur."
     backup_with_uploads: "Include uploads in scheduled backups. Disabling this will only backup the database."
@@ -2728,12 +2729,14 @@ en:
     about_page_extra_groups_order: "Ordering of the extra groups on the about page."
     adobe_analytics_tags_url: "Adobe Analytics tags URL (`https://assets.adobedtm.com/...`)"
     view_raw_email_allowed_groups: "Groups which can view the raw email content of a post if it was created by an incoming email. This includes email headers and other technical information."
-    experimental_content_localization: "Displays localized content for users based on their language preferences. Such content may include categories, tags, posts, and topics. This feature is under heavy development."
     rich_editor: "Enable the rich editor so all users can switch between the current Markdown mode and the new rich text editor for more intuitive and user-friendly composition. The rich text editor is under active development, so not all features are supported yet — <a href='https://meta.discourse.org/t/test-our-new-composer/352347' target='_blank'>see Meta for more details</a>."
-    experimental_content_localization_allowed_groups: 'Groups allowed to update localized content. Requires "experimental content localization" to be enabled.'
-    experimental_content_localization_supported_locales: "List of supported locales that user content can be translated to. Requires `experimental_content_localization` to be enabled to take effect."
     viewport_based_mobile_mode: "EXPERIMENTAL: Disable the user-agent-based mobile/desktop modes and use viewport width instead."
-    experimental_anon_language_switcher: "Enable experimental language switcher. This will allow site visitors who are not logged in to switch between translated versions of Discourse and user-contributed content in topics."
+
+    content_localization_enabled: "Displays localized content for users based on their browser or user language preferences. Such content may include categories, tags, posts, and topics. Supported locales are set in 'content localization supported locales'."
+    content_localization_supported_locales: "List of supported locales that user content can be translated to. Requires 'content localization enabled'."
+    content_localization_allowed_groups: "Groups allowed to update localized content. Requires 'content localization enabled'."
+    content_localization_anon_language_switcher: "Enable language switcher which allows site visitors who are not logged in to switch between translated versions of Discourse and user-contributed content. Depends on the list of languages defined in 'content localization supported locales'"
+
     errors:
       invalid_css_color: "Invalid color. Enter a color name or hex value."
       invalid_email: "Invalid email address."
@@ -2803,7 +2806,7 @@ en:
       delete_rejected_email_after_days: "This setting cannot be set lower than the delete_email_logs_after_days setting or greater than %{max}"
       invalid_uncategorized_category_setting: 'The "Uncategorized" category cannot be selected if ''allow uncategorized topics'' is not enabled.'
       invalid_search_ranking_weights: "Value is invalid for search_ranking_weights site setting. Example: '{0.1,0.2,0.3,1.0}'. Note that maximum value for each weight is 1.0."
-      experimental_anon_language_switcher_requirements: "The experimental language switcher requires the `set locale from cookie` site setting to be enabled, and the `automatic translation target languages` to have at least one language."
+      content_localization_anon_language_switcher_requirements: "The language switcher requires the `set locale from cookie` site setting to be enabled, and the `content localization supported locales` to have at least one language."
 
     keywords:
       clean_up_inactive_users_after_days: "deactivated|inactive|unactivated"
@@ -5776,6 +5779,3 @@ en:
       duplicate_ids: "has duplicate ids"
       reserved_id: "has a reserved keyword as id: %{id}"
       unsafe_description: "has an unsafe HTML description"
-
-  content_localization:
-    not_allowed: "You are not allowed to localize this content."

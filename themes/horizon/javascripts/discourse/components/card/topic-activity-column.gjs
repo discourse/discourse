@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import formatDate from "discourse/helpers/format-date";
 
 export default class TopicActivityColumn extends Component {
@@ -36,21 +35,12 @@ export default class TopicActivityColumn extends Component {
 
   <template>
     <span class={{concatClass "topic-activity" this.topicUser.class}}>
-      <div class="topic-activity__type">
-        {{#if this.topicUser.user}}
-          {{icon "reply"}}
-        {{else}}
-          {{icon "pencil"}}
-        {{/if}}
-      </div>
-
       {{#if this.topicUser.username}}
         <span
           class="topic-activity__username"
         >{{this.topicUser.username}}</span>
         <span class="dot-separator"></span>
       {{/if}}
-
       <div class="topic-activity__time">
         {{formatDate @topic.bumpedAt leaveAgo="true" format="tiny"}}
       </div>

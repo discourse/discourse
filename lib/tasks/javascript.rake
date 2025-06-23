@@ -186,7 +186,9 @@ task "javascript:update_constants" => :environment do
 
     export const ADMIN_SEARCH_RESULT_TYPES = #{Admin::SearchController::RESULT_TYPES.to_json};
 
-    export const API_KEY_SCOPE_MODES = #{ApiKey.scope_modes.keys.to_json}
+    export const API_KEY_SCOPE_MODES = #{ApiKey.scope_modes.keys.to_json};
+
+    export const INVITE_DESCRIPTION_MAX_LENGTH = #{Invite::DESCRIPTION_MAX_LENGTH};
   JS
 
   pretty_notifications = Notification.types.map { |n| "  #{n[0]}: #{n[1]}," }.join("\n")

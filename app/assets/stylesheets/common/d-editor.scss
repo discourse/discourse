@@ -19,6 +19,7 @@
   display: flex;
   flex-grow: 1;
   min-height: 0;
+  scrollbar-color: var(--primary-low) transparent;
 }
 
 .d-editor-textarea-column {
@@ -317,10 +318,14 @@
   flex-direction: row;
   flex-wrap: wrap;
   align-items: center;
-  margin-top: 0.25rem;
+  margin: 0.25rem 0;
 
   .composer-toggle-switch {
     padding: 0 0.5rem;
+  }
+
+  @include viewport.until(sm) {
+    font-size: var(--font-down-1-rem);
   }
 
   .btn:focus-visible {
@@ -354,6 +359,7 @@
 
   &.--replaced-toolbar {
     animation: float-left ease 0.2s 1 forwards;
+    flex-wrap: nowrap;
 
     @keyframes float-left {
       0% {
@@ -372,7 +378,8 @@
 .toolbar-separator {
   width: 1px;
   background-color: var(--primary-low);
-  margin: 0.5rem 0.25rem;
+  margin: auto 1px;
+  height: 1.25rem;
 }
 
 .d-editor #form-template-form {

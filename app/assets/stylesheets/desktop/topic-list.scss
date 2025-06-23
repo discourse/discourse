@@ -168,15 +168,6 @@
   .dismiss-container-bottom {
     float: right;
   }
-
-  .--no-topics-education + & {
-    margin: 0;
-
-    .footer-message {
-      overflow-wrap: break-word;
-      padding-top: 4em;
-    }
-  }
 }
 
 // Misc. stuff

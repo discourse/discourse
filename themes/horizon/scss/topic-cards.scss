@@ -1,5 +1,9 @@
 @use "lib/viewport";
 
+:root {
+  --d-border-radius-small: calc(var(--d-border-radius) * 0.5);
+}
+
 .topic-list .topic-list-item-separator {
   display: none;
 }
@@ -9,6 +13,43 @@
 
   &:hover {
     border-color: var(--accent-color);
+  }
+}
+
+.topic-list,
+.category-boxes .subcategories {
+  .badge-category__wrapper {
+    border-radius: var(--d-border-radius);
+    padding: 3px 6px;
+    background-color: light-dark(
+      oklch(from var(--category-badge-color) 97% calc(c * 0.3) h),
+      oklch(from var(--category-badge-color) 45% calc(c * 0.5) h)
+    );
+
+    @include viewport.until(md) {
+      padding: 2px 6px;
+      font-size: var(--font-down-2);
+    }
+
+    .badge-category__name {
+      color: light-dark(
+        oklch(from var(--category-badge-color) 20% calc(c * 1) h),
+        oklch(from var(--category-badge-color) 100% calc(c * 0.9) h)
+      );
+    }
+  }
+}
+
+// undo all the above for the few instances that arent styled like traditional badges
+.category-text-title {
+  .badge-category__wrapper {
+    border-radius: 0;
+    padding: 0;
+    background-color: transparent;
+
+    .badge-category__name {
+      color: var(--primary);
+    }
   }
 }
 
@@ -34,35 +75,72 @@
   background: var(--d-content-background);
   box-shadow: 0 0 12px 1px var(--topic-card-shadow);
   text-overflow: ellipsis;
-  padding: 0.75em 1rem;
+  padding: var(--space-3);
   border: 1px solid var(--primary-300);
   display: grid;
-  grid-template-columns: min-content min-content auto min-content;
+  grid-template-columns: min-content min-content min-content auto min-content;
   grid-template-areas:
-    "creator title title status"
-    "creator category activity likes-replies";
-  grid-column-gap: 0.75rem;
-  grid-row-gap: 0.5rem;
+    "creator title title title status"
+    ". category activity activity .";
+  grid-gap: var(--space-3);
   border-radius: var(--d-border-radius);
   cursor: pointer;
 
-  .bulk-select-enabled & {
-    grid-template-columns: min-content min-content min-content auto min-content;
+  &.has-replies {
     grid-template-areas:
-      "bulk-select creator title title status"
-      "bulk-select creator category activity likes-replies";
+      "creator title title title status"
+      ". category likes-replies activity .";
+  }
+
+  &:not(.has-replies) {
+    .topic-likes-replies-data {
+      display: none;
+    }
   }
 
   @include viewport.until(sm) {
+    max-width: 100vw;
+    box-sizing: border-box;
     grid-template-areas:
-      "category category category status"
-      "creator title title title"
-      "activity activity activity likes-replies";
-    row-gap: 0.75em;
+      "creator title title title status"
+      ". category activity activity . ";
     border: none;
     border-bottom: 1px solid var(--primary-200);
     box-shadow: none;
     border-radius: 0;
+    padding: var(--space-4) var(--space-3);
+
+    &.has-replies {
+      grid-template-areas:
+        "creator title title title status"
+        ". category likes-replies activity . ";
+    }
+  }
+
+  .bulk-select-enabled & {
+    grid-template-columns: min-content min-content min-content auto min-content min-content;
+    grid-template-areas:
+      "bulk-select creator title title title status"
+      "bulk-select category category activity activity .";
+
+    &.has-replies {
+      grid-template-areas:
+        "bulk-select creator title title title status"
+        "bulk-select category category activity likes-replies likes-replies";
+
+      @include viewport.until(sm) {
+        grid-template-areas:
+          "bulk-select creator title title title status"
+          "bulk-select . category likes-replies activity . ";
+      }
+    }
+
+    @include viewport.until(sm) {
+      grid-template-columns: min-content min-content min-content min-content auto min-content;
+      grid-template-areas:
+        "bulk-select creator title title title status"
+        "bulk-select . category activity activity . ";
+    }
   }
 
   &:hover {
@@ -88,32 +166,34 @@
 
     @include viewport.from(sm) {
       grid-template-areas:
-        "creator title title status"
-        "creator category activity likes-replies "
-        "creator excerpt excerpt excerpt";
+        "creator title title title status"
+        ". category activity activity . "
+        ". excerpt excerpt excerpt excerpt";
+
+      &.has-replies {
+        grid-template-areas:
+          "creator title title title status"
+          ". category likes-replies activity ."
+          ". excerpt excerpt excerpt excerpt";
+      }
 
       .bulk-select-enabled & {
         grid-template-areas:
-          "bulk-select creator title title status"
-          "bulk-select creator category activity likes-replies "
-          " bulk-select creator excerpt excerpt excerpt";
+          "bulk-select creator title title title status"
+          "bulk-select category category activity likes-replies likes-replies "
+          " bulk-select excerpt excerpt excerpt excerpt excerpt";
       }
-    }
-
-    // when there is enough space, excerpt can be next to likes-replies
-    @include viewport.from(lg) {
-      grid-template-areas:
-        "creator title title status"
-        "creator category activity ."
-        "creator excerpt excerpt likes-replies";
     }
   }
 
   .link-top-line {
     grid-area: title;
     font-weight: 500;
-    display: flex;
-    align-items: center;
+    line-height: calc(var(--space-3) * 2); // avatar sizing
+
+    @include viewport.until(sm) {
+      line-height: normal;
+    }
 
     .title {
       padding: 0;
@@ -148,6 +228,11 @@
 
   .badge-category__wrapper {
     border-radius: var(--d-border-radius);
+
+    @include viewport.until(sm) {
+      border-radius: var(--d-border-radius-small);
+      max-width: 125px;
+    }
     padding: 0.25em 0.5rem;
     background-color: light-dark(
       oklch(from var(--category-badge-color) 97% calc(c * 0.3) h),
@@ -159,11 +244,25 @@
       font-size: var(--font-down-2);
     }
 
+    .badge-category {
+      align-items: center;
+    }
+
     .badge-category__name {
+      font-size: var(--font-down-1);
       color: light-dark(
         oklch(from var(--category-badge-color) 20% calc(c * 1) h),
         oklch(from var(--category-badge-color) 100% calc(c * 0.9) h)
       );
+      min-width: 0;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .d-icon {
+      width: var(--font-down-1);
+      height: var(--font-down-1);
     }
   }
 
@@ -172,14 +271,12 @@
     grid-area: creator;
 
     .avatar {
-      height: 50px;
-      width: 50px;
+      height: calc(var(--space-3) * 2);
+      width: calc(var(--space-3) * 2);
       border-radius: var(--d-border-radius);
 
       @include viewport.until(sm) {
-        height: 30px;
-        width: 30px;
-        border-radius: 0.25rem;
+        border-radius: var(--d-border-radius-small);
       }
     }
   }
@@ -229,6 +326,11 @@
 
   // status
   .topic-status-data {
+    display: none;
+  }
+
+  &.--has-status-card .topic-status-data {
+    display: block;
     grid-area: status;
   }
 
@@ -240,12 +342,21 @@
     gap: 0.25em;
     align-items: center;
     padding: 0.2em 0.5rem;
-    font-size: var(--font-down-3);
+    font-size: var(--font-down-2);
+
+    @include viewport.from(lg) {
+      font-size: var(--font-down-3);
+    }
     font-weight: 600;
     border-radius: var(--d-border-radius);
     border: 1px solid var(--status-color);
     color: var(--status-color);
     width: min-content;
+
+    @include viewport.until(sm) {
+      border-radius: var(--d-border-radius-small);
+      padding: 0.35em;
+    }
 
     &.--pinned {
       --status-color: var(--primary-500);
@@ -264,14 +375,31 @@
     }
 
     svg {
-      font-size: var(--font-down-1);
       color: var(--status-color);
+
+      @include viewport.from(lg) {
+        font-size: var(--font-down-1);
+      }
+    }
+
+    &__name {
+      margin: 0;
+
+      @include viewport.until(sm) {
+        display: none;
+      }
     }
   }
 
   .link-top-line .event-date {
     margin-left: 0.5em;
     font-size: var(--font-down-3);
+    white-space: nowrap;
+  }
+
+  .link-top-line .event-date-container {
+    top: -0.25rem;
+    line-height: normal;
   }
 
   .topic-list-data {
@@ -323,13 +451,15 @@
     grid-area: likes-replies;
     display: flex;
     flex-direction: row;
-    gap: 0.5em;
-    justify-content: flex-end;
+    gap: var(--space-3);
     height: min-content;
     align-self: center;
+
+    .topic-likes {
+      display: none;
+    }
   }
 
-  .topic-likes-replies-data .topic-likes,
   .topic-likes-replies-data .topic-replies {
     display: flex;
     flex-direction: row;
@@ -362,221 +492,186 @@
       display: none;
     }
   }
-}
 
-// Bookmarks
-.topic-list-item.bookmark-list-item {
-  .link-bottom-line {
-    font-size: unset;
-  }
-
-  // regular card without excerpt class
-  grid-template-columns: 20px min-content min-content auto min-content min-content min-content;
-  grid-template-areas:
-    ". . . . . . dropdown"
-    "avatar update metadata metadata metadata . category";
-
-  @include viewport.until(sm) {
-    grid-template-columns: min-content min-content auto min-content min-content min-content min-content;
-    grid-template-areas:
-      " . . . . . . dropdown"
-      "update metadata metadata metadata metadata category category";
-
-    .avatar {
+  // Assigned List
+  &.assigned-list-item {
+    .topic-status-data {
       display: none;
+    }
+    grid-template-areas:
+      "creator title title title dropdown"
+      ". category activity activity .";
+
+    &.has-replies {
+      grid-template-areas:
+        "creator title title title dropdown"
+        "category category likes-replies activity .";
+    }
+
+    .assign-topic-buttons {
+      display: contents;
+
+      .assign-actions-dropdown {
+        grid-area: dropdown;
+        justify-content: flex-end;
+        height: 1em;
+
+        .select-kit-header {
+          padding-top: 0;
+          margin-left: auto;
+          align-items: center;
+          background: transparent;
+        }
+
+        .select-kit-header-wrapper {
+          height: 1em;
+          width: 1em;
+        }
+      }
     }
   }
 
-  &.has-metadata {
-    grid-template-columns: 20px min-content min-content auto min-content min-content min-content;
+  // Bookmarks
+  &.bookmark-list-item {
+    grid-template-areas:
+      "creator title title title dropdown"
+      "category category activity . . ";
 
     @include viewport.until(sm) {
       grid-template-areas:
-        ". . . . . . . dropdown"
-        "update update metadata metadata metadata metadata category category";
+        "title title title title dropdown"
+        "category category activity activity . ";
 
       .avatar {
         display: none;
       }
     }
-  }
 
-  // card with excerpt (all in horizon since the toggle is gone)
-  &.excerpt-expanded {
-    grid-template-columns: 20px min-content auto minmax(0, 100px);
-    grid-template-areas:
-      ". . .  dropdown"
-      "avatar update metadata metadata"
-      "excerpt excerpt excerpt ."
-      "excerpt excerpt excerpt category";
-
-    @include viewport.from(xl) {
-      grid-template-columns: 20px min-content auto min-content;
-    }
-
-    @include viewport.until(sm) {
-      grid-template-columns: auto min-content;
+    &.excerpt-expanded {
       grid-template-areas:
-        ".  dropdown"
-        "category category";
+        "creator title title title dropdown"
+        "category category activity . . "
+        "excerpt excerpt excerpt excerpt excerpt";
 
-      .post-excerpt,
-      .avatar {
-        display: none;
+      @include viewport.until(sm) {
+        grid-template-areas:
+          "title title title title dropdown"
+          "category category activity activity . "
+          "excerpt excerpt excerpt excerpt excerpt";
       }
     }
 
     &.has-metadata {
-      grid-template-columns: 20px min-content auto min-content;
       grid-template-areas:
-        ". . . dropdown"
-        "avatar update metadata metadata"
-        "excerpt excerpt excerpt . "
-        "excerpt excerpt excerpt category";
+        "creator title title title dropdown"
+        "category category activity metadata . ";
 
       @include viewport.until(sm) {
-        grid-template-columns: auto min-content;
         grid-template-areas:
-          " . dropdown"
-          "metadata category";
+          "metadata metadata metadata metadata dropdown"
+          "title title title title ."
+          "category category activity activity . ";
+      }
 
-        .bookmark-metadata {
-          flex-wrap: wrap;
+      &.excerpt-expanded {
+        grid-template-areas:
+          "creator title title title dropdown"
+          "category category activity metadata . "
+          "excerpt excerpt excerpt excerpt excerpt";
+
+        @include viewport.until(sm) {
+          grid-template-areas:
+            "metadata metadata metadata metadata dropdown"
+            "title title title title ."
+            "category category activity activity . "
+            "excerpt excerpt excerpt excerpt excerpt";
         }
       }
     }
 
-    .badge-category__wrapper {
-      align-self: flex-end;
-      height: min-content;
-      max-width: 100%;
-    }
-  }
-
-  td.author-avatar {
-    grid-area: avatar;
-  }
-
-  td.main-link .link-bottom-line {
-    display: contents;
-
-    .badge-category__wrapper {
-      grid-area: category;
-      display: flex;
-      align-items: center;
-      width: min-content;
-      justify-self: flex-end;
-    }
-  }
-
-  td.main-link .link-top-line {
-    display: contents;
-
-    .bookmark-metadata {
-      grid-area: metadata;
-      margin: 0;
-      display: flex;
-      align-items: center;
-      gap: var(--spacing-inline-xs);
+    td.author-avatar {
+      grid-area: creator;
     }
 
-    .bookmark-metadata-item {
-      margin: 0;
-      vertical-align: middle;
-    }
+    td.main-link .link-bottom-line {
+      display: contents;
 
-    .bookmark-status-with-link {
-      grid-column: 1/-2;
-      grid-row: 1/2;
-    }
-  }
-
-  .post-excerpt {
-    grid-area: excerpt;
-    margin: 0;
-  }
-
-  .topic-list-data:last-of-type {
-    display: contents;
-
-    .bookmark-actions-dropdown {
-      grid-area: dropdown;
-      align-self: flex-start;
-      height: 1em;
-
-      .select-kit-header {
-        padding-top: 0;
-        margin-left: auto;
+      .badge-category__wrapper {
+        grid-area: category;
+        display: flex;
         align-items: center;
-        background: transparent;
-      }
-
-      .select-kit-header-wrapper {
-        height: 1em;
-        width: 1em;
+        width: min-content;
+        justify-self: flex-end;
       }
     }
-  }
 
-  .post-metadata.topic-list-data.updated-at {
-    grid-area: update;
-  }
+    td.main-link .link-top-line {
+      display: contents;
 
-  td.activity .post-activity {
-    display: none;
+      .bookmark-metadata {
+        grid-area: metadata;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: var(--spacing-inline-s);
+        white-space: nowrap;
+      }
+
+      .bookmark-metadata-item {
+        margin: 0;
+        vertical-align: middle;
+      }
+
+      .bookmark-status-with-link {
+        grid-area: title;
+      }
+    }
+
+    .post-excerpt {
+      grid-area: excerpt;
+      margin: 0;
+    }
+
+    .topic-list-data:last-of-type {
+      display: contents;
+
+      .bookmark-actions-dropdown {
+        grid-area: dropdown;
+        align-self: flex-start;
+        height: 1em;
+
+        .select-kit-header {
+          padding-top: 0;
+          margin-left: auto;
+          align-items: center;
+          background: transparent;
+        }
+
+        .select-kit-header-wrapper {
+          height: 1em;
+          width: 1em;
+        }
+      }
+    }
+
+    .post-metadata.topic-list-data.updated-at {
+      grid-area: activity;
+      display: flex;
+      align-items: center;
+      font-size: var(--font-down-1-rem);
+    }
+
+    td.activity .post-activity {
+      display: none;
+    }
   }
 }
 
-// Assigned List
-.topic-list-item.assigned-list-item {
-  .topic-status-card {
-    display: none;
-    position: relative;
-    top: unset;
-    right: unset;
-  }
-
-  td.main-link .link-top-line {
-    grid-column: 1/-3;
-  }
-  grid-template-columns: 20px min-content min-content auto min-content min-content min-content;
-  grid-template-areas:
-    ". . . . . status dropdown"
-    "activity . . . . likes-replies category";
-
-  @include viewport.until(sm) {
-    grid-template-columns: 20px min-content min-content auto min-content min-content min-content 36px;
-    grid-template-areas:
-      "category category . . . . status dropdown"
-      ". . . . . . . . "
-      "activity . . . . . . likes-replies";
-  }
-
-  .assign-topic-buttons {
-    display: contents;
-
-    .assign-actions-dropdown {
-      grid-area: dropdown;
-      justify-content: flex-end;
-      height: 1em;
-
-      .select-kit-header {
-        padding-top: 0;
-        margin-left: auto;
-        align-items: center;
-        background: transparent;
-      }
-
-      .select-kit-header-wrapper {
-        height: 1em;
-        width: 1em;
-      }
-    }
-  }
-
-  td.topic-category-status-data {
-    display: contents;
-  }
+// bulk-select overrule for j/k nav
+.topic-list tr.selected td:first-of-type,
+.topic-list-item.selected td:first-of-type {
+  box-shadow: none;
 }
 
 // User Messages
@@ -600,6 +695,10 @@ body.user-messages-page {
     grid-template-areas: "title activity" "posters .";
     grid-template-columns: auto auto;
     grid-template-rows: auto auto;
+
+    &.has-replies {
+      grid-template-areas: "title activity" "posters .";
+    }
 
     &:hover {
       .discourse-no-touch & {
@@ -650,5 +749,4 @@ body.user-messages-page {
 .event-date-container {
   display: inline-flex;
   position: relative;
-  top: -0.25em; // optical alignment
 }

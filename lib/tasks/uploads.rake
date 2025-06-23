@@ -524,15 +524,16 @@ task "uploads:recover" => :environment do
   end
 end
 
-def sync_s3_acls(async: true, concurrency: 10)
+def sync_access_control(async: true, concurrency: 10)
   if async
-    puts "CAUTION: This task may take a long time to complete! There are #{Upload.count} uploads to sync ACLs for."
+    puts "CAUTION: This task may take a long time to complete! There are #{Upload.count} uploads to sync access control metadata for."
     puts ""
     puts "-" * 30
-    puts "Uploads marked as secure will get a private ACL, and uploads marked as not secure will get a public ACL."
-    puts "Upload ACLs will be updated in Sidekiq jobs in batches of 100 at a time, check Sidekiq queues for SyncAclsForUploads for progress."
-    Upload.select(:id).find_in_batches(batch_size: 100) { |uploads| adjust_acls(uploads.map(&:id)) }
-    puts "", "Upload ACL sync complete!"
+    puts "Syncing access control metadata will be done in Sidekiq jobs in batches of 100 at a time, check Sidekiq queues for `Jobs::SyncAccessControlForUploads` for progress."
+    Upload
+      .select(:id)
+      .find_in_batches(batch_size: 100) { |uploads| adjust_access_controls(uploads.map(&:id)) }
+    puts "", "Syncing access control metadata complete!"
   else
     executor = Concurrent::ThreadPoolExecutor.new(min_threads: 1, max_threads: concurrency)
     errors = []
@@ -544,9 +545,9 @@ def sync_s3_acls(async: true, concurrency: 10)
           Concurrent::Future.execute(executor:) do
             RailsMultisite::ConnectionManagement.with_connection(current_db) do
               begin
-                Discourse.store.update_upload_ACL(upload)
+                Discourse.store.update_upload_access_control(upload)
               rescue => error
-                errors << "Error updating ACL for upload #{upload.url}: #{error.message}"
+                errors << "Error updating access control for upload #{upload.url}: #{error.message}"
               end
             end
           end
@@ -566,13 +567,21 @@ def sync_s3_acls(async: true, concurrency: 10)
   end
 end
 
+# This task is defined for backwards compatibility
 task "uploads:sync_s3_acls", %i[synchronous parallel] => :environment do |_, args|
+  Rake::Task["uploads:sync_access_control"].invoke(
+    synchronous: args[:synchronous],
+    parallel: args[:parallel],
+  )
+end
+
+task "uploads:sync_access_control", %i[synchronous parallel] => :environment do |_, args|
   unless Discourse.store.external?
     puts "This task only works for external storage."
     exit 1
   end
 
-  method = :sync_s3_acls
+  method = :sync_access_control
   method_args = { async: !args.key?(:synchronous) || !(args[:synchronous] == "true") }
   method_args[:concurrency] = args[:parallel].to_i if args.key?(:parallel)
 
@@ -628,7 +637,7 @@ task "uploads:disable_secure_uploads" => :environment do
           secure_upload_ids,
         )
 
-      adjust_acls(secure_upload_ids)
+      adjust_access_controls(secure_upload_ids)
       mark_upload_posts_for_rebake(post_ids_to_rebake)
     end
 
@@ -641,7 +650,7 @@ end
 ##
 # Run this task whenever the secure_uploads or login_required
 # settings are changed for a Discourse instance to update
-# the upload secure flag and S3 upload ACLs. Any uploads that
+# the upload secure flag and S3 access control metadata. Any uploads that
 # have their secure status changed will have all associated posts
 # rebaked.
 #
@@ -704,25 +713,26 @@ task "uploads:secure_upload_analyse_and_update" => :environment do
     mark_upload_posts_for_rebake(post_ids_to_rebake)
 
     # Also do this AFTER upload transaction complete so we don't end up with any
-    # errors leaving ACLs in a bad state (the ACL sync task can be run to fix any
-    # outliers at any time).
-    adjust_acls(all_upload_ids_changed)
+    # errors leaving access control in a bad state
+    adjust_access_controls(all_upload_ids_changed)
   end
   puts "", "", "Done!"
 end
 
-def adjust_acls(upload_ids_to_adjust_acl_for)
-  jobs_to_create = (upload_ids_to_adjust_acl_for.count.to_f / 100.00).ceil
+def adjust_access_controls(upload_ids_to_adjust_access_control_for)
+  jobs_to_create = (upload_ids_to_adjust_access_control_for.count.to_f / 100.00).ceil
 
   if jobs_to_create > 1
-    puts "Adjusting ACLs for #{upload_ids_to_adjust_acl_for} uploads. These will be batched across #{jobs_to_create} sync job(s)."
+    puts "Adjusting access control metadata for #{upload_ids_to_adjust_access_control_for} uploads. These will be batched across #{jobs_to_create} sync job(s)."
   end
 
-  upload_ids_to_adjust_acl_for.each_slice(100) do |upload_ids|
-    Jobs.enqueue(:sync_acls_for_uploads, upload_ids: upload_ids)
+  upload_ids_to_adjust_access_control_for.each_slice(100) do |upload_ids|
+    Jobs.enqueue(:sync_access_control_for_uploads, upload_ids: upload_ids)
   end
 
-  puts "ACL batching complete. Keep an eye on the Sidekiq queue for progress." if jobs_to_create > 1
+  if jobs_to_create > 1
+    puts "Adjusting access control metadata batching complete. Keep an eye on the Sidekiq queue for progress."
+  end
 end
 
 def mark_all_as_secure_login_required
