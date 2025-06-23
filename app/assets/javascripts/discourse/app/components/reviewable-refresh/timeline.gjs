@@ -211,7 +211,7 @@ export default class ReviewableTimeline extends Component {
     <div class="reviewable-timeline">
       {{#if this.currentUser.staff}}
         <ReviewableNoteForm
-          @reviewable={{this.args.reviewable}}
+          @reviewable={{@reviewable}}
           @onNoteCreated={{this.onNoteCreated}}
         />
       {{/if}}

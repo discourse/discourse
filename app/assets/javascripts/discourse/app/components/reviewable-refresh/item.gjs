@@ -76,7 +76,7 @@ export default class ReviewableItem extends Component {
   @optionalService adminTools;
 
   @tracked disabled = false;
-  @tracked activeTab = "insights";
+  @tracked activeTab = "timeline";
 
   @alias("reviewable.claimed_by.automatic") autoClaimed;
 
