@@ -1525,36 +1525,41 @@ RSpec.describe User do
   end
 
   describe "#new_user_posting_on_first_day?" do
-    def test_user?(opts = {})
-      Fabricate.build(
-        :user,
-        { created_at: Time.zone.now }.merge(opts),
-      ).new_user_posting_on_first_day?
+    def create_test_user(opts = {})
+      Fabricate(:user, { created_at: Time.zone.now }.merge(opts))
     end
 
-    it "handles when user has never posted" do
-      expect(test_user?).to eq(true)
-      expect(test_user?(moderator: true)).to eq(false)
-      expect(test_user?(trust_level: TrustLevel[2])).to eq(false)
-      expect(test_user?(created_at: 2.days.ago)).to eq(true)
+    it "is true for a user who has never posted" do
+      expect(create_test_user.new_user_posting_on_first_day?).to eq(true)
+    end
+
+    it "is false if the user is moderator or admin" do
+      expect(create_test_user(moderator: true).new_user_posting_on_first_day?).to eq(false)
+      expect(create_test_user(admin: true).new_user_posting_on_first_day?).to eq(false)
+    end
+
+    it "is false for a user that is TL2 or above" do
+      expect(create_test_user(trust_level: TrustLevel[2]).new_user_posting_on_first_day?).to eq(
+        false,
+      )
+      expect(create_test_user(trust_level: TrustLevel[3]).new_user_posting_on_first_day?).to eq(
+        false,
+      )
+      expect(create_test_user(trust_level: TrustLevel[0]).new_user_posting_on_first_day?).to eq(
+        true,
+      )
     end
 
     it "is true for a user who posted less than 24 hours ago but was created over 1 day ago" do
-      u = Fabricate(:user, created_at: 28.hours.ago)
-      u.user_stat.first_post_created_at = 1.hour.ago
+      u = create_test_user(created_at: 28.hours.ago)
+      u.user_stat.update!(first_post_created_at: 1.hour.ago)
       expect(u.new_user_posting_on_first_day?).to eq(true)
     end
 
     it "is false if first post was more than 24 hours ago" do
-      u = Fabricate(:user, created_at: 28.hours.ago)
-      u.user_stat.first_post_created_at = 25.hours.ago
+      u = create_test_user(created_at: 28.hours.ago)
+      u.user_stat.update!(first_post_created_at: 25.hour.ago)
       expect(u.new_user_posting_on_first_day?).to eq(false)
-    end
-
-    it "considers trust level 0 users as new users unconditionally" do
-      u = Fabricate(:user, created_at: 28.hours.ago, trust_level: TrustLevel[0])
-      u.user_stat.first_post_created_at = 25.hours.ago
-      expect(u.new_user_posting_on_first_day?).to eq(true)
     end
   end
 

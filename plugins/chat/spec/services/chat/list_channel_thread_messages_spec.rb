@@ -149,9 +149,10 @@ RSpec.describe Chat::ListChannelThreadMessages do
         end
 
         it "returns messages" do
-          expect(result.can_load_more_past).to eq(false)
-          expect(result.can_load_more_future).to eq(false)
-          expect(result.messages).to contain_exactly(thread.original_message, *messages)
+          expect(result).to have_attributes(
+            metadata: a_hash_including(can_load_more_future: false, can_load_more_past: false),
+            messages: [thread.original_message, *messages],
+          )
         end
       end
 

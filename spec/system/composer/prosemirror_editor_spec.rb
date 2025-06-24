@@ -399,8 +399,11 @@ describe "Composer - ProseMirror editor", type: :system do
     end
 
     it "supports Ctrl + K to create a link" do
+      hyperlink_modal = PageObjects::Modals::Base.new
       open_composer_and_toggle_rich_editor
       page.send_keys([PLATFORM_KEY_MODIFIER, "k"])
+      expect(hyperlink_modal).to be_open
+      expect(hyperlink_modal.header).to have_content(I18n.t("js.composer.link_dialog_title"))
       page.send_keys("https://www.example.com")
       page.send_keys(:tab)
       page.send_keys("This is a link")
