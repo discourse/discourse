@@ -1050,11 +1050,11 @@ class Theme < ActiveRecord::Base
     compiler.append_tree(migrations_tree, include_variables: false)
     compiler.append_tree(tests_tree)
 
-    compiler.append_raw_script "test_setup.js", <<~JS
-      (function() {
-        require("discourse/lib/theme-settings-store").registerSettings(#{self.id}, #{cached_default_settings.to_json}, { force: true });
-      })();
-    JS
+    # compiler.append_raw_script "test_setup.js", <<~JS
+    #   (function() {
+    #     require("discourse/lib/theme-settings-store").registerSettings(#{self.id}, #{cached_default_settings.to_json}, { force: true });
+    #   })();
+    # JS
 
     content = compiler.content
 
