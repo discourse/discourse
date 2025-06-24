@@ -877,7 +877,9 @@ export default class TopicController extends Controller {
 
     const topic = this.model;
 
-    if (post?.is_localized) {
+    // TODO Also need to check for `content_localization_enabled`, `can_localize_content`
+    const editingLocalizedPost = post?.is_localized;
+    if (editingLocalizedPost) {
       return this.dialog.alert({
         message: i18n("post.localizations.edit_warning.message", {
           language: post.language,
@@ -886,21 +888,21 @@ export default class TopicController extends Controller {
           {
             label: i18n("post.localizations.edit_warning.action_original"),
             class: "btn-primary",
-            action: () => {
-              // console.log("edit original");
-            },
+            action: () => this._openComposerForEdit(topic, post),
           },
           {
             label: i18n("post.localizations.edit_warning.action_translation"),
             class: "",
-            action: () => {
-              // console.log("edit translation");
-            },
+            action: () => this._openComposerForEditTranslation(post),
           },
         ],
       });
     }
 
+    return this._openComposerForEdit(topic, post);
+  }
+
+  _openComposerForEdit(topic, post) {
     let editingSharedDraft = false;
     let draftsCategoryId = this.get("site.shared_drafts_category_id");
     if (draftsCategoryId && draftsCategoryId === topic.get("category.id")) {
@@ -926,6 +928,16 @@ export default class TopicController extends Controller {
       opts.draftKey === composerModel?.draftKey;
 
     return editingSamePost ? composer.unshrink() : composer.open(opts);
+  }
+
+  async _openComposerForEditTranslation(post) {
+    await this.composer.open({
+      action: Composer.ADD_TRANSLATION,
+      draftKey: "translation",
+      warningsDisabled: true,
+      hijackPreview: this.originalPostContent,
+      post,
+    });
   }
 
   @action

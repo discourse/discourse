@@ -672,11 +672,7 @@ class PostSerializer < BasicPostSerializer
   end
 
   def raw
-    if ContentLocalization.show_translated_post?(object, scope)
-      object.get_localization(I18n.locale)&.raw || object.raw
-    else
-      object.raw
-    end
+    object.raw
   end
 
   def include_locale?
