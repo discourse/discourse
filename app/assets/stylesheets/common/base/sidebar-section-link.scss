@@ -12,7 +12,7 @@
 
   &[data-list-item-name="all-categories"],
   &[data-list-item-name="all-tags"],
-  &[data-list-item-name="configure-default-navigation-menu-tags"] {
+  &[data-list-item-name*="configure-default-navigation-menu-"] {
     font-size: var(--font-down-1-rem);
   }
 

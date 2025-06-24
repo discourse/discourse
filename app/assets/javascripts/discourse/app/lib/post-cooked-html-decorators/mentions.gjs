@@ -9,31 +9,25 @@ const CookedUserStatusMessage = <template>
 </template>;
 
 export default function (element, context) {
-  const {
-    data: { post },
-    state,
-    owner,
-    helper,
-  } = context;
+  const { post, owner, helper } = context;
 
-  state.extractedMentions = _extractMentions(element, post);
-
+  const extractedMentions = extractMentions(element, post);
   const userStatusService = owner.lookup("service:user-status");
 
-  const _updateUserStatus = (updatedUser) => {
-    state.extractedMentions
+  const updateUserStatus = (updatedUser) => {
+    extractedMentions
       .filter(({ user }) => updatedUser.id === user?.id)
       .forEach(({ mentions, user }) => {
-        _renderUserStatusOnMentions(mentions, user, helper);
+        renderUserStatusOnMentions(mentions, user, helper);
       });
   };
 
-  state.extractedMentions.forEach(({ mentions, user }) => {
+  extractedMentions.forEach(({ mentions, user }) => {
     if (userStatusService.isEnabled) {
       user.statusManager?.trackStatus?.();
-      user.on?.("status-changed", element, _updateUserStatus);
+      user.on?.("status-changed", element, updateUserStatus);
 
-      _renderUserStatusOnMentions(mentions, user, helper);
+      renderUserStatusOnMentions(mentions, user, helper);
     }
 
     const classes = applyValueTransformer("mentions-class", [], {
@@ -48,17 +42,15 @@ export default function (element, context) {
   // cleanup code
   return () => {
     if (userStatusService.isEnabled) {
-      state.extractedMentions.forEach(({ user }) => {
+      extractedMentions.forEach(({ user }) => {
         user.statusManager?.stopTrackingStatus?.();
-        user.off?.("status-changed", element, _updateUserStatus);
+        user.off?.("status-changed", element, updateUserStatus);
       });
     }
-
-    state.extractedMentions = [];
   };
 }
 
-function _renderUserStatusOnMentions(mentions, user, helper) {
+function renderUserStatusOnMentions(mentions, user, helper) {
   mentions.forEach((mention) => {
     let wrapper = mention.querySelector(".user-status-message-wrapper");
 
@@ -79,7 +71,7 @@ function _renderUserStatusOnMentions(mentions, user, helper) {
   });
 }
 
-function _extractMentions(element, post) {
+function extractMentions(element, post) {
   return (
     post?.mentioned_users?.map((user) => {
       const href = getURL(`/u/${user.username.toLowerCase()}`);
