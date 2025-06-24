@@ -9,6 +9,7 @@ import { isEmpty, isPresent } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
 import BufferedProxy from "ember-buffered-proxy/proxy";
 import { Promise } from "rsvp";
+import DEditorOriginalTranslationPreview from "discourse/components/d-editor-original-translation-preview";
 import {
   CLOSE_INITIATED_BY_BUTTON,
   CLOSE_INITIATED_BY_ESC,
@@ -877,7 +878,14 @@ export default class TopicController extends Controller {
 
     const topic = this.model;
 
-    if (post?.is_localized) {
+    const editingLocalizedPost =
+      post?.is_localized && this.siteSettings.content_localization_enabled;
+
+    if (editingLocalizedPost) {
+      if (!this.currentUser.can_localize_content) {
+        return this._openComposerForEdit(topic, post);
+      }
+
       return this.dialog.alert({
         message: i18n("post.localizations.edit_warning.message", {
           language: post.language,
@@ -886,21 +894,21 @@ export default class TopicController extends Controller {
           {
             label: i18n("post.localizations.edit_warning.action_original"),
             class: "btn-primary",
-            action: () => {
-              // console.log("edit original");
-            },
+            action: () => this._openComposerForEdit(topic, post),
           },
           {
             label: i18n("post.localizations.edit_warning.action_translation"),
             class: "",
-            action: () => {
-              // console.log("edit translation");
-            },
+            action: () => this._openComposerForEditTranslation(topic, post),
           },
         ],
       });
     }
 
+    return this._openComposerForEdit(topic, post);
+  }
+
+  _openComposerForEdit(topic, post) {
     let editingSharedDraft = false;
     let draftsCategoryId = this.get("site.shared_drafts_category_id");
     if (draftsCategoryId && draftsCategoryId === topic.get("category.id")) {
@@ -926,6 +934,24 @@ export default class TopicController extends Controller {
       opts.draftKey === composerModel?.draftKey;
 
     return editingSamePost ? composer.unshrink() : composer.open(opts);
+  }
+
+  async _openComposerForEditTranslation(topic, post) {
+    const { raw } = await ajax(`/posts/${post.id}.json`);
+
+    const composerOpts = {
+      action: Composer.ADD_TRANSLATION,
+      draftKey: "translation",
+      warningsDisabled: true,
+      hijackPreview: {
+        component: DEditorOriginalTranslationPreview,
+        model: { postLocale: post.locale, rawPost: raw },
+      },
+      post,
+      selectedTranslationLocale: this.currentUser?.effective_locale,
+    };
+
+    await this.composer.open(composerOpts);
   }
 
   @action
