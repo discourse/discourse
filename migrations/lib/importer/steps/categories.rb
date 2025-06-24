@@ -16,8 +16,14 @@ module Migrations::Importer::Steps
 
     requires_mapping :ids_by_name, "SELECT name, id FROM categories"
     requires_set :existing_ids, "SELECT id FROM categories"
-    requires_set :category_names, <<~SQL
+    requires_set :existing_category_names, <<~SQL
       SELECT COALESCE(parent_category_id::text, '') || '-' || LOWER(name) FROM categories
+    SQL
+    requires_set :existing_slugs, <<~SQL
+      SELECT
+        COALESCE(parent_category_id::text, '') || ':' || LOWER(slug)
+      FROM categories
+      WHERE slug <> ''
     SQL
 
     column_names %i[
@@ -116,6 +122,15 @@ module Migrations::Importer::Steps
       ORDER BY t.level, position, t.original_id
     SQL
 
+    def execute
+      @highest_position = Category.unscoped.maximum(:position) || 0
+      @mapped_category_ids = @intermediate_db.query_array(<<~SQL, MappingType::CATEGORIES).to_h
+        SELECT original_id, discourse_id FROM  mapped.ids WHERE type = ?
+      SQL
+
+      super
+    end
+
     private
 
     def transform_row(row)
@@ -143,25 +158,34 @@ module Migrations::Importer::Steps
       row[:default_list_filter] ||= DEFAULT_LIST_FILTER
       row[:default_top_period] ||= DEFAULT_TOP_PERIOD
       row[:minimum_required_tags] ||= DEFAULT_MINIMUM_REQUIRED_TAGS
-      row[:parent_category_id] = resolve_existing_id(row[:parent_category_id])
-
+      row[:parent_category_id] = @mapped_category_ids[row[:parent_category_id]]
       row[:name], row[:name_lower] = ensure_unique_name(row[:name], row[:parent_category_id])
-      row[:slug] ||= Slug.for(row[:name_lower], "")
+      row[:slug] = ensure_unique_slug(row[:slug], row[:parent_category_id], row[:name_lower])
 
       row[:style_type] ||= DEFAULT_STYLE_TYPE
       row[:subcategory_list_style] ||= DEFAULT_SUBCATEGORY_LIST_STYLE
       row[:text_color] ||= DEFAULT_TEXT_COLOR
       row[:user_id] = row[:mapped_user_id] || Discourse::SYSTEM_USER_ID
-
       row[:uploaded_background_dark_id] = row[:mapped_uploaded_background_dark_id]
       row[:uploaded_background_id] = row[:mapped_uploaded_background_id]
       row[:uploaded_logo_dark_id] = row[:mapped_uploaded_logo_dark_id]
       row[:uploaded_logo_id] = row[:mapped_uploaded_logo_id]
 
-      # TODO:
-      #   1. Explore feasibility of resolving and setting topic_id here
-      #   2. User emails are currently not validated, should `email_in` be validated?
+      if row[:position]
+        @highest_position = row[:position] if row[:position] > @highest_position
+      else
+        row[:position] = @highest_position += 1
+      end
+
       super
+
+      # `parent_category_id` is self-referential, in addition loading existing category ids,
+      #  we need to track mapped ids in the current run
+      @mapped_category_ids[row[:original_id]] = row[:id] unless @mapped_category_ids.key?(
+        row[:original_id],
+      )
+
+      row
     end
 
     def resolve_existing_id(existing_id)
@@ -186,12 +210,11 @@ module Migrations::Importer::Steps
 
     def ensure_unique_name(original_name, parent_id)
       truncated_name = original_name[0...MAX_NAME_LENGTH].scrub.strip
-      downcased_name = truncated_name.downcase
+      name_lower = truncated_name.downcase
 
-      parent_key = parent_id.to_s
-      name_key = "#{parent_key}-#{downcased_name}"
-
-      return truncated_name, downcased_name if @category_names.add?(name_key)
+      if @existing_category_names.add?("#{parent_id}-#{name_lower}")
+        return truncated_name, name_lower
+      end
 
       counter = 1
       loop do
@@ -199,13 +222,30 @@ module Migrations::Importer::Steps
         trim_length = MAX_NAME_LENGTH - suffix.length
 
         candidate_name = "#{truncated_name[0...trim_length]}#{suffix}"
-        downcased_candidate_name = candidate_name.downcase
-        candidate_name_key = "#{parent_key}-#{downcased_candidate_name}"
+        candidate_name_lower = candidate_name.downcase
 
-        return candidate_name, downcased_candidate_name if @category_names.add?(candidate_name_key)
+        if @existing_category_names.add?("#{parent_id}-#{candidate_name_lower}")
+          return candidate_name, candidate_name_lower
+        end
 
         counter += 1
       end
+    end
+
+    def ensure_unique_slug(slug, parent_id, name_lower)
+      # `name_lower` is already deduplicated,
+      # safe to use directly as fallback
+      return Slug.for(name_lower, "") if slug.blank?
+
+      parent_prefix = "#{parent_id}:"
+      slug_lower = slug.downcase
+
+      return slug if @existing_slugs.add?("#{parent_prefix}#{slug_lower}")
+
+      new_slug = "#{slug_lower}-1"
+      new_slug.next! until @existing_slugs.add?("#{parent_prefix}#{new_slug}")
+
+      new_slug
     end
   end
 end
