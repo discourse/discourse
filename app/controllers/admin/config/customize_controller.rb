@@ -8,6 +8,7 @@ class Admin::Config::CustomizeController < Admin::AdminController
       Theme
         .include_basic_relations
         .includes(:theme_fields, color_scheme: [:color_scheme_colors])
+        .with_experimental_system_themes
         .where(component: false)
         .order(:name)
 

@@ -399,6 +399,7 @@ de:
       created: "Du hast diesen Beitrag mit einem Lesezeichen versehen. %{name}"
       created_generic: "Du hast dies mit einem Lesezeichen versehen: %{name}"
       create: "Lesezeichen erstellen"
+      clear_reminder: "Erinnerung löschen"
       edit: "Lesezeichen bearbeiten"
       not_bookmarked: "diesen Beitrag mit Lesezeichen versehen"
       remove_reminder_keep_bookmark: "Erinnerung entfernen und Lesezeichen behalten"
@@ -1904,6 +1905,7 @@ de:
           edit_link_options: "Link-Optionen bearbeiten oder per E-Mail versenden."
           show_advanced: "Erweiterte Optionen anzeigen"
           hide_advanced: "Erweiterte Optionen ausblenden"
+          description: "Beschreibung"
           restrict: "Beschränken auf"
           restrict_email: "Auf E-Mail beschränken"
           restrict_domain: "Auf Domain beschränken"
@@ -2588,7 +2590,8 @@ de:
       italic_text: "betonter Text"
       link_title: "Link"
       link_description: "gib hier eine Link-Beschreibung ein"
-      link_dialog_title: "Link einfügen"
+      link_dialog_action: "Einfügen"
+      link_edit_action: "Aktualisieren"
       link_optional_text: "optionaler Titel"
       link_url_placeholder: "Füge eine URL ein oder tippe, um die Themen zu durchsuchen"
       blockquote_title: "Blockzitat"
@@ -2660,6 +2663,9 @@ de:
       image_scale_button: "Bild auf %{percent} % skalieren"
       delete_image_button: Bild löschen
       toggle_image_grid: Bildraster umschalten
+      link_toolbar:
+        copy: "Link kopieren"
+        link_copied: "Link kopiert!"
     notifications:
       tooltip:
         regular:
@@ -3650,6 +3656,8 @@ de:
           title: "Übersetzungen für Beitrag"
           confirm_delete: "Bist du sicher, dass du die Übersetzungen für '%{languageCode}' löschen willst?"
         success: "Die Übersetzungen wurden erfolgreich aktualisiert"
+        post_language_selector:
+          none: "Keiner"
       errors:
         create: "Entschuldige, es gab einen Fehler beim Anlegen des Beitrags. Bitte versuche es noch einmal."
         edit: "Entschuldige, es gab einen Fehler beim Bearbeiten des Beitrags. Bitte versuche es noch einmal."
@@ -5962,9 +5970,11 @@ de:
           install: "Installieren"
           themes:
             title: "Themes"
+            description: "Website-weite Themes, die das Gesamtbild deiner Website für alle Nutzer verändern."
             themes_intro: "Installiere ein neues Theme, um loszulegen, oder erstelle dein eigenes von Grund auf mit diesen Ressourcen."
             new_theme: "Neues Theme"
             back: "Zurück zu Themes"
+            install: "Installieren"
           components:
             title: "Komponenten"
             description: "Anpassungen, die Oberflächenelemente deines Forumsdesigns verändern oder zusätzliche Frontend-Funktionen hinzufügen"
@@ -6029,7 +6039,8 @@ de:
           unsaved_changes: "Du hast ungespeicherte Änderungen"
           copy_of: "Kopie von %{name}"
           copy_created: 'Es wurde eine neue Kopie von "%{name}" erstellt.'
-          illegal_character_in_color: "Farben bestehen nur aus Hexadezimalzeichen"
+          illegal_character_in_color: "Die Farbe darf nur aus Hexadezimalzeichen bestehen"
+          invalid_color_length: "Die Farbe muss das Format #rrggbb oder #rgb haben."
           delete_confirm: "Bist du sicher, dass du diese Farbpalette löschen willst?"
       plugins:
         title: "Plug-ins"
@@ -6325,6 +6336,15 @@ de:
           remote_theme_edits: "Wenn du dieses Theme bearbeiten möchtest, musst du <a href='%{repoURL}' target='_blank'>eine Änderung in seinem Repository einreichen</a>"
           repo_unreachable: "Das Git-Repository dieses Themes konnte nicht kontaktiert werden. Fehlermeldung:"
           imported_from_archive: "Dieses Theme wurde aus einer .zip-Datei importiert"
+          settings: "Einstellungen"
+          colors: "Farben"
+          unsaved_colors:
+            one: "Du hast %{count} nicht gespeicherte Farbe"
+            other: "Du hast %{count} nicht gespeicherte Farben"
+          unsaved_colors_leave_route_confirmation: "Du hast deine Änderungen an der Farbpalette noch nicht gespeichert. Bist du sicher, dass du gehen willst?"
+          save_colors: "Farben speichern"
+          discard_colors: "Verwerfen"
+          colors_title: "Farben"
           scss:
             text: "CSS"
             title: "Benutzerdefinierte CSS-Regeln mit Unterstützung für SCSS-Syntax"

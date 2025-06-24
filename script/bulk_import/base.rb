@@ -515,6 +515,7 @@ class BulkImport::Base
     username
     username_lower
     name
+    title
     active
     trust_level
     admin

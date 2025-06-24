@@ -371,7 +371,6 @@ cs:
       s3_backup_requires_s3_settings: "S3 nemůžete použít jako umístění zálohy, pokud nezadáte '%{setting_name}'."
       s3_bucket_reused: "Nemůžete použít stejný segment pro 's3_upload_bucket' a 's3_backup_bucket'. Vyberte jiný bucket nebo použijte pro každý bucket jinou cestu."
       secure_uploads_requirements: "Nahrávání S3 a seznamy ACL S3 musí být před povolením zabezpečeného nahrávání povoleny."
-      s3_use_acls_requirements: "Pokud je povoleno zabezpečené nahrávání, musíte mít povoleny seznamy ACL S3."
       share_quote_facebook_requirements: "Chcete-li povolit sdílení citací pro Facebook, musíte nastavit Facebook app id."
       second_factor_cannot_be_enforced_with_disabled_local_login: "Nemůžete vynutit 2FA, pokud je zakázáno lokální přihlašování."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Nemůžete vynutit 2FA, pokud je povoleno DiscourseConnect."
@@ -677,6 +676,7 @@ cs:
       few: "%{count} příspěvky"
       many: "%{count} příspěvků"
       other: "%{count} příspěvků"
+    dominating_topic: Do tohoto tématu jste toho hodně napsali! Zvažte, zda byste neměli dát i ostatním příležitost se zapojit.
     get_a_room:
       one: Již jste jednou odpověděli uživateli @%{reply_username}, věděli jste, že jim místo toho můžete poslat soukromou zprávu?
       few: Již jste %{count}x odpověděli uživateli @%{reply_username}, věděli jste, že jim místo toho můžete poslat soukromou zprávu?
@@ -1385,8 +1385,8 @@ cs:
     trending_search:
       title: Populární hledané výrazy
       labels:
-        term: Období
-        searches: Vyhledávání
+        term: Výraz
+        searches: Hledání
         click_through: CTR
       description: "Nejoblíbenější vyhledávané výrazy s jejich mírou prokliku."
     emails:
@@ -1644,9 +1644,15 @@ cs:
     content_security_policy_report_only: "Povolit Content-Security-Policy-Report-Only (CSP)"
     send_welcome_message: "Poslat všem novým uživatelům uvítací zprávu s rychlým návodem jak začít."
     send_tl1_welcome_message: "Pslat novým uživatelům úrovně důvěry 1 uvítací zprávu."
+    redirect_users_to_top_page: "Automaticky přesměrovat nové a dlouho nepřítomné uživatele na seznam nejlepších témat (top). Platí pouze v případě, že je v nastavení 'top menu' webu uvedeno 'top'."
     top_page_default_timeframe: "Výchozí časové období stránky Nejlepší pro anonymní uživatele (pro přihlášené uživatele se nastaví automaticky na základě jejich poslední návštěvy)."
+    prioritize_username_in_ux: "Zobrazit uživatelské jméno jako první na uživatelské stránce, kartě uživatele a v příspěvcích"
+    email_token_valid_hours: "Tokeny pro zapomenuté heslo/aktivaci účtu jsou platné (n) hodin."
     version_checks: "Odešlete příkaz ping na Discourse Hub pro aktualizace verzí a zobrazte zprávy o nových verzích na <a href='%{base_path}/admin' target='_blank'>/admin</a> nástěnce"
     invite_expiry_days: "Platnost uživatelských pozvánek ve dnech"
+    min_username_length: "Minimální délka uživatelského jména ve znacích. VAROVÁNÍ: pokud má některý z existujících uživatelů nebo skupin kratší jméno, váš web se rozbije!"
+    max_username_length: "Maximální délka uživatelského jména ve znacích. VAROVÁNÍ: pokud má některý z existujících uživatelů nebo skupin delší jméno, váš web se rozbije!"
+    reserved_usernames: "Uživatelská jména, pro která není povolena registrace. Zástupný znak * lze použít k nalezení libovolného znaku nula nebo vícekrát."
     block_common_passwords: "Nepovolit heslo pokud je mezi 10 000 nejběžnějšími."
     google_oauth2_client_secret: "Client secret vaší Google aplikace."
     remove_older_backups: "Odstranit zálohy starší než je zadaný počet dní. Nechte prázdné pro vypnutí."
@@ -1658,6 +1664,7 @@ cs:
     max_topics_per_day: "Maximální počet témat, který smí uživatel za den vytvořit."
     clean_orphan_uploads_grace_period_hours: "Grace period (in hours) before an orphan upload is removed."
     purge_deleted_uploads_grace_period_days: "Grace period (in days) before a deleted upload is erased."
+    purge_unactivated_users_grace_period_days: "Doba odkladu (ve dnech), než bude uživatel, který si neaktivoval účet, smazán. Nastavte hodnotu 0, abyste nikdy nemazali neaktivované uživatele."
     enable_listing_suspended_users_on_search: "Umožnit běžným uživatelům vyhledávat pozastavené uživatele."
     tl3_promotion_min_duration: "Minimální počet dní, po které povýšení na úroveň důvěry 3 trvá, než může být uživatel snížen zpět na úroveň důvěry 2."
     delete_all_posts_and_topics_allowed_groups: "Skupiny s povolením mazat příspěvky a témata vytvořená jinými uživateli. Tyto skupiny budou moci také vidět odstraněná témata a příspěvky."
@@ -1680,13 +1687,38 @@ cs:
     email_total_attachment_size_limit_kb: "Maximální celková velikost souborů připojených k odchozím e-mailům. Nastavením na 0 zakážete odesílání příloh."
     delete_rejected_email_after_days: "Smazat odmítnuté e-maily starší než (n) dnů."
     pop3_polling_openssl_verify: "Ověřit certifikát serveru TLS (výchozí: povoleno)"
+    delete_user_max_post_age: "Zakázat mazání uživatelů, jejichž první příspěvek je starší než (x) dní."
     delete_all_posts_max: "Maximální počet příspěvků, které mohou být smazány najednou tlačítkem 'Odstranit všechny příspěvky'. Pokud má uživatel více příspěvků než je zde nastaveno, nemohou být jeho příspěvky smazány najednou a uživatele nelze odstranit."
+    delete_user_self_max_post_count: "Maximální počet příspěvků, které může uživatel mít, a zároveň a zároveň být schopen samoobslužně smazat účet. Nastavením na -1 samoobslužné mazání účtu zakážete."
+    username_change_period: "Maximální počet dní po registraci, po které si účty mohou změnit uživatelské jméno (0 pro zakázání změny uživatelského jména)."
     email_editable: "Povolit uživatelům změnit si po registraci emailovou adresu."
+    logout_redirect: "Umístění, na které má být prohlížeč přesměrován po odhlášení (např.: https://example.com/logout)."
     uploaded_avatars_allowed_groups: "Skupiny, které mají povoleno nahrát vlastní profilové obrázky."
     digest_topics: "Maximální počet populárních témat zařazených do email přehledu."
     digest_posts: "Maximální počet populárních příspěvků zařazených do email přehledu."
-    group_in_subject: "Nastavte %%{optional_pm} v předmětu e-mailu podle názvu první skupiny v SZ, viz: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Přizpůsobit formát předmětu pro standardní e-maily</a>"
+    public_user_custom_fields: "Seznam uživatelských polí, která lze načíst pomocí API."
+    staff_user_custom_fields: "Seznam uživatelských polí, která lze načíst pomocí API pro členy redakce."
+    enable_user_directory: "Zveřejnit adresář uživatelů"
+    enable_group_directory: "Zveřejnit adresář skupin"
+    enable_category_group_moderation: "Povolit skupinám moderovat obsah v konkrétních kategoriích"
+    group_in_subject: "Nastavit %%{optional_pm} v předmětu e-mailu podle názvu první skupiny v SZ, viz: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Přizpůsobit formát předmětu pro standardní e-maily</a>"
+    allow_anonymous_mode: "Povolit uživatelům možnost přepnout se při odesílání příspěvků do anonymního režimu. Po aktivaci mohou uživatelé při vytváření příspěvků nebo témat na webu zvolit skrytí své identity. Viz také `allow anonymous likes`."
+    anonymous_account_duration_minutes: "Pro ochranu anonymity vytvářet pro každého uživatele každých N minut nový anonymní účet. Příklad: pokud je nastaveno na 600, jakmile od posledního příspěvku uplyne 600 minut A ZÁROVEŇ se uživatel přepne na anonymního uživatele, vytvoří se nový anonymní účet."
+    hide_user_profiles_from_public: "Zakázat uživatelské karty, uživatelské profily a adresář uživatelů pro nepřihlášené uživatele."
+    hide_new_user_profiles: "Skrýt profily uživatelů s úrovní důvěryhodnosti 1 nebo nižší před veřejností a uživatelům s úrovní důvěryhodnosti 1 důvěřovat, dokud poprvé nepřispějí. Tato funkce je bezpodmínečně zakázána na stránkách s nastavením 'must_approve_users' a 'invite_only'."
+    allow_users_to_hide_profile: "Umožnit uživatelům skrýt svůj profil a přítomnost"
+    hide_user_activity_tab: "Skrýt kartu Aktivita v uživatelském profilu pro jiné uživatele, než jsou správci a vlastníci profilu."
+    delete_associated_accounts_on_password_reset: "Odstranit přidružené uživatelské účty, když uživatel změní heslo."
+    allow_featured_topic_on_user_profiles: "Umožnit uživatelům zobrazit odkaz na téma na své uživatelské kartě a profilu."
+    show_inactive_accounts: "Povolit přihlášeným uživatelům prohlížet profily neaktivních účtů."
     hide_suspension_reasons: "Nezobrazovat důvody pozastavení veřejně na uživatelských profilech."
+    log_personal_messages_views: "Zaznamenávat zobrazení soukromých zpráv administrátorem pro ostatní uživatele/skupiny."
+    ignored_users_count_message_threshold: "Upozornit moderátory, pokud je určitý uživatel ignorován tímto počtem ostatních uživatelů."
+    ignored_users_message_gap_days: "Jak dlouho čekat, než znovu upozornit moderátory na uživatele, kterého mnoho dalších ignorovalo."
+    clean_up_inactive_users_after_days: "Počet dní před odstraněním neaktivního uživatele (úroveň důvěryhodnosti 0 bez jakýchkoli příspěvků). Chcete-li čištění zakázat, nastavte hodnotu 0."
+    clean_up_unused_staged_users_after_days: "Počet dní před odstraněním nepoužívaného předběžného uživatele (bez jakýchkoli příspěvků). Chcete-li čištění zakázat, nastavte hodnotu 0."
+    user_selected_primary_groups: "Umožnit uživatelům nastavit si vlastní primární skupinu"
+    allowed_user_website_domains: "Webové stránky uživatele budou ověřeny vůči těmto doménám. Seznam oddělený svislou čarou."
     enable_mobile_theme: "Používat na mobilních zařízeních verzi přizpůsobenou pro mobily s možností přejít na plnou verzi. Zrušte, pokud chcete používat vlastní plně responzivní kaskádový styl."
     pm_warn_user_last_seen_months_ago: "Při vytváření nové SZ upozornit uživatele, když adresát nebyl viděn více než n měsíců."
     permalink_normalizations: "Před přiřazením trvalých odkazů použijte následující regulární výraz, např.: /(topic.*)\\?.*/\\1 pomůže odstranit query string z route témat. Formát je regex+řetězec. Použijte \\1 atd. pro přístup k captures."
@@ -1694,6 +1726,7 @@ cs:
     penalty_step_hours: "Výchozí sankce pro ztišení nebo pozastavení uživatelů v hodinách. První přestupek se rovná první hodnotě, druhý přestupek druhé hodnotě, atd."
     penalty_include_post_message: "Automatické zahrnutí zprávy s urážlivým příspěvkem do šablony e-mailové zprávy při ztišení nebo pozastavení uživatele."
     full_name_requirement: "Nastavení celého jména jako povinného, nepovinného nebo nepovinného, ale skrytého v registračním formuláři."
+    enable_names: "Zobrazení celého jména uživatele v jeho profilu, kartě uživatele a e-mailech. Zakázáním skryjete celé jméno všude."
     short_progress_text_threshold: "After the number of posts in a topic goes above this number, the progress bar will only show the current post number. If you change the progress bar's width, you may need to change this value."
     embed_unlisted: "Vložená témata budou skryta, dokud uživatel neodpoví."
     import_embed_unlisted: "Importovaná vložená témata budou skryta, dokud uživatel neodpoví (i když není zaškrtnuto nastavení webu `embed unlisted`)."
@@ -1711,10 +1744,17 @@ cs:
     shared_drafts_allowed_groups: "Povolte uživatelům v těchto skupinách zobrazovat a upravovat sdílené návrhy."
     base_font: "Základní písmo použité pro většinu textu na webu. Motivy mohou toto přepsat pomocí vlastní vlastnosti CSS `--font-family`."
     heading_font: "Písmo, které se má použít pro nadpisy na webu. Motivy toto mohou přepsat pomocí vlastní vlastnosti CSS `--heading-font-family`."
+    enable_user_status: "Umožnit uživatelům nastavit si vlastní stavovou zprávu (emoji + popis)."
+    enable_user_tips: "Povolit tipy pro nové uživatele, které jim popisují klíčové funkce"
     dashboard_hidden_reports: "Povolit skrytí zadaných sestav z nástěnky"
     dashboard_visible_tabs: "Vyberte, které záložky administrační nástěnky budou viditelné."
     dashboard_general_tab_activity_metrics: "Na kartě Obecné vyberte sestavy, které se mají zobrazovat jako metriky aktivity."
+    gravatar_name: "Zadejte název poskytovatele služby Gravatar. Tento název se obvykle používá k identifikaci zdroje, který webu poskytuje avatary Gravatar."
+    gravatar_base_url: "Zadejte adresu URL pro přístup k rozhraní API poskytovatele Gravatar. Toto nastavení je rozhodující pro převod e-mailových adres na adresy URL služby Gravatar, kde jsou uloženy obrázky avatarů."
+    gravatar_login_url: "URL relativní k `gravatar_base_url`, která uživateli poskytuje přihlášení ke službě Gravatar."
     allow_changing_staged_user_tracking: "Umožnit administrátorovi změnit předvolby oznámení o kategoriích a štítcích u předběžně založeného uživatele.."
+    use_email_for_username_and_name_suggestions: "Pro návrhy uživatelského jména a jména použijte první část e-mailové adresy. Upozornění: To může usnadnit zjištění e-mailové adresy vašich členů útočníky (protože mnoho lidí používá běžné poskytovatele e-mailu, jako je `gmail.com`)."
+    use_name_for_username_suggestions: "Při navrhování uživatelských jmen použít celé jméno uživatele."
     experimental_form_templates: "Povolit funkci šablon formulářů. Spravujte šablony v <a href='%{base_path}/admin/customize/form-templates'>Přizpůsobit/Šablony</a>."
     errors:
       invalid_email: "Neplatná emailová adresa."
@@ -3449,7 +3489,7 @@ cs:
       long_description: |
         Tento odznak je udělen, když dosáhnete 2. úrovně důvěry. Děkujeme, že se účastníte po dobu několika týdnů a skutečně se připojujete k naší komunitě. Nyní můžete posílat pozvánky ze svého profilu nebo jednotlivých témat, vytvářet skupinové soukromé zprávy a mít více lajků za den.
     regular:
-      name: Stálý
+      name: Stálý člen
       description: <a href="https://meta.discourse.cz/t/vysvetleni-urovni-duvery-v-discourse/">Uděleno</a> překategorizovat, přejmenovat, sledovat odkazy, wiki, více lajků
       long_description: |
         Tento odznak je udělen, když dosáhnete 3. úrovně důvěry. Díky za to, že jste byli po dobu několika měsíců součástí naší komunity. Nyní jste jedním z nejaktivnějších čtenářů a spolehlivým přispěvatelem, který dělá naši komunitu skvělou. Nyní můžete přejmenovávat témata a měnit jejich kategorie, využít výkonnějších indikátorů nevyžádané pošty, a také dostanete denně mnohem více lajků.

@@ -298,7 +298,6 @@ ja:
       s3_backup_requires_s3_settings: "'%{setting_name}' が入力されていない場合、S3 をバックアップとして使用することはできません。"
       s3_bucket_reused: "'s3_upload_bucket' and 's3_backup_bucket' に同じバケットを使用することはできません。別のバケットを選択するか、バケットごとに異なるパスを使用してください。"
       secure_uploads_requirements: "安全なアップロードを有効にする前に、S3 アップロードと S3 ACL を有効にする必要があります。"
-      s3_use_acls_requirements: "安全なアップロードを有効にする場合は、S3 ACL が有効になっている必要があります。"
       share_quote_facebook_requirements: "Facebook に引用を共有できるようにするには、Facebook アプリの ID を設定する必要があります。"
       second_factor_cannot_be_enforced_with_disabled_local_login: "ログインが無効になっている場合、2FA を適用することはできません。"
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "DiscourseConnect が有効になっている場合、2FA を適用することはできません。"
@@ -1662,7 +1661,6 @@ ja:
     blocked_ip_blocks: "Discourse によって決してクロールされない非公開 IP ブロックリスト"
     allowed_internal_hosts: "Discourse がワンボックスやその他の目的で安全にクロールできる内部ホストのリスト"
     allowed_onebox_iframes: "ワンボックス埋め込みを介して許可される iframe src ドメインのリスト。`*` はすべてのデフォルトのワンボックスエンジンを許可します。"
-    allowed_iframes: "Discourse が投稿で安全に許可できる iframe src URL プレフィックスのリスト"
     allowed_crawler_user_agents: "サイトへのアクセスを許可する必要のあるウェブクローラーのユーザーエージェント。警告！これを設定すると、ここにリストされていないすべてのクローラーが拒否されます！"
     blocked_crawler_user_agents: "サイトへのアクセスを許可してはいけないウェブクローラーを識別する、ユーザーエージェント文字列の大文字と小文字を区別しない一意の語。ホワイトリストが定義されている場合は適用されません。"
     slow_down_crawler_user_agents: '"slow down crawler rate" 設定の構成のとおりに速度の制限が必要なウェブクローラーのユーザーエージェント。各値の長さは 3 文字以上です。'
@@ -1784,7 +1782,6 @@ ja:
     s3_endpoint: "エンドポイントは DigitalOcean Spaces または Minio などの S3 対応サービスにバックアップするように変更できます。警告: AWS S3 を使用している場合は空のままにしてください。"
     s3_configure_tombstone_policy: "トゥームストーンアップロードの自動削除ポリシーを有効にする。重要: 無効である場合、アップロードが削除された後にスペースを再確保することはありません。"
     s3_disable_cleanup: "最大許容数を超えるバックアップが存在する場合、S3 の古いバックアップの削除を防止する。"
-    s3_use_acls: "AWS は S3 バケットでの ACL の使用を推奨していません。このアドバイスに従っている場合は、このオプションをオフにしてください。安全なアップロードを使用している場合は、これを有効にする必要があります。"
     enable_direct_s3_uploads: "Amazon S3 への直接のマルチ―パートアップロードを許可します。詳細については、https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469 をご覧ください。"
     backup_time_of_day: "バックアップが発生する必要のある時刻 (UTC)。"
     backup_with_uploads: "スケジュールされたバックアップにアップロードを含める。これを無効にすると、データベースのみがバックアップされます。"

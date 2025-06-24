@@ -24,6 +24,12 @@ import {
   applyOnChangePluginApiCallbacks,
 } from "select-kit/lib/plugin-api";
 import selectKitPropUtils from "select-kit/lib/select-kit-prop-utils";
+import ErrorsCollection from "./select-kit/errors-collection";
+import SelectKitCollection from "./select-kit/select-kit-collection";
+import SelectKitFilter from "./select-kit/select-kit-filter";
+import SelectKitRow from "./select-kit/select-kit-row";
+import SelectedChoice from "./selected-choice";
+import SelectedName from "./selected-name";
 
 export const MAIN_COLLECTION = "MAIN_COLLECTION";
 export const ERRORS_COLLECTION = "ERRORS_COLLECTION";
@@ -71,7 +77,17 @@ export function resolveComponent(context, component) {
   const owner = getOwner(context);
 
   if (typeof component === "string") {
-    return owner.resolveRegistration(`component:${component}`);
+    deprecated(
+      `[${component}] SelectKit components should be imported and passed by reference, not as a string`,
+      {
+        id: "discourse.select-kit-resolved-components",
+      }
+    );
+    const result = owner.resolveRegistration(`component:${component}`);
+    if (!result) {
+      throw new Error(`Component not found: ${component}`);
+    }
+    return result;
   }
 
   return component;
@@ -119,9 +135,9 @@ function protoProp(prototype, key, descriptor) {
   limitMatches: null,
   placement: isDocumentRTL() ? "bottom-end" : "bottom-start",
   verticalOffset: 3,
-  filterComponent: "select-kit/select-kit-filter",
-  selectedNameComponent: "selected-name",
-  selectedChoiceComponent: "selected-choice",
+  filterComponent: SelectKitFilter,
+  selectedNameComponent: SelectedName,
+  selectedChoiceComponent: SelectedChoice,
   castInteger: false,
   focusAfterOnChange: true,
   triggerOnChangeOnTab: true,
@@ -235,7 +251,7 @@ export default class SelectKit extends Component {
 
   _modifyComponentForRowWrapper(collection, item) {
     let component = this.modifyComponentForRow(collection, item);
-    return component || "select-kit/select-kit-row";
+    return component || SelectKitRow;
   }
 
   modifyComponentForRow() {}
@@ -265,10 +281,10 @@ export default class SelectKit extends Component {
     if (!component) {
       switch (identifier) {
         case ERRORS_COLLECTION:
-          component = "select-kit/errors-collection";
+          component = ErrorsCollection;
           break;
         default:
-          component = "select-kit/select-kit-collection";
+          component = SelectKitCollection;
           break;
       }
     }

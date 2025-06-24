@@ -117,3 +117,75 @@ export function changedDescendants(old, cur, f, offset = 0) {
     offset += child.nodeSize;
   }
 }
+
+/**
+ * Get the continuous range of a mark at a given position.
+ *
+ * @param $pos
+ *    {import("prosemirror-model").ResolvedPos} - The position in the document.
+ * @param type
+ *    {import("prosemirror-model").MarkType} - The type of mark to find.
+ * @param attrs
+ *    {Object} - Optional attributes to match against the mark.
+ * @returns {{ from: number, to: number, mark: import("prosemirror-model").Mark } | undefined}
+ */
+export function getMarkRange($pos, type, attrs = {}) {
+  if (!$pos || !type) {
+    return;
+  }
+
+  // Try node after, then before, return if neither has the mark
+  let start = $pos.parent.childAfter($pos.parentOffset);
+  if (!start.node || !findMarkOfType(start.node.marks, type, attrs)) {
+    start = $pos.parent.childBefore($pos.parentOffset);
+    if (!start.node || !findMarkOfType(start.node.marks, type, attrs)) {
+      return;
+    }
+  }
+
+  const mark = findMarkOfType(start.node.marks, type, attrs);
+
+  let from = $pos.start() + start.offset;
+  let to = from + start.node.nodeSize;
+
+  // Expand backward
+  let { index } = start;
+  while (
+    index > 0 &&
+    findMarkOfType($pos.parent.child(index - 1).marks, type, mark.attrs)
+  ) {
+    index--;
+    from -= $pos.parent.child(index).nodeSize;
+  }
+
+  // Expand forward
+  index = start.index + 1;
+  while (
+    index < $pos.parent.childCount &&
+    findMarkOfType($pos.parent.child(index).marks, type, mark.attrs)
+  ) {
+    to += $pos.parent.child(index).nodeSize;
+    index++;
+  }
+
+  return { from, to, mark };
+}
+
+/**
+ * Find a mark of a specific type within marks, matching the attributes if provided.
+ *
+ * @param marks
+ *    {import("prosemirror-model").Mark[]} - Array of marks to search through.
+ * @param type
+ *   {import("prosemirror-model").MarkType} - The type of mark to find.
+ * @param attrs
+ *  {Object} - Optional attributes to match against the mark.
+ * @returns {import("prosemirror-model").Mark | undefined}
+ */
+export function findMarkOfType(marks, type, attrs = {}) {
+  return marks.find(
+    (item) =>
+      item.type === type &&
+      Object.keys(attrs).every((key) => item.attrs[key] === attrs[key])
+  );
+}

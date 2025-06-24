@@ -399,6 +399,7 @@ fi:
       created: "Olet kirjanmerkinnyt tämän viestin. %{name}"
       created_generic: "Olet kirjanmerkinnyt tämän. %{name}"
       create: "Luo kirjanmerkki"
+      clear_reminder: "Tyhjennä muistutus"
       edit: "Muokkaa kirjanmerkkiä"
       not_bookmarked: "lisää viesti kirjanmerkkeihin"
       remove_reminder_keep_bookmark: "Poista muistutus ja säilytä kirjanmerkki"
@@ -1904,6 +1905,7 @@ fi:
           edit_link_options: "Muokkaa linkin asetuksia tai lähetä sähköpostitse."
           show_advanced: "Näytä lisäasetukset"
           hide_advanced: "Piilota lisäasetukset"
+          description: "Kuvaus"
           restrict: "Rajoita:"
           restrict_email: "Rajoita sähköpostiosoitteeseen"
           restrict_domain: "Rajoita verkkotunnukseen"
@@ -2588,7 +2590,8 @@ fi:
       italic_text: "kursivoitu teksti"
       link_title: "Hyperlinkki"
       link_description: "kirjoita linkin kuvaus tähän"
-      link_dialog_title: "Lisää linkki"
+      link_dialog_action: "Lisää"
+      link_edit_action: "Päivitä"
       link_optional_text: "valinnainen otsikko"
       link_url_placeholder: "Liitä URL tai hae ketjua kirjoittamalla"
       blockquote_title: "Sitaatti"
@@ -2660,6 +2663,9 @@ fi:
       image_scale_button: "Muuta kuvan kokoa %{percent} prosenttiin"
       delete_image_button: Poista kuva
       toggle_image_grid: Kuvaruudukko päälle/pois päältä
+      link_toolbar:
+        copy: "Kopioi linkki"
+        link_copied: "Linkki kopioitu!"
     notifications:
       tooltip:
         regular:
@@ -3650,6 +3656,8 @@ fi:
           title: "Käännökset viestille"
           confirm_delete: "Oletko varma, että haluat poistaa käännökset kohteelle '%{languageCode}'?"
         success: "Käännökset on päivitetty onnistuneesti"
+        post_language_selector:
+          none: "Ei valittu"
       errors:
         create: "Viestin luonti epäonnistui. Yritä uudelleen."
         edit: "Viestin muokkaus epäonnistui. Yritä uudelleen."
@@ -5961,9 +5969,11 @@ fi:
           install: "Asenna"
           themes:
             title: "Teemat"
+            description: "Sivuston laajuiset teemat, jotka muuttavat sivustosi yleistä ulkoasua ja tunnelmaa kaikille käyttäjille."
             themes_intro: "Aloita asentamalla uusi teema tai luo oma alusta alkaen näiden resurssien avulla."
             new_theme: "Uusi teema"
             back: "Takaisin teemoihin"
+            install: "Asenna"
           components:
             title: "Komponentit"
             description: "Mukautukset, jotka muuttavat foorumisuunnittelun pintaelementtejä tai lisäävät käyttöliittymäominaisuuksia"
@@ -6028,7 +6038,8 @@ fi:
           unsaved_changes: "Sinulla on tallentamattomia muutoksia"
           copy_of: "Kopio %{name}"
           copy_created: 'Uusi kopio "%{name}" on luotu'
-          illegal_character_in_color: "Värit koostuvat vain heksadesimaaleista merkeistä"
+          illegal_character_in_color: "Väri saa koostua vain heksadesimaalimerkeistä"
+          invalid_color_length: "Värin on oltava muodossa #rrggbb tai #rgb"
           delete_confirm: "Haluatko varmasti poistaa tämän väripaletin?"
       plugins:
         title: "Lisäosat"
@@ -6324,6 +6335,15 @@ fi:
           remote_theme_edits: "Jos haluat muokata tätä teemaa, sinun on <a href='%{repoURL}' target='_blank'>lähetettävä muutos sen tietovarastoon</a>"
           repo_unreachable: "Teeman Git-tietovarastoon yhdistäminen epäonnistui. Virheviesti:"
           imported_from_archive: "Tämä teema tuotiin .zip-tiedostosta"
+          settings: "Asetukset"
+          colors: "Värit"
+          unsaved_colors:
+            one: "Sinulla on %{count} tallentamaton väri"
+            other: "Sinulla on %{count} tallentamattomia värejä"
+          unsaved_colors_leave_route_confirmation: "Et ole vielä tallentanut väripaletin muutoksia. Oletko varma, että haluat lähteä?"
+          save_colors: "Tallenna värit"
+          discard_colors: "Hylkää"
+          colors_title: "Värit"
           scss:
             text: "CSS"
             title: "Mukautetut CSS-säännöt, jotka tukevat SCSS-syntaksia"

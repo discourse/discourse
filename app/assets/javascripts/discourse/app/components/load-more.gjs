@@ -23,6 +23,12 @@ export function enableLoadMoreObserver() {
  * in additional options to customize the observer's behavior;
  * Refer to https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver/IntersectionObserver#options for a full list.
  *
+ * Additionally, an @enabled boolean can be passed to allow for cases where
+ * the element is visible in the viewport but you don't want to allow the `loadMore`
+ * behaviour. A use case for this is when our controllers return some `canLoadMore`
+ * boolean. There is no use attempting to load more from the server in this case,
+ * there will be nothing else.
+ *
  * @example Basic usage with a block:
  * ```gjs
  * <LoadMore @action={{this.loadMoreTopics}}>
@@ -57,10 +63,11 @@ export default class LoadMore extends Component {
   root = this.args.root || null;
   rootMargin = this.args.rootMargin || "0px 0px 0px 0px";
   threshold = this.args.threshold || 0.0;
+  enabled = this.args.enabled ?? true;
 
   @action
   onIntersection(entry) {
-    if (ENABLE_LOAD_MORE_OBSERVER && entry.isIntersecting) {
+    if (ENABLE_LOAD_MORE_OBSERVER && entry.isIntersecting && this.enabled) {
       discourseDebounce(this, this.args.action, 100);
     }
   }
@@ -78,7 +85,6 @@ export default class LoadMore extends Component {
           }}
           class="load-more-sentinel"
           aria-hidden="true"
-          style="height: 0px; width: 100%; margin: 0; padding: 0; pointer-events: none; user-select: none; visibility: hidden; position: relative;"
         />
       </Wrapper>
     {{/let}}

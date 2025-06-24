@@ -45,24 +45,32 @@ export default RouteTemplate(
 
       <div class="title">
         {{#if @controller.editingName}}
-          <TextField @value={{@controller.model.name}} @autofocus="true" />
-          <DButton
-            @action={{@controller.finishedEditingName}}
-            @icon="check"
-            class="btn-primary btn-small submit-edit"
-          />
-          <DButton
-            @action={{@controller.cancelEditingName}}
-            @icon="xmark"
-            class="btn-small cancel-edit"
-          />
+          <div class="container-edit-title">
+            <TextField @value={{@controller.model.name}} @autofocus="true" />
+            <DButton
+              @action={{@controller.finishedEditingName}}
+              @icon="check"
+              class="btn-primary btn-small submit-edit"
+            />
+            <DButton
+              @action={{@controller.cancelEditingName}}
+              @icon="xmark"
+              class="btn-small cancel-edit"
+            />
+          </div>
         {{else}}
-          <span>{{@controller.model.name}}</span>
           <DButton
             @action={{@controller.startEditingName}}
-            @icon="pencil"
-            class="btn-small"
-          />
+            class="btn-transparent title-button"
+            role="heading"
+            aria-level="2"
+            aria-label="Edit theme name: {{@controller.model.name}}"
+          >
+            <span>{{@controller.model.name}}</span>
+            {{#unless @controller.model.system}}
+              {{icon "pencil" class="inline-icon"}}
+            {{/unless}}
+          </DButton>
         {{/if}}
       </div>
 

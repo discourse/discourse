@@ -491,6 +491,7 @@ he:
       created: "הוספת את הפוסט הזה לסימניות. %{name}"
       created_generic: "הוספת את זה לסימניות. %{name}"
       create: "יצירת סימנייה"
+      clear_reminder: "פינוי התזכורת"
       edit: "עריכת סימנייה"
       not_bookmarked: "סימון פוסט זה בסימנייה"
       remove_reminder_keep_bookmark: "הסרת תזכורת ושמירת הסימנייה"
@@ -2104,6 +2105,7 @@ he:
           edit_link_options: "עריכת אפשרויות קישור או לשלוח בדוא״ל."
           show_advanced: "הצגת אפשרויות מתקדמות"
           hide_advanced: "הסתרת אפשרויות מתקדמות"
+          description: "תיאור"
           restrict: "הגבלה לכדי"
           restrict_email: "הגבלה לדוא״ל"
           restrict_domain: "הגבלה לשם תחום"
@@ -2864,7 +2866,10 @@ he:
       italic_text: "טקסט נטוי"
       link_title: "קישור"
       link_description: "הזן תיאור קישור כאן"
-      link_dialog_title: "הזן קישור"
+      link_dialog_title: "הוספת קישור חיצוני"
+      link_dialog_action: "כתיבה"
+      link_edit_title: "עריכת קישור חיצוני"
+      link_edit_action: "עדכון"
       link_optional_text: "כותרת כרשות"
       link_url_placeholder: "יש להדביק כתובת כדי לחפש נושאים"
       blockquote_title: "מקטע ציטוט"
@@ -2936,6 +2941,12 @@ he:
       image_scale_button: "שינוי קנה המידה של התמונה לכדי %{percent}%"
       delete_image_button: מחיקת תמונה
       toggle_image_grid: החלפת מצב רשת תמונות
+      link_toolbar:
+        edit: "עריכת קישור"
+        copy: "העתקת קישור"
+        remove: "הסרת קישור"
+        visit: "פתיחת קישור בלשונית חיצונית"
+        link_copied: "הקישור הועתק!"
     notifications:
       tooltip:
         regular:
@@ -4060,6 +4071,8 @@ he:
           title: "תרגומים לפוסט"
           confirm_delete: "למחוק את התרגומים ל־‚%{languageCode}’?"
         success: "התרגומים עודכנו בהצלחה"
+        post_language_selector:
+          none: "ללא"
       errors:
         create: "אירעה שגיאה ביצירת הפוסט שלך. נא לנסות שוב, עמך הסליחה."
         edit: "אירעה שגיאה בעריכת הפוסט שלך. נא לנסות שוב, עמך הסליחה."
@@ -4275,6 +4288,7 @@ he:
         title: "שיתוף פוסט מס׳ %{post_number}"
         instructions: "שיתוף קישור לפוסט זה:"
       original_language: "הפוסט הזה נכתב במקור ב%{language}"
+      original_language_and_outdated: "הפוסט הזה נכתב במקור ב%{language}. יכול להיות שהתרגום לא עדכני"
     category:
       none: "(ללא קטגוריה)"
       all: "כל הקטגוריות"
@@ -6507,9 +6521,11 @@ he:
           install: "התקנה"
           themes:
             title: "תמות"
+            description: "ערכות עיצוב של האתר שמשנות את המראה והתחושה הכלליים של האתר שלך לכל המשתמשים."
             themes_intro: "יש להתקין ערכת עיצוב חדשה כדי להתחיל או ליצור אחת משלך מאפס באמצעות המשאבים האלה."
             new_theme: "ערכת עיצוב חדשה"
             back: "חזרה לערכות עיצוב"
+            install: "התקנה"
           components:
             title: "רכיבים"
             description: "התאמות שמשנות רכיבים גלויים של עיצוב הפורום שלך, או מוסיפות תכונות חזית נוספות"
@@ -6576,7 +6592,10 @@ he:
           unsaved_changes: "יש שינויים שלא נשמרו"
           copy_of: "עותק של %{name}"
           copy_created: 'נוצר עותק חדש של „%{name}”'
-          illegal_character_in_color: "הצבעים מורכבים מתווים הקסדצימליים בלבד"
+          illegal_character_in_color: "הצבע חייב להיות מורכב מתווים הקסדצימליים בלבד"
+          invalid_color_length: "הצבע צריך להיות בתבנית ‎#rrggbb או ‎#rgb"
+          blocked_edit_for_system: "אי אפשר לערוך ערכות צבעים ששייכות לערכת עיצוב מערכתית."
+          delete_confirm: "למחוק את ערכת הצבעים הזאת?"
       plugins:
         title: "תוספים"
         name: "שם"
@@ -6877,6 +6896,17 @@ he:
           remote_theme_edits: "אם מעניין אותך לערוך את ערכת העיצוב הזאת, עליך <a href='%{repoURL}' target='_blank'>להגיש שינוי במאגר שלה</a>"
           repo_unreachable: "לא ניתן ליצור קשר עם מאגר ה־git של ערכת העיצוב הזו. הודעת השגיאה:"
           imported_from_archive: "ערכת עיצוב זו ייובאה מקובץ ‎.zip"
+          settings: "הגדרות"
+          colors: "צבעים"
+          unsaved_colors:
+            one: "יש לך צבע שלא נשמר"
+            two: "יש לך שני צבעים שלא נשמרו"
+            many: "יש לך %{count} צבעים שלא נשמרו"
+            other: "יש לך %{count} צבעים שלא נשמרו"
+          unsaved_colors_leave_route_confirmation: "לא שמרת עדיין את השינויים לערכת הצבעים שלך. לצאת?"
+          save_colors: "שמירת צבעים"
+          discard_colors: "להשליך"
+          colors_title: "צבעים"
           scss:
             text: "CSS"
             title: "כללי CSS מותאמים אישית עם תמיכה בתחביר SCSS"
@@ -6939,6 +6969,7 @@ he:
           about: "שינוי הצבעים המכהנים בערכות העיצוב שלך. עליך ליצור לוח צבעים כדי להתחיל."
           new_name: "לוח צבעים חדש"
           copy_name_prefix: "העתק של"
+          delete_confirm: "למחוק את ערכת הצבעים הזאת?"
           undo: "לבטל פעולה"
           undo_title: "ביטול השינויים לצבע זה מאז הפעם שעברה שהוא נשמר."
           revert: "להחזיר"

@@ -3,9 +3,11 @@ import { tracked } from "@glimmer/tracking";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import { TrackedMap } from "@ember-compat/tracked-built-ins";
 import curryComponent from "ember-curry-component";
 import DecoratedHtml from "discourse/components/decorated-html";
 import { bind } from "discourse/lib/decorators";
+import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { makeArray } from "discourse/lib/helpers";
 import decorateLinkCounts from "discourse/lib/post-cooked-html-decorators/link-counts";
 import decorateMentions from "discourse/lib/post-cooked-html-decorators/mentions";
@@ -29,8 +31,8 @@ export default class PostCookedHtml extends Component {
   @service currentUser;
 
   @tracked highlighted = false;
-  #decoratorState = new WeakMap();
   #pendingDecoratorCleanup = [];
+  #decoratorState = this.args.decoratorState || new TrackedMap();
 
   willDestroy() {
     super.willDestroy(...arguments);
@@ -47,29 +49,26 @@ export default class PostCookedHtml extends Component {
 
     [...POST_COOKED_DECORATORS, ...this.extraDecorators].forEach(
       (decorator) => {
-        if (!this.#decoratorState.has(decorator)) {
-          this.#decoratorState.set(decorator, {});
-        }
+        try {
+          let decoratorState;
+          if (this.#decoratorState.has(decorator)) {
+            decoratorState = this.#decoratorState.get(decorator);
+          } else {
+            decoratorState = new TrackedMap();
+            this.#decoratorState.set(decorator, decoratorState);
+          }
 
-        const owner = getOwner(this);
-        const decorationCleanup = decorator(element, {
-          data: {
-            post: this.args.post,
-            cooked: this.cooked,
-            highlightTerm: this.highlightTerm,
-            isIgnored: this.isIgnored,
-            ignoredUsers: this.ignoredUsers,
-          },
-          createDetachedElement: this.#createDetachedElement,
-          currentUser: this.currentUser,
-          helper,
-          renderNestedPostCookedHtml: (
+          const owner = getOwner(this);
+          const renderNestedPostCookedHtml = (
             nestedElement,
             nestedPost,
-            extraDecorators
+            extraDecorators,
+            extraArguments
           ) => {
             const nestedArguments = {
+              ...extraArguments,
               post: nestedPost,
+              decoratorState,
               streamElement: false,
               highlightTerm: this.highlightTerm,
               extraDecorators: [
@@ -82,13 +81,44 @@ export default class PostCookedHtml extends Component {
               nestedElement,
               curryComponent(PostCookedHtml, nestedArguments, owner)
             );
-          },
-          owner,
-          state: this.#decoratorState.get(decorator),
-        });
+          };
 
-        if (typeof decorationCleanup === "function") {
-          this.#pendingDecoratorCleanup.push(decorationCleanup);
+          const decorationCleanup = decorator(element, {
+            data: {
+              post: this.args.post,
+              cooked: this.cooked,
+              highlightTerm: this.highlightTerm,
+              isIgnored: this.isIgnored,
+              ignoredUsers: this.ignoredUsers,
+            },
+            decoratorState,
+            cooked: this.cooked,
+            createDetachedElement: this.#createDetachedElement,
+            currentUser: this.currentUser,
+            extraDecorators: this.extraDecorators,
+            helper,
+            highlightTerm: this.highlightTerm,
+            ignoredUsers: this.ignoredUsers,
+            isIgnored: this.isIgnored,
+            owner,
+            post: this.args.post,
+            renderGlimmer: helper.renderGlimmer,
+            renderNestedPostCookedHtml,
+          });
+
+          if (typeof decorationCleanup === "function") {
+            this.#pendingDecoratorCleanup.push(decorationCleanup);
+          }
+        } catch (e) {
+          if (isRailsTesting() || isTesting()) {
+            throw e;
+          } else {
+            // in case one of the decorators throws an error we want to surface it to the console but prevent
+            // the application from crashing
+
+            // eslint-disable-next-line no-console
+            console.error(e);
+          }
         }
       }
     );

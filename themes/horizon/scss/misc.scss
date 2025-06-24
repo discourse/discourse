@@ -1,0 +1,141 @@
+@use "lib/viewport";
+
+.user-main .about.collapsed-info .details {
+  background: var(--d-content-background);
+}
+
+.user-menu .quick-access-panel .read,
+.user-notifications-list .read {
+  background: var(--d-content-background);
+}
+
+.powered-by-discourse {
+  z-index: 400;
+}
+
+.boxed.white {
+  background-color: var(--d-content-background);
+}
+
+.admin-area .sidebar-wrapper .admin-panel {
+  background-color: transparent;
+}
+
+.admin-report .main .report-alert.no-data,
+.admin-report .main .report-alert.rate-limited {
+  background-color: var(--d-content-background);
+}
+
+.admin-detail {
+  background-color: var(--d-content-background);
+}
+
+.select-kit.combo-box .select-kit-header,
+.select-kit.multi-select .multi-select-header,
+.d-editor-textarea-wrapper,
+.fk-d-menu__inner-content,
+.menu-panel {
+  background-color: var(--d-content-background);
+}
+
+.fk-d-menu .btn {
+  border-radius: 0;
+}
+
+.open .grippie {
+  background-color: var(--accent-color);
+}
+
+.d-editor-textarea-wrapper.in-focus,
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="datetime"]:focus,
+input[type="datetime-local"]:focus,
+input[type="date"]:focus,
+input[type="month"]:focus,
+input[type="time"]:focus,
+input[type="week"]:focus,
+input[type="number"]:focus,
+input[type="email"]:focus,
+input[type="url"]:focus,
+input[type="search"]:focus,
+input[type="tel"]:focus,
+input[type="color"]:focus,
+.select-kit.multi-select.is-expanded .multi-select-header,
+.select-kit.multi-select .multi-select-header:focus {
+  border-color: var(--accent-color);
+  outline: 2px solid var(--accent-color);
+}
+
+#reply-control {
+  background-color: var(--background-color);
+}
+
+@include viewport.until(sm) {
+  // pinned topic excerpts are hidden on small screens too
+  .fk-d-menu__trigger.topic-list-layout-trigger {
+    display: none;
+  }
+}
+
+.search-container .search-header,
+.search-container .search-bar,
+.search-container .search-filters,
+.search-container .search-filters .search-advanced-filters {
+  background-color: var(--d-content-background);
+}
+
+.user-main .about .details {
+  padding: 1em 1em 0;
+  border-bottom: 0;
+  border-radius: var(--d-border-radius);
+  background-color: var(--primary-50);
+}
+
+.alert.alert-info {
+  background: var(--tertiary-very-low);
+}
+
+.discourse-reactions-list .reactions {
+  gap: 0.15em;
+}
+
+.group-details-container {
+  border-radius: var(--d-border-radius);
+}
+
+.period-chooser-header {
+  border-radius: 0;
+}
+
+// compatibility with the top contributors sidebar theme component
+// https://meta.discourse.org/t/top-contributors-sidebar/215110
+.list-container
+  #list-area
+  > .contents
+  > .topic-list:has(.discourse-top-contributors) {
+  grid-template-areas: "head head" "body sidebar";
+  grid-template-rows: auto 1fr;
+
+  @include viewport.until(lg) {
+    grid-template-areas: "head head" "body body";
+  }
+
+  tbody {
+    display: flex;
+  }
+
+  .discourse-top-contributors {
+    width: auto;
+    box-sizing: border-box;
+
+    @include viewport.until(lg) {
+      display: none;
+    }
+
+    .top-contributors-heading {
+      font-size: var(--font-up-2);
+      padding-bottom: 0.5em;
+    }
+  }
+}

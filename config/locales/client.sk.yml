@@ -488,9 +488,11 @@ sk:
       bookmarked_success: "Pridané do záložky!"
       deleted_bookmark_success: "Záložka odstránená!"
       reminder_set_success: "Pripomienka nastavená!"
+      reminder_clear_success: "Pripomienka vymazaná"
       created: "Tento príspevok ste pridali medzi záložky. %{name}"
       created_generic: "Toto ste si priradili do záložiek. %{name}"
       create: "Vytvoriť záložku"
+      clear_reminder: "Vymazať pripomienku"
       edit: "Upraviť záložku"
       not_bookmarked: "Vytvor záložku na tento príspevok"
       remove_reminder_keep_bookmark: "Odstráňte pripomenutie a ponechajte záložku"
@@ -2112,6 +2114,7 @@ sk:
           edit_link_options: "Upravte možnosti prepojenia alebo pošlite e-mailom."
           show_advanced: "Zobraziť rozšírené možnosti"
           hide_advanced: "Skryť rozšírené možnosti"
+          description: "Popis"
           restrict: "Obmedziť na"
           restrict_email: "Obmedziť na e-mail"
           restrict_domain: "Obmedziť na doménu"
@@ -2876,7 +2879,10 @@ sk:
       italic_text: "zdôraznený text"
       link_title: "Hyperlink"
       link_description: "tu zadaj popis odkazu"
-      link_dialog_title: "Vložte hyperlink"
+      link_dialog_title: "Vložiť hypertextový odkaz"
+      link_dialog_action: "Vložiť"
+      link_edit_title: "Upraviť hypertextový odkaz"
+      link_edit_action: "Aktualizovať"
       link_optional_text: "nepovinný názov"
       link_url_placeholder: "Vložte adresu URL alebo zadajte vyhľadávané témy"
       blockquote_title: "Úvodzovky"
@@ -2948,6 +2954,12 @@ sk:
       image_scale_button: "Zmeniť veľkosť obrázka na %{percent}%"
       delete_image_button: Odstrániť obrázok
       toggle_image_grid: Prepnúť mriežku obrázkov
+      link_toolbar:
+        edit: "Upraviť odkaz"
+        copy: "Kopírovať odkaz"
+        remove: "Odstrániť odkaz"
+        visit: "Otvoriť odkaz na externej karte"
+        link_copied: "Odkaz skopírovaný!"
     notifications:
       tooltip:
         regular:
@@ -4068,6 +4080,8 @@ sk:
           title: "Preklady pre príspevok"
           confirm_delete: "Ste si istí, že chcete odstrániť preklady pre '%{languageCode}'?"
         success: "Preklady boli úspešne aktualizované"
+        post_language_selector:
+          none: "Žiadny"
       errors:
         create: "Ľutujeme, pri vytváraní príspevku nastala chyba. Prosím, skúste znovu."
         edit: "Ľutujeme, pri úprave príspevku nastala chyba. Prosím, skúste znovu."
@@ -4283,6 +4297,7 @@ sk:
         title: "Zdieľať príspevok #%{post_number}"
         instructions: "Zdieľať odkaz na tento príspevok:"
       original_language: "Tento príspevok bol pôvodne napísaný v %{language}"
+      original_language_and_outdated: "Tento príspevok bol pôvodne napísaný v jazyku %{language}. Preklad môže byť zastaraný."
     category:
       none: "(Bez kategórie)"
       all: "Všetky kategórie"
@@ -6524,9 +6539,11 @@ sk:
           install: "Inštalácia"
           themes:
             title: "Témy"
+            description: "Témy pre celú stránku, ktoré menia celkový vzhľad a dojem z vašej stránky pre všetkých používateľov."
             themes_intro: "Na začiatok si nainštalujte novú tému alebo si vytvorte vlastnú od začiatku pomocou týchto zdrojov."
             new_theme: "Nová téma"
             back: "Späť na témy"
+            install: "Inštalácia"
           components:
             title: "Komponenty"
             description: "Prispôsobenia, ktoré menia povrchové prvky dizajnu vášho fóra alebo pridávajú ďalšie funkcie front-endu"
@@ -6593,7 +6610,9 @@ sk:
           unsaved_changes: "Máte neuložené zmeny"
           copy_of: "Kópia %{name}"
           copy_created: 'Bola vytvorená nová kópia "%{name}"'
-          illegal_character_in_color: "Farby pozostávajú len z hexadecimálnych znakov"
+          illegal_character_in_color: "Farba musí pozostávať len z hexadecimálnych znakov"
+          invalid_color_length: "Farba musí byť vo formáte #rrggbb alebo #rgb"
+          blocked_edit_for_system: "Paletu farieb, ktorá patrí k systémovej téme, nie je možné upravovať."
           delete_confirm: "Naozaj chcete odstrániť túto farebnú paletu?"
       plugins:
         title: "Pluginy"
@@ -6895,6 +6914,17 @@ sk:
           remote_theme_edits: "Ak chcete upraviť túto tému, musíte <a href='%{repoURL}' target='_blank'>odoslať zmenu v jej úložisku</a>"
           repo_unreachable: "Nepodarilo sa kontaktovať Git repozitár tohto motívu. Chybová správa:"
           imported_from_archive: "Táto téma bola importovaná zo súboru .zip"
+          settings: "Nastavenia"
+          colors: "Farby"
+          unsaved_colors:
+            one: "Máte %{count} neuloženú faribu"
+            few: "Máte %{count} neuložených farieb"
+            many: "Máte %{count} neuložených farieb"
+            other: "Máte %{count} neuložené farby"
+          unsaved_colors_leave_route_confirmation: "Zatiaľ ste neuložili zmeny farebnej palety. Naozaj chcete odísť?"
+          save_colors: "Uložiť farby"
+          discard_colors: "Zahodiť"
+          colors_title: "Farby"
           scss:
             text: "CSS"
             title: "Vlastné pravidlá CSS s podporou syntaxe SCSS"

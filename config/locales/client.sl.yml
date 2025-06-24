@@ -1546,6 +1546,7 @@ sl:
           expires_in_time: "Poteče čez %{time}"
           link_copied: "Povezava kopirana!"
           show_advanced: "Pokaži dodatne možnosti"
+          description: "Opis"
           add_to_groups: "Dodaj v skupine"
           expires_after: "Poteče po"
           send_invite_email: "Shrani in pošlji e-pošto"
@@ -2032,7 +2033,7 @@ sl:
       italic_text: "poudarjeno"
       link_title: "Povezava"
       link_description: "vnesite opis povezave tukaj"
-      link_dialog_title: "Vstavi povezavo"
+      link_dialog_action: "Dodaj"
       link_optional_text: "neobvezen naslov"
       link_url_placeholder: "Za iskanje po temah prilepite ali vpišite URL"
       blockquote_title: "Citirano"
@@ -2085,6 +2086,8 @@ sl:
           label: "Preklopi izpostavljanje teme"
           desc: "Odgovori brez da spremeniš čas zadnjega odgovora"
       ignore: "Prezri"
+      link_toolbar:
+        link_copied: "Povezava kopirana!"
     notifications:
       tooltip:
         regular:
@@ -2808,6 +2811,8 @@ sl:
           actions: "Akcije"
           edit: "Uredi"
           delete: "Izbriši"
+        post_language_selector:
+          none: "Brez"
       errors:
         create: "Oprostite, pri ustvarjanju vašega prispevka je prišlo do napake. Poskusite ponovno."
         edit: "Oprostite, pri ustvarjanju vašega prispevka je prišlo do napake. Poskusite ponovno."
@@ -4221,6 +4226,10 @@ sl:
           disable: "Onemogoči"
           add: "Dodaj"
           remote_theme_edits: "Če želite urediti to temo, morate <a href='%{repoURL}' target='_blank'>predlagati spremembo v njenem repozitoriju</a>"
+          settings: "Nastavitve"
+          colors: "Barve"
+          discard_colors: "Zavrzi"
+          colors_title: "Barve"
           scss:
             text: "CSS"
           all_filter: "Vse"

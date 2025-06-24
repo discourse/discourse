@@ -367,8 +367,6 @@ export default class ComposerService extends Service {
       return "composer.create_whisper";
     } else if (privateMessage && modelAction === Composer.REPLY) {
       return "composer.create_pm";
-    } else if (modelAction === Composer.ADD_TRANSLATION) {
-      return "composer.translations.save";
     }
 
     return SAVE_LABELS[modelAction];
@@ -1476,6 +1474,8 @@ export default class ComposerService extends Service {
       action: CREATE_TOPIC,
       draftKey: this.topicDraftKey,
       draftSequence: 0,
+      locale:
+        this.currentUser.effective_locale || this.siteSettings.default_locale,
     });
   }
 
@@ -1518,6 +1518,7 @@ export default class ComposerService extends Service {
       isWarning: false,
       hasTargetGroups: opts.hasGroups,
       warningsDisabled: opts.warningsDisabled,
+      locale: this._initialLocale(opts),
     });
 
     if (!this.model.targetRecipients) {
@@ -1809,6 +1810,19 @@ export default class ComposerService extends Service {
   clearLastValidatedAt() {
     this.set("lastValidatedAt", null);
     this.appEvents.trigger("composer-service:last-validated-at-cleared");
+  }
+
+  _initialLocale(opts) {
+    if (opts?.locale) {
+      return opts.locale;
+    }
+
+    // inherit post locale when editing, not when replying
+    if (opts?.post?.locale && opts.action === Composer.EDIT) {
+      return opts.post.locale;
+    }
+
+    return "";
   }
 }
 

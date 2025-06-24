@@ -398,6 +398,7 @@ pt_BR:
       created: "Você marcou esta postagem como favorita. %{name}"
       created_generic: "Você favoritou isso. %{name}"
       create: "Criar favorito"
+      clear_reminder: "Limpar lembrete"
       edit: "Editar favorito"
       not_bookmarked: "marcar postagem como favorita"
       remove_reminder_keep_bookmark: "Remover lembrete e manter favorito"
@@ -1891,6 +1892,7 @@ pt_BR:
           edit_link_options: "Editar opções de link ou enviar por e-mail"
           show_advanced: "Exibir opções avançadas"
           hide_advanced: "Ocultar opções avançadas"
+          description: "Descrição"
           restrict: "Restringir a"
           restrict_email: "Restringir a e-mail"
           restrict_domain: "Restringir a domínio"
@@ -2549,7 +2551,8 @@ pt_BR:
       italic_text: "texto realçado"
       link_title: "Hiperlink"
       link_description: "digite a descrição do link aqui"
-      link_dialog_title: "Inserir hiperlink"
+      link_dialog_action: "Inserir"
+      link_edit_action: "Atualizar"
       link_optional_text: "título opcional"
       link_url_placeholder: "Cole uma URL ou digite para pesquisar tópicos"
       blockquote_title: "Citação em bloco"
@@ -2621,6 +2624,9 @@ pt_BR:
       image_scale_button: "Dimensionar imagem para %{percent}%"
       delete_image_button: Excluir Imagem
       toggle_image_grid: Alternar para grade de imagem
+      link_toolbar:
+        copy: "Copiar link"
+        link_copied: "Link copiado!"
     notifications:
       tooltip:
         regular:
@@ -3590,6 +3596,8 @@ pt_BR:
           actions: "Ações"
           edit: "Editar"
           delete: "Excluir"
+        post_language_selector:
+          none: "Nenhum"
       errors:
         create: "Desculpe, houve um erro ao criar sua postagem. Tente outra vez."
         edit: "Desculpe, houve um erro ao editar sua postagem. Tente outra vez."
@@ -5738,6 +5746,7 @@ pt_BR:
             title: "Temas"
             themes_intro: "Instale um novo tema para começar, ou crie um do zero usando estes recursos."
             new_theme: "Novo tema"
+            install: "Instalar"
           components:
             title: "Componentes"
             install: "Instalar"
@@ -6060,6 +6069,10 @@ pt_BR:
           remote_theme_edits: "Se você quiser editar este tema, é preciso <a href='%{repoURL}' target='_blank'>enviar uma alteração em seu repositório</a>"
           repo_unreachable: "Não foi possível acessar o repositório Git deste tema. Mensagem de erro:"
           imported_from_archive: "Este tema foi importado de um arquivo .zip"
+          settings: "Configurações"
+          colors: "Cores"
+          discard_colors: "Descartar"
+          colors_title: "Cores"
           scss:
             text: "CSS"
             title: "Regras CSS personalizadas com suporte para sintaxe SCSS"

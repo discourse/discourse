@@ -578,6 +578,7 @@ ar:
       created: "لقد وضعت إشارة مرجعية على هذا المنشور. %{name}"
       created_generic: "لقد وضعت إشارة مرجعية على هذا. %{name}"
       create: "إنشاء إشارة مرجعية"
+      clear_reminder: "مسح التذكير"
       edit: "تعديل الإشارة المرجعية"
       not_bookmarked: "وضع إشارة مرجعية على هذا المنشور"
       remove_reminder_keep_bookmark: "إزالة التذكير والاحتفاظ بالإشارة المرجعية"
@@ -2273,6 +2274,7 @@ ar:
           edit_link_options: "تعديل خيارات الرابط أو الإرسال عبر البريد الإلكتروني"
           show_advanced: "إظهار الخيارات المتقدمة"
           hide_advanced: "إخفاء الخيارات المتقدمة"
+          description: "الوصف"
           restrict: "التقييد إلى"
           restrict_email: "التقييد إلى البريد الإلكتروني"
           restrict_domain: "التقييد إلى النطاق"
@@ -3062,7 +3064,8 @@ ar:
       italic_text: "نص مائل"
       link_title: "رابط تشعُّبي"
       link_description: "أدخِل وصف الرابط هنا"
-      link_dialog_title: "إدراج رابط تشعُّبي"
+      link_dialog_action: "إدراج"
+      link_edit_action: "تحديث"
       link_optional_text: "عنوان اختياري"
       link_url_placeholder: "الصق عنوانًا أو اكتب للبحث في الموضوعات"
       blockquote_title: "اقتباس فقرة"
@@ -3134,6 +3137,9 @@ ar:
       image_scale_button: "تغيير حجم الصورة إلى %{percent}%"
       delete_image_button: حذف الصورة
       toggle_image_grid: تشغيل التخطيط الشبكي للصور
+      link_toolbar:
+        copy: "نسخ الرابط"
+        link_copied: "تم نسخ الرابط!"
     notifications:
       tooltip:
         regular:
@@ -4361,6 +4367,8 @@ ar:
           actions: "الإجراءات"
           edit: "تعديل"
           delete: "حذف"
+        post_language_selector:
+          none: "لا يوجد"
       errors:
         create: "عذرًا، حدث خطأ في أثناء إنشاء منشورك. يُرجى إعادة المحاولة."
         edit: "عذرا، حدث خطأ في أثناء تعديل منشورك. يُرجى إعادة المحاولة."
@@ -6692,6 +6700,7 @@ ar:
             title: "الواجهة"
             themes_intro: "قم بتثبيت سمة جديدة للبدء، أو إنشاء سمة خاصة بك من الصفر باستخدام هذه الموارد."
             new_theme: "سمة جديدة"
+            install: "تثبيت"
           components:
             title: "المكوِّنات"
             install: "تثبيت"
@@ -7027,6 +7036,10 @@ ar:
           remote_theme_edits: "إذا كنت ترغب في تعديل هذه السمة0، يجب عليك <a href='%{repoURL}' target='_blank'>طلب تغيير في مستودعها</a>"
           repo_unreachable: "تعذَّر الاتصال بمستودع Git لهذه السمة. رسالة الخطأ:"
           imported_from_archive: "تم استيراد هذه السمة من ملف ‎.zip"
+          settings: "الإعدادات"
+          colors: "الألوان"
+          discard_colors: "تجاهل"
+          colors_title: "الألوان"
           scss:
             text: "CSS"
           after_header:

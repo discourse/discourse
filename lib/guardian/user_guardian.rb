@@ -38,9 +38,10 @@ module UserGuardian
   end
 
   def can_edit_name?(user)
-    return false unless SiteSetting.enable_names?
     return false if SiteSetting.auth_overrides_name?
-    return true if is_staff?
+    return true if is_admin?
+    return false unless SiteSetting.enable_names?
+    return true if is_moderator?
     return false if is_anonymous?
     can_edit?(user)
   end

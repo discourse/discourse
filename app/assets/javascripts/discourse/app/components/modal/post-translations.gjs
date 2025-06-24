@@ -27,9 +27,15 @@ export default class PostTranslationsModal extends Component {
   }
 
   get originalPostContent() {
+    const originalLocale =
+      this.args.model.post?.locale || this.siteSettings.default_locale;
+
     return `<div class='d-editor-translation-preview-wrapper'>
          <span class='d-editor-translation-preview-wrapper__header'>
           ${i18n("composer.translations.original_content")}
+            <span class='d-editor-translation-preview-wrapper__original-locale'>
+               ${originalLocale}
+            </span>
          </span>
           ${this.args.model.post.cooked}
       </div>`;
@@ -54,7 +60,7 @@ export default class PostTranslationsModal extends Component {
   async editLocalization(locale) {
     if (
       !this.currentUser ||
-      !this.siteSettings.experimental_content_localization ||
+      !this.siteSettings.content_localization_enabled ||
       !this.currentUser.can_localize_content
     ) {
       return;
@@ -62,14 +68,20 @@ export default class PostTranslationsModal extends Component {
 
     this.args.closeModal();
 
-    await this.composer.open({
+    const composerOpts = {
       action: Composer.ADD_TRANSLATION,
       draftKey: "translation",
       warningsDisabled: true,
       hijackPreview: this.originalPostContent,
       post: this.args.model.post,
       selectedTranslationLocale: locale.locale,
-    });
+    };
+
+    if (locale?.topic_localization) {
+      composerOpts.topicTitle = locale.topic_localization?.title;
+    }
+
+    await this.composer.open(composerOpts);
     this.composer.model.set("reply", locale.raw);
   }
 

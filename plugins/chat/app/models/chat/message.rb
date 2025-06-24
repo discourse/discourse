@@ -214,7 +214,6 @@ module Chat
       chat-transcript
       discourse-local-dates
       emoji
-      emojiShortcuts
       inlineEmoji
       html-img
       hashtag-autocomplete
@@ -253,6 +252,7 @@ module Chat
 
       features = MARKDOWN_FEATURES.dup
       features << "image-grid" if bot
+      features << "emojiShortcuts" if SiteSetting.enable_emoji_shortcuts
 
       rules = MARKDOWN_IT_RULES.dup
       rules << "heading" if bot

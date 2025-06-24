@@ -1616,6 +1616,7 @@ bg:
           expired_at_time: "Изтекъл на %{time}"
           show_advanced: "Показване на разширени опции"
           hide_advanced: "Скриване на разширените опции"
+          description: "Описание"
           restrict: "Ограничаване до"
           restrict_email: "Ограничете до имейл"
           restrict_domain: "Ограничаване до домейн"
@@ -2113,7 +2114,7 @@ bg:
       italic_text: "Подчертан текст"
       link_title: "Хипервръзка"
       link_description: "добави описание на връзката тук"
-      link_dialog_title: "Добави хипервръзка"
+      link_edit_action: "Актуализация"
       link_optional_text: "заглавие по избор"
       link_url_placeholder: "Поставете URL или въведете, за да търсите теми"
       blockquote_title: "Текстов блок"
@@ -2803,6 +2804,8 @@ bg:
           actions: "Действия"
           edit: "Редактирай"
           delete: "Изтрий"
+        post_language_selector:
+          none: "Без"
       errors:
         create: "При създаването на Вашата публикация се получи грешка. Моля, опитайте отново."
         edit: "Съжаляваме, възникна грешка при редактирането на публикацията. Моля, опитайте отново. "
@@ -3849,6 +3852,10 @@ bg:
           enable: "Позволи"
           disable: "Деактивиране"
           add: "Добави"
+          settings: "Настройки"
+          colors: "Цветове"
+          discard_colors: "Отхвърляне"
+          colors_title: "Цветове"
           scss:
             text: "CSS"
           footer:

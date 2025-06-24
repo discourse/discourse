@@ -305,7 +305,6 @@ zh_CN:
       s3_backup_requires_s3_settings: "除非提供 '%{setting_name}'，否则无法将 S3 用作备份位置。"
       s3_bucket_reused: "您无法将同一个存储桶同时用作 's3_upload_bucket' 和 's3_backup_bucket'。请选择一个不同的存储桶或为每个存储桶使用不同的路径。"
       secure_uploads_requirements: "在启用安全上传之前，必须先启用 S3 上传和 S3 ACL。"
-      s3_use_acls_requirements: "启用安全上传时，您必须启用 S3 ACL。"
       share_quote_facebook_requirements: "您必须设置 Facebook 应用 ID 才能为 Facebook 启用引用共享。"
       second_factor_cannot_be_enforced_with_disabled_local_login: "如果禁用本地登录，则无法强制执行双重身份验证。"
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "如果启用了 DiscourseConnect，则无法强制执行双重身份验证。"
@@ -576,8 +575,17 @@ zh_CN:
   education:
     until_posts:
       other: "%{count} 个帖子"
+    "new-topic": |
+      感谢您对 %{site_name} 做出贡献！
+
+      发帖之前，请选择一个类别或标签，将此主题与相关讨论分组，以便其他人轻松找到它。
+
+      有关参与我们社区的更多提示和建议，[查看我们的社区准则](%{base_path}/guidelines)。
+    dominating_topic: 你在这个主题中发表了很多文章！请考虑让其他人也有机会参与进来。
     get_a_room:
       other: 您已回复 @%{reply_username} %{count} 次，您知道您可以向他们发送个人消息吗？
+    too_many_replies: |
+      新用户在同一主题下回复数量暂时限制为 %{newuser_max_replies_per_topic} 条。请考虑访问其他主题，以继续了解社区。
   activerecord:
     attributes:
       category:
@@ -1681,7 +1689,7 @@ zh_CN:
     blocked_ip_blocks: "Discourse 不应抓取的私有 IP 地址段列表"
     allowed_internal_hosts: "Discourse 可以安全抓取用于 Onebox 处理和其他目的的内部主机列表"
     allowed_onebox_iframes: "通过 Onebox 嵌入允许的 iframe src 网域列表 `*` 将允许所有默认的 Onebox 引擎。"
-    allowed_iframes: "Discourse 可以安全地允许在帖子中使用的 iframe src URL 前缀列表"
+    allowed_iframes: "Discourse 允许在帖子中安全使用的 iframe src URL 前缀列表。* 可用于匹配任意数量的非/字符。"
     allowed_crawler_user_agents: "应被允许访问网站的网络抓取工具的用户代理。警告！设置此项将禁止此处未列出的所有抓取工具！"
     blocked_crawler_user_agents: "用户代理字符串中不区分大小写的唯一字词，用于标识不应被允许访问网站的网抓取工具。如果定义了许可名单，则不适用。"
     slow_down_crawler_user_agents: '网络爬虫的用户代理应该按照“减慢爬虫速率”设置中的配置进行速率限制。每个值的长度必须至少为 3 个字符。'
@@ -1806,7 +1814,7 @@ zh_CN:
     s3_endpoint: "可以修改端点以备份到 S3 兼容服务，如 DigitalOcean Spaces 或 Minio。警告：如果使用 AWS S3，请留空。"
     s3_configure_tombstone_policy: "为逻辑删除上传启用自动删除策略。重要提示：如果禁用，在删除上传后不会回收空间。"
     s3_disable_cleanup: "当备份的数量超出允许的最大值时，不移除 S3 中的旧备份。"
-    s3_use_acls: "AWS 建议不要在 S3 存储桶上使用 ACL；如果您遵循此建议，请取消选中此选项。如果您使用安全上传，则必须启用此选项。"
+    s3_use_acls: "AWS 建议不要在 S3 存储桶上使用 ACL；仅当打算在配置的 `s3_upload_bucket`和 `s3_backup_bucket` 上配置权限策略时才取消选中此选项。"
     enable_direct_s3_uploads: "允许直接分段上传到 Amazon S3，如需了解详情，请参阅 https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469。"
     backup_time_of_day: "备份的 UTC 时间。"
     backup_with_uploads: "在计划备份中包括上传。禁用此项只会备份数据库。"
@@ -2361,6 +2369,8 @@ zh_CN:
     experimental_content_localization: "根据用户的语言偏好为其显示本地化内容。这些内容可能包括类别、标签、帖子和主题。该功能正在紧张开发中。"
     rich_editor: "启用富文本编辑器，所有用户都可以在当前 Markdown 模式和新的富文本编辑器之间切换，从而实现更直观、更人性化的写作体验。富文本编辑器目前仍在积极开发中，因此并非所有功能都已支持 — <a href='https://meta.discourse.org/t/test-our-new-composer/352347' target='_blank'>请参阅 Meta 了解更多详情</a>。"
     experimental_content_localization_allowed_groups: '允许更新本地化内容的组。需要启用"实验性内容本地化"。'
+    viewport_based_mobile_mode: "实验：禁用基于 user-agent 的移动/桌面模式，改用视口宽度。"
+    experimental_anon_language_switcher: "启用实验性语言切换器。这将允许未登录的网站访问者在 Discourse 的翻译版本和用户贡献的主题内容之间切换。"
     errors:
       invalid_css_color: "颜色无效。输入颜色名称或十六进制值。"
       invalid_email: "无效的电子邮件地址。"

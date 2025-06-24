@@ -1345,6 +1345,7 @@ lv:
           expired_at_time: "Derīguma termiņš beidzas pēc %{time}"
           show_advanced: "Rādīt papildu opcijas"
           hide_advanced: "Slēpt papildu opcijas"
+          description: "Apraksts"
           max_redemptions_allowed: "Maksimāli izmantojams"
           add_to_groups: "Pievienot grupām"
           expires_after: "Derīguma termiņš beidzas"
@@ -1700,7 +1701,7 @@ lv:
       italic_text: "Uzsvērts teksts"
       link_title: "Saite"
       link_description: "ievadiet saites aprakstu šeit"
-      link_dialog_title: "Ievietojiet saiti"
+      link_dialog_action: "Ievietot"
       link_optional_text: "neobligāts nosaukums"
       blockquote_title: "Bloka citāts"
       blockquote_text: "Bloka citāts"
@@ -2241,6 +2242,8 @@ lv:
           actions: "Darbības"
           edit: "Rediģēt"
           delete: "Dzēst"
+        post_language_selector:
+          none: "Nav"
       errors:
         create: "Atvainojiet, izveidojot jūsu ierakstu, notika kļūda. Lūdzu, mēģiniet vēlreiz."
         edit: "Atvainojiet, rediģējot jūsu ierakstu, notika kļūda. Lūdzu, mēģiniet vēlreiz."
@@ -3308,6 +3311,10 @@ lv:
           disable: "Atslēgt"
           up_to_date: "Dizains ir pilnībā atjaunināts, pēdējā parbaude:"
           add: "Pievienot"
+          settings: "Iestatījumi"
+          colors: "Krāsas"
+          discard_colors: "Izmest"
+          colors_title: "Krāsas"
           scss:
             text: "CSS"
           all_filter: "Viss"

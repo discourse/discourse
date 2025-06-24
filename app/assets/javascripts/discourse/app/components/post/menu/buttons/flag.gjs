@@ -3,17 +3,33 @@ import { action } from "@ember/object";
 import { gt } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
 
 export default class PostMenuFlagButton extends Component {
   static shouldRender(args, helper) {
-    const { reviewable_id, canFlag, hidden } = args.post;
-    return (
+    const { post } = args;
+    const { reviewable_id, canFlag, hidden } = post;
+
+    let show =
       reviewable_id ||
       (canFlag && !hidden) ||
       (helper.siteSettings.allow_all_users_to_flag_illegal_content &&
-        !helper.currentUser)
-    );
+        !helper.currentUser);
+
+    return applyValueTransformer("flag-button-render-decision", show, { post });
+  }
+
+  get dynamicFlagButtonClass() {
+    return applyValueTransformer("flag-button-dynamic-class", "", {
+      post: this.args.post,
+    });
+  }
+
+  get isFlagButtonDisabled() {
+    return applyValueTransformer("flag-button-disabled-state", false, {
+      post: this.args.post,
+    });
   }
 
   get title() {
@@ -42,12 +58,16 @@ export default class PostMenuFlagButton extends Component {
         </DButton>
       {{/if}}
       <DButton
-        class="post-action-menu__flag create-flag"
+        class={{concatClass
+          "post-action-menu__flag create-flag"
+          this.dynamicFlagButtonClass
+        }}
         ...attributes
         @action={{@buttonActions.showFlags}}
         @icon="flag"
         @label={{if @showLabel "post.controls.flag_action"}}
         @title={{this.title}}
+        @disabled={{this.isFlagButtonDisabled}}
       />
     </div>
   </template>

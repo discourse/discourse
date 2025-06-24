@@ -398,6 +398,7 @@ nl:
       created: "Je hebt een bladwijzer voor dit bericht gemaakt. %{name}"
       created_generic: "Je hebt een bladwijzer hiervoor gemaakt. %{name}"
       create: "Bladwijzer maken"
+      clear_reminder: "Herinnering verwijderen"
       edit: "Bladwijzer bewerken"
       not_bookmarked: "bladwijzer maken voor dit bericht"
       remove_reminder_keep_bookmark: "Herinnering verwijderen en bladwijzer behouden"
@@ -1879,6 +1880,7 @@ nl:
           edit_link_options: "Bewerk de linkopties of verzend via e-mail."
           show_advanced: "Geavanceerde opties weergeven"
           hide_advanced: "Geavanceerde opties verbergen"
+          description: "Beschrijving"
           restrict: "Beperken tot"
           restrict_email: "Beperken tot e-mail"
           restrict_domain: "Beperken tot domein"
@@ -2528,7 +2530,8 @@ nl:
       italic_text: "Cursieve tekst"
       link_title: "Hyperlink"
       link_description: "voer hier een linkbeschrijving in"
-      link_dialog_title: "Hyperlink invoegen"
+      link_dialog_action: "Invoegen"
+      link_edit_action: "Bijwerken"
       link_optional_text: "optionele titel"
       link_url_placeholder: "Plak een URL of typ om topics te zoeken"
       blockquote_title: "Blokcitaat"
@@ -2600,6 +2603,9 @@ nl:
       image_scale_button: "Afbeelding schalen naar %{percent}%"
       delete_image_button: Afbeelding verwijderen
       toggle_image_grid: Afbeeldingsraster schakelen
+      link_toolbar:
+        copy: "Link kopiëren"
+        link_copied: "Link gekopieerd!"
     notifications:
       tooltip:
         regular:
@@ -3567,6 +3573,8 @@ nl:
           actions: "Acties"
           edit: "Bewerken"
           delete: "Verwijderen"
+        post_language_selector:
+          none: "Geen"
       errors:
         create: "Sorry, er is een fout opgetreden bij het plaatsen van je bericht. Probeer het opnieuw."
         edit: "Sorry, er is een fout opgetreden bij het bewerken van je bericht. Probeer het opnieuw."
@@ -5628,6 +5636,7 @@ nl:
             title: "Thema's"
             themes_intro: "Installeer een nieuw thema om te beginnen of maak je eigen thema met behulp van deze bronnen."
             new_theme: "Nieuw thema"
+            install: "Installeren"
           components:
             title: "Onderdelen"
             install: "Installeren"
@@ -5948,6 +5957,10 @@ nl:
           remote_theme_edits: "Als je dit thema wilt bewerken, moet je <a href='%{repoURL}' target='_blank'>een wijziging indienen in de repository</a>"
           repo_unreachable: "Kon geen contact krijgen met de Git-repository van dit thema. Foutbericht:"
           imported_from_archive: "Dit thema is vanuit een .zip-bestand geïmporteerd"
+          settings: "Instellingen"
+          colors: "Kleuren"
+          discard_colors: "Weggooien"
+          colors_title: "Kleuren"
           scss:
             text: "CSS"
           after_header:

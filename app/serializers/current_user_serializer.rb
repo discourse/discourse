@@ -77,7 +77,8 @@ class CurrentUserSerializer < BasicUserSerializer
              :has_unseen_features,
              :can_see_emails,
              :use_glimmer_post_stream_mode_auto_mode,
-             :can_localize_content?
+             :can_localize_content?,
+             :effective_locale
 
   delegate :user_stat, to: :object, private: true
   delegate :any_posts, :draft_count, :pending_posts_count, :read_faq?, to: :user_stat
@@ -331,6 +332,14 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def include_can_localize_content?
-    SiteSetting.experimental_content_localization
+    SiteSetting.content_localization_enabled
+  end
+
+  def effective_locale
+    scope.user.effective_locale
+  end
+
+  def include_effective_locale?
+    SiteSetting.content_localization_enabled
   end
 end

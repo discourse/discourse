@@ -19,6 +19,7 @@
   display: flex;
   flex-grow: 1;
   min-height: 0;
+  scrollbar-color: var(--primary-low) transparent;
 }
 
 .d-editor-textarea-column {
@@ -313,21 +314,18 @@
 
 // d-editor bar button sizing
 .d-editor-button-bar {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(2.35em, 1fr));
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
   align-items: center;
-  border-bottom: var(--d-input-border);
-  width: 100%;
-  box-sizing: border-box;
-  flex-shrink: 0;
+  margin: 0.25rem 0;
 
-  @include viewport.until(md) {
-    // occupy available space on narrower screens
-    grid-template-columns: repeat(auto-fit, minmax(2em, 1fr));
+  .composer-toggle-switch {
+    padding: 0 0.5rem;
   }
 
   @include viewport.until(sm) {
-    font-size: var(--font-down-1);
+    font-size: var(--font-down-1-rem);
   }
 
   .btn:focus-visible {
@@ -346,7 +344,11 @@
 
     .discourse-no-touch & {
       &:hover {
-        color: var(--primary-low);
+        background-color: var(--primary-low);
+
+        .d-icon {
+          color: var(--primary-medium);
+        }
       }
     }
   }
@@ -354,6 +356,30 @@
   .select-kit-header-wrapper {
     justify-content: center;
   }
+
+  &.--replaced-toolbar {
+    animation: float-left ease 0.2s 1 forwards;
+    flex-wrap: nowrap;
+
+    @keyframes float-left {
+      0% {
+        opacity: 0;
+        transform: translateX(10px);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+  }
+}
+
+.toolbar-separator {
+  width: 1px;
+  background-color: var(--primary-low);
+  margin: auto 1px;
+  height: 1.25rem;
 }
 
 .d-editor #form-template-form {
@@ -406,6 +432,15 @@
       border-radius: var(--d-border-radius);
       font-size: var(--font-down-1-rem);
       color: var(--primary-high);
+    }
+
+    &__original-locale {
+      margin-left: 0.5rem;
+      text-transform: uppercase;
+      font-size: var(--font-down-2);
+      background: var(--tertiary-low);
+      padding: 0.25rem 0.5rem;
+      border-radius: var(--d-border-radius);
     }
   }
 }

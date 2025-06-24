@@ -399,6 +399,7 @@ tr_TR:
       created: "Bu gönderiyi yer imlerine eklediniz. %{name}"
       created_generic: "Bunu yer imlerine eklediniz. %{name}"
       create: "Yer imi oluştur"
+      clear_reminder: "Anımsatıcıyı temizle"
       edit: "Yer imini düzenle"
       not_bookmarked: "bu gönderiye yer imi ekle"
       remove_reminder_keep_bookmark: "Anımsatıcıyı kaldır ve yer imini tut"
@@ -1899,6 +1900,7 @@ tr_TR:
           edit_link_options: "Bağlantı seçeneklerini düzenleyin veya e-posta ile gönderin."
           show_advanced: "Gelişmiş Seçenekleri Göster"
           hide_advanced: "Gelişmiş Seçenekleri Gizle"
+          description: "Açıklama"
           restrict: "Şununla kısıtla"
           restrict_email: "E-posta ile kısıtla"
           restrict_domain: "Alan adıyla kısıtla"
@@ -2574,7 +2576,8 @@ tr_TR:
       italic_text: "vurgulanan yazı"
       link_title: "Köprü"
       link_description: "bağlantı açıklamasını buraya girin"
-      link_dialog_title: "Köprü Ekle"
+      link_dialog_action: "Ekle"
+      link_edit_action: "Güncelle"
       link_optional_text: "isteğe bağlı başlık"
       link_url_placeholder: "Bir URL yapıştırın veya konuları aramak için yazın"
       blockquote_title: "Blok alıntı"
@@ -2646,6 +2649,9 @@ tr_TR:
       image_scale_button: "Görüntüyü %%{percent} oranına ölçeklendir"
       delete_image_button: Görüntüyü Sil
       toggle_image_grid: Resim ızgarasını aç/kapat
+      link_toolbar:
+        copy: "Bağlantıyı kopyala"
+        link_copied: "Bağlantı kopyalandı!"
     notifications:
       tooltip:
         regular:
@@ -3618,6 +3624,8 @@ tr_TR:
           actions: "Eylemler"
           edit: "Düzenle"
           delete: "Sil"
+        post_language_selector:
+          none: "Yok"
       errors:
         create: "Üzgünüz, gönderiniz oluşturulurken bir hata oluştu. Lütfen tekrar deneyin."
         edit: "Üzgünüz, gönderiniz düzenlenirken bir hata oluştu. Lütfen tekrar deneyin."
@@ -5730,6 +5738,7 @@ tr_TR:
             title: "Temalar"
             themes_intro: "Başlamak için yeni bir tema yükleyin veya bu kaynakları kullanarak sıfırdan kendi temanızı oluşturun."
             new_theme: "Yeni tema"
+            install: "Yükle"
           components:
             title: "Bileşenler"
             install: "Yükle"
@@ -6050,6 +6059,10 @@ tr_TR:
           remote_theme_edits: "Bu temayı düzenlemek istiyorsanız <a href='%{repoURL}' target='_blank'>deposunda bir değişiklik göndermeniz gerekiyor</a>"
           repo_unreachable: "Bu temanın Git deposuyla bağlantı kurulamadı. Hata mesajı:"
           imported_from_archive: "Bu tema bir .zip dosyasından içe aktarıldı"
+          settings: "Ayarlar"
+          colors: "Renkler"
+          discard_colors: "Kapat"
+          colors_title: "Renkler"
           scss:
             text: "CSS"
           after_header:

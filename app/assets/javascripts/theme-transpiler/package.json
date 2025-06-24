@@ -32,9 +32,9 @@
     "polyfill-crypto.getrandomvalues": "^1.0.0",
     "postcss-js": "^4.0.1",
     "postcss-media-minmax": "^5.0.0",
-    "postcss": "^8.5.4",
+    "postcss": "^8.5.6",
     "source-map-js": "^1.2.1",
-    "terser": "^5.42.0",
+    "terser": "^5.43.1",
     "url-polyfill": "^1.1.12",
     "url-shim": "^1.0.1"
   },

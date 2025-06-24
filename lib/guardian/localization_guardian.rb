@@ -2,7 +2,7 @@
 
 module LocalizationGuardian
   def can_localize_content?
-    return false if !SiteSetting.experimental_content_localization
-    user.in_any_groups?(SiteSetting.experimental_content_localization_allowed_groups_map)
+    return false if !SiteSetting.content_localization_enabled
+    user.in_any_groups?(SiteSetting.content_localization_allowed_groups_map)
   end
 end

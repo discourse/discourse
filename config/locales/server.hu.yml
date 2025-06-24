@@ -263,6 +263,7 @@ hu:
         other: "%{count} karakterre korlátozva; megadott karakterek száma: %{length}."
       invalid_boolean: "Érvénytelen logikai érték."
       taken: "már foglalt"
+      reserved: "%{name} A csoport neve foglalt, válasszon másik nevet"
       accepted: elfogadottnak kell lennie
       blank: nem lehet üres
       present: üresnek kell lennie
@@ -331,7 +332,6 @@ hu:
       s3_backup_requires_s3_settings: "Az S3 nem használható biztonsági mentés helyeként, hacsak nem adta meg a %{setting_name} értékét."
       s3_bucket_reused: "Nem használhatja ugyanazt a tárolót az „s3_upload_bucket” és az „s3_backup_bucket” számára. Válasszon másik gyűjtőzónát, vagy használjon más útvonalat minden egyes csoporthoz."
       secure_uploads_requirements: "A biztonságos feltöltés engedélyezése előtt engedélyezni kell az S3 feltöltéseket és az S3 ACL-eket."
-      s3_use_acls_requirements: "Ha a biztonságos feltöltés engedélyezve van, engedélyeznie kell az S3 ACL-eket."
       share_quote_facebook_requirements: "Be kell állítania egy Facebook-alkalmazás azonosítót, hogy engedélyezhesse a megosztást Facebookon."
       second_factor_cannot_be_enforced_with_disabled_local_login: "A 2FA nem kényszeríthető, ha a helyi bejelentkezés le van tiltva."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "A 2FA nem kényszeríthető, ha a DiscourseConnect engedélyezett."
@@ -622,9 +622,25 @@ hu:
     until_posts:
       one: "%{count} bejegyzés"
       other: "%{count} bejegyzés"
+    "new-topic": |
+      Köszönjük, hogy hozzájárultál a %{site_name} témához!
+
+      Mielőtt hozzászólnál, kérlek, válassz egy kategóriát vagy címkét, hogy csoportosítsd ezt a témát a kapcsolódó beszélgetésekkel, hogy mások könnyen megtalálhassák.
+
+      További tippekért és tanácsokért a közösségünkben való részvétellel kapcsolatban [tekintsd meg közösségi irányelveinket](%{base_path}/irányelvek).
+    "new-reply": |
+      Köszönjük, hogy hozzájárultál %{site_name} oldalunkhoz!
+
+      Ne feledd, mindannyian igazi emberek vagyunk. Kérlek, légy kedves a közösség többi tagjához.
+
+      További tippekért és tanácsokért a közösségünkben való részvétellel kapcsolatban [tekintsd meg közösségi irányelveinket](%{base_path}/irányelvek).
+    dominating_topic: Sok hozzászólást tettél ebbe a témába! Fontold meg, hogy másoknak is adsz lehetőséget a hozzászóláshoz
     get_a_room:
       one: 'Egyszer már válaszoltál neki: @%{reply_username} , tudtad, hogy küldhetsz neki személyes üzenetet is?'
       other: 'Már válaszoltál neki: @%{reply_username} , %{count} alkalommal , tudtad, hogy küldhetsz neki személyes üzenetet is?'
+    dont_feed_the_trolls: Ezt a bejegyzést moderátori figyelemfelhívás céljából megjelölték. A negatív tartalomra való válaszadás további negatív viselkedésre ösztönözhet - biztosan folytatni szeretnéd?
+    too_many_replies: |
+      Az új felhasználók átmenetileg %{newuser_max_replies_per_topic} hozzászólásra korlátozódnak ugyanabban a témában. Kérjük, fontold meg más témák felkeresését is, hogy megismerd a közösséget.
   activerecord:
     attributes:
       category:
@@ -1756,7 +1772,6 @@ hu:
     blocked_ip_blocks: "Privát IP-címtartományok listája, amelyeket a Discourse soha nem indexelhet"
     allowed_internal_hosts: "Belső kiszolgálók listája, amelyeket a Discourse biztonságosan indexelhet oneboxing és egyéb célokra"
     allowed_onebox_iframes: "Az iframe src domainek listája, amelyek engedélyezettek a Onebox beágyazásokon keresztül. A * minden alapértelmezett Onebox motort engedélyez."
-    allowed_iframes: "Az iframe src URL előtagok listája, amelyeket a Discourse biztonságosan engedélyezhet a bejegyzésekben"
     allowed_crawler_user_agents: "Azon webes keresőrobotok felhasználói ügynökei, amelyek számára engedélyezett a webhely elérése. FIGYELMEZTETÉS! ENNEK BEÁLLÍTÁSA MEGTILTJA AZ ÖSSZES ITT NEM FELSOROLT KERESŐROBOT HOZZÁFÉRÉSÉT!"
     blocked_crawler_user_agents: "A felhasználói ügynök karakterláncban szereplő egyedi, kis- és nagybetűkre nem érzékeny szó, amely azonosítja azokat a webes keresőrobotokat, amelyek számára nem engedélyezett a webhely elérése. Nem alkalmazandó, ha az engedélyezési lista definiálva van."
     slow_down_crawler_user_agents: 'A forgalmi korlátozás alá elő webes robotok felhasználói ügynökei, ahogy a „robotok sebességének lelassítása” beállításban meg van adva. Minden egyes értéknek legalább 3 karakteresnek kell lennie.'
@@ -1881,7 +1896,6 @@ hu:
     s3_endpoint: "A végpont módosítható, hogy S3-kompatibilis szolgáltatásba, például DigitalOcean Spaces-be vagy Minio-ba készítsen biztonsági mentést. FIGYELMEZTETÉS: Hagyja üresen, ha AWS S3-at használ."
     s3_configure_tombstone_policy: "Automatikus törlési szabályzat engedélyezése a törölt feltöltésekre. FONTOS: Ha ki van kapcsolva, a feltöltések törlése után nem szabadul fel tárhely."
     s3_disable_cleanup: "Megakadályozza a régi biztonsági mentések eltávolítását az S3-ból, ha több biztonsági mentés van, mint a megengedett maximum."
-    s3_use_acls: "Az AWS nem javasolja az ACL-ek használatát az S3 tárolókon; ha ezt a tanácsot követi, ne jelölje be ezt az opciót. Ezt engedélyezni kell, ha biztonságos feltöltéseket használ."
     enable_direct_s3_uploads: "Lehetővé teszi a közvetlen többrészes feltöltéseket az Amazon S3-ba, további részletekért lásd: https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469"
     backup_time_of_day: "A nap azon időpontja UTC-ben, amikor a biztonsági mentésnek meg kell történnie."
     backup_with_uploads: "Feltöltések felvétele az ütemezett biztonsági mentésekbe. Ennek kikapcsolásával csak az adatbázisról készül biztonsági mentés."
@@ -2421,6 +2435,7 @@ hu:
     default_navigation_menu_tags: "A kiválasztott címkék alapértelmezetten megjelennek a Navigációs Menü Címkék szekciójában."
     experimental_new_new_view_groups: 'Engedélyezzen egy új témalistát, amely egyesíti az olvasatlan és új témákat, és az oldalsávon lévő "Minden" hivatkozást jelölje be.'
     glimmer_post_stream_mode: "Szabályozhatja, hogy a rendszer használja-e az új „csillogó” post-stream megvalósítást. Az „auto” automatikusan bekapcsol, amint minden témája és bővítménye készen áll. Ez a megvalósítás aktív fejlesztés alatt áll, és nem termelési használatra készült. Ne dolgozzon ellene témákat/bővítményeket, amíg a megvalósítást nem véglegesítik és be nem jelentik."
+    glimmer_post_stream_mode_auto_groups: "Az új 'glimmer' post stream implementáció engedélyezése 'auto' módban a megadott felhasználói csoportok számára. Ez az implementáció aktív fejlesztés alatt áll, és nem szánták gyártás közbeni használatra. Ne fejlesszen témákat/pluginokat ellene, amíg az implementáció véglegesítésre és bejelentésre nem kerül."
     experimental_form_templates: "Engedélyezze az űrlapsablonok funkciót. A sablonokat a következő helyen kezelheti: <a href='%{base_path}/admin/customize/form-templates'>Testreszabás / Sablonok</a>."
     show_preview_for_form_templates: "Az űrlapsablonok előnézetének engedélyezése"
     lazy_load_categories_groups: "Lusta betöltés alkalmazása a kategória információkra a kiválasztott csoportok felhasználói számára. Ez javítja a teljesítményt olyan webhelyeken, ahol sok kategória van."
@@ -2428,11 +2443,18 @@ hu:
     page_loading_indicator: "A Discourse-on belüli oldalnavigációk során megjelenő betöltési jelző konfigurálása. A 'Spinner' egy teljes oldalas jelző. A 'Slider' egy keskeny sávot jelenít meg a képernyő tetején."
     show_user_menu_avatars: "Felhasználói avatarok megjelenítése a felhasználói menüben"
     about_page_hidden_groups: "Ne jelenítse meg bizonyos csoportok tagjait a /about oldalon."
+    about_page_extra_groups: "Csoportok, amelyek a moderátorok alatt, a névjegy oldalon jelennek meg."
+    about_page_extra_groups_initial_members: "Az egyes csoportokban a névjegy oldalon kibontandó tagok száma."
+    about_page_extra_groups_show_description: "Megjelenjenek-e a csoportleírások a névjegy oldalon."
+    about_page_extra_groups_order: "Az extra csoportok sorrendje a névjegy oldalon."
     adobe_analytics_tags_url: "Adobe Analytics címkék URL-je (`https://assets.adobedtm.com/...`)"
     view_raw_email_allowed_groups: "Csoportok, amelyek megtekinthetik egy bejegyzés nyers e-mail tartalmát, ha azt bejövő e-mailből hozták létre. Ez magában foglalja az e-mail fejléceket és egyéb technikai információkat."
     experimental_content_localization: "Lokalizált tartalmakat jelenít meg a felhasználók számára a nyelvi beállításaik alapján. Ilyen tartalom lehetnek a kategóriák, címkék, bejegyzések és témák. Ezt a funkciót jelenleg nagy erőkkel fejlesztjük."
     rich_editor: "Engedélyezze a szerkesztőt, hogy minden felhasználó válthasson a jelenlegi Markdown mód és az új szövegszerkesztő között az intuitívabb és felhasználóbarátabb szerkesztés érdekében. A szövegszerkesztő aktív fejlesztés alatt áll, így még nem minden funkció támogatott - <a href='https://meta.discourse.org/t/test-our-new-composer/352347' target='_blank'>további részletekért lásd a Meta oldalon</a>."
     experimental_content_localization_allowed_groups: 'Lokalizált tartalom frissítésére jogosult csoportok. A "kísérleti tartalom lokalizáció" engedélyezése szükséges.'
+    experimental_content_localization_supported_locales: "A támogatott nyelvi beállítások listája, amelyekre a felhasználói tartalom lefordítható. A működéshez engedélyezni kell az `experimental_content_localization` beállítást."
+    viewport_based_mobile_mode: "KÍSÉRLETI: Tiltsa le a felhasználói ügynök alapú mobil/asztali módokat, és használja helyettük a nézetablak szélességét."
+    experimental_anon_language_switcher: "Kísérleti nyelvváltó engedélyezése. Ez lehetővé teszi a nem bejelentkezett látogatók számára, hogy a Discourse lefordított változatai és a felhasználók által hozzáadott tartalmak között váltsanak a témakörökben."
     errors:
       invalid_css_color: "Érvénytelen szín. Adjon meg egy színnevet vagy hexaértéket."
       invalid_email: "Érvénytelen e-mail cím."
@@ -2454,6 +2476,7 @@ hu:
         one: "Nem lehet hosszabb, mint %{count} karakter."
         other: "Nem lehet hosszabb, mint %{count} karakter."
       invalid_json: "Érvénytelen JSON."
+      invalid_object: "Érvénytelen objektum."
       invalid_reply_by_email_address: "Tartalmaznia kell '%{reply_key}' értéket, és különböznie kell az értesítő e-mailtől."
       invalid_alternative_reply_by_email_addresses: "Minden értéknek tartalmaznia kell a '%{reply_key}' értéket, és különböznie kell az értesítési e-mail címtől."
       invalid_domain_hostname: "Nem tartalmazhatja a * vagy a ? karaktereket."
@@ -2501,6 +2524,7 @@ hu:
       delete_rejected_email_after_days: "Ez a beállítás nem lehet alacsonyabb, mint a delete_email_logs_after_days beállítás, és nem lehet nagyobb, mint %{max}"
       invalid_uncategorized_category_setting: 'A "Nem kategorizált" kategória nem választható ki, ha a "nem kategorizált témák engedélyezése" nincs engedélyezve.'
       invalid_search_ranking_weights: "Az érték érvénytelen a search_ranking_weights webhely beállításánál. Példa: „{0.1,0.2,0.3,1.0}”. Vegye figyelembe, hogy az egyes súlyok maximális értéke 1,0."
+      experimental_anon_language_switcher_requirements: "A kísérleti nyelvváltóhoz szükséges, hogy a `set locale from cookie` webhelybeállítás engedélyezve legyen, és az `automatic translation target languages` legalább egy nyelvet tartalmazzon."
     keywords:
       clean_up_inactive_users_after_days: "deaktiválva|inaktív|nem aktivált"
       navigation_menu: "oldalsáv|lenyíló fejléc"
@@ -2642,6 +2666,11 @@ hu:
     errors: "%{errors}"
     not_available: "Nem elérhető. Esetleg %{suggestion}?"
     something_already_taken: "Valami hiba történt, lehet hogy a felhasználónév vagy az e-mail cím már regisztrálva van. Próbálja meg az elfelejtett jelszó hivatkozást."
+    omniauth_error:
+      generic: "Sajnáljuk, hiba történt a fiókod %{provider} használatával történő hitelesítése során. Kérjük, próbáld újra."
+      csrf_detected: "Sajnáljuk, az engedélyezés időtúllépést okozott, vagy böngészőt váltott. Kérjük, próbálja újra."
+      request_error: "Sajnáljuk, hiba történt az engedélyezés megkezdésekor. Kérjük, próbálja újra."
+      invalid_iat: "Sajnáljuk, a szerver órajelének eltérései miatt nem tudjuk ellenőrizni az engedélyezési tokent. Kérjük, próbálja újra."
     omniauth_error_unknown: "Hiba történt a bejelentkezési adatok feldolgozásakor. Kérjük, próbálja újra."
     omniauth_confirm_title: "Jelentkezzen be a %{provider} használatával"
     omniauth_confirm_button: "Folytatás"
@@ -4040,6 +4069,8 @@ hu:
   offline:
     title: "Nem lehet betölteni az alkalmazást"
     offline_page_message: "Úgy tűnik, offline vagy! Kérjük, ellenőrizze a hálózati kapcsolatot, és próbálja újra."
+  login_required:
+    welcome_message: "# Üdvözöljük a(z) %{title} oldalon"
   upload:
     edit_reason: "letöltött képek helyi másolatai"
     unauthorized: "Sajnos a feltölteni kívánt fájl nem engedélyezett (engedélyezett kiterjesztések: %{authorized_extensions})."
@@ -4065,6 +4096,7 @@ hu:
     images:
       too_large: "Sajnáljuk, a feltölteni kívánt kép túl nagy (a maximális méret %{max_size_kb}KB), kérjük, méretezze át, és próbálja újra."
       too_large_humanized: "Sajnáljuk, a feltölteni kívánt kép túl nagy (a maximális méret %{max_size}), kérjük, méretezze át, és próbálja újra."
+      larger_than_x_megapixels: "Sajnáljuk, a %{original_filename} fájlnévvel rendelkező kép túl nagy (a maximális méret %{max_image_megapixels} megapixel), kérjük, méretezze át és próbálja újra."
       size_not_found: "Sajnáljuk, de nem tudtuk megállapítani a kép méretét. Lehet, hogy a kép sérült?"
     placeholders:
       too_large: "(a kép nagyobb, mint %{max_size_kb}KB)"
@@ -5144,6 +5176,9 @@ hu:
       approve_and_restore:
         title: "Bejegyzés jóváhagyása és visszaállítása"
         complete: "A bejegyzés jóváhagyva és visszaállítva."
+      approve_and_unhide:
+        title: "Bejegyzés jóváhagyása és felfedése"
+        complete: "Bejegyzés jóváhagyva és felfedve"
       delete_user:
         reason: "Törölve az ellenőrzési soron keresztül"
         complete: "Felhasználó törölve."
@@ -5189,6 +5224,8 @@ hu:
       duplicate_ids: "duplikált azonosítói vannak"
       reserved_id: "foglalt kulcsszóval rendelkezik azonosítóként: %{id}"
       unsafe_description: "nem biztonságos HTML-leírást tartalmaz"
+  content_localization:
+    not_allowed: "Nem jogosult a tartalom lokalizálására."
   activemodel:
     errors:
       <<: *errors

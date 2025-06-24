@@ -398,6 +398,7 @@ es:
       created: "Has guardado esta publicación en marcadores. %{name}"
       created_generic: "Has añadido esto a marcadores. %{name}"
       create: "Crear marcador"
+      clear_reminder: "Quitar recordatorio"
       edit: "Editar marcador"
       not_bookmarked: "guarda esta publicación en marcadores"
       remove_reminder_keep_bookmark: "Eliminar recordatorio y mantener marcador"
@@ -1879,6 +1880,7 @@ es:
           edit_link_options: "Edita las opciones del enlace o envíalo por correo electrónico."
           show_advanced: "Mostrar opciones avanzadas"
           hide_advanced: "Ocultar opciones avanzadas"
+          description: "Descripción"
           restrict: "Restringir a"
           restrict_email: "Restringir al correo electrónico"
           restrict_domain: "Restringir a un dominio"
@@ -2528,7 +2530,8 @@ es:
       italic_text: "Texto en cursiva"
       link_title: "Hipervínculo"
       link_description: "Introduce la descripción del enlace aquí"
-      link_dialog_title: "Insertar hipervínculo"
+      link_dialog_action: "Insertar"
+      link_edit_action: "Actualizar"
       link_optional_text: "título opcional"
       link_url_placeholder: "Copia una URL o escribe para buscar temas"
       blockquote_title: "Cita"
@@ -2600,6 +2603,9 @@ es:
       image_scale_button: "Escalar imagen a %{percent} %"
       delete_image_button: Eliminar imagen
       toggle_image_grid: Alternar cuadrícula de imágenes
+      link_toolbar:
+        copy: "Copiar enlace"
+        link_copied: "¡Enlace copiado!"
     notifications:
       tooltip:
         regular:
@@ -3567,6 +3573,8 @@ es:
           actions: "Acciones"
           edit: "Editar"
           delete: "Eliminar"
+        post_language_selector:
+          none: "Ninguno"
       errors:
         create: "Lo sentimos, se produjo un error al crear tu publicación. Inténtalo de nuevo."
         edit: "Lo sentimos, se produjo un error al editar tu publicación. Inténtalo de nuevo."
@@ -5629,6 +5637,7 @@ es:
             title: "Tema"
             themes_intro: "Instala un tema nuevo para empezar, o crea el tuyo desde cero utilizando estos recursos."
             new_theme: "Nuevo tema"
+            install: "Instalar"
           components:
             title: "Componentes"
             install: "Instalar"
@@ -5949,6 +5958,10 @@ es:
           remote_theme_edits: "Si quieres editar este tema, deberás <a href='%{repoURL}' target='_blank'>proponer un cambio en su repositorio</a>"
           repo_unreachable: "No se ha podido contactar el repositorio Git de este tema. Mensaje de error:"
           imported_from_archive: "Este tema se importó desde un archivo .zip"
+          settings: "Ajustes"
+          colors: "Colores"
+          discard_colors: "Descartar"
+          colors_title: "Colores"
           scss:
             text: "CSS"
           after_header:

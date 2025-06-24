@@ -68,7 +68,7 @@ class Discourse extends Application {
 }
 
 function moduleThemeId(moduleName) {
-  const match = moduleName.match(/^discourse\/theme\-(\d+)\//);
+  const match = moduleName.match(/^discourse\/theme\-(-?\d+)\//);
   if (match) {
     return parseInt(match[1], 10);
   }

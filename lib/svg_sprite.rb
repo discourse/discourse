@@ -5,6 +5,7 @@ module SvgSprite
       %w[
         a
         address-book
+        address-card
         align-left
         anchor
         angle-down

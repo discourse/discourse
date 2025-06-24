@@ -1078,6 +1078,7 @@ th:
           success: "สร้างลิงก์คำเชิญสำเร็จแล้ว!"
           error: "มีข้อผิดพลาดในการสร้างลิงก์คำเชิญ"
         invite:
+          description: "รายละเอียด"
           update_invite: "อัปเดต"
           cancel: "ยกเลิก"
       password:
@@ -1400,7 +1401,8 @@ th:
       italic_text: "ตัวอักษรเอียง"
       link_title: "ลิงค์"
       link_description: "กรอกรายละเอียดลิงก์ที่นี่"
-      link_dialog_title: "เพิ่มลิงค์"
+      link_dialog_action: "แทรก"
+      link_edit_action: "อัปเดต"
       link_optional_text: "ชื่อเรื่องเพิ่มเติม"
       link_url_placeholder: "วาง URL หรือพิมพ์เพื่อค้นหากระทู้"
       blockquote_title: "ส่วนอ้างถึง"
@@ -1958,6 +1960,8 @@ th:
           actions: "การกระทำ"
           edit: "แก้ไข"
           delete: "ลบ"
+        post_language_selector:
+          none: "ไม่มี"
       errors:
         create: "ขออภัย เกิดความผิดพลาดขณะกำลังสร้างโพสต์ของคุณ กรุณาลองใหม่อีกครั้ง"
         edit: "ขออภัย เกิดความผิดพลาดขณะกำลังแก้ไขโพสต์ของคุณ กรุณาลองใหม่อีกครั้ง"
@@ -2821,6 +2825,7 @@ th:
           install: "ติดตั้ง"
           themes:
             title: "ธีม"
+            install: "ติดตั้ง"
           components:
             install: "ติดตั้ง"
             name: "ชื่อ"
@@ -2931,6 +2936,9 @@ th:
           add: "เพิ่ม"
           theme_settings: "การตั้งค่าธีม"
           no_settings: "ธีมนี้ไม่มีการตั้งค่า"
+          settings: "การตั้งค่า"
+          colors: "สี"
+          colors_title: "สี"
           scss:
             text: "CSS"
           footer:

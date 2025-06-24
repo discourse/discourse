@@ -1,0 +1,117 @@
+@use "lib/viewport";
+
+.post-stream {
+  .contents {
+    font-size: var(--font-up-1);
+    line-height: 1.25;
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+.timeline-container .topic-timeline {
+  min-width: unset; // why we have this?
+
+  .timeline-scrollarea {
+    border-left: 1px solid var(--accent-color);
+
+    .timeline-scroller {
+      @include viewport.from(lg) {
+        margin-left: -4.5px;
+        background: var(--d-content-background);
+        height: 40px !important; // height is coming from element style have no other choice
+      }
+
+      .timeline-replies,
+      .timeline-ago {
+        line-height: 1;
+      }
+    }
+
+    .timeline-handle {
+      background-color: var(--accent-color);
+
+      @include viewport.from(lg) {
+        width: 8px;
+        border-radius: 10px;
+        height: calc(100% - 6px);
+      }
+    }
+  }
+}
+
+// should probably get rid of this extra specificity class in core?
+.timeline-container.timeline-fullscreen {
+  @include viewport.until(lg) {
+    .topic-timeline
+      .timeline-scrollarea
+      .timeline-scroller
+      .timeline-scroller-content {
+      padding-right: 0.5em;
+    }
+  }
+}
+
+.container.posts {
+  grid-template-columns: auto 8em;
+
+  @media screen and (width <= 924px) {
+    grid-template-columns: auto auto;
+  }
+
+  .post-notice {
+    padding: var(--spacing-block-sm);
+    border-radius: var(--d-border-radius);
+    font-size: var(--font-down-1-rem);
+
+    .d-icon {
+      font-size: var(--font-up-1);
+      width: 1em;
+    }
+  }
+}
+
+.timeline-container .topic-timeline .timeline-ago {
+  max-width: unset;
+  overflow: unset;
+  text-overflow: unset;
+}
+
+.timeline-container .topic-timeline .timeline-scroller-content {
+  overflow: unset;
+}
+
+.more-topics__container
+  .more-topics__list
+  .topic-list-body
+  .topic-list-item:last-of-type {
+  border-bottom: 1px solid var(--primary-300);
+}
+
+.discourse-post-event .discourse-post-event-widget {
+  background: var(--d-content-background);
+}
+
+.more-topics__container .nav {
+  position: unset;
+  margin-block: unset;
+  margin-bottom: 1em;
+}
+
+.timeline-container.timeline-fullscreen
+  .topic-timeline
+  .timeline-scrollarea
+  .timeline-scroller
+  .timeline-handle {
+  float: none;
+  width: 5px;
+  position: relative;
+  right: -4px;
+}
+
+nav.post-controls .actions button {
+  font-size: var(--font-0);
+}
+
+.archetype-private_message {
+  --pm-border-radius: var(--d-border-radius);
+}

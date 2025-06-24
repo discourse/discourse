@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 el:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          poll: "Ψηφοφορία Discourse"
   js:
     poll:
       voters:

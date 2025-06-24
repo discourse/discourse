@@ -5,7 +5,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
+import { TrackedArray, TrackedMap } from "@ember-compat/tracked-built-ins";
 import { TrackedAsyncData } from "ember-async-data";
 import { and, eq, not, or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
@@ -47,6 +47,8 @@ export default class Post extends Component {
   @tracked expandedFirstPost;
   @tracked repliesAbove;
   @tracked repliesBelow = new TrackedArray();
+
+  decoratorState = new TrackedMap();
 
   get additionalClasses() {
     return applyValueTransformer("post-class", [], {
@@ -362,6 +364,11 @@ export default class Post extends Component {
         )
       }}
       data-post-number={{@post.post_number}}
+      {{! The post component is wrapped in a `div` and sets the same `id` below in the `article` tag,
+          we need to only set it in the `div` when the post is cloaked.
+          This is not ideal, but the post-stream component sets the `id` for the children to ensure
+          all cloaked items can be referenced and we need to override it }}
+      id={{if @cloaked (concat "post_" @post.post_number)}}
     >
       {{#unless @cloaked}}
         {{#let
@@ -370,6 +377,7 @@ export default class Post extends Component {
             actions=(hash
               updateTopicPageQueryParams=@updateTopicPageQueryParams
             )
+            decoratorState=this.decoratorState
             topicPageQueryParams=@topicPageQueryParams
           )
           as |postOutletArgs|
@@ -465,6 +473,7 @@ export default class Post extends Component {
                       <PostCookedHtml
                         @post={{@post}}
                         @highlightTerm={{@highlightTerm}}
+                        @decoratorState={{this.decoratorState}}
                       />
                     </PluginOutlet>
 

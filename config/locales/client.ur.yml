@@ -291,6 +291,7 @@ ur:
     bookmarks:
       created: "آپ نے اس %{name} پوسٹ کو بک مارک کیا ہے۔"
       create: "بک مارک بنائیں"
+      clear_reminder: "یاد دہانی مٹائیں"
       edit: "بک مارک میں ترمیم"
       not_bookmarked: "اِس پوسٹ کو بُک مارک کریں"
       remove_reminder_keep_bookmark: "یاد دہانی کو ہٹا دیں اور بک مارک کو بچا کر رکھیں"
@@ -1493,6 +1494,7 @@ ur:
           expired_at_time: "%{time}پر ختم ہو گا"
           show_advanced: "ایڈوانس آپشنز دکھائیں"
           hide_advanced: "ایڈوانس آپشنز چھپائیں"
+          description: "تفصیل"
           restrict: "تک محدود"
           restrict_email: "ای میل تک محدود"
           restrict_domain: "ڈومین تک محدود"
@@ -1935,7 +1937,8 @@ ur:
       italic_text: "زور دیا گیا ٹَیکسٹ"
       link_title: "ہائپرلِنک"
       link_description: "یہاں لِنک کی تفصیل درج کریں"
-      link_dialog_title: "ہائپرلِنک ڈالیں"
+      link_dialog_action: "شامل"
+      link_edit_action: "اپ ڈیٹ"
       link_optional_text: "اختیاری عنوان"
       link_url_placeholder: "موضوعات تلاش کرنے کے لئے URL پیسٹ کریں یا ٹائپ کریں"
       blockquote_title: "بلاک متن"
@@ -2751,6 +2754,8 @@ ur:
           actions: "عمل"
           edit: "ترمیم کریں"
           delete: "مٹائیں"
+        post_language_selector:
+          none: "کوئی نہیں"
       errors:
         create: "معذرت، آپ کی پوسٹ بنانے میں ایک خرابی کا سامنا کرنا پڑا۔ براہ مہربانی دوبارہ کوشش کریں۔"
         edit: "معذرت، آپ کی پوسٹ ترمیم کرنے میں ایک خرابی کا سامنا کرنا پڑا۔ براہ مہربانی دوبارہ کوشش کریں۔"
@@ -4140,6 +4145,7 @@ ur:
           install: "انسٹال"
           themes:
             title: "تِھیمز"
+            install: "انسٹال"
           components:
             title: "اجزاء"
             install: "انسٹال"
@@ -4378,6 +4384,10 @@ ur:
           remote_theme_edits: "اگر آپ اس تھیم میں ترمیم کرنا چاہتے ہیں، تو آپ کو <a href='%{repoURL}' target='_blank'>اس کے ریپوزٹری پرتبدیلی درج کروانا ہوگی</a>"
           repo_unreachable: "اِس تِھیم کی گِٹ رِیپَوزِٹَری سے رابطہ نہیں کیا جا سکا۔ تکنیکی خرابی کا پیغام:"
           imported_from_archive: "یہ تھیم زپ فائل سے درآمد کی گئی تھی۔"
+          settings: "ترتیبات"
+          colors: "رنگ"
+          discard_colors: "منسوخ"
+          colors_title: "رنگ"
           scss:
             text: "CSS"
           after_header:

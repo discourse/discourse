@@ -398,10 +398,14 @@ describe "Composer - ProseMirror editor", type: :system do
       expect(rich).to have_css("em", text: "This is italic")
     end
 
-    xit "supports Ctrl + K to create a link" do
+    it "supports Ctrl + K to create a link" do
+      hyperlink_modal = PageObjects::Modals::Base.new
       open_composer_and_toggle_rich_editor
       page.send_keys([PLATFORM_KEY_MODIFIER, "k"])
-      page.send_keys("https://www.example.com\t")
+      expect(hyperlink_modal).to be_open
+      expect(hyperlink_modal.header).to have_content(I18n.t("js.composer.link_dialog_title"))
+      page.send_keys("https://www.example.com")
+      page.send_keys(:tab)
       page.send_keys("This is a link")
       page.send_keys(:enter)
 
@@ -847,6 +851,10 @@ describe "Composer - ProseMirror editor", type: :system do
   describe "with mentions" do
     fab!(:post)
     fab!(:topic) { post.topic }
+    fab!(:mixed_case_user) { Fabricate(:user, username: "TestUser_123") }
+    fab!(:mixed_case_group) do
+      Fabricate(:group, name: "TestGroup_ABC", mentionable_level: Group::ALIAS_LEVELS[:everyone])
+    end
 
     before do
       Draft.set(
@@ -862,11 +870,11 @@ describe "Composer - ProseMirror editor", type: :system do
 
       composer.type_content("Hey @#{user.username} ")
 
-      expect(rich).to have_css("a.mention", text: user.username)
+      expect(rich).to have_css("a.mention[data-valid='true']", text: user.username)
 
       composer.type_content("and @invalid_user - how are you?")
 
-      expect(rich).to have_no_css("a.mention", text: "@invalid_user")
+      expect(rich).to have_css("a.mention[data-valid='false']", text: "@invalid_user")
 
       composer.toggle_rich_editor
 
@@ -880,8 +888,225 @@ describe "Composer - ProseMirror editor", type: :system do
 
       composer.toggle_rich_editor
 
-      expect(rich).to have_css("a.mention", text: user.username)
-      expect(rich).to have_no_css("a.mention", text: "@unknown")
+      expect(rich).to have_css("a.mention[data-valid='true']", text: user.username)
+      expect(rich).to have_css("a.mention[data-valid='false']", text: "@unknown")
+    end
+
+    it "validates mentions case-insensitively" do
+      open_composer_and_toggle_rich_editor
+
+      composer.type_content("Hey @testuser_123 and @TESTUSER_123 ")
+
+      expect(rich).to have_css("a.mention[data-valid='true']", text: "testuser_123")
+      expect(rich).to have_css("a.mention[data-valid='true']", text: "TESTUSER_123")
+
+      composer.type_content("and @InvalidUser ")
+
+      expect(rich).to have_css("a.mention[data-valid='false']", text: "@InvalidUser")
+    end
+
+    it "validates group mentions case-insensitively" do
+      open_composer_and_toggle_rich_editor
+
+      composer.type_content("Hey @testgroup_abc and @TESTGROUP_ABC ")
+
+      expect(rich).to have_css("a.mention[data-valid='true']", text: "testgroup_abc")
+      expect(rich).to have_css("a.mention[data-valid='true']", text: "TESTGROUP_ABC")
+
+      composer.type_content("and @InvalidGroup ")
+
+      expect(rich).to have_css("a.mention[data-valid='false']", text: "@InvalidGroup")
+    end
+  end
+
+  describe "link toolbar" do
+    let(:insert_hyperlink_modal) { PageObjects::Modals::InsertHyperlink.new }
+
+    it "shows link toolbar when cursor is on a link" do
+      open_composer_and_toggle_rich_editor
+
+      composer.type_content("[Example](https://example.com)")
+      composer.send_keys(:left, :left, :left)
+
+      expect(page).to have_css("[data-identifier='composer-link-toolbar']")
+      expect(page).to have_css("button.composer-link-toolbar__edit")
+      expect(page).to have_css("button.composer-link-toolbar__copy")
+      expect(page).to have_css("a.composer-link-toolbar__visit", text: "example.com")
+    end
+
+    it "allows editing a link via toolbar" do
+      cdp.allow_clipboard
+      open_composer_and_toggle_rich_editor
+
+      composer.type_content("[Example](https://example.com)")
+      composer.send_keys(:left, :left, :left)
+
+      # Use Tab to navigate to the toolbar and Enter to activate edit
+      composer.send_keys(:tab, :enter)
+
+      expect(insert_hyperlink_modal).to be_open
+
+      expect(insert_hyperlink_modal.link_text_value).to eq("Example")
+      expect(insert_hyperlink_modal.link_url_value).to eq("https://example.com")
+
+      insert_hyperlink_modal.fill_in_link_text("Updated Example")
+      insert_hyperlink_modal.fill_in_link_url("https://updated-example.com")
+      insert_hyperlink_modal.click_primary_button
+
+      expect(rich).to have_css("a[href='https://updated-example.com']", text: "Updated Example")
+
+      composer.toggle_rich_editor
+      expect(composer).to have_value("[Updated Example](https://updated-example.com)")
+    end
+
+    it "allows copying a link URL via toolbar" do
+      cdp.allow_clipboard
+      open_composer_and_toggle_rich_editor
+
+      composer.type_content("[Example](https://example.com)")
+      composer.send_keys(:left, :left, :left)
+
+      find("button.composer-link-toolbar__copy").click
+
+      expect(page).to have_content(I18n.t("js.composer.link_toolbar.link_copied"))
+    end
+
+    it "allows unlinking a link via toolbar when markup is not auto or linkify" do
+      open_composer_and_toggle_rich_editor
+
+      composer.type_content("[Manual Link](https://example.com)")
+
+      find("button.composer-link-toolbar__unlink").click
+
+      expect(rich).to have_no_css("a")
+      expect(rich).to have_content("Manual Link")
+
+      composer.toggle_rich_editor
+      expect(composer).to have_value("Manual Link")
+    end
+
+    it "doesn't show unlink button for auto-detected links" do
+      open_composer_and_toggle_rich_editor
+
+      composer.type_content("<https://example.com>")
+
+      expect(page).to have_css("[data-identifier='composer-link-toolbar']")
+      expect(page).to have_no_css("button.composer-link-toolbar__unlink")
+      expect(page).to have_css("a.composer-link-toolbar__visit", text: "")
+    end
+
+    it "doesn't show unlink button for auto-linkified URLs" do
+      open_composer_and_toggle_rich_editor
+
+      composer.type_content("https://example.com")
+
+      expect(page).to have_css("[data-identifier='composer-link-toolbar']")
+      expect(page).to have_no_css("button.composer-link-toolbar__unlink")
+      expect(page).to have_css("a.composer-link-toolbar__visit", text: "")
+    end
+
+    it "shows visit button for valid URLs" do
+      open_composer_and_toggle_rich_editor
+
+      composer.type_content("[Example](https://example.com)")
+
+      expect(page).to have_css(
+        "a.composer-link-toolbar__visit[href='https://example.com']",
+        text: "example.com",
+      )
+    end
+
+    it "strips base URL from internal links in toolbar display" do
+      open_composer_and_toggle_rich_editor
+
+      internal_link = "#{Discourse.base_url}/t/some-topic/123"
+
+      composer.type_content("[Internal Link](#{internal_link})")
+      composer.send_keys(:left, :left, :left)
+
+      expect(page).to have_css("[data-identifier='composer-link-toolbar']")
+      expect(page).to have_css(
+        "a.composer-link-toolbar__visit[href='#{internal_link}']",
+        text: "/t/some-topic/123",
+      )
+    end
+
+    it "doesn't show visit button for invalid URLs" do
+      open_composer_and_toggle_rich_editor
+
+      composer.type_content("[Example](not-a-url)")
+
+      expect(page).to have_css("[data-identifier='composer-link-toolbar']")
+      expect(page).to have_no_css("a.composer-link-toolbar__visit")
+      expect(page).to have_no_css(".composer-link-toolbar__divider")
+    end
+
+    it "closes toolbar when cursor moves outside link" do
+      open_composer_and_toggle_rich_editor
+
+      composer.type_content("Text before [Example](https://example.com),")
+
+      composer.send_keys(:left)
+
+      expect(page).to have_css("[data-identifier='composer-link-toolbar']")
+      expect(page).to have_css("a.composer-link-toolbar__visit", text: "example.com")
+
+      composer.send_keys(:right)
+
+      expect(page).to have_no_css("[data-identifier='composer-link-toolbar']")
+    end
+
+    it "preserves emojis when editing a link via toolbar" do
+      open_composer_and_toggle_rich_editor
+
+      composer.type_content("[Party :tada: Time](https://example.com)")
+      composer.send_keys(:left, :left, :left)
+
+      # Use Tab to navigate to the toolbar and Enter to activate edit
+      composer.send_keys(:tab, :enter)
+
+      expect(insert_hyperlink_modal).to be_open
+
+      expect(insert_hyperlink_modal.link_text_value).to eq("Party :tada: Time")
+      expect(insert_hyperlink_modal.link_url_value).to eq("https://example.com")
+
+      insert_hyperlink_modal.fill_in_link_text("Updated :tada: Party")
+      insert_hyperlink_modal.fill_in_link_url("https://updated-party.com")
+      insert_hyperlink_modal.click_primary_button
+
+      expect(rich).to have_css("a[href='https://updated-party.com']")
+      expect(rich).to have_css("a img[title=':tada:'], a img[alt=':tada:']")
+
+      composer.toggle_rich_editor
+      expect(composer).to have_value("[Updated :tada: Party](https://updated-party.com)")
+    end
+
+    it "preserves bold and italic formatting when editing a link via toolbar" do
+      open_composer_and_toggle_rich_editor
+
+      composer.type_content("[**Bold** and *italic* text](https://example.com)")
+      composer.send_keys(:left, :left, :left)
+
+      # Use Tab to navigate to the toolbar and Enter to activate edit
+      composer.send_keys(:tab, :enter)
+
+      expect(insert_hyperlink_modal).to be_open
+
+      expect(insert_hyperlink_modal.link_text_value).to eq("**Bold** and *italic* text")
+      expect(insert_hyperlink_modal.link_url_value).to eq("https://example.com")
+
+      insert_hyperlink_modal.fill_in_link_text("Updated **bold** and *italic* content")
+      insert_hyperlink_modal.fill_in_link_url("https://updated-example.com")
+      insert_hyperlink_modal.click_primary_button
+
+      expect(rich).to have_css("a[href='https://updated-example.com']")
+      expect(rich).to have_css("strong a", text: "bold")
+      expect(rich).to have_css("em a", text: "italic")
+
+      composer.toggle_rich_editor
+      expect(composer).to have_value(
+        "[Updated **bold** and *italic* content](https://updated-example.com)",
+      )
     end
   end
 end

@@ -1421,6 +1421,7 @@ gl:
           expired_at_time: "Caduca o %{time}"
           show_advanced: "Amosar opcións avanzadas"
           hide_advanced: "Agochar opcións avanzadas"
+          description: "Descrición"
           add_to_groups: "Engadir aos grupos"
           expires_after: "Caduca tras"
           send_invite_email: "Gardar e enviar mensaxe de correo"
@@ -1832,7 +1833,8 @@ gl:
       italic_text: "texto recalcado"
       link_title: "Hiperligazón"
       link_description: "introducir a descrición da ligazón aquí"
-      link_dialog_title: "Inserir hiperligazón"
+      link_dialog_action: "Inserir"
+      link_edit_action: "Actualizar"
       link_optional_text: "título opcional"
       link_url_placeholder: "Pegue un URL ou escriba para buscar temas"
       blockquote_title: "Cita"
@@ -2580,6 +2582,8 @@ gl:
           actions: "Accións"
           edit: "Editar"
           delete: "Eliminar"
+        post_language_selector:
+          none: "Ningunha"
       errors:
         create: "Sentímolo pero produciuse un erro creando a publicación. Ténteo de novo."
         edit: "Sentímolo pero produciuse un erro editando a publicación. Ténteo de novo."
@@ -3881,6 +3885,7 @@ gl:
           install: "Instalar"
           themes:
             title: "Temas"
+            install: "Instalar"
           components:
             title: "Compoñentes"
             install: "Instalar"
@@ -4120,6 +4125,10 @@ gl:
           remote_theme_edits: "Se quere editar este tema, debe <a href='%{repoURL}' target='_blank'> enviar un cambio a este repositorio</a>"
           repo_unreachable: "Non se puido conectar co repositorio Git deste tema. Mensaxe de erro:"
           imported_from_archive: "Este tema foi importado dun ficheiro .zip"
+          settings: "Configuración"
+          colors: "Cores"
+          discard_colors: "Desbotar"
+          colors_title: "Cores"
           scss:
             text: "CSS"
           after_header:

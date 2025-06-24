@@ -1816,6 +1816,7 @@ hy:
           share_link: "Կիսվել հղումով"
           show_advanced: "Ցույց տալ Ընդլայնված Տարբերակները"
           hide_advanced: "Թաքցնել Ընդլայնված Տարբերակները"
+          description: "Նկարագրությունը"
           restrict: "Սահմանափակել"
           restrict_email: "Սահմանափակել էլեկտրոնային փոստով"
           restrict_domain: "Սահմանափակել դոմենով"
@@ -2281,7 +2282,8 @@ hy:
       italic_text: "շեղ տեքստ"
       link_title: "Հիպերհղում"
       link_description: "մուտքագրեք հղման նկարագրությունն այստեղ"
-      link_dialog_title: "Տեղադրել Հիպերհղումը"
+      link_dialog_action: "Մուտքագրել"
+      link_edit_action: "Թարմացնել"
       link_optional_text: "ընտրովի վերնագիր"
       link_url_placeholder: "Տեղադրեք URL կամ տեքստը մուտքագրեք՝ թեմաները որոնելու համար"
       blockquote_title: "Մեջբերել բաժինը"
@@ -2333,6 +2335,9 @@ hy:
           label: "Փոխանջատել թեմայի բարձրացումը "
           desc: "Պատասխանել՝ առանց պատասխանի վերջին ամսաթիվը փոխելու"
       ignore: "Անտեսել"
+      link_toolbar:
+        copy: "Պատճենել հղումը"
+        link_copied: "Հղումը պատճենված է:"
     notifications:
       tooltip:
         regular:
@@ -3006,6 +3011,8 @@ hy:
           actions: "Գործողություններ"
           edit: "Խմբագրել"
           delete: "Ջնջել"
+        post_language_selector:
+          none: "Ոչ մի"
       errors:
         create: "Ներողություն, Ձեր գրառումը ստեղծելիս տեղի է ունեցել սխալ: Խնդրում ենք կրկին փորձել:"
         edit: "Ներողություն, Ձեր գրառումը խմբագրելիս տեղի է ունեցել սխալ: Խնդրում ենք կրկին փորձել:"
@@ -4263,6 +4270,7 @@ hy:
           install: "Տեղադրել"
           themes:
             title: "Թեմաներ"
+            install: "Տեղադրել"
           components:
             title: "Բաղադրիչներ"
             install: "Տեղադրել"
@@ -4497,6 +4505,10 @@ hy:
           compare_commits: "(Տեսնել նոր commit-ները)"
           repo_unreachable: "Հնարավոր չէ կապ հաստատել այս թեմայի Git ռեպոզիտորիայի հետ: Սխալի հաղորդագրությունը՝ "
           imported_from_archive: "Այս թեման ներմուծվել է .zip ֆայլից"
+          settings: "Կարգավորումներ"
+          colors: "Գույներ"
+          discard_colors: "Ջնջել"
+          colors_title: "Գույներ"
           scss:
             text: "CSS"
           after_header:

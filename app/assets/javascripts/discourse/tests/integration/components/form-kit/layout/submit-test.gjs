@@ -54,4 +54,18 @@ module("Integration | Component | FormKit | Layout | Submit", function (hooks) {
 
     assert.dom(".form-kit__button .d-icon-spinner").exists();
   });
+
+  test("@disabled", async function (assert) {
+    await render(
+      <template>
+        <Form as |form|>
+          <form.Submit @label="submit" @disabled={{true}} />
+        </Form>
+      </template>
+    );
+
+    assert
+      .dom(".form-kit__button")
+      .isDisabled("submit button is disabled when @disabled is true");
+  });
 });

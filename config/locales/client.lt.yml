@@ -357,6 +357,7 @@ lt:
       created: "Jūs pažymėjote šį įrašą. %{name}"
       created_generic: "Jūs tai pažymėjote. %{name}"
       create: "Sukurti žymę"
+      clear_reminder: "Išvalyti priminimą."
       edit: "Redaguoti žymę"
       not_bookmarked: "pažymėkite šį įrašą"
       remove_reminder_keep_bookmark: "Pašalinkite priminimą ir išsaugokite žymę"
@@ -1556,6 +1557,7 @@ lt:
           expired_at_time: "Galiojimo laikas baigėsi %{time}"
           show_advanced: "Rodyti išplėstines parinktis"
           hide_advanced: "Slėpti išplėstines parinktis"
+          description: "Aprašymas"
           restrict: "Apriboti"
           email_or_domain_placeholder: "vardas@example.com arba example.com"
           max_redemptions_allowed: "Maksimaliai naudoja"
@@ -1984,7 +1986,8 @@ lt:
       italic_text: "pasviras tekstas"
       link_title: "Nuoroda"
       link_description: "įveskite čia nuorodos aprašymą"
-      link_dialog_title: "Įkelti nuorodą"
+      link_dialog_action: "Įterpti"
+      link_edit_action: "Atnaujinti"
       link_optional_text: "papildoma antraštė"
       link_url_placeholder: "Įklijuokite URL arba įveskite, kad ieškotumėte temų"
       blockquote_title: "Blokuoti citatą"
@@ -2776,6 +2779,8 @@ lt:
           actions: "Veiksmai"
           edit: "Redaguoti"
           delete: "Pašalinti"
+        post_language_selector:
+          none: "Nieko"
       errors:
         create: "Atsiprašome, įvyko klaida kuriant įrašą. Prašome pamėginti dar kartą."
         edit: "Atsiprašome, įvyko klaida redaguojant įrašą. Prašome pamėginti dar kartą."
@@ -4110,6 +4115,7 @@ lt:
           install: "diegti"
           themes:
             title: "Temos"
+            install: "diegti"
           components:
             title: "Komponentai"
             install: "diegti"
@@ -4341,6 +4347,10 @@ lt:
           compare_commits: "(Žr. naujus įsipareigojimus)"
           repo_unreachable: "Nepavyko susisiekti su šios temos „Git“ saugykla. Klaidos pranešimas:"
           imported_from_archive: "Ši tema buvo importuota iš .zip failo"
+          settings: "Nustatymai"
+          colors: "Spalvos"
+          discard_colors: "Išmesti"
+          colors_title: "Spalvos"
           scss:
             text: "CSS"
           after_header:

@@ -127,6 +127,10 @@
     color: var(--primary);
   }
 
+  a:not([contenteditable="false"] a) {
+    cursor: inherit;
+  }
+
   kbd {
     // I believe this shouldn't be `inline-flex` in posts either (test with emojis before/after text to see why),
     // but overriding just for the editor for now
@@ -188,6 +192,70 @@
     100% {
       background-position: -200% 0;
     }
+  }
+}
+
+.fk-d-menu[data-identifier="composer-link-toolbar"] {
+  z-index: z("composer", "dropdown") + 1;
+  animation: fade-in ease 0.25s 1 forwards;
+
+  .fk-d-menu__inner-content {
+    overflow: visible;
+  }
+
+  .btn {
+    background-color: var(--secondary);
+    color: var(--primary-medium);
+
+    .d-icon {
+      color: var(--primary-medium);
+    }
+
+    &:hover:not(:disabled) {
+      color: var(--primary);
+
+      .d-icon {
+        color: var(--primary);
+      }
+    }
+
+    &:active {
+      background: var(--secondary);
+    }
+
+    &:focus-visible {
+      @include default-focus;
+    }
+  }
+
+  .composer-link-toolbar__visit {
+    .d-button-label {
+      max-width: 12rem;
+    }
+  }
+}
+
+.composer-link-toolbar__visit {
+  min-width: 0;
+  align-items: center;
+
+  // visit link has a right-side icon
+  flex-direction: row-reverse;
+
+  .d-icon {
+    // overrides the default from d-button.scss
+    margin-right: 0;
+  }
+
+  .d-button-label {
+    font-size: var(--font-down-1-rem);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &:not(:disabled) .d-button-label {
+    margin-right: 0.5rem;
   }
 }
 
