@@ -454,8 +454,6 @@ createWidget("post-date", {
 
 // glimmer-post-stream: has glimmer version
 createWidget("post-language", {
-  tagName: "div.post-info.post-language",
-
   html(attrs) {
     return [
       new RenderGlimmer(this, "div", PostMetaDataLanguage, {

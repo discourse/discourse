@@ -2435,12 +2435,10 @@ nb_NO:
       italic_label: "K"
       italic_title: "Kursiv"
       italic_text: "kursiv tekst"
-      link_title: "Hyperlenke"
       link_description: "beskriv lenken her"
       link_dialog_action: "Sett inn"
       link_edit_action: "Oppdater"
-      link_optional_text: "valgfri tittel"
-      link_url_placeholder: "Lim inn en URL eller skriv for å søke i emner"
+      link_optional_text: "Tekst"
       blockquote_title: "Sitatramme"
       blockquote_text: "Sitatramme"
       code_title: "Kodeutsnitt"
@@ -2904,10 +2902,6 @@ nb_NO:
         top: "Det finnes ingen populære emner."
         hot: "Det finnes ingen aktuelle temaer."
         filter: "Det finnes ingen emner."
-        educate:
-          new: '<p>Dine nye emner vil vises her. Som standard betraktes emner som nye, og vil vise en <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> indikator hvis de ble opprettet i de siste 2 dagene.</p><p>Besøk dine <a href="%{userPrefsUrl}">preferanser</a> for å endre dette.</p>'
-          unread: "<p>Dine uleste emner vil vises her.</p><p>Som forvalg anses emner som ulest og vil vise ulest-tall <span class=\"badge unread-posts badge-notification\">1</span> dersom du:</p><ul><li>Opprettet emnet</li><li>Svarte på emnet</li><li>Leste emnet i mer enn 5 minutter</li></ul><p>Eller dersom du uttrykkelig har satt emnet som overvåkes eller følges via \U0001F514 i hvert emne.</p><p>Gå til<a href=\"%{userPrefsUrl}\">innstillingene</a> dine for å endre dette.</p>"
-          new_new: "<p>Dine nye emner vil vises her, og dine uleste emner også. Som standard anses emner som nye og vil vise en <span class=\"badge new-topic badge-notification\" style=\"vertical-align:middle;line-height:inherit;\"></span>-indikator hvis de ble opprettet i løpet av de siste to dagene. Uleste emner vil vise <span class=\"badge unread-posts badge-notification\">1</span> hvis du: opprettet emnet, svarte på emnet, leste emnet i mer enn 5 minutter, eller hvis du uttrykkelig har satt emnet til Sporet eller Overvåket via \U0001F514 i hvert emne.</p><p>Besøk dine <a href=\"%{userPrefsUrl}\">innstillinger</a> for å endre dette.</p>"
       bottom:
         latest: "Det finnes ingen flere siste emner."
         posted: "Det finnes ingen flere emner med innlegg."

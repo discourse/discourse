@@ -1,10 +1,10 @@
 import { getOwner } from "@ember/owner";
+import { settled } from "@ember/test-helpers";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import PreloadStore from "discourse/lib/preload-store";
 import { ADMIN_NAV_MAP } from "discourse/lib/sidebar/admin-nav-map";
-import { humanizedSettingName } from "discourse/lib/site-settings-utils";
 import { i18n } from "discourse-i18n";
 import {
   PageLinkFormatter,
@@ -119,6 +119,7 @@ module("Unit | Service | AdminSearchDataSource", function (hooks) {
 
   test("buildMap - labels are correct for top-level, second-level, and third-level nav", async function (assert) {
     await this.subject.buildMap();
+    await settled();
 
     const firstPage = this.subject.pageDataSourceItems.find(
       (page) => page.url === "/admin"
@@ -329,9 +330,7 @@ module(
       );
       assert.deepEqual(
         formatter.format().label,
-        i18n("chat.admin.title") +
-          " > " +
-          humanizedSettingName(setting.setting),
+        i18n("chat.admin.title") + " > " + setting.humanized_name,
         "label uses the plugin admin route label and setting name"
       );
     });
@@ -353,9 +352,7 @@ module(
       );
       assert.deepEqual(
         formatter.format().label,
-        i18n("admin.config.about.title") +
-          " > " +
-          humanizedSettingName(setting.setting),
+        i18n("admin.config.about.title") + " > " + setting.humanized_name,
         "label uses the primary area and setting name"
       );
     });
@@ -379,7 +376,7 @@ module(
         formatter.format().label,
         i18n("admin.site_settings.categories.required") +
           " > " +
-          humanizedSettingName(setting.setting),
+          setting.humanized_name,
         "label uses the category and setting name"
       );
     });

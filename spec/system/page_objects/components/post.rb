@@ -60,6 +60,11 @@ module PageObjects
         find("#embedded-posts__top--#{@post_number}").has_no_content?(content)
       end
 
+      def post_language
+        post.find(".post-info.post-language").hover
+        find(".post-language-content")
+      end
+
       private
 
       def post_id

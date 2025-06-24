@@ -1,12 +1,11 @@
-import Component from "@ember/component";
-import discourseTag from "discourse/helpers/discourse-tag";
+import discourseTags from "discourse/helpers/discourse-tags";
 
-export default class ReviewableTags extends Component {
-  <template>
-    {{#if this.tags}}
-      <div class="list-tags">
-        {{#each this.tags as |t|}}{{discourseTag t}}{{/each}}
-      </div>
-    {{/if}}
-  </template>
-}
+const ReviewableTags = <template>
+  {{#if @tags}}
+    <div class="list-tags">
+      {{discourseTags @topic tags=@tags}}
+    </div>
+  {{/if}}
+</template>;
+
+export default ReviewableTags;
