@@ -10,11 +10,11 @@
   width: auto;
   display: flex;
   box-sizing: border-box;
-  margin-bottom: 1.2em;
+  margin-bottom: 1.2rem;
   gap: 1rem;
 
   @include viewport.until(sm) {
-    margin: 1.5rem 1.2rem;
+    margin: 1.5rem 1rem;
   }
 
   .account-created &,
