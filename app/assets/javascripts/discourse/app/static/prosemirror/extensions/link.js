@@ -1,4 +1,5 @@
 import { ReplaceAroundStep, ReplaceStep } from "prosemirror-transform";
+import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
 import {
   getChangedRanges,
   markInputRule,
@@ -131,9 +132,11 @@ const extension = {
     new Plugin({
       props: {
         handleKeyDown(view, event) {
-          if (event.key === "k" && event.metaKey) {
-            // Avoids propagating this event to the chat global keydown handler
+          if (event.key === "k" && event[`${PLATFORM_KEY_MODIFIER}Key`]) {
+            // Avoids propagating this event to the chat global keydown handler,
+            // and avoids Ctrl+K from being handled by the browser to open the search bar.
             event.stopPropagation();
+            event.preventDefault();
             return false;
           }
         },
