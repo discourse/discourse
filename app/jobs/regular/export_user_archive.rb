@@ -117,7 +117,6 @@ module Jobs
       )
 
     def execute(args)
-      Rails.logger.warn("User ID?: #{args[:user_id]}")
       @archive_for_user = User.find_by(id: args[:user_id])
 
       if args[:requesting_user_id].present?
