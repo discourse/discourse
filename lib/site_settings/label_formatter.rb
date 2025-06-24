@@ -80,8 +80,8 @@ module SiteSettings
         I18n.t("site_settings.#{setting}", base_path: Discourse.base_path, default: "")
       end
 
-      def humanized_name(setting, setting_label: nil)
-        name = setting_label || setting.to_s.gsub("_", " ")
+      def humanized_name(setting)
+        name = setting.to_s.gsub("_", " ")
 
         formatted_name =
           (name[0].upcase + name[1..-1])
