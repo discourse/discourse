@@ -6,6 +6,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import DButton from "discourse/components/d-button";
+import DEditorOriginalTranslationPreview from "discourse/components/d-editor-original-translation-preview";
 import FastEdit from "discourse/components/fast-edit";
 import FastEditModal from "discourse/components/modal/fast-edit";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -19,6 +20,7 @@ import {
   postUrl,
   setCaretPosition,
 } from "discourse/lib/utilities";
+import { ADD_TRANSLATION } from "discourse/models/composer";
 import { i18n } from "discourse-i18n";
 
 export function fixQuotes(str) {
@@ -35,6 +37,7 @@ export default class PostTextSelectionToolbar extends Component {
   @service siteSettings;
   @service appEvents;
   @service toasts;
+  @service composer;
 
   @tracked isFastEditing = false;
 
@@ -123,7 +126,14 @@ export default class PostTextSelectionToolbar extends Component {
 
   @action
   async toggleFastEdit() {
-    if (this.post?.is_localized) {
+    const editingLocalizedPost =
+      this.post?.is_localized && this.siteSettings.content_localization_enabled;
+
+    if (editingLocalizedPost) {
+      if (!this.currentUser.can_localize_content) {
+        this._handleFastEdit();
+      }
+
       return this.dialog.alert({
         message: i18n("post.localizations.edit_warning.message", {
           language: this.post.language,
@@ -132,21 +142,21 @@ export default class PostTextSelectionToolbar extends Component {
           {
             label: i18n("post.localizations.edit_warning.action_original"),
             class: "btn-primary",
-            action: () => {
-              console.log("edit original");
-            },
+            action: () => {}, // TODO: fix not working for some reason, we want it to just open up the editor
           },
           {
             label: i18n("post.localizations.edit_warning.action_translation"),
             class: "",
-            action: () => {
-              console.log("edit translation");
-            },
+            action: () => this._handleEditTranslation.call(this, this.post),
           },
         ],
       });
     }
 
+    return this._handleFastEdit();
+  }
+
+  async _handleFastEdit() {
     if (this.args.data.supportsFastEdit) {
       if (this.site.desktopView) {
         this.isFastEditing = !this.isFastEditing;
@@ -209,6 +219,24 @@ export default class PostTextSelectionToolbar extends Component {
       this.args.data.hideToolbar();
       return;
     }
+  }
+
+  async _handleEditTranslation(post) {
+    const { raw } = await ajax(`/posts/${post.id}.json`);
+
+    const composerOpts = {
+      action: ADD_TRANSLATION,
+      draftKey: "translation",
+      warningsDisabled: true,
+      hijackPreview: {
+        component: DEditorOriginalTranslationPreview,
+        model: { postLocale: post.locale, rawPost: raw },
+      },
+      post,
+      selectedTranslationLocale: this.currentUser?.effective_locale,
+    };
+
+    await this.composer.open(composerOpts);
   }
 
   @action
