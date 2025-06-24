@@ -257,9 +257,9 @@ export default class AdminSearchDataSource extends Service {
     this.#processSettings(allItems.settings);
     this.#processThemesAndComponents(allItems.themes_and_components);
     this.#processReports(allItems.reports);
-    await Promise.resolve();
-
     this._mapCached = true;
+
+    return Promise.resolve();
   }
 
   search(filter) {
