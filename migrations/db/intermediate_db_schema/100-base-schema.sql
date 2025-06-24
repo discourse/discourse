@@ -4,10 +4,11 @@
 
 CREATE TABLE user_emails
 (
-    email      TEXT     NOT NULL PRIMARY KEY,
+    email      TEXT     NOT NULL,
+    user_id    NUMERIC  NOT NULL,
     created_at DATETIME,
     "primary"  BOOLEAN,
-    user_id    NUMERIC  NOT NULL
+    PRIMARY KEY (user_id, email)
 );
 
 CREATE TABLE user_options
