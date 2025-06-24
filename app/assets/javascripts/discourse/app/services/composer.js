@@ -1817,25 +1817,12 @@ export default class ComposerService extends Service {
       return opts.locale;
     }
 
-    if (opts?.post?.locale) {
+    // inherit post locale when editing, not when replying
+    if (opts?.post?.locale && opts.action === Composer.EDIT) {
       return opts.post.locale;
     }
 
-    if (this.currentUser?.effective_locale) {
-      if (
-        this.siteSettings.available_content_localization_locales.find(
-          (locale) => locale.value === this.currentUser?.effective_locale
-        )
-      ) {
-        return this.currentUser.effective_locale;
-      } else {
-        // If user's effective locale is not part of available locales,
-        // we leave it empty so that a locale value won't be attached to the post.
-        return "";
-      }
-    }
-
-    return this.siteSettings.default_locale;
+    return "";
   }
 }
 

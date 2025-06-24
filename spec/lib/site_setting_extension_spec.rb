@@ -1109,6 +1109,24 @@ RSpec.describe SiteSettingExtension do
     end
   end
 
+  describe "humanized_name" do
+    it "returns the humanized name for a setting" do
+      expect(SiteSetting.humanized_name(:clean_up_inactive_users_after_days)).to eq(
+        "Clean up inactive users after days",
+      )
+    end
+
+    it "handles acronyms in setting names" do
+      expect(SiteSetting.humanized_name(:enable_linkedin_oidc_logins)).to eq(
+        "Enable LinkedIn OIDC logins",
+      )
+    end
+
+    it "handles mixed case in setting names" do
+      expect(SiteSetting.humanized_name(:opengraph_image)).to eq("OpenGraph image")
+    end
+  end
+
   describe "logging Site Settings via the Rails Console" do
     around do |example|
       # Ensure Rails::Console is defined for the duration of each example.
