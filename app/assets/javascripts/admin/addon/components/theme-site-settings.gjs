@@ -9,7 +9,6 @@ import AsyncContent from "discourse/components/async-content";
 import DPageSubheader from "discourse/components/d-page-subheader";
 import basePath from "discourse/helpers/base-path";
 import { ajax } from "discourse/lib/ajax";
-import { humanizedSettingName } from "discourse/lib/site-settings-utils";
 import { currentThemeId, listThemes } from "discourse/lib/theme-selector";
 import { i18n } from "discourse-i18n";
 import DTooltip from "float-kit/components/d-tooltip";
@@ -49,7 +48,7 @@ export default class ThemeSiteSettings extends Component {
     this.themeableSiteSettings = response.themeable_site_settings.map(
       (setting) => {
         return {
-          name: humanizedSettingName(setting),
+          name: setting.humanized_name,
           value: setting,
         };
       }
@@ -92,11 +91,12 @@ export default class ThemeSiteSettings extends Component {
             </thead>
             <tbody>
               {{#each-in content as |settingName overrides|}}
-                <tr class="admin-theme-site-settings-row d-admin-row__content">
+                <tr
+                  class="admin-theme-site-settings-row d-admin-row__content"
+                  data-setting-name={{settingName}}
+                >
                   <td class="admin-theme-site-settings-row__setting">
-                    <p class="setting-label">{{humanizedSettingName
-                        settingName
-                      }}</p>
+                    <p class="setting-label">{{overrides.humanized_name}}</p>
                     <div
                       class="setting-description"
                     >{{overrides.description}}</div>
@@ -112,6 +112,7 @@ export default class ThemeSiteSettings extends Component {
                             @route="adminCustomizeThemes.show"
                             @models={{array "themes" theme.theme_id}}
                             class="theme-link"
+                            data-theme-id={{theme.theme_id}}
                           >
                             {{theme.theme_name}}
                           </LinkTo>
