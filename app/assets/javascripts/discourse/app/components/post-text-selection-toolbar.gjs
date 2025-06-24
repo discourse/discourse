@@ -35,8 +35,6 @@ export default class PostTextSelectionToolbar extends Component {
   @service appEvents;
   @service toasts;
 
-  @tracked isFastEditing = false;
-
   appEventsListeners = modifier(() => {
     this.appEvents.on("quote-button:edit", this, "toggleFastEdit");
 
@@ -108,32 +106,22 @@ export default class PostTextSelectionToolbar extends Component {
     const text = await this.args.data.buildQuote();
     clipboardCopy(text);
     this.toasts.success({
-      duration: 3000,
+      duration: "short",
       data: { message: i18n("post.quote_copied_to_clibboard") },
     });
     await this.args.data.hideToolbar();
   }
 
   @action
-  async closeFastEdit() {
-    this.isFastEditing = false;
-    await this.args.data.hideToolbar();
-  }
-
-  @action
   async toggleFastEdit() {
     if (this.args.data.supportsFastEdit) {
-      if (this.site.desktopView) {
-        this.isFastEditing = !this.isFastEditing;
-      } else {
-        this.modal.show(FastEditModal, {
-          model: {
-            initialValue: this.args.data.quoteState.buffer,
-            post: this.post,
-          },
-        });
-        this.args.data.hideToolbar();
-      }
+      this.modal.show(FastEditModal, {
+        model: {
+          initialValue: this.args.data.quoteState.buffer,
+          post: this.post,
+        },
+      });
+      this.args.data.hideToolbar();
     } else {
       const result = await ajax(`/posts/${this.post.id}`);
 
@@ -201,11 +189,7 @@ export default class PostTextSelectionToolbar extends Component {
     <div
       {{on "mousedown" this.trapEvents}}
       {{on "mouseup" this.trapEvents}}
-      class={{concatClass
-        "quote-button"
-        "visible"
-        (if this.isFastEditing "fast-editing")
-      }}
+      class={{concatClass "quote-button" "visible"}}
       {{this.appEventsListeners}}
     >
       <div class="buttons">
@@ -282,14 +266,6 @@ export default class PostTextSelectionToolbar extends Component {
       </div>
 
       <div class="extra">
-        {{#if this.isFastEditing}}
-          <FastEdit
-            @initialValue={{@data.quoteState.buffer}}
-            @post={{this.post}}
-            @close={{this.closeFastEdit}}
-          />
-        {{/if}}
-
         <PluginOutlet @name="quote-button-after" @connectorTagName="div" />
       </div>
     </div>
