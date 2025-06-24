@@ -8,6 +8,12 @@ loaderShim("@ember-compat/tracked-built-ins", () =>
   importSync("@ember-compat/tracked-built-ins")
 );
 loaderShim("@popperjs/core", () => importSync("@popperjs/core"));
+loaderShim("@fullcalendar/core", () => importSync("@fullcalendar/core"));
+loaderShim("@fullcalendar/daygrid", () => importSync("@fullcalendar/daygrid"));
+loaderShim("@fullcalendar/list", () => importSync("@fullcalendar/list"));
+loaderShim("@fullcalendar/timegrid", () =>
+  importSync("@fullcalendar/timegrid")
+);
 loaderShim("@floating-ui/dom", () => importSync("@floating-ui/dom"));
 loaderShim("@uppy/aws-s3", () => importSync("@uppy/aws-s3"));
 loaderShim("@uppy/aws-s3-multipart", () =>
