@@ -214,6 +214,7 @@ module SiteSettingExtension
   )
     locale_setting_hash = {
       setting: "default_locale",
+      humanized_name: humanized_name("default_locale"),
       default: SiteSettings::DefaultsProvider::DEFAULT_LOCALE,
       category: "required",
       description: description("default_locale"),
