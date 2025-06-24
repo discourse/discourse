@@ -1,0 +1,209 @@
+// DAutocomplete component styles
+
+.autocomplete-results {
+  max-height: 300px;
+  overflow-y: auto;
+  background: var(--secondary);
+  border: 1px solid var(--primary-low);
+  border-radius: 4px;
+  box-shadow: var(--shadow-dropdown);
+
+  .autocomplete-loading {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+  }
+
+  .autocomplete-no-results {
+    padding: 12px 16px;
+    color: var(--primary-medium);
+    font-style: italic;
+    text-align: center;
+  }
+}
+
+.autocomplete-results__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  .autocomplete-result {
+    cursor: pointer;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--primary-low);
+    transition: background-color 0.15s ease;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &:hover,
+    &.selected {
+      background-color: var(--d-hover);
+    }
+
+    &.selected {
+      background-color: var(--tertiary-low);
+    }
+
+    .autocomplete-result__text {
+      display: block;
+      color: var(--primary);
+    }
+  }
+}
+
+// Input container styles
+.autocomplete-input-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: center;
+  min-height: 32px;
+  padding: 4px 8px;
+  background: var(--secondary);
+  border: 1px solid var(--primary-low);
+  border-radius: 4px;
+  cursor: text;
+  transition: border-color 0.15s ease;
+
+  &:focus-within {
+    border-color: var(--tertiary);
+    outline: 2px solid var(--tertiary-low);
+    outline-offset: -1px;
+  }
+
+  &.disabled {
+    background: var(--primary-very-low);
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  .autocomplete-input-wrapper {
+    flex: 1;
+    min-width: 100px;
+
+    input {
+      border: none;
+      background: transparent;
+      outline: none;
+      padding: 4px 0;
+      font-size: var(--font-0);
+      color: var(--primary);
+      width: 100%;
+
+      &::placeholder {
+        color: var(--primary-medium);
+      }
+
+      &:disabled {
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  &.single-mode {
+    .autocomplete-input-wrapper {
+      display: none;
+    }
+
+    &:not(:has(.autocomplete-chip)) {
+      .autocomplete-input-wrapper {
+        display: block;
+      }
+    }
+  }
+}
+
+// Chip styles
+.autocomplete-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 6px;
+  background: var(--primary-low);
+  border: 1px solid var(--primary-low-mid);
+  border-radius: 12px;
+  font-size: var(--font-down-1);
+  color: var(--primary);
+  max-width: 200px;
+
+  .autocomplete-chip__content {
+    flex: 1;
+    min-width: 0;
+
+    .autocomplete-chip__text {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
+  .autocomplete-chip__remove {
+    flex-shrink: 0;
+    padding: 0;
+    min-height: 16px;
+    width: 16px;
+    margin: 0;
+    background: transparent;
+    border: none;
+    color: var(--primary-medium);
+
+    &:hover {
+      color: var(--danger);
+      background: var(--danger-low);
+    }
+
+    .d-icon {
+      font-size: 10px;
+    }
+  }
+}
+
+// Responsive styles
+@media screen and (max-width: 767px) {
+  .autocomplete-results {
+    max-height: 200px;
+  }
+
+  .autocomplete-input-container {
+    min-height: 40px;
+    padding: 6px 10px;
+
+    .autocomplete-input-wrapper input {
+      font-size: 16px; // Prevent zoom on iOS
+    }
+  }
+
+  .autocomplete-chip {
+    font-size: var(--font-down-2);
+    padding: 3px 8px;
+  }
+}
+
+// Dark mode adjustments
+.dark-mode {
+  .autocomplete-results {
+    background: var(--secondary);
+    border-color: var(--primary-low);
+    box-shadow: var(--shadow-dropdown);
+  }
+
+  .autocomplete-input-container {
+    background: var(--secondary);
+    border-color: var(--primary-low);
+
+    &.disabled {
+      background: var(--primary-very-low);
+    }
+  }
+
+  .autocomplete-chip {
+    background: var(--primary-very-low);
+    border-color: var(--primary-low);
+  }
+}
