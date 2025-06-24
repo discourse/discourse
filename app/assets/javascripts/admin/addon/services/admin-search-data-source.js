@@ -228,7 +228,7 @@ export default class AdminSearchDataSource extends Service {
 
   async buildMap() {
     if (this.isLoaded) {
-      return;
+      return Promise.resolve();
     }
 
     ADMIN_NAV_MAP.forEach((navMapSection) => {
@@ -346,7 +346,7 @@ export default class AdminSearchDataSource extends Service {
 
     // Cache the setting area + category URLs for later use
     // when building the setting list via #processSettings.
-    if (link.settings_area && !this.settingPageMap.areas[this.settings_area]) {
+    if (link.settings_area && !this.settingPageMap.areas[link.settings_area]) {
       this.settingPageMap.areas[link.settings_area] = link.multi_tabbed
         ? `${formattedPageLink.url}/settings`
         : formattedPageLink.url;
