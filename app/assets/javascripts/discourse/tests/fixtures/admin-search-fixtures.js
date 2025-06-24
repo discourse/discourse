@@ -3,6 +3,7 @@ export default {
     settings: [
       {
         setting: "title",
+        humanized_name: "Title",
         description:
           "The name of this site. Visible to all visitors including anonymous users.",
         keywords: [],
@@ -11,6 +12,7 @@ export default {
       },
       {
         setting: "site_description",
+        humanized_name: "Site description",
         description:
           "Describe this site in one sentence. Visible to all visitors including anonymous users.",
         keywords: [],
