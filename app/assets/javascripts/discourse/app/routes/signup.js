@@ -1,6 +1,8 @@
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
+import cookie from "discourse/lib/cookie";
+import DiscourseURL from "discourse/lib/url";
 import DiscourseRoute from "discourse/routes/discourse";
 
 export default class SignupRoute extends DiscourseRoute {
@@ -10,7 +12,11 @@ export default class SignupRoute extends DiscourseRoute {
 
   authComplete = false;
 
-  beforeModel() {
+  beforeModel({ from }) {
+    if (from) {
+      this.internalReferrer = this.router.urlFor(from.name);
+    }
+
     this.authComplete = document.getElementById(
       "data-authentication"
     )?.dataset.authenticationData;
@@ -24,6 +30,13 @@ export default class SignupRoute extends DiscourseRoute {
 
   setupController(controller) {
     super.setupController(...arguments);
+
+    if (
+      this.internalReferrer ||
+      DiscourseURL.isInternalTopic(document.referrer)
+    ) {
+      cookie("destination_url", this.internalReferrer || document.referrer);
+    }
 
     if (this.login.isOnlyOneExternalLoginMethod && !this.authComplete) {
       controller.set("isRedirectingToExternalAuth", true);
