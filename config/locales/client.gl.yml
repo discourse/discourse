@@ -1831,12 +1831,11 @@ gl:
       italic_label: "C"
       italic_title: "Recalque"
       italic_text: "texto recalcado"
-      link_title: "Hiperligazón"
+      link_title: "Ligazón"
       link_description: "introducir a descrición da ligazón aquí"
       link_dialog_action: "Inserir"
       link_edit_action: "Actualizar"
-      link_optional_text: "título opcional"
-      link_url_placeholder: "Pegue un URL ou escriba para buscar temas"
+      link_optional_text: "Texto"
       blockquote_title: "Cita"
       blockquote_text: "Citación"
       code_title: "Texto preformatado"
@@ -2136,8 +2135,6 @@ gl:
         bookmarks: "Aínda non marcou este tema."
         category: "Non hai temas en %{category}."
         top: "Non hai temas destacados."
-        educate:
-          new: '<p>Aquí aparecen os seus temas novos. De xeito predeterminado, os temas considéranse novos e amosarán un indicador de <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">novo</span> se se crearon nos últimos dous días.</p><p>Vexa as súas <a href="%{userPrefsUrl}">preferencias</a> para cambiar este axuste.</p>'
       bottom:
         latest: "Non hai máis temas."
         posted: "Non hai máis temas publicados."

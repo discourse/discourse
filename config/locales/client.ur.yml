@@ -1935,12 +1935,11 @@ ur:
       italic_label: "I"
       italic_title: "آئیٹیلک"
       italic_text: "زور دیا گیا ٹَیکسٹ"
-      link_title: "ہائپرلِنک"
+      link_title: "لنک"
       link_description: "یہاں لِنک کی تفصیل درج کریں"
       link_dialog_action: "شامل"
       link_edit_action: "اپ ڈیٹ"
-      link_optional_text: "اختیاری عنوان"
-      link_url_placeholder: "موضوعات تلاش کرنے کے لئے URL پیسٹ کریں یا ٹائپ کریں"
+      link_optional_text: "ٹیکسٹ"
       blockquote_title: "بلاک متن"
       blockquote_text: "بلاک متن"
       code_title: "پہلے سے فارمیٹ کیا گیا ٹَیکسٹ"
@@ -2289,8 +2288,6 @@ ur:
         bookmarks: "ابھی تک آپ کے بُک مارک کیے ہوے کوئی ٹاپک نہیں ہیں۔"
         category: "کوئی %{category} کے ٹاپک موجود نہیں ہیں۔"
         top: "کوئی ٹاپ ٹاپک موجود نہیں ہیں۔"
-        educate:
-          new: '<p>آپ کے نئے عنوانات یہاں ظاہر ہوں گے۔ پہلے سے طے شدہ طور پر، عنوانات کو نئے تصور کیا جاتا ہے اور اگر وہ پچھلے 2 دنوں میں بنائے گئے تھے تو وہ <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> دکھائے گا۔</p><p>اسے تبدیل کرنے کے لیے اپنی <a href="%{userPrefsUrl}">ترجیحات</a> دیکھیں۔</p>'
       bottom:
         latest: "کوئی مزید تازہ ترین ٹاپک موجود نہیں ہیں۔"
         posted: "کوئی مزید پوسٹ کیے گئے ٹاپک موجود نہیں ہیں۔"

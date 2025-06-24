@@ -2518,11 +2518,9 @@ sq:
       italic_label: "I"
       italic_title: "Theksuar"
       italic_text: "tekst i theksuar"
-      link_title: "Lidhje"
       link_description: "shkruaj përshkrimin e lidhjes këtu"
       link_edit_action: "Përditëso"
-      link_optional_text: "titull fakultativ"
-      link_url_placeholder: "Ngjitni një URL ose shkruani për të kërkuar tema"
+      link_optional_text: "Tekst"
       blockquote_title: "Citim"
       blockquote_text: "Citim"
       code_title: "Tekst i paraformatuar"
@@ -2990,10 +2988,6 @@ sq:
         top: "Nuk ka tema popullore."
         hot: "Nuk ka tema të nxehta."
         filter: "Nuk ka tema."
-        educate:
-          new: '<p>Temat tuaja të reja do të shfaqen këtu. Si parazgjedhje, temat konsiderohen të reja dhe do të shfaqin një tregues <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> nëse janë krijuar në 2 ditët e fundit.</p><p>Vizitoni preferencat tuaja <a href="%{userPrefsUrl}"></a> për ta ndryshuar këtë.</p>'
-          unread: "<p>Këtu shfaqen temat tuaja të palexuara.</p><p>Si parazgjedhje, temat konsiderohen të palexuara dhe do të tregojnë numrat e palexuara <span class=\"badge unread-posts badge-notification\">1</span> nëse:</p><ul><li>Krijuar temën</li><li>Përgjigje temës</li><li>Lexoni temën për më shumë se 5 minuta</li></ul><p>Ose nëse e keni vendosur në mënyrë eksplicite temën në gjurmuar ose shikuar nëpërmjet \U0001F514 në secilën temë.</p><p>Vizitoni preferencat tuaja <a href=\"%{userPrefsUrl}\"></a> për ta ndryshuar këtë.</p>"
-          new_new: "<p>Temat tuaja të reja do të shfaqen këtu dhe temat tuaja të palexuara gjithashtu do të shfaqen. Si parazgjedhje, temat konsiderohen të reja dhe do të shfaqin një tregues <span class=\"badge new-topic badge-notification\" style=\"vertical-align:middle;line-height:inherit;\"></span> nëse janë krijuar në 2 ditët e fundit. Temat e palexuara do të shfaqin numërimin e palexuar <span class=\"badge unread-posts badge-notification\">1</span> nëse ju: keni krijuar temën, i jeni përgjigjur temës, e lexoni temën për më shumë se 5 minuta ose nëse e keni vendosur në mënyrë eksplicite temën në Gjurmuar ose Shikuar nëpërmjet \U0001F514 në secilën temë.</p><p>Vizitoni preferencat tuaja <a href=\"%{userPrefsUrl}\"></a> për ta ndryshuar këtë.</p>"
       bottom:
         latest: "Nuk ka më tema të reja."
         posted: "Nuk ka më tema të publikuara."
