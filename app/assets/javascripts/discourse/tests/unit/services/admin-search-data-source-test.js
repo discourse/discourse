@@ -136,6 +136,10 @@ module("Unit | Service | AdminSearchDataSource", function (hooks) {
       (page) => page.url === "/admin/config/flags"
     );
 
+    if (!secondPage) {
+      // eslint-disable-next-line no-console
+      console.log(JSON.stringify(this.subject.pageDataSourceItems));
+    }
     assert.notStrictEqual(secondPage, undefined, "second-level page exists");
     assert.strictEqual(
       secondPage.label,
