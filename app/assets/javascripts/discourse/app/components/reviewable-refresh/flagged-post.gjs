@@ -1,7 +1,7 @@
 import ReviewablePost from "discourse/components/reviewable-refresh/post";
 import { i18n } from "discourse-i18n";
 
-const ReviewableFlaggedPost = <template>
+<template>
   <ReviewablePost
     @reviewable={{@reviewable}}
     @userLabel={{i18n "review.flagged_user"}}
@@ -9,6 +9,4 @@ const ReviewableFlaggedPost = <template>
   >
     {{yield}}
   </ReviewablePost>
-</template>;
-
-export default ReviewableFlaggedPost;
+</template>
