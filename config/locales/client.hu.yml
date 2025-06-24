@@ -1801,9 +1801,9 @@ hu:
         after_10_minutes: "10 perc elteltével"
       notification_level_when_replying:
         label: "Feladáskor"
-        watch_topic: "Megfigyelt témák"
+        watch_topic: "Téma figyelése"
         track_topic: "Téma követése"
-        do_nothing: "Ne csinálj semmit"
+        do_nothing: "Ne tegyen semmit"
       topics_unread_when_closed: "Tekintse a témákat olvasatlannak, amikor bezárják"
       invited:
         title: "Meghívók"
@@ -2399,7 +2399,7 @@ hu:
         one: "Válasszon legalább %{count} elemet."
         other: "Válasszon legalább %{count} elemet."
       components:
-        filter_for_more: Szűrés a továbbiakhoz…
+        filter_for_more: További szűrés...
         categories_admin_dropdown:
           title: "Kategóriák kezelése"
         bulk_select_topics_dropdown:
@@ -2461,18 +2461,18 @@ hu:
         one: "<b>Figyelem!</b>Megemlítette a(z) <a href='%{group_link}'>%{group}</a> csoportot, azonban ennek a csoportnak több mint %{count} tagja van, amely több, mint a rendszergazda által beállított megemlítési korlát. Senki nem lesz értesítve."
         other: "<b>Figyelem!</b>Megemlítette a(z) <a href='%{group_link}'>%{group}</a> csoportot, azonban ennek a csoportnak több mint %{count} tagja van, amely több, mint a rendszergazda által beállított megemlítési korlát. Senki nem lesz értesítve."
       group_mentioned:
-        one: "A %{group} megemlítése értesít <a href='%{group_link}'>%{count} személyt</a>."
-        other: "A %{group} megemlítése értesít <a href='%{group_link}'>%{count} személyt</a>."
+        one: "A(z) %{group} megemlítése <a href='%{group_link}'>%{count} személyt</a> értesít."
+        other: "A(z) %{group} megemlítése <a href='%{group_link}'>%{count} személyt</a> értesít."
       larger_group_mentioned:
-        one: "A %{group} megemlítése értesít <a href='%{group_link}'>%{count} személyt</a>. Biztos benne?"
-        other: "A %{group} megemlítése értesít <a href='%{group_link}'>%{count} személyt</a>. Biztos benne?"
+        one: "A(z) %{group} megemlítése <a href='%{group_link}'>%{count} személyt</a> értesít. Biztos benne?"
+        other: "A(z) %{group} megemlítése <a href='%{group_link}'>%{count} személyt</a> értesít. Biztos benne?"
       cannot_see_mention:
         category: "Megemlítette @%{username} felhasználót, de nem lesz értesítve, mivel nincs hozzáférése ehhez a kategóriához. Hozzá kell adnia egy olyan csoporthoz, amely hozzáfér ehhez a kategóriához."
         private: "Megemlítette @%{username} felhasználót, de nem lesz értesítve, mert nem tudja megnézni ezt a személyes üzenetet. Meg kell hívnia ehhez a személyes üzenethez."
         muted_topic: "Megemlítette @%{username} felhasználót, de nem lesz értesítve, mert lenémította ezt a témát."
         not_allowed: "Megemlítette @%{username} felhasználót, de nem lesz értesítve, mert nem hívta meg a témához."
       cannot_see_group_mention:
-        not_mentionable: "Nem említheti a @%{group}csoportot."
+        not_mentionable: "Nem említheti meg a(z) @%{group} csoportot."
         some_not_allowed:
           one: "Megemlítetted @%{group} de csak %{count} felhasználó kap értesítést, mert a többi tag nem láthatja ezt a személyes üzenetet. Meg kell hívnod őket erre a személyes üzenetre."
           other: "Megemlítetted @%{group} de csak %{count} felhasználó kap értesítést, mert a többi tag nem láthatja ezt a személyes üzenetet. Meg kell hívnod őket erre a személyes üzenetre."
@@ -6645,7 +6645,7 @@ hu:
           other: "Nem lehet törölni az összes hozzászólást, mert a felhasználónak több mint %{count} hozzászólása van. (delete_all_posts_max)"
         delete_confirm_title: "Biztosan törli ezt a felhasználót? Ez végleges!"
         delete_confirm: "Általában előnyösebb a felhasználók anonimizálása, mint a törlésük, hogy elkerüljük a meglévő viták tartalmának eltávolítását."
-        delete_and_block: "Az e-mail és az IP-cím törlése és <b>blokkolása</b>"
+        delete_and_block: "Törölje és <b>blokkolja</b> ezt az e-mailt és IP-címet"
         delete_dont_block: "Csak törlés"
         deleting_user: "Felhasználó törlése"
         deleted: "A felhasználó el lett távolítva"
