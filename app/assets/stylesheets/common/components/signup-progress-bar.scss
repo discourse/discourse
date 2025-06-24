@@ -14,7 +14,7 @@
   gap: 1rem;
 
   @include viewport.until(sm) {
-    margin: 1.5rem 1rem;
+    margin: 1.5rem 0.85rem;
   }
 
   .account-created &,
