@@ -1984,12 +1984,11 @@ lt:
       italic_label: "I"
       italic_title: "Pasvirimas"
       italic_text: "pasviras tekstas"
-      link_title: "Nuoroda"
+      link_title: "nuoroda"
       link_description: "įveskite čia nuorodos aprašymą"
       link_dialog_action: "Įterpti"
       link_edit_action: "Atnaujinti"
-      link_optional_text: "papildoma antraštė"
-      link_url_placeholder: "Įklijuokite URL arba įveskite, kad ieškotumėte temų"
+      link_optional_text: "Tekstas"
       blockquote_title: "Blokuoti citatą"
       blockquote_text: "Blokuoti citatą"
       code_title: "Tekstas kodui"
@@ -2320,8 +2319,6 @@ lt:
         bookmarks: "Jūs dar neturite pažymėtų temų."
         category: "Nėra jokių temų kategorijoje %{category}."
         top: "Nėra jokių TOP temų."
-        educate:
-          unread: "<p>Jūsų neskaitytos temos rodomos čia.</p><p>Pagal numatytuosius nustatymus temos laikomos neskaitytomis ir bus rodomas neskaitytų skaičius <span class=\"badge unread-posts badge-notification\">1</span> jei:</p><ul><li>sukūrėte temą</li><li>atsakėte į temą</li><li>Temą skaitėte ilgiau nei 5 minutes</li></ul><p>Arba aiškiai kiekvienoje temoje nustatykite temą į Stebimą arba Stebimą naudodami \U0001F514.</p><p>Norėdami tai pakeisti, aplankykite savo <a href=\"%{userPrefsUrl}\">nustatymus</a></p>"
       bottom:
         latest: "Daugiau nėra jokių naujausių temų."
         posted: "Daugiau nėra jokių paskelbtų temų."

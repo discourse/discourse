@@ -2528,12 +2528,11 @@ it:
       italic_label: "I"
       italic_title: "Corsivo"
       italic_text: "testo in corsivo"
-      link_title: "Hyperlink"
+      link_title: "Link"
       link_description: "inserisci qui la descrizione del collegamento"
       link_dialog_action: "Inserisci"
       link_edit_action: "Aggiorna"
-      link_optional_text: "titolo opzionale"
-      link_url_placeholder: "Incolla un URL o digita per cercare argomenti"
+      link_optional_text: "Testo"
       blockquote_title: "Citazione"
       blockquote_text: "Citazione"
       code_title: "Testo preformattato"
@@ -3001,10 +3000,6 @@ it:
         top: "Non ci sono argomenti popolari."
         hot: "Non ci sono argomenti popolari."
         filter: "Non ci sono argomenti."
-        educate:
-          new: '<p>I tuoi nuovi argomenti appariranno qui. Per impostazione predefinita, gli argomenti sono considerati nuovi e mostreranno un <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span>indicatore se sono stati creati negli ultimi 2 giorni.</p><p>Visita le tue <a href="%{userPrefsUrl}">preferenze</a> per cambiare questa opzione.</p>'
-          unread: "<p>I tuoi argomenti non letti appaiono qui.</p><p>Per impostazione predefinita, gli argomenti sono considerati non letti e mostreranno un contatore <span class=\"badge unread-posts badge-notification\">1</span> se :</p><ul><li>Hai creato l'argomento</li><li>Hai risposto all'argomento</li><li>Hai letto l'argomento per più di 5 minuti</li></ul><p>Oppure se hai esplicitamente impostato l'argomento come Seguito o in Osservazione attivando \U0001F514 in ogni argomento.</p><p>Visita le tue <a href=\"%{userPrefsUrl}\">preferenze</a> per cambiare queste impostazioni.</p>"
-          new_new: "<p>I tuoi nuovi argomenti verranno visualizzati qui e verranno visualizzati anche i tuoi argomenti non letti. Per impostazione predefinita, gli argomenti sono considerati nuovi e mostreranno un indicatore <span class=\"badge new-topic badge-notification\" style=\"vertical-align:middle;line-height:inherit;\"></span> se sono stati creati negli ultimi 2 giorni. Gli argomenti non letti mostreranno un contatore <span class=\"badge unread-posts badge-notification\">1</span> se: hai creato l'argomento, hai risposto all'argomento, hai letto l'argomento per più di 5 minuti o se hai esplicitamente impostato l'argomento su Seguito o in Osservazione attivando \U0001F514 in ogni argomento.</p><p>Visita le tue <a href=\"%{userPrefsUrl}\">preferenze</a> per modificare questa impostazione.</p>"
       bottom:
         latest: "Non ci sono altri argomenti più recenti."
         posted: "Non ci sono altri argomenti pubblicati."
