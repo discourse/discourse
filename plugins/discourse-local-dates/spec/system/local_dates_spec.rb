@@ -86,8 +86,8 @@ describe "Local dates", type: :system do
     it "allows selecting a date without a time and inserts into the post" do
       topic_page.visit_topic_and_open_composer(topic)
       expect(topic_page).to have_expanded_composer
-      find(".d-editor-button-bar .toolbar-popup-menu-options").click
-      page.find(".toolbar-popup-menu-options [data-name=local-dates]").click
+      find(".toolbar-menu__options-trigger").click
+      page.find("button[data-name=local-dates]").click
       expect(insert_datetime_modal).to be_open
       insert_datetime_modal.calendar_date_time_picker.select_year(year)
       insert_datetime_modal.calendar_date_time_picker.select_day(16)
@@ -100,8 +100,8 @@ describe "Local dates", type: :system do
     it "allows selecting a date with a time and inserts into the post" do
       topic_page.visit_topic_and_open_composer(topic)
       expect(topic_page).to have_expanded_composer
-      find(".d-editor-button-bar .toolbar-popup-menu-options").click
-      page.find(".toolbar-popup-menu-options [data-name=local-dates]").click
+      find(".toolbar-menu__options-trigger").click
+      page.find("button[data-name=local-dates]").click
       expect(insert_datetime_modal).to be_open
       insert_datetime_modal.calendar_date_time_picker.select_year(year)
       insert_datetime_modal.calendar_date_time_picker.select_day(16)
@@ -116,8 +116,8 @@ describe "Local dates", type: :system do
     it "allows selecting a start date and time and an end date and time" do
       topic_page.visit_topic_and_open_composer(topic)
       expect(topic_page).to have_expanded_composer
-      find(".d-editor-button-bar .toolbar-popup-menu-options").click
-      page.find(".toolbar-popup-menu-options [data-name=local-dates]").click
+      find(".toolbar-menu__options-trigger").click
+      page.find("button[data-name=local-dates]").click
       expect(insert_datetime_modal).to be_open
       insert_datetime_modal.calendar_date_time_picker.select_year(year)
       insert_datetime_modal.calendar_date_time_picker.select_day(16)
@@ -139,8 +139,8 @@ describe "Local dates", type: :system do
 
       expect(topic_page).to have_expanded_composer
 
-      find(".d-editor-button-bar .toolbar-popup-menu-options").click
-      page.find(".toolbar-popup-menu-options [data-name=local-dates]").click
+      find(".toolbar-menu__options-trigger").click
+      page.find("button[data-name=local-dates]").click
 
       expect(insert_datetime_modal).to be_open
 
