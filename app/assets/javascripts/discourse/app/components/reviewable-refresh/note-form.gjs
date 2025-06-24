@@ -6,6 +6,8 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { not } from "truth-helpers";
 import Form from "discourse/components/form";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
@@ -19,6 +21,7 @@ import { i18n } from "discourse-i18n";
  * @param {Function} [onNoteCreated] - Callback function called when a note is successfully created.
  */
 export default class ReviewableNoteForm extends Component {
+  @service appEvents;
   @service currentUser;
 
   /**
@@ -66,6 +69,14 @@ export default class ReviewableNoteForm extends Component {
 
       // Clear the submitted content
       await this.formApi.set("content", "");
+
+      // Notify any interested plugins that a note has been created.
+      this.appEvents.trigger(
+        "reviewablenote:created",
+        data,
+        this.args.reviewable,
+        this.formApi
+      );
 
       // Notify parent component
       if (this.args.onNoteCreated) {
@@ -163,6 +174,12 @@ export default class ReviewableNoteForm extends Component {
             {{/if}}
           </div>
         </form.Field>
+
+        <PluginOutlet
+          @name="reviewable-note-form-after-note"
+          @connectorTagName="div"
+          @outletArgs={{lazyHash form=form}}
+        />
 
         <form.Actions>
           <form.Submit
