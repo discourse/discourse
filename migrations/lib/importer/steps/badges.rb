@@ -54,8 +54,8 @@ module Migrations::Importer::Steps
       SELECT b.*,
              mup.discourse_id AS resolved_image_upload_id
       FROM badges b
-           LEFT JOIN mapped.ids mb ON b.original_id = mb.original_id AND mb.type = ?
-           LEFT JOIN mapped.ids mup ON b.image_upload_id = mup.original_id AND mup.type = ?
+           LEFT JOIN mapped.ids mb ON b.original_id = mb.original_id AND mb.type = ?1
+           LEFT JOIN mapped.ids mup ON b.image_upload_id = mup.original_id AND mup.type = ?2
       WHERE mb.original_id IS NULL
       ORDER BY b.ROWID
     SQL
