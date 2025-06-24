@@ -117,6 +117,7 @@ module Jobs
       )
 
     def execute(args)
+      Rails.logger.warn("User ID?: #{args[:user_id]}")
       @archive_for_user = User.find_by(id: args[:user_id])
 
       if args[:requesting_user_id].present?
@@ -182,8 +183,11 @@ module Jobs
         FileUtils.rm_rf(dirname)
       end
 
+      provide_results(user_export, zip_filename, export_title)
+    end
+
+    def provide_results(user_export, zip_filename, export_title)
       begin
-        # create upload
         create_upload_for_user(user_export, zip_filename)
       ensure
         post = notify_user(user_export, export_title)
