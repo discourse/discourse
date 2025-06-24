@@ -292,3 +292,96 @@ task "themes:qunit_all_official" => :environment do |task, args|
   Rake::Task["themes:qunit"].reenable
   Rake::Task["themes:qunit"].invoke("ids", theme_ids_with_qunit_tests.join("|"))
 end
+
+HORIZON_REMOTE_PATHS = %w[
+  github.com/discourse-org/horizon
+  github.com/discourse-org/nextgen-theme
+  github.com/discourse/horizon
+]
+
+def get_horizon_themes
+  Theme.joins(:remote_theme).where(<<~SQL)
+    remote_themes.remote_url LIKE ANY (ARRAY[#{HORIZON_REMOTE_PATHS.map { |path| "'%#{path}%'" }.join(", ")}])
+  SQL
+end
+
+desc "Remove duplicated Horizon themes"
+task "themes:deduplicate_horizon" => :environment do |task, args|
+  horizon_themes = get_horizon_themes
+
+  abort "🟩 No Horizon themes found" if horizon_themes.empty?
+
+  # v0 will handle only one horizon theme
+  abort("⭕ More than one horizon theme installed") if horizon_themes.count > 1
+
+  manual_horizon_theme = horizon_themes.first
+  system_horizon_theme = Theme.horizon_theme
+
+  Theme.transaction do
+    # Enable hidden horizon theme if it is not enabled
+    if !SiteSetting.experimental_system_themes_map.include?("horizon")
+      SiteSetting.experimental_system_themes =
+        (SiteSetting.experimental_system_themes_map << "horizon").join("|")
+    end
+
+    # Make the system horizon selectable if manual horizon is selectable
+    system_horizon_theme.update!(user_selectable: manual_horizon_theme.user_selectable)
+
+    # Move all components of the manual horizon theme to the system horizon theme
+    ChildTheme
+      .where(parent_theme_id: manual_horizon_theme.id)
+      .where.not(child_theme_id: system_horizon_theme.child_themes.pluck(:id))
+      .find_each { |child_theme| child_theme.update!(parent_theme_id: system_horizon_theme.id) }
+
+    # Update user options to point to the system horizon theme
+    UserOption
+      .where(theme_ids: [manual_horizon_theme.id])
+      .find_each { |user_option| user_option.update!(theme_ids: [system_horizon_theme.id]) }
+
+    # Move color palettes
+    color_schemes_map =
+      manual_horizon_theme
+        .color_schemes
+        .reduce({}) do |map, color_scheme|
+          map[color_scheme.id] = system_horizon_theme
+            .color_schemes
+            .find_by(name: color_scheme.name)
+            .id
+          map
+        end
+    if manual_horizon_theme.color_scheme.theme_id == manual_horizon_theme.id
+      system_horizon_theme.update!(
+        color_scheme_id: color_schemes_map[manual_horizon_theme.color_scheme_id],
+      )
+    elsif manual_horizon_theme.color_scheme_id
+      system_horizon_theme.update!(color_scheme_id: manual_horizon_theme.color_scheme_id)
+    end
+    UserOption
+      .where(color_scheme_id: color_schemes_map.keys)
+      .find_each do |user_option|
+        user_option.update!(color_scheme_id: color_schemes_map[user_option.color_scheme_id])
+      end
+    UserOption
+      .where(dark_scheme_id: color_schemes_map.keys)
+      .find_each do |user_option|
+        user_option.update!(dark_scheme_id: color_schemes_map[user_option.dark_scheme_id])
+      end
+
+    # Move theme settings
+    ThemeSetting
+      .where(theme_id: manual_horizon_theme.id)
+      .find_each { |theme_setting| theme_setting.update!(theme_id: system_horizon_theme.id) }
+
+    # Move theme translations
+    ThemeTranslationOverride
+      .where(theme_id: manual_horizon_theme.id)
+      .find_each { |translation| translation.update!(theme_id: system_horizon_theme.id) }
+
+    # Change default theme to system horizon theme if manual horizon theme is default
+    SiteSetting.default_theme_id = system_horizon_theme.id if manual_horizon_theme.default?
+
+    # Delete the manual horizon theme and color palettes
+    manual_horizon_theme.color_schemes.map(&:destroy!)
+    manual_horizon_theme.destroy!
+  end
+end
