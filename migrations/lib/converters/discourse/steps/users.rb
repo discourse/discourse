@@ -43,18 +43,13 @@ module Migrations::Converters::Discourse
     end
 
     def process_item(item)
-      avatar_upload_id = nil
-      avatar_type = nil
+avatar_type =
+  case item[:uploaded_avatar_id]
+  when item[:avatar_custom_upload_id] then 1 # TODO Enum
+  when item[:gravatar_upload_id] then 2 # TODO Enum
+  end
 
-      if item[:uploaded_avatar_id]
-        if item[:uploaded_avatar_id] == item[:avatar_custom_upload_id]
-          avatar_upload_id = @avatar_upload_creator.create_for(item)
-          avatar_type = 1 # TODO Enum
-        elsif item[:uploaded_avatar_id] == item[:gravatar_upload_id]
-          avatar_upload_id = @avatar_upload_creator.create_for(item)
-          avatar_type = 2 # TODO Enum
-        end
-      end
+avatar_upload_id = @avatar_upload_creator.create_for(item) if avatar_type
 
       IntermediateDB::User.create(
         original_id: item[:id],
