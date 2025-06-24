@@ -26,7 +26,6 @@ module Migrations::Converters::Discourse
                                      FROM user_avatars
                                      ORDER BY user_id, id DESC)
         SELECT u.*,
-               up.id                AS avatar_id,
                up.url               AS avatar_url,
                up.original_filename AS avatar_filename,
                up.origin            AS avatar_origin,
@@ -43,13 +42,14 @@ module Migrations::Converters::Discourse
     end
 
     def process_item(item)
-avatar_type =
-  case item[:uploaded_avatar_id]
-  when item[:avatar_custom_upload_id] then 1 # TODO Enum
-  when item[:gravatar_upload_id] then 2 # TODO Enum
-  end
-
-avatar_upload_id = @avatar_upload_creator.create_for(item) if avatar_type
+      avatar_type =
+        case item[:uploaded_avatar_id]
+        when item[:avatar_custom_upload_id]
+          1 # TODO Enum
+        when item[:gravatar_upload_id]
+          2 # TODO Enum
+        end
+      avatar_upload_id = @avatar_upload_creator.create_for(item) if avatar_type
 
       IntermediateDB::User.create(
         original_id: item[:id],
