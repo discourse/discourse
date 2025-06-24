@@ -43,6 +43,7 @@ module SiteSettings
       tl4
       tld
       txt
+      ui
       url
       ux
     ].freeze
