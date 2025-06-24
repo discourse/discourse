@@ -13,6 +13,7 @@ const SidebarSections = <template>
     <AnonymousSections
       @collapsableSections={{@collapsableSections}}
       @toggleNavigationMenu={{@toggleNavigationMenu}}
+      @hideApiSections={{@hideApiSections}}
     />
   {{/if}}
 </template>;
