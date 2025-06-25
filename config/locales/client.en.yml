@@ -496,9 +496,11 @@ en:
     drafts:
       label: "Drafts"
       label_with_count: "Drafts (%{count})"
+      delete_all_label: "Delete all drafts"
       resume: "Resume"
       remove: "Remove"
       remove_confirmation: "Are you sure you want to delete this draft?"
+      remove_all_confirmation: "Are you sure you want to delete all your drafts?"
       new_topic: "New topic draft"
       new_private_message: "New personal message draft"
       edit_topic: "Edit topic draft"

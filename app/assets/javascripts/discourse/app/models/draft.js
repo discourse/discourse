@@ -9,6 +9,12 @@ export default class Draft extends EmberObject {
     });
   }
 
+  static clearAll() {
+    return ajax(`/drafts/destroy-all`, {
+      type: "DELETE",
+    });
+  }
+
   static get(key) {
     return ajax(`/drafts/${key}.json`);
   }
