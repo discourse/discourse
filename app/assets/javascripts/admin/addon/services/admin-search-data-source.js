@@ -222,13 +222,9 @@ export default class AdminSearchDataSource extends Service {
   };
   @tracked _mapCached = false;
 
-  get isLoaded() {
-    return this._mapCached;
-  }
-
   async buildMap() {
-    if (this.isLoaded) {
-      return Promise.resolve();
+    if (this._mapCached) {
+      return;
     }
 
     ADMIN_NAV_MAP.forEach((navMapSection) => {
@@ -258,8 +254,6 @@ export default class AdminSearchDataSource extends Service {
     this.#processThemesAndComponents(allItems.themes_and_components);
     this.#processReports(allItems.reports);
     this._mapCached = true;
-
-    return Promise.resolve();
   }
 
   search(filter) {
