@@ -74,18 +74,18 @@ RSpec.describe Themes::ThemeSiteSettingManager do
             .find { |e| e[:event_name] == :theme_site_setting_changed }
 
         expect(event).to be_present
-        expect(event[:params]).to eq([:enable_welcome_banner, nil, false])
+        expect(event[:params]).to eq([:enable_welcome_banner, true, false])
       end
     end
 
     context "when updating an existing theme site setting" do
       fab!(:theme_site_setting) do
-        Fabricate(
-          :theme_site_setting_with_service,
-          theme: theme,
-          name: "enable_welcome_banner",
-          value: true,
-        )
+        # NOTE: This example is a little contrived, because `true` is the same as the site setting default,
+        # it would usually not ever be inserted into ThemeSiteSetting.
+        #
+        # However, we don't have any theme site settings yet with an enum with > 2 choices,
+        # so we have to fake things a bit here to make sure the update behaviour works.
+        Fabricate(:theme_site_setting, theme: theme, name: "enable_welcome_banner", value: true)
       end
 
       it "runs successfully" do
@@ -186,13 +186,13 @@ RSpec.describe Themes::ThemeSiteSettingManager do
       end
     end
 
-    context "when setting value to the same as the site setting default" do
+    context "when changing value to the same as the site setting default" do
       let!(:theme_site_setting) do
         Fabricate(
           :theme_site_setting_with_service,
           theme: theme,
           name: "enable_welcome_banner",
-          value: true,
+          value: false,
         )
       end
 

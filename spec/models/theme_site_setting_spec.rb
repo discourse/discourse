@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
 RSpec.describe ThemeSiteSetting do
-  fab!(:theme)
+  fab!(:theme_1) { Fabricate(:theme) }
+  fab!(:theme_2) { Fabricate(:theme) }
   fab!(:theme_site_setting_1) do
     Fabricate(
       :theme_site_setting_with_service,
-      theme: theme,
+      theme: theme_1,
       name: "enable_welcome_banner",
       value: false,
     )
@@ -13,32 +14,43 @@ RSpec.describe ThemeSiteSetting do
   fab!(:theme_site_setting_2) do
     Fabricate(
       :theme_site_setting_with_service,
-      theme: theme,
+      theme: theme_1,
       name: "search_experience",
       value: "search_field",
     )
   end
 
-  describe ".safe_all" do
-    it "returns.safe_all theme site settings" do
-      expect(ThemeSiteSetting.safe_all).to match_array([theme_site_setting_1, theme_site_setting_2])
+  describe ".generate_theme_map" do
+    it "returns a map of theme ids mapped to theme site settings, using site setting defaults if the setting records do not exist" do
+      expect(ThemeSiteSetting.generate_theme_map).to include(
+        {
+          theme_1.id => {
+            enable_welcome_banner: false,
+            search_experience: "search_field",
+          },
+          theme_2.id => {
+            enable_welcome_banner: true,
+            search_experience: "search_icon",
+          },
+        },
+      )
     end
 
     context "when skipping redis" do
       before { GlobalSetting.skip_redis = true }
 
-      it "returns []" do
+      it "returns {}" do
         GlobalSetting.skip_redis = true
-        expect(ThemeSiteSetting.safe_all).to eq([])
+        expect(ThemeSiteSetting.generate_theme_map).to eq({})
       end
     end
 
     context "when skipping db" do
       before { GlobalSetting.skip_db = true }
 
-      it "returns []" do
+      it "returns {}" do
         GlobalSetting.skip_db = true
-        expect(ThemeSiteSetting.safe_all).to eq([])
+        expect(ThemeSiteSetting.generate_theme_map).to eq({})
       end
     end
 
@@ -51,8 +63,8 @@ RSpec.describe ThemeSiteSetting do
           .returns(false)
       end
 
-      it "returns []" do
-        expect(ThemeSiteSetting.safe_all).to eq([])
+      it "returns {}" do
+        expect(ThemeSiteSetting.generate_theme_map).to eq({})
       end
     end
   end
