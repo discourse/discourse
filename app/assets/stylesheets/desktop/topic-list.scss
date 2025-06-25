@@ -29,14 +29,14 @@
   margin: 0 0 10px;
 
   .topic-list-data {
-    padding: 0.8em 0.33em;
+    padding: var(--space-3) var(--space-1);
 
     &:first-of-type {
-      padding-inline: 0.67em;
+      padding-inline-start: var(--space-3);
     }
 
     &:last-of-type {
-      padding-right: 0.67em;
+      padding-inline-end: var(--space-3);
     }
 
     th & {
@@ -46,7 +46,7 @@
 
   button.bulk-select {
     padding: 0;
-    margin-right: 0.5em;
+    margin-right: var(--space-2);
     line-height: var(--line-height-large);
   }
 
@@ -56,7 +56,7 @@
 
     label {
       margin: 0;
-      padding: 0.8em 0.67em 1.1em 0.67em;
+      padding: var(--space-3) var(--space-2);
       cursor: pointer;
     }
 
@@ -69,8 +69,8 @@
     background: none;
     border: none;
     line-height: var(--line-height-large);
-    padding-left: 0.5em;
-    padding-right: 0.5em;
+    padding-left: var(--space-2);
+    padding-right: var(--space-2);
     position: relative;
 
     &.active {
