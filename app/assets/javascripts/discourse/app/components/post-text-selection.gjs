@@ -176,6 +176,7 @@ export default class PostTextSelection extends Component {
       trapTab: false,
       closeOnScroll: false,
       data: {
+        supportsFastEdit: this.computeSupportsFastEdit(cooked, quoteState),
         canEditPost: this.canEditPost,
         canCopyQuote: this.canCopyQuote,
         topic: this.args.topic,
