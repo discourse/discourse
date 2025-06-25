@@ -1,6 +1,29 @@
+// @ts-check
 import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
 import { translateModKey } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
+
+/**
+ * @typedef ToolbarButton
+ * @property {string} id
+ * @property {string} [group]
+ * @property {string} [tabindex]
+ * @property {string} [className]
+ * @property {string} [label]
+ * @property {string} [icon]
+ * @property {string} [href]
+ * @property {Function} action
+ * @property {Function} [perform]
+ * @property {Function} [sendAction]
+ * @property {boolean} [trimLeading]
+ * @property {boolean} [preventFocus]
+ * @property {Function} condition
+ * @property {boolean} [hideShortcutInTitle]
+ * @property {string} title
+ * @property {string} [shortcut]
+ * @property {boolean} [unshift]
+ * @property {Function} [active]
+ */
 
 function getButtonLabel(labelKey, defaultLabel) {
   // use the Font Awesome icon if the label matches the default
@@ -40,13 +63,15 @@ export class ToolbarBase {
    * @param {string=} buttonAttrs.shortcut
    * @param {boolean=} buttonAttrs.unshift
    * @param {boolean=} buttonAttrs.disabled
+   * @param {Function=} buttonAttrs.active callback function that receives state and returns boolean
    */
   addButton(buttonAttrs) {
-    const g = this.groups.findBy("group", buttonAttrs.group || DEFAULT_GROUP);
+    const group = this.groups.find(
+      (item) => item.group === (buttonAttrs.group || DEFAULT_GROUP)
+    );
 
-    const createdButton = Object.defineProperties(
-      {},
-      Object.getOwnPropertyDescriptors(buttonAttrs)
+    const createdButton = /** @type {ToolbarButton} */ (
+      Object.defineProperties({}, Object.getOwnPropertyDescriptors(buttonAttrs))
     );
 
     createdButton.tabindex ||= "-1";
@@ -89,19 +114,23 @@ export class ToolbarBase {
     }
 
     if (buttonAttrs.unshift) {
-      g.buttons.unshift(createdButton);
+      group.buttons.unshift(createdButton);
     } else {
-      g.buttons.push(createdButton);
+      group.buttons.push(createdButton);
     }
   }
 
-  addSeparator({ group = DEFAULT_GROUP, condition }) {
-    const g = this.groups.findBy("group", group);
-    if (!g) {
-      throw new Error(`Couldn't find toolbar group ${group}`);
+  addSeparator({ group: groupName = DEFAULT_GROUP, condition }) {
+    const group = this.groups.find((item) => item.group === groupName);
+
+    if (!group) {
+      throw new Error(`Couldn't find toolbar group ${groupName}`);
     }
 
-    g.buttons.push({ type: "separator", condition: condition || (() => true) });
+    group.buttons.push({
+      type: "separator",
+      condition: condition || (() => true),
+    });
   }
 }
 
@@ -129,6 +158,7 @@ export default class Toolbar extends ToolbarBase {
       preventFocus: true,
       trimLeading: true,
       perform: (e) => e.applySurround("**", "**", "bold_text"),
+      active: ({ state }) => state.inBold,
     });
 
     const italicLabel = getButtonLabel("composer.italic_label", "I");
@@ -142,6 +172,7 @@ export default class Toolbar extends ToolbarBase {
       preventFocus: true,
       trimLeading: true,
       perform: (e) => e.applySurround("*", "*", "italic_text"),
+      active: ({ state }) => state.inItalic,
     });
 
     if (opts.showLink) {
@@ -153,6 +184,7 @@ export default class Toolbar extends ToolbarBase {
         preventFocus: true,
         trimLeading: true,
         sendAction: (event) => this.context.send("showLinkModal", event),
+        active: ({ state }) => state.inLink,
       });
     }
 
@@ -167,6 +199,7 @@ export default class Toolbar extends ToolbarBase {
           applyEmptyLines: true,
           multiline: true,
         }),
+      active: ({ state }) => state.inBlockquote,
     });
 
     if (!this.capabilities.touch) {
@@ -178,6 +211,7 @@ export default class Toolbar extends ToolbarBase {
         preventFocus: true,
         trimLeading: true,
         perform: (e) => e.formatCode(),
+        active: ({ state }) => state.inCode || state.inCodeBlock,
       });
 
       this.addButton({
@@ -188,6 +222,7 @@ export default class Toolbar extends ToolbarBase {
         title: "composer.ulist_title",
         preventFocus: true,
         perform: (e) => e.applyList("* ", "list_item"),
+        active: ({ state }) => state.inBulletList,
       });
 
       this.addButton({
@@ -202,6 +237,7 @@ export default class Toolbar extends ToolbarBase {
             (i) => (!i ? "1. " : `${parseInt(i, 10) + 1}. `),
             "list_item"
           ),
+        active: ({ state }) => state.inOrderedList,
       });
     }
 
