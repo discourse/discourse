@@ -4,18 +4,6 @@ import { translateModKey } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 
 /**
- * @typedef ToolbarState
- * @property {boolean} inBold
- * @property {boolean} inItalic
- * @property {boolean} inLink
- * @property {boolean} inBulletList
- * @property {boolean} inOrderedList
- * @property {boolean} inCode
- * @property {boolean} inCodeBlock
- * @property {boolean} inBlockquote
- */
-
-/**
  * @typedef ToolbarButton
  * @property {string} id
  * @property {string} [group]
