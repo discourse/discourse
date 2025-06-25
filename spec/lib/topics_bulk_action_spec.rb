@@ -293,6 +293,44 @@ RSpec.describe TopicsBulkAction do
       end
     end
 
+    context "when notification_level_id is blank" do
+      it "raises an invalid parameters error" do
+        tba =
+          TopicsBulkAction.new(
+            topic.user,
+            [topic.id],
+            type: "change_notification_level",
+            notification_level_id: "",
+          )
+        expect { tba.perform! }.to raise_error(
+          Discourse::InvalidParameters,
+          /notification_level_id/,
+        )
+      end
+
+      it "raises an invalid parameters error when notification_level_id is nil" do
+        tba =
+          TopicsBulkAction.new(
+            topic.user,
+            [topic.id],
+            type: "change_notification_level",
+            notification_level_id: nil,
+          )
+        expect { tba.perform! }.to raise_error(
+          Discourse::InvalidParameters,
+          /notification_level_id/,
+        )
+      end
+
+      it "raises an invalid parameters error when notification_level_id is missing" do
+        tba = TopicsBulkAction.new(topic.user, [topic.id], type: "change_notification_level")
+        expect { tba.perform! }.to raise_error(
+          Discourse::InvalidParameters,
+          /notification_level_id/,
+        )
+      end
+    end
+
     context "when the user can't see the topic" do
       it "doesn't change the level" do
         Guardian.any_instance.expects(:can_see?).returns(false)

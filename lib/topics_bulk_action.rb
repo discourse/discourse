@@ -154,9 +154,13 @@ class TopicsBulkAction
   end
 
   def change_notification_level
+    notification_level_id = @operation[:notification_level_id]
+
+    raise Discourse::InvalidParameters.new(:notification_level_id) if notification_level_id.blank?
+
     topics.each do |t|
       if guardian.can_see?(t)
-        TopicUser.change(@user, t.id, notification_level: @operation[:notification_level_id].to_i)
+        TopicUser.change(@user, t.id, notification_level: notification_level_id.to_i)
         @changed_ids << t.id
       end
     end
