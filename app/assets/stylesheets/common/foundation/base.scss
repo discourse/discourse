@@ -10,13 +10,14 @@
   --d-nav-pill-border-radius: var(--d-border-radius);
   --d-input-border-radius: var(--d-border-radius);
   --d-content-background: initial;
-  --space-0: 0.125rem; // 2px
-  --space-1: 0.25rem; // 4px
-  --space-2: calc(0.25rem * 2);
-  --space-3: calc(0.25rem * 3);
-  --space-4: calc(0.25rem * 4);
-  --space-5: calc(0.25rem * 5);
-  --space-6: calc(0.25rem * 6);
+  --space: 0.25rem; // 4px
+  --space-0: calc(var(--space) / 2); // 2px
+  --space-1: var(--space); // 4px
+  --space-2: calc(var(--space) * 2);
+  --space-3: calc(var(--space) * 3);
+  --space-4: calc(var(--space) * 4);
+  --space-5: calc(var(--space) * 5);
+  --space-6: calc(var(--space) * 6);
 }
 
 // --------------------------------------------------
