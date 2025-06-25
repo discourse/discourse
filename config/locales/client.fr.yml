@@ -2530,12 +2530,11 @@ fr:
       italic_label: "I"
       italic_title: "Italique"
       italic_text: "texte en italique"
-      link_title: "Lien"
+      link_title: "Insérer un lien"
       link_description: "saisir ici la description du lien"
       link_dialog_action: "Insérer"
       link_edit_action: "Mettre à jour"
-      link_optional_text: "titre (facultatif)"
-      link_url_placeholder: "Collez une adresse URL ou commencez votre saisie pour rechercher un sujet dans le forum"
+      link_optional_text: "Texte"
       blockquote_title: "Citation"
       blockquote_text: "Citation"
       code_title: "Texte préformaté"
@@ -3003,10 +3002,6 @@ fr:
         top: "Il n'y a pas de meilleurs sujets."
         hot: "Il n'y a aucun sujet populaire."
         filter: "Il n'y a pas de sujets."
-        educate:
-          new: '<p>Vos nouveaux sujets vont apparaître ici. Par défaut, les sujets sont considérés comme nouveaux et affichent l''indicateur <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> lorsqu''ils ont été créés depuis moins de 2 jours.</p><p>Vous pouvez modifier cela dans vos <a href="%{userPrefsUrl}">préférences</a>.</p>'
-          unread: "<p>Vos sujets non lus apparaissent ici.</p><p>Par défaut, les sujets considérés comme non lus et qui affichent le nombre de messages non lus <span class=\"badge unread-posts badge-notification\">1</span> sont ceux :</p> <ul><li>que vous avez créés</li><li>auxquels vous avez répondu</li><li>que vous avez lus plus de 5 minutes</li></ul><p>ou que vous avez explicitement suivis ou surveillés via le menu \U0001F514 de chaque sujet.</p><p>Vous pouvez modifier cela dans vos <a href=\"%{userPrefsUrl}\">préférences</a>.</p>"
-          new_new: "<p>Vos nouveaux sujets apparaîtront ici et vos sujets non lus seront également affichés. Par défaut, les sujets sont considérés comme nouveaux et afficheront un indicateur <span class=\"badge new-topic badge-notification\" style=\"vertical-align:middle;line-height:inherit;\"></span> s'ils ont été créés au cours des 2 derniers jours. Les sujets non lus indiqueront le nombre de sujets non lus <span class=\"badge unread-posts badge-notification\">1</span> si vous avez créé le sujet, répondu au sujet, lu le sujet pendant plus de 5 minutes, ou si vous avez explicitement défini le sujet comme suivi ou surveillé via le \U0001F514 dans chaque sujet.</p><p>Accédez à vos <a href=\"%{userPrefsUrl}\">préférences</a> pour modifier cela.</p>"
       bottom:
         latest: "Il n'y a pas d'autres sujets récents à consulter."
         posted: "Il n'y a pas d'autres sujets publiés à consulter."

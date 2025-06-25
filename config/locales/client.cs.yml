@@ -2875,14 +2875,12 @@ cs:
       italic_label: "I"
       italic_title: "Kurzíva"
       italic_text: "text kurzívou"
-      link_title: "Hypertextový odkaz"
+      link_title: "Odkaz"
       link_description: "sem vložte popis odkazu"
-      link_dialog_title: "Vložit hypertextový odkaz"
       link_dialog_action: "Vložit"
-      link_edit_title: "Upravit hypertextový odkaz"
+      link_edit_title: "Upravit odkaz"
       link_edit_action: "Aktualizovat"
-      link_optional_text: "volitelný popis"
-      link_url_placeholder: "Vložte URL nebo pište pro vyhledání témat"
+      link_optional_text: "Text"
       blockquote_title: "Bloková citace"
       blockquote_text: "Bloková citace"
       code_title: "Předformátovaný text"
@@ -3427,10 +3425,6 @@ cs:
         top: "Nejsou tu žádná populární témata."
         hot: "Nejsou tu žádná žhavá témata."
         filter: "Nejsou tu žádná témata."
-        educate:
-          new: '<p>Zde se zobrazí vaše nová témata. Ve výchozím nastavení jsou témata považována za nová a zobrazí se u nich indikátor <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span>, pokud byla vytvořena v posledních 2 dnech.</p><p>Navštivte své <a href="%{userPrefsUrl}">předvolby</a> a změňte to.</p>'
-          unread: "<p>Zde se zobrazují vaše nepřečtená témata.</p><p>Ve výchozím nastavení jsou témata považována za nepřečtená a zobrazí se počet nepřečtených témat <span class=\"badge unread-posts badge-notification\">1</span>, pokud jste:</p><ul><li>vytvořili téma</li><li>odpověděli na téma</li><li>četli téma déle než 5 minut</li></ul><p>nebo pokud jste téma explicitně nastavili jako hlídané nebo sledované prostřednictvím \U0001F514 v každém tématu.</p><p>Pokud to chcete změnit, navštivte své <a href=\"%{userPrefsUrl}\">předvolby</a>.</p>"
-          new_new: "<p>Zde se zobrazí vaše nová a také nepřečtená témata. Ve výchozím nastavení jsou témata považována za nová a zobrazí se u nich indikátor <span class=\"badge new-topic badge-notification\" style=\"vertical-align:middle;line-height:inherit;\"></span>, pokud byla vytvořena v posledních 2 dnech. U nepřečtených témat se zobrazí počet nepřečtených <span class=\"badge unread-posts badge-notification\">1</span>, pokud jste: téma vytvořili, na téma odpověděli, téma četli déle než 5 minut nebo pokud jste téma explicitně nastavili jako hlídané nebo sledované prostřednictvím \U0001F514 v každém tématu.</p><p>Chcete-li toto nastavení změnit, navštivte <a href=\"%{userPrefsUrl}\">předvolby</a> .</p>"
       bottom:
         latest: "Nejsou tu žádná další nejnovější témata."
         posted: "Nejsou tu žádná další zaslaná témata k přečtení."

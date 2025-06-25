@@ -131,7 +131,7 @@ module PageObjects
 
       def set_locale(locale)
         Components::DMenu.new(POST_LANGUAGE_SELECTOR).expand
-        find("#{POST_LANGUAGE_SELECTOR} button", text: locale)
+        find("#{POST_LANGUAGE_SELECTOR} button", text: locale).click
       end
 
       def switch_category(category_name)

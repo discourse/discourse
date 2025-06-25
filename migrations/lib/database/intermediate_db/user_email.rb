@@ -9,22 +9,22 @@ module Migrations::Database::IntermediateDB
     SQL = <<~SQL
       INSERT INTO user_emails (
         email,
+        user_id,
         created_at,
-        "primary",
-        user_id
+        "primary"
       )
       VALUES (
         ?, ?, ?, ?
       )
     SQL
 
-    def self.create(email:, created_at: nil, primary: nil, user_id:)
+    def self.create(email:, user_id:, created_at: nil, primary: nil)
       ::Migrations::Database::IntermediateDB.insert(
         SQL,
         email,
+        user_id,
         ::Migrations::Database.format_datetime(created_at),
         ::Migrations::Database.format_boolean(primary),
-        user_id,
       )
     end
   end

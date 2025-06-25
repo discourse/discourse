@@ -5459,8 +5459,6 @@ pl_PL:
       duplicate_ids: "ma zduplikowane identyfikatory"
       reserved_id: "ma zastrzeżone słowo kluczowe jako id: %{id}"
       unsafe_description: "zawiera niebezpieczny opis HTML"
-  content_localization:
-    not_allowed: "Nie możesz lokalizować tej zawartości."
   activemodel:
     errors:
       <<: *errors
