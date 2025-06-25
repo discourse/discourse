@@ -103,11 +103,11 @@
 }
 
 #reply-control.composer-action-add_translation {
-  .d-editor-preview .d-editor-translation-preview-wrapper {
+  .d-editor-translation-preview-wrapper {
     border-color: var(--d-sidebar-border-color);
   }
 
-  .d-editor-preview .d-editor-translation-preview-wrapper__header {
+  .d-editor-translation-preview-wrapper__header {
     top: 6.5rem;
     padding: 0.25rem 0.75rem;
     background: var(--background-color);
