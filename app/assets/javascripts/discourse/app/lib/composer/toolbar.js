@@ -1,5 +1,4 @@
 // @ts-check
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
 import { translateModKey } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
@@ -52,17 +51,6 @@ export class ToolbarBase {
     this.groups = [{ group: DEFAULT_GROUP, buttons: [] }];
     this.siteSettings = opts.siteSettings || {};
     this.capabilities = opts.capabilities || {};
-    /** @type {ToolbarState} */
-    this.state = new TrackedObject({
-      inBold: false,
-      inItalic: false,
-      inLink: false,
-      inCode: false,
-      inCodeBlock: false,
-      inBlockquote: false,
-      inBulletList: false,
-      inOrderedList: false,
-    });
   }
 
   /**

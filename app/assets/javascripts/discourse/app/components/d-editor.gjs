@@ -190,11 +190,6 @@ export default class DEditor extends Component {
     this._cachedCookFunction = null;
   }
 
-  @action
-  updateToolbarState(state) {
-    Object.assign(this.toolbar.state, state);
-  }
-
   async cachedCookAsync(text, options) {
     this._cachedCookFunction ||= await generateCookFunction(options || {});
     return await this._cachedCookFunction(text);
@@ -749,7 +744,6 @@ export default class DEditor extends Component {
             @topicId={{@topicId}}
             @id={{this.textAreaId}}
             @replaceToolbar={{this.replaceToolbar}}
-            @onStateUpdate={{this.updateToolbarState}}
           />
           <PopupInputTip @validation={{this.validation}} />
           <PluginOutlet

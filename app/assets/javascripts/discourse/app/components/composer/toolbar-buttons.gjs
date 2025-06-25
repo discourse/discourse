@@ -27,7 +27,8 @@ export default class ComposerToolbarButtons extends Component {
 
   @action
   isButtonActive(button) {
-    return button.active?.({ state: this.args.data.state });
+    const state = this.args.data.context?.textManipulation?.state || {};
+    return button.active?.({ state });
   }
 
   <template>
