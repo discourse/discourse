@@ -53,7 +53,7 @@ RSpec.describe ThemeSiteSettingResolver do
 
       it "uses the overridden value" do
         result = resolver.resolved_theme_site_settings.find { |s| s[:setting] == themeable_setting }
-        expect(result[:value]).to eq(overridden_value.to_s)
+        expect(result[:value]).to eq(overridden_value)
         expect(result[:default]).to eq(default_value)
       end
     end

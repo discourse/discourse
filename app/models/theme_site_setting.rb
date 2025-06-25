@@ -90,7 +90,7 @@ class ThemeSiteSetting < ActiveRecord::Base
   end
 
   def setting_rb_value
-    SiteSetting.type_supervisor.to_rb_value(self.name, self.value, self.data_type).to_s
+    SiteSetting.type_supervisor.to_rb_value(self.name, self.value, self.data_type)
   end
 end
 
