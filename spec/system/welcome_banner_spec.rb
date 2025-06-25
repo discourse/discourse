@@ -6,7 +6,9 @@ describe "Welcome banner", type: :system do
   let(:search_page) { PageObjects::Pages::Search.new }
 
   context "when welcome banner is enabled" do
-    before { SiteSetting.enable_welcome_banner = true }
+    before do
+      Fabricate(:theme_site_setting_with_service, name: "enable_welcome_banner", value: true)
+    end
 
     it "shows for logged in and anonymous users" do
       visit "/"
@@ -38,7 +40,13 @@ describe "Welcome banner", type: :system do
     end
 
     context "when using search_field search_experience" do
-      before { SiteSetting.search_experience = "search_field" }
+      before do
+        Fabricate(
+          :theme_site_setting_with_service,
+          name: "search_experience",
+          value: "search_field",
+        )
+      end
 
       it "hides welcome banner and shows header search on scroll, and vice-versa" do
         Fabricate(:topic)
@@ -60,7 +68,9 @@ describe "Welcome banner", type: :system do
     end
 
     context "when using search_icon search_experience" do
-      before { SiteSetting.search_experience = "search_icon" }
+      before do
+        Fabricate(:theme_site_setting_with_service, name: "search_experience", value: "search_icon")
+      end
 
       it "hides welcome banner and shows header search on scroll, and vice-versa" do
         Fabricate(:topic)
@@ -83,7 +93,9 @@ describe "Welcome banner", type: :system do
   end
 
   context "when welcome banner is not enabled" do
-    before { SiteSetting.enable_welcome_banner = false }
+    before do
+      Fabricate(:theme_site_setting_with_service, name: "enable_welcome_banner", value: false)
+    end
 
     it "does not show the welcome banner for logged in and anonymous users" do
       visit "/"
