@@ -179,8 +179,8 @@ module Migrations::Importer::Steps
 
       super
 
-      # `parent_category_id` is self-referential, in addition loading existing category ids,
-      #  we need to track mapped ids in the current run
+      # `parent_category_id` is self-referential. In addition to loading existing category IDs
+      # at the start of the step, we also need to track mapped IDs created during the step
       @mapped_category_ids[row[:original_id]] = row[:id] unless @mapped_category_ids.key?(
         row[:original_id],
       )
@@ -234,7 +234,7 @@ module Migrations::Importer::Steps
 
     def ensure_unique_slug(slug, parent_id, name_lower)
       # `name_lower` is already deduplicated,
-      # safe to use directly as fallback
+      # safe to use directly as fallback without deduplication
       return Slug.for(name_lower, "") if slug.blank?
 
       parent_prefix = "#{parent_id}:"

@@ -13,6 +13,7 @@ module Migrations::Converters::Discourse
 
     def execute
       super
+
       @background_upload_creator = UploadCreator.new(column_prefix: "background")
       @background_dark_upload_creator = UploadCreator.new(column_prefix: "background_dark")
       @logo_upload_creator = UploadCreator.new(column_prefix: "logo")

@@ -7,7 +7,6 @@ output:
 
 schema:
   tables:
-<<<<<<< HEAD
     badges:
       columns:
         add:
@@ -16,7 +15,6 @@ schema:
         exclude:
           - "grant_count"
           - "system"
-=======
     categories:
       columns:
         add:
@@ -40,7 +38,6 @@ schema:
           - "topics_week"
           - "topics_year"
           - "reviewable_by_group_id"
->>>>>>> 6b6cea74de (DEV: Add `categories` converter and importer steps)
     user_emails:
       columns:
         include:
