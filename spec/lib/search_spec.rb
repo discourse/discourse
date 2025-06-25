@@ -1913,6 +1913,22 @@ RSpec.describe Search do
       expect(Search.execute("test after:jan").posts).to contain_exactly(post_1, post_2)
     end
 
+    it "supports before/after filters and is not affected by the `search_recent_regular_posts_offset_post_id` site setting" do
+      post_1 = Fabricate(:post, created_at: Time.zone.parse("2000-06-24"), like_count: 15)
+      post_2 = Fabricate(:post, created_at: Time.zone.parse("2000-06-26"), like_count: 5)
+
+      SiteSetting.search_recent_regular_posts_offset_post_id = post_2.id
+      # Disable pagination as we are only concerned about the posts returned in the first page.
+      SiteSetting.search_page_size = 1
+
+      expect(
+        Search
+          .execute("after:2000-01-01 before:2001-01-01 order:likes", search_type: :full_page)
+          .posts
+          .map(&:id),
+      ).to contain_exactly(post_1.id)
+    end
+
     it "supports in:first, user:, @username" do
       post_1 = Fabricate(:post, raw: "hi this is a test 123 123", topic: topic)
       post_2 = Fabricate(:post, raw: "boom boom shake the room test", topic: topic)
