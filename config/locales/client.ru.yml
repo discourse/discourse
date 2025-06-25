@@ -2806,12 +2806,11 @@ ru:
       italic_label: "К"
       italic_title: "Курсив"
       italic_text: "текст, выделенный курсивом"
-      link_title: "Ссылка"
+      link_title: "Ссылки"
       link_description: "Введите описание ссылки"
       link_dialog_action: "Вставить"
       link_edit_action: "Обновить"
-      link_optional_text: "необязательный текст ссылки"
-      link_url_placeholder: "Вставьте URL или введите текст для поиска темы"
+      link_optional_text: "Текст"
       blockquote_title: "Цитата"
       blockquote_text: "Впишите сюда текст цитаты"
       code_title: "Текст «как есть» (без применения форматирования)"
@@ -3345,10 +3344,6 @@ ru:
         top: "Нет обсуждаемых тем."
         hot: "Нет горячих тем."
         filter: "Тем нет."
-        educate:
-          new: '<p>Здесь появятся ваши новые темы. По умолчанию темы считаются новыми и обозначаются индикатором <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span>, если были созданы за последние 2 дня.</p><p>Изменить этот период можно в <a href="%{userPrefsUrl}">настройках</a>.</p>'
-          unread: "<p>Ваши непрочитанные темы скоро появятся тут.</p><p>По умолчанию темы получают счетчик <span class=\"badge unread-posts badge-notification\">1</span>, если:</p><ul><li>Создана тема.</li><li>Получен ответ на сообщение в теме.</li><li>Время чтения темы пользователем превышает 5 минут.</li></ul><p>Изменить настройки уведомлений можно, нажав на значок \U0001F514 в интересующей вас теме.</p><p>Изменить этот период можно в <a href=\"%{userPrefsUrl}\">настройках</a>.</p>"
-          new_new: "<p>Здесь появятся новые, а также непрочитанные темы. По умолчанию темы считаются новыми и обозначаются индикатором <span class=\"badge new-topic badge-notification\" style=\"vertical-align:middle;line-height:inherit;\"></span>, если они были созданы за последние два дня. Тема считается непрочитанной и получает счетчик <span class=\"badge unread-posts badge-notification\">1</span>, если вы: создали тему, ответили в теме, читали тему более 5 минут или если вы явно задали для темы отслеживание или слежение с помощью значка \U0001F514 в ней.</p><p>Изменить этот период можно в <a href=\"%{userPrefsUrl}\">настройках</a>.</p>"
       bottom:
         latest: "Обновлённых тем больше нет."
         posted: "Новых тем больше нет."

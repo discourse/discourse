@@ -26,7 +26,9 @@ module PageObjects
       end
 
       def has_selected_palette?(palette)
-        has_css?(".user-color-palette-selector[data-selected-color-palette-id='#{palette.id}']")
+        has_css?(
+          ".user-color-palette-selector-trigger[data-selected-color-palette-id=\"#{palette.id}\"]",
+        )
       end
 
       def has_loaded_css?

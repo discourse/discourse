@@ -3,9 +3,9 @@ import { number } from "discourse/lib/formatter";
 import { i18n } from "discourse-i18n";
 
 export default function (element, context) {
-  const { data } = context;
+  const { post } = context;
 
-  const linkCounts = data.post.link_counts;
+  const linkCounts = post.link_counts;
   if (!linkCounts?.length) {
     return;
   }

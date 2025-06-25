@@ -23,6 +23,9 @@ export default {
       "service:chat-channels-manager"
     );
     const openQuickChannelSelector = (e) => {
+      if (isInputSelection(event.target) && !isChatComposer(event.target)) {
+        return;
+      }
       e.preventDefault();
       e.stopPropagation();
       modal.show(ChatModalNewMessage);

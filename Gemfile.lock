@@ -57,13 +57,14 @@ GEM
       rake (>= 10.4, < 14.0)
     ast (2.4.3)
     aws-eventstream (1.4.0)
-    aws-partitions (1.1053.0)
-    aws-sdk-core (3.219.0)
+    aws-partitions (1.1117.0)
+    aws-sdk-core (3.226.0)
       aws-eventstream (~> 1, >= 1.3.0)
       aws-partitions (~> 1, >= 1.992.0)
       aws-sigv4 (~> 1.9)
       base64
       jmespath (~> 1, >= 1.6.1)
+      logger
     aws-sdk-kms (1.99.0)
       aws-sdk-core (~> 3, >= 3.216.0)
       aws-sigv4 (~> 1.5)
@@ -74,7 +75,7 @@ GEM
     aws-sdk-sns (1.96.0)
       aws-sdk-core (~> 3, >= 3.216.0)
       aws-sigv4 (~> 1.5)
-    aws-sigv4 (1.11.0)
+    aws-sigv4 (1.12.1)
       aws-eventstream (~> 1, >= 1.0.2)
     base64 (0.3.0)
     benchmark (0.4.1)
@@ -232,12 +233,11 @@ GEM
       base64
     kgio (2.11.4)
     language_server-protocol (3.17.0.5)
-    libv8-node (23.6.1.0)
-    libv8-node (23.6.1.0-aarch64-linux)
-    libv8-node (23.6.1.0-arm64-darwin)
-    libv8-node (23.6.1.0-x86_64-darwin)
-    libv8-node (23.6.1.0-x86_64-linux)
-    libv8-node (23.6.1.0-x86_64-linux-musl)
+    libv8-node (24.1.0.0)
+    libv8-node (24.1.0.0-aarch64-linux)
+    libv8-node (24.1.0.0-arm64-darwin)
+    libv8-node (24.1.0.0-x86_64-linux)
+    libv8-node (24.1.0.0-x86_64-linux-musl)
     lint_roller (1.1.0)
     listen (3.9.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
@@ -272,10 +272,10 @@ GEM
     mime-types (3.7.0)
       logger
       mime-types-data (~> 3.2025, >= 3.2025.0507)
-    mime-types-data (3.2025.0617)
+    mime-types-data (3.2025.0624)
     mini_mime (1.1.5)
-    mini_racer (0.18.1)
-      libv8-node (~> 23.6.1.0)
+    mini_racer (0.19.0)
+      libv8-node (~> 24.1.0.0)
     mini_scheduler (0.18.0)
       sidekiq (>= 6.5, < 8.0)
     mini_sql (1.6.0)
@@ -292,7 +292,7 @@ GEM
     mustache (1.1.1)
     net-http (0.6.0)
       uri
-    net-imap (0.5.8)
+    net-imap (0.5.9)
       date
       net-protocol
     net-pop (0.1.2)
@@ -421,10 +421,10 @@ GEM
     rails-html-sanitizer (1.6.2)
       loofah (~> 2.21)
       nokogiri (>= 1.15.7, != 1.16.7, != 1.16.6, != 1.16.5, != 1.16.4, != 1.16.3, != 1.16.2, != 1.16.1, != 1.16.0.rc1, != 1.16.0)
-    rails_failover (2.2.0)
-      activerecord (>= 6.1, < 8.0)
+    rails_failover (2.3.0)
+      activerecord (>= 6.1, < 9.0)
       concurrent-ruby
-      railties (>= 6.1, < 8.0)
+      railties (>= 6.1, < 9.0)
     rails_multisite (6.1.0)
       activerecord (>= 6.0)
       railties (>= 6.0)
@@ -489,7 +489,7 @@ GEM
       rspec-support (~> 3.13.0)
     rspec-multi-mock (0.3.1)
       rspec (>= 3.7.0)
-    rspec-rails (8.0.0)
+    rspec-rails (8.0.1)
       actionpack (>= 7.2)
       activesupport (>= 7.2)
       railties (>= 7.2)
@@ -507,7 +507,7 @@ GEM
       rspec-core (>= 2.14)
     rtlcss (0.2.1)
       mini_racer (>= 0.6.3)
-    rubocop (1.76.2)
+    rubocop (1.77.0)
       json (~> 2.3)
       language_server-protocol (~> 3.17.0.2)
       lint_roller (~> 1.1.0)
@@ -815,12 +815,12 @@ CHECKSUMS
   annotate (3.2.0) sha256=9a61baa1fb13880aa3a8d9f62553889bb2a3b7970f88bbc66d3ac75a567780d3
   ast (2.4.3) sha256=954615157c1d6a382bc27d690d973195e79db7f55e9765ac7c481c60bdb4d383
   aws-eventstream (1.4.0) sha256=116bf85c436200d1060811e6f5d2d40c88f65448f2125bc77ffce5121e6e183b
-  aws-partitions (1.1053.0) sha256=6f06634f719c745929d671909919e608d2b3c9072df85f6c074823f4a79d11ca
-  aws-sdk-core (3.219.0) sha256=d10c3832ece1f1de8edb7cbbcd737dd49b2789fae8744537943e86fdd822c649
+  aws-partitions (1.1117.0) sha256=fe6469ff7426b449c0c6d0aa43e45f387a4b26992bf48f6897c0b730b205a8a3
+  aws-sdk-core (3.226.0) sha256=6b2dca6576d965b8c7ddf393fe49dac6aea2b6f4a07ead0c35306bba2b0c90f5
   aws-sdk-kms (1.99.0) sha256=ba292fc3ffd672532aae2601fe55ff424eee78da8e23c23ba6ce4037138275a8
   aws-sdk-s3 (1.182.0) sha256=d0fc3579395cb6cb69bf6e975240ce031fc673190e74c8dddbdd6c18572b450d
   aws-sdk-sns (1.96.0) sha256=f92b3c7203c53181b1cafb3dbbea85f330002ad696175bda829cfef359fa6dd4
-  aws-sigv4 (1.11.0) sha256=50a8796991a862324442036ad7a395920572b84bb6cd29b945e5e1800e8da1db
+  aws-sigv4 (1.12.1) sha256=6973ff95cb0fd0dc58ba26e90e9510a2219525d07620c8babeb70ef831826c00
   base64 (0.3.0) sha256=27337aeabad6ffae05c265c450490628ef3ebd4b67be58257393227588f5a97b
   benchmark (0.4.1) sha256=d4ef40037bba27f03b28013e219b950b82bace296549ec15a78016552f8d2cce
   better_errors (2.10.1) sha256=f798f1bac93f3e775925b7fcb24cffbcf0bb62ee2210f5350f161a6b75fc0a73
@@ -911,12 +911,11 @@ CHECKSUMS
   jwt (2.10.1) sha256=e6424ae1d813f63e761a04d6284e10e7ec531d6f701917fadcd0d9b2deaf1cc5
   kgio (2.11.4) sha256=bda7a2146115998a5b07154e708e0ac02c38dcee7e793c33e2e14f600fdfffc6
   language_server-protocol (3.17.0.5) sha256=fd1e39a51a28bf3eec959379985a72e296e9f9acfce46f6a79d31ca8760803cc
-  libv8-node (23.6.1.0) sha256=5a72ed69e4ca1a29a9a4f6e2bdb9ae8e8d881524fb642f19692c0a058de74150
-  libv8-node (23.6.1.0-aarch64-linux) sha256=8ef12223e2ec7a6b8f44b58c14d85d8861815c1ec59ad6f776c63dabc535aadb
-  libv8-node (23.6.1.0-arm64-darwin) sha256=f217e3be9dc3579a4713520ac9644f4bfb733c8408d2b62c9044560b7f5cc031
-  libv8-node (23.6.1.0-x86_64-darwin) sha256=19fc5b329582bd8dac8be0e1094bf8162ec20dffe62a8413678a2b051684063b
-  libv8-node (23.6.1.0-x86_64-linux) sha256=dd73cfb4bad1387128ed216fa7fa4cbd8d4433a0f47ddcefc5bd77009b5c0c0a
-  libv8-node (23.6.1.0-x86_64-linux-musl) sha256=facea16158ab38317fec14aea4fc514cdbb78444d17c4e979a67e0f6d755d42a
+  libv8-node (24.1.0.0) sha256=2f0e9ac629c4c5753eaf7001952bb6dce4eb596f3dc0df3049ee7d9cfb9471cd
+  libv8-node (24.1.0.0-aarch64-linux) sha256=fe7787bdb082d1101f65d8f42572ec6c634776a334d82b9fedded152e1d4f358
+  libv8-node (24.1.0.0-arm64-darwin) sha256=f34bdd85787a32a16db137ffbe83feb1cd09f4d69ff3c43cd2f0a675656ee16b
+  libv8-node (24.1.0.0-x86_64-linux) sha256=0857486e64f7bd4133d4aa607c42d0abade1ab53dffcbfd30f12e0b7dba8f157
+  libv8-node (24.1.0.0-x86_64-linux-musl) sha256=080a243ac014054780cc0d0be2c18b93642a139d09622c0cfd1ebc8614d24437
   lint_roller (1.1.0) sha256=2c0c845b632a7d172cb849cc90c1bce937a28c5c8ccccb50dfd46a485003cc87
   listen (3.9.0) sha256=db9e4424e0e5834480385197c139cb6b0ae0ef28cc13310cfd1ca78377d59c67
   literate_randomizer (0.4.0) sha256=05073c9b383983b1ed7e26c40b963468e91bc86e663b3eeff3a4af91b84217b1
@@ -935,9 +934,9 @@ CHECKSUMS
   messageformat-wrapper (1.1.0) sha256=ecea879626e412d1bc841c457dacfcbb1a62cf88ca83573e4ea34bb371f160bc
   method_source (1.1.0) sha256=181301c9c45b731b4769bc81e8860e72f9161ad7d66dd99103c9ab84f560f5c5
   mime-types (3.7.0) sha256=dcebf61c246f08e15a4de34e386ebe8233791e868564a470c3fe77c00eed5e56
-  mime-types-data (3.2025.0617) sha256=1220c4af9a22dbdecdc490dda00e8b9303bb41239ec428a682d4cfdb64bc3ef6
+  mime-types-data (3.2025.0624) sha256=32034cfa6fb6efa02930ffde4f89f2818f1d2a36ead2cd2be97ce0ff3e0f5e96
   mini_mime (1.1.5) sha256=8681b7e2e4215f2a159f9400b5816d85e9d8c6c6b491e96a12797e798f8bccef
-  mini_racer (0.18.1) sha256=c6694c37672da05027fe0894215a94c18a2117bdbb4ba90d80d275e4b23b3413
+  mini_racer (0.19.0) sha256=9152694738db8b145ced843126e2a391f908732c069cb97bbc909c2bac16bbc1
   mini_scheduler (0.18.0) sha256=d2f084f38da8d76c5844a92f0d6bd01fc9982a8b5e6c7679b6cf44c82da33503
   mini_sql (1.6.0) sha256=5296637f6a4af5bb43e06788037e9a2968ff9c8eb65928befcba8cb41f42d6ee
   mini_suffix (0.3.3) sha256=8d1d33f92f69a2247c9b7d27173235da90479d955cdb863b63a7f53843b722e7
@@ -949,7 +948,7 @@ CHECKSUMS
   multi_xml (0.7.2) sha256=307a96dc48613badb7b2fc174fd4e62d7c7b619bc36ea33bfd0c49f64f5787ce
   mustache (1.1.1) sha256=90891fdd50b53919ca334c8c1031eada1215e78d226d5795e523d6123a2717d0
   net-http (0.6.0) sha256=9621b20c137898af9d890556848c93603716cab516dc2c89b01a38b894e259fb
-  net-imap (0.5.8) sha256=52aa5fdfc1a8a3df1f793b20a327e95b5a9dfe1d733e1f0d53075d2dbcfcf593
+  net-imap (0.5.9) sha256=d95905321e1bd9f294ffc7ff8697be218eee1ec96c8504c0960964d0a0be33fc
   net-pop (0.1.2) sha256=848b4e982013c15b2f0382792268763b748cce91c9e91e36b0f27ed26420dff3
   net-protocol (0.2.2) sha256=aa73e0cba6a125369de9837b8d8ef82a61849360eba0521900e2c3713aa162a8
   net-smtp (0.5.1) sha256=ed96a0af63c524fceb4b29b0d352195c30d82dd916a42f03c62a3a70e5b70736
@@ -1004,7 +1003,7 @@ CHECKSUMS
   rackup (1.0.1) sha256=ba86604a28989fe1043bff20d819b360944ca08156406812dca6742b24b3c249
   rails-dom-testing (2.3.0) sha256=8acc7953a7b911ca44588bf08737bc16719f431a1cc3091a292bca7317925c1d
   rails-html-sanitizer (1.6.2) sha256=35fce2ca8242da8775c83b6ba9c1bcaad6751d9eb73c1abaa8403475ab89a560
-  rails_failover (2.2.0) sha256=42f716eff762e9effecc38add352953472024affb50ef60346eabb11487d7c5f
+  rails_failover (2.3.0) sha256=eed6ea0674fd6f9f6b070ad297ad2ead121ecf9202920f6068b6a4f29d9491c9
   rails_multisite (6.1.0) sha256=7bd7b83b89e292375d595cc7714ae061e3056e7f295295af8c4575b6271186aa
   railties (7.2.2.1) sha256=e3f11bf116dd6d0d874522843ccc70ec0f89fbfed3e9c2ee48a4778cd042fe1f
   rainbow (3.1.1) sha256=039491aa3a89f42efa1d6dec2fc4e62ede96eb6acd95e52f1ad581182b79bc6a
@@ -1035,12 +1034,12 @@ CHECKSUMS
   rspec-html-matchers (0.10.0) sha256=d424bfeb0104884478be299b6695b56c2d0432bb77dc9cedecb5138e91c0e9ae
   rspec-mocks (3.13.5) sha256=e4338a6f285ada9fe56f5893f5457783af8194f5d08884d17a87321d5195ea81
   rspec-multi-mock (0.3.1) sha256=289470f28d1d9dcdecabf70e9a14f97b0dc7e3dba090dfbe4c98c64ebd53794c
-  rspec-rails (8.0.0) sha256=977a508cd94d152db2068c6585470db5d0cd47eef56d5410b9531034fb9d97bf
+  rspec-rails (8.0.1) sha256=0c3700b10ab6d7c648c4cd554023d8c2b5b07e7f01205f7608f0c511cf686505
   rspec-support (3.13.4) sha256=184b1814f6a968102b57df631892c7f1990a91c9a3b9e80ef892a0fc2a71a3f7
   rss (0.3.1) sha256=b46234c04551b925180f8bedfc6f6045bf2d9998417feda72f300e7980226737
   rswag-specs (2.16.0) sha256=8ba26085c408b0bd2ed21dc8015c80f417c7d34c63720ab7133c2549b5bd2a91
   rtlcss (0.2.1) sha256=213d5a00bf61267f93a7a516d699d77e1cc5f396743abb33c01e3f3243a7bf60
-  rubocop (1.76.2) sha256=ae44f172ba0bbe3d623c927111798f85a7879bcc88e544d08f51f62c19f45633
+  rubocop (1.77.0) sha256=1f360b4575ef7a124be27b0dfffa227a2b2d9420d22d4fd8bf179d702bcc88c0
   rubocop-ast (1.45.1) sha256=94042e49adc17f187ba037b33f941ba7398fede77cdf4bffafba95190a473a3e
   rubocop-capybara (2.22.1) sha256=ced88caef23efea53f46e098ff352f8fc1068c649606ca75cb74650970f51c0c
   rubocop-discourse (3.12.1) sha256=ebf7e2224f053047372071419052828c3e3a01bccb14ea1f282ac143547df9bc

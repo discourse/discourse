@@ -768,7 +768,7 @@ export default class Post extends RestModel {
           postId: this.id,
           action: postAction.actionType.name_key,
           canUndo: postAction.can_undo,
-          description: postAction.translatedDescription,
+          description: postAction.actionType.translatedDescription,
         };
       });
   }

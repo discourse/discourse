@@ -147,6 +147,13 @@ module Migrations::Importer
       row
     end
 
+    def ensure_valid_value(value:, allowed_set:, default_value:)
+      return value if allowed_set.include?(value)
+
+      yield(value, default_value) if block_given?
+      default_value
+    end
+
     def find_mapping_type(table_name)
       constant_name = table_name.to_s.upcase
 

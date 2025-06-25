@@ -6,7 +6,6 @@ import escapeRegExp from "discourse/lib/escape-regexp";
 import getURL from "discourse/lib/get-url";
 import PreloadStore from "discourse/lib/preload-store";
 import { ADMIN_NAV_MAP } from "discourse/lib/sidebar/admin-nav-map";
-import { humanizedSettingName } from "discourse/lib/site-settings-utils";
 import I18n, { i18n } from "discourse-i18n";
 import { ADMIN_SEARCH_RESULT_TYPES } from "admin/lib/constants";
 
@@ -72,13 +71,12 @@ export class PageLinkFormatter {
 
     let label;
     if (this.parentLabel) {
-      label = sectionLabel;
-      if (sectionLabel) {
-        label += ` ${SEPARATOR} `;
-      }
-      label += `${this.parentLabel} ${SEPARATOR} ${linkLabel}`;
+      label = `${this.parentLabel} ${SEPARATOR} ${linkLabel}`;
     } else {
-      label = sectionLabel + (sectionLabel ? ` ${SEPARATOR} ` : "") + linkLabel;
+      label = sectionLabel;
+      if (sectionLabel !== linkLabel) {
+        label = label + (sectionLabel ? ` ${SEPARATOR} ` : "") + linkLabel;
+      }
     }
 
     let keywords = this.link.keywords
@@ -130,7 +128,7 @@ export class SettingLinkFormatter {
 
     const keywords = buildKeywords(
       this.setting.setting,
-      humanizedSettingName(this.setting.setting),
+      this.setting.humanized_name,
       this.setting.description,
       this.setting.keywords,
       rootLabel
@@ -168,7 +166,7 @@ export class SettingLinkFormatter {
 
     return [
       rootLabel,
-      `${rootLabel} ${SEPARATOR} ${humanizedSettingName(this.setting.setting)}`,
+      `${rootLabel} ${SEPARATOR} ${this.setting.humanized_name}`,
     ];
   }
 
@@ -230,7 +228,7 @@ export default class AdminSearchDataSource extends Service {
 
   async buildMap() {
     if (this.isLoaded) {
-      return;
+      return Promise.resolve();
     }
 
     ADMIN_NAV_MAP.forEach((navMapSection) => {
@@ -259,9 +257,9 @@ export default class AdminSearchDataSource extends Service {
     this.#processSettings(allItems.settings);
     this.#processThemesAndComponents(allItems.themes_and_components);
     this.#processReports(allItems.reports);
-    await Promise.resolve();
-
     this._mapCached = true;
+
+    return Promise.resolve();
   }
 
   search(filter) {
@@ -338,7 +336,7 @@ export default class AdminSearchDataSource extends Service {
     return filteredResults.sort((a, b) => b.score - a.score);
   }
 
-  #addPageLink(navMapSection, link, parentLabel = "") {
+  #addPageLink(navMapSection, link, parentLabel = null) {
     const formattedPageLink = new PageLinkFormatter(
       this.router,
       navMapSection,
@@ -348,7 +346,7 @@ export default class AdminSearchDataSource extends Service {
 
     // Cache the setting area + category URLs for later use
     // when building the setting list via #processSettings.
-    if (link.settings_area && !this.settingPageMap.areas[this.settings_area]) {
+    if (link.settings_area && !this.settingPageMap.areas[link.settings_area]) {
       this.settingPageMap.areas[link.settings_area] = link.multi_tabbed
         ? `${formattedPageLink.url}/settings`
         : formattedPageLink.url;

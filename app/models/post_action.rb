@@ -278,6 +278,7 @@ end
 #  index_post_actions_on_deferred_by_id                        (deferred_by_id) WHERE (deferred_by_id IS NOT NULL)
 #  index_post_actions_on_deleted_by_id                         (deleted_by_id) WHERE (deleted_by_id IS NOT NULL)
 #  index_post_actions_on_disagreed_by_id                       (disagreed_by_id) WHERE (disagreed_by_id IS NOT NULL)
+#  index_post_actions_on_post_action_type_id                   (post_action_type_id)
 #  index_post_actions_on_post_action_type_id_and_disagreed_at  (post_action_type_id,disagreed_at) WHERE (disagreed_at IS NULL)
 #  index_post_actions_on_post_id                               (post_id)
 #  index_post_actions_on_user_id                               (user_id)

@@ -2866,12 +2866,10 @@ he:
       italic_text: "טקסט נטוי"
       link_title: "קישור"
       link_description: "הזן תיאור קישור כאן"
-      link_dialog_title: "הוספת קישור חיצוני"
       link_dialog_action: "כתיבה"
-      link_edit_title: "עריכת קישור חיצוני"
+      link_edit_title: "עריכת קישור"
       link_edit_action: "עדכון"
-      link_optional_text: "כותרת כרשות"
-      link_url_placeholder: "יש להדביק כתובת כדי לחפש נושאים"
+      link_optional_text: "טקסט"
       blockquote_title: "מקטע ציטוט"
       blockquote_text: "בלוק ציטוט"
       code_title: "טקסט מעוצב"
@@ -3416,10 +3414,6 @@ he:
         top: "אין נושאים מובילים."
         hot: "אין נושאים חמים."
         filter: "אין נושאים."
-        educate:
-          new: '<p>הנושאים החדשים שלך יופיעו כאן. כבררת מחדל, נושאים נחשבים חדשים ויופיעו עם המחוון <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> אם הם נוצרו ביומיים האחרונים. </p><p>ניתן לבקר בעמוד ה<a href="%{userPrefsUrl}">העדפות</a> שלך כדי לשנות זאת.</p>'
-          unread: "<p>הנושאים שלא קראת יופיעו כאן.</p><p>כברירת מחדל, נושאים ייחשבו שטרם קראת אותם ויוצג עליהם מונה <span class=\"badge unread-posts badge-notification\">1</span> בספירה של הפריטים שלא נקראו אם: </p> <ul><li>יצרת את הנושא</li><li>הגבת לנושא</li><li>קראת את הנושא במשך יותר מ־5 דקות</li></ul><p>או אם בחרת לעקוב או לצפות בנושא דרך \U0001F514 המופיע בכל נושא.</p><p>ניתן לבקר בעמוד ה<a href=\"%{userPrefsUrl}\">העדפות</a> שלך כדי לשנות זאת.</p>"
-          new_new: "<p>הנושאים החדשים שלך יופיעו כאן לצד הנושאים שטרם קראת. כברירת מחדל, נושאים נחשבים חדשים ויופיע לידם מחוון <span class=\"badge new-topic badge-notification\" style=\"vertical-align:middle;line-height:inherit;\"></span> אם נוצרו ביומיים האחרונים. ליד נושאים שלא נקראו יופיע הסימון <span class=\"badge unread-posts badge-notification\">1</span> אם: יצרת את הנושא, הגבת לנושא, קראת את הנושא במשך למעלה מ־5 דקות או אם ביקשת מפורשות לעקוב או להשגיח אחר הנושא באמצעות \U0001F514 בכל נושא ונושא.</p><p>נא לגשת אל ה<a href=\"%{userPrefsUrl}\">העדפות</a> כדי לשנות זאת.</p>"
       bottom:
         latest: "אין עוד נושאים אחרונים."
         posted: "אין עוד נושאים שפורסמו."

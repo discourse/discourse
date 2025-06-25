@@ -2339,6 +2339,9 @@ ug:
       to_continue: "تىزىمغا كىرىڭ"
       preferences: "ئىشلەتكۈچى مايىللىقىڭىزنى ئۆزگەرتىش ئۈچۈن تىزىمغا كىرىشىڭىز كېرەك."
       not_approved: "ھېساباتىڭىز تېخى تەستىقلانمىدى. تەستىقلانسا تىزىمغا كىرىش ئېلخەت ئارقىلىق ئۇقتۇرۇش قىلىنىدۇ."
+      discourse_id:
+        name: "Discourse كىملىكى"
+        title: "Discord كىملىكى بىلەن تىزىمغا كىرىڭ"
       google_oauth2:
         name: "Google"
         title: "Google بىلەن تىزىمغا كىرىڭ"
@@ -2601,8 +2604,10 @@ ug:
       link_dialog_action: "قىستۇر"
       link_edit_title: "ئۇلانما تەھرىر"
       link_edit_action: "يېڭىلا"
-      link_optional_text: "تاللانما ماۋزۇ"
-      link_url_placeholder: "تور ئادرېسى چاپلىنىدۇ ياكى ئىزدەيدىغان تېما كىرگۈزۈلىدۇ"
+      link_text_label: "ئۇلانما تېكىستى"
+      link_optional_text: "تېكىست"
+      link_url_label: "ئۇلانما ياكى تېما"
+      link_url_placeholder: "ئۇلانما چاپلا ياكى تېما ئىزدە"
       blockquote_title: "بۆلەك نەقىل"
       blockquote_text: "بۆلەك نەقىل"
       code_title: "پىچىملىق تېكىست"
@@ -3081,10 +3086,11 @@ ug:
         top: "چوققا تېما يوق."
         hot: "قىزىق تېما يوق."
         filter: "تېما يوق."
-        educate:
-          new: '<p>يېڭى تېمىڭىز بۇ جايدا كۆرۈنىدۇ. كۆڭۈلدىكى ئەھۋالدا، ئەگەر ئۆتكەن 2 كۈن ئىچىدە قۇرۇلغان بولسا، تېما يېڭى تېما دەپ قارىلىدۇ ھەمدە <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span>كۆرسەتكۈچنى كۆرسىتىدۇ.</p><p>سىزنىڭ <a href="%{userPrefsUrl}">مايىللىق</a> تەڭشىكىڭىزنى زىيارەت قىلىپ بۇنى ئۆزگەرتەلەيسىز.</p>'
-          unread: "<p>ئوقۇلمىغان تېمىڭىز بۇ جايدا كۆرۈنىدۇ.</p><p>كۆڭۈلدىكى ئەھۋالدا، ئەگەر تۆۋەندىكى شەرتنى قانائەتلەندۈرسە، تېما ئوقۇلمىغان دەپ قارىلىدۇ ھەمدە ئوقۇلمىغانلىق سانى كۆرۈنىدۇ <span class=\"badge unread-posts badge-notification\">1</span> ئەگەر سىز:</p><ul><li>قۇرغان تېما</li><li>جاۋاب قايتۇرغان تېما</li><li>تېمىنى 5 مىنۇتتىن ئارتۇق ئوقۇغان</li></ul><p> ياكى ئەگەر ھەر بىر تېمىدا \U0001F514 ئارقىلىق تېمىنى كۆزەتتىكى ياكى ئەگەشكەن دەپ تەڭشىگەن بولسىڭىز.</p><p>سىزنىڭ <a href=\"%{userPrefsUrl}\">مايىللىق</a> تەڭشىكىڭىزدىن بۇنى ئۆزگەرتەلەيسىز.</p>"
-          new_new: "<p>يېڭى تېمىڭىز بۇ جايدا كۆرۈنىدۇ، ھەمدە ئوقۇلمىغان تېمىلىرىڭىزمۇ كۆرسىتىلىدۇ. كۆڭۈلدىكى ئەھۋالدا، ئەگەر ئۇلار يېقىنقى 2 كۈن ئىچىدە قۇرۇلغان بولسا، تېما يېڭى دەپ قارىلىدۇ ھەمدە <span class=\"badge new-topic badge-notification\" style=\"vertical-align:middle;line-height:inherit;\"></span> كۆرسەتكۈچ كۆرۈنىدۇ. ئوقۇلمىغان تېمىنىڭ ئوقۇلمىغان سانى <span class=\"badge unread-posts badge-notification\">1</span> كۆرۈنىدۇ. ئەگەر سىز: قۇرغان تېما، جاۋاب قايتۇرغان تېما، تېمىنى 5 مىنۇتتىن ئارتۇق ئوقۇغان ياكى ئەگەر ھەر بىر تېمىدا \U0001F514 ئارقىلىق تېمىنى كۆزەتتىكى ياكى ئەگەشكەن دەپ تەڭشىگەن بولسىڭىز.</p><p>سىزنىڭ <a href=\"%{userPrefsUrl}\">مايىللىق</a> تەڭشىكىڭىزدىن بۇنى ئۆزگەرتەلەيسىز.</p>"
+        education:
+          topic_tracking_preferences: "يېڭى تېما ئىزلاش تەڭىكىڭىزنى <a href=\"%{basePath}/my/preferences/tracking\">مايىللىقىڭىز</a> دا كۆرسىتىپ ۋە ئۆزگەرتەلەيسىز."
+          unread: "ئوقۇلمىغان ھېچ نەرسە قالمىدى… تەسىرلىك!"
+          new_new: "ھازىرچە ھېچقانداق يېڭىلىق يوق… تېزلا تەكشۈرىدۇ!"
+          new: "ھازىرچە ھېچقانداق يېڭىلىق يوق… تېزلا تەكشۈرىدۇ!"
       bottom:
         latest: "تېخىمۇ كۆپ يېڭى تېما يوق."
         posted: "يوللانغان تېخىمۇ كۆپ تېما يوق."
@@ -3230,6 +3236,7 @@ ug:
       browse_all_categories_latest: "<a href='%{basePath}/categories'>ھەممە سەھىپىگە كۆز يۈگۈرت</a> ياكى <a href='%{basePath}/latest'>ئاخىرقى تېمىنى كۆرسەت</a>."
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>ھەممە سەھىپىگە كۆز يۈگۈرت</a> ، <a href='%{basePath}/latest'>ئاخىرقى تېمىنى كۆرسەت</a> ياكى قىزغىن تېمىنى كۆرسەت:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>ھەممە بەلگىگە كۆز يۈگۈرت</a> ياكى <a href='%{basePath}/latest'>ئاخىرقى تېمىنى كۆرسەت</a>."
+      browse_latest_topics: "ئاخىرقى تېمىغا كۆزيۈگۈرتىدۇ"
       suggest_create_topic: <a href>يېڭى بىر سۆھبەت باشلاش</a>قا تەييارمۇ؟
       jump_reply: "تېمىنىڭ ئەسلى ئورنىغا ئاتلا"
       jump_reply_aria: "@%{username} نىڭ تېمىسىنىڭ ئەسلى ئورنىغا ئاتلا"
@@ -7408,6 +7415,7 @@ ug:
           basic: "ئاساسى تەڭشەك"
           users: "ئىشلەتكۈچى"
           posting: "يوللاش"
+          content_localization: "مەزمۇننى يەرلىكلەشتۈرۈش"
           email: "ئېلخەت"
           files: "ھۆججەت"
           trust: "ئىشەنچ دەرىجىسى"
