@@ -1710,7 +1710,7 @@ bs_BA:
       link_title: "Link"
       link_description: "ubaci opis linka"
       link_dialog_action: "Unesi"
-      link_optional_text: "naslov neobavezan"
+      link_optional_text: "Poruka"
       blockquote_title: "Citiranje"
       blockquote_text: "Citiranje"
       code_title: "Formatiran Tekst"

@@ -2593,6 +2593,9 @@ sk:
       to_continue: "Prosím, prihláste sa"
       preferences: "Na zmenu používateľských nastavení musíte byť prihlásený."
       not_approved: "Váš účet zatiaľ nebol schválený. Ak bude pripravený na prihlásenie, dostanete upozorňujúci email."
+      discourse_id:
+        name: "Discourse ID"
+        title: "Prihláste sa pomocou Discourse ID"
       google_oauth2:
         name: "Google"
         title: "Prihlásenie pomocou služby Google"
@@ -2877,14 +2880,16 @@ sk:
       italic_label: "I"
       italic_title: "Zdôraznene"
       italic_text: "zdôraznený text"
-      link_title: "Hyperlink"
+      link_title: "Odkaz"
       link_description: "tu zadaj popis odkazu"
-      link_dialog_title: "Vložiť hypertextový odkaz"
+      link_dialog_title: "Vložiť odkaz"
       link_dialog_action: "Vložiť"
-      link_edit_title: "Upraviť hypertextový odkaz"
+      link_edit_title: "Upraviť odkaz"
       link_edit_action: "Aktualizovať"
-      link_optional_text: "nepovinný názov"
-      link_url_placeholder: "Vložte adresu URL alebo zadajte vyhľadávané témy"
+      link_text_label: "Text odkazu"
+      link_optional_text: "Text"
+      link_url_label: "Odkaz alebo téma"
+      link_url_placeholder: "Vložte odkaz alebo vyhľadajte témy"
       blockquote_title: "Úvodzovky"
       blockquote_text: "Úvodzovky"
       code_title: "Preformátovaný text"
@@ -3429,10 +3434,11 @@ sk:
         top: "Nie sú žiadne populárne témy."
         hot: "Neexistujú žiadne horúce témy."
         filter: "Neexistujú žiadne témy."
-        educate:
-          new: '<p>Vaše nové témy sa zobrazia tu. Predvolene sú témy považované za nové a zobrazí sa na nich indikátor <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span>, ak boli vytvorené za posledné 2 dni.</p><p>Navštívte svoje <a href="%{userPrefsUrl}">nastavenia</a>, aby ste to zmenili.</p>'
-          unread: "<p>Vaše neprečítané témy sa zobrazujú tu.</p><p>V predvolenom nastavení sa témy považujú za neprečítané a zobrazí sa počet neprečítaných <span class=\"badge unread-posts badge-notification\">1</span>, ak:</p><ul><li>Vytvorili ste tému</li><li>Odpovedali ste na tému</li><li>Čítali ste tému dlhšie ako 5 minút</li></ul><p>Alebo ak ste tému explicitne nastavili ako Sledovanú alebo Sledovanú prostredníctvom \U0001F514 v každej téme.</p><p>Navštívte svoje <a href=\"%{userPrefsUrl}\">nastavenia</a>, aby ste to zmenili.</p>"
-          new_new: "<p>Zobrazia sa tu vaše nové témy a tiež neprečítané témy. V predvolenom nastavení sa témy považujú za nové a zobrazí sa na nich indikátor <span class=\"badge new-topic badge-notification\" style=\"vertical-align:middle;line-height:inherit;\"></span>, ak boli vytvorené za posledné 2 dni. Neprečítané témy budú zobrazovať počet neprečítaných <span class=\"badge unread-posts badge-notification\">1</span>, ak ste: vytvorili tému, odpovedali na tému, čítali tému dlhšie ako 5 minút alebo ak ste tému explicitne nastavili ako sledovanú alebo sledovanú prostredníctvom \U0001F514 v každej téme.</p><p>Navštívte svoje <a href=\"%{userPrefsUrl}\">nastavenia</a>, aby ste to zmenili.</p>"
+        education:
+          topic_tracking_preferences: "Nastavenia sledovania novej témy si môžete pozrieť a zmeniť v <a href=\"%{basePath}/my/preferences/tracking\">nastaveniach</a>."
+          unread: "Nič nezostalo neprečítané... pôsobivé!"
+          new_new: "Momentálne nič nové...čoskoro sa vráťte!"
+          new: "Momentálne nič nové...čoskoro sa vráťte!"
       bottom:
         latest: "Nie je už viac najnovšich tém."
         posted: "Žiadne ďalšie témy na čítanie."
@@ -3590,6 +3596,7 @@ sk:
       browse_all_categories_latest: "<a href='%{basePath}/categories'>Prezrite si všetky kategórie</a> alebo <a href='%{basePath}/latest'>najnovšie témy</a>."
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Prehliadať všetky kategórie</a>, <a href='%{basePath}/latest'>zobraziť najnovšie témy</a> alebo vidieť hore:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Prehľadávať všetky značky</a> alebo <a href='%{basePath}/latest'>zobraziť najnovšie témy</a>."
+      browse_latest_topics: "Prehľadávanie najnovších tém"
       suggest_create_topic: Ste pripravení <a href>začať novú konverzáciu?</a>
       jump_reply: "Prejsť na pôvodné umiestnenie príspevku"
       jump_reply_aria: "Prejsť na príspevok @%{username}na jeho pôvodnom mieste"
@@ -8006,6 +8013,7 @@ sk:
           basic: "Základné nastavenia"
           users: "Používatelia"
           posting: "Prispievam"
+          content_localization: "Lokalizácia obsahu"
           email: "Email"
           files: "Súbory"
           trust: "Stupne dôvery"

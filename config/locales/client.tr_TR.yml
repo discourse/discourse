@@ -2574,12 +2574,11 @@ tr_TR:
       italic_label: "I"
       italic_title: "Vurgulama"
       italic_text: "vurgulanan yazı"
-      link_title: "Köprü"
+      link_title: "Bağlantı"
       link_description: "bağlantı açıklamasını buraya girin"
       link_dialog_action: "Ekle"
       link_edit_action: "Güncelle"
-      link_optional_text: "isteğe bağlı başlık"
-      link_url_placeholder: "Bir URL yapıştırın veya konuları aramak için yazın"
+      link_optional_text: "Metin"
       blockquote_title: "Blok alıntı"
       blockquote_text: "Blok alıntı"
       code_title: "Önceden biçimlendirilmiş metin"
@@ -3052,10 +3051,6 @@ tr_TR:
         top: "Popüler konu yok."
         hot: "Popüler bir konu bulunmuyor."
         filter: "Konu yok."
-        educate:
-          new: '<p>Yeni konularınız burada görünür. Varsayılan olarak, konular yeni kabul edilir ve son 2 gün içinde oluşturulmuşlarsa <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> göstergesi görünür.</p><p>Bunu değiştirmek için <a href="%{userPrefsUrl}"> tercihlerinizi</a> ziyaret edin.</p>'
-          unread: "<p>Okunmamış konularınız burada görünür.</p><p>Konular varsayılan olarak okunmamış sayılır ve şu durumlarda okunmamış sayısı <span class=\"badge unread-posts badge-notification\">1</span> olarak gösterilir: </p><ul><li>Konuyu siz oluşturmuşsanız</li><li>Konuya yanıt vermişseniz</li><li>Konuyu 5 dakikadan fazla okumuşsanız</li></ul><p>Her bir konuda \U0001F514 aracılığıyla konuyu Takip Edildi veya İzlendi olarak seçmişseniz.</p><p><a href=\"%{userPrefsUrl}\">Tercihler</a> bölümünden bunu değiştirebilirsiniz.</p>"
-          new_new: "<p>Yeni konularınız burada görünecek ve okunmamış konularınız da görüntülenecektir. Varsayılan olarak, konular yeni olarak kabul edilir ve son 2 gün içinde oluşturulmuşlarsa bir <span class=\"badge new-topic badge-notification\" style=\"vertical-align:middle;line-height:inherit;\"></span> göstergesi gösterilir. Okunmamış konular, aşağıdaki durumlarda okunmamış sayıları <span class=\"badge unread-posts badge-notification\">1</span> gösterecektir: Konuyu oluşturduysanız, konuya yanıt verdiyseniz, konuyu 5 dakikadan fazla okuduysanız veya konuyu her konudaki \U0001F514 işareti aracılığıyla açıkça İzlendi veya İzleniyor olarak ayarladıysanız.</p><p>Bunu değiştirmek için <a href=\"%{userPrefsUrl}\">tercihlerinizi</a> ziyaret edin.</p>"
       bottom:
         latest: "Başka en son konu yok."
         posted: "Başka gönderi yapılan konu yok."

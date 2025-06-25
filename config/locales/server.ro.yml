@@ -130,6 +130,7 @@ ro:
   errors: &errors
     format: ! "%{attribute} %{message}"
     messages:
+      invalid_locale: "%{invalid_locale} nu este o locală validă"
       invalid_boolean: "Valoare logică invalidă."
       taken: "nu este disponibil"
       reserved: "Numele grupului %{name} este rezervat, alege un alt nume."
@@ -152,6 +153,7 @@ ro:
       less_than_or_equal_to: trebuie să fie mai mic sau egal cu %{count}
       not_a_number: nu este un număr
       not_an_integer: trebuie sa fie un număr întreg
+      must_all_be_positive: toate trebuie să fie pozitive
       odd: trebuie sa fie impar
       record_invalid: ! "Validarea a eşuat: %{errors}"
       restrict_dependent_destroy:
@@ -1276,10 +1278,11 @@ ro:
     about_page_extra_groups_initial_members: "Numărul de membri pentru a extinde fiecare grup pe pagina „Despre”."
     about_page_extra_groups_show_description: "Dacă se includ descrierile grupurilor pe pagina „Despre”."
     about_page_extra_groups_order: "Ordonarea grupurilor suplimentare pe pagina „Despre”."
-    experimental_content_localization_allowed_groups: 'Grupuri cărora li se permite să actualizeze conținutul localizat. Necesită ca „localizarea experimentală a conținutului” să fie activată.'
-    experimental_content_localization_supported_locales: "Lista localelor acceptate în care conținutul utilizatorului poate fi tradus. Necesită ca `experimental_content_localization` să fie activat pentru a avea efect."
     viewport_based_mobile_mode: "EXPERIMENTAL: Dezactivează modurile mobil/desktop bazate pe agent utilizator și folosește, în schimb, lățimea spațiului vizibil."
-    experimental_anon_language_switcher: "Activează comutatorul experimental de limbă. Acest lucru va permite vizitatorilor site-ului care nu sunt autentificați să comute între versiunile traduse Discourse și conținutul la care au contribuit utilizatorii în subiecte."
+    content_localization_enabled: "Afișează conținutul localizat pentru utilizatori bazat pe preferințele lor de navigator sau de limbă ale utilizatorului. Acest conținut poate include categorii, etichete, postări și subiecte. Localele acceptate sunt setate în „locale disponibile pentru localizarea conținutului”."
+    content_localization_supported_locales: "Lista localelor acceptate în care poate fi tradus conținutul. Necesită „localizarea conținutului activată”."
+    content_localization_allowed_groups: "Grupuri care pot actualiza conținutul localizat. Necesită „localizarea conținutului activat”."
+    content_localization_anon_language_switcher: "Activează comutatorul de limbă care permite vizitatorilor site-ului care nu sunt autentificați să schimbe între versiunile traduse Discourse și conținutul la care au contribuit utilizatori. Depinde de lista de limbi definite în „locale acceptate pentru localizarea conținutului”."
     errors:
       invalid_email: "Adresă de email invalidă."
       invalid_username: "Nu există nici un utilizator cu acest nume de utilizator."
@@ -1303,6 +1306,7 @@ ro:
       invalid_regex: "Regex invalid sau nepermis."
       min_username_length_range: "Nu poți seta minimum cu o valoare mai mare decât a maximului."
       max_username_length_range: "Nu poți seta maximum cu o valoare mai mică decât a minimului."
+      content_localization_anon_language_switcher_requirements: "Comutatorul de limbă necesită activarea setării site-ului „setează locală din cookie”, și „locale acceptate pentru localizarea conținutului” pentru a avea cel puțin o limbă."
     keywords:
       clean_up_inactive_users_after_days: "dezactivat|inactiv|neactivat"
       navigation_menu: "bară laterală|listă derulantă din antet"
@@ -2255,8 +2259,6 @@ ro:
       delete_user:
         complete: "Utilizatorul a fost șters."
   fallback_username: "utilizator"
-  content_localization:
-    not_allowed: "Nu ai voie să localizezi acest conținut."
   activemodel:
     errors:
       <<: *errors

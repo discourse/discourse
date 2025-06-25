@@ -178,6 +178,7 @@ ro:
         save: "Salvează"
         edit: "Editează"
         system: "sistem"
+        header_description: "Cârligele web primite pot fi folosite de sisteme externe pentru a posta mesaje într-un canal de discuții desemnat ca utilizator de tip bot"
         url: "URL"
         username: "Nume de utilizator"
       selection:
