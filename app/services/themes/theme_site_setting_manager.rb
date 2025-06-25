@@ -119,6 +119,8 @@ class Themes::ThemeSiteSettingManager
             data_type: setting_data_type,
           )
         context[:new_value] = setting_ruby_value
+      else
+        context[:new_value] = SiteSetting.defaults[params.name]
       end
     end
 

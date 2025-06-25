@@ -5,10 +5,20 @@ describe "Admin Theme Site Settings", type: :system do
   fab!(:theme_1) { Fabricate(:theme, name: "Blue Steel") }
   fab!(:theme_2) { Fabricate(:theme, name: "Derelicte") }
   fab!(:theme_site_setting_1) do
-    Fabricate(:theme_site_setting, theme: theme_1, name: "enable_welcome_banner", value: false)
+    Fabricate(
+      :theme_site_setting_with_service,
+      theme: theme_1,
+      name: "enable_welcome_banner",
+      value: false,
+    )
   end
   fab!(:theme_site_setting_2) do
-    Fabricate(:theme_site_setting, theme: theme_2, name: "search_experience", value: "search_field")
+    Fabricate(
+      :theme_site_setting_with_service,
+      theme: theme_2,
+      name: "search_experience",
+      value: "search_field",
+    )
   end
 
   let(:theme_site_settings_page) { PageObjects::Pages::AdminThemeSiteSettings.new }

@@ -39,9 +39,34 @@ class ThemeSiteSetting < ActiveRecord::Base
   #
   # This is used to ensure that we don't try to load settings from Redis or
   # the database when they are not available.
-  def self.safe_all
-    return [] if !can_access_db?
-    all
+  def self.generate_theme_map
+    return {} if !can_access_db?
+
+    theme_site_setting_values_map = {}
+    Theme
+      .includes(:theme_site_settings)
+      .not_components
+      .each do |theme|
+        SiteSetting.themeable_site_settings.each do |setting_name|
+          setting = theme.theme_site_settings.find { |s| s.name == setting_name.to_s }
+
+          value =
+            if setting.nil?
+              SiteSetting.defaults[setting_name]
+            else
+              SiteSetting.type_supervisor.to_rb_value(
+                setting.name.to_sym,
+                setting.value,
+                setting.data_type,
+              )
+            end
+
+          theme_site_setting_values_map[theme.id] ||= {}
+          theme_site_setting_values_map[theme.id][setting_name] = value
+        end
+      end
+
+    theme_site_setting_values_map
   end
 
   def setting_rb_value

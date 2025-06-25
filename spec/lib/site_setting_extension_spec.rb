@@ -988,15 +988,26 @@ RSpec.describe SiteSettingExtension do
     fab!(:theme_1) { Fabricate(:theme) }
     fab!(:theme_2) { Fabricate(:theme) }
     fab!(:tss_1) do
-      Fabricate(:theme_site_setting, name: "enable_welcome_banner", value: false, theme: theme_1)
+      Fabricate(
+        :theme_site_setting_with_service,
+        name: "enable_welcome_banner",
+        value: false,
+        theme: theme_1,
+      )
     end
     fab!(:tss_2) do
       Fabricate(
-        :theme_site_setting,
+        :theme_site_setting_with_service,
         name: "search_experience",
         value: "search_field",
         theme: theme_2,
       )
+    end
+
+    it "has the site setting default values when there are no theme site settings for the theme" do
+      SiteSetting.refresh!
+      expect(SiteSetting.theme_site_settings[theme_1.id][:search_experience]).to eq("search_icon")
+      expect(SiteSetting.theme_site_settings[theme_2.id][:enable_welcome_banner]).to eq(true)
     end
 
     it "returns true for settings that are themeable" do

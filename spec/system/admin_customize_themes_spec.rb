@@ -297,7 +297,12 @@ describe "Admin Customize Themes", type: :system do
     end
 
     it "allows resetting themeable site setting values back to site setting default" do
-      Fabricate(:theme_site_setting, theme: theme, name: "enable_welcome_banner", value: "f")
+      Fabricate(
+        :theme_site_setting_with_service,
+        theme: theme,
+        name: "enable_welcome_banner",
+        value: false,
+      )
       theme_page.visit(theme.id)
       expect(theme_page).to have_overridden_theme_site_setting("enable_welcome_banner")
       theme_page.reset_overridden_theme_site_setting("enable_welcome_banner")

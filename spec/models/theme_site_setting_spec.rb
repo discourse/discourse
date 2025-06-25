@@ -3,10 +3,20 @@
 RSpec.describe ThemeSiteSetting do
   fab!(:theme)
   fab!(:theme_site_setting_1) do
-    Fabricate(:theme_site_setting, theme: theme, name: "enable_welcome_banner", value: false)
+    Fabricate(
+      :theme_site_setting_with_service,
+      theme: theme,
+      name: "enable_welcome_banner",
+      value: false,
+    )
   end
   fab!(:theme_site_setting_2) do
-    Fabricate(:theme_site_setting, theme: theme, name: "search_experience", value: "search_field")
+    Fabricate(
+      :theme_site_setting_with_service,
+      theme: theme,
+      name: "search_experience",
+      value: "search_field",
+    )
   end
 
   describe ".safe_all" do

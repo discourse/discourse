@@ -80,7 +80,12 @@ RSpec.describe Themes::ThemeSiteSettingManager do
 
     context "when updating an existing theme site setting" do
       fab!(:theme_site_setting) do
-        Fabricate(:theme_site_setting, theme: theme, name: "enable_welcome_banner", value: true)
+        Fabricate(
+          :theme_site_setting_with_service,
+          theme: theme,
+          name: "enable_welcome_banner",
+          value: true,
+        )
       end
 
       it "runs successfully" do
@@ -128,7 +133,12 @@ RSpec.describe Themes::ThemeSiteSettingManager do
 
     context "when removing a theme site setting by ommitting the value" do
       let!(:theme_site_setting) do
-        Fabricate(:theme_site_setting, theme: theme, name: "enable_welcome_banner", value: false)
+        Fabricate(
+          :theme_site_setting_with_service,
+          theme: theme,
+          name: "enable_welcome_banner",
+          value: false,
+        )
       end
 
       before { SiteSetting.refresh! }
@@ -178,7 +188,12 @@ RSpec.describe Themes::ThemeSiteSettingManager do
 
     context "when setting value to the same as the site setting default" do
       let!(:theme_site_setting) do
-        Fabricate(:theme_site_setting, theme: theme, name: "enable_welcome_banner", value: true)
+        Fabricate(
+          :theme_site_setting_with_service,
+          theme: theme,
+          name: "enable_welcome_banner",
+          value: true,
+        )
       end
 
       let(:params) { { theme_id: theme.id, name: "enable_welcome_banner", value: true } }

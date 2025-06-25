@@ -406,15 +406,7 @@ module SiteSettingExtension
       deletions.each { |name, _| current[name] = defaults_view[name] }
       uploads.clear
 
-      new_theme_site_settings = {}
-      ThemeSiteSetting.safe_all.each do |tss|
-        new_theme_site_settings[tss.theme_id] ||= {}
-        new_theme_site_settings[tss.theme_id][tss.name.to_sym] = type_supervisor.to_rb_value(
-          tss.name,
-          tss.value,
-          tss.data_type,
-        )
-      end
+      new_theme_site_settings = ThemeSiteSetting.generate_theme_map
 
       theme_site_setting_changes, theme_site_setting_deletions =
         diff_hash(new_theme_site_settings, theme_site_settings)

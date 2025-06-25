@@ -14,7 +14,7 @@ describe "Search", type: :system do
       SearchIndexer.enable
       SearchIndexer.index(topic, force: true)
       SearchIndexer.index(topic2, force: true)
-      SiteSetting.enable_welcome_banner = false
+      Fabricate(:theme_site_setting_with_service, name: "enable_welcome_banner", value: false)
     end
 
     after { SearchIndexer.disable }
@@ -72,7 +72,7 @@ describe "Search", type: :system do
       SearchIndexer.index(topic, force: true)
       SiteSetting.rate_limit_search_anon_user_per_minute = 4
       RateLimiter.enable
-      SiteSetting.enable_welcome_banner = false
+      Fabricate(:theme_site_setting_with_service, name: "enable_welcome_banner", value: false)
     end
 
     after { SearchIndexer.disable }
@@ -98,7 +98,7 @@ describe "Search", type: :system do
       SearchIndexer.enable
       SearchIndexer.index(topic, force: true)
       SearchIndexer.index(topic2, force: true)
-      SiteSetting.enable_welcome_banner = false
+      Fabricate(:theme_site_setting_with_service, name: "enable_welcome_banner", value: false)
     end
 
     after { SearchIndexer.disable }
@@ -135,7 +135,9 @@ describe "Search", type: :system do
     end
 
     describe "with search icon in header" do
-      before { SiteSetting.search_experience = "search_icon" }
+      before do
+        Fabricate(:theme_site_setting_with_service, name: "search_experience", value: "search_icon")
+      end
 
       it "displays the correct search mode" do
         visit("/")
@@ -145,7 +147,13 @@ describe "Search", type: :system do
     end
 
     describe "with search field in header" do
-      before { SiteSetting.search_experience = "search_field" }
+      before do
+        Fabricate(
+          :theme_site_setting_with_service,
+          name: "search_experience",
+          value: "search_field",
+        )
+      end
 
       it "displays the correct search mode" do
         visit("/")
@@ -201,7 +209,7 @@ describe "Search", type: :system do
       SearchIndexer.enable
       SearchIndexer.index(topic, force: true)
       SearchIndexer.index(topic2, force: true)
-      SiteSetting.enable_welcome_banner = false
+      Fabricate(:theme_site_setting_with_service, name: "enable_welcome_banner", value: false)
       sign_in(admin)
     end
 

@@ -8,8 +8,18 @@ RSpec.describe Admin::Config::ThemeSiteSettingsController do
 
   before do
     sign_in(admin)
-    Fabricate(:theme_site_setting, theme: theme_1, name: "search_experience", value: "search_field")
-    Fabricate(:theme_site_setting, theme: theme_2, name: "enable_welcome_banner", value: false)
+    Fabricate(
+      :theme_site_setting_with_service,
+      theme: theme_1,
+      name: "search_experience",
+      value: "search_field",
+    )
+    Fabricate(
+      :theme_site_setting_with_service,
+      theme: theme_2,
+      name: "enable_welcome_banner",
+      value: false,
+    )
   end
 
   describe "#index" do
