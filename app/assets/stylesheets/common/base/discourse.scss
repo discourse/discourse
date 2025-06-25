@@ -427,12 +427,13 @@ textarea {
   }
 
   .d-icon {
-    margin-left: 0.25em;
+    margin-left: var(--space-1);
   }
 
   button {
     background: none;
     border: none;
+    padding: 0;
   }
 }
 
