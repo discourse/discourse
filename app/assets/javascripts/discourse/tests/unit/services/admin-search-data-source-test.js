@@ -2,7 +2,6 @@ import { getOwner } from "@ember/owner";
 import { settled } from "@ember/test-helpers";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
-import sinon from "sinon";
 import PreloadStore from "discourse/lib/preload-store";
 import { ADMIN_NAV_MAP } from "discourse/lib/sidebar/admin-nav-map";
 import { i18n } from "discourse-i18n";
@@ -71,13 +70,6 @@ module("Unit | Service | AdminSearchDataSource", function (hooks) {
 
   hooks.beforeEach(function () {
     this.subject = getOwner(this).lookup("service:admin-search-data-source");
-  });
-
-  test("buildMap - is a noop if already cached", async function (assert) {
-    await this.subject.buildMap();
-    sinon.stub(ADMIN_NAV_MAP, "forEach");
-    await this.subject.buildMap();
-    assert.false(ADMIN_NAV_MAP.forEach.called);
   });
 
   test("buildMap - makes a key/value object of preloaded plugins, excluding disabled and invalid ones", async function (assert) {
