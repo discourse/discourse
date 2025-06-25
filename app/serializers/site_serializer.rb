@@ -128,11 +128,13 @@ class SiteSerializer < ApplicationSerializer
           types = ordered_flags(PostActionType.types.values)
           ActiveModel::ArraySerializer.new(types).as_json
         else
+          flags = Flag.unscoped.order(:position).where(score_type: false).all
+
           ActiveModel::ArraySerializer.new(
-            Flag.unscoped.order(:position).where(score_type: false).all,
+            flags,
             each_serializer: FlagSerializer,
             target: :post_action,
-            used_flag_ids: Flag.used_flag_ids,
+            used_flag_ids: self.used_flag_ids(flags.map(&:id)),
           ).as_json
         end
       end
@@ -146,16 +148,19 @@ class SiteSerializer < ApplicationSerializer
           types = ordered_flags(PostActionType.topic_flag_types.values)
           ActiveModel::ArraySerializer.new(types, each_serializer: TopicFlagTypeSerializer).as_json
         else
-          ActiveModel::ArraySerializer.new(
+          flags =
             Flag
               .unscoped
               .where("'Topic' = ANY(applies_to)")
               .where(score_type: false)
               .order(:position)
-              .all,
+              .all
+
+          ActiveModel::ArraySerializer.new(
+            flags,
             each_serializer: FlagSerializer,
             target: :topic_flag,
-            used_flag_ids: Flag.used_flag_ids,
+            used_flag_ids: self.used_flag_ids(flags.map(&:id)),
           ).as_json
         end
       end
@@ -404,5 +409,9 @@ class SiteSerializer < ApplicationSerializer
 
   def ordered_flags(flags)
     flags.map { |id| PostActionType.new(id: id) }
+  end
+
+  def used_flag_ids(flag_ids)
+    @used_flag_ids ||= Flag.used_flag_ids(flag_ids)
   end
 end
