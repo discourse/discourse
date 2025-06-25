@@ -6805,6 +6805,8 @@ en:
           active_filter: "Active"
           inactive_filter: "Inactive"
           updates_available_filter: "Updates Available"
+          theme_setting_saved: "Theme setting saved!"
+          theme_site_setting_saved: "Theme site setting saved!"
 
         schema:
           title: "Edit %{name} setting"

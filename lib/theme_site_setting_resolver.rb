@@ -34,7 +34,7 @@ class ThemeSiteSettingResolver
   def resolved_theme_site_settings
     stored_theme_site_settings =
       theme.theme_site_settings.to_a.select do |setting|
-        setting.name.in?(SiteSetting.themeable_site_settings)
+        setting.name.to_sym.in?(SiteSetting.themeable_site_settings)
       end
 
     SiteSetting

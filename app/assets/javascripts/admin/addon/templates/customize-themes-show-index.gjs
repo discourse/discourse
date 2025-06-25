@@ -283,7 +283,9 @@ export default RouteTemplate(
         <p><i>{{i18n
               "admin.customize.theme.overriden_site_settings_explanation"
             }}</i></p>
-        <section class="form-horizontal theme settings control-unit">
+        <section
+          class="form-horizontal theme settings theme-site-settings control-unit"
+        >
           {{#each @controller.themeSiteSettings as |setting|}}
             <ThemeSiteSettingEditor
               @setting={{setting}}

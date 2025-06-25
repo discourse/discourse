@@ -5,7 +5,7 @@ import SiteSetting from "admin/models/site-setting";
 export default class ThemeSiteSettings extends SiteSetting {
   async updateSetting(themeId, newValue) {
     try {
-      await ajax(`/admin/themes/${themeId}/site-setting`, {
+      return ajax(`/admin/themes/${themeId}/site-setting`, {
         type: "PUT",
         data: {
           name: this.setting,

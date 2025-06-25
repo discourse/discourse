@@ -279,4 +279,34 @@ describe "Admin Customize Themes", type: :system do
       expect(page).to have_current_path("/")
     end
   end
+
+  describe "editing theme site settings" do
+    it "shows all themeable site settings and allows editing values" do
+      theme_page.visit(theme.id)
+      SiteSetting.themeable_site_settings.each do |setting_name|
+        expect(theme_page).to have_theme_site_setting(setting_name)
+      end
+      theme_page.toggle_theme_site_setting("enable_welcome_banner")
+      expect(theme_page).to have_overridden_theme_site_setting("enable_welcome_banner")
+      expect(page).to have_content(
+        I18n.t("admin_js.admin.customize.theme.theme_site_setting_saved"),
+      )
+      expect(
+        ThemeSiteSetting.exists?(theme: theme, name: "enable_welcome_banner", value: "f"),
+      ).to be_truthy
+    end
+
+    it "allows resetting themeable site setting values back to site setting default" do
+      Fabricate(:theme_site_setting, theme: theme, name: "enable_welcome_banner", value: "f")
+      theme_page.visit(theme.id)
+      expect(theme_page).to have_overridden_theme_site_setting("enable_welcome_banner")
+      theme_page.reset_overridden_theme_site_setting("enable_welcome_banner")
+      expect(page).to have_content(
+        I18n.t("admin_js.admin.customize.theme.theme_site_setting_saved"),
+      )
+      expect(
+        ThemeSiteSetting.exists?(theme: theme, name: "enable_welcome_banner", value: "f"),
+      ).to be_falsey
+    end
+  end
 end
