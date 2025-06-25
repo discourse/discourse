@@ -2,6 +2,7 @@
 
 class ThemeSettingsSerializer < ApplicationSerializer
   attributes :setting,
+             :humanized_name,
              :type,
              :default,
              :value,
@@ -14,6 +15,10 @@ class ThemeSettingsSerializer < ApplicationSerializer
 
   def setting
     object.name
+  end
+
+  def humanized_name
+    SiteSetting.humanized_name(object.name)
   end
 
   def type
