@@ -33,6 +33,8 @@ schema:
         add:
           - name: "original_username"
             datatype: text
+          - name: "avatar_type"
+            datatype: integer
         exclude:
           - "flag_level"
           - "last_emailed_at"
