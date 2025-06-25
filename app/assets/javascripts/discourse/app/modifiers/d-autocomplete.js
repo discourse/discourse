@@ -5,6 +5,7 @@ import { cancel } from "@ember/runloop";
 import Modifier from "ember-modifier";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
+import { TextareaAutocompleteHandler } from "discourse/lib/textarea-text-manipulation";
 
 /**
  * Class-based modifier for adding autocomplete functionality to input elements
@@ -145,6 +146,12 @@ export default class DAutocompleteModifier extends Modifier {
   modify(element, [options]) {
     this.targetElement = element;
     this.options = options || {};
+
+    // Always ensure we have a textHandler, create default if not provided
+    // This matches the behavior of the original jQuery autocomplete library
+    if (!this.options.textHandler) {
+      this.options.textHandler = new TextareaAutocompleteHandler(element);
+    }
 
     // Set up event listeners
     element.addEventListener("keyup", this.handleKeyUp);
@@ -425,24 +432,37 @@ export default class DAutocompleteModifier extends Modifier {
       return;
     }
 
-    // Simple text replacement
-    const value = this.targetElement.value;
-    const preserveKey = this.options.preserveKey ?? true;
-    const replacement = (preserveKey ? this.options.key || "" : "") + term;
+    // Use external textHandler if provided (for integration with TextareaTextManipulation)
+    if (this.options.textHandler) {
+      const preserveKey = this.options.preserveKey ?? true;
+      const replacement = (preserveKey ? this.options.key || "" : "") + term;
 
-    const newValue =
-      value.substring(0, this.completeStart) +
-      replacement +
-      value.substring(this.getCaretPosition());
+      // Use textHandler's replaceTerm method for consistent behavior
+      this.options.textHandler.replaceTerm(
+        this.completeStart,
+        this.getCaretPosition() - 1,
+        replacement
+      );
+    } else {
+      // Simple text replacement (default behavior)
+      const value = this.targetElement.value;
+      const preserveKey = this.options.preserveKey ?? true;
+      const replacement = (preserveKey ? this.options.key || "" : "") + term;
 
-    this.targetElement.value = newValue;
+      const newValue =
+        value.substring(0, this.completeStart) +
+        replacement +
+        value.substring(this.getCaretPosition());
 
-    // Set cursor position after replacement
-    const newCaretPos = this.completeStart + replacement.length;
-    this.targetElement.setSelectionRange(newCaretPos, newCaretPos);
+      this.targetElement.value = newValue;
 
-    // Trigger input event to notify other listeners
-    this.targetElement.dispatchEvent(new Event("input", { bubbles: true }));
+      // Set cursor position after replacement
+      const newCaretPos = this.completeStart + replacement.length;
+      this.targetElement.setSelectionRange(newCaretPos, newCaretPos);
+
+      // Trigger input event to notify other listeners
+      this.targetElement.dispatchEvent(new Event("input", { bubbles: true }));
+    }
 
     // Call afterComplete callback
     this.options.afterComplete?.(this.targetElement.value, event);
@@ -487,10 +507,23 @@ export default class DAutocompleteModifier extends Modifier {
   }
 
   getCaretPosition() {
+    // Use textHandler if available for consistency
+    if (this.options.textHandler) {
+      return this.options.textHandler.getCaretPosition();
+    }
     return this.targetElement.selectionStart || 0;
   }
 
   getCaretCoords() {
+    // Use textHandler if available for more accurate positioning
+    if (this.options.textHandler && this.options.textHandler.getCaretCoords) {
+      try {
+        return this.options.textHandler.getCaretCoords(this.completeStart);
+      } catch {
+        // Fall through to default implementation
+      }
+    }
+
     // Simple approximation - in real implementation you might want more sophisticated caret positioning
     try {
       const caretPos = this.getCaretPosition();
