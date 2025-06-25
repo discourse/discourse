@@ -82,12 +82,15 @@ export default RouteTemplate(
       />
 
       <div id="main-outlet-wrapper" class="wrap" role="main">
-        <div class="sidebar-wrapper">
-          {{! empty div allows for animation }}
-          {{#if (and @controller.sidebarEnabled @controller.showSidebar)}}
-            <Sidebar @toggleSidebar={{@controller.toggleSidebar}} />
-          {{/if}}
-        </div>
+
+        {{#unless @controller.hideMobileWrapper}}
+          <div class="sidebar-wrapper">
+            {{! empty div allows for animation }}
+            {{#if (and @controller.sidebarEnabled @controller.showSidebar)}}
+              <Sidebar @toggleSidebar={{@controller.toggleSidebar}} />
+            {{/if}}
+          </div>
+        {{/unless}}
 
         <LoadingSliderFallbackSpinner />
 

@@ -4047,7 +4047,10 @@ experimental:
     type: list
     default: ""
     hidden: true
-    allow_any: false
+  allow_any: false
     choices:
       - "foundation"
       - "horizon"
+  experimental_grid_layout:
+    client: true
+    default: true

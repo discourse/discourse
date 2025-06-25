@@ -14,6 +14,7 @@ export default class ApplicationController extends Controller {
   @service footer;
   @service header;
   @service sidebarState;
+  @service site;
 
   queryParams = [{ navigationMenuQueryParamOverride: "navigation_menu" }];
   showTop = true;
@@ -38,6 +39,10 @@ export default class ApplicationController extends Controller {
 
   get showPoweredBy() {
     return this.showFooter && this.siteSettings.enable_powered_by_discourse;
+  }
+
+  get hideMobileWrapper() {
+    return this.siteSettings.experimental_grid_layout && this.site.mobileView;
   }
 
   @discourseComputed
