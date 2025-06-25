@@ -271,6 +271,8 @@ export default class SiteSettingComponent extends Component {
 
         this.setting.validationMessage = errorString;
       } else {
+        // eslint-disable-next-line no-console
+        console.error(e);
         this.setting.validationMessage = i18n("generic_error");
       }
     } finally {
