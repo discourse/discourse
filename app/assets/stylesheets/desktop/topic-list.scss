@@ -163,7 +163,7 @@
 }
 
 .topic-list-bottom {
-  margin: 1.25em 0;
+  margin: var(--space-5) 0;
 
   .dismiss-container-bottom {
     float: right;
@@ -185,7 +185,7 @@
 
 #list-area {
   h2 {
-    margin: 20px 0 10px;
+    margin: var(--space-5) 0 var(--space-3);
   }
 
   .show-more {
@@ -196,8 +196,8 @@
 
     .alert {
       margin: 0;
-      padding: 1.1em 2em 1.1em 0.65em;
-      gap: 0.65em;
+      padding: var(--space-4) var(--space-8) var(--space-4) var(--space-3);
+      gap: var(--space-3);
       align-items: center;
 
       &.loading {
@@ -213,7 +213,7 @@
   margin-left: -5px;
 
   .btn {
-    margin-right: 0.5em;
+    margin-right: var(--space-2);
   }
 }
 
@@ -232,7 +232,7 @@
 
 .category-logo.aspect-image {
   float: left;
-  margin: 0.33em 2em 2em 0;
+  margin: var(--space-1) var(--space-8) var(--space-8) 0;
 }
 
 /* Tablet (portrait) ----------- */
@@ -283,7 +283,7 @@
   .nav-pills {
     > li > a {
       font-size: var(--font-0);
-      padding: 0.45em 0.67em;
+      padding: var(--space-2) var(--space-3);
     }
   }
 
