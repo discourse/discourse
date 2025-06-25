@@ -244,6 +244,7 @@ class Search
     @valid = true
     @page = @opts[:page]
     @search_all_pms = false
+    @matched_advanced_filter_names = []
 
     term = Search.clean_term(term)
 
@@ -372,8 +373,8 @@ class Search
     @advanced_orders ||= {}
   end
 
-  def self.advanced_filter(trigger, &block)
-    advanced_filters[trigger] = block
+  def self.advanced_filter(trigger, name: nil, &block)
+    advanced_filters[trigger] = { block:, name: }
   end
 
   def self.advanced_filters
@@ -755,7 +756,9 @@ class Search
     end
   end
 
-  advanced_filter(/\Abefore:(.*)\z/i) do |posts, match|
+  BEFORE_ADVANCED_FILTER_NAME = "before"
+
+  advanced_filter(/\Abefore:(.*)\z/i, name: BEFORE_ADVANCED_FILTER_NAME) do |posts, match|
     if date = Search.word_to_date(match)
       posts.where("posts.created_at < ?", date)
     else
@@ -763,7 +766,9 @@ class Search
     end
   end
 
-  advanced_filter(/\Aafter:(.*)\z/i) do |posts, match|
+  AFTER_ADVANCED_FILTER_NAME = "after"
+
+  advanced_filter(/\Aafter:(.*)\z/i, name: AFTER_ADVANCED_FILTER_NAME) do |posts, match|
     if date = Search.word_to_date(match)
       posts.where("posts.created_at > ?", date)
     else
@@ -915,13 +920,17 @@ class Search
 
         found = false
 
-        Search.advanced_filters.each do |matcher, block|
+        Search.advanced_filters.each do |matcher, options|
+          block = options[:block]
+          name = options[:name]
+
           case_insensitive_matcher =
             Regexp.new(matcher.source, matcher.options | Regexp::IGNORECASE)
 
           cleaned = word.gsub(/["']/, "")
           if cleaned =~ case_insensitive_matcher
             (@filters ||= []) << [block, $1]
+            @matched_advanced_filter_names << name if name
             found = true
           end
         end
@@ -1427,7 +1436,10 @@ class Search
   def aggregate_post_sql(opts)
     min_id =
       if SiteSetting.search_recent_regular_posts_offset_post_id > 0
-        if %w[all_topics private_message].include?(opts[:type_filter])
+        if %w[all_topics private_message].include?(opts[:type_filter]) ||
+             @matched_advanced_filter_names.any? { |name|
+               [BEFORE_ADVANCED_FILTER_NAME, AFTER_ADVANCED_FILTER_NAME].include?(name)
+             }
           0
         else
           SiteSetting.search_recent_regular_posts_offset_post_id
