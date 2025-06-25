@@ -561,6 +561,11 @@ basic:
     enum: "InterfaceColorSelectorSetting"
     default: "disabled"
     area: "interface"
+  use_modern_autocomplete:
+    client: true
+    hidden: true
+    default: true
+    area: "interface"
 
 login:
   invite_only:
