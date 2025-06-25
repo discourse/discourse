@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { cached, tracked } from "@glimmer/tracking";
+import { cached } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
@@ -11,7 +11,6 @@ import { INPUT_DELAY } from "discourse/lib/environment";
 import escapeRegExp from "discourse/lib/escape-regexp";
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
 import toMarkdown from "discourse/lib/to-markdown";
-import { applyValueTransformer } from "discourse/lib/transformer";
 import {
   getElement,
   selectedNode,
@@ -49,36 +48,17 @@ export default class PostTextSelection extends Component {
   @service siteSettings;
   @service menu;
 
-  @tracked isSelecting = false;
-  @tracked preventClose = applyValueTransformer(
-    "post-text-selection-prevent-close",
-    false
-  );
-
-  prevSelectedText;
-
-  documentListeners = modifier(() => {
+  setup = modifier(() => {
     document.addEventListener("selectionchange", this.selectionChange);
-
-    return () => {
-      document.removeEventListener("selectionchange", this.selectionChange);
-    };
-  });
-
-  appEventsListeners = modifier(() => {
     this.appEvents.on("quote-button:quote", this, "insertQuote");
 
     return () => {
+      cancel(this.debouncedSelectionChangeHandler);
+      document.removeEventListener("selectionchange", this.selectionChange);
       this.appEvents.off("quote-button:quote", this, "insertQuote");
+      this.menuInstance?.close();
     };
   });
-
-  willDestroy() {
-    super.willDestroy(...arguments);
-
-    cancel(this.debouncedSelectionChanged);
-    this.menuInstance?.close();
-  }
 
   @bind
   async showToolbar(cooked) {
@@ -140,18 +120,21 @@ export default class PostTextSelection extends Component {
   }
 
   @bind
-  selectionChange() {
-    this.hideToolbar();
-    discourseDebounce(this.selectionChangeHandler, INPUT_DELAY);
+  async selectionChange() {
+    await this.hideToolbar();
+    this.debouncedSelectionChangeHandler = discourseDebounce(
+      this.selectionChangeHandler,
+      INPUT_DELAY
+    );
   }
 
   @bind
-  selectionChangeHandler() {
+  async selectionChangeHandler() {
     const cooked = this.computeCurrentCooked();
     if (cooked) {
-      this.showToolbar(cooked);
+      await this.showToolbar(cooked);
     } else {
-      this.hideToolbar();
+      await this.hideToolbar();
     }
   }
 
@@ -275,6 +258,6 @@ export default class PostTextSelection extends Component {
   }
 
   <template>
-    <div {{this.documentListeners}} {{this.appEventsListeners}}></div>
+    <div {{this.setup}}></div>
   </template>
 }

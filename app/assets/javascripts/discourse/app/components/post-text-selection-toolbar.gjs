@@ -1,12 +1,10 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import DButton from "discourse/components/d-button";
-import FastEdit from "discourse/components/fast-edit";
 import FastEditModal from "discourse/components/modal/fast-edit";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import concatClass from "discourse/helpers/concat-class";
@@ -97,11 +95,6 @@ export default class PostTextSelectionToolbar extends Component {
   }
 
   @action
-  trapEvents(event) {
-    event.stopPropagation();
-  }
-
-  @action
   async copyQuoteToClipboard() {
     const text = await this.args.data.buildQuote();
     clipboardCopy(text);
@@ -184,11 +177,7 @@ export default class PostTextSelectionToolbar extends Component {
   }
 
   <template>
-    {{! template-lint-disable no-invalid-interactive }}
-    {{! template-lint-disable no-pointer-down-event-binding }}
     <div
-      {{on "mousedown" this.trapEvents}}
-      {{on "mouseup" this.trapEvents}}
       class={{concatClass "quote-button" "visible"}}
       {{this.appEventsListeners}}
     >
