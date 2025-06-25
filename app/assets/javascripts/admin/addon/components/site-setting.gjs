@@ -406,7 +406,7 @@ export default class SiteSettingComponent extends Component {
         {{#if this.setting.secret}}
           <DButton
             @action={{this.toggleSecret}}
-            @icon="far-eye-slash"
+            @icon={{if this.isSecret "far-eye" "far-eye-slash"}}
             @ariaLabel="admin.settings.unmask"
             class="setting-toggle-secret"
           />
