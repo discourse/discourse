@@ -842,6 +842,13 @@ export default class TextareaTextManipulation {
   }
 
   autocomplete(options) {
+    if (this.siteSettings.use_modern_autocomplete) {
+      // TODO: Implement modern DAutocomplete integration
+      // For now, fall back to jQuery autocomplete
+      // eslint-disable-next-line no-console
+      console.warn("Modern autocomplete enabled but not yet implemented");
+    }
+
     // @ts-ignore
     this.$textarea.autocomplete(
       options instanceof Object

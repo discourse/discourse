@@ -70,7 +70,7 @@ export default class DAutocomplete extends Component {
   }
 
   get shouldDebounce() {
-    return this.args.debounced ?? true;
+    return this.args.debounced ?? false;
   }
 
   get menuIdentifier() {
