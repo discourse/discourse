@@ -539,7 +539,8 @@ RSpec.describe RemoteTheme do
         expect(theme.theme_site_settings.count).to eq(0)
       end
 
-      # TODO (martin) Hard to test this without a better example...
+      # TODO (martin) Hard to test this without a better example...we don't have any
+      # theme site settings that are an enum with > 2 values.
       xit "does not override user modified theme site settings" do
         add_to_git_repo(
           initial_repo,
@@ -553,10 +554,8 @@ RSpec.describe RemoteTheme do
         theme = RemoteTheme.import_theme(initial_repo_url)
         expect(theme.theme_site_settings.first.value).to eq("search_field")
 
-        # Manually update to a custom value
         theme.theme_site_settings.first.update!(value: "search_icon")
 
-        # Update the theme with a new value for the same setting
         add_to_git_repo(
           initial_repo,
           "about.json" =>
@@ -569,7 +568,6 @@ RSpec.describe RemoteTheme do
         theme.remote_theme.update_from_remote
         theme.reload
 
-        # It should keep the user's custom value
         expect(theme.theme_site_settings.first.value).to eq("search_icon")
       end
 

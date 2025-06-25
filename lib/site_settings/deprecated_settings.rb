@@ -141,7 +141,7 @@ module SiteSettings::DeprecatedSettings
         end
       end
 
-      define_singleton_method old_setting do |warn: true|
+      define_singleton_method old_setting do |scoped_to = nil, warn: true|
         if warn
           Discourse.deprecate(
             "`SiteSetting.#{old_setting}` has been deprecated. Please use `SiteSetting.#{new_setting}` instead.",
@@ -152,13 +152,13 @@ module SiteSettings::DeprecatedSettings
         if OVERRIDE_TL_GROUP_SETTINGS.include?(old_setting)
           self.public_send("_group_to_tl_#{old_setting}")
         else
-          self.public_send(override ? new_setting : "_#{old_setting}")
+          self.public_send(override ? new_setting : "_#{old_setting}", scoped_to)
         end
       end
 
       SiteSetting.singleton_class.alias_method(:"_#{old_setting}?", :"#{old_setting}?") if !override
 
-      define_singleton_method "#{old_setting}?" do |warn: true|
+      define_singleton_method "#{old_setting}?" do |scoped_to = nil, warn: true|
         if warn
           Discourse.deprecate(
             "`SiteSetting.#{old_setting}?` has been deprecated. Please use `SiteSetting.#{new_setting}?` instead.",
@@ -166,7 +166,7 @@ module SiteSettings::DeprecatedSettings
           )
         end
 
-        self.public_send("#{override ? new_setting : "_" + old_setting}?")
+        self.public_send("#{override ? new_setting : "_" + old_setting}?", scoped_to)
       end
 
       SiteSetting.singleton_class.alias_method(:"_#{old_setting}=", :"#{old_setting}=") if !override
