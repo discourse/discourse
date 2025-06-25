@@ -90,11 +90,7 @@ class Themes::ThemeSiteSettingManager
     context[:new_value] = nil
 
     if existing_theme_site_setting
-      context[:previous_value] = SiteSetting.type_supervisor.to_rb_value(
-        existing_theme_site_setting.name,
-        existing_theme_site_setting.value,
-        setting_data_type,
-      )
+      context[:previous_value] = existing_theme_site_setting.setting_rb_value
 
       # Since the site setting itself doesn't matter, if we are
       # setting this back to the same value as the default setting

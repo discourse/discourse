@@ -10,6 +10,15 @@
 class ThemeSiteSetting < ActiveRecord::Base
   belongs_to :theme
 
+  # Gets a list of themes that have theme site setting records
+  # and the associated values for those settings.
+  #
+  # @return [Array<Hash>] an array of hashes where each hash contains:
+  #   - :theme_id [Integer] the ID of the theme
+  #   - :theme_name [String] the name of the theme
+  #   - :setting_name [Symbol] the name of the setting
+  #   - :value [String] the value of the setting
+  #   - :data_type [Integer] the data type of the setting
   def self.themes_with_overridden_settings
     sql = <<~SQL
       SELECT theme.id AS theme_id, theme.name AS theme_name,
@@ -34,12 +43,23 @@ class ThemeSiteSetting < ActiveRecord::Base
       ActiveRecord::Base.connection.table_exists?(self.table_name)
   end
 
-  # Lightweight override similar to what SiteSettings::DbProvider and
-  # SiteSettings::LocalProcessProvider do.
+  # Genetates a map of theme IDs to their site setting values. When
+  # there is no theme site setting for a given theme, the default
+  # site setting value is used.
   #
-  # This is used to ensure that we don't try to load settings from Redis or
-  # the database when they are not available.
+  # @return [Hash] a map where keys are theme IDs and values are hashes:
+  #
+  # {
+  #   123 => {
+  #     setting_name_1 => value_1,
+  #     setting_name_2 => value_2,
+  #     ...
+  #   }
+  # }
   def self.generate_theme_map
+    # Similar to what SiteSettings::DbProvider and SiteSettings::LocalProcessProvider do
+    # for their #all method, we can't try to load settings if the DB is not available,
+    # since this method is called within SiteSetting.refresh! which is called on boot.
     return {} if !can_access_db?
 
     theme_site_setting_values_map = {}
