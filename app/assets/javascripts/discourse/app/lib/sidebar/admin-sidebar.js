@@ -5,7 +5,6 @@ import { adminRouteValid } from "discourse/lib/admin-utilities";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import getURL from "discourse/lib/get-url";
 import PreloadStore from "discourse/lib/preload-store";
-import { ADMIN_NAV_MAP } from "discourse/lib/sidebar/admin-nav-map";
 import BaseCustomSidebarPanel from "discourse/lib/sidebar/base-custom-sidebar-panel";
 import BaseCustomSidebarSection from "discourse/lib/sidebar/base-custom-sidebar-section";
 import BaseCustomSidebarSectionLink from "discourse/lib/sidebar/base-custom-sidebar-section-link";
@@ -310,7 +309,9 @@ function pluginAdminRouteLinks(router) {
 }
 
 function installedPluginsLinkKeywords() {
-  return (PreloadStore.get("visiblePlugins") || []).mapBy("name");
+  return (PreloadStore.get("visiblePlugins") || []).map(
+    (plugin) => plugin.name
+  );
 }
 
 export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
@@ -336,18 +337,22 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
       "service:admin-sidebar-state-manager"
     );
 
-    const savedConfig = this.adminSidebarStateManager.navConfig;
-    const navMap = savedConfig || ADMIN_NAV_MAP;
+    this.adminNavManager = getOwnerWithFallback(this).lookup(
+      "service:admin-nav-manager"
+    );
 
     if (!session.get("safe_mode")) {
-      const pluginLinks = navMap.find(
-        (section) => section.name === "plugins"
-      ).links;
-      pluginAdminRouteLinks(router).forEach((pluginLink) => {
-        if (!pluginLinks.mapBy("name").includes(pluginLink.name)) {
-          pluginLinks.push(pluginLink);
-        }
-      });
+      const existingPluginLinkNames = this.adminNavManager
+        .findSection("plugins")
+        .links.map((link) => link.name);
+      const pluginLinksToAdd = pluginAdminRouteLinks(router)
+        .map((pluginLink) => {
+          if (!existingPluginLinkNames.includes(pluginLink.name)) {
+            return pluginLink;
+          }
+        })
+        .compact();
+      this.adminNavManager.amendLinksToSection("plugins", pluginLinksToAdd);
 
       this.adminSidebarStateManager.setLinkKeywords(
         "admin_installed_plugins",
@@ -355,36 +360,54 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
       );
     }
 
-    store.findAll("theme").then((themes) => {
-      this.adminSidebarStateManager.setLinkKeywords(
-        "admin_themes_and_components",
-        themes.content.rejectBy("component").mapBy("name")
-      );
-      this.adminSidebarStateManager.setLinkKeywords(
-        "admin_themes_and_components",
-        themes.content.filterBy("component").mapBy("name")
-      );
-    });
+    // Mods cannot access themes
+    if (currentUser.admin) {
+      store.findAll("theme").then((themes) => {
+        this.adminSidebarStateManager.setLinkKeywords(
+          "admin_themes_and_components",
+          themes.content
+            .reject((theme) => theme.component)
+            .map((theme) => theme.name)
+        );
+        this.adminSidebarStateManager.setLinkKeywords(
+          "admin_themes_and_components",
+          themes.content
+            .filter((theme) => theme.component)
+            .map((theme) => theme.name)
+        );
+      });
+    }
 
     if (siteSettings.experimental_form_templates) {
-      navMap
-        .find((section) => section.name === "appearance")
-        .links.push({
+      this.adminNavManager.amendLinksToSection("appearance", [
+        {
           name: "admin_customize_form_templates",
           route: "adminCustomizeFormTemplates",
           label: "admin.form_templates.nav_title",
           icon: "list",
-        });
+        },
+      ]);
     }
 
     if (siteSettings.use_overhauled_theme_color_palette) {
-      navMap
-        .find((section) => section.name === "appearance")
-        .links.find((link) => link.name === "admin_color_palettes").route =
-        "adminConfig.colorPalettes";
+      this.adminNavManager.overrideSectionLink(
+        "appearance",
+        "admin_color_palettes",
+        {
+          route: "adminConfig.colorPalettes",
+        }
+      );
     }
 
-    navMap.forEach((section) =>
+    for (const [sectionName, additionalLinks] of Object.entries(
+      additionalAdminSidebarSectionLinks
+    )) {
+      if (additionalLinks.length) {
+        this.adminNavManager.amendLinksToSection(sectionName, additionalLinks);
+      }
+    }
+
+    this.adminNavManager.filteredNavMap.forEach((section) =>
       section.links.forEach((link) => {
         if (link.keywords) {
           this.adminSidebarStateManager.setLinkKeywords(
@@ -395,18 +418,7 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
       })
     );
 
-    let navConfig = useAdminNavConfig(navMap);
-
-    if (!currentUser.admin && currentUser.moderator) {
-      navConfig.forEach((section) => {
-        section.links = section.links.filter((link) => {
-          return link.moderator;
-        });
-      });
-      navConfig = navConfig.filterBy("links.length");
-    }
-
-    return navConfig.map((adminNavSectionData) => {
+    return this.adminNavManager.filteredNavMap.map((adminNavSectionData) => {
       return defineAdminSection(
         adminNavSectionData,
         this.adminSidebarStateManager,
