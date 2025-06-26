@@ -70,6 +70,12 @@ export default class WelcomeBanner extends Component {
     });
   }
 
+  get subheaderText() {
+    return this.currentUser
+      ? i18n("welcome_banner.subheader.logged_in_members")
+      : i18n("welcome_banner.subheader.anonymous_members");
+  }
+
   get shouldDisplay() {
     const enabled = applyValueTransformer(
       "site-setting-enable-welcome-banner",
@@ -104,6 +110,11 @@ export default class WelcomeBanner extends Component {
           <div class="custom-search-banner-wrap welcome-banner__wrap">
             <div class="welcome-banner__title">
               {{htmlSafe this.headerText}}
+              {{#if this.subheaderText}}
+                <p class="welcome-banner__subheader">
+                  {{htmlSafe this.subheaderText}}
+                </p>
+              {{/if}}
             </div>
             <PluginOutlet @name="welcome-banner-below-headline" />
             <div class="search-menu welcome-banner__search-menu">
