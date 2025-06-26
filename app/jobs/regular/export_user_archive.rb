@@ -182,10 +182,10 @@ module Jobs
         FileUtils.rm_rf(dirname)
       end
 
-      provide_results(user_export, zip_filename, export_title)
+      provide_results(user_export, zip_filename, export_title, args)
     end
 
-    def provide_results(user_export, zip_filename, export_title)
+    def provide_results(user_export, zip_filename, export_title, args)
       begin
         create_upload_for_user(user_export, zip_filename)
       ensure
