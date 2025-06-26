@@ -59,7 +59,9 @@ module("Integration | Component | Post | PostMetaData", function (hooks) {
       .dom("div.post-info.post-metadata-test")
       .exists("the test component is present");
     assert
-      .dom("div.post-info.post-metadata-test + div.post-info.post-date")
+      .dom(
+        "div.post-info.post-metadata-test:nth-child(1) + div.post-info.post-date:nth-child(2)"
+      )
       .exists("the expected order is correct");
   });
 });
