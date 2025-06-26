@@ -2699,6 +2699,7 @@ en:
       add_warning: "This is an official warning."
       toggle_whisper: "Toggle Whisper"
       toggle_unlisted: "Toggle Unlisted"
+      toggle_unlisted_description: "Toggle the unlisted status of the topic"
       insert_table: "Insert Table"
       posting_not_on_topic: "Which topic do you want to reply to?"
       saved_local_draft_tip: "saved locally"
