@@ -62,7 +62,7 @@ const INFO_DEFINITIONS = {
   },
   [metaDataInfoKeys.READ_INDICATOR]: {
     Component: PostMetaDataReadIndicator,
-    shouldRender: (args) => !args.post.read,
+    shouldRender: (args) => args.post.read,
   },
 };
 
