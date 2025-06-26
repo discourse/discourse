@@ -3,7 +3,6 @@ import { service } from "@ember/service";
 import ApiSections from "../api-sections";
 import CategoriesSection from "./categories-section";
 import CustomSections from "./custom-sections";
-import MessagesSection from "./messages-section";
 import TagsSection from "./tags-section";
 
 export default class SidebarUserSections extends Component {
@@ -20,10 +19,6 @@ export default class SidebarUserSections extends Component {
 
       {{#if this.currentUser.display_sidebar_tags}}
         <TagsSection @collapsable={{@collapsableSections}} />
-      {{/if}}
-
-      {{#if this.currentUser.can_send_private_messages}}
-        <MessagesSection @collapsable={{@collapsableSections}} />
       {{/if}}
 
       {{#unless @hideApiSections}}
