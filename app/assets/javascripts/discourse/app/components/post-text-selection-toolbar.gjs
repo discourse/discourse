@@ -119,11 +119,7 @@ export default class PostTextSelectionToolbar extends Component {
               class="btn-flat quote-edit-label"
               {{on
                 "click"
-                (fn
-                  @data.toggleFastEdit
-                  this.quoteState
-                  this.args.data.supportsFastEdit
-                )
+                (fn @data.toggleFastEdit this.quoteState @data.supportsFastEdit)
               }}
             />
           {{/if}}
