@@ -864,6 +864,17 @@ class Search
       else
         posts = posts.order("posts.like_count DESC")
       end
+    elsif @order == :read && @guardian.user
+      posts =
+        posts.joins(
+          "JOIN topic_users tu ON tu.topic_id = posts.topic_id AND tu.user_id = #{@guardian.user.id.to_i}",
+        ).where("tu.last_visited_at IS NOT NULL")
+
+      if aggregate_search
+        posts = posts.order("MAX(tu.last_visited_at) DESC")
+      else
+        posts = posts.reorder("tu.last_visited_at DESC")
+      end
     elsif allow_relevance_search
       posts = sort_by_relevance(posts, type_filter: type_filter, aggregate_search: aggregate_search)
     end
@@ -937,6 +948,9 @@ class Search
 
         if word == "l"
           @order = :latest
+          nil
+        elsif word == "r"
+          @order = :read if @guardian.user
           nil
         elsif word =~ /\Aorder:\w+\z/i
           @order = word.downcase.gsub("order:", "").to_sym
