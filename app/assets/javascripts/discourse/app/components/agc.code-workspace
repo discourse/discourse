@@ -1,0 +1,21 @@
+{
+  "folders": [
+    {
+      "name": "discourse",
+      "path": "../../../../../..",
+    },
+    {
+      "name": "discourse-ai",
+      "path": "../../../../../../plugins/discourse-ai",
+    },
+    {
+      "name": "discourse-global-communities",
+      "path": "../../../../../../plugins/discourse-global-communities",
+    },
+    {
+      "name": "agc-ignite-theme",
+      "path": "../../../../../../plugins/agc-ignite-theme",
+    },
+  ],
+  "settings": {},
+}
