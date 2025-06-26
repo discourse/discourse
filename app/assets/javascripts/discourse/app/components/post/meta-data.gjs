@@ -1,6 +1,8 @@
 import Component from "@glimmer/component";
+import { cached } from "@glimmer/tracking";
 import { getOwner } from "@ember/owner";
-import { service } from "@ember/service";
+import DAG from "discourse/lib/dag";
+import { applyMutableValueTransformer } from "discourse/lib/transformer";
 import PostMetaDataDate from "./meta-data/date";
 import PostMetaDataEditsIndicator from "./meta-data/edits-indicator";
 import PostMetaDataEmailIndicator from "./meta-data/email-indicator";
@@ -12,82 +14,114 @@ import PostMetaDataReplyToTab from "./meta-data/reply-to-tab";
 import PostMetaDataSelectPost from "./meta-data/select-post";
 import PostMetaDataWhisperIndicator from "./meta-data/whisper-indicator";
 
-export default class PostMetaData extends Component {
-  @service currentUser;
+const metaDataInfoKeys = Object.freeze({
+  WHISPER_INDICATOR: "whisper_indicator",
+  EMAIL_INDICATOR: "email_indicator",
+  LOCKED_INDICATOR: "locked_indicator",
+  EDITS_INDICATOR: "edits_indicator",
+  SELECT_POST: "select_post",
+  REPLY_TO_TAB: "reply_to_tab",
+  LANGUAGE: "language",
+  DATE: "date",
+  READ_INDICATOR: "read_indicator",
+});
 
-  get displayPosterName() {
+const INFO_DEFINITIONS = {
+  [metaDataInfoKeys.WHISPER_INDICATOR]: {
+    Component: PostMetaDataWhisperIndicator,
+    shouldRender: (args) => args.post.isWhisper,
+  },
+  [metaDataInfoKeys.EMAIL_INDICATOR]: {
+    Component: PostMetaDataEmailIndicator,
+    shouldRender: (args) => args.post.via_email,
+  },
+  [metaDataInfoKeys.LOCKED_INDICATOR]: {
+    Component: PostMetaDataLockedIndicator,
+    shouldRender: (args) => args.post.locked,
+  },
+  [metaDataInfoKeys.EDITS_INDICATOR]: {
+    Component: PostMetaDataEditsIndicator,
+    shouldRender: (args) => args.post.version > 1 || args.post.wiki,
+  },
+  [metaDataInfoKeys.SELECT_POST]: {
+    Component: PostMetaDataSelectPost,
+    shouldRender: (args) => args.multiSelect,
+  },
+  [metaDataInfoKeys.REPLY_TO_TAB]: {
+    Component: PostMetaDataReplyToTab,
+    shouldRender: (args, owner) =>
+      PostMetaDataReplyToTab.shouldRender(args, null, owner),
+  },
+  [metaDataInfoKeys.LANGUAGE]: {
+    Component: PostMetaDataLanguage,
+    shouldRender: (args) => args.post.is_localized && args.post.language,
+  },
+  [metaDataInfoKeys.DATE]: {
+    Component: PostMetaDataDate,
+    shouldRender: () => true,
+  },
+  [metaDataInfoKeys.READ_INDICATOR]: {
+    Component: PostMetaDataReadIndicator,
+    shouldRender: (args) => !args.post.read,
+  },
+};
+
+const INFO_COMPONENTS = Array.from(Object.entries(INFO_DEFINITIONS)).map(
+  ([key, { Component: InfoComponent }]) => [key, InfoComponent]
+);
+
+export default class PostMetaData extends Component {
+  @cached
+  get availableInfoComponents() {
+    return this.#infoComponentsDag
+      .resolve()
+      .filter(({ key }) => {
+        const shouldRender = INFO_DEFINITIONS[key]?.shouldRender;
+        return shouldRender ? shouldRender(this.args, getOwner(this)) : true;
+      })
+      .map(({ key, value: InfoComponent }) => ({ key, InfoComponent }));
+  }
+
+  get shouldDisplayPosterName() {
     return this.args.displayPosterName ?? true;
   }
 
-  get shouldDisplayEditsIndicator() {
-    return this.args.post.version > 1 || this.args.post.wiki;
-  }
-
-  get shouldDisplayReplyToTab() {
-    return PostMetaDataReplyToTab.shouldRender(this.args, null, getOwner(this));
-  }
-
-  get shouldDisplayLanguage() {
-    return this.args.post.is_localized && this.args.post.language;
+  // The metadata components are managed in a Directed Acyclic Graph (DAG)
+  // to allow plugins to modify the list (e.g., add new items or reorder).
+  get #infoComponentsDag() {
+    return applyMutableValueTransformer(
+      "post-meta-data-infos",
+      DAG.from(INFO_COMPONENTS, {
+        throwErrorOnCycle: false,
+      }),
+      { post: this.args.post, metaDataInfoKeys }
+    );
   }
 
   <template>
     <div class="topic-meta-data" role="heading" aria-level="2">
-      {{#if this.displayPosterName}}
+      {{#if this.shouldDisplayPosterName}}
         <PostMetaDataPosterName @post={{@post}} />
       {{/if}}
 
       <div class="post-infos">
-        {{#if @post.isWhisper}}
-          <PostMetaDataWhisperIndicator @post={{@post}} />
-        {{/if}}
-
-        {{#if @post.via_email}}
-          <PostMetaDataEmailIndicator
-            @post={{@post}}
-            @showRawEmail={{@showRawEmail}}
-          />
-        {{/if}}
-
-        {{#if @post.locked}}
-          <PostMetaDataLockedIndicator @post={{@post}} />
-        {{/if}}
-
-        {{#if this.shouldDisplayEditsIndicator}}
-          <PostMetaDataEditsIndicator
+        {{! do not include PluginOutlets here, use the DAG API instead }}
+        {{#each this.availableInfoComponents key="key" as |item|}}
+          <item.InfoComponent
             @post={{@post}}
             @editPost={{@editPost}}
-            @showHistory={{@showHistory}}
-          />
-        {{/if}}
-
-        {{#if @multiSelect}}
-          <PostMetaDataSelectPost
-            @post={{@post}}
-            @selected={{@selected}}
-            @selectReplies={{@selectReplies}}
-            @selectBelow={{@selectBelow}}
-            @togglePostSelection={{@togglePostSelection}}
-          />
-        {{/if}}
-
-        {{#if this.shouldDisplayReplyToTab}}
-          <PostMetaDataReplyToTab
-            @post={{@post}}
             @hasRepliesAbove={{@hasRepliesAbove}}
             @isReplyingDirectlyToPostAbove={{@isReplyingDirectlyToPostAbove}}
             @repliesAbove={{@repliesAbove}}
+            @selectBelow={{@selectBelow}}
+            @selectReplies={{@selectReplies}}
+            @selected={{@selected}}
+            @showHistory={{@showHistory}}
+            @showRawEmail={{@showRawEmail}}
+            @togglePostSelection={{@togglePostSelection}}
             @toggleReplyAbove={{@toggleReplyAbove}}
           />
-        {{/if}}
-
-        {{#if this.shouldDisplayLanguage}}
-          <PostMetaDataLanguage @post={{@post}} />
-        {{/if}}
-
-        <PostMetaDataDate @post={{@post}} />
-
-        <PostMetaDataReadIndicator @post={{@post}} />
+        {{/each}}
       </div>
     </div>
   </template>
