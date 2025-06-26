@@ -3136,7 +3136,7 @@ RSpec.describe Search do
     end
   end
 
-  it "can order by read" do
+  it "orders posts by the timestamp of the user's last visit to each topic" do
     user = Fabricate(:user)
 
     post2 = nil
@@ -3160,5 +3160,10 @@ RSpec.describe Search do
 
     # also allow for the r shortcul like we have l
     expect(result.posts.map(&:id)).to eq([post1.id, post2.id])
+
+    result = Search.execute("Read order term r", guardian: Guardian.new)
+
+    # no op on anon - all included
+    expect(result.posts.map(&:id).length).to eq(3)
   end
 end
