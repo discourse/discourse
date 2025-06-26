@@ -15,6 +15,29 @@ schema:
         exclude:
           - "grant_count"
           - "system"
+    categories:
+      columns:
+        add:
+          - name: "about_topic_title"
+            datatype: text
+          - name: "existing_id"
+            datatype: numeric
+        exclude:
+          - "contains_messages"
+          - "latest_post_id"
+          - "latest_topic_id"
+          - "name_lower"
+          - "post_count"
+          - "posts_day"
+          - "posts_month"
+          - "posts_week"
+          - "posts_year"
+          - "topic_count"
+          - "topics_day"
+          - "topics_month"
+          - "topics_week"
+          - "topics_year"
+          - "reviewable_by_group_id"
     user_emails:
       columns:
         include:
@@ -79,7 +102,6 @@ schema:
         - "badge_groupings"
         - "badge_types"
         - "bookmarks"
-        - "categories"
         - "categories_web_hooks"
         - "category_custom_fields"
         - "category_featured_topics"
