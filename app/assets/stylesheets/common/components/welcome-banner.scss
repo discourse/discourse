@@ -82,6 +82,20 @@
       text-align: center;
     }
 
+    .welcome-banner__subheader {
+      font-size: var(--font-down-6);
+      font-weight: normal;
+      margin-top: 0.25rem;
+
+      @include viewport.until(md) {
+        font-size: var(--font-down-4);
+      }
+
+      @include viewport.until(sm) {
+        font-size: var(--font-down-1);
+      }
+    }
+
     .btn.search-icon {
       z-index: 2;
       background: transparent;
