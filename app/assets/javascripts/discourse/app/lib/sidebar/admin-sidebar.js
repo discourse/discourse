@@ -4,7 +4,6 @@ import { configNavForPlugin } from "discourse/lib/admin-plugin-config-nav";
 import { adminRouteValid } from "discourse/lib/admin-utilities";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import getURL from "discourse/lib/get-url";
-import { cloneJSON } from "discourse/lib/object";
 import PreloadStore from "discourse/lib/preload-store";
 import { ADMIN_NAV_MAP } from "discourse/lib/sidebar/admin-nav-map";
 import BaseCustomSidebarPanel from "discourse/lib/sidebar/base-custom-sidebar-panel";
@@ -338,7 +337,7 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
     );
 
     const savedConfig = this.adminSidebarStateManager.navConfig;
-    const navMap = savedConfig || cloneJSON(ADMIN_NAV_MAP);
+    const navMap = savedConfig || ADMIN_NAV_MAP;
 
     if (!session.get("safe_mode")) {
       const pluginLinks = navMap.find(
