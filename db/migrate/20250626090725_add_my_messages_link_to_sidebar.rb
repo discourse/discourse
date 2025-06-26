@@ -8,6 +8,31 @@ class AddMyMessagesLinkToSidebar < ActiveRecord::Migration[7.2]
       ).first
     return if !community_section
 
+    # Check if "My Messages" link already exists
+    existing_messages_link = DB.query_single(<<~SQL).first
+      SELECT ssl.id
+      FROM sidebar_section_links ssl
+      JOIN sidebar_urls su ON ssl.linkable_id = su.id
+      WHERE ssl.sidebar_section_id = #{community_section}
+        AND ssl.linkable_type = 'SidebarUrl'
+        AND su.value = '/my/messages'
+      LIMIT 1
+    SQL
+
+    # If the link already exists, we're done
+    return if existing_messages_link
+
+    # Clean up any orphaned URLs with `/my/messages` value
+    DB.query(<<~SQL)
+      DELETE FROM sidebar_urls 
+      WHERE value = '/my/messages'
+        AND id NOT IN (
+          SELECT DISTINCT linkable_id 
+          FROM sidebar_section_links 
+          WHERE linkable_type = 'SidebarUrl'
+        )
+    SQL
+
     # Find the position of "My Posts" link
     my_posts_position = DB.query_single(<<~SQL).first
       SELECT ssl.position
@@ -15,7 +40,7 @@ class AddMyMessagesLinkToSidebar < ActiveRecord::Migration[7.2]
       JOIN sidebar_urls su ON ssl.linkable_id = su.id
       WHERE ssl.sidebar_section_id = #{community_section}
         AND ssl.linkable_type = 'SidebarUrl'
-        AND su.name = 'My Posts'
+        AND su.value = '/my/activity'
       LIMIT 1
     SQL
 
@@ -29,22 +54,16 @@ class AddMyMessagesLinkToSidebar < ActiveRecord::Migration[7.2]
         AND linkable_type = 'SidebarUrl'
     SQL
 
+    # Use a much higher temporary offset to avoid conflicts
+    temp_offset = max_position + 1000
+
     # First, move all links that come after "My Posts" to temporary high positions
     DB.query <<~SQL
       UPDATE sidebar_section_links
-      SET position = position + #{max_position + 100}
+      SET position = position + #{temp_offset}
       WHERE sidebar_section_id = #{community_section}
         AND linkable_type = 'SidebarUrl'
         AND position > #{my_posts_position}
-    SQL
-
-    # Then move them back to their final positions (shifted by 1)
-    DB.query <<~SQL
-      UPDATE sidebar_section_links
-      SET position = position - #{max_position + 100} + 1
-      WHERE sidebar_section_id = #{community_section}
-        AND linkable_type = 'SidebarUrl'
-        AND position > #{max_position + 99}
     SQL
 
     # Insert the "My Messages" sidebar URL
@@ -62,6 +81,15 @@ class AddMyMessagesLinkToSidebar < ActiveRecord::Migration[7.2]
       INSERT INTO sidebar_section_links(user_id, linkable_id, linkable_type, sidebar_section_id, position, created_at, updated_at)
       VALUES (-1, #{sidebar_url_id}, 'SidebarUrl', #{community_section}, #{my_posts_position + 1}, now(), now())
     SQL
+
+    # Finally, move the temporarily displaced links back to their correct positions (shifted by 1)
+    DB.query <<~SQL
+      UPDATE sidebar_section_links
+      SET position = position - #{temp_offset} + 1
+      WHERE sidebar_section_id = #{community_section}
+        AND linkable_type = 'SidebarUrl'
+        AND position > #{temp_offset}
+    SQL
   end
 
   def down
@@ -77,7 +105,7 @@ class AddMyMessagesLinkToSidebar < ActiveRecord::Migration[7.2]
       SELECT su.id, ssl.position
       FROM sidebar_urls su
       JOIN sidebar_section_links ssl ON ssl.linkable_id = su.id
-      WHERE su.name = 'My Messages' AND su.value = '/my/messages'
+      WHERE su.value = '/my/messages'
         AND ssl.sidebar_section_id = #{community_section}
         AND ssl.linkable_type = 'SidebarUrl'
       LIMIT 1
@@ -100,13 +128,33 @@ class AddMyMessagesLinkToSidebar < ActiveRecord::Migration[7.2]
       WHERE id = #{sidebar_url_id}
     SQL
 
-    # Shift all links that came after "My Messages" back up by 1 position
+    # Get the maximum position to use as a temporary offset
+    max_position = DB.query_single(<<~SQL).first || 0
+      SELECT COALESCE(MAX(position), -1)
+      FROM sidebar_section_links
+      WHERE sidebar_section_id = #{community_section}
+        AND linkable_type = 'SidebarUrl'
+    SQL
+
+    # Use a much higher temporary offset to avoid conflicts
+    temp_offset = max_position + 1000
+
+    # First, move all links that came after "My Messages" to temporary high positions
     DB.query <<~SQL
       UPDATE sidebar_section_links
-      SET position = position - 1
+      SET position = position + #{temp_offset}
       WHERE sidebar_section_id = #{community_section}
         AND linkable_type = 'SidebarUrl'
         AND position > #{my_messages_position}
+    SQL
+
+    # Then move them back to their correct positions (shifted by -1)
+    DB.query <<~SQL
+      UPDATE sidebar_section_links
+      SET position = position - #{temp_offset} - 1
+      WHERE sidebar_section_id = #{community_section}
+        AND linkable_type = 'SidebarUrl'
+        AND position > #{temp_offset}
     SQL
   end
 end
