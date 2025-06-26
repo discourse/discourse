@@ -898,15 +898,6 @@ export default class ComposerEditor extends Component {
 
   @action
   extraButtons(toolbar) {
-    toolbar.addButton({
-      id: "quote",
-      group: "fontStyles",
-      icon: "far-comment",
-      sendAction: this.composer.importQuote,
-      title: "composer.quote_post_title",
-      unshift: true,
-    });
-
     if (
       this.composer.allowUpload &&
       this.composer.uploadIcon &&
