@@ -61,21 +61,20 @@ export default class PostTextSelection extends Component {
   setup = modifier(() => {
     document.addEventListener("selectionchange", this.selectionChange);
     this.appEvents.on("quote-button:quote", this, "insertQuote");
-    this.appEvents.on("quote-button:edit", this, "toggleFastEdit");
+    this.appEvents.on("quote-button:edit", this, "toggleHeadlessFastEdit");
 
     return () => {
       cancel(this.debouncedSelectionChangeHandler);
       document.removeEventListener("selectionchange", this.selectionChange);
       this.appEvents.off("quote-button:quote", this, "insertQuote");
-      this.appEvents.off("quote-button:edit", this, "toggleFastEdit");
+      this.appEvents.off("quote-button:edit", this, "toggleHeadlessFastEdit");
       this.menuInstance?.close();
     };
   });
 
   @bind
-  async toggleFastEdit() {
+  async toggleHeadlessFastEdit() {
     const cooked = this.computeCurrentCooked();
-
     if (!cooked) {
       return;
     }
@@ -83,6 +82,11 @@ export default class PostTextSelection extends Component {
     const quoteState = this.computeQuoteState(cooked);
     const supportsFastEdit = this.computeSupportsFastEdit(cooked, quoteState);
 
+    await this.toggleFastEdit(quoteState, supportsFastEdit);
+  }
+
+  @bind
+  async toggleFastEdit(quoteState, supportsFastEdit) {
     if (supportsFastEdit) {
       this.modal.show(FastEditModal, {
         model: {
