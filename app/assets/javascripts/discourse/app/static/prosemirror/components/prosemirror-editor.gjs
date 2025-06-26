@@ -183,6 +183,8 @@ export default class ProsemirrorEditor extends Component {
           this.#lastSerialized = value;
           this.args.change?.({ target: { value } });
         }
+
+        this.textManipulation.updateState();
       },
       handleDOMEvents: {
         focus: () => {
@@ -213,6 +215,8 @@ export default class ProsemirrorEditor extends Component {
     this.#destructor = this.args.onSetup?.(this.textManipulation);
 
     this.convertFromValue();
+
+    this.textManipulation.updateState();
   }
 
   @bind

@@ -8,6 +8,25 @@
 export const TextManipulation = {};
 
 /**
+ * @typedef ToolbarState
+ * @property {boolean} [inBold]
+ * @property {boolean} [inItalic]
+ * @property {boolean} [inLink]
+ * @property {boolean} [inBulletList]
+ * @property {boolean} [inOrderedList]
+ * @property {boolean} [inCode]
+ * @property {boolean} [inCodeBlock]
+ * @property {boolean} [inBlockquote]
+ */
+
+/**
+ * The current state of the editor for toolbar button active states
+ * @name TextManipulation#state
+ * @type {ToolbarState | undefined}
+ * @readonly
+ */
+
+/**
  * Whether the editor allows a preview being shown
  * @name TextManipulation#allowPreview
  * @type {boolean}

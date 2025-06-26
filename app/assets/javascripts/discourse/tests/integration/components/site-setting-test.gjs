@@ -172,10 +172,13 @@ module("Integration | Component | site-setting", function (hooks) {
       <template><SiteSettingComponent @setting={{self.setting}} /></template>
     );
     assert.dom(".input-setting-string").hasAttribute("type", "password");
+    assert.dom(".setting-toggle-secret svg").hasClass("d-icon-far-eye");
     await click(".setting-toggle-secret");
     assert.dom(".input-setting-string").hasAttribute("type", "text");
+    assert.dom(".setting-toggle-secret svg").hasClass("d-icon-far-eye-slash");
     await click(".setting-toggle-secret");
     assert.dom(".input-setting-string").hasAttribute("type", "password");
+    assert.dom(".setting-toggle-secret svg").hasClass("d-icon-far-eye");
   });
 });
 

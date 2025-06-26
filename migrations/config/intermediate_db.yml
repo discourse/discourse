@@ -7,6 +7,14 @@ output:
 
 schema:
   tables:
+    badges:
+      columns:
+        add:
+          - name: "existing_id"
+            datatype: "numeric"
+        exclude:
+          - "grant_count"
+          - "system"
     user_emails:
       columns:
         include:
@@ -25,6 +33,8 @@ schema:
         add:
           - name: "original_username"
             datatype: text
+          - name: "avatar_type"
+            datatype: integer
         exclude:
           - "flag_level"
           - "last_emailed_at"
@@ -68,7 +78,6 @@ schema:
         - "backup_metadata"
         - "badge_groupings"
         - "badge_types"
-        - "badges"
         - "bookmarks"
         - "categories"
         - "categories_web_hooks"

@@ -164,7 +164,9 @@ export default RouteTemplate(
     {{/unless}}
 
     {{#if @controller.model.component}}
-      <section class="form-horizontal theme settings control-unit">
+      <section
+        class="form-horizontal theme settings control-unit relative-theme-selector parent-themes-setting"
+      >
         <div class="row setting">
           <ThemeSettingRelativesSelector
             @setting={{@controller.relativesSelectorSettingsForComponent}}
@@ -174,7 +176,9 @@ export default RouteTemplate(
         </div>
       </section>
     {{else}}
-      <section class="form-horizontal theme settings control-unit">
+      <section
+        class="form-horizontal theme settings control-unit relative-theme-selector included-components-setting"
+      >
         <div class="row setting">
           <ThemeSettingRelativesSelector
             @setting={{@controller.relativesSelectorSettingsForTheme}}

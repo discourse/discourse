@@ -1,5 +1,4 @@
 import { getOwner } from "@ember/owner";
-import { settled } from "@ember/test-helpers";
 import { setupTest } from "ember-qunit";
 import { module, skip, test } from "qunit";
 import sinon from "sinon";
@@ -117,10 +116,8 @@ module("Unit | Service | AdminSearchDataSource", function (hooks) {
     );
   });
 
-  // For some reason this test fails in CI, but passes locally.
   skip("buildMap - labels are correct for top-level, second-level, and third-level nav", async function (assert) {
     await this.subject.buildMap();
-    await settled();
 
     const firstPage = this.subject.pageDataSourceItems.find(
       (page) => page.url === "/admin"
