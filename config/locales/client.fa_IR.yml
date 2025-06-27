@@ -392,6 +392,7 @@ fa_IR:
       created: "شما این نوشته را نشانک کردید. %{name}"
       created_generic: "شما این را نشانک گذاری کرده‌اید. %{name}"
       create: "ایجاد نشانک"
+      clear_reminder: "پاک کردن یادآور"
       edit: "ویرایش نشانک"
       not_bookmarked: "این نوشته را نشانک بزنید"
       remove_reminder_keep_bookmark: "حذف یادآوری و نگه داشتن نشانک"
@@ -1887,6 +1888,7 @@ fa_IR:
           edit_link_options: "گزینه های پیوند را ویرایش کنید یا از طریق ایمیل ارسال کنید."
           show_advanced: "نمایش تنظیمات پیشرفته"
           hide_advanced: "پنهان کردن تنظیمات پیشرفته"
+          description: "توضیح"
           restrict: "محدود کردن به"
           restrict_email: "محدود کردن ایمیل"
           restrict_domain: "محدود کردن دامنه"
@@ -2545,11 +2547,11 @@ fa_IR:
       italic_label: "I"
       italic_title: "تاکید"
       italic_text: "متن تاکید شده"
-      link_title: "فرا‌پیوند"
+      link_title: "پیوند"
       link_description: "توضیحات لینک را اینجا وارد کنید."
-      link_dialog_title: "افزودن پیوند"
-      link_optional_text: "عنوان اختیاری"
-      link_url_placeholder: "یک نشانی وب را جایگذاری کنید یا برای جستجوی موضوعات تایپ کنید"
+      link_dialog_action: "درج کردن"
+      link_edit_action: "به روز رسانی"
+      link_optional_text: "متن"
       blockquote_title: "نقل‌قول"
       blockquote_text: "نقل‌قول"
       code_title: "متن قالب‌بندی شده"
@@ -2618,6 +2620,9 @@ fa_IR:
       image_scale_button: "تغییر مقیاس تصویر به %{percent}%"
       delete_image_button: حذف تصویر
       toggle_image_grid: تغییر وضعیت شبکه تصویر
+      link_toolbar:
+        copy: "رونوشت پیوند"
+        link_copied: "لینک کپی شد!"
     notifications:
       tooltip:
         regular:
@@ -3014,10 +3019,6 @@ fa_IR:
         top: "موضوع برتری وجود ندارد."
         hot: "هیچ موضوع داغی وجود ندارد."
         filter: "هنوز هیچ موضوعی وجود ندارد."
-        educate:
-          new: '<p>موضوعات جدید شما در اینجا ظاهر می‌شوند. موضوعات به‌طور پیش‌فرض، جدید در نظر گرفته می‌شوند و اگر در ۲ روز گذشته ایجاد شده باشند، نشانگر <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> را نشان می‌دهند.</p><p>برای تغییر این مورد، از تنظیمات <a href="%{userPrefsUrl}"></a> دیدن کنید.</p>'
-          unread: "<p>موضوعات خوانده نشده شما در اینجا ظاهر می‌شوند.</p><p>موضوعات به طور پیش فرض، خوانده نشده در نظر گرفته می شوند و تعداد خوانده نشده <span class=\"badge unread-posts badge-notification\">۱</span> را نشان می‌دهد اگر شما:</p><ul><li>موضوع را ایجاد کرده اید</li><li>به موضوع پاسخ داده‌اید</li><li>موضوع را برای بیش از ۵ دقیقه خوانده‌اید</li></ul><p>یا اگر به صراحت موضوع را در هر موضوع به حالت ردیابی یا دنبال شده، از طریق \U0001F514 تنظیم کرده اید.</p><p> به <a href=\"%{userPrefsUrl}\">تنظیمات</a> خود مراجعه کنید تا آن را تغییر دهید.</p>"
-          new_new: "<p>موضوعات جدید شما در اینجا ظاهر می شوند و موضوعات خوانده نشده شما نیز نمایش داده می‌شوند. موضوعات به طور پیش فرض، جدید در نظر گرفته می شوند و اگر در ۲ روز گذشته ایجاد شده باشند، نشانگر <span class=\"badge new-topic badge-notification\" style=\"vertical-align:middle;line-height:inherit;\"></span> را نشان می دهند. موضوعات خوانده نشده شمارش خوانده نشده <span class=\"badge unread-posts badge-notification\">۱</span> را نشان می دهند اگر: موضوع را ایجاد کرده اید، به موضوع پاسخ داده اید، موضوع را بیش از ۵ دقیقه مطالعه کرده اید یا اگر موضوع را صریحاً به حالت پیگیری شده یا دنبال شده از طریق \U0001F514 در هر موضوع تنظیم کرده‌اید.</p><p> به <a href=\"%{userPrefsUrl}\">تنظیمات</a> خود مراجعه کنید تا آن را تغییر دهید.</p>"
       bottom:
         latest: "موضوع تازه‌ی دیگری وجود ندارد."
         posted: "هیچ موضوعات نوشته شده ای وجود ندارد"
@@ -3589,6 +3590,8 @@ fa_IR:
           delete: "حذف"
         add: "افزودن ترجمه جدید"
         success: "ترجمه‌ها با موفقیت به‌روزرسانی شدند."
+        post_language_selector:
+          none: "هیچ کدام"
       errors:
         create: "متأسفیم، در ایجاد نوشته‌ی شما خطایی روی داد. لطفاً دوباره تلاش کنید."
         edit: "متأسفیم، در ویرایش نوشته‌ی شما خطایی روی داد. لطفاً دوباره تلاش کنید."

@@ -105,20 +105,24 @@ class Users::OmniauthCallbacksController < ApplicationController
     true
   end
 
+  ALLOWED_FAILURE_ERRORS = %w[csrf_detected request_error invalid_iat].to_h { [_1, _1] }
+
   def failure
-    if provider = params[:provider].presence || params[:strategy].presence
-      if authenticator = Discourse.enabled_authenticators.find { _1.name == provider }
-        provider = authenticator.display_name
+    error_name = params[:message].to_s.gsub(/[^\w-]/, "").presence
+    error = ALLOWED_FAILURE_ERRORS.fetch(error_name, "generic")
+
+    if error == "generic"
+      provider_name = params[:provider].presence || params[:strategy].presence
+      provider = Discourse.enabled_authenticators.find { _1.name == provider_name }&.display_name
+
+      if provider.blank? && Discourse.enabled_authenticators.one?
+        provider = Discourse.enabled_authenticators[0].display_name
       end
+
+      error = provider.present? ? "generic_with_provider" : "generic_without_provider"
     end
 
-    if provider.blank? && Discourse.enabled_authenticators.size == 1
-      provider = Discourse.enabled_authenticators.first.display_name
-    end
-
-    key = params[:message].to_s.gsub(/[^\w-]/, "").presence || "generic"
-    default = I18n.t("login.omniauth_error.generic", provider:)
-    flash[:error] = I18n.t("login.omniauth_error.#{key}", provider:, default:).html_safe
+    flash[:error] = I18n.t("login.omniauth_error.#{error}", provider:).html_safe
 
     render "failure"
   end

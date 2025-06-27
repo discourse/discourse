@@ -242,6 +242,26 @@ describe "Reviewables", type: :system do
         )
       end
 
+      it "claims the reviewable while revising, and unclaims it when cancelling" do
+        revise_modal = PageObjects::Modals::Base.new
+
+        review_page.visit_reviewable(queued_post_reviewable)
+
+        expect(queued_post_reviewable).to be_pending
+        expect(queued_post_reviewable.target_created_by).to be_present
+
+        review_page.select_action(queued_post_reviewable, "revise_and_reject_post")
+
+        expect(revise_modal).to be_open
+
+        expect(page).to have_css(".claimed-actions")
+
+        revise_modal.close
+
+        expect(revise_modal).to be_closed
+        expect(page).to have_no_css(".claimed-actions")
+      end
+
       it "allows selecting a custom reason for revise and reject" do
         revise_modal = PageObjects::Modals::Base.new
 

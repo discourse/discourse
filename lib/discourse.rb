@@ -13,9 +13,6 @@ module Discourse
   class Utils
     URI_REGEXP = URI.regexp(%w[http https])
 
-    # TODO: Remove this once we drop support for Ruby 2.
-    EMPTY_KEYWORDS = {}
-
     # Usage:
     #   Discourse::Utils.execute_command("pwd", chdir: 'mydirectory')
     # or with a block
@@ -487,6 +484,10 @@ module Discourse
   end
 
   BUILTIN_AUTH = [
+    Auth::AuthProvider.new(
+      authenticator: Auth::DiscourseIdAuthenticator.new,
+      icon: "fab-discourse",
+    ),
     Auth::AuthProvider.new(
       authenticator: Auth::FacebookAuthenticator.new,
       frame_width: 580,

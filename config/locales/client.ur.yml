@@ -291,6 +291,7 @@ ur:
     bookmarks:
       created: "آپ نے اس %{name} پوسٹ کو بک مارک کیا ہے۔"
       create: "بک مارک بنائیں"
+      clear_reminder: "یاد دہانی مٹائیں"
       edit: "بک مارک میں ترمیم"
       not_bookmarked: "اِس پوسٹ کو بُک مارک کریں"
       remove_reminder_keep_bookmark: "یاد دہانی کو ہٹا دیں اور بک مارک کو بچا کر رکھیں"
@@ -1493,6 +1494,7 @@ ur:
           expired_at_time: "%{time}پر ختم ہو گا"
           show_advanced: "ایڈوانس آپشنز دکھائیں"
           hide_advanced: "ایڈوانس آپشنز چھپائیں"
+          description: "تفصیل"
           restrict: "تک محدود"
           restrict_email: "ای میل تک محدود"
           restrict_domain: "ڈومین تک محدود"
@@ -1933,11 +1935,11 @@ ur:
       italic_label: "I"
       italic_title: "آئیٹیلک"
       italic_text: "زور دیا گیا ٹَیکسٹ"
-      link_title: "ہائپرلِنک"
+      link_title: "لنک"
       link_description: "یہاں لِنک کی تفصیل درج کریں"
-      link_dialog_title: "ہائپرلِنک ڈالیں"
-      link_optional_text: "اختیاری عنوان"
-      link_url_placeholder: "موضوعات تلاش کرنے کے لئے URL پیسٹ کریں یا ٹائپ کریں"
+      link_dialog_action: "شامل"
+      link_edit_action: "اپ ڈیٹ"
+      link_optional_text: "ٹیکسٹ"
       blockquote_title: "بلاک متن"
       blockquote_text: "بلاک متن"
       code_title: "پہلے سے فارمیٹ کیا گیا ٹَیکسٹ"
@@ -2286,8 +2288,6 @@ ur:
         bookmarks: "ابھی تک آپ کے بُک مارک کیے ہوے کوئی ٹاپک نہیں ہیں۔"
         category: "کوئی %{category} کے ٹاپک موجود نہیں ہیں۔"
         top: "کوئی ٹاپ ٹاپک موجود نہیں ہیں۔"
-        educate:
-          new: '<p>آپ کے نئے عنوانات یہاں ظاہر ہوں گے۔ پہلے سے طے شدہ طور پر، عنوانات کو نئے تصور کیا جاتا ہے اور اگر وہ پچھلے 2 دنوں میں بنائے گئے تھے تو وہ <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> دکھائے گا۔</p><p>اسے تبدیل کرنے کے لیے اپنی <a href="%{userPrefsUrl}">ترجیحات</a> دیکھیں۔</p>'
       bottom:
         latest: "کوئی مزید تازہ ترین ٹاپک موجود نہیں ہیں۔"
         posted: "کوئی مزید پوسٹ کیے گئے ٹاپک موجود نہیں ہیں۔"
@@ -2751,6 +2751,8 @@ ur:
           actions: "عمل"
           edit: "ترمیم کریں"
           delete: "مٹائیں"
+        post_language_selector:
+          none: "کوئی نہیں"
       errors:
         create: "معذرت، آپ کی پوسٹ بنانے میں ایک خرابی کا سامنا کرنا پڑا۔ براہ مہربانی دوبارہ کوشش کریں۔"
         edit: "معذرت، آپ کی پوسٹ ترمیم کرنے میں ایک خرابی کا سامنا کرنا پڑا۔ براہ مہربانی دوبارہ کوشش کریں۔"

@@ -1078,6 +1078,7 @@ th:
           success: "สร้างลิงก์คำเชิญสำเร็จแล้ว!"
           error: "มีข้อผิดพลาดในการสร้างลิงก์คำเชิญ"
         invite:
+          description: "รายละเอียด"
           update_invite: "อัปเดต"
           cancel: "ยกเลิก"
       password:
@@ -1398,11 +1399,11 @@ th:
       italic_label: "เอียง"
       italic_title: "เอียง"
       italic_text: "ตัวอักษรเอียง"
-      link_title: "ลิงค์"
+      link_title: "ลิงก์"
       link_description: "กรอกรายละเอียดลิงก์ที่นี่"
-      link_dialog_title: "เพิ่มลิงค์"
-      link_optional_text: "ชื่อเรื่องเพิ่มเติม"
-      link_url_placeholder: "วาง URL หรือพิมพ์เพื่อค้นหากระทู้"
+      link_dialog_action: "แทรก"
+      link_edit_action: "อัปเดต"
+      link_optional_text: "ข้อความ"
       blockquote_title: "ส่วนอ้างถึง"
       blockquote_text: "ส่วนอ้างถึง"
       code_title: "ข้อความก่อนจัดรูปแบบ"
@@ -1958,6 +1959,8 @@ th:
           actions: "การกระทำ"
           edit: "แก้ไข"
           delete: "ลบ"
+        post_language_selector:
+          none: "ไม่มี"
       errors:
         create: "ขออภัย เกิดความผิดพลาดขณะกำลังสร้างโพสต์ของคุณ กรุณาลองใหม่อีกครั้ง"
         edit: "ขออภัย เกิดความผิดพลาดขณะกำลังแก้ไขโพสต์ของคุณ กรุณาลองใหม่อีกครั้ง"

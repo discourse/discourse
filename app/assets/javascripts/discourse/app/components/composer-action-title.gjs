@@ -73,7 +73,7 @@ export default class ComposerActionTitle extends Component {
     const allowedActions = [CREATE_TOPIC, EDIT, REPLY];
     if (
       this.currentUser &&
-      this.siteSettings.experimental_content_localization &&
+      this.siteSettings.content_localization_enabled &&
       this.currentUser.can_localize_content &&
       allowedActions.includes(this.model.action)
     ) {

@@ -415,6 +415,15 @@ export default class ComposerService extends Service {
 
       options.push(
         this._setupPopupMenuOption({
+          name: "quote",
+          action: this.importQuote,
+          icon: "far-comment",
+          label: "composer.quote_post_title",
+        })
+      );
+
+      options.push(
+        this._setupPopupMenuOption({
           name: "toggle-invisible",
           action: "toggleInvisible",
           icon: "far-eye-slash",
@@ -1211,7 +1220,9 @@ export default class ComposerService extends Service {
         }
 
         if (result.responseJson.action === "create_post") {
-          this.appEvents.trigger("composer:created-post");
+          this.appEvents.trigger("composer:created-post", {
+            postId: result.responseJson.post.id,
+          });
           this.appEvents.trigger(
             "post:highlight",
             result.payload.post_number,
@@ -1817,25 +1828,12 @@ export default class ComposerService extends Service {
       return opts.locale;
     }
 
-    if (opts?.post?.locale) {
+    // inherit post locale when editing, not when replying
+    if (opts?.post?.locale && opts.action === Composer.EDIT) {
       return opts.post.locale;
     }
 
-    if (this.currentUser?.effective_locale) {
-      if (
-        this.siteSettings.available_content_localization_locales.find(
-          (locale) => locale.value === this.currentUser?.effective_locale
-        )
-      ) {
-        return this.currentUser.effective_locale;
-      } else {
-        // If user's effective locale is not part of available locales,
-        // we leave it empty so that a locale value won't be attached to the post.
-        return "";
-      }
-    }
-
-    return this.siteSettings.default_locale;
+    return "";
   }
 }
 

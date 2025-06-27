@@ -350,9 +350,11 @@ zh_CN:
       bookmarked_success: "已加入书签！"
       deleted_bookmark_success: "书签已删除！"
       reminder_set_success: "提醒已设置！"
+      reminder_clear_success: "提醒已清除"
       created: "您已将此帖子加入书签。%{name}"
       created_generic: "您已将此加入书签。%{name}"
       create: "创建书签"
+      clear_reminder: "清除提醒"
       edit: "编辑书签"
       not_bookmarked: "将此帖子加入书签"
       remove_reminder_keep_bookmark: "移除提醒并保留书签"
@@ -1801,6 +1803,7 @@ zh_CN:
           edit_link_options: "编辑链接选项或通过电子邮件发送。"
           show_advanced: "显示高级选项"
           hide_advanced: "隐藏高级选项"
+          description: "描述"
           restrict: "限制为"
           restrict_email: "仅限电子邮件"
           restrict_domain: "仅限网域"
@@ -2190,6 +2193,9 @@ zh_CN:
       to_continue: "请登录"
       preferences: "您需要登录才能更改用户偏好设置。"
       not_approved: "您的帐户尚未获得批准。一旦可以登录，您会收到电子邮件通知。"
+      discourse_id:
+        name: "Discourse ID"
+        title: "使用 Discourse ID 登录"
       google_oauth2:
         name: "Google"
         title: "使用 Google 登录"
@@ -2432,11 +2438,16 @@ zh_CN:
       italic_label: "I"
       italic_title: "强调"
       italic_text: "强调文本"
-      link_title: "超链接"
+      link_title: "链接"
       link_description: "在此处输入链接描述"
-      link_dialog_title: "插入超链接"
-      link_optional_text: "可选标题"
-      link_url_placeholder: "粘贴 URL 或键入以搜索话题"
+      link_dialog_title: "插入链接"
+      link_dialog_action: "插入"
+      link_edit_title: "编辑链接"
+      link_edit_action: "更新"
+      link_text_label: "链接文本"
+      link_optional_text: "文本"
+      link_url_label: "链接或话题"
+      link_url_placeholder: "粘贴链接或搜索话题"
       blockquote_title: "块引用"
       blockquote_text: "块引用"
       code_title: "预先格式化的文本"
@@ -2506,6 +2517,12 @@ zh_CN:
       image_scale_button: "将图片缩放至 %{percent}%"
       delete_image_button: 删除图片
       toggle_image_grid: 切换图片网格
+      link_toolbar:
+        edit: "编辑链接"
+        copy: "复制链接"
+        remove: "删除链接"
+        visit: "在新标签页中打开链接"
+        link_copied: "链接已复制！"
     notifications:
       tooltip:
         regular:
@@ -2876,10 +2893,11 @@ zh_CN:
         top: "没有热门话题。"
         hot: "没有热门话题。"
         filter: "没有话题。"
-        educate:
-          new: '<p>您的新话题将显示在这里。默认情况下，如果是在过去 2 天内创建的，话题会被视为新话题，还会显示 <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> 指示器。</p><p>访问您的<a href="%{userPrefsUrl}">偏好设置</a>可以更改此设置。</p>'
-          unread: "<p>您的未读话题显示在此处。</p><p>默认情况下，如果符合以下条件，话题会被视为未读并且还将显示未读计数 <span class=\"badge unread-posts badge-notification\">1</span>：</p><ul><li>您创建了该话题</li><li>您回复了该话题</li><li>您阅读该话题超过 5 分钟</li></ul><p>或者如果您在每个话题中通过 \U0001F514 将话题显式设为“已跟踪”或“已关注”。</p><p>访问您的<a href=\"%{userPrefsUrl}\">偏好设置</a>可以更改此设置。</p>"
-          new_new: "<p>您的新话题将显示在此处，您的未读话题也将显示。默认情况下，如果它们是在最近 2 天内创建的，话题会被视为新话题，并且会显示 <span class=\"badge new-topic badge-notification\" style=\"vertical-align:middle;line-height:inherit;\"></span> 指示器。如果符合以下条件，未读话题将显示未读计数 <span class=\"badge unread-posts badge-notification\">1</span>：您创建话题、回复话题、阅读话题超过 5 分钟，或者通过每个话题中的\U0001F514 明确将话题设置为“已跟踪”或“已关注”。</p><p>访问您的<a href=\"%{userPrefsUrl}\">偏好设置</a>可以更改此设置。</p>"
+        education:
+          topic_tracking_preferences: "您可以在 <a href=\"%{basePath}/my/preferences/tracking\">您的偏好设置</a>中查看和更改新的主题跟踪设置。"
+          unread: "没有什么未读的...令人印象深刻！"
+          new_new: "目前没什么新东西... 稍后再回来看看！"
+          new: "目前没什么新东西... 稍后再回来看看！"
       bottom:
         latest: "没有更多最新话题了。"
         posted: "没有更多已发布话题了。"
@@ -3015,6 +3033,7 @@ zh_CN:
       browse_all_categories_latest: "<a href='%{basePath}/categories'>浏览所有类别</a>或<a href='%{basePath}/latest'>查看最新话题</a>。"
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>浏览所有类别</a>、<a href='%{basePath}/latest'>查看最新话题</a>或查看热门话题："
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>浏览所有标签</a>或<a href='%{basePath}/latest'>查看最新话题</a>。"
+      browse_latest_topics: "浏览最新话题"
       suggest_create_topic: 准备好<a href>开始新对话</a>了吗？
       jump_reply: "跳到帖子的原始位置"
       jump_reply_aria: "跳到 @%{username} 的帖子的原始位置"
@@ -3427,6 +3446,8 @@ zh_CN:
           title: "帖子的翻译"
           confirm_delete: "您确定要删除“%{languageCode}”的翻译吗？"
         success: "翻译已成功更新"
+        post_language_selector:
+          none: "无"
       errors:
         create: "抱歉，创建您的帖子时出错。请重试。"
         edit: "抱歉，编辑您的帖子时出错。请重试。"
@@ -3612,6 +3633,7 @@ zh_CN:
         title: "分享帖子 #%{post_number}"
         instructions: "分享此帖子的链接："
       original_language: "这篇文章最初是用 %{language} 写的"
+      original_language_and_outdated: "本帖最初以 %{language} 撰写。译文可能已过时"
     category:
       none: "（无类别）"
       all: "所有类别"
@@ -5723,6 +5745,7 @@ zh_CN:
           copy_created: '已创建“%{name}”的新副本'
           illegal_character_in_color: "颜色必须只由十六进制字符组成"
           invalid_color_length: "颜色必须为 #rrggbb 或 #rgb 格式"
+          blocked_edit_for_system: "属于系统主题的调色板无法编辑。"
           delete_confirm: "确定要删除此调色板吗？"
       plugins:
         title: "插件"
@@ -7039,6 +7062,7 @@ zh_CN:
           basic: "基本设置"
           users: "用户"
           posting: "发帖"
+          content_localization: "内容本地化"
           email: "电子邮件"
           files: "文件"
           trust: "信任级别"

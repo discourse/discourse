@@ -399,6 +399,7 @@ fi:
       created: "Olet kirjanmerkinnyt tämän viestin. %{name}"
       created_generic: "Olet kirjanmerkinnyt tämän. %{name}"
       create: "Luo kirjanmerkki"
+      clear_reminder: "Tyhjennä muistutus"
       edit: "Muokkaa kirjanmerkkiä"
       not_bookmarked: "lisää viesti kirjanmerkkeihin"
       remove_reminder_keep_bookmark: "Poista muistutus ja säilytä kirjanmerkki"
@@ -1904,6 +1905,7 @@ fi:
           edit_link_options: "Muokkaa linkin asetuksia tai lähetä sähköpostitse."
           show_advanced: "Näytä lisäasetukset"
           hide_advanced: "Piilota lisäasetukset"
+          description: "Kuvaus"
           restrict: "Rajoita:"
           restrict_email: "Rajoita sähköpostiosoitteeseen"
           restrict_domain: "Rajoita verkkotunnukseen"
@@ -2586,11 +2588,11 @@ fi:
       italic_label: "I"
       italic_title: "Kursiivi"
       italic_text: "kursivoitu teksti"
-      link_title: "Hyperlinkki"
+      link_title: "Linkki"
       link_description: "kirjoita linkin kuvaus tähän"
-      link_dialog_title: "Lisää linkki"
-      link_optional_text: "valinnainen otsikko"
-      link_url_placeholder: "Liitä URL tai hae ketjua kirjoittamalla"
+      link_dialog_action: "Lisää"
+      link_edit_action: "Päivitä"
+      link_optional_text: "Teksti"
       blockquote_title: "Sitaatti"
       blockquote_text: "Sitaatti"
       code_title: "Teksti ilman muotoiluja"
@@ -2660,6 +2662,9 @@ fi:
       image_scale_button: "Muuta kuvan kokoa %{percent} prosenttiin"
       delete_image_button: Poista kuva
       toggle_image_grid: Kuvaruudukko päälle/pois päältä
+      link_toolbar:
+        copy: "Kopioi linkki"
+        link_copied: "Linkki kopioitu!"
     notifications:
       tooltip:
         regular:
@@ -3063,10 +3068,6 @@ fi:
         top: "Suosittuja ketjuja ei ole."
         hot: "Suosittuja ketjuja ei ole."
         filter: "Ketjuja ei ole."
-        educate:
-          new: '<p>Sinulle uudet ketjut näytetään tässä. Oletuksena ketju tulkitaan uudeksi ja sen yhteydessä näytetään <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span>-merkintä, jos se on aloitettu edellisten kahden päivän aikana.</p><p>Aikarajaa voit muuttaa <a href="%{userPrefsUrl}">käyttäjäasetuksissasi</a>.</p>'
-          unread: '<p>Lukemattomia viestejä sisältävät ketjut näytetään tässä.</p><p>Ketjun yhteydessä näytetään lukemattomien viestien lukumäärä <span class="badge unread-posts badge-notification">1</span>, jos olet:</p><ul><li>aloittanut ketjun</li><li>vastannut ketjuun</li><li>lukenut ketjua yli 5 minuuttia</li></ul><p>tai, jos olet erikseen merkinnyt ketjun seurattavaksi tai tarkkailtavaksi ketjun lopusta löytyvällä painikkeella.</p><p>Voit muuttaa tätä <a href="%{userPrefsUrl}">asetuksissasi</a>.</p>'
-          new_new: "<p>Uudet ketjusi näkyvät täällä, ja lukemattomat ketjusi näytetään myös. Ketjuja pidetään oletuksena uusina ja ne näyttävät <span class=\"badge new-topic badge-notification\" style=\"vertical-align:middle;line-height:inherit;\"></span>-ilmaisimen, jos ne on luotu viimeisten kahden päivän aikana. Lukemattomat ketjut näyttävät lukemattomien määrät <span class=\"badge unread-posts badge-notification\">1</span>, jos sinä loit ketjun, vastasit ketjuun, olet lukenut ketjua yli viiden minuutin ajan tai jos olet nimenomaan asettanut ketjun seuratuksi tai tarkkailluksi \U0001F514-kuvakkeen kautta kussakin ketjussa. </p><p>Voit muuttaa tämän <a href=\"%{userPrefsUrl}\">asetuksissasi</a>.</p>"
       bottom:
         latest: "Tuoreimpia ketjuja ei ole enempää."
         posted: "Ketjuja, joihin olet kirjoittanut, ei ole enempää."
@@ -3650,6 +3651,8 @@ fi:
           title: "Käännökset viestille"
           confirm_delete: "Oletko varma, että haluat poistaa käännökset kohteelle '%{languageCode}'?"
         success: "Käännökset on päivitetty onnistuneesti"
+        post_language_selector:
+          none: "Ei valittu"
       errors:
         create: "Viestin luonti epäonnistui. Yritä uudelleen."
         edit: "Viestin muokkaus epäonnistui. Yritä uudelleen."

@@ -155,6 +155,22 @@ describe "Admin Customize Themes", type: :system do
     end
   end
 
+  describe "when editing a theme's included components" do
+    fab!(:component) { Fabricate(:theme, component: true, name: "Cool component 145") }
+
+    it "can save the included components" do
+      theme_page.visit(theme.id)
+      theme_page.included_components_selector.expand
+      theme_page.included_components_selector.select_row_by_index(0)
+      theme_page.included_components_selector.collapse
+      theme_page.relative_themes_save_button.click
+      expect(theme_page).to have_reset_button_for_setting(".included-components-setting")
+      expect(ChildTheme.exists?(parent_theme_id: theme.id, child_theme_id: component.id)).to eq(
+        true,
+      )
+    end
+  end
+
   context "when visting a component's page" do
     fab!(:component) { Fabricate(:theme, component: true, name: "Cool component 493") }
 

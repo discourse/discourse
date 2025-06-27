@@ -398,6 +398,7 @@ pt_BR:
       created: "Você marcou esta postagem como favorita. %{name}"
       created_generic: "Você favoritou isso. %{name}"
       create: "Criar favorito"
+      clear_reminder: "Limpar lembrete"
       edit: "Editar favorito"
       not_bookmarked: "marcar postagem como favorita"
       remove_reminder_keep_bookmark: "Remover lembrete e manter favorito"
@@ -1891,6 +1892,7 @@ pt_BR:
           edit_link_options: "Editar opções de link ou enviar por e-mail"
           show_advanced: "Exibir opções avançadas"
           hide_advanced: "Ocultar opções avançadas"
+          description: "Descrição"
           restrict: "Restringir a"
           restrict_email: "Restringir a e-mail"
           restrict_domain: "Restringir a domínio"
@@ -2547,11 +2549,11 @@ pt_BR:
       italic_label: "I"
       italic_title: "Realce"
       italic_text: "texto realçado"
-      link_title: "Hiperlink"
+      link_title: "Link"
       link_description: "digite a descrição do link aqui"
-      link_dialog_title: "Inserir hiperlink"
-      link_optional_text: "título opcional"
-      link_url_placeholder: "Cole uma URL ou digite para pesquisar tópicos"
+      link_dialog_action: "Inserir"
+      link_edit_action: "Atualizar"
+      link_optional_text: "Texto"
       blockquote_title: "Citação em bloco"
       blockquote_text: "Citação em bloco"
       code_title: "Texto pré-formatado"
@@ -2621,6 +2623,9 @@ pt_BR:
       image_scale_button: "Dimensionar imagem para %{percent}%"
       delete_image_button: Excluir Imagem
       toggle_image_grid: Alternar para grade de imagem
+      link_toolbar:
+        copy: "Copiar link"
+        link_copied: "Link copiado!"
     notifications:
       tooltip:
         regular:
@@ -3018,10 +3023,6 @@ pt_BR:
         top: "Não há melhores tópicos."
         hot: "Não há tópicos principais."
         filter: "Não existem tópicos."
-        educate:
-          new: '<p>Seus novos tópicos serão exibidos aqui. Por padrão, os tópicos serão considerados novos e exibirão um <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> indicador se tiverem tido criados nos últimos dois dias.</p><p>Acesse suas <a href="%{userPrefsUrl}">preferências</a> para alterar essa configuração.</p>'
-          unread: "<p>Seus tópicos não lidos são exibidos aqui.</p><p>Por padrão, os tópicos são considerados como não lidos e exibirão contadores <span class=\"badge unread-posts badge-notification\">1</span> se você tiver:</p><ul><li>criado o tópico</li><li>respondido ao tópico</li><li>lido o tópico por mais de 5 minutos</li></ul><p>ou marcado o tópico como Monitorado ou Acompanhado no \U0001F514 em cada tópico.</p><p>Acesse suas <a href=\"%{userPrefsUrl}\">preferências</a> para alterar essa configuração.</p>"
-          new_new: "<p>Seus novos tópicos aparecerão aqui e seus tópicos não lidos também serão exibidos. Por padrão, os tópicos são considerados novos e mostrarão um indicador <span class=\"badge new-topic badge-notification\" style=\"vertical-align:middle;line-height:inherit;\"></span> se tiverem sido criados nos últimos 2 dias. Tópicos não lidos mostrarão contagens não lidas <span class=\"badge unread-posts badge-notification\">1</span> se você: tiver criado o tópico, respondido ao tópico, lido o tópico por mais de 5 minutos ou se você tiver definido explicitamente o tópico como Monitorado ou Acompanhado através do \U0001F514 em cada tópico.</p><p>Acesse suas <a href=\"%{userPrefsUrl}\">preferências</a> para alterar isso.</p>"
       bottom:
         latest: "Não há mais últimos tópicos."
         posted: "Não há mais tópicos postados."
@@ -3590,6 +3591,8 @@ pt_BR:
           actions: "Ações"
           edit: "Editar"
           delete: "Excluir"
+        post_language_selector:
+          none: "Nenhum"
       errors:
         create: "Desculpe, houve um erro ao criar sua postagem. Tente outra vez."
         edit: "Desculpe, houve um erro ao editar sua postagem. Tente outra vez."

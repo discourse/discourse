@@ -15,19 +15,19 @@ RSpec.describe "Anonymous user language switcher", type: :system do
 
   before do
     SiteSetting.default_locale = "en"
-    SiteSetting.experimental_content_localization_supported_locales = "es|ja"
-    SiteSetting.experimental_content_localization = true
+    SiteSetting.content_localization_supported_locales = "es|ja"
+    SiteSetting.content_localization_enabled = true
     SiteSetting.allow_user_locale = true
     SiteSetting.set_locale_from_cookie = true
   end
 
   it "only shows the language switcher based on what is in target languages" do
-    SiteSetting.experimental_anon_language_switcher = false
+    SiteSetting.content_localization_anon_language_switcher = false
     visit("/")
 
     expect(page).not_to have_css(SWITCHER_SELECTOR)
 
-    SiteSetting.experimental_anon_language_switcher = true
+    SiteSetting.content_localization_anon_language_switcher = true
     visit("/")
 
     switcher.expand
@@ -35,7 +35,7 @@ RSpec.describe "Anonymous user language switcher", type: :system do
     expect(switcher).to have_content("日本語")
     expect(switcher).to have_content("Español")
 
-    SiteSetting.experimental_content_localization_supported_locales = "es"
+    SiteSetting.content_localization_supported_locales = "es"
     visit("/")
 
     switcher.expand

@@ -309,21 +309,29 @@ module FileStore
       end
     end
 
-    def update_upload_access_control(upload)
+    def update_upload_access_control(upload, remove_existing_acl: false)
       key = get_upload_key(upload)
-      update_access_control(key, upload.secure?)
+      update_access_control(key, upload.secure?, remove_existing_acl:)
 
       upload.optimized_images.each do |optimized_image|
-        update_optimized_image_access_control(optimized_image, secure: upload.secure)
+        update_optimized_image_access_control(
+          optimized_image,
+          secure: upload.secure,
+          remove_existing_acl:,
+        )
       end
 
       true
     end
 
-    def update_optimized_image_access_control(optimized_image, secure: false)
+    def update_optimized_image_access_control(
+      optimized_image,
+      secure: false,
+      remove_existing_acl: false
+    )
       optimized_image_key = get_path_for_optimized_image(optimized_image)
       optimized_image_key.prepend(File.join(upload_path, "/")) if Rails.configuration.multisite
-      update_access_control(optimized_image_key, secure)
+      update_access_control(optimized_image_key, secure, remove_existing_acl:)
     end
 
     def download_file(upload, destination_path)
@@ -395,7 +403,11 @@ module FileStore
     end
 
     def self.default_s3_options(secure:)
-      options = { acl: acl_option_value(secure:) }
+      options = {}
+
+      if acl_value = acl_option_value(secure:)
+        options[:acl] = acl_value
+      end
 
       if tagging_option_value = visibility_tagging_option_value(secure:)
         options[:tagging] = tagging_option_value
@@ -437,12 +449,27 @@ module FileStore
       end
     end
 
-    def update_access_control(key, secure)
-      object = object_from_path(key).acl.put(acl: acl_option_value(secure:))
+    def update_access_control(key, secure, remove_existing_acl: false)
+      acl = self.class.acl_option_value(secure:)
+
+      if acl.present? || remove_existing_acl
+        begin
+          object = object_from_path(key).acl.put(acl:)
+        rescue Aws::S3::Errors::NotImplemented => err
+          Discourse.warn_exception(
+            err,
+            message: "The file store object storage provider does not support setting ACLs",
+          )
+        end
+      end
 
       if tagging_option_value =
            self.class.visibility_tagging_option_value(secure:, encode_form: false)
-        s3_helper.upsert_tag(key, tagging_option_value)
+        s3_helper.upsert_tag(
+          key,
+          tag_key: tagging_option_value.keys.first,
+          tag_value: tagging_option_value.values.first,
+        )
       end
     rescue Aws::S3::Errors::NoSuchKey
       Rails.logger.warn(

@@ -371,6 +371,7 @@ da:
       created: "Du har sat et bogmærke for dette indlæg. %{name}"
       created_generic: "Du har bogmærket dette. %{name}"
       create: "Opret bogmærke"
+      clear_reminder: "Ryd påmindelse"
       edit: "Rediger bogmærke"
       not_bookmarked: "bogmærk dette indlæg"
       remove_reminder_keep_bookmark: "Fjern påmindelse og behold bogmærke"
@@ -1681,6 +1682,7 @@ da:
           share_link: "Del link"
           show_advanced: "Vis Avancerede Indstillinger"
           hide_advanced: "Skjul Avancerede Indstillinger"
+          description: "Beskrivelse"
           restrict: "Begræns til"
           restrict_email: "Begræns til e-mail"
           restrict_domain: "Begræns til domæne"
@@ -2220,9 +2222,9 @@ da:
       italic_text: "kursiv skrift"
       link_title: "Link"
       link_description: "skriv linkets beskrivelse her"
-      link_dialog_title: "Indsæt link"
-      link_optional_text: "evt. titel"
-      link_url_placeholder: "Indsæt en URL eller skriv for at søge i emner"
+      link_dialog_action: "Indsæt"
+      link_edit_action: "Opdater"
+      link_optional_text: "Tekst"
       blockquote_title: "Citatblok"
       blockquote_text: "Citatblok"
       code_title: "Præformateret tekst"
@@ -2284,6 +2286,9 @@ da:
         title: "Tilføj billedbeskrivelse"
       image_scale_button: "Skaler billedet til %{percent}%"
       delete_image_button: Slet Billede
+      link_toolbar:
+        copy: "Kopiér link"
+        link_copied: "Link kopieret!"
     notifications:
       tooltip:
         regular:
@@ -2585,9 +2590,6 @@ da:
         category: "Der er ingen emner i kategorien %{category}."
         top: "Der er ingen top emner"
         filter: "Der er ingen emner."
-        educate:
-          new: '<p>Dine nye emner vil blive vist her. Som standard betragtes emner som nye og vil vise en <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> indikator, hvis de blev oprettet inden for de sidste 2 dage.</p><p>Besøg dine <a href="%{userPrefsUrl}">præferencer</a> for at ændre dette.</p>'
-          unread: "<p>Dine ulæste emner vises her.</p><p>Som standard betragtes emner som ulæste og vil vise antal af ulæste <span class=\"badge unread-posts badge-notification\">1</span> hvis du:</p><ul><li>Oprettede emnet</li><li>Svarede på emnet</li><li>Læste emnet i mere end 5 minutter</li></ul><p>Eller hvis du udtrykkeligt har indstillet emnet til fulgt eller overvåget via \U0001F514 i hvert emne.</p><p>Besøg dine <a href=\"%{userPrefsUrl}\">præferencer</a> for at ændre dette.</p>"
       bottom:
         latest: "Der er ikke flere populære emner."
         posted: "Der er ikke flere emner."
@@ -3075,6 +3077,8 @@ da:
           actions: "Handlinger"
           edit: "Rediger"
           delete: "Slet"
+        post_language_selector:
+          none: "Ingen"
       errors:
         create: "Beklager, der opstod en fejl under oprettelsen af dit indlæg. Prøv venligst igen."
         edit: "Beklager, der opstrod en fejl under redigeringen af dit indlæg. Prøv venligst igen."

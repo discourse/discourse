@@ -84,7 +84,7 @@ class Site
                 category_required_tag_groups: :tag_group,
               ).joins("LEFT JOIN topics t on t.id = categories.topic_id")
 
-            if SiteSetting.experimental_content_localization
+            if SiteSetting.content_localization_enabled
               locale = I18n.locale.to_s
               query =
                 query.joins(
@@ -232,7 +232,7 @@ class Site
     end
 
     seq = nil
-    use_localized_anon_cache = SiteSetting.experimental_content_localization && guardian.anonymous?
+    use_localized_anon_cache = SiteSetting.content_localization_enabled && guardian.anonymous?
 
     locale = I18n.locale
     cache_key = "site_json"

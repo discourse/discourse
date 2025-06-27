@@ -161,6 +161,19 @@ export default class AdminConfigAreasComponents extends Component {
     }
   }
 
+  @action
+  deleteComponentById(id) {
+    this.components = this.components.filter((c) => c.id !== id);
+
+    if (
+      this.components.length === 0 &&
+      !this.nameFilter &&
+      !this.statusFilter
+    ) {
+      this.hasComponents = false;
+    }
+  }
+
   <template>
     <DPageSubheader
       @titleLabel={{i18n
@@ -229,7 +242,10 @@ export default class AdminConfigAreasComponents extends Component {
               </thead>
               <tbody>
                 {{#each this.components as |comp|}}
-                  <ComponentRow @component={{comp}} @refresh={{this.load}} />
+                  <ComponentRow
+                    @component={{comp}}
+                    @deleteComponent={{this.deleteComponentById}}
+                  />
                 {{/each}}
               </tbody>
             </table>
@@ -394,7 +410,7 @@ class ComponentRow extends Component {
               ),
             },
           });
-          this.args.refresh();
+          this.args.deleteComponent(this.args.component.id);
         } catch (error) {
           this.toasts.error({
             duration: "long",

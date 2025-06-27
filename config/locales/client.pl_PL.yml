@@ -484,9 +484,11 @@ pl_PL:
       bookmarked_success: "Zakładki!"
       deleted_bookmark_success: "Zakładka usunięta!"
       reminder_set_success: "Przypomnienie ustawione!"
+      reminder_clear_success: "Przypomnienie wyczyszczone"
       created: "Dodano post do zakładek. %{name}"
       created_generic: "Dodałeś to do zakładek. %{name}"
       create: "Utwórz zakładkę"
+      clear_reminder: "Wyczyść przypomnienie"
       edit: "Edytuj zakładkę"
       not_bookmarked: "dodaj do zakładek"
       remove_reminder_keep_bookmark: "Usuń przypomnienie i zachowaj zakładkę"
@@ -2105,6 +2107,7 @@ pl_PL:
           edit_link_options: "Edytuj opcje linku lub wyślij e-mailem."
           show_advanced: "Pokaż ustawienia zaawansowane"
           hide_advanced: "Ukryj ustawienia zaawansowane"
+          description: "Opis"
           restrict: "Ogranicz do"
           restrict_email: "Ogranicz do e-maila"
           restrict_domain: "Ogranicz do domeny"
@@ -2577,6 +2580,9 @@ pl_PL:
       to_continue: "Zaloguj się"
       preferences: "Musisz się zalogować, aby zmieniać swoje ustawienia."
       not_approved: "Twoje konto nie zostało jeszcze aktywowane. Zostaniesz powiadomiony e-mailem, gdy będziesz mógł/mogła się zalogować."
+      discourse_id:
+        name: "Discourse ID"
+        title: "Zaloguj się za pomocą Discourse ID"
       google_oauth2:
         name: "Google"
         title: "Zaloguj się przez Google"
@@ -2761,6 +2767,7 @@ pl_PL:
         select: "Wybierz tłumaczenie"
         save: "Zapisz tłumaczenie"
         original_content: "Oryginalna treść posta"
+        placeholder: "Wprowadź tłumaczenie postu tutaj..."
       group_mentioned_limit:
         one: "<b>Ostrzeżenie!</b> Wspomniałeś/łaś o <a href='%{group_link}'>%{group}</a> , jednak ta grupa ma więcej członków niż skonfigurowany przez administratora limit wzmianek dla użytkowników %{count}. Nikt nie zostanie powiadomiony."
         few: "<b>Ostrzeżenie!</b> Wspomniałeś/łaś o <a href='%{group_link}'>%{group}</a> , jednak ta grupa ma więcej członków niż skonfigurowany przez administratora limit wzmianek dla użytkowników %{count}. Nikt nie zostanie powiadomiony."
@@ -2860,9 +2867,14 @@ pl_PL:
       italic_text: "wyróżniony tekst"
       link_title: "Odnośnik"
       link_description: "wprowadź tutaj opis odnośnika"
-      link_dialog_title: "Wstaw odnośnik"
-      link_optional_text: "opcjonalny tytuł"
-      link_url_placeholder: "Wklej adres URL lub wpisz, aby wyszukać tematy"
+      link_dialog_title: "Wstaw link"
+      link_dialog_action: "Wstaw"
+      link_edit_title: "Edytuj link"
+      link_edit_action: "Aktualizuj"
+      link_text_label: "Tekst linku"
+      link_optional_text: "Tekst"
+      link_url_label: "Link lub temat"
+      link_url_placeholder: "Wklej link lub wyszukaj tematy"
       blockquote_title: "Cytat blokowy"
       blockquote_text: "Cytat"
       code_title: "Tekst sformatowany"
@@ -2932,6 +2944,12 @@ pl_PL:
       image_scale_button: "Skaluj obraz do %{percent}%"
       delete_image_button: Usuń obraz
       toggle_image_grid: Przełącz siatkę obrazu
+      link_toolbar:
+        edit: "Edytuj link"
+        copy: "Skopiuj link"
+        remove: "Usuń link"
+        visit: "Otwórz link w karcie zewnętrznej"
+        link_copied: "Link skopiowany!"
     notifications:
       tooltip:
         regular:
@@ -3136,6 +3154,7 @@ pl_PL:
       in_messages_tooltip: "przełącz się na wyszukiwanie regularnych tematów"
       in_topics_posts: "we wszystkich tematach i postach"
       enter_hint: "lub naciśnij Enter"
+      mobile_enter_hint: "lub dotknij Szukaj"
       in_posts_by: "w postach %{username}"
       recent: "Ostatnie wyszukiwania"
       clear_recent: "Wyczyść ostatnie wyszukiwania"
@@ -3400,10 +3419,8 @@ pl_PL:
         top: "Brak najlepszych tematów."
         hot: "Nie ma gorących tematów."
         filter: "Brak tematów."
-        educate:
-          new: '<p>Twoje nowe tematy pojawią się tutaj. Domyślnie tematy są uważane za nowe i będą pokazywać wskaźnik <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span>, jeśli zostały utworzone w ciągu ostatnich 2 dni.</p><p>Odwiedź swoje <a href="%{userPrefsUrl}">ustawienia</a>, aby to zmienić.</p>'
-          unread: "<p>Twoje nie przeczytane tematy będą pojawiać się tutaj.</p><p>Domyślnie tematy są określane jako nieprzeczytane a ich liczba zostanie wyświetlona<span class=\"badge unread-posts badge-notification\">1</span> Jeśli:</p><ul><li>Utworzyłeś/łaś temat</li><li>Odpowiedziałeś/łaś w temacie</li><li>Czytałeś/łaś temat dłużej niż 5 minuty</li></ul><p>Albo ustawiłeś/łaś śledzenie lub obserwowanie tematu przez \U0001F514 na dole każdej dyskusji.</p><p>Odwiedź swoje <a href=\"%{userPrefsUrl}\">ustawienia</a> by to zmienić.</p>"
-          new_new: "<p>Twoje nowe tematy pojawią się tutaj, a Twoje nieprzeczytane tematy również zostaną wyświetlone. Domyślnie tematy są uważane za nowe i będą wyświetlać wskaźnik <span class=\"badge new-topic badge-notification\" style=\"vertical-align:middle;line-height:inherit;\"></span>, jeśli zostały utworzone w ciągu ostatnich 2 dni. Nieprzeczytane tematy będą wyświetlane jako nieprzeczytane <span class=\"badge unread-posts badge-notification\">1</span>, jeśli: utworzyłeś temat, odpowiedziałeś na temat, czytałeś temat przez ponad 5 minut lub jeśli wyraźnie ustawiłeś temat jako śledzony lub obserwowany za pomocą \U0001F514 w każdym temacie.</p><p>Odwiedź <a href=\"%{userPrefsUrl}\">preferencje</a>, aby to zmienić.</p>"
+        education:
+          unread: "Nic nie pozostało nieprzeczytane... imponujące!"
       bottom:
         latest: "Nie ma więcej najnowszych tematów."
         posted: "Nie ma więcej tematów w których pisałeś."
@@ -3564,6 +3581,7 @@ pl_PL:
       browse_all_categories_latest: "<a href='%{basePath}/categories'>Przeglądaj wszystkie kategorie</a> lub <a href='%{basePath}/latest'>przeglądaj najnowsze tematy</a>."
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Przeglądaj wszystkie kategorie</a>, <a href='%{basePath}/latest'>zobacz najnowsze tematy</a> lub zobacz popularne:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Przeglądaj wszystkie tagi</a> lub <a href='%{basePath}/latest'>zobacz najnowsze tematy</a>."
+      browse_latest_topics: "Przeglądaj najnowsze tematy"
       suggest_create_topic: Gotowy na <a href>rozpoczęcie nowej rozmowy?</a>
       jump_reply: "Przejdź do pierwotnej lokalizacji posta"
       jump_reply_aria: "Przejdź do postu @%{username} w jego oryginalnej lokalizacji"
@@ -4047,6 +4065,9 @@ pl_PL:
         add: "Dodaj nowe tłumaczenie"
         modal:
           title: "Tłumaczenia dla postu"
+        success: "Tłumaczenia zostały pomyślnie zaktualizowane"
+        post_language_selector:
+          none: "Brak"
       errors:
         create: "Przepraszamy, podczas tworzenia twojego wpisu wystąpił błąd. Spróbuj ponownie."
         edit: "Przepraszamy, podczas edytowania twojego wpisu wystąpił błąd. Spróbuj ponownie."
@@ -4261,6 +4282,8 @@ pl_PL:
       share:
         title: "Udostępnij post #%{post_number}"
         instructions: "Udostępnij link do tego posta:"
+      original_language: "Ten post został pierwotnie napisany w %{language}"
+      original_language_and_outdated: "Ten post został pierwotnie napisany w %{language}. Tłumaczenie może być nieaktualne"
     category:
       none: "(brak kategorii)"
       all: "Wszystkie kategorie"
@@ -4313,6 +4336,7 @@ pl_PL:
       background_image_dark: "Obraz tła ciemnej kategorii"
       style: "Style"
       background_color: "Kolor"
+      foreground_color: "Kolor tekstu"
       styles:
         type: "Styl"
         icon: "Ikona"
@@ -5389,6 +5413,8 @@ pl_PL:
           default: "Wszystkie tematy %{filter}"
         category:
           latest: "Najnowsze tematy w %{category}"
+          top: "Najpopularniejsze tematy w %{category}"
+          new: "Nowe tematy w %{category}"
         multi_tag:
           default: "Tematy otagowane %{tags}"
         categories: "Wszystkie kategorie"

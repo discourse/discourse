@@ -1291,6 +1291,7 @@ ca:
         invite_link:
           success: "Enllaç d'invitació generat emb èxit!"
         invite:
+          description: "Descripció"
           cancel: "Cancel·la"
         bulk_invite:
           error: "El fitxer hauria de tenir format CSV."
@@ -1645,11 +1646,9 @@ ca:
       italic_label: "I"
       italic_title: "Cursiva"
       italic_text: "text en cursiva"
-      link_title: "Enllaç"
       link_description: "introduïu una descripció de l'enllaç"
-      link_dialog_title: "Insereix un enllaç"
-      link_optional_text: "títol opcional"
-      link_url_placeholder: "Enganxeu un URL o escriviu per a cercar temes"
+      link_dialog_action: "Insereix"
+      link_optional_text: "Text"
       blockquote_title: "Bloc de citació"
       blockquote_text: "Bloc de citació"
       code_title: "Text preformatat"
@@ -2284,6 +2283,8 @@ ca:
           actions: "Accions"
           edit: "Edita"
           delete: "Suprimeix"
+        post_language_selector:
+          none: "Cap"
       errors:
         create: "S'ha produït un error en crear la vostra publicació. Torneu-ho a provar."
         edit: "S'ha produït un error en editar la vostra publicació. Torneu-ho a provar."

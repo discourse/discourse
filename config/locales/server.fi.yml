@@ -332,7 +332,6 @@ fi:
       s3_backup_requires_s3_settings: "Et voi käyttää S3:a varmuuskopiosijaintina, ellei %{setting_name} ei ole määritetty."
       s3_bucket_reused: "Sama säiliö ei voi olla sekä 's3_upload_bucket' että 's3_backup_bucket'. Valitse eri säiliö tai määritä eri polku jokaiselle säiliölle."
       secure_uploads_requirements: "S3-lataukset ja S3 ACL:t täytyy ottaa käyttöön ennen suojattujen latausten käyttöönottoa."
-      s3_use_acls_requirements: "Sinulla täytyy olla S3 ACL:t käytössä, kun suojatut lataukset on käytössä."
       share_quote_facebook_requirements: "Facebook-sovellustunnus on määritettävä, jotta lainausten jakaminen Facebookiin on mahdollista."
       second_factor_cannot_be_enforced_with_disabled_local_login: "Et voi pakottaa kaksivaiheista tunnistusta, jos paikallinen kirjautuminen on pois käytöstä."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Et voi pakottaa 2FA-asetusta käyttöön kun DiscourseConnect on aktiivisena."
@@ -1897,7 +1896,6 @@ fi:
     s3_endpoint: "Päätepisteeksi voidaan vaihtaa muu S3-yhteensopiva palvelu kuten DigitalOcean Spaces tai Minio. VAROITUS: Jätä tyhjäksi, jos käytät AWS S3:a."
     s3_configure_tombstone_policy: "Ota käyttöön tombstone-hakemiston automaattinen tyhjennys. TÄRKEÄÄ: Jos ei käytössä, tilaa ei vapaudu, kun ladattuja tiedostoja poistetaan."
     s3_disable_cleanup: "Estä vanhojen varmuuskopioiden poistaminen S3:sta, kun varmuuskopioita on enemmän kuin suurin sallittu määrä."
-    s3_use_acls: "AWS suosittelee, ettei ACL-luetteloita käytetä S3-säilöissä; jos noudatat tätä neuvoa, poista tämä valinta. Tämä täytyy olla käytössä, jos käytät suojattuja latauksia."
     enable_direct_s3_uploads: "Mahdollistaa suorat moniosaiset lataukset Amazon S3:een. Lisätietoja on osoitteessa https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469."
     backup_time_of_day: "UTC-kellonaika, jolloin varmuuskopio tehdään."
     backup_with_uploads: "Sisällytä lataukset ajastettuihin varmuuskopioihin. Jos tämä ei ole käytössä, vain tietokanta varmuuskopioidaan."
@@ -2453,12 +2451,8 @@ fi:
     about_page_extra_groups_order: "Lisäryhmien järjestys Tietoja-sivulla."
     adobe_analytics_tags_url: "Adobe Analytics -tunnisteiden URL (`https://assets.adobedtm.com/...`)"
     view_raw_email_allowed_groups: "Ryhmät, jotka voivat tarkastella viestin raakaa sähköpostisisältöä, jos se on luotu saapuvasta sähköpostista. Tämä sisältää sähköpostin ylätunnisteet ja muut tekniset tiedot."
-    experimental_content_localization: "Näyttää käyttäjille lokalisoidun sisällön kieliasetusten perusteella. Tällainen sisältö voi sisältää luokkia, tunnisteita, viestejä ja aiheita. Tätä ominaisuutta kehitetään voimakkaasti."
     rich_editor: "Ota käyttöön rikas editori, jotta kaikki käyttäjät voivat vaihtaa nykyisen Markdown-tilan ja uuden rikkaan tekstieditorin välillä intuitiivisempaan ja käyttäjäystävällisempään sävellykseen. Tekstieditori on aktiivisessa kehityksessä, joten kaikkia ominaisuuksia ei tueta vielä — <a href='https://meta.discourse.org/t/test-our-new-composer/352347' target='_blank'>katso Meta saadaksesi lisätietoja</a>."
-    experimental_content_localization_allowed_groups: 'Ryhmillä on oikeus päivittää lokalisoitua sisältöä. Edellyttää, että "kokeellinen sisällön lokalisointi" on käytössä.'
-    experimental_content_localization_supported_locales: "Lista tuetuista lokaatioista, joihin käyttäjäsisältö voidaan kääntää. Vaatii `experimental_content_localization` jotta se voidaan ottaa käyttöön."
     viewport_based_mobile_mode: "KOKEELLINEN: Poista käyttäjäagenttipohjaiset mobiili-/työpöytätilat käytöstä ja käytä sen sijaan näyttöikkunan leveyttä."
-    experimental_anon_language_switcher: "Ota kokeellinen kielenvaihto käyttöön. Tämä sallii sivuston kävijöitä, jotka eivät ole kirjautuneet vaihtamaan käännettyjen versioiden Discourse ja käyttäjän lähettämää sisältöä aiheista."
     errors:
       invalid_css_color: "Virheellinen väri. Anna värin nimi tai heksadesimaaliarvo."
       invalid_email: "Sähköpostiosoite ei kelpaa."
@@ -2528,7 +2522,6 @@ fi:
       delete_rejected_email_after_days: "Tämä asetus ei voi olla pienempi kuin delete_email_logs_after_days-asetus tai suurempi kuin %{max}"
       invalid_uncategorized_category_setting: 'Luokittelemattomat-aluetta ei voi valita, jos "allow uncategorized topics" ei ole käytössä.'
       invalid_search_ranking_weights: "Arvo on virheellinen search_ranking_weights-sivustoasetukselle. Esimerkki: '{0.1,0.2,0.3,1.0}'. Huomaa, että kunkin painon enimmäisarvo on 1.0."
-      experimental_anon_language_switcher_requirements: "Kokeellinen kielenvaihtaja edellyttää, että sivuston `aseta kieli evästeen perusteella` -asetus on käytössä ja että `automaattisen käännöksen kohdekielet` -kohdassa on vähintään yksi kieli."
     keywords:
       clean_up_inactive_users_after_days: "poistettu käytöstä|inactive|aktivoimaton"
       navigation_menu: "sivupalkki|yläpalkin avattava valikko"
@@ -5186,8 +5179,6 @@ fi:
       duplicate_ids: "päällekkäiset tunnukset"
       reserved_id: "sisältää varatun avainsanan tunnuksena: %{id}"
       unsafe_description: "sisältää vaarallisen HTML-kuvauksen"
-  content_localization:
-    not_allowed: "Sinulla ei ole lupaa lokalisoida tätä sisältöä."
   activemodel:
     errors:
       <<: *errors

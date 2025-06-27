@@ -11,7 +11,7 @@ describe BasicTopicSerializer do
     end
 
     it "returns the fancy title with a modifier" do
-      SiteSetting.experimental_content_localization = true
+      SiteSetting.content_localization_enabled = true
       Fabricate(:topic_localization, topic:, fancy_title: "X", locale: "ja")
       I18n.locale = "ja"
       topic.update!(locale: "en")

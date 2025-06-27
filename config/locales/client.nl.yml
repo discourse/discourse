@@ -398,6 +398,7 @@ nl:
       created: "Je hebt een bladwijzer voor dit bericht gemaakt. %{name}"
       created_generic: "Je hebt een bladwijzer hiervoor gemaakt. %{name}"
       create: "Bladwijzer maken"
+      clear_reminder: "Herinnering verwijderen"
       edit: "Bladwijzer bewerken"
       not_bookmarked: "bladwijzer maken voor dit bericht"
       remove_reminder_keep_bookmark: "Herinnering verwijderen en bladwijzer behouden"
@@ -1879,6 +1880,7 @@ nl:
           edit_link_options: "Bewerk de linkopties of verzend via e-mail."
           show_advanced: "Geavanceerde opties weergeven"
           hide_advanced: "Geavanceerde opties verbergen"
+          description: "Beschrijving"
           restrict: "Beperken tot"
           restrict_email: "Beperken tot e-mail"
           restrict_domain: "Beperken tot domein"
@@ -2526,11 +2528,11 @@ nl:
       italic_label: "I"
       italic_title: "Cursief"
       italic_text: "Cursieve tekst"
-      link_title: "Hyperlink"
+      link_title: "Link"
       link_description: "voer hier een linkbeschrijving in"
-      link_dialog_title: "Hyperlink invoegen"
-      link_optional_text: "optionele titel"
-      link_url_placeholder: "Plak een URL of typ om topics te zoeken"
+      link_dialog_action: "Invoegen"
+      link_edit_action: "Bijwerken"
+      link_optional_text: "Tekst"
       blockquote_title: "Blokcitaat"
       blockquote_text: "Blokcitaat"
       code_title: "Vooraf opgemaakte tekst"
@@ -2600,6 +2602,9 @@ nl:
       image_scale_button: "Afbeelding schalen naar %{percent}%"
       delete_image_button: Afbeelding verwijderen
       toggle_image_grid: Afbeeldingsraster schakelen
+      link_toolbar:
+        copy: "Link kopiëren"
+        link_copied: "Link gekopieerd!"
     notifications:
       tooltip:
         regular:
@@ -2995,10 +3000,6 @@ nl:
         top: "Er zijn geen toptopics."
         hot: "Er zijn geen veelgelezen topics."
         filter: "Er zijn geen topics."
-        educate:
-          new: '<p>Hier worden je nieuwe topics weergegeven. Standaard worden topics als nieuw beschouwd en wordt de indicator <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> weergegeven als ze de afgelopen 2 dagen zijn gemaakt.</p><p>Ga naar je <a href="%{userPrefsUrl}">voorkeuren</a> om dit te wijzigen.</p>'
-          unread: "<p>Je ongelezen topics worden hier weergegeven.</p><p>Standaard worden topics als ongelezen beschouwd en wordt het aantal ongelezen berichten aangegeven <span class=\"badge unread-posts badge-notification\">1</span> als je:</p><ul><li>Het topic hebt gemaakt</li><li>Op het topic hebt geantwoord</li><li>Het topic langer dan 5 minuten hebt gelezen</li></ul><p>Of als je het topic expliciet hebt ingesteld op \"Gevolgd\" of \"Geobserveerd\" via de \U0001F514 in elk topic.</p><p>Ga naar je <a href=\"%{userPrefsUrl}\">voorkeuren</a> om dit te wijzigen.</p>"
-          new_new: "<p>Je nieuwe topics worden hier weergegeven, evenals je ongelezen topics. Standaard worden topics beschouwd als nieuw en hebben ze de indicator <span class=\"badge new-topic badge-notification\" style=\"vertical-align:middle;line-height:inherit;\"></span> als ze de afgelopen 2 dagen zijn gemaakt. Ongelezen topics geven het aantal ongelezen berichten weer <span class=\"badge unread-posts badge-notification\">1</span> als je het topic hebt gemaakt, hebt gereageerd op het topic, het topic langer dan 5 minuten hebt gelezen of het topic expliciet hebt gevolgd of bekeken via de \U0001F514 in elk topic.</p><p>Ga naar je <a href=\"%{userPrefsUrl}\">voorkeuren</a> om dit te wijzigen.</p>"
       bottom:
         latest: "Er zijn verder geen nieuwste topics."
         posted: "Er zijn verder geen geplaatste topics."
@@ -3567,6 +3568,8 @@ nl:
           actions: "Acties"
           edit: "Bewerken"
           delete: "Verwijderen"
+        post_language_selector:
+          none: "Geen"
       errors:
         create: "Sorry, er is een fout opgetreden bij het plaatsen van je bericht. Probeer het opnieuw."
         edit: "Sorry, er is een fout opgetreden bij het bewerken van je bericht. Probeer het opnieuw."

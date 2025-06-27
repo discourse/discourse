@@ -51,10 +51,4 @@ module("Integration | Component | ComposerEditor", function (hooks) {
     await fillIn(".d-editor-input", `"><svg onload="prompt(/xss/)"></svg>`);
     assert.dom(".d-editor-preview").hasHtml('<p>"&gt;<svg></svg></p>');
   });
-
-  test("has a toolbar button to quote a post", async function (assert) {
-    await render(<template><ComposerEditor /></template>);
-
-    assert.dom(".d-editor-button-bar .btn.quote").exists();
-  });
 });

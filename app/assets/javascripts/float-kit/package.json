@@ -14,7 +14,7 @@
     "start": "ember serve"
   },
   "dependencies": {
-    "@babel/core": "^7.27.4",
+    "@babel/core": "^7.27.7",
     "@ember/render-modifiers": "^3.0.0",
     "@floating-ui/dom": "^1.7.1",
     "ember-auto-import": "^2.10.0",
@@ -32,7 +32,7 @@
     "@types/qunit": "^2.19.12",
     "@types/rsvp": "^4.0.9",
     "broccoli-asset-rev": "^3.0.0",
-    "ember-cli": "~6.4.0",
+    "ember-cli": "~6.5.0",
     "ember-cli-inject-live-reload": "^2.1.0",
     "ember-cli-sri": "^2.1.1",
     "ember-cli-terser": "^4.0.2",

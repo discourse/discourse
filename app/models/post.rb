@@ -635,7 +635,7 @@ class Post < ActiveRecord::Base
       any_visible_posts_in_topic =
         Post.exists?(topic_id: topic_id, hidden: false, post_type: Post.types[:regular])
 
-      if !any_visible_posts_in_topic
+      if is_first_post? || !any_visible_posts_in_topic
         self.topic.update_status(
           "visible",
           false,

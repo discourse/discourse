@@ -342,6 +342,7 @@ sv:
       created: "Du har bokmärkt detta inlägg. %{name}"
       created_generic: "Du har bokmärkt detta. %{name}"
       create: "Skapa bokmärke"
+      clear_reminder: "Rensa påminnelse"
       edit: "Redigera bokmärke"
       not_bookmarked: "bokmärk detta inlägg"
       remove_reminder_keep_bookmark: "Ta bort påminnelsen och behåll bokmärket"
@@ -1692,6 +1693,7 @@ sv:
           link_copied: "Länken kopierad!"
           show_advanced: "Visa avancerade alternativ"
           hide_advanced: "Dölj avancerade alternativ"
+          description: "Beskrivning"
           restrict: "Begränsa till"
           restrict_email: "Begränsa till e-post"
           restrict_domain: "Begränsa till domän"
@@ -2254,11 +2256,11 @@ sv:
       italic_label: "I"
       italic_title: "Kursiv"
       italic_text: "kursiv text"
-      link_title: "Hyperlänk"
+      link_title: "Länk"
       link_description: "skriv en länkbeskrivning här"
-      link_dialog_title: "Infoga hyperlänk"
-      link_optional_text: "valfri rubrik"
-      link_url_placeholder: "Klistra in en URL eller skriv för att söka ämnen"
+      link_dialog_action: "Ange"
+      link_edit_action: "Uppdatera"
+      link_optional_text: "Text"
       blockquote_title: "Citat"
       blockquote_text: "Citat"
       code_title: "Förformatterad text"
@@ -2325,6 +2327,8 @@ sv:
         aria_label: Alternativ text för bild
       delete_image_button: Radera bild
       toggle_image_grid: Växla bildrutnät
+      link_toolbar:
+        link_copied: "Länken kopierad!"
     notifications:
       tooltip:
         regular:
@@ -2705,10 +2709,6 @@ sv:
         top: "Det finns inga toppämnen."
         hot: "Det finns inga heta ämnen."
         filter: "Det finns inga ämnen."
-        educate:
-          new: '<p>Dina nya ämnen hamnar här. Standard är att ämnen anses nya och kommer att visa en <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span>-indikator om de skapades de senaste 2 dagarna.</p><p>Gå till dina <a href="%{userPrefsUrl}">användarinställningar</a> för att ändra detta.</p>'
-          unread: "<p>Dina olästa ämnen visas här.</p><p>Som standard betraktas ämnen som olästa och visar olästa värden <span class=\"badge unread-posts badge-notification\">1</span> om du:</p><ul><li>skapade ämnet</li><li>svarade på ämnet</li><li>läste ämnet i mer än 5 minuter</li></ul><p>eller om du uttryckligen har satt ämnet till Följt eller Bevakat via \U0001F514 i varje ämne.</p><p>Gå till dina <a href=\"%{userPrefsUrl}\">inställningar</a> för att ändra detta.</p>"
-          new_new: "<p>Dina nya ämnen kommer att visas här, och dina olästa ämnen kommer också att visas. Som standard betraktas ämnen som nya, med en <span class=\"badge new-topic badge-notification\" style=\"vertical-align:middle;line-height:inherit;\"></span>-indikator om de skapades under de senaste 2 dagarna. Olästa ämnen visar oläst-antalet <span class=\"badge unread-posts badge-notification\">1</span> om du: skapade ämnet, svarade på ämnet, läste ämnet i mer än 5 minuter eller om du uttryckligen har ställt in ämnet till Följt eller Bevakat via \U0001F514 i varje ämne.</p><p>Gå till dina <a href=\"%{userPrefsUrl}\">inställningar</a> för att ändra detta.</p>"
       bottom:
         latest: "Det finns inga fler senaste ämnen."
         posted: "Det finns inga fler postade ämnen."
@@ -3247,6 +3247,8 @@ sv:
           actions: "Åtgärder"
           edit: "Redigera"
           delete: "Ta bort"
+        post_language_selector:
+          none: "Ingen"
       errors:
         create: "Tyvärr uppstod det ett fel under skapandet av ditt inlägg. Vi ber dig försöka igen."
         edit: "Tyvärr uppstod det ett fel under ändringen av ditt inlägg. Vi ber dig försöka igen."

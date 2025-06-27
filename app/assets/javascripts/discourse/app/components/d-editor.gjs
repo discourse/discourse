@@ -91,6 +91,8 @@ export default class DEditor extends Component {
 
     this.register = getRegister(this);
 
+    this.setupToolbar();
+
     if (
       this.siteSettings.rich_editor &&
       this.keyValueStore.get("d-editor-prefers-rich-editor") === "true"
@@ -98,6 +100,19 @@ export default class DEditor extends Component {
       this.editorComponent = await loadRichEditor();
     } else {
       this.editorComponent = TextareaEditor;
+    }
+  }
+
+  setupToolbar() {
+    this.toolbar = new Toolbar(
+      this.getProperties("siteSettings", "showLink", "capabilities")
+    );
+    this.toolbar.context = this;
+
+    _createCallbacks.forEach((cb) => cb(this.toolbar));
+
+    if (this.extraButtons) {
+      this.extraButtons(this.toolbar);
     }
   }
 
@@ -134,7 +149,9 @@ export default class DEditor extends Component {
 
         if (customAction) {
           const toolbarEvent = this.newToolbarEvent();
-          customAction(toolbarEvent);
+          if (!button.condition || button.condition(toolbarEvent)) {
+            customAction(toolbarEvent);
+          }
         } else {
           button.action(button);
         }
@@ -159,8 +176,10 @@ export default class DEditor extends Component {
       }
     });
 
-    keymap["tab"] = () => this.textManipulation.indentSelection("right");
-    keymap["shift+tab"] = () => this.textManipulation.indentSelection("left");
+    // indentSelection returns true if the selection was indented
+    // itsatrap expects the return value to be false to prevent default
+    keymap["tab"] = () => !this.textManipulation.indentSelection("right");
+    keymap["shift+tab"] = () => !this.textManipulation.indentSelection("left");
     if (this.siteSettings.rich_editor) {
       keymap["ctrl+m"] = () => this.toggleRichEditor();
     }
@@ -173,22 +192,6 @@ export default class DEditor extends Component {
     this._previewMutationObserver?.disconnect();
 
     this._cachedCookFunction = null;
-  }
-
-  @discourseComputed()
-  toolbar() {
-    const toolbar = new Toolbar(
-      this.getProperties("siteSettings", "showLink", "capabilities")
-    );
-    toolbar.context = this;
-
-    _createCallbacks.forEach((cb) => cb(toolbar));
-
-    if (this.extraButtons) {
-      this.extraButtons(toolbar);
-    }
-
-    return toolbar;
   }
 
   async cachedCookAsync(text, options) {
@@ -490,20 +493,6 @@ export default class DEditor extends Component {
       replaceText: (oldVal, newVal, opts) =>
         this.textManipulation.replaceText(oldVal, newVal, opts),
     };
-  }
-
-  @action
-  toolbarButton(button) {
-    if (this.disabled) {
-      return;
-    }
-
-    const toolbarEvent = this.newToolbarEvent(button.trimLeading);
-    if (button.sendAction) {
-      return button.sendAction(toolbarEvent);
-    } else {
-      button.perform(toolbarEvent);
-    }
   }
 
   @action

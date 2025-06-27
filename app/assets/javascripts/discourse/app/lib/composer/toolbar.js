@@ -1,6 +1,29 @@
+// @ts-check
 import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
 import { translateModKey } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
+
+/**
+ * @typedef ToolbarButton
+ * @property {string} id
+ * @property {string} [group]
+ * @property {string} [tabindex]
+ * @property {string} [className]
+ * @property {string} [label]
+ * @property {string} [icon]
+ * @property {string} [href]
+ * @property {Function} action
+ * @property {Function} [perform]
+ * @property {Function} [sendAction]
+ * @property {boolean} [trimLeading]
+ * @property {boolean} [preventFocus]
+ * @property {Function} condition
+ * @property {boolean} [hideShortcutInTitle]
+ * @property {string} title
+ * @property {string} [shortcut]
+ * @property {boolean} [unshift]
+ * @property {Function} [active]
+ */
 
 function getButtonLabel(labelKey, defaultLabel) {
   // use the Font Awesome icon if the label matches the default
@@ -18,36 +41,58 @@ export class ToolbarBase {
     this.capabilities = opts.capabilities || {};
   }
 
+  /**
+   * @param {Object} buttonAttrs
+   * @param {string=} buttonAttrs.id
+   * @param {string=} buttonAttrs.group
+   * @param {string=} buttonAttrs.tabindex
+   * @param {string=} buttonAttrs.className
+   * @param {string=} buttonAttrs.label
+   * @param {string=} buttonAttrs.icon
+   * @param {string=} buttonAttrs.href
+   * @param {Function=} buttonAttrs.action
+   * @param {Function=} buttonAttrs.perform
+   * @param {boolean=} buttonAttrs.trimLeading
+   * @param {boolean=} buttonAttrs.popupMenu
+   * @param {boolean=} buttonAttrs.preventFocus
+   * @param {Function=} buttonAttrs.condition
+   * @param {Function=} buttonAttrs.sendAction
+   * @param {Function=} buttonAttrs.shortcutAction custom shortcut action
+   * @param {boolean=} buttonAttrs.hideShortcutInTitle hide shortcut in title
+   * @param {string=} buttonAttrs.title
+   * @param {string=} buttonAttrs.shortcut
+   * @param {boolean=} buttonAttrs.unshift
+   * @param {boolean=} buttonAttrs.disabled
+   * @param {Function=} buttonAttrs.active callback function that receives state and returns boolean
+   */
   addButton(buttonAttrs) {
-    const g = this.groups.findBy("group", buttonAttrs.group || DEFAULT_GROUP);
+    const group = this.groups.find(
+      (item) => item.group === (buttonAttrs.group || DEFAULT_GROUP)
+    );
 
-    const createdButton = {
-      id: buttonAttrs.id,
-      tabindex: buttonAttrs.tabindex || "-1",
-      className: buttonAttrs.className || buttonAttrs.id,
-      label: buttonAttrs.label,
-      icon: buttonAttrs.icon,
-      href: buttonAttrs.href,
-      action: (button) => {
-        buttonAttrs.action
-          ? buttonAttrs.action(button)
-          : this.context.send("toolbarButton", button);
+    const createdButton = /** @type {ToolbarButton} */ (
+      Object.defineProperties({}, Object.getOwnPropertyDescriptors(buttonAttrs))
+    );
 
-        // appEvents is only available on the main toolbar
-        // only custom plugins listen to this event
-        this.context.appEvents?.trigger(
-          "d-editor:toolbar-button-clicked",
-          button
-        );
-      },
-      perform: buttonAttrs.perform || function () {},
-      trimLeading: buttonAttrs.trimLeading,
-      popupMenu: buttonAttrs.popupMenu,
-      preventFocus: buttonAttrs.preventFocus || false,
-      condition: buttonAttrs.condition || (() => true),
-      sendAction: buttonAttrs.sendAction,
-      shortcutAction: buttonAttrs.shortcutAction, // (optional) custom shortcut action
-      hideShortcutInTitle: buttonAttrs.hideShortcutInTitle || false, // (optional) hide shortcut in title
+    createdButton.tabindex ||= "-1";
+    createdButton.className ||= buttonAttrs.id;
+    createdButton.condition ||= () => true;
+
+    createdButton.action = () => {
+      const toolbarEvent = this.context.newToolbarEvent?.(
+        buttonAttrs.trimLeading
+      );
+
+      const actionFn =
+        buttonAttrs.action ?? buttonAttrs.sendAction ?? buttonAttrs.perform;
+      actionFn?.(toolbarEvent);
+
+      // appEvents is only available on the main toolbar
+      // only custom plugins listen to this event
+      this.context.appEvents?.trigger(
+        "d-editor:toolbar-button-clicked",
+        createdButton
+      );
     };
 
     const title = i18n(buttonAttrs.title || `composer.${buttonAttrs.id}_title`);
@@ -69,19 +114,23 @@ export class ToolbarBase {
     }
 
     if (buttonAttrs.unshift) {
-      g.buttons.unshift(createdButton);
+      group.buttons.unshift(createdButton);
     } else {
-      g.buttons.push(createdButton);
+      group.buttons.push(createdButton);
     }
   }
 
-  addSeparator({ group = DEFAULT_GROUP, condition }) {
-    const g = this.groups.findBy("group", group);
-    if (!g) {
-      throw new Error(`Couldn't find toolbar group ${group}`);
+  addSeparator({ group: groupName = DEFAULT_GROUP, condition }) {
+    const group = this.groups.find((item) => item.group === groupName);
+
+    if (!group) {
+      throw new Error(`Couldn't find toolbar group ${groupName}`);
     }
 
-    g.buttons.push({ type: "separator", condition: condition || (() => true) });
+    group.buttons.push({
+      type: "separator",
+      condition: condition || (() => true),
+    });
   }
 }
 
@@ -109,6 +158,7 @@ export default class Toolbar extends ToolbarBase {
       preventFocus: true,
       trimLeading: true,
       perform: (e) => e.applySurround("**", "**", "bold_text"),
+      active: ({ state }) => state.inBold,
     });
 
     const italicLabel = getButtonLabel("composer.italic_label", "I");
@@ -122,6 +172,7 @@ export default class Toolbar extends ToolbarBase {
       preventFocus: true,
       trimLeading: true,
       perform: (e) => e.applySurround("*", "*", "italic_text"),
+      active: ({ state }) => state.inItalic,
     });
 
     if (opts.showLink) {
@@ -133,6 +184,7 @@ export default class Toolbar extends ToolbarBase {
         preventFocus: true,
         trimLeading: true,
         sendAction: (event) => this.context.send("showLinkModal", event),
+        active: ({ state }) => state.inLink,
       });
     }
 
@@ -147,6 +199,7 @@ export default class Toolbar extends ToolbarBase {
           applyEmptyLines: true,
           multiline: true,
         }),
+      active: ({ state }) => state.inBlockquote,
     });
 
     if (!this.capabilities.touch) {
@@ -158,6 +211,7 @@ export default class Toolbar extends ToolbarBase {
         preventFocus: true,
         trimLeading: true,
         perform: (e) => e.formatCode(),
+        active: ({ state }) => state.inCode || state.inCodeBlock,
       });
 
       this.addButton({
@@ -168,6 +222,7 @@ export default class Toolbar extends ToolbarBase {
         title: "composer.ulist_title",
         preventFocus: true,
         perform: (e) => e.applyList("* ", "list_item"),
+        active: ({ state }) => state.inBulletList,
       });
 
       this.addButton({
@@ -182,6 +237,7 @@ export default class Toolbar extends ToolbarBase {
             (i) => (!i ? "1. " : `${parseInt(i, 10) + 1}. `),
             "list_item"
           ),
+        active: ({ state }) => state.inOrderedList,
       });
     }
 

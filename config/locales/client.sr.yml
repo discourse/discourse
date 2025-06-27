@@ -1501,6 +1501,7 @@ sr:
           create_link_to_invite: "Napravite link koji se može deliti da biste odmah odobrili pristup ovoj zajednici."
           show_advanced: "Прикажи напредне опције"
           hide_advanced: "Sakrij napredne opcije"
+          description: "Opis"
           cancel: "Odustani"
           create_link: "Napravi link"
           create_link_and_send_email: "Napravi link i pošalji mail"
@@ -1774,11 +1775,7 @@ sr:
       italic_label: "I"
       italic_title: "Italic"
       italic_text: "italic tekst"
-      link_title: "Hiperlink"
       link_description: "Unesite opis linka ovde"
-      link_dialog_title: "Ubacite Hiperlink"
-      link_optional_text: "neobavezan naslov"
-      link_url_placeholder: "Zalepite URL ili tip za pretraživanje tema"
       blockquote_title: "izdvojeni citat"
       blockquote_text: "izdvojeni citat"
       code_title: "Pred-formatirani tekst"
@@ -2114,6 +2111,8 @@ sr:
           actions: "Akcije"
           edit: "Izmeni"
           delete: "Obriši"
+        post_language_selector:
+          none: "Ništa"
       errors:
         create: "Žao nam je, dogodila se greška pri otvaranju tvoje poruke. Molimo pokušajte ponovo."
         edit: "Žao nam je, dogodila se greška pri izmenjivanju tvoje poruke. Molimo pokušajte ponovo."

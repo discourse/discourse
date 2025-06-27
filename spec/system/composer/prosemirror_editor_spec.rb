@@ -399,8 +399,11 @@ describe "Composer - ProseMirror editor", type: :system do
     end
 
     it "supports Ctrl + K to create a link" do
+      hyperlink_modal = PageObjects::Modals::Base.new
       open_composer_and_toggle_rich_editor
       page.send_keys([PLATFORM_KEY_MODIFIER, "k"])
+      expect(hyperlink_modal).to be_open
+      expect(hyperlink_modal.header).to have_content(I18n.t("js.composer.link_dialog_title"))
       page.send_keys("https://www.example.com")
       page.send_keys(:tab)
       page.send_keys("This is a link")
@@ -638,6 +641,37 @@ describe "Composer - ProseMirror editor", type: :system do
       composer.type_content(:backspace)
 
       expect(rich).to have_css("a", text: "lin")
+    end
+  end
+
+  describe "toolbar state updates" do
+    it "updates the toolbar state following the cursor position" do
+      open_composer_and_toggle_rich_editor
+
+      expect(page).to have_css(".toolbar__button.bold.--active", count: 0)
+      expect(page).to have_css(".toolbar__button.italic.--active", count: 0)
+      expect(page).to have_css(".toolbar__button.link.--active", count: 0)
+      expect(page).to have_css(".toolbar__button.bullet.--active", count: 0)
+      expect(page).to have_css(".toolbar__button.list.--active", count: 0)
+      expect(page).to have_css(".toolbar__button.code.--active", count: 0)
+      expect(page).to have_css(".toolbar__button.blockquote.--active", count: 0)
+
+      composer.type_content("> - ` [***many styles***](https://example.com)`")
+      composer.send_keys(:left, :left)
+
+      expect(page).to have_css(".toolbar__button.bold.--active", count: 1)
+      expect(page).to have_css(".toolbar__button.italic.--active", count: 1)
+      expect(page).to have_css(".toolbar__button.link.--active", count: 1)
+      expect(page).to have_css(".toolbar__button.bullet.--active", count: 1)
+      expect(page).to have_css(".toolbar__button.list.--active", count: 0)
+      expect(page).to have_css(".toolbar__button.code.--active", count: 1)
+      expect(page).to have_css(".toolbar__button.blockquote.--active", count: 1)
+
+      page.find(".toolbar__button.bullet").click
+      page.find(".toolbar__button.list").click
+
+      expect(page).to have_css(".toolbar__button.list.--active", count: 1)
+      expect(page).to have_css(".toolbar__button.bullet.--active", count: 0)
     end
   end
 
@@ -928,7 +962,7 @@ describe "Composer - ProseMirror editor", type: :system do
       expect(page).to have_css("[data-identifier='composer-link-toolbar']")
       expect(page).to have_css("button.composer-link-toolbar__edit")
       expect(page).to have_css("button.composer-link-toolbar__copy")
-      expect(page).to have_css("a.composer-link-toolbar__visit", text: "https://example.com")
+      expect(page).to have_css("a.composer-link-toolbar__visit", text: "example.com")
     end
 
     it "allows editing a link via toolbar" do
@@ -1009,7 +1043,22 @@ describe "Composer - ProseMirror editor", type: :system do
 
       expect(page).to have_css(
         "a.composer-link-toolbar__visit[href='https://example.com']",
-        text: "https://example.com",
+        text: "example.com",
+      )
+    end
+
+    it "strips base URL from internal links in toolbar display" do
+      open_composer_and_toggle_rich_editor
+
+      internal_link = "#{Discourse.base_url}/t/some-topic/123"
+
+      composer.type_content("[Internal Link](#{internal_link})")
+      composer.send_keys(:left, :left, :left)
+
+      expect(page).to have_css("[data-identifier='composer-link-toolbar']")
+      expect(page).to have_css(
+        "a.composer-link-toolbar__visit[href='#{internal_link}']",
+        text: "/t/some-topic/123",
       )
     end
 
@@ -1031,7 +1080,7 @@ describe "Composer - ProseMirror editor", type: :system do
       composer.send_keys(:left)
 
       expect(page).to have_css("[data-identifier='composer-link-toolbar']")
-      expect(page).to have_css("a.composer-link-toolbar__visit", text: "https://example.com")
+      expect(page).to have_css("a.composer-link-toolbar__visit", text: "example.com")
 
       composer.send_keys(:right)
 

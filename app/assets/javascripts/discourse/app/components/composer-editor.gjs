@@ -898,15 +898,6 @@ export default class ComposerEditor extends Component {
 
   @action
   extraButtons(toolbar) {
-    toolbar.addButton({
-      id: "quote",
-      group: "fontStyles",
-      icon: "far-comment",
-      sendAction: this.composer.importQuote,
-      title: "composer.quote_post_title",
-      unshift: true,
-    });
-
     if (
       this.composer.allowUpload &&
       this.composer.uploadIcon &&
@@ -963,7 +954,7 @@ export default class ComposerEditor extends Component {
 
   get showTranslationEditor() {
     if (
-      !this.siteSettings.experimental_content_localization ||
+      !this.siteSettings.content_localization_enabled ||
       !this.currentUser.can_localize_content
     ) {
       return false;

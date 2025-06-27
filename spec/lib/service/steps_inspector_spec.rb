@@ -281,7 +281,11 @@ RSpec.describe Service::StepsInspector do
         before do
           class DummyService
             def fetch_model
-              OpenStruct.new(invalid?: true, errors: ActiveModel::Errors.new(nil))
+              OpenStruct.new(
+                has_changes_to_save?: true,
+                invalid?: true,
+                errors: ActiveModel::Errors.new(nil),
+              )
             end
           end
         end
