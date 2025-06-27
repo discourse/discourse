@@ -1,6 +1,17 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
+import AdminConfigAreaCard from "admin/components/admin-config-area-card";
 import ThemesGridCard from "./themes-grid-card";
+
+const COMPONENTS_FOR_CUSTOM_CARDS = [];
+
+export function addCardToAdminThemesGrid(func) {
+  COMPONENTS_FOR_CUSTOM_CARDS.push(func(AdminConfigAreaCard));
+}
+
+export function resetCardsForAdminThemesGrid() {
+  COMPONENTS_FOR_CUSTOM_CARDS.length = 0;
+}
 
 // NOTE (martin): Much of the JS code in this component is placeholder code. Much
 // of the existing theme logic in /admin/customize/themes has old patterns
@@ -42,9 +53,9 @@ export default class ThemesGrid extends Component {
       {{#each @themes as |theme|}}
         <ThemesGridCard @theme={{theme}} @allThemes={{@themes}} />
       {{/each}}
-      {{#if (has-block "specialCard")}}
-        {{yield to="specialCard"}}
-      {{/if}}
+      {{#each COMPONENTS_FOR_CUSTOM_CARDS as |comp|}}
+        <comp />
+      {{/each}}
     </div>
   </template>
 }

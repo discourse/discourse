@@ -104,6 +104,7 @@ import { resetDecorators as resetPostCookedDecorators } from "discourse/widgets/
 import { resetPostSmallActionClassesCallbacks } from "discourse/widgets/post-small-action";
 import { resetDecorators } from "discourse/widgets/widget";
 import I18n from "discourse-i18n";
+import { resetCardsForAdminThemesGrid } from "admin/components/themes-grid";
 import { _clearSnapshots } from "select-kit/components/composer-actions";
 import { setupDSelectAssertions } from "./d-select-assertions";
 import { setupFormKitAssertions } from "./form-kit-assertions";
@@ -271,6 +272,7 @@ export function testCleanup(container, app) {
   resetGroupPostSmallActionCodes();
   resetPostSmallActionClassesCallbacks();
   resetPostClassesCallback();
+  resetCardsForAdminThemesGrid();
 }
 
 function cleanupCssGeneratorTags() {
