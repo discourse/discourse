@@ -38,18 +38,18 @@ RSpec.describe ThemeSiteSetting do
 
     context "when skipping redis" do
       before { GlobalSetting.skip_redis = true }
+      after { GlobalSetting.skip_redis = false }
 
       it "returns {}" do
-        GlobalSetting.skip_redis = true
         expect(ThemeSiteSetting.generate_theme_map).to eq({})
       end
     end
 
     context "when skipping db" do
       before { GlobalSetting.skip_db = true }
+      after { GlobalSetting.skip_db = false }
 
       it "returns {}" do
-        GlobalSetting.skip_db = true
         expect(ThemeSiteSetting.generate_theme_map).to eq({})
       end
     end
