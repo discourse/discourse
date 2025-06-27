@@ -375,48 +375,55 @@ module SiteSettingExtension
   end
 
   # Refresh all the site settings and theme site settings
-  def refresh!
+  def refresh!(refresh_site_settings: true, refresh_theme_site_settings: true)
     mutex.synchronize do
       ensure_listen_for_changes
 
-      new_hash =
-        Hash[
-          *(
-            provider
-              .all
-              .map do |s|
-                [s.name.to_sym, type_supervisor.to_rb_value(s.name, s.value, s.data_type)]
-              end
-              .to_a
-              .flatten
-          )
-        ]
+      if refresh_site_settings
+        new_hash =
+          Hash[
+            *(
+              provider
+                .all
+                .map do |s|
+                  [s.name.to_sym, type_supervisor.to_rb_value(s.name, s.value, s.data_type)]
+                end
+                .to_a
+                .flatten
+            )
+          ]
 
-      defaults_view = defaults.all(new_hash[:default_locale])
+        defaults_view = defaults.all(new_hash[:default_locale])
 
-      # add locale default and defaults based on default_locale, cause they are cached
-      new_hash = defaults_view.merge!(new_hash)
+        # add locale default and defaults based on default_locale, cause they are cached
+        new_hash = defaults_view.merge!(new_hash)
 
-      # add shadowed
-      shadowed_settings.each { |ss| new_hash[ss] = GlobalSetting.public_send(ss) }
+        # add shadowed
+        shadowed_settings.each { |ss| new_hash[ss] = GlobalSetting.public_send(ss) }
 
-      changes, deletions = diff_hash(new_hash, current)
+        changes, deletions = diff_hash(new_hash, current)
 
-      changes.each { |name, val| current[name] = val }
-      deletions.each { |name, _| current[name] = defaults_view[name] }
-      uploads.clear
-
-      new_theme_site_settings = ThemeSiteSetting.generate_theme_map
-
-      theme_site_setting_changes, theme_site_setting_deletions =
-        diff_hash(new_theme_site_settings, theme_site_settings)
-      theme_site_setting_changes.each do |theme_id, settings|
-        theme_site_settings[theme_id] ||= {}
-        theme_site_settings[theme_id].merge!(settings)
+        changes.each { |name, val| current[name] = val }
+        deletions.each { |name, _| current[name] = defaults_view[name] }
+        uploads.clear
       end
-      theme_site_setting_deletions.each { |theme_id, _| theme_site_settings.delete(theme_id) }
 
-      clear_cache!(expire_theme_site_setting_cache: ThemeSiteSetting.can_access_db?)
+      if refresh_theme_site_settings
+        new_theme_site_settings = ThemeSiteSetting.generate_theme_map
+
+        theme_site_setting_changes, theme_site_setting_deletions =
+          diff_hash(new_theme_site_settings, theme_site_settings)
+        theme_site_setting_changes.each do |theme_id, settings|
+          theme_site_settings[theme_id] ||= {}
+          theme_site_settings[theme_id].merge!(settings)
+        end
+        theme_site_setting_deletions.each { |theme_id, _| theme_site_settings.delete(theme_id) }
+      end
+
+      clear_cache!(
+        expire_theme_site_setting_cache:
+          ThemeSiteSetting.can_access_db? && refresh_theme_site_settings,
+      )
     end
   end
 

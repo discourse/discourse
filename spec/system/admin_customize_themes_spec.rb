@@ -2,7 +2,7 @@
 
 describe "Admin Customize Themes", type: :system do
   fab!(:color_scheme)
-  fab!(:theme) { Fabricate(:theme, name: "Cool theme 1") }
+  fab!(:theme) { Fabricate(:theme, name: "Cool theme 1", user_selectable: true) }
   fab!(:admin) { Fabricate(:admin, locale: "en") }
 
   let(:theme_page) { PageObjects::Pages::AdminCustomizeThemes.new }
@@ -328,6 +328,24 @@ describe "Admin Customize Themes", type: :system do
       expect(
         ThemeSiteSetting.exists?(theme: theme, name: "enable_welcome_banner", value: "f"),
       ).to be_falsey
+    end
+
+    it "alters the UI via MessageBus when a theme site setting changes" do
+      SiteSetting.refresh!(refresh_site_settings: false, refresh_theme_site_settings: true)
+      banner = PageObjects::Components::WelcomeBanner.new
+      other_user = Fabricate(:user)
+      other_user.user_option.update!(theme_ids: [theme.id])
+      sign_in(other_user)
+      visit("/")
+      expect(banner).to be_visible
+
+      using_session(:admin) do
+        sign_in(admin)
+        theme_page.visit(theme.id)
+        theme_page.toggle_theme_site_setting("enable_welcome_banner")
+      end
+
+      expect(banner).to be_hidden
     end
   end
 end
