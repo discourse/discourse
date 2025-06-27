@@ -2,12 +2,87 @@
 -- update the "config/intermediate_db.yml" configuration file and then run
 -- `bin/cli schema generate` to regenerate this file.
 
+CREATE TABLE badges
+(
+    original_id         NUMERIC  NOT NULL PRIMARY KEY,
+    allow_title         BOOLEAN,
+    auto_revoke         BOOLEAN,
+    badge_grouping_id   NUMERIC,
+    badge_type_id       NUMERIC  NOT NULL,
+    created_at          DATETIME,
+    description         TEXT,
+    enabled             BOOLEAN,
+    existing_id         NUMERIC,
+    icon                TEXT,
+    image_upload_id     TEXT,
+    listable            BOOLEAN,
+    long_description    TEXT,
+    multiple_grant      BOOLEAN,
+    name                TEXT     NOT NULL,
+    "query"             TEXT,
+    show_in_post_header BOOLEAN,
+    show_posts          BOOLEAN,
+    target_posts        BOOLEAN,
+    "trigger"           INTEGER
+);
+
+CREATE TABLE categories
+(
+    original_id                               NUMERIC  NOT NULL PRIMARY KEY,
+    about_topic_title                         TEXT,
+    all_topics_wiki                           BOOLEAN,
+    allow_badges                              BOOLEAN,
+    allow_global_tags                         BOOLEAN,
+    allow_unlimited_owner_edits_on_first_post BOOLEAN,
+    auto_close_based_on_last_post             BOOLEAN,
+    auto_close_hours                          FLOAT,
+    color                                     TEXT,
+    created_at                                DATETIME,
+    default_list_filter                       TEXT,
+    default_slow_mode_seconds                 INTEGER,
+    default_top_period                        TEXT,
+    default_view                              TEXT,
+    description                               TEXT,
+    email_in                                  TEXT,
+    email_in_allow_strangers                  BOOLEAN,
+    emoji                                     TEXT,
+    existing_id                               NUMERIC,
+    icon                                      TEXT,
+    locale                                    TEXT,
+    mailinglist_mirror                        BOOLEAN,
+    minimum_required_tags                     INTEGER,
+    name                                      TEXT     NOT NULL,
+    navigate_to_first_post_after_read         BOOLEAN,
+    num_featured_topics                       INTEGER,
+    parent_category_id                        NUMERIC,
+    position                                  INTEGER,
+    read_only_banner                          TEXT,
+    read_restricted                           BOOLEAN,
+    search_priority                           INTEGER,
+    show_subcategory_list                     BOOLEAN,
+    slug                                      TEXT     NOT NULL,
+    sort_ascending                            BOOLEAN,
+    sort_order                                TEXT,
+    style_type                                INTEGER,
+    subcategory_list_style                    TEXT,
+    text_color                                TEXT,
+    topic_featured_link_allowed               BOOLEAN,
+    topic_id                                  NUMERIC,
+    topic_template                            TEXT,
+    uploaded_background_dark_id               TEXT,
+    uploaded_background_id                    TEXT,
+    uploaded_logo_dark_id                     TEXT,
+    uploaded_logo_id                          TEXT,
+    user_id                                   NUMERIC  NOT NULL
+);
+
 CREATE TABLE user_emails
 (
-    email      TEXT     NOT NULL PRIMARY KEY,
+    email      TEXT     NOT NULL,
+    user_id    NUMERIC  NOT NULL,
     created_at DATETIME,
     "primary"  BOOLEAN,
-    user_id    NUMERIC  NOT NULL
+    PRIMARY KEY (user_id, email)
 );
 
 CREATE TABLE user_options
@@ -80,6 +155,7 @@ CREATE TABLE users
     approved                  BOOLEAN,
     approved_at               DATETIME,
     approved_by_id            NUMERIC,
+    avatar_type               INTEGER,
     created_at                DATETIME  NOT NULL,
     date_of_birth             DATE,
     first_seen_at             DATETIME,

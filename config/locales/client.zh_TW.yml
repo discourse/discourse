@@ -2401,12 +2401,11 @@ zh_TW:
       italic_label: "I"
       italic_title: "斜體"
       italic_text: "斜體字"
-      link_title: "超連結"
+      link_title: "連結"
       link_description: "在此輸入超連結的描述"
       link_dialog_action: "插入"
       link_edit_action: "更新"
-      link_optional_text: "標題 (可選填)"
-      link_url_placeholder: "貼上 URL 或輸入以搜尋主題"
+      link_optional_text: "文字"
       blockquote_title: "塊引用"
       blockquote_text: "塊引用"
       code_title: "預先格式化文字"
@@ -2847,10 +2846,6 @@ zh_TW:
         top: "沒有精選話題。"
         hot: "沒有熱門話題。"
         filter: "沒有主題。"
-        educate:
-          new: '<p>您的新主題會出現在這裡。預設情況下，主題會被視為新主題，如果是在過去兩天內建立，則會顯示<span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> 指示符。</p><p>請造訪您的<a href="%{userPrefsUrl}">偏好設定</a>來變更。</p>'
-          unread: "<p>您的未讀話題顯示在此處。</p><p>默認情況下，如果符合以下條件，話題會被視為未讀並且還將顯示未讀計數 <span class=\"badge unread-posts badge-notification\">1</span>：</p><ul><li>您創建了該話題</li><li>您回覆了該話題</li><li>您閱讀該話題超過 5 分鐘</li></ul><p>或者如果您在每個話題中通過 \U0001F514 將話題顯式設為「已跟蹤」或「已關注」。</p><p>訪問您的<a href=\"%{userPrefsUrl}\">偏好設定</a>可以更改此設定。</p>"
-          new_new: "<p>您的新話題將顯示在此處，您的未讀話題也將顯示。默認情況下，如果它們是在最近 2 天內創建的，話題會被視為新話題，並且會顯示 <span class=\"badge new-topic badge-notification\" style=\"vertical-align:middle;line-height:inherit;\"></span> 指示器。如果符合以下條件，未讀話題將顯示未讀計數 <span class=\"badge unread-posts badge-notification\">1</span>：您創建話題、回覆話題、閱讀話題超過 5 分鐘，或者通過每個話題中的 \U0001F514 明確將話題設置為「已跟蹤」或「已關注」。</p><p>訪問您的<a href=\"%{userPrefsUrl}\">偏好設定</a>可以更改此設定。</p>"
       bottom:
         latest: "已經沒有其它最近的話題了。"
         posted: "已經沒有其它話題了。"

@@ -71,7 +71,7 @@ export default class ReviewableQueuedPost extends Component {
         {{highlightWatchedWords @reviewable.payload.title @reviewable}}
       </div>
       {{categoryBadge @reviewable.category}}
-      <ReviewableTags @tags={{@reviewable.payload.tags}} @tagName="" />
+      <ReviewableTags @tags={{@reviewable.payload.tags}} />
       {{#if @reviewable.payload.via_email}}
         <a href {{on "click" this.showRawEmail}} class="show-raw-email">
           {{icon "envelope" title="post.via_email"}}

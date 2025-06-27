@@ -57,7 +57,7 @@ module Migrations::Importer::Steps
       SELECT u.*,
              us.suspended_at,
              us.suspended_till,
-             JSON_GROUP_ARRAY(LOWER(ue.email)) AS emails
+             GROUP_CONCAT(LOWER(ue.email)) AS emails
       FROM users u
            LEFT JOIN user_emails ue ON u.original_id = ue.user_id
            LEFT JOIN mapped.ids amu ON u.approved_by_id IS NOT NULL AND u.approved_by_id = amu.original_id AND amu.type = ?1
@@ -78,14 +78,13 @@ module Migrations::Importer::Steps
 
     def transform_row(row)
       if row[:emails].present?
-        JSON
-          .parse(row[:emails])
-          .each do |email|
-            if (existing_user_id = @user_ids_by_email[email])
-              row[:id] = existing_user_id
-              return nil
-            end
+        emails = row[:emails].split(",")
+        emails.each do |email|
+          if (existing_user_id = @user_ids_by_email[email])
+            row[:id] = existing_user_id
+            return nil
           end
+        end
       end
 
       if row[:external_id].present? &&
@@ -123,7 +122,15 @@ module Migrations::Importer::Steps
 
       row[:views] ||= 0
 
+      # we need to set it in a different step because `uploads` depends on `users`
+      row.delete(:uploaded_avatar_id)
+
       super
+
+      emails&.each { |email| @user_ids_by_email[email] = row[:id] }
+      @user_ids_by_external_id[row[:external_id]] = row[:id]
+
+      row
     end
 
     def after_commit_of_inserted_rows(rows)

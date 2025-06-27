@@ -601,6 +601,21 @@ RSpec.describe FileStore::S3Store do
         expect(s3_helper.s3_client.api_requests).to be_empty
       end
 
+      it "removes acl when `s3_use_acls` site setting is disabled and the `remove_existing_acl` kwarg is true" do
+        SiteSetting.s3_use_acls = false
+
+        upload.update!(secure: true)
+
+        expect(store.update_upload_access_control(upload, remove_existing_acl: true)).to be_truthy
+
+        put_object_acl_request =
+          store.s3_helper.s3_client.api_requests.find do |api_request|
+            api_request[:operation_name] == :put_object_acl
+          end
+
+        expect(put_object_acl_request[:context].params[:acl]).to eq(nil)
+      end
+
       describe "when `s3_enable_access_control_tags` site setting is enabled" do
         before { SiteSetting.s3_enable_access_control_tags = true }
 
