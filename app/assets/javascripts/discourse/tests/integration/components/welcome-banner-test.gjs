@@ -12,18 +12,11 @@ module("Integration | Component | WelcomeBanner", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
-    this._locale = I18n.locale;
-    this._translations = I18n.translations;
-    this._extras = I18n.extras;
     this._overrides = I18n._overrides;
-
     this.router = getOwner(this).lookup("service:router");
   });
 
   hooks.afterEach(function () {
-    I18n.locale = this._locale;
-    I18n.translations = this._translations;
-    I18n.extras = this._extras;
     I18n._overrides = this._overrides;
   });
 
