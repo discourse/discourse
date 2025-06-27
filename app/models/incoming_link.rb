@@ -129,5 +129,7 @@ end
 # Indexes
 #
 #  index_incoming_links_on_created_at_and_user_id  (created_at,user_id)
+#  index_incoming_links_on_current_user_id         (current_user_id) WHERE (current_user_id IS NOT NULL)
 #  index_incoming_links_on_post_id                 (post_id)
+#  index_incoming_links_on_user_id                 (user_id) WHERE (user_id IS NOT NULL)
 #
