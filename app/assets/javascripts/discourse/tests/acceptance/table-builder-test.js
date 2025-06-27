@@ -1,7 +1,6 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 ["enabled", "disabled"].forEach((postStreamMode) => {
   acceptance(
@@ -15,11 +14,10 @@ import selectKit from "discourse/tests/helpers/select-kit-helper";
       test("Can see table builder button when creating a topic", async function (assert) {
         await visit("/");
         await click("#create-topic");
-        await click(".d-editor-button-bar .options");
-        await selectKit(".toolbar-popup-menu-options").expand();
+        await click(".toolbar-menu__options-trigger");
 
         assert
-          .dom(`.select-kit-row[data-name='toggle-spreadsheet']`)
+          .dom("button[data-name='toggle-spreadsheet']")
           .exists("it shows the builder button");
       });
 
@@ -28,11 +26,10 @@ import selectKit from "discourse/tests/helpers/select-kit-helper";
         await click("#post_1 .show-more-actions");
         await click("#post_1 .edit");
         assert.dom("#reply-control").exists();
-        await click(".d-editor-button-bar .options");
-        await selectKit(".toolbar-popup-menu-options").expand();
+        await click(".toolbar-menu__options-trigger");
 
         assert
-          .dom(`.select-kit-row[data-name='toggle-spreadsheet']`)
+          .dom("button[data-name='toggle-spreadsheet']")
           .exists("it shows the builder button");
       });
     }

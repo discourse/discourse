@@ -25,7 +25,7 @@ acceptance("Poll Builder - polls are enabled", function (needs) {
 
     await displayPollBuilderButton();
 
-    const pollBuilderButtonSelector = `.select-kit-row[data-name='${i18n(
+    const pollBuilderButtonSelector = `button[title='${i18n(
       "poll.ui_builder.title"
     )}']`;
 
@@ -61,7 +61,7 @@ acceptance("Poll Builder - polls are enabled", function (needs) {
     await displayPollBuilderButton();
 
     assert
-      .dom(".select-kit-row[data-value='showPollBuilder']")
+      .dom(`button[title='${i18n("poll.ui_builder.title")}']`)
       .doesNotExist("hides the builder button");
   });
 
@@ -71,7 +71,7 @@ acceptance("Poll Builder - polls are enabled", function (needs) {
     await displayPollBuilderButton();
 
     assert
-      .dom(`.select-kit-row[data-name='${i18n("poll.ui_builder.title")}']`)
+      .dom(`button[title='${i18n("poll.ui_builder.title")}']`)
       .exists("it shows the builder button");
   });
 });
