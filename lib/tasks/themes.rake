@@ -309,7 +309,7 @@ desc "Remove duplicated Horizon themes"
 task "themes:deduplicate_horizon" => :environment do |task, args|
   horizon_themes = get_horizon_themes
 
-  abort "🟩 No Horizon themes found" if horizon_themes.empty?
+  abort("🟩 No Horizon themes found") if horizon_themes.empty?
 
   # v0 will handle only one horizon theme
   abort("⭕ More than one horizon theme installed") if horizon_themes.count > 1
