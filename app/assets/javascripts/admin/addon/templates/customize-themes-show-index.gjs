@@ -179,11 +179,19 @@ export default RouteTemplate(
         class="form-horizontal theme settings control-unit relative-theme-selector included-components-setting"
       >
         <div class="row setting">
-          <ThemeSettingRelativesSelector
-            @setting={{@controller.relativesSelectorSettingsForTheme}}
-            @model={{@controller.model}}
-            class="theme-setting"
-          />
+          <PluginOutlet
+            @name="admin-customize-theme-included-components-setting"
+            @outletArgs={{lazyHash
+              setting=@controller.relativesSelectorSettingsForTheme
+              model=@controller.model
+            }}
+          >
+            <ThemeSettingRelativesSelector
+              @setting={{@controller.relativesSelectorSettingsForTheme}}
+              @model={{@controller.model}}
+              class="theme-setting"
+            />
+          </PluginOutlet>
         </div>
       </section>
     {{/if}}
