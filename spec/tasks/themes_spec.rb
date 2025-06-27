@@ -131,7 +131,7 @@ RSpec.describe "tasks/themes" do
       Fabricate(
         :theme,
         user: user,
-        name: "Manual Horizon",
+        name: "Remote Horizon",
         remote_theme: remote_theme,
         user_selectable: true,
       )
@@ -141,21 +141,21 @@ RSpec.describe "tasks/themes" do
     end
     fab!(:theme_setting) do
       ThemeSetting.create!(
-        theme: manual_horizon_theme,
+        theme: remote_horizon_theme,
         data_type: ThemeSetting.types[:bool],
         name: "enable_welcome_banner",
         value: "false",
       )
     end
     fab!(:manual_color_scheme) do
-      manual_horizon_theme.color_schemes.create!(
+      remote_horizon_theme.color_schemes.create!(
         name: "Lily Dark",
-        theme_id: manual_horizon_theme.id,
+        theme_id: remote_horizon_theme.id,
       )
     end
     fab!(:theme_translation_override) do
       ThemeTranslationOverride.create!(
-        theme: manual_horizon_theme,
+        theme: remote_horizon_theme,
         locale: "en",
         translation_key: "test.key",
         value: "Test Value",
@@ -166,21 +166,21 @@ RSpec.describe "tasks/themes" do
     let!(:system_color_scheme) { system_horizon_theme.color_schemes.where(name: "Lily Dark").first }
 
     before do
-      manual_horizon_theme.update!(color_scheme: manual_color_scheme)
-      manual_horizon_theme.add_relative_theme!(:child, child_component)
-      manual_horizon_theme.save!
+      remote_horizon_theme.update!(color_scheme: manual_color_scheme)
+      remote_horizon_theme.add_relative_theme!(:child, child_component)
+      remote_horizon_theme.save!
       user.user_option.update!(
-        theme_ids: [manual_horizon_theme.id],
+        theme_ids: [remote_horizon_theme.id],
         color_scheme_id: manual_color_scheme.id,
         dark_scheme_id: manual_color_scheme.id,
       )
-      SiteSetting.default_theme_id = manual_horizon_theme.id
+      SiteSetting.default_theme_id = remote_horizon_theme.id
     end
 
     context "when no horizon themes exist" do
       before do
-        manual_horizon_theme.remote_theme&.destroy!
-        manual_horizon_theme.destroy!
+        remote_horizon_theme.remote_theme&.destroy!
+        remote_horizon_theme.destroy!
       end
 
       it "aborts with no themes message" do
@@ -215,14 +215,16 @@ RSpec.describe "tasks/themes" do
     context "when exactly one horizon theme exists" do
       it "successfully migrates theme data" do
         expect(system_horizon_theme.user_selectable).to be false
-        expect(SiteSetting.default_theme_id).to eq(manual_horizon_theme.id)
+        expect(SiteSetting.default_theme_id).to eq(remote_horizon_theme.id)
         expect(system_horizon_theme.child_themes).to eq([])
         expect(system_horizon_theme.theme_settings.pluck(:name)).to eq([])
         expect(system_horizon_theme.theme_translation_overrides.pluck(:translation_key)).to eq([])
         expect(system_horizon_theme.color_scheme.name).to eq("Horizon")
-        expect { invoke_rake_task("themes:deduplicate_horizon") }.not_to raise_error
+        expect {
+          capture_stdout { invoke_rake_task("themes:deduplicate_horizon") }
+        }.not_to raise_error
 
-        expect { manual_horizon_theme.reload }.to raise_error(ActiveRecord::RecordNotFound)
+        expect { remote_horizon_theme.reload }.to raise_error(ActiveRecord::RecordNotFound)
 
         system_horizon_theme.reload
         expect(system_horizon_theme.user_selectable).to be true
@@ -235,12 +237,21 @@ RSpec.describe "tasks/themes" do
         expect(system_horizon_theme.color_scheme).to eq(system_color_scheme)
       end
 
+      it "logs that remote theme was deleted" do
+        expect {
+          capture_stderr { capture_stdout { invoke_rake_task("themes:deduplicate_horizon") } }
+        }.to change { UserHistory.count }
+
+        expect(UserHistory.last.action).to eq(UserHistory.actions[:delete_theme])
+        expect(UserHistory.last.subject).to eq("Remote Horizon")
+      end
+
       it "updates user theme and color scheme" do
-        expect(user.user_option.theme_ids).to eq([manual_horizon_theme.id])
+        expect(user.user_option.theme_ids).to eq([remote_horizon_theme.id])
         expect(user.user_option.color_scheme_id).to eq(manual_color_scheme.id)
         expect(user.user_option.dark_scheme_id).to eq(manual_color_scheme.id)
 
-        invoke_rake_task("themes:deduplicate_horizon")
+        capture_stdout { invoke_rake_task("themes:deduplicate_horizon") }
 
         user.user_option.reload
         expect(user.user_option.theme_ids).to eq([system_horizon_theme.id])
@@ -252,7 +263,7 @@ RSpec.describe "tasks/themes" do
         custom_color_scheme = Fabricate(:color_scheme)
         user.user_option.update!(color_scheme_id: custom_color_scheme.id)
 
-        expect { invoke_rake_task("themes:deduplicate_horizon") }.not_to change {
+        expect { capture_stdout { invoke_rake_task("themes:deduplicate_horizon") } }.not_to change {
           user.user_option.color_scheme_id
         }
       end
@@ -260,14 +271,14 @@ RSpec.describe "tasks/themes" do
       it "enables system horizon theme if not already enabled" do
         SiteSetting.experimental_system_themes = "foundation"
 
-        invoke_rake_task("themes:deduplicate_horizon")
+        capture_stdout { invoke_rake_task("themes:deduplicate_horizon") }
         expect(SiteSetting.experimental_system_themes_map).to eq(%w[foundation horizon])
       end
 
       it "does not modify system themes setting if horizon already enabled" do
         SiteSetting.experimental_system_themes = "horizon"
 
-        invoke_rake_task("themes:deduplicate_horizon")
+        capture_stdout { invoke_rake_task("themes:deduplicate_horizon") }
         expect(SiteSetting.experimental_system_themes_map).to eq(%w[horizon])
       end
     end

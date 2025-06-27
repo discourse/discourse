@@ -323,24 +323,28 @@ task "themes:deduplicate_horizon" => :environment do |task, args|
       SiteSetting.experimental_system_themes =
         (SiteSetting.experimental_system_themes_map << "horizon").join("|")
     end
+    puts "Horizon is enabled"
 
-    # Make the system horizon selectable if manual horizon is selectable
-    system_horizon_theme.update!(user_selectable: manual_horizon_theme.user_selectable)
+    # Make the system horizon selectable if remote horizon is selectable
+    system_horizon_theme.update!(user_selectable: remote_horizon_theme.user_selectable)
+    puts "User selectable is updated"
 
-    # Move all components of the manual horizon theme to the system horizon theme
+    # Move all components of the remote horizon theme to the system horizon theme
     ChildTheme
-      .where(parent_theme_id: manual_horizon_theme.id)
+      .where(parent_theme_id: remote_horizon_theme.id)
       .where.not(child_theme_id: system_horizon_theme.child_themes.pluck(:id))
       .find_each { |child_theme| child_theme.update!(parent_theme_id: system_horizon_theme.id) }
+    puts "Components is moved"
 
     # Update user options to point to the system horizon theme
     UserOption
-      .where(theme_ids: [manual_horizon_theme.id])
+      .where(theme_ids: [remote_horizon_theme.id])
       .find_each { |user_option| user_option.update!(theme_ids: [system_horizon_theme.id]) }
+    puts "User options theme id is updated"
 
     # Move color palettes
     color_schemes_map =
-      manual_horizon_theme
+      remote_horizon_theme
         .color_schemes
         .reduce({}) do |map, color_scheme|
           map[color_scheme.id] = system_horizon_theme
@@ -349,13 +353,14 @@ task "themes:deduplicate_horizon" => :environment do |task, args|
             .id
           map
         end
-    if manual_horizon_theme.color_scheme.theme_id == manual_horizon_theme.id
+    if remote_horizon_theme.color_scheme.theme_id == remote_horizon_theme.id
       system_horizon_theme.update!(
-        color_scheme_id: color_schemes_map[manual_horizon_theme.color_scheme_id],
+        color_scheme_id: color_schemes_map[remote_horizon_theme.color_scheme_id],
       )
-    elsif manual_horizon_theme.color_scheme_id
-      system_horizon_theme.update!(color_scheme_id: manual_horizon_theme.color_scheme_id)
+    elsif remote_horizon_theme.color_scheme_id
+      system_horizon_theme.update!(color_scheme_id: remote_horizon_theme.color_scheme_id)
     end
+    puts "Theme color palette is updated"
     UserOption
       .where(color_scheme_id: color_schemes_map.keys)
       .find_each do |user_option|
@@ -366,22 +371,33 @@ task "themes:deduplicate_horizon" => :environment do |task, args|
       .find_each do |user_option|
         user_option.update!(dark_scheme_id: color_schemes_map[user_option.dark_scheme_id])
       end
+    puts "User option color schemes are updated"
 
     # Move theme settings
     ThemeSetting
-      .where(theme_id: manual_horizon_theme.id)
+      .where(theme_id: remote_horizon_theme.id)
       .find_each { |theme_setting| theme_setting.update!(theme_id: system_horizon_theme.id) }
+    puts "Theme settings are moved"
 
     # Move theme translations
     ThemeTranslationOverride
-      .where(theme_id: manual_horizon_theme.id)
+      .where(theme_id: remote_horizon_theme.id)
       .find_each { |translation| translation.update!(theme_id: system_horizon_theme.id) }
+    puts "Theme translations are moved"
 
-    # Change default theme to system horizon theme if manual horizon theme is default
-    SiteSetting.default_theme_id = system_horizon_theme.id if manual_horizon_theme.default?
+    # Change default theme to system horizon theme if remote horizon theme is default
+    SiteSetting.default_theme_id = system_horizon_theme.id if remote_horizon_theme.default?
+    puts "Default theme is updated to system horizon theme"
 
-    # Delete the manual horizon theme and color palettes
-    manual_horizon_theme.color_schemes.map(&:destroy!)
-    manual_horizon_theme.destroy!
+    # Delete the remote horizon theme and color palettes
+    remote_horizon_theme.color_schemes.map(&:destroy!)
+    puts "Remote horizon theme color palettes are deleted"
+
+    StaffActionLogger.new(Discourse.system_user).log_theme_destroy(remote_horizon_theme)
+    remote_horizon_theme.destroy!
+    puts "Remote horizon theme is deleted"
+
+    Theme.expire_site_cache!
+    puts "Site cache is expired"
   end
 end
