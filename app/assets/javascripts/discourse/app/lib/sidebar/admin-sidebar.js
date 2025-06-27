@@ -392,7 +392,7 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
       }
     }
 
-    this.adminNavManager.filteredNavMap.forEach((section) =>
+    return this.adminNavManager.filteredNavMap.map((section) => {
       section.links.forEach((link) => {
         if (link.keywords) {
           this.adminSidebarStateManager.setLinkKeywords(
@@ -400,12 +400,10 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
             i18n(link.keywords).split("|")
           );
         }
-      })
-    );
+      });
 
-    return this.adminNavManager.filteredNavMap.map((adminNavSectionData) => {
       return defineAdminSection(
-        adminNavSectionData,
+        section,
         this.adminSidebarStateManager,
         router,
         currentUser

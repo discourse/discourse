@@ -1,4 +1,3 @@
-import { cached } from "@glimmer/tracking";
 import Service, { service } from "@ember/service";
 import { cloneJSON } from "discourse/lib/object";
 import { ADMIN_NAV_MAP } from "discourse/lib/sidebar/admin-nav-map";
@@ -7,9 +6,13 @@ export default class AdminNavManager extends Service {
   @service currentUser;
 
   #adminNavMap = cloneJSON(ADMIN_NAV_MAP);
+  #filteredNavMap = null;
 
-  @cached
   get filteredNavMap() {
+    if (this.#filteredNavMap) {
+      return this.#filteredNavMap;
+    }
+
     let navConfig = cloneJSON(this.#adminNavMap);
 
     if (this.currentUser.admin) {
@@ -23,14 +26,20 @@ export default class AdminNavManager extends Service {
     });
     navConfig = navConfig.filter((section) => section.links.length);
 
-    return navConfig;
+    this.#filteredNavMap = navConfig;
+
+    return this.#filteredNavMap;
   }
 
   findSection(sectionName) {
+    this.#guardFilteredNavAccess();
+
     return this.#adminNavMap.find((section) => section.name === sectionName);
   }
 
   amendLinksToSection(sectionName, links) {
+    this.#guardFilteredNavAccess();
+
     const section = this.findSection(sectionName);
     if (!section) {
       // eslint-disable-next-line no-console
@@ -42,6 +51,8 @@ export default class AdminNavManager extends Service {
   }
 
   overrideSectionLink(sectionName, linkName, newAttrs = {}) {
+    this.#guardFilteredNavAccess();
+
     const section = this.findSection(sectionName);
     const foundLink = section.links.find((link) => link.name === linkName);
 
@@ -51,6 +62,14 @@ export default class AdminNavManager extends Service {
       // eslint-disable-next-line no-console
       console.warn(
         `[AdminNavManager] Link ${linkName} not found in section ${sectionName}`
+      );
+    }
+  }
+
+  #guardFilteredNavAccess() {
+    if (this.#filteredNavMap) {
+      throw new Error(
+        "Cannot call findSection after filteredNavMap has been accessed, admin nav state can only be modified in admin-sidebar.js"
       );
     }
   }
