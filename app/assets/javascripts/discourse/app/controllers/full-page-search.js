@@ -218,14 +218,17 @@ export default class FullPageSearchController extends Controller {
       this.sortOrders.forEach((order) => {
         if (order.term) {
           let word = order.term;
-          let matches = term.match(new RegExp(`${word}\\b`));
+          let matches = term.match(new RegExp(`(^|\\s)${word}($|\\s)`));
           if (!matches && order.alias) {
             word = order.alias;
-            matches = term.match(new RegExp(`${word}\\b`));
+            matches = term.match(new RegExp(`(^|\\s)${word}($|\\s)`));
           }
           if (matches) {
             this.set("sortOrder", order.id);
-            term = term.replace(new RegExp(`${word}\\b`, "g"), "");
+            term = term.replace(
+              new RegExp(`(^|\\s)${word}($|\\s)`, "g"),
+              "$1$2"
+            );
             term = term.trim();
           }
         }
