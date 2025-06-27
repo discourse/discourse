@@ -219,7 +219,7 @@
     font-size: var(--font-up-4);
     line-height: var(--line-height-large);
     display: inline-block;
-    color: var(--header-icon-color);
+    color: var(--header_primary-low-mid);
   }
 
   .notifications {
@@ -298,13 +298,13 @@
       font-size: var(--font-up-4);
       line-height: var(--line-height-large);
       display: inline-block;
-      color: var(--header-icon-color);
+      color: var(--header_primary-low-mid);
     }
   }
 }
 
 // topic info in the header
-.d-header .extra-info-wrapper {
+.extra-info-wrapper {
   flex: 1 0 0;
   display: flex;
   align-items: center;
@@ -351,7 +351,7 @@
   }
 
   .topic-link {
-    color: var(--header-title-color);
+    color: var(--header_primary);
     display: block;
 
     @include ellipsis;
@@ -359,7 +359,7 @@
 
   .topic-statuses {
     .d-icon {
-      color: var(--icon-color);
+      color: var(--header_primary-medium);
     }
 
     .d-icon-envelope {
