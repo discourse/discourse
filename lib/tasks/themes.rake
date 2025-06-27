@@ -314,7 +314,7 @@ task "themes:deduplicate_horizon" => :environment do |task, args|
   # v0 will handle only one horizon theme
   abort("⭕ More than one horizon theme installed") if horizon_themes.count > 1
 
-  manual_horizon_theme = horizon_themes.first
+  remote_horizon_theme = horizon_themes.first
   system_horizon_theme = Theme.horizon_theme
 
   Theme.transaction do
