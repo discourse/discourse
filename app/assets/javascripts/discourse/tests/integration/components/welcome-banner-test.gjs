@@ -3,15 +3,28 @@ import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import WelcomeBanner from "discourse/components/welcome-banner";
+import LocalizationInitializer from "discourse/instance-initializers/localization";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import I18n from "discourse-i18n";
+import I18n, { i18n } from "discourse-i18n";
 
 module("Integration | Component | WelcomeBanner", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
+    this._locale = I18n.locale;
+    this._translations = I18n.translations;
+    this._extras = I18n.extras;
+    this._overrides = I18n._overrides;
+
     this.router = getOwner(this).lookup("service:router");
+  });
+
+  hooks.afterEach(function () {
+    I18n.locale = this._locale;
+    I18n.translations = this._translations;
+    I18n.extras = this._extras;
+    I18n._overrides = this._overrides;
   });
 
   test("shouldDisplay", async function (assert) {
@@ -53,7 +66,7 @@ module("Integration | Component | WelcomeBanner", function (hooks) {
 
   test("optional subheader", async function (assert) {
     sinon.stub(this.router, "currentRouteName").value("discovery.latest");
-    I18n.translations = {
+    I18n._overrides = {
       en: {
         js: {
           welcome_banner: {
@@ -64,6 +77,7 @@ module("Integration | Component | WelcomeBanner", function (hooks) {
         },
       },
     };
+    LocalizationInitializer.initialize(this.owner);
 
     await render(<template><WelcomeBanner /></template>);
 
@@ -80,7 +94,7 @@ module("Integration | Component | WelcomeBanner", function (hooks) {
       .dom(".welcome-banner__subheader")
       .isVisible("should be rendered if text is provided")
       .hasText(
-        I18n.translations.en.js.welcome_banner.subheader.logged_in_members,
+        i18n("welcome_banner.subheader.logged_in_members"),
         "should contain proper text"
       );
   });
