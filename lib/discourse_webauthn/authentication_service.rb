@@ -111,6 +111,7 @@ module DiscourseWebauthn
 
       # 26. Success! Update the last used at time for the key (credentialRecord).
       security_key.update(last_used: Time.zone.now)
+      clear_challenge
 
       # Return security key record so controller can use it to update the session
       security_key
