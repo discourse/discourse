@@ -85,7 +85,8 @@
     .welcome-banner__subheader {
       font-size: var(--font-down-6);
       font-weight: normal;
-      margin-top: 0.25rem;
+      margin: 0;
+      padding: 0.25rem 0;
 
       @include viewport.until(md) {
         font-size: var(--font-down-4);
