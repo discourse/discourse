@@ -102,15 +102,31 @@ export default RouteTemplate(
               <table class="d-table user-invite-list">
                 <thead class="d-table__header">
                   <tr class="d-table__row">
-                    <th class="d-table__header-cell">{{i18n "user.invited.user"}}</th>
-                    <th class="d-table__header-cell">{{i18n "user.invited.redeemed_at"}}</th>
+                    <th class="d-table__header-cell">{{i18n
+                        "user.invited.user"
+                      }}</th>
+                    <th class="d-table__header-cell">{{i18n
+                        "user.invited.redeemed_at"
+                      }}</th>
                     {{#if @controller.model.can_see_invite_details}}
-                      <th class="d-table__header-cell">{{i18n "user.last_seen"}}</th>
-                      <th class="d-table__header-cell">{{i18n "user.invited.topics_entered"}}</th>
-                      <th class="d-table__header-cell">{{i18n "user.invited.posts_read_count"}}</th>
-                      <th class="d-table__header-cell">{{i18n "user.invited.time_read"}}</th>
-                      <th class="d-table__header-cell">{{i18n "user.invited.days_visited"}}</th>
-                      <th class="d-table__header-cell">{{i18n "user.invited.invited_via"}}</th>
+                      <th class="d-table__header-cell">{{i18n
+                          "user.last_seen"
+                        }}</th>
+                      <th class="d-table__header-cell">{{i18n
+                          "user.invited.topics_entered"
+                        }}</th>
+                      <th class="d-table__header-cell">{{i18n
+                          "user.invited.posts_read_count"
+                        }}</th>
+                      <th class="d-table__header-cell">{{i18n
+                          "user.invited.time_read"
+                        }}</th>
+                      <th class="d-table__header-cell">{{i18n
+                          "user.invited.days_visited"
+                        }}</th>
+                      <th class="d-table__header-cell">{{i18n
+                          "user.invited.invited_via"
+                        }}</th>
                     {{/if}}
                   </tr>
                 </thead>
@@ -187,9 +203,15 @@ export default RouteTemplate(
               <table class="d-table user-invite-list">
                 <thead class="d-table__header">
                   <tr class="d-table__row">
-                    <th class="d-table__header-cell">{{i18n "user.invited.invited_via"}}</th>
-                    <th class="d-table__header-cell">{{i18n "user.invited.sent"}}</th>
-                    <th class="d-table__header-cell">{{i18n "user.invited.expires_at"}}</th>
+                    <th class="d-table__header-cell">{{i18n
+                        "user.invited.invited_via"
+                      }}</th>
+                    <th class="d-table__header-cell">{{i18n
+                        "user.invited.sent"
+                      }}</th>
+                    <th class="d-table__header-cell">{{i18n
+                        "user.invited.expires_at"
+                      }}</th>
                     <th class="d-table__header-cell"></th>
                   </tr>
                 </thead>
