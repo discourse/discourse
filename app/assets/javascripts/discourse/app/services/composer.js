@@ -1211,7 +1211,9 @@ export default class ComposerService extends Service {
         }
 
         if (result.responseJson.action === "create_post") {
-          this.appEvents.trigger("composer:created-post");
+          this.appEvents.trigger("composer:created-post", {
+            postId: result.responseJson.post.id,
+          });
           this.appEvents.trigger(
             "post:highlight",
             result.payload.post_number,
