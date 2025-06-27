@@ -4046,7 +4046,7 @@ experimental:
   reviewable_ui_refresh:
     client: true
     type: group_list
-    default: "1"
+    default: ""
   experimental_system_themes:
     type: list
     default: ""
