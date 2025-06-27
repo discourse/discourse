@@ -1060,34 +1060,35 @@
     grid-column: 1 / span 2;
   }
 
-  .d-admin-table.user-invite-list {
-    width: 100%;
+  .d-table.user-invite-list {
     margin-top: var(--space-4);
 
-    .d-admin-row__content {
-      td {
-        padding: var(--space-2);
+    .d-table__cell {
+      &.--overview {
+        .d-icon {
+          color: var(--primary-medium);
+          font-size: var(--font-down-1);
+          margin-right: var(--space-1);
+        }
       }
 
-      .d-admin-row__controls {
+      &.--controls {
         width: 10%;
       }
 
-      .d-admin-row__detail {
-        &.invite-updated-at {
-          width: 18%;
+      &.invite-updated-at {
+        width: 18%;
 
-          @include viewport.until(md) {
-            width: auto;
-          }
+        @include viewport.until(md) {
+          width: auto;
         }
+      }
 
-        &.invite-expires-at {
-          width: 20%;
+      &.invite-expires-at {
+        width: 20%;
 
-          @include viewport.until(md) {
-            width: auto;
-          }
+        @include viewport.until(md) {
+          width: auto;
         }
       }
 
@@ -1100,14 +1101,6 @@
       .invite-description {
         color: var(--primary-high);
         margin-top: var(--space-1);
-      }
-
-      .invite-type {
-        .d-icon {
-          color: var(--primary-medium);
-          font-size: var(--font-down-1);
-          margin-right: var(--space-1);
-        }
       }
 
       .invite-details {
@@ -1130,11 +1123,7 @@
         font-size: var(--font-down-1);
 
         a {
-          color: var(--primary-high);
-        }
-
-        .d-icon {
-          color: var(--primary-low-mid);
+          color: var(--primary-very-high);
         }
       }
 
