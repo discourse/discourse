@@ -42,7 +42,7 @@ module PageObjects
           component.find(".fk-d-menu__trigger")["data-value"]
         when "select"
           PageObjects::Components::DSelect.new(component.find("select")).value
-        when "composer"
+        when "composer", "textarea"
           component.find("textarea").value
         when "image"
           url = component.find(".uploaded-image-preview a.lightbox", wait: 10)[:href]
