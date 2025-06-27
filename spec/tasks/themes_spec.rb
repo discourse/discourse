@@ -199,7 +199,7 @@ RSpec.describe "tasks/themes" do
           minimum_discourse_version: "2.5.0",
         )
       end
-      fab!(:manual_horizon_theme_2) do
+      fab!(:remote_horizon_theme_2) do
         Fabricate(:theme, user: user, name: "Second Horizon", remote_theme: remote_theme_2)
       end
 
