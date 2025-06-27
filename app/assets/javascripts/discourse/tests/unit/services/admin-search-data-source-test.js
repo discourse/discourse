@@ -80,9 +80,9 @@ module("Unit | Service | AdminSearchDataSource", function (hooks) {
 
   test("buildMap - is a noop if already cached", async function (assert) {
     await this.subject.buildMap();
-    sinon.stub(this.adminNavManager.filteredNavMap, "forEach");
+    sinon.stub(PreloadStore, "get");
     await this.subject.buildMap();
-    assert.false(this.adminNavManager.filteredNavMap.forEach.called);
+    assert.false(PreloadStore.get.called);
   });
 
   test("buildMap - makes a key/value object of preloaded plugins, excluding disabled and invalid ones", async function (assert) {
