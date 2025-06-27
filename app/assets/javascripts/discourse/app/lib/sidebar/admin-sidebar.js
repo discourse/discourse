@@ -186,21 +186,6 @@ function defineAdminSection(
   return AdminNavSection;
 }
 
-export function useAdminNavConfig(navMap) {
-  for (const [sectionName, additionalLinks] of Object.entries(
-    additionalAdminSidebarSectionLinks
-  )) {
-    const section = navMap.find(
-      (navSection) => navSection.name === sectionName
-    );
-    if (section && additionalLinks.length) {
-      section.links.push(...additionalLinks);
-    }
-  }
-
-  return navMap;
-}
-
 // This is used for a plugin API.
 export function addAdminSidebarSectionLink(sectionName, link) {
   if (!additionalAdminSidebarSectionLinks.hasOwnProperty(sectionName)) {
