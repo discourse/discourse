@@ -3135,4 +3135,35 @@ RSpec.describe Search do
       expect(results.posts).to contain_exactly(regular_post)
     end
   end
+
+  it "orders posts by the timestamp of the user's last visit to each topic" do
+    user = Fabricate(:user)
+
+    post2 = nil
+    freeze_time 2.hours.ago do
+      post2 = Fabricate(:post, raw: "Read order term")
+      TopicUser.update_last_read(user, post2.topic.id, post2.post_number, 1, 0)
+    end
+
+    post1 = nil
+    freeze_time 1.hour.ago do
+      post1 = Fabricate(:post, raw: "Read order term")
+      TopicUser.update_last_read(user, post1.topic.id, post1.post_number, 1, 0)
+    end
+
+    _unread_post = Fabricate(:post, raw: "Read order term")
+
+    result = Search.execute("Read order term order:read", guardian: Guardian.new(user))
+    expect(result.posts.map(&:id)).to eq([post1.id, post2.id])
+
+    result = Search.execute("Read order term r", guardian: Guardian.new(user))
+
+    # also allow for the r shortcul like we have l
+    expect(result.posts.map(&:id)).to eq([post1.id, post2.id])
+
+    result = Search.execute("Read order term r", guardian: Guardian.new)
+
+    # no op on anon - all included
+    expect(result.posts.map(&:id).length).to eq(3)
+  end
 end
