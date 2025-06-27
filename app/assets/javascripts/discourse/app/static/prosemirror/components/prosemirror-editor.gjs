@@ -60,6 +60,13 @@ const AUTOCOMPLETE_KEY_DOWN_SUPPRESS = ["Enter", "Tab"];
  */
 
 /**
+ * @typedef {Object} GlimmerNodeViewDef
+ * @property {HTMLElement} element The DOM element where the node view will be rendered
+ * @property {any} component The Glimmer component class
+ * @property {Record<string, unknown>} data Data to pass to the component
+ */
+
+/**
  * @extends {Component<ProsemirrorEditorSignature>}
  */
 export default class ProsemirrorEditor extends Component {
@@ -73,6 +80,7 @@ export default class ProsemirrorEditor extends Component {
   schema = createSchema(this.extensions, this.args.includeDefault);
   view;
 
+  /** @type {TrackedArray<GlimmerNodeViewDef>} */
   glimmerNodeViews = new TrackedArray();
   #lastSerialized;
   /** @type {undefined | (() => void)} */

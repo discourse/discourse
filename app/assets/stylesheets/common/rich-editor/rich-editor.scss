@@ -269,7 +269,7 @@
 
 .fk-d-menu[data-identifier="composer-image-alt-text"] {
   min-width: calc(100% - 1rem);
-  background-color: rgba(var(--primary-rgb), 0.2);
+  background-color: rgb(var(--primary-rgb), 0.2);
   backdrop-filter: blur(8px);
   color: var(--secondary);
   isolation: auto;
@@ -308,11 +308,6 @@
   min-width: 100%;
   display: flex;
   position: relative;
-
-  &.--expanded {
-    display: flex;
-    align-items: center;
-  }
 
   &__field {
     height: 1.5em;
@@ -480,11 +475,4 @@ span:focus .fake-cursor {
   animation-iteration-count: infinite;
   position: relative;
   z-index: 1;
-}
-
-.image-alt-text-input {
-  &.--expanded {
-    display: flex;
-    align-items: center;
-  }
 }

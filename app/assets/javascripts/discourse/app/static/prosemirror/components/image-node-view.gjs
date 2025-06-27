@@ -299,6 +299,7 @@ export default class ImageNodeView extends Component {
   selectNode() {
     this.nodeView.dom.classList.add("ProseMirror-selectednode");
     this.showMenu();
+    this.editAltText();
   }
 
   deselectNode() {
