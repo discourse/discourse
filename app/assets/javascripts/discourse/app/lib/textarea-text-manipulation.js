@@ -867,28 +867,42 @@ export default class TextareaTextManipulation {
 
   _setupModernAutocomplete(options) {
     // Import the modifier dynamically to avoid circular dependencies
-    import("discourse/modifiers/d-autocomplete").then((module) => {
-      const DAutocompleteModifier = module.default;
+    import("discourse/modifiers/d-autocomplete")
+      .then((module) => {
+        console.log("Setting up modern autocomplete with options:", options);
+        const DAutocompleteModifier = module.default;
 
-      // Create and apply the modifier
-      const modifier = new DAutocompleteModifier(
-        getOwnerWithFallback(this),
-        []
-      );
+        // Create and apply the modifier
+        const modifier = new DAutocompleteModifier(
+          getOwnerWithFallback(this),
+          []
+        );
 
-      // Adapt options for the modifier
-      const modifierOptions = {
-        ...options,
-        // Use the textarea's autocomplete handler for text manipulation
-        textHandler: this.autocompleteHandler,
-      };
+        // Adapt options for the modifier
+        const modifierOptions = {
+          ...options,
+          // Use the textarea's autocomplete handler for text manipulation
+          textHandler: this.autocompleteHandler,
+        };
 
-      // Apply the modifier to the textarea
-      modifier.modify(this.textarea, [modifierOptions]);
+        console.log(
+          "Applying modifier to textarea:",
+          this.textarea,
+          "with options:",
+          modifierOptions
+        );
 
-      // Store reference for cleanup
-      this._modernAutocompleteModifier = modifier;
-    });
+        // Apply the modifier to the textarea
+        modifier.modify(this.textarea, [modifierOptions]);
+
+        // Store reference for cleanup
+        this._modernAutocompleteModifier = modifier;
+
+        console.log("Modern autocomplete setup complete");
+      })
+      .catch((error) => {
+        console.error("Failed to set up modern autocomplete:", error);
+      });
   }
 }
 
