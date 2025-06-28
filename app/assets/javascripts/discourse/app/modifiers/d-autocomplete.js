@@ -277,9 +277,6 @@ export default class DAutocompleteModifier extends Modifier {
       return;
     }
 
-    console.log("Rendering autocomplete with results:", this.results);
-    console.log("Using template:", !!this.options.template);
-
     // Close any existing menu first
     await this.menu.close("d-autocomplete");
 
@@ -288,8 +285,10 @@ export default class DAutocompleteModifier extends Modifier {
       const virtualElement = this.createVirtualElementAtCaret();
 
       // Show menu with autocomplete results using d-menu service
+      // Configuration aligned with emoji-picker for proper positioning and navigation
       this.menuInstance = await this.menu.show(virtualElement, {
         identifier: "d-autocomplete",
+        groupIdentifier: "d-autocomplete",
         component: DAutocompleteResults,
         data: {
           results: this.results,
@@ -297,11 +296,11 @@ export default class DAutocompleteModifier extends Modifier {
           onSelect: this.selectResult,
           template: this.options.template,
         },
-        inline: true, // CRITICAL: This is what copy-quote uses for text positioning
-        placement: "top-start", // Default to above like copy-quote on desktop
+        inline: true, // CRITICAL: This is what emoji-picker uses for text positioning
+        placement: "top-start", // Default to above like emoji-picker on desktop
         fallbackPlacements: ["bottom-start", "top-end", "bottom-end"],
-        offset: 5, // Small positive offset for spacing
-        autoClose: false, // We handle closing manually
+        offset: 10, // Match emoji-picker offset
+        autoClose: false, // We handle closing manually like emoji-picker
         closeOnClickOutside: false, // We handle this with global click handler
         closeOnEscape: false, // We handle escape in keydown
         trapTab: false,
@@ -311,13 +310,12 @@ export default class DAutocompleteModifier extends Modifier {
         },
       });
 
-      console.log("Menu instance created:", this.menuInstance);
       this.expanded = true;
 
       // Call onRender callback if provided
       this.options.onRender?.(this.results);
-    } catch (error) {
-      console.error("Error rendering autocomplete:", error);
+    } catch {
+      // Error rendering autocomplete
     }
   }
 
@@ -351,9 +349,15 @@ export default class DAutocompleteModifier extends Modifier {
       Math.min(this.results.length - 1, this.selectedIndex + direction)
     );
 
-    // Re-render the menu with updated selectedIndex
-    // The d-menu component will handle the DOM updates
-    await this.renderAutocomplete();
+    // Update the component's data directly instead of re-rendering the entire menu
+    // This prevents the visual refresh that occurs with renderAutocomplete()
+    if (this.menuInstance?.component) {
+      // Update the component's selectedIndex data directly
+      this.menuInstance.component.args.data.selectedIndex = this.selectedIndex;
+
+      // Trigger a targeted update to just the selection state
+      // The DAutocompleteResults component will handle visual updates via CSS
+    }
   }
 
   @action
@@ -464,15 +468,6 @@ export default class DAutocompleteModifier extends Modifier {
   }
 
   getCaretCoords() {
-    console.log("=== getCaretCoords DEBUG ===");
-    console.log("- textHandler available:", !!this.options.textHandler);
-    console.log(
-      "- textHandler.getCaretCoords available:",
-      !!(this.options.textHandler && this.options.textHandler.getCaretCoords)
-    );
-    console.log("- completeStart:", this.completeStart);
-    console.log("- current caret position:", this.getCaretPosition());
-
     // Use textHandler if available for more accurate positioning
     if (this.options.textHandler && this.options.textHandler.getCaretCoords) {
       try {
@@ -482,20 +477,11 @@ export default class DAutocompleteModifier extends Modifier {
             ? this.completeStart
             : this.getCaretPosition();
         const coords = this.options.textHandler.getCaretCoords(position);
-        console.log(
-          "- textHandler.getCaretCoords(",
-          position,
-          ") returned:",
-          coords
-        );
         return coords;
-      } catch (error) {
-        console.log("- textHandler.getCaretCoords failed:", error);
+      } catch {
         // Fall through to default implementation
       }
     }
-
-    console.log("- falling back to simple approximation");
 
     // Simple approximation - in real implementation you might want more sophisticated caret positioning
     try {
@@ -514,19 +500,14 @@ export default class DAutocompleteModifier extends Modifier {
       const width = span.offsetWidth;
       document.body.removeChild(span);
 
-      const fallbackCoords = { left: width, top: 0 };
-      console.log("- fallback coords:", fallbackCoords);
-      return fallbackCoords;
-    } catch (error) {
-      console.log("- fallback failed:", error);
+      return { left: width, top: 0 };
+    } catch {
       return { left: 0, top: 0 };
     }
   }
 
-  createInitialVirtualElement() {
-    console.log("=== createInitialVirtualElement DEBUG ===");
-
-    // Initial virtual element positioned at caret for measurement
+  createVirtualElementAtCaret() {
+    // Create virtual element positioned at the caret location
     return {
       getBoundingClientRect: () => {
         const caretCoords = this.getCaretCoords();
@@ -543,7 +524,6 @@ export default class DAutocompleteModifier extends Modifier {
           y: textareaRect.top + caretCoords.top,
         };
 
-        console.log("🎯 Initial virtual element coordinates:", virtualRect);
         return virtualRect;
       },
       getClientRects() {
@@ -556,121 +536,5 @@ export default class DAutocompleteModifier extends Modifier {
         return 0;
       },
     };
-  }
-
-  async repositionMenuBasedOnActualHeight() {
-    console.log("=== repositionMenuBasedOnActualHeight DEBUG ===");
-
-    // Try to get the actual menu element to measure its height
-    // Need to investigate what properties are available on menuInstance
-    console.log(
-      "Menu instance properties:",
-      Object.keys(this.menuInstance || {})
-    );
-
-    let actualMenuHeight = 150; // Fallback estimate
-
-    // Try different ways to access the menu DOM element
-    if (this.menuInstance?.element) {
-      actualMenuHeight = this.menuInstance.element.offsetHeight;
-      console.log("Got height from menuInstance.element:", actualMenuHeight);
-    } else if (this.menuInstance?.domElement) {
-      actualMenuHeight = this.menuInstance.domElement.offsetHeight;
-      console.log("Got height from menuInstance.domElement:", actualMenuHeight);
-    } else {
-      // Try to find the menu element by identifier
-      const menuElement = document.querySelector(
-        '.fk-d-menu[data-identifier="d-autocomplete"]'
-      );
-      if (menuElement) {
-        actualMenuHeight = menuElement.offsetHeight;
-        console.log("Got height from querySelector:", actualMenuHeight);
-      }
-    }
-
-    console.log("Actual menu height:", actualMenuHeight);
-
-    // Calculate positioning like original autocomplete
-    const caretCoords = this.getCaretCoords();
-    const textareaRect = this.targetElement.getBoundingClientRect();
-
-    let vOffset = actualMenuHeight; // Default: position above caret
-
-    // Check if there's enough space above (like original logic)
-    const headerHeight =
-      document.querySelector("header.d-header")?.offsetHeight || 0;
-    const spaceAbove = textareaRect.top + caretCoords.top - headerHeight;
-
-    console.log(
-      "Space above caret:",
-      spaceAbove,
-      "Menu height:",
-      actualMenuHeight
-    );
-
-    if (spaceAbove < actualMenuHeight) {
-      vOffset = -32; // Position below caret (BELOW constant from original)
-      console.log("Not enough space above, positioning below");
-    } else {
-      console.log("Enough space above, positioning above");
-    }
-
-    // Create adjusted virtual element
-    const adjustedVirtualElement = {
-      getBoundingClientRect: () => {
-        const coords = this.getCaretCoords();
-        const textArea = this.targetElement.getBoundingClientRect();
-
-        const adjustedRect = {
-          left: textArea.left + coords.left,
-          top: textArea.top + coords.top - vOffset, // Key: subtract height to position above
-          right: textArea.left + coords.left,
-          bottom: textArea.top + coords.top - vOffset,
-          width: 0,
-          height: 0,
-          x: textArea.left + coords.left,
-          y: textArea.top + coords.top - vOffset,
-        };
-
-        console.log("🎯 Adjusted virtual element coordinates:", adjustedRect);
-        return adjustedRect;
-      },
-      getClientRects() {
-        return [this.getBoundingClientRect()];
-      },
-      get clientWidth() {
-        return 0;
-      },
-      get clientHeight() {
-        return 0;
-      },
-    };
-
-    // Reposition menu with adjusted virtual element
-    await this.menu.close("d-autocomplete");
-
-    this.menuInstance = await this.menu.show(adjustedVirtualElement, {
-      identifier: "d-autocomplete",
-      component: DAutocompleteResults,
-      data: {
-        results: this.results,
-        selectedIndex: this.selectedIndex,
-        onSelect: this.selectResult,
-        template: this.options.template,
-      },
-      inline: true,
-      placement: "bottom-start", // Always use bottom since we adjusted the virtual element position
-      offset: 5,
-      autoClose: false,
-      closeOnClickOutside: false,
-      closeOnEscape: false,
-      trapTab: false,
-      onClose: () => {
-        this.expanded = false;
-        this.options.onClose?.();
-      },
-    });
-
-    console.log("Menu repositioned with actual height");
   }
 }
