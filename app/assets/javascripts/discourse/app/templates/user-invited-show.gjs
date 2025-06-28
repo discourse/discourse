@@ -151,31 +151,31 @@ export default RouteTemplate(
                       </td>
                       {{#if @controller.model.can_see_invite_details}}
                         <td class="d-table__cell --detail">
-                          <div class="d-admin-row__mobile-label">
+                          <div class="d-table__mobile-label">
                             {{i18n "user.last_seen"}}
                           </div>
                           {{formatDate invite.user.last_seen_at}}
                         </td>
                         <td class="d-table__cell --detail">
-                          <div class="d-admin-row__mobile-label">
+                          <div class="d-table__mobile-label">
                             {{i18n "user.invited.topics_entered"}}
                           </div>
                           {{number invite.user.topics_entered}}
                         </td>
                         <td class="d-table__cell --detail">
-                          <div class="d-admin-row__mobile-label">
+                          <div class="d-table__mobile-label">
                             {{i18n "user.invited.posts_read_count"}}
                           </div>
                           {{number invite.user.posts_read_count}}
                         </td>
                         <td class="d-table__cell --detail">
-                          <div class="d-admin-row__mobile-label">
+                          <div class="d-table__mobile-label">
                             {{i18n "user.invited.time_read"}}
                           </div>
                           {{formatDuration invite.user.time_read}}
                         </td>
                         <td class="d-table__cell --detail">
-                          <div class="d-admin-row__mobile-label">
+                          <div class="d-table__mobile-label">
                             {{i18n "user.invited.days_visited"}}
                           </div>
                           <div>
@@ -189,7 +189,7 @@ export default RouteTemplate(
                           </div>
                         </td>
                         <td class="d-table__cell --detail">
-                          <div class="d-admin-row__mobile-label">
+                          <div class="d-table__mobile-label">
                             {{i18n "user.invited.invited_via"}}
                           </div>
                           {{htmlSafe invite.invite_source}}
@@ -269,14 +269,14 @@ export default RouteTemplate(
                       </td>
 
                       <td class="d-table__cell --detail invite-updated-at">
-                        <div class="d-admin-row__mobile-label">
+                        <div class="d-table__mobile-label">
                           {{i18n "user.invited.sent"}}
                         </div>
                         {{formatDate invite.updated_at}}
                       </td>
 
                       <td class="d-table__cell --detail invite-expires-at">
-                        <div class="d-admin-row__mobile-label">
+                        <div class="d-table__mobile-label">
                           {{i18n "user.invited.expires_at"}}
                         </div>
                         {{#if @controller.inviteExpired}}
@@ -290,9 +290,9 @@ export default RouteTemplate(
 
                       {{#if invite.can_delete_invite}}
                         <td class="d-table__cell --controls invite-actions">
-                          <div class="d-admin-row__controls-options">
+                          <div class="d-table__cell-actions">
                             <DButton
-                              @label="admin.user_fields.edit"
+                              @label="user.invited.edit"
                               @action={{fn @controller.editInvite invite}}
                               @title="user.invited.edit"
                               class="btn-small edit-invite"
@@ -302,6 +302,7 @@ export default RouteTemplate(
                               @title={{i18n "more_options"}}
                               @icon="ellipsis-vertical"
                               @onRegisterApi={{@controller.onRegisterApi}}
+                              class="btn-small"
                             >
                               <:content>
                                 <DropdownMenu as |dropdown|>

@@ -77,16 +77,16 @@
     border-top: 0;
     width: auto;
   }
+}
 
-  &-options {
-    display: flex;
-    flex-direction: row;
-    gap: 0.5em;
-    justify-content: flex-end;
+.d-table__cell-actions {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5em;
+  justify-content: flex-end;
 
-    .fk-d-menu__trigger {
-      font-size: var(--font-down-1);
-    }
+  .fk-d-menu__trigger {
+    font-size: var(--font-down-1);
   }
 }
 
