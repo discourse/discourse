@@ -11,28 +11,62 @@ describe "User selector", type: :system do
     sign_in(current_user)
   end
 
-  context "when autocompleting a username" do
-    it "correctly shows the user" do
-      visit("/t/-/#{topic.id}")
-      find(".btn-primary.create").click
-      find(".d-editor-input").send_keys("Hello @som")
+  context "with modern autocomplete enabled" do
+    before { SiteSetting.use_modern_autocomplete = true }
 
-      within(".autocomplete.ac-user") do |el|
-        expect(el).to have_selector(".selected .avatar[title=someone]")
-        expect(el.find(".selected .username")).to have_content("someone")
+    context "when autocompleting a username" do
+      it "correctly shows the user" do
+        visit("/t/-/#{topic.id}")
+        find(".btn-primary.create").click
+        find(".d-editor-input").send_keys("Hello @som")
+
+        within(".autocomplete.ac-user") do |el|
+          expect(el).to have_selector(".selected .avatar[title=someone]")
+          expect(el.find(".selected .username")).to have_content("someone")
+        end
+      end
+    end
+
+    context "when autocompleting a group" do
+      it "correctly shows the user" do
+        visit("/t/-/#{topic.id}")
+        find(".btn-primary.create").click
+        find(".d-editor-input").send_keys("Hello @adm")
+
+        within(".autocomplete.ac-user") do |el|
+          expect(el).to have_selector(".selected .d-icon-users")
+          expect(el.find(".selected .username")).to have_content("admins")
+        end
       end
     end
   end
 
-  context "when autocompleting a group" do
-    it "correctly shows the user" do
-      visit("/t/-/#{topic.id}")
-      find(".btn-primary.create").click
-      find(".d-editor-input").send_keys("Hello @adm")
+  context "with legacy autocomplete enabled" do
+    before { SiteSetting.use_modern_autocomplete = false }
 
-      within(".autocomplete.ac-user") do |el|
-        expect(el).to have_selector(".selected .d-icon-users")
-        expect(el.find(".selected .username")).to have_content("admins")
+    context "when autocompleting a username" do
+      it "correctly shows the user" do
+        visit("/t/-/#{topic.id}")
+        find(".btn-primary.create").click
+        find(".d-editor-input").send_keys("Hello @som")
+
+        within(".autocomplete.ac-user") do |el|
+          expect(el).to have_selector(".selected .avatar[title=someone]")
+          expect(el.find(".selected .username")).to have_content("someone")
+        end
+      end
+    end
+
+    context "when autocompleting a group" do
+      it "correctly shows the user" do
+        visit("/t/-/#{topic.id}")
+        find(".btn-primary.create").click
+        find(".d-editor-input").send_keys("Hello @adm")
+
+        within(".autocomplete.ac-user") do |el|
+          expect(el).to have_selector(".selected .d-icon-users")
+          expect(el.find(".selected .username")).to have_content("admins")
+        end
       end
     end
   end
