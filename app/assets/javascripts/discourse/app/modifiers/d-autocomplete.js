@@ -1,8 +1,9 @@
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { getOwner } from "@ember/owner";
 import { cancel } from "@ember/runloop";
+import { service } from "@ember/service";
 import Modifier from "ember-modifier";
+import DAutocompleteResults from "discourse/components/d-autocomplete-results";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import { TextareaAutocompleteHandler } from "discourse/lib/textarea-text-manipulation";
@@ -14,14 +15,16 @@ import { TextareaAutocompleteHandler } from "discourse/lib/textarea-text-manipul
  * @class DAutocompleteModifier
  * @param {string} key - Trigger character (e.g., "@", "#", ":")
  * @param {Function} dataSource - Async function to fetch results: (term) => Promise<Array>
+ * @param {Function} template - Template function that receives {options: results} and returns HTML
  * @param {Function} [transformComplete] - Transform completion before insertion
  * @param {Function} [afterComplete] - Callback after completion
  * @param {boolean} [debounced=false] - Enable debounced search
  * @param {boolean} [preserveKey=true] - Include trigger key in completion
- * @param {Function} [template] - Custom template function for results
  * @param {boolean} [autoSelectFirstSuggestion=true] - Auto-select first result
  */
 export default class DAutocompleteModifier extends Modifier {
+  @service menu;
+
   @tracked expanded = false;
   @tracked results = [];
   @tracked selectedIndex = -1;
@@ -34,8 +37,7 @@ export default class DAutocompleteModifier extends Modifier {
   searchPromise = null;
   debouncedSearch = null;
   targetElement = null;
-  autocompleteDiv = null;
-  menuService = null;
+  menuInstance = null;
 
   // Constants
   ALLOWED_LETTERS_REGEXP = /[\s[{(/+]/;
@@ -63,45 +65,45 @@ export default class DAutocompleteModifier extends Modifier {
     }
   };
 
-  handleKeyDown = (event) => {
+  handleKeyDown = async (event) => {
     // Handle navigation when autocomplete is open
     if (this.expanded) {
       switch (event.key) {
         case "ArrowUp":
           event.preventDefault();
-          this.moveSelection(-1);
+          await this.moveSelection(-1);
           break;
         case "ArrowDown":
           event.preventDefault();
-          this.moveSelection(1);
+          await this.moveSelection(1);
           break;
         case "Enter":
         case "Tab":
           event.preventDefault();
           if (this.selectedIndex >= 0) {
-            this.selectResult(this.results[this.selectedIndex], event);
+            await this.selectResult(this.results[this.selectedIndex], event);
           }
           break;
         case "Escape":
           event.preventDefault();
           event.stopPropagation();
-          this.closeAutocomplete();
+          await this.closeAutocomplete();
           break;
         case "ArrowRight":
           // Allow right arrow to close autocomplete if at end of word
           if (this.targetElement.value[this.getCaretPosition()] === " ") {
-            this.closeAutocomplete();
+            await this.closeAutocomplete();
           }
           break;
         case "Backspace":
           // Handle backspace to potentially reopen autocomplete
-          this.handleBackspace(event);
+          await this.handleBackspace(event);
           break;
       }
     } else {
       // Handle backspace when closed to potentially reopen
       if (event.key === "Backspace") {
-        this.handleBackspace(event);
+        await this.handleBackspace(event);
       }
     }
   };
@@ -118,16 +120,11 @@ export default class DAutocompleteModifier extends Modifier {
     event.stopPropagation();
   };
 
-  handleGlobalClick = () => {
+  handleGlobalClick = async () => {
     if (this.expanded) {
-      this.closeAutocomplete();
+      await this.closeAutocomplete();
     }
   };
-
-  constructor(owner, args) {
-    super(owner, args);
-    this.menuService = getOwner(this).lookup("service:menu");
-  }
 
   willDestroy() {
     super.willDestroy();
@@ -166,7 +163,9 @@ export default class DAutocompleteModifier extends Modifier {
   cleanup() {
     cancel(this.debouncedSearch);
     this.searchPromise?.cancel?.();
-    this.closeAutocomplete();
+    // Note: closeAutocomplete is async but we can't await in cleanup
+    // The menu service will handle cleanup automatically
+    this.menu.close("d-autocomplete");
   }
 
   get shouldDebounce() {
@@ -202,7 +201,7 @@ export default class DAutocompleteModifier extends Modifier {
       if (!this.options.key || value[this.completeStart] === this.options.key) {
         await this.performSearch(term);
       } else {
-        this.closeAutocomplete();
+        await this.closeAutocomplete();
       }
     }
   }
@@ -231,7 +230,7 @@ export default class DAutocompleteModifier extends Modifier {
       (term.length !== 0 && term.trim().length === 0) ||
       this.targetElement.value[this.getCaretPosition()]?.trim()
     ) {
-      this.closeAutocomplete();
+      await this.closeAutocomplete();
       return;
     }
 
@@ -250,11 +249,11 @@ export default class DAutocompleteModifier extends Modifier {
         return;
       }
 
-      this.updateResults(results || []);
+      await this.updateResults(results || []);
     } catch (error) {
       if (error.name !== "AbortError") {
         this.results = [];
-        this.closeAutocomplete();
+        await this.closeAutocomplete();
       }
     } finally {
       this.isLoading = false;
@@ -262,116 +261,70 @@ export default class DAutocompleteModifier extends Modifier {
     }
   }
 
-  updateResults(results) {
+  async updateResults(results) {
     this.results = results;
 
     if (this.results.length === 0) {
-      this.closeAutocomplete();
+      await this.closeAutocomplete();
     } else {
       this.selectedIndex = this.autoSelectFirstSuggestion ? 0 : -1;
-      this.renderAutocomplete();
+      await this.renderAutocomplete();
     }
   }
 
-  renderAutocomplete() {
-    if (this.autocompleteDiv) {
-      this.autocompleteDiv.remove();
-    }
-
+  async renderAutocomplete() {
     if (this.results.length === 0) {
       return;
     }
 
-    // Create autocomplete container with exact CSS classes for compatibility
-    this.autocompleteDiv = document.createElement("div");
-    this.autocompleteDiv.className = "autocomplete ac-user";
+    console.log("Rendering autocomplete with results:", this.results);
+    console.log("Using template:", !!this.options.template);
 
-    const ul = document.createElement("ul");
+    // Close any existing menu first
+    await this.menu.close("d-autocomplete");
 
-    this.results.forEach((result, index) => {
-      const li = document.createElement("li");
-      const a = document.createElement("a");
+    try {
+      // Create virtual element positioned at the caret location
+      const virtualElement = this.createVirtualElementAtCaret();
 
-      if (index === this.selectedIndex) {
-        a.className = "selected";
-      }
-
-      // Use custom template if provided, otherwise default structure
-      if (this.options.template) {
-        a.innerHTML = this.options.template(result);
-      } else {
-        // Default user autocomplete structure
-        a.innerHTML = this.getDefaultTemplate(result);
-      }
-
-      a.addEventListener("click", (event) => {
-        event.preventDefault();
-        event.stopPropagation();
-        this.selectedIndex = index;
-        this.selectResult(result, event);
+      // Show menu with autocomplete results using d-menu service
+      this.menuInstance = await this.menu.show(virtualElement, {
+        identifier: "d-autocomplete",
+        component: DAutocompleteResults,
+        data: {
+          results: this.results,
+          selectedIndex: this.selectedIndex,
+          onSelect: this.selectResult,
+          template: this.options.template,
+        },
+        inline: true, // CRITICAL: This is what copy-quote uses for text positioning
+        placement: "top-start", // Default to above like copy-quote on desktop
+        fallbackPlacements: ["bottom-start", "top-end", "bottom-end"],
+        offset: 5, // Small positive offset for spacing
+        autoClose: false, // We handle closing manually
+        closeOnClickOutside: false, // We handle this with global click handler
+        closeOnEscape: false, // We handle escape in keydown
+        trapTab: false,
+        onClose: () => {
+          this.expanded = false;
+          this.options.onClose?.();
+        },
       });
 
-      li.appendChild(a);
-      ul.appendChild(li);
-    });
+      console.log("Menu instance created:", this.menuInstance);
+      this.expanded = true;
 
-    this.autocompleteDiv.appendChild(ul);
-
-    // Position the autocomplete div
-    this.positionAutocomplete();
-
-    // Add to DOM
-    document.body.appendChild(this.autocompleteDiv);
-    this.expanded = true;
-
-    // Call onRender callback if provided
-    this.options.onRender?.(this.results);
-  }
-
-  getDefaultTemplate(result) {
-    // Default template maintaining CSS compatibility
-    if (typeof result === "string") {
-      return `<span class="username">${result}</span>`;
+      // Call onRender callback if provided
+      this.options.onRender?.(this.results);
+    } catch (error) {
+      console.error("Error rendering autocomplete:", error);
     }
-
-    if (result.username) {
-      let html = `<span class="username">${result.username}</span>`;
-      if (result.avatar_template) {
-        const avatar = result.avatar_template.replace("{size}", "25");
-        html = `<img class="avatar" src="${avatar}" width="25" height="25"> ${html}`;
-      }
-      if (result.name) {
-        html += `<span class="name">${result.name}</span>`;
-      }
-      return html;
-    }
-
-    return result.toString();
-  }
-
-  positionAutocomplete() {
-    if (!this.autocompleteDiv || !this.targetElement) {
-      return;
-    }
-
-    const targetRect = this.targetElement.getBoundingClientRect();
-    const caretCoords = this.getCaretCoords();
-
-    // Basic positioning - below the element
-    this.autocompleteDiv.style.position = "fixed";
-    this.autocompleteDiv.style.left = `${targetRect.left + (caretCoords?.left || 0)}px`;
-    this.autocompleteDiv.style.top = `${targetRect.bottom + 2}px`;
-    this.autocompleteDiv.style.zIndex = "1000";
-    this.autocompleteDiv.style.maxHeight = "200px";
-    this.autocompleteDiv.style.overflowY = "auto";
   }
 
   @action
-  closeAutocomplete() {
-    if (this.autocompleteDiv) {
-      this.autocompleteDiv.remove();
-      this.autocompleteDiv = null;
-    }
+  async closeAutocomplete() {
+    // Close the d-menu
+    await this.menu.close("d-autocomplete");
 
     this.expanded = false;
     this.completeStart = null;
@@ -379,42 +332,38 @@ export default class DAutocompleteModifier extends Modifier {
     this.results = [];
     this.selectedIndex = -1;
     this.previousTerm = null;
+    this.menuInstance = null;
 
     cancel(this.debouncedSearch);
     this.searchPromise?.cancel?.();
 
-    this.options.onClose?.();
+    // Note: onClose callback is handled by the menu's onClose option
   }
 
   @action
-  moveSelection(direction) {
+  async moveSelection(direction) {
     if (this.results.length === 0) {
       return;
     }
 
-    const oldIndex = this.selectedIndex;
     this.selectedIndex = Math.max(
       -1,
       Math.min(this.results.length - 1, this.selectedIndex + direction)
     );
 
-    // Update DOM selection classes
-    if (this.autocompleteDiv) {
-      const links = this.autocompleteDiv.querySelectorAll("a");
-      if (links[oldIndex]) {
-        links[oldIndex].classList.remove("selected");
-      }
-      if (links[this.selectedIndex]) {
-        links[this.selectedIndex].classList.add("selected");
-        links[this.selectedIndex].scrollIntoView({ block: "nearest" });
-      }
-    }
+    // Re-render the menu with updated selectedIndex
+    // The d-menu component will handle the DOM updates
+    await this.renderAutocomplete();
   }
 
   @action
   async selectResult(result, event) {
     await this.completeTextareaTerm(result, event);
-    this.closeAutocomplete();
+    await this.closeAutocomplete();
+
+    // Clear any cached search state to prevent showing stale results
+    this.previousTerm = null;
+    this.searchTerm = "";
   }
 
   @action
@@ -515,14 +464,38 @@ export default class DAutocompleteModifier extends Modifier {
   }
 
   getCaretCoords() {
+    console.log("=== getCaretCoords DEBUG ===");
+    console.log("- textHandler available:", !!this.options.textHandler);
+    console.log(
+      "- textHandler.getCaretCoords available:",
+      !!(this.options.textHandler && this.options.textHandler.getCaretCoords)
+    );
+    console.log("- completeStart:", this.completeStart);
+    console.log("- current caret position:", this.getCaretPosition());
+
     // Use textHandler if available for more accurate positioning
     if (this.options.textHandler && this.options.textHandler.getCaretCoords) {
       try {
-        return this.options.textHandler.getCaretCoords(this.completeStart);
-      } catch {
+        // Use completeStart position (where @ is) like legacy autocomplete does
+        const position =
+          this.completeStart !== null
+            ? this.completeStart
+            : this.getCaretPosition();
+        const coords = this.options.textHandler.getCaretCoords(position);
+        console.log(
+          "- textHandler.getCaretCoords(",
+          position,
+          ") returned:",
+          coords
+        );
+        return coords;
+      } catch (error) {
+        console.log("- textHandler.getCaretCoords failed:", error);
         // Fall through to default implementation
       }
     }
+
+    console.log("- falling back to simple approximation");
 
     // Simple approximation - in real implementation you might want more sophisticated caret positioning
     try {
@@ -541,9 +514,163 @@ export default class DAutocompleteModifier extends Modifier {
       const width = span.offsetWidth;
       document.body.removeChild(span);
 
-      return { left: width, top: 0 };
-    } catch {
+      const fallbackCoords = { left: width, top: 0 };
+      console.log("- fallback coords:", fallbackCoords);
+      return fallbackCoords;
+    } catch (error) {
+      console.log("- fallback failed:", error);
       return { left: 0, top: 0 };
     }
+  }
+
+  createInitialVirtualElement() {
+    console.log("=== createInitialVirtualElement DEBUG ===");
+
+    // Initial virtual element positioned at caret for measurement
+    return {
+      getBoundingClientRect: () => {
+        const caretCoords = this.getCaretCoords();
+        const textareaRect = this.targetElement.getBoundingClientRect();
+
+        const virtualRect = {
+          left: textareaRect.left + caretCoords.left,
+          top: textareaRect.top + caretCoords.top,
+          right: textareaRect.left + caretCoords.left,
+          bottom: textareaRect.top + caretCoords.top,
+          width: 0,
+          height: 0,
+          x: textareaRect.left + caretCoords.left,
+          y: textareaRect.top + caretCoords.top,
+        };
+
+        console.log("🎯 Initial virtual element coordinates:", virtualRect);
+        return virtualRect;
+      },
+      getClientRects() {
+        return [this.getBoundingClientRect()];
+      },
+      get clientWidth() {
+        return 0;
+      },
+      get clientHeight() {
+        return 0;
+      },
+    };
+  }
+
+  async repositionMenuBasedOnActualHeight() {
+    console.log("=== repositionMenuBasedOnActualHeight DEBUG ===");
+
+    // Try to get the actual menu element to measure its height
+    // Need to investigate what properties are available on menuInstance
+    console.log(
+      "Menu instance properties:",
+      Object.keys(this.menuInstance || {})
+    );
+
+    let actualMenuHeight = 150; // Fallback estimate
+
+    // Try different ways to access the menu DOM element
+    if (this.menuInstance?.element) {
+      actualMenuHeight = this.menuInstance.element.offsetHeight;
+      console.log("Got height from menuInstance.element:", actualMenuHeight);
+    } else if (this.menuInstance?.domElement) {
+      actualMenuHeight = this.menuInstance.domElement.offsetHeight;
+      console.log("Got height from menuInstance.domElement:", actualMenuHeight);
+    } else {
+      // Try to find the menu element by identifier
+      const menuElement = document.querySelector(
+        '.fk-d-menu[data-identifier="d-autocomplete"]'
+      );
+      if (menuElement) {
+        actualMenuHeight = menuElement.offsetHeight;
+        console.log("Got height from querySelector:", actualMenuHeight);
+      }
+    }
+
+    console.log("Actual menu height:", actualMenuHeight);
+
+    // Calculate positioning like original autocomplete
+    const caretCoords = this.getCaretCoords();
+    const textareaRect = this.targetElement.getBoundingClientRect();
+
+    let vOffset = actualMenuHeight; // Default: position above caret
+
+    // Check if there's enough space above (like original logic)
+    const headerHeight =
+      document.querySelector("header.d-header")?.offsetHeight || 0;
+    const spaceAbove = textareaRect.top + caretCoords.top - headerHeight;
+
+    console.log(
+      "Space above caret:",
+      spaceAbove,
+      "Menu height:",
+      actualMenuHeight
+    );
+
+    if (spaceAbove < actualMenuHeight) {
+      vOffset = -32; // Position below caret (BELOW constant from original)
+      console.log("Not enough space above, positioning below");
+    } else {
+      console.log("Enough space above, positioning above");
+    }
+
+    // Create adjusted virtual element
+    const adjustedVirtualElement = {
+      getBoundingClientRect: () => {
+        const coords = this.getCaretCoords();
+        const textArea = this.targetElement.getBoundingClientRect();
+
+        const adjustedRect = {
+          left: textArea.left + coords.left,
+          top: textArea.top + coords.top - vOffset, // Key: subtract height to position above
+          right: textArea.left + coords.left,
+          bottom: textArea.top + coords.top - vOffset,
+          width: 0,
+          height: 0,
+          x: textArea.left + coords.left,
+          y: textArea.top + coords.top - vOffset,
+        };
+
+        console.log("🎯 Adjusted virtual element coordinates:", adjustedRect);
+        return adjustedRect;
+      },
+      getClientRects() {
+        return [this.getBoundingClientRect()];
+      },
+      get clientWidth() {
+        return 0;
+      },
+      get clientHeight() {
+        return 0;
+      },
+    };
+
+    // Reposition menu with adjusted virtual element
+    await this.menu.close("d-autocomplete");
+
+    this.menuInstance = await this.menu.show(adjustedVirtualElement, {
+      identifier: "d-autocomplete",
+      component: DAutocompleteResults,
+      data: {
+        results: this.results,
+        selectedIndex: this.selectedIndex,
+        onSelect: this.selectResult,
+        template: this.options.template,
+      },
+      inline: true,
+      placement: "bottom-start", // Always use bottom since we adjusted the virtual element position
+      offset: 5,
+      autoClose: false,
+      closeOnClickOutside: false,
+      closeOnEscape: false,
+      trapTab: false,
+      onClose: () => {
+        this.expanded = false;
+        this.options.onClose?.();
+      },
+    });
+
+    console.log("Menu repositioned with actual height");
   }
 }
