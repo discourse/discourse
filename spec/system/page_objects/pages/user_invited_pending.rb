@@ -42,7 +42,7 @@ module PageObjects
         end
 
         def edit_button
-          tr_element.find(".invite-actions .btn-default")
+          tr_element.find(".invite-actions .edit-invite")
         end
 
         def expiry_date

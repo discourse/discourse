@@ -1,4 +1,4 @@
-import { visit } from "@ember/test-helpers";
+import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
@@ -9,11 +9,22 @@ acceptance("User invites", function (needs) {
     await visit("/u/eviltrout/invited");
 
     assert.dom("table.user-invite-list tbody tr").exists({ count: 3 });
+
     assert
-      .dom("table.user-invite-list tbody tr:nth-child(1) button.cancel")
+      .dom(
+        "table.user-invite-list tbody tr:nth-child(1) .d-icon-ellipsis-vertical"
+      )
       .exists();
+
+    await click(
+      "table.user-invite-list tbody tr:nth-child(1) .d-icon-ellipsis-vertical"
+    );
+    assert.dom(".btn-danger").exists();
+
     assert
-      .dom("table.user-invite-list tbody tr:nth-child(2) button.cancel")
+      .dom(
+        "table.user-invite-list tbody tr:nth-child(2) .d-icon-ellipsis-vertical"
+      )
       .doesNotExist();
   });
 });

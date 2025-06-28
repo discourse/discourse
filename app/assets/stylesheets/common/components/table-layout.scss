@@ -1,0 +1,101 @@
+@use "lib/viewport";
+
+.d-table {
+  width: 100%;
+
+  @include viewport.until(md) {
+    border-collapse: collapse;
+    margin-bottom: var(--space-3);
+  }
+
+  th,
+  td {
+    padding: var(--space-2);
+  }
+}
+
+.d-table__header {
+  @include viewport.until(md) {
+    display: none;
+  }
+}
+
+.d-table__header-cell {
+  text-align: left;
+  font-weight: normal;
+  color: var(--primary-high);
+}
+
+.d-table__row {
+  position: relative;
+  padding: var(--space-1) 0;
+
+  @include viewport.until(md) {
+    display: block;
+    margin-bottom: var(--space-3);
+    border: 1px solid var(--primary-low);
+  }
+}
+
+.d-table__cell {
+  vertical-align: middle;
+
+  @include viewport.until(md) {
+    display: block;
+    border-top: 1px solid var(--primary-low);
+  }
+
+  &:first-child {
+    @include viewport.until(md) {
+      border-top: 0;
+    }
+  }
+}
+
+.d-table__cell.--overview {
+  @include viewport.until(md) {
+    width: auto;
+    border-top: 0;
+  }
+}
+
+.d-table__cell.--detail {
+  @include viewport.until(md) {
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
+.d-table__cell.--controls {
+  text-align: right;
+  width: auto;
+
+  @include viewport.until(md) {
+    position: absolute;
+    top: -3px;
+    right: 0;
+    border-top: 0;
+    width: auto;
+  }
+}
+
+// Wrapper keeps button and dropdown aligned
+.d-table__cell-actions {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5em;
+  justify-content: flex-end;
+
+  .fk-d-menu__trigger {
+    font-size: var(--font-down-1);
+  }
+}
+
+.d-table__mobile-label {
+  display: none;
+
+  @include viewport.until(md) {
+    display: inline-flex;
+    color: var(--primary-high);
+  }
+}
