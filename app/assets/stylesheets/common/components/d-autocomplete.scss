@@ -1,7 +1,5 @@
-// Z-index fix for d-autocomplete to ensure it appears above composer elements
 .fk-d-menu[data-identifier="d-autocomplete"] {
-  // Use composer dropdown z-index to ensure it appears above composer elements
-  z-index: z("composer", "dropdown") + 1 !important; // 701
+  z-index: z("modal", "dialog");
 }
 
 // Ensure autocomplete results have proper styling

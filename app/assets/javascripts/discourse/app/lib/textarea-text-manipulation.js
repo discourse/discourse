@@ -869,7 +869,6 @@ export default class TextareaTextManipulation {
     // Import the modifier dynamically to avoid circular dependencies
     import("discourse/modifiers/d-autocomplete")
       .then((module) => {
-        console.log("Setting up modern autocomplete with options:", options);
         const DAutocompleteModifier = module.default;
 
         // Create and apply the modifier
@@ -885,23 +884,14 @@ export default class TextareaTextManipulation {
           textHandler: this.autocompleteHandler,
         };
 
-        console.log(
-          "Applying modifier to textarea:",
-          this.textarea,
-          "with options:",
-          modifierOptions
-        );
-
         // Apply the modifier to the textarea
         modifier.modify(this.textarea, [modifierOptions]);
 
         // Store reference for cleanup
         this._modernAutocompleteModifier = modifier;
-
-        console.log("Modern autocomplete setup complete");
       })
-      .catch((error) => {
-        console.error("Failed to set up modern autocomplete:", error);
+      .catch(() => {
+        // Failed to set up modern autocomplete
       });
   }
 }

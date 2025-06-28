@@ -37,13 +37,22 @@ export default class DAutocompleteResults extends Component {
         });
       });
 
-      // Apply selected class to the appropriate link
-      if (
-        this.args.data.selectedIndex >= 0 &&
-        links[this.args.data.selectedIndex]
-      ) {
-        links[this.args.data.selectedIndex].classList.add("selected");
-      }
+      // Update selection styling
+      this.updateTemplatedSelection(links);
+    }
+  }
+
+  @action
+  updateTemplatedSelection(links) {
+    // Clear existing selection
+    links.forEach((link) => link.classList.remove("selected"));
+
+    // Apply selected class to the appropriate link
+    if (
+      this.args.data.selectedIndex >= 0 &&
+      links[this.args.data.selectedIndex]
+    ) {
+      links[this.args.data.selectedIndex].classList.add("selected");
     }
   }
 
