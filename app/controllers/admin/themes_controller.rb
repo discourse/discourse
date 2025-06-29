@@ -509,6 +509,6 @@ class Admin::ThemesController < Admin::AdminController
   end
 
   def ensure_theme_creation_is_allowed
-    guardian.ensure_can_create_theme!(current_user)
+    guardian.ensure_can_create_theme!
   end
 end

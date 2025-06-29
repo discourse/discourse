@@ -405,16 +405,15 @@ RSpec.describe Admin::ThemesController do
       end
 
       context "with registered user_guardian_can_create_theme" do
+        after { DiscoursePluginRegistry.reset! }
+
         it "doesn't allow importing a theme if the modifier returns false" do
           plugin_instance = Plugin::Instance.new
-          i = 0
-          plugin_instance.register_modifier(
-            :user_guardian_can_create_theme,
-          ) do |val, admin_user, guardian|
-            expect(admin_user).to eq(admin)
+          can_create = true
+
+          plugin_instance.register_modifier(:user_guardian_can_create_theme) do |val, guardian|
             expect(guardian.user).to eq(admin)
-            i += 1
-            i % 2 == 1
+            can_create
           end
 
           RemoteTheme.stubs(:import_theme).returns(Fabricate(:theme))
@@ -422,12 +421,11 @@ RSpec.describe Admin::ThemesController do
                params: {
                  remote: "https://github.com/discourse/discourse-brand-header.git",
                }
-          expect(i).to eq(1)
           expect(response.status).to eq(201)
-
           json = response.parsed_body
-
           expect(json["theme"]).to be_present
+
+          can_create = false
 
           expect do
             post "/admin/themes/import.json",
@@ -435,7 +433,6 @@ RSpec.describe Admin::ThemesController do
                    remote: "https://github.com/discourse/discourse-brand-header-2.git",
                  }
           end.not_to change { Theme.count }
-          expect(i).to eq(2)
           expect(response.status).to eq(403)
         end
       end
@@ -672,16 +669,15 @@ RSpec.describe Admin::ThemesController do
       end
 
       context "with registered user_guardian_can_create_theme" do
+        after { DiscoursePluginRegistry.reset! }
+
         it "doesn't allow theme creation if the modifier returns false" do
           plugin_instance = Plugin::Instance.new
-          i = 0
-          plugin_instance.register_modifier(
-            :user_guardian_can_create_theme,
-          ) do |val, admin_user, guardian|
-            expect(admin_user).to eq(admin)
+          can_create = true
+
+          plugin_instance.register_modifier(:user_guardian_can_create_theme) do |val, guardian|
             expect(guardian.user).to eq(admin)
-            i += 1
-            i % 2 == 1
+            can_create
           end
 
           post "/admin/themes.json",
@@ -691,12 +687,11 @@ RSpec.describe Admin::ThemesController do
                    theme_fields: [name: "scss", target: "common", value: "body{color: red;}"],
                  },
                }
-          expect(i).to eq(1)
           expect(response.status).to eq(201)
-
           json = response.parsed_body
-
           expect(json["theme"]).to be_present
+
+          can_create = false
 
           expect do
             post "/admin/themes.json",
@@ -707,7 +702,6 @@ RSpec.describe Admin::ThemesController do
                    },
                  }
           end.not_to change { Theme.count }
-          expect(i).to eq(2)
           expect(response.status).to eq(403)
         end
       end
