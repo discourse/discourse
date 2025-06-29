@@ -53,8 +53,8 @@ export default class ThemesGrid extends Component {
       {{#each @themes as |theme|}}
         <ThemesGridCard @theme={{theme}} @allThemes={{@themes}} />
       {{/each}}
-      {{#each COMPONENTS_FOR_CUSTOM_CARDS as |comp|}}
-        <comp />
+      {{#each COMPONENTS_FOR_CUSTOM_CARDS as |Card|}}
+        <Card />
       {{/each}}
     </div>
   </template>
