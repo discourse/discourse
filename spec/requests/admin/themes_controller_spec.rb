@@ -478,6 +478,7 @@ RSpec.describe Admin::ThemesController do
       end
 
       it "filters experimental system themes" do
+        SiteSetting.experimental_system_themes = ""
         get "/admin/themes.json"
         expect(response.status).to eq(200)
         theme_names = response.parsed_body["themes"].map { |theme| theme[:name] }

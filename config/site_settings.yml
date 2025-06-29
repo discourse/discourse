@@ -4045,7 +4045,7 @@ experimental:
     default: false
   experimental_system_themes:
     type: list
-    default: ""
+    default: "horizon"
     hidden: true
     allow_any: false
     choices:
