@@ -98,8 +98,10 @@ body:not(.has-full-page-chat, .wizard) {
   }
 }
 
-.welcome-banner {
-  display: none;
+@include viewport.until(sm) {
+  .welcome-banner {
+    display: none;
+  }
 }
 
 #list-area {
