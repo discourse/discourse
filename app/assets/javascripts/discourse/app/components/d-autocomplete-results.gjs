@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
@@ -15,11 +16,44 @@ import { eq } from "truth-helpers";
  * @param {Function} [data.template] - Optional template function for custom rendering
  */
 export default class DAutocompleteResults extends Component {
+  @tracked selectedIndex = -1;
+
+  constructor(owner, args) {
+    super(owner, args);
+    this.selectedIndex = this.args.data.selectedIndex || -1;
+
+    // Register this component instance so the modifier can call its methods
+    if (this.args.data.registerComponent) {
+      this.args.data.registerComponent(this);
+    }
+  }
+
   @action
-  handleClick(result, index, event) {
-    event.preventDefault();
-    event.stopPropagation();
-    this.args.data.onSelect(result, index, event);
+  updateSelectedIndex(newIndex) {
+    console.log("Action updateSelectedIndex called with:", newIndex);
+    this.selectedIndex = newIndex;
+
+    // Apply DOM manipulation like original autocomplete
+    this.markSelected();
+  }
+
+  markSelected() {
+    // Find all links in the autocomplete menu and update selection like original
+    const menuElement = document.querySelector(
+      '.fk-d-menu[data-identifier="d-autocomplete"]'
+    );
+    if (menuElement) {
+      const links = menuElement.querySelectorAll("li a");
+
+      // Remove 'selected' class from all links
+      links.forEach((link) => link.classList.remove("selected"));
+
+      // Add 'selected' class to current selection
+      if (this.selectedIndex >= 0 && links[this.selectedIndex]) {
+        links[this.selectedIndex].classList.add("selected");
+        console.log("Marked link", this.selectedIndex, "as selected");
+      }
+    }
   }
 
   @action
@@ -37,9 +71,12 @@ export default class DAutocompleteResults extends Component {
         });
       });
 
-      // Update selection styling
+      // Apply initial selection styling
       this.updateTemplatedSelection(links);
     }
+
+    // Apply initial selection marking like original autocomplete
+    this.markSelected();
   }
 
   @action
@@ -48,12 +85,40 @@ export default class DAutocompleteResults extends Component {
     links.forEach((link) => link.classList.remove("selected"));
 
     // Apply selected class to the appropriate link
-    if (
-      this.args.data.selectedIndex >= 0 &&
-      links[this.args.data.selectedIndex]
-    ) {
-      links[this.args.data.selectedIndex].classList.add("selected");
+    if (this.selectedIndex >= 0 && links[this.selectedIndex]) {
+      links[this.selectedIndex].classList.add("selected");
     }
+  }
+
+  // Method to update selection from outside (called by modifier)
+  updateSelection(newIndex) {
+    console.log(
+      "Component updateSelection called with:",
+      newIndex,
+      "current:",
+      this.selectedIndex
+    );
+    this.selectedIndex = newIndex;
+    console.log("Component selectedIndex updated to:", this.selectedIndex);
+
+    // Update templated selection if using templates
+    if (this.args.data.template) {
+      console.log("Updating templated selection...");
+      const menuElement = document.querySelector(
+        '.fk-d-menu[data-identifier="d-autocomplete"]'
+      );
+      if (menuElement) {
+        const links = menuElement.querySelectorAll("li a");
+        this.updateTemplatedSelection(links);
+      }
+    }
+  }
+
+  @action
+  handleClick(result, index, event) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.args.data.onSelect(result, index, event);
   }
 
   get isComponentTemplate() {
@@ -108,8 +173,7 @@ export default class DAutocompleteResults extends Component {
           {{#each this.templateItems as |templateItem index|}}
             <li>
               <a
-                class="{{templateItem.cssClasses}}
-                  {{if (eq index @data.selectedIndex) 'selected' ''}}"
+                class={{templateItem.cssClasses}}
                 title={{templateItem.title}}
                 {{on "click" (fn this.handleClick templateItem.item index)}}
                 data-index={{index}}
@@ -132,7 +196,7 @@ export default class DAutocompleteResults extends Component {
           {{#each @data.results as |result index|}}
             <li>
               <a
-                class={{if (eq index @data.selectedIndex) "selected" ""}}
+                class=""
                 {{on "click" (fn this.handleClick result index)}}
                 data-index={{index}}
               >
