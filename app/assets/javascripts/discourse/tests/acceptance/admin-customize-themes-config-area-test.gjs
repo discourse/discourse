@@ -15,14 +15,14 @@ acceptance("Admin - Config areas - Themes", function (needs) {
 
   test("custom cards in themes grid", async function (assert) {
     withPluginApi("0.1", (api) => {
-      api.addCardToAdminThemesGrid((adminConfigAreaCardComponent) => {
+      api.addCardToAdminThemesGrid((AdminConfigAreaCardComponent) => {
         return class extends Component {
           <template>
-            <adminConfigAreaCardComponent class="my-test-card">
+            <AdminConfigAreaCardComponent class="my-test-card">
               <:content>
                 Hello, this is a test card.
               </:content>
-            </adminConfigAreaCardComponent>
+            </AdminConfigAreaCardComponent>
           </template>
         };
       });
