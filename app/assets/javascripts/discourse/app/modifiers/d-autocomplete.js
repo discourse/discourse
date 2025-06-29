@@ -295,6 +295,10 @@ export default class DAutocompleteModifier extends Modifier {
           selectedIndex: this.selectedIndex,
           onSelect: this.selectResult,
           template: this.options.template,
+          registerComponent: (componentInstance) => {
+            console.log("Component registered:", !!componentInstance);
+            this.componentInstance = componentInstance;
+          },
         },
         inline: true, // CRITICAL: This is what emoji-picker uses for text positioning
         placement: "top-start", // Default to above like emoji-picker on desktop
@@ -331,6 +335,7 @@ export default class DAutocompleteModifier extends Modifier {
     this.selectedIndex = -1;
     this.previousTerm = null;
     this.menuInstance = null;
+    this.componentInstance = null; // Clean up component reference
 
     cancel(this.debouncedSearch);
     this.searchPromise?.cancel?.();
@@ -344,19 +349,25 @@ export default class DAutocompleteModifier extends Modifier {
       return;
     }
 
-    this.selectedIndex = Math.max(
+    // Calculate new selectedIndex
+    const newIndex = Math.max(
       -1,
       Math.min(this.results.length - 1, this.selectedIndex + direction)
     );
 
-    // Update the component's data directly instead of re-rendering the entire menu
-    // This prevents the visual refresh that occurs with renderAutocomplete()
-    if (this.menuInstance?.component) {
-      // Update the component's selectedIndex data directly
-      this.menuInstance.component.args.data.selectedIndex = this.selectedIndex;
+    this.selectedIndex = newIndex;
 
-      // Trigger a targeted update to just the selection state
-      // The DAutocompleteResults component will handle visual updates via CSS
+    // Update the component's selectedIndex via action method to trigger reactivity
+    if (this.componentInstance && this.componentInstance.updateSelectedIndex) {
+      console.log(
+        "Calling component action updateSelectedIndex with:",
+        this.selectedIndex
+      );
+      this.componentInstance.updateSelectedIndex(this.selectedIndex);
+    } else {
+      console.log(
+        "No component instance or updateSelectedIndex method available"
+      );
     }
   }
 
