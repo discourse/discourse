@@ -27,13 +27,13 @@ export function applyLocalDates(dates, siteSettings) {
     const opts = buildOptionsFromElement(element, siteSettings);
 
     if (
-      element.attributes["data-range"]?.value === "to" &&
-      index !== 0 &&
-      arr[index - 1].attributes["data-range"]?.value === "from"
+      element.attributes["data-range"]?.value === "from" &&
+      index === 0 &&
+      arr[index + 1].attributes["data-range"]?.value === "to"
     ) {
-      const fromElement = arr[index - 1];
-      if (_rangeIsSameLocalDay(fromElement, element)) {
-        opts.sameLocalDayAsFrom = true;
+      const toElement = arr[index + 1];
+      if (_rangeIsSameLocalDay(element, toElement)) {
+        opts.sameLocalDay = true;
       }
     }
 
@@ -78,6 +78,7 @@ function buildOptionsFromElement(element, siteSettings) {
 
   if (_rangeElements(element).length === 2) {
     opts.duration = _calculateDuration(element);
+    opts.range = dataset.range;
   }
 
   opts.time = dataset.time;
