@@ -3,18 +3,22 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import SiteSetting from "admin/models/site-setting";
 
 export default class ThemeSettings extends SiteSetting {
-  updateSetting(themeId, newValue) {
+  async updateSetting(themeId, newValue) {
     if (this.objects_schema) {
       newValue = JSON.stringify(newValue);
     }
 
-    return ajax(`/admin/themes/${themeId}/setting`, {
-      type: "PUT",
-      data: {
-        name: this.setting,
-        value: newValue,
-      },
-    });
+    try {
+      return ajax(`/admin/themes/${themeId}/setting`, {
+        type: "PUT",
+        data: {
+          name: this.setting,
+          value: newValue,
+        },
+      });
+    } catch (error) {
+      popupAjaxError(error);
+    }
   }
 
   loadMetadata(themeId) {
