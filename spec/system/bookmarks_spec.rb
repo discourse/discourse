@@ -89,6 +89,19 @@ describe "Bookmarking posts and topics", type: :system do
     )
   end
 
+  it "clears all topic bookmarks from the topic bookmark button if more than one post is bookmarked" do
+    Fabricate(:bookmark, bookmarkable: post, user: current_user)
+    Fabricate(:bookmark, bookmarkable: post_2, user: current_user)
+    topic_page.visit_topic(topic)
+    topic_page.click_topic_footer_button(:bookmark)
+    dialog = PageObjects::Components::Dialog.new
+    expect(dialog).to have_content(I18n.t("js.bookmarks.confirm_clear"))
+    dialog.click_yes
+    expect(dialog).to be_closed
+    expect(topic_page).to have_no_bookmarks
+    expect(Bookmark.where(user: current_user).count).to eq(0)
+  end
+
   describe "topic level bookmarks" do
     it "allows the topic to be bookmarked" do
       topic_page.visit_topic(topic)

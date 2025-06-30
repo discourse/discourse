@@ -29,6 +29,11 @@ export default class BookmarkMenu extends Component {
   timeShortcuts = timeShortcuts(this.timezone);
   bookmarkCreatePromise = null;
 
+  willDestroy() {
+    super.willDestroy(...arguments);
+    console.log("destroying bookmark-menu component");
+  }
+
   @action
   setReminderShortcuts() {
     this.reminderAtOptions = [
@@ -49,6 +54,7 @@ export default class BookmarkMenu extends Component {
   }
 
   get showEditDeleteMenu() {
+    console.log("showEditDeleteMenu", this.existingBookmark, this.quicksaved);
     return this.existingBookmark && !this.quicksaved;
   }
 
@@ -168,7 +174,9 @@ export default class BookmarkMenu extends Component {
   async onRemoveBookmark() {
     try {
       const response = await this.bookmarkManager.delete();
-      this.bookmarkManager.afterDelete(response, this.existingBookmark.id);
+      if (this.existingBookmark) {
+        this.bookmarkManager.afterDelete(response, this.existingBookmark.id);
+      }
       this.toasts.success({
         duration: "short",
         data: {
