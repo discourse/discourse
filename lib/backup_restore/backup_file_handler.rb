@@ -8,7 +8,12 @@ module BackupRestore
 
     def initialize(logger, filename, current_db, root_tmp_directory: Rails.root, location: nil)
       @logger = logger
-      @filename = filename
+      if filename.start_with?("http://", "https://")
+        @url = filename
+        @filename = File.basename(URI.parse(@url).path)
+      else
+        @filename = filename
+      end
       @current_db = current_db
       @root_tmp_directory = root_tmp_directory
       @is_archive = !(@filename =~ /\.sql\.gz\z/)
@@ -17,11 +22,6 @@ module BackupRestore
 
     def decompress
       create_tmp_directory
-
-      if @filename.start_with?("http://", "https://")
-        @url = @filename
-        @filename = File.basename(URI.parse(@url).path)
-      end
 
       @archive_path = File.join(@tmp_directory, @filename)
 
