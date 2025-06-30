@@ -158,6 +158,7 @@ import {
   reopenWidget,
 } from "discourse/widgets/widget";
 import { addImageWrapperButton } from "discourse-markdown-it/features/image-controls";
+import { addCardToAdminThemesGrid } from "admin/components/themes-grid";
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 import { modifySelectKit } from "select-kit/lib/plugin-api";
 
@@ -1288,7 +1289,7 @@ class PluginApi {
    * });
    * ```
    *
-   * This API is deprecated. See renderIntoOutlet instead.
+   * This API is deprecated. See renderInOutlet instead.
    *
    **/
   registerConnectorClass(outletName, connectorName, klass) {
@@ -3418,6 +3419,38 @@ class PluginApi {
    */
   registerRichEditorExtension(extension) {
     registerRichEditorExtension(extension);
+  }
+
+  /**
+   * Adds a card to the admin themes grid.
+   *
+   * ```js
+   * import Component from "@glimmer/component";
+   *
+   * api.addCardToAdminThemesGrid((adminConfigAreaCardComponent) => {
+   *   return class extends Component {
+   *     <template>
+   *       <adminConfigAreaCardComponent class="my-custom-card">
+   *         <:content>
+   *           <!-- your custom card content goes here -->
+   *         </:content>
+   *       </adminConfigAreaCardComponent>
+   *     </template>
+   *   }
+   * });
+   * ```
+   *
+   * @param {Function} func - A function that returns a card component class.
+   *
+   * @callback func
+   * @param {AdminConfigAreaCard} adminConfigAreaCardComponent - The
+   * `AdminConfigAreaCard` class from core to be optionally used as a container
+   * for the card content.
+   * @returns {Component} - A Glimmer component class for the card to be added
+   * to the grid.
+   */
+  addCardToAdminThemesGrid(func) {
+    addCardToAdminThemesGrid(func);
   }
 
   #deprecatedWidgetOverride(widgetName, override) {

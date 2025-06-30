@@ -12,7 +12,9 @@ import DToggleSwitch from "discourse/components/d-toggle-switch";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import FilterInput from "discourse/components/filter-input";
 import LoadMore from "discourse/components/load-more";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import icon from "discourse/helpers/d-icon";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import { extractErrorInfo } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
@@ -184,10 +186,15 @@ export default class AdminConfigAreasComponents extends Component {
       }}
     >
       <:actions as |actions|>
-        <actions.Primary
-          @label="admin.config_areas.themes_and_components.components.install"
-          @action={{this.installModal}}
-        />
+        <PluginOutlet
+          @name="admin-config-area-components-new-button"
+          @outletArgs={{lazyHash actions=actions}}
+        >
+          <actions.Primary
+            @label="admin.config_areas.themes_and_components.components.install"
+            @action={{this.installModal}}
+          />
+        </PluginOutlet>
       </:actions>
     </DPageSubheader>
     <div class="container">
@@ -259,7 +266,11 @@ export default class AdminConfigAreasComponents extends Component {
           {{else}}
             <AdminConfigAreaEmptyList
               @emptyLabel="admin.config_areas.themes_and_components.components.no_components"
-            />
+            >
+              <PluginOutlet
+                @name="admin-config-area-components-empty-list-bottom"
+              />
+            </AdminConfigAreaEmptyList>
           {{/if}}
         {{/if}}
       </ConditionalLoadingSpinner>

@@ -4,6 +4,8 @@ import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isPresent } from "@ember/utils";
 import DPageSubheader from "discourse/components/d-page-subheader";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
 import InstallThemeModal from "admin/components/modal/install-theme";
 import ThemesGrid from "admin/components/themes-grid";
@@ -91,10 +93,15 @@ export default class AdminConfigAreasThemes extends Component {
       }}
     >
       <:actions as |actions|>
-        <actions.Primary
-          @label="admin.config_areas.themes_and_components.themes.install"
-          @action={{this.installModal}}
-        />
+        <PluginOutlet
+          @name="admin-config-area-themes-new-button"
+          @outletArgs={{lazyHash actions=actions}}
+        >
+          <actions.Primary
+            @label="admin.config_areas.themes_and_components.themes.install"
+            @action={{this.installModal}}
+          />
+        </PluginOutlet>
       </:actions>
     </DPageSubheader>
     <div class="admin-detail">
