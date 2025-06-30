@@ -56,6 +56,12 @@ export default class Post extends Component {
     });
   }
 
+  get additionalArticleClasses() {
+    return applyValueTransformer("post-article-class", [], {
+      post: this.args.post,
+    });
+  }
+
   get canLoadMoreRepliesBelow() {
     return this.repliesBelow.length < this.args.post.reply_count;
   }
@@ -396,6 +402,7 @@ export default class Post extends Component {
                   "post--auto-generated is-auto-generated"
                 )
                 (if @post.via_email "post--via-email via-email")
+                this.additionalArticleClasses
               }}
               aria-label={{i18n
                 "share.post"
