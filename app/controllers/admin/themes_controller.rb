@@ -7,6 +7,7 @@ class Admin::ThemesController < Admin::AdminController
 
   skip_before_action :check_xhr, only: %i[show preview export]
   before_action :ensure_admin
+  before_action :ensure_theme_creation_is_allowed, only: %i[create import]
 
   def preview
     theme = Theme.find_by(id: params[:id])
@@ -505,5 +506,9 @@ class Admin::ThemesController < Admin::AdminController
   # Overridden by theme-creator plugin
   def theme_user
     current_user
+  end
+
+  def ensure_theme_creation_is_allowed
+    guardian.ensure_can_create_theme!
   end
 end

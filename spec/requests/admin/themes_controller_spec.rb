@@ -403,6 +403,39 @@ RSpec.describe Admin::ThemesController do
         expect(json["theme"]["auto_update"]).to eq(false)
         expect(UserHistory.where(action: UserHistory.actions[:change_theme]).count).to eq(1)
       end
+
+      context "with registered user_guardian_can_create_theme" do
+        after { DiscoursePluginRegistry.reset! }
+
+        it "doesn't allow importing a theme if the modifier returns false" do
+          plugin_instance = Plugin::Instance.new
+          can_create = true
+
+          plugin_instance.register_modifier(:user_guardian_can_create_theme) do |val, guardian|
+            expect(guardian.user).to eq(admin)
+            can_create
+          end
+
+          RemoteTheme.stubs(:import_theme).returns(Fabricate(:theme))
+          post "/admin/themes/import.json",
+               params: {
+                 remote: "https://github.com/discourse/discourse-brand-header.git",
+               }
+          expect(response.status).to eq(201)
+          json = response.parsed_body
+          expect(json["theme"]).to be_present
+
+          can_create = false
+
+          expect do
+            post "/admin/themes/import.json",
+                 params: {
+                   remote: "https://github.com/discourse/discourse-brand-header-2.git",
+                 }
+          end.not_to change { Theme.count }
+          expect(response.status).to eq(403)
+        end
+      end
     end
 
     shared_examples "theme import not allowed" do
@@ -633,6 +666,44 @@ RSpec.describe Admin::ThemesController do
           expect(json["errors"]).to include(
             "No type could be guessed for field blahblah for target common",
           )
+        end
+      end
+
+      context "with registered user_guardian_can_create_theme" do
+        after { DiscoursePluginRegistry.reset! }
+
+        it "doesn't allow theme creation if the modifier returns false" do
+          plugin_instance = Plugin::Instance.new
+          can_create = true
+
+          plugin_instance.register_modifier(:user_guardian_can_create_theme) do |val, guardian|
+            expect(guardian.user).to eq(admin)
+            can_create
+          end
+
+          post "/admin/themes.json",
+               params: {
+                 theme: {
+                   name: "my test name",
+                   theme_fields: [name: "scss", target: "common", value: "body{color: red;}"],
+                 },
+               }
+          expect(response.status).to eq(201)
+          json = response.parsed_body
+          expect(json["theme"]).to be_present
+
+          can_create = false
+
+          expect do
+            post "/admin/themes.json",
+                 params: {
+                   theme: {
+                     name: "my test name 2",
+                     theme_fields: [name: "scss", target: "common", value: "body{color: red;}"],
+                   },
+                 }
+          end.not_to change { Theme.count }
+          expect(response.status).to eq(403)
         end
       end
     end
