@@ -25,6 +25,7 @@ RSpec.describe SidebarSection do
       [
         "Topics",
         "My Posts",
+        "My Messages",
         "Review",
         "Admin",
         "Invite",
