@@ -7,6 +7,7 @@ import DAutocompleteResults from "discourse/components/d-autocomplete-results";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import { TextareaAutocompleteHandler } from "discourse/lib/textarea-text-manipulation";
+import virtualElementFromCaretCoords from "discourse/lib/virtual-element-from-caret-coords";
 
 /**
  * Class-based modifier for adding autocomplete functionality to input elements
@@ -285,7 +286,6 @@ export default class DAutocompleteModifier extends Modifier {
       const virtualElement = this.createVirtualElementAtCaret();
 
       // Show menu with autocomplete results using d-menu service
-      // Configuration aligned with emoji-picker for proper positioning and navigation
       this.menuInstance = await this.menu.show(virtualElement, {
         identifier: "d-autocomplete",
         groupIdentifier: "d-autocomplete",
@@ -296,18 +296,14 @@ export default class DAutocompleteModifier extends Modifier {
           onSelect: this.selectResult,
           template: this.options.template,
           registerComponent: (componentInstance) => {
-            console.log("Component registered:", !!componentInstance);
             this.componentInstance = componentInstance;
           },
         },
-        inline: true, // CRITICAL: This is what emoji-picker uses for text positioning
-        placement: "top-start", // Default to above like emoji-picker on desktop
-        fallbackPlacements: ["bottom-start", "top-end", "bottom-end"],
-        offset: 10, // Match emoji-picker offset
-        autoClose: false, // We handle closing manually like emoji-picker
-        closeOnClickOutside: false, // We handle this with global click handler
-        closeOnEscape: false, // We handle escape in keydown
+        padding: { top: 0, left: 0, right: 0, bottom: 0 },
+        inline: true,
+        autoUpdate: true,
         trapTab: false,
+        closeOnScroll: false,
         onClose: () => {
           this.expanded = false;
           this.options.onClose?.();
@@ -359,15 +355,7 @@ export default class DAutocompleteModifier extends Modifier {
 
     // Update the component's selectedIndex via action method to trigger reactivity
     if (this.componentInstance && this.componentInstance.updateSelectedIndex) {
-      console.log(
-        "Calling component action updateSelectedIndex with:",
-        this.selectedIndex
-      );
       this.componentInstance.updateSelectedIndex(this.selectedIndex);
-    } else {
-      console.log(
-        "No component instance or updateSelectedIndex method available"
-      );
     }
   }
 
@@ -478,8 +466,8 @@ export default class DAutocompleteModifier extends Modifier {
     return this.targetElement.selectionStart || 0;
   }
 
-  getCaretCoords() {
-    // Use textHandler if available for more accurate positioning
+  getAbsoluteCaretCoords() {
+    // Use textHandler for accurate relative coordinate calculation
     if (this.options.textHandler && this.options.textHandler.getCaretCoords) {
       try {
         // Use completeStart position (where @ is) like legacy autocomplete does
@@ -487,65 +475,35 @@ export default class DAutocompleteModifier extends Modifier {
           this.completeStart !== null
             ? this.completeStart
             : this.getCaretPosition();
-        const coords = this.options.textHandler.getCaretCoords(position);
-        return coords;
+        const relativeCoords =
+          this.options.textHandler.getCaretCoords(position);
+
+        // Convert to absolute viewport coordinates
+        const textareaRect = this.targetElement.getBoundingClientRect();
+
+        return {
+          x: textareaRect.left + relativeCoords.left,
+          y: textareaRect.top + relativeCoords.top,
+        };
       } catch {
-        // Fall through to default implementation
+        // Fall through to fallback
       }
     }
 
-    // Simple approximation - in real implementation you might want more sophisticated caret positioning
-    try {
-      const caretPos = this.getCaretPosition();
-      const value = this.targetElement.value;
-      const textBeforeCaret = value.substring(0, caretPos);
-
-      // Create a temporary span to measure text width
-      const span = document.createElement("span");
-      span.style.font = window.getComputedStyle(this.targetElement).font;
-      span.style.visibility = "hidden";
-      span.style.position = "absolute";
-      span.textContent = textBeforeCaret;
-
-      document.body.appendChild(span);
-      const width = span.offsetWidth;
-      document.body.removeChild(span);
-
-      return { left: width, top: 0 };
-    } catch {
-      return { left: 0, top: 0 };
-    }
+    // Fallback: return textarea position (will be inaccurate but won't crash)
+    const textareaRect = this.targetElement.getBoundingClientRect();
+    return {
+      x: textareaRect.left,
+      y: textareaRect.top,
+    };
   }
 
   createVirtualElementAtCaret() {
-    // Create virtual element positioned at the caret location
-    return {
-      getBoundingClientRect: () => {
-        const caretCoords = this.getCaretCoords();
-        const textareaRect = this.targetElement.getBoundingClientRect();
+    // Get absolute viewport coordinates for the caret
+    const caretCoords = this.getAbsoluteCaretCoords();
 
-        const virtualRect = {
-          left: textareaRect.left + caretCoords.left,
-          top: textareaRect.top + caretCoords.top,
-          right: textareaRect.left + caretCoords.left,
-          bottom: textareaRect.top + caretCoords.top,
-          width: 0,
-          height: 0,
-          x: textareaRect.left + caretCoords.left,
-          y: textareaRect.top + caretCoords.top,
-        };
-
-        return virtualRect;
-      },
-      getClientRects() {
-        return [this.getBoundingClientRect()];
-      },
-      get clientWidth() {
-        return 0;
-      },
-      get clientHeight() {
-        return 0;
-      },
-    };
+    // Create virtual element using the clean library approach
+    // Small upward offset to position menu above the line
+    return virtualElementFromCaretCoords(caretCoords, [9, -250]);
   }
 }
