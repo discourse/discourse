@@ -76,6 +76,7 @@ export default class ProsemirrorEditor extends Component {
   @service capabilities;
   @service modal;
   @service toasts;
+  @service site;
 
   schema = createSchema(this.extensions, this.args.includeDefault);
   view;
@@ -109,6 +110,7 @@ export default class ProsemirrorEditor extends Component {
         capabilities: this.capabilities,
         modal: this.modal,
         toasts: this.toasts,
+        site: this.site,
         replaceToolbar: this.args.replaceToolbar,
         addGlimmerNodeView: (nodeView) => this.glimmerNodeViews.push(nodeView),
       }),

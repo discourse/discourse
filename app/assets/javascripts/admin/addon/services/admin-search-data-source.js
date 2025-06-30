@@ -5,7 +5,6 @@ import { ajax } from "discourse/lib/ajax";
 import escapeRegExp from "discourse/lib/escape-regexp";
 import getURL from "discourse/lib/get-url";
 import PreloadStore from "discourse/lib/preload-store";
-import { ADMIN_NAV_MAP } from "discourse/lib/sidebar/admin-nav-map";
 import I18n, { i18n } from "discourse-i18n";
 import { ADMIN_SEARCH_RESULT_TYPES } from "admin/lib/constants";
 
@@ -209,6 +208,7 @@ export class SettingLinkFormatter {
 export default class AdminSearchDataSource extends Service {
   @service router;
   @service siteSettings;
+  @service adminNavManager;
 
   plugins = {};
   pageDataSourceItems = [];
@@ -227,7 +227,7 @@ export default class AdminSearchDataSource extends Service {
       return;
     }
 
-    ADMIN_NAV_MAP.forEach((navMapSection) => {
+    this.adminNavManager.filteredNavMap.forEach((navMapSection) => {
       navMapSection.links.forEach((link) => {
         let parentLabel = this.#addPageLink(navMapSection, link);
 
