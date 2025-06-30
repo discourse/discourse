@@ -9,7 +9,11 @@ class FlaggedUserSerializer < BasicUserSerializer
              :custom_fields,
              :flags_agreed,
              :flags_disagreed,
-             :flags_ignored
+             :flags_ignored,
+             :created_at,
+             :custom_fields,
+             :post_count,
+             :trust_level
 
   def can_delete_all_posts
     scope.can_delete_all_posts?(object)
