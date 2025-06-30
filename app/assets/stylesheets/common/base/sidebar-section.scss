@@ -94,17 +94,17 @@
 
   .sidebar-section-header-text {
     line-height: normal;
-    margin-right: 0.25em;
+    margin-right: var(--space-0);
 
     @include ellipsis;
   }
 
   .sidebar-section-header-global-indicator {
-    margin: 0 0.75em 0 0.25em;
+    margin: 0 var(--space-3) 0 var(--space-1);
     font-size: var(--font-down-2);
 
     .d-icon {
-      margin-top: -0.125em; // optical alignment
+      margin-top: calc(-1 * var(--space-sm)); // optical alignment
     }
   }
 
@@ -158,6 +158,6 @@
 
 .sidebar-section-header-global-indicator__content {
   .d-icon-shield-halved {
-    padding-right: 0.25rem;
+    padding-right: var(--space-1);
   }
 }
