@@ -2120,6 +2120,9 @@ en:
     composer_media_optimization_image_resize_width_target: "Images with widths larger than `composer_media_optimization_image_dimensions_resize_threshold` will be resized to this width. Must be >= than `composer_media_optimization_image_dimensions_resize_threshold`."
     composer_media_optimization_image_encode_quality: "JPG encode quality used in the re-encode process."
 
+    video_conversion_enabled: "Enable video conversion for uploaded video files. This allows videos to be converted to web-compatible formats."
+    mediaconvert_role_arn: "AWS IAM role ARN for MediaConvert service. Required when using AWS MediaConvert for video conversion."
+
     min_ratio_to_crop: "Ratio used to crop tall images. Enter the result of width / height."
 
     simultaneous_uploads: "Maximum number of files that can be dragged & dropped in the composer"

@@ -2237,6 +2237,16 @@ files:
     default: true
     client: true
     hidden: true
+  video_conversion_enabled:
+    default: false
+  video_conversion_service:
+    default: "aws_mediaconvert"
+    hidden: true
+  mediaconvert_role_arn:
+    default: ""
+  mediaconvert_endpoint:
+    default: ""
+    hidden: true
 
 trust:
   default_trust_level:

@@ -40,6 +40,7 @@ module FileStore
           content_type: content_type,
           cache_locally: true,
           private: upload.secure?,
+          upload_id: upload.id,
         )
       url
     end
@@ -113,6 +114,11 @@ module FileStore
         delete_file(original_path)
       else
         path, etag = s3_helper.upload(file, path, options)
+      end
+
+      if opts[:upload_id] && FileHelper.is_supported_video?(opts[:filename]) &&
+           SiteSetting.video_conversion_enabled
+        Jobs.enqueue(:convert_video, upload_id: opts[:upload_id])
       end
 
       # return the upload url and etag
