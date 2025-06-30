@@ -1,5 +1,6 @@
 import { ajax } from "discourse/lib/ajax";
 import { getHashtagTypeClasses } from "discourse/lib/hashtag-type-registry";
+import { emojiUnescape } from "discourse/lib/text";
 import { isBoundary } from "discourse/static/prosemirror/lib/markdown-it";
 
 const VALID_HASHTAGS = new Map();
@@ -161,7 +162,7 @@ const extension = {
                 }
 
                 // decorate valid hashtags based on their type
-                const tagText = validHashtag?.text || name;
+                const tagText = emojiUnescape(validHashtag?.text || name);
                 const hashtagTypeClass =
                   getHashtagTypeClasses()[validHashtag.type];
                 const hashtagIconHTML = hashtagTypeClass
