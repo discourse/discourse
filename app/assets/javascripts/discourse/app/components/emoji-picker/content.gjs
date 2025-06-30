@@ -7,7 +7,7 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { cancel, next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { modifier as modifierFn } from "ember-modifier";
-import { emojiSearch } from "pretty-text/emoji";
+import { emojiSearch, isSkinTonableEmoji } from "pretty-text/emoji";
 import { eq, gt, includes, notEq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import FilterInput from "discourse/components/filter-input";
@@ -181,7 +181,7 @@ export default class EmojiPicker extends Component {
       this.filteredEmojis = results.map((emoji) => {
         return {
           name: emoji,
-          url: emojiUrlFor(emoji),
+          tonable: isSkinTonableEmoji(emoji),
         };
       });
 
