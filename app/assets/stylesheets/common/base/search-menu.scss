@@ -40,7 +40,7 @@
 
     .search-menu-panel & {
       @include viewport.from(sm) {
-        padding: var(--space-3) var(--space-8) 0;
+        padding: var(--space-3) var(--space-4) 0;
       }
     }
   }
@@ -89,11 +89,11 @@
     @include viewport.from(sm) {
       // alignment adjustment for search menu panel (within topic) on desktop to align with results
       .search-input {
-        padding-right: calc(var(--space-8) - 0.65em);
+        padding-right: calc(1rem - 0.65em);
       }
 
       .search-term__input {
-        padding-left: var(--space-8);
+        padding-left: var(--space-4);
       }
     }
   }
@@ -115,14 +115,14 @@
     background-color: var(--primary-200);
 
     @include viewport.from(sm) {
-      margin-left: var(--space-8);
+      margin-left: var(--space-4);
       margin-right: 0;
     }
 
     @include viewport.until(sm) {
       position: fixed;
       top: calc(var(--header-offset) + var(--space-3));
-      left: var(--space-8);
+      left: var(--space-4);
       padding: var(--space-1) var(--space-2);
     }
 
@@ -138,13 +138,13 @@
     padding-top: var(--space-3);
 
     .heading {
-      padding: var(--space-2) 0 0 var(--space-8);
+      padding: var(--space-2) 0 0 var(--space-4);
       display: flex;
       align-items: center;
       justify-content: space-between;
 
       .menu-panel & {
-        padding: var(--space-2) var(--space-2) 0 var(--space-8);
+        padding: var(--space-2) var(--space-2) 0 var(--space-4);
       }
 
       .filter {
@@ -191,7 +191,7 @@
     .search-item-tag {
       display: inline-flex;
       align-items: baseline;
-      gap: var(--space-1);
+      gap: var(--space-2);
       color: var(--primary-high);
 
       .d-icon {
@@ -420,7 +420,7 @@
 }
 
 .search-random-quick-tip {
-  padding: 0 var(--space-8) var(--space-3);
+  padding: 0 var(--space-4) var(--space-3);
   font-size: var(--font-down-2);
   color: var(--primary-medium);
 
