@@ -8,8 +8,7 @@ import CookText from "discourse/components/cook-text";
 import DButton from "discourse/components/d-button";
 import RawEmailModal from "discourse/components/modal/raw-email";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import ReviewableCreatedBy from "discourse/components/reviewable-created-by";
-import ReviewablePostHeader from "discourse/components/reviewable-post-header";
+import ReviewableCreatedBy from "discourse/components/reviewable-refresh/created-by";
 import ReviewableTopicLink from "discourse/components/reviewable-refresh/topic-link";
 import ReviewableTags from "discourse/components/reviewable-tags";
 import categoryBadge from "discourse/helpers/category-badge";
@@ -88,9 +87,7 @@ export default class ReviewableQueuedPost extends Component {
           {{/if}}
         </ReviewableTopicLink>
       </div>
-    </div>
 
-    <div class="review-item__meta-content">
       <div class="review-item__meta-label">{{i18n "review.queued_user"}}</div>
 
       <div class="review-item__meta-flagged-user">
@@ -100,14 +97,8 @@ export default class ReviewableQueuedPost extends Component {
 
     <div class="review-item__post">
       <div class="review-item__post-content">
-        <ReviewablePostHeader
-          @reviewable={{@reviewable}}
-          @createdBy={{@reviewable.target_created_by}}
-          @tagName=""
-        />
-
         <CookText
-          class="post-body {{if this.isCollapsed 'is-collapsed'}}"
+          class="post-body{{if this.isCollapsed ' is-collapsed'}}"
           @rawText={{highlightWatchedWords @reviewable.payload.raw @reviewable}}
           @categoryId={{@reviewable.category_id}}
           @topicId={{@reviewable.topic_id}}
