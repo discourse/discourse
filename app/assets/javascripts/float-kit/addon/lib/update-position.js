@@ -4,6 +4,7 @@ import {
   flip,
   hide,
   inline,
+  limitShift,
   offset,
   shift,
 } from "@floating-ui/dom";
@@ -40,14 +41,19 @@ export async function updatePosition(trigger, content, options) {
   if (isCentered) {
     middleware.push(centerOffset);
   } else {
-    middleware.push(offset(options.offset ? parseInt(options.offset, 10) : 10));
+    middleware.push(offset(options.offset ?? 10));
 
     if (options.inline) {
       middleware.push(inline());
     }
 
     middleware.push(flip(flipOptions));
-    middleware.push(shift({ padding }));
+
+    let limiter;
+    if (options.limitShift) {
+      limiter = limitShift(options.limitShift);
+    }
+    middleware.push(shift({ padding, limiter, boundary: options.boundary }));
   }
 
   let arrowElement;

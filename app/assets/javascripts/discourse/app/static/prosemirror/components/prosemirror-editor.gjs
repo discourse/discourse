@@ -8,6 +8,7 @@ import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import "../extensions/register-default";
+import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { baseKeymap } from "prosemirror-commands";
 import * as ProsemirrorCommands from "prosemirror-commands";
 import { dropCursor } from "prosemirror-dropcursor";
@@ -59,6 +60,13 @@ const AUTOCOMPLETE_KEY_DOWN_SUPPRESS = ["Enter", "Tab"];
  */
 
 /**
+ * @typedef {Object} GlimmerNodeViewDef
+ * @property {HTMLElement} element The DOM element where the node view will be rendered
+ * @property {any} component The Glimmer component class
+ * @property {Record<string, unknown>} data Data to pass to the component
+ */
+
+/**
  * @extends {Component<ProsemirrorEditorSignature>}
  */
 export default class ProsemirrorEditor extends Component {
@@ -72,6 +80,8 @@ export default class ProsemirrorEditor extends Component {
   schema = createSchema(this.extensions, this.args.includeDefault);
   view;
 
+  /** @type {TrackedArray<GlimmerNodeViewDef>} */
+  glimmerNodeViews = new TrackedArray();
   #lastSerialized;
   /** @type {undefined | (() => void)} */
   #destructor;
@@ -100,6 +110,7 @@ export default class ProsemirrorEditor extends Component {
         modal: this.modal,
         toasts: this.toasts,
         replaceToolbar: this.args.replaceToolbar,
+        addGlimmerNodeView: (nodeView) => this.glimmerNodeViews.push(nodeView),
       }),
     };
   }
@@ -275,7 +286,11 @@ export default class ProsemirrorEditor extends Component {
       {{didUpdate this.convertFromValue @value}}
       {{didUpdate this.updateContext "placeholder" @placeholder}}
       {{willDestroy this.teardown}}
-    >
-    </div>
+    ></div>
+    {{#each this.glimmerNodeViews as |nodeView|}}
+      {{#in-element nodeView.element insertBefore=null}}
+        <nodeView.component @data={{nodeView.data}} />
+      {{/in-element}}
+    {{/each}}
   </template>
 }

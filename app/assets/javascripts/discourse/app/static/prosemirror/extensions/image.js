@@ -4,6 +4,8 @@ import {
 } from "pretty-text/upload-short-url";
 import { ajax } from "discourse/lib/ajax";
 import { isNumeric } from "discourse/lib/utilities";
+import ImageNodeView from "../components/image-node-view";
+import GlimmerNodeView from "../lib/glimmer-node-view";
 
 const PLACEHOLDER_IMG = "/images/transparent.png";
 
@@ -12,6 +14,11 @@ const ALT_TEXT_REGEX =
 
 /** @type {RichEditorExtension} */
 const extension = {
+  nodeViews: {
+    image: ({ getContext }) =>
+      GlimmerNodeView.create(ImageNodeView, "image", getContext),
+  },
+
   nodeSpec: {
     image: {
       inline: true,
@@ -19,7 +26,6 @@ const extension = {
         src: {},
         alt: { default: null },
         title: { default: null },
-        // Overriding ProseMirror's default node to support these attrs
         width: { default: null },
         height: { default: null },
         originalSrc: { default: null },
