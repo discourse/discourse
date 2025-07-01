@@ -89,6 +89,7 @@ export default class UppyUpload {
   @service siteSettings;
   @service capabilities;
   @service session;
+  @service currentUser;
 
   @tracked uploading = false;
   @tracked processing = false;
@@ -162,6 +163,7 @@ export default class UppyUpload {
           },
           this.config.validateUploadedFilesOptions
         );
+
         const isValid =
           validateUploadedFile(currentFile, validationOpts) &&
           this.config.isUploadedFileAllowed(currentFile);
