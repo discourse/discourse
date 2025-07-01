@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { NodeSelection } from "prosemirror-state";
 import ToolbarButtons from "discourse/components/composer/toolbar-buttons";
@@ -115,10 +116,17 @@ export default class ImageNodeView extends Component {
   #rovingButtonBar(event) {
     if (rovingButtonBar(event)) {
       event.preventDefault();
-      event.stopPropagation();
+      return true;
     }
 
-    return true;
+    if (event.type === "keydown" && event.key === "ArrowRight") {
+      event.preventDefault();
+
+      // we should not need to use a selector here
+      this.altMenuInstance.content.querySelector("textarea")?.focus();
+    }
+
+    return false;
   }
 
   @action
@@ -148,7 +156,7 @@ export default class ImageNodeView extends Component {
       },
       limitShift: {
         offset: ({ rects }) => {
-          const inputHeight = this.altMenuInstance?.content?.offsetHeight;
+          const inputHeight = this.altMenuInstance?.content?.offsetHeight || 0;
 
           return {
             crossAxis: Math.min(
@@ -306,9 +314,11 @@ export default class ImageNodeView extends Component {
   get imageStyle() {
     const scale = (this.imageAttrs["data-scale"] || 100) / 100;
     if (this.imageAttrs.width && this.imageAttrs.height) {
-      return `width: ${this.imageAttrs.width * scale}px; height: ${
-        this.imageAttrs.height * scale
-      }px;`;
+      return htmlSafe(
+        `width: ${this.imageAttrs.width * scale}px; height: ${
+          this.imageAttrs.height * scale
+        }px;`
+      );
     }
     return null;
   }

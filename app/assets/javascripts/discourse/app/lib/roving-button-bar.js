@@ -28,7 +28,11 @@ export function rovingButtonBar(event, containerClass = null) {
     }
   }
 
-  focusable?.focus();
+  if (!focusable) {
+    return false;
+  }
+
+  focusable.focus();
 
   return true;
 }
