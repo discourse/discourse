@@ -14,6 +14,7 @@ module Migrations::Database::IntermediateDB
         approved,
         approved_at,
         approved_by_id,
+        avatar_type,
         created_at,
         date_of_birth,
         first_seen_at,
@@ -37,7 +38,7 @@ module Migrations::Database::IntermediateDB
         views
       )
       VALUES (
-        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
       )
     SQL
 
@@ -48,6 +49,7 @@ module Migrations::Database::IntermediateDB
       approved: nil,
       approved_at: nil,
       approved_by_id: nil,
+      avatar_type: nil,
       created_at:,
       date_of_birth: nil,
       first_seen_at: nil,
@@ -78,6 +80,7 @@ module Migrations::Database::IntermediateDB
         ::Migrations::Database.format_boolean(approved),
         ::Migrations::Database.format_datetime(approved_at),
         approved_by_id,
+        avatar_type,
         ::Migrations::Database.format_datetime(created_at),
         ::Migrations::Database.format_date(date_of_birth),
         ::Migrations::Database.format_datetime(first_seen_at),

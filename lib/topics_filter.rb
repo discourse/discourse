@@ -545,6 +545,19 @@ class TopicsFilter
     "views" => {
       column: "topics.views",
     },
+    "read" => {
+      column: "tu.last_visited_at",
+      scope: -> do
+        if @guardian.user
+          @scope.joins(
+            "JOIN topic_users tu ON tu.topic_id = topics.id AND tu.user_id = #{@guardian.user.id.to_i}",
+          ).where("tu.last_visited_at IS NOT NULL")
+        else
+          # make sure this works for anon
+          @scope.joins("LEFT JOIN topic_users tu ON 1 = 0")
+        end
+      end,
+    },
   }
   private_constant :ORDER_BY_MAPPINGS
 

@@ -265,7 +265,7 @@
       gap: var(--space-2);
 
       .participant-group {
-        padding: 0 5px;
+        padding: 0.1em 0.3em;
         border: 1px solid var(--primary-low);
         border-radius: var(--space-1);
         min-width: 3em;
@@ -277,6 +277,7 @@
           align-items: center;
           height: 1.25em;
           color: var(--primary-high);
+          font-size: var(--font-down-1);
 
           .mobile-view & {
             height: 1.1em;
@@ -284,6 +285,7 @@
 
           .d-icon {
             margin-right: 5px;
+            font-size: var(--font-down-1);
           }
         }
       }

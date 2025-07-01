@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
+import { getCardsForAdminThemesGrid } from "discourse/lib/admin-custom-themes-grid-cards";
 import ThemesGridCard from "./themes-grid-card";
 
 // NOTE (martin): Much of the JS code in this component is placeholder code. Much
@@ -42,9 +43,9 @@ export default class ThemesGrid extends Component {
       {{#each @themes as |theme|}}
         <ThemesGridCard @theme={{theme}} @allThemes={{@themes}} />
       {{/each}}
-      {{#if (has-block "specialCard")}}
-        {{yield to="specialCard"}}
-      {{/if}}
+      {{#each (getCardsForAdminThemesGrid) as |Card|}}
+        <Card />
+      {{/each}}
     </div>
   </template>
 }
