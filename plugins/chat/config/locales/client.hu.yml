@@ -58,7 +58,7 @@ hu:
       cancel: "Mégse"
       cancel_reply: "Válasz elvetése"
       chat_channels: "Csatornák"
-      browse_all_channels: "Összes csatorna böngészése"
+      browse_all_channels: "Összes csatorna tallózása"
       see_in: "Lásd itt"
       move_to_channel:
         title: "Üzenetek áthelyezése a csatornába"
@@ -84,7 +84,7 @@ hu:
         join: "Belépés"
         leave: "Elhagyás"
         save_label:
-          mute_channel: "A csatorna némítása beállítás mentve"
+          mute_channel: "Csatorna némítási beállítása mentve"
           desktop_notification: "Asztali értesítés beállítása mentve"
           mobile_notification: "Mobil push értesítés beállítás mentése"
       channel_archive:
@@ -147,7 +147,7 @@ hu:
           description: "Új sor Enterrel"
       enable: "Csevegés engedélyezése"
       flag: "Jelölés"
-      emoji: "Hangulatjel beszúrása"
+      emoji: "Emodzsi beszúrása"
       flagged: "Ezt az üzenetet felülvizsgálatra jelentették"
       invalid_access: "Nincs hozzáférése ennek a csevegőcsatornának a megtekintéséhez"
       invitation_notification: "<span>%{username}</span> <span>meghvta Önt, hogy csatlakozzon egy csevegőcsatornához</span>"
@@ -205,12 +205,12 @@ hu:
       placeholder_users: "Csevegés: %{commaSeparatedNames}"
       placeholder_group: "Csevegés a csoportban"
       placeholder_new_message_disallowed:
-        archived: "A csatorna archiválva van, nem küldhet új üzenetet."
-        closed: "A csatorna zárva van, nem küldhet új üzenetet."
-        read_only: "A csatorna csak olvasható, nem küldhet új üzenetet."
+        archived: "A csatorna archiválva van, jelenleg nem küldhet új üzenetet."
+        closed: "A csatorna le lett zárva, jelenleg nem küldhet új üzenetet."
+        read_only: "A csatorna csak olvasható, jelenleg nem küldhet új üzenetet."
       placeholder_silenced: "Jelenleg nem küldhet üzeneteket."
       remove_upload: "Fájl eltávolítása"
-      react: "Reagálás hangulatjellel"
+      react: "Reagálás emodzsival"
       reply: "Válasz"
       edit: "Szerkesztés"
       copy_link: "Hivatkozás másolása"
@@ -258,9 +258,9 @@ hu:
         archive_failed: "A csatorna archiválása nem sikerült. %{completed}/%{total} üzenetek archiválva. <a target=\"_blank\" href=\"%{topic_url}\">A</a> céltéma létrejött. Nyomja meg az Újra gombot az archiválás befejezéséhez."
         archive_failed_no_topic: "A csatorna archiválása nem sikerült. %{completed}/%{total} üzenetek archiválva. A céltéma nem jött létre. Nyomja meg az Újra gombot az archiválás befejezéséhez."
         archive_completed: "Lásd <a target=\"_blank\" href=\"%{topic_url}\">az archív témát</a>"
-        closed_header: "A csatorna zárolt"
+        closed_header: "A csatorna zárolva van"
         closed: "Zárt"
-        open_header: "A csatorna nyitott"
+        open_header: "A csatorna nyitva van"
         open: "Megnyitás"
       browse:
         back: "Vissza"
@@ -380,12 +380,12 @@ hu:
       reviewable:
         type: "Csevegőüzenet"
       reactions:
-        only_you: "<span>A következővel reagáltál </span>:%{emoji}:"
-        you_and_single_user: "<span>Te és %{username} a következővel reagáltatok: </span>:%{emoji}:"
-        you_and_multiple_users: "<span>Te, %{commaSeparatedUsernames} és %{username} a következővel reagáltatok </span>:%{emoji}:"
+        only_you: "<span>A következővel reagált </span>:%{emoji}:"
+        you_and_single_user: "<span>Ön és %{username} a következővel reagált: </span>:%{emoji}:"
+        you_and_multiple_users: "<span>Ön, %{commaSeparatedUsernames} és %{username} a következővel reagáltak </span>:%{emoji}:"
         you_multiple_users_and_more:
-          one: "<span>Te, %{commaSeparatedUsernames} és további %{count} felhasználó a következővel reagált </span>:%{emoji}:"
-          other: "<span>Te, %{commaSeparatedUsernames} és további %{count} felhasználó a következővel reagált </span>:%{emoji}:"
+          one: "<span>Ön, %{commaSeparatedUsernames} és további %{count} felhasználó a következővel reagált </span>:%{emoji}:"
+          other: "<span>Ön, %{commaSeparatedUsernames} és további %{count} felhasználó a következővel reagált </span>:%{emoji}:"
         single_user: "<span>%{username} a következővel reagált </span>:%{emoji}:"
         multiple_users: "<span>%{commaSeparatedUsernames} és %{username} a következővel reagált </span>:%{emoji}:"
         multiple_users_and_more:
@@ -429,7 +429,7 @@ hu:
         unfollow: "Elhagyás"
         admin_title: "Adminisztrátor"
         settings_title: "Beállítások"
-        info_title: "Csatorna info"
+        info_title: "Csatornainformációk"
         category_label: "Kategória"
         history_label: "Idővonal"
         members_label: "Tagok"
@@ -460,21 +460,21 @@ hu:
         channel_placeholder: "Válasszon csatornát"
         channel: "Csatorna"
         confirm_destroy: "Biztos, hogy törli ezt a bejövő webhookot? Ezt nem lehet visszavonni."
-        current_emoji: "Aktuális hangulatjel"
+        current_emoji: "Jelenlegi emodzsi"
         description: "Leírás"
         delete: "Törlés"
-        emoji: "Hangulatjel"
-        emoji_instructions: "A rendszerben használt profilképe lesz használva, ha a hangulatjel üresen marad."
+        emoji: "Emodzsi"
+        emoji_instructions: "A rendszerben használt profilképe lesz használva, ha az emodzsi üresen marad."
         name: "Név"
         name_placeholder: "név…"
         new: "Új bejövő webhook"
         none: "Nincs meglévő bejövő webhoook létrehozva."
-        no_emoji: "Nincs hangulatjel kiválasztva"
+        no_emoji: "Nincs emodzsi kiválasztva"
         post_to: "Közzététel ide:"
-        reset_emoji: "Hangulatjel visszaállítása"
+        reset_emoji: "Emodzsi visszaállítása"
         save: "Mentés"
         edit: "Szerkesztés"
-        select_emoji: "Válasszon hangulatjelet"
+        select_emoji: "Válasszon emodzsit"
         system: "rendszer"
         title: "Bejövő webhookok"
         url: "URL"
@@ -544,7 +544,7 @@ hu:
         activities: "Tevékenységek"
         flags: "Zászlók"
         symbols: "Szimbólumok"
-        search_placeholder: "Keresés emoji név és álnév alapján..."
+        search_placeholder: "Keresés emodzsinév és álnév alapján…"
         no_results: "Nincs találat"
       thread:
         title: "Cím"
@@ -578,7 +578,7 @@ hu:
         primary_action: "Cím beállítása"
       thread_title_modal:
         title: "Téma cím beállítása"
-        input_placeholder: "Mondja el másoknak, miről szól ez a beszélgetés..."
+        input_placeholder: "Mondja el másoknak, miről szól ez a beszélgetés…"
         discourse_ai:
           title: "Téma címek automatikus generálása"
           description: "Nézze meg a %{url} oldalt, ha többet szeretne megtudni erről és a Discourse-élmény egyéb fejlesztéseiről."
@@ -595,7 +595,7 @@ hu:
       chat_quoted: "<span>%{username}</span>%{description}"
       chat_watched_thread_label:
         one: "%{username} és %{username2}"
-        other: "%{username} és még %{count} további"
+        other: "%{username} és még %{count} felhasználó"
       popup:
         chat_mention:
           direct: 'megemlítette Önt a következő csatornán: „%{channel}”'

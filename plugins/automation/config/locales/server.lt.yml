@@ -6,6 +6,9 @@
 
 lt:
   discourse_automation:
+    models:
+      fields:
+        invalid_field: Lauko komponentas `%{component}` netinka naudoti su `%{target}:%{target_name}.`
     triggerables:
       topic:
         title: Tema

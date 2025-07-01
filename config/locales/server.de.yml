@@ -1705,7 +1705,7 @@ de:
     block_onebox_on_redirect: "Verhindere Oneboxing für URLs, die zu einer weiterführenden Seite führen. Diese Konfiguration verhindert die Erstellung einer visuellen Karte (Onebox) für jede URL, die zu einem anderen Ziel weiterleitet, und stellt sicher, dass direkte, nicht weiterleitende URLs für Oneboxing priorisiert werden."
     allowed_inline_onebox_domains: "Eine Liste von Domains, die in verkleinerter Form in eine Onebox umgewandelt werden, wenn sie ohne Titel verlinkt werden"
     enable_inline_onebox_on_all_domains: "Ignoriere die Website-Einstellung allowed_inline_onebox_domains und erlaube Inline-Onebox auf allen Domains."
-    onebox_locale: "Das Gebietsschema, das an Onebox-Anbieter gesendet wird. Wenn du nichts angibst, wird die Standard-Sprachumgebung verwendet"
+    onebox_locale: "Die Oberflächensprache, die an Onebox-Anbieter gesendet wird. Wenn du nichts angibst, wird die Standard-Sprachumgebung verwendet"
     force_custom_user_agent_hosts: "Hosts, bei denen der spezifische Onebox-Useragent für alle Anfragen genutzt wird. (Besonders hilfreich bei Hosts, die Zugriffe per Useragent limitieren.)"
     max_oneboxes_per_post: "Lege die maximale Anzahl von Oneboxes fest, die in einem Beitrag enthalten sein können. Oneboxes bieten eine Vorschau der verlinkten Inhalte im Beitrag."
     facebook_app_access_token: "Ein Token, das aus deiner Facebook-App-ID und deinem Geheimnis generiert wird. Wird verwendet, um Instagram-Oneboxes zu generieren."

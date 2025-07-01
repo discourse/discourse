@@ -186,7 +186,7 @@ hu:
       inline_to_message: "Üzenet #%{message_id}, %{username} által – #%{chat_channel}"
       inline_to_channel: "Csevegés #%{chat_channel}"
       inline_to_topic_channel: "Csevegés a %{topic_title} témához"
-      inline_to_thread: "%{thread_title} - #%{chat_channel}"
+      inline_to_thread: "%{thread_title} – #%{chat_channel}"
       inline_to_thread_no_title: "Téma: #%{chat_channel}"
       thread_title_connector: "ebben:"
       x_members:
