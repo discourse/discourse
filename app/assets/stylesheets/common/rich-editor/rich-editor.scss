@@ -276,7 +276,7 @@
   isolation: auto;
   border-radius: var(--d-border-radius);
   font-size: var(--font-down-1);
-  box-shadow: 0 4px 4px 0 rgb(var(--primary-rgb), 0.25);
+  box-shadow: var(--shadow-dropdown);
 
   .fk-d-menu__inner-content {
     border: none;
