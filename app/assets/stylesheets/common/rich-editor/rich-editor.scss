@@ -53,6 +53,7 @@
     display: inline-block;
     height: auto;
     max-width: 100%;
+    border-radius: var(--d-border-radius);
 
     &[data-placeholder="true"] {
       animation: placeholder 1.5s infinite;
@@ -269,13 +270,18 @@
 
 .fk-d-menu[data-identifier="composer-image-alt-text"] {
   min-width: calc(100% - 1rem);
-  background-color: rgb(var(--primary-rgb), 0.2);
-  backdrop-filter: blur(8px);
-  color: var(--secondary);
+  background-color: rgb(
+    255,
+    255,
+    255,
+    0.6
+  ); // we don't want this to change with the theme for once
+  backdrop-filter: blur(10px);
+  color: var(--primary);
   isolation: auto;
   border-radius: var(--d-border-radius);
   font-size: var(--font-down-1);
-  box-shadow: 0 0 0 0 var(--tertiary-high);
+  box-shadow: 0 4 4 0 rgb(var(--primary-rgb), 0.25);
 
   .fk-d-menu__inner-content {
     border: none;
@@ -286,7 +292,7 @@
   }
 
   &:focus-within {
-    box-shadow: 0 0 0 1px var(--tertiary-high);
+    box-shadow: 0 0 0 2px var(--tertiary-high);
   }
 }
 
@@ -302,6 +308,12 @@
       width 0.2s ease,
       height 0.2s ease;
   }
+
+  &:not(.ProseMirror-selectednode) {
+    img:hover {
+      cursor: pointer;
+    }
+  }
 }
 
 .image-alt-text-input {
@@ -316,7 +328,6 @@
     outline: none;
     padding: 0;
     background: transparent;
-    color: var(--secondary);
     resize: none;
     margin: 0;
     transition: height 0.1s ease;
@@ -325,10 +336,6 @@
     scrollbar-color: rgb(var(--primary-rgb), 0.3) transparent;
     scrollbar-width: thin;
     overflow-y: hidden;
-
-    &::placeholder {
-      color: var(--secondary);
-    }
 
     &:focus {
       outline: none;
@@ -350,7 +357,13 @@
 
     .d-icon {
       font-size: var(--font-down-1);
-      color: var(--secondary);
+      color: var(--primary-high);
+    }
+
+    &:hover {
+      .d-icon {
+        color: var(--primary) !important;
+      }
     }
   }
 }
@@ -388,7 +401,7 @@
 }
 
 .ProseMirror-selectednode {
-  outline: 2px solid #8cf;
+  outline: 2px solid var(--tertiary-high);
   border-radius: var(--d-border-radius);
 }
 
