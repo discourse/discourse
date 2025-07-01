@@ -917,8 +917,8 @@ form {
     margin-right: 0.2em;
 
     .d-icon {
-      height: 0.74em;
-      width: var(--space-3);
+      height: 0.75rem;
+      width: 0.75rem;
     }
   }
 
@@ -997,11 +997,11 @@ body.has-sidebar-page {
 
   #main-outlet-wrapper {
     grid-template-columns: var(--d-sidebar-width) minmax(0, 1fr);
-    gap: 0 var(--space-8);
+    gap: 0 2rem;
     padding-left: 0;
 
     @include viewport.until(lg) {
-      gap: 0 var(--space-4);
+      gap: 0 1rem;
     }
   }
 }

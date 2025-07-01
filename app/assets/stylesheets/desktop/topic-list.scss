@@ -32,11 +32,11 @@
     padding: var(--space-3) var(--space-1);
 
     &:first-of-type {
-      padding-inline-start: var(--space-3);
+      padding-inline-start: 0.75rem;
     }
 
     &:last-of-type {
-      padding-inline-end: var(--space-3);
+      padding-inline-end: 0.75rem;
     }
 
     th & {
