@@ -130,7 +130,6 @@ export default class ImageNodeView extends Component {
     }
 
     this.menuInstance = await this.menu.show(this.nodeView.dom, {
-      trigger: this.nodeView.dom.querySelector("img"),
       identifier: "composer-image-toolbar",
       component: ToolbarButtons,
       placement: "top-start",
@@ -152,7 +151,10 @@ export default class ImageNodeView extends Component {
           const inputHeight = this.altMenuInstance?.content?.offsetHeight;
 
           return {
-            crossAxis: rects.floating.height + 2 * MARGIN + inputHeight,
+            crossAxis: Math.min(
+              rects.floating.height + 2 * MARGIN + inputHeight,
+              rects.reference.height - MARGIN
+            ),
           };
         },
       },
