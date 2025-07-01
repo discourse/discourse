@@ -203,14 +203,16 @@ class Theme < ActiveRecord::Base
     end
   end
 
-  def update_javascript_cache!
-    all_extra_js =
-      theme_fields
-        .where(target_id: Theme.targets[:extra_js])
-        .order(:name, :id)
-        .pluck(:name, :value)
-        .to_h
+  def load_all_extra_js
+    theme_fields
+      .where(target_id: Theme.targets[:extra_js])
+      .order(:name, :id)
+      .pluck(:name, :value)
+      .to_h
+  end
 
+  def update_javascript_cache!
+    all_extra_js = load_all_extra_js
     if all_extra_js.present?
       js_compiler = ThemeJavascriptCompiler.new(id, name, build_settings_hash)
       js_compiler.append_tree(all_extra_js)
@@ -1046,7 +1048,8 @@ class Theme < ActiveRecord::Base
         theme_fields.where(target_id: Theme.targets[:migrations]).order(name: :asc),
       )
 
-    compiler = ThemeJavascriptCompiler.new(id, name, minify: false)
+    compiler = ThemeJavascriptCompiler.new(id, name, build_settings_hash, minify: false)
+    compiler.append_tree(load_all_extra_js)
     compiler.append_tree(migrations_tree, include_variables: false)
     compiler.append_tree(tests_tree)
 

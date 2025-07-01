@@ -317,4 +317,26 @@ RSpec.describe DiscourseJsProcessor do
     )
     puts result["code"]
   end
+
+  it "handles relative imports from one module to another" do
+    mod_1 = <<~JS.chomp
+      export default "test";
+    JS
+
+    mod_2 = <<~JS.chomp
+      import MyComponent from "../components/my-component";
+      console.log(MyComponent);
+    JS
+
+    result =
+      DiscourseJsProcessor::Transpiler.new.rollup(
+        {
+          "discourse/components/my-component.js" => mod_1,
+          "discourse/components/other-component.js" => mod_2,
+        },
+        { themeId: 22 },
+      )
+
+    expect(result["code"]).not_to include("../components/my-component")
+  end
 end
