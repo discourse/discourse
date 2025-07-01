@@ -351,7 +351,7 @@
   }
 
   .topic-link {
-    color: var(--primary--header);
+    color: var(--header_primary);
     display: block;
 
     @include ellipsis;
