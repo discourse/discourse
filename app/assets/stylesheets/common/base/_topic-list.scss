@@ -312,11 +312,13 @@
       font-weight: 700;
       color: inherit;
       display: inline-block;
+      padding: 15px 5px;
     }
   }
 
   .num.activity {
     a {
+      padding: 15px 5px;
       span.relative-date {
         pointer-events: none;
       }
