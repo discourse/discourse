@@ -1,6 +1,6 @@
 import EmberObject from "@ember/object";
 import { getOwner } from "@ember/owner";
-import { click, render, triggerEvent } from "@ember/test-helpers";
+import { click, render, triggerEvent, triggerKeyEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import MountWidget from "discourse/components/mount-widget";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -364,6 +364,27 @@ module("Integration | Component | Widget | post", function (hooks) {
     await click("a.reply-to-tab");
     assert.dom("section.embedded-posts.top .cooked").exists();
     assert.dom("section.embedded-posts .d-icon-arrow-up").exists();
+  });
+
+  test("reply-to-tab keyboard accessibility", async function (assert) {
+    const self = this;
+
+    this.set("args", {
+      replyToUsername: "eviltrout",
+      replyToAvatarTemplate: "/images/avatar.png",
+      replyDirectlyAbove: true,
+    });
+    this.siteSettings.suppress_reply_directly_above = false;
+
+    await render(
+      <template>
+        <MountWidget @widget="post" @model={{self.post}} @args={{self.args}} />
+      </template>
+    );
+
+    assert.dom("a.reply-to-tab").exists("shows the tab");
+    await triggerKeyEvent("a.reply-to-tab", "keydown", "Enter");
+    assert.dom("section.embedded-posts.top .cooked").exists("toggles replies with Enter key");
   });
 
   test("cooked content hidden", async function (assert) {

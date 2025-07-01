@@ -1,5 +1,5 @@
 import { getOwner } from "@ember/owner";
-import { click, render, triggerEvent } from "@ember/test-helpers";
+import { click, render, triggerEvent, triggerKeyEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import Post from "discourse/components/post";
 import { withPluginApi } from "discourse/lib/plugin-api";
@@ -381,6 +381,28 @@ module("Integration | Component | Post", function (hooks) {
     await click("a.reply-to-tab");
     assert.strictEqual(count("section.embedded-posts.top .cooked"), 1);
     assert.strictEqual(count("section.embedded-posts .d-icon-arrow-up"), 1);
+  });
+
+  test("reply-to-tab keyboard accessibility", async function (assert) {
+    this.siteSettings.suppress_reply_directly_above = false;
+    this.post.reply_to_user = {
+      username: "eviltrout",
+      avatar_template: "/images/avatar.png",
+    };
+    this.post.post_number = 2;
+    this.post.reply_to_post_number = 1;
+
+    const prevPost = this.store.createRecord("post", {
+      id: 122,
+      post_number: 1,
+      topic: this.post.topic,
+    });
+
+    await renderComponent(this.post, { prevPost });
+
+    assert.dom("a.reply-to-tab").exists("shows the tab");
+    await triggerKeyEvent("a.reply-to-tab", "keydown", "Enter");
+    assert.strictEqual(count("section.embedded-posts.top .cooked"), 1, "toggles replies with Enter key");
   });
 
   test("cooked content hidden", async function (assert) {
