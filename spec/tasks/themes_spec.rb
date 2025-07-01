@@ -147,10 +147,11 @@ RSpec.describe "tasks/themes" do
         value: "false",
       )
     end
-    fab!(:manual_color_scheme) do
+    fab!(:remote_color_scheme) do
       remote_horizon_theme.color_schemes.create!(
         name: "Lily Dark",
         theme_id: remote_horizon_theme.id,
+        user_selectable: true,
       )
     end
     fab!(:theme_translation_override) do
@@ -166,13 +167,13 @@ RSpec.describe "tasks/themes" do
     let!(:system_color_scheme) { system_horizon_theme.color_schemes.where(name: "Lily Dark").first }
 
     before do
-      remote_horizon_theme.update!(color_scheme: manual_color_scheme)
+      remote_horizon_theme.update!(color_scheme: remote_color_scheme)
       remote_horizon_theme.add_relative_theme!(:child, child_component)
       remote_horizon_theme.save!
       user.user_option.update!(
         theme_ids: [remote_horizon_theme.id],
-        color_scheme_id: manual_color_scheme.id,
-        dark_scheme_id: manual_color_scheme.id,
+        color_scheme_id: remote_color_scheme.id,
+        dark_scheme_id: remote_color_scheme.id,
       )
       SiteSetting.default_theme_id = remote_horizon_theme.id
     end
@@ -235,6 +236,7 @@ RSpec.describe "tasks/themes" do
           "test.key",
         )
         expect(system_horizon_theme.color_scheme).to eq(system_color_scheme)
+        expect(system_color_scheme.reload.user_selectable).to be true
       end
 
       it "logs that remote theme was deleted" do
@@ -248,8 +250,8 @@ RSpec.describe "tasks/themes" do
 
       it "updates user theme and color scheme" do
         expect(user.user_option.theme_ids).to eq([remote_horizon_theme.id])
-        expect(user.user_option.color_scheme_id).to eq(manual_color_scheme.id)
-        expect(user.user_option.dark_scheme_id).to eq(manual_color_scheme.id)
+        expect(user.user_option.color_scheme_id).to eq(remote_color_scheme.id)
+        expect(user.user_option.dark_scheme_id).to eq(remote_color_scheme.id)
 
         capture_stdout { invoke_rake_task("themes:deduplicate_horizon") }
 
