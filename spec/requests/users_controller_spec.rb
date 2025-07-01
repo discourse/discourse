@@ -4991,13 +4991,22 @@ RSpec.describe UsersController do
             )
           end
 
-          it "doesn't work for non-admin" do
+          it "errors for non-admin when SiteSetting.restrict_user_lookup_by_external_id is true" do
+            SiteSetting.restrict_user_lookup_by_external_id = true
             sign_in(user1)
             get "/u/by-external/google_oauth2/myuid.json"
             expect(response.status).to eq(403)
           end
 
-          it "can fetch the user" do
+          it "fetches user for non-admin when SiteSetting.restrict_user_lookup_by_external_id is false" do
+            SiteSetting.restrict_user_lookup_by_external_id = false
+            sign_in(user1)
+            get "/u/by-external/google_oauth2/myuid.json"
+            expect(response.status).to eq(200)
+            expect(response.parsed_body["user"]["username"]).to eq(user1.username)
+          end
+
+          it "it fetches user for admin" do
             get "/u/by-external/google_oauth2/myuid.json"
             expect(response.status).to eq(200)
             expect(response.parsed_body["user"]["username"]).to eq(user1.username)
