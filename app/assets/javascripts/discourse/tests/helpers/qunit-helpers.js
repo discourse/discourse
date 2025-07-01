@@ -35,7 +35,6 @@ import { resetCustomPostMessageCallbacks } from "discourse/controllers/topic";
 import { clearHTMLCache } from "discourse/helpers/custom-html";
 import { resetUsernameDecorators } from "discourse/helpers/decorate-username-selector";
 import { resetBeforeAuthCompleteCallbacks } from "discourse/instance-initializers/auth-complete";
-import { resetAdminPluginConfigNav } from "discourse/lib/admin-plugin-config-nav";
 import { clearPluginHeaderActionComponents } from "discourse/lib/admin-plugin-header-actions";
 import { resetAdditionalReportModes } from "discourse/lib/admin-report-additional-modes";
 import { rollbackAllPrepends } from "discourse/lib/class-prepend";
@@ -260,7 +259,6 @@ export function testCleanup(container, app) {
   resetBeforeAuthCompleteCallbacks();
   clearPopupMenuOptions();
   clearAdditionalAdminSidebarSectionLinks();
-  resetAdminPluginConfigNav();
   resetTransformers();
   rollbackAllPrepends();
   clearAboutPageActivities();
