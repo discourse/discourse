@@ -125,8 +125,7 @@
   --gold: #{$gold};
   --silver: #{$silver};
   --bronze: #{$bronze};
-  --d-icon-color: --d-icon-lighter: --d-icon-lightest: --shadow-modal: 0 8px
-    60px rgba(0, 0, 0, #{$shadow-opacity-modal});
+  --shadow-modal: 0 8px 60px rgba(0, 0, 0, #{$shadow-opacity-modal});
   --shadow-composer: 0 -1px 40px rgba(0, 0, 0, #{$shadow-opacity-composer});
   --shadow-card: 0 4px 14px rgba(0, 0, 0, #{$shadow-opacity-card});
   --shadow-dropdown: 0 2px 12px 0 rgba(0, 0, 0, #{$shadow-opacity-dropdown});
