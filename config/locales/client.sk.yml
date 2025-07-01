@@ -3132,6 +3132,7 @@ sk:
       relevance: "Relevancia"
       latest_post: "Najnovší príspevok"
       latest_topic: "Posledná téma"
+      last_read: "Posledné čítanie"
       most_viewed: "Najviac prezerané"
       most_liked: "Najviac sa páčia"
       select_all: "Označ všetky"
