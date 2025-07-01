@@ -327,7 +327,7 @@ body:not(.archetype-private_message) {
 
       .discourse-no-touch & {
         &:hover,
-        &:focus-within {
+        &:focus-visible {
           outline: 0;
           background: var(--d-hover);
         }
