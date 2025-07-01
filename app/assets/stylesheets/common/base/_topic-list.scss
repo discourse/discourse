@@ -260,14 +260,13 @@
 
     .participant-group-wrapper {
       display: flex;
-      margin-left: var(--space-2);
       flex-wrap: wrap;
       gap: var(--space-2);
 
       .participant-group {
         padding: 0.1em 0.3em;
         border: 1px solid var(--primary-low);
-        border-radius: var(--space-1);
+        border-radius: 0.25em;
         min-width: 3em;
 
         @include ellipsis;
