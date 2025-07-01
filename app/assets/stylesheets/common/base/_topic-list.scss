@@ -90,11 +90,11 @@
   --tag-text-color: var(--primary-medium);
 
   a.title:not(.badge-notification) {
-    color: var(--primary-medium);
+    color: var(--read-color);
   }
 
   .badge-category {
-    color: var(--primary-medium);
+    color: var(--read-color);
   }
 }
 
@@ -113,17 +113,17 @@
   a.title {
     padding: 15px 0;
     word-break: break-word;
-    color: var(--primary);
+    color: var(--title-color);
   }
 
   .anon & {
     a.title:visited:not(.badge-notification) {
-      color: var(--primary-medium);
+      color: var(--read-color);
     }
   }
 
   a.title.visited:not(.badge-notification) {
-    color: var(--primary-medium);
+    color: var(--read-color);
   }
 }
 
@@ -207,7 +207,7 @@
   }
 
   td {
-    color: var(--primary-medium);
+    color: var(--metadata-color);
     font-size: var(--font-0);
   }
 
@@ -296,7 +296,7 @@
     display: block;
     font-size: var(--font-down-1);
     margin-top: 0.33em;
-    color: var(--primary-high);
+    color: var(--excerpt-color);
     word-wrap: break-word;
     line-height: var(--line-height-large);
     padding-right: 20px;
