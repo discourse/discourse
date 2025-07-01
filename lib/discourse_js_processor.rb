@@ -37,7 +37,7 @@ class DiscourseJsProcessor
           "node",
           "build.js",
         )
-      File.write("app/assets/javascripts/theme-transpiler/theme-transpiler.js", result)
+      # File.write("app/assets/javascripts/theme-transpiler/theme-transpiler.js", result)
       result
     end
 
@@ -62,7 +62,7 @@ class DiscourseJsProcessor
           @processor_mutex.synchronize { build_theme_transpiler }
         end
 
-      source = File.read("app/assets/javascripts/theme-transpiler/theme-transpiler.js")
+      # source = File.read("app/assets/javascripts/theme-transpiler/theme-transpiler.js")
 
       ctx.eval(source, filename: "theme-transpiler.js")
 
