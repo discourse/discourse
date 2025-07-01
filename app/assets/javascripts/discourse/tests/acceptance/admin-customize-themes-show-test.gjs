@@ -1,4 +1,3 @@
-import Component from "@glimmer/component";
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { withPluginApi } from "discourse/lib/plugin-api";
@@ -84,14 +83,12 @@ acceptance("Admin - Customize - Themes - Show", function (needs) {
     withPluginApi("0.1", (api) => {
       api.renderInOutlet(
         "admin-customize-theme-included-components-setting",
-        class extends Component {
-          <template>
-            <p class="custom-element-in-place-of-included-components">
-              This is a custom element that replaces the included components
-              setting.
-            </p>
-          </template>
-        }
+        <template>
+          <p class="custom-element-in-place-of-included-components">
+            This is a custom element that replaces the included components
+            setting.
+          </p>
+        </template>
       );
     });
 

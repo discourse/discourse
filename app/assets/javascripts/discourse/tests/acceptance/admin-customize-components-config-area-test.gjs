@@ -1,4 +1,3 @@
-import Component from "@glimmer/component";
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { withPluginApi } from "discourse/lib/plugin-api";
@@ -17,14 +16,12 @@ acceptance("Admin - Config areas - Components", function (needs) {
     withPluginApi("0.1", (api) => {
       api.renderInOutlet(
         "admin-config-area-components-new-button",
-        class extends Component {
-          <template>
-            <@actions.Primary
-              class="my-custom-button"
-              @translatedLabel="Hello world"
-            />
-          </template>
-        }
+        <template>
+          <@actions.Primary
+            class="my-custom-button"
+            @translatedLabel="Hello world"
+          />
+        </template>
       );
     });
 
@@ -44,13 +41,11 @@ acceptance("Admin - Config areas - Components", function (needs) {
     withPluginApi("0.1", (api) => {
       api.renderInOutlet(
         "admin-config-area-components-empty-list-bottom",
-        class extends Component {
-          <template>
-            <div class="my-custom-empty-list">
-              Additional message shown at the bottom of the empty list.
-            </div>
-          </template>
-        }
+        <template>
+          <div class="my-custom-empty-list">
+            Additional message shown at the bottom of the empty list.
+          </div>
+        </template>
       );
     });
 

@@ -3428,15 +3428,13 @@ class PluginApi {
    * import Component from "@glimmer/component";
    *
    * api.addCardToAdminThemesGrid((adminConfigAreaCardComponent) => {
-   *   return class extends Component {
-   *     <template>
-   *       <adminConfigAreaCardComponent class="my-custom-card">
-   *         <:content>
-   *           <!-- your custom card content goes here -->
-   *         </:content>
-   *       </adminConfigAreaCardComponent>
-   *     </template>
-   *   }
+   *   return <template>
+   *     <adminConfigAreaCardComponent class="my-custom-card">
+   *       <:content>
+   *         <!-- your custom card content goes here -->
+   *       </:content>
+   *     </adminConfigAreaCardComponent>
+   *   </template>;
    * });
    * ```
    *

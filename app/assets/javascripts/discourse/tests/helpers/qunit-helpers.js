@@ -35,6 +35,7 @@ import { resetCustomPostMessageCallbacks } from "discourse/controllers/topic";
 import { clearHTMLCache } from "discourse/helpers/custom-html";
 import { resetUsernameDecorators } from "discourse/helpers/decorate-username-selector";
 import { resetBeforeAuthCompleteCallbacks } from "discourse/instance-initializers/auth-complete";
+import { resetCardsForAdminThemesGrid } from "discourse/lib/admin-custom-themes-grid-cards";
 import { resetAdminPluginConfigNav } from "discourse/lib/admin-plugin-config-nav";
 import { clearPluginHeaderActionComponents } from "discourse/lib/admin-plugin-header-actions";
 import { resetAdditionalReportModes } from "discourse/lib/admin-report-additional-modes";
@@ -104,7 +105,6 @@ import { resetDecorators as resetPostCookedDecorators } from "discourse/widgets/
 import { resetPostSmallActionClassesCallbacks } from "discourse/widgets/post-small-action";
 import { resetDecorators } from "discourse/widgets/widget";
 import I18n from "discourse-i18n";
-import { resetCardsForAdminThemesGrid } from "admin/components/themes-grid";
 import { _clearSnapshots } from "select-kit/components/composer-actions";
 import { setupDSelectAssertions } from "./d-select-assertions";
 import { setupFormKitAssertions } from "./form-kit-assertions";

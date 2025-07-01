@@ -1,4 +1,3 @@
-import Component from "@glimmer/component";
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { withPluginApi } from "discourse/lib/plugin-api";
@@ -16,15 +15,13 @@ acceptance("Admin - Config areas - Themes", function (needs) {
   test("custom cards in themes grid", async function (assert) {
     withPluginApi("0.1", (api) => {
       api.addCardToAdminThemesGrid((AdminConfigAreaCardComponent) => {
-        return class extends Component {
-          <template>
-            <AdminConfigAreaCardComponent class="my-test-card">
-              <:content>
-                Hello, this is a test card.
-              </:content>
-            </AdminConfigAreaCardComponent>
-          </template>
-        };
+        return <template>
+          <AdminConfigAreaCardComponent class="my-test-card">
+            <:content>
+              Hello, this is a test card.
+            </:content>
+          </AdminConfigAreaCardComponent>
+        </template>;
       });
     });
 
@@ -41,14 +38,12 @@ acceptance("Admin - Config areas - Themes", function (needs) {
     withPluginApi("0.1", (api) => {
       api.renderInOutlet(
         "admin-config-area-themes-new-button",
-        class extends Component {
-          <template>
-            <@actions.Primary
-              class="my-custom-button"
-              @translatedLabel="Hello world"
-            />
-          </template>
-        }
+        <template>
+          <@actions.Primary
+            class="my-custom-button"
+            @translatedLabel="Hello world"
+          />
+        </template>
       );
     });
 
