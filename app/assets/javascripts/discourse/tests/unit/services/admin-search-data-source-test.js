@@ -1,10 +1,12 @@
 import { getOwner } from "@ember/owner";
-import { settled } from "@ember/test-helpers";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import PreloadStore from "discourse/lib/preload-store";
-import { ADMIN_NAV_MAP } from "discourse/lib/sidebar/admin-nav-map";
+import {
+  logIn,
+  updateCurrentUser,
+} from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 import {
   PageLinkFormatter,
@@ -70,14 +72,17 @@ module("Unit | Service | AdminSearchDataSource", function (hooks) {
   setupTest(hooks);
 
   hooks.beforeEach(function () {
+    logIn(getOwner(this));
+    updateCurrentUser({ admin: true });
     this.subject = getOwner(this).lookup("service:admin-search-data-source");
+    this.adminNavManager = getOwner(this).lookup("service:admin-nav-manager");
   });
 
   test("buildMap - is a noop if already cached", async function (assert) {
     await this.subject.buildMap();
-    sinon.stub(ADMIN_NAV_MAP, "forEach");
+    sinon.stub(PreloadStore, "get");
     await this.subject.buildMap();
-    assert.false(ADMIN_NAV_MAP.forEach.called);
+    assert.false(PreloadStore.get.called);
   });
 
   test("buildMap - makes a key/value object of preloaded plugins, excluding disabled and invalid ones", async function (assert) {
@@ -93,10 +98,13 @@ module("Unit | Service | AdminSearchDataSource", function (hooks) {
     );
   });
 
-  test("buildMap - uses ADMIN_NAV_MAP to build up a list of page links including sub-pages", async function (assert) {
+  test("buildMap - uses adminNavManager to build up a list of page links including sub-pages", async function (assert) {
     await this.subject.buildMap();
 
-    assert.true(this.subject.pageDataSourceItems.length > ADMIN_NAV_MAP.length);
+    assert.true(
+      this.subject.pageDataSourceItems.length >
+        this.adminNavManager.filteredNavMap.length
+    );
 
     assert.deepEqual(this.subject.pageDataSourceItems[0], {
       label: "Dashboard",
@@ -119,7 +127,6 @@ module("Unit | Service | AdminSearchDataSource", function (hooks) {
 
   test("buildMap - labels are correct for top-level, second-level, and third-level nav", async function (assert) {
     await this.subject.buildMap();
-    await settled();
 
     const firstPage = this.subject.pageDataSourceItems.find(
       (page) => page.url === "/admin"

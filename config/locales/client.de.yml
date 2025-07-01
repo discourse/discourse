@@ -396,6 +396,7 @@ de:
       bookmarked_success: "Gespeichert!"
       deleted_bookmark_success: "Lesezeichen gelöscht!"
       reminder_set_success: "Erinnerung gesetzt!"
+      reminder_clear_success: "Erinnerung gelöscht"
       created: "Du hast diesen Beitrag mit einem Lesezeichen versehen. %{name}"
       created_generic: "Du hast dies mit einem Lesezeichen versehen: %{name}"
       create: "Lesezeichen erstellen"
@@ -2332,6 +2333,9 @@ de:
       to_continue: "Melde dich bitte an"
       preferences: "Du musst angemeldet sein, um deine Benutzereinstellungen bearbeiten zu können."
       not_approved: "Dein Benutzerkonto wurde noch nicht genehmigt. Du wirst per E-Mail benachrichtigt, sobald du dich anmelden kannst."
+      discourse_id:
+        name: "Discourse ID"
+        title: "Mit Discourse ID anmelden"
       google_oauth2:
         name: "Google"
         title: "Mit Google anmelden"
@@ -2591,9 +2595,9 @@ de:
       link_title: "Link"
       link_description: "gib hier eine Link-Beschreibung ein"
       link_dialog_action: "Einfügen"
+      link_edit_title: "Link bearbeiten"
       link_edit_action: "Aktualisieren"
-      link_optional_text: "optionaler Titel"
-      link_url_placeholder: "Füge eine URL ein oder tippe, um die Themen zu durchsuchen"
+      link_optional_text: "Text"
       blockquote_title: "Blockzitat"
       blockquote_text: "Blockzitat"
       code_title: "Vorformatierter Text"
@@ -2664,7 +2668,10 @@ de:
       delete_image_button: Bild löschen
       toggle_image_grid: Bildraster umschalten
       link_toolbar:
+        edit: "Link bearbeiten"
         copy: "Link kopieren"
+        remove: "Link entfernen"
+        visit: "Link in externem Tab öffnen"
         link_copied: "Link kopiert!"
     notifications:
       tooltip:
@@ -3069,10 +3076,6 @@ de:
         top: "Es gibt keine angesagten Themen."
         hot: "Es gibt keine heißen Themen."
         filter: "Es gibt keine Themen."
-        educate:
-          new: '<p>Hier werden deine neuen Themen angezeigt. Standardmäßig werden Themen als neu erachtet und mit einem <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span>-Indikator dargestellt, wenn sie in den letzten 2 Tagen erstellt wurden. </p><p>Besuche deine <a href="%{userPrefsUrl}">Einstellungen</a>, um dies zu ändern.</p>'
-          unread: "<p>Hier werden deine ungelesenen Themen angezeigt.</p><p>Standardmäßig werden Themen als ungelesen erachtet und mit einem Zähler für ungelesene Beiträge <span class=\"badge unread-posts badge-notification\">1</span> dargestellt, wenn du:</p><ul><li>das Thema erstellt hast;</li><li>auf das Thema geantwortet hast;</li><li>das Thema für mehr als 5 Minuten gelesen hast.</li></ul><p>Oder falls du das Thema über \U0001F514 ausdrücklich auf „Verfolgen“ oder „Beobachten“ eingestellt hast.</p><p>Besuche deine <a href=\"%{userPrefsUrl}\">Einstellungen</a>, um dies zu ändern.</p>"
-          new_new: "<p>Hier erscheinen deine neuen Themen und deine ungelesenen Themen werden ebenfalls angezeigt. Standardmäßig gelten Themen als neu und werden mit einem <span class=\"badge new-topic badge-notification\" style=\"vertical-align:middle;line-height:inherit;\"></span> Symbol gekennzeichnet, wenn sie in den letzten 2 Tagen erstellt wurden. Ungelesene Themen werden mit einem Zähler für ungelesene Beiträge <span class=\"badge unread-posts badge-notification\">1</span> dargestellt, wenn du: das Thema erstellt hast; auf das Thema geantwortet hast; das Thema für mehr als 5 Minuten gelesen hast; oder falls du das Thema über \U0001F514 ausdrücklich auf „Verfolgen“ oder „Beobachten“ eingestellt hast.</p><p>Besuche deine <a href=\"%{userPrefsUrl}\">Einstellungen</a> , um dies zu ändern.</p>"
       bottom:
         latest: "Das waren die aktuellen Themen."
         posted: "Das waren alle Themen."
@@ -3853,6 +3856,7 @@ de:
         title: "Beitrag #%{post_number} teilen"
         instructions: "Link zu diesem Beitrag teilen:"
       original_language: "Dieser Beitrag wurde ursprünglich in %{language} geschrieben"
+      original_language_and_outdated: "Dieser Beitrag wurde ursprünglich auf %{language} geschrieben. Die Übersetzung ist möglicherweise veraltet"
     category:
       none: "(keine Kategorie)"
       all: "Alle Kategorien"
@@ -6041,6 +6045,7 @@ de:
           copy_created: 'Es wurde eine neue Kopie von "%{name}" erstellt.'
           illegal_character_in_color: "Die Farbe darf nur aus Hexadezimalzeichen bestehen"
           invalid_color_length: "Die Farbe muss das Format #rrggbb oder #rgb haben."
+          blocked_edit_for_system: "Farbpaletten, die zu einem System-Theme gehören, können nicht bearbeitet werden."
           delete_confirm: "Bist du sicher, dass du diese Farbpalette löschen willst?"
       plugins:
         title: "Plug-ins"

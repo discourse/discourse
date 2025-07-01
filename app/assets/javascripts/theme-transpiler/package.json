@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@babel/preset-env": "^7.27.2",
-    "@babel/standalone": "^7.27.6",
+    "@babel/standalone": "^7.27.7",
     "@csstools/postcss-light-dark-function": "^2.0.9",
     "@rollup/browser": "^4.40.2",
     "@rollup/plugin-babel": "^6.0.4",

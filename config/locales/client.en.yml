@@ -222,6 +222,9 @@ en:
       header:
         logged_in_members: "Welcome back, %{preferred_display_name}!"
         anonymous_members: "Welcome to %{site_name}!"
+      subheader:
+        logged_in_members: ""
+        anonymous_members: ""
       search: "Search"
 
     themes:
@@ -3035,6 +3038,7 @@ en:
       relevance: "Relevance"
       latest_post: "Latest Post"
       latest_topic: "Latest Topic"
+      last_read: "Last Read"
       most_viewed: "Most Viewed"
       most_liked: "Most Liked"
       select_all: "Select All"

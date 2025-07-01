@@ -3062,12 +3062,11 @@ ar:
       italic_label: "I"
       italic_title: "مائل"
       italic_text: "نص مائل"
-      link_title: "رابط تشعُّبي"
+      link_title: "رابط"
       link_description: "أدخِل وصف الرابط هنا"
       link_dialog_action: "إدراج"
       link_edit_action: "تحديث"
-      link_optional_text: "عنوان اختياري"
-      link_url_placeholder: "الصق عنوانًا أو اكتب للبحث في الموضوعات"
+      link_optional_text: "النص"
       blockquote_title: "اقتباس فقرة"
       blockquote_text: "اقتباس فقرة"
       code_title: "نص منسَّق سابقًا"
@@ -3667,10 +3666,6 @@ ar:
         top: "لا توجد موضوعات في الأكثر نشاطًا."
         hot: "لا توجد موضوعات ساخنة."
         filter: "لا توجد موضوعات."
-        educate:
-          new: '<p>ستظهر موضوعاتك الجديدة هنا. تُعتبَر الموضوعات جديدة بشكلٍٍ افتراضي وستعرض مؤشر <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> إذا كان قد تم إنشاؤها في آخر يومين.</p><p>يمكنك الانتقال إلى <a href="%{userPrefsUrl}">تفضيلاتك</a> لتغيير ذلك.</p>'
-          unread: "<p>ستظهر موضوعاتك غير المقروءة هنا.</p><p>تُعتبَر الموضوعات غير مقروءة بشكلٍٍ افتراضي وستعرض أعداد الموضوعات غير المقروءة <span class=\"badge unread-posts badge-notification\">1</span> إذا كنت قد:</p><ul><li>أنشأت الموضوع</li><li>رددت على الموضوع</li><li>قرأت الموضوع لأكثر من 5 دقائق</li></ul><p>أو إذا وضعت الموضوع صراحةً تحت \"المراقبة\" أو \"التتبُّع\" عبر \U0001F514 في كل موضوع.</p><p>يمكنك الانتقال إلى <a href=\"%{userPrefsUrl}\">التفضيلات</a> لتغيير ذلك.</p>"
-          new_new: "<p>ستظهر موضوعاتك الجديدة هنا، وسيتم أيضًا عرض موضوعاتك غير المقروءة. تُعتبَر الموضوعات جديدة بشكلٍٍ افتراضي، وستعرض <span class=\"badge new-topic badge-notification\" style=\"vertical-align:middle;line-height:inherit;\"></span> مؤشرًا إذا تم إنشاؤها في آخر يومين. ستعرض الموضوعات غير المقروءة الأعداد غير المقروءة <span class=\"badge unread-posts badge-notification\">1</span> إذا كنت قد: أنشأت الموضوع، أو قرأت الموضوع لأكثر من 5 دقائق، أو إذا وضعت الموضوع صراحةً تحت \"المراقبة\" أو \"التتبُّع\" عبر \U0001F514 في كل موضوع.</p><p>انتقل إلى <a href=\"%{userPrefsUrl}\">التفضيلات</a> لتغيير ذلك.</p>"
       bottom:
         latest: "لا يوجد المزيد من الموضوعات الحديثة."
         posted: "لا يوجد المزيد من الموضوعات المنشورة."

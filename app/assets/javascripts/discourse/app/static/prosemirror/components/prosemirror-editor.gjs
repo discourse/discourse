@@ -68,6 +68,7 @@ export default class ProsemirrorEditor extends Component {
   @service capabilities;
   @service modal;
   @service toasts;
+  @service site;
 
   schema = createSchema(this.extensions, this.args.includeDefault);
   view;
@@ -99,6 +100,7 @@ export default class ProsemirrorEditor extends Component {
         capabilities: this.capabilities,
         modal: this.modal,
         toasts: this.toasts,
+        site: this.site,
         replaceToolbar: this.args.replaceToolbar,
       }),
     };
@@ -183,6 +185,8 @@ export default class ProsemirrorEditor extends Component {
           this.#lastSerialized = value;
           this.args.change?.({ target: { value } });
         }
+
+        this.textManipulation.updateState();
       },
       handleDOMEvents: {
         focus: () => {
@@ -213,6 +217,8 @@ export default class ProsemirrorEditor extends Component {
     this.#destructor = this.args.onSetup?.(this.textManipulation);
 
     this.convertFromValue();
+
+    this.textManipulation.updateState();
   }
 
   @bind

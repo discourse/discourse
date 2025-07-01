@@ -644,6 +644,37 @@ describe "Composer - ProseMirror editor", type: :system do
     end
   end
 
+  describe "toolbar state updates" do
+    it "updates the toolbar state following the cursor position" do
+      open_composer_and_toggle_rich_editor
+
+      expect(page).to have_css(".toolbar__button.bold.--active", count: 0)
+      expect(page).to have_css(".toolbar__button.italic.--active", count: 0)
+      expect(page).to have_css(".toolbar__button.link.--active", count: 0)
+      expect(page).to have_css(".toolbar__button.bullet.--active", count: 0)
+      expect(page).to have_css(".toolbar__button.list.--active", count: 0)
+      expect(page).to have_css(".toolbar__button.code.--active", count: 0)
+      expect(page).to have_css(".toolbar__button.blockquote.--active", count: 0)
+
+      composer.type_content("> - ` [***many styles***](https://example.com)`")
+      composer.send_keys(:left, :left)
+
+      expect(page).to have_css(".toolbar__button.bold.--active", count: 1)
+      expect(page).to have_css(".toolbar__button.italic.--active", count: 1)
+      expect(page).to have_css(".toolbar__button.link.--active", count: 1)
+      expect(page).to have_css(".toolbar__button.bullet.--active", count: 1)
+      expect(page).to have_css(".toolbar__button.list.--active", count: 0)
+      expect(page).to have_css(".toolbar__button.code.--active", count: 1)
+      expect(page).to have_css(".toolbar__button.blockquote.--active", count: 1)
+
+      page.find(".toolbar__button.bullet").click
+      page.find(".toolbar__button.list").click
+
+      expect(page).to have_css(".toolbar__button.list.--active", count: 1)
+      expect(page).to have_css(".toolbar__button.bullet.--active", count: 0)
+    end
+  end
+
   describe "trailing paragraph" do
     it "ensures there is always a trailing paragraph" do
       open_composer_and_toggle_rich_editor

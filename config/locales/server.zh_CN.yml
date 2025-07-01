@@ -238,6 +238,7 @@ zh_CN:
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>：%{message}"
     messages:
+      invalid_locale: "%{invalid_locale} 不是一个有效的语言环境"
       too_long_validation:
         other: "最多只能有 %{count} 个字符；您输入了 %{length} 个字符。"
       invalid_boolean: "布尔值无效。"
@@ -266,6 +267,7 @@ zh_CN:
       less_than_or_equal_to: 必须小于或等于 %{count}
       not_a_number: 不是数字
       not_an_integer: 必须是整数
+      must_all_be_positive: 必须全部为正数
       odd: 必须是奇数
       record_invalid: ! "验证失败：%{errors}"
       max_emojis: "不能超过 %{max_emojis_count} 个表情符号"
@@ -2366,11 +2368,12 @@ zh_CN:
     about_page_hidden_groups: "不在 /about 页面显示特定群组的成员。"
     adobe_analytics_tags_url: "Adobe Analytics 标签 URL (`https://assets.adobedtm.com/...`)"
     view_raw_email_allowed_groups: "如果帖子是通过接收的电子邮件创建的，可以查看帖子原始电子邮件内容的群组。这包括电子邮件标题和其他技术信息。"
-    experimental_content_localization: "根据用户的语言偏好为其显示本地化内容。这些内容可能包括类别、标签、帖子和主题。该功能正在紧张开发中。"
     rich_editor: "启用富文本编辑器，所有用户都可以在当前 Markdown 模式和新的富文本编辑器之间切换，从而实现更直观、更人性化的写作体验。富文本编辑器目前仍在积极开发中，因此并非所有功能都已支持 — <a href='https://meta.discourse.org/t/test-our-new-composer/352347' target='_blank'>请参阅 Meta 了解更多详情</a>。"
-    experimental_content_localization_allowed_groups: '允许更新本地化内容的组。需要启用"实验性内容本地化"。'
     viewport_based_mobile_mode: "实验：禁用基于 user-agent 的移动/桌面模式，改用视口宽度。"
-    experimental_anon_language_switcher: "启用实验性语言切换器。这将允许未登录的网站访问者在 Discourse 的翻译版本和用户贡献的主题内容之间切换。"
+    content_localization_enabled: "根据用户的浏览器或语言偏好设置，显示本地化内容。此类内容可能包括类别、标签、帖子和主题。支持的语言环境在 'content localization supported locales' 中设置。"
+    content_localization_supported_locales: "用户内容可翻译成的受支持本地语言列表。要求 'content localization enabled'。"
+    content_localization_allowed_groups: "允许群组更新本地化内容。需要 'content localization enabled''。"
+    content_localization_anon_language_switcher: "启用语言切换器，允许未登录的网站访问者在翻译版本的 Discourse 和用户贡献的内容之间切换。取决于 'content localization supported locales' 中定义的语言列表"
     errors:
       invalid_css_color: "颜色无效。输入颜色名称或十六进制值。"
       invalid_email: "无效的电子邮件地址。"
@@ -2437,6 +2440,7 @@ zh_CN:
       delete_rejected_email_after_days: "此设置不能设置为低于 delete_email_logs_after_days 设置或大于 %{max}"
       invalid_uncategorized_category_setting: '如果“允许未分类话题”设置未启用，则无法选择“未分类”类别。'
       invalid_search_ranking_weights: "该值对于 search_ranking_weights 网站设置无效。示例：'{0.1,0.2,0.3,1.0}'。注意，每个权重的最大值为 1.0。"
+      content_localization_anon_language_switcher_requirements: "语言切换器要求启用 `set locale from cookie` 网站设置，并且 `content localization supported locales` 至少有一种语言。"
     keywords:
       clean_up_inactive_users_after_days: "已停用|闲置|未激活"
       navigation_menu: "边栏|标题下拉菜单"
@@ -5136,8 +5140,6 @@ zh_CN:
       duplicate_ids: "有重复的 ID"
       reserved_id: "有一个保留关键字 ID：%{id}"
       unsafe_description: "有不安全的 HTML 描述"
-  content_localization:
-    not_allowed: "您无权本地化此内容。"
   activemodel:
     errors:
       <<: *errors

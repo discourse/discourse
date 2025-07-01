@@ -112,7 +112,12 @@ export default class FullPageSearchController extends Controller {
 
     this.sortOrders = [
       { name: i18n("search.relevance"), id: 0 },
-      { name: i18n("search.latest_post"), id: 1, term: "order:latest" },
+      {
+        name: i18n("search.latest_post"),
+        id: 1,
+        term: "order:latest",
+        alias: "l",
+      },
       { name: i18n("search.most_liked"), id: 2, term: "order:likes" },
       { name: i18n("search.most_viewed"), id: 3, term: "order:views" },
       {
@@ -121,6 +126,15 @@ export default class FullPageSearchController extends Controller {
         term: "order:latest_topic",
       },
     ];
+
+    if (this.currentUser) {
+      this.sortOrders.push({
+        name: i18n("search.last_read"),
+        id: 5,
+        term: "order:read",
+        alias: "r",
+      });
+    }
 
     this.bulkSelectHelper = new BulkSelectHelper(this);
   }
@@ -203,10 +217,18 @@ export default class FullPageSearchController extends Controller {
     if (term) {
       this.sortOrders.forEach((order) => {
         if (order.term) {
-          let matches = term.match(new RegExp(`${order.term}\\b`));
+          let word = order.term;
+          let matches = term.match(new RegExp(`(^|\\s)${word}($|\\s)`));
+          if (!matches && order.alias) {
+            word = order.alias;
+            matches = term.match(new RegExp(`(^|\\s)${word}($|\\s)`));
+          }
           if (matches) {
             this.set("sortOrder", order.id);
-            term = term.replace(new RegExp(`${order.term}\\b`, "g"), "");
+            term = term.replace(
+              new RegExp(`(^|\\s)${word}($|\\s)`, "g"),
+              "$1$2"
+            );
             term = term.trim();
           }
         }

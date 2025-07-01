@@ -533,8 +533,8 @@ hu:
       filtered_flagged_by: "Megjelölte"
       unknown:
         title:
-          one: "Vannak függőben lévő ellenőrzésre váró elemek egy letiltott bővítményből."
-          other: "Vannak függőben lévő ellenőrzésre váró elemek egy letiltott bővítményből."
+          one: "Függőben lévő felülvizsgálandó elemek vannak a letiltott bővítményből:"
+          other: "Függőben lévő felülvizsgálandó elemek vannak a letiltott bővítményekből:"
         instruction: "Nem jeleníthetők meg megfelelően, amíg nem engedélyezi a megfelelő beépülő modult. Kérjük, engedélyezze a bővítményt, és frissítse az oldalt. Alternatív megoldásként figyelmen kívül hagyhatja őket. <a href='%{url}' target='_blank'>További információ...</a>"
         reviewable_unknown_source: "%{reviewableType} (ismeretlen bővítmény)"
         reviewable_known_source: "%{reviewableType} (a '%{pluginName}' bővítményből)"
@@ -1824,9 +1824,9 @@ hu:
         after_10_minutes: "10 perc elteltével"
       notification_level_when_replying:
         label: "Feladáskor"
-        watch_topic: "Megfigyelt témák"
+        watch_topic: "Téma figyelése"
         track_topic: "Téma követése"
-        do_nothing: "Ne csinálj semmit"
+        do_nothing: "Ne tegyen semmit"
       topics_unread_when_closed: "Tekintse a témákat olvasatlannak, amikor bezárják"
       invited:
         title: "Meghívók"
@@ -2334,8 +2334,8 @@ hu:
         sr_title: "Bejelentkezés a Google-lel"
       twitter:
         name: "X"
-        title: "Jelentkezzen be X-el"
-        sr_title: "Jelentkezzen be X-el"
+        title: "Bejelentkezés X-szel"
+        sr_title: "Bejelentkezés X-szel"
       instagram:
         name: "Instagram"
         title: "Bejelentkezés az Instagrammal"
@@ -2421,7 +2421,7 @@ hu:
         one: "%{count} téma van ebben a kategóriában"
         other: "%{count} téma van ebben a kategóriában"
     timezone_input:
-      ambiguous_ist: "Az IST nem egyértelmű, kérjük, válasszon egy konkrét időzónát (pl.: Ázsia/Kolkata)"
+      ambiguous_ist: "Az IST nem egyértelmű, válasszon egy konkrét időzónát (például Ázsia/Kolkata)"
     select_kit:
       delete_item: "%{name} törlése"
       filter_by: "Szűrő: %{name}"
@@ -2441,7 +2441,7 @@ hu:
         one: "Válasszon legalább %{count} elemet."
         other: "Válasszon legalább %{count} elemet."
       components:
-        filter_for_more: Szűrés a továbbiakhoz…
+        filter_for_more: További szűrés...
         categories_admin_dropdown:
           title: "Kategóriák kezelése"
         bulk_select_topics_dropdown:
@@ -2504,23 +2504,23 @@ hu:
         select: "Fordítás kiválasztása"
         save: "Fordítás mentése"
         original_content: "Eredeti bejegyzés tartalma"
-        placeholder: "Bejegyzés fordításának helye..."
+        placeholder: "Adja meg a bejegyzés fordítását…"
       group_mentioned_limit:
         one: "<b>Figyelem!</b>Megemlítette a(z) <a href='%{group_link}'>%{group}</a> csoportot, azonban ennek a csoportnak több mint %{count} tagja van, amely több, mint a rendszergazda által beállított megemlítési korlát. Senki nem lesz értesítve."
         other: "<b>Figyelem!</b>Megemlítette a(z) <a href='%{group_link}'>%{group}</a> csoportot, azonban ennek a csoportnak több mint %{count} tagja van, amely több, mint a rendszergazda által beállított megemlítési korlát. Senki nem lesz értesítve."
       group_mentioned:
-        one: "A %{group} megemlítése értesít <a href='%{group_link}'>%{count} személyt</a>."
-        other: "A %{group} megemlítése értesít <a href='%{group_link}'>%{count} személyt</a>."
+        one: "A(z) %{group} megemlítése <a href='%{group_link}'>%{count} személyt</a> értesít."
+        other: "A(z) %{group} megemlítése <a href='%{group_link}'>%{count} személyt</a> értesít."
       larger_group_mentioned:
-        one: "A %{group} megemlítése értesít <a href='%{group_link}'>%{count} személyt</a>. Biztos benne?"
-        other: "A %{group} megemlítése értesít <a href='%{group_link}'>%{count} személyt</a>. Biztos benne?"
+        one: "A(z) %{group} megemlítése <a href='%{group_link}'>%{count} személyt</a> értesít. Biztos benne?"
+        other: "A(z) %{group} megemlítése <a href='%{group_link}'>%{count} személyt</a> értesít. Biztos benne?"
       cannot_see_mention:
         category: "Megemlítette @%{username} felhasználót, de nem lesz értesítve, mivel nincs hozzáférése ehhez a kategóriához. Hozzá kell adnia egy olyan csoporthoz, amely hozzáfér ehhez a kategóriához."
         private: "Megemlítette @%{username} felhasználót, de nem lesz értesítve, mert nem tudja megnézni ezt a személyes üzenetet. Meg kell hívnia ehhez a személyes üzenethez."
         muted_topic: "Megemlítette @%{username} felhasználót, de nem lesz értesítve, mert lenémította ezt a témát."
         not_allowed: "Megemlítette @%{username} felhasználót, de nem lesz értesítve, mert nem hívta meg a témához."
       cannot_see_group_mention:
-        not_mentionable: "Nem említheti a @%{group}csoportot."
+        not_mentionable: "Nem említheti meg a(z) @%{group} csoportot."
         some_not_allowed:
           one: "Megemlítetted @%{group} de csak %{count} felhasználó kap értesítést, mert a többi tag nem láthatja ezt a személyes üzenetet. Meg kell hívnod őket erre a személyes üzenetre."
           other: "Megemlítetted @%{group} de csak %{count} felhasználó kap értesítést, mert a többi tag nem láthatja ezt a személyes üzenetet. Meg kell hívnod őket erre a személyes üzenetre."
@@ -2584,12 +2584,11 @@ hu:
       italic_label: "I"
       italic_title: "Dőlt"
       italic_text: "dőlt szöveg"
-      link_title: "Hiperhivatkozás"
+      link_title: "Hivatkozás"
       link_description: "itt adja meg a hivatkozás leírását"
       link_dialog_action: "Beszúrás"
       link_edit_action: "Frissítés"
-      link_optional_text: "megadható cím"
-      link_url_placeholder: "Illesszen be egy URL-t, vagy gépeljen a témák kereséséhez"
+      link_optional_text: "Szöveg"
       blockquote_title: "Idézetblokk"
       blockquote_text: "Idézetblokk"
       code_title: "Előformázott szöveg"
@@ -3065,10 +3064,6 @@ hu:
         top: "Nincsenek népszerű témák."
         hot: "Nincsenek népszerű témák."
         filter: "Nincsenek témák."
-        educate:
-          new: '<p>Az új témák fognak itt megjelenni. Alapértelmezésként itt jelennek meg a friss témák, és egy ilyen jelet <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> talál majd azok mellett, amelyek az elmúlt két napban lettek közzétéve.</p><p>A beállításait <a href="%{userPrefsUrl}">ezen az oldalon</a> tudja módosítani.</p>'
-          unread: "<p>Az olvasatlan témák itt fognak megjelenni.</p><p>Alapértelmezés szerint a témák olvasatlannak minősülnek, és az olvasatlanok száma <span class=\"badge unread-posts badge-notification\">1</span> lesz, ha Ön:</p><ul><li>Létrehozta a témát</li><li>Válaszoltál a témára</li><li>Több mint 5 percig olvastad a témát</li></ul><p>Vagy ha a témát kifejezetten Nyomon követett vagy Figyelt témának állítottad be az egyes témákban található \U0001F514 segítségével.</p><p>Ennek megváltoztatásához látogass el a <a href=\"%{userPrefsUrl}\">beállításaidhoz</a>.</p>"
-          new_new: "<p>Itt jelennek meg az új és olvasatlan témáid. Alapértelmezés szerint a témák újnak számítanak, és a <span class=\"badge new-topic badge-notification\" style=\"vertical-align:middle;line-height:inherit;\"></span> jelzést mutatják, ha az elmúlt 2 napban hozták létre őket. Az olvasatlan témáknál az olvasatlanok száma <span class=\"badge unread-posts badge-notification\">1</span> lesz, ha: létrehoztad a témát, válaszoltál a témára, több mint 5 percig olvastad a témát, vagy ha kifejezetten Nyomon követett vagy Figyelt témára állítottad a témát az egyes témákban található \U0001F514 segítségével.</p><p>Ennek megváltoztatásához látogass el a <a href=\"%{userPrefsUrl}\">beállításaidhoz</a>.</p>"
       bottom:
         latest: "Nincs több friss téma."
         posted: "Nincs több közzétett téma."

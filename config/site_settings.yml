@@ -1616,6 +1616,11 @@ content_localization:
     allow_any: false
     choices: "LocaleSiteSetting.values"
     area: "localization"
+    validator: "ContentLocalizationLocalesValidator"
+  content_localization_max_locales:
+    default: 10
+    type: integer
+    hidden: true
   content_localization_anon_language_switcher:
     default: false
     client: true
@@ -2312,7 +2317,7 @@ trust:
     type: group_list
     allow_any: false
     refresh: true
-    area: "group_permissions"
+    area: "flags|group_permissions"
   allow_all_users_to_flag_illegal_content:
     default: false
     area: "flags"
@@ -4043,9 +4048,13 @@ experimental:
   rich_editor:
     client: true
     default: false
+  reviewable_ui_refresh:
+    client: true
+    type: group_list
+    default: ""
   experimental_system_themes:
     type: list
-    default: ""
+    default: "horizon"
     hidden: true
     allow_any: false
     choices:

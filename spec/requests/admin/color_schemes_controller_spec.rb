@@ -33,6 +33,7 @@ RSpec.describe Admin::ColorSchemesController do
       end
 
       it "filters colors belonging to experimental system themes" do
+        SiteSetting.experimental_system_themes = ""
         get "/admin/color_schemes.json"
         expect(response.status).to eq(200)
         scheme_names = response.parsed_body.map { |scheme| scheme["name"] }

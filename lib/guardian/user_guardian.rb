@@ -224,4 +224,12 @@ module UserGuardian
   def can_change_tracking_preferences?(user)
     (SiteSetting.allow_changing_staged_user_tracking || !user.staged) && can_edit_user?(user)
   end
+
+  def can_create_theme?
+    return false if !is_admin?
+    # this modifier is used to further restrict theme creation, it's not
+    # possible to use this modifier to open up theme creation permissions (e.g.
+    # to non-admins)
+    DiscoursePluginRegistry.apply_modifier(:user_guardian_can_create_theme, true, self)
+  end
 end

@@ -2585,6 +2585,9 @@ uk:
       to_continue: "Будь ласка, Увійдіть"
       preferences: "Вам потрібно увійти, щоб змінити налаштування користувача."
       not_approved: "Ваш обліковий запис ще не схвалено. Ви отримаєте сповіщення електронною поштою, коли все буде готове для входу."
+      discourse_id:
+        name: "Discourse ID"
+        title: "Увійти за допомогою Discourse ID"
       google_oauth2:
         name: "Google"
         title: "Увійти через Google"
@@ -2869,14 +2872,16 @@ uk:
       italic_label: "К"
       italic_title: "Курсив"
       italic_text: "виділення тексту курсивом"
-      link_title: "Гіперпосилання"
+      link_title: "Посилання"
       link_description: "введіть опис посилання"
-      link_dialog_title: "Вставити гіперпосилання"
+      link_dialog_title: "Вставити посилання"
       link_dialog_action: "Вставити"
-      link_edit_title: "Редагувати гіперпосилання"
+      link_edit_title: "Редагувати посилання"
       link_edit_action: "Оновити"
-      link_optional_text: "необовʼязкова назва"
-      link_url_placeholder: "Вставте URL або введіть для пошуку теми"
+      link_text_label: "Текст посилання"
+      link_optional_text: "Текст"
+      link_url_label: "Посилання або тема"
+      link_url_placeholder: "Вставити посилання або шукати теми"
       blockquote_title: "Цитата"
       blockquote_text: "Цитата"
       code_title: "Попередньо форматований текст"
@@ -3421,10 +3426,11 @@ uk:
         top: "Топових тем немає."
         hot: "Нема гарячих тем."
         filter: "Немає тем."
-        educate:
-          new: '<p>Ваші нові теми з’являтимуться тут. Типово теми вважаються новими і показуватимуть індикатор <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span>, якщо її створено за останні 2 дні.</p><p>Відвідайте свої <a href="%{userPrefsUrl}">налаштування</a>, щоб змінити це.</p>'
-          unread: "<p>Ваші непрочитані теми показуватимуться тут.</p><p>Типово теми вважаються непрочитаними та показують кількість непрочитаних <span class=\"badge unread-posts badge-notification\">1</span>, якщо ви:</p><ul><li>створили тему</li><li>відповіли на тему</li><li>читали тему більше ніж 5 хвилини,</li></ul><p>або якщо ви явно додасте тему у перелік на Відстеження або Перегляд за допомогою \U0001F514 в кожній темі.</p><p>Відвідайте свої <a href=\"%{userPrefsUrl}\">налаштування</a>, щоб змінити це.</p>"
-          new_new: "<p>Тут з’являться ваші нові теми, а також непрочитані теми. За замовчуванням теми вважаються новими та відображатимуть індикатор <span class=\"badge new-topic badge-notification\" style=\"vertical-align:middle;line-height:inherit;\"></span> , якщо вони були створені протягом останніх 2 днів. Непрочитані теми відображатимуть кількість непрочитаних <span class=\"badge unread-posts badge-notification\">1</span> , якщо ви: створили тему, відповіли на тему, читали тему більше 5 хвилин, або якщо ви явно встановили тему як Відстежувана або Спостережувана через \U0001F514 у кожній темі.</p><p>Відвідайте свої <a href=\"%{userPrefsUrl}\">налаштування</a> , щоб змінити це.</p>"
+        education:
+          topic_tracking_preferences: "Ви можете переглянути та змінити налаштування відстеження нових тем у <a href=\"%{basePath}/my/preferences/tracking\">своїх</a> налаштуваннях."
+          unread: "Не залишилося нічого непрочитаного... вражаюче!"
+          new_new: "Наразі нічого нового... слідкуйте за новинами!"
+          new: "Наразі нічого нового... слідкуйте за новинами!"
       bottom:
         latest: "Більше немає останніх тем."
         posted: "Створених тем більше немає."
@@ -3590,6 +3596,7 @@ uk:
       browse_all_categories_latest: "<a href='%{basePath}/categories'>Перегляньте всі категорії</a> або <a href='%{basePath}/latest'>перегляньте останні теми</a>."
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Перегляньте всі категорії</a>, <a href='%{basePath}/latest'>перегляньте останні теми</a> або перегляньте топ:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Переглянути всі теги</a> або <a href='%{basePath}/latest'>переглянути останні теми</a>."
+      browse_latest_topics: "Переглянути найновіші теми"
       suggest_create_topic: Готові <a href>почати нову розмову?</a>
       jump_reply: "Перейти до початкового розташування публікації"
       jump_reply_aria: "Перейти до повідомлення @%{username} в його оригінальному розташуванні"
@@ -7994,6 +8001,7 @@ uk:
           basic: "Основні установки"
           users: "Користувачі"
           posting: "Опублікування"
+          content_localization: "Локалізація контенту"
           email: "Електронна пошта"
           files: "Файли"
           trust: "Рівні довіри"
