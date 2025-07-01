@@ -115,4 +115,24 @@ describe "Content Localization" do
       expect(composer).to have_content(post_3.raw)
     end
   end
+
+  context "for site settings" do
+    let(:settings_page) { PageObjects::Pages::AdminSiteSettings.new }
+    let(:banner) { PageObjects::Components::AdminChangesBanner.new }
+
+    it "does not allow more than the maximum number of locales" do
+      SiteSetting.content_localization_max_locales = 2
+      sign_in(admin)
+
+      settings_page.visit("content_localization_supported_locales")
+      settings_page.select_list_values("content_localization_supported_locales", %w[en ja es])
+      settings_page.save_setting("content_localization_supported_locales")
+      expect(settings_page.error_message("content_localization_supported_locales")).to have_content(
+        I18n.t(
+          "site_settings.errors.content_localization_locale_limit",
+          max: SiteSetting.content_localization_max_locales,
+        ),
+      )
+    end
+  end
 end

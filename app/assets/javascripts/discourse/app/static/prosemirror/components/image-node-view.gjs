@@ -13,20 +13,11 @@ const MIN_SCALE = 50;
 const MAX_SCALE = 100;
 const SCALE_STEP = 25;
 const MARGIN = 8;
+const TOOLBAR_HEIGHT = 48;
 
 class ImageToolbar extends ToolbarBase {
   constructor(opts = {}) {
     super(opts);
-
-    this.addButton({
-      id: "image-alt-text",
-      icon: "font",
-      title: "composer.image_toolbar.alt_text",
-      className: "composer-image-toolbar__alt-text",
-      preventFocus: true,
-      action: opts.editAltText,
-      active: () => opts.isAltTextMenuOpen(),
-    });
 
     this.addButton({
       id: "image-scale-down",
@@ -96,7 +87,6 @@ export default class ImageNodeView extends Component {
       this.imageState = new TrackedObject(attrs);
 
       this.imageToolbar = new ImageToolbar({
-        editAltText: this.editAltText.bind(this),
         scaleDown: this.scaleDown.bind(this),
         scaleUp: this.scaleUp.bind(this),
         removeImage: this.removeImage.bind(this),
@@ -171,7 +161,7 @@ export default class ImageNodeView extends Component {
   }
 
   @action
-  async editAltText() {
+  async showAltText() {
     this.altMenuInstance?.close();
 
     const imgElement = this.nodeView.dom.querySelector("img");
@@ -179,8 +169,8 @@ export default class ImageNodeView extends Component {
     this.altMenuInstance = await this.menu.show(imgElement, {
       identifier: "composer-image-alt-text",
       component: ImageAltTextInput,
-      placement: "right-end",
-      fallbackPlacements: ["left-end"],
+      placement: "bottom-start",
+      fallbackPlacements: ["bottom-start"],
       padding: MARGIN,
       data: {
         alt: this.node.attrs.alt || "",
@@ -193,11 +183,15 @@ export default class ImageNodeView extends Component {
       closeOnScroll: false,
       maxWidth: 0,
       offset: ({ rects }) => ({
-        mainAxis: -rects.reference.width + MARGIN,
-        crossAxis: -MARGIN,
+        mainAxis: -MARGIN - rects.floating.height,
+        crossAxis: MARGIN,
       }),
       limitShift: {
-        offset: ({ rects }) => ({ mainAxis: rects.floating.height }),
+        offset: ({ rects }) => {
+          return {
+            crossAxis: TOOLBAR_HEIGHT + MARGIN + rects.floating.height,
+          };
+        },
       },
     });
   }
@@ -299,7 +293,7 @@ export default class ImageNodeView extends Component {
   selectNode() {
     this.nodeView.dom.classList.add("ProseMirror-selectednode");
     this.showMenu();
-    this.editAltText();
+    this.showAltText();
   }
 
   deselectNode() {
