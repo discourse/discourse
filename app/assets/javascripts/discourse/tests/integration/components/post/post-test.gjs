@@ -1,5 +1,10 @@
 import { getOwner } from "@ember/owner";
-import { click, render, triggerEvent, triggerKeyEvent } from "@ember/test-helpers";
+import {
+  click,
+  render,
+  triggerEvent,
+  triggerKeyEvent,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import Post from "discourse/components/post";
 import { withPluginApi } from "discourse/lib/plugin-api";
@@ -402,7 +407,11 @@ module("Integration | Component | Post", function (hooks) {
 
     assert.dom("a.reply-to-tab").exists("shows the tab");
     await triggerKeyEvent("a.reply-to-tab", "keydown", "Enter");
-    assert.strictEqual(count("section.embedded-posts.top .cooked"), 1, "toggles replies with Enter key");
+    assert.strictEqual(
+      count("section.embedded-posts.top .cooked"),
+      1,
+      "toggles in-reply-to with Enter key"
+    );
   });
 
   test("cooked content hidden", async function (assert) {

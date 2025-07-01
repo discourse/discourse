@@ -1,6 +1,11 @@
 import EmberObject from "@ember/object";
 import { getOwner } from "@ember/owner";
-import { click, render, triggerEvent, triggerKeyEvent } from "@ember/test-helpers";
+import {
+  click,
+  render,
+  triggerEvent,
+  triggerKeyEvent,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import MountWidget from "discourse/components/mount-widget";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -384,7 +389,9 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     assert.dom("a.reply-to-tab").exists("shows the tab");
     await triggerKeyEvent("a.reply-to-tab", "keydown", "Enter");
-    assert.dom("section.embedded-posts.top .cooked").exists("toggles replies with Enter key");
+    assert
+      .dom("section.embedded-posts.top .cooked")
+      .exists("toggles in-reply-to with Enter key");
   });
 
   test("cooked content hidden", async function (assert) {
