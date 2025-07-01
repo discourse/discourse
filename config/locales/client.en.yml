@@ -229,6 +229,9 @@ en:
       broken_theme_alert: "Your site may not work because a theme / component has errors."
       error_caused_by: "Caused by '%{name}'. <a target='blank' href='%{path}'>Click here</a> to update, reconfigure or disable."
       only_admins: "(this message is only shown to site administrators)"
+      horizon:
+        topic_pinned: "Pinned"
+        topic_hot: "Hot"
 
     broken_decorator_alert: "Posts may not display correctly because one of the post content decorators on your site raised an error."
     broken_page_change_alert: "An onPageChange handler raised an error. Check the browser developer tools for more information."
