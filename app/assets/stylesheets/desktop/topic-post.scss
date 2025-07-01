@@ -245,7 +245,7 @@ pre.codeblock-buttons:hover {
         &::before {
           content: "";
           position: absolute;
-          top: calc(-1 * var(--space-4));
+          top: calc(-1 * var(--space-6));
           width: 1px;
           height: calc(100% + var(--space-6));
           background: var(--primary-300);
@@ -309,7 +309,7 @@ pre.codeblock-buttons:hover {
       border: 1px solid var(--primary-300);
       padding: var(--space-2);
       left: 32px;
-      bottom: calc(-1 * var(--space-1));
+      bottom: calc(-1 * var(--space-12));
       z-index: 1;
 
       .archetype-private_message & {
@@ -425,7 +425,7 @@ pre.codeblock-buttons:hover {
   }
 
   .avatar {
-    margin-right: var(--space-sm);
+    margin-right: var(--space-half);
   }
 }
 

@@ -66,7 +66,7 @@
       font-size: var(--font-up-6);
       line-height: $line-height-medium;
       font-weight: bold;
-      margin-bottom: var(--space-52);
+      margin-bottom: var(--space-2);
 
       @include viewport.until(md) {
         font-size: var(--font-up-4);

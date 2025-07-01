@@ -13,7 +13,7 @@
 
   // used for padding & margin
   --space: 0.25rem; // 4px
-  --space-sm: calc(var(--space) / 2); // 2px
+  --space-half: calc(var(--space) / 2); // 2px
   --space-1: var(--space); // 4px
   --space-2: calc(var(--space) * 2);
   --space-3: calc(var(--space) * 3);
@@ -22,6 +22,10 @@
   --space-6: calc(var(--space) * 6);
   --space-7: calc(var(--space) * 7);
   --space-8: calc(var(--space) * 8);
+  --space-9: calc(var(--space) * 9);
+  --space-10: calc(var(--space) * 10);
+  --space-11: calc(var(--space) * 11);
+  --space-12: calc(var(--space) * 12);
 }
 
 // --------------------------------------------------

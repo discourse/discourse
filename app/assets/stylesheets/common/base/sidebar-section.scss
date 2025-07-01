@@ -94,7 +94,7 @@
 
   .sidebar-section-header-text {
     line-height: normal;
-    margin-right: var(--space-0);
+    margin-right: var(--space);
 
     @include ellipsis;
   }
@@ -104,7 +104,7 @@
     font-size: var(--font-down-2);
 
     .d-icon {
-      margin-top: calc(-1 * var(--space-sm)); // optical alignment
+      margin-top: calc(-1 * var(--space-half)); // optical alignment
     }
   }
 
