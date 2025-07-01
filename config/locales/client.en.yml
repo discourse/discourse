@@ -1254,6 +1254,7 @@ en:
     user_fields:
       none: "(select an option)"
       required: 'Please enter a value for "%{name}"'
+      required_select: 'Please select a value for "%{name}"'
       required_checkbox: 'The field "%{name}" is required'
       same_as_password: "Your password should not be repeated in other fields"
       optional: (optional)
@@ -3309,7 +3310,7 @@ en:
         hot: "There are no hot topics."
         filter: "There are no topics."
         education:
-          topic_tracking_preferences: "You can view and change your new topic tracking settings in <a href=\"%{basePath}/my/preferences/tracking\">your preferences</a>."
+          topic_tracking_preferences: 'You can view and change your new topic tracking settings in <a href="%{basePath}/my/preferences/tracking">your preferences</a>.'
           unread: "Nothing left unread...impressive!"
           new_new: "Nothing new at the moment...check back soon!"
           new: "Nothing new at the moment...check back soon!"
