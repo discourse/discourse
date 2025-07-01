@@ -163,7 +163,6 @@ export default class UppyUpload {
           },
           this.config.validateUploadedFilesOptions
         );
-
         const isValid =
           validateUploadedFile(currentFile, validationOpts) &&
           this.config.isUploadedFileAllowed(currentFile);
