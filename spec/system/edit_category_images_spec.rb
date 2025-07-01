@@ -3,7 +3,6 @@
 describe "Edit Category Images", type: :system do
   fab!(:admin)
   fab!(:category)
-  fab!(:upload) { Fabricate(:upload, user: admin) }
   let(:category_page) { PageObjects::Pages::Category.new }
 
   context "when trying to upload an image" do
@@ -19,8 +18,6 @@ describe "Edit Category Images", type: :system do
       it "displays and updates new counter" do
         category_page.visit_images(category)
 
-        logo = file_from_fixtures("logo.png", "images").path
-
         find("#category-logo-uploader .image-upload-controls").click
         attach_file(
           "category-logo-uploader__input",
@@ -31,6 +28,10 @@ describe "Edit Category Images", type: :system do
         expect(page).to have_content("uploaded successfully").or have_css(
                ".uploaded-image-preview.input-xxlarge",
              )
+
+        upload = Upload.last
+        expect(upload.user_id).to eq(admin.id)
+        expect(upload.original_filename).to eq("logo.png")
       end
     end
   end
