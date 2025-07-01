@@ -1,8 +1,10 @@
 function manipulateAstNodeForTheme(node, themeId) {
   // Magically add theme id as the first param for each of these helpers)
   if (
-    node.path.parts &&
-    ["theme-i18n", "theme-prefix", "theme-setting"].includes(node.path.parts[0])
+    node.path.head &&
+    ["theme-i18n", "theme-prefix", "theme-setting"].includes(
+      node.path.head.name
+    )
   ) {
     if (node.params.length === 1) {
       node.params.unshift({
