@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
+import { action } from "@ember/object";
 import { service } from "@ember/service";
 import avatar from "discourse/helpers/avatar";
 import icon from "discourse/helpers/d-icon";
@@ -19,6 +20,13 @@ export default class PostMetaDataReplyToTab extends Component {
 
   @service site;
 
+  @action
+  keyDown(event) {
+    if (event.key === "Enter") {
+      this.args.toggleReplyAbove();
+    }
+  }
+
   <template>
     <a
       class="reply-to-tab"
@@ -32,6 +40,7 @@ export default class PostMetaDataReplyToTab extends Component {
       tabindex="0"
       title="post.in_reply_to"
       {{on "click" @toggleReplyAbove}}
+      {{on "keydown" this.keyDown}}
     >
       {{#if @repliesAbove.isPending}}
         <div class="spinner small"></div>

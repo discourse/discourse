@@ -207,6 +207,12 @@ createWidget("reply-to-tab", {
       () => (this.state.loading = false)
     );
   },
+
+  keyDown(event) {
+    if (event.key === "Enter") {
+      this.click();
+    }
+  },
 });
 
 createWidget("post-avatar-user-info", {
