@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { next } from "@ember/runloop";
 import { modifier } from "ember-modifier";
 import { or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
@@ -28,6 +29,8 @@ export default class ImageAltTextInput extends Component {
   @action
   expandInput() {
     this.isExpanded = true;
+
+    next(() => this.textarea.select());
   }
 
   @action
@@ -38,7 +41,6 @@ export default class ImageAltTextInput extends Component {
   @action
   onBlur() {
     this.isExpanded = false;
-    this.positionCaretAtStart();
     this.args.data.onSave?.(this.altText.trim());
   }
 
@@ -63,14 +65,6 @@ export default class ImageAltTextInput extends Component {
   @action
   onKeyPress(event) {
     event.stopPropagation();
-  }
-
-  @action
-  positionCaretAtStart() {
-    if (this.textarea) {
-      this.textarea.setSelectionRange(0, 0);
-      this.textarea.scrollTop = 0;
-    }
   }
 
   <template>
