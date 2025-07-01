@@ -130,7 +130,7 @@
   --shadow-card: 0 4px 14px rgba(0, 0, 0, #{$shadow-opacity-card});
   --shadow-dropdown: 0 2px 12px 0 rgba(0, 0, 0, #{$shadow-opacity-dropdown});
   --shadow-menu-panel: var(--shadow-dropdown);
-  --shadow-header: 0 0 0 1px var(--content-border-color);
+  --shadow-header: 0 0 0 1px var(--primary-low);
   --shadow-footer-nav: 0 0 2px 0 rgba(0, 0, 0, #{$shadow-opacity-footer-nav});
   --shadow-focus-danger: 0 0 6px 0 var(--danger);
   --float-kit-arrow-stroke-color: var(--primary-low);
