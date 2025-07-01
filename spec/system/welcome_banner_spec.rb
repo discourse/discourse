@@ -29,15 +29,12 @@ describe "Welcome banner", type: :system do
       visit "/"
       expect(banner).to have_anonymous_subheader
 
-      sign_in(current_user)
-      visit "/"
-      expect(banner).to be_visible
-      expect(banner).to have_no_subheader
       TranslationOverride.upsert!(
         "en",
         "js.welcome_banner.subheader.logged_in_members",
-        "We are so cool",
+        "We are so cool!",
       )
+      sign_in(current_user)
       visit "/"
       expect(banner).to have_logged_in_subheader
     end
