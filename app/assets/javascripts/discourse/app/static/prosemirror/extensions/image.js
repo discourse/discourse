@@ -53,18 +53,12 @@ const extension = {
               extras: dom.hasAttribute("data-thumbnail")
                 ? "thumbnail"
                 : undefined,
+              "data-scale": dom.getAttribute("data-scale"),
             };
           },
         },
       ],
       toDOM(node) {
-        const width = node.attrs.width
-          ? (node.attrs.width * (node.attrs["data-scale"] || 100)) / 100
-          : undefined;
-        const height = node.attrs.height
-          ? (node.attrs.height * (node.attrs["data-scale"] || 100)) / 100
-          : undefined;
-
         if (node.attrs.extras === "audio") {
           return [
             "audio",
@@ -90,7 +84,7 @@ const extension = {
           attrs["data-thumbnail"] = true;
         }
 
-        return ["img", { ...attrs, width, height }];
+        return ["img", attrs];
       },
     },
   },

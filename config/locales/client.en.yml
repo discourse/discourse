@@ -2882,6 +2882,7 @@ en:
 
       image_toolbar:
         alt_text: "Add image description"
+        alt_text_reset: "Reset image description"
         zoom_out: "Decrease image size"
         zoom_in: "Increase image size"
         remove: "Remove image"

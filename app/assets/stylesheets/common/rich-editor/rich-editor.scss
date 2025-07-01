@@ -201,7 +201,7 @@
 .fk-d-menu[data-identifier="composer-image-alt-text"] {
   user-select: none;
   z-index: z("composer", "dropdown");
-  animation: fade-in ease 0.25s 1 forwards;
+  animation: fade-in ease 0.25s 1 forwards !important;
 
   .fk-d-menu__inner-content {
     overflow: visible;
@@ -270,18 +270,13 @@
 
 .fk-d-menu[data-identifier="composer-image-alt-text"] {
   min-width: calc(100% - 1rem);
-  background-color: rgb(
-    255,
-    255,
-    255,
-    0.6
-  ); // we don't want this to change with the theme for once
+  background-color: rgb(var(--secondary-rgb), 0.6);
   backdrop-filter: blur(10px);
   color: var(--primary);
   isolation: auto;
   border-radius: var(--d-border-radius);
   font-size: var(--font-down-1);
-  box-shadow: 0 4 4 0 rgb(var(--primary-rgb), 0.25);
+  box-shadow: 0 4px 4px 0 rgb(var(--primary-rgb), 0.25);
 
   .fk-d-menu__inner-content {
     border: none;
@@ -331,18 +326,25 @@
     resize: none;
     margin: 0;
     transition: height 0.1s ease;
-    padding-right: 1.25rem;
+    padding-right: var(--space-4);
+    margin-right: var(--space-2);
     cursor: pointer;
     scrollbar-color: rgb(var(--primary-rgb), 0.3) transparent;
     scrollbar-width: thin;
     overflow-y: hidden;
+    scrollbar-gutter: stable;
+    line-height: var(--line-height-large);
+
+    &::placeholder {
+      color: var(--primary);
+    }
 
     &:focus {
       outline: none;
     }
 
     .--expanded & {
-      height: 4.5em;
+      height: 4.25em;
       cursor: inherit;
       overflow-y: auto;
     }
@@ -365,6 +367,18 @@
         color: var(--primary) !important;
       }
     }
+  }
+
+  &__display {
+    pointer-events: none;
+    position: absolute;
+    left: 0;
+    right: var(--space-4);
+    top: 0;
+    bottom: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
 

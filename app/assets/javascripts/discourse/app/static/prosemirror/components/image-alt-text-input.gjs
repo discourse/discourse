@@ -2,6 +2,8 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { modifier } from "ember-modifier";
+import { or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import { i18n } from "discourse-i18n";
@@ -9,6 +11,19 @@ import { i18n } from "discourse-i18n";
 export default class ImageAltTextInput extends Component {
   @tracked isExpanded = false;
   @tracked altText = this.args.data.alt || "";
+
+  registerTextarea = modifier((element) => {
+    this.textarea = element;
+
+    // Without this, the textarea will not be focused when the user taps on it
+    // on mobile
+    const handleTouchStart = () => this.textarea.focus();
+    this.textarea.addEventListener("touchstart", handleTouchStart);
+
+    return () => {
+      this.textarea.removeEventListener("touchstart", handleTouchStart);
+    };
+  });
 
   @action
   expandInput() {
@@ -52,10 +67,9 @@ export default class ImageAltTextInput extends Component {
 
   @action
   positionCaretAtStart() {
-    const textarea = document.querySelector(".image-alt-text-input__field");
-    if (textarea) {
-      textarea.setSelectionRange(0, 0);
-      textarea.scrollTop = 0;
+    if (this.textarea) {
+      this.textarea.setSelectionRange(0, 0);
+      this.textarea.scrollTop = 0;
     }
   }
 
@@ -67,7 +81,7 @@ export default class ImageAltTextInput extends Component {
       }}
     >
       <textarea
-        value={{this.altText}}
+        value={{if this.isExpanded this.altText " "}}
         placeholder={{i18n "composer.image_alt_text.title"}}
         class="image-alt-text-input__field"
         {{on "input" this.onInputChange}}
@@ -75,6 +89,7 @@ export default class ImageAltTextInput extends Component {
         {{on "blur" this.onBlur}}
         {{on "keydown" this.onKeyDown}}
         {{on "keypress" this.onKeyPress}}
+        {{this.registerTextarea}}
       />
       {{#if this.isExpanded}}
         <DButton
@@ -82,8 +97,12 @@ export default class ImageAltTextInput extends Component {
           @action={{this.resetAltText}}
           @preventFocus={{true}}
           class="image-alt-text-input__reset"
-          title={{i18n "composer.image_alt_text.reset"}}
+          title={{i18n "composer.image_toolbar.alt_text_reset"}}
         />
+      {{else}}
+        <span class="image-alt-text-input__display">
+          {{or this.altText (i18n "composer.image_alt_text.title")}}
+        </span>
       {{/if}}
     </div>
   </template>

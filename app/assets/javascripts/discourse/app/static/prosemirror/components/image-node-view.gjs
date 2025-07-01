@@ -12,8 +12,8 @@ import ImageAltTextInput from "./image-alt-text-input";
 const MIN_SCALE = 50;
 const MAX_SCALE = 100;
 const SCALE_STEP = 25;
+
 const MARGIN = 8;
-const TOOLBAR_HEIGHT = 48;
 
 class ImageToolbar extends ToolbarBase {
   constructor(opts = {}) {
@@ -63,8 +63,16 @@ export default class ImageNodeView extends Component {
 
   constructor() {
     super(...arguments);
+
     // Register this component instance with the nodeView
     this.args.data?.setComponentInstance?.(this);
+
+    // For some reason mobile tap doesn't work without this
+    this.nodeView.dom.addEventListener("touchstart", (e) => {
+      if (this.menuInstance?.content?.contains(e.target)) {
+        e.target.closest("button")?.click();
+      }
+    });
   }
 
   willDestroy() {
@@ -73,8 +81,11 @@ export default class ImageNodeView extends Component {
     this.altMenuInstance?.destroy();
   }
 
-  stopEvent() {
-    return this.menuInstance?.expanded;
+  stopEvent(event) {
+    return (
+      this.menuInstance?.content?.contains(event.target) ||
+      this.altMenuInstance?.content?.contains(event.target)
+    );
   }
 
   #updateImageState() {
@@ -102,26 +113,16 @@ export default class ImageNodeView extends Component {
   }
 
   #rovingButtonBar(event) {
-    if (event.key === "Tab" && !this.altMenuInstance?.expanded) {
-      event.preventDefault();
-      this.view.focus();
-      return false;
-    }
-
-    // For arrow keys, prevent ProseMirror from handling them
-    if (!rovingButtonBar(event)) {
+    if (rovingButtonBar(event)) {
       event.preventDefault();
       event.stopPropagation();
-
-      return false;
     }
 
     return true;
   }
 
   @action
-  async showMenu() {
-    // Update state before showing menu
+  async showToolbar() {
     this.#updateImageState();
 
     if (this.menuInstance) {
@@ -132,22 +133,28 @@ export default class ImageNodeView extends Component {
       trigger: this.nodeView.dom.querySelector("img"),
       identifier: "composer-image-toolbar",
       component: ToolbarButtons,
-      placement: "right-end",
-      fallbackPlacements: ["left-end"],
+      placement: "top-start",
+      fallbackPlacements: ["top-start"],
       padding: MARGIN,
       data: this.imageToolbar,
       portalOutletElement: this.nodeView.dom,
       closeOnClickOutside: false,
       closeOnEscape: false,
       closeOnScroll: false,
-      limitShift: {
-        offset: ({ rects }) => ({ mainAxis: rects.floating.height + MARGIN }),
-      },
       offset({ rects }) {
         return {
-          mainAxis: -rects.reference.width + MARGIN,
-          crossAxis: -rects.reference.height + MARGIN,
+          mainAxis: -MARGIN - rects.floating.height,
+          crossAxis: MARGIN,
         };
+      },
+      limitShift: {
+        offset: ({ rects }) => {
+          const inputHeight = this.altMenuInstance?.content?.offsetHeight;
+
+          return {
+            crossAxis: rects.floating.height + 2 * MARGIN + inputHeight,
+          };
+        },
       },
     });
 
@@ -188,8 +195,9 @@ export default class ImageNodeView extends Component {
       }),
       limitShift: {
         offset: ({ rects }) => {
+          const toolbarHeight = this.menuInstance?.content?.offsetHeight || 0;
           return {
-            crossAxis: TOOLBAR_HEIGHT + MARGIN + rects.floating.height,
+            crossAxis: toolbarHeight + 2 * MARGIN + rects.floating.height,
           };
         },
       },
@@ -278,21 +286,12 @@ export default class ImageNodeView extends Component {
       attrs["data-thumbnail"] = true;
     }
 
-    if (node.attrs.width && node.attrs["data-scale"]) {
-      attrs.width =
-        (node.attrs.width * (node.attrs["data-scale"] || 100)) / 100;
-    }
-    if (node.attrs.height && node.attrs["data-scale"]) {
-      attrs.height =
-        (node.attrs.height * (node.attrs["data-scale"] || 100)) / 100;
-    }
-
     return attrs;
   }
 
   selectNode() {
     this.nodeView.dom.classList.add("ProseMirror-selectednode");
-    this.showMenu();
+    this.showToolbar();
     this.showAltText();
   }
 
@@ -300,6 +299,16 @@ export default class ImageNodeView extends Component {
     this.nodeView.dom.classList.remove("ProseMirror-selectednode");
     this.menuInstance?.close();
     this.altMenuInstance?.close();
+  }
+
+  get imageStyle() {
+    const scale = (this.imageAttrs["data-scale"] || 100) / 100;
+    if (this.imageAttrs.width && this.imageAttrs.height) {
+      return `width: ${this.imageAttrs.width * scale}px; height: ${
+        this.imageAttrs.height * scale
+      }px;`;
+    }
+    return null;
   }
 
   <template>
@@ -312,6 +321,7 @@ export default class ImageNodeView extends Component {
       data-orig-src={{this.imageAttrs.data-orig-src}}
       data-thumbnail={{this.imageAttrs.data-thumbnail}}
       data-scale={{this.imageAttrs.data-scale}}
+      style={{this.imageStyle}}
     />
   </template>
 }
