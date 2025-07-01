@@ -93,68 +93,6 @@ class AddMyMessagesLinkToSidebar < ActiveRecord::Migration[7.2]
   end
 
   def down
-    # Find the community sidebar section
-    community_section =
-      DB.query_single(
-        "SELECT id FROM sidebar_sections WHERE section_type = 0 AND public = true LIMIT 1",
-      ).first
-    return if !community_section
-
-    # Find the "My Messages" link and its position
-    result = DB.query <<~SQL
-      SELECT su.id, ssl.position
-      FROM sidebar_urls su
-      JOIN sidebar_section_links ssl ON ssl.linkable_id = su.id
-      WHERE su.value = '/my/messages'
-        AND ssl.sidebar_section_id = #{community_section}
-        AND ssl.linkable_type = 'SidebarUrl'
-      LIMIT 1
-    SQL
-
-    my_messages_data = result.first
-    return if !my_messages_data
-
-    sidebar_url_id = my_messages_data.id
-    my_messages_position = my_messages_data.position
-
-    # Remove the "My Messages" link
-    DB.query <<~SQL
-      DELETE FROM sidebar_section_links
-      WHERE linkable_id = #{sidebar_url_id} AND linkable_type = 'SidebarUrl'
-    SQL
-
-    DB.query <<~SQL
-      DELETE FROM sidebar_urls
-      WHERE id = #{sidebar_url_id}
-    SQL
-
-    # Get the maximum position to use as a temporary offset
-    max_position = DB.query_single(<<~SQL).first || 0
-      SELECT COALESCE(MAX(position), -1)
-      FROM sidebar_section_links
-      WHERE sidebar_section_id = #{community_section}
-        AND linkable_type = 'SidebarUrl'
-    SQL
-
-    # Use a much higher temporary offset to avoid conflicts
-    temp_offset = max_position + 1000
-
-    # First, move all links that came after "My Messages" to temporary high positions
-    DB.query <<~SQL
-      UPDATE sidebar_section_links
-      SET position = position + #{temp_offset}
-      WHERE sidebar_section_id = #{community_section}
-        AND linkable_type = 'SidebarUrl'
-        AND position > #{my_messages_position}
-    SQL
-
-    # Then move them back to their correct positions (shifted by -1)
-    DB.query <<~SQL
-      UPDATE sidebar_section_links
-      SET position = position - #{temp_offset} - 1
-      WHERE sidebar_section_id = #{community_section}
-        AND linkable_type = 'SidebarUrl'
-        AND position > #{temp_offset}
-    SQL
+    raise ActiveRecord::IrreversibleMigration
   end
 end
