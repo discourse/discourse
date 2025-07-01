@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import ThemesGridCard from "./themes-grid-card";
 import { getCardsForAdminThemesGrid } from "discourse/lib/admin-custom-themes-grid-cards";
+import ThemesGridCard from "./themes-grid-card";
 
 // NOTE (martin): Much of the JS code in this component is placeholder code. Much
 // of the existing theme logic in /admin/customize/themes has old patterns
