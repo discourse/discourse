@@ -158,7 +158,7 @@ import {
   reopenWidget,
 } from "discourse/widgets/widget";
 import { addImageWrapperButton } from "discourse-markdown-it/features/image-controls";
-import { addCardToAdminThemesGrid } from "admin/components/themes-grid";
+import { addCardToAdminThemesGrid } from "discourse/lib/admin-custom-themes-grid-cards";
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 import { modifySelectKit } from "select-kit/lib/plugin-api";
 
