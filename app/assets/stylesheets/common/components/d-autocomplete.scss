@@ -1,5 +1,7 @@
+@use "lib/viewport";
+
 .fk-d-menu[data-identifier="d-autocomplete"] {
-  z-index: z("modal", "dialog");
+  z-index: z("composer", "dropdown") + 1;
 }
 
 // Ensure autocomplete results have proper styling
@@ -7,10 +9,14 @@
   .autocomplete.ac-user {
     max-width: 370px;
     min-width: 300px;
+
+    @include viewport.from(sm) {
+      max-width: 600px;
+    }
     background-color: var(--secondary);
     border: 1px solid var(--primary-low);
     border-radius: 3px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px rgb(0 0 0 / 0.1);
 
     ul {
       list-style: none;
