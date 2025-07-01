@@ -3,20 +3,29 @@
 // which causes problems when overriding custom properties in themes
 :root {
   --topic-body-width: #{$topic-body-width};
-  --topic-body-width-padding: #{$topic-body-width-padding};
+  --topic-body-width-padding: var(--space-3);
   --topic-avatar-width: #{$topic-avatar-width};
   --d-border-radius: 4px;
   --d-border-radius-large: calc(var(--d-border-radius) * 2);
   --d-nav-pill-border-radius: var(--d-border-radius);
   --d-input-border-radius: var(--d-border-radius);
   --d-content-background: initial;
-  --space-0: 0.125rem; // 2px
-  --space-1: 0.25rem; // 4px
-  --space-2: calc(0.25rem * 2);
-  --space-3: calc(0.25rem * 3);
-  --space-4: calc(0.25rem * 4);
-  --space-5: calc(0.25rem * 5);
-  --space-6: calc(0.25rem * 6);
+
+  // used for padding & margin
+  --space: 0.25rem; // 4px
+  --space-half: calc(var(--space) / 2); // 2px
+  --space-1: var(--space); // 4px
+  --space-2: calc(var(--space) * 2);
+  --space-3: calc(var(--space) * 3);
+  --space-4: calc(var(--space) * 4);
+  --space-5: calc(var(--space) * 5);
+  --space-6: calc(var(--space) * 6);
+  --space-7: calc(var(--space) * 7);
+  --space-8: calc(var(--space) * 8);
+  --space-9: calc(var(--space) * 9);
+  --space-10: calc(var(--space) * 10);
+  --space-11: calc(var(--space) * 11);
+  --space-12: calc(var(--space) * 12);
 }
 
 // --------------------------------------------------

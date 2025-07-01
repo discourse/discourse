@@ -1,5 +1,5 @@
 .sidebar-section-wrapper {
-  padding-block: 0.35rem;
+  padding-block: var(--space-1);
   border-bottom: 1px solid var(--d-sidebar-border-color);
 
   &:first-child {
