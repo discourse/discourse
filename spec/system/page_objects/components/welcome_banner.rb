@@ -30,6 +30,10 @@ module PageObjects
         )
       end
 
+      def has_no_subheader?
+        has_no_css?(".welcome-banner .welcome-banner__subheader")
+      end
+
       def has_anonymous_subheader?
         has_css?(
           ".welcome-banner .welcome-banner__subheader",
