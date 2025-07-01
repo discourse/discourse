@@ -276,16 +276,14 @@ export default class PostStream extends Component {
               (this.viewportTracker.getCloakingData
                 post above=this.cloakAbove below=this.cloakBelow
               )
-              as |PostComponent cloakingData|
+              (eq this.keyboardSelectedPostNumber post.post_number)
+              as |PostComponent cloakingData keyboardSelected|
             }}
               <PostComponent
                 id={{concat "post_" post.post_number}}
                 class={{concatClass
                   (if cloakingData.active "post-stream--cloaked")
-                  (if
-                    (eq this.keyboardSelectedPostNumber post.post_number)
-                    "selected"
-                  )
+                  (if keyboardSelected "selected")
                 }}
                 style={{cloakingData.style}}
                 @cloaked={{cloakingData.active}}
@@ -302,6 +300,7 @@ export default class PostStream extends Component {
                 @filteringRepliesToPostNumber={{@filteringRepliesToPostNumber}}
                 @grantBadge={{fn @grantBadge post}}
                 @highlightTerm={{this.highlightTerm}}
+                @keyboardSelected={{keyboardSelected}}
                 @lockPost={{fn @lockPost post}}
                 @multiSelect={{@multiSelect}}
                 @permanentlyDeletePost={{fn @permanentlyDeletePost post}}
