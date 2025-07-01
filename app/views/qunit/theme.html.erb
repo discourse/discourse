@@ -18,9 +18,8 @@
       <%- end %>
       <%= preload_script "test-site-settings" %>
       <%= theme_translations_lookup %>
-      <%= theme_js_lookup %>
-      <%= theme_lookup("head_tag") %>
       <%= theme_tests %>
+      <%= theme_lookup("head_tag") %>
 
       <%= tag.meta id: 'data-discourse-setup', data: client_side_setup_data %>
       <meta property="og:title" content="">

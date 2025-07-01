@@ -52,9 +52,14 @@ esbuild
       path: "path-browserify",
       url: "./url-polyfill",
       "source-map-js": "source-map-js",
+      assert: "./noop",
+      fs: "./noop",
     },
     banner: {
       js: `var process = { "env": { "EMBER_ENV": "production" }, "cwd": () => "/" };`,
+    },
+    define: {
+      "import.meta.url": "'http://example.com'",
     },
     external: [],
     entryPoints: ["./transpiler.js"],
