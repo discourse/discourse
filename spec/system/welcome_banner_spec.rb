@@ -6,7 +6,33 @@ describe "Welcome banner", type: :system do
   let(:search_page) { PageObjects::Pages::Search.new }
 
   context "when welcome banner is enabled" do
-    before { SiteSetting.enable_welcome_banner = true }
+    before do
+      SiteSetting.enable_welcome_banner = true
+      # 1 option
+      # I18n.backend.store_translations(
+      #   :en,
+      #   "welcome_banner.subheader.anonymous_members" => "Something about us.",
+      #   "welcome_banner.subheader.logged_in_members" => "We rock!"
+      # )
+      # 2 option
+      # I18n.backend.store_translations(
+      #   :en,
+      #   js: {
+      #     welcome_banner: {
+      #       subheader: {
+      #         anonymous_members: "Something about us.",
+      #         logged_in_members: "We rock!"
+      #       }
+      #     }
+      #   }
+      # )
+      # 3 option
+      TranslationOverride.upsert!(
+        locale: "en",
+        translation_key: "welcome_banner.subheader.anonymous_members",
+        value: "Something about us.",
+      )
+    end
 
     it "shows for logged in and anonymous users" do
       visit "/"
@@ -15,6 +41,17 @@ describe "Welcome banner", type: :system do
       sign_in(current_user)
       visit "/"
       expect(banner).to have_logged_in_title(current_user.username)
+    end
+
+    it "shows subheader" do
+      # puts I18n.t("js.welcome_banner")
+      visit "/"
+      # binding.pry
+      expect(banner).to have_anonymous_subheader
+      sign_in(current_user)
+      visit "/"
+      # binding.pry
+      expect(banner).to have_logged_in_subheader
     end
 
     it "only displays on top_menu routes" do

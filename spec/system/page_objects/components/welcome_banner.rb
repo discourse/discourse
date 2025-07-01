@@ -29,6 +29,20 @@ module PageObjects
             I18n.t("js.welcome_banner.header.logged_in_members", preferred_display_name: username),
         )
       end
+
+      def has_anonymous_subheader?
+        has_css?(
+          ".welcome-banner .welcome-banner__subheader",
+          text: I18n.t("js.welcome_banner.subheader.anonymous_members"),
+        )
+      end
+
+      def has_logged_in_subheader?
+        has_css?(
+          ".welcome-banner .welcome-banner__subheader",
+          text: I18n.t("js.welcome_banner.subheader.logged_in_members"),
+        )
+      end
     end
   end
 end
