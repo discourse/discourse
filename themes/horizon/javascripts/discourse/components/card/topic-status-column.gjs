@@ -10,7 +10,7 @@ export default class TopicStatusColumn extends Component {
     if (this.args.topic.is_hot) {
       return {
         icon: "fire",
-        text: "themes.horizon.topic_hot",
+        text: "topic_statuses.hot.title",
         className: "--hot",
       };
     }
@@ -18,7 +18,7 @@ export default class TopicStatusColumn extends Component {
     if (this.args.topic.pinned) {
       return {
         icon: "thumbtack",
-        text: "themes.horizon.topic_pinned",
+        text: "topic_statuses.pinned.title",
         className: "--pinned",
       };
     }
