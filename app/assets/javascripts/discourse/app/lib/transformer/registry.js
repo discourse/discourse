@@ -5,6 +5,7 @@ export const BEHAVIOR_TRANSFORMERS = Object.freeze([
   "discovery-topic-list-load-more",
   "full-page-search-load-more",
   "post-menu-toggle-like-action",
+  "post-stream-error-loading",
   "topic-list-item-click",
 ]);
 
