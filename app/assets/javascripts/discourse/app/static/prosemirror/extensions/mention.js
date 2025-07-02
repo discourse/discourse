@@ -108,7 +108,7 @@ const extension = {
             this._processingMentionNodes = true;
 
             view.state.doc.descendants((node, pos) => {
-              if (node.type.name !== "mention" || !node.attrs.valid) {
+              if (node.type.name !== "mention") {
                 return;
               }
 
@@ -130,11 +130,10 @@ const extension = {
                   continue;
                 }
 
+                // insert invalid mentions as text nodes
+                const textNode = view.state.schema.text(`@${name}`);
                 view.dispatch(
-                  view.state.tr.setNodeMarkup(pos, null, {
-                    ...node.attrs,
-                    valid: false,
-                  })
+                  view.state.tr.replaceWith(pos, pos + node.nodeSize, textNode)
                 );
               }
             };

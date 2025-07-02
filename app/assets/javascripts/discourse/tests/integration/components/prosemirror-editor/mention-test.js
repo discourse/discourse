@@ -51,7 +51,7 @@ module(
       ],
       "invalid mention": [
         "Hello @invalid, how are you?",
-        '<p>Hello <a class="mention" data-name="invalid" data-valid="false" contenteditable="false" draggable="true">@invalid</a>, how are you?</p>',
+        "<p>Hello @invalid, how are you?</p>",
         "Hello @invalid, how are you?",
       ],
     };
