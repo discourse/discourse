@@ -170,7 +170,7 @@ createWidget("reply-to-tab", {
 
   buildAttributes(attrs) {
     let result = {
-      tabindex: "0",
+      href: "",
     };
 
     if (!attrs.mobileView) {
@@ -201,7 +201,8 @@ createWidget("reply-to-tab", {
     ];
   },
 
-  click() {
+  click(event) {
+    event.preventDefault();
     this.state.loading = true;
     this.sendWidgetAction("toggleReplyAbove").then(
       () => (this.state.loading = false)
