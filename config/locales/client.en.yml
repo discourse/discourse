@@ -818,6 +818,9 @@ en:
         title: "Why are you rejecting this user?"
         send_email: "Send rejection email"
       flagged_as: "Flagged as"
+      posted_in: "Posted in"
+      review_user: "Flagged User"
+
 
     relative_time_picker:
       minutes:
