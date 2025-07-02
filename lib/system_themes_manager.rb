@@ -12,7 +12,14 @@ class SystemThemesManager
     theme_dir = "#{Rails.root}/themes/#{theme_name}"
 
     remote_theme = RemoteTheme.import_theme_from_directory(theme_dir, theme_id: theme_id)
-    remote_theme.color_scheme&.update!(user_selectable: true)
+    if remote_theme.color_scheme
+      remote_theme.color_scheme.update!(user_selectable: true)
+      remote_theme
+        .color_schemes
+        .where(name: "#{remote_theme.color_scheme.name} Dark")
+        .first
+        &.update!(user_selectable: true)
+    end
     Stylesheet::Manager.clear_theme_cache!
   end
 end

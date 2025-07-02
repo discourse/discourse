@@ -979,7 +979,7 @@ RSpec.describe Stylesheet::Manager do
 
       # Ensure we force compile each theme only once
       expect(output.scan(/#{child_theme_with_css.name}/).length).to eq(2) # ltr/rtl
-      expect(StylesheetCache.count).to eq(38) # (1 theme with rtl/ltr) + 32 color schemes (2 themes * 8 color schemes (7 defaults + 1 theme scheme) * 2 (light and dark mode per scheme)) + 4 Horizon
+      expect(StylesheetCache.count).to eq(42) # (1 theme with rtl/ltr) + 32 color schemes (2 themes * 8 color schemes (7 defaults + 1 theme scheme) * 2 (light and dark mode per scheme)) + 8 Horizon
     end
 
     it "generates precompiled CSS - core and themes" do
@@ -987,7 +987,7 @@ RSpec.describe Stylesheet::Manager do
       Stylesheet::Manager.precompile_theme_css
 
       results = StylesheetCache.pluck(:target)
-      expect(results.size).to eq(48) # 10 core targets + 2 theme (ltr/rtl) + 32 color schemes (light and dark mode per scheme) + 4 Horizon
+      expect(results.size).to eq(52) # 10 core targets + 2 theme (ltr/rtl) + 32 color schemes (light and dark mode per scheme) + 8 Horizon
 
       expect(results.count { |target| target =~ /^common_theme_/ }).to eq(2) # ltr/rtl
     end
@@ -999,7 +999,7 @@ RSpec.describe Stylesheet::Manager do
       Stylesheet::Manager.precompile_theme_css
 
       results = StylesheetCache.pluck(:target)
-      expect(results.size).to eq(62) # 10 core targets + theme rtl/ltr + 32 color schemes (light and dark mode per scheme) + 14 Foundation + 4 Horizon
+      expect(results.size).to eq(66) # 10 core targets + theme rtl/ltr + 32 color schemes (light and dark mode per scheme) + 14 Foundation + 8 Horizon
 
       expect(results).to include("color_definitions_#{scheme1.name}_#{scheme1.id}_#{user_theme.id}")
       expect(results).to include(
