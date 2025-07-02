@@ -12,17 +12,18 @@ acceptance("Admin - Config areas - Themes", function (needs) {
     });
   });
 
-  test("custom cards in themes grid", async function (assert) {
+  test("admin-themes-grid-additional-cards plugin outlet", async function (assert) {
     withPluginApi("0.1", (api) => {
-      api.addCardToAdminThemesGrid((AdminConfigAreaCardComponent) => {
-        return <template>
-          <AdminConfigAreaCardComponent class="my-test-card">
+      api.renderInOutlet(
+        "admin-themes-grid-additional-cards",
+        <template>
+          <@AdminConfigAreaCardComponent class="my-test-card">
             <:content>
               Hello, this is a test card.
             </:content>
-          </AdminConfigAreaCardComponent>
-        </template>;
-      });
+          </@AdminConfigAreaCardComponent>
+        </template>
+      );
     });
 
     await visit("/admin/config/customize/themes");
