@@ -8,13 +8,13 @@ source "https://rubygems.org"
 
 gem "bootsnap", require: false, platform: :mri
 
-gem "actionmailer", "~> 7.2.0"
-gem "actionpack", "~> 7.2.0"
-gem "actionview", "~> 7.2.0"
-gem "activemodel", "~> 7.2.0"
-gem "activerecord", "~> 7.2.0"
-gem "activesupport", "~> 7.2.0"
-gem "railties", "~> 7.2.0"
+gem "actionmailer", "~> 8.0.0"
+gem "actionpack", "~> 8.0.0"
+gem "actionview", "~> 8.0.0"
+gem "activemodel", "~> 8.0.0"
+gem "activerecord", "~> 8.0.0"
+gem "activesupport", "~> 8.0.0"
+gem "railties", "~> 8.0.0"
 
 gem "propshaft"
 
@@ -144,7 +144,7 @@ group :test, :development do
 
   gem "rswag-specs"
 
-  gem "annotate"
+  gem "annotaterb"
 
   gem "syntax_tree"
 
