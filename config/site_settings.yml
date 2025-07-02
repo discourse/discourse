@@ -3625,6 +3625,14 @@ uncategorized:
     client: true
     default: true
     area: "interface"
+  welcome_banner_location:
+    default: "Above topic content"
+    type: enum
+    client: true
+    choices:
+      - "Above topic content"
+      - "Below site header"
+    area: "interface"
 
 user_preferences:
   default_email_digest_frequency:
