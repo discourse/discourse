@@ -2708,7 +2708,6 @@ en:
     show_bottom_topic_map: "Shows the topic map at the bottom of the topic when it has 10 replies or more."
     show_topic_map_in_topics_without_replies: "Shows the topic map even if the topic has no replies."
     enable_welcome_banner: "Display a banner on your main topic list pages to welcome members and allow them to search site content"
-    welcome_banner_location: "Determines where on the page the welcome banner will appear."
 
     splash_screen: "Displays a temporary loading screen while site assets load"
     navigation_menu: "Specify sidebar or header dropdown as the main navigation menu for your site. Sidebar is recommended."
