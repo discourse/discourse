@@ -38,19 +38,19 @@ end
 # Table name: javascript_caches
 #
 #  id             :bigint           not null, primary key
-#  theme_field_id :bigint
-#  digest         :string
 #  content        :text             not null
+#  digest         :string
+#  name           :string
+#  source_map     :text
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
+#  theme_field_id :bigint
 #  theme_id       :bigint
-#  source_map     :text
-#  name           :string
 #
 # Indexes
 #
 #  index_javascript_caches_on_digest                   (digest)
-#  index_javascript_caches_on_theme_field_id_and_name  (theme_field_id,name) UNIQUE WHERE (theme_field_id IS NOT NULL)
+#  index_javascript_caches_on_theme_field_id_and_name  (theme_field_id,name) UNIQUE NULLS NOT DISTINCT WHERE (theme_field_id IS NOT NULL)
 #  index_javascript_caches_on_theme_id                 (theme_id) UNIQUE
 #
 # Foreign Keys
