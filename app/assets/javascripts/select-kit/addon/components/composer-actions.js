@@ -208,8 +208,8 @@ export default class ComposerActions extends DropdownSelectBoxComponent {
 
     if (this.canUnlistTopic) {
       items.push({
-        name: i18n("composer.toggle_unlisted"),
-        description: i18n("composer.toggle_unlisted_description"),
+        name: i18n("composer.composer_actions.toggle_unlisted.label"),
+        description: i18n("composer.composer_actions.toggle_unlisted.desc"),
         icon: "far-eye-slash",
         id: "toggle_unlisted",
       });
