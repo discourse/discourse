@@ -75,9 +75,8 @@ acceptance("Discourse Presence Plugin", function (needs) {
       "publishes reply presence when typing"
     );
 
-    const menu = selectKit(".toolbar-popup-menu-options");
-    await menu.expand();
-    await menu.selectRowByName("toggle-whisper");
+    await click(".toolbar-menu__options-trigger");
+    await click("[data-name='toggle-whisper']");
 
     assert
       .dom(".composer-actions svg.d-icon-far-eye-slash")
