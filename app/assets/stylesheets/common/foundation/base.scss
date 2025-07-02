@@ -154,12 +154,12 @@ table {
 }
 
 tbody {
-  border-top: 3px solid var(--primary-low);
+  border-top: 3px solid var(--table-border-color);
 }
 
 .topic-list-item,
 tr {
-  border-bottom: 1px solid var(--primary-low);
+  border-bottom: 1px solid var(--table-border-color);
 
   @media (prefers-reduced-motion: no-preference) {
     &.highlighted {
