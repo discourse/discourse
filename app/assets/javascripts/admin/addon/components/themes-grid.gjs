@@ -1,6 +1,8 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import { getCardsForAdminThemesGrid } from "discourse/lib/admin-custom-themes-grid-cards";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import lazyHash from "discourse/helpers/lazy-hash";
+import AdminConfigAreaCard from "admin/components/admin-config-area-card";
 import ThemesGridCard from "./themes-grid-card";
 
 // NOTE (martin): Much of the JS code in this component is placeholder code. Much
@@ -43,9 +45,12 @@ export default class ThemesGrid extends Component {
       {{#each @themes as |theme|}}
         <ThemesGridCard @theme={{theme}} @allThemes={{@themes}} />
       {{/each}}
-      {{#each (getCardsForAdminThemesGrid) as |Card|}}
-        <Card />
-      {{/each}}
+      <PluginOutlet
+        @name="admin-themes-grid-additional-cards"
+        @outletArgs={{lazyHash
+          AdminConfigAreaCardComponent=AdminConfigAreaCard
+        }}
+      />
     </div>
   </template>
 }
