@@ -37,7 +37,7 @@ class ActiveRecord::Relation
     def select_raw(arel, name = nil, binds = [], &block)
       arel = arel_from_relation(arel)
       sql, binds = to_sql_and_binds(arel, binds)
-      execute_and_clear(sql, name, binds, &block)
+      internal_execute(sql, name, binds, &block)
     end
   end
 
@@ -57,7 +57,8 @@ class ActiveRecord::Relation
 
       klass
         .connection
-        .select_raw(relation.arel) do |result, _|
+        .select_raw(relation.arel)
+        .then do |result|
           result.type_map = DB.type_map
           result.nfields == 1 ? result.column_values(0) : result.values
         end
