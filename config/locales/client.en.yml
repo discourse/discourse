@@ -4453,6 +4453,8 @@ en:
       pinned:
         title: "Pinned"
         help: "This topic is pinned for you; it will display at the top of its category"
+      hot:
+        title: "Hot"
       unlisted:
         help: "This topic is unlisted; it will not be displayed in topic lists, and can only be accessed via a direct link. %{unlistedReason}"
       personal_message:
