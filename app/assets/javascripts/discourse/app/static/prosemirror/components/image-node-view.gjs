@@ -169,8 +169,9 @@ export default class ImageNodeView extends Component {
       padding: MARGIN,
       data: {
         alt: this.node.attrs.alt || "",
-        onSave: (altText) => this.saveAltText(altText),
+        onSave: this.saveAltText,
         onClose: () => this.view.focus(),
+        view: this.view,
       },
       portalOutletElement: this.nodeView.dom,
       closeOnClickOutside: false,
@@ -194,7 +195,7 @@ export default class ImageNodeView extends Component {
   }
 
   @action
-  saveAltText(altText) {
+  saveAltText(altText, forceFocus) {
     const pos = this.getPos();
     if (pos === undefined || pos === null) {
       return;
@@ -209,6 +210,10 @@ export default class ImageNodeView extends Component {
     tr.setNodeMarkup(pos, null, newAttrs);
     tr.setSelection(NodeSelection.create(tr.doc, pos));
     this.view.dispatch(tr);
+
+    if (forceFocus) {
+      this.view.focus();
+    }
   }
 
   @action

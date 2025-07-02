@@ -29,9 +29,12 @@ export default class ImageAltTextInput extends Component {
   }
 
   @action
-  onBlur() {
+  onBlur(event) {
+    // helps avoid a shift of the composer window on mobile
+    const forceFocus = event.relatedTarget === this.args.data.view.dom;
+
     this.isExpanded = false;
-    this.args.data.onSave?.(this.altText.trim());
+    this.args.data.onSave?.(this.altText.trim(), forceFocus);
   }
 
   @action
@@ -39,9 +42,10 @@ export default class ImageAltTextInput extends Component {
     event.stopPropagation();
     if (event.key === "Enter") {
       event.preventDefault();
-      this.onBlur();
+      this.args.data.onClose?.();
     } else if (event.key === "Escape") {
       event.preventDefault();
+      this.altText = this.args.data.alt || "";
       this.args.data.onClose?.();
     }
   }
