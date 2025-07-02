@@ -30,7 +30,7 @@ export default class ReviewableItem extends Component {
   get scoreSummary() {
     const scores = this.args.reviewable.reviewable_scores || [];
 
-    const scoreData = scores.reduce((acc, score) => {
+    const scoreDataTally = scores.reduce((acc, score) => {
       if (!acc[score.score_type.type]) {
         acc[score.score_type.type] = {
           title: score.score_type.title,
@@ -43,7 +43,7 @@ export default class ReviewableItem extends Component {
       return acc;
     }, {});
 
-    return Object.values(scoreData);
+    return Object.values(scoreDataTally);
   }
 
   <template>
@@ -63,7 +63,7 @@ export default class ReviewableItem extends Component {
                 <div class="review-item__flag-badges">
                   {{#each this.scoreSummary as |score|}}
                     <ReviewableFlagReason
-                      @type={{score.type}}
+                      @type={{dasherize score.type}}
                       @title={{score.title}}
                       @count={{score.count}}
                     />

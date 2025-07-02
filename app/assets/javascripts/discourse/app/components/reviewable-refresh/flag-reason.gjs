@@ -1,17 +1,9 @@
 import Component from "@glimmer/component";
 import { gt } from "truth-helpers";
 
-const SCORE_TYPE_TO_CSS_CLASS_MAP = {
-  illegal: "illegal",
-  inappropriate: "inappropriate",
-  needs_approval: "needs-approval",
-  off_topic: "off-topic",
-  spam: "spam",
-};
-
 export default class ReviewableFlagReason extends Component {
   get scoreCSSClass() {
-    return `--${SCORE_TYPE_TO_CSS_CLASS_MAP[this.args.type] || "other"}`;
+    return `--${this.args.type || "others"} `;
   }
 
   <template>
