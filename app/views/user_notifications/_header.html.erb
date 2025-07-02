@@ -1,0 +1,29 @@
+<%# Displays the header in the digest email %>
+
+<%- if I18n.t('user_notifications.digest.custom.html.header').present? %>
+  <table width="100%" class="digest-header logo-header" dir="<%= rtl? ? 'rtl' : 'ltr' %>" style="border-spacing:0;padding:0;">
+    <tr>
+      <td></td>
+      <td width="650" style="padding:0;">
+        <%= raw(t 'user_notifications.digest.custom.html.header') %>
+      </td>
+      <td></td>
+    </tr>
+  </table>
+<%- else %>
+  <table width="100%" class="digest-header text-header with-dir" style="background-color:#<%= @header_bgcolor -%>;">
+    <tr>
+      <td></td>
+      <td width="650" align="center" style="text-align: center;padding: 20px 0; font-family:Arial,sans-serif;">
+        <a href="<%= Discourse.base_url %>" style="color:#<%= @header_color -%>;font-size:22px;text-decoration:none;">
+        <%- if logo_url.blank? %>
+          <%= SiteSetting.title %>
+        <%- else %>
+          <img src="<%= logo_url %>" height="40" style="clear:both;display:block;height:40px;margin:auto;max-width:100%;outline:0;text-decoration:none;" alt="<%= SiteSetting.title %>">
+        <%- end %>
+        </a>
+      </td>
+      <td></td>
+    </tr>
+  </table>
+<%- end %>

@@ -1,0 +1,93 @@
+<%# Displays a single popular topic in the digest email %>
+
+<table class="digest-topic popular-topic with-dir" style="width:100%">
+  <tbody>
+    <tr>
+      <td class="digest-topic-category with-dir" style="margin:0;padding:<%= rtl? ? '0 16px 0 0' : '0 0 0 16px' %>;vertical-align:top;">
+        <p style="color:#8f8f8f;line-height:1.3;margin: 20px 0 0 0;">
+          <%= category_badge(topic.category, inline_style: true, absolute_url: true) %>
+        </p>
+      </td>
+      <td class="with-dir" style="margin:0;padding:<%= rtl? ? '0 0 0 16px' : '0 16px 0 0' %>;text-align:<%= rtl? ? 'left' : 'right' %>;vertical-align:top;">
+        <p class="text-right digest-created-at" style="color:#8f8f8f;line-height:1.3;margin:20px 0 0 0;font-weight:400;">
+          <%= short_date(topic.created_at) %>
+        </p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<table class="digest-topic-title-wrapper with-dir" style="vertical-align:top;width:100%">
+  <tbody>
+    <tr>
+      <td class="with-dir" style="padding:<%= rtl? ? '0 16px 8px 8px' : '0 8px 8px 16px' %>;width:100%;">
+        <h2 class="digest-topic-title" style="font-size:18px;font-weight:400;line-height:1.3;margin:0;padding:0;word-wrap:normal">
+          <a href="<%= Discourse.base_url_no_prefix + topic.relative_url %>" style="font-weight:400;line-height:1.3;margin:0;padding:0;text-decoration:none">
+            <strong><%= gsub_emoji_to_unicode(topic.title.truncate(100, separator: /\s/)) -%></strong>
+          </a>
+        </h2>
+        <%- if SiteSetting.show_topic_featured_link_in_digest && topic.featured_link %>
+          <a class='topic-featured-link' href='<%= topic.featured_link %>'><%= raw topic_featured_link_domain(topic.featured_link) %></a>
+        <%- end %>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<table class="digest-topic-title-wrapper with-dir" style="padding:0;position:relative;vertical-align:top;width:100%">
+  <tbody>
+    <tr>
+      <td class="digest-topic-op" style="color:#0a0a0a;line-height:1.3;margin:0 auto;padding:<%= rtl? ? '0 16px 0 0' : '0 0 0 16px' %>;width:50px;vertical-align:top;">
+        <img src="<%= topic.user.small_avatar_url -%>" style="border-radius:50%;clear:both;display:block;float:none;height:50px;width:50px;margin:0;max-width:100%;outline:0;text-align:center;text-decoration:none;" align="center" alt="<%= topic.user.username -%>">
+      </td>
+      <td style="color:#0a0a0a;padding:<%= rtl? ? '0 8px 0 16px' : '0 16px 0 8px' %>;vertical-align:top;">
+        <% if topic.user %>
+          <% if SiteSetting.enable_names? && topic.user.name.present? && topic.user.name.downcase != topic.user.username.downcase %>
+            <h6 class="digest-topic-username" style="color:inherit;line-height:1.3;margin:0;padding:0;font-weight: normal;font-size:16px;"><%= topic.user.name -%></h6>
+          <% end %>
+          <p class="digest-topic-name" style="color:inherit;font-size:14px;font-weight:400;line-height:1.3;margin:0 0 8px 0;padding:0;word-wrap:normal;"><%= topic.user.username -%></p>
+        <% end %>
+      </td>
+      <%- if show_image_with_url(topic.image_url) && topic.featured_link.nil? && !(@excerpts[topic.first_post&.id]||"").include?(topic.image_url) -%>
+        <td style="margin:0;padding:<%= rtl? ? '0 8px 0 16px' : '0 16px 0 8px' %>;vertical-align:top;" align="right">
+          <img src="<%= url_for_email(topic.image_url) -%>" height="64" style="margin:auto;max-height:64px;max-width:100%;outline:0;text-decoration:none;" alt="topic image">
+        </td>
+      <%- end -%>
+    </tr>
+  </tbody>
+</table>
+<%- if topic.first_post.present? && !topic.first_post.user_deleted %>
+  <table class="digest-topic-body with-dir" style="border-bottom:1px solid #f3f3f3;mso-border-bottom-alt:none;padding:0;vertical-align:top;width:100%;">
+    <tbody>
+      <tr>
+        <td class="post-excerpt" style="color:#0a0a0a;font-size:14px;padding:0 16px 0 16px;width:100%;font-weight:normal;mso-padding-alt: 16px;">
+          <%= @excerpts[topic.first_post.id] %>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+<%- end %>
+<table class="digest-topic-stats with-dir" style="padding:0;vertical-align:top;width:100%; padding-top:20px;">
+  <tbody>
+    <tr>
+      <td class="digest-topic-stat" style="padding:<%= rtl? ? '0 16px 16px 8px' : '0 8px 16px 16px' %>;white-space:nowrap;vertical-align:top;width:75px">
+        <img class="digest-icon" src="<%= email_image_url 'heart_lightdark.png' -%>" style="clear:both;display:inline-block;float:<%= rtl? ? 'right' : 'left' %>;height:20px;width:20px;margin:0;max-width:100%;outline:0;text-decoration:none;" alt="likes">
+        <span style="color:#8f8f8f;float:<%= rtl? ? 'right' : 'left' %>;line-height:1.3;margin:0 5px 10px 5px;padding:0;font-weight:400;">&nbsp;<%= topic.like_count -%></span>
+      </td>
+      <td class="digest-topic-stat" style="padding:0 8px 16px 8px;white-space:nowrap;vertical-align:top;width:75px">
+        <img class="digest-icon" src="<%= email_image_url 'comment_lightdark.png' -%>" style="clear:none;display:inline-block;float:<%= rtl? ? 'right' : 'left' %>;height:20px;width:20px;margin:0;max-width:100%;outline:0;text-decoration:none;" alt="replies">
+        <span style="color:#8f8f8f;float:<%= rtl? ? 'right' : 'left' %>;line-height:1.3;margin:0 5px 10px 5px;padding:0;font-weight:400;">&nbsp;<%= topic.posts_count - 1 -%></span>
+      </td>
+      <td class="digest-read-more-wrap" style="line-height:1.3;padding:<%= rtl? ? '0 8px 0 16px' : '0 16px 0 8px' %>;text-align:<%= rtl? ? 'left' : 'right' %>;white-space:nowrap;vertical-align:top;">
+        <span class="with_accent-colors mso-accent-link">
+          <a href="<%= Discourse.base_url_no_prefix + topic.relative_url %>" class="digest-button with-accent-colors" style="width:100%;text-decoration:none;padding:8px 16px;white-space:nowrap;">
+            <%=t 'user_notifications.digest.join_the_discussion' %>
+          </a>
+        </span>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<div style="background-color:#f3f3f3;">
+  <table class="spacer with-dir" style="padding:0;width:100%;background-color:#f3f3f3">
+    <tbody><tr><td height="20px" style="border-collapse:collapse!important;line-height:20px;margin:0;mso-line-height-rule:exactly;padding:0;">&#xA0;</td></tr></tbody>
+  </table>
+</div>
