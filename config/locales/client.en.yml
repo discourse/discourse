@@ -3310,7 +3310,7 @@ en:
         hot: "There are no hot topics."
         filter: "There are no topics."
         education:
-          "You can view and change your new topic tracking settings in <a href=\"%{basePath}/my/preferences/tracking\">your preferences</a>."
+          topic_tracking_preferences: "You can view and change your new topic tracking settings in <a href=\"%{basePath}/my/preferences/tracking\">your preferences</a>."
           unread: "Nothing left unread...impressive!"
           new_new: "Nothing new at the moment...check back soon!"
           new: "Nothing new at the moment...check back soon!"
