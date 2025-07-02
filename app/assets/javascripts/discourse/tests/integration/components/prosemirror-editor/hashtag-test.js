@@ -32,6 +32,13 @@ module(
               style_type: "icon",
               id: 4,
             },
+            {
+              type: "category",
+              ref: "welcome",
+              text: "hello :wave:",
+              style_type: "square",
+              id: 5,
+            },
           ],
           tags: [
             {
@@ -80,6 +87,11 @@ module(
         "Lets #discuss",
         '<p>Lets <a class="hashtag-cooked" data-name="discuss" data-processed="true" data-valid="true" contenteditable="false" draggable="true"><span class=\"hashtag-category-icon hashtag-color--category-4\"><svg class=\"fa d-icon d-icon-comment svg-icon svg-string\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><use href=\"#comment\"></use></svg></span>discuss</a></p>',
         "Lets #discuss",
+      ],
+      "hashtag with emoji in text": [
+        "#welcome",
+        '<p><a class="hashtag-cooked" data-name="welcome" data-processed="true" data-valid="true" contenteditable="false" draggable="true"><span class=\"hashtag-category-square hashtag-color--category-5\"></span>hello <img width=\"20\" height=\"20\" src=\"/images/emoji/twitter/wave.png?v=14\" title=\"wave\" alt=\"wave\" class=\"emoji\"></a></p>',
+        "#welcome",
       ],
     };
 
