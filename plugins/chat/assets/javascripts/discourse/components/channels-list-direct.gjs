@@ -5,14 +5,15 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { and, not, or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
+import EmptyState from "discourse/components/empty-state";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
 import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
-import EmptyChannelsList from "discourse/plugins/chat/discourse/components/empty-channels-list";
 import ChatChannelRow from "./chat-channel-row";
+import ChatZero from "./svg/chat-zero";
 
 export default class ChannelsListDirect extends Component {
   @service chat;
@@ -109,12 +110,15 @@ export default class ChannelsListDirect extends Component {
       }}
     >
       {{#if this.directMessageChannelsEmpty}}
-        <EmptyChannelsList
-          @title={{i18n "chat.no_direct_message_channels"}}
-          @ctaTitle={{i18n "chat.no_direct_message_channels_cta"}}
-          @ctaAction={{this.openNewMessageModal}}
-          @showCTA={{this.canCreateDirectMessageChannel}}
-        />
+        {{#if this.canCreateDirectMessageChannel}}
+          <EmptyState
+            @identifier="empty-channels-list"
+            @svgContent={{ChatZero}}
+            @title="chat.no_direct_message_channels"
+            @ctaLabel="chat.no_direct_message_channels_cta"
+            @ctaAction={{this.openNewMessageModal}}
+          />
+        {{/if}}
       {{else}}
         {{#each
           this.chatChannelsManager.truncatedDirectMessageChannels

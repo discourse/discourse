@@ -1,25 +1,25 @@
 @use "lib/viewport";
 
-.empty-topic-filter {
-  margin: 0 auto;
-  width: 75%;
-  text-align: center;
+.empty-state {
+  &__container {
+    text-align: center;
 
-  @include viewport.from(sm) {
-    padding-top: 7rem;
-  }
+    &.--empty-topic-filter {
+      margin: 0 auto;
+      width: 75%;
 
-  &__preferences-hint {
-    margin-top: 2rem;
-    font-size: var(--font-down-1);
-    color: var(--primary-medium);
+      @include viewport.from(sm) {
+        padding-top: 7rem;
+      }
+    }
 
-    @include viewport.until(sm) {
-      position: absolute;
-      bottom: 3rem;
-      margin-inline: auto;
-      margin-top: 0;
-      left: 0;
+    &.--empty-channels-list {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      height: 100%;
     }
   }
 
@@ -39,5 +39,23 @@
 
   &__cta {
     margin-top: 2rem;
+  }
+
+  &__tip {
+    margin-top: 2rem;
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+
+    .d-icon {
+      font-size: var(--font-down-1);
+    }
+
+    @include viewport.until(sm) {
+      position: absolute;
+      bottom: 3rem;
+      margin-inline: auto;
+      margin-top: 0;
+      left: 0;
+    }
   }
 }
