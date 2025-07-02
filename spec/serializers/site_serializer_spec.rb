@@ -90,7 +90,7 @@ RSpec.describe SiteSerializer do
   it "includes user-selectable color schemes" do
     # it includes seeded color schemes
     serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
-    expect(serialized[:user_color_schemes].count).to eq(6)
+    expect(serialized[:user_color_schemes].count).to eq(7)
 
     scheme_names = serialized[:user_color_schemes].map { |x| x[:name] }
     expect(scheme_names).to include(I18n.t("color_schemes.dark"))
