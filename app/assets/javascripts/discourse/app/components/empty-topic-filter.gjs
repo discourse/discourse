@@ -11,12 +11,12 @@ export default class EmptyTopicFilter extends Component {
 
   get educationText() {
     if (this.args.unreadFilter) {
-      return "topics.none.education.unread";
+      return i18n("topics.none.education.unread");
     } else if (this.args.newFilter) {
       if (this.currentUser.new_new_view_enabled) {
-        return "topics.none.education.new_new";
+        return i18n("topics.none.education.new_new");
       } else {
-        return "topics.none.education.new";
+        return i18n("topics.none.education.new");
       }
     }
   }

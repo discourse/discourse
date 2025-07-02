@@ -250,7 +250,7 @@ export default RouteTemplate(
             <EmptyState
               @identifier="empty-channels-list"
               @svgContent={{SvgEnvelopeZero}}
-              @title="user.invited.none.title"
+              @title={{i18n "user.invited.none.title"}}
               @ctaLabel="user.invited.none.cta"
               @ctaAction={{@controller.createInvite}}
               @tipIcon="upload"

@@ -2,7 +2,16 @@
 
 .empty-state {
   &__container {
-    text-align: center;
+    &.--with-image {
+      text-align: center;
+    }
+
+    &.--text-only {
+      .empty-state__title {
+        font-weight: bold;
+        font-size: var(--font-up-1);
+      }
+    }
 
     &.--empty-topic-filter {
       margin: 0 auto;

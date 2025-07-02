@@ -2,10 +2,13 @@ import { concat } from "@ember/helper";
 import { or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import icon from "discourse/helpers/d-icon";
-import { i18n } from "discourse-i18n";
 
 const EmptyState = <template>
-  <div class="empty-state__container {{concat '--' @identifier}}">
+  <div
+    class="empty-state__container
+      {{if @identifier (concat '--' @identifier)}}
+      {{if @svgContent '--with-image' '--text-only'}}"
+  >
     <div class="empty-state">
       {{#if @svgContent}}
         <div class="empty-state__image">
@@ -14,7 +17,13 @@ const EmptyState = <template>
       {{/if}}
 
       {{#if @title}}
-        <span data-test-title class="empty-state__title">{{i18n @title}}</span>
+        <span data-test-title class="empty-state__title">{{@title}}</span>
+      {{/if}}
+
+      {{#if @body}}
+        <div class="empty-state__body">
+          <p data-test-body>{{@body}}</p>
+        </div>
       {{/if}}
 
       {{#if @ctaLabel}}

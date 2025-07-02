@@ -12,5 +12,6 @@ module("Integration | Component | empty-state", function (hooks) {
     );
 
     assert.dom("[data-test-title]").exists();
+    assert.dom("[data-test-body]").exists();
   });
 });

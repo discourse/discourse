@@ -106,7 +106,7 @@ export default class ChannelsListPublic extends Component {
           <EmptyState
             @identifier="empty-channels-list"
             @svgContent={{ChatZero}}
-            @title="chat.no_public_channels"
+            @title={{i18n "chat.no_public_channels"}}
             @ctaLabel="chat.no_public_channels_cta"
             @ctaAction={{this.openBrowseChannels}}
           />
