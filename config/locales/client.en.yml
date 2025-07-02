@@ -6426,6 +6426,9 @@ en:
           save_successful: "User field saved."
         color_palettes:
           palette_name: "Name"
+          copy_to_clipboard: "Copy to Clipboard"
+          copied_to_clipboard: "Copied to Clipboard"
+          copy_to_clipboard_error: "Error copying data to Clipboard"
           duplicate: "Duplicate"
           delete: "Delete"
           color_options:

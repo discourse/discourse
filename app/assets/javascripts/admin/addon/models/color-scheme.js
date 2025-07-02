@@ -88,6 +88,28 @@ export default class ColorScheme extends EmberObject {
     return [`"${this.name}": {`, buffer.join(",\n"), "}"].join("\n");
   }
 
+  schemeObject() {
+    const extractColors = (property) =>
+      Object.fromEntries(
+        this.colors.map((color) => [color.get("name"), color.get(property)])
+      );
+    return {
+      dark: extractColors("dark_hex"),
+      light: extractColors("hex"),
+    };
+  }
+
+  /**
+   * @returns a JSON representation of the color scheme.
+   */
+  dump() {
+    return (
+      JSON.stringify(this.name) +
+      ": " +
+      JSON.stringify(this.schemeObject(), null, 2)
+    );
+  }
+
   copy() {
     const newScheme = ColorScheme.create({
       name: this.name,
