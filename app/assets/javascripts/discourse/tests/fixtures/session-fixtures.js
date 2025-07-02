@@ -91,7 +91,7 @@ export default {
             },
             {
               id: 333,
-              name: "My Posts",
+              name: "My posts",
               value: "/my/activity",
               icon: "user",
               external: false,
