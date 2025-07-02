@@ -2266,6 +2266,8 @@ en:
       errors_summary_title: "This form contains errors:"
       dirty_form: "You didn't submit your changes! Are you sure you want to leave?"
       errors:
+        starts_with: "Must start with %{prefix}"
+        ends_with: "Must end with %{suffix}"
         required: "Required"
         date_before_or_equal: "Must be before or equal to %{date}"
         date_after_or_equal: "Must be after or equal to %{date}"
