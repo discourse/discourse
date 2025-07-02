@@ -46,7 +46,7 @@ describe "Viewing reviewable item", type: :system do
           reviewable_score_type: ReviewableScore.types[:off_topic],
         )
 
-      _llegal_reviewable_score =
+      _illegal_reviewable_score =
         Fabricate(
           :reviewable_score,
           reviewable: reviewable_flagged_post,
