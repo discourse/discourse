@@ -2142,6 +2142,7 @@ files:
   external_system_avatars_enabled:
     default: true
     client: true
+    hidden: true
     validator: "ExternalSystemAvatarsValidator"
   external_system_avatars_url:
     default: "/letter_avatar_proxy/v4/letter/{first_letter}/{color}/{size}.png"
