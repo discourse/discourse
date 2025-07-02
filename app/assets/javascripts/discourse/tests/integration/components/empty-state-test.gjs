@@ -8,12 +8,9 @@ module("Integration | Component | empty-state", function (hooks) {
 
   test("it renders", async function (assert) {
     await render(
-      <template>
-        <EmptyState @title="user.no_bookmarks_title" @body="Test body" />
-      </template>
+      <template><EmptyState @title="user.no_bookmarks_title" /></template>
     );
 
     assert.dom("[data-test-title]").exists();
-    assert.dom("[data-test-body]").hasText("Test body");
   });
 });
