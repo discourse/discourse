@@ -118,11 +118,30 @@ export default class SelectKitRow extends Component {
     });
   }
 
-  @computed("item.{icon,icons}")
+  @computed("dynamicIcons", "item.{icon,icons}")
   get icons() {
     const _icon = makeArray(this.getProperty(this.item, "icon"));
     const icons = makeArray(this.getProperty(this.item, "icons"));
     return _icon.concat(icons).filter(Boolean);
+  }
+
+  @computed("dynamicIcons", "item.{afterTextIcon,afterTextIcons}")
+  get afterTextIcons() {
+    if (this.dynamicIcons.afterTextIcons) {
+      return this.dynamicIcons.afterTextIcons;
+    }
+
+    const _icon = makeArray(this.getProperty(this.item, "afterTextIcon"));
+    const icons = makeArray(this.getProperty(this.item, "afterTextIcons"));
+    return _icon.concat(icons).filter(Boolean);
+  }
+
+  @computed
+  get dynamicIcons() {
+    if (!this.item.dynamicIcons) {
+      return {};
+    }
+    return this.item.dynamicIcons();
   }
 
   @computed("selectKit.highlighted")

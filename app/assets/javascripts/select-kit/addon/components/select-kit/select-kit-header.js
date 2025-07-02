@@ -52,6 +52,7 @@ export default class SelectKitHeader extends Component {
 
   @computed("selectKit.options.{icon,icons}")
   get icons() {
+    console.log("recomputing header icon");
     const icon = makeArray(this.selectKit.options.icon);
     const icons = makeArray(this.selectKit.options.icons);
     return icon.concat(icons).filter(Boolean);

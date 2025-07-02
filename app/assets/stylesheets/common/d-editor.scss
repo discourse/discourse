@@ -399,6 +399,13 @@
   }
 }
 
+.toolbar-popup-menu-options {
+  // Fix discourse-text icon positioning
+  &.heading .dropdown-select-box-header {
+    padding: 0.5em 0.45em 0.3em;
+  }
+}
+
 .d-editor #form-template-form {
   overflow: auto;
   background: var(--primary-very-low);

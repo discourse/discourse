@@ -190,6 +190,17 @@ export default class ProsemirrorTextManipulation {
     command?.(this.view.state, this.view.dispatch);
   }
 
+  applyHeading(_selection, level, exampleKey) {
+    console.log(_selection, level, exampleKey);
+    // heading has an attr for level
+    //
+    // TODO (martin) Handle paragraph, maybe using example key or level 0
+    const nodeType = this.schema.nodes.heading;
+    // const command = wrapIn(nodeType, { level });
+    const command = setBlockType(nodeType, { level });
+    command?.(this.view.state, this.view.dispatch);
+  }
+
   formatCode() {
     let command;
 
@@ -345,6 +356,10 @@ export default class ProsemirrorTextManipulation {
    * Updates the toolbar state object based on the current editor active states
    */
   updateState() {
+    console.log("inHeading", [
+      inNode(this.view.state, this.schema.nodes.heading),
+      this.view.state.selection.$head.nodeAfter?.attrs?.level,
+    ]);
     Object.assign(this.state, {
       inBold: hasMark(this.view.state, this.schema.marks.strong),
       inItalic: hasMark(this.view.state, this.schema.marks.em),
@@ -354,6 +369,10 @@ export default class ProsemirrorTextManipulation {
       inOrderedList: inNode(this.view.state, this.schema.nodes.ordered_list),
       inCodeBlock: inNode(this.view.state, this.schema.nodes.code_block),
       inBlockquote: inNode(this.view.state, this.schema.nodes.blockquote),
+      inHeading: [
+        inNode(this.view.state, this.schema.nodes.heading),
+        this.view.state.selection.$head.nodeAfter?.attrs?.level,
+      ],
     });
   }
 }

@@ -96,6 +96,11 @@ module SvgSprite
         discourse-text
         discourse-threads
         discourse-add-translation
+        discourse-h1
+        discourse-h2
+        discourse-h3
+        discourse-h4
+        discourse-h5
         download
         earth-americas
         ellipsis
@@ -201,6 +206,7 @@ module SvgSprite
         paintbrush
         palette
         paper-plane
+        paragraph
         pause
         pencil
         play

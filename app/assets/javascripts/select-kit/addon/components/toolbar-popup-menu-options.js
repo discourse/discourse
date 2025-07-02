@@ -24,7 +24,7 @@ export default class ToolbarPopupMenuOptions extends DropdownSelectBoxComponent 
         if (content.condition) {
           let label;
           if (content.label) {
-            label = i18n(content.label);
+            label = i18n(content.label, content.labelArgs || {});
             if (content.shortcut) {
               label += ` <kbd class="shortcut">${translateModKey(
                 PLATFORM_KEY_MODIFIER + "+" + content.shortcut

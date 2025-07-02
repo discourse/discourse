@@ -797,6 +797,11 @@ export default class TextareaTextManipulation {
   }
 
   @bind
+  applyHeading(sel, level, exampleKey) {
+    console.log(`applyHeading: ${sel}, ${level}, ${exampleKey}`);
+  }
+
+  @bind
   formatCode() {
     const sel = this.getSelected("", { lineVal: true });
     const selValue = sel.value;

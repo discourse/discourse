@@ -1,4 +1,5 @@
 // @ts-check
+import { action } from "@ember/object";
 import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
 import { translateModKey } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
@@ -175,6 +176,53 @@ export default class Toolbar extends ToolbarBase {
       active: ({ state }) => state.inItalic,
     });
 
+    const headingLabel = getButtonLabel("composer.heading_label", "H");
+    const headingIcon = headingLabel ? null : "discourse-text";
+    this.addButton({
+      id: "heading",
+      group: "fontStyles",
+      icon: ({ state }) => {
+        console.log("btn state", state);
+        return headingIcon;
+      },
+      label: headingLabel,
+      // TODO (martin) HEADING perhaps not
+      // shortcut: "H",
+      preventFocus: true,
+      trimLeading: true,
+      // perform: (e) => e.applyHeading(),
+      // active: ({ state }) => state.inHeading,
+      sendAction: this.onExpandPopupMenuOptions.bind(this),
+      popupMenu: {
+        options: () => {
+          const headingOptions = [];
+          for (let i = 1; i <= 4; i++) {
+            headingOptions.push({
+              name: `heading-${i}`,
+              icon: `discourse-h${i}`,
+              label: "composer.heading_level_n",
+              labelArgs: { levelNumber: i },
+              condition: true,
+              active: ({ state }) => {
+                console.log(state);
+              },
+            });
+          }
+          headingOptions.push({
+            name: "heading-paragraph",
+            icon: "discourse-text",
+            label: "composer.heading_level_paragraph",
+            condition: true,
+            active: ({ state }) => {
+              console.log(state);
+            },
+          });
+          return headingOptions;
+        },
+        action: this.onHeadingMenuAction.bind(this),
+      },
+    });
+
     if (opts.showLink) {
       this.addButton({
         id: "link",
@@ -252,5 +300,23 @@ export default class Toolbar extends ToolbarBase {
         perform: (e) => e.toggleDirection(),
       });
     }
+  }
+
+  @action
+  onExpandPopupMenuOptions(toolbarEvent) {
+    this.currentToolbarEvent = toolbarEvent;
+  }
+
+  @action
+  onHeadingMenuAction(menuItem) {
+    let level;
+
+    if (menuItem.name === "heading-paragraph") {
+      level = 0;
+    } else {
+      level = parseInt(menuItem.name.split("-")[1], 10);
+    }
+
+    this.currentToolbarEvent.applyHeading(level, "heading");
   }
 }

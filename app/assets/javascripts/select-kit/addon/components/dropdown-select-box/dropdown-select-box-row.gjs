@@ -24,5 +24,13 @@ export default class DropdownSelectBoxRow extends SelectKitRowComponent {
         <span class="desc">{{htmlSafe this.description}}</span>
       {{/if}}
     </div>
+
+    {{#if this.afterTextIcons}}
+      <div class="after-text-icons">
+        {{#each this.afterTextIcons as |i|}}
+          {{icon i}}
+        {{/each}}
+      </div>
+    {{/if}}
   </template>
 }

@@ -25,10 +25,22 @@ export default class ComposerToolbarButtons extends Component {
     return this.args.rovingButtonBar || this.args.data.rovingButtonBar;
   }
 
+  get textManipulationState() {
+    return this.args.data.context?.textManipulation?.state || {};
+  }
+
   @action
   isButtonActive(button) {
-    const state = this.args.data.context?.textManipulation?.state || {};
-    return button.active?.({ state });
+    return button.active?.({ state: this.textManipulationState });
+  }
+
+  @action
+  getButtonIcon(button) {
+    if (typeof button.icon === "function") {
+      return button.icon({ state: this.textManipulationState });
+    }
+
+    return button.icon;
   }
 
   <template>
@@ -44,7 +56,11 @@ export default class ComposerToolbarButtons extends Component {
               @onOpen={{button.action}}
               @tabindex={{this.tabIndex button}}
               @onKeydown={{this.rovingButtonBar}}
-              @options={{hash icon=button.icon focusAfterOnChange=false}}
+              @options={{hash
+                icon=(this.getButtonIcon button)
+                focusAfterOnChange=false
+              }}
+              @textManipulationState={{@context.textManipulation.state}}
               class={{button.className}}
             />
           {{else}}
@@ -55,7 +71,7 @@ export default class ComposerToolbarButtons extends Component {
               @label={{button.label}}
               @translatedLabel={{button.translatedLabel}}
               @disabled={{button.disabled}}
-              @icon={{button.icon}}
+              @icon={{this.getButtonIcon button}}
               @preventFocus={{button.preventFocus}}
               @onKeyDown={{this.rovingButtonBar}}
               tabindex={{this.tabIndex button}}

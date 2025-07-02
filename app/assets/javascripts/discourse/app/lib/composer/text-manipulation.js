@@ -17,6 +17,8 @@ export const TextManipulation = {};
  * @property {boolean} [inCode]
  * @property {boolean} [inCodeBlock]
  * @property {boolean} [inBlockquote]
+ * @property {Array}   [inHeading] - Array with bool as the first element to indicate if in heading
+ *                                and the second element is the heading level (1-6)
  */
 
 /**
