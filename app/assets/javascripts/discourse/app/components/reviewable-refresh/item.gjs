@@ -2,6 +2,8 @@ import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
 import ReviewableFlagReason from "discourse/components/reviewable-refresh/flag-reason";
+import ReviewableFlaggedPostType from "discourse/components/reviewable-refresh/types/flagged-post";
+import ReviewablePostType from "discourse/components/reviewable-refresh/types/post";
 import { i18n } from "discourse-i18n";
 
 export default class ReviewableItem extends Component {
@@ -46,6 +48,15 @@ export default class ReviewableItem extends Component {
     return Object.values(scoreData);
   }
 
+  get reviewableTypeComponent() {
+    switch (this.args.reviewable.type) {
+      case "ReviewablePost":
+        return ReviewablePostType;
+      case "ReviewableFlaggedPost":
+        return ReviewableFlaggedPostType;
+    }
+  }
+
   <template>
     <div class="review-container">
       <div
@@ -71,6 +82,8 @@ export default class ReviewableItem extends Component {
                 </div>
               </div>
             </div>
+
+            <this.reviewableTypeComponent @reviewable={{@reviewable}} />
           </div>
         </div>
       </div>
