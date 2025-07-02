@@ -69,13 +69,6 @@ export default class ImageNodeView extends Component {
 
     // Register this component instance with the nodeView
     this.args.data?.setComponentInstance?.(this);
-
-    // For some reason mobile tap doesn't work without this
-    this.nodeView.dom.addEventListener("touchstart", (e) => {
-      if (this.menuInstance?.content?.contains(e.target)) {
-        e.target.closest("button")?.click();
-      }
-    });
   }
 
   willDestroy() {

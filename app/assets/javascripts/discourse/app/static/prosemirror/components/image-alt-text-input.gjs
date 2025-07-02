@@ -69,7 +69,6 @@ export default class ImageAltTextInput extends Component {
           class="image-alt-text-input__display"
           {{on "focus" this.expandInput}}
           {{on "click" this.expandInput}}
-          {{on "touchstart" this.expandInput}}
         >
           {{or this.altText (i18n "composer.image_alt_text.title")}}
         </div>
