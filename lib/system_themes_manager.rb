@@ -11,7 +11,8 @@ class SystemThemesManager
 
     theme_dir = "#{Rails.root}/themes/#{theme_name}"
 
-    RemoteTheme.import_theme_from_directory(theme_dir, theme_id: theme_id)
+    remote_theme = RemoteTheme.import_theme_from_directory(theme_dir, theme_id: theme_id)
+    remote_theme.color_scheme&.update!(user_selectable: true)
     Stylesheet::Manager.clear_theme_cache!
   end
 end

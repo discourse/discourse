@@ -5,5 +5,8 @@ RSpec.describe SystemThemesManager do
     Theme.delete_all
     expect { SystemThemesManager.sync! }.to change { Theme.system.count }.by(2)
     expect { SystemThemesManager.sync! }.not_to change { Theme.count }
+    expect(Theme.horizon_theme.color_scheme.user_selectable).to be true
+    expect(Theme.horizon_theme.color_schemes.where(user_selectable: true).count).to eq(1)
+    expect(Theme.horizon_theme.color_schemes.where(user_selectable: false).count).to eq(11)
   end
 end
