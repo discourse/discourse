@@ -9,7 +9,7 @@ const INVALID_MENTIONS = new Set();
 const extension = {
   nodeSpec: {
     mention: {
-      attrs: { name: {}, valid: { default: true } },
+      attrs: { name: {} },
       inline: true,
       group: "inline",
       draggable: true,
@@ -21,7 +21,6 @@ const extension = {
           getAttrs: (dom) => {
             return {
               name: dom.getAttribute("data-name"),
-              valid: dom.getAttribute("data-valid"),
             };
           },
         },
@@ -32,7 +31,6 @@ const extension = {
           {
             class: "mention",
             "data-name": node.attrs.name,
-            "data-valid": node.attrs.valid,
           },
           `@${node.attrs.name}`,
         ];
