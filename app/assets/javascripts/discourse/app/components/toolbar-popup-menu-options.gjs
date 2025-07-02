@@ -12,8 +12,6 @@ import { i18n } from "discourse-i18n";
 import DMenu from "float-kit/components/d-menu";
 
 export default class ToolbarPopupmenuOptions extends Component {
-  dMenu;
-
   willDestroy() {
     super.willDestroy();
     this.dMenu?.destroy();
@@ -44,16 +42,12 @@ export default class ToolbarPopupmenuOptions extends Component {
         }
       }
 
-      let title;
-      if (content.title) {
-        title = i18n(content.title);
-        if (content.shortcut) {
-          title += ` (${translateModKey(
-            PLATFORM_KEY_MODIFIER + "+" + content.shortcut
-          )})`;
-        }
+      let title = content.title ? i18n(content.title) : label;
+      if (content.shortcut) {
+        title += ` (${translateModKey(
+          PLATFORM_KEY_MODIFIER + "+" + content.shortcut
+        )})`;
       }
-      title ||= label;
 
       return {
         icon: content.icon,
