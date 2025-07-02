@@ -101,7 +101,6 @@ import {
   addSearchResultsCallback,
 } from "discourse/lib/search";
 import Sharing from "discourse/lib/sharing";
-import { addAdminSidebarSectionLink } from "discourse/lib/sidebar/admin-sidebar";
 import { addSectionLink as addCustomCommunitySectionLink } from "discourse/lib/sidebar/custom-community-section-links";
 import {
   addSidebarPanel,
@@ -2883,7 +2882,17 @@ class PluginApi {
    * @param {string} [link.icon] - The FontAwesome icon to display for the link.
    */
   addAdminSidebarSectionLink(sectionName, link) {
-    addAdminSidebarSectionLink(sectionName, link);
+    this.registerValueTransformer(
+      "admin-sidebar-section-links",
+      ({
+        value: links,
+        context: { sectionName: calculatingForSectionName },
+      }) => {
+        if (sectionName === calculatingForSectionName) {
+          links.push(link);
+        }
+      }
+    );
   }
 
   /**

@@ -110,7 +110,7 @@ acceptance("Admin Sidebar - Sections - Plugin API", function (needs) {
     groups: [AUTO_GROUPS.admins],
   });
 
-  needs.hooks.beforeEach(() => {
+  needs.instanceInitializer(function () {
     withPluginApi("1.24.0", (api) => {
       api.addAdminSidebarSectionLink("root", {
         name: "test_section_link",
@@ -235,7 +235,9 @@ acceptance(
     needs.hooks.beforeEach(() => {
       _locale = I18n.locale;
       I18n.locale = "fr_FOO";
+    });
 
+    needs.instanceInitializer(() => {
       withPluginApi("1.24.0", (api) => {
         api.addAdminSidebarSectionLink("root", {
           name: "test_section_link",

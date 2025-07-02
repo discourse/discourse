@@ -1,6 +1,6 @@
 import Service, { service } from "@ember/service";
 import { cloneJSON } from "discourse/lib/object";
-import { ADMIN_NAV_MAP } from "discourse/lib/sidebar/admin-nav-map";
+import { ADMIN_NAV_MAP } from "admin/lib/sidebar/admin-nav-map";
 
 export default class AdminNavManager extends Service {
   @service currentUser;
