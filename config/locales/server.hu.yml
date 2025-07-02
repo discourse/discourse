@@ -1787,6 +1787,7 @@ hu:
     blocked_ip_blocks: "Privát IP-címtartományok listája, amelyeket a Discourse soha nem indexelhet"
     allowed_internal_hosts: "Belső kiszolgálók listája, amelyeket a Discourse biztonságosan indexelhet oneboxing és egyéb célokra"
     allowed_onebox_iframes: "Az iframe src domainek listája, amelyek engedélyezettek a Onebox beágyazásokon keresztül. A * minden alapértelmezett Onebox motort engedélyez."
+    allowed_iframes: "Az iframe src URL előtagok listája, amelyeket a Discourse biztonságosan engedélyez a bejegyzésekben. A * karakter tetszőleges számú, nem-/ karaktert helyettesíthet."
     allowed_crawler_user_agents: "Azon webes keresőrobotok felhasználói ügynökei, amelyek számára engedélyezett a webhely elérése. FIGYELMEZTETÉS! ENNEK BEÁLLÍTÁSA MEGTILTJA AZ ÖSSZES ITT NEM FELSOROLT KERESŐROBOT HOZZÁFÉRÉSÉT!"
     blocked_crawler_user_agents: "A felhasználói ügynök karakterláncban szereplő egyedi, kis- és nagybetűkre nem érzékeny szó, amely azonosítja azokat a webes keresőrobotokat, amelyek számára nem engedélyezett a webhely elérése. Nem alkalmazandó, ha az engedélyezési lista definiálva van."
     slow_down_crawler_user_agents: 'A forgalmi korlátozás alá elő webes robotok felhasználói ügynökei, ahogy a „robotok sebességének lelassítása” beállításban meg van adva. Minden egyes értéknek legalább 3 karakteresnek kell lennie.'
@@ -4729,7 +4730,7 @@ hu:
       name: Első emodzsi
       description: Egy emodzsit használt egy bejegyzésben
       long_description: |
-        Ezt a jelvényt akkor kapod meg, amikor először adsz hozzá egy Emojit a hozzászólásodhoz :thumbsup:. Az emojik segítségével érzelmeket közvetíthetsz a hozzászólásaidban, a boldogságtól :smiley: a szomorúságon át :anguished: a dühöngésen :angry: és mindenen máson keresztül :sunglasses:. Csak írj be egy :-t (kettőspont), vagy nyomd meg az Emoji eszköztár gombját a szerkesztőben, hogy több száz lehetőség közül választhass :ok_hand:.
+        Ezt a jelvényt akkor kapja, amikor először ad hozzá egy emodzsit a hozzászólásához :thumbsup:. Az emodzsik segítségével érzelmeket közvetíthet a hozzászólásaiban, a boldogságtól :smiley: a szomorúságon :anguished: és a haragon :angry: át bármeddig :sunglasses:. Csak írjon be egy kettőspontot, vagy nyomja meg az Emodzsi eszköztár gombját a szerkesztőben, hogy több száz lehetőség közül választhasson :ok_hand:
     first_mention:
       name: Első megemlítés
       description: Megemlített egy felhasználót egy bejegyzésben

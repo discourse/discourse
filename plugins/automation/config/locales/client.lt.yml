@@ -9,6 +9,7 @@ lt:
     discourse_automation:
       create: Sukurti
       update: Atnaujinti
+      no_automation_yet: Dar nesukūrėte jokių automatizavimų. Norėdami pradėti, pasirinkite vieną iš toliau pateiktų parinktių.
       fields:
         user:
           label: Narys
@@ -64,10 +65,16 @@ lt:
               label: Žymos
             restricted_category:
               label: Kategorija
+              description: Pasirinktinai, suaktyvės tik tuo atveju, jei įrašo tema yra šioje kategorijoje
             restricted_group:
               label: Grupė
+              description: Pasirinktinai, suaktyvės tik tuo atveju, jei įrašo tema yra asmeninė žinutė šios grupės gautuosiuose
             restricted_groups:
               label: Grupės
+              description: Pasirinktinai, suaktyvės tik tuo atveju, jei įrašo tema yra asmeninė žinutė vienoje iš grupės gautųjų dėžučių
+            ignore_group_members:
+              label: Ignoruoti grupės narius
+              description: Praleisti aktyviklį, jei siuntėjas yra aukščiau nurodytos grupės narys
           created: Sukurta
         category_created_edited:
           fields:
