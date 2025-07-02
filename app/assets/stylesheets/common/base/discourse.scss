@@ -536,15 +536,15 @@ textarea {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: var(--space-4);
+  width: 1em;
   background-color: var(--secondary);
   border-radius: 50%;
-  height: var(--space-4);
+  height: 1em;
   box-shadow: 0 0 0 2px var(--secondary);
 
   .d-icon.d-icon-discourse-dnd {
     color: var(--header_primary-medium) !important;
-    font-size: var(--space-4);
+    font-size: 1em;
     height: 1em;
     width: 1em;
   }
@@ -917,8 +917,8 @@ form {
     margin-right: 0.2em;
 
     .d-icon {
-      height: 0.75rem;
-      width: 0.75rem;
+      height: 0.75em;
+      width: 0.75em;
     }
   }
 
