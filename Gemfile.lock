@@ -52,9 +52,9 @@ GEM
       uri (>= 0.13.1)
     addressable (2.8.7)
       public_suffix (>= 2.0.2, < 7.0)
-    annotate (2.6.5)
-      activerecord (>= 2.3.0)
-      rake (>= 0.8.7)
+    annotaterb (4.16.0)
+      activerecord (>= 6.0.0)
+      activesupport (>= 6.0.0)
     ast (2.4.3)
     aws-eventstream (1.4.0)
     aws-partitions (1.1117.0)
@@ -667,7 +667,7 @@ DEPENDENCIES
   activerecord (~> 8.0.0)
   activesupport (~> 8.0.0)
   addressable
-  annotate
+  annotaterb
   aws-sdk-s3
   aws-sdk-sns
   better_errors
@@ -813,7 +813,7 @@ CHECKSUMS
   activerecord (8.0.2) sha256=793470b92c44e4198d0262ac60086b7822f0ea585079ad67e32a6e4c86f2d90a
   activesupport (8.0.2) sha256=8565cddba31b900cdc17682fd66ecd020441e3eef320a9930285394e8c07a45e
   addressable (2.8.7) sha256=462986537cf3735ab5f3c0f557f14155d778f4b43ea4f485a9deb9c8f7c58232
-  annotate (2.6.5) sha256=14dc2adae397080ee14bf6e3fd6f1d8de81aa1d28c4ca670e734d11bf6b97d26
+  annotaterb (4.16.0) sha256=3ed087a925b306036139e4191b38044390bcfc4561adece8f779f9d5ee87ca3c
   ast (2.4.3) sha256=954615157c1d6a382bc27d690d973195e79db7f55e9765ac7c481c60bdb4d383
   aws-eventstream (1.4.0) sha256=116bf85c436200d1060811e6f5d2d40c88f65448f2125bc77ffce5121e6e183b
   aws-partitions (1.1117.0) sha256=fe6469ff7426b449c0c6d0aa43e45f387a4b26992bf48f6897c0b730b205a8a3
