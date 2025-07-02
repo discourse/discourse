@@ -161,7 +161,7 @@ basic:
     area: "localization"
   allow_user_locale:
     client: true
-    default: false
+    default: true
     area: "localization"
   set_locale_from_accept_language_header:
     default: false
@@ -4056,7 +4056,7 @@ experimental:
     client: true
   rich_editor:
     client: true
-    default: false
+    default: true
   reviewable_ui_refresh:
     client: true
     type: group_list
