@@ -269,7 +269,8 @@
 }
 
 .fk-d-menu[data-identifier="composer-image-alt-text"] {
-  min-width: calc(100% - 1rem);
+  width: calc(100% - 1rem);
+  min-width: 15rem;
   background-color: rgb(var(--secondary-rgb), 0.6);
   backdrop-filter: blur(10px);
   color: var(--primary);
@@ -279,6 +280,8 @@
   box-shadow: var(--shadow-dropdown);
 
   .fk-d-menu__inner-content {
+    width: 100%;
+    box-sizing: border-box;
     border: none;
     box-shadow: none;
     background-color: transparent;
@@ -309,15 +312,28 @@
       cursor: pointer;
     }
   }
+
+  &.ProseMirror-selectednode img {
+    user-select: none !important;
+  }
 }
 
 .image-alt-text-input {
   min-width: 100%;
   display: flex;
   position: relative;
+  transition: height 0.15s ease;
+  height: 1.5em;
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+
+  &.--expanded {
+    height: 4.25em;
+  }
 
   &__field {
-    height: 1.5em;
     flex: 1;
     border: none;
     outline: none;
@@ -325,13 +341,9 @@
     background: transparent;
     resize: none;
     margin: 0;
-    transition: height 0.1s ease;
-    padding-right: var(--space-4);
-    margin-right: var(--space-2);
-    cursor: pointer;
     scrollbar-color: rgb(var(--primary-rgb), 0.3) transparent;
     scrollbar-width: thin;
-    overflow-y: hidden;
+    overflow-y: auto;
     scrollbar-gutter: stable;
     line-height: var(--line-height-large);
 
@@ -342,43 +354,14 @@
     &:focus {
       outline: none;
     }
-
-    .--expanded & {
-      height: 4.25em;
-      cursor: inherit;
-      overflow-y: auto;
-    }
-  }
-
-  &__reset {
-    position: absolute;
-    right: var(--space-2);
-    top: calc(-1 * var(--space-1));
-    padding: var(--space-0) var(--space-1);
-    background-color: transparent !important;
-
-    .d-icon {
-      font-size: var(--font-down-1);
-      color: var(--primary-high);
-    }
-
-    &:hover {
-      .d-icon {
-        color: var(--primary) !important;
-      }
-    }
   }
 
   &__display {
-    pointer-events: none;
-    position: absolute;
-    left: 0;
-    right: var(--space-4);
-    top: 0;
-    bottom: 0;
+    cursor: pointer;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    flex: 1;
   }
 }
 

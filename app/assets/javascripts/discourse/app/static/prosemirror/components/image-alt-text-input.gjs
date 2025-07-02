@@ -5,7 +5,6 @@ import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { modifier } from "ember-modifier";
 import { or } from "truth-helpers";
-import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import { i18n } from "discourse-i18n";
 
@@ -15,15 +14,6 @@ export default class ImageAltTextInput extends Component {
 
   registerTextarea = modifier((element) => {
     this.textarea = element;
-
-    // Without this, the textarea will not be focused when the user taps on it
-    // on mobile
-    const handleTouchStart = () => this.textarea.focus();
-    this.textarea.addEventListener("touchstart", handleTouchStart);
-
-    return () => {
-      this.textarea.removeEventListener("touchstart", handleTouchStart);
-    };
   });
 
   @action
@@ -45,12 +35,6 @@ export default class ImageAltTextInput extends Component {
   }
 
   @action
-  resetAltText() {
-    this.altText = "";
-    this.args.data.onClose?.();
-  }
-
-  @action
   onKeyDown(event) {
     event.stopPropagation();
     if (event.key === "Enter") {
@@ -62,11 +46,6 @@ export default class ImageAltTextInput extends Component {
     }
   }
 
-  @action
-  onKeyPress(event) {
-    event.stopPropagation();
-  }
-
   <template>
     <div
       class={{concatClass
@@ -74,29 +53,26 @@ export default class ImageAltTextInput extends Component {
         (if this.isExpanded " --expanded")
       }}
     >
-      <textarea
-        value={{if this.isExpanded this.altText " "}}
-        placeholder={{i18n "composer.image_alt_text.title"}}
-        class="image-alt-text-input__field"
-        {{on "input" this.onInputChange}}
-        {{on "focus" this.expandInput}}
-        {{on "blur" this.onBlur}}
-        {{on "keydown" this.onKeyDown}}
-        {{on "keypress" this.onKeyPress}}
-        {{this.registerTextarea}}
-      />
       {{#if this.isExpanded}}
-        <DButton
-          @icon="xmark"
-          @action={{this.resetAltText}}
-          @preventFocus={{true}}
-          class="image-alt-text-input__reset"
-          title={{i18n "composer.image_toolbar.alt_text_reset"}}
+        <textarea
+          value={{this.altText}}
+          placeholder={{i18n "composer.image_alt_text.title"}}
+          class="image-alt-text-input__field"
+          {{on "input" this.onInputChange}}
+          {{on "blur" this.onBlur}}
+          {{on "keydown" this.onKeyDown}}
+          {{this.registerTextarea}}
         />
       {{else}}
-        <span class="image-alt-text-input__display">
+        <div
+          tabindex="0"
+          class="image-alt-text-input__display"
+          {{on "focus" this.expandInput}}
+          {{on "click" this.expandInput}}
+          {{on "touchstart" this.expandInput}}
+        >
           {{or this.altText (i18n "composer.image_alt_text.title")}}
-        </span>
+        </div>
       {{/if}}
     </div>
   </template>

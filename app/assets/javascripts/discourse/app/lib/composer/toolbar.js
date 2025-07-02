@@ -74,7 +74,7 @@ export class ToolbarBase {
       Object.defineProperties({}, Object.getOwnPropertyDescriptors(buttonAttrs))
     );
 
-    createdButton.tabindex ||= "-1";
+    createdButton.tabindex ??= "-1";
     createdButton.className ||= buttonAttrs.id;
     createdButton.condition ||= () => true;
 

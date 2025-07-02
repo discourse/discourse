@@ -7,7 +7,6 @@ import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { NodeSelection } from "prosemirror-state";
 import ToolbarButtons from "discourse/components/composer/toolbar-buttons";
 import { ToolbarBase } from "discourse/lib/composer/toolbar";
-import { rovingButtonBar } from "discourse/lib/roving-button-bar";
 import ImageAltTextInput from "./image-alt-text-input";
 
 const MIN_SCALE = 50;
@@ -30,6 +29,7 @@ class ImageToolbar extends ToolbarBase {
         return !opts.canScaleDown();
       },
       action: opts.scaleDown,
+      tabindex: 0,
     });
 
     this.addButton({
@@ -42,6 +42,7 @@ class ImageToolbar extends ToolbarBase {
         return !opts.canScaleUp();
       },
       action: opts.scaleUp,
+      tabindex: 0,
     });
 
     this.addButton({
@@ -51,6 +52,7 @@ class ImageToolbar extends ToolbarBase {
       className: "composer-image-toolbar__trash",
       preventFocus: true,
       action: opts.removeImage,
+      tabindex: 0,
     });
   }
 }
@@ -106,27 +108,9 @@ export default class ImageNodeView extends Component {
         canScaleUp: () => this.imageState.scale < MAX_SCALE,
         isAltTextMenuOpen: () => this.altMenuInstance?.expanded,
       });
-
-      this.imageToolbar.rovingButtonBar = this.#rovingButtonBar.bind(this);
     } else {
       Object.assign(this.imageState, attrs);
     }
-  }
-
-  #rovingButtonBar(event) {
-    if (rovingButtonBar(event)) {
-      event.preventDefault();
-      return true;
-    }
-
-    if (event.type === "keydown" && event.key === "ArrowRight") {
-      event.preventDefault();
-
-      // we should not need to use a selector here
-      this.altMenuInstance.content.querySelector("textarea")?.focus();
-    }
-
-    return false;
   }
 
   @action
@@ -148,6 +132,7 @@ export default class ImageNodeView extends Component {
       closeOnClickOutside: false,
       closeOnEscape: false,
       closeOnScroll: false,
+      trapTab: false,
       offset({ rects }) {
         return {
           mainAxis: -MARGIN - rects.floating.height,
@@ -198,6 +183,7 @@ export default class ImageNodeView extends Component {
       closeOnClickOutside: false,
       closeOnEscape: false,
       closeOnScroll: false,
+      trapTab: false,
       maxWidth: 0,
       offset: ({ rects }) => ({
         mainAxis: -MARGIN - rects.floating.height,
