@@ -1934,7 +1934,7 @@ RSpec.describe UsersController do
                  username: "dude",
                  password: "P4ssw0rd$$",
                  user_fields: {
-                   [tennis_field.id] => "Nadal",
+                   tennis_field.id => "Nadal",
                  },
                )
 
@@ -6473,7 +6473,7 @@ RSpec.describe UsersController do
 
       expect(response.status).to eq(400)
       expect(response.parsed_body["errors"][0]).to eq(
-        "param is missing or the value is empty: name",
+        "param is missing or the value is empty or invalid: name",
       )
     end
 

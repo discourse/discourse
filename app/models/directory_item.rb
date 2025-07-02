@@ -179,17 +179,17 @@ end
 # Table name: directory_items
 #
 #  id             :integer          not null, primary key
-#  period_type    :integer          not null
-#  user_id        :integer          not null
-#  likes_received :integer          not null
+#  days_visited   :integer          default(0), not null
 #  likes_given    :integer          not null
-#  topics_entered :integer          not null
-#  topic_count    :integer          not null
+#  likes_received :integer          not null
+#  period_type    :integer          not null
 #  post_count     :integer          not null
+#  posts_read     :integer          default(0), not null
+#  topic_count    :integer          not null
+#  topics_entered :integer          not null
 #  created_at     :datetime
 #  updated_at     :datetime
-#  days_visited   :integer          default(0), not null
-#  posts_read     :integer          default(0), not null
+#  user_id        :integer          not null
 #
 # Indexes
 #

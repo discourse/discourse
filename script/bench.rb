@@ -165,7 +165,7 @@ end
 
 puts "Ensuring profiling DB exists and is migrated"
 puts `bundle exec rake db:create`
-`bundle exec rake db:migrate`
+`bundle exec rake db:migrate:reset`
 
 puts "Timing loading Rails"
 measure("load_rails") { `bundle exec rails middleware` }
