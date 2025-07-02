@@ -32,9 +32,9 @@
 :sort: false
 :timestamp: false
 :trace: false
-:with_comment: true
-:with_column_comments: true
-:with_table_comments: true
+:with_comment: false
+:with_column_comments: false
+:with_table_comments: false
 :active_admin: false
 :command:
 :debug: false
