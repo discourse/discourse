@@ -138,6 +138,14 @@ module PageObjects
         )
       end
 
+      def click_claim_reviewable
+        find(".reviewable-claimed-topic .claim").click
+      end
+
+      def click_unclaim_reviewable
+        find(".reviewable-claimed-topic .unclaim").click
+      end
+
       private
 
       def reviewable_action_dropdown
