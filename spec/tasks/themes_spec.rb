@@ -151,6 +151,13 @@ RSpec.describe "tasks/themes" do
       remote_horizon_theme.color_schemes.create!(
         name: "Lily Dark",
         theme_id: remote_horizon_theme.id,
+        user_selectable: false,
+      )
+    end
+    fab!(:remote_color_scheme_2) do
+      remote_horizon_theme.color_schemes.create!(
+        name: "Violet Dark",
+        theme_id: remote_horizon_theme.id,
         user_selectable: true,
       )
     end
@@ -165,6 +172,9 @@ RSpec.describe "tasks/themes" do
 
     let!(:system_horizon_theme) { Theme.horizon_theme }
     let!(:system_color_scheme) { system_horizon_theme.color_schemes.where(name: "Lily Dark").first }
+    let!(:system_color_scheme_2) do
+      system_horizon_theme.color_schemes.where(name: "Violet Dark").first
+    end
 
     before do
       remote_horizon_theme.update!(color_scheme: remote_color_scheme)
@@ -237,6 +247,7 @@ RSpec.describe "tasks/themes" do
         )
         expect(system_horizon_theme.color_scheme).to eq(system_color_scheme)
         expect(system_color_scheme.reload.user_selectable).to be true
+        expect(system_color_scheme_2.reload.user_selectable).to be true
       end
 
       it "logs that remote theme was deleted" do
