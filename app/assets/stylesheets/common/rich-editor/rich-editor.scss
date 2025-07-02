@@ -271,8 +271,8 @@
 .fk-d-menu[data-identifier="composer-image-alt-text"] {
   width: calc(100% - 1rem);
   min-width: 15rem;
-  background-color: rgb(var(--secondary-rgb), 0.6);
-  backdrop-filter: blur(10px);
+  background-color: rgb(var(--secondary-rgb), 0.65);
+  backdrop-filter: blur(4px);
   color: var(--primary);
   isolation: auto;
   border-radius: var(--d-border-radius);
