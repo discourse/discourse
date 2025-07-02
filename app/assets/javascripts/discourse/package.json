@@ -25,7 +25,7 @@
     "@json-editor/json-editor": "2.15.2",
     "@messageformat/core": "^3.4.0",
     "@messageformat/runtime": "^3.0.1",
-    "ace-builds": "^1.43.0",
+    "ace-builds": "^1.43.1",
     "decorator-transforms": "^2.3.0",
     "diff": "^8.0.2",
     "discourse-widget-hbs": "workspace:1.0.0",
