@@ -17,7 +17,7 @@ const EmptyState = <template>
       {{/if}}
 
       {{#if @title}}
-        <span data-test-title class="empty-state__title">{{@title}}</span>
+        <div data-test-title class="empty-state__title">{{@title}}</div>
       {{/if}}
 
       {{#if @body}}
