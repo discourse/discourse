@@ -1307,6 +1307,71 @@ RSpec.describe UserNotifications do
     end
   end
 
+  describe ".notification_email" do
+    let!(:plugin) { Plugin::Instance.new }
+    let(:response_by_user) { Fabricate(:user, name: "John Doe") }
+    let(:category) { Fabricate(:category, name: "India") }
+
+    let(:topic) { Fabricate(:topic, category: category, title: "Super cool topic") }
+
+    let(:user) { Fabricate(:user) }
+    let(:post) { Fabricate(:post, topic: topic, raw: "This is My super duper cool topic") }
+    let(:response) do
+      Fabricate(
+        :basic_reply,
+        topic: post.topic,
+        user: response_by_user,
+        raw: "@#{user.username} response to post",
+      )
+    end
+    let(:notification) { Fabricate(:mentioned_notification, user: user, post: response) }
+    let!(:modify_post) do
+      post.cooked = "modified post"
+      Proc.new do
+        {
+          title: "Super cool topic",
+          post: post,
+          username: "bruce4",
+          from_alias: "John Doe via Discourse",
+          allow_reply_by_email: true,
+          use_site_subject: true,
+          add_re_to_subject: nil,
+          show_category_in_subject: true,
+          show_tags_in_subject: true,
+          show_group_in_subject: nil,
+          notification_type: "mentioned",
+          use_invite_template: nil,
+          use_topic_title_subject: false,
+          user: user,
+        }
+      end
+    end
+
+    it "allows plugins to control #notification_email" do
+      DiscoursePluginRegistry.register_modifier(
+        plugin,
+        :user_notification_email_options,
+        &modify_post
+      )
+
+      mail =
+        UserNotifications.user_mentioned(
+          user,
+          post: response,
+          notification_type: notification.notification_type,
+          notification_data_hash: notification.data_hash,
+        )
+      mail_html = mail.html_part.body.to_s
+      expect(mail_html.scan("modified post").count).to eq(1)
+    ensure
+      DiscoursePluginRegistry.unregister_modifier(
+        plugin,
+        :user_notification_email_options,
+        &modify_post
+      )
+    end
+  end
+
   # notification emails derived from templates are translated into the user's locale
   shared_context "with notification derived from template" do
     let(:user) { Fabricate(:user, locale: locale) }
