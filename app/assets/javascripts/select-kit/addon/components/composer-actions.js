@@ -206,6 +206,15 @@ export default class ComposerActions extends DropdownSelectBoxComponent {
       });
     }
 
+    if (this.canUnlistTopic) {
+      items.push({
+        name: i18n("composer.composer_actions.toggle_unlisted.label"),
+        description: i18n("composer.composer_actions.toggle_unlisted.desc"),
+        icon: "far-eye-slash",
+        id: "toggle_unlisted",
+      });
+    }
+
     if (this.action === CREATE_TOPIC) {
       if (this.site.shared_drafts_category_id) {
         // Shared Drafts Choice
@@ -273,6 +282,10 @@ export default class ComposerActions extends DropdownSelectBoxComponent {
 
   toggleWhisperSelected(options, model) {
     model.toggleProperty("whisper");
+  }
+
+  toggleUnlistedSelected(options, model) {
+    model.toggleProperty("unlistTopic");
   }
 
   toggleTopicBumpSelected(options, model) {

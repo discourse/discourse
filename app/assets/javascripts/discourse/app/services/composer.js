@@ -422,16 +422,6 @@ export default class ComposerService extends Service {
         })
       );
 
-      options.push(
-        this._setupPopupMenuOption({
-          name: "toggle-invisible",
-          action: "toggleInvisible",
-          icon: "far-eye-slash",
-          label: "composer.toggle_unlisted",
-          condition: "canUnlistTopic",
-        })
-      );
-
       if (this.capabilities.touch) {
         options.push(
           this._setupPopupMenuOption({
@@ -460,16 +450,6 @@ export default class ComposerService extends Service {
           })
         );
       }
-
-      options.push(
-        this._setupPopupMenuOption({
-          name: "toggle-whisper",
-          action: "toggleWhisper",
-          icon: "far-eye-slash",
-          label: "composer.toggle_whisper",
-          condition: "showWhisperToggle",
-        })
-      );
 
       options.push(
         this._setupPopupMenuOption({
@@ -834,11 +814,6 @@ export default class ComposerService extends Service {
         tableTokens: null,
       },
     });
-  }
-
-  @action
-  toggleInvisible() {
-    this.toggleProperty("model.unlistTopic");
   }
 
   @action
