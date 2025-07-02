@@ -144,7 +144,7 @@ group :test, :development do
 
   gem "rswag-specs"
 
-  gem "annotate"
+  gem "annotaterb"
 
   gem "syntax_tree"
 

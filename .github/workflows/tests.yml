@@ -217,7 +217,7 @@ jobs:
         if: matrix.build_type == 'backend' && matrix.target == 'core'
         run: |
           bin/rake annotate:ensure_all_indexes
-          bin/annotate --models --model-dir app/models
+          bin/annotaterb models --model-dir app/models
 
           if [ ! -z "$(git status --porcelain app/models/)" ]; then
             echo "Core annotations are not up to date. To resolve, run:"
