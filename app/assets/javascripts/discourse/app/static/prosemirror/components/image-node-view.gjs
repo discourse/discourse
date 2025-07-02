@@ -209,8 +209,6 @@ export default class ImageNodeView extends Component {
     tr.setNodeMarkup(pos, null, newAttrs);
     tr.setSelection(NodeSelection.create(tr.doc, pos));
     this.view.dispatch(tr);
-
-    this.view.focus();
   }
 
   @action
