@@ -402,11 +402,11 @@ he:
           נא לשים לב שבעת תגובה לנושא או קריאת נושא במשך למעלה ממספר דקות, רמת ההתראות משתנה אוטומטית למצב ‚במעקב’. ניתן לשנות זאת ב[העדפות המשתמש שלך](%{base_uri}/my/preferences).
       poll:
         instructions: |-
-          ידעת שאפשר להוסיף סקר לכל פוסט? כדאי לנסות להשתמש בסמל גלגל השיניים <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> שבעורך כדי **לבנות סקר**.
+          ידעת שאפשר להוסיף סקר לכל פוסט שהוא? נא לנסות להשתמש בסמל <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> בעורך כדי **להרכיב סקר**.
         not_found: |-
           אופס! לא היה אף סקר בתגובה שלך.
 
-          יש להשתמש בסמל גלגל השיניים <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> שבעורך, או להעתיק ולהדביק את הסקר הזה בתגובה הבאה שלך:
+          יש להשתמש בסמל גלגל השיניים <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> שבעורך, או להעתיק ולהדביק את הסקר הזה בתגובה הבאה שלך:
 
           ```text
           [poll]
@@ -430,12 +430,12 @@ he:
           - כשבפוסט שלך יש הרבה פרטי רשות שעשויים להציף אם נקראים בבת אחת.
 
           [details=יש לבחור את זה כדי לראות אם זה עובד!]
-          1. יש לבחור את <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> גלגל השיניים בעורך.
-          2. לבחור ב־„הסתרת פרטים”.
+          1. יש לבחור את סמל גלגל השיניים <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> בעורך.
+          2. לבחור ב„הסתרת פרטים”.
           3. לערוך את תקציר הפרטים ולהוסיף את התוכן שלך.
           [/details]
 
-          אפשר לבקש ממך להשתמש <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> בגלגל השיניים בעורך כדי להוסיף סעיף פרטים בתגובה הבאה?
+          אפשר לבקש ממך להשתמש בסמל גלגל השינויים <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> בעורך כדי להוסיף סעיף פרטים בתגובה הבאה?
         not_found: |-
           מתקשה ביצירת וידג׳ט פירוט? נא לנסות לכלול את הסימון שלהלן בתגובה הבאה שלך:
 

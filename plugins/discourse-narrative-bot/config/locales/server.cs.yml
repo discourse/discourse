@@ -401,19 +401,6 @@ cs:
 
           Všimni si, že když odpovídáš na téma nebo čteš téma déle než několik minut, je automaticky nastavena úroveň upozornění 'sledování'. Toto nastavení můžeš změnit ve [svých uživatelských nastaveních](%{base_uri}/my/preferences).
       poll:
-        instructions: |-
-          Věděl/a jsi, že můžeš k jakémukoli příspěvku přidat hlasování? Zkus v editoru použít ozubené kolečko <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> a **Vytvořit hlasování**.
-        not_found: |-
-          Ups! Ve tvojí odpovědi nebylo žádné hlasování.
-
-          Použij ikonu ozubeného kola <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> v editoru nebo zkopíruj a vlož tuto hlasování do své další odpovědi:
-
-          ```text
-          [poll]
-          * :cat:
-          * :dog:
-          [/poll]
-          ````
         reply: |-
           Hej, pěkná anketa! Jak jsem si vedl při výuce?
 
@@ -422,20 +409,6 @@ cs:
           * :-1:
           [/poll]
       details:
-        instructions: |-
-          Někdy můžeš chtít v odpovědích **skrýt detaily**:
-
-          - Pokud diskutuješ o dějových bodech filmu nebo seriálu, které by byly považovány za spoiler.
-
-          - Když je ve tvém příspěvku třeba spousta nepovinných detailů, které mohou být při čtení najednou zahlcující.
-
-          [details=Klikni na tento text, abys viděl/a, jak to funguje!]
-          1. V editoru vyber ozubené kolo <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> .
-          2. Vyber možnost "Skrýt detaily".
-          3. Uprav shrnutí podrobností a přidej svůj obsah.
-          [/details]
-
-          Mohl/a bys použít ozubené kolečko <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> v editoru a přidat sekci s detaily do další odpovědi?
         not_found: |-
           Máš potíže s vytvořením sekce s podrobnostmi? Zkus do příští odpovědi uvést následující text:
 

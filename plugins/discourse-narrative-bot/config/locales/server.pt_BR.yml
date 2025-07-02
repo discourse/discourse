@@ -398,19 +398,6 @@ pt_BR:
 
           Observe que, quando você responde a um tópico, ou lê por mais de alguns minutos, ele é automaticamente alterado para um nível de notificação de "monitorando". Você pode mudar isso em [suas preferências de usuário(a)](%{base_uri}/my/preferences).
       poll:
-        instructions: |-
-          Você sabia que pode adicionar uma enquete a qualquer postagem? Tente usar a <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> engrenagem no editor para **montar uma enquete**.
-        not_found: |-
-          Oops! Não havia nenhuma enquete na sua resposta.
-
-          Use o ícone de <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> engrenagem no editor, ou copie e cole esta enquete na sua próxima resposta:
-
-          ```text
-          [poll]
-          * :cat:
-          * :dog:
-          [/poll]
-          ```
         reply: |-
           Ei, boa enquete! Como eu me saí te ensinando?
 
@@ -419,20 +406,6 @@ pt_BR:
           * :-1:
           [/poll]
       details:
-        instructions: |-
-          Às vezes você pode querer **esconder detalhes** em suas respostas:
-
-          - Quando você estiver discutindo os pontos do enredo de um filme ou série que possa ser considerado um spoiler.
-
-          - Quando a sua postagem precisa de muitos detalhes opcionais que podem ser cansativos quando forem lidos todos de uma vez.
-
-          [details=Selecione este para ver como funciona!]
-          1. Selecione a <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> engrenagem no editor.
-          2. Selecione "Ocultar Detalhes".
-          3. Edite o resumo dos detalhes e adicione seu conteúdo.
-          [/details]
-
-          Você pode usar a <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> engrenagem no editor para adicionar uma seção de detalhes na sua próxima resposta?
         not_found: |-
           Está com dificuldades para criar um seção de detalhes? Tente incluir o seguinte na sua próxima resposta:
 
