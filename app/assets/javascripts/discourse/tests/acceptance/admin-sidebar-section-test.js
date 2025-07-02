@@ -110,7 +110,7 @@ acceptance("Admin Sidebar - Sections - Plugin API", function (needs) {
     groups: [AUTO_GROUPS.admins],
   });
 
-  needs.instanceInitializer(function () {
+  needs.instanceInitializer(() => {
     withPluginApi("1.24.0", (api) => {
       api.addAdminSidebarSectionLink("root", {
         name: "test_section_link",
