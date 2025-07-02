@@ -5132,6 +5132,9 @@ en:
             invite:
               content: "Invite"
               title: "Invite new members"
+            my_messages:
+              content: "My Messages"
+              title: "My personal messages"
         global_section: "Global section, visible to everyone"
       panels:
         forum:
