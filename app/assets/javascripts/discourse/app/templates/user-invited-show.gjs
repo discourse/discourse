@@ -250,20 +250,20 @@ export default RouteTemplate(
             <EmptyState
               @identifier="empty-channels-list"
               @svgContent={{SvgEnvelopeZero}}
-              @title="user.invited.none"
-              @ctaLabel="user.invited.none_cta"
+              @title="user.invited.none.title"
+              @ctaLabel="user.invited.none.cta"
               @ctaAction={{@controller.createInvite}}
               @tipIcon="upload"
             >
               <:tip>
                 {{#if @controller.canBulkInvite}}
-                  {{i18n "user.invited.none_tip.prefix"}}
+                  {{i18n "user.invited.none.tip.prefix"}}
                   <DButton
                     @action={{@controller.createInviteCsv}}
-                    @label="user.invited.none_tip.action"
+                    @label="user.invited.none.tip.action"
                     class="btn-link"
                   />
-                  {{i18n "user.invited.none_tip.suffix"}}
+                  {{i18n "user.invited.none.tip.suffix"}}
                 {{/if}}
               </:tip>
             </EmptyState>

@@ -1989,12 +1989,13 @@ en:
         removed: "Removed"
         search: "type to search invites…"
         user: "Invited User"
-        none: "No invites to display."
-        none_cta: "Create invite link"
-        none_tip:
-          prefix: "You can also send bulk invites by"
-          action: "uploading a CSV file"
-          suffix: ""
+        none:
+          title: "No invites to display."
+          cta: "Create invite link"
+          tip:
+            prefix: "You can also send bulk invites by"
+            action: "uploading a CSV file"
+            suffix: ""
         truncated:
           one: "Showing the first invite."
           other: "Showing the first %{count} invites."
