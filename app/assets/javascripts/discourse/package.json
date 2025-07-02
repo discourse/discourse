@@ -20,6 +20,10 @@
   },
   "dependencies": {
     "@faker-js/faker": "^9.9.0",
+    "@fullcalendar/core": "^6.1.18",
+    "@fullcalendar/daygrid": "^6.1.18",
+    "@fullcalendar/list": "^6.1.18",
+    "@fullcalendar/timegrid": "^6.1.18",
     "@glimmer/syntax": "0.93.1",
     "@highlightjs/cdn-assets": "11.11.1",
     "@json-editor/json-editor": "2.15.2",
