@@ -245,6 +245,10 @@ export default class PostTextSelection extends Component {
       ".cooked"
     );
 
+    if (!cooked) {
+      return;
+    }
+
     if (cooked.closest(".small-action")) {
       return;
     }
