@@ -156,7 +156,7 @@ RSpec.describe PostRevisionSerializer do
           root: false,
         ).as_json
 
-      expect(json[:locale_changes][:previous]).to eq("ja")
+      expect(json[:locale_changes][:previous]).to eq("日本語")
       expect(json[:locale_changes][:current]).to eq(nil)
     end
 
@@ -172,8 +172,8 @@ RSpec.describe PostRevisionSerializer do
           root: false,
         ).as_json
 
-      expect(json[:locale_changes][:previous]).to eq("")
-      expect(json[:locale_changes][:current]).to eq("ja")
+      expect(json[:locale_changes][:previous]).to eq(nil)
+      expect(json[:locale_changes][:current]).to eq("日本語")
     end
   end
 end
