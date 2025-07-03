@@ -48,19 +48,20 @@ export default class ToolbarPopupmenuOptions extends Component {
           PLATFORM_KEY_MODIFIER + "+" + content.shortcut
         )})`;
       }
-
-      return {
-        icon: content.icon,
-        label,
-        title,
-        name: content.name,
-        action: content.action,
-      };
+      return Object.defineProperties(
+        {},
+        Object.getOwnPropertyDescriptors({ ...content, label, title })
+      );
     }
   }
 
   get convertedContent() {
     return this.args.content.map(this.#convertMenuOption).filter(Boolean);
+  }
+
+  @action
+  getActive(option) {
+    return option.active?.({ state: this.args.context.textManipulation.state });
   }
 
   <template>
@@ -76,11 +77,8 @@ export default class ToolbarPopupmenuOptions extends Component {
       @offset={{5}}
       @onKeydown={{@onKeydown}}
       tabindex="-1"
-      class={{concatClass @class}}
+      class={{concatClass "toolbar__button" @class}}
     >
-      <:trigger>
-        {{icon @options.icon}}
-      </:trigger>
       <:content>
         <DropdownMenu as |dropdown|>
           {{#each this.convertedContent as |option|}}
@@ -92,6 +90,9 @@ export default class ToolbarPopupmenuOptions extends Component {
                 @action={{fn this.onSelect option}}
                 data-name={{option.name}}
               />
+              <span class="toolbar-menu__active-icon">
+                {{if (this.getActive option) (icon "check")}}
+              </span>
             </dropdown.item>
           {{/each}}
         </DropdownMenu>

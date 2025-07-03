@@ -103,6 +103,7 @@ export default class ComposerEditor extends Component {
   @service currentUser;
 
   @tracked preview;
+  @tracked textManipulation;
 
   composerEventPrefix = "composer";
   shouldBuildScrollMap = true;
@@ -921,6 +922,41 @@ export default class ComposerEditor extends Component {
       popupMenu: {
         options: () => this.composer.popupMenuOptions,
         action: this.composer.onPopupMenuAction,
+      },
+    });
+
+    const that = this;
+
+    toolbar.addButton({
+      id: "list-test",
+      group: "extras",
+      active: ({ state }) => state.inOrderedList || state.inBulletList,
+      get icon() {
+        return that.textManipulation?.state.inOrderedList
+          ? "list-ol"
+          : "list-ul";
+      },
+      title: "composer.options",
+      popupMenu: {
+        options: () => [
+          {
+            condition: true,
+            name: "list-ul",
+            action: () => {},
+            icon: "list-ul",
+            label: "composer.ulist_title",
+            active: ({ state }) => state.inBulletList,
+          },
+          {
+            condition: true,
+            name: "list-ol",
+            action: () => {},
+            icon: "list-ol",
+            label: "composer.olist_title",
+            active: ({ state }) => state.inOrderedList,
+          },
+        ],
+        action: () => {},
       },
     });
   }

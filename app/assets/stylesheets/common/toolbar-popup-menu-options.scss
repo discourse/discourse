@@ -11,3 +11,20 @@
     }
   }
 }
+
+.toolbar-menu__list-test-content {
+  @include viewport.from(sm) {
+    z-index: z("composer", "content");
+  }
+
+  .dropdown-menu__item {
+    position: relative;
+  }
+}
+
+.toolbar-menu__active-icon {
+  position: absolute;
+  right: 0.5em;
+  top: 50%;
+  transform: translateY(-50%);
+}
