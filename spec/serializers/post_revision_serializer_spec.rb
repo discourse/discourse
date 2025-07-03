@@ -143,4 +143,37 @@ RSpec.describe PostRevisionSerializer do
       expect { serializer.as_json }.not_to raise_error
     end
   end
+
+  describe "post locale edits" do
+    it "returns the locale changes when set to nothing" do
+      post_revision =
+        Fabricate(:post_revision, post: post, modifications: { "locale" => ["ja", ""] })
+
+      json =
+        PostRevisionSerializer.new(
+          post_revision,
+          scope: Guardian.new(Fabricate(:user)),
+          root: false,
+        ).as_json
+
+      expect(json[:locale_changes][:previous]).to eq("ja")
+      expect(json[:locale_changes][:current]).to eq(nil)
+    end
+
+    it "returns the locale changes when set from nothing to something" do
+      post.update!(locale: "ja")
+      post_revision =
+        Fabricate(:post_revision, post: post, modifications: { "locale" => ["", "ja"] })
+
+      json =
+        PostRevisionSerializer.new(
+          post_revision,
+          scope: Guardian.new(Fabricate(:user)),
+          root: false,
+        ).as_json
+
+      expect(json[:locale_changes][:previous]).to eq("")
+      expect(json[:locale_changes][:current]).to eq("ja")
+    end
+  end
 end
