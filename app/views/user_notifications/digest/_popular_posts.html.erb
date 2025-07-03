@@ -8,7 +8,7 @@
       <td class="side-spacer" style="padding:0;">&nbsp;</td>
       <td class="with-dir" width="650" align="center" valign="top" style="border-collapse:collapse!important;line-height:1.3;margin:0;padding:0;vertical-align:top;">
         <% @popular_posts.each do |post| %>
-          <%= render partial: "user_notifications/popular_post", locals: { post: post } %>
+          <%= render partial: "user_notifications/digest/popular_post", locals: { post: post } %>
         <% end %>
       </td>
       <td class="side-spacer" style="padding:0;">&nbsp;</td>

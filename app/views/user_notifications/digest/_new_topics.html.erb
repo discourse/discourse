@@ -8,7 +8,7 @@
         <table class="digest-new-topic with-dir" style="padding:0;vertical-align:top;width:100%">
           <tbody>
             <% @other_new_for_you.each do |topic| %>
-              <%= render partial: "user_notifications/new_topic", locals: { topic: topic } %>
+              <%= render partial: "user_notifications/digest/new_topic", locals: { topic: topic } %>
             <% end %>
           </tbody>
         </table>
