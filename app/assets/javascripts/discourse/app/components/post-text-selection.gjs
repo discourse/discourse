@@ -201,6 +201,7 @@ export default class PostTextSelection extends Component {
 
   @bind
   async hideToolbar() {
+    this.args.quoteState.clear();
     await this.menuInstance?.close();
     await this.menuInstance?.destroy();
   }
