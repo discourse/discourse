@@ -866,6 +866,8 @@ export default class ComposerEditor extends Component {
     const selected = toolbarEvent.selected;
     toolbarEvent.selectText(selected.start, selected.end - selected.start);
     this.composer.storeToolbarState(toolbarEvent);
+
+    window.getSelection().removeAllRanges();
   }
 
   showPreview() {
