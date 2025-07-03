@@ -1,0 +1,13 @@
+@use "lib/viewport";
+
+.toolbar-menu__options-content {
+  @include viewport.from(sm) {
+    z-index: z("composer", "content");
+  }
+
+  .shortcut {
+    @include viewport.until(sm) {
+      display: none;
+    }
+  }
+}

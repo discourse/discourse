@@ -8,16 +8,14 @@ acceptance("Details Button", function (needs) {
   needs.user();
 
   test("details button", async function (assert) {
-    const popupMenu = selectKit(".toolbar-popup-menu-options");
-
     await visit("/");
     await click("#create-topic");
     const categoryChooser = selectKit(".category-chooser");
     await categoryChooser.expand();
     await categoryChooser.selectRowByValue(2);
 
-    await popupMenu.expand();
-    await popupMenu.selectRowByName(i18n("details.title"));
+    await click(".toolbar-menu__options-trigger");
+    await click(`button[title="${i18n("details.title")}"]`);
 
     assert
       .dom(".d-editor-input")
@@ -34,8 +32,8 @@ acceptance("Details Button", function (needs) {
     textarea.selectionStart = 0;
     textarea.selectionEnd = textarea.value.length;
 
-    await popupMenu.expand();
-    await popupMenu.selectRowByName(i18n("details.title"));
+    await click(".toolbar-menu__options-trigger");
+    await click(`button[title="${i18n("details.title")}"]`);
 
     assert
       .dom(".d-editor-input")
@@ -62,8 +60,8 @@ acceptance("Details Button", function (needs) {
     textarea.selectionStart = 7;
     textarea.selectionEnd = 28;
 
-    await popupMenu.expand();
-    await popupMenu.selectRowByName(i18n("details.title"));
+    await click(".toolbar-menu__options-trigger");
+    await click(`button[title="${i18n("details.title")}"]`);
 
     assert
       .dom(".d-editor-input")
@@ -90,8 +88,8 @@ acceptance("Details Button", function (needs) {
     textarea.selectionStart = 8;
     textarea.selectionEnd = 29;
 
-    await popupMenu.expand();
-    await popupMenu.selectRowByName(i18n("details.title"));
+    await click(".toolbar-menu__options-trigger");
+    await click(`button[title="${i18n("details.title")}"]`);
 
     assert
       .dom(".d-editor-input")
@@ -116,7 +114,6 @@ acceptance("Details Button", function (needs) {
 
   test("details button surrounds all selected text in a single details block", async function (assert) {
     const multilineInput = "first line\n\nsecond line\n\nthird line";
-    const popupMenu = selectKit(".toolbar-popup-menu-options");
 
     await visit("/");
     await click("#create-topic");
@@ -129,8 +126,8 @@ acceptance("Details Button", function (needs) {
     textarea.selectionStart = 0;
     textarea.selectionEnd = textarea.value.length;
 
-    await popupMenu.expand();
-    await popupMenu.selectRowByName(i18n("details.title"));
+    await click(".toolbar-menu__options-trigger");
+    await click(`button[title="${i18n("details.title")}"]`);
 
     assert
       .dom(".d-editor-input")

@@ -206,6 +206,98 @@ module("Unit | Lib | FormKit | Validator", function (hooks) {
     );
   });
 
+  ["input", "input-text", "text"].forEach(async (type) => {
+    test(`${type} - startsWith`, async function (assert) {
+      let errors = await new Validator("xxx", {
+        startsWith: { prefix: "@" },
+      }).validate(type);
+
+      assert.deepEqual(
+        errors,
+        [i18n("form_kit.errors.starts_with", { prefix: "@" })],
+        "it returns an error when the value does not start with the prefix"
+      );
+
+      errors = await new Validator("@gmail.com", {
+        startsWith: { prefix: "@" },
+      }).validate(type);
+
+      assert.deepEqual(
+        errors,
+        [],
+        "it returns no error when the value starts with the prefix"
+      );
+
+      errors = await new Validator("", {
+        startsWith: { prefix: "@" },
+      }).validate(type);
+
+      assert.deepEqual(
+        errors,
+        [],
+        "it returns no error when the value is blank"
+      );
+    });
+  });
+
+  ["input", "input-text", "text"].forEach(async (type) => {
+    test(`${type} - endsWith`, async function (assert) {
+      let errors = await new Validator("xxx", {
+        endsWith: { suffix: "@" },
+      }).validate(type);
+
+      assert.deepEqual(
+        errors,
+        [i18n("form_kit.errors.ends_with", { suffix: "@" })],
+        "it returns an error when the value does not end with the suffix"
+      );
+
+      errors = await new Validator("@gmail.com", {
+        endsWith: { suffix: ".com" },
+      }).validate(type);
+
+      assert.deepEqual(
+        errors,
+        [],
+        "it returns no error when the value ends with the suffix"
+      );
+
+      errors = await new Validator("", {
+        endsWith: { suffix: ".com" },
+      }).validate(type);
+
+      assert.deepEqual(
+        errors,
+        [],
+        "it returns no error when the value is blank"
+      );
+    });
+  });
+
+  test(`unsupported type - endsWith`, async function (assert) {
+    let errors = await new Validator("xxx", {
+      endsWith: { suffix: "@" },
+    }).validate("icon");
+
+    assert.deepEqual(
+      errors,
+      [],
+      "it returns no error when the type is unsupported"
+    );
+  });
+
+  test(`unsupported type - startsWith`, async function (assert) {
+    let errors = await new Validator("xxx", {
+      startsWith: { prefix: "@" },
+    }).validate("icon");
+
+    assert.deepEqual(
+      errors,
+      [],
+      "it returns no error when the type is unsupported"
+    );
+  });
+
   test("required", async function (assert) {
     let errors = await new Validator(" ", {
       required: { trim: true },

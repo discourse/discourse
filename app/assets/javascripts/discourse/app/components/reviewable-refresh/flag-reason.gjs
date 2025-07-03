@@ -11,17 +11,16 @@ const SCORE_TYPE_TO_CSS_CLASS_MAP = {
 
 export default class ReviewableFlagReason extends Component {
   get scoreCSSClass() {
-    return `--${SCORE_TYPE_TO_CSS_CLASS_MAP[this.args.type] || "other"}`;
+    return SCORE_TYPE_TO_CSS_CLASS_MAP[this.args.type] || "other";
   }
 
   <template>
-    <span class="review-item__flag-reason {{this.scoreCSSClass}}">
+    <span class="review-item__flag-reason --{{this.scoreCSSClass}}">
       {{#if (gt @count 0)}}
-        <span class="review-item__flag-count {{this.scoreCSSClass}}">
+        <span class="review-item__flag-count --{{this.scoreCSSClass}}">
           {{@count}}
         </span>
       {{/if}}
-
       {{@title}}
     </span>
   </template>
