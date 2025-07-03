@@ -127,7 +127,7 @@ export default class AdminConfigAreasColorPalette extends Component {
   }
 
   @action
-  async copy_to_clipboard() {
+  async copyToClipboard() {
     try {
       await clipboardCopy(this.args.colorPalette.dump());
       this.toasts.success({
@@ -137,7 +137,9 @@ export default class AdminConfigAreasColorPalette extends Component {
           ),
         },
       });
-    } catch {
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(error);
       this.toasts.error({
         data: {
           message: i18n(
@@ -346,7 +348,7 @@ export default class AdminConfigAreasColorPalette extends Component {
               <DButton
                 class="copy-to-clipboard"
                 @label="admin.config_areas.color_palettes.copy_to_clipboard"
-                @action={{this.copy_to_clipboard}}
+                @action={{this.copyToClipboard}}
               />
               <form.Submit
                 @isLoading={{this.saving}}

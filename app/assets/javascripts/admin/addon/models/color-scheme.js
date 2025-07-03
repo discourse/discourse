@@ -94,6 +94,7 @@ export default class ColorScheme extends EmberObject {
         this.colors.map((color) => [color.name, color[property]])
       );
     return {
+      name: this.name,
       dark: extractColors("dark_hex"),
       light: extractColors("hex"),
     };
@@ -103,11 +104,7 @@ export default class ColorScheme extends EmberObject {
    * @returns a JSON representation of the color scheme.
    */
   dump() {
-    return (
-      JSON.stringify(this.name) +
-      ": " +
-      JSON.stringify(this.schemeObject(), null, 2)
-    );
+    return JSON.stringify(this.schemeObject(), null, 2);
   }
 
   copy() {

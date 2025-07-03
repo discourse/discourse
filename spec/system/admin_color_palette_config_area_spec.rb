@@ -199,7 +199,9 @@ describe "Admin Color Palette Config Area Page", type: :system do
     config_area.copy_to_clipboard_button.click
 
     clipboard_content = cdp.read_clipboard
-    clipboard_scheme = JSON.parse("{" + clipboard_content + "}")[color_scheme.name]
+    clipboard_scheme = JSON.parse(clipboard_content)
+
+    expect(clipboard_scheme["name"]).to eq(color_scheme.name)
 
     color_scheme.colors.each do |color|
       expect(color.hex).to eq(clipboard_scheme["light"][color.name])
