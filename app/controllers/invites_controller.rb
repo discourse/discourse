@@ -491,6 +491,13 @@ class InvitesController < ApplicationController
         end
 
         if invites.present?
+          custom_error =
+            DiscoursePluginRegistry.apply_modifier(:invite_bulk_csv_custom_error, nil, invites)
+
+          if custom_error.present?
+            return render json: failed_json.merge(errors: [custom_error]), status: 422
+          end
+
           Jobs.enqueue(:bulk_invite, invites: invites, current_user_id: current_user.id)
 
           if invites.count >= SiteSetting.max_bulk_invites

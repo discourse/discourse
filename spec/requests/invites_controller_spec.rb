@@ -1806,6 +1806,24 @@ RSpec.describe InvitesController do
         user2 = User.where(staged: true).find_by_email("test2@example.com")
         expect(user2.locale).to eq("pl")
       end
+
+      describe "invite_bulk_csv_custom_error modifier" do
+        let!(:plugin) { Plugin::Instance.new }
+        let!(:modifier) { :invite_bulk_csv_custom_error }
+        let!(:block) { Proc.new { "Custom error message" } }
+
+        before { DiscoursePluginRegistry.register_modifier(plugin, modifier, &block) }
+        after { DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &block) }
+
+        it "applies custom errors" do
+          sign_in(admin)
+
+          post "/invites/upload_csv.json", params: { file: file, name: "discourse.csv" }
+
+          expect(response.status).to eq(422)
+          expect(response.parsed_body["errors"]).to include("Custom error message")
+        end
+      end
     end
   end
 end
