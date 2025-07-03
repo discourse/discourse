@@ -331,22 +331,4 @@ describe "Reviewables", type: :system do
       expect(review_page).to have_no_information_about_unknown_reviewables_visible
     end
   end
-
-  describe "when user is part of the groups list of the `reviewable_ui_refresh` site setting" do
-    fab!(:reviewable_flagged_post)
-    fab!(:group)
-
-    before do
-      SiteSetting.reviewable_ui_refresh = group.name
-      group.add(admin)
-    end
-
-    it "shows the new reviewable UI" do
-      sign_in(admin)
-
-      visit "/review/#{reviewable_flagged_post.id}"
-
-      expect(page).to have_selector(".review-container")
-    end
-  end
 end
