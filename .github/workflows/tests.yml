@@ -186,7 +186,7 @@ jobs:
         if: steps.app-cache.outputs.cache-hit != 'true'
         run: |
           bin/rake db:create
-          script/silence_successful_output bin/rake db:migrate
+          script/silence_successful_output bin/rake db:migrate:reset
 
       - name: Create and migrate parallel databases
         if: >-
