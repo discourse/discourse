@@ -4056,7 +4056,7 @@ experimental:
     type: list
     default: "horizon"
     hidden: true
-  allow_any: false
+    allow_any: false
     choices:
       - "foundation"
       - "horizon"
