@@ -16,6 +16,10 @@ module PageObjects
         self
       end
 
+      def sort_order
+        PageObjects::Components::SelectKit.new("#search-sort-by")
+      end
+
       def click_search_menu_link
         find(".search-menu .results .search-link").click
       end
@@ -23,6 +27,10 @@ module PageObjects
       def clear_search_input
         find("input.full-page-search").set("")
         self
+      end
+
+      def search_input
+        find("input.full-page-search")
       end
 
       def has_heading_text?(text)

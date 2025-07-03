@@ -1288,7 +1288,7 @@ class PluginApi {
    * });
    * ```
    *
-   * This API is deprecated. See renderIntoOutlet instead.
+   * This API is deprecated. See renderInOutlet instead.
    *
    **/
   registerConnectorClass(outletName, connectorName, klass) {

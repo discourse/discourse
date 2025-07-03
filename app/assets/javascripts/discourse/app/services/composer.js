@@ -415,6 +415,15 @@ export default class ComposerService extends Service {
 
       options.push(
         this._setupPopupMenuOption({
+          name: "quote",
+          action: this.importQuote,
+          icon: "far-comment",
+          label: "composer.quote_post_title",
+        })
+      );
+
+      options.push(
+        this._setupPopupMenuOption({
           name: "toggle-invisible",
           action: "toggleInvisible",
           icon: "far-eye-slash",

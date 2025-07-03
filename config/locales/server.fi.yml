@@ -1703,7 +1703,7 @@ fi:
     x_summary_large_image: "Twitter-kortin \"summary large image\" (leveys vähintään 280 ja korkeus vähintään 150, ei voi olla .svg). Jos jätetty tyhjäksi, tavallisen kortin metatiedot luodaan käyttämällä opengraph_image-kuvaa, kunhan se ei ole myös .svg."
     notification_email: "Sähköpostiosoite, josta kaikki tärkeät järjestelmän lähettämät sähköpostiviestit lähetetään. Tässä määritetyn verkkotunnuksen SPF, DKIM ja käänteiset PTR-tietueet täytyy olla asetettu oikein, jotta sähköpostit menevät perille."
     email_custom_headers: "Pystyviivalla eroteltu luettelo mukautetuista sähköpostin otsikkotiedoista"
-    email_subject: "Mukautettava tavallisten sähköpostiviestien aiheen muoto. Katso englanninkielinen ohje: <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
+    email_subject: "Mukautettava tavallisten sähköpostiviestien aiheen muoto. Katso englanninkielinen ohje: <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Kertoo käyttäjälle tarkemmin, miksi hän ei pääse tiettyyn ketjuun. Huomioi: tämä vaarantaa tietoturvaa, koska käyttäjä saa tietää, että URL osoittaa olemassa olevaan ketjuun."
     enforce_second_factor: "Vaadi käyttäjiä ottamaan käyttöön kaksivaiheinen tunnistus ennen kuin he voivat käyttää Discoursen käyttöliittymää. Tämä asetus ei vaikuta API- tai DiscourseConnect-palveluntarjoajatodennukseen. Jos enforce_second_factor_on_external_auth on käytössä, käyttäjät eivät voi kirjautua sisään ulkoisilla todennuspalveluilla kaksivaiheisen tunnistuksen määrittämisen jälkeen."
     enforce_second_factor_on_external_auth: "Vaadi käyttäjiä käyttämään aina kaksivaiheista tunnistusta. Kun tämä on käytössä, tämä estää käyttäjiä kirjautumasta sisään ulkoisilla todennusmenetelmillä, kuten yhteisökirjautumisella, jos heillä on kaksivaiheinen tunnistus käytössä. Käytöstä poistettujen käyttäjien tarvitsee vain vahvistaa kaksivaiheinen tunnistus kirjautuessaan sisään käyttäjätunnuksella ja salasanalla. Katso myös \"enforce_second_factor\"-asetus."
@@ -2664,7 +2664,7 @@ fi:
     not_available: "Ei saatavissa. Kokeile %{suggestion}?"
     something_already_taken: "Jokin meni vikaan. Tämä käyttäjätunnus tai sähköpostiosoite on ehkä jo rekisteröity, kokeile salasanan unohduslinkkiä."
     omniauth_error:
-      generic: "Valitettavasti tapahtui virhe yritettäessä valtuuttaa tilisi %{provider}-tunnuksella. Ole hyvä ja yritä uudelleen."
+      generic_with_provider: "Valitettavasti tapahtui virhe yritettäessä valtuuttaa tilisi %{provider}-tunnuksella. Ole hyvä ja yritä uudelleen."
       csrf_detected: "Valitettavasti valtuutus on vanhentunut tai olet vaihtanut selainta. Yritä uudelleen."
       request_error: "Valitettavasti valtuutuksen käynnistämisessä tapahtui virhe. Ole hyvä ja yritä uudelleen."
       invalid_iat: "Anteeksi, emme voi vahvistaa valtuutustunnusta palvelimen kelloerojen vuoksi. Yritä uudelleen."

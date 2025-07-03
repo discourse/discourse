@@ -47,6 +47,67 @@ RSpec.describe EmailController do
       end
     end
 
+    describe "unsubscribe using rfc 8058" do
+      fab!(:topic_post) { Fabricate(:post) }
+      before { ActionController::Base.allow_forgery_protection = true }
+      after { ActionController::Base.allow_forgery_protection = false }
+
+      it "supports one-click unsubscribe from list" do
+        key = UnsubscribeKey.create_key_for(user, UnsubscribeKey::DIGEST_TYPE)
+        user.user_option.update_columns(
+          email_digests: true,
+          email_level: UserOption.email_level_types[:never],
+          email_messages_level: UserOption.email_level_types[:never],
+          mailing_list_mode: true,
+        )
+
+        # ensure we don't have a CSRF token
+        post "/email/unsubscribe/#{key}", params: { "List-Unsubscribe": "One-Click" }
+        # we have no CSRF token, but this is fine, we should still get a 302
+        expect(response.status).to eq(302)
+
+        user.user_option.reload
+        expect(user.user_option.email_digests).to eq(false)
+        expect(user.user_option.mailing_list_mode).to eq(false)
+      end
+
+      it "supports one-click unsubscribe from topic" do
+        topic_key =
+          UnsubscribeKey.create_key_for(user, UnsubscribeKey::TOPIC_TYPE, post: topic_post)
+
+        TopicUser.change(
+          user.id,
+          topic_post.topic_id,
+          notification_level: TopicUser.notification_levels[:watching],
+        )
+
+        post "/email/unsubscribe/#{topic_key}", params: { "List-Unsubscribe": "One-Click" }
+        expect(response.status).to eq(302)
+
+        expect(TopicUser.get(topic_post.topic, user).notification_level).to eq(
+          TopicUser.notification_levels[:tracking],
+        )
+      end
+
+      it "supports one-click unsubscribe from mailing list" do
+        mailing_list_key = UnsubscribeKey.create_key_for(user, UnsubscribeKey::ALL_TYPE)
+
+        user.user_option.update_columns(
+          mailing_list_mode: true,
+          email_digests: true,
+          email_level: UserOption.email_level_types[:always],
+        )
+
+        post "/email/unsubscribe/#{mailing_list_key}", params: { "List-Unsubscribe": "One-Click" }
+        expect(response.status).to eq(302)
+
+        user.user_option.reload
+        expect(user.user_option.mailing_list_mode).to eq(false)
+        expect(user.user_option.email_digests).to eq(false)
+        expect(user.user_option.email_level).to eq(UserOption.email_level_types[:never])
+      end
+    end
+
     describe "unsubscribe from digest" do
       let(:key) { UnsubscribeKey.create_key_for(user, UnsubscribeKey::DIGEST_TYPE) }
 

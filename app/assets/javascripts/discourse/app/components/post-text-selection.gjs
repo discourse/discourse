@@ -241,7 +241,19 @@ export default class PostTextSelection extends Component {
       return;
     }
 
-    return getElement(range.commonAncestorContainer)?.closest?.(".cooked");
+    const cooked = getElement(range.commonAncestorContainer)?.closest?.(
+      ".cooked"
+    );
+
+    if (!cooked) {
+      return;
+    }
+
+    if (cooked.closest(".small-action")) {
+      return;
+    }
+
+    return cooked;
   }
 
   get post() {

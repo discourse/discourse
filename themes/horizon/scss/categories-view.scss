@@ -4,7 +4,8 @@
   .category-list {
     border-collapse: separate;
 
-    th.topics {
+    th.topics,
+    .category-logo {
       display: none;
     }
 
@@ -224,7 +225,8 @@
     margin-inline: 1rem;
 
     .num.posts,
-    .category-topics-count {
+    .category-topics-count,
+    .category-logo {
       display: none;
     }
 
@@ -261,6 +263,10 @@
 }
 
 .category-boxes.with-subcategories {
+  .category-logo {
+    display: none;
+  }
+
   @include viewport.from(sm) {
     margin-top: 0;
   }

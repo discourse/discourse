@@ -1281,7 +1281,7 @@ class TopicsController < ApplicationController
 
     opts =
       params.slice(
-        *%i[page print filter_top_level_replies preview_theme_id].concat(
+        *%i[page print filter_top_level_replies preview_theme_id include_raw].concat(
           additional_allowed_query_parameters,
         ),
       )

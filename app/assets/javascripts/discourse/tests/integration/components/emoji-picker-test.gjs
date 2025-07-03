@@ -96,6 +96,15 @@ module("Integration | Component | emoji-picker-content", function (hooks) {
     assert
       .dom('.emoji-picker__section.filtered > img[alt="grinning_face"]')
       .exists("it filters the correct emoji using search alias");
+
+    await emojiPicker(".emoji-picker").tone(2);
+    await fillIn(".filter-input", "fist");
+
+    assert
+      .dom(
+        `.emoji-picker__section.filtered > img[src="/images/emoji/twitter/raised_fist/2.png?v=${v}"]`
+      )
+      .exists("it uses the selected skin tone in search results");
   });
 
   test("When selecting an emoji", async function (assert) {

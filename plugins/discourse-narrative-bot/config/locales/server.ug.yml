@@ -396,11 +396,11 @@ ug:
           دىققەت، تېمىغا جاۋاب ياكى تېما ئوقۇش ۋاقتى بىر قانچە مىنۇتتىن ئېشىپ كەتسە، ئۇنىڭ ئۇقتۇرۇش دەرىجىسى ئۆزلۈكىدىن «ئىزلاش» قىلىپ تەڭشىلىدۇ. سىز بۇنى [ئىشلەتكۈچى مايىللىقى](%{base_uri}/my/preferences) دا ئۆزگەرتەلەيسىز.
       poll:
         instructions: |-
-          خالىغان يازمىغا راي سىناش قوشالايدىغانلىقىىڭىزنى بىلەمتىڭىز؟ تەھرىرلىگۈچتىكى <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> چىشلىق چاقنى ئىشلىتىپ **راي سىناش قۇر**ۇڭ.
+          ھەر قانداق يازمىغا راي سىناش قوشالايدىغانلىقىڭىزنى بىلەمسىز؟ تەھرىرلىگۈچتىكى <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> سىنبەلگە ئارقىلىق **راي سىناش قۇر**ۇشنى سىناڭ.
         not_found: |-
           ئاپلا! جاۋابىڭىزدا ھېچقانداق راي سىناش يوق.
 
-          تەھرىرلىگۈچتىكى <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> چىشلىق چاق سىنبەلگىنى ئىشىلىتىڭ ياكى كېيىنكى جاۋابىڭىزدا بۇ راي سىناشنى كۆچۈرۈپ چاپلاڭ:
+          تەھرىرلىگۈچتىكى <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> سىنبەلگىنى ئىشىلىتىڭ ياكى كېيىنكى جاۋابىڭىزدا بۇ راي سىناشنى كۆچۈرۈپ چاپلاڭ:
 
           ```text
           [poll]
@@ -425,12 +425,12 @@ ug:
 
           [details=تاللانسا قانداق ئىشلەيدىغانلىقىنى كۆرسىتىدۇ!]
 
-          1-تەھرىرلىگۈچتىكى چىشلىق چاق <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> سىنبەلگە تاللىنىدۇ.
+          1-تەھرىرلىگۈچتىكى <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> سىنبەلگە تاللىنىدۇ.
           2-«تەپسىلاتىنى يوشۇر» تاللىنىدۇ.
-          3-تەپسىلىي خۇلاسىنى تەھرىرلەپ ۋە مەزمۇن قوشىدۇ.
+          3-تەپسىلىي خۇلاسىنى تەھرىرلەپ ۋە مەزمۇن قوشۇلىدۇ.
           [/details]
 
-          سىز تەھرىرلىگۈچتىكى چىشلىق چاق<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> سىنبەلگىنى ئىشلىتىپ كېيىنكى جاۋابتا تەپسىلىي ئۇچۇر بۆلىكىنى قوشامسىز؟
+          سىز تەھرىرلىگۈچتىكى <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> سىنبەلگىنى ئىشلىتىپ كېيىنكى جاۋابتا تەپسىلىي ئۇچۇر بۆلىكىنى قوشامسىز؟
         not_found: |-
           تەپسىلىي ئەپچە قۇرۇشتا مەسىلە كۆرۈلدىمۇ؟ كېيىنكى جاۋابىڭىزدا تۆۋەندىكى تېكىستنى قوشۇپ سىناپ بېقىڭ:
 
