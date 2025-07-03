@@ -154,7 +154,7 @@ table {
 }
 
 tbody {
-  border-top: 3px solid var(--table-border-color);
+  border-top: var(--d-table-border-top-height) solid var(--table-border-color);
 }
 
 .topic-list-item,
