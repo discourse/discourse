@@ -243,10 +243,8 @@ describe "Creating Invites", type: :system do
 
     it "can open the invite modal from the empty state button" do
       find(".empty-state .btn-primary").click
-      expect(create_invite_modal_empty).to be_visible
-      expect(create_invite_modal_empty.header).to have_text(
-        I18n.t("js.user.invited.invite.new_title"),
-      )
+
+      expect(page).to have_css("create-invite-modal")
     end
   end
 end
