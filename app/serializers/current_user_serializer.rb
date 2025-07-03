@@ -78,8 +78,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :can_see_emails,
              :use_glimmer_post_stream_mode_auto_mode,
              :can_localize_content?,
-             :effective_locale,
-             :use_reviewable_ui_refresh
+             :effective_locale
 
   delegate :user_stat, to: :object, private: true
   delegate :any_posts, :draft_count, :pending_posts_count, :read_faq?, to: :user_stat
@@ -342,13 +341,5 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def include_effective_locale?
     SiteSetting.content_localization_enabled
-  end
-
-  def use_reviewable_ui_refresh
-    scope.can_see_reviewable_ui_refresh?
-  end
-
-  def include_use_reviewable_ui_refresh?
-    scope.can_see_review_queue?
   end
 end

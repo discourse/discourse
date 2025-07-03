@@ -663,11 +663,6 @@ class Guardian
     other && authenticated? && other.is_a?(User) && @user == other
   end
 
-  def can_see_reviewable_ui_refresh?
-    SiteSetting.reviewable_ui_refresh_map.include?(Group::AUTO_GROUPS[:everyone]) ||
-      @user.in_any_groups?(SiteSetting.reviewable_ui_refresh_map)
-  end
-
   private
 
   def is_my_own?(obj)
