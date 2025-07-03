@@ -102,15 +102,16 @@ export default class ChannelsListPublic extends Component {
       }}
     >
       {{#if this.chatChannelsManager.publicMessageChannelsEmpty}}
-        {{#if this.chatChannelsManager.displayPublicChannels}}
-          <EmptyState
-            @identifier="empty-channels-list"
-            @svgContent={{ChatZero}}
-            @title={{i18n "chat.no_public_channels"}}
-            @ctaLabel={{i18n "chat.no_public_channels_cta"}}
-            @ctaAction={{this.openBrowseChannels}}
-          />
-        {{/if}}
+        <EmptyState
+          @identifier="empty-channels-list"
+          @svgContent={{ChatZero}}
+          @title={{i18n "chat.no_public_channels"}}
+          @ctaLabel={{if
+            this.chatChannelsManager.displayPublicChannels
+            (i18n "chat.no_public_channels_cta")
+          }}
+          @ctaAction={{this.openBrowseChannels}}
+        />
       {{else}}
         {{#each this.channelList as |channel|}}
           <ChatChannelRow

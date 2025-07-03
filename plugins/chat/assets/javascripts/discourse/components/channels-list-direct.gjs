@@ -110,15 +110,16 @@ export default class ChannelsListDirect extends Component {
       }}
     >
       {{#if this.directMessageChannelsEmpty}}
-        {{#if this.canCreateDirectMessageChannel}}
-          <EmptyState
-            @identifier="empty-channels-list"
-            @svgContent={{ChatZero}}
-            @title={{i18n "chat.no_direct_message_channels"}}
-            @ctaLabel={{i18n "chat.no_direct_message_channels_cta"}}
-            @ctaAction={{this.openNewMessageModal}}
-          />
-        {{/if}}
+        <EmptyState
+          @identifier="empty-channels-list"
+          @svgContent={{ChatZero}}
+          @title={{i18n "chat.no_direct_message_channels"}}
+          @ctaLabel={{if
+            this.canCreateDirectMessageChannel
+            (i18n "chat.no_direct_message_channels_cta")
+          }}
+          @ctaAction={{this.openNewMessageModal}}
+        />
       {{else}}
         {{#each
           this.chatChannelsManager.truncatedDirectMessageChannels
