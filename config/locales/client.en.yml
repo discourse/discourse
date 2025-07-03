@@ -4146,6 +4146,9 @@ en:
           other: "Are you sure you want to merge these %{count} posts?"
 
       revisions:
+        locale:
+          no_locale_set: "No language set"
+          locale_removed: "Language removed"
         controls:
           first: "First revision"
           previous: "Previous revision"
