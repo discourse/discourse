@@ -97,7 +97,9 @@
 
   &__meta-content {
     display: grid;
-    grid-template-columns: auto auto;
+    grid-template-columns: auto 1fr;
+    row-gap: var(--space-4);
+    column-gap: var(--space-4);
     padding: var(--space-4);
 
     .badge-category__wrapper {
@@ -120,12 +122,39 @@
   }
 
   &__post {
+    display: flex;
     padding: var(--space-4);
 
+    &-content-wrapper {
+      padding-top: var(--space-4);
+      border-top: 4px solid var(--primary-low);
+    }
+
     &-content {
-      max-height: 200px;
-      overflow: hidden;
-      position: relative;
+      max-height: 300px;
+      overflow: auto;
+      scrollbar-color: var(--primary-low) transparent;
+      transition: scrollbar-color 0.25s ease-in-out;
+      transition-delay: 0.5s;
+
+      --scrollbarWidth: 0.5em;
+
+      &::-webkit-scrollbar {
+        width: var(--scrollbarWidth);
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background-color: transparent;
+        border-radius: calc(var(--scrollbarWidth) / 2);
+      }
+
+      &::-webkit-scrollbar-track {
+        background-color: transparent;
+      }
+
+      p:first-of-type {
+        margin-top: 0;
+      }
     }
   }
 
