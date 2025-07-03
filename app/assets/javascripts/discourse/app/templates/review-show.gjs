@@ -26,41 +26,15 @@ export default RouteTemplate(
     }
 
     /**
-     * Determines if the current user can use the refreshed reviewable UI.
-     *
-     * @returns {boolean} True if the current user can access the refreshed UI, false otherwise
-     */
-    get canUseRefreshUI() {
-      if (!this.currentUser) {
-        return false;
-      }
-
-      const allowedGroupIds =
-        this.args.controller.siteSettings.reviewable_ui_refresh;
-      if (!allowedGroupIds) {
-        return false;
-      }
-
-      // Convert comma-separated string to array of numbers
-      const groupIds = allowedGroupIds
-        .toString()
-        .split(",")
-        .map((id) => parseInt(id.trim(), 10))
-        .filter((id) => !isNaN(id));
-
-      // Check if current user is in any of the specified groups
-      return this.currentUser.groups.some((userGroup) =>
-        groupIds.includes(userGroup.id)
-      );
-    }
-
-    /**
      * Determines whether to use the refreshed reviewable UI component.
      *
      * @returns {boolean} True if both conditions are met: user has permission and component exists
      */
     get shouldUseRefreshUI() {
-      return this.canUseRefreshUI && this.refreshedReviewableComponentExists;
+      return (
+        this.currentUser.use_reviewable_ui_refresh &&
+        this.refreshedReviewableComponentExists
+      );
     }
 
     <template>
