@@ -199,17 +199,31 @@
     touch-action: none;
     min-width: 6em;
 
+    body.grid-layout & {
+      margin-right: 0.5em;
+    }
+
     .topic-admin-menu .btn {
       height: 100%;
     }
 
     .timeline-controls {
       margin-bottom: var(--space-4);
+      display: flex;
+
+      body.grid-layout & {
+        flex-direction: row-reverse;
+      }
     }
 
     .timeline-date-wrapper {
       max-width: 9em;
       overflow-wrap: anywhere;
+
+      body.grid-layout & {
+        text-align: right;
+        margin-left: auto;
+      }
     }
 
     .timeline-footer-controls {
@@ -221,6 +235,10 @@
       display: flex;
       gap: var(--space-2);
       flex-wrap: wrap;
+
+      body.grid-layout & {
+        right: 0;
+      }
 
       @media (prefers-reduced-motion: no-preference) {
         transition: opacity 0.2s ease-in;
@@ -238,9 +256,17 @@
     .timeline-scrollarea {
       margin-top: 0.5em;
       margin-left: 0.5em;
-      border-left: 1px solid var(--tertiary-low-or-tertiary-high);
       position: relative;
       transform: translateZ(0);
+
+      body:not(.grid-layout) & {
+        border-left: 1px solid var(--tertiary-low-or-tertiary-high);
+      }
+
+      body.grid-layout & {
+        margin-right: 1px;
+        border-right: 1px solid var(--tertiary-low-or-tertiary-high);
+      }
     }
 
     .timeline-padding {
@@ -267,10 +293,17 @@
       width: 0.35em;
       background-color: var(--tertiary-low-or-tertiary-high);
       height: 100%;
-      float: left;
       z-index: z("base") + 1;
       outline: 1px solid transparent;
-      margin-left: 0.5px;
+
+      body:not(.grid-layout) & {
+        margin-left: 0.5px;
+      }
+
+      body.grid-layout & {
+        width: 0.45em;
+        margin-right: -0.225em;
+      }
     }
 
     .timeline-scroller-content {
@@ -280,6 +313,11 @@
       padding-left: var(--space-4);
       position: absolute; // prevents text length from impacting width
       max-height: 3em; // this hides the date when the count + date would wrap to more than 2 lines
+
+      body.grid-layout & {
+        padding-right: 1em;
+        text-align: right;
+      }
     }
 
     .timeline-ago {
@@ -296,6 +334,10 @@
       display: flex;
       align-items: center;
 
+      body.grid-layout & {
+        flex-direction: row-reverse;
+      }
+
       .back-button {
         margin-top: var(--space-4);
       }
@@ -311,6 +353,15 @@
       position: absolute;
       margin-left: -0.35em;
       z-index: z("base") + 2; // above timeline-handle
+
+      body.grid-layout & {
+        display: flex;
+        flex-direction: row-reverse;
+        align-items: center;
+        gap: 0.5em;
+        right: -1.25em;
+        margin-left: 0;
+      }
 
       .progress {
         font-size: 0.8em;

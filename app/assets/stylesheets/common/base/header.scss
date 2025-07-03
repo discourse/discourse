@@ -286,6 +286,10 @@
     height: 2.2857em;
     padding: 0.2143em;
 
+    .grid-layout & {
+      margin-right: 0.5em;
+    }
+
     &:focus,
     .discourse-no-touch & {
       &:hover {
@@ -497,6 +501,15 @@ $mobile-avatar-height: 1.532em;
 }
 
 .d-header-mode {
+  body.grid-layout & {
+    display: flex;
+    align-self: center;
+
+    button {
+      margin: 0;
+    }
+  }
+
   .bootstrap-mode {
     color: var(--primary-medium);
     font-size: var(--font-down-1);

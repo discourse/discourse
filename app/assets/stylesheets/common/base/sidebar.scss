@@ -67,13 +67,16 @@
 
 .sidebar-wrapper {
   display: flex;
-  grid-area: sidebar;
   position: sticky;
   top: var(--main-outlet-offset);
   background: var(--d-sidebar-background);
   height: calc(var(--composer-vh, 1dvh) * 100 - var(--main-outlet-offset, 0px));
   align-self: start;
   overflow-y: auto;
+
+  body:not(.grid-layout) & {
+    grid-area: sidebar;
+  }
 
   // back-compat for themes
   --1dvh: 1dvh;

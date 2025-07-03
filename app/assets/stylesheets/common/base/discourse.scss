@@ -736,16 +736,19 @@ form {
 #main-outlet-wrapper {
   box-sizing: border-box;
   width: 100%;
-  display: grid;
-  grid-template-areas:
-    "sidebar content"
-    "sidebar below-content";
-  grid-template-rows: 1fr auto;
-  grid-template-columns: 0 minmax(0, 1fr); // 0 column width needs to be set for CSS transitions
-  gap: 0;
 
-  #main-outlet {
-    grid-area: content;
+  body:not(.grid-layout) & {
+    display: grid;
+    grid-template-areas:
+      "sidebar content"
+      "sidebar below-content";
+    grid-template-rows: 1fr auto;
+    grid-template-columns: 0 minmax(0, 1fr); // 0 column width needs to be set for CSS transitions
+    gap: 0;
+
+    #main-outlet {
+      grid-area: content;
+    }
   }
 }
 
@@ -989,7 +992,7 @@ a#skip-link {
   margin-right: var(--scroll-gap, 0);
 }
 
-body.has-sidebar-page {
+body.has-sidebar-page:not(.grid-layout) {
   .wrap {
     // increase page max-width to accommodate sidebar width
     max-width: calc(var(--d-sidebar-width) + var(--d-max-width));
@@ -1107,6 +1110,27 @@ body.has-sidebar-page {
           @include ellipsis;
         }
       }
+    }
+  }
+}
+
+.grid-layout {
+  .d-header {
+    &__contents-primary,
+    &__contents-secondary {
+      display: flex;
+    }
+
+    &__contents-primary {
+      margin-right: auto;
+    }
+
+    &__contents-secondary {
+      flex: 1 1 auto;
+    }
+
+    .panel {
+      margin-left: auto;
     }
   }
 }
