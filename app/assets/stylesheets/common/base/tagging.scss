@@ -72,6 +72,10 @@
   vertical-align: middle;
   margin: 0;
   color: var(--tag-text-color);
+  font-size: var(--d-tag-font-size);
+  padding: 0 var(--d-tag-horizontal-padding);
+  border-radius: var(--d-tag-border-radius);
+  background-color: var(--d-tag-background-color);
 
   @include ellipsis;
 
