@@ -205,6 +205,8 @@ describe "Admin Color Palette Config Area Page", type: :system do
 
     color_scheme.colors.each do |color|
       expect(color.hex).to eq(clipboard_scheme["light"][color.name])
+      next if color.dark_hex.nil?
+      expect(color.dark_hex).to eq(clipboard_scheme["dark"][color.name])
     end
   end
 end
