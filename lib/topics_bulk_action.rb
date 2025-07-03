@@ -136,7 +136,12 @@ class TopicsBulkAction
     updatable_topics = topics.where.not(category_id: @operation[:category_id])
 
     if SiteSetting.create_revision_on_bulk_topic_moves
-      opts = { bypass_bump: true, validate_post: false, bypass_rate_limiter: true }
+      opts = {
+        bypass_bump: true,
+        validate_post: false,
+        bypass_rate_limiter: true,
+        silent: @operation[:silent],
+      }
 
       updatable_topics.each do |t|
         if guardian.can_edit?(t)
@@ -147,7 +152,9 @@ class TopicsBulkAction
     else
       updatable_topics.each do |t|
         if guardian.can_edit?(t)
-          @changed_ids << t.id if t.change_category_to_id(@operation[:category_id])
+          if t.change_category_to_id(@operation[:category_id], silent: @operation[:silent])
+            @changed_ids << t.id
+          end
         end
       end
     end

@@ -1048,6 +1048,7 @@ class TopicsController < ApplicationController
           :category_id,
           :notification_level_id,
           :message,
+          :silent,
           *DiscoursePluginRegistry.permitted_bulk_action_parameters,
           tags: [],
         )

@@ -215,6 +215,7 @@ class PostRevisor
   # - skip_validations: ask ActiveRecord to skip validations
   # - skip_revision: do not create a new PostRevision record
   # - skip_staff_log: skip creating an entry in the staff action log
+  # - silent: don't send notifications to user
   def revise!(editor, fields, opts = {})
     @editor = editor
     @fields = fields.with_indifferent_access
@@ -270,6 +271,9 @@ class PostRevisor
 
     @skip_revision = false
     @skip_revision = @opts[:skip_revision] if @opts.has_key?(:skip_revision)
+
+    @silent = false
+    @silent = @opts[:silent] if @opts.has_key?(:silent)
 
     @post.incoming_email&.update(imap_sync: true) if @post.incoming_email&.imap_uid
 
@@ -722,6 +726,7 @@ class PostRevisor
 
   def alert_users
     return if @editor.id == Discourse::SYSTEM_USER_ID
+    return if @silent
     Jobs.enqueue(:post_alert, post_id: @post.id)
   end
 
