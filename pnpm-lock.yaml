@@ -529,8 +529,8 @@ importers:
         specifier: ^8.2.0
         version: 8.2.0(@babel/core@7.27.7)
       ember-cli-deprecation-workflow:
-        specifier: ^3.3.0
-        version: 3.3.0(ember-source@5.12.0(patch_hash=pqnuctuxbp6ekxyjszyhrgmysm)(@glimmer/component@1.1.2(@babel/core@7.27.7))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5)(webpack@5.99.9(@swc/core@1.12.9)(esbuild@0.25.5)))
+        specifier: ^3.4.0
+        version: 3.4.0(ember-source@5.12.0(patch_hash=pqnuctuxbp6ekxyjszyhrgmysm)(@glimmer/component@1.1.2(@babel/core@7.27.7))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5)(webpack@5.99.9(@swc/core@1.12.9)(esbuild@0.25.5)))
       ember-cli-htmlbars:
         specifier: ^6.3.0
         version: 6.3.0
@@ -698,7 +698,7 @@ importers:
         version: 4.3.0
       ember-this-fallback:
         specifier: ^0.4.0
-        version: 0.4.0(patch_hash=znalyv6akdxlqfpmxunrdi3osa)(ember-cli-htmlbars@6.3.0)(ember-source@5.12.0(patch_hash=pqnuctuxbp6ekxyjszyhrgmysm)(@glimmer/component@1.1.2(@babel/core@7.27.7))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5))
+        version: 0.4.0(patch_hash=znalyv6akdxlqfpmxunrdi3osa)(ember-cli-htmlbars@6.3.0)(ember-source@5.12.0(patch_hash=pqnuctuxbp6ekxyjszyhrgmysm)(@glimmer/component@1.1.2(@babel/core@7.27.7))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5)(webpack@5.99.9(@swc/core@1.12.9)(esbuild@0.25.5)))
     devDependencies:
       ember-cli:
         specifier: ~6.5.0
@@ -1065,7 +1065,7 @@ importers:
         version: 5.12.0(patch_hash=pqnuctuxbp6ekxyjszyhrgmysm)(@glimmer/component@1.1.2(@babel/core@7.27.7))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5)(webpack@5.99.9(@swc/core@1.12.9)(esbuild@0.25.5))
       ember-this-fallback:
         specifier: ^0.4.0
-        version: 0.4.0(patch_hash=znalyv6akdxlqfpmxunrdi3osa)(ember-cli-htmlbars@6.3.0)(ember-source@5.12.0(patch_hash=pqnuctuxbp6ekxyjszyhrgmysm)(@glimmer/component@1.1.2(@babel/core@7.27.7))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5))
+        version: 0.4.0(patch_hash=znalyv6akdxlqfpmxunrdi3osa)(ember-cli-htmlbars@6.3.0)(ember-source@5.12.0(patch_hash=pqnuctuxbp6ekxyjszyhrgmysm)(@glimmer/component@1.1.2(@babel/core@7.27.7))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5)(webpack@5.99.9(@swc/core@1.12.9)(esbuild@0.25.5)))
       fastestsmallesttextencoderdecoder:
         specifier: ^1.0.22
         version: 1.0.22
@@ -4326,11 +4326,11 @@ packages:
     peerDependencies:
       '@babel/core': ^7.12.0
 
-  ember-cli-deprecation-workflow@3.3.0:
-    resolution: {integrity: sha512-AZTOv+xftPXNov+X7k/JZFMd5/Suzkuvg5Zc1W3MoJb+kjIwW/3sieBOXEbt7aMq9Px4ixb9FSrFPNlzggV4qA==}
+  ember-cli-deprecation-workflow@3.4.0:
+    resolution: {integrity: sha512-Ksrmib4mjD4xa0dqFgxJLBwkSp9EVYH6jSqe2NpODlBKEAZhsVzQj5wKPnC1dXfK3Erq/r1Fh3q4g46FZiCUiw==}
     engines: {node: '>= 18'}
     peerDependencies:
-      ember-source: '>= 4.0.0'
+      ember-source: '>= 3.28.0'
 
   ember-cli-get-component-path-option@1.0.0:
     resolution: {integrity: sha512-k47TDwcJ2zPideBCZE8sCiShSxQSpebY2BHcX2DdipMmBox5gsfyVrbKJWIHeSTTKyEUgmBIvQkqTOozEziCZA==}
@@ -12900,7 +12900,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  ember-cli-deprecation-workflow@3.3.0(ember-source@5.12.0(patch_hash=pqnuctuxbp6ekxyjszyhrgmysm)(@glimmer/component@1.1.2(@babel/core@7.27.7))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5)(webpack@5.99.9(@swc/core@1.12.9)(esbuild@0.25.5))):
+  ember-cli-deprecation-workflow@3.4.0(ember-source@5.12.0(patch_hash=pqnuctuxbp6ekxyjszyhrgmysm)(@glimmer/component@1.1.2(@babel/core@7.27.7))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5)(webpack@5.99.9(@swc/core@1.12.9)(esbuild@0.25.5))):
     dependencies:
       '@babel/core': 7.27.7(supports-color@8.1.1)
       ember-cli-babel: 8.2.0(@babel/core@7.27.7)
@@ -13447,7 +13447,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  ember-this-fallback@0.4.0(patch_hash=znalyv6akdxlqfpmxunrdi3osa)(ember-cli-htmlbars@6.3.0)(ember-source@5.12.0(patch_hash=pqnuctuxbp6ekxyjszyhrgmysm)(@glimmer/component@1.1.2(@babel/core@7.27.7))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5)):
+  ember-this-fallback@0.4.0(patch_hash=znalyv6akdxlqfpmxunrdi3osa)(ember-cli-htmlbars@6.3.0)(ember-source@5.12.0(patch_hash=pqnuctuxbp6ekxyjszyhrgmysm)(@glimmer/component@1.1.2(@babel/core@7.27.7))(@glint/template@1.4.1-unstable.34c4510)(rsvp@4.8.5)(webpack@5.99.9(@swc/core@1.12.9)(esbuild@0.25.5))):
     dependencies:
       '@glimmer/syntax': 0.84.3
       babel-plugin-ember-template-compilation: 2.4.1
