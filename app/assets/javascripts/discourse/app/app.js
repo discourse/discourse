@@ -8,7 +8,6 @@ import { registerDiscourseImplicitInjections } from "discourse/lib/implicit-inje
 // Register Discourse's standard implicit injections on common framework classes.
 registerDiscourseImplicitInjections();
 
-import { DEBUG } from "@glimmer/env";
 import Application from "@ember/application";
 import { VERSION } from "@ember/version";
 import require from "require";
@@ -101,16 +100,11 @@ function loadInitializers(app) {
   let discourseInstanceInitializers = [];
 
   for (let moduleName of Object.keys(requirejs.entries)) {
-    if (
-      moduleName.match(/^(discourse|admin)\//) &&
-      !moduleName.endsWith("-test")
-    ) {
+    if (moduleName.startsWith("discourse/") && !moduleName.endsWith("-test")) {
       // In discourse core, initializers follow standard Ember conventions
-      if (moduleName.match(/^(discourse|admin)\/initializers\//)) {
+      if (moduleName.startsWith("discourse/initializers/")) {
         initializers.push(moduleName);
-      } else if (
-        moduleName.match(/^(discourse|admin)\/instance-initializers\//)
-      ) {
+      } else if (moduleName.startsWith("discourse/instance-initializers/")) {
         instanceInitializers.push(moduleName);
       } else {
         // https://meta.discourse.org/t/updating-our-initializer-naming-patterns/241919
@@ -170,25 +164,6 @@ function loadInitializers(app) {
       initialize: () => withPluginApi(callback.version, callback.code),
     });
   }
-
-  if (DEBUG && isTesting()) {
-    app.instanceInitializer({
-      name: "discourse-test-initializer",
-      initialize() {
-        for (const func of testInitializers) {
-          func(...arguments);
-        }
-      },
-    });
-  }
-}
-
-const testInitializers = [];
-export function addTestInitializer(func) {
-  testInitializers.push(func);
-}
-export function clearTestInitializers() {
-  testInitializers.length = 0;
 }
 
 function resolveInitializer(moduleName) {

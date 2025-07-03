@@ -13,7 +13,6 @@ import MessageBus from "message-bus-client";
 import { resetCache as resetOneboxCache } from "pretty-text/oneboxer";
 import QUnit, { module, test } from "qunit";
 import sinon from "sinon";
-import { addTestInitializer, clearTestInitializers } from "discourse/app";
 import { clearAboutPageActivities } from "discourse/components/about-page";
 import { resetCardClickListenerSelector } from "discourse/components/card-contents-base";
 import {
@@ -36,6 +35,7 @@ import { resetCustomPostMessageCallbacks } from "discourse/controllers/topic";
 import { clearHTMLCache } from "discourse/helpers/custom-html";
 import { resetUsernameDecorators } from "discourse/helpers/decorate-username-selector";
 import { resetBeforeAuthCompleteCallbacks } from "discourse/instance-initializers/auth-complete";
+import { resetAdminPluginConfigNav } from "discourse/lib/admin-plugin-config-nav";
 import { clearPluginHeaderActionComponents } from "discourse/lib/admin-plugin-header-actions";
 import { resetAdditionalReportModes } from "discourse/lib/admin-report-additional-modes";
 import { rollbackAllPrepends } from "discourse/lib/class-prepend";
@@ -65,6 +65,7 @@ import { clearTopicFooterButtons } from "discourse/lib/register-topic-footer-but
 import { clearTopicFooterDropdowns } from "discourse/lib/register-topic-footer-dropdown";
 import { clearTagsHtmlCallbacks } from "discourse/lib/render-tags";
 import { resetLogSearchLinkClickedCallbacks } from "discourse/lib/search";
+import { clearAdditionalAdminSidebarSectionLinks } from "discourse/lib/sidebar/admin-sidebar";
 import { resetDefaultSectionLinks as resetTopicsSectionLinks } from "discourse/lib/sidebar/custom-community-section-links";
 import { resetSidebarPanels } from "discourse/lib/sidebar/custom-sections";
 import {
@@ -258,6 +259,8 @@ export function testCleanup(container, app) {
   cleanupCssGeneratorTags();
   resetBeforeAuthCompleteCallbacks();
   clearPopupMenuOptions();
+  clearAdditionalAdminSidebarSectionLinks();
+  resetAdminPluginConfigNav();
   resetTransformers();
   rollbackAllPrepends();
   clearAboutPageActivities();
@@ -268,7 +271,6 @@ export function testCleanup(container, app) {
   resetGroupPostSmallActionCodes();
   resetPostSmallActionClassesCallbacks();
   resetPostClassesCallback();
-  clearTestInitializers();
 }
 
 function cleanupCssGeneratorTags() {
@@ -360,8 +362,6 @@ export function acceptance(name, optionsOrCallback) {
   let settingChanges;
   let userChanges;
 
-  const instanceInitializers = [];
-
   const setup = {
     beforeEach() {
       I18n.testing = true;
@@ -394,10 +394,6 @@ export function acceptance(name, optionsOrCallback) {
         this.owner = this.container;
       }
 
-      for (const fn of instanceInitializers) {
-        addTestInitializer(fn);
-      }
-
       if (options.beforeEach) {
         options.beforeEach.call(this);
       }
@@ -428,9 +424,6 @@ export function acceptance(name, optionsOrCallback) {
     },
     mobileView() {
       mobileView = true;
-    },
-    instanceInitializer(fn) {
-      instanceInitializers.push(fn);
     },
   };
 

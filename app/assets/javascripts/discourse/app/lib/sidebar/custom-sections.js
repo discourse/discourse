@@ -3,6 +3,7 @@ import BaseCustomSidebarSection from "discourse/lib/sidebar/base-custom-sidebar-
 import BaseCustomSidebarSectionLink from "discourse/lib/sidebar/base-custom-sidebar-section-link";
 import { MAIN_PANEL } from "discourse/lib/sidebar/panels";
 import { i18n } from "discourse-i18n";
+import AdminSidebarPanel from "./admin-sidebar";
 
 class MainSidebarPanel {
   sections = [];
@@ -61,6 +62,6 @@ export function resetPanelSections(
 }
 
 export function resetSidebarPanels() {
-  customPanels = [new MainSidebarPanel()];
+  customPanels = [new MainSidebarPanel(), new AdminSidebarPanel()];
   currentPanelKey = MAIN_PANEL;
 }
