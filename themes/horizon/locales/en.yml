@@ -1,8 +1,3 @@
 en:
   theme_metadata:
     description: "A simple, beautiful theme that improves the out of the box experience for Discourse sites."
-  topic_pinned: "Pinned"
-  topic_hot: "Hot"
-  user_replied: "replied"
-  user_posted: "posted"
-  user_updated: "updated"

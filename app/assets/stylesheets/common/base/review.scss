@@ -1,0 +1,140 @@
+:root {
+  --d-review-reason-spam-bg: #fee2e2;
+  --d-review-reason-spam-text: #b91c1c;
+  --d-review-reason-spam-count-bg: #b91c1c;
+  --d-review-reason-spam-count-text: #fee2e2;
+  --d-review-reason-off-topic-bg: #fff7dc;
+  --d-review-reason-off-topic-text: #5e450c;
+  --d-review-reason-off-topic-count-bg: #5e450c;
+  --d-review-reason-off-topic-count-text: #fff7dc;
+  --d-review-reason-illegal-bg: #fff5f5;
+  --d-review-reason-illegal-text: #4b0000;
+  --d-review-reason-illegal-count-bg: #4b0000;
+  --d-review-reason-illegal-count-text: #fff5f5;
+  --d-review-reason-inappropriate-bg: #ffedd5;
+  --d-review-reason-inappropriate-text: #c2410c;
+  --d-review-reason-inappropriate-count-bg: #c2410c;
+  --d-review-reason-inappropriate-count-text: #ffedd5;
+  --d-review-reason-other-bg: #dee7f1;
+  --d-review-reason-other-text: #334155;
+  --d-review-reason-other-count-bg: #334155;
+  --d-review-reason-other-count-text: #dee7f1;
+}
+
+.review-item {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: var(--space-4);
+  align-items: flex-start;
+
+  &__primary-content {
+    position: relative;
+    flex: 0 1 70%;
+  }
+
+  &__flag-summary {
+    border-radius: var(--d-border-radius);
+    border: 1px solid var(--primary-low);
+    margin-bottom: var(--space-6);
+  }
+
+  &__header {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: var(--space-2);
+    align-items: start;
+    background-color: var(--primary-very-low);
+    padding: var(--space-5) var(--space-4);
+  }
+
+  &__label-badges {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--space-2);
+    align-items: start;
+  }
+
+  &__flag-label {
+    white-space: nowrap;
+    text-align: left;
+  }
+
+  &__flag-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+  }
+}
+
+.review-item__flag-reason {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  background: var(--primary-very-low);
+  border-radius: 999px;
+  padding: var(--space-1) var(--space-2);
+  font-size: var(--font-down-1);
+  line-height: 1;
+
+  &.--illegal {
+    background-color: var(--d-review-reason-illegal-bg);
+    color: var(--d-review-reason-illegal-text);
+  }
+
+  &.--inappropriate {
+    background-color: var(--d-review-reason-inappropriate-bg);
+    color: var(--d-review-reason-inappropriate-text);
+  }
+
+  &.--other,
+  &.--needs-approval {
+    background-color: var(--d-review-reason-other-bg);
+    color: var(--d-review-reason-other-text);
+  }
+
+  &.--spam {
+    background-color: var(--d-review-reason-spam-bg);
+    color: var(--d-review-reason-spam-text);
+  }
+
+  &.--off-topic {
+    background-color: var(--d-review-reason-off-topic-bg);
+    color: var(--d-review-reason-off-topic-text);
+  }
+}
+
+.review-item__flag-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  min-width: 1rem;
+  padding: var(--space-1);
+  font-size: var(--font-down-2);
+
+  &.--illegal {
+    background-color: var(--d-review-reason-illegal-count-bg);
+    color: var(--d-review-reason-illegal-count-text);
+  }
+
+  &.--inappropriate {
+    background-color: var(--d-review-reason-inappropriate-count-bg);
+    color: var(--d-review-reason-inappropriate-count-text);
+  }
+
+  &.--other,
+  &.--needs-approval {
+    background-color: var(--d-review-reason-other-count-bg);
+    color: var(--d-review-reason-other-count-text);
+  }
+
+  &.--spam {
+    background-color: var(--d-review-reason-spam-count-bg);
+    color: var(--d-review-reason-spam-count-text);
+  }
+
+  &.--off-topic {
+    background-color: var(--d-review-reason-off-topic-count-bg);
+    color: var(--d-review-reason-off-topic-count-text);
+  }
+}

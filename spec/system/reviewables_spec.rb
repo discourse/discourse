@@ -282,6 +282,24 @@ describe "Reviewables", type: :system do
 
         expect(review_page).to have_reviewable_with_rejected_status(queued_post_reviewable)
       end
+
+      context "with reviewable claiming enabled" do
+        before { SiteSetting.reviewable_claiming = "required" }
+
+        it "properly claims and unclaims the reviewable" do
+          review_page.visit_reviewable(queued_post_reviewable)
+
+          expect(review_page).to have_no_reviewable_action_dropdown
+
+          review_page.click_claim_reviewable
+
+          expect(review_page).to have_reviewable_action_dropdown
+
+          review_page.click_unclaim_reviewable
+
+          expect(review_page).to have_no_reviewable_action_dropdown
+        end
+      end
     end
   end
 

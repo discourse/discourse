@@ -347,29 +347,39 @@ task "themes:deduplicate_horizon" => :environment do |task, args|
       remote_horizon_theme
         .color_schemes
         .reduce({}) do |map, color_scheme|
-          map[color_scheme.id] = system_horizon_theme
-            .color_schemes
-            .find_by(name: color_scheme.name)
-            .id
+          map[color_scheme.id] = {
+            id: system_horizon_theme.color_schemes.find_by(name: color_scheme.name).id,
+            user_selectable: color_scheme.user_selectable,
+          }
           map
         end
+    system_horizon_theme.color_schemes.find_each do |color_scheme|
+      color_scheme.update!(
+        user_selectable:
+          !!color_schemes_map
+            .values
+            .find { |scheme| scheme[:id] == color_scheme.id }
+            &.dig(:user_selectable),
+      )
+    end
     if remote_horizon_theme.color_scheme.theme_id == remote_horizon_theme.id
       system_horizon_theme.update!(
-        color_scheme_id: color_schemes_map[remote_horizon_theme.color_scheme_id],
+        color_scheme_id: color_schemes_map[remote_horizon_theme.color_scheme_id][:id],
       )
     elsif remote_horizon_theme.color_scheme_id
       system_horizon_theme.update!(color_scheme_id: remote_horizon_theme.color_scheme_id)
     end
+    system_horizon_theme.color_scheme.update!(user_selectable: true)
     puts "Theme color palette is updated"
     UserOption
       .where(color_scheme_id: color_schemes_map.keys)
       .find_each do |user_option|
-        user_option.update!(color_scheme_id: color_schemes_map[user_option.color_scheme_id])
+        user_option.update!(color_scheme_id: color_schemes_map[user_option.color_scheme_id][:id])
       end
     UserOption
       .where(dark_scheme_id: color_schemes_map.keys)
       .find_each do |user_option|
-        user_option.update!(dark_scheme_id: color_schemes_map[user_option.dark_scheme_id])
+        user_option.update!(dark_scheme_id: color_schemes_map[user_option.dark_scheme_id][:id])
       end
     puts "User option color schemes are updated"
 

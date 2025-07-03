@@ -583,9 +583,16 @@ zh_CN:
       发帖之前，请选择一个类别或标签，将此主题与相关讨论分组，以便其他人轻松找到它。
 
       有关参与我们社区的更多提示和建议，[查看我们的社区准则](%{base_path}/guidelines)。
+    "new-reply": |
+      感谢您对 %{site_name} 的贡献！
+
+      请记得，我们都是活生生的人。请友善对待您的社区成员。
+
+      如需了解更多参与社区的提示和建议，[请查看我们的社区准则](%{base_path}/guidelines)。
     dominating_topic: 你在这个主题中发表了很多文章！请考虑让其他人也有机会参与进来。
     get_a_room:
       other: 您已回复 @%{reply_username} %{count} 次，您知道您可以向他们发送个人消息吗？
+    dont_feed_the_trolls: 该帖子已经被举报过以引起版主注意。回复负面内容会可能会引发更多的负面行为——你确定要继续吗？
     too_many_replies: |
       新用户在同一主题下回复数量暂时限制为 %{newuser_max_replies_per_topic} 条。请考虑访问其他主题，以继续了解社区。
   activerecord:
@@ -1622,7 +1629,7 @@ zh_CN:
     x_summary_large_image: "Twitter 卡片 'summary large image'（宽度至少应为 280，高度至少为 150，不能为 .svg）。如果留空，则使用 opengraph_image（前提是也不能为 .svg）生成常规卡片元数据。"
     notification_email: "发送所有重要系统电子邮件时使用的 from: 电子邮件地址。此处指定的网域必须正确设置 SPF、DKIM 和反向 PTR 记录才能收到电子邮件。"
     email_custom_headers: "以 | 分隔的自定义电子邮件标头列表。"
-    email_subject: "标准电子邮件的可自定义主题格式。请参阅 <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
+    email_subject: "标准电子邮件的可自定义主题格式。请参阅 <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "向用户提供有关他们无法访问特定话题的更多详细信息。注意：这不太安全，因为用户会知道 URL 是否链接到有效话题。"
     enforce_second_factor: "要求用户在访问 Discourse UI 之前启用双重身份验证。此设置不会影响 API 或 'DiscourseConnect provider' 身份验证。如果启用了 enforce_second_factor_on_external_auth 设置，用户在设置双重身份验证后将无法使用外部身份验证提供商登录。"
     enforce_second_factor_on_external_auth: "要求用户始终使用双重身份验证。启用后，如果用户启用了双重身份验证，将无法使用外部身份验证方法（如社交登录）登录。禁用后，用户只需在使用用户名和密码登录时确认双重身份验证。另请参见 `enforce_second_factor` 设置。"
@@ -2370,6 +2377,7 @@ zh_CN:
     view_raw_email_allowed_groups: "如果帖子是通过接收的电子邮件创建的，可以查看帖子原始电子邮件内容的群组。这包括电子邮件标题和其他技术信息。"
     rich_editor: "启用富文本编辑器，所有用户都可以在当前 Markdown 模式和新的富文本编辑器之间切换，从而实现更直观、更人性化的写作体验。富文本编辑器目前仍在积极开发中，因此并非所有功能都已支持 — <a href='https://meta.discourse.org/t/test-our-new-composer/352347' target='_blank'>请参阅 Meta 了解更多详情</a>。"
     viewport_based_mobile_mode: "实验：禁用基于 user-agent 的移动/桌面模式，改用视口宽度。"
+    reviewable_ui_refresh: "可以在审核队列中使用实验性新 UI 的群组。"
     content_localization_enabled: "根据用户的浏览器或语言偏好设置，显示本地化内容。此类内容可能包括类别、标签、帖子和主题。支持的语言环境在 'content localization supported locales' 中设置。"
     content_localization_supported_locales: "用户内容可翻译成的受支持本地语言列表。要求 'content localization enabled'。"
     content_localization_allowed_groups: "允许群组更新本地化内容。需要 'content localization enabled''。"
@@ -2563,6 +2571,9 @@ zh_CN:
     errors: "%{errors}"
     not_available: "不可用，试试 %{suggestion}？"
     something_already_taken: "出了点问题，可能该用户名或电子邮件地址已被注册，试试点击忘记密码链接。"
+    omniauth_error:
+      generic_without_provider: "抱歉，尝试使用登录服务授权您的帐户时出现错误。请重试。"
+      generic_with_provider: "抱歉，尝试使用 %{provider} 授权您的帐户时出错。请重试。"
     omniauth_error_unknown: "处理您的登录时出错，请重试。"
     omniauth_confirm_title: "使用 %{provider} 登录"
     omniauth_confirm_button: "继续"

@@ -2317,7 +2317,7 @@ trust:
     type: group_list
     allow_any: false
     refresh: true
-    area: "group_permissions"
+    area: "flags|group_permissions"
   allow_all_users_to_flag_illegal_content:
     default: false
     area: "flags"
@@ -4048,6 +4048,10 @@ experimental:
   rich_editor:
     client: true
     default: false
+  reviewable_ui_refresh:
+    client: true
+    type: group_list
+    default: ""
   experimental_system_themes:
     type: list
     default: "horizon"

@@ -384,19 +384,6 @@ es:
 
           Ten en cuenta que cuando respondes a un tema o lees un tema durante más de unos minutos, el nivel de notificación se establece automáticamente en «siguiendo». Puedes cambiar esto en [tus preferencias de usuario](%{base_uri}/my/preferences).
       poll:
-        instructions: |-
-          ¿Sabes que puedes agregar una encuesta en cualquier publicación? Intenta usar el botón de engranaje <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> en el editor para **realizar una encuesta**.
-        not_found: |-
-          ¡Ups! No hubo ninguna encuesta en tu respuesta.
-
-          Usa el <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> icono de engranaje en el editor, o bien copia y pega esta encuesta en tu próxima respuesta:
-
-          ```text
-          [poll]
-          * :cat:
-          * :dog:
-          [/poll]
-          ```
         reply: |-
           Hey, ¡buena encuesta! ¿Qué tal estuvo mi proceso de enseñanza?
 
@@ -405,20 +392,6 @@ es:
           * :-1:
           [/poll]
       details:
-        instructions: |-
-          Puede que a veces quieras **ocultar detalles** en tus respuestas:
-
-          - Cuando estás discutiendo detalles de la trama de una película o programa de televisión que podrían ser considerados spoiler.
-
-          - Cuando tu publicación necesita un montón de detalles opcionales que pueden ser abrumadores cuando se leen todos a la vez.
-
-          [details=¡Clic aquí para ver cómo funciona!]
-          1. Selecciona el botón de engranaje <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> en el editor.
-          2. Selecciona «ocultar detalles».
-          3. Edita el resumen de detalles y agrega el contenido que deseas ocultar.
-          [/details]
-
-          ¿Puedes usar el botón de engranaje <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> en el editor para agregar una sección de detalles en tu próxima respuesta?
         not_found: |-
           ¿Tienes problemas para crear un widget de detalles? Trata de incluir lo siguiente en tu próxima respuesta:
 

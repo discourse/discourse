@@ -222,6 +222,9 @@ en:
       header:
         logged_in_members: "Welcome back, %{preferred_display_name}!"
         anonymous_members: "Welcome to %{site_name}!"
+      subheader:
+        logged_in_members: ""
+        anonymous_members: ""
       search: "Search"
 
     themes:
@@ -814,6 +817,7 @@ en:
       reject_reason:
         title: "Why are you rejecting this user?"
         send_email: "Send rejection email"
+      flagged_as: "Flagged as"
 
     relative_time_picker:
       minutes:
@@ -1254,6 +1258,7 @@ en:
     user_fields:
       none: "(select an option)"
       required: 'Please enter a value for "%{name}"'
+      required_select: 'Please select a value for "%{name}"'
       required_checkbox: 'The field "%{name}" is required'
       same_as_password: "Your password should not be repeated in other fields"
       optional: (optional)
@@ -2261,6 +2266,8 @@ en:
       errors_summary_title: "This form contains errors:"
       dirty_form: "You didn't submit your changes! Are you sure you want to leave?"
       errors:
+        starts_with: "Must start with %{prefix}"
+        ends_with: "Must end with %{suffix}"
         required: "Required"
         date_before_or_equal: "Must be before or equal to %{date}"
         date_after_or_equal: "Must be after or equal to %{date}"
@@ -4455,6 +4462,8 @@ en:
       pinned:
         title: "Pinned"
         help: "This topic is pinned for you; it will display at the top of its category"
+      hot:
+        title: "Hot"
       unlisted:
         help: "This topic is unlisted; it will not be displayed in topic lists, and can only be accessed via a direct link. %{unlistedReason}"
       personal_message:
@@ -5132,6 +5141,9 @@ en:
             invite:
               content: "Invite"
               title: "Invite new members"
+            my_messages:
+              content: "My Messages"
+              title: "My personal messages"
         global_section: "Global section, visible to everyone"
       panels:
         forum:

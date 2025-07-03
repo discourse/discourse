@@ -45,7 +45,7 @@ export default class GrippieDragResize extends Modifier {
 
     // Only allow left-click dragging
     // c.f. https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/button#value
-    if (event.button !== 0) {
+    if (event.type === "mousedown" && event.button !== 0) {
       return;
     }
 
